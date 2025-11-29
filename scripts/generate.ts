@@ -833,6 +833,53 @@ function generateCurriculumIndex(levels: Array<{ level: string; moduleCount: num
 </html>`;
 }
 
+// Generate root index (all curricula)
+function generateRootIndex(curricula: { langPair: string; name: string; levels: { level: string; count: number }[] }[]): string {
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Curricula Opus</title>
+  <style>
+    :root { --primary: #1a5fb4; --bg: #fafafa; --card-bg: #fff; --text: #1e1e1e; --text-muted: #5e5e5e; --border: #e0e0e0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+    header { background: linear-gradient(135deg, #1a5fb4, #613583); color: white; padding: 4rem 2rem; text-align: center; }
+    header h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+    header p { opacity: 0.9; font-size: 1.125rem; }
+    main { max-width: 700px; margin: 0 auto; padding: 2rem; }
+    .curriculum-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+    .curriculum-card { background: var(--card-bg); border: 2px solid var(--border); border-radius: 16px; padding: 2rem; text-decoration: none; color: inherit; transition: all 0.2s; }
+    .curriculum-card:hover { border-color: var(--primary); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.1); }
+    .curriculum-card h2 { font-size: 1.5rem; color: var(--primary); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
+    .curriculum-card p { color: var(--text-muted); }
+    .badge { background: #e8f4fd; color: var(--primary); padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; }
+    footer { text-align: center; padding: 2rem; color: var(--text-muted); }
+    footer a { color: var(--primary); }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Curricula Opus</h1>
+    <p>Open Language Learning Curricula</p>
+  </header>
+  <main>
+    <div class="curriculum-grid">
+      ${curricula.map(c => `<a href="${c.langPair}/index.html" class="curriculum-card">
+        <h2>${c.name}</h2>
+        <p>For English Speakers</p>
+        <p style="margin-top: 1rem;">${c.levels.map(l => `<span class="badge">${l.level}</span> ${l.count} modules`).join(' ')}</p>
+      </a>`).join('\n      ')}
+    </div>
+  </main>
+  <footer>
+    <p>Open source curriculum - <a href="https://github.com/krisztiankoos/curricula-opus">GitHub</a></p>
+  </footer>
+</body>
+</html>`;
+}
+
 // ============================================================================
 // MAIN
 // ============================================================================
@@ -859,6 +906,9 @@ async function main() {
   const langPairs = targetLangPair
     ? [targetLangPair]
     : (await readdir(CURRICULUM_DIR)).filter(f => f.startsWith('l'));
+
+  // Collect info for root index
+  const allCurricula: { langPair: string; name: string; levels: { level: string; count: number }[] }[] = [];
 
   for (const langPair of langPairs) {
     console.log(`📚 Processing ${langPair}...`);
@@ -959,7 +1009,22 @@ async function main() {
     if (levels.length > 0) {
       const curriculumIndex = generateCurriculumIndex(levels, langPair);
       await writeHTML(join(OUTPUT_DIR, 'html', langPair, 'index.html'), curriculumIndex);
+
+      // Collect for root index
+      const langName = langPair === 'l2-uk-en' ? 'Ukrainian' : langPair;
+      allCurricula.push({
+        langPair,
+        name: langName,
+        levels: levels.map(l => ({ level: l.level, count: l.moduleCount }))
+      });
     }
+  }
+
+  // Generate root index
+  if (allCurricula.length > 0) {
+    const rootIndex = generateRootIndex(allCurricula);
+    await writeHTML(join(OUTPUT_DIR, 'html', 'index.html'), rootIndex);
+    console.log(`  ✓ /output/html/index.html`);
   }
 
   console.log('\n✅ Generation complete!\n');
