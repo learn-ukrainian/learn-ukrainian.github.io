@@ -363,36 +363,30 @@ Change "this" to "that" and "my" to "your":
 
 # Vocabulary
 
-| uk | translit | ipa | en | pos | gender | note |
-|----|----------|-----|-----|-----|--------|------|
-| цей | tsei | /t͡sɛj/ | this (masculine) | pron | m | Demonstrative |
-| ця | tsya | /t͡sʲɑ/ | this (feminine) | pron | f | Demonstrative |
-| це | tse | /t͡sɛ/ | this (neuter) | pron | n | Also "this is" |
-| ці | tsi | /t͡sʲi/ | these | pron | pl | Plural demonstrative |
-| той | toi | /tɔj/ | that (masculine) | pron | m | Demonstrative |
-| та | ta | /tɑ/ | that (feminine) | pron | f | Demonstrative |
-| те | te | /tɛ/ | that (neuter) | pron | n | Demonstrative |
-| ті | ti | /tʲi/ | those | pron | pl | Plural demonstrative |
-| мій | mii | /mʲij/ | my (masculine) | pron | m | Possessive |
-| моя | moya | /mɔˈjɑ/ | my (feminine) | pron | f | Possessive |
-| моє | moye | /mɔˈjɛ/ | my (neuter) | pron | n | Possessive |
-| мої | moyi | /mɔˈji/ | my (plural) | pron | pl | Possessive |
-| твій | tvii | /tvʲij/ | your (m, informal) | pron | m | Informal possessive |
-| твоя | tvoya | /tvɔˈjɑ/ | your (f, informal) | pron | f | Informal possessive |
-| твоє | tvoye | /tvɔˈjɛ/ | your (n, informal) | pron | n | Informal possessive |
-| твої | tvoyi | /tvɔˈji/ | your (pl, informal) | pron | pl | Informal possessive |
-| його | yoho | /jɔˈɦɔ/ | his, its | pron | - | Invariable - never changes |
-| її | yiyi | /jiˈji/ | her, hers | pron | - | Invariable - never changes |
-| стілець | stilets | /ˈstʲilɛt͡sʲ/ | chair | noun | m | Furniture |
-| ліжко | lizhko | /ˈlʲiʒkɔ/ | bed | noun | n | Furniture |
-| лампа | lampa | /ˈlɑmpɑ/ | lamp | noun | f | Cognate with English |
-| двері | dveri | /ˈdvɛrʲi/ | door | noun | pl | Always plural in Ukrainian! |
-| телефон | telefon | /tɛlɛˈfɔn/ | phone | noun | m | Cognate |
-| сумка | sumka | /ˈsumkɑ/ | bag | noun | f | Common item |
-| ручка | ruchka | /ˈrutʃkɑ/ | pen | noun | f | Also means "handle" |
-| ключ | klyuch | /klʲutʃ/ | key | noun | m | Consonant = masculine |
-| гаманець | hamanets | /ɦɑmɑˈnɛt͡sʲ/ | wallet | noun | m | Personal item |
-
+| Word | IPA | English | POS | Gender | Note |
+|------|-----|---------|-----|--------|------|
+| цей | /t͡sɛj/ | this (masculine) | pron | m | Demonstrative |
+| ця | /t͡sʲɑ/ | this (feminine) | pron | f | Demonstrative |
+| ці | /t͡sʲi/ | these | pron | pl | Plural demonstrative |
+| той | /tɔj/ | that (masculine) | pron | m | Demonstrative |
+| та | /tɑ/ | that (feminine) | pron | f | Demonstrative |
+| те | /tɛ/ | that (neuter) | pron | n | Demonstrative |
+| ті | /tʲi/ | those | pron | pl | Plural demonstrative |
+| моє | /mɔˈjɛ/ | my (neuter) | pron | n | Possessive |
+| мої | /mɔˈji/ | my (plural) | pron | pl | Possessive |
+| твоє | /tvɔˈjɛ/ | your (n, informal) | pron | n | Informal possessive |
+| твої | /tvɔˈji/ | your (pl, informal) | pron | pl | Informal possessive |
+| його | /jɔˈɦɔ/ | his, its | pron | - | Invariable - never changes |
+| її | /jiˈji/ | her, hers | pron | - | Invariable - never changes |
+| стілець | /ˈstʲilɛt͡sʲ/ | chair | noun | m | Furniture |
+| ліжко | /ˈlʲiʒkɔ/ | bed | noun | n | Furniture |
+| лампа | /ˈlɑmpɑ/ | lamp | noun | f | Cognate with English |
+| двері | /ˈdvɛrʲi/ | door | noun | pl | Always plural in Ukrainian! |
+| телефон | /tɛlɛˈfɔn/ | phone | noun | m | Cognate |
+| сумка | /ˈsumkɑ/ | bag | noun | f | Common item |
+| ручка | /ˈrutʃkɑ/ | pen | noun | f | Also means "handle" |
+| ключ | /klʲutʃ/ | key | noun | m | Consonant = masculine |
+| гаманець | /ɦɑmɑˈnɛt͡sʲ/ | wallet | noun | m | Personal item |
 ---
 
 # Agreement Summary

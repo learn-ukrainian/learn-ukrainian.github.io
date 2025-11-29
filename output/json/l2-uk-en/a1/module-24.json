@@ -354,131 +354,109 @@
     "moduleId": "mod-uk-A1-24",
     "level": "A1",
     "phase": "A1.3",
-    "wordCount": 13,
+    "wordCount": 12,
     "transliterationMode": "full",
     "words": [
       {
         "id": "v-m24-001",
         "uk": "могти",
-        "translit": "mohty",
-        "ipa": "/mɔɦˈtɪ/",
-        "en": "can, to be able",
-        "pos": "verb",
-        "gender": "-",
-        "note": "можу, можеш, може"
+        "translit": "/mɔɦˈtɪ/",
+        "ipa": "can, to be able",
+        "en": "verb",
+        "pos": "-",
+        "gender": "можу, можеш, може"
       },
       {
         "id": "v-m24-002",
         "uk": "мусити",
-        "translit": "musyty",
-        "ipa": "/muˈsɪtɪ/",
-        "en": "must, have to",
-        "pos": "verb",
-        "gender": "-",
-        "note": "мушу, мусиш, мусить"
+        "translit": "/muˈsɪtɪ/",
+        "ipa": "must, have to",
+        "en": "verb",
+        "pos": "-",
+        "gender": "мушу, мусиш, мусить"
       },
       {
         "id": "v-m24-003",
         "uk": "повинен",
-        "translit": "povynen",
-        "ipa": "/pɔˈvɪnɛn/",
-        "en": "should, ought to (m)",
-        "pos": "adj",
-        "gender": "m",
-        "note": "повинна (f), повинні (pl)"
+        "translit": "/pɔˈvɪnɛn/",
+        "ipa": "should, ought to (m)",
+        "en": "adj",
+        "pos": "m",
+        "gender": "повинна (f), повинні (pl)"
       },
       {
         "id": "v-m24-004",
         "uk": "треба",
-        "translit": "treba",
-        "ipa": "/ˈtrɛbɑ/",
-        "en": "it's necessary",
-        "pos": "adv",
-        "gender": "-",
-        "note": "+ dative + infinitive"
+        "translit": "/ˈtrɛbɑ/",
+        "ipa": "it's necessary",
+        "en": "adv",
+        "pos": "-",
+        "gender": "+ dative + infinitive"
       },
       {
         "id": "v-m24-005",
         "uk": "потрібно",
-        "translit": "potribno",
-        "ipa": "/pɔˈtrʲibnɔ/",
-        "en": "it's needed",
-        "pos": "adv",
-        "gender": "-",
-        "note": "= треба"
+        "translit": "/pɔˈtrʲibnɔ/",
+        "ipa": "it's needed",
+        "en": "adv",
+        "pos": "-",
+        "gender": "= треба"
       },
       {
         "id": "v-m24-006",
-        "uk": "хотіти",
-        "translit": "khotity",
-        "ipa": "/xɔˈtʲitɪ/",
-        "en": "to want",
-        "pos": "verb",
-        "gender": "-",
-        "note": "хочу, хочеш, хоче"
+        "uk": "допомогти",
+        "translit": "/dɔpɔmɔɦˈtɪ/",
+        "ipa": "to help (perf)",
+        "en": "verb",
+        "pos": "-"
       },
       {
         "id": "v-m24-007",
-        "uk": "допомогти",
-        "translit": "dopomohty",
-        "ipa": "/dɔpɔmɔɦˈtɪ/",
-        "en": "to help (perf)",
-        "pos": "verb",
-        "gender": "-"
+        "uk": "зрозуміти",
+        "translit": "/zrɔzuˈmʲitɪ/",
+        "ipa": "to understand (perf)",
+        "en": "verb",
+        "pos": "-"
       },
       {
         "id": "v-m24-008",
-        "uk": "зрозуміти",
-        "translit": "zrozumity",
-        "ipa": "/zrɔzuˈmʲitɪ/",
-        "en": "to understand (perf)",
-        "pos": "verb",
-        "gender": "-"
+        "uk": "поспішати",
+        "translit": "/pɔspʲiˈʃɑtɪ/",
+        "ipa": "to hurry",
+        "en": "verb",
+        "pos": "-"
       },
       {
         "id": "v-m24-009",
-        "uk": "поспішати",
-        "translit": "pospishaty",
-        "ipa": "/pɔspʲiˈʃɑtɪ/",
-        "en": "to hurry",
-        "pos": "verb",
-        "gender": "-"
+        "uk": "закінчити",
+        "translit": "/zɑˈkʲintʃɪtɪ/",
+        "ipa": "to finish",
+        "en": "verb",
+        "pos": "-"
       },
       {
         "id": "v-m24-010",
-        "uk": "закінчити",
-        "translit": "zakinchyty",
-        "ipa": "/zɑˈkʲintʃɪtɪ/",
-        "en": "to finish",
-        "pos": "verb",
-        "gender": "-"
+        "uk": "почекати",
+        "translit": "/pɔtʃɛˈkɑtɪ/",
+        "ipa": "to wait (perf)",
+        "en": "verb",
+        "pos": "-"
       },
       {
         "id": "v-m24-011",
-        "uk": "почекати",
-        "translit": "pochekaty",
-        "ipa": "/pɔtʃɛˈkɑtɪ/",
-        "en": "to wait (perf)",
-        "pos": "verb",
-        "gender": "-"
+        "uk": "відпочити",
+        "translit": "/vʲidpɔˈtʃɪtɪ/",
+        "ipa": "to rest",
+        "en": "verb",
+        "pos": "-"
       },
       {
         "id": "v-m24-012",
-        "uk": "відпочити",
-        "translit": "vidpochyty",
-        "ipa": "/vʲidpɔˈtʃɪtɪ/",
-        "en": "to rest",
-        "pos": "verb",
-        "gender": "-"
-      },
-      {
-        "id": "v-m24-013",
         "uk": "платити",
-        "translit": "platyty",
-        "ipa": "/plɑˈtɪtɪ/",
-        "en": "to pay",
-        "pos": "verb",
-        "gender": "-"
+        "translit": "/plɑˈtɪtɪ/",
+        "ipa": "to pay",
+        "en": "verb",
+        "pos": "-"
       }
     ]
   }

@@ -1,0 +1,449 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-A2-32",
+    "moduleId": "mod-uk-A2-32",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "methodology": "ppp",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "A2",
+    "phase": "A2.1",
+    "moduleNumber": 32,
+    "title": "The Dative II",
+    "subtitle": "To Whom - Nouns",
+    "description": "Learn dative case endings for nouns",
+    "objectives": [
+      "Learn dative case endings for nouns",
+      "Apply dative to masculine, feminine, neuter nouns",
+      "Express recipients in full sentences",
+      "Build on pronoun dative from Module 31"
+    ],
+    "grammarFocus": [
+      "Dative noun endings by gender",
+      "Masculine -ові/-у patterns",
+      "Feminine -і pattern",
+      "Plural -ам pattern"
+    ],
+    "totalDuration": 45,
+    "transliterationMode": "partial",
+    "tags": [
+      "dative",
+      "nouns",
+      "case",
+      "indirect-object",
+      "endings"
+    ],
+    "version": 1,
+    "createdAt": "2025-11-29T00:00:00Z",
+    "modifiedAt": "2025-11-29T00:00:00Z",
+    "phases": [
+      {
+        "id": "phase-warm-up",
+        "name": "warm-up",
+        "duration": 5,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### From Pronouns to Nouns\n\nIn Module 31, you learned dative pronouns (мені, тобі, йому...). Now let's apply dative to **nouns** - to friends, family, people by name!\n\n**Compare:**\n- Я даю книгу **йому**. (I give the book to him - pronoun)\n- Я даю книгу **другові**. (I give the book to my friend - noun)\n\n**The key question:** Кому? (To whom?)\n- Кому ти пишеш? - To whom are you writing?\n- Другові. / Сестрі. / Батькові. - To a friend. / To sister. / To father.\n\n> 💡 **Did You Know?**\n>\n> Ukrainian has TWO masculine dative endings: **-ові** and **-у**. The -ові ending is uniquely Ukrainian! It developed to make speech clearer (since -у is also genitive/locative). When you use \"-ові,\" you're using a distinctly Ukrainian form that sets it apart from other Slavic languages."
+          }
+        ]
+      },
+      {
+        "id": "phase-presentation",
+        "name": "presentation",
+        "duration": 15,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Dative Endings Overview\n\n| Gender | Nominative | Dative | Example |\n|--------|------------|--------|---------|\n| Masculine | -consonant | -ові / -у | друг → другові |\n| Masculine soft | -ь | -еві / -ю | вчитель → вчителеві |\n| Feminine | -а | -і | сестра → сестрі |\n| Feminine soft | -я | -і | Марія → Марії |\n| Neuter | -о/-е | -у/-ові | місто → місту |\n| Plural (all) | - | -ам | друзі → друзям |"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Masculine Dative: -ові vs -у\n\n**Both endings are correct!** Ukrainians use both:\n\n| Nominative | Dative (-ові) | Dative (-у) |\n|------------|---------------|-------------|\n| друг | друг**ові** | друг**у** |\n| брат | брат**ові** | брат**у** |\n| студент | студент**ові** | студент**у** |\n| батько | батьк**ові** | батьк**у** |\n| Андрій | Андрі**єві** | Андрі**ю** |\n\n> ⚡ **Pro Tip: When to Use Which?**\n>\n> - **-ові/-еві** sounds more formal, literary, distinctly Ukrainian\n> - **-у/-ю** sounds more casual, conversational\n> - For names, both work: \"Іванові\" or \"Івану\"\n> - In modern speech, -ові is becoming more popular as a marker of Ukrainian identity\n\n**Consonant changes before -і:**\n- г → з: друг → дру**з**і (but also другові)\n- к → ц: студентка → студент**ц**і\n- х → с: свекруха → свекру**с**і\n\n> 📜 **History Bite: The -ові Ending**\n>\n> The -ові ending developed in Ukrainian during the medieval period (12th-14th centuries) and became a distinctive marker of the language. While Russian uses only -у, Ukrainian proudly maintains both. After Ukraine's independence, using -ові became associated with conscious Ukrainian language use - it's grammar with identity!"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Feminine Dative: -і\n\nFeminine nouns change **-а/-я** to **-і**:\n\n| Nominative | Dative | Example Sentence |\n|------------|--------|------------------|\n| мама | мам**і** | Я дзвоню мамі. |\n| сестра | сестр**і** | Допоможи сестрі. |\n| подруга | подруз**і** | Розкажи подрузі. |\n| бабуся | бабус**і** | Напиши бабусі. |\n| Марія | Марі**ї** | Дай це Марії. |\n\n**Remember the consonant changes:**\n- г → з: подру**г**а → подру**з**і\n- к → ц: донь**к**а → донь**ц**і\n- х → с: невіст**к**а → невіст**ц**і\n\n> 🎭 **Culture Corner: Addressing People**\n>\n> When you need to address someone indirectly, use dative:\n> - Передай привіт **мамі**! (Say hi to mom!)\n> - Скажи **Олені**, що я чекаю. (Tell Olena I'm waiting.)\n> - Побажай **бабусі** здоров'я! (Wish grandma health!)\n>\n> This is extremely common in everyday Ukrainian conversations!"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Neuter Dative: -у/-ові\n\nNeuter nouns take **-у** (or sometimes -ові for emphasis):\n\n| Nominative | Dative | Example |\n|------------|--------|---------|\n| місто | міст**у** | Що потрібно місту? |\n| село | сел**у** | Допомога селу. |\n| дитя | дитят**і** | Дай дитяті іграшку. |\n\n> 💡 **Did You Know?**\n>\n> Neuter dative is relatively rare because neuter nouns are mostly things, not recipients. You'll use it mostly with **дитя** (child), **немовля** (baby), or abstract concepts like \"місту потрібні дороги\" (the city needs roads)."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Plural Dative: -ам/-ям\n\nAll genders form plural dative with **-ам** (hard) or **-ям** (soft):\n\n| Nominative Sg | Nominative Pl | Dative Pl |\n|---------------|---------------|-----------|\n| друг | друзі | друз**ям** |\n| сестра | сестри | сестр**ам** |\n| батько | батьки | батьк**ам** |\n| студент | студенти | студент**ам** |\n| дитина | діти | діт**ям** |\n\n**Example sentences:**\n- Я допомагаю **студентам**. (I help students.)\n- Вона пише **батькам**. (She writes to her parents.)\n- Розкажи це **друзям**! (Tell this to friends!)"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Common Patterns\n\n**Letter/message writing:**\n- писати листа **другові** (write a letter to a friend)\n- надіслати повідомлення **колезі** (send a message to a colleague)\n- відповісти **клієнтові** (reply to a client)\n\n**Giving and showing:**\n- дати подарунок **сестрі** (give a gift to sister)\n- показати фото **батькам** (show photos to parents)\n- принести квіти **дівчині** (bring flowers to girlfriend)\n\n**Helping and telling:**\n- допомогти **бабусі** (help grandma)\n- сказати правду **другові** (tell the truth to a friend)\n- пояснити **студентові** (explain to a student)\n\n> ⚡ **Pro Tip: Names in Dative**\n>\n> Ukrainian names follow the same rules:\n> - Іван → Іван**ові** / Іван**у**\n> - Олена → Олен**і**\n> - Андрій → Андрі**єві** / Андрі**ю**\n> - Марія → Марі**ї**\n>\n> Foreign names often don't decline: \"Скажи Джон**у**\" but sometimes \"Скажи Джон\""
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-A2-32-matchup"
+          }
+        ]
+      },
+      {
+        "id": "phase-practice",
+        "name": "practice",
+        "duration": 15,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Noun Transformations\n\nChange nominative to dative:\n\n**Masculine:**\n1. друг → другові / другу\n2. брат → братові / брату\n3. студент → студентові / студенту\n4. батько → батькові / батьку\n5. вчитель → вчителеві / вчителю\n\n**Feminine:**\n1. сестра → сестрі\n2. мама → мамі\n3. подруга → подрузі\n4. бабуся → бабусі\n5. колега → колезі\n\n**Plural:**\n1. друзі → друзям\n2. батьки → батькам\n3. студенти → студентам\n4. сестри → сестрам"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Complete the Sentences\n\nFill in the dative form:\n\n1. Я пишу листа ___ (брат). → братові / брату\n2. Допоможи ___ (бабуся)! → бабусі\n3. Вона дзвонить ___ (подруга). → подрузі\n4. Покажи це ___ (батьки). → батькам\n5. Скажи ___ (Марія), що я чекаю. → Марії\n6. Він дає гроші ___ (студенти). → студентам"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Build Full Sentences\n\nCreate sentences using: Subject + дати/показати/сказати + Object + Dative noun\n\n1. Я / подарунок / сестра → Я даю подарунок сестрі.\n2. Вона / лист / друг → Вона пише листа другові.\n3. Ми / фото / батьки → Ми показуємо фото батькам.\n4. Він / правда / брат → Він каже правду братові."
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-A2-32-quiz"
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-A2-32-groupsort"
+          }
+        ]
+      },
+      {
+        "id": "phase-production",
+        "name": "production",
+        "duration": 10,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Real Situations\n\n**Scenario 1: At the post office**\n- Я хочу надіслати посилку.\n- Кому?\n- Братові. Він живе в Львові.\n- Напишіть адресу отримувача.\n\n**Scenario 2: Planning a party**\n- Кому ти надіслав запрошення?\n- Усім друзям! Олегові, Марії, Андрієві...\n- А батькам?\n- Так, батькам теж!\n\n**Scenario 3: Office communication**\n- Передай це директорові.\n- А копію?\n- Копію надішли колегам по електронній пошті."
+          }
+        ]
+      }
+    ]
+  },
+  "activities": [
+    {
+      "id": "act-uk-A2-32-matchup",
+      "type": "match-up",
+      "title": "Nominative to Dative",
+      "description": "Match the noun with its dative form.",
+      "content": {
+        "type": "match-up",
+        "instructions": "Match the noun with its dative form.",
+        "pairs": [
+          {
+            "left": "брат",
+            "right": "братові"
+          },
+          {
+            "left": "сестра",
+            "right": "сестрі"
+          },
+          {
+            "left": "друг",
+            "right": "другові"
+          },
+          {
+            "left": "мама",
+            "right": "мамі"
+          },
+          {
+            "left": "батьки",
+            "right": "батькам"
+          },
+          {
+            "left": "подруга",
+            "right": "подрузі"
+          }
+        ],
+        "shuffleRight": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2",
+      "duration": 5,
+      "tags": [
+        "dative",
+        "nouns",
+        "case",
+        "indirect-object",
+        "endings"
+      ],
+      "createdAt": "2025-11-29T00:00:00Z",
+      "modifiedAt": "2025-11-29T00:00:00Z"
+    },
+    {
+      "id": "act-uk-A2-32-quiz",
+      "type": "quiz",
+      "title": "Dative Nouns",
+      "description": "Choose the correct dative form.",
+      "content": {
+        "type": "quiz",
+        "instructions": "Choose the correct dative form.",
+        "questions": [
+          {
+            "question": "\"I'm writing to my brother\" - Я пишу ___.",
+            "options": [
+              "братові",
+              "брата",
+              "брат",
+              "братом"
+            ],
+            "correctIndex": 0,
+            "explanation": "Dative of брат = братові."
+          },
+          {
+            "question": "\"Help grandma!\" - Допоможи ___!",
+            "options": [
+              "бабусі",
+              "бабуся",
+              "бабусю",
+              "бабусею"
+            ],
+            "correctIndex": 0,
+            "explanation": "Feminine dative: бабуся → бабусі."
+          },
+          {
+            "question": "\"Tell your friend (f)\" - Скажи ___.",
+            "options": [
+              "подрузі",
+              "подруга",
+              "подругу",
+              "подругою"
+            ],
+            "correctIndex": 0,
+            "explanation": "подруга → подрузі (г→з before і)."
+          },
+          {
+            "question": "\"Show the students\" - Покажи ___.",
+            "options": [
+              "студентам",
+              "студенти",
+              "студентів",
+              "студентами"
+            ],
+            "correctIndex": 0,
+            "explanation": "Plural dative: -ам."
+          },
+          {
+            "question": "\"Give it to Maria\" - Дай це ___.",
+            "options": [
+              "Марії",
+              "Марія",
+              "Марію",
+              "Марією"
+            ],
+            "correctIndex": 0,
+            "explanation": "Марія → Марії."
+          },
+          {
+            "question": "\"Call your parents\" - Подзвони ___.",
+            "options": [
+              "батькам",
+              "батьки",
+              "батьків",
+              "батьками"
+            ],
+            "correctIndex": 0,
+            "explanation": "Plural dative: батьки → батькам."
+          },
+          {
+            "question": "\"Explain to the teacher (m)\" - Поясни ___.",
+            "options": [
+              "вчителеві",
+              "вчитель",
+              "вчителя",
+              "вчителем"
+            ],
+            "correctIndex": 0,
+            "explanation": "Soft masc: вчитель → вчителеві."
+          },
+          {
+            "question": "\"Write to your sister\" - Напиши ___.",
+            "options": [
+              "сестрі",
+              "сестра",
+              "сестру",
+              "сестрою"
+            ],
+            "correctIndex": 0,
+            "explanation": "Feminine dative: сестра → сестрі."
+          }
+        ],
+        "shuffleQuestions": true,
+        "shuffleOptions": true,
+        "showCorrectAnswers": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2",
+      "duration": 5,
+      "tags": [
+        "dative",
+        "nouns",
+        "case",
+        "indirect-object",
+        "endings"
+      ],
+      "createdAt": "2025-11-29T00:00:00Z",
+      "modifiedAt": "2025-11-29T00:00:00Z"
+    },
+    {
+      "id": "act-uk-A2-32-groupsort",
+      "type": "group-sort",
+      "title": "Gender in Dative",
+      "description": "Sort the dative forms by the original noun's gender.",
+      "content": {
+        "type": "group-sort",
+        "instructions": "Sort the dative forms by the original noun's gender.",
+        "groups": [
+          {
+            "name": "Masculine Dative",
+            "items": [
+              "братові",
+              "другові",
+              "студентові",
+              "вчителеві"
+            ]
+          },
+          {
+            "name": "Feminine Dative",
+            "items": [
+              "сестрі",
+              "мамі",
+              "подрузі",
+              "бабусі"
+            ]
+          },
+          {
+            "name": "Plural Dative",
+            "items": [
+              "батькам",
+              "друзям",
+              "студентам",
+              "колегам"
+            ]
+          }
+        ],
+        "shuffleItems": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2",
+      "duration": 5,
+      "tags": [
+        "dative",
+        "nouns",
+        "case",
+        "indirect-object",
+        "endings"
+      ],
+      "createdAt": "2025-11-29T00:00:00Z",
+      "modifiedAt": "2025-11-29T00:00:00Z"
+    }
+  ],
+  "vocabulary": {
+    "moduleId": "mod-uk-A2-32",
+    "level": "A2",
+    "phase": "A2.1",
+    "wordCount": 9,
+    "transliterationMode": "partial",
+    "words": [
+      {
+        "id": "v-m32-001",
+        "uk": "клієнт",
+        "translit": "/klʲiˈjɛnt/",
+        "ipa": "client",
+        "en": "noun",
+        "pos": "m",
+        "gender": "Dat: клієнтові"
+      },
+      {
+        "id": "v-m32-002",
+        "uk": "повідомлення",
+        "translit": "/poʋʲiˈdomlɛnʲːɑ/",
+        "ipa": "message",
+        "en": "noun",
+        "pos": "n"
+      },
+      {
+        "id": "v-m32-003",
+        "uk": "запрошення",
+        "translit": "/zɑproˈʃɛnʲːɑ/",
+        "ipa": "invitation",
+        "en": "noun",
+        "pos": "n"
+      },
+      {
+        "id": "v-m32-004",
+        "uk": "відповідь",
+        "translit": "/ʋʲidpoˈʋʲidʲ/",
+        "ipa": "answer",
+        "en": "noun",
+        "pos": "f"
+      },
+      {
+        "id": "v-m32-005",
+        "uk": "допомога",
+        "translit": "/dopoˈmoɦɑ/",
+        "ipa": "help",
+        "en": "noun",
+        "pos": "f"
+      },
+      {
+        "id": "v-m32-006",
+        "uk": "порада",
+        "translit": "/poˈrɑdɑ/",
+        "ipa": "advice",
+        "en": "noun",
+        "pos": "f"
+      },
+      {
+        "id": "v-m32-007",
+        "uk": "підтримка",
+        "translit": "/pʲidˈtrɪmkɑ/",
+        "ipa": "support",
+        "en": "noun",
+        "pos": "f"
+      },
+      {
+        "id": "v-m32-008",
+        "uk": "отримувач",
+        "translit": "/otrɪˈmuvɑtʃ/",
+        "ipa": "recipient",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m32-009",
+        "uk": "адресат",
+        "translit": "/ɑdrɛˈsɑt/",
+        "ipa": "addressee",
+        "en": "noun",
+        "pos": "m"
+      }
+    ]
+  }
+}

@@ -381,197 +381,152 @@
     "moduleId": "mod-uk-A1-17",
     "level": "A1",
     "phase": "A1.3",
-    "wordCount": 20,
+    "wordCount": 17,
     "transliterationMode": "full",
     "words": [
       {
         "id": "v-m17-001",
         "uk": "їжа",
-        "translit": "yizha",
-        "ipa": "/ˈjizʲɑ/",
-        "en": "food",
-        "pos": "noun",
-        "gender": "f"
+        "translit": "/ˈjizʲɑ/",
+        "ipa": "food",
+        "en": "noun",
+        "pos": "f"
       },
       {
         "id": "v-m17-002",
         "uk": "сніданок",
-        "translit": "snidanok",
-        "ipa": "/snʲiˈdɑnɔk/",
-        "en": "breakfast",
-        "pos": "noun",
-        "gender": "m"
+        "translit": "/snʲiˈdɑnɔk/",
+        "ipa": "breakfast",
+        "en": "noun",
+        "pos": "m"
       },
       {
         "id": "v-m17-003",
         "uk": "обід",
-        "translit": "obid",
-        "ipa": "/ɔˈbʲid/",
-        "en": "lunch",
-        "pos": "noun",
-        "gender": "m"
+        "translit": "/ɔˈbʲid/",
+        "ipa": "lunch",
+        "en": "noun",
+        "pos": "m"
       },
       {
         "id": "v-m17-004",
         "uk": "вечеря",
-        "translit": "vecherya",
-        "ipa": "/vɛˈtʃɛrʲɑ/",
-        "en": "dinner",
-        "pos": "noun",
-        "gender": "f"
+        "translit": "/vɛˈtʃɛrʲɑ/",
+        "ipa": "dinner",
+        "en": "noun",
+        "pos": "f"
       },
       {
         "id": "v-m17-005",
-        "uk": "яблуко",
-        "translit": "yabluko",
-        "ipa": "/ˈjɑblukɔ/",
-        "en": "apple",
-        "pos": "noun",
-        "gender": "n",
-        "note": "Gen: яблука, pl: яблука"
+        "uk": "картопля",
+        "translit": "/kɑrˈtɔplʲɑ/",
+        "ipa": "potato",
+        "en": "noun",
+        "pos": "f",
+        "gender": "Collective, no plural"
       },
       {
         "id": "v-m17-006",
-        "uk": "картопля",
-        "translit": "kartoplya",
-        "ipa": "/kɑrˈtɔplʲɑ/",
-        "en": "potato",
-        "pos": "noun",
-        "gender": "f",
-        "note": "Collective, no plural"
+        "uk": "помідор",
+        "translit": "/pɔmʲiˈdɔr/",
+        "ipa": "tomato",
+        "en": "noun",
+        "pos": "m"
       },
       {
         "id": "v-m17-007",
-        "uk": "помідор",
-        "translit": "pomidor",
-        "ipa": "/pɔmʲiˈdɔr/",
-        "en": "tomato",
-        "pos": "noun",
-        "gender": "m"
+        "uk": "огірок",
+        "translit": "/ɔˈɦʲirɔk/",
+        "ipa": "cucumber",
+        "en": "noun",
+        "pos": "m"
       },
       {
         "id": "v-m17-008",
-        "uk": "огірок",
-        "translit": "ohirok",
-        "ipa": "/ɔˈɦʲirɔk/",
-        "en": "cucumber",
-        "pos": "noun",
-        "gender": "m"
+        "uk": "курка",
+        "translit": "/ˈkurkɑ/",
+        "ipa": "chicken",
+        "en": "noun",
+        "pos": "f"
       },
       {
         "id": "v-m17-009",
-        "uk": "курка",
-        "translit": "kurka",
-        "ipa": "/ˈkurkɑ/",
-        "en": "chicken",
-        "pos": "noun",
-        "gender": "f"
+        "uk": "м'ясо",
+        "translit": "/ˈmjɑsɔ/",
+        "ipa": "meat",
+        "en": "noun",
+        "pos": "n"
       },
       {
         "id": "v-m17-010",
-        "uk": "м'ясо",
-        "translit": "myaso",
-        "ipa": "/ˈmjɑsɔ/",
-        "en": "meat",
-        "pos": "noun",
-        "gender": "n"
+        "uk": "риба",
+        "translit": "/ˈrɪbɑ/",
+        "ipa": "fish",
+        "en": "noun",
+        "pos": "f"
       },
       {
         "id": "v-m17-011",
-        "uk": "риба",
-        "translit": "ryba",
-        "ipa": "/ˈrɪbɑ/",
-        "en": "fish",
-        "pos": "noun",
-        "gender": "f"
+        "uk": "борщ",
+        "translit": "/bɔrʃtʃ/",
+        "ipa": "borscht",
+        "en": "noun",
+        "pos": "m",
+        "gender": "Beet soup"
       },
       {
         "id": "v-m17-012",
-        "uk": "хліб",
-        "translit": "khlib",
-        "ipa": "/xlʲib/",
-        "en": "bread",
-        "pos": "noun",
-        "gender": "m"
+        "uk": "вареники",
+        "translit": "/vɑˈrɛnɪkɪ/",
+        "ipa": "dumplings",
+        "en": "noun",
+        "pos": "pl",
+        "gender": "Singular: вареник"
       },
       {
         "id": "v-m17-013",
-        "uk": "борщ",
-        "translit": "borshch",
-        "ipa": "/bɔrʃtʃ/",
-        "en": "borscht",
-        "pos": "noun",
-        "gender": "m",
-        "note": "Beet soup"
+        "uk": "сало",
+        "translit": "/ˈsɑlɔ/",
+        "ipa": "pork fat",
+        "en": "noun",
+        "pos": "n",
+        "gender": "Cured, sliced thin"
       },
       {
         "id": "v-m17-014",
-        "uk": "вареники",
-        "translit": "varenyky",
-        "ipa": "/vɑˈrɛnɪkɪ/",
-        "en": "dumplings",
-        "pos": "noun",
-        "gender": "pl",
-        "note": "Singular: вареник"
+        "uk": "каша",
+        "translit": "/ˈkɑʃɑ/",
+        "ipa": "porridge",
+        "en": "noun",
+        "pos": "f",
+        "gender": "Buckwheat, oats, etc."
       },
       {
         "id": "v-m17-015",
-        "uk": "сало",
-        "translit": "salo",
-        "ipa": "/ˈsɑlɔ/",
-        "en": "pork fat",
-        "pos": "noun",
-        "gender": "n",
-        "note": "Cured, sliced thin"
+        "uk": "смачний",
+        "translit": "/ˈsmɑtʃnɪj/",
+        "ipa": "tasty",
+        "en": "adj",
+        "pos": "m",
+        "gender": "смачна (f), смачне (n)"
       },
       {
         "id": "v-m17-016",
-        "uk": "каша",
-        "translit": "kasha",
-        "ipa": "/ˈkɑʃɑ/",
-        "en": "porridge",
-        "pos": "noun",
-        "gender": "f",
-        "note": "Buckwheat, oats, etc."
+        "uk": "свіжий",
+        "translit": "/ˈsvʲiʒɪj/",
+        "ipa": "fresh",
+        "en": "adj",
+        "pos": "m",
+        "gender": "свіжа (f), свіже (n)"
       },
       {
         "id": "v-m17-017",
-        "uk": "салат",
-        "translit": "salat",
-        "ipa": "/sɑˈlɑt/",
-        "en": "salad",
-        "pos": "noun",
-        "gender": "m"
-      },
-      {
-        "id": "v-m17-018",
-        "uk": "смачний",
-        "translit": "smachnyi",
-        "ipa": "/ˈsmɑtʃnɪj/",
-        "en": "tasty",
-        "pos": "adj",
-        "gender": "m",
-        "note": "смачна (f), смачне (n)"
-      },
-      {
-        "id": "v-m17-019",
-        "uk": "свіжий",
-        "translit": "svizhyi",
-        "ipa": "/ˈsvʲiʒɪj/",
-        "en": "fresh",
-        "pos": "adj",
-        "gender": "m",
-        "note": "свіжа (f), свіже (n)"
-      },
-      {
-        "id": "v-m17-020",
         "uk": "смачного",
-        "translit": "smachnoho",
-        "ipa": "/smɑtʃˈnɔɦɔ/",
-        "en": "bon appétit",
-        "pos": "phrase",
-        "gender": "-",
-        "note": "Literally \"of tasty\""
+        "translit": "/smɑtʃˈnɔɦɔ/",
+        "ipa": "bon appétit",
+        "en": "phrase",
+        "pos": "-",
+        "gender": "Literally \"of tasty\""
       }
     ]
   }

@@ -347,208 +347,170 @@
     "moduleId": "mod-uk-A1-11",
     "level": "A1",
     "phase": "A1.2",
-    "wordCount": 20,
+    "wordCount": 18,
     "transliterationMode": "full",
     "words": [
       {
         "id": "v-m11-001",
-        "uk": "бачити",
-        "translit": "bachyty",
-        "ipa": "/ˈbɑtʃɪtɪ/",
-        "en": "to see",
-        "pos": "verb",
-        "gender": "-",
-        "note": "бачу, бачиш + Acc"
+        "uk": "чути",
+        "translit": "/ˈtʃutɪ/",
+        "ipa": "to hear",
+        "en": "verb",
+        "pos": "-",
+        "gender": "чую, чуєш + Acc"
       },
       {
         "id": "v-m11-002",
-        "uk": "чути",
-        "translit": "chuty",
-        "ipa": "/ˈtʃutɪ/",
-        "en": "to hear",
-        "pos": "verb",
-        "gender": "-",
-        "note": "чую, чуєш + Acc"
+        "uk": "брати",
+        "translit": "/ˈbrɑtɪ/",
+        "ipa": "to take",
+        "en": "verb",
+        "pos": "-",
+        "gender": "беру, береш + Acc"
       },
       {
         "id": "v-m11-003",
-        "uk": "брати",
-        "translit": "braty",
-        "ipa": "/ˈbrɑtɪ/",
-        "en": "to take",
-        "pos": "verb",
-        "gender": "-",
-        "note": "беру, береш + Acc"
+        "uk": "давати",
+        "translit": "/dɑˈvɑtɪ/",
+        "ipa": "to give",
+        "en": "verb",
+        "pos": "-",
+        "gender": "даю, даєш + Acc"
       },
       {
         "id": "v-m11-004",
-        "uk": "давати",
-        "translit": "davaty",
-        "ipa": "/dɑˈvɑtɪ/",
-        "en": "to give",
-        "pos": "verb",
-        "gender": "-",
-        "note": "даю, даєш + Acc"
+        "uk": "мати",
+        "translit": "/ˈmɑtɪ/",
+        "ipa": "to have",
+        "en": "verb",
+        "pos": "-",
+        "gender": "маю, маєш + Acc"
       },
       {
         "id": "v-m11-005",
-        "uk": "мати",
-        "translit": "maty",
-        "ipa": "/ˈmɑtɪ/",
-        "en": "to have",
-        "pos": "verb",
-        "gender": "-",
-        "note": "маю, маєш + Acc"
+        "uk": "нести",
+        "translit": "/ˈnɛstɪ/",
+        "ipa": "to carry",
+        "en": "verb",
+        "pos": "-",
+        "gender": "несу, несеш + Acc"
       },
       {
         "id": "v-m11-006",
-        "uk": "нести",
-        "translit": "nesty",
-        "ipa": "/ˈnɛstɪ/",
-        "en": "to carry",
-        "pos": "verb",
-        "gender": "-",
-        "note": "несу, несеш + Acc"
+        "uk": "класти",
+        "translit": "/ˈklɑstɪ/",
+        "ipa": "to put",
+        "en": "verb",
+        "pos": "-",
+        "gender": "кладу, кладеш + Acc"
       },
       {
         "id": "v-m11-007",
-        "uk": "класти",
-        "translit": "klasty",
-        "ipa": "/ˈklɑstɪ/",
-        "en": "to put",
-        "pos": "verb",
-        "gender": "-",
-        "note": "кладу, кладеш + Acc"
+        "uk": "відкривати",
+        "translit": "/vʲidkrɪˈvɑtɪ/",
+        "ipa": "to open",
+        "en": "verb",
+        "pos": "-",
+        "gender": "відкриваю + Acc"
       },
       {
         "id": "v-m11-008",
-        "uk": "відкривати",
-        "translit": "vidkryvaty",
-        "ipa": "/vʲidkrɪˈvɑtɪ/",
-        "en": "to open",
-        "pos": "verb",
-        "gender": "-",
-        "note": "відкриваю + Acc"
+        "uk": "закривати",
+        "translit": "/zɑkrɪˈvɑtɪ/",
+        "ipa": "to close",
+        "en": "verb",
+        "pos": "-",
+        "gender": "закриваю + Acc"
       },
       {
         "id": "v-m11-009",
-        "uk": "закривати",
-        "translit": "zakryvaty",
-        "ipa": "/zɑkrɪˈvɑtɪ/",
-        "en": "to close",
-        "pos": "verb",
-        "gender": "-",
-        "note": "закриваю + Acc"
+        "uk": "газета",
+        "translit": "/ɦɑˈzɛtɑ/",
+        "ipa": "newspaper",
+        "en": "noun",
+        "pos": "f",
+        "gender": "газету in Acc"
       },
       {
         "id": "v-m11-010",
-        "uk": "газета",
-        "translit": "hazeta",
-        "ipa": "/ɦɑˈzɛtɑ/",
-        "en": "newspaper",
-        "pos": "noun",
-        "gender": "f",
-        "note": "газету in Acc"
+        "uk": "журнал",
+        "translit": "/ʒurˈnɑl/",
+        "ipa": "magazine",
+        "en": "noun",
+        "pos": "m",
+        "gender": "No change in Acc"
       },
       {
         "id": "v-m11-011",
-        "uk": "журнал",
-        "translit": "zhurnal",
-        "ipa": "/ʒurˈnɑl/",
-        "en": "magazine",
-        "pos": "noun",
-        "gender": "m",
-        "note": "No change in Acc"
+        "uk": "конверт",
+        "translit": "/kɔnˈvɛrt/",
+        "ipa": "envelope",
+        "en": "noun",
+        "pos": "m",
+        "gender": "No change"
       },
       {
         "id": "v-m11-012",
-        "uk": "лист",
-        "translit": "lyst",
-        "ipa": "/lɪst/",
-        "en": "letter",
-        "pos": "noun",
-        "gender": "m",
-        "note": "No change (inan.)"
+        "uk": "посилка",
+        "translit": "/pɔˈsɪlkɑ/",
+        "ipa": "package",
+        "en": "noun",
+        "pos": "f",
+        "gender": "посилку in Acc"
       },
       {
         "id": "v-m11-013",
-        "uk": "конверт",
-        "translit": "konvert",
-        "ipa": "/kɔnˈvɛrt/",
-        "en": "envelope",
-        "pos": "noun",
-        "gender": "m",
-        "note": "No change"
+        "uk": "подарунок",
+        "translit": "/pɔdɑˈrunɔk/",
+        "ipa": "gift",
+        "en": "noun",
+        "pos": "m",
+        "gender": "No change"
       },
       {
         "id": "v-m11-014",
-        "uk": "посилка",
-        "translit": "posylka",
-        "ipa": "/pɔˈsɪlkɑ/",
-        "en": "package",
-        "pos": "noun",
-        "gender": "f",
-        "note": "посилку in Acc"
+        "uk": "квиток",
+        "translit": "/kvɪˈtɔk/",
+        "ipa": "ticket",
+        "en": "noun",
+        "pos": "m",
+        "gender": "No change"
       },
       {
         "id": "v-m11-015",
-        "uk": "подарунок",
-        "translit": "podarunok",
-        "ipa": "/pɔdɑˈrunɔk/",
-        "en": "gift",
-        "pos": "noun",
-        "gender": "m",
-        "note": "No change"
+        "uk": "паспорт",
+        "translit": "/ˈpɑspɔrt/",
+        "ipa": "passport",
+        "en": "noun",
+        "pos": "m",
+        "gender": "No change"
       },
       {
         "id": "v-m11-016",
-        "uk": "квиток",
-        "translit": "kvytok",
-        "ipa": "/kvɪˈtɔk/",
-        "en": "ticket",
-        "pos": "noun",
-        "gender": "m",
-        "note": "No change"
+        "uk": "документ",
+        "translit": "/dɔkuˈmɛnt/",
+        "ipa": "document",
+        "en": "noun",
+        "pos": "m",
+        "gender": "No change"
       },
       {
         "id": "v-m11-017",
-        "uk": "паспорт",
-        "translit": "pasport",
-        "ipa": "/ˈpɑspɔrt/",
-        "en": "passport",
-        "pos": "noun",
-        "gender": "m",
-        "note": "No change"
+        "uk": "валіза",
+        "translit": "/vɑˈlʲizɑ/",
+        "ipa": "suitcase",
+        "en": "noun",
+        "pos": "f",
+        "gender": "валізу in Acc"
       },
       {
         "id": "v-m11-018",
-        "uk": "документ",
-        "translit": "dokument",
-        "ipa": "/dɔkuˈmɛnt/",
-        "en": "document",
-        "pos": "noun",
-        "gender": "m",
-        "note": "No change"
-      },
-      {
-        "id": "v-m11-019",
-        "uk": "валіза",
-        "translit": "valiza",
-        "ipa": "/vɑˈlʲizɑ/",
-        "en": "suitcase",
-        "pos": "noun",
-        "gender": "f",
-        "note": "валізу in Acc"
-      },
-      {
-        "id": "v-m11-020",
         "uk": "коробка",
-        "translit": "korobka",
-        "ipa": "/kɔˈrɔbkɑ/",
-        "en": "box",
-        "pos": "noun",
-        "gender": "f",
-        "note": "коробку in Acc"
+        "translit": "/kɔˈrɔbkɑ/",
+        "ipa": "box",
+        "en": "noun",
+        "pos": "f",
+        "gender": "коробку in Acc"
       }
     ]
   }

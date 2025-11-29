@@ -307,29 +307,23 @@ Use: Скільки коштує? Чи є...? Можна...? Я візьму...
 
 # Vocabulary
 
-| uk | translit | ipa | en | pos | gender | note |
-|----|----------|-----|-----|-----|--------|------|
-| магазин | mahazyn | /mɑɦɑˈzɪn/ | store | noun | m | |
-| ринок | rynok | /ˈrɪnɔk/ | market | noun | m | |
-| коштувати | koshtuvaty | /kɔʃtuˈvɑtɪ/ | to cost | verb | - | коштує (3rd sg) |
-| купувати | kupuvaty | /kupuˈvɑtɪ/ | to buy | verb | - | купую, купуєш |
-| продавати | prodavaty | /prɔdɑˈvɑtɪ/ | to sell | verb | - | продаю, продаєш |
-| приміряти | prymiryaty | /prɪmʲirʲˈɑtɪ/ | to try on | verb | - | |
-| розмір | rozmir | /ˈrɔzmʲir/ | size | noun | m | |
-| великий | velykyi | /vɛˈlɪkɪj/ | big, large | adj | m | велика (f), велике (n) |
-| маленький | malenkyi | /mɑˈlɛnʲkɪj/ | small | adj | m | маленька (f) |
-| більший | bilshyi | /ˈbʲilʲʃɪj/ | bigger | adj | m | Comparative |
-| менший | menshyi | /ˈmɛnʃɪj/ | smaller | adj | m | Comparative |
-| занадто | zanadto | /zɑˈnɑdtɔ/ | too (excessive) | adv | - | |
-| колір | kolir | /ˈkɔlʲir/ | color | noun | m | Gen: кольору |
-| білий | bilyi | /ˈbʲilɪj/ | white | adj | m | |
-| чорний | chornyi | /ˈtʃɔrnɪj/ | black | adj | m | |
-| знижка | znyzhka | /ˈznɪʒkɑ/ | discount | noun | f | |
-| каса | kasa | /ˈkɑsɑ/ | cash register | noun | f | |
-| чек | chek | /tʃɛk/ | receipt | noun | m | |
-| пакет | paket | /pɑˈkɛt/ | bag | noun | m | Plastic bag |
-| примірочна | primirochna | /prɪˈmʲirɔtʃnɑ/ | fitting room | noun | f | |
-
+| Word | IPA | English | POS | Gender | Note |
+|------|-----|---------|-----|--------|------|
+| продавати | /prɔdɑˈvɑtɪ/ | to sell | verb | - | продаю, продаєш |
+| приміряти | /prɪmʲirʲˈɑtɪ/ | to try on | verb | - |  |
+| розмір | /ˈrɔzmʲir/ | size | noun | m |  |
+| великий | /vɛˈlɪkɪj/ | big, large | adj | m | велика (f), велике (n) |
+| маленький | /mɑˈlɛnʲkɪj/ | small | adj | m | маленька (f) |
+| більший | /ˈbʲilʲʃɪj/ | bigger | adj | m | Comparative |
+| менший | /ˈmɛnʃɪj/ | smaller | adj | m | Comparative |
+| занадто | /zɑˈnɑdtɔ/ | too (excessive) | adv | - |  |
+| колір | /ˈkɔlʲir/ | color | noun | m | Gen: кольору |
+| білий | /ˈbʲilɪj/ | white | adj | m |  |
+| чорний | /ˈtʃɔrnɪj/ | black | adj | m |  |
+| каса | /ˈkɑsɑ/ | cash register | noun | f |  |
+| чек | /tʃɛk/ | receipt | noun | m |  |
+| пакет | /pɑˈkɛt/ | bag | noun | m | Plastic bag |
+| примірочна | /prɪˈmʲirɔtʃnɑ/ | fitting room | noun | f |  |
 ---
 
 # Shopping Phrases Summary

@@ -284,27 +284,16 @@ Describe using possessives:
 
 # Vocabulary
 
-| uk | translit | ipa | en | pos | gender | note |
-|----|----------|-----|-----|-----|--------|------|
-| мій | mii | /mʲij/ | my (m) | pron | m | моя (f), моє (n), мої (pl) |
-| твій | tvii | /tvʲij/ | your (m, informal) | pron | m | твоя (f), твоє (n), твої (pl) |
-| його | yoho | /jɔˈɦɔ/ | his, its | pron | - | Never changes! |
-| її | yiyi | /jiˈji/ | her | pron | - | Never changes! |
-| наш | nash | /nɑʃ/ | our (m) | pron | m | наша (f), наше (n), наші (pl) |
-| ваш | vash | /vɑʃ/ | your (m, formal) | pron | m | ваша (f), ваше (n), ваші (pl) |
-| їхній | yikhnii | /ˈjixnʲij/ | their (m) | pron | m | їхня (f), їхнє (n), їхні (pl) |
-| свій | svii | /svʲij/ | one's own (m) | pron | m | своя (f), своє (n), свої (pl) |
-| чий | chyi | /tʃɪj/ | whose (m) | pron | m | чия (f), чиє (n), чиї (pl) |
-| річ | rich | /rʲitʃ/ | thing | noun | f | Plural: речі |
-| брат | brat | /brɑt/ | brother | noun | m | |
-| сестра | sestra | /sɛsˈtrɑ/ | sister | noun | f | |
-| родина | rodyna | /rɔˈdɪnɑ/ | family | noun | f | |
-| телефон | telefon | /tɛlɛˈfɔn/ | phone | noun | m | |
-| машина | mashyna | /mɑˈʃɪnɑ/ | car | noun | f | |
-| паспорт | pasport | /ˈpɑspɔrt/ | passport | noun | m | |
-| валіза | valiza | /vɑˈlʲizɑ/ | suitcase | noun | f | |
-| сумка | sumka | /ˈsumkɑ/ | bag | noun | f | |
-
+| Word | IPA | English | POS | Gender | Note |
+|------|-----|---------|-----|--------|------|
+| наш | /nɑʃ/ | our (m) | pron | m | наша (f), наше (n), наші (pl) |
+| ваш | /vɑʃ/ | your (m, formal) | pron | m | ваша (f), ваше (n), ваші (pl) |
+| їхній | /ˈjixnʲij/ | their (m) | pron | m | їхня (f), їхнє (n), їхні (pl) |
+| свій | /svʲij/ | one's own (m) | pron | m | своя (f), своє (n), свої (pl) |
+| чий | /tʃɪj/ | whose (m) | pron | m | чия (f), чиє (n), чиї (pl) |
+| річ | /rʲitʃ/ | thing | noun | f | Plural: речі |
+| родина | /rɔˈdɪnɑ/ | family | noun | f |  |
+| машина | /mɑˈʃɪnɑ/ | car | noun | f |  |
 ---
 
 # Possessive Summary

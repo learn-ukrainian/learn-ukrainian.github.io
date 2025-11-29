@@ -339,180 +339,78 @@
     "moduleId": "mod-uk-A1-14",
     "level": "A1",
     "phase": "A1.2",
-    "wordCount": 18,
+    "wordCount": 8,
     "transliterationMode": "full",
     "words": [
       {
         "id": "v-m14-001",
-        "uk": "мій",
-        "translit": "mii",
-        "ipa": "/mʲij/",
-        "en": "my (m)",
-        "pos": "pron",
-        "gender": "m",
-        "note": "моя (f), моє (n), мої (pl)"
+        "uk": "наш",
+        "translit": "/nɑʃ/",
+        "ipa": "our (m)",
+        "en": "pron",
+        "pos": "m",
+        "gender": "наша (f), наше (n), наші (pl)"
       },
       {
         "id": "v-m14-002",
-        "uk": "твій",
-        "translit": "tvii",
-        "ipa": "/tvʲij/",
-        "en": "your (m, informal)",
-        "pos": "pron",
-        "gender": "m",
-        "note": "твоя (f), твоє (n), твої (pl)"
+        "uk": "ваш",
+        "translit": "/vɑʃ/",
+        "ipa": "your (m, formal)",
+        "en": "pron",
+        "pos": "m",
+        "gender": "ваша (f), ваше (n), ваші (pl)"
       },
       {
         "id": "v-m14-003",
-        "uk": "його",
-        "translit": "yoho",
-        "ipa": "/jɔˈɦɔ/",
-        "en": "his, its",
-        "pos": "pron",
-        "gender": "-",
-        "note": "Never changes!"
+        "uk": "їхній",
+        "translit": "/ˈjixnʲij/",
+        "ipa": "their (m)",
+        "en": "pron",
+        "pos": "m",
+        "gender": "їхня (f), їхнє (n), їхні (pl)"
       },
       {
         "id": "v-m14-004",
-        "uk": "її",
-        "translit": "yiyi",
-        "ipa": "/jiˈji/",
-        "en": "her",
-        "pos": "pron",
-        "gender": "-",
-        "note": "Never changes!"
+        "uk": "свій",
+        "translit": "/svʲij/",
+        "ipa": "one's own (m)",
+        "en": "pron",
+        "pos": "m",
+        "gender": "своя (f), своє (n), свої (pl)"
       },
       {
         "id": "v-m14-005",
-        "uk": "наш",
-        "translit": "nash",
-        "ipa": "/nɑʃ/",
-        "en": "our (m)",
-        "pos": "pron",
-        "gender": "m",
-        "note": "наша (f), наше (n), наші (pl)"
+        "uk": "чий",
+        "translit": "/tʃɪj/",
+        "ipa": "whose (m)",
+        "en": "pron",
+        "pos": "m",
+        "gender": "чия (f), чиє (n), чиї (pl)"
       },
       {
         "id": "v-m14-006",
-        "uk": "ваш",
-        "translit": "vash",
-        "ipa": "/vɑʃ/",
-        "en": "your (m, formal)",
-        "pos": "pron",
-        "gender": "m",
-        "note": "ваша (f), ваше (n), ваші (pl)"
+        "uk": "річ",
+        "translit": "/rʲitʃ/",
+        "ipa": "thing",
+        "en": "noun",
+        "pos": "f",
+        "gender": "Plural: речі"
       },
       {
         "id": "v-m14-007",
-        "uk": "їхній",
-        "translit": "yikhnii",
-        "ipa": "/ˈjixnʲij/",
-        "en": "their (m)",
-        "pos": "pron",
-        "gender": "m",
-        "note": "їхня (f), їхнє (n), їхні (pl)"
+        "uk": "родина",
+        "translit": "/rɔˈdɪnɑ/",
+        "ipa": "family",
+        "en": "noun",
+        "pos": "f"
       },
       {
         "id": "v-m14-008",
-        "uk": "свій",
-        "translit": "svii",
-        "ipa": "/svʲij/",
-        "en": "one's own (m)",
-        "pos": "pron",
-        "gender": "m",
-        "note": "своя (f), своє (n), свої (pl)"
-      },
-      {
-        "id": "v-m14-009",
-        "uk": "чий",
-        "translit": "chyi",
-        "ipa": "/tʃɪj/",
-        "en": "whose (m)",
-        "pos": "pron",
-        "gender": "m",
-        "note": "чия (f), чиє (n), чиї (pl)"
-      },
-      {
-        "id": "v-m14-010",
-        "uk": "річ",
-        "translit": "rich",
-        "ipa": "/rʲitʃ/",
-        "en": "thing",
-        "pos": "noun",
-        "gender": "f",
-        "note": "Plural: речі"
-      },
-      {
-        "id": "v-m14-011",
-        "uk": "брат",
-        "translit": "brat",
-        "ipa": "/brɑt/",
-        "en": "brother",
-        "pos": "noun",
-        "gender": "m"
-      },
-      {
-        "id": "v-m14-012",
-        "uk": "сестра",
-        "translit": "sestra",
-        "ipa": "/sɛsˈtrɑ/",
-        "en": "sister",
-        "pos": "noun",
-        "gender": "f"
-      },
-      {
-        "id": "v-m14-013",
-        "uk": "родина",
-        "translit": "rodyna",
-        "ipa": "/rɔˈdɪnɑ/",
-        "en": "family",
-        "pos": "noun",
-        "gender": "f"
-      },
-      {
-        "id": "v-m14-014",
-        "uk": "телефон",
-        "translit": "telefon",
-        "ipa": "/tɛlɛˈfɔn/",
-        "en": "phone",
-        "pos": "noun",
-        "gender": "m"
-      },
-      {
-        "id": "v-m14-015",
         "uk": "машина",
-        "translit": "mashyna",
-        "ipa": "/mɑˈʃɪnɑ/",
-        "en": "car",
-        "pos": "noun",
-        "gender": "f"
-      },
-      {
-        "id": "v-m14-016",
-        "uk": "паспорт",
-        "translit": "pasport",
-        "ipa": "/ˈpɑspɔrt/",
-        "en": "passport",
-        "pos": "noun",
-        "gender": "m"
-      },
-      {
-        "id": "v-m14-017",
-        "uk": "валіза",
-        "translit": "valiza",
-        "ipa": "/vɑˈlʲizɑ/",
-        "en": "suitcase",
-        "pos": "noun",
-        "gender": "f"
-      },
-      {
-        "id": "v-m14-018",
-        "uk": "сумка",
-        "translit": "sumka",
-        "ipa": "/ˈsumkɑ/",
-        "en": "bag",
-        "pos": "noun",
-        "gender": "f"
+        "translit": "/mɑˈʃɪnɑ/",
+        "ipa": "car",
+        "en": "noun",
+        "pos": "f"
       }
     ]
   }

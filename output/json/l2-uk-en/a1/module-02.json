@@ -437,202 +437,182 @@
       {
         "id": "v-m02-001",
         "uk": "буква",
-        "translit": "bukva",
-        "ipa": "/ˈbukvɑ/",
-        "en": "letter (of alphabet)",
-        "pos": "noun",
-        "gender": "f",
-        "note": "Б, У - uses new letters"
+        "translit": "/ˈbukvɑ/",
+        "ipa": "letter (of alphabet)",
+        "en": "noun",
+        "pos": "f",
+        "gender": "Б, У - uses new letters"
       },
       {
         "id": "v-m02-002",
         "uk": "слово",
-        "translit": "slovo",
-        "ipa": "/ˈslɔvɔ/",
-        "en": "word",
-        "pos": "noun",
-        "gender": "n",
-        "note": "Basic vocabulary"
+        "translit": "/ˈslɔvɔ/",
+        "ipa": "word",
+        "en": "noun",
+        "pos": "n",
+        "gender": "Basic vocabulary"
       },
       {
         "id": "v-m02-003",
         "uk": "алфавіт",
-        "translit": "alfavit",
-        "ipa": "/ɑlfɑˈvʲit/",
-        "en": "alphabet",
-        "pos": "noun",
-        "gender": "m",
-        "note": "Also: абетка (traditional)"
+        "translit": "/ɑlfɑˈvʲit/",
+        "ipa": "alphabet",
+        "en": "noun",
+        "pos": "m",
+        "gender": "Also: абетка (traditional)"
       },
       {
         "id": "v-m02-004",
         "uk": "мова",
-        "translit": "mova",
-        "ipa": "/ˈmɔvɑ/",
-        "en": "language",
-        "pos": "noun",
-        "gender": "f",
-        "note": "Українська мова = Ukrainian language"
+        "translit": "/ˈmɔvɑ/",
+        "ipa": "language",
+        "en": "noun",
+        "pos": "f",
+        "gender": "Українська мова = Ukrainian language"
       },
       {
         "id": "v-m02-005",
         "uk": "українська",
-        "translit": "ukrayinska",
-        "ipa": "/ukrɑˈjinʲsʲkɑ/",
-        "en": "Ukrainian (adj)",
-        "pos": "adj",
-        "gender": "f",
-        "note": "Uses Ї!"
+        "translit": "/ukrɑˈjinʲsʲkɑ/",
+        "ipa": "Ukrainian (adj)",
+        "en": "adj",
+        "pos": "f",
+        "gender": "Uses Ї!"
       },
       {
         "id": "v-m02-006",
         "uk": "англійська",
-        "translit": "anhliiska",
-        "ipa": "/ɑnˈɦlʲijsʲkɑ/",
-        "en": "English (adj)",
-        "pos": "adj",
-        "gender": "f",
-        "note": "Г = H sound"
+        "translit": "/ɑnˈɦlʲijsʲkɑ/",
+        "ipa": "English (adj)",
+        "en": "adj",
+        "pos": "f",
+        "gender": "Г = H sound"
       },
       {
         "id": "v-m02-007",
         "uk": "так",
-        "translit": "tak",
-        "ipa": "/tɑk/",
-        "en": "yes",
-        "pos": "particle",
-        "gender": "-",
-        "note": "Essential word"
+        "translit": "/tɑk/",
+        "ipa": "yes",
+        "en": "particle",
+        "pos": "-",
+        "gender": "Essential word"
       },
       {
         "id": "v-m02-008",
         "uk": "ні",
-        "translit": "ni",
-        "ipa": "/nʲi/",
-        "en": "no",
-        "pos": "particle",
-        "gender": "-",
-        "note": "Essential word"
+        "translit": "/nʲi/",
+        "ipa": "no",
+        "en": "particle",
+        "pos": "-",
+        "gender": "Essential word"
       },
       {
         "id": "v-m02-009",
         "uk": "добре",
-        "translit": "dobre",
-        "ipa": "/ˈdɔbrɛ/",
-        "en": "good, okay",
-        "pos": "adv",
-        "gender": "-",
-        "note": "Common response"
+        "translit": "/ˈdɔbrɛ/",
+        "ipa": "good, okay",
+        "en": "adv",
+        "pos": "-",
+        "gender": "Common response"
       },
       {
         "id": "v-m02-010",
         "uk": "дякую",
-        "translit": "dyakuyu",
-        "ipa": "/ˈdʲakuju/",
-        "en": "thank you",
-        "pos": "verb",
-        "gender": "-",
-        "note": "Я, Ю = iotated"
+        "translit": "/ˈdʲakuju/",
+        "ipa": "thank you",
+        "en": "verb",
+        "pos": "-",
+        "gender": "Я, Ю = iotated"
       },
       {
         "id": "v-m02-011",
         "uk": "будь ласка",
-        "translit": "bud' laska",
-        "ipa": "/budʲ ˈlɑskɑ/",
-        "en": "please",
-        "pos": "phrase",
-        "gender": "-",
-        "note": "Ь = soft sign"
+        "translit": "/budʲ ˈlɑskɑ/",
+        "ipa": "please",
+        "en": "phrase",
+        "pos": "-",
+        "gender": "Ь = soft sign"
       },
       {
         "id": "v-m02-012",
         "uk": "привіт",
-        "translit": "pryvit",
-        "ipa": "/prɪˈvʲit/",
-        "en": "hi, hello",
-        "pos": "interj",
-        "gender": "-",
-        "note": "Informal greeting"
+        "translit": "/prɪˈvʲit/",
+        "ipa": "hi, hello",
+        "en": "interj",
+        "pos": "-",
+        "gender": "Informal greeting"
       },
       {
         "id": "v-m02-013",
         "uk": "до побачення",
-        "translit": "do pobachennya",
-        "ipa": "/dɔ pɔˈbɑtʃɛnʲːɑ/",
-        "en": "goodbye",
-        "pos": "phrase",
-        "gender": "-",
-        "note": "Ч = CH"
+        "translit": "/dɔ pɔˈbɑtʃɛnʲːɑ/",
+        "ipa": "goodbye",
+        "en": "phrase",
+        "pos": "-",
+        "gender": "Ч = CH"
       },
       {
         "id": "v-m02-014",
         "uk": "вибачте",
-        "translit": "vybachte",
-        "ipa": "/vɪˈbɑtʃtɛ/",
-        "en": "excuse me, sorry",
-        "pos": "verb",
-        "gender": "-",
-        "note": "Ч = CH"
+        "translit": "/vɪˈbɑtʃtɛ/",
+        "ipa": "excuse me, sorry",
+        "en": "verb",
+        "pos": "-",
+        "gender": "Ч = CH"
       },
       {
         "id": "v-m02-015",
         "uk": "прошу",
-        "translit": "proshu",
-        "ipa": "/ˈprɔʃu/",
-        "en": "please/you're welcome",
-        "pos": "verb",
-        "gender": "-",
-        "note": "Ш = SH"
+        "translit": "/ˈprɔʃu/",
+        "ipa": "please/you're welcome",
+        "en": "verb",
+        "pos": "-",
+        "gender": "Ш = SH"
       },
       {
         "id": "v-m02-016",
         "uk": "ласкаво просимо",
-        "translit": "laskavo prosymo",
-        "ipa": "/ˈlɑskɑvɔ ˈprɔsɪmɔ/",
-        "en": "welcome",
-        "pos": "phrase",
-        "gender": "-",
-        "note": "Formal welcome"
+        "translit": "/ˈlɑskɑvɔ ˈprɔsɪmɔ/",
+        "ipa": "welcome",
+        "en": "phrase",
+        "pos": "-",
+        "gender": "Formal welcome"
       },
       {
         "id": "v-m02-017",
         "uk": "що",
-        "translit": "shcho",
-        "ipa": "/ʃtʃɔ/",
-        "en": "what",
-        "pos": "pron",
-        "gender": "-",
-        "note": "Щ = SHCH"
+        "translit": "/ʃtʃɔ/",
+        "ipa": "what",
+        "en": "pron",
+        "pos": "-",
+        "gender": "Щ = SHCH"
       },
       {
         "id": "v-m02-018",
         "uk": "як",
-        "translit": "yak",
-        "ipa": "/jɑk/",
-        "en": "how",
-        "pos": "adv",
-        "gender": "-",
-        "note": "Я = YA"
+        "translit": "/jɑk/",
+        "ipa": "how",
+        "en": "adv",
+        "pos": "-",
+        "gender": "Я = YA"
       },
       {
         "id": "v-m02-019",
         "uk": "де",
-        "translit": "de",
-        "ipa": "/dɛ/",
-        "en": "where",
-        "pos": "adv",
-        "gender": "-",
-        "note": "Simple question word"
+        "translit": "/dɛ/",
+        "ipa": "where",
+        "en": "adv",
+        "pos": "-",
+        "gender": "Simple question word"
       },
       {
         "id": "v-m02-020",
         "uk": "хто",
-        "translit": "khto",
-        "ipa": "/xtɔ/",
-        "en": "who",
-        "pos": "pron",
-        "gender": "-",
-        "note": "Х = KH"
+        "translit": "/xtɔ/",
+        "ipa": "who",
+        "en": "pron",
+        "pos": "-",
+        "gender": "Х = KH"
       }
     ]
   }

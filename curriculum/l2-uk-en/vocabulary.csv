@@ -1,0 +1,487 @@
+lemma,ipa,english,pos,gender,module,level,note
+банан,/bɑˈnɑn/,banana,noun,m,1,A1,"Б=B (new), Н=N (false friend)"
+банк,/bɑnk/,bank,noun,m,1,A1,"Б=B (new), Н=N (false friend)"
+відео,/ˈwideɔ/,video,noun,n,1,A1,"В=V (false friend), Д=D (new)"
+кафе,/kɑˈfɛ/,café,noun,n,1,A1,All True Friends + Ф (new)
+лимон,/lɪˈmɔn/,lemon,noun,m,1,A1,"Л=L (new), Н=N (false friend)"
+мама,/ˈmɑmɑ/,mom,noun,f,1,A1,True Friends only: М-А-М-А
+метро,/mɛˈtrɔ/,metro,noun,n,1,A1,Р=R (false friend)
+музика,/ˈmuzɪkɑ/,music,noun,f,1,A1,"У=U (false friend), З=Z (new)"
+парк,/pɑrk/,park,noun,m,1,A1,"П=P (new), Р=R (false friend)"
+піца,/ˈpitsɑ/,pizza,noun,f,1,A1,"П=P (new), Ц=TS (preview)"
+радіо,/ˈrɑdʲiɔ/,radio,noun,n,1,A1,"Р=R (false friend), Д=D (new)"
+салат,/sɑˈlɑt/,salad,noun,m,1,A1,"С=S (false friend), Л=L (new)"
+студент,/stuˈdɛnt/,student,noun,m,1,A1,"С=S, У=U, Н=N (false friends)"
+суп,/sup/,soup,noun,m,1,A1,"С=S, У=U (false friends)"
+таксі,/tɑkˈsi/,taxi,noun,n,1,A1,"С=S (false friend), І=I"
+тато,/ˈtɑtɔ/,dad,noun,m,1,A1,True Friends: Т-А-Т-О
+турист,/tuˈrɪst/,tourist,noun,m,1,A1,"У=U, Р=R, С=S (false friends)"
+фото,/ˈfɔtɔ/,photo,noun,n,1,A1,"Ф=F (new), rest True Friends"
+футбол,/fudˈbɔl/,football,noun,m,1,A1,"Ф=F (new), У=U, Б=B, Л=L"
+хокей,/xɔˈkɛj/,hockey,noun,m,1,A1,Х=KH (false friend)
+алфавіт,/ɑlfɑˈvʲit/,alphabet,noun,m,2,A1,Also: абетка (traditional)
+англійська,/ɑnˈɦlʲijsʲkɑ/,English (adj),adj,f,2,A1,Г = H sound
+будь ласка,/budʲ ˈlɑskɑ/,please,phrase,-,2,A1,Ь = soft sign
+буква,/ˈbukvɑ/,letter (of alphabet),noun,f,2,A1,"Б, У - uses new letters"
+вибачте,/vɪˈbɑtʃtɛ/,"excuse me, sorry",verb,-,2,A1,Ч = CH
+де,/dɛ/,where,adv,-,2,A1,Simple question word
+до побачення,/dɔ pɔˈbɑtʃɛnʲːɑ/,goodbye,phrase,-,2,A1,Ч = CH
+добре,/ˈdɔbrɛ/,"good, okay",adv,-,2,A1,Common response
+дякую,/ˈdʲakuju/,thank you,verb,-,2,A1,"Я, Ю = iotated"
+ласкаво просимо,/ˈlɑskɑvɔ ˈprɔsɪmɔ/,welcome,phrase,-,2,A1,Formal welcome
+мова,/ˈmɔvɑ/,language,noun,f,2,A1,Українська мова = Ukrainian language
+ні,/nʲi/,no,particle,-,2,A1,Essential word
+привіт,/prɪˈvʲit/,"hi, hello",interj,-,2,A1,Informal greeting
+прошу,/ˈprɔʃu/,please/you're welcome,verb,-,2,A1,Ш = SH
+слово,/ˈslɔvɔ/,word,noun,n,2,A1,Basic vocabulary
+так,/tɑk/,yes,particle,-,2,A1,Essential word
+українська,/ukrɑˈjinʲsʲkɑ/,Ukrainian (adj),adj,f,2,A1,Uses Ї!
+хто,/xtɔ/,who,pron,-,2,A1,Х = KH
+що,/ʃtʃɔ/,what,pron,-,2,A1,Щ = SHCH
+як,/jɑk/,how,adv,-,2,A1,Я = YA
+брат,/brɑt/,brother,noun,m,3,A1,Consonant ending = masculine
+вчитель,/ˈwtʃɪtɛlʲ/,teacher (male),noun,m,3,A1,Soft sign after л
+вчителька,/wtʃɪˈtɛlʲkɑ/,teacher (female),noun,f,3,A1,-ка feminine suffix
+вікно,/wʲikˈnɔ/,window,noun,n,3,A1,-о = neuter
+день,/dɛnʲ/,day,noun,m,3,A1,-ь after н = masculine
+жіночий,/ʒʲiˈnɔtʃɪj/,feminine,adj,m,3,A1,"Literally ""woman-like"""
+земля,/zɛmˈlʲa/,"earth, land",noun,f,3,A1,-я = feminine
+книга,/ˈknɪɦɑ/,book,noun,f,3,A1,-а = feminine
+молоко,/mɔlɔˈkɔ/,milk,noun,n,3,A1,-о = neuter
+море,/ˈmɔrɛ/,sea,noun,n,3,A1,-е = neuter
+ніч,/nʲitʃ/,night,noun,f,3,A1,-ь after ч = feminine
+рід,/rʲid/,"gender (grammatical), genus",noun,m,3,A1,чоловічий рід = masculine gender
+середній,/sɛˈrɛdnʲij/,"middle, neuter",adj,m,3,A1,середній рід = neuter gender
+сестра,/sɛsˈtrɑ/,sister,noun,f,3,A1,-а ending = feminine
+сонце,/ˈsɔnt͡sɛ/,sun,noun,n,3,A1,-е = neuter
+студентка,/stuˈdɛntkɑ/,student (female),noun,f,3,A1,-ка feminine suffix
+стіл,/stʲil/,table,noun,m,3,A1,Consonant = masculine
+чоловічий,/tʃɔlɔˈvʲitʃɪj/,masculine,adj,m,3,A1,"Literally ""man-like"""
+яблуко,/ˈjablukɔ/,apple,noun,n,3,A1,-о = neuter
+ви,/vɪ/,you (formal/plural),pron,-,4,A1,Formal or plural
+вона,/wɔˈnɑ/,she,pron,f,4,A1,Third person feminine
+вони,/wɔˈnɪ/,they,pron,-,4,A1,Third person plural
+воно,/wɔˈnɔ/,it,pron,n,4,A1,Third person neuter
+він,/wʲin/,he,pron,m,4,A1,Third person masculine
+друг,/druɦ/,friend (male),noun,m,4,A1,Plural: друзі
+з,/z/,from,prep,-,4,A1,Я з України = I'm from Ukraine
+ми,/mɪ/,we,pron,-,4,A1,First person plural
+моя,/mɔˈjɑ/,my (feminine),pron,f,4,A1,Possessive pronoun
+мій,/mʲij/,my (masculine),pron,m,4,A1,Possessive pronoun
+подруга,/pɔˈdruɦɑ/,friend (female),noun,f,4,A1,Female friend
+там,/tɑm/,there,adv,-,4,A1,Location
+твоя,/tvɔˈjɑ/,"your (fem, informal)",pron,f,4,A1,Informal possessive
+твій,/tvʲij/,"your (masc, informal)",pron,m,4,A1,Informal possessive
+ти,/tɪ/,you (informal),pron,-,4,A1,For friends/family
+то,/tɔ/,that,pron,-,4,A1,Less common than це
+тут,/tut/,here,adv,-,4,A1,Location
+українець,/ukrɑˈjinɛt͡sʲ/,Ukrainian (male),noun,m,4,A1,Nationality
+українка,/ukrɑˈjinkɑ/,Ukrainian (female),noun,f,4,A1,Nationality
+це,/t͡sɛ/,"this, this is",pron,-,4,A1,Invariable - never changes
+я,/jɑ/,I,pron,-,4,A1,First person singular
+гаманець,/ɦɑmɑˈnɛt͡sʲ/,wallet,noun,m,5,A1,Personal item
+двері,/ˈdvɛrʲi/,door,noun,pl,5,A1,Always plural in Ukrainian!
+його,/jɔˈɦɔ/,"his, its",pron,-,5,A1,Invariable - never changes
+ключ,/klʲutʃ/,key,noun,m,5,A1,Consonant = masculine
+лампа,/ˈlɑmpɑ/,lamp,noun,f,5,A1,Cognate with English
+ліжко,/ˈlʲiʒkɔ/,bed,noun,n,5,A1,Furniture
+моє,/mɔˈjɛ/,my (neuter),pron,n,5,A1,Possessive
+мої,/mɔˈji/,my (plural),pron,pl,5,A1,Possessive
+ручка,/ˈrutʃkɑ/,pen,noun,f,5,A1,"Also means ""handle"""
+стілець,/ˈstʲilɛt͡sʲ/,chair,noun,m,5,A1,Furniture
+сумка,/ˈsumkɑ/,bag,noun,f,5,A1,Common item
+та,/tɑ/,that (feminine),pron,f,5,A1,Demonstrative
+твоє,/tvɔˈjɛ/,"your (n, informal)",pron,n,5,A1,Informal possessive
+твої,/tvɔˈji/,"your (pl, informal)",pron,pl,5,A1,Informal possessive
+те,/tɛ/,that (neuter),pron,n,5,A1,Demonstrative
+телефон,/tɛlɛˈfɔn/,phone,noun,m,5,A1,Cognate
+той,/tɔj/,that (masculine),pron,m,5,A1,Demonstrative
+ті,/tʲi/,those,pron,pl,5,A1,Plural demonstrative
+цей,/t͡sɛj/,this (masculine),pron,m,5,A1,Demonstrative
+ця,/t͡sʲɑ/,this (feminine),pron,f,5,A1,Demonstrative
+ці,/t͡sʲi/,these,pron,pl,5,A1,Plural demonstrative
+її,/jiˈji/,"her, hers",pron,-,5,A1,Invariable - never changes
+говорити,/ɦɔvɔˈrɪtɪ/,to speak,verb,-,6,A1,"Class II: говорю, говориш..."
+дивитися,/dɪvɪˈtɪsʲɑ/,"to watch, look",verb,-,6,A1,Reflexive Class II
+думати,/ˈdumɑtɪ/,to think,verb,-,6,A1,"Class I: думаю, думаєш..."
+завтра,/ˈzɑvtrɑ/,tomorrow,adv,-,6,A1,Time word
+знати,/ˈznɑtɪ/,to know,verb,-,6,A1,"Class I: знаю, знаєш..."
+кожен день,/ˈkɔʒɛn dɛnʲ/,every day,phrase,-,6,A1,Time expression
+лист,/lɪst/,letter,noun,m,6,A1,Object of писати
+не,/nɛ/,not,part,-,6,A1,Goes before verb
+писати,/pɪˈsɑtɪ/,to write,verb,-,6,A1,"Class I with с→ш: пишу, пишеш..."
+працювати,/prɑt͡sʲuˈvɑtɪ/,to work,verb,-,6,A1,"Class I: працюю, працюєш..."
+робити,/rɔˈbɪtɪ/,"to do, to make",verb,-,6,A1,"Class II: роблю, робиш..."
+розуміти,/rɔzuˈmʲitɪ/,to understand,verb,-,6,A1,"Class II: розумію, розумієш..."
+слухати,/ˈsluxɑtɪ/,to listen,verb,-,6,A1,"Class I: слухаю, слухаєш..."
+сьогодні,/sʲɔˈɦɔdnʲi/,today,adv,-,6,A1,Time word
+хотіти,/xɔˈtʲitɪ/,to want,verb,-,6,A1,"Irregular: хочу, хочеш..."
+читати,/tʃɪˈtɑtɪ/,to read,verb,-,6,A1,"Class I: читаю, читаєш..."
+завжди,/ˈzɑvʒdɪ/,always,adv,-,7,A1,Frequency
+звідки,/ˈzvʲidkɪ/,where from,adv,-,7,A1,Origin/source
+коли,/kɔˈlɪ/,when,adv,-,7,A1,Time question
+куди,/kuˈdɪ/,where to (direction),adv,-,7,A1,Movement toward
+ніде,/nʲiˈdɛ/,nowhere,adv,-,7,A1,Requires не with verb
+ніколи,/nʲiˈkɔlɪ/,never,adv,-,7,A1,Requires не with verb
+ніхто,/nʲixˈtɔ/,nobody,pron,-,7,A1,Requires не with verb
+ніщо,/nʲiʃˈtʃɔ/,nothing,pron,-,7,A1,Requires не with verb
+ніякий,/nʲijɑˈkɪj/,no kind of,pron,m,7,A1,Requires не with verb
+рідко,/ˈrʲidkɔ/,rarely,adv,-,7,A1,Frequency
+скільки,/ˈskʲilʲkɪ/,how much/many,adv,-,7,A1,Quantity question
+часто,/ˈtʃɑstɔ/,often,adv,-,7,A1,Frequency
+чи,/tʃɪ/,whether (question particle),part,-,7,A1,Starts yes/no questions
+чому,/tʃɔˈmu/,why,adv,-,7,A1,Reason question
+яка,/jɑˈkɑ/,which/what kind (f),pron,f,7,A1,Agrees with noun
+яке,/jɑˈkɛ/,which/what kind (n),pron,n,7,A1,Agrees with noun
+який,/jɑˈkɪj/,which/what kind (m),pron,m,7,A1,Agrees with noun
+іноді,/iˈnɔdʲi/,sometimes,adv,-,7,A1,Frequency
+бачити,/ˈbɑtʃɪtɪ/,to see,verb,-,8,A1,"бачу, бачиш, бачить"
+вчити,/ˈwtʃɪtɪ/,to teach/learn,verb,-,8,A1,"вчу, вчиш, вчить"
+вчитися,/ˈwtʃɪtɪsʲɑ/,"to study, learn",verb,-,8,A1,"Reflexive: вчуся, вчишся"
+дякувати,/dʲɑkuˈvɑtɪ/,to thank,verb,-,8,A1,"Class I: дякую, дякуєш"
+жити,/ˈʒɪtɪ/,to live,verb,-,8,A1,"живу, живеш, живе"
+купувати,/kupuˈvɑtɪ/,to buy,verb,-,8,A1,"Class I: купую, купуєш"
+лежати,/lɛˈʒɑtɪ/,to lie down,verb,-,8,A1,"лежу, лежиш, лежить"
+любити,/lʲuˈbɪtɪ/,to love,verb,-,8,A1,"люблю (б→бл), любиш, любить"
+носити,/nɔˈsɪtɪ/,"to carry, wear",verb,-,8,A1,"ношу (с→ш), носиш, носить"
+пити,/ˈpɪtɪ/,to drink,verb,-,8,A1,"Irregular: п'ю, п'єш, п'є"
+просити,/prɔˈsɪtɪ/,"to ask, request",verb,-,8,A1,"прошу (с→ш), просиш, просить"
+сидіти,/sɪˈdʲitɪ/,to sit,verb,-,8,A1,"сиджу (д→дж), сидиш, сидить"
+спати,/ˈspɑtɪ/,to sleep,verb,-,8,A1,"сплю, спиш, спить"
+стояти,/stɔˈjɑtɪ/,to stand,verb,-,8,A1,"стою, стоїш, стоїть"
+телефонувати,/tɛlɛfɔnuˈvɑtɪ/,to call (phone),verb,-,8,A1,Class I: телефоную
+ходити,/xɔˈdɪtɪ/,"to walk, go",verb,-,8,A1,"ходжу (д→дж), ходиш, ходить"
+їсти,/ˈjistɪ/,to eat,verb,-,8,A1,"Irregular: їм, їси, їсть"
+вісім,/ˈvʲisʲim/,eight,num,-,9,A1,
+готівка,/ɦɔˈtʲivkɑ/,cash,noun,f,9,A1,
+гривня,/ˈɦrɪvnʲɑ/,hryvnia (₴),noun,f,9,A1,"2-4: гривні, 5+: гривень"
+два,/dvɑ/,two (m/n),num,-,9,A1,дві (f)
+двадцять,/ˈdvɑd͡tsʲɑtʲ/,twenty,num,-,9,A1,
+дев'ять,/ˈdɛvjɑtʲ/,nine,num,-,9,A1,
+десять,/ˈdɛsʲɑtʲ/,ten,num,-,9,A1,
+дешево,/ˈdɛʃɛvɔ/,cheap,adv,-,9,A1,
+дорого,/ˈdɔrɔɦɔ/,expensive,adv,-,9,A1,
+знижка,/ˈznɪʒkɑ/,discount,noun,f,9,A1,
+картка,/ˈkɑrtkɑ/,card,noun,f,9,A1,Bank card
+копійка,/kɔˈpʲijkɑ/,kopeck,noun,f,9,A1,"2-4: копійки, 5+: копійок"
+коштувати,/kɔʃtuˈvɑtɪ/,to cost,verb,-,9,A1,коштує (it costs)
+нуль,/nulʲ/,zero,num,m,9,A1,
+один,/ɔˈdɪn/,one (m),num,m,9,A1,"одна (f), одне (n)"
+п'ятдесят,/pjɑtdɛˈsʲɑt/,fifty,num,-,9,A1,
+п'ять,/pjɑtʲ/,five,num,-,9,A1,
+решта,/ˈrɛʃtɑ/,change (money),noun,f,9,A1,
+сорок,/ˈsɔrɔk/,forty,num,-,9,A1,Irregular!
+сто,/stɔ/,hundred,num,-,9,A1,
+сім,/sʲim/,seven,num,-,9,A1,
+три,/trɪ/,three,num,-,9,A1,
+тридцять,/ˈtrɪd͡tsʲɑtʲ/,thirty,num,-,9,A1,
+ціна,/t͡sʲiˈnɑ/,price,noun,f,9,A1,
+чотири,/tʃɔˈtɪrɪ/,four,num,-,9,A1,
+шість,/ʃʲistʲ/,six,num,-,9,A1,
+брати,/ˈbrɑtɪ/,to take,verb,-,11,A1,"беру, береш + Acc"
+валіза,/vɑˈlʲizɑ/,suitcase,noun,f,11,A1,валізу in Acc
+відкривати,/vʲidkrɪˈvɑtɪ/,to open,verb,-,11,A1,відкриваю + Acc
+газета,/ɦɑˈzɛtɑ/,newspaper,noun,f,11,A1,газету in Acc
+давати,/dɑˈvɑtɪ/,to give,verb,-,11,A1,"даю, даєш + Acc"
+документ,/dɔkuˈmɛnt/,document,noun,m,11,A1,No change
+журнал,/ʒurˈnɑl/,magazine,noun,m,11,A1,No change in Acc
+закривати,/zɑkrɪˈvɑtɪ/,to close,verb,-,11,A1,закриваю + Acc
+квиток,/kvɪˈtɔk/,ticket,noun,m,11,A1,No change
+класти,/ˈklɑstɪ/,to put,verb,-,11,A1,"кладу, кладеш + Acc"
+конверт,/kɔnˈvɛrt/,envelope,noun,m,11,A1,No change
+коробка,/kɔˈrɔbkɑ/,box,noun,f,11,A1,коробку in Acc
+мати,/ˈmɑtɪ/,to have,verb,-,11,A1,"маю, маєш + Acc"
+нести,/ˈnɛstɪ/,to carry,verb,-,11,A1,"несу, несеш + Acc"
+паспорт,/ˈpɑspɔrt/,passport,noun,m,11,A1,No change
+подарунок,/pɔdɑˈrunɔk/,gift,noun,m,11,A1,No change
+посилка,/pɔˈsɪlkɑ/,package,noun,f,11,A1,посилку in Acc
+чути,/ˈtʃutɪ/,to hear,verb,-,11,A1,"чую, чуєш + Acc"
+водій,/vɔˈdʲij/,driver,noun,m,12,A1,Acc: водія
+гість,/ɦʲistʲ/,guest,noun,m,12,A1,Acc: гостя
+директор,/dɪˈrɛktɔr/,director,noun,m,12,A1,Acc: директора
+колега,/kɔˈlɛɦɑ/,colleague,noun,m/f,12,A1,"m: колегу, f: колегу"
+лікар,/ˈlʲikɑr/,doctor (m),noun,m,12,A1,Acc: лікаря
+лікарка,/lʲiˈkɑrkɑ/,doctor (f),noun,f,12,A1,Acc: лікарку
+менеджер,/mɛˈnɛd͡ʒɛr/,manager,noun,m,12,A1,Acc: менеджера
+офіціант,/ɔfʲit͡sʲiˈɑnt/,waiter,noun,m,12,A1,Acc: офіціанта
+офіціантка,/ɔfʲit͡sʲiˈɑntkɑ/,waitress,noun,f,12,A1,Acc: офіціантку
+пасажир,/pɑsɑˈʒɪr/,passenger,noun,m,12,A1,Acc: пасажира
+продавець,/prɔdɑˈvɛt͡sʲ/,seller (m),noun,m,12,A1,Acc: продавця
+продавчиня,/prɔdɑvˈtʃɪnʲɑ/,seller (f),noun,f,12,A1,Acc: продавчиню
+сусід,/suˈsʲid/,neighbor (m),noun,m,12,A1,Acc: сусіда
+сусідка,/suˈsʲidkɑ/,neighbor (f),noun,f,12,A1,Acc: сусідку
+Київ,/ˈkɪjiu̯/,Kyiv,noun,m,13,A1,Loc: Києві
+аеропорт,/ɑɛrɔˈpɔrt/,airport,noun,m,13,A1,Loc: аеропорту
+в / у,/v/ /u/,"in, at",prep,-,13,A1,"В after vowels, У after consonants"
+вулиця,/ˈvulɪt͡sʲɑ/,street,noun,f,13,A1,Loc: вулиці
+готель,/ɦɔˈtɛlʲ/,hotel,noun,m,13,A1,Loc: готелі
+кімната,/kʲimˈnɑtɑ/,room,noun,f,13,A1,Loc: кімнаті
+магазин,/mɑɦɑˈzɪn/,store,noun,m,13,A1,Loc: магазині
+на,/nɑ/,"on, at",prep,-,13,A1,"Surfaces, events, open areas"
+офіс,/ˈɔfʲis/,office,noun,m,13,A1,Loc: офісі
+площа,/ˈplɔʃt͡ʃɑ/,square,noun,f,13,A1,Loc: площі
+ресторан,/rɛstɔˈrɑn/,restaurant,noun,m,13,A1,Loc: ресторані
+станція,/ˈstɑnt͡sʲijɑ/,station,noun,f,13,A1,Loc: станції
+університет,/unʲivɛrsɪˈtɛt/,university,noun,m,13,A1,Loc: університеті
+центр,/t͡sɛntr/,center,noun,m,13,A1,Loc: центрі
+школа,/ˈʃkɔlɑ/,school,noun,f,13,A1,Loc: школі
+ваш,/vɑʃ/,"your (m, formal)",pron,m,14,A1,"ваша (f), ваше (n), ваші (pl)"
+машина,/mɑˈʃɪnɑ/,car,noun,f,14,A1,
+наш,/nɑʃ/,our (m),pron,m,14,A1,"наша (f), наше (n), наші (pl)"
+родина,/rɔˈdɪnɑ/,family,noun,f,14,A1,
+річ,/rʲitʃ/,thing,noun,f,14,A1,Plural: речі
+свій,/svʲij/,one's own (m),pron,m,14,A1,"своя (f), своє (n), свої (pl)"
+чий,/tʃɪj/,whose (m),pron,m,14,A1,"чия (f), чиє (n), чиї (pl)"
+їхній,/ˈjixnʲij/,their (m),pron,m,14,A1,"їхня (f), їхнє (n), їхні (pl)"
+аптека,/ɑpˈtɛkɑ/,pharmacy,noun,f,15,A1,
+близько,/ˈblɪzʲkɔ/,"near, close",adv,-,15,A1,
+біля,/ˈbʲilʲɑ/,"near, by",prep,-,15,A1,+ genitive
+вихід,/ˈvɪxʲid/,exit,noun,m,15,A1,
+вхід,/vxʲid/,entrance,noun,m,15,A1,
+далеко,/dɑˈlɛkɔ/,far,adv,-,15,A1,
+до,/dɔ/,"to, toward",prep,-,15,A1,+ genitive
+за,/zɑ/,behind,prep,-,15,A1,+ instrumental
+зупинка,/zuˈpɪnkɑ/,stop,noun,f,15,A1,"Bus, tram stop"
+йти,/jtɪ/,to go (on foot),verb,-,15,A1,"Imp: йди, йдіть"
+квартал,/kvɑrˈtɑl/,block,noun,m,15,A1,
+ліворуч,/lʲiˈvɔrutʃ/,to the left,adv,-,15,A1,ліво = left
+лікарня,/lʲiˈkɑrnʲɑ/,hospital,noun,f,15,A1,
+навпроти,/nɑuˈprɔtɪ/,opposite,prep,-,15,A1,+ genitive
+назад,/nɑˈzɑd/,back,adv,-,15,A1,
+перейти,/pɛrɛjˈtɪ/,to cross,verb,-,15,A1,"Imp: перейди, перейдіть"
+повернути,/pɔvɛrˈnutɪ/,to turn,verb,-,15,A1,"Imp: поверни, поверніть"
+пошта,/ˈpɔʃtɑ/,post office,noun,f,15,A1,
+праворуч,/prɑˈvɔrutʃ/,to the right,adv,-,15,A1,право = right
+прямо,/ˈprʲɑmɔ/,straight,adv,-,15,A1,
+ринок,/ˈrɪnɔk/,market,noun,m,15,A1,
+ріг,/rʲiɦ/,corner,noun,m,15,A1,За рогом
+без,/bɛz/,without,prep,-,16,A1,+ genitive
+від,/vʲid/,from,prep,-,16,A1,+ genitive
+гроші,/ˈɦrɔʃʲi/,money,noun,pl,16,A1,Gen: грошей
+для,/dlʲɑ/,for,prep,-,16,A1,+ genitive
+з / із,/z/ /iz/,"from, out of",prep,-,16,A1,+ genitive
+кілограм,/kʲilɔˈɦrɑm/,kilogram,noun,m,16,A1,Gen: кілограма
+кінець,/kʲiˈnɛt͡sʲ/,end,noun,m,16,A1,Gen: кінця
+немає,/nɛˈmɑjɛ/,there is no,verb,-,16,A1,+ genitive
+пляшка,/ˈplʲɑʃkɑ/,bottle,noun,f,16,A1,Gen: пляшки
+початок,/pɔˈtʃɑtɔk/,beginning,noun,m,16,A1,Gen: початку
+після,/ˈpʲislʲɑ/,after,prep,-,16,A1,+ genitive
+сторінка,/stɔˈrʲinkɑ/,page,noun,f,16,A1,Gen: сторінки
+хліб,/xlʲib/,bread,noun,m,16,A1,Gen: хліба
+цукор,/ˈt͡sukɔr/,sugar,noun,m,16,A1,Gen: цукру
+час,/tʃɑs/,time,noun,m,16,A1,Gen: часу
+чашка,/ˈtʃɑʃkɑ/,cup,noun,f,16,A1,Gen: чашки
+борщ,/bɔrʃtʃ/,borscht,noun,m,17,A1,Beet soup
+вареники,/vɑˈrɛnɪkɪ/,dumplings,noun,pl,17,A1,Singular: вареник
+вечеря,/vɛˈtʃɛrʲɑ/,dinner,noun,f,17,A1,
+картопля,/kɑrˈtɔplʲɑ/,potato,noun,f,17,A1,"Collective, no plural"
+каша,/ˈkɑʃɑ/,porridge,noun,f,17,A1,"Buckwheat, oats, etc."
+курка,/ˈkurkɑ/,chicken,noun,f,17,A1,
+м'ясо,/ˈmjɑsɔ/,meat,noun,n,17,A1,
+обід,/ɔˈbʲid/,lunch,noun,m,17,A1,
+огірок,/ɔˈɦʲirɔk/,cucumber,noun,m,17,A1,
+помідор,/pɔmʲiˈdɔr/,tomato,noun,m,17,A1,
+риба,/ˈrɪbɑ/,fish,noun,f,17,A1,
+сало,/ˈsɑlɔ/,pork fat,noun,n,17,A1,"Cured, sliced thin"
+свіжий,/ˈsvʲiʒɪj/,fresh,adj,m,17,A1,"свіжа (f), свіже (n)"
+смачний,/ˈsmɑtʃnɪj/,tasty,adj,m,17,A1,"смачна (f), смачне (n)"
+смачного,/smɑtʃˈnɔɦɔ/,bon appétit,phrase,-,17,A1,"Literally ""of tasty"""
+сніданок,/snʲiˈdɑnɔk/,breakfast,noun,m,17,A1,
+їжа,/ˈjizʲɑ/,food,noun,f,17,A1,
+взяти,/ˈvzʲɑtɪ/,to take,verb,-,18,A1,Я візьму (I'll take)
+гарячий,/ɦɑˈrʲɑtʃɪj/,hot,adj,m,18,A1,
+замовляти,/zɑmɔvˈlʲɑtɪ/,to order,verb,-,18,A1,"замовляю, замовляєш"
+меню,/mɛˈnʲu/,menu,noun,n,18,A1,Indeclinable
+можна,/ˈmɔʒnɑ/,"may, can",adv,-,18,A1,Permission
+місце,/ˈmʲist͡sɛ/,"seat, place",noun,n,18,A1,
+на виніс,/nɑ ˈvɪnʲis/,to go,phrase,-,18,A1,Takeaway
+принести,/prɪnɛsˈtɪ/,to bring,verb,-,18,A1,"Imp: принеси, принесіть"
+рахунок,/rɑˈxunɔk/,"bill, check",noun,m,18,A1,
+склянка,/ˈsklʲɑnkɑ/,glass,noun,f,18,A1,
+столик,/ˈstɔlɪk/,table (small),noun,m,18,A1,Diminutive of стіл
+страва,/ˈstrɑvɑ/,"dish, course",noun,f,18,A1,
+холодний,/xɔˈlɔdnɪj/,cold,adj,m,18,A1,
+чайові,/tʃɑjɔˈvʲi/,tip,noun,pl,18,A1,"Literally ""for tea"""
+білий,/ˈbʲilɪj/,white,adj,m,19,A1,
+більший,/ˈbʲilʲʃɪj/,bigger,adj,m,19,A1,Comparative
+великий,/vɛˈlɪkɪj/,"big, large",adj,m,19,A1,"велика (f), велике (n)"
+занадто,/zɑˈnɑdtɔ/,too (excessive),adv,-,19,A1,
+каса,/ˈkɑsɑ/,cash register,noun,f,19,A1,
+колір,/ˈkɔlʲir/,color,noun,m,19,A1,Gen: кольору
+маленький,/mɑˈlɛnʲkɪj/,small,adj,m,19,A1,маленька (f)
+менший,/ˈmɛnʃɪj/,smaller,adj,m,19,A1,Comparative
+пакет,/pɑˈkɛt/,bag,noun,m,19,A1,Plastic bag
+примірочна,/prɪˈmʲirɔtʃnɑ/,fitting room,noun,f,19,A1,
+приміряти,/prɪmʲirʲˈɑtɪ/,to try on,verb,-,19,A1,
+продавати,/prɔdɑˈvɑtɪ/,to sell,verb,-,19,A1,"продаю, продаєш"
+розмір,/ˈrɔzmʲir/,size,noun,m,19,A1,
+чек,/tʃɛk/,receipt,noun,m,19,A1,
+чорний,/ˈtʃɔrnɪj/,black,adj,m,19,A1,
+був,/buv/,was (m),verb,m,21,A1,Past of бути
+була,/buˈlɑ/,was (f),verb,f,21,A1,Past of бути
+були,/buˈlɪ/,were,verb,pl,21,A1,Past of бути
+було,/ˈbulɔ/,was (n),verb,n,21,A1,Past of бути
+вже,/vʒɛ/,already,adv,-,21,A1,
+вчора,/ˈwtʃɔrɑ/,yesterday,adv,-,21,A1,
+давно,/ˈdɑvnɔ/,long ago,adv,-,21,A1,
+минулий,/mɪˈnulɪj/,"last, past",adj,m,21,A1,минулого тижня
+недавно,/nɛˈdɑvnɔ/,recently,adv,-,21,A1,
+позавчора,/pɔzɑˈwtʃɔrɑ/,day before yesterday,adv,-,21,A1,
+потім,/pɔˈtʲim/,"then, later",adv,-,21,A1,
+раніше,/ˈrɑnʲiʃɛ/,"earlier, before",adv,-,21,A1,
+тоді,/tɔˈdʲi/,then,adv,-,21,A1,
+ще не,/ʃtʃɛ nɛ/,not yet,phrase,-,21,A1,
+ішла,/iʃˈlɑ/,went (f),verb,f,21,A1,Past of йти
+ішов,/iˈʃɔv/,went (m),verb,m,21,A1,Past of йти
+буде,/ˈbudɛ/,will be,verb,-,22,A1,він/вона/воно
+будемо,/ˈbudɛmɔ/,we will be,verb,-,22,A1,ми form
+будете,/ˈbudɛtɛ/,you will be,verb,-,22,A1,ви form
+будеш,/ˈbudɛʃ/,you will be,verb,-,22,A1,ти form
+буду,/ˈbudu/,I will be,verb,-,22,A1,Future of бути
+будуть,/ˈbudutʲ/,they will be,verb,-,22,A1,вони form
+збиратися,/zbɪˈrɑtɪsʲɑ/,to be going to,verb,-,22,A1,збираюся
+зробити,/zrɔˈbɪtɪ/,to do (perf),verb,-,22,A1,Simple future: зроблю
+написати,/nɑpɪˈsɑtɪ/,to write (perf),verb,-,22,A1,Simple future: напишу
+наступний,/nɑˈstupnɪj/,next,adj,m,22,A1,наступного тижня
+планувати,/plɑnuˈvɑtɪ/,to plan,verb,-,22,A1,планую
+прочитати,/prɔtʃɪˈtɑtɪ/,to read (perf),verb,-,22,A1,Simple future: прочитаю
+пізніше,/ˈpʲizʲnʲiʃɛ/,later,adv,-,22,A1,
+післязавтра,/pʲislʲɑˈzɑvtrɑ/,day after tomorrow,adv,-,22,A1,
+скоро,/ˈskɔrɔ/,soon,adv,-,22,A1,
+весна,/vɛsˈnɑ/,spring,noun,f,23,A1,Adv: навесні
+вівторок,/vʲivˈtɔrɔk/,Tuesday,noun,m,23,A1,
+година,/ɦɔˈdɪnɑ/,hour,noun,f,23,A1,
+зима,/zɪˈmɑ/,winter,noun,f,23,A1,Adv: взимку
+лютий,/ˈlʲutɪj/,February,noun,m,23,A1,Loc: у лютому
+літо,/ˈlʲitɔ/,summer,noun,n,23,A1,Adv: влітку
+місяць,/ˈmʲisʲɑt͡sʲ/,month,noun,m,23,A1,Gen: місяця
+неділя,/nɛˈdʲilʲɑ/,Sunday,noun,f,23,A1,
+осінь,/ˈɔsʲinʲ/,autumn,noun,f,23,A1,Adv: восени
+п'ятниця,/ˈpjɑtnɪt͡sʲɑ/,Friday,noun,f,23,A1,
+понеділок,/pɔnɛˈdʲilɔk/,Monday,noun,m,23,A1,
+рік,/rʲik/,year,noun,m,23,A1,Gen: року
+середа,/sɛˈrɛdɑ/,Wednesday,noun,f,23,A1,
+субота,/suˈbɔtɑ/,Saturday,noun,f,23,A1,
+січень,/ˈsʲitʃɛnʲ/,January,noun,m,23,A1,Loc: у січні
+тиждень,/ˈtɪʒdɛnʲ/,week,noun,m,23,A1,Gen: тижня
+хвилина,/xvɪˈlɪnɑ/,minute,noun,f,23,A1,
+четвер,/ˈtʃɛtvɛr/,Thursday,noun,m,23,A1,
+відпочити,/vʲidpɔˈtʃɪtɪ/,to rest,verb,-,24,A1,
+допомогти,/dɔpɔmɔɦˈtɪ/,to help (perf),verb,-,24,A1,
+закінчити,/zɑˈkʲintʃɪtɪ/,to finish,verb,-,24,A1,
+зрозуміти,/zrɔzuˈmʲitɪ/,to understand (perf),verb,-,24,A1,
+могти,/mɔɦˈtɪ/,"can, to be able",verb,-,24,A1,"можу, можеш, може"
+мусити,/muˈsɪtɪ/,"must, have to",verb,-,24,A1,"мушу, мусиш, мусить"
+платити,/plɑˈtɪtɪ/,to pay,verb,-,24,A1,
+повинен,/pɔˈvɪnɛn/,"should, ought to (m)",adj,m,24,A1,"повинна (f), повинні (pl)"
+поспішати,/pɔspʲiˈʃɑtɪ/,to hurry,verb,-,24,A1,
+потрібно,/pɔˈtrʲibnɔ/,it's needed,adv,-,24,A1,= треба
+почекати,/pɔtʃɛˈkɑtɪ/,to wait (perf),verb,-,24,A1,
+треба,/ˈtrɛbɑ/,it's necessary,adv,-,24,A1,+ dative + infinitive
+вечеряти,/vɛtʃɛˈrʲɑtɪ/,to have dinner,verb,-,25,A1,
+виходити,/vɪxɔˈdɪtɪ/,"to go out, leave",verb,-,25,A1,
+вмиватися,/vmɪˈvɑtɪsʲɑ/,to wash (face),verb,-,25,A1,Reflexive
+вставати,/vstɑˈvɑtɪ/,to get up,verb,-,25,A1,"встаю, встаєш"
+голитися,/ɦɔˈlɪtɪsʲɑ/,to shave,verb,-,25,A1,Reflexive
+душ,/duʃ/,shower,noun,m,25,A1,приймати душ
+зазвичай,/zɑˈzvɪtʃɑj/,usually,adv,-,25,A1,
+засинати,/zɑsɪˈnɑtɪ/,to fall asleep,verb,-,25,A1,
+зуби,/ˈzubɪ/,teeth,noun,pl,25,A1,Singular: зуб
+лягати,/lʲɑˈɦɑtɪ/,to lie down,verb,-,25,A1,лягати спати
+обідати,/ɔˈbʲidɑtɪ/,to have lunch,verb,-,25,A1,
+одягатися,/ɔˈdʲɑɦɑtɪsʲɑ/,to get dressed,verb,-,25,A1,Reflexive
+повертатися,/pɔvɛrˈtɑtɪsʲɑ/,to return,verb,-,25,A1,Reflexive
+прокидатися,/prɔkɪˈdɑtɪsʲɑ/,to wake up,verb,-,25,A1,Reflexive
+роздягатися,/rɔzˈdʲɑɦɑtɪsʲɑ/,to undress,verb,-,25,A1,Reflexive
+снідати,/snʲiˈdɑtɪ/,to have breakfast,verb,-,25,A1,
+спочатку,/spɔˈtʃɑtku/,"first, at first",adv,-,25,A1,
+чистити,/ˈtʃɪstɪtɪ/,"to clean, brush",verb,-,25,A1,чистити зуби
+щодня,/ʃtʃɔˈdnʲɑ/,every day,adv,-,25,A1,
+важкий,/vɑʒˈkɪj/,"hard, heavy",adj,m,26,A1,"важка (f), важке (n)"
+гарний,/ˈɦɑrnɪj/,"beautiful, nice",adj,m,26,A1,"гарна (f), гарне (n)"
+добрий,/ˈdɔbrɪj/,"good, kind",adj,m,26,A1,"добра (f), добре (n)"
+легкий,/ˈlɛɦkɪj/,"easy, light",adj,m,26,A1,"легка (f), легке (n)"
+молодий,/mɔˈlɔdɪj/,young,adj,m,26,A1,"молода (f), молоде (n)"
+новий,/nɔˈvɪj/,new,adj,m,26,A1,"нова (f), нове (n)"
+поганий,/pɔˈɦɑnɪj/,bad,adj,m,26,A1,"погана (f), погане (n)"
+розумний,/rɔˈzumnɪj/,smart,adj,m,26,A1,"розумна (f), розумне (n)"
+старий,/stɑˈrɪj/,old,adj,m,26,A1,"стара (f), старе (n)"
+сумний,/ˈsumnɪj/,sad,adj,m,26,A1,"сумна (f), сумне (n)"
+цікавий,/t͡sʲiˈkɑvɪj/,interesting,adj,m,26,A1,"цікава (f), цікаве (n)"
+чистий,/ˈtʃɪstɪj/,clean,adj,m,26,A1,"чиста (f), чисте (n)"
+щасливий,/ʃtʃɑsˈlɪvɪj/,happy,adj,m,26,A1,"щаслива (f), щасливе (n)"
+високий,/vɪˈsɔkɪj/,tall,adj,m,27,A1,
+вишиванка,/vɪʃɪˈvɑnkɑ/,embroidered shirt,noun,f,27,A1,Traditional
+волосся,/vɔˈlɔsʲːɑ/,hair,noun,n,27,A1,"Collective, singular"
+джинси,/ˈd͡ʒɪnsɪ/,jeans,noun,pl,27,A1,Always plural
+кросівки,/krɔˈsʲivkɪ/,sneakers,noun,pl,27,A1,
+куртка,/ˈkurtkɑ/,jacket,noun,f,27,A1,
+одяг,/ˈɔdʲɑɦ/,clothes,noun,m,27,A1,Collective
+очі,/ˈɔtʃʲi/,eyes,noun,pl,27,A1,Singular: око
+пальто,/pɑlʲˈtɔ/,coat,noun,n,27,A1,Indeclinable
+светр,/svɛtr/,sweater,noun,m,27,A1,
+сорочка,/sɔˈrɔtʃkɑ/,shirt,noun,f,27,A1,
+спідниця,/spʲidˈnɪt͡sʲɑ/,skirt,noun,f,27,A1,
+сукня,/ˈsuknʲɑ/,dress,noun,f,27,A1,Also: плаття
+футболка,/futˈbɔlkɑ/,t-shirt,noun,f,27,A1,
+худий,/xuˈdɪj/,thin,adj,m,27,A1,
+черевики,/tʃɛrɛˈvɪkɪ/,shoes,noun,pl,27,A1,
+штани,/ʃtɑˈnɪ/,pants,noun,pl,27,A1,Always plural
+веселка,/vɛˈsɛlkɑ/,rainbow,noun,f,28,A1,
+вітер,/ˈvʲitɛr/,wind,noun,m,28,A1,Дме вітер
+градус,/ˈɦrɑdus/,degree,noun,m,28,A1,
+гроза,/ɦrɔˈzɑ/,thunderstorm,noun,f,28,A1,
+дощ,/dɔʃtʃ/,rain,noun,m,28,A1,Йде дощ
+жарко,/ˈʒɑrkɔ/,hot (adv),adv,-,28,A1,Impersonal
+мороз,/mɔˈrɔz/,frost,noun,m,28,A1,
+парасолька,/pɑrɑˈsɔlʲkɑ/,umbrella,noun,f,28,A1,
+погода,/pɔˈɦɔdɑ/,weather,noun,f,28,A1,
+сніг,/snʲiɦ/,snow,noun,m,28,A1,Йде сніг
+сонячний,/sɔˈnʲɑtʃnɪj/,sunny,adj,m,28,A1,
+температура,/tɛmpɛrɑˈturɑ/,temperature,noun,f,28,A1,
+тепло,/ˈtɛplɔ/,warm (adv),adv,-,28,A1,Impersonal
+туман,/tuˈmɑn/,fog,noun,m,28,A1,
+хмара,/ˈxmɑrɑ/,cloud,noun,f,28,A1,
+хмарний,/ˈxmɑrnɪj/,cloudy,adj,m,28,A1,
+холодно,/ˈxɔlɔdnɔ/,cold (adv),adv,-,28,A1,Impersonal
+бабуся,/bɑˈbusʲɑ/,grandma,noun,f,29,A1,
+батьки,/ˈbɑtʲkɪ/,parents,noun,pl,29,A1,
+батько,/ˈbɑtʲkɔ/,father,noun,m,29,A1,Formal
+дитина,/dɪˈtɪnɑ/,child,noun,f,29,A1,Pl: діти!
+дочка,/ˈdɔtʃkɑ/,daughter,noun,f,29,A1,Pl: дочки
+дружина,/druˈʒɪnɑ/,wife,noun,f,29,A1,
+дідусь,/dʲiˈdusʲ/,grandpa,noun,m,29,A1,
+одружений,/ɔˈdruʒɛnɪj/,married (m),adj,m,29,A1,одружена (f)
+родич,/ˈrɔdɪtʃ/,relative,noun,m,29,A1,Pl: родичі
+син,/sɪn/,son,noun,m,29,A1,Pl: сини
+чоловік,/tʃɔlɔˈvʲik/,husband,noun,m,29,A1,Also: man
+вам,/vɑm/,to you,pron,-,31,A2,Dat. of ви
+дарувати,/dɑruˈvɑtɪ/,to gift (impf),verb,-,31,A2,+ dat
+дати,/ˈdɑtɪ/,to give (pf),verb,-,31,A2,+ dat
+дзвонити,/dzvoˈnɪtɪ/,to call (impf),verb,-,31,A2,+ dat
+допомагати,/dopoˈmɑɦɑtɪ/,to help (impf),verb,-,31,A2,+ dat
+здаватися,/zdɑˈvɑtɪsʲɑ/,to seem,verb,-,31,A2,+ dat
+йому,/joˈmu/,to him/it,pron,-,31,A2,Dat. of він/воно
+казати,/kɑˈzɑtɪ/,to tell (impf),verb,-,31,A2,+ dat
+кому,/koˈmu/,to whom,pron,-,31,A2,Dat. question
+мені,/meˈnʲi/,to me,pron,-,31,A2,Dat. of я
+нам,/nɑm/,to us,pron,-,31,A2,Dat. of ми
+подарувати,/podɑruˈvɑtɪ/,to gift (pf),verb,-,31,A2,+ dat
+подзвонити,/podzvonɪtɪ/,to call (pf),verb,-,31,A2,+ dat
+подобатися,/podoˈbɑtɪsʲɑ/,"to please, like",verb,-,31,A2,+ dat
+показати,/pokɑˈzɑtɪ/,to show (pf),verb,-,31,A2,+ dat
+показувати,/pokɑˈzuvɑtɪ/,to show (impf),verb,-,31,A2,+ dat
+потрібний,/poˈtrʲibnɪj/,needed,adj,m,31,A2,+ dat for person
+сказати,/skɑˈzɑtɪ/,to tell (pf),verb,-,31,A2,+ dat
+тобі,/toˈbʲi/,to you,pron,-,31,A2,Dat. of ти
+їй,/jij/,to her,pron,-,31,A2,Dat. of вона
+їм,/jim/,to them,pron,-,31,A2,Dat. of вони
+адресат,/ɑdrɛˈsɑt/,addressee,noun,m,32,A2,
+відповідь,/ʋʲidpoˈʋʲidʲ/,answer,noun,f,32,A2,
+допомога,/dopoˈmoɦɑ/,help,noun,f,32,A2,
+запрошення,/zɑproˈʃɛnʲːɑ/,invitation,noun,n,32,A2,
+клієнт,/klʲiˈjɛnt/,client,noun,m,32,A2,Dat: клієнтові
+отримувач,/otrɪˈmuvɑtʃ/,recipient,noun,m,32,A2,
+повідомлення,/poʋʲiˈdomlɛnʲːɑ/,message,noun,n,32,A2,
+порада,/poˈrɑdɑ/,advice,noun,f,32,A2,
+підтримка,/pʲidˈtrɪmkɑ/,support,noun,f,32,A2,

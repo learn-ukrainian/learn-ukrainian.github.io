@@ -258,29 +258,23 @@ Where are these things/people?
 
 # Vocabulary
 
-| uk | translit | ipa | en | pos | gender | note |
-|----|----------|-----|-----|-----|--------|------|
-| в / у | v / u | /v/ /u/ | in, at | prep | - | В after vowels, У after consonants |
-| на | na | /nɑ/ | on, at | prep | - | Surfaces, events, open areas |
-| де | de | /dɛ/ | where | adv | - | Де ти? |
-| тут | tut | /tut/ | here | adv | - | |
-| там | tam | /tɑm/ | there | adv | - | |
-| кімната | kimnata | /kʲimˈnɑtɑ/ | room | noun | f | Loc: кімнаті |
-| офіс | ofis | /ˈɔfʲis/ | office | noun | m | Loc: офісі |
-| школа | shkola | /ˈʃkɔlɑ/ | school | noun | f | Loc: школі |
-| університет | universytet | /unʲivɛrsɪˈtɛt/ | university | noun | m | Loc: університеті |
-| магазин | mahazyn | /mɑɦɑˈzɪn/ | store | noun | m | Loc: магазині |
-| ресторан | restoran | /rɛstɔˈrɑn/ | restaurant | noun | m | Loc: ресторані |
-| кафе | kafe | /kɑˈfɛ/ | café | noun | n | Indeclinable! |
-| вулиця | vulytsya | /ˈvulɪt͡sʲɑ/ | street | noun | f | Loc: вулиці |
-| площа | ploshcha | /ˈplɔʃt͡ʃɑ/ | square | noun | f | Loc: площі |
-| парк | park | /pɑrk/ | park | noun | m | Loc: парку |
-| центр | tsentr | /t͡sɛntr/ | center | noun | m | Loc: центрі |
-| станція | stantsiya | /ˈstɑnt͡sʲijɑ/ | station | noun | f | Loc: станції |
-| аеропорт | aeroport | /ɑɛrɔˈpɔrt/ | airport | noun | m | Loc: аеропорту |
-| готель | hotel | /ɦɔˈtɛlʲ/ | hotel | noun | m | Loc: готелі |
-| Київ | Kyiv | /ˈkɪjiu̯/ | Kyiv | noun | m | Loc: Києві |
-
+| Word | IPA | English | POS | Gender | Note |
+|------|-----|---------|-----|--------|------|
+| в / у | /v/ /u/ | in, at | prep | - | В after vowels, У after consonants |
+| на | /nɑ/ | on, at | prep | - | Surfaces, events, open areas |
+| кімната | /kʲimˈnɑtɑ/ | room | noun | f | Loc: кімнаті |
+| офіс | /ˈɔfʲis/ | office | noun | m | Loc: офісі |
+| школа | /ˈʃkɔlɑ/ | school | noun | f | Loc: школі |
+| університет | /unʲivɛrsɪˈtɛt/ | university | noun | m | Loc: університеті |
+| магазин | /mɑɦɑˈzɪn/ | store | noun | m | Loc: магазині |
+| ресторан | /rɛstɔˈrɑn/ | restaurant | noun | m | Loc: ресторані |
+| вулиця | /ˈvulɪt͡sʲɑ/ | street | noun | f | Loc: вулиці |
+| площа | /ˈplɔʃt͡ʃɑ/ | square | noun | f | Loc: площі |
+| центр | /t͡sɛntr/ | center | noun | m | Loc: центрі |
+| станція | /ˈstɑnt͡sʲijɑ/ | station | noun | f | Loc: станції |
+| аеропорт | /ɑɛrɔˈpɔrt/ | airport | noun | m | Loc: аеропорту |
+| готель | /ɦɔˈtɛlʲ/ | hotel | noun | m | Loc: готелі |
+| Київ | /ˈkɪjiu̯/ | Kyiv | noun | m | Loc: Києві |
 ---
 
 # Locative Summary

@@ -296,34 +296,26 @@ Turn positive to negative:
 
 # Vocabulary
 
-| uk | translit | ipa | en | pos | gender | note |
-|----|----------|-----|-----|-----|--------|------|
-| чи | chy | /tʃɪ/ | whether (question particle) | part | - | Starts yes/no questions |
-| що | shcho | /ʃtʃɔ/ | what | pron | - | Question word |
-| хто | khto | /xtɔ/ | who | pron | - | Question word |
-| де | de | /dɛ/ | where (location) | adv | - | Stationary position |
-| куди | kudy | /kuˈdɪ/ | where to (direction) | adv | - | Movement toward |
-| звідки | zvidky | /ˈzvʲidkɪ/ | where from | adv | - | Origin/source |
-| коли | koly | /kɔˈlɪ/ | when | adv | - | Time question |
-| чому | chomu | /tʃɔˈmu/ | why | adv | - | Reason question |
-| як | yak | /jɑk/ | how | adv | - | Manner question |
-| скільки | skilky | /ˈskʲilʲkɪ/ | how much/many | adv | - | Quantity question |
-| який | yakyi | /jɑˈkɪj/ | which/what kind (m) | pron | m | Agrees with noun |
-| яка | yaka | /jɑˈkɑ/ | which/what kind (f) | pron | f | Agrees with noun |
-| яке | yake | /jɑˈkɛ/ | which/what kind (n) | pron | n | Agrees with noun |
-| не | ne | /nɛ/ | not | part | - | Goes before verb |
-| ніхто | nikhto | /nʲixˈtɔ/ | nobody | pron | - | Requires не with verb |
-| ніщо | nishcho | /nʲiʃˈtʃɔ/ | nothing | pron | - | Requires не with verb |
-| ніде | nide | /nʲiˈdɛ/ | nowhere | adv | - | Requires не with verb |
-| ніколи | nikoly | /nʲiˈkɔlɪ/ | never | adv | - | Requires не with verb |
-| ніякий | niyakyi | /nʲijɑˈkɪj/ | no kind of | pron | m | Requires не with verb |
-| так | tak | /tɑk/ | yes | part | - | Affirmative answer |
-| ні | ni | /nʲi/ | no | part | - | Negative answer |
-| завжди | zavzhdy | /ˈzɑvʒdɪ/ | always | adv | - | Frequency |
-| часто | chasto | /ˈtʃɑstɔ/ | often | adv | - | Frequency |
-| іноді | inodi | /iˈnɔdʲi/ | sometimes | adv | - | Frequency |
-| рідко | ridko | /ˈrʲidkɔ/ | rarely | adv | - | Frequency |
-
+| Word | IPA | English | POS | Gender | Note |
+|------|-----|---------|-----|--------|------|
+| чи | /tʃɪ/ | whether (question particle) | part | - | Starts yes/no questions |
+| куди | /kuˈdɪ/ | where to (direction) | adv | - | Movement toward |
+| звідки | /ˈzvʲidkɪ/ | where from | adv | - | Origin/source |
+| коли | /kɔˈlɪ/ | when | adv | - | Time question |
+| чому | /tʃɔˈmu/ | why | adv | - | Reason question |
+| скільки | /ˈskʲilʲkɪ/ | how much/many | adv | - | Quantity question |
+| який | /jɑˈkɪj/ | which/what kind (m) | pron | m | Agrees with noun |
+| яка | /jɑˈkɑ/ | which/what kind (f) | pron | f | Agrees with noun |
+| яке | /jɑˈkɛ/ | which/what kind (n) | pron | n | Agrees with noun |
+| ніхто | /nʲixˈtɔ/ | nobody | pron | - | Requires не with verb |
+| ніщо | /nʲiʃˈtʃɔ/ | nothing | pron | - | Requires не with verb |
+| ніде | /nʲiˈdɛ/ | nowhere | adv | - | Requires не with verb |
+| ніколи | /nʲiˈkɔlɪ/ | never | adv | - | Requires не with verb |
+| ніякий | /nʲijɑˈkɪj/ | no kind of | pron | m | Requires не with verb |
+| завжди | /ˈzɑvʒdɪ/ | always | adv | - | Frequency |
+| часто | /ˈtʃɑstɔ/ | often | adv | - | Frequency |
+| іноді | /iˈnɔdʲi/ | sometimes | adv | - | Frequency |
+| рідко | /ˈrʲidkɔ/ | rarely | adv | - | Frequency |
 ---
 
 # Question Patterns

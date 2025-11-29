@@ -355,258 +355,170 @@
     "moduleId": "mod-uk-A1-07",
     "level": "A1",
     "phase": "A1.2",
-    "wordCount": 25,
+    "wordCount": 18,
     "transliterationMode": "full",
     "words": [
       {
         "id": "v-m07-001",
         "uk": "чи",
-        "translit": "chy",
-        "ipa": "/tʃɪ/",
-        "en": "whether (question particle)",
-        "pos": "part",
-        "gender": "-",
-        "note": "Starts yes/no questions"
+        "translit": "/tʃɪ/",
+        "ipa": "whether (question particle)",
+        "en": "part",
+        "pos": "-",
+        "gender": "Starts yes/no questions"
       },
       {
         "id": "v-m07-002",
-        "uk": "що",
-        "translit": "shcho",
-        "ipa": "/ʃtʃɔ/",
-        "en": "what",
-        "pos": "pron",
-        "gender": "-",
-        "note": "Question word"
+        "uk": "куди",
+        "translit": "/kuˈdɪ/",
+        "ipa": "where to (direction)",
+        "en": "adv",
+        "pos": "-",
+        "gender": "Movement toward"
       },
       {
         "id": "v-m07-003",
-        "uk": "хто",
-        "translit": "khto",
-        "ipa": "/xtɔ/",
-        "en": "who",
-        "pos": "pron",
-        "gender": "-",
-        "note": "Question word"
+        "uk": "звідки",
+        "translit": "/ˈzvʲidkɪ/",
+        "ipa": "where from",
+        "en": "adv",
+        "pos": "-",
+        "gender": "Origin/source"
       },
       {
         "id": "v-m07-004",
-        "uk": "де",
-        "translit": "de",
-        "ipa": "/dɛ/",
-        "en": "where (location)",
-        "pos": "adv",
-        "gender": "-",
-        "note": "Stationary position"
+        "uk": "коли",
+        "translit": "/kɔˈlɪ/",
+        "ipa": "when",
+        "en": "adv",
+        "pos": "-",
+        "gender": "Time question"
       },
       {
         "id": "v-m07-005",
-        "uk": "куди",
-        "translit": "kudy",
-        "ipa": "/kuˈdɪ/",
-        "en": "where to (direction)",
-        "pos": "adv",
-        "gender": "-",
-        "note": "Movement toward"
+        "uk": "чому",
+        "translit": "/tʃɔˈmu/",
+        "ipa": "why",
+        "en": "adv",
+        "pos": "-",
+        "gender": "Reason question"
       },
       {
         "id": "v-m07-006",
-        "uk": "звідки",
-        "translit": "zvidky",
-        "ipa": "/ˈzvʲidkɪ/",
-        "en": "where from",
-        "pos": "adv",
-        "gender": "-",
-        "note": "Origin/source"
+        "uk": "скільки",
+        "translit": "/ˈskʲilʲkɪ/",
+        "ipa": "how much/many",
+        "en": "adv",
+        "pos": "-",
+        "gender": "Quantity question"
       },
       {
         "id": "v-m07-007",
-        "uk": "коли",
-        "translit": "koly",
-        "ipa": "/kɔˈlɪ/",
-        "en": "when",
-        "pos": "adv",
-        "gender": "-",
-        "note": "Time question"
+        "uk": "який",
+        "translit": "/jɑˈkɪj/",
+        "ipa": "which/what kind (m)",
+        "en": "pron",
+        "pos": "m",
+        "gender": "Agrees with noun"
       },
       {
         "id": "v-m07-008",
-        "uk": "чому",
-        "translit": "chomu",
-        "ipa": "/tʃɔˈmu/",
-        "en": "why",
-        "pos": "adv",
-        "gender": "-",
-        "note": "Reason question"
+        "uk": "яка",
+        "translit": "/jɑˈkɑ/",
+        "ipa": "which/what kind (f)",
+        "en": "pron",
+        "pos": "f",
+        "gender": "Agrees with noun"
       },
       {
         "id": "v-m07-009",
-        "uk": "як",
-        "translit": "yak",
-        "ipa": "/jɑk/",
-        "en": "how",
-        "pos": "adv",
-        "gender": "-",
-        "note": "Manner question"
+        "uk": "яке",
+        "translit": "/jɑˈkɛ/",
+        "ipa": "which/what kind (n)",
+        "en": "pron",
+        "pos": "n",
+        "gender": "Agrees with noun"
       },
       {
         "id": "v-m07-010",
-        "uk": "скільки",
-        "translit": "skilky",
-        "ipa": "/ˈskʲilʲkɪ/",
-        "en": "how much/many",
-        "pos": "adv",
-        "gender": "-",
-        "note": "Quantity question"
+        "uk": "ніхто",
+        "translit": "/nʲixˈtɔ/",
+        "ipa": "nobody",
+        "en": "pron",
+        "pos": "-",
+        "gender": "Requires не with verb"
       },
       {
         "id": "v-m07-011",
-        "uk": "який",
-        "translit": "yakyi",
-        "ipa": "/jɑˈkɪj/",
-        "en": "which/what kind (m)",
-        "pos": "pron",
-        "gender": "m",
-        "note": "Agrees with noun"
+        "uk": "ніщо",
+        "translit": "/nʲiʃˈtʃɔ/",
+        "ipa": "nothing",
+        "en": "pron",
+        "pos": "-",
+        "gender": "Requires не with verb"
       },
       {
         "id": "v-m07-012",
-        "uk": "яка",
-        "translit": "yaka",
-        "ipa": "/jɑˈkɑ/",
-        "en": "which/what kind (f)",
-        "pos": "pron",
-        "gender": "f",
-        "note": "Agrees with noun"
+        "uk": "ніде",
+        "translit": "/nʲiˈdɛ/",
+        "ipa": "nowhere",
+        "en": "adv",
+        "pos": "-",
+        "gender": "Requires не with verb"
       },
       {
         "id": "v-m07-013",
-        "uk": "яке",
-        "translit": "yake",
-        "ipa": "/jɑˈkɛ/",
-        "en": "which/what kind (n)",
-        "pos": "pron",
-        "gender": "n",
-        "note": "Agrees with noun"
+        "uk": "ніколи",
+        "translit": "/nʲiˈkɔlɪ/",
+        "ipa": "never",
+        "en": "adv",
+        "pos": "-",
+        "gender": "Requires не with verb"
       },
       {
         "id": "v-m07-014",
-        "uk": "не",
-        "translit": "ne",
-        "ipa": "/nɛ/",
-        "en": "not",
-        "pos": "part",
-        "gender": "-",
-        "note": "Goes before verb"
+        "uk": "ніякий",
+        "translit": "/nʲijɑˈkɪj/",
+        "ipa": "no kind of",
+        "en": "pron",
+        "pos": "m",
+        "gender": "Requires не with verb"
       },
       {
         "id": "v-m07-015",
-        "uk": "ніхто",
-        "translit": "nikhto",
-        "ipa": "/nʲixˈtɔ/",
-        "en": "nobody",
-        "pos": "pron",
-        "gender": "-",
-        "note": "Requires не with verb"
+        "uk": "завжди",
+        "translit": "/ˈzɑvʒdɪ/",
+        "ipa": "always",
+        "en": "adv",
+        "pos": "-",
+        "gender": "Frequency"
       },
       {
         "id": "v-m07-016",
-        "uk": "ніщо",
-        "translit": "nishcho",
-        "ipa": "/nʲiʃˈtʃɔ/",
-        "en": "nothing",
-        "pos": "pron",
-        "gender": "-",
-        "note": "Requires не with verb"
+        "uk": "часто",
+        "translit": "/ˈtʃɑstɔ/",
+        "ipa": "often",
+        "en": "adv",
+        "pos": "-",
+        "gender": "Frequency"
       },
       {
         "id": "v-m07-017",
-        "uk": "ніде",
-        "translit": "nide",
-        "ipa": "/nʲiˈdɛ/",
-        "en": "nowhere",
-        "pos": "adv",
-        "gender": "-",
-        "note": "Requires не with verb"
+        "uk": "іноді",
+        "translit": "/iˈnɔdʲi/",
+        "ipa": "sometimes",
+        "en": "adv",
+        "pos": "-",
+        "gender": "Frequency"
       },
       {
         "id": "v-m07-018",
-        "uk": "ніколи",
-        "translit": "nikoly",
-        "ipa": "/nʲiˈkɔlɪ/",
-        "en": "never",
-        "pos": "adv",
-        "gender": "-",
-        "note": "Requires не with verb"
-      },
-      {
-        "id": "v-m07-019",
-        "uk": "ніякий",
-        "translit": "niyakyi",
-        "ipa": "/nʲijɑˈkɪj/",
-        "en": "no kind of",
-        "pos": "pron",
-        "gender": "m",
-        "note": "Requires не with verb"
-      },
-      {
-        "id": "v-m07-020",
-        "uk": "так",
-        "translit": "tak",
-        "ipa": "/tɑk/",
-        "en": "yes",
-        "pos": "part",
-        "gender": "-",
-        "note": "Affirmative answer"
-      },
-      {
-        "id": "v-m07-021",
-        "uk": "ні",
-        "translit": "ni",
-        "ipa": "/nʲi/",
-        "en": "no",
-        "pos": "part",
-        "gender": "-",
-        "note": "Negative answer"
-      },
-      {
-        "id": "v-m07-022",
-        "uk": "завжди",
-        "translit": "zavzhdy",
-        "ipa": "/ˈzɑvʒdɪ/",
-        "en": "always",
-        "pos": "adv",
-        "gender": "-",
-        "note": "Frequency"
-      },
-      {
-        "id": "v-m07-023",
-        "uk": "часто",
-        "translit": "chasto",
-        "ipa": "/ˈtʃɑstɔ/",
-        "en": "often",
-        "pos": "adv",
-        "gender": "-",
-        "note": "Frequency"
-      },
-      {
-        "id": "v-m07-024",
-        "uk": "іноді",
-        "translit": "inodi",
-        "ipa": "/iˈnɔdʲi/",
-        "en": "sometimes",
-        "pos": "adv",
-        "gender": "-",
-        "note": "Frequency"
-      },
-      {
-        "id": "v-m07-025",
         "uk": "рідко",
-        "translit": "ridko",
-        "ipa": "/ˈrʲidkɔ/",
-        "en": "rarely",
-        "pos": "adv",
-        "gender": "-",
-        "note": "Frequency"
+        "translit": "/ˈrʲidkɔ/",
+        "ipa": "rarely",
+        "en": "adv",
+        "pos": "-",
+        "gender": "Frequency"
       }
     ]
   }

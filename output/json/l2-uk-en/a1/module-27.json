@@ -358,179 +358,152 @@
     "moduleId": "mod-uk-A1-27",
     "level": "A1",
     "phase": "A1.3",
-    "wordCount": 18,
+    "wordCount": 17,
     "transliterationMode": "full",
     "words": [
       {
         "id": "v-m27-001",
         "uk": "одяг",
-        "translit": "odyah",
-        "ipa": "/ˈɔdʲɑɦ/",
-        "en": "clothes",
-        "pos": "noun",
-        "gender": "m",
-        "note": "Collective"
+        "translit": "/ˈɔdʲɑɦ/",
+        "ipa": "clothes",
+        "en": "noun",
+        "pos": "m",
+        "gender": "Collective"
       },
       {
         "id": "v-m27-002",
-        "uk": "носити",
-        "translit": "nosyty",
-        "ipa": "/nɔˈsɪtɪ/",
-        "en": "to wear",
-        "pos": "verb",
-        "gender": "-",
-        "note": "ношу, носиш"
+        "uk": "сорочка",
+        "translit": "/sɔˈrɔtʃkɑ/",
+        "ipa": "shirt",
+        "en": "noun",
+        "pos": "f"
       },
       {
         "id": "v-m27-003",
-        "uk": "сорочка",
-        "translit": "sorochka",
-        "ipa": "/sɔˈrɔtʃkɑ/",
-        "en": "shirt",
-        "pos": "noun",
-        "gender": "f"
+        "uk": "футболка",
+        "translit": "/futˈbɔlkɑ/",
+        "ipa": "t-shirt",
+        "en": "noun",
+        "pos": "f"
       },
       {
         "id": "v-m27-004",
-        "uk": "футболка",
-        "translit": "futbolka",
-        "ipa": "/futˈbɔlkɑ/",
-        "en": "t-shirt",
-        "pos": "noun",
-        "gender": "f"
+        "uk": "светр",
+        "translit": "/svɛtr/",
+        "ipa": "sweater",
+        "en": "noun",
+        "pos": "m"
       },
       {
         "id": "v-m27-005",
-        "uk": "светр",
-        "translit": "svetr",
-        "ipa": "/svɛtr/",
-        "en": "sweater",
-        "pos": "noun",
-        "gender": "m"
+        "uk": "куртка",
+        "translit": "/ˈkurtkɑ/",
+        "ipa": "jacket",
+        "en": "noun",
+        "pos": "f"
       },
       {
         "id": "v-m27-006",
-        "uk": "куртка",
-        "translit": "kurtka",
-        "ipa": "/ˈkurtkɑ/",
-        "en": "jacket",
-        "pos": "noun",
-        "gender": "f"
+        "uk": "пальто",
+        "translit": "/pɑlʲˈtɔ/",
+        "ipa": "coat",
+        "en": "noun",
+        "pos": "n",
+        "gender": "Indeclinable"
       },
       {
         "id": "v-m27-007",
-        "uk": "пальто",
-        "translit": "palto",
-        "ipa": "/pɑlʲˈtɔ/",
-        "en": "coat",
-        "pos": "noun",
-        "gender": "n",
-        "note": "Indeclinable"
+        "uk": "сукня",
+        "translit": "/ˈsuknʲɑ/",
+        "ipa": "dress",
+        "en": "noun",
+        "pos": "f",
+        "gender": "Also: плаття"
       },
       {
         "id": "v-m27-008",
-        "uk": "сукня",
-        "translit": "suknya",
-        "ipa": "/ˈsuknʲɑ/",
-        "en": "dress",
-        "pos": "noun",
-        "gender": "f",
-        "note": "Also: плаття"
+        "uk": "спідниця",
+        "translit": "/spʲidˈnɪt͡sʲɑ/",
+        "ipa": "skirt",
+        "en": "noun",
+        "pos": "f"
       },
       {
         "id": "v-m27-009",
-        "uk": "спідниця",
-        "translit": "spidnytsya",
-        "ipa": "/spʲidˈnɪt͡sʲɑ/",
-        "en": "skirt",
-        "pos": "noun",
-        "gender": "f"
+        "uk": "штани",
+        "translit": "/ʃtɑˈnɪ/",
+        "ipa": "pants",
+        "en": "noun",
+        "pos": "pl",
+        "gender": "Always plural"
       },
       {
         "id": "v-m27-010",
-        "uk": "штани",
-        "translit": "shtany",
-        "ipa": "/ʃtɑˈnɪ/",
-        "en": "pants",
-        "pos": "noun",
-        "gender": "pl",
-        "note": "Always plural"
+        "uk": "джинси",
+        "translit": "/ˈd͡ʒɪnsɪ/",
+        "ipa": "jeans",
+        "en": "noun",
+        "pos": "pl",
+        "gender": "Always plural"
       },
       {
         "id": "v-m27-011",
-        "uk": "джинси",
-        "translit": "dzhynsy",
-        "ipa": "/ˈd͡ʒɪnsɪ/",
-        "en": "jeans",
-        "pos": "noun",
-        "gender": "pl",
-        "note": "Always plural"
+        "uk": "черевики",
+        "translit": "/tʃɛrɛˈvɪkɪ/",
+        "ipa": "shoes",
+        "en": "noun",
+        "pos": "pl"
       },
       {
         "id": "v-m27-012",
-        "uk": "черевики",
-        "translit": "cherevyky",
-        "ipa": "/tʃɛrɛˈvɪkɪ/",
-        "en": "shoes",
-        "pos": "noun",
-        "gender": "pl"
+        "uk": "кросівки",
+        "translit": "/krɔˈsʲivkɪ/",
+        "ipa": "sneakers",
+        "en": "noun",
+        "pos": "pl"
       },
       {
         "id": "v-m27-013",
-        "uk": "кросівки",
-        "translit": "krosivky",
-        "ipa": "/krɔˈsʲivkɪ/",
-        "en": "sneakers",
-        "pos": "noun",
-        "gender": "pl"
+        "uk": "вишиванка",
+        "translit": "/vɪʃɪˈvɑnkɑ/",
+        "ipa": "embroidered shirt",
+        "en": "noun",
+        "pos": "f",
+        "gender": "Traditional"
       },
       {
         "id": "v-m27-014",
-        "uk": "вишиванка",
-        "translit": "vyshyvanka",
-        "ipa": "/vɪʃɪˈvɑnkɑ/",
-        "en": "embroidered shirt",
-        "pos": "noun",
-        "gender": "f",
-        "note": "Traditional"
+        "uk": "волосся",
+        "translit": "/vɔˈlɔsʲːɑ/",
+        "ipa": "hair",
+        "en": "noun",
+        "pos": "n",
+        "gender": "Collective, singular"
       },
       {
         "id": "v-m27-015",
-        "uk": "волосся",
-        "translit": "volossya",
-        "ipa": "/vɔˈlɔsʲːɑ/",
-        "en": "hair",
-        "pos": "noun",
-        "gender": "n",
-        "note": "Collective, singular"
+        "uk": "очі",
+        "translit": "/ˈɔtʃʲi/",
+        "ipa": "eyes",
+        "en": "noun",
+        "pos": "pl",
+        "gender": "Singular: око"
       },
       {
         "id": "v-m27-016",
-        "uk": "очі",
-        "translit": "ochi",
-        "ipa": "/ˈɔtʃʲi/",
-        "en": "eyes",
-        "pos": "noun",
-        "gender": "pl",
-        "note": "Singular: око"
+        "uk": "високий",
+        "translit": "/vɪˈsɔkɪj/",
+        "ipa": "tall",
+        "en": "adj",
+        "pos": "m"
       },
       {
         "id": "v-m27-017",
-        "uk": "високий",
-        "translit": "vysokyi",
-        "ipa": "/vɪˈsɔkɪj/",
-        "en": "tall",
-        "pos": "adj",
-        "gender": "m"
-      },
-      {
-        "id": "v-m27-018",
         "uk": "худий",
-        "translit": "khudyi",
-        "ipa": "/xuˈdɪj/",
-        "en": "thin",
-        "pos": "adj",
-        "gender": "m"
+        "translit": "/xuˈdɪj/",
+        "ipa": "thin",
+        "en": "adj",
+        "pos": "m"
       }
     ]
   }

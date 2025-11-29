@@ -351,29 +351,24 @@ Practice asking questions:
 
 # Vocabulary
 
-| uk | translit | ipa | en | pos | gender | note |
-|----|----------|-----|-----|-----|--------|------|
-| читати | chytaty | /tʃɪˈtɑtɪ/ | to read | verb | - | Class I: читаю, читаєш... |
-| писати | pysaty | /pɪˈsɑtɪ/ | to write | verb | - | Class I with с→ш: пишу, пишеш... |
-| знати | znaty | /ˈznɑtɪ/ | to know | verb | - | Class I: знаю, знаєш... |
-| працювати | pratsyuvaty | /prɑt͡sʲuˈvɑtɪ/ | to work | verb | - | Class I: працюю, працюєш... |
-| говорити | hovoryty | /ɦɔvɔˈrɪtɪ/ | to speak | verb | - | Class II: говорю, говориш... |
-| робити | robyty | /rɔˈbɪtɪ/ | to do, to make | verb | - | Class II: роблю, робиш... |
-| дивитися | dyvytysya | /dɪvɪˈtɪsʲɑ/ | to watch, look | verb | - | Reflexive Class II |
-| слухати | slukhaty | /ˈsluxɑtɪ/ | to listen | verb | - | Class I: слухаю, слухаєш... |
-| розуміти | rozumity | /rɔzuˈmʲitɪ/ | to understand | verb | - | Class II: розумію, розумієш... |
-| думати | dumaty | /ˈdumɑtɪ/ | to think | verb | - | Class I: думаю, думаєш... |
-| хотіти | khotity | /xɔˈtʲitɪ/ | to want | verb | - | Irregular: хочу, хочеш... |
-| не | ne | /nɛ/ | not | part | - | Goes before verb |
-| що | shcho | /ʃt͡ʃɔ/ | what | pron | - | Question word |
-| де | de | /dɛ/ | where | adv | - | Question word |
-| як | yak | /jɑk/ | how | adv | - | Question word |
-| книга | knyha | /ˈknɪɦɑ/ | book | noun | f | Object of читати |
-| лист | lyst | /lɪst/ | letter | noun | m | Object of писати |
-| кожен день | kozhen den | /ˈkɔʒɛn dɛnʲ/ | every day | phrase | - | Time expression |
-| завтра | zavtra | /ˈzɑvtrɑ/ | tomorrow | adv | - | Time word |
-| сьогодні | sohodni | /sʲɔˈɦɔdnʲi/ | today | adv | - | Time word |
-
+| Word | IPA | English | POS | Gender | Note |
+|------|-----|---------|-----|--------|------|
+| читати | /tʃɪˈtɑtɪ/ | to read | verb | - | Class I: читаю, читаєш... |
+| писати | /pɪˈsɑtɪ/ | to write | verb | - | Class I with с→ш: пишу, пишеш... |
+| знати | /ˈznɑtɪ/ | to know | verb | - | Class I: знаю, знаєш... |
+| працювати | /prɑt͡sʲuˈvɑtɪ/ | to work | verb | - | Class I: працюю, працюєш... |
+| говорити | /ɦɔvɔˈrɪtɪ/ | to speak | verb | - | Class II: говорю, говориш... |
+| робити | /rɔˈbɪtɪ/ | to do, to make | verb | - | Class II: роблю, робиш... |
+| дивитися | /dɪvɪˈtɪsʲɑ/ | to watch, look | verb | - | Reflexive Class II |
+| слухати | /ˈsluxɑtɪ/ | to listen | verb | - | Class I: слухаю, слухаєш... |
+| розуміти | /rɔzuˈmʲitɪ/ | to understand | verb | - | Class II: розумію, розумієш... |
+| думати | /ˈdumɑtɪ/ | to think | verb | - | Class I: думаю, думаєш... |
+| хотіти | /xɔˈtʲitɪ/ | to want | verb | - | Irregular: хочу, хочеш... |
+| не | /nɛ/ | not | part | - | Goes before verb |
+| лист | /lɪst/ | letter | noun | m | Object of писати |
+| кожен день | /ˈkɔʒɛn dɛnʲ/ | every day | phrase | - | Time expression |
+| завтра | /ˈzɑvtrɑ/ | tomorrow | adv | - | Time word |
+| сьогодні | /sʲɔˈɦɔdnʲi/ | today | adv | - | Time word |
 ---
 
 # Conjugation Summary

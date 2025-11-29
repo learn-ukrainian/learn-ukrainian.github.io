@@ -294,22 +294,20 @@ Answer:
 
 # Vocabulary
 
-| uk | translit | ipa | en | pos | gender | note |
-|----|----------|-----|-----|-----|--------|------|
-| могти | mohty | /mɔɦˈtɪ/ | can, to be able | verb | - | можу, можеш, може |
-| мусити | musyty | /muˈsɪtɪ/ | must, have to | verb | - | мушу, мусиш, мусить |
-| повинен | povynen | /pɔˈvɪnɛn/ | should, ought to (m) | adj | m | повинна (f), повинні (pl) |
-| треба | treba | /ˈtrɛbɑ/ | it's necessary | adv | - | + dative + infinitive |
-| потрібно | potribno | /pɔˈtrʲibnɔ/ | it's needed | adv | - | = треба |
-| хотіти | khotity | /xɔˈtʲitɪ/ | to want | verb | - | хочу, хочеш, хоче |
-| допомогти | dopomohty | /dɔpɔmɔɦˈtɪ/ | to help (perf) | verb | - | |
-| зрозуміти | zrozumity | /zrɔzuˈmʲitɪ/ | to understand (perf) | verb | - | |
-| поспішати | pospishaty | /pɔspʲiˈʃɑtɪ/ | to hurry | verb | - | |
-| закінчити | zakinchyty | /zɑˈkʲintʃɪtɪ/ | to finish | verb | - | |
-| почекати | pochekaty | /pɔtʃɛˈkɑtɪ/ | to wait (perf) | verb | - | |
-| відпочити | vidpochyty | /vʲidpɔˈtʃɪtɪ/ | to rest | verb | - | |
-| платити | platyty | /plɑˈtɪtɪ/ | to pay | verb | - | |
-
+| Word | IPA | English | POS | Gender | Note |
+|------|-----|---------|-----|--------|------|
+| могти | /mɔɦˈtɪ/ | can, to be able | verb | - | можу, можеш, може |
+| мусити | /muˈsɪtɪ/ | must, have to | verb | - | мушу, мусиш, мусить |
+| повинен | /pɔˈvɪnɛn/ | should, ought to (m) | adj | m | повинна (f), повинні (pl) |
+| треба | /ˈtrɛbɑ/ | it's necessary | adv | - | + dative + infinitive |
+| потрібно | /pɔˈtrʲibnɔ/ | it's needed | adv | - | = треба |
+| допомогти | /dɔpɔmɔɦˈtɪ/ | to help (perf) | verb | - |  |
+| зрозуміти | /zrɔzuˈmʲitɪ/ | to understand (perf) | verb | - |  |
+| поспішати | /pɔspʲiˈʃɑtɪ/ | to hurry | verb | - |  |
+| закінчити | /zɑˈkʲintʃɪtɪ/ | to finish | verb | - |  |
+| почекати | /pɔtʃɛˈkɑtɪ/ | to wait (perf) | verb | - |  |
+| відпочити | /vʲidpɔˈtʃɪtɪ/ | to rest | verb | - |  |
+| платити | /plɑˈtɪtɪ/ | to pay | verb | - |  |
 ---
 
 # Modal Summary

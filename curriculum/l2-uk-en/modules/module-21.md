@@ -286,25 +286,24 @@ Describe what you did yesterday using past tense:
 
 # Vocabulary
 
-| uk | translit | ipa | en | pos | gender | note |
-|----|----------|-----|-----|-----|--------|------|
-| вчора | vchora | /ˈwtʃɔrɑ/ | yesterday | adv | - | |
-| позавчора | pozavchora | /pɔzɑˈwtʃɔrɑ/ | day before yesterday | adv | - | |
-| минулий | mynulyi | /mɪˈnulɪj/ | last, past | adj | m | минулого тижня |
-| давно | davno | /ˈdɑvnɔ/ | long ago | adv | - | |
-| недавно | nedavno | /nɛˈdɑvnɔ/ | recently | adv | - | |
-| раніше | ranishe | /ˈrɑnʲiʃɛ/ | earlier, before | adv | - | |
-| тоді | todi | /tɔˈdʲi/ | then | adv | - | |
-| потім | potim | /pɔˈtʲim/ | then, later | adv | - | |
-| вже | vzhe | /vʒɛ/ | already | adv | - | |
-| ще не | shche ne | /ʃtʃɛ nɛ/ | not yet | phrase | - | |
-| був | buv | /buv/ | was (m) | verb | m | Past of бути |
-| була | bula | /buˈlɑ/ | was (f) | verb | f | Past of бути |
-| було | bulo | /ˈbulɔ/ | was (n) | verb | n | Past of бути |
-| були | buly | /buˈlɪ/ | were | verb | pl | Past of бути |
-| ішов | ishov | /iˈʃɔv/ | went (m) | verb | m | Past of йти |
-| ішла | ishla | /iʃˈlɑ/ | went (f) | verb | f | Past of йти |
-
+| Word | IPA | English | POS | Gender | Note |
+|------|-----|---------|-----|--------|------|
+| вчора | /ˈwtʃɔrɑ/ | yesterday | adv | - |  |
+| позавчора | /pɔzɑˈwtʃɔrɑ/ | day before yesterday | adv | - |  |
+| минулий | /mɪˈnulɪj/ | last, past | adj | m | минулого тижня |
+| давно | /ˈdɑvnɔ/ | long ago | adv | - |  |
+| недавно | /nɛˈdɑvnɔ/ | recently | adv | - |  |
+| раніше | /ˈrɑnʲiʃɛ/ | earlier, before | adv | - |  |
+| тоді | /tɔˈdʲi/ | then | adv | - |  |
+| потім | /pɔˈtʲim/ | then, later | adv | - |  |
+| вже | /vʒɛ/ | already | adv | - |  |
+| ще не | /ʃtʃɛ nɛ/ | not yet | phrase | - |  |
+| був | /buv/ | was (m) | verb | m | Past of бути |
+| була | /buˈlɑ/ | was (f) | verb | f | Past of бути |
+| було | /ˈbulɔ/ | was (n) | verb | n | Past of бути |
+| були | /buˈlɪ/ | were | verb | pl | Past of бути |
+| ішов | /iˈʃɔv/ | went (m) | verb | m | Past of йти |
+| ішла | /iʃˈlɑ/ | went (f) | verb | f | Past of йти |
 ---
 
 # Past Tense Summary

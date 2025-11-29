@@ -294,29 +294,26 @@ Say what you want:
 
 # Vocabulary
 
-| uk | translit | ipa | en | pos | gender | note |
-|----|----------|-----|-----|-----|--------|------|
-| бачити | bachyty | /ˈbɑtʃɪtɪ/ | to see | verb | - | бачу, бачиш + Acc |
-| чути | chuty | /ˈtʃutɪ/ | to hear | verb | - | чую, чуєш + Acc |
-| брати | braty | /ˈbrɑtɪ/ | to take | verb | - | беру, береш + Acc |
-| давати | davaty | /dɑˈvɑtɪ/ | to give | verb | - | даю, даєш + Acc |
-| мати | maty | /ˈmɑtɪ/ | to have | verb | - | маю, маєш + Acc |
-| нести | nesty | /ˈnɛstɪ/ | to carry | verb | - | несу, несеш + Acc |
-| класти | klasty | /ˈklɑstɪ/ | to put | verb | - | кладу, кладеш + Acc |
-| відкривати | vidkryvaty | /vʲidkrɪˈvɑtɪ/ | to open | verb | - | відкриваю + Acc |
-| закривати | zakryvaty | /zɑkrɪˈvɑtɪ/ | to close | verb | - | закриваю + Acc |
-| газета | hazeta | /ɦɑˈzɛtɑ/ | newspaper | noun | f | газету in Acc |
-| журнал | zhurnal | /ʒurˈnɑl/ | magazine | noun | m | No change in Acc |
-| лист | lyst | /lɪst/ | letter | noun | m | No change (inan.) |
-| конверт | konvert | /kɔnˈvɛrt/ | envelope | noun | m | No change |
-| посилка | posylka | /pɔˈsɪlkɑ/ | package | noun | f | посилку in Acc |
-| подарунок | podarunok | /pɔdɑˈrunɔk/ | gift | noun | m | No change |
-| квиток | kvytok | /kvɪˈtɔk/ | ticket | noun | m | No change |
-| паспорт | pasport | /ˈpɑspɔrt/ | passport | noun | m | No change |
-| документ | dokument | /dɔkuˈmɛnt/ | document | noun | m | No change |
-| валіза | valiza | /vɑˈlʲizɑ/ | suitcase | noun | f | валізу in Acc |
-| коробка | korobka | /kɔˈrɔbkɑ/ | box | noun | f | коробку in Acc |
-
+| Word | IPA | English | POS | Gender | Note |
+|------|-----|---------|-----|--------|------|
+| чути | /ˈtʃutɪ/ | to hear | verb | - | чую, чуєш + Acc |
+| брати | /ˈbrɑtɪ/ | to take | verb | - | беру, береш + Acc |
+| давати | /dɑˈvɑtɪ/ | to give | verb | - | даю, даєш + Acc |
+| мати | /ˈmɑtɪ/ | to have | verb | - | маю, маєш + Acc |
+| нести | /ˈnɛstɪ/ | to carry | verb | - | несу, несеш + Acc |
+| класти | /ˈklɑstɪ/ | to put | verb | - | кладу, кладеш + Acc |
+| відкривати | /vʲidkrɪˈvɑtɪ/ | to open | verb | - | відкриваю + Acc |
+| закривати | /zɑkrɪˈvɑtɪ/ | to close | verb | - | закриваю + Acc |
+| газета | /ɦɑˈzɛtɑ/ | newspaper | noun | f | газету in Acc |
+| журнал | /ʒurˈnɑl/ | magazine | noun | m | No change in Acc |
+| конверт | /kɔnˈvɛrt/ | envelope | noun | m | No change |
+| посилка | /pɔˈsɪlkɑ/ | package | noun | f | посилку in Acc |
+| подарунок | /pɔdɑˈrunɔk/ | gift | noun | m | No change |
+| квиток | /kvɪˈtɔk/ | ticket | noun | m | No change |
+| паспорт | /ˈpɑspɔrt/ | passport | noun | m | No change |
+| документ | /dɔkuˈmɛnt/ | document | noun | m | No change |
+| валіза | /vɑˈlʲizɑ/ | suitcase | noun | f | валізу in Acc |
+| коробка | /kɔˈrɔbkɑ/ | box | noun | f | коробку in Acc |
 ---
 
 # Case Summary

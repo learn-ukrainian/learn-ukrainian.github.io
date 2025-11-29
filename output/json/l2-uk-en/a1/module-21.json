@@ -353,153 +353,137 @@
       {
         "id": "v-m21-001",
         "uk": "вчора",
-        "translit": "vchora",
-        "ipa": "/ˈwtʃɔrɑ/",
-        "en": "yesterday",
-        "pos": "adv",
-        "gender": "-"
+        "translit": "/ˈwtʃɔrɑ/",
+        "ipa": "yesterday",
+        "en": "adv",
+        "pos": "-"
       },
       {
         "id": "v-m21-002",
         "uk": "позавчора",
-        "translit": "pozavchora",
-        "ipa": "/pɔzɑˈwtʃɔrɑ/",
-        "en": "day before yesterday",
-        "pos": "adv",
-        "gender": "-"
+        "translit": "/pɔzɑˈwtʃɔrɑ/",
+        "ipa": "day before yesterday",
+        "en": "adv",
+        "pos": "-"
       },
       {
         "id": "v-m21-003",
         "uk": "минулий",
-        "translit": "mynulyi",
-        "ipa": "/mɪˈnulɪj/",
-        "en": "last, past",
-        "pos": "adj",
-        "gender": "m",
-        "note": "минулого тижня"
+        "translit": "/mɪˈnulɪj/",
+        "ipa": "last, past",
+        "en": "adj",
+        "pos": "m",
+        "gender": "минулого тижня"
       },
       {
         "id": "v-m21-004",
         "uk": "давно",
-        "translit": "davno",
-        "ipa": "/ˈdɑvnɔ/",
-        "en": "long ago",
-        "pos": "adv",
-        "gender": "-"
+        "translit": "/ˈdɑvnɔ/",
+        "ipa": "long ago",
+        "en": "adv",
+        "pos": "-"
       },
       {
         "id": "v-m21-005",
         "uk": "недавно",
-        "translit": "nedavno",
-        "ipa": "/nɛˈdɑvnɔ/",
-        "en": "recently",
-        "pos": "adv",
-        "gender": "-"
+        "translit": "/nɛˈdɑvnɔ/",
+        "ipa": "recently",
+        "en": "adv",
+        "pos": "-"
       },
       {
         "id": "v-m21-006",
         "uk": "раніше",
-        "translit": "ranishe",
-        "ipa": "/ˈrɑnʲiʃɛ/",
-        "en": "earlier, before",
-        "pos": "adv",
-        "gender": "-"
+        "translit": "/ˈrɑnʲiʃɛ/",
+        "ipa": "earlier, before",
+        "en": "adv",
+        "pos": "-"
       },
       {
         "id": "v-m21-007",
         "uk": "тоді",
-        "translit": "todi",
-        "ipa": "/tɔˈdʲi/",
-        "en": "then",
-        "pos": "adv",
-        "gender": "-"
+        "translit": "/tɔˈdʲi/",
+        "ipa": "then",
+        "en": "adv",
+        "pos": "-"
       },
       {
         "id": "v-m21-008",
         "uk": "потім",
-        "translit": "potim",
-        "ipa": "/pɔˈtʲim/",
-        "en": "then, later",
-        "pos": "adv",
-        "gender": "-"
+        "translit": "/pɔˈtʲim/",
+        "ipa": "then, later",
+        "en": "adv",
+        "pos": "-"
       },
       {
         "id": "v-m21-009",
         "uk": "вже",
-        "translit": "vzhe",
-        "ipa": "/vʒɛ/",
-        "en": "already",
-        "pos": "adv",
-        "gender": "-"
+        "translit": "/vʒɛ/",
+        "ipa": "already",
+        "en": "adv",
+        "pos": "-"
       },
       {
         "id": "v-m21-010",
         "uk": "ще не",
-        "translit": "shche ne",
-        "ipa": "/ʃtʃɛ nɛ/",
-        "en": "not yet",
-        "pos": "phrase",
-        "gender": "-"
+        "translit": "/ʃtʃɛ nɛ/",
+        "ipa": "not yet",
+        "en": "phrase",
+        "pos": "-"
       },
       {
         "id": "v-m21-011",
         "uk": "був",
-        "translit": "buv",
-        "ipa": "/buv/",
-        "en": "was (m)",
-        "pos": "verb",
-        "gender": "m",
-        "note": "Past of бути"
+        "translit": "/buv/",
+        "ipa": "was (m)",
+        "en": "verb",
+        "pos": "m",
+        "gender": "Past of бути"
       },
       {
         "id": "v-m21-012",
         "uk": "була",
-        "translit": "bula",
-        "ipa": "/buˈlɑ/",
-        "en": "was (f)",
-        "pos": "verb",
-        "gender": "f",
-        "note": "Past of бути"
+        "translit": "/buˈlɑ/",
+        "ipa": "was (f)",
+        "en": "verb",
+        "pos": "f",
+        "gender": "Past of бути"
       },
       {
         "id": "v-m21-013",
         "uk": "було",
-        "translit": "bulo",
-        "ipa": "/ˈbulɔ/",
-        "en": "was (n)",
-        "pos": "verb",
-        "gender": "n",
-        "note": "Past of бути"
+        "translit": "/ˈbulɔ/",
+        "ipa": "was (n)",
+        "en": "verb",
+        "pos": "n",
+        "gender": "Past of бути"
       },
       {
         "id": "v-m21-014",
         "uk": "були",
-        "translit": "buly",
-        "ipa": "/buˈlɪ/",
-        "en": "were",
-        "pos": "verb",
-        "gender": "pl",
-        "note": "Past of бути"
+        "translit": "/buˈlɪ/",
+        "ipa": "were",
+        "en": "verb",
+        "pos": "pl",
+        "gender": "Past of бути"
       },
       {
         "id": "v-m21-015",
         "uk": "ішов",
-        "translit": "ishov",
-        "ipa": "/iˈʃɔv/",
-        "en": "went (m)",
-        "pos": "verb",
-        "gender": "m",
-        "note": "Past of йти"
+        "translit": "/iˈʃɔv/",
+        "ipa": "went (m)",
+        "en": "verb",
+        "pos": "m",
+        "gender": "Past of йти"
       },
       {
         "id": "v-m21-016",
         "uk": "ішла",
-        "translit": "ishla",
-        "ipa": "/iʃˈlɑ/",
-        "en": "went (f)",
-        "pos": "verb",
-        "gender": "f",
-        "note": "Past of йти"
+        "translit": "/iʃˈlɑ/",
+        "ipa": "went (f)",
+        "en": "verb",
+        "pos": "f",
+        "gender": "Past of йти"
       }
     ]
   }

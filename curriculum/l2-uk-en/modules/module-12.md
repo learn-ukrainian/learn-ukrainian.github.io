@@ -234,27 +234,22 @@ Practice with real people:
 
 # Vocabulary
 
-| uk | translit | ipa | en | pos | gender | note |
-|----|----------|-----|-----|-----|--------|------|
-| друг | druh | /druɦ/ | friend (m) | noun | m | Acc: друга |
-| подруга | podruha | /pɔˈdruɦɑ/ | friend (f) | noun | f | Acc: подругу |
-| колега | koleha | /kɔˈlɛɦɑ/ | colleague | noun | m/f | m: колегу, f: колегу |
-| сусід | susid | /suˈsʲid/ | neighbor (m) | noun | m | Acc: сусіда |
-| сусідка | susidka | /suˈsʲidkɑ/ | neighbor (f) | noun | f | Acc: сусідку |
-| лікар | likar | /ˈlʲikɑr/ | doctor (m) | noun | m | Acc: лікаря |
-| лікарка | likarka | /lʲiˈkɑrkɑ/ | doctor (f) | noun | f | Acc: лікарку |
-| вчитель | vchytel | /ˈwtʃɪtɛlʲ/ | teacher (m) | noun | m | Acc: вчителя |
-| вчителька | vchytelka | /wtʃɪˈtɛlʲkɑ/ | teacher (f) | noun | f | Acc: вчительку |
-| офіціант | ofitsiant | /ɔfʲit͡sʲiˈɑnt/ | waiter | noun | m | Acc: офіціанта |
-| офіціантка | ofitsiantka | /ɔfʲit͡sʲiˈɑntkɑ/ | waitress | noun | f | Acc: офіціантку |
-| продавець | prodavets | /prɔdɑˈvɛt͡sʲ/ | seller (m) | noun | m | Acc: продавця |
-| продавчиня | prodavchynya | /prɔdɑvˈtʃɪnʲɑ/ | seller (f) | noun | f | Acc: продавчиню |
-| водій | vodii | /vɔˈdʲij/ | driver | noun | m | Acc: водія |
-| пасажир | pasazhyr | /pɑsɑˈʒɪr/ | passenger | noun | m | Acc: пасажира |
-| гість | hist | /ɦʲistʲ/ | guest | noun | m | Acc: гостя |
-| директор | dyrektor | /dɪˈrɛktɔr/ | director | noun | m | Acc: директора |
-| менеджер | menedzher | /mɛˈnɛd͡ʒɛr/ | manager | noun | m | Acc: менеджера |
-
+| Word | IPA | English | POS | Gender | Note |
+|------|-----|---------|-----|--------|------|
+| колега | /kɔˈlɛɦɑ/ | colleague | noun | m/f | m: колегу, f: колегу |
+| сусід | /suˈsʲid/ | neighbor (m) | noun | m | Acc: сусіда |
+| сусідка | /suˈsʲidkɑ/ | neighbor (f) | noun | f | Acc: сусідку |
+| лікар | /ˈlʲikɑr/ | doctor (m) | noun | m | Acc: лікаря |
+| лікарка | /lʲiˈkɑrkɑ/ | doctor (f) | noun | f | Acc: лікарку |
+| офіціант | /ɔfʲit͡sʲiˈɑnt/ | waiter | noun | m | Acc: офіціанта |
+| офіціантка | /ɔfʲit͡sʲiˈɑntkɑ/ | waitress | noun | f | Acc: офіціантку |
+| продавець | /prɔdɑˈvɛt͡sʲ/ | seller (m) | noun | m | Acc: продавця |
+| продавчиня | /prɔdɑvˈtʃɪnʲɑ/ | seller (f) | noun | f | Acc: продавчиню |
+| водій | /vɔˈdʲij/ | driver | noun | m | Acc: водія |
+| пасажир | /pɑsɑˈʒɪr/ | passenger | noun | m | Acc: пасажира |
+| гість | /ɦʲistʲ/ | guest | noun | m | Acc: гостя |
+| директор | /dɪˈrɛktɔr/ | director | noun | m | Acc: директора |
+| менеджер | /mɛˈnɛd͡ʒɛr/ | manager | noun | m | Acc: менеджера |
 ---
 
 # Animate Accusative Summary

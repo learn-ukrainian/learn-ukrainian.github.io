@@ -349,208 +349,161 @@
     "moduleId": "mod-uk-A1-08",
     "level": "A1",
     "phase": "A1.2",
-    "wordCount": 20,
+    "wordCount": 17,
     "transliterationMode": "full",
     "words": [
       {
         "id": "v-m08-001",
-        "uk": "говорити",
-        "translit": "hovoryty",
-        "ipa": "/ɦɔvɔˈrɪtɪ/",
-        "en": "to speak",
-        "pos": "verb",
-        "gender": "-",
-        "note": "говорю, говориш, говорить"
+        "uk": "бачити",
+        "translit": "/ˈbɑtʃɪtɪ/",
+        "ipa": "to see",
+        "en": "verb",
+        "pos": "-",
+        "gender": "бачу, бачиш, бачить"
       },
       {
         "id": "v-m08-002",
-        "uk": "робити",
-        "translit": "robyty",
-        "ipa": "/rɔˈbɪtɪ/",
-        "en": "to do, make",
-        "pos": "verb",
-        "gender": "-",
-        "note": "роблю (б→бл), робиш, робить"
+        "uk": "любити",
+        "translit": "/lʲuˈbɪtɪ/",
+        "ipa": "to love",
+        "en": "verb",
+        "pos": "-",
+        "gender": "люблю (б→бл), любиш, любить"
       },
       {
         "id": "v-m08-003",
-        "uk": "бачити",
-        "translit": "bachyty",
-        "ipa": "/ˈbɑtʃɪtɪ/",
-        "en": "to see",
-        "pos": "verb",
-        "gender": "-",
-        "note": "бачу, бачиш, бачить"
+        "uk": "ходити",
+        "translit": "/xɔˈdɪtɪ/",
+        "ipa": "to walk, go",
+        "en": "verb",
+        "pos": "-",
+        "gender": "ходжу (д→дж), ходиш, ходить"
       },
       {
         "id": "v-m08-004",
-        "uk": "любити",
-        "translit": "lyubyty",
-        "ipa": "/lʲuˈbɪtɪ/",
-        "en": "to love",
-        "pos": "verb",
-        "gender": "-",
-        "note": "люблю (б→бл), любиш, любить"
+        "uk": "носити",
+        "translit": "/nɔˈsɪtɪ/",
+        "ipa": "to carry, wear",
+        "en": "verb",
+        "pos": "-",
+        "gender": "ношу (с→ш), носиш, носить"
       },
       {
         "id": "v-m08-005",
-        "uk": "ходити",
-        "translit": "khodyty",
-        "ipa": "/xɔˈdɪtɪ/",
-        "en": "to walk, go",
-        "pos": "verb",
-        "gender": "-",
-        "note": "ходжу (д→дж), ходиш, ходить"
+        "uk": "просити",
+        "translit": "/prɔˈsɪtɪ/",
+        "ipa": "to ask, request",
+        "en": "verb",
+        "pos": "-",
+        "gender": "прошу (с→ш), просиш, просить"
       },
       {
         "id": "v-m08-006",
-        "uk": "носити",
-        "translit": "nosyty",
-        "ipa": "/nɔˈsɪtɪ/",
-        "en": "to carry, wear",
-        "pos": "verb",
-        "gender": "-",
-        "note": "ношу (с→ш), носиш, носить"
+        "uk": "сидіти",
+        "translit": "/sɪˈdʲitɪ/",
+        "ipa": "to sit",
+        "en": "verb",
+        "pos": "-",
+        "gender": "сиджу (д→дж), сидиш, сидить"
       },
       {
         "id": "v-m08-007",
-        "uk": "просити",
-        "translit": "prosyty",
-        "ipa": "/prɔˈsɪtɪ/",
-        "en": "to ask, request",
-        "pos": "verb",
-        "gender": "-",
-        "note": "прошу (с→ш), просиш, просить"
+        "uk": "стояти",
+        "translit": "/stɔˈjɑtɪ/",
+        "ipa": "to stand",
+        "en": "verb",
+        "pos": "-",
+        "gender": "стою, стоїш, стоїть"
       },
       {
         "id": "v-m08-008",
-        "uk": "сидіти",
-        "translit": "sydity",
-        "ipa": "/sɪˈdʲitɪ/",
-        "en": "to sit",
-        "pos": "verb",
-        "gender": "-",
-        "note": "сиджу (д→дж), сидиш, сидить"
+        "uk": "лежати",
+        "translit": "/lɛˈʒɑtɪ/",
+        "ipa": "to lie down",
+        "en": "verb",
+        "pos": "-",
+        "gender": "лежу, лежиш, лежить"
       },
       {
         "id": "v-m08-009",
-        "uk": "стояти",
-        "translit": "stoyaty",
-        "ipa": "/stɔˈjɑtɪ/",
-        "en": "to stand",
-        "pos": "verb",
-        "gender": "-",
-        "note": "стою, стоїш, стоїть"
+        "uk": "спати",
+        "translit": "/ˈspɑtɪ/",
+        "ipa": "to sleep",
+        "en": "verb",
+        "pos": "-",
+        "gender": "сплю, спиш, спить"
       },
       {
         "id": "v-m08-010",
-        "uk": "лежати",
-        "translit": "lezhaty",
-        "ipa": "/lɛˈʒɑtɪ/",
-        "en": "to lie down",
-        "pos": "verb",
-        "gender": "-",
-        "note": "лежу, лежиш, лежить"
+        "uk": "їсти",
+        "translit": "/ˈjistɪ/",
+        "ipa": "to eat",
+        "en": "verb",
+        "pos": "-",
+        "gender": "Irregular: їм, їси, їсть"
       },
       {
         "id": "v-m08-011",
-        "uk": "спати",
-        "translit": "spaty",
-        "ipa": "/ˈspɑtɪ/",
-        "en": "to sleep",
-        "pos": "verb",
-        "gender": "-",
-        "note": "сплю, спиш, спить"
+        "uk": "пити",
+        "translit": "/ˈpɪtɪ/",
+        "ipa": "to drink",
+        "en": "verb",
+        "pos": "-",
+        "gender": "Irregular: п'ю, п'єш, п'є"
       },
       {
         "id": "v-m08-012",
-        "uk": "хотіти",
-        "translit": "khotity",
-        "ipa": "/xɔˈtʲitɪ/",
-        "en": "to want",
-        "pos": "verb",
-        "gender": "-",
-        "note": "Irregular: хочу, хочеш, хоче"
+        "uk": "жити",
+        "translit": "/ˈʒɪtɪ/",
+        "ipa": "to live",
+        "en": "verb",
+        "pos": "-",
+        "gender": "живу, живеш, живе"
       },
       {
         "id": "v-m08-013",
-        "uk": "їсти",
-        "translit": "yisty",
-        "ipa": "/ˈjistɪ/",
-        "en": "to eat",
-        "pos": "verb",
-        "gender": "-",
-        "note": "Irregular: їм, їси, їсть"
+        "uk": "вчити",
+        "translit": "/ˈwtʃɪtɪ/",
+        "ipa": "to teach/learn",
+        "en": "verb",
+        "pos": "-",
+        "gender": "вчу, вчиш, вчить"
       },
       {
         "id": "v-m08-014",
-        "uk": "пити",
-        "translit": "pyty",
-        "ipa": "/ˈpɪtɪ/",
-        "en": "to drink",
-        "pos": "verb",
-        "gender": "-",
-        "note": "Irregular: п'ю, п'єш, п'є"
+        "uk": "вчитися",
+        "translit": "/ˈwtʃɪtɪsʲɑ/",
+        "ipa": "to study, learn",
+        "en": "verb",
+        "pos": "-",
+        "gender": "Reflexive: вчуся, вчишся"
       },
       {
         "id": "v-m08-015",
-        "uk": "жити",
-        "translit": "zhyty",
-        "ipa": "/ˈʒɪtɪ/",
-        "en": "to live",
-        "pos": "verb",
-        "gender": "-",
-        "note": "живу, живеш, живе"
+        "uk": "купувати",
+        "translit": "/kupuˈvɑtɪ/",
+        "ipa": "to buy",
+        "en": "verb",
+        "pos": "-",
+        "gender": "Class I: купую, купуєш"
       },
       {
         "id": "v-m08-016",
-        "uk": "вчити",
-        "translit": "vchyty",
-        "ipa": "/ˈwtʃɪtɪ/",
-        "en": "to teach/learn",
-        "pos": "verb",
-        "gender": "-",
-        "note": "вчу, вчиш, вчить"
+        "uk": "телефонувати",
+        "translit": "/tɛlɛfɔnuˈvɑtɪ/",
+        "ipa": "to call (phone)",
+        "en": "verb",
+        "pos": "-",
+        "gender": "Class I: телефоную"
       },
       {
         "id": "v-m08-017",
-        "uk": "вчитися",
-        "translit": "vchytysya",
-        "ipa": "/ˈwtʃɪtɪsʲɑ/",
-        "en": "to study, learn",
-        "pos": "verb",
-        "gender": "-",
-        "note": "Reflexive: вчуся, вчишся"
-      },
-      {
-        "id": "v-m08-018",
-        "uk": "купувати",
-        "translit": "kupuvaty",
-        "ipa": "/kupuˈvɑtɪ/",
-        "en": "to buy",
-        "pos": "verb",
-        "gender": "-",
-        "note": "Class I: купую, купуєш"
-      },
-      {
-        "id": "v-m08-019",
-        "uk": "телефонувати",
-        "translit": "telefonuvaty",
-        "ipa": "/tɛlɛfɔnuˈvɑtɪ/",
-        "en": "to call (phone)",
-        "pos": "verb",
-        "gender": "-",
-        "note": "Class I: телефоную"
-      },
-      {
-        "id": "v-m08-020",
         "uk": "дякувати",
-        "translit": "dyakuvaty",
-        "ipa": "/dʲɑkuˈvɑtɪ/",
-        "en": "to thank",
-        "pos": "verb",
-        "gender": "-",
-        "note": "Class I: дякую, дякуєш"
+        "translit": "/dʲɑkuˈvɑtɪ/",
+        "ipa": "to thank",
+        "en": "verb",
+        "pos": "-",
+        "gender": "Class I: дякую, дякуєш"
       }
     ]
   }

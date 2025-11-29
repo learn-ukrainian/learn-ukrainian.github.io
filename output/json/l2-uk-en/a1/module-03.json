@@ -344,208 +344,179 @@
     "moduleId": "mod-uk-A1-03",
     "level": "A1",
     "phase": "A1.1",
-    "wordCount": 20,
+    "wordCount": 19,
     "transliterationMode": "full",
     "words": [
       {
         "id": "v-m03-001",
         "uk": "рід",
-        "translit": "rid",
-        "ipa": "/rʲid/",
-        "en": "gender (grammatical), genus",
-        "pos": "noun",
-        "gender": "m",
-        "note": "чоловічий рід = masculine gender"
+        "translit": "/rʲid/",
+        "ipa": "gender (grammatical), genus",
+        "en": "noun",
+        "pos": "m",
+        "gender": "чоловічий рід = masculine gender"
       },
       {
         "id": "v-m03-002",
         "uk": "чоловічий",
-        "translit": "cholovichyi",
-        "ipa": "/tʃɔlɔˈvʲitʃɪj/",
-        "en": "masculine",
-        "pos": "adj",
-        "gender": "m",
-        "note": "Literally \"man-like\""
+        "translit": "/tʃɔlɔˈvʲitʃɪj/",
+        "ipa": "masculine",
+        "en": "adj",
+        "pos": "m",
+        "gender": "Literally \"man-like\""
       },
       {
         "id": "v-m03-003",
         "uk": "жіночий",
-        "translit": "zhinochyi",
-        "ipa": "/ʒʲiˈnɔtʃɪj/",
-        "en": "feminine",
-        "pos": "adj",
-        "gender": "m",
-        "note": "Literally \"woman-like\""
+        "translit": "/ʒʲiˈnɔtʃɪj/",
+        "ipa": "feminine",
+        "en": "adj",
+        "pos": "m",
+        "gender": "Literally \"woman-like\""
       },
       {
         "id": "v-m03-004",
         "uk": "середній",
-        "translit": "serednii",
-        "ipa": "/sɛˈrɛdnʲij/",
-        "en": "middle, neuter",
-        "pos": "adj",
-        "gender": "m",
-        "note": "середній рід = neuter gender"
+        "translit": "/sɛˈrɛdnʲij/",
+        "ipa": "middle, neuter",
+        "en": "adj",
+        "pos": "m",
+        "gender": "середній рід = neuter gender"
       },
       {
         "id": "v-m03-005",
         "uk": "брат",
-        "translit": "brat",
-        "ipa": "/brɑt/",
-        "en": "brother",
-        "pos": "noun",
-        "gender": "m",
-        "note": "Consonant ending = masculine"
+        "translit": "/brɑt/",
+        "ipa": "brother",
+        "en": "noun",
+        "pos": "m",
+        "gender": "Consonant ending = masculine"
       },
       {
         "id": "v-m03-006",
         "uk": "сестра",
-        "translit": "sestra",
-        "ipa": "/sɛsˈtrɑ/",
-        "en": "sister",
-        "pos": "noun",
-        "gender": "f",
-        "note": "-а ending = feminine"
+        "translit": "/sɛsˈtrɑ/",
+        "ipa": "sister",
+        "en": "noun",
+        "pos": "f",
+        "gender": "-а ending = feminine"
       },
       {
         "id": "v-m03-007",
-        "uk": "студент",
-        "translit": "student",
-        "ipa": "/stuˈdɛnt/",
-        "en": "student (male)",
-        "pos": "noun",
-        "gender": "m",
-        "note": "Consonant ending"
+        "uk": "студентка",
+        "translit": "/stuˈdɛntkɑ/",
+        "ipa": "student (female)",
+        "en": "noun",
+        "pos": "f",
+        "gender": "-ка feminine suffix"
       },
       {
         "id": "v-m03-008",
-        "uk": "студентка",
-        "translit": "studentka",
-        "ipa": "/stuˈdɛntkɑ/",
-        "en": "student (female)",
-        "pos": "noun",
-        "gender": "f",
-        "note": "-ка feminine suffix"
+        "uk": "вчитель",
+        "translit": "/ˈwtʃɪtɛlʲ/",
+        "ipa": "teacher (male)",
+        "en": "noun",
+        "pos": "m",
+        "gender": "Soft sign after л"
       },
       {
         "id": "v-m03-009",
-        "uk": "вчитель",
-        "translit": "vchytel",
-        "ipa": "/ˈwtʃɪtɛlʲ/",
-        "en": "teacher (male)",
-        "pos": "noun",
-        "gender": "m",
-        "note": "Soft sign after л"
+        "uk": "вчителька",
+        "translit": "/wtʃɪˈtɛlʲkɑ/",
+        "ipa": "teacher (female)",
+        "en": "noun",
+        "pos": "f",
+        "gender": "-ка feminine suffix"
       },
       {
         "id": "v-m03-010",
-        "uk": "вчителька",
-        "translit": "vchytelka",
-        "ipa": "/wtʃɪˈtɛlʲkɑ/",
-        "en": "teacher (female)",
-        "pos": "noun",
-        "gender": "f",
-        "note": "-ка feminine suffix"
+        "uk": "стіл",
+        "translit": "/stʲil/",
+        "ipa": "table",
+        "en": "noun",
+        "pos": "m",
+        "gender": "Consonant = masculine"
       },
       {
         "id": "v-m03-011",
-        "uk": "стіл",
-        "translit": "stil",
-        "ipa": "/stʲil/",
-        "en": "table",
-        "pos": "noun",
-        "gender": "m",
-        "note": "Consonant = masculine"
+        "uk": "книга",
+        "translit": "/ˈknɪɦɑ/",
+        "ipa": "book",
+        "en": "noun",
+        "pos": "f",
+        "gender": "-а = feminine"
       },
       {
         "id": "v-m03-012",
-        "uk": "книга",
-        "translit": "knyha",
-        "ipa": "/ˈknɪɦɑ/",
-        "en": "book",
-        "pos": "noun",
-        "gender": "f",
-        "note": "-а = feminine"
+        "uk": "вікно",
+        "translit": "/wʲikˈnɔ/",
+        "ipa": "window",
+        "en": "noun",
+        "pos": "n",
+        "gender": "-о = neuter"
       },
       {
         "id": "v-m03-013",
-        "uk": "вікно",
-        "translit": "vikno",
-        "ipa": "/wʲikˈnɔ/",
-        "en": "window",
-        "pos": "noun",
-        "gender": "n",
-        "note": "-о = neuter"
+        "uk": "море",
+        "translit": "/ˈmɔrɛ/",
+        "ipa": "sea",
+        "en": "noun",
+        "pos": "n",
+        "gender": "-е = neuter"
       },
       {
         "id": "v-m03-014",
-        "uk": "море",
-        "translit": "more",
-        "ipa": "/ˈmɔrɛ/",
-        "en": "sea",
-        "pos": "noun",
-        "gender": "n",
-        "note": "-е = neuter"
+        "uk": "день",
+        "translit": "/dɛnʲ/",
+        "ipa": "day",
+        "en": "noun",
+        "pos": "m",
+        "gender": "-ь after н = masculine"
       },
       {
         "id": "v-m03-015",
-        "uk": "день",
-        "translit": "den",
-        "ipa": "/dɛnʲ/",
-        "en": "day",
-        "pos": "noun",
-        "gender": "m",
-        "note": "-ь after н = masculine"
+        "uk": "ніч",
+        "translit": "/nʲitʃ/",
+        "ipa": "night",
+        "en": "noun",
+        "pos": "f",
+        "gender": "-ь after ч = feminine"
       },
       {
         "id": "v-m03-016",
-        "uk": "ніч",
-        "translit": "nich",
-        "ipa": "/nʲitʃ/",
-        "en": "night",
-        "pos": "noun",
-        "gender": "f",
-        "note": "-ь after ч = feminine"
+        "uk": "земля",
+        "translit": "/zɛmˈlʲa/",
+        "ipa": "earth, land",
+        "en": "noun",
+        "pos": "f",
+        "gender": "-я = feminine"
       },
       {
         "id": "v-m03-017",
-        "uk": "земля",
-        "translit": "zemlya",
-        "ipa": "/zɛmˈlʲa/",
-        "en": "earth, land",
-        "pos": "noun",
-        "gender": "f",
-        "note": "-я = feminine"
+        "uk": "яблуко",
+        "translit": "/ˈjablukɔ/",
+        "ipa": "apple",
+        "en": "noun",
+        "pos": "n",
+        "gender": "-о = neuter"
       },
       {
         "id": "v-m03-018",
-        "uk": "яблуко",
-        "translit": "yabluko",
-        "ipa": "/ˈjablukɔ/",
-        "en": "apple",
-        "pos": "noun",
-        "gender": "n",
-        "note": "-о = neuter"
+        "uk": "молоко",
+        "translit": "/mɔlɔˈkɔ/",
+        "ipa": "milk",
+        "en": "noun",
+        "pos": "n",
+        "gender": "-о = neuter"
       },
       {
         "id": "v-m03-019",
-        "uk": "молоко",
-        "translit": "moloko",
-        "ipa": "/mɔlɔˈkɔ/",
-        "en": "milk",
-        "pos": "noun",
-        "gender": "n",
-        "note": "-о = neuter"
-      },
-      {
-        "id": "v-m03-020",
         "uk": "сонце",
-        "translit": "sontse",
-        "ipa": "/ˈsɔnt͡sɛ/",
-        "en": "sun",
-        "pos": "noun",
-        "gender": "n",
-        "note": "-е = neuter"
+        "translit": "/ˈsɔnt͡sɛ/",
+        "ipa": "sun",
+        "en": "noun",
+        "pos": "n",
+        "gender": "-е = neuter"
       }
     ]
   }

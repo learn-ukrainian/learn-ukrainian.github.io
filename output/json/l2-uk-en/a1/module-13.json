@@ -324,206 +324,143 @@
     "moduleId": "mod-uk-A1-13",
     "level": "A1",
     "phase": "A1.2",
-    "wordCount": 20,
+    "wordCount": 15,
     "transliterationMode": "full",
     "words": [
       {
         "id": "v-m13-001",
         "uk": "в / у",
-        "translit": "v / u",
-        "ipa": "/v/ /u/",
-        "en": "in, at",
-        "pos": "prep",
-        "gender": "-",
-        "note": "В after vowels, У after consonants"
+        "translit": "/v/ /u/",
+        "ipa": "in, at",
+        "en": "prep",
+        "pos": "-",
+        "gender": "В after vowels, У after consonants"
       },
       {
         "id": "v-m13-002",
         "uk": "на",
-        "translit": "na",
-        "ipa": "/nɑ/",
-        "en": "on, at",
-        "pos": "prep",
-        "gender": "-",
-        "note": "Surfaces, events, open areas"
+        "translit": "/nɑ/",
+        "ipa": "on, at",
+        "en": "prep",
+        "pos": "-",
+        "gender": "Surfaces, events, open areas"
       },
       {
         "id": "v-m13-003",
-        "uk": "де",
-        "translit": "de",
-        "ipa": "/dɛ/",
-        "en": "where",
-        "pos": "adv",
-        "gender": "-",
-        "note": "Де ти?"
+        "uk": "кімната",
+        "translit": "/kʲimˈnɑtɑ/",
+        "ipa": "room",
+        "en": "noun",
+        "pos": "f",
+        "gender": "Loc: кімнаті"
       },
       {
         "id": "v-m13-004",
-        "uk": "тут",
-        "translit": "tut",
-        "ipa": "/tut/",
-        "en": "here",
-        "pos": "adv",
-        "gender": "-"
+        "uk": "офіс",
+        "translit": "/ˈɔfʲis/",
+        "ipa": "office",
+        "en": "noun",
+        "pos": "m",
+        "gender": "Loc: офісі"
       },
       {
         "id": "v-m13-005",
-        "uk": "там",
-        "translit": "tam",
-        "ipa": "/tɑm/",
-        "en": "there",
-        "pos": "adv",
-        "gender": "-"
+        "uk": "школа",
+        "translit": "/ˈʃkɔlɑ/",
+        "ipa": "school",
+        "en": "noun",
+        "pos": "f",
+        "gender": "Loc: школі"
       },
       {
         "id": "v-m13-006",
-        "uk": "кімната",
-        "translit": "kimnata",
-        "ipa": "/kʲimˈnɑtɑ/",
-        "en": "room",
-        "pos": "noun",
-        "gender": "f",
-        "note": "Loc: кімнаті"
+        "uk": "університет",
+        "translit": "/unʲivɛrsɪˈtɛt/",
+        "ipa": "university",
+        "en": "noun",
+        "pos": "m",
+        "gender": "Loc: університеті"
       },
       {
         "id": "v-m13-007",
-        "uk": "офіс",
-        "translit": "ofis",
-        "ipa": "/ˈɔfʲis/",
-        "en": "office",
-        "pos": "noun",
-        "gender": "m",
-        "note": "Loc: офісі"
+        "uk": "магазин",
+        "translit": "/mɑɦɑˈzɪn/",
+        "ipa": "store",
+        "en": "noun",
+        "pos": "m",
+        "gender": "Loc: магазині"
       },
       {
         "id": "v-m13-008",
-        "uk": "школа",
-        "translit": "shkola",
-        "ipa": "/ˈʃkɔlɑ/",
-        "en": "school",
-        "pos": "noun",
-        "gender": "f",
-        "note": "Loc: школі"
+        "uk": "ресторан",
+        "translit": "/rɛstɔˈrɑn/",
+        "ipa": "restaurant",
+        "en": "noun",
+        "pos": "m",
+        "gender": "Loc: ресторані"
       },
       {
         "id": "v-m13-009",
-        "uk": "університет",
-        "translit": "universytet",
-        "ipa": "/unʲivɛrsɪˈtɛt/",
-        "en": "university",
-        "pos": "noun",
-        "gender": "m",
-        "note": "Loc: університеті"
+        "uk": "вулиця",
+        "translit": "/ˈvulɪt͡sʲɑ/",
+        "ipa": "street",
+        "en": "noun",
+        "pos": "f",
+        "gender": "Loc: вулиці"
       },
       {
         "id": "v-m13-010",
-        "uk": "магазин",
-        "translit": "mahazyn",
-        "ipa": "/mɑɦɑˈzɪn/",
-        "en": "store",
-        "pos": "noun",
-        "gender": "m",
-        "note": "Loc: магазині"
+        "uk": "площа",
+        "translit": "/ˈplɔʃt͡ʃɑ/",
+        "ipa": "square",
+        "en": "noun",
+        "pos": "f",
+        "gender": "Loc: площі"
       },
       {
         "id": "v-m13-011",
-        "uk": "ресторан",
-        "translit": "restoran",
-        "ipa": "/rɛstɔˈrɑn/",
-        "en": "restaurant",
-        "pos": "noun",
-        "gender": "m",
-        "note": "Loc: ресторані"
+        "uk": "центр",
+        "translit": "/t͡sɛntr/",
+        "ipa": "center",
+        "en": "noun",
+        "pos": "m",
+        "gender": "Loc: центрі"
       },
       {
         "id": "v-m13-012",
-        "uk": "кафе",
-        "translit": "kafe",
-        "ipa": "/kɑˈfɛ/",
-        "en": "café",
-        "pos": "noun",
-        "gender": "n",
-        "note": "Indeclinable!"
+        "uk": "станція",
+        "translit": "/ˈstɑnt͡sʲijɑ/",
+        "ipa": "station",
+        "en": "noun",
+        "pos": "f",
+        "gender": "Loc: станції"
       },
       {
         "id": "v-m13-013",
-        "uk": "вулиця",
-        "translit": "vulytsya",
-        "ipa": "/ˈvulɪt͡sʲɑ/",
-        "en": "street",
-        "pos": "noun",
-        "gender": "f",
-        "note": "Loc: вулиці"
+        "uk": "аеропорт",
+        "translit": "/ɑɛrɔˈpɔrt/",
+        "ipa": "airport",
+        "en": "noun",
+        "pos": "m",
+        "gender": "Loc: аеропорту"
       },
       {
         "id": "v-m13-014",
-        "uk": "площа",
-        "translit": "ploshcha",
-        "ipa": "/ˈplɔʃt͡ʃɑ/",
-        "en": "square",
-        "pos": "noun",
-        "gender": "f",
-        "note": "Loc: площі"
+        "uk": "готель",
+        "translit": "/ɦɔˈtɛlʲ/",
+        "ipa": "hotel",
+        "en": "noun",
+        "pos": "m",
+        "gender": "Loc: готелі"
       },
       {
         "id": "v-m13-015",
-        "uk": "парк",
-        "translit": "park",
-        "ipa": "/pɑrk/",
-        "en": "park",
-        "pos": "noun",
-        "gender": "m",
-        "note": "Loc: парку"
-      },
-      {
-        "id": "v-m13-016",
-        "uk": "центр",
-        "translit": "tsentr",
-        "ipa": "/t͡sɛntr/",
-        "en": "center",
-        "pos": "noun",
-        "gender": "m",
-        "note": "Loc: центрі"
-      },
-      {
-        "id": "v-m13-017",
-        "uk": "станція",
-        "translit": "stantsiya",
-        "ipa": "/ˈstɑnt͡sʲijɑ/",
-        "en": "station",
-        "pos": "noun",
-        "gender": "f",
-        "note": "Loc: станції"
-      },
-      {
-        "id": "v-m13-018",
-        "uk": "аеропорт",
-        "translit": "aeroport",
-        "ipa": "/ɑɛrɔˈpɔrt/",
-        "en": "airport",
-        "pos": "noun",
-        "gender": "m",
-        "note": "Loc: аеропорту"
-      },
-      {
-        "id": "v-m13-019",
-        "uk": "готель",
-        "translit": "hotel",
-        "ipa": "/ɦɔˈtɛlʲ/",
-        "en": "hotel",
-        "pos": "noun",
-        "gender": "m",
-        "note": "Loc: готелі"
-      },
-      {
-        "id": "v-m13-020",
         "uk": "Київ",
-        "translit": "Kyiv",
-        "ipa": "/ˈkɪjiu̯/",
-        "en": "Kyiv",
-        "pos": "noun",
-        "gender": "m",
-        "note": "Loc: Києві"
+        "translit": "/ˈkɪjiu̯/",
+        "ipa": "Kyiv",
+        "en": "noun",
+        "pos": "m",
+        "gender": "Loc: Києві"
       }
     ]
   }

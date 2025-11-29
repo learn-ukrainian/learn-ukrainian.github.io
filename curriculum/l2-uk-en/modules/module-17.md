@@ -318,29 +318,25 @@ Answer these questions:
 
 # Vocabulary
 
-| uk | translit | ipa | en | pos | gender | note |
-|----|----------|-----|-----|-----|--------|------|
-| їжа | yizha | /ˈjizʲɑ/ | food | noun | f | |
-| сніданок | snidanok | /snʲiˈdɑnɔk/ | breakfast | noun | m | |
-| обід | obid | /ɔˈbʲid/ | lunch | noun | m | |
-| вечеря | vecherya | /vɛˈtʃɛrʲɑ/ | dinner | noun | f | |
-| яблуко | yabluko | /ˈjɑblukɔ/ | apple | noun | n | Gen: яблука, pl: яблука |
-| картопля | kartoplya | /kɑrˈtɔplʲɑ/ | potato | noun | f | Collective, no plural |
-| помідор | pomidor | /pɔmʲiˈdɔr/ | tomato | noun | m | |
-| огірок | ohirok | /ɔˈɦʲirɔk/ | cucumber | noun | m | |
-| курка | kurka | /ˈkurkɑ/ | chicken | noun | f | |
-| м'ясо | myaso | /ˈmjɑsɔ/ | meat | noun | n | |
-| риба | ryba | /ˈrɪbɑ/ | fish | noun | f | |
-| хліб | khlib | /xlʲib/ | bread | noun | m | |
-| борщ | borshch | /bɔrʃtʃ/ | borscht | noun | m | Beet soup |
-| вареники | varenyky | /vɑˈrɛnɪkɪ/ | dumplings | noun | pl | Singular: вареник |
-| сало | salo | /ˈsɑlɔ/ | pork fat | noun | n | Cured, sliced thin |
-| каша | kasha | /ˈkɑʃɑ/ | porridge | noun | f | Buckwheat, oats, etc. |
-| салат | salat | /sɑˈlɑt/ | salad | noun | m | |
-| смачний | smachnyi | /ˈsmɑtʃnɪj/ | tasty | adj | m | смачна (f), смачне (n) |
-| свіжий | svizhyi | /ˈsvʲiʒɪj/ | fresh | adj | m | свіжа (f), свіже (n) |
-| смачного | smachnoho | /smɑtʃˈnɔɦɔ/ | bon appétit | phrase | - | Literally "of tasty" |
-
+| Word | IPA | English | POS | Gender | Note |
+|------|-----|---------|-----|--------|------|
+| їжа | /ˈjizʲɑ/ | food | noun | f |  |
+| сніданок | /snʲiˈdɑnɔk/ | breakfast | noun | m |  |
+| обід | /ɔˈbʲid/ | lunch | noun | m |  |
+| вечеря | /vɛˈtʃɛrʲɑ/ | dinner | noun | f |  |
+| картопля | /kɑrˈtɔplʲɑ/ | potato | noun | f | Collective, no plural |
+| помідор | /pɔmʲiˈdɔr/ | tomato | noun | m |  |
+| огірок | /ɔˈɦʲirɔk/ | cucumber | noun | m |  |
+| курка | /ˈkurkɑ/ | chicken | noun | f |  |
+| м'ясо | /ˈmjɑsɔ/ | meat | noun | n |  |
+| риба | /ˈrɪbɑ/ | fish | noun | f |  |
+| борщ | /bɔrʃtʃ/ | borscht | noun | m | Beet soup |
+| вареники | /vɑˈrɛnɪkɪ/ | dumplings | noun | pl | Singular: вареник |
+| сало | /ˈsɑlɔ/ | pork fat | noun | n | Cured, sliced thin |
+| каша | /ˈkɑʃɑ/ | porridge | noun | f | Buckwheat, oats, etc. |
+| смачний | /ˈsmɑtʃnɪj/ | tasty | adj | m | смачна (f), смачне (n) |
+| свіжий | /ˈsvʲiʒɪj/ | fresh | adj | m | свіжа (f), свіже (n) |
+| смачного | /smɑtʃˈnɔɦɔ/ | bon appétit | phrase | - | Literally "of tasty" |
 ---
 
 # Food Phrases

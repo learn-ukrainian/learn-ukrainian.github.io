@@ -354,173 +354,103 @@
     "moduleId": "mod-uk-A1-29",
     "level": "A1",
     "phase": "A1.3",
-    "wordCount": 17,
+    "wordCount": 11,
     "transliterationMode": "full",
     "words": [
       {
         "id": "v-m29-001",
-        "uk": "родина",
-        "translit": "rodyna",
-        "ipa": "/rɔˈdɪnɑ/",
-        "en": "family",
-        "pos": "noun",
-        "gender": "f"
+        "uk": "батько",
+        "translit": "/ˈbɑtʲkɔ/",
+        "ipa": "father",
+        "en": "noun",
+        "pos": "m",
+        "gender": "Formal"
       },
       {
         "id": "v-m29-002",
-        "uk": "мама",
-        "translit": "mama",
-        "ipa": "/ˈmɑmɑ/",
-        "en": "mom",
-        "pos": "noun",
-        "gender": "f",
-        "note": "Informal"
+        "uk": "батьки",
+        "translit": "/ˈbɑtʲkɪ/",
+        "ipa": "parents",
+        "en": "noun",
+        "pos": "pl"
       },
       {
         "id": "v-m29-003",
-        "uk": "тато",
-        "translit": "tato",
-        "ipa": "/ˈtɑtɔ/",
-        "en": "dad",
-        "pos": "noun",
-        "gender": "m",
-        "note": "Informal"
+        "uk": "син",
+        "translit": "/sɪn/",
+        "ipa": "son",
+        "en": "noun",
+        "pos": "m",
+        "gender": "Pl: сини"
       },
       {
         "id": "v-m29-004",
-        "uk": "батько",
-        "translit": "batko",
-        "ipa": "/ˈbɑtʲkɔ/",
-        "en": "father",
-        "pos": "noun",
-        "gender": "m",
-        "note": "Formal"
+        "uk": "дочка",
+        "translit": "/ˈdɔtʃkɑ/",
+        "ipa": "daughter",
+        "en": "noun",
+        "pos": "f",
+        "gender": "Pl: дочки"
       },
       {
         "id": "v-m29-005",
-        "uk": "мати",
-        "translit": "maty",
-        "ipa": "/ˈmɑtɪ/",
-        "en": "mother",
-        "pos": "noun",
-        "gender": "f",
-        "note": "Formal"
+        "uk": "дитина",
+        "translit": "/dɪˈtɪnɑ/",
+        "ipa": "child",
+        "en": "noun",
+        "pos": "f",
+        "gender": "Pl: діти!"
       },
       {
         "id": "v-m29-006",
-        "uk": "батьки",
-        "translit": "batky",
-        "ipa": "/ˈbɑtʲkɪ/",
-        "en": "parents",
-        "pos": "noun",
-        "gender": "pl"
+        "uk": "дідусь",
+        "translit": "/dʲiˈdusʲ/",
+        "ipa": "grandpa",
+        "en": "noun",
+        "pos": "m"
       },
       {
         "id": "v-m29-007",
-        "uk": "брат",
-        "translit": "brat",
-        "ipa": "/brɑt/",
-        "en": "brother",
-        "pos": "noun",
-        "gender": "m",
-        "note": "Pl: брати"
+        "uk": "бабуся",
+        "translit": "/bɑˈbusʲɑ/",
+        "ipa": "grandma",
+        "en": "noun",
+        "pos": "f"
       },
       {
         "id": "v-m29-008",
-        "uk": "сестра",
-        "translit": "sestra",
-        "ipa": "/sɛsˈtrɑ/",
-        "en": "sister",
-        "pos": "noun",
-        "gender": "f",
-        "note": "Pl: сестри"
+        "uk": "чоловік",
+        "translit": "/tʃɔlɔˈvʲik/",
+        "ipa": "husband",
+        "en": "noun",
+        "pos": "m",
+        "gender": "Also: man"
       },
       {
         "id": "v-m29-009",
-        "uk": "син",
-        "translit": "syn",
-        "ipa": "/sɪn/",
-        "en": "son",
-        "pos": "noun",
-        "gender": "m",
-        "note": "Pl: сини"
+        "uk": "дружина",
+        "translit": "/druˈʒɪnɑ/",
+        "ipa": "wife",
+        "en": "noun",
+        "pos": "f"
       },
       {
         "id": "v-m29-010",
-        "uk": "дочка",
-        "translit": "dochka",
-        "ipa": "/ˈdɔtʃkɑ/",
-        "en": "daughter",
-        "pos": "noun",
-        "gender": "f",
-        "note": "Pl: дочки"
+        "uk": "одружений",
+        "translit": "/ɔˈdruʒɛnɪj/",
+        "ipa": "married (m)",
+        "en": "adj",
+        "pos": "m",
+        "gender": "одружена (f)"
       },
       {
         "id": "v-m29-011",
-        "uk": "дитина",
-        "translit": "dytyna",
-        "ipa": "/dɪˈtɪnɑ/",
-        "en": "child",
-        "pos": "noun",
-        "gender": "f",
-        "note": "Pl: діти!"
-      },
-      {
-        "id": "v-m29-012",
-        "uk": "дідусь",
-        "translit": "didus",
-        "ipa": "/dʲiˈdusʲ/",
-        "en": "grandpa",
-        "pos": "noun",
-        "gender": "m"
-      },
-      {
-        "id": "v-m29-013",
-        "uk": "бабуся",
-        "translit": "babusya",
-        "ipa": "/bɑˈbusʲɑ/",
-        "en": "grandma",
-        "pos": "noun",
-        "gender": "f"
-      },
-      {
-        "id": "v-m29-014",
-        "uk": "чоловік",
-        "translit": "cholovik",
-        "ipa": "/tʃɔlɔˈvʲik/",
-        "en": "husband",
-        "pos": "noun",
-        "gender": "m",
-        "note": "Also: man"
-      },
-      {
-        "id": "v-m29-015",
-        "uk": "дружина",
-        "translit": "druzhyna",
-        "ipa": "/druˈʒɪnɑ/",
-        "en": "wife",
-        "pos": "noun",
-        "gender": "f"
-      },
-      {
-        "id": "v-m29-016",
-        "uk": "одружений",
-        "translit": "odruzhenyi",
-        "ipa": "/ɔˈdruʒɛnɪj/",
-        "en": "married (m)",
-        "pos": "adj",
-        "gender": "m",
-        "note": "одружена (f)"
-      },
-      {
-        "id": "v-m29-017",
         "uk": "родич",
-        "translit": "rodych",
-        "ipa": "/ˈrɔdɪtʃ/",
-        "en": "relative",
-        "pos": "noun",
-        "gender": "m",
-        "note": "Pl: родичі"
+        "translit": "/ˈrɔdɪtʃ/",
+        "ipa": "relative",
+        "en": "noun",
+        "pos": "m",
+        "gender": "Pl: родичі"
       }
     ]
   }

@@ -353,164 +353,140 @@
     "moduleId": "mod-uk-A1-22",
     "level": "A1",
     "phase": "A1.3",
-    "wordCount": 16,
+    "wordCount": 15,
     "transliterationMode": "full",
     "words": [
       {
         "id": "v-m22-001",
         "uk": "буду",
-        "translit": "budu",
-        "ipa": "/ˈbudu/",
-        "en": "I will be",
-        "pos": "verb",
-        "gender": "-",
-        "note": "Future of бути"
+        "translit": "/ˈbudu/",
+        "ipa": "I will be",
+        "en": "verb",
+        "pos": "-",
+        "gender": "Future of бути"
       },
       {
         "id": "v-m22-002",
         "uk": "будеш",
-        "translit": "budesh",
-        "ipa": "/ˈbudɛʃ/",
-        "en": "you will be",
-        "pos": "verb",
-        "gender": "-",
-        "note": "ти form"
+        "translit": "/ˈbudɛʃ/",
+        "ipa": "you will be",
+        "en": "verb",
+        "pos": "-",
+        "gender": "ти form"
       },
       {
         "id": "v-m22-003",
         "uk": "буде",
-        "translit": "bude",
-        "ipa": "/ˈbudɛ/",
-        "en": "will be",
-        "pos": "verb",
-        "gender": "-",
-        "note": "він/вона/воно"
+        "translit": "/ˈbudɛ/",
+        "ipa": "will be",
+        "en": "verb",
+        "pos": "-",
+        "gender": "він/вона/воно"
       },
       {
         "id": "v-m22-004",
         "uk": "будемо",
-        "translit": "budemo",
-        "ipa": "/ˈbudɛmɔ/",
-        "en": "we will be",
-        "pos": "verb",
-        "gender": "-",
-        "note": "ми form"
+        "translit": "/ˈbudɛmɔ/",
+        "ipa": "we will be",
+        "en": "verb",
+        "pos": "-",
+        "gender": "ми form"
       },
       {
         "id": "v-m22-005",
         "uk": "будете",
-        "translit": "budete",
-        "ipa": "/ˈbudɛtɛ/",
-        "en": "you will be",
-        "pos": "verb",
-        "gender": "-",
-        "note": "ви form"
+        "translit": "/ˈbudɛtɛ/",
+        "ipa": "you will be",
+        "en": "verb",
+        "pos": "-",
+        "gender": "ви form"
       },
       {
         "id": "v-m22-006",
         "uk": "будуть",
-        "translit": "budut",
-        "ipa": "/ˈbudutʲ/",
-        "en": "they will be",
-        "pos": "verb",
-        "gender": "-",
-        "note": "вони form"
+        "translit": "/ˈbudutʲ/",
+        "ipa": "they will be",
+        "en": "verb",
+        "pos": "-",
+        "gender": "вони form"
       },
       {
         "id": "v-m22-007",
-        "uk": "завтра",
-        "translit": "zavtra",
-        "ipa": "/ˈzɑvtrɑ/",
-        "en": "tomorrow",
-        "pos": "adv",
-        "gender": "-"
+        "uk": "післязавтра",
+        "translit": "/pʲislʲɑˈzɑvtrɑ/",
+        "ipa": "day after tomorrow",
+        "en": "adv",
+        "pos": "-"
       },
       {
         "id": "v-m22-008",
-        "uk": "післязавтра",
-        "translit": "pislyazavtra",
-        "ipa": "/pʲislʲɑˈzɑvtrɑ/",
-        "en": "day after tomorrow",
-        "pos": "adv",
-        "gender": "-"
+        "uk": "наступний",
+        "translit": "/nɑˈstupnɪj/",
+        "ipa": "next",
+        "en": "adj",
+        "pos": "m",
+        "gender": "наступного тижня"
       },
       {
         "id": "v-m22-009",
-        "uk": "наступний",
-        "translit": "nastupnyi",
-        "ipa": "/nɑˈstupnɪj/",
-        "en": "next",
-        "pos": "adj",
-        "gender": "m",
-        "note": "наступного тижня"
+        "uk": "скоро",
+        "translit": "/ˈskɔrɔ/",
+        "ipa": "soon",
+        "en": "adv",
+        "pos": "-"
       },
       {
         "id": "v-m22-010",
-        "uk": "скоро",
-        "translit": "skoro",
-        "ipa": "/ˈskɔrɔ/",
-        "en": "soon",
-        "pos": "adv",
-        "gender": "-"
+        "uk": "пізніше",
+        "translit": "/ˈpʲizʲnʲiʃɛ/",
+        "ipa": "later",
+        "en": "adv",
+        "pos": "-"
       },
       {
         "id": "v-m22-011",
-        "uk": "пізніше",
-        "translit": "piznishe",
-        "ipa": "/ˈpʲizʲnʲiʃɛ/",
-        "en": "later",
-        "pos": "adv",
-        "gender": "-"
+        "uk": "планувати",
+        "translit": "/plɑnuˈvɑtɪ/",
+        "ipa": "to plan",
+        "en": "verb",
+        "pos": "-",
+        "gender": "планую"
       },
       {
         "id": "v-m22-012",
-        "uk": "планувати",
-        "translit": "planuvaty",
-        "ipa": "/plɑnuˈvɑtɪ/",
-        "en": "to plan",
-        "pos": "verb",
-        "gender": "-",
-        "note": "планую"
+        "uk": "збиратися",
+        "translit": "/zbɪˈrɑtɪsʲɑ/",
+        "ipa": "to be going to",
+        "en": "verb",
+        "pos": "-",
+        "gender": "збираюся"
       },
       {
         "id": "v-m22-013",
-        "uk": "збиратися",
-        "translit": "zbyratysya",
-        "ipa": "/zbɪˈrɑtɪsʲɑ/",
-        "en": "to be going to",
-        "pos": "verb",
-        "gender": "-",
-        "note": "збираюся"
+        "uk": "прочитати",
+        "translit": "/prɔtʃɪˈtɑtɪ/",
+        "ipa": "to read (perf)",
+        "en": "verb",
+        "pos": "-",
+        "gender": "Simple future: прочитаю"
       },
       {
         "id": "v-m22-014",
-        "uk": "прочитати",
-        "translit": "prochytaty",
-        "ipa": "/prɔtʃɪˈtɑtɪ/",
-        "en": "to read (perf)",
-        "pos": "verb",
-        "gender": "-",
-        "note": "Simple future: прочитаю"
+        "uk": "написати",
+        "translit": "/nɑpɪˈsɑtɪ/",
+        "ipa": "to write (perf)",
+        "en": "verb",
+        "pos": "-",
+        "gender": "Simple future: напишу"
       },
       {
         "id": "v-m22-015",
-        "uk": "написати",
-        "translit": "napysaty",
-        "ipa": "/nɑpɪˈsɑtɪ/",
-        "en": "to write (perf)",
-        "pos": "verb",
-        "gender": "-",
-        "note": "Simple future: напишу"
-      },
-      {
-        "id": "v-m22-016",
         "uk": "зробити",
-        "translit": "zrobyty",
-        "ipa": "/zrɔˈbɪtɪ/",
-        "en": "to do (perf)",
-        "pos": "verb",
-        "gender": "-",
-        "note": "Simple future: зроблю"
+        "translit": "/zrɔˈbɪtɪ/",
+        "ipa": "to do (perf)",
+        "en": "verb",
+        "pos": "-",
+        "gender": "Simple future: зроблю"
       }
     ]
   }

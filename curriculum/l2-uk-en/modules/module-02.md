@@ -311,29 +311,28 @@ The Ukrainian alphabet has a specific order (like ABC in English). Practice sayi
 
 # Vocabulary
 
-| uk | translit | ipa | en | pos | gender | note |
-|----|----------|-----|-----|-----|--------|------|
-| буква | bukva | /ˈbukvɑ/ | letter (of alphabet) | noun | f | Б, У - uses new letters |
-| слово | slovo | /ˈslɔvɔ/ | word | noun | n | Basic vocabulary |
-| алфавіт | alfavit | /ɑlfɑˈvʲit/ | alphabet | noun | m | Also: абетка (traditional) |
-| мова | mova | /ˈmɔvɑ/ | language | noun | f | Українська мова = Ukrainian language |
-| українська | ukrayinska | /ukrɑˈjinʲsʲkɑ/ | Ukrainian (adj) | adj | f | Uses Ї! |
-| англійська | anhliiska | /ɑnˈɦlʲijsʲkɑ/ | English (adj) | adj | f | Г = H sound |
-| так | tak | /tɑk/ | yes | particle | - | Essential word |
-| ні | ni | /nʲi/ | no | particle | - | Essential word |
-| добре | dobre | /ˈdɔbrɛ/ | good, okay | adv | - | Common response |
-| дякую | dyakuyu | /ˈdʲakuju/ | thank you | verb | - | Я, Ю = iotated |
-| будь ласка | bud' laska | /budʲ ˈlɑskɑ/ | please | phrase | - | Ь = soft sign |
-| привіт | pryvit | /prɪˈvʲit/ | hi, hello | interj | - | Informal greeting |
-| до побачення | do pobachennya | /dɔ pɔˈbɑtʃɛnʲːɑ/ | goodbye | phrase | - | Ч = CH |
-| вибачте | vybachte | /vɪˈbɑtʃtɛ/ | excuse me, sorry | verb | - | Ч = CH |
-| прошу | proshu | /ˈprɔʃu/ | please/you're welcome | verb | - | Ш = SH |
-| ласкаво просимо | laskavo prosymo | /ˈlɑskɑvɔ ˈprɔsɪmɔ/ | welcome | phrase | - | Formal welcome |
-| що | shcho | /ʃtʃɔ/ | what | pron | - | Щ = SHCH |
-| як | yak | /jɑk/ | how | adv | - | Я = YA |
-| де | de | /dɛ/ | where | adv | - | Simple question word |
-| хто | khto | /xtɔ/ | who | pron | - | Х = KH |
-
+| Word | IPA | English | POS | Gender | Note |
+|------|-----|---------|-----|--------|------|
+| буква | /ˈbukvɑ/ | letter (of alphabet) | noun | f | Б, У - uses new letters |
+| слово | /ˈslɔvɔ/ | word | noun | n | Basic vocabulary |
+| алфавіт | /ɑlfɑˈvʲit/ | alphabet | noun | m | Also: абетка (traditional) |
+| мова | /ˈmɔvɑ/ | language | noun | f | Українська мова = Ukrainian language |
+| українська | /ukrɑˈjinʲsʲkɑ/ | Ukrainian (adj) | adj | f | Uses Ї! |
+| англійська | /ɑnˈɦlʲijsʲkɑ/ | English (adj) | adj | f | Г = H sound |
+| так | /tɑk/ | yes | particle | - | Essential word |
+| ні | /nʲi/ | no | particle | - | Essential word |
+| добре | /ˈdɔbrɛ/ | good, okay | adv | - | Common response |
+| дякую | /ˈdʲakuju/ | thank you | verb | - | Я, Ю = iotated |
+| будь ласка | /budʲ ˈlɑskɑ/ | please | phrase | - | Ь = soft sign |
+| привіт | /prɪˈvʲit/ | hi, hello | interj | - | Informal greeting |
+| до побачення | /dɔ pɔˈbɑtʃɛnʲːɑ/ | goodbye | phrase | - | Ч = CH |
+| вибачте | /vɪˈbɑtʃtɛ/ | excuse me, sorry | verb | - | Ч = CH |
+| прошу | /ˈprɔʃu/ | please/you're welcome | verb | - | Ш = SH |
+| ласкаво просимо | /ˈlɑskɑvɔ ˈprɔsɪmɔ/ | welcome | phrase | - | Formal welcome |
+| що | /ʃtʃɔ/ | what | pron | - | Щ = SHCH |
+| як | /jɑk/ | how | adv | - | Я = YA |
+| де | /dɛ/ | where | adv | - | Simple question word |
+| хто | /xtɔ/ | who | pron | - | Х = KH |
 ---
 
 # Letter Groups Summary

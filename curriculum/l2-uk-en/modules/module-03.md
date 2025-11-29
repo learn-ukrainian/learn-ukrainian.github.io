@@ -293,29 +293,27 @@ Now predict the gender of these new words (you haven't learned them yet, but you
 
 # Vocabulary
 
-| uk | translit | ipa | en | pos | gender | note |
-|----|----------|-----|-----|-----|--------|------|
-| рід | rid | /rʲid/ | gender (grammatical), genus | noun | m | чоловічий рід = masculine gender |
-| чоловічий | cholovichyi | /tʃɔlɔˈvʲitʃɪj/ | masculine | adj | m | Literally "man-like" |
-| жіночий | zhinochyi | /ʒʲiˈnɔtʃɪj/ | feminine | adj | m | Literally "woman-like" |
-| середній | serednii | /sɛˈrɛdnʲij/ | middle, neuter | adj | m | середній рід = neuter gender |
-| брат | brat | /brɑt/ | brother | noun | m | Consonant ending = masculine |
-| сестра | sestra | /sɛsˈtrɑ/ | sister | noun | f | -а ending = feminine |
-| студент | student | /stuˈdɛnt/ | student (male) | noun | m | Consonant ending |
-| студентка | studentka | /stuˈdɛntkɑ/ | student (female) | noun | f | -ка feminine suffix |
-| вчитель | vchytel | /ˈwtʃɪtɛlʲ/ | teacher (male) | noun | m | Soft sign after л |
-| вчителька | vchytelka | /wtʃɪˈtɛlʲkɑ/ | teacher (female) | noun | f | -ка feminine suffix |
-| стіл | stil | /stʲil/ | table | noun | m | Consonant = masculine |
-| книга | knyha | /ˈknɪɦɑ/ | book | noun | f | -а = feminine |
-| вікно | vikno | /wʲikˈnɔ/ | window | noun | n | -о = neuter |
-| море | more | /ˈmɔrɛ/ | sea | noun | n | -е = neuter |
-| день | den | /dɛnʲ/ | day | noun | m | -ь after н = masculine |
-| ніч | nich | /nʲitʃ/ | night | noun | f | -ь after ч = feminine |
-| земля | zemlya | /zɛmˈlʲa/ | earth, land | noun | f | -я = feminine |
-| яблуко | yabluko | /ˈjablukɔ/ | apple | noun | n | -о = neuter |
-| молоко | moloko | /mɔlɔˈkɔ/ | milk | noun | n | -о = neuter |
-| сонце | sontse | /ˈsɔnt͡sɛ/ | sun | noun | n | -е = neuter |
-
+| Word | IPA | English | POS | Gender | Note |
+|------|-----|---------|-----|--------|------|
+| рід | /rʲid/ | gender (grammatical), genus | noun | m | чоловічий рід = masculine gender |
+| чоловічий | /tʃɔlɔˈvʲitʃɪj/ | masculine | adj | m | Literally "man-like" |
+| жіночий | /ʒʲiˈnɔtʃɪj/ | feminine | adj | m | Literally "woman-like" |
+| середній | /sɛˈrɛdnʲij/ | middle, neuter | adj | m | середній рід = neuter gender |
+| брат | /brɑt/ | brother | noun | m | Consonant ending = masculine |
+| сестра | /sɛsˈtrɑ/ | sister | noun | f | -а ending = feminine |
+| студентка | /stuˈdɛntkɑ/ | student (female) | noun | f | -ка feminine suffix |
+| вчитель | /ˈwtʃɪtɛlʲ/ | teacher (male) | noun | m | Soft sign after л |
+| вчителька | /wtʃɪˈtɛlʲkɑ/ | teacher (female) | noun | f | -ка feminine suffix |
+| стіл | /stʲil/ | table | noun | m | Consonant = masculine |
+| книга | /ˈknɪɦɑ/ | book | noun | f | -а = feminine |
+| вікно | /wʲikˈnɔ/ | window | noun | n | -о = neuter |
+| море | /ˈmɔrɛ/ | sea | noun | n | -е = neuter |
+| день | /dɛnʲ/ | day | noun | m | -ь after н = masculine |
+| ніч | /nʲitʃ/ | night | noun | f | -ь after ч = feminine |
+| земля | /zɛmˈlʲa/ | earth, land | noun | f | -я = feminine |
+| яблуко | /ˈjablukɔ/ | apple | noun | n | -о = neuter |
+| молоко | /mɔlɔˈkɔ/ | milk | noun | n | -о = neuter |
+| сонце | /ˈsɔnt͡sɛ/ | sun | noun | n | -е = neuter |
 ---
 
 # Gender Patterns

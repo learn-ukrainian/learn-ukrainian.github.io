@@ -303,28 +303,22 @@ Practice the complete café experience:
 
 # Vocabulary
 
-| uk | translit | ipa | en | pos | gender | note |
-|----|----------|-----|-----|-----|--------|------|
-| меню | menyu | /mɛˈnʲu/ | menu | noun | n | Indeclinable |
-| замовляти | zamovlyaty | /zɑmɔvˈlʲɑtɪ/ | to order | verb | - | замовляю, замовляєш |
-| рахунок | rakhunok | /rɑˈxunɔk/ | bill, check | noun | m | |
-| офіціант | ofitsiant | /ɔfʲit͡sʲiˈɑnt/ | waiter | noun | m | |
-| офіціантка | ofitsiantka | /ɔfʲit͡sʲiˈɑntkɑ/ | waitress | noun | f | |
-| столик | stolyk | /ˈstɔlɪk/ | table (small) | noun | m | Diminutive of стіл |
-| місце | mistse | /ˈmʲist͡sɛ/ | seat, place | noun | n | |
-| принести | prynesry | /prɪnɛsˈtɪ/ | to bring | verb | - | Imp: принеси, принесіть |
-| взяти | vzyaty | /ˈvzʲɑtɪ/ | to take | verb | - | Я візьму (I'll take) |
-| можна | mozhna | /ˈmɔʒnɑ/ | may, can | adv | - | Permission |
-| чашка | chashka | /ˈtʃɑʃkɑ/ | cup | noun | f | |
-| склянка | sklyanka | /ˈsklʲɑnkɑ/ | glass | noun | f | |
-| тут | tut | /tut/ | here | adv | - | For here |
-| на виніс | na vynis | /nɑ ˈvɪnʲis/ | to go | phrase | - | Takeaway |
-| гарячий | haryachyi | /ɦɑˈrʲɑtʃɪj/ | hot | adj | m | |
-| холодний | kholodnyi | /xɔˈlɔdnɪj/ | cold | adj | m | |
-| страва | strava | /ˈstrɑvɑ/ | dish, course | noun | f | |
-| чайові | chayovi | /tʃɑjɔˈvʲi/ | tip | noun | pl | Literally "for tea" |
-| решта | reshta | /ˈrɛʃtɑ/ | change (money) | noun | f | |
-
+| Word | IPA | English | POS | Gender | Note |
+|------|-----|---------|-----|--------|------|
+| меню | /mɛˈnʲu/ | menu | noun | n | Indeclinable |
+| замовляти | /zɑmɔvˈlʲɑtɪ/ | to order | verb | - | замовляю, замовляєш |
+| рахунок | /rɑˈxunɔk/ | bill, check | noun | m |  |
+| столик | /ˈstɔlɪk/ | table (small) | noun | m | Diminutive of стіл |
+| місце | /ˈmʲist͡sɛ/ | seat, place | noun | n |  |
+| принести | /prɪnɛsˈtɪ/ | to bring | verb | - | Imp: принеси, принесіть |
+| взяти | /ˈvzʲɑtɪ/ | to take | verb | - | Я візьму (I'll take) |
+| можна | /ˈmɔʒnɑ/ | may, can | adv | - | Permission |
+| склянка | /ˈsklʲɑnkɑ/ | glass | noun | f |  |
+| на виніс | /nɑ ˈvɪnʲis/ | to go | phrase | - | Takeaway |
+| гарячий | /ɦɑˈrʲɑtʃɪj/ | hot | adj | m |  |
+| холодний | /xɔˈlɔdnɪj/ | cold | adj | m |  |
+| страва | /ˈstrɑvɑ/ | dish, course | noun | f |  |
+| чайові | /tʃɑjɔˈvʲi/ | tip | noun | pl | Literally "for tea" |
 ---
 
 # Café Dialogue Template

@@ -296,27 +296,25 @@ Describe the weather for:
 
 # Vocabulary
 
-| uk | translit | ipa | en | pos | gender | note |
-|----|----------|-----|-----|-----|--------|------|
-| погода | pohoda | /pɔˈɦɔdɑ/ | weather | noun | f | |
-| сонце | sontse | /ˈsɔnt͡sɛ/ | sun | noun | n | |
-| хмара | khmara | /ˈxmɑrɑ/ | cloud | noun | f | |
-| дощ | doshch | /dɔʃtʃ/ | rain | noun | m | Йде дощ |
-| сніг | snih | /snʲiɦ/ | snow | noun | m | Йде сніг |
-| вітер | viter | /ˈvʲitɛr/ | wind | noun | m | Дме вітер |
-| гроза | hroza | /ɦrɔˈzɑ/ | thunderstorm | noun | f | |
-| туман | tuman | /tuˈmɑn/ | fog | noun | m | |
-| мороз | moroz | /mɔˈrɔz/ | frost | noun | m | |
-| веселка | veselka | /vɛˈsɛlkɑ/ | rainbow | noun | f | |
-| тепло | teplo | /ˈtɛplɔ/ | warm (adv) | adv | - | Impersonal |
-| холодно | kholodno | /ˈxɔlɔdnɔ/ | cold (adv) | adv | - | Impersonal |
-| жарко | zharko | /ˈʒɑrkɔ/ | hot (adv) | adv | - | Impersonal |
-| сонячний | sonyachnyi | /sɔˈnʲɑtʃnɪj/ | sunny | adj | m | |
-| хмарний | khmarnyi | /ˈxmɑrnɪj/ | cloudy | adj | m | |
-| температура | temperatura | /tɛmpɛrɑˈturɑ/ | temperature | noun | f | |
-| градус | hradus | /ˈɦrɑdus/ | degree | noun | m | |
-| парасолька | parasolka | /pɑrɑˈsɔlʲkɑ/ | umbrella | noun | f | |
-
+| Word | IPA | English | POS | Gender | Note |
+|------|-----|---------|-----|--------|------|
+| погода | /pɔˈɦɔdɑ/ | weather | noun | f |  |
+| хмара | /ˈxmɑrɑ/ | cloud | noun | f |  |
+| дощ | /dɔʃtʃ/ | rain | noun | m | Йде дощ |
+| сніг | /snʲiɦ/ | snow | noun | m | Йде сніг |
+| вітер | /ˈvʲitɛr/ | wind | noun | m | Дме вітер |
+| гроза | /ɦrɔˈzɑ/ | thunderstorm | noun | f |  |
+| туман | /tuˈmɑn/ | fog | noun | m |  |
+| мороз | /mɔˈrɔz/ | frost | noun | m |  |
+| веселка | /vɛˈsɛlkɑ/ | rainbow | noun | f |  |
+| тепло | /ˈtɛplɔ/ | warm (adv) | adv | - | Impersonal |
+| холодно | /ˈxɔlɔdnɔ/ | cold (adv) | adv | - | Impersonal |
+| жарко | /ˈʒɑrkɔ/ | hot (adv) | adv | - | Impersonal |
+| сонячний | /sɔˈnʲɑtʃnɪj/ | sunny | adj | m |  |
+| хмарний | /ˈxmɑrnɪj/ | cloudy | adj | m |  |
+| температура | /tɛmpɛrɑˈturɑ/ | temperature | noun | f |  |
+| градус | /ˈɦrɑdus/ | degree | noun | m |  |
+| парасолька | /pɑrɑˈsɔlʲkɑ/ | umbrella | noun | f |  |
 ---
 
 # Weather Summary

@@ -12,6 +12,9 @@
     "vocab": "python3 scripts/vocab-analysis.py",
     "vocab:a1": "python3 scripts/vocab-analysis.py l2-uk-en a1",
     "vocab:a2": "python3 scripts/vocab-analysis.py l2-uk-en a2",
+    "vocab:build": "python3 scripts/vocab-manager.py build l2-uk-en",
+    "vocab:stats": "python3 scripts/vocab-manager.py stats l2-uk-en",
+    "vocab:duplicates": "python3 scripts/vocab-manager.py duplicates l2-uk-en",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

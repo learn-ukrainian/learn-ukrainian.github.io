@@ -371,245 +371,195 @@
     "moduleId": "mod-uk-A1-15",
     "level": "A1",
     "phase": "A1.2",
-    "wordCount": 25,
+    "wordCount": 22,
     "transliterationMode": "full",
     "words": [
       {
         "id": "v-m15-001",
         "uk": "прямо",
-        "translit": "pryamo",
-        "ipa": "/ˈprʲɑmɔ/",
-        "en": "straight",
-        "pos": "adv",
-        "gender": "-"
+        "translit": "/ˈprʲɑmɔ/",
+        "ipa": "straight",
+        "en": "adv",
+        "pos": "-"
       },
       {
         "id": "v-m15-002",
         "uk": "праворуч",
-        "translit": "pravoruch",
-        "ipa": "/prɑˈvɔrutʃ/",
-        "en": "to the right",
-        "pos": "adv",
-        "gender": "-",
-        "note": "право = right"
+        "translit": "/prɑˈvɔrutʃ/",
+        "ipa": "to the right",
+        "en": "adv",
+        "pos": "-",
+        "gender": "право = right"
       },
       {
         "id": "v-m15-003",
         "uk": "ліворуч",
-        "translit": "livoruch",
-        "ipa": "/lʲiˈvɔrutʃ/",
-        "en": "to the left",
-        "pos": "adv",
-        "gender": "-",
-        "note": "ліво = left"
+        "translit": "/lʲiˈvɔrutʃ/",
+        "ipa": "to the left",
+        "en": "adv",
+        "pos": "-",
+        "gender": "ліво = left"
       },
       {
         "id": "v-m15-004",
         "uk": "назад",
-        "translit": "nazad",
-        "ipa": "/nɑˈzɑd/",
-        "en": "back",
-        "pos": "adv",
-        "gender": "-"
+        "translit": "/nɑˈzɑd/",
+        "ipa": "back",
+        "en": "adv",
+        "pos": "-"
       },
       {
         "id": "v-m15-005",
         "uk": "близько",
-        "translit": "blyzko",
-        "ipa": "/ˈblɪzʲkɔ/",
-        "en": "near, close",
-        "pos": "adv",
-        "gender": "-"
+        "translit": "/ˈblɪzʲkɔ/",
+        "ipa": "near, close",
+        "en": "adv",
+        "pos": "-"
       },
       {
         "id": "v-m15-006",
         "uk": "далеко",
-        "translit": "daleko",
-        "ipa": "/dɑˈlɛkɔ/",
-        "en": "far",
-        "pos": "adv",
-        "gender": "-"
+        "translit": "/dɑˈlɛkɔ/",
+        "ipa": "far",
+        "en": "adv",
+        "pos": "-"
       },
       {
         "id": "v-m15-007",
         "uk": "біля",
-        "translit": "bilya",
-        "ipa": "/ˈbʲilʲɑ/",
-        "en": "near, by",
-        "pos": "prep",
-        "gender": "-",
-        "note": "+ genitive"
+        "translit": "/ˈbʲilʲɑ/",
+        "ipa": "near, by",
+        "en": "prep",
+        "pos": "-",
+        "gender": "+ genitive"
       },
       {
         "id": "v-m15-008",
         "uk": "до",
-        "translit": "do",
-        "ipa": "/dɔ/",
-        "en": "to, toward",
-        "pos": "prep",
-        "gender": "-",
-        "note": "+ genitive"
+        "translit": "/dɔ/",
+        "ipa": "to, toward",
+        "en": "prep",
+        "pos": "-",
+        "gender": "+ genitive"
       },
       {
         "id": "v-m15-009",
         "uk": "навпроти",
-        "translit": "navproty",
-        "ipa": "/nɑuˈprɔtɪ/",
-        "en": "opposite",
-        "pos": "prep",
-        "gender": "-",
-        "note": "+ genitive"
+        "translit": "/nɑuˈprɔtɪ/",
+        "ipa": "opposite",
+        "en": "prep",
+        "pos": "-",
+        "gender": "+ genitive"
       },
       {
         "id": "v-m15-010",
         "uk": "за",
-        "translit": "za",
-        "ipa": "/zɑ/",
-        "en": "behind",
-        "pos": "prep",
-        "gender": "-",
-        "note": "+ instrumental"
+        "translit": "/zɑ/",
+        "ipa": "behind",
+        "en": "prep",
+        "pos": "-",
+        "gender": "+ instrumental"
       },
       {
         "id": "v-m15-011",
-        "uk": "метро",
-        "translit": "metro",
-        "ipa": "/mɛˈtrɔ/",
-        "en": "metro, subway",
-        "pos": "noun",
-        "gender": "n",
-        "note": "Indeclinable"
+        "uk": "зупинка",
+        "translit": "/zuˈpɪnkɑ/",
+        "ipa": "stop",
+        "en": "noun",
+        "pos": "f",
+        "gender": "Bus, tram stop"
       },
       {
         "id": "v-m15-012",
-        "uk": "станція",
-        "translit": "stantsiya",
-        "ipa": "/ˈstɑnt͡sʲijɑ/",
-        "en": "station",
-        "pos": "noun",
-        "gender": "f"
+        "uk": "квартал",
+        "translit": "/kvɑrˈtɑl/",
+        "ipa": "block",
+        "en": "noun",
+        "pos": "m"
       },
       {
         "id": "v-m15-013",
-        "uk": "зупинка",
-        "translit": "zupynka",
-        "ipa": "/zuˈpɪnkɑ/",
-        "en": "stop",
-        "pos": "noun",
-        "gender": "f",
-        "note": "Bus, tram stop"
+        "uk": "ріг",
+        "translit": "/rʲiɦ/",
+        "ipa": "corner",
+        "en": "noun",
+        "pos": "m",
+        "gender": "За рогом"
       },
       {
         "id": "v-m15-014",
-        "uk": "квартал",
-        "translit": "kvartal",
-        "ipa": "/kvɑrˈtɑl/",
-        "en": "block",
-        "pos": "noun",
-        "gender": "m"
+        "uk": "вхід",
+        "translit": "/vxʲid/",
+        "ipa": "entrance",
+        "en": "noun",
+        "pos": "m"
       },
       {
         "id": "v-m15-015",
-        "uk": "ріг",
-        "translit": "rih",
-        "ipa": "/rʲiɦ/",
-        "en": "corner",
-        "pos": "noun",
-        "gender": "m",
-        "note": "За рогом"
+        "uk": "вихід",
+        "translit": "/ˈvɪxʲid/",
+        "ipa": "exit",
+        "en": "noun",
+        "pos": "m"
       },
       {
         "id": "v-m15-016",
-        "uk": "вхід",
-        "translit": "vkhid",
-        "ipa": "/vxʲid/",
-        "en": "entrance",
-        "pos": "noun",
-        "gender": "m"
+        "uk": "аптека",
+        "translit": "/ɑpˈtɛkɑ/",
+        "ipa": "pharmacy",
+        "en": "noun",
+        "pos": "f"
       },
       {
         "id": "v-m15-017",
-        "uk": "вихід",
-        "translit": "vykhid",
-        "ipa": "/ˈvɪxʲid/",
-        "en": "exit",
-        "pos": "noun",
-        "gender": "m"
+        "uk": "лікарня",
+        "translit": "/lʲiˈkɑrnʲɑ/",
+        "ipa": "hospital",
+        "en": "noun",
+        "pos": "f"
       },
       {
         "id": "v-m15-018",
-        "uk": "банк",
-        "translit": "bank",
-        "ipa": "/bɑnk/",
-        "en": "bank",
-        "pos": "noun",
-        "gender": "m"
+        "uk": "пошта",
+        "translit": "/ˈpɔʃtɑ/",
+        "ipa": "post office",
+        "en": "noun",
+        "pos": "f"
       },
       {
         "id": "v-m15-019",
-        "uk": "аптека",
-        "translit": "apteka",
-        "ipa": "/ɑpˈtɛkɑ/",
-        "en": "pharmacy",
-        "pos": "noun",
-        "gender": "f"
+        "uk": "ринок",
+        "translit": "/ˈrɪnɔk/",
+        "ipa": "market",
+        "en": "noun",
+        "pos": "m"
       },
       {
         "id": "v-m15-020",
-        "uk": "лікарня",
-        "translit": "likarnya",
-        "ipa": "/lʲiˈkɑrnʲɑ/",
-        "en": "hospital",
-        "pos": "noun",
-        "gender": "f"
+        "uk": "йти",
+        "translit": "/jtɪ/",
+        "ipa": "to go (on foot)",
+        "en": "verb",
+        "pos": "-",
+        "gender": "Imp: йди, йдіть"
       },
       {
         "id": "v-m15-021",
-        "uk": "пошта",
-        "translit": "poshta",
-        "ipa": "/ˈpɔʃtɑ/",
-        "en": "post office",
-        "pos": "noun",
-        "gender": "f"
+        "uk": "повернути",
+        "translit": "/pɔvɛrˈnutɪ/",
+        "ipa": "to turn",
+        "en": "verb",
+        "pos": "-",
+        "gender": "Imp: поверни, поверніть"
       },
       {
         "id": "v-m15-022",
-        "uk": "ринок",
-        "translit": "rynok",
-        "ipa": "/ˈrɪnɔk/",
-        "en": "market",
-        "pos": "noun",
-        "gender": "m"
-      },
-      {
-        "id": "v-m15-023",
-        "uk": "йти",
-        "translit": "yty",
-        "ipa": "/jtɪ/",
-        "en": "to go (on foot)",
-        "pos": "verb",
-        "gender": "-",
-        "note": "Imp: йди, йдіть"
-      },
-      {
-        "id": "v-m15-024",
-        "uk": "повернути",
-        "translit": "povernuty",
-        "ipa": "/pɔvɛrˈnutɪ/",
-        "en": "to turn",
-        "pos": "verb",
-        "gender": "-",
-        "note": "Imp: поверни, поверніть"
-      },
-      {
-        "id": "v-m15-025",
         "uk": "перейти",
-        "translit": "pereyty",
-        "ipa": "/pɛrɛjˈtɪ/",
-        "en": "to cross",
-        "pos": "verb",
-        "gender": "-",
-        "note": "Imp: перейди, перейдіть"
+        "translit": "/pɛrɛjˈtɪ/",
+        "ipa": "to cross",
+        "en": "verb",
+        "pos": "-",
+        "gender": "Imp: перейди, перейдіть"
       }
     ]
   }

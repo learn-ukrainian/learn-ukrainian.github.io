@@ -296,25 +296,21 @@ Use adjectives to describe:
 
 # Vocabulary
 
-| uk | translit | ipa | en | pos | gender | note |
-|----|----------|-----|-----|-----|--------|------|
-| великий | velykyi | /vɛˈlɪkɪj/ | big, large | adj | m | велика (f), велике (n) |
-| маленький | malenkyi | /mɑˈlɛnʲkɪj/ | small | adj | m | маленька (f), маленьке (n) |
-| новий | novyi | /nɔˈvɪj/ | new | adj | m | нова (f), нове (n) |
-| старий | staryi | /stɑˈrɪj/ | old | adj | m | стара (f), старе (n) |
-| гарний | harnyi | /ˈɦɑrnɪj/ | beautiful, nice | adj | m | гарна (f), гарне (n) |
-| добрий | dobryi | /ˈdɔbrɪj/ | good, kind | adj | m | добра (f), добре (n) |
-| поганий | pohanyi | /pɔˈɦɑnɪj/ | bad | adj | m | погана (f), погане (n) |
-| молодий | molodyi | /mɔˈlɔdɪj/ | young | adj | m | молода (f), молоде (n) |
-| розумний | rozumnyi | /rɔˈzumnɪj/ | smart | adj | m | розумна (f), розумне (n) |
-| щасливий | shchaslyvyi | /ʃtʃɑsˈlɪvɪj/ | happy | adj | m | щаслива (f), щасливе (n) |
-| сумний | sumnyi | /ˈsumnɪj/ | sad | adj | m | сумна (f), сумне (n) |
-| легкий | lehkyi | /ˈlɛɦkɪj/ | easy, light | adj | m | легка (f), легке (n) |
-| важкий | vazhkyi | /vɑʒˈkɪj/ | hard, heavy | adj | m | важка (f), важке (n) |
-| чистий | chystyi | /ˈtʃɪstɪj/ | clean | adj | m | чиста (f), чисте (n) |
-| цікавий | tsikavyi | /t͡sʲiˈkɑvɪj/ | interesting | adj | m | цікава (f), цікаве (n) |
-| смачний | smachnyi | /ˈsmɑtʃnɪj/ | tasty, delicious | adj | m | смачна (f), смачне (n) |
-
+| Word | IPA | English | POS | Gender | Note |
+|------|-----|---------|-----|--------|------|
+| новий | /nɔˈvɪj/ | new | adj | m | нова (f), нове (n) |
+| старий | /stɑˈrɪj/ | old | adj | m | стара (f), старе (n) |
+| гарний | /ˈɦɑrnɪj/ | beautiful, nice | adj | m | гарна (f), гарне (n) |
+| добрий | /ˈdɔbrɪj/ | good, kind | adj | m | добра (f), добре (n) |
+| поганий | /pɔˈɦɑnɪj/ | bad | adj | m | погана (f), погане (n) |
+| молодий | /mɔˈlɔdɪj/ | young | adj | m | молода (f), молоде (n) |
+| розумний | /rɔˈzumnɪj/ | smart | adj | m | розумна (f), розумне (n) |
+| щасливий | /ʃtʃɑsˈlɪvɪj/ | happy | adj | m | щаслива (f), щасливе (n) |
+| сумний | /ˈsumnɪj/ | sad | adj | m | сумна (f), сумне (n) |
+| легкий | /ˈlɛɦkɪj/ | easy, light | adj | m | легка (f), легке (n) |
+| важкий | /vɑʒˈkɪj/ | hard, heavy | adj | m | важка (f), важке (n) |
+| чистий | /ˈtʃɪstɪj/ | clean | adj | m | чиста (f), чисте (n) |
+| цікавий | /t͡sʲiˈkɑvɪj/ | interesting | adj | m | цікава (f), цікаве (n) |
 ---
 
 # Adjective Summary

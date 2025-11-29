@@ -330,32 +330,29 @@ Turn these statements into questions (just add ?):
 
 # Vocabulary
 
-| uk | translit | ipa | en | pos | gender | note |
-|----|----------|-----|-----|-----|--------|------|
-| це | tse | /t͡sɛ/ | this, this is | pron | - | Invariable - never changes |
-| то | to | /tɔ/ | that | pron | - | Less common than це |
-| я | ya | /jɑ/ | I | pron | - | First person singular |
-| ти | ty | /tɪ/ | you (informal) | pron | - | For friends/family |
-| він | vin | /wʲin/ | he | pron | m | Third person masculine |
-| вона | vona | /wɔˈnɑ/ | she | pron | f | Third person feminine |
-| воно | vono | /wɔˈnɔ/ | it | pron | n | Third person neuter |
-| ми | my | /mɪ/ | we | pron | - | First person plural |
-| ви | vy | /vɪ/ | you (formal/plural) | pron | - | Formal or plural |
-| вони | vony | /wɔˈnɪ/ | they | pron | - | Third person plural |
-| хто | khto | /xtɔ/ | who | pron | - | Question word |
-| що | shcho | /ʃt͡ʃɔ/ | what | pron | - | Question word |
-| друг | druh | /druɦ/ | friend (male) | noun | m | Plural: друзі |
-| подруга | podruha | /pɔˈdruɦɑ/ | friend (female) | noun | f | Female friend |
-| українець | ukrayinets | /ukrɑˈjinɛt͡sʲ/ | Ukrainian (male) | noun | m | Nationality |
-| українка | ukrayinka | /ukrɑˈjinkɑ/ | Ukrainian (female) | noun | f | Nationality |
-| з | z | /z/ | from | prep | - | Я з України = I'm from Ukraine |
-| тут | tut | /tut/ | here | adv | - | Location |
-| там | tam | /tɑm/ | there | adv | - | Location |
-| мій | mii | /mʲij/ | my (masculine) | pron | m | Possessive pronoun |
-| моя | moya | /mɔˈjɑ/ | my (feminine) | pron | f | Possessive pronoun |
-| твій | tvii | /tvʲij/ | your (masc, informal) | pron | m | Informal possessive |
-| твоя | tvoya | /tvɔˈjɑ/ | your (fem, informal) | pron | f | Informal possessive |
-
+| Word | IPA | English | POS | Gender | Note |
+|------|-----|---------|-----|--------|------|
+| це | /t͡sɛ/ | this, this is | pron | - | Invariable - never changes |
+| то | /tɔ/ | that | pron | - | Less common than це |
+| я | /jɑ/ | I | pron | - | First person singular |
+| ти | /tɪ/ | you (informal) | pron | - | For friends/family |
+| він | /wʲin/ | he | pron | m | Third person masculine |
+| вона | /wɔˈnɑ/ | she | pron | f | Third person feminine |
+| воно | /wɔˈnɔ/ | it | pron | n | Third person neuter |
+| ми | /mɪ/ | we | pron | - | First person plural |
+| ви | /vɪ/ | you (formal/plural) | pron | - | Formal or plural |
+| вони | /wɔˈnɪ/ | they | pron | - | Third person plural |
+| друг | /druɦ/ | friend (male) | noun | m | Plural: друзі |
+| подруга | /pɔˈdruɦɑ/ | friend (female) | noun | f | Female friend |
+| українець | /ukrɑˈjinɛt͡sʲ/ | Ukrainian (male) | noun | m | Nationality |
+| українка | /ukrɑˈjinkɑ/ | Ukrainian (female) | noun | f | Nationality |
+| з | /z/ | from | prep | - | Я з України = I'm from Ukraine |
+| тут | /tut/ | here | adv | - | Location |
+| там | /tɑm/ | there | adv | - | Location |
+| мій | /mʲij/ | my (masculine) | pron | m | Possessive pronoun |
+| моя | /mɔˈjɑ/ | my (feminine) | pron | f | Possessive pronoun |
+| твій | /tvʲij/ | your (masc, informal) | pron | m | Informal possessive |
+| твоя | /tvɔˈjɑ/ | your (fem, informal) | pron | f | Informal possessive |
 ---
 
 # Zero Copula Summary

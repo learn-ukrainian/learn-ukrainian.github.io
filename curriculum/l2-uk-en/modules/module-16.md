@@ -303,28 +303,24 @@ Say what you don't have:
 
 # Vocabulary
 
-| uk | translit | ipa | en | pos | gender | note |
-|----|----------|-----|-----|-----|--------|------|
-| немає | nemaye | /nɛˈmɑjɛ/ | there is no | verb | - | + genitive |
-| без | bez | /bɛz/ | without | prep | - | + genitive |
-| для | dlya | /dlʲɑ/ | for | prep | - | + genitive |
-| з / із | z / iz | /z/ /iz/ | from, out of | prep | - | + genitive |
-| після | pislya | /ˈpʲislʲɑ/ | after | prep | - | + genitive |
-| від | vid | /vʲid/ | from | prep | - | + genitive |
-| час | chas | /tʃɑs/ | time | noun | m | Gen: часу |
-| гроші | hroshi | /ˈɦrɔʃʲi/ | money | noun | pl | Gen: грошей |
-| хліб | khlib | /xlʲib/ | bread | noun | m | Gen: хліба |
-| цукор | tsukor | /ˈt͡sukɔr/ | sugar | noun | m | Gen: цукру |
-| молоко | moloko | /mɔlɔˈkɔ/ | milk | noun | n | Gen: молока |
-| чашка | chashka | /ˈtʃɑʃkɑ/ | cup | noun | f | Gen: чашки |
-| пляшка | plyashka | /ˈplʲɑʃkɑ/ | bottle | noun | f | Gen: пляшки |
-| сторінка | storinka | /stɔˈrʲinkɑ/ | page | noun | f | Gen: сторінки |
-| кінець | kinets | /kʲiˈnɛt͡sʲ/ | end | noun | m | Gen: кінця |
-| початок | pochatok | /pɔˈtʃɑtɔk/ | beginning | noun | m | Gen: початку |
-| подарунок | podarunok | /pɔdɑˈrunɔk/ | gift | noun | m | Gen: подарунка |
-| лист | lyst | /lɪst/ | letter | noun | m | Gen: листа |
-| кілограм | kilohram | /kʲilɔˈɦrɑm/ | kilogram | noun | m | Gen: кілограма |
-
+| Word | IPA | English | POS | Gender | Note |
+|------|-----|---------|-----|--------|------|
+| немає | /nɛˈmɑjɛ/ | there is no | verb | - | + genitive |
+| без | /bɛz/ | without | prep | - | + genitive |
+| для | /dlʲɑ/ | for | prep | - | + genitive |
+| з / із | /z/ /iz/ | from, out of | prep | - | + genitive |
+| після | /ˈpʲislʲɑ/ | after | prep | - | + genitive |
+| від | /vʲid/ | from | prep | - | + genitive |
+| час | /tʃɑs/ | time | noun | m | Gen: часу |
+| гроші | /ˈɦrɔʃʲi/ | money | noun | pl | Gen: грошей |
+| хліб | /xlʲib/ | bread | noun | m | Gen: хліба |
+| цукор | /ˈt͡sukɔr/ | sugar | noun | m | Gen: цукру |
+| чашка | /ˈtʃɑʃkɑ/ | cup | noun | f | Gen: чашки |
+| пляшка | /ˈplʲɑʃkɑ/ | bottle | noun | f | Gen: пляшки |
+| сторінка | /stɔˈrʲinkɑ/ | page | noun | f | Gen: сторінки |
+| кінець | /kʲiˈnɛt͡sʲ/ | end | noun | m | Gen: кінця |
+| початок | /pɔˈtʃɑtɔk/ | beginning | noun | m | Gen: початку |
+| кілограм | /kʲilɔˈɦrɑm/ | kilogram | noun | m | Gen: кілограма |
 ---
 
 # Genitive Summary

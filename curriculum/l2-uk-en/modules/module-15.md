@@ -312,34 +312,30 @@ Example:
 
 # Vocabulary
 
-| uk | translit | ipa | en | pos | gender | note |
-|----|----------|-----|-----|-----|--------|------|
-| прямо | pryamo | /ˈprʲɑmɔ/ | straight | adv | - | |
-| праворуч | pravoruch | /prɑˈvɔrutʃ/ | to the right | adv | - | право = right |
-| ліворуч | livoruch | /lʲiˈvɔrutʃ/ | to the left | adv | - | ліво = left |
-| назад | nazad | /nɑˈzɑd/ | back | adv | - | |
-| близько | blyzko | /ˈblɪzʲkɔ/ | near, close | adv | - | |
-| далеко | daleko | /dɑˈlɛkɔ/ | far | adv | - | |
-| біля | bilya | /ˈbʲilʲɑ/ | near, by | prep | - | + genitive |
-| до | do | /dɔ/ | to, toward | prep | - | + genitive |
-| навпроти | navproty | /nɑuˈprɔtɪ/ | opposite | prep | - | + genitive |
-| за | za | /zɑ/ | behind | prep | - | + instrumental |
-| метро | metro | /mɛˈtrɔ/ | metro, subway | noun | n | Indeclinable |
-| станція | stantsiya | /ˈstɑnt͡sʲijɑ/ | station | noun | f | |
-| зупинка | zupynka | /zuˈpɪnkɑ/ | stop | noun | f | Bus, tram stop |
-| квартал | kvartal | /kvɑrˈtɑl/ | block | noun | m | |
-| ріг | rih | /rʲiɦ/ | corner | noun | m | За рогом |
-| вхід | vkhid | /vxʲid/ | entrance | noun | m | |
-| вихід | vykhid | /ˈvɪxʲid/ | exit | noun | m | |
-| банк | bank | /bɑnk/ | bank | noun | m | |
-| аптека | apteka | /ɑpˈtɛkɑ/ | pharmacy | noun | f | |
-| лікарня | likarnya | /lʲiˈkɑrnʲɑ/ | hospital | noun | f | |
-| пошта | poshta | /ˈpɔʃtɑ/ | post office | noun | f | |
-| ринок | rynok | /ˈrɪnɔk/ | market | noun | m | |
-| йти | yty | /jtɪ/ | to go (on foot) | verb | - | Imp: йди, йдіть |
-| повернути | povernuty | /pɔvɛrˈnutɪ/ | to turn | verb | - | Imp: поверни, поверніть |
-| перейти | pereyty | /pɛrɛjˈtɪ/ | to cross | verb | - | Imp: перейди, перейдіть |
-
+| Word | IPA | English | POS | Gender | Note |
+|------|-----|---------|-----|--------|------|
+| прямо | /ˈprʲɑmɔ/ | straight | adv | - |  |
+| праворуч | /prɑˈvɔrutʃ/ | to the right | adv | - | право = right |
+| ліворуч | /lʲiˈvɔrutʃ/ | to the left | adv | - | ліво = left |
+| назад | /nɑˈzɑd/ | back | adv | - |  |
+| близько | /ˈblɪzʲkɔ/ | near, close | adv | - |  |
+| далеко | /dɑˈlɛkɔ/ | far | adv | - |  |
+| біля | /ˈbʲilʲɑ/ | near, by | prep | - | + genitive |
+| до | /dɔ/ | to, toward | prep | - | + genitive |
+| навпроти | /nɑuˈprɔtɪ/ | opposite | prep | - | + genitive |
+| за | /zɑ/ | behind | prep | - | + instrumental |
+| зупинка | /zuˈpɪnkɑ/ | stop | noun | f | Bus, tram stop |
+| квартал | /kvɑrˈtɑl/ | block | noun | m |  |
+| ріг | /rʲiɦ/ | corner | noun | m | За рогом |
+| вхід | /vxʲid/ | entrance | noun | m |  |
+| вихід | /ˈvɪxʲid/ | exit | noun | m |  |
+| аптека | /ɑpˈtɛkɑ/ | pharmacy | noun | f |  |
+| лікарня | /lʲiˈkɑrnʲɑ/ | hospital | noun | f |  |
+| пошта | /ˈpɔʃtɑ/ | post office | noun | f |  |
+| ринок | /ˈrɪnɔk/ | market | noun | m |  |
+| йти | /jtɪ/ | to go (on foot) | verb | - | Imp: йди, йдіть |
+| повернути | /pɔvɛrˈnutɪ/ | to turn | verb | - | Imp: поверни, поверніть |
+| перейти | /pɛrɛjˈtɪ/ | to cross | verb | - | Imp: перейди, перейдіть |
 ---
 
 # Direction Patterns

@@ -291,25 +291,23 @@ Describe your plans for the coming days:
 
 # Vocabulary
 
-| uk | translit | ipa | en | pos | gender | note |
-|----|----------|-----|-----|-----|--------|------|
-| буду | budu | /ˈbudu/ | I will be | verb | - | Future of бути |
-| будеш | budesh | /ˈbudɛʃ/ | you will be | verb | - | ти form |
-| буде | bude | /ˈbudɛ/ | will be | verb | - | він/вона/воно |
-| будемо | budemo | /ˈbudɛmɔ/ | we will be | verb | - | ми form |
-| будете | budete | /ˈbudɛtɛ/ | you will be | verb | - | ви form |
-| будуть | budut | /ˈbudutʲ/ | they will be | verb | - | вони form |
-| завтра | zavtra | /ˈzɑvtrɑ/ | tomorrow | adv | - | |
-| післязавтра | pislyazavtra | /pʲislʲɑˈzɑvtrɑ/ | day after tomorrow | adv | - | |
-| наступний | nastupnyi | /nɑˈstupnɪj/ | next | adj | m | наступного тижня |
-| скоро | skoro | /ˈskɔrɔ/ | soon | adv | - | |
-| пізніше | piznishe | /ˈpʲizʲnʲiʃɛ/ | later | adv | - | |
-| планувати | planuvaty | /plɑnuˈvɑtɪ/ | to plan | verb | - | планую |
-| збиратися | zbyratysya | /zbɪˈrɑtɪsʲɑ/ | to be going to | verb | - | збираюся |
-| прочитати | prochytaty | /prɔtʃɪˈtɑtɪ/ | to read (perf) | verb | - | Simple future: прочитаю |
-| написати | napysaty | /nɑpɪˈsɑtɪ/ | to write (perf) | verb | - | Simple future: напишу |
-| зробити | zrobyty | /zrɔˈbɪtɪ/ | to do (perf) | verb | - | Simple future: зроблю |
-
+| Word | IPA | English | POS | Gender | Note |
+|------|-----|---------|-----|--------|------|
+| буду | /ˈbudu/ | I will be | verb | - | Future of бути |
+| будеш | /ˈbudɛʃ/ | you will be | verb | - | ти form |
+| буде | /ˈbudɛ/ | will be | verb | - | він/вона/воно |
+| будемо | /ˈbudɛmɔ/ | we will be | verb | - | ми form |
+| будете | /ˈbudɛtɛ/ | you will be | verb | - | ви form |
+| будуть | /ˈbudutʲ/ | they will be | verb | - | вони form |
+| післязавтра | /pʲislʲɑˈzɑvtrɑ/ | day after tomorrow | adv | - |  |
+| наступний | /nɑˈstupnɪj/ | next | adj | m | наступного тижня |
+| скоро | /ˈskɔrɔ/ | soon | adv | - |  |
+| пізніше | /ˈpʲizʲnʲiʃɛ/ | later | adv | - |  |
+| планувати | /plɑnuˈvɑtɪ/ | to plan | verb | - | планую |
+| збиратися | /zbɪˈrɑtɪsʲɑ/ | to be going to | verb | - | збираюся |
+| прочитати | /prɔtʃɪˈtɑtɪ/ | to read (perf) | verb | - | Simple future: прочитаю |
+| написати | /nɑpɪˈsɑtɪ/ | to write (perf) | verb | - | Simple future: напишу |
+| зробити | /zrɔˈbɪtɪ/ | to do (perf) | verb | - | Simple future: зроблю |
 ---
 
 # Future Tense Summary

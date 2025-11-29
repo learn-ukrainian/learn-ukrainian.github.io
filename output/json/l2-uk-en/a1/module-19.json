@@ -366,197 +366,135 @@
     "moduleId": "mod-uk-A1-19",
     "level": "A1",
     "phase": "A1.3",
-    "wordCount": 20,
+    "wordCount": 15,
     "transliterationMode": "full",
     "words": [
       {
         "id": "v-m19-001",
-        "uk": "магазин",
-        "translit": "mahazyn",
-        "ipa": "/mɑɦɑˈzɪn/",
-        "en": "store",
-        "pos": "noun",
-        "gender": "m"
+        "uk": "продавати",
+        "translit": "/prɔdɑˈvɑtɪ/",
+        "ipa": "to sell",
+        "en": "verb",
+        "pos": "-",
+        "gender": "продаю, продаєш"
       },
       {
         "id": "v-m19-002",
-        "uk": "ринок",
-        "translit": "rynok",
-        "ipa": "/ˈrɪnɔk/",
-        "en": "market",
-        "pos": "noun",
-        "gender": "m"
+        "uk": "приміряти",
+        "translit": "/prɪmʲirʲˈɑtɪ/",
+        "ipa": "to try on",
+        "en": "verb",
+        "pos": "-"
       },
       {
         "id": "v-m19-003",
-        "uk": "коштувати",
-        "translit": "koshtuvaty",
-        "ipa": "/kɔʃtuˈvɑtɪ/",
-        "en": "to cost",
-        "pos": "verb",
-        "gender": "-",
-        "note": "коштує (3rd sg)"
+        "uk": "розмір",
+        "translit": "/ˈrɔzmʲir/",
+        "ipa": "size",
+        "en": "noun",
+        "pos": "m"
       },
       {
         "id": "v-m19-004",
-        "uk": "купувати",
-        "translit": "kupuvaty",
-        "ipa": "/kupuˈvɑtɪ/",
-        "en": "to buy",
-        "pos": "verb",
-        "gender": "-",
-        "note": "купую, купуєш"
+        "uk": "великий",
+        "translit": "/vɛˈlɪkɪj/",
+        "ipa": "big, large",
+        "en": "adj",
+        "pos": "m",
+        "gender": "велика (f), велике (n)"
       },
       {
         "id": "v-m19-005",
-        "uk": "продавати",
-        "translit": "prodavaty",
-        "ipa": "/prɔdɑˈvɑtɪ/",
-        "en": "to sell",
-        "pos": "verb",
-        "gender": "-",
-        "note": "продаю, продаєш"
+        "uk": "маленький",
+        "translit": "/mɑˈlɛnʲkɪj/",
+        "ipa": "small",
+        "en": "adj",
+        "pos": "m",
+        "gender": "маленька (f)"
       },
       {
         "id": "v-m19-006",
-        "uk": "приміряти",
-        "translit": "prymiryaty",
-        "ipa": "/prɪmʲirʲˈɑtɪ/",
-        "en": "to try on",
-        "pos": "verb",
-        "gender": "-"
+        "uk": "більший",
+        "translit": "/ˈbʲilʲʃɪj/",
+        "ipa": "bigger",
+        "en": "adj",
+        "pos": "m",
+        "gender": "Comparative"
       },
       {
         "id": "v-m19-007",
-        "uk": "розмір",
-        "translit": "rozmir",
-        "ipa": "/ˈrɔzmʲir/",
-        "en": "size",
-        "pos": "noun",
-        "gender": "m"
+        "uk": "менший",
+        "translit": "/ˈmɛnʃɪj/",
+        "ipa": "smaller",
+        "en": "adj",
+        "pos": "m",
+        "gender": "Comparative"
       },
       {
         "id": "v-m19-008",
-        "uk": "великий",
-        "translit": "velykyi",
-        "ipa": "/vɛˈlɪkɪj/",
-        "en": "big, large",
-        "pos": "adj",
-        "gender": "m",
-        "note": "велика (f), велике (n)"
+        "uk": "занадто",
+        "translit": "/zɑˈnɑdtɔ/",
+        "ipa": "too (excessive)",
+        "en": "adv",
+        "pos": "-"
       },
       {
         "id": "v-m19-009",
-        "uk": "маленький",
-        "translit": "malenkyi",
-        "ipa": "/mɑˈlɛnʲkɪj/",
-        "en": "small",
-        "pos": "adj",
-        "gender": "m",
-        "note": "маленька (f)"
+        "uk": "колір",
+        "translit": "/ˈkɔlʲir/",
+        "ipa": "color",
+        "en": "noun",
+        "pos": "m",
+        "gender": "Gen: кольору"
       },
       {
         "id": "v-m19-010",
-        "uk": "більший",
-        "translit": "bilshyi",
-        "ipa": "/ˈbʲilʲʃɪj/",
-        "en": "bigger",
-        "pos": "adj",
-        "gender": "m",
-        "note": "Comparative"
+        "uk": "білий",
+        "translit": "/ˈbʲilɪj/",
+        "ipa": "white",
+        "en": "adj",
+        "pos": "m"
       },
       {
         "id": "v-m19-011",
-        "uk": "менший",
-        "translit": "menshyi",
-        "ipa": "/ˈmɛnʃɪj/",
-        "en": "smaller",
-        "pos": "adj",
-        "gender": "m",
-        "note": "Comparative"
+        "uk": "чорний",
+        "translit": "/ˈtʃɔrnɪj/",
+        "ipa": "black",
+        "en": "adj",
+        "pos": "m"
       },
       {
         "id": "v-m19-012",
-        "uk": "занадто",
-        "translit": "zanadto",
-        "ipa": "/zɑˈnɑdtɔ/",
-        "en": "too (excessive)",
-        "pos": "adv",
-        "gender": "-"
+        "uk": "каса",
+        "translit": "/ˈkɑsɑ/",
+        "ipa": "cash register",
+        "en": "noun",
+        "pos": "f"
       },
       {
         "id": "v-m19-013",
-        "uk": "колір",
-        "translit": "kolir",
-        "ipa": "/ˈkɔlʲir/",
-        "en": "color",
-        "pos": "noun",
-        "gender": "m",
-        "note": "Gen: кольору"
+        "uk": "чек",
+        "translit": "/tʃɛk/",
+        "ipa": "receipt",
+        "en": "noun",
+        "pos": "m"
       },
       {
         "id": "v-m19-014",
-        "uk": "білий",
-        "translit": "bilyi",
-        "ipa": "/ˈbʲilɪj/",
-        "en": "white",
-        "pos": "adj",
-        "gender": "m"
+        "uk": "пакет",
+        "translit": "/pɑˈkɛt/",
+        "ipa": "bag",
+        "en": "noun",
+        "pos": "m",
+        "gender": "Plastic bag"
       },
       {
         "id": "v-m19-015",
-        "uk": "чорний",
-        "translit": "chornyi",
-        "ipa": "/ˈtʃɔrnɪj/",
-        "en": "black",
-        "pos": "adj",
-        "gender": "m"
-      },
-      {
-        "id": "v-m19-016",
-        "uk": "знижка",
-        "translit": "znyzhka",
-        "ipa": "/ˈznɪʒkɑ/",
-        "en": "discount",
-        "pos": "noun",
-        "gender": "f"
-      },
-      {
-        "id": "v-m19-017",
-        "uk": "каса",
-        "translit": "kasa",
-        "ipa": "/ˈkɑsɑ/",
-        "en": "cash register",
-        "pos": "noun",
-        "gender": "f"
-      },
-      {
-        "id": "v-m19-018",
-        "uk": "чек",
-        "translit": "chek",
-        "ipa": "/tʃɛk/",
-        "en": "receipt",
-        "pos": "noun",
-        "gender": "m"
-      },
-      {
-        "id": "v-m19-019",
-        "uk": "пакет",
-        "translit": "paket",
-        "ipa": "/pɑˈkɛt/",
-        "en": "bag",
-        "pos": "noun",
-        "gender": "m",
-        "note": "Plastic bag"
-      },
-      {
-        "id": "v-m19-020",
         "uk": "примірочна",
-        "translit": "primirochna",
-        "ipa": "/prɪˈmʲirɔtʃnɑ/",
-        "en": "fitting room",
-        "pos": "noun",
-        "gender": "f"
+        "translit": "/prɪˈmʲirɔtʃnɑ/",
+        "ipa": "fitting room",
+        "en": "noun",
+        "pos": "f"
       }
     ]
   }

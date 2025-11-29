@@ -371,258 +371,223 @@
     "moduleId": "mod-uk-A1-09",
     "level": "A1",
     "phase": "A1.2",
-    "wordCount": 27,
+    "wordCount": 26,
     "transliterationMode": "full",
     "words": [
       {
         "id": "v-m09-001",
         "uk": "нуль",
-        "translit": "nul",
-        "ipa": "/nulʲ/",
-        "en": "zero",
-        "pos": "num",
-        "gender": "m"
+        "translit": "/nulʲ/",
+        "ipa": "zero",
+        "en": "num",
+        "pos": "m"
       },
       {
         "id": "v-m09-002",
         "uk": "один",
-        "translit": "odyn",
-        "ipa": "/ɔˈdɪn/",
-        "en": "one (m)",
-        "pos": "num",
-        "gender": "m",
-        "note": "одна (f), одне (n)"
+        "translit": "/ɔˈdɪn/",
+        "ipa": "one (m)",
+        "en": "num",
+        "pos": "m",
+        "gender": "одна (f), одне (n)"
       },
       {
         "id": "v-m09-003",
         "uk": "два",
-        "translit": "dva",
-        "ipa": "/dvɑ/",
-        "en": "two (m/n)",
-        "pos": "num",
-        "gender": "-",
-        "note": "дві (f)"
+        "translit": "/dvɑ/",
+        "ipa": "two (m/n)",
+        "en": "num",
+        "pos": "-",
+        "gender": "дві (f)"
       },
       {
         "id": "v-m09-004",
         "uk": "три",
-        "translit": "try",
-        "ipa": "/trɪ/",
-        "en": "three",
-        "pos": "num",
-        "gender": "-"
+        "translit": "/trɪ/",
+        "ipa": "three",
+        "en": "num",
+        "pos": "-"
       },
       {
         "id": "v-m09-005",
         "uk": "чотири",
-        "translit": "chotyry",
-        "ipa": "/tʃɔˈtɪrɪ/",
-        "en": "four",
-        "pos": "num",
-        "gender": "-"
+        "translit": "/tʃɔˈtɪrɪ/",
+        "ipa": "four",
+        "en": "num",
+        "pos": "-"
       },
       {
         "id": "v-m09-006",
         "uk": "п'ять",
-        "translit": "pyat",
-        "ipa": "/pjɑtʲ/",
-        "en": "five",
-        "pos": "num",
-        "gender": "-"
+        "translit": "/pjɑtʲ/",
+        "ipa": "five",
+        "en": "num",
+        "pos": "-"
       },
       {
         "id": "v-m09-007",
         "uk": "шість",
-        "translit": "shist",
-        "ipa": "/ʃʲistʲ/",
-        "en": "six",
-        "pos": "num",
-        "gender": "-"
+        "translit": "/ʃʲistʲ/",
+        "ipa": "six",
+        "en": "num",
+        "pos": "-"
       },
       {
         "id": "v-m09-008",
         "uk": "сім",
-        "translit": "sim",
-        "ipa": "/sʲim/",
-        "en": "seven",
-        "pos": "num",
-        "gender": "-"
+        "translit": "/sʲim/",
+        "ipa": "seven",
+        "en": "num",
+        "pos": "-"
       },
       {
         "id": "v-m09-009",
         "uk": "вісім",
-        "translit": "visim",
-        "ipa": "/ˈvʲisʲim/",
-        "en": "eight",
-        "pos": "num",
-        "gender": "-"
+        "translit": "/ˈvʲisʲim/",
+        "ipa": "eight",
+        "en": "num",
+        "pos": "-"
       },
       {
         "id": "v-m09-010",
         "uk": "дев'ять",
-        "translit": "devyat",
-        "ipa": "/ˈdɛvjɑtʲ/",
-        "en": "nine",
-        "pos": "num",
-        "gender": "-"
+        "translit": "/ˈdɛvjɑtʲ/",
+        "ipa": "nine",
+        "en": "num",
+        "pos": "-"
       },
       {
         "id": "v-m09-011",
         "uk": "десять",
-        "translit": "desyat",
-        "ipa": "/ˈdɛsʲɑtʲ/",
-        "en": "ten",
-        "pos": "num",
-        "gender": "-"
+        "translit": "/ˈdɛsʲɑtʲ/",
+        "ipa": "ten",
+        "en": "num",
+        "pos": "-"
       },
       {
         "id": "v-m09-012",
         "uk": "двадцять",
-        "translit": "dvadtsyat",
-        "ipa": "/ˈdvɑd͡tsʲɑtʲ/",
-        "en": "twenty",
-        "pos": "num",
-        "gender": "-"
+        "translit": "/ˈdvɑd͡tsʲɑtʲ/",
+        "ipa": "twenty",
+        "en": "num",
+        "pos": "-"
       },
       {
         "id": "v-m09-013",
         "uk": "тридцять",
-        "translit": "trydtsyat",
-        "ipa": "/ˈtrɪd͡tsʲɑtʲ/",
-        "en": "thirty",
-        "pos": "num",
-        "gender": "-"
+        "translit": "/ˈtrɪd͡tsʲɑtʲ/",
+        "ipa": "thirty",
+        "en": "num",
+        "pos": "-"
       },
       {
         "id": "v-m09-014",
         "uk": "сорок",
-        "translit": "sorok",
-        "ipa": "/ˈsɔrɔk/",
-        "en": "forty",
-        "pos": "num",
-        "gender": "-",
-        "note": "Irregular!"
+        "translit": "/ˈsɔrɔk/",
+        "ipa": "forty",
+        "en": "num",
+        "pos": "-",
+        "gender": "Irregular!"
       },
       {
         "id": "v-m09-015",
         "uk": "п'ятдесят",
-        "translit": "pyatdesyat",
-        "ipa": "/pjɑtdɛˈsʲɑt/",
-        "en": "fifty",
-        "pos": "num",
-        "gender": "-"
+        "translit": "/pjɑtdɛˈsʲɑt/",
+        "ipa": "fifty",
+        "en": "num",
+        "pos": "-"
       },
       {
         "id": "v-m09-016",
         "uk": "сто",
-        "translit": "sto",
-        "ipa": "/stɔ/",
-        "en": "hundred",
-        "pos": "num",
-        "gender": "-"
+        "translit": "/stɔ/",
+        "ipa": "hundred",
+        "en": "num",
+        "pos": "-"
       },
       {
         "id": "v-m09-017",
         "uk": "гривня",
-        "translit": "hryvnya",
-        "ipa": "/ˈɦrɪvnʲɑ/",
-        "en": "hryvnia (₴)",
-        "pos": "noun",
-        "gender": "f",
-        "note": "2-4: гривні, 5+: гривень"
+        "translit": "/ˈɦrɪvnʲɑ/",
+        "ipa": "hryvnia (₴)",
+        "en": "noun",
+        "pos": "f",
+        "gender": "2-4: гривні, 5+: гривень"
       },
       {
         "id": "v-m09-018",
         "uk": "копійка",
-        "translit": "kopiyka",
-        "ipa": "/kɔˈpʲijkɑ/",
-        "en": "kopeck",
-        "pos": "noun",
-        "gender": "f",
-        "note": "2-4: копійки, 5+: копійок"
+        "translit": "/kɔˈpʲijkɑ/",
+        "ipa": "kopeck",
+        "en": "noun",
+        "pos": "f",
+        "gender": "2-4: копійки, 5+: копійок"
       },
       {
         "id": "v-m09-019",
         "uk": "ціна",
-        "translit": "tsina",
-        "ipa": "/t͡sʲiˈnɑ/",
-        "en": "price",
-        "pos": "noun",
-        "gender": "f"
+        "translit": "/t͡sʲiˈnɑ/",
+        "ipa": "price",
+        "en": "noun",
+        "pos": "f"
       },
       {
         "id": "v-m09-020",
         "uk": "коштувати",
-        "translit": "koshtuvaty",
-        "ipa": "/kɔʃtuˈvɑtɪ/",
-        "en": "to cost",
-        "pos": "verb",
-        "gender": "-",
-        "note": "коштує (it costs)"
+        "translit": "/kɔʃtuˈvɑtɪ/",
+        "ipa": "to cost",
+        "en": "verb",
+        "pos": "-",
+        "gender": "коштує (it costs)"
       },
       {
         "id": "v-m09-021",
-        "uk": "скільки",
-        "translit": "skilky",
-        "ipa": "/ˈskʲilʲkɪ/",
-        "en": "how much/many",
-        "pos": "adv",
-        "gender": "-"
+        "uk": "дорого",
+        "translit": "/ˈdɔrɔɦɔ/",
+        "ipa": "expensive",
+        "en": "adv",
+        "pos": "-"
       },
       {
         "id": "v-m09-022",
-        "uk": "дорого",
-        "translit": "doroho",
-        "ipa": "/ˈdɔrɔɦɔ/",
-        "en": "expensive",
-        "pos": "adv",
-        "gender": "-"
+        "uk": "дешево",
+        "translit": "/ˈdɛʃɛvɔ/",
+        "ipa": "cheap",
+        "en": "adv",
+        "pos": "-"
       },
       {
         "id": "v-m09-023",
-        "uk": "дешево",
-        "translit": "deshevo",
-        "ipa": "/ˈdɛʃɛvɔ/",
-        "en": "cheap",
-        "pos": "adv",
-        "gender": "-"
+        "uk": "знижка",
+        "translit": "/ˈznɪʒkɑ/",
+        "ipa": "discount",
+        "en": "noun",
+        "pos": "f"
       },
       {
         "id": "v-m09-024",
-        "uk": "знижка",
-        "translit": "znyzhka",
-        "ipa": "/ˈznɪʒkɑ/",
-        "en": "discount",
-        "pos": "noun",
-        "gender": "f"
+        "uk": "решта",
+        "translit": "/ˈrɛʃtɑ/",
+        "ipa": "change (money)",
+        "en": "noun",
+        "pos": "f"
       },
       {
         "id": "v-m09-025",
-        "uk": "решта",
-        "translit": "reshta",
-        "ipa": "/ˈrɛʃtɑ/",
-        "en": "change (money)",
-        "pos": "noun",
-        "gender": "f"
+        "uk": "готівка",
+        "translit": "/ɦɔˈtʲivkɑ/",
+        "ipa": "cash",
+        "en": "noun",
+        "pos": "f"
       },
       {
         "id": "v-m09-026",
-        "uk": "готівка",
-        "translit": "hotivka",
-        "ipa": "/ɦɔˈtʲivkɑ/",
-        "en": "cash",
-        "pos": "noun",
-        "gender": "f"
-      },
-      {
-        "id": "v-m09-027",
         "uk": "картка",
-        "translit": "kartka",
-        "ipa": "/ˈkɑrtkɑ/",
-        "en": "card",
-        "pos": "noun",
-        "gender": "f",
-        "note": "Bank card"
+        "translit": "/ˈkɑrtkɑ/",
+        "ipa": "card",
+        "en": "noun",
+        "pos": "f",
+        "gender": "Bank card"
       }
     ]
   }

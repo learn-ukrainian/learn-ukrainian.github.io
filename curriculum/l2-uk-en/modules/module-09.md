@@ -284,36 +284,34 @@ Practice: You're buying items. Say the price:
 
 # Vocabulary
 
-| uk | translit | ipa | en | pos | gender | note |
-|----|----------|-----|-----|-----|--------|------|
-| нуль | nul | /nulʲ/ | zero | num | m | |
-| один | odyn | /ɔˈdɪn/ | one (m) | num | m | одна (f), одне (n) |
-| два | dva | /dvɑ/ | two (m/n) | num | - | дві (f) |
-| три | try | /trɪ/ | three | num | - | |
-| чотири | chotyry | /tʃɔˈtɪrɪ/ | four | num | - | |
-| п'ять | pyat | /pjɑtʲ/ | five | num | - | |
-| шість | shist | /ʃʲistʲ/ | six | num | - | |
-| сім | sim | /sʲim/ | seven | num | - | |
-| вісім | visim | /ˈvʲisʲim/ | eight | num | - | |
-| дев'ять | devyat | /ˈdɛvjɑtʲ/ | nine | num | - | |
-| десять | desyat | /ˈdɛsʲɑtʲ/ | ten | num | - | |
-| двадцять | dvadtsyat | /ˈdvɑd͡tsʲɑtʲ/ | twenty | num | - | |
-| тридцять | trydtsyat | /ˈtrɪd͡tsʲɑtʲ/ | thirty | num | - | |
-| сорок | sorok | /ˈsɔrɔk/ | forty | num | - | Irregular! |
-| п'ятдесят | pyatdesyat | /pjɑtdɛˈsʲɑt/ | fifty | num | - | |
-| сто | sto | /stɔ/ | hundred | num | - | |
-| гривня | hryvnya | /ˈɦrɪvnʲɑ/ | hryvnia (₴) | noun | f | 2-4: гривні, 5+: гривень |
-| копійка | kopiyka | /kɔˈpʲijkɑ/ | kopeck | noun | f | 2-4: копійки, 5+: копійок |
-| ціна | tsina | /t͡sʲiˈnɑ/ | price | noun | f | |
-| коштувати | koshtuvaty | /kɔʃtuˈvɑtɪ/ | to cost | verb | - | коштує (it costs) |
-| скільки | skilky | /ˈskʲilʲkɪ/ | how much/many | adv | - | |
-| дорого | doroho | /ˈdɔrɔɦɔ/ | expensive | adv | - | |
-| дешево | deshevo | /ˈdɛʃɛvɔ/ | cheap | adv | - | |
-| знижка | znyzhka | /ˈznɪʒkɑ/ | discount | noun | f | |
-| решта | reshta | /ˈrɛʃtɑ/ | change (money) | noun | f | |
-| готівка | hotivka | /ɦɔˈtʲivkɑ/ | cash | noun | f | |
-| картка | kartka | /ˈkɑrtkɑ/ | card | noun | f | Bank card |
-
+| Word | IPA | English | POS | Gender | Note |
+|------|-----|---------|-----|--------|------|
+| нуль | /nulʲ/ | zero | num | m |  |
+| один | /ɔˈdɪn/ | one (m) | num | m | одна (f), одне (n) |
+| два | /dvɑ/ | two (m/n) | num | - | дві (f) |
+| три | /trɪ/ | three | num | - |  |
+| чотири | /tʃɔˈtɪrɪ/ | four | num | - |  |
+| п'ять | /pjɑtʲ/ | five | num | - |  |
+| шість | /ʃʲistʲ/ | six | num | - |  |
+| сім | /sʲim/ | seven | num | - |  |
+| вісім | /ˈvʲisʲim/ | eight | num | - |  |
+| дев'ять | /ˈdɛvjɑtʲ/ | nine | num | - |  |
+| десять | /ˈdɛsʲɑtʲ/ | ten | num | - |  |
+| двадцять | /ˈdvɑd͡tsʲɑtʲ/ | twenty | num | - |  |
+| тридцять | /ˈtrɪd͡tsʲɑtʲ/ | thirty | num | - |  |
+| сорок | /ˈsɔrɔk/ | forty | num | - | Irregular! |
+| п'ятдесят | /pjɑtdɛˈsʲɑt/ | fifty | num | - |  |
+| сто | /stɔ/ | hundred | num | - |  |
+| гривня | /ˈɦrɪvnʲɑ/ | hryvnia (₴) | noun | f | 2-4: гривні, 5+: гривень |
+| копійка | /kɔˈpʲijkɑ/ | kopeck | noun | f | 2-4: копійки, 5+: копійок |
+| ціна | /t͡sʲiˈnɑ/ | price | noun | f |  |
+| коштувати | /kɔʃtuˈvɑtɪ/ | to cost | verb | - | коштує (it costs) |
+| дорого | /ˈdɔrɔɦɔ/ | expensive | adv | - |  |
+| дешево | /ˈdɛʃɛvɔ/ | cheap | adv | - |  |
+| знижка | /ˈznɪʒkɑ/ | discount | noun | f |  |
+| решта | /ˈrɛʃtɑ/ | change (money) | noun | f |  |
+| готівка | /ɦɔˈtʲivkɑ/ | cash | noun | f |  |
+| картка | /ˈkɑrtkɑ/ | card | noun | f | Bank card |
 ---
 
 # Number Patterns

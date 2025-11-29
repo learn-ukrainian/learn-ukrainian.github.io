@@ -299,27 +299,25 @@ Describe yourself or a friend:
 
 # Vocabulary
 
-| uk | translit | ipa | en | pos | gender | note |
-|----|----------|-----|-----|-----|--------|------|
-| одяг | odyah | /ˈɔdʲɑɦ/ | clothes | noun | m | Collective |
-| носити | nosyty | /nɔˈsɪtɪ/ | to wear | verb | - | ношу, носиш |
-| сорочка | sorochka | /sɔˈrɔtʃkɑ/ | shirt | noun | f | |
-| футболка | futbolka | /futˈbɔlkɑ/ | t-shirt | noun | f | |
-| светр | svetr | /svɛtr/ | sweater | noun | m | |
-| куртка | kurtka | /ˈkurtkɑ/ | jacket | noun | f | |
-| пальто | palto | /pɑlʲˈtɔ/ | coat | noun | n | Indeclinable |
-| сукня | suknya | /ˈsuknʲɑ/ | dress | noun | f | Also: плаття |
-| спідниця | spidnytsya | /spʲidˈnɪt͡sʲɑ/ | skirt | noun | f | |
-| штани | shtany | /ʃtɑˈnɪ/ | pants | noun | pl | Always plural |
-| джинси | dzhynsy | /ˈd͡ʒɪnsɪ/ | jeans | noun | pl | Always plural |
-| черевики | cherevyky | /tʃɛrɛˈvɪkɪ/ | shoes | noun | pl | |
-| кросівки | krosivky | /krɔˈsʲivkɪ/ | sneakers | noun | pl | |
-| вишиванка | vyshyvanka | /vɪʃɪˈvɑnkɑ/ | embroidered shirt | noun | f | Traditional |
-| волосся | volossya | /vɔˈlɔsʲːɑ/ | hair | noun | n | Collective, singular |
-| очі | ochi | /ˈɔtʃʲi/ | eyes | noun | pl | Singular: око |
-| високий | vysokyi | /vɪˈsɔkɪj/ | tall | adj | m | |
-| худий | khudyi | /xuˈdɪj/ | thin | adj | m | |
-
+| Word | IPA | English | POS | Gender | Note |
+|------|-----|---------|-----|--------|------|
+| одяг | /ˈɔdʲɑɦ/ | clothes | noun | m | Collective |
+| сорочка | /sɔˈrɔtʃkɑ/ | shirt | noun | f |  |
+| футболка | /futˈbɔlkɑ/ | t-shirt | noun | f |  |
+| светр | /svɛtr/ | sweater | noun | m |  |
+| куртка | /ˈkurtkɑ/ | jacket | noun | f |  |
+| пальто | /pɑlʲˈtɔ/ | coat | noun | n | Indeclinable |
+| сукня | /ˈsuknʲɑ/ | dress | noun | f | Also: плаття |
+| спідниця | /spʲidˈnɪt͡sʲɑ/ | skirt | noun | f |  |
+| штани | /ʃtɑˈnɪ/ | pants | noun | pl | Always plural |
+| джинси | /ˈd͡ʒɪnsɪ/ | jeans | noun | pl | Always plural |
+| черевики | /tʃɛrɛˈvɪkɪ/ | shoes | noun | pl |  |
+| кросівки | /krɔˈsʲivkɪ/ | sneakers | noun | pl |  |
+| вишиванка | /vɪʃɪˈvɑnkɑ/ | embroidered shirt | noun | f | Traditional |
+| волосся | /vɔˈlɔsʲːɑ/ | hair | noun | n | Collective, singular |
+| очі | /ˈɔtʃʲi/ | eyes | noun | pl | Singular: око |
+| високий | /vɪˈsɔkɪj/ | tall | adj | m |  |
+| худий | /xuˈdɪj/ | thin | adj | m |  |
 ---
 
 # Appearance Summary

@@ -305,29 +305,25 @@ Describe what you/others do using Class II verbs:
 
 # Vocabulary
 
-| uk | translit | ipa | en | pos | gender | note |
-|----|----------|-----|-----|-----|--------|------|
-| говорити | hovoryty | /ɦɔvɔˈrɪtɪ/ | to speak | verb | - | говорю, говориш, говорить |
-| робити | robyty | /rɔˈbɪtɪ/ | to do, make | verb | - | роблю (б→бл), робиш, робить |
-| бачити | bachyty | /ˈbɑtʃɪtɪ/ | to see | verb | - | бачу, бачиш, бачить |
-| любити | lyubyty | /lʲuˈbɪtɪ/ | to love | verb | - | люблю (б→бл), любиш, любить |
-| ходити | khodyty | /xɔˈdɪtɪ/ | to walk, go | verb | - | ходжу (д→дж), ходиш, ходить |
-| носити | nosyty | /nɔˈsɪtɪ/ | to carry, wear | verb | - | ношу (с→ш), носиш, носить |
-| просити | prosyty | /prɔˈsɪtɪ/ | to ask, request | verb | - | прошу (с→ш), просиш, просить |
-| сидіти | sydity | /sɪˈdʲitɪ/ | to sit | verb | - | сиджу (д→дж), сидиш, сидить |
-| стояти | stoyaty | /stɔˈjɑtɪ/ | to stand | verb | - | стою, стоїш, стоїть |
-| лежати | lezhaty | /lɛˈʒɑtɪ/ | to lie down | verb | - | лежу, лежиш, лежить |
-| спати | spaty | /ˈspɑtɪ/ | to sleep | verb | - | сплю, спиш, спить |
-| хотіти | khotity | /xɔˈtʲitɪ/ | to want | verb | - | Irregular: хочу, хочеш, хоче |
-| їсти | yisty | /ˈjistɪ/ | to eat | verb | - | Irregular: їм, їси, їсть |
-| пити | pyty | /ˈpɪtɪ/ | to drink | verb | - | Irregular: п'ю, п'єш, п'є |
-| жити | zhyty | /ˈʒɪtɪ/ | to live | verb | - | живу, живеш, живе |
-| вчити | vchyty | /ˈwtʃɪtɪ/ | to teach/learn | verb | - | вчу, вчиш, вчить |
-| вчитися | vchytysya | /ˈwtʃɪtɪsʲɑ/ | to study, learn | verb | - | Reflexive: вчуся, вчишся |
-| купувати | kupuvaty | /kupuˈvɑtɪ/ | to buy | verb | - | Class I: купую, купуєш |
-| телефонувати | telefonuvaty | /tɛlɛfɔnuˈvɑtɪ/ | to call (phone) | verb | - | Class I: телефоную |
-| дякувати | dyakuvaty | /dʲɑkuˈvɑtɪ/ | to thank | verb | - | Class I: дякую, дякуєш |
-
+| Word | IPA | English | POS | Gender | Note |
+|------|-----|---------|-----|--------|------|
+| бачити | /ˈbɑtʃɪtɪ/ | to see | verb | - | бачу, бачиш, бачить |
+| любити | /lʲuˈbɪtɪ/ | to love | verb | - | люблю (б→бл), любиш, любить |
+| ходити | /xɔˈdɪtɪ/ | to walk, go | verb | - | ходжу (д→дж), ходиш, ходить |
+| носити | /nɔˈsɪtɪ/ | to carry, wear | verb | - | ношу (с→ш), носиш, носить |
+| просити | /prɔˈsɪtɪ/ | to ask, request | verb | - | прошу (с→ш), просиш, просить |
+| сидіти | /sɪˈdʲitɪ/ | to sit | verb | - | сиджу (д→дж), сидиш, сидить |
+| стояти | /stɔˈjɑtɪ/ | to stand | verb | - | стою, стоїш, стоїть |
+| лежати | /lɛˈʒɑtɪ/ | to lie down | verb | - | лежу, лежиш, лежить |
+| спати | /ˈspɑtɪ/ | to sleep | verb | - | сплю, спиш, спить |
+| їсти | /ˈjistɪ/ | to eat | verb | - | Irregular: їм, їси, їсть |
+| пити | /ˈpɪtɪ/ | to drink | verb | - | Irregular: п'ю, п'єш, п'є |
+| жити | /ˈʒɪtɪ/ | to live | verb | - | живу, живеш, живе |
+| вчити | /ˈwtʃɪtɪ/ | to teach/learn | verb | - | вчу, вчиш, вчить |
+| вчитися | /ˈwtʃɪtɪsʲɑ/ | to study, learn | verb | - | Reflexive: вчуся, вчишся |
+| купувати | /kupuˈvɑtɪ/ | to buy | verb | - | Class I: купую, купуєш |
+| телефонувати | /tɛlɛfɔnuˈvɑtɪ/ | to call (phone) | verb | - | Class I: телефоную |
+| дякувати | /dʲɑkuˈvɑtɪ/ | to thank | verb | - | Class I: дякую, дякуєш |
 ---
 
 # Conjugation Summary

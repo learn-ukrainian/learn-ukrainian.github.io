@@ -296,26 +296,19 @@ Tell about your family:
 
 # Vocabulary
 
-| uk | translit | ipa | en | pos | gender | note |
-|----|----------|-----|-----|-----|--------|------|
-| родина | rodyna | /rɔˈdɪnɑ/ | family | noun | f | |
-| мама | mama | /ˈmɑmɑ/ | mom | noun | f | Informal |
-| тато | tato | /ˈtɑtɔ/ | dad | noun | m | Informal |
-| батько | batko | /ˈbɑtʲkɔ/ | father | noun | m | Formal |
-| мати | maty | /ˈmɑtɪ/ | mother | noun | f | Formal |
-| батьки | batky | /ˈbɑtʲkɪ/ | parents | noun | pl | |
-| брат | brat | /brɑt/ | brother | noun | m | Pl: брати |
-| сестра | sestra | /sɛsˈtrɑ/ | sister | noun | f | Pl: сестри |
-| син | syn | /sɪn/ | son | noun | m | Pl: сини |
-| дочка | dochka | /ˈdɔtʃkɑ/ | daughter | noun | f | Pl: дочки |
-| дитина | dytyna | /dɪˈtɪnɑ/ | child | noun | f | Pl: діти! |
-| дідусь | didus | /dʲiˈdusʲ/ | grandpa | noun | m | |
-| бабуся | babusya | /bɑˈbusʲɑ/ | grandma | noun | f | |
-| чоловік | cholovik | /tʃɔlɔˈvʲik/ | husband | noun | m | Also: man |
-| дружина | druzhyna | /druˈʒɪnɑ/ | wife | noun | f | |
-| одружений | odruzhenyi | /ɔˈdruʒɛnɪj/ | married (m) | adj | m | одружена (f) |
-| родич | rodych | /ˈrɔdɪtʃ/ | relative | noun | m | Pl: родичі |
-
+| Word | IPA | English | POS | Gender | Note |
+|------|-----|---------|-----|--------|------|
+| батько | /ˈbɑtʲkɔ/ | father | noun | m | Formal |
+| батьки | /ˈbɑtʲkɪ/ | parents | noun | pl |  |
+| син | /sɪn/ | son | noun | m | Pl: сини |
+| дочка | /ˈdɔtʃkɑ/ | daughter | noun | f | Pl: дочки |
+| дитина | /dɪˈtɪnɑ/ | child | noun | f | Pl: діти! |
+| дідусь | /dʲiˈdusʲ/ | grandpa | noun | m |  |
+| бабуся | /bɑˈbusʲɑ/ | grandma | noun | f |  |
+| чоловік | /tʃɔlɔˈvʲik/ | husband | noun | m | Also: man |
+| дружина | /druˈʒɪnɑ/ | wife | noun | f |  |
+| одружений | /ɔˈdruʒɛnɪj/ | married (m) | adj | m | одружена (f) |
+| родич | /ˈrɔdɪtʃ/ | relative | noun | m | Pl: родичі |
 ---
 
 # Family Summary

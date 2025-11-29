@@ -279,29 +279,28 @@ Read these tricky words:
 
 # Vocabulary
 
-| uk | translit | ipa | en | pos | gender | note |
-|----|----------|-----|-----|-----|--------|------|
-| мама | mama | /ˈmɑmɑ/ | mom | noun | f | True Friends only: М-А-М-А |
-| тато | tato | /ˈtɑtɔ/ | dad | noun | m | True Friends: Т-А-Т-О |
-| банк | bank | /bɑnk/ | bank | noun | m | Б=B (new), Н=N (false friend) |
-| парк | park | /pɑrk/ | park | noun | m | П=P (new), Р=R (false friend) |
-| кафе | kafe | /kɑˈfɛ/ | café | noun | n | All True Friends + Ф (new) |
-| метро | metro | /mɛˈtrɔ/ | metro | noun | n | Р=R (false friend) |
-| таксі | taksi | /tɑkˈsi/ | taxi | noun | n | С=S (false friend), І=I |
-| радіо | radio | /ˈrɑdʲiɔ/ | radio | noun | n | Р=R (false friend), Д=D (new) |
-| піца | pitsa | /ˈpitsɑ/ | pizza | noun | f | П=P (new), Ц=TS (preview) |
-| суп | sup | /sup/ | soup | noun | m | С=S, У=U (false friends) |
-| салат | salat | /sɑˈlɑt/ | salad | noun | m | С=S (false friend), Л=L (new) |
-| лимон | lymon | /lɪˈmɔn/ | lemon | noun | m | Л=L (new), Н=N (false friend) |
-| банан | banan | /bɑˈnɑn/ | banana | noun | m | Б=B (new), Н=N (false friend) |
-| хокей | khokei | /xɔˈkɛj/ | hockey | noun | m | Х=KH (false friend) |
-| футбол | futbol | /fudˈbɔl/ | football | noun | m | Ф=F (new), У=U, Б=B, Л=L |
-| студент | student | /stuˈdɛnt/ | student | noun | m | С=S, У=U, Н=N (false friends) |
-| турист | turyst | /tuˈrɪst/ | tourist | noun | m | У=U, Р=R, С=S (false friends) |
-| музика | muzyka | /ˈmuzɪkɑ/ | music | noun | f | У=U (false friend), З=Z (new) |
-| фото | foto | /ˈfɔtɔ/ | photo | noun | n | Ф=F (new), rest True Friends |
-| відео | video | /ˈwideɔ/ | video | noun | n | В=V (false friend), Д=D (new) |
-
+| Word | IPA | English | POS | Gender | Note |
+|------|-----|---------|-----|--------|------|
+| мама | /ˈmɑmɑ/ | mom | noun | f | True Friends only: М-А-М-А |
+| тато | /ˈtɑtɔ/ | dad | noun | m | True Friends: Т-А-Т-О |
+| банк | /bɑnk/ | bank | noun | m | Б=B (new), Н=N (false friend) |
+| парк | /pɑrk/ | park | noun | m | П=P (new), Р=R (false friend) |
+| кафе | /kɑˈfɛ/ | café | noun | n | All True Friends + Ф (new) |
+| метро | /mɛˈtrɔ/ | metro | noun | n | Р=R (false friend) |
+| таксі | /tɑkˈsi/ | taxi | noun | n | С=S (false friend), І=I |
+| радіо | /ˈrɑdʲiɔ/ | radio | noun | n | Р=R (false friend), Д=D (new) |
+| піца | /ˈpitsɑ/ | pizza | noun | f | П=P (new), Ц=TS (preview) |
+| суп | /sup/ | soup | noun | m | С=S, У=U (false friends) |
+| салат | /sɑˈlɑt/ | salad | noun | m | С=S (false friend), Л=L (new) |
+| лимон | /lɪˈmɔn/ | lemon | noun | m | Л=L (new), Н=N (false friend) |
+| банан | /bɑˈnɑn/ | banana | noun | m | Б=B (new), Н=N (false friend) |
+| хокей | /xɔˈkɛj/ | hockey | noun | m | Х=KH (false friend) |
+| футбол | /fudˈbɔl/ | football | noun | m | Ф=F (new), У=U, Б=B, Л=L |
+| студент | /stuˈdɛnt/ | student | noun | m | С=S, У=U, Н=N (false friends) |
+| турист | /tuˈrɪst/ | tourist | noun | m | У=U, Р=R, С=S (false friends) |
+| музика | /ˈmuzɪkɑ/ | music | noun | f | У=U (false friend), З=Z (new) |
+| фото | /ˈfɔtɔ/ | photo | noun | n | Ф=F (new), rest True Friends |
+| відео | /ˈwideɔ/ | video | noun | n | В=V (false friend), Д=D (new) |
 ---
 
 # Letter Groups
