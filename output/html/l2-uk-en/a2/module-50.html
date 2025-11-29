@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 50: Checkpoint: A2.2 Review | Ukrainian A2</title>
+  <style>
+    :root { --primary: #1a5fb4; --primary-light: #3584e4; --success: #26a269; --warning: #e5a50a; --danger: #c01c28; --bg: #fafafa; --card-bg: #fff; --text: #1e1e1e; --text-muted: #5e5e5e; --border: #e0e0e0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+    .top-nav { background: #2e2e2e; color: white; padding: 0.5rem 2rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.875rem; }
+    .top-nav a { color: white; text-decoration: none; }
+    .top-nav a:hover { text-decoration: underline; }
+    .module-nav { display: flex; gap: 1rem; align-items: center; }
+    .module-nav-link { color: rgba(255,255,255,0.8); text-decoration: none; padding: 0.25rem 0.5rem; }
+    .module-nav-link:hover { color: white; }
+    .module-nav-link.disabled { color: rgba(255,255,255,0.3); pointer-events: none; }
+    .nav { position: sticky; top: 0; background: var(--primary); color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; z-index: 100; }
+    .nav h1 { font-size: 1.25rem; }
+    .nav-tabs { display: flex; gap: 0.5rem; }
+    .nav-tab { background: rgba(255,255,255,0.2); border: none; color: white; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; }
+    .nav-tab.active { background: white; color: var(--primary); }
+    main { max-width: 1000px; margin: 0 auto; padding: 2rem; }
+    .section { display: none; } .section.active { display: block; }
+    .lesson-header { text-align: center; margin-bottom: 2rem; padding: 2rem; background: linear-gradient(135deg, #e8f4fd, #f0e8fd); border-radius: 12px; }
+    .level-badge { background: var(--primary); color: white; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.875rem; }
+    .card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 1.5rem; margin-bottom: 1.5rem; }
+    .card h3 { color: var(--primary); margin-bottom: 1rem; }
+    .canvas-note { background: #fffbeb; border-left: 4px solid var(--warning); padding: 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+    .canvas-note h4 { color: var(--warning); margin-bottom: 0.5rem; }
+    .md-content { line-height: 1.7; }
+    .md-content p { margin: 0.75rem 0; }
+    .md-content ul, .md-content ol { margin: 0.75rem 0; padding-left: 1.5rem; }
+    .md-content li { margin: 0.25rem 0; }
+    .md-content strong { color: var(--primary); }
+    .md-content blockquote { background: #e8f4fd; border-left: 4px solid var(--primary); padding: 0.75rem 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+    .md-content blockquote p { margin: 0.25rem 0; }
+    .md-content table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+    .md-content th, .md-content td { border: 1px solid var(--border); padding: 0.5rem 0.75rem; text-align: left; }
+    .md-content th { background: #f5f5f5; font-weight: 600; }
+    .md-content code { background: #f0f0f0; padding: 0.125rem 0.375rem; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
+    .letter-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0; }
+    .letter-group { border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; }
+    .letter-group.true-friends { border-color: var(--success); } .letter-group.true-friends .letters { color: var(--success); }
+    .letter-group.false-friends { border-color: var(--danger); } .letter-group.false-friends .letters { color: var(--danger); }
+    .letter-group.new-letters { border-color: var(--primary); } .letter-group.new-letters .letters { color: var(--primary); }
+    .letters { font-size: 1.75rem; letter-spacing: 0.3rem; }
+    .match-container { display: flex; gap: 3rem; padding: 1rem; position: relative; }
+    .match-column { flex: 1; display: flex; flex-direction: column; gap: 0.75rem; }
+    .match-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; font-size: 1.25rem; cursor: pointer; }
+    .match-item.selected { border-color: var(--primary); background: #e8f4fd; }
+    .match-item.matched { border-color: var(--success); background: #e8f8f0; }
+    .match-item.wrong { border-color: var(--danger); background: #fde8e8; }
+    .match-lines { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+    .quiz-question { border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; }
+    .quiz-question.answered { pointer-events: none; }
+    .quiz-question .cyrillic { font-size: 1.5rem; color: var(--primary); font-weight: 600; }
+    .quiz-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-top: 1rem; }
+    .quiz-option { background: #f5f5f5; border: 2px solid var(--border); border-radius: 8px; padding: 1rem; cursor: pointer; text-align: center; }
+    .quiz-option.correct { border-color: var(--success); background: #d4edda; }
+    .quiz-option.wrong { border-color: var(--danger); background: #f8d7da; }
+    .quiz-explanation { margin-top: 1rem; padding: 1rem; background: #e8f4fd; border-radius: 8px; display: none; }
+    .quiz-explanation.show { display: block; }
+    .sort-pool { background: #f5f5f5; border: 2px dashed var(--border); border-radius: 12px; padding: 1.5rem; min-height: 80px; margin-bottom: 1rem; }
+    .sort-items { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; }
+    .sort-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 0.75rem 1.25rem; font-size: 1.5rem; cursor: grab; }
+    .sort-item.correct { border-color: var(--success); background: #e8f8f0; }
+    .sort-item.wrong { border-color: var(--danger); background: #fde8e8; }
+    .sort-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    .sort-group { border: 2px solid var(--border); border-radius: 12px; padding: 1rem; min-height: 150px; }
+    .sort-group.drag-over { border-color: var(--primary); background: #e8f4fd; }
+    .sort-group h4 { font-size: 0.875rem; text-align: center; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--border); }
+    .sort-group.true-friends h4 { color: var(--success); border-color: var(--success); }
+    .sort-group.false-friends h4 { color: var(--danger); border-color: var(--danger); }
+    .sort-group.new-letters h4 { color: var(--primary); border-color: var(--primary); }
+    .vocab-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; }
+    .vocab-card { border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; text-align: center; }
+    .vocab-card .uk { font-size: 1.75rem; font-weight: 600; color: var(--primary); }
+    .vocab-card .translit { color: var(--text-muted); font-style: italic; }
+    .vocab-card .en { font-weight: 500; margin: 0.25rem 0; }
+    .vocab-card .note { font-size: 0.75rem; color: #613583; background: #f0e8fd; padding: 0.25rem 0.5rem; border-radius: 4px; }
+    .btn { padding: 0.75rem 1.5rem; border: none; border-radius: 8px; cursor: pointer; }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-outline { background: transparent; border: 2px solid var(--border); }
+    .btn-group { display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem; }
+    .score-display { text-align: center; padding: 1rem; background: linear-gradient(135deg, #e8f8f0, #e8f4fd); border-radius: 8px; margin-bottom: 1rem; }
+    .score-display .score { font-size: 2rem; font-weight: 700; color: var(--success); }
+    .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
+    .completion-message.show { display: block; }
+    footer { text-align: center; padding: 2rem; color: var(--text-muted); }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+  </style>
+</head>
+<body>
+  <div class="top-nav">
+    <a href="../index.html">← l2-uk-en Curriculum</a>
+    <div class="module-nav">
+      <a href="module-49.html" class="module-nav-link">← Module 49</a>
+      <a href="index.html" class="module-nav-link">A2 Index</a>
+      <span class="module-nav-link disabled">Next →</span>
+    </div>
+  </div>
+  <nav class="nav">
+    <h1>Module 50: Checkpoint: A2.2 Review</h1>
+    <div class="nav-tabs">
+      <button class="nav-tab active" data-section="lesson">Lesson</button>
+      <button class="nav-tab" data-section="match">Match</button>
+      <button class="nav-tab" data-section="quiz">Quiz</button>
+      <button class="nav-tab" data-section="sort">Sort</button>
+      <button class="nav-tab" data-section="vocab">Vocab</button>
+    </div>
+  </nav>
+  <main>
+    <section id="lesson" class="section active">
+      <div class="lesson-header">
+        <span class="level-badge">A2 · A2.2</span>
+        <h2 style="font-size:2rem;margin:0.5rem 0">Checkpoint: A2.2 Review</h2>
+        <p style="color:var(--text-muted)">Aspect, Comparison & Conditionals</p>
+      </div>
+      
+      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### A2.2 Complete!</h4><div class="md-content"><p>Congratulations! You've completed Phase A2.2. Let's review everything:</p>
+<p><strong>What you've learned (Modules 41-49):</strong></p>
+<ul>
+<li>✅ Verbal aspect (perfective/imperfective)</li>
+<li>✅ Comparative adjectives and adverbs</li>
+<li>✅ Superlative forms</li>
+<li>✅ Real conditionals (якщо)</li>
+<li>✅ Unreal conditionals (якби + б/би)</li>
+<li>✅ Advanced shopping vocabulary</li>
+<li>✅ Making plans and arrangements</li>
+</ul>
+<p>This checkpoint will consolidate your knowledge and prepare you for the final stretch of A2!</p>
+<blockquote>
+  <p>💡 <strong>Self-Assessment Goal</strong></p>
+  <p>By the end of this module, you should feel confident:</p>
+  <ul>
+  <li>Choosing correct aspect for any situation</li>
+  <li>Comparing things using all forms</li>
+  <li>Making real and hypothetical conditionals</li>
+  <li>Handling complex shopping and planning scenarios</li>
+  </ul>
+</blockquote></div></div><div class="canvas-note"><h4>### Verbal Aspect Review (Modules 41-43)</h4><div class="md-content"><p><strong>The core concept:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Use</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Imperfective</td>
+<td>Process, repeated, duration</td>
+<td>Я читав годину.</td>
+</tr>
+<tr>
+<td>Perfective</td>
+<td>Completed, single, result</td>
+<td>Я прочитав книгу.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Key aspect pairs:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Imperfective</th>
+<th>Perfective</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>читати</td>
+<td>прочитати</td>
+</tr>
+<tr>
+<td>писати</td>
+<td>написати</td>
+</tr>
+<tr>
+<td>робити</td>
+<td>зробити</td>
+</tr>
+<tr>
+<td>відкривати</td>
+<td>відкрити</td>
+</tr>
+<tr>
+<td>закривати</td>
+<td>закрити</td>
+</tr>
+<tr>
+<td>шукати</td>
+<td>знайти</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Time expressions:</strong></p>
+<ul>
+<li>Duration → imperfective: Я працював <strong>три години</strong>.</li>
+<li>Time limit → perfective: Я зробив <strong>за три години</strong>.</li>
+</ul>
+<p><strong>With modals:</strong></p>
+<ul>
+<li>починати/закінчувати + imperfective: закінчив <strong>читати</strong></li>
+<li>хотіти + either (depends on meaning)</li>
+</ul></div></div><div class="canvas-note"><h4>Comparatives & Superlatives Review (Modules 44-45)</h4><div class="md-content"><p><strong>Comparative formation:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Pattern</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Regular</td>
+<td>+ -іший/-ший</td>
+<td>новий → новіший</td>
+</tr>
+<tr>
+<td>Irregular</td>
+<td>stem change</td>
+<td>великий → більший</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Key irregular forms:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Adjective</th>
+<th>Comparative</th>
+<th>Superlative</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>великий</td>
+<td>більший</td>
+<td>найбільший</td>
+</tr>
+<tr>
+<td>малий</td>
+<td>менший</td>
+<td>найменший</td>
+</tr>
+<tr>
+<td>добрий</td>
+<td>кращий</td>
+<td>найкращий</td>
+</tr>
+<tr>
+<td>поганий</td>
+<td>гірший</td>
+<td>найгірший</td>
+</tr>
+<tr>
+<td>високий</td>
+<td>вищий</td>
+<td>найвищий</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Comparison constructions:</strong></p>
+<ul>
+<li>A більший <strong>ніж</strong> B (than)</li>
+<li>A більший <strong>за</strong> B + acc (than)</li>
+<li><strong>Такий… як</strong> (as… as)</li>
+</ul>
+<p><strong>Superlatives:</strong></p>
+<ul>
+<li>най- + comparative: найбільший, найкращий</li>
+<li>With prepositions: найвищий <strong>в Україні</strong></li>
+</ul></div></div><div class="canvas-note"><h4>Conditionals Review (Modules 46-47)</h4><div class="md-content"><p><strong>Real conditionals (якщо):</strong></p>
+<ul>
+<li>Якщо + future/present, future</li>
+<li>Якщо буде дощ, візьму парасолю.</li>
+</ul>
+<p><strong>Unreal conditionals (якби + б/би):</strong></p>
+<ul>
+<li>Якби + past, past + б/би</li>
+<li>Якби мав час, допоміг би.</li>
+</ul>
+<p><strong>Key differences:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Certainty</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Якщо</td>
+<td>If (possible)</td>
+<td>Might happen</td>
+</tr>
+<tr>
+<td>Якби</td>
+<td>If (unreal)</td>
+<td>Contrary to fact</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Useful phrases:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Ukrainian</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Я хотів би</td>
+<td>I would like</td>
+</tr>
+<tr>
+<td>Чи не могли б ви…?</td>
+<td>Could you possibly…?</td>
+</tr>
+<tr>
+<td>Було б добре</td>
+<td>It would be good</td>
+</tr>
+<tr>
+<td>Мав би</td>
+<td>should</td>
+</tr>
+</tbody>
+</table></div></div><div class="canvas-note"><h4>Shopping & Plans Review (Modules 48-49)</h4><div class="md-content"><p><strong>Shopping vocabulary:</strong></p>
+<ul>
+<li>розмір (size), примірочна (fitting room)</li>
+<li>знижка (discount), гарантія (warranty)</li>
+<li>завеликий/замалий (too big/small)</li>
+<li>повернути (return), обміняти (exchange)</li>
+</ul>
+<p><strong>Planning phrases:</strong></p>
+<ul>
+<li>Давай… (Let's…)</li>
+<li>О котрій? (At what time?)</li>
+<li>Домовились! (Agreed!)</li>
+<li>На жаль, не можу (Unfortunately, I can't)</li>
+</ul></div></div><div class="canvas-note"><h4>### Aspect Challenge</h4><div class="md-content"><p>Choose correct aspect:</p>
+<ol>
+<li><p>Вчора я ___ (читати/прочитати) цю книгу. (finished)<br />
+→ прочитав</p></li>
+<li><p>Я завжди ___ (читати/прочитати) перед сном. (habit)<br />
+→ читаю</p></li>
+<li><p>Поки він ___ (готувати/приготувати), я дивився телевізор.<br />
+→ готував (simultaneous)</p></li>
+<li><p>Вона ___ (писати/написати) листа за годину. (in one hour)<br />
+→ написала</p></li>
+<li><p>Коли ___ (закінчувати/закінчити), зателефонуй!<br />
+→ закінчиш</p></li>
+<li><p>Я ще не ___ (відповідати/відповісти) на листа.<br />
+→ відповів (ще не + perf)</p></li>
+</ol></div></div><div class="canvas-note"><h4>Comparison Challenge</h4><div class="md-content"><p>Complete with correct form:</p>
+<ol>
+<li><p>Київ ___ (великий) за Львів.<br />
+→ більший</p></li>
+<li><p>Це ___ (добрий) ресторан у місті.<br />
+→ найкращий</p></li>
+<li><p>Вона говорить українською ___ (добре), ніж я.<br />
+→ краще</p></li>
+<li><p>Чим ___ (багато), тим ___ (добре).<br />
+→ більше, краще</p></li>
+<li><p>Цей телефон ___ (дорогий), але ___ (якісний).<br />
+→ дорожчий, якісніший</p></li>
+<li><p>Яка ___ (висока) гора в Україні?<br />
+→ найвища</p></li>
+</ol></div></div><div class="canvas-note"><h4>Conditional Challenge</h4><div class="md-content"><p>Transform or complete:</p>
+<ol>
+<li><p>Real: Якщо матиму час, ___ (допомогти).<br />
+→ допоможу</p></li>
+<li><p>Unreal: Якби мав час, ___ (допомогти).<br />
+→ допоміг би</p></li>
+<li><p>Real: Якщо він ___ (прийти), ми почнемо.<br />
+→ прийде</p></li>
+<li><p>Unreal: Якби він ___ (прийти), ми б почали.<br />
+→ прийшов</p></li>
+<li><p>Polite: Чи не ___ (могти) ви допомогти?<br />
+→ могли б</p></li>
+<li><p>Wish: Я ___ (хотіти) поїхати в Україну.<br />
+→ хотів би</p></li>
+</ol></div></div><div class="canvas-note"><h4>Integrated Scenarios</h4><div class="md-content"><p><strong>Scenario 1: Shopping</strong><br />
+Complete the dialogue:</p>
+<ul>
+<li>Я шукаю куртку. Ця ___ (занадто великий).</li>
+<li>Є ___ (менший) розмір?</li>
+<li>Так, ось. Це ___ (добрий) якість.</li>
+<li>Скільки коштує? Чи є ___? (знижка)</li>
+<li>Так, сьогодні 20% знижка.</li>
+<li>___ (чудово)! Беру.</li>
+</ul>
+<p>Answers: завелика, менший, найкраща, знижка, Чудово</p>
+<p><strong>Scenario 2: Making plans</strong><br />
+Complete the dialogue:</p>
+<ul>
+<li>___ (давай) зустрінемося у вихідні?</li>
+<li>На жаль, у суботу я ___. (зайнятий)</li>
+<li>А ___ (як щодо) неділі?</li>
+<li>Неділя ___ (підходити)! О ___ (котрий)?</li>
+<li>Може, о п'ятій? Де ___? (зустрічатися)</li>
+<li>Біля кінотеатру. ___! (домовитися)</li>
+</ul>
+<p>Answers: Давай, зайнятий, як щодо, підходить, котрій, зустрінемося, Домовились</p></div></div><div class="canvas-note"><h4>### Self-Assessment Tasks</h4><div class="md-content"><p><strong>Task 1: Tell a story using aspect</strong><br />
+Describe what you did yesterday using appropriate aspects:</p>
+<ul>
+<li>Вчора я прокинувся о… (perfective chain)</li>
+<li>Коли снідав, я… (imperfective background)</li>
+</ul>
+<p><strong>Task 2: Compare things</strong></p>
+<ul>
+<li>Compare two cities you know</li>
+<li>Describe the best [food/place/movie] you know</li>
+<li>Use: більший, кращий, найкращий</li>
+</ul>
+<p><strong>Task 3: Express wishes</strong></p>
+<ul>
+<li>What would you do if you had more time?</li>
+<li>What would you do if you could live anywhere?</li>
+<li>Use: Якби…, я б…</li>
+</ul>
+<p><strong>Task 4: Make plans</strong></p>
+<ul>
+<li>Invite someone to an activity</li>
+<li>Agree on time and place</li>
+<li>Use: Давай…, О котрій?, Домовились!</li>
+</ul></div></div><div class="canvas-note"><h4>Can-Do Checklist</h4><div class="md-content"><p><strong>Check your abilities:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Skill</th>
+<th>Can Do?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>I can choose correct aspect for past actions</td>
+<td>☐</td>
+</tr>
+<tr>
+<td>I can use aspect with time expressions</td>
+<td>☐</td>
+</tr>
+<tr>
+<td>I can form comparatives (більший, кращий)</td>
+<td>☐</td>
+</tr>
+<tr>
+<td>I can form superlatives (найбільший, найкращий)</td>
+<td>☐</td>
+</tr>
+<tr>
+<td>I can make real conditionals (якщо…)</td>
+<td>☐</td>
+</tr>
+<tr>
+<td>I can make unreal conditionals (якби… б)</td>
+<td>☐</td>
+</tr>
+<tr>
+<td>I can use polite requests (чи не могли б ви)</td>
+<td>☐</td>
+</tr>
+<tr>
+<td>I can shop for clothes (sizes, returns)</td>
+<td>☐</td>
+</tr>
+<tr>
+<td>I can shop for electronics (warranties, features)</td>
+<td>☐</td>
+</tr>
+<tr>
+<td>I can make and confirm plans</td>
+<td>☐</td>
+</tr>
+</tbody>
+</table>
+<p><strong>How did you do?</strong></p>
+<ul>
+<li>8-10 checks: Excellent! Ready for A2.3</li>
+<li>5-7 checks: Good progress, review weak areas</li>
+<li>0-4 checks: Review Modules 41-49 before continuing</li>
+</ul></div></div></div>
+      <div class="btn-group"><button class="btn btn-primary" onclick="showSection('match')">Start →</button></div>
+    </section>
+    <section id="match" class="section"><div class="card"><h3>Grammar Concepts</h3>
+      <div class="score-display"><span class="score"><span id="match-score">0</span>/6</span></div>
+      <div class="match-container" id="match-container"><svg class="match-lines" id="match-lines"></svg>
+        <div class="match-column" id="match-left"><div class="match-item" data-pair="0">Imperfective (process)</div><div class="match-item" data-pair="1">Perfective (completed)</div><div class="match-item" data-pair="2">Comparative</div><div class="match-item" data-pair="3">Superlative</div><div class="match-item" data-pair="4">Real conditional</div><div class="match-item" data-pair="5">Unreal conditional</div></div>
+        <div class="match-column" id="match-right"><div class="match-item" data-pair="3">найбільший</div><div class="match-item" data-pair="2">більший</div><div class="match-item" data-pair="1">Я прочитав книгу</div><div class="match-item" data-pair="4">Якщо буде...</div><div class="match-item" data-pair="5">Якби був...</div><div class="match-item" data-pair="0">Я читав годину</div></div>
+      </div>
+      <div class="completion-message" id="match-complete"><h3>Perfect!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetMatch()">Reset</button><button class="btn btn-primary" onclick="showSection('quiz')">Next →</button></div>
+    </div></section>
+    <section id="quiz" class="section"><div class="card"><h3>A2.2 Comprehensive Review</h3>
+      <div class="score-display"><span class="score"><span id="quiz-score">0</span>/8</span></div>
+      <div id="quiz-container"></div>
+      <div class="completion-message" id="quiz-complete"><h3>Complete!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('sort')">Next →</button></div>
+    </div></section>
+    <section id="sort" class="section"><div class="card"><h3>A2.2 Key Grammar</h3>
+      <div class="score-display"><span class="score"><span id="sort-score">0</span>/10</span></div>
+      <div class="sort-pool" id="sort-pool"><div class="sort-items" id="sort-items"></div></div>
+      <div class="sort-groups"><div class="sort-group true-friends" data-group="true-friends"><h4>Imperfective Verbs</h4><div class="sort-items"></div></div><div class="sort-group false-friends" data-group="false-friends"><h4>Perfective Verbs</h4><div class="sort-items"></div></div></div>
+      <div class="completion-message" id="sort-complete"><h3>All Sorted!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetSort()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Vocab →</button></div>
+    </div></section>
+    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (0)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
+      <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
+    </section>
+  </main>
+  <footer>Module 50 · curricula-opus</footer>
+  <script>
+    const matchPairs=[{"left":"Imperfective (process)","right":"Я читав годину"},{"left":"Perfective (completed)","right":"Я прочитав книгу"},{"left":"Comparative","right":"більший"},{"left":"Superlative","right":"найбільший"},{"left":"Real conditional","right":"Якщо буде..."},{"left":"Unreal conditional","right":"Якби був..."}];
+    const quizData=[{"question":"1. \"I was reading for two hours\" - Я ___ дві години.","options":["читав","прочитав","читаю","прочитаю"],"correctIndex":0,"explanation":"Duration = imperfective."},{"question":"\"This is the best restaurant\" - Це ___ ресторан.","options":["найкращий","кращий","добрий","краще"],"correctIndex":0,"explanation":"Superlative = найкращий."},{"question":"\"If I had time, I would help\" - Якби я ___ час, я б допоміг.","options":["мав","маю","матиму","мати"],"correctIndex":0,"explanation":"Unreal = past tense after якби."},{"question":"\"Could you help?\" - Чи не ___ ви допомогти?","options":["могли б","можете","зможете","могли"],"correctIndex":0,"explanation":"Polite = могли б."},{"question":"\"This is too big\" - Це ___.","options":["завелике","великий","більше","найбільше"],"correctIndex":0,"explanation":"за- = too."},{"question":"\"Let's meet tomorrow\" - ___ зустрінемося завтра.","options":["Давай","Давати","Дай","Дано"],"correctIndex":0,"explanation":"\"Let's\" = Давай."},{"question":"\"She runs faster than me\" - Вона бігає ___ за мене.","options":["швидше","швидкий","швидко","найшвидше"],"correctIndex":0,"explanation":"Adverb comparative = швидше."},{"question":"\"The more, the better\" - Чим ___, тим ___.","options":["більше, краще","багато, добре","більший, кращий","найбільше, найкраще"],"correctIndex":0,"explanation":"Adverbs in this construction."}];
+    const sortData={"true-friends":["читати","писати","робити","відкривати","шукати"],"false-friends":["прочитати","написати","зробити","відкрити","знайти"]};
+    const vocabData=[];
+    const totalSort=10;
+    function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
+    document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));
+    let matchSel=null,matchScore=0,matchPairsArr=[];
+    document.querySelectorAll('#match-left .match-item').forEach(item=>{item.addEventListener('click',()=>{if(item.classList.contains('matched'))return;document.querySelectorAll('#match-left .match-item').forEach(i=>i.classList.remove('selected'));item.classList.add('selected');matchSel={el:item,pair:item.dataset.pair};});});
+    document.querySelectorAll('#match-right .match-item').forEach(item=>{item.addEventListener('click',()=>{if(item.classList.contains('matched')||!matchSel)return;if(matchSel.pair===item.dataset.pair){matchSel.el.classList.remove('selected');matchSel.el.classList.add('matched');item.classList.add('matched');matchPairsArr.push({left:matchSel.el,right:item});matchScore++;document.getElementById('match-score').textContent=matchScore;drawLines();if(matchScore===matchPairs.length)document.getElementById('match-complete').classList.add('show');}else{item.classList.add('wrong');setTimeout(()=>item.classList.remove('wrong'),300);}matchSel=null;});});
+    function drawLines(){const svg=document.getElementById('match-lines'),c=document.getElementById('match-container');if(!svg||!c)return;const r=c.getBoundingClientRect();svg.innerHTML='';svg.setAttribute('viewBox','0 0 '+r.width+' '+r.height);matchPairsArr.forEach(p=>{const lr=p.left.getBoundingClientRect(),rr=p.right.getBoundingClientRect();const line=document.createElementNS('http://www.w3.org/2000/svg','line');line.setAttribute('x1',lr.right-r.left);line.setAttribute('y1',lr.top+lr.height/2-r.top);line.setAttribute('x2',rr.left-r.left);line.setAttribute('y2',rr.top+rr.height/2-r.top);line.setAttribute('stroke','#26a269');line.setAttribute('stroke-width','2');svg.appendChild(line);});}
+    function resetMatch(){matchSel=null;matchScore=0;matchPairsArr=[];document.getElementById('match-score').textContent='0';document.getElementById('match-complete')?.classList.remove('show');document.getElementById('match-lines').innerHTML='';document.querySelectorAll('#match-container .match-item').forEach(i=>i.classList.remove('matched','selected','wrong'));}
+    window.addEventListener('resize',drawLines);
+    let quizScore=0,quizAns=0;
+    function initQuiz(){const c=document.getElementById('quiz-container');if(!c||!quizData.length)return;c.innerHTML='';quizData.forEach((q,i)=>{const sh=[...q.options].sort(()=>Math.random()-0.5);const cor=sh.indexOf(q.options[q.correctIndex]);const div=document.createElement('div');div.className='quiz-question';div.innerHTML='<h4>Q'+(i+1)+': <span class="cyrillic">'+(q.question.match(/[А-ЯІЇЄҐ]+/)?.[0]||'')+'</span></h4><div class="quiz-options">'+sh.map((o,j)=>'<div class="quiz-option" data-c="'+(j===cor)+'" data-q="'+i+'">'+o+'</div>').join('')+'</div><div class="quiz-explanation" id="exp-'+i+'">'+q.explanation+'</div>';c.appendChild(div);});document.querySelectorAll('.quiz-option').forEach(o=>o.addEventListener('click',handleQuiz));}
+    function handleQuiz(e){const opt=e.target,q=opt.closest('.quiz-question');if(q.classList.contains('answered'))return;q.classList.add('answered');if(opt.dataset.c==='true'){opt.classList.add('correct');quizScore++;}else{opt.classList.add('wrong');q.querySelector('[data-c="true"]').classList.add('correct');}document.getElementById('exp-'+opt.dataset.q).classList.add('show');document.getElementById('quiz-score').textContent=quizScore;quizAns++;if(quizAns===quizData.length)document.getElementById('quiz-complete').classList.add('show');}
+    function resetQuiz(){quizScore=0;quizAns=0;document.getElementById('quiz-score').textContent='0';document.getElementById('quiz-complete')?.classList.remove('show');initQuiz();}
+    let sortScore=0,dragItem=null;
+    function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
+    function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
+    function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
+  </script>
+</body>
+</html>

@@ -1,0 +1,372 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-A2-50",
+    "moduleId": "mod-uk-A2-50",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "methodology": "ppp",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "A2",
+    "phase": "A2.2",
+    "moduleNumber": 50,
+    "title": "Checkpoint: A2.2 Review",
+    "subtitle": "Aspect, Comparison & Conditionals",
+    "description": "Review verbal aspect system",
+    "objectives": [
+      "Review verbal aspect system",
+      "Consolidate comparatives and superlatives",
+      "Practice conditional constructions",
+      "Self-assess A2.2 progress"
+    ],
+    "grammarFocus": [
+      "Verbal aspect review",
+      "Comparative/superlative review",
+      "Conditional review",
+      "Integrated grammar practice"
+    ],
+    "totalDuration": 45,
+    "transliterationMode": "partial",
+    "tags": [
+      "review",
+      "checkpoint",
+      "aspect",
+      "comparatives",
+      "conditionals",
+      "assessment"
+    ],
+    "version": 1,
+    "createdAt": "2025-11-29T00:00:00Z",
+    "modifiedAt": "2025-11-29T00:00:00Z",
+    "phases": [
+      {
+        "id": "phase-warm-up",
+        "name": "warm-up",
+        "duration": 5,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### A2.2 Complete!\n\nCongratulations! You've completed Phase A2.2. Let's review everything:\n\n**What you've learned (Modules 41-49):**\n- ✅ Verbal aspect (perfective/imperfective)\n- ✅ Comparative adjectives and adverbs\n- ✅ Superlative forms\n- ✅ Real conditionals (якщо)\n- ✅ Unreal conditionals (якби + б/би)\n- ✅ Advanced shopping vocabulary\n- ✅ Making plans and arrangements\n\nThis checkpoint will consolidate your knowledge and prepare you for the final stretch of A2!\n\n> 💡 **Self-Assessment Goal**\n>\n> By the end of this module, you should feel confident:\n> - Choosing correct aspect for any situation\n> - Comparing things using all forms\n> - Making real and hypothetical conditionals\n> - Handling complex shopping and planning scenarios"
+          }
+        ]
+      },
+      {
+        "id": "phase-presentation",
+        "name": "presentation",
+        "duration": 15,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Verbal Aspect Review (Modules 41-43)\n\n**The core concept:**\n| Aspect | Use | Example |\n|--------|-----|---------|\n| Imperfective | Process, repeated, duration | Я читав годину. |\n| Perfective | Completed, single, result | Я прочитав книгу. |\n\n**Key aspect pairs:**\n| Imperfective | Perfective |\n|--------------|------------|\n| читати | прочитати |\n| писати | написати |\n| робити | зробити |\n| відкривати | відкрити |\n| закривати | закрити |\n| шукати | знайти |\n\n**Time expressions:**\n- Duration → imperfective: Я працював **три години**.\n- Time limit → perfective: Я зробив **за три години**.\n\n**With modals:**\n- починати/закінчувати + imperfective: закінчив **читати**\n- хотіти + either (depends on meaning)"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Comparatives & Superlatives Review (Modules 44-45)\n\n**Comparative formation:**\n| Type | Pattern | Example |\n|------|---------|---------|\n| Regular | + -іший/-ший | новий → новіший |\n| Irregular | stem change | великий → більший |\n\n**Key irregular forms:**\n| Adjective | Comparative | Superlative |\n|-----------|-------------|-------------|\n| великий | більший | найбільший |\n| малий | менший | найменший |\n| добрий | кращий | найкращий |\n| поганий | гірший | найгірший |\n| високий | вищий | найвищий |\n\n**Comparison constructions:**\n- A більший **ніж** B (than)\n- A більший **за** B + acc (than)\n- **Такий... як** (as... as)\n\n**Superlatives:**\n- най- + comparative: найбільший, найкращий\n- With prepositions: найвищий **в Україні**"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Conditionals Review (Modules 46-47)\n\n**Real conditionals (якщо):**\n- Якщо + future/present, future\n- Якщо буде дощ, візьму парасолю.\n\n**Unreal conditionals (якби + б/би):**\n- Якби + past, past + б/би\n- Якби мав час, допоміг би.\n\n**Key differences:**\n| Word | Meaning | Certainty |\n|------|---------|-----------|\n| Якщо | If (possible) | Might happen |\n| Якби | If (unreal) | Contrary to fact |\n\n**Useful phrases:**\n| Ukrainian | English |\n|-----------|---------|\n| Я хотів би | I would like |\n| Чи не могли б ви...? | Could you possibly...? |\n| Було б добре | It would be good |\n| Мав би | should |"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Shopping & Plans Review (Modules 48-49)\n\n**Shopping vocabulary:**\n- розмір (size), примірочна (fitting room)\n- знижка (discount), гарантія (warranty)\n- завеликий/замалий (too big/small)\n- повернути (return), обміняти (exchange)\n\n**Planning phrases:**\n- Давай... (Let's...)\n- О котрій? (At what time?)\n- Домовились! (Agreed!)\n- На жаль, не можу (Unfortunately, I can't)"
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-A2-50-matchup"
+          }
+        ]
+      },
+      {
+        "id": "phase-practice",
+        "name": "practice",
+        "duration": 15,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Aspect Challenge\n\nChoose correct aspect:\n\n1. Вчора я ___ (читати/прочитати) цю книгу. (finished)\n   → прочитав\n\n2. Я завжди ___ (читати/прочитати) перед сном. (habit)\n   → читаю\n\n3. Поки він ___ (готувати/приготувати), я дивився телевізор.\n   → готував (simultaneous)\n\n4. Вона ___ (писати/написати) листа за годину. (in one hour)\n   → написала\n\n5. Коли ___ (закінчувати/закінчити), зателефонуй!\n   → закінчиш\n\n6. Я ще не ___ (відповідати/відповісти) на листа.\n   → відповів (ще не + perf)"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Comparison Challenge\n\nComplete with correct form:\n\n1. Київ ___ (великий) за Львів.\n   → більший\n\n2. Це ___ (добрий) ресторан у місті.\n   → найкращий\n\n3. Вона говорить українською ___ (добре), ніж я.\n   → краще\n\n4. Чим ___ (багато), тим ___ (добре).\n   → більше, краще\n\n5. Цей телефон ___ (дорогий), але ___ (якісний).\n   → дорожчий, якісніший\n\n6. Яка ___ (висока) гора в Україні?\n   → найвища"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Conditional Challenge\n\nTransform or complete:\n\n1. Real: Якщо матиму час, ___ (допомогти).\n   → допоможу\n\n2. Unreal: Якби мав час, ___ (допомогти).\n   → допоміг би\n\n3. Real: Якщо він ___ (прийти), ми почнемо.\n   → прийде\n\n4. Unreal: Якби він ___ (прийти), ми б почали.\n   → прийшов\n\n5. Polite: Чи не ___ (могти) ви допомогти?\n   → могли б\n\n6. Wish: Я ___ (хотіти) поїхати в Україну.\n   → хотів би"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Integrated Scenarios\n\n**Scenario 1: Shopping**\nComplete the dialogue:\n\n- Я шукаю куртку. Ця ___ (занадто великий).\n- Є ___ (менший) розмір?\n- Так, ось. Це ___ (добрий) якість.\n- Скільки коштує? Чи є ___? (знижка)\n- Так, сьогодні 20% знижка.\n- ___ (чудово)! Беру.\n\nAnswers: завелика, менший, найкраща, знижка, Чудово\n\n**Scenario 2: Making plans**\nComplete the dialogue:\n\n- ___ (давай) зустрінемося у вихідні?\n- На жаль, у суботу я ___. (зайнятий)\n- А ___ (як щодо) неділі?\n- Неділя ___ (підходити)! О ___ (котрий)?\n- Може, о п'ятій? Де ___? (зустрічатися)\n- Біля кінотеатру. ___! (домовитися)\n\nAnswers: Давай, зайнятий, як щодо, підходить, котрій, зустрінемося, Домовились"
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-A2-50-quiz"
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-A2-50-groupsort"
+          }
+        ]
+      },
+      {
+        "id": "phase-production",
+        "name": "production",
+        "duration": 10,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Self-Assessment Tasks\n\n**Task 1: Tell a story using aspect**\nDescribe what you did yesterday using appropriate aspects:\n- Вчора я прокинувся о... (perfective chain)\n- Коли снідав, я... (imperfective background)\n\n**Task 2: Compare things**\n- Compare two cities you know\n- Describe the best [food/place/movie] you know\n- Use: більший, кращий, найкращий\n\n**Task 3: Express wishes**\n- What would you do if you had more time?\n- What would you do if you could live anywhere?\n- Use: Якби..., я б...\n\n**Task 4: Make plans**\n- Invite someone to an activity\n- Agree on time and place\n- Use: Давай..., О котрій?, Домовились!"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Can-Do Checklist\n\n**Check your abilities:**\n\n| Skill | Can Do? |\n|-------|---------|\n| I can choose correct aspect for past actions | ☐ |\n| I can use aspect with time expressions | ☐ |\n| I can form comparatives (більший, кращий) | ☐ |\n| I can form superlatives (найбільший, найкращий) | ☐ |\n| I can make real conditionals (якщо...) | ☐ |\n| I can make unreal conditionals (якби... б) | ☐ |\n| I can use polite requests (чи не могли б ви) | ☐ |\n| I can shop for clothes (sizes, returns) | ☐ |\n| I can shop for electronics (warranties, features) | ☐ |\n| I can make and confirm plans | ☐ |\n\n**How did you do?**\n- 8-10 checks: Excellent! Ready for A2.3\n- 5-7 checks: Good progress, review weak areas\n- 0-4 checks: Review Modules 41-49 before continuing"
+          }
+        ]
+      }
+    ]
+  },
+  "activities": [
+    {
+      "id": "act-uk-A2-50-matchup",
+      "type": "match-up",
+      "title": "Grammar Concepts",
+      "description": "Match concept with example.",
+      "content": {
+        "type": "match-up",
+        "instructions": "Match concept with example.",
+        "pairs": [
+          {
+            "left": "Imperfective (process)",
+            "right": "Я читав годину"
+          },
+          {
+            "left": "Perfective (completed)",
+            "right": "Я прочитав книгу"
+          },
+          {
+            "left": "Comparative",
+            "right": "більший"
+          },
+          {
+            "left": "Superlative",
+            "right": "найбільший"
+          },
+          {
+            "left": "Real conditional",
+            "right": "Якщо буде..."
+          },
+          {
+            "left": "Unreal conditional",
+            "right": "Якби був..."
+          }
+        ],
+        "shuffleRight": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2",
+      "duration": 5,
+      "tags": [
+        "review",
+        "checkpoint",
+        "aspect",
+        "comparatives",
+        "conditionals",
+        "assessment"
+      ],
+      "createdAt": "2025-11-29T00:00:00Z",
+      "modifiedAt": "2025-11-29T00:00:00Z"
+    },
+    {
+      "id": "act-uk-A2-50-quiz",
+      "type": "quiz",
+      "title": "A2.2 Comprehensive Review",
+      "description": "Test your knowledge from Modules 41-49.",
+      "content": {
+        "type": "quiz",
+        "instructions": "Test your knowledge from Modules 41-49.",
+        "questions": [
+          {
+            "question": "1. \"I was reading for two hours\" - Я ___ дві години.",
+            "options": [
+              "читав",
+              "прочитав",
+              "читаю",
+              "прочитаю"
+            ],
+            "correctIndex": 0,
+            "explanation": "Duration = imperfective."
+          },
+          {
+            "question": "\"This is the best restaurant\" - Це ___ ресторан.",
+            "options": [
+              "найкращий",
+              "кращий",
+              "добрий",
+              "краще"
+            ],
+            "correctIndex": 0,
+            "explanation": "Superlative = найкращий."
+          },
+          {
+            "question": "\"If I had time, I would help\" - Якби я ___ час, я б допоміг.",
+            "options": [
+              "мав",
+              "маю",
+              "матиму",
+              "мати"
+            ],
+            "correctIndex": 0,
+            "explanation": "Unreal = past tense after якби."
+          },
+          {
+            "question": "\"Could you help?\" - Чи не ___ ви допомогти?",
+            "options": [
+              "могли б",
+              "можете",
+              "зможете",
+              "могли"
+            ],
+            "correctIndex": 0,
+            "explanation": "Polite = могли б."
+          },
+          {
+            "question": "\"This is too big\" - Це ___.",
+            "options": [
+              "завелике",
+              "великий",
+              "більше",
+              "найбільше"
+            ],
+            "correctIndex": 0,
+            "explanation": "за- = too."
+          },
+          {
+            "question": "\"Let's meet tomorrow\" - ___ зустрінемося завтра.",
+            "options": [
+              "Давай",
+              "Давати",
+              "Дай",
+              "Дано"
+            ],
+            "correctIndex": 0,
+            "explanation": "\"Let's\" = Давай."
+          },
+          {
+            "question": "\"She runs faster than me\" - Вона бігає ___ за мене.",
+            "options": [
+              "швидше",
+              "швидкий",
+              "швидко",
+              "найшвидше"
+            ],
+            "correctIndex": 0,
+            "explanation": "Adverb comparative = швидше."
+          },
+          {
+            "question": "\"The more, the better\" - Чим ___, тим ___.",
+            "options": [
+              "більше, краще",
+              "багато, добре",
+              "більший, кращий",
+              "найбільше, найкраще"
+            ],
+            "correctIndex": 0,
+            "explanation": "Adverbs in this construction."
+          }
+        ],
+        "shuffleQuestions": true,
+        "shuffleOptions": true,
+        "showCorrectAnswers": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2",
+      "duration": 5,
+      "tags": [
+        "review",
+        "checkpoint",
+        "aspect",
+        "comparatives",
+        "conditionals",
+        "assessment"
+      ],
+      "createdAt": "2025-11-29T00:00:00Z",
+      "modifiedAt": "2025-11-29T00:00:00Z"
+    },
+    {
+      "id": "act-uk-A2-50-groupsort",
+      "type": "group-sort",
+      "title": "A2.2 Key Grammar",
+      "description": "Sort the forms.",
+      "content": {
+        "type": "group-sort",
+        "instructions": "Sort the forms.",
+        "groups": [
+          {
+            "name": "Imperfective Verbs",
+            "items": [
+              "читати",
+              "писати",
+              "робити",
+              "відкривати",
+              "шукати"
+            ]
+          },
+          {
+            "name": "Perfective Verbs",
+            "items": [
+              "прочитати",
+              "написати",
+              "зробити",
+              "відкрити",
+              "знайти"
+            ]
+          }
+        ],
+        "shuffleItems": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2",
+      "duration": 5,
+      "tags": [
+        "review",
+        "checkpoint",
+        "aspect",
+        "comparatives",
+        "conditionals",
+        "assessment"
+      ],
+      "createdAt": "2025-11-29T00:00:00Z",
+      "modifiedAt": "2025-11-29T00:00:00Z"
+    }
+  ],
+  "vocabulary": {
+    "moduleId": "mod-uk-A2-50",
+    "level": "A2",
+    "phase": "A2.2",
+    "wordCount": 0,
+    "transliterationMode": "partial",
+    "words": []
+  }
+}

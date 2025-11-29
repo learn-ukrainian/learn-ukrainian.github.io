@@ -1,0 +1,459 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-A2-46",
+    "moduleId": "mod-uk-A2-46",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "methodology": "ppp",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "A2",
+    "phase": "A2.2",
+    "moduleNumber": 46,
+    "title": "Conditionals I",
+    "subtitle": "If... Then...",
+    "description": "Form real conditional sentences",
+    "objectives": [
+      "Form real conditional sentences",
+      "Use якщо (if) correctly",
+      "Express possible outcomes",
+      "Understand condition-result relationships"
+    ],
+    "grammarFocus": [
+      "Real conditionals (Type 1)",
+      "якщо/коли clauses",
+      "Future in conditional sentences",
+      "Conjunction usage"
+    ],
+    "totalDuration": 45,
+    "transliterationMode": "partial",
+    "tags": [
+      "conditionals",
+      "grammar",
+      "якщо",
+      "would",
+      "subjunctive"
+    ],
+    "version": 1,
+    "createdAt": "2025-11-29T00:00:00Z",
+    "modifiedAt": "2025-11-29T00:00:00Z",
+    "phases": [
+      {
+        "id": "phase-warm-up",
+        "name": "warm-up",
+        "duration": 5,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### What If...?\n\nTime to talk about possibilities! \"If it rains, I'll take an umbrella.\"\n\n**Ukrainian conditionals follow a simple pattern:**\n- **Якщо** + condition, result.\n- **Якщо** буде дощ, я візьму парасолю.\n\nUnlike English, Ukrainian often uses future tense in BOTH parts of the sentence!\n\n> 💡 **Did You Know?**\n>\n> Ukrainian has two types of conditionals: \"real\" (things that might happen) and \"unreal\" (hypothetical/wishes). This module covers real conditionals - things that could actually happen. Module 47 will cover the \"would\" and \"could\" of unreal conditionals!"
+          }
+        ]
+      },
+      {
+        "id": "phase-presentation",
+        "name": "presentation",
+        "duration": 15,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Real Conditionals: The Basics\n\n**Structure: Якщо + condition, result**\n\n| Якщо (If) | Result (Then) |\n|-----------|---------------|\n| Якщо буде дощ, | я залишуся вдома. |\n| If it rains, | I'll stay home. |\n\n**Key patterns:**\n\n**Future + Future:**\n- Якщо **матиму** час, я **зателефоную**. - If I have time, I'll call.\n- Якщо він **прийде**, ми **почнемо**. - If he comes, we'll start.\n\n**Present + Future:**\n- Якщо ти **хочеш**, я **допоможу**. - If you want, I'll help.\n- Якщо **є** час, **давай** підемо. - If there's time, let's go.\n\n> ⚡ **Pro Tip: Future in Both Clauses**\n>\n> Unlike English (\"If it rains\" - present), Ukrainian often uses future in both parts:\n> - Якщо **буде** дощ, я **візьму** парасолю.\n> - (Literally: If there will be rain, I will take umbrella.)"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Common Conditional Patterns\n\n**Possibility:**\n- **Якщо** він зателефонує, скажи мені. - If he calls, tell me.\n- **Якщо** матимеш час, заходь. - If you have time, stop by.\n- **Якщо** знайду, подзвоню. - If I find it, I'll call.\n\n**Plans/Arrangements:**\n- **Якщо** погода буде гарна, підемо на пікнік. - If the weather is nice, we'll go on a picnic.\n- **Якщо** все буде добре, приїду в п'ятницю. - If all goes well, I'll come on Friday.\n\n**Cause and Effect:**\n- **Якщо** вивчиш, здаси екзамен. - If you study, you'll pass the exam.\n- **Якщо** не поспішатимеш, запізнишся. - If you don't hurry, you'll be late.\n\n> 🎭 **Culture Corner: Ukrainian Planning**\n>\n> Ukrainians often use \"якщо\" to soften commitments:\n> - \"Якщо все буде добре...\" (If all goes well...)\n> - \"Якщо вийде...\" (If it works out...)\n>\n> This isn't pessimism - it's acknowledging life's unpredictability!"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Якщо vs Коли\n\n**Якщо (if) - uncertain:**\n- **Якщо** він прийде, ми почнемо. - If he comes (maybe he won't).\n- **Якщо** буде час, заходь. - If there's time (maybe there won't be).\n\n**Коли (when) - expected:**\n- **Коли** він прийде, ми почнемо. - When he comes (he definitely will).\n- **Коли** прийдеш додому, зателефонуй. - When you get home (you will), call.\n\n**Examples showing the difference:**\n- **Якщо** побачиш Марію, передай привіт. - If you see Maria (you might not)...\n- **Коли** побачиш Марію, передай привіт. - When you see Maria (you will)...\n\n> 📜 **History Bite: Slavic Conditionals**\n>\n> The word \"якщо\" comes from \"як\" (how/as) + \"що\" (what), creating \"as-what\" → \"if.\" This compound construction is relatively modern - older Ukrainian used \"коли\" or \"аще\" for \"if.\" Today \"якщо\" is standard for uncertainty."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Negative Conditions\n\n**Якщо не... (If not...):**\n- **Якщо не** прийдеш, я піду сам. - If you don't come, I'll go alone.\n- **Якщо не** знайду, куплю новий. - If I don't find it, I'll buy a new one.\n\n**Unless (якщо... не):**\n- Я піду, **якщо** ти **не** хочеш. - I'll go if you don't want to.\n- Він запізниться, **якщо не** поспішатиме. - He'll be late unless he hurries.\n\n**Якщо ні (if not/otherwise):**\n- Сподіваюся, що так. **Якщо ні**, зателефоную. - I hope so. If not, I'll call."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Position of Clauses\n\n**Якщо first (most common):**\n- **Якщо** буде дощ, я залишуся вдома.\n- **Якщо** захочеш, дзвони.\n\n**Result first (for emphasis):**\n- Я залишуся вдома, **якщо** буде дощ.\n- Дзвони, **якщо** захочеш.\n\n**With \"то\" (then) - optional but emphatic:**\n- Якщо він прийде, **то** ми почнемо.\n- Якщо буде час, **то** зроблю.\n\n> ⚡ **Pro Tip: Comma Usage**\n>\n> Always use a comma between the condition and result:\n> - Якщо хочеш**,** давай поговоримо.\n> - Я допоможу**,** якщо потрібно."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Useful Conditional Expressions\n\n**Якщо можна... (If possible...):**\n- **Якщо можна**, допоможіть мені. - If possible, help me.\n\n**Якщо хочеш... (If you want...):**\n- **Якщо хочеш**, можемо піти разом. - If you want, we can go together.\n\n**Якщо не помиляюся... (If I'm not mistaken...):**\n- **Якщо не помиляюся**, він з Києва. - If I'm not mistaken, he's from Kyiv.\n\n**Якщо чесно... (Honestly/To be honest...):**\n- **Якщо чесно**, мені не подобається. - Honestly, I don't like it.\n\n**Якщо що... (If anything/Just in case...):**\n- **Якщо що**, дзвони. - If anything (happens), call.\n\n> 💡 **Key Insight**\n>\n> \"Якщо що\" is very useful in conversation - it means \"if anything happens\" or \"just in case\" without specifying what:\n> - Я буду вдома. Якщо що - дзвони!\n> - (I'll be home. If anything - call!)"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Questions with Conditionals\n\n**Що буде, якщо...? (What will happen if...?):**\n- **Що буде**, **якщо** він не прийде? - What happens if he doesn't come?\n- **Що робити**, **якщо** загублю ключі? - What to do if I lose my keys?\n\n**А якщо...? (And what if...?):**\n- **А якщо** він скаже \"ні\"? - And what if he says \"no\"?\n- **А якщо** не вийде? - And what if it doesn't work?"
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-A2-46-matchup"
+          }
+        ]
+      },
+      {
+        "id": "phase-practice",
+        "name": "practice",
+        "duration": 15,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Complete Conditionals\n\n1. Якщо ___ (бути) гарна погода, ми підемо на прогулянку.\n   → буде\n\n2. Якщо ти ___ (хотіти), я допоможу.\n   → хочеш / захочеш\n\n3. Я зателефоную, якщо ___ (знайти) інформацію.\n   → знайду\n\n4. Якщо він не ___ (прийти), ми почнемо без нього.\n   → прийде\n\n5. ___ (поспішати), ти встигнеш.\n   → Якщо поспішатимеш\n\n6. Ми поїдемо, якщо ___ (мати) час.\n   → матимемо / будемо мати"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Choose Якщо or Коли\n\n1. ___ прийдеш додому, зателефонуй. (you definitely will)\n   → Коли\n\n2. ___ побачиш Івана, передай йому книгу. (you might not)\n   → Якщо\n\n3. ___ закінчу роботу, поїду відпочивати. (I will finish)\n   → Коли\n\n4. ___ буде час, заходь. (maybe there won't be)\n   → Якщо\n\n5. ___ приїдеш до Києва, обов'язково відвідай Софію. (uncertain if you will)\n   → Якщо"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Translate Conditionals\n\n1. If it rains, I'll stay home.\n   → Якщо буде дощ, я залишуся вдома.\n\n2. If you want, we can go together.\n   → Якщо хочеш, можемо піти разом.\n\n3. Call me if you need help.\n   → Зателефонуй мені, якщо потрібна допомога.\n\n4. What will happen if he doesn't come?\n   → Що буде, якщо він не прийде?\n\n5. If I'm not mistaken, she's from Lviv.\n   → Якщо не помиляюся, вона зі Львова.\n\n6. I'll help you if I have time.\n   → Я допоможу тобі, якщо матиму час."
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-A2-46-quiz"
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-A2-46-groupsort"
+          }
+        ]
+      },
+      {
+        "id": "phase-production",
+        "name": "production",
+        "duration": 10,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Create Conditionals\n\n**Make sentences about:**\n\nYour plans:\n- Якщо матиму час, я...\n- Якщо погода буде гарна, ми...\n- Якщо все буде добре, я...\n\nAdvice:\n- Якщо хочеш вивчити українську, треба...\n- Якщо запізнюєшся, краще...\n- Якщо не знаєш дорогу, можна..."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Conditional Dialogue\n\n- Що будемо робити у вихідні?\n- **Якщо** погода буде гарна, можемо поїхати за місто.\n- А **якщо** буде дощ?\n- **Якщо** буде дощ, залишимося вдома і подивимося фільм.\n- Добре. **Якщо що** - дзвони завтра вранці.\n- Домовились!"
+          }
+        ]
+      }
+    ]
+  },
+  "activities": [
+    {
+      "id": "act-uk-A2-46-matchup",
+      "type": "match-up",
+      "title": "Condition → Result",
+      "description": "Match conditions with logical results.",
+      "content": {
+        "type": "match-up",
+        "instructions": "Match conditions with logical results.",
+        "pairs": [
+          {
+            "left": "Якщо буде дощ,",
+            "right": "візьму парасолю"
+          },
+          {
+            "left": "Якщо матиму час,",
+            "right": "зателефоную"
+          },
+          {
+            "left": "Якщо не поспішатимеш,",
+            "right": "запізнишся"
+          },
+          {
+            "left": "Якщо хочеш,",
+            "right": "можемо піти разом"
+          },
+          {
+            "left": "Якщо він прийде,",
+            "right": "ми почнемо"
+          },
+          {
+            "left": "Якщо все буде добре,",
+            "right": "приїду в п'ятницю"
+          }
+        ],
+        "shuffleRight": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2",
+      "duration": 5,
+      "tags": [
+        "conditionals",
+        "grammar",
+        "якщо",
+        "would",
+        "subjunctive"
+      ],
+      "createdAt": "2025-11-29T00:00:00Z",
+      "modifiedAt": "2025-11-29T00:00:00Z"
+    },
+    {
+      "id": "act-uk-A2-46-quiz",
+      "type": "quiz",
+      "title": "Conditionals",
+      "description": "Choose the correct form.",
+      "content": {
+        "type": "quiz",
+        "instructions": "Choose the correct form.",
+        "questions": [
+          {
+            "question": "\"If it rains, I'll take an umbrella\" - Якщо ___ дощ, я візьму парасолю.",
+            "options": [
+              "буде",
+              "є",
+              "був",
+              "бути"
+            ],
+            "correctIndex": 0,
+            "explanation": "Future in \"if\" clause = буде."
+          },
+          {
+            "question": "\"___ you get home, call me\" (you will) - ___ прийдеш додому, зателефонуй.",
+            "options": [
+              "Коли",
+              "Якщо",
+              "Що",
+              "Як"
+            ],
+            "correctIndex": 0,
+            "explanation": "Certain event = коли."
+          },
+          {
+            "question": "\"If you want, we can go\" - ___ хочеш, можемо піти.",
+            "options": [
+              "Якщо",
+              "Коли",
+              "Що",
+              "Як"
+            ],
+            "correctIndex": 0,
+            "explanation": "Uncertain/offer = якщо."
+          },
+          {
+            "question": "\"What happens if he doesn't come?\" - Що буде, якщо він не ___?",
+            "options": [
+              "прийде",
+              "приходить",
+              "прийшов",
+              "прийти"
+            ],
+            "correctIndex": 0,
+            "explanation": "Future after якщо = прийде."
+          },
+          {
+            "question": "\"I'll call if anything\" - Я зателефоную, ___.",
+            "options": [
+              "якщо що",
+              "якщо коли",
+              "що якщо",
+              "коли що"
+            ],
+            "correctIndex": 0,
+            "explanation": "\"If anything\" = якщо що."
+          },
+          {
+            "question": "\"If I'm not mistaken\" - Якщо не ___.",
+            "options": [
+              "помиляюся",
+              "помилюсь",
+              "помилятися",
+              "помилився"
+            ],
+            "correctIndex": 0,
+            "explanation": "Present tense in set phrase."
+          }
+        ],
+        "shuffleQuestions": true,
+        "shuffleOptions": true,
+        "showCorrectAnswers": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2",
+      "duration": 5,
+      "tags": [
+        "conditionals",
+        "grammar",
+        "якщо",
+        "would",
+        "subjunctive"
+      ],
+      "createdAt": "2025-11-29T00:00:00Z",
+      "modifiedAt": "2025-11-29T00:00:00Z"
+    },
+    {
+      "id": "act-uk-A2-46-groupsort",
+      "type": "group-sort",
+      "title": "Якщо vs Коли",
+      "description": "Sort by certainty.",
+      "content": {
+        "type": "group-sort",
+        "instructions": "Sort by certainty.",
+        "groups": [
+          {
+            "name": "Якщо (uncertain)",
+            "items": [
+              "Якщо побачиш Марію...",
+              "Якщо буде час...",
+              "Якщо вийде...",
+              "Якщо хочеш..."
+            ]
+          },
+          {
+            "name": "Коли (certain)",
+            "items": [
+              "Коли прийдеш додому...",
+              "Коли закінчу роботу...",
+              "Коли він повернеться...",
+              "Коли настане літо..."
+            ]
+          }
+        ],
+        "shuffleItems": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2",
+      "duration": 5,
+      "tags": [
+        "conditionals",
+        "grammar",
+        "якщо",
+        "would",
+        "subjunctive"
+      ],
+      "createdAt": "2025-11-29T00:00:00Z",
+      "modifiedAt": "2025-11-29T00:00:00Z"
+    }
+  ],
+  "vocabulary": {
+    "moduleId": "mod-uk-A2-46",
+    "level": "A2",
+    "phase": "A2.2",
+    "wordCount": 13,
+    "transliterationMode": "partial",
+    "words": [
+      {
+        "id": "v-m46-001",
+        "uk": "якщо",
+        "translit": "/jɑkˈʃtʃo/",
+        "ipa": "if",
+        "en": "conj",
+        "pos": "-"
+      },
+      {
+        "id": "v-m46-002",
+        "uk": "умова",
+        "translit": "/uˈmovɑ/",
+        "ipa": "condition",
+        "en": "noun",
+        "pos": "f"
+      },
+      {
+        "id": "v-m46-003",
+        "uk": "результат",
+        "translit": "/rɛzulʲˈtɑt/",
+        "ipa": "result",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m46-004",
+        "uk": "інакше",
+        "translit": "/ˈinɑkʃɛ/",
+        "ipa": "otherwise",
+        "en": "adv",
+        "pos": "-"
+      },
+      {
+        "id": "v-m46-005",
+        "uk": "можливо",
+        "translit": "/moʒˈlɪvo/",
+        "ipa": "possibly, maybe",
+        "en": "adv",
+        "pos": "-"
+      },
+      {
+        "id": "v-m46-006",
+        "uk": "обов'язково",
+        "translit": "/obovjɑzˈkovo/",
+        "ipa": "definitely, certainly",
+        "en": "adv",
+        "pos": "-"
+      },
+      {
+        "id": "v-m46-007",
+        "uk": "залишитися",
+        "translit": "/zɑlɪˈʃɪtɪsʲɑ/",
+        "ipa": "to stay (perf)",
+        "en": "verb",
+        "pos": "-"
+      },
+      {
+        "id": "v-m46-008",
+        "uk": "запізнюватися",
+        "translit": "/zɑpʲizˈnʲuvɑtɪsʲɑ/",
+        "ipa": "to be late (impf)",
+        "en": "verb",
+        "pos": "-"
+      },
+      {
+        "id": "v-m46-009",
+        "uk": "запізнитися",
+        "translit": "/zɑpʲizˈnɪtɪsʲɑ/",
+        "ipa": "to be late (perf)",
+        "en": "verb",
+        "pos": "-"
+      },
+      {
+        "id": "v-m46-010",
+        "uk": "помилятися",
+        "translit": "/pomɪˈlʲɑtɪsʲɑ/",
+        "ipa": "to be mistaken",
+        "en": "verb",
+        "pos": "-"
+      },
+      {
+        "id": "v-m46-011",
+        "uk": "сподіватися",
+        "translit": "/spodʲiˈvɑtɪsʲɑ/",
+        "ipa": "to hope",
+        "en": "verb",
+        "pos": "-"
+      },
+      {
+        "id": "v-m46-012",
+        "uk": "домовлятися",
+        "translit": "/domovˈlʲɑtɪsʲɑ/",
+        "ipa": "to agree, arrange",
+        "en": "verb",
+        "pos": "-"
+      },
+      {
+        "id": "v-m46-013",
+        "uk": "домовитися",
+        "translit": "/domoˈvɪtɪsʲɑ/",
+        "ipa": "to agree (perf)",
+        "en": "verb",
+        "pos": "-"
+      }
+    ]
+  }
+}

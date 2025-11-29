@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 45: Superlatives | Ukrainian A2</title>
+  <style>
+    :root { --primary: #1a5fb4; --primary-light: #3584e4; --success: #26a269; --warning: #e5a50a; --danger: #c01c28; --bg: #fafafa; --card-bg: #fff; --text: #1e1e1e; --text-muted: #5e5e5e; --border: #e0e0e0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+    .top-nav { background: #2e2e2e; color: white; padding: 0.5rem 2rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.875rem; }
+    .top-nav a { color: white; text-decoration: none; }
+    .top-nav a:hover { text-decoration: underline; }
+    .module-nav { display: flex; gap: 1rem; align-items: center; }
+    .module-nav-link { color: rgba(255,255,255,0.8); text-decoration: none; padding: 0.25rem 0.5rem; }
+    .module-nav-link:hover { color: white; }
+    .module-nav-link.disabled { color: rgba(255,255,255,0.3); pointer-events: none; }
+    .nav { position: sticky; top: 0; background: var(--primary); color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; z-index: 100; }
+    .nav h1 { font-size: 1.25rem; }
+    .nav-tabs { display: flex; gap: 0.5rem; }
+    .nav-tab { background: rgba(255,255,255,0.2); border: none; color: white; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; }
+    .nav-tab.active { background: white; color: var(--primary); }
+    main { max-width: 1000px; margin: 0 auto; padding: 2rem; }
+    .section { display: none; } .section.active { display: block; }
+    .lesson-header { text-align: center; margin-bottom: 2rem; padding: 2rem; background: linear-gradient(135deg, #e8f4fd, #f0e8fd); border-radius: 12px; }
+    .level-badge { background: var(--primary); color: white; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.875rem; }
+    .card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 1.5rem; margin-bottom: 1.5rem; }
+    .card h3 { color: var(--primary); margin-bottom: 1rem; }
+    .canvas-note { background: #fffbeb; border-left: 4px solid var(--warning); padding: 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+    .canvas-note h4 { color: var(--warning); margin-bottom: 0.5rem; }
+    .md-content { line-height: 1.7; }
+    .md-content p { margin: 0.75rem 0; }
+    .md-content ul, .md-content ol { margin: 0.75rem 0; padding-left: 1.5rem; }
+    .md-content li { margin: 0.25rem 0; }
+    .md-content strong { color: var(--primary); }
+    .md-content blockquote { background: #e8f4fd; border-left: 4px solid var(--primary); padding: 0.75rem 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+    .md-content blockquote p { margin: 0.25rem 0; }
+    .md-content table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+    .md-content th, .md-content td { border: 1px solid var(--border); padding: 0.5rem 0.75rem; text-align: left; }
+    .md-content th { background: #f5f5f5; font-weight: 600; }
+    .md-content code { background: #f0f0f0; padding: 0.125rem 0.375rem; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
+    .letter-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0; }
+    .letter-group { border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; }
+    .letter-group.true-friends { border-color: var(--success); } .letter-group.true-friends .letters { color: var(--success); }
+    .letter-group.false-friends { border-color: var(--danger); } .letter-group.false-friends .letters { color: var(--danger); }
+    .letter-group.new-letters { border-color: var(--primary); } .letter-group.new-letters .letters { color: var(--primary); }
+    .letters { font-size: 1.75rem; letter-spacing: 0.3rem; }
+    .match-container { display: flex; gap: 3rem; padding: 1rem; position: relative; }
+    .match-column { flex: 1; display: flex; flex-direction: column; gap: 0.75rem; }
+    .match-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; font-size: 1.25rem; cursor: pointer; }
+    .match-item.selected { border-color: var(--primary); background: #e8f4fd; }
+    .match-item.matched { border-color: var(--success); background: #e8f8f0; }
+    .match-item.wrong { border-color: var(--danger); background: #fde8e8; }
+    .match-lines { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+    .quiz-question { border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; }
+    .quiz-question.answered { pointer-events: none; }
+    .quiz-question .cyrillic { font-size: 1.5rem; color: var(--primary); font-weight: 600; }
+    .quiz-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-top: 1rem; }
+    .quiz-option { background: #f5f5f5; border: 2px solid var(--border); border-radius: 8px; padding: 1rem; cursor: pointer; text-align: center; }
+    .quiz-option.correct { border-color: var(--success); background: #d4edda; }
+    .quiz-option.wrong { border-color: var(--danger); background: #f8d7da; }
+    .quiz-explanation { margin-top: 1rem; padding: 1rem; background: #e8f4fd; border-radius: 8px; display: none; }
+    .quiz-explanation.show { display: block; }
+    .sort-pool { background: #f5f5f5; border: 2px dashed var(--border); border-radius: 12px; padding: 1.5rem; min-height: 80px; margin-bottom: 1rem; }
+    .sort-items { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; }
+    .sort-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 0.75rem 1.25rem; font-size: 1.5rem; cursor: grab; }
+    .sort-item.correct { border-color: var(--success); background: #e8f8f0; }
+    .sort-item.wrong { border-color: var(--danger); background: #fde8e8; }
+    .sort-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    .sort-group { border: 2px solid var(--border); border-radius: 12px; padding: 1rem; min-height: 150px; }
+    .sort-group.drag-over { border-color: var(--primary); background: #e8f4fd; }
+    .sort-group h4 { font-size: 0.875rem; text-align: center; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--border); }
+    .sort-group.true-friends h4 { color: var(--success); border-color: var(--success); }
+    .sort-group.false-friends h4 { color: var(--danger); border-color: var(--danger); }
+    .sort-group.new-letters h4 { color: var(--primary); border-color: var(--primary); }
+    .vocab-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; }
+    .vocab-card { border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; text-align: center; }
+    .vocab-card .uk { font-size: 1.75rem; font-weight: 600; color: var(--primary); }
+    .vocab-card .translit { color: var(--text-muted); font-style: italic; }
+    .vocab-card .en { font-weight: 500; margin: 0.25rem 0; }
+    .vocab-card .note { font-size: 0.75rem; color: #613583; background: #f0e8fd; padding: 0.25rem 0.5rem; border-radius: 4px; }
+    .btn { padding: 0.75rem 1.5rem; border: none; border-radius: 8px; cursor: pointer; }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-outline { background: transparent; border: 2px solid var(--border); }
+    .btn-group { display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem; }
+    .score-display { text-align: center; padding: 1rem; background: linear-gradient(135deg, #e8f8f0, #e8f4fd); border-radius: 8px; margin-bottom: 1rem; }
+    .score-display .score { font-size: 2rem; font-weight: 700; color: var(--success); }
+    .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
+    .completion-message.show { display: block; }
+    footer { text-align: center; padding: 2rem; color: var(--text-muted); }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+  </style>
+</head>
+<body>
+  <div class="top-nav">
+    <a href="../index.html">← l2-uk-en Curriculum</a>
+    <div class="module-nav">
+      <a href="module-44.html" class="module-nav-link">← Module 44</a>
+      <a href="index.html" class="module-nav-link">A2 Index</a>
+      <a href="module-46.html" class="module-nav-link">Module 46 →</a>
+    </div>
+  </div>
+  <nav class="nav">
+    <h1>Module 45: Superlatives</h1>
+    <div class="nav-tabs">
+      <button class="nav-tab active" data-section="lesson">Lesson</button>
+      <button class="nav-tab" data-section="match">Match</button>
+      <button class="nav-tab" data-section="quiz">Quiz</button>
+      <button class="nav-tab" data-section="sort">Sort</button>
+      <button class="nav-tab" data-section="vocab">Vocab</button>
+    </div>
+  </nav>
+  <main>
+    <section id="lesson" class="section active">
+      <div class="lesson-header">
+        <span class="level-badge">A2 · A2.2</span>
+        <h2 style="font-size:2rem;margin:0.5rem 0">Superlatives</h2>
+        <p style="color:var(--text-muted)">The Best, The Biggest</p>
+      </div>
+      
+      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### The Best of the Best!</h4><div class="md-content"><p>You can compare two things. Now compare ALL things - who's the best, what's the biggest?</p>
+<p><strong>The formula is simple:</strong><br />
+Comparative + най- = Superlative</p>
+<ul>
+<li>більший (bigger) → <strong>най</strong>більший (biggest)</li>
+<li>кращий (better) → <strong>най</strong>кращий (best)</li>
+</ul>
+<blockquote>
+  <p>💡 <strong>Did You Know?</strong></p>
+  <p>The prefix "най-" comes from the Slavic root meaning "most" or "extreme." It's related to similar forms in other Slavic languages: Russian "наи-", Polish "naj-", Czech "nej-". Once you know this prefix, superlatives become effortless!</p>
+</blockquote></div></div><div class="canvas-note"><h4>### Forming Superlatives</h4><div class="md-content"><p><strong>Simple rule: най- + comparative</strong></p>
+<table>
+<thead>
+<tr>
+<th>Adjective</th>
+<th>Comparative</th>
+<th>Superlative</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>новий</td>
+<td>новіший</td>
+<td><strong>най</strong>новіший</td>
+</tr>
+<tr>
+<td>старий</td>
+<td>старіший</td>
+<td><strong>най</strong>старіший</td>
+</tr>
+<tr>
+<td>великий</td>
+<td>більший</td>
+<td><strong>най</strong>більший</td>
+</tr>
+<tr>
+<td>малий</td>
+<td>менший</td>
+<td><strong>най</strong>менший</td>
+</tr>
+<tr>
+<td>добрий</td>
+<td>кращий</td>
+<td><strong>най</strong>кращий</td>
+</tr>
+<tr>
+<td>поганий</td>
+<td>гірший</td>
+<td><strong>най</strong>гірший</td>
+</tr>
+<tr>
+<td>високий</td>
+<td>вищий</td>
+<td><strong>най</strong>вищий</td>
+</tr>
+<tr>
+<td>низький</td>
+<td>нижчий</td>
+<td><strong>най</strong>нижчий</td>
+</tr>
+<tr>
+<td>дорогий</td>
+<td>дорожчий</td>
+<td><strong>най</strong>дорожчий</td>
+</tr>
+<tr>
+<td>дешевий</td>
+<td>дешевший</td>
+<td><strong>най</strong>дешевший</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples:</strong></p>
+<ul>
+<li>Це <strong>найбільше</strong> місто в Україні. - This is the biggest city in Ukraine.</li>
+<li>Він <strong>найкращий</strong> друг. - He is the best friend.</li>
+<li>Це <strong>найдорожча</strong> машина. - This is the most expensive car.</li>
+</ul>
+<blockquote>
+  <p>⚡ <strong>Pro Tip: Never Forget най-</strong></p>
+  <p>Unlike English, which uses "most" for long adjectives, Ukrainian ALWAYS uses най-:</p>
+  <ul>
+  <li>beautiful → most beautiful</li>
+  <li>красивий → найкрасивіший (not "найбільш красивий")</li>
+  </ul>
+</blockquote></div></div><div class="canvas-note"><h4>Superlatives with Prepositions</h4><div class="md-content"><p><strong>з/із + genitive (of/among):</strong></p>
+<ul>
+<li>Він найвищий <strong>з усіх</strong>. - He is the tallest of all.</li>
+<li>Це найкраще <strong>із запропонованого</strong>. - This is the best of what's offered.</li>
+</ul>
+<p><strong>серед + genitive (among):</strong></p>
+<ul>
+<li>Вона найрозумніша <strong>серед друзів</strong>. - She's the smartest among friends.</li>
+<li>Це найбільше місто <strong>серед усіх</strong>. - This is the biggest city among all.</li>
+</ul>
+<p><strong>в/у + locative (in):</strong></p>
+<ul>
+<li>Це найвища гора <strong>в Україні</strong>. - This is the highest mountain in Ukraine.</li>
+<li>Він найкращий студент <strong>у класі</strong>. - He's the best student in the class.</li>
+</ul>
+<p><strong>Examples:</strong></p>
+<ul>
+<li>Говерла - найвища гора в Україні.</li>
+<li>Дніпро - найдовша річка в Україні.</li>
+<li>Київ - найбільше місто в країні.</li>
+</ul>
+<blockquote>
+  <p>📜 <strong>History Bite: Ukrainian Records</strong></p>
+  <ul>
+  <li>Найвища гора: Говерла (2,061 м)</li>
+  <li>Найдовша річка: Дніпро (2,201 км)</li>
+  <li>Найбільше місто: Київ (2.8 млн)</li>
+  <li>Найстаріший університет: Львівський (1661)</li>
+  </ul>
+</blockquote></div></div><div class="canvas-note"><h4>Adverb Superlatives</h4><div class="md-content"><p><strong>Same pattern: най- + comparative adverb</strong></p>
+<table>
+<thead>
+<tr>
+<th>Adverb</th>
+<th>Comparative</th>
+<th>Superlative</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>швидко</td>
+<td>швидше</td>
+<td><strong>най</strong>швидше</td>
+</tr>
+<tr>
+<td>повільно</td>
+<td>повільніше</td>
+<td><strong>най</strong>повільніше</td>
+</tr>
+<tr>
+<td>добре</td>
+<td>краще</td>
+<td><strong>най</strong>краще</td>
+</tr>
+<tr>
+<td>погано</td>
+<td>гірше</td>
+<td><strong>най</strong>гірше</td>
+</tr>
+<tr>
+<td>багато</td>
+<td>більше</td>
+<td><strong>най</strong>більше</td>
+</tr>
+<tr>
+<td>мало</td>
+<td>менше</td>
+<td><strong>най</strong>менше</td>
+</tr>
+<tr>
+<td>рано</td>
+<td>раніше</td>
+<td><strong>най</strong>раніше</td>
+</tr>
+<tr>
+<td>пізно</td>
+<td>пізніше</td>
+<td><strong>най</strong>пізніше</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples:</strong></p>
+<ul>
+<li>Він бігає <strong>найшвидше</strong>. - He runs the fastest.</li>
+<li>Я люблю це <strong>найбільше</strong>. - I like this the most.</li>
+<li>Вона прийшла <strong>найраніше</strong>. - She arrived the earliest.</li>
+</ul>
+<blockquote>
+  <p>🎭 <strong>Culture Corner: Ukrainian Pride</strong></p>
+  <p>Ukrainians love talking about "най-" facts:</p>
+  <ul>
+  <li>"Найсмачніший борщ у моєї бабусі!"</li>
+  <li>"Найкраща кава в цьому кафе!"</li>
+  <li>"Найгарніше місто - Львів!" (or Kyiv, depending on who you ask!)</li>
+  </ul>
+</blockquote></div></div><div class="canvas-note"><h4>Alternative Superlative Construction</h4><div class="md-content"><p><strong>найбільш/найменш + adjective:</strong><br />
+This form exists but is less common in speech:</p>
+<ul>
+<li><strong>найбільш</strong> цікавий (most interesting) = найцікавіший</li>
+<li><strong>найменш</strong> важливий (least important) = not used often</li>
+</ul>
+<p><strong>When to use найбільш:</strong></p>
+<ul>
+<li>With compound adjectives</li>
+<li>In formal/scientific texts</li>
+<li>When the adjective doesn't easily form -іший</li>
+</ul>
+<p><strong>Examples:</strong></p>
+<ul>
+<li>Це найбільш поширена думка. - This is the most widespread opinion.</li>
+<li>Найбільш вірогідний варіант. - The most probable option.</li>
+</ul></div></div><div class="canvas-note"><h4>Absolute Superlatives</h4><div class="md-content"><p><strong>дуже/надзвичайно + adjective (no comparison):</strong><br />
+Sometimes you want to say "extremely" without comparing:</p>
+<ul>
+<li><strong>дуже</strong> гарний - very beautiful</li>
+<li><strong>надзвичайно</strong> цікавий - extremely interesting</li>
+<li><strong>неймовірно</strong> смачний - incredibly delicious</li>
+</ul>
+<p><strong>Prefix пре- (archaic/emphatic):</strong></p>
+<ul>
+<li><strong>пре</strong>красний - most beautiful (poetic)</li>
+<li><strong>пре</strong>мудрий - most wise (literary)</li>
+</ul>
+<blockquote>
+  <p>💡 <strong>Key Insight</strong></p>
+  <p>Regular superlatives compare: "the best among all"<br />
+  Absolute intensifiers just emphasize: "extremely good"</p>
+</blockquote></div></div><div class="canvas-note"><h4>Common Superlative Expressions</h4><div class="md-content"><p><strong>Найкраще + infinitive:</strong></p>
+<ul>
+<li><strong>Найкраще</strong> почати зранку. - It's best to start in the morning.</li>
+<li><strong>Найкраще</strong> запитати його. - It's best to ask him.</li>
+</ul>
+<p><strong>Найголовніше:</strong></p>
+<ul>
+<li><strong>Найголовніше</strong> - здоров'я. - The most important thing is health.</li>
+</ul>
+<p><strong>Як найшвидше:</strong></p>
+<ul>
+<li>Зроби це <strong>як найшвидше</strong>! - Do it as fast as possible!</li>
+</ul>
+<p><strong>Щонайменше/щонайбільше:</strong></p>
+<ul>
+<li><strong>Щонайменше</strong> сто людей. - At least a hundred people.</li>
+<li><strong>Щонайбільше</strong> тиждень. - At most a week.</li>
+</ul></div></div><div class="canvas-note"><h4>Superlatives in Questions</h4><div class="md-content"><p><strong>Який/яка/яке найкращий?</strong></p>
+<ul>
+<li><strong>Який</strong> ресторан <strong>найкращий</strong>? - Which restaurant is the best?</li>
+<li><strong>Яка</strong> книга <strong>найцікавіша</strong>? - Which book is the most interesting?</li>
+<li><strong>Яке</strong> місто <strong>найбільше</strong>? - Which city is the biggest?</li>
+</ul>
+<p><strong>Де найкраще…?</strong></p>
+<ul>
+<li><strong>Де найкраще</strong> відпочити? - Where is the best place to rest?</li>
+<li><strong>Де найсмачніше</strong> готують? - Where do they cook the best?</li>
+</ul>
+<p><strong>Хто найкращий?</strong></p>
+<ul>
+<li><strong>Хто</strong> тут <strong>найстарший</strong>? - Who is the oldest here?</li>
+<li><strong>Хто</strong> грає <strong>найкраще</strong>? - Who plays the best?</li>
+</ul></div></div><div class="canvas-note"><h4>### Form Superlatives</h4><div class="md-content"><ol>
+<li>великий → найбільший</li>
+<li>малий → найменший</li>
+<li>добрий → найкращий</li>
+<li>поганий → найгірший</li>
+<li>високий → найвищий</li>
+<li>дорогий → найдорожчий</li>
+<li>цікавий → найцікавіший</li>
+<li>швидкий → найшвидший</li>
+<li>красивий → найкрасивіший</li>
+<li>важливий → найважливіший</li>
+</ol></div></div><div class="canvas-note"><h4>Complete Sentences</h4><div class="md-content"><ol>
+<li><p>Це ___ (велике) місто в Україні.<br />
+→ найбільше</p></li>
+<li><p>Вона ___ (добра) студентка в класі.<br />
+→ найкраща</p></li>
+<li><p>Який ___ (високий) будинок у Києві?<br />
+→ найвищий</p></li>
+<li><p>Він бігає ___ (швидко) з усіх.<br />
+→ найшвидше</p></li>
+<li><p>Це ___ (дешевий) варіант.<br />
+→ найдешевший</p></li>
+<li><p>Я люблю цю пісню ___ (багато).<br />
+→ найбільше</p></li>
+</ol></div></div><div class="canvas-note"><h4>Translate Superlatives</h4><div class="md-content"><ol>
+<li><p>This is the best restaurant in the city.<br />
+→ Це найкращий ресторан у місті.</p></li>
+<li><p>She is the youngest in the family.<br />
+→ Вона наймолодша в сім'ї.</p></li>
+<li><p>This is the most important thing.<br />
+→ Це найважливіша річ.</p></li>
+<li><p>He works the hardest.<br />
+→ Він працює найбільше.</p></li>
+<li><p>Which is the cheapest?<br />
+→ Який найдешевший?</p></li>
+<li><p>I like coffee the most.<br />
+→ Я люблю каву найбільше.</p></li>
+</ol></div></div><div class="canvas-note"><h4>### Describe Superlatives</h4><div class="md-content"><p><strong>Your favorites:</strong></p>
+<ul>
+<li>Моя найулюбленіша книга - …</li>
+<li>Найкращий фільм, який я бачив - …</li>
+<li>Найсмачніша страва - …</li>
+<li>Найкраще місце для відпочинку - …</li>
+</ul>
+<p><strong>Ukrainian facts:</strong></p>
+<ul>
+<li>Найбільше місто - Київ.</li>
+<li>Найвища гора - Говерла.</li>
+<li>Найдовша річка - Дніпро.</li>
+<li>Найстаріше місто - Львів (або Київ?).</li>
+</ul></div></div><div class="canvas-note"><h4>Opinion Dialogue</h4><div class="md-content"><ul>
+<li>Який ресторан тут найкращий?</li>
+<li>На мою думку, "Пузата Хата" - найсмачніший і найдешевший.</li>
+<li>А який найдорожчий?</li>
+<li>Є кілька, але "Канапа" - один із найдорожчих.</li>
+<li>Що там найсмачніше?</li>
+<li>Борщ! Найкращий борщ у місті!</li>
+</ul></div></div></div>
+      <div class="btn-group"><button class="btn btn-primary" onclick="showSection('match')">Start →</button></div>
+    </section>
+    <section id="match" class="section"><div class="card"><h3>Comparatives to Superlatives</h3>
+      <div class="score-display"><span class="score"><span id="match-score">0</span>/6</span></div>
+      <div class="match-container" id="match-container"><svg class="match-lines" id="match-lines"></svg>
+        <div class="match-column" id="match-left"><div class="match-item" data-pair="0">більший</div><div class="match-item" data-pair="1">менший</div><div class="match-item" data-pair="2">кращий</div><div class="match-item" data-pair="3">гірший</div><div class="match-item" data-pair="4">вищий</div><div class="match-item" data-pair="5">дорожчий</div></div>
+        <div class="match-column" id="match-right"><div class="match-item" data-pair="5">найдорожчий</div><div class="match-item" data-pair="3">найгірший</div><div class="match-item" data-pair="2">найкращий</div><div class="match-item" data-pair="4">найвищий</div><div class="match-item" data-pair="0">найбільший</div><div class="match-item" data-pair="1">найменший</div></div>
+      </div>
+      <div class="completion-message" id="match-complete"><h3>Perfect!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetMatch()">Reset</button><button class="btn btn-primary" onclick="showSection('quiz')">Next →</button></div>
+    </div></section>
+    <section id="quiz" class="section"><div class="card"><h3>Superlatives</h3>
+      <div class="score-display"><span class="score"><span id="quiz-score">0</span>/6</span></div>
+      <div id="quiz-container"></div>
+      <div class="completion-message" id="quiz-complete"><h3>Complete!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('sort')">Next →</button></div>
+    </div></section>
+    <section id="sort" class="section"><div class="card"><h3>Comparative vs Superlative</h3>
+      <div class="score-display"><span class="score"><span id="sort-score">0</span>/10</span></div>
+      <div class="sort-pool" id="sort-pool"><div class="sort-items" id="sort-items"></div></div>
+      <div class="sort-groups"><div class="sort-group true-friends" data-group="true-friends"><h4>Comparatives</h4><div class="sort-items"></div></div><div class="sort-group false-friends" data-group="false-friends"><h4>Superlatives</h4><div class="sort-items"></div></div></div>
+      <div class="completion-message" id="sort-complete"><h3>All Sorted!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetSort()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Vocab →</button></div>
+    </div></section>
+    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (17)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
+      <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
+    </section>
+  </main>
+  <footer>Module 45 · curricula-opus</footer>
+  <script>
+    const matchPairs=[{"left":"більший","right":"найбільший"},{"left":"менший","right":"найменший"},{"left":"кращий","right":"найкращий"},{"left":"гірший","right":"найгірший"},{"left":"вищий","right":"найвищий"},{"left":"дорожчий","right":"найдорожчий"}];
+    const quizData=[{"question":"\"The biggest city\" - ___ місто.","options":["найбільше","більше","більший","великий"],"correctIndex":0,"explanation":"Superlative neuter = найбільше."},{"question":"\"The best friend\" - ___ друг.","options":["найкращий","кращий","добрий","краще"],"correctIndex":0,"explanation":"Superlative masculine = найкращий."},{"question":"\"She sings the best\" - Вона співає ___.","options":["найкраще","краще","кращий","найкраща"],"correctIndex":0,"explanation":"Adverb superlative = найкраще."},{"question":"\"The most important thing\" - ___ річ.","options":["найважливіша","важливіша","важлива","найважливіший"],"correctIndex":0,"explanation":"Feminine superlative = найважливіша."},{"question":"\"Which is the cheapest?\" - Який ___?","options":["найдешевший","дешевший","дешевий","найдешевше"],"correctIndex":0,"explanation":"Masculine superlative = найдешевший."},{"question":"\"At least ten people\" - ___ десять людей.","options":["Щонайменше","Найменше","Менше","Мало"],"correctIndex":0,"explanation":"\"At least\" = щонайменше."}];
+    const sortData={"true-friends":["більший","кращий","вищий","дорожчий","швидше"],"false-friends":["найбільший","найкращий","найвищий","найдорожчий","найшвидше"]};
+    const vocabData=[{"uk":"найбільший","translit":"/nɑjˈbʲilʲʃɪj/","en":"adj","note":""},{"uk":"найменший","translit":"/nɑjˈmɛnʃɪj/","en":"adj","note":""},{"uk":"найкращий","translit":"/nɑjˈkrɑʃtʃɪj/","en":"adj","note":""},{"uk":"найгірший","translit":"/nɑjˈɦʲirʃɪj/","en":"adj","note":""},{"uk":"найвищий","translit":"/nɑjˈvɪʃtʃɪj/","en":"adj","note":""},{"uk":"найдорожчий","translit":"/nɑjdoˈroʒtʃɪj/","en":"adj","note":""},{"uk":"найдешевший","translit":"/nɑjdɛˈʃɛvʃɪj/","en":"adj","note":""},{"uk":"найважливіший","translit":"/nɑjvɑʒˈlɪvʲiʃɪj/","en":"adj","note":""},{"uk":"найцікавіший","translit":"/nɑjtsʲikɑˈvʲiʃɪj/","en":"adj","note":""},{"uk":"найшвидше","translit":"/nɑjˈʃvɪdʃɛ/","en":"adv","note":""},{"uk":"найкраще","translit":"/nɑjˈkrɑʃtʃɛ/","en":"adv","note":""},{"uk":"найбільше","translit":"/nɑjˈbʲilʲʃɛ/","en":"adv","note":""},{"uk":"щонайменше","translit":"/ʃtʃonɑjˈmɛnʃɛ/","en":"adv","note":""},{"uk":"щонайбільше","translit":"/ʃtʃonɑjˈbʲilʲʃɛ/","en":"adv","note":""},{"uk":"найголовніший","translit":"/nɑjɦolovˈnʲiʃɪj/","en":"adj","note":""},{"uk":"надзвичайно","translit":"/nɑdzvɪˈtʃɑjno/","en":"adv","note":""},{"uk":"неймовірно","translit":"/nɛjmoˈvʲirno/","en":"adv","note":""}];
+    const totalSort=10;
+    function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
+    document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));
+    let matchSel=null,matchScore=0,matchPairsArr=[];
+    document.querySelectorAll('#match-left .match-item').forEach(item=>{item.addEventListener('click',()=>{if(item.classList.contains('matched'))return;document.querySelectorAll('#match-left .match-item').forEach(i=>i.classList.remove('selected'));item.classList.add('selected');matchSel={el:item,pair:item.dataset.pair};});});
+    document.querySelectorAll('#match-right .match-item').forEach(item=>{item.addEventListener('click',()=>{if(item.classList.contains('matched')||!matchSel)return;if(matchSel.pair===item.dataset.pair){matchSel.el.classList.remove('selected');matchSel.el.classList.add('matched');item.classList.add('matched');matchPairsArr.push({left:matchSel.el,right:item});matchScore++;document.getElementById('match-score').textContent=matchScore;drawLines();if(matchScore===matchPairs.length)document.getElementById('match-complete').classList.add('show');}else{item.classList.add('wrong');setTimeout(()=>item.classList.remove('wrong'),300);}matchSel=null;});});
+    function drawLines(){const svg=document.getElementById('match-lines'),c=document.getElementById('match-container');if(!svg||!c)return;const r=c.getBoundingClientRect();svg.innerHTML='';svg.setAttribute('viewBox','0 0 '+r.width+' '+r.height);matchPairsArr.forEach(p=>{const lr=p.left.getBoundingClientRect(),rr=p.right.getBoundingClientRect();const line=document.createElementNS('http://www.w3.org/2000/svg','line');line.setAttribute('x1',lr.right-r.left);line.setAttribute('y1',lr.top+lr.height/2-r.top);line.setAttribute('x2',rr.left-r.left);line.setAttribute('y2',rr.top+rr.height/2-r.top);line.setAttribute('stroke','#26a269');line.setAttribute('stroke-width','2');svg.appendChild(line);});}
+    function resetMatch(){matchSel=null;matchScore=0;matchPairsArr=[];document.getElementById('match-score').textContent='0';document.getElementById('match-complete')?.classList.remove('show');document.getElementById('match-lines').innerHTML='';document.querySelectorAll('#match-container .match-item').forEach(i=>i.classList.remove('matched','selected','wrong'));}
+    window.addEventListener('resize',drawLines);
+    let quizScore=0,quizAns=0;
+    function initQuiz(){const c=document.getElementById('quiz-container');if(!c||!quizData.length)return;c.innerHTML='';quizData.forEach((q,i)=>{const sh=[...q.options].sort(()=>Math.random()-0.5);const cor=sh.indexOf(q.options[q.correctIndex]);const div=document.createElement('div');div.className='quiz-question';div.innerHTML='<h4>Q'+(i+1)+': <span class="cyrillic">'+(q.question.match(/[А-ЯІЇЄҐ]+/)?.[0]||'')+'</span></h4><div class="quiz-options">'+sh.map((o,j)=>'<div class="quiz-option" data-c="'+(j===cor)+'" data-q="'+i+'">'+o+'</div>').join('')+'</div><div class="quiz-explanation" id="exp-'+i+'">'+q.explanation+'</div>';c.appendChild(div);});document.querySelectorAll('.quiz-option').forEach(o=>o.addEventListener('click',handleQuiz));}
+    function handleQuiz(e){const opt=e.target,q=opt.closest('.quiz-question');if(q.classList.contains('answered'))return;q.classList.add('answered');if(opt.dataset.c==='true'){opt.classList.add('correct');quizScore++;}else{opt.classList.add('wrong');q.querySelector('[data-c="true"]').classList.add('correct');}document.getElementById('exp-'+opt.dataset.q).classList.add('show');document.getElementById('quiz-score').textContent=quizScore;quizAns++;if(quizAns===quizData.length)document.getElementById('quiz-complete').classList.add('show');}
+    function resetQuiz(){quizScore=0;quizAns=0;document.getElementById('quiz-score').textContent='0';document.getElementById('quiz-complete')?.classList.remove('show');initQuiz();}
+    let sortScore=0,dragItem=null;
+    function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
+    function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
+    function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
+  </script>
+</body>
+</html>

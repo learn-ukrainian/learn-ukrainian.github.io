@@ -1,0 +1,501 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-A2-45",
+    "moduleId": "mod-uk-A2-45",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "methodology": "ppp",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "A2",
+    "phase": "A2.2",
+    "moduleNumber": 45,
+    "title": "Superlatives",
+    "subtitle": "The Best, The Biggest",
+    "description": "Form superlative adjectives",
+    "objectives": [
+      "Form superlative adjectives",
+      "Use superlatives in sentences",
+      "Master irregular superlatives",
+      "Express preferences and opinions"
+    ],
+    "grammarFocus": [
+      "Superlative formation (най- prefix)",
+      "Superlative syntax",
+      "Irregular superlatives",
+      "Absolute superlatives"
+    ],
+    "totalDuration": 45,
+    "transliterationMode": "partial",
+    "tags": [
+      "adjectives",
+      "superlatives",
+      "comparison",
+      "grammar"
+    ],
+    "version": 1,
+    "createdAt": "2025-11-29T00:00:00Z",
+    "modifiedAt": "2025-11-29T00:00:00Z",
+    "phases": [
+      {
+        "id": "phase-warm-up",
+        "name": "warm-up",
+        "duration": 5,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### The Best of the Best!\n\nYou can compare two things. Now compare ALL things - who's the best, what's the biggest?\n\n**The formula is simple:**\nComparative + най- = Superlative\n\n- більший (bigger) → **най**більший (biggest)\n- кращий (better) → **най**кращий (best)\n\n> 💡 **Did You Know?**\n>\n> The prefix \"най-\" comes from the Slavic root meaning \"most\" or \"extreme.\" It's related to similar forms in other Slavic languages: Russian \"наи-\", Polish \"naj-\", Czech \"nej-\". Once you know this prefix, superlatives become effortless!"
+          }
+        ]
+      },
+      {
+        "id": "phase-presentation",
+        "name": "presentation",
+        "duration": 15,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Forming Superlatives\n\n**Simple rule: най- + comparative**\n\n| Adjective | Comparative | Superlative |\n|-----------|-------------|-------------|\n| новий | новіший | **най**новіший |\n| старий | старіший | **най**старіший |\n| великий | більший | **най**більший |\n| малий | менший | **най**менший |\n| добрий | кращий | **най**кращий |\n| поганий | гірший | **най**гірший |\n| високий | вищий | **най**вищий |\n| низький | нижчий | **най**нижчий |\n| дорогий | дорожчий | **най**дорожчий |\n| дешевий | дешевший | **най**дешевший |\n\n**Examples:**\n- Це **найбільше** місто в Україні. - This is the biggest city in Ukraine.\n- Він **найкращий** друг. - He is the best friend.\n- Це **найдорожча** машина. - This is the most expensive car.\n\n> ⚡ **Pro Tip: Never Forget най-**\n>\n> Unlike English, which uses \"most\" for long adjectives, Ukrainian ALWAYS uses най-:\n> - beautiful → most beautiful\n> - красивий → найкрасивіший (not \"найбільш красивий\")"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Superlatives with Prepositions\n\n**з/із + genitive (of/among):**\n- Він найвищий **з усіх**. - He is the tallest of all.\n- Це найкраще **із запропонованого**. - This is the best of what's offered.\n\n**серед + genitive (among):**\n- Вона найрозумніша **серед друзів**. - She's the smartest among friends.\n- Це найбільше місто **серед усіх**. - This is the biggest city among all.\n\n**в/у + locative (in):**\n- Це найвища гора **в Україні**. - This is the highest mountain in Ukraine.\n- Він найкращий студент **у класі**. - He's the best student in the class.\n\n**Examples:**\n- Говерла - найвища гора в Україні.\n- Дніпро - найдовша річка в Україні.\n- Київ - найбільше місто в країні.\n\n> 📜 **History Bite: Ukrainian Records**\n>\n> - Найвища гора: Говерла (2,061 м)\n> - Найдовша річка: Дніпро (2,201 км)\n> - Найбільше місто: Київ (2.8 млн)\n> - Найстаріший університет: Львівський (1661)"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Adverb Superlatives\n\n**Same pattern: най- + comparative adverb**\n\n| Adverb | Comparative | Superlative |\n|--------|-------------|-------------|\n| швидко | швидше | **най**швидше |\n| повільно | повільніше | **най**повільніше |\n| добре | краще | **най**краще |\n| погано | гірше | **най**гірше |\n| багато | більше | **най**більше |\n| мало | менше | **най**менше |\n| рано | раніше | **най**раніше |\n| пізно | пізніше | **най**пізніше |\n\n**Examples:**\n- Він бігає **найшвидше**. - He runs the fastest.\n- Я люблю це **найбільше**. - I like this the most.\n- Вона прийшла **найраніше**. - She arrived the earliest.\n\n> 🎭 **Culture Corner: Ukrainian Pride**\n>\n> Ukrainians love talking about \"най-\" facts:\n> - \"Найсмачніший борщ у моєї бабусі!\"\n> - \"Найкраща кава в цьому кафе!\"\n> - \"Найгарніше місто - Львів!\" (or Kyiv, depending on who you ask!)"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Alternative Superlative Construction\n\n**найбільш/найменш + adjective:**\nThis form exists but is less common in speech:\n\n- **найбільш** цікавий (most interesting) = найцікавіший\n- **найменш** важливий (least important) = not used often\n\n**When to use найбільш:**\n- With compound adjectives\n- In formal/scientific texts\n- When the adjective doesn't easily form -іший\n\n**Examples:**\n- Це найбільш поширена думка. - This is the most widespread opinion.\n- Найбільш вірогідний варіант. - The most probable option."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Absolute Superlatives\n\n**дуже/надзвичайно + adjective (no comparison):**\nSometimes you want to say \"extremely\" without comparing:\n\n- **дуже** гарний - very beautiful\n- **надзвичайно** цікавий - extremely interesting\n- **неймовірно** смачний - incredibly delicious\n\n**Prefix пре- (archaic/emphatic):**\n- **пре**красний - most beautiful (poetic)\n- **пре**мудрий - most wise (literary)\n\n> 💡 **Key Insight**\n>\n> Regular superlatives compare: \"the best among all\"\n> Absolute intensifiers just emphasize: \"extremely good\""
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Common Superlative Expressions\n\n**Найкраще + infinitive:**\n- **Найкраще** почати зранку. - It's best to start in the morning.\n- **Найкраще** запитати його. - It's best to ask him.\n\n**Найголовніше:**\n- **Найголовніше** - здоров'я. - The most important thing is health.\n\n**Як найшвидше:**\n- Зроби це **як найшвидше**! - Do it as fast as possible!\n\n**Щонайменше/щонайбільше:**\n- **Щонайменше** сто людей. - At least a hundred people.\n- **Щонайбільше** тиждень. - At most a week."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Superlatives in Questions\n\n**Який/яка/яке найкращий?**\n- **Який** ресторан **найкращий**? - Which restaurant is the best?\n- **Яка** книга **найцікавіша**? - Which book is the most interesting?\n- **Яке** місто **найбільше**? - Which city is the biggest?\n\n**Де найкраще...?**\n- **Де найкраще** відпочити? - Where is the best place to rest?\n- **Де найсмачніше** готують? - Where do they cook the best?\n\n**Хто найкращий?**\n- **Хто** тут **найстарший**? - Who is the oldest here?\n- **Хто** грає **найкраще**? - Who plays the best?"
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-A2-45-matchup"
+          }
+        ]
+      },
+      {
+        "id": "phase-practice",
+        "name": "practice",
+        "duration": 15,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Form Superlatives\n\n1. великий → найбільший\n2. малий → найменший\n3. добрий → найкращий\n4. поганий → найгірший\n5. високий → найвищий\n6. дорогий → найдорожчий\n7. цікавий → найцікавіший\n8. швидкий → найшвидший\n9. красивий → найкрасивіший\n10. важливий → найважливіший"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Complete Sentences\n\n1. Це ___ (велике) місто в Україні.\n   → найбільше\n\n2. Вона ___ (добра) студентка в класі.\n   → найкраща\n\n3. Який ___ (високий) будинок у Києві?\n   → найвищий\n\n4. Він бігає ___ (швидко) з усіх.\n   → найшвидше\n\n5. Це ___ (дешевий) варіант.\n   → найдешевший\n\n6. Я люблю цю пісню ___ (багато).\n   → найбільше"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Translate Superlatives\n\n1. This is the best restaurant in the city.\n   → Це найкращий ресторан у місті.\n\n2. She is the youngest in the family.\n   → Вона наймолодша в сім'ї.\n\n3. This is the most important thing.\n   → Це найважливіша річ.\n\n4. He works the hardest.\n   → Він працює найбільше.\n\n5. Which is the cheapest?\n   → Який найдешевший?\n\n6. I like coffee the most.\n   → Я люблю каву найбільше."
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-A2-45-quiz"
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-A2-45-groupsort"
+          }
+        ]
+      },
+      {
+        "id": "phase-production",
+        "name": "production",
+        "duration": 10,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Describe Superlatives\n\n**Your favorites:**\n- Моя найулюбленіша книга - ...\n- Найкращий фільм, який я бачив - ...\n- Найсмачніша страва - ...\n- Найкраще місце для відпочинку - ...\n\n**Ukrainian facts:**\n- Найбільше місто - Київ.\n- Найвища гора - Говерла.\n- Найдовша річка - Дніпро.\n- Найстаріше місто - Львів (або Київ?)."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Opinion Dialogue\n\n- Який ресторан тут найкращий?\n- На мою думку, \"Пузата Хата\" - найсмачніший і найдешевший.\n- А який найдорожчий?\n- Є кілька, але \"Канапа\" - один із найдорожчих.\n- Що там найсмачніше?\n- Борщ! Найкращий борщ у місті!"
+          }
+        ]
+      }
+    ]
+  },
+  "activities": [
+    {
+      "id": "act-uk-A2-45-matchup",
+      "type": "match-up",
+      "title": "Comparatives to Superlatives",
+      "description": "Match comparative with superlative.",
+      "content": {
+        "type": "match-up",
+        "instructions": "Match comparative with superlative.",
+        "pairs": [
+          {
+            "left": "більший",
+            "right": "найбільший"
+          },
+          {
+            "left": "менший",
+            "right": "найменший"
+          },
+          {
+            "left": "кращий",
+            "right": "найкращий"
+          },
+          {
+            "left": "гірший",
+            "right": "найгірший"
+          },
+          {
+            "left": "вищий",
+            "right": "найвищий"
+          },
+          {
+            "left": "дорожчий",
+            "right": "найдорожчий"
+          }
+        ],
+        "shuffleRight": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2",
+      "duration": 5,
+      "tags": [
+        "adjectives",
+        "superlatives",
+        "comparison",
+        "grammar"
+      ],
+      "createdAt": "2025-11-29T00:00:00Z",
+      "modifiedAt": "2025-11-29T00:00:00Z"
+    },
+    {
+      "id": "act-uk-A2-45-quiz",
+      "type": "quiz",
+      "title": "Superlatives",
+      "description": "Choose the correct form.",
+      "content": {
+        "type": "quiz",
+        "instructions": "Choose the correct form.",
+        "questions": [
+          {
+            "question": "\"The biggest city\" - ___ місто.",
+            "options": [
+              "найбільше",
+              "більше",
+              "більший",
+              "великий"
+            ],
+            "correctIndex": 0,
+            "explanation": "Superlative neuter = найбільше."
+          },
+          {
+            "question": "\"The best friend\" - ___ друг.",
+            "options": [
+              "найкращий",
+              "кращий",
+              "добрий",
+              "краще"
+            ],
+            "correctIndex": 0,
+            "explanation": "Superlative masculine = найкращий."
+          },
+          {
+            "question": "\"She sings the best\" - Вона співає ___.",
+            "options": [
+              "найкраще",
+              "краще",
+              "кращий",
+              "найкраща"
+            ],
+            "correctIndex": 0,
+            "explanation": "Adverb superlative = найкраще."
+          },
+          {
+            "question": "\"The most important thing\" - ___ річ.",
+            "options": [
+              "найважливіша",
+              "важливіша",
+              "важлива",
+              "найважливіший"
+            ],
+            "correctIndex": 0,
+            "explanation": "Feminine superlative = найважливіша."
+          },
+          {
+            "question": "\"Which is the cheapest?\" - Який ___?",
+            "options": [
+              "найдешевший",
+              "дешевший",
+              "дешевий",
+              "найдешевше"
+            ],
+            "correctIndex": 0,
+            "explanation": "Masculine superlative = найдешевший."
+          },
+          {
+            "question": "\"At least ten people\" - ___ десять людей.",
+            "options": [
+              "Щонайменше",
+              "Найменше",
+              "Менше",
+              "Мало"
+            ],
+            "correctIndex": 0,
+            "explanation": "\"At least\" = щонайменше."
+          }
+        ],
+        "shuffleQuestions": true,
+        "shuffleOptions": true,
+        "showCorrectAnswers": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2",
+      "duration": 5,
+      "tags": [
+        "adjectives",
+        "superlatives",
+        "comparison",
+        "grammar"
+      ],
+      "createdAt": "2025-11-29T00:00:00Z",
+      "modifiedAt": "2025-11-29T00:00:00Z"
+    },
+    {
+      "id": "act-uk-A2-45-groupsort",
+      "type": "group-sort",
+      "title": "Comparative vs Superlative",
+      "description": "Sort the forms.",
+      "content": {
+        "type": "group-sort",
+        "instructions": "Sort the forms.",
+        "groups": [
+          {
+            "name": "Comparatives",
+            "items": [
+              "більший",
+              "кращий",
+              "вищий",
+              "дорожчий",
+              "швидше"
+            ]
+          },
+          {
+            "name": "Superlatives",
+            "items": [
+              "найбільший",
+              "найкращий",
+              "найвищий",
+              "найдорожчий",
+              "найшвидше"
+            ]
+          }
+        ],
+        "shuffleItems": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2",
+      "duration": 5,
+      "tags": [
+        "adjectives",
+        "superlatives",
+        "comparison",
+        "grammar"
+      ],
+      "createdAt": "2025-11-29T00:00:00Z",
+      "modifiedAt": "2025-11-29T00:00:00Z"
+    }
+  ],
+  "vocabulary": {
+    "moduleId": "mod-uk-A2-45",
+    "level": "A2",
+    "phase": "A2.2",
+    "wordCount": 17,
+    "transliterationMode": "partial",
+    "words": [
+      {
+        "id": "v-m45-001",
+        "uk": "найбільший",
+        "translit": "/nɑjˈbʲilʲʃɪj/",
+        "ipa": "biggest",
+        "en": "adj",
+        "pos": "-",
+        "gender": "sup of великий"
+      },
+      {
+        "id": "v-m45-002",
+        "uk": "найменший",
+        "translit": "/nɑjˈmɛnʃɪj/",
+        "ipa": "smallest",
+        "en": "adj",
+        "pos": "-",
+        "gender": "sup of малий"
+      },
+      {
+        "id": "v-m45-003",
+        "uk": "найкращий",
+        "translit": "/nɑjˈkrɑʃtʃɪj/",
+        "ipa": "best",
+        "en": "adj",
+        "pos": "-",
+        "gender": "sup of добрий"
+      },
+      {
+        "id": "v-m45-004",
+        "uk": "найгірший",
+        "translit": "/nɑjˈɦʲirʃɪj/",
+        "ipa": "worst",
+        "en": "adj",
+        "pos": "-",
+        "gender": "sup of поганий"
+      },
+      {
+        "id": "v-m45-005",
+        "uk": "найвищий",
+        "translit": "/nɑjˈvɪʃtʃɪj/",
+        "ipa": "highest/tallest",
+        "en": "adj",
+        "pos": "-",
+        "gender": "sup of високий"
+      },
+      {
+        "id": "v-m45-006",
+        "uk": "найдорожчий",
+        "translit": "/nɑjdoˈroʒtʃɪj/",
+        "ipa": "most expensive",
+        "en": "adj",
+        "pos": "-",
+        "gender": "sup of дорогий"
+      },
+      {
+        "id": "v-m45-007",
+        "uk": "найдешевший",
+        "translit": "/nɑjdɛˈʃɛvʃɪj/",
+        "ipa": "cheapest",
+        "en": "adj",
+        "pos": "-",
+        "gender": "sup of дешевий"
+      },
+      {
+        "id": "v-m45-008",
+        "uk": "найважливіший",
+        "translit": "/nɑjvɑʒˈlɪvʲiʃɪj/",
+        "ipa": "most important",
+        "en": "adj",
+        "pos": "-",
+        "gender": "sup of важливий"
+      },
+      {
+        "id": "v-m45-009",
+        "uk": "найцікавіший",
+        "translit": "/nɑjtsʲikɑˈvʲiʃɪj/",
+        "ipa": "most interesting",
+        "en": "adj",
+        "pos": "-",
+        "gender": "sup of цікавий"
+      },
+      {
+        "id": "v-m45-010",
+        "uk": "найшвидше",
+        "translit": "/nɑjˈʃvɪdʃɛ/",
+        "ipa": "fastest",
+        "en": "adv",
+        "pos": "-",
+        "gender": "sup of швидко"
+      },
+      {
+        "id": "v-m45-011",
+        "uk": "найкраще",
+        "translit": "/nɑjˈkrɑʃtʃɛ/",
+        "ipa": "best (adv)",
+        "en": "adv",
+        "pos": "-",
+        "gender": "sup of добре"
+      },
+      {
+        "id": "v-m45-012",
+        "uk": "найбільше",
+        "translit": "/nɑjˈbʲilʲʃɛ/",
+        "ipa": "most (adv)",
+        "en": "adv",
+        "pos": "-",
+        "gender": "sup of багато"
+      },
+      {
+        "id": "v-m45-013",
+        "uk": "щонайменше",
+        "translit": "/ʃtʃonɑjˈmɛnʃɛ/",
+        "ipa": "at least",
+        "en": "adv",
+        "pos": "-"
+      },
+      {
+        "id": "v-m45-014",
+        "uk": "щонайбільше",
+        "translit": "/ʃtʃonɑjˈbʲilʲʃɛ/",
+        "ipa": "at most",
+        "en": "adv",
+        "pos": "-"
+      },
+      {
+        "id": "v-m45-015",
+        "uk": "найголовніший",
+        "translit": "/nɑjɦolovˈnʲiʃɪj/",
+        "ipa": "most main/important",
+        "en": "adj",
+        "pos": "-"
+      },
+      {
+        "id": "v-m45-016",
+        "uk": "надзвичайно",
+        "translit": "/nɑdzvɪˈtʃɑjno/",
+        "ipa": "extraordinarily",
+        "en": "adv",
+        "pos": "-"
+      },
+      {
+        "id": "v-m45-017",
+        "uk": "неймовірно",
+        "translit": "/nɛjmoˈvʲirno/",
+        "ipa": "incredibly",
+        "en": "adv",
+        "pos": "-"
+      }
+    ]
+  }
+}

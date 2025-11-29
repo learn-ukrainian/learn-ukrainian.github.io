@@ -1,0 +1,425 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-A2-41",
+    "moduleId": "mod-uk-A2-41",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "methodology": "ppp",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "A2",
+    "phase": "A2.2",
+    "moduleNumber": 41,
+    "title": "Verbal Aspect I",
+    "subtitle": "Perfective & Imperfective",
+    "description": "Understand the concept of verbal aspect",
+    "objectives": [
+      "Understand the concept of verbal aspect",
+      "Distinguish perfective from imperfective verbs",
+      "Recognize common aspect pairs",
+      "Use aspect in basic contexts"
+    ],
+    "grammarFocus": [
+      "Verbal aspect introduction",
+      "Imperfective (process, repetition)",
+      "Perfective (completion, single action)",
+      "Common aspect pairs"
+    ],
+    "totalDuration": 45,
+    "transliterationMode": "partial",
+    "tags": [
+      "verbs",
+      "aspect",
+      "perfective",
+      "imperfective",
+      "grammar"
+    ],
+    "version": 1,
+    "createdAt": "2025-11-29T00:00:00Z",
+    "modifiedAt": "2025-11-29T00:00:00Z",
+    "phases": [
+      {
+        "id": "phase-warm-up",
+        "name": "warm-up",
+        "duration": 5,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### A New Dimension of Verbs\n\nYou've mastered tenses (past, present, future) and cases. Now meet **aspect** - a uniquely Slavic feature that English doesn't have!\n\n**The big idea:**\n- **Imperfective** = process, ongoing, repeated (like video)\n- **Perfective** = completed, single, result (like photo)\n\nCompare:\n- Я **читав** книгу. (I was reading a book - process, imperfective)\n- Я **прочитав** книгу. (I read/finished the book - completed, perfective)\n\nBoth are past tense, but different aspects!\n\n> 💡 **Did You Know?**\n>\n> English lost verbal aspect centuries ago, but Slavic languages kept it. This is why Ukrainian has \"verb pairs\" - two verbs for every action! It might seem complex, but it allows incredible precision in describing actions."
+          }
+        ]
+      },
+      {
+        "id": "phase-presentation",
+        "name": "presentation",
+        "duration": 15,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### What Is Aspect?\n\n**Aspect** describes HOW an action happens, not WHEN:\n\n| Aspect | Focus | Think of it as... |\n|--------|-------|-------------------|\n| Imperfective | Process, duration, repetition | Watching a movie |\n| Perfective | Completion, result, single event | Taking a snapshot |\n\n**Same action, different aspects:**\n\n| Imperfective | Perfective | Meaning |\n|--------------|------------|---------|\n| читати | прочитати | to read |\n| писати | написати | to write |\n| робити | зробити | to do/make |\n| їсти | з'їсти | to eat |\n| пити | випити | to drink |\n\n> ⚡ **Pro Tip: The Key Question**\n>\n> Ask yourself:\n> - Is the action **in progress** or **repeated**? → Imperfective\n> - Is the action **completed** or a **single event**? → Perfective"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "When to Use Imperfective\n\n**1. Actions in progress:**\n- Що ти **робиш**? - What are you doing? (right now)\n- Я **читаю** книгу. - I'm reading a book. (in progress)\n- Він **писав** листа. - He was writing a letter.\n\n**2. Repeated/habitual actions:**\n- Я **читаю** щодня. - I read every day.\n- Вона **готувала** вечерю кожен день. - She cooked dinner every day.\n- Ми **ходимо** в парк щонеділі. - We go to the park every Sunday.\n\n**3. General statements:**\n- Я **люблю** читати. - I love to read.\n- Він добре **готує**. - He cooks well.\n- Вона **говорить** українською. - She speaks Ukrainian.\n\n**4. Duration markers:**\n- Я **читав** дві години. - I was reading for two hours.\n- Вона **працювала** весь день. - She was working all day.\n\n> 📜 **History Bite: Slavic Aspect**\n>\n> Verbal aspect developed in Proto-Slavic over 1,500 years ago. While most Indo-European languages lost this feature, all Slavic languages (Ukrainian, Russian, Polish, Czech, etc.) preserved it. It's one of the defining characteristics of the Slavic language family!"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "When to Use Perfective\n\n**1. Completed actions (with result):**\n- Я **прочитав** книгу. - I read (finished) the book.\n- Вона **написала** листа. - She wrote (completed) the letter.\n- Він **зробив** домашнє завдання. - He did (finished) the homework.\n\n**2. Single, specific events:**\n- Я **купив** каву. - I bought (a) coffee. (one time)\n- Він **сказав** \"привіт.\" - He said \"hello.\" (once)\n- Вона **відкрила** вікно. - She opened the window. (one action)\n\n**3. Sequential actions:**\n- Я **прийшов** додому, **поїв** і **ліг** спати.\n- I came home, ate, and went to bed. (sequence of completed actions)\n\n**4. Future single actions:**\n- Завтра я **прочитаю** цю книгу. - Tomorrow I'll read (finish) this book.\n- Він **напише** тобі. - He'll write to you. (once, completed)\n\n> 🎭 **Culture Corner: Aspect in Daily Life**\n>\n> Ukrainians use aspect instinctively. When someone asks \"Що ти робив?\" (imperfective), they want to know about your activities. When they ask \"Що ти зробив?\" (perfective), they want to know what you accomplished!"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Common Aspect Pairs\n\n**Pattern 1: Prefix addition (most common)**\n\n| Imperfective | Perfective | Prefix | Meaning |\n|--------------|------------|--------|---------|\n| читати | **про**читати | про- | to read |\n| писати | **на**писати | на- | to write |\n| робити | **з**робити | з- | to do |\n| їсти | **з'**їсти | з'- | to eat |\n| пити | **ви**пити | ви- | to drink |\n| вчити | **ви**вчити | ви- | to learn |\n| готувати | **при**готувати | при- | to prepare/cook |\n\n**Pattern 2: Suffix change**\n\n| Imperfective | Perfective | Change |\n|--------------|------------|--------|\n| давати | дати | -ва- drops |\n| вставати | встати | -ва- drops |\n| купувати | купити | -ува- → -и- |\n| показувати | показати | -ува- → -а- |\n\n**Pattern 3: Different stems (irregular)**\n\n| Imperfective | Perfective | Meaning |\n|--------------|------------|---------|\n| говорити | сказати | to say/speak |\n| брати | взяти | to take |\n| класти | покласти | to put |\n| шукати | знайти | to look for / find |\n\n> ⚡ **Pro Tip: Learning Pairs**\n>\n> Always learn verbs as pairs! When you learn \"читати\" (to read), immediately learn \"прочитати\" (to read/finish). Your vocabulary cards should show both forms."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Aspect in Different Tenses\n\n**Past tense - both aspects possible:**\n\n| Imperfective | Perfective |\n|--------------|------------|\n| Я читав. (I was reading) | Я прочитав. (I read/finished) |\n| Вона писала. (She was writing) | Вона написала. (She wrote/finished) |\n\n**Present tense - only imperfective:**\n\n| Imperfective | Perfective |\n|--------------|------------|\n| Я читаю. (I'm reading) | ❌ (no present form) |\n| Вона пише. (She's writing) | ❌ (no present form) |\n\nWhy? Because present means \"in progress\" - that's imperfective by nature!\n\n**Future tense - both aspects, different forms:**\n\n| Imperfective | Perfective |\n|--------------|------------|\n| Я буду читати. (I will be reading) | Я прочитаю. (I will read/finish) |\n| Вона буде писати. (She will be writing) | Вона напише. (She will write/finish) |\n\nNote: Imperfective future = буду + infinitive; Perfective future = conjugated form"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Aspect with Negation\n\n**Imperfective negation - didn't do at all:**\n- Я **не читав** цю книгу. - I didn't read this book. (never)\n- Вона **не готувала** сьогодні. - She didn't cook today. (no cooking happened)\n\n**Perfective negation - didn't complete:**\n- Я **не прочитав** цю книгу. - I didn't finish this book. (started but didn't complete)\n- Вона **не приготувала** вечерю. - She didn't manage to cook dinner. (intended but failed)\n\n> 💡 **Key Insight**\n>\n> Negation + imperfective = action didn't happen\n> Negation + perfective = action didn't reach completion"
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-A2-41-matchup"
+          }
+        ]
+      },
+      {
+        "id": "phase-practice",
+        "name": "practice",
+        "duration": 15,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Identify the Aspect\n\nDetermine if imperfective (I) or perfective (P):\n\n1. Я читаю книгу. → I (in progress)\n2. Я прочитав книгу. → P (completed)\n3. Вона писала весь день. → I (duration)\n4. Він написав листа. → P (completed)\n5. Ми їмо сніданок. → I (in progress)\n6. Вони з'їли все. → P (completed)\n7. Я вчу українську щодня. → I (habitual)\n8. Я вивчив нові слова. → P (completed)"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Choose the Correct Aspect\n\nSelect imperfective or perfective:\n\n1. Я ___ (читати/прочитати) кожен вечір.\n   → читаю (habitual action - imperfective)\n\n2. Вчора я ___ (читати/прочитати) цю книгу.\n   → прочитав (completed - perfective)\n\n3. Що ти ___ (робити/зробити) зараз?\n   → робиш (right now - imperfective)\n\n4. Вона ___ (готувати/приготувати) вечерю за годину.\n   → приготувала (completed in one hour - perfective)\n\n5. Він завжди ___ (писати/написати) листи батькам.\n   → пише (always - imperfective)\n\n6. Завтра я ___ (писати/написати) тобі.\n   → напишу (single future action - perfective)"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Form Aspect Pairs\n\nGive the perfective form:\n\n1. читати → прочитати\n2. писати → написати\n3. робити → зробити\n4. їсти → з'їсти\n5. пити → випити\n6. вчити → вивчити\n7. готувати → приготувати\n8. давати → дати"
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-A2-41-quiz"
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-A2-41-groupsort"
+          }
+        ]
+      },
+      {
+        "id": "phase-production",
+        "name": "production",
+        "duration": 10,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Describe Your Day\n\n**Using both aspects:**\n\nYesterday (perfective for completed actions):\n- Я **прокинувся** о сьомій.\n- Я **приготував** сніданок і **поїв**.\n- Я **прочитав** новини.\n- Я **написав** три листи.\n\nGenerally (imperfective for habits):\n- Я зазвичай **прокидаюся** о сьомій.\n- Я завжди **готую** сніданок.\n- Я **читаю** новини щоранку.\n- Я часто **пишу** листи."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Compare These Situations\n\n**Situation 1: Reading**\n- Я читав книгу. (I was reading - process)\n- Я прочитав книгу. (I finished reading - result)\n\n**Situation 2: Cooking**\n- Вона готувала вечерю. (She was cooking - process)\n- Вона приготувала вечерю. (She cooked/finished dinner - result)\n\n**Situation 3: Writing**\n- Він писав лист дві години. (He was writing for 2 hours - duration)\n- Він написав лист за дві години. (He wrote the letter in 2 hours - completion)"
+          }
+        ]
+      }
+    ]
+  },
+  "activities": [
+    {
+      "id": "act-uk-A2-41-matchup",
+      "type": "match-up",
+      "title": "Aspect Pairs",
+      "description": "Match imperfective with perfective.",
+      "content": {
+        "type": "match-up",
+        "instructions": "Match imperfective with perfective.",
+        "pairs": [
+          {
+            "left": "читати",
+            "right": "прочитати"
+          },
+          {
+            "left": "писати",
+            "right": "написати"
+          },
+          {
+            "left": "робити",
+            "right": "зробити"
+          },
+          {
+            "left": "їсти",
+            "right": "з'їсти"
+          },
+          {
+            "left": "пити",
+            "right": "випити"
+          },
+          {
+            "left": "вчити",
+            "right": "вивчити"
+          }
+        ],
+        "shuffleRight": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2",
+      "duration": 5,
+      "tags": [
+        "verbs",
+        "aspect",
+        "perfective",
+        "imperfective",
+        "grammar"
+      ],
+      "createdAt": "2025-11-29T00:00:00Z",
+      "modifiedAt": "2025-11-29T00:00:00Z"
+    },
+    {
+      "id": "act-uk-A2-41-quiz",
+      "type": "quiz",
+      "title": "Verbal Aspect",
+      "description": "Choose the correct aspect.",
+      "content": {
+        "type": "quiz",
+        "instructions": "Choose the correct aspect.",
+        "questions": [
+          {
+            "question": "\"I'm reading a book now\" - Я ___ книгу.",
+            "options": [
+              "читаю",
+              "прочитаю",
+              "прочитав",
+              "читав"
+            ],
+            "correctIndex": 0,
+            "explanation": "Present/in progress = imperfective."
+          },
+          {
+            "question": "\"I finished the book yesterday\" - Я ___ книгу вчора.",
+            "options": [
+              "прочитав",
+              "читав",
+              "читаю",
+              "буду читати"
+            ],
+            "correctIndex": 0,
+            "explanation": "Completed past = perfective."
+          },
+          {
+            "question": "\"She was cooking all day\" - Вона ___ весь день.",
+            "options": [
+              "готувала",
+              "приготувала",
+              "готує",
+              "приготує"
+            ],
+            "correctIndex": 0,
+            "explanation": "Duration = imperfective."
+          },
+          {
+            "question": "\"I read every evening\" (habit) - Я ___ кожен вечір.",
+            "options": [
+              "читаю",
+              "прочитаю",
+              "прочитав",
+              "буду читати"
+            ],
+            "correctIndex": 0,
+            "explanation": "Habitual = imperfective."
+          },
+          {
+            "question": "\"Tomorrow I'll write you a letter\" (one action) - Завтра я ___ тобі листа.",
+            "options": [
+              "напишу",
+              "буду писати",
+              "написав",
+              "пишу"
+            ],
+            "correctIndex": 0,
+            "explanation": "Single future action = perfective."
+          },
+          {
+            "question": "\"He said hello\" (once) - Він ___ \"привіт.\"",
+            "options": [
+              "сказав",
+              "говорив",
+              "говорить",
+              "скаже"
+            ],
+            "correctIndex": 0,
+            "explanation": "Single past action = perfective."
+          }
+        ],
+        "shuffleQuestions": true,
+        "shuffleOptions": true,
+        "showCorrectAnswers": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2",
+      "duration": 5,
+      "tags": [
+        "verbs",
+        "aspect",
+        "perfective",
+        "imperfective",
+        "grammar"
+      ],
+      "createdAt": "2025-11-29T00:00:00Z",
+      "modifiedAt": "2025-11-29T00:00:00Z"
+    },
+    {
+      "id": "act-uk-A2-41-groupsort",
+      "type": "group-sort",
+      "title": "Imperfective vs Perfective",
+      "description": "Sort by aspect.",
+      "content": {
+        "type": "group-sort",
+        "instructions": "Sort by aspect.",
+        "groups": [
+          {
+            "name": "Imperfective (process/repeated)",
+            "items": [
+              "читати",
+              "писати",
+              "робити",
+              "готувати",
+              "говорити",
+              "вчити"
+            ]
+          },
+          {
+            "name": "Perfective (completed/single)",
+            "items": [
+              "прочитати",
+              "написати",
+              "зробити",
+              "приготувати",
+              "сказати",
+              "вивчити"
+            ]
+          }
+        ],
+        "shuffleItems": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2",
+      "duration": 5,
+      "tags": [
+        "verbs",
+        "aspect",
+        "perfective",
+        "imperfective",
+        "grammar"
+      ],
+      "createdAt": "2025-11-29T00:00:00Z",
+      "modifiedAt": "2025-11-29T00:00:00Z"
+    }
+  ],
+  "vocabulary": {
+    "moduleId": "mod-uk-A2-41",
+    "level": "A2",
+    "phase": "A2.2",
+    "wordCount": 8,
+    "transliterationMode": "partial",
+    "words": [
+      {
+        "id": "v-m41-001",
+        "uk": "вид",
+        "translit": "/vɪd/",
+        "ipa": "aspect (grammatical)",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m41-002",
+        "uk": "недоконаний",
+        "translit": "/nɛdoˈkonɑnɪj/",
+        "ipa": "imperfective",
+        "en": "adj",
+        "pos": "-",
+        "gender": "lit. \"unfinished\""
+      },
+      {
+        "id": "v-m41-003",
+        "uk": "доконаний",
+        "translit": "/doˈkonɑnɪj/",
+        "ipa": "perfective",
+        "en": "adj",
+        "pos": "-",
+        "gender": "lit. \"finished\""
+      },
+      {
+        "id": "v-m41-004",
+        "uk": "з'їсти",
+        "translit": "/ˈzjistɪ/",
+        "ipa": "to eat (perf)",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf of їсти"
+      },
+      {
+        "id": "v-m41-005",
+        "uk": "випити",
+        "translit": "/ˈvɪpɪtɪ/",
+        "ipa": "to drink (perf)",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf of пити"
+      },
+      {
+        "id": "v-m41-006",
+        "uk": "вивчити",
+        "translit": "/ˈvɪvtʃɪtɪ/",
+        "ipa": "to learn (perf)",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf of вчити"
+      },
+      {
+        "id": "v-m41-007",
+        "uk": "приготувати",
+        "translit": "/prɪɦotuˈvɑtɪ/",
+        "ipa": "to cook/prepare (perf)",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf of готувати"
+      },
+      {
+        "id": "v-m41-008",
+        "uk": "купити",
+        "translit": "/kuˈpɪtɪ/",
+        "ipa": "to buy (perf)",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf of купувати"
+      }
+    ]
+  }
+}

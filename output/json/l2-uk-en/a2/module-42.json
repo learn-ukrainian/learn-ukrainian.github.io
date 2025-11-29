@@ -1,0 +1,496 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-A2-42",
+    "moduleId": "mod-uk-A2-42",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "methodology": "ppp",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "A2",
+    "phase": "A2.2",
+    "moduleNumber": 42,
+    "title": "Verbal Aspect II",
+    "subtitle": "More Aspect Pairs",
+    "description": "Master more aspect pair patterns",
+    "objectives": [
+      "Master more aspect pair patterns",
+      "Learn motion verb aspects",
+      "Understand prefix meanings",
+      "Use aspect pairs in conversation"
+    ],
+    "grammarFocus": [
+      "Additional aspect pairs",
+      "Motion verb aspects",
+      "Prefix meanings and patterns",
+      "Aspect in questions"
+    ],
+    "totalDuration": 45,
+    "transliterationMode": "partial",
+    "tags": [
+      "verbs",
+      "aspect",
+      "pairs",
+      "prefixes",
+      "grammar"
+    ],
+    "version": 1,
+    "createdAt": "2025-11-29T00:00:00Z",
+    "modifiedAt": "2025-11-29T00:00:00Z",
+    "phases": [
+      {
+        "id": "phase-warm-up",
+        "name": "warm-up",
+        "duration": 5,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Building Your Aspect Vocabulary\n\nYou know the basics: imperfective (process) vs perfective (completed). Now let's expand your verb pair collection!\n\n**Quick review:**\n- Imperfective: читати, писати, робити (process)\n- Perfective: прочитати, написати, зробити (completed)\n\nToday we'll learn more pairs and discover how prefixes change meaning.\n\n> 💡 **Did You Know?**\n>\n> Ukrainian has about 20 common prefixes that create perfective verbs. Each prefix often adds a shade of meaning: при- (arrival), ви- (out/completion), за- (beginning), до- (completion/to). Learning these prefixes unlocks hundreds of verb pairs!"
+          }
+        ]
+      },
+      {
+        "id": "phase-presentation",
+        "name": "presentation",
+        "duration": 15,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### More Common Aspect Pairs\n\n**Daily action verbs:**\n\n| Imperfective | Perfective | Meaning |\n|--------------|------------|---------|\n| відкривати | відкрити | to open |\n| закривати | закрити | to close |\n| починати | почати | to begin |\n| кінчати | закінчити | to finish |\n| брати | взяти | to take |\n| класти | покласти | to put |\n| вмикати | увімкнути | to turn on |\n| вимикати | вимкнути | to turn off |\n\n**Examples:**\n- Я **відкриваю** вікно щоранку. (I open the window every morning - habit)\n- Я **відкрив** вікно. (I opened the window - completed)\n- Він **починає** роботу о дев'ятій. (He starts work at 9 - routine)\n- Він **почав** нову книгу. (He started a new book - single action)\n\n> ⚡ **Pro Tip: -ати/-ити Pattern**\n>\n> Many imperfective verbs end in -ати (відкривати, закривати, починати)\n> Their perfective often ends in -ити or -ти (відкрити, закрити, почати)"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Communication Verbs\n\n| Imperfective | Perfective | Meaning |\n|--------------|------------|---------|\n| говорити | сказати | to speak/say |\n| питати | запитати | to ask |\n| відповідати | відповісти | to answer |\n| пояснювати | пояснити | to explain |\n| розповідати | розповісти | to tell (a story) |\n| запрошувати | запросити | to invite |\n| дякувати | подякувати | to thank |\n\n**Examples:**\n- Вона **говорить** по телефону. (She's talking on the phone - process)\n- Вона **сказала** \"так.\" (She said \"yes\" - once)\n- Я **питаю** його щодня. (I ask him every day - repeated)\n- Я **запитав** його про роботу. (I asked him about work - once)\n\n> 🎭 **Culture Corner: Asking vs Telling**\n>\n> Note the difference:\n> - питати/запитати = to ask (a question)\n> - просити/попросити = to ask (a favor, request)\n> - розповідати/розповісти = to tell (a story, information)\n> - казати/сказати = to tell/say (words)"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Motion Verbs: A Special Category\n\nMotion verbs have their own aspect system:\n\n**Going on foot:**\n| Type | Imperfective | Perfective |\n|------|--------------|------------|\n| One direction | йти | піти |\n| Round trip/habitual | ходити | — |\n\n**Going by transport:**\n| Type | Imperfective | Perfective |\n|------|--------------|------------|\n| One direction | їхати | поїхати |\n| Round trip/habitual | їздити | — |\n\n**Examples:**\n- Я **йду** на роботу. (I'm going to work - now, one direction)\n- Я **ходжу** на роботу щодня. (I go to work daily - habitual)\n- Вчора він **пішов** додому. (Yesterday he went home - completed)\n\n- Вона **їде** до Львова. (She's going to Lviv - now, by transport)\n- Вона **їздить** до Львова щомісяця. (She goes to Lviv monthly)\n- Вона **поїхала** вчора. (She left yesterday - completed)\n\n> 📜 **History Bite: Determinate vs Indeterminate**\n>\n> Slavic motion verbs originally had two stems: \"determinate\" (one direction, йти) and \"indeterminate\" (various directions, ходити). This ancient distinction survives in Ukrainian, Russian, Polish, and other Slavic languages. Most other Indo-European languages lost this feature!"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Prefix Meanings\n\nPrefixes add meaning AND make verbs perfective:\n\n**при- (arrival, addition):**\n| Base | With при- | Meaning |\n|------|-----------|---------|\n| йти | прийти | to arrive (on foot) |\n| їхати | приїхати | to arrive (by transport) |\n| нести | принести | to bring |\n| готувати | приготувати | to prepare |\n\n**ви- (out, completion):**\n| Base | With ви- | Meaning |\n|------|----------|---------|\n| йти | вийти | to go out |\n| їхати | виїхати | to drive out |\n| пити | випити | to drink (up) |\n| вчити | вивчити | to learn (completely) |\n\n**за- (beginning, behind):**\n| Base | With за- | Meaning |\n|------|----------|---------|\n| співати | заспівати | to start singing |\n| плакати | заплакати | to start crying |\n| бігти | забігти | to run behind |\n\n**до- (completion, reaching):**\n| Base | With до- | Meaning |\n|------|----------|---------|\n| читати | дочитати | to finish reading |\n| їсти | доїсти | to finish eating |\n| йти | дійти | to reach (on foot) |\n\n> ⚡ **Pro Tip: Prefix Stacking**\n>\n> You can even combine prefixes: при + ви + йти = привийти (to come out). But don't worry about this now - focus on basic prefixes first!"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Aspect Pairs with Different Stems\n\nSome common verbs have completely different stems:\n\n| Imperfective | Perfective | Meaning |\n|--------------|------------|---------|\n| говорити | сказати | to speak/say |\n| брати | взяти | to take |\n| класти | покласти | to put |\n| шукати | знайти | to search/find |\n| бачити | побачити | to see |\n| чути | почути | to hear |\n\n**Examples:**\n- Я **шукаю** ключі. (I'm looking for the keys - process)\n- Я **знайшов** ключі! (I found the keys! - result)\n- Ти **бачиш** це? (Do you see this? - state)\n- Ти **побачив** мене вчора? (Did you see me yesterday? - event)"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Asking Questions with Aspect\n\n**Imperfective questions (about activity/process):**\n- Що ти **робиш**? - What are you doing?\n- Що ти **робив** учора? - What were you doing yesterday?\n- Чи ти **читав** цю книгу? - Have you read this book? (experience)\n\n**Perfective questions (about result/completion):**\n- Що ти **зробив**? - What did you accomplish?\n- Чи ти **прочитав** книгу? - Did you finish the book?\n- Чи ти **знайшов** ключі? - Did you find the keys?\n\n> 💡 **Key Insight**\n>\n> \"Що ти робив?\" = What were you up to? (general)\n> \"Що ти зробив?\" = What did you get done? (results)"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Aspect in Commands (Imperative)\n\n**Imperfective commands (general/polite):**\n- **Читай**! - Read! (in general)\n- **Сідай**! - Sit down! (invitation)\n- **Говоріть** повільніше. - Speak more slowly.\n\n**Perfective commands (specific/urgent):**\n- **Прочитай** це! - Read this! (now, this thing)\n- **Сядь**! - Sit! (do it now)\n- **Скажіть** мені. - Tell me. (once)\n\n**Negative commands usually imperfective:**\n- **Не читай** це! - Don't read this!\n- **Не говори** нікому! - Don't tell anyone!\n\n> ⚡ **Pro Tip: Negative Commands**\n>\n> Negative commands almost always use imperfective: \"Не роби!\" not \"Не зроби!\" This is because you're telling someone not to engage in the action at all."
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-A2-42-matchup"
+          }
+        ]
+      },
+      {
+        "id": "phase-practice",
+        "name": "practice",
+        "duration": 15,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Match Aspect Pairs\n\nConnect imperfective with perfective:\n\n1. відкривати → відкрити\n2. закривати → закрити\n3. починати → почати\n4. питати → запитати\n5. відповідати → відповісти\n6. брати → взяти\n7. шукати → знайти\n8. бачити → побачити"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Choose Correct Aspect\n\n1. Він ___ (відкривати/відкрити) вікно кожен ранок.\n   → відкриває (habitual - imperfective)\n\n2. Вона ___ (закривати/закрити) двері і пішла.\n   → закрила (completed - perfective)\n\n3. Я ___ (питати/запитати) його вчора про це.\n   → запитав (once - perfective)\n\n4. Вони завжди ___ (відповідати/відповісти) швидко.\n   → відповідають (always - imperfective)\n\n5. Де ти ___ (брати/взяти) цю книгу?\n   → взяв (completed - perfective)\n\n6. Я ___ (шукати/знайти) ключі вже годину!\n   → шукаю (process - imperfective)"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Translate Using Correct Aspect\n\n1. I'm opening the window. → Я відкриваю вікно.\n2. She opened the door. → Вона відкрила двері.\n3. He always asks questions. → Він завжди питає.\n4. I asked her yesterday. → Я запитав її вчора.\n5. They're looking for an apartment. → Вони шукають квартиру.\n6. We found a good restaurant! → Ми знайшли гарний ресторан!"
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-A2-42-quiz"
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-A2-42-groupsort"
+          }
+        ]
+      },
+      {
+        "id": "phase-production",
+        "name": "production",
+        "duration": 10,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Describe Actions\n\n**Your morning (use both aspects):**\n\nHabitual (imperfective):\n- Я зазвичай **прокидаюся** о сьомій.\n- Я **вмикаю** світло і **відкриваю** вікно.\n- Я **йду** в ванну кімнату.\n\nThis morning (perfective):\n- Сьогодні я **прокинувся** о восьмій.\n- Я **увімкнув** телефон і **відкрив** повідомлення.\n- Я **пішов** на кухню."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Role Play: Lost Keys\n\n- Де мої ключі? Я **шукаю** їх вже півгодини!\n- Ти **дивився** на столі?\n- Так, **подивився**. Там немає.\n- **Перевір** кишені!\n- О, **знайшов**! Вони були в куртці.\n- Завжди **клади** ключі на одне місце!"
+          }
+        ]
+      }
+    ]
+  },
+  "activities": [
+    {
+      "id": "act-uk-A2-42-matchup",
+      "type": "match-up",
+      "title": "More Aspect Pairs",
+      "description": "Match imperfective with perfective.",
+      "content": {
+        "type": "match-up",
+        "instructions": "Match imperfective with perfective.",
+        "pairs": [
+          {
+            "left": "відкривати",
+            "right": "відкрити"
+          },
+          {
+            "left": "закривати",
+            "right": "закрити"
+          },
+          {
+            "left": "починати",
+            "right": "почати"
+          },
+          {
+            "left": "питати",
+            "right": "запитати"
+          },
+          {
+            "left": "шукати",
+            "right": "знайти"
+          },
+          {
+            "left": "бачити",
+            "right": "побачити"
+          }
+        ],
+        "shuffleRight": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2",
+      "duration": 5,
+      "tags": [
+        "verbs",
+        "aspect",
+        "pairs",
+        "prefixes",
+        "grammar"
+      ],
+      "createdAt": "2025-11-29T00:00:00Z",
+      "modifiedAt": "2025-11-29T00:00:00Z"
+    },
+    {
+      "id": "act-uk-A2-42-quiz",
+      "type": "quiz",
+      "title": "Aspect Pairs",
+      "description": "Choose the correct form.",
+      "content": {
+        "type": "quiz",
+        "instructions": "Choose the correct form.",
+        "questions": [
+          {
+            "question": "\"She's opening the window\" - Вона ___ вікно.",
+            "options": [
+              "відкриває",
+              "відкрила",
+              "відкриє",
+              "відкрити"
+            ],
+            "correctIndex": 0,
+            "explanation": "In progress = imperfective."
+          },
+          {
+            "question": "\"He asked me yesterday\" - Він ___ мене вчора.",
+            "options": [
+              "запитав",
+              "питав",
+              "питає",
+              "запитує"
+            ],
+            "correctIndex": 0,
+            "explanation": "Single past action = perfective."
+          },
+          {
+            "question": "\"I'm looking for my phone\" - Я ___ телефон.",
+            "options": [
+              "шукаю",
+              "знайшов",
+              "знайду",
+              "шукав"
+            ],
+            "correctIndex": 0,
+            "explanation": "Process = imperfective."
+          },
+          {
+            "question": "\"They found a solution\" - Вони ___ рішення.",
+            "options": [
+              "знайшли",
+              "шукали",
+              "шукають",
+              "знаходять"
+            ],
+            "correctIndex": 0,
+            "explanation": "Result = perfective."
+          },
+          {
+            "question": "\"Please close the door!\" - ___ двері, будь ласка!",
+            "options": [
+              "Закрий",
+              "Закривай",
+              "Закриваєш",
+              "Закриєш"
+            ],
+            "correctIndex": 0,
+            "explanation": "Specific command = perfective imperative."
+          },
+          {
+            "question": "\"Don't open!\" - Не ___!",
+            "options": [
+              "відкривай",
+              "відкрий",
+              "відкриєш",
+              "відкрив"
+            ],
+            "correctIndex": 0,
+            "explanation": "Negative command = imperfective."
+          }
+        ],
+        "shuffleQuestions": true,
+        "shuffleOptions": true,
+        "showCorrectAnswers": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2",
+      "duration": 5,
+      "tags": [
+        "verbs",
+        "aspect",
+        "pairs",
+        "prefixes",
+        "grammar"
+      ],
+      "createdAt": "2025-11-29T00:00:00Z",
+      "modifiedAt": "2025-11-29T00:00:00Z"
+    },
+    {
+      "id": "act-uk-A2-42-groupsort",
+      "type": "group-sort",
+      "title": "By Prefix Meaning",
+      "description": "Sort perfective verbs by prefix meaning.",
+      "content": {
+        "type": "group-sort",
+        "instructions": "Sort perfective verbs by prefix meaning.",
+        "groups": [
+          {
+            "name": "при- (arrival)",
+            "items": [
+              "прийти",
+              "приїхати",
+              "принести"
+            ]
+          },
+          {
+            "name": "ви- (out/completion)",
+            "items": [
+              "вийти",
+              "випити",
+              "вивчити"
+            ]
+          },
+          {
+            "name": "за- (beginning)",
+            "items": [
+              "заспівати",
+              "заплакати",
+              "закричати"
+            ]
+          }
+        ],
+        "shuffleItems": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2",
+      "duration": 5,
+      "tags": [
+        "verbs",
+        "aspect",
+        "pairs",
+        "prefixes",
+        "grammar"
+      ],
+      "createdAt": "2025-11-29T00:00:00Z",
+      "modifiedAt": "2025-11-29T00:00:00Z"
+    }
+  ],
+  "vocabulary": {
+    "moduleId": "mod-uk-A2-42",
+    "level": "A2",
+    "phase": "A2.2",
+    "wordCount": 16,
+    "transliterationMode": "partial",
+    "words": [
+      {
+        "id": "v-m42-001",
+        "uk": "відкрити",
+        "translit": "/vʲidˈkrɪtɪ/",
+        "ipa": "to open (perf)",
+        "en": "verb",
+        "pos": "-"
+      },
+      {
+        "id": "v-m42-002",
+        "uk": "закрити",
+        "translit": "/zɑˈkrɪtɪ/",
+        "ipa": "to close (perf)",
+        "en": "verb",
+        "pos": "-"
+      },
+      {
+        "id": "v-m42-003",
+        "uk": "починати",
+        "translit": "/potʃɪˈnɑtɪ/",
+        "ipa": "to begin (impf)",
+        "en": "verb",
+        "pos": "-"
+      },
+      {
+        "id": "v-m42-004",
+        "uk": "почати",
+        "translit": "/poˈtʃɑtɪ/",
+        "ipa": "to begin (perf)",
+        "en": "verb",
+        "pos": "-"
+      },
+      {
+        "id": "v-m42-005",
+        "uk": "кінчати",
+        "translit": "/kʲinˈtʃɑtɪ/",
+        "ipa": "to finish (impf)",
+        "en": "verb",
+        "pos": "-"
+      },
+      {
+        "id": "v-m42-006",
+        "uk": "запитати",
+        "translit": "/zɑpɪˈtɑtɪ/",
+        "ipa": "to ask (perf)",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf of питати"
+      },
+      {
+        "id": "v-m42-007",
+        "uk": "відповісти",
+        "translit": "/vʲidpoˈvʲistɪ/",
+        "ipa": "to answer (perf)",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf of відповідати"
+      },
+      {
+        "id": "v-m42-008",
+        "uk": "пояснити",
+        "translit": "/pojɑsˈnɪtɪ/",
+        "ipa": "to explain (perf)",
+        "en": "verb",
+        "pos": "-"
+      },
+      {
+        "id": "v-m42-009",
+        "uk": "розповісти",
+        "translit": "/rɔzpoˈvʲistɪ/",
+        "ipa": "to tell (perf)",
+        "en": "verb",
+        "pos": "-"
+      },
+      {
+        "id": "v-m42-010",
+        "uk": "запросити",
+        "translit": "/zɑproˈsɪtɪ/",
+        "ipa": "to invite (perf)",
+        "en": "verb",
+        "pos": "-"
+      },
+      {
+        "id": "v-m42-011",
+        "uk": "прийти",
+        "translit": "/prɪjˈtɪ/",
+        "ipa": "to arrive (on foot)",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf of йти"
+      },
+      {
+        "id": "v-m42-012",
+        "uk": "приїхати",
+        "translit": "/prɪˈjixɑtɪ/",
+        "ipa": "to arrive (by transport)",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf of їхати"
+      },
+      {
+        "id": "v-m42-013",
+        "uk": "вийти",
+        "translit": "/ˈvɪjtɪ/",
+        "ipa": "to go out",
+        "en": "verb",
+        "pos": "-"
+      },
+      {
+        "id": "v-m42-014",
+        "uk": "побачити",
+        "translit": "/poˈbɑtʃɪtɪ/",
+        "ipa": "to see (perf)",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf of бачити"
+      },
+      {
+        "id": "v-m42-015",
+        "uk": "почути",
+        "translit": "/poˈtʃutɪ/",
+        "ipa": "to hear (perf)",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf of чути"
+      },
+      {
+        "id": "v-m42-016",
+        "uk": "знайти",
+        "translit": "/znɑjˈtɪ/",
+        "ipa": "to find (perf)",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf of шукати"
+      }
+    ]
+  }
+}

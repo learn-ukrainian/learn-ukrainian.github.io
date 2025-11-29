@@ -602,3 +602,126 @@ lemma,ipa,english,pos,gender,module,level,note
 підпис,/ˈpʲidpɪs/,signature,noun,m,39,A2,
 розписатися,/rozpɪˈsɑtɪsʲɑ/,to sign,verb,-,39,A2,
 індекс,/ˈindɛks/,postal code,noun,m,39,A2,
+вивчити,/ˈvɪvtʃɪtɪ/,to learn (perf),verb,-,41,A2,pf of вчити
+вид,/vɪd/,aspect (grammatical),noun,m,41,A2,
+випити,/ˈvɪpɪtɪ/,to drink (perf),verb,-,41,A2,pf of пити
+доконаний,/doˈkonɑnɪj/,perfective,adj,-,41,A2,"lit. ""finished"""
+з'їсти,/ˈzjistɪ/,to eat (perf),verb,-,41,A2,pf of їсти
+купити,/kuˈpɪtɪ/,to buy (perf),verb,-,41,A2,pf of купувати
+недоконаний,/nɛdoˈkonɑnɪj/,imperfective,adj,-,41,A2,"lit. ""unfinished"""
+приготувати,/prɪɦotuˈvɑtɪ/,to cook/prepare (perf),verb,-,41,A2,pf of готувати
+вийти,/ˈvɪjtɪ/,to go out,verb,-,42,A2,
+відкрити,/vʲidˈkrɪtɪ/,to open (perf),verb,-,42,A2,
+відповісти,/vʲidpoˈvʲistɪ/,to answer (perf),verb,-,42,A2,pf of відповідати
+закрити,/zɑˈkrɪtɪ/,to close (perf),verb,-,42,A2,
+запитати,/zɑpɪˈtɑtɪ/,to ask (perf),verb,-,42,A2,pf of питати
+запросити,/zɑproˈsɪtɪ/,to invite (perf),verb,-,42,A2,
+знайти,/znɑjˈtɪ/,to find (perf),verb,-,42,A2,pf of шукати
+кінчати,/kʲinˈtʃɑtɪ/,to finish (impf),verb,-,42,A2,
+побачити,/poˈbɑtʃɪtɪ/,to see (perf),verb,-,42,A2,pf of бачити
+почати,/poˈtʃɑtɪ/,to begin (perf),verb,-,42,A2,
+починати,/potʃɪˈnɑtɪ/,to begin (impf),verb,-,42,A2,
+почути,/poˈtʃutɪ/,to hear (perf),verb,-,42,A2,pf of чути
+пояснити,/pojɑsˈnɪtɪ/,to explain (perf),verb,-,42,A2,
+прийти,/prɪjˈtɪ/,to arrive (on foot),verb,-,42,A2,pf of йти
+приїхати,/prɪˈjixɑtɪ/,to arrive (by transport),verb,-,42,A2,pf of їхати
+розповісти,/rɔzpoˈvʲistɪ/,to tell (perf),verb,-,42,A2,
+відпочивати,/vʲidpotʃɪˈvɑtɪ/,to rest (impf),verb,-,43,A2,
+збирати,/zbɪˈrɑtɪ/,to gather (impf),verb,-,43,A2,
+зібрати,/zʲiˈbrɑtɪ/,to gather (perf),verb,-,43,A2,
+нарешті,/nɑˈrɛʃtʲi/,finally,adv,-,43,A2,
+перш ніж,/pɛrʃ nʲiʒ/,before,conj,-,43,A2,+ perfective
+повернутися,/povɛrˈnutɪsʲɑ/,to return (perf),verb,-,43,A2,
+поки,/poˈkɪ/,while,conj,-,43,A2,
+прокинутися,/proˈkɪnutɪsʲɑ/,to wake up (perf),verb,-,43,A2,
+після того як,/ˈpʲislʲɑ toˈɦo jɑk/,after,conj,-,43,A2,+ perfective
+раптом,/ˈrɑptom/,suddenly,adv,-,43,A2,
+більше,/ˈbʲilʲʃɛ/,more,adv,-,44,A2,comp of багато
+вищий,/ˈvɪʃtʃɪj/,higher/taller,adj,-,44,A2,comp of високий
+гірше,/ˈɦʲirʃɛ/,worse,adv,-,44,A2,comp of погано
+гірший,/ˈɦʲirʃɪj/,worse,adj,-,44,A2,comp of поганий
+дешевший,/dɛˈʃɛvʃɪj/,cheaper,adj,-,44,A2,comp of дешевий
+дорожчий,/doˈroʒtʃɪj/,more expensive,adj,-,44,A2,comp of дорогий
+значно,/ˈznɑtʃno/,significantly,adv,-,44,A2,
+краще,/ˈkrɑʃtʃɛ/,better,adv,-,44,A2,comp of добре
+кращий,/ˈkrɑʃtʃɪj/,better,adj,-,44,A2,comp of добрий
+менше,/ˈmɛnʃɛ/,less,adv,-,44,A2,comp of мало
+молодший,/moˈlodʃɪj/,younger,adj,-,44,A2,comp of молодий
+набагато,/nɑbɑˈɦɑto/,much (intensifier),adv,-,44,A2,
+нижчий,/ˈnɪʒtʃɪj/,lower/shorter,adj,-,44,A2,comp of низький
+повільніше,/poˈvʲilʲnʲiʃɛ/,more slowly,adv,-,44,A2,comp of повільно
+старіший,/stɑˈrʲiʃɪj/,older,adj,-,44,A2,comp of старий
+швидше,/ˈʃvɪdʃɛ/,faster,adv,-,44,A2,comp of швидко
+надзвичайно,/nɑdzvɪˈtʃɑjno/,extraordinarily,adv,-,45,A2,
+найбільше,/nɑjˈbʲilʲʃɛ/,most (adv),adv,-,45,A2,sup of багато
+найбільший,/nɑjˈbʲilʲʃɪj/,biggest,adj,-,45,A2,sup of великий
+найважливіший,/nɑjvɑʒˈlɪvʲiʃɪj/,most important,adj,-,45,A2,sup of важливий
+найвищий,/nɑjˈvɪʃtʃɪj/,highest/tallest,adj,-,45,A2,sup of високий
+найголовніший,/nɑjɦolovˈnʲiʃɪj/,most main/important,adj,-,45,A2,
+найгірший,/nɑjˈɦʲirʃɪj/,worst,adj,-,45,A2,sup of поганий
+найдешевший,/nɑjdɛˈʃɛvʃɪj/,cheapest,adj,-,45,A2,sup of дешевий
+найдорожчий,/nɑjdoˈroʒtʃɪj/,most expensive,adj,-,45,A2,sup of дорогий
+найкраще,/nɑjˈkrɑʃtʃɛ/,best (adv),adv,-,45,A2,sup of добре
+найкращий,/nɑjˈkrɑʃtʃɪj/,best,adj,-,45,A2,sup of добрий
+найменший,/nɑjˈmɛnʃɪj/,smallest,adj,-,45,A2,sup of малий
+найцікавіший,/nɑjtsʲikɑˈvʲiʃɪj/,most interesting,adj,-,45,A2,sup of цікавий
+найшвидше,/nɑjˈʃvɪdʃɛ/,fastest,adv,-,45,A2,sup of швидко
+неймовірно,/nɛjmoˈvʲirno/,incredibly,adv,-,45,A2,
+щонайбільше,/ʃtʃonɑjˈbʲilʲʃɛ/,at most,adv,-,45,A2,
+щонайменше,/ʃtʃonɑjˈmɛnʃɛ/,at least,adv,-,45,A2,
+домовитися,/domoˈvɪtɪsʲɑ/,to agree (perf),verb,-,46,A2,
+домовлятися,/domovˈlʲɑtɪsʲɑ/,"to agree, arrange",verb,-,46,A2,
+залишитися,/zɑlɪˈʃɪtɪsʲɑ/,to stay (perf),verb,-,46,A2,
+запізнитися,/zɑpʲizˈnɪtɪsʲɑ/,to be late (perf),verb,-,46,A2,
+запізнюватися,/zɑpʲizˈnʲuvɑtɪsʲɑ/,to be late (impf),verb,-,46,A2,
+можливо,/moʒˈlɪvo/,"possibly, maybe",adv,-,46,A2,
+обов'язково,/obovjɑzˈkovo/,"definitely, certainly",adv,-,46,A2,
+помилятися,/pomɪˈlʲɑtɪsʲɑ/,to be mistaken,verb,-,46,A2,
+результат,/rɛzulʲˈtɑt/,result,noun,m,46,A2,
+сподіватися,/spodʲiˈvɑtɪsʲɑ/,to hope,verb,-,46,A2,
+умова,/uˈmovɑ/,condition,noun,f,46,A2,
+якщо,/jɑkˈʃtʃo/,if,conj,-,46,A2,
+інакше,/ˈinɑkʃɛ/,otherwise,adv,-,46,A2,
+б,/b/,would (after vowel),part,-,47,A2,
+би,/bɪ/,would (after consonant),part,-,47,A2,
+було б,/buˈlo b/,would be,phrase,-,47,A2,
+гіпотетичний,/ɦʲipotɛˈtɪtʃnɪj/,hypothetical,adj,-,47,A2,
+мав би,/mɑv bɪ/,should (m),phrase,-,47,A2,
+могли б,/moɦˈlɪ b/,could (pl/formal),phrase,-,47,A2,
+можливість,/moʒˈlɪvʲistʲ/,possibility,noun,f,47,A2,
+мрія,/ˈmrʲijɑ/,dream,noun,f,47,A2,
+мріяти,/mrʲiˈjɑtɪ/,to dream,verb,-,47,A2,
+на жаль,/nɑ ʒɑlʲ/,unfortunately,phrase,-,47,A2,
+уявити,/ujɑˈvɪtɪ/,to imagine (perf),verb,-,47,A2,
+уявляти,/ujɑvˈlʲɑtɪ/,to imagine (impf),verb,-,47,A2,
+уявний,/ujɑvˈnɪj/,"imaginary, hypothetical",adj,-,47,A2,
+хотів би,/xoˈtʲiv bɪ/,would like (m),phrase,-,47,A2,
+хотіла б,/xoˈtʲilɑ b/,would like (f),phrase,-,47,A2,
+шкода,/ˈʃkodɑ/,"pity, shame",noun,f,47,A2,
+якби,/jɑkˈbɪ/,if (unreal),conj,-,47,A2,
+акція,/ˈɑktsʲijɑ/,"promotion, sale",noun,f,48,A2,
+батарея,/bɑtɑˈrɛjɑ/,battery,noun,f,48,A2,
+бездротовий,/bɛzdroˈtovɪj/,wireless,adj,-,48,A2,
+водонепроникний,/vodonɛproˈnɪknɪj/,waterproof,adj,-,48,A2,
+дефект,/dɛˈfɛkt/,defect,noun,m,48,A2,
+екран,/ɛˈkrɑn/,screen,noun,m,48,A2,
+зарядка,/zɑˈrʲɑdkɑ/,charger,noun,f,48,A2,
+навушники,/nɑˈvuʃnɪkɪ/,headphones,noun,pl,48,A2,
+пам'ять,/ˈpɑmjɑtʲ/,memory,noun,f,48,A2,
+ремінь,/rɛˈmʲinʲ/,belt,noun,m,48,A2,
+розпродаж,/rozpˈrodɑʒ/,sale (clearance),noun,m,48,A2,
+чохол,/tʃoˈxol/,"case, cover",noun,m,48,A2,
+вільний,/ˈvʲilʲnɪj/,"free, available",adj,-,49,A2,
+зайнятий,/zɑjˈnʲɑtɪj/,busy,adj,-,49,A2,
+запрошувати,/zɑproˈʃuvɑtɪ/,to invite (impf),verb,-,49,A2,
+зручний,/zrutʃˈnɪj/,convenient,adj,-,49,A2,
+зустріч,/ˈzustrʲitʃ/,meeting,noun,f,49,A2,
+нагадати,/nɑɦɑˈdɑtɪ/,to remind (perf),verb,-,49,A2,
+опівдні,/oˈpʲivdnʲi/,at noon,adv,-,49,A2,
+перенести,/pɛrɛˈnɛstɪ/,to reschedule (perf),verb,-,49,A2,
+план,/plɑn/,plan,noun,m,49,A2,
+призначити,/prɪznɑˈtʃɪtɪ/,to schedule (perf),verb,-,49,A2,
+пропозиція,/propoˈzɪtsʲijɑ/,"suggestion, proposal",noun,f,49,A2,
+підтвердити,/pʲidˈtvɛrdɪtɪ/,to confirm (perf),verb,-,49,A2,
+скасувати,/skɑsuˈvɑtɪ/,to cancel (perf),verb,-,49,A2,
+чекатиму,/tʃɛˈkɑtɪmu/,I will wait,verb,-,49,A2,

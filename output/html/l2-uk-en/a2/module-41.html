@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 41: Verbal Aspect I | Ukrainian A2</title>
+  <style>
+    :root { --primary: #1a5fb4; --primary-light: #3584e4; --success: #26a269; --warning: #e5a50a; --danger: #c01c28; --bg: #fafafa; --card-bg: #fff; --text: #1e1e1e; --text-muted: #5e5e5e; --border: #e0e0e0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+    .top-nav { background: #2e2e2e; color: white; padding: 0.5rem 2rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.875rem; }
+    .top-nav a { color: white; text-decoration: none; }
+    .top-nav a:hover { text-decoration: underline; }
+    .module-nav { display: flex; gap: 1rem; align-items: center; }
+    .module-nav-link { color: rgba(255,255,255,0.8); text-decoration: none; padding: 0.25rem 0.5rem; }
+    .module-nav-link:hover { color: white; }
+    .module-nav-link.disabled { color: rgba(255,255,255,0.3); pointer-events: none; }
+    .nav { position: sticky; top: 0; background: var(--primary); color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; z-index: 100; }
+    .nav h1 { font-size: 1.25rem; }
+    .nav-tabs { display: flex; gap: 0.5rem; }
+    .nav-tab { background: rgba(255,255,255,0.2); border: none; color: white; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; }
+    .nav-tab.active { background: white; color: var(--primary); }
+    main { max-width: 1000px; margin: 0 auto; padding: 2rem; }
+    .section { display: none; } .section.active { display: block; }
+    .lesson-header { text-align: center; margin-bottom: 2rem; padding: 2rem; background: linear-gradient(135deg, #e8f4fd, #f0e8fd); border-radius: 12px; }
+    .level-badge { background: var(--primary); color: white; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.875rem; }
+    .card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 1.5rem; margin-bottom: 1.5rem; }
+    .card h3 { color: var(--primary); margin-bottom: 1rem; }
+    .canvas-note { background: #fffbeb; border-left: 4px solid var(--warning); padding: 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+    .canvas-note h4 { color: var(--warning); margin-bottom: 0.5rem; }
+    .md-content { line-height: 1.7; }
+    .md-content p { margin: 0.75rem 0; }
+    .md-content ul, .md-content ol { margin: 0.75rem 0; padding-left: 1.5rem; }
+    .md-content li { margin: 0.25rem 0; }
+    .md-content strong { color: var(--primary); }
+    .md-content blockquote { background: #e8f4fd; border-left: 4px solid var(--primary); padding: 0.75rem 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+    .md-content blockquote p { margin: 0.25rem 0; }
+    .md-content table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+    .md-content th, .md-content td { border: 1px solid var(--border); padding: 0.5rem 0.75rem; text-align: left; }
+    .md-content th { background: #f5f5f5; font-weight: 600; }
+    .md-content code { background: #f0f0f0; padding: 0.125rem 0.375rem; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
+    .letter-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0; }
+    .letter-group { border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; }
+    .letter-group.true-friends { border-color: var(--success); } .letter-group.true-friends .letters { color: var(--success); }
+    .letter-group.false-friends { border-color: var(--danger); } .letter-group.false-friends .letters { color: var(--danger); }
+    .letter-group.new-letters { border-color: var(--primary); } .letter-group.new-letters .letters { color: var(--primary); }
+    .letters { font-size: 1.75rem; letter-spacing: 0.3rem; }
+    .match-container { display: flex; gap: 3rem; padding: 1rem; position: relative; }
+    .match-column { flex: 1; display: flex; flex-direction: column; gap: 0.75rem; }
+    .match-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; font-size: 1.25rem; cursor: pointer; }
+    .match-item.selected { border-color: var(--primary); background: #e8f4fd; }
+    .match-item.matched { border-color: var(--success); background: #e8f8f0; }
+    .match-item.wrong { border-color: var(--danger); background: #fde8e8; }
+    .match-lines { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+    .quiz-question { border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; }
+    .quiz-question.answered { pointer-events: none; }
+    .quiz-question .cyrillic { font-size: 1.5rem; color: var(--primary); font-weight: 600; }
+    .quiz-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-top: 1rem; }
+    .quiz-option { background: #f5f5f5; border: 2px solid var(--border); border-radius: 8px; padding: 1rem; cursor: pointer; text-align: center; }
+    .quiz-option.correct { border-color: var(--success); background: #d4edda; }
+    .quiz-option.wrong { border-color: var(--danger); background: #f8d7da; }
+    .quiz-explanation { margin-top: 1rem; padding: 1rem; background: #e8f4fd; border-radius: 8px; display: none; }
+    .quiz-explanation.show { display: block; }
+    .sort-pool { background: #f5f5f5; border: 2px dashed var(--border); border-radius: 12px; padding: 1.5rem; min-height: 80px; margin-bottom: 1rem; }
+    .sort-items { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; }
+    .sort-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 0.75rem 1.25rem; font-size: 1.5rem; cursor: grab; }
+    .sort-item.correct { border-color: var(--success); background: #e8f8f0; }
+    .sort-item.wrong { border-color: var(--danger); background: #fde8e8; }
+    .sort-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    .sort-group { border: 2px solid var(--border); border-radius: 12px; padding: 1rem; min-height: 150px; }
+    .sort-group.drag-over { border-color: var(--primary); background: #e8f4fd; }
+    .sort-group h4 { font-size: 0.875rem; text-align: center; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--border); }
+    .sort-group.true-friends h4 { color: var(--success); border-color: var(--success); }
+    .sort-group.false-friends h4 { color: var(--danger); border-color: var(--danger); }
+    .sort-group.new-letters h4 { color: var(--primary); border-color: var(--primary); }
+    .vocab-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; }
+    .vocab-card { border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; text-align: center; }
+    .vocab-card .uk { font-size: 1.75rem; font-weight: 600; color: var(--primary); }
+    .vocab-card .translit { color: var(--text-muted); font-style: italic; }
+    .vocab-card .en { font-weight: 500; margin: 0.25rem 0; }
+    .vocab-card .note { font-size: 0.75rem; color: #613583; background: #f0e8fd; padding: 0.25rem 0.5rem; border-radius: 4px; }
+    .btn { padding: 0.75rem 1.5rem; border: none; border-radius: 8px; cursor: pointer; }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-outline { background: transparent; border: 2px solid var(--border); }
+    .btn-group { display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem; }
+    .score-display { text-align: center; padding: 1rem; background: linear-gradient(135deg, #e8f8f0, #e8f4fd); border-radius: 8px; margin-bottom: 1rem; }
+    .score-display .score { font-size: 2rem; font-weight: 700; color: var(--success); }
+    .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
+    .completion-message.show { display: block; }
+    footer { text-align: center; padding: 2rem; color: var(--text-muted); }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+  </style>
+</head>
+<body>
+  <div class="top-nav">
+    <a href="../index.html">← l2-uk-en Curriculum</a>
+    <div class="module-nav">
+      <a href="module-40.html" class="module-nav-link">← Module 40</a>
+      <a href="index.html" class="module-nav-link">A2 Index</a>
+      <a href="module-42.html" class="module-nav-link">Module 42 →</a>
+    </div>
+  </div>
+  <nav class="nav">
+    <h1>Module 41: Verbal Aspect I</h1>
+    <div class="nav-tabs">
+      <button class="nav-tab active" data-section="lesson">Lesson</button>
+      <button class="nav-tab" data-section="match">Match</button>
+      <button class="nav-tab" data-section="quiz">Quiz</button>
+      <button class="nav-tab" data-section="sort">Sort</button>
+      <button class="nav-tab" data-section="vocab">Vocab</button>
+    </div>
+  </nav>
+  <main>
+    <section id="lesson" class="section active">
+      <div class="lesson-header">
+        <span class="level-badge">A2 · A2.2</span>
+        <h2 style="font-size:2rem;margin:0.5rem 0">Verbal Aspect I</h2>
+        <p style="color:var(--text-muted)">Perfective & Imperfective</p>
+      </div>
+      
+      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### A New Dimension of Verbs</h4><div class="md-content"><p>You've mastered tenses (past, present, future) and cases. Now meet <strong>aspect</strong> - a uniquely Slavic feature that English doesn't have!</p>
+<p><strong>The big idea:</strong></p>
+<ul>
+<li><strong>Imperfective</strong> = process, ongoing, repeated (like video)</li>
+<li><strong>Perfective</strong> = completed, single, result (like photo)</li>
+</ul>
+<p>Compare:</p>
+<ul>
+<li>Я <strong>читав</strong> книгу. (I was reading a book - process, imperfective)</li>
+<li>Я <strong>прочитав</strong> книгу. (I read/finished the book - completed, perfective)</li>
+</ul>
+<p>Both are past tense, but different aspects!</p>
+<blockquote>
+  <p>💡 <strong>Did You Know?</strong></p>
+  <p>English lost verbal aspect centuries ago, but Slavic languages kept it. This is why Ukrainian has "verb pairs" - two verbs for every action! It might seem complex, but it allows incredible precision in describing actions.</p>
+</blockquote></div></div><div class="canvas-note"><h4>### What Is Aspect?</h4><div class="md-content"><p><strong>Aspect</strong> describes HOW an action happens, not WHEN:</p>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Focus</th>
+<th>Think of it as…</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Imperfective</td>
+<td>Process, duration, repetition</td>
+<td>Watching a movie</td>
+</tr>
+<tr>
+<td>Perfective</td>
+<td>Completion, result, single event</td>
+<td>Taking a snapshot</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Same action, different aspects:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Imperfective</th>
+<th>Perfective</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>читати</td>
+<td>прочитати</td>
+<td>to read</td>
+</tr>
+<tr>
+<td>писати</td>
+<td>написати</td>
+<td>to write</td>
+</tr>
+<tr>
+<td>робити</td>
+<td>зробити</td>
+<td>to do/make</td>
+</tr>
+<tr>
+<td>їсти</td>
+<td>з'їсти</td>
+<td>to eat</td>
+</tr>
+<tr>
+<td>пити</td>
+<td>випити</td>
+<td>to drink</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p>⚡ <strong>Pro Tip: The Key Question</strong></p>
+  <p>Ask yourself:</p>
+  <ul>
+  <li>Is the action <strong>in progress</strong> or <strong>repeated</strong>? → Imperfective</li>
+  <li>Is the action <strong>completed</strong> or a <strong>single event</strong>? → Perfective</li>
+  </ul>
+</blockquote></div></div><div class="canvas-note"><h4>When to Use Imperfective</h4><div class="md-content"><p><strong>1. Actions in progress:</strong></p>
+<ul>
+<li>Що ти <strong>робиш</strong>? - What are you doing? (right now)</li>
+<li>Я <strong>читаю</strong> книгу. - I'm reading a book. (in progress)</li>
+<li>Він <strong>писав</strong> листа. - He was writing a letter.</li>
+</ul>
+<p><strong>2. Repeated/habitual actions:</strong></p>
+<ul>
+<li>Я <strong>читаю</strong> щодня. - I read every day.</li>
+<li>Вона <strong>готувала</strong> вечерю кожен день. - She cooked dinner every day.</li>
+<li>Ми <strong>ходимо</strong> в парк щонеділі. - We go to the park every Sunday.</li>
+</ul>
+<p><strong>3. General statements:</strong></p>
+<ul>
+<li>Я <strong>люблю</strong> читати. - I love to read.</li>
+<li>Він добре <strong>готує</strong>. - He cooks well.</li>
+<li>Вона <strong>говорить</strong> українською. - She speaks Ukrainian.</li>
+</ul>
+<p><strong>4. Duration markers:</strong></p>
+<ul>
+<li>Я <strong>читав</strong> дві години. - I was reading for two hours.</li>
+<li>Вона <strong>працювала</strong> весь день. - She was working all day.</li>
+</ul>
+<blockquote>
+  <p>📜 <strong>History Bite: Slavic Aspect</strong></p>
+  <p>Verbal aspect developed in Proto-Slavic over 1,500 years ago. While most Indo-European languages lost this feature, all Slavic languages (Ukrainian, Russian, Polish, Czech, etc.) preserved it. It's one of the defining characteristics of the Slavic language family!</p>
+</blockquote></div></div><div class="canvas-note"><h4>When to Use Perfective</h4><div class="md-content"><p><strong>1. Completed actions (with result):</strong></p>
+<ul>
+<li>Я <strong>прочитав</strong> книгу. - I read (finished) the book.</li>
+<li>Вона <strong>написала</strong> листа. - She wrote (completed) the letter.</li>
+<li>Він <strong>зробив</strong> домашнє завдання. - He did (finished) the homework.</li>
+</ul>
+<p><strong>2. Single, specific events:</strong></p>
+<ul>
+<li>Я <strong>купив</strong> каву. - I bought (a) coffee. (one time)</li>
+<li>Він <strong>сказав</strong> "привіт." - He said "hello." (once)</li>
+<li>Вона <strong>відкрила</strong> вікно. - She opened the window. (one action)</li>
+</ul>
+<p><strong>3. Sequential actions:</strong></p>
+<ul>
+<li>Я <strong>прийшов</strong> додому, <strong>поїв</strong> і <strong>ліг</strong> спати.</li>
+<li>I came home, ate, and went to bed. (sequence of completed actions)</li>
+</ul>
+<p><strong>4. Future single actions:</strong></p>
+<ul>
+<li>Завтра я <strong>прочитаю</strong> цю книгу. - Tomorrow I'll read (finish) this book.</li>
+<li>Він <strong>напише</strong> тобі. - He'll write to you. (once, completed)</li>
+</ul>
+<blockquote>
+  <p>🎭 <strong>Culture Corner: Aspect in Daily Life</strong></p>
+  <p>Ukrainians use aspect instinctively. When someone asks "Що ти робив?" (imperfective), they want to know about your activities. When they ask "Що ти зробив?" (perfective), they want to know what you accomplished!</p>
+</blockquote></div></div><div class="canvas-note"><h4>Common Aspect Pairs</h4><div class="md-content"><p><strong>Pattern 1: Prefix addition (most common)</strong></p>
+<table>
+<thead>
+<tr>
+<th>Imperfective</th>
+<th>Perfective</th>
+<th>Prefix</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>читати</td>
+<td><strong>про</strong>читати</td>
+<td>про-</td>
+<td>to read</td>
+</tr>
+<tr>
+<td>писати</td>
+<td><strong>на</strong>писати</td>
+<td>на-</td>
+<td>to write</td>
+</tr>
+<tr>
+<td>робити</td>
+<td><strong>з</strong>робити</td>
+<td>з-</td>
+<td>to do</td>
+</tr>
+<tr>
+<td>їсти</td>
+<td><strong>з'</strong>їсти</td>
+<td>з'-</td>
+<td>to eat</td>
+</tr>
+<tr>
+<td>пити</td>
+<td><strong>ви</strong>пити</td>
+<td>ви-</td>
+<td>to drink</td>
+</tr>
+<tr>
+<td>вчити</td>
+<td><strong>ви</strong>вчити</td>
+<td>ви-</td>
+<td>to learn</td>
+</tr>
+<tr>
+<td>готувати</td>
+<td><strong>при</strong>готувати</td>
+<td>при-</td>
+<td>to prepare/cook</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Pattern 2: Suffix change</strong></p>
+<table>
+<thead>
+<tr>
+<th>Imperfective</th>
+<th>Perfective</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>давати</td>
+<td>дати</td>
+<td>-ва- drops</td>
+</tr>
+<tr>
+<td>вставати</td>
+<td>встати</td>
+<td>-ва- drops</td>
+</tr>
+<tr>
+<td>купувати</td>
+<td>купити</td>
+<td>-ува- → -и-</td>
+</tr>
+<tr>
+<td>показувати</td>
+<td>показати</td>
+<td>-ува- → -а-</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Pattern 3: Different stems (irregular)</strong></p>
+<table>
+<thead>
+<tr>
+<th>Imperfective</th>
+<th>Perfective</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>говорити</td>
+<td>сказати</td>
+<td>to say/speak</td>
+</tr>
+<tr>
+<td>брати</td>
+<td>взяти</td>
+<td>to take</td>
+</tr>
+<tr>
+<td>класти</td>
+<td>покласти</td>
+<td>to put</td>
+</tr>
+<tr>
+<td>шукати</td>
+<td>знайти</td>
+<td>to look for / find</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p>⚡ <strong>Pro Tip: Learning Pairs</strong></p>
+  <p>Always learn verbs as pairs! When you learn "читати" (to read), immediately learn "прочитати" (to read/finish). Your vocabulary cards should show both forms.</p>
+</blockquote></div></div><div class="canvas-note"><h4>Aspect in Different Tenses</h4><div class="md-content"><p><strong>Past tense - both aspects possible:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Imperfective</th>
+<th>Perfective</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Я читав. (I was reading)</td>
+<td>Я прочитав. (I read/finished)</td>
+</tr>
+<tr>
+<td>Вона писала. (She was writing)</td>
+<td>Вона написала. (She wrote/finished)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Present tense - only imperfective:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Imperfective</th>
+<th>Perfective</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Я читаю. (I'm reading)</td>
+<td>❌ (no present form)</td>
+</tr>
+<tr>
+<td>Вона пише. (She's writing)</td>
+<td>❌ (no present form)</td>
+</tr>
+</tbody>
+</table>
+<p>Why? Because present means "in progress" - that's imperfective by nature!</p>
+<p><strong>Future tense - both aspects, different forms:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Imperfective</th>
+<th>Perfective</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Я буду читати. (I will be reading)</td>
+<td>Я прочитаю. (I will read/finish)</td>
+</tr>
+<tr>
+<td>Вона буде писати. (She will be writing)</td>
+<td>Вона напише. (She will write/finish)</td>
+</tr>
+</tbody>
+</table>
+<p>Note: Imperfective future = буду + infinitive; Perfective future = conjugated form</p></div></div><div class="canvas-note"><h4>Aspect with Negation</h4><div class="md-content"><p><strong>Imperfective negation - didn't do at all:</strong></p>
+<ul>
+<li>Я <strong>не читав</strong> цю книгу. - I didn't read this book. (never)</li>
+<li>Вона <strong>не готувала</strong> сьогодні. - She didn't cook today. (no cooking happened)</li>
+</ul>
+<p><strong>Perfective negation - didn't complete:</strong></p>
+<ul>
+<li>Я <strong>не прочитав</strong> цю книгу. - I didn't finish this book. (started but didn't complete)</li>
+<li>Вона <strong>не приготувала</strong> вечерю. - She didn't manage to cook dinner. (intended but failed)</li>
+</ul>
+<blockquote>
+  <p>💡 <strong>Key Insight</strong></p>
+  <p>Negation + imperfective = action didn't happen<br />
+  Negation + perfective = action didn't reach completion</p>
+</blockquote></div></div><div class="canvas-note"><h4>### Identify the Aspect</h4><div class="md-content"><p>Determine if imperfective (I) or perfective (P):</p>
+<ol>
+<li>Я читаю книгу. → I (in progress)</li>
+<li>Я прочитав книгу. → P (completed)</li>
+<li>Вона писала весь день. → I (duration)</li>
+<li>Він написав листа. → P (completed)</li>
+<li>Ми їмо сніданок. → I (in progress)</li>
+<li>Вони з'їли все. → P (completed)</li>
+<li>Я вчу українську щодня. → I (habitual)</li>
+<li>Я вивчив нові слова. → P (completed)</li>
+</ol></div></div><div class="canvas-note"><h4>Choose the Correct Aspect</h4><div class="md-content"><p>Select imperfective or perfective:</p>
+<ol>
+<li><p>Я ___ (читати/прочитати) кожен вечір.<br />
+→ читаю (habitual action - imperfective)</p></li>
+<li><p>Вчора я ___ (читати/прочитати) цю книгу.<br />
+→ прочитав (completed - perfective)</p></li>
+<li><p>Що ти ___ (робити/зробити) зараз?<br />
+→ робиш (right now - imperfective)</p></li>
+<li><p>Вона ___ (готувати/приготувати) вечерю за годину.<br />
+→ приготувала (completed in one hour - perfective)</p></li>
+<li><p>Він завжди ___ (писати/написати) листи батькам.<br />
+→ пише (always - imperfective)</p></li>
+<li><p>Завтра я ___ (писати/написати) тобі.<br />
+→ напишу (single future action - perfective)</p></li>
+</ol></div></div><div class="canvas-note"><h4>Form Aspect Pairs</h4><div class="md-content"><p>Give the perfective form:</p>
+<ol>
+<li>читати → прочитати</li>
+<li>писати → написати</li>
+<li>робити → зробити</li>
+<li>їсти → з'їсти</li>
+<li>пити → випити</li>
+<li>вчити → вивчити</li>
+<li>готувати → приготувати</li>
+<li>давати → дати</li>
+</ol></div></div><div class="canvas-note"><h4>### Describe Your Day</h4><div class="md-content"><p><strong>Using both aspects:</strong></p>
+<p>Yesterday (perfective for completed actions):</p>
+<ul>
+<li>Я <strong>прокинувся</strong> о сьомій.</li>
+<li>Я <strong>приготував</strong> сніданок і <strong>поїв</strong>.</li>
+<li>Я <strong>прочитав</strong> новини.</li>
+<li>Я <strong>написав</strong> три листи.</li>
+</ul>
+<p>Generally (imperfective for habits):</p>
+<ul>
+<li>Я зазвичай <strong>прокидаюся</strong> о сьомій.</li>
+<li>Я завжди <strong>готую</strong> сніданок.</li>
+<li>Я <strong>читаю</strong> новини щоранку.</li>
+<li>Я часто <strong>пишу</strong> листи.</li>
+</ul></div></div><div class="canvas-note"><h4>Compare These Situations</h4><div class="md-content"><p><strong>Situation 1: Reading</strong></p>
+<ul>
+<li>Я читав книгу. (I was reading - process)</li>
+<li>Я прочитав книгу. (I finished reading - result)</li>
+</ul>
+<p><strong>Situation 2: Cooking</strong></p>
+<ul>
+<li>Вона готувала вечерю. (She was cooking - process)</li>
+<li>Вона приготувала вечерю. (She cooked/finished dinner - result)</li>
+</ul>
+<p><strong>Situation 3: Writing</strong></p>
+<ul>
+<li>Він писав лист дві години. (He was writing for 2 hours - duration)</li>
+<li>Він написав лист за дві години. (He wrote the letter in 2 hours - completion)</li>
+</ul></div></div></div>
+      <div class="btn-group"><button class="btn btn-primary" onclick="showSection('match')">Start →</button></div>
+    </section>
+    <section id="match" class="section"><div class="card"><h3>Aspect Pairs</h3>
+      <div class="score-display"><span class="score"><span id="match-score">0</span>/6</span></div>
+      <div class="match-container" id="match-container"><svg class="match-lines" id="match-lines"></svg>
+        <div class="match-column" id="match-left"><div class="match-item" data-pair="0">читати</div><div class="match-item" data-pair="1">писати</div><div class="match-item" data-pair="2">робити</div><div class="match-item" data-pair="3">їсти</div><div class="match-item" data-pair="4">пити</div><div class="match-item" data-pair="5">вчити</div></div>
+        <div class="match-column" id="match-right"><div class="match-item" data-pair="4">випити</div><div class="match-item" data-pair="3">з'їсти</div><div class="match-item" data-pair="5">вивчити</div><div class="match-item" data-pair="1">написати</div><div class="match-item" data-pair="2">зробити</div><div class="match-item" data-pair="0">прочитати</div></div>
+      </div>
+      <div class="completion-message" id="match-complete"><h3>Perfect!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetMatch()">Reset</button><button class="btn btn-primary" onclick="showSection('quiz')">Next →</button></div>
+    </div></section>
+    <section id="quiz" class="section"><div class="card"><h3>Verbal Aspect</h3>
+      <div class="score-display"><span class="score"><span id="quiz-score">0</span>/6</span></div>
+      <div id="quiz-container"></div>
+      <div class="completion-message" id="quiz-complete"><h3>Complete!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('sort')">Next →</button></div>
+    </div></section>
+    <section id="sort" class="section"><div class="card"><h3>Imperfective vs Perfective</h3>
+      <div class="score-display"><span class="score"><span id="sort-score">0</span>/12</span></div>
+      <div class="sort-pool" id="sort-pool"><div class="sort-items" id="sort-items"></div></div>
+      <div class="sort-groups"><div class="sort-group true-friends" data-group="true-friends"><h4>Imperfective</h4><div class="sort-items"></div></div><div class="sort-group false-friends" data-group="false-friends"><h4>Perfective</h4><div class="sort-items"></div></div></div>
+      <div class="completion-message" id="sort-complete"><h3>All Sorted!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetSort()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Vocab →</button></div>
+    </div></section>
+    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (8)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
+      <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
+    </section>
+  </main>
+  <footer>Module 41 · curricula-opus</footer>
+  <script>
+    const matchPairs=[{"left":"читати","right":"прочитати"},{"left":"писати","right":"написати"},{"left":"робити","right":"зробити"},{"left":"їсти","right":"з'їсти"},{"left":"пити","right":"випити"},{"left":"вчити","right":"вивчити"}];
+    const quizData=[{"question":"\"I'm reading a book now\" - Я ___ книгу.","options":["читаю","прочитаю","прочитав","читав"],"correctIndex":0,"explanation":"Present/in progress = imperfective."},{"question":"\"I finished the book yesterday\" - Я ___ книгу вчора.","options":["прочитав","читав","читаю","буду читати"],"correctIndex":0,"explanation":"Completed past = perfective."},{"question":"\"She was cooking all day\" - Вона ___ весь день.","options":["готувала","приготувала","готує","приготує"],"correctIndex":0,"explanation":"Duration = imperfective."},{"question":"\"I read every evening\" (habit) - Я ___ кожен вечір.","options":["читаю","прочитаю","прочитав","буду читати"],"correctIndex":0,"explanation":"Habitual = imperfective."},{"question":"\"Tomorrow I'll write you a letter\" (one action) - Завтра я ___ тобі листа.","options":["напишу","буду писати","написав","пишу"],"correctIndex":0,"explanation":"Single future action = perfective."},{"question":"\"He said hello\" (once) - Він ___ \"привіт.\"","options":["сказав","говорив","говорить","скаже"],"correctIndex":0,"explanation":"Single past action = perfective."}];
+    const sortData={"true-friends":["читати","писати","робити","готувати","говорити","вчити"],"false-friends":["прочитати","написати","зробити","приготувати","сказати","вивчити"]};
+    const vocabData=[{"uk":"вид","translit":"/vɪd/","en":"noun","note":""},{"uk":"недоконаний","translit":"/nɛdoˈkonɑnɪj/","en":"adj","note":""},{"uk":"доконаний","translit":"/doˈkonɑnɪj/","en":"adj","note":""},{"uk":"з'їсти","translit":"/ˈzjistɪ/","en":"verb","note":""},{"uk":"випити","translit":"/ˈvɪpɪtɪ/","en":"verb","note":""},{"uk":"вивчити","translit":"/ˈvɪvtʃɪtɪ/","en":"verb","note":""},{"uk":"приготувати","translit":"/prɪɦotuˈvɑtɪ/","en":"verb","note":""},{"uk":"купити","translit":"/kuˈpɪtɪ/","en":"verb","note":""}];
+    const totalSort=12;
+    function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
+    document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));
+    let matchSel=null,matchScore=0,matchPairsArr=[];
+    document.querySelectorAll('#match-left .match-item').forEach(item=>{item.addEventListener('click',()=>{if(item.classList.contains('matched'))return;document.querySelectorAll('#match-left .match-item').forEach(i=>i.classList.remove('selected'));item.classList.add('selected');matchSel={el:item,pair:item.dataset.pair};});});
+    document.querySelectorAll('#match-right .match-item').forEach(item=>{item.addEventListener('click',()=>{if(item.classList.contains('matched')||!matchSel)return;if(matchSel.pair===item.dataset.pair){matchSel.el.classList.remove('selected');matchSel.el.classList.add('matched');item.classList.add('matched');matchPairsArr.push({left:matchSel.el,right:item});matchScore++;document.getElementById('match-score').textContent=matchScore;drawLines();if(matchScore===matchPairs.length)document.getElementById('match-complete').classList.add('show');}else{item.classList.add('wrong');setTimeout(()=>item.classList.remove('wrong'),300);}matchSel=null;});});
+    function drawLines(){const svg=document.getElementById('match-lines'),c=document.getElementById('match-container');if(!svg||!c)return;const r=c.getBoundingClientRect();svg.innerHTML='';svg.setAttribute('viewBox','0 0 '+r.width+' '+r.height);matchPairsArr.forEach(p=>{const lr=p.left.getBoundingClientRect(),rr=p.right.getBoundingClientRect();const line=document.createElementNS('http://www.w3.org/2000/svg','line');line.setAttribute('x1',lr.right-r.left);line.setAttribute('y1',lr.top+lr.height/2-r.top);line.setAttribute('x2',rr.left-r.left);line.setAttribute('y2',rr.top+rr.height/2-r.top);line.setAttribute('stroke','#26a269');line.setAttribute('stroke-width','2');svg.appendChild(line);});}
+    function resetMatch(){matchSel=null;matchScore=0;matchPairsArr=[];document.getElementById('match-score').textContent='0';document.getElementById('match-complete')?.classList.remove('show');document.getElementById('match-lines').innerHTML='';document.querySelectorAll('#match-container .match-item').forEach(i=>i.classList.remove('matched','selected','wrong'));}
+    window.addEventListener('resize',drawLines);
+    let quizScore=0,quizAns=0;
+    function initQuiz(){const c=document.getElementById('quiz-container');if(!c||!quizData.length)return;c.innerHTML='';quizData.forEach((q,i)=>{const sh=[...q.options].sort(()=>Math.random()-0.5);const cor=sh.indexOf(q.options[q.correctIndex]);const div=document.createElement('div');div.className='quiz-question';div.innerHTML='<h4>Q'+(i+1)+': <span class="cyrillic">'+(q.question.match(/[А-ЯІЇЄҐ]+/)?.[0]||'')+'</span></h4><div class="quiz-options">'+sh.map((o,j)=>'<div class="quiz-option" data-c="'+(j===cor)+'" data-q="'+i+'">'+o+'</div>').join('')+'</div><div class="quiz-explanation" id="exp-'+i+'">'+q.explanation+'</div>';c.appendChild(div);});document.querySelectorAll('.quiz-option').forEach(o=>o.addEventListener('click',handleQuiz));}
+    function handleQuiz(e){const opt=e.target,q=opt.closest('.quiz-question');if(q.classList.contains('answered'))return;q.classList.add('answered');if(opt.dataset.c==='true'){opt.classList.add('correct');quizScore++;}else{opt.classList.add('wrong');q.querySelector('[data-c="true"]').classList.add('correct');}document.getElementById('exp-'+opt.dataset.q).classList.add('show');document.getElementById('quiz-score').textContent=quizScore;quizAns++;if(quizAns===quizData.length)document.getElementById('quiz-complete').classList.add('show');}
+    function resetQuiz(){quizScore=0;quizAns=0;document.getElementById('quiz-score').textContent='0';document.getElementById('quiz-complete')?.classList.remove('show');initQuiz();}
+    let sortScore=0,dragItem=null;
+    function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
+    function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
+    function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
+  </script>
+</body>
+</html>
