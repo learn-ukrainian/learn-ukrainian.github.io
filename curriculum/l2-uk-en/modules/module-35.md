@@ -1,0 +1,430 @@
+---
+module: 35
+title: "The Instrumental II"
+subtitle: "By What Means"
+level: A2
+phase: A2.1
+duration: 45
+transliteration: partial
+tags: [instrumental, case, transport, tools, means, manner]
+objectives:
+  - Use instrumental for tools and instruments
+  - Express transportation without preposition
+  - Describe manner of doing things
+  - Master "by means of" constructions
+grammar:
+  - Instrumental without preposition (means)
+  - Transport + instrumental
+  - Tool/instrument + instrumental
+  - Manner adverbials with instrumental
+---
+
+# Lesson Content
+
+## warm-up
+
+### Beyond "With" - The True Instrumental
+
+In Module 34, you learned з + instrumental for "with whom." But the instrumental case has another crucial use - its *original* purpose: expressing the **tool, means, or manner** of an action.
+
+**The difference:**
+- Я йду **з другом**. (I'm going with a friend - companionship)
+- Я їду **автобусом**. (I'm going by bus - means of transport)
+
+Notice: No preposition! The instrumental ending alone shows "by means of."
+
+> 💡 **Did You Know?**
+>
+> This is why it's called the "instrumental" case - it marks the *instrument* used. When you write "ручкою" (with a pen), the ending -ою tells the listener this is what you're using, not who you're with. This preposition-free construction is uniquely Slavic!
+
+## presentation
+
+### Transport: No Preposition Needed!
+
+To say how you travel, use instrumental **without** з:
+
+| Transport | Instrumental | Example |
+|-----------|--------------|---------|
+| автобус | автобус**ом** | Їду автобусом. |
+| тролейбус | тролейбус**ом** | Їду тролейбусом. |
+| трамвай | трамва**єм** | Їду трамваєм. |
+| поїзд | поїзд**ом** | Їду поїздом. |
+| літак | літак**ом** | Лечу літаком. |
+| машина | машин**ою** | Їду машиною. |
+| таксі | таксі | Їду таксі. |
+| велосипед | велосипед**ом** | Їду велосипедом. |
+| метро | метро | Їду метро. |
+
+> ⚡ **Pro Tip: Indeclinable Words**
+>
+> Some borrowed words don't change form:
+> - **таксі** stays таксі (Їду таксі)
+> - **метро** stays метро (Їду метро)
+>
+> These are neuter nouns that resist Ukrainian endings!
+
+**Full sentences:**
+- Я їду на роботу **автобусом**. - I go to work by bus.
+- Вона летить до Києва **літаком**. - She's flying to Kyiv by plane.
+- Ми подорожуємо **поїздом**. - We travel by train.
+- Він добирається **велосипедом**. - He gets there by bicycle.
+
+> 📜 **History Bite: Prepositionless Cases**
+>
+> In Old Ukrainian (and Proto-Slavic), cases could express many meanings without prepositions. Over time, Ukrainian added prepositions for clarity, but the instrumental for transport remained preposition-free. When you say "їду поїздом," you're using grammar that predates the year 1000!
+
+### Tools and Instruments
+
+What you USE to do something takes instrumental:
+
+| Tool | Instrumental | Example |
+|------|--------------|---------|
+| ручка | ручк**ою** | писати ручкою |
+| олівець | олівц**ем** | малювати олівцем |
+| ніж | нож**ем** | різати ножем |
+| виделка | виделк**ою** | їсти виделкою |
+| ложка | ложк**ою** | їсти ложкою |
+| комп'ютер | комп'ютер**ом** | працювати комп'ютером |
+| телефон | телефон**ом** | дзвонити телефоном |
+| ключ | ключ**ем** | відкривати ключем |
+
+**Full sentences:**
+- Я пишу **ручкою**, не олівцем. - I write with a pen, not a pencil.
+- Вона ріже хліб **ножем**. - She cuts bread with a knife.
+- Ми їмо суп **ложкою**. - We eat soup with a spoon.
+- Він відкриває двері **ключем**. - He opens the door with a key.
+
+> 🎭 **Culture Corner: Traditional Tools**
+>
+> In traditional Ukrainian culture, tools were respected and often personified. A sharp "ніж" (knife) was considered lucky; dropping it meant a male guest would come. Eating with proper utensils showed good manners: "їсти виделкою і ножем" (eating with fork and knife) was a sign of refined upbringing.
+
+### Manner: How Something Is Done
+
+The instrumental expresses HOW an action is performed:
+
+| Manner | Instrumental | Example |
+|--------|--------------|---------|
+| голос | голос**ом** | говорити голосом |
+| шепіт | шепот**ом** | говорити шепотом |
+| крик | крик**ом** | кричати криком |
+| швидкість | швидкіст**ю** | їхати швидкістю |
+| радість | радіст**ю** | зустріти з радістю |
+
+**Common manner expressions:**
+- говорити **тихим голосом** - speak in a quiet voice
+- іти **швидким кроком** - walk with a quick step
+- дивитися **здивованими очима** - look with surprised eyes
+- слухати **з увагою** - listen with attention
+
+> ⚡ **Pro Tip: Adjective + Instrumental**
+>
+> When describing HOW, add an adjective that also changes to instrumental:
+> - говорити **тихим голосом** (quiet voice - both instrumental)
+> - йти **швидкою ходою** (quick pace - both instrumental)
+>
+> The adjective must match the noun in case, gender, and number!
+
+### Speaking Languages
+
+Languages use instrumental with говорити/розмовляти:
+
+| Language | Instrumental | Example |
+|----------|--------------|---------|
+| українська | українськ**ою** | говорити українською |
+| англійська | англійськ**ою** | говорити англійською |
+| німецька | німецьк**ою** | говорити німецькою |
+| французька | французьк**ою** | говорити французькою |
+| іспанська | іспанськ**ою** | говорити іспанською |
+| польська | польськ**ою** | говорити польською |
+
+**Note:** The word "мова" (language) is implied but usually omitted:
+- Він говорить **українською** (мовою). - He speaks Ukrainian.
+- Вона розмовляє **англійською**. - She speaks English.
+
+**Full sentences:**
+- Я вільно розмовляю **українською**. - I speak Ukrainian fluently.
+- Вони говорять **англійською** і **німецькою**. - They speak English and German.
+- Якою мовою ви розмовляєте? - What language do you speak?
+
+> 💡 **Did You Know?**
+>
+> Using instrumental for languages emphasizes the *means* of communication - the language is your *tool* for expressing yourself. This parallels "writing with a pen" - both are instruments you use to communicate!
+
+### Common Verb + Instrumental Patterns
+
+These verbs commonly take instrumental (without preposition):
+
+| Verb | Meaning | Example |
+|------|---------|---------|
+| писати | write | писати ручкою |
+| малювати | draw | малювати олівцем |
+| різати | cut | різати ножем |
+| їсти | eat | їсти ложкою |
+| працювати | work | працювати руками |
+| керувати | drive, manage | керувати машиною |
+| володіти | own, master | володіти мовою |
+| захоплюватися | be fascinated by | захоплюватися музикою |
+| цікавитися | be interested in | цікавитися історією |
+| займатися | be engaged in | займатися спортом |
+
+**Examples with interests:**
+- Я **захоплююся** музикою. - I'm fascinated by music.
+- Вона **цікавиться** історією. - She's interested in history.
+- Він **займається** спортом. - He does sports.
+
+> ⚡ **Pro Tip: Interest Verbs**
+>
+> Three key verbs for talking about interests use instrumental:
+> - **цікавитися** + instr = be interested in
+> - **захоплюватися** + instr = be fascinated by, be into
+> - **займатися** + instr = be engaged in, do (activity)
+
+### Body Parts as Instruments
+
+Body parts used to do actions take instrumental:
+
+| Body Part | Instrumental | Example |
+|-----------|--------------|---------|
+| рука | рук**ою** / рук**ами** | писати рукою |
+| нога | ног**ою** / ног**ами** | штовхати ногою |
+| голова | голов**ою** | кивати головою |
+| очі | оч**има** | дивитися очима |
+| плечі | плеч**има** | знизати плечима |
+
+**Common expressions:**
+- кивати **головою** - nod (with the head)
+- махати **рукою** - wave (with the hand)
+- знизати **плечима** - shrug (with the shoulders)
+- тупати **ногами** - stomp (with the feet)
+
+> 💡 **Did You Know?**
+>
+> "Знизати плечима" (to shrug shoulders) is the universal gesture of uncertainty. The instrumental emphasizes that the shoulders are the *means* of expressing this. Body language is literally grammatically marked in Ukrainian!
+
+## practice
+
+### Transform to Instrumental
+
+Give the instrumental form:
+
+**Transport:**
+1. автобус → автобусом
+2. поїзд → поїздом
+3. літак → літаком
+4. машина → машиною
+5. велосипед → велосипедом
+
+**Tools:**
+1. ручка → ручкою
+2. олівець → олівцем
+3. ніж → ножем
+4. ложка → ложкою
+5. ключ → ключем
+
+**Languages:**
+1. українська → українською
+2. англійська → англійською
+3. німецька → німецькою
+
+### Complete the Sentences
+
+Fill in the instrumental form:
+
+1. Я їду на роботу ___ (автобус). → автобусом
+2. Вона пише ___ (ручка). → ручкою
+3. Він говорить ___ (українська). → українською
+4. Ми їмо суп ___ (ложка). → ложкою
+5. Вони летять ___ (літак). → літаком
+6. Я цікавлюся ___ (історія). → історією
+
+### Build Full Sentences
+
+Create sentences using instrumental for means:
+
+1. я / їхати / робота / автобус → Я їду на роботу автобусом.
+2. вона / писати / лист / ручка → Вона пише листа ручкою.
+3. він / говорити / англійська → Він говорить англійською.
+4. ми / різати / хліб / ніж → Ми ріжемо хліб ножем.
+
+## production
+
+### Real Situations
+
+**Scenario 1: Getting to work**
+- Як ти добираєшся на роботу?
+- Зазвичай їду автобусом, а іноді метро.
+- А машиною не їздиш?
+- Ні, у центрі важко паркуватися.
+
+**Scenario 2: Learning languages**
+- Якими мовами ти розмовляєш?
+- Вільно говорю українською та англійською.
+- А ще якимись?
+- Трохи німецькою. Зараз вчу.
+
+**Scenario 3: At a restaurant**
+- Чим це їдять?
+- Цей салат їдять виделкою.
+- А суп?
+- Звісно, ложкою!
+
+---
+
+# Activities
+
+## match-up: Action + Instrument
+
+> Match the action with its typical instrument.
+
+| Left | Right |
+|------|-------|
+| писати | ручкою |
+| різати | ножем |
+| їсти суп | ложкою |
+| їхати | автобусом |
+| відкривати двері | ключем |
+| говорити | українською |
+
+## quiz: Instrumental for Means
+
+> Choose the correct instrumental form.
+
+1. "I go to work by bus" - Я їду на роботу ___.
+   - [x] автобусом
+   - [ ] автобус
+   - [ ] автобуса
+   - [ ] з автобусом
+   > Transport uses instrumental without preposition.
+
+2. "She writes with a pen" - Вона пише ___.
+   - [x] ручкою
+   - [ ] ручка
+   - [ ] ручки
+   - [ ] з ручкою
+   > Tools use instrumental without preposition.
+
+3. "He speaks Ukrainian" - Він говорить ___.
+   - [x] українською
+   - [ ] українська
+   - [ ] українську
+   - [ ] з українською
+   > Languages use instrumental with говорити.
+
+4. "We travel by train" - Ми подорожуємо ___.
+   - [x] поїздом
+   - [ ] поїзд
+   - [ ] поїзда
+   - [ ] на поїзді
+   > Transport instrumental: поїзд → поїздом.
+
+5. "I cut bread with a knife" - Я ріжу хліб ___.
+   - [x] ножем
+   - [ ] ніж
+   - [ ] ножа
+   - [ ] з ножем
+   > Tool instrumental: ніж → ножем.
+
+6. "She's interested in music" - Вона цікавиться ___.
+   - [x] музикою
+   - [ ] музика
+   - [ ] музики
+   - [ ] музиці
+   > Цікавитися takes instrumental.
+
+7. "He nods with his head" - Він киває ___.
+   - [x] головою
+   - [ ] голова
+   - [ ] голови
+   - [ ] головою
+   > Body parts as instruments use instrumental.
+
+8. "They fly by plane" - Вони летять ___.
+   - [x] літаком
+   - [ ] літак
+   - [ ] літака
+   - [ ] на літаку
+   > Transport instrumental: літак → літаком.
+
+## group-sort: With Preposition vs Without
+
+> Sort by whether the instrumental uses a preposition or not.
+
+### з + Instrumental (companionship)
+- з другом (with a friend)
+- з сестрою (with a sister)
+- з батьками (with parents)
+- з колегами (with colleagues)
+
+### Instrumental alone (means/tool)
+- автобусом (by bus)
+- ручкою (with a pen)
+- українською (in Ukrainian)
+- ножем (with a knife)
+
+---
+
+# Vocabulary
+
+| Word | IPA | English | POS | Gender | Note |
+|------|-----|---------|-----|--------|------|
+| автобус | /ɑfˈtobus/ | bus | noun | m | |
+| тролейбус | /troˈlɛjbus/ | trolleybus | noun | m | |
+| трамвай | /trɑmˈvɑj/ | tram | noun | m | |
+| поїзд | /ˈpojizd/ | train | noun | m | |
+| літак | /lʲiˈtɑk/ | airplane | noun | m | |
+| велосипед | /vɛlosɪˈpɛd/ | bicycle | noun | m | |
+| олівець | /oliˈvɛtsʲ/ | pencil | noun | m | |
+| ніж | /nʲiʒ/ | knife | noun | m | |
+| виделка | /vɪˈdɛlkɑ/ | fork | noun | f | |
+| ложка | /ˈloʒkɑ/ | spoon | noun | f | |
+| голос | /ˈɦolos/ | voice | noun | m | |
+| шепіт | /ˈʃɛpʲit/ | whisper | noun | m | |
+| керувати | /kɛruˈvɑtɪ/ | to drive, manage | verb | - | + instr |
+| володіти | /voloˈdʲitɪ/ | to master, own | verb | - | + instr |
+| захоплюватися | /zɑxoplʲuˈvɑtɪsʲɑ/ | to be fascinated | verb | - | + instr |
+| цікавитися | /tsʲikɑˈvɪtɪsʲɑ/ | to be interested | verb | - | + instr |
+| займатися | /zɑjmɑˈtɪsʲɑ/ | to be engaged in | verb | - | + instr |
+| кивати | /kɪˈvɑtɪ/ | to nod | verb | - | + instr |
+
+---
+
+# Summary
+
+## Instrumental for Means (No Preposition)
+
+| Category | Example | Translation |
+|----------|---------|-------------|
+| Transport | їхати автобусом | go by bus |
+| Tool | писати ручкою | write with a pen |
+| Language | говорити українською | speak Ukrainian |
+| Body part | кивати головою | nod with head |
+| Manner | говорити шепотом | speak in a whisper |
+
+## Key Verbs + Instrumental
+
+| Verb | Meaning | Example |
+|------|---------|---------|
+| їхати | travel | їхати поїздом |
+| писати | write | писати олівцем |
+| говорити | speak | говорити англійською |
+| цікавитися | be interested | цікавитися музикою |
+| захоплюватися | be fascinated | захоплюватися спортом |
+| займатися | do, be engaged | займатися йогою |
+| керувати | drive/manage | керувати машиною |
+
+## With vs Without Preposition
+
+| з + Instrumental | Instrumental alone |
+|------------------|-------------------|
+| Companionship | Means/Tool |
+| з другом (with friend) | автобусом (by bus) |
+| з сестрою (with sister) | ручкою (with pen) |
+| з батьками (with parents) | українською (in Ukrainian) |
+
+> 💡 **Key Takeaways**
+>
+> - Transport uses instrumental WITHOUT preposition: їхати автобусом
+> - Tools/instruments use instrumental WITHOUT preposition: писати ручкою
+> - Languages use instrumental with говорити: говорити українською
+> - Interest verbs (цікавитися, захоплюватися, займатися) take instrumental
+> - Compare: з другом (with friend) vs ножем (with knife - tool)

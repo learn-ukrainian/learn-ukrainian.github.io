@@ -1,0 +1,516 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-A2-34",
+    "moduleId": "mod-uk-A2-34",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "methodology": "ppp",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "A2",
+    "phase": "A2.1",
+    "moduleNumber": 34,
+    "title": "The Instrumental I",
+    "subtitle": "With Whom",
+    "description": "Learn instrumental case endings for accompaniment",
+    "objectives": [
+      "Learn instrumental case endings for accompaniment",
+      "Use з + instrumental for \"with whom\"",
+      "Apply instrumental to pronouns and nouns",
+      "Express social activities and companionship"
+    ],
+    "grammarFocus": [
+      "Instrumental case endings by gender",
+      "Preposition з + instrumental",
+      "Instrumental pronouns"
+    ],
+    "totalDuration": 45,
+    "transliterationMode": "partial",
+    "tags": [
+      "instrumental",
+      "case",
+      "accompaniment",
+      "preposition-з"
+    ],
+    "version": 1,
+    "createdAt": "2025-11-29T00:00:00Z",
+    "modifiedAt": "2025-11-29T00:00:00Z",
+    "phases": [
+      {
+        "id": "phase-warm-up",
+        "name": "warm-up",
+        "duration": 5,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### The Seventh Case!\n\nYou've learned six cases: Nominative, Accusative, Genitive, Dative, Locative, and Vocative. Now for the last one: the **Instrumental case** (Орудний відмінок).\n\n**The key question:** З ким? (With whom?) / З чим? (With what?)\n\nIn English, \"with\" does all the work. In Ukrainian, the noun itself changes to show it's the companion or instrument:\n\n- Я йду **з другом**. (I'm going with a friend.)\n- Вона п'є каву **з молоком**. (She drinks coffee with milk.)\n\n> 💡 **Did You Know?**\n>\n> The instrumental case is named for its use with *instruments* (tools), but its most common use in everyday speech is for companionship - \"with whom.\" This dual purpose makes it incredibly useful: you'll use it to say who you're with AND what you use to do something."
+          }
+        ]
+      },
+      {
+        "id": "phase-presentation",
+        "name": "presentation",
+        "duration": 15,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Instrumental Endings Overview\n\n| Gender | Nominative | Instrumental | Example |\n|--------|------------|--------------|---------|\n| Masculine | -consonant | -ом | друг → з друг**ом** |\n| Masculine soft | -ь/-й | -ем | вчитель → з вчител**ем** |\n| Feminine | -а | -ою | сестра → з сестр**ою** |\n| Feminine soft | -я | -ею | Марія → з Марі**єю** |\n| Neuter | -о | -ом | вікно → з вікн**ом** |\n| Neuter soft | -е | -ем | море → з мор**ем** |\n| Plural (all) | - | -ами/-ями | друзі → з друз**ями** |"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Masculine Instrumental: -ом/-ем\n\n**Hard consonant → -ом:**\n\n| Nominative | Instrumental | With... |\n|------------|--------------|---------|\n| друг | друг**ом** | з другом |\n| брат | брат**ом** | з братом |\n| батько | батьк**ом** | з батьком |\n| студент | студент**ом** | зі студентом |\n| чоловік | чоловік**ом** | з чоловіком |\n\n**Soft consonant (-ь, -й) → -ем:**\n\n| Nominative | Instrumental | With... |\n|------------|--------------|---------|\n| вчитель | вчител**ем** | з вчителем |\n| хлопець | хлопц**ем** | з хлопцем |\n| Андрій | Андрі**єм** | з Андрієм |\n| край | кра**єм** | з краєм |\n\n> ⚡ **Pro Tip: з vs зі vs із**\n>\n> All three mean \"with\" before instrumental:\n> - **з** - default: з другом, з сестрою\n> - **зі** - before consonant clusters: зі студентом, зі мною\n> - **із** - formal/written alternative: із задоволенням\n>\n> Use **зі** when \"з\" would be hard to pronounce!"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Feminine Instrumental: -ою/-ею\n\n**Hard stem (-а) → -ою:**\n\n| Nominative | Instrumental | With... |\n|------------|--------------|---------|\n| сестра | сестр**ою** | з сестрою |\n| подруга | подруг**ою** | з подругою |\n| мама | мам**ою** | з мамою |\n| дружина | дружин**ою** | з дружиною |\n| донька | донькою | з донькою |\n\n**Soft stem (-я) → -ею:**\n\n| Nominative | Instrumental | With... |\n|------------|--------------|---------|\n| Марія | Марі**єю** | з Марією |\n| Наталія | Наталі**єю** | з Наталією |\n| сім'я | сім'**єю** | з сім'єю |\n| земля | земл**ею** | з землею |\n\n> 📜 **History Bite: The -ою Ending**\n>\n> The feminine instrumental -ою comes from Old Church Slavonic -ojǫ. Over centuries, the nasal vowel simplified, but the ending kept its distinctive length. When you say \"з сестрою,\" you're using a form that has existed for over 1,000 years!"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Instrumental Pronouns\n\n| Nominative | Instrumental | Example |\n|------------|--------------|---------|\n| я | мною | зі **мною** |\n| ти | тобою | з **тобою** |\n| він | ним | з **ним** |\n| вона | нею | з **нею** |\n| воно | ним | з **ним** |\n| ми | нами | з **нами** |\n| ви | вами | з **вами** |\n| вони | ними | з **ними** |\n\n**Examples:**\n- Хто йде **зі мною**? - Who's going with me?\n- Я хочу бути **з тобою**. - I want to be with you.\n- Вона живе **з ним**. - She lives with him.\n- Поїдемо **з нами**! - Come with us!\n\n> 🎭 **Culture Corner: Companionship**\n>\n> Ukrainians value being together. The question \"З ким ти?\" (Who are you with?) is common and caring, not intrusive. Doing things alone (сам/сама) is often seen as unfortunate. \"Ходімо з нами!\" (Come with us!) is a warm invitation you'll hear often."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Plural Instrumental: -ами/-ями\n\n**Hard stems → -ами:**\n\n| Nom. Singular | Nom. Plural | Instrumental Plural |\n|---------------|-------------|---------------------|\n| друг | друзі | друз**ями** |\n| брат | брати | брат**ами** |\n| сестра | сестри | сестр**ами** |\n| батько | батьки | батьк**ами** |\n\n**Soft stems → -ями:**\n\n| Nom. Singular | Nom. Plural | Instrumental Plural |\n|---------------|-------------|---------------------|\n| вчитель | вчителі | вчител**ями** |\n| гість | гості | гост**ями** |\n| приятель | приятелі | приятел**ями** |\n\n**Examples:**\n- Я живу **з батьками**. - I live with my parents.\n- Вона працює **з колегами**. - She works with colleagues.\n- Ми гуляємо **з друзями**. - We walk with friends."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Common Patterns with з + Instrumental\n\n**Living/Being:**\n- жити з + INSTR (live with)\n- бути з + INSTR (be with)\n- залишатися з + INSTR (stay with)\n\n**Going/Moving:**\n- йти з + INSTR (go with)\n- їхати з + INSTR (travel with)\n- гуляти з + INSTR (walk with)\n\n**Social Activities:**\n- зустрічатися з + INSTR (meet with)\n- розмовляти з + INSTR (talk with)\n- знайомитися з + INSTR (get acquainted with)\n- працювати з + INSTR (work with)\n\n> ⚡ **Pro Tip: Verbs That Love Instrumental**\n>\n> These verbs commonly take з + instrumental:\n> - **зустрічатися** з ким? (meet with whom?)\n> - **вітатися** з ким? (greet whom?)\n> - **прощатися** з ким? (say goodbye to whom?)\n> - **знайомитися** з ким? (get acquainted with whom?)\n>\n> All about social interaction!"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Expressions of Togetherness\n\n| Expression | Meaning |\n|------------|---------|\n| разом з | together with |\n| удвох | the two of us |\n| утрьох | the three of us |\n| усі разом | all together |\n| один на один | one-on-one |\n\n**Examples:**\n- Ми **разом з** братом поїдемо. - My brother and I will go together.\n- Вони живуть **удвох**. - The two of them live together.\n- Поговоримо **один на один**. - Let's talk one-on-one.\n\n> 💡 **Did You Know?**\n>\n> Ukrainian has special words for \"the two of us\" (удвох), \"the three of us\" (утрьох), \"the four of us\" (учотирьох), etc. These express togetherness more warmly than just counting people!"
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-A2-34-matchup"
+          }
+        ]
+      },
+      {
+        "id": "phase-practice",
+        "name": "practice",
+        "duration": 15,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Noun Transformations\n\nChange nominative to instrumental:\n\n**Masculine:**\n1. друг → другом\n2. брат → братом\n3. вчитель → вчителем\n4. батько → батьком\n5. Андрій → Андрієм\n\n**Feminine:**\n1. сестра → сестрою\n2. подруга → подругою\n3. мама → мамою\n4. Марія → Марією\n\n**Plural:**\n1. друзі → друзями\n2. батьки → батьками\n3. сестри → сестрами\n4. колеги → колегами"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Complete the Sentences\n\nFill in the instrumental form:\n\n1. Я йду з ___ (друг). → другом\n2. Вона живе з ___ (сестра). → сестрою\n3. Ми розмовляємо з ___ (вчитель). → вчителем\n4. Він їде з ___ (батьки). → батьками\n5. Я хочу бути з ___ (ти). → тобою\n6. Вони працюють з ___ (ми). → нами"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Build Full Sentences\n\nCreate sentences: Subject + verb + з + instrumental\n\n1. Я / жити / батьки → Я живу з батьками.\n2. Вона / гуляти / собака → Вона гуляє з собакою.\n3. Ми / їхати / друзі → Ми їдемо з друзями.\n4. Він / працювати / колеги → Він працює з колегами."
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-A2-34-quiz"
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-A2-34-groupsort"
+          }
+        ]
+      },
+      {
+        "id": "phase-production",
+        "name": "production",
+        "duration": 10,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Real Situations\n\n**Scenario 1: Making plans**\n- З ким ти йдеш на концерт?\n- З подругою. А ти?\n- Я ще не знаю. Може, з братом.\n- Ходімо всі разом!\n\n**Scenario 2: Meeting someone new**\n- Познайомся, це Андрій.\n- Приємно познайомитися з вами!\n- Ми з Андрієм разом працюємо.\n- О, ви колеги! Як давно?\n\n**Scenario 3: Family life**\n- Ти живеш з батьками?\n- Ні, я живу з дружиною і донькою.\n- А з ким ти проводиш вихідні?\n- Зазвичай з сім'єю, іноді з друзями."
+          }
+        ]
+      }
+    ]
+  },
+  "activities": [
+    {
+      "id": "act-uk-A2-34-matchup",
+      "type": "match-up",
+      "title": "Nominative to Instrumental",
+      "description": "Match the noun with its instrumental form.",
+      "content": {
+        "type": "match-up",
+        "instructions": "Match the noun with its instrumental form.",
+        "pairs": [
+          {
+            "left": "друг",
+            "right": "другом"
+          },
+          {
+            "left": "сестра",
+            "right": "сестрою"
+          },
+          {
+            "left": "вчитель",
+            "right": "вчителем"
+          },
+          {
+            "left": "Марія",
+            "right": "Марією"
+          },
+          {
+            "left": "батьки",
+            "right": "батьками"
+          },
+          {
+            "left": "подруга",
+            "right": "подругою"
+          }
+        ],
+        "shuffleRight": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2",
+      "duration": 5,
+      "tags": [
+        "instrumental",
+        "case",
+        "accompaniment",
+        "preposition-з"
+      ],
+      "createdAt": "2025-11-29T00:00:00Z",
+      "modifiedAt": "2025-11-29T00:00:00Z"
+    },
+    {
+      "id": "act-uk-A2-34-quiz",
+      "type": "quiz",
+      "title": "Instrumental Case",
+      "description": "Choose the correct instrumental form.",
+      "content": {
+        "type": "quiz",
+        "instructions": "Choose the correct instrumental form.",
+        "questions": [
+          {
+            "question": "\"I'm going with a friend (m)\" - Я йду з ___.",
+            "options": [
+              "другом",
+              "друга",
+              "другові",
+              "друг"
+            ],
+            "correctIndex": 0,
+            "explanation": "Masculine instrumental: друг → другом."
+          },
+          {
+            "question": "\"She lives with her sister\" - Вона живе з ___.",
+            "options": [
+              "сестрою",
+              "сестри",
+              "сестрі",
+              "сестру"
+            ],
+            "correctIndex": 0,
+            "explanation": "Feminine instrumental: сестра → сестрою."
+          },
+          {
+            "question": "\"We're talking with the teacher\" - Ми розмовляємо з ___.",
+            "options": [
+              "вчителем",
+              "вчитель",
+              "вчителя",
+              "вчителеві"
+            ],
+            "correctIndex": 0,
+            "explanation": "Soft masculine instrumental: вчитель → вчителем."
+          },
+          {
+            "question": "\"He travels with his parents\" - Він їде з ___.",
+            "options": [
+              "батьками",
+              "батьки",
+              "батьків",
+              "батькам"
+            ],
+            "correctIndex": 0,
+            "explanation": "Plural instrumental: батьки → батьками."
+          },
+          {
+            "question": "\"I want to be with you (informal)\" - Я хочу бути з ___.",
+            "options": [
+              "тобою",
+              "тобі",
+              "тебе",
+              "ти"
+            ],
+            "correctIndex": 0,
+            "explanation": "Instrumental of ти = тобою."
+          },
+          {
+            "question": "\"She's meeting with him\" - Вона зустрічається з ___.",
+            "options": [
+              "ним",
+              "його",
+              "йому",
+              "він"
+            ],
+            "correctIndex": 0,
+            "explanation": "Instrumental of він = ним."
+          },
+          {
+            "question": "\"They work with us\" - Вони працюють з ___.",
+            "options": [
+              "нами",
+              "нас",
+              "нам",
+              "ми"
+            ],
+            "correctIndex": 0,
+            "explanation": "Instrumental of ми = нами."
+          },
+          {
+            "question": "\"Come with us!\" - Ходімо з ___!",
+            "options": [
+              "нами",
+              "нас",
+              "нам",
+              "ми"
+            ],
+            "correctIndex": 0,
+            "explanation": "Instrumental of ми = нами."
+          }
+        ],
+        "shuffleQuestions": true,
+        "shuffleOptions": true,
+        "showCorrectAnswers": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2",
+      "duration": 5,
+      "tags": [
+        "instrumental",
+        "case",
+        "accompaniment",
+        "preposition-з"
+      ],
+      "createdAt": "2025-11-29T00:00:00Z",
+      "modifiedAt": "2025-11-29T00:00:00Z"
+    },
+    {
+      "id": "act-uk-A2-34-groupsort",
+      "type": "group-sort",
+      "title": "Gender in Instrumental",
+      "description": "Sort the instrumental forms by the original noun's gender.",
+      "content": {
+        "type": "group-sort",
+        "instructions": "Sort the instrumental forms by the original noun's gender.",
+        "groups": [
+          {
+            "name": "Masculine Instrumental",
+            "items": [
+              "другом",
+              "братом",
+              "вчителем",
+              "батьком"
+            ]
+          },
+          {
+            "name": "Feminine Instrumental",
+            "items": [
+              "сестрою",
+              "подругою",
+              "мамою",
+              "Марією"
+            ]
+          },
+          {
+            "name": "Plural Instrumental",
+            "items": [
+              "батьками",
+              "друзями",
+              "сестрами",
+              "колегами"
+            ]
+          }
+        ],
+        "shuffleItems": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2",
+      "duration": 5,
+      "tags": [
+        "instrumental",
+        "case",
+        "accompaniment",
+        "preposition-з"
+      ],
+      "createdAt": "2025-11-29T00:00:00Z",
+      "modifiedAt": "2025-11-29T00:00:00Z"
+    }
+  ],
+  "vocabulary": {
+    "moduleId": "mod-uk-A2-34",
+    "level": "A2",
+    "phase": "A2.1",
+    "wordCount": 16,
+    "transliterationMode": "partial",
+    "words": [
+      {
+        "id": "v-m34-001",
+        "uk": "з/із/зі",
+        "translit": "/z/, /iz/, /zʲi/",
+        "ipa": "with",
+        "en": "prep",
+        "pos": "-",
+        "gender": "+ instr"
+      },
+      {
+        "id": "v-m34-002",
+        "uk": "разом",
+        "translit": "/ˈrɑzom/",
+        "ipa": "together",
+        "en": "adv",
+        "pos": "-"
+      },
+      {
+        "id": "v-m34-003",
+        "uk": "удвох",
+        "translit": "/udˈvox/",
+        "ipa": "the two (together)",
+        "en": "adv",
+        "pos": "-"
+      },
+      {
+        "id": "v-m34-004",
+        "uk": "утрьох",
+        "translit": "/uˈtrʲox/",
+        "ipa": "the three (together)",
+        "en": "adv",
+        "pos": "-"
+      },
+      {
+        "id": "v-m34-005",
+        "uk": "зустрічатися",
+        "translit": "/zustriˈtʃɑtɪsʲɑ/",
+        "ipa": "to meet",
+        "en": "verb",
+        "pos": "-",
+        "gender": "з + instr"
+      },
+      {
+        "id": "v-m34-006",
+        "uk": "вітатися",
+        "translit": "/viˈtɑtɪsʲɑ/",
+        "ipa": "to greet",
+        "en": "verb",
+        "pos": "-",
+        "gender": "з + instr"
+      },
+      {
+        "id": "v-m34-007",
+        "uk": "прощатися",
+        "translit": "/proʃˈtʃɑtɪsʲɑ/",
+        "ipa": "to say goodbye",
+        "en": "verb",
+        "pos": "-",
+        "gender": "з + instr"
+      },
+      {
+        "id": "v-m34-008",
+        "uk": "знайомитися",
+        "translit": "/znɑˈjomɪtɪsʲɑ/",
+        "ipa": "to get acquainted",
+        "en": "verb",
+        "pos": "-",
+        "gender": "з + instr"
+      },
+      {
+        "id": "v-m34-009",
+        "uk": "мною",
+        "translit": "/mnoju/",
+        "ipa": "(with) me",
+        "en": "pron",
+        "pos": "-",
+        "gender": "Instr. of я"
+      },
+      {
+        "id": "v-m34-010",
+        "uk": "тобою",
+        "translit": "/toˈboju/",
+        "ipa": "(with) you",
+        "en": "pron",
+        "pos": "-",
+        "gender": "Instr. of ти"
+      },
+      {
+        "id": "v-m34-011",
+        "uk": "ним",
+        "translit": "/nɪm/",
+        "ipa": "(with) him/it",
+        "en": "pron",
+        "pos": "-",
+        "gender": "Instr. of він/воно"
+      },
+      {
+        "id": "v-m34-012",
+        "uk": "нею",
+        "translit": "/ˈnɛju/",
+        "ipa": "(with) her",
+        "en": "pron",
+        "pos": "-",
+        "gender": "Instr. of вона"
+      },
+      {
+        "id": "v-m34-013",
+        "uk": "нами",
+        "translit": "/ˈnɑmɪ/",
+        "ipa": "(with) us",
+        "en": "pron",
+        "pos": "-",
+        "gender": "Instr. of ми"
+      },
+      {
+        "id": "v-m34-014",
+        "uk": "вами",
+        "translit": "/ˈvɑmɪ/",
+        "ipa": "(with) you",
+        "en": "pron",
+        "pos": "-",
+        "gender": "Instr. of ви"
+      },
+      {
+        "id": "v-m34-015",
+        "uk": "ними",
+        "translit": "/ˈnɪmɪ/",
+        "ipa": "(with) them",
+        "en": "pron",
+        "pos": "-",
+        "gender": "Instr. of вони"
+      },
+      {
+        "id": "v-m34-016",
+        "uk": "компанія",
+        "translit": "/kompɑˈnʲijɑ/",
+        "ipa": "company, group",
+        "en": "noun",
+        "pos": "f"
+      }
+    ]
+  }
+}

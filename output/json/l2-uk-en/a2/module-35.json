@@ -1,0 +1,521 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-A2-35",
+    "moduleId": "mod-uk-A2-35",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "methodology": "ppp",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "A2",
+    "phase": "A2.1",
+    "moduleNumber": 35,
+    "title": "The Instrumental II",
+    "subtitle": "By What Means",
+    "description": "Use instrumental for tools and instruments",
+    "objectives": [
+      "Use instrumental for tools and instruments",
+      "Express transportation without preposition",
+      "Describe manner of doing things",
+      "Master \"by means of\" constructions"
+    ],
+    "grammarFocus": [
+      "Instrumental without preposition (means)",
+      "Transport + instrumental",
+      "Tool/instrument + instrumental",
+      "Manner adverbials with instrumental"
+    ],
+    "totalDuration": 45,
+    "transliterationMode": "partial",
+    "tags": [
+      "instrumental",
+      "case",
+      "transport",
+      "tools",
+      "means",
+      "manner"
+    ],
+    "version": 1,
+    "createdAt": "2025-11-29T00:00:00Z",
+    "modifiedAt": "2025-11-29T00:00:00Z",
+    "phases": [
+      {
+        "id": "phase-warm-up",
+        "name": "warm-up",
+        "duration": 5,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Beyond \"With\" - The True Instrumental\n\nIn Module 34, you learned з + instrumental for \"with whom.\" But the instrumental case has another crucial use - its *original* purpose: expressing the **tool, means, or manner** of an action.\n\n**The difference:**\n- Я йду **з другом**. (I'm going with a friend - companionship)\n- Я їду **автобусом**. (I'm going by bus - means of transport)\n\nNotice: No preposition! The instrumental ending alone shows \"by means of.\"\n\n> 💡 **Did You Know?**\n>\n> This is why it's called the \"instrumental\" case - it marks the *instrument* used. When you write \"ручкою\" (with a pen), the ending -ою tells the listener this is what you're using, not who you're with. This preposition-free construction is uniquely Slavic!"
+          }
+        ]
+      },
+      {
+        "id": "phase-presentation",
+        "name": "presentation",
+        "duration": 15,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Transport: No Preposition Needed!\n\nTo say how you travel, use instrumental **without** з:\n\n| Transport | Instrumental | Example |\n|-----------|--------------|---------|\n| автобус | автобус**ом** | Їду автобусом. |\n| тролейбус | тролейбус**ом** | Їду тролейбусом. |\n| трамвай | трамва**єм** | Їду трамваєм. |\n| поїзд | поїзд**ом** | Їду поїздом. |\n| літак | літак**ом** | Лечу літаком. |\n| машина | машин**ою** | Їду машиною. |\n| таксі | таксі | Їду таксі. |\n| велосипед | велосипед**ом** | Їду велосипедом. |\n| метро | метро | Їду метро. |\n\n> ⚡ **Pro Tip: Indeclinable Words**\n>\n> Some borrowed words don't change form:\n> - **таксі** stays таксі (Їду таксі)\n> - **метро** stays метро (Їду метро)\n>\n> These are neuter nouns that resist Ukrainian endings!\n\n**Full sentences:**\n- Я їду на роботу **автобусом**. - I go to work by bus.\n- Вона летить до Києва **літаком**. - She's flying to Kyiv by plane.\n- Ми подорожуємо **поїздом**. - We travel by train.\n- Він добирається **велосипедом**. - He gets there by bicycle.\n\n> 📜 **History Bite: Prepositionless Cases**\n>\n> In Old Ukrainian (and Proto-Slavic), cases could express many meanings without prepositions. Over time, Ukrainian added prepositions for clarity, but the instrumental for transport remained preposition-free. When you say \"їду поїздом,\" you're using grammar that predates the year 1000!"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Tools and Instruments\n\nWhat you USE to do something takes instrumental:\n\n| Tool | Instrumental | Example |\n|------|--------------|---------|\n| ручка | ручк**ою** | писати ручкою |\n| олівець | олівц**ем** | малювати олівцем |\n| ніж | нож**ем** | різати ножем |\n| виделка | виделк**ою** | їсти виделкою |\n| ложка | ложк**ою** | їсти ложкою |\n| комп'ютер | комп'ютер**ом** | працювати комп'ютером |\n| телефон | телефон**ом** | дзвонити телефоном |\n| ключ | ключ**ем** | відкривати ключем |\n\n**Full sentences:**\n- Я пишу **ручкою**, не олівцем. - I write with a pen, not a pencil.\n- Вона ріже хліб **ножем**. - She cuts bread with a knife.\n- Ми їмо суп **ложкою**. - We eat soup with a spoon.\n- Він відкриває двері **ключем**. - He opens the door with a key.\n\n> 🎭 **Culture Corner: Traditional Tools**\n>\n> In traditional Ukrainian culture, tools were respected and often personified. A sharp \"ніж\" (knife) was considered lucky; dropping it meant a male guest would come. Eating with proper utensils showed good manners: \"їсти виделкою і ножем\" (eating with fork and knife) was a sign of refined upbringing."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Manner: How Something Is Done\n\nThe instrumental expresses HOW an action is performed:\n\n| Manner | Instrumental | Example |\n|--------|--------------|---------|\n| голос | голос**ом** | говорити голосом |\n| шепіт | шепот**ом** | говорити шепотом |\n| крик | крик**ом** | кричати криком |\n| швидкість | швидкіст**ю** | їхати швидкістю |\n| радість | радіст**ю** | зустріти з радістю |\n\n**Common manner expressions:**\n- говорити **тихим голосом** - speak in a quiet voice\n- іти **швидким кроком** - walk with a quick step\n- дивитися **здивованими очима** - look with surprised eyes\n- слухати **з увагою** - listen with attention\n\n> ⚡ **Pro Tip: Adjective + Instrumental**\n>\n> When describing HOW, add an adjective that also changes to instrumental:\n> - говорити **тихим голосом** (quiet voice - both instrumental)\n> - йти **швидкою ходою** (quick pace - both instrumental)\n>\n> The adjective must match the noun in case, gender, and number!"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Speaking Languages\n\nLanguages use instrumental with говорити/розмовляти:\n\n| Language | Instrumental | Example |\n|----------|--------------|---------|\n| українська | українськ**ою** | говорити українською |\n| англійська | англійськ**ою** | говорити англійською |\n| німецька | німецьк**ою** | говорити німецькою |\n| французька | французьк**ою** | говорити французькою |\n| іспанська | іспанськ**ою** | говорити іспанською |\n| польська | польськ**ою** | говорити польською |\n\n**Note:** The word \"мова\" (language) is implied but usually omitted:\n- Він говорить **українською** (мовою). - He speaks Ukrainian.\n- Вона розмовляє **англійською**. - She speaks English.\n\n**Full sentences:**\n- Я вільно розмовляю **українською**. - I speak Ukrainian fluently.\n- Вони говорять **англійською** і **німецькою**. - They speak English and German.\n- Якою мовою ви розмовляєте? - What language do you speak?\n\n> 💡 **Did You Know?**\n>\n> Using instrumental for languages emphasizes the *means* of communication - the language is your *tool* for expressing yourself. This parallels \"writing with a pen\" - both are instruments you use to communicate!"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Common Verb + Instrumental Patterns\n\nThese verbs commonly take instrumental (without preposition):\n\n| Verb | Meaning | Example |\n|------|---------|---------|\n| писати | write | писати ручкою |\n| малювати | draw | малювати олівцем |\n| різати | cut | різати ножем |\n| їсти | eat | їсти ложкою |\n| працювати | work | працювати руками |\n| керувати | drive, manage | керувати машиною |\n| володіти | own, master | володіти мовою |\n| захоплюватися | be fascinated by | захоплюватися музикою |\n| цікавитися | be interested in | цікавитися історією |\n| займатися | be engaged in | займатися спортом |\n\n**Examples with interests:**\n- Я **захоплююся** музикою. - I'm fascinated by music.\n- Вона **цікавиться** історією. - She's interested in history.\n- Він **займається** спортом. - He does sports.\n\n> ⚡ **Pro Tip: Interest Verbs**\n>\n> Three key verbs for talking about interests use instrumental:\n> - **цікавитися** + instr = be interested in\n> - **захоплюватися** + instr = be fascinated by, be into\n> - **займатися** + instr = be engaged in, do (activity)"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Body Parts as Instruments\n\nBody parts used to do actions take instrumental:\n\n| Body Part | Instrumental | Example |\n|-----------|--------------|---------|\n| рука | рук**ою** / рук**ами** | писати рукою |\n| нога | ног**ою** / ног**ами** | штовхати ногою |\n| голова | голов**ою** | кивати головою |\n| очі | оч**има** | дивитися очима |\n| плечі | плеч**има** | знизати плечима |\n\n**Common expressions:**\n- кивати **головою** - nod (with the head)\n- махати **рукою** - wave (with the hand)\n- знизати **плечима** - shrug (with the shoulders)\n- тупати **ногами** - stomp (with the feet)\n\n> 💡 **Did You Know?**\n>\n> \"Знизати плечима\" (to shrug shoulders) is the universal gesture of uncertainty. The instrumental emphasizes that the shoulders are the *means* of expressing this. Body language is literally grammatically marked in Ukrainian!"
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-A2-35-matchup"
+          }
+        ]
+      },
+      {
+        "id": "phase-practice",
+        "name": "practice",
+        "duration": 15,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Transform to Instrumental\n\nGive the instrumental form:\n\n**Transport:**\n1. автобус → автобусом\n2. поїзд → поїздом\n3. літак → літаком\n4. машина → машиною\n5. велосипед → велосипедом\n\n**Tools:**\n1. ручка → ручкою\n2. олівець → олівцем\n3. ніж → ножем\n4. ложка → ложкою\n5. ключ → ключем\n\n**Languages:**\n1. українська → українською\n2. англійська → англійською\n3. німецька → німецькою"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Complete the Sentences\n\nFill in the instrumental form:\n\n1. Я їду на роботу ___ (автобус). → автобусом\n2. Вона пише ___ (ручка). → ручкою\n3. Він говорить ___ (українська). → українською\n4. Ми їмо суп ___ (ложка). → ложкою\n5. Вони летять ___ (літак). → літаком\n6. Я цікавлюся ___ (історія). → історією"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Build Full Sentences\n\nCreate sentences using instrumental for means:\n\n1. я / їхати / робота / автобус → Я їду на роботу автобусом.\n2. вона / писати / лист / ручка → Вона пише листа ручкою.\n3. він / говорити / англійська → Він говорить англійською.\n4. ми / різати / хліб / ніж → Ми ріжемо хліб ножем."
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-A2-35-quiz"
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-A2-35-groupsort"
+          }
+        ]
+      },
+      {
+        "id": "phase-production",
+        "name": "production",
+        "duration": 10,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Real Situations\n\n**Scenario 1: Getting to work**\n- Як ти добираєшся на роботу?\n- Зазвичай їду автобусом, а іноді метро.\n- А машиною не їздиш?\n- Ні, у центрі важко паркуватися.\n\n**Scenario 2: Learning languages**\n- Якими мовами ти розмовляєш?\n- Вільно говорю українською та англійською.\n- А ще якимись?\n- Трохи німецькою. Зараз вчу.\n\n**Scenario 3: At a restaurant**\n- Чим це їдять?\n- Цей салат їдять виделкою.\n- А суп?\n- Звісно, ложкою!"
+          }
+        ]
+      }
+    ]
+  },
+  "activities": [
+    {
+      "id": "act-uk-A2-35-matchup",
+      "type": "match-up",
+      "title": "Action + Instrument",
+      "description": "Match the action with its typical instrument.",
+      "content": {
+        "type": "match-up",
+        "instructions": "Match the action with its typical instrument.",
+        "pairs": [
+          {
+            "left": "писати",
+            "right": "ручкою"
+          },
+          {
+            "left": "різати",
+            "right": "ножем"
+          },
+          {
+            "left": "їсти суп",
+            "right": "ложкою"
+          },
+          {
+            "left": "їхати",
+            "right": "автобусом"
+          },
+          {
+            "left": "відкривати двері",
+            "right": "ключем"
+          },
+          {
+            "left": "говорити",
+            "right": "українською"
+          }
+        ],
+        "shuffleRight": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2",
+      "duration": 5,
+      "tags": [
+        "instrumental",
+        "case",
+        "transport",
+        "tools",
+        "means",
+        "manner"
+      ],
+      "createdAt": "2025-11-29T00:00:00Z",
+      "modifiedAt": "2025-11-29T00:00:00Z"
+    },
+    {
+      "id": "act-uk-A2-35-quiz",
+      "type": "quiz",
+      "title": "Instrumental for Means",
+      "description": "Choose the correct instrumental form.",
+      "content": {
+        "type": "quiz",
+        "instructions": "Choose the correct instrumental form.",
+        "questions": [
+          {
+            "question": "\"I go to work by bus\" - Я їду на роботу ___.",
+            "options": [
+              "автобусом",
+              "автобус",
+              "автобуса",
+              "з автобусом"
+            ],
+            "correctIndex": 0,
+            "explanation": "Transport uses instrumental without preposition."
+          },
+          {
+            "question": "\"She writes with a pen\" - Вона пише ___.",
+            "options": [
+              "ручкою",
+              "ручка",
+              "ручки",
+              "з ручкою"
+            ],
+            "correctIndex": 0,
+            "explanation": "Tools use instrumental without preposition."
+          },
+          {
+            "question": "\"He speaks Ukrainian\" - Він говорить ___.",
+            "options": [
+              "українською",
+              "українська",
+              "українську",
+              "з українською"
+            ],
+            "correctIndex": 0,
+            "explanation": "Languages use instrumental with говорити."
+          },
+          {
+            "question": "\"We travel by train\" - Ми подорожуємо ___.",
+            "options": [
+              "поїздом",
+              "поїзд",
+              "поїзда",
+              "на поїзді"
+            ],
+            "correctIndex": 0,
+            "explanation": "Transport instrumental: поїзд → поїздом."
+          },
+          {
+            "question": "\"I cut bread with a knife\" - Я ріжу хліб ___.",
+            "options": [
+              "ножем",
+              "ніж",
+              "ножа",
+              "з ножем"
+            ],
+            "correctIndex": 0,
+            "explanation": "Tool instrumental: ніж → ножем."
+          },
+          {
+            "question": "\"She's interested in music\" - Вона цікавиться ___.",
+            "options": [
+              "музикою",
+              "музика",
+              "музики",
+              "музиці"
+            ],
+            "correctIndex": 0,
+            "explanation": "Цікавитися takes instrumental."
+          },
+          {
+            "question": "\"He nods with his head\" - Він киває ___.",
+            "options": [
+              "головою",
+              "голова",
+              "голови",
+              "головою"
+            ],
+            "correctIndex": 0,
+            "explanation": "Body parts as instruments use instrumental."
+          },
+          {
+            "question": "\"They fly by plane\" - Вони летять ___.",
+            "options": [
+              "літаком",
+              "літак",
+              "літака",
+              "на літаку"
+            ],
+            "correctIndex": 0,
+            "explanation": "Transport instrumental: літак → літаком."
+          }
+        ],
+        "shuffleQuestions": true,
+        "shuffleOptions": true,
+        "showCorrectAnswers": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2",
+      "duration": 5,
+      "tags": [
+        "instrumental",
+        "case",
+        "transport",
+        "tools",
+        "means",
+        "manner"
+      ],
+      "createdAt": "2025-11-29T00:00:00Z",
+      "modifiedAt": "2025-11-29T00:00:00Z"
+    },
+    {
+      "id": "act-uk-A2-35-groupsort",
+      "type": "group-sort",
+      "title": "With Preposition vs Without",
+      "description": "Sort by whether the instrumental uses a preposition or not.",
+      "content": {
+        "type": "group-sort",
+        "instructions": "Sort by whether the instrumental uses a preposition or not.",
+        "groups": [
+          {
+            "name": "з + Instrumental (companionship)",
+            "items": [
+              "з другом (with a friend)",
+              "з сестрою (with a sister)",
+              "з батьками (with parents)",
+              "з колегами (with colleagues)"
+            ]
+          },
+          {
+            "name": "Instrumental alone (means/tool)",
+            "items": [
+              "автобусом (by bus)",
+              "ручкою (with a pen)",
+              "українською (in Ukrainian)",
+              "ножем (with a knife)"
+            ]
+          }
+        ],
+        "shuffleItems": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2",
+      "duration": 5,
+      "tags": [
+        "instrumental",
+        "case",
+        "transport",
+        "tools",
+        "means",
+        "manner"
+      ],
+      "createdAt": "2025-11-29T00:00:00Z",
+      "modifiedAt": "2025-11-29T00:00:00Z"
+    }
+  ],
+  "vocabulary": {
+    "moduleId": "mod-uk-A2-35",
+    "level": "A2",
+    "phase": "A2.1",
+    "wordCount": 18,
+    "transliterationMode": "partial",
+    "words": [
+      {
+        "id": "v-m35-001",
+        "uk": "автобус",
+        "translit": "/ɑfˈtobus/",
+        "ipa": "bus",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m35-002",
+        "uk": "тролейбус",
+        "translit": "/troˈlɛjbus/",
+        "ipa": "trolleybus",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m35-003",
+        "uk": "трамвай",
+        "translit": "/trɑmˈvɑj/",
+        "ipa": "tram",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m35-004",
+        "uk": "поїзд",
+        "translit": "/ˈpojizd/",
+        "ipa": "train",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m35-005",
+        "uk": "літак",
+        "translit": "/lʲiˈtɑk/",
+        "ipa": "airplane",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m35-006",
+        "uk": "велосипед",
+        "translit": "/vɛlosɪˈpɛd/",
+        "ipa": "bicycle",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m35-007",
+        "uk": "олівець",
+        "translit": "/oliˈvɛtsʲ/",
+        "ipa": "pencil",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m35-008",
+        "uk": "ніж",
+        "translit": "/nʲiʒ/",
+        "ipa": "knife",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m35-009",
+        "uk": "виделка",
+        "translit": "/vɪˈdɛlkɑ/",
+        "ipa": "fork",
+        "en": "noun",
+        "pos": "f"
+      },
+      {
+        "id": "v-m35-010",
+        "uk": "ложка",
+        "translit": "/ˈloʒkɑ/",
+        "ipa": "spoon",
+        "en": "noun",
+        "pos": "f"
+      },
+      {
+        "id": "v-m35-011",
+        "uk": "голос",
+        "translit": "/ˈɦolos/",
+        "ipa": "voice",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m35-012",
+        "uk": "шепіт",
+        "translit": "/ˈʃɛpʲit/",
+        "ipa": "whisper",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m35-013",
+        "uk": "керувати",
+        "translit": "/kɛruˈvɑtɪ/",
+        "ipa": "to drive, manage",
+        "en": "verb",
+        "pos": "-",
+        "gender": "+ instr"
+      },
+      {
+        "id": "v-m35-014",
+        "uk": "володіти",
+        "translit": "/voloˈdʲitɪ/",
+        "ipa": "to master, own",
+        "en": "verb",
+        "pos": "-",
+        "gender": "+ instr"
+      },
+      {
+        "id": "v-m35-015",
+        "uk": "захоплюватися",
+        "translit": "/zɑxoplʲuˈvɑtɪsʲɑ/",
+        "ipa": "to be fascinated",
+        "en": "verb",
+        "pos": "-",
+        "gender": "+ instr"
+      },
+      {
+        "id": "v-m35-016",
+        "uk": "цікавитися",
+        "translit": "/tsʲikɑˈvɪtɪsʲɑ/",
+        "ipa": "to be interested",
+        "en": "verb",
+        "pos": "-",
+        "gender": "+ instr"
+      },
+      {
+        "id": "v-m35-017",
+        "uk": "займатися",
+        "translit": "/zɑjmɑˈtɪsʲɑ/",
+        "ipa": "to be engaged in",
+        "en": "verb",
+        "pos": "-",
+        "gender": "+ instr"
+      },
+      {
+        "id": "v-m35-018",
+        "uk": "кивати",
+        "translit": "/kɪˈvɑtɪ/",
+        "ipa": "to nod",
+        "en": "verb",
+        "pos": "-",
+        "gender": "+ instr"
+      }
+    ]
+  }
+}

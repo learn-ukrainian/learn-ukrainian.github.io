@@ -1,0 +1,435 @@
+---
+module: 34
+title: "The Instrumental I"
+subtitle: "With Whom"
+level: A2
+phase: A2.1
+duration: 45
+transliteration: partial
+tags: [instrumental, case, accompaniment, preposition-з]
+objectives:
+  - Learn instrumental case endings for accompaniment
+  - Use з + instrumental for "with whom"
+  - Apply instrumental to pronouns and nouns
+  - Express social activities and companionship
+grammar:
+  - Instrumental case endings by gender
+  - Preposition з + instrumental
+  - Instrumental pronouns
+---
+
+# Lesson Content
+
+## warm-up
+
+### The Seventh Case!
+
+You've learned six cases: Nominative, Accusative, Genitive, Dative, Locative, and Vocative. Now for the last one: the **Instrumental case** (Орудний відмінок).
+
+**The key question:** З ким? (With whom?) / З чим? (With what?)
+
+In English, "with" does all the work. In Ukrainian, the noun itself changes to show it's the companion or instrument:
+
+- Я йду **з другом**. (I'm going with a friend.)
+- Вона п'є каву **з молоком**. (She drinks coffee with milk.)
+
+> 💡 **Did You Know?**
+>
+> The instrumental case is named for its use with *instruments* (tools), but its most common use in everyday speech is for companionship - "with whom." This dual purpose makes it incredibly useful: you'll use it to say who you're with AND what you use to do something.
+
+## presentation
+
+### Instrumental Endings Overview
+
+| Gender | Nominative | Instrumental | Example |
+|--------|------------|--------------|---------|
+| Masculine | -consonant | -ом | друг → з друг**ом** |
+| Masculine soft | -ь/-й | -ем | вчитель → з вчител**ем** |
+| Feminine | -а | -ою | сестра → з сестр**ою** |
+| Feminine soft | -я | -ею | Марія → з Марі**єю** |
+| Neuter | -о | -ом | вікно → з вікн**ом** |
+| Neuter soft | -е | -ем | море → з мор**ем** |
+| Plural (all) | - | -ами/-ями | друзі → з друз**ями** |
+
+### Masculine Instrumental: -ом/-ем
+
+**Hard consonant → -ом:**
+
+| Nominative | Instrumental | With... |
+|------------|--------------|---------|
+| друг | друг**ом** | з другом |
+| брат | брат**ом** | з братом |
+| батько | батьк**ом** | з батьком |
+| студент | студент**ом** | зі студентом |
+| чоловік | чоловік**ом** | з чоловіком |
+
+**Soft consonant (-ь, -й) → -ем:**
+
+| Nominative | Instrumental | With... |
+|------------|--------------|---------|
+| вчитель | вчител**ем** | з вчителем |
+| хлопець | хлопц**ем** | з хлопцем |
+| Андрій | Андрі**єм** | з Андрієм |
+| край | кра**єм** | з краєм |
+
+> ⚡ **Pro Tip: з vs зі vs із**
+>
+> All three mean "with" before instrumental:
+> - **з** - default: з другом, з сестрою
+> - **зі** - before consonant clusters: зі студентом, зі мною
+> - **із** - formal/written alternative: із задоволенням
+>
+> Use **зі** when "з" would be hard to pronounce!
+
+### Feminine Instrumental: -ою/-ею
+
+**Hard stem (-а) → -ою:**
+
+| Nominative | Instrumental | With... |
+|------------|--------------|---------|
+| сестра | сестр**ою** | з сестрою |
+| подруга | подруг**ою** | з подругою |
+| мама | мам**ою** | з мамою |
+| дружина | дружин**ою** | з дружиною |
+| донька | донькою | з донькою |
+
+**Soft stem (-я) → -ею:**
+
+| Nominative | Instrumental | With... |
+|------------|--------------|---------|
+| Марія | Марі**єю** | з Марією |
+| Наталія | Наталі**єю** | з Наталією |
+| сім'я | сім'**єю** | з сім'єю |
+| земля | земл**ею** | з землею |
+
+> 📜 **History Bite: The -ою Ending**
+>
+> The feminine instrumental -ою comes from Old Church Slavonic -ojǫ. Over centuries, the nasal vowel simplified, but the ending kept its distinctive length. When you say "з сестрою," you're using a form that has existed for over 1,000 years!
+
+### Instrumental Pronouns
+
+| Nominative | Instrumental | Example |
+|------------|--------------|---------|
+| я | мною | зі **мною** |
+| ти | тобою | з **тобою** |
+| він | ним | з **ним** |
+| вона | нею | з **нею** |
+| воно | ним | з **ним** |
+| ми | нами | з **нами** |
+| ви | вами | з **вами** |
+| вони | ними | з **ними** |
+
+**Examples:**
+- Хто йде **зі мною**? - Who's going with me?
+- Я хочу бути **з тобою**. - I want to be with you.
+- Вона живе **з ним**. - She lives with him.
+- Поїдемо **з нами**! - Come with us!
+
+> 🎭 **Culture Corner: Companionship**
+>
+> Ukrainians value being together. The question "З ким ти?" (Who are you with?) is common and caring, not intrusive. Doing things alone (сам/сама) is often seen as unfortunate. "Ходімо з нами!" (Come with us!) is a warm invitation you'll hear often.
+
+### Plural Instrumental: -ами/-ями
+
+**Hard stems → -ами:**
+
+| Nom. Singular | Nom. Plural | Instrumental Plural |
+|---------------|-------------|---------------------|
+| друг | друзі | друз**ями** |
+| брат | брати | брат**ами** |
+| сестра | сестри | сестр**ами** |
+| батько | батьки | батьк**ами** |
+
+**Soft stems → -ями:**
+
+| Nom. Singular | Nom. Plural | Instrumental Plural |
+|---------------|-------------|---------------------|
+| вчитель | вчителі | вчител**ями** |
+| гість | гості | гост**ями** |
+| приятель | приятелі | приятел**ями** |
+
+**Examples:**
+- Я живу **з батьками**. - I live with my parents.
+- Вона працює **з колегами**. - She works with colleagues.
+- Ми гуляємо **з друзями**. - We walk with friends.
+
+### Common Patterns with з + Instrumental
+
+**Living/Being:**
+- жити з + INSTR (live with)
+- бути з + INSTR (be with)
+- залишатися з + INSTR (stay with)
+
+**Going/Moving:**
+- йти з + INSTR (go with)
+- їхати з + INSTR (travel with)
+- гуляти з + INSTR (walk with)
+
+**Social Activities:**
+- зустрічатися з + INSTR (meet with)
+- розмовляти з + INSTR (talk with)
+- знайомитися з + INSTR (get acquainted with)
+- працювати з + INSTR (work with)
+
+> ⚡ **Pro Tip: Verbs That Love Instrumental**
+>
+> These verbs commonly take з + instrumental:
+> - **зустрічатися** з ким? (meet with whom?)
+> - **вітатися** з ким? (greet whom?)
+> - **прощатися** з ким? (say goodbye to whom?)
+> - **знайомитися** з ким? (get acquainted with whom?)
+>
+> All about social interaction!
+
+### Expressions of Togetherness
+
+| Expression | Meaning |
+|------------|---------|
+| разом з | together with |
+| удвох | the two of us |
+| утрьох | the three of us |
+| усі разом | all together |
+| один на один | one-on-one |
+
+**Examples:**
+- Ми **разом з** братом поїдемо. - My brother and I will go together.
+- Вони живуть **удвох**. - The two of them live together.
+- Поговоримо **один на один**. - Let's talk one-on-one.
+
+> 💡 **Did You Know?**
+>
+> Ukrainian has special words for "the two of us" (удвох), "the three of us" (утрьох), "the four of us" (учотирьох), etc. These express togetherness more warmly than just counting people!
+
+## practice
+
+### Noun Transformations
+
+Change nominative to instrumental:
+
+**Masculine:**
+1. друг → другом
+2. брат → братом
+3. вчитель → вчителем
+4. батько → батьком
+5. Андрій → Андрієм
+
+**Feminine:**
+1. сестра → сестрою
+2. подруга → подругою
+3. мама → мамою
+4. Марія → Марією
+
+**Plural:**
+1. друзі → друзями
+2. батьки → батьками
+3. сестри → сестрами
+4. колеги → колегами
+
+### Complete the Sentences
+
+Fill in the instrumental form:
+
+1. Я йду з ___ (друг). → другом
+2. Вона живе з ___ (сестра). → сестрою
+3. Ми розмовляємо з ___ (вчитель). → вчителем
+4. Він їде з ___ (батьки). → батьками
+5. Я хочу бути з ___ (ти). → тобою
+6. Вони працюють з ___ (ми). → нами
+
+### Build Full Sentences
+
+Create sentences: Subject + verb + з + instrumental
+
+1. Я / жити / батьки → Я живу з батьками.
+2. Вона / гуляти / собака → Вона гуляє з собакою.
+3. Ми / їхати / друзі → Ми їдемо з друзями.
+4. Він / працювати / колеги → Він працює з колегами.
+
+## production
+
+### Real Situations
+
+**Scenario 1: Making plans**
+- З ким ти йдеш на концерт?
+- З подругою. А ти?
+- Я ще не знаю. Може, з братом.
+- Ходімо всі разом!
+
+**Scenario 2: Meeting someone new**
+- Познайомся, це Андрій.
+- Приємно познайомитися з вами!
+- Ми з Андрієм разом працюємо.
+- О, ви колеги! Як давно?
+
+**Scenario 3: Family life**
+- Ти живеш з батьками?
+- Ні, я живу з дружиною і донькою.
+- А з ким ти проводиш вихідні?
+- Зазвичай з сім'єю, іноді з друзями.
+
+---
+
+# Activities
+
+## match-up: Nominative to Instrumental
+
+> Match the noun with its instrumental form.
+
+| Left | Right |
+|------|-------|
+| друг | другом |
+| сестра | сестрою |
+| вчитель | вчителем |
+| Марія | Марією |
+| батьки | батьками |
+| подруга | подругою |
+
+## quiz: Instrumental Case
+
+> Choose the correct instrumental form.
+
+1. "I'm going with a friend (m)" - Я йду з ___.
+   - [x] другом
+   - [ ] друга
+   - [ ] другові
+   - [ ] друг
+   > Masculine instrumental: друг → другом.
+
+2. "She lives with her sister" - Вона живе з ___.
+   - [x] сестрою
+   - [ ] сестри
+   - [ ] сестрі
+   - [ ] сестру
+   > Feminine instrumental: сестра → сестрою.
+
+3. "We're talking with the teacher" - Ми розмовляємо з ___.
+   - [x] вчителем
+   - [ ] вчитель
+   - [ ] вчителя
+   - [ ] вчителеві
+   > Soft masculine instrumental: вчитель → вчителем.
+
+4. "He travels with his parents" - Він їде з ___.
+   - [x] батьками
+   - [ ] батьки
+   - [ ] батьків
+   - [ ] батькам
+   > Plural instrumental: батьки → батьками.
+
+5. "I want to be with you (informal)" - Я хочу бути з ___.
+   - [x] тобою
+   - [ ] тобі
+   - [ ] тебе
+   - [ ] ти
+   > Instrumental of ти = тобою.
+
+6. "She's meeting with him" - Вона зустрічається з ___.
+   - [x] ним
+   - [ ] його
+   - [ ] йому
+   - [ ] він
+   > Instrumental of він = ним.
+
+7. "They work with us" - Вони працюють з ___.
+   - [x] нами
+   - [ ] нас
+   - [ ] нам
+   - [ ] ми
+   > Instrumental of ми = нами.
+
+8. "Come with us!" - Ходімо з ___!
+   - [x] нами
+   - [ ] нас
+   - [ ] нам
+   - [ ] ми
+   > Instrumental of ми = нами.
+
+## group-sort: Gender in Instrumental
+
+> Sort the instrumental forms by the original noun's gender.
+
+### Masculine Instrumental
+- другом
+- братом
+- вчителем
+- батьком
+
+### Feminine Instrumental
+- сестрою
+- подругою
+- мамою
+- Марією
+
+### Plural Instrumental
+- батьками
+- друзями
+- сестрами
+- колегами
+
+---
+
+# Vocabulary
+
+| Word | IPA | English | POS | Gender | Note |
+|------|-----|---------|-----|--------|------|
+| з/із/зі | /z/, /iz/, /zʲi/ | with | prep | - | + instr |
+| разом | /ˈrɑzom/ | together | adv | - | |
+| удвох | /udˈvox/ | the two (together) | adv | - | |
+| утрьох | /uˈtrʲox/ | the three (together) | adv | - | |
+| зустрічатися | /zustriˈtʃɑtɪsʲɑ/ | to meet | verb | - | з + instr |
+| вітатися | /viˈtɑtɪsʲɑ/ | to greet | verb | - | з + instr |
+| прощатися | /proʃˈtʃɑtɪsʲɑ/ | to say goodbye | verb | - | з + instr |
+| знайомитися | /znɑˈjomɪtɪsʲɑ/ | to get acquainted | verb | - | з + instr |
+| мною | /mnoju/ | (with) me | pron | - | Instr. of я |
+| тобою | /toˈboju/ | (with) you | pron | - | Instr. of ти |
+| ним | /nɪm/ | (with) him/it | pron | - | Instr. of він/воно |
+| нею | /ˈnɛju/ | (with) her | pron | - | Instr. of вона |
+| нами | /ˈnɑmɪ/ | (with) us | pron | - | Instr. of ми |
+| вами | /ˈvɑmɪ/ | (with) you | pron | - | Instr. of ви |
+| ними | /ˈnɪmɪ/ | (with) them | pron | - | Instr. of вони |
+| компанія | /kompɑˈnʲijɑ/ | company, group | noun | f | |
+
+---
+
+# Summary
+
+## Instrumental Endings
+
+| Gender | Nom ending | Instr ending | Example |
+|--------|------------|--------------|---------|
+| Masculine | consonant | -ом | друг → другом |
+| Masc soft | -ь/-й | -ем | вчитель → вчителем |
+| Feminine | -а | -ою | сестра → сестрою |
+| Fem soft | -я | -ею | Марія → Марією |
+| Neuter | -о/-е | -ом/-ем | місто → містом |
+| Plural | - | -ами/-ями | друзі → друзями |
+
+## Instrumental Pronouns
+
+| Nominative | Instrumental |
+|------------|--------------|
+| я | мною |
+| ти | тобою |
+| він/воно | ним |
+| вона | нею |
+| ми | нами |
+| ви | вами |
+| вони | ними |
+
+## Common Patterns
+
+| Pattern | Example |
+|---------|---------|
+| жити з + instr | жити з батьками |
+| йти з + instr | йти з другом |
+| працювати з + instr | працювати з колегами |
+| зустрічатися з + instr | зустрічатися з подругою |
+
+> 💡 **Key Takeaways**
+>
+> - Instrumental answers "з ким?" (with whom?) and "з чим?" (with what?)
+> - Masculine: -ом (hard) / -ем (soft)
+> - Feminine: -ою (hard) / -ею (soft)
+> - Plural: -ами (hard) / -ями (soft)
+> - Use зі before consonant clusters: зі мною, зі студентом
+> - Many social verbs use з + instrumental: зустрічатися, знайомитися
