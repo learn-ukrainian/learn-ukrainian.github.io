@@ -5,24 +5,143 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>A1 Modules | Ukrainian for English Speakers</title>
   <style>
-    :root { --primary: #1a5fb4; --bg: #fafafa; --card-bg: #fff; --text: #1e1e1e; --text-muted: #5e5e5e; --border: #e0e0e0; }
+    :root {
+      --primary: #1a5fb4;
+      --bg: #f8fafc;
+      --card-bg: #fff;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+    }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
-    .top-nav { background: #2e2e2e; color: white; padding: 0.75rem 2rem; font-size: 0.875rem; }
-    .top-nav a { color: white; text-decoration: none; }
-    .top-nav a:hover { text-decoration: underline; }
-    header { background: var(--primary); color: white; padding: 3rem 2rem; text-align: center; }
-    header h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
-    header p { opacity: 0.9; }
-    main { max-width: 900px; margin: 0 auto; padding: 2rem; }
-    .module-list { display: flex; flex-direction: column; gap: 1rem; }
-    .module-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; display: flex; align-items: center; gap: 1.5rem; text-decoration: none; color: inherit; transition: box-shadow 0.2s, border-color 0.2s; }
-    .module-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-color: var(--primary); }
-    .module-num { background: var(--primary); color: white; width: 50px; height: 50px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.25rem; flex-shrink: 0; }
-    .module-info h3 { color: var(--primary); margin-bottom: 0.25rem; }
-    .module-info p { color: var(--text-muted); font-size: 0.875rem; }
-    .phase-badge { background: #e8f4fd; color: var(--primary); padding: 0.125rem 0.5rem; border-radius: 4px; font-size: 0.75rem; margin-left: 0.5rem; }
-    footer { text-align: center; padding: 2rem; color: var(--text-muted); }
+
+    .top-nav { background: #1e293b; color: white; padding: 0.75rem 2rem; font-size: 0.875rem; }
+    .top-nav a { color: white; text-decoration: none; opacity: 0.9; }
+    .top-nav a:hover { opacity: 1; text-decoration: underline; }
+
+    header { background: linear-gradient(135deg, #1e40af, #7c3aed); color: white; padding: 3rem 2rem; text-align: center; }
+    header h1 { font-size: 2.75rem; margin-bottom: 0.5rem; font-weight: 700; }
+    header p { opacity: 0.9; font-size: 1.125rem; }
+
+    main { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+
+    .phase-section { margin-bottom: 3rem; }
+    .phase-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 2px solid var(--border);
+    }
+    .phase-header h2 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .phase-count {
+      background: var(--border);
+      color: var(--text-muted);
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+
+    .tile-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .tile {
+      background: var(--card-bg);
+      border-radius: 16px;
+      overflow: hidden;
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      display: flex;
+      flex-direction: column;
+    }
+    .tile:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.12);
+    }
+
+    .tile-header {
+      padding: 1.25rem 1.25rem 1rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+    .tile-num {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.125rem;
+      color: white;
+      flex-shrink: 0;
+    }
+    .tile-titles {
+      flex: 1;
+      min-width: 0;
+    }
+    .tile-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.25rem;
+      line-height: 1.3;
+    }
+    .tile-subtitle {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .tile-footer {
+      padding: 0.875rem 1.25rem;
+      background: #f8fafc;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: auto;
+    }
+    .tile-phase {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.25rem 0.625rem;
+      border-radius: 6px;
+    }
+    .tile-meta {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .tile-meta svg {
+      width: 14px;
+      height: 14px;
+      opacity: 0.6;
+    }
+
+    footer { text-align: center; padding: 3rem 2rem; color: var(--text-muted); font-size: 0.875rem; }
+
+    @media (max-width: 640px) {
+      .tile-grid { grid-template-columns: 1fr; }
+      header { padding: 2rem 1rem; }
+      header h1 { font-size: 2rem; }
+      main { padding: 1.5rem 1rem; }
+    }
   </style>
 </head>
 <body>
@@ -34,219 +153,574 @@
     <p>Ukrainian for English Speakers · 30 Modules</p>
   </header>
   <main>
-    <div class="module-list">
-      
-      <a href="module-01.html" class="module-card">
-        <div class="module-num">01</div>
-        <div class="module-info">
-          <h3>The Cyrillic Code I<span class="phase-badge">A1.1</span></h3>
-          <p>True Friends & False Friends</p>
-        </div>
-      </a>
-      <a href="module-02.html" class="module-card">
-        <div class="module-num">02</div>
-        <div class="module-info">
-          <h3>The Cyrillic Code II<span class="phase-badge">A1.1</span></h3>
-          <p>Completing the Alphabet</p>
-        </div>
-      </a>
-      <a href="module-03.html" class="module-card">
-        <div class="module-num">03</div>
-        <div class="module-info">
-          <h3>The Gender Code<span class="phase-badge">A1.1</span></h3>
-          <p>Masculine, Feminine, Neuter</p>
-        </div>
-      </a>
-      <a href="module-04.html" class="module-card">
-        <div class="module-num">04</div>
-        <div class="module-info">
-          <h3>This Is / I Am<span class="phase-badge">A1.1</span></h3>
-          <p>Zero Copula & Personal Pronouns</p>
-        </div>
-      </a>
-      <a href="module-05.html" class="module-card">
-        <div class="module-num">05</div>
-        <div class="module-info">
-          <h3>My World<span class="phase-badge">A1.1</span></h3>
-          <p>Demonstratives & Possessives</p>
-        </div>
-      </a>
-      <a href="module-06.html" class="module-card">
-        <div class="module-num">06</div>
-        <div class="module-info">
-          <h3>The Living Verb I<span class="phase-badge">A1.2</span></h3>
-          <p>Present Tense Basics</p>
-        </div>
-      </a>
-      <a href="module-07.html" class="module-card">
-        <div class="module-num">07</div>
-        <div class="module-info">
-          <h3>Questions & Negation<span class="phase-badge">A1.2</span></h3>
-          <p>Asking and Denying</p>
-        </div>
-      </a>
-      <a href="module-08.html" class="module-card">
-        <div class="module-num">08</div>
-        <div class="module-info">
-          <h3>The Living Verb II<span class="phase-badge">A1.2</span></h3>
-          <p>Class II Conjugation</p>
-        </div>
-      </a>
-      <a href="module-09.html" class="module-card">
-        <div class="module-num">09</div>
-        <div class="module-info">
-          <h3>Numbers & Money<span class="phase-badge">A1.2</span></h3>
-          <p>Counting & Currency</p>
-        </div>
-      </a>
-      <a href="module-10.html" class="module-card">
-        <div class="module-num">10</div>
-        <div class="module-info">
-          <h3>Checkpoint: First Contact<span class="phase-badge">A1.2</span></h3>
-          <p>A1.1 Review</p>
-        </div>
-      </a>
-      <a href="module-11.html" class="module-card">
-        <div class="module-num">11</div>
-        <div class="module-info">
-          <h3>The Accusative I<span class="phase-badge">A1.2</span></h3>
-          <p>Direct Objects - Things</p>
-        </div>
-      </a>
-      <a href="module-12.html" class="module-card">
-        <div class="module-num">12</div>
-        <div class="module-info">
-          <h3>The Accusative II<span class="phase-badge">A1.2</span></h3>
-          <p>Direct Objects - People</p>
-        </div>
-      </a>
-      <a href="module-13.html" class="module-card">
-        <div class="module-num">13</div>
-        <div class="module-info">
-          <h3>The Locative Case<span class="phase-badge">A1.2</span></h3>
-          <p>Where Things Are</p>
-        </div>
-      </a>
-      <a href="module-14.html" class="module-card">
-        <div class="module-num">14</div>
-        <div class="module-info">
-          <h3>Possessive Pronouns<span class="phase-badge">A1.2</span></h3>
-          <p>My, Your, Our</p>
-        </div>
-      </a>
-      <a href="module-15.html" class="module-card">
-        <div class="module-num">15</div>
-        <div class="module-info">
-          <h3>City Navigation<span class="phase-badge">A1.2</span></h3>
-          <p>Finding Your Way</p>
-        </div>
-      </a>
-      <a href="module-16.html" class="module-card">
-        <div class="module-num">16</div>
-        <div class="module-info">
-          <h3>The Genitive Case<span class="phase-badge">A1.2</span></h3>
-          <p>Possession & Absence</p>
-        </div>
-      </a>
-      <a href="module-17.html" class="module-card">
-        <div class="module-num">17</div>
-        <div class="module-info">
-          <h3>Food & Drinks<span class="phase-badge">A1.3</span></h3>
-          <p>What's on the Menu?</p>
-        </div>
-      </a>
-      <a href="module-18.html" class="module-card">
-        <div class="module-num">18</div>
-        <div class="module-info">
-          <h3>At the Café<span class="phase-badge">A1.3</span></h3>
-          <p>Ordering Food & Drinks</p>
-        </div>
-      </a>
-      <a href="module-19.html" class="module-card">
-        <div class="module-num">19</div>
-        <div class="module-info">
-          <h3>Shopping<span class="phase-badge">A1.3</span></h3>
-          <p>At the Store & Market</p>
-        </div>
-      </a>
-      <a href="module-20.html" class="module-card">
-        <div class="module-num">20</div>
-        <div class="module-info">
-          <h3>Checkpoint: Navigating Life<span class="phase-badge">A1.3</span></h3>
-          <p>A1.2 Review</p>
-        </div>
-      </a>
-      <a href="module-21.html" class="module-card">
-        <div class="module-num">21</div>
-        <div class="module-info">
-          <h3>The Past Tense<span class="phase-badge">A1.3</span></h3>
-          <p>What Happened Yesterday</p>
-        </div>
-      </a>
-      <a href="module-22.html" class="module-card">
-        <div class="module-num">22</div>
-        <div class="module-info">
-          <h3>The Future Tense<span class="phase-badge">A1.3</span></h3>
-          <p>Plans & Predictions</p>
-        </div>
-      </a>
-      <a href="module-23.html" class="module-card">
-        <div class="module-num">23</div>
-        <div class="module-info">
-          <h3>Time Expressions<span class="phase-badge">A1.3</span></h3>
-          <p>Days, Months & Hours</p>
-        </div>
-      </a>
-      <a href="module-24.html" class="module-card">
-        <div class="module-num">24</div>
-        <div class="module-info">
-          <h3>Modal Verbs<span class="phase-badge">A1.3</span></h3>
-          <p>Can, Must, Want</p>
-        </div>
-      </a>
-      <a href="module-25.html" class="module-card">
-        <div class="module-num">25</div>
-        <div class="module-info">
-          <h3>Daily Routine<span class="phase-badge">A1.3</span></h3>
-          <p>A Day in Your Life</p>
-        </div>
-      </a>
-      <a href="module-26.html" class="module-card">
-        <div class="module-num">26</div>
-        <div class="module-info">
-          <h3>Adjectives<span class="phase-badge">A1.3</span></h3>
-          <p>Describing the World</p>
-        </div>
-      </a>
-      <a href="module-27.html" class="module-card">
-        <div class="module-num">27</div>
-        <div class="module-info">
-          <h3>Clothes & Appearance<span class="phase-badge">A1.3</span></h3>
-          <p>What Are You Wearing?</p>
-        </div>
-      </a>
-      <a href="module-28.html" class="module-card">
-        <div class="module-num">28</div>
-        <div class="module-info">
-          <h3>Weather<span class="phase-badge">A1.3</span></h3>
-          <p>Sun, Rain & Snow</p>
-        </div>
-      </a>
-      <a href="module-29.html" class="module-card">
-        <div class="module-num">29</div>
-        <div class="module-info">
-          <h3>Family<span class="phase-badge">A1.3</span></h3>
-          <p>Parents, Siblings & Beyond</p>
-        </div>
-      </a>
-      <a href="module-30.html" class="module-card">
-        <div class="module-num">30</div>
-        <div class="module-info">
-          <h3>A1 Capstone<span class="phase-badge">A1.3</span></h3>
-          <p>Your Ukrainian Foundation</p>
-        </div>
-      </a>
-    </div>
+    
+    <section class="phase-section">
+      <div class="phase-header">
+        <h2>A1.1</h2>
+        <span class="phase-count">5 modules</span>
+      </div>
+      <div class="tile-grid">
+        
+        <a href="module-01.html" class="tile">
+          <div class="tile-header">
+            <div class="tile-num" style="background: #059669;">01</div>
+            <div class="tile-titles">
+              <div class="tile-title">The Cyrillic Code I</div>
+              <div class="tile-subtitle">True Friends & False Friends</div>
+            </div>
+          </div>
+          <div class="tile-footer">
+            <span class="tile-phase" style="background: #d1fae5; color: #059669;">A1.1</span>
+            <span class="tile-meta">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              45 min
+            </span>
+          </div>
+        </a>
+        <a href="module-02.html" class="tile">
+          <div class="tile-header">
+            <div class="tile-num" style="background: #059669;">02</div>
+            <div class="tile-titles">
+              <div class="tile-title">The Cyrillic Code II</div>
+              <div class="tile-subtitle">Completing the Alphabet</div>
+            </div>
+          </div>
+          <div class="tile-footer">
+            <span class="tile-phase" style="background: #d1fae5; color: #059669;">A1.1</span>
+            <span class="tile-meta">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              45 min
+            </span>
+          </div>
+        </a>
+        <a href="module-03.html" class="tile">
+          <div class="tile-header">
+            <div class="tile-num" style="background: #059669;">03</div>
+            <div class="tile-titles">
+              <div class="tile-title">The Gender Code</div>
+              <div class="tile-subtitle">Masculine, Feminine, Neuter</div>
+            </div>
+          </div>
+          <div class="tile-footer">
+            <span class="tile-phase" style="background: #d1fae5; color: #059669;">A1.1</span>
+            <span class="tile-meta">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              40 min
+            </span>
+          </div>
+        </a>
+        <a href="module-04.html" class="tile">
+          <div class="tile-header">
+            <div class="tile-num" style="background: #059669;">04</div>
+            <div class="tile-titles">
+              <div class="tile-title">This Is / I Am</div>
+              <div class="tile-subtitle">Zero Copula & Personal Pronouns</div>
+            </div>
+          </div>
+          <div class="tile-footer">
+            <span class="tile-phase" style="background: #d1fae5; color: #059669;">A1.1</span>
+            <span class="tile-meta">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              40 min
+            </span>
+          </div>
+        </a>
+        <a href="module-05.html" class="tile">
+          <div class="tile-header">
+            <div class="tile-num" style="background: #059669;">05</div>
+            <div class="tile-titles">
+              <div class="tile-title">My World</div>
+              <div class="tile-subtitle">Demonstratives & Possessives</div>
+            </div>
+          </div>
+          <div class="tile-footer">
+            <span class="tile-phase" style="background: #d1fae5; color: #059669;">A1.1</span>
+            <span class="tile-meta">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              45 min
+            </span>
+          </div>
+        </a>
+      </div>
+    </section>
+    <section class="phase-section">
+      <div class="phase-header">
+        <h2>A1.2</h2>
+        <span class="phase-count">11 modules</span>
+      </div>
+      <div class="tile-grid">
+        
+        <a href="module-06.html" class="tile">
+          <div class="tile-header">
+            <div class="tile-num" style="background: #0891b2;">06</div>
+            <div class="tile-titles">
+              <div class="tile-title">The Living Verb I</div>
+              <div class="tile-subtitle">Present Tense Basics</div>
+            </div>
+          </div>
+          <div class="tile-footer">
+            <span class="tile-phase" style="background: #cffafe; color: #0891b2;">A1.2</span>
+            <span class="tile-meta">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              50 min
+            </span>
+          </div>
+        </a>
+        <a href="module-07.html" class="tile">
+          <div class="tile-header">
+            <div class="tile-num" style="background: #0891b2;">07</div>
+            <div class="tile-titles">
+              <div class="tile-title">Questions & Negation</div>
+              <div class="tile-subtitle">Asking and Denying</div>
+            </div>
+          </div>
+          <div class="tile-footer">
+            <span class="tile-phase" style="background: #cffafe; color: #0891b2;">A1.2</span>
+            <span class="tile-meta">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              45 min
+            </span>
+          </div>
+        </a>
+        <a href="module-08.html" class="tile">
+          <div class="tile-header">
+            <div class="tile-num" style="background: #0891b2;">08</div>
+            <div class="tile-titles">
+              <div class="tile-title">The Living Verb II</div>
+              <div class="tile-subtitle">Class II Conjugation</div>
+            </div>
+          </div>
+          <div class="tile-footer">
+            <span class="tile-phase" style="background: #cffafe; color: #0891b2;">A1.2</span>
+            <span class="tile-meta">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              45 min
+            </span>
+          </div>
+        </a>
+        <a href="module-09.html" class="tile">
+          <div class="tile-header">
+            <div class="tile-num" style="background: #0891b2;">09</div>
+            <div class="tile-titles">
+              <div class="tile-title">Numbers & Money</div>
+              <div class="tile-subtitle">Counting & Currency</div>
+            </div>
+          </div>
+          <div class="tile-footer">
+            <span class="tile-phase" style="background: #cffafe; color: #0891b2;">A1.2</span>
+            <span class="tile-meta">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              50 min
+            </span>
+          </div>
+        </a>
+        <a href="module-10.html" class="tile">
+          <div class="tile-header">
+            <div class="tile-num" style="background: #0891b2;">10</div>
+            <div class="tile-titles">
+              <div class="tile-title">Checkpoint: First Contact</div>
+              <div class="tile-subtitle">A1.1 Review</div>
+            </div>
+          </div>
+          <div class="tile-footer">
+            <span class="tile-phase" style="background: #cffafe; color: #0891b2;">A1.2</span>
+            <span class="tile-meta">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              45 min
+            </span>
+          </div>
+        </a>
+        <a href="module-11.html" class="tile">
+          <div class="tile-header">
+            <div class="tile-num" style="background: #0891b2;">11</div>
+            <div class="tile-titles">
+              <div class="tile-title">The Accusative I</div>
+              <div class="tile-subtitle">Direct Objects - Things</div>
+            </div>
+          </div>
+          <div class="tile-footer">
+            <span class="tile-phase" style="background: #cffafe; color: #0891b2;">A1.2</span>
+            <span class="tile-meta">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              50 min
+            </span>
+          </div>
+        </a>
+        <a href="module-12.html" class="tile">
+          <div class="tile-header">
+            <div class="tile-num" style="background: #0891b2;">12</div>
+            <div class="tile-titles">
+              <div class="tile-title">The Accusative II</div>
+              <div class="tile-subtitle">Direct Objects - People</div>
+            </div>
+          </div>
+          <div class="tile-footer">
+            <span class="tile-phase" style="background: #cffafe; color: #0891b2;">A1.2</span>
+            <span class="tile-meta">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              45 min
+            </span>
+          </div>
+        </a>
+        <a href="module-13.html" class="tile">
+          <div class="tile-header">
+            <div class="tile-num" style="background: #0891b2;">13</div>
+            <div class="tile-titles">
+              <div class="tile-title">The Locative Case</div>
+              <div class="tile-subtitle">Where Things Are</div>
+            </div>
+          </div>
+          <div class="tile-footer">
+            <span class="tile-phase" style="background: #cffafe; color: #0891b2;">A1.2</span>
+            <span class="tile-meta">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              50 min
+            </span>
+          </div>
+        </a>
+        <a href="module-14.html" class="tile">
+          <div class="tile-header">
+            <div class="tile-num" style="background: #0891b2;">14</div>
+            <div class="tile-titles">
+              <div class="tile-title">Possessive Pronouns</div>
+              <div class="tile-subtitle">My, Your, Our</div>
+            </div>
+          </div>
+          <div class="tile-footer">
+            <span class="tile-phase" style="background: #cffafe; color: #0891b2;">A1.2</span>
+            <span class="tile-meta">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              45 min
+            </span>
+          </div>
+        </a>
+        <a href="module-15.html" class="tile">
+          <div class="tile-header">
+            <div class="tile-num" style="background: #0891b2;">15</div>
+            <div class="tile-titles">
+              <div class="tile-title">City Navigation</div>
+              <div class="tile-subtitle">Finding Your Way</div>
+            </div>
+          </div>
+          <div class="tile-footer">
+            <span class="tile-phase" style="background: #cffafe; color: #0891b2;">A1.2</span>
+            <span class="tile-meta">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              50 min
+            </span>
+          </div>
+        </a>
+        <a href="module-16.html" class="tile">
+          <div class="tile-header">
+            <div class="tile-num" style="background: #0891b2;">16</div>
+            <div class="tile-titles">
+              <div class="tile-title">The Genitive Case</div>
+              <div class="tile-subtitle">Possession & Absence</div>
+            </div>
+          </div>
+          <div class="tile-footer">
+            <span class="tile-phase" style="background: #cffafe; color: #0891b2;">A1.2</span>
+            <span class="tile-meta">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              55 min
+            </span>
+          </div>
+        </a>
+      </div>
+    </section>
+    <section class="phase-section">
+      <div class="phase-header">
+        <h2>A1.3</h2>
+        <span class="phase-count">14 modules</span>
+      </div>
+      <div class="tile-grid">
+        
+        <a href="module-17.html" class="tile">
+          <div class="tile-header">
+            <div class="tile-num" style="background: #0284c7;">17</div>
+            <div class="tile-titles">
+              <div class="tile-title">Food & Drinks</div>
+              <div class="tile-subtitle">What's on the Menu?</div>
+            </div>
+          </div>
+          <div class="tile-footer">
+            <span class="tile-phase" style="background: #e0f2fe; color: #0284c7;">A1.3</span>
+            <span class="tile-meta">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              50 min
+            </span>
+          </div>
+        </a>
+        <a href="module-18.html" class="tile">
+          <div class="tile-header">
+            <div class="tile-num" style="background: #0284c7;">18</div>
+            <div class="tile-titles">
+              <div class="tile-title">At the Café</div>
+              <div class="tile-subtitle">Ordering Food & Drinks</div>
+            </div>
+          </div>
+          <div class="tile-footer">
+            <span class="tile-phase" style="background: #e0f2fe; color: #0284c7;">A1.3</span>
+            <span class="tile-meta">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              45 min
+            </span>
+          </div>
+        </a>
+        <a href="module-19.html" class="tile">
+          <div class="tile-header">
+            <div class="tile-num" style="background: #0284c7;">19</div>
+            <div class="tile-titles">
+              <div class="tile-title">Shopping</div>
+              <div class="tile-subtitle">At the Store & Market</div>
+            </div>
+          </div>
+          <div class="tile-footer">
+            <span class="tile-phase" style="background: #e0f2fe; color: #0284c7;">A1.3</span>
+            <span class="tile-meta">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              50 min
+            </span>
+          </div>
+        </a>
+        <a href="module-20.html" class="tile">
+          <div class="tile-header">
+            <div class="tile-num" style="background: #0284c7;">20</div>
+            <div class="tile-titles">
+              <div class="tile-title">Checkpoint: Navigating Life</div>
+              <div class="tile-subtitle">A1.2 Review</div>
+            </div>
+          </div>
+          <div class="tile-footer">
+            <span class="tile-phase" style="background: #e0f2fe; color: #0284c7;">A1.3</span>
+            <span class="tile-meta">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              50 min
+            </span>
+          </div>
+        </a>
+        <a href="module-21.html" class="tile">
+          <div class="tile-header">
+            <div class="tile-num" style="background: #0284c7;">21</div>
+            <div class="tile-titles">
+              <div class="tile-title">The Past Tense</div>
+              <div class="tile-subtitle">What Happened Yesterday</div>
+            </div>
+          </div>
+          <div class="tile-footer">
+            <span class="tile-phase" style="background: #e0f2fe; color: #0284c7;">A1.3</span>
+            <span class="tile-meta">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              55 min
+            </span>
+          </div>
+        </a>
+        <a href="module-22.html" class="tile">
+          <div class="tile-header">
+            <div class="tile-num" style="background: #0284c7;">22</div>
+            <div class="tile-titles">
+              <div class="tile-title">The Future Tense</div>
+              <div class="tile-subtitle">Plans & Predictions</div>
+            </div>
+          </div>
+          <div class="tile-footer">
+            <span class="tile-phase" style="background: #e0f2fe; color: #0284c7;">A1.3</span>
+            <span class="tile-meta">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              50 min
+            </span>
+          </div>
+        </a>
+        <a href="module-23.html" class="tile">
+          <div class="tile-header">
+            <div class="tile-num" style="background: #0284c7;">23</div>
+            <div class="tile-titles">
+              <div class="tile-title">Time Expressions</div>
+              <div class="tile-subtitle">Days, Months & Hours</div>
+            </div>
+          </div>
+          <div class="tile-footer">
+            <span class="tile-phase" style="background: #e0f2fe; color: #0284c7;">A1.3</span>
+            <span class="tile-meta">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              50 min
+            </span>
+          </div>
+        </a>
+        <a href="module-24.html" class="tile">
+          <div class="tile-header">
+            <div class="tile-num" style="background: #0284c7;">24</div>
+            <div class="tile-titles">
+              <div class="tile-title">Modal Verbs</div>
+              <div class="tile-subtitle">Can, Must, Want</div>
+            </div>
+          </div>
+          <div class="tile-footer">
+            <span class="tile-phase" style="background: #e0f2fe; color: #0284c7;">A1.3</span>
+            <span class="tile-meta">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              45 min
+            </span>
+          </div>
+        </a>
+        <a href="module-25.html" class="tile">
+          <div class="tile-header">
+            <div class="tile-num" style="background: #0284c7;">25</div>
+            <div class="tile-titles">
+              <div class="tile-title">Daily Routine</div>
+              <div class="tile-subtitle">A Day in Your Life</div>
+            </div>
+          </div>
+          <div class="tile-footer">
+            <span class="tile-phase" style="background: #e0f2fe; color: #0284c7;">A1.3</span>
+            <span class="tile-meta">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              50 min
+            </span>
+          </div>
+        </a>
+        <a href="module-26.html" class="tile">
+          <div class="tile-header">
+            <div class="tile-num" style="background: #0284c7;">26</div>
+            <div class="tile-titles">
+              <div class="tile-title">Adjectives</div>
+              <div class="tile-subtitle">Describing the World</div>
+            </div>
+          </div>
+          <div class="tile-footer">
+            <span class="tile-phase" style="background: #e0f2fe; color: #0284c7;">A1.3</span>
+            <span class="tile-meta">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              50 min
+            </span>
+          </div>
+        </a>
+        <a href="module-27.html" class="tile">
+          <div class="tile-header">
+            <div class="tile-num" style="background: #0284c7;">27</div>
+            <div class="tile-titles">
+              <div class="tile-title">Clothes & Appearance</div>
+              <div class="tile-subtitle">What Are You Wearing?</div>
+            </div>
+          </div>
+          <div class="tile-footer">
+            <span class="tile-phase" style="background: #e0f2fe; color: #0284c7;">A1.3</span>
+            <span class="tile-meta">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              45 min
+            </span>
+          </div>
+        </a>
+        <a href="module-28.html" class="tile">
+          <div class="tile-header">
+            <div class="tile-num" style="background: #0284c7;">28</div>
+            <div class="tile-titles">
+              <div class="tile-title">Weather</div>
+              <div class="tile-subtitle">Sun, Rain & Snow</div>
+            </div>
+          </div>
+          <div class="tile-footer">
+            <span class="tile-phase" style="background: #e0f2fe; color: #0284c7;">A1.3</span>
+            <span class="tile-meta">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              45 min
+            </span>
+          </div>
+        </a>
+        <a href="module-29.html" class="tile">
+          <div class="tile-header">
+            <div class="tile-num" style="background: #0284c7;">29</div>
+            <div class="tile-titles">
+              <div class="tile-title">Family</div>
+              <div class="tile-subtitle">Parents, Siblings & Beyond</div>
+            </div>
+          </div>
+          <div class="tile-footer">
+            <span class="tile-phase" style="background: #e0f2fe; color: #0284c7;">A1.3</span>
+            <span class="tile-meta">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              50 min
+            </span>
+          </div>
+        </a>
+        <a href="module-30.html" class="tile">
+          <div class="tile-header">
+            <div class="tile-num" style="background: #0284c7;">30</div>
+            <div class="tile-titles">
+              <div class="tile-title">A1 Capstone</div>
+              <div class="tile-subtitle">Your Ukrainian Foundation</div>
+            </div>
+          </div>
+          <div class="tile-footer">
+            <span class="tile-phase" style="background: #e0f2fe; color: #0284c7;">A1.3</span>
+            <span class="tile-meta">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              60 min
+            </span>
+          </div>
+        </a>
+      </div>
+    </section>
   </main>
   <footer>curricula-opus · A1</footer>
 </body>

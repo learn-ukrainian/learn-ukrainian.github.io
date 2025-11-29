@@ -738,7 +738,23 @@ function generateHTML(vibeJSON: any, nav: NavInfo): string {
 // INDEX PAGE GENERATORS
 // ============================================================================
 
-function generateLevelIndex(modules: Array<{ num: number; title: string; subtitle?: string; phase: string }>, level: string, langPair: string): string {
+function generateLevelIndex(modules: Array<{ num: number; title: string; subtitle?: string; phase: string; duration?: number; tags?: string[] }>, level: string, langPair: string): string {
+  // Define phase colors
+  const phaseColors: Record<string, { bg: string; accent: string; light: string }> = {
+    'A1.1': { bg: '#059669', accent: '#10b981', light: '#d1fae5' },
+    'A1.2': { bg: '#0891b2', accent: '#06b6d4', light: '#cffafe' },
+    'A1.3': { bg: '#0284c7', accent: '#0ea5e9', light: '#e0f2fe' },
+    'A2.1': { bg: '#2563eb', accent: '#3b82f6', light: '#dbeafe' },
+    'A2.2': { bg: '#7c3aed', accent: '#8b5cf6', light: '#ede9fe' },
+    'A2.3': { bg: '#9333ea', accent: '#a855f7', light: '#f3e8ff' },
+    'B1.1': { bg: '#c026d3', accent: '#d946ef', light: '#fae8ff' },
+    'B1.2': { bg: '#db2777', accent: '#ec4899', light: '#fce7f3' },
+  };
+  const defaultColor = { bg: '#6b7280', accent: '#9ca3af', light: '#f3f4f6' };
+
+  // Group modules by phase
+  const phases = [...new Set(modules.map(m => m.phase))];
+
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -746,24 +762,143 @@ function generateLevelIndex(modules: Array<{ num: number; title: string; subtitl
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${level} Modules | Ukrainian for English Speakers</title>
   <style>
-    :root { --primary: #1a5fb4; --bg: #fafafa; --card-bg: #fff; --text: #1e1e1e; --text-muted: #5e5e5e; --border: #e0e0e0; }
+    :root {
+      --primary: #1a5fb4;
+      --bg: #f8fafc;
+      --card-bg: #fff;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+    }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
-    .top-nav { background: #2e2e2e; color: white; padding: 0.75rem 2rem; font-size: 0.875rem; }
-    .top-nav a { color: white; text-decoration: none; }
-    .top-nav a:hover { text-decoration: underline; }
-    header { background: var(--primary); color: white; padding: 3rem 2rem; text-align: center; }
-    header h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
-    header p { opacity: 0.9; }
-    main { max-width: 900px; margin: 0 auto; padding: 2rem; }
-    .module-list { display: flex; flex-direction: column; gap: 1rem; }
-    .module-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; display: flex; align-items: center; gap: 1.5rem; text-decoration: none; color: inherit; transition: box-shadow 0.2s, border-color 0.2s; }
-    .module-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-color: var(--primary); }
-    .module-num { background: var(--primary); color: white; width: 50px; height: 50px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.25rem; flex-shrink: 0; }
-    .module-info h3 { color: var(--primary); margin-bottom: 0.25rem; }
-    .module-info p { color: var(--text-muted); font-size: 0.875rem; }
-    .phase-badge { background: #e8f4fd; color: var(--primary); padding: 0.125rem 0.5rem; border-radius: 4px; font-size: 0.75rem; margin-left: 0.5rem; }
-    footer { text-align: center; padding: 2rem; color: var(--text-muted); }
+
+    .top-nav { background: #1e293b; color: white; padding: 0.75rem 2rem; font-size: 0.875rem; }
+    .top-nav a { color: white; text-decoration: none; opacity: 0.9; }
+    .top-nav a:hover { opacity: 1; text-decoration: underline; }
+
+    header { background: linear-gradient(135deg, #1e40af, #7c3aed); color: white; padding: 3rem 2rem; text-align: center; }
+    header h1 { font-size: 2.75rem; margin-bottom: 0.5rem; font-weight: 700; }
+    header p { opacity: 0.9; font-size: 1.125rem; }
+
+    main { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+
+    .phase-section { margin-bottom: 3rem; }
+    .phase-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 2px solid var(--border);
+    }
+    .phase-header h2 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .phase-count {
+      background: var(--border);
+      color: var(--text-muted);
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+
+    .tile-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .tile {
+      background: var(--card-bg);
+      border-radius: 16px;
+      overflow: hidden;
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      display: flex;
+      flex-direction: column;
+    }
+    .tile:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.12);
+    }
+
+    .tile-header {
+      padding: 1.25rem 1.25rem 1rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+    .tile-num {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.125rem;
+      color: white;
+      flex-shrink: 0;
+    }
+    .tile-titles {
+      flex: 1;
+      min-width: 0;
+    }
+    .tile-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.25rem;
+      line-height: 1.3;
+    }
+    .tile-subtitle {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .tile-footer {
+      padding: 0.875rem 1.25rem;
+      background: #f8fafc;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: auto;
+    }
+    .tile-phase {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.25rem 0.625rem;
+      border-radius: 6px;
+    }
+    .tile-meta {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .tile-meta svg {
+      width: 14px;
+      height: 14px;
+      opacity: 0.6;
+    }
+
+    footer { text-align: center; padding: 3rem 2rem; color: var(--text-muted); font-size: 0.875rem; }
+
+    @media (max-width: 640px) {
+      .tile-grid { grid-template-columns: 1fr; }
+      header { padding: 2rem 1rem; }
+      header h1 { font-size: 2rem; }
+      main { padding: 1.5rem 1rem; }
+    }
   </style>
 </head>
 <body>
@@ -775,16 +910,41 @@ function generateLevelIndex(modules: Array<{ num: number; title: string; subtitl
     <p>Ukrainian for English Speakers · ${modules.length} Modules</p>
   </header>
   <main>
-    <div class="module-list">
-      ${modules.map(m => `
-      <a href="module-${padNumber(m.num)}.html" class="module-card">
-        <div class="module-num">${padNumber(m.num)}</div>
-        <div class="module-info">
-          <h3>${m.title}<span class="phase-badge">${m.phase}</span></h3>
-          ${m.subtitle ? `<p>${m.subtitle}</p>` : ''}
-        </div>
-      </a>`).join('')}
-    </div>
+    ${phases.map(phase => {
+      const phaseModules = modules.filter(m => m.phase === phase);
+      const colors = phaseColors[phase] || defaultColor;
+      return `
+    <section class="phase-section">
+      <div class="phase-header">
+        <h2>${phase}</h2>
+        <span class="phase-count">${phaseModules.length} modules</span>
+      </div>
+      <div class="tile-grid">
+        ${phaseModules.map(m => {
+          const c = phaseColors[m.phase] || defaultColor;
+          return `
+        <a href="module-${padNumber(m.num)}.html" class="tile">
+          <div class="tile-header">
+            <div class="tile-num" style="background: ${c.bg};">${padNumber(m.num)}</div>
+            <div class="tile-titles">
+              <div class="tile-title">${m.title}</div>
+              ${m.subtitle ? `<div class="tile-subtitle">${m.subtitle}</div>` : ''}
+            </div>
+          </div>
+          <div class="tile-footer">
+            <span class="tile-phase" style="background: ${c.light}; color: ${c.bg};">${m.phase}</span>
+            <span class="tile-meta">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              ${m.duration || 45} min
+            </span>
+          </div>
+        </a>`;
+        }).join('')}
+      </div>
+    </section>`;
+    }).join('')}
   </main>
   <footer>curricula-opus · ${level}</footer>
 </body>
@@ -890,6 +1050,7 @@ interface ModuleInfo {
   title: string;
   subtitle?: string;
   phase: string;
+  duration?: number;
   parsed: ParsedModule;
   vibeJSON: any;
 }
@@ -942,6 +1103,7 @@ async function main() {
           title: parsed.frontmatter.title,
           subtitle: parsed.frontmatter.subtitle,
           phase: parsed.frontmatter.phase,
+          duration: parsed.frontmatter.duration,
           parsed,
           vibeJSON,
         });
@@ -994,7 +1156,7 @@ async function main() {
 
       // Generate level index
       const levelIndex = generateLevelIndex(
-        levelModules.map(m => ({ num: m.num, title: m.title, subtitle: m.subtitle, phase: m.phase })),
+        levelModules.map(m => ({ num: m.num, title: m.title, subtitle: m.subtitle, phase: m.phase, duration: m.duration })),
         level,
         langPair
       );
