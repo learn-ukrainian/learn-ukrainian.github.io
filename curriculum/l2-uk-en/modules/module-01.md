@@ -77,17 +77,17 @@ DANGER! These look Latin but sound completely different:
 
 Memorize these! They cause the most confusion for beginners.
 
-> ⚡ **Pro Tip: The False Friends Song**
+> ⚡ **Pro Tip: Remember the False Friends**
 >
-> Remember this phrase: **"Very Nice Russian Students Use Kharkiv"**
-> - **V**ery = В (V, not B)
-> - **N**ice = Н (N, not H)
-> - **R**ussian = Р (R, not P)
-> - **S**tudents = С (S, not C)
-> - **U**se = У (U, not Y)
-> - **Kh**arkiv = Х (KH, not X)
+> Each letter looks like one thing but sounds like another:
+> - **В** looks like B → sounds like **V** (as in Violin)
+> - **Н** looks like H → sounds like **N** (as in Noon)
+> - **Р** looks like P → sounds like **R** (rolled, like Spanish)
+> - **С** looks like C → sounds like **S** (always soft)
+> - **У** looks like Y → sounds like **U** (as in flUte)
+> - **Х** looks like X → sounds like **KH** (German "Bach")
 >
-> This mnemonic will save you from the most common beginner mistakes!
+> Practice these daily until they become automatic!
 
 > 🎯 **Fun Fact: Why the Confusion?**
 >
