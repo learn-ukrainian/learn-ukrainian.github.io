@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 51: Reflexive Verbs | Ukrainian A2</title>
+  <style>
+    :root { --primary: #1a5fb4; --primary-light: #3584e4; --success: #26a269; --warning: #e5a50a; --danger: #c01c28; --bg: #fafafa; --card-bg: #fff; --text: #1e1e1e; --text-muted: #5e5e5e; --border: #e0e0e0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+    .top-nav { background: #2e2e2e; color: white; padding: 0.5rem 2rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.875rem; }
+    .top-nav a { color: white; text-decoration: none; }
+    .top-nav a:hover { text-decoration: underline; }
+    .module-nav { display: flex; gap: 1rem; align-items: center; }
+    .module-nav-link { color: rgba(255,255,255,0.8); text-decoration: none; padding: 0.25rem 0.5rem; }
+    .module-nav-link:hover { color: white; }
+    .module-nav-link.disabled { color: rgba(255,255,255,0.3); pointer-events: none; }
+    .nav { position: sticky; top: 0; background: var(--primary); color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; z-index: 100; }
+    .nav h1 { font-size: 1.25rem; }
+    .nav-tabs { display: flex; gap: 0.5rem; }
+    .nav-tab { background: rgba(255,255,255,0.2); border: none; color: white; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; }
+    .nav-tab.active { background: white; color: var(--primary); }
+    main { max-width: 1000px; margin: 0 auto; padding: 2rem; }
+    .section { display: none; } .section.active { display: block; }
+    .lesson-header { text-align: center; margin-bottom: 2rem; padding: 2rem; background: linear-gradient(135deg, #e8f4fd, #f0e8fd); border-radius: 12px; }
+    .level-badge { background: var(--primary); color: white; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.875rem; }
+    .card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 1.5rem; margin-bottom: 1.5rem; }
+    .card h3 { color: var(--primary); margin-bottom: 1rem; }
+    .canvas-note { background: #fffbeb; border-left: 4px solid var(--warning); padding: 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+    .canvas-note h4 { color: var(--warning); margin-bottom: 0.5rem; }
+    .md-content { line-height: 1.7; }
+    .md-content p { margin: 0.75rem 0; }
+    .md-content ul, .md-content ol { margin: 0.75rem 0; padding-left: 1.5rem; }
+    .md-content li { margin: 0.25rem 0; }
+    .md-content strong { color: var(--primary); }
+    .md-content blockquote { background: #e8f4fd; border-left: 4px solid var(--primary); padding: 0.75rem 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+    .md-content blockquote p { margin: 0.25rem 0; }
+    .md-content table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+    .md-content th, .md-content td { border: 1px solid var(--border); padding: 0.5rem 0.75rem; text-align: left; }
+    .md-content th { background: #f5f5f5; font-weight: 600; }
+    .md-content code { background: #f0f0f0; padding: 0.125rem 0.375rem; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
+    .letter-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0; }
+    .letter-group { border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; }
+    .letter-group.true-friends { border-color: var(--success); } .letter-group.true-friends .letters { color: var(--success); }
+    .letter-group.false-friends { border-color: var(--danger); } .letter-group.false-friends .letters { color: var(--danger); }
+    .letter-group.new-letters { border-color: var(--primary); } .letter-group.new-letters .letters { color: var(--primary); }
+    .letters { font-size: 1.75rem; letter-spacing: 0.3rem; }
+    .match-container { display: flex; gap: 3rem; padding: 1rem; position: relative; }
+    .match-column { flex: 1; display: flex; flex-direction: column; gap: 0.75rem; }
+    .match-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; font-size: 1.25rem; cursor: pointer; }
+    .match-item.selected { border-color: var(--primary); background: #e8f4fd; }
+    .match-item.matched { border-color: var(--success); background: #e8f8f0; }
+    .match-item.wrong { border-color: var(--danger); background: #fde8e8; }
+    .match-lines { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+    .quiz-question { border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; }
+    .quiz-question.answered { pointer-events: none; }
+    .quiz-question .cyrillic { font-size: 1.5rem; color: var(--primary); font-weight: 600; }
+    .quiz-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-top: 1rem; }
+    .quiz-option { background: #f5f5f5; border: 2px solid var(--border); border-radius: 8px; padding: 1rem; cursor: pointer; text-align: center; }
+    .quiz-option.correct { border-color: var(--success); background: #d4edda; }
+    .quiz-option.wrong { border-color: var(--danger); background: #f8d7da; }
+    .quiz-explanation { margin-top: 1rem; padding: 1rem; background: #e8f4fd; border-radius: 8px; display: none; }
+    .quiz-explanation.show { display: block; }
+    .sort-pool { background: #f5f5f5; border: 2px dashed var(--border); border-radius: 12px; padding: 1.5rem; min-height: 80px; margin-bottom: 1rem; }
+    .sort-items { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; }
+    .sort-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 0.75rem 1.25rem; font-size: 1.5rem; cursor: grab; }
+    .sort-item.correct { border-color: var(--success); background: #e8f8f0; }
+    .sort-item.wrong { border-color: var(--danger); background: #fde8e8; }
+    .sort-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    .sort-group { border: 2px solid var(--border); border-radius: 12px; padding: 1rem; min-height: 150px; }
+    .sort-group.drag-over { border-color: var(--primary); background: #e8f4fd; }
+    .sort-group h4 { font-size: 0.875rem; text-align: center; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--border); }
+    .sort-group.true-friends h4 { color: var(--success); border-color: var(--success); }
+    .sort-group.false-friends h4 { color: var(--danger); border-color: var(--danger); }
+    .sort-group.new-letters h4 { color: var(--primary); border-color: var(--primary); }
+    .vocab-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; }
+    .vocab-card { border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; text-align: center; }
+    .vocab-card .uk { font-size: 1.75rem; font-weight: 600; color: var(--primary); }
+    .vocab-card .translit { color: var(--text-muted); font-style: italic; }
+    .vocab-card .en { font-weight: 500; margin: 0.25rem 0; }
+    .vocab-card .note { font-size: 0.75rem; color: #613583; background: #f0e8fd; padding: 0.25rem 0.5rem; border-radius: 4px; }
+    .btn { padding: 0.75rem 1.5rem; border: none; border-radius: 8px; cursor: pointer; }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-outline { background: transparent; border: 2px solid var(--border); }
+    .btn-group { display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem; }
+    .score-display { text-align: center; padding: 1rem; background: linear-gradient(135deg, #e8f8f0, #e8f4fd); border-radius: 8px; margin-bottom: 1rem; }
+    .score-display .score { font-size: 2rem; font-weight: 700; color: var(--success); }
+    .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
+    .completion-message.show { display: block; }
+    footer { text-align: center; padding: 2rem; color: var(--text-muted); }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+  </style>
+</head>
+<body>
+  <div class="top-nav">
+    <a href="../index.html">← l2-uk-en Curriculum</a>
+    <div class="module-nav">
+      <a href="module-50.html" class="module-nav-link">← Module 50</a>
+      <a href="index.html" class="module-nav-link">A2 Index</a>
+      <a href="module-52.html" class="module-nav-link">Module 52 →</a>
+    </div>
+  </div>
+  <nav class="nav">
+    <h1>Module 51: Reflexive Verbs</h1>
+    <div class="nav-tabs">
+      <button class="nav-tab active" data-section="lesson">Lesson</button>
+      <button class="nav-tab" data-section="match">Match</button>
+      <button class="nav-tab" data-section="quiz">Quiz</button>
+      <button class="nav-tab" data-section="sort">Sort</button>
+      <button class="nav-tab" data-section="vocab">Vocab</button>
+    </div>
+  </nav>
+  <main>
+    <section id="lesson" class="section active">
+      <div class="lesson-header">
+        <span class="level-badge">A2 · A2.3</span>
+        <h2 style="font-size:2rem;margin:0.5rem 0">Reflexive Verbs</h2>
+        <p style="color:var(--text-muted)">Actions on Yourself</p>
+      </div>
+      
+      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Doing Things to Yourself</h4><div class="md-content"><p>Some actions are directed at yourself: "I wash myself," "She introduces herself." Ukrainian uses <strong>reflexive verbs</strong> for these!</p>
+<p><strong>Two ways to express reflexivity:</strong></p>
+<ul>
+<li><strong>-ся/-сь suffix</strong> on verbs</li>
+<li><strong>себе</strong> (oneself) as a separate word</li>
+</ul>
+<blockquote>
+  <p>💡 <strong>Did You Know?</strong></p>
+  <p>The suffix -ся comes from the old word "ся" meaning "oneself." It merged with verbs over centuries! Today -ся/-сь is the most common way to show reflexive action, while себе is used for emphasis or with certain verbs.</p>
+</blockquote></div></div><div class="canvas-note"><h4>### The -ся/-сь Suffix</h4><div class="md-content"><p><strong>After consonants: -ся</strong></p>
+<ul>
+<li>митися (to wash oneself) → я <strong>миюся</strong></li>
+<li>вчитися (to study/learn) → він <strong>вчиться</strong></li>
+<li>одягатися (to dress oneself) → ми <strong>одягаємося</strong></li>
+</ul>
+<p><strong>After vowels: -сь</strong></p>
+<ul>
+<li>миюся → ми <strong>миємось</strong> (colloquial: миємося)</li>
+<li>вчаться → вони <strong>вчаться</strong></li>
+</ul>
+<p><strong>Common reflexive verbs:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Infinitive</th>
+<th>Meaning</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>митися</td>
+<td>to wash oneself</td>
+<td>Я миюся вранці</td>
+</tr>
+<tr>
+<td>одягатися</td>
+<td>to get dressed</td>
+<td>Вона одягається</td>
+</tr>
+<tr>
+<td>роздягатися</td>
+<td>to undress</td>
+<td>Діти роздягаються</td>
+</tr>
+<tr>
+<td>голитися</td>
+<td>to shave</td>
+<td>Він голиться</td>
+</tr>
+<tr>
+<td>зачісуватися</td>
+<td>to comb one's hair</td>
+<td>Я зачісуюся</td>
+</tr>
+<tr>
+<td>вмиватися</td>
+<td>to wash one's face</td>
+<td>Ти вмиваєшся?</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p>⚡ <strong>Pro Tip: -ся vs -сь</strong></p>
+  <p>In modern Ukrainian:</p>
+  <ul>
+  <li>-ся is standard after consonants</li>
+  <li>-сь is often used after vowels in casual speech</li>
+  <li>Both forms are generally acceptable</li>
+  </ul>
+</blockquote></div></div><div class="canvas-note"><h4>Daily Routine Reflexives</h4><div class="md-content"><p><strong>Morning routine:</strong></p>
+<ul>
+<li>Я <strong>прокидаюся</strong> о сьомій. - I wake up at seven.</li>
+<li>Потім <strong>вмиваюся</strong> і <strong>вдягаюся</strong>. - Then I wash my face and get dressed.</li>
+<li>Він <strong>голиться</strong> щоранку. - He shaves every morning.</li>
+<li>Вона <strong>зачісується</strong> перед дзеркалом. - She combs her hair in front of the mirror.</li>
+</ul>
+<p><strong>Evening routine:</strong></p>
+<ul>
+<li>Діти <strong>роздягаються</strong> і <strong>миються</strong>. - The children undress and wash.</li>
+<li>Я <strong>лягаю</strong> спати о десятій. - I go to bed at ten.</li>
+<li>Ми <strong>готуємося</strong> до сну. - We prepare for sleep.</li>
+</ul>
+<blockquote>
+  <p>🎭 <strong>Culture Corner: Ukrainian Morning Routines</strong></p>
+  <p>Ukrainians typically have thorough morning routines. A proper breakfast (сніданок) is important - not just coffee on the go! The expression "зустрічати день" (to greet the day) reflects this cultural value of starting the day properly.</p>
+</blockquote></div></div><div class="canvas-note"><h4>Себе - Oneself</h4><div class="md-content"><p><strong>Себе</strong> is the reflexive pronoun. It doesn't change for gender or number, but it declines for case:</p>
+<table>
+<thead>
+<tr>
+<th>Case</th>
+<th>Form</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nominative</td>
+<td>—</td>
+<td>(doesn't exist)</td>
+</tr>
+<tr>
+<td>Accusative</td>
+<td>себе</td>
+<td>Я бачу <strong>себе</strong> в дзеркалі</td>
+</tr>
+<tr>
+<td>Genitive</td>
+<td>себе</td>
+<td>Він думає про <strong>себе</strong></td>
+</tr>
+<tr>
+<td>Dative</td>
+<td>собі</td>
+<td>Я купив <strong>собі</strong> каву</td>
+</tr>
+<tr>
+<td>Instrumental</td>
+<td>собою</td>
+<td>Візьми це з <strong>собою</strong></td>
+</tr>
+<tr>
+<td>Locative</td>
+<td>собі</td>
+<td>Він не впевнений у <strong>собі</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples:</strong></p>
+<ul>
+<li>Вона дивиться на <strong>себе</strong>. - She's looking at herself.</li>
+<li>Я купив <strong>собі</strong> подарунок. - I bought myself a gift.</li>
+<li>Візьми документи з <strong>собою</strong>. - Take the documents with you.</li>
+<li>Він задоволений <strong>собою</strong>. - He's satisfied with himself.</li>
+</ul>
+<blockquote>
+  <p>📜 <strong>History Bite: Reflexive Origins</strong></p>
+  <p>The word себе comes from Proto-Slavic *sebě. Unlike personal pronouns (я, ти, він), it has no nominative form - you can't say "себе робить" because the subject is always expressed by another pronoun or noun.</p>
+</blockquote></div></div><div class="canvas-note"><h4>Verbs That Are Always Reflexive</h4><div class="md-content"><p>Some verbs only exist in reflexive form:</p>
+<table>
+<thead>
+<tr>
+<th>Verb</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>сміятися</td>
+<td>to laugh</td>
+</tr>
+<tr>
+<td>боятися</td>
+<td>to be afraid</td>
+</tr>
+<tr>
+<td>намагатися</td>
+<td>to try</td>
+</tr>
+<tr>
+<td>здаватися</td>
+<td>to seem</td>
+</tr>
+<tr>
+<td>подобатися</td>
+<td>to please/like</td>
+</tr>
+<tr>
+<td>дивуватися</td>
+<td>to be surprised</td>
+</tr>
+<tr>
+<td>народитися</td>
+<td>to be born</td>
+</tr>
+<tr>
+<td>залишатися</td>
+<td>to remain</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples:</strong></p>
+<ul>
+<li>Вона <strong>сміється</strong>. - She's laughing.</li>
+<li>Я <strong>боюся</strong> собак. - I'm afraid of dogs.</li>
+<li>Він <strong>намагається</strong> зрозуміти. - He's trying to understand.</li>
+<li>Мені <strong>подобається</strong> ця книга. - I like this book.</li>
+<li>Вони <strong>здаються</strong> щасливими. - They seem happy.</li>
+</ul></div></div><div class="canvas-note"><h4>Reflexive vs Non-Reflexive Pairs</h4><div class="md-content"><p>Many verbs have both forms with different meanings:</p>
+<table>
+<thead>
+<tr>
+<th>Non-reflexive</th>
+<th>Meaning</th>
+<th>Reflexive</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>мити</td>
+<td>to wash (sth)</td>
+<td>митися</td>
+<td>to wash oneself</td>
+</tr>
+<tr>
+<td>одягати</td>
+<td>to dress (sb)</td>
+<td>одягатися</td>
+<td>to get dressed</td>
+</tr>
+<tr>
+<td>вчити</td>
+<td>to teach</td>
+<td>вчитися</td>
+<td>to learn/study</td>
+</tr>
+<tr>
+<td>бачити</td>
+<td>to see</td>
+<td>бачитися</td>
+<td>to meet (each other)</td>
+</tr>
+<tr>
+<td>зустрічати</td>
+<td>to meet (sb)</td>
+<td>зустрічатися</td>
+<td>to meet up</td>
+</tr>
+<tr>
+<td>знайомити</td>
+<td>to introduce (sb)</td>
+<td>знайомитися</td>
+<td>to get acquainted</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples:</strong></p>
+<ul>
+<li>Мама <strong>миє</strong> дитину. - Mom washes the child.</li>
+<li>Дитина <strong>миється</strong> сама. - The child washes themselves.</li>
+<li>Я <strong>вчу</strong> англійську. - I teach English.</li>
+<li>Я <strong>вчуся</strong> грати на гітарі. - I'm learning to play guitar.</li>
+</ul>
+<blockquote>
+  <p>⚡ <strong>Pro Tip: "Each Other" Meaning</strong></p>
+  <p>Reflexive verbs can also mean "each other":</p>
+  <ul>
+  <li>Ми <strong>бачимося</strong> щодня. - We see each other every day.</li>
+  <li>Вони <strong>зустрічаються</strong> в парку. - They meet (each other) in the park.</li>
+  <li>Ми <strong>листуємося</strong> електронною поштою. - We correspond with each other by email.</li>
+  </ul>
+</blockquote></div></div><div class="canvas-note"><h4>Common Expressions with Себе</h4><div class="md-content"><p><strong>Useful phrases:</strong></p>
+<ul>
+<li><p><strong>про себе</strong> - about oneself; to oneself</p></li>
+<li><p>Розкажи про себе. - Tell about yourself.</p></li>
+<li><p>Я думаю про себе. - I think to myself.</p></li>
+<li><p><strong>у себе</strong> - at one's place</p></li>
+<li><p>Я у себе вдома. - I'm at my place.</p></li>
+<li><p>Залиш це у себе. - Keep it at your place.</p></li>
+<li><p><strong>з собою</strong> - with oneself</p></li>
+<li><p>Візьми гроші з собою. - Take money with you.</p></li>
+<li><p>Вона завжди має з собою книгу. - She always has a book with her.</p></li>
+<li><p><strong>собі</strong> - for oneself</p></li>
+<li><p>Я собі куплю каву. - I'll buy myself a coffee.</p></li>
+<li><p>Вибери собі подарунок. - Choose a gift for yourself.</p></li>
+</ul></div></div><div class="canvas-note"><h4>Себе in Fixed Expressions</h4><div class="md-content"><p><strong>Common idioms:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Expression</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>почувати себе</td>
+<td>to feel</td>
+</tr>
+<tr>
+<td>вести себе</td>
+<td>to behave</td>
+</tr>
+<tr>
+<td>уявляти собі</td>
+<td>to imagine</td>
+</tr>
+<tr>
+<td>дозволяти собі</td>
+<td>to allow oneself</td>
+</tr>
+<tr>
+<td>не в собі</td>
+<td>not oneself (upset)</td>
+</tr>
+<tr>
+<td>прийти до себе</td>
+<td>to come to one's senses</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples:</strong></p>
+<ul>
+<li>Як ви <strong>почуваєте себе</strong>? - How do you feel?</li>
+<li>Діти, <strong>ведіть себе</strong> добре! - Children, behave well!</li>
+<li><strong>Уявляю собі</strong>! - I can imagine!</li>
+<li>Вона <strong>не в собі</strong> сьогодні. - She's not herself today.</li>
+</ul></div></div><div class="canvas-note"><h4>### Conjugate Reflexive Verbs</h4><div class="md-content"><ol>
+<li>митися (я) → миюся</li>
+<li>одягатися (вона) → одягається</li>
+<li>вчитися (ми) → вчимося</li>
+<li>сміятися (вони) → сміються</li>
+<li>боятися (ти) → боїшся</li>
+<li>готуватися (він) → готується</li>
+</ol></div></div><div class="canvas-note"><h4>Choose Себе Form</h4><div class="md-content"><ol>
+<li>Я бачу ___ (себе) в дзеркалі. → себе (Acc)</li>
+<li>Вона купила ___ (себе) сукню. → собі (Dat)</li>
+<li>Візьми це з ___ (себе). → собою (Inst)</li>
+<li>Він думає тільки про ___ (себе). → себе (Gen/Acc)</li>
+<li>Вона не впевнена в ___ (себе). → собі (Loc)</li>
+</ol></div></div><div class="canvas-note"><h4>Translate</h4><div class="md-content"><ol>
+<li><p>I wash myself every morning.<br />
+→ Я миюся щоранку.</p></li>
+<li><p>She's getting dressed now.<br />
+→ Вона зараз одягається.</p></li>
+<li><p>We meet each other every week.<br />
+→ Ми зустрічаємося щотижня.</p></li>
+<li><p>How do you feel?<br />
+→ Як ви почуваєте себе? / Як ви себе почуваєте?</p></li>
+<li><p>Take the umbrella with you.<br />
+→ Візьми парасолю з собою.</p></li>
+<li><p>I bought myself a new phone.<br />
+→ Я купив/купила собі новий телефон.</p></li>
+</ol></div></div><div class="canvas-note"><h4>### Describe Your Morning Routine</h4><div class="md-content"><p>Use reflexive verbs:</p>
+<ul>
+<li>Я прокидаюся о…</li>
+<li>Потім я вмиваюся і…</li>
+<li>Я одягаюся і…</li>
+<li>Я готуюся до роботи/навчання…</li>
+</ul></div></div><div class="canvas-note"><h4>Role Play: Meeting Someone</h4><div class="md-content"><p>Use reflexive verbs for introductions:</p>
+<ul>
+<li>Давайте познайомимося!</li>
+<li>Мене звати… А вас?</li>
+<li>Ми вже бачилися раніше?</li>
+<li>Будемо зустрічатися частіше!</li>
+</ul></div></div></div>
+      <div class="btn-group"><button class="btn btn-primary" onclick="showSection('match')">Start →</button></div>
+    </section>
+    <section id="match" class="section"><div class="card"><h3>Reflexive Pairs</h3>
+      <div class="score-display"><span class="score"><span id="match-score">0</span>/6</span></div>
+      <div class="match-container" id="match-container"><svg class="match-lines" id="match-lines"></svg>
+        <div class="match-column" id="match-left"><div class="match-item" data-pair="0">мити</div><div class="match-item" data-pair="1">одягати</div><div class="match-item" data-pair="2">вчити</div><div class="match-item" data-pair="3">зустрічати</div><div class="match-item" data-pair="4">знайомити</div><div class="match-item" data-pair="5">бачити</div></div>
+        <div class="match-column" id="match-right"><div class="match-item" data-pair="2">вчитися</div><div class="match-item" data-pair="4">знайомитися</div><div class="match-item" data-pair="3">зустрічатися</div><div class="match-item" data-pair="5">бачитися</div><div class="match-item" data-pair="0">митися</div><div class="match-item" data-pair="1">одягатися</div></div>
+      </div>
+      <div class="completion-message" id="match-complete"><h3>Perfect!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetMatch()">Reset</button><button class="btn btn-primary" onclick="showSection('quiz')">Next →</button></div>
+    </div></section>
+    <section id="quiz" class="section"><div class="card"><h3>Reflexive Verbs</h3>
+      <div class="score-display"><span class="score"><span id="quiz-score">0</span>/6</span></div>
+      <div id="quiz-container"></div>
+      <div class="completion-message" id="quiz-complete"><h3>Complete!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('sort')">Next →</button></div>
+    </div></section>
+    <section id="sort" class="section"><div class="card"><h3>Always Reflexive vs Pairs</h3>
+      <div class="score-display"><span class="score"><span id="sort-score">0</span>/10</span></div>
+      <div class="sort-pool" id="sort-pool"><div class="sort-items" id="sort-items"></div></div>
+      <div class="sort-groups"><div class="sort-group true-friends" data-group="true-friends"><h4>Always Reflexive</h4><div class="sort-items"></div></div><div class="sort-group false-friends" data-group="false-friends"><h4>Has Non-Reflexive Pair</h4><div class="sort-items"></div></div></div>
+      <div class="completion-message" id="sort-complete"><h3>All Sorted!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetSort()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Vocab →</button></div>
+    </div></section>
+    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (8)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
+      <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
+    </section>
+  </main>
+  <footer>Module 51 · curricula-opus</footer>
+  <script>
+    const matchPairs=[{"left":"мити","right":"митися"},{"left":"одягати","right":"одягатися"},{"left":"вчити","right":"вчитися"},{"left":"зустрічати","right":"зустрічатися"},{"left":"знайомити","right":"знайомитися"},{"left":"бачити","right":"бачитися"}];
+    const quizData=[{"question":"\"I wash myself\" - Я ___.","options":["миюся","мию","миється","митися"],"correctIndex":0,"explanation":"First person singular + -ся."},{"question":"\"She's laughing\" - Вона ___.","options":["сміється","сміятися","сміюся","сміються"],"correctIndex":0,"explanation":"Third person singular + -ться."},{"question":"\"I bought myself a gift\" - Я купив ___ подарунок.","options":["собі","себе","собою","мені"],"correctIndex":0,"explanation":"Dative for \"for oneself.\""},{"question":"\"Take it with you\" - Візьми це з ___.","options":["собою","себе","собі","тобою"],"correctIndex":0,"explanation":"Instrumental with \"з.\""},{"question":"\"We meet each other daily\" - Ми ___ щодня.","options":["зустрічаємося","зустрічаємо","зустрічати","зустрінемося"],"correctIndex":0,"explanation":"Reflexive = each other."},{"question":"\"How do you feel?\" - Як ви ___ себе?","options":["почуваєте","почуваєтеся","почуваю","почували"],"correctIndex":0,"explanation":"\"Почувати себе\" - fixed expression."}];
+    const sortData={"true-friends":["сміятися","боятися","намагатися","здаватися","народитися"],"false-friends":["митися (мити)","одягатися (одягати)","вчитися (вчити)","зустрічатися (зустрічати)","знайомитися (знайомити)"]};
+    const vocabData=[{"uk":"митися","translit":"/ˈmɪtɪsʲɑ/","en":"verb","note":""},{"uk":"зачісуватися","translit":"/zɑtʃʲisuˈvɑtɪsʲɑ/","en":"verb","note":""},{"uk":"сміятися","translit":"/smʲiˈjɑtɪsʲɑ/","en":"verb","note":""},{"uk":"боятися","translit":"/boˈjɑtɪsʲɑ/","en":"verb","note":""},{"uk":"намагатися","translit":"/nɑmɑˈɦɑtɪsʲɑ/","en":"verb","note":""},{"uk":"себе","translit":"/sɛˈbɛ/","en":"pron","note":""},{"uk":"собі","translit":"/soˈbʲi/","en":"pron","note":""},{"uk":"собою","translit":"/soˈboju/","en":"pron","note":""}];
+    const totalSort=10;
+    function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
+    document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));
+    let matchSel=null,matchScore=0,matchPairsArr=[];
+    document.querySelectorAll('#match-left .match-item').forEach(item=>{item.addEventListener('click',()=>{if(item.classList.contains('matched'))return;document.querySelectorAll('#match-left .match-item').forEach(i=>i.classList.remove('selected'));item.classList.add('selected');matchSel={el:item,pair:item.dataset.pair};});});
+    document.querySelectorAll('#match-right .match-item').forEach(item=>{item.addEventListener('click',()=>{if(item.classList.contains('matched')||!matchSel)return;if(matchSel.pair===item.dataset.pair){matchSel.el.classList.remove('selected');matchSel.el.classList.add('matched');item.classList.add('matched');matchPairsArr.push({left:matchSel.el,right:item});matchScore++;document.getElementById('match-score').textContent=matchScore;drawLines();if(matchScore===matchPairs.length)document.getElementById('match-complete').classList.add('show');}else{item.classList.add('wrong');setTimeout(()=>item.classList.remove('wrong'),300);}matchSel=null;});});
+    function drawLines(){const svg=document.getElementById('match-lines'),c=document.getElementById('match-container');if(!svg||!c)return;const r=c.getBoundingClientRect();svg.innerHTML='';svg.setAttribute('viewBox','0 0 '+r.width+' '+r.height);matchPairsArr.forEach(p=>{const lr=p.left.getBoundingClientRect(),rr=p.right.getBoundingClientRect();const line=document.createElementNS('http://www.w3.org/2000/svg','line');line.setAttribute('x1',lr.right-r.left);line.setAttribute('y1',lr.top+lr.height/2-r.top);line.setAttribute('x2',rr.left-r.left);line.setAttribute('y2',rr.top+rr.height/2-r.top);line.setAttribute('stroke','#26a269');line.setAttribute('stroke-width','2');svg.appendChild(line);});}
+    function resetMatch(){matchSel=null;matchScore=0;matchPairsArr=[];document.getElementById('match-score').textContent='0';document.getElementById('match-complete')?.classList.remove('show');document.getElementById('match-lines').innerHTML='';document.querySelectorAll('#match-container .match-item').forEach(i=>i.classList.remove('matched','selected','wrong'));}
+    window.addEventListener('resize',drawLines);
+    let quizScore=0,quizAns=0;
+    function initQuiz(){const c=document.getElementById('quiz-container');if(!c||!quizData.length)return;c.innerHTML='';quizData.forEach((q,i)=>{const sh=[...q.options].sort(()=>Math.random()-0.5);const cor=sh.indexOf(q.options[q.correctIndex]);const div=document.createElement('div');div.className='quiz-question';div.innerHTML='<h4>Q'+(i+1)+': <span class="cyrillic">'+(q.question.match(/[А-ЯІЇЄҐ]+/)?.[0]||'')+'</span></h4><div class="quiz-options">'+sh.map((o,j)=>'<div class="quiz-option" data-c="'+(j===cor)+'" data-q="'+i+'">'+o+'</div>').join('')+'</div><div class="quiz-explanation" id="exp-'+i+'">'+q.explanation+'</div>';c.appendChild(div);});document.querySelectorAll('.quiz-option').forEach(o=>o.addEventListener('click',handleQuiz));}
+    function handleQuiz(e){const opt=e.target,q=opt.closest('.quiz-question');if(q.classList.contains('answered'))return;q.classList.add('answered');if(opt.dataset.c==='true'){opt.classList.add('correct');quizScore++;}else{opt.classList.add('wrong');q.querySelector('[data-c="true"]').classList.add('correct');}document.getElementById('exp-'+opt.dataset.q).classList.add('show');document.getElementById('quiz-score').textContent=quizScore;quizAns++;if(quizAns===quizData.length)document.getElementById('quiz-complete').classList.add('show');}
+    function resetQuiz(){quizScore=0;quizAns=0;document.getElementById('quiz-score').textContent='0';document.getElementById('quiz-complete')?.classList.remove('show');initQuiz();}
+    let sortScore=0,dragItem=null;
+    function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
+    function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
+    function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
+  </script>
+</body>
+</html>

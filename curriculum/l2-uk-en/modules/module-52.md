@@ -1,0 +1,386 @@
+---
+module: 52
+title: "Relative Clauses"
+subtitle: "Який, Що, Котрий"
+level: A2
+phase: A2.3
+duration: 45
+transliteration: partial
+tags: [grammar, relative, clauses, який, що]
+objectives:
+  - Form relative clauses with який
+  - Use що as a relative pronoun
+  - Understand котрий in formal contexts
+  - Connect sentences with relative pronouns
+grammar:
+  - Який/яка/яке/які declension
+  - Що as relative pronoun
+  - Котрий (formal)
+  - Agreement with antecedent
+---
+
+# Lesson Content
+
+## warm-up
+
+### Connecting Ideas
+
+"The book **that** I read was interesting." "The woman **who** lives here is a teacher."
+
+In Ukrainian, we use **який**, **що**, and **котрий** to connect sentences like this!
+
+**Examples:**
+- Книга, **яку** я прочитав, була цікава.
+- Жінка, **яка** тут живе, — вчителька.
+
+> 💡 **Did You Know?**
+>
+> Ukrainian relative pronouns must agree in gender and number with the noun they refer to! So "який" changes to "яка," "яке," "які" depending on the noun. English just uses "which/that/who" for everything.
+
+## presentation
+
+### Який - The Main Relative Pronoun
+
+**Який** means "which/that/who" and agrees with the noun it refers to:
+
+| Gender | Nominative | Accusative | Genitive |
+|--------|------------|------------|----------|
+| Masc | який | якого/який | якого |
+| Fem | яка | яку | якої |
+| Neut | яке | яке | якого |
+| Plural | які | яких/які | яких |
+
+**Subject of relative clause (nominative):**
+- Чоловік, **який** тут працює, мій брат. - The man who works here is my brother.
+- Жінка, **яка** мене знає, зателефонувала. - The woman who knows me called.
+- Місто, **яке** я люблю, — Львів. - The city that I love is Lviv.
+- Люди, **які** тут живуть, дуже привітні. - The people who live here are very friendly.
+
+> ⚡ **Pro Tip: Gender Agreement**
+>
+> Look at the noun BEFORE який - that determines the gender:
+> - чоловік (m) → який
+> - жінка (f) → яка
+> - місто (n) → яке
+> - люди (pl) → які
+
+### Який in Different Cases
+
+The case of який depends on its role in the relative clause:
+
+**Accusative (object):**
+- Книга, **яку** я читаю, цікава. - The book that I'm reading is interesting.
+- Фільм, **який** ми дивилися, був довгий. - The movie that we watched was long.
+- Людей, **яких** я знаю, тут немає. - The people whom I know aren't here.
+
+**Genitive:**
+- Людина, **якої** я не знаю, подзвонила. - A person whom I don't know called.
+- Місто, **якого** я ніколи не бачив, дуже гарне. - The city that I've never seen is very beautiful.
+
+**Dative:**
+- Друг, **якому** я допоміг, подякував мені. - The friend whom I helped thanked me.
+- Дівчина, **якій** я дав квіти, посміхнулася. - The girl to whom I gave flowers smiled.
+
+> 📜 **History Bite: From Questions to Relatives**
+>
+> Який comes from the question word "який?" (which?). This is common across languages - question words become relative pronouns. Compare: "Який фільм?" (Which movie?) → "Фільм, який я дивився" (The movie that I watched).
+
+### Який with Prepositions
+
+When a preposition is needed, it comes BEFORE який:
+
+**З яким/якою (with whom/which):**
+- Друг, **з яким** я подорожував, живе в Києві. - The friend with whom I traveled lives in Kyiv.
+- Компанія, **з якою** я працюю, велика. - The company that I work with is large.
+
+**Про якого/яку (about whom/which):**
+- Книга, **про яку** ти говориш, дуже популярна. - The book you're talking about is very popular.
+- Людина, **про яку** я думаю, далеко. - The person I'm thinking about is far away.
+
+**У якому/якій (in which):**
+- Будинок, **у якому** я живу, старий. - The building in which I live is old.
+- Країна, **у якій** я народився, — Україна. - The country in which I was born is Ukraine.
+
+> ⚡ **Pro Tip: Preposition Position**
+>
+> Unlike English ("the book you're talking ABOUT"), Ukrainian puts the preposition before the relative pronoun:
+> - ❌ книга, яку ти говориш про
+> - ✅ книга, про яку ти говориш
+
+### Що as a Relative Pronoun
+
+**Що** can replace який/яка/яке in casual speech, especially for things (not people):
+
+**Standard/Formal:**
+- Це книга, **яка** мені подобається.
+
+**Casual:**
+- Це книга, **що** мені подобається.
+
+**Що is preferred with:**
+- **все**, що... - everything that...
+- **те**, що... - that which.../what...
+- **щось**, що... - something that...
+- **нічого**, що... - nothing that...
+
+**Examples:**
+- **Все, що** ти сказав, правда. - Everything that you said is true.
+- **Те, що** він зробив, — неправильно. - What he did is wrong.
+- Є **щось, що** я хочу сказати. - There's something that I want to say.
+- **Нічого, що** варто згадати. - Nothing worth mentioning.
+
+> 🎭 **Culture Corner: Formal vs Casual**
+>
+> In everyday speech, Ukrainians often use що instead of який for simplicity. In writing and formal speech, який is preferred. News broadcasts use який, while friends chatting might use що.
+
+### Котрий - Formal Alternative
+
+**Котрий** is a more formal/literary equivalent of який:
+
+- Документ, **котрий** ви підписали... - The document which you signed...
+- Людина, **котра** це зробила... - The person who did this...
+
+**Usage:**
+- More common in Western Ukraine
+- Used in official/legal language
+- Literary/archaic flavor
+
+For everyday communication, use **який** or **що**.
+
+### Common Relative Clause Patterns
+
+**Describing people:**
+- Це людина, **яка** мені допомогла. - This is the person who helped me.
+- Я знаю хлопця, **який** тут працює. - I know the guy who works here.
+- Жінка, **якій** я дзвонив, не відповіла. - The woman I called didn't answer.
+
+**Describing things:**
+- Це книга, **яку** я хочу прочитати. - This is the book I want to read.
+- Машина, **яка** стоїть там, моя. - The car standing there is mine.
+- Ресторан, **у якому** ми їли, дорогий. - The restaurant where we ate is expensive.
+
+**Describing places:**
+- Місто, **де** я живу... / Місто, **у якому** я живу... - The city where I live...
+- Країна, **звідки** він приїхав... - The country he came from...
+
+### Relative Clauses with Де, Куди, Звідки
+
+For places, you can use location words:
+
+| Word | Meaning | Example |
+|------|---------|---------|
+| де | where | Місто, де я народився |
+| куди | where (direction) | Країна, куди я їду |
+| звідки | from where | Місто, звідки вона |
+
+**Examples:**
+- Ресторан, **де** ми познайомилися, закрився. - The restaurant where we met closed.
+- Країна, **куди** ми їдемо, дуже красива. - The country we're going to is very beautiful.
+- Це місто, **звідки** вона родом. - This is the city she's from.
+
+## practice
+
+### Complete with Correct Form
+
+1. Людина, ___ (який) тут живе, мій сусід.
+   → яка (f. - людина is feminine)
+
+2. Книга, ___ (який) я читаю, цікава.
+   → яку (f. accusative)
+
+3. Друг, ___ (який) я допоміг, подякував.
+   → якому (m. dative)
+
+4. Місто, у ___ (який) я живу, велике.
+   → якому (n. locative)
+
+5. Люди, ___ (який) я знаю, добрі.
+   → яких (pl. accusative) / які (pl. nominative depending on meaning)
+
+6. Жінка, про ___ (який) ти говориш, моя тітка.
+   → яку (f. accusative after про)
+
+### Combine Sentences
+
+1. Це книга. Я прочитав книгу.
+   → Це книга, яку я прочитав.
+
+2. Ось чоловік. Чоловік мені допоміг.
+   → Ось чоловік, який мені допоміг.
+
+3. Я знаю жінку. Жінка працює тут.
+   → Я знаю жінку, яка працює тут.
+
+4. Це ресторан. Ми їли в ресторані.
+   → Це ресторан, у якому ми їли. / Це ресторан, де ми їли.
+
+5. Ось друг. Я подорожував з другом.
+   → Ось друг, з яким я подорожував.
+
+### Translate
+
+1. The woman who called is my sister.
+   → Жінка, яка зателефонувала, — моя сестра.
+
+2. Everything that you said is true.
+   → Все, що ти сказав, — правда.
+
+3. The city where I was born is beautiful.
+   → Місто, де я народився, гарне.
+
+4. This is the book I want to read.
+   → Це книга, яку я хочу прочитати.
+
+## production
+
+### Describe with Relative Clauses
+
+**Describe people you know:**
+- У мене є друг, який...
+- Я знаю людину, яка...
+- Мій сусід — людина, з якою...
+
+**Describe places:**
+- Місто, де я живу, ...
+- Ресторан, у якому я часто їм, ...
+- Країна, куди я хочу поїхати, ...
+
+### Create Complex Sentences
+
+Use все/те/щось + що:
+- Все, що я знаю, — ...
+- Те, що він сказав, ...
+- Є щось, що я хочу...
+
+---
+
+# Activities
+
+## match-up: Який Forms
+
+> Match gender with correct form.
+
+| Left | Right |
+|------|-------|
+| чоловік (m) | який |
+| жінка (f) | яка |
+| місто (n) | яке |
+| люди (pl) | які |
+| книга (f) | яка |
+| друг (m) | який |
+
+## quiz: Relative Pronouns
+
+> Choose the correct form.
+
+1. "The book that I read" - Книга, ___ я прочитав.
+   - [x] яку
+   - [ ] яка
+   - [ ] який
+   - [ ] яке
+   > Книга (f) + accusative = яку.
+
+2. "Everything that you said" - Все, ___ ти сказав.
+   - [x] що
+   - [ ] яке
+   - [ ] яка
+   - [ ] який
+   > "Все, що..." is a fixed pattern.
+
+3. "The man who works here" - Чоловік, ___ тут працює.
+   - [x] який
+   - [ ] яка
+   - [ ] якого
+   - [ ] яким
+   > Чоловік (m) + nominative = який.
+
+4. "The friend I helped" - Друг, ___ я допоміг.
+   - [x] якому
+   - [ ] який
+   - [ ] якого
+   - [ ] яким
+   > Допомагати + dative = якому.
+
+5. "The city where I live" - Місто, ___ я живу.
+   - [x] де
+   - [ ] який
+   - [ ] яке
+   - [ ] що
+   > Location = де.
+
+6. "The woman about whom" - Жінка, про ___ ти говориш.
+   - [x] яку
+   - [ ] яка
+   - [ ] якої
+   - [ ] якій
+   > Про + accusative = яку.
+
+## group-sort: Який vs Що
+
+> Sort by typical usage.
+
+### Який preferred
+- людина, яка
+- чоловік, який
+- книга, яку я читаю
+- місто, яке я люблю
+
+### Що preferred
+- все, що
+- те, що
+- щось, що
+- нічого, що
+
+---
+
+# Vocabulary
+
+| Word | IPA | English | POS | Gender | Note |
+|------|-----|---------|-----|--------|------|
+| які | /jɑˈkʲi/ | which, that, who (pl) | pron | pl | |
+| котрий | /koˈtrɪj/ | which (formal) | pron | m | formal |
+| усе | /uˈsɛ/ | everything | pron | n | |
+| щось | /ʃtʃosʲ/ | something | pron | n | |
+| нічого | /nʲiˈtʃoɦo/ | nothing | pron | - | |
+| згадувати | /zɦɑˈduvɑtɪ/ | to mention (impf) | verb | - | |
+| підписувати | /pʲidpɪˈsuvɑtɪ/ | to sign (impf) | verb | - | |
+
+---
+
+# Summary
+
+## Який Declension
+
+| Case | M | F | N | Pl |
+|------|---|---|---|-----|
+| Nom | який | яка | яке | які |
+| Acc | якого/який | яку | яке | яких/які |
+| Gen | якого | якої | якого | яких |
+| Dat | якому | якій | якому | яким |
+| Ins | яким | якою | яким | якими |
+| Loc | якому | якій | якому | яких |
+
+## Key Patterns
+
+| Pattern | Example |
+|---------|---------|
+| Noun + який (nom) | чоловік, який працює |
+| Noun + якого (acc) | фільм, який я бачив |
+| Prep + який | книга, про яку говорять |
+| все/те + що | все, що ти сказав |
+
+## Place Relatives
+
+| Word | Use |
+|------|-----|
+| де | where (location) |
+| куди | where (direction) |
+| звідки | from where |
+
+> 💡 **Key Takeaways**
+>
+> - Який agrees with the noun in gender/number
+> - Case of який = its role in the relative clause
+> - Prepositions go BEFORE який
+> - Що is casual alternative (especially with все, те, щось)
+> - Де/куди/звідки for places

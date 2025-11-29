@@ -1,0 +1,420 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-A2-51",
+    "moduleId": "mod-uk-A2-51",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "methodology": "ppp",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "A2",
+    "phase": "A2.3",
+    "moduleNumber": 51,
+    "title": "Reflexive Verbs",
+    "subtitle": "Actions on Yourself",
+    "description": "Understand reflexive verb formation with -ся/-сь",
+    "objectives": [
+      "Understand reflexive verb formation with -ся/-сь",
+      "Use себе (oneself) correctly",
+      "Master common reflexive verbs",
+      "Express self-directed actions"
+    ],
+    "grammarFocus": [
+      "Reflexive suffix -ся/-сь",
+      "Себе in different cases",
+      "Reciprocal meaning (each other)",
+      "Common reflexive verb patterns"
+    ],
+    "totalDuration": 45,
+    "transliterationMode": "partial",
+    "tags": [
+      "verbs",
+      "reflexive",
+      "себе",
+      "grammar"
+    ],
+    "version": 1,
+    "createdAt": "2025-11-29T00:00:00Z",
+    "modifiedAt": "2025-11-29T00:00:00Z",
+    "phases": [
+      {
+        "id": "phase-warm-up",
+        "name": "warm-up",
+        "duration": 5,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Doing Things to Yourself\n\nSome actions are directed at yourself: \"I wash myself,\" \"She introduces herself.\" Ukrainian uses **reflexive verbs** for these!\n\n**Two ways to express reflexivity:**\n- **-ся/-сь suffix** on verbs\n- **себе** (oneself) as a separate word\n\n> 💡 **Did You Know?**\n>\n> The suffix -ся comes from the old word \"ся\" meaning \"oneself.\" It merged with verbs over centuries! Today -ся/-сь is the most common way to show reflexive action, while себе is used for emphasis or with certain verbs."
+          }
+        ]
+      },
+      {
+        "id": "phase-presentation",
+        "name": "presentation",
+        "duration": 15,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### The -ся/-сь Suffix\n\n**After consonants: -ся**\n- митися (to wash oneself) → я **миюся**\n- вчитися (to study/learn) → він **вчиться**\n- одягатися (to dress oneself) → ми **одягаємося**\n\n**After vowels: -сь**\n- миюся → ми **миємось** (colloquial: миємося)\n- вчаться → вони **вчаться**\n\n**Common reflexive verbs:**\n\n| Infinitive | Meaning | Example |\n|------------|---------|---------|\n| митися | to wash oneself | Я миюся вранці |\n| одягатися | to get dressed | Вона одягається |\n| роздягатися | to undress | Діти роздягаються |\n| голитися | to shave | Він голиться |\n| зачісуватися | to comb one's hair | Я зачісуюся |\n| вмиватися | to wash one's face | Ти вмиваєшся? |\n\n> ⚡ **Pro Tip: -ся vs -сь**\n>\n> In modern Ukrainian:\n> - -ся is standard after consonants\n> - -сь is often used after vowels in casual speech\n> - Both forms are generally acceptable"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Daily Routine Reflexives\n\n**Morning routine:**\n- Я **прокидаюся** о сьомій. - I wake up at seven.\n- Потім **вмиваюся** і **вдягаюся**. - Then I wash my face and get dressed.\n- Він **голиться** щоранку. - He shaves every morning.\n- Вона **зачісується** перед дзеркалом. - She combs her hair in front of the mirror.\n\n**Evening routine:**\n- Діти **роздягаються** і **миються**. - The children undress and wash.\n- Я **лягаю** спати о десятій. - I go to bed at ten.\n- Ми **готуємося** до сну. - We prepare for sleep.\n\n> 🎭 **Culture Corner: Ukrainian Morning Routines**\n>\n> Ukrainians typically have thorough morning routines. A proper breakfast (сніданок) is important - not just coffee on the go! The expression \"зустрічати день\" (to greet the day) reflects this cultural value of starting the day properly."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Себе - Oneself\n\n**Себе** is the reflexive pronoun. It doesn't change for gender or number, but it declines for case:\n\n| Case | Form | Example |\n|------|------|---------|\n| Nominative | — | (doesn't exist) |\n| Accusative | себе | Я бачу **себе** в дзеркалі |\n| Genitive | себе | Він думає про **себе** |\n| Dative | собі | Я купив **собі** каву |\n| Instrumental | собою | Візьми це з **собою** |\n| Locative | собі | Він не впевнений у **собі** |\n\n**Examples:**\n- Вона дивиться на **себе**. - She's looking at herself.\n- Я купив **собі** подарунок. - I bought myself a gift.\n- Візьми документи з **собою**. - Take the documents with you.\n- Він задоволений **собою**. - He's satisfied with himself.\n\n> 📜 **History Bite: Reflexive Origins**\n>\n> The word себе comes from Proto-Slavic *sebě. Unlike personal pronouns (я, ти, він), it has no nominative form - you can't say \"себе робить\" because the subject is always expressed by another pronoun or noun."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Verbs That Are Always Reflexive\n\nSome verbs only exist in reflexive form:\n\n| Verb | Meaning |\n|------|---------|\n| сміятися | to laugh |\n| боятися | to be afraid |\n| намагатися | to try |\n| здаватися | to seem |\n| подобатися | to please/like |\n| дивуватися | to be surprised |\n| народитися | to be born |\n| залишатися | to remain |\n\n**Examples:**\n- Вона **сміється**. - She's laughing.\n- Я **боюся** собак. - I'm afraid of dogs.\n- Він **намагається** зрозуміти. - He's trying to understand.\n- Мені **подобається** ця книга. - I like this book.\n- Вони **здаються** щасливими. - They seem happy."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Reflexive vs Non-Reflexive Pairs\n\nMany verbs have both forms with different meanings:\n\n| Non-reflexive | Meaning | Reflexive | Meaning |\n|---------------|---------|-----------|---------|\n| мити | to wash (sth) | митися | to wash oneself |\n| одягати | to dress (sb) | одягатися | to get dressed |\n| вчити | to teach | вчитися | to learn/study |\n| бачити | to see | бачитися | to meet (each other) |\n| зустрічати | to meet (sb) | зустрічатися | to meet up |\n| знайомити | to introduce (sb) | знайомитися | to get acquainted |\n\n**Examples:**\n- Мама **миє** дитину. - Mom washes the child.\n- Дитина **миється** сама. - The child washes themselves.\n- Я **вчу** англійську. - I teach English.\n- Я **вчуся** грати на гітарі. - I'm learning to play guitar.\n\n> ⚡ **Pro Tip: \"Each Other\" Meaning**\n>\n> Reflexive verbs can also mean \"each other\":\n> - Ми **бачимося** щодня. - We see each other every day.\n> - Вони **зустрічаються** в парку. - They meet (each other) in the park.\n> - Ми **листуємося** електронною поштою. - We correspond with each other by email."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Common Expressions with Себе\n\n**Useful phrases:**\n\n- **про себе** - about oneself; to oneself\n  - Розкажи про себе. - Tell about yourself.\n  - Я думаю про себе. - I think to myself.\n\n- **у себе** - at one's place\n  - Я у себе вдома. - I'm at my place.\n  - Залиш це у себе. - Keep it at your place.\n\n- **з собою** - with oneself\n  - Візьми гроші з собою. - Take money with you.\n  - Вона завжди має з собою книгу. - She always has a book with her.\n\n- **собі** - for oneself\n  - Я собі куплю каву. - I'll buy myself a coffee.\n  - Вибери собі подарунок. - Choose a gift for yourself."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Себе in Fixed Expressions\n\n**Common idioms:**\n\n| Expression | Meaning |\n|------------|---------|\n| почувати себе | to feel |\n| вести себе | to behave |\n| уявляти собі | to imagine |\n| дозволяти собі | to allow oneself |\n| не в собі | not oneself (upset) |\n| прийти до себе | to come to one's senses |\n\n**Examples:**\n- Як ви **почуваєте себе**? - How do you feel?\n- Діти, **ведіть себе** добре! - Children, behave well!\n- **Уявляю собі**! - I can imagine!\n- Вона **не в собі** сьогодні. - She's not herself today."
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-A2-51-matchup"
+          }
+        ]
+      },
+      {
+        "id": "phase-practice",
+        "name": "practice",
+        "duration": 15,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Conjugate Reflexive Verbs\n\n1. митися (я) → миюся\n2. одягатися (вона) → одягається\n3. вчитися (ми) → вчимося\n4. сміятися (вони) → сміються\n5. боятися (ти) → боїшся\n6. готуватися (він) → готується"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Choose Себе Form\n\n1. Я бачу ___ (себе) в дзеркалі. → себе (Acc)\n2. Вона купила ___ (себе) сукню. → собі (Dat)\n3. Візьми це з ___ (себе). → собою (Inst)\n4. Він думає тільки про ___ (себе). → себе (Gen/Acc)\n5. Вона не впевнена в ___ (себе). → собі (Loc)"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Translate\n\n1. I wash myself every morning.\n   → Я миюся щоранку.\n\n2. She's getting dressed now.\n   → Вона зараз одягається.\n\n3. We meet each other every week.\n   → Ми зустрічаємося щотижня.\n\n4. How do you feel?\n   → Як ви почуваєте себе? / Як ви себе почуваєте?\n\n5. Take the umbrella with you.\n   → Візьми парасолю з собою.\n\n6. I bought myself a new phone.\n   → Я купив/купила собі новий телефон."
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-A2-51-quiz"
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-A2-51-groupsort"
+          }
+        ]
+      },
+      {
+        "id": "phase-production",
+        "name": "production",
+        "duration": 10,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Describe Your Morning Routine\n\nUse reflexive verbs:\n- Я прокидаюся о...\n- Потім я вмиваюся і...\n- Я одягаюся і...\n- Я готуюся до роботи/навчання..."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Role Play: Meeting Someone\n\nUse reflexive verbs for introductions:\n- Давайте познайомимося!\n- Мене звати... А вас?\n- Ми вже бачилися раніше?\n- Будемо зустрічатися частіше!"
+          }
+        ]
+      }
+    ]
+  },
+  "activities": [
+    {
+      "id": "act-uk-A2-51-matchup",
+      "type": "match-up",
+      "title": "Reflexive Pairs",
+      "description": "Match non-reflexive with reflexive form.",
+      "content": {
+        "type": "match-up",
+        "instructions": "Match non-reflexive with reflexive form.",
+        "pairs": [
+          {
+            "left": "мити",
+            "right": "митися"
+          },
+          {
+            "left": "одягати",
+            "right": "одягатися"
+          },
+          {
+            "left": "вчити",
+            "right": "вчитися"
+          },
+          {
+            "left": "зустрічати",
+            "right": "зустрічатися"
+          },
+          {
+            "left": "знайомити",
+            "right": "знайомитися"
+          },
+          {
+            "left": "бачити",
+            "right": "бачитися"
+          }
+        ],
+        "shuffleRight": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2",
+      "duration": 5,
+      "tags": [
+        "verbs",
+        "reflexive",
+        "себе",
+        "grammar"
+      ],
+      "createdAt": "2025-11-29T00:00:00Z",
+      "modifiedAt": "2025-11-29T00:00:00Z"
+    },
+    {
+      "id": "act-uk-A2-51-quiz",
+      "type": "quiz",
+      "title": "Reflexive Verbs",
+      "description": "Choose the correct form.",
+      "content": {
+        "type": "quiz",
+        "instructions": "Choose the correct form.",
+        "questions": [
+          {
+            "question": "\"I wash myself\" - Я ___.",
+            "options": [
+              "миюся",
+              "мию",
+              "миється",
+              "митися"
+            ],
+            "correctIndex": 0,
+            "explanation": "First person singular + -ся."
+          },
+          {
+            "question": "\"She's laughing\" - Вона ___.",
+            "options": [
+              "сміється",
+              "сміятися",
+              "сміюся",
+              "сміються"
+            ],
+            "correctIndex": 0,
+            "explanation": "Third person singular + -ться."
+          },
+          {
+            "question": "\"I bought myself a gift\" - Я купив ___ подарунок.",
+            "options": [
+              "собі",
+              "себе",
+              "собою",
+              "мені"
+            ],
+            "correctIndex": 0,
+            "explanation": "Dative for \"for oneself.\""
+          },
+          {
+            "question": "\"Take it with you\" - Візьми це з ___.",
+            "options": [
+              "собою",
+              "себе",
+              "собі",
+              "тобою"
+            ],
+            "correctIndex": 0,
+            "explanation": "Instrumental with \"з.\""
+          },
+          {
+            "question": "\"We meet each other daily\" - Ми ___ щодня.",
+            "options": [
+              "зустрічаємося",
+              "зустрічаємо",
+              "зустрічати",
+              "зустрінемося"
+            ],
+            "correctIndex": 0,
+            "explanation": "Reflexive = each other."
+          },
+          {
+            "question": "\"How do you feel?\" - Як ви ___ себе?",
+            "options": [
+              "почуваєте",
+              "почуваєтеся",
+              "почуваю",
+              "почували"
+            ],
+            "correctIndex": 0,
+            "explanation": "\"Почувати себе\" - fixed expression."
+          }
+        ],
+        "shuffleQuestions": true,
+        "shuffleOptions": true,
+        "showCorrectAnswers": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2",
+      "duration": 5,
+      "tags": [
+        "verbs",
+        "reflexive",
+        "себе",
+        "grammar"
+      ],
+      "createdAt": "2025-11-29T00:00:00Z",
+      "modifiedAt": "2025-11-29T00:00:00Z"
+    },
+    {
+      "id": "act-uk-A2-51-groupsort",
+      "type": "group-sort",
+      "title": "Always Reflexive vs Pairs",
+      "description": "Sort by type.",
+      "content": {
+        "type": "group-sort",
+        "instructions": "Sort by type.",
+        "groups": [
+          {
+            "name": "Always Reflexive",
+            "items": [
+              "сміятися",
+              "боятися",
+              "намагатися",
+              "здаватися",
+              "народитися"
+            ]
+          },
+          {
+            "name": "Has Non-Reflexive Pair",
+            "items": [
+              "митися (мити)",
+              "одягатися (одягати)",
+              "вчитися (вчити)",
+              "зустрічатися (зустрічати)",
+              "знайомитися (знайомити)"
+            ]
+          }
+        ],
+        "shuffleItems": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2",
+      "duration": 5,
+      "tags": [
+        "verbs",
+        "reflexive",
+        "себе",
+        "grammar"
+      ],
+      "createdAt": "2025-11-29T00:00:00Z",
+      "modifiedAt": "2025-11-29T00:00:00Z"
+    }
+  ],
+  "vocabulary": {
+    "moduleId": "mod-uk-A2-51",
+    "level": "A2",
+    "phase": "A2.3",
+    "wordCount": 8,
+    "transliterationMode": "partial",
+    "words": [
+      {
+        "id": "v-m51-001",
+        "uk": "митися",
+        "translit": "/ˈmɪtɪsʲɑ/",
+        "ipa": "to wash oneself",
+        "en": "verb",
+        "pos": "-"
+      },
+      {
+        "id": "v-m51-002",
+        "uk": "зачісуватися",
+        "translit": "/zɑtʃʲisuˈvɑtɪsʲɑ/",
+        "ipa": "to comb one's hair",
+        "en": "verb",
+        "pos": "-"
+      },
+      {
+        "id": "v-m51-003",
+        "uk": "сміятися",
+        "translit": "/smʲiˈjɑtɪsʲɑ/",
+        "ipa": "to laugh",
+        "en": "verb",
+        "pos": "-",
+        "gender": "always refl"
+      },
+      {
+        "id": "v-m51-004",
+        "uk": "боятися",
+        "translit": "/boˈjɑtɪsʲɑ/",
+        "ipa": "to be afraid",
+        "en": "verb",
+        "pos": "-",
+        "gender": "always refl"
+      },
+      {
+        "id": "v-m51-005",
+        "uk": "намагатися",
+        "translit": "/nɑmɑˈɦɑtɪsʲɑ/",
+        "ipa": "to try",
+        "en": "verb",
+        "pos": "-",
+        "gender": "always refl"
+      },
+      {
+        "id": "v-m51-006",
+        "uk": "себе",
+        "translit": "/sɛˈbɛ/",
+        "ipa": "oneself (acc/gen)",
+        "en": "pron",
+        "pos": "-"
+      },
+      {
+        "id": "v-m51-007",
+        "uk": "собі",
+        "translit": "/soˈbʲi/",
+        "ipa": "oneself (dat/loc)",
+        "en": "pron",
+        "pos": "-"
+      },
+      {
+        "id": "v-m51-008",
+        "uk": "собою",
+        "translit": "/soˈboju/",
+        "ipa": "oneself (inst)",
+        "en": "pron",
+        "pos": "-"
+      }
+    ]
+  }
+}

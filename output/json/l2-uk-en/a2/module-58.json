@@ -1,0 +1,452 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-A2-58",
+    "moduleId": "mod-uk-A2-58",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "methodology": "ppp",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "A2",
+    "phase": "A2.3",
+    "moduleNumber": 58,
+    "title": "Expressing Opinions",
+    "subtitle": "I Think, I Believe",
+    "description": "Express personal opinions",
+    "objectives": [
+      "Express personal opinions",
+      "Agree and disagree politely",
+      "Give reasons for views",
+      "Discuss topics with others"
+    ],
+    "grammarFocus": [
+      "Opinion verbs (думати, вважати)",
+      "Agreement/disagreement phrases",
+      "Linking opinions with reasons",
+      "Modal expressions for opinions"
+    ],
+    "totalDuration": 45,
+    "transliterationMode": "partial",
+    "tags": [
+      "opinions",
+      "views",
+      "discourse",
+      "functional"
+    ],
+    "version": 1,
+    "createdAt": "2025-11-29T00:00:00Z",
+    "modifiedAt": "2025-11-29T00:00:00Z",
+    "phases": [
+      {
+        "id": "phase-warm-up",
+        "name": "warm-up",
+        "duration": 5,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Sharing Your Thoughts\n\nTime to express what you think! In Ukrainian, there are many ways to share opinions - from casual to formal.\n\n**Key phrases:**\n- Я **думаю**, що... - I think that...\n- **На мою думку**,... - In my opinion,...\n- Я **згоден/згодна**. - I agree.\n\n> 💡 **Did You Know?**\n>\n> Ukrainians love discussing topics! Political discussions are common, especially since 2014. The phrase \"А я думаю інакше\" (But I think differently) is often the start of a lively debate!"
+          }
+        ]
+      },
+      {
+        "id": "phase-presentation",
+        "name": "presentation",
+        "duration": 15,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Expressing Opinions\n\n**Basic opinion phrases:**\n\n| Ukrainian | English | Register |\n|-----------|---------|----------|\n| Я думаю, що... | I think that... | neutral |\n| Я вважаю, що... | I believe/consider that... | formal |\n| На мою думку,... | In my opinion,... | neutral |\n| Мені здається, що... | It seems to me that... | softer |\n| Я переконаний/переконана, що... | I'm convinced that... | strong |\n| Як на мене,... | As for me,... | casual |\n\n**Examples:**\n- **Я думаю**, що це хороша ідея. - I think this is a good idea.\n- **На мою думку**, він має рацію. - In my opinion, he's right.\n- **Мені здається**, що це занадто дорого. - It seems to me that it's too expensive.\n- **Як на мене**, це найкращий варіант. - As for me, this is the best option.\n\n> ⚡ **Pro Tip: Strength of Opinion**\n>\n> From softest to strongest:\n> 1. Мені здається (weakest)\n> 2. Я думаю (neutral)\n> 3. Я вважаю (more formal/firm)\n> 4. Я переконаний (strongest)"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Asking for Opinions\n\n**General questions:**\n- **Що ви думаєте** про це? - What do you think about this?\n- **Яка ваша думка**? - What's your opinion?\n- **Як ви вважаєте**? - What do you think/believe?\n- **Як тобі здається**? - How does it seem to you?\n- А **ти як думаєш**? - And what do you think?\n\n**Specific topic:**\n- Що ви думаєте про **новий закон**? - What do you think about the new law?\n- Яка ваша думка щодо **цієї проблеми**? - What's your opinion on this problem?\n- Як ви **ставитеся** до цього? - How do you feel about this?\n\n> 🎭 **Culture Corner: Discussion Etiquette**\n>\n> Ukrainians are generally direct in expressing opinions, but politeness matters! Starting with \"Я поважаю вашу думку, але...\" (I respect your opinion, but...) before disagreeing is appreciated. Topics like politics can be sensitive!"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Agreeing - Погоджуватися\n\n**Strong agreement:**\n- **Абсолютно згоден/згодна**! - Absolutely agree!\n- **Повністю погоджуюся**! - I completely agree!\n- **Саме так**! - Exactly!\n- **Точно**! - Exactly!/Right!\n- Ви **маєте рацію**. - You're right.\n\n**Moderate agreement:**\n- **Я згоден/згодна**. - I agree.\n- Так, **ви праві**. - Yes, you're right.\n- **Мабуть**, так. - Probably so.\n- Це **правда**. - That's true.\n- Я **теж** так думаю. - I think so too.\n\n**Partial agreement:**\n- **В цілому** згоден, але... - I generally agree, but...\n- **Частково** ви праві. - You're partially right.\n- Це **правда**, однак... - That's true, however...\n- З **одного боку**, так... - On one hand, yes..."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Disagreeing - Не погоджуватися\n\n**Polite disagreement:**\n- Я **не зовсім згоден/згодна**. - I don't quite agree.\n- Я думаю **інакше**. - I think differently.\n- Вибачте, але я **не можу погодитися**. - Sorry, but I can't agree.\n- Не **впевнений/впевнена**, що це так. - I'm not sure that's the case.\n- **Можливо**, але... - Perhaps, but...\n\n**Direct disagreement:**\n- Я **не згоден/згодна**. - I disagree.\n- Це **не так**. - That's not true.\n- Я думаю, що ви **помиляєтеся**. - I think you're wrong.\n- **Навпаки**! - On the contrary!\n- Ні, це **неправда**. - No, that's not true.\n\n**Softening disagreement:**\n- Я **поважаю вашу думку**, але... - I respect your opinion, but...\n- **Розумію**, що ви маєте на увазі, але... - I understand what you mean, but...\n- Це **цікава точка зору**, однак... - That's an interesting point of view, however...\n\n> 📜 **History Bite: Freedom of Speech**\n>\n> The right to express opinions freely became especially important in Ukraine after independence in 1991 and the Revolution of Dignity in 2014. The phrase \"свобода слова\" (freedom of speech) is fundamental to Ukrainian civic culture."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Giving Reasons\n\n**Connecting opinions with reasons:**\n\n| Connector | Meaning |\n|-----------|---------|\n| тому що / бо | because |\n| оскільки | since/because |\n| адже | after all/because |\n| справа в тому, що | the thing is that |\n| по-перше... по-друге... | firstly... secondly... |\n\n**Examples:**\n- Я думаю, що це погана ідея, **тому що** занадто дорого. - I think it's a bad idea because it's too expensive.\n- **Справа в тому, що** ми не маємо часу. - The thing is that we don't have time.\n- **По-перше**, це небезпечно. **По-друге**, це незаконно. - Firstly, it's dangerous. Secondly, it's illegal."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Expressing Certainty and Doubt\n\n**Certainty:**\n| Ukrainian | English |\n|-----------|---------|\n| Я впевнений/впевнена | I'm sure/certain |\n| Без сумніву | Without doubt |\n| Безперечно | Undoubtedly |\n| Звісно | Of course |\n| Очевидно | Obviously |\n| Напевно | Certainly/Probably |\n\n**Doubt:**\n| Ukrainian | English |\n|-----------|---------|\n| Можливо | Maybe/Perhaps |\n| Мабуть | Probably |\n| Не впевнений/впевнена | Not sure |\n| Сумніваюся | I doubt |\n| Навряд чи | Hardly/Unlikely |\n| Хто знає | Who knows |\n\n**Examples:**\n- Я **впевнений**, що він прийде. - I'm sure he'll come.\n- **Можливо**, вона запізнюється. - Maybe she's running late.\n- **Навряд чи** це правда. - That's hardly true.\n- **Хто знає**, що буде завтра? - Who knows what tomorrow will bring?"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Discussion Phrases\n\n**Adding to discussion:**\n- **Крім того**,... - Besides that,...\n- **Також** варто зазначити,... - It's also worth noting,...\n- **До речі**,... - By the way,...\n- **До того ж**,... - Moreover,...\n\n**Changing topic:**\n- А **щодо**... - As for...\n- **Якщо говорити про**... - Speaking of...\n- **Що стосується**... - Regarding...\n\n**Concluding:**\n- **Загалом**,... - In general,...\n- **Отже**,... - So/Therefore,...\n- **Підсумовуючи**,... - Summing up,..."
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-A2-58-matchup"
+          }
+        ]
+      },
+      {
+        "id": "phase-practice",
+        "name": "practice",
+        "duration": 15,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Express Your Opinion\n\n1. (think / good idea)\n   → Я думаю, що це хороша ідея.\n\n2. (in my opinion / expensive)\n   → На мою думку, це дорого.\n\n3. (seems to me / difficult)\n   → Мені здається, що це важко.\n\n4. (convinced / right)\n   → Я переконаний, що він має рацію."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Agree or Disagree\n\nRespond to these statements:\n\n1. \"Українська мова дуже красива.\" (agree strongly)\n   → Абсолютно згоден! / Повністю погоджуюся!\n\n2. \"Всі мають вивчати програмування.\" (partially agree)\n   → В цілому згоден, але не всім це потрібно.\n\n3. \"Зима — найкраща пора року.\" (disagree politely)\n   → Я думаю інакше. Мені більше подобається літо.\n\n4. \"Читати книги краще, ніж дивитися фільми.\" (your opinion)\n   → [Your own response]"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Give Reasons\n\nComplete with reasons:\n\n1. Я думаю, що треба вчити мови, тому що...\n2. На мою думку, здоров'я важливіше за гроші, оскільки...\n3. Я вважаю, що спорт корисний. По-перше,... По-друге,..."
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-A2-58-quiz"
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-A2-58-groupsort"
+          }
+        ]
+      },
+      {
+        "id": "phase-production",
+        "name": "production",
+        "duration": 10,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Discussion Topics\n\nExpress your opinion on:\n- Чи потрібно вивчати іноземні мови?\n- Чи краще жити в місті чи в селі?\n- Які професії будуть популярні в майбутньому?"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Debate Practice\n\n**Topic: \"Соціальні мережі — це добре чи погано?\"**\n\nPresent both sides:\n- З одного боку...\n- З іншого боку...\n- Моя думка:..."
+          }
+        ]
+      }
+    ]
+  },
+  "activities": [
+    {
+      "id": "act-uk-A2-58-matchup",
+      "type": "match-up",
+      "title": "Opinion Phrases",
+      "description": "Match Ukrainian with English.",
+      "content": {
+        "type": "match-up",
+        "instructions": "Match Ukrainian with English.",
+        "pairs": [
+          {
+            "left": "Я думаю, що",
+            "right": "I think that"
+          },
+          {
+            "left": "На мою думку",
+            "right": "In my opinion"
+          },
+          {
+            "left": "Я згоден",
+            "right": "I agree"
+          },
+          {
+            "left": "Я не згоден",
+            "right": "I disagree"
+          },
+          {
+            "left": "Мені здається",
+            "right": "It seems to me"
+          },
+          {
+            "left": "Ви маєте рацію",
+            "right": "You're right"
+          }
+        ],
+        "shuffleRight": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2",
+      "duration": 5,
+      "tags": [
+        "opinions",
+        "views",
+        "discourse",
+        "functional"
+      ],
+      "createdAt": "2025-11-29T00:00:00Z",
+      "modifiedAt": "2025-11-29T00:00:00Z"
+    },
+    {
+      "id": "act-uk-A2-58-quiz",
+      "type": "quiz",
+      "title": "Expressing Opinions",
+      "description": "Choose the correct phrase.",
+      "content": {
+        "type": "quiz",
+        "instructions": "Choose the correct phrase.",
+        "questions": [
+          {
+            "question": "\"I think that this is good\" - ___, що це добре.",
+            "options": [
+              "Я думаю",
+              "Мені думка",
+              "Думаючи",
+              "Я думки"
+            ],
+            "correctIndex": 0,
+            "explanation": "\"I think\" = Я думаю."
+          },
+          {
+            "question": "\"I agree\" (male speaker) - Я ___.",
+            "options": [
+              "згоден",
+              "згодна",
+              "згодний",
+              "згода"
+            ],
+            "correctIndex": 0,
+            "explanation": "Male = згоден."
+          },
+          {
+            "question": "\"In my opinion\" - ___ думку.",
+            "options": [
+              "На мою",
+              "В моєму",
+              "Моя",
+              "Для моєї"
+            ],
+            "correctIndex": 0,
+            "explanation": "Fixed phrase = на мою думку."
+          },
+          {
+            "question": "\"I don't quite agree\" - Я не ___ згоден.",
+            "options": [
+              "зовсім",
+              "повністю",
+              "трохи",
+              "дуже"
+            ],
+            "correctIndex": 0,
+            "explanation": "Polite = не зовсім."
+          },
+          {
+            "question": "\"You're right\" - Ви ___ рацію.",
+            "options": [
+              "маєте",
+              "є",
+              "даєте",
+              "берете"
+            ],
+            "correctIndex": 0,
+            "explanation": "Fixed phrase = мати рацію."
+          },
+          {
+            "question": "\"Perhaps, but...\" - ___, але...",
+            "options": [
+              "Можливо",
+              "Мабуть що",
+              "Хіба",
+              "Чи"
+            ],
+            "correctIndex": 0,
+            "explanation": "Perhaps = можливо."
+          }
+        ],
+        "shuffleQuestions": true,
+        "shuffleOptions": true,
+        "showCorrectAnswers": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2",
+      "duration": 5,
+      "tags": [
+        "opinions",
+        "views",
+        "discourse",
+        "functional"
+      ],
+      "createdAt": "2025-11-29T00:00:00Z",
+      "modifiedAt": "2025-11-29T00:00:00Z"
+    },
+    {
+      "id": "act-uk-A2-58-groupsort",
+      "type": "group-sort",
+      "title": "Agree vs Disagree",
+      "description": "Sort phrases.",
+      "content": {
+        "type": "group-sort",
+        "instructions": "Sort phrases.",
+        "groups": [
+          {
+            "name": "Agreement",
+            "items": [
+              "Абсолютно згоден",
+              "Ви маєте рацію",
+              "Точно",
+              "Я теж так думаю",
+              "Повністю погоджуюся"
+            ]
+          },
+          {
+            "name": "Disagreement",
+            "items": [
+              "Я не згоден",
+              "Це не так",
+              "Я думаю інакше",
+              "Навпаки",
+              "Я не можу погодитися"
+            ]
+          }
+        ],
+        "shuffleItems": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2",
+      "duration": 5,
+      "tags": [
+        "opinions",
+        "views",
+        "discourse",
+        "functional"
+      ],
+      "createdAt": "2025-11-29T00:00:00Z",
+      "modifiedAt": "2025-11-29T00:00:00Z"
+    }
+  ],
+  "vocabulary": {
+    "moduleId": "mod-uk-A2-58",
+    "level": "A2",
+    "phase": "A2.3",
+    "wordCount": 12,
+    "transliterationMode": "partial",
+    "words": [
+      {
+        "id": "v-m58-001",
+        "uk": "думка",
+        "translit": "/ˈdumkɑ/",
+        "ipa": "opinion, thought",
+        "en": "noun",
+        "pos": "f"
+      },
+      {
+        "id": "v-m58-002",
+        "uk": "вважати",
+        "translit": "/vvɑˈʒɑtɪ/",
+        "ipa": "to believe, consider",
+        "en": "verb",
+        "pos": "-"
+      },
+      {
+        "id": "v-m58-003",
+        "uk": "погоджуватися",
+        "translit": "/poɦoˈdʒuvɑtɪsʲɑ/",
+        "ipa": "to agree (impf)",
+        "en": "verb",
+        "pos": "-"
+      },
+      {
+        "id": "v-m58-004",
+        "uk": "згоден",
+        "translit": "/ˈzɦodɛn/",
+        "ipa": "agree (m)",
+        "en": "adj",
+        "pos": "m",
+        "gender": "short form"
+      },
+      {
+        "id": "v-m58-005",
+        "uk": "згодна",
+        "translit": "/ˈzɦodnɑ/",
+        "ipa": "agree (f)",
+        "en": "adj",
+        "pos": "f",
+        "gender": "short form"
+      },
+      {
+        "id": "v-m58-006",
+        "uk": "рація",
+        "translit": "/ˈrɑtsʲijɑ/",
+        "ipa": "rightness",
+        "en": "noun",
+        "pos": "f",
+        "gender": "мати рацію"
+      },
+      {
+        "id": "v-m58-007",
+        "uk": "переконаний",
+        "translit": "/pɛrɛˈkonɑnɪj/",
+        "ipa": "convinced",
+        "en": "adj",
+        "pos": "m"
+      },
+      {
+        "id": "v-m58-008",
+        "uk": "сумніватися",
+        "translit": "/sumnʲiˈvɑtɪsʲɑ/",
+        "ipa": "to doubt",
+        "en": "verb",
+        "pos": "-"
+      },
+      {
+        "id": "v-m58-009",
+        "uk": "впевнений",
+        "translit": "/vˈpɛvnɛnɪj/",
+        "ipa": "sure, certain",
+        "en": "adj",
+        "pos": "m"
+      },
+      {
+        "id": "v-m58-010",
+        "uk": "навпаки",
+        "translit": "/nɑvˈpɑkɪ/",
+        "ipa": "on the contrary",
+        "en": "adv",
+        "pos": "-"
+      },
+      {
+        "id": "v-m58-011",
+        "uk": "загалом",
+        "translit": "/zɑˈɦɑlom/",
+        "ipa": "in general",
+        "en": "adv",
+        "pos": "-"
+      },
+      {
+        "id": "v-m58-012",
+        "uk": "отже",
+        "translit": "/ˈotʒɛ/",
+        "ipa": "so, therefore",
+        "en": "conj",
+        "pos": "-"
+      }
+    ]
+  }
+}

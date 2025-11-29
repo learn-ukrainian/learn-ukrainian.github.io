@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 59: Passive & Impersonal | Ukrainian A2</title>
+  <style>
+    :root { --primary: #1a5fb4; --primary-light: #3584e4; --success: #26a269; --warning: #e5a50a; --danger: #c01c28; --bg: #fafafa; --card-bg: #fff; --text: #1e1e1e; --text-muted: #5e5e5e; --border: #e0e0e0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+    .top-nav { background: #2e2e2e; color: white; padding: 0.5rem 2rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.875rem; }
+    .top-nav a { color: white; text-decoration: none; }
+    .top-nav a:hover { text-decoration: underline; }
+    .module-nav { display: flex; gap: 1rem; align-items: center; }
+    .module-nav-link { color: rgba(255,255,255,0.8); text-decoration: none; padding: 0.25rem 0.5rem; }
+    .module-nav-link:hover { color: white; }
+    .module-nav-link.disabled { color: rgba(255,255,255,0.3); pointer-events: none; }
+    .nav { position: sticky; top: 0; background: var(--primary); color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; z-index: 100; }
+    .nav h1 { font-size: 1.25rem; }
+    .nav-tabs { display: flex; gap: 0.5rem; }
+    .nav-tab { background: rgba(255,255,255,0.2); border: none; color: white; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; }
+    .nav-tab.active { background: white; color: var(--primary); }
+    main { max-width: 1000px; margin: 0 auto; padding: 2rem; }
+    .section { display: none; } .section.active { display: block; }
+    .lesson-header { text-align: center; margin-bottom: 2rem; padding: 2rem; background: linear-gradient(135deg, #e8f4fd, #f0e8fd); border-radius: 12px; }
+    .level-badge { background: var(--primary); color: white; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.875rem; }
+    .card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 1.5rem; margin-bottom: 1.5rem; }
+    .card h3 { color: var(--primary); margin-bottom: 1rem; }
+    .canvas-note { background: #fffbeb; border-left: 4px solid var(--warning); padding: 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+    .canvas-note h4 { color: var(--warning); margin-bottom: 0.5rem; }
+    .md-content { line-height: 1.7; }
+    .md-content p { margin: 0.75rem 0; }
+    .md-content ul, .md-content ol { margin: 0.75rem 0; padding-left: 1.5rem; }
+    .md-content li { margin: 0.25rem 0; }
+    .md-content strong { color: var(--primary); }
+    .md-content blockquote { background: #e8f4fd; border-left: 4px solid var(--primary); padding: 0.75rem 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+    .md-content blockquote p { margin: 0.25rem 0; }
+    .md-content table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+    .md-content th, .md-content td { border: 1px solid var(--border); padding: 0.5rem 0.75rem; text-align: left; }
+    .md-content th { background: #f5f5f5; font-weight: 600; }
+    .md-content code { background: #f0f0f0; padding: 0.125rem 0.375rem; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
+    .letter-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0; }
+    .letter-group { border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; }
+    .letter-group.true-friends { border-color: var(--success); } .letter-group.true-friends .letters { color: var(--success); }
+    .letter-group.false-friends { border-color: var(--danger); } .letter-group.false-friends .letters { color: var(--danger); }
+    .letter-group.new-letters { border-color: var(--primary); } .letter-group.new-letters .letters { color: var(--primary); }
+    .letters { font-size: 1.75rem; letter-spacing: 0.3rem; }
+    .match-container { display: flex; gap: 3rem; padding: 1rem; position: relative; }
+    .match-column { flex: 1; display: flex; flex-direction: column; gap: 0.75rem; }
+    .match-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; font-size: 1.25rem; cursor: pointer; }
+    .match-item.selected { border-color: var(--primary); background: #e8f4fd; }
+    .match-item.matched { border-color: var(--success); background: #e8f8f0; }
+    .match-item.wrong { border-color: var(--danger); background: #fde8e8; }
+    .match-lines { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+    .quiz-question { border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; }
+    .quiz-question.answered { pointer-events: none; }
+    .quiz-question .cyrillic { font-size: 1.5rem; color: var(--primary); font-weight: 600; }
+    .quiz-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-top: 1rem; }
+    .quiz-option { background: #f5f5f5; border: 2px solid var(--border); border-radius: 8px; padding: 1rem; cursor: pointer; text-align: center; }
+    .quiz-option.correct { border-color: var(--success); background: #d4edda; }
+    .quiz-option.wrong { border-color: var(--danger); background: #f8d7da; }
+    .quiz-explanation { margin-top: 1rem; padding: 1rem; background: #e8f4fd; border-radius: 8px; display: none; }
+    .quiz-explanation.show { display: block; }
+    .sort-pool { background: #f5f5f5; border: 2px dashed var(--border); border-radius: 12px; padding: 1.5rem; min-height: 80px; margin-bottom: 1rem; }
+    .sort-items { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; }
+    .sort-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 0.75rem 1.25rem; font-size: 1.5rem; cursor: grab; }
+    .sort-item.correct { border-color: var(--success); background: #e8f8f0; }
+    .sort-item.wrong { border-color: var(--danger); background: #fde8e8; }
+    .sort-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    .sort-group { border: 2px solid var(--border); border-radius: 12px; padding: 1rem; min-height: 150px; }
+    .sort-group.drag-over { border-color: var(--primary); background: #e8f4fd; }
+    .sort-group h4 { font-size: 0.875rem; text-align: center; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--border); }
+    .sort-group.true-friends h4 { color: var(--success); border-color: var(--success); }
+    .sort-group.false-friends h4 { color: var(--danger); border-color: var(--danger); }
+    .sort-group.new-letters h4 { color: var(--primary); border-color: var(--primary); }
+    .vocab-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; }
+    .vocab-card { border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; text-align: center; }
+    .vocab-card .uk { font-size: 1.75rem; font-weight: 600; color: var(--primary); }
+    .vocab-card .translit { color: var(--text-muted); font-style: italic; }
+    .vocab-card .en { font-weight: 500; margin: 0.25rem 0; }
+    .vocab-card .note { font-size: 0.75rem; color: #613583; background: #f0e8fd; padding: 0.25rem 0.5rem; border-radius: 4px; }
+    .btn { padding: 0.75rem 1.5rem; border: none; border-radius: 8px; cursor: pointer; }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-outline { background: transparent; border: 2px solid var(--border); }
+    .btn-group { display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem; }
+    .score-display { text-align: center; padding: 1rem; background: linear-gradient(135deg, #e8f8f0, #e8f4fd); border-radius: 8px; margin-bottom: 1rem; }
+    .score-display .score { font-size: 2rem; font-weight: 700; color: var(--success); }
+    .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
+    .completion-message.show { display: block; }
+    footer { text-align: center; padding: 2rem; color: var(--text-muted); }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+  </style>
+</head>
+<body>
+  <div class="top-nav">
+    <a href="../index.html">← l2-uk-en Curriculum</a>
+    <div class="module-nav">
+      <a href="module-58.html" class="module-nav-link">← Module 58</a>
+      <a href="index.html" class="module-nav-link">A2 Index</a>
+      <a href="module-60.html" class="module-nav-link">Module 60 →</a>
+    </div>
+  </div>
+  <nav class="nav">
+    <h1>Module 59: Passive & Impersonal</h1>
+    <div class="nav-tabs">
+      <button class="nav-tab active" data-section="lesson">Lesson</button>
+      <button class="nav-tab" data-section="match">Match</button>
+      <button class="nav-tab" data-section="quiz">Quiz</button>
+      <button class="nav-tab" data-section="sort">Sort</button>
+      <button class="nav-tab" data-section="vocab">Vocab</button>
+    </div>
+  </nav>
+  <main>
+    <section id="lesson" class="section active">
+      <div class="lesson-header">
+        <span class="level-badge">A2 · A2.3</span>
+        <h2 style="font-size:2rem;margin:0.5rem 0">Passive & Impersonal</h2>
+        <p style="color:var(--text-muted)">It Is Said, One Does</p>
+      </div>
+      
+      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Beyond Active Voice</h4><div class="md-content"><p>Sometimes we don't know or don't want to say who did something:</p>
+<ul>
+<li>"The door <strong>was opened</strong>."</li>
+<li>"<strong>It is said</strong> that…"</li>
+<li>"<strong>One must</strong> be careful."</li>
+</ul>
+<p>Ukrainian has special constructions for these situations!</p>
+<blockquote>
+  <p>💡 <strong>Did You Know?</strong></p>
+  <p>Ukrainian uses passive constructions less frequently than English. Instead, it often prefers active voice with impersonal subjects or reflexive verbs. But knowing passive is essential for understanding news, official documents, and formal texts!</p>
+</blockquote></div></div><div class="canvas-note"><h4>### Impersonal Constructions</h4><div class="md-content"><p><strong>Impersonal sentences</strong> don't have a specific subject - they describe general situations:</p>
+<p><strong>Common patterns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Ukrainian</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Треба…</td>
+<td>It's necessary to… / One must…</td>
+</tr>
+<tr>
+<td>Можна…</td>
+<td>It's possible to… / One may…</td>
+</tr>
+<tr>
+<td>Не можна…</td>
+<td>It's forbidden to… / One mustn't…</td>
+</tr>
+<tr>
+<td>Потрібно…</td>
+<td>It's needed to…</td>
+</tr>
+<tr>
+<td>Варто…</td>
+<td>It's worth…</td>
+</tr>
+<tr>
+<td>Слід…</td>
+<td>One should…</td>
+</tr>
+<tr>
+<td>Заборонено…</td>
+<td>It's forbidden…</td>
+</tr>
+<tr>
+<td>Дозволено…</td>
+<td>It's allowed…</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples:</strong></p>
+<ul>
+<li><strong>Треба</strong> працювати. - One must work. / It's necessary to work.</li>
+<li><strong>Можна</strong> запитати? - May I ask? / Is it possible to ask?</li>
+<li>Тут <strong>не можна</strong> курити. - Smoking is not allowed here.</li>
+<li><strong>Варто</strong> спробувати. - It's worth trying.</li>
+<li><strong>Заборонено</strong> входити. - Entry is forbidden.</li>
+</ul>
+<blockquote>
+  <p>⚡ <strong>Pro Tip: Adding Subject</strong></p>
+  <p>To specify WHO, use dative case:</p>
+  <ul>
+  <li><strong>Мені</strong> треба працювати. - I need to work.</li>
+  <li><strong>Тобі</strong> можна йти. - You may go.</li>
+  <li><strong>Нам</strong> варто подумати. - We should think about it.</li>
+  </ul>
+</blockquote></div></div><div class="canvas-note"><h4>Reflexive as Passive</h4><div class="md-content"><p>Ukrainian often uses <strong>reflexive verbs (-ся)</strong> where English uses passive:</p>
+<p><strong>Active → Reflexive (passive meaning):</strong></p>
+<ul>
+<li>Будують будинок. → Будинок <strong>будується</strong>. - A house is being built.</li>
+<li>Продають квитки. → Квитки <strong>продаються</strong>. - Tickets are sold.</li>
+<li>Говорять, що… → <strong>Говориться</strong>, що… - It is said that…</li>
+</ul>
+<p><strong>Common reflexive passives:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Reflexive</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>продається</td>
+<td>is sold</td>
+</tr>
+<tr>
+<td>здається</td>
+<td>is rented out</td>
+</tr>
+<tr>
+<td>вважається</td>
+<td>is considered</td>
+</tr>
+<tr>
+<td>називається</td>
+<td>is called</td>
+</tr>
+<tr>
+<td>готується</td>
+<td>is being prepared</td>
+</tr>
+<tr>
+<td>пишеться</td>
+<td>is written</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples:</strong></p>
+<ul>
+<li>Ця книга <strong>продається</strong> в магазині. - This book is sold in the store.</li>
+<li>Квартира <strong>здається</strong>. - Apartment for rent.</li>
+<li>Це <strong>вважається</strong> поганим. - This is considered bad.</li>
+<li>Як це <strong>пишеться</strong>? - How is this written?</li>
+<li>Як це <strong>називається</strong>? - What is this called?</li>
+</ul>
+<blockquote>
+  <p>🎭 <strong>Culture Corner: Signs and Notices</strong></p>
+  <p>You'll see reflexive passives everywhere in Ukraine:</p>
+  <ul>
+  <li>"Продається" - For sale</li>
+  <li>"Здається" - For rent</li>
+  <li>"Відчинено/Зачинено" - Open/Closed</li>
+  <li>"Вхід заборонено" - Entry forbidden</li>
+  </ul>
+</blockquote></div></div><div class="canvas-note"><h4>-но/-то Participles (Passive Result)</h4><div class="md-content"><p>These forms show the <strong>result</strong> of a completed action (who did it is unknown/unimportant):</p>
+<p><strong>Formation:</strong> verb stem + -но (most) or -то (some verbs)</p>
+<table>
+<thead>
+<tr>
+<th>Infinitive</th>
+<th>-но/-то form</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>зробити</td>
+<td>зроблено</td>
+<td>done/made</td>
+</tr>
+<tr>
+<td>написати</td>
+<td>написано</td>
+<td>written</td>
+</tr>
+<tr>
+<td>сказати</td>
+<td>сказано</td>
+<td>said</td>
+</tr>
+<tr>
+<td>відкрити</td>
+<td>відкрито</td>
+<td>opened</td>
+</tr>
+<tr>
+<td>закрити</td>
+<td>закрито</td>
+<td>closed</td>
+</tr>
+<tr>
+<td>зайняти</td>
+<td>зайнято</td>
+<td>occupied</td>
+</tr>
+<tr>
+<td>продати</td>
+<td>продано</td>
+<td>sold</td>
+</tr>
+<tr>
+<td>прийняти</td>
+<td>прийнято</td>
+<td>accepted</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Usage:</strong></p>
+<ul>
+<li>Роботу <strong>зроблено</strong>. - The work is done.</li>
+<li>Лист <strong>написано</strong>. - The letter is written.</li>
+<li><strong>Сказано</strong> — <strong>зроблено</strong>. - Said — done. (proverb)</li>
+<li>Це місце <strong>зайнято</strong>. - This seat is taken.</li>
+<li>Рішення <strong>прийнято</strong>. - The decision has been made.</li>
+<li>Магазин <strong>закрито</strong>. - The store is closed.</li>
+</ul>
+<blockquote>
+  <p>📜 <strong>History Bite: Impersonal Forms</strong></p>
+  <p>The -но/-то forms are distinctly Ukrainian (and Belarusian). Russian uses different constructions. These forms are ancient and very common in everyday speech and official language.</p>
+</blockquote></div></div><div class="canvas-note"><h4>Passive with "бути" + Participle</h4><div class="md-content"><p>For more formal passive, use <strong>бути</strong> + passive participle (-ний/-тий):</p>
+<p><strong>Formation:</strong> бути + participle (agrees with subject)</p>
+<table>
+<thead>
+<tr>
+<th>Verb</th>
+<th>Participle (m/f/n/pl)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>зробити</td>
+<td>зроблений/зроблена/зроблене/зроблені</td>
+</tr>
+<tr>
+<td>написати</td>
+<td>написаний/написана/написане/написані</td>
+</tr>
+<tr>
+<td>відкрити</td>
+<td>відкритий/відкрита/відкрите/відкриті</td>
+</tr>
+<tr>
+<td>побудувати</td>
+<td>побудований/побудована/побудоване/побудовані</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples:</strong></p>
+<ul>
+<li>Лист <strong>був написаний</strong> вчора. - The letter was written yesterday.</li>
+<li>Книга <strong>буде опублікована</strong> завтра. - The book will be published tomorrow.</li>
+<li>Ці будинки <strong>були побудовані</strong> в 19 столітті. - These buildings were built in the 19th century.</li>
+<li>Музей <strong>зараз зачинений</strong>. - The museum is currently closed.</li>
+</ul></div></div><div class="canvas-note"><h4>Common Passive Expressions</h4><div class="md-content"><p><strong>In daily life:</strong></p>
+<ul>
+<li>Вхід <strong>заборонено</strong>. - Entry forbidden.</li>
+<li>Вихід <strong>тут</strong>. - Exit here.</li>
+<li><strong>Зачинено</strong> на ремонт. - Closed for repairs.</li>
+<li><strong>Продано</strong>! - Sold!</li>
+<li><strong>Зайнято</strong>. - Occupied/Busy.</li>
+<li><strong>Вільно</strong>. - Free/Available.</li>
+</ul>
+<p><strong>In news/formal:</strong></p>
+<ul>
+<li><strong>Повідомляється</strong>, що… - It is reported that…</li>
+<li><strong>Очікується</strong>, що… - It is expected that…</li>
+<li><strong>Було прийнято</strong> рішення. - A decision was made.</li>
+<li><strong>Буде оголошено</strong> завтра. - It will be announced tomorrow.</li>
+</ul></div></div><div class="canvas-note"><h4>They Say / It Is Said</h4><div class="md-content"><p><strong>General statements without specific subject:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Ukrainian</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Кажуть, що…</td>
+<td>They say that…</td>
+</tr>
+<tr>
+<td>Говорять, що…</td>
+<td>They say that…</td>
+</tr>
+<tr>
+<td>Вважають, що…</td>
+<td>It's believed that…</td>
+</tr>
+<tr>
+<td>Відомо, що…</td>
+<td>It's known that…</td>
+</tr>
+<tr>
+<td>Вважається, що…</td>
+<td>It's considered that…</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples:</strong></p>
+<ul>
+<li><strong>Кажуть</strong>, що завтра буде дощ. - They say it will rain tomorrow.</li>
+<li><strong>Говорять</strong>, він дуже розумний. - They say he's very smart.</li>
+<li><strong>Відомо</strong>, що це небезпечно. - It's known that this is dangerous.</li>
+<li><strong>Вважається</strong>, що це найкращий варіант. - It's considered the best option.</li>
+</ul></div></div><div class="canvas-note"><h4>### Transform to Passive/Impersonal</h4><div class="md-content"><ol>
+<li><p>Хтось відкрив двері. (someone opened the door)<br />
+→ Двері відкрито. / Двері були відкриті.</p></li>
+<li><p>Хтось написав книгу. (someone wrote the book)<br />
+→ Книгу написано. / Книга написана.</p></li>
+<li><p>Тут курять. (they smoke here)<br />
+→ Тут можна курити. (allowed) / Тут не можна курити. (forbidden)</p></li>
+<li><p>Люди кажуть, що він багатий.<br />
+→ Кажуть, що він багатий.</p></li>
+<li><p>Хтось зайняв це місце.<br />
+→ Це місце зайнято.</p></li>
+</ol></div></div><div class="canvas-note"><h4>Choose the Correct Form</h4><div class="md-content"><ol>
+<li><p>The work is done. - Роботу ___.<br />
+→ зроблено</p></li>
+<li><p>The store is closed. - Магазин ___.<br />
+→ закрито / зачинено</p></li>
+<li><p>It is said that… - ___, що…<br />
+→ Кажуть / Говорять</p></li>
+<li><p>Entry is forbidden. - Вхід ___.<br />
+→ заборонено</p></li>
+<li><p>This seat is taken. - Це місце ___.<br />
+→ зайнято</p></li>
+</ol></div></div><div class="canvas-note"><h4>Translate</h4><div class="md-content"><ol>
+<li><p>One must study.<br />
+→ Треба вчитися.</p></li>
+<li><p>It's not allowed to smoke here.<br />
+→ Тут не можна курити. / Тут заборонено курити.</p></li>
+<li><p>The decision has been made.<br />
+→ Рішення прийнято.</p></li>
+<li><p>They say it will rain.<br />
+→ Кажуть, що буде дощ.</p></li>
+<li><p>This is considered important.<br />
+→ Це вважається важливим.</p></li>
+</ol></div></div><div class="canvas-note"><h4>### Describe Situations</h4><div class="md-content"><p>Use passive/impersonal constructions:</p>
+<p><strong>At a restaurant:</strong></p>
+<ul>
+<li>Столик зайнято/вільно.</li>
+<li>Тут не можна курити.</li>
+<li>Замовлення прийнято.</li>
+</ul>
+<p><strong>At an office:</strong></p>
+<ul>
+<li>Документи підготовлено.</li>
+<li>Рішення буде прийнято завтра.</li>
+<li>Зачинено на обід.</li>
+</ul></div></div><div class="canvas-note"><h4>News Report</h4><div class="md-content"><p>Create sentences about news:</p>
+<ul>
+<li>Повідомляється, що…</li>
+<li>Було оголошено…</li>
+<li>Очікується, що…</li>
+<li>Вважається, що…</li>
+</ul></div></div></div>
+      <div class="btn-group"><button class="btn btn-primary" onclick="showSection('match')">Start →</button></div>
+    </section>
+    <section id="match" class="section"><div class="card"><h3>-но/-то Forms</h3>
+      <div class="score-display"><span class="score"><span id="match-score">0</span>/6</span></div>
+      <div class="match-container" id="match-container"><svg class="match-lines" id="match-lines"></svg>
+        <div class="match-column" id="match-left"><div class="match-item" data-pair="0">зробити</div><div class="match-item" data-pair="1">написати</div><div class="match-item" data-pair="2">відкрити</div><div class="match-item" data-pair="3">закрити</div><div class="match-item" data-pair="4">сказати</div><div class="match-item" data-pair="5">продати</div></div>
+        <div class="match-column" id="match-right"><div class="match-item" data-pair="4">сказано</div><div class="match-item" data-pair="3">закрито</div><div class="match-item" data-pair="2">відкрито</div><div class="match-item" data-pair="1">написано</div><div class="match-item" data-pair="0">зроблено</div><div class="match-item" data-pair="5">продано</div></div>
+      </div>
+      <div class="completion-message" id="match-complete"><h3>Perfect!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetMatch()">Reset</button><button class="btn btn-primary" onclick="showSection('quiz')">Next →</button></div>
+    </div></section>
+    <section id="quiz" class="section"><div class="card"><h3>Passive & Impersonal</h3>
+      <div class="score-display"><span class="score"><span id="quiz-score">0</span>/6</span></div>
+      <div id="quiz-container"></div>
+      <div class="completion-message" id="quiz-complete"><h3>Complete!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('sort')">Next →</button></div>
+    </div></section>
+    <section id="sort" class="section"><div class="card"><h3>Impersonal Types</h3>
+      <div class="score-display"><span class="score"><span id="sort-score">0</span>/15</span></div>
+      <div class="sort-pool" id="sort-pool"><div class="sort-items" id="sort-items"></div></div>
+      <div class="sort-groups"><div class="sort-group true-friends" data-group="true-friends"><h4>Modal Impersonal</h4><div class="sort-items"></div></div><div class="sort-group false-friends" data-group="false-friends"><h4>-но/-то Participles</h4><div class="sort-items"></div></div><div class="sort-group new-letters" data-group="new-letters"><h4>Reflexive Passive</h4><div class="sort-items"></div></div></div>
+      <div class="completion-message" id="sort-complete"><h3>All Sorted!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetSort()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Vocab →</button></div>
+    </div></section>
+    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (10)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
+      <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
+    </section>
+  </main>
+  <footer>Module 59 · curricula-opus</footer>
+  <script>
+    const matchPairs=[{"left":"зробити","right":"зроблено"},{"left":"написати","right":"написано"},{"left":"відкрити","right":"відкрито"},{"left":"закрити","right":"закрито"},{"left":"сказати","right":"сказано"},{"left":"продати","right":"продано"}];
+    const quizData=[{"question":"\"The work is done\" - Роботу ___.","options":["зроблено","зробити","зробив","зроблений"],"correctIndex":0,"explanation":"-но form for impersonal passive."},{"question":"\"One must work\" - ___ працювати.","options":["Треба","Можна","Варто","Слід"],"correctIndex":0,"explanation":"Necessity = треба."},{"question":"\"It is said that\" - ___, що...","options":["Кажуть","Каже","Казати","Казано"],"correctIndex":0,"explanation":"Third person plural = кажуть."},{"question":"\"This seat is taken\" - Це місце ___.","options":["зайнято","зайняти","займає","зайнятий"],"correctIndex":0,"explanation":"-то form = зайнято."},{"question":"\"It's forbidden to smoke\" - Курити ___.","options":["заборонено","заборонити","заборона","забороняє"],"correctIndex":0,"explanation":"-но form = заборонено."},{"question":"\"It's considered important\" - Це ___ важливим.","options":["вважається","вважати","вважаємо","вважано"],"correctIndex":0,"explanation":"Reflexive = вважається."}];
+    const sortData={"true-friends":["треба","можна","не можна","варто","слід"],"false-friends":["зроблено","написано","закрито","продано","зайнято"],"new-letters":["продається","здається","вважається","називається","готується"]};
+    const vocabData=[{"uk":"заборонено","translit":"/zɑboroˈnɛno/","en":"part","note":""},{"uk":"дозволено","translit":"/dozˈvolɛno/","en":"part","note":""},{"uk":"зроблено","translit":"/ˈzroblɛno/","en":"part","note":""},{"uk":"закрито","translit":"/zɑˈkrɪto/","en":"part","note":""},{"uk":"відкрито","translit":"/vʲidˈkrɪto/","en":"part","note":""},{"uk":"зайнято","translit":"/ˈzɑjnʲɑto/","en":"part","note":""},{"uk":"називатися","translit":"/nɑzɪˈvɑtɪsʲɑ/","en":"verb","note":""},{"uk":"продаватися","translit":"/prodɑˈvɑtɪsʲɑ/","en":"verb","note":""},{"uk":"варто","translit":"/ˈvɑrto/","en":"adv","note":""},{"uk":"слід","translit":"/slʲid/","en":"adv","note":""}];
+    const totalSort=15;
+    function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
+    document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));
+    let matchSel=null,matchScore=0,matchPairsArr=[];
+    document.querySelectorAll('#match-left .match-item').forEach(item=>{item.addEventListener('click',()=>{if(item.classList.contains('matched'))return;document.querySelectorAll('#match-left .match-item').forEach(i=>i.classList.remove('selected'));item.classList.add('selected');matchSel={el:item,pair:item.dataset.pair};});});
+    document.querySelectorAll('#match-right .match-item').forEach(item=>{item.addEventListener('click',()=>{if(item.classList.contains('matched')||!matchSel)return;if(matchSel.pair===item.dataset.pair){matchSel.el.classList.remove('selected');matchSel.el.classList.add('matched');item.classList.add('matched');matchPairsArr.push({left:matchSel.el,right:item});matchScore++;document.getElementById('match-score').textContent=matchScore;drawLines();if(matchScore===matchPairs.length)document.getElementById('match-complete').classList.add('show');}else{item.classList.add('wrong');setTimeout(()=>item.classList.remove('wrong'),300);}matchSel=null;});});
+    function drawLines(){const svg=document.getElementById('match-lines'),c=document.getElementById('match-container');if(!svg||!c)return;const r=c.getBoundingClientRect();svg.innerHTML='';svg.setAttribute('viewBox','0 0 '+r.width+' '+r.height);matchPairsArr.forEach(p=>{const lr=p.left.getBoundingClientRect(),rr=p.right.getBoundingClientRect();const line=document.createElementNS('http://www.w3.org/2000/svg','line');line.setAttribute('x1',lr.right-r.left);line.setAttribute('y1',lr.top+lr.height/2-r.top);line.setAttribute('x2',rr.left-r.left);line.setAttribute('y2',rr.top+rr.height/2-r.top);line.setAttribute('stroke','#26a269');line.setAttribute('stroke-width','2');svg.appendChild(line);});}
+    function resetMatch(){matchSel=null;matchScore=0;matchPairsArr=[];document.getElementById('match-score').textContent='0';document.getElementById('match-complete')?.classList.remove('show');document.getElementById('match-lines').innerHTML='';document.querySelectorAll('#match-container .match-item').forEach(i=>i.classList.remove('matched','selected','wrong'));}
+    window.addEventListener('resize',drawLines);
+    let quizScore=0,quizAns=0;
+    function initQuiz(){const c=document.getElementById('quiz-container');if(!c||!quizData.length)return;c.innerHTML='';quizData.forEach((q,i)=>{const sh=[...q.options].sort(()=>Math.random()-0.5);const cor=sh.indexOf(q.options[q.correctIndex]);const div=document.createElement('div');div.className='quiz-question';div.innerHTML='<h4>Q'+(i+1)+': <span class="cyrillic">'+(q.question.match(/[А-ЯІЇЄҐ]+/)?.[0]||'')+'</span></h4><div class="quiz-options">'+sh.map((o,j)=>'<div class="quiz-option" data-c="'+(j===cor)+'" data-q="'+i+'">'+o+'</div>').join('')+'</div><div class="quiz-explanation" id="exp-'+i+'">'+q.explanation+'</div>';c.appendChild(div);});document.querySelectorAll('.quiz-option').forEach(o=>o.addEventListener('click',handleQuiz));}
+    function handleQuiz(e){const opt=e.target,q=opt.closest('.quiz-question');if(q.classList.contains('answered'))return;q.classList.add('answered');if(opt.dataset.c==='true'){opt.classList.add('correct');quizScore++;}else{opt.classList.add('wrong');q.querySelector('[data-c="true"]').classList.add('correct');}document.getElementById('exp-'+opt.dataset.q).classList.add('show');document.getElementById('quiz-score').textContent=quizScore;quizAns++;if(quizAns===quizData.length)document.getElementById('quiz-complete').classList.add('show');}
+    function resetQuiz(){quizScore=0;quizAns=0;document.getElementById('quiz-score').textContent='0';document.getElementById('quiz-complete')?.classList.remove('show');initQuiz();}
+    let sortScore=0,dragItem=null;
+    function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
+    function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
+    function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
+  </script>
+</body>
+</html>

@@ -1,0 +1,448 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-A2-55",
+    "moduleId": "mod-uk-A2-55",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "methodology": "ppp",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "A2",
+    "phase": "A2.3",
+    "moduleNumber": 55,
+    "title": "Travel & Transportation",
+    "subtitle": "Trains, Planes & Booking",
+    "description": "Book tickets for trains and planes",
+    "objectives": [
+      "Book tickets for trains and planes",
+      "Navigate stations and airports",
+      "Discuss travel plans and itineraries",
+      "Handle travel-related situations"
+    ],
+    "grammarFocus": [
+      "Travel vocabulary",
+      "Booking phrases",
+      "Time and schedule expressions",
+      "Direction and destination"
+    ],
+    "totalDuration": 45,
+    "transliterationMode": "partial",
+    "tags": [
+      "travel",
+      "transportation",
+      "booking",
+      "functional",
+      "dialogue"
+    ],
+    "version": 1,
+    "createdAt": "2025-11-29T00:00:00Z",
+    "modifiedAt": "2025-11-29T00:00:00Z",
+    "phases": [
+      {
+        "id": "phase-warm-up",
+        "name": "warm-up",
+        "duration": 5,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### On the Move\n\nUkraine has excellent train networks and growing air connections. Whether traveling domestically or internationally, you'll need this vocabulary!\n\n**Key phrases:**\n- Мені потрібен **квиток** до Львова. - I need a ticket to Lviv.\n- О котрій **відправлення**? - What time is departure?\n- **Звідки** відходить потяг? - Where does the train leave from?\n\n> 💡 **Did You Know?**\n>\n> Ukrainian trains are legendary! The overnight train (нічний потяг) is a classic experience - you get a bed, tea from the провідник (conductor), and wake up at your destination. The train from Kyiv to Lviv takes about 5-6 hours, while flights take just over an hour."
+          }
+        ]
+      },
+      {
+        "id": "phase-presentation",
+        "name": "presentation",
+        "duration": 15,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Types of Transportation\n\n**Ground transportation:**\n| Ukrainian | English |\n|-----------|---------|\n| потяг | train |\n| автобус | bus |\n| маршрутка | minibus |\n| таксі | taxi |\n| метро | metro/subway |\n| трамвай | tram |\n| тролейбус | trolleybus |\n\n**Air and water:**\n| Ukrainian | English |\n|-----------|---------|\n| літак | airplane |\n| гелікоптер | helicopter |\n| корабель | ship |\n| пором | ferry |\n\n**Stations and airports:**\n| Ukrainian | English |\n|-----------|---------|\n| вокзал | train station |\n| автовокзал | bus station |\n| аеропорт | airport |\n| станція | station (metro) |\n| зупинка | stop (bus/tram) |\n\n> ⚡ **Pro Tip: Вокзал vs Станція**\n>\n> - **Вокзал** - main train/bus station (building)\n> - **Станція** - metro station, smaller stops\n> - **Зупинка** - bus/tram stop (on the street)"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Buying Tickets - Купівля квитків\n\n**At the ticket office:**\n- Дайте, будь ласка, **квиток** до Одеси. - Please give me a ticket to Odesa.\n- **Два квитки** до Харкова, будь ласка. - Two tickets to Kharkiv, please.\n- Мені потрібен квиток **в один бік**. - I need a one-way ticket.\n- Квиток **туди і назад**, будь ласка. - A round-trip ticket, please.\n\n**Specifying details:**\n- На **сьогодні** / на **завтра**. - For today / for tomorrow.\n- На **ранковий** / **вечірній** потяг. - For the morning / evening train.\n- **Перший** / **другий** клас. - First / second class.\n- **Плацкарт** / **купе**. - Open carriage / compartment.\n\n**Questions:**\n- **Скільки коштує** квиток? - How much is a ticket?\n- О котрій **відправлення**? - What time is departure?\n- О котрій **прибуття**? - What time is arrival?\n- Звідки **відходить** потяг? - Where does the train depart from?\n- З якої **платформи**? - From which platform?\n\n> 🎭 **Culture Corner: Train Classes**\n>\n> Ukrainian trains have different classes:\n> - **Плацкарт** - open carriage with bunks (cheapest, social!)\n> - **Купе** - 4-person compartment (more privacy)\n> - **СВ (спальний вагон)** - 2-person sleeper (luxury)\n> - **Сидячий** - seats only (day trains)"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Train Travel Vocabulary\n\n**On the train:**\n| Ukrainian | English |\n|-----------|---------|\n| вагон | carriage/car |\n| місце | seat/place |\n| верхня полиця | upper bunk |\n| нижня полиця | lower bunk |\n| провідник/провідниця | conductor |\n| білизна | bedding |\n| чай | tea |\n\n**Useful phrases:**\n- Де мій **вагон**? - Where is my carriage?\n- Яке моє **місце**? - Which is my seat?\n- Чи можна **поміняти** місце? - Can I change seats?\n- О котрій ми **приїдемо**? - What time will we arrive?\n- **Скільки** зупинок до Львова? - How many stops to Lviv?\n\n> 📜 **History Bite: Ukrainian Railways**\n>\n> Ukraine's railway network was built mostly in the 19th century under the Russian and Austro-Hungarian empires. Today, Укрзалізниця operates one of the largest rail networks in Europe! The Kyiv-Lviv route is one of the most popular."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "At the Airport - В аеропорту\n\n**Check-in vocabulary:**\n| Ukrainian | English |\n|-----------|---------|\n| реєстрація | check-in |\n| посадковий талон | boarding pass |\n| багаж | luggage |\n| ручна поклажа | carry-on |\n| здати багаж | to check luggage |\n| паспортний контроль | passport control |\n| митниця | customs |\n| вихід (на посадку) | gate |\n\n**Useful phrases:**\n- Де **реєстрація** на рейс до Варшави? - Where is check-in for the Warsaw flight?\n- Ось мій **паспорт** і **квиток**. - Here's my passport and ticket.\n- Скільки **кілограмів** можна взяти? - How many kilograms can I take?\n- Чи є **затримка** рейсу? - Is there a flight delay?\n- З якого **виходу** посадка? - From which gate is boarding?\n- Рейс **скасовано**? - Is the flight cancelled?\n\n**Announcements:**\n- Увага! Оголошується **посадка** на рейс... - Attention! Boarding is announced for flight...\n- Пасажирів рейсу... просимо пройти до виходу... - Passengers of flight... please proceed to gate..."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Booking Online\n\n**Website vocabulary:**\n| Ukrainian | English |\n|-----------|---------|\n| пошук | search |\n| дата відправлення | departure date |\n| дата повернення | return date |\n| кількість пасажирів | number of passengers |\n| вибрати місце | choose seat |\n| оплата | payment |\n| підтвердження | confirmation |\n| електронний квиток | e-ticket |\n\n**Phrases:**\n- Я хочу **забронювати** квиток. - I want to book a ticket.\n- Можна **онлайн**? - Can I do it online?\n- Мені потрібно **підтвердження**. - I need confirmation.\n- Куди надіслати **електронний квиток**? - Where should I send the e-ticket?\n\n> ⚡ **Pro Tip: Booking Sites**\n>\n> - **Укрзалізниця** (uz.gov.ua) - official train booking\n> - **Busfor** - intercity buses\n> - **SkyUp**, **МАУ** - Ukrainian airlines\n> - Apps make booking easier!"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Problems and Solutions\n\n**Common issues:**\n- Я **загубив/загубила** квиток. - I lost my ticket.\n- Я **спізнився/спізнилась** на потяг. - I missed the train.\n- Мій **багаж** не прибув. - My luggage didn't arrive.\n- Потяг **затримується**. - The train is delayed.\n- Рейс **скасовано**. - The flight is cancelled.\n\n**Asking for help:**\n- Чи можна **повернути** квиток? - Can I return the ticket?\n- Коли **наступний** потяг? - When is the next train?\n- Де **бюро знахідок**? - Where is lost and found?\n- Чи є **альтернативний** рейс? - Is there an alternative flight?"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Travel Dialogue\n\n**Buying a train ticket:**\n\n- Доброго дня! Мені потрібен квиток до Одеси.\n- На коли?\n- На завтра, на ранковий потяг.\n- Є потяг о 7:30 і о 9:15. Який вам?\n- О 9:15, будь ласка. Скільки коштує?\n- 450 гривень. Плацкарт чи купе?\n- Купе, будь ласка. Нижня полиця, якщо можна.\n- Звичайно. Ось ваш квиток. Потяг відходить з третьої платформи.\n- Дякую!"
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-A2-55-matchup"
+          }
+        ]
+      },
+      {
+        "id": "phase-practice",
+        "name": "practice",
+        "duration": 15,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Match Transportation\n\n1. потяг → train\n2. літак → airplane\n3. вокзал → train station\n4. аеропорт → airport\n5. квиток → ticket\n6. платформа → platform"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Complete Booking Dialogue\n\n1. Мені потрібен квиток до ___. (Lviv)\n   → Львова\n\n2. На ___, будь ласка. (tomorrow)\n   → завтра\n\n3. Квиток ___ і ___. (there and back)\n   → туди і назад\n\n4. ___ коштує? (how much)\n   → Скільки\n\n5. З якої ___? (platform)\n   → платформи\n\n6. О котрій ___? (arrival)\n   → прибуття"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Translate\n\n1. I need a ticket to Kyiv.\n   → Мені потрібен квиток до Києва.\n\n2. What time is departure?\n   → О котрій відправлення?\n\n3. From which platform?\n   → З якої платформи?\n\n4. Is there a flight delay?\n   → Чи є затримка рейсу?\n\n5. I missed the train.\n   → Я спізнився/спізнилась на потяг."
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-A2-55-quiz"
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-A2-55-groupsort"
+          }
+        ]
+      },
+      {
+        "id": "phase-production",
+        "name": "production",
+        "duration": 10,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Plan a Trip\n\nDescribe your travel plans:\n- Куди ви їдете?\n- Яким транспортом?\n- Коли відправлення?\n- Скільки коштує квиток?"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Role Play: Ticket Office\n\n**Customer:**\n- Ask for tickets\n- Specify date and time\n- Ask about price\n- Choose class\n\n**Agent:**\n- Offer options\n- Give prices\n- Explain platform\n- Provide ticket"
+          }
+        ]
+      }
+    ]
+  },
+  "activities": [
+    {
+      "id": "act-uk-A2-55-matchup",
+      "type": "match-up",
+      "title": "Travel Vocabulary",
+      "description": "Match Ukrainian with English.",
+      "content": {
+        "type": "match-up",
+        "instructions": "Match Ukrainian with English.",
+        "pairs": [
+          {
+            "left": "потяг",
+            "right": "train"
+          },
+          {
+            "left": "літак",
+            "right": "airplane"
+          },
+          {
+            "left": "квиток",
+            "right": "ticket"
+          },
+          {
+            "left": "вокзал",
+            "right": "train station"
+          },
+          {
+            "left": "платформа",
+            "right": "platform"
+          },
+          {
+            "left": "багаж",
+            "right": "luggage"
+          }
+        ],
+        "shuffleRight": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2",
+      "duration": 5,
+      "tags": [
+        "travel",
+        "transportation",
+        "booking",
+        "functional",
+        "dialogue"
+      ],
+      "createdAt": "2025-11-29T00:00:00Z",
+      "modifiedAt": "2025-11-29T00:00:00Z"
+    },
+    {
+      "id": "act-uk-A2-55-quiz",
+      "type": "quiz",
+      "title": "Travel Situations",
+      "description": "Choose the correct answer.",
+      "content": {
+        "type": "quiz",
+        "instructions": "Choose the correct answer.",
+        "questions": [
+          {
+            "question": "\"A ticket to Lviv\" - Квиток ___ Львова.",
+            "options": [
+              "до",
+              "в",
+              "на",
+              "у"
+            ],
+            "correctIndex": 0,
+            "explanation": "Direction \"to city\" = до."
+          },
+          {
+            "question": "\"Round trip\" - Туди і ___.",
+            "options": [
+              "назад",
+              "звідти",
+              "далі",
+              "потім"
+            ],
+            "correctIndex": 0,
+            "explanation": "\"There and back\" = туди і назад."
+          },
+          {
+            "question": "\"What time is departure?\" - О котрій ___?",
+            "options": [
+              "відправлення",
+              "відправляти",
+              "відправитися",
+              "відправляється"
+            ],
+            "correctIndex": 0,
+            "explanation": "Noun = відправлення."
+          },
+          {
+            "question": "\"From which platform?\" - З якої ___?",
+            "options": [
+              "платформи",
+              "платформа",
+              "платформу",
+              "платформою"
+            ],
+            "correctIndex": 0,
+            "explanation": "Genitive after з = платформи."
+          },
+          {
+            "question": "\"I missed the train\" - Я ___ на потяг.",
+            "options": [
+              "спізнився/спізнилась",
+              "спізнюся",
+              "спізнитися",
+              "спізнював"
+            ],
+            "correctIndex": 0,
+            "explanation": "Past tense = спізнився."
+          },
+          {
+            "question": "\"Is there a delay?\" - Чи є ___?",
+            "options": [
+              "затримка",
+              "затримати",
+              "затримується",
+              "затриманий"
+            ],
+            "correctIndex": 0,
+            "explanation": "Noun = затримка."
+          }
+        ],
+        "shuffleQuestions": true,
+        "shuffleOptions": true,
+        "showCorrectAnswers": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2",
+      "duration": 5,
+      "tags": [
+        "travel",
+        "transportation",
+        "booking",
+        "functional",
+        "dialogue"
+      ],
+      "createdAt": "2025-11-29T00:00:00Z",
+      "modifiedAt": "2025-11-29T00:00:00Z"
+    },
+    {
+      "id": "act-uk-A2-55-groupsort",
+      "type": "group-sort",
+      "title": "Train vs Plane",
+      "description": "Sort by transport type.",
+      "content": {
+        "type": "group-sort",
+        "instructions": "Sort by transport type.",
+        "groups": [
+          {
+            "name": "Train (Потяг)",
+            "items": [
+              "вокзал",
+              "вагон",
+              "купе",
+              "плацкарт",
+              "платформа",
+              "провідник"
+            ]
+          },
+          {
+            "name": "Plane (Літак)",
+            "items": [
+              "аеропорт",
+              "реєстрація",
+              "посадковий талон",
+              "вихід",
+              "митниця",
+              "ручна поклажа"
+            ]
+          }
+        ],
+        "shuffleItems": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2",
+      "duration": 5,
+      "tags": [
+        "travel",
+        "transportation",
+        "booking",
+        "functional",
+        "dialogue"
+      ],
+      "createdAt": "2025-11-29T00:00:00Z",
+      "modifiedAt": "2025-11-29T00:00:00Z"
+    }
+  ],
+  "vocabulary": {
+    "moduleId": "mod-uk-A2-55",
+    "level": "A2",
+    "phase": "A2.3",
+    "wordCount": 11,
+    "transliterationMode": "partial",
+    "words": [
+      {
+        "id": "v-m55-001",
+        "uk": "потяг",
+        "translit": "/ˈpotʲɑɦ/",
+        "ipa": "train",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m55-002",
+        "uk": "вокзал",
+        "translit": "/vokˈzɑl/",
+        "ipa": "train station",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m55-003",
+        "uk": "платформа",
+        "translit": "/plɑtˈformɑ/",
+        "ipa": "platform",
+        "en": "noun",
+        "pos": "f"
+      },
+      {
+        "id": "v-m55-004",
+        "uk": "відправлення",
+        "translit": "/vʲidprɑvˈlɛnʲɑ/",
+        "ipa": "departure",
+        "en": "noun",
+        "pos": "n"
+      },
+      {
+        "id": "v-m55-005",
+        "uk": "прибуття",
+        "translit": "/prɪˈbutʲɑ/",
+        "ipa": "arrival",
+        "en": "noun",
+        "pos": "n"
+      },
+      {
+        "id": "v-m55-006",
+        "uk": "затримка",
+        "translit": "/zɑˈtrɪmkɑ/",
+        "ipa": "delay",
+        "en": "noun",
+        "pos": "f"
+      },
+      {
+        "id": "v-m55-007",
+        "uk": "багаж",
+        "translit": "/bɑˈɦɑʒ/",
+        "ipa": "luggage",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m55-008",
+        "uk": "посадковий талон",
+        "translit": "/posɑdˈkovɪj tɑˈlon/",
+        "ipa": "boarding pass",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m55-009",
+        "uk": "рейс",
+        "translit": "/rɛjs/",
+        "ipa": "flight",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m55-010",
+        "uk": "купе",
+        "translit": "/kuˈpɛ/",
+        "ipa": "compartment",
+        "en": "noun",
+        "pos": "n",
+        "gender": "indecl"
+      },
+      {
+        "id": "v-m55-011",
+        "uk": "провідник",
+        "translit": "/provʲidˈnɪk/",
+        "ipa": "conductor",
+        "en": "noun",
+        "pos": "m"
+      }
+    ]
+  }
+}
