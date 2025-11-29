@@ -1,0 +1,397 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-A2+-75",
+    "moduleId": "mod-uk-A2+-75",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "methodology": "ppp",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "A2+",
+    "phase": "A2+.3",
+    "moduleNumber": 75,
+    "title": "Review: Vocabulary Expansion",
+    "subtitle": "Consolidating Thematic Vocabulary",
+    "description": "Review all A2+ thematic vocabulary",
+    "objectives": [
+      "Review all A2+ thematic vocabulary",
+      "Practice cross-topic communication",
+      "Consolidate key expressions",
+      "Build confidence in topic discussions"
+    ],
+    "grammarFocus": [
+      "Topic-specific expressions",
+      "Vocabulary collocations",
+      "Cross-topic integration"
+    ],
+    "totalDuration": 45,
+    "transliterationMode": "none",
+    "tags": [
+      "review",
+      "vocabulary",
+      "thematic",
+      "consolidation"
+    ],
+    "version": 1,
+    "createdAt": "2025-11-29T00:00:00Z",
+    "modifiedAt": "2025-11-29T00:00:00Z",
+    "phases": [
+      {
+        "id": "phase-warm-up",
+        "name": "warm-up",
+        "duration": 5,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Seven Topics, One Review\n\nIn Modules 67-73, you expanded your vocabulary across seven life areas:\n\n1. 🍳 Food & Cooking\n2. 🏥 Health & Body\n3. 🏠 Home & Furniture\n4. 🌿 Nature & Weather\n5. 😊 Emotions & Personality\n6. 💼 Work & Professions\n7. 📱 Technology & Media\n\nLet's consolidate and connect them!\n\n> 💡 **The Goal**\n>\n> Move vocabulary from recognition to active use in real conversations!"
+          }
+        ]
+      },
+      {
+        "id": "phase-presentation",
+        "name": "presentation",
+        "duration": 15,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Food & Cooking Highlights (Module 67)\n\n**Key Vocabulary:**\n- Cooking verbs: варити, смажити, пекти, готувати\n- Taste: смачний, солоний, солодкий, гострий\n- Kitchen: каструля, сковорода, духовка\n- Dishes: борщ, вареники, деруни\n\n**Essential Phrases:**\n- Що на обід? - What's for lunch?\n- Смачного! - Bon appétit!\n- Смакує? - Does it taste good?\n- Я наївся. - I'm full.\n\n**Quick Check:** Can you order food, describe tastes, and give a simple recipe?"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Health & Body Highlights (Module 68)\n\n**Key Vocabulary:**\n- Body parts: серце, легені, коліно, плече\n- Symptoms: температура, кашель, нежить, біль\n- Medical: лікар, аптека, рецепт, ліки\n\n**Essential Phrases:**\n- Болить голова. - I have a headache.\n- У мене температура. - I have a fever.\n- Де аптека? - Where's the pharmacy?\n- На що скаржитесь? - What are your complaints?\n\n**Quick Check:** Can you describe symptoms and navigate a doctor visit?"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Home & Furniture Highlights (Module 69)\n\n**Key Vocabulary:**\n- Furniture: диван, ліжко, шафа, стіл\n- Rooms: вітальня, спальня, кухня, ванна\n- Housing: квартира, поверх, балкон, ліфт\n- Actions: прибирати, пилососити, переїжджати\n\n**Essential Phrases:**\n- Застели ліжко! - Make the bed!\n- Квартира затишна. - The apartment is cozy.\n- На якому поверсі? - On which floor?\n\n**Quick Check:** Can you describe your home and discuss housing?"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Nature & Weather Highlights (Module 70)\n\n**Key Vocabulary:**\n- Weather: гроза, туман, спека, заметіль\n- Landscapes: гора, озеро, ліс, степ\n- Animals: вовк, лелека, бджола\n- Plants: дуб, береза, соняшник\n\n**Essential Phrases:**\n- Йде дощ. - It's raining.\n- Яка погода? - What's the weather?\n- Дме вітер. - The wind is blowing.\n\n**Quick Check:** Can you discuss weather and describe nature?"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Emotions & Personality Highlights (Module 71)\n\n**Key Vocabulary:**\n- Positive: щасливий, вдячний, задоволений\n- Negative: сумний, злий, розчарований\n- Traits: добрий, чесний, впертий, лінивий\n\n**Essential Phrases:**\n- Мені сумно. - I feel sad.\n- Не хвилюйся! - Don't worry!\n- Вона добра людина. - She's a good person.\n\n**Quick Check:** Can you express emotions and describe personalities?"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Work & Professions Highlights (Module 72)\n\n**Key Vocabulary:**\n- Professions: програміст, юрист, бухгалтер\n- Workplace: офіс, колега, відділ\n- Career: зарплата, співбесіда, резюме\n\n**Essential Phrases:**\n- Де ви працюєте? - Where do you work?\n- Яка ваша посада? - What's your position?\n- Я шукаю роботу. - I'm looking for a job.\n\n**Quick Check:** Can you discuss work and navigate job situations?"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Technology & Media Highlights (Module 73)\n\n**Key Vocabulary:**\n- Devices: ноутбук, смартфон, навушники\n- Actions: завантажити, надіслати, видалити\n- Problems: не працює, зависло, повільно\n- Social: підписник, лайк, стрічка\n\n**Essential Phrases:**\n- Завантаж цей застосунок. - Download this app.\n- Інтернет не працює. - The internet doesn't work.\n- Надішли посилання. - Send the link.\n\n**Quick Check:** Can you discuss tech and solve basic problems?"
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-A2+-75-matchup"
+          }
+        ]
+      },
+      {
+        "id": "phase-practice",
+        "name": "practice",
+        "duration": 15,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Cross-Topic Connections\n\nMatch vocabulary to create natural sentences:\n\n1. Я **хворий** (health) + тому **працюю** з дому (work)\n   → Я хворий, тому працюю з дому.\n\n2. На **кухні** (home) + **готую** борщ (food)\n   → На кухні готую борщ.\n\n3. **Погода** погана (weather) + **настрій** сумний (emotions)\n   → Погода погана, настрій сумний.\n\n4. **Ноутбук** зависло (tech) + не можу **працювати** (work)\n   → Ноутбук зависло, не можу працювати."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Topic Switch Challenge\n\nAnswer questions from different topics:\n\n1. **Food:** Яка твоя улюблена страва?\n   → Моя улюблена страва — борщ зі сметаною.\n\n2. **Health:** Як ти почуваєшся?\n   → Почуваюся добре, дякую.\n\n3. **Home:** Опиши свою квартиру.\n   → Маю затишну однокімнатну квартиру.\n\n4. **Weather:** Яка погода сьогодні?\n   → Сьогодні сонячно і тепло.\n\n5. **Emotions:** Чи ти щасливий?\n   → Загалом так, я задоволений життям.\n\n6. **Work:** Ким ти працюєш?\n   → Я працюю програмістом в IT-компанії.\n\n7. **Tech:** Які соцмережі використовуєш?\n   → Користуюся Телеграмом і Інстаграмом."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Situational Practice\n\n**Scenario 1: At a new apartment**\nCombine: Home + Tech + Emotions\n- \"Квартира простора і світла. Wi-Fi швидкий. Я задоволений!\"\n\n**Scenario 2: Sick day**\nCombine: Health + Work + Tech\n- \"У мене застуда. Працюю віддалено. Надішли мені документи на email.\"\n\n**Scenario 3: Weekend plans**\nCombine: Weather + Nature + Food\n- \"Якщо буде сонячно, підемо в похід. Візьму бутерброди і чай.\""
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Vocabulary Categories Review\n\n**Complete the sets:**\n\n**Cooking verbs:** варити, смажити, ___, готувати\n→ пекти\n\n**Body parts:** голова, рука, нога, ___\n→ серце / коліно / плече\n\n**Furniture:** диван, ліжко, шафа, ___\n→ стіл / крісло\n\n**Weather:** дощ, сніг, вітер, ___\n→ гроза / туман\n\n**Emotions:** щасливий, сумний, злий, ___\n→ вдячний / схвильований\n\n**Professions:** лікар, вчитель, програміст, ___\n→ юрист / бухгалтер\n\n**Tech actions:** завантажити, надіслати, ___, видалити\n→ зберегти"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Translate & Use\n\n1. I feel bad, I have a headache.\n   → Мені погано, болить голова.\n\n2. The apartment is cozy but small.\n   → Квартира затишна, але маленька.\n\n3. It's raining, I'm staying home.\n   → Йде дощ, залишаюся вдома.\n\n4. I'm happy with my new job.\n   → Я задоволений новою роботою.\n\n5. Download the app and send me the link.\n   → Завантаж застосунок і надішли мені посилання."
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-A2+-75-quiz"
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-A2+-75-groupsort"
+          }
+        ]
+      },
+      {
+        "id": "phase-production",
+        "name": "production",
+        "duration": 10,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### A Day in Your Life\n\nDescribe a typical day using ALL seven topics:\n\n**Example:**\n\"Вранці я прокидаюся у своїй **затишній квартирі** (home). На **сніданок їм** вівсянку (food). Перевіряю **погоду** — сьогодні сонячно (weather). Я **почуваюся** добре (health/emotions), **їду на роботу** (work). Там перевіряю **email** і **месенджери** (tech). Увечері готую **вечерю** і дивлюся серіал.\"\n\nYour turn!"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Problem-Solution Scenarios\n\nDescribe problems and solutions using vocabulary:\n\n1. **Tech problem:** Ноутбук не працює.\n   → Спробую перезавантажити. Якщо не допоможе, занесу в ремонт.\n\n2. **Health problem:** Боли горло і є кашель.\n   → Піду до лікаря. Візьму ліки в аптеці.\n\n3. **Home problem:** Кран тече.\n   → Викличу сантехніка. А поки покладу ганчірку."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Discussion Topics\n\nDiscuss these questions:\n\n1. **Food + Health:** Як їжа впливає на здоров'я?\n2. **Work + Tech:** Як технології змінили роботу?\n3. **Weather + Emotions:** Чи погода впливає на настрій?\n4. **Home + Work:** Які плюси і мінуси роботи з дому?"
+          }
+        ]
+      }
+    ]
+  },
+  "activities": [
+    {
+      "id": "act-uk-A2+-75-matchup",
+      "type": "match-up",
+      "title": "Topic → Key Word",
+      "description": "Topic → Key Word",
+      "content": {
+        "type": "match-up",
+        "instructions": "",
+        "pairs": [
+          {
+            "left": "Food",
+            "right": "смачний"
+          },
+          {
+            "left": "Health",
+            "right": "температура"
+          },
+          {
+            "left": "Home",
+            "right": "квартира"
+          },
+          {
+            "left": "Weather",
+            "right": "гроза"
+          },
+          {
+            "left": "Emotions",
+            "right": "щасливий"
+          },
+          {
+            "left": "Work",
+            "right": "зарплата"
+          },
+          {
+            "left": "Tech",
+            "right": "завантажити"
+          }
+        ],
+        "shuffleRight": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2+",
+      "duration": 5,
+      "tags": [
+        "review",
+        "vocabulary",
+        "thematic",
+        "consolidation"
+      ],
+      "createdAt": "2025-11-29T00:00:00Z",
+      "modifiedAt": "2025-11-29T00:00:00Z"
+    },
+    {
+      "id": "act-uk-A2+-75-quiz",
+      "type": "quiz",
+      "title": "Vocabulary Review",
+      "description": "Test across all seven topics.",
+      "content": {
+        "type": "quiz",
+        "instructions": "Test across all seven topics.",
+        "questions": [
+          {
+            "question": "\"Смажити\" relates to ___.",
+            "options": [
+              "cooking",
+              "health",
+              "technology",
+              "emotions"
+            ],
+            "correctIndex": 0,
+            "explanation": "Смажити = to fry."
+          },
+          {
+            "question": "\"Застуда\" is a ___ term.",
+            "options": [
+              "health",
+              "weather",
+              "food",
+              "work"
+            ],
+            "correctIndex": 0,
+            "explanation": "Застуда = cold (illness)."
+          },
+          {
+            "question": "\"Затишний\" describes ___.",
+            "options": [
+              "a cozy home",
+              "delicious food",
+              "good weather",
+              "a happy person"
+            ],
+            "correctIndex": 0,
+            "explanation": "Затишний = cozy."
+          },
+          {
+            "question": "\"Гроза\" is a ___ phenomenon.",
+            "options": [
+              "weather",
+              "tech",
+              "health",
+              "emotional"
+            ],
+            "correctIndex": 0,
+            "explanation": "Гроза = thunderstorm."
+          },
+          {
+            "question": "\"Щедрий\" is a ___ trait.",
+            "options": [
+              "personality",
+              "health",
+              "weather",
+              "work"
+            ],
+            "correctIndex": 0,
+            "explanation": "Щедрий = generous."
+          },
+          {
+            "question": "\"Співбесіда\" happens at ___.",
+            "options": [
+              "job interview",
+              "doctor's office",
+              "restaurant",
+              "tech store"
+            ],
+            "correctIndex": 0,
+            "explanation": "Співбесіда = job interview."
+          },
+          {
+            "question": "\"Зависло\" describes a ___ problem.",
+            "options": [
+              "technology",
+              "health",
+              "weather",
+              "home"
+            ],
+            "correctIndex": 0,
+            "explanation": "Зависло = froze (computer)."
+          }
+        ],
+        "shuffleQuestions": true,
+        "shuffleOptions": true,
+        "showCorrectAnswers": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2+",
+      "duration": 5,
+      "tags": [
+        "review",
+        "vocabulary",
+        "thematic",
+        "consolidation"
+      ],
+      "createdAt": "2025-11-29T00:00:00Z",
+      "modifiedAt": "2025-11-29T00:00:00Z"
+    },
+    {
+      "id": "act-uk-A2+-75-groupsort",
+      "type": "group-sort",
+      "title": "By Topic",
+      "description": "By Topic",
+      "content": {
+        "type": "group-sort",
+        "instructions": "",
+        "groups": [
+          {
+            "name": "Їжа (Food)",
+            "items": [
+              "смачний",
+              "варити",
+              "борщ",
+              "сметана"
+            ]
+          },
+          {
+            "name": "Здоров'я (Health)",
+            "items": [
+              "температура",
+              "лікар",
+              "болить",
+              "аптека"
+            ]
+          },
+          {
+            "name": "Природа (Nature)",
+            "items": [
+              "гроза",
+              "гора",
+              "лелека",
+              "соняшник"
+            ]
+          },
+          {
+            "name": "Технології (Tech)",
+            "items": [
+              "ноутбук",
+              "завантажити",
+              "пароль",
+              "Wi-Fi"
+            ]
+          }
+        ],
+        "shuffleItems": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2+",
+      "duration": 5,
+      "tags": [
+        "review",
+        "vocabulary",
+        "thematic",
+        "consolidation"
+      ],
+      "createdAt": "2025-11-29T00:00:00Z",
+      "modifiedAt": "2025-11-29T00:00:00Z"
+    }
+  ],
+  "vocabulary": {
+    "moduleId": "mod-uk-A2+-75",
+    "level": "A2+",
+    "phase": "A2+.3",
+    "wordCount": 0,
+    "transliterationMode": "none",
+    "words": []
+  }
+}

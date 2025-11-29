@@ -1,0 +1,703 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-A2+-68",
+    "moduleId": "mod-uk-A2+-68",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "methodology": "ppp",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "A2+",
+    "phase": "A2+.2",
+    "moduleNumber": 68,
+    "title": "Health & Body Vocabulary",
+    "subtitle": "Body Parts, Symptoms, and Medical Terms",
+    "description": "Learn extended body vocabulary",
+    "objectives": [
+      "Learn extended body vocabulary",
+      "Describe symptoms and conditions",
+      "Navigate medical situations",
+      "Discuss health and wellness"
+    ],
+    "grammarFocus": [
+      "Health expressions (болить, боляче)",
+      "Reflexive verbs (почуватися)",
+      "Impersonal constructions"
+    ],
+    "totalDuration": 45,
+    "transliterationMode": "none",
+    "tags": [
+      "vocabulary",
+      "health",
+      "body",
+      "medical",
+      "daily-life"
+    ],
+    "version": 1,
+    "createdAt": "2025-11-29T00:00:00Z",
+    "modifiedAt": "2025-11-29T00:00:00Z",
+    "phases": [
+      {
+        "id": "phase-warm-up",
+        "name": "warm-up",
+        "duration": 5,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Beyond Basic Body Parts\n\nYou know \"голова\" and \"рука.\" Now let's expand your body and health vocabulary!\n\n**Internal organs:**\n- серце (heart), легені (lungs), печінка (liver)\n\n**Describing how you feel:**\n- Мені погано. (I feel bad.)\n- У мене болить голова. (I have a headache.)\n\n> 💡 **Why This Matters**\n>\n> Health vocabulary is essential for emergencies, doctor visits, and discussing wellbeing in everyday life."
+          }
+        ]
+      },
+      {
+        "id": "phase-presentation",
+        "name": "presentation",
+        "duration": 15,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Body Parts - Extended\n\n| External | Internal |\n|----------|----------|\n| лоб (forehead) | серце (heart) |\n| брова (eyebrow) | легені (lungs) |\n| повіка (eyelid) | шлунок (stomach) |\n| вія (eyelash) | печінка (liver) |\n| щока (cheek) | нирки (kidneys) |\n| підборіддя (chin) | кишечник (intestines) |\n| шия (neck) | м'яз (muscle) |\n| плече (shoulder) | кістка (bone) |\n| лікоть (elbow) | суглоб (joint) |\n| зап'ясток (wrist) | шкіра (skin) |\n| коліно (knee) | кров (blood) |\n| щиколотка (ankle) | нерв (nerve) |\n\n**Examples:**\n- У мене висипка на **шкірі**. - I have a rash on my skin.\n- Болить **коліно**. - My knee hurts.\n- Перевірте **серце** і **легені**. - Check the heart and lungs.\n- Зламана **кістка**. - Broken bone.\n- Потягнув **м'яз**. - Pulled a muscle.\n\n> ⚡ **Pro Tip: Plural Forms**\n>\n> Some body parts come in pairs: легеня → легені, нирка → нирки, око → очі, вухо → вуха."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Expressing Pain\n\n| Structure | Example | Meaning |\n|-----------|---------|---------|\n| болить + body part | Болить голова. | (My) head hurts. |\n| У мене болить... | У мене болить горло. | I have a sore throat. |\n| Мені боляче | Мені боляче. | It hurts me. |\n| Мене турбує... | Мене турбує спина. | My back is bothering me. |\n\n**Body parts that hurt:**\n- Болить **голова**. - I have a headache.\n- Болить **живіт**. - My stomach hurts.\n- Болить **горло**. - My throat hurts.\n- Болять **зуби**. - My teeth hurt.\n- Болить **спина**. - My back hurts.\n- Болить **серце**. - My heart hurts.\n\n**Examples:**\n- **Сильно болить** голова. - I have a strong headache.\n- Де саме **болить**? - Where exactly does it hurt?\n- Давно **болить**? - Has it hurt for long?\n- **Боляче** ходити. - It hurts to walk.\n- Вже **не болить**. - It doesn't hurt anymore."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Symptoms\n\n| Ukrainian | English |\n|-----------|---------|\n| температура | fever |\n| кашель | cough |\n| нежить | runny nose |\n| головний біль | headache |\n| запаморочення | dizziness |\n| нудота | nausea |\n| блювання | vomiting |\n| діарея | diarrhea |\n| висипка | rash |\n| набряк | swelling |\n| біль | pain |\n| слабкість | weakness |\n| безсоння | insomnia |\n| втома | fatigue |\n\n**Examples:**\n- У мене **температура** 38. - I have a temperature of 38.\n- Сильний **кашель** і **нежить**. - Strong cough and runny nose.\n- Відчуваю **запаморочення**. - I feel dizzy.\n- Мене **нудить**. - I feel nauseous.\n- Є **набряк** на нозі. - There's swelling on my leg.\n- Страшенна **слабкість**. - Terrible weakness.\n\n> 📝 **Note: Temperature**\n>\n> Ukrainian uses Celsius. Normal body temperature is 36.6°C. Fever starts at 37.5°C. 38°C is a moderate fever."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Common Conditions\n\n| Ukrainian | English |\n|-----------|---------|\n| застуда | cold |\n| грип | flu |\n| алергія | allergy |\n| запалення | inflammation |\n| інфекція | infection |\n| тиск | (blood) pressure |\n| цукровий діабет | diabetes |\n| астма | asthma |\n| травма | injury |\n| перелом | fracture |\n| розтягнення | sprain |\n| отруєння | poisoning |\n\n**Examples:**\n- У мене **застуда**. - I have a cold.\n- Це **грип** чи **застуда**? - Is it the flu or a cold?\n- В мене **алергія** на пил. - I'm allergic to dust.\n- Це **запалення** легенів. - This is pneumonia.\n- Підвищений **тиск**. - High blood pressure.\n- Харчове **отруєння**. - Food poisoning.\n\n> 🎭 **Culture Note: Home Remedies**\n>\n> Ukrainians often use home remedies: чай з медом і лимоном (tea with honey and lemon) for colds, часник (garlic) for immunity, малинове варення (raspberry jam) for fever."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "At the Doctor\n\n| Ukrainian | English |\n|-----------|---------|\n| лікар | doctor |\n| пацієнт | patient |\n| огляд | examination |\n| діагноз | diagnosis |\n| рецепт | prescription |\n| ліки | medicine |\n| таблетка | pill, tablet |\n| укол | injection |\n| аналіз | test |\n| лікарня | hospital |\n| поліклініка | clinic |\n| аптека | pharmacy |\n| швидка допомога | ambulance |\n\n**Useful phrases:**\n- Мені потрібен **лікар**. - I need a doctor.\n- Запишіться на **огляд**. - Schedule an examination.\n- Який **діагноз**? - What's the diagnosis?\n- Випишіть **рецепт**, будь ласка. - Please write a prescription.\n- Де найближча **аптека**? - Where's the nearest pharmacy?\n- Викличте **швидку допомогу**! - Call an ambulance!\n\n**Doctor's questions:**\n- На що скаржитесь? - What are your complaints?\n- Де болить? - Where does it hurt?\n- Як давно? - For how long?\n- Чи є алергії? - Do you have allergies?\n- Які ліки приймаєте? - What medications are you taking?"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Wellness & Prevention\n\n| Ukrainian | English |\n|-----------|---------|\n| здоров'я | health |\n| здоровий | healthy |\n| хворий | sick |\n| одужати | to recover |\n| лікуватися | to receive treatment |\n| почуватися | to feel |\n| відпочивати | to rest |\n| імунітет | immunity |\n| вітаміни | vitamins |\n| дієта | diet |\n| спорт | sports |\n| сон | sleep |\n\n**Examples:**\n- Як ваше **здоров'я**? - How's your health?\n- Він **хворий** на грип. - He's sick with the flu.\n- Вона вже **одужала**. - She's already recovered.\n- Я погано **почуваюся**. - I feel bad.\n- Потрібно більше **відпочивати**. - You need to rest more.\n- Вітаміни підтримують **імунітет**. - Vitamins support immunity.\n- Здоровий **сон** — це важливо. - Healthy sleep is important."
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-A2+-68-matchup"
+          }
+        ]
+      },
+      {
+        "id": "phase-practice",
+        "name": "practice",
+        "duration": 15,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Match Symptom to Condition\n\n1. температура, кашель, нежить → застуда / грип\n2. болить живіт, нудота, блювання → отруєння\n3. чхання, нежить, сльозяться очі → алергія\n4. набряк, біль у суглобі → травма / розтягнення\n5. втома, слабкість, запаморочення → тиск / анемія"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Complete Doctor Dialogue\n\n**Лікар:** На що ___ (complain)?\n→ скаржитесь\n\n**Пацієнт:** У мене болить ___ (head) і ___ (throat).\n→ голова, горло\n\n**Лікар:** Яка у вас ___ (temperature)?\n→ температура\n\n**Пацієнт:** 38 градусів.\n\n**Лікар:** Це ___. Випишу ___ (prescription).\n→ грип/застуда, рецепт"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Body Part Pairs\n\nMatch singular to plural:\n1. легеня → легені\n2. нирка → нирки\n3. око → очі\n4. вухо → вуха\n5. рука → руки"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Translate\n\n1. I have a headache. → У мене болить голова.\n2. Call an ambulance! → Викличте швидку допомогу!\n3. I feel dizzy. → Я відчуваю запаморочення.\n4. Where's the pharmacy? → Де аптека?\n5. I'm allergic to... → У мене алергія на..."
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-A2+-68-quiz"
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-A2+-68-groupsort"
+          }
+        ]
+      },
+      {
+        "id": "phase-production",
+        "name": "production",
+        "duration": 10,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Describe Symptoms\n\n**Scenario:** You feel sick. Describe your symptoms:\n- \"У мене температура 37.8. Болить горло і є кашель. Відчуваю слабкість.\""
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Doctor Visit Roleplay\n\n**Patient:** На що скаржитесь?\n**You:** \"У мене болить..., є..., почуваюся...\""
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Health Advice\n\nGive advice to someone who's sick:\n- \"Тобі потрібно відпочивати.\"\n- \"Пий багато води.\"\n- \"Прийми ліки.\"\n- \"Зверніся до лікаря.\""
+          }
+        ]
+      }
+    ]
+  },
+  "activities": [
+    {
+      "id": "act-uk-A2+-68-matchup",
+      "type": "match-up",
+      "title": "Body Part → System",
+      "description": "Body Part → System",
+      "content": {
+        "type": "match-up",
+        "instructions": "",
+        "pairs": [
+          {
+            "left": "серце",
+            "right": "cardiovascular"
+          },
+          {
+            "left": "легені",
+            "right": "respiratory"
+          },
+          {
+            "left": "шлунок",
+            "right": "digestive"
+          },
+          {
+            "left": "м'яз",
+            "right": "muscular"
+          },
+          {
+            "left": "кістка",
+            "right": "skeletal"
+          }
+        ],
+        "shuffleRight": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2+",
+      "duration": 5,
+      "tags": [
+        "vocabulary",
+        "health",
+        "body",
+        "medical",
+        "daily-life"
+      ],
+      "createdAt": "2025-11-29T00:00:00Z",
+      "modifiedAt": "2025-11-29T00:00:00Z"
+    },
+    {
+      "id": "act-uk-A2+-68-quiz",
+      "type": "quiz",
+      "title": "Health Vocabulary",
+      "description": "Choose the correct answer.",
+      "content": {
+        "type": "quiz",
+        "instructions": "Choose the correct answer.",
+        "questions": [
+          {
+            "question": "\"I have a headache\" in Ukrainian is ___.",
+            "options": [
+              "У мене болить голова",
+              "У мене голова болить",
+              "Мій голова болить",
+              "Болить мене голова"
+            ],
+            "correctIndex": 0,
+            "explanation": "Standard structure: (У мене) болить + body part."
+          },
+          {
+            "question": "Where do you buy medicine?",
+            "options": [
+              "аптека",
+              "лікарня",
+              "поліклініка",
+              "лабораторія"
+            ],
+            "correctIndex": 0,
+            "explanation": "Аптека = pharmacy."
+          },
+          {
+            "question": "\"Нежить\" means ___.",
+            "options": [
+              "runny nose",
+              "headache",
+              "fever",
+              "cough"
+            ],
+            "correctIndex": 0,
+            "explanation": "Нежить = runny nose."
+          },
+          {
+            "question": "The plural of \"легеня\" is ___.",
+            "options": [
+              "легені",
+              "легеня",
+              "легеняй",
+              "легеней"
+            ],
+            "correctIndex": 0,
+            "explanation": "Легеня → легені (lungs)."
+          },
+          {
+            "question": "\"Швидка допомога\" is ___.",
+            "options": [
+              "ambulance",
+              "pharmacy",
+              "hospital",
+              "clinic"
+            ],
+            "correctIndex": 0,
+            "explanation": "Швидка допомога = emergency medical service (ambulance)."
+          },
+          {
+            "question": "\"Одужати\" means ___.",
+            "options": [
+              "to recover",
+              "to get sick",
+              "to diagnose",
+              "to prescribe"
+            ],
+            "correctIndex": 0,
+            "explanation": "Одужати = to recover, get well."
+          }
+        ],
+        "shuffleQuestions": true,
+        "shuffleOptions": true,
+        "showCorrectAnswers": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2+",
+      "duration": 5,
+      "tags": [
+        "vocabulary",
+        "health",
+        "body",
+        "medical",
+        "daily-life"
+      ],
+      "createdAt": "2025-11-29T00:00:00Z",
+      "modifiedAt": "2025-11-29T00:00:00Z"
+    },
+    {
+      "id": "act-uk-A2+-68-groupsort",
+      "type": "group-sort",
+      "title": "Symptom Categories",
+      "description": "Symptom Categories",
+      "content": {
+        "type": "group-sort",
+        "instructions": "",
+        "groups": [
+          {
+            "name": "Біль (Pain)",
+            "items": [
+              "головний біль",
+              "біль у животі",
+              "біль у спині",
+              "біль у горлі"
+            ]
+          },
+          {
+            "name": "Респіраторні (Respiratory)",
+            "items": [
+              "кашель",
+              "нежить",
+              "чхання",
+              "утруднене дихання"
+            ]
+          },
+          {
+            "name": "Загальні (General)",
+            "items": [
+              "температура",
+              "слабкість",
+              "запаморочення",
+              "втома"
+            ]
+          }
+        ],
+        "shuffleItems": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2+",
+      "duration": 5,
+      "tags": [
+        "vocabulary",
+        "health",
+        "body",
+        "medical",
+        "daily-life"
+      ],
+      "createdAt": "2025-11-29T00:00:00Z",
+      "modifiedAt": "2025-11-29T00:00:00Z"
+    }
+  ],
+  "vocabulary": {
+    "moduleId": "mod-uk-A2+-68",
+    "level": "A2+",
+    "phase": "A2+.2",
+    "wordCount": 42,
+    "transliterationMode": "none",
+    "words": [
+      {
+        "id": "v-m68-001",
+        "uk": "серце",
+        "translit": "/ˈsɛrtsɛ/",
+        "ipa": "heart",
+        "en": "noun",
+        "pos": "n"
+      },
+      {
+        "id": "v-m68-002",
+        "uk": "легені",
+        "translit": "/lɛˈɦɛnʲi/",
+        "ipa": "lungs",
+        "en": "noun",
+        "pos": "pl"
+      },
+      {
+        "id": "v-m68-003",
+        "uk": "шлунок",
+        "translit": "/ˈʃlunok/",
+        "ipa": "stomach",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m68-004",
+        "uk": "печінка",
+        "translit": "/pɛˈtʃʲinkɑ/",
+        "ipa": "liver",
+        "en": "noun",
+        "pos": "f"
+      },
+      {
+        "id": "v-m68-005",
+        "uk": "нирки",
+        "translit": "/ˈnɪrkɪ/",
+        "ipa": "kidneys",
+        "en": "noun",
+        "pos": "pl"
+      },
+      {
+        "id": "v-m68-006",
+        "uk": "м'яз",
+        "translit": "/mjɑz/",
+        "ipa": "muscle",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m68-007",
+        "uk": "кістка",
+        "translit": "/ˈkʲistkɑ/",
+        "ipa": "bone",
+        "en": "noun",
+        "pos": "f"
+      },
+      {
+        "id": "v-m68-008",
+        "uk": "суглоб",
+        "translit": "/ˈsuɦlob/",
+        "ipa": "joint",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m68-009",
+        "uk": "шкіра",
+        "translit": "/ˈʃkʲirɑ/",
+        "ipa": "skin",
+        "en": "noun",
+        "pos": "f"
+      },
+      {
+        "id": "v-m68-010",
+        "uk": "кров",
+        "translit": "/krov/",
+        "ipa": "blood",
+        "en": "noun",
+        "pos": "f"
+      },
+      {
+        "id": "v-m68-011",
+        "uk": "коліно",
+        "translit": "/koˈlʲino/",
+        "ipa": "knee",
+        "en": "noun",
+        "pos": "n"
+      },
+      {
+        "id": "v-m68-012",
+        "uk": "плече",
+        "translit": "/plɛˈtʃɛ/",
+        "ipa": "shoulder",
+        "en": "noun",
+        "pos": "n"
+      },
+      {
+        "id": "v-m68-013",
+        "uk": "лікоть",
+        "translit": "/ˈlʲikotʲ/",
+        "ipa": "elbow",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m68-014",
+        "uk": "щиколотка",
+        "translit": "/ʃtʃɪˈkolotkɑ/",
+        "ipa": "ankle",
+        "en": "noun",
+        "pos": "f"
+      },
+      {
+        "id": "v-m68-015",
+        "uk": "болить",
+        "translit": "/boˈlɪtʲ/",
+        "ipa": "hurts",
+        "en": "verb",
+        "pos": "-",
+        "gender": "3sg"
+      },
+      {
+        "id": "v-m68-016",
+        "uk": "боляче",
+        "translit": "/boˈlʲɑtʃɛ/",
+        "ipa": "painful, it hurts",
+        "en": "adv",
+        "pos": "-"
+      },
+      {
+        "id": "v-m68-017",
+        "uk": "температура",
+        "translit": "/tɛmpɛrɑˈturɑ/",
+        "ipa": "fever, temperature",
+        "en": "noun",
+        "pos": "f"
+      },
+      {
+        "id": "v-m68-018",
+        "uk": "кашель",
+        "translit": "/ˈkɑʃɛlʲ/",
+        "ipa": "cough",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m68-019",
+        "uk": "нежить",
+        "translit": "/ˈnɛʒɪtʲ/",
+        "ipa": "runny nose",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m68-020",
+        "uk": "запаморочення",
+        "translit": "/zɑpɑmoˈrotʃɛnʲːɑ/",
+        "ipa": "dizziness",
+        "en": "noun",
+        "pos": "n"
+      },
+      {
+        "id": "v-m68-021",
+        "uk": "нудота",
+        "translit": "/nuˈdotɑ/",
+        "ipa": "nausea",
+        "en": "noun",
+        "pos": "f"
+      },
+      {
+        "id": "v-m68-022",
+        "uk": "набряк",
+        "translit": "/ˈnɑbrʲɑk/",
+        "ipa": "swelling",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m68-023",
+        "uk": "слабкість",
+        "translit": "/ˈslɑbkʲistʲ/",
+        "ipa": "weakness",
+        "en": "noun",
+        "pos": "f"
+      },
+      {
+        "id": "v-m68-024",
+        "uk": "втома",
+        "translit": "/ˈvtomɑ/",
+        "ipa": "fatigue",
+        "en": "noun",
+        "pos": "f"
+      },
+      {
+        "id": "v-m68-025",
+        "uk": "застуда",
+        "translit": "/zɑsˈtudɑ/",
+        "ipa": "cold",
+        "en": "noun",
+        "pos": "f"
+      },
+      {
+        "id": "v-m68-026",
+        "uk": "грип",
+        "translit": "/ɦrɪp/",
+        "ipa": "flu",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m68-027",
+        "uk": "алергія",
+        "translit": "/ɑˈlɛrɦʲijɑ/",
+        "ipa": "allergy",
+        "en": "noun",
+        "pos": "f"
+      },
+      {
+        "id": "v-m68-028",
+        "uk": "інфекція",
+        "translit": "/inˈfɛktsʲijɑ/",
+        "ipa": "infection",
+        "en": "noun",
+        "pos": "f"
+      },
+      {
+        "id": "v-m68-029",
+        "uk": "травма",
+        "translit": "/ˈtrɑvmɑ/",
+        "ipa": "injury",
+        "en": "noun",
+        "pos": "f"
+      },
+      {
+        "id": "v-m68-030",
+        "uk": "лікар",
+        "translit": "/ˈlʲikɑr/",
+        "ipa": "doctor",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m68-031",
+        "uk": "пацієнт",
+        "translit": "/pɑtsʲiˈjɛnt/",
+        "ipa": "patient",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m68-032",
+        "uk": "діагноз",
+        "translit": "/dʲiɑɦˈnoz/",
+        "ipa": "diagnosis",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m68-033",
+        "uk": "рецепт",
+        "translit": "/rɛˈtsɛpt/",
+        "ipa": "prescription",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m68-034",
+        "uk": "ліки",
+        "translit": "/ˈlʲikɪ/",
+        "ipa": "medicine",
+        "en": "noun",
+        "pos": "pl"
+      },
+      {
+        "id": "v-m68-035",
+        "uk": "таблетка",
+        "translit": "/tɑbˈlɛtkɑ/",
+        "ipa": "pill, tablet",
+        "en": "noun",
+        "pos": "f"
+      },
+      {
+        "id": "v-m68-036",
+        "uk": "аптека",
+        "translit": "/ɑpˈtɛkɑ/",
+        "ipa": "pharmacy",
+        "en": "noun",
+        "pos": "f"
+      },
+      {
+        "id": "v-m68-037",
+        "uk": "лікарня",
+        "translit": "/lʲiˈkɑrnʲɑ/",
+        "ipa": "hospital",
+        "en": "noun",
+        "pos": "f"
+      },
+      {
+        "id": "v-m68-038",
+        "uk": "швидка допомога",
+        "translit": "/ˈʃvɪdkɑ doˈpomoɦɑ/",
+        "ipa": "ambulance",
+        "en": "noun",
+        "pos": "f"
+      },
+      {
+        "id": "v-m68-039",
+        "uk": "здоров'я",
+        "translit": "/zdoˈrovj'ɑ/",
+        "ipa": "health",
+        "en": "noun",
+        "pos": "n"
+      },
+      {
+        "id": "v-m68-040",
+        "uk": "хворий",
+        "translit": "/xvoˈrɪj/",
+        "ipa": "sick",
+        "en": "adj",
+        "pos": "-"
+      },
+      {
+        "id": "v-m68-041",
+        "uk": "одужати",
+        "translit": "/oduˈʒɑtɪ/",
+        "ipa": "to recover",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m68-042",
+        "uk": "почуватися",
+        "translit": "/potʃuˈvɑtɪsʲɑ/",
+        "ipa": "to feel",
+        "en": "verb",
+        "pos": "-",
+        "gender": "impf"
+      }
+    ]
+  }
+}

@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 66: Root Families II: Motion & Perception | Ukrainian A2+</title>
+  <style>
+    :root { --primary: #1a5fb4; --primary-light: #3584e4; --success: #26a269; --warning: #e5a50a; --danger: #c01c28; --bg: #fafafa; --card-bg: #fff; --text: #1e1e1e; --text-muted: #5e5e5e; --border: #e0e0e0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+    .top-nav { background: #2e2e2e; color: white; padding: 0.5rem 2rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.875rem; }
+    .top-nav a { color: white; text-decoration: none; }
+    .top-nav a:hover { text-decoration: underline; }
+    .module-nav { display: flex; gap: 1rem; align-items: center; }
+    .module-nav-link { color: rgba(255,255,255,0.8); text-decoration: none; padding: 0.25rem 0.5rem; }
+    .module-nav-link:hover { color: white; }
+    .module-nav-link.disabled { color: rgba(255,255,255,0.3); pointer-events: none; }
+    .nav { position: sticky; top: 0; background: var(--primary); color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; z-index: 100; }
+    .nav h1 { font-size: 1.25rem; }
+    .nav-tabs { display: flex; gap: 0.5rem; }
+    .nav-tab { background: rgba(255,255,255,0.2); border: none; color: white; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; }
+    .nav-tab.active { background: white; color: var(--primary); }
+    main { max-width: 1000px; margin: 0 auto; padding: 2rem; }
+    .section { display: none; } .section.active { display: block; }
+    .lesson-header { text-align: center; margin-bottom: 2rem; padding: 2rem; background: linear-gradient(135deg, #e8f4fd, #f0e8fd); border-radius: 12px; }
+    .level-badge { background: var(--primary); color: white; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.875rem; }
+    .card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 1.5rem; margin-bottom: 1.5rem; }
+    .card h3 { color: var(--primary); margin-bottom: 1rem; }
+    .canvas-note { background: #fffbeb; border-left: 4px solid var(--warning); padding: 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+    .canvas-note h4 { color: var(--warning); margin-bottom: 0.5rem; }
+    .md-content { line-height: 1.7; }
+    .md-content p { margin: 0.75rem 0; }
+    .md-content ul, .md-content ol { margin: 0.75rem 0; padding-left: 1.5rem; }
+    .md-content li { margin: 0.25rem 0; }
+    .md-content strong { color: var(--primary); }
+    .md-content blockquote { background: #e8f4fd; border-left: 4px solid var(--primary); padding: 0.75rem 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+    .md-content blockquote p { margin: 0.25rem 0; }
+    .md-content table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+    .md-content th, .md-content td { border: 1px solid var(--border); padding: 0.5rem 0.75rem; text-align: left; }
+    .md-content th { background: #f5f5f5; font-weight: 600; }
+    .md-content code { background: #f0f0f0; padding: 0.125rem 0.375rem; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
+    .letter-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0; }
+    .letter-group { border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; }
+    .letter-group.true-friends { border-color: var(--success); } .letter-group.true-friends .letters { color: var(--success); }
+    .letter-group.false-friends { border-color: var(--danger); } .letter-group.false-friends .letters { color: var(--danger); }
+    .letter-group.new-letters { border-color: var(--primary); } .letter-group.new-letters .letters { color: var(--primary); }
+    .letters { font-size: 1.75rem; letter-spacing: 0.3rem; }
+    .match-container { display: flex; gap: 3rem; padding: 1rem; position: relative; }
+    .match-column { flex: 1; display: flex; flex-direction: column; gap: 0.75rem; }
+    .match-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; font-size: 1.25rem; cursor: pointer; }
+    .match-item.selected { border-color: var(--primary); background: #e8f4fd; }
+    .match-item.matched { border-color: var(--success); background: #e8f8f0; }
+    .match-item.wrong { border-color: var(--danger); background: #fde8e8; }
+    .match-lines { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+    .quiz-question { border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; }
+    .quiz-question.answered { pointer-events: none; }
+    .quiz-question .cyrillic { font-size: 1.5rem; color: var(--primary); font-weight: 600; }
+    .quiz-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-top: 1rem; }
+    .quiz-option { background: #f5f5f5; border: 2px solid var(--border); border-radius: 8px; padding: 1rem; cursor: pointer; text-align: center; }
+    .quiz-option.correct { border-color: var(--success); background: #d4edda; }
+    .quiz-option.wrong { border-color: var(--danger); background: #f8d7da; }
+    .quiz-explanation { margin-top: 1rem; padding: 1rem; background: #e8f4fd; border-radius: 8px; display: none; }
+    .quiz-explanation.show { display: block; }
+    .sort-pool { background: #f5f5f5; border: 2px dashed var(--border); border-radius: 12px; padding: 1.5rem; min-height: 80px; margin-bottom: 1rem; }
+    .sort-items { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; }
+    .sort-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 0.75rem 1.25rem; font-size: 1.5rem; cursor: grab; }
+    .sort-item.correct { border-color: var(--success); background: #e8f8f0; }
+    .sort-item.wrong { border-color: var(--danger); background: #fde8e8; }
+    .sort-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    .sort-group { border: 2px solid var(--border); border-radius: 12px; padding: 1rem; min-height: 150px; }
+    .sort-group.drag-over { border-color: var(--primary); background: #e8f4fd; }
+    .sort-group h4 { font-size: 0.875rem; text-align: center; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--border); }
+    .sort-group.true-friends h4 { color: var(--success); border-color: var(--success); }
+    .sort-group.false-friends h4 { color: var(--danger); border-color: var(--danger); }
+    .sort-group.new-letters h4 { color: var(--primary); border-color: var(--primary); }
+    .vocab-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; }
+    .vocab-card { border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; text-align: center; }
+    .vocab-card .uk { font-size: 1.75rem; font-weight: 600; color: var(--primary); }
+    .vocab-card .translit { color: var(--text-muted); font-style: italic; }
+    .vocab-card .en { font-weight: 500; margin: 0.25rem 0; }
+    .vocab-card .note { font-size: 0.75rem; color: #613583; background: #f0e8fd; padding: 0.25rem 0.5rem; border-radius: 4px; }
+    .btn { padding: 0.75rem 1.5rem; border: none; border-radius: 8px; cursor: pointer; }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-outline { background: transparent; border: 2px solid var(--border); }
+    .btn-group { display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem; }
+    .score-display { text-align: center; padding: 1rem; background: linear-gradient(135deg, #e8f8f0, #e8f4fd); border-radius: 8px; margin-bottom: 1rem; }
+    .score-display .score { font-size: 2rem; font-weight: 700; color: var(--success); }
+    .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
+    .completion-message.show { display: block; }
+    footer { text-align: center; padding: 2rem; color: var(--text-muted); }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+  </style>
+</head>
+<body>
+  <div class="top-nav">
+    <a href="../index.html">← l2-uk-en Curriculum</a>
+    <div class="module-nav">
+      <a href="module-65.html" class="module-nav-link">← Module 65</a>
+      <a href="index.html" class="module-nav-link">A2+ Index</a>
+      <a href="module-67.html" class="module-nav-link">Module 67 →</a>
+    </div>
+  </div>
+  <nav class="nav">
+    <h1>Module 66: Root Families II: Motion & Perception</h1>
+    <div class="nav-tabs">
+      <button class="nav-tab active" data-section="lesson">Lesson</button>
+      <button class="nav-tab" data-section="match">Match</button>
+      <button class="nav-tab" data-section="quiz">Quiz</button>
+      <button class="nav-tab" data-section="sort">Sort</button>
+      <button class="nav-tab" data-section="vocab">Vocab</button>
+    </div>
+  </nav>
+  <main>
+    <section id="lesson" class="section active">
+      <div class="lesson-header">
+        <span class="level-badge">A2+ · A2+.1</span>
+        <h2 style="font-size:2rem;margin:0.5rem 0">Root Families II: Motion & Perception</h2>
+        <p style="color:var(--text-muted)">Roots for Movement, Seeing, and Knowing</p>
+      </div>
+      
+      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### More Root Families</h4><div class="md-content"><p>In Module 65, you learned roots for learning, work, reading, writing, and speech. Now let's explore roots for <strong>motion</strong> and <strong>perception</strong>!</p>
+<p><strong>Motion roots:</strong></p>
+<ul>
+<li><strong>ход-</strong> = going (on foot)</li>
+<li>вхід (entrance), вихід (exit), прихід (arrival)</li>
+</ul>
+<p><strong>Perception roots:</strong></p>
+<ul>
+<li><strong>бач-</strong> = seeing</li>
+<li>побачити (to see), побачення (meeting/date)</li>
+</ul>
+<blockquote>
+  <p>💡 <strong>Remember</strong></p>
+  <p>Roots + prefixes + suffixes = unlimited vocabulary!</p>
+</blockquote></div></div><div class="canvas-note"><h4>### Root Family: -ход- / -хід- (Walking, Going)</h4><div class="md-content"><p><strong>Core meaning:</strong> Movement on foot</p>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Parts</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ходити</td>
+<td>ход- + -ити</td>
+<td>to walk, to go</td>
+</tr>
+<tr>
+<td>хід</td>
+<td>хід</td>
+<td>movement, course</td>
+</tr>
+<tr>
+<td>вхід</td>
+<td>в- + хід</td>
+<td>entrance</td>
+</tr>
+<tr>
+<td>вихід</td>
+<td>ви- + хід</td>
+<td>exit</td>
+</tr>
+<tr>
+<td>прихід</td>
+<td>при- + хід</td>
+<td>arrival, coming</td>
+</tr>
+<tr>
+<td>відхід</td>
+<td>від- + хід</td>
+<td>departure</td>
+</tr>
+<tr>
+<td>перехід</td>
+<td>пере- + хід</td>
+<td>crossing, transition</td>
+</tr>
+<tr>
+<td>похід</td>
+<td>по- + хід</td>
+<td>hike, campaign</td>
+</tr>
+<tr>
+<td>підхід</td>
+<td>під- + хід</td>
+<td>approach</td>
+</tr>
+<tr>
+<td>обхід</td>
+<td>об- + хід</td>
+<td>bypass, round</td>
+</tr>
+<tr>
+<td>дохід</td>
+<td>до- + хід</td>
+<td>income</td>
+</tr>
+<tr>
+<td>витрата/видаток</td>
+<td>ви- + трат/дат</td>
+<td>expense</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples:</strong></p>
+<ul>
+<li>Де <strong>вхід</strong>? - Where's the entrance?</li>
+<li><strong>Вихід</strong> там. - The exit is there.</li>
+<li>Його <strong>прихід</strong> був несподіваним. - His arrival was unexpected.</li>
+<li>Це пішохідний <strong>перехід</strong>. - This is a pedestrian crossing.</li>
+<li>Ми йдемо в <strong>похід</strong>. - We're going on a hike.</li>
+<li>Який твій <strong>дохід</strong>? - What's your income?</li>
+</ul>
+<blockquote>
+  <p>⚡ <strong>Pro Tip: -ход- vs -хід-</strong></p>
+  <p>The vowel changes: ходити (verb) but вхід (noun). This is a common pattern in Ukrainian root variations.</p>
+</blockquote></div></div><div class="canvas-note"><h4>Root Family: -їзд- / -їхат- (Riding, Driving)</h4><div class="md-content"><p><strong>Core meaning:</strong> Movement by vehicle</p>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Parts</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>їздити</td>
+<td>їзд- + -ити</td>
+<td>to ride, drive (regularly)</td>
+</tr>
+<tr>
+<td>їхати</td>
+<td>їхат-</td>
+<td>to go (by vehicle, one direction)</td>
+</tr>
+<tr>
+<td>поїздка</td>
+<td>по- + їзд- + -ка</td>
+<td>trip</td>
+</tr>
+<tr>
+<td>поїзд</td>
+<td>по- + їзд</td>
+<td>train</td>
+</tr>
+<tr>
+<td>виїзд</td>
+<td>ви- + їзд</td>
+<td>exit (for vehicles), departure</td>
+</tr>
+<tr>
+<td>в'їзд</td>
+<td>в- + їзд</td>
+<td>entrance (for vehicles)</td>
+</tr>
+<tr>
+<td>приїзд</td>
+<td>при- + їзд</td>
+<td>arrival (by vehicle)</td>
+</tr>
+<tr>
+<td>від'їзд</td>
+<td>від- + їзд</td>
+<td>departure (by vehicle)</td>
+</tr>
+<tr>
+<td>переїзд</td>
+<td>пере- + їзд</td>
+<td>move (relocation); crossing</td>
+</tr>
+<tr>
+<td>проїзд</td>
+<td>про- + їзд</td>
+<td>passage; fare</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples:</strong></p>
+<ul>
+<li>Вона часто <strong>їздить</strong> на роботу. - She often rides to work.</li>
+<li><strong>Поїздка</strong> була чудова. - The trip was wonderful.</li>
+<li><strong>Поїзд</strong> відправляється о восьмій. - The train departs at eight.</li>
+<li><strong>В'їзд</strong> заборонено. - Entry (for vehicles) prohibited.</li>
+<li>Ми плануємо <strong>переїзд</strong>. - We're planning a move.</li>
+<li>Скільки коштує <strong>проїзд</strong>? - How much is the fare?</li>
+</ul>
+<blockquote>
+  <p>📝 <strong>Note: їздити vs їхати</strong></p>
+  <p>їздити = habitual, regular trips; їхати = single trip in progress</p>
+</blockquote></div></div><div class="canvas-note"><h4>Root Family: -бач- (Seeing)</h4><div class="md-content"><p><strong>Core meaning:</strong> Visual perception</p>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Parts</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>бачити</td>
+<td>бач- + -ити</td>
+<td>to see</td>
+</tr>
+<tr>
+<td>побачити</td>
+<td>по- + бач- + -ити</td>
+<td>to see (perfective)</td>
+</tr>
+<tr>
+<td>побачення</td>
+<td>побач- + -ення</td>
+<td>meeting, date</td>
+</tr>
+<tr>
+<td>передбачати</td>
+<td>перед- + бач- + -ати</td>
+<td>to foresee, predict</td>
+</tr>
+<tr>
+<td>передбачення</td>
+<td>передбач- + -ення</td>
+<td>prediction</td>
+</tr>
+<tr>
+<td>забачити</td>
+<td>за- + бач- + -ити</td>
+<td>to notice</td>
+</tr>
+<tr>
+<td>вибачати</td>
+<td>ви- + бач- + -ати</td>
+<td>to forgive</td>
+</tr>
+<tr>
+<td>вибачення</td>
+<td>вибач- + -ення</td>
+<td>apology</td>
+</tr>
+<tr>
+<td>небачений</td>
+<td>не- + бач- + -ений</td>
+<td>unseen, unprecedented</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples:</strong></p>
+<ul>
+<li>Я <strong>бачу</strong> тебе! - I see you!</li>
+<li>Хочу <strong>побачити</strong> це. - I want to see this.</li>
+<li>У нас <strong>побачення</strong> о сьомій. - We have a date at seven.</li>
+<li>Ніхто не <strong>передбачав</strong> цього. - Nobody foresaw this.</li>
+<li><strong>Вибач</strong> мені! - Forgive me! / Sorry!</li>
+<li>Це <strong>небачений</strong> успіх! - This is unprecedented success!</li>
+</ul>
+<blockquote>
+  <p>🎭 <strong>Culture Note: Побачення</strong></p>
+  <p>"Побачення" means both "meeting" and "romantic date." Context determines meaning: "ділове побачення" (business meeting) vs "романтичне побачення" (romantic date).</p>
+</blockquote></div></div><div class="canvas-note"><h4>Root Family: -слух- (Hearing, Listening)</h4><div class="md-content"><p><strong>Core meaning:</strong> Auditory perception</p>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Parts</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>слухати</td>
+<td>слух- + -ати</td>
+<td>to listen</td>
+</tr>
+<tr>
+<td>слух</td>
+<td>слух</td>
+<td>hearing; rumor</td>
+</tr>
+<tr>
+<td>слухач</td>
+<td>слух- + -ач</td>
+<td>listener</td>
+</tr>
+<tr>
+<td>послухати</td>
+<td>по- + слух- + -ати</td>
+<td>to listen (a bit)</td>
+</tr>
+<tr>
+<td>вислухати</td>
+<td>ви- + слух- + -ати</td>
+<td>to hear out</td>
+</tr>
+<tr>
+<td>прослухати</td>
+<td>про- + слух- + -ати</td>
+<td>to listen through</td>
+</tr>
+<tr>
+<td>підслухати</td>
+<td>під- + слух- + -ати</td>
+<td>to eavesdrop</td>
+</tr>
+<tr>
+<td>неслухняний</td>
+<td>не- + слух- + -няний</td>
+<td>disobedient</td>
+</tr>
+<tr>
+<td>слухняний</td>
+<td>слух- + -няний</td>
+<td>obedient</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples:</strong></p>
+<ul>
+<li><strong>Слухай</strong> уважно! - Listen carefully!</li>
+<li>У неї гарний <strong>слух</strong>. - She has good hearing.</li>
+<li>Це тільки <strong>слухи</strong>. - These are just rumors.</li>
+<li><strong>Послухай</strong> цю пісню. - Listen to this song.</li>
+<li>Дай мені <strong>вислухати</strong> тебе. - Let me hear you out.</li>
+<li>Дитина <strong>неслухняна</strong>. - The child is disobedient.</li>
+</ul></div></div><div class="canvas-note"><h4>Root Family: -знат- / -знай- (Knowing)</h4><div class="md-content"><p><strong>Core meaning:</strong> Knowledge, acquaintance</p>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Parts</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>знати</td>
+<td>знат-</td>
+<td>to know</td>
+</tr>
+<tr>
+<td>знання</td>
+<td>зна- + -ння</td>
+<td>knowledge</td>
+</tr>
+<tr>
+<td>знайомий</td>
+<td>знай- + -омий</td>
+<td>acquaintance; familiar</td>
+</tr>
+<tr>
+<td>знайомитися</td>
+<td>знайом- + -итися</td>
+<td>to get acquainted</td>
+</tr>
+<tr>
+<td>познайомитися</td>
+<td>по- + знайом- + -итися</td>
+<td>to meet (someone)</td>
+</tr>
+<tr>
+<td>дізнатися</td>
+<td>ді- + знат- + -ися</td>
+<td>to find out</td>
+</tr>
+<tr>
+<td>пізнавати</td>
+<td>пі- + знав- + -ати</td>
+<td>to learn, cognize</td>
+</tr>
+<tr>
+<td>визнавати</td>
+<td>ви- + знав- + -ати</td>
+<td>to recognize, admit</td>
+</tr>
+<tr>
+<td>визнання</td>
+<td>визна- + -ння</td>
+<td>recognition</td>
+</tr>
+<tr>
+<td>невідомий</td>
+<td>не- + від- + -омий</td>
+<td>unknown</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples:</strong></p>
+<ul>
+<li>Я <strong>знаю</strong> її. - I know her.</li>
+<li>Він має глибокі <strong>знання</strong>. - He has deep knowledge.</li>
+<li>Це мій <strong>знайомий</strong>. - This is my acquaintance.</li>
+<li><strong>Познайомся</strong> з Олегом! - Meet Oleg!</li>
+<li>Хочу <strong>дізнатися</strong> правду. - I want to find out the truth.</li>
+<li>Він <strong>визнав</strong> свою помилку. - He admitted his mistake.</li>
+</ul>
+<blockquote>
+  <p>⚡ <strong>Pro Tip: знати vs дізнатися</strong></p>
+  <p>знати = to know (state); дізнатися = to find out, learn (action of acquiring knowledge)</p>
+</blockquote></div></div><div class="canvas-note"><h4>Summary: Motion & Perception Roots</h4><div class="md-content"><table>
+<thead>
+<tr>
+<th>Root</th>
+<th>Core Meaning</th>
+<th>Key Words</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-ход-/-хід-</td>
+<td>walking</td>
+<td>вхід, вихід, похід</td>
+</tr>
+<tr>
+<td>-їзд-</td>
+<td>riding/driving</td>
+<td>поїздка, поїзд</td>
+</tr>
+<tr>
+<td>-бач-</td>
+<td>seeing</td>
+<td>бачити, побачення</td>
+</tr>
+<tr>
+<td>-слух-</td>
+<td>hearing</td>
+<td>слухати, слухач</td>
+</tr>
+<tr>
+<td>-знат-/-знай-</td>
+<td>knowing</td>
+<td>знання, знайомий</td>
+</tr>
+</tbody>
+</table></div></div><div class="canvas-note"><h4>### Identify the Root</h4><div class="md-content"><ol>
+<li>вхід → -хід- (walking)</li>
+<li>поїздка → -їзд- (riding)</li>
+<li>побачення → -бач- (seeing)</li>
+<li>слухач → -слух- (hearing)</li>
+<li>знайомий → -знай- (knowing)</li>
+</ol></div></div><div class="canvas-note"><h4>Match Word to Root Family</h4><div class="md-content"><p><strong>-ход-/-хід-:</strong> вихід, перехід, похід, дохід<br />
+<strong>-їзд-:</strong> поїзд, приїзд, переїзд, в'їзд<br />
+<strong>-бач-:</strong> бачити, вибачення, передбачення<br />
+<strong>-слух-:</strong> слухати, слухач, неслухняний<br />
+<strong>-знат-:</strong> знання, дізнатися, визнання</p></div></div><div class="canvas-note"><h4>Complete with the Right Word</h4><div class="md-content"><ol>
+<li><p>Де ___ (entrance)? — Там, а ___ (exit) — тут.<br />
+→ вхід, вихід</p></li>
+<li><p>___ (train) приїжджає о десятій. ___ (trip) була довга.<br />
+→ поїзд, поїздка</p></li>
+<li><p>___ (sorry)! Я не ___ (saw) тебе.<br />
+→ вибач, бачив</p></li>
+<li><p>___ (listen) мене! Ти ніколи не ___ (listen).<br />
+→ послухай, слухаєш</p></li>
+<li><p>Я хочу ___ (find out) правду. Ти ___ (know) щось?<br />
+→ дізнатися, знаєш</p></li>
+</ol></div></div><div class="canvas-note"><h4>Translate</h4><div class="md-content"><ol>
+<li>Where is the exit? → Де вихід?</li>
+<li>The train arrives at 6. → Поїзд прибуває о шостій.</li>
+<li>I want to see you. → Я хочу побачити тебе.</li>
+<li>Listen carefully! → Слухай уважно!</li>
+<li>I found out the truth. → Я дізнався/дізналася правду.</li>
+</ol></div></div><div class="canvas-note"><h4>### Discuss Travel</h4><div class="md-content"><p>Use -їзд- words:</p>
+<ul>
+<li>Минулого року я їздив у <strong>поїздку</strong> до Львова.</li>
+<li><strong>Поїзд</strong> — найкращий транспорт.</li>
+<li><strong>Приїзд</strong> гостей о третій.</li>
+</ul></div></div><div class="canvas-note"><h4>Talk About Perception</h4><div class="md-content"><p>Use -бач-/-слух- words:</p>
+<ul>
+<li>Я <strong>бачу</strong> зміни.</li>
+<li><strong>Послухай</strong> цю музику!</li>
+<li><strong>Вибач</strong>, я запізнився.</li>
+</ul></div></div><div class="canvas-note"><h4>Discuss Knowledge</h4><div class="md-content"><p>Use -знат- words:</p>
+<ul>
+<li>Я хочу <strong>дізнатися</strong> більше.</li>
+<li>Він мій старий <strong>знайомий</strong>.</li>
+<li>Її <strong>визнали</strong> переможницею.</li>
+</ul></div></div></div>
+      <div class="btn-group"><button class="btn btn-primary" onclick="showSection('match')">Start →</button></div>
+    </section>
+    <section id="match" class="section"><div class="card"><h3>Root → Meaning</h3>
+      <div class="score-display"><span class="score"><span id="match-score">0</span>/5</span></div>
+      <div class="match-container" id="match-container"><svg class="match-lines" id="match-lines"></svg>
+        <div class="match-column" id="match-left"><div class="match-item" data-pair="0">-ход-/-хід-</div><div class="match-item" data-pair="1">-їзд-</div><div class="match-item" data-pair="2">-бач-</div><div class="match-item" data-pair="3">-слух-</div><div class="match-item" data-pair="4">-знат-/-знай-</div></div>
+        <div class="match-column" id="match-right"><div class="match-item" data-pair="2">seeing</div><div class="match-item" data-pair="0">walking, going</div><div class="match-item" data-pair="3">hearing</div><div class="match-item" data-pair="4">knowing</div><div class="match-item" data-pair="1">riding, driving</div></div>
+      </div>
+      <div class="completion-message" id="match-complete"><h3>Perfect!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetMatch()">Reset</button><button class="btn btn-primary" onclick="showSection('quiz')">Next →</button></div>
+    </div></section>
+    <section id="quiz" class="section"><div class="card"><h3>Root Families II</h3>
+      <div class="score-display"><span class="score"><span id="quiz-score">0</span>/6</span></div>
+      <div id="quiz-container"></div>
+      <div class="completion-message" id="quiz-complete"><h3>Complete!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('sort')">Next →</button></div>
+    </div></section>
+    <section id="sort" class="section"><div class="card"><h3>By Root</h3>
+      <div class="score-display"><span class="score"><span id="sort-score">0</span>/16</span></div>
+      <div class="sort-pool" id="sort-pool"><div class="sort-items" id="sort-items"></div></div>
+      <div class="sort-groups"><div class="sort-group true-friends" data-group="true-friends"><h4>-ход-/-хід-</h4><div class="sort-items"></div></div><div class="sort-group false-friends" data-group="false-friends"><h4>-їзд-</h4><div class="sort-items"></div></div><div class="sort-group new-letters" data-group="new-letters"><h4>-бач-</h4><div class="sort-items"></div></div><div class="sort-group undefined" data-group="undefined"><h4>-слух-</h4><div class="sort-items"></div></div></div>
+      <div class="completion-message" id="sort-complete"><h3>All Sorted!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetSort()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Vocab →</button></div>
+    </div></section>
+    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (35)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
+      <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
+    </section>
+  </main>
+  <footer>Module 66 · curricula-opus</footer>
+  <script>
+    const matchPairs=[{"left":"-ход-/-хід-","right":"walking, going"},{"left":"-їзд-","right":"riding, driving"},{"left":"-бач-","right":"seeing"},{"left":"-слух-","right":"hearing"},{"left":"-знат-/-знай-","right":"knowing"}];
+    const quizData=[{"question":"Which word is from the same family as \"вхід\"?","options":["вихід","виїзд","вибачення","вислухати"],"correctIndex":0,"explanation":"Both contain -хід- (going)."},{"question":"Which word is from the same family as \"поїзд\"?","options":["поїздка","похід","побачення","послухати"],"correctIndex":0,"explanation":"Both contain -їзд- (riding)."},{"question":"Which word is from the same family as \"бачити\"?","options":["передбачення","слухання","знання","ходіння"],"correctIndex":0,"explanation":"Both contain -бач- (seeing)."},{"question":"Which word is from the same family as \"слухати\"?","options":["неслухняний","небачений","незнайомий","невідомий"],"correctIndex":0,"explanation":"Both contain -слух- (hearing)."},{"question":"Which word is from the same family as \"знати\"?","options":["познайомитися","побачити","послухати","поїхати"],"correctIndex":0,"explanation":"Both contain -знай- (knowing)."},{"question":"\"Дохід\" means \"income.\" What root does it contain?","options":["-хід- (going)","-їзд- (riding)","-бач- (seeing)","-знат- (knowing)"],"correctIndex":0,"explanation":"До-хід: what \"comes to\" you = income!"}];
+    const sortData={"true-friends":["вхід","вихід","перехід","похід"],"false-friends":["поїзд","поїздка","приїзд","переїзд"],"new-letters":["побачити","побачення","вибачення","передбачення"],"undefined":["слухати","слухач","вислухати","слухняний"]};
+    const vocabData=[{"uk":"вхід","translit":"/vxʲid/","en":"noun","note":""},{"uk":"вихід","translit":"/ˈvɪxʲid/","en":"noun","note":""},{"uk":"прихід","translit":"/ˈprɪxʲid/","en":"noun","note":""},{"uk":"відхід","translit":"/ˈvʲidxʲid/","en":"noun","note":""},{"uk":"перехід","translit":"/ˈpɛrɛxʲid/","en":"noun","note":""},{"uk":"похід","translit":"/ˈpoxʲid/","en":"noun","note":""},{"uk":"підхід","translit":"/ˈpʲidxʲid/","en":"noun","note":""},{"uk":"дохід","translit":"/ˈdoxʲid/","en":"noun","note":""},{"uk":"поїздка","translit":"/poˈjizdkɑ/","en":"noun","note":""},{"uk":"поїзд","translit":"/ˈpojizd/","en":"noun","note":""},{"uk":"виїзд","translit":"/ˈvɪjizd/","en":"noun","note":""},{"uk":"в'їзд","translit":"/vjizd/","en":"noun","note":""},{"uk":"приїзд","translit":"/ˈprɪjizd/","en":"noun","note":""},{"uk":"від'їзд","translit":"/ˈvʲidjizd/","en":"noun","note":""},{"uk":"переїзд","translit":"/ˈpɛrɛjizd/","en":"noun","note":""},{"uk":"проїзд","translit":"/ˈprojizd/","en":"noun","note":""},{"uk":"побачити","translit":"/poˈbɑtʃɪtɪ/","en":"verb","note":""},{"uk":"побачення","translit":"/pobɑˈtʃɛnʲːɑ/","en":"noun","note":""},{"uk":"передбачати","translit":"/pɛrɛdˈbɑtʃɑtɪ/","en":"verb","note":""},{"uk":"передбачення","translit":"/pɛrɛdbɑˈtʃɛnʲːɑ/","en":"noun","note":""},{"uk":"вибачати","translit":"/vɪbɑˈtʃɑtɪ/","en":"verb","note":""},{"uk":"вибачення","translit":"/vɪbɑˈtʃɛnʲːɑ/","en":"noun","note":""},{"uk":"слух","translit":"/slux/","en":"noun","note":""},{"uk":"слухач","translit":"/sluˈxɑtʃ/","en":"noun","note":""},{"uk":"вислухати","translit":"/ˈvɪsluxɑtɪ/","en":"verb","note":""},{"uk":"підслухати","translit":"/pʲidsluˈxɑtɪ/","en":"verb","note":""},{"uk":"слухняний","translit":"/sluxˈnʲɑnɪj/","en":"adj","note":""},{"uk":"неслухняний","translit":"/nɛsluxˈnʲɑnɪj/","en":"adj","note":""},{"uk":"знайомий","translit":"/znɑˈjomɪj/","en":"noun","note":""},{"uk":"знайомитися","translit":"/znɑˈjomɪtɪsʲɑ/","en":"verb","note":""},{"uk":"познайомитися","translit":"/poznɑˈjomɪtɪsʲɑ/","en":"verb","note":""},{"uk":"дізнатися","translit":"/dʲizˈnɑtɪsʲɑ/","en":"verb","note":""},{"uk":"пізнавати","translit":"/pʲiznɑˈvɑtɪ/","en":"verb","note":""},{"uk":"визнавати","translit":"/vɪznɑˈvɑtɪ/","en":"verb","note":""},{"uk":"визнання","translit":"/vɪzˈnɑnʲːɑ/","en":"noun","note":""}];
+    const totalSort=16;
+    function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
+    document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));
+    let matchSel=null,matchScore=0,matchPairsArr=[];
+    document.querySelectorAll('#match-left .match-item').forEach(item=>{item.addEventListener('click',()=>{if(item.classList.contains('matched'))return;document.querySelectorAll('#match-left .match-item').forEach(i=>i.classList.remove('selected'));item.classList.add('selected');matchSel={el:item,pair:item.dataset.pair};});});
+    document.querySelectorAll('#match-right .match-item').forEach(item=>{item.addEventListener('click',()=>{if(item.classList.contains('matched')||!matchSel)return;if(matchSel.pair===item.dataset.pair){matchSel.el.classList.remove('selected');matchSel.el.classList.add('matched');item.classList.add('matched');matchPairsArr.push({left:matchSel.el,right:item});matchScore++;document.getElementById('match-score').textContent=matchScore;drawLines();if(matchScore===matchPairs.length)document.getElementById('match-complete').classList.add('show');}else{item.classList.add('wrong');setTimeout(()=>item.classList.remove('wrong'),300);}matchSel=null;});});
+    function drawLines(){const svg=document.getElementById('match-lines'),c=document.getElementById('match-container');if(!svg||!c)return;const r=c.getBoundingClientRect();svg.innerHTML='';svg.setAttribute('viewBox','0 0 '+r.width+' '+r.height);matchPairsArr.forEach(p=>{const lr=p.left.getBoundingClientRect(),rr=p.right.getBoundingClientRect();const line=document.createElementNS('http://www.w3.org/2000/svg','line');line.setAttribute('x1',lr.right-r.left);line.setAttribute('y1',lr.top+lr.height/2-r.top);line.setAttribute('x2',rr.left-r.left);line.setAttribute('y2',rr.top+rr.height/2-r.top);line.setAttribute('stroke','#26a269');line.setAttribute('stroke-width','2');svg.appendChild(line);});}
+    function resetMatch(){matchSel=null;matchScore=0;matchPairsArr=[];document.getElementById('match-score').textContent='0';document.getElementById('match-complete')?.classList.remove('show');document.getElementById('match-lines').innerHTML='';document.querySelectorAll('#match-container .match-item').forEach(i=>i.classList.remove('matched','selected','wrong'));}
+    window.addEventListener('resize',drawLines);
+    let quizScore=0,quizAns=0;
+    function initQuiz(){const c=document.getElementById('quiz-container');if(!c||!quizData.length)return;c.innerHTML='';quizData.forEach((q,i)=>{const sh=[...q.options].sort(()=>Math.random()-0.5);const cor=sh.indexOf(q.options[q.correctIndex]);const div=document.createElement('div');div.className='quiz-question';div.innerHTML='<h4>Q'+(i+1)+': '+q.question+'</h4><div class="quiz-options">'+sh.map((o,j)=>'<div class="quiz-option" data-c="'+(j===cor)+'" data-q="'+i+'">'+o+'</div>').join('')+'</div><div class="quiz-explanation" id="exp-'+i+'">'+q.explanation+'</div>';c.appendChild(div);});document.querySelectorAll('.quiz-option').forEach(o=>o.addEventListener('click',handleQuiz));}
+    function handleQuiz(e){const opt=e.target,q=opt.closest('.quiz-question');if(q.classList.contains('answered'))return;q.classList.add('answered');if(opt.dataset.c==='true'){opt.classList.add('correct');quizScore++;}else{opt.classList.add('wrong');q.querySelector('[data-c="true"]').classList.add('correct');}document.getElementById('exp-'+opt.dataset.q).classList.add('show');document.getElementById('quiz-score').textContent=quizScore;quizAns++;if(quizAns===quizData.length)document.getElementById('quiz-complete').classList.add('show');}
+    function resetQuiz(){quizScore=0;quizAns=0;document.getElementById('quiz-score').textContent='0';document.getElementById('quiz-complete')?.classList.remove('show');initQuiz();}
+    let sortScore=0,dragItem=null;
+    function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
+    function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
+    function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
+  </script>
+</body>
+</html>

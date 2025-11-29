@@ -1,0 +1,667 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-A2+-73",
+    "moduleId": "mod-uk-A2+-73",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "methodology": "ppp",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "A2+",
+    "phase": "A2+.2",
+    "moduleNumber": 73,
+    "title": "Technology & Media Vocabulary",
+    "subtitle": "Computers, Internet, and Digital Communication",
+    "description": "Learn computer and device vocabulary",
+    "objectives": [
+      "Learn computer and device vocabulary",
+      "Master internet terminology",
+      "Discuss social media and communication",
+      "Navigate digital situations"
+    ],
+    "grammarFocus": [
+      "Tech verbs (завантажувати, надсилати)",
+      "Online communication phrases",
+      "Tech-related collocations"
+    ],
+    "totalDuration": 45,
+    "transliterationMode": "none",
+    "tags": [
+      "vocabulary",
+      "technology",
+      "internet",
+      "media",
+      "digital"
+    ],
+    "version": 1,
+    "createdAt": "2025-11-29T00:00:00Z",
+    "modifiedAt": "2025-11-29T00:00:00Z",
+    "phases": [
+      {
+        "id": "phase-warm-up",
+        "name": "warm-up",
+        "duration": 5,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### The Digital World in Ukrainian\n\nYou use technology daily. Now let's talk about it in Ukrainian!\n\n**Devices:**\n- смартфон (smartphone), ноутбук (laptop), планшет (tablet)\n\n**Actions:**\n- завантажувати (to download), надсилати (to send)\n\n> 💡 **Why This Matters**\n>\n> Tech vocabulary is essential for modern life — troubleshooting, shopping online, and discussing the digital world!"
+          }
+        ]
+      },
+      {
+        "id": "phase-presentation",
+        "name": "presentation",
+        "duration": 15,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Devices\n\n| Ukrainian | English |\n|-----------|---------|\n| комп'ютер | computer |\n| ноутбук | laptop |\n| смартфон | smartphone |\n| планшет | tablet |\n| телефон | phone |\n| екран | screen |\n| клавіатура | keyboard |\n| миша | mouse |\n| навушники | headphones |\n| зарядка | charger |\n| кабель | cable |\n| акумулятор | battery |\n| флешка | flash drive |\n| принтер | printer |\n| сканер | scanner |\n| камера | camera |\n\n**Examples:**\n- Мій **ноутбук** старий. - My laptop is old.\n- Де **зарядка** від телефона? - Where's the phone charger?\n- **Екран** занадто темний. - The screen is too dark.\n- Потрібні **навушники**? - Need headphones?\n- **Акумулятор** майже розрядився. - The battery is almost dead.\n\n> ⚡ **Pro Tip: Gender of Tech Words**\n>\n> Most borrowed tech words are masculine: комп'ютер (m), смартфон (m), ноутбук (m). Exception: миша (f) = mouse."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Computer Terms\n\n| Ukrainian | English |\n|-----------|---------|\n| файл | file |\n| папка | folder |\n| документ | document |\n| програма | program, software |\n| застосунок (апка) | application, app |\n| операційна система | operating system |\n| браузер | browser |\n| вікно | window |\n| іконка | icon |\n| пароль | password |\n| логін | login |\n| обліковий запис | account |\n| налаштування | settings |\n| оновлення | update |\n| резервна копія | backup |\n\n**Examples:**\n- Збережи **файл** у **папку**. - Save the file to a folder.\n- Яка **програма** для цього? - What program is for this?\n- Завантаж **застосунок**. - Download the app.\n- Забув **пароль**. - Forgot the password.\n- Перевір **налаштування**. - Check the settings.\n- Зроби **резервну копію**! - Make a backup!"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Internet Vocabulary\n\n| Ukrainian | English |\n|-----------|---------|\n| інтернет | internet |\n| мережа | network |\n| Wi-Fi | Wi-Fi |\n| сайт | website |\n| посилання | link |\n| сторінка | page |\n| пошук | search |\n| пошукова система | search engine |\n| результат | result |\n| реклама | advertisement |\n| спам | spam |\n| вірус | virus |\n| хакер | hacker |\n| кібербезпека | cybersecurity |\n\n**Examples:**\n- Немає **інтернету**. - No internet.\n- Який пароль від **Wi-Fi**? - What's the Wi-Fi password?\n- Відкрий цей **сайт**. - Open this website.\n- Надішли **посилання**. - Send the link.\n- **Пошук** у Google. - Search in Google.\n- Це **спам**, видали! - It's spam, delete it!\n- Обережно, це може бути **вірус**! - Careful, it might be a virus!"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Tech Actions\n\n| Imperfective | Perfective | Meaning |\n|--------------|------------|---------|\n| завантажувати | завантажити | to download |\n| вивантажувати | вивантажити | to upload |\n| надсилати | надіслати | to send |\n| отримувати | отримати | to receive |\n| зберігати | зберегти | to save |\n| видаляти | видалити | to delete |\n| копіювати | скопіювати | to copy |\n| вставляти | вставити | to paste |\n| вмикати | увімкнути | to turn on |\n| вимикати | вимкнути | to turn off |\n| перезавантажувати | перезавантажити | to restart |\n| оновлювати | оновити | to update |\n| встановлювати | встановити | to install |\n\n**Examples:**\n- **Завантаж** цей файл. - Download this file.\n- **Надішли** мені фото. - Send me a photo.\n- Не забудь **зберегти**! - Don't forget to save!\n- **Видали** цей файл. - Delete this file.\n- **Увімкни** комп'ютер. - Turn on the computer.\n- Треба **перезавантажити** систему. - Need to restart the system.\n- **Оновіть** застосунок. - Update the app."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Social Media\n\n| Ukrainian | English |\n|-----------|---------|\n| соціальні мережі | social media |\n| пост | post |\n| публікація | publication |\n| стрічка | feed |\n| підписник | follower |\n| підписуватися | to follow |\n| лайк | like |\n| коментар | comment |\n| поширювати | to share |\n| сторіз | story |\n| профіль | profile |\n| нік | username |\n| повідомлення | message |\n| чат | chat |\n\n**Examples:**\n- Скільки у тебе **підписників**? - How many followers do you have?\n- **Підпишися** на мене! - Follow me!\n- Постав **лайк**! - Give a like!\n- Напиши **коментар**. - Write a comment.\n- **Поширю** це у **стрічці**. - I'll share this in my feed.\n- Напиши мені в **чат**. - Write me in the chat.\n\n> 🎭 **Culture Note: Popular Platforms**\n>\n> Ukrainians actively use Telegram, Instagram, Facebook, and TikTok. Telegram is especially popular for news and communication."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Communication Verbs\n\n| Ukrainian | English |\n|-----------|---------|\n| писати | to write |\n| дзвонити | to call |\n| надсилати повідомлення | to send a message |\n| телефонувати | to phone |\n| відеодзвінок | video call |\n| голосове повідомлення | voice message |\n| відповідати | to reply |\n| пересилати | to forward |\n| блокувати | to block |\n\n**Examples:**\n- **Напиши** мені пізніше. - Write me later.\n- **Зателефонуй**, коли прийдеш. - Call when you arrive.\n- Надішли **голосове повідомлення**. - Send a voice message.\n- Зробимо **відеодзвінок**? - Shall we do a video call?\n- **Відповідь** на повідомлення. - Reply to the message.\n- Довелося його **заблокувати**. - Had to block him."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Common Tech Problems\n\n| Problem | Ukrainian |\n|---------|-----------|\n| doesn't work | не працює |\n| frozen | зависло |\n| slow | повільно |\n| crashed | впало / зламалося |\n| no connection | немає з'єднання |\n| error | помилка |\n| bug | баг / помилка |\n| won't turn on | не вмикається |\n| no sound | немає звуку |\n| no image | немає зображення |\n\n**Examples:**\n- Комп'ютер **не працює**! - The computer doesn't work!\n- Програма **зависла**. - The program froze.\n- Інтернет дуже **повільний**. - The internet is very slow.\n- Система **впала**. - The system crashed.\n- **Помилка** під час завантаження. - Error during download.\n- Телефон **не вмикається**. - The phone won't turn on."
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-A2+-73-matchup"
+          }
+        ]
+      },
+      {
+        "id": "phase-practice",
+        "name": "practice",
+        "duration": 15,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Match Device to Use\n\n1. ноутбук → робота, навчання\n2. смартфон → дзвінки, месенджери\n3. навушники → слухати музику\n4. флешка → зберігати файли\n5. принтер → друкувати документи"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Complete Tech Actions\n\n1. ___ (download) файл з інтернету.\n   → завантаж\n\n2. ___ (send) мені посилання.\n   → надішли\n\n3. ___ (save) документ у папку.\n   → збережи\n\n4. ___ (delete) спам з пошти.\n   → видали\n\n5. ___ (turn on) комп'ютер.\n   → увімкни"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Tech Problem Dialogue\n\n**A:** Мій комп'ютер ___ (doesn't work).\n→ не працює\n\n**B:** Спробуй ___ (restart).\n→ перезавантажити\n\n**A:** Не допомогло. Програма ___ (froze).\n→ зависла\n\n**B:** ___ (Delete) її і ___ (install) знову.\n→ видали, встанови"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Translate\n\n1. Download this app. → Завантаж цей застосунок.\n2. The internet is slow. → Інтернет повільний.\n3. Send me a link. → Надішли мені посилання.\n4. Follow me on Instagram. → Підпишися на мене в Інстаграмі.\n5. The battery is dead. → Акумулятор розрядився."
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-A2+-73-quiz"
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-A2+-73-groupsort"
+          }
+        ]
+      },
+      {
+        "id": "phase-production",
+        "name": "production",
+        "duration": 10,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Describe Your Tech Setup\n\n**Example:** \"У мене є ноутбук і смартфон. Найчастіше користуюся Телеграмом і Інстаграмом. Люблю слухати музику в навушниках.\"\n\nDescribe your devices and how you use them."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Tech Support Roleplay\n\n**Scenario:** Your device has a problem.\n- \"Мій комп'ютер не вмикається.\"\n- \"Я спробував перезавантажити, але не допомогло.\"\n- \"Що робити?\""
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Social Media Discussion\n\nDiscuss social media habits:\n- \"Я користуюся Телеграмом для новин.\"\n- \"В Інстаграмі підписаний на...\"\n- \"Не люблю ТікТок, бо...\""
+          }
+        ]
+      }
+    ]
+  },
+  "activities": [
+    {
+      "id": "act-uk-A2+-73-matchup",
+      "type": "match-up",
+      "title": "Action → Result",
+      "description": "Action → Result",
+      "content": {
+        "type": "match-up",
+        "instructions": "",
+        "pairs": [
+          {
+            "left": "завантажити",
+            "right": "file appears"
+          },
+          {
+            "left": "видалити",
+            "right": "file gone"
+          },
+          {
+            "left": "зберегти",
+            "right": "file saved"
+          },
+          {
+            "left": "надіслати",
+            "right": "message sent"
+          },
+          {
+            "left": "увімкнути",
+            "right": "device turns on"
+          }
+        ],
+        "shuffleRight": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2+",
+      "duration": 5,
+      "tags": [
+        "vocabulary",
+        "technology",
+        "internet",
+        "media",
+        "digital"
+      ],
+      "createdAt": "2025-11-29T00:00:00Z",
+      "modifiedAt": "2025-11-29T00:00:00Z"
+    },
+    {
+      "id": "act-uk-A2+-73-quiz",
+      "type": "quiz",
+      "title": "Technology Vocabulary",
+      "description": "Choose the correct answer.",
+      "content": {
+        "type": "quiz",
+        "instructions": "Choose the correct answer.",
+        "questions": [
+          {
+            "question": "\"Завантажити\" means ___.",
+            "options": [
+              "to download",
+              "to upload",
+              "to delete",
+              "to save"
+            ],
+            "correctIndex": 0,
+            "explanation": "Завантажити = to download."
+          },
+          {
+            "question": "\"Застосунок\" is ___.",
+            "options": [
+              "application, app",
+              "website",
+              "password",
+              "file"
+            ],
+            "correctIndex": 0,
+            "explanation": "Застосунок = app (also: апка)."
+          },
+          {
+            "question": "\"Акумулятор розрядився\" means ___.",
+            "options": [
+              "the battery is dead",
+              "the screen broke",
+              "the internet is slow",
+              "the file deleted"
+            ],
+            "correctIndex": 0,
+            "explanation": "Розрядився = discharged, dead."
+          },
+          {
+            "question": "\"Підписник\" means ___.",
+            "options": [
+              "follower",
+              "subscriber",
+              "message",
+              "post"
+            ],
+            "correctIndex": 0,
+            "explanation": "Підписник = follower (social media)."
+          },
+          {
+            "question": "\"Зависло\" means the program ___.",
+            "options": [
+              "froze",
+              "crashed",
+              "updated",
+              "started"
+            ],
+            "correctIndex": 0,
+            "explanation": "Зависло = froze (stopped responding)."
+          },
+          {
+            "question": "\"Резервна копія\" is ___.",
+            "options": [
+              "backup",
+              "update",
+              "settings",
+              "password"
+            ],
+            "correctIndex": 0,
+            "explanation": "Резервна копія = backup."
+          }
+        ],
+        "shuffleQuestions": true,
+        "shuffleOptions": true,
+        "showCorrectAnswers": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2+",
+      "duration": 5,
+      "tags": [
+        "vocabulary",
+        "technology",
+        "internet",
+        "media",
+        "digital"
+      ],
+      "createdAt": "2025-11-29T00:00:00Z",
+      "modifiedAt": "2025-11-29T00:00:00Z"
+    },
+    {
+      "id": "act-uk-A2+-73-groupsort",
+      "type": "group-sort",
+      "title": "By Category",
+      "description": "By Category",
+      "content": {
+        "type": "group-sort",
+        "instructions": "",
+        "groups": [
+          {
+            "name": "Пристрої (Devices)",
+            "items": [
+              "ноутбук",
+              "смартфон",
+              "планшет",
+              "навушники"
+            ]
+          },
+          {
+            "name": "Дії (Actions)",
+            "items": [
+              "завантажити",
+              "надіслати",
+              "зберегти",
+              "видалити"
+            ]
+          },
+          {
+            "name": "Проблеми (Problems)",
+            "items": [
+              "не працює",
+              "зависло",
+              "повільно",
+              "помилка"
+            ]
+          },
+          {
+            "name": "Соцмережі (Social Media)",
+            "items": [
+              "підписник",
+              "лайк",
+              "коментар",
+              "стрічка"
+            ]
+          }
+        ],
+        "shuffleItems": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2+",
+      "duration": 5,
+      "tags": [
+        "vocabulary",
+        "technology",
+        "internet",
+        "media",
+        "digital"
+      ],
+      "createdAt": "2025-11-29T00:00:00Z",
+      "modifiedAt": "2025-11-29T00:00:00Z"
+    }
+  ],
+  "vocabulary": {
+    "moduleId": "mod-uk-A2+-73",
+    "level": "A2+",
+    "phase": "A2+.2",
+    "wordCount": 35,
+    "transliterationMode": "none",
+    "words": [
+      {
+        "id": "v-m73-001",
+        "uk": "комп'ютер",
+        "translit": "/kompˈjutɛr/",
+        "ipa": "computer",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m73-002",
+        "uk": "ноутбук",
+        "translit": "/noˈutbuk/",
+        "ipa": "laptop",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m73-003",
+        "uk": "смартфон",
+        "translit": "/smɑrtˈfon/",
+        "ipa": "smartphone",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m73-004",
+        "uk": "планшет",
+        "translit": "/plɑnˈʃɛt/",
+        "ipa": "tablet",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m73-005",
+        "uk": "екран",
+        "translit": "/ɛkˈrɑn/",
+        "ipa": "screen",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m73-006",
+        "uk": "клавіатура",
+        "translit": "/klɑvʲiɑˈturɑ/",
+        "ipa": "keyboard",
+        "en": "noun",
+        "pos": "f"
+      },
+      {
+        "id": "v-m73-007",
+        "uk": "навушники",
+        "translit": "/nɑˈvuʃnɪkɪ/",
+        "ipa": "headphones",
+        "en": "noun",
+        "pos": "pl"
+      },
+      {
+        "id": "v-m73-008",
+        "uk": "зарядка",
+        "translit": "/zɑˈrʲɑdkɑ/",
+        "ipa": "charger",
+        "en": "noun",
+        "pos": "f"
+      },
+      {
+        "id": "v-m73-009",
+        "uk": "акумулятор",
+        "translit": "/ɑkumuˈlʲɑtor/",
+        "ipa": "battery",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m73-010",
+        "uk": "файл",
+        "translit": "/fɑjl/",
+        "ipa": "file",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m73-011",
+        "uk": "папка",
+        "translit": "/ˈpɑpkɑ/",
+        "ipa": "folder",
+        "en": "noun",
+        "pos": "f"
+      },
+      {
+        "id": "v-m73-012",
+        "uk": "застосунок",
+        "translit": "/zɑstoˈsunok/",
+        "ipa": "application, app",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m73-013",
+        "uk": "пароль",
+        "translit": "/pɑˈrolʲ/",
+        "ipa": "password",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m73-014",
+        "uk": "налаштування",
+        "translit": "/nɑlɑʃtuˈvɑnʲːɑ/",
+        "ipa": "settings",
+        "en": "noun",
+        "pos": "n"
+      },
+      {
+        "id": "v-m73-015",
+        "uk": "оновлення",
+        "translit": "/onovˈlɛnʲːɑ/",
+        "ipa": "update",
+        "en": "noun",
+        "pos": "n"
+      },
+      {
+        "id": "v-m73-016",
+        "uk": "резервна копія",
+        "translit": "/rɛˈzɛrvnɑ ˈkopʲijɑ/",
+        "ipa": "backup",
+        "en": "noun",
+        "pos": "f"
+      },
+      {
+        "id": "v-m73-017",
+        "uk": "сайт",
+        "translit": "/sɑjt/",
+        "ipa": "website",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m73-018",
+        "uk": "посилання",
+        "translit": "/posɪˈlɑnʲːɑ/",
+        "ipa": "link",
+        "en": "noun",
+        "pos": "n"
+      },
+      {
+        "id": "v-m73-019",
+        "uk": "пошук",
+        "translit": "/ˈpoʃuk/",
+        "ipa": "search",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m73-020",
+        "uk": "вірус",
+        "translit": "/ˈvʲirus/",
+        "ipa": "virus",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m73-021",
+        "uk": "завантажувати",
+        "translit": "/zɑvɑntɑˈʒuvɑtɪ/",
+        "ipa": "to download",
+        "en": "verb",
+        "pos": "-",
+        "gender": "impf"
+      },
+      {
+        "id": "v-m73-022",
+        "uk": "вивантажувати",
+        "translit": "/vɪvɑntɑˈʒuvɑtɪ/",
+        "ipa": "to upload",
+        "en": "verb",
+        "pos": "-",
+        "gender": "impf"
+      },
+      {
+        "id": "v-m73-023",
+        "uk": "надсилати",
+        "translit": "/nɑdsɪˈlɑtɪ/",
+        "ipa": "to send",
+        "en": "verb",
+        "pos": "-",
+        "gender": "impf"
+      },
+      {
+        "id": "v-m73-024",
+        "uk": "зберігати",
+        "translit": "/zbɛrʲiˈɦɑtɪ/",
+        "ipa": "to save",
+        "en": "verb",
+        "pos": "-",
+        "gender": "impf"
+      },
+      {
+        "id": "v-m73-025",
+        "uk": "видаляти",
+        "translit": "/vɪdɑˈlʲɑtɪ/",
+        "ipa": "to delete",
+        "en": "verb",
+        "pos": "-",
+        "gender": "impf"
+      },
+      {
+        "id": "v-m73-026",
+        "uk": "вмикати",
+        "translit": "/vmɪˈkɑtɪ/",
+        "ipa": "to turn on",
+        "en": "verb",
+        "pos": "-",
+        "gender": "impf"
+      },
+      {
+        "id": "v-m73-027",
+        "uk": "вимикати",
+        "translit": "/vɪmɪˈkɑtɪ/",
+        "ipa": "to turn off",
+        "en": "verb",
+        "pos": "-",
+        "gender": "impf"
+      },
+      {
+        "id": "v-m73-028",
+        "uk": "перезавантажувати",
+        "translit": "/pɛrɛzɑvɑntɑˈʒuvɑtɪ/",
+        "ipa": "to restart",
+        "en": "verb",
+        "pos": "-",
+        "gender": "impf"
+      },
+      {
+        "id": "v-m73-029",
+        "uk": "встановлювати",
+        "translit": "/vstɑˈnovlʲuvɑtɪ/",
+        "ipa": "to install",
+        "en": "verb",
+        "pos": "-",
+        "gender": "impf"
+      },
+      {
+        "id": "v-m73-030",
+        "uk": "підписник",
+        "translit": "/pʲidˈpɪsnɪk/",
+        "ipa": "follower",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m73-031",
+        "uk": "лайк",
+        "translit": "/lɑjk/",
+        "ipa": "like",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m73-032",
+        "uk": "коментар",
+        "translit": "/komɛnˈtɑr/",
+        "ipa": "comment",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m73-033",
+        "uk": "стрічка",
+        "translit": "/ˈstrʲitʃkɑ/",
+        "ipa": "feed",
+        "en": "noun",
+        "pos": "f"
+      },
+      {
+        "id": "v-m73-034",
+        "uk": "повідомлення",
+        "translit": "/povʲiˈdomlɛnʲːɑ/",
+        "ipa": "message",
+        "en": "noun",
+        "pos": "n"
+      },
+      {
+        "id": "v-m73-035",
+        "uk": "відеодзвінок",
+        "translit": "/vʲidɛoˈdzvʲinok/",
+        "ipa": "video call",
+        "en": "noun",
+        "pos": "m"
+      }
+    ]
+  }
+}

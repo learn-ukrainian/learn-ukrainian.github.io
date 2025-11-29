@@ -1,0 +1,363 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-A2+-74",
+    "moduleId": "mod-uk-A2+-74",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "methodology": "ppp",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "A2+",
+    "phase": "A2+.3",
+    "moduleNumber": 74,
+    "title": "Review: Word Formation",
+    "subtitle": "Consolidating Prefixes, Suffixes, and Root Families",
+    "description": "Review all A2+ word formation patterns",
+    "objectives": [
+      "Review all A2+ word formation patterns",
+      "Practice prefix identification and meaning",
+      "Consolidate suffix knowledge",
+      "Apply root family understanding"
+    ],
+    "grammarFocus": [
+      "Motion and action prefixes",
+      "Noun and adjective suffixes",
+      "Root families and derivation"
+    ],
+    "totalDuration": 45,
+    "transliterationMode": "none",
+    "tags": [
+      "review",
+      "word-formation",
+      "prefixes",
+      "suffixes",
+      "roots"
+    ],
+    "version": 1,
+    "createdAt": "2025-11-29T00:00:00Z",
+    "modifiedAt": "2025-11-29T00:00:00Z",
+    "phases": [
+      {
+        "id": "phase-warm-up",
+        "name": "warm-up",
+        "duration": 5,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Word Formation Master Review\n\nYou've learned powerful tools for building Ukrainian vocabulary. Let's consolidate!\n\n**Three key skills:**\n1. **Prefixes** change meaning (direction, completion, etc.)\n2. **Suffixes** change word type (verb → noun, noun → adjective)\n3. **Roots** connect word families (one root = many words)\n\n> 💡 **The Goal**\n>\n> By recognizing word parts, you can understand new words without a dictionary!"
+          }
+        ]
+      },
+      {
+        "id": "phase-presentation",
+        "name": "presentation",
+        "duration": 15,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Prefix Review (Modules 61-62)\n\n**Motion Prefixes:**\n\n| Prefix | Meaning | Example |\n|--------|---------|---------|\n| при- | arrival | приходити (to arrive) |\n| ви- | exit, out | виходити (to exit) |\n| в-/у- | entry, in | входити (to enter) |\n| за- | behind, start | заходити (to drop by) |\n| пере- | across | переходити (to cross) |\n| від- | away from | відходити (to depart) |\n| до- | up to | доходити (to reach) |\n| об- | around | обходити (to go around) |\n\n**Action Prefixes:**\n\n| Prefix | Meaning | Example |\n|--------|---------|---------|\n| на- | onto, accumulation | написати (to write) |\n| по- | beginning, brief | почитати (to read a bit) |\n| з-/с- | completion, together | зробити (to make/do) |\n| про- | through | прочитати (to read through) |\n| роз- | apart, spreading | розказати (to tell) |\n\n**Quick Test:**\n- при- + йти = прийти (to come, arrive)\n- ви- + йти = вийти (to go out)\n- пере- + йти = перейти (to cross)"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Suffix Review (Modules 63-64)\n\n**Noun Suffixes:**\n\n| Suffix | Creates | Example |\n|--------|---------|---------|\n| -ння/-ття | verbal noun | читання (reading) |\n| -ість | abstract quality | можливість (possibility) |\n| -ство/-цтво | state, realm | мистецтво (art) |\n| -ач/-ник | agent (person) | читач (reader), робітник (worker) |\n| -ок/-ець | result, object | початок (beginning) |\n\n**Adjective Suffixes:**\n\n| Suffix | Creates | Example |\n|--------|---------|---------|\n| -ний/-ній | general relation | річний (annual) |\n| -ський | belonging, origin | міський (urban) |\n| -овий | type, material | книжковий (book-related) |\n| -ливий | tendency | щасливий (happy) |\n| -истий | abundance | кам'янистий (rocky) |\n| -ів/-ин | possessive | батьків (father's) |\n\n**Quick Test:**\n- читати → читання (verbal noun)\n- місто → міський (adjective)\n- щастя → щасливий (adjective)"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Root Family Review (Modules 65-66)\n\n**Ten Key Roots:**\n\n| Root | Meaning | Words |\n|------|---------|-------|\n| -уч-/-вч- | learning | учень, вчитель, наука |\n| -роб- | work | робота, виробництво |\n| -пис- | writing | писати, підпис |\n| -чит- | reading | читати, читач |\n| -говор-/-мов- | speech | мова, розмова |\n| -ход-/-хід- | walking | вхід, вихід, похід |\n| -їзд- | riding | поїзд, поїздка |\n| -бач- | seeing | бачити, побачення |\n| -слух- | hearing | слухати, слухняний |\n| -знат-/-знай- | knowing | знання, знайомий |\n\n**Quick Test:**\n- вхід contains root -хід- (going)\n- поїздка contains root -їзд- (riding)\n- побачення contains root -бач- (seeing)"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Combining All Skills\n\n**Analyzing complex words:**\n\n**приїзд** (arrival by vehicle)\n- при- = arrival\n- -їзд- = riding\n- = arrival (by vehicle)\n\n**навчання** (education)\n- на- = onto, towards\n- -вч- = learning\n- -ання = verbal noun suffix\n- = education, learning process\n\n**міський** (urban)\n- міст- = city (from місто)\n- -ський = belonging to\n- = belonging to city, urban\n\n**книжковий** (book-related)\n- книжк- = book (from книга)\n- -овий = type/material\n- = book-related"
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-A2+-74-matchup"
+          }
+        ]
+      },
+      {
+        "id": "phase-practice",
+        "name": "practice",
+        "duration": 15,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Prefix Identification\n\nIdentify the prefix and its meaning:\n\n1. **приїхати** → при- (arrival) + їхати = to arrive (by vehicle)\n2. **вийти** → ви- (out) + йти = to exit\n3. **переробити** → пере- (re-) + робити = to remake\n4. **написати** → на- (completion) + писати = to write (completed)\n5. **розказати** → роз- (out, spreading) + казати = to tell"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Suffix Identification\n\nIdentify the suffix and what it creates:\n\n1. **читання** → чита- + -ння (verbal noun) = reading\n2. **можливість** → можлив- + -ість (abstract quality) = possibility\n3. **письменник** → письмен- + -ник (agent) = writer\n4. **міський** → міськ- + -ий (adjective) = urban\n5. **щасливий** → щас- + -ливий (tendency) = happy"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Root Identification\n\nIdentify the root and meaning:\n\n1. **виробництво** → -роб- (work) = production\n2. **прочитати** → -чит- (read) = to read through\n3. **розмова** → -мов- (speech) = conversation\n4. **перехід** → -хід- (going) = crossing\n5. **дізнатися** → -знат- (know) = to find out"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Build Words\n\nCreate words using these parts:\n\n1. за- + -роб- + -ляти = **заробляти** (to earn)\n2. пере- + -пис- + -увати = **переписувати** (to rewrite)\n3. на- + -вч- + -ання = **навчання** (education)\n4. ви- + -хід- = **вихід** (exit)\n5. до- + -мов- + -итися = **домовитися** (to agree)"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Analyze Complex Words\n\nBreak down these words:\n\n1. **відповідальність**\n   - від-повід-аль-н-ість\n   - від- = from + response + -ність = quality\n   - = responsibility\n\n2. **виробництво**\n   - ви-роб-ниц-тво\n   - ви- = out + work + -ство = state\n   - = production\n\n3. **передбачення**\n   - перед-бач-ення\n   - перед- = before + see + -ення = noun\n   - = prediction"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Translate Using Word Formation\n\n1. To earn money → заробляти гроші (за- + роб-)\n2. The entrance is here → вхід тут (в- + хід-)\n3. I found out the truth → Я дізнався правду (ді- + знат-)\n4. Reading is useful → Читання корисне (-чит- + -ання)\n5. Urban transport → Міський транспорт (-ськ- from місто)"
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-A2+-74-quiz"
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-A2+-74-groupsort"
+          }
+        ]
+      },
+      {
+        "id": "phase-production",
+        "name": "production",
+        "duration": 10,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Word Family Challenge\n\nChoose a root and create as many words as possible:\n\n**Root -пис- (write):**\n- писати (to write)\n- писання (writing)\n- підпис (signature)\n- переписати (to rewrite)\n- письменник (writer)\n- записка (note)\n- описати (to describe)"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Explain Word Meanings\n\nExplain these words using their parts:\n\n1. **відходити** - \"від-\" (away) + \"-ход-\" (go) = to depart, walk away\n2. **неслухняний** - \"не-\" (not) + \"-слух-\" (listen) + \"-няний\" = not listening, disobedient\n3. **книжковий** - \"книжк-\" (book) + \"-овий\" (type) = related to books"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Create Sentences\n\nUse word formation knowledge to complete:\n\n1. Де ___ (entrance)? А де ___ (exit)?\n   → вхід, вихід\n\n2. Він ___ (writer), вона ___ (reader).\n   → письменник, читачка\n\n3. ___ (urban) життя дуже ___ (busy).\n   → міське, зайняте"
+          }
+        ]
+      }
+    ]
+  },
+  "activities": [
+    {
+      "id": "act-uk-A2+-74-matchup",
+      "type": "match-up",
+      "title": "Prefix → Meaning",
+      "description": "Prefix → Meaning",
+      "content": {
+        "type": "match-up",
+        "instructions": "",
+        "pairs": [
+          {
+            "left": "при-",
+            "right": "arrival"
+          },
+          {
+            "left": "ви-",
+            "right": "exit, out"
+          },
+          {
+            "left": "пере-",
+            "right": "across"
+          },
+          {
+            "left": "роз-",
+            "right": "apart"
+          },
+          {
+            "left": "за-",
+            "right": "behind, start"
+          }
+        ],
+        "shuffleRight": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2+",
+      "duration": 5,
+      "tags": [
+        "review",
+        "word-formation",
+        "prefixes",
+        "suffixes",
+        "roots"
+      ],
+      "createdAt": "2025-11-29T00:00:00Z",
+      "modifiedAt": "2025-11-29T00:00:00Z"
+    },
+    {
+      "id": "act-uk-A2+-74-quiz",
+      "type": "quiz",
+      "title": "Word Formation Review",
+      "description": "Test your word formation knowledge.",
+      "content": {
+        "type": "quiz",
+        "instructions": "Test your word formation knowledge.",
+        "questions": [
+          {
+            "question": "The prefix in \"виходити\" means ___.",
+            "options": [
+              "out, exit",
+              "in, enter",
+              "across",
+              "arrival"
+            ],
+            "correctIndex": 0,
+            "explanation": "Ви- = out, exit."
+          },
+          {
+            "question": "The suffix \"-ість\" creates ___.",
+            "options": [
+              "abstract quality nouns",
+              "verbs",
+              "agent nouns",
+              "adjectives"
+            ],
+            "correctIndex": 0,
+            "explanation": "-ість creates feminine abstract nouns."
+          },
+          {
+            "question": "Words with root \"-роб-\" relate to ___.",
+            "options": [
+              "work",
+              "reading",
+              "speaking",
+              "walking"
+            ],
+            "correctIndex": 0,
+            "explanation": "-роб- = work (робота, робити)."
+          },
+          {
+            "question": "\"Читач\" uses the suffix ___.",
+            "options": [
+              "-ач (agent)",
+              "-ість (quality)",
+              "-ння (verbal noun)",
+              "-ський (belonging)"
+            ],
+            "correctIndex": 0,
+            "explanation": "-ач creates agent nouns."
+          },
+          {
+            "question": "\"Міський\" comes from ___.",
+            "options": [
+              "місто (city)",
+              "місяць (month)",
+              "місце (place)",
+              "місія (mission)"
+            ],
+            "correctIndex": 0,
+            "explanation": "Місто → міський."
+          },
+          {
+            "question": "The root in \"навчання\" is ___.",
+            "options": [
+              "-вч-/-уч- (learning)",
+              "-ння (suffix)",
+              "на- (prefix)",
+              "-ан- (connector)"
+            ],
+            "correctIndex": 0,
+            "explanation": "Root -вч- means learning."
+          }
+        ],
+        "shuffleQuestions": true,
+        "shuffleOptions": true,
+        "showCorrectAnswers": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2+",
+      "duration": 5,
+      "tags": [
+        "review",
+        "word-formation",
+        "prefixes",
+        "suffixes",
+        "roots"
+      ],
+      "createdAt": "2025-11-29T00:00:00Z",
+      "modifiedAt": "2025-11-29T00:00:00Z"
+    },
+    {
+      "id": "act-uk-A2+-74-groupsort",
+      "type": "group-sort",
+      "title": "By Pattern",
+      "description": "By Pattern",
+      "content": {
+        "type": "group-sort",
+        "instructions": "",
+        "groups": [
+          {
+            "name": "Motion Prefixes",
+            "items": [
+              "при- (arrival)",
+              "ви- (exit)",
+              "пере- (across)",
+              "в- (enter)"
+            ]
+          },
+          {
+            "name": "Noun Suffixes",
+            "items": [
+              "-ння/-ття",
+              "-ість",
+              "-ство",
+              "-ач/-ник"
+            ]
+          },
+          {
+            "name": "Adjective Suffixes",
+            "items": [
+              "-ний/-ній",
+              "-ський",
+              "-овий",
+              "-ливий"
+            ]
+          }
+        ],
+        "shuffleItems": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2+",
+      "duration": 5,
+      "tags": [
+        "review",
+        "word-formation",
+        "prefixes",
+        "suffixes",
+        "roots"
+      ],
+      "createdAt": "2025-11-29T00:00:00Z",
+      "modifiedAt": "2025-11-29T00:00:00Z"
+    }
+  ],
+  "vocabulary": {
+    "moduleId": "mod-uk-A2+-74",
+    "level": "A2+",
+    "phase": "A2+.3",
+    "wordCount": 0,
+    "transliterationMode": "none",
+    "words": []
+  }
+}

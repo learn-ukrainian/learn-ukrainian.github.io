@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 65: Root Families I: Common Roots | Ukrainian A2+</title>
+  <style>
+    :root { --primary: #1a5fb4; --primary-light: #3584e4; --success: #26a269; --warning: #e5a50a; --danger: #c01c28; --bg: #fafafa; --card-bg: #fff; --text: #1e1e1e; --text-muted: #5e5e5e; --border: #e0e0e0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+    .top-nav { background: #2e2e2e; color: white; padding: 0.5rem 2rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.875rem; }
+    .top-nav a { color: white; text-decoration: none; }
+    .top-nav a:hover { text-decoration: underline; }
+    .module-nav { display: flex; gap: 1rem; align-items: center; }
+    .module-nav-link { color: rgba(255,255,255,0.8); text-decoration: none; padding: 0.25rem 0.5rem; }
+    .module-nav-link:hover { color: white; }
+    .module-nav-link.disabled { color: rgba(255,255,255,0.3); pointer-events: none; }
+    .nav { position: sticky; top: 0; background: var(--primary); color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; z-index: 100; }
+    .nav h1 { font-size: 1.25rem; }
+    .nav-tabs { display: flex; gap: 0.5rem; }
+    .nav-tab { background: rgba(255,255,255,0.2); border: none; color: white; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; }
+    .nav-tab.active { background: white; color: var(--primary); }
+    main { max-width: 1000px; margin: 0 auto; padding: 2rem; }
+    .section { display: none; } .section.active { display: block; }
+    .lesson-header { text-align: center; margin-bottom: 2rem; padding: 2rem; background: linear-gradient(135deg, #e8f4fd, #f0e8fd); border-radius: 12px; }
+    .level-badge { background: var(--primary); color: white; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.875rem; }
+    .card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 1.5rem; margin-bottom: 1.5rem; }
+    .card h3 { color: var(--primary); margin-bottom: 1rem; }
+    .canvas-note { background: #fffbeb; border-left: 4px solid var(--warning); padding: 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+    .canvas-note h4 { color: var(--warning); margin-bottom: 0.5rem; }
+    .md-content { line-height: 1.7; }
+    .md-content p { margin: 0.75rem 0; }
+    .md-content ul, .md-content ol { margin: 0.75rem 0; padding-left: 1.5rem; }
+    .md-content li { margin: 0.25rem 0; }
+    .md-content strong { color: var(--primary); }
+    .md-content blockquote { background: #e8f4fd; border-left: 4px solid var(--primary); padding: 0.75rem 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+    .md-content blockquote p { margin: 0.25rem 0; }
+    .md-content table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+    .md-content th, .md-content td { border: 1px solid var(--border); padding: 0.5rem 0.75rem; text-align: left; }
+    .md-content th { background: #f5f5f5; font-weight: 600; }
+    .md-content code { background: #f0f0f0; padding: 0.125rem 0.375rem; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
+    .letter-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0; }
+    .letter-group { border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; }
+    .letter-group.true-friends { border-color: var(--success); } .letter-group.true-friends .letters { color: var(--success); }
+    .letter-group.false-friends { border-color: var(--danger); } .letter-group.false-friends .letters { color: var(--danger); }
+    .letter-group.new-letters { border-color: var(--primary); } .letter-group.new-letters .letters { color: var(--primary); }
+    .letters { font-size: 1.75rem; letter-spacing: 0.3rem; }
+    .match-container { display: flex; gap: 3rem; padding: 1rem; position: relative; }
+    .match-column { flex: 1; display: flex; flex-direction: column; gap: 0.75rem; }
+    .match-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; font-size: 1.25rem; cursor: pointer; }
+    .match-item.selected { border-color: var(--primary); background: #e8f4fd; }
+    .match-item.matched { border-color: var(--success); background: #e8f8f0; }
+    .match-item.wrong { border-color: var(--danger); background: #fde8e8; }
+    .match-lines { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+    .quiz-question { border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; }
+    .quiz-question.answered { pointer-events: none; }
+    .quiz-question .cyrillic { font-size: 1.5rem; color: var(--primary); font-weight: 600; }
+    .quiz-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-top: 1rem; }
+    .quiz-option { background: #f5f5f5; border: 2px solid var(--border); border-radius: 8px; padding: 1rem; cursor: pointer; text-align: center; }
+    .quiz-option.correct { border-color: var(--success); background: #d4edda; }
+    .quiz-option.wrong { border-color: var(--danger); background: #f8d7da; }
+    .quiz-explanation { margin-top: 1rem; padding: 1rem; background: #e8f4fd; border-radius: 8px; display: none; }
+    .quiz-explanation.show { display: block; }
+    .sort-pool { background: #f5f5f5; border: 2px dashed var(--border); border-radius: 12px; padding: 1.5rem; min-height: 80px; margin-bottom: 1rem; }
+    .sort-items { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; }
+    .sort-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 0.75rem 1.25rem; font-size: 1.5rem; cursor: grab; }
+    .sort-item.correct { border-color: var(--success); background: #e8f8f0; }
+    .sort-item.wrong { border-color: var(--danger); background: #fde8e8; }
+    .sort-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    .sort-group { border: 2px solid var(--border); border-radius: 12px; padding: 1rem; min-height: 150px; }
+    .sort-group.drag-over { border-color: var(--primary); background: #e8f4fd; }
+    .sort-group h4 { font-size: 0.875rem; text-align: center; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--border); }
+    .sort-group.true-friends h4 { color: var(--success); border-color: var(--success); }
+    .sort-group.false-friends h4 { color: var(--danger); border-color: var(--danger); }
+    .sort-group.new-letters h4 { color: var(--primary); border-color: var(--primary); }
+    .vocab-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; }
+    .vocab-card { border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; text-align: center; }
+    .vocab-card .uk { font-size: 1.75rem; font-weight: 600; color: var(--primary); }
+    .vocab-card .translit { color: var(--text-muted); font-style: italic; }
+    .vocab-card .en { font-weight: 500; margin: 0.25rem 0; }
+    .vocab-card .note { font-size: 0.75rem; color: #613583; background: #f0e8fd; padding: 0.25rem 0.5rem; border-radius: 4px; }
+    .btn { padding: 0.75rem 1.5rem; border: none; border-radius: 8px; cursor: pointer; }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-outline { background: transparent; border: 2px solid var(--border); }
+    .btn-group { display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem; }
+    .score-display { text-align: center; padding: 1rem; background: linear-gradient(135deg, #e8f8f0, #e8f4fd); border-radius: 8px; margin-bottom: 1rem; }
+    .score-display .score { font-size: 2rem; font-weight: 700; color: var(--success); }
+    .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
+    .completion-message.show { display: block; }
+    footer { text-align: center; padding: 2rem; color: var(--text-muted); }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+  </style>
+</head>
+<body>
+  <div class="top-nav">
+    <a href="../index.html">← l2-uk-en Curriculum</a>
+    <div class="module-nav">
+      <a href="module-64.html" class="module-nav-link">← Module 64</a>
+      <a href="index.html" class="module-nav-link">A2+ Index</a>
+      <a href="module-66.html" class="module-nav-link">Module 66 →</a>
+    </div>
+  </div>
+  <nav class="nav">
+    <h1>Module 65: Root Families I: Common Roots</h1>
+    <div class="nav-tabs">
+      <button class="nav-tab active" data-section="lesson">Lesson</button>
+      <button class="nav-tab" data-section="match">Match</button>
+      <button class="nav-tab" data-section="quiz">Quiz</button>
+      <button class="nav-tab" data-section="sort">Sort</button>
+      <button class="nav-tab" data-section="vocab">Vocab</button>
+    </div>
+  </nav>
+  <main>
+    <section id="lesson" class="section active">
+      <div class="lesson-header">
+        <span class="level-badge">A2+ · A2+.1</span>
+        <h2 style="font-size:2rem;margin:0.5rem 0">Root Families I: Common Roots</h2>
+        <p style="color:var(--text-muted)">Recognizing Word Relationships Through Roots</p>
+      </div>
+      
+      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### The Power of Roots</h4><div class="md-content"><p>In Modules 61-64, you learned prefixes and suffixes. Now let's look at what's <strong>between</strong> them — the <strong>root</strong>!</p>
+<p><strong>The root is the core meaning:</strong></p>
+<ul>
+<li><strong>уч-</strong> = learning/teaching</li>
+<li>вчити (to teach), <strong>уч</strong>ень (student), на<strong>вч</strong>ання (education), <strong>вч</strong>итель (teacher)</li>
+</ul>
+<p>One root generates an entire word family!</p>
+<blockquote>
+  <p>💡 <strong>Why This Matters</strong></p>
+  <p>Understanding roots is the key to rapid vocabulary growth. When you know a root, you can often guess the meaning of new words containing it!</p>
+</blockquote></div></div><div class="canvas-note"><h4>### Root Family: -уч- / -вч- (Learning)</h4><div class="md-content"><p><strong>Core meaning:</strong> Learning, teaching, studying</p>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Parts</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>вчити</td>
+<td>вч- + -ити</td>
+<td>to teach/learn</td>
+</tr>
+<tr>
+<td>учень</td>
+<td>уч- + -ень</td>
+<td>student, pupil</td>
+</tr>
+<tr>
+<td>учениця</td>
+<td>учен- + -иця</td>
+<td>female student</td>
+</tr>
+<tr>
+<td>вчитель</td>
+<td>вч- + -итель</td>
+<td>teacher (m)</td>
+</tr>
+<tr>
+<td>вчителька</td>
+<td>вчитель- + -ка</td>
+<td>teacher (f)</td>
+</tr>
+<tr>
+<td>навчання</td>
+<td>на- + вч- + -ання</td>
+<td>education, learning</td>
+</tr>
+<tr>
+<td>навчатися</td>
+<td>на- + вч- + -атися</td>
+<td>to study</td>
+</tr>
+<tr>
+<td>вчений</td>
+<td>вч- + -ений</td>
+<td>scientist; learned</td>
+</tr>
+<tr>
+<td>наука</td>
+<td>на- + ук- + -а</td>
+<td>science</td>
+</tr>
+<tr>
+<td>науковий</td>
+<td>наук- + -овий</td>
+<td>scientific</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples:</strong></p>
+<ul>
+<li><strong>Учень</strong> вчиться добре. - The student studies well.</li>
+<li><strong>Вчитель</strong> вчить дітей. - The teacher teaches children.</li>
+<li>Вона здобуває <strong>навчання</strong>. - She's getting education.</li>
+<li>Він відомий <strong>вчений</strong>. - He's a famous scientist.</li>
+<li>Це <strong>науковий</strong> журнал. - This is a scientific journal.</li>
+</ul>
+<blockquote>
+  <p>⚡ <strong>Pro Tip: Root Variations</strong></p>
+  <p>The same root can have spelling variations: уч-/вч-/наук-. This is due to historical sound changes, but the core meaning "learning" remains!</p>
+</blockquote></div></div><div class="canvas-note"><h4>Root Family: -роб- (Work, Make)</h4><div class="md-content"><p><strong>Core meaning:</strong> Work, labor, making</p>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Parts</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>робота</td>
+<td>роб- + -ота</td>
+<td>work, job</td>
+</tr>
+<tr>
+<td>робити</td>
+<td>роб- + -ити</td>
+<td>to do, to make</td>
+</tr>
+<tr>
+<td>робітник</td>
+<td>робіт- + -ник</td>
+<td>worker</td>
+</tr>
+<tr>
+<td>робочий</td>
+<td>роб- + -очий</td>
+<td>working (adj)</td>
+</tr>
+<tr>
+<td>виробляти</td>
+<td>ви- + роб- + -ляти</td>
+<td>to produce</td>
+</tr>
+<tr>
+<td>виробництво</td>
+<td>виробн- + -ицтво</td>
+<td>production</td>
+</tr>
+<tr>
+<td>виріб</td>
+<td>ви- + ріб</td>
+<td>product</td>
+</tr>
+<tr>
+<td>заробляти</td>
+<td>за- + роб- + -ляти</td>
+<td>to earn</td>
+</tr>
+<tr>
+<td>заробіток</td>
+<td>заробіт- + -ок</td>
+<td>earnings</td>
+</tr>
+<tr>
+<td>переробка</td>
+<td>пере- + роб- + -ка</td>
+<td>processing</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples:</strong></p>
+<ul>
+<li>Яка твоя <strong>робота</strong>? - What's your job?</li>
+<li>Що ти <strong>робиш</strong>? - What are you doing?</li>
+<li><strong>Робітники</strong> страйкують. - The workers are striking.</li>
+<li>Це <strong>робочий</strong> день. - This is a working day.</li>
+<li>Завод <strong>виробляє</strong> машини. - The factory produces cars.</li>
+<li>Скільки він <strong>заробляє</strong>? - How much does he earn?</li>
+</ul></div></div><div class="canvas-note"><h4>Root Family: -пис- (Write)</h4><div class="md-content"><p><strong>Core meaning:</strong> Writing</p>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Parts</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>писати</td>
+<td>пис- + -ати</td>
+<td>to write</td>
+</tr>
+<tr>
+<td>писання</td>
+<td>пис- + -ання</td>
+<td>writing</td>
+</tr>
+<tr>
+<td>письменник</td>
+<td>письмен- + -ник</td>
+<td>writer</td>
+</tr>
+<tr>
+<td>письмо</td>
+<td>письм- + -о</td>
+<td>letter; writing</td>
+</tr>
+<tr>
+<td>підпис</td>
+<td>під- + пис</td>
+<td>signature</td>
+</tr>
+<tr>
+<td>опис</td>
+<td>о- + пис</td>
+<td>description</td>
+</tr>
+<tr>
+<td>запис</td>
+<td>за- + пис</td>
+<td>record, entry</td>
+</tr>
+<tr>
+<td>записка</td>
+<td>запис- + -ка</td>
+<td>note</td>
+</tr>
+<tr>
+<td>записник</td>
+<td>запис- + -ник</td>
+<td>notebook</td>
+</tr>
+<tr>
+<td>переписувати</td>
+<td>пере- + пис- + -увати</td>
+<td>to rewrite</td>
+</tr>
+<tr>
+<td>виписувати</td>
+<td>ви- + пис- + -увати</td>
+<td>to write out</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples:</strong></p>
+<ul>
+<li>Вона <strong>пише</strong> книгу. - She's writing a book.</li>
+<li>Він відомий <strong>письменник</strong>. - He's a famous writer.</li>
+<li>Поставте <strong>підпис</strong> тут. - Put your signature here.</li>
+<li>Я залишу <strong>записку</strong>. - I'll leave a note.</li>
+<li>Прочитай <strong>опис</strong> товару. - Read the product description.</li>
+<li><strong>Перепиши</strong> це чисто. - Rewrite this neatly.</li>
+</ul>
+<blockquote>
+  <p>📝 <strong>Note: письм- vs пис-</strong></p>
+  <p>The root пис- sometimes becomes письм- in derived words (письмо, письменник).</p>
+</blockquote></div></div><div class="canvas-note"><h4>Root Family: -чит- (Read)</h4><div class="md-content"><p><strong>Core meaning:</strong> Reading</p>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Parts</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>читати</td>
+<td>чит- + -ати</td>
+<td>to read</td>
+</tr>
+<tr>
+<td>читання</td>
+<td>чит- + -ання</td>
+<td>reading</td>
+</tr>
+<tr>
+<td>читач</td>
+<td>чит- + -ач</td>
+<td>reader</td>
+</tr>
+<tr>
+<td>читальня</td>
+<td>читаль- + -ня</td>
+<td>reading room</td>
+</tr>
+<tr>
+<td>прочитати</td>
+<td>про- + чит- + -ати</td>
+<td>to read through</td>
+</tr>
+<tr>
+<td>перечитати</td>
+<td>пере- + чит- + -ати</td>
+<td>to reread</td>
+</tr>
+<tr>
+<td>зачитуватися</td>
+<td>за- + чит- + -уватися</td>
+<td>to be engrossed in reading</td>
+</tr>
+<tr>
+<td>начитаний</td>
+<td>на- + чит- + -аний</td>
+<td>well-read</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples:</strong></p>
+<ul>
+<li>Люблю <strong>читати</strong> вранці. - I love reading in the morning.</li>
+<li><strong>Читання</strong> — корисне хобі. - Reading is a useful hobby.</li>
+<li>Бібліотека має <strong>читальню</strong>. - The library has a reading room.</li>
+<li><strong>Прочитай</strong> цю статтю. - Read this article (through).</li>
+<li>Хочу <strong>перечитати</strong> цю книгу. - I want to reread this book.</li>
+<li>Вона дуже <strong>начитана</strong>. - She's very well-read.</li>
+</ul></div></div><div class="canvas-note"><h4>Root Family: -говор- / -мов- (Speech, Language)</h4><div class="md-content"><p><strong>Core meaning:</strong> Speaking, language, speech</p>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Parts</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>говорити</td>
+<td>говор- + -ити</td>
+<td>to speak</td>
+</tr>
+<tr>
+<td>розмова</td>
+<td>роз- + мов- + -а</td>
+<td>conversation</td>
+</tr>
+<tr>
+<td>розмовляти</td>
+<td>роз- + мов- + -ляти</td>
+<td>to converse</td>
+</tr>
+<tr>
+<td>мова</td>
+<td>мов- + -а</td>
+<td>language</td>
+</tr>
+<tr>
+<td>мовлення</td>
+<td>мовл- + -ення</td>
+<td>speech</td>
+</tr>
+<tr>
+<td>мовчати</td>
+<td>мовч- + -ати</td>
+<td>to be silent</td>
+</tr>
+<tr>
+<td>домовитися</td>
+<td>до- + мов- + -итися</td>
+<td>to agree</td>
+</tr>
+<tr>
+<td>договір</td>
+<td>до- + говор- (→ -ір)</td>
+<td>contract, agreement</td>
+</tr>
+<tr>
+<td>перемовини</td>
+<td>пере- + мов- + -ини</td>
+<td>negotiations</td>
+</tr>
+<tr>
+<td>промова</td>
+<td>про- + мов- + -а</td>
+<td>speech, address</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples:</strong></p>
+<ul>
+<li>Він добре <strong>говорить</strong> українською. - He speaks Ukrainian well.</li>
+<li>Ми мали цікаву <strong>розмову</strong>. - We had an interesting conversation.</li>
+<li>Українська <strong>мова</strong> красива. - Ukrainian language is beautiful.</li>
+<li><strong>Мовчи</strong>! - Be quiet!</li>
+<li>Треба <strong>домовитися</strong> про ціну. - We need to agree on the price.</li>
+<li>Підпишемо <strong>договір</strong>. - We'll sign the contract.</li>
+</ul>
+<blockquote>
+  <p>🎭 <strong>Culture Note: Мовлення</strong></p>
+  <p>"Мовлення" (speech) is used formally: "свобода мовлення" (freedom of speech), "усне мовлення" (oral speech).</p>
+</blockquote></div></div><div class="canvas-note"><h4>Summary: Root Recognition</h4><div class="md-content"><table>
+<thead>
+<tr>
+<th>Root</th>
+<th>Core Meaning</th>
+<th>Key Words</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-уч-/-вч-</td>
+<td>learning</td>
+<td>учень, вчитель, наука</td>
+</tr>
+<tr>
+<td>-роб-</td>
+<td>work/make</td>
+<td>робота, робити, виробництво</td>
+</tr>
+<tr>
+<td>-пис-</td>
+<td>writing</td>
+<td>писати, підпис, записка</td>
+</tr>
+<tr>
+<td>-чит-</td>
+<td>reading</td>
+<td>читати, читач, прочитати</td>
+</tr>
+<tr>
+<td>-говор-/-мов-</td>
+<td>speech</td>
+<td>говорити, мова, розмова</td>
+</tr>
+</tbody>
+</table></div></div><div class="canvas-note"><h4>### Identify the Root</h4><div class="md-content"><ol>
+<li>навчання → -вч- (learning)</li>
+<li>робітник → -роб- (work)</li>
+<li>письменник → -пис- (writing)</li>
+<li>читальня → -чит- (reading)</li>
+<li>розмовляти → -мов- (speech)</li>
+</ol></div></div><div class="canvas-note"><h4>Group by Root Family</h4><div class="md-content"><p><strong>-роб- family:</strong> робота, робити, виробництво, заробляти<br />
+<strong>-пис- family:</strong> писати, підпис, записка, опис<br />
+<strong>-чит- family:</strong> читати, читач, прочитати, перечитати</p></div></div><div class="canvas-note"><h4>Complete with Related Words</h4><div class="md-content"><ol>
+<li><p>Він ___ (teaches) у школі. Він ___ (teacher).<br />
+→ вчить, вчитель</p></li>
+<li><p>Вона ___ (works) в офісі. Її ___ (work) цікава.<br />
+→ працює/робить, робота</p></li>
+<li><p>Я ___ (write) лист. Поставте ___ (signature).<br />
+→ пишу, підпис</p></li>
+<li><p>Діти ___ (read) книги. Вони — активні ___ (readers).<br />
+→ читають, читачі</p></li>
+<li><p>Ми ___ (converse) годинами. Наша ___ (conversation) цікава.<br />
+→ розмовляємо, розмова</p></li>
+</ol></div></div><div class="canvas-note"><h4>Translate</h4><div class="md-content"><ol>
+<li>The student is studying. → Учень вчиться.</li>
+<li>She's a famous writer. → Вона відома письменниця.</li>
+<li>I love reading. → Я люблю читання.</li>
+<li>He earns well. → Він добре заробляє.</li>
+<li>Let's have a conversation. → Давай поговоримо / Маймо розмову.</li>
+</ol></div></div><div class="canvas-note"><h4>### Talk About Learning</h4><div class="md-content"><p>Use -уч-/-вч- words:</p>
+<ul>
+<li>Я <strong>навчаюся</strong> в університеті.</li>
+<li>Мої <strong>вчителі</strong> дуже добрі.</li>
+<li>Вона <strong>вчена</strong> — працює в лабораторії.</li>
+</ul></div></div><div class="canvas-note"><h4>Discuss Work</h4><div class="md-content"><p>Use -роб- words:</p>
+<ul>
+<li>Моя <strong>робота</strong> цікава.</li>
+<li>Завод <strong>виробляє</strong> електроніку.</li>
+<li>Хочу більше <strong>заробляти</strong>.</li>
+</ul></div></div><div class="canvas-note"><h4>Talk About Reading and Writing</h4><div class="md-content"><p>Use -чит-/-пис- words:</p>
+<ul>
+<li>Люблю <strong>читати</strong> українською.</li>
+<li>Треба <strong>підписати</strong> договір.</li>
+<li>Я залишив <strong>записку</strong> на столі.</li>
+</ul></div></div></div>
+      <div class="btn-group"><button class="btn btn-primary" onclick="showSection('match')">Start →</button></div>
+    </section>
+    <section id="match" class="section"><div class="card"><h3>Root → Meaning</h3>
+      <div class="score-display"><span class="score"><span id="match-score">0</span>/5</span></div>
+      <div class="match-container" id="match-container"><svg class="match-lines" id="match-lines"></svg>
+        <div class="match-column" id="match-left"><div class="match-item" data-pair="0">-уч-/-вч-</div><div class="match-item" data-pair="1">-роб-</div><div class="match-item" data-pair="2">-пис-</div><div class="match-item" data-pair="3">-чит-</div><div class="match-item" data-pair="4">-говор-/-мов-</div></div>
+        <div class="match-column" id="match-right"><div class="match-item" data-pair="1">work, making</div><div class="match-item" data-pair="0">learning, teaching</div><div class="match-item" data-pair="4">speech, language</div><div class="match-item" data-pair="3">reading</div><div class="match-item" data-pair="2">writing</div></div>
+      </div>
+      <div class="completion-message" id="match-complete"><h3>Perfect!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetMatch()">Reset</button><button class="btn btn-primary" onclick="showSection('quiz')">Next →</button></div>
+    </div></section>
+    <section id="quiz" class="section"><div class="card"><h3>Root Families</h3>
+      <div class="score-display"><span class="score"><span id="quiz-score">0</span>/6</span></div>
+      <div id="quiz-container"></div>
+      <div class="completion-message" id="quiz-complete"><h3>Complete!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('sort')">Next →</button></div>
+    </div></section>
+    <section id="sort" class="section"><div class="card"><h3>By Root</h3>
+      <div class="score-display"><span class="score"><span id="sort-score">0</span>/16</span></div>
+      <div class="sort-pool" id="sort-pool"><div class="sort-items" id="sort-items"></div></div>
+      <div class="sort-groups"><div class="sort-group true-friends" data-group="true-friends"><h4>-уч-/-вч-</h4><div class="sort-items"></div></div><div class="sort-group false-friends" data-group="false-friends"><h4>-роб-</h4><div class="sort-items"></div></div><div class="sort-group new-letters" data-group="new-letters"><h4>-пис-</h4><div class="sort-items"></div></div><div class="sort-group undefined" data-group="undefined"><h4>-чит-</h4><div class="sort-items"></div></div></div>
+      <div class="completion-message" id="sort-complete"><h3>All Sorted!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetSort()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Vocab →</button></div>
+    </div></section>
+    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (34)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
+      <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
+    </section>
+  </main>
+  <footer>Module 65 · curricula-opus</footer>
+  <script>
+    const matchPairs=[{"left":"-уч-/-вч-","right":"learning, teaching"},{"left":"-роб-","right":"work, making"},{"left":"-пис-","right":"writing"},{"left":"-чит-","right":"reading"},{"left":"-говор-/-мов-","right":"speech, language"}];
+    const quizData=[{"question":"Which word is from the same family as \"писати\"?","options":["письменник","читач","робітник","вчитель"],"correctIndex":0,"explanation":"All contain the root -пис- (writing)."},{"question":"Which word is from the same family as \"робота\"?","options":["виробництво","навчання","розмова","читання"],"correctIndex":0,"explanation":"Both contain -роб- (work)."},{"question":"Which word is from the same family as \"мова\"?","options":["розмовляти","записувати","працювати","навчатися"],"correctIndex":0,"explanation":"Both contain -мов- (speech)."},{"question":"Which word is from the same family as \"учень\"?","options":["навчання","читання","писання","виробництво"],"correctIndex":0,"explanation":"Both contain -уч-/-вч- (learning)."},{"question":"Which word is from the same family as \"читати\"?","options":["перечитати","переписати","переробити","перемовини"],"correctIndex":0,"explanation":"Both contain -чит- (reading)."},{"question":"\"Заробляти\" means \"to earn.\" What root does it contain?","options":["-роб- (work)","-пис- (write)","-чит- (read)","-мов- (speech)"],"correctIndex":0,"explanation":"За-роб-ляти — earning is related to work!"}];
+    const sortData={"true-friends":["учень","вчитель","навчання","наука"],"false-friends":["робота","робітник","виробництво","заробляти"],"new-letters":["писати","підпис","записка","письменник"],"undefined":["читати","читач","прочитати","читальня"]};
+    const vocabData=[{"uk":"учень","translit":"/uˈtʃɛnʲ/","en":"noun","note":""},{"uk":"учениця","translit":"/utʃɛˈnɪtsʲɑ/","en":"noun","note":""},{"uk":"вчитель","translit":"/vtʃɪˈtɛlʲ/","en":"noun","note":""},{"uk":"вчителька","translit":"/vtʃɪˈtɛlʲkɑ/","en":"noun","note":""},{"uk":"вчений","translit":"/ˈvtʃɛnɪj/","en":"noun","note":""},{"uk":"наука","translit":"/nɑˈukɑ/","en":"noun","note":""},{"uk":"науковий","translit":"/nɑuˈkovɪj/","en":"adj","note":""},{"uk":"навчатися","translit":"/nɑvˈtʃɑtɪsʲɑ/","en":"verb","note":""},{"uk":"робота","translit":"/roˈbotɑ/","en":"noun","note":""},{"uk":"робітник","translit":"/roˈbʲitnɪk/","en":"noun","note":""},{"uk":"робочий","translit":"/roˈbotʃɪj/","en":"adj","note":""},{"uk":"виробляти","translit":"/vɪrobˈlʲɑtɪ/","en":"verb","note":""},{"uk":"виробництво","translit":"/vɪrobˈnɪtstvo/","en":"noun","note":""},{"uk":"виріб","translit":"/ˈvɪrʲib/","en":"noun","note":""},{"uk":"заробляти","translit":"/zɑrobˈlʲɑtɪ/","en":"verb","note":""},{"uk":"заробіток","translit":"/zɑˈrobʲitok/","en":"noun","note":""},{"uk":"підпис","translit":"/ˈpʲidpɪs/","en":"noun","note":""},{"uk":"опис","translit":"/ˈopɪs/","en":"noun","note":""},{"uk":"запис","translit":"/ˈzɑpɪs/","en":"noun","note":""},{"uk":"записка","translit":"/zɑˈpɪskɑ/","en":"noun","note":""},{"uk":"переписувати","translit":"/pɛrɛpɪˈsuvɑtɪ/","en":"verb","note":""},{"uk":"читач","translit":"/tʃɪˈtɑtʃ/","en":"noun","note":""},{"uk":"читальня","translit":"/tʃɪˈtɑlʲnʲɑ/","en":"noun","note":""},{"uk":"прочитати","translit":"/protʃɪˈtɑtɪ/","en":"verb","note":""},{"uk":"перечитати","translit":"/pɛrɛtʃɪˈtɑtɪ/","en":"verb","note":""},{"uk":"начитаний","translit":"/nɑtʃɪˈtɑnɪj/","en":"adj","note":""},{"uk":"розмова","translit":"/rozˈmovɑ/","en":"noun","note":""},{"uk":"розмовляти","translit":"/rozmovˈlʲɑtɪ/","en":"verb","note":""},{"uk":"мовлення","translit":"/movˈlɛnʲːɑ/","en":"noun","note":""},{"uk":"мовчати","translit":"/movˈtʃɑtɪ/","en":"verb","note":""},{"uk":"домовитися","translit":"/domovˈɪtɪsʲɑ/","en":"verb","note":""},{"uk":"договір","translit":"/doɦoˈvʲir/","en":"noun","note":""},{"uk":"перемовини","translit":"/pɛrɛˈmovɪnɪ/","en":"noun","note":""},{"uk":"промова","translit":"/proˈmovɑ/","en":"noun","note":""}];
+    const totalSort=16;
+    function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
+    document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));
+    let matchSel=null,matchScore=0,matchPairsArr=[];
+    document.querySelectorAll('#match-left .match-item').forEach(item=>{item.addEventListener('click',()=>{if(item.classList.contains('matched'))return;document.querySelectorAll('#match-left .match-item').forEach(i=>i.classList.remove('selected'));item.classList.add('selected');matchSel={el:item,pair:item.dataset.pair};});});
+    document.querySelectorAll('#match-right .match-item').forEach(item=>{item.addEventListener('click',()=>{if(item.classList.contains('matched')||!matchSel)return;if(matchSel.pair===item.dataset.pair){matchSel.el.classList.remove('selected');matchSel.el.classList.add('matched');item.classList.add('matched');matchPairsArr.push({left:matchSel.el,right:item});matchScore++;document.getElementById('match-score').textContent=matchScore;drawLines();if(matchScore===matchPairs.length)document.getElementById('match-complete').classList.add('show');}else{item.classList.add('wrong');setTimeout(()=>item.classList.remove('wrong'),300);}matchSel=null;});});
+    function drawLines(){const svg=document.getElementById('match-lines'),c=document.getElementById('match-container');if(!svg||!c)return;const r=c.getBoundingClientRect();svg.innerHTML='';svg.setAttribute('viewBox','0 0 '+r.width+' '+r.height);matchPairsArr.forEach(p=>{const lr=p.left.getBoundingClientRect(),rr=p.right.getBoundingClientRect();const line=document.createElementNS('http://www.w3.org/2000/svg','line');line.setAttribute('x1',lr.right-r.left);line.setAttribute('y1',lr.top+lr.height/2-r.top);line.setAttribute('x2',rr.left-r.left);line.setAttribute('y2',rr.top+rr.height/2-r.top);line.setAttribute('stroke','#26a269');line.setAttribute('stroke-width','2');svg.appendChild(line);});}
+    function resetMatch(){matchSel=null;matchScore=0;matchPairsArr=[];document.getElementById('match-score').textContent='0';document.getElementById('match-complete')?.classList.remove('show');document.getElementById('match-lines').innerHTML='';document.querySelectorAll('#match-container .match-item').forEach(i=>i.classList.remove('matched','selected','wrong'));}
+    window.addEventListener('resize',drawLines);
+    let quizScore=0,quizAns=0;
+    function initQuiz(){const c=document.getElementById('quiz-container');if(!c||!quizData.length)return;c.innerHTML='';quizData.forEach((q,i)=>{const sh=[...q.options].sort(()=>Math.random()-0.5);const cor=sh.indexOf(q.options[q.correctIndex]);const div=document.createElement('div');div.className='quiz-question';div.innerHTML='<h4>Q'+(i+1)+': '+q.question+'</h4><div class="quiz-options">'+sh.map((o,j)=>'<div class="quiz-option" data-c="'+(j===cor)+'" data-q="'+i+'">'+o+'</div>').join('')+'</div><div class="quiz-explanation" id="exp-'+i+'">'+q.explanation+'</div>';c.appendChild(div);});document.querySelectorAll('.quiz-option').forEach(o=>o.addEventListener('click',handleQuiz));}
+    function handleQuiz(e){const opt=e.target,q=opt.closest('.quiz-question');if(q.classList.contains('answered'))return;q.classList.add('answered');if(opt.dataset.c==='true'){opt.classList.add('correct');quizScore++;}else{opt.classList.add('wrong');q.querySelector('[data-c="true"]').classList.add('correct');}document.getElementById('exp-'+opt.dataset.q).classList.add('show');document.getElementById('quiz-score').textContent=quizScore;quizAns++;if(quizAns===quizData.length)document.getElementById('quiz-complete').classList.add('show');}
+    function resetQuiz(){quizScore=0;quizAns=0;document.getElementById('quiz-score').textContent='0';document.getElementById('quiz-complete')?.classList.remove('show');initQuiz();}
+    let sortScore=0,dragItem=null;
+    function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
+    function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
+    function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
+  </script>
+</body>
+</html>

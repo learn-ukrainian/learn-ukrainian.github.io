@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 75: Review: Vocabulary Expansion | Ukrainian A2+</title>
+  <style>
+    :root { --primary: #1a5fb4; --primary-light: #3584e4; --success: #26a269; --warning: #e5a50a; --danger: #c01c28; --bg: #fafafa; --card-bg: #fff; --text: #1e1e1e; --text-muted: #5e5e5e; --border: #e0e0e0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+    .top-nav { background: #2e2e2e; color: white; padding: 0.5rem 2rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.875rem; }
+    .top-nav a { color: white; text-decoration: none; }
+    .top-nav a:hover { text-decoration: underline; }
+    .module-nav { display: flex; gap: 1rem; align-items: center; }
+    .module-nav-link { color: rgba(255,255,255,0.8); text-decoration: none; padding: 0.25rem 0.5rem; }
+    .module-nav-link:hover { color: white; }
+    .module-nav-link.disabled { color: rgba(255,255,255,0.3); pointer-events: none; }
+    .nav { position: sticky; top: 0; background: var(--primary); color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; z-index: 100; }
+    .nav h1 { font-size: 1.25rem; }
+    .nav-tabs { display: flex; gap: 0.5rem; }
+    .nav-tab { background: rgba(255,255,255,0.2); border: none; color: white; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; }
+    .nav-tab.active { background: white; color: var(--primary); }
+    main { max-width: 1000px; margin: 0 auto; padding: 2rem; }
+    .section { display: none; } .section.active { display: block; }
+    .lesson-header { text-align: center; margin-bottom: 2rem; padding: 2rem; background: linear-gradient(135deg, #e8f4fd, #f0e8fd); border-radius: 12px; }
+    .level-badge { background: var(--primary); color: white; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.875rem; }
+    .card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 1.5rem; margin-bottom: 1.5rem; }
+    .card h3 { color: var(--primary); margin-bottom: 1rem; }
+    .canvas-note { background: #fffbeb; border-left: 4px solid var(--warning); padding: 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+    .canvas-note h4 { color: var(--warning); margin-bottom: 0.5rem; }
+    .md-content { line-height: 1.7; }
+    .md-content p { margin: 0.75rem 0; }
+    .md-content ul, .md-content ol { margin: 0.75rem 0; padding-left: 1.5rem; }
+    .md-content li { margin: 0.25rem 0; }
+    .md-content strong { color: var(--primary); }
+    .md-content blockquote { background: #e8f4fd; border-left: 4px solid var(--primary); padding: 0.75rem 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+    .md-content blockquote p { margin: 0.25rem 0; }
+    .md-content table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+    .md-content th, .md-content td { border: 1px solid var(--border); padding: 0.5rem 0.75rem; text-align: left; }
+    .md-content th { background: #f5f5f5; font-weight: 600; }
+    .md-content code { background: #f0f0f0; padding: 0.125rem 0.375rem; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
+    .letter-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0; }
+    .letter-group { border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; }
+    .letter-group.true-friends { border-color: var(--success); } .letter-group.true-friends .letters { color: var(--success); }
+    .letter-group.false-friends { border-color: var(--danger); } .letter-group.false-friends .letters { color: var(--danger); }
+    .letter-group.new-letters { border-color: var(--primary); } .letter-group.new-letters .letters { color: var(--primary); }
+    .letters { font-size: 1.75rem; letter-spacing: 0.3rem; }
+    .match-container { display: flex; gap: 3rem; padding: 1rem; position: relative; }
+    .match-column { flex: 1; display: flex; flex-direction: column; gap: 0.75rem; }
+    .match-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; font-size: 1.25rem; cursor: pointer; }
+    .match-item.selected { border-color: var(--primary); background: #e8f4fd; }
+    .match-item.matched { border-color: var(--success); background: #e8f8f0; }
+    .match-item.wrong { border-color: var(--danger); background: #fde8e8; }
+    .match-lines { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+    .quiz-question { border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; }
+    .quiz-question.answered { pointer-events: none; }
+    .quiz-question .cyrillic { font-size: 1.5rem; color: var(--primary); font-weight: 600; }
+    .quiz-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-top: 1rem; }
+    .quiz-option { background: #f5f5f5; border: 2px solid var(--border); border-radius: 8px; padding: 1rem; cursor: pointer; text-align: center; }
+    .quiz-option.correct { border-color: var(--success); background: #d4edda; }
+    .quiz-option.wrong { border-color: var(--danger); background: #f8d7da; }
+    .quiz-explanation { margin-top: 1rem; padding: 1rem; background: #e8f4fd; border-radius: 8px; display: none; }
+    .quiz-explanation.show { display: block; }
+    .sort-pool { background: #f5f5f5; border: 2px dashed var(--border); border-radius: 12px; padding: 1.5rem; min-height: 80px; margin-bottom: 1rem; }
+    .sort-items { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; }
+    .sort-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 0.75rem 1.25rem; font-size: 1.5rem; cursor: grab; }
+    .sort-item.correct { border-color: var(--success); background: #e8f8f0; }
+    .sort-item.wrong { border-color: var(--danger); background: #fde8e8; }
+    .sort-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    .sort-group { border: 2px solid var(--border); border-radius: 12px; padding: 1rem; min-height: 150px; }
+    .sort-group.drag-over { border-color: var(--primary); background: #e8f4fd; }
+    .sort-group h4 { font-size: 0.875rem; text-align: center; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--border); }
+    .sort-group.true-friends h4 { color: var(--success); border-color: var(--success); }
+    .sort-group.false-friends h4 { color: var(--danger); border-color: var(--danger); }
+    .sort-group.new-letters h4 { color: var(--primary); border-color: var(--primary); }
+    .vocab-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; }
+    .vocab-card { border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; text-align: center; }
+    .vocab-card .uk { font-size: 1.75rem; font-weight: 600; color: var(--primary); }
+    .vocab-card .translit { color: var(--text-muted); font-style: italic; }
+    .vocab-card .en { font-weight: 500; margin: 0.25rem 0; }
+    .vocab-card .note { font-size: 0.75rem; color: #613583; background: #f0e8fd; padding: 0.25rem 0.5rem; border-radius: 4px; }
+    .btn { padding: 0.75rem 1.5rem; border: none; border-radius: 8px; cursor: pointer; }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-outline { background: transparent; border: 2px solid var(--border); }
+    .btn-group { display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem; }
+    .score-display { text-align: center; padding: 1rem; background: linear-gradient(135deg, #e8f8f0, #e8f4fd); border-radius: 8px; margin-bottom: 1rem; }
+    .score-display .score { font-size: 2rem; font-weight: 700; color: var(--success); }
+    .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
+    .completion-message.show { display: block; }
+    footer { text-align: center; padding: 2rem; color: var(--text-muted); }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+  </style>
+</head>
+<body>
+  <div class="top-nav">
+    <a href="../index.html">← l2-uk-en Curriculum</a>
+    <div class="module-nav">
+      <a href="module-74.html" class="module-nav-link">← Module 74</a>
+      <a href="index.html" class="module-nav-link">A2+ Index</a>
+      <span class="module-nav-link disabled">Next →</span>
+    </div>
+  </div>
+  <nav class="nav">
+    <h1>Module 75: Review: Vocabulary Expansion</h1>
+    <div class="nav-tabs">
+      <button class="nav-tab active" data-section="lesson">Lesson</button>
+      <button class="nav-tab" data-section="match">Match</button>
+      <button class="nav-tab" data-section="quiz">Quiz</button>
+      <button class="nav-tab" data-section="sort">Sort</button>
+      <button class="nav-tab" data-section="vocab">Vocab</button>
+    </div>
+  </nav>
+  <main>
+    <section id="lesson" class="section active">
+      <div class="lesson-header">
+        <span class="level-badge">A2+ · A2+.3</span>
+        <h2 style="font-size:2rem;margin:0.5rem 0">Review: Vocabulary Expansion</h2>
+        <p style="color:var(--text-muted)">Consolidating Thematic Vocabulary</p>
+      </div>
+      
+      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Seven Topics, One Review</h4><div class="md-content"><p>In Modules 67-73, you expanded your vocabulary across seven life areas:</p>
+<ol>
+<li>🍳 Food &amp; Cooking</li>
+<li>🏥 Health &amp; Body</li>
+<li>🏠 Home &amp; Furniture</li>
+<li>🌿 Nature &amp; Weather</li>
+<li>😊 Emotions &amp; Personality</li>
+<li>💼 Work &amp; Professions</li>
+<li>📱 Technology &amp; Media</li>
+</ol>
+<p>Let's consolidate and connect them!</p>
+<blockquote>
+  <p>💡 <strong>The Goal</strong></p>
+  <p>Move vocabulary from recognition to active use in real conversations!</p>
+</blockquote></div></div><div class="canvas-note"><h4>### Food & Cooking Highlights (Module 67)</h4><div class="md-content"><p><strong>Key Vocabulary:</strong></p>
+<ul>
+<li>Cooking verbs: варити, смажити, пекти, готувати</li>
+<li>Taste: смачний, солоний, солодкий, гострий</li>
+<li>Kitchen: каструля, сковорода, духовка</li>
+<li>Dishes: борщ, вареники, деруни</li>
+</ul>
+<p><strong>Essential Phrases:</strong></p>
+<ul>
+<li>Що на обід? - What's for lunch?</li>
+<li>Смачного! - Bon appétit!</li>
+<li>Смакує? - Does it taste good?</li>
+<li>Я наївся. - I'm full.</li>
+</ul>
+<p><strong>Quick Check:</strong> Can you order food, describe tastes, and give a simple recipe?</p></div></div><div class="canvas-note"><h4>Health & Body Highlights (Module 68)</h4><div class="md-content"><p><strong>Key Vocabulary:</strong></p>
+<ul>
+<li>Body parts: серце, легені, коліно, плече</li>
+<li>Symptoms: температура, кашель, нежить, біль</li>
+<li>Medical: лікар, аптека, рецепт, ліки</li>
+</ul>
+<p><strong>Essential Phrases:</strong></p>
+<ul>
+<li>Болить голова. - I have a headache.</li>
+<li>У мене температура. - I have a fever.</li>
+<li>Де аптека? - Where's the pharmacy?</li>
+<li>На що скаржитесь? - What are your complaints?</li>
+</ul>
+<p><strong>Quick Check:</strong> Can you describe symptoms and navigate a doctor visit?</p></div></div><div class="canvas-note"><h4>Home & Furniture Highlights (Module 69)</h4><div class="md-content"><p><strong>Key Vocabulary:</strong></p>
+<ul>
+<li>Furniture: диван, ліжко, шафа, стіл</li>
+<li>Rooms: вітальня, спальня, кухня, ванна</li>
+<li>Housing: квартира, поверх, балкон, ліфт</li>
+<li>Actions: прибирати, пилососити, переїжджати</li>
+</ul>
+<p><strong>Essential Phrases:</strong></p>
+<ul>
+<li>Застели ліжко! - Make the bed!</li>
+<li>Квартира затишна. - The apartment is cozy.</li>
+<li>На якому поверсі? - On which floor?</li>
+</ul>
+<p><strong>Quick Check:</strong> Can you describe your home and discuss housing?</p></div></div><div class="canvas-note"><h4>Nature & Weather Highlights (Module 70)</h4><div class="md-content"><p><strong>Key Vocabulary:</strong></p>
+<ul>
+<li>Weather: гроза, туман, спека, заметіль</li>
+<li>Landscapes: гора, озеро, ліс, степ</li>
+<li>Animals: вовк, лелека, бджола</li>
+<li>Plants: дуб, береза, соняшник</li>
+</ul>
+<p><strong>Essential Phrases:</strong></p>
+<ul>
+<li>Йде дощ. - It's raining.</li>
+<li>Яка погода? - What's the weather?</li>
+<li>Дме вітер. - The wind is blowing.</li>
+</ul>
+<p><strong>Quick Check:</strong> Can you discuss weather and describe nature?</p></div></div><div class="canvas-note"><h4>Emotions & Personality Highlights (Module 71)</h4><div class="md-content"><p><strong>Key Vocabulary:</strong></p>
+<ul>
+<li>Positive: щасливий, вдячний, задоволений</li>
+<li>Negative: сумний, злий, розчарований</li>
+<li>Traits: добрий, чесний, впертий, лінивий</li>
+</ul>
+<p><strong>Essential Phrases:</strong></p>
+<ul>
+<li>Мені сумно. - I feel sad.</li>
+<li>Не хвилюйся! - Don't worry!</li>
+<li>Вона добра людина. - She's a good person.</li>
+</ul>
+<p><strong>Quick Check:</strong> Can you express emotions and describe personalities?</p></div></div><div class="canvas-note"><h4>Work & Professions Highlights (Module 72)</h4><div class="md-content"><p><strong>Key Vocabulary:</strong></p>
+<ul>
+<li>Professions: програміст, юрист, бухгалтер</li>
+<li>Workplace: офіс, колега, відділ</li>
+<li>Career: зарплата, співбесіда, резюме</li>
+</ul>
+<p><strong>Essential Phrases:</strong></p>
+<ul>
+<li>Де ви працюєте? - Where do you work?</li>
+<li>Яка ваша посада? - What's your position?</li>
+<li>Я шукаю роботу. - I'm looking for a job.</li>
+</ul>
+<p><strong>Quick Check:</strong> Can you discuss work and navigate job situations?</p></div></div><div class="canvas-note"><h4>Technology & Media Highlights (Module 73)</h4><div class="md-content"><p><strong>Key Vocabulary:</strong></p>
+<ul>
+<li>Devices: ноутбук, смартфон, навушники</li>
+<li>Actions: завантажити, надіслати, видалити</li>
+<li>Problems: не працює, зависло, повільно</li>
+<li>Social: підписник, лайк, стрічка</li>
+</ul>
+<p><strong>Essential Phrases:</strong></p>
+<ul>
+<li>Завантаж цей застосунок. - Download this app.</li>
+<li>Інтернет не працює. - The internet doesn't work.</li>
+<li>Надішли посилання. - Send the link.</li>
+</ul>
+<p><strong>Quick Check:</strong> Can you discuss tech and solve basic problems?</p></div></div><div class="canvas-note"><h4>### Cross-Topic Connections</h4><div class="md-content"><p>Match vocabulary to create natural sentences:</p>
+<ol>
+<li><p>Я <strong>хворий</strong> (health) + тому <strong>працюю</strong> з дому (work)<br />
+→ Я хворий, тому працюю з дому.</p></li>
+<li><p>На <strong>кухні</strong> (home) + <strong>готую</strong> борщ (food)<br />
+→ На кухні готую борщ.</p></li>
+<li><p><strong>Погода</strong> погана (weather) + <strong>настрій</strong> сумний (emotions)<br />
+→ Погода погана, настрій сумний.</p></li>
+<li><p><strong>Ноутбук</strong> зависло (tech) + не можу <strong>працювати</strong> (work)<br />
+→ Ноутбук зависло, не можу працювати.</p></li>
+</ol></div></div><div class="canvas-note"><h4>Topic Switch Challenge</h4><div class="md-content"><p>Answer questions from different topics:</p>
+<ol>
+<li><p><strong>Food:</strong> Яка твоя улюблена страва?<br />
+→ Моя улюблена страва — борщ зі сметаною.</p></li>
+<li><p><strong>Health:</strong> Як ти почуваєшся?<br />
+→ Почуваюся добре, дякую.</p></li>
+<li><p><strong>Home:</strong> Опиши свою квартиру.<br />
+→ Маю затишну однокімнатну квартиру.</p></li>
+<li><p><strong>Weather:</strong> Яка погода сьогодні?<br />
+→ Сьогодні сонячно і тепло.</p></li>
+<li><p><strong>Emotions:</strong> Чи ти щасливий?<br />
+→ Загалом так, я задоволений життям.</p></li>
+<li><p><strong>Work:</strong> Ким ти працюєш?<br />
+→ Я працюю програмістом в IT-компанії.</p></li>
+<li><p><strong>Tech:</strong> Які соцмережі використовуєш?<br />
+→ Користуюся Телеграмом і Інстаграмом.</p></li>
+</ol></div></div><div class="canvas-note"><h4>Situational Practice</h4><div class="md-content"><p><strong>Scenario 1: At a new apartment</strong><br />
+Combine: Home + Tech + Emotions</p>
+<ul>
+<li>"Квартира простора і світла. Wi-Fi швидкий. Я задоволений!"</li>
+</ul>
+<p><strong>Scenario 2: Sick day</strong><br />
+Combine: Health + Work + Tech</p>
+<ul>
+<li>"У мене застуда. Працюю віддалено. Надішли мені документи на email."</li>
+</ul>
+<p><strong>Scenario 3: Weekend plans</strong><br />
+Combine: Weather + Nature + Food</p>
+<ul>
+<li>"Якщо буде сонячно, підемо в похід. Візьму бутерброди і чай."</li>
+</ul></div></div><div class="canvas-note"><h4>Vocabulary Categories Review</h4><div class="md-content"><p><strong>Complete the sets:</strong></p>
+<p><strong>Cooking verbs:</strong> варити, смажити, ___, готувати<br />
+→ пекти</p>
+<p><strong>Body parts:</strong> голова, рука, нога, ___<br />
+→ серце / коліно / плече</p>
+<p><strong>Furniture:</strong> диван, ліжко, шафа, ___<br />
+→ стіл / крісло</p>
+<p><strong>Weather:</strong> дощ, сніг, вітер, ___<br />
+→ гроза / туман</p>
+<p><strong>Emotions:</strong> щасливий, сумний, злий, ___<br />
+→ вдячний / схвильований</p>
+<p><strong>Professions:</strong> лікар, вчитель, програміст, ___<br />
+→ юрист / бухгалтер</p>
+<p><strong>Tech actions:</strong> завантажити, надіслати, ___, видалити<br />
+→ зберегти</p></div></div><div class="canvas-note"><h4>Translate & Use</h4><div class="md-content"><ol>
+<li><p>I feel bad, I have a headache.<br />
+→ Мені погано, болить голова.</p></li>
+<li><p>The apartment is cozy but small.<br />
+→ Квартира затишна, але маленька.</p></li>
+<li><p>It's raining, I'm staying home.<br />
+→ Йде дощ, залишаюся вдома.</p></li>
+<li><p>I'm happy with my new job.<br />
+→ Я задоволений новою роботою.</p></li>
+<li><p>Download the app and send me the link.<br />
+→ Завантаж застосунок і надішли мені посилання.</p></li>
+</ol></div></div><div class="canvas-note"><h4>### A Day in Your Life</h4><div class="md-content"><p>Describe a typical day using ALL seven topics:</p>
+<p><strong>Example:</strong><br />
+"Вранці я прокидаюся у своїй <strong>затишній квартирі</strong> (home). На <strong>сніданок їм</strong> вівсянку (food). Перевіряю <strong>погоду</strong> — сьогодні сонячно (weather). Я <strong>почуваюся</strong> добре (health/emotions), <strong>їду на роботу</strong> (work). Там перевіряю <strong>email</strong> і <strong>месенджери</strong> (tech). Увечері готую <strong>вечерю</strong> і дивлюся серіал."</p>
+<p>Your turn!</p></div></div><div class="canvas-note"><h4>Problem-Solution Scenarios</h4><div class="md-content"><p>Describe problems and solutions using vocabulary:</p>
+<ol>
+<li><p><strong>Tech problem:</strong> Ноутбук не працює.<br />
+→ Спробую перезавантажити. Якщо не допоможе, занесу в ремонт.</p></li>
+<li><p><strong>Health problem:</strong> Боли горло і є кашель.<br />
+→ Піду до лікаря. Візьму ліки в аптеці.</p></li>
+<li><p><strong>Home problem:</strong> Кран тече.<br />
+→ Викличу сантехніка. А поки покладу ганчірку.</p></li>
+</ol></div></div><div class="canvas-note"><h4>Discussion Topics</h4><div class="md-content"><p>Discuss these questions:</p>
+<ol>
+<li><strong>Food + Health:</strong> Як їжа впливає на здоров'я?</li>
+<li><strong>Work + Tech:</strong> Як технології змінили роботу?</li>
+<li><strong>Weather + Emotions:</strong> Чи погода впливає на настрій?</li>
+<li><strong>Home + Work:</strong> Які плюси і мінуси роботи з дому?</li>
+</ol></div></div></div>
+      <div class="btn-group"><button class="btn btn-primary" onclick="showSection('match')">Start →</button></div>
+    </section>
+    <section id="match" class="section"><div class="card"><h3>Topic → Key Word</h3>
+      <div class="score-display"><span class="score"><span id="match-score">0</span>/7</span></div>
+      <div class="match-container" id="match-container"><svg class="match-lines" id="match-lines"></svg>
+        <div class="match-column" id="match-left"><div class="match-item" data-pair="0">Food</div><div class="match-item" data-pair="1">Health</div><div class="match-item" data-pair="2">Home</div><div class="match-item" data-pair="3">Weather</div><div class="match-item" data-pair="4">Emotions</div><div class="match-item" data-pair="5">Work</div><div class="match-item" data-pair="6">Tech</div></div>
+        <div class="match-column" id="match-right"><div class="match-item" data-pair="6">завантажити</div><div class="match-item" data-pair="0">смачний</div><div class="match-item" data-pair="2">квартира</div><div class="match-item" data-pair="4">щасливий</div><div class="match-item" data-pair="5">зарплата</div><div class="match-item" data-pair="3">гроза</div><div class="match-item" data-pair="1">температура</div></div>
+      </div>
+      <div class="completion-message" id="match-complete"><h3>Perfect!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetMatch()">Reset</button><button class="btn btn-primary" onclick="showSection('quiz')">Next →</button></div>
+    </div></section>
+    <section id="quiz" class="section"><div class="card"><h3>Vocabulary Review</h3>
+      <div class="score-display"><span class="score"><span id="quiz-score">0</span>/7</span></div>
+      <div id="quiz-container"></div>
+      <div class="completion-message" id="quiz-complete"><h3>Complete!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('sort')">Next →</button></div>
+    </div></section>
+    <section id="sort" class="section"><div class="card"><h3>By Topic</h3>
+      <div class="score-display"><span class="score"><span id="sort-score">0</span>/16</span></div>
+      <div class="sort-pool" id="sort-pool"><div class="sort-items" id="sort-items"></div></div>
+      <div class="sort-groups"><div class="sort-group true-friends" data-group="true-friends"><h4>Їжа</h4><div class="sort-items"></div></div><div class="sort-group false-friends" data-group="false-friends"><h4>Здоров'я</h4><div class="sort-items"></div></div><div class="sort-group new-letters" data-group="new-letters"><h4>Природа</h4><div class="sort-items"></div></div><div class="sort-group undefined" data-group="undefined"><h4>Технології</h4><div class="sort-items"></div></div></div>
+      <div class="completion-message" id="sort-complete"><h3>All Sorted!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetSort()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Vocab →</button></div>
+    </div></section>
+    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (0)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
+      <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
+    </section>
+  </main>
+  <footer>Module 75 · curricula-opus</footer>
+  <script>
+    const matchPairs=[{"left":"Food","right":"смачний"},{"left":"Health","right":"температура"},{"left":"Home","right":"квартира"},{"left":"Weather","right":"гроза"},{"left":"Emotions","right":"щасливий"},{"left":"Work","right":"зарплата"},{"left":"Tech","right":"завантажити"}];
+    const quizData=[{"question":"\"Смажити\" relates to ___.","options":["cooking","health","technology","emotions"],"correctIndex":0,"explanation":"Смажити = to fry."},{"question":"\"Застуда\" is a ___ term.","options":["health","weather","food","work"],"correctIndex":0,"explanation":"Застуда = cold (illness)."},{"question":"\"Затишний\" describes ___.","options":["a cozy home","delicious food","good weather","a happy person"],"correctIndex":0,"explanation":"Затишний = cozy."},{"question":"\"Гроза\" is a ___ phenomenon.","options":["weather","tech","health","emotional"],"correctIndex":0,"explanation":"Гроза = thunderstorm."},{"question":"\"Щедрий\" is a ___ trait.","options":["personality","health","weather","work"],"correctIndex":0,"explanation":"Щедрий = generous."},{"question":"\"Співбесіда\" happens at ___.","options":["job interview","doctor's office","restaurant","tech store"],"correctIndex":0,"explanation":"Співбесіда = job interview."},{"question":"\"Зависло\" describes a ___ problem.","options":["technology","health","weather","home"],"correctIndex":0,"explanation":"Зависло = froze (computer)."}];
+    const sortData={"true-friends":["смачний","варити","борщ","сметана"],"false-friends":["температура","лікар","болить","аптека"],"new-letters":["гроза","гора","лелека","соняшник"],"undefined":["ноутбук","завантажити","пароль","Wi-Fi"]};
+    const vocabData=[];
+    const totalSort=16;
+    function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
+    document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));
+    let matchSel=null,matchScore=0,matchPairsArr=[];
+    document.querySelectorAll('#match-left .match-item').forEach(item=>{item.addEventListener('click',()=>{if(item.classList.contains('matched'))return;document.querySelectorAll('#match-left .match-item').forEach(i=>i.classList.remove('selected'));item.classList.add('selected');matchSel={el:item,pair:item.dataset.pair};});});
+    document.querySelectorAll('#match-right .match-item').forEach(item=>{item.addEventListener('click',()=>{if(item.classList.contains('matched')||!matchSel)return;if(matchSel.pair===item.dataset.pair){matchSel.el.classList.remove('selected');matchSel.el.classList.add('matched');item.classList.add('matched');matchPairsArr.push({left:matchSel.el,right:item});matchScore++;document.getElementById('match-score').textContent=matchScore;drawLines();if(matchScore===matchPairs.length)document.getElementById('match-complete').classList.add('show');}else{item.classList.add('wrong');setTimeout(()=>item.classList.remove('wrong'),300);}matchSel=null;});});
+    function drawLines(){const svg=document.getElementById('match-lines'),c=document.getElementById('match-container');if(!svg||!c)return;const r=c.getBoundingClientRect();svg.innerHTML='';svg.setAttribute('viewBox','0 0 '+r.width+' '+r.height);matchPairsArr.forEach(p=>{const lr=p.left.getBoundingClientRect(),rr=p.right.getBoundingClientRect();const line=document.createElementNS('http://www.w3.org/2000/svg','line');line.setAttribute('x1',lr.right-r.left);line.setAttribute('y1',lr.top+lr.height/2-r.top);line.setAttribute('x2',rr.left-r.left);line.setAttribute('y2',rr.top+rr.height/2-r.top);line.setAttribute('stroke','#26a269');line.setAttribute('stroke-width','2');svg.appendChild(line);});}
+    function resetMatch(){matchSel=null;matchScore=0;matchPairsArr=[];document.getElementById('match-score').textContent='0';document.getElementById('match-complete')?.classList.remove('show');document.getElementById('match-lines').innerHTML='';document.querySelectorAll('#match-container .match-item').forEach(i=>i.classList.remove('matched','selected','wrong'));}
+    window.addEventListener('resize',drawLines);
+    let quizScore=0,quizAns=0;
+    function initQuiz(){const c=document.getElementById('quiz-container');if(!c||!quizData.length)return;c.innerHTML='';quizData.forEach((q,i)=>{const sh=[...q.options].sort(()=>Math.random()-0.5);const cor=sh.indexOf(q.options[q.correctIndex]);const div=document.createElement('div');div.className='quiz-question';div.innerHTML='<h4>Q'+(i+1)+': '+q.question+'</h4><div class="quiz-options">'+sh.map((o,j)=>'<div class="quiz-option" data-c="'+(j===cor)+'" data-q="'+i+'">'+o+'</div>').join('')+'</div><div class="quiz-explanation" id="exp-'+i+'">'+q.explanation+'</div>';c.appendChild(div);});document.querySelectorAll('.quiz-option').forEach(o=>o.addEventListener('click',handleQuiz));}
+    function handleQuiz(e){const opt=e.target,q=opt.closest('.quiz-question');if(q.classList.contains('answered'))return;q.classList.add('answered');if(opt.dataset.c==='true'){opt.classList.add('correct');quizScore++;}else{opt.classList.add('wrong');q.querySelector('[data-c="true"]').classList.add('correct');}document.getElementById('exp-'+opt.dataset.q).classList.add('show');document.getElementById('quiz-score').textContent=quizScore;quizAns++;if(quizAns===quizData.length)document.getElementById('quiz-complete').classList.add('show');}
+    function resetQuiz(){quizScore=0;quizAns=0;document.getElementById('quiz-score').textContent='0';document.getElementById('quiz-complete')?.classList.remove('show');initQuiz();}
+    let sortScore=0,dragItem=null;
+    function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
+    function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
+    function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
+  </script>
+</body>
+</html>

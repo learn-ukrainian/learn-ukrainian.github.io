@@ -1,0 +1,774 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-A2+-62",
+    "moduleId": "mod-uk-A2+-62",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "methodology": "ppp",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "A2+",
+    "phase": "A2+.1",
+    "moduleNumber": 62,
+    "title": "Prefixes II: Action Verbs",
+    "subtitle": "Transforming Everyday Verbs",
+    "description": "Learn prefixes that modify action verbs",
+    "objectives": [
+      "Learn prefixes that modify action verbs",
+      "Understand how prefixes create perfective verbs",
+      "Build vocabulary through prefix patterns",
+      "Recognize prefix meanings in new words"
+    ],
+    "grammarFocus": [
+      "Prefix + action verb combinations",
+      "Perfectivization through prefixes",
+      "Multiple meanings of prefixes"
+    ],
+    "totalDuration": 45,
+    "transliterationMode": "none",
+    "tags": [
+      "word-formation",
+      "prefixes",
+      "verbs",
+      "vocabulary-expansion"
+    ],
+    "version": 1,
+    "createdAt": "2025-11-29T00:00:00Z",
+    "modifiedAt": "2025-11-29T00:00:00Z",
+    "phases": [
+      {
+        "id": "phase-warm-up",
+        "name": "warm-up",
+        "duration": 5,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Beyond Motion Verbs\n\nIn Module 61, you learned prefixes with motion verbs. Now let's see how the **same prefixes** work with everyday action verbs!\n\n**The pattern continues:**\n- на- + писати = написати (to write → to finish writing)\n- про- + читати = прочитати (to read → to read through)\n- роз- + казати = розказати (to tell → to tell a story)\n\n> 💡 **Key Insight**\n>\n> The same prefix often has the same core meaning with different verbs:\n> - про- = \"through\" → прочитати (read through), пройти (go through)\n> - роз- = \"apart\" → розказати (tell out), розбити (break apart)"
+          }
+        ]
+      },
+      {
+        "id": "phase-presentation",
+        "name": "presentation",
+        "duration": 15,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### на- (Accumulation, Completion)\n\n**Meaning:** accumulation, filling up, or completing an action on a surface\n\n| Base (Impf) | Prefixed (Perf) | Meaning |\n|-------------|-----------------|---------|\n| писати | написати | to write (complete) |\n| малювати | намалювати | to draw/paint (complete) |\n| вчити | навчити | to teach (successfully) |\n| лити | налити | to pour (fill up) |\n| різати | нарізати | to slice (multiple pieces) |\n| збирати | назбирати | to collect (accumulate) |\n\n**Examples:**\n- Я **написав** листа. - I wrote (finished) the letter.\n- Вона **намалювала** картину. - She painted a picture.\n- Він **навчив** мене плавати. - He taught me to swim.\n- **Налий** мені води. - Pour me some water.\n- **Наріж** хліба. - Slice some bread.\n\n> ⚡ **Pro Tip: на- = \"onto\" or \"accumulate\"**\n>\n> Think of на- as putting something onto a surface (написати = write onto paper) or accumulating (назбирати = gather up)."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "по- (Brief Action, Beginning)\n\n**Meaning:** brief or limited action, sometimes beginning of action\n\n| Base (Impf) | Prefixed (Perf) | Meaning |\n|-------------|-----------------|---------|\n| бачити | побачити | to see (catch sight of) |\n| чути | почути | to hear (catch sound) |\n| читати | почитати | to read (for a while) |\n| гуляти | погуляти | to walk (for a while) |\n| думати | подумати | to think (consider) |\n| дякувати | подякувати | to thank |\n| снідати | поснідати | to have breakfast |\n| обідати | пообідати | to have lunch |\n\n**Examples:**\n- Я **побачив** її в парку. - I saw her in the park.\n- Ти **почув** це? - Did you hear that?\n- Давай **почитаємо** трохи. - Let's read for a while.\n- Він **подумав** і погодився. - He thought about it and agreed.\n- **Подякуй** їм! - Thank them!\n- Ми вже **пообідали**. - We already had lunch.\n\n> 📝 **Note: по- has multiple uses**\n>\n> По- can mean: brief action (почитати - read a bit), result (побачити - see/catch sight), or simply perfectivization (подякувати - thank)."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "з-/с- (Completion, Together)\n\n**Meaning:** completion, bringing together, or making\n\n| Base (Impf) | Prefixed (Perf) | Meaning |\n|-------------|-----------------|---------|\n| робити | зробити | to do/make (complete) |\n| їсти | з'їсти | to eat (up) |\n| варити | зварити | to cook (finish cooking) |\n| будувати | збудувати | to build (complete) |\n| збирати | зібрати | to gather (together) |\n| готувати | зготувати | to prepare (finish) |\n| фотографувати | сфотографувати | to photograph |\n| питати | спитати | to ask |\n\n**Examples:**\n- Я **зробив** домашнє завдання. - I did my homework.\n- Він **з'їв** усе. - He ate everything.\n- Вона **зварила** суп. - She cooked soup.\n- Вони **збудували** дім. - They built a house.\n- **Зберіть** речі! - Gather your things!\n- Можна вас **сфотографувати**? - Can I photograph you?\n\n> ⚡ **Pro Tip: з-/с- = \"complete/together\"**\n>\n> Use з- before voiced consonants (зробити), с- before voiceless (спитати), з- or зі- before з, с, ш (зібрати)."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "про- (Through, Completion)\n\n**Meaning:** action through something, or completing fully\n\n| Base (Impf) | Prefixed (Perf) | Meaning |\n|-------------|-----------------|---------|\n| читати | прочитати | to read (through/finish) |\n| слухати | прослухати | to listen (through) |\n| дивитися | продивитися | to look through |\n| жити | прожити | to live (through a period) |\n| працювати | пропрацювати | to work (for a period) |\n| спати | проспати | to oversleep |\n\n**Examples:**\n- Я **прочитав** цю книгу. - I read (finished) this book.\n- **Прослухай** цей запис. - Listen to this recording.\n- Він **прожив** там 10 років. - He lived there for 10 years.\n- Вона **пропрацювала** всю ніч. - She worked all night.\n- Я **проспав**! - I overslept!"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "роз- (Apart, Distribution)\n\n**Meaning:** spreading apart, distribution, or intensification\n\n| Base (Impf) | Prefixed (Perf) | Meaning |\n|-------------|-----------------|---------|\n| казати | розказати | to tell (a story) |\n| давати | роздати | to distribute |\n| бити | розбити | to break (into pieces) |\n| різати | розрізати | to cut (apart) |\n| кладати | розкласти | to spread out, unpack |\n|уміти | розуміти* | to understand |\n\n*розуміти is imperfective (зрозуміти is perfective)\n\n**Examples:**\n- **Розкажи** мені про це. - Tell me about it.\n- Вона **роздала** подарунки. - She distributed the gifts.\n- Він **розбив** вазу. - He broke the vase.\n- **Розріж** торт. - Cut the cake.\n- **Розклади** речі. - Unpack your things.\n\n> 🎭 **Culture Note: Розповідати/Розказати**\n>\n> Both mean \"to tell\" but: розповідати (impf) is more detailed storytelling, розказати (pf) is a completed telling. Казати is just \"to say.\""
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "від- (Response, Away)\n\n**Meaning:** response to action, separation, or completion\n\n| Base (Impf) | Prefixed (Perf) | Meaning |\n|-------------|-----------------|---------|\n| повідати | відповісти* | to answer |\n| давати | віддати | to give back |\n| крити | відкрити | to open (uncover) |\n| пускати | відпустити | to let go, release |\n| ремонтувати | відремонтувати | to repair (complete) |\n| новлювати | відновити | to restore, renew |\n\n*відповісти is from older \"повідати\" (to tell)\n\n**Examples:**\n- Він не **відповів** на питання. - He didn't answer the question.\n- **Віддай** мені книгу. - Give me back the book.\n- **Відкрий** двері. - Open the door.\n- Мене **відпустили** раніше. - They let me go early.\n- Ми **відремонтували** квартиру. - We repaired the apartment."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "ви- (Completion, Result)\n\n**Meaning:** with non-motion verbs: completion with result\n\n| Base (Impf) | Prefixed (Perf) | Meaning |\n|-------------|-----------------|---------|\n| вчити | вивчити | to learn (master) |\n| рішувати | вирішити | to decide, solve |\n| пити | випити | to drink (up) |\n| конати | виконати | to fulfill, execute |\n| грати | виграти | to win |\n| тратити | витратити | to spend (money/time) |\n\n**Examples:**\n- Я **вивчив** українську. - I learned Ukrainian.\n- Ми **вирішили** проблему. - We solved the problem.\n- Він **випив** каву. - He drank (up) the coffee.\n- Вона **виграла** змагання. - She won the competition.\n- Я **витратив** багато грошей. - I spent a lot of money."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "за- (Beginning, Covering)\n\n**Meaning:** beginning of action, or covering/closing\n\n| Base (Impf) | Prefixed (Perf) | Meaning |\n|-------------|-----------------|---------|\n| кривати | закрити | to close, cover |\n| кінчувати | закінчити | to finish |\n| писувати | записати | to write down, record |\n| мовляти | замовляти* | to order |\n| питати | запитати | to ask (a question) |\n| бувати | забути | to forget |\n\n*замовляти is impf, замовити is pf\n\n**Examples:**\n- **Закрий** вікно. - Close the window.\n- Я **закінчив** роботу. - I finished work.\n- **Запиши** мій номер. - Write down my number.\n- Ми **замовили** піцу. - We ordered pizza.\n- Я **забув** пароль. - I forgot the password."
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-A2+-62-matchup"
+          }
+        ]
+      },
+      {
+        "id": "phase-practice",
+        "name": "practice",
+        "duration": 15,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Match Prefix to Verb\n\n1. на- + писати → написати (write complete)\n2. по- + бачити → побачити (see/notice)\n3. з- + робити → зробити (make/do)\n4. про- + читати → прочитати (read through)\n5. роз- + казати → розказати (tell/narrate)\n6. від- + крити → відкрити (open)\n7. ви- + вчити → вивчити (learn/master)\n8. за- + крити → закрити (close)"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Choose Correct Form\n\n1. Я ___ (wrote) листа вчора.\n   → написав\n\n2. Вона ___ (saw) це в новинах.\n   → побачила\n\n3. Ми ___ (made) помилку.\n   → зробили\n\n4. Він ___ (read) всю книгу.\n   → прочитав\n\n5. ___ (Tell) мені про свою подорож.\n   → Розкажи\n\n6. ___ (Open) двері, будь ласка.\n   → Відкрий\n\n7. Я ___ (learned) нові слова.\n   → вивчив\n\n8. ___ (Close) вікно, холодно.\n   → Закрий"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Translate\n\n1. I finished my homework. → Я зробив домашнє завдання.\n2. She drank all the tea. → Вона випила весь чай.\n3. Did you hear that? → Ти почув це?\n4. Tell me a story. → Розкажи мені історію.\n5. I forgot my keys. → Я забув ключі.\n6. Open the book. → Відкрий книгу."
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-A2+-62-quiz"
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-A2+-62-groupsort"
+          }
+        ]
+      },
+      {
+        "id": "phase-production",
+        "name": "production",
+        "duration": 10,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Describe Your Day\n\nUse prefixed verbs:\n- Я **прокинувся** о сьомій.\n- Я **поснідав** і **випив** каву.\n- Я **зробив** вправи.\n- Я **прочитав** новини.\n- Я **вивчив** нові слова.\n- Я **закінчив** роботу о шостій."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Create Sentences\n\nWith роз-: Він **розказав** мені цікаву історію.\nWith за-: Я **забув** номер телефону.\nWith ви-: Вона **виграла** гру.\nWith про-: Ми **прожили** там два роки."
+          }
+        ]
+      }
+    ]
+  },
+  "activities": [
+    {
+      "id": "act-uk-A2+-62-matchup",
+      "type": "match-up",
+      "title": "Prefix Function",
+      "description": "Match prefix with its main function.",
+      "content": {
+        "type": "match-up",
+        "instructions": "Match prefix with its main function.",
+        "pairs": [
+          {
+            "left": "на-",
+            "right": "accumulation, onto"
+          },
+          {
+            "left": "по-",
+            "right": "brief action, result"
+          },
+          {
+            "left": "з-/с-",
+            "right": "completion, together"
+          },
+          {
+            "left": "про-",
+            "right": "through, fully"
+          },
+          {
+            "left": "роз-",
+            "right": "apart, distribute"
+          },
+          {
+            "left": "від-",
+            "right": "response, back"
+          },
+          {
+            "left": "ви-",
+            "right": "result, mastery"
+          },
+          {
+            "left": "за-",
+            "right": "beginning, close"
+          }
+        ],
+        "shuffleRight": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2+",
+      "duration": 5,
+      "tags": [
+        "word-formation",
+        "prefixes",
+        "verbs",
+        "vocabulary-expansion"
+      ],
+      "createdAt": "2025-11-29T00:00:00Z",
+      "modifiedAt": "2025-11-29T00:00:00Z"
+    },
+    {
+      "id": "act-uk-A2+-62-quiz",
+      "type": "quiz",
+      "title": "Action Verb Prefixes",
+      "description": "Choose the correct prefixed verb.",
+      "content": {
+        "type": "quiz",
+        "instructions": "Choose the correct prefixed verb.",
+        "questions": [
+          {
+            "question": "\"I wrote a letter\" - Я ___ листа.",
+            "options": [
+              "написав",
+              "записав",
+              "виписав",
+              "переписав"
+            ],
+            "correctIndex": 0,
+            "explanation": "На- + писати = complete writing."
+          },
+          {
+            "question": "\"She saw him\" - Вона його ___.",
+            "options": [
+              "побачила",
+              "бачила",
+              "забачила",
+              "вибачила"
+            ],
+            "correctIndex": 0,
+            "explanation": "По- + бачити = catch sight of."
+          },
+          {
+            "question": "\"We solved the problem\" - Ми ___ проблему.",
+            "options": [
+              "вирішили",
+              "зарішили",
+              "перерішили",
+              "розрішили"
+            ],
+            "correctIndex": 0,
+            "explanation": "Ви- + рішити = solve (result)."
+          },
+          {
+            "question": "\"He read the whole book\" - Він ___ всю книгу.",
+            "options": [
+              "прочитав",
+              "зачитав",
+              "начитав",
+              "вичитав"
+            ],
+            "correctIndex": 0,
+            "explanation": "Про- = read through completely."
+          },
+          {
+            "question": "\"Tell me about it\" - ___ мені про це.",
+            "options": [
+              "Розкажи",
+              "Закажи",
+              "Покажи",
+              "Накажи"
+            ],
+            "correctIndex": 0,
+            "explanation": "Роз- + казати = narrate/tell."
+          },
+          {
+            "question": "\"Close the door\" - ___ двері.",
+            "options": [
+              "Закрий",
+              "Відкрий",
+              "Розкрий",
+              "Покрий"
+            ],
+            "correctIndex": 0,
+            "explanation": "За- + крити = close/cover."
+          }
+        ],
+        "shuffleQuestions": true,
+        "shuffleOptions": true,
+        "showCorrectAnswers": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2+",
+      "duration": 5,
+      "tags": [
+        "word-formation",
+        "prefixes",
+        "verbs",
+        "vocabulary-expansion"
+      ],
+      "createdAt": "2025-11-29T00:00:00Z",
+      "modifiedAt": "2025-11-29T00:00:00Z"
+    },
+    {
+      "id": "act-uk-A2+-62-groupsort",
+      "type": "group-sort",
+      "title": "By Prefix Type",
+      "description": "Sort verbs by their prefix.",
+      "content": {
+        "type": "group-sort",
+        "instructions": "Sort verbs by their prefix.",
+        "groups": [
+          {
+            "name": "на- (onto/accumulate)",
+            "items": [
+              "написати",
+              "намалювати",
+              "налити",
+              "нарізати"
+            ]
+          },
+          {
+            "name": "з-/с- (complete/together)",
+            "items": [
+              "зробити",
+              "з'їсти",
+              "зібрати",
+              "сфотографувати"
+            ]
+          },
+          {
+            "name": "про- (through)",
+            "items": [
+              "прочитати",
+              "прослухати",
+              "прожити",
+              "проспати"
+            ]
+          }
+        ],
+        "shuffleItems": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2+",
+      "duration": 5,
+      "tags": [
+        "word-formation",
+        "prefixes",
+        "verbs",
+        "vocabulary-expansion"
+      ],
+      "createdAt": "2025-11-29T00:00:00Z",
+      "modifiedAt": "2025-11-29T00:00:00Z"
+    }
+  ],
+  "vocabulary": {
+    "moduleId": "mod-uk-A2+-62",
+    "level": "A2+",
+    "phase": "A2+.1",
+    "wordCount": 45,
+    "transliterationMode": "none",
+    "words": [
+      {
+        "id": "v-m62-001",
+        "uk": "написати",
+        "translit": "/nɑpɪˈsɑtɪ/",
+        "ipa": "to write (complete)",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m62-002",
+        "uk": "намалювати",
+        "translit": "/nɑmɑlʲuˈvɑtɪ/",
+        "ipa": "to draw/paint",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m62-003",
+        "uk": "навчити",
+        "translit": "/nɑvˈtʃɪtɪ/",
+        "ipa": "to teach",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m62-004",
+        "uk": "налити",
+        "translit": "/nɑˈlɪtɪ/",
+        "ipa": "to pour",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m62-005",
+        "uk": "нарізати",
+        "translit": "/nɑˈrʲizɑtɪ/",
+        "ipa": "to slice",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m62-006",
+        "uk": "побачити",
+        "translit": "/poˈbɑtʃɪtɪ/",
+        "ipa": "to see",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m62-007",
+        "uk": "почути",
+        "translit": "/poˈtʃutɪ/",
+        "ipa": "to hear",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m62-008",
+        "uk": "почитати",
+        "translit": "/potʃɪˈtɑtɪ/",
+        "ipa": "to read (a while)",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m62-009",
+        "uk": "подумати",
+        "translit": "/poˈdumɑtɪ/",
+        "ipa": "to think over",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m62-010",
+        "uk": "подякувати",
+        "translit": "/podʲɑkuˈvɑtɪ/",
+        "ipa": "to thank",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m62-011",
+        "uk": "поснідати",
+        "translit": "/posnʲiˈdɑtɪ/",
+        "ipa": "to have breakfast",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m62-012",
+        "uk": "пообідати",
+        "translit": "/pooˈbʲidɑtɪ/",
+        "ipa": "to have lunch",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m62-013",
+        "uk": "зробити",
+        "translit": "/zroˈbɪtɪ/",
+        "ipa": "to do, make",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m62-014",
+        "uk": "з'їсти",
+        "translit": "/ˈzjistɪ/",
+        "ipa": "to eat up",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m62-015",
+        "uk": "зварити",
+        "translit": "/zvɑˈrɪtɪ/",
+        "ipa": "to cook",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m62-016",
+        "uk": "збудувати",
+        "translit": "/zbuduˈvɑtɪ/",
+        "ipa": "to build",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m62-017",
+        "uk": "зібрати",
+        "translit": "/zʲiˈbrɑtɪ/",
+        "ipa": "to gather",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m62-018",
+        "uk": "сфотографувати",
+        "translit": "/sfotoɦrɑfuˈvɑtɪ/",
+        "ipa": "to photograph",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m62-019",
+        "uk": "спитати",
+        "translit": "/spɪˈtɑtɪ/",
+        "ipa": "to ask",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m62-020",
+        "uk": "прочитати",
+        "translit": "/protʃɪˈtɑtɪ/",
+        "ipa": "to read (finish)",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m62-021",
+        "uk": "прослухати",
+        "translit": "/prosˈluxɑtɪ/",
+        "ipa": "to listen through",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m62-022",
+        "uk": "прожити",
+        "translit": "/proˈʒɪtɪ/",
+        "ipa": "to live (period)",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m62-023",
+        "uk": "проспати",
+        "translit": "/prosˈpɑtɪ/",
+        "ipa": "to oversleep",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m62-024",
+        "uk": "розказати",
+        "translit": "/rozkɑˈzɑtɪ/",
+        "ipa": "to tell, narrate",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m62-025",
+        "uk": "роздати",
+        "translit": "/rozˈdɑtɪ/",
+        "ipa": "to distribute",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m62-026",
+        "uk": "розбити",
+        "translit": "/rozˈbɪtɪ/",
+        "ipa": "to break",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m62-027",
+        "uk": "розрізати",
+        "translit": "/rozˈrʲizɑtɪ/",
+        "ipa": "to cut apart",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m62-028",
+        "uk": "відповісти",
+        "translit": "/vʲidpoˈvʲistɪ/",
+        "ipa": "to answer",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m62-029",
+        "uk": "віддати",
+        "translit": "/vʲiˈdːɑtɪ/",
+        "ipa": "to give back",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m62-030",
+        "uk": "відкрити",
+        "translit": "/vʲidˈkrɪtɪ/",
+        "ipa": "to open",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m62-031",
+        "uk": "відпустити",
+        "translit": "/vʲidpusˈtɪtɪ/",
+        "ipa": "to release, let go",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m62-032",
+        "uk": "вивчити",
+        "translit": "/ˈvɪvtʃɪtɪ/",
+        "ipa": "to learn (master)",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m62-033",
+        "uk": "вирішити",
+        "translit": "/vɪˈrʲiʃɪtɪ/",
+        "ipa": "to decide, solve",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m62-034",
+        "uk": "випити",
+        "translit": "/ˈvɪpɪtɪ/",
+        "ipa": "to drink up",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m62-035",
+        "uk": "виграти",
+        "translit": "/ˈvɪɦrɑtɪ/",
+        "ipa": "to win",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m62-036",
+        "uk": "витратити",
+        "translit": "/ˈvɪtrɑtɪtɪ/",
+        "ipa": "to spend",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m62-037",
+        "uk": "закрити",
+        "translit": "/zɑˈkrɪtɪ/",
+        "ipa": "to close",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m62-038",
+        "uk": "закінчити",
+        "translit": "/zɑˈkʲintʃɪtɪ/",
+        "ipa": "to finish",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m62-039",
+        "uk": "записати",
+        "translit": "/zɑpɪˈsɑtɪ/",
+        "ipa": "to write down",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m62-040",
+        "uk": "замовити",
+        "translit": "/zɑˈmovɪtɪ/",
+        "ipa": "to order",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m62-041",
+        "uk": "запитати",
+        "translit": "/zɑpɪˈtɑtɪ/",
+        "ipa": "to ask",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m62-042",
+        "uk": "забути",
+        "translit": "/zɑˈbutɪ/",
+        "ipa": "to forget",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m62-043",
+        "uk": "історія",
+        "translit": "/isˈtorʲijɑ/",
+        "ipa": "story, history",
+        "en": "noun",
+        "pos": "f"
+      },
+      {
+        "id": "v-m62-044",
+        "uk": "подарунок",
+        "translit": "/podɑˈrunok/",
+        "ipa": "gift",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m62-045",
+        "uk": "помилка",
+        "translit": "/poˈmɪlkɑ/",
+        "ipa": "mistake",
+        "en": "noun",
+        "pos": "f"
+      }
+    ]
+  }
+}

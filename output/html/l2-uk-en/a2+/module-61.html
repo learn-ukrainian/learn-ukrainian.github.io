@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 61: Prefixes I: Motion Verbs | Ukrainian A2+</title>
+  <style>
+    :root { --primary: #1a5fb4; --primary-light: #3584e4; --success: #26a269; --warning: #e5a50a; --danger: #c01c28; --bg: #fafafa; --card-bg: #fff; --text: #1e1e1e; --text-muted: #5e5e5e; --border: #e0e0e0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+    .top-nav { background: #2e2e2e; color: white; padding: 0.5rem 2rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.875rem; }
+    .top-nav a { color: white; text-decoration: none; }
+    .top-nav a:hover { text-decoration: underline; }
+    .module-nav { display: flex; gap: 1rem; align-items: center; }
+    .module-nav-link { color: rgba(255,255,255,0.8); text-decoration: none; padding: 0.25rem 0.5rem; }
+    .module-nav-link:hover { color: white; }
+    .module-nav-link.disabled { color: rgba(255,255,255,0.3); pointer-events: none; }
+    .nav { position: sticky; top: 0; background: var(--primary); color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; z-index: 100; }
+    .nav h1 { font-size: 1.25rem; }
+    .nav-tabs { display: flex; gap: 0.5rem; }
+    .nav-tab { background: rgba(255,255,255,0.2); border: none; color: white; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; }
+    .nav-tab.active { background: white; color: var(--primary); }
+    main { max-width: 1000px; margin: 0 auto; padding: 2rem; }
+    .section { display: none; } .section.active { display: block; }
+    .lesson-header { text-align: center; margin-bottom: 2rem; padding: 2rem; background: linear-gradient(135deg, #e8f4fd, #f0e8fd); border-radius: 12px; }
+    .level-badge { background: var(--primary); color: white; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.875rem; }
+    .card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 1.5rem; margin-bottom: 1.5rem; }
+    .card h3 { color: var(--primary); margin-bottom: 1rem; }
+    .canvas-note { background: #fffbeb; border-left: 4px solid var(--warning); padding: 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+    .canvas-note h4 { color: var(--warning); margin-bottom: 0.5rem; }
+    .md-content { line-height: 1.7; }
+    .md-content p { margin: 0.75rem 0; }
+    .md-content ul, .md-content ol { margin: 0.75rem 0; padding-left: 1.5rem; }
+    .md-content li { margin: 0.25rem 0; }
+    .md-content strong { color: var(--primary); }
+    .md-content blockquote { background: #e8f4fd; border-left: 4px solid var(--primary); padding: 0.75rem 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+    .md-content blockquote p { margin: 0.25rem 0; }
+    .md-content table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+    .md-content th, .md-content td { border: 1px solid var(--border); padding: 0.5rem 0.75rem; text-align: left; }
+    .md-content th { background: #f5f5f5; font-weight: 600; }
+    .md-content code { background: #f0f0f0; padding: 0.125rem 0.375rem; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
+    .letter-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0; }
+    .letter-group { border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; }
+    .letter-group.true-friends { border-color: var(--success); } .letter-group.true-friends .letters { color: var(--success); }
+    .letter-group.false-friends { border-color: var(--danger); } .letter-group.false-friends .letters { color: var(--danger); }
+    .letter-group.new-letters { border-color: var(--primary); } .letter-group.new-letters .letters { color: var(--primary); }
+    .letters { font-size: 1.75rem; letter-spacing: 0.3rem; }
+    .match-container { display: flex; gap: 3rem; padding: 1rem; position: relative; }
+    .match-column { flex: 1; display: flex; flex-direction: column; gap: 0.75rem; }
+    .match-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; font-size: 1.25rem; cursor: pointer; }
+    .match-item.selected { border-color: var(--primary); background: #e8f4fd; }
+    .match-item.matched { border-color: var(--success); background: #e8f8f0; }
+    .match-item.wrong { border-color: var(--danger); background: #fde8e8; }
+    .match-lines { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+    .quiz-question { border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; }
+    .quiz-question.answered { pointer-events: none; }
+    .quiz-question .cyrillic { font-size: 1.5rem; color: var(--primary); font-weight: 600; }
+    .quiz-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-top: 1rem; }
+    .quiz-option { background: #f5f5f5; border: 2px solid var(--border); border-radius: 8px; padding: 1rem; cursor: pointer; text-align: center; }
+    .quiz-option.correct { border-color: var(--success); background: #d4edda; }
+    .quiz-option.wrong { border-color: var(--danger); background: #f8d7da; }
+    .quiz-explanation { margin-top: 1rem; padding: 1rem; background: #e8f4fd; border-radius: 8px; display: none; }
+    .quiz-explanation.show { display: block; }
+    .sort-pool { background: #f5f5f5; border: 2px dashed var(--border); border-radius: 12px; padding: 1.5rem; min-height: 80px; margin-bottom: 1rem; }
+    .sort-items { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; }
+    .sort-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 0.75rem 1.25rem; font-size: 1.5rem; cursor: grab; }
+    .sort-item.correct { border-color: var(--success); background: #e8f8f0; }
+    .sort-item.wrong { border-color: var(--danger); background: #fde8e8; }
+    .sort-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    .sort-group { border: 2px solid var(--border); border-radius: 12px; padding: 1rem; min-height: 150px; }
+    .sort-group.drag-over { border-color: var(--primary); background: #e8f4fd; }
+    .sort-group h4 { font-size: 0.875rem; text-align: center; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--border); }
+    .sort-group.true-friends h4 { color: var(--success); border-color: var(--success); }
+    .sort-group.false-friends h4 { color: var(--danger); border-color: var(--danger); }
+    .sort-group.new-letters h4 { color: var(--primary); border-color: var(--primary); }
+    .vocab-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; }
+    .vocab-card { border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; text-align: center; }
+    .vocab-card .uk { font-size: 1.75rem; font-weight: 600; color: var(--primary); }
+    .vocab-card .translit { color: var(--text-muted); font-style: italic; }
+    .vocab-card .en { font-weight: 500; margin: 0.25rem 0; }
+    .vocab-card .note { font-size: 0.75rem; color: #613583; background: #f0e8fd; padding: 0.25rem 0.5rem; border-radius: 4px; }
+    .btn { padding: 0.75rem 1.5rem; border: none; border-radius: 8px; cursor: pointer; }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-outline { background: transparent; border: 2px solid var(--border); }
+    .btn-group { display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem; }
+    .score-display { text-align: center; padding: 1rem; background: linear-gradient(135deg, #e8f8f0, #e8f4fd); border-radius: 8px; margin-bottom: 1rem; }
+    .score-display .score { font-size: 2rem; font-weight: 700; color: var(--success); }
+    .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
+    .completion-message.show { display: block; }
+    footer { text-align: center; padding: 2rem; color: var(--text-muted); }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+  </style>
+</head>
+<body>
+  <div class="top-nav">
+    <a href="../index.html">← l2-uk-en Curriculum</a>
+    <div class="module-nav">
+      <span class="module-nav-link disabled">← Prev</span>
+      <a href="index.html" class="module-nav-link">A2+ Index</a>
+      <a href="module-62.html" class="module-nav-link">Module 62 →</a>
+    </div>
+  </div>
+  <nav class="nav">
+    <h1>Module 61: Prefixes I: Motion Verbs</h1>
+    <div class="nav-tabs">
+      <button class="nav-tab active" data-section="lesson">Lesson</button>
+      <button class="nav-tab" data-section="match">Match</button>
+      <button class="nav-tab" data-section="quiz">Quiz</button>
+      <button class="nav-tab" data-section="sort">Sort</button>
+      <button class="nav-tab" data-section="vocab">Vocab</button>
+    </div>
+  </nav>
+  <main>
+    <section id="lesson" class="section active">
+      <div class="lesson-header">
+        <span class="level-badge">A2+ · A2+.1</span>
+        <h2 style="font-size:2rem;margin:0.5rem 0">Prefixes I: Motion Verbs</h2>
+        <p style="color:var(--text-muted)">How Prefixes Change Meaning</p>
+      </div>
+      
+      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Welcome to A2+!</h4><div class="md-content"><p>You've mastered A2 grammar. Now it's time to <strong>multiply your vocabulary</strong> through word formation!</p>
+<p><strong>The power of prefixes:</strong></p>
+<ul>
+<li>You know: йти (to go), їхати (to drive)</li>
+<li>Add prefixes: прийти, вийти, зайти, перейти…</li>
+<li>One root → many words!</li>
+</ul>
+<p>In Ukrainian, prefixes don't just modify verbs—they create entirely new meanings. Learning prefixes is the fastest way to expand your vocabulary.</p>
+<blockquote>
+  <p>💡 <strong>Did You Know?</strong></p>
+  <p>Ukrainian has about 20 common verb prefixes. Each prefix adds a specific shade of meaning. By learning these prefixes, you can understand hundreds of verbs you've never seen before!</p>
+</blockquote></div></div><div class="canvas-note"><h4>### The Prefix System</h4><div class="md-content"><p><strong>How it works:</strong></p>
+<ul>
+<li>Base verb: йти (to go on foot)</li>
+<li>Add prefix: при- + йти = прийти (to arrive)</li>
+<li>The prefix changes the meaning AND makes it perfective</li>
+</ul>
+<p><strong>Key insight:</strong> Most prefixed verbs are <strong>perfective</strong>. The base verb is usually imperfective.</p>
+<table>
+<thead>
+<tr>
+<th>Base (Impf)</th>
+<th>Prefixed (Perf)</th>
+<th>Meaning Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>йти</td>
+<td>прийти</td>
+<td>go → arrive</td>
+</tr>
+<tr>
+<td>йти</td>
+<td>вийти</td>
+<td>go → go out</td>
+</tr>
+<tr>
+<td>йти</td>
+<td>зайти</td>
+<td>go → drop by</td>
+</tr>
+</tbody>
+</table></div></div><div class="canvas-note"><h4>при- (Arrival, Addition)</h4><div class="md-content"><p><strong>Meaning:</strong> movement toward, arrival at destination</p>
+<table>
+<thead>
+<tr>
+<th>Base</th>
+<th>Prefixed</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>йти</td>
+<td>прийти</td>
+<td>to arrive (on foot)</td>
+</tr>
+<tr>
+<td>їхати</td>
+<td>приїхати</td>
+<td>to arrive (by transport)</td>
+</tr>
+<tr>
+<td>летіти</td>
+<td>прилетіти</td>
+<td>to arrive (by plane)</td>
+</tr>
+<tr>
+<td>нести</td>
+<td>принести</td>
+<td>to bring (carrying)</td>
+</tr>
+<tr>
+<td>везти</td>
+<td>привезти</td>
+<td>to bring (by transport)</td>
+</tr>
+<tr>
+<td>ходити</td>
+<td>приходити</td>
+<td>to come (habitually)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples:</strong></p>
+<ul>
+<li>Він <strong>прийшов</strong> о восьмій. - He arrived at 8.</li>
+<li>Вона <strong>приїхала</strong> з Києва. - She arrived from Kyiv.</li>
+<li>Я <strong>приніс</strong> тобі книгу. - I brought you a book.</li>
+<li>Він завжди <strong>приходить</strong> вчасно. - He always comes on time.</li>
+</ul>
+<blockquote>
+  <p>⚡ <strong>Pro Tip: при- = toward/arrival</strong></p>
+  <p>Think of при- as "toward the destination." The action ends at a specific point.</p>
+</blockquote></div></div><div class="canvas-note"><h4>ви- (Exit, Out)</h4><div class="md-content"><p><strong>Meaning:</strong> movement out of, exiting</p>
+<table>
+<thead>
+<tr>
+<th>Base</th>
+<th>Prefixed</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>йти</td>
+<td>вийти</td>
+<td>to go out, exit</td>
+</tr>
+<tr>
+<td>їхати</td>
+<td>виїхати</td>
+<td>to drive out, leave</td>
+</tr>
+<tr>
+<td>летіти</td>
+<td>вилетіти</td>
+<td>to fly out, depart</td>
+</tr>
+<tr>
+<td>нести</td>
+<td>винести</td>
+<td>to carry out</td>
+</tr>
+<tr>
+<td>бігти</td>
+<td>вибігти</td>
+<td>to run out</td>
+</tr>
+<tr>
+<td>ходити</td>
+<td>виходити</td>
+<td>to go out (habitually)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples:</strong></p>
+<ul>
+<li>Він <strong>вийшов</strong> з кімнати. - He went out of the room.</li>
+<li>Ми <strong>виїхали</strong> о шостій ранку. - We left at 6 AM.</li>
+<li>Літак <strong>вилетів</strong> вчасно. - The plane departed on time.</li>
+<li>Вона <strong>виходить</strong> на роботу о сьомій. - She leaves for work at 7.</li>
+</ul>
+<blockquote>
+  <p>🎭 <strong>Culture Note: Вихід</strong></p>
+  <p>You'll see "ВИХІД" (exit) signs everywhere in Ukraine. It comes from вийти!<br />
+  Similarly: вхід (entrance) from увійти.</p>
+</blockquote></div></div><div class="canvas-note"><h4>в-/у- (Entry, Into)</h4><div class="md-content"><p><strong>Meaning:</strong> movement into, entering</p>
+<table>
+<thead>
+<tr>
+<th>Base</th>
+<th>Prefixed</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>йти</td>
+<td>увійти / ввійти</td>
+<td>to enter (on foot)</td>
+</tr>
+<tr>
+<td>їхати</td>
+<td>в'їхати</td>
+<td>to drive into</td>
+</tr>
+<tr>
+<td>летіти</td>
+<td>влетіти</td>
+<td>to fly into</td>
+</tr>
+<tr>
+<td>нести</td>
+<td>внести / унести</td>
+<td>to carry in</td>
+</tr>
+<tr>
+<td>бігти</td>
+<td>вбігти</td>
+<td>to run in</td>
+</tr>
+<tr>
+<td>ходити</td>
+<td>входити</td>
+<td>to enter (habitually)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples:</strong></p>
+<ul>
+<li>Вона <strong>увійшла</strong> до кімнати. - She entered the room.</li>
+<li>Машина <strong>в'їхала</strong> в гараж. - The car drove into the garage.</li>
+<li>Птах <strong>влетів</strong> у вікно. - A bird flew into the window.</li>
+<li>Він <strong>входить</strong> без стуку. - He enters without knocking.</li>
+</ul>
+<blockquote>
+  <p>📝 <strong>Note: в- vs у-</strong></p>
+  <p>Use у- before consonants (увійти), в- before vowels (ввійти) or after vowels. Both forms are correct.</p>
+</blockquote></div></div><div class="canvas-note"><h4>за- (Behind, Dropping By)</h4><div class="md-content"><p><strong>Meaning:</strong> movement behind something, or brief stop</p>
+<table>
+<thead>
+<tr>
+<th>Base</th>
+<th>Prefixed</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>йти</td>
+<td>зайти</td>
+<td>to drop by, go behind</td>
+</tr>
+<tr>
+<td>їхати</td>
+<td>заїхати</td>
+<td>to stop by (driving)</td>
+</tr>
+<tr>
+<td>бігти</td>
+<td>забігти</td>
+<td>to run in briefly</td>
+</tr>
+<tr>
+<td>нести</td>
+<td>занести</td>
+<td>to drop off (carrying)</td>
+</tr>
+<tr>
+<td>ходити</td>
+<td>заходити</td>
+<td>to drop by (habitually)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples:</strong></p>
+<ul>
+<li>Я <strong>зайду</strong> до тебе ввечері. - I'll drop by your place tonight.</li>
+<li>Сонце <strong>зайшло</strong> за хмару. - The sun went behind a cloud.</li>
+<li><strong>Заїдь</strong> у магазин по дорозі. - Stop by the store on the way.</li>
+<li>Він часто <strong>заходить</strong> до нас. - He often drops by our place.</li>
+</ul></div></div><div class="canvas-note"><h4>пере- (Across, Over)</h4><div class="md-content"><p><strong>Meaning:</strong> movement across, from one side to another</p>
+<table>
+<thead>
+<tr>
+<th>Base</th>
+<th>Prefixed</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>йти</td>
+<td>перейти</td>
+<td>to cross (on foot)</td>
+</tr>
+<tr>
+<td>їхати</td>
+<td>переїхати</td>
+<td>to cross (driving), to move</td>
+</tr>
+<tr>
+<td>летіти</td>
+<td>перелетіти</td>
+<td>to fly across</td>
+</tr>
+<tr>
+<td>нести</td>
+<td>перенести</td>
+<td>to carry across, transfer</td>
+</tr>
+<tr>
+<td>бігти</td>
+<td>перебігти</td>
+<td>to run across</td>
+</tr>
+<tr>
+<td>ходити</td>
+<td>переходити</td>
+<td>to cross (habitually)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples:</strong></p>
+<ul>
+<li><strong>Перейдіть</strong> вулицю на світлофорі. - Cross the street at the traffic light.</li>
+<li>Ми <strong>переїхали</strong> в нову квартиру. - We moved to a new apartment.</li>
+<li>Птахи <strong>перелетіли</strong> через річку. - The birds flew across the river.</li>
+<li>Вона <strong>переходить</strong> дорогу тут щодня. - She crosses the road here every day.</li>
+</ul>
+<blockquote>
+  <p>⚡ <strong>Pro Tip: пере- = across/transfer</strong></p>
+  <p>Пере- often implies moving from one state/place to another: переїхати (move house), перенести (reschedule/transfer).</p>
+</blockquote></div></div><div class="canvas-note"><h4>від- (Away From)</h4><div class="md-content"><p><strong>Meaning:</strong> movement away from starting point</p>
+<table>
+<thead>
+<tr>
+<th>Base</th>
+<th>Prefixed</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>йти</td>
+<td>відійти</td>
+<td>to step away, leave</td>
+</tr>
+<tr>
+<td>їхати</td>
+<td>від'їхати</td>
+<td>to drive away</td>
+</tr>
+<tr>
+<td>летіти</td>
+<td>відлетіти</td>
+<td>to fly away</td>
+</tr>
+<tr>
+<td>нести</td>
+<td>віднести</td>
+<td>to carry away</td>
+</tr>
+<tr>
+<td>бігти</td>
+<td>відбігти</td>
+<td>to run away</td>
+</tr>
+<tr>
+<td>ходити</td>
+<td>відходити</td>
+<td>to depart, leave</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples:</strong></p>
+<ul>
+<li>Поїзд <strong>відійшов</strong> 5 хвилин тому. - The train left 5 minutes ago.</li>
+<li>Машина <strong>від'їхала</strong>. - The car drove away.</li>
+<li>Птахи <strong>відлетіли</strong> на південь. - The birds flew away to the south.</li>
+<li>Потяг <strong>відходить</strong> о третій. - The train departs at 3.</li>
+</ul></div></div><div class="canvas-note"><h4>до- (Up To, Reaching)</h4><div class="md-content"><p><strong>Meaning:</strong> movement up to a point, reaching destination</p>
+<table>
+<thead>
+<tr>
+<th>Base</th>
+<th>Prefixed</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>йти</td>
+<td>дійти</td>
+<td>to reach (on foot), to get to</td>
+</tr>
+<tr>
+<td>їхати</td>
+<td>доїхати</td>
+<td>to reach (driving)</td>
+</tr>
+<tr>
+<td>летіти</td>
+<td>долетіти</td>
+<td>to fly to, reach</td>
+</tr>
+<tr>
+<td>нести</td>
+<td>донести</td>
+<td>to carry to</td>
+</tr>
+<tr>
+<td>бігти</td>
+<td>добігти</td>
+<td>to run to</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples:</strong></p>
+<ul>
+<li>Я <strong>дійшов</strong> до станції за 10 хвилин. - I reached the station in 10 minutes.</li>
+<li>Ми <strong>доїхали</strong> до Львова за 5 годин. - We drove to Lviv in 5 hours.</li>
+<li>Як <strong>дійти</strong> до центру? - How do I get to the center?</li>
+<li>Лист <strong>дійшов</strong> за тиждень. - The letter arrived in a week.</li>
+</ul></div></div><div class="canvas-note"><h4>об- (Around)</h4><div class="md-content"><p><strong>Meaning:</strong> movement around something</p>
+<table>
+<thead>
+<tr>
+<th>Base</th>
+<th>Prefixed</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>йти</td>
+<td>обійти</td>
+<td>to go around, bypass</td>
+</tr>
+<tr>
+<td>їхати</td>
+<td>об'їхати</td>
+<td>to drive around</td>
+</tr>
+<tr>
+<td>летіти</td>
+<td>облетіти</td>
+<td>to fly around</td>
+</tr>
+<tr>
+<td>бігти</td>
+<td>оббігти</td>
+<td>to run around</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples:</strong></p>
+<ul>
+<li><strong>Обійди</strong> цю калюжу. - Go around this puddle.</li>
+<li>Ми <strong>об'їхали</strong> затор. - We drove around the traffic jam.</li>
+<li>Вони <strong>оббігли</strong> стадіон. - They ran around the stadium.</li>
+</ul></div></div><div class="canvas-note"><h4>Summary Table: All Prefixes</h4><div class="md-content"><table>
+<thead>
+<tr>
+<th>Prefix</th>
+<th>Meaning</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>при-</td>
+<td>arrival, toward</td>
+<td>прийти (arrive)</td>
+</tr>
+<tr>
+<td>ви-</td>
+<td>out, exit</td>
+<td>вийти (exit)</td>
+</tr>
+<tr>
+<td>в-/у-</td>
+<td>into, entry</td>
+<td>увійти (enter)</td>
+</tr>
+<tr>
+<td>за-</td>
+<td>behind, drop by</td>
+<td>зайти (drop by)</td>
+</tr>
+<tr>
+<td>пере-</td>
+<td>across, over</td>
+<td>перейти (cross)</td>
+</tr>
+<tr>
+<td>від-</td>
+<td>away from</td>
+<td>відійти (leave)</td>
+</tr>
+<tr>
+<td>до-</td>
+<td>up to, reaching</td>
+<td>дійти (reach)</td>
+</tr>
+<tr>
+<td>об-</td>
+<td>around</td>
+<td>обійти (go around)</td>
+</tr>
+</tbody>
+</table></div></div><div class="canvas-note"><h4>### Match Prefix to Meaning</h4><div class="md-content"><ol>
+<li>при- → arrival</li>
+<li>ви- → exit</li>
+<li>в-/у- → entry</li>
+<li>за- → behind/drop by</li>
+<li>пере- → across</li>
+<li>від- → away from</li>
+<li>до- → reaching</li>
+<li>об- → around</li>
+</ol></div></div><div class="canvas-note"><h4>Complete with Correct Verb</h4><div class="md-content"><ol>
+<li><p>Він ___ (arrive) о восьмій годині.<br />
+→ прийшов</p></li>
+<li><p>Вона ___ (exit) з магазину.<br />
+→ вийшла</p></li>
+<li><p>Ми ___ (cross) вулицю.<br />
+→ перейшли</p></li>
+<li><p>Я ___ (drop by) до друга.<br />
+→ зайшов</p></li>
+<li><p>Поїзд ___ (depart) вчасно.<br />
+→ відійшов</p></li>
+<li><p>Як ___ (reach) до центру?<br />
+→ дійти</p></li>
+<li><p>Вона ___ (enter) в кімнату.<br />
+→ увійшла</p></li>
+<li><p>Ми ___ (drive around) затор.<br />
+→ об'їхали</p></li>
+</ol></div></div><div class="canvas-note"><h4>Translate</h4><div class="md-content"><ol>
+<li>I arrived home at 6. → Я прийшов додому о шостій.</li>
+<li>She went out to the balcony. → Вона вийшла на балкон.</li>
+<li>We crossed the bridge. → Ми перейшли міст.</li>
+<li>Drop by tomorrow! → Зайди завтра!</li>
+<li>The bus departed. → Автобус відійшов.</li>
+<li>How do I get to the station? → Як дійти до станції?</li>
+</ol></div></div><div class="canvas-note"><h4>### Describe Movement</h4><div class="md-content"><p><strong>Use prefixed verbs to describe:</strong></p>
+<p>Your morning:</p>
+<ul>
+<li>Я <strong>вийшов</strong> з дому о восьмій.</li>
+<li>Я <strong>дійшов</strong> до зупинки за 5 хвилин.</li>
+<li>Я <strong>зайшов</strong> у кав'ярню по каву.</li>
+<li>Я <strong>прийшов</strong> на роботу о дев'ятій.</li>
+</ul>
+<p>A trip:</p>
+<ul>
+<li>Ми <strong>виїхали</strong> рано вранці.</li>
+<li>Ми <strong>об'їхали</strong> Київ.</li>
+<li>Ми <strong>перетнули</strong> кордон.</li>
+<li>Ми <strong>доїхали</strong> до Варшави ввечері.</li>
+</ul></div></div><div class="canvas-note"><h4>Give Directions</h4><div class="md-content"><p>Practice giving directions using prefixed verbs:</p>
+<ul>
+<li><strong>Вийдіть</strong> з метро.</li>
+<li><strong>Перейдіть</strong> вулицю.</li>
+<li><strong>Дійдіть</strong> до перехрестя.</li>
+<li><strong>Зайдіть</strong> у двір.</li>
+</ul></div></div></div>
+      <div class="btn-group"><button class="btn btn-primary" onclick="showSection('match')">Start →</button></div>
+    </section>
+    <section id="match" class="section"><div class="card"><h3>Prefix → Meaning</h3>
+      <div class="score-display"><span class="score"><span id="match-score">0</span>/8</span></div>
+      <div class="match-container" id="match-container"><svg class="match-lines" id="match-lines"></svg>
+        <div class="match-column" id="match-left"><div class="match-item" data-pair="0">при-</div><div class="match-item" data-pair="1">ви-</div><div class="match-item" data-pair="2">в-/у-</div><div class="match-item" data-pair="3">за-</div><div class="match-item" data-pair="4">пере-</div><div class="match-item" data-pair="5">від-</div><div class="match-item" data-pair="6">до-</div><div class="match-item" data-pair="7">об-</div></div>
+        <div class="match-column" id="match-right"><div class="match-item" data-pair="0">arrival, toward</div><div class="match-item" data-pair="5">away from</div><div class="match-item" data-pair="7">around</div><div class="match-item" data-pair="3">behind, drop by</div><div class="match-item" data-pair="1">out, exit</div><div class="match-item" data-pair="2">into, entry</div><div class="match-item" data-pair="6">reaching, up to</div><div class="match-item" data-pair="4">across, over</div></div>
+      </div>
+      <div class="completion-message" id="match-complete"><h3>Perfect!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetMatch()">Reset</button><button class="btn btn-primary" onclick="showSection('quiz')">Next →</button></div>
+    </div></section>
+    <section id="quiz" class="section"><div class="card"><h3>Prefixed Motion Verbs</h3>
+      <div class="score-display"><span class="score"><span id="quiz-score">0</span>/6</span></div>
+      <div id="quiz-container"></div>
+      <div class="completion-message" id="quiz-complete"><h3>Complete!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('sort')">Next →</button></div>
+    </div></section>
+    <section id="sort" class="section"><div class="card"><h3>By Prefix</h3>
+      <div class="score-display"><span class="score"><span id="sort-score">0</span>/12</span></div>
+      <div class="sort-pool" id="sort-pool"><div class="sort-items" id="sort-items"></div></div>
+      <div class="sort-groups"><div class="sort-group true-friends" data-group="true-friends"><h4>при-</h4><div class="sort-items"></div></div><div class="sort-group false-friends" data-group="false-friends"><h4>ви-</h4><div class="sort-items"></div></div><div class="sort-group new-letters" data-group="new-letters"><h4>пере-</h4><div class="sort-items"></div></div></div>
+      <div class="completion-message" id="sort-complete"><h3>All Sorted!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetSort()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Vocab →</button></div>
+    </div></section>
+    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (42)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
+      <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
+    </section>
+  </main>
+  <footer>Module 61 · curricula-opus</footer>
+  <script>
+    const matchPairs=[{"left":"при-","right":"arrival, toward"},{"left":"ви-","right":"out, exit"},{"left":"в-/у-","right":"into, entry"},{"left":"за-","right":"behind, drop by"},{"left":"пере-","right":"across, over"},{"left":"від-","right":"away from"},{"left":"до-","right":"reaching, up to"},{"left":"об-","right":"around"}];
+    const quizData=[{"question":"\"He arrived on time\" - Він ___ вчасно.","options":["прийшов","вийшов","зайшов","дійшов"],"correctIndex":0,"explanation":"При- = arrival."},{"question":"\"She exited the building\" - Вона ___ з будівлі.","options":["вийшла","увійшла","прийшла","зайшла"],"correctIndex":0,"explanation":"Ви- = exit."},{"question":"\"We crossed the street\" - Ми ___ вулицю.","options":["перейшли","вийшли","зайшли","дійшли"],"correctIndex":0,"explanation":"Пере- = across."},{"question":"\"Drop by tomorrow\" - ___ завтра.","options":["Зайди","Вийди","Перейди","Дійди"],"correctIndex":0,"explanation":"За- = drop by."},{"question":"\"The train departed\" - Поїзд ___.","options":["відійшов","прийшов","дійшов","обійшов"],"correctIndex":0,"explanation":"Від- = away, departure."},{"question":"\"How do I get to the center?\" - Як ___ до центру?","options":["дійти","прийти","вийти","зайти"],"correctIndex":0,"explanation":"До- = reaching destination."}];
+    const sortData={"true-friends":["прийти","приїхати","принести","прилетіти"],"false-friends":["вийти","виїхати","винести","вибігти"],"new-letters":["перейти","переїхати","перенести","перебігти"]};
+    const vocabData=[{"uk":"прийти","translit":"/prɪjˈtɪ/","en":"verb","note":""},{"uk":"приїхати","translit":"/prɪˈjixɑtɪ/","en":"verb","note":""},{"uk":"прилетіти","translit":"/prɪlɛˈtʲitɪ/","en":"verb","note":""},{"uk":"принести","translit":"/prɪnɛsˈtɪ/","en":"verb","note":""},{"uk":"привезти","translit":"/prɪvɛzˈtɪ/","en":"verb","note":""},{"uk":"приходити","translit":"/prɪxoˈdɪtɪ/","en":"verb","note":""},{"uk":"вийти","translit":"/ˈvɪjtɪ/","en":"verb","note":""},{"uk":"виїхати","translit":"/ˈvɪjixɑtɪ/","en":"verb","note":""},{"uk":"вилетіти","translit":"/vɪlɛˈtʲitɪ/","en":"verb","note":""},{"uk":"винести","translit":"/vɪnɛsˈtɪ/","en":"verb","note":""},{"uk":"виходити","translit":"/vɪxoˈdɪtɪ/","en":"verb","note":""},{"uk":"увійти","translit":"/uˈvʲijtɪ/","en":"verb","note":""},{"uk":"в'їхати","translit":"/ˈvjixɑtɪ/","en":"verb","note":""},{"uk":"входити","translit":"/vxoˈdɪtɪ/","en":"verb","note":""},{"uk":"зайти","translit":"/zɑjˈtɪ/","en":"verb","note":""},{"uk":"заїхати","translit":"/zɑˈjixɑtɪ/","en":"verb","note":""},{"uk":"заходити","translit":"/zɑxoˈdɪtɪ/","en":"verb","note":""},{"uk":"перейти","translit":"/pɛrɛjˈtɪ/","en":"verb","note":""},{"uk":"переїхати","translit":"/pɛrɛˈjixɑtɪ/","en":"verb","note":""},{"uk":"переходити","translit":"/pɛrɛxoˈdɪtɪ/","en":"verb","note":""},{"uk":"відійти","translit":"/vʲidʲijˈtɪ/","en":"verb","note":""},{"uk":"від'їхати","translit":"/vʲidˈjixɑtɪ/","en":"verb","note":""},{"uk":"відходити","translit":"/vʲidxoˈdɪtɪ/","en":"verb","note":""},{"uk":"дійти","translit":"/dʲijˈtɪ/","en":"verb","note":""},{"uk":"доїхати","translit":"/doˈjixɑtɪ/","en":"verb","note":""},{"uk":"обійти","translit":"/obʲijˈtɪ/","en":"verb","note":""},{"uk":"об'їхати","translit":"/obˈjixɑtɪ/","en":"verb","note":""},{"uk":"вхід","translit":"/vxʲid/","en":"noun","note":""},{"uk":"вихід","translit":"/ˈvɪxʲid/","en":"noun","note":""},{"uk":"прихід","translit":"/ˈprɪxʲid/","en":"noun","note":""},{"uk":"відхід","translit":"/ˈvʲidxʲid/","en":"noun","note":""},{"uk":"перехід","translit":"/ˈpɛrɛxʲid/","en":"noun","note":""},{"uk":"прибуття","translit":"/prɪˈbutʲːɑ/","en":"noun","note":""},{"uk":"відбуття","translit":"/vʲidˈbutʲːɑ/","en":"noun","note":""},{"uk":"переїзд","translit":"/pɛrɛˈjizd/","en":"noun","note":""},{"uk":"заїзд","translit":"/ˈzɑjizd/","en":"noun","note":""},{"uk":"виїзд","translit":"/ˈvɪjizd/","en":"noun","note":""},{"uk":"напрямок","translit":"/nɑˈprʲɑmok/","en":"noun","note":""},{"uk":"затор","translit":"/zɑˈtor/","en":"noun","note":""},{"uk":"світлофор","translit":"/svʲitloˈfor/","en":"noun","note":""},{"uk":"перехрестя","translit":"/pɛrɛˈxrɛstʲɑ/","en":"noun","note":""},{"uk":"калюжа","translit":"/kɑˈlʲuʒɑ/","en":"noun","note":""}];
+    const totalSort=12;
+    function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
+    document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));
+    let matchSel=null,matchScore=0,matchPairsArr=[];
+    document.querySelectorAll('#match-left .match-item').forEach(item=>{item.addEventListener('click',()=>{if(item.classList.contains('matched'))return;document.querySelectorAll('#match-left .match-item').forEach(i=>i.classList.remove('selected'));item.classList.add('selected');matchSel={el:item,pair:item.dataset.pair};});});
+    document.querySelectorAll('#match-right .match-item').forEach(item=>{item.addEventListener('click',()=>{if(item.classList.contains('matched')||!matchSel)return;if(matchSel.pair===item.dataset.pair){matchSel.el.classList.remove('selected');matchSel.el.classList.add('matched');item.classList.add('matched');matchPairsArr.push({left:matchSel.el,right:item});matchScore++;document.getElementById('match-score').textContent=matchScore;drawLines();if(matchScore===matchPairs.length)document.getElementById('match-complete').classList.add('show');}else{item.classList.add('wrong');setTimeout(()=>item.classList.remove('wrong'),300);}matchSel=null;});});
+    function drawLines(){const svg=document.getElementById('match-lines'),c=document.getElementById('match-container');if(!svg||!c)return;const r=c.getBoundingClientRect();svg.innerHTML='';svg.setAttribute('viewBox','0 0 '+r.width+' '+r.height);matchPairsArr.forEach(p=>{const lr=p.left.getBoundingClientRect(),rr=p.right.getBoundingClientRect();const line=document.createElementNS('http://www.w3.org/2000/svg','line');line.setAttribute('x1',lr.right-r.left);line.setAttribute('y1',lr.top+lr.height/2-r.top);line.setAttribute('x2',rr.left-r.left);line.setAttribute('y2',rr.top+rr.height/2-r.top);line.setAttribute('stroke','#26a269');line.setAttribute('stroke-width','2');svg.appendChild(line);});}
+    function resetMatch(){matchSel=null;matchScore=0;matchPairsArr=[];document.getElementById('match-score').textContent='0';document.getElementById('match-complete')?.classList.remove('show');document.getElementById('match-lines').innerHTML='';document.querySelectorAll('#match-container .match-item').forEach(i=>i.classList.remove('matched','selected','wrong'));}
+    window.addEventListener('resize',drawLines);
+    let quizScore=0,quizAns=0;
+    function initQuiz(){const c=document.getElementById('quiz-container');if(!c||!quizData.length)return;c.innerHTML='';quizData.forEach((q,i)=>{const sh=[...q.options].sort(()=>Math.random()-0.5);const cor=sh.indexOf(q.options[q.correctIndex]);const div=document.createElement('div');div.className='quiz-question';div.innerHTML='<h4>Q'+(i+1)+': '+q.question+'</h4><div class="quiz-options">'+sh.map((o,j)=>'<div class="quiz-option" data-c="'+(j===cor)+'" data-q="'+i+'">'+o+'</div>').join('')+'</div><div class="quiz-explanation" id="exp-'+i+'">'+q.explanation+'</div>';c.appendChild(div);});document.querySelectorAll('.quiz-option').forEach(o=>o.addEventListener('click',handleQuiz));}
+    function handleQuiz(e){const opt=e.target,q=opt.closest('.quiz-question');if(q.classList.contains('answered'))return;q.classList.add('answered');if(opt.dataset.c==='true'){opt.classList.add('correct');quizScore++;}else{opt.classList.add('wrong');q.querySelector('[data-c="true"]').classList.add('correct');}document.getElementById('exp-'+opt.dataset.q).classList.add('show');document.getElementById('quiz-score').textContent=quizScore;quizAns++;if(quizAns===quizData.length)document.getElementById('quiz-complete').classList.add('show');}
+    function resetQuiz(){quizScore=0;quizAns=0;document.getElementById('quiz-score').textContent='0';document.getElementById('quiz-complete')?.classList.remove('show');initQuiz();}
+    let sortScore=0,dragItem=null;
+    function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
+    function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
+    function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
+  </script>
+</body>
+</html>

@@ -1,0 +1,691 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-A2+-69",
+    "moduleId": "mod-uk-A2+-69",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "methodology": "ppp",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "A2+",
+    "phase": "A2+.2",
+    "moduleNumber": 69,
+    "title": "Home & Furniture Vocabulary",
+    "subtitle": "Rooms, Furniture, and Household Items",
+    "description": "Learn furniture and household items",
+    "objectives": [
+      "Learn furniture and household items",
+      "Describe rooms and living spaces",
+      "Discuss home maintenance",
+      "Navigate housing situations"
+    ],
+    "grammarFocus": [
+      "Location prepositions with furniture",
+      "Housing-related verbs",
+      "Describing spaces"
+    ],
+    "totalDuration": 45,
+    "transliterationMode": "none",
+    "tags": [
+      "vocabulary",
+      "home",
+      "furniture",
+      "household",
+      "daily-life"
+    ],
+    "version": 1,
+    "createdAt": "2025-11-29T00:00:00Z",
+    "modifiedAt": "2025-11-29T00:00:00Z",
+    "phases": [
+      {
+        "id": "phase-warm-up",
+        "name": "warm-up",
+        "duration": 5,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Expanding Home Vocabulary\n\nYou know basic rooms. Now let's furnish them!\n\n**Furniture:**\n- диван (sofa), крісло (armchair), шафа (wardrobe)\n\n**Household items:**\n- ковдра (blanket), подушка (pillow), рушник (towel)\n\n> 💡 **Why This Matters**\n>\n> Home vocabulary is essential for renting, moving, shopping, and describing where you live."
+          }
+        ]
+      },
+      {
+        "id": "phase-presentation",
+        "name": "presentation",
+        "duration": 15,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Living Room (Вітальня)\n\n| Ukrainian | English |\n|-----------|---------|\n| диван | sofa |\n| крісло | armchair |\n| журнальний столик | coffee table |\n| телевізор | TV |\n| полиця | shelf |\n| книжкова шафа | bookcase |\n| килим | carpet, rug |\n| штори | curtains |\n| лампа | lamp |\n| картина | painting |\n| ваза | vase |\n\n**Examples:**\n- Сядь на **диван**. - Sit on the sofa.\n- **Крісло** біля вікна. - The armchair is near the window.\n- Пульт на **журнальному столику**. - The remote is on the coffee table.\n- Гарні **штори**! - Nice curtains!\n- Повісь **картину** на стіну. - Hang the painting on the wall."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Bedroom (Спальня)\n\n| Ukrainian | English |\n|-----------|---------|\n| ліжко | bed |\n| матрац | mattress |\n| подушка | pillow |\n| ковдра | blanket |\n| простирадло | sheet |\n| покривало | bedspread |\n| тумбочка | nightstand |\n| шафа | wardrobe |\n| комод | dresser |\n| дзеркало | mirror |\n| будильник | alarm clock |\n\n**Examples:**\n- Застели **ліжко**. - Make the bed.\n- Мені потрібна нова **подушка**. - I need a new pillow.\n- **Ковдра** тепла і м'яка. - The blanket is warm and soft.\n- Одяг у **шафі**. - The clothes are in the wardrobe.\n- **Будильник** дзвонить о сьомій. - The alarm rings at seven.\n\n> ⚡ **Pro Tip: Застелити ліжко**\n>\n> \"Застелити ліжко\" = to make the bed. Literally \"to cover the bed.\""
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Kitchen (Кухня)\n\n| Ukrainian | English |\n|-----------|---------|\n| стіл | table |\n| стілець | chair |\n| холодильник | refrigerator |\n| плита | stove |\n| духовка | oven |\n| мийка | sink |\n| посуд | dishes |\n| каструля | pot |\n| сковорода | frying pan |\n| чайник | kettle |\n| мікрохвильовка | microwave |\n| тостер | toaster |\n\n**Examples:**\n- Поклади на **стіл**. - Put it on the table.\n- Відкрий **холодильник**. - Open the refrigerator.\n- Помий **посуд**. - Wash the dishes.\n- **Плита** не працює. - The stove doesn't work.\n- Постав **чайник**! - Put the kettle on!"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Bathroom (Ванна кімната)\n\n| Ukrainian | English |\n|-----------|---------|\n| ванна | bathtub |\n| душ | shower |\n| умивальник | sink (bathroom) |\n| унітаз | toilet |\n| рушник | towel |\n| дзеркало | mirror |\n| мило | soap |\n| шампунь | shampoo |\n| зубна щітка | toothbrush |\n| зубна паста | toothpaste |\n| пральна машина | washing machine |\n| фен | hair dryer |\n\n**Examples:**\n- Я у **душі**. - I'm in the shower.\n- Дай мені **рушник**. - Give me a towel.\n- Де **мило**? - Where's the soap?\n- Увімкни **пральну машину**. - Turn on the washing machine.\n- **Фен** у шухляді. - The hair dryer is in the drawer.\n\n> 🎭 **Culture Note: Bathroom Terms**\n>\n> In Ukraine, \"туалет\" and \"ванна\" are often separate rooms. \"Туалет\" = toilet room; \"ванна кімната\" = room with bath/shower."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Home Office (Кабінет)\n\n| Ukrainian | English |\n|-----------|---------|\n| письмовий стіл | desk |\n| офісне крісло | office chair |\n| комп'ютер | computer |\n| принтер | printer |\n| полиця | shelf |\n| шухляда | drawer |\n| канцелярія | office supplies |\n| ручка | pen |\n| зошит | notebook |\n\n**Examples:**\n- Сядь за **письмовий стіл**. - Sit at the desk.\n- Документи в **шухляді**. - Documents are in the drawer.\n- Увімкни **комп'ютер**. - Turn on the computer.\n- Папір для **принтера** закінчився. - Printer paper ran out."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Housing Types\n\n| Ukrainian | English |\n|-----------|---------|\n| квартира | apartment |\n| будинок | house |\n| кімната | room |\n| студія | studio |\n| приватний будинок | private house |\n| багатоповерховий будинок | apartment building |\n| поверх | floor |\n| під'їзд | entrance (building) |\n| ліфт | elevator |\n| сходи | stairs |\n| балкон | balcony |\n| гараж | garage |\n\n**Examples:**\n- Я живу в **квартирі**. - I live in an apartment.\n- **Будинок** має два **поверхи**. - The house has two floors.\n- **Ліфт** не працює, йди **сходами**. - The elevator doesn't work, take the stairs.\n- Квартира з **балконом**. - Apartment with a balcony.\n- Машина в **гаражі**. - The car is in the garage."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Housing Verbs\n\n| Imperfective | Perfective | Meaning |\n|--------------|------------|---------|\n| жити | прожити | to live |\n| орендувати | зняти | to rent |\n| переїжджати | переїхати | to move |\n| ремонтувати | відремонтувати | to repair, renovate |\n| прибирати | прибрати | to clean |\n| провітрювати | провітрити | to air out |\n| мити | помити | to wash |\n| пилососити | пропилососити | to vacuum |\n| прасувати | попрасувати | to iron |\n\n**Examples:**\n- Ми **орендуємо** квартиру. - We rent an apartment.\n- Коли ви **переїжджаєте**? - When are you moving?\n- Треба **прибрати** кімнату. - Need to clean the room.\n- **Провітри** спальню! - Air out the bedroom!\n- Я **пилососю** щосуботи. - I vacuum every Saturday."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Describing Spaces\n\n| Ukrainian | English |\n|-----------|---------|\n| просторий | spacious |\n| затишний | cozy |\n| світлий | bright, light |\n| темний | dark |\n| чистий | clean |\n| брудний | dirty |\n| новий | new |\n| старий | old |\n| сучасний | modern |\n| обладнаний | furnished |\n\n**Examples:**\n- **Просторий** і **світлий** зал. - Spacious and bright living room.\n- **Затишна** маленька спальня. - A cozy small bedroom.\n- Кухня **сучасна** і **обладнана**. - The kitchen is modern and furnished.\n- Квартира **чиста** і доглянута. - The apartment is clean and well-maintained."
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-A2+-69-matchup"
+          }
+        ]
+      },
+      {
+        "id": "phase-practice",
+        "name": "practice",
+        "duration": 15,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Match Furniture to Room\n\n1. диван → вітальня\n2. ліжко → спальня\n3. холодильник → кухня\n4. душ → ванна кімната\n5. письмовий стіл → кабінет"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Complete with Correct Item\n\n1. Я сплю на ___ (bed) з м'яким ___ (mattress).\n   → ліжку, матрацом\n\n2. Посуд у ___ (sink). Помий його!\n   → мийці\n\n3. Візьми ___ (towel) з ванної.\n   → рушник\n\n4. Сядь у ___ (armchair) біля вікна.\n   → крісло\n\n5. Увімкни ___ (washing machine). Треба прати.\n   → пральну машину"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Housing Dialogue\n\n**A:** Яка у вас ___ (apartment)?\n→ квартира\n\n**B:** Двокімнатна, на третьому ___ (floor).\n→ поверсі\n\n**A:** Є ___ (balcony)?\n→ балкон\n\n**B:** Так, і великий ___ (living room).\n→ зал / вітальня"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Translate\n\n1. Make the bed. → Застели ліжко.\n2. We're moving tomorrow. → Ми переїжджаємо завтра.\n3. The apartment is cozy. → Квартира затишна.\n4. Turn on the washing machine. → Увімкни пральну машину.\n5. Where are the keys? → Де ключі?"
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-A2+-69-quiz"
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-A2+-69-groupsort"
+          }
+        ]
+      },
+      {
+        "id": "phase-production",
+        "name": "production",
+        "duration": 10,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Describe Your Home\n\n**Example:** \"Я живу в квартирі на п'ятому поверсі. Вітальня простора і світла. У спальні велике ліжко і шафа.\"\n\nDescribe your home: rooms, furniture, what you like about it."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Rental Dialogue\n\n**Scenario:** You're looking for an apartment.\n- \"Шукаю однокімнатну квартиру.\"\n- \"Є балкон?\"\n- \"Яка орендна плата?\"\n- \"Меблі включені?\""
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Home Chores\n\nDescribe your weekly routine:\n- \"Щопонеділка я прибираю.\"\n- \"У суботу пилососю і мию підлогу.\"\n- \"Посуд мию щодня.\""
+          }
+        ]
+      }
+    ]
+  },
+  "activities": [
+    {
+      "id": "act-uk-A2+-69-matchup",
+      "type": "match-up",
+      "title": "Item → Location",
+      "description": "Item → Location",
+      "content": {
+        "type": "match-up",
+        "instructions": "",
+        "pairs": [
+          {
+            "left": "подушка",
+            "right": "ліжко"
+          },
+          {
+            "left": "рушник",
+            "right": "ванна"
+          },
+          {
+            "left": "каструля",
+            "right": "кухня"
+          },
+          {
+            "left": "диван",
+            "right": "вітальня"
+          },
+          {
+            "left": "шампунь",
+            "right": "ванна"
+          }
+        ],
+        "shuffleRight": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2+",
+      "duration": 5,
+      "tags": [
+        "vocabulary",
+        "home",
+        "furniture",
+        "household",
+        "daily-life"
+      ],
+      "createdAt": "2025-11-29T00:00:00Z",
+      "modifiedAt": "2025-11-29T00:00:00Z"
+    },
+    {
+      "id": "act-uk-A2+-69-quiz",
+      "type": "quiz",
+      "title": "Home Vocabulary",
+      "description": "Choose the correct answer.",
+      "content": {
+        "type": "quiz",
+        "instructions": "Choose the correct answer.",
+        "questions": [
+          {
+            "question": "\"Диван\" in English is ___.",
+            "options": [
+              "sofa",
+              "bed",
+              "chair",
+              "table"
+            ],
+            "correctIndex": 0,
+            "explanation": "Диван = sofa."
+          },
+          {
+            "question": "Where do you find \"холодильник\"?",
+            "options": [
+              "кухня",
+              "спальня",
+              "ванна",
+              "вітальня"
+            ],
+            "correctIndex": 0,
+            "explanation": "Холодильник (refrigerator) is in the kitchen."
+          },
+          {
+            "question": "\"Застелити ліжко\" means ___.",
+            "options": [
+              "to make the bed",
+              "to buy a bed",
+              "to sleep",
+              "to break the bed"
+            ],
+            "correctIndex": 0,
+            "explanation": "Застелити = to cover, make (the bed)."
+          },
+          {
+            "question": "\"Затишний\" describes a ___ place.",
+            "options": [
+              "cozy",
+              "dirty",
+              "expensive",
+              "big"
+            ],
+            "correctIndex": 0,
+            "explanation": "Затишний = cozy."
+          },
+          {
+            "question": "\"Пральна машина\" is ___.",
+            "options": [
+              "washing machine",
+              "dishwasher",
+              "microwave",
+              "refrigerator"
+            ],
+            "correctIndex": 0,
+            "explanation": "Пральна машина = washing machine."
+          },
+          {
+            "question": "\"Переїжджати\" means ___.",
+            "options": [
+              "to move (residence)",
+              "to travel",
+              "to rent",
+              "to clean"
+            ],
+            "correctIndex": 0,
+            "explanation": "Переїжджати = to move to a new place."
+          }
+        ],
+        "shuffleQuestions": true,
+        "shuffleOptions": true,
+        "showCorrectAnswers": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2+",
+      "duration": 5,
+      "tags": [
+        "vocabulary",
+        "home",
+        "furniture",
+        "household",
+        "daily-life"
+      ],
+      "createdAt": "2025-11-29T00:00:00Z",
+      "modifiedAt": "2025-11-29T00:00:00Z"
+    },
+    {
+      "id": "act-uk-A2+-69-groupsort",
+      "type": "group-sort",
+      "title": "By Room",
+      "description": "By Room",
+      "content": {
+        "type": "group-sort",
+        "instructions": "",
+        "groups": [
+          {
+            "name": "Вітальня (Living Room)",
+            "items": [
+              "диван",
+              "крісло",
+              "телевізор",
+              "килим"
+            ]
+          },
+          {
+            "name": "Спальня (Bedroom)",
+            "items": [
+              "ліжко",
+              "подушка",
+              "ковдра",
+              "шафа"
+            ]
+          },
+          {
+            "name": "Кухня (Kitchen)",
+            "items": [
+              "холодильник",
+              "плита",
+              "мийка",
+              "чайник"
+            ]
+          },
+          {
+            "name": "Ванна (Bathroom)",
+            "items": [
+              "душ",
+              "рушник",
+              "мило",
+              "пральна машина"
+            ]
+          }
+        ],
+        "shuffleItems": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2+",
+      "duration": 5,
+      "tags": [
+        "vocabulary",
+        "home",
+        "furniture",
+        "household",
+        "daily-life"
+      ],
+      "createdAt": "2025-11-29T00:00:00Z",
+      "modifiedAt": "2025-11-29T00:00:00Z"
+    }
+  ],
+  "vocabulary": {
+    "moduleId": "mod-uk-A2+-69",
+    "level": "A2+",
+    "phase": "A2+.2",
+    "wordCount": 38,
+    "transliterationMode": "none",
+    "words": [
+      {
+        "id": "v-m69-001",
+        "uk": "диван",
+        "translit": "/dɪˈvɑn/",
+        "ipa": "sofa",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m69-002",
+        "uk": "крісло",
+        "translit": "/ˈkrʲislo/",
+        "ipa": "armchair",
+        "en": "noun",
+        "pos": "n"
+      },
+      {
+        "id": "v-m69-003",
+        "uk": "журнальний столик",
+        "translit": "/ʒurnɑlʲnɪj ˈstolɪk/",
+        "ipa": "coffee table",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m69-004",
+        "uk": "килим",
+        "translit": "/kɪˈlɪm/",
+        "ipa": "carpet, rug",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m69-005",
+        "uk": "штори",
+        "translit": "/ˈʃtorɪ/",
+        "ipa": "curtains",
+        "en": "noun",
+        "pos": "pl"
+      },
+      {
+        "id": "v-m69-006",
+        "uk": "ліжко",
+        "translit": "/ˈlʲiʒko/",
+        "ipa": "bed",
+        "en": "noun",
+        "pos": "n"
+      },
+      {
+        "id": "v-m69-007",
+        "uk": "матрац",
+        "translit": "/mɑˈtrɑts/",
+        "ipa": "mattress",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m69-008",
+        "uk": "подушка",
+        "translit": "/poˈduʃkɑ/",
+        "ipa": "pillow",
+        "en": "noun",
+        "pos": "f"
+      },
+      {
+        "id": "v-m69-009",
+        "uk": "ковдра",
+        "translit": "/ˈkovdrɑ/",
+        "ipa": "blanket",
+        "en": "noun",
+        "pos": "f"
+      },
+      {
+        "id": "v-m69-010",
+        "uk": "простирадло",
+        "translit": "/prostɪˈrɑdlo/",
+        "ipa": "sheet",
+        "en": "noun",
+        "pos": "n"
+      },
+      {
+        "id": "v-m69-011",
+        "uk": "тумбочка",
+        "translit": "/tumˈbotʃkɑ/",
+        "ipa": "nightstand",
+        "en": "noun",
+        "pos": "f"
+      },
+      {
+        "id": "v-m69-012",
+        "uk": "шафа",
+        "translit": "/ˈʃɑfɑ/",
+        "ipa": "wardrobe",
+        "en": "noun",
+        "pos": "f"
+      },
+      {
+        "id": "v-m69-013",
+        "uk": "комод",
+        "translit": "/koˈmod/",
+        "ipa": "dresser",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m69-014",
+        "uk": "дзеркало",
+        "translit": "/ˈdzɛrkɑlo/",
+        "ipa": "mirror",
+        "en": "noun",
+        "pos": "n"
+      },
+      {
+        "id": "v-m69-015",
+        "uk": "мийка",
+        "translit": "/ˈmɪjkɑ/",
+        "ipa": "sink",
+        "en": "noun",
+        "pos": "f"
+      },
+      {
+        "id": "v-m69-016",
+        "uk": "посуд",
+        "translit": "/ˈposud/",
+        "ipa": "dishes",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m69-017",
+        "uk": "ванна",
+        "translit": "/ˈvɑnːɑ/",
+        "ipa": "bathtub",
+        "en": "noun",
+        "pos": "f"
+      },
+      {
+        "id": "v-m69-018",
+        "uk": "душ",
+        "translit": "/duʃ/",
+        "ipa": "shower",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m69-019",
+        "uk": "умивальник",
+        "translit": "/umɪˈvɑlʲnɪk/",
+        "ipa": "sink (bathroom)",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m69-020",
+        "uk": "рушник",
+        "translit": "/ruʃˈnɪk/",
+        "ipa": "towel",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m69-021",
+        "uk": "мило",
+        "translit": "/ˈmɪlo/",
+        "ipa": "soap",
+        "en": "noun",
+        "pos": "n"
+      },
+      {
+        "id": "v-m69-022",
+        "uk": "пральна машина",
+        "translit": "/ˈprɑlʲnɑ mɑˈʃɪnɑ/",
+        "ipa": "washing machine",
+        "en": "noun",
+        "pos": "f"
+      },
+      {
+        "id": "v-m69-023",
+        "uk": "письмовий стіл",
+        "translit": "/pɪsʲˈmovɪj stʲil/",
+        "ipa": "desk",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m69-024",
+        "uk": "шухляда",
+        "translit": "/ʃuxˈlʲɑdɑ/",
+        "ipa": "drawer",
+        "en": "noun",
+        "pos": "f"
+      },
+      {
+        "id": "v-m69-025",
+        "uk": "квартира",
+        "translit": "/kvɑrˈtɪrɑ/",
+        "ipa": "apartment",
+        "en": "noun",
+        "pos": "f"
+      },
+      {
+        "id": "v-m69-026",
+        "uk": "поверх",
+        "translit": "/ˈpovɛrx/",
+        "ipa": "floor (level)",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m69-027",
+        "uk": "балкон",
+        "translit": "/bɑlˈkon/",
+        "ipa": "balcony",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m69-028",
+        "uk": "ліфт",
+        "translit": "/lʲift/",
+        "ipa": "elevator",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m69-029",
+        "uk": "сходи",
+        "translit": "/ˈsxodɪ/",
+        "ipa": "stairs",
+        "en": "noun",
+        "pos": "pl"
+      },
+      {
+        "id": "v-m69-030",
+        "uk": "орендувати",
+        "translit": "/orɛnduˈvɑtɪ/",
+        "ipa": "to rent",
+        "en": "verb",
+        "pos": "-",
+        "gender": "impf"
+      },
+      {
+        "id": "v-m69-031",
+        "uk": "переїжджати",
+        "translit": "/pɛrɛˈjiʒdʒɑtɪ/",
+        "ipa": "to move",
+        "en": "verb",
+        "pos": "-",
+        "gender": "impf"
+      },
+      {
+        "id": "v-m69-032",
+        "uk": "прибирати",
+        "translit": "/prɪbɪˈrɑtɪ/",
+        "ipa": "to clean",
+        "en": "verb",
+        "pos": "-",
+        "gender": "impf"
+      },
+      {
+        "id": "v-m69-033",
+        "uk": "пилососити",
+        "translit": "/pɪloˈsosɪtɪ/",
+        "ipa": "to vacuum",
+        "en": "verb",
+        "pos": "-",
+        "gender": "impf"
+      },
+      {
+        "id": "v-m69-034",
+        "uk": "просторий",
+        "translit": "/prosˈtorɪj/",
+        "ipa": "spacious",
+        "en": "adj",
+        "pos": "-"
+      },
+      {
+        "id": "v-m69-035",
+        "uk": "затишний",
+        "translit": "/zɑˈtɪʃnɪj/",
+        "ipa": "cozy",
+        "en": "adj",
+        "pos": "-"
+      },
+      {
+        "id": "v-m69-036",
+        "uk": "світлий",
+        "translit": "/ˈsvʲitlɪj/",
+        "ipa": "bright",
+        "en": "adj",
+        "pos": "-"
+      },
+      {
+        "id": "v-m69-037",
+        "uk": "сучасний",
+        "translit": "/sutʃɑsˈnɪj/",
+        "ipa": "modern",
+        "en": "adj",
+        "pos": "-"
+      },
+      {
+        "id": "v-m69-038",
+        "uk": "обладнаний",
+        "translit": "/oblɑdˈnɑnɪj/",
+        "ipa": "furnished",
+        "en": "adj",
+        "pos": "-"
+      }
+    ]
+  }
+}

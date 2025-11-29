@@ -1,0 +1,747 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-A2+-61",
+    "moduleId": "mod-uk-A2+-61",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "methodology": "ppp",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "A2+",
+    "phase": "A2+.1",
+    "moduleNumber": 61,
+    "title": "Prefixes I: Motion Verbs",
+    "subtitle": "How Prefixes Change Meaning",
+    "description": "Understand how prefixes change motion verb meanings",
+    "objectives": [
+      "Understand how prefixes change motion verb meanings",
+      "Learn common motion verb prefixes",
+      "Form and use prefixed motion verbs",
+      "Build vocabulary through derivation"
+    ],
+    "grammarFocus": [
+      "Prefix + motion verb combinations",
+      "Meaning changes with prefixes",
+      "Aspect of prefixed verbs"
+    ],
+    "totalDuration": 45,
+    "transliterationMode": "none",
+    "tags": [
+      "word-formation",
+      "prefixes",
+      "motion-verbs",
+      "vocabulary-expansion"
+    ],
+    "version": 1,
+    "createdAt": "2025-11-29T00:00:00Z",
+    "modifiedAt": "2025-11-29T00:00:00Z",
+    "phases": [
+      {
+        "id": "phase-warm-up",
+        "name": "warm-up",
+        "duration": 5,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Welcome to A2+!\n\nYou've mastered A2 grammar. Now it's time to **multiply your vocabulary** through word formation!\n\n**The power of prefixes:**\n- You know: йти (to go), їхати (to drive)\n- Add prefixes: прийти, вийти, зайти, перейти...\n- One root → many words!\n\nIn Ukrainian, prefixes don't just modify verbs—they create entirely new meanings. Learning prefixes is the fastest way to expand your vocabulary.\n\n> 💡 **Did You Know?**\n>\n> Ukrainian has about 20 common verb prefixes. Each prefix adds a specific shade of meaning. By learning these prefixes, you can understand hundreds of verbs you've never seen before!"
+          }
+        ]
+      },
+      {
+        "id": "phase-presentation",
+        "name": "presentation",
+        "duration": 15,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### The Prefix System\n\n**How it works:**\n- Base verb: йти (to go on foot)\n- Add prefix: при- + йти = прийти (to arrive)\n- The prefix changes the meaning AND makes it perfective\n\n**Key insight:** Most prefixed verbs are **perfective**. The base verb is usually imperfective.\n\n| Base (Impf) | Prefixed (Perf) | Meaning Change |\n|-------------|-----------------|----------------|\n| йти | прийти | go → arrive |\n| йти | вийти | go → go out |\n| йти | зайти | go → drop by |"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "при- (Arrival, Addition)\n\n**Meaning:** movement toward, arrival at destination\n\n| Base | Prefixed | Meaning |\n|------|----------|---------|\n| йти | прийти | to arrive (on foot) |\n| їхати | приїхати | to arrive (by transport) |\n| летіти | прилетіти | to arrive (by plane) |\n| нести | принести | to bring (carrying) |\n| везти | привезти | to bring (by transport) |\n| ходити | приходити | to come (habitually) |\n\n**Examples:**\n- Він **прийшов** о восьмій. - He arrived at 8.\n- Вона **приїхала** з Києва. - She arrived from Kyiv.\n- Я **приніс** тобі книгу. - I brought you a book.\n- Він завжди **приходить** вчасно. - He always comes on time.\n\n> ⚡ **Pro Tip: при- = toward/arrival**\n>\n> Think of при- as \"toward the destination.\" The action ends at a specific point."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "ви- (Exit, Out)\n\n**Meaning:** movement out of, exiting\n\n| Base | Prefixed | Meaning |\n|------|----------|---------|\n| йти | вийти | to go out, exit |\n| їхати | виїхати | to drive out, leave |\n| летіти | вилетіти | to fly out, depart |\n| нести | винести | to carry out |\n| бігти | вибігти | to run out |\n| ходити | виходити | to go out (habitually) |\n\n**Examples:**\n- Він **вийшов** з кімнати. - He went out of the room.\n- Ми **виїхали** о шостій ранку. - We left at 6 AM.\n- Літак **вилетів** вчасно. - The plane departed on time.\n- Вона **виходить** на роботу о сьомій. - She leaves for work at 7.\n\n> 🎭 **Culture Note: Вихід**\n>\n> You'll see \"ВИХІД\" (exit) signs everywhere in Ukraine. It comes from вийти!\n> Similarly: вхід (entrance) from увійти."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "в-/у- (Entry, Into)\n\n**Meaning:** movement into, entering\n\n| Base | Prefixed | Meaning |\n|------|----------|---------|\n| йти | увійти / ввійти | to enter (on foot) |\n| їхати | в'їхати | to drive into |\n| летіти | влетіти | to fly into |\n| нести | внести / унести | to carry in |\n| бігти | вбігти | to run in |\n| ходити | входити | to enter (habitually) |\n\n**Examples:**\n- Вона **увійшла** до кімнати. - She entered the room.\n- Машина **в'їхала** в гараж. - The car drove into the garage.\n- Птах **влетів** у вікно. - A bird flew into the window.\n- Він **входить** без стуку. - He enters without knocking.\n\n> 📝 **Note: в- vs у-**\n>\n> Use у- before consonants (увійти), в- before vowels (ввійти) or after vowels. Both forms are correct."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "за- (Behind, Dropping By)\n\n**Meaning:** movement behind something, or brief stop\n\n| Base | Prefixed | Meaning |\n|------|----------|---------|\n| йти | зайти | to drop by, go behind |\n| їхати | заїхати | to stop by (driving) |\n| бігти | забігти | to run in briefly |\n| нести | занести | to drop off (carrying) |\n| ходити | заходити | to drop by (habitually) |\n\n**Examples:**\n- Я **зайду** до тебе ввечері. - I'll drop by your place tonight.\n- Сонце **зайшло** за хмару. - The sun went behind a cloud.\n- **Заїдь** у магазин по дорозі. - Stop by the store on the way.\n- Він часто **заходить** до нас. - He often drops by our place."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "пере- (Across, Over)\n\n**Meaning:** movement across, from one side to another\n\n| Base | Prefixed | Meaning |\n|------|----------|---------|\n| йти | перейти | to cross (on foot) |\n| їхати | переїхати | to cross (driving), to move |\n| летіти | перелетіти | to fly across |\n| нести | перенести | to carry across, transfer |\n| бігти | перебігти | to run across |\n| ходити | переходити | to cross (habitually) |\n\n**Examples:**\n- **Перейдіть** вулицю на світлофорі. - Cross the street at the traffic light.\n- Ми **переїхали** в нову квартиру. - We moved to a new apartment.\n- Птахи **перелетіли** через річку. - The birds flew across the river.\n- Вона **переходить** дорогу тут щодня. - She crosses the road here every day.\n\n> ⚡ **Pro Tip: пере- = across/transfer**\n>\n> Пере- often implies moving from one state/place to another: переїхати (move house), перенести (reschedule/transfer)."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "від- (Away From)\n\n**Meaning:** movement away from starting point\n\n| Base | Prefixed | Meaning |\n|------|----------|---------|\n| йти | відійти | to step away, leave |\n| їхати | від'їхати | to drive away |\n| летіти | відлетіти | to fly away |\n| нести | віднести | to carry away |\n| бігти | відбігти | to run away |\n| ходити | відходити | to depart, leave |\n\n**Examples:**\n- Поїзд **відійшов** 5 хвилин тому. - The train left 5 minutes ago.\n- Машина **від'їхала**. - The car drove away.\n- Птахи **відлетіли** на південь. - The birds flew away to the south.\n- Потяг **відходить** о третій. - The train departs at 3."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "до- (Up To, Reaching)\n\n**Meaning:** movement up to a point, reaching destination\n\n| Base | Prefixed | Meaning |\n|------|----------|---------|\n| йти | дійти | to reach (on foot), to get to |\n| їхати | доїхати | to reach (driving) |\n| летіти | долетіти | to fly to, reach |\n| нести | донести | to carry to |\n| бігти | добігти | to run to |\n\n**Examples:**\n- Я **дійшов** до станції за 10 хвилин. - I reached the station in 10 minutes.\n- Ми **доїхали** до Львова за 5 годин. - We drove to Lviv in 5 hours.\n- Як **дійти** до центру? - How do I get to the center?\n- Лист **дійшов** за тиждень. - The letter arrived in a week."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "об- (Around)\n\n**Meaning:** movement around something\n\n| Base | Prefixed | Meaning |\n|------|----------|---------|\n| йти | обійти | to go around, bypass |\n| їхати | об'їхати | to drive around |\n| летіти | облетіти | to fly around |\n| бігти | оббігти | to run around |\n\n**Examples:**\n- **Обійди** цю калюжу. - Go around this puddle.\n- Ми **об'їхали** затор. - We drove around the traffic jam.\n- Вони **оббігли** стадіон. - They ran around the stadium."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Summary Table: All Prefixes\n\n| Prefix | Meaning | Example |\n|--------|---------|---------|\n| при- | arrival, toward | прийти (arrive) |\n| ви- | out, exit | вийти (exit) |\n| в-/у- | into, entry | увійти (enter) |\n| за- | behind, drop by | зайти (drop by) |\n| пере- | across, over | перейти (cross) |\n| від- | away from | відійти (leave) |\n| до- | up to, reaching | дійти (reach) |\n| об- | around | обійти (go around) |"
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-A2+-61-matchup"
+          }
+        ]
+      },
+      {
+        "id": "phase-practice",
+        "name": "practice",
+        "duration": 15,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Match Prefix to Meaning\n\n1. при- → arrival\n2. ви- → exit\n3. в-/у- → entry\n4. за- → behind/drop by\n5. пере- → across\n6. від- → away from\n7. до- → reaching\n8. об- → around"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Complete with Correct Verb\n\n1. Він ___ (arrive) о восьмій годині.\n   → прийшов\n\n2. Вона ___ (exit) з магазину.\n   → вийшла\n\n3. Ми ___ (cross) вулицю.\n   → перейшли\n\n4. Я ___ (drop by) до друга.\n   → зайшов\n\n5. Поїзд ___ (depart) вчасно.\n   → відійшов\n\n6. Як ___ (reach) до центру?\n   → дійти\n\n7. Вона ___ (enter) в кімнату.\n   → увійшла\n\n8. Ми ___ (drive around) затор.\n   → об'їхали"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Translate\n\n1. I arrived home at 6. → Я прийшов додому о шостій.\n2. She went out to the balcony. → Вона вийшла на балкон.\n3. We crossed the bridge. → Ми перейшли міст.\n4. Drop by tomorrow! → Зайди завтра!\n5. The bus departed. → Автобус відійшов.\n6. How do I get to the station? → Як дійти до станції?"
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-A2+-61-quiz"
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-A2+-61-groupsort"
+          }
+        ]
+      },
+      {
+        "id": "phase-production",
+        "name": "production",
+        "duration": 10,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Describe Movement\n\n**Use prefixed verbs to describe:**\n\nYour morning:\n- Я **вийшов** з дому о восьмій.\n- Я **дійшов** до зупинки за 5 хвилин.\n- Я **зайшов** у кав'ярню по каву.\n- Я **прийшов** на роботу о дев'ятій.\n\nA trip:\n- Ми **виїхали** рано вранці.\n- Ми **об'їхали** Київ.\n- Ми **перетнули** кордон.\n- Ми **доїхали** до Варшави ввечері."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Give Directions\n\nPractice giving directions using prefixed verbs:\n\n- **Вийдіть** з метро.\n- **Перейдіть** вулицю.\n- **Дійдіть** до перехрестя.\n- **Зайдіть** у двір."
+          }
+        ]
+      }
+    ]
+  },
+  "activities": [
+    {
+      "id": "act-uk-A2+-61-matchup",
+      "type": "match-up",
+      "title": "Prefix → Meaning",
+      "description": "Match prefix with its core meaning.",
+      "content": {
+        "type": "match-up",
+        "instructions": "Match prefix with its core meaning.",
+        "pairs": [
+          {
+            "left": "при-",
+            "right": "arrival, toward"
+          },
+          {
+            "left": "ви-",
+            "right": "out, exit"
+          },
+          {
+            "left": "в-/у-",
+            "right": "into, entry"
+          },
+          {
+            "left": "за-",
+            "right": "behind, drop by"
+          },
+          {
+            "left": "пере-",
+            "right": "across, over"
+          },
+          {
+            "left": "від-",
+            "right": "away from"
+          },
+          {
+            "left": "до-",
+            "right": "reaching, up to"
+          },
+          {
+            "left": "об-",
+            "right": "around"
+          }
+        ],
+        "shuffleRight": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2+",
+      "duration": 5,
+      "tags": [
+        "word-formation",
+        "prefixes",
+        "motion-verbs",
+        "vocabulary-expansion"
+      ],
+      "createdAt": "2025-11-29T00:00:00Z",
+      "modifiedAt": "2025-11-29T00:00:00Z"
+    },
+    {
+      "id": "act-uk-A2+-61-quiz",
+      "type": "quiz",
+      "title": "Prefixed Motion Verbs",
+      "description": "Choose the correct verb.",
+      "content": {
+        "type": "quiz",
+        "instructions": "Choose the correct verb.",
+        "questions": [
+          {
+            "question": "\"He arrived on time\" - Він ___ вчасно.",
+            "options": [
+              "прийшов",
+              "вийшов",
+              "зайшов",
+              "дійшов"
+            ],
+            "correctIndex": 0,
+            "explanation": "При- = arrival."
+          },
+          {
+            "question": "\"She exited the building\" - Вона ___ з будівлі.",
+            "options": [
+              "вийшла",
+              "увійшла",
+              "прийшла",
+              "зайшла"
+            ],
+            "correctIndex": 0,
+            "explanation": "Ви- = exit."
+          },
+          {
+            "question": "\"We crossed the street\" - Ми ___ вулицю.",
+            "options": [
+              "перейшли",
+              "вийшли",
+              "зайшли",
+              "дійшли"
+            ],
+            "correctIndex": 0,
+            "explanation": "Пере- = across."
+          },
+          {
+            "question": "\"Drop by tomorrow\" - ___ завтра.",
+            "options": [
+              "Зайди",
+              "Вийди",
+              "Перейди",
+              "Дійди"
+            ],
+            "correctIndex": 0,
+            "explanation": "За- = drop by."
+          },
+          {
+            "question": "\"The train departed\" - Поїзд ___.",
+            "options": [
+              "відійшов",
+              "прийшов",
+              "дійшов",
+              "обійшов"
+            ],
+            "correctIndex": 0,
+            "explanation": "Від- = away, departure."
+          },
+          {
+            "question": "\"How do I get to the center?\" - Як ___ до центру?",
+            "options": [
+              "дійти",
+              "прийти",
+              "вийти",
+              "зайти"
+            ],
+            "correctIndex": 0,
+            "explanation": "До- = reaching destination."
+          }
+        ],
+        "shuffleQuestions": true,
+        "shuffleOptions": true,
+        "showCorrectAnswers": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2+",
+      "duration": 5,
+      "tags": [
+        "word-formation",
+        "prefixes",
+        "motion-verbs",
+        "vocabulary-expansion"
+      ],
+      "createdAt": "2025-11-29T00:00:00Z",
+      "modifiedAt": "2025-11-29T00:00:00Z"
+    },
+    {
+      "id": "act-uk-A2+-61-groupsort",
+      "type": "group-sort",
+      "title": "By Prefix",
+      "description": "Sort verbs by their prefix.",
+      "content": {
+        "type": "group-sort",
+        "instructions": "Sort verbs by their prefix.",
+        "groups": [
+          {
+            "name": "при- (arrival)",
+            "items": [
+              "прийти",
+              "приїхати",
+              "принести",
+              "прилетіти"
+            ]
+          },
+          {
+            "name": "ви- (exit)",
+            "items": [
+              "вийти",
+              "виїхати",
+              "винести",
+              "вибігти"
+            ]
+          },
+          {
+            "name": "пере- (across)",
+            "items": [
+              "перейти",
+              "переїхати",
+              "перенести",
+              "перебігти"
+            ]
+          }
+        ],
+        "shuffleItems": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2+",
+      "duration": 5,
+      "tags": [
+        "word-formation",
+        "prefixes",
+        "motion-verbs",
+        "vocabulary-expansion"
+      ],
+      "createdAt": "2025-11-29T00:00:00Z",
+      "modifiedAt": "2025-11-29T00:00:00Z"
+    }
+  ],
+  "vocabulary": {
+    "moduleId": "mod-uk-A2+-61",
+    "level": "A2+",
+    "phase": "A2+.1",
+    "wordCount": 42,
+    "transliterationMode": "none",
+    "words": [
+      {
+        "id": "v-m61-001",
+        "uk": "прийти",
+        "translit": "/prɪjˈtɪ/",
+        "ipa": "to arrive (on foot)",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m61-002",
+        "uk": "приїхати",
+        "translit": "/prɪˈjixɑtɪ/",
+        "ipa": "to arrive (by transport)",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m61-003",
+        "uk": "прилетіти",
+        "translit": "/prɪlɛˈtʲitɪ/",
+        "ipa": "to arrive (by plane)",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m61-004",
+        "uk": "принести",
+        "translit": "/prɪnɛsˈtɪ/",
+        "ipa": "to bring (carrying)",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m61-005",
+        "uk": "привезти",
+        "translit": "/prɪvɛzˈtɪ/",
+        "ipa": "to bring (by transport)",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m61-006",
+        "uk": "приходити",
+        "translit": "/prɪxoˈdɪtɪ/",
+        "ipa": "to come (habitually)",
+        "en": "verb",
+        "pos": "-",
+        "gender": "impf"
+      },
+      {
+        "id": "v-m61-007",
+        "uk": "вийти",
+        "translit": "/ˈvɪjtɪ/",
+        "ipa": "to go out, exit",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m61-008",
+        "uk": "виїхати",
+        "translit": "/ˈvɪjixɑtɪ/",
+        "ipa": "to drive out, leave",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m61-009",
+        "uk": "вилетіти",
+        "translit": "/vɪlɛˈtʲitɪ/",
+        "ipa": "to fly out, depart",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m61-010",
+        "uk": "винести",
+        "translit": "/vɪnɛsˈtɪ/",
+        "ipa": "to carry out",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m61-011",
+        "uk": "виходити",
+        "translit": "/vɪxoˈdɪtɪ/",
+        "ipa": "to exit (habitually)",
+        "en": "verb",
+        "pos": "-",
+        "gender": "impf"
+      },
+      {
+        "id": "v-m61-012",
+        "uk": "увійти",
+        "translit": "/uˈvʲijtɪ/",
+        "ipa": "to enter",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m61-013",
+        "uk": "в'їхати",
+        "translit": "/ˈvjixɑtɪ/",
+        "ipa": "to drive into",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m61-014",
+        "uk": "входити",
+        "translit": "/vxoˈdɪtɪ/",
+        "ipa": "to enter (habitually)",
+        "en": "verb",
+        "pos": "-",
+        "gender": "impf"
+      },
+      {
+        "id": "v-m61-015",
+        "uk": "зайти",
+        "translit": "/zɑjˈtɪ/",
+        "ipa": "to drop by",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m61-016",
+        "uk": "заїхати",
+        "translit": "/zɑˈjixɑtɪ/",
+        "ipa": "to stop by (driving)",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m61-017",
+        "uk": "заходити",
+        "translit": "/zɑxoˈdɪtɪ/",
+        "ipa": "to drop by (habitually)",
+        "en": "verb",
+        "pos": "-",
+        "gender": "impf"
+      },
+      {
+        "id": "v-m61-018",
+        "uk": "перейти",
+        "translit": "/pɛrɛjˈtɪ/",
+        "ipa": "to cross (on foot)",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m61-019",
+        "uk": "переїхати",
+        "translit": "/pɛrɛˈjixɑtɪ/",
+        "ipa": "to move (residence)",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m61-020",
+        "uk": "переходити",
+        "translit": "/pɛrɛxoˈdɪtɪ/",
+        "ipa": "to cross (habitually)",
+        "en": "verb",
+        "pos": "-",
+        "gender": "impf"
+      },
+      {
+        "id": "v-m61-021",
+        "uk": "відійти",
+        "translit": "/vʲidʲijˈtɪ/",
+        "ipa": "to step away, leave",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m61-022",
+        "uk": "від'їхати",
+        "translit": "/vʲidˈjixɑtɪ/",
+        "ipa": "to drive away",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m61-023",
+        "uk": "відходити",
+        "translit": "/vʲidxoˈdɪtɪ/",
+        "ipa": "to depart (habitually)",
+        "en": "verb",
+        "pos": "-",
+        "gender": "impf"
+      },
+      {
+        "id": "v-m61-024",
+        "uk": "дійти",
+        "translit": "/dʲijˈtɪ/",
+        "ipa": "to reach (on foot)",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m61-025",
+        "uk": "доїхати",
+        "translit": "/doˈjixɑtɪ/",
+        "ipa": "to reach (by transport)",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m61-026",
+        "uk": "обійти",
+        "translit": "/obʲijˈtɪ/",
+        "ipa": "to go around",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m61-027",
+        "uk": "об'їхати",
+        "translit": "/obˈjixɑtɪ/",
+        "ipa": "to drive around",
+        "en": "verb",
+        "pos": "-",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m61-028",
+        "uk": "вхід",
+        "translit": "/vxʲid/",
+        "ipa": "entrance",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m61-029",
+        "uk": "вихід",
+        "translit": "/ˈvɪxʲid/",
+        "ipa": "exit",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m61-030",
+        "uk": "прихід",
+        "translit": "/ˈprɪxʲid/",
+        "ipa": "arrival, coming",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m61-031",
+        "uk": "відхід",
+        "translit": "/ˈvʲidxʲid/",
+        "ipa": "departure",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m61-032",
+        "uk": "перехід",
+        "translit": "/ˈpɛrɛxʲid/",
+        "ipa": "crossing, transition",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m61-033",
+        "uk": "прибуття",
+        "translit": "/prɪˈbutʲːɑ/",
+        "ipa": "arrival",
+        "en": "noun",
+        "pos": "n",
+        "gender": "formal"
+      },
+      {
+        "id": "v-m61-034",
+        "uk": "відбуття",
+        "translit": "/vʲidˈbutʲːɑ/",
+        "ipa": "departure",
+        "en": "noun",
+        "pos": "n",
+        "gender": "formal"
+      },
+      {
+        "id": "v-m61-035",
+        "uk": "переїзд",
+        "translit": "/pɛrɛˈjizd/",
+        "ipa": "move (relocation)",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m61-036",
+        "uk": "заїзд",
+        "translit": "/ˈzɑjizd/",
+        "ipa": "entrance (for vehicles)",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m61-037",
+        "uk": "виїзд",
+        "translit": "/ˈvɪjizd/",
+        "ipa": "exit (for vehicles)",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m61-038",
+        "uk": "напрямок",
+        "translit": "/nɑˈprʲɑmok/",
+        "ipa": "direction",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m61-039",
+        "uk": "затор",
+        "translit": "/zɑˈtor/",
+        "ipa": "traffic jam",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m61-040",
+        "uk": "світлофор",
+        "translit": "/svʲitloˈfor/",
+        "ipa": "traffic light",
+        "en": "noun",
+        "pos": "m"
+      },
+      {
+        "id": "v-m61-041",
+        "uk": "перехрестя",
+        "translit": "/pɛrɛˈxrɛstʲɑ/",
+        "ipa": "intersection",
+        "en": "noun",
+        "pos": "n"
+      },
+      {
+        "id": "v-m61-042",
+        "uk": "калюжа",
+        "translit": "/kɑˈlʲuʒɑ/",
+        "ipa": "puddle",
+        "en": "noun",
+        "pos": "f"
+      }
+    ]
+  }
+}

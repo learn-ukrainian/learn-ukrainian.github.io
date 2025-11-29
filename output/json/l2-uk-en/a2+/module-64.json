@@ -1,0 +1,661 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-A2+-64",
+    "moduleId": "mod-uk-A2+-64",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "methodology": "ppp",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "A2+",
+    "phase": "A2+.1",
+    "moduleNumber": 64,
+    "title": "Suffixes II: Adjectives",
+    "subtitle": "Creating Adjectives from Nouns and Verbs",
+    "description": "Learn adjective-forming suffixes",
+    "objectives": [
+      "Learn adjective-forming suffixes",
+      "Create adjectives from nouns",
+      "Recognize suffix patterns",
+      "Expand descriptive vocabulary"
+    ],
+    "grammarFocus": [
+      "Relational suffixes (-ний, -ський)",
+      "Quality suffixes (-ливий, -истий)",
+      "Possessive suffixes (-ів, -ин)"
+    ],
+    "totalDuration": 45,
+    "transliterationMode": "none",
+    "tags": [
+      "word-formation",
+      "suffixes",
+      "adjectives",
+      "vocabulary-expansion"
+    ],
+    "version": 1,
+    "createdAt": "2025-11-29T00:00:00Z",
+    "modifiedAt": "2025-11-29T00:00:00Z",
+    "phases": [
+      {
+        "id": "phase-warm-up",
+        "name": "warm-up",
+        "duration": 5,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Describing Everything\n\nIn Module 63, you made nouns. Now let's make **adjectives**!\n\n**The pattern:**\n- Україна (Ukraine) → українська мова (Ukrainian language)\n- місто (city) → міський транспорт (city transport)\n- книга (book) → книжковий магазин (bookstore)\n\nSuffixes transform nouns into adjectives that describe qualities and relationships.\n\n> 💡 **Why This Matters**\n>\n> Ukrainian has rich adjective-forming patterns. One noun can generate multiple adjectives with different nuances!"
+          }
+        ]
+      },
+      {
+        "id": "phase-presentation",
+        "name": "presentation",
+        "duration": 15,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### -ний / -ній (General Relation)\n\n**Meaning:** Relating to, connected with (most common adjective suffix)\n\n| Noun | Adjective | Meaning |\n|------|-----------|---------|\n| рік | річний | annual, yearly |\n| день | денний | daily, daytime |\n| ніч | нічний | night, nocturnal |\n| літо | літній | summer |\n| зима | зимовий | winter |\n| весна | весняний | spring |\n| осінь | осінній | autumn |\n| сонце | сонячний | sunny |\n| вода | водний | water (adj) |\n| море | морський | sea (adj) |\n\n**Examples:**\n- **Річний** звіт готовий. - The annual report is ready.\n- Люблю **літній** відпочинок. - I love summer vacation.\n- Це **морський** порт. - This is a sea port.\n- **Сонячний** день! - A sunny day!\n- **Нічний** рейс о другій. - The night flight is at 2.\n\n> ⚡ **Pro Tip: Spelling Changes**\n>\n> Some stems change: день → денний (not *деньний), ніч → нічний, море → морський."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "-ський / -цький (Belonging, Origin)\n\n**Meaning:** Belonging to place, people, or category\n\n| Noun | Adjective | Meaning |\n|------|-----------|---------|\n| Україна | український | Ukrainian |\n| місто | міський | city, urban |\n| село | сільський | village, rural |\n| студент | студентський | student (adj) |\n| людина | людський | human |\n| дитина | дитячий | children's |\n| жінка | жіночий | women's |\n| чоловік | чоловічий | men's |\n| Київ | київський | Kyivan |\n| Львів | львівський | Lviv (adj) |\n\n**Examples:**\n- **Українська** мова красива. - Ukrainian language is beautiful.\n- **Міський** транспорт дешевий. - City transport is cheap.\n- Це **студентське** гуртожиток. - This is a student dormitory.\n- **Дитячий** садок поруч. - The kindergarten is nearby.\n- **Київський** метрополітен великий. - Kyiv metro is big.\n\n> 🎭 **Culture Note: City Adjectives**\n>\n> Most Ukrainian cities have their adjective forms:\n> - Одеса → одеський\n> - Харків → харківський\n> - Дніпро → дніпровський"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "-овий / -евий (Material, Type)\n\n**Meaning:** Made of, relating to type or material\n\n| Noun | Adjective | Meaning |\n|------|-----------|---------|\n| книга | книжковий | book (adj) |\n| фрукт | фруктовий | fruit (adj) |\n| овоч | овочевий | vegetable (adj) |\n| бізнес | бізнесовий | business (adj) |\n| спорт | спортивний | sports (adj) |\n| музика | музичний | musical |\n| театр | театральний | theater (adj) |\n| банк | банківський | banking |\n\n**Examples:**\n- **Книжковий** магазин зачинений. - The bookstore is closed.\n- Купи **фруктовий** сік. - Buy fruit juice.\n- Він має **бізнесову** візу. - He has a business visa.\n- Це **спортивний** клуб. - This is a sports club.\n- **Музичний** фестиваль у серпні. - The music festival is in August."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "-ливий (Tendency, Characteristic)\n\n**Meaning:** Having tendency, prone to, characterized by\n\n| Base | Adjective | Meaning |\n|------|-----------|---------|\n| щастя | щасливий | happy |\n| талант | талановитий | talented |\n| сила | силний → сильний | strong |\n| користь | корисний | useful |\n| цікавий | цікавий | interesting |\n| уважний | уважний | attentive |\n| дбайливий | дбайливий | caring |\n| забудьк- | забудькуватий | forgetful |\n| говір- | говіркий | talkative |\n\n**Examples:**\n- Вона **щаслива** жінка. - She's a happy woman.\n- Він **талановитий** музикант. - He's a talented musician.\n- Це **корисна** інформація. - This is useful information.\n- Яка **цікава** книга! - What an interesting book!\n- Вона дуже **дбайлива** мати. - She's a very caring mother."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "-истий / -астий (Abundance, Resemblance)\n\n**Meaning:** Full of, resembling, having lots of\n\n| Base | Adjective | Meaning |\n|------|-----------|---------|\n| вода | водянистий | watery |\n| камінь | кам'янистий | stony, rocky |\n| пісок | піщаний | sandy |\n| хмара | хмарний | cloudy |\n| лист | листяний | leafy |\n| зірка | зоряний | starry |\n| гора | гірський | mountainous |\n| ліс | лісистий / лісовий | forested |\n\n**Examples:**\n- Суп занадто **водянистий**. - The soup is too watery.\n- Це **кам'яниста** дорога. - This is a rocky road.\n- **Хмарний** день сьогодні. - It's a cloudy day today.\n- Яке **зоряне** небо! - What a starry sky!\n- **Гірський** курорт дорогий. - The mountain resort is expensive."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "-ів / -ин (Possessive)\n\n**Meaning:** Belonging to specific person (possessive adjectives from names)\n\n| Name | Adjective | Meaning |\n|------|-----------|---------|\n| батько | батьків | father's |\n| мама | мамин | mother's |\n| сестра | сестрин | sister's |\n| брат | братів | brother's |\n| тато | татів | dad's |\n| Тарас | Тарасів | Taras's |\n| Марія | Маріїн | Maria's |\n| дідусь | дідусів | grandfather's |\n| бабуся | бабусин | grandmother's |\n\n**Examples:**\n- Це **батькова** машина. - This is father's car.\n- **Мамина** кухня найкраща. - Mom's cooking is the best.\n- Де **сестрина** кімната? - Where is sister's room?\n- **Бабусин** пиріг смачний. - Grandma's pie is delicious.\n\n> 📝 **Note: Declension**\n>\n> These possessive adjectives decline like regular adjectives:\n> - батьків (m), батькова (f), батькове (n), батькові (pl)"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Summary: Adjective Suffixes\n\n| Suffix | Meaning | Example |\n|--------|---------|---------|\n| -ний/-ній | general relation | річний (annual) |\n| -ський | belonging, origin | міський (urban) |\n| -овий | type, material | книжковий (book) |\n| -ливий | tendency | щасливий (happy) |\n| -истий | abundance | кам'янистий (rocky) |\n| -ів/-ин | possessive | батьків (father's) |"
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-A2+-64-matchup"
+          }
+        ]
+      },
+      {
+        "id": "phase-practice",
+        "name": "practice",
+        "duration": 15,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Form Adjectives from Nouns\n\n1. Україна → український\n2. місто → міський\n3. книга → книжковий\n4. літо → літній\n5. ніч → нічний\n6. море → морський"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Match Suffix to Meaning\n\n1. -ський → belonging to\n2. -овий → type/material\n3. -ливий → tendency\n4. -истий → abundance\n5. -ів/-ин → possessive"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Complete Sentences\n\n1. Люблю ___ (Ukrainian) кухню.\n   → українську\n\n2. Це ___ (city) парк.\n   → міський\n\n3. Купи ___ (fruit) сік.\n   → фруктовий\n\n4. Вона ___ (happy) людина.\n   → щаслива\n\n5. Де ___ (mom's) сумка?\n   → мамина"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Translate\n\n1. Ukrainian language → українська мова\n2. City transport → міський транспорт\n3. Summer vacation → літній відпочинок\n4. Starry sky → зоряне небо\n5. Father's car → батькова машина"
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-A2+-64-quiz"
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-A2+-64-groupsort"
+          }
+        ]
+      },
+      {
+        "id": "phase-production",
+        "name": "production",
+        "duration": 10,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Describe Places\n\nUse -ський adjectives:\n- **Київський** метрополітен дуже зручний.\n- **Сільський** пейзаж красивий.\n- **Гірський** курорт найкращий."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Talk About Seasons\n\nUse season adjectives:\n- **Літні** дні довгі і теплі.\n- **Зимова** погода холодна.\n- **Весняні** квіти прекрасні."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Describe Qualities\n\nUse -ливий adjectives:\n- Він **талановитий** художник.\n- Це **корисний** досвід.\n- Вона **щаслива** у шлюбі."
+          }
+        ]
+      }
+    ]
+  },
+  "activities": [
+    {
+      "id": "act-uk-A2+-64-matchup",
+      "type": "match-up",
+      "title": "Suffix → Function",
+      "description": "Suffix → Function",
+      "content": {
+        "type": "match-up",
+        "instructions": "",
+        "pairs": [
+          {
+            "left": "-ний/-ській",
+            "right": "relation, belonging"
+          },
+          {
+            "left": "-овий/-евий",
+            "right": "type, material"
+          },
+          {
+            "left": "-ливий",
+            "right": "tendency, quality"
+          },
+          {
+            "left": "-истий/-астий",
+            "right": "abundance"
+          },
+          {
+            "left": "-ів/-ин",
+            "right": "possession"
+          }
+        ],
+        "shuffleRight": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2+",
+      "duration": 5,
+      "tags": [
+        "word-formation",
+        "suffixes",
+        "adjectives",
+        "vocabulary-expansion"
+      ],
+      "createdAt": "2025-11-29T00:00:00Z",
+      "modifiedAt": "2025-11-29T00:00:00Z"
+    },
+    {
+      "id": "act-uk-A2+-64-quiz",
+      "type": "quiz",
+      "title": "Adjective Suffixes",
+      "description": "Choose the correct adjective form.",
+      "content": {
+        "type": "quiz",
+        "instructions": "Choose the correct adjective form.",
+        "questions": [
+          {
+            "question": "\"Ukrainian\" (from Україна) - ___ мова",
+            "options": [
+              "українська",
+              "українова",
+              "україниста",
+              "українива"
+            ],
+            "correctIndex": 0,
+            "explanation": "-ський for origin/belonging."
+          },
+          {
+            "question": "\"City\" (from місто) - ___ транспорт",
+            "options": [
+              "міський",
+              "містовий",
+              "містовистий",
+              "містаний"
+            ],
+            "correctIndex": 0,
+            "explanation": "-ський for belonging."
+          },
+          {
+            "question": "\"Fruit\" (type) - ___ сік",
+            "options": [
+              "фруктовий",
+              "фруктський",
+              "фруктистий",
+              "фруктливий"
+            ],
+            "correctIndex": 0,
+            "explanation": "-овий for type."
+          },
+          {
+            "question": "\"Happy\" (quality) - ___ людина",
+            "options": [
+              "щаслива",
+              "щастева",
+              "щастиста",
+              "щастська"
+            ],
+            "correctIndex": 0,
+            "explanation": "-ливий for tendency/quality."
+          },
+          {
+            "question": "\"Rocky\" (abundance) - ___ дорога",
+            "options": [
+              "кам'яниста",
+              "каменева",
+              "кам'янська",
+              "камнива"
+            ],
+            "correctIndex": 0,
+            "explanation": "-истий for abundance."
+          },
+          {
+            "question": "\"Mother's\" (possessive) - ___ рука",
+            "options": [
+              "мамина",
+              "мамова",
+              "мамська",
+              "мамиста"
+            ],
+            "correctIndex": 0,
+            "explanation": "-ин for feminine possessive."
+          }
+        ],
+        "shuffleQuestions": true,
+        "shuffleOptions": true,
+        "showCorrectAnswers": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2+",
+      "duration": 5,
+      "tags": [
+        "word-formation",
+        "suffixes",
+        "adjectives",
+        "vocabulary-expansion"
+      ],
+      "createdAt": "2025-11-29T00:00:00Z",
+      "modifiedAt": "2025-11-29T00:00:00Z"
+    },
+    {
+      "id": "act-uk-A2+-64-groupsort",
+      "type": "group-sort",
+      "title": "By Suffix Type",
+      "description": "By Suffix Type",
+      "content": {
+        "type": "group-sort",
+        "instructions": "",
+        "groups": [
+          {
+            "name": "-ський (belonging)",
+            "items": [
+              "український",
+              "міський",
+              "студентський",
+              "київський"
+            ]
+          },
+          {
+            "name": "-овий (type)",
+            "items": [
+              "книжковий",
+              "фруктовий",
+              "спортивний",
+              "музичний"
+            ]
+          },
+          {
+            "name": "-ливий (quality)",
+            "items": [
+              "щасливий",
+              "талановитий",
+              "корисний",
+              "дбайливий"
+            ]
+          }
+        ],
+        "shuffleItems": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2+",
+      "duration": 5,
+      "tags": [
+        "word-formation",
+        "suffixes",
+        "adjectives",
+        "vocabulary-expansion"
+      ],
+      "createdAt": "2025-11-29T00:00:00Z",
+      "modifiedAt": "2025-11-29T00:00:00Z"
+    }
+  ],
+  "vocabulary": {
+    "moduleId": "mod-uk-A2+-64",
+    "level": "A2+",
+    "phase": "A2+.1",
+    "wordCount": 37,
+    "transliterationMode": "none",
+    "words": [
+      {
+        "id": "v-m64-001",
+        "uk": "річний",
+        "translit": "/ˈrʲitʃnɪj/",
+        "ipa": "annual",
+        "en": "adj",
+        "pos": "-"
+      },
+      {
+        "id": "v-m64-002",
+        "uk": "денний",
+        "translit": "/ˈdɛnːɪj/",
+        "ipa": "daily, daytime",
+        "en": "adj",
+        "pos": "-"
+      },
+      {
+        "id": "v-m64-003",
+        "uk": "нічний",
+        "translit": "/ˈnʲitʃnɪj/",
+        "ipa": "night",
+        "en": "adj",
+        "pos": "-"
+      },
+      {
+        "id": "v-m64-004",
+        "uk": "літній",
+        "translit": "/ˈlʲitnʲij/",
+        "ipa": "summer",
+        "en": "adj",
+        "pos": "-"
+      },
+      {
+        "id": "v-m64-005",
+        "uk": "зимовий",
+        "translit": "/zɪˈmovɪj/",
+        "ipa": "winter",
+        "en": "adj",
+        "pos": "-"
+      },
+      {
+        "id": "v-m64-006",
+        "uk": "весняний",
+        "translit": "/vɛsˈnʲɑnɪj/",
+        "ipa": "spring",
+        "en": "adj",
+        "pos": "-"
+      },
+      {
+        "id": "v-m64-007",
+        "uk": "осінній",
+        "translit": "/oˈsʲinʲːij/",
+        "ipa": "autumn",
+        "en": "adj",
+        "pos": "-"
+      },
+      {
+        "id": "v-m64-008",
+        "uk": "сонячний",
+        "translit": "/ˈsonʲɑtʃnɪj/",
+        "ipa": "sunny",
+        "en": "adj",
+        "pos": "-"
+      },
+      {
+        "id": "v-m64-009",
+        "uk": "морський",
+        "translit": "/ˈmorskɪj/",
+        "ipa": "sea, marine",
+        "en": "adj",
+        "pos": "-"
+      },
+      {
+        "id": "v-m64-010",
+        "uk": "український",
+        "translit": "/ukrɑˈjinsʲkɪj/",
+        "ipa": "Ukrainian",
+        "en": "adj",
+        "pos": "-"
+      },
+      {
+        "id": "v-m64-011",
+        "uk": "міський",
+        "translit": "/ˈmʲiskɪj/",
+        "ipa": "city, urban",
+        "en": "adj",
+        "pos": "-"
+      },
+      {
+        "id": "v-m64-012",
+        "uk": "сільський",
+        "translit": "/ˈsʲilʲsʲkɪj/",
+        "ipa": "village, rural",
+        "en": "adj",
+        "pos": "-"
+      },
+      {
+        "id": "v-m64-013",
+        "uk": "студентський",
+        "translit": "/stuˈdɛntsʲkɪj/",
+        "ipa": "student",
+        "en": "adj",
+        "pos": "-"
+      },
+      {
+        "id": "v-m64-014",
+        "uk": "людський",
+        "translit": "/ˈlʲudsʲkɪj/",
+        "ipa": "human",
+        "en": "adj",
+        "pos": "-"
+      },
+      {
+        "id": "v-m64-015",
+        "uk": "дитячий",
+        "translit": "/dɪˈtʲɑtʃɪj/",
+        "ipa": "children's",
+        "en": "adj",
+        "pos": "-"
+      },
+      {
+        "id": "v-m64-016",
+        "uk": "жіночий",
+        "translit": "/ʒʲiˈnotʃɪj/",
+        "ipa": "women's",
+        "en": "adj",
+        "pos": "-"
+      },
+      {
+        "id": "v-m64-017",
+        "uk": "чоловічий",
+        "translit": "/tʃoloˈvʲitʃɪj/",
+        "ipa": "men's",
+        "en": "adj",
+        "pos": "-"
+      },
+      {
+        "id": "v-m64-018",
+        "uk": "київський",
+        "translit": "/ˈkɪjivskɪj/",
+        "ipa": "Kyivan",
+        "en": "adj",
+        "pos": "-"
+      },
+      {
+        "id": "v-m64-019",
+        "uk": "книжковий",
+        "translit": "/knɪʒˈkovɪj/",
+        "ipa": "book",
+        "en": "adj",
+        "pos": "-"
+      },
+      {
+        "id": "v-m64-020",
+        "uk": "фруктовий",
+        "translit": "/frukˈtovɪj/",
+        "ipa": "fruit",
+        "en": "adj",
+        "pos": "-"
+      },
+      {
+        "id": "v-m64-021",
+        "uk": "овочевий",
+        "translit": "/ovoˈtʃɛvɪj/",
+        "ipa": "vegetable",
+        "en": "adj",
+        "pos": "-"
+      },
+      {
+        "id": "v-m64-022",
+        "uk": "спортивний",
+        "translit": "/sporˈtɪvnɪj/",
+        "ipa": "sports",
+        "en": "adj",
+        "pos": "-"
+      },
+      {
+        "id": "v-m64-023",
+        "uk": "музичний",
+        "translit": "/muˈzɪtʃnɪj/",
+        "ipa": "musical",
+        "en": "adj",
+        "pos": "-"
+      },
+      {
+        "id": "v-m64-024",
+        "uk": "театральний",
+        "translit": "/tɛɑˈtrɑlʲnɪj/",
+        "ipa": "theater",
+        "en": "adj",
+        "pos": "-"
+      },
+      {
+        "id": "v-m64-025",
+        "uk": "щасливий",
+        "translit": "/ʃtʃɑsˈlɪvɪj/",
+        "ipa": "happy",
+        "en": "adj",
+        "pos": "-"
+      },
+      {
+        "id": "v-m64-026",
+        "uk": "талановитий",
+        "translit": "/tɑlɑnoˈvɪtɪj/",
+        "ipa": "talented",
+        "en": "adj",
+        "pos": "-"
+      },
+      {
+        "id": "v-m64-027",
+        "uk": "корисний",
+        "translit": "/koˈrɪsnɪj/",
+        "ipa": "useful",
+        "en": "adj",
+        "pos": "-"
+      },
+      {
+        "id": "v-m64-028",
+        "uk": "дбайливий",
+        "translit": "/ˈdbɑjlɪvɪj/",
+        "ipa": "caring",
+        "en": "adj",
+        "pos": "-"
+      },
+      {
+        "id": "v-m64-029",
+        "uk": "кам'янистий",
+        "translit": "/kɑmjɑˈnɪstɪj/",
+        "ipa": "rocky",
+        "en": "adj",
+        "pos": "-"
+      },
+      {
+        "id": "v-m64-030",
+        "uk": "хмарний",
+        "translit": "/ˈxmɑrnɪj/",
+        "ipa": "cloudy",
+        "en": "adj",
+        "pos": "-"
+      },
+      {
+        "id": "v-m64-031",
+        "uk": "зоряний",
+        "translit": "/ˈzorʲɑnɪj/",
+        "ipa": "starry",
+        "en": "adj",
+        "pos": "-"
+      },
+      {
+        "id": "v-m64-032",
+        "uk": "гірський",
+        "translit": "/ˈɦʲirskɪj/",
+        "ipa": "mountain",
+        "en": "adj",
+        "pos": "-"
+      },
+      {
+        "id": "v-m64-033",
+        "uk": "лісовий",
+        "translit": "/lʲisoˈvɪj/",
+        "ipa": "forest",
+        "en": "adj",
+        "pos": "-"
+      },
+      {
+        "id": "v-m64-034",
+        "uk": "батьків",
+        "translit": "/ˈbɑtʲkʲiv/",
+        "ipa": "father's",
+        "en": "adj",
+        "pos": "-"
+      },
+      {
+        "id": "v-m64-035",
+        "uk": "мамин",
+        "translit": "/ˈmɑmɪn/",
+        "ipa": "mother's",
+        "en": "adj",
+        "pos": "-"
+      },
+      {
+        "id": "v-m64-036",
+        "uk": "сестрин",
+        "translit": "/sɛsˈtrɪn/",
+        "ipa": "sister's",
+        "en": "adj",
+        "pos": "-"
+      },
+      {
+        "id": "v-m64-037",
+        "uk": "бабусин",
+        "translit": "/bɑˈbusɪn/",
+        "ipa": "grandmother's",
+        "en": "adj",
+        "pos": "-"
+      }
+    ]
+  }
+}

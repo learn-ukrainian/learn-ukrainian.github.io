@@ -747,6 +747,9 @@ function generateLevelIndex(modules: Array<{ num: number; title: string; subtitl
     'A2.1': { bg: '#2563eb', accent: '#3b82f6', light: '#dbeafe' },
     'A2.2': { bg: '#7c3aed', accent: '#8b5cf6', light: '#ede9fe' },
     'A2.3': { bg: '#9333ea', accent: '#a855f7', light: '#f3e8ff' },
+    'A2+.1': { bg: '#be185d', accent: '#ec4899', light: '#fce7f3' },
+    'A2+.2': { bg: '#9d174d', accent: '#f472b6', light: '#fce7f3' },
+    'A2+.3': { bg: '#831843', accent: '#fb7185', light: '#ffe4e6' },
     'B1.1': { bg: '#c026d3', accent: '#d946ef', light: '#fae8ff' },
     'B1.2': { bg: '#db2777', accent: '#ec4899', light: '#fce7f3' },
   };
