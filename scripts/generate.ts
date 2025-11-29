@@ -17,6 +17,14 @@
 import { mkdir, writeFile, readFile, readdir } from 'fs/promises';
 import { join, dirname } from 'path';
 import { existsSync } from 'fs';
+import * as showdown from 'showdown';
+
+// Initialize markdown converter
+const mdConverter = new showdown.Converter({
+  tables: true,
+  strikethrough: true,
+  simpleLineBreaks: true,
+});
 
 // ============================================================================
 // CONFIGURATION
@@ -574,7 +582,17 @@ function generateHTML(vibeJSON: any, nav: NavInfo): string {
     .card h3 { color: var(--primary); margin-bottom: 1rem; }
     .canvas-note { background: #fffbeb; border-left: 4px solid var(--warning); padding: 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
     .canvas-note h4 { color: var(--warning); margin-bottom: 0.5rem; }
-    .canvas-note pre { white-space: pre-wrap; font-family: inherit; }
+    .md-content { line-height: 1.7; }
+    .md-content p { margin: 0.75rem 0; }
+    .md-content ul, .md-content ol { margin: 0.75rem 0; padding-left: 1.5rem; }
+    .md-content li { margin: 0.25rem 0; }
+    .md-content strong { color: var(--primary); }
+    .md-content blockquote { background: #e8f4fd; border-left: 4px solid var(--primary); padding: 0.75rem 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+    .md-content blockquote p { margin: 0.25rem 0; }
+    .md-content table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+    .md-content th, .md-content td { border: 1px solid var(--border); padding: 0.5rem 0.75rem; text-align: left; }
+    .md-content th { background: #f5f5f5; font-weight: 600; }
+    .md-content code { background: #f0f0f0; padding: 0.125rem 0.375rem; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
     .letter-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0; }
     .letter-group { border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; }
     .letter-group.true-friends { border-color: var(--success); } .letter-group.true-friends .letters { color: var(--success); }
@@ -658,7 +676,7 @@ function generateHTML(vibeJSON: any, nav: NavInfo): string {
         <div class="letter-group false-friends"><h4>⚠ False Friends</h4><p class="letters">${vocabulary.letterGroups.falseFriends?.join(' ')}</p></div>
         <div class="letter-group new-letters"><h4>★ New Letters</h4><p class="letters">${vocabulary.letterGroups.newLetters?.join(' ')}</p></div>
       </div></div>` : ''}
-      <div class="card"><h3>Theory</h3>${theoryContent.map((t: any) => `<div class="canvas-note"><h4>${t.title}</h4><pre>${t.content}</pre></div>`).join('')}</div>
+      <div class="card"><h3>Theory</h3>${theoryContent.map((t: any) => `<div class="canvas-note"><h4>${t.title}</h4><div class="md-content">${mdConverter.makeHtml(t.content)}</div></div>`).join('')}</div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('${matchActivity ? 'match' : quizActivity ? 'quiz' : 'vocab'}')">Start →</button></div>
     </section>
     ${matchActivity ? `<section id="match" class="section"><div class="card"><h3>${matchActivity.title}</h3>

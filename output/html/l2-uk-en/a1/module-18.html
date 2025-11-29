@@ -28,7 +28,17 @@
     .card h3 { color: var(--primary); margin-bottom: 1rem; }
     .canvas-note { background: #fffbeb; border-left: 4px solid var(--warning); padding: 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
     .canvas-note h4 { color: var(--warning); margin-bottom: 0.5rem; }
-    .canvas-note pre { white-space: pre-wrap; font-family: inherit; }
+    .md-content { line-height: 1.7; }
+    .md-content p { margin: 0.75rem 0; }
+    .md-content ul, .md-content ol { margin: 0.75rem 0; padding-left: 1.5rem; }
+    .md-content li { margin: 0.25rem 0; }
+    .md-content strong { color: var(--primary); }
+    .md-content blockquote { background: #e8f4fd; border-left: 4px solid var(--primary); padding: 0.75rem 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+    .md-content blockquote p { margin: 0.25rem 0; }
+    .md-content table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+    .md-content th, .md-content td { border: 1px solid var(--border); padding: 0.5rem 0.75rem; text-align: left; }
+    .md-content th { background: #f5f5f5; font-weight: 600; }
+    .md-content code { background: #f0f0f0; padding: 0.125rem 0.375rem; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
     .letter-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0; }
     .letter-group { border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; }
     .letter-group.true-friends { border-color: var(--success); } .letter-group.true-friends .letters { color: var(--success); }
@@ -108,142 +118,344 @@
         <p style="color:var(--text-muted)">Ordering Food & Drinks</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Ukrainian Café Culture</h4><pre>Ukrainians love their кав'ярні (coffee houses)! From trendy Kyiv spots to cozy Lviv cafés, coffee culture runs deep. Lviv, in particular, is famous for its coffee traditions.
-
-Key phrases you'll master:
-- **Можна меню?** - May I have the menu?
-- **Я хочу...** - I want...
-- **Рахунок, будь ласка!** - The bill, please!
-
-> 💡 **Did You Know?**
->
-> Lviv has been a coffee capital since the 17th century when a Ukrainian Cossack, Yuri Kulchytsky, opened one of Europe's first coffee houses in Vienna. Legend says he discovered coffee beans left behind by the Ottoman army! Today Lviv has the highest density of cafés per capita in Ukraine.</pre></div><div class="canvas-note"><h4>### Entering & Seating</h4><pre>| Ukrainian | Transliteration | English |
-|-----------|-----------------|---------|
-| Добрий день! | Dobryi den! | Good day! |
-| Столик на двох | Stolyk na dvokh | Table for two |
-| Можна меню? | Mozhna menyu? | May I have the menu? |
-| Ми хочемо замовити. | My khochemo zamovyty. | We'd like to order. |
-| Є вільні місця? | Ye vilni mistsya? | Are there free seats? |
-
-> ⚡ **Pro Tip: Можна**
->
-> "Можна" is incredibly useful - it means "May I?" or "Is it possible?"
-> - Можна меню? (May I have the menu?)
-> - Можна рахунок? (May I have the bill?)
-> - Можна тут сісти? (May I sit here?)
->
-> Just add what you want after "можна"!</pre></div><div class="canvas-note"><h4>Ordering Drinks</h4><pre>| Ukrainian | Transliteration | English |
-|-----------|-----------------|---------|
-| Мені каву, будь ласка. | Meni kavu, bud laska. | Coffee for me, please. |
-| Каву з молоком. | Kavu z molokom. | Coffee with milk. |
-| Каву без цукру. | Kavu bez tsukru. | Coffee without sugar. |
-| Чай з лимоном. | Chai z lymonom. | Tea with lemon. |
-| Склянку води. | Sklyanku vody. | A glass of water. |
-| Пляшку мінералки. | Plyashku mineralky. | A bottle of mineral water. |
-
-**Coffee types:**
-- еспресо (espresso)
-- американо (americano)
-- капучино (cappuccino)
-- лате (latte)
-- по-турецьки (Turkish coffee)
-- раф (raf - cream coffee with vanilla)
-
-> 🎭 **Culture Corner: Coffee Customs**
->
-> Ukrainian coffee culture tips:
-> - **Кава по-львівськи** - Lviv-style coffee, strong and aromatic
-> - Coffee is often served with a glass of water
-> - "На виніс" means "to go" (literally "to carry out")
-> - "Тут" means "for here"
->
-> Ask: **Тут чи на виніс?** (For here or to go?)</pre></div><div class="canvas-note"><h4>Ordering Food</h4><pre>| Ukrainian | Transliteration | English |
-|-----------|-----------------|---------|
-| Що порекомендуєте? | Shcho porekomenduyete? | What do you recommend? |
-| Яка страва дня? | Yaka strava dnya? | What's the dish of the day? |
-| Я візьму... | Ya vizmu... | I'll take... |
-| Мені, будь ласка... | Meni, bud laska... | For me, please... |
-| І ще... | I shche... | And also... |
-| Це все. | Tse vse. | That's all. |
-
-**Common café foods:**
-- круасан (croissant)
-- сирник (cottage cheese pancake)
-- тістечко (pastry/cake)
-- сендвіч (sandwich)
-- салат (salad)
-- суп (soup)
-
-> 📜 **History Bite: Сирники**
->
-> Сирники (cottage cheese pancakes) are a Slavic breakfast staple dating back centuries. The word comes from "сир" (cottage cheese). They're pan-fried and served with сметана (sour cream) or варення (jam). A perfect café breakfast!</pre></div><div class="canvas-note"><h4>Making Requests</h4><pre>**Polite imperatives (ви form):**
-
-| Infinitive | Imperative | Example |
-|------------|------------|---------|
-| дати | дайте | Дайте меню. (Give me the menu.) |
-| принести | принесіть | Принесіть воду. (Bring water.) |
-| повторити | повторіть | Повторіть, будь ласка. (Repeat, please.) |
-| показати | покажіть | Покажіть це. (Show me this.) |
-
-> 🔍 **Myth Buster: "Imperatives Are Rude"**
->
-> In Ukrainian, imperatives with "будь ласка" are perfectly polite:
-> - Дайте, будь ласка, каву. (Give me coffee, please.) ✓
-> - Принесіть рахунок, будь ласка. (Bring the bill, please.) ✓
->
-> This is the normal way to order - not rude at all!</pre></div><div class="canvas-note"><h4>Special Requests</h4><pre>| Ukrainian | English |
-|-----------|---------|
-| Без цукру, будь ласка. | Without sugar, please. |
-| Без молока. | Without milk. |
-| Трохи більше... | A little more... |
-| Менше цукру. | Less sugar. |
-| Гаряче / холодне. | Hot / cold. |
-| Я вегетаріанець. | I'm vegetarian (m). |
-| Я вегетаріанка. | I'm vegetarian (f). |
-| У мене алергія на... | I'm allergic to... |</pre></div><div class="canvas-note"><h4>Paying</h4><pre>| Ukrainian | Transliteration | English |
-|-----------|-----------------|---------|
-| Рахунок, будь ласка! | Rakhunok, bud laska! | The bill, please! |
-| Скільки з мене? | Skilky z mene? | How much do I owe? |
-| Можна карткою? | Mozhna kartkoyu? | Can I pay by card? |
-| Готівкою. | Hotivkoyu. | In cash. |
-| Решта - ваша. | Reshta - vasha. | Keep the change. |
-| Без решти. | Bez reshty. | No change needed. |
-| Дякую, все було смачно! | Dyakuyu, vse bulo smachno! | Thank you, everything was delicious! |
-
-> 🌍 **Real World: Tipping in Ukraine**
->
-> - Tips (чайові - literally "for tea") are not mandatory
-> - 10% is standard for good service
-> - You can say "Без решти" (No change) or "Решта - ваша" (Keep the change)
-> - In upscale places, tips may be included (обслуговування)
-> - Cash tips are preferred by staff</pre></div><div class="canvas-note"><h4>### Role Play Ordering</h4><pre>Practice this dialogue:
-A: Добрий день! Що замовите?
-B: Мені каву, будь ласка.
-A: Яку каву? Еспресо, американо, лате?
-B: Американо, будь ласка. Без цукру.
-A: Щось ще?
-B: Ні, дякую. Це все.</pre></div><div class="canvas-note"><h4>Complete the Phrases</h4><pre>1. ___ меню, будь ласка? (May I have) → Можна
-2. Каву ___ молоком. (with) → з
-3. ___, будь ласка, рахунок. (Bring) → Принесіть
-4. Скільки ___ мене? (from) → з</pre></div><div class="canvas-note"><h4>Make Requests</h4><pre>Transform to polite requests:
-1. I want coffee. → Мені каву, будь ласка.
-2. Bring water. → Принесіть воду, будь ласка.
-3. The bill. → Рахунок, будь ласка.
-4. May I sit here? → Можна тут сісти?</pre></div><div class="canvas-note"><h4>### Full Café Scenario</h4><pre>Practice the complete café experience:
-1. Enter and greet
-2. Ask for a table
-3. Request the menu
-4. Order drinks and food
-5. Make a special request
-6. Ask for the bill
-7. Pay and thank</pre></div></div>
+      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Ukrainian Café Culture</h4><div class="md-content"><p>Ukrainians love their кав'ярні (coffee houses)! From trendy Kyiv spots to cozy Lviv cafés, coffee culture runs deep. Lviv, in particular, is famous for its coffee traditions.</p>
+<p>Key phrases you'll master:</p>
+<ul>
+<li><strong>Можна меню?</strong> - May I have the menu?</li>
+<li><strong>Я хочу…</strong> - I want…</li>
+<li><strong>Рахунок, будь ласка!</strong> - The bill, please!</li>
+</ul>
+<blockquote>
+  <p>💡 <strong>Did You Know?</strong></p>
+  <p>Lviv has been a coffee capital since the 17th century when a Ukrainian Cossack, Yuri Kulchytsky, opened one of Europe's first coffee houses in Vienna. Legend says he discovered coffee beans left behind by the Ottoman army! Today Lviv has the highest density of cafés per capita in Ukraine.</p>
+</blockquote></div></div><div class="canvas-note"><h4>### Entering & Seating</h4><div class="md-content"><table>
+<thead>
+<tr>
+<th>Ukrainian</th>
+<th>Transliteration</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Добрий день!</td>
+<td>Dobryi den!</td>
+<td>Good day!</td>
+</tr>
+<tr>
+<td>Столик на двох</td>
+<td>Stolyk na dvokh</td>
+<td>Table for two</td>
+</tr>
+<tr>
+<td>Можна меню?</td>
+<td>Mozhna menyu?</td>
+<td>May I have the menu?</td>
+</tr>
+<tr>
+<td>Ми хочемо замовити.</td>
+<td>My khochemo zamovyty.</td>
+<td>We'd like to order.</td>
+</tr>
+<tr>
+<td>Є вільні місця?</td>
+<td>Ye vilni mistsya?</td>
+<td>Are there free seats?</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p>⚡ <strong>Pro Tip: Можна</strong></p>
+  <p>"Можна" is incredibly useful - it means "May I?" or "Is it possible?"</p>
+  <ul>
+  <li>Можна меню? (May I have the menu?)</li>
+  <li>Можна рахунок? (May I have the bill?)</li>
+  <li>Можна тут сісти? (May I sit here?)</li>
+  </ul>
+  <p>Just add what you want after "можна"!</p>
+</blockquote></div></div><div class="canvas-note"><h4>Ordering Drinks</h4><div class="md-content"><table>
+<thead>
+<tr>
+<th>Ukrainian</th>
+<th>Transliteration</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Мені каву, будь ласка.</td>
+<td>Meni kavu, bud laska.</td>
+<td>Coffee for me, please.</td>
+</tr>
+<tr>
+<td>Каву з молоком.</td>
+<td>Kavu z molokom.</td>
+<td>Coffee with milk.</td>
+</tr>
+<tr>
+<td>Каву без цукру.</td>
+<td>Kavu bez tsukru.</td>
+<td>Coffee without sugar.</td>
+</tr>
+<tr>
+<td>Чай з лимоном.</td>
+<td>Chai z lymonom.</td>
+<td>Tea with lemon.</td>
+</tr>
+<tr>
+<td>Склянку води.</td>
+<td>Sklyanku vody.</td>
+<td>A glass of water.</td>
+</tr>
+<tr>
+<td>Пляшку мінералки.</td>
+<td>Plyashku mineralky.</td>
+<td>A bottle of mineral water.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Coffee types:</strong></p>
+<ul>
+<li>еспресо (espresso)</li>
+<li>американо (americano)</li>
+<li>капучино (cappuccino)</li>
+<li>лате (latte)</li>
+<li>по-турецьки (Turkish coffee)</li>
+<li>раф (raf - cream coffee with vanilla)</li>
+</ul>
+<blockquote>
+  <p>🎭 <strong>Culture Corner: Coffee Customs</strong></p>
+  <p>Ukrainian coffee culture tips:</p>
+  <ul>
+  <li><strong>Кава по-львівськи</strong> - Lviv-style coffee, strong and aromatic</li>
+  <li>Coffee is often served with a glass of water</li>
+  <li>"На виніс" means "to go" (literally "to carry out")</li>
+  <li>"Тут" means "for here"</li>
+  </ul>
+  <p>Ask: <strong>Тут чи на виніс?</strong> (For here or to go?)</p>
+</blockquote></div></div><div class="canvas-note"><h4>Ordering Food</h4><div class="md-content"><table>
+<thead>
+<tr>
+<th>Ukrainian</th>
+<th>Transliteration</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Що порекомендуєте?</td>
+<td>Shcho porekomenduyete?</td>
+<td>What do you recommend?</td>
+</tr>
+<tr>
+<td>Яка страва дня?</td>
+<td>Yaka strava dnya?</td>
+<td>What's the dish of the day?</td>
+</tr>
+<tr>
+<td>Я візьму…</td>
+<td>Ya vizmu…</td>
+<td>I'll take…</td>
+</tr>
+<tr>
+<td>Мені, будь ласка…</td>
+<td>Meni, bud laska…</td>
+<td>For me, please…</td>
+</tr>
+<tr>
+<td>І ще…</td>
+<td>I shche…</td>
+<td>And also…</td>
+</tr>
+<tr>
+<td>Це все.</td>
+<td>Tse vse.</td>
+<td>That's all.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Common café foods:</strong></p>
+<ul>
+<li>круасан (croissant)</li>
+<li>сирник (cottage cheese pancake)</li>
+<li>тістечко (pastry/cake)</li>
+<li>сендвіч (sandwich)</li>
+<li>салат (salad)</li>
+<li>суп (soup)</li>
+</ul>
+<blockquote>
+  <p>📜 <strong>History Bite: Сирники</strong></p>
+  <p>Сирники (cottage cheese pancakes) are a Slavic breakfast staple dating back centuries. The word comes from "сир" (cottage cheese). They're pan-fried and served with сметана (sour cream) or варення (jam). A perfect café breakfast!</p>
+</blockquote></div></div><div class="canvas-note"><h4>Making Requests</h4><div class="md-content"><p><strong>Polite imperatives (ви form):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Infinitive</th>
+<th>Imperative</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>дати</td>
+<td>дайте</td>
+<td>Дайте меню. (Give me the menu.)</td>
+</tr>
+<tr>
+<td>принести</td>
+<td>принесіть</td>
+<td>Принесіть воду. (Bring water.)</td>
+</tr>
+<tr>
+<td>повторити</td>
+<td>повторіть</td>
+<td>Повторіть, будь ласка. (Repeat, please.)</td>
+</tr>
+<tr>
+<td>показати</td>
+<td>покажіть</td>
+<td>Покажіть це. (Show me this.)</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p>🔍 <strong>Myth Buster: "Imperatives Are Rude"</strong></p>
+  <p>In Ukrainian, imperatives with "будь ласка" are perfectly polite:</p>
+  <ul>
+  <li>Дайте, будь ласка, каву. (Give me coffee, please.) ✓</li>
+  <li>Принесіть рахунок, будь ласка. (Bring the bill, please.) ✓</li>
+  </ul>
+  <p>This is the normal way to order - not rude at all!</p>
+</blockquote></div></div><div class="canvas-note"><h4>Special Requests</h4><div class="md-content"><table>
+<thead>
+<tr>
+<th>Ukrainian</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Без цукру, будь ласка.</td>
+<td>Without sugar, please.</td>
+</tr>
+<tr>
+<td>Без молока.</td>
+<td>Without milk.</td>
+</tr>
+<tr>
+<td>Трохи більше…</td>
+<td>A little more…</td>
+</tr>
+<tr>
+<td>Менше цукру.</td>
+<td>Less sugar.</td>
+</tr>
+<tr>
+<td>Гаряче / холодне.</td>
+<td>Hot / cold.</td>
+</tr>
+<tr>
+<td>Я вегетаріанець.</td>
+<td>I'm vegetarian (m).</td>
+</tr>
+<tr>
+<td>Я вегетаріанка.</td>
+<td>I'm vegetarian (f).</td>
+</tr>
+<tr>
+<td>У мене алергія на…</td>
+<td>I'm allergic to…</td>
+</tr>
+</tbody>
+</table></div></div><div class="canvas-note"><h4>Paying</h4><div class="md-content"><table>
+<thead>
+<tr>
+<th>Ukrainian</th>
+<th>Transliteration</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Рахунок, будь ласка!</td>
+<td>Rakhunok, bud laska!</td>
+<td>The bill, please!</td>
+</tr>
+<tr>
+<td>Скільки з мене?</td>
+<td>Skilky z mene?</td>
+<td>How much do I owe?</td>
+</tr>
+<tr>
+<td>Можна карткою?</td>
+<td>Mozhna kartkoyu?</td>
+<td>Can I pay by card?</td>
+</tr>
+<tr>
+<td>Готівкою.</td>
+<td>Hotivkoyu.</td>
+<td>In cash.</td>
+</tr>
+<tr>
+<td>Решта - ваша.</td>
+<td>Reshta - vasha.</td>
+<td>Keep the change.</td>
+</tr>
+<tr>
+<td>Без решти.</td>
+<td>Bez reshty.</td>
+<td>No change needed.</td>
+</tr>
+<tr>
+<td>Дякую, все було смачно!</td>
+<td>Dyakuyu, vse bulo smachno!</td>
+<td>Thank you, everything was delicious!</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p>🌍 <strong>Real World: Tipping in Ukraine</strong></p>
+  <ul>
+  <li>Tips (чайові - literally "for tea") are not mandatory</li>
+  <li>10% is standard for good service</li>
+  <li>You can say "Без решти" (No change) or "Решта - ваша" (Keep the change)</li>
+  <li>In upscale places, tips may be included (обслуговування)</li>
+  <li>Cash tips are preferred by staff</li>
+  </ul>
+</blockquote></div></div><div class="canvas-note"><h4>### Role Play Ordering</h4><div class="md-content"><p>Practice this dialogue:<br />
+A: Добрий день! Що замовите?<br />
+B: Мені каву, будь ласка.<br />
+A: Яку каву? Еспресо, американо, лате?<br />
+B: Американо, будь ласка. Без цукру.<br />
+A: Щось ще?<br />
+B: Ні, дякую. Це все.</p></div></div><div class="canvas-note"><h4>Complete the Phrases</h4><div class="md-content"><ol>
+<li>___ меню, будь ласка? (May I have) → Можна</li>
+<li>Каву ___ молоком. (with) → з</li>
+<li>___, будь ласка, рахунок. (Bring) → Принесіть</li>
+<li>Скільки ___ мене? (from) → з</li>
+</ol></div></div><div class="canvas-note"><h4>Make Requests</h4><div class="md-content"><p>Transform to polite requests:</p>
+<ol>
+<li>I want coffee. → Мені каву, будь ласка.</li>
+<li>Bring water. → Принесіть воду, будь ласка.</li>
+<li>The bill. → Рахунок, будь ласка.</li>
+<li>May I sit here? → Можна тут сісти?</li>
+</ol></div></div><div class="canvas-note"><h4>### Full Café Scenario</h4><div class="md-content"><p>Practice the complete café experience:</p>
+<ol>
+<li>Enter and greet</li>
+<li>Ask for a table</li>
+<li>Request the menu</li>
+<li>Order drinks and food</li>
+<li>Make a special request</li>
+<li>Ask for the bill</li>
+<li>Pay and thank</li>
+</ol></div></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('match')">Start →</button></div>
     </section>
     <section id="match" class="section"><div class="card"><h3>Café Phrases</h3>
       <div class="score-display"><span class="score"><span id="match-score">0</span>/6</span></div>
       <div class="match-container" id="match-container"><svg class="match-lines" id="match-lines"></svg>
         <div class="match-column" id="match-left"><div class="match-item" data-pair="0">Можна меню?</div><div class="match-item" data-pair="1">Рахунок, будь ласка!</div><div class="match-item" data-pair="2">Скільки з мене?</div><div class="match-item" data-pair="3">Що порекомендуєте?</div><div class="match-item" data-pair="4">Без цукру.</div><div class="match-item" data-pair="5">Решта - ваша.</div></div>
-        <div class="match-column" id="match-right"><div class="match-item" data-pair="3">What do you recommend?</div><div class="match-item" data-pair="0">May I have the menu?</div><div class="match-item" data-pair="4">Without sugar.</div><div class="match-item" data-pair="2">How much do I owe?</div><div class="match-item" data-pair="5">Keep the change.</div><div class="match-item" data-pair="1">The bill, please!</div></div>
+        <div class="match-column" id="match-right"><div class="match-item" data-pair="0">May I have the menu?</div><div class="match-item" data-pair="3">What do you recommend?</div><div class="match-item" data-pair="1">The bill, please!</div><div class="match-item" data-pair="4">Without sugar.</div><div class="match-item" data-pair="2">How much do I owe?</div><div class="match-item" data-pair="5">Keep the change.</div></div>
       </div>
       <div class="completion-message" id="match-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetMatch()">Reset</button><button class="btn btn-primary" onclick="showSection('quiz')">Next →</button></div>

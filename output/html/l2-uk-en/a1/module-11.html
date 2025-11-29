@@ -28,7 +28,17 @@
     .card h3 { color: var(--primary); margin-bottom: 1rem; }
     .canvas-note { background: #fffbeb; border-left: 4px solid var(--warning); padding: 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
     .canvas-note h4 { color: var(--warning); margin-bottom: 0.5rem; }
-    .canvas-note pre { white-space: pre-wrap; font-family: inherit; }
+    .md-content { line-height: 1.7; }
+    .md-content p { margin: 0.75rem 0; }
+    .md-content ul, .md-content ol { margin: 0.75rem 0; padding-left: 1.5rem; }
+    .md-content li { margin: 0.25rem 0; }
+    .md-content strong { color: var(--primary); }
+    .md-content blockquote { background: #e8f4fd; border-left: 4px solid var(--primary); padding: 0.75rem 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+    .md-content blockquote p { margin: 0.25rem 0; }
+    .md-content table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+    .md-content th, .md-content td { border: 1px solid var(--border); padding: 0.5rem 0.75rem; text-align: left; }
+    .md-content th { background: #f5f5f5; font-weight: 600; }
+    .md-content code { background: #f0f0f0; padding: 0.125rem 0.375rem; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
     .letter-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0; }
     .letter-group { border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; }
     .letter-group.true-friends { border-color: var(--success); } .letter-group.true-friends .letters { color: var(--success); }
@@ -108,144 +118,213 @@
         <p style="color:var(--text-muted)">Direct Objects - Things</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Welcome to Cases!</h4><pre>This is one of the most important modules in your Ukrainian journey. You're about to learn **cases** - the grammatical feature that changes noun endings based on their function in a sentence.
-
-In English, word order tells us who does what:
-- "The dog bites the man" ≠ "The man bites the dog"
-
-In Ukrainian, **endings** tell us who does what:
-- Собака кусає чоловіка (The dog bites the man)
-- Чоловік кусає собаку (The man bites the dog)
-
-The endings -а and -у mark "who gets bitten" (the direct object).
-
-> 🔍 **Myth Buster: "Cases Are Impossible"**
->
-> English speakers often fear cases. But consider:
-> - English has case remnants: I/me, he/him, she/her, who/whom
-> - "I see him" not "I see he" - that's accusative!
->
-> Ukrainian just applies this more consistently. Once you see the patterns, it becomes natural.
-
-> 💡 **Did You Know?**
->
-> Ukrainian has **7 cases**, but don't panic! At A1, you'll learn just 3:
-> - **Nominative** (subject) - already know this!
-> - **Accusative** (direct object) - this module!
-> - **Locative** (location) - Module 13
-> - **Genitive** (possession, absence) - Module 16
->
-> The others (Dative, Instrumental, Vocative) come in A2.</pre></div><div class="canvas-note"><h4>### What Is Accusative?</h4><pre>The **accusative case** marks the **direct object** - the thing receiving the action:
-
-| English | Ukrainian | What's in Accusative |
-|---------|-----------|---------------------|
-| I see **the book**. | Я бачу **книгу**. | книгу (book) |
-| She reads **a letter**. | Вона читає **листа**. | листа (letter) |
-| We want **water**. | Ми хочемо **воду**. | воду (water) |
-
-**Verbs that take accusative objects:**
-- бачити (to see)
-- чути (to hear)
-- читати (to read)
-- писати (to write)
-- мати (to have)
-- хотіти (to want)
-- любити (to love)
-- брати (to take)
-- давати (to give)</pre></div><div class="canvas-note"><h4>Accusative Endings: Inanimate Nouns</h4><pre>For **inanimate** (non-living) nouns:
-
-| Gender | Nominative | Accusative | Change |
-|--------|------------|------------|--------|
-| Masculine | стіл | стіл | **No change!** |
-| Neuter | вікно | вікно | **No change!** |
-| Feminine -а | книга | книг**у** | -а → -у |
-| Feminine -я | земля | земл**ю** | -я → -ю |
-
-> ⚡ **Pro Tip: The Easy Part**
->
-> Masculine and neuter inanimate nouns **don't change** in accusative!
-> - Я бачу стіл. (I see the table.) - same as nominative
-> - Я бачу вікно. (I see the window.) - same as nominative
->
-> Only feminine nouns change: -а → -у, -я → -ю
-
-> 📜 **History Bite: Why Feminine Changes**
->
-> In Proto-Slavic, the accusative originally had distinct endings for all genders. Over time, masculine and neuter inanimate forms merged with nominative for simplicity. Feminine kept its distinct accusative because the -а/-у distinction was very clear and useful. Languages evolve toward efficiency!</pre></div><div class="canvas-note"><h4>Examples by Gender</h4><pre>**Masculine (no change):**
-- Я бачу **стіл**. (I see the table.)
-- Вона читає **журнал**. (She reads the magazine.)
-- Ми хочемо **хліб**. (We want bread.)
-
-**Neuter (no change):**
-- Я бачу **вікно**. (I see the window.)
-- Він п'є **молоко**. (He drinks milk.)
-- Вони хочуть **яблуко**. (They want an apple.)
-
-**Feminine (-а → -у):**
-- Я бачу **книгу**. (I see the book.) ← книга
-- Вона читає **газету**. (She reads the newspaper.) ← газета
-- Ми хочемо **воду**. (We want water.) ← вода
-
-**Feminine (-я → -ю):**
-- Я бачу **землю**. (I see the land.) ← земля
-- Він любить **Україну**. (He loves Ukraine.) ← Україна... wait!
-
-> 🎯 **Fun Fact: Україна in Accusative**
->
-> "Україна" ends in -а, so:
-> - Nominative: **Україна** прекрасна. (Ukraine is beautiful.)
-> - Accusative: Я люблю **Україну**. (I love Ukraine.)
->
-> This is why you'll see "Я люблю Україну!" on signs and shirts - it's grammatically correct accusative!</pre></div><div class="canvas-note"><h4>Common Patterns</h4><pre>**"I see..." sentences:**
-- Я бачу будинок. (I see a building.)
-- Я бачу машину. (I see a car.) ← машина
-- Я бачу місто. (I see a city.)
-
-**"I want..." sentences:**
-- Я хочу каву. (I want coffee.) ← кава
-- Я хочу чай. (I want tea.)
-- Я хочу сік. (I want juice.)
-
-> 🎭 **Culture Corner: Ordering Drinks**
->
-> In cafés, you'll use accusative constantly:
-> - Я хочу **каву**. (I want coffee.)
-> - Можна **воду**? (Can I have water?)
-> - Дайте, будь ласка, **чай**. (Give me tea, please.)
->
-> Notice: каву, воду (feminine) vs чай, сік (masculine - no change).</pre></div><div class="canvas-note"><h4>### Transform to Accusative</h4><pre>Change nominative to accusative:
-1. книга → книг__ (книгу)
-2. стіл → ст__ (стіл - no change!)
-3. вода → вод__ (воду)
-4. вікно → вікн__ (вікно - no change!)
-5. газета → газет__ (газету)</pre></div><div class="canvas-note"><h4>Build Sentences</h4><pre>Combine subject + verb + object:
-- Я + бачити + книга = Я бачу книгу.
-- Вона + читати + газета = Вона читає газету.
-- Ми + хотіти + кава = Ми хочемо каву.
-
-> 🌍 **Real World: Daily Accusative**
->
-> You use accusative constantly without realizing:
-> - Ordering: **Каву**, будь ласка! (Coffee, please!)
-> - Shopping: Я хочу **цю сумку**. (I want this bag.)
-> - Describing: Я люблю **музику**. (I love music.)
->
-> Every direct object = accusative!</pre></div><div class="canvas-note"><h4>### Describe What You See</h4><pre>Look around and describe using "Я бачу...":
-1. Я бачу _______ (table) → стіл
-2. Я бачу _______ (book) → книгу
-3. Я бачу _______ (window) → вікно
-4. Я бачу _______ (lamp) → лампу</pre></div><div class="canvas-note"><h4>Express Wants</h4><pre>Say what you want:
-1. Я хочу _______ (coffee) → каву
-2. Я хочу _______ (tea) → чай
-3. Я хочу _______ (water) → воду
-4. Я хочу _______ (bread) → хліб</pre></div></div>
+      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Welcome to Cases!</h4><div class="md-content"><p>This is one of the most important modules in your Ukrainian journey. You're about to learn <strong>cases</strong> - the grammatical feature that changes noun endings based on their function in a sentence.</p>
+<p>In English, word order tells us who does what:</p>
+<ul>
+<li>"The dog bites the man" ≠ "The man bites the dog"</li>
+</ul>
+<p>In Ukrainian, <strong>endings</strong> tell us who does what:</p>
+<ul>
+<li>Собака кусає чоловіка (The dog bites the man)</li>
+<li>Чоловік кусає собаку (The man bites the dog)</li>
+</ul>
+<p>The endings -а and -у mark "who gets bitten" (the direct object).</p>
+<blockquote>
+  <p>🔍 <strong>Myth Buster: "Cases Are Impossible"</strong></p>
+  <p>English speakers often fear cases. But consider:</p>
+  <ul>
+  <li>English has case remnants: I/me, he/him, she/her, who/whom</li>
+  <li>"I see him" not "I see he" - that's accusative!</li>
+  </ul>
+  <p>Ukrainian just applies this more consistently. Once you see the patterns, it becomes natural.</p>
+  <p>💡 <strong>Did You Know?</strong></p>
+  <p>Ukrainian has <strong>7 cases</strong>, but don't panic! At A1, you'll learn just 3:</p>
+  <ul>
+  <li><strong>Nominative</strong> (subject) - already know this!</li>
+  <li><strong>Accusative</strong> (direct object) - this module!</li>
+  <li><strong>Locative</strong> (location) - Module 13</li>
+  <li><strong>Genitive</strong> (possession, absence) - Module 16</li>
+  </ul>
+  <p>The others (Dative, Instrumental, Vocative) come in A2.</p>
+</blockquote></div></div><div class="canvas-note"><h4>### What Is Accusative?</h4><div class="md-content"><p>The <strong>accusative case</strong> marks the <strong>direct object</strong> - the thing receiving the action:</p>
+<table>
+<thead>
+<tr>
+<th>English</th>
+<th>Ukrainian</th>
+<th>What's in Accusative</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>I see <strong>the book</strong>.</td>
+<td>Я бачу <strong>книгу</strong>.</td>
+<td>книгу (book)</td>
+</tr>
+<tr>
+<td>She reads <strong>a letter</strong>.</td>
+<td>Вона читає <strong>листа</strong>.</td>
+<td>листа (letter)</td>
+</tr>
+<tr>
+<td>We want <strong>water</strong>.</td>
+<td>Ми хочемо <strong>воду</strong>.</td>
+<td>воду (water)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Verbs that take accusative objects:</strong></p>
+<ul>
+<li>бачити (to see)</li>
+<li>чути (to hear)</li>
+<li>читати (to read)</li>
+<li>писати (to write)</li>
+<li>мати (to have)</li>
+<li>хотіти (to want)</li>
+<li>любити (to love)</li>
+<li>брати (to take)</li>
+<li>давати (to give)</li>
+</ul></div></div><div class="canvas-note"><h4>Accusative Endings: Inanimate Nouns</h4><div class="md-content"><p>For <strong>inanimate</strong> (non-living) nouns:</p>
+<table>
+<thead>
+<tr>
+<th>Gender</th>
+<th>Nominative</th>
+<th>Accusative</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Masculine</td>
+<td>стіл</td>
+<td>стіл</td>
+<td><strong>No change!</strong></td>
+</tr>
+<tr>
+<td>Neuter</td>
+<td>вікно</td>
+<td>вікно</td>
+<td><strong>No change!</strong></td>
+</tr>
+<tr>
+<td>Feminine -а</td>
+<td>книга</td>
+<td>книг<strong>у</strong></td>
+<td>-а → -у</td>
+</tr>
+<tr>
+<td>Feminine -я</td>
+<td>земля</td>
+<td>земл<strong>ю</strong></td>
+<td>-я → -ю</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p>⚡ <strong>Pro Tip: The Easy Part</strong></p>
+  <p>Masculine and neuter inanimate nouns <strong>don't change</strong> in accusative!</p>
+  <ul>
+  <li>Я бачу стіл. (I see the table.) - same as nominative</li>
+  <li>Я бачу вікно. (I see the window.) - same as nominative</li>
+  </ul>
+  <p>Only feminine nouns change: -а → -у, -я → -ю</p>
+  <p>📜 <strong>History Bite: Why Feminine Changes</strong></p>
+  <p>In Proto-Slavic, the accusative originally had distinct endings for all genders. Over time, masculine and neuter inanimate forms merged with nominative for simplicity. Feminine kept its distinct accusative because the -а/-у distinction was very clear and useful. Languages evolve toward efficiency!</p>
+</blockquote></div></div><div class="canvas-note"><h4>Examples by Gender</h4><div class="md-content"><p><strong>Masculine (no change):</strong></p>
+<ul>
+<li>Я бачу <strong>стіл</strong>. (I see the table.)</li>
+<li>Вона читає <strong>журнал</strong>. (She reads the magazine.)</li>
+<li>Ми хочемо <strong>хліб</strong>. (We want bread.)</li>
+</ul>
+<p><strong>Neuter (no change):</strong></p>
+<ul>
+<li>Я бачу <strong>вікно</strong>. (I see the window.)</li>
+<li>Він п'є <strong>молоко</strong>. (He drinks milk.)</li>
+<li>Вони хочуть <strong>яблуко</strong>. (They want an apple.)</li>
+</ul>
+<p><strong>Feminine (-а → -у):</strong></p>
+<ul>
+<li>Я бачу <strong>книгу</strong>. (I see the book.) ← книга</li>
+<li>Вона читає <strong>газету</strong>. (She reads the newspaper.) ← газета</li>
+<li>Ми хочемо <strong>воду</strong>. (We want water.) ← вода</li>
+</ul>
+<p><strong>Feminine (-я → -ю):</strong></p>
+<ul>
+<li>Я бачу <strong>землю</strong>. (I see the land.) ← земля</li>
+<li>Він любить <strong>Україну</strong>. (He loves Ukraine.) ← Україна… wait!</li>
+</ul>
+<blockquote>
+  <p>🎯 <strong>Fun Fact: Україна in Accusative</strong></p>
+  <p>"Україна" ends in -а, so:</p>
+  <ul>
+  <li>Nominative: <strong>Україна</strong> прекрасна. (Ukraine is beautiful.)</li>
+  <li>Accusative: Я люблю <strong>Україну</strong>. (I love Ukraine.)</li>
+  </ul>
+  <p>This is why you'll see "Я люблю Україну!" on signs and shirts - it's grammatically correct accusative!</p>
+</blockquote></div></div><div class="canvas-note"><h4>Common Patterns</h4><div class="md-content"><p><strong>"I see…" sentences:</strong></p>
+<ul>
+<li>Я бачу будинок. (I see a building.)</li>
+<li>Я бачу машину. (I see a car.) ← машина</li>
+<li>Я бачу місто. (I see a city.)</li>
+</ul>
+<p><strong>"I want…" sentences:</strong></p>
+<ul>
+<li>Я хочу каву. (I want coffee.) ← кава</li>
+<li>Я хочу чай. (I want tea.)</li>
+<li>Я хочу сік. (I want juice.)</li>
+</ul>
+<blockquote>
+  <p>🎭 <strong>Culture Corner: Ordering Drinks</strong></p>
+  <p>In cafés, you'll use accusative constantly:</p>
+  <ul>
+  <li>Я хочу <strong>каву</strong>. (I want coffee.)</li>
+  <li>Можна <strong>воду</strong>? (Can I have water?)</li>
+  <li>Дайте, будь ласка, <strong>чай</strong>. (Give me tea, please.)</li>
+  </ul>
+  <p>Notice: каву, воду (feminine) vs чай, сік (masculine - no change).</p>
+</blockquote></div></div><div class="canvas-note"><h4>### Transform to Accusative</h4><div class="md-content"><p>Change nominative to accusative:</p>
+<ol>
+<li>книга → книг__ (книгу)</li>
+<li>стіл → ст__ (стіл - no change!)</li>
+<li>вода → вод__ (воду)</li>
+<li>вікно → вікн__ (вікно - no change!)</li>
+<li>газета → газет__ (газету)</li>
+</ol></div></div><div class="canvas-note"><h4>Build Sentences</h4><div class="md-content"><p>Combine subject + verb + object:</p>
+<ul>
+<li>Я + бачити + книга = Я бачу книгу.</li>
+<li>Вона + читати + газета = Вона читає газету.</li>
+<li>Ми + хотіти + кава = Ми хочемо каву.</li>
+</ul>
+<blockquote>
+  <p>🌍 <strong>Real World: Daily Accusative</strong></p>
+  <p>You use accusative constantly without realizing:</p>
+  <ul>
+  <li>Ordering: <strong>Каву</strong>, будь ласка! (Coffee, please!)</li>
+  <li>Shopping: Я хочу <strong>цю сумку</strong>. (I want this bag.)</li>
+  <li>Describing: Я люблю <strong>музику</strong>. (I love music.)</li>
+  </ul>
+  <p>Every direct object = accusative!</p>
+</blockquote></div></div><div class="canvas-note"><h4>### Describe What You See</h4><div class="md-content"><p>Look around and describe using "Я бачу…":</p>
+<ol>
+<li>Я бачу <strong><em>_</em></strong> (table) → стіл</li>
+<li>Я бачу <strong><em>_</em></strong> (book) → книгу</li>
+<li>Я бачу <strong><em>_</em></strong> (window) → вікно</li>
+<li>Я бачу <strong><em>_</em></strong> (lamp) → лампу</li>
+</ol></div></div><div class="canvas-note"><h4>Express Wants</h4><div class="md-content"><p>Say what you want:</p>
+<ol>
+<li>Я хочу <strong><em>_</em></strong> (coffee) → каву</li>
+<li>Я хочу <strong><em>_</em></strong> (tea) → чай</li>
+<li>Я хочу <strong><em>_</em></strong> (water) → воду</li>
+<li>Я хочу <strong><em>_</em></strong> (bread) → хліб</li>
+</ol></div></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('match')">Start →</button></div>
     </section>
     <section id="match" class="section"><div class="card"><h3>Nominative to Accusative</h3>
       <div class="score-display"><span class="score"><span id="match-score">0</span>/6</span></div>
       <div class="match-container" id="match-container"><svg class="match-lines" id="match-lines"></svg>
         <div class="match-column" id="match-left"><div class="match-item" data-pair="0">книга</div><div class="match-item" data-pair="1">вода</div><div class="match-item" data-pair="2">газета</div><div class="match-item" data-pair="3">кава</div><div class="match-item" data-pair="4">стіл</div><div class="match-item" data-pair="5">вікно</div></div>
-        <div class="match-column" id="match-right"><div class="match-item" data-pair="4">стіл</div><div class="match-item" data-pair="1">воду</div><div class="match-item" data-pair="0">книгу</div><div class="match-item" data-pair="5">вікно</div><div class="match-item" data-pair="3">каву</div><div class="match-item" data-pair="2">газету</div></div>
+        <div class="match-column" id="match-right"><div class="match-item" data-pair="1">воду</div><div class="match-item" data-pair="3">каву</div><div class="match-item" data-pair="0">книгу</div><div class="match-item" data-pair="5">вікно</div><div class="match-item" data-pair="2">газету</div><div class="match-item" data-pair="4">стіл</div></div>
       </div>
       <div class="completion-message" id="match-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetMatch()">Reset</button><button class="btn btn-primary" onclick="showSection('quiz')">Next →</button></div>

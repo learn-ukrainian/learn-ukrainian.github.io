@@ -28,7 +28,17 @@
     .card h3 { color: var(--primary); margin-bottom: 1rem; }
     .canvas-note { background: #fffbeb; border-left: 4px solid var(--warning); padding: 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
     .canvas-note h4 { color: var(--warning); margin-bottom: 0.5rem; }
-    .canvas-note pre { white-space: pre-wrap; font-family: inherit; }
+    .md-content { line-height: 1.7; }
+    .md-content p { margin: 0.75rem 0; }
+    .md-content ul, .md-content ol { margin: 0.75rem 0; padding-left: 1.5rem; }
+    .md-content li { margin: 0.25rem 0; }
+    .md-content strong { color: var(--primary); }
+    .md-content blockquote { background: #e8f4fd; border-left: 4px solid var(--primary); padding: 0.75rem 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+    .md-content blockquote p { margin: 0.25rem 0; }
+    .md-content table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+    .md-content th, .md-content td { border: 1px solid var(--border); padding: 0.5rem 0.75rem; text-align: left; }
+    .md-content th { background: #f5f5f5; font-weight: 600; }
+    .md-content code { background: #f0f0f0; padding: 0.125rem 0.375rem; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
     .letter-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0; }
     .letter-group { border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; }
     .letter-group.true-friends { border-color: var(--success); } .letter-group.true-friends .letters { color: var(--success); }
@@ -108,157 +118,399 @@
         <p style="color:var(--text-muted)">Days, Months & Hours</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Time Is Everything</h4><pre>To make plans, set meetings, or just talk about your schedule, you need time vocabulary. Let's master days, months, and telling time in Ukrainian!
-
-Key questions:
-- **Котра година?** - What time is it?
-- **Який сьогодні день?** - What day is it today?
-- **Якого числа?** - What date?
-
-> 💡 **Did You Know?**
->
-> Ukrainian uses different prepositions for "on" depending on what follows:
-> - Days: **у** понеділок (on Monday) - accusative
-> - Months: **у** січні (in January) - locative
-> - Dates: use ordinal numbers with genitive!</pre></div><div class="canvas-note"><h4>### Days of the Week (Дні тижня)</h4><pre>| Ukrainian | Transliteration | English | Origin |
-|-----------|-----------------|---------|--------|
-| понеділок | ponedilok | Monday | "after Sunday" |
-| вівторок | vivtorok | Tuesday | "second" |
-| середа | sereda | Wednesday | "middle" |
-| четвер | chetver | Thursday | "fourth" |
-| п'ятниця | pyatnytsia | Friday | "fifth" |
-| субота | subota | Saturday | from Sabbath |
-| неділя | nedilya | Sunday | "no work" |
-
-**Using days:**
-- Сьогодні понеділок. (Today is Monday.)
-- **У** понеділок я працюю. (On Monday I work.)
-- Що ти робиш **у** середу? (What are you doing on Wednesday?)
-
-> 📜 **History Bite: Slavic Week**
->
-> Ukrainian days reflect an ancient Slavic counting system:
-> - **Вівторок** = second (day after неділя)
-> - **Середа** = middle of the week
-> - **Четвер** = fourth
-> - **П'ятниця** = fifth
->
-> "Неділя" (Sunday) means "no work" - it was the day of rest!</pre></div><div class="canvas-note"><h4>Months of the Year (Місяці року)</h4><pre>| Ukrainian | Transliteration | English | Meaning |
-|-----------|-----------------|---------|---------|
-| січень | sichen | January | "cutting" (frost) |
-| лютий | lyutyi | February | "fierce" (cold) |
-| березень | berezen | March | birch tree |
-| квітень | kviten | April | flowers |
-| травень | traven | May | grass |
-| червень | cherven | June | red (berries) |
-| липень | lypen | July | linden tree |
-| серпень | serpen | August | sickle (harvest) |
-| вересень | veresen | September | heather |
-| жовтень | zhovten | October | yellow (leaves) |
-| листопад | lystopad | November | leaf fall |
-| грудень | hruden | December | frozen ground |
-
-> 🎯 **Fun Fact: Nature Calendar**
->
-> Ukrainian months are NOT named after Roman gods like English months. They describe NATURE:
-> - Квітень = flowers bloom
-> - Листопад = leaves fall (literal translation!)
-> - Грудень = frozen lumps of earth
->
-> This is a uniquely Slavic tradition shared with Polish, Czech, and Croatian!
-
-**Using months:**
-- Зараз березень. (It's March now.)
-- **У** січ**ні** холодно. (In January it's cold.) - locative!
-- Мій день народження **у** лип**ні**. (My birthday is in July.)</pre></div><div class="canvas-note"><h4>Seasons (Пори року)</h4><pre>| Ukrainian | Transliteration | English | Months |
-|-----------|-----------------|---------|--------|
-| весна | vesna | spring | березень-травень |
-| літо | lito | summer | червень-серпень |
-| осінь | osin | autumn | вересень-листопад |
-| зима | zyma | winter | грудень-лютий |
-
-**Using seasons:**
-- **Навесні** тепло. (In spring it's warm.)
-- **Влітку** жарко. (In summer it's hot.)
-- **Восени** іде дощ. (In autumn it rains.)
-- **Взимку** холодно. (In winter it's cold.)
-
-> ⚡ **Pro Tip: Season Adverbs**
->
-> Seasons have special adverb forms:
-> - весна → **навесні** (in spring)
-> - літо → **влітку** (in summer)
-> - осінь → **восени** (in autumn)
-> - зима → **взимку** (in winter)</pre></div><div class="canvas-note"><h4>Telling Time (Котра година?)</h4><pre>**Hours:**
-
-| Time | Ukrainian | Explanation |
-|------|-----------|-------------|
-| 1:00 | перша година | first hour |
-| 2:00 | друга година | second hour |
-| 3:00 | третя година | third hour |
-| 4:00 | четверта година | fourth hour |
-| 5:00 | п'ята година | fifth hour |
-| 6:00 | шоста година | sixth hour |
-| 7:00 | сьома година | seventh hour |
-| 8:00 | восьма година | eighth hour |
-| 9:00 | дев'ята година | ninth hour |
-| 10:00 | десята година | tenth hour |
-| 11:00 | одинадцята година | eleventh hour |
-| 12:00 | дванадцята година | twelfth hour |
-
-**Asking time:**
-- **Котра година?** - What time is it?
-- **Зараз третя година.** - It's 3 o'clock now.
-- **О котрій годині?** - At what time?
-- **О дев'ятій.** - At 9.
-
-> 🔗 **Language Link: Ordinal Numbers**
->
-> Telling time uses ordinal (not cardinal) numbers:
-> - один → перший → перша година
-> - два → другий → друга година
->
-> The ordinals match feminine "година"!</pre></div><div class="canvas-note"><h4>Half & Quarter Hours</h4><pre>| Time | Ukrainian |
-|------|-----------|
-| 2:30 | пів на третю (half toward third) |
-| 3:15 | чверть на четверту |
-| 3:45 | за чверть четверта |
-| 3:30 | пів на четверту |
-
-**Informal way (with numbers):**
-- 2:30 = дві тридцять
-- 3:15 = три п'ятнадцять
-- 3:45 = три сорок п'ять
-
-> 🌍 **Real World: Scheduling**
->
-> - **Коли ми зустрінемося?** - When will we meet?
-> - **О шостій вечора.** - At 6 PM.
-> - **Зустріч о дев'ятій ранку.** - Meeting at 9 AM.
-> - **Поїзд о двадцять другій.** - Train at 22:00.</pre></div><div class="canvas-note"><h4>### Days Practice</h4><pre>Answer:
-1. Який сьогодні день? → Сьогодні...
-2. What day comes after середа? → четвер
-3. What day comes before неділя? → субота
-4. When is the middle of the week? → середа</pre></div><div class="canvas-note"><h4>Months Practice</h4><pre>1. When is it cold? → У січні, у лютому, у грудні
-2. When do leaves fall? → У листопаді
-3. When is it hot? → У липні, у серпні
-4. Your birthday month? → У... (+ locative)</pre></div><div class="canvas-note"><h4>Time Practice</h4><pre>Say in Ukrainian:
-1. It's 5 o'clock. → Зараз п'ята година.
-2. At 3 PM. → О третій.
-3. At 9 in the morning. → О дев'ятій ранку.
-4. At 8 in the evening. → О восьмій вечора.</pre></div><div class="canvas-note"><h4>### Plan a Meeting</h4><pre>Arrange to meet someone:
-A: Коли ти вільний/вільна?
-B: У п'ятницю ввечері.
-A: О котрій годині?
-B: О сьомій.
-A: Добре, домовились!</pre></div></div>
+      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Time Is Everything</h4><div class="md-content"><p>To make plans, set meetings, or just talk about your schedule, you need time vocabulary. Let's master days, months, and telling time in Ukrainian!</p>
+<p>Key questions:</p>
+<ul>
+<li><strong>Котра година?</strong> - What time is it?</li>
+<li><strong>Який сьогодні день?</strong> - What day is it today?</li>
+<li><strong>Якого числа?</strong> - What date?</li>
+</ul>
+<blockquote>
+  <p>💡 <strong>Did You Know?</strong></p>
+  <p>Ukrainian uses different prepositions for "on" depending on what follows:</p>
+  <ul>
+  <li>Days: <strong>у</strong> понеділок (on Monday) - accusative</li>
+  <li>Months: <strong>у</strong> січні (in January) - locative</li>
+  <li>Dates: use ordinal numbers with genitive!</li>
+  </ul>
+</blockquote></div></div><div class="canvas-note"><h4>### Days of the Week (Дні тижня)</h4><div class="md-content"><table>
+<thead>
+<tr>
+<th>Ukrainian</th>
+<th>Transliteration</th>
+<th>English</th>
+<th>Origin</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>понеділок</td>
+<td>ponedilok</td>
+<td>Monday</td>
+<td>"after Sunday"</td>
+</tr>
+<tr>
+<td>вівторок</td>
+<td>vivtorok</td>
+<td>Tuesday</td>
+<td>"second"</td>
+</tr>
+<tr>
+<td>середа</td>
+<td>sereda</td>
+<td>Wednesday</td>
+<td>"middle"</td>
+</tr>
+<tr>
+<td>четвер</td>
+<td>chetver</td>
+<td>Thursday</td>
+<td>"fourth"</td>
+</tr>
+<tr>
+<td>п'ятниця</td>
+<td>pyatnytsia</td>
+<td>Friday</td>
+<td>"fifth"</td>
+</tr>
+<tr>
+<td>субота</td>
+<td>subota</td>
+<td>Saturday</td>
+<td>from Sabbath</td>
+</tr>
+<tr>
+<td>неділя</td>
+<td>nedilya</td>
+<td>Sunday</td>
+<td>"no work"</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Using days:</strong></p>
+<ul>
+<li>Сьогодні понеділок. (Today is Monday.)</li>
+<li><strong>У</strong> понеділок я працюю. (On Monday I work.)</li>
+<li>Що ти робиш <strong>у</strong> середу? (What are you doing on Wednesday?)</li>
+</ul>
+<blockquote>
+  <p>📜 <strong>History Bite: Slavic Week</strong></p>
+  <p>Ukrainian days reflect an ancient Slavic counting system:</p>
+  <ul>
+  <li><strong>Вівторок</strong> = second (day after неділя)</li>
+  <li><strong>Середа</strong> = middle of the week</li>
+  <li><strong>Четвер</strong> = fourth</li>
+  <li><strong>П'ятниця</strong> = fifth</li>
+  </ul>
+  <p>"Неділя" (Sunday) means "no work" - it was the day of rest!</p>
+</blockquote></div></div><div class="canvas-note"><h4>Months of the Year (Місяці року)</h4><div class="md-content"><table>
+<thead>
+<tr>
+<th>Ukrainian</th>
+<th>Transliteration</th>
+<th>English</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>січень</td>
+<td>sichen</td>
+<td>January</td>
+<td>"cutting" (frost)</td>
+</tr>
+<tr>
+<td>лютий</td>
+<td>lyutyi</td>
+<td>February</td>
+<td>"fierce" (cold)</td>
+</tr>
+<tr>
+<td>березень</td>
+<td>berezen</td>
+<td>March</td>
+<td>birch tree</td>
+</tr>
+<tr>
+<td>квітень</td>
+<td>kviten</td>
+<td>April</td>
+<td>flowers</td>
+</tr>
+<tr>
+<td>травень</td>
+<td>traven</td>
+<td>May</td>
+<td>grass</td>
+</tr>
+<tr>
+<td>червень</td>
+<td>cherven</td>
+<td>June</td>
+<td>red (berries)</td>
+</tr>
+<tr>
+<td>липень</td>
+<td>lypen</td>
+<td>July</td>
+<td>linden tree</td>
+</tr>
+<tr>
+<td>серпень</td>
+<td>serpen</td>
+<td>August</td>
+<td>sickle (harvest)</td>
+</tr>
+<tr>
+<td>вересень</td>
+<td>veresen</td>
+<td>September</td>
+<td>heather</td>
+</tr>
+<tr>
+<td>жовтень</td>
+<td>zhovten</td>
+<td>October</td>
+<td>yellow (leaves)</td>
+</tr>
+<tr>
+<td>листопад</td>
+<td>lystopad</td>
+<td>November</td>
+<td>leaf fall</td>
+</tr>
+<tr>
+<td>грудень</td>
+<td>hruden</td>
+<td>December</td>
+<td>frozen ground</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p>🎯 <strong>Fun Fact: Nature Calendar</strong></p>
+  <p>Ukrainian months are NOT named after Roman gods like English months. They describe NATURE:</p>
+  <ul>
+  <li>Квітень = flowers bloom</li>
+  <li>Листопад = leaves fall (literal translation!)</li>
+  <li>Грудень = frozen lumps of earth</li>
+  </ul>
+  <p>This is a uniquely Slavic tradition shared with Polish, Czech, and Croatian!</p>
+</blockquote>
+<p><strong>Using months:</strong></p>
+<ul>
+<li>Зараз березень. (It's March now.)</li>
+<li><strong>У</strong> січ<strong>ні</strong> холодно. (In January it's cold.) - locative!</li>
+<li>Мій день народження <strong>у</strong> лип<strong>ні</strong>. (My birthday is in July.)</li>
+</ul></div></div><div class="canvas-note"><h4>Seasons (Пори року)</h4><div class="md-content"><table>
+<thead>
+<tr>
+<th>Ukrainian</th>
+<th>Transliteration</th>
+<th>English</th>
+<th>Months</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>весна</td>
+<td>vesna</td>
+<td>spring</td>
+<td>березень-травень</td>
+</tr>
+<tr>
+<td>літо</td>
+<td>lito</td>
+<td>summer</td>
+<td>червень-серпень</td>
+</tr>
+<tr>
+<td>осінь</td>
+<td>osin</td>
+<td>autumn</td>
+<td>вересень-листопад</td>
+</tr>
+<tr>
+<td>зима</td>
+<td>zyma</td>
+<td>winter</td>
+<td>грудень-лютий</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Using seasons:</strong></p>
+<ul>
+<li><strong>Навесні</strong> тепло. (In spring it's warm.)</li>
+<li><strong>Влітку</strong> жарко. (In summer it's hot.)</li>
+<li><strong>Восени</strong> іде дощ. (In autumn it rains.)</li>
+<li><strong>Взимку</strong> холодно. (In winter it's cold.)</li>
+</ul>
+<blockquote>
+  <p>⚡ <strong>Pro Tip: Season Adverbs</strong></p>
+  <p>Seasons have special adverb forms:</p>
+  <ul>
+  <li>весна → <strong>навесні</strong> (in spring)</li>
+  <li>літо → <strong>влітку</strong> (in summer)</li>
+  <li>осінь → <strong>восени</strong> (in autumn)</li>
+  <li>зима → <strong>взимку</strong> (in winter)</li>
+  </ul>
+</blockquote></div></div><div class="canvas-note"><h4>Telling Time (Котра година?)</h4><div class="md-content"><p><strong>Hours:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Time</th>
+<th>Ukrainian</th>
+<th>Explanation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1:00</td>
+<td>перша година</td>
+<td>first hour</td>
+</tr>
+<tr>
+<td>2:00</td>
+<td>друга година</td>
+<td>second hour</td>
+</tr>
+<tr>
+<td>3:00</td>
+<td>третя година</td>
+<td>third hour</td>
+</tr>
+<tr>
+<td>4:00</td>
+<td>четверта година</td>
+<td>fourth hour</td>
+</tr>
+<tr>
+<td>5:00</td>
+<td>п'ята година</td>
+<td>fifth hour</td>
+</tr>
+<tr>
+<td>6:00</td>
+<td>шоста година</td>
+<td>sixth hour</td>
+</tr>
+<tr>
+<td>7:00</td>
+<td>сьома година</td>
+<td>seventh hour</td>
+</tr>
+<tr>
+<td>8:00</td>
+<td>восьма година</td>
+<td>eighth hour</td>
+</tr>
+<tr>
+<td>9:00</td>
+<td>дев'ята година</td>
+<td>ninth hour</td>
+</tr>
+<tr>
+<td>10:00</td>
+<td>десята година</td>
+<td>tenth hour</td>
+</tr>
+<tr>
+<td>11:00</td>
+<td>одинадцята година</td>
+<td>eleventh hour</td>
+</tr>
+<tr>
+<td>12:00</td>
+<td>дванадцята година</td>
+<td>twelfth hour</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Asking time:</strong></p>
+<ul>
+<li><strong>Котра година?</strong> - What time is it?</li>
+<li><strong>Зараз третя година.</strong> - It's 3 o'clock now.</li>
+<li><strong>О котрій годині?</strong> - At what time?</li>
+<li><strong>О дев'ятій.</strong> - At 9.</li>
+</ul>
+<blockquote>
+  <p>🔗 <strong>Language Link: Ordinal Numbers</strong></p>
+  <p>Telling time uses ordinal (not cardinal) numbers:</p>
+  <ul>
+  <li>один → перший → перша година</li>
+  <li>два → другий → друга година</li>
+  </ul>
+  <p>The ordinals match feminine "година"!</p>
+</blockquote></div></div><div class="canvas-note"><h4>Half & Quarter Hours</h4><div class="md-content"><table>
+<thead>
+<tr>
+<th>Time</th>
+<th>Ukrainian</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2:30</td>
+<td>пів на третю (half toward third)</td>
+</tr>
+<tr>
+<td>3:15</td>
+<td>чверть на четверту</td>
+</tr>
+<tr>
+<td>3:45</td>
+<td>за чверть четверта</td>
+</tr>
+<tr>
+<td>3:30</td>
+<td>пів на четверту</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Informal way (with numbers):</strong></p>
+<ul>
+<li>2:30 = дві тридцять</li>
+<li>3:15 = три п'ятнадцять</li>
+<li>3:45 = три сорок п'ять</li>
+</ul>
+<blockquote>
+  <p>🌍 <strong>Real World: Scheduling</strong></p>
+  <ul>
+  <li><strong>Коли ми зустрінемося?</strong> - When will we meet?</li>
+  <li><strong>О шостій вечора.</strong> - At 6 PM.</li>
+  <li><strong>Зустріч о дев'ятій ранку.</strong> - Meeting at 9 AM.</li>
+  <li><strong>Поїзд о двадцять другій.</strong> - Train at 22:00.</li>
+  </ul>
+</blockquote></div></div><div class="canvas-note"><h4>### Days Practice</h4><div class="md-content"><p>Answer:</p>
+<ol>
+<li>Який сьогодні день? → Сьогодні…</li>
+<li>What day comes after середа? → четвер</li>
+<li>What day comes before неділя? → субота</li>
+<li>When is the middle of the week? → середа</li>
+</ol></div></div><div class="canvas-note"><h4>Months Practice</h4><div class="md-content"><ol>
+<li>When is it cold? → У січні, у лютому, у грудні</li>
+<li>When do leaves fall? → У листопаді</li>
+<li>When is it hot? → У липні, у серпні</li>
+<li>Your birthday month? → У… (+ locative)</li>
+</ol></div></div><div class="canvas-note"><h4>Time Practice</h4><div class="md-content"><p>Say in Ukrainian:</p>
+<ol>
+<li>It's 5 o'clock. → Зараз п'ята година.</li>
+<li>At 3 PM. → О третій.</li>
+<li>At 9 in the morning. → О дев'ятій ранку.</li>
+<li>At 8 in the evening. → О восьмій вечора.</li>
+</ol></div></div><div class="canvas-note"><h4>### Plan a Meeting</h4><div class="md-content"><p>Arrange to meet someone:<br />
+A: Коли ти вільний/вільна?<br />
+B: У п'ятницю ввечері.<br />
+A: О котрій годині?<br />
+B: О сьомій.<br />
+A: Добре, домовились!</p></div></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('match')">Start →</button></div>
     </section>
     <section id="match" class="section"><div class="card"><h3>Days of the Week</h3>
       <div class="score-display"><span class="score"><span id="match-score">0</span>/7</span></div>
       <div class="match-container" id="match-container"><svg class="match-lines" id="match-lines"></svg>
         <div class="match-column" id="match-left"><div class="match-item" data-pair="0">понеділок</div><div class="match-item" data-pair="1">вівторок</div><div class="match-item" data-pair="2">середа</div><div class="match-item" data-pair="3">четвер</div><div class="match-item" data-pair="4">п'ятниця</div><div class="match-item" data-pair="5">субота</div><div class="match-item" data-pair="6">неділя</div></div>
-        <div class="match-column" id="match-right"><div class="match-item" data-pair="0">Monday</div><div class="match-item" data-pair="3">Thursday</div><div class="match-item" data-pair="5">Saturday</div><div class="match-item" data-pair="6">Sunday</div><div class="match-item" data-pair="4">Friday</div><div class="match-item" data-pair="2">Wednesday</div><div class="match-item" data-pair="1">Tuesday</div></div>
+        <div class="match-column" id="match-right"><div class="match-item" data-pair="1">Tuesday</div><div class="match-item" data-pair="0">Monday</div><div class="match-item" data-pair="4">Friday</div><div class="match-item" data-pair="2">Wednesday</div><div class="match-item" data-pair="5">Saturday</div><div class="match-item" data-pair="6">Sunday</div><div class="match-item" data-pair="3">Thursday</div></div>
       </div>
       <div class="completion-message" id="match-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetMatch()">Reset</button><button class="btn btn-primary" onclick="showSection('quiz')">Next →</button></div>

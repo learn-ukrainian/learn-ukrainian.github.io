@@ -28,7 +28,17 @@
     .card h3 { color: var(--primary); margin-bottom: 1rem; }
     .canvas-note { background: #fffbeb; border-left: 4px solid var(--warning); padding: 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
     .canvas-note h4 { color: var(--warning); margin-bottom: 0.5rem; }
-    .canvas-note pre { white-space: pre-wrap; font-family: inherit; }
+    .md-content { line-height: 1.7; }
+    .md-content p { margin: 0.75rem 0; }
+    .md-content ul, .md-content ol { margin: 0.75rem 0; padding-left: 1.5rem; }
+    .md-content li { margin: 0.25rem 0; }
+    .md-content strong { color: var(--primary); }
+    .md-content blockquote { background: #e8f4fd; border-left: 4px solid var(--primary); padding: 0.75rem 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+    .md-content blockquote p { margin: 0.25rem 0; }
+    .md-content table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+    .md-content th, .md-content td { border: 1px solid var(--border); padding: 0.5rem 0.75rem; text-align: left; }
+    .md-content th { background: #f5f5f5; font-weight: 600; }
+    .md-content code { background: #f0f0f0; padding: 0.125rem 0.375rem; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
     .letter-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0; }
     .letter-group { border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; }
     .letter-group.true-friends { border-color: var(--success); } .letter-group.true-friends .letters { color: var(--success); }
@@ -108,107 +118,223 @@
         <p style="color:var(--text-muted)">Direct Objects - People</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Living vs Non-Living</h4><pre>In Module 11, you learned masculine inanimate nouns don't change in accusative. But for **animate** nouns (people and animals), there's a twist:
-
-**Masculine animate accusative = Genitive form!**
-
-- Я бачу **стіл**. (I see the table.) - no change
-- Я бачу **студента**. (I see the student.) - adds -а!
-
-> 💡 **Did You Know?**
->
-> This animate/inanimate distinction exists because Slavic languages evolved to help clarify "who does what to whom." With people, word order alone wasn't clear enough, so distinct endings developed. Tables don't perform actions, but students do - so we mark them differently!</pre></div><div class="canvas-note"><h4>### Animate Accusative Endings</h4><pre>**Masculine animate (add -а or change -а → -у):**
-
-| Nominative | Accusative | Example |
-|------------|------------|---------|
-| студент | студент**а** | Я бачу студента. |
-| друг | друг**а** | Я бачу друга. |
-| лікар | лікар**я** | Я бачу лікаря. |
-| тато | тат**а** | Я бачу тата. |
-| чоловік | чоловік**а** | Я бачу чоловіка. |
-
-**Feminine animate (same as inanimate!):**
-
-| Nominative | Accusative | Example |
-|------------|------------|---------|
-| студентка | студентк**у** | Я бачу студентку. |
-| подруга | подруг**у** | Я бачу подругу. |
-| жінка | жінк**у** | Я бачу жінку. |
-
-> ⚡ **Pro Tip: Feminine Is Easy**
->
-> Feminine nouns use the same accusative whether animate or inanimate:
-> - книга → книгу (inanimate)
-> - жінка → жінку (animate)
->
-> Only masculine has the animate/inanimate split!
-
-> 📜 **History Bite: Why Accusative = Genitive?**
->
-> The merger of accusative and genitive for animates happened gradually in Slavic languages around 1000-1500 AD. Originally all masculines had distinct accusative forms. The genitive "invaded" animate accusative because saying "I see Ivan" sounded too similar to "Ivan sees" - ambiguous! Adding -а removed the confusion.</pre></div><div class="canvas-note"><h4>Who Counts as Animate?</h4><pre>**Animate (use genitive-like accusative):**
-- People: студент, лікар, друг, чоловік, тато
-- Animals: собака, кіт, птах, кінь
-- Personified beings: Бог (God), ангел (angel)
-
-**Inanimate (no accusative change):**
-- Objects: стіл, телефон, комп'ютер
-- Abstract things: час (time), успіх (success)
-- Plants: дерево (tree), квітка (flower)
-- Collectives: народ (people/nation), клас (class)
-
-> 🎯 **Fun Fact: Dead People**
->
-> In Ukrainian, deceased people are still grammatically animate:
-> - Я вивчаю **Шевченка**. (I study Shevchenko.)
-> - Ми читаємо **Франка**. (We read Franko.)
->
-> The animate rule applies even to historical figures!</pre></div><div class="canvas-note"><h4>Common People Vocabulary</h4><pre>| Nominative | Accusative | English |
-|------------|------------|---------|
-| друг | друга | friend (m) |
-| подруга | подругу | friend (f) |
-| студент | студента | student (m) |
-| студентка | студентку | student (f) |
-| вчитель | вчителя | teacher (m) |
-| вчителька | вчительку | teacher (f) |
-| лікар | лікаря | doctor (m) |
-| лікарка | лікарку | doctor (f) |
-| чоловік | чоловіка | man/husband |
-| жінка | жінку | woman/wife |
-| хлопець | хлопця | boy/guy |
-| дівчина | дівчину | girl |
-
-> 🎭 **Culture Corner: Чекати на + Accusative**
->
-> The verb **чекати** (to wait) takes **на + accusative**:
-> - Я чекаю на друга. (I'm waiting for a friend.)
-> - Вона чекає на лікаря. (She's waiting for the doctor.)
->
-> This is a common construction you'll use often!</pre></div><div class="canvas-note"><h4>### Transform to Accusative</h4><pre>Change to accusative:
-1. студент → студент__ (студента)
-2. подруга → подруг__ (подругу)
-3. чоловік → чоловік__ (чоловіка)
-4. жінка → жінк__ (жінку)
-5. друг → друг__ (друга)</pre></div><div class="canvas-note"><h4>Complete Sentences</h4><pre>1. Я бачу ___ (лікар) → лікаря
-2. Вона знає ___ (студентка) → студентку
-3. Ми чекаємо на ___ (друг) → друга
-4. Він любить ___ (дівчина) → дівчину
-
-> 🌍 **Real World: Talking About People**
->
-> - **Я знаю цього чоловіка.** - I know this man.
-> - **Ти бачиш ту жінку?** - Do you see that woman?
-> - **Ми чекаємо на лікаря.** - We're waiting for the doctor.
-> - **Я люблю свою маму.** - I love my mom.</pre></div><div class="canvas-note"><h4>### Describe Who You Know</h4><pre>Practice with real people:
-- Я знаю ___ (name of male friend)
-- Я знаю ___ (name of female friend)
-- Я бачу ___ (profession)</pre></div></div>
+      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Living vs Non-Living</h4><div class="md-content"><p>In Module 11, you learned masculine inanimate nouns don't change in accusative. But for <strong>animate</strong> nouns (people and animals), there's a twist:</p>
+<p><strong>Masculine animate accusative = Genitive form!</strong></p>
+<ul>
+<li>Я бачу <strong>стіл</strong>. (I see the table.) - no change</li>
+<li>Я бачу <strong>студента</strong>. (I see the student.) - adds -а!</li>
+</ul>
+<blockquote>
+  <p>💡 <strong>Did You Know?</strong></p>
+  <p>This animate/inanimate distinction exists because Slavic languages evolved to help clarify "who does what to whom." With people, word order alone wasn't clear enough, so distinct endings developed. Tables don't perform actions, but students do - so we mark them differently!</p>
+</blockquote></div></div><div class="canvas-note"><h4>### Animate Accusative Endings</h4><div class="md-content"><p><strong>Masculine animate (add -а or change -а → -у):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Nominative</th>
+<th>Accusative</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>студент</td>
+<td>студент<strong>а</strong></td>
+<td>Я бачу студента.</td>
+</tr>
+<tr>
+<td>друг</td>
+<td>друг<strong>а</strong></td>
+<td>Я бачу друга.</td>
+</tr>
+<tr>
+<td>лікар</td>
+<td>лікар<strong>я</strong></td>
+<td>Я бачу лікаря.</td>
+</tr>
+<tr>
+<td>тато</td>
+<td>тат<strong>а</strong></td>
+<td>Я бачу тата.</td>
+</tr>
+<tr>
+<td>чоловік</td>
+<td>чоловік<strong>а</strong></td>
+<td>Я бачу чоловіка.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Feminine animate (same as inanimate!):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Nominative</th>
+<th>Accusative</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>студентка</td>
+<td>студентк<strong>у</strong></td>
+<td>Я бачу студентку.</td>
+</tr>
+<tr>
+<td>подруга</td>
+<td>подруг<strong>у</strong></td>
+<td>Я бачу подругу.</td>
+</tr>
+<tr>
+<td>жінка</td>
+<td>жінк<strong>у</strong></td>
+<td>Я бачу жінку.</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p>⚡ <strong>Pro Tip: Feminine Is Easy</strong></p>
+  <p>Feminine nouns use the same accusative whether animate or inanimate:</p>
+  <ul>
+  <li>книга → книгу (inanimate)</li>
+  <li>жінка → жінку (animate)</li>
+  </ul>
+  <p>Only masculine has the animate/inanimate split!</p>
+  <p>📜 <strong>History Bite: Why Accusative = Genitive?</strong></p>
+  <p>The merger of accusative and genitive for animates happened gradually in Slavic languages around 1000-1500 AD. Originally all masculines had distinct accusative forms. The genitive "invaded" animate accusative because saying "I see Ivan" sounded too similar to "Ivan sees" - ambiguous! Adding -а removed the confusion.</p>
+</blockquote></div></div><div class="canvas-note"><h4>Who Counts as Animate?</h4><div class="md-content"><p><strong>Animate (use genitive-like accusative):</strong></p>
+<ul>
+<li>People: студент, лікар, друг, чоловік, тато</li>
+<li>Animals: собака, кіт, птах, кінь</li>
+<li>Personified beings: Бог (God), ангел (angel)</li>
+</ul>
+<p><strong>Inanimate (no accusative change):</strong></p>
+<ul>
+<li>Objects: стіл, телефон, комп'ютер</li>
+<li>Abstract things: час (time), успіх (success)</li>
+<li>Plants: дерево (tree), квітка (flower)</li>
+<li>Collectives: народ (people/nation), клас (class)</li>
+</ul>
+<blockquote>
+  <p>🎯 <strong>Fun Fact: Dead People</strong></p>
+  <p>In Ukrainian, deceased people are still grammatically animate:</p>
+  <ul>
+  <li>Я вивчаю <strong>Шевченка</strong>. (I study Shevchenko.)</li>
+  <li>Ми читаємо <strong>Франка</strong>. (We read Franko.)</li>
+  </ul>
+  <p>The animate rule applies even to historical figures!</p>
+</blockquote></div></div><div class="canvas-note"><h4>Common People Vocabulary</h4><div class="md-content"><table>
+<thead>
+<tr>
+<th>Nominative</th>
+<th>Accusative</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>друг</td>
+<td>друга</td>
+<td>friend (m)</td>
+</tr>
+<tr>
+<td>подруга</td>
+<td>подругу</td>
+<td>friend (f)</td>
+</tr>
+<tr>
+<td>студент</td>
+<td>студента</td>
+<td>student (m)</td>
+</tr>
+<tr>
+<td>студентка</td>
+<td>студентку</td>
+<td>student (f)</td>
+</tr>
+<tr>
+<td>вчитель</td>
+<td>вчителя</td>
+<td>teacher (m)</td>
+</tr>
+<tr>
+<td>вчителька</td>
+<td>вчительку</td>
+<td>teacher (f)</td>
+</tr>
+<tr>
+<td>лікар</td>
+<td>лікаря</td>
+<td>doctor (m)</td>
+</tr>
+<tr>
+<td>лікарка</td>
+<td>лікарку</td>
+<td>doctor (f)</td>
+</tr>
+<tr>
+<td>чоловік</td>
+<td>чоловіка</td>
+<td>man/husband</td>
+</tr>
+<tr>
+<td>жінка</td>
+<td>жінку</td>
+<td>woman/wife</td>
+</tr>
+<tr>
+<td>хлопець</td>
+<td>хлопця</td>
+<td>boy/guy</td>
+</tr>
+<tr>
+<td>дівчина</td>
+<td>дівчину</td>
+<td>girl</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p>🎭 <strong>Culture Corner: Чекати на + Accusative</strong></p>
+  <p>The verb <strong>чекати</strong> (to wait) takes <strong>на + accusative</strong>:</p>
+  <ul>
+  <li>Я чекаю на друга. (I'm waiting for a friend.)</li>
+  <li>Вона чекає на лікаря. (She's waiting for the doctor.)</li>
+  </ul>
+  <p>This is a common construction you'll use often!</p>
+</blockquote></div></div><div class="canvas-note"><h4>### Transform to Accusative</h4><div class="md-content"><p>Change to accusative:</p>
+<ol>
+<li>студент → студент__ (студента)</li>
+<li>подруга → подруг__ (подругу)</li>
+<li>чоловік → чоловік__ (чоловіка)</li>
+<li>жінка → жінк__ (жінку)</li>
+<li>друг → друг__ (друга)</li>
+</ol></div></div><div class="canvas-note"><h4>Complete Sentences</h4><div class="md-content"><ol>
+<li>Я бачу ___ (лікар) → лікаря</li>
+<li>Вона знає ___ (студентка) → студентку</li>
+<li>Ми чекаємо на ___ (друг) → друга</li>
+<li>Він любить ___ (дівчина) → дівчину</li>
+</ol>
+<blockquote>
+  <p>🌍 <strong>Real World: Talking About People</strong></p>
+  <ul>
+  <li><strong>Я знаю цього чоловіка.</strong> - I know this man.</li>
+  <li><strong>Ти бачиш ту жінку?</strong> - Do you see that woman?</li>
+  <li><strong>Ми чекаємо на лікаря.</strong> - We're waiting for the doctor.</li>
+  <li><strong>Я люблю свою маму.</strong> - I love my mom.</li>
+  </ul>
+</blockquote></div></div><div class="canvas-note"><h4>### Describe Who You Know</h4><div class="md-content"><p>Practice with real people:</p>
+<ul>
+<li>Я знаю ___ (name of male friend)</li>
+<li>Я знаю ___ (name of female friend)</li>
+<li>Я бачу ___ (profession)</li>
+</ul></div></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('match')">Start →</button></div>
     </section>
     <section id="match" class="section"><div class="card"><h3>Animate Accusative</h3>
       <div class="score-display"><span class="score"><span id="match-score">0</span>/6</span></div>
       <div class="match-container" id="match-container"><svg class="match-lines" id="match-lines"></svg>
         <div class="match-column" id="match-left"><div class="match-item" data-pair="0">студент</div><div class="match-item" data-pair="1">друг</div><div class="match-item" data-pair="2">лікар</div><div class="match-item" data-pair="3">чоловік</div><div class="match-item" data-pair="4">студентка</div><div class="match-item" data-pair="5">жінка</div></div>
-        <div class="match-column" id="match-right"><div class="match-item" data-pair="0">студента</div><div class="match-item" data-pair="4">студентку</div><div class="match-item" data-pair="1">друга</div><div class="match-item" data-pair="2">лікаря</div><div class="match-item" data-pair="5">жінку</div><div class="match-item" data-pair="3">чоловіка</div></div>
+        <div class="match-column" id="match-right"><div class="match-item" data-pair="5">жінку</div><div class="match-item" data-pair="3">чоловіка</div><div class="match-item" data-pair="0">студента</div><div class="match-item" data-pair="4">студентку</div><div class="match-item" data-pair="1">друга</div><div class="match-item" data-pair="2">лікаря</div></div>
       </div>
       <div class="completion-message" id="match-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetMatch()">Reset</button><button class="btn btn-primary" onclick="showSection('quiz')">Next →</button></div>

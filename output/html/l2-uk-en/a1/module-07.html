@@ -28,7 +28,17 @@
     .card h3 { color: var(--primary); margin-bottom: 1rem; }
     .canvas-note { background: #fffbeb; border-left: 4px solid var(--warning); padding: 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
     .canvas-note h4 { color: var(--warning); margin-bottom: 0.5rem; }
-    .canvas-note pre { white-space: pre-wrap; font-family: inherit; }
+    .md-content { line-height: 1.7; }
+    .md-content p { margin: 0.75rem 0; }
+    .md-content ul, .md-content ol { margin: 0.75rem 0; padding-left: 1.5rem; }
+    .md-content li { margin: 0.25rem 0; }
+    .md-content strong { color: var(--primary); }
+    .md-content blockquote { background: #e8f4fd; border-left: 4px solid var(--primary); padding: 0.75rem 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+    .md-content blockquote p { margin: 0.25rem 0; }
+    .md-content table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+    .md-content th, .md-content td { border: 1px solid var(--border); padding: 0.5rem 0.75rem; text-align: left; }
+    .md-content th { background: #f5f5f5; font-weight: 600; }
+    .md-content code { background: #f0f0f0; padding: 0.125rem 0.375rem; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
     .letter-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0; }
     .letter-group { border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; }
     .letter-group.true-friends { border-color: var(--success); } .letter-group.true-friends .letters { color: var(--success); }
@@ -108,144 +118,269 @@
         <p style="color:var(--text-muted)">Asking and Denying</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Time to Ask Questions!</h4><pre>You can now make statements in Ukrainian. But conversations need questions! In this module, you'll learn to ask anything - and say "no" properly.
-
-Ukrainian has two types of questions:
-1. **Yes/No questions** - "Do you speak Ukrainian?"
-2. **Wh-questions** - "What do you speak?"
-
-And here's a surprise: Ukrainian **requires** double negatives!
-
-> 💡 **Did You Know?**
->
-> In English, "I don't know nothing" is considered incorrect (double negative). In Ukrainian, **Я нічого не знаю** (literally "I nothing not know") is the ONLY correct way to say "I don't know anything"! This is true for all Slavic languages, as well as Spanish, French, and many others.</pre></div><div class="canvas-note"><h4>### Yes/No Questions with Чи</h4><pre>To ask a yes/no question, add **Чи** at the beginning:
-
-| Statement | Question |
-|-----------|----------|
-| Ти читаєш. (You read.) | **Чи** ти читаєш? (Do you read?) |
-| Вона студентка. (She's a student.) | **Чи** вона студентка? (Is she a student?) |
-| Він знає. (He knows.) | **Чи** він знає? (Does he know?) |
-
-**Or** just use rising intonation (no Чи needed):
-- Ти читаєш? ↗ (Do you read?)
-
-> ⚡ **Pro Tip: Чи vs. Intonation**
->
-> - **Чи** = more formal, clearer, written Ukrainian
-> - **Intonation only** = casual, spoken Ukrainian
->
-> Both are correct! In everyday speech, Ukrainians often skip Чи and just raise their voice at the end.
-
-> 📜 **History Bite: Where Чи Comes From**
->
-> The particle **чи** comes from Proto-Slavic *či, related to the word **що** (what). It originally meant "whether" and still does in some contexts: "Не знаю, чи він прийде" (I don't know whether he'll come).</pre></div><div class="canvas-note"><h4>Question Words</h4><pre>| Ukrainian | Transliteration | English | Example |
-|-----------|-----------------|---------|---------|
-| що | shcho | what | Що це? (What is this?) |
-| хто | khto | who | Хто це? (Who is this?) |
-| де | de | where (location) | Де ти? (Where are you?) |
-| куди | kudy | where (direction) | Куди ти йдеш? (Where are you going?) |
-| звідки | zvidky | where from | Звідки ти? (Where are you from?) |
-| коли | koly | when | Коли? (When?) |
-| чому | chomu | why | Чому? (Why?) |
-| як | yak | how | Як справи? (How are things?) |
-| скільки | skilky | how much/many | Скільки? (How much?) |
-| який/яка/яке | yakyi/yaka/yake | which/what kind | Яка це книга? (What book is this?) |
-
-> 🔗 **Language Link: Question Word Patterns**
->
-> Notice the patterns in Ukrainian question words:
-> - **Х-** words: хто, хіба (who, really?)
-> - **Ч-** words: що, чи, чому, чий (what, whether, why, whose)
-> - **К-** words: коли, куди, котрий (when, where to, which)
-> - **Як-** words: як, який (how, which)
->
-> These patterns help you remember related words!</pre></div><div class="canvas-note"><h4>Negation with Не</h4><pre>To negate, put **не** directly before the verb:
-
-| Positive | Negative |
-|----------|----------|
-| Я знаю. (I know.) | Я **не** знаю. (I don't know.) |
-| Вона читає. (She reads.) | Вона **не** читає. (She doesn't read.) |
-| Це добре. (This is good.) | Це **не** добре. (This isn't good.) |
-
-> 🎯 **Fun Fact: Не Never Moves**
->
-> Unlike English where "not" can appear in different places, Ukrainian **не** always goes immediately before the verb:
-> - "I do **not** know" = Я **не** знаю
-> - "She does **not** read" = Вона **не** читає
->
-> Simple rule: find the verb, put не before it!</pre></div><div class="canvas-note"><h4>Double Negatives (Required!)</h4><pre>Ukrainian requires **multiple negatives** in a sentence:
-
-| English | Ukrainian (literal) |
-|---------|---------------------|
-| I don't know anything. | Я **ні**чого **не** знаю. (I nothing not know.) |
-| Nobody knows. | **Ні**хто **не** знає. (Nobody not knows.) |
-| I never read. | Я **ні**коли **не** читаю. (I never not read.) |
-| There's nothing anywhere. | **Ні**де **ні**чого **не**має. (Nowhere nothing not-is.) |
-
-**Negative words:**
-- ніхто (nobody)
-- ніщо/нічого (nothing)
-- ніде (nowhere)
-- ніколи (never)
-- ніякий (no kind of)
-
-> 🔍 **Myth Buster: "Double Negatives Are Wrong"**
->
-> English teachers say "don't use double negatives." But this is just an English rule! In Ukrainian (and Russian, Spanish, French, Italian, Greek...), double negatives are **required** and don't cancel out. Think of them as reinforcing each other, not canceling.
-
-> 🎭 **Culture Corner: Answering Questions**
->
-> When answering yes/no questions:
-> - **Так** = Yes
-> - **Ні** = No
-> - **Так, звичайно!** = Yes, of course!
-> - **Ні, на жаль** = No, unfortunately
-> - **Мабуть** = Maybe/Probably
-> - **Не знаю** = I don't know
->
-> Ukrainians often soften "no" with explanations rather than just saying "ні."</pre></div><div class="canvas-note"><h4>### Question Formation</h4><pre>**From statement to Чи-question:**
-- Він студент. → Чи він студент?
-- Вони працюють. → Чи вони працюють?
-- Це твоя книга. → Чи це твоя книга?
-
-**Using question words:**
-- ___ це? (What is this?) → Що це?
-- ___ ти живеш? (Where do you live?) → Де ти живеш?
-- ___ ти йдеш? (Where are you going?) → Куди ти йдеш?
-- ___ це коштує? (How much does this cost?) → Скільки це коштує?</pre></div><div class="canvas-note"><h4>Negation Practice</h4><pre>**Add negation:**
-- Я знаю. → Я не знаю.
-- Вона читає. → Вона не читає.
-- Вони працюють. → Вони не працюють.
-
-**Double negatives:**
-- I know nothing. → Я нічого не знаю.
-- Nobody is here. → Ніхто тут не є. / Тут нікого немає.
-- I never work. → Я ніколи не працюю.
-
-> 🌍 **Real World: Common Questions**
->
-> Questions you'll use every day:
-> - **Як справи?** - How are things? (casual greeting)
-> - **Що нового?** - What's new?
-> - **Скільки коштує?** - How much does it cost?
-> - **Де туалет?** - Where is the toilet?
-> - **Чи ви говорите англійською?** - Do you speak English?
-> - **Чому?** - Why? (very useful!)</pre></div><div class="canvas-note"><h4>### Ask About Everything</h4><pre>Form questions about:
-1. Someone's name: ___ тебе звати?
-2. Someone's origin: ___ ти?
-3. Location of something: ___ моя книга?
-4. Time: ___ ми зустрінемося?
-5. Reason: ___ ти не прийшов?</pre></div><div class="canvas-note"><h4>Negate These Statements</h4><pre>Turn positive to negative:
-1. Я все знаю. → Я ___ не знаю.
-2. Він завжди працює. → Він ___ не працює.
-3. Хтось тут є. → ___ тут не є.</pre></div></div>
+      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Time to Ask Questions!</h4><div class="md-content"><p>You can now make statements in Ukrainian. But conversations need questions! In this module, you'll learn to ask anything - and say "no" properly.</p>
+<p>Ukrainian has two types of questions:</p>
+<ol>
+<li><strong>Yes/No questions</strong> - "Do you speak Ukrainian?"</li>
+<li><strong>Wh-questions</strong> - "What do you speak?"</li>
+</ol>
+<p>And here's a surprise: Ukrainian <strong>requires</strong> double negatives!</p>
+<blockquote>
+  <p>💡 <strong>Did You Know?</strong></p>
+  <p>In English, "I don't know nothing" is considered incorrect (double negative). In Ukrainian, <strong>Я нічого не знаю</strong> (literally "I nothing not know") is the ONLY correct way to say "I don't know anything"! This is true for all Slavic languages, as well as Spanish, French, and many others.</p>
+</blockquote></div></div><div class="canvas-note"><h4>### Yes/No Questions with Чи</h4><div class="md-content"><p>To ask a yes/no question, add <strong>Чи</strong> at the beginning:</p>
+<table>
+<thead>
+<tr>
+<th>Statement</th>
+<th>Question</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ти читаєш. (You read.)</td>
+<td><strong>Чи</strong> ти читаєш? (Do you read?)</td>
+</tr>
+<tr>
+<td>Вона студентка. (She's a student.)</td>
+<td><strong>Чи</strong> вона студентка? (Is she a student?)</td>
+</tr>
+<tr>
+<td>Він знає. (He knows.)</td>
+<td><strong>Чи</strong> він знає? (Does he know?)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Or</strong> just use rising intonation (no Чи needed):</p>
+<ul>
+<li>Ти читаєш? ↗ (Do you read?)</li>
+</ul>
+<blockquote>
+  <p>⚡ <strong>Pro Tip: Чи vs. Intonation</strong></p>
+  <ul>
+  <li><strong>Чи</strong> = more formal, clearer, written Ukrainian</li>
+  <li><strong>Intonation only</strong> = casual, spoken Ukrainian</li>
+  </ul>
+  <p>Both are correct! In everyday speech, Ukrainians often skip Чи and just raise their voice at the end.</p>
+  <p>📜 <strong>History Bite: Where Чи Comes From</strong></p>
+  <p>The particle <strong>чи</strong> comes from Proto-Slavic *či, related to the word <strong>що</strong> (what). It originally meant "whether" and still does in some contexts: "Не знаю, чи він прийде" (I don't know whether he'll come).</p>
+</blockquote></div></div><div class="canvas-note"><h4>Question Words</h4><div class="md-content"><table>
+<thead>
+<tr>
+<th>Ukrainian</th>
+<th>Transliteration</th>
+<th>English</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>що</td>
+<td>shcho</td>
+<td>what</td>
+<td>Що це? (What is this?)</td>
+</tr>
+<tr>
+<td>хто</td>
+<td>khto</td>
+<td>who</td>
+<td>Хто це? (Who is this?)</td>
+</tr>
+<tr>
+<td>де</td>
+<td>de</td>
+<td>where (location)</td>
+<td>Де ти? (Where are you?)</td>
+</tr>
+<tr>
+<td>куди</td>
+<td>kudy</td>
+<td>where (direction)</td>
+<td>Куди ти йдеш? (Where are you going?)</td>
+</tr>
+<tr>
+<td>звідки</td>
+<td>zvidky</td>
+<td>where from</td>
+<td>Звідки ти? (Where are you from?)</td>
+</tr>
+<tr>
+<td>коли</td>
+<td>koly</td>
+<td>when</td>
+<td>Коли? (When?)</td>
+</tr>
+<tr>
+<td>чому</td>
+<td>chomu</td>
+<td>why</td>
+<td>Чому? (Why?)</td>
+</tr>
+<tr>
+<td>як</td>
+<td>yak</td>
+<td>how</td>
+<td>Як справи? (How are things?)</td>
+</tr>
+<tr>
+<td>скільки</td>
+<td>skilky</td>
+<td>how much/many</td>
+<td>Скільки? (How much?)</td>
+</tr>
+<tr>
+<td>який/яка/яке</td>
+<td>yakyi/yaka/yake</td>
+<td>which/what kind</td>
+<td>Яка це книга? (What book is this?)</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p>🔗 <strong>Language Link: Question Word Patterns</strong></p>
+  <p>Notice the patterns in Ukrainian question words:</p>
+  <ul>
+  <li><strong>Х-</strong> words: хто, хіба (who, really?)</li>
+  <li><strong>Ч-</strong> words: що, чи, чому, чий (what, whether, why, whose)</li>
+  <li><strong>К-</strong> words: коли, куди, котрий (when, where to, which)</li>
+  <li><strong>Як-</strong> words: як, який (how, which)</li>
+  </ul>
+  <p>These patterns help you remember related words!</p>
+</blockquote></div></div><div class="canvas-note"><h4>Negation with Не</h4><div class="md-content"><p>To negate, put <strong>не</strong> directly before the verb:</p>
+<table>
+<thead>
+<tr>
+<th>Positive</th>
+<th>Negative</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Я знаю. (I know.)</td>
+<td>Я <strong>не</strong> знаю. (I don't know.)</td>
+</tr>
+<tr>
+<td>Вона читає. (She reads.)</td>
+<td>Вона <strong>не</strong> читає. (She doesn't read.)</td>
+</tr>
+<tr>
+<td>Це добре. (This is good.)</td>
+<td>Це <strong>не</strong> добре. (This isn't good.)</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p>🎯 <strong>Fun Fact: Не Never Moves</strong></p>
+  <p>Unlike English where "not" can appear in different places, Ukrainian <strong>не</strong> always goes immediately before the verb:</p>
+  <ul>
+  <li>"I do <strong>not</strong> know" = Я <strong>не</strong> знаю</li>
+  <li>"She does <strong>not</strong> read" = Вона <strong>не</strong> читає</li>
+  </ul>
+  <p>Simple rule: find the verb, put не before it!</p>
+</blockquote></div></div><div class="canvas-note"><h4>Double Negatives (Required!)</h4><div class="md-content"><p>Ukrainian requires <strong>multiple negatives</strong> in a sentence:</p>
+<table>
+<thead>
+<tr>
+<th>English</th>
+<th>Ukrainian (literal)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>I don't know anything.</td>
+<td>Я <strong>ні</strong>чого <strong>не</strong> знаю. (I nothing not know.)</td>
+</tr>
+<tr>
+<td>Nobody knows.</td>
+<td><strong>Ні</strong>хто <strong>не</strong> знає. (Nobody not knows.)</td>
+</tr>
+<tr>
+<td>I never read.</td>
+<td>Я <strong>ні</strong>коли <strong>не</strong> читаю. (I never not read.)</td>
+</tr>
+<tr>
+<td>There's nothing anywhere.</td>
+<td><strong>Ні</strong>де <strong>ні</strong>чого <strong>не</strong>має. (Nowhere nothing not-is.)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Negative words:</strong></p>
+<ul>
+<li>ніхто (nobody)</li>
+<li>ніщо/нічого (nothing)</li>
+<li>ніде (nowhere)</li>
+<li>ніколи (never)</li>
+<li>ніякий (no kind of)</li>
+</ul>
+<blockquote>
+  <p>🔍 <strong>Myth Buster: "Double Negatives Are Wrong"</strong></p>
+  <p>English teachers say "don't use double negatives." But this is just an English rule! In Ukrainian (and Russian, Spanish, French, Italian, Greek…), double negatives are <strong>required</strong> and don't cancel out. Think of them as reinforcing each other, not canceling.</p>
+  <p>🎭 <strong>Culture Corner: Answering Questions</strong></p>
+  <p>When answering yes/no questions:</p>
+  <ul>
+  <li><strong>Так</strong> = Yes</li>
+  <li><strong>Ні</strong> = No</li>
+  <li><strong>Так, звичайно!</strong> = Yes, of course!</li>
+  <li><strong>Ні, на жаль</strong> = No, unfortunately</li>
+  <li><strong>Мабуть</strong> = Maybe/Probably</li>
+  <li><strong>Не знаю</strong> = I don't know</li>
+  </ul>
+  <p>Ukrainians often soften "no" with explanations rather than just saying "ні."</p>
+</blockquote></div></div><div class="canvas-note"><h4>### Question Formation</h4><div class="md-content"><p><strong>From statement to Чи-question:</strong></p>
+<ul>
+<li>Він студент. → Чи він студент?</li>
+<li>Вони працюють. → Чи вони працюють?</li>
+<li>Це твоя книга. → Чи це твоя книга?</li>
+</ul>
+<p><strong>Using question words:</strong></p>
+<ul>
+<li>___ це? (What is this?) → Що це?</li>
+<li>___ ти живеш? (Where do you live?) → Де ти живеш?</li>
+<li>___ ти йдеш? (Where are you going?) → Куди ти йдеш?</li>
+<li>___ це коштує? (How much does this cost?) → Скільки це коштує?</li>
+</ul></div></div><div class="canvas-note"><h4>Negation Practice</h4><div class="md-content"><p><strong>Add negation:</strong></p>
+<ul>
+<li>Я знаю. → Я не знаю.</li>
+<li>Вона читає. → Вона не читає.</li>
+<li>Вони працюють. → Вони не працюють.</li>
+</ul>
+<p><strong>Double negatives:</strong></p>
+<ul>
+<li>I know nothing. → Я нічого не знаю.</li>
+<li>Nobody is here. → Ніхто тут не є. / Тут нікого немає.</li>
+<li>I never work. → Я ніколи не працюю.</li>
+</ul>
+<blockquote>
+  <p>🌍 <strong>Real World: Common Questions</strong></p>
+  <p>Questions you'll use every day:</p>
+  <ul>
+  <li><strong>Як справи?</strong> - How are things? (casual greeting)</li>
+  <li><strong>Що нового?</strong> - What's new?</li>
+  <li><strong>Скільки коштує?</strong> - How much does it cost?</li>
+  <li><strong>Де туалет?</strong> - Where is the toilet?</li>
+  <li><strong>Чи ви говорите англійською?</strong> - Do you speak English?</li>
+  <li><strong>Чому?</strong> - Why? (very useful!)</li>
+  </ul>
+</blockquote></div></div><div class="canvas-note"><h4>### Ask About Everything</h4><div class="md-content"><p>Form questions about:</p>
+<ol>
+<li>Someone's name: ___ тебе звати?</li>
+<li>Someone's origin: ___ ти?</li>
+<li>Location of something: ___ моя книга?</li>
+<li>Time: ___ ми зустрінемося?</li>
+<li>Reason: ___ ти не прийшов?</li>
+</ol></div></div><div class="canvas-note"><h4>Negate These Statements</h4><div class="md-content"><p>Turn positive to negative:</p>
+<ol>
+<li>Я все знаю. → Я ___ не знаю.</li>
+<li>Він завжди працює. → Він ___ не працює.</li>
+<li>Хтось тут є. → ___ тут не є.</li>
+</ol></div></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('match')">Start →</button></div>
     </section>
     <section id="match" class="section"><div class="card"><h3>Question Words</h3>
       <div class="score-display"><span class="score"><span id="match-score">0</span>/8</span></div>
       <div class="match-container" id="match-container"><svg class="match-lines" id="match-lines"></svg>
         <div class="match-column" id="match-left"><div class="match-item" data-pair="0">що</div><div class="match-item" data-pair="1">хто</div><div class="match-item" data-pair="2">де</div><div class="match-item" data-pair="3">куди</div><div class="match-item" data-pair="4">коли</div><div class="match-item" data-pair="5">чому</div><div class="match-item" data-pair="6">як</div><div class="match-item" data-pair="7">скільки</div></div>
-        <div class="match-column" id="match-right"><div class="match-item" data-pair="7">how much/many</div><div class="match-item" data-pair="6">how</div><div class="match-item" data-pair="5">why</div><div class="match-item" data-pair="4">when</div><div class="match-item" data-pair="3">where (direction)</div><div class="match-item" data-pair="2">where (location)</div><div class="match-item" data-pair="1">who</div><div class="match-item" data-pair="0">what</div></div>
+        <div class="match-column" id="match-right"><div class="match-item" data-pair="2">where (location)</div><div class="match-item" data-pair="3">where (direction)</div><div class="match-item" data-pair="6">how</div><div class="match-item" data-pair="1">who</div><div class="match-item" data-pair="0">what</div><div class="match-item" data-pair="4">when</div><div class="match-item" data-pair="7">how much/many</div><div class="match-item" data-pair="5">why</div></div>
       </div>
       <div class="completion-message" id="match-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetMatch()">Reset</button><button class="btn btn-primary" onclick="showSection('quiz')">Next →</button></div>

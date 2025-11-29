@@ -28,7 +28,17 @@
     .card h3 { color: var(--primary); margin-bottom: 1rem; }
     .canvas-note { background: #fffbeb; border-left: 4px solid var(--warning); padding: 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
     .canvas-note h4 { color: var(--warning); margin-bottom: 0.5rem; }
-    .canvas-note pre { white-space: pre-wrap; font-family: inherit; }
+    .md-content { line-height: 1.7; }
+    .md-content p { margin: 0.75rem 0; }
+    .md-content ul, .md-content ol { margin: 0.75rem 0; padding-left: 1.5rem; }
+    .md-content li { margin: 0.25rem 0; }
+    .md-content strong { color: var(--primary); }
+    .md-content blockquote { background: #e8f4fd; border-left: 4px solid var(--primary); padding: 0.75rem 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+    .md-content blockquote p { margin: 0.25rem 0; }
+    .md-content table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+    .md-content th, .md-content td { border: 1px solid var(--border); padding: 0.5rem 0.75rem; text-align: left; }
+    .md-content th { background: #f5f5f5; font-weight: 600; }
+    .md-content code { background: #f0f0f0; padding: 0.125rem 0.375rem; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
     .letter-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0; }
     .letter-group { border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; }
     .letter-group.true-friends { border-color: var(--success); } .letter-group.true-friends .letters { color: var(--success); }
@@ -108,202 +118,422 @@
         <p style="color:var(--text-muted)">Demonstratives & Possessives</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Why Words Change</h4><pre>In Module 03, you learned that nouns have gender. Now comes the consequence: **words that describe nouns must match their gender!**
-
-In English, "this" and "my" never change:
-- this book, this table, this window
-- my book, my table, my window
-
-In Ukrainian, they change to match the noun:
-- **ця** книга, **цей** стіл, **це** вікно
-- **моя** книга, **мій** стіл, **моє** вікно
-
-This is called **agreement** - and once you understand the pattern, it becomes automatic!
-
-> 🔍 **Myth Buster: "Too Many Forms!"**
->
-> When learners see 4 forms for "this" and 4 forms for "my," panic sets in. But here's the secret: **they follow the same pattern!**
->
-> | Gender | Demonstrative | Possessive |
-> |--------|---------------|------------|
-> | Masculine | цей, той | мій, твій |
-> | Feminine | ця, та | моя, твоя |
-> | Neuter | це, те | моє, твоє |
-> | Plural | ці, ті | мої, твої |
->
-> Learn one pattern, apply it everywhere. Same endings, same logic!
-
-> 💡 **Did You Know?**
->
-> English **used to** have gender agreement too! In Old English (before 1100 AD):
-> - "se cyning" (the king - masculine form)
-> - "sēo cwēn" (the queen - feminine form)
-> - "þæt hūs" (the house - neuter form)
->
-> Over time, English simplified and dropped these distinctions. Ukrainian kept them!</pre></div><div class="canvas-note"><h4>### Demonstratives: This & That</h4><pre>**"This" - цей/ця/це/ці:**
-
-| Gender | Form | Example | Translation |
-|--------|------|---------|-------------|
-| Masculine | цей | цей стіл | this table |
-| Feminine | ця | ця книга | this book |
-| Neuter | це | це вікно | this window |
-| Plural | ці | ці люди | these people |
-
-**"That" - той/та/те/ті:**
-
-| Gender | Form | Example | Translation |
-|--------|------|---------|-------------|
-| Masculine | той | той студент | that student |
-| Feminine | та | та жінка | that woman |
-| Neuter | те | те яблуко | that apple |
-| Plural | ті | ті книги | those books |
-
-> ⚡ **Pro Tip: Same Endings Pattern**
->
-> Notice the endings?
-> - Masculine: **-ей** (цей) / **-ой** (той)
-> - Feminine: **-я** (ця) / **-а** (та)
-> - Neuter: **-е** (це) / **-е** (те)
-> - Plural: **-і** (ці) / **-і** (ті)
->
-> These endings appear everywhere in Ukrainian adjectives!
-
-> 📜 **History Bite: Why Two Forms?**
->
-> "Цей" and "той" come from ancient demonstratives:
-> - **Цей** (this) - from Old Slavic "сьи" meaning "here/close"
-> - **Той** (that) - from "то" meaning "there/far"
->
-> The masculine forms added an extra vowel over time, giving us the modern цей/той pattern.</pre></div><div class="canvas-note"><h4>Possessives: My & Your</h4><pre>**"My" - мій/моя/моє/мої:**
-
-| Gender | Form | Example | Translation |
-|--------|------|---------|-------------|
-| Masculine | мій | мій брат | my brother |
-| Feminine | моя | моя сестра | my sister |
-| Neuter | моє | моє яблуко | my apple |
-| Plural | мої | мої друзі | my friends |
-
-**"Your" (informal) - твій/твоя/твоє/твої:**
-
-| Gender | Form | Example | Translation |
-|--------|------|---------|-------------|
-| Masculine | твій | твій друг | your friend (m) |
-| Feminine | твоя | твоя подруга | your friend (f) |
-| Neuter | твоє | твоє вікно | your window |
-| Plural | твої | твої книги | your books |
-
-> 🔗 **Language Link: Familiar Pattern**
->
-> Compare possessives across languages:
->
-> | Language | Masc | Fem | Pattern |
-> |----------|------|-----|---------|
-> | Ukrainian | мій | моя | й → я |
-> | Russian | мой | моя | й → я |
-> | Polish | mój | moja | j → ja |
-> | Czech | můj | moje | j → je/ja |
->
-> Slavic languages share this pattern. Learn one, recognize all!
-
-> 🎭 **Culture Corner: Formal "Your"**
->
-> For formal "your" (Ви form):
-> - **ваш** (masculine) - ваш паспорт (your passport)
-> - **ваша** (feminine) - ваша ручка (your pen)
-> - **ваше** (neuter) - ваше ім'я (your name)
-> - **ваші** (plural) - ваші документи (your documents)
->
-> In formal situations, you must use ваш/ваша/ваше/ваші, not твій!</pre></div><div class="canvas-note"><h4>Other Possessives</h4><pre>**"His/Her/Its/Their" don't change!**
-
-| Pronoun | Form | Example |
-|---------|------|---------|
-| his | його (yoho) | його книга, його стіл, його вікно |
-| her | її (yiyi) | її книга, її стіл, її вікно |
-| its | його | (same as "his") |
-| their | їхній/їхня/їхнє | їхній дім, їхня машина |
-
-> 💡 **Did You Know?**
->
-> **Його** and **її** never change form! They stay the same regardless of the noun's gender:
-> - його книга (his/its book - feminine noun)
-> - його стіл (his/its table - masculine noun)
-> - його вікно (his/its window - neuter noun)
->
-> This makes them easier than мій/твій!
-
-> 🎯 **Fun Fact: Whose Chair?**
->
-> The word **чий** (whose) also follows the gender pattern:
-> - **Чий** це стіл? (Whose table is this? - masc)
-> - **Чия** це книга? (Whose book is this? - fem)
-> - **Чиє** це вікно? (Whose window is this? - neut)
-> - **Чиї** це речі? (Whose things are these? - plural)
->
-> Same endings as мій/твій!</pre></div><div class="canvas-note"><h4>### Agreement Decision Tree</h4><pre>When using a demonstrative or possessive:
-
-1. **Find the noun** - What are you describing?
-2. **Determine gender** - What's the noun's ending?
-3. **Apply matching form** - Use the correct demonstrative/possessive ending
-
-**Example:** "this book"
-1. Noun: книга (book)
-2. Gender: feminine (-а ending)
-3. Form: **ця** книга (feminine demonstrative)
-
-**Example:** "my table"
-1. Noun: стіл (table)
-2. Gender: masculine (consonant ending)
-3. Form: **мій** стіл (masculine possessive)</pre></div><div class="canvas-note"><h4>Common Objects Vocabulary</h4><pre>**In the House:**
-- стіл (m) - table → цей стіл, мій стіл
-- стілець (m) - chair → цей стілець, мій стілець
-- ліжко (n) - bed → це ліжко, моє ліжко
-- лампа (f) - lamp → ця лампа, моя лампа
-- двері (pl) - door → ці двері, мої двері
-
-**Personal Items:**
-- телефон (m) - phone → цей телефон, мій телефон
-- сумка (f) - bag → ця сумка, моя сумка
-- ручка (f) - pen → ця ручка, моя ручка
-- ключ (m) - key → цей ключ, мій ключ
-- гаманець (m) - wallet → цей гаманець, мій гаманець
-
-> 🌍 **Real World: Lost & Found**
->
-> Useful phrases at hotels, airports, or asking about items:
->
-> - **Це твоя сумка?** - Is this your bag?
-> - **Це мій паспорт.** - This is my passport.
-> - **Чий це телефон?** - Whose phone is this?
-> - **Де моя ручка?** - Where is my pen?
-> - **Той ключ твій?** - Is that key yours?</pre></div><div class="canvas-note"><h4>### Describe Your Things</h4><pre>Practice with items around you:
-1. Це _______ (мій/моя/моє) _______ (item).
-2. Цей/Ця/Це _______ (item) - _______ (мій/моя/моє).
-3. Де _______ (твій/твоя/твоє) _______ ?</pre></div><div class="canvas-note"><h4>Quick Transformation</h4><pre>Change "this" to "that" and "my" to "your":
-
-| This/My | That/Your |
-|---------|-----------|
-| ця книга | та книга |
-| мій стіл | твій стіл |
-| це вікно | те вікно |
-| мої друзі | твої друзі |
-| цей телефон | той телефон |
-
-> ⚡ **Pro Tip: Rapid Gender Check**
->
-> Before speaking, quickly check the noun ending:
-> - Consonant? → masculine → цей/мій
-> - -а/-я? → feminine → ця/моя
-> - -о/-е? → neuter → це/моє
-> - Multiple items? → plural → ці/мої
->
-> This becomes instant with practice!</pre></div></div>
+      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Why Words Change</h4><div class="md-content"><p>In Module 03, you learned that nouns have gender. Now comes the consequence: <strong>words that describe nouns must match their gender!</strong></p>
+<p>In English, "this" and "my" never change:</p>
+<ul>
+<li>this book, this table, this window</li>
+<li>my book, my table, my window</li>
+</ul>
+<p>In Ukrainian, they change to match the noun:</p>
+<ul>
+<li><strong>ця</strong> книга, <strong>цей</strong> стіл, <strong>це</strong> вікно</li>
+<li><strong>моя</strong> книга, <strong>мій</strong> стіл, <strong>моє</strong> вікно</li>
+</ul>
+<p>This is called <strong>agreement</strong> - and once you understand the pattern, it becomes automatic!</p>
+<blockquote>
+  <p>🔍 <strong>Myth Buster: "Too Many Forms!"</strong></p>
+  <p>When learners see 4 forms for "this" and 4 forms for "my," panic sets in. But here's the secret: <strong>they follow the same pattern!</strong></p>
+  <table>
+  <thead>
+  <tr>
+  <th>Gender</th>
+  <th>Demonstrative</th>
+  <th>Possessive</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+  <td>Masculine</td>
+  <td>цей, той</td>
+  <td>мій, твій</td>
+  </tr>
+  <tr>
+  <td>Feminine</td>
+  <td>ця, та</td>
+  <td>моя, твоя</td>
+  </tr>
+  <tr>
+  <td>Neuter</td>
+  <td>це, те</td>
+  <td>моє, твоє</td>
+  </tr>
+  <tr>
+  <td>Plural</td>
+  <td>ці, ті</td>
+  <td>мої, твої</td>
+  </tr>
+  </tbody>
+  </table>
+  <p>Learn one pattern, apply it everywhere. Same endings, same logic!</p>
+  <p>💡 <strong>Did You Know?</strong></p>
+  <p>English <strong>used to</strong> have gender agreement too! In Old English (before 1100 AD):</p>
+  <ul>
+  <li>"se cyning" (the king - masculine form)</li>
+  <li>"sēo cwēn" (the queen - feminine form)</li>
+  <li>"þæt hūs" (the house - neuter form)</li>
+  </ul>
+  <p>Over time, English simplified and dropped these distinctions. Ukrainian kept them!</p>
+</blockquote></div></div><div class="canvas-note"><h4>### Demonstratives: This & That</h4><div class="md-content"><p><strong>"This" - цей/ця/це/ці:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Gender</th>
+<th>Form</th>
+<th>Example</th>
+<th>Translation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Masculine</td>
+<td>цей</td>
+<td>цей стіл</td>
+<td>this table</td>
+</tr>
+<tr>
+<td>Feminine</td>
+<td>ця</td>
+<td>ця книга</td>
+<td>this book</td>
+</tr>
+<tr>
+<td>Neuter</td>
+<td>це</td>
+<td>це вікно</td>
+<td>this window</td>
+</tr>
+<tr>
+<td>Plural</td>
+<td>ці</td>
+<td>ці люди</td>
+<td>these people</td>
+</tr>
+</tbody>
+</table>
+<p><strong>"That" - той/та/те/ті:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Gender</th>
+<th>Form</th>
+<th>Example</th>
+<th>Translation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Masculine</td>
+<td>той</td>
+<td>той студент</td>
+<td>that student</td>
+</tr>
+<tr>
+<td>Feminine</td>
+<td>та</td>
+<td>та жінка</td>
+<td>that woman</td>
+</tr>
+<tr>
+<td>Neuter</td>
+<td>те</td>
+<td>те яблуко</td>
+<td>that apple</td>
+</tr>
+<tr>
+<td>Plural</td>
+<td>ті</td>
+<td>ті книги</td>
+<td>those books</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p>⚡ <strong>Pro Tip: Same Endings Pattern</strong></p>
+  <p>Notice the endings?</p>
+  <ul>
+  <li>Masculine: <strong>-ей</strong> (цей) / <strong>-ой</strong> (той)</li>
+  <li>Feminine: <strong>-я</strong> (ця) / <strong>-а</strong> (та)</li>
+  <li>Neuter: <strong>-е</strong> (це) / <strong>-е</strong> (те)</li>
+  <li>Plural: <strong>-і</strong> (ці) / <strong>-і</strong> (ті)</li>
+  </ul>
+  <p>These endings appear everywhere in Ukrainian adjectives!</p>
+  <p>📜 <strong>History Bite: Why Two Forms?</strong></p>
+  <p>"Цей" and "той" come from ancient demonstratives:</p>
+  <ul>
+  <li><strong>Цей</strong> (this) - from Old Slavic "сьи" meaning "here/close"</li>
+  <li><strong>Той</strong> (that) - from "то" meaning "there/far"</li>
+  </ul>
+  <p>The masculine forms added an extra vowel over time, giving us the modern цей/той pattern.</p>
+</blockquote></div></div><div class="canvas-note"><h4>Possessives: My & Your</h4><div class="md-content"><p><strong>"My" - мій/моя/моє/мої:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Gender</th>
+<th>Form</th>
+<th>Example</th>
+<th>Translation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Masculine</td>
+<td>мій</td>
+<td>мій брат</td>
+<td>my brother</td>
+</tr>
+<tr>
+<td>Feminine</td>
+<td>моя</td>
+<td>моя сестра</td>
+<td>my sister</td>
+</tr>
+<tr>
+<td>Neuter</td>
+<td>моє</td>
+<td>моє яблуко</td>
+<td>my apple</td>
+</tr>
+<tr>
+<td>Plural</td>
+<td>мої</td>
+<td>мої друзі</td>
+<td>my friends</td>
+</tr>
+</tbody>
+</table>
+<p><strong>"Your" (informal) - твій/твоя/твоє/твої:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Gender</th>
+<th>Form</th>
+<th>Example</th>
+<th>Translation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Masculine</td>
+<td>твій</td>
+<td>твій друг</td>
+<td>your friend (m)</td>
+</tr>
+<tr>
+<td>Feminine</td>
+<td>твоя</td>
+<td>твоя подруга</td>
+<td>your friend (f)</td>
+</tr>
+<tr>
+<td>Neuter</td>
+<td>твоє</td>
+<td>твоє вікно</td>
+<td>your window</td>
+</tr>
+<tr>
+<td>Plural</td>
+<td>твої</td>
+<td>твої книги</td>
+<td>your books</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p>🔗 <strong>Language Link: Familiar Pattern</strong></p>
+  <p>Compare possessives across languages:</p>
+  <table>
+  <thead>
+  <tr>
+  <th>Language</th>
+  <th>Masc</th>
+  <th>Fem</th>
+  <th>Pattern</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+  <td>Ukrainian</td>
+  <td>мій</td>
+  <td>моя</td>
+  <td>й → я</td>
+  </tr>
+  <tr>
+  <td>Russian</td>
+  <td>мой</td>
+  <td>моя</td>
+  <td>й → я</td>
+  </tr>
+  <tr>
+  <td>Polish</td>
+  <td>mój</td>
+  <td>moja</td>
+  <td>j → ja</td>
+  </tr>
+  <tr>
+  <td>Czech</td>
+  <td>můj</td>
+  <td>moje</td>
+  <td>j → je/ja</td>
+  </tr>
+  </tbody>
+  </table>
+  <p>Slavic languages share this pattern. Learn one, recognize all!</p>
+  <p>🎭 <strong>Culture Corner: Formal "Your"</strong></p>
+  <p>For formal "your" (Ви form):</p>
+  <ul>
+  <li><strong>ваш</strong> (masculine) - ваш паспорт (your passport)</li>
+  <li><strong>ваша</strong> (feminine) - ваша ручка (your pen)</li>
+  <li><strong>ваше</strong> (neuter) - ваше ім'я (your name)</li>
+  <li><strong>ваші</strong> (plural) - ваші документи (your documents)</li>
+  </ul>
+  <p>In formal situations, you must use ваш/ваша/ваше/ваші, not твій!</p>
+</blockquote></div></div><div class="canvas-note"><h4>Other Possessives</h4><div class="md-content"><p><strong>"His/Her/Its/Their" don't change!</strong></p>
+<table>
+<thead>
+<tr>
+<th>Pronoun</th>
+<th>Form</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>his</td>
+<td>його (yoho)</td>
+<td>його книга, його стіл, його вікно</td>
+</tr>
+<tr>
+<td>her</td>
+<td>її (yiyi)</td>
+<td>її книга, її стіл, її вікно</td>
+</tr>
+<tr>
+<td>its</td>
+<td>його</td>
+<td>(same as "his")</td>
+</tr>
+<tr>
+<td>their</td>
+<td>їхній/їхня/їхнє</td>
+<td>їхній дім, їхня машина</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p>💡 <strong>Did You Know?</strong></p>
+  <p><strong>Його</strong> and <strong>її</strong> never change form! They stay the same regardless of the noun's gender:</p>
+  <ul>
+  <li>його книга (his/its book - feminine noun)</li>
+  <li>його стіл (his/its table - masculine noun)</li>
+  <li>його вікно (his/its window - neuter noun)</li>
+  </ul>
+  <p>This makes them easier than мій/твій!</p>
+  <p>🎯 <strong>Fun Fact: Whose Chair?</strong></p>
+  <p>The word <strong>чий</strong> (whose) also follows the gender pattern:</p>
+  <ul>
+  <li><strong>Чий</strong> це стіл? (Whose table is this? - masc)</li>
+  <li><strong>Чия</strong> це книга? (Whose book is this? - fem)</li>
+  <li><strong>Чиє</strong> це вікно? (Whose window is this? - neut)</li>
+  <li><strong>Чиї</strong> це речі? (Whose things are these? - plural)</li>
+  </ul>
+  <p>Same endings as мій/твій!</p>
+</blockquote></div></div><div class="canvas-note"><h4>### Agreement Decision Tree</h4><div class="md-content"><p>When using a demonstrative or possessive:</p>
+<ol>
+<li><strong>Find the noun</strong> - What are you describing?</li>
+<li><strong>Determine gender</strong> - What's the noun's ending?</li>
+<li><strong>Apply matching form</strong> - Use the correct demonstrative/possessive ending</li>
+</ol>
+<p><strong>Example:</strong> "this book"</p>
+<ol>
+<li>Noun: книга (book)</li>
+<li>Gender: feminine (-а ending)</li>
+<li>Form: <strong>ця</strong> книга (feminine demonstrative)</li>
+</ol>
+<p><strong>Example:</strong> "my table"</p>
+<ol>
+<li>Noun: стіл (table)</li>
+<li>Gender: masculine (consonant ending)</li>
+<li>Form: <strong>мій</strong> стіл (masculine possessive)</li>
+</ol></div></div><div class="canvas-note"><h4>Common Objects Vocabulary</h4><div class="md-content"><p><strong>In the House:</strong></p>
+<ul>
+<li>стіл (m) - table → цей стіл, мій стіл</li>
+<li>стілець (m) - chair → цей стілець, мій стілець</li>
+<li>ліжко (n) - bed → це ліжко, моє ліжко</li>
+<li>лампа (f) - lamp → ця лампа, моя лампа</li>
+<li>двері (pl) - door → ці двері, мої двері</li>
+</ul>
+<p><strong>Personal Items:</strong></p>
+<ul>
+<li>телефон (m) - phone → цей телефон, мій телефон</li>
+<li>сумка (f) - bag → ця сумка, моя сумка</li>
+<li>ручка (f) - pen → ця ручка, моя ручка</li>
+<li>ключ (m) - key → цей ключ, мій ключ</li>
+<li>гаманець (m) - wallet → цей гаманець, мій гаманець</li>
+</ul>
+<blockquote>
+  <p>🌍 <strong>Real World: Lost & Found</strong></p>
+  <p>Useful phrases at hotels, airports, or asking about items:</p>
+  <ul>
+  <li><strong>Це твоя сумка?</strong> - Is this your bag?</li>
+  <li><strong>Це мій паспорт.</strong> - This is my passport.</li>
+  <li><strong>Чий це телефон?</strong> - Whose phone is this?</li>
+  <li><strong>Де моя ручка?</strong> - Where is my pen?</li>
+  <li><strong>Той ключ твій?</strong> - Is that key yours?</li>
+  </ul>
+</blockquote></div></div><div class="canvas-note"><h4>### Describe Your Things</h4><div class="md-content"><p>Practice with items around you:</p>
+<ol>
+<li>Це <strong><em><em></em></strong> (мій/моя/моє) <strong><em></em></em></strong> (item).</li>
+<li>Цей/Ця/Це <strong><em><em></em></strong> (item) - <strong><em></em></em></strong> (мій/моя/моє).</li>
+<li>Де <strong><em><em></em></strong> (твій/твоя/твоє) <strong><em></em></em></strong> ?</li>
+</ol></div></div><div class="canvas-note"><h4>Quick Transformation</h4><div class="md-content"><p>Change "this" to "that" and "my" to "your":</p>
+<table>
+<thead>
+<tr>
+<th>This/My</th>
+<th>That/Your</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ця книга</td>
+<td>та книга</td>
+</tr>
+<tr>
+<td>мій стіл</td>
+<td>твій стіл</td>
+</tr>
+<tr>
+<td>це вікно</td>
+<td>те вікно</td>
+</tr>
+<tr>
+<td>мої друзі</td>
+<td>твої друзі</td>
+</tr>
+<tr>
+<td>цей телефон</td>
+<td>той телефон</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p>⚡ <strong>Pro Tip: Rapid Gender Check</strong></p>
+  <p>Before speaking, quickly check the noun ending:</p>
+  <ul>
+  <li>Consonant? → masculine → цей/мій</li>
+  <li>-а/-я? → feminine → ця/моя</li>
+  <li>-о/-е? → neuter → це/моє</li>
+  <li>Multiple items? → plural → ці/мої</li>
+  </ul>
+  <p>This becomes instant with practice!</p>
+</blockquote></div></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('match')">Start →</button></div>
     </section>
     <section id="match" class="section"><div class="card"><h3>Demonstratives by Gender</h3>
       <div class="score-display"><span class="score"><span id="match-score">0</span>/8</span></div>
       <div class="match-container" id="match-container"><svg class="match-lines" id="match-lines"></svg>
         <div class="match-column" id="match-left"><div class="match-item" data-pair="0">цей</div><div class="match-item" data-pair="1">ця</div><div class="match-item" data-pair="2">це</div><div class="match-item" data-pair="3">ці</div><div class="match-item" data-pair="4">той</div><div class="match-item" data-pair="5">та</div><div class="match-item" data-pair="6">те</div><div class="match-item" data-pair="7">ті</div></div>
-        <div class="match-column" id="match-right"><div class="match-item" data-pair="2">Neuter singular</div><div class="match-item" data-pair="1">Feminine singular</div><div class="match-item" data-pair="2">Neuter singular</div><div class="match-item" data-pair="0">Masculine singular</div><div class="match-item" data-pair="0">Masculine singular</div><div class="match-item" data-pair="3">Plural (all genders)</div><div class="match-item" data-pair="1">Feminine singular</div><div class="match-item" data-pair="3">Plural (all genders)</div></div>
+        <div class="match-column" id="match-right"><div class="match-item" data-pair="3">Plural (all genders)</div><div class="match-item" data-pair="2">Neuter singular</div><div class="match-item" data-pair="0">Masculine singular</div><div class="match-item" data-pair="1">Feminine singular</div><div class="match-item" data-pair="2">Neuter singular</div><div class="match-item" data-pair="3">Plural (all genders)</div><div class="match-item" data-pair="0">Masculine singular</div><div class="match-item" data-pair="1">Feminine singular</div></div>
       </div>
       <div class="completion-message" id="match-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetMatch()">Reset</button><button class="btn btn-primary" onclick="showSection('quiz')">Next →</button></div>

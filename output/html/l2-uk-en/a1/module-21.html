@@ -28,7 +28,17 @@
     .card h3 { color: var(--primary); margin-bottom: 1rem; }
     .canvas-note { background: #fffbeb; border-left: 4px solid var(--warning); padding: 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
     .canvas-note h4 { color: var(--warning); margin-bottom: 0.5rem; }
-    .canvas-note pre { white-space: pre-wrap; font-family: inherit; }
+    .md-content { line-height: 1.7; }
+    .md-content p { margin: 0.75rem 0; }
+    .md-content ul, .md-content ol { margin: 0.75rem 0; padding-left: 1.5rem; }
+    .md-content li { margin: 0.25rem 0; }
+    .md-content strong { color: var(--primary); }
+    .md-content blockquote { background: #e8f4fd; border-left: 4px solid var(--primary); padding: 0.75rem 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+    .md-content blockquote p { margin: 0.25rem 0; }
+    .md-content table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+    .md-content th, .md-content td { border: 1px solid var(--border); padding: 0.5rem 0.75rem; text-align: left; }
+    .md-content th { background: #f5f5f5; font-weight: 600; }
+    .md-content code { background: #f0f0f0; padding: 0.125rem 0.375rem; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
     .letter-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0; }
     .letter-group { border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; }
     .letter-group.true-friends { border-color: var(--success); } .letter-group.true-friends .letters { color: var(--success); }
@@ -108,133 +118,392 @@
         <p style="color:var(--text-muted)">What Happened Yesterday</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Yesterday, Last Week, Long Ago...</h4><pre>So far, you've only spoken about NOW (present tense). Time to unlock the past!
-
-Ukrainian past tense is beautifully simple - just ONE past tense form (unlike English with its "I did," "I was doing," "I had done," etc.). But there's a twist: the verb must match the GENDER of the subject!
-
-- Я читав. (I read - male speaker)
-- Я читала. (I read - female speaker)
-
-> 💡 **Did You Know?**
->
-> Ukrainian past tense comes from an ancient past participle + the verb "to be." Originally, "я читав єсмь" (I am having-read) became just "я читав." The "to be" disappeared, but the gender agreement from the participle remained. That's why past tense verbs change for gender!</pre></div><div class="canvas-note"><h4>### Past Tense Formation</h4><pre>Take the infinitive, remove -ти, add past endings:
-
-| Gender | Ending | читати → |
-|--------|--------|----------|
-| Masculine | -в | читав |
-| Feminine | -ла | читала |
-| Neuter | -ло | читало |
-| Plural (all) | -ли | читали |
-
-**Full pattern:**
-
-| Subject | читати | робити | говорити |
-|---------|--------|--------|----------|
-| він | читав | робив | говорив |
-| вона | читала | робила | говорила |
-| воно | читало | робило | говорило |
-| вони | читали | робили | говорили |
-| я (m) | читав | робив | говорив |
-| я (f) | читала | робила | говорила |
-| ти (m) | читав | робив | говорив |
-| ти (f) | читала | робила | говорила |
-| ми | читали | робили | говорили |
-| ви | читали | робили | говорили |
-
-> ⚡ **Pro Tip: Gender Matters for Я and Ти!**
->
-> Unlike English "I" which never changes, Ukrainian past tense reveals the speaker's gender:
-> - Де ти **був**? (Where were you? - to a man)
-> - Де ти **була**? (Where were you? - to a woman)
->
-> This also applies to "I" - use the form matching YOUR gender!</pre></div><div class="canvas-note"><h4>The Verb "To Be" (Бути) in Past</h4><pre>| Subject | Past Tense | Example |
-|---------|------------|---------|
-| він | був | Він був удома. (He was at home.) |
-| вона | була | Вона була в школі. (She was at school.) |
-| воно | було | Все було добре. (Everything was fine.) |
-| вони | були | Вони були разом. (They were together.) |
-| я (m) | був | Я був там. (I was there.) |
-| я (f) | була | Я була там. (I was there.) |
-
-> 📜 **History Bite: The Disappearing "To Be"**
->
-> In Old East Slavic, "I was" was "я був єсмь" - the "єсмь" (I am) has completely vanished in modern Ukrainian past tense. However, traces remain in formal/archaic contexts and in the conditional mood (б). Languages constantly simplify!</pre></div><div class="canvas-note"><h4>Special Past Tense Forms</h4><pre>Some verbs have irregular past tense stems:
-
-| Infinitive | He | She | They |
-|------------|-----|------|------|
-| їсти (eat) | їв | їла | їли |
-| пити (drink) | пив | пила | пили |
-| йти (go) | ішов | ішла | ішли |
-| могти (can) | міг | могла | могли |
-| нести (carry) | ніс | несла | несли |
-| везти (transport) | віз | везла | везли |
-
-> 🎯 **Fun Fact: Ішов vs Йшов**
->
-> "Йти" (to go on foot) has a unique past: ішов/ішла/ішли. The initial "й" transforms to "і" in the past. This verb is highly irregular in many Slavic languages - it's so common that it resisted regularization!</pre></div><div class="canvas-note"><h4>Common Past Tense Verbs</h4><pre>| Infinitive | Meaning | Він | Вона |
-|------------|---------|-----|------|
-| працювати | work | працював | працювала |
-| жити | live | жив | жила |
-| знати | know | знав | знала |
-| хотіти | want | хотів | хотіла |
-| бачити | see | бачив | бачила |
-| любити | love | любив | любила |
-| купити | buy | купив | купила |
-| дивитися | watch | дивився | дивилася |
-
-> 🔗 **Language Link: Reflexive Verbs**
->
-> Reflexive verbs (-ся) keep -ся in past tense:
-> - дивитися → дивився/дивилася (watched)
-> - вчитися → вчився/вчилася (studied)
-> - називатися → називався/називалася (was called)</pre></div><div class="canvas-note"><h4>Time Expressions for Past</h4><pre>| Ukrainian | Transliteration | English |
-|-----------|-----------------|---------|
-| вчора | vchora | yesterday |
-| позавчора | pozavchora | day before yesterday |
-| минулого тижня | mynuloho tyzhnya | last week |
-| минулого місяця | mynuloho misyatsya | last month |
-| минулого року | mynuloho roku | last year |
-| давно | davno | long ago |
-| недавно | nedavno | recently |
-| раніше | ranishe | earlier, before |
-
-> 🌍 **Real World: Talking About Yesterday**
->
-> - **Що ти робив учора?** - What did you do yesterday?
-> - **Я працював.** - I worked.
-> - **Де ви були минулого тижня?** - Where were you last week?
-> - **Ми були у Львові.** - We were in Lviv.</pre></div><div class="canvas-note"><h4>### Form Past Tense</h4><pre>Change to past (он):
-1. читати → читав
-2. писати → писав
-3. робити → робив
-4. їсти → їв
-5. йти → ішов
-
-Change to past (вона):
-1. говорити → говорила
-2. знати → знала
-3. пити → пила
-4. бути → була
-5. працювати → працювала</pre></div><div class="canvas-note"><h4>Complete Sentences</h4><pre>1. Він ___ (читати) книгу. → читав
-2. Вона ___ (бути) в школі. → була
-3. Ми ___ (дивитися) фільм. → дивилися
-4. Вони ___ (їсти) піцу. → їли
-5. Я (f) ___ (працювати) вчора. → працювала</pre></div><div class="canvas-note"><h4>Tell About Yesterday</h4><pre>Answer these questions:
-1. Де ви були вчора?
-2. Що ви їли на сніданок?
-3. Чи ви читали книгу?
-4. Що ви дивилися ввечері?</pre></div><div class="canvas-note"><h4>### Share Your Day</h4><pre>Describe what you did yesterday using past tense:
-- Вчора я встав/встала о сьомій годині.
-- Я їв/їла кашу на сніданок.
-- Потім я працював/працювала.
-- Увечері я дивився/дивилася фільм.</pre></div></div>
+      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Yesterday, Last Week, Long Ago...</h4><div class="md-content"><p>So far, you've only spoken about NOW (present tense). Time to unlock the past!</p>
+<p>Ukrainian past tense is beautifully simple - just ONE past tense form (unlike English with its "I did," "I was doing," "I had done," etc.). But there's a twist: the verb must match the GENDER of the subject!</p>
+<ul>
+<li>Я читав. (I read - male speaker)</li>
+<li>Я читала. (I read - female speaker)</li>
+</ul>
+<blockquote>
+  <p>💡 <strong>Did You Know?</strong></p>
+  <p>Ukrainian past tense comes from an ancient past participle + the verb "to be." Originally, "я читав єсмь" (I am having-read) became just "я читав." The "to be" disappeared, but the gender agreement from the participle remained. That's why past tense verbs change for gender!</p>
+</blockquote></div></div><div class="canvas-note"><h4>### Past Tense Formation</h4><div class="md-content"><p>Take the infinitive, remove -ти, add past endings:</p>
+<table>
+<thead>
+<tr>
+<th>Gender</th>
+<th>Ending</th>
+<th>читати →</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Masculine</td>
+<td>-в</td>
+<td>читав</td>
+</tr>
+<tr>
+<td>Feminine</td>
+<td>-ла</td>
+<td>читала</td>
+</tr>
+<tr>
+<td>Neuter</td>
+<td>-ло</td>
+<td>читало</td>
+</tr>
+<tr>
+<td>Plural (all)</td>
+<td>-ли</td>
+<td>читали</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Full pattern:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Subject</th>
+<th>читати</th>
+<th>робити</th>
+<th>говорити</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>він</td>
+<td>читав</td>
+<td>робив</td>
+<td>говорив</td>
+</tr>
+<tr>
+<td>вона</td>
+<td>читала</td>
+<td>робила</td>
+<td>говорила</td>
+</tr>
+<tr>
+<td>воно</td>
+<td>читало</td>
+<td>робило</td>
+<td>говорило</td>
+</tr>
+<tr>
+<td>вони</td>
+<td>читали</td>
+<td>робили</td>
+<td>говорили</td>
+</tr>
+<tr>
+<td>я (m)</td>
+<td>читав</td>
+<td>робив</td>
+<td>говорив</td>
+</tr>
+<tr>
+<td>я (f)</td>
+<td>читала</td>
+<td>робила</td>
+<td>говорила</td>
+</tr>
+<tr>
+<td>ти (m)</td>
+<td>читав</td>
+<td>робив</td>
+<td>говорив</td>
+</tr>
+<tr>
+<td>ти (f)</td>
+<td>читала</td>
+<td>робила</td>
+<td>говорила</td>
+</tr>
+<tr>
+<td>ми</td>
+<td>читали</td>
+<td>робили</td>
+<td>говорили</td>
+</tr>
+<tr>
+<td>ви</td>
+<td>читали</td>
+<td>робили</td>
+<td>говорили</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p>⚡ <strong>Pro Tip: Gender Matters for Я and Ти!</strong></p>
+  <p>Unlike English "I" which never changes, Ukrainian past tense reveals the speaker's gender:</p>
+  <ul>
+  <li>Де ти <strong>був</strong>? (Where were you? - to a man)</li>
+  <li>Де ти <strong>була</strong>? (Where were you? - to a woman)</li>
+  </ul>
+  <p>This also applies to "I" - use the form matching YOUR gender!</p>
+</blockquote></div></div><div class="canvas-note"><h4>The Verb "To Be" (Бути) in Past</h4><div class="md-content"><table>
+<thead>
+<tr>
+<th>Subject</th>
+<th>Past Tense</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>він</td>
+<td>був</td>
+<td>Він був удома. (He was at home.)</td>
+</tr>
+<tr>
+<td>вона</td>
+<td>була</td>
+<td>Вона була в школі. (She was at school.)</td>
+</tr>
+<tr>
+<td>воно</td>
+<td>було</td>
+<td>Все було добре. (Everything was fine.)</td>
+</tr>
+<tr>
+<td>вони</td>
+<td>були</td>
+<td>Вони були разом. (They were together.)</td>
+</tr>
+<tr>
+<td>я (m)</td>
+<td>був</td>
+<td>Я був там. (I was there.)</td>
+</tr>
+<tr>
+<td>я (f)</td>
+<td>була</td>
+<td>Я була там. (I was there.)</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p>📜 <strong>History Bite: The Disappearing "To Be"</strong></p>
+  <p>In Old East Slavic, "I was" was "я був єсмь" - the "єсмь" (I am) has completely vanished in modern Ukrainian past tense. However, traces remain in formal/archaic contexts and in the conditional mood (б). Languages constantly simplify!</p>
+</blockquote></div></div><div class="canvas-note"><h4>Special Past Tense Forms</h4><div class="md-content"><p>Some verbs have irregular past tense stems:</p>
+<table>
+<thead>
+<tr>
+<th>Infinitive</th>
+<th>He</th>
+<th>She</th>
+<th>They</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>їсти (eat)</td>
+<td>їв</td>
+<td>їла</td>
+<td>їли</td>
+</tr>
+<tr>
+<td>пити (drink)</td>
+<td>пив</td>
+<td>пила</td>
+<td>пили</td>
+</tr>
+<tr>
+<td>йти (go)</td>
+<td>ішов</td>
+<td>ішла</td>
+<td>ішли</td>
+</tr>
+<tr>
+<td>могти (can)</td>
+<td>міг</td>
+<td>могла</td>
+<td>могли</td>
+</tr>
+<tr>
+<td>нести (carry)</td>
+<td>ніс</td>
+<td>несла</td>
+<td>несли</td>
+</tr>
+<tr>
+<td>везти (transport)</td>
+<td>віз</td>
+<td>везла</td>
+<td>везли</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p>🎯 <strong>Fun Fact: Ішов vs Йшов</strong></p>
+  <p>"Йти" (to go on foot) has a unique past: ішов/ішла/ішли. The initial "й" transforms to "і" in the past. This verb is highly irregular in many Slavic languages - it's so common that it resisted regularization!</p>
+</blockquote></div></div><div class="canvas-note"><h4>Common Past Tense Verbs</h4><div class="md-content"><table>
+<thead>
+<tr>
+<th>Infinitive</th>
+<th>Meaning</th>
+<th>Він</th>
+<th>Вона</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>працювати</td>
+<td>work</td>
+<td>працював</td>
+<td>працювала</td>
+</tr>
+<tr>
+<td>жити</td>
+<td>live</td>
+<td>жив</td>
+<td>жила</td>
+</tr>
+<tr>
+<td>знати</td>
+<td>know</td>
+<td>знав</td>
+<td>знала</td>
+</tr>
+<tr>
+<td>хотіти</td>
+<td>want</td>
+<td>хотів</td>
+<td>хотіла</td>
+</tr>
+<tr>
+<td>бачити</td>
+<td>see</td>
+<td>бачив</td>
+<td>бачила</td>
+</tr>
+<tr>
+<td>любити</td>
+<td>love</td>
+<td>любив</td>
+<td>любила</td>
+</tr>
+<tr>
+<td>купити</td>
+<td>buy</td>
+<td>купив</td>
+<td>купила</td>
+</tr>
+<tr>
+<td>дивитися</td>
+<td>watch</td>
+<td>дивився</td>
+<td>дивилася</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p>🔗 <strong>Language Link: Reflexive Verbs</strong></p>
+  <p>Reflexive verbs (-ся) keep -ся in past tense:</p>
+  <ul>
+  <li>дивитися → дивився/дивилася (watched)</li>
+  <li>вчитися → вчився/вчилася (studied)</li>
+  <li>називатися → називався/називалася (was called)</li>
+  </ul>
+</blockquote></div></div><div class="canvas-note"><h4>Time Expressions for Past</h4><div class="md-content"><table>
+<thead>
+<tr>
+<th>Ukrainian</th>
+<th>Transliteration</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>вчора</td>
+<td>vchora</td>
+<td>yesterday</td>
+</tr>
+<tr>
+<td>позавчора</td>
+<td>pozavchora</td>
+<td>day before yesterday</td>
+</tr>
+<tr>
+<td>минулого тижня</td>
+<td>mynuloho tyzhnya</td>
+<td>last week</td>
+</tr>
+<tr>
+<td>минулого місяця</td>
+<td>mynuloho misyatsya</td>
+<td>last month</td>
+</tr>
+<tr>
+<td>минулого року</td>
+<td>mynuloho roku</td>
+<td>last year</td>
+</tr>
+<tr>
+<td>давно</td>
+<td>davno</td>
+<td>long ago</td>
+</tr>
+<tr>
+<td>недавно</td>
+<td>nedavno</td>
+<td>recently</td>
+</tr>
+<tr>
+<td>раніше</td>
+<td>ranishe</td>
+<td>earlier, before</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p>🌍 <strong>Real World: Talking About Yesterday</strong></p>
+  <ul>
+  <li><strong>Що ти робив учора?</strong> - What did you do yesterday?</li>
+  <li><strong>Я працював.</strong> - I worked.</li>
+  <li><strong>Де ви були минулого тижня?</strong> - Where were you last week?</li>
+  <li><strong>Ми були у Львові.</strong> - We were in Lviv.</li>
+  </ul>
+</blockquote></div></div><div class="canvas-note"><h4>### Form Past Tense</h4><div class="md-content"><p>Change to past (он):</p>
+<ol>
+<li>читати → читав</li>
+<li>писати → писав</li>
+<li>робити → робив</li>
+<li>їсти → їв</li>
+<li>йти → ішов</li>
+</ol>
+<p>Change to past (вона):</p>
+<ol>
+<li>говорити → говорила</li>
+<li>знати → знала</li>
+<li>пити → пила</li>
+<li>бути → була</li>
+<li>працювати → працювала</li>
+</ol></div></div><div class="canvas-note"><h4>Complete Sentences</h4><div class="md-content"><ol>
+<li>Він ___ (читати) книгу. → читав</li>
+<li>Вона ___ (бути) в школі. → була</li>
+<li>Ми ___ (дивитися) фільм. → дивилися</li>
+<li>Вони ___ (їсти) піцу. → їли</li>
+<li>Я (f) ___ (працювати) вчора. → працювала</li>
+</ol></div></div><div class="canvas-note"><h4>Tell About Yesterday</h4><div class="md-content"><p>Answer these questions:</p>
+<ol>
+<li>Де ви були вчора?</li>
+<li>Що ви їли на сніданок?</li>
+<li>Чи ви читали книгу?</li>
+<li>Що ви дивилися ввечері?</li>
+</ol></div></div><div class="canvas-note"><h4>### Share Your Day</h4><div class="md-content"><p>Describe what you did yesterday using past tense:</p>
+<ul>
+<li>Вчора я встав/встала о сьомій годині.</li>
+<li>Я їв/їла кашу на сніданок.</li>
+<li>Потім я працював/працювала.</li>
+<li>Увечері я дивився/дивилася фільм.</li>
+</ul></div></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('match')">Start →</button></div>
     </section>
     <section id="match" class="section"><div class="card"><h3>Infinitive to Past</h3>
       <div class="score-display"><span class="score"><span id="match-score">0</span>/6</span></div>
       <div class="match-container" id="match-container"><svg class="match-lines" id="match-lines"></svg>
         <div class="match-column" id="match-left"><div class="match-item" data-pair="0">читати</div><div class="match-item" data-pair="1">робити</div><div class="match-item" data-pair="2">їсти</div><div class="match-item" data-pair="3">пити</div><div class="match-item" data-pair="4">йти</div><div class="match-item" data-pair="5">бути</div></div>
-        <div class="match-column" id="match-right"><div class="match-item" data-pair="3">пив</div><div class="match-item" data-pair="4">ішов</div><div class="match-item" data-pair="5">був</div><div class="match-item" data-pair="2">їв</div><div class="match-item" data-pair="1">робив</div><div class="match-item" data-pair="0">читав</div></div>
+        <div class="match-column" id="match-right"><div class="match-item" data-pair="1">робив</div><div class="match-item" data-pair="3">пив</div><div class="match-item" data-pair="0">читав</div><div class="match-item" data-pair="2">їв</div><div class="match-item" data-pair="5">був</div><div class="match-item" data-pair="4">ішов</div></div>
       </div>
       <div class="completion-message" id="match-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetMatch()">Reset</button><button class="btn btn-primary" onclick="showSection('quiz')">Next →</button></div>

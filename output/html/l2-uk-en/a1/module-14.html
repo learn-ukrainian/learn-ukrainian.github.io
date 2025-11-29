@@ -28,7 +28,17 @@
     .card h3 { color: var(--primary); margin-bottom: 1rem; }
     .canvas-note { background: #fffbeb; border-left: 4px solid var(--warning); padding: 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
     .canvas-note h4 { color: var(--warning); margin-bottom: 0.5rem; }
-    .canvas-note pre { white-space: pre-wrap; font-family: inherit; }
+    .md-content { line-height: 1.7; }
+    .md-content p { margin: 0.75rem 0; }
+    .md-content ul, .md-content ol { margin: 0.75rem 0; padding-left: 1.5rem; }
+    .md-content li { margin: 0.25rem 0; }
+    .md-content strong { color: var(--primary); }
+    .md-content blockquote { background: #e8f4fd; border-left: 4px solid var(--primary); padding: 0.75rem 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+    .md-content blockquote p { margin: 0.25rem 0; }
+    .md-content table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+    .md-content th, .md-content td { border: 1px solid var(--border); padding: 0.5rem 0.75rem; text-align: left; }
+    .md-content th { background: #f5f5f5; font-weight: 600; }
+    .md-content code { background: #f0f0f0; padding: 0.125rem 0.375rem; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
     .letter-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0; }
     .letter-group { border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; }
     .letter-group.true-friends { border-color: var(--success); } .letter-group.true-friends .letters { color: var(--success); }
@@ -108,140 +118,273 @@
         <p style="color:var(--text-muted)">My, Your, Our</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Whose Is It?</h4><pre>You learned demonstratives (цей, ця, це) in Module 05. Possessive pronouns work the same way - they match the noun's gender and number!
-
-- **мій** стіл (my table - masculine)
-- **моя** книга (my book - feminine)
-- **моє** вікно (my window - neuter)
-- **мої** друзі (my friends - plural)
-
-Same root "мо-", different endings for each gender.
-
-> 💡 **Did You Know?**
->
-> Ukrainian possessives come from the genitive (possession) forms of personal pronouns. "Мій" literally evolved from something like "of me." This is why possessives in all Slavic languages look similar - they share this ancient origin!</pre></div><div class="canvas-note"><h4>### First & Second Person Possessives</h4><pre>**Мій (my) - matches noun gender:**
-
-| Gender | Form | Example |
-|--------|------|---------|
-| Masculine | мій | мій брат (my brother) |
-| Feminine | моя | моя сестра (my sister) |
-| Neuter | моє | моє ім'я (my name) |
-| Plural | мої | мої друзі (my friends) |
-
-**Твій (your - informal) - same pattern:**
-
-| Gender | Form | Example |
-|--------|------|---------|
-| Masculine | твій | твій телефон (your phone) |
-| Feminine | твоя | твоя книга (your book) |
-| Neuter | твоє | твоє місто (your city) |
-| Plural | твої | твої речі (your things) |
-
-> ⚡ **Pro Tip: The Pattern**
->
-> All possessives follow the same endings:
-> - Masculine: -ій (мій, твій, наш)
-> - Feminine: -я (моя, твоя, наша)
-> - Neuter: -є (моє, твоє, наше)
-> - Plural: -і (мої, твої, наші)</pre></div><div class="canvas-note"><h4>Third Person Possessives</h4><pre>**Його (his/its) - NEVER changes!**
-- його брат (his brother)
-- його сестра (his sister)
-- його ім'я (his name)
-- його друзі (his friends)
-
-**Її (her) - NEVER changes!**
-- її брат (her brother)
-- її книга (her book)
-- її місто (her city)
-- її друзі (her friends)
-
-**Їхній (their) - changes like мій:**
-
-| Gender | Form | Example |
-|--------|------|---------|
-| Masculine | їхній | їхній дім (their house) |
-| Feminine | їхня | їхня машина (their car) |
-| Neuter | їхнє | їхнє рішення (their decision) |
-| Plural | їхні | їхні діти (their children) |
-
-> 🎯 **Fun Fact: The Unchanging Ones**
->
-> Why don't його and її change? They're actually genitive forms of він and вона, frozen as possessives:
-> - "його книга" literally = "the book of him"
-> - "її дім" literally = "the house of her"
->
-> This frozen genitive construction is why they never change for gender!</pre></div><div class="canvas-note"><h4>Plural Possessives</h4><pre>**Наш (our):**
-
-| Gender | Form | Example |
-|--------|------|---------|
-| Masculine | наш | наш клас (our class) |
-| Feminine | наша | наша родина (our family) |
-| Neuter | наше | наше місто (our city) |
-| Plural | наші | наші друзі (our friends) |
-
-**Ваш (your - formal/plural):**
-
-| Gender | Form | Example |
-|--------|------|---------|
-| Masculine | ваш | ваш паспорт (your passport) |
-| Feminine | ваша | ваша валіза (your suitcase) |
-| Neuter | ваше | ваше місце (your seat) |
-| Plural | ваші | ваші документи (your documents) |
-
-> 📜 **History Bite: Наш vs Ваш**
->
-> "Наш" and "ваш" have the same ancient root as English "us" and Latin "nos." These pronouns have been remarkably stable for thousands of years across Indo-European languages. When you say "наш," you're using a word that Bronze Age speakers would have recognized!</pre></div><div class="canvas-note"><h4>The Special Свій (Reflexive Possessive)</h4><pre>Ukrainian has a special possessive **свій** meaning "one's own" - it refers back to the subject:
-
-- Я читаю **свою** книгу. (I read my [own] book.)
-- Він любить **свою** роботу. (He loves his [own] job.)
-- Вона взяла **свій** телефон. (She took her [own] phone.)
-
-**Свій changes like мій:**
-- свій, своя, своє, свої
-
-> 🔍 **Myth Buster: "Свій is Optional"**
->
-> Many learners skip свій, but it matters! Compare:
-> - Він взяв **свій** телефон. = He took his own phone.
-> - Він взяв **його** телефон. = He took his (someone else's) phone.
->
-> Without свій, you might cause confusion about whose phone was taken!
-
-> 🎭 **Culture Corner: Formal vs Informal**
->
-> In Ukrainian society:
-> - Use **твій** with friends, family, children, peers
-> - Use **ваш** with strangers, elders, in professional settings
-> - Addressing someone with ти/твій when ви/ваш is expected is considered rude!
->
-> When in doubt, use ви/ваш - it's always safe.</pre></div><div class="canvas-note"><h4>### Match Possessive to Noun</h4><pre>Choose the correct form:
-1. ___ брат (мій/моя/моє) → мій
-2. ___ книга (твій/твоя/твоє) → твоя
-3. ___ місто (наш/наша/наше) → наше
-4. ___ друзі (ваш/ваша/ваші) → ваші</pre></div><div class="canvas-note"><h4>Complete with Possessives</h4><pre>1. Це ___ (my) телефон. → мій
-2. Де ___ (your-informal) книга? → твоя
-3. ___ (Our) дім великий. → Наш
-4. ___ (Her) брат студент. → Її
-5. ___ (Their) машина нова. → Їхня
-
-> 🌍 **Real World: Talking About Belongings**
->
-> - **Чий це телефон?** - Whose phone is this?
-> - **Це мій.** - It's mine.
-> - **Це твоя сумка?** - Is this your bag?
-> - **Ні, це її сумка.** - No, it's her bag.
-> - **Де ваш паспорт?** - Where is your passport?</pre></div><div class="canvas-note"><h4>### Talk About Your Things</h4><pre>Describe using possessives:
-1. My phone is on the table. → Мій телефон на столі.
-2. Her book is interesting. → Її книга цікава.
-3. Our city is beautiful. → Наше місто гарне.
-4. Their house is big. → Їхній дім великий.</pre></div></div>
+      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Whose Is It?</h4><div class="md-content"><p>You learned demonstratives (цей, ця, це) in Module 05. Possessive pronouns work the same way - they match the noun's gender and number!</p>
+<ul>
+<li><strong>мій</strong> стіл (my table - masculine)</li>
+<li><strong>моя</strong> книга (my book - feminine)</li>
+<li><strong>моє</strong> вікно (my window - neuter)</li>
+<li><strong>мої</strong> друзі (my friends - plural)</li>
+</ul>
+<p>Same root "мо-", different endings for each gender.</p>
+<blockquote>
+  <p>💡 <strong>Did You Know?</strong></p>
+  <p>Ukrainian possessives come from the genitive (possession) forms of personal pronouns. "Мій" literally evolved from something like "of me." This is why possessives in all Slavic languages look similar - they share this ancient origin!</p>
+</blockquote></div></div><div class="canvas-note"><h4>### First & Second Person Possessives</h4><div class="md-content"><p><strong>Мій (my) - matches noun gender:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Gender</th>
+<th>Form</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Masculine</td>
+<td>мій</td>
+<td>мій брат (my brother)</td>
+</tr>
+<tr>
+<td>Feminine</td>
+<td>моя</td>
+<td>моя сестра (my sister)</td>
+</tr>
+<tr>
+<td>Neuter</td>
+<td>моє</td>
+<td>моє ім'я (my name)</td>
+</tr>
+<tr>
+<td>Plural</td>
+<td>мої</td>
+<td>мої друзі (my friends)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Твій (your - informal) - same pattern:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Gender</th>
+<th>Form</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Masculine</td>
+<td>твій</td>
+<td>твій телефон (your phone)</td>
+</tr>
+<tr>
+<td>Feminine</td>
+<td>твоя</td>
+<td>твоя книга (your book)</td>
+</tr>
+<tr>
+<td>Neuter</td>
+<td>твоє</td>
+<td>твоє місто (your city)</td>
+</tr>
+<tr>
+<td>Plural</td>
+<td>твої</td>
+<td>твої речі (your things)</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p>⚡ <strong>Pro Tip: The Pattern</strong></p>
+  <p>All possessives follow the same endings:</p>
+  <ul>
+  <li>Masculine: -ій (мій, твій, наш)</li>
+  <li>Feminine: -я (моя, твоя, наша)</li>
+  <li>Neuter: -є (моє, твоє, наше)</li>
+  <li>Plural: -і (мої, твої, наші)</li>
+  </ul>
+</blockquote></div></div><div class="canvas-note"><h4>Third Person Possessives</h4><div class="md-content"><p><strong>Його (his/its) - NEVER changes!</strong></p>
+<ul>
+<li>його брат (his brother)</li>
+<li>його сестра (his sister)</li>
+<li>його ім'я (his name)</li>
+<li>його друзі (his friends)</li>
+</ul>
+<p><strong>Її (her) - NEVER changes!</strong></p>
+<ul>
+<li>її брат (her brother)</li>
+<li>її книга (her book)</li>
+<li>її місто (her city)</li>
+<li>її друзі (her friends)</li>
+</ul>
+<p><strong>Їхній (their) - changes like мій:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Gender</th>
+<th>Form</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Masculine</td>
+<td>їхній</td>
+<td>їхній дім (their house)</td>
+</tr>
+<tr>
+<td>Feminine</td>
+<td>їхня</td>
+<td>їхня машина (their car)</td>
+</tr>
+<tr>
+<td>Neuter</td>
+<td>їхнє</td>
+<td>їхнє рішення (their decision)</td>
+</tr>
+<tr>
+<td>Plural</td>
+<td>їхні</td>
+<td>їхні діти (their children)</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p>🎯 <strong>Fun Fact: The Unchanging Ones</strong></p>
+  <p>Why don't його and її change? They're actually genitive forms of він and вона, frozen as possessives:</p>
+  <ul>
+  <li>"його книга" literally = "the book of him"</li>
+  <li>"її дім" literally = "the house of her"</li>
+  </ul>
+  <p>This frozen genitive construction is why they never change for gender!</p>
+</blockquote></div></div><div class="canvas-note"><h4>Plural Possessives</h4><div class="md-content"><p><strong>Наш (our):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Gender</th>
+<th>Form</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Masculine</td>
+<td>наш</td>
+<td>наш клас (our class)</td>
+</tr>
+<tr>
+<td>Feminine</td>
+<td>наша</td>
+<td>наша родина (our family)</td>
+</tr>
+<tr>
+<td>Neuter</td>
+<td>наше</td>
+<td>наше місто (our city)</td>
+</tr>
+<tr>
+<td>Plural</td>
+<td>наші</td>
+<td>наші друзі (our friends)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Ваш (your - formal/plural):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Gender</th>
+<th>Form</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Masculine</td>
+<td>ваш</td>
+<td>ваш паспорт (your passport)</td>
+</tr>
+<tr>
+<td>Feminine</td>
+<td>ваша</td>
+<td>ваша валіза (your suitcase)</td>
+</tr>
+<tr>
+<td>Neuter</td>
+<td>ваше</td>
+<td>ваше місце (your seat)</td>
+</tr>
+<tr>
+<td>Plural</td>
+<td>ваші</td>
+<td>ваші документи (your documents)</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p>📜 <strong>History Bite: Наш vs Ваш</strong></p>
+  <p>"Наш" and "ваш" have the same ancient root as English "us" and Latin "nos." These pronouns have been remarkably stable for thousands of years across Indo-European languages. When you say "наш," you're using a word that Bronze Age speakers would have recognized!</p>
+</blockquote></div></div><div class="canvas-note"><h4>The Special Свій (Reflexive Possessive)</h4><div class="md-content"><p>Ukrainian has a special possessive <strong>свій</strong> meaning "one's own" - it refers back to the subject:</p>
+<ul>
+<li>Я читаю <strong>свою</strong> книгу. (I read my [own] book.)</li>
+<li>Він любить <strong>свою</strong> роботу. (He loves his [own] job.)</li>
+<li>Вона взяла <strong>свій</strong> телефон. (She took her [own] phone.)</li>
+</ul>
+<p><strong>Свій changes like мій:</strong></p>
+<ul>
+<li>свій, своя, своє, свої</li>
+</ul>
+<blockquote>
+  <p>🔍 <strong>Myth Buster: "Свій is Optional"</strong></p>
+  <p>Many learners skip свій, but it matters! Compare:</p>
+  <ul>
+  <li>Він взяв <strong>свій</strong> телефон. = He took his own phone.</li>
+  <li>Він взяв <strong>його</strong> телефон. = He took his (someone else's) phone.</li>
+  </ul>
+  <p>Without свій, you might cause confusion about whose phone was taken!</p>
+  <p>🎭 <strong>Culture Corner: Formal vs Informal</strong></p>
+  <p>In Ukrainian society:</p>
+  <ul>
+  <li>Use <strong>твій</strong> with friends, family, children, peers</li>
+  <li>Use <strong>ваш</strong> with strangers, elders, in professional settings</li>
+  <li>Addressing someone with ти/твій when ви/ваш is expected is considered rude!</li>
+  </ul>
+  <p>When in doubt, use ви/ваш - it's always safe.</p>
+</blockquote></div></div><div class="canvas-note"><h4>### Match Possessive to Noun</h4><div class="md-content"><p>Choose the correct form:</p>
+<ol>
+<li>___ брат (мій/моя/моє) → мій</li>
+<li>___ книга (твій/твоя/твоє) → твоя</li>
+<li>___ місто (наш/наша/наше) → наше</li>
+<li>___ друзі (ваш/ваша/ваші) → ваші</li>
+</ol></div></div><div class="canvas-note"><h4>Complete with Possessives</h4><div class="md-content"><ol>
+<li>Це ___ (my) телефон. → мій</li>
+<li>Де ___ (your-informal) книга? → твоя</li>
+<li>___ (Our) дім великий. → Наш</li>
+<li>___ (Her) брат студент. → Її</li>
+<li>___ (Their) машина нова. → Їхня</li>
+</ol>
+<blockquote>
+  <p>🌍 <strong>Real World: Talking About Belongings</strong></p>
+  <ul>
+  <li><strong>Чий це телефон?</strong> - Whose phone is this?</li>
+  <li><strong>Це мій.</strong> - It's mine.</li>
+  <li><strong>Це твоя сумка?</strong> - Is this your bag?</li>
+  <li><strong>Ні, це її сумка.</strong> - No, it's her bag.</li>
+  <li><strong>Де ваш паспорт?</strong> - Where is your passport?</li>
+  </ul>
+</blockquote></div></div><div class="canvas-note"><h4>### Talk About Your Things</h4><div class="md-content"><p>Describe using possessives:</p>
+<ol>
+<li>My phone is on the table. → Мій телефон на столі.</li>
+<li>Her book is interesting. → Її книга цікава.</li>
+<li>Our city is beautiful. → Наше місто гарне.</li>
+<li>Their house is big. → Їхній дім великий.</li>
+</ol></div></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('match')">Start →</button></div>
     </section>
     <section id="match" class="section"><div class="card"><h3>Possessive Forms</h3>
       <div class="score-display"><span class="score"><span id="match-score">0</span>/7</span></div>
       <div class="match-container" id="match-container"><svg class="match-lines" id="match-lines"></svg>
         <div class="match-column" id="match-left"><div class="match-item" data-pair="0">я</div><div class="match-item" data-pair="1">ти</div><div class="match-item" data-pair="2">він</div><div class="match-item" data-pair="3">вона</div><div class="match-item" data-pair="4">ми</div><div class="match-item" data-pair="5">ви</div><div class="match-item" data-pair="6">вони</div></div>
-        <div class="match-column" id="match-right"><div class="match-item" data-pair="0">мій/моя/моє</div><div class="match-item" data-pair="5">ваш/ваша/ваше</div><div class="match-item" data-pair="2">його</div><div class="match-item" data-pair="6">їхній/їхня/їхнє</div><div class="match-item" data-pair="4">наш/наша/наше</div><div class="match-item" data-pair="1">твій/твоя/твоє</div><div class="match-item" data-pair="3">її</div></div>
+        <div class="match-column" id="match-right"><div class="match-item" data-pair="2">його</div><div class="match-item" data-pair="5">ваш/ваша/ваше</div><div class="match-item" data-pair="4">наш/наша/наше</div><div class="match-item" data-pair="3">її</div><div class="match-item" data-pair="6">їхній/їхня/їхнє</div><div class="match-item" data-pair="1">твій/твоя/твоє</div><div class="match-item" data-pair="0">мій/моя/моє</div></div>
       </div>
       <div class="completion-message" id="match-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetMatch()">Reset</button><button class="btn btn-primary" onclick="showSection('quiz')">Next →</button></div>

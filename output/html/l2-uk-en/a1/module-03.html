@@ -28,7 +28,17 @@
     .card h3 { color: var(--primary); margin-bottom: 1rem; }
     .canvas-note { background: #fffbeb; border-left: 4px solid var(--warning); padding: 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
     .canvas-note h4 { color: var(--warning); margin-bottom: 0.5rem; }
-    .canvas-note pre { white-space: pre-wrap; font-family: inherit; }
+    .md-content { line-height: 1.7; }
+    .md-content p { margin: 0.75rem 0; }
+    .md-content ul, .md-content ol { margin: 0.75rem 0; padding-left: 1.5rem; }
+    .md-content li { margin: 0.25rem 0; }
+    .md-content strong { color: var(--primary); }
+    .md-content blockquote { background: #e8f4fd; border-left: 4px solid var(--primary); padding: 0.75rem 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+    .md-content blockquote p { margin: 0.25rem 0; }
+    .md-content table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+    .md-content th, .md-content td { border: 1px solid var(--border); padding: 0.5rem 0.75rem; text-align: left; }
+    .md-content th { background: #f5f5f5; font-weight: 600; }
+    .md-content code { background: #f0f0f0; padding: 0.125rem 0.375rem; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
     .letter-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0; }
     .letter-group { border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; }
     .letter-group.true-friends { border-color: var(--success); } .letter-group.true-friends .letters { color: var(--success); }
@@ -108,148 +118,195 @@
         <p style="color:var(--text-muted)">Masculine, Feminine, Neuter</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Why Gender Matters</h4><pre>In Ukrainian, every single noun has a gender: masculine (чоловічий рід), feminine (жіночий рід), or neuter (середній рід). This isn't about biology - it's **grammatical gender**.
-
-Why does this matter? Because:
-- Adjectives change to match the noun's gender
-- Verbs change in past tense to match the noun's gender
-- "This/that" words change to match the noun's gender
-- Getting gender wrong sounds very strange to native speakers
-
-The good news: **you can predict gender from the word ending about 95% of the time!**
-
-> 🔍 **Myth Buster: "Grammatical Gender is Sexist"**
->
-> Some learners feel uncomfortable with "masculine" and "feminine" grammar. But here's the thing: grammatical gender has **nothing to do with real-world gender**! A table (стіл) is masculine. A book (книга) is feminine. A window (вікно) is neuter. These are just grammatical categories that determine how other words behave around nouns.
->
-> Many languages have 2, 3, or even more "genders" - German has 3, Swahili has 18 noun classes! It's just a classification system.
-
-> 💡 **Did You Know?**
->
-> English **used to have** grammatical gender! Until about 1,000 years ago, English nouns were masculine, feminine, or neuter - just like Ukrainian today. Over centuries, English lost this feature (and most case endings too). That's why learning gender feels strange to English speakers - your language forgot it!</pre></div><div class="canvas-note"><h4>### Masculine Nouns (Чоловічий рід)</h4><pre>Masculine nouns typically end in a **consonant** (hard or soft):
-
-| Ending | Examples |
-|--------|----------|
-| Consonant | студент (student), брат (brother), стіл (table) |
-| -ь (soft sign) | день (day), вчитель (teacher), кінь (horse) |
-| -й | край (edge/country), музей (museum), герой (hero) |
-
-**Memory trick:** If it ends in a consonant → probably masculine!
-
-> 📜 **History Bite: The -ь Ending**
->
-> The soft sign (ь) at the end of masculine nouns comes from Old Church Slavonic. Words like **день** (day) and **гість** (guest) have been softened for over 1,000 years. This "soft" quality changes how the consonant sounds - like adding a tiny "y" sound. Compare: **брат** (brat) vs **брать** (brat' - softer final T).
-
-> ⚡ **Pro Tip: Natural Gender Override**
->
-> Living beings often match their natural gender:
-> - **тато** (dad) → masculine (ends in -о but refers to male)
-> - **батько** (father) → masculine (same reason)
-> - **дядько** (uncle) → masculine
->
-> When natural gender conflicts with the ending, natural gender wins for people!</pre></div><div class="canvas-note"><h4>Feminine Nouns (Жіночий рід)</h4><pre>Feminine nouns typically end in **-а** or **-я**:
-
-| Ending | Examples |
-|--------|----------|
-| -а | мама (mom), сестра (sister), книга (book) |
-| -я | земля (earth/land), сім'я (family), пісня (song) |
-| -ь (some) | ніч (night), річ (thing), подорож (journey) |
-
-**Memory trick:** If it ends in -а/-я → probably feminine!
-
-> 🔗 **Language Link: The -а Ending**
->
-> The feminine -а ending is common across many languages:
-> - Ukrainian: мама, сестра, школа
-> - Spanish: mama, hermana (sister), escuela (school)
-> - Italian: mamma, sorella, scuola
-> - Russian: мама, сестра, школа
->
-> This isn't coincidence! Many Indo-European languages share this feminine marker. When you learn Ukrainian gender, you're learning a pattern that helps across multiple languages.
-
-> 🎯 **Fun Fact: The -ь Trap**
->
-> The soft sign (ь) can appear in BOTH masculine and feminine nouns! How do you know?
-> - **Masculine:** Usually after д, т, н, с, з, л, р (день, вчитель, кінь)
-> - **Feminine:** Usually after ч, ш, щ, ж (ніч, річ, подорож)
->
-> If it ends in -ч/-ш/-щ/-ж + ь → almost always feminine!</pre></div><div class="canvas-note"><h4>Neuter Nouns (Середній рід)</h4><pre>Neuter nouns typically end in **-о** or **-е**:
-
-| Ending | Examples |
-|--------|----------|
-| -о | вікно (window), молоко (milk), яблуко (apple) |
-| -е | море (sea), серце (heart), сонце (sun) |
-| -я (some) | ім'я (name), теля (calf), курча (chick) |
-| -мя | ім'я, плем'я (tribe), полум'я (flame) |
-
-**Memory trick:** If it ends in -о/-е → neuter!
-
-> 🎭 **Culture Corner: Neuter and Baby Animals**
->
-> In Ukrainian, baby animals are often neuter:
-> - **теля** (calf) - neuter
-> - **порося** (piglet) - neuter
-> - **курча** (chick) - neuter
-> - **цуценя** (puppy) - neuter
-> - **кошеня** (kitten) - neuter
->
-> This makes sense - baby animals aren't clearly male or female, so they're grammatically "neither." The -я ending with neuter is a telltale sign of young animals!
-
-> 💡 **Did You Know?**
->
-> The word **ім'я** (name) looks feminine (-я ending) but is actually neuter! This is one of a small group of ancient nouns ending in -мя that are neuter: ім'я (name), плем'я (tribe), сім'я (seed - but сім'я meaning "family" is feminine!). These are inherited from **Proto-Slavic** (Common Slavic) - the ancestor of all Slavic languages spoken over 1,000 years ago.</pre></div><div class="canvas-note"><h4>### The Gender Decision Tree</h4><pre>When you see a new Ukrainian noun, ask:
-
-1. **Does it end in a consonant?** → Masculine (студент, стіл, день)
-2. **Does it end in -а or -я?** → Feminine (мама, земля) ... unless it's a baby animal or -мя word!
-3. **Does it end in -о or -е?** → Neuter (вікно, море)
-4. **Is it a person?** → Natural gender may override (тато = masculine despite -о)</pre></div><div class="canvas-note"><h4>Pattern Recognition</h4><pre>Study these word families:
-
-**Profession pairs (masculine/feminine):**
-- студент / студентка (student m/f)
-- вчитель / вчителька (teacher m/f)
-- лікар / лікарка (doctor m/f)
-
-**Object patterns:**
-- книга (book) - fem → книжка (small book) - fem
-- стіл (table) - masc → столик (small table) - masc
-- вікно (window) - neut → віконце (small window) - neut
-
-> 🌍 **Real World: Gender Consistency**
->
-> Diminutives (cute/small versions) keep the same gender as the base word:
-> - **кіт** (cat, masc) → **котик** (kitty, masc)
-> - **собака** (dog, fem) → **собачка** (doggy, fem)
-> - **сонце** (sun, neut) → **сонечко** (little sun, neut)
->
-> The suffixes -ик/-ок (masculine), -ка (feminine), -ко/-це (neuter) add cuteness while preserving gender!</pre></div><div class="canvas-note"><h4>### Gender Sorting Challenge</h4><pre>Sort these nouns by gender. Look at the endings!
-
-**Masculine:** брат, студент, стіл, день, музей
-**Feminine:** мама, книга, сестра, ніч, земля
-**Neuter:** вікно, молоко, море, сонце, яблуко</pre></div><div class="canvas-note"><h4>Apply the Rules</h4><pre>Now predict the gender of these new words (you haven't learned them yet, but you can use the endings!):
-
-1. **озеро** (lake) - ends in -о → ?
-2. **дівчина** (girl) - ends in -а → ?
-3. **комп'ютер** (computer) - ends in consonant → ?
-4. **любов** (love) - ends in consonant → ?
-5. **життя** (life) - ends in -я → ?
-
-*(Answers: neuter, feminine, masculine, feminine [exception!], neuter)*
-
-> ⚡ **Pro Tip: The 5% Exceptions**
->
-> Some nouns don't follow the rules:
-> - **любов** (love) - ends in consonant but FEMININE
-> - **путь** (path) - ends in ь but FEMININE (very archaic)
-> - **тато** (dad), **дядько** (uncle) - end in -о but MASCULINE (natural gender)
->
-> These exceptions are rare! For 95% of nouns, the ending tells you the gender.</pre></div></div>
+      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Why Gender Matters</h4><div class="md-content"><p>In Ukrainian, every single noun has a gender: masculine (чоловічий рід), feminine (жіночий рід), or neuter (середній рід). This isn't about biology - it's <strong>grammatical gender</strong>.</p>
+<p>Why does this matter? Because:</p>
+<ul>
+<li>Adjectives change to match the noun's gender</li>
+<li>Verbs change in past tense to match the noun's gender</li>
+<li>"This/that" words change to match the noun's gender</li>
+<li>Getting gender wrong sounds very strange to native speakers</li>
+</ul>
+<p>The good news: <strong>you can predict gender from the word ending about 95% of the time!</strong></p>
+<blockquote>
+  <p>🔍 <strong>Myth Buster: "Grammatical Gender is Sexist"</strong></p>
+  <p>Some learners feel uncomfortable with "masculine" and "feminine" grammar. But here's the thing: grammatical gender has <strong>nothing to do with real-world gender</strong>! A table (стіл) is masculine. A book (книга) is feminine. A window (вікно) is neuter. These are just grammatical categories that determine how other words behave around nouns.</p>
+  <p>Many languages have 2, 3, or even more "genders" - German has 3, Swahili has 18 noun classes! It's just a classification system.</p>
+  <p>💡 <strong>Did You Know?</strong></p>
+  <p>English <strong>used to have</strong> grammatical gender! Until about 1,000 years ago, English nouns were masculine, feminine, or neuter - just like Ukrainian today. Over centuries, English lost this feature (and most case endings too). That's why learning gender feels strange to English speakers - your language forgot it!</p>
+</blockquote></div></div><div class="canvas-note"><h4>### Masculine Nouns (Чоловічий рід)</h4><div class="md-content"><p>Masculine nouns typically end in a <strong>consonant</strong> (hard or soft):</p>
+<table>
+<thead>
+<tr>
+<th>Ending</th>
+<th>Examples</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Consonant</td>
+<td>студент (student), брат (brother), стіл (table)</td>
+</tr>
+<tr>
+<td>-ь (soft sign)</td>
+<td>день (day), вчитель (teacher), кінь (horse)</td>
+</tr>
+<tr>
+<td>-й</td>
+<td>край (edge/country), музей (museum), герой (hero)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Memory trick:</strong> If it ends in a consonant → probably masculine!</p>
+<blockquote>
+  <p>📜 <strong>History Bite: The -ь Ending</strong></p>
+  <p>The soft sign (ь) at the end of masculine nouns comes from Old Church Slavonic. Words like <strong>день</strong> (day) and <strong>гість</strong> (guest) have been softened for over 1,000 years. This "soft" quality changes how the consonant sounds - like adding a tiny "y" sound. Compare: <strong>брат</strong> (brat) vs <strong>брать</strong> (brat' - softer final T).</p>
+  <p>⚡ <strong>Pro Tip: Natural Gender Override</strong></p>
+  <p>Living beings often match their natural gender:</p>
+  <ul>
+  <li><strong>тато</strong> (dad) → masculine (ends in -о but refers to male)</li>
+  <li><strong>батько</strong> (father) → masculine (same reason)</li>
+  <li><strong>дядько</strong> (uncle) → masculine</li>
+  </ul>
+  <p>When natural gender conflicts with the ending, natural gender wins for people!</p>
+</blockquote></div></div><div class="canvas-note"><h4>Feminine Nouns (Жіночий рід)</h4><div class="md-content"><p>Feminine nouns typically end in <strong>-а</strong> or <strong>-я</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Ending</th>
+<th>Examples</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-а</td>
+<td>мама (mom), сестра (sister), книга (book)</td>
+</tr>
+<tr>
+<td>-я</td>
+<td>земля (earth/land), сім'я (family), пісня (song)</td>
+</tr>
+<tr>
+<td>-ь (some)</td>
+<td>ніч (night), річ (thing), подорож (journey)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Memory trick:</strong> If it ends in -а/-я → probably feminine!</p>
+<blockquote>
+  <p>🔗 <strong>Language Link: The -а Ending</strong></p>
+  <p>The feminine -а ending is common across many languages:</p>
+  <ul>
+  <li>Ukrainian: мама, сестра, школа</li>
+  <li>Spanish: mama, hermana (sister), escuela (school)</li>
+  <li>Italian: mamma, sorella, scuola</li>
+  <li>Russian: мама, сестра, школа</li>
+  </ul>
+  <p>This isn't coincidence! Many Indo-European languages share this feminine marker. When you learn Ukrainian gender, you're learning a pattern that helps across multiple languages.</p>
+  <p>🎯 <strong>Fun Fact: The -ь Trap</strong></p>
+  <p>The soft sign (ь) can appear in BOTH masculine and feminine nouns! How do you know?</p>
+  <ul>
+  <li><strong>Masculine:</strong> Usually after д, т, н, с, з, л, р (день, вчитель, кінь)</li>
+  <li><strong>Feminine:</strong> Usually after ч, ш, щ, ж (ніч, річ, подорож)</li>
+  </ul>
+  <p>If it ends in -ч/-ш/-щ/-ж + ь → almost always feminine!</p>
+</blockquote></div></div><div class="canvas-note"><h4>Neuter Nouns (Середній рід)</h4><div class="md-content"><p>Neuter nouns typically end in <strong>-о</strong> or <strong>-е</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Ending</th>
+<th>Examples</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-о</td>
+<td>вікно (window), молоко (milk), яблуко (apple)</td>
+</tr>
+<tr>
+<td>-е</td>
+<td>море (sea), серце (heart), сонце (sun)</td>
+</tr>
+<tr>
+<td>-я (some)</td>
+<td>ім'я (name), теля (calf), курча (chick)</td>
+</tr>
+<tr>
+<td>-мя</td>
+<td>ім'я, плем'я (tribe), полум'я (flame)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Memory trick:</strong> If it ends in -о/-е → neuter!</p>
+<blockquote>
+  <p>🎭 <strong>Culture Corner: Neuter and Baby Animals</strong></p>
+  <p>In Ukrainian, baby animals are often neuter:</p>
+  <ul>
+  <li><strong>теля</strong> (calf) - neuter</li>
+  <li><strong>порося</strong> (piglet) - neuter</li>
+  <li><strong>курча</strong> (chick) - neuter</li>
+  <li><strong>цуценя</strong> (puppy) - neuter</li>
+  <li><strong>кошеня</strong> (kitten) - neuter</li>
+  </ul>
+  <p>This makes sense - baby animals aren't clearly male or female, so they're grammatically "neither." The -я ending with neuter is a telltale sign of young animals!</p>
+  <p>💡 <strong>Did You Know?</strong></p>
+  <p>The word <strong>ім'я</strong> (name) looks feminine (-я ending) but is actually neuter! This is one of a small group of ancient nouns ending in -мя that are neuter: ім'я (name), плем'я (tribe), сім'я (seed - but сім'я meaning "family" is feminine!). These are inherited from <strong>Proto-Slavic</strong> (Common Slavic) - the ancestor of all Slavic languages spoken over 1,000 years ago.</p>
+</blockquote></div></div><div class="canvas-note"><h4>### The Gender Decision Tree</h4><div class="md-content"><p>When you see a new Ukrainian noun, ask:</p>
+<ol>
+<li><strong>Does it end in a consonant?</strong> → Masculine (студент, стіл, день)</li>
+<li><strong>Does it end in -а or -я?</strong> → Feminine (мама, земля) … unless it's a baby animal or -мя word!</li>
+<li><strong>Does it end in -о or -е?</strong> → Neuter (вікно, море)</li>
+<li><strong>Is it a person?</strong> → Natural gender may override (тато = masculine despite -о)</li>
+</ol></div></div><div class="canvas-note"><h4>Pattern Recognition</h4><div class="md-content"><p>Study these word families:</p>
+<p><strong>Profession pairs (masculine/feminine):</strong></p>
+<ul>
+<li>студент / студентка (student m/f)</li>
+<li>вчитель / вчителька (teacher m/f)</li>
+<li>лікар / лікарка (doctor m/f)</li>
+</ul>
+<p><strong>Object patterns:</strong></p>
+<ul>
+<li>книга (book) - fem → книжка (small book) - fem</li>
+<li>стіл (table) - masc → столик (small table) - masc</li>
+<li>вікно (window) - neut → віконце (small window) - neut</li>
+</ul>
+<blockquote>
+  <p>🌍 <strong>Real World: Gender Consistency</strong></p>
+  <p>Diminutives (cute/small versions) keep the same gender as the base word:</p>
+  <ul>
+  <li><strong>кіт</strong> (cat, masc) → <strong>котик</strong> (kitty, masc)</li>
+  <li><strong>собака</strong> (dog, fem) → <strong>собачка</strong> (doggy, fem)</li>
+  <li><strong>сонце</strong> (sun, neut) → <strong>сонечко</strong> (little sun, neut)</li>
+  </ul>
+  <p>The suffixes -ик/-ок (masculine), -ка (feminine), -ко/-це (neuter) add cuteness while preserving gender!</p>
+</blockquote></div></div><div class="canvas-note"><h4>### Gender Sorting Challenge</h4><div class="md-content"><p>Sort these nouns by gender. Look at the endings!</p>
+<p><strong>Masculine:</strong> брат, студент, стіл, день, музей<br />
+<strong>Feminine:</strong> мама, книга, сестра, ніч, земля<br />
+<strong>Neuter:</strong> вікно, молоко, море, сонце, яблуко</p></div></div><div class="canvas-note"><h4>Apply the Rules</h4><div class="md-content"><p>Now predict the gender of these new words (you haven't learned them yet, but you can use the endings!):</p>
+<ol>
+<li><strong>озеро</strong> (lake) - ends in -о → ?</li>
+<li><strong>дівчина</strong> (girl) - ends in -а → ?</li>
+<li><strong>комп'ютер</strong> (computer) - ends in consonant → ?</li>
+<li><strong>любов</strong> (love) - ends in consonant → ?</li>
+<li><strong>життя</strong> (life) - ends in -я → ?</li>
+</ol>
+<p><em>(Answers: neuter, feminine, masculine, feminine [exception!], neuter)</em></p>
+<blockquote>
+  <p>⚡ <strong>Pro Tip: The 5% Exceptions</strong></p>
+  <p>Some nouns don't follow the rules:</p>
+  <ul>
+  <li><strong>любов</strong> (love) - ends in consonant but FEMININE</li>
+  <li><strong>путь</strong> (path) - ends in ь but FEMININE (very archaic)</li>
+  <li><strong>тато</strong> (dad), <strong>дядько</strong> (uncle) - end in -о but MASCULINE (natural gender)</li>
+  </ul>
+  <p>These exceptions are rare! For 95% of nouns, the ending tells you the gender.</p>
+</blockquote></div></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('match')">Start →</button></div>
     </section>
     <section id="match" class="section"><div class="card"><h3>Endings to Genders</h3>
       <div class="score-display"><span class="score"><span id="match-score">0</span>/6</span></div>
       <div class="match-container" id="match-container"><svg class="match-lines" id="match-lines"></svg>
         <div class="match-column" id="match-left"><div class="match-item" data-pair="0">Consonant ending (т, н, к...)</div><div class="match-item" data-pair="1">-а ending</div><div class="match-item" data-pair="2">-я ending (general)</div><div class="match-item" data-pair="3">-о ending</div><div class="match-item" data-pair="4">-е ending</div><div class="match-item" data-pair="5">-ь after ч/ш/щ</div></div>
-        <div class="match-column" id="match-right"><div class="match-item" data-pair="1">Feminine (жіночий)</div><div class="match-item" data-pair="3">Neuter (середній)</div><div class="match-item" data-pair="3">Neuter (середній)</div><div class="match-item" data-pair="0">Masculine (чоловічий)</div><div class="match-item" data-pair="1">Feminine (жіночий)</div><div class="match-item" data-pair="1">Feminine (жіночий)</div></div>
+        <div class="match-column" id="match-right"><div class="match-item" data-pair="3">Neuter (середній)</div><div class="match-item" data-pair="1">Feminine (жіночий)</div><div class="match-item" data-pair="1">Feminine (жіночий)</div><div class="match-item" data-pair="1">Feminine (жіночий)</div><div class="match-item" data-pair="3">Neuter (середній)</div><div class="match-item" data-pair="0">Masculine (чоловічий)</div></div>
       </div>
       <div class="completion-message" id="match-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetMatch()">Reset</button><button class="btn btn-primary" onclick="showSection('quiz')">Next →</button></div>

@@ -28,7 +28,17 @@
     .card h3 { color: var(--primary); margin-bottom: 1rem; }
     .canvas-note { background: #fffbeb; border-left: 4px solid var(--warning); padding: 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
     .canvas-note h4 { color: var(--warning); margin-bottom: 0.5rem; }
-    .canvas-note pre { white-space: pre-wrap; font-family: inherit; }
+    .md-content { line-height: 1.7; }
+    .md-content p { margin: 0.75rem 0; }
+    .md-content ul, .md-content ol { margin: 0.75rem 0; padding-left: 1.5rem; }
+    .md-content li { margin: 0.25rem 0; }
+    .md-content strong { color: var(--primary); }
+    .md-content blockquote { background: #e8f4fd; border-left: 4px solid var(--primary); padding: 0.75rem 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+    .md-content blockquote p { margin: 0.25rem 0; }
+    .md-content table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+    .md-content th, .md-content td { border: 1px solid var(--border); padding: 0.5rem 0.75rem; text-align: left; }
+    .md-content th { background: #f5f5f5; font-weight: 600; }
+    .md-content code { background: #f0f0f0; padding: 0.125rem 0.375rem; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
     .letter-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0; }
     .letter-group { border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; }
     .letter-group.true-friends { border-color: var(--success); } .letter-group.true-friends .letters { color: var(--success); }
@@ -108,149 +118,370 @@
         <p style="color:var(--text-muted)">Finding Your Way</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Lost in Kyiv?</h4><pre>You've landed in Kyiv. You need to find your hotel, a café, the metro... How do you ask for directions?
-
-Key phrases you'll learn:
-- **Де...?** - Where is...?
-- **Як дійти до...?** - How do I get to...?
-- **Йдіть прямо!** - Go straight!
-
-> 💡 **Did You Know?**
->
-> Ukrainian cities have excellent public transport! Kyiv's metro is one of the deepest in the world (some stations are 100m underground - built to double as bomb shelters). The words "метро" and "станція" will be among your most useful vocabulary!</pre></div><div class="canvas-note"><h4>### Asking "Where?"</h4><pre>**Basic patterns:**
-- Де + noun? → Де метро? (Where is the metro?)
-- Де тут + noun? → Де тут банк? (Where is a bank here?)
-- Де найближча/найближчий + noun? → Де найближча аптека? (Where is the nearest pharmacy?)
-
-**Polite patterns:**
-- Скажіть, будь ласка, де...? (Tell me please, where is...?)
-- Вибачте, де...? (Excuse me, where is...?)
-- Ви не підкажете, де...? (Could you tell me where...?)
-
-> ⚡ **Pro Tip: Politeness Matters**
->
-> Always start with:
-> - **Вибачте** (Excuse me) - literally "forgive me"
-> - **Скажіть, будь ласка** (Tell me, please)
->
-> Ukrainians appreciate polite beginnings to requests!</pre></div><div class="canvas-note"><h4>Direction Words</h4><pre>| Ukrainian | Transliteration | English |
-|-----------|-----------------|---------|
-| прямо | pryamo | straight |
-| праворуч | pravoruch | to the right |
-| ліворуч | livoruch | to the left |
-| назад | nazad | back |
-| тут | tut | here |
-| там | tam | there |
-| далеко | daleko | far |
-| близько | blyzko | near, close |
-| поруч | poruch | next to, nearby |
-
-> 📜 **History Bite: Право- and Ліво-**
->
-> "Праворуч" (right) contains "право" (right/law), connected to "правда" (truth) and "правий" (correct). In many cultures, right = correct/good. "Ліворуч" (left) contains "ліво" - connected to concepts of "other" or "different." These associations are thousands of years old across Indo-European languages!</pre></div><div class="canvas-note"><h4>Prepositions for Location</h4><pre>| Ukrainian | English | Example |
-|-----------|---------|---------|
-| до | to, toward | Йдіть до станції. (Go to the station.) |
-| біля | near, by | Банк біля метро. (Bank is near the metro.) |
-| навпроти | opposite | Аптека навпроти готелю. (Pharmacy is opposite the hotel.) |
-| за | behind | За рогом. (Around the corner. / Behind the corner.) |
-| перед | in front of | Перед входом. (In front of the entrance.) |
-| між | between | Між банком і аптекою. (Between the bank and pharmacy.) |
-
-> 🔗 **Language Link: До + Genitive**
->
-> The preposition "до" (to) takes the genitive case:
-> - до станці**ї** (to the station) - станція → станції
-> - до готел**ю** (to the hotel) - готель → готелю
->
-> You'll learn genitive fully in Module 16, but for now, notice the endings change!</pre></div><div class="canvas-note"><h4>Giving Directions (Imperatives)</h4><pre>| Infinitive | Imperative (ви) | English |
-|------------|-----------------|---------|
-| йти | йдіть | go (on foot) |
-| іти | ідіть | go |
-| повернути | поверніть | turn |
-| перейти | перейдіть | cross |
-| пройти | пройдіть | pass, go through |
-
-**Common direction sentences:**
-- Йдіть прямо. (Go straight.)
-- Поверніть праворуч. (Turn right.)
-- Поверніть ліворуч. (Turn left.)
-- Перейдіть вулицю. (Cross the street.)
-- Пройдіть два квартали. (Go two blocks.)
-
-> 🎯 **Fun Fact: Metro Station Names**
->
-> Kyiv metro stations often have meaningful names:
-> - **Майдан Незалежності** - Independence Square
-> - **Золоті ворота** - Golden Gate (medieval gate)
-> - **Хрещатик** - main street name (from хрещення = baptism)
-> - **Університет** - University
->
-> Learning station names teaches you history and vocabulary!</pre></div><div class="canvas-note"><h4>City Places Vocabulary</h4><pre>| Ukrainian | Transliteration | English |
-|-----------|-----------------|---------|
-| метро | metro | metro, subway |
-| станція | stantsiya | station |
-| зупинка | zupynka | stop (bus/tram) |
-| вулиця | vulytsya | street |
-| площа | ploshcha | square |
-| квартал | kvartal | block |
-| ріг | rih | corner |
-| перехрестя | perekhrestya | intersection |
-| вхід | vkhid | entrance |
-| вихід | vykhid | exit |
-
-> 🎭 **Culture Corner: Street Names**
->
-> Ukrainian streets are named after:
-> - **Famous people**: вулиця Шевченка, вулиця Лесі Українки
-> - **Historical events**: вулиця Незалежності (Independence Street)
-> - **Cities**: Київська вулиця, Львівська вулиця
->
-> Many streets were renamed after 2014 and 2022, replacing Soviet-era names with Ukrainian ones!</pre></div><div class="canvas-note"><h4>Essential Services</h4><pre>| Ukrainian | Transliteration | English |
-|-----------|-----------------|---------|
-| банк | bank | bank |
-| банкомат | bankomat | ATM |
-| аптека | apteka | pharmacy |
-| лікарня | likarnya | hospital |
-| поліція | politsiya | police |
-| пошта | poshta | post office |
-| супермаркет | supermarket | supermarket |
-| ринок | rynok | market |
-| готель | hotel | hotel |
-| туалет | tualet | toilet, restroom |
-
-> 🌍 **Real World: Finding a Pharmacy**
->
-> Pharmacies (аптеки) in Ukraine are everywhere and marked with a green cross. Pharmacists can recommend medications - you don't always need a doctor for minor issues.
->
-> - Де найближча аптека? (Where is the nearest pharmacy?)
-> - У мене болить голова. (I have a headache.)
-> - Дайте, будь ласка, знеболююче. (Give me a painkiller, please.)</pre></div><div class="canvas-note"><h4>### Direction Comprehension</h4><pre>Match the instruction to the action:
-1. Йдіть прямо. → Go straight.
-2. Поверніть праворуч. → Turn right.
-3. Перейдіть вулицю. → Cross the street.
-4. Це за рогом. → It's around the corner.</pre></div><div class="canvas-note"><h4>Complete the Dialogue</h4><pre>A: Вибачте, де найближче метро?
-B: Йдіть ___ (straight), потім поверніть ___ (left). Метро ___ (there).
-
-Answers: прямо, ліворуч, там</pre></div><div class="canvas-note"><h4>Ask for These Places</h4><pre>Form questions:
-1. Bank → Де банк? / Вибачте, де найближчий банк?
-2. Metro → Де метро? / Скажіть, будь ласка, де метро?
-3. Pharmacy → Де аптека? / Де найближча аптека?</pre></div><div class="canvas-note"><h4>### Role Play: Tourist</h4><pre>Practice asking for directions to:
-1. The metro station
-2. A pharmacy
-3. Your hotel
-4. A restaurant
-
-Example:
-- Вибачте, скажіть, будь ласка, як дійти до метро?
-- Йдіть прямо, потім поверніть праворуч. Метро біля банку.
-- Дякую!</pre></div></div>
+      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Lost in Kyiv?</h4><div class="md-content"><p>You've landed in Kyiv. You need to find your hotel, a café, the metro… How do you ask for directions?</p>
+<p>Key phrases you'll learn:</p>
+<ul>
+<li><strong>Де…?</strong> - Where is…?</li>
+<li><strong>Як дійти до…?</strong> - How do I get to…?</li>
+<li><strong>Йдіть прямо!</strong> - Go straight!</li>
+</ul>
+<blockquote>
+  <p>💡 <strong>Did You Know?</strong></p>
+  <p>Ukrainian cities have excellent public transport! Kyiv's metro is one of the deepest in the world (some stations are 100m underground - built to double as bomb shelters). The words "метро" and "станція" will be among your most useful vocabulary!</p>
+</blockquote></div></div><div class="canvas-note"><h4>### Asking "Where?"</h4><div class="md-content"><p><strong>Basic patterns:</strong></p>
+<ul>
+<li>Де + noun? → Де метро? (Where is the metro?)</li>
+<li>Де тут + noun? → Де тут банк? (Where is a bank here?)</li>
+<li>Де найближча/найближчий + noun? → Де найближча аптека? (Where is the nearest pharmacy?)</li>
+</ul>
+<p><strong>Polite patterns:</strong></p>
+<ul>
+<li>Скажіть, будь ласка, де…? (Tell me please, where is…?)</li>
+<li>Вибачте, де…? (Excuse me, where is…?)</li>
+<li>Ви не підкажете, де…? (Could you tell me where…?)</li>
+</ul>
+<blockquote>
+  <p>⚡ <strong>Pro Tip: Politeness Matters</strong></p>
+  <p>Always start with:</p>
+  <ul>
+  <li><strong>Вибачте</strong> (Excuse me) - literally "forgive me"</li>
+  <li><strong>Скажіть, будь ласка</strong> (Tell me, please)</li>
+  </ul>
+  <p>Ukrainians appreciate polite beginnings to requests!</p>
+</blockquote></div></div><div class="canvas-note"><h4>Direction Words</h4><div class="md-content"><table>
+<thead>
+<tr>
+<th>Ukrainian</th>
+<th>Transliteration</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>прямо</td>
+<td>pryamo</td>
+<td>straight</td>
+</tr>
+<tr>
+<td>праворуч</td>
+<td>pravoruch</td>
+<td>to the right</td>
+</tr>
+<tr>
+<td>ліворуч</td>
+<td>livoruch</td>
+<td>to the left</td>
+</tr>
+<tr>
+<td>назад</td>
+<td>nazad</td>
+<td>back</td>
+</tr>
+<tr>
+<td>тут</td>
+<td>tut</td>
+<td>here</td>
+</tr>
+<tr>
+<td>там</td>
+<td>tam</td>
+<td>there</td>
+</tr>
+<tr>
+<td>далеко</td>
+<td>daleko</td>
+<td>far</td>
+</tr>
+<tr>
+<td>близько</td>
+<td>blyzko</td>
+<td>near, close</td>
+</tr>
+<tr>
+<td>поруч</td>
+<td>poruch</td>
+<td>next to, nearby</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p>📜 <strong>History Bite: Право- and Ліво-</strong></p>
+  <p>"Праворуч" (right) contains "право" (right/law), connected to "правда" (truth) and "правий" (correct). In many cultures, right = correct/good. "Ліворуч" (left) contains "ліво" - connected to concepts of "other" or "different." These associations are thousands of years old across Indo-European languages!</p>
+</blockquote></div></div><div class="canvas-note"><h4>Prepositions for Location</h4><div class="md-content"><table>
+<thead>
+<tr>
+<th>Ukrainian</th>
+<th>English</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>до</td>
+<td>to, toward</td>
+<td>Йдіть до станції. (Go to the station.)</td>
+</tr>
+<tr>
+<td>біля</td>
+<td>near, by</td>
+<td>Банк біля метро. (Bank is near the metro.)</td>
+</tr>
+<tr>
+<td>навпроти</td>
+<td>opposite</td>
+<td>Аптека навпроти готелю. (Pharmacy is opposite the hotel.)</td>
+</tr>
+<tr>
+<td>за</td>
+<td>behind</td>
+<td>За рогом. (Around the corner. / Behind the corner.)</td>
+</tr>
+<tr>
+<td>перед</td>
+<td>in front of</td>
+<td>Перед входом. (In front of the entrance.)</td>
+</tr>
+<tr>
+<td>між</td>
+<td>between</td>
+<td>Між банком і аптекою. (Between the bank and pharmacy.)</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p>🔗 <strong>Language Link: До + Genitive</strong></p>
+  <p>The preposition "до" (to) takes the genitive case:</p>
+  <ul>
+  <li>до станці<strong>ї</strong> (to the station) - станція → станції</li>
+  <li>до готел<strong>ю</strong> (to the hotel) - готель → готелю</li>
+  </ul>
+  <p>You'll learn genitive fully in Module 16, but for now, notice the endings change!</p>
+</blockquote></div></div><div class="canvas-note"><h4>Giving Directions (Imperatives)</h4><div class="md-content"><table>
+<thead>
+<tr>
+<th>Infinitive</th>
+<th>Imperative (ви)</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>йти</td>
+<td>йдіть</td>
+<td>go (on foot)</td>
+</tr>
+<tr>
+<td>іти</td>
+<td>ідіть</td>
+<td>go</td>
+</tr>
+<tr>
+<td>повернути</td>
+<td>поверніть</td>
+<td>turn</td>
+</tr>
+<tr>
+<td>перейти</td>
+<td>перейдіть</td>
+<td>cross</td>
+</tr>
+<tr>
+<td>пройти</td>
+<td>пройдіть</td>
+<td>pass, go through</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Common direction sentences:</strong></p>
+<ul>
+<li>Йдіть прямо. (Go straight.)</li>
+<li>Поверніть праворуч. (Turn right.)</li>
+<li>Поверніть ліворуч. (Turn left.)</li>
+<li>Перейдіть вулицю. (Cross the street.)</li>
+<li>Пройдіть два квартали. (Go two blocks.)</li>
+</ul>
+<blockquote>
+  <p>🎯 <strong>Fun Fact: Metro Station Names</strong></p>
+  <p>Kyiv metro stations often have meaningful names:</p>
+  <ul>
+  <li><strong>Майдан Незалежності</strong> - Independence Square</li>
+  <li><strong>Золоті ворота</strong> - Golden Gate (medieval gate)</li>
+  <li><strong>Хрещатик</strong> - main street name (from хрещення = baptism)</li>
+  <li><strong>Університет</strong> - University</li>
+  </ul>
+  <p>Learning station names teaches you history and vocabulary!</p>
+</blockquote></div></div><div class="canvas-note"><h4>City Places Vocabulary</h4><div class="md-content"><table>
+<thead>
+<tr>
+<th>Ukrainian</th>
+<th>Transliteration</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>метро</td>
+<td>metro</td>
+<td>metro, subway</td>
+</tr>
+<tr>
+<td>станція</td>
+<td>stantsiya</td>
+<td>station</td>
+</tr>
+<tr>
+<td>зупинка</td>
+<td>zupynka</td>
+<td>stop (bus/tram)</td>
+</tr>
+<tr>
+<td>вулиця</td>
+<td>vulytsya</td>
+<td>street</td>
+</tr>
+<tr>
+<td>площа</td>
+<td>ploshcha</td>
+<td>square</td>
+</tr>
+<tr>
+<td>квартал</td>
+<td>kvartal</td>
+<td>block</td>
+</tr>
+<tr>
+<td>ріг</td>
+<td>rih</td>
+<td>corner</td>
+</tr>
+<tr>
+<td>перехрестя</td>
+<td>perekhrestya</td>
+<td>intersection</td>
+</tr>
+<tr>
+<td>вхід</td>
+<td>vkhid</td>
+<td>entrance</td>
+</tr>
+<tr>
+<td>вихід</td>
+<td>vykhid</td>
+<td>exit</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p>🎭 <strong>Culture Corner: Street Names</strong></p>
+  <p>Ukrainian streets are named after:</p>
+  <ul>
+  <li><strong>Famous people</strong>: вулиця Шевченка, вулиця Лесі Українки</li>
+  <li><strong>Historical events</strong>: вулиця Незалежності (Independence Street)</li>
+  <li><strong>Cities</strong>: Київська вулиця, Львівська вулиця</li>
+  </ul>
+  <p>Many streets were renamed after 2014 and 2022, replacing Soviet-era names with Ukrainian ones!</p>
+</blockquote></div></div><div class="canvas-note"><h4>Essential Services</h4><div class="md-content"><table>
+<thead>
+<tr>
+<th>Ukrainian</th>
+<th>Transliteration</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>банк</td>
+<td>bank</td>
+<td>bank</td>
+</tr>
+<tr>
+<td>банкомат</td>
+<td>bankomat</td>
+<td>ATM</td>
+</tr>
+<tr>
+<td>аптека</td>
+<td>apteka</td>
+<td>pharmacy</td>
+</tr>
+<tr>
+<td>лікарня</td>
+<td>likarnya</td>
+<td>hospital</td>
+</tr>
+<tr>
+<td>поліція</td>
+<td>politsiya</td>
+<td>police</td>
+</tr>
+<tr>
+<td>пошта</td>
+<td>poshta</td>
+<td>post office</td>
+</tr>
+<tr>
+<td>супермаркет</td>
+<td>supermarket</td>
+<td>supermarket</td>
+</tr>
+<tr>
+<td>ринок</td>
+<td>rynok</td>
+<td>market</td>
+</tr>
+<tr>
+<td>готель</td>
+<td>hotel</td>
+<td>hotel</td>
+</tr>
+<tr>
+<td>туалет</td>
+<td>tualet</td>
+<td>toilet, restroom</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p>🌍 <strong>Real World: Finding a Pharmacy</strong></p>
+  <p>Pharmacies (аптеки) in Ukraine are everywhere and marked with a green cross. Pharmacists can recommend medications - you don't always need a doctor for minor issues.</p>
+  <ul>
+  <li>Де найближча аптека? (Where is the nearest pharmacy?)</li>
+  <li>У мене болить голова. (I have a headache.)</li>
+  <li>Дайте, будь ласка, знеболююче. (Give me a painkiller, please.)</li>
+  </ul>
+</blockquote></div></div><div class="canvas-note"><h4>### Direction Comprehension</h4><div class="md-content"><p>Match the instruction to the action:</p>
+<ol>
+<li>Йдіть прямо. → Go straight.</li>
+<li>Поверніть праворуч. → Turn right.</li>
+<li>Перейдіть вулицю. → Cross the street.</li>
+<li>Це за рогом. → It's around the corner.</li>
+</ol></div></div><div class="canvas-note"><h4>Complete the Dialogue</h4><div class="md-content"><p>A: Вибачте, де найближче метро?<br />
+B: Йдіть ___ (straight), потім поверніть ___ (left). Метро ___ (there).</p>
+<p>Answers: прямо, ліворуч, там</p></div></div><div class="canvas-note"><h4>Ask for These Places</h4><div class="md-content"><p>Form questions:</p>
+<ol>
+<li>Bank → Де банк? / Вибачте, де найближчий банк?</li>
+<li>Metro → Де метро? / Скажіть, будь ласка, де метро?</li>
+<li>Pharmacy → Де аптека? / Де найближча аптека?</li>
+</ol></div></div><div class="canvas-note"><h4>### Role Play: Tourist</h4><div class="md-content"><p>Practice asking for directions to:</p>
+<ol>
+<li>The metro station</li>
+<li>A pharmacy</li>
+<li>Your hotel</li>
+<li>A restaurant</li>
+</ol>
+<p>Example:</p>
+<ul>
+<li>Вибачте, скажіть, будь ласка, як дійти до метро?</li>
+<li>Йдіть прямо, потім поверніть праворуч. Метро біля банку.</li>
+<li>Дякую!</li>
+</ul></div></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('match')">Start →</button></div>
     </section>
     <section id="match" class="section"><div class="card"><h3>Direction Words</h3>
       <div class="score-display"><span class="score"><span id="match-score">0</span>/8</span></div>
       <div class="match-container" id="match-container"><svg class="match-lines" id="match-lines"></svg>
         <div class="match-column" id="match-left"><div class="match-item" data-pair="0">прямо</div><div class="match-item" data-pair="1">праворуч</div><div class="match-item" data-pair="2">ліворуч</div><div class="match-item" data-pair="3">назад</div><div class="match-item" data-pair="4">близько</div><div class="match-item" data-pair="5">далеко</div><div class="match-item" data-pair="6">біля</div><div class="match-item" data-pair="7">навпроти</div></div>
-        <div class="match-column" id="match-right"><div class="match-item" data-pair="7">opposite</div><div class="match-item" data-pair="2">left</div><div class="match-item" data-pair="1">right</div><div class="match-item" data-pair="3">back</div><div class="match-item" data-pair="0">straight</div><div class="match-item" data-pair="4">near</div><div class="match-item" data-pair="6">next to</div><div class="match-item" data-pair="5">far</div></div>
+        <div class="match-column" id="match-right"><div class="match-item" data-pair="6">next to</div><div class="match-item" data-pair="0">straight</div><div class="match-item" data-pair="1">right</div><div class="match-item" data-pair="5">far</div><div class="match-item" data-pair="2">left</div><div class="match-item" data-pair="3">back</div><div class="match-item" data-pair="4">near</div><div class="match-item" data-pair="7">opposite</div></div>
       </div>
       <div class="completion-message" id="match-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetMatch()">Reset</button><button class="btn btn-primary" onclick="showSection('quiz')">Next →</button></div>

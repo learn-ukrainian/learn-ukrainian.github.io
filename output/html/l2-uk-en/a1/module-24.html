@@ -28,7 +28,17 @@
     .card h3 { color: var(--primary); margin-bottom: 1rem; }
     .canvas-note { background: #fffbeb; border-left: 4px solid var(--warning); padding: 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
     .canvas-note h4 { color: var(--warning); margin-bottom: 0.5rem; }
-    .canvas-note pre { white-space: pre-wrap; font-family: inherit; }
+    .md-content { line-height: 1.7; }
+    .md-content p { margin: 0.75rem 0; }
+    .md-content ul, .md-content ol { margin: 0.75rem 0; padding-left: 1.5rem; }
+    .md-content li { margin: 0.25rem 0; }
+    .md-content strong { color: var(--primary); }
+    .md-content blockquote { background: #e8f4fd; border-left: 4px solid var(--primary); padding: 0.75rem 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+    .md-content blockquote p { margin: 0.25rem 0; }
+    .md-content table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+    .md-content th, .md-content td { border: 1px solid var(--border); padding: 0.5rem 0.75rem; text-align: left; }
+    .md-content th { background: #f5f5f5; font-weight: 600; }
+    .md-content code { background: #f0f0f0; padding: 0.125rem 0.375rem; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
     .letter-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0; }
     .letter-group { border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; }
     .letter-group.true-friends { border-color: var(--success); } .letter-group.true-friends .letters { color: var(--success); }
@@ -108,137 +118,300 @@
         <p style="color:var(--text-muted)">Can, Must, Want</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### What Can You Do?</h4><pre>Modal verbs express ability, necessity, and desire. They're essential for everyday communication:
-
-- **Я можу говорити українською.** (I can speak Ukrainian.)
-- **Я мушу працювати.** (I must work.)
-- **Я хочу їсти.** (I want to eat.)
-
-All modals work the same way: **modal verb + infinitive**
-
-> 💡 **Did You Know?**
->
-> Ukrainian has multiple ways to say "must" - with subtle differences:
-> - **Мусити** - personal obligation (I must)
-> - **Повинен** - duty/should (I should)
-> - **Треба** - impersonal necessity (it's necessary)
->
-> English just has "must" for all of these!</pre></div><div class="canvas-note"><h4>### Могти (Can, To Be Able)</h4><pre>| Person | Form | Example |
-|--------|------|---------|
-| я | можу | Я можу допомогти. |
-| ти | можеш | Ти можеш прийти? |
-| він/вона | може | Він може зробити це. |
-| ми | можемо | Ми можемо зустрітися. |
-| ви | можете | Ви можете почекати? |
-| вони | можуть | Вони можуть приїхати. |
-
-**Examples:**
-- Я **можу** говорити українською. (I can speak Ukrainian.)
-- Ти **можеш** мені допомогти? (Can you help me?)
-- Вона **не може** прийти завтра. (She can't come tomorrow.)
-
-> ⚡ **Pro Tip: Past & Future of Могти**
->
-> **Past:** міг/могла/могло/могли + infinitive
-> - Я не міг зрозуміти. (I couldn't understand.)
->
-> **Future:** зможу/зможеш... (perfective)
-> - Я зможу допомогти завтра. (I'll be able to help tomorrow.)</pre></div><div class="canvas-note"><h4>Мусити (Must, Have To)</h4><pre>| Person | Form | Example |
-|--------|------|---------|
-| я | мушу | Я мушу йти. |
-| ти | мусиш | Ти мусиш вивчити це. |
-| він/вона | мусить | Вона мусить працювати. |
-| ми | мусимо | Ми мусимо поспішати. |
-| ви | мусите | Ви мусите бути обережні. |
-| вони | мусять | Вони мусять платити. |
-
-**Examples:**
-- Я **мушу** йти. (I must go.)
-- Він **мусить** закінчити роботу. (He must finish work.)
-- Ми **мусимо** поспішати! (We must hurry!)
-
-> 📜 **History Bite: Мусити Origins**
->
-> "Мусити" came to Ukrainian through Polish from German "müssen." It entered during centuries of cultural contact. The native Slavic way to express necessity uses "повинен" or "треба." You'll hear both in modern Ukrainian!</pre></div><div class="canvas-note"><h4>Повинен/Повинна (Should, Must)</h4><pre>This is an adjective, not a verb - it changes for gender!
-
-| Form | Used with | Example |
-|------|-----------|---------|
-| повинен | він, я(m), ти(m) | Він повинен допомогти. |
-| повинна | вона, я(f), ти(f) | Вона повинна прийти. |
-| повинне | воно | Воно повинне працювати. |
-| повинні | ми, ви, вони | Ми повинні вчитися. |
-
-**Examples:**
-- Я **повинен** (m) / **повинна** (f) працювати. (I should work.)
-- Ти **повинен** бути чесним. (You should be honest.)
-- Вони **повинні** знати правду. (They should know the truth.)
-
-> 🔗 **Language Link: Мусити vs Повинен**
->
-> Both mean "must" but with nuance:
-> - **Мусити** = have to (external pressure)
-> - **Повинен** = ought to, should (duty, moral obligation)
->
-> "Я мушу їсти" = I have to eat (hungry!)
-> "Я повинен їсти здорову їжу" = I should eat healthy food (it's the right thing)</pre></div><div class="canvas-note"><h4>Треба / Потрібно (It's Necessary)</h4><pre>These are impersonal - no subject needed:
-
-| Expression | Example | Meaning |
-|------------|---------|---------|
-| треба | Треба працювати. | One must work. / It's necessary to work. |
-| потрібно | Потрібно вчитися. | It's necessary to study. |
-| не треба | Не треба хвилюватися. | Don't worry. / No need to worry. |
-
-**With dative for "person who needs to":**
-- **Мені** треба йти. (I need to go.)
-- **Тобі** потрібно відпочити. (You need to rest.)
-- **Нам** не треба поспішати. (We don't need to hurry.)
-
-> 🎯 **Fun Fact: Не треба!**
->
-> "Не треба" is a common way to refuse politely or tell someone not to bother:
-> - Можна допомогти? - Ні, не треба, дякую!
-> (Can I help? - No, no need, thanks!)
->
-> It's gentler than saying "ні"!</pre></div><div class="canvas-note"><h4>Хотіти (To Want)</h4><pre>Review from Module 08:
-
-| Person | Form | Example |
-|--------|------|---------|
-| я | хочу | Я хочу їсти. |
-| ти | хочеш | Ти хочеш каву? |
-| він/вона | хоче | Вона хоче спати. |
-| ми | хочемо | Ми хочемо поїхати. |
-| ви | хочете | Ви хочете замовити? |
-| вони | хочуть | Вони хочуть допомогти. |
-
-**Polite form: Я хотів би / Я хотіла б (I would like)**
-- Я хотів би каву. (I would like coffee. - male)
-- Я хотіла б замовити. (I would like to order. - female)
-
-> 🌍 **Real World: Polite Requests**
->
-> - **Чи можете ви допомогти?** - Can you help?
-> - **Чи можна тут сісти?** - May I sit here?
-> - **Я хотів би запитати.** - I'd like to ask.
-> - **Вам потрібна допомога?** - Do you need help?</pre></div><div class="canvas-note"><h4>### Form Sentences with Modals</h4><pre>1. I can help. → Я можу допомогти.
-2. She must work. → Вона мусить працювати.
-3. We should study. → Ми повинні вчитися.
-4. They want to eat. → Вони хочуть їсти.
-5. I need to go. → Мені треба йти.</pre></div><div class="canvas-note"><h4>Negative Forms</h4><pre>1. I can't understand. → Я не можу зрозуміти.
-2. You don't have to hurry. → Тобі не треба поспішати.
-3. She doesn't want to wait. → Вона не хоче чекати.</pre></div><div class="canvas-note"><h4>Questions with Modals</h4><pre>1. Can you help? → Ти можеш допомогти?
-2. Do you want coffee? → Ти хочеш каву?
-3. Do I have to pay now? → Мені треба платити зараз?</pre></div><div class="canvas-note"><h4>### Talk About Your Abilities</h4><pre>Answer:
-1. Що ви можете робити добре?
-2. Якими мовами ви можете говорити?
-3. Що ви мусите робити щодня?
-4. Що ви хочете вивчити?</pre></div></div>
+      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### What Can You Do?</h4><div class="md-content"><p>Modal verbs express ability, necessity, and desire. They're essential for everyday communication:</p>
+<ul>
+<li><strong>Я можу говорити українською.</strong> (I can speak Ukrainian.)</li>
+<li><strong>Я мушу працювати.</strong> (I must work.)</li>
+<li><strong>Я хочу їсти.</strong> (I want to eat.)</li>
+</ul>
+<p>All modals work the same way: <strong>modal verb + infinitive</strong></p>
+<blockquote>
+  <p>💡 <strong>Did You Know?</strong></p>
+  <p>Ukrainian has multiple ways to say "must" - with subtle differences:</p>
+  <ul>
+  <li><strong>Мусити</strong> - personal obligation (I must)</li>
+  <li><strong>Повинен</strong> - duty/should (I should)</li>
+  <li><strong>Треба</strong> - impersonal necessity (it's necessary)</li>
+  </ul>
+  <p>English just has "must" for all of these!</p>
+</blockquote></div></div><div class="canvas-note"><h4>### Могти (Can, To Be Able)</h4><div class="md-content"><table>
+<thead>
+<tr>
+<th>Person</th>
+<th>Form</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>я</td>
+<td>можу</td>
+<td>Я можу допомогти.</td>
+</tr>
+<tr>
+<td>ти</td>
+<td>можеш</td>
+<td>Ти можеш прийти?</td>
+</tr>
+<tr>
+<td>він/вона</td>
+<td>може</td>
+<td>Він може зробити це.</td>
+</tr>
+<tr>
+<td>ми</td>
+<td>можемо</td>
+<td>Ми можемо зустрітися.</td>
+</tr>
+<tr>
+<td>ви</td>
+<td>можете</td>
+<td>Ви можете почекати?</td>
+</tr>
+<tr>
+<td>вони</td>
+<td>можуть</td>
+<td>Вони можуть приїхати.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples:</strong></p>
+<ul>
+<li>Я <strong>можу</strong> говорити українською. (I can speak Ukrainian.)</li>
+<li>Ти <strong>можеш</strong> мені допомогти? (Can you help me?)</li>
+<li>Вона <strong>не може</strong> прийти завтра. (She can't come tomorrow.)</li>
+</ul>
+<blockquote>
+  <p>⚡ <strong>Pro Tip: Past & Future of Могти</strong></p>
+  <p><strong>Past:</strong> міг/могла/могло/могли + infinitive</p>
+  <ul>
+  <li>Я не міг зрозуміти. (I couldn't understand.)</li>
+  </ul>
+  <p><strong>Future:</strong> зможу/зможеш… (perfective)</p>
+  <ul>
+  <li>Я зможу допомогти завтра. (I'll be able to help tomorrow.)</li>
+  </ul>
+</blockquote></div></div><div class="canvas-note"><h4>Мусити (Must, Have To)</h4><div class="md-content"><table>
+<thead>
+<tr>
+<th>Person</th>
+<th>Form</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>я</td>
+<td>мушу</td>
+<td>Я мушу йти.</td>
+</tr>
+<tr>
+<td>ти</td>
+<td>мусиш</td>
+<td>Ти мусиш вивчити це.</td>
+</tr>
+<tr>
+<td>він/вона</td>
+<td>мусить</td>
+<td>Вона мусить працювати.</td>
+</tr>
+<tr>
+<td>ми</td>
+<td>мусимо</td>
+<td>Ми мусимо поспішати.</td>
+</tr>
+<tr>
+<td>ви</td>
+<td>мусите</td>
+<td>Ви мусите бути обережні.</td>
+</tr>
+<tr>
+<td>вони</td>
+<td>мусять</td>
+<td>Вони мусять платити.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples:</strong></p>
+<ul>
+<li>Я <strong>мушу</strong> йти. (I must go.)</li>
+<li>Він <strong>мусить</strong> закінчити роботу. (He must finish work.)</li>
+<li>Ми <strong>мусимо</strong> поспішати! (We must hurry!)</li>
+</ul>
+<blockquote>
+  <p>📜 <strong>History Bite: Мусити Origins</strong></p>
+  <p>"Мусити" came to Ukrainian through Polish from German "müssen." It entered during centuries of cultural contact. The native Slavic way to express necessity uses "повинен" or "треба." You'll hear both in modern Ukrainian!</p>
+</blockquote></div></div><div class="canvas-note"><h4>Повинен/Повинна (Should, Must)</h4><div class="md-content"><p>This is an adjective, not a verb - it changes for gender!</p>
+<table>
+<thead>
+<tr>
+<th>Form</th>
+<th>Used with</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>повинен</td>
+<td>він, я(m), ти(m)</td>
+<td>Він повинен допомогти.</td>
+</tr>
+<tr>
+<td>повинна</td>
+<td>вона, я(f), ти(f)</td>
+<td>Вона повинна прийти.</td>
+</tr>
+<tr>
+<td>повинне</td>
+<td>воно</td>
+<td>Воно повинне працювати.</td>
+</tr>
+<tr>
+<td>повинні</td>
+<td>ми, ви, вони</td>
+<td>Ми повинні вчитися.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples:</strong></p>
+<ul>
+<li>Я <strong>повинен</strong> (m) / <strong>повинна</strong> (f) працювати. (I should work.)</li>
+<li>Ти <strong>повинен</strong> бути чесним. (You should be honest.)</li>
+<li>Вони <strong>повинні</strong> знати правду. (They should know the truth.)</li>
+</ul>
+<blockquote>
+  <p>🔗 <strong>Language Link: Мусити vs Повинен</strong></p>
+  <p>Both mean "must" but with nuance:</p>
+  <ul>
+  <li><strong>Мусити</strong> = have to (external pressure)</li>
+  <li><strong>Повинен</strong> = ought to, should (duty, moral obligation)</li>
+  </ul>
+  <p>"Я мушу їсти" = I have to eat (hungry!)<br />
+  "Я повинен їсти здорову їжу" = I should eat healthy food (it's the right thing)</p>
+</blockquote></div></div><div class="canvas-note"><h4>Треба / Потрібно (It's Necessary)</h4><div class="md-content"><p>These are impersonal - no subject needed:</p>
+<table>
+<thead>
+<tr>
+<th>Expression</th>
+<th>Example</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>треба</td>
+<td>Треба працювати.</td>
+<td>One must work. / It's necessary to work.</td>
+</tr>
+<tr>
+<td>потрібно</td>
+<td>Потрібно вчитися.</td>
+<td>It's necessary to study.</td>
+</tr>
+<tr>
+<td>не треба</td>
+<td>Не треба хвилюватися.</td>
+<td>Don't worry. / No need to worry.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>With dative for "person who needs to":</strong></p>
+<ul>
+<li><strong>Мені</strong> треба йти. (I need to go.)</li>
+<li><strong>Тобі</strong> потрібно відпочити. (You need to rest.)</li>
+<li><strong>Нам</strong> не треба поспішати. (We don't need to hurry.)</li>
+</ul>
+<blockquote>
+  <p>🎯 <strong>Fun Fact: Не треба!</strong></p>
+  <p>"Не треба" is a common way to refuse politely or tell someone not to bother:</p>
+  <ul>
+  <li>Можна допомогти? - Ні, не треба, дякую!<br />
+  (Can I help? - No, no need, thanks!)</li>
+  </ul>
+  <p>It's gentler than saying "ні"!</p>
+</blockquote></div></div><div class="canvas-note"><h4>Хотіти (To Want)</h4><div class="md-content"><p>Review from Module 08:</p>
+<table>
+<thead>
+<tr>
+<th>Person</th>
+<th>Form</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>я</td>
+<td>хочу</td>
+<td>Я хочу їсти.</td>
+</tr>
+<tr>
+<td>ти</td>
+<td>хочеш</td>
+<td>Ти хочеш каву?</td>
+</tr>
+<tr>
+<td>він/вона</td>
+<td>хоче</td>
+<td>Вона хоче спати.</td>
+</tr>
+<tr>
+<td>ми</td>
+<td>хочемо</td>
+<td>Ми хочемо поїхати.</td>
+</tr>
+<tr>
+<td>ви</td>
+<td>хочете</td>
+<td>Ви хочете замовити?</td>
+</tr>
+<tr>
+<td>вони</td>
+<td>хочуть</td>
+<td>Вони хочуть допомогти.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Polite form: Я хотів би / Я хотіла б (I would like)</strong></p>
+<ul>
+<li>Я хотів би каву. (I would like coffee. - male)</li>
+<li>Я хотіла б замовити. (I would like to order. - female)</li>
+</ul>
+<blockquote>
+  <p>🌍 <strong>Real World: Polite Requests</strong></p>
+  <ul>
+  <li><strong>Чи можете ви допомогти?</strong> - Can you help?</li>
+  <li><strong>Чи можна тут сісти?</strong> - May I sit here?</li>
+  <li><strong>Я хотів би запитати.</strong> - I'd like to ask.</li>
+  <li><strong>Вам потрібна допомога?</strong> - Do you need help?</li>
+  </ul>
+</blockquote></div></div><div class="canvas-note"><h4>### Form Sentences with Modals</h4><div class="md-content"><ol>
+<li>I can help. → Я можу допомогти.</li>
+<li>She must work. → Вона мусить працювати.</li>
+<li>We should study. → Ми повинні вчитися.</li>
+<li>They want to eat. → Вони хочуть їсти.</li>
+<li>I need to go. → Мені треба йти.</li>
+</ol></div></div><div class="canvas-note"><h4>Negative Forms</h4><div class="md-content"><ol>
+<li>I can't understand. → Я не можу зрозуміти.</li>
+<li>You don't have to hurry. → Тобі не треба поспішати.</li>
+<li>She doesn't want to wait. → Вона не хоче чекати.</li>
+</ol></div></div><div class="canvas-note"><h4>Questions with Modals</h4><div class="md-content"><ol>
+<li>Can you help? → Ти можеш допомогти?</li>
+<li>Do you want coffee? → Ти хочеш каву?</li>
+<li>Do I have to pay now? → Мені треба платити зараз?</li>
+</ol></div></div><div class="canvas-note"><h4>### Talk About Your Abilities</h4><div class="md-content"><p>Answer:</p>
+<ol>
+<li>Що ви можете робити добре?</li>
+<li>Якими мовами ви можете говорити?</li>
+<li>Що ви мусите робити щодня?</li>
+<li>Що ви хочете вивчити?</li>
+</ol></div></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('match')">Start →</button></div>
     </section>
     <section id="match" class="section"><div class="card"><h3>Modal Translations</h3>
       <div class="score-display"><span class="score"><span id="match-score">0</span>/6</span></div>
       <div class="match-container" id="match-container"><svg class="match-lines" id="match-lines"></svg>
         <div class="match-column" id="match-left"><div class="match-item" data-pair="0">Я можу</div><div class="match-item" data-pair="1">Я мушу</div><div class="match-item" data-pair="2">Я повинен</div><div class="match-item" data-pair="3">Мені треба</div><div class="match-item" data-pair="4">Я хочу</div><div class="match-item" data-pair="5">Я не можу</div></div>
-        <div class="match-column" id="match-right"><div class="match-item" data-pair="2">I should</div><div class="match-item" data-pair="3">I need to</div><div class="match-item" data-pair="4">I want</div><div class="match-item" data-pair="0">I can</div><div class="match-item" data-pair="1">I must</div><div class="match-item" data-pair="5">I can't</div></div>
+        <div class="match-column" id="match-right"><div class="match-item" data-pair="3">I need to</div><div class="match-item" data-pair="2">I should</div><div class="match-item" data-pair="1">I must</div><div class="match-item" data-pair="0">I can</div><div class="match-item" data-pair="5">I can't</div><div class="match-item" data-pair="4">I want</div></div>
       </div>
       <div class="completion-message" id="match-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetMatch()">Reset</button><button class="btn btn-primary" onclick="showSection('quiz')">Next →</button></div>

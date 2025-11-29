@@ -28,7 +28,17 @@
     .card h3 { color: var(--primary); margin-bottom: 1rem; }
     .canvas-note { background: #fffbeb; border-left: 4px solid var(--warning); padding: 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
     .canvas-note h4 { color: var(--warning); margin-bottom: 0.5rem; }
-    .canvas-note pre { white-space: pre-wrap; font-family: inherit; }
+    .md-content { line-height: 1.7; }
+    .md-content p { margin: 0.75rem 0; }
+    .md-content ul, .md-content ol { margin: 0.75rem 0; padding-left: 1.5rem; }
+    .md-content li { margin: 0.25rem 0; }
+    .md-content strong { color: var(--primary); }
+    .md-content blockquote { background: #e8f4fd; border-left: 4px solid var(--primary); padding: 0.75rem 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+    .md-content blockquote p { margin: 0.25rem 0; }
+    .md-content table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+    .md-content th, .md-content td { border: 1px solid var(--border); padding: 0.5rem 0.75rem; text-align: left; }
+    .md-content th { background: #f5f5f5; font-weight: 600; }
+    .md-content code { background: #f0f0f0; padding: 0.125rem 0.375rem; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
     .letter-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0; }
     .letter-group { border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; }
     .letter-group.true-friends { border-color: var(--success); } .letter-group.true-friends .letters { color: var(--success); }
@@ -108,147 +118,346 @@
         <p style="color:var(--text-muted)">A Day in Your Life</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### What's Your Routine?</h4><pre>Every day we follow patterns: wake up, eat, work, sleep. Let's learn to describe YOUR typical day in Ukrainian!
-
-Many daily activities use **reflexive verbs** (-ся ending):
-- прокидатися (to wake up)
-- вмиватися (to wash oneself)
-- одягатися (to dress oneself)
-
-> 💡 **Did You Know?**
->
-> Ukrainian reflexive verbs end in -ся (short for "себе" = oneself). This suffix stuck to the verb over centuries. Originally, "я мию себе" (I wash myself) became "я миюся." Many everyday actions are reflexive - you do them TO yourself!</pre></div><div class="canvas-note"><h4>### Morning Routine</h4><pre>| Ukrainian | Transliteration | English |
-|-----------|-----------------|---------|
-| прокидатися | prokydatysya | to wake up |
-| вставати | vstavaty | to get up |
-| вмиватися | vmyvatysya | to wash (oneself) |
-| чистити зуби | chystyty zuby | to brush teeth |
-| голитися | holytysya | to shave |
-| одягатися | odyahatysya | to get dressed |
-| снідати | snidaty | to have breakfast |
-| пити каву | pyty kavu | to drink coffee |
-
-**Sample morning:**
-- Я **прокидаюся** о сьомій годині.
-- Потім я **встаю** і **вмиваюся**.
-- Я **чищу зуби** і **одягаюся**.
-- О пів на восьму я **снідаю**.
-
-> ⚡ **Pro Tip: Reflexive Conjugation**
->
-> Reflexive verbs conjugate normally, but keep -ся:
-> - я вмиваюся
-> - ти вмиваєшся
-> - він вмивається
-> - ми вмиваємося
-> - ви вмиваєтеся
-> - вони вмиваються
->
-> Note: -ся after vowels, -сь after consonants (informal)</pre></div><div class="canvas-note"><h4>Daytime Activities</h4><pre>| Ukrainian | Transliteration | English |
-|-----------|-----------------|---------|
-| виходити з дому | vykhodity z domu | to leave home |
-| їхати на роботу | yikhaty na robotu | to go to work |
-| працювати | pratsyuvaty | to work |
-| обідати | obidaty | to have lunch |
-| повертатися | povertatysya | to return |
-| відпочивати | vidpochyvaty | to rest |
-
-**Sample day:**
-- О восьмій я **виходжу з дому**.
-- Я **їду на роботу** метро.
-- Я **працюю** з дев'ятої до шостої.
-- О першій я **обідаю**.
-- О сьомій я **повертаюся** додому.
-
-> 📜 **History Bite: Reflexive Evolution**
->
-> The reflexive -ся comes from the pronoun "себе" (self). In Old East Slavic, verbs with "ся" were written separately: "мыти ся." Over time, the pronoun merged with the verb. This happened across all Slavic languages - compare Russian "-ся," Polish "-się," Czech "-se."</pre></div><div class="canvas-note"><h4>Evening Routine</h4><pre>| Ukrainian | Transliteration | English |
-|-----------|-----------------|---------|
-| вечеряти | vecheryaty | to have dinner |
-| дивитися телевізор | dyvytysya televizor | to watch TV |
-| читати | chytaty | to read |
-| гуляти | hulyaty | to walk, stroll |
-| приймати душ | pryimaty dush | to take a shower |
-| роздягатися | rozdyahatysya | to undress |
-| лягати спати | lyahaty spaty | to go to bed |
-| засинати | zasynaty | to fall asleep |
-
-**Sample evening:**
-- О сьомій я **вечеряю** з родиною.
-- Потім я **дивлюся телевізор** або **читаю**.
-- О десятій я **приймаю душ**.
-- О одинадцятій я **лягаю спати**.
-- Я зазвичай **засинаю** швидко.
-
-> 🎯 **Fun Fact: Гуляти**
->
-> "Гуляти" means both "to walk/stroll" AND "to have fun/party"! Context matters:
-> - Ми гуляємо в парку. (We're walking in the park.)
-> - Ми гуляємо на весіллі. (We're partying at a wedding.)
->
-> Evening "гуляння" can mean a romantic evening stroll or a big party!</pre></div><div class="canvas-note"><h4>Time Expressions</h4><pre>| Ukrainian | English |
-|-----------|---------|
-| о + locative | at (time) |
-| з... до... | from... to... |
-| вранці | in the morning |
-| вдень | during the day |
-| ввечері | in the evening |
-| вночі | at night |
-| щодня | every day |
-| зазвичай | usually |
-| завжди | always |
-| іноді | sometimes |
-| ніколи | never |
-
-> 🔗 **Language Link: Time Prepositions**
->
-> - **О** сьомій = at 7 (specific time)
-> - **З** дев'ятої **до** шостої = from 9 to 6 (range)
-> - **Близько** восьмої = around 8 (approximate)
->
-> All use locative case for hours!</pre></div><div class="canvas-note"><h4>Sequence Words</h4><pre>| Ukrainian | English |
-|-----------|---------|
-| спочатку | first, at first |
-| потім | then, after that |
-| після того | after that |
-| нарешті | finally |
-| перед тим | before that |
-| одночасно | at the same time |
-
-**Using sequences:**
-- **Спочатку** я вмиваюся, **потім** снідаю.
-- **Перед тим**, як лягти спати, я читаю.
-- **Нарешті** я засинаю.
-
-> 🌍 **Real World: Describing Your Day**
->
-> - **Як проходить твій день?** - How does your day go?
-> - **Що ти робиш вранці?** - What do you do in the morning?
-> - **О котрій ти встаєш?** - What time do you get up?
-> - **Коли ти лягаєш спати?** - When do you go to bed?</pre></div><div class="canvas-note"><h4>### Describe Routine Actions</h4><pre>Say in Ukrainian:
-1. I wake up at 7. → Я прокидаюся о сьомій.
-2. She has breakfast at 8. → Вона снідає о восьмій.
-3. We work from 9 to 5. → Ми працюємо з дев'ятої до п'ятої.
-4. They go to bed at 11. → Вони лягають спати о одинадцятій.</pre></div><div class="canvas-note"><h4>Put in Order</h4><pre>Arrange these activities chronologically:
-- вечеряти → снідати → обідати
-
-Answer: снідати, обідати, вечеряти</pre></div><div class="canvas-note"><h4>Complete the Routine</h4><pre>Fill in with reflexive verbs:
-1. Вранці я ___ (wake up). → прокидаюся
-2. Потім я ___ (wash). → вмиваюся
-3. Я ___ (get dressed). → одягаюся
-4. Ввечері я ___ (undress). → роздягаюся</pre></div><div class="canvas-note"><h4>### Describe Your Day</h4><pre>Write or speak about your typical day:
-- О котрій ви прокидаєтеся?
-- Що ви робите вранці?
-- Коли ви працюєте/навчаєтеся?
-- Що ви робите ввечері?
-- О котрій ви лягаєте спати?</pre></div></div>
+      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### What's Your Routine?</h4><div class="md-content"><p>Every day we follow patterns: wake up, eat, work, sleep. Let's learn to describe YOUR typical day in Ukrainian!</p>
+<p>Many daily activities use <strong>reflexive verbs</strong> (-ся ending):</p>
+<ul>
+<li>прокидатися (to wake up)</li>
+<li>вмиватися (to wash oneself)</li>
+<li>одягатися (to dress oneself)</li>
+</ul>
+<blockquote>
+  <p>💡 <strong>Did You Know?</strong></p>
+  <p>Ukrainian reflexive verbs end in -ся (short for "себе" = oneself). This suffix stuck to the verb over centuries. Originally, "я мию себе" (I wash myself) became "я миюся." Many everyday actions are reflexive - you do them TO yourself!</p>
+</blockquote></div></div><div class="canvas-note"><h4>### Morning Routine</h4><div class="md-content"><table>
+<thead>
+<tr>
+<th>Ukrainian</th>
+<th>Transliteration</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>прокидатися</td>
+<td>prokydatysya</td>
+<td>to wake up</td>
+</tr>
+<tr>
+<td>вставати</td>
+<td>vstavaty</td>
+<td>to get up</td>
+</tr>
+<tr>
+<td>вмиватися</td>
+<td>vmyvatysya</td>
+<td>to wash (oneself)</td>
+</tr>
+<tr>
+<td>чистити зуби</td>
+<td>chystyty zuby</td>
+<td>to brush teeth</td>
+</tr>
+<tr>
+<td>голитися</td>
+<td>holytysya</td>
+<td>to shave</td>
+</tr>
+<tr>
+<td>одягатися</td>
+<td>odyahatysya</td>
+<td>to get dressed</td>
+</tr>
+<tr>
+<td>снідати</td>
+<td>snidaty</td>
+<td>to have breakfast</td>
+</tr>
+<tr>
+<td>пити каву</td>
+<td>pyty kavu</td>
+<td>to drink coffee</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Sample morning:</strong></p>
+<ul>
+<li>Я <strong>прокидаюся</strong> о сьомій годині.</li>
+<li>Потім я <strong>встаю</strong> і <strong>вмиваюся</strong>.</li>
+<li>Я <strong>чищу зуби</strong> і <strong>одягаюся</strong>.</li>
+<li>О пів на восьму я <strong>снідаю</strong>.</li>
+</ul>
+<blockquote>
+  <p>⚡ <strong>Pro Tip: Reflexive Conjugation</strong></p>
+  <p>Reflexive verbs conjugate normally, but keep -ся:</p>
+  <ul>
+  <li>я вмиваюся</li>
+  <li>ти вмиваєшся</li>
+  <li>він вмивається</li>
+  <li>ми вмиваємося</li>
+  <li>ви вмиваєтеся</li>
+  <li>вони вмиваються</li>
+  </ul>
+  <p>Note: -ся after vowels, -сь after consonants (informal)</p>
+</blockquote></div></div><div class="canvas-note"><h4>Daytime Activities</h4><div class="md-content"><table>
+<thead>
+<tr>
+<th>Ukrainian</th>
+<th>Transliteration</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>виходити з дому</td>
+<td>vykhodity z domu</td>
+<td>to leave home</td>
+</tr>
+<tr>
+<td>їхати на роботу</td>
+<td>yikhaty na robotu</td>
+<td>to go to work</td>
+</tr>
+<tr>
+<td>працювати</td>
+<td>pratsyuvaty</td>
+<td>to work</td>
+</tr>
+<tr>
+<td>обідати</td>
+<td>obidaty</td>
+<td>to have lunch</td>
+</tr>
+<tr>
+<td>повертатися</td>
+<td>povertatysya</td>
+<td>to return</td>
+</tr>
+<tr>
+<td>відпочивати</td>
+<td>vidpochyvaty</td>
+<td>to rest</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Sample day:</strong></p>
+<ul>
+<li>О восьмій я <strong>виходжу з дому</strong>.</li>
+<li>Я <strong>їду на роботу</strong> метро.</li>
+<li>Я <strong>працюю</strong> з дев'ятої до шостої.</li>
+<li>О першій я <strong>обідаю</strong>.</li>
+<li>О сьомій я <strong>повертаюся</strong> додому.</li>
+</ul>
+<blockquote>
+  <p>📜 <strong>History Bite: Reflexive Evolution</strong></p>
+  <p>The reflexive -ся comes from the pronoun "себе" (self). In Old East Slavic, verbs with "ся" were written separately: "мыти ся." Over time, the pronoun merged with the verb. This happened across all Slavic languages - compare Russian "-ся," Polish "-się," Czech "-se."</p>
+</blockquote></div></div><div class="canvas-note"><h4>Evening Routine</h4><div class="md-content"><table>
+<thead>
+<tr>
+<th>Ukrainian</th>
+<th>Transliteration</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>вечеряти</td>
+<td>vecheryaty</td>
+<td>to have dinner</td>
+</tr>
+<tr>
+<td>дивитися телевізор</td>
+<td>dyvytysya televizor</td>
+<td>to watch TV</td>
+</tr>
+<tr>
+<td>читати</td>
+<td>chytaty</td>
+<td>to read</td>
+</tr>
+<tr>
+<td>гуляти</td>
+<td>hulyaty</td>
+<td>to walk, stroll</td>
+</tr>
+<tr>
+<td>приймати душ</td>
+<td>pryimaty dush</td>
+<td>to take a shower</td>
+</tr>
+<tr>
+<td>роздягатися</td>
+<td>rozdyahatysya</td>
+<td>to undress</td>
+</tr>
+<tr>
+<td>лягати спати</td>
+<td>lyahaty spaty</td>
+<td>to go to bed</td>
+</tr>
+<tr>
+<td>засинати</td>
+<td>zasynaty</td>
+<td>to fall asleep</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Sample evening:</strong></p>
+<ul>
+<li>О сьомій я <strong>вечеряю</strong> з родиною.</li>
+<li>Потім я <strong>дивлюся телевізор</strong> або <strong>читаю</strong>.</li>
+<li>О десятій я <strong>приймаю душ</strong>.</li>
+<li>О одинадцятій я <strong>лягаю спати</strong>.</li>
+<li>Я зазвичай <strong>засинаю</strong> швидко.</li>
+</ul>
+<blockquote>
+  <p>🎯 <strong>Fun Fact: Гуляти</strong></p>
+  <p>"Гуляти" means both "to walk/stroll" AND "to have fun/party"! Context matters:</p>
+  <ul>
+  <li>Ми гуляємо в парку. (We're walking in the park.)</li>
+  <li>Ми гуляємо на весіллі. (We're partying at a wedding.)</li>
+  </ul>
+  <p>Evening "гуляння" can mean a romantic evening stroll or a big party!</p>
+</blockquote></div></div><div class="canvas-note"><h4>Time Expressions</h4><div class="md-content"><table>
+<thead>
+<tr>
+<th>Ukrainian</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>о + locative</td>
+<td>at (time)</td>
+</tr>
+<tr>
+<td>з… до…</td>
+<td>from… to…</td>
+</tr>
+<tr>
+<td>вранці</td>
+<td>in the morning</td>
+</tr>
+<tr>
+<td>вдень</td>
+<td>during the day</td>
+</tr>
+<tr>
+<td>ввечері</td>
+<td>in the evening</td>
+</tr>
+<tr>
+<td>вночі</td>
+<td>at night</td>
+</tr>
+<tr>
+<td>щодня</td>
+<td>every day</td>
+</tr>
+<tr>
+<td>зазвичай</td>
+<td>usually</td>
+</tr>
+<tr>
+<td>завжди</td>
+<td>always</td>
+</tr>
+<tr>
+<td>іноді</td>
+<td>sometimes</td>
+</tr>
+<tr>
+<td>ніколи</td>
+<td>never</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p>🔗 <strong>Language Link: Time Prepositions</strong></p>
+  <ul>
+  <li><strong>О</strong> сьомій = at 7 (specific time)</li>
+  <li><strong>З</strong> дев'ятої <strong>до</strong> шостої = from 9 to 6 (range)</li>
+  <li><strong>Близько</strong> восьмої = around 8 (approximate)</li>
+  </ul>
+  <p>All use locative case for hours!</p>
+</blockquote></div></div><div class="canvas-note"><h4>Sequence Words</h4><div class="md-content"><table>
+<thead>
+<tr>
+<th>Ukrainian</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>спочатку</td>
+<td>first, at first</td>
+</tr>
+<tr>
+<td>потім</td>
+<td>then, after that</td>
+</tr>
+<tr>
+<td>після того</td>
+<td>after that</td>
+</tr>
+<tr>
+<td>нарешті</td>
+<td>finally</td>
+</tr>
+<tr>
+<td>перед тим</td>
+<td>before that</td>
+</tr>
+<tr>
+<td>одночасно</td>
+<td>at the same time</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Using sequences:</strong></p>
+<ul>
+<li><strong>Спочатку</strong> я вмиваюся, <strong>потім</strong> снідаю.</li>
+<li><strong>Перед тим</strong>, як лягти спати, я читаю.</li>
+<li><strong>Нарешті</strong> я засинаю.</li>
+</ul>
+<blockquote>
+  <p>🌍 <strong>Real World: Describing Your Day</strong></p>
+  <ul>
+  <li><strong>Як проходить твій день?</strong> - How does your day go?</li>
+  <li><strong>Що ти робиш вранці?</strong> - What do you do in the morning?</li>
+  <li><strong>О котрій ти встаєш?</strong> - What time do you get up?</li>
+  <li><strong>Коли ти лягаєш спати?</strong> - When do you go to bed?</li>
+  </ul>
+</blockquote></div></div><div class="canvas-note"><h4>### Describe Routine Actions</h4><div class="md-content"><p>Say in Ukrainian:</p>
+<ol>
+<li>I wake up at 7. → Я прокидаюся о сьомій.</li>
+<li>She has breakfast at 8. → Вона снідає о восьмій.</li>
+<li>We work from 9 to 5. → Ми працюємо з дев'ятої до п'ятої.</li>
+<li>They go to bed at 11. → Вони лягають спати о одинадцятій.</li>
+</ol></div></div><div class="canvas-note"><h4>Put in Order</h4><div class="md-content"><p>Arrange these activities chronologically:</p>
+<ul>
+<li>вечеряти → снідати → обідати</li>
+</ul>
+<p>Answer: снідати, обідати, вечеряти</p></div></div><div class="canvas-note"><h4>Complete the Routine</h4><div class="md-content"><p>Fill in with reflexive verbs:</p>
+<ol>
+<li>Вранці я ___ (wake up). → прокидаюся</li>
+<li>Потім я ___ (wash). → вмиваюся</li>
+<li>Я ___ (get dressed). → одягаюся</li>
+<li>Ввечері я ___ (undress). → роздягаюся</li>
+</ol></div></div><div class="canvas-note"><h4>### Describe Your Day</h4><div class="md-content"><p>Write or speak about your typical day:</p>
+<ul>
+<li>О котрій ви прокидаєтеся?</li>
+<li>Що ви робите вранці?</li>
+<li>Коли ви працюєте/навчаєтеся?</li>
+<li>Що ви робите ввечері?</li>
+<li>О котрій ви лягаєте спати?</li>
+</ul></div></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('match')">Start →</button></div>
     </section>
     <section id="match" class="section"><div class="card"><h3>Daily Activities</h3>
       <div class="score-display"><span class="score"><span id="match-score">0</span>/6</span></div>
       <div class="match-container" id="match-container"><svg class="match-lines" id="match-lines"></svg>
         <div class="match-column" id="match-left"><div class="match-item" data-pair="0">прокидатися</div><div class="match-item" data-pair="1">снідати</div><div class="match-item" data-pair="2">працювати</div><div class="match-item" data-pair="3">вечеряти</div><div class="match-item" data-pair="4">лягати спати</div><div class="match-item" data-pair="5">засинати</div></div>
-        <div class="match-column" id="match-right"><div class="match-item" data-pair="1">to have breakfast</div><div class="match-item" data-pair="4">to go to bed</div><div class="match-item" data-pair="5">to fall asleep</div><div class="match-item" data-pair="2">to work</div><div class="match-item" data-pair="0">to wake up</div><div class="match-item" data-pair="3">to have dinner</div></div>
+        <div class="match-column" id="match-right"><div class="match-item" data-pair="1">to have breakfast</div><div class="match-item" data-pair="5">to fall asleep</div><div class="match-item" data-pair="3">to have dinner</div><div class="match-item" data-pair="0">to wake up</div><div class="match-item" data-pair="4">to go to bed</div><div class="match-item" data-pair="2">to work</div></div>
       </div>
       <div class="completion-message" id="match-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetMatch()">Reset</button><button class="btn btn-primary" onclick="showSection('quiz')">Next →</button></div>
