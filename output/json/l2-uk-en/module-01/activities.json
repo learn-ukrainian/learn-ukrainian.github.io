@@ -1,0 +1,230 @@
+{
+  "moduleId": "mod-uk-A1-01",
+  "activities": [
+    {
+      "id": "act-uk-A1-01-match",
+      "type": "match-up",
+      "title": "False Friends: The Trap Letters",
+      "description": "Match the deceptive Cyrillic letters to their true sounds.",
+      "content": {
+        "type": "match-up",
+        "pairs": [
+          {
+            "left": "Р р",
+            "right": "R sound (not P!)"
+          },
+          {
+            "left": "Н н",
+            "right": "N sound (not H!)"
+          },
+          {
+            "left": "С с",
+            "right": "S sound (not C!)"
+          },
+          {
+            "left": "Х х",
+            "right": "KH sound (not X!)"
+          },
+          {
+            "left": "В в",
+            "right": "V sound (not B!)"
+          },
+          {
+            "left": "У у",
+            "right": "U sound (not Y!)"
+          }
+        ],
+        "instructions": "These letters look like English but sound completely different! Match each Cyrillic letter to its actual sound.",
+        "shuffleRight": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [
+        "grammar",
+        "alphabet"
+      ],
+      "createdAt": "2025-11-29T00:00:00Z",
+      "modifiedAt": "2025-11-29T00:00:00Z"
+    },
+    {
+      "id": "act-uk-A1-01-quiz",
+      "type": "quiz",
+      "title": "Decipher International Words",
+      "description": "Identify these international words written in Cyrillic.",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "question": "What does ТАКСІ mean?",
+            "options": [
+              "Taxi",
+              "Task",
+              "Text",
+              "Talk"
+            ],
+            "correctIndex": 0,
+            "explanation": "ТАКСІ (taksi) = Taxi. Remember: Т=T, А=A, К=K, С=S, І=I"
+          },
+          {
+            "question": "What does БАНК mean?",
+            "options": [
+              "Bank",
+              "Back",
+              "Book",
+              "Bunch"
+            ],
+            "correctIndex": 0,
+            "explanation": "БАНК (bank) = Bank. Б=B (not В!), А=A, Н=N (not H!), К=K"
+          },
+          {
+            "question": "What does МЕТРО mean?",
+            "options": [
+              "Metro",
+              "Meter",
+              "Mother",
+              "Metal"
+            ],
+            "correctIndex": 0,
+            "explanation": "МЕТРО (metro) = Metro/Subway. М=M, Е=E, Т=T, Р=R (not P!), О=O"
+          },
+          {
+            "question": "What does ПАРК mean?",
+            "options": [
+              "Park",
+              "Pork",
+              "Part",
+              "Pack"
+            ],
+            "correctIndex": 0,
+            "explanation": "ПАРК (park) = Park. П=P, А=A, Р=R (not P!), К=K"
+          },
+          {
+            "question": "What does ПІЦА mean?",
+            "options": [
+              "Pizza",
+              "Peace",
+              "Piece",
+              "Price"
+            ],
+            "correctIndex": 0,
+            "explanation": "ПІЦА (pitsa) = Pizza. П=P, І=I, Ц=TS, А=A"
+          },
+          {
+            "question": "What does СТУДЕНТ mean?",
+            "options": [
+              "Student",
+              "Stadium",
+              "Study",
+              "Street"
+            ],
+            "correctIndex": 0,
+            "explanation": "СТУДЕНТ (student) = Student. С=S (not C!), Т=T, У=U, Д=D, Е=E, Н=N (not H!)"
+          },
+          {
+            "question": "What does КАФЕ mean?",
+            "options": [
+              "Café",
+              "Coffee",
+              "Cave",
+              "Calf"
+            ],
+            "correctIndex": 0,
+            "explanation": "КАФЕ (kafe) = Café. К=K, А=A, Ф=F, Е=E"
+          },
+          {
+            "question": "What does РАДІО mean?",
+            "options": [
+              "Radio",
+              "Ready",
+              "Radar",
+              "Ratio"
+            ],
+            "correctIndex": 0,
+            "explanation": "РАДІО (radio) = Radio. Р=R (not P!), А=A, Д=D, І=I, О=O"
+          }
+        ],
+        "shuffleQuestions": true,
+        "shuffleOptions": true,
+        "showCorrectAnswers": true,
+        "instructions": "Choose the correct English meaning for each Cyrillic word."
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [
+        "grammar",
+        "alphabet"
+      ],
+      "createdAt": "2025-11-29T00:00:00Z",
+      "modifiedAt": "2025-11-29T00:00:00Z"
+    },
+    {
+      "id": "act-uk-A1-01-sort",
+      "type": "group-sort",
+      "title": "Sort the Letters: True Friends vs False Friends vs New",
+      "description": "Categorize Cyrillic letters by their relationship to Latin letters.",
+      "content": {
+        "type": "group-sort",
+        "groups": [
+          {
+            "name": "True Friends (Look & Sound Same)",
+            "items": [
+              "А",
+              "Е",
+              "І",
+              "О",
+              "К",
+              "М",
+              "Т"
+            ]
+          },
+          {
+            "name": "False Friends (Look Latin, Sound Different)",
+            "items": [
+              "В",
+              "Н",
+              "Р",
+              "С",
+              "У",
+              "Х"
+            ]
+          },
+          {
+            "name": "New Letters (Unique to Cyrillic)",
+            "items": [
+              "Б",
+              "Д",
+              "З",
+              "Л",
+              "П",
+              "Ф",
+              "Ц",
+              "Й"
+            ]
+          }
+        ],
+        "instructions": "Drag each letter to the correct category.",
+        "shuffleItems": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [
+        "grammar",
+        "alphabet"
+      ],
+      "createdAt": "2025-11-29T00:00:00Z",
+      "modifiedAt": "2025-11-29T00:00:00Z"
+    }
+  ]
+}

@@ -1,0 +1,145 @@
+{
+  "id": "lesson-uk-A1-01",
+  "moduleId": "mod-uk-A1-01",
+  "languagePair": "l2-uk-en",
+  "subject": "language",
+  "methodology": "ppp",
+  "owner": "curricula-opus",
+  "visibility": "public",
+  "language": "uk",
+  "targetLevel": "A1",
+  "phase": "A1.1",
+  "moduleNumber": 1,
+  "title": "The Cyrillic Code I",
+  "description": "Master the alphabet through logical groupings: True Friends and False Friends",
+  "objectives": [
+    "Recognize Cyrillic letters that look like Latin letters",
+    "Identify 'False Friend' letters that look Latin but sound different",
+    "Read 20 international words in Cyrillic",
+    "Understand the phonetic logic behind Cyrillic"
+  ],
+  "grammarFocus": [
+    "Cyrillic alphabet groups 1-3",
+    "Phonetic basics"
+  ],
+  "vocabularyIds": [
+    "v-m01-001",
+    "v-m01-002",
+    "v-m01-003",
+    "v-m01-004",
+    "v-m01-005",
+    "v-m01-006",
+    "v-m01-007",
+    "v-m01-008",
+    "v-m01-009",
+    "v-m01-010",
+    "v-m01-011",
+    "v-m01-012",
+    "v-m01-013",
+    "v-m01-014",
+    "v-m01-015",
+    "v-m01-016",
+    "v-m01-017",
+    "v-m01-018",
+    "v-m01-019",
+    "v-m01-020"
+  ],
+  "totalDuration": 45,
+  "transliterationMode": "full",
+  "tags": [
+    "alphabet",
+    "basics",
+    "cyrillic",
+    "cognates"
+  ],
+  "version": 1,
+  "createdAt": "2025-11-29T00:00:00Z",
+  "modifiedAt": "2025-11-29T00:00:00Z",
+  "phases": [
+    {
+      "id": "phase-warmup",
+      "name": "warm-up",
+      "duration": 5,
+      "items": [
+        {
+          "type": "canvas",
+          "canvasData": "{}",
+          "teacherNotes": "Why Cyrillic Isn't Scary\n\nCyrillic was designed for Slavic sounds. Many letters come from Greek, which is why some look familiar. The key: don't trust your eyes—trust the logic."
+        }
+      ]
+    },
+    {
+      "id": "phase-presentation",
+      "name": "presentation",
+      "duration": 15,
+      "items": [
+        {
+          "type": "canvas",
+          "canvasData": "{}",
+          "teacherNotes": "Group 1: True Friends\n\nThese letters look AND sound like their Latin equivalents:\n\n• А а = A (as in 'father')\n• Е е = E (as in 'bet')\n• І і = I (as in 'machine')\n• О о = O (as in 'hot')\n• К к = K\n• М м = M\n• Т т = T"
+        },
+        {
+          "type": "canvas",
+          "canvasData": "{}",
+          "teacherNotes": "Group 2: False Friends (DANGER!)\n\nThese letters LOOK Latin but sound DIFFERENT:\n\n• В в = V (not B!)\n• Н н = N (not H!)\n• Р р = R (not P!) - trilled\n• С с = S (not C!)\n• У у = U (not Y!)\n• Х х = KH (not X!) - like 'Bach'"
+        },
+        {
+          "type": "canvas",
+          "canvasData": "{}",
+          "teacherNotes": "Group 3: New but Easy\n\nLetters that don't exist in Latin but are straightforward:\n\n• Б б = B (like a belly with a hat)\n• Д д = D\n• З з = Z\n• Л л = L\n• П п = P (like a doorway/portal)\n• Ф ф = F"
+        },
+        {
+          "type": "activity",
+          "activityId": "act-uk-A1-01-match"
+        }
+      ]
+    },
+    {
+      "id": "phase-practice",
+      "name": "practice",
+      "duration": 15,
+      "items": [
+        {
+          "type": "canvas",
+          "canvasData": "{}",
+          "teacherNotes": "Reading Practice\n\nLet's read international words. Sound out each letter using what you've learned."
+        },
+        {
+          "type": "activity",
+          "activityId": "act-uk-A1-01-quiz"
+        },
+        {
+          "type": "activity",
+          "activityId": "act-uk-A1-01-sort"
+        }
+      ]
+    },
+    {
+      "id": "phase-production",
+      "name": "production",
+      "duration": 10,
+      "items": [
+        {
+          "type": "canvas",
+          "canvasData": "{}",
+          "teacherNotes": "Real-World Reading\n\nTry reading these words without looking at the transliteration first:\n\n1. БАНК\n2. ПАРК\n3. МЕТРО\n4. ПІЦА\n5. СТУДЕНТ"
+        },
+        {
+          "type": "canvas",
+          "canvasData": "{}",
+          "teacherNotes": "Remember\n\nП = P, Р = R, В = V, Н = N, С = S, Х = KH"
+        },
+        {
+          "type": "canvas",
+          "canvasData": "{}",
+          "teacherNotes": "⚠️ ITALIC WARNING ⚠️\n\nCyrillic italic/cursive looks VERY different from print!\n\nDangerous letters:\n• т → looks like \"m\" in italic\n• п → looks like \"n\" in italic\n• д → looks like \"g\" in italic\n• и → looks like \"u\" in italic\n• л → looks like \"л\" with a hook\n• г → looks like \"∂\" in italic\n\nWe'll cover this in Module 02!"
+        }
+      ]
+    }
+  ],
+  "activities": [
+    "act-uk-A1-01-match",
+    "act-uk-A1-01-quiz",
+    "act-uk-A1-01-sort"
+  ]
+}

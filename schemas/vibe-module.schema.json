@@ -1,0 +1,173 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "vibe-module.schema.json",
+  "title": "Vibe Module Schema",
+  "description": "Complete module format for Vibe app - includes lesson, activities, and vocabulary",
+  "type": "object",
+  "required": ["lesson", "activities", "vocabulary"],
+  "properties": {
+    "lesson": {
+      "type": "object",
+      "description": "Lesson metadata and structure",
+      "required": ["id", "moduleId", "languagePair", "subject", "methodology", "owner", "visibility", "language", "targetLevel", "phase", "moduleNumber", "title", "description", "objectives", "grammarFocus", "totalDuration", "phases", "createdAt", "modifiedAt"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^lesson-[a-z]{2}-[A-Z][0-9]-[0-9]{2}$" },
+        "moduleId": { "type": "string", "pattern": "^mod-[a-z]{2}-[A-Z][0-9]-[0-9]{2}$" },
+        "languagePair": { "type": "string", "pattern": "^l[0-9]-[a-z]{2}-[a-z]{2}$" },
+        "subject": { "type": "string", "enum": ["language", "math", "science", "history"] },
+        "methodology": { "type": "string", "enum": ["ppp", "tbl", "clil", "communicative"] },
+        "owner": { "type": "string" },
+        "visibility": { "type": "string", "enum": ["public", "private", "unlisted"] },
+        "language": { "type": "string", "description": "ISO 639-1 code" },
+        "targetLevel": { "type": "string", "pattern": "^[A-C][1-2]$" },
+        "phase": { "type": "string", "pattern": "^[A-C][1-2]\\.[1-4]$" },
+        "moduleNumber": { "type": "integer", "minimum": 1 },
+        "title": { "type": "string" },
+        "subtitle": { "type": "string" },
+        "description": { "type": "string" },
+        "objectives": { "type": "array", "items": { "type": "string" } },
+        "grammarFocus": { "type": "array", "items": { "type": "string" } },
+        "totalDuration": { "type": "integer", "description": "Minutes" },
+        "transliterationMode": { "type": "string", "enum": ["full", "vocab-only", "first-occurrence", "none"] },
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "version": { "type": "integer", "default": 1 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "modifiedAt": { "type": "string", "format": "date-time" },
+        "phases": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "name", "duration", "items"],
+            "properties": {
+              "id": { "type": "string" },
+              "name": { "type": "string", "enum": ["warm-up", "presentation", "practice", "production", "review"] },
+              "duration": { "type": "integer" },
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "type": { "type": "string", "enum": ["canvas", "activity"] },
+                    "canvasData": { "type": "string" },
+                    "teacherNotes": { "type": "string" },
+                    "activityId": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "activities": {
+      "type": "array",
+      "description": "Interactive exercises for the module",
+      "items": {
+        "type": "object",
+        "required": ["id", "type", "title", "description", "content", "subject", "owner", "visibility", "language", "difficultyLevel", "duration", "createdAt", "modifiedAt"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^act-[a-z]{2}-[A-Z][0-9]-[0-9]{2}-[a-z]+$" },
+          "type": { "type": "string", "enum": ["match-up", "quiz", "group-sort", "gap-fill", "flash-cards", "unjumble", "dialogue", "listening"] },
+          "title": { "type": "string" },
+          "description": { "type": "string" },
+          "subject": { "type": "string" },
+          "owner": { "type": "string" },
+          "visibility": { "type": "string", "enum": ["public", "private", "unlisted"] },
+          "language": { "type": "string" },
+          "difficultyLevel": { "type": "string", "pattern": "^[A-C][1-2]$" },
+          "duration": { "type": "integer", "description": "Minutes" },
+          "tags": { "type": "array", "items": { "type": "string" } },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "modifiedAt": { "type": "string", "format": "date-time" },
+          "content": {
+            "type": "object",
+            "description": "Activity-specific content structure",
+            "properties": {
+              "type": { "type": "string" },
+              "instructions": { "type": "string" },
+              "pairs": {
+                "type": "array",
+                "description": "For match-up activities",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "left": { "type": "string" },
+                    "right": { "type": "string" }
+                  }
+                }
+              },
+              "questions": {
+                "type": "array",
+                "description": "For quiz activities",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "question": { "type": "string" },
+                    "options": { "type": "array", "items": { "type": "string" } },
+                    "correctIndex": { "type": "integer" },
+                    "explanation": { "type": "string" }
+                  }
+                }
+              },
+              "groups": {
+                "type": "array",
+                "description": "For group-sort activities",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": { "type": "string" },
+                    "items": { "type": "array", "items": { "type": "string" } }
+                  }
+                }
+              },
+              "shuffleRight": { "type": "boolean" },
+              "shuffleQuestions": { "type": "boolean" },
+              "shuffleOptions": { "type": "boolean" },
+              "shuffleItems": { "type": "boolean" },
+              "showCorrectAnswers": { "type": "boolean" }
+            }
+          }
+        }
+      }
+    },
+    "vocabulary": {
+      "type": "object",
+      "description": "Vocabulary list for the module",
+      "required": ["moduleId", "level", "phase", "wordCount", "words"],
+      "properties": {
+        "moduleId": { "type": "string" },
+        "level": { "type": "string" },
+        "phase": { "type": "string" },
+        "wordCount": { "type": "integer" },
+        "transliterationMode": { "type": "string" },
+        "letterGroups": {
+          "type": "object",
+          "description": "For alphabet modules",
+          "properties": {
+            "trueFriends": { "type": "array", "items": { "type": "string" } },
+            "falseFriends": { "type": "array", "items": { "type": "string" } },
+            "newLetters": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "words": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "uk", "translit", "en", "pos"],
+            "properties": {
+              "id": { "type": "string", "pattern": "^v-m[0-9]{2}-[0-9]{3}$" },
+              "uk": { "type": "string", "description": "Ukrainian word" },
+              "translit": { "type": "string", "description": "Transliteration" },
+              "ipa": { "type": "string", "description": "IPA pronunciation" },
+              "en": { "type": "string", "description": "English translation" },
+              "pos": { "type": "string", "enum": ["noun", "verb", "adj", "adv", "prep", "conj", "pron", "num", "part", "intj"] },
+              "gender": { "type": "string", "enum": ["m", "f", "n"] },
+              "note": { "type": "string", "description": "Learning note" },
+              "letterFocus": { "type": "array", "items": { "type": "string" }, "description": "Letters highlighted in this word" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

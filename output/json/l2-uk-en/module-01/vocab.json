@@ -1,0 +1,332 @@
+{
+  "moduleId": "mod-uk-A1-01",
+  "level": "A1",
+  "phase": "A1.1",
+  "wordCount": 20,
+  "transliterationMode": "full",
+  "words": [
+    {
+      "id": "v-m01-001",
+      "uk": "мама",
+      "translit": "mama",
+      "ipa": "/ˈmɑmɑ/",
+      "en": "mom",
+      "pos": "noun",
+      "gender": "f",
+      "note": "True Friend: М=M, А=A",
+      "letterFocus": [
+        "М",
+        "А"
+      ]
+    },
+    {
+      "id": "v-m01-002",
+      "uk": "тато",
+      "translit": "tato",
+      "ipa": "/ˈtɑtɔ/",
+      "en": "dad",
+      "pos": "noun",
+      "gender": "m",
+      "note": "True Friend: Т=T, О=O",
+      "letterFocus": [
+        "Т",
+        "О"
+      ]
+    },
+    {
+      "id": "v-m01-003",
+      "uk": "банк",
+      "translit": "bank",
+      "ipa": "/bɑnk/",
+      "en": "bank",
+      "pos": "noun",
+      "gender": "m",
+      "note": "Cognate. Б=B (not В)",
+      "letterFocus": [
+        "Б",
+        "Н",
+        "К"
+      ]
+    },
+    {
+      "id": "v-m01-004",
+      "uk": "парк",
+      "translit": "park",
+      "ipa": "/pɑrk/",
+      "en": "park",
+      "pos": "noun",
+      "gender": "m",
+      "note": "False Friend: П=P (not Р), Р=R",
+      "letterFocus": [
+        "П",
+        "Р"
+      ]
+    },
+    {
+      "id": "v-m01-005",
+      "uk": "кафе",
+      "translit": "kafe",
+      "ipa": "/kɑˈfɛ/",
+      "en": "café",
+      "pos": "noun",
+      "gender": "n",
+      "note": "Cognate. К=K, Ф=F, Е=E",
+      "letterFocus": [
+        "К",
+        "Ф",
+        "Е"
+      ]
+    },
+    {
+      "id": "v-m01-006",
+      "uk": "метро",
+      "translit": "metro",
+      "ipa": "/mɛˈtrɔ/",
+      "en": "metro",
+      "pos": "noun",
+      "gender": "n",
+      "note": "Cognate. Е=E",
+      "letterFocus": [
+        "Е"
+      ]
+    },
+    {
+      "id": "v-m01-007",
+      "uk": "таксі",
+      "translit": "taksi",
+      "ipa": "/tɑkˈsi/",
+      "en": "taxi",
+      "pos": "noun",
+      "gender": "n",
+      "note": "Cognate. І=I (dotted)",
+      "letterFocus": [
+        "І"
+      ]
+    },
+    {
+      "id": "v-m01-008",
+      "uk": "радіо",
+      "translit": "radio",
+      "ipa": "/ˈrɑd⁽ʲ⁾iɔ/",
+      "en": "radio",
+      "pos": "noun",
+      "gender": "n",
+      "note": "False Friend: Р=R (not P)",
+      "letterFocus": [
+        "Р",
+        "Д",
+        "І"
+      ]
+    },
+    {
+      "id": "v-m01-009",
+      "uk": "піца",
+      "translit": "pitsa",
+      "ipa": "/ˈpitsɑ/",
+      "en": "pizza",
+      "pos": "noun",
+      "gender": "f",
+      "note": "Cognate. Ц=TS sound",
+      "letterFocus": [
+        "П",
+        "Ц"
+      ]
+    },
+    {
+      "id": "v-m01-010",
+      "uk": "суп",
+      "translit": "sup",
+      "ipa": "/sup/",
+      "en": "soup",
+      "pos": "noun",
+      "gender": "m",
+      "note": "False Friend: С=S (not C), У=U",
+      "letterFocus": [
+        "С",
+        "У"
+      ]
+    },
+    {
+      "id": "v-m01-011",
+      "uk": "салат",
+      "translit": "salat",
+      "ipa": "/sɑˈlɑt/",
+      "en": "salad",
+      "pos": "noun",
+      "gender": "m",
+      "note": "Cognate. Л=L",
+      "letterFocus": [
+        "С",
+        "Л"
+      ]
+    },
+    {
+      "id": "v-m01-012",
+      "uk": "лимон",
+      "translit": "lymon",
+      "ipa": "/lɪˈmɔn/",
+      "en": "lemon",
+      "pos": "noun",
+      "gender": "m",
+      "note": "Cognate. И=Y sound (hard I)",
+      "letterFocus": [
+        "Л",
+        "И"
+      ]
+    },
+    {
+      "id": "v-m01-013",
+      "uk": "банан",
+      "translit": "banan",
+      "ipa": "/bɑˈnɑn/",
+      "en": "banana",
+      "pos": "noun",
+      "gender": "m",
+      "note": "Cognate",
+      "letterFocus": [
+        "Б",
+        "Н"
+      ]
+    },
+    {
+      "id": "v-m01-014",
+      "uk": "хокей",
+      "translit": "khokei",
+      "ipa": "/xɔˈkɛj/",
+      "en": "hockey",
+      "pos": "noun",
+      "gender": "m",
+      "note": "False Friend: Х=KH/H sound (not X). Й=Y",
+      "letterFocus": [
+        "Х",
+        "Й"
+      ]
+    },
+    {
+      "id": "v-m01-015",
+      "uk": "футбол",
+      "translit": "futbol",
+      "ipa": "/fudˈbɔl/",
+      "en": "football",
+      "pos": "noun",
+      "gender": "m",
+      "note": "Cognate",
+      "letterFocus": [
+        "Ф",
+        "У",
+        "Б"
+      ]
+    },
+    {
+      "id": "v-m01-016",
+      "uk": "студент",
+      "translit": "student",
+      "ipa": "/stuˈdɛnt/",
+      "en": "student",
+      "pos": "noun",
+      "gender": "m",
+      "note": "Cognate. Full word recognition",
+      "letterFocus": [
+        "С",
+        "Т",
+        "У",
+        "Д",
+        "Е",
+        "Н"
+      ]
+    },
+    {
+      "id": "v-m01-017",
+      "uk": "турист",
+      "translit": "turyst",
+      "ipa": "/tuˈrɪst/",
+      "en": "tourist",
+      "pos": "noun",
+      "gender": "m",
+      "note": "Cognate",
+      "letterFocus": [
+        "Т",
+        "У",
+        "Р",
+        "И"
+      ]
+    },
+    {
+      "id": "v-m01-018",
+      "uk": "музика",
+      "translit": "muzyka",
+      "ipa": "/ˈmuzɪkɑ/",
+      "en": "music",
+      "pos": "noun",
+      "gender": "f",
+      "note": "Cognate. З=Z",
+      "letterFocus": [
+        "М",
+        "У",
+        "З",
+        "И",
+        "К"
+      ]
+    },
+    {
+      "id": "v-m01-019",
+      "uk": "фото",
+      "translit": "foto",
+      "ipa": "/ˈfɔtɔ/",
+      "en": "photo",
+      "pos": "noun",
+      "gender": "n",
+      "note": "Cognate",
+      "letterFocus": [
+        "Ф",
+        "О",
+        "Т"
+      ]
+    },
+    {
+      "id": "v-m01-020",
+      "uk": "відео",
+      "translit": "video",
+      "ipa": "/ˈwid⁽ʲ⁾ɛɔ/",
+      "en": "video",
+      "pos": "noun",
+      "gender": "n",
+      "note": "False Friend: В=V (not B)",
+      "letterFocus": [
+        "В",
+        "І",
+        "Д"
+      ]
+    }
+  ],
+  "letterGroups": {
+    "trueFriends": [
+      "А",
+      "Е",
+      "І",
+      "О",
+      "К",
+      "М",
+      "Т"
+    ],
+    "falseFriends": [
+      "В",
+      "Н",
+      "Р",
+      "С",
+      "У",
+      "Х"
+    ],
+    "newLetters": [
+      "Б",
+      "Д",
+      "З",
+      "И",
+      "Й",
+      "Л",
+      "П",
+      "Ф",
+      "Ц"
+    ]
+  }
+}

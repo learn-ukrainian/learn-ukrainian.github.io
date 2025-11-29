@@ -1,0 +1,290 @@
+{
+  "level": "A2",
+  "modules": [
+    {
+      "id": "mod-uk-A2-31", "number": 31, "phase": "A2.1", "type": "grammar",
+      "title": "To Me, For Me: Dative I", "titleUk": "Давальний відмінок I",
+      "description": "Dative case basics: recipients and indirect objects",
+      "grammarFocus": ["Dative case", "Verbs with dative"],
+      "vocabularyTarget": 20, "vocabularyDomains": ["giving verbs", "communication"],
+      "transliterationMode": "none"
+    },
+    {
+      "id": "mod-uk-A2-32", "number": 32, "phase": "A2.1", "type": "grammar",
+      "title": "Dative II: Feelings & Needs", "titleUk": "Давальний відмінок II",
+      "description": "Dative for feelings (мені холодно) and needs (мені потрібно)",
+      "grammarFocus": ["Impersonal + Dative", "Подобатися"],
+      "vocabularyTarget": 25, "vocabularyDomains": ["needs", "preferences"],
+      "transliterationMode": "none"
+    },
+    {
+      "id": "mod-uk-A2-33", "number": 33, "phase": "A2.1", "type": "vocabulary",
+      "title": "Health & Body", "titleUk": "Здоров'я і тіло",
+      "description": "Body parts and health vocabulary with dative expressions",
+      "grammarFocus": ["Dative practice", "Body part expressions"],
+      "vocabularyTarget": 45, "vocabularyDomains": ["body parts", "symptoms", "health"],
+      "transliterationMode": "none"
+    },
+    {
+      "id": "mod-uk-A2-34", "number": 34, "phase": "A2.1", "type": "function",
+      "title": "At the Doctor", "titleUk": "У лікаря",
+      "description": "Medical consultations and health discussions",
+      "grammarFocus": ["Dative integration"],
+      "vocabularyTarget": 30, "vocabularyDomains": ["medical phrases", "symptoms"],
+      "transliterationMode": "none"
+    },
+    {
+      "id": "mod-uk-A2-35", "number": 35, "phase": "A2.1", "type": "grammar",
+      "title": "With & By: Instrumental I", "titleUk": "Орудний відмінок I",
+      "description": "Instrumental for accompaniment (з) and means",
+      "grammarFocus": ["Instrumental case", "З + Instrumental"],
+      "vocabularyTarget": 20, "vocabularyDomains": ["accompaniment", "tools"],
+      "transliterationMode": "none"
+    },
+    {
+      "id": "mod-uk-A2-36", "number": 36, "phase": "A2.1", "type": "grammar",
+      "title": "Instrumental II: Being", "titleUk": "Орудний відмінок II",
+      "description": "Instrumental for professions and states with бути",
+      "grammarFocus": ["Бути + Instrumental", "Profession expressions"],
+      "vocabularyTarget": 30, "vocabularyDomains": ["professions", "states"],
+      "transliterationMode": "none"
+    },
+    {
+      "id": "mod-uk-A2-37", "number": 37, "phase": "A2.1", "type": "grammar",
+      "title": "Comparing Things I", "titleUk": "Порівняння I",
+      "description": "Comparative adjectives",
+      "grammarFocus": ["Comparative formation", "-іший/-ший"],
+      "vocabularyTarget": 25, "vocabularyDomains": ["comparison words", "qualities"],
+      "transliterationMode": "none"
+    },
+    {
+      "id": "mod-uk-A2-38", "number": 38, "phase": "A2.1", "type": "grammar",
+      "title": "Comparing Things II", "titleUk": "Порівняння II",
+      "description": "Superlatives and irregular comparisons",
+      "grammarFocus": ["Superlatives", "Irregular forms"],
+      "vocabularyTarget": 20, "vocabularyDomains": ["superlatives", "intensifiers"],
+      "transliterationMode": "none"
+    },
+    {
+      "id": "mod-uk-A2-39", "number": 39, "phase": "A2.1", "type": "grammar",
+      "title": "Hey You! Vocative", "titleUk": "Кличний відмінок",
+      "description": "Vocative case for direct address",
+      "grammarFocus": ["Vocative case", "Forms of address"],
+      "vocabularyTarget": 15, "vocabularyDomains": ["names", "titles", "address"],
+      "transliterationMode": "none"
+    },
+    {
+      "id": "mod-uk-A2-40", "number": 40, "phase": "A2.1", "type": "vocabulary",
+      "title": "Describing People", "titleUk": "Опис людей",
+      "description": "Appearance, personality, all cases for description",
+      "grammarFocus": ["All cases review"],
+      "vocabularyTarget": 45, "vocabularyDomains": ["appearance", "personality", "traits"],
+      "transliterationMode": "none"
+    },
+    {
+      "id": "mod-uk-A2-41", "number": 41, "phase": "A2.1", "type": "grammar",
+      "title": "Do It! Imperative I", "titleUk": "Наказовий спосіб I",
+      "description": "Imperative mood - ти forms",
+      "grammarFocus": ["Imperative formation", "Ти-commands"],
+      "vocabularyTarget": 20, "vocabularyDomains": ["command verbs", "instructions"],
+      "transliterationMode": "none"
+    },
+    {
+      "id": "mod-uk-A2-42", "number": 42, "phase": "A2.1", "type": "grammar",
+      "title": "Imperative II & Politeness", "titleUk": "Наказовий спосіб II",
+      "description": "Ви-forms and softening imperatives",
+      "grammarFocus": ["Ви-commands", "Polite requests"],
+      "vocabularyTarget": 20, "vocabularyDomains": ["polite phrases", "requests"],
+      "transliterationMode": "none"
+    },
+    {
+      "id": "mod-uk-A2-43", "number": 43, "phase": "A2.1", "type": "grammar",
+      "title": "Going Places: Motion I", "titleUk": "Дієслова руху I",
+      "description": "Unidirectional vs multidirectional motion (йти/ходити)",
+      "grammarFocus": ["Motion verb pairs", "Йти/ходити"],
+      "vocabularyTarget": 25, "vocabularyDomains": ["motion verbs", "destinations"],
+      "transliterationMode": "none"
+    },
+    {
+      "id": "mod-uk-A2-44", "number": 44, "phase": "A2.1", "type": "grammar",
+      "title": "Motion II: Vehicles", "titleUk": "Дієслова руху II",
+      "description": "Motion by vehicle (їхати/їздити)",
+      "grammarFocus": ["Їхати/їздити", "Transport expressions"],
+      "vocabularyTarget": 30, "vocabularyDomains": ["transport", "travel"],
+      "transliterationMode": "none"
+    },
+    {
+      "id": "mod-uk-A2-45", "number": 45, "phase": "A2.1", "type": "review",
+      "title": "Checkpoint: Explorer", "titleUk": "Контроль: Дослідник",
+      "description": "Review modules 31-44",
+      "grammarFocus": ["All A2.1 grammar"],
+      "vocabularyTarget": 10, "vocabularyDomains": ["mixed review"],
+      "transliterationMode": "none"
+    },
+    {
+      "id": "mod-uk-A2-46", "number": 46, "phase": "A2.2", "type": "grammar",
+      "title": "Two Verbs, One Action: Aspect Intro", "titleUk": "Вид дієслова: Вступ",
+      "description": "Introduction to verbal aspect - recognition of pairs",
+      "grammarFocus": ["Aspect concept", "Common pairs"],
+      "vocabularyTarget": 30, "vocabularyDomains": ["verb pairs"],
+      "transliterationMode": "none"
+    },
+    {
+      "id": "mod-uk-A2-47", "number": 47, "phase": "A2.2", "type": "grammar",
+      "title": "Because & When", "titleUk": "Тому що і коли",
+      "description": "Basic complex sentences with conjunctions",
+      "grammarFocus": ["Тому що", "Коли", "Якщо"],
+      "vocabularyTarget": 20, "vocabularyDomains": ["conjunctions", "connectors"],
+      "transliterationMode": "none"
+    },
+    {
+      "id": "mod-uk-A2-48", "number": 48, "phase": "A2.2", "type": "vocabulary",
+      "title": "Travel & Directions", "titleUk": "Подорож і напрямки",
+      "description": "Travel vocabulary with motion verbs",
+      "grammarFocus": ["Motion practice", "Directional prepositions"],
+      "vocabularyTarget": 45, "vocabularyDomains": ["travel", "directions", "locations"],
+      "transliterationMode": "none"
+    },
+    {
+      "id": "mod-uk-A2-49", "number": 49, "phase": "A2.2", "type": "function",
+      "title": "At the Station", "titleUk": "На вокзалі",
+      "description": "Buying tickets, asking for information",
+      "grammarFocus": ["Functional integration"],
+      "vocabularyTarget": 30, "vocabularyDomains": ["station", "tickets", "schedules"],
+      "transliterationMode": "none"
+    },
+    {
+      "id": "mod-uk-A2-50", "number": 50, "phase": "A2.2", "type": "vocabulary",
+      "title": "Accommodation", "titleUk": "Житло",
+      "description": "Hotels, apartments, booking",
+      "grammarFocus": ["All cases practice"],
+      "vocabularyTarget": 40, "vocabularyDomains": ["hotel", "apartment", "booking"],
+      "transliterationMode": "none"
+    },
+    {
+      "id": "mod-uk-A2-51", "number": 51, "phase": "A2.2", "type": "vocabulary",
+      "title": "Work & Jobs", "titleUk": "Робота і професії",
+      "description": "Professions and workplace vocabulary",
+      "grammarFocus": ["Instrumental for professions"],
+      "vocabularyTarget": 40, "vocabularyDomains": ["professions", "workplace"],
+      "transliterationMode": "none"
+    },
+    {
+      "id": "mod-uk-A2-52", "number": 52, "phase": "A2.2", "type": "function",
+      "title": "Job Context", "titleUk": "Робочий контекст",
+      "description": "Describing work, responsibilities",
+      "grammarFocus": ["Professional language"],
+      "vocabularyTarget": 25, "vocabularyDomains": ["duties", "workplace phrases"],
+      "transliterationMode": "none"
+    },
+    {
+      "id": "mod-uk-A2-53", "number": 53, "phase": "A2.2", "type": "vocabulary",
+      "title": "Hobbies & Interests", "titleUk": "Хобі і інтереси",
+      "description": "Leisure activities and interests",
+      "grammarFocus": ["Verb review"],
+      "vocabularyTarget": 40, "vocabularyDomains": ["hobbies", "sports", "activities"],
+      "transliterationMode": "none"
+    },
+    {
+      "id": "mod-uk-A2-54", "number": 54, "phase": "A2.2", "type": "vocabulary",
+      "title": "Shopping (Detailed)", "titleUk": "Покупки (детально)",
+      "description": "Extended shopping vocabulary and interactions",
+      "grammarFocus": ["Genitive for quantities"],
+      "vocabularyTarget": 40, "vocabularyDomains": ["shopping", "stores", "products"],
+      "transliterationMode": "none"
+    },
+    {
+      "id": "mod-uk-A2-55", "number": 55, "phase": "A2.2", "type": "function",
+      "title": "At the Market", "titleUk": "На ринку",
+      "description": "Market interactions, bargaining",
+      "grammarFocus": ["Functional integration"],
+      "vocabularyTarget": 25, "vocabularyDomains": ["market phrases", "bargaining"],
+      "transliterationMode": "none"
+    },
+    {
+      "id": "mod-uk-A2-56", "number": 56, "phase": "A2.3", "type": "vocabulary",
+      "title": "Technology Basics", "titleUk": "Технології: основи",
+      "description": "Basic technology and internet vocabulary",
+      "grammarFocus": ["Modern vocabulary"],
+      "vocabularyTarget": 35, "vocabularyDomains": ["technology", "internet", "devices"],
+      "transliterationMode": "none"
+    },
+    {
+      "id": "mod-uk-A2-57", "number": 57, "phase": "A2.3", "type": "vocabulary",
+      "title": "Nature & Animals", "titleUk": "Природа і тварини",
+      "description": "Natural world vocabulary",
+      "grammarFocus": ["Descriptive practice"],
+      "vocabularyTarget": 40, "vocabularyDomains": ["nature", "animals", "environment"],
+      "transliterationMode": "none"
+    },
+    {
+      "id": "mod-uk-A2-58", "number": 58, "phase": "A2.3", "type": "grammar",
+      "title": "Numbers: Big & Ordinal", "titleUk": "Великі числа і порядкові",
+      "description": "Numbers 100-1000+, ordinal numbers",
+      "grammarFocus": ["Large numerals", "Ordinals"],
+      "vocabularyTarget": 25, "vocabularyDomains": ["numbers", "ordinals"],
+      "transliterationMode": "none"
+    },
+    {
+      "id": "mod-uk-A2-59", "number": 59, "phase": "A2.3", "type": "vocabulary",
+      "title": "Dates & History", "titleUk": "Дати і історія",
+      "description": "Historical dates and events",
+      "grammarFocus": ["Ordinals with dates"],
+      "vocabularyTarget": 30, "vocabularyDomains": ["dates", "history", "events"],
+      "transliterationMode": "none"
+    },
+    {
+      "id": "mod-uk-A2-60", "number": 60, "phase": "A2.3", "type": "vocabulary",
+      "title": "Emotions & Reactions", "titleUk": "Емоції і реакції",
+      "description": "Emotional vocabulary with dative expressions",
+      "grammarFocus": ["Dative emotions"],
+      "vocabularyTarget": 35, "vocabularyDomains": ["emotions", "reactions", "feelings"],
+      "transliterationMode": "none"
+    },
+    {
+      "id": "mod-uk-A2-61", "number": 61, "phase": "A2.3", "type": "grammar",
+      "title": "Adverbs Deep Dive", "titleUk": "Прислівники",
+      "description": "Adverb formation and usage",
+      "grammarFocus": ["Adverb formation", "Placement"],
+      "vocabularyTarget": 25, "vocabularyDomains": ["manner adverbs"],
+      "transliterationMode": "none"
+    },
+    {
+      "id": "mod-uk-A2-62", "number": 62, "phase": "A2.3", "type": "vocabulary",
+      "title": "Actions & Manner", "titleUk": "Дії і манера",
+      "description": "Descriptive adverbs in context",
+      "grammarFocus": ["Adverb practice"],
+      "vocabularyTarget": 30, "vocabularyDomains": ["adverbs", "descriptors"],
+      "transliterationMode": "none"
+    },
+    {
+      "id": "mod-uk-A2-63", "number": 63, "phase": "A2.3", "type": "function",
+      "title": "Telling Stories (Simple)", "titleUk": "Прості розповіді",
+      "description": "Basic narrative structures",
+      "grammarFocus": ["Past tense", "Sequencing"],
+      "vocabularyTarget": 25, "vocabularyDomains": ["narrative words", "sequence"],
+      "transliterationMode": "none"
+    },
+    {
+      "id": "mod-uk-A2-64", "number": 64, "phase": "A2.3", "type": "grammar",
+      "title": "Preposition Mastery", "titleUk": "Прийменники",
+      "description": "All prepositions with their cases",
+      "grammarFocus": ["Preposition + case combinations"],
+      "vocabularyTarget": 20, "vocabularyDomains": ["prepositions"],
+      "transliterationMode": "none"
+    },
+    {
+      "id": "mod-uk-A2-65", "number": 65, "phase": "A2.3", "type": "review",
+      "title": "A2 Capstone: The Explorer Test", "titleUk": "Підсумок A2: Тест дослідника",
+      "description": "Comprehensive A2 assessment",
+      "grammarFocus": ["All A2 grammar"],
+      "vocabularyTarget": 10, "vocabularyDomains": ["comprehensive review"],
+      "transliterationMode": "none"
+    }
+  ],
+  "vocabularySummary": {
+    "A2.1": { "modules": "31-45", "newWords": 380, "cumulative": 1130 },
+    "A2.2": { "modules": "46-55", "newWords": 350, "cumulative": 1480 },
+    "A2.3": { "modules": "56-65", "newWords": 320, "cumulative": 1800 }
+  }
+}

@@ -1,0 +1,365 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "VocabularyItem": {
+      "type": "object",
+      "required": ["id", "uk", "en", "gender", "pos"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^v-[a-z0-9-]+$" },
+        "uk": { "type": "string", "description": "Ukrainian word (Cyrillic)" },
+        "uk_translit": { "type": "string", "description": "Latin transliteration (A1.1 only)" },
+        "ipa": { "type": "string", "description": "IPA pronunciation" },
+        "en": { "type": "string", "description": "English translation" },
+        "gender": { "enum": ["m", "f", "n", "pl", "na"], "description": "m=masc, f=fem, n=neut, pl=plural only, na=not applicable" },
+        "pos": { "enum": ["noun", "verb", "adj", "adv", "prep", "conj", "pron", "num", "part", "interj", "phrase"] },
+        "aspect": { "enum": ["impf", "pf", "both", "na"], "description": "For verbs only" },
+        "declension": { "enum": ["1", "2", "3", "4", "na"], "description": "Noun declension family" },
+        "conjugation": { "enum": ["1", "2", "irr", "na"], "description": "Verb conjugation class" },
+        "forms": {
+          "type": "object",
+          "description": "Key grammatical forms",
+          "properties": {
+            "nom_sg": { "type": "string" },
+            "gen_sg": { "type": "string" },
+            "acc_sg": { "type": "string" },
+            "dat_sg": { "type": "string" },
+            "inst_sg": { "type": "string" },
+            "loc_sg": { "type": "string" },
+            "voc_sg": { "type": "string" },
+            "nom_pl": { "type": "string" },
+            "inf": { "type": "string" },
+            "pres_1sg": { "type": "string" },
+            "pres_3sg": { "type": "string" },
+            "past_m": { "type": "string" },
+            "past_f": { "type": "string" },
+            "imp_sg": { "type": "string" },
+            "imp_pl": { "type": "string" }
+          }
+        },
+        "example": {
+          "type": "object",
+          "properties": {
+            "uk": { "type": "string" },
+            "en": { "type": "string" }
+          }
+        },
+        "audio": { "type": "string", "description": "Audio file reference" },
+        "image": { "type": "string", "description": "Image file reference" },
+        "notes": { "type": "string", "description": "Usage notes, false friends, etc." },
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "frequency": { "type": "integer", "minimum": 1, "maximum": 10, "description": "1=most common, 10=rare" },
+        "level": { "enum": ["A1", "A2", "B1", "B2", "C1"] }
+      }
+    },
+
+    "Lesson": {
+      "type": "object",
+      "required": ["id", "moduleId", "title", "level", "objectives", "phases"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^lesson-[a-z]{2}-[A-Z][0-9]-[0-9]{2}$" },
+        "moduleId": { "type": "string" },
+        "title": { "type": "string" },
+        "titleUk": { "type": "string", "description": "Ukrainian title (B1+)" },
+        "description": { "type": "string" },
+        "descriptionUk": { "type": "string" },
+        "level": { "enum": ["A1", "A2", "B1", "B2", "C1"] },
+        "moduleNumber": { "type": "integer" },
+        "lessonType": { "enum": ["grammar", "vocabulary", "function", "review"] },
+        "objectives": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 2,
+          "maxItems": 5
+        },
+        "objectivesUk": { "type": "array", "items": { "type": "string" } },
+        "grammarFocus": { "type": "array", "items": { "type": "string" } },
+        "vocabularyIds": { "type": "array", "items": { "type": "string" }, "description": "References to vocabulary.json" },
+        "prerequisiteModules": { "type": "array", "items": { "type": "integer" } },
+        "duration": { "type": "integer", "description": "Minutes" },
+        "phases": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Phase" }
+        },
+        "transliterationMode": {
+          "enum": ["full", "vocab-only", "first-occurrence", "none"],
+          "description": "How transliteration is used in this lesson"
+        },
+        "instructionLanguage": {
+          "type": "object",
+          "properties": {
+            "exercises": { "enum": ["en", "uk", "both"] },
+            "grammar": { "enum": ["en", "uk", "both"] },
+            "feedback": { "enum": ["en", "uk", "both"] }
+          }
+        },
+        "metadata": {
+          "type": "object",
+          "properties": {
+            "version": { "type": "integer" },
+            "createdAt": { "type": "string", "format": "date-time" },
+            "modifiedAt": { "type": "string", "format": "date-time" },
+            "author": { "type": "string" }
+          }
+        }
+      }
+    },
+
+    "Phase": {
+      "type": "object",
+      "required": ["id", "name", "duration", "items"],
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "enum": ["warm-up", "presentation", "practice", "production", "review"] },
+        "duration": { "type": "integer" },
+        "items": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              { "$ref": "#/definitions/ActivityReference" },
+              { "$ref": "#/definitions/ContentBlock" }
+            ]
+          }
+        }
+      }
+    },
+
+    "ActivityReference": {
+      "type": "object",
+      "required": ["type", "activityId"],
+      "properties": {
+        "type": { "const": "activity" },
+        "activityId": { "type": "string" }
+      }
+    },
+
+    "ContentBlock": {
+      "type": "object",
+      "required": ["type", "content"],
+      "properties": {
+        "type": { "enum": ["explanation", "dialogue", "table", "note", "audio", "video"] },
+        "content": { "type": "string" },
+        "contentUk": { "type": "string" }
+      }
+    },
+
+    "Activity": {
+      "type": "object",
+      "required": ["id", "type", "title", "level", "content"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^act-[a-z0-9-]+$" },
+        "type": { "enum": ["flash-cards", "match-up", "gap-fill", "group-sort", "unjumble", "quiz", "true-false", "listen-respond", "dictation", "translation", "free-write"] },
+        "title": { "type": "string" },
+        "titleUk": { "type": "string" },
+        "description": { "type": "string" },
+        "descriptionUk": { "type": "string" },
+        "level": { "enum": ["A1", "A2", "B1", "B2", "C1"] },
+        "vocabularyIds": { "type": "array", "items": { "type": "string" } },
+        "instructions": { "type": "string" },
+        "instructionsUk": { "type": "string" },
+        "content": {
+          "oneOf": [
+            { "$ref": "#/definitions/FlashCardsContent" },
+            { "$ref": "#/definitions/MatchUpContent" },
+            { "$ref": "#/definitions/GapFillContent" },
+            { "$ref": "#/definitions/GroupSortContent" },
+            { "$ref": "#/definitions/UnjumbleContent" },
+            { "$ref": "#/definitions/QuizContent" },
+            { "$ref": "#/definitions/TrueFalseContent" }
+          ]
+        },
+        "hints": { "type": "array", "items": { "type": "string" } },
+        "feedback": {
+          "type": "object",
+          "properties": {
+            "correct": { "type": "string" },
+            "incorrect": { "type": "string" },
+            "correctUk": { "type": "string" },
+            "incorrectUk": { "type": "string" }
+          }
+        },
+        "tags": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+
+    "FlashCardsContent": {
+      "type": "object",
+      "required": ["cards"],
+      "properties": {
+        "cards": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["front", "back"],
+            "properties": {
+              "front": { "type": "string" },
+              "back": { "type": "string" },
+              "frontAudio": { "type": "string" },
+              "backAudio": { "type": "string" },
+              "image": { "type": "string" },
+              "hint": { "type": "string" }
+            }
+          }
+        },
+        "showTransliteration": { "type": "boolean" },
+        "shuffleCards": { "type": "boolean", "default": true }
+      }
+    },
+
+    "MatchUpContent": {
+      "type": "object",
+      "required": ["pairs"],
+      "properties": {
+        "pairs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["left", "right"],
+            "properties": {
+              "left": { "type": "string" },
+              "right": { "type": "string" },
+              "leftAudio": { "type": "string" }
+            }
+          }
+        },
+        "shuffleBoth": { "type": "boolean", "default": true }
+      }
+    },
+
+    "GapFillContent": {
+      "type": "object",
+      "required": ["sentences"],
+      "properties": {
+        "sentences": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["text", "gaps"],
+            "properties": {
+              "text": { "type": "string", "description": "Sentence with [gap] markers" },
+              "translation": { "type": "string" },
+              "gaps": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["correct"],
+                  "properties": {
+                    "correct": { "type": "string" },
+                    "alternatives": { "type": "array", "items": { "type": "string" } },
+                    "distractors": { "type": "array", "items": { "type": "string" } },
+                    "hint": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "inputMode": { "enum": ["select", "type", "drag"], "default": "select" }
+      }
+    },
+
+    "GroupSortContent": {
+      "type": "object",
+      "required": ["groups"],
+      "properties": {
+        "groups": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "items"],
+            "properties": {
+              "name": { "type": "string" },
+              "nameUk": { "type": "string" },
+              "items": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        },
+        "shuffleItems": { "type": "boolean", "default": true }
+      }
+    },
+
+    "UnjumbleContent": {
+      "type": "object",
+      "required": ["sentences"],
+      "properties": {
+        "sentences": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["correct"],
+            "properties": {
+              "correct": { "type": "string", "description": "Correct sentence" },
+              "translation": { "type": "string" },
+              "alternatives": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        }
+      }
+    },
+
+    "QuizContent": {
+      "type": "object",
+      "required": ["questions"],
+      "properties": {
+        "questions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["question", "options", "correctIndex"],
+            "properties": {
+              "question": { "type": "string" },
+              "questionUk": { "type": "string" },
+              "options": { "type": "array", "items": { "type": "string" }, "minItems": 2, "maxItems": 4 },
+              "correctIndex": { "type": "integer" },
+              "explanation": { "type": "string" },
+              "explanationUk": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+
+    "TrueFalseContent": {
+      "type": "object",
+      "required": ["statements"],
+      "properties": {
+        "statements": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["statement", "isTrue"],
+            "properties": {
+              "statement": { "type": "string" },
+              "statementUk": { "type": "string" },
+              "isTrue": { "type": "boolean" },
+              "explanation": { "type": "string" },
+              "explanationUk": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+
+    "Module": {
+      "type": "object",
+      "required": ["id", "number", "level", "title", "type", "vocabularyTarget", "grammarFocus"],
+      "properties": {
+        "id": { "type": "string" },
+        "number": { "type": "integer" },
+        "level": { "enum": ["A1", "A2", "B1", "B2", "C1"] },
+        "phase": { "type": "string", "description": "e.g., 'A1.1', 'A1.2'" },
+        "title": { "type": "string" },
+        "titleUk": { "type": "string" },
+        "type": { "enum": ["grammar", "vocabulary", "function", "review"] },
+        "description": { "type": "string" },
+        "vocabularyTarget": { "type": "integer", "description": "New words introduced" },
+        "vocabularyCumulative": { "type": "integer", "description": "Total words by end of module" },
+        "grammarFocus": { "type": "array", "items": { "type": "string" } },
+        "canDo": { "type": "array", "items": { "type": "string" }, "description": "CEFR can-do statements" },
+        "prerequisites": { "type": "array", "items": { "type": "integer" } },
+        "lessons": { "type": "array", "items": { "type": "string" } },
+        "transliterationMode": { "enum": ["full", "vocab-only", "first-occurrence", "none"] },
+        "instructionLanguage": { "enum": ["en", "uk", "both"] }
+      }
+    }
+  }
+}

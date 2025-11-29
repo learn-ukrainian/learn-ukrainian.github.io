@@ -1,0 +1,305 @@
+{
+  "$schema": "../../schemas/vibe-schema.json",
+  "languagePair": {
+    "code": "l2-uk-en",
+    "type": "L2",
+    "targetLanguage": {
+      "code": "uk",
+      "name": "Ukrainian",
+      "nameNative": "Українська"
+    },
+    "sourceLanguage": {
+      "code": "en",
+      "name": "English",
+      "nameNative": "English"
+    },
+    "description": "Ukrainian as a Second Language for English speakers"
+  },
+  "curriculum": {
+    "id": "l2-uk-en-cefr",
+    "name": "Ukrainian for English Speakers",
+    "nameUk": "Українська для англомовних",
+    "version": "2.0.0",
+    "framework": "CEFR",
+    "targetLevels": ["A1", "A2", "B1", "B2", "C1"],
+    "totalModules": 200,
+    "totalVocabulary": 8000
+  },
+  "methodology": {
+    "approach": "grammar-scaffolded-vocabulary-injection",
+    "lessonStructure": "PPP",
+    "phases": ["warm-up", "presentation", "practice", "production", "review"]
+  },
+  "transliterationStrategy": {
+    "A1.1": { "modules": [1, 10], "mode": "full", "description": "All words show Cyrillic + Latin" },
+    "A1.2": { "modules": [11, 20], "mode": "vocab-only", "description": "Word lists have Latin, sentences Cyrillic only" },
+    "A1.3": { "modules": [21, 30], "mode": "first-occurrence", "description": "New words get Latin once" },
+    "A2+": { "modules": [31, 200], "mode": "none", "description": "Pure Cyrillic" }
+  },
+  "immersionStrategy": {
+    "A1": { "instructionLanguage": "en", "exerciseLanguage": "en", "percentage": { "en": 95, "uk": 5 } },
+    "A2": { "instructionLanguage": "en", "exerciseLanguage": "both", "percentage": { "en": 70, "uk": 30 } },
+    "B1": { "instructionLanguage": "both", "exerciseLanguage": "uk", "percentage": { "en": 40, "uk": 60 } },
+    "B2": { "instructionLanguage": "uk", "exerciseLanguage": "uk", "percentage": { "en": 15, "uk": 85 } },
+    "C1": { "instructionLanguage": "uk", "exerciseLanguage": "uk", "percentage": { "en": 5, "uk": 95 } }
+  },
+  "levels": {
+    "A1": {
+      "name": "Survivor",
+      "nameUk": "Виживання",
+      "modules": 30,
+      "moduleRange": [1, 30],
+      "vocabularyTarget": 750,
+      "grammarPoints": 17,
+      "description": "Concrete survival: buy food, introduce yourself, navigate",
+      "canDo": [
+        "Understand familiar words and basic phrases about self and family",
+        "Introduce myself and ask/answer simple questions about personal details",
+        "Interact simply if the other person speaks slowly and clearly",
+        "Write short simple messages and fill in forms with personal details"
+      ],
+      "phases": {
+        "A1.1": { "modules": [1, 10], "name": "First Contact", "vocab": 240 },
+        "A1.2": { "modules": [11, 20], "name": "Navigation", "vocab": 250 },
+        "A1.3": { "modules": [21, 30], "name": "Time & Self", "vocab": 260 }
+      },
+      "grammar": [
+        "Cyrillic alphabet & phonetics",
+        "Noun gender (m/f/n)",
+        "Declension groups (1-4)",
+        "Personal pronouns",
+        "Present tense (Class I & II)",
+        "Zero copula",
+        "Nominative case",
+        "Accusative case (inanimate & animate)",
+        "Locative case",
+        "Genitive case (basic)",
+        "Possessive pronouns",
+        "Past tense (L-participle)",
+        "Future tense (compound)",
+        "Adjective agreement (basic)",
+        "Modal verbs (могти, хотіти, мусити)",
+        "Question formation",
+        "Negation"
+      ],
+      "vocabularyDomains": [
+        "Personal identification",
+        "Numbers 0-100",
+        "Time (days, months)",
+        "City & places",
+        "Food & drink",
+        "Family",
+        "Daily routine",
+        "Weather",
+        "Colors",
+        "Common objects"
+      ]
+    },
+    "A2": {
+      "name": "Explorer",
+      "nameUk": "Дослідник",
+      "modules": 35,
+      "moduleRange": [31, 65],
+      "vocabularyTarget": 1050,
+      "vocabularyCumulative": 1800,
+      "grammarPoints": 11,
+      "description": "Social connection and routine tasks",
+      "canDo": [
+        "Understand sentences about familiar topics (family, shopping, work)",
+        "Communicate in simple routine tasks requiring direct exchange of information",
+        "Describe in simple terms aspects of background and immediate environment",
+        "Write short simple notes and messages"
+      ],
+      "phases": {
+        "A2.1": { "modules": [31, 45], "name": "Connection", "vocab": 380 },
+        "A2.2": { "modules": [46, 55], "name": "Expansion", "vocab": 350 },
+        "A2.3": { "modules": [56, 65], "name": "Independence", "vocab": 320 }
+      },
+      "grammar": [
+        "Dative case",
+        "Instrumental case",
+        "Vocative case",
+        "Comparative adjectives",
+        "Superlative adjectives",
+        "Imperative mood",
+        "Motion verbs (simple)",
+        "Aspect introduction",
+        "Adverbs of manner",
+        "Complex sentences (basic)",
+        "Preposition expansion"
+      ],
+      "vocabularyDomains": [
+        "Health & body",
+        "Appearance & clothing",
+        "Travel & accommodation",
+        "Work & occupations",
+        "Hobbies & leisure",
+        "Shopping (detailed)",
+        "Services",
+        "Emotions (basic)",
+        "Nature & animals",
+        "Technology (basic)"
+      ]
+    },
+    "B1": {
+      "name": "Connector",
+      "nameUk": "Зв'язківець",
+      "modules": 40,
+      "moduleRange": [66, 105],
+      "vocabularyTarget": 1500,
+      "vocabularyCumulative": 3300,
+      "grammarPoints": 10,
+      "description": "Independence and opinions",
+      "canDo": [
+        "Understand main points of clear standard speech on familiar matters",
+        "Deal with most situations likely to arise while traveling",
+        "Produce simple connected text on familiar topics",
+        "Describe experiences, events, dreams, hopes and ambitions"
+      ],
+      "phases": {
+        "B1.1": { "modules": [66, 80], "name": "Aspect Revolution", "vocab": 420 },
+        "B1.2": { "modules": [81, 95], "name": "Complex Expression", "vocab": 475 },
+        "B1.3": { "modules": [96, 105], "name": "Autonomy", "vocab": 605 }
+      },
+      "grammar": [
+        "Aspect system (full)",
+        "Future (perfective)",
+        "Prefixed motion verbs",
+        "Conditional mood",
+        "Reflexive verbs (full)",
+        "Relative clauses",
+        "Indirect questions",
+        "Complex conjunctions",
+        "Reported speech (basic)",
+        "Participles (recognition)"
+      ],
+      "vocabularyDomains": [
+        "Education & learning",
+        "Media & entertainment",
+        "Environment & ecology",
+        "Society & community",
+        "Personal relationships (complex)",
+        "Plans & intentions",
+        "Opinions & preferences",
+        "Problems & solutions",
+        "Abstract concepts (basic)",
+        "Professional contexts"
+      ]
+    },
+    "B2": {
+      "name": "Thinker",
+      "nameUk": "Мислитель",
+      "modules": 45,
+      "moduleRange": [106, 150],
+      "vocabularyTarget": 2200,
+      "vocabularyCumulative": 5500,
+      "grammarPoints": 10,
+      "description": "Fluency and abstract thought",
+      "canDo": [
+        "Understand extended speech and lectures with complex arguments",
+        "Read articles on contemporary problems expressing attitudes",
+        "Interact with fluency and spontaneity without strain",
+        "Write clear detailed text on a wide range of subjects"
+      ],
+      "phases": {
+        "B2.1": { "modules": [106, 125], "name": "Sophistication", "vocab": 635 },
+        "B2.2": { "modules": [126, 140], "name": "Domains", "vocab": 850 },
+        "B2.3": { "modules": [141, 150], "name": "Refinement", "vocab": 715 }
+      },
+      "grammar": [
+        "Passive voice",
+        "Active participles",
+        "Passive participles",
+        "Advanced aspect",
+        "All conditionals",
+        "Reported speech (full)",
+        "Complex subordination",
+        "Concession & contrast",
+        "Result & purpose",
+        "Emphasis structures"
+      ],
+      "vocabularyDomains": [
+        "Politics & government",
+        "Economics & business",
+        "Science & technology",
+        "Arts & culture",
+        "Current events",
+        "Abstract thought",
+        "Argumentation",
+        "Academic vocabulary",
+        "Idioms & expressions",
+        "Register variation"
+      ]
+    },
+    "C1": {
+      "name": "Master",
+      "nameUk": "Майстер",
+      "modules": 50,
+      "moduleRange": [151, 200],
+      "vocabularyTarget": 2500,
+      "vocabularyCumulative": 8000,
+      "grammarPoints": 9,
+      "description": "Academic and professional mastery",
+      "canDo": [
+        "Understand a wide range of demanding, longer texts",
+        "Express myself fluently and spontaneously without obvious searching",
+        "Use language flexibly for social, academic and professional purposes",
+        "Produce clear, well-structured text on complex subjects"
+      ],
+      "phases": {
+        "C1.1": { "modules": [151, 170], "name": "Refinement", "vocab": 1000 },
+        "C1.2": { "modules": [171, 185], "name": "Specialization", "vocab": 850 },
+        "C1.3": { "modules": [186, 200], "name": "Mastery", "vocab": 650 }
+      },
+      "grammar": [
+        "Gerunds",
+        "Participle clauses",
+        "Advanced word order",
+        "Nominalization",
+        "Hedging & precision",
+        "Discourse markers",
+        "Stylistic variation",
+        "Archaic forms",
+        "Dialectal awareness"
+      ],
+      "vocabularyDomains": [
+        "Academic discourse",
+        "Professional specialization",
+        "Literary language",
+        "Regional variation",
+        "Historical features",
+        "Nuanced expression",
+        "Cultural references",
+        "Collocations",
+        "Low-frequency essentials",
+        "Stylistics"
+      ]
+    }
+  },
+  "caseProgression": {
+    "order": ["nominative", "accusative", "locative", "genitive", "dative", "instrumental", "vocative"],
+    "introduction": {
+      "nominative": { "module": 3, "level": "A1" },
+      "accusative": { "module": 11, "level": "A1" },
+      "locative": { "module": 13, "level": "A1" },
+      "genitive": { "module": 16, "level": "A1" },
+      "dative": { "module": 31, "level": "A2" },
+      "instrumental": { "module": 35, "level": "A2" },
+      "vocative": { "module": 39, "level": "A2" }
+    }
+  },
+  "verbProgression": {
+    "present": { "module": 6, "level": "A1" },
+    "past": { "module": 21, "level": "A1" },
+    "futureCompound": { "module": 22, "level": "A1" },
+    "imperative": { "module": 41, "level": "A2" },
+    "aspectIntro": { "module": 46, "level": "A2" },
+    "aspectFull": { "module": 66, "level": "B1" },
+    "futureSimple": { "module": 71, "level": "B1" },
+    "conditional": { "module": 77, "level": "B1" },
+    "prefixedMotion": { "module": 72, "level": "B1" },
+    "passive": { "module": 106, "level": "B2" },
+    "participles": { "module": 109, "level": "B2" },
+    "gerunds": { "module": 151, "level": "C1" }
+  }
+}
