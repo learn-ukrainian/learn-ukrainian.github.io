@@ -1,9 +1,9 @@
 # A2+ Curriculum Plan: Ukrainian for English Speakers
 
-**Status:** 🔲 TO BUILD
-**Modules:** 61-75 (15 modules)
-**Vocabulary Target:** ~580 words
-**Cumulative Target:** ~1,400 words
+**Status:** ✅ IMPLEMENTED
+**Modules:** 61-80 (20 modules)
+**Vocabulary Target:** ~750 words
+**Cumulative Target:** ~1,600 words
 
 ---
 
@@ -13,8 +13,8 @@ A2+ is a **bridge level** between A2 and B1 that addresses the vocabulary gap. A
 
 **A2+ focuses on:**
 1. **Word Formation** - Prefixes, suffixes, and root families to multiply vocabulary
-2. **Vocabulary Expansion** - Deeper coverage of practical domains
-3. **Collocations** - Common word combinations for natural speech
+2. **Vocabulary Expansion** - Deeper coverage of 12 practical domains
+3. **Review & Consolidation** - Preparation for B1 grammar-intensive content
 
 ---
 
@@ -39,263 +39,146 @@ Before starting A2+, learners have completed:
 - Recognize word families (root-based learning)
 - Multiply vocabulary through derivation
 
-### Grammar/Vocabulary Progression
+### Module Structure
 
-| Module | Focus | Type | Target Words |
-|--------|-------|------|--------------|
-| 61 | Prefixes I: Motion | Word Formation | 45 |
-| 62 | Prefixes II: Action | Word Formation | 45 |
-| 63 | Suffixes I: Nouns | Word Formation | 40 |
-| 64 | Suffixes II: Adjectives | Word Formation | 40 |
-| 65 | Root Families I | Word Formation | 35 |
-| 66 | Root Families II | Word Formation | 35 |
+| # | Title | Subtitle | Type |
+|---|-------|----------|------|
+| 61 | Prefixes I: Motion Verbs | How Prefixes Change Meaning | Word Formation |
+| 62 | Prefixes II: Action Verbs | Transforming Everyday Verbs | Word Formation |
+| 63 | Suffixes I: Nouns | Building Nouns from Verbs and Adjectives | Word Formation |
+| 64 | Suffixes II: Adjectives | Creating Adjectives from Nouns and Verbs | Word Formation |
+| 65 | Root Families I: Common Roots | Recognizing Word Relationships Through Roots | Word Formation |
+| 66 | Root Families II: Motion & Perception | Roots for Movement, Seeing, and Knowing | Word Formation |
 
-### Module Content Specifications A2+.1
+### Key Content
 
-#### Module 61: Prefixes I - Motion Verbs
-**Focus:** How prefixes change motion verb meanings
+**Module 61: Prefixes I - Motion Verbs**
+- **при-** (arrival): йти → прийти, їхати → приїхати
+- **ви-** (exit): йти → вийти, їхати → виїхати
+- **за-** (behind/drop by): йти → зайти, їхати → заїхати
+- **пере-** (across): йти → перейти, їхати → переїхати
 
-**Key prefixes:**
-- **при-** (arrival): йти → прийти (come), їхати → приїхати (arrive)
-- **ви-** (exit): йти → вийти (go out), їхати → виїхати (drive out)
-- **за-** (behind/drop by): йти → зайти (drop by), їхати → заїхати
-- **пере-** (across): йти → перейти (cross), їхати → переїхати
+**Module 62: Prefixes II - Action Verbs**
+- **на-** (accumulation): писати → написати
+- **по-** (completion): будувати → побудувати
+- **роз-** (dispersal): давати → роздавати
+- **від-** (away/response): повідати → відповідати
 
-**Vocabulary (45 words):**
-All prefixed motion verbs with their meanings, plus related nouns (вихід, прихід, etc.)
+**Module 63-64: Suffix Formation**
+- **-ння/-ття** (verbal nouns): читати → читання
+- **-ість** (abstract): новий → новість
+- **-ний/-ський** (adjectives): місто → міський
 
----
-
-#### Module 62: Prefixes II - Action Verbs
-**Focus:** Prefixes with non-motion verbs
-
-**Key prefixes:**
-- **на-** (accumulation): писати → написати, малювати → намалювати
-- **по-** (completion): будувати → побудувати, бачити → побачити
-- **роз-** (dispersal): давати → роздавати, казати → розказати
-- **від-** (away/response): повідати → відповідати, давати → віддавати
-
-**Vocabulary (45 words):**
-Prefixed action verbs showing meaning changes
+**Module 65-66: Root Families**
+- **ход-** family: ходити, хід, вхід, вихід, похід
+- **пис-** family: писати, письмо, письменник, підпис
+- **бач-** family: бачити, побачення, бачення
 
 ---
 
-#### Module 63: Suffixes I - Noun Formation
-**Focus:** Creating nouns from verbs and adjectives
-
-**Key suffixes:**
-- **-ння/-ття** (verbal nouns): читати → читання, писати → писання
-- **-ість** (abstract): новий → новість, можливий → можливість
-- **-ок/-ець** (result/person): початок, кінець, молодець
-
-**Vocabulary (40 words):**
-Derived nouns with their base words
-
----
-
-#### Module 64: Suffixes II - Adjective Formation
-**Focus:** Creating adjectives from nouns
-
-**Key suffixes:**
-- **-ний/-ний** (relating to): місто → міський, книга → книжковий
-- **-ливий** (tendency): забути → забудькуватий, говорити → говіркий
-- **-ський** (belonging to): Україна → український, студент → студентський
-
-**Vocabulary (40 words):**
-Derived adjectives with their base nouns
-
----
-
-#### Module 65: Root Families I
-**Focus:** Word families based on common roots
-
-**Sample root: ход- (movement)**
-- ходити, хід, вхід, вихід, похід, прихід, ходьба, пішохід, прохідний
-
-**Sample root: пис- (writing)**
-- писати, письмо, письменник, писемність, підпис, напис, запис, опис
-
-**Vocabulary (35 words):**
-Two complete word families with all derivations
-
----
-
-#### Module 66: Root Families II
-**Focus:** More word families
-
-**Sample root: роб- (work/do)**
-- робити, робота, робітник, виріб, обробка, заробіток, безробітний
-
-**Sample root: чит- (reading)**
-- читати, читач, читання, прочитати, перечитати, зачитатися
-
-**Vocabulary (35 words):**
-Two more complete word families
-
----
-
-## Phase A2+.2: Vocabulary Expansion (Modules 67-73)
+## Phase A2+.2: Vocabulary Expansion (Modules 67-78)
 
 ### Learning Goals
-- Deepen vocabulary in key practical domains
-- Learn common collocations
+- Deepen vocabulary in 12 key practical domains
 - Build natural word combinations
 - Prepare for B1 conversational needs
 
-### Vocabulary Progression
+### Module Structure
 
-| Module | Topic | Type | Target Words |
-|--------|-------|------|--------------|
-| 67 | Expanded Food & Cooking | Vocabulary | 40 |
-| 68 | Expanded Home & Furniture | Vocabulary | 40 |
-| 69 | Expanded City & Services | Vocabulary | 40 |
-| 70 | Nature & Environment | Vocabulary | 40 |
-| 71 | Collocations: Verbs I | Collocations | 35 |
-| 72 | Collocations: Verbs II | Collocations | 35 |
-| 73 | Collocations: Adjectives | Collocations | 35 |
+| # | Title | Subtitle | Domain |
+|---|-------|----------|--------|
+| 67 | Food & Cooking Vocabulary | Kitchen Actions, Ingredients, and Meals | Daily Life |
+| 68 | Health & Body Vocabulary | Body Parts, Symptoms, and Medical Terms | Health |
+| 69 | Home & Furniture Vocabulary | Rooms, Furniture, and Household Items | Daily Life |
+| 70 | Nature & Weather Vocabulary | Landscapes, Weather, and the Natural World | Environment |
+| 71 | Emotions & Personality Vocabulary | Describing Feelings and Character Traits | Social |
+| 72 | Work & Professions Vocabulary | Jobs, Workplace, and Career Terms | Professional |
+| 73 | Technology & Media Vocabulary | Computers, Internet, and Digital Communication | Modern Life |
+| 74 | Hobbies & Leisure Vocabulary | Free Time Activities and Entertainment | Lifestyle |
+| 75 | Education & Learning Vocabulary | School, University, and Academic Life | Education |
+| 76 | Shopping & Services Vocabulary | Stores, Banking, and Customer Service | Daily Life |
+| 77 | Sports & Fitness Vocabulary | Exercise, Teams, and Athletic Activities | Lifestyle |
+| 78 | Arts & Culture Vocabulary | Music, Cinema, Literature, and Traditions | Culture |
 
-### Module Content Specifications A2+.2
+### Key Vocabulary Domains
 
-#### Module 67: Expanded Food & Cooking
-**Focus:** Kitchen, cooking methods, recipes
+**Daily Life (67, 69, 76)**
+- Kitchen: каструля, сковорода, духовка, нарізати, смажити
+- Home: комод, полиця, килим, прибирати, ремонт
+- Shopping: каса, знижка, чек, обмін, повернення
 
-**Domains:**
-- Kitchen tools: каструля, сковорода, духовка, миска
-- Cooking verbs: смажити, варити, пекти, різати, мішати
-- Ingredients: борошно, цукор, сіль, перець, олія
-- Recipes: рецепт, інгредієнт, порція, страва
+**Health & Body (68)**
+- Body: серце, легені, печінка, кістка, м'яз
+- Symptoms: біль, температура, запалення, нежить
+- Medical: лікар, аптека, рецепт, таблетки
 
-**Vocabulary (40 words)**
+**Nature & Environment (70)**
+- Landscape: гора, долина, озеро, ліс, поле
+- Weather: хмарно, сонячно, гроза, сніг, туман
+- Nature: птах, звір, квітка, дерево
 
----
+**Social & Emotional (71)**
+- Emotions: радість, сум, гнів, страх, здивування
+- Personality: добрий, чесний, сміливий, терплячий
 
-#### Module 68: Expanded Home & Furniture
-**Focus:** Detailed household vocabulary
+**Professional (72)**
+- Jobs: інженер, лікар, вчитель, програміст
+- Workplace: офіс, фабрика, зустріч, проєкт
 
-**Domains:**
-- Furniture: комод, полиця, килим, штора, подушка
-- Appliances: пральна машина, посудомийка, кондиціонер
-- Maintenance: ремонт, прибирати, мити, пилососити
-- Problems: ламатися, текти, не працювати
+**Modern Life (73)**
+- Technology: комп'ютер, смартфон, інтернет, програма
+- Media: новини, фільм, серіал, соціальні мережі
 
-**Vocabulary (40 words)**
+**Lifestyle (74, 77)**
+- Hobbies: малювати, грати, колекціонувати, подорожувати
+- Sports: футбол, плавання, тренування, змагання
 
----
-
-#### Module 69: Expanded City & Services
-**Focus:** Urban life, institutions, services
-
-**Domains:**
-- Institutions: мерія, поліція, суд, нотаріус
-- Services: перукарня, хімчистка, ремонт, доставка
-- Urban features: парковка, світлофор, пішохідний перехід
-- Problems: затор, аварія, ремонт дороги
-
-**Vocabulary (40 words)**
-
----
-
-#### Module 70: Nature & Environment
-**Focus:** Nature, animals, ecology
-
-**Domains:**
-- Landscape: гора, долина, річка, озеро, ліс, поле
-- Animals: птах, звір, комаха, риба + common species
-- Plants: дерево, квітка, трава, кущ + types
-- Environment: довкілля, забруднення, переробка
-
-**Vocabulary (40 words)**
+**Education & Culture (75, 78)**
+- School: урок, іспит, оцінка, домашнє завдання
+- Arts: музика, картина, вистава, концерт
 
 ---
 
-#### Module 71: Collocations - Verbs I
-**Focus:** Common verb + noun combinations
-
-**Examples:**
-- робити + помилку, вибір, спробу, враження
-- приймати + рішення, душ, участь, гостей
-- мати + право, час, можливість, намір
-
-**Vocabulary (35 collocations)**
-
----
-
-#### Module 72: Collocations - Verbs II
-**Focus:** More verb + noun combinations
-
-**Examples:**
-- давати + пораду, згоду, відповідь, обіцянку
-- ставити + питання, мету, оцінку
-- вести + розмову, справи, переговори
-
-**Vocabulary (35 collocations)**
-
----
-
-#### Module 73: Collocations - Adjectives
-**Focus:** Adjective + noun combinations
-
-**Examples:**
-- важливий + момент, крок, рішення
-- гарячий + чай, душ, тема (hot topic)
-- свіжий + хліб, повітря, новини
-
-**Vocabulary (35 collocations)**
-
----
-
-## Phase A2+.3: Review & Consolidation (Modules 74-75)
+## Phase A2+.3: Review & Consolidation (Modules 79-80)
 
 ### Learning Goals
 - Consolidate word formation patterns
-- Review expanded vocabulary
-- Practice collocations in context
+- Review all expanded vocabulary domains
 - Prepare for B1 level
 
-| Module | Focus | Type | Target Words |
-|--------|-------|------|--------------|
-| 74 | A2+ Review & Practice | Review | 25 |
-| 75 | A2+ Checkpoint | Review | 25 |
+### Module Structure
 
-### Module Content Specifications A2+.3
+| # | Title | Subtitle | Type |
+|---|-------|----------|------|
+| 79 | Review: Word Formation | Consolidating Prefixes, Suffixes, and Root Families | Review |
+| 80 | Review: Vocabulary Expansion | Consolidating Thematic Vocabulary | Review |
 
-#### Module 74: A2+ Review & Practice
-**Review:** All word formation patterns and vocabulary
+### Module Content
 
-**Activities:**
-- Prefix/suffix recognition
+**Module 79: Word Formation Review**
+- Prefix recognition and application
+- Suffix production exercises
 - Root family expansion
-- Collocation matching
-- Vocabulary in context
+- Word derivation practice
 
-**Vocabulary (25 words):** Review consolidation
-
----
-
-#### Module 75: A2+ Checkpoint
-**Assessment:** Comprehensive A2+ evaluation
-
-**Assessment areas:**
-1. Word formation (create derived words)
-2. Root family recognition
-3. Collocation production
-4. Vocabulary recall
-5. Practical usage in context
-
-**Vocabulary (25 words):** Review consolidation
+**Module 80: Vocabulary Review**
+- Domain-based vocabulary consolidation
+- Practical usage in context
+- A2+ checkpoint assessment
+- B1 readiness evaluation
 
 ---
 
 ## Vocabulary Summary
 
-| Phase | Modules | Words |
-|-------|---------|-------|
-| A2+.1 Word Formation | 61-66 | 240 |
-| A2+.2 Vocabulary Expansion | 67-73 | 290 |
-| A2+.3 Review | 74-75 | 50 |
-| **Total** | 15 | **~580** |
+| Phase | Modules | Count | Words |
+|-------|---------|-------|-------|
+| A2+.1 Word Formation | 61-66 | 6 | ~200 |
+| A2+.2 Vocabulary Expansion | 67-78 | 12 | ~480 |
+| A2+.3 Review | 79-80 | 2 | ~70 |
+| **Total** | **61-80** | **20** | **~750** |
 
-**Cumulative after A2+:** ~1,400 words
+**Cumulative after A2+:** ~1,600 words
 
 ---
 
@@ -305,16 +188,26 @@ After completing A2+, learners can:
 - Recognize and use common prefixes to understand new verbs
 - Form nouns and adjectives using productive suffixes
 - Recognize word families and guess meanings
-- Use natural collocations in speech
-- Navigate expanded practical vocabulary domains
+- Navigate 12 expanded practical vocabulary domains
+- Discuss health, work, technology, culture, and more
+
+---
+
+## Implementation Status
+
+| Phase | Modules | Status |
+|-------|---------|--------|
+| A2+.1 Word Formation | 61-66 | ✅ Implemented |
+| A2+.2 Vocabulary Expansion | 67-78 | ✅ Implemented |
+| A2+.3 Review | 79-80 | ✅ Implemented |
 
 ---
 
 ## Transition to B1
 
-With ~1,400 words after A2+, learners are prepared for B1 (modules 76-125) which focuses on:
-- Advanced aspect usage
-- Complex motion verbs
-- Sophisticated sentence structures
-- Abstract vocabulary
-- Register awareness
+With ~1,600 words after A2+, learners are prepared for B1 (modules 81-140) which focuses on:
+- Advanced aspect usage (доконаний/недоконаний вид)
+- Complex motion verbs with prefixes
+- Abstract vocabulary (ideas, problems, solutions)
+- Opinion and discussion expressions
+- Complex sentences and reported speech
