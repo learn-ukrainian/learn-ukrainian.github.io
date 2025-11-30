@@ -1217,36 +1217,40 @@ async function main() {
         );
       }
 
-      // Generate level index
-      const levelIndex = generateLevelIndex(
-        levelModules.map(m => ({ num: m.num, title: m.title, subtitle: m.subtitle, phase: m.phase, duration: m.duration })),
-        level,
-        langPair
-      );
-      await writeHTML(join(OUTPUT_DIR, 'html', langPair, levelLower, 'index.html'), levelIndex);
+      // Generate level index (skip if generating specific module to avoid corrupting index)
+      if (!targetModule) {
+        const levelIndex = generateLevelIndex(
+          levelModules.map(m => ({ num: m.num, title: m.title, subtitle: m.subtitle, phase: m.phase, duration: m.duration })),
+          level,
+          langPair
+        );
+        await writeHTML(join(OUTPUT_DIR, 'html', langPair, levelLower, 'index.html'), levelIndex);
+      }
     }
 
-    // Generate curriculum index
-    const levels = Array.from(modulesByLevel.entries())
-      .map(([level, mods]) => ({ level, moduleCount: mods.length }))
-      .sort((a, b) => a.level.localeCompare(b.level));
+    // Generate curriculum index (skip if generating specific module)
+    if (!targetModule) {
+      const levels = Array.from(modulesByLevel.entries())
+        .map(([level, mods]) => ({ level, moduleCount: mods.length }))
+        .sort((a, b) => a.level.localeCompare(b.level));
 
-    if (levels.length > 0) {
-      const curriculumIndex = generateCurriculumIndex(levels, langPair);
-      await writeHTML(join(OUTPUT_DIR, 'html', langPair, 'index.html'), curriculumIndex);
+      if (levels.length > 0) {
+        const curriculumIndex = generateCurriculumIndex(levels, langPair);
+        await writeHTML(join(OUTPUT_DIR, 'html', langPair, 'index.html'), curriculumIndex);
 
-      // Collect for root index
-      const langName = langPair === 'l2-uk-en' ? 'Ukrainian' : langPair;
-      allCurricula.push({
-        langPair,
-        name: langName,
-        levels: levels.map(l => ({ level: l.level, count: l.moduleCount }))
-      });
+        // Collect for root index
+        const langName = langPair === 'l2-uk-en' ? 'Ukrainian' : langPair;
+        allCurricula.push({
+          langPair,
+          name: langName,
+          levels: levels.map(l => ({ level: l.level, count: l.moduleCount }))
+        });
+      }
     }
   }
 
-  // Generate root index
-  if (allCurricula.length > 0) {
+  // Generate root index (skip if generating specific module)
+  if (!targetModule && allCurricula.length > 0) {
     const rootIndex = generateRootIndex(allCurricula);
     await writeHTML(join(OUTPUT_DIR, 'html', 'index.html'), rootIndex);
     console.log(`  ✓ /output/html/index.html`);
