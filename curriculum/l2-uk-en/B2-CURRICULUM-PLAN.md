@@ -4,10 +4,18 @@
 
 ## Overview
 
-- **Modules:** 141-220 (80 modules)
-- **Target vocabulary:** ~2,000-2,400 new words (~25-30/module)
-- **Cumulative vocabulary:** ~5,000-5,400 words
-- **Focus:** Register awareness, passive mastery, phraseology, literature intro, nuanced expression
+- **Modules:** 141-240 (100 modules)
+- **Target vocabulary:** ~2,600-3,100 new words
+  - Standard modules: 25-30 words
+  - History modules: 35-40 words (denser terminology)
+- **Cumulative vocabulary:** ~5,500-6,300 words
+- **Focus:** Register awareness, passive mastery, phraseology, **Ukrainian history**, nuanced expression
+
+> **RESTRUCTURED (2024)**:
+> - Literature moved to C1 (end) based on teacher feedback
+> - Replaced with comprehensive Ukrainian History (22→26 modules)
+> - Expanded advanced sentence structures (2→5 modules)
+> - Expanded modern Ukraine coverage (3→7 modules)
 
 ---
 
@@ -176,47 +184,178 @@ At B2, learners can:
 
 ---
 
-## Literature Introduction (8-10 modules)
+## Ukrainian History (22 modules)
 
-### Foundations
-1. **Introduction to Ukrainian Literature**
-   - Overview of literary history
-   - Key periods and movements
+> **IMPORTANT**: This section addresses common historical misconceptions and teaches the TRUE history of Ukraine.
+> Many learners (and their home countries) have absorbed Russian propaganda narratives. This curriculum
+> provides factual, academically-supported history.
 
-2. **Котляревський: Енеїда**
-   - The birth of modern Ukrainian literature (1798)
-   - Burlesque style, vernacular language
-   - Excerpts and cultural significance
+### Part 1: Ancient & Medieval Ukraine (4 modules)
 
-### Poetry
-3. **Taras Shevchenko I**
-   - Biography, significance as national poet
-   - Simple poems from Kobzar
+1. **Pre-Slavic Ukraine** (Module 211)
+   - Trypillia culture (5500-2750 BC) - one of Europe's oldest civilizations
+   - Scythians, Sarmatians, Greek colonies
+   - Early Slavic tribes
+   - Vocabulary: археологія, цивілізація, племена, предки, культура
 
-4. **Taras Shevchenko II**
-   - More complex works
-   - Historical and political context
+2. **Kyivan Rus I: The TRUTH** (Module 212) ⚠️ KEY MODULE
+   - Kyivan Rus was NOT Russia (Moscow didn't exist until 1147!)
+   - Kyiv as the capital of a medieval Slavic state
+   - Volodymyr the Great, Yaroslav the Wise
+   - Why "Rus" ≠ "Russia" (etymology, history)
+   - **Debunking the myth**: Russia appropriated the name after 1709
+   - Vocabulary: князь, князівство, хрещення, столиця, спадщина
 
-5. **Lesya Ukrainka I**
-   - Biography, significance
-   - Selected poems
+3. **Kyivan Rus II: Golden Age** (Module 213)
+   - 10th-11th century as largest state in Europe
+   - Софійський собор, Києво-Печерська лавра
+   - Legal code: Руська правда
+   - International connections (Byzantine, European)
+   - Vocabulary: собор, монастир, законодавство, грамота, торгівля
 
-6. **Lesya Ukrainka II**
-   - "Лісова пісня" excerpts
-   - Dramatic poetry
+4. **Galicia-Volhynia Kingdom** (Module 214)
+   - Continuation of Rus tradition after Mongol invasion (1240)
+   - King Danylo of Halych
+   - Separate development from Muscovy
+   - Western orientation (Papal recognition)
+   - Vocabulary: королівство, князь, папа, коронація, захід
 
-### Prose
-7. **Ivan Franko**
-   - Short stories
-   - Social themes
+### Part 2: Lithuanian-Polish Period (3 modules)
 
-8. **Modern Ukrainian Literature**
-   - 20th century overview
-   - Contemporary authors intro
+5. **Under Lithuania** (Module 215)
+   - Grand Duchy of Lithuania absorbed Ukrainian lands
+   - Ruthenian as official language
+   - Religious tolerance, autonomy
+   - "Lithuania was more Ruthenian than Lithuanian"
+   - Vocabulary: велике князівство, автономія, руська мова, шляхта
 
-9. **Reading Strategies**
-   - Literary analysis basics
-   - Unknown word strategies
+6. **Polish Rule & Union of Lublin** (Module 216)
+   - 1569: Ukrainian lands transferred to Poland
+   - Religious pressure (Catholic vs Orthodox)
+   - Serfdom expansion, oppression
+   - Brest Union (1596) - Uniate Church creation
+   - Vocabulary: унія, кріпацтво, православ'я, католицизм, гніт
+
+7. **Cultural Resistance** (Module 217)
+   - Orthodox brotherhoods (братства)
+   - Kyiv-Mohyla Academy (1632)
+   - Preservation of language and faith
+   - Rise of national consciousness
+   - Vocabulary: братство, академія, духовенство, книгодрукування
+
+### Part 3: The Cossack Era (4 modules)
+
+8. **Rise of the Cossacks** (Module 218)
+   - Who were the Cossacks? Free people escaping serfdom
+   - Zaporozhian Sich (1553-1554)
+   - Military democracy, self-governance
+   - Raids against Ottoman Empire
+   - Vocabulary: козак, Січ, гетьман, отаман, воля
+
+9. **Bohdan Khmelnytsky** (Module 219)
+   - 1648 Revolution against Poland
+   - Formation of the Cossack Hetmanate
+   - National liberation war
+   - Military victories, establishment of Ukrainian state
+   - Vocabulary: повстання, визволення, битва, держава, перемога
+
+10. **Pereiaslav & Its MYTHS** (Module 220) ⚠️ KEY MODULE
+    - 1654 Pereiaslav Agreement - what REALLY happened
+    - **NOT a "reunification"** - that's Russian propaganda
+    - A military alliance, not annexation
+    - How Russia broke the agreement
+    - Vocabulary: угода, союз, зрада, пропаганда, автономія
+
+11. **The Hetmanate's Fall** (Module 221)
+    - Ivan Mazepa and the fight for independence
+    - Battle of Poltava (1709) - catastrophic loss
+    - Russia abolishes Ukrainian autonomy
+    - Destruction of the Sich (1775)
+    - Vocabulary: гетьман, автономія, поразка, скасування, імперія
+
+### Part 4: Under the Empires (3 modules)
+
+12. **Russian Imperial Oppression** (Module 222)
+    - Valuev Decree (1863) - "Ukrainian language never existed"
+    - Ems Decree (1876) - Ukrainian banned in print
+    - Russification policies
+    - "Little Russians" myth
+    - Vocabulary: заборона, русифікація, гноблення, указ, імперія
+
+13. **Austrian Galicia** (Module 223)
+    - Western Ukraine under Habsburgs
+    - Greater cultural freedom
+    - Ukrainian identity flourishes
+    - Lviv as cultural center
+    - Vocabulary: Галичина, Львів, свобода, культура, преса
+
+14. **19th Century National Awakening** (Module 224)
+    - Taras Shevchenko's role
+    - Cyril and Methodius Brotherhood
+    - "Ukrainophiles" movement
+    - Development of modern Ukrainian identity
+    - Vocabulary: відродження, національність, інтелігенція, свідомість
+
+### Part 5: 20th Century Struggles (5 modules)
+
+15. **WWI & Revolution** (Module 225)
+    - Ukrainians in WWI (both sides)
+    - February & October Revolutions
+    - January 22, 1918: Independence declared!
+    - Ukrainian National Republic (УНР)
+    - Vocabulary: революція, незалежність, республіка, рада, проголошення
+
+16. **War for Independence (1917-1921)** (Module 226)
+    - Multiple fronts: Bolsheviks, Poland, White Army
+    - West Ukrainian People's Republic (ЗУНР)
+    - Act of Unification (January 22, 1919)
+    - Tragic defeat and occupation
+    - Vocabulary: війна, окупація, об'єднання, армія, поразка
+
+17. **Soviet Terror & Holodomor** (Module 227) ⚠️ KEY MODULE
+    - 1920s: Brief "Ukrainization" period
+    - 1930s: Stalin's terror begins
+    - **HOLODOMOR (1932-1933)**: Genocide by famine
+    - 4-10 million Ukrainians murdered
+    - Розстріляне відродження - Executed Renaissance
+    - Vocabulary: голодомор, геноцид, терор, репресії, голод
+
+18. **WWII in Ukraine** (Module 228)
+    - Nazi occupation, Holocaust in Ukraine
+    - Ukrainian resistance (UPA)
+    - 8 million Ukrainian deaths
+    - Post-war Soviet repressions
+    - Vocabulary: війна, окупація, опір, Голокост, жертви
+
+19. **Soviet Ukraine (1945-1991)** (Module 229)
+    - Post-war reconstruction
+    - Continued Russification
+    - Шістдесятники (Sixties dissidents)
+    - Chornobyl disaster (1986)
+    - Vocabulary: СРСР, дисиденти, Чорнобиль, катастрофа, перебудова
+
+### Part 6: Independent Ukraine (3 modules)
+
+20. **Independence & Early Years** (Module 230)
+    - August 24, 1991: Independence restored
+    - Referendum: 90%+ voted for independence
+    - Building a new state, challenges
+    - 1990s economic crisis
+    - Vocabulary: незалежність, референдум, демократія, криза, реформи
+
+21. **Orange Revolution & Euromaidan** (Module 231)
+    - 2004 Orange Revolution
+    - 2013-2014 Revolution of Dignity (Euromaidan)
+    - Fight against corruption, for European future
+    - Небесна Сотня (Heavenly Hundred)
+    - Vocabulary: революція, протест, майдан, гідність, корупція
+
+22. **Russian Aggression & Today** (Module 232) ⚠️ KEY MODULE
+    - 2014: Russia annexes Crimea, starts war in Donbas
+    - 2022: Full-scale invasion
+    - Ukrainian resistance and resilience
+    - European integration, NATO
+    - Vocabulary: агресія, окупація, спротив, інтеграція, перемога
 
 ---
 
@@ -245,94 +384,170 @@ At B2, learners can:
 | 157 | Active Participles II | Grammar | -лий recognition |
 | 158 | Participles vs Clauses | Grammar | Literary vs spoken |
 | 159 | Advanced Adverbial Participles | Grammar | Complex constructions |
-| 160 | Politics & Government | Vocabulary | Democracy, parliament |
-| 161 | Law & Justice | Vocabulary | Courts, rights |
-| 162 | Economics & Business | Vocabulary | Markets, negotiations |
-| 163 | B2.1 Review I | Review | Passive voice |
-| 164 | B2.1 Review II | Review | Register |
-| 165 | B2.1 Checkpoint | Review | Assessment |
+| 160 | Multi-clause Sentences | Grammar | Complex embedded structures |
+| 161 | Parenthetical Expressions | Grammar | до речі, між іншим, власне |
+| 162 | Emphasis & Inversion | Grammar | Word order for emphasis |
+| 163 | Stylistic Connectors | Grammar | однак, проте, втім, зате |
+| 164 | Advanced Structures Practice | Practice | All complex structures |
+| 165 | Politics & Government | Vocabulary | Democracy, parliament |
+| 166 | Law & Justice | Vocabulary | Courts, rights |
+| 167 | Economics & Business | Vocabulary | Markets, negotiations |
+| 168 | B2.1 Review I | Review | Passive voice |
+| 169 | B2.1 Review II | Review | Register & structures |
+| 170 | B2.1 Checkpoint | Review | Assessment |
 
-### B2.2: Phraseology (Modules 166-190)
-
-| # | Title | Type | Focus |
-|---|-------|------|-------|
-| 166 | Idioms: Body I | Vocabulary | Очі, вуха |
-| 167 | Idioms: Body II | Vocabulary | Руки, ноги |
-| 168 | Idioms: Body III | Vocabulary | Голова, серце |
-| 169 | Idioms: Animals I | Vocabulary | Вовк, собака |
-| 170 | Idioms: Animals II | Vocabulary | Птахи, риба |
-| 171 | Idioms: Nature | Vocabulary | Вода, камінь, дерево |
-| 172 | Idioms: Daily Life | Vocabulary | Food, home, work |
-| 173 | Proverbs: Work & Effort | Vocabulary | Під лежачий камінь... |
-| 174 | Proverbs: Wisdom | Vocabulary | Сім разів відміряй... |
-| 175 | Proverbs: Character | Vocabulary | Не все те золото... |
-| 176 | Proverbs: Relationships | Vocabulary | Family, friends |
-| 177 | Set Expressions: Formal | Vocabulary | Business, official |
-| 178 | Set Expressions: Hedging | Vocabulary | Softening, politeness |
-| 179 | Set Expressions: Emphasis | Vocabulary | Intensifiers |
-| 180 | Set Expressions: Discourse | Vocabulary | Transitions, connectors |
-| 181 | Phraseology in Context I | Practice | Reading with idioms |
-| 182 | Phraseology in Context II | Practice | Using idioms naturally |
-| 183 | Medicine & Health Advanced | Vocabulary | Diagnosis, treatment |
-| 184 | Technology Advanced | Vocabulary | Software, AI, data |
-| 185 | Environment & Ecology | Vocabulary | Climate, sustainability |
-| 186 | Philosophy & Abstract | Vocabulary | Existence, morality |
-| 187 | B2.2 Review I | Review | Idioms |
-| 188 | B2.2 Review II | Review | Proverbs & expressions |
-| 189 | B2.2 Checkpoint | Review | Assessment |
-| 190 | Phraseology Integration | Practice | All phraseology |
-
-### B2.3: Synonymy & Nuance (Modules 191-210)
+### B2.2: Phraseology (Modules 171-195)
 
 | # | Title | Type | Focus |
 |---|-------|------|-------|
-| 191 | Synonyms: Speaking I | Vocabulary | казати/говорити/розповідати |
-| 192 | Synonyms: Speaking II | Vocabulary | повідомляти/сповіщати/заявляти |
-| 193 | Synonyms: Asking | Vocabulary | питати/запитувати/цікавитися |
-| 194 | Synonyms: Thinking I | Vocabulary | думати/гадати/вважати |
-| 195 | Synonyms: Thinking II | Vocabulary | розуміти/усвідомлювати/осягати |
-| 196 | Synonyms: Memory | Vocabulary | пам'ятати/згадувати/нагадувати |
-| 197 | Synonyms: Emotion I | Vocabulary | любити/кохати/подобатися |
-| 198 | Synonyms: Emotion II | Vocabulary | боятися/лякатися/побоюватися |
-| 199 | Synonyms: Size | Vocabulary | великий/величезний/здоровенний |
-| 200 | Synonyms: Quality | Vocabulary | гарний/красивий/чудовий |
-| 201 | Synonyms: Character | Vocabulary | розумний/мудрий/кмітливий |
-| 202 | Synonyms: Movement | Vocabulary | швидко/хутко/стрімко |
-| 203 | Word Formation Advanced I | Grammar | Compound words |
-| 204 | Word Formation Advanced II | Grammar | Abbreviations, neologisms |
-| 205 | Advanced Sentences I | Grammar | Multi-clause structures |
-| 206 | Advanced Sentences II | Grammar | Emphasis, inversion |
-| 207 | Punctuation Ukrainian | Grammar | Comma rules, direct speech |
-| 208 | B2.3 Review I | Review | Synonyms |
-| 209 | B2.3 Review II | Review | Advanced grammar |
-| 210 | B2.3 Checkpoint | Review | Assessment |
+| 171 | Idioms: Body I | Vocabulary | Очі, вуха |
+| 172 | Idioms: Body II | Vocabulary | Руки, ноги |
+| 173 | Idioms: Body III | Vocabulary | Голова, серце |
+| 174 | Idioms: Animals I | Vocabulary | Вовк, собака |
+| 175 | Idioms: Animals II | Vocabulary | Птахи, риба |
+| 176 | Idioms: Nature | Vocabulary | Вода, камінь, дерево |
+| 177 | Idioms: Daily Life | Vocabulary | Food, home, work |
+| 178 | Proverbs: Work & Effort | Vocabulary | Під лежачий камінь... |
+| 179 | Proverbs: Wisdom | Vocabulary | Сім разів відміряй... |
+| 180 | Proverbs: Character | Vocabulary | Не все те золото... |
+| 181 | Proverbs: Relationships | Vocabulary | Family, friends |
+| 182 | Set Expressions: Formal | Vocabulary | Business, official |
+| 183 | Set Expressions: Hedging | Vocabulary | Softening, politeness |
+| 184 | Set Expressions: Emphasis | Vocabulary | Intensifiers |
+| 185 | Set Expressions: Discourse | Vocabulary | Transitions, connectors |
+| 186 | Phraseology in Context I | Practice | Reading with idioms |
+| 187 | Phraseology in Context II | Practice | Using idioms naturally |
+| 188 | Medicine & Health Advanced | Vocabulary | Diagnosis, treatment |
+| 189 | Technology Advanced | Vocabulary | Software, AI, data |
+| 190 | Environment & Ecology | Vocabulary | Climate, sustainability |
+| 191 | Philosophy & Abstract | Vocabulary | Existence, morality |
+| 192 | B2.2 Review I | Review | Idioms |
+| 193 | B2.2 Review II | Review | Proverbs & expressions |
+| 194 | B2.2 Checkpoint | Review | Assessment |
+| 195 | Phraseology Integration | Practice | All phraseology |
 
-### B2.4: Literature & Integration (Modules 211-220)
+### B2.3: Synonymy & Nuance (Modules 196-215)
 
 | # | Title | Type | Focus |
 |---|-------|------|-------|
-| 211 | Ukrainian Literature Intro | Literature | History, periods, movements |
-| 212 | Котляревський: Енеїда | Literature | Birth of modern Ukrainian (1798) |
-| 213 | Taras Shevchenko I | Literature | Biography, simple poems |
-| 214 | Taras Shevchenko II | Literature | Kobzar selections |
-| 215 | Lesya Ukrainka I | Literature | Biography, poems |
-| 216 | Lesya Ukrainka II | Literature | Лісова пісня excerpts |
-| 217 | Ivan Franko | Literature | Short stories |
-| 218 | Modern Literature | Literature | 20th century, contemporary |
-| 219 | B2 Integration | Practice | All B2 skills |
-| 220 | B2 Capstone | Review | Comprehensive assessment |
+| 196 | Synonyms: Speaking I | Vocabulary | казати/говорити/розповідати |
+| 197 | Synonyms: Speaking II | Vocabulary | повідомляти/сповіщати/заявляти |
+| 198 | Synonyms: Asking | Vocabulary | питати/запитувати/цікавитися |
+| 199 | Synonyms: Thinking I | Vocabulary | думати/гадати/вважати |
+| 200 | Synonyms: Thinking II | Vocabulary | розуміти/усвідомлювати/осягати |
+| 201 | Synonyms: Memory | Vocabulary | пам'ятати/згадувати/нагадувати |
+| 202 | Synonyms: Emotion I | Vocabulary | любити/кохати/подобатися |
+| 203 | Synonyms: Emotion II | Vocabulary | боятися/лякатися/побоюватися |
+| 204 | Synonyms: Size | Vocabulary | великий/величезний/здоровенний |
+| 205 | Synonyms: Quality | Vocabulary | гарний/красивий/чудовий |
+| 206 | Synonyms: Character | Vocabulary | розумний/мудрий/кмітливий |
+| 207 | Synonyms: Movement | Vocabulary | швидко/хутко/стрімко |
+| 208 | Word Formation Advanced I | Grammar | Compound words |
+| 209 | Word Formation Advanced II | Grammar | Abbreviations, neologisms |
+| 210 | Punctuation Ukrainian | Grammar | Comma rules, direct speech |
+| 211 | Academic Writing Intro | Skills | Preparing for C1 academic |
+| 212 | B2.3 Review I | Review | Synonyms |
+| 213 | B2.3 Review II | Review | Word formation |
+| 214 | B2.3 Checkpoint | Review | Assessment |
+| 215 | Synonymy Integration | Practice | All nuance skills |
+
+### B2.4: Ukrainian History (Modules 216-240)
+
+> **Note:** This section replaces the original literature modules. Literature is now taught at the END of C1.
+> History modules use **35-40 words/module** (higher than standard) due to dense terminology.
+>
+> ⚠️ = Key myth-busting modules addressing Russian propaganda narratives
+
+#### Part 1: Ancient & Medieval (216-219)
+
+| # | Title | Type | Focus |
+|---|-------|------|-------|
+| 216 | Pre-Slavic Ukraine | History | Trypillia, Scythians, early Slavs |
+| 217 | Kyivan Rus I: The TRUTH ⚠️ | History | Debunking "Rus = Russia" myth |
+| 218 | Kyivan Rus II: Golden Age | History | Culture, law, international ties |
+| 219 | Galicia-Volhynia Kingdom | History | Continuation after Mongol invasion |
+
+#### Part 2: Lithuanian-Polish Period (220-222)
+
+| # | Title | Type | Focus |
+|---|-------|------|-------|
+| 220 | Under Lithuania | History | Autonomy, Ruthenian as official language |
+| 221 | Polish Rule & Union of Lublin | History | Religious pressure, serfdom |
+| 222 | Cultural Resistance | History | Brotherhoods, Kyiv-Mohyla Academy |
+
+#### Part 3: Cossack Era (223-226)
+
+| # | Title | Type | Focus |
+|---|-------|------|-------|
+| 223 | Rise of the Cossacks | History | Sich, military democracy |
+| 224 | Bohdan Khmelnytsky | History | 1648 Revolution, Hetmanate |
+| 225 | Pereiaslav & Its MYTHS ⚠️ | History | Debunking "reunification" propaganda |
+| 226 | The Hetmanate's Fall | History | Mazepa, Poltava, loss of autonomy |
+
+#### Part 4: Under the Empires (227-229)
+
+| # | Title | Type | Focus |
+|---|-------|------|-------|
+| 227 | Russian Imperial Oppression | History | Valuev/Ems decrees, Russification |
+| 228 | Austrian Galicia | History | Cultural freedom (with Polish pressure nuance) |
+| 229 | 19th Century Awakening | History | Shevchenko's role, national identity |
+
+#### Part 5: 20th Century (230-234)
+
+| # | Title | Type | Focus |
+|---|-------|------|-------|
+| 230 | WWI & Revolution | History | 1918 independence declared |
+| 231 | War for Independence | History | 1917-1921, УНР, ЗУНР, defeat |
+| 232 | Soviet Terror & Holodomor ⚠️ | History | Genocide, 4-10 million deaths |
+| 233 | WWII in Ukraine | History | Occupation, resistance, Holocaust |
+| 234 | Soviet Ukraine (1945-1991) | History | Dissidents, Chornobyl |
+
+#### Part 6: Independent Ukraine - EXPANDED (235-240)
+
+> **7 modules** for crucial contemporary period (was 3)
+
+| # | Title | Type | Focus |
+|---|-------|------|-------|
+| 235 | Independence 1991 | History | Referendum, Leonid Kravchuk, early state |
+| 236 | 1990s Transition | History | Economic crisis, Kuchma era, oligarchs |
+| 237 | Orange Revolution | History | 2004, Yushchenko, democracy movement |
+| 238 | Yanukovych Era | History | 2010-2013, corruption, EU rejection |
+| 239 | Euromaidan ⚠️ | History | Revolution of Dignity, Heavenly Hundred |
+| 240 | Russian Aggression ⚠️ | History | 2014 Crimea, Donbas, 2022 invasion |
+
+#### B2 Review & Capstone (part of C1.1)
+
+> Note: B2 integration and capstone are now the first modules of C1 to ensure smooth transition.
 
 ---
 
 ## Summary
 
-- **Total B2 modules:** 80 (141-220)
-- **Grammar modules:** ~30
-- **Vocabulary/Phraseology modules:** ~35
-- **Literature modules:** ~8
-- **Review/checkpoint modules:** ~7
-- **Target new words:** ~2,000-2,400 (~25-30/module)
-- **Cumulative after B2:** ~5,000-5,400 words
+- **Total B2 modules:** 100 (141-240)
+- **B2.1 Grammar & Register:** 30 modules (141-170)
+- **B2.2 Phraseology:** 25 modules (171-195)
+- **B2.3 Synonymy & Nuance:** 20 modules (196-215)
+- **B2.4 Ukrainian History:** 25 modules (216-240)
+- **Target new words:** ~2,600-3,100
+  - Standard modules: 25-30 words
+  - History modules: 35-40 words
+- **Cumulative after B2:** ~5,500-6,300 words
+
+### Why History Instead of Literature?
+
+1. **CEFR alignment**: B2 learners can read "straightforward, unelaborated language" - not 19th century literary Ukrainian
+2. **Accessibility**: Historical texts use modern Ukrainian; literature uses archaic forms
+3. **Cultural foundation**: Understanding history BEFORE literature makes literary works meaningful
+4. **Misconception correction**: Many learners have absorbed Russian propaganda about Ukrainian history
+5. **Teacher recommendation**: Ukrainian language teachers confirm literature is too advanced for B2
+
+### Key Improvements (2024)
+- ✅ Expanded advanced sentence structures (2→5 modules)
+- ✅ Expanded modern Ukraine history (3→7 modules for 1991-present)
+- ✅ Increased vocabulary budget for history modules (35-40 words)
+- ✅ Added academic writing intro module for C1 preparation
+
+**Related GitHub Issues:** #26, #27, #30
 
 ---
 

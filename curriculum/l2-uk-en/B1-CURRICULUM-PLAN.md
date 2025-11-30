@@ -201,9 +201,61 @@
 
 ---
 
-## Open Questions
+## ⚠️ CRITICAL: Aspect Teaching Guidelines
 
-1. Are there specific expressions/idioms that should be prioritized?
-2. What topics are missing from your B1-B2 experience?
-3. Should B2 focus more on register (formal/informal) or literature?
-4. How much C1 should cover professional/academic Ukrainian?
+### The Aspect Ambiguity Problem
+
+Ukrainian aspect is **NOT black and white**. Many situations allow BOTH perfective and imperfective with different nuances. When creating aspect exercises:
+
+#### ❌ AVOID: Binary "correct/incorrect" for ambiguous cases
+
+**Bad example:**
+> "Вона ___ книгу весь вечір." (читала / прочитала)
+> ✓ читала ✗ прочитала
+
+**Problem:** "Прочитала" could work if speaker emphasizes she finished it during that evening.
+
+#### ✅ BETTER: Explain when BOTH work
+
+**Good example:**
+> "Вона ___ книгу весь вечір."
+> - **читала** = focuses on process, what she was doing (more common)
+> - **прочитала** = emphasizes completion, result (possible if she finished)
+>
+> *In this context, "читала" is more natural because "весь вечір" emphasizes duration.*
+
+### Guidelines for Aspect Exercises
+
+1. **Clear contexts only**: Use examples where ONE aspect is clearly more natural
+   - Duration markers (весь день, годину) → imperfective
+   - Result markers (нарешті, вже) → perfective
+   - "ще не" → perfective
+   - Habitual (кожного дня, завжди) → imperfective
+
+2. **Acknowledge ambiguity**: When both work, explain the meaning difference
+
+3. **Use "more natural/common" not "correct/incorrect"** for borderline cases
+
+4. **Focus on meaning difference** rather than grammatical rule
+
+### Modules Requiring Careful Review
+- Module 82: Aspect in Past - single vs repeated
+- Module 83: Aspect in Past - result vs process
+- Module 84: Aspect in Future
+- Module 85: Aspect in Negation
+- Module 86: Aspect in Imperatives
+
+---
+
+## Implementation Status
+
+| Phase | Modules | Status |
+|-------|---------|--------|
+| B1.1 | 81-100 | ✅ Implemented |
+| B1.2 | 101-115 | ⏳ Planned |
+| B1.3 | 116-125 | ⏳ Planned |
+| B1.4 | 126-140 | ⏳ Planned |
+
+**Related GitHub Issues:**
+- #24: Implement missing modules 101-140
+- #25: Review aspect examples for ambiguous cases

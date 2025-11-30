@@ -73,6 +73,10 @@ When you care about the **activity itself** or **how time was spent**, use imper
 - Він **вчив** українську в університеті. - He was studying Ukrainian at university.
 - Що ти **робив** учора? - What were you doing yesterday?
 
+> **⚠️ Ambiguity Note**
+>
+> "Я **читав** книгу весь вечір" emphasizes duration (process). But if you finished the book that evening, you could also say "Я **прочитав** книгу за вечір" (I read the book in one evening). Both are grammatically correct - the choice depends on whether you want to emphasize the **process** or the **result**. Duration markers make imperfective *more natural*, but don't make perfective wrong.
+
 ### The Same Event, Different Perspective
 
 | Imperfective (process) | Perfective (result) |
@@ -314,7 +318,7 @@ B: Я працював над ним шість місяців. Закінчив
 5. Ми ___ про це весь вечір.
    - [x] говорили
    - [ ] поговорили
-   > Весь вечір = duration = imperfective
+   > "Весь вечір" emphasizes duration, making imperfective more natural here
 
 6. Вона ___ статтю за три дні.
    - [ ] писала
@@ -398,6 +402,7 @@ B: Я працював над ним шість місяців. Закінчив
 > **Key Takeaways**
 >
 > - Ask yourself: Do I care about the result or the process?
-> - Duration expressions require imperfective
-> - "За + time" (completion time) requires perfective
+> - Duration expressions (весь день, три години) *prefer* imperfective
+> - "За + time" (completion time) *requires* perfective
 > - The same event can be described both ways depending on your focus
+> - **Remember:** Aspect choice is often about perspective, not right vs wrong!

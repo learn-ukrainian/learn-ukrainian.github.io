@@ -396,3 +396,4 @@ B: Не забуду, обіцяю!
 > - "Ще не" (not yet) uses perfective
 > - Warnings about specific events use perfective
 > - Objects often shift to genitive in negation
+> - **Note:** Some prohibitions accept BOTH aspects with different nuances!

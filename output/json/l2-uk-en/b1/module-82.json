@@ -180,13 +180,13 @@
             "explanation": "Завжди = repeated = imperfective"
           },
           {
-            "question": "Минулого тижня я ___ цікавий фільм.",
+            "question": "Нарешті я ___ цікавий фільм до кінця.",
             "options": [
               "дивився",
               "подивився"
             ],
             "correctIndex": 1,
-            "explanation": "Минулого тижня + single film = perfective"
+            "explanation": "\"Нарешті\" + \"до кінця\" = clear result = perfective"
           },
           {
             "question": "Раніше він часто ___ у цьому кафе.",

@@ -220,9 +220,10 @@ After completing the checkpoint, assess yourself:
 
 > This quiz tests all B1.1 skills.
 
-1. Вона ___ книгу весь вечір.
-   - [x] читала
-   - [ ] прочитала
+1. Він ___ листа і надіслав його.
+   - [x] написав
+   - [ ] писав
+   > The result ("надіслав") confirms the letter was completed, requiring perfective.
 
 2. Куди ти ___ ?
    - [x] йдеш

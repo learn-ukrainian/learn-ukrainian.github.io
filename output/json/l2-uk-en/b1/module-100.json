@@ -45,13 +45,13 @@
         "instructions": "This quiz tests all B1.1 skills.",
         "questions": [
           {
-            "question": "Вона ___ книгу весь вечір.",
+            "question": "Він ___ листа і надіслав його.",
             "options": [
-              "читала",
-              "прочитала"
+              "написав",
+              "писав"
             ],
             "correctIndex": 0,
-            "explanation": ""
+            "explanation": "The result (\"надіслав\") confirms the letter was completed, requiring perfective."
           },
           {
             "question": "Куди ти ___ ?",
