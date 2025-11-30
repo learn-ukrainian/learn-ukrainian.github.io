@@ -1,22 +1,21 @@
 ---
 module: 3
 title: "The Gender Code"
-subtitle: "Masculine, Feminine, Neuter"
+subtitle: "Gender & The 4 Declensions"
 level: A1
 phase: A1.1
-duration: 40
+duration: 45
 transliteration: full
-tags: [grammar, nouns, gender, basics]
+tags: [grammar, nouns, gender, declensions, basics]
 objectives:
   - Understand that every Ukrainian noun has grammatical gender
-  - Recognize masculine nouns by their endings
-  - Recognize feminine nouns by their endings
-  - Recognize neuter nouns by their endings
-  - Predict gender from word endings with 90%+ accuracy
+  - Learn the 4 Declension Groups (Відміни)
+  - Classify nouns into Declensions based on endings
+  - Predict gender from Declension group
 grammar:
   - Grammatical gender (чоловічий, жіночий, середній рід)
-  - Noun ending patterns for each gender
-  - Natural gender vs grammatical gender
+  - The 4 Noun Declensions (I, II, III, IV)
+  - Noun ending patterns
 ---
 
 # Lesson Content
@@ -25,269 +24,279 @@ grammar:
 
 ### Why Gender Matters
 
-In Ukrainian, every single noun has a gender: masculine (чоловічий рід), feminine (жіночий рід), or neuter (середній рід). This isn't about biology - it's **grammatical gender**.
+In Ukrainian, every single noun has a gender: **Masculine** (чоловічий рід), **Feminine** (жіночий рід), or **Neuter** (середній рід).
 
-Why does this matter? Because:
-- Adjectives change to match the noun's gender
-- Verbs change in past tense to match the noun's gender
-- "This/that" words change to match the noun's gender
-- Getting gender wrong sounds very strange to native speakers
+But knowing the gender isn't enough. You need to know **how the word changes**.
+In English, words barely change (cat → cats). In Ukrainian, words change their endings constantly to show their role in the sentence (Cases).
 
-The good news: **you can predict gender from the word ending about 95% of the time!**
+To predict these changes, we group nouns into **4 Families** called **Declensions** (Відміни).
+Think of them as "teams" that follow the same rules.
 
-> 🔍 **Myth Buster: "Grammatical Gender is Sexist"**
+> 🔍 **Deep Theory: The System**
 >
-> Some learners feel uncomfortable with "masculine" and "feminine" grammar. But here's the thing: grammatical gender has **nothing to do with real-world gender**! A table (стіл) is masculine. A book (книга) is feminine. A window (вікно) is neuter. These are just grammatical categories that determine how other words behave around nouns.
+> Many courses teach "endings" (if it ends in -a, it's feminine). That works for A1.
+> But to master Ukrainian (B1+), you need the **Declension System**.
+> - **Group I:** The "-A/-YA" Team
+> - **Group II:** The "Consonant & O/E" Team
+> - **Group III:** The "Soft Feminine" Team
+> - **Group IV:** The "Baby Animal" Team
 >
-> Many languages have 2, 3, or even more "genders" - German has 3, Swahili has 18 noun classes! It's just a classification system.
-
-> 💡 **Did You Know?**
->
-> English **used to have** grammatical gender! Until about 1,000 years ago, English nouns were masculine, feminine, or neuter - just like Ukrainian today. Over centuries, English lost this feature (and most case endings too). That's why learning gender feels strange to English speakers - your language forgot it!
+> Learn the Team, and you'll know exactly how to change the word later!
 
 ## presentation
 
-### Masculine Nouns (Чоловічий рід)
+### Group I: The "-A/-YA" Team (First Declension)
 
-Masculine nouns typically end in a **consonant** (hard or soft):
+**Members:** Mostly **Feminine**, some **Masculine**.
+**Identifier:** Ends in **-а** or **-я**.
 
-| Ending | Examples |
-|--------|----------|
-| Consonant | студент (student), брат (brother), стіл (table) |
-| -ь (soft sign) | день (day), вчитель (teacher), кінь (horse) |
-| -й | край (edge/country), музей (museum), герой (hero) |
+| Word | Gender | Meaning |
+|------|--------|---------|
+| мам**а** | Feminine | mom |
+| кних**а** | Feminine | book |
+| земл**я** | Feminine | earth |
+| тат**о** → (Wait!) | Masculine | dad |
 
-**Memory trick:** If it ends in a consonant → probably masculine!
+*Note on "Тато":* Wait, `тато` ends in -o? Actually, `тато` acts like a Group II noun in singular but has mixed behaviors.
+Actually, let's look at standard Group I Masculines: **суддя** (judge), **Микола** (Mykola - name).
+Most common Group I words are Feminine.
 
-> 📜 **History Bite: The -ь Ending**
+**Rule:** If it ends in **-а** or **-я**, it's usually **Group I**.
+
+> ⚡ **Pro Tip: Natural Gender Overrides**
 >
-> The soft sign (ь) at the end of masculine nouns comes from Old Church Slavonic. Words like **день** (day) and **гість** (guest) have been softened for over 1,000 years. This "soft" quality changes how the consonant sounds - like adding a tiny "y" sound. Compare: **брат** (brat) vs **брать** (brat' - softer final T).
+> Words like **тато** (dad) refer to men, so they are **Masculine** gender.
+> However, structurally, most textbooks put -a/-ya nouns here.
+> *Correction:* `тато` ends in -o, so it looks like Group II, but strictly it declines like Group I in some dialects? No, `тато` is usually Group II (hard) in singular. Let's stick to clear examples.
+> **Clear Group I Masculine:** суддя (judge), староста (elder).
 
-> ⚡ **Pro Tip: Natural Gender Override**
+### Group II: The "Main" Team (Second Declension)
+
+This is the biggest group.
+**Members:** **Masculine** (consonant) and **Neuter** (-o/-e).
+
+**Identifier:**
+1. **Masculine:** Ends in a **Consonant** (hard or soft) or **-й**.
+2. **Neuter:** Ends in **-о**, **-е**, or **-я** (non-babies).
+
+| Word | Gender | Ending |
+|------|--------|--------|
+| стіл | Masculine | Consonant (L) |
+| музей | Masculine | -й |
+| вікн**о** | Neuter | -о |
+| мор**е** | Neuter | -е |
+| весілл**я** | Neuter | -я (abstract) |
+
+**Rule:**
+- Consonant ending? → **Group II Masculine**.
+- -O/-E ending? → **Group II Neuter**.
+
+### Group III: The "Soft Feminine" Team (Third Declension)
+
+**Members:** Exclusively **Feminine**.
+**Identifier:** Ends in **-ь** (soft sign) or sibilant (sh/ch) + soft sign.
+
+| Word | Gender | Ending |
+|------|--------|--------|
+| ніч | Feminine | -ч (implicitly soft context) |
+| любов | Feminine | -в (unique exception) |
+| радіст**ь** | Feminine | -ь |
+
+**Distinguishing from Group II Masculine:**
+- Group II Masculine: ден**ь** (day), вчител**ь** (teacher).
+- Group III Feminine: ніч (night), тінь (shadow).
+*How to tell?* You often have to memorize the gender of -ь words.
+- **Hint:** Abstract nouns ending in **-ість** are ALWAYS Group III Feminine (радість - joy, якість - quality).
+
+### Group IV: The "Baby" Team (Fourth Declension)
+
+**Members:** **Neuter**.
+**Identifier:** Ends in **-а/-я** but signifies a **young animal/being**.
+**Secret Test:** When you change it, does a **-т-** appear?
+- курч**а** (chick) → курча**т**а (chicks)
+- ім'**я** (name) → імена (names) - *Wait, this is a special -en- suffix group, traditionally distinct but related.*
+
+Let's stick to the core Group IV: **Baby Animals**.
+- **теля** (calf)
+- **кошеня** (kitten)
+- **дівча** (little girl - neuter!)
+
+**Rule:** Baby animal ending in -a/-ya? → **Group IV Neuter**.
+
+> 🎯 **Summary Table: The 4 Declensions**
 >
-> Living beings often match their natural gender:
-> - **тато** (dad) → masculine (ends in -о but refers to male)
-> - **батько** (father) → masculine (same reason)
-> - **дядько** (uncle) → masculine
->
-> When natural gender conflicts with the ending, natural gender wins for people!
-
-### Feminine Nouns (Жіночий рід)
-
-Feminine nouns typically end in **-а** or **-я**:
-
-| Ending | Examples |
-|--------|----------|
-| -а | мама (mom), сестра (sister), книга (book) |
-| -я | земля (earth/land), сім'я (family), пісня (song) |
-| -ь (some) | ніч (night), річ (thing), подорож (journey) |
-
-**Memory trick:** If it ends in -а/-я → probably feminine!
-
-> 🔗 **Language Link: The -а Ending**
->
-> The feminine -а ending is common across many languages:
-> - Ukrainian: мама, сестра, школа
-> - Spanish: mama, hermana (sister), escuela (school)
-> - Italian: mamma, sorella, scuola
-> - Russian: мама, сестра, школа
->
-> This isn't coincidence! Many Indo-European languages share this feminine marker. When you learn Ukrainian gender, you're learning a pattern that helps across multiple languages.
-
-> 🎯 **Fun Fact: The -ь Trap**
->
-> The soft sign (ь) can appear in BOTH masculine and feminine nouns! How do you know?
-> - **Masculine:** Usually after д, т, н, с, з, л, р (день, вчитель, кінь)
-> - **Feminine:** Usually after ч, ш, щ, ж (ніч, річ, подорож)
->
-> If it ends in -ч/-ш/-щ/-ж + ь → almost always feminine!
-
-### Neuter Nouns (Середній рід)
-
-Neuter nouns typically end in **-о** or **-е**:
-
-| Ending | Examples |
-|--------|----------|
-| -о | вікно (window), молоко (milk), яблуко (apple) |
-| -е | море (sea), серце (heart), сонце (sun) |
-| -я (some) | ім'я (name), теля (calf), курча (chick) |
-| -мя | ім'я, плем'я (tribe), полум'я (flame) |
-
-**Memory trick:** If it ends in -о/-е → neuter!
-
-> 🎭 **Culture Corner: Neuter and Baby Animals**
->
-> In Ukrainian, baby animals are often neuter:
-> - **теля** (calf) - neuter
-> - **порося** (piglet) - neuter
-> - **курча** (chick) - neuter
-> - **цуценя** (puppy) - neuter
-> - **кошеня** (kitten) - neuter
->
-> This makes sense - baby animals aren't clearly male or female, so they're grammatically "neither." The -я ending with neuter is a telltale sign of young animals!
-
-> 💡 **Did You Know?**
->
-> The word **ім'я** (name) looks feminine (-я ending) but is actually neuter! This is one of a small group of ancient nouns ending in -мя that are neuter: ім'я (name), плем'я (tribe), сім'я (seed - but сім'я meaning "family" is feminine!). These are inherited from **Proto-Slavic** (Common Slavic) - the ancestor of all Slavic languages spoken over 1,000 years ago.
+> | Group | Gender | Endings | Examples |
+> |-------|--------|---------|----------|
+> | **I** | Fem (mostly) | -а, -я | мама, сім'я |
+> | **II** | Masc / Neut | Consonant, -о, -е | стіл, вікно |
+> | **III** | Fem | -ь (some), -ість | ніч, радість |
+> | **IV** | Neut | -а/-я (babies) | теля, курча |
 
 ## practice
 
-### The Gender Decision Tree
+### The Sorter
 
-When you see a new Ukrainian noun, ask:
+Categorize these nouns into Declension Groups:
 
-1. **Does it end in a consonant?** → Masculine (студент, стіл, день)
-2. **Does it end in -а or -я?** → Feminine (мама, земля) ... unless it's a baby animal or -мя word!
-3. **Does it end in -о or -е?** → Neuter (вікно, море)
-4. **Is it a person?** → Natural gender may override (тато = masculine despite -о)
+1. **Книга** (book)
+   - Ends in -а. Not a baby.
+   - → **Group I** (Feminine)
 
-### Pattern Recognition
+2. **Стіл** (table)
+   - Ends in consonant.
+   - → **Group II** (Masculine)
 
-Study these word families:
+3. **Вікно** (window)
+   - Ends in -о.
+   - → **Group II** (Neuter)
 
-**Profession pairs (masculine/feminine):**
-- студент / студентка (student m/f)
-- вчитель / вчителька (teacher m/f)
-- лікар / лікарка (doctor m/f)
+4. **Радість** (joy)
+   - Ends in -ість.
+   - → **Group III** (Feminine)
 
-**Object patterns:**
-- книга (book) - fem → книжка (small book) - fem
-- стіл (table) - masc → столик (small table) - masc
-- вікно (window) - neut → віконце (small window) - neut
+5. **Кошеня** (kitten)
+   - Baby animal in -я.
+   - → **Group IV** (Neuter)
 
-> 🌍 **Real World: Gender Consistency**
+### Gender Prediction
+
+Now that you know the group, the gender is easy!
+
+- Group I (book) → Feminine
+- Group II Consonant (table) → Masculine
+- Group II Vowel (window) → Neuter
+- Group III (joy) → Feminine
+- Group IV (kitten) → Neuter
+
+> ⚡ **Pro Tip: The "Soft Sign" Danger**
 >
-> Diminutives (cute/small versions) keep the same gender as the base word:
-> - **кіт** (cat, masc) → **котик** (kitty, masc)
-> - **собака** (dog, fem) → **собачка** (doggy, fem)
-> - **сонце** (sun, neut) → **сонечко** (little sun, neut)
+> The hardest part is distinguishing **Group II Masculine** (-ь) from **Group III Feminine** (-ь).
+> - **Masculine:** день (day), біль (pain), король (king)
+> - **Feminine:** ніч (night), сіль (salt), осінь (autumn)
 >
-> The suffixes -ик/-ок (masculine), -ка (feminine), -ко/-це (neuter) add cuteness while preserving gender!
+> Memorize these common ones!
 
 ## production
 
-### Gender Sorting Challenge
+### Analyze New Words
 
-Sort these nouns by gender. Look at the endings!
+Look at these words and determine: **Group** and **Gender**.
 
-**Masculine:** брат, студент, стіл, день, музей
-**Feminine:** мама, книга, сестра, ніч, земля
-**Neuter:** вікно, молоко, море, сонце, яблуко
+1. **Україна**
+   - Ends in -а. Group I. Gender: Feminine.
+2. **Паспорт**
+   - Ends in Consonant. Group II. Gender: Masculine.
+3. **Сонце**
+   - Ends in -е. Group II. Gender: Neuter.
+4. **Любов**
+   - Exception! Looks like Consonant (Group II), but it's actually **Group III** (Feminine).
 
-### Apply the Rules
+### Exceptions Note
 
-Now predict the gender of these new words (you haven't learned them yet, but you can use the endings!):
-
-1. **озеро** (lake) - ends in -о → ?
-2. **дівчина** (girl) - ends in -а → ?
-3. **комп'ютер** (computer) - ends in consonant → ?
-4. **любов** (love) - ends in consonant → ?
-5. **життя** (life) - ends in -я → ?
-
-*(Answers: neuter, feminine, masculine, feminine [exception!], neuter)*
-
-> ⚡ **Pro Tip: The 5% Exceptions**
->
-> Some nouns don't follow the rules:
-> - **любов** (love) - ends in consonant but FEMININE
-> - **путь** (path) - ends in ь but FEMININE (very archaic)
-> - **тато** (dad), **дядько** (uncle) - end in -о but MASCULINE (natural gender)
->
-> These exceptions are rare! For 95% of nouns, the ending tells you the gender.
+- **Тато** (dad): Ends in -о (Group II structure), acts Masculine.
+- **Дядько** (uncle): Ends in -о (Group II structure), acts Masculine.
+- **Ім'я** (name): Ends in -я, but is Neuter (Ancient type).
 
 ---
 
 # Activities
 
-## match-up: Endings to Genders
+## match-up: Words to Groups
 
-> Match each ending type to its typical gender. Remember the patterns!
+> Match the word to its Declension Group.
 
 | Left | Right |
 |------|-------|
-| Consonant ending (т, н, к...) | Masculine (чоловічий) |
-| -а ending | Feminine (жіночий) |
-| -я ending (general) | Feminine (жіночий) |
-| -о ending | Neuter (середній) |
-| -е ending | Neuter (середній) |
-| -ь after ч/ш/щ | Feminine (жіночий) |
+| Мама (-а) | Group I |
+| Стіл (cons) | Group II (Masc) |
+| Вікно (-о) | Group II (Neut) |
+| Радість (-ість) | Group III |
+| Теля (baby) | Group IV |
 
-## quiz: Identify the Gender
+## quiz: Identify Group & Gender
 
-> Look at each noun's ending and determine its gender!
+> Analyze the word and choose the correct classification.
 
-1. What gender is СТІЛ (table)?
-   - [x] Masculine
-   - [ ] Feminine
-   - [ ] Neuter
-   > СТІЛ ends in a consonant (Л) → masculine!
+1. **Газета** (Newspaper)
+   - [x] Group I (Feminine)
+   - [ ] Group II (Masculine)
+   - [ ] Group II (Neuter)
+   - [ ] Group III (Feminine)
+   > Ends in -а → Group I.
 
-2. What gender is КНИГА (book)?
-   - [ ] Masculine
-   - [x] Feminine
-   - [ ] Neuter
-   > КНИГА ends in -А → feminine!
+2. **Телефон** (Phone)
+   - [ ] Group I (Feminine)
+   - [x] Group II (Masculine)
+   - [ ] Group III (Feminine)
+   - [ ] Group IV (Neuter)
+   > Ends in consonant → Group II Masculine.
 
-3. What gender is ВІКНО (window)?
-   - [ ] Masculine
-   - [ ] Feminine
-   - [x] Neuter
-   > ВІКНО ends in -О → neuter!
+3. **Море** (Sea)
+   - [ ] Group I (Feminine)
+   - [ ] Group II (Masculine)
+   - [x] Group II (Neuter)
+   - [ ] Group IV (Neuter)
+   > Ends in -е → Group II Neuter.
 
-4. What gender is МОРЕ (sea)?
-   - [ ] Masculine
-   - [ ] Feminine
-   - [x] Neuter
-   > МОРЕ ends in -Е → neuter!
+4. **Ніч** (Night)
+   - [ ] Group I (Feminine)
+   - [ ] Group II (Masculine)
+   - [x] Group III (Feminine)
+   - [ ] Group IV (Neuter)
+   > Ends in -ч (soft context), implies Group III.
 
-5. What gender is ДЕНЬ (day)?
-   - [x] Masculine
-   - [ ] Feminine
-   - [ ] Neuter
-   > ДЕНЬ ends in -Ь after Н → masculine! (soft masculine)
+5. **Цуценя** (Puppy)
+   - [ ] Group I (Feminine)
+   - [ ] Group II (Neuter)
+   - [ ] Group III (Feminine)
+   - [x] Group IV (Neuter)
+   > Baby animal in -я → Group IV.
 
-6. What gender is НІЧ (night)?
-   - [ ] Masculine
-   - [x] Feminine
-   - [ ] Neuter
-   > НІЧ ends in -Ь after Ч → feminine! (Remember: -ь after ч/ш/щ/ж = feminine)
+6. **Сіль** (Salt)
+   - [ ] Group I (Feminine)
+   - [ ] Group II (Masculine)
+   - [x] Group III (Feminine)
+   - [ ] Group IV (Neuter)
+   > Common Group III word (Feminine).
 
-7. What gender is СЕСТРА (sister)?
-   - [ ] Masculine
-   - [x] Feminine
-   - [ ] Neuter
-   > СЕСТРА ends in -А → feminine!
+7. **Музей** (Museum)
+   - [ ] Group I (Feminine)
+   - [x] Group II (Masculine)
+   - [ ] Group III (Feminine)
+   - [ ] Group IV (Neuter)
+   > Ends in -й → Group II Masculine.
 
-8. What gender is ЯБЛУКО (apple)?
-   - [ ] Masculine
-   - [ ] Feminine
-   - [x] Neuter
-   > ЯБЛУКО ends in -О → neuter!
+## group-sort: Declension Families
 
-## group-sort: Sort by Gender
+> Sort words into their Declension Groups.
 
-> Drag each noun to its correct gender category based on the ending pattern.
-
-### Masculine (Чоловічий)
-- студент
-- брат
-- стіл
-- день
-- музей
-
-### Feminine (Жіночий)
+### Group I (-a/-ya)
 - мама
 - книга
-- сестра
-- ніч
 - земля
+- сестра
+- пісня
 
-### Neuter (Середній)
+### Group II (Consonant/-o/-e)
+- стіл
 - вікно
-- молоко
-- море
+- день
+- музей
 - сонце
-- яблуко
+
+### Group III (-ь Feminine)
+- ніч
+- радість
+- любов
+- сіль
+- осінь
+
+### Group IV (Baby Animals)
+- теля
+- кошеня
+- цуценя
+- курча
+- дівча
 
 ---
 
@@ -295,45 +304,38 @@ Now predict the gender of these new words (you haven't learned them yet, but you
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
-| рід | /rʲid/ | gender (grammatical), genus | noun | m | чоловічий рід = masculine gender |
-| чоловічий | /tʃɔlɔˈvʲitʃɪj/ | masculine | adj | m | Literally "man-like" |
-| жіночий | /ʒʲiˈnɔtʃɪj/ | feminine | adj | m | Literally "woman-like" |
-| середній | /sɛˈrɛdnʲij/ | middle, neuter | adj | m | середній рід = neuter gender |
-| брат | /brɑt/ | brother | noun | m | Consonant ending = masculine |
-| сестра | /sɛsˈtrɑ/ | sister | noun | f | -а ending = feminine |
-| студентка | /stuˈdɛntkɑ/ | student (female) | noun | f | -ка feminine suffix |
-| вчитель | /ˈwtʃɪtɛlʲ/ | teacher (male) | noun | m | Soft sign after л |
-| вчителька | /wtʃɪˈtɛlʲkɑ/ | teacher (female) | noun | f | -ка feminine suffix |
-| стіл | /stʲil/ | table | noun | m | Consonant = masculine |
-| книга | /ˈknɪɦɑ/ | book | noun | f | -а = feminine |
-| вікно | /wʲikˈnɔ/ | window | noun | n | -о = neuter |
-| море | /ˈmɔrɛ/ | sea | noun | n | -е = neuter |
-| день | /dɛnʲ/ | day | noun | m | -ь after н = masculine |
-| ніч | /nʲitʃ/ | night | noun | f | -ь after ч = feminine |
-| земля | /zɛmˈlʲa/ | earth, land | noun | f | -я = feminine |
-| яблуко | /ˈjablukɔ/ | apple | noun | n | -о = neuter |
-| молоко | /mɔlɔˈkɔ/ | milk | noun | n | -о = neuter |
-| сонце | /ˈsɔnt͡sɛ/ | sun | noun | n | -е = neuter |
+| відміна | /vʲidˈmʲinɑ/ | declension | noun | f | Group I |
+| група | /ˈhrupɑ/ | group | noun | f | Group I |
+| стіл | /stʲil/ | table | noun | m | Group II (hard) |
+| вікно | /wʲikˈnɔ/ | window | noun | n | Group II (hard) |
+| книга | /ˈknɪɦɑ/ | book | noun | f | Group I (hard) |
+| ніч | /nʲitʃ/ | night | noun | f | Group III |
+| теля | /tɛˈlʲa/ | calf | noun | n | Group IV |
+| кошеня | /kɔʃɛˈnʲa/ | kitten | noun | n | Group IV |
+| радість | /ˈrɑdʲistʲ/ | joy | noun | f | Group III |
+| сіль | /sʲilʲ/ | salt | noun | f | Group III |
+| день | /dɛnʲ/ | day | noun | m | Group II (soft) |
+| сонце | /ˈsɔnt͡sɛ/ | sun | noun | n | Group II (hard) |
+| море | /ˈmɔrɛ/ | sea | noun | n | Group II (soft) |
+| земля | /zɛmˈlʲa/ | earth | noun | f | Group I (soft) |
+| сім'я | /sʲiˈmjuɑ/ | family | noun | f | Group I (soft) |
+
 ---
 
-# Gender Patterns
+# Declension Reference
 
-## Quick Reference
+## Why memorize groups?
 
-| Gender | Typical Endings | Examples |
-|--------|-----------------|----------|
-| Masculine | consonant, -ь (after д/т/н/с/з/л/р), -й | брат, день, музей |
-| Feminine | -а, -я, -ь (after ч/ш/щ/ж) | мама, земля, ніч |
-| Neuter | -о, -е, -мя, -я (baby animals) | вікно, море, ім'я, теля |
+When we start changing words (cases), each group has its own pattern.
 
-## Exception Words to Memorize
+| If you are in... | Accusative change? |
+|------------------|-------------------|
+| **Group I** | Yes (-у/-ю) |
+| **Group II** | No (if inanimate) |
+| **Group III** | No |
+| **Group IV** | No |
 
-| Word | Meaning | Expected | Actual | Why |
-|------|---------|----------|--------|-----|
-| тато | dad | neuter (-о) | masculine | natural gender |
-| дядько | uncle | neuter (-о) | masculine | natural gender |
-| любов | love | masculine (consonant) | feminine | exception |
-| путь | path | masculine (-ь) | feminine | archaic |
+Knowing the group now saves you headaches later!
 
 ---
 
@@ -341,16 +343,16 @@ Now predict the gender of these new words (you haven't learned them yet, but you
 
 > 💡 **What You Learned Today**
 >
-> - Every Ukrainian noun has grammatical gender: masculine, feminine, or neuter
-> - **Masculine:** Usually ends in consonant or -ь (after certain consonants)
-> - **Feminine:** Usually ends in -а, -я, or -ь (after ч/ш/щ/ж)
-> - **Neuter:** Usually ends in -о or -е
-> - Natural gender (people) can override grammatical gender
-> - About 95% of nouns follow the ending patterns!
+> - Nouns belong to **4 Declension Groups (Families)**
+> - **Group I:** -а/-я nouns (mostly Feminine)
+> - **Group II:** Consonant nouns (Masculine) + -о/-е nouns (Neuter)
+> - **Group III:** -ь nouns (Feminine)
+> - **Group IV:** Baby animals (Neuter)
+> - Identifying the Group helps you predict the Gender
 
 > 🎯 **Coming Next**
 >
-> In Module 04, you'll learn how to make sentences with "this is" and "I am":
-> - Це студент. (This is a student.)
-> - Я українець. (I am Ukrainian.)
-> - Why Ukrainian doesn't need "is" in the present tense!
+> In Module 04, we'll use these nouns to make sentences:
+> - **Це** стіл. (Group II)
+> - **Це** мама. (Group I)
+> - We will learn the pronoun "Це" (This is).

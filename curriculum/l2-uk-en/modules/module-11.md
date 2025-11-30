@@ -79,22 +79,23 @@ The **accusative case** marks the **direct object** - the thing receiving the ac
 
 ### Accusative Endings: Inanimate Nouns
 
-For **inanimate** (non-living) nouns:
+Remember the **4 Declension Groups** from Module 03? Here is how they behave in Accusative (for **inanimate** things):
 
-| Gender | Nominative | Accusative | Change |
-|--------|------------|------------|--------|
-| Masculine | стіл | стіл | **No change!** |
-| Neuter | вікно | вікно | **No change!** |
-| Feminine -а | книга | книг**у** | -а → -у |
-| Feminine -я | земля | земл**ю** | -я → -ю |
+| Group | Description | Change in Accusative? | Pattern |
+|-------|-------------|-----------------------|---------|
+| **I** | -а/-я nouns | **YES** | **-а → -у**, **-я → -ю** |
+| **II** | Consonant/-о/-е | **NO** | No change |
+| **III** | -ь Feminine | **NO** | No change |
+| **IV** | Baby animals | **NO** | No change |
 
-> ⚡ **Pro Tip: The Easy Part**
+> ⚡ **Pro Tip: The "Group I" Rule**
 >
-> Masculine and neuter inanimate nouns **don't change** in accusative!
-> - Я бачу стіл. (I see the table.) - same as nominative
-> - Я бачу вікно. (I see the window.) - same as nominative
+> Only **Group I** (-a/-ya) changes for inanimate objects!
+> - **Книга** (Group I) → Я бачу **книгу**.
+> - **Стіл** (Group II) → Я бачу **стіл**.
+> - **Вікно** (Group II) → Я бачу **вікно**.
 >
-> Only feminine nouns change: -а → -у, -я → -ю
+> If it's not Group I (and not a person/animal), relax - it doesn't change!
 
 > 📜 **History Bite: Why Feminine Changes**
 >
@@ -326,12 +327,12 @@ Say what you want:
 
 **Endings (Inanimate):**
 
-| Gender | Nominative | Accusative | Example |
-|--------|------------|------------|---------|
-| Masculine | -consonant | = Nom | стіл → стіл |
-| Neuter | -о/-е | = Nom | вікно → вікно |
-| Feminine | -а | -у | книга → книгу |
-| Feminine | -я | -ю | земля → землю |
+| Group | Gender (Typ.) | Change | Example |
+|-------|---------------|--------|---------|
+| **I** | Fem/Masc | **-у** / **-ю** | книга → книгу |
+| **II** | Masc/Neut | No change | стіл → стіл |
+| **III** | Fem | No change | ніч → ніч |
+| **IV** | Neut | No change | теля → теля |
 
 ---
 
