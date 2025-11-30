@@ -193,3 +193,15 @@ The C1 curriculum is the path to **mastery**. It shifts focus from "learning the
 | C1.3 Stylistics | 281-305 | Nuance, humor, register |
 | C1.4 Lit Classics | 306-330 | 19th C. literary language |
 | C1.5 Lit Modern | 331-360 | 20th-21st C. literary language |
+
+---
+
+## Implementation Status
+
+| Phase | Modules | Status |
+|-------|---------|--------|
+| C1.1 | 241-265 | ⏳ Planned |
+| C1.2 | 266-280 | ⏳ Planned |
+| C1.3 | 281-305 | ⏳ Planned |
+| C1.4 | 306-330 | ⏳ Planned |
+| C1.5 | 331-360 | ⏳ Planned |

@@ -162,3 +162,14 @@ Unlike previous levels, B2 modules are **interleaved** to maintain engagement. I
 - **Integrated Skills:** Grammar concepts are applied in History readings.
 - **Myth-Busting:** "⚠️" modules address common historical misconceptions.
 - **C1 Readiness:** Final phase introduces academic skills needed for the next level.
+
+---
+
+## Implementation Status
+
+| Phase | Modules | Status |
+|-------|---------|--------|
+| B2.1 | 141-165 | ⏳ Planned |
+| B2.2 | 166-190 | ⏳ Planned |
+| B2.3 | 191-215 | ⏳ Planned |
+| B2.4 | 216-240 | ⏳ Planned |
