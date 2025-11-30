@@ -810,6 +810,8 @@ function generateLevelIndex(modules: Array<{ num: number; title: string; subtitl
     'A2+.3': { bg: '#831843', accent: '#fb7185', light: '#ffe4e6' },
     'B1.1': { bg: '#c026d3', accent: '#d946ef', light: '#fae8ff' },
     'B1.2': { bg: '#db2777', accent: '#ec4899', light: '#fce7f3' },
+    'B1.3': { bg: '#e11d48', accent: '#f43f5e', light: '#ffe4e6' },
+    'B1.4': { bg: '#dc2626', accent: '#ef4444', light: '#fee2e2' },
   };
   const defaultColor = { bg: '#6b7280', accent: '#9ca3af', light: '#f3f4f6' };
 
