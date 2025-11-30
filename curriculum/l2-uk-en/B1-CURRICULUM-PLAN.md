@@ -252,7 +252,7 @@ Ukrainian aspect is **NOT black and white**. Many situations allow BOTH perfecti
 | Phase | Modules | Status |
 |-------|---------|--------|
 | B1.1 | 81-100 | ✅ Implemented |
-| B1.2 | 101-115 | ⏳ Planned |
+| B1.2 | 101-115 | ✅ Implemented |
 | B1.3 | 116-125 | ⏳ Planned |
 | B1.4 | 126-140 | ⏳ Planned |
 
