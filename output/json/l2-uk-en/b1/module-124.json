@@ -1,0 +1,263 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-B1-124",
+    "moduleId": "mod-uk-B1-124",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "lessonType": "revision",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "B1",
+    "phase": "B1.3",
+    "moduleNumber": 124,
+    "title": "B1.3 Review",
+    "subtitle": "Reported Speech and Participles",
+    "description": "Review all reported speech structures",
+    "objectives": [
+      "Review all reported speech structures",
+      "Consolidate participle knowledge",
+      "Practice B1.3 vocabulary",
+      "Prepare for B1.3 checkpoint"
+    ],
+    "grammarFocus": [],
+    "totalDuration": 45,
+    "transliterationMode": "none",
+    "tags": [
+      "review",
+      "reported-speech",
+      "participles",
+      "vocabulary"
+    ],
+    "version": 1,
+    "createdAt": "2025-11-30T00:00:00Z",
+    "modifiedAt": "2025-11-30T00:00:00Z",
+    "phases": [
+      {
+        "id": "phase-warm-up",
+        "name": "warm-up",
+        "duration": 5,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Огляд B1.3 | B1.3 Overview\n\nB1.3 охопив **непряму мову** та **дієприкметники**:\n\nB1.3 covered **reported speech** and **participles**:\n\n**Grammar (Modules 116-121):**\n- Reported statements (що)\n- Reported questions (чи, question words)\n- Reported commands (щоб + past)\n- Past passive participles (-ний/-тий)\n- Short passive forms (-но/-то)\n- Adverbial participles (-учи/-вши)\n\n**Vocabulary (Modules 122-123):**\n- Emotions & Relationships\n- Health & Wellness"
+          }
+        ]
+      },
+      {
+        "id": "phase-presentation",
+        "name": "presentation",
+        "duration": 15,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Непряма мова: Огляд | Reported Speech Summary\n\n| Type | Connector | Example |\n|------|-----------|---------|\n| **Statements** | що | Він сказав, **що** він працює. |\n| **Yes/No Questions** | чи | Він запитав, **чи** я прийду. |\n| **Info Questions** | question word | Він запитав, **де** я живу. |\n| **Commands** | щоб + past | Він попросив, **щоб** я прийшов. |"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Непряма мова: Висловлювання | Reported Statements\n\n**Structure:** reporting verb + **що** + clause\n\n| Direct | Reported |\n|--------|----------|\n| «Я працюю» | Він сказав, що він працює. |\n| «Ми прийдемо» | Вони сказали, що вони прийдуть. |\n\n**Reporting verbs:** сказати, повідомити, стверджувати, заявити"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Непряма мова: Запитання | Reported Questions\n\n**Yes/No:** reporting verb + **чи** + statement order\n- «Ти прийдеш?» → Він запитав, чи я прийду.\n\n**Information:** reporting verb + **question word** + statement order\n- «Де ти живеш?» → Він запитав, де я живу."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Непряма мова: Накази | Reported Commands\n\n**Structure:** reporting verb + **щоб** + subject + **past tense**\n\n| Direct | Reported |\n|--------|----------|\n| «Прийди!» | Він попросив, щоб я прийшов. |\n| «Не запізнюйся!» | Вона сказала, щоб я не запізнювався. |\n\n**Reporting verbs:** попросити, наказати, порадити, заборонити"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Пасивні дієприкметники | Passive Participles\n\n**Formation:**\n- **-ний/-ений/-аний:** зроблений, написаний\n- **-тий:** відкритий, закритий, забутий\n\n**Usage:**\n- As adjective: написан**а** книга\n- As predicate: Книга написан**а**.\n- Short form: Книгу написан**о**. (formal)"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Дієприслівники | Adverbial Participles\n\n| Type | Suffix | Meaning | Example |\n|------|--------|---------|---------|\n| **Imperfective** | -учи/-ючи | while doing | читаючи |\n| **Perfective** | -вши/-ши | having done | прочитавши |\n\n**Usage:**\n- Читаючи книгу, він пив каву. (simultaneous)\n- Прочитавши книгу, він заснув. (prior action)"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "B1.3 Vocabulary Themes\n\n**Emotions & Relationships:**\nрадість, сум, тривога, розчарування, довіра, підтримка, конфлікт, примирення\n\n**Health & Wellness:**\nздоров'я, стрес, втома, харчування, тренування, сон, відпочинок, імунітет"
+          }
+        ]
+      },
+      {
+        "id": "phase-practice",
+        "name": "practice",
+        "duration": 15,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Convert to Reported Speech\n\n**Statements:**\n1. Анна: «Я вивчаю українську.»\n   → Анна сказала, що **вона вивчає українську**.\n\n2. Петро: «Ми поїдемо на море.»\n   → Петро сказав, що **вони поїдуть на море**.\n\n**Questions:**\n3. «Ти любиш каву?» (він запитав)\n   → Він запитав, **чи я люблю каву**.\n\n4. «Де ти працюєш?» (вона запитала)\n   → Вона запитала, **де я працюю**.\n\n**Commands:**\n5. Мама: «Прибери кімнату!»\n   → Мама сказала, щоб я **прибрав кімнату**.\n\n6. Лікар: «Відпочивайте більше!»\n   → Лікар порадив, щоб я **відпочивав більше**."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Participle Practice\n\n**Form passive participles:**\n1. написати → **написаний**\n2. закрити → **закритий**\n3. забути → **забутий**\n\n**Convert to short form:**\n4. Робота зроблена. → Роботу **зроблено**.\n5. Рішення прийняте. → Рішення **прийнято**.\n\n**Form adverbial participles:**\n6. читати → **читаючи**\n7. прочитати → **прочитавши**\n8. повернутися → **повернувшись**"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Mixed Grammar Practice\n\nChoose the correct form:\n\n1. Він сказав, ___ він прийде.\n   - a) що ✓\n   - b) чи\n   - c) щоб\n\n2. Вона запитала, ___ я працюю.\n   - a) що\n   - b) де ✓\n   - c) щоб\n\n3. Він попросив, ___ я допоміг.\n   - a) що\n   - b) чи\n   - c) щоб ✓\n\n4. ___ книгу, він заснув.\n   - a) Читаючи\n   - b) Прочитавши ✓\n   - c) Прочитаний\n\n5. Роботу ___.\n   - a) зроблена\n   - b) зроблено ✓\n   - c) зробити"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Vocabulary Review\n\nComplete with vocabulary from modules 122-123:\n\n1. Відчуття, коли щось не вийшло: **розчарування**\n2. Хронічна втома від роботи: **вигорання**\n3. Вірити комусь: **довіряти**\n4. Здорове харчування і фізичні вправи: **здоровий спосіб життя**\n5. Сказати «вибачте»: **пробачити**"
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-B1-124-quiz"
+          }
+        ]
+      },
+      {
+        "id": "phase-production",
+        "name": "production",
+        "duration": 10,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Report a Conversation\n\nReport what your friend said:\n- Він/вона сказав(ла), що...\n- Він/вона запитав(ла), чи/де/коли...\n- Він/вона попросив(ла), щоб..."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Use Participles\n\nDescribe actions using participles:\n- Написавши лист, я пішов на пошту.\n- Слухаючи музику, я працюю.\n- Робота закінчена."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Discuss Health and Emotions\n\nTalk about:\n- Як ви **справляєтеся** зі стресом?\n- Які **стосунки** важливі для вас?\n- Як ви піклуєтеся про **здоров'я**?"
+          }
+        ]
+      }
+    ]
+  },
+  "activities": [
+    {
+      "id": "act-uk-B1-124-quiz",
+      "type": "quiz",
+      "title": "B1.3 Comprehensive Review",
+      "description": "Choose the correct answer.",
+      "content": {
+        "type": "quiz",
+        "instructions": "Choose the correct answer.",
+        "questions": [
+          {
+            "question": "Він сказав, ___ він працює.",
+            "options": [
+              "що",
+              "чи"
+            ],
+            "correctIndex": 0,
+            "explanation": "що for statements."
+          },
+          {
+            "question": "Вона запитала, ___ я прийду.",
+            "options": [
+              "чи",
+              "що"
+            ],
+            "correctIndex": 0,
+            "explanation": "чи for yes/no questions."
+          },
+          {
+            "question": "Він попросив, щоб я ___.",
+            "options": [
+              "допоміг",
+              "допомогти"
+            ],
+            "correctIndex": 0,
+            "explanation": "Past tense after щоб."
+          },
+          {
+            "question": "___ книгу, він пив чай.",
+            "options": [
+              "Читаючи",
+              "Прочитавши"
+            ],
+            "correctIndex": 0,
+            "explanation": "Simultaneous action = imperfective."
+          },
+          {
+            "question": "Роботу ___.",
+            "options": [
+              "зроблено",
+              "зроблена"
+            ],
+            "correctIndex": 0,
+            "explanation": "Short form with accusative subject."
+          },
+          {
+            "question": "Verb: закрити → Participle: ___",
+            "options": [
+              "закритий",
+              "закрений"
+            ],
+            "correctIndex": 0,
+            "explanation": "-тий after vowel."
+          }
+        ],
+        "shuffleQuestions": true,
+        "shuffleOptions": true,
+        "showCorrectAnswers": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "B1",
+      "duration": 5,
+      "tags": [
+        "review",
+        "reported-speech",
+        "participles",
+        "vocabulary"
+      ],
+      "createdAt": "2025-11-30T00:00:00Z",
+      "modifiedAt": "2025-11-30T00:00:00Z"
+    },
+    {
+      "id": "act-uk-B1-124-fillin",
+      "type": "fill-in",
+      "title": "Report the Day",
+      "description": "Мій друг розповів про свій день.",
+      "content": {
+        "type": "fill-in",
+        "instructions": "Мій друг розповів про свій день."
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "B1",
+      "duration": 5,
+      "tags": [
+        "review",
+        "reported-speech",
+        "participles",
+        "vocabulary"
+      ],
+      "createdAt": "2025-11-30T00:00:00Z",
+      "modifiedAt": "2025-11-30T00:00:00Z"
+    }
+  ],
+  "vocabulary": {
+    "moduleId": "mod-uk-B1-124",
+    "level": "B1",
+    "phase": "B1.3",
+    "wordCount": 0,
+    "transliterationMode": "none",
+    "words": []
+  }
+}

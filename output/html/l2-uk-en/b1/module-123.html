@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 123: Health & Wellness Vocabulary | Ukrainian B1</title>
+  <style>
+    :root { --primary: #1a5fb4; --primary-light: #3584e4; --success: #26a269; --warning: #e5a50a; --danger: #c01c28; --bg: #fafafa; --card-bg: #fff; --text: #1e1e1e; --text-muted: #5e5e5e; --border: #e0e0e0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+    .top-nav { background: #2e2e2e; color: white; padding: 0.5rem 2rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.875rem; }
+    .top-nav a { color: white; text-decoration: none; }
+    .top-nav a:hover { text-decoration: underline; }
+    .module-nav { display: flex; gap: 1rem; align-items: center; }
+    .module-nav-link { color: rgba(255,255,255,0.8); text-decoration: none; padding: 0.25rem 0.5rem; }
+    .module-nav-link:hover { color: white; }
+    .module-nav-link.disabled { color: rgba(255,255,255,0.3); pointer-events: none; }
+    .nav { position: sticky; top: 0; background: var(--primary); color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; z-index: 100; }
+    .nav h1 { font-size: 1.25rem; }
+    .nav-tabs { display: flex; gap: 0.5rem; }
+    .nav-tab { background: rgba(255,255,255,0.2); border: none; color: white; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; }
+    .nav-tab.active { background: white; color: var(--primary); }
+    main { max-width: 1000px; margin: 0 auto; padding: 2rem; }
+    .section { display: none; } .section.active { display: block; }
+    .lesson-header { text-align: center; margin-bottom: 2rem; padding: 2rem; background: linear-gradient(135deg, #e8f4fd, #f0e8fd); border-radius: 12px; }
+    .level-badge { background: var(--primary); color: white; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.875rem; }
+    .card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 1.5rem; margin-bottom: 1.5rem; }
+    .card h3 { color: var(--primary); margin-bottom: 1rem; }
+    .canvas-note { background: #fffbeb; border-left: 4px solid var(--warning); padding: 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+    .canvas-note h4 { color: var(--warning); margin-bottom: 0.5rem; }
+    .md-content { line-height: 1.7; }
+    .md-content p { margin: 0.75rem 0; }
+    .md-content ul, .md-content ol { margin: 0.75rem 0; padding-left: 1.5rem; }
+    .md-content li { margin: 0.25rem 0; }
+    .md-content strong { color: var(--primary); }
+    .md-content blockquote { background: #e8f4fd; border-left: 4px solid var(--primary); padding: 0.75rem 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+    .md-content blockquote p { margin: 0.25rem 0; }
+    .md-content table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+    .md-content th, .md-content td { border: 1px solid var(--border); padding: 0.5rem 0.75rem; text-align: left; }
+    .md-content th { background: #f5f5f5; font-weight: 600; }
+    .md-content code { background: #f0f0f0; padding: 0.125rem 0.375rem; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
+    .letter-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0; }
+    .letter-group { border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; }
+    .letter-group.true-friends { border-color: var(--success); } .letter-group.true-friends .letters { color: var(--success); }
+    .letter-group.false-friends { border-color: var(--danger); } .letter-group.false-friends .letters { color: var(--danger); }
+    .letter-group.new-letters { border-color: var(--primary); } .letter-group.new-letters .letters { color: var(--primary); }
+    .letters { font-size: 1.75rem; letter-spacing: 0.3rem; }
+    .match-container { display: flex; gap: 3rem; padding: 1rem; position: relative; }
+    .match-column { flex: 1; display: flex; flex-direction: column; gap: 0.75rem; }
+    .match-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; font-size: 1.25rem; cursor: pointer; }
+    .match-item.selected { border-color: var(--primary); background: #e8f4fd; }
+    .match-item.matched { border-color: var(--success); background: #e8f8f0; }
+    .match-item.wrong { border-color: var(--danger); background: #fde8e8; }
+    .match-lines { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+    .quiz-question { border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; }
+    .quiz-question.answered { pointer-events: none; }
+    .quiz-question .cyrillic { font-size: 1.5rem; color: var(--primary); font-weight: 600; }
+    .quiz-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-top: 1rem; }
+    .quiz-option { background: #f5f5f5; border: 2px solid var(--border); border-radius: 8px; padding: 1rem; cursor: pointer; text-align: center; }
+    .quiz-option.correct { border-color: var(--success); background: #d4edda; }
+    .quiz-option.wrong { border-color: var(--danger); background: #f8d7da; }
+    .quiz-explanation { margin-top: 1rem; padding: 1rem; background: #e8f4fd; border-radius: 8px; display: none; }
+    .quiz-explanation.show { display: block; }
+    .sort-pool { background: #f5f5f5; border: 2px dashed var(--border); border-radius: 12px; padding: 1.5rem; min-height: 80px; margin-bottom: 1rem; }
+    .sort-items { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; }
+    .sort-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 0.75rem 1.25rem; font-size: 1.5rem; cursor: grab; }
+    .sort-item.correct { border-color: var(--success); background: #e8f8f0; }
+    .sort-item.wrong { border-color: var(--danger); background: #fde8e8; }
+    .sort-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    .sort-group { border: 2px solid var(--border); border-radius: 12px; padding: 1rem; min-height: 150px; }
+    .sort-group.drag-over { border-color: var(--primary); background: #e8f4fd; }
+    .sort-group h4 { font-size: 0.875rem; text-align: center; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--border); }
+    .sort-group.true-friends h4 { color: var(--success); border-color: var(--success); }
+    .sort-group.false-friends h4 { color: var(--danger); border-color: var(--danger); }
+    .sort-group.new-letters h4 { color: var(--primary); border-color: var(--primary); }
+    .vocab-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; }
+    .vocab-card { border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; text-align: center; }
+    .vocab-card .uk { font-size: 1.75rem; font-weight: 600; color: var(--primary); }
+    .vocab-card .translit { color: var(--text-muted); font-style: italic; }
+    .vocab-card .en { font-weight: 500; margin: 0.25rem 0; }
+    .vocab-card .note { font-size: 0.75rem; color: #613583; background: #f0e8fd; padding: 0.25rem 0.5rem; border-radius: 4px; }
+    .btn { padding: 0.75rem 1.5rem; border: none; border-radius: 8px; cursor: pointer; }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-outline { background: transparent; border: 2px solid var(--border); }
+    .btn-group { display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem; }
+    .score-display { text-align: center; padding: 1rem; background: linear-gradient(135deg, #e8f8f0, #e8f4fd); border-radius: 8px; margin-bottom: 1rem; }
+    .score-display .score { font-size: 2rem; font-weight: 700; color: var(--success); }
+    .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
+    .completion-message.show { display: block; }
+    footer { text-align: center; padding: 2rem; color: var(--text-muted); }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+  </style>
+</head>
+<body>
+  <div class="top-nav">
+    <a href="../index.html">← l2-uk-en Curriculum</a>
+    <div class="module-nav">
+      <a href="module-122.html" class="module-nav-link">← Module 122</a>
+      <a href="index.html" class="module-nav-link">B1 Index</a>
+      <a href="module-124.html" class="module-nav-link">Module 124 →</a>
+    </div>
+  </div>
+  <nav class="nav">
+    <h1>Module 123: Health & Wellness Vocabulary</h1>
+    <div class="nav-tabs">
+      <button class="nav-tab active" data-section="lesson">Lesson</button>
+      
+      <button class="nav-tab" data-section="quiz">Quiz</button>
+      
+      <button class="nav-tab" data-section="vocab">Vocab</button>
+    </div>
+  </nav>
+  <main>
+    <section id="lesson" class="section active">
+      <div class="lesson-header">
+        <span class="level-badge">B1 · B1.3</span>
+        <h2 style="font-size:2rem;margin:0.5rem 0">Health & Wellness Vocabulary</h2>
+        <p style="color:var(--text-muted)">Stress, Recovery, Diet</p>
+      </div>
+      
+      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Здоров'я та самопочуття | Health and Wellness</h4><div class="md-content"><p>На рівні B1 ми обговорюємо здоров'я глибше:</p>
+<p>At B1 level, we discuss health more deeply:</p>
+<ul>
+<li>Як ви <strong>піклуєтеся</strong> про своє здоров'я? | How do you take care of your health?</li>
+<li>Що допомагає вам <strong>справлятися зі стресом</strong>? | What helps you cope with stress?</li>
+<li>Яку роль грає <strong>харчування</strong> у вашому житті? | What role does nutrition play in your life?</li>
+</ul></div></div><div class="canvas-note"><h4>### Загальне здоров'я | General Health</h4><div class="md-content"><table>
+<thead>
+<tr>
+<th>Ukrainian</th>
+<th>IPA</th>
+<th>English</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>здоров'я</td>
+<td>/zdoˈrowjɑ/</td>
+<td>health</td>
+<td>Міцне здоров'я</td>
+</tr>
+<tr>
+<td>самопочуття</td>
+<td>/sɑmopoˈt͡ʃutʲːɑ/</td>
+<td>well-being</td>
+<td>Гарне самопочуття</td>
+</tr>
+<tr>
+<td>імунітет</td>
+<td>/imuˈnʲitɛt/</td>
+<td>immunity</td>
+<td>Зміцнювати імунітет</td>
+</tr>
+<tr>
+<td>організм</td>
+<td>/orɦɑˈnʲizm/</td>
+<td>organism, body</td>
+<td>Здоровий організм</td>
+</tr>
+<tr>
+<td>симптом</td>
+<td>/sɪmˈptom/</td>
+<td>symptom</td>
+<td>Перші симптоми</td>
+</tr>
+<tr>
+<td>діагноз</td>
+<td>/dʲiɑɦˈnoz/</td>
+<td>diagnosis</td>
+<td>Поставити діагноз</td>
+</tr>
+<tr>
+<td>лікування</td>
+<td>/lʲikuˈvɑnʲːɑ/</td>
+<td>treatment</td>
+<td>Курс лікування</td>
+</tr>
+<tr>
+<td>одужання</td>
+<td>/oduˈʒɑnʲːɑ/</td>
+<td>recovery</td>
+<td>Швидке одужання</td>
+</tr>
+<tr>
+<td>профілактика</td>
+<td>/profilʲɑkˈtɪkɑ/</td>
+<td>prevention</td>
+<td>Профілактика хвороб</td>
+</tr>
+</tbody>
+</table></div></div><div class="canvas-note"><h4>Стрес і психічне здоров'я | Stress and Mental Health</h4><div class="md-content"><table>
+<thead>
+<tr>
+<th>Ukrainian</th>
+<th>IPA</th>
+<th>English</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>стрес</td>
+<td>/strɛs/</td>
+<td>stress</td>
+<td>Хронічний стрес</td>
+</tr>
+<tr>
+<td>тривожність</td>
+<td>/trɪˈvoʒnʲistʲ/</td>
+<td>anxiety</td>
+<td>Підвищена тривожність</td>
+</tr>
+<tr>
+<td>депресія</td>
+<td>/dɛˈprɛsʲijɑ/</td>
+<td>depression</td>
+<td>Симптоми депресії</td>
+</tr>
+<tr>
+<td>втома</td>
+<td>/ˈftomɑ/</td>
+<td>fatigue</td>
+<td>Хронічна втома</td>
+</tr>
+<tr>
+<td>виснаження</td>
+<td>/vɪsˈnɑʒɛnʲːɑ/</td>
+<td>exhaustion</td>
+<td>Емоційне виснаження</td>
+</tr>
+<tr>
+<td>вигорання</td>
+<td>/vɪɦoˈrɑnʲːɑ/</td>
+<td>burnout</td>
+<td>Професійне вигорання</td>
+</tr>
+<tr>
+<td>релаксація</td>
+<td>/rɛlɑkˈsɑt͡sʲijɑ/</td>
+<td>relaxation</td>
+<td>Техніки релаксації</td>
+</tr>
+<tr>
+<td>медитація</td>
+<td>/mɛdɪˈtɑt͡sʲijɑ/</td>
+<td>meditation</td>
+<td>Практикувати медитацію</td>
+</tr>
+<tr>
+<td>психолог</td>
+<td>/psɪˈxoloɦ/</td>
+<td>psychologist</td>
+<td>Консультація психолога</td>
+</tr>
+<tr>
+<td>терапія</td>
+<td>/tɛrɑˈpʲijɑ/</td>
+<td>therapy</td>
+<td>Когнітивна терапія</td>
+</tr>
+</tbody>
+</table></div></div><div class="canvas-note"><h4>Дієслова здоров'я | Health Verbs</h4><div class="md-content"><table>
+<thead>
+<tr>
+<th>Ukrainian</th>
+<th>English</th>
+<th>Aspect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>хворіти / захворіти</td>
+<td>to be ill / to fall ill</td>
+<td>impf/pf</td>
+</tr>
+<tr>
+<td>одужувати / одужати</td>
+<td>to recover</td>
+<td>impf/pf</td>
+</tr>
+<tr>
+<td>лікувати / вилікувати</td>
+<td>to treat / to cure</td>
+<td>impf/pf</td>
+</tr>
+<tr>
+<td>лікуватися</td>
+<td>to receive treatment</td>
+<td>impf</td>
+</tr>
+<tr>
+<td>відпочивати / відпочити</td>
+<td>to rest</td>
+<td>impf/pf</td>
+</tr>
+<tr>
+<td>відновлюватися / відновитися</td>
+<td>to recover, restore</td>
+<td>impf/pf</td>
+</tr>
+<tr>
+<td>розслаблятися / розслабитися</td>
+<td>to relax</td>
+<td>impf/pf</td>
+</tr>
+<tr>
+<td>справлятися / справитися</td>
+<td>to cope</td>
+<td>impf/pf</td>
+</tr>
+<tr>
+<td>стресувати</td>
+<td>to stress</td>
+<td>impf</td>
+</tr>
+<tr>
+<td>турбуватися</td>
+<td>to worry</td>
+<td>impf</td>
+</tr>
+</tbody>
+</table></div></div><div class="canvas-note"><h4>Харчування | Nutrition</h4><div class="md-content"><table>
+<thead>
+<tr>
+<th>Ukrainian</th>
+<th>IPA</th>
+<th>English</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>харчування</td>
+<td>/xɑrt͡ʃuˈvɑnʲːɑ/</td>
+<td>nutrition</td>
+<td>Здорове харчування</td>
+</tr>
+<tr>
+<td>дієта</td>
+<td>/dʲiˈjɛtɑ/</td>
+<td>diet</td>
+<td>Дотримуватися дієти</td>
+</tr>
+<tr>
+<td>калорії</td>
+<td>/kɑˈlorʲiʲi/</td>
+<td>calories</td>
+<td>Рахувати калорії</td>
+</tr>
+<tr>
+<td>білки</td>
+<td>/bʲilˈkɪ/</td>
+<td>proteins</td>
+<td>Достатньо білків</td>
+</tr>
+<tr>
+<td>вуглеводи</td>
+<td>/wuɦlɛˈvodɪ/</td>
+<td>carbohydrates</td>
+<td>Прості вуглеводи</td>
+</tr>
+<tr>
+<td>жири</td>
+<td>/ˈʒɪrɪ/</td>
+<td>fats</td>
+<td>Корисні жири</td>
+</tr>
+<tr>
+<td>вітаміни</td>
+<td>/vʲitɑˈmʲinɪ/</td>
+<td>vitamins</td>
+<td>Приймати вітаміни</td>
+</tr>
+<tr>
+<td>клітковина</td>
+<td>/klʲitkoˈvɪnɑ/</td>
+<td>fiber</td>
+<td>Багато клітковини</td>
+</tr>
+<tr>
+<td>добавки</td>
+<td>/doˈbɑwkɪ/</td>
+<td>supplements</td>
+<td>Харчові добавки</td>
+</tr>
+</tbody>
+</table></div></div><div class="canvas-note"><h4>Фізична активність | Physical Activity</h4><div class="md-content"><table>
+<thead>
+<tr>
+<th>Ukrainian</th>
+<th>IPA</th>
+<th>English</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>тренування</td>
+<td>/trɛnuˈvɑnʲːɑ/</td>
+<td>training, workout</td>
+<td>Регулярні тренування</td>
+</tr>
+<tr>
+<td>вправа</td>
+<td>/ˈwprɑvɑ/</td>
+<td>exercise</td>
+<td>Фізичні вправи</td>
+</tr>
+<tr>
+<td>кардіо</td>
+<td>/ˈkɑrdʲio/</td>
+<td>cardio</td>
+<td>Кардіо тренування</td>
+</tr>
+<tr>
+<td>силові вправи</td>
+<td>-</td>
+<td>strength training</td>
+<td>-</td>
+</tr>
+<tr>
+<td>йога</td>
+<td>/ˈjoɦɑ/</td>
+<td>yoga</td>
+<td>Заняття йогою</td>
+</tr>
+<tr>
+<td>біг</td>
+<td>/bʲiɦ/</td>
+<td>running</td>
+<td>Ранковий біг</td>
+</tr>
+<tr>
+<td>плавання</td>
+<td>/ˈplɑvɑnʲːɑ/</td>
+<td>swimming</td>
+<td>Користь плавання</td>
+</tr>
+<tr>
+<td>розтяжка</td>
+<td>/rozˈtʲɑʒkɑ/</td>
+<td>stretching</td>
+<td>Вправи на розтяжку</td>
+</tr>
+<tr>
+<td>витривалість</td>
+<td>/vɪtrɪˈvɑlʲistʲ/</td>
+<td>endurance</td>
+<td>Розвивати витривалість</td>
+</tr>
+</tbody>
+</table></div></div><div class="canvas-note"><h4>Сон і відпочинок | Sleep and Rest</h4><div class="md-content"><table>
+<thead>
+<tr>
+<th>Ukrainian</th>
+<th>IPA</th>
+<th>English</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>сон</td>
+<td>/son/</td>
+<td>sleep</td>
+<td>Здоровий сон</td>
+</tr>
+<tr>
+<td>безсоння</td>
+<td>/bɛzˈsonʲːɑ/</td>
+<td>insomnia</td>
+<td>Страждати на безсоння</td>
+</tr>
+<tr>
+<td>відпочинок</td>
+<td>/vʲidpoˈt͡ʃɪnok/</td>
+<td>rest</td>
+<td>Активний відпочинок</td>
+</tr>
+<tr>
+<td>режим</td>
+<td>/rɛˈʒɪm/</td>
+<td>regime, schedule</td>
+<td>Режим дня</td>
+</tr>
+<tr>
+<td>засинати / заснути</td>
+<td>-</td>
+<td>to fall asleep</td>
+<td>impf/pf</td>
+</tr>
+<tr>
+<td>прокидатися / прокинутися</td>
+<td>-</td>
+<td>to wake up</td>
+<td>impf/pf</td>
+</tr>
+<tr>
+<td>висипатися / виспатися</td>
+<td>-</td>
+<td>to get enough sleep</td>
+<td>impf/pf</td>
+</tr>
+</tbody>
+</table></div></div><div class="canvas-note"><h4>Корисні вирази | Useful Expressions</h4><div class="md-content"><table>
+<thead>
+<tr>
+<th>Ukrainian</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>вести здоровий спосіб життя</td>
+<td>to lead a healthy lifestyle</td>
+</tr>
+<tr>
+<td>піклуватися про здоров'я</td>
+<td>to take care of one's health</td>
+</tr>
+<tr>
+<td>справлятися зі стресом</td>
+<td>to cope with stress</td>
+</tr>
+<tr>
+<td>дотримуватися режиму</td>
+<td>to follow a schedule</td>
+</tr>
+<tr>
+<td>слідкувати за вагою</td>
+<td>to watch one's weight</td>
+</tr>
+<tr>
+<td>бути у формі</td>
+<td>to be in shape</td>
+</tr>
+<tr>
+<td>зміцнювати здоров'я</td>
+<td>to strengthen health</td>
+</tr>
+<tr>
+<td>позбуватися шкідливих звичок</td>
+<td>to get rid of bad habits</td>
+</tr>
+</tbody>
+</table></div></div><div class="canvas-note"><h4>### Complete with Correct Word</h4><div class="md-content"><ol>
+<li><p>Він страждає на хронічний ___ (stress).<br />
+→ Він страждає на хронічний <strong>стрес</strong>.</p></li>
+<li><p>Вона дотримується здорової ___ (diet).<br />
+→ Вона дотримується здорової <strong>дієти</strong>.</p></li>
+<li><p>Мені потрібно більше ___ (sleep).<br />
+→ Мені потрібно більше <strong>сну</strong>.</p></li>
+<li><p>Регулярні ___ (workouts) корисні для здоров'я.<br />
+→ Регулярні <strong>тренування</strong> корисні для здоров'я.</p></li>
+<li><p>Вітаміни зміцнюють ___ (immunity).<br />
+→ Вітаміни зміцнюють <strong>імунітет</strong>.</p></li>
+</ol></div></div><div class="canvas-note"><h4>Match Problem to Solution</h4><div class="md-content"><table>
+<thead>
+<tr>
+<th>Problem</th>
+<th>Solution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>стрес</td>
+<td>медитація, релаксація</td>
+</tr>
+<tr>
+<td>безсоння</td>
+<td>режим сну, відпочинок</td>
+</tr>
+<tr>
+<td>втома</td>
+<td>відпочинок, здоровий сон</td>
+</tr>
+<tr>
+<td>зайва вага</td>
+<td>дієта, тренування</td>
+</tr>
+<tr>
+<td>слабкий імунітет</td>
+<td>вітаміни, здорове харчування</td>
+</tr>
+</tbody>
+</table></div></div><div class="canvas-note"><h4>Discussion Questions</h4><div class="md-content"><ol>
+<li>Як ви справляєтеся зі <strong>стресом</strong>?</li>
+<li>Чи дотримуєтеся ви <strong>режиму дня</strong>?</li>
+<li>Скільки годин ви <strong>спите</strong>?</li>
+<li>Чи займаєтеся ви <strong>спортом</strong>?</li>
+<li>Що для вас означає <strong>здоровий спосіб життя</strong>?</li>
+</ol></div></div><div class="canvas-note"><h4>Translate to Ukrainian</h4><div class="md-content"><ol>
+<li><p>I need to reduce stress.<br />
+→ <strong>Мені потрібно зменшити стрес.</strong></p></li>
+<li><p>She follows a healthy diet.<br />
+→ <strong>Вона дотримується здорової дієти.</strong></p></li>
+<li><p>Regular exercise is important for health.<br />
+→ <strong>Регулярні фізичні вправи важливі для здоров'я.</strong></p></li>
+<li><p>I'm trying to get more sleep.<br />
+→ <strong>Я намагаюся більше спати / висипатися.</strong></p></li>
+</ol></div></div><div class="canvas-note"><h4>### Describe Your Wellness Routine</h4><div class="md-content"><p>Talk about your health habits:</p>
+<ul>
+<li>Що ви робите для <strong>фізичного</strong> здоров'я?</li>
+<li>Як ви піклуєтеся про <strong>психічне</strong> здоров'я?</li>
+<li>Як виглядає ваш <strong>режим дня</strong>?</li>
+</ul></div></div><div class="canvas-note"><h4>Give Health Advice</h4><div class="md-content"><p>A friend is stressed and tired. What do you advise?</p>
+<ul>
+<li>Раджу тобі більше відпочивати…</li>
+<li>Спробуй медитацію…</li>
+<li>Важливо висипатися…</li>
+</ul></div></div></div>
+      <div class="btn-group"><button class="btn btn-primary" onclick="showSection('quiz')">Start →</button></div>
+    </section>
+    
+    <section id="quiz" class="section"><div class="card"><h3>Health and Wellness</h3>
+      <div class="score-display"><span class="score"><span id="quiz-score">0</span>/6</span></div>
+      <div id="quiz-container"></div>
+      <div class="completion-message" id="quiz-complete"><h3>Complete!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
+    </div></section>
+    
+    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (0)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
+      <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
+    </section>
+  </main>
+  <footer>Module 123 · curricula-opus</footer>
+  <script>
+    const matchPairs=[];
+    const quizData=[{"question":"Chronic tiredness:","options":["хронічна втома","хронічний сон"],"correctIndex":0,"explanation":"Втома = fatigue/tiredness."},{"question":"To cope with stress:","options":["справлятися зі стресом","робити стрес"],"correctIndex":0,"explanation":"Справлятися = to cope."},{"question":"Healthy eating:","options":["здорове харчування","здорова їжа"],"correctIndex":0,"explanation":"Харчування = nutrition/eating habits."},{"question":"Professional burnout:","options":["професійне вигорання","професійна втома"],"correctIndex":0,"explanation":"Вигорання = burnout."},{"question":"To follow a diet:","options":["дотримуватися дієти","тримати дієту"],"correctIndex":0,"explanation":"Дотримуватися = to follow/adhere to."},{"question":"Immunity:","options":["імунітет","імуна"],"correctIndex":0,"explanation":"Імунітет = immunity."}];
+    const sortData={};
+    const vocabData=[];
+    const totalSort=0;
+    function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
+    document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));
+    let matchSel=null,matchScore=0,matchPairsArr=[];
+    document.querySelectorAll('#match-left .match-item').forEach(item=>{item.addEventListener('click',()=>{if(item.classList.contains('matched'))return;document.querySelectorAll('#match-left .match-item').forEach(i=>i.classList.remove('selected'));item.classList.add('selected');matchSel={el:item,pair:item.dataset.pair};});});
+    document.querySelectorAll('#match-right .match-item').forEach(item=>{item.addEventListener('click',()=>{if(item.classList.contains('matched')||!matchSel)return;if(matchSel.pair===item.dataset.pair){matchSel.el.classList.remove('selected');matchSel.el.classList.add('matched');item.classList.add('matched');matchPairsArr.push({left:matchSel.el,right:item});matchScore++;document.getElementById('match-score').textContent=matchScore;drawLines();if(matchScore===matchPairs.length)document.getElementById('match-complete').classList.add('show');}else{item.classList.add('wrong');setTimeout(()=>item.classList.remove('wrong'),300);}matchSel=null;});});
+    function drawLines(){const svg=document.getElementById('match-lines'),c=document.getElementById('match-container');if(!svg||!c)return;const r=c.getBoundingClientRect();svg.innerHTML='';svg.setAttribute('viewBox','0 0 '+r.width+' '+r.height);matchPairsArr.forEach(p=>{const lr=p.left.getBoundingClientRect(),rr=p.right.getBoundingClientRect();const line=document.createElementNS('http://www.w3.org/2000/svg','line');line.setAttribute('x1',lr.right-r.left);line.setAttribute('y1',lr.top+lr.height/2-r.top);line.setAttribute('x2',rr.left-r.left);line.setAttribute('y2',rr.top+rr.height/2-r.top);line.setAttribute('stroke','#26a269');line.setAttribute('stroke-width','2');svg.appendChild(line);});}
+    function resetMatch(){matchSel=null;matchScore=0;matchPairsArr=[];document.getElementById('match-score').textContent='0';document.getElementById('match-complete')?.classList.remove('show');document.getElementById('match-lines').innerHTML='';document.querySelectorAll('#match-container .match-item').forEach(i=>i.classList.remove('matched','selected','wrong'));}
+    window.addEventListener('resize',drawLines);
+    let quizScore=0,quizAns=0;
+    function initQuiz(){const c=document.getElementById('quiz-container');if(!c||!quizData.length)return;c.innerHTML='';quizData.forEach((q,i)=>{const sh=[...q.options].sort(()=>Math.random()-0.5);const cor=sh.indexOf(q.options[q.correctIndex]);const div=document.createElement('div');div.className='quiz-question';div.innerHTML='<h4>Q'+(i+1)+': '+q.question+'</h4><div class="quiz-options">'+sh.map((o,j)=>'<div class="quiz-option" data-c="'+(j===cor)+'" data-q="'+i+'">'+o+'</div>').join('')+'</div><div class="quiz-explanation" id="exp-'+i+'">'+q.explanation+'</div>';c.appendChild(div);});document.querySelectorAll('.quiz-option').forEach(o=>o.addEventListener('click',handleQuiz));}
+    function handleQuiz(e){const opt=e.target,q=opt.closest('.quiz-question');if(q.classList.contains('answered'))return;q.classList.add('answered');if(opt.dataset.c==='true'){opt.classList.add('correct');quizScore++;}else{opt.classList.add('wrong');q.querySelector('[data-c="true"]').classList.add('correct');}document.getElementById('exp-'+opt.dataset.q).classList.add('show');document.getElementById('quiz-score').textContent=quizScore;quizAns++;if(quizAns===quizData.length)document.getElementById('quiz-complete').classList.add('show');}
+    function resetQuiz(){quizScore=0;quizAns=0;document.getElementById('quiz-score').textContent='0';document.getElementById('quiz-complete')?.classList.remove('show');initQuiz();}
+    let sortScore=0,dragItem=null;
+    function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
+    function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
+    function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
+  </script>
+</body>
+</html>

@@ -1,0 +1,263 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-B1-120",
+    "moduleId": "mod-uk-B1-120",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "lessonType": "grammar-introduction",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "B1",
+    "phase": "B1.3",
+    "moduleNumber": 120,
+    "title": "Past Passive Participles II",
+    "subtitle": "Usage and Short Forms (-но/-то)",
+    "description": "Use participles in passive constructions",
+    "objectives": [
+      "Use participles in passive constructions",
+      "Master short forms (-но/-то)",
+      "Express agent with instrumental case",
+      "Distinguish active vs passive voice"
+    ],
+    "grammarFocus": [],
+    "totalDuration": 45,
+    "transliterationMode": "none",
+    "tags": [
+      "grammar",
+      "participles",
+      "passive",
+      "usage"
+    ],
+    "version": 1,
+    "createdAt": "2025-11-30T00:00:00Z",
+    "modifiedAt": "2025-11-30T00:00:00Z",
+    "phases": [
+      {
+        "id": "phase-warm-up",
+        "name": "warm-up",
+        "duration": 5,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Активний vs пасивний стан | Active vs Passive Voice\n\nПорівняйте:\n\nCompare:\n\n**Активний (Active):**\n- Художник **намалював** картину. - The artist painted the picture.\n\n**Пасивний (Passive):**\n- Картина **намальована** художником. - The picture was painted by the artist."
+          }
+        ]
+      },
+      {
+        "id": "phase-presentation",
+        "name": "presentation",
+        "duration": 15,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Повні форми дієприкметників | Full Participle Forms\n\n**Structure:** Subject + бути (optional) + participle (agrees with subject)\n\n| Example | Analysis |\n|---------|----------|\n| Лист **написаний**. | Letter (m) + written (m) |\n| Книга **прочитана**. | Book (f) + read (f) |\n| Вікно **відкрите**. | Window (n) + open (n) |\n| Двері **закриті**. | Doors (pl) + closed (pl) |\n\n**With бути for past/future:**\n- Лист **був написаний** учора. - The letter was written yesterday.\n- Робота **буде зроблена** завтра. - The work will be done tomorrow."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Вираження діяча | Expressing the Agent\n\n**Agent (who did the action) = Instrumental case**\n\n| Passive Sentence | Agent |\n|-----------------|-------|\n| Книга написана **Шевченком**. | by Shevchenko |\n| Будинок збудований **робітниками**. | by workers |\n| Лист підписаний **директором**. | by the director |\n\n**Without agent (more common):**\n- Книга вже прочитана. - The book is already read.\n- Вікно відкрите. - The window is open."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Короткі форми: -но/-то | Short Forms: -но/-то\n\n**Ukrainian has unique impersonal passive forms:**\n\n| Full Form | Short Form | Meaning |\n|-----------|------------|---------|\n| Робота зроблена | Роботу **зроблено** | The work is done |\n| Книгу прочитана | Книгу **прочитано** | The book is read |\n| Вікно відкрите | Вікно **відкрито** | The window is open |\n\n**Key differences:**\n- Short forms are **invariable** (don't change for gender/number)\n- Subject goes in **accusative** case\n- Very common in formal/written Ukrainian"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Утворення коротких форм | Short Form Formation\n\n| Full Participle | Short Form |\n|-----------------|------------|\n| написан**ий** | написан**о** |\n| прочитан**ий** | прочитан**о** |\n| зроблен**ий** | зроблен**о** |\n| відкрит**ий** | відкрит**о** |\n| закрит**ий** | закрит**о** |\n| забут**ий** | забут**о** |\n\n**Pattern:** Remove adjective ending, add **-о** (or **-о** after consonant clusters)"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Повна vs коротка форма | Full vs Short Form\n\n| Full Form | Short Form | Style |\n|-----------|------------|-------|\n| Лист написаний. | Лист написано. | Formal |\n| Роботу закінчено. | Роботу закінчено. | Official |\n| Рішення прийнято. | Рішення прийнято. | News |\n\n**Short forms are preferred in:**\n- Official documents\n- News reports\n- Academic writing\n- Signs and announcements"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Приклади коротких форм | Examples of Short Forms\n\n**Офіційні оголошення (Official announcements):**\n- Засідання **відкрито**. - The meeting is open.\n- Голосування **завершено**. - Voting is complete.\n- Рішення **прийнято**. - The decision is made.\n\n**Новини (News):**\n- Угоду **підписано**. - The agreement has been signed.\n- Закон **ухвалено**. - The law has been passed.\n- Злочинця **затримано**. - The criminal has been detained.\n\n**Інструкції (Instructions):**\n- Заборонено палити. - Smoking is forbidden.\n- Дозволено фотографувати. - Photography is allowed."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "З діячем | With Agent\n\nShort forms can also express agent:\n\n- Книгу написано **Шевченком**. - The book was written by Shevchenko.\n- Закон ухвалено **парламентом**. - The law was passed by parliament.\n- Роботу виконано **студентами**. - The work was done by students."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Часові форми | Tense Forms\n\n**Present (no auxiliary):**\n- Вікно відкрито. - The window is open.\n\n**Past (було):**\n- Вікно **було** відкрито. - The window was open.\n\n**Future (буде):**\n- Вікно **буде** відкрито. - The window will be open."
+          }
+        ]
+      },
+      {
+        "id": "phase-practice",
+        "name": "practice",
+        "duration": 15,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Convert to Short Form\n\n1. Робота зроблена. → Роботу **зроблено**.\n2. Книга прочитана. → Книгу **прочитано**.\n3. Двері закриті. → Двері **закрито**.\n4. Лист написаний. → Лист **написано**.\n5. Рішення прийняте. → Рішення **прийнято**."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Add the Agent\n\n1. Картину намальовано ___ (художник).\n   → Картину намальовано **художником**.\n\n2. Симфонію написано ___ (Бетховен).\n   → Симфонію написано **Бетховеном**.\n\n3. Будинок збудовано ___ (робітники).\n   → Будинок збудовано **робітниками**.\n\n4. Закон ухвалено ___ (парламент).\n   → Закон ухвалено **парламентом**."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Choose Full or Short Form\n\n1. Офіційне оголошення: «Засідання ___» (відкрите/відкрито)\n   → **відкрито** (formal/official)\n\n2. Опис кімнати: «Вікно ___» (відкрите/відкрито)\n   → **відкрите** (descriptive)\n\n3. Новини: «Угоду ___» (підписана/підписано)\n   → **підписано** (news style)\n\n4. Розмова: «Робота вже ___» (зроблена/зроблено)\n   → both acceptable, **зроблена** more common in speech"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Translate to Ukrainian\n\n1. The work is done.\n   → **Роботу зроблено.** / **Робота зроблена.**\n\n2. The decision was made by the director.\n   → **Рішення прийнято директором.**\n\n3. The book was written in 1861.\n   → **Книгу написано в 1861 році.**\n\n4. The window will be closed.\n   → **Вікно буде закрито.**"
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-B1-120-quiz"
+          }
+        ]
+      },
+      {
+        "id": "phase-production",
+        "name": "production",
+        "duration": 10,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### News Report Style\n\nWrite sentences in news style using short forms:\n\n- Угоду підписано.\n- Нового президента обрано.\n- Засідання завершено."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Describe Completed Actions\n\nUse participles to describe what has been done:\n\n- У кімнаті: вікно відкрито, ліжко застелено...\n- На роботі: проєкт закінчено, звіт надіслано..."
+          }
+        ]
+      }
+    ]
+  },
+  "activities": [
+    {
+      "id": "act-uk-B1-120-quiz",
+      "type": "quiz",
+      "title": "Passive Constructions",
+      "description": "Choose the correct form.",
+      "content": {
+        "type": "quiz",
+        "instructions": "Choose the correct form.",
+        "questions": [
+          {
+            "question": "Роботу ___ (зроблена/зроблено).",
+            "options": [
+              "зроблено",
+              "зроблена"
+            ],
+            "correctIndex": 0,
+            "explanation": "Short form with accusative subject."
+          },
+          {
+            "question": "Книга ___ Шевченком.",
+            "options": [
+              "написана",
+              "написано"
+            ],
+            "correctIndex": 0,
+            "explanation": "Full form agrees with subject."
+          },
+          {
+            "question": "Засідання ___ (відкрите/відкрито).",
+            "options": [
+              "відкрито",
+              "відкрите"
+            ],
+            "correctIndex": 0,
+            "explanation": "Official announcement uses short form."
+          },
+          {
+            "question": "Вікно було ___ учора.",
+            "options": [
+              "відкрито",
+              "відкрити"
+            ],
+            "correctIndex": 0,
+            "explanation": "Past passive with було + short form."
+          },
+          {
+            "question": "Угоду підписано ___ (президент).",
+            "options": [
+              "президентом",
+              "президента"
+            ],
+            "correctIndex": 0,
+            "explanation": "Agent in instrumental case."
+          },
+          {
+            "question": "Рішення вже ___.",
+            "options": [
+              "прийнято",
+              "прийняте"
+            ],
+            "correctIndex": 0,
+            "explanation": "Short form is preferred for formal contexts."
+          }
+        ],
+        "shuffleQuestions": true,
+        "shuffleOptions": true,
+        "showCorrectAnswers": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "B1",
+      "duration": 5,
+      "tags": [
+        "grammar",
+        "participles",
+        "passive",
+        "usage"
+      ],
+      "createdAt": "2025-11-30T00:00:00Z",
+      "modifiedAt": "2025-11-30T00:00:00Z"
+    },
+    {
+      "id": "act-uk-B1-120-fillin",
+      "type": "fill-in",
+      "title": "News Report",
+      "description": "Учора в Києві відбулося важливе засідання.",
+      "content": {
+        "type": "fill-in",
+        "instructions": "Учора в Києві відбулося важливе засідання."
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "B1",
+      "duration": 5,
+      "tags": [
+        "grammar",
+        "participles",
+        "passive",
+        "usage"
+      ],
+      "createdAt": "2025-11-30T00:00:00Z",
+      "modifiedAt": "2025-11-30T00:00:00Z"
+    }
+  ],
+  "vocabulary": {
+    "moduleId": "mod-uk-B1-120",
+    "level": "B1",
+    "phase": "B1.3",
+    "wordCount": 0,
+    "transliterationMode": "none",
+    "words": []
+  }
+}

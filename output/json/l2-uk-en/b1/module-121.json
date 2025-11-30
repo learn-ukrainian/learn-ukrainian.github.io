@@ -1,0 +1,263 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-B1-121",
+    "moduleId": "mod-uk-B1-121",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "lessonType": "grammar-introduction",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "B1",
+    "phase": "B1.3",
+    "moduleNumber": 121,
+    "title": "Adverbial Participles",
+    "subtitle": "Читаючи, прочитавши",
+    "description": "Understand adverbial participle concept",
+    "objectives": [
+      "Understand adverbial participle concept",
+      "Form imperfective adverbial participles (-учи/-ючи)",
+      "Form perfective adverbial participles (-вши/-ши)",
+      "Use adverbial participles in sentences"
+    ],
+    "grammarFocus": [],
+    "totalDuration": 45,
+    "transliterationMode": "none",
+    "tags": [
+      "grammar",
+      "participles",
+      "adverbial",
+      "дієприслівник"
+    ],
+    "version": 1,
+    "createdAt": "2025-11-30T00:00:00Z",
+    "modifiedAt": "2025-11-30T00:00:00Z",
+    "phases": [
+      {
+        "id": "phase-warm-up",
+        "name": "warm-up",
+        "duration": 5,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Що таке дієприслівник? | What is an Adverbial Participle?\n\nДієприслівник описує дію, яка супроводжує головне дієслово:\n\nAn adverbial participle describes an action accompanying the main verb:\n\n- **Читаючи** книгу, він пив каву. - **While reading** a book, he drank coffee.\n- **Прочитавши** книгу, він пішов спати. - **Having read** the book, he went to sleep."
+          }
+        ]
+      },
+      {
+        "id": "phase-presentation",
+        "name": "presentation",
+        "duration": 15,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Два типи дієприслівників | Two Types of Adverbial Participles\n\n| Type | Suffix | Meaning | Example |\n|------|--------|---------|---------|\n| **Imperfective** | -учи/-ючи | while doing | читаючи (while reading) |\n| **Perfective** | -вши/-ши | having done | прочитавши (having read) |"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Недоконаний дієприслівник (-учи/-ючи) | Imperfective (-учи/-ючи)\n\n**Formation:** Imperfective verb stem (3rd person plural) + **-учи/-ючи**\n\n| Infinitive | 3rd pl. | Adverbial Participle |\n|------------|---------|---------------------|\n| читати | читають | чита**ючи** |\n| писати | пишуть | пиш**учи** |\n| говорити | говорять | говор**ячи** |\n| робити | роблять | робл**ячи** |\n| їсти | їдять | їд**ячи** |\n| йти | йдуть | йд**учи** / іду**чи** |\n| сидіти | сидять | сид**ячи** |\n| стояти | стоять | сто**ячи** |\n\n**Rule:**\n- After consonant: **-учи** (пишучи, йдучи)\n- After vowel/soft: **-ючи/-ячи** (читаючи, говорячи)"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Доконаний дієприслівник (-вши/-ши) | Perfective (-вши/-ши)\n\n**Formation:** Perfective past tense stem + **-вши/-ши**\n\n| Infinitive | Past (m) | Adverbial Participle |\n|------------|----------|---------------------|\n| прочитати | прочитав | прочита**вши** |\n| написати | написав | написа**вши** |\n| зробити | зробив | зроби**вши** |\n| прийти | прийшов | прийшо**вши** |\n| сказати | сказав | сказа**вши** |\n| побачити | побачив | побачи**вши** |\n| дізнатися | дізнався | дізна**вшись** |\n\n**Rule:**\n- After vowel: **-вши** (прочитавши, сказавши)\n- After consonant: **-ши** (принісши)\n- Reflexive: **-вшись/-шись** (дізнавшись)"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Значення | Meaning\n\n**Imperfective (-учи/-ючи):** Simultaneous action\n- Він **читаючи** газету, снідав. - He ate breakfast **while reading** the newspaper.\n- **Йдучи** додому, я зустрів друга. - **While walking** home, I met a friend.\n\n**Perfective (-вши/-ши):** Prior/completed action\n- **Прочитавши** книгу, він заснув. - **Having read** the book, he fell asleep.\n- **Повернувшись** додому, вона зателефонувала. - **Having returned** home, she called."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Порядок слів | Word Order\n\nAdverbial participles can come before or after the main clause:\n\n**Before:**\n- **Читаючи книгу**, він пив чай.\n- **Прочитавши книгу**, він пішов спати.\n\n**After:**\n- Він пив чай, **читаючи книгу**.\n- Він пішов спати, **прочитавши книгу**."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Важливе правило | Important Rule\n\n**The subject of the adverbial participle must be the same as the main verb!**\n\n✓ **Читаючи** книгу, **він** заснув. (He was reading, he fell asleep)\n✗ **Читаючи** книгу, **мені** стало нудно. (Wrong: different subjects)\n\n**Correct:** Коли я читав книгу, мені стало нудно."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Поширені дієприслівники | Common Adverbial Participles\n\n**Imperfective:**\n| Participle | Meaning |\n|------------|---------|\n| читаючи | while reading |\n| пишучи | while writing |\n| слухаючи | while listening |\n| дивлячись | while watching |\n| йдучи | while going |\n| їдучи | while driving/traveling |\n| працюючи | while working |\n| думаючи | while thinking |\n\n**Perfective:**\n| Participle | Meaning |\n|------------|---------|\n| прочитавши | having read |\n| написавши | having written |\n| закінчивши | having finished |\n| повернувшись | having returned |\n| прокинувшись | having woken up |\n| дізнавшись | having learned |\n| побачивши | having seen |\n| почувши | having heard |"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Стилістика | Style Notes\n\nAdverbial participles are more common in:\n- Written Ukrainian\n- Formal speech\n- Literature\n\nIn everyday speech, alternatives are often used:\n- Participle: **Прочитавши** книгу, він заснув.\n- Alternative: **Коли він прочитав** книгу, він заснув.\n- Alternative: Він прочитав книгу **і** заснув."
+          }
+        ]
+      },
+      {
+        "id": "phase-practice",
+        "name": "practice",
+        "duration": 15,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Form Imperfective Adverbial Participles\n\n1. читати → **читаючи**\n2. писати → **пишучи**\n3. слухати → **слухаючи**\n4. говорити → **говорячи**\n5. йти → **йдучи/ідучи**\n6. працювати → **працюючи**"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Form Perfective Adverbial Participles\n\n1. прочитати → **прочитавши**\n2. написати → **написавши**\n3. зробити → **зробивши**\n4. прийти → **прийшовши**\n5. повернутися → **повернувшись**\n6. дізнатися → **дізнавшись**"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Complete with Correct Form\n\n1. ___ (читати) газету, він пив каву.\n   → **Читаючи** газету, він пив каву.\n\n2. ___ (закінчити) роботу, вона пішла додому.\n   → **Закінчивши** роботу, вона пішла додому.\n\n3. ___ (слухати) музику, я працював.\n   → **Слухаючи** музику, я працював.\n\n4. ___ (повернутися) з роботи, він приготував вечерю.\n   → **Повернувшись** з роботи, він приготував вечерю."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Translate to Ukrainian\n\n1. While walking, he thought about the problem.\n   → **Йдучи, він думав про проблему.**\n\n2. Having finished work, she went to the gym.\n   → **Закінчивши роботу, вона пішла в спортзал.**\n\n3. While listening to music, I fell asleep.\n   → **Слухаючи музику, я заснув.**\n\n4. Having read the news, he called his friend.\n   → **Прочитавши новини, він зателефонував другу.**"
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-B1-121-quiz"
+          }
+        ]
+      },
+      {
+        "id": "phase-production",
+        "name": "production",
+        "duration": 10,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Describe Your Morning Routine\n\nUse adverbial participles:\n\n- Прокинувшись, я йду в душ.\n- Снідаючи, я читаю новини.\n- Закінчивши сніданок, я йду на роботу."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Combine Actions\n\nCombine these pairs using adverbial participles:\n\n1. Він слухав музику. Він працював.\n   → Слухаючи музику, він працював.\n\n2. Вона закінчила проєкт. Вона пішла на обід.\n   → Закінчивши проєкт, вона пішла на обід."
+          }
+        ]
+      }
+    ]
+  },
+  "activities": [
+    {
+      "id": "act-uk-B1-121-quiz",
+      "type": "quiz",
+      "title": "Adverbial Participles",
+      "description": "Choose the correct form.",
+      "content": {
+        "type": "quiz",
+        "instructions": "Choose the correct form.",
+        "questions": [
+          {
+            "question": "While reading: ___",
+            "options": [
+              "читаючи",
+              "прочитавши"
+            ],
+            "correctIndex": 0,
+            "explanation": "Imperfective for simultaneous action."
+          },
+          {
+            "question": "Having written: ___",
+            "options": [
+              "написавши",
+              "пишучи"
+            ],
+            "correctIndex": 0,
+            "explanation": "Perfective for completed action."
+          },
+          {
+            "question": "___ книгу, він заснув. (simultaneous)",
+            "options": [
+              "Читаючи",
+              "Прочитавши"
+            ],
+            "correctIndex": 0,
+            "explanation": "Simultaneous action = imperfective."
+          },
+          {
+            "question": "___ роботу, вона пішла додому. (completed first)",
+            "options": [
+              "Закінчивши",
+              "Закінчуючи"
+            ],
+            "correctIndex": 0,
+            "explanation": "Prior action = perfective."
+          },
+          {
+            "question": "Imperfective of \"говорити\": ___",
+            "options": [
+              "говорячи",
+              "говоривши"
+            ],
+            "correctIndex": 0,
+            "explanation": "3rd plural говорять → говорячи."
+          },
+          {
+            "question": "Perfective of \"повернутися\": ___",
+            "options": [
+              "повернувшись",
+              "повертаючись"
+            ],
+            "correctIndex": 0,
+            "explanation": "Past stem + -вшись."
+          }
+        ],
+        "shuffleQuestions": true,
+        "shuffleOptions": true,
+        "showCorrectAnswers": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "B1",
+      "duration": 5,
+      "tags": [
+        "grammar",
+        "participles",
+        "adverbial",
+        "дієприслівник"
+      ],
+      "createdAt": "2025-11-30T00:00:00Z",
+      "modifiedAt": "2025-11-30T00:00:00Z"
+    },
+    {
+      "id": "act-uk-B1-121-fillin",
+      "type": "fill-in",
+      "title": "Complete the Story",
+      "description": "Мій ранок",
+      "content": {
+        "type": "fill-in",
+        "instructions": "Мій ранок"
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "B1",
+      "duration": 5,
+      "tags": [
+        "grammar",
+        "participles",
+        "adverbial",
+        "дієприслівник"
+      ],
+      "createdAt": "2025-11-30T00:00:00Z",
+      "modifiedAt": "2025-11-30T00:00:00Z"
+    }
+  ],
+  "vocabulary": {
+    "moduleId": "mod-uk-B1-121",
+    "level": "B1",
+    "phase": "B1.3",
+    "wordCount": 0,
+    "transliterationMode": "none",
+    "words": []
+  }
+}

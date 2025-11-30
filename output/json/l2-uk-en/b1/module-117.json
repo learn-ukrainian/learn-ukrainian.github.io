@@ -1,0 +1,255 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-B1-117",
+    "moduleId": "mod-uk-B1-117",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "lessonType": "grammar-introduction",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "B1",
+    "phase": "B1.3",
+    "moduleNumber": 117,
+    "title": "Reported Questions",
+    "subtitle": "Він запитав, чи... / що...",
+    "description": "Report yes/no questions using чи",
+    "objectives": [
+      "Report yes/no questions using чи",
+      "Report information questions using question words",
+      "Master word order in reported questions",
+      "Use appropriate reporting verbs for questions"
+    ],
+    "grammarFocus": [],
+    "totalDuration": 45,
+    "transliterationMode": "none",
+    "tags": [
+      "grammar",
+      "reported-speech",
+      "questions"
+    ],
+    "version": 1,
+    "createdAt": "2025-11-30T00:00:00Z",
+    "modifiedAt": "2025-11-30T00:00:00Z",
+    "phases": [
+      {
+        "id": "phase-warm-up",
+        "name": "warm-up",
+        "duration": 5,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Пряме vs непряме запитання | Direct vs Indirect Questions\n\nПорівняйте два типи запитань:\n\nCompare two types of questions:\n\n**Пряме запитання (Direct question):**\n- Він запитав: «Ти прийдеш?» - He asked: \"Will you come?\"\n\n**Непряме запитання (Reported question):**\n- Він запитав, **чи** я прийду. - He asked if I would come."
+          }
+        ]
+      },
+      {
+        "id": "phase-presentation",
+        "name": "presentation",
+        "duration": 15,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Дієслова для запитань | Reporting Verbs for Questions\n\n| Ukrainian | English | Example |\n|-----------|---------|---------|\n| запитати (pf) | to ask | Він запитав, чи... |\n| питати (impf) | to ask | Вона питала, де... |\n| цікавитися (impf) | to wonder, be interested | Мене цікавить, як... |\n| хотіти знати | to want to know | Я хочу знати, чому... |\n| поцікавитися (pf) | to inquire | Він поцікавився, коли... |"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Так/ні запитання → чи | Yes/No Questions → чи\n\n**Structure:**\n```\nзапитати + чи + subject + verb\n```\n\n| Direct Question | Reported Question |\n|-----------------|-------------------|\n| «Ти вдома?» | Він запитав, **чи** я вдома. |\n| «Ви працюєте?» | Вона запитала, **чи** ми працюємо. |\n| «Він прийшов?» | Я запитав, **чи** він прийшов. |\n| «Вона знає?» | Вони запитали, **чи** вона знає. |\n\n**Note:** чи = if/whether in reported questions"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Спеціальні запитання | Information Questions\n\n**Structure:**\n```\nзапитати + question word + subject + verb\n```\n\n| Question Word | Example |\n|---------------|---------|\n| що (what) | Він запитав, **що** я роблю. |\n| хто (who) | Вона запитала, **хто** прийшов. |\n| де (where) | Я запитав, **де** він живе. |\n| коли (when) | Вони запитали, **коли** ми приїдемо. |\n| чому (why) | Він запитав, **чому** вона плаче. |\n| як (how) | Вона запитала, **як** це зробити. |\n| скільки (how much/many) | Я запитав, **скільки** це коштує. |\n| який (which) | Він запитав, **який** колір я люблю. |\n| куди (where to) | Вона запитала, **куди** я йду. |\n| звідки (where from) | Вони запитали, **звідки** він. |"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Порядок слів | Word Order\n\n**Important difference from English:**\n\nIn reported questions, Ukrainian uses **statement word order**, not question word order:\n\n| Direct | Reported (Ukrainian) | Reported (English) |\n|--------|---------------------|-------------------|\n| «Де ти живеш?» | ...де **ти живеш** | ...where you live |\n| «Що він робить?» | ...що **він робить** | ...what he does |\n| «Коли вони приїдуть?» | ...коли **вони приїдуть** | ...when they will arrive |\n\n**No inversion needed!**"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Приклади з чи | Examples with чи\n\n**Direct:** «Ти любиш каву?»\n**Reported:** Він запитав, **чи** я люблю каву.\n\n**Direct:** «Вона прийде на вечірку?»\n**Reported:** Ми запитали, **чи** вона прийде на вечірку.\n\n**Direct:** «Ви бачили цей фільм?»\n**Reported:** Вони запитали, **чи** ми бачили цей фільм."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Приклади з питальними словами | Examples with Question Words\n\n**Direct:** «Де ти працюєш?»\n**Reported:** Він запитав, **де** я працюю.\n\n**Direct:** «Коли починається урок?»\n**Reported:** Студент запитав, **коли** починається урок.\n\n**Direct:** «Чому ти запізнився?»\n**Reported:** Вона запитала, **чому** я запізнився.\n\n**Direct:** «Скільки коштує квиток?»\n**Reported:** Турист запитав, **скільки** коштує квиток."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Зміни займенників і часу | Pronoun and Time Changes\n\nSame changes as in reported statements:\n\n| Direct | Reported |\n|--------|----------|\n| ти, ви | я, він/вона, вони |\n| тут | там |\n| зараз | тоді |\n| сьогодні | того дня |\n\n**Example:**\n- Direct: «Що **ти** робиш **зараз**?»\n- Reported: Він запитав, що **я** роблю **тоді**."
+          }
+        ]
+      },
+      {
+        "id": "phase-practice",
+        "name": "practice",
+        "duration": 15,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Convert Yes/No Questions\n\n1. «Ти голодний?» (він запитав)\n   → Він запитав, **чи я голодний**.\n\n2. «Вона знає про це?» (ми запитали)\n   → Ми запитали, **чи вона знає про це**.\n\n3. «Ви були в Україні?» (вона запитала)\n   → Вона запитала, **чи ми були в Україні**.\n\n4. «Він приїде завтра?» (я запитав)\n   → Я запитав, **чи він приїде завтра**."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Convert Information Questions\n\n1. «Де знаходиться вокзал?» (турист запитав)\n   → Турист запитав, **де знаходиться вокзал**.\n\n2. «Коли ти народився?» (вона запитала)\n   → Вона запитала, **коли я народився**.\n\n3. «Чому він не прийшов?» (ми запитали)\n   → Ми запитали, **чому він не прийшов**.\n\n4. «Як тебе звати?» (він запитав)\n   → Він запитав, **як мене звати**.\n\n5. «Скільки у вас дітей?» (вона запитала)\n   → Вона запитала, **скільки в нас дітей**."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Choose чи or Question Word\n\n1. Він запитав, ___ я люблю музику.\n   → **чи** (yes/no question)\n\n2. Вона запитала, ___ я живу.\n   → **де** (where)\n\n3. Я хочу знати, ___ починається фільм.\n   → **коли** (when)\n\n4. Мене цікавить, ___ вони приїдуть.\n   → **чи** (yes/no question)\n\n5. Він поцікавився, ___ я вибрав цей подарунок.\n   → **чому** (why)"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Translate to Ukrainian\n\n1. She asked if I spoke Ukrainian.\n   → **Вона запитала, чи я говорю українською.**\n\n2. He wanted to know where the museum was.\n   → **Він хотів знати, де знаходиться музей.**\n\n3. They asked when the train arrives.\n   → **Вони запитали, коли приїжджає потяг.**\n\n4. I wondered if she was coming.\n   → **Мене цікавило, чи вона прийде.**"
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-B1-117-quiz"
+          }
+        ]
+      },
+      {
+        "id": "phase-production",
+        "name": "production",
+        "duration": 10,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Report These Questions\n\nImagine someone asked you these questions. Report them:\n\n1. Незнайомець: «Як пройти до центру?»\n   → Незнайомець запитав, як пройти до центру.\n\n2. Друг: «Ти підеш на концерт?»\n   → Друг запитав, чи я піду на концерт.\n\n3. Колега: «Чому ти такий втомлений?»\n   → Колега запитав, чому я такий втомлений."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Discussion\n\nReport questions you were asked today:\n- Що вас запитали на роботі/в школі?\n- Про що вас питали друзі?\n- Які питання ви чули сьогодні?"
+          }
+        ]
+      }
+    ]
+  },
+  "activities": [
+    {
+      "id": "act-uk-B1-117-quiz",
+      "type": "quiz",
+      "title": "Reported Questions",
+      "description": "Choose the correct form.",
+      "content": {
+        "type": "quiz",
+        "instructions": "Choose the correct form.",
+        "questions": [
+          {
+            "question": "Він запитав, ___ я прийду.",
+            "options": [
+              "чи",
+              "що"
+            ],
+            "correctIndex": 0,
+            "explanation": "чи for yes/no questions."
+          },
+          {
+            "question": "Вона запитала, ___ я живу.",
+            "options": [
+              "де",
+              "чи"
+            ],
+            "correctIndex": 0,
+            "explanation": "де for \"where\" questions."
+          },
+          {
+            "question": "Мене цікавить, ___ це коштує.",
+            "options": [
+              "скільки",
+              "чи"
+            ],
+            "correctIndex": 0,
+            "explanation": "скільки for \"how much\" questions."
+          },
+          {
+            "question": "Вони запитали, ___ приїде потяг.",
+            "options": [
+              "коли",
+              "що"
+            ],
+            "correctIndex": 0,
+            "explanation": "коли for \"when\" questions."
+          },
+          {
+            "question": "Він хотів знати, ___ вона не прийшла.",
+            "options": [
+              "чому",
+              "чи"
+            ],
+            "correctIndex": 0,
+            "explanation": "чому for \"why\" questions."
+          },
+          {
+            "question": "«Ти вдома?» → Він запитав, ___ я вдома.",
+            "options": [
+              "чи",
+              "де"
+            ],
+            "correctIndex": 0,
+            "explanation": "Yes/no question uses чи."
+          }
+        ],
+        "shuffleQuestions": true,
+        "shuffleOptions": true,
+        "showCorrectAnswers": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "B1",
+      "duration": 5,
+      "tags": [
+        "grammar",
+        "reported-speech",
+        "questions"
+      ],
+      "createdAt": "2025-11-30T00:00:00Z",
+      "modifiedAt": "2025-11-30T00:00:00Z"
+    },
+    {
+      "id": "act-uk-B1-117-fillin",
+      "type": "fill-in",
+      "title": "Report the Interview",
+      "description": "Журналіст запитав актора багато питань.",
+      "content": {
+        "type": "fill-in",
+        "instructions": "Журналіст запитав актора багато питань."
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "B1",
+      "duration": 5,
+      "tags": [
+        "grammar",
+        "reported-speech",
+        "questions"
+      ],
+      "createdAt": "2025-11-30T00:00:00Z",
+      "modifiedAt": "2025-11-30T00:00:00Z"
+    }
+  ],
+  "vocabulary": {
+    "moduleId": "mod-uk-B1-117",
+    "level": "B1",
+    "phase": "B1.3",
+    "wordCount": 0,
+    "transliterationMode": "none",
+    "words": []
+  }
+}

@@ -1,0 +1,285 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-B1-119",
+    "moduleId": "mod-uk-B1-119",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "lessonType": "grammar-introduction",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "B1",
+    "phase": "B1.3",
+    "moduleNumber": 119,
+    "title": "Past Passive Participles I",
+    "subtitle": "Formation: -ний/-тий",
+    "description": "Understand passive participle concept",
+    "objectives": [
+      "Understand passive participle concept",
+      "Form participles with -ний and -тий suffixes",
+      "Recognize participle patterns from verb stems",
+      "Use participles as adjectives"
+    ],
+    "grammarFocus": [],
+    "totalDuration": 45,
+    "transliterationMode": "none",
+    "tags": [
+      "grammar",
+      "participles",
+      "passive",
+      "formation"
+    ],
+    "version": 1,
+    "createdAt": "2025-11-30T00:00:00Z",
+    "modifiedAt": "2025-11-30T00:00:00Z",
+    "phases": [
+      {
+        "id": "phase-warm-up",
+        "name": "warm-up",
+        "duration": 5,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Що таке дієприкметник? | What is a Participle?\n\nДієприкметник — це слово, яке поєднує властивості дієслова та прикметника:\n\nA participle is a word that combines properties of a verb and an adjective:\n\n- **Написана** книга - A **written** book (participle from \"написати\")\n- **Закрите** вікно - A **closed** window (participle from \"закрити\")\n- **Зроблена** робота - **Done** work (participle from \"зробити\")"
+          }
+        ]
+      },
+      {
+        "id": "phase-presentation",
+        "name": "presentation",
+        "duration": 15,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Пасивні дієприкметники | Passive Participles\n\n**Passive participles** describe a state resulting from an action done TO something:\n\n| Verb | Participle | Meaning |\n|------|------------|---------|\n| читати → прочитати | прочитан**ий** | read (having been read) |\n| писати → написати | написан**ий** | written |\n| відкривати → відкрити | відкрит**ий** | opened |\n| закривати → закрити | закрит**ий** | closed |"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Утворення з -ний | Formation with -ний\n\n**Most common pattern:** perfective verb stem + **-н-** + adjective ending\n\n| Verb | Stem | Participle |\n|------|------|------------|\n| зроби**ти** | зробл- | зробл**ений** |\n| напис**ати** | напис- | напис**аний** |\n| прочит**ати** | прочит- | прочит**аний** |\n| вивч**ити** | вивч- | вивч**ений** |\n| побуд**увати** | побудов- | побудов**аний** |\n| приготув**ати** | приготов- | приготов**лений** |\n\n**Stem changes to watch:**\n\n| Pattern | Example |\n|---------|---------|\n| -ити → -ений | зробити → зроблений |\n| -ати → -аний | написати → написаний |\n| -увати → -ований | намалювати → намальований |\n| -ювати → -йований | організувати → організований |"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Утворення з -тий | Formation with -тий\n\n**For verbs with stems ending in vowel or certain consonants:**\n\n| Verb | Stem | Participle |\n|------|------|------------|\n| відкри**ти** | відкри- | відкри**тий** |\n| закри**ти** | закри- | закри**тий** |\n| поми**ти** | поми- | поми**тий** |\n| взя**ти** | взя- | взя**тий** |\n| поча**ти** | поча- | поча**тий** |\n| забу**ти** | забу- | забу**тий** |\n| одягну**ти** | одягну- | одягну**тий** |\n| прочита**ти** | прочита- | прочита**ний** |\n\n**Pattern:** -ти verbs with vowel before -ти usually get **-тий**"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Відмінювання дієприкметників | Participle Declension\n\nParticiples decline like adjectives:\n\n| Case | Masculine | Feminine | Neuter | Plural |\n|------|-----------|----------|--------|--------|\n| Nom | написаний | написана | написане | написані |\n| Gen | написаного | написаної | написаного | написаних |\n| Dat | написаному | написаній | написаному | написаним |\n| Acc | написаний/ого | написану | написане | написані/их |\n| Inst | написаним | написаною | написаним | написаними |\n| Loc | написаному | написаній | написаному | написаних |"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Дієприкметники як прикметники | Participles as Adjectives\n\nParticiples function exactly like adjectives:\n\n**Before noun:**\n- **Написана** книга лежить на столі. - The written book is on the table.\n- Я бачу **відкриті** двері. - I see the open(ed) door.\n\n**After noun (predicate):**\n- Книга **написана**. - The book is written.\n- Двері **відкриті**. - The door is open."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Поширені дієприкметники | Common Participles\n\n| Participle | From Verb | English |\n|------------|-----------|---------|\n| написаний | написати | written |\n| прочитаний | прочитати | read |\n| зроблений | зробити | done, made |\n| закритий | закрити | closed |\n| відкритий | відкрити | open(ed) |\n| забутий | забути | forgotten |\n| втрачений | втратити | lost |\n| знайдений | знайти | found |\n| куплений | купити | bought |\n| проданий | продати | sold |\n| приготовлений | приготувати | prepared, cooked |\n| вимитий | вимити | washed |\n| збудований | збудувати | built |\n| організований | організувати | organized |\n| запрошений | запросити | invited |"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Порівняння: дієприкметник vs прикметник | Participle vs Adjective\n\nSome participles have become regular adjectives:\n\n| Participle (action) | Adjective (quality) |\n|---------------------|---------------------|\n| відкритий (opened by someone) | відкритий (open personality) |\n| закритий (closed by someone) | закритий (closed system) |\n| зайнятий (occupied) | зайнятий (busy) |"
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-B1-119-matchup"
+          }
+        ]
+      },
+      {
+        "id": "phase-practice",
+        "name": "practice",
+        "duration": 15,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Form Participles\n\n1. написати → **написаний**\n2. зробити → **зроблений**\n3. відкрити → **відкритий**\n4. прочитати → **прочитаний**\n5. забути → **забутий**\n6. купити → **куплений**\n7. приготувати → **приготовлений**\n8. збудувати → **збудований**"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Complete with Correct Form\n\n1. ___ (написати) лист лежить на столі.\n   → **Написаний** лист лежить на столі.\n\n2. Двері ___ (закрити).\n   → Двері **закриті**.\n\n3. Я прочитав ___ (рекомендувати) книгу.\n   → Я прочитав **рекомендовану** книгу.\n\n4. ___ (запросити) гості вже прийшли.\n   → **Запрошені** гості вже прийшли.\n\n5. Вечеря вже ___ (приготувати).\n   → Вечеря вже **приготовлена**."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Match Verb to Participle\n\n| Verb | Participle |\n|------|------------|\n| знайти | знайдений |\n| втратити | втрачений |\n| продати | проданий |\n| організувати | організований |\n| вимити | вимитий |"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Translate to Ukrainian\n\n1. The closed door\n   → **Закриті двері**\n\n2. A written letter\n   → **Написаний лист**\n\n3. The invited guests\n   → **Запрошені гості**\n\n4. The book is read\n   → **Книга прочитана**\n\n5. Prepared food\n   → **Приготовлена їжа**"
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-B1-119-quiz"
+          }
+        ]
+      },
+      {
+        "id": "phase-production",
+        "name": "production",
+        "duration": 10,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Describe Your Room\n\nUse participles to describe objects:\n\n- Ліжко застелене. - The bed is made.\n- Книги розставлені на полиці. - Books are arranged on the shelf.\n- Вікно відкрите. - The window is open."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "What Was Done?\n\nDescribe completed actions using participles:\n\n- Домашнє завдання зроблене.\n- Лист написаний і відправлений.\n- Вечеря приготовлена."
+          }
+        ]
+      }
+    ]
+  },
+  "activities": [
+    {
+      "id": "act-uk-B1-119-quiz",
+      "type": "quiz",
+      "title": "Participle Formation",
+      "description": "Choose the correct participle.",
+      "content": {
+        "type": "quiz",
+        "instructions": "Choose the correct participle.",
+        "questions": [
+          {
+            "question": "Verb: написати → Participle: ___",
+            "options": [
+              "написаний",
+              "написений"
+            ],
+            "correctIndex": 0,
+            "explanation": "-ати verbs → -аний."
+          },
+          {
+            "question": "Verb: закрити → Participle: ___",
+            "options": [
+              "закритий",
+              "закрений"
+            ],
+            "correctIndex": 0,
+            "explanation": "Vowel + -ти → -тий."
+          },
+          {
+            "question": "Verb: зробити → Participle: ___",
+            "options": [
+              "зроблений",
+              "зроблятий"
+            ],
+            "correctIndex": 0,
+            "explanation": "-ити verbs → -ений."
+          },
+          {
+            "question": "___ книга лежить на столі.",
+            "options": [
+              "Прочитана",
+              "Прочитаний"
+            ],
+            "correctIndex": 0,
+            "explanation": "Feminine noun \"книга\" needs feminine participle."
+          },
+          {
+            "question": "Двері ___.",
+            "options": [
+              "закриті",
+              "закрита"
+            ],
+            "correctIndex": 0,
+            "explanation": "Plural noun \"двері\" needs plural participle."
+          },
+          {
+            "question": "Verb: забути → Participle: ___",
+            "options": [
+              "забутий",
+              "забутений"
+            ],
+            "correctIndex": 0,
+            "explanation": "-ути → -утий."
+          }
+        ],
+        "shuffleQuestions": true,
+        "shuffleOptions": true,
+        "showCorrectAnswers": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "B1",
+      "duration": 5,
+      "tags": [
+        "grammar",
+        "participles",
+        "passive",
+        "formation"
+      ],
+      "createdAt": "2025-11-30T00:00:00Z",
+      "modifiedAt": "2025-11-30T00:00:00Z"
+    },
+    {
+      "id": "act-uk-B1-119-matchup",
+      "type": "match-up",
+      "title": "Verbs and Participles",
+      "description": "Verbs and Participles",
+      "content": {
+        "type": "match-up",
+        "instructions": "",
+        "pairs": [
+          {
+            "left": "купити",
+            "right": "куплений"
+          },
+          {
+            "left": "відкрити",
+            "right": "відкритий"
+          },
+          {
+            "left": "приготувати",
+            "right": "приготовлений"
+          },
+          {
+            "left": "знайти",
+            "right": "знайдений"
+          },
+          {
+            "left": "запросити",
+            "right": "запрошений"
+          }
+        ],
+        "shuffleRight": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "B1",
+      "duration": 5,
+      "tags": [
+        "grammar",
+        "participles",
+        "passive",
+        "formation"
+      ],
+      "createdAt": "2025-11-30T00:00:00Z",
+      "modifiedAt": "2025-11-30T00:00:00Z"
+    }
+  ],
+  "vocabulary": {
+    "moduleId": "mod-uk-B1-119",
+    "level": "B1",
+    "phase": "B1.3",
+    "wordCount": 0,
+    "transliterationMode": "none",
+    "words": []
+  }
+}

@@ -1,0 +1,245 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-B1-116",
+    "moduleId": "mod-uk-B1-116",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "lessonType": "grammar-introduction",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "B1",
+    "phase": "B1.3",
+    "moduleNumber": 116,
+    "title": "Reported Statements",
+    "subtitle": "Він сказав, що...",
+    "description": "Understand reported speech structure in Ukrainian",
+    "objectives": [
+      "Understand reported speech structure in Ukrainian",
+      "Convert direct statements to reported speech",
+      "Use correct tense in reported clauses",
+      "Master reporting verbs for statements"
+    ],
+    "grammarFocus": [],
+    "totalDuration": 45,
+    "transliterationMode": "none",
+    "tags": [
+      "grammar",
+      "reported-speech",
+      "statements"
+    ],
+    "version": 1,
+    "createdAt": "2025-11-30T00:00:00Z",
+    "modifiedAt": "2025-11-30T00:00:00Z",
+    "phases": [
+      {
+        "id": "phase-warm-up",
+        "name": "warm-up",
+        "duration": 5,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Пряма vs непряма мова | Direct vs Indirect Speech\n\nПорівняйте:\n\nCompare:\n\n**Пряма мова (Direct speech):**\n- Він сказав: «Я втомлений.» - He said: \"I am tired.\"\n\n**Непряма мова (Reported speech):**\n- Він сказав, що він втомлений. - He said that he was tired.\n\nУ чому різниця? | What's the difference?"
+          }
+        ]
+      },
+      {
+        "id": "phase-presentation",
+        "name": "presentation",
+        "duration": 15,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Структура непрямої мови | Reported Speech Structure\n\n**Formula:**\n```\nReporting verb + що + reported clause\n```\n\n| Direct | Reported |\n|--------|----------|\n| Він сказав: «Я працюю.» | Він сказав, **що** він працює. |\n| Вона каже: «Я хочу спати.» | Вона каже, **що** вона хоче спати. |\n\n**Key connector:** що (that)"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Дієслова для передачі мови | Reporting Verbs\n\n| Ukrainian | English | Usage |\n|-----------|---------|-------|\n| сказати (pf) | to say | Він сказав, що... |\n| казати (impf) | to say | Він казав, що... |\n| говорити (impf) | to speak, say | Вона говорила, що... |\n| повідомити (pf) | to inform | Нам повідомили, що... |\n| повідомляти (impf) | to inform | Вони повідомляють, що... |\n| стверджувати (impf) | to claim | Він стверджує, що... |\n| заявити (pf) | to declare | Вона заявила, що... |\n| пояснити (pf) | to explain | Він пояснив, що... |\n| додати (pf) | to add | Вона додала, що... |\n| визнати (pf) | to admit | Він визнав, що... |"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Зміна часу | Tense Shift\n\n**Important:** In Ukrainian, tense shift is **less strict** than in English!\n\n**If reporting verb is in past:**\n\n| English | Ukrainian |\n|---------|-----------|\n| \"I work\" → He said he worked | «Я працюю» → Він сказав, що працює |\n| \"I worked\" → He said he had worked | «Я працював» → Він сказав, що працював |\n| \"I will work\" → He said he would work | «Я працюватиму» → Він сказав, що працюватиме |\n\n**Ukrainian is more flexible:**\n- Він сказав, що він **працює**. (present - acceptable)\n- Він сказав, що він **працював**. (past - also acceptable)\n\nThe choice depends on context and whether the action is still relevant."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Зміна займенників | Pronoun Changes\n\n| Direct | Reported |\n|--------|----------|\n| я (I) | він/вона (he/she) |\n| ти (you) | я (I) / він/вона |\n| ми (we) | вони (they) / ми |\n| мій (my) | його/її (his/her) |\n| тут (here) | там (there) |\n| зараз (now) | тоді (then) |\n| сьогодні (today) | того дня (that day) |\n| вчора (yesterday) | напередодні (the day before) |\n| завтра (tomorrow) | наступного дня (the next day) |"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Приклади | Examples\n\n**Direct:** Марія сказала: «Я живу в Києві.»\n**Reported:** Марія сказала, що вона живе в Києві.\n\n**Direct:** Петро каже: «Мій брат приїде завтра.»\n**Reported:** Петро каже, що його брат приїде завтра.\n\n**Direct:** Вони сказали: «Ми бачили цей фільм учора.»\n**Reported:** Вони сказали, що вони бачили цей фільм напередодні."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Різні типи висловлювань | Different Statement Types\n\n**Positive statements:**\n- Він сказав, що все добре. - He said everything is fine.\n\n**Negative statements:**\n- Вона сказала, що не прийде. - She said she won't come.\n\n**Statements with modals:**\n- Він сказав, що повинен піти. - He said he had to go.\n- Вона сказала, що може допомогти. - She said she could help."
+          }
+        ]
+      },
+      {
+        "id": "phase-practice",
+        "name": "practice",
+        "duration": 15,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Convert to Reported Speech\n\n1. Анна сказала: «Я вивчаю українську.»\n   → Анна сказала, що **вона вивчає українську**.\n\n2. Іван каже: «Мої батьки живуть у Львові.»\n   → Іван каже, що **його батьки живуть у Львові**.\n\n3. Вони сказали: «Ми приїдемо о п'ятій.»\n   → Вони сказали, що **вони приїдуть о п'ятій**.\n\n4. Марія сказала: «Я не розумію цього.»\n   → Марія сказала, що **вона не розуміє цього**.\n\n5. Він каже: «Тут дуже гарно.»\n   → Він каже, що **там дуже гарно**."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Choose the Correct Reporting Verb\n\n1. Новини ___ (повідомили/сказали), що президент приїде.\n   → **повідомили** (official information)\n\n2. Він ___ (стверджує/говорить), що бачив це на власні очі.\n   → **стверджує** (claiming)\n\n3. Вона ___ (визнала/заявила), що помилилася.\n   → **визнала** (admitting)\n\n4. Міністр ___ (додав/сказав), що реформи триватимуть.\n   → **заявив** or **сказав** (formal announcement)"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Translate to Ukrainian\n\n1. She said that she was busy.\n   → **Вона сказала, що вона зайнята.**\n\n2. They told us that the train was late.\n   → **Вони сказали нам, що потяг запізнюється.**\n\n3. He claimed that he knew the truth.\n   → **Він стверджував, що знає правду.**\n\n4. The newspaper reported that the storm was coming.\n   → **Газета повідомила, що наближається буря.**"
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-B1-116-quiz"
+          }
+        ]
+      },
+      {
+        "id": "phase-production",
+        "name": "production",
+        "duration": 10,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Report What People Said\n\nImagine these people said something to you. Report it:\n\n1. Ваш друг: «Я переїжджаю до іншого міста.»\n   → Мій друг сказав, що він переїжджає до іншого міста.\n\n2. Ваша мама: «Я приготувала вечерю.»\n   → Моя мама сказала, що вона приготувала вечерю.\n\n3. Колега: «Завтра буде важлива зустріч.»\n   → Колега повідомив, що завтра буде важлива зустріч."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Discussion\n\nReport something you heard recently:\n- Що вам хтось сказав сьогодні?\n- Що ви чули в новинах?\n- Що казали ваші друзі?"
+          }
+        ]
+      }
+    ]
+  },
+  "activities": [
+    {
+      "id": "act-uk-B1-116-quiz",
+      "type": "quiz",
+      "title": "Reported Speech Structure",
+      "description": "Choose the correct form.",
+      "content": {
+        "type": "quiz",
+        "instructions": "Choose the correct form.",
+        "questions": [
+          {
+            "question": "Вона сказала, ___ вона хоче допомогти.",
+            "options": [
+              "що",
+              "щоб"
+            ],
+            "correctIndex": 0,
+            "explanation": "що introduces reported statements."
+          },
+          {
+            "question": "Він ___, що все буде добре.",
+            "options": [
+              "сказав",
+              "запитав"
+            ],
+            "correctIndex": 0,
+            "explanation": "сказав for statements, запитав for questions."
+          },
+          {
+            "question": "Вона сказала, що ___ втомлена.",
+            "options": [
+              "вона",
+              "я"
+            ],
+            "correctIndex": 0,
+            "explanation": "Pronoun changes from я to вона in reported speech."
+          },
+          {
+            "question": "Новини ___, що буде дощ.",
+            "options": [
+              "повідомили",
+              "сказали"
+            ],
+            "correctIndex": 0,
+            "explanation": "повідомити is more appropriate for news/official reports."
+          },
+          {
+            "question": "Він сказав: «Я тут». → Він сказав, що він ___.",
+            "options": [
+              "там",
+              "тут"
+            ],
+            "correctIndex": 0,
+            "explanation": "тут changes to там in reported speech."
+          },
+          {
+            "question": "Він стверджує, що ___ правду.",
+            "options": [
+              "знає",
+              "знав"
+            ],
+            "correctIndex": 0,
+            "explanation": "Present tense is acceptable in Ukrainian reported speech."
+          }
+        ],
+        "shuffleQuestions": true,
+        "shuffleOptions": true,
+        "showCorrectAnswers": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "B1",
+      "duration": 5,
+      "tags": [
+        "grammar",
+        "reported-speech",
+        "statements"
+      ],
+      "createdAt": "2025-11-30T00:00:00Z",
+      "modifiedAt": "2025-11-30T00:00:00Z"
+    },
+    {
+      "id": "act-uk-B1-116-fillin",
+      "type": "fill-in",
+      "title": "Convert to Reported Speech",
+      "description": "Марія: «(1)___ живу в Києві. Мій чоловік (2)___ вчителем. Ми (3)___ двох дітей. Вони (4)___ в школу.»",
+      "content": {
+        "type": "fill-in",
+        "instructions": "Марія: «(1)___ живу в Києві. Мій чоловік (2)___ вчителем. Ми (3)___ двох дітей. Вони (4)___ в школу.»"
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "B1",
+      "duration": 5,
+      "tags": [
+        "grammar",
+        "reported-speech",
+        "statements"
+      ],
+      "createdAt": "2025-11-30T00:00:00Z",
+      "modifiedAt": "2025-11-30T00:00:00Z"
+    }
+  ],
+  "vocabulary": {
+    "moduleId": "mod-uk-B1-116",
+    "level": "B1",
+    "phase": "B1.3",
+    "wordCount": 0,
+    "transliterationMode": "none",
+    "words": []
+  }
+}

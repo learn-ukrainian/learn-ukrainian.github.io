@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 117: Reported Questions | Ukrainian B1</title>
+  <style>
+    :root { --primary: #1a5fb4; --primary-light: #3584e4; --success: #26a269; --warning: #e5a50a; --danger: #c01c28; --bg: #fafafa; --card-bg: #fff; --text: #1e1e1e; --text-muted: #5e5e5e; --border: #e0e0e0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+    .top-nav { background: #2e2e2e; color: white; padding: 0.5rem 2rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.875rem; }
+    .top-nav a { color: white; text-decoration: none; }
+    .top-nav a:hover { text-decoration: underline; }
+    .module-nav { display: flex; gap: 1rem; align-items: center; }
+    .module-nav-link { color: rgba(255,255,255,0.8); text-decoration: none; padding: 0.25rem 0.5rem; }
+    .module-nav-link:hover { color: white; }
+    .module-nav-link.disabled { color: rgba(255,255,255,0.3); pointer-events: none; }
+    .nav { position: sticky; top: 0; background: var(--primary); color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; z-index: 100; }
+    .nav h1 { font-size: 1.25rem; }
+    .nav-tabs { display: flex; gap: 0.5rem; }
+    .nav-tab { background: rgba(255,255,255,0.2); border: none; color: white; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; }
+    .nav-tab.active { background: white; color: var(--primary); }
+    main { max-width: 1000px; margin: 0 auto; padding: 2rem; }
+    .section { display: none; } .section.active { display: block; }
+    .lesson-header { text-align: center; margin-bottom: 2rem; padding: 2rem; background: linear-gradient(135deg, #e8f4fd, #f0e8fd); border-radius: 12px; }
+    .level-badge { background: var(--primary); color: white; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.875rem; }
+    .card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 1.5rem; margin-bottom: 1.5rem; }
+    .card h3 { color: var(--primary); margin-bottom: 1rem; }
+    .canvas-note { background: #fffbeb; border-left: 4px solid var(--warning); padding: 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+    .canvas-note h4 { color: var(--warning); margin-bottom: 0.5rem; }
+    .md-content { line-height: 1.7; }
+    .md-content p { margin: 0.75rem 0; }
+    .md-content ul, .md-content ol { margin: 0.75rem 0; padding-left: 1.5rem; }
+    .md-content li { margin: 0.25rem 0; }
+    .md-content strong { color: var(--primary); }
+    .md-content blockquote { background: #e8f4fd; border-left: 4px solid var(--primary); padding: 0.75rem 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+    .md-content blockquote p { margin: 0.25rem 0; }
+    .md-content table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+    .md-content th, .md-content td { border: 1px solid var(--border); padding: 0.5rem 0.75rem; text-align: left; }
+    .md-content th { background: #f5f5f5; font-weight: 600; }
+    .md-content code { background: #f0f0f0; padding: 0.125rem 0.375rem; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
+    .letter-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0; }
+    .letter-group { border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; }
+    .letter-group.true-friends { border-color: var(--success); } .letter-group.true-friends .letters { color: var(--success); }
+    .letter-group.false-friends { border-color: var(--danger); } .letter-group.false-friends .letters { color: var(--danger); }
+    .letter-group.new-letters { border-color: var(--primary); } .letter-group.new-letters .letters { color: var(--primary); }
+    .letters { font-size: 1.75rem; letter-spacing: 0.3rem; }
+    .match-container { display: flex; gap: 3rem; padding: 1rem; position: relative; }
+    .match-column { flex: 1; display: flex; flex-direction: column; gap: 0.75rem; }
+    .match-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; font-size: 1.25rem; cursor: pointer; }
+    .match-item.selected { border-color: var(--primary); background: #e8f4fd; }
+    .match-item.matched { border-color: var(--success); background: #e8f8f0; }
+    .match-item.wrong { border-color: var(--danger); background: #fde8e8; }
+    .match-lines { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+    .quiz-question { border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; }
+    .quiz-question.answered { pointer-events: none; }
+    .quiz-question .cyrillic { font-size: 1.5rem; color: var(--primary); font-weight: 600; }
+    .quiz-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-top: 1rem; }
+    .quiz-option { background: #f5f5f5; border: 2px solid var(--border); border-radius: 8px; padding: 1rem; cursor: pointer; text-align: center; }
+    .quiz-option.correct { border-color: var(--success); background: #d4edda; }
+    .quiz-option.wrong { border-color: var(--danger); background: #f8d7da; }
+    .quiz-explanation { margin-top: 1rem; padding: 1rem; background: #e8f4fd; border-radius: 8px; display: none; }
+    .quiz-explanation.show { display: block; }
+    .sort-pool { background: #f5f5f5; border: 2px dashed var(--border); border-radius: 12px; padding: 1.5rem; min-height: 80px; margin-bottom: 1rem; }
+    .sort-items { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; }
+    .sort-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 0.75rem 1.25rem; font-size: 1.5rem; cursor: grab; }
+    .sort-item.correct { border-color: var(--success); background: #e8f8f0; }
+    .sort-item.wrong { border-color: var(--danger); background: #fde8e8; }
+    .sort-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    .sort-group { border: 2px solid var(--border); border-radius: 12px; padding: 1rem; min-height: 150px; }
+    .sort-group.drag-over { border-color: var(--primary); background: #e8f4fd; }
+    .sort-group h4 { font-size: 0.875rem; text-align: center; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--border); }
+    .sort-group.true-friends h4 { color: var(--success); border-color: var(--success); }
+    .sort-group.false-friends h4 { color: var(--danger); border-color: var(--danger); }
+    .sort-group.new-letters h4 { color: var(--primary); border-color: var(--primary); }
+    .vocab-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; }
+    .vocab-card { border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; text-align: center; }
+    .vocab-card .uk { font-size: 1.75rem; font-weight: 600; color: var(--primary); }
+    .vocab-card .translit { color: var(--text-muted); font-style: italic; }
+    .vocab-card .en { font-weight: 500; margin: 0.25rem 0; }
+    .vocab-card .note { font-size: 0.75rem; color: #613583; background: #f0e8fd; padding: 0.25rem 0.5rem; border-radius: 4px; }
+    .btn { padding: 0.75rem 1.5rem; border: none; border-radius: 8px; cursor: pointer; }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-outline { background: transparent; border: 2px solid var(--border); }
+    .btn-group { display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem; }
+    .score-display { text-align: center; padding: 1rem; background: linear-gradient(135deg, #e8f8f0, #e8f4fd); border-radius: 8px; margin-bottom: 1rem; }
+    .score-display .score { font-size: 2rem; font-weight: 700; color: var(--success); }
+    .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
+    .completion-message.show { display: block; }
+    footer { text-align: center; padding: 2rem; color: var(--text-muted); }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+  </style>
+</head>
+<body>
+  <div class="top-nav">
+    <a href="../index.html">← l2-uk-en Curriculum</a>
+    <div class="module-nav">
+      <a href="module-116.html" class="module-nav-link">← Module 116</a>
+      <a href="index.html" class="module-nav-link">B1 Index</a>
+      <a href="module-118.html" class="module-nav-link">Module 118 →</a>
+    </div>
+  </div>
+  <nav class="nav">
+    <h1>Module 117: Reported Questions</h1>
+    <div class="nav-tabs">
+      <button class="nav-tab active" data-section="lesson">Lesson</button>
+      
+      <button class="nav-tab" data-section="quiz">Quiz</button>
+      
+      <button class="nav-tab" data-section="vocab">Vocab</button>
+    </div>
+  </nav>
+  <main>
+    <section id="lesson" class="section active">
+      <div class="lesson-header">
+        <span class="level-badge">B1 · B1.3</span>
+        <h2 style="font-size:2rem;margin:0.5rem 0">Reported Questions</h2>
+        <p style="color:var(--text-muted)">Він запитав, чи... / що...</p>
+      </div>
+      
+      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Пряме vs непряме запитання | Direct vs Indirect Questions</h4><div class="md-content"><p>Порівняйте два типи запитань:</p>
+<p>Compare two types of questions:</p>
+<p><strong>Пряме запитання (Direct question):</strong></p>
+<ul>
+<li>Він запитав: «Ти прийдеш?» - He asked: "Will you come?"</li>
+</ul>
+<p><strong>Непряме запитання (Reported question):</strong></p>
+<ul>
+<li>Він запитав, <strong>чи</strong> я прийду. - He asked if I would come.</li>
+</ul></div></div><div class="canvas-note"><h4>### Дієслова для запитань | Reporting Verbs for Questions</h4><div class="md-content"><table>
+<thead>
+<tr>
+<th>Ukrainian</th>
+<th>English</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>запитати (pf)</td>
+<td>to ask</td>
+<td>Він запитав, чи…</td>
+</tr>
+<tr>
+<td>питати (impf)</td>
+<td>to ask</td>
+<td>Вона питала, де…</td>
+</tr>
+<tr>
+<td>цікавитися (impf)</td>
+<td>to wonder, be interested</td>
+<td>Мене цікавить, як…</td>
+</tr>
+<tr>
+<td>хотіти знати</td>
+<td>to want to know</td>
+<td>Я хочу знати, чому…</td>
+</tr>
+<tr>
+<td>поцікавитися (pf)</td>
+<td>to inquire</td>
+<td>Він поцікавився, коли…</td>
+</tr>
+</tbody>
+</table></div></div><div class="canvas-note"><h4>Так/ні запитання → чи | Yes/No Questions → чи</h4><div class="md-content"><p><strong>Structure:</strong></p>
+<pre><code>запитати + чи + subject + verb
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Direct Question</th>
+<th>Reported Question</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>«Ти вдома?»</td>
+<td>Він запитав, <strong>чи</strong> я вдома.</td>
+</tr>
+<tr>
+<td>«Ви працюєте?»</td>
+<td>Вона запитала, <strong>чи</strong> ми працюємо.</td>
+</tr>
+<tr>
+<td>«Він прийшов?»</td>
+<td>Я запитав, <strong>чи</strong> він прийшов.</td>
+</tr>
+<tr>
+<td>«Вона знає?»</td>
+<td>Вони запитали, <strong>чи</strong> вона знає.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Note:</strong> чи = if/whether in reported questions</p></div></div><div class="canvas-note"><h4>Спеціальні запитання | Information Questions</h4><div class="md-content"><p><strong>Structure:</strong></p>
+<pre><code>запитати + question word + subject + verb
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Question Word</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>що (what)</td>
+<td>Він запитав, <strong>що</strong> я роблю.</td>
+</tr>
+<tr>
+<td>хто (who)</td>
+<td>Вона запитала, <strong>хто</strong> прийшов.</td>
+</tr>
+<tr>
+<td>де (where)</td>
+<td>Я запитав, <strong>де</strong> він живе.</td>
+</tr>
+<tr>
+<td>коли (when)</td>
+<td>Вони запитали, <strong>коли</strong> ми приїдемо.</td>
+</tr>
+<tr>
+<td>чому (why)</td>
+<td>Він запитав, <strong>чому</strong> вона плаче.</td>
+</tr>
+<tr>
+<td>як (how)</td>
+<td>Вона запитала, <strong>як</strong> це зробити.</td>
+</tr>
+<tr>
+<td>скільки (how much/many)</td>
+<td>Я запитав, <strong>скільки</strong> це коштує.</td>
+</tr>
+<tr>
+<td>який (which)</td>
+<td>Він запитав, <strong>який</strong> колір я люблю.</td>
+</tr>
+<tr>
+<td>куди (where to)</td>
+<td>Вона запитала, <strong>куди</strong> я йду.</td>
+</tr>
+<tr>
+<td>звідки (where from)</td>
+<td>Вони запитали, <strong>звідки</strong> він.</td>
+</tr>
+</tbody>
+</table></div></div><div class="canvas-note"><h4>Порядок слів | Word Order</h4><div class="md-content"><p><strong>Important difference from English:</strong></p>
+<p>In reported questions, Ukrainian uses <strong>statement word order</strong>, not question word order:</p>
+<table>
+<thead>
+<tr>
+<th>Direct</th>
+<th>Reported (Ukrainian)</th>
+<th>Reported (English)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>«Де ти живеш?»</td>
+<td>…де <strong>ти живеш</strong></td>
+<td>…where you live</td>
+</tr>
+<tr>
+<td>«Що він робить?»</td>
+<td>…що <strong>він робить</strong></td>
+<td>…what he does</td>
+</tr>
+<tr>
+<td>«Коли вони приїдуть?»</td>
+<td>…коли <strong>вони приїдуть</strong></td>
+<td>…when they will arrive</td>
+</tr>
+</tbody>
+</table>
+<p><strong>No inversion needed!</strong></p></div></div><div class="canvas-note"><h4>Приклади з чи | Examples with чи</h4><div class="md-content"><p><strong>Direct:</strong> «Ти любиш каву?»<br />
+<strong>Reported:</strong> Він запитав, <strong>чи</strong> я люблю каву.</p>
+<p><strong>Direct:</strong> «Вона прийде на вечірку?»<br />
+<strong>Reported:</strong> Ми запитали, <strong>чи</strong> вона прийде на вечірку.</p>
+<p><strong>Direct:</strong> «Ви бачили цей фільм?»<br />
+<strong>Reported:</strong> Вони запитали, <strong>чи</strong> ми бачили цей фільм.</p></div></div><div class="canvas-note"><h4>Приклади з питальними словами | Examples with Question Words</h4><div class="md-content"><p><strong>Direct:</strong> «Де ти працюєш?»<br />
+<strong>Reported:</strong> Він запитав, <strong>де</strong> я працюю.</p>
+<p><strong>Direct:</strong> «Коли починається урок?»<br />
+<strong>Reported:</strong> Студент запитав, <strong>коли</strong> починається урок.</p>
+<p><strong>Direct:</strong> «Чому ти запізнився?»<br />
+<strong>Reported:</strong> Вона запитала, <strong>чому</strong> я запізнився.</p>
+<p><strong>Direct:</strong> «Скільки коштує квиток?»<br />
+<strong>Reported:</strong> Турист запитав, <strong>скільки</strong> коштує квиток.</p></div></div><div class="canvas-note"><h4>Зміни займенників і часу | Pronoun and Time Changes</h4><div class="md-content"><p>Same changes as in reported statements:</p>
+<table>
+<thead>
+<tr>
+<th>Direct</th>
+<th>Reported</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ти, ви</td>
+<td>я, він/вона, вони</td>
+</tr>
+<tr>
+<td>тут</td>
+<td>там</td>
+</tr>
+<tr>
+<td>зараз</td>
+<td>тоді</td>
+</tr>
+<tr>
+<td>сьогодні</td>
+<td>того дня</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example:</strong></p>
+<ul>
+<li>Direct: «Що <strong>ти</strong> робиш <strong>зараз</strong>?»</li>
+<li>Reported: Він запитав, що <strong>я</strong> роблю <strong>тоді</strong>.</li>
+</ul></div></div><div class="canvas-note"><h4>### Convert Yes/No Questions</h4><div class="md-content"><ol>
+<li><p>«Ти голодний?» (він запитав)<br />
+→ Він запитав, <strong>чи я голодний</strong>.</p></li>
+<li><p>«Вона знає про це?» (ми запитали)<br />
+→ Ми запитали, <strong>чи вона знає про це</strong>.</p></li>
+<li><p>«Ви були в Україні?» (вона запитала)<br />
+→ Вона запитала, <strong>чи ми були в Україні</strong>.</p></li>
+<li><p>«Він приїде завтра?» (я запитав)<br />
+→ Я запитав, <strong>чи він приїде завтра</strong>.</p></li>
+</ol></div></div><div class="canvas-note"><h4>Convert Information Questions</h4><div class="md-content"><ol>
+<li><p>«Де знаходиться вокзал?» (турист запитав)<br />
+→ Турист запитав, <strong>де знаходиться вокзал</strong>.</p></li>
+<li><p>«Коли ти народився?» (вона запитала)<br />
+→ Вона запитала, <strong>коли я народився</strong>.</p></li>
+<li><p>«Чому він не прийшов?» (ми запитали)<br />
+→ Ми запитали, <strong>чому він не прийшов</strong>.</p></li>
+<li><p>«Як тебе звати?» (він запитав)<br />
+→ Він запитав, <strong>як мене звати</strong>.</p></li>
+<li><p>«Скільки у вас дітей?» (вона запитала)<br />
+→ Вона запитала, <strong>скільки в нас дітей</strong>.</p></li>
+</ol></div></div><div class="canvas-note"><h4>Choose чи or Question Word</h4><div class="md-content"><ol>
+<li><p>Він запитав, ___ я люблю музику.<br />
+→ <strong>чи</strong> (yes/no question)</p></li>
+<li><p>Вона запитала, ___ я живу.<br />
+→ <strong>де</strong> (where)</p></li>
+<li><p>Я хочу знати, ___ починається фільм.<br />
+→ <strong>коли</strong> (when)</p></li>
+<li><p>Мене цікавить, ___ вони приїдуть.<br />
+→ <strong>чи</strong> (yes/no question)</p></li>
+<li><p>Він поцікавився, ___ я вибрав цей подарунок.<br />
+→ <strong>чому</strong> (why)</p></li>
+</ol></div></div><div class="canvas-note"><h4>Translate to Ukrainian</h4><div class="md-content"><ol>
+<li><p>She asked if I spoke Ukrainian.<br />
+→ <strong>Вона запитала, чи я говорю українською.</strong></p></li>
+<li><p>He wanted to know where the museum was.<br />
+→ <strong>Він хотів знати, де знаходиться музей.</strong></p></li>
+<li><p>They asked when the train arrives.<br />
+→ <strong>Вони запитали, коли приїжджає потяг.</strong></p></li>
+<li><p>I wondered if she was coming.<br />
+→ <strong>Мене цікавило, чи вона прийде.</strong></p></li>
+</ol></div></div><div class="canvas-note"><h4>### Report These Questions</h4><div class="md-content"><p>Imagine someone asked you these questions. Report them:</p>
+<ol>
+<li><p>Незнайомець: «Як пройти до центру?»<br />
+→ Незнайомець запитав, як пройти до центру.</p></li>
+<li><p>Друг: «Ти підеш на концерт?»<br />
+→ Друг запитав, чи я піду на концерт.</p></li>
+<li><p>Колега: «Чому ти такий втомлений?»<br />
+→ Колега запитав, чому я такий втомлений.</p></li>
+</ol></div></div><div class="canvas-note"><h4>Discussion</h4><div class="md-content"><p>Report questions you were asked today:</p>
+<ul>
+<li>Що вас запитали на роботі/в школі?</li>
+<li>Про що вас питали друзі?</li>
+<li>Які питання ви чули сьогодні?</li>
+</ul></div></div></div>
+      <div class="btn-group"><button class="btn btn-primary" onclick="showSection('quiz')">Start →</button></div>
+    </section>
+    
+    <section id="quiz" class="section"><div class="card"><h3>Reported Questions</h3>
+      <div class="score-display"><span class="score"><span id="quiz-score">0</span>/6</span></div>
+      <div id="quiz-container"></div>
+      <div class="completion-message" id="quiz-complete"><h3>Complete!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
+    </div></section>
+    
+    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (0)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
+      <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
+    </section>
+  </main>
+  <footer>Module 117 · curricula-opus</footer>
+  <script>
+    const matchPairs=[];
+    const quizData=[{"question":"Він запитав, ___ я прийду.","options":["чи","що"],"correctIndex":0,"explanation":"чи for yes/no questions."},{"question":"Вона запитала, ___ я живу.","options":["де","чи"],"correctIndex":0,"explanation":"де for \"where\" questions."},{"question":"Мене цікавить, ___ це коштує.","options":["скільки","чи"],"correctIndex":0,"explanation":"скільки for \"how much\" questions."},{"question":"Вони запитали, ___ приїде потяг.","options":["коли","що"],"correctIndex":0,"explanation":"коли for \"when\" questions."},{"question":"Він хотів знати, ___ вона не прийшла.","options":["чому","чи"],"correctIndex":0,"explanation":"чому for \"why\" questions."},{"question":"«Ти вдома?» → Він запитав, ___ я вдома.","options":["чи","де"],"correctIndex":0,"explanation":"Yes/no question uses чи."}];
+    const sortData={};
+    const vocabData=[];
+    const totalSort=0;
+    function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
+    document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));
+    let matchSel=null,matchScore=0,matchPairsArr=[];
+    document.querySelectorAll('#match-left .match-item').forEach(item=>{item.addEventListener('click',()=>{if(item.classList.contains('matched'))return;document.querySelectorAll('#match-left .match-item').forEach(i=>i.classList.remove('selected'));item.classList.add('selected');matchSel={el:item,pair:item.dataset.pair};});});
+    document.querySelectorAll('#match-right .match-item').forEach(item=>{item.addEventListener('click',()=>{if(item.classList.contains('matched')||!matchSel)return;if(matchSel.pair===item.dataset.pair){matchSel.el.classList.remove('selected');matchSel.el.classList.add('matched');item.classList.add('matched');matchPairsArr.push({left:matchSel.el,right:item});matchScore++;document.getElementById('match-score').textContent=matchScore;drawLines();if(matchScore===matchPairs.length)document.getElementById('match-complete').classList.add('show');}else{item.classList.add('wrong');setTimeout(()=>item.classList.remove('wrong'),300);}matchSel=null;});});
+    function drawLines(){const svg=document.getElementById('match-lines'),c=document.getElementById('match-container');if(!svg||!c)return;const r=c.getBoundingClientRect();svg.innerHTML='';svg.setAttribute('viewBox','0 0 '+r.width+' '+r.height);matchPairsArr.forEach(p=>{const lr=p.left.getBoundingClientRect(),rr=p.right.getBoundingClientRect();const line=document.createElementNS('http://www.w3.org/2000/svg','line');line.setAttribute('x1',lr.right-r.left);line.setAttribute('y1',lr.top+lr.height/2-r.top);line.setAttribute('x2',rr.left-r.left);line.setAttribute('y2',rr.top+rr.height/2-r.top);line.setAttribute('stroke','#26a269');line.setAttribute('stroke-width','2');svg.appendChild(line);});}
+    function resetMatch(){matchSel=null;matchScore=0;matchPairsArr=[];document.getElementById('match-score').textContent='0';document.getElementById('match-complete')?.classList.remove('show');document.getElementById('match-lines').innerHTML='';document.querySelectorAll('#match-container .match-item').forEach(i=>i.classList.remove('matched','selected','wrong'));}
+    window.addEventListener('resize',drawLines);
+    let quizScore=0,quizAns=0;
+    function initQuiz(){const c=document.getElementById('quiz-container');if(!c||!quizData.length)return;c.innerHTML='';quizData.forEach((q,i)=>{const sh=[...q.options].sort(()=>Math.random()-0.5);const cor=sh.indexOf(q.options[q.correctIndex]);const div=document.createElement('div');div.className='quiz-question';div.innerHTML='<h4>Q'+(i+1)+': '+q.question+'</h4><div class="quiz-options">'+sh.map((o,j)=>'<div class="quiz-option" data-c="'+(j===cor)+'" data-q="'+i+'">'+o+'</div>').join('')+'</div><div class="quiz-explanation" id="exp-'+i+'">'+q.explanation+'</div>';c.appendChild(div);});document.querySelectorAll('.quiz-option').forEach(o=>o.addEventListener('click',handleQuiz));}
+    function handleQuiz(e){const opt=e.target,q=opt.closest('.quiz-question');if(q.classList.contains('answered'))return;q.classList.add('answered');if(opt.dataset.c==='true'){opt.classList.add('correct');quizScore++;}else{opt.classList.add('wrong');q.querySelector('[data-c="true"]').classList.add('correct');}document.getElementById('exp-'+opt.dataset.q).classList.add('show');document.getElementById('quiz-score').textContent=quizScore;quizAns++;if(quizAns===quizData.length)document.getElementById('quiz-complete').classList.add('show');}
+    function resetQuiz(){quizScore=0;quizAns=0;document.getElementById('quiz-score').textContent='0';document.getElementById('quiz-complete')?.classList.remove('show');initQuiz();}
+    let sortScore=0,dragItem=null;
+    function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
+    function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
+    function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
+  </script>
+</body>
+</html>
