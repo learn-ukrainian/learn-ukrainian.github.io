@@ -166,179 +166,22 @@
 
 ---
 
-## B1: Intermediate (Modules 81-???) 🔲 TO PLAN
+## B1/B2/C1 Draft Plans
 
-**⚠️ NEEDS REVISION** - Plan below is outdated. Must be redesigned based on:
-1. CEFR B1 requirements for Slavic languages
-2. Ukrainian-specific grammar (aspect mastery, participles intro, complex motion)
-3. Realistic vocabulary load (~25-30 words/module)
-4. Proper topic coverage without overlap with A2+
-
-**Draft target:** ~1,200-1,500 words (cumulative: ~2,600-2,900)
-
-### B1.1 (Modules 81-???): Advanced Aspect & Motion [DRAFT]
-
-| # | Title | Type | Focus |
-|---|-------|------|-------|
-| 76 | Aspect Review | Grammar | Perfective/imperfective mastery |
-| 77 | Aspect in Context I | Grammar | Choosing aspect - past |
-| 78 | Aspect in Context II | Grammar | Choosing aspect - future |
-| 79 | Aspect: Negation | Grammar | Imperfective in negation |
-| 80 | Aspect: Commands | Grammar | Aspect in imperatives |
-| 81 | Verb Pairs Expansion | Vocabulary | 50 new verb pairs |
-| 82 | Motion: Arriving | Grammar | При- prefix detailed |
-| 83 | Motion: Leaving | Grammar | Ви- prefix detailed |
-| 84 | Motion: Entering/Passing | Grammar | В-/у-, про- prefixes |
-| 85 | Motion: Around & Back | Grammar | Об-, по-, пере- |
-| 86 | Complex Motion Practice | Vocabulary | All prefixed motion |
-| 87 | Conditionals III | Grammar | Mixed conditionals |
-| 88 | Reflexive Verbs II | Grammar | Passive -ся, reciprocal |
-| 89 | Word Formation III | Word Formation | Root families expansion |
-| 90 | B1.1 Checkpoint | Review | Assessment |
-
-### B1.2 (Modules 91-105): Complex Sentences
-
-| # | Title | Type | Focus |
-|---|-------|------|-------|
-| 91 | Relative Clauses II | Grammar | Where, when, whose |
-| 92 | Indirect Questions | Grammar | Embedded questions |
-| 93 | Purpose Clauses | Grammar | Щоб + infinitive/past |
-| 94 | Concession | Grammar | Хоча, незважаючи на |
-| 95 | Reported Speech I | Grammar | Statements |
-| 96 | Reported Speech II | Grammar | Questions, commands |
-| 97 | Participle Preview | Grammar | Recognition only |
-| 98 | Collocations II | Collocations | Systematic study |
-| 99 | Synonymy I | Vocabulary | думати/гадати/вважати |
-| 100 | Synonymy II | Vocabulary | великий/здоровий/величезний |
-| 101 | Education & Learning | Vocabulary | Academic vocabulary |
-| 102 | Media & News | Vocabulary | News vocabulary |
-| 103 | Society & Community | Vocabulary | Social vocabulary |
-| 104 | Environment & Nature | Vocabulary | Environmental vocabulary |
-| 105 | B1.2 Checkpoint | Review | Assessment |
-
-### B1.3 (Modules 106-125): Expansion
-
-| # | Title | Type | Focus |
-|---|-------|------|-------|
-| 106 | Expressing Opinions II | Function | Agreement/disagreement |
-| 107 | Making Plans | Function | Future + conditional |
-| 108 | Narrating Events | Function | Aspect + time |
-| 109 | Abstract Concepts I | Vocabulary | Abstract nouns |
-| 110 | Abstract Concepts II | Vocabulary | More abstractions |
-| 111 | Work & Career | Vocabulary | Professional contexts |
-| 112 | Relationships | Vocabulary | Emotional expression |
-| 113 | Problems & Solutions | Vocabulary | Describing problems |
-| 114 | Phraseology I | Vocabulary | Common idioms |
-| 115 | Phraseology II | Vocabulary | More idioms |
-| 116 | Word Formation IV | Word Formation | Diminutives (-ик, -ок, -ечк-) |
-| 117 | Word Formation V | Word Formation | Augmentatives, pejoratives |
-| 118-120 | Vocabulary Expansion | Vocabulary | Topic-based expansion |
-| 121-124 | Practice & Integration | Function | Skills integration |
-| 125 | B1 Capstone | Review | Comprehensive B1 assessment |
-
----
-
-## B2: Upper-Intermediate (Modules ???-???) 🔲 TO PLAN
-
-**⚠️ NEEDS REVISION** - Must be redesigned based on CEFR B2 requirements
-
-### B2.1 (Modules 126-145): Participles & Passive
-
-| # | Title | Type | Focus |
-|---|-------|------|-------|
-| 126-130 | Present Participles | Grammar | -учий/-ючий formation |
-| 131-135 | Past Participles | Grammar | -ний/-тий formation |
-| 136-140 | Passive Voice | Grammar | Participle passive, -ся passive |
-| 141-145 | Complex Sentences | Grammar | Multi-clause, embedding |
-
-### B2.2 (Modules 146-165): Stylistics & Register
-
-| # | Title | Type | Focus |
-|---|-------|------|-------|
-| 146-150 | Register: Formal | Stylistics | Official, academic style |
-| 151-155 | Register: Informal | Stylistics | Colloquial patterns |
-| 156-160 | Register: Literary | Stylistics | Literary language |
-| 161-165 | Ukrainian vs Russian | Vocabulary | Distinctions, false friends |
-
-### B2.3 (Modules 166-180): Phraseology & Literature
-
-| # | Title | Type | Focus |
-|---|-------|------|-------|
-| 166-170 | Advanced Phraseology | Vocabulary | Idioms, proverbs |
-| 171-175 | Literature Introduction | Reading | Literary texts |
-| 176-178 | Near-Synonyms | Vocabulary | Fine distinctions |
-| 179 | B2 Review | Review | Consolidation |
-| 180 | B2 Capstone | Review | Comprehensive B2 assessment |
-
----
-
-## C1: Advanced (Modules ???-???) 🔲 TO PLAN
-
-**⚠️ NEEDS REVISION** - Must be redesigned based on CEFR C1 requirements
-
-### C1.1 (Modules 181-200): Literary & Academic
-
-| # | Title | Type | Focus |
-|---|-------|------|-------|
-| 181-185 | Literary Ukrainian | Reading | Poetry, prose analysis |
-| 186-190 | Academic Ukrainian | Writing | Essays, research |
-| 191-195 | Advanced Word Formation | Grammar | Productive patterns |
-| 196-200 | Advanced Grammar | Grammar | Archaic forms, literary constructions |
-
-### C1.2 (Modules 201-220): Professional & Discourse
-
-| # | Title | Type | Focus |
-|---|-------|------|-------|
-| 201-205 | Professional Fields | Vocabulary | Business, legal, medical |
-| 206-210 | Discourse & Pragmatics | Function | Conversation management |
-| 211-215 | Hedging & Politeness | Function | Nuanced communication |
-| 216-220 | Regional & Historical | Vocabulary | Dialects, archaic |
-
-### C1.3 (Modules 221-240): Mastery
-
-| # | Title | Type | Focus |
-|---|-------|------|-------|
-| 221-225 | STEM Vocabulary | Vocabulary | Scientific terminology |
-| 226-230 | Arts & Culture | Vocabulary | Art, music, film |
-| 231-235 | Philosophy & History | Vocabulary | Abstract, historical |
-| 236-238 | Advanced Practice | Function | All skills integration |
-| 239 | C1 Review | Review | Consolidation |
-| 240 | C1 Capstone | Review | Final assessment |
-
----
-
-## Content Coverage Matrix
-
-| Content Area | A1 | A2 | A2+ | B1 | B2 | C1 |
-|--------------|----|----|-----|----|----|-----|
-| **Grammar** |
-| Cases (7) | 4 | 7 ✓ | - | - | - | - |
-| Verb Aspect | - | Intro | - | ✓✓ | ✓ | - |
-| Motion Verbs | - | ✓ | - | ✓✓ | - | - |
-| Conditionals | - | ✓ | - | ✓ | ✓ | - |
-| Participles | - | - | - | Preview | ✓✓ | ✓ |
-| Passive | - | Intro | - | ✓ | ✓✓ | - |
-| **Vocabulary** |
-| Word Formation | - | - | ✓✓ | ✓ | ✓ | ✓ |
-| Collocations | - | - | ✓ | ✓✓ | ✓ | - |
-| Synonymy | - | - | - | ✓ | ✓✓ | ✓ |
-| Phraseology | - | - | - | ✓ | ✓✓ | ✓ |
-| **Style** |
-| Register | - | - | - | - | ✓✓ | ✓ |
-| Literary | - | - | - | - | ✓ | ✓✓ |
-| Discourse | - | - | - | - | ✓ | ✓✓ |
+Detailed plans in separate files:
+- **B1-DRAFT-PLAN.md** - 60 modules (81-140): Aspect, motion verbs, complex sentences, synonymy
+- **B2-DRAFT-PLAN.md** - 80 modules (141-220): Passive, register, phraseology, literature intro
+- **C1-DRAFT-PLAN.md** - 100 modules (221-320): Literature, academic, professional, dialects
 
 ---
 
 ## Implementation Order
 
 1. **Phase 1:** ✅ Build A2+ modules 61-80 (COMPLETE)
-2. **Phase 2:** 🔲 Research & plan B1 based on CEFR requirements
-3. **Phase 3:** 🔲 Build B1 modules
-4. **Phase 4:** 🔲 Research & plan B2 based on CEFR requirements
-5. **Phase 5:** 🔲 Build B2 modules
-6. **Phase 6:** 🔲 Research & plan C1 based on CEFR requirements
-7. **Phase 7:** 🔲 Build C1 modules
+2. **Phase 2:** ✅ Draft B1/B2/C1 plans (COMPLETE)
+3. **Phase 3:** 🔲 Build B1 modules 81-140
+4. **Phase 4:** 🔲 Build B2 modules 141-220
+5. **Phase 5:** 🔲 Build C1 modules 221-320
 
 ---
 
@@ -346,12 +189,7 @@
 
 - **v1.0** (Original): 200 modules, 8,000 words target
 - **v2.0**: 240 modules, 7,500 words target
-  - Fixed vocabulary tracking (actual vs planned)
-  - Added A2+ bridge level for word formation
-  - Added stylistics, collocations, phraseology
-  - Renumbered B1/B2/C1 modules
-- **v3.0** (Current): Content-driven approach
+- **v3.0** (Current): 320 modules, ~8,000 words target
   - Completed A2+ with 20 modules (61-80), 433 new words
-  - Expanded A2+ to 12 thematic vocabulary areas
-  - B1/B2/C1 marked for revision based on CEFR requirements
-  - Module counts TBD based on actual content needs
+  - Created detailed B1/B2/C1 draft plans as separate files
+  - Content-driven approach based on CEFR requirements
