@@ -1,0 +1,253 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-B1-127",
+    "moduleId": "mod-uk-B1-127",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "lessonType": "grammar-introduction",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "B1",
+    "phase": "B1.4",
+    "moduleNumber": 127,
+    "title": "Numerals: Collectives & Fractions",
+    "subtitle": "Двоє, троє; половина, третина",
+    "description": "Learn collective numerals (двоє, троє, etc.)",
+    "objectives": [
+      "Learn collective numerals (двоє, троє, etc.)",
+      "Understand when to use collective vs cardinal numerals",
+      "Master fractions and decimals",
+      "Use approximate quantities"
+    ],
+    "grammarFocus": [],
+    "totalDuration": 45,
+    "transliterationMode": "none",
+    "tags": [
+      "grammar",
+      "numerals",
+      "collectives",
+      "fractions"
+    ],
+    "version": 1,
+    "createdAt": "2025-11-30T00:00:00Z",
+    "modifiedAt": "2025-11-30T00:00:00Z",
+    "phases": [
+      {
+        "id": "phase-warm-up",
+        "name": "warm-up",
+        "duration": 5,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Числівники | Numerals Review\n\nДо B1 ви вивчили кількісні та порядкові числівники:\n\nUp to B1 you learned cardinal and ordinal numerals:\n\n- **Кількісні**: один, два, три... (one, two, three...)\n- **Порядкові**: перший, другий, третій... (first, second, third...)\n\nТепер додаємо збірні числівники та дроби:\n\nNow we add collective numerals and fractions:\n\n- **Збірні**: двоє, троє, четверо... (pair, trio, group of four...)\n- **Дроби**: половина, третина... (half, third...)"
+          }
+        ]
+      },
+      {
+        "id": "phase-presentation",
+        "name": "presentation",
+        "duration": 15,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Збірні числівники | Collective Numerals\n\n#### Forms\n\n| Number | Collective | Used with |\n|--------|------------|-----------|\n| 2 | двоє | людей, дітей, тварин |\n| 3 | троє | людей, дітей, тварин |\n| 4 | четверо | людей, дітей, тварин |\n| 5 | п'ятеро | людей, дітей, тварин |\n| 6 | шестеро | людей, дітей, тварин |\n| 7 | семеро | людей, дітей, тварин |\n| 8-10 | восьмеро, дев'ятеро, десятеро | rare |\n\n#### When to Use Collectives\n\n**1. With people (mixed gender or unspecified):**\n- Нас **двоє**. - There are two of us.\n- **Троє** друзів прийшли. - Three friends came.\n- У кімнаті **четверо** людей. - There are four people in the room.\n\n**2. With children:**\n- У них **троє** дітей. - They have three children.\n- **Двоє** малюків грають. - Two toddlers are playing.\n\n**3. With paired or plural-only nouns:**\n- **двоє** дверей - two doors\n- **троє** окулярів - three pairs of glasses\n- **четверо** ножиць - four pairs of scissors\n\n**4. As substantivized numerals:**\n- Ми **обоє** згодні. - We both agree.\n- Вони **двоє** — пара. - They (two) are a couple.\n\n#### Cardinal vs Collective\n\n| Cardinal | Collective | When to Use |\n|----------|------------|-------------|\n| два студенти | двоє студентів | Collective for groups |\n| три хлопці | троє хлопців | Collective more common |\n| дві жінки | двоє жінок | Cardinal for specific gender |\n| п'ять котів | п'ятеро кошенят | Collective for young animals |"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Declension of Collectives\n\nCollectives decline like adjectives in plural:\n\n| Case | двоє | троє |\n|------|------|------|\n| Nom | двоє | троє |\n| Gen | двох | трьох |\n| Dat | двом | трьом |\n| Acc | двох/двоє | трьох/троє |\n| Inst | двома | трьома |\n| Loc | (на) двох | (на) трьох |\n\n**Examples:**\n- Для **двох** людей. - For two people.\n- Я бачив **трьох** дітей. - I saw three children.\n- З **четверома** друзями. - With four friends."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Дроби | Fractions\n\n#### Basic Fractions\n\n| Fraction | Ukrainian | Example |\n|----------|-----------|---------|\n| 1/2 | половина | половина яблука |\n| 1/3 | третина | третина торта |\n| 1/4 | чверть | чверть години |\n| 2/3 | дві третини | дві третини учнів |\n| 3/4 | три чверті | три чверті роботи |\n\n#### Reading Fractions\n\n**Formula:** numerator (cardinal) + denominator (ordinal in genitive)\n\n| Fraction | Ukrainian |\n|----------|-----------|\n| 1/5 | одна п'ята |\n| 2/5 | дві п'ятих |\n| 3/7 | три сьомих |\n| 5/8 | п'ять восьмих |\n\n**With nouns:**\n- **Половина** студентів прийшла. - Half of the students came.\n- **Дві третини** роботи зроблено. - Two thirds of the work is done.\n- **Чверть** населення. - A quarter of the population."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Десяткові дроби | Decimals\n\n| Decimal | Ukrainian | Reading |\n|---------|-----------|---------|\n| 0,5 | нуль цілих п'ять десятих | zero point five |\n| 1,5 | одна ціла п'ять десятих | one point five |\n| 2,75 | дві цілих сімдесят п'ять сотих | two point seven five |\n| 3,14 | три цілих чотирнадцять сотих | pi |\n\n**Note:** Ukrainian uses comma (,) not period (.) for decimals!\n\n**Colloquial shortcuts:**\n- 1,5 = **півтора** (m/n) / **півтори** (f)\n- 2,5 = **два з половиною**"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Приблизна кількість | Approximate Quantities\n\n| Expression | Meaning | Example |\n|------------|---------|---------|\n| близько | about, approximately | близько десяти |\n| приблизно | approximately | приблизно сто |\n| майже | almost | майже всі |\n| понад | over, more than | понад тисячу |\n| менше ніж | less than | менше ніж п'ять |\n| більше ніж | more than | більше ніж сто |\n| десь | around, some | десь двадцять |\n| кілька | several | кілька разів |\n| декілька | a few | декілька людей |\n\n**Examples:**\n- **Близько** 50 студентів прийшли. - About 50 students came.\n- Це коштує **понад** 1000 гривень. - It costs over 1000 hryvnias.\n- Я був там **кілька** разів. - I was there several times."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Відсотки | Percentages\n\n| Percentage | Ukrainian |\n|------------|-----------|\n| 1% | один відсоток |\n| 5% | п'ять відсотків |\n| 25% | двадцять п'ять відсотків |\n| 50% | п'ятдесят відсотків |\n| 100% | сто відсотків |\n\n**Case agreement:**\n- 1 відсоток (nom sg)\n- 2-4 відсотки (nom pl)\n- 5+ відсотків (gen pl)"
+          }
+        ]
+      },
+      {
+        "id": "phase-practice",
+        "name": "practice",
+        "duration": 15,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Choose Cardinal or Collective\n\n1. У них ___ (два/двоє) сини.\n   → **двоє** синів (collective for children)\n\n2. Я бачила ___ (три/троє) жінки.\n   → **трьох** жінок / **три** жінки (both acceptable)\n\n3. У кімнаті ___ (чотири/четверо) людей.\n   → **четверо** людей (collective for mixed group)\n\n4. Вона купила ___ (п'ять/п'ятеро) яблук.\n   → **п'ять** яблук (cardinal for things)\n\n5. У них ___ (шість/шестеро) дітей.\n   → **шестеро** дітей (collective for children)"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Express Fractions\n\n1. 1/2 пирога → **половина пирога**\n2. 1/4 години → **чверть години**\n3. 2/3 роботи → **дві третини роботи**\n4. 3/4 учнів → **три чверті учнів**\n5. 1/5 населення → **одна п'ята населення**"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Approximate Quantities\n\nExpress approximately:\n\n1. ~10 людей → **близько десяти людей**\n2. ~100 гривень → **приблизно сто гривень**\n3. >50 студентів → **понад п'ятдесят студентів**\n4. <20 хвилин → **менше ніж двадцять хвилин**\n5. almost all → **майже всі**"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Translate to Ukrainian\n\n1. We both agree.\n   → **Ми обоє згодні.**\n\n2. Half of the students passed.\n   → **Половина студентів склала іспит.**\n\n3. About 30 people came.\n   → **Близько тридцяти людей прийшло.**\n\n4. They have three children.\n   → **У них троє дітей.**"
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-B1-127-quiz"
+          }
+        ]
+      },
+      {
+        "id": "phase-production",
+        "name": "production",
+        "duration": 10,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Talk About Your Family\n\nDescribe family members using collectives:\n\n- Скільки людей у вашій родині?\n- Скільки дітей у ваших батьків?\n- Example: «Нас четверо: батьки і двоє дітей.»"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Statistics Discussion\n\nDiscuss using fractions and percentages:\n\n- Скільки відсотків вашого часу ви працюєте?\n- Яка частина вашої зарплати йде на їжу?\n- Example: «Близько третини зарплати йде на оренду.»"
+          }
+        ]
+      }
+    ]
+  },
+  "activities": [
+    {
+      "id": "act-uk-B1-127-quiz",
+      "type": "quiz",
+      "title": "Numerals",
+      "description": "Choose the correct form.",
+      "content": {
+        "type": "quiz",
+        "instructions": "Choose the correct form.",
+        "questions": [
+          {
+            "question": "У них ___ дітей.",
+            "options": [
+              "троє",
+              "три"
+            ],
+            "correctIndex": 0,
+            "explanation": "Collective for children."
+          },
+          {
+            "question": "Половина пирога — це:",
+            "options": [
+              "1/2",
+              "1/4"
+            ],
+            "correctIndex": 0,
+            "explanation": "Половина = half."
+          },
+          {
+            "question": "«Близько» означає:",
+            "options": [
+              "приблизно",
+              "точно"
+            ],
+            "correctIndex": 0,
+            "explanation": "Approximate quantity."
+          },
+          {
+            "question": "Ми ___ згодні.",
+            "options": [
+              "обоє",
+              "два"
+            ],
+            "correctIndex": 0,
+            "explanation": "Collective as substantive."
+          },
+          {
+            "question": "2,5 можна сказати:",
+            "options": [
+              "два з половиною",
+              "двоє половини"
+            ],
+            "correctIndex": 0,
+            "explanation": "Colloquial form for 2.5."
+          },
+          {
+            "question": "Понад 100 означає:",
+            "options": [
+              "більше ніж 100",
+              "менше ніж 100"
+            ],
+            "correctIndex": 0,
+            "explanation": "Понад = over, more than."
+          }
+        ],
+        "shuffleQuestions": true,
+        "shuffleOptions": true,
+        "showCorrectAnswers": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "B1",
+      "duration": 5,
+      "tags": [
+        "grammar",
+        "numerals",
+        "collectives",
+        "fractions"
+      ],
+      "createdAt": "2025-11-30T00:00:00Z",
+      "modifiedAt": "2025-11-30T00:00:00Z"
+    },
+    {
+      "id": "act-uk-B1-127-fillin",
+      "type": "fill-in",
+      "title": "Family Statistics",
+      "description": "Опишіть сім'ю, використовуючи числівники.",
+      "content": {
+        "type": "fill-in",
+        "instructions": "Опишіть сім'ю, використовуючи числівники."
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "B1",
+      "duration": 5,
+      "tags": [
+        "grammar",
+        "numerals",
+        "collectives",
+        "fractions"
+      ],
+      "createdAt": "2025-11-30T00:00:00Z",
+      "modifiedAt": "2025-11-30T00:00:00Z"
+    }
+  ],
+  "vocabulary": {
+    "moduleId": "mod-uk-B1-127",
+    "level": "B1",
+    "phase": "B1.4",
+    "wordCount": 0,
+    "transliterationMode": "none",
+    "words": []
+  }
+}

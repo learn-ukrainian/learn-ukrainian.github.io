@@ -1,0 +1,268 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-B1-129",
+    "moduleId": "mod-uk-B1-129",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "lessonType": "vocabulary-expansion",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "B1",
+    "phase": "B1.4",
+    "moduleNumber": 129,
+    "title": "Travel & Geography",
+    "subtitle": "Подорожі та географія",
+    "description": "Learn travel and tourism vocabulary",
+    "objectives": [
+      "Learn travel and tourism vocabulary",
+      "Discuss borders, visas, and customs",
+      "Describe destinations and journeys",
+      "Plan trips using appropriate vocabulary"
+    ],
+    "grammarFocus": [],
+    "totalDuration": 45,
+    "transliterationMode": "none",
+    "tags": [
+      "vocabulary",
+      "travel",
+      "geography",
+      "tourism"
+    ],
+    "version": 1,
+    "createdAt": "2025-11-30T00:00:00Z",
+    "modifiedAt": "2025-11-30T00:00:00Z",
+    "phases": [
+      {
+        "id": "phase-warm-up",
+        "name": "warm-up",
+        "duration": 5,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Подорожі | Traveling\n\nЧи любите ви подорожувати? Куди ви їздили?\n\nDo you like traveling? Where have you been?\n\n- Які **країни** ви відвідали? | Which countries have you visited?\n- Як ви зазвичай подорожуєте? | How do you usually travel?\n- Що вам потрібно для поїздки за кордон? | What do you need for traveling abroad?"
+          }
+        ]
+      },
+      {
+        "id": "phase-presentation",
+        "name": "presentation",
+        "duration": 15,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Документи для подорожі | Travel Documents\n\n| Ukrainian | IPA | English |\n|-----------|-----|---------|\n| паспорт | /ˈpɑsport/ | passport |\n| віза | /ˈvʲizɑ/ | visa |\n| посвідчення особи | /posvʲidˈt͡ʃɛnʲːɑ oˈsobɪ/ | ID card |\n| страховка | /strɑˈxowkɑ/ | insurance |\n| квиток | /kvɪˈtok/ | ticket |\n| бронювання | /bronʲuˈvɑnʲːɑ/ | reservation, booking |\n| посадковий талон | /posɑdˈkovɪj tɑˈlon/ | boarding pass |"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Кордон та митниця | Border and Customs\n\n| Ukrainian | IPA | English |\n|-----------|-----|---------|\n| кордон | /korˈdon/ | border |\n| митниця | /ˈmɪtnɪt͡sʲɑ/ | customs |\n| прикордонник | /prɪkorˈdonnɪk/ | border guard |\n| паспортний контроль | /pɑsˈportnɪj konˈtrolʲ/ | passport control |\n| декларація | /dɛklɑrɑˈt͡sʲijɑ/ | declaration |\n| перетинати кордон | /pɛrɛtɪˈnɑtɪ korˈdon/ | to cross the border |"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Географія | Geography\n\n| Ukrainian | IPA | English |\n|-----------|-----|---------|\n| країна | /krɑˈjinɑ/ | country |\n| місто | /ˈmʲisto/ | city |\n| столиця | /stoˈlɪt͡sʲɑ/ | capital |\n| область | /ˈoblɑstʲ/ | region, oblast |\n| півострів | /pʲivˈostrʲiv/ | peninsula |\n| острів | /ˈostrʲiv/ | island |\n| гори | /ˈɦorɪ/ | mountains |\n| море | /ˈmorɛ/ | sea |\n| океан | /okɛˈɑn/ | ocean |\n| річка | /ˈrʲit͡ʃkɑ/ | river |\n| озеро | /ˈozɛro/ | lake |"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Напрямки світу | Cardinal Directions\n\n| Ukrainian | English |\n|-----------|---------|\n| північ | north |\n| південь | south |\n| схід | east |\n| захід | west |\n| північний | northern |\n| південний | southern |\n| східний | eastern |\n| західний | western |"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Види транспорту | Types of Transport\n\n| Ukrainian | English | Used for |\n|-----------|---------|----------|\n| літак | airplane | air travel |\n| поїзд | train | land travel |\n| автобус | bus | land travel |\n| корабель | ship | sea travel |\n| пором | ferry | short sea crossings |\n| автомобіль | car | personal travel |"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Місця | Places\n\n| Ukrainian | IPA | English |\n|-----------|-----|---------|\n| аеропорт | /ɑɛroˈport/ | airport |\n| вокзал | /wokˈzɑl/ | train station |\n| автовокзал | /ɑwtovoˈkzɑl/ | bus station |\n| порт | /port/ | port |\n| готель | /ɦoˈtɛlʲ/ | hotel |\n| хостел | /ˈxostɛl/ | hostel |\n| пункт призначення | /punkt prɪznɑˈt͡ʃɛnʲːɑ/ | destination |"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Дієслова | Travel Verbs\n\n| Ukrainian | English | Aspect |\n|-----------|---------|--------|\n| подорожувати | to travel | impf |\n| їхати / поїхати | to go (by transport) | impf/pf |\n| летіти / полетіти | to fly | impf/pf |\n| пливти / попливти | to sail | impf/pf |\n| бронювати / забронювати | to book | impf/pf |\n| відвідувати / відвідати | to visit | impf/pf |\n| оглядати / оглянути | to sightsee | impf/pf |\n| досліджувати / дослідити | to explore | impf/pf |\n| прибувати / прибути | to arrive | impf/pf |\n| відправлятися / відправитися | to depart | impf/pf |"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Корисні вирази | Useful Expressions\n\n| Ukrainian | English |\n|-----------|---------|\n| поїздка за кордон | trip abroad |\n| відпустка | vacation |\n| туристична путівка | travel package |\n| прямий рейс | direct flight |\n| пересадка | transfer, layover |\n| час у дорозі | travel time |\n| місце призначення | destination |\n| курортне місто | resort town |"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Україна: географія | Ukraine: Geography\n\n**Важливі місця:**\n- **Київ** — столиця, на річці Дніпро\n- **Одеса** — портове місто на Чорному морі\n- **Львів** — західна Україна, історичний центр\n- **Карпати** — гори на заході\n- **Крим** — півострів на півдні\n\n**Річки:** Дніпро, Дністер, Південний Буг, Сіверський Донець\n\n**Моря:** Чорне море, Азовське море"
+          }
+        ]
+      },
+      {
+        "id": "phase-practice",
+        "name": "practice",
+        "duration": 15,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Match Terms\n\n1. кордон — a) border\n2. віза — b) visa\n3. літак — c) airplane\n4. готель — d) hotel\n5. столиця — e) capital"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Complete Sentences\n\n1. Для поїздки за кордон потрібен ___ (passport).\n   → **паспорт**\n\n2. Літак приземлився в ___ (airport).\n   → **аеропорту**\n\n3. Київ — ___ (capital) України.\n   → **столиця**\n\n4. Ми ___ (booked) готель заздалегідь.\n   → **забронювали**\n\n5. Карпати — це ___ (mountains) на заході.\n   → **гори**"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Describe a Trip\n\nUse the vocabulary to describe:\n\n1. **Документи:** Я взяв паспорт, візу, страховку...\n2. **Транспорт:** Ми летіли літаком, потім їхали поїздом...\n3. **Місця:** Ми відвідали музеї, оглянули старе місто..."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Translate to Ukrainian\n\n1. We crossed the border by car.\n   → **Ми перетнули кордон на автомобілі.**\n\n2. The capital of Ukraine is Kyiv.\n   → **Столиця України — Київ.**\n\n3. I booked a direct flight.\n   → **Я забронював прямий рейс.**\n\n4. The hotel is near the train station.\n   → **Готель знаходиться біля вокзалу.**"
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-B1-129-quiz"
+          }
+        ]
+      },
+      {
+        "id": "phase-production",
+        "name": "production",
+        "duration": 10,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Plan a Trip\n\nPlan a trip to Ukraine:\n\n- Куди ви поїдете? (місто, регіон)\n- Як ви туди дістанетеся? (транспорт)\n- Де ви зупинитеся? (готель, хостел)\n- Що ви хочете побачити?"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Describe Your Best Trip\n\nTalk about a memorable journey:\n\n- Куди ви їздили?\n- Як довго тривала поїздка?\n- Що ви там робили?\n- Що вам найбільше сподобалося?"
+          }
+        ]
+      }
+    ]
+  },
+  "activities": [
+    {
+      "id": "act-uk-B1-129-quiz",
+      "type": "quiz",
+      "title": "Travel Vocabulary",
+      "description": "Choose the correct word.",
+      "content": {
+        "type": "quiz",
+        "instructions": "Choose the correct word.",
+        "questions": [
+          {
+            "question": "Документ для міжнародних поїздок:",
+            "options": [
+              "паспорт",
+              "квиток"
+            ],
+            "correctIndex": 0,
+            "explanation": "Passport for international travel."
+          },
+          {
+            "question": "Лінія між двома країнами:",
+            "options": [
+              "кордон",
+              "митниця"
+            ],
+            "correctIndex": 0,
+            "explanation": "Border between countries."
+          },
+          {
+            "question": "Київ — це:",
+            "options": [
+              "столиця",
+              "область"
+            ],
+            "correctIndex": 0,
+            "explanation": "Capital city."
+          },
+          {
+            "question": "Місце, де зупиняються поїзди:",
+            "options": [
+              "вокзал",
+              "аеропорт"
+            ],
+            "correctIndex": 0,
+            "explanation": "Train station."
+          },
+          {
+            "question": "Гори на заході України:",
+            "options": [
+              "Карпати",
+              "Альпи"
+            ],
+            "correctIndex": 0,
+            "explanation": "Carpathian mountains."
+          },
+          {
+            "question": "Перевірка на кордоні:",
+            "options": [
+              "паспортний контроль",
+              "бронювання"
+            ],
+            "correctIndex": 0,
+            "explanation": "Passport control at the border."
+          }
+        ],
+        "shuffleQuestions": true,
+        "shuffleOptions": true,
+        "showCorrectAnswers": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "B1",
+      "duration": 5,
+      "tags": [
+        "vocabulary",
+        "travel",
+        "geography",
+        "tourism"
+      ],
+      "createdAt": "2025-11-30T00:00:00Z",
+      "modifiedAt": "2025-11-30T00:00:00Z"
+    },
+    {
+      "id": "act-uk-B1-129-fillin",
+      "type": "fill-in",
+      "title": "Planning a Trip",
+      "description": "Заплануйте поїздку.",
+      "content": {
+        "type": "fill-in",
+        "instructions": "Заплануйте поїздку."
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "B1",
+      "duration": 5,
+      "tags": [
+        "vocabulary",
+        "travel",
+        "geography",
+        "tourism"
+      ],
+      "createdAt": "2025-11-30T00:00:00Z",
+      "modifiedAt": "2025-11-30T00:00:00Z"
+    }
+  ],
+  "vocabulary": {
+    "moduleId": "mod-uk-B1-129",
+    "level": "B1",
+    "phase": "B1.4",
+    "wordCount": 0,
+    "transliterationMode": "none",
+    "words": []
+  }
+}

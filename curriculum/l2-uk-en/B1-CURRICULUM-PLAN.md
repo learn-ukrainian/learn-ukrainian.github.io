@@ -254,7 +254,7 @@ Ukrainian aspect is **NOT black and white**. Many situations allow BOTH perfecti
 | B1.1 | 81-100 | ✅ Implemented |
 | B1.2 | 101-115 | ✅ Implemented |
 | B1.3 | 116-125 | ✅ Implemented |
-| B1.4 | 126-140 | ⏳ Planned |
+| B1.4 | 126-140 | ✅ Implemented |
 
 **Related GitHub Issues:**
 - #24: Implement missing modules 101-140

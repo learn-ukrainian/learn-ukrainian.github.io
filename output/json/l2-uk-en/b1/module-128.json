@@ -1,0 +1,263 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-B1-128",
+    "moduleId": "mod-uk-B1-128",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "lessonType": "vocabulary-expansion",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "B1",
+    "phase": "B1.4",
+    "moduleNumber": 128,
+    "title": "Business Basics",
+    "subtitle": "Основи бізнесу",
+    "description": "Learn essential business vocabulary",
+    "objectives": [
+      "Learn essential business vocabulary",
+      "Discuss companies and workplaces",
+      "Understand contracts and negotiations",
+      "Use professional language in context"
+    ],
+    "grammarFocus": [],
+    "totalDuration": 45,
+    "transliterationMode": "none",
+    "tags": [
+      "vocabulary",
+      "business",
+      "work",
+      "professional"
+    ],
+    "version": 1,
+    "createdAt": "2025-11-30T00:00:00Z",
+    "modifiedAt": "2025-11-30T00:00:00Z",
+    "phases": [
+      {
+        "id": "phase-warm-up",
+        "name": "warm-up",
+        "duration": 5,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Світ бізнесу | The World of Business\n\nНа рівні B1 важливо знати базову бізнес-лексику:\n\nAt B1 level, it's important to know basic business vocabulary:\n\n- Де ви **працюєте**? | Where do you work?\n- Яка ваша **посада**? | What's your position?\n- Чи є у вас **зустрічі** щодня? | Do you have meetings every day?"
+          }
+        ]
+      },
+      {
+        "id": "phase-presentation",
+        "name": "presentation",
+        "duration": 15,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Компанія та структура | Company and Structure\n\n| Ukrainian | IPA | English |\n|-----------|-----|---------|\n| компанія | /kompɑˈnʲijɑ/ | company |\n| фірма | /ˈfʲirmɑ/ | firm |\n| підприємство | /pʲidprɪˈjɛmstvo/ | enterprise |\n| корпорація | /korporɑˈt͡sʲijɑ/ | corporation |\n| офіс | /ˈofʲis/ | office |\n| штаб-квартира | /ʃtɑb kvɑrˈtɪrɑ/ | headquarters |\n| філія | /fʲiˈlʲijɑ/ | branch |\n| відділ | /vʲidˈdʲil/ | department |"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Посади | Positions\n\n| Ukrainian | English | Notes |\n|-----------|---------|-------|\n| директор | director | керуючий |\n| генеральний директор | CEO | gen. dir. |\n| менеджер | manager | управлінець |\n| начальник | boss, chief | керівник |\n| співробітник | employee | працівник |\n| колега | colleague | співпрацівник |\n| підлеглий | subordinate | m |\n| асистент | assistant | помічник |\n| секретар | secretary | m/f |\n| бухгалтер | accountant | m/f |"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Бізнес-процеси | Business Processes\n\n| Ukrainian | IPA | English |\n|-----------|-----|---------|\n| зустріч | /ˈzustrʲit͡ʃ/ | meeting |\n| нарада | /nɑˈrɑdɑ/ | conference, meeting |\n| переговори | /pɛrɛɦoˈvorɪ/ | negotiations |\n| презентація | /prɛzɛntɑˈt͡sʲijɑ/ | presentation |\n| звіт | /zvʲit/ | report |\n| проєкт | /proˈjɛkt/ | project |\n| дедлайн | /ˈdɛdlɑjn/ | deadline |\n| бюджет | /bʲuˈd͡ʒɛt/ | budget |"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Документи | Documents\n\n| Ukrainian | English | Notes |\n|-----------|---------|-------|\n| контракт | contract | договір |\n| договір | agreement, contract | formal |\n| угода | deal, agreement | informal |\n| рахунок | invoice, bill | m |\n| квитанція | receipt | f |\n| акт | act, document | official |\n| накладна | waybill | f |\n| звіт | report | m |"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Дієслова | Business Verbs\n\n| Ukrainian | English | Aspect |\n|-----------|---------|--------|\n| працювати | to work | impf |\n| керувати | to manage, lead | impf |\n| співпрацювати | to cooperate | impf |\n| наймати / найняти | to hire | impf/pf |\n| звільняти / звільнити | to fire, dismiss | impf/pf |\n| підписувати / підписати | to sign | impf/pf |\n| домовлятися / домовитися | to agree, negotiate | impf/pf |\n| інвестувати | to invest | impf/pf |\n| заробляти / заробити | to earn | impf/pf |\n| витрачати / витратити | to spend | impf/pf |"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Фінанси | Finance\n\n| Ukrainian | IPA | English |\n|-----------|-----|---------|\n| прибуток | /prɪˈbutok/ | profit |\n| збиток | /ˈzbɪtok/ | loss |\n| дохід | /ˈdoxʲid/ | income, revenue |\n| витрати | /vɪˈtrɑtɪ/ | expenses |\n| зарплата | /zɑrˈplɑtɑ/ | salary |\n| бонус | /ˈbonus/ | bonus |\n| податок | /poˈdɑtok/ | tax |\n| рахунок | /rɑˈxunok/ | account, bill |"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Корисні вирази | Useful Expressions\n\n| Ukrainian | English |\n|-----------|---------|\n| укласти угоду | to make a deal |\n| підписати контракт | to sign a contract |\n| провести зустріч | to hold a meeting |\n| подати звіт | to submit a report |\n| дотримуватися дедлайну | to meet a deadline |\n| вести переговори | to conduct negotiations |\n| прийняти рішення | to make a decision |\n| вирішити проблему | to solve a problem |"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Приклади діалогів | Example Dialogues\n\n**На зустрічі:**\n- Доброго дня! Давайте почнемо нараду.\n- Сьогодні ми обговоримо новий проєкт.\n- Хто відповідальний за бюджет?\n- Дедлайн — наступний тиждень.\n\n**Переговори:**\n- Ми пропонуємо співпрацю.\n- Які ваші умови?\n- Нам потрібно обговорити деталі.\n- Давайте підпишемо договір."
+          }
+        ]
+      },
+      {
+        "id": "phase-practice",
+        "name": "practice",
+        "duration": 15,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Match Terms\n\n1. компанія — a) company\n2. зустріч — b) meeting\n3. контракт — c) contract\n4. прибуток — d) profit\n5. зарплата — e) salary"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Complete with Correct Word\n\n1. Директор ___ (провів/написав) зустріч.\n   → **провів**\n\n2. Ми ___ (підписали/прочитали) контракт.\n   → **підписали**\n\n3. Компанія має великий ___ (прибуток/податок).\n   → **прибуток**\n\n4. Він працює в ___ (відділі/зустрічі) маркетингу.\n   → **відділі**\n\n5. Потрібно ___ (подати/провести) звіт до п'ятниці.\n   → **подати**"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Translate to Ukrainian\n\n1. She works at a large company.\n   → **Вона працює у великій компанії.**\n\n2. We signed the contract yesterday.\n   → **Ми підписали контракт учора.**\n\n3. The meeting starts at 10.\n   → **Зустріч починається о десятій.**\n\n4. He manages the marketing department.\n   → **Він керує відділом маркетингу.**\n\n5. They are conducting negotiations.\n   → **Вони ведуть переговори.**"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Business Scenarios\n\nDescribe what happens in these situations:\n\n1. **Нова робота:** найняли → підписали контракт → почали працювати\n2. **Проєкт:** отримали завдання → працювали → подали звіт\n3. **Угода:** вели переговори → домовилися → підписали договір"
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-B1-128-quiz"
+          }
+        ]
+      },
+      {
+        "id": "phase-production",
+        "name": "production",
+        "duration": 10,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Describe Your Workplace\n\nTalk about:\n\n- Де ви працюєте? (компанія, офіс)\n- Яка ваша посада?\n- Чи часто у вас зустрічі?\n- З ким ви співпрацюєте?"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Role Play: Business Meeting\n\nConduct a short meeting:\n\n- Привітання та мета зустрічі\n- Обговорення проєкту\n- Розподіл завдань\n- Дедлайни"
+          }
+        ]
+      }
+    ]
+  },
+  "activities": [
+    {
+      "id": "act-uk-B1-128-quiz",
+      "type": "quiz",
+      "title": "Business Vocabulary",
+      "description": "Choose the correct word.",
+      "content": {
+        "type": "quiz",
+        "instructions": "Choose the correct word.",
+        "questions": [
+          {
+            "question": "Місце, де працюють:",
+            "options": [
+              "офіс",
+              "контракт"
+            ],
+            "correctIndex": 0,
+            "explanation": "Office is the workplace."
+          },
+          {
+            "question": "Документ про співпрацю:",
+            "options": [
+              "договір",
+              "звіт"
+            ],
+            "correctIndex": 0,
+            "explanation": "Agreement/contract for cooperation."
+          },
+          {
+            "question": "Гроші, які платять за роботу:",
+            "options": [
+              "зарплата",
+              "прибуток"
+            ],
+            "correctIndex": 0,
+            "explanation": "Salary is payment for work."
+          },
+          {
+            "question": "Зустріч для обговорення:",
+            "options": [
+              "нарада",
+              "контракт"
+            ],
+            "correctIndex": 0,
+            "explanation": "Meeting for discussion."
+          },
+          {
+            "question": "Дохід мінус витрати:",
+            "options": [
+              "прибуток",
+              "податок"
+            ],
+            "correctIndex": 0,
+            "explanation": "Profit = revenue - expenses."
+          },
+          {
+            "question": "Закінчити до певної дати:",
+            "options": [
+              "дотримуватися дедлайну",
+              "подати звіт"
+            ],
+            "correctIndex": 0,
+            "explanation": "Meeting a deadline."
+          }
+        ],
+        "shuffleQuestions": true,
+        "shuffleOptions": true,
+        "showCorrectAnswers": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "B1",
+      "duration": 5,
+      "tags": [
+        "vocabulary",
+        "business",
+        "work",
+        "professional"
+      ],
+      "createdAt": "2025-11-30T00:00:00Z",
+      "modifiedAt": "2025-11-30T00:00:00Z"
+    },
+    {
+      "id": "act-uk-B1-128-fillin",
+      "type": "fill-in",
+      "title": "Company Description",
+      "description": "Опишіть компанію.",
+      "content": {
+        "type": "fill-in",
+        "instructions": "Опишіть компанію."
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "B1",
+      "duration": 5,
+      "tags": [
+        "vocabulary",
+        "business",
+        "work",
+        "professional"
+      ],
+      "createdAt": "2025-11-30T00:00:00Z",
+      "modifiedAt": "2025-11-30T00:00:00Z"
+    }
+  ],
+  "vocabulary": {
+    "moduleId": "mod-uk-B1-128",
+    "level": "B1",
+    "phase": "B1.4",
+    "wordCount": 0,
+    "transliterationMode": "none",
+    "words": []
+  }
+}

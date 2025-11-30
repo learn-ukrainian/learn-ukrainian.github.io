@@ -1,0 +1,248 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-B1-126",
+    "moduleId": "mod-uk-B1-126",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "lessonType": "grammar-introduction",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "B1",
+    "phase": "B1.4",
+    "moduleNumber": 126,
+    "title": "Diminutives",
+    "subtitle": "Зменшувально-пестливі форми",
+    "description": "Learn common diminutive suffixes",
+    "objectives": [
+      "Learn common diminutive suffixes",
+      "Understand emotional and expressive uses",
+      "Form diminutives from nouns and adjectives",
+      "Use diminutives appropriately in context"
+    ],
+    "grammarFocus": [],
+    "totalDuration": 45,
+    "transliterationMode": "none",
+    "tags": [
+      "grammar",
+      "diminutives",
+      "word-formation",
+      "expressiveness"
+    ],
+    "version": 1,
+    "createdAt": "2025-11-30T00:00:00Z",
+    "modifiedAt": "2025-11-30T00:00:00Z",
+    "phases": [
+      {
+        "id": "phase-warm-up",
+        "name": "warm-up",
+        "duration": 5,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Ласкаві слова | Affectionate Words\n\nВ українській мові часто використовують зменшувальні форми:\n\nIn Ukrainian, diminutive forms are frequently used:\n\n- **Мамо** → **мамочко** (dear mom)\n- **Кіт** → **котик** (kitty)\n- **Хліб** → **хлібчик** (a piece of bread)\n\nWhy? To express:\n- Affection (мамочка, бабусенька)\n- Small size (столик, будиночок)\n- Politeness (хвилиночку, водички)"
+          }
+        ]
+      },
+      {
+        "id": "phase-presentation",
+        "name": "presentation",
+        "duration": 15,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Основні суфікси | Main Suffixes\n\n#### For Masculine Nouns\n\n| Suffix | Base | Diminutive | English |\n|--------|------|------------|---------|\n| **-ик** | стіл | столик | small table |\n| **-ик** | дім | домик | small house |\n| **-ок** | син | синок | son (dear) |\n| **-ок** | брат | браток | brother (dear) |\n| **-ець** | хлопець | хлопчик | boy |\n| **-чик** | ніж | ножик | small knife |\n\n#### For Feminine Nouns\n\n| Suffix | Base | Diminutive | English |\n|--------|------|------------|---------|\n| **-ка** | книга | книжка | small book |\n| **-ечка** | ніч | ніченька | night (poetic) |\n| **-очка** | зірка | зірочка | little star |\n| **-уся/-юся** | мама | мамуся | mommy |\n| **-енька** | бабуся | бабусенька | dear grandma |\n\n#### For Neuter Nouns\n\n| Suffix | Base | Diminutive | English |\n|--------|------|------------|---------|\n| **-ко** | вікно | віконко | small window |\n| **-це** | серце | серденько | dear heart |\n| **-ечко** | сонце | сонечко | sun (dear) |\n| **-атко** | дитя | дитятко | baby (dear) |"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Подвійні зменшувальні | Double Diminutives\n\nUkrainian can stack diminutive suffixes for extra expressiveness:\n\n| Base | Single | Double | Meaning |\n|------|--------|--------|---------|\n| мама | мамка | мамочка | mommy (very dear) |\n| кіт | котик | котичок | tiny kitty |\n| дім | домик | домочок | tiny house |\n| хліб | хлібець | хлібчик | small piece of bread |"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Зменшувальні прикметники | Diminutive Adjectives\n\nAdjectives also have diminutive forms:\n\n| Base | Diminutive | Meaning |\n|------|------------|---------|\n| малий | маленький | small, little (affectionate) |\n| гарний | гарненький | pretty (cute) |\n| білий | біленький | white (nice) |\n| теплий | тепленький | warm (cozy) |\n| м'який | м'якенький | soft (nice and soft) |\n| рідний | рідненький | dear (very dear) |"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Використання | Usage Contexts\n\n**1. Affection (найчастіше / most common):**\n- Моя донечка така розумна! - My little daughter is so smart!\n- Котику, іди сюди! - Kitty, come here!\n\n**2. Small size:**\n- Хочеш шматочок торта? - Want a piece of cake?\n- Це мій маленький будиночок. - This is my little house.\n\n**3. Politeness/Requests:**\n- Зачекайте хвилиночку! - Wait a moment!\n- Дайте, будь ласка, водички. - Please give me some water.\n\n**4. Irony/Sarcasm:**\n- Ну і ситуаційка! - What a situation! (ironic)\n- Гарненьке діло! - Nice business! (sarcastic)"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Слова, що існують лише у зменшувальній формі | Words Only in Diminutive Form\n\nSome words are always used in diminutive form:\n\n| Diminutive | Meaning | Notes |\n|------------|---------|-------|\n| батько | father | (батько is standard) |\n| матінка | mother (poetic) | literary |\n| сонечко | sun (to person) | term of endearment |\n| серденько | heart (to person) | term of endearment |\n| зайчик | bunny (to person) | term of endearment |"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Правила формування | Formation Rules\n\n**General patterns:**\n\n1. **Hard consonants** → usually **-ик, -ок**\n   - стіл → столик, дзвін → дзвіночок\n\n2. **Soft consonants** → usually **-чик, -ечка**\n   - ніч → ніченька, ключ → ключик\n\n3. **-ка words** → **-очка, -ечка**\n   - рука → рученька, донька → донечка\n\n4. **Consonant changes** may occur:\n   - друг → дружок (г→ж)\n   - книга → книжка (г→ж)\n   - нога → ніженька (г→ж, о→і)"
+          }
+        ]
+      },
+      {
+        "id": "phase-practice",
+        "name": "practice",
+        "duration": 15,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Form Diminutives\n\n1. кіт → ___\n   → **котик**\n\n2. стіл → ___\n   → **столик**\n\n3. вікно → ___\n   → **віконко / віконечко**\n\n4. мама → ___\n   → **мамочка / мамуся**\n\n5. ніч → ___\n   → **ніченька**\n\n6. серце → ___\n   → **серденько**\n\n7. хліб → ___\n   → **хлібчик / хлібець**\n\n8. зірка → ___\n   → **зірочка**"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Match Context to Diminutive\n\nChoose the appropriate form:\n\n1. «___, іди сюди!» (to a child) → **Синочку / Донечко**\n2. «Зачекайте ___!» (polite request) → **хвилиночку**\n3. «Який гарний ___!» (small house) → **будиночок**\n4. «Моя ___ захворіла.» (beloved grandmother) → **бабусенька**\n5. «Дайте ___ води.» (polite) → **трішечки / крапельку**"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Translate with Diminutives\n\n1. My dear mother is the best.\n   → **Моя мамочка найкраща.**\n\n2. Wait just a moment, please.\n   → **Зачекайте хвилиночку, будь ласка.**\n\n3. The kitty is sleeping on the sofa.\n   → **Котик спить на дивані.**\n\n4. What a cozy little house!\n   → **Який затишний будиночок!**\n\n5. She's my little star.\n   → **Вона моя зірочка.**"
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-B1-126-quiz"
+          }
+        ]
+      },
+      {
+        "id": "phase-production",
+        "name": "production",
+        "duration": 10,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Describe with Diminutives\n\nUse diminutives to describe:\n\n**Ваш дім:**\n- Опишіть свій будинок або квартиру, використовуючи зменшувальні форми\n- Example: «У мене є маленька кухонька з двома віконечками...»\n\n**Ваша родина:**\n- Розкажіть про членів родини ласкаво\n- Example: «Моя бабусенька готує найкращі пиріжки...»"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Create Affectionate Messages\n\nWrite short messages using diminutives:\n\n1. To your mother\n2. To a child\n3. To a pet"
+          }
+        ]
+      }
+    ]
+  },
+  "activities": [
+    {
+      "id": "act-uk-B1-126-quiz",
+      "type": "quiz",
+      "title": "Diminutive Forms",
+      "description": "Choose the correct diminutive.",
+      "content": {
+        "type": "quiz",
+        "instructions": "Choose the correct diminutive.",
+        "questions": [
+          {
+            "question": "Зменшувальна форма від «стіл»:",
+            "options": [
+              "столик",
+              "столець"
+            ],
+            "correctIndex": 0,
+            "explanation": "-ик is the common suffix for masculine nouns."
+          },
+          {
+            "question": "«Мамочка» виражає:",
+            "options": [
+              "ласку",
+              "іронію"
+            ],
+            "correctIndex": 0,
+            "explanation": "Affection is the primary meaning."
+          },
+          {
+            "question": "Зменшувальна форма від «вікно»:",
+            "options": [
+              "віконечко",
+              "вікночко"
+            ],
+            "correctIndex": 0,
+            "explanation": "-ечко for neuter after consonant."
+          },
+          {
+            "question": "«Зачекайте хвилиночку» — це:",
+            "options": [
+              "ввічливе прохання",
+              "наказ"
+            ],
+            "correctIndex": 0,
+            "explanation": "Diminutive softens the request."
+          },
+          {
+            "question": "Яке слово НЕ є зменшувальним:",
+            "options": [
+              "батько",
+              "котик"
+            ],
+            "correctIndex": 0,
+            "explanation": "батько is the base form."
+          },
+          {
+            "question": "«Гарненька ситуація» може означати:",
+            "options": [
+              "іронію",
+              "захоплення"
+            ],
+            "correctIndex": 0,
+            "explanation": "Diminutives can express irony."
+          }
+        ],
+        "shuffleQuestions": true,
+        "shuffleOptions": true,
+        "showCorrectAnswers": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "B1",
+      "duration": 5,
+      "tags": [
+        "grammar",
+        "diminutives",
+        "word-formation",
+        "expressiveness"
+      ],
+      "createdAt": "2025-11-30T00:00:00Z",
+      "modifiedAt": "2025-11-30T00:00:00Z"
+    },
+    {
+      "id": "act-uk-B1-126-fillin",
+      "type": "fill-in",
+      "title": "Using Diminutives",
+      "description": "Виберіть правильну форму.",
+      "content": {
+        "type": "fill-in",
+        "instructions": "Виберіть правильну форму."
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "B1",
+      "duration": 5,
+      "tags": [
+        "grammar",
+        "diminutives",
+        "word-formation",
+        "expressiveness"
+      ],
+      "createdAt": "2025-11-30T00:00:00Z",
+      "modifiedAt": "2025-11-30T00:00:00Z"
+    }
+  ],
+  "vocabulary": {
+    "moduleId": "mod-uk-B1-126",
+    "level": "B1",
+    "phase": "B1.4",
+    "wordCount": 0,
+    "transliterationMode": "none",
+    "words": []
+  }
+}

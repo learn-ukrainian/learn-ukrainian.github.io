@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 129: Travel & Geography | Ukrainian B1</title>
+  <style>
+    :root { --primary: #1a5fb4; --primary-light: #3584e4; --success: #26a269; --warning: #e5a50a; --danger: #c01c28; --bg: #fafafa; --card-bg: #fff; --text: #1e1e1e; --text-muted: #5e5e5e; --border: #e0e0e0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+    .top-nav { background: #2e2e2e; color: white; padding: 0.5rem 2rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.875rem; }
+    .top-nav a { color: white; text-decoration: none; }
+    .top-nav a:hover { text-decoration: underline; }
+    .module-nav { display: flex; gap: 1rem; align-items: center; }
+    .module-nav-link { color: rgba(255,255,255,0.8); text-decoration: none; padding: 0.25rem 0.5rem; }
+    .module-nav-link:hover { color: white; }
+    .module-nav-link.disabled { color: rgba(255,255,255,0.3); pointer-events: none; }
+    .nav { position: sticky; top: 0; background: var(--primary); color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; z-index: 100; }
+    .nav h1 { font-size: 1.25rem; }
+    .nav-tabs { display: flex; gap: 0.5rem; }
+    .nav-tab { background: rgba(255,255,255,0.2); border: none; color: white; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; }
+    .nav-tab.active { background: white; color: var(--primary); }
+    main { max-width: 1000px; margin: 0 auto; padding: 2rem; }
+    .section { display: none; } .section.active { display: block; }
+    .lesson-header { text-align: center; margin-bottom: 2rem; padding: 2rem; background: linear-gradient(135deg, #e8f4fd, #f0e8fd); border-radius: 12px; }
+    .level-badge { background: var(--primary); color: white; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.875rem; }
+    .card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 1.5rem; margin-bottom: 1.5rem; }
+    .card h3 { color: var(--primary); margin-bottom: 1rem; }
+    .canvas-note { background: #fffbeb; border-left: 4px solid var(--warning); padding: 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+    .canvas-note h4 { color: var(--warning); margin-bottom: 0.5rem; }
+    .md-content { line-height: 1.7; }
+    .md-content p { margin: 0.75rem 0; }
+    .md-content ul, .md-content ol { margin: 0.75rem 0; padding-left: 1.5rem; }
+    .md-content li { margin: 0.25rem 0; }
+    .md-content strong { color: var(--primary); }
+    .md-content blockquote { background: #e8f4fd; border-left: 4px solid var(--primary); padding: 0.75rem 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+    .md-content blockquote p { margin: 0.25rem 0; }
+    .md-content table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+    .md-content th, .md-content td { border: 1px solid var(--border); padding: 0.5rem 0.75rem; text-align: left; }
+    .md-content th { background: #f5f5f5; font-weight: 600; }
+    .md-content code { background: #f0f0f0; padding: 0.125rem 0.375rem; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
+    .letter-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0; }
+    .letter-group { border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; }
+    .letter-group.true-friends { border-color: var(--success); } .letter-group.true-friends .letters { color: var(--success); }
+    .letter-group.false-friends { border-color: var(--danger); } .letter-group.false-friends .letters { color: var(--danger); }
+    .letter-group.new-letters { border-color: var(--primary); } .letter-group.new-letters .letters { color: var(--primary); }
+    .letters { font-size: 1.75rem; letter-spacing: 0.3rem; }
+    .match-container { display: flex; gap: 3rem; padding: 1rem; position: relative; }
+    .match-column { flex: 1; display: flex; flex-direction: column; gap: 0.75rem; }
+    .match-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; font-size: 1.25rem; cursor: pointer; }
+    .match-item.selected { border-color: var(--primary); background: #e8f4fd; }
+    .match-item.matched { border-color: var(--success); background: #e8f8f0; }
+    .match-item.wrong { border-color: var(--danger); background: #fde8e8; }
+    .match-lines { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+    .quiz-question { border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; }
+    .quiz-question.answered { pointer-events: none; }
+    .quiz-question .cyrillic { font-size: 1.5rem; color: var(--primary); font-weight: 600; }
+    .quiz-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-top: 1rem; }
+    .quiz-option { background: #f5f5f5; border: 2px solid var(--border); border-radius: 8px; padding: 1rem; cursor: pointer; text-align: center; }
+    .quiz-option.correct { border-color: var(--success); background: #d4edda; }
+    .quiz-option.wrong { border-color: var(--danger); background: #f8d7da; }
+    .quiz-explanation { margin-top: 1rem; padding: 1rem; background: #e8f4fd; border-radius: 8px; display: none; }
+    .quiz-explanation.show { display: block; }
+    .sort-pool { background: #f5f5f5; border: 2px dashed var(--border); border-radius: 12px; padding: 1.5rem; min-height: 80px; margin-bottom: 1rem; }
+    .sort-items { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; }
+    .sort-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 0.75rem 1.25rem; font-size: 1.5rem; cursor: grab; }
+    .sort-item.correct { border-color: var(--success); background: #e8f8f0; }
+    .sort-item.wrong { border-color: var(--danger); background: #fde8e8; }
+    .sort-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    .sort-group { border: 2px solid var(--border); border-radius: 12px; padding: 1rem; min-height: 150px; }
+    .sort-group.drag-over { border-color: var(--primary); background: #e8f4fd; }
+    .sort-group h4 { font-size: 0.875rem; text-align: center; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--border); }
+    .sort-group.true-friends h4 { color: var(--success); border-color: var(--success); }
+    .sort-group.false-friends h4 { color: var(--danger); border-color: var(--danger); }
+    .sort-group.new-letters h4 { color: var(--primary); border-color: var(--primary); }
+    .vocab-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; }
+    .vocab-card { border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; text-align: center; }
+    .vocab-card .uk { font-size: 1.75rem; font-weight: 600; color: var(--primary); }
+    .vocab-card .translit { color: var(--text-muted); font-style: italic; }
+    .vocab-card .en { font-weight: 500; margin: 0.25rem 0; }
+    .vocab-card .note { font-size: 0.75rem; color: #613583; background: #f0e8fd; padding: 0.25rem 0.5rem; border-radius: 4px; }
+    .btn { padding: 0.75rem 1.5rem; border: none; border-radius: 8px; cursor: pointer; }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-outline { background: transparent; border: 2px solid var(--border); }
+    .btn-group { display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem; }
+    .score-display { text-align: center; padding: 1rem; background: linear-gradient(135deg, #e8f8f0, #e8f4fd); border-radius: 8px; margin-bottom: 1rem; }
+    .score-display .score { font-size: 2rem; font-weight: 700; color: var(--success); }
+    .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
+    .completion-message.show { display: block; }
+    footer { text-align: center; padding: 2rem; color: var(--text-muted); }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+  </style>
+</head>
+<body>
+  <div class="top-nav">
+    <a href="../index.html">← l2-uk-en Curriculum</a>
+    <div class="module-nav">
+      <a href="module-128.html" class="module-nav-link">← Module 128</a>
+      <a href="index.html" class="module-nav-link">B1 Index</a>
+      <a href="module-130.html" class="module-nav-link">Module 130 →</a>
+    </div>
+  </div>
+  <nav class="nav">
+    <h1>Module 129: Travel & Geography</h1>
+    <div class="nav-tabs">
+      <button class="nav-tab active" data-section="lesson">Lesson</button>
+      
+      <button class="nav-tab" data-section="quiz">Quiz</button>
+      
+      <button class="nav-tab" data-section="vocab">Vocab</button>
+    </div>
+  </nav>
+  <main>
+    <section id="lesson" class="section active">
+      <div class="lesson-header">
+        <span class="level-badge">B1 · B1.4</span>
+        <h2 style="font-size:2rem;margin:0.5rem 0">Travel & Geography</h2>
+        <p style="color:var(--text-muted)">Подорожі та географія</p>
+      </div>
+      
+      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Подорожі | Traveling</h4><div class="md-content"><p>Чи любите ви подорожувати? Куди ви їздили?</p>
+<p>Do you like traveling? Where have you been?</p>
+<ul>
+<li>Які <strong>країни</strong> ви відвідали? | Which countries have you visited?</li>
+<li>Як ви зазвичай подорожуєте? | How do you usually travel?</li>
+<li>Що вам потрібно для поїздки за кордон? | What do you need for traveling abroad?</li>
+</ul></div></div><div class="canvas-note"><h4>### Документи для подорожі | Travel Documents</h4><div class="md-content"><table>
+<thead>
+<tr>
+<th>Ukrainian</th>
+<th>IPA</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>паспорт</td>
+<td>/ˈpɑsport/</td>
+<td>passport</td>
+</tr>
+<tr>
+<td>віза</td>
+<td>/ˈvʲizɑ/</td>
+<td>visa</td>
+</tr>
+<tr>
+<td>посвідчення особи</td>
+<td>/posvʲidˈt͡ʃɛnʲːɑ oˈsobɪ/</td>
+<td>ID card</td>
+</tr>
+<tr>
+<td>страховка</td>
+<td>/strɑˈxowkɑ/</td>
+<td>insurance</td>
+</tr>
+<tr>
+<td>квиток</td>
+<td>/kvɪˈtok/</td>
+<td>ticket</td>
+</tr>
+<tr>
+<td>бронювання</td>
+<td>/bronʲuˈvɑnʲːɑ/</td>
+<td>reservation, booking</td>
+</tr>
+<tr>
+<td>посадковий талон</td>
+<td>/posɑdˈkovɪj tɑˈlon/</td>
+<td>boarding pass</td>
+</tr>
+</tbody>
+</table></div></div><div class="canvas-note"><h4>Кордон та митниця | Border and Customs</h4><div class="md-content"><table>
+<thead>
+<tr>
+<th>Ukrainian</th>
+<th>IPA</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>кордон</td>
+<td>/korˈdon/</td>
+<td>border</td>
+</tr>
+<tr>
+<td>митниця</td>
+<td>/ˈmɪtnɪt͡sʲɑ/</td>
+<td>customs</td>
+</tr>
+<tr>
+<td>прикордонник</td>
+<td>/prɪkorˈdonnɪk/</td>
+<td>border guard</td>
+</tr>
+<tr>
+<td>паспортний контроль</td>
+<td>/pɑsˈportnɪj konˈtrolʲ/</td>
+<td>passport control</td>
+</tr>
+<tr>
+<td>декларація</td>
+<td>/dɛklɑrɑˈt͡sʲijɑ/</td>
+<td>declaration</td>
+</tr>
+<tr>
+<td>перетинати кордон</td>
+<td>/pɛrɛtɪˈnɑtɪ korˈdon/</td>
+<td>to cross the border</td>
+</tr>
+</tbody>
+</table></div></div><div class="canvas-note"><h4>Географія | Geography</h4><div class="md-content"><table>
+<thead>
+<tr>
+<th>Ukrainian</th>
+<th>IPA</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>країна</td>
+<td>/krɑˈjinɑ/</td>
+<td>country</td>
+</tr>
+<tr>
+<td>місто</td>
+<td>/ˈmʲisto/</td>
+<td>city</td>
+</tr>
+<tr>
+<td>столиця</td>
+<td>/stoˈlɪt͡sʲɑ/</td>
+<td>capital</td>
+</tr>
+<tr>
+<td>область</td>
+<td>/ˈoblɑstʲ/</td>
+<td>region, oblast</td>
+</tr>
+<tr>
+<td>півострів</td>
+<td>/pʲivˈostrʲiv/</td>
+<td>peninsula</td>
+</tr>
+<tr>
+<td>острів</td>
+<td>/ˈostrʲiv/</td>
+<td>island</td>
+</tr>
+<tr>
+<td>гори</td>
+<td>/ˈɦorɪ/</td>
+<td>mountains</td>
+</tr>
+<tr>
+<td>море</td>
+<td>/ˈmorɛ/</td>
+<td>sea</td>
+</tr>
+<tr>
+<td>океан</td>
+<td>/okɛˈɑn/</td>
+<td>ocean</td>
+</tr>
+<tr>
+<td>річка</td>
+<td>/ˈrʲit͡ʃkɑ/</td>
+<td>river</td>
+</tr>
+<tr>
+<td>озеро</td>
+<td>/ˈozɛro/</td>
+<td>lake</td>
+</tr>
+</tbody>
+</table></div></div><div class="canvas-note"><h4>Напрямки світу | Cardinal Directions</h4><div class="md-content"><table>
+<thead>
+<tr>
+<th>Ukrainian</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>північ</td>
+<td>north</td>
+</tr>
+<tr>
+<td>південь</td>
+<td>south</td>
+</tr>
+<tr>
+<td>схід</td>
+<td>east</td>
+</tr>
+<tr>
+<td>захід</td>
+<td>west</td>
+</tr>
+<tr>
+<td>північний</td>
+<td>northern</td>
+</tr>
+<tr>
+<td>південний</td>
+<td>southern</td>
+</tr>
+<tr>
+<td>східний</td>
+<td>eastern</td>
+</tr>
+<tr>
+<td>західний</td>
+<td>western</td>
+</tr>
+</tbody>
+</table></div></div><div class="canvas-note"><h4>Види транспорту | Types of Transport</h4><div class="md-content"><table>
+<thead>
+<tr>
+<th>Ukrainian</th>
+<th>English</th>
+<th>Used for</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>літак</td>
+<td>airplane</td>
+<td>air travel</td>
+</tr>
+<tr>
+<td>поїзд</td>
+<td>train</td>
+<td>land travel</td>
+</tr>
+<tr>
+<td>автобус</td>
+<td>bus</td>
+<td>land travel</td>
+</tr>
+<tr>
+<td>корабель</td>
+<td>ship</td>
+<td>sea travel</td>
+</tr>
+<tr>
+<td>пором</td>
+<td>ferry</td>
+<td>short sea crossings</td>
+</tr>
+<tr>
+<td>автомобіль</td>
+<td>car</td>
+<td>personal travel</td>
+</tr>
+</tbody>
+</table></div></div><div class="canvas-note"><h4>Місця | Places</h4><div class="md-content"><table>
+<thead>
+<tr>
+<th>Ukrainian</th>
+<th>IPA</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>аеропорт</td>
+<td>/ɑɛroˈport/</td>
+<td>airport</td>
+</tr>
+<tr>
+<td>вокзал</td>
+<td>/wokˈzɑl/</td>
+<td>train station</td>
+</tr>
+<tr>
+<td>автовокзал</td>
+<td>/ɑwtovoˈkzɑl/</td>
+<td>bus station</td>
+</tr>
+<tr>
+<td>порт</td>
+<td>/port/</td>
+<td>port</td>
+</tr>
+<tr>
+<td>готель</td>
+<td>/ɦoˈtɛlʲ/</td>
+<td>hotel</td>
+</tr>
+<tr>
+<td>хостел</td>
+<td>/ˈxostɛl/</td>
+<td>hostel</td>
+</tr>
+<tr>
+<td>пункт призначення</td>
+<td>/punkt prɪznɑˈt͡ʃɛnʲːɑ/</td>
+<td>destination</td>
+</tr>
+</tbody>
+</table></div></div><div class="canvas-note"><h4>Дієслова | Travel Verbs</h4><div class="md-content"><table>
+<thead>
+<tr>
+<th>Ukrainian</th>
+<th>English</th>
+<th>Aspect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>подорожувати</td>
+<td>to travel</td>
+<td>impf</td>
+</tr>
+<tr>
+<td>їхати / поїхати</td>
+<td>to go (by transport)</td>
+<td>impf/pf</td>
+</tr>
+<tr>
+<td>летіти / полетіти</td>
+<td>to fly</td>
+<td>impf/pf</td>
+</tr>
+<tr>
+<td>пливти / попливти</td>
+<td>to sail</td>
+<td>impf/pf</td>
+</tr>
+<tr>
+<td>бронювати / забронювати</td>
+<td>to book</td>
+<td>impf/pf</td>
+</tr>
+<tr>
+<td>відвідувати / відвідати</td>
+<td>to visit</td>
+<td>impf/pf</td>
+</tr>
+<tr>
+<td>оглядати / оглянути</td>
+<td>to sightsee</td>
+<td>impf/pf</td>
+</tr>
+<tr>
+<td>досліджувати / дослідити</td>
+<td>to explore</td>
+<td>impf/pf</td>
+</tr>
+<tr>
+<td>прибувати / прибути</td>
+<td>to arrive</td>
+<td>impf/pf</td>
+</tr>
+<tr>
+<td>відправлятися / відправитися</td>
+<td>to depart</td>
+<td>impf/pf</td>
+</tr>
+</tbody>
+</table></div></div><div class="canvas-note"><h4>Корисні вирази | Useful Expressions</h4><div class="md-content"><table>
+<thead>
+<tr>
+<th>Ukrainian</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>поїздка за кордон</td>
+<td>trip abroad</td>
+</tr>
+<tr>
+<td>відпустка</td>
+<td>vacation</td>
+</tr>
+<tr>
+<td>туристична путівка</td>
+<td>travel package</td>
+</tr>
+<tr>
+<td>прямий рейс</td>
+<td>direct flight</td>
+</tr>
+<tr>
+<td>пересадка</td>
+<td>transfer, layover</td>
+</tr>
+<tr>
+<td>час у дорозі</td>
+<td>travel time</td>
+</tr>
+<tr>
+<td>місце призначення</td>
+<td>destination</td>
+</tr>
+<tr>
+<td>курортне місто</td>
+<td>resort town</td>
+</tr>
+</tbody>
+</table></div></div><div class="canvas-note"><h4>Україна: географія | Ukraine: Geography</h4><div class="md-content"><p><strong>Важливі місця:</strong></p>
+<ul>
+<li><strong>Київ</strong> — столиця, на річці Дніпро</li>
+<li><strong>Одеса</strong> — портове місто на Чорному морі</li>
+<li><strong>Львів</strong> — західна Україна, історичний центр</li>
+<li><strong>Карпати</strong> — гори на заході</li>
+<li><strong>Крим</strong> — півострів на півдні</li>
+</ul>
+<p><strong>Річки:</strong> Дніпро, Дністер, Південний Буг, Сіверський Донець</p>
+<p><strong>Моря:</strong> Чорне море, Азовське море</p></div></div><div class="canvas-note"><h4>### Match Terms</h4><div class="md-content"><ol>
+<li>кордон — a) border</li>
+<li>віза — b) visa</li>
+<li>літак — c) airplane</li>
+<li>готель — d) hotel</li>
+<li>столиця — e) capital</li>
+</ol></div></div><div class="canvas-note"><h4>Complete Sentences</h4><div class="md-content"><ol>
+<li><p>Для поїздки за кордон потрібен ___ (passport).<br />
+→ <strong>паспорт</strong></p></li>
+<li><p>Літак приземлився в ___ (airport).<br />
+→ <strong>аеропорту</strong></p></li>
+<li><p>Київ — ___ (capital) України.<br />
+→ <strong>столиця</strong></p></li>
+<li><p>Ми ___ (booked) готель заздалегідь.<br />
+→ <strong>забронювали</strong></p></li>
+<li><p>Карпати — це ___ (mountains) на заході.<br />
+→ <strong>гори</strong></p></li>
+</ol></div></div><div class="canvas-note"><h4>Describe a Trip</h4><div class="md-content"><p>Use the vocabulary to describe:</p>
+<ol>
+<li><strong>Документи:</strong> Я взяв паспорт, візу, страховку…</li>
+<li><strong>Транспорт:</strong> Ми летіли літаком, потім їхали поїздом…</li>
+<li><strong>Місця:</strong> Ми відвідали музеї, оглянули старе місто…</li>
+</ol></div></div><div class="canvas-note"><h4>Translate to Ukrainian</h4><div class="md-content"><ol>
+<li><p>We crossed the border by car.<br />
+→ <strong>Ми перетнули кордон на автомобілі.</strong></p></li>
+<li><p>The capital of Ukraine is Kyiv.<br />
+→ <strong>Столиця України — Київ.</strong></p></li>
+<li><p>I booked a direct flight.<br />
+→ <strong>Я забронював прямий рейс.</strong></p></li>
+<li><p>The hotel is near the train station.<br />
+→ <strong>Готель знаходиться біля вокзалу.</strong></p></li>
+</ol></div></div><div class="canvas-note"><h4>### Plan a Trip</h4><div class="md-content"><p>Plan a trip to Ukraine:</p>
+<ul>
+<li>Куди ви поїдете? (місто, регіон)</li>
+<li>Як ви туди дістанетеся? (транспорт)</li>
+<li>Де ви зупинитеся? (готель, хостел)</li>
+<li>Що ви хочете побачити?</li>
+</ul></div></div><div class="canvas-note"><h4>Describe Your Best Trip</h4><div class="md-content"><p>Talk about a memorable journey:</p>
+<ul>
+<li>Куди ви їздили?</li>
+<li>Як довго тривала поїздка?</li>
+<li>Що ви там робили?</li>
+<li>Що вам найбільше сподобалося?</li>
+</ul></div></div></div>
+      <div class="btn-group"><button class="btn btn-primary" onclick="showSection('quiz')">Start →</button></div>
+    </section>
+    
+    <section id="quiz" class="section"><div class="card"><h3>Travel Vocabulary</h3>
+      <div class="score-display"><span class="score"><span id="quiz-score">0</span>/6</span></div>
+      <div id="quiz-container"></div>
+      <div class="completion-message" id="quiz-complete"><h3>Complete!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
+    </div></section>
+    
+    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (0)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
+      <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
+    </section>
+  </main>
+  <footer>Module 129 · curricula-opus</footer>
+  <script>
+    const matchPairs=[];
+    const quizData=[{"question":"Документ для міжнародних поїздок:","options":["паспорт","квиток"],"correctIndex":0,"explanation":"Passport for international travel."},{"question":"Лінія між двома країнами:","options":["кордон","митниця"],"correctIndex":0,"explanation":"Border between countries."},{"question":"Київ — це:","options":["столиця","область"],"correctIndex":0,"explanation":"Capital city."},{"question":"Місце, де зупиняються поїзди:","options":["вокзал","аеропорт"],"correctIndex":0,"explanation":"Train station."},{"question":"Гори на заході України:","options":["Карпати","Альпи"],"correctIndex":0,"explanation":"Carpathian mountains."},{"question":"Перевірка на кордоні:","options":["паспортний контроль","бронювання"],"correctIndex":0,"explanation":"Passport control at the border."}];
+    const sortData={};
+    const vocabData=[];
+    const totalSort=0;
+    function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
+    document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));
+    let matchSel=null,matchScore=0,matchPairsArr=[];
+    document.querySelectorAll('#match-left .match-item').forEach(item=>{item.addEventListener('click',()=>{if(item.classList.contains('matched'))return;document.querySelectorAll('#match-left .match-item').forEach(i=>i.classList.remove('selected'));item.classList.add('selected');matchSel={el:item,pair:item.dataset.pair};});});
+    document.querySelectorAll('#match-right .match-item').forEach(item=>{item.addEventListener('click',()=>{if(item.classList.contains('matched')||!matchSel)return;if(matchSel.pair===item.dataset.pair){matchSel.el.classList.remove('selected');matchSel.el.classList.add('matched');item.classList.add('matched');matchPairsArr.push({left:matchSel.el,right:item});matchScore++;document.getElementById('match-score').textContent=matchScore;drawLines();if(matchScore===matchPairs.length)document.getElementById('match-complete').classList.add('show');}else{item.classList.add('wrong');setTimeout(()=>item.classList.remove('wrong'),300);}matchSel=null;});});
+    function drawLines(){const svg=document.getElementById('match-lines'),c=document.getElementById('match-container');if(!svg||!c)return;const r=c.getBoundingClientRect();svg.innerHTML='';svg.setAttribute('viewBox','0 0 '+r.width+' '+r.height);matchPairsArr.forEach(p=>{const lr=p.left.getBoundingClientRect(),rr=p.right.getBoundingClientRect();const line=document.createElementNS('http://www.w3.org/2000/svg','line');line.setAttribute('x1',lr.right-r.left);line.setAttribute('y1',lr.top+lr.height/2-r.top);line.setAttribute('x2',rr.left-r.left);line.setAttribute('y2',rr.top+rr.height/2-r.top);line.setAttribute('stroke','#26a269');line.setAttribute('stroke-width','2');svg.appendChild(line);});}
+    function resetMatch(){matchSel=null;matchScore=0;matchPairsArr=[];document.getElementById('match-score').textContent='0';document.getElementById('match-complete')?.classList.remove('show');document.getElementById('match-lines').innerHTML='';document.querySelectorAll('#match-container .match-item').forEach(i=>i.classList.remove('matched','selected','wrong'));}
+    window.addEventListener('resize',drawLines);
+    let quizScore=0,quizAns=0;
+    function initQuiz(){const c=document.getElementById('quiz-container');if(!c||!quizData.length)return;c.innerHTML='';quizData.forEach((q,i)=>{const sh=[...q.options].sort(()=>Math.random()-0.5);const cor=sh.indexOf(q.options[q.correctIndex]);const div=document.createElement('div');div.className='quiz-question';div.innerHTML='<h4>Q'+(i+1)+': '+q.question+'</h4><div class="quiz-options">'+sh.map((o,j)=>'<div class="quiz-option" data-c="'+(j===cor)+'" data-q="'+i+'">'+o+'</div>').join('')+'</div><div class="quiz-explanation" id="exp-'+i+'">'+q.explanation+'</div>';c.appendChild(div);});document.querySelectorAll('.quiz-option').forEach(o=>o.addEventListener('click',handleQuiz));}
+    function handleQuiz(e){const opt=e.target,q=opt.closest('.quiz-question');if(q.classList.contains('answered'))return;q.classList.add('answered');if(opt.dataset.c==='true'){opt.classList.add('correct');quizScore++;}else{opt.classList.add('wrong');q.querySelector('[data-c="true"]').classList.add('correct');}document.getElementById('exp-'+opt.dataset.q).classList.add('show');document.getElementById('quiz-score').textContent=quizScore;quizAns++;if(quizAns===quizData.length)document.getElementById('quiz-complete').classList.add('show');}
+    function resetQuiz(){quizScore=0;quizAns=0;document.getElementById('quiz-score').textContent='0';document.getElementById('quiz-complete')?.classList.remove('show');initQuiz();}
+    let sortScore=0,dragItem=null;
+    function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
+    function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
+    function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
+  </script>
+</body>
+</html>

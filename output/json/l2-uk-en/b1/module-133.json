@@ -1,0 +1,273 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-B1-133",
+    "moduleId": "mod-uk-B1-133",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "lessonType": "vocabulary-expansion",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "B1",
+    "phase": "B1.4",
+    "moduleNumber": 133,
+    "title": "Synonymy II: Speaking",
+    "subtitle": "Казати, говорити, розповідати, повідомляти",
+    "description": "Distinguish between Ukrainian verbs of speaking",
+    "objectives": [
+      "Distinguish between Ukrainian verbs of speaking",
+      "Choose the right verb for communication context",
+      "Understand formal vs informal usage",
+      "Master reporting verbs"
+    ],
+    "grammarFocus": [],
+    "totalDuration": 45,
+    "transliterationMode": "none",
+    "tags": [
+      "vocabulary",
+      "synonyms",
+      "verbs",
+      "speaking"
+    ],
+    "version": 1,
+    "createdAt": "2025-11-30T00:00:00Z",
+    "modifiedAt": "2025-11-30T00:00:00Z",
+    "phases": [
+      {
+        "id": "phase-warm-up",
+        "name": "warm-up",
+        "duration": 5,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Як сказати «сказати»? | How to Say \"Say\"?\n\nВ українській багато способів описати мовлення:\n\nUkrainian has many ways to describe speaking:\n\n- Він **сказав**: «Привіт!»\n- Вона **говорила** зі мною.\n- Він **розповів** історію.\n- Новини **повідомили** про подію.\n\nКожне дієслово має свої нюанси."
+          }
+        ]
+      },
+      {
+        "id": "phase-presentation",
+        "name": "presentation",
+        "duration": 15,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Казати / Сказати | To Say, Tell\n\n**Казати/сказати** — найзагальніше дієслово.\n\n| Usage | Example | English |\n|-------|---------|---------|\n| Say words | Він сказав «так». | He said \"yes\". |\n| Tell someone | Скажи їй правду. | Tell her the truth. |\n| General | Що ти кажеш? | What are you saying? |\n\n**Forms:** казати (impf) / сказати (pf)\n\n**Patterns:**\n- сказати + що (content)\n- сказати + кому (recipient)\n- сказати + щоб (command)"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Говорити / Сказати | To Speak, Talk\n\n**Говорити** — процес мовлення, розмова.\n\n| Usage | Example | English |\n|-------|---------|---------|\n| Speak | Він говорить українською. | He speaks Ukrainian. |\n| Talk | Ми говорили годину. | We talked for an hour. |\n| Discuss | Говорили про погоду. | Talked about weather. |\n\n**Forms:** говорити (impf) / only impf commonly used for process\n\n**Patterns:**\n- говорити + мовою (language)\n- говорити + з ким (with whom)\n- говорити + про що (about what)"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Розповідати / Розповісти | To Tell, Narrate\n\n**Розповідати** — передавати інформацію, історію.\n\n| Usage | Example | English |\n|-------|---------|---------|\n| Tell story | Розповів казку. | Told a fairy tale. |\n| Narrate | Розповідав про поїздку. | Was telling about the trip. |\n| Share | Розповіла секрет. | Shared a secret. |\n\n**Forms:** розповідати (impf) / розповісти (pf)\n\n**Patterns:**\n- розповідати + про що (about what)\n- розповідати + кому (to whom)\n- розповідати + історію/казку (a story)"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Повідомляти / Повідомити | To Inform, Report\n\n**Повідомляти** — офіційно інформувати.\n\n| Usage | Example | English |\n|-------|---------|---------|\n| Report | Новини повідомили... | The news reported... |\n| Inform | Повідомте мене. | Inform me. |\n| Announce | Повідомили про зміни. | Announced changes. |\n\n**Forms:** повідомляти (impf) / повідомити (pf)\n\n**Note:** More formal, official contexts."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Оповідати / Оповісти | To Narrate (Literary)\n\n**Оповідати** — літературне, книжне.\n\n| Usage | Example | English |\n|-------|---------|---------|\n| Narrate | Автор оповідає. | The author narrates. |\n| Tell (literary) | Оповідь оповідає про... | The story tells about... |\n\n**Note:** Used in literary contexts, not everyday speech."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Заявляти / Заявити | To Declare, State\n\n**Заявляти** — офіційно, публічно.\n\n| Usage | Example | English |\n|-------|---------|---------|\n| Declare | Президент заявив... | The president declared... |\n| State | Заявив про відставку. | Stated resignation. |\n\n**Note:** Official declarations."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Стверджувати | To Claim, Assert\n\n**Стверджувати** — наполягати на правдивості.\n\n| Usage | Example | English |\n|-------|---------|---------|\n| Claim | Він стверджує, що... | He claims that... |\n| Assert | Стверджував свою невинність. | Asserted his innocence. |"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Порівняння | Comparison\n\n| Verb | Formality | Type | Example |\n|------|-----------|------|---------|\n| казати | neutral | general | Що кажеш? |\n| говорити | neutral | process | Говорили годину. |\n| розповідати | neutral | narrative | Розповів історію. |\n| повідомляти | formal | report | Повідомили новину. |\n| заявляти | formal | declare | Заявив офіційно. |"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Колокації | Collocations\n\n| Verb | Common Objects |\n|------|----------------|\n| сказати | правду, слово, «так/ні» |\n| говорити | мовою, правду, багато |\n| розповідати | історію, казку, про себе |\n| повідомляти | новину, інформацію |\n| заявляти | про намір, офіційно |"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Вирази | Expressions\n\n| Ukrainian | English |\n|-----------|---------|\n| Як сказати... | How to say... |\n| Так би мовити | So to speak |\n| М'яко кажучи | To put it mildly |\n| Власне кажучи | Strictly speaking |\n| Між нами кажучи | Between us |\n| Чесно кажучи | Honestly speaking |"
+          }
+        ]
+      },
+      {
+        "id": "phase-practice",
+        "name": "practice",
+        "duration": 15,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Choose the Right Verb\n\n1. Він ___ (said) «Добрий день».\n   → **сказав**\n\n2. Вона ___ (told the story) про свою подорож.\n   → **розповіла**\n\n3. Новини ___ (reported) про аварію.\n   → **повідомили**\n\n4. Ми ___ (talked) дві години.\n   → **говорили**\n\n5. Президент ___ (declared) про нові реформи.\n   → **заявив**"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Complete with Correct Form\n\n1. Що ти ___ (сказати/говорити)? — What are you saying?\n   → **кажеш**\n\n2. Вона ___ (говорити) трьома мовами.\n   → **говорить**\n\n3. Він ___ (розповісти) нам цікаву історію.\n   → **розповів**\n\n4. Офіційно ___ (повідомити), що...\n   → **повідомили**\n\n5. ___ (сказати) їй правду!\n   → **Скажи**"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Match Context to Verb\n\n1. Fairy tale to children → **розповідати**\n2. News announcement → **повідомляти**\n3. Casual chat → **говорити**\n4. Short answer → **сказати**\n5. Official statement → **заявляти**"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Translate\n\n1. What did he say?\n   → **Що він сказав?**\n\n2. She speaks Ukrainian fluently.\n   → **Вона вільно говорить українською.**\n\n3. Tell me about yourself.\n   → **Розкажіть про себе.**\n\n4. The news reported an accident.\n   → **Новини повідомили про аварію.**"
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-B1-133-quiz"
+          }
+        ]
+      },
+      {
+        "id": "phase-production",
+        "name": "production",
+        "duration": 10,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Report a Conversation\n\nDescribe a recent conversation:\n\n- Що вам **сказали**?\n- Про що ви **говорили**?\n- Що вам **розповіли**?"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "News Report\n\nPractice being a news anchor:\n\n- Сьогодні **повідомили**, що...\n- Президент **заявив**...\n- Очевидці **розповіли**..."
+          }
+        ]
+      }
+    ]
+  },
+  "activities": [
+    {
+      "id": "act-uk-B1-133-quiz",
+      "type": "quiz",
+      "title": "Speaking Verbs",
+      "description": "Choose the verb with the right nuance.",
+      "content": {
+        "type": "quiz",
+        "instructions": "Choose the verb with the right nuance.",
+        "questions": [
+          {
+            "question": "Для новин:",
+            "options": [
+              "повідомляти",
+              "казати"
+            ],
+            "correctIndex": 0,
+            "explanation": "Formal reporting."
+          },
+          {
+            "question": "Для історії:",
+            "options": [
+              "розповідати",
+              "говорити"
+            ],
+            "correctIndex": 0,
+            "explanation": "Narrative telling."
+          },
+          {
+            "question": "Для процесу розмови:",
+            "options": [
+              "говорити",
+              "сказати"
+            ],
+            "correctIndex": 0,
+            "explanation": "Process of speaking."
+          },
+          {
+            "question": "Для короткої відповіді:",
+            "options": [
+              "сказати",
+              "розповідати"
+            ],
+            "correctIndex": 0,
+            "explanation": "Short statement."
+          },
+          {
+            "question": "Для офіційної заяви:",
+            "options": [
+              "заявити",
+              "казати"
+            ],
+            "correctIndex": 0,
+            "explanation": "Official declaration."
+          },
+          {
+            "question": "«Чесно кажучи» means:",
+            "options": [
+              "honestly speaking",
+              "telling a story"
+            ],
+            "correctIndex": 0,
+            "explanation": "Expression with казати."
+          }
+        ],
+        "shuffleQuestions": true,
+        "shuffleOptions": true,
+        "showCorrectAnswers": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "B1",
+      "duration": 5,
+      "tags": [
+        "vocabulary",
+        "synonyms",
+        "verbs",
+        "speaking"
+      ],
+      "createdAt": "2025-11-30T00:00:00Z",
+      "modifiedAt": "2025-11-30T00:00:00Z"
+    },
+    {
+      "id": "act-uk-B1-133-fillin",
+      "type": "fill-in",
+      "title": "News Report",
+      "description": "Напишіть новинний репортаж.",
+      "content": {
+        "type": "fill-in",
+        "instructions": "Напишіть новинний репортаж."
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "B1",
+      "duration": 5,
+      "tags": [
+        "vocabulary",
+        "synonyms",
+        "verbs",
+        "speaking"
+      ],
+      "createdAt": "2025-11-30T00:00:00Z",
+      "modifiedAt": "2025-11-30T00:00:00Z"
+    }
+  ],
+  "vocabulary": {
+    "moduleId": "mod-uk-B1-133",
+    "level": "B1",
+    "phase": "B1.4",
+    "wordCount": 0,
+    "transliterationMode": "none",
+    "words": []
+  }
+}

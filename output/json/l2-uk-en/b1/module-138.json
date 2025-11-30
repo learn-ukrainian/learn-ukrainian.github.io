@@ -1,0 +1,213 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-B1-138",
+    "moduleId": "mod-uk-B1-138",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "lessonType": "revision",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "B1",
+    "phase": "B1.4",
+    "moduleNumber": 138,
+    "title": "B1 Integration I",
+    "subtitle": "Grammar Skills Review",
+    "description": "Review all B1 grammar topics",
+    "objectives": [
+      "Review all B1 grammar topics",
+      "Practice aspect, motion verbs, complex sentences",
+      "Integrate reported speech and participles",
+      "Apply grammar in connected discourse"
+    ],
+    "grammarFocus": [],
+    "totalDuration": 45,
+    "transliterationMode": "none",
+    "tags": [
+      "practice",
+      "integration",
+      "grammar",
+      "review"
+    ],
+    "version": 1,
+    "createdAt": "2025-11-30T00:00:00Z",
+    "modifiedAt": "2025-11-30T00:00:00Z",
+    "phases": [
+      {
+        "id": "phase-warm-up",
+        "name": "warm-up",
+        "duration": 5,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Огляд граматики B1 | B1 Grammar Overview\n\nМи вивчили багато граматичних тем на рівні B1:\n\nWe covered many grammar topics at B1 level:\n\n- **B1.1:** Aspect, Motion verbs\n- **B1.2:** Complex sentences, Conditionals\n- **B1.3:** Reported speech, Participles\n- **B1.4:** Diminutives, Numerals\n\nТепер час інтегрувати все!"
+          }
+        ]
+      },
+      {
+        "id": "phase-presentation",
+        "name": "presentation",
+        "duration": 15,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Огляд ключових тем | Key Topics Review\n\n#### 1. Вид дієслова | Aspect (Modules 81-88)\n\n**Доконаний** (perfective) — результат, одноразова дія\n**Недоконаний** (imperfective) — процес, повторювана дія\n\n| Context | Aspect | Example |\n|---------|--------|---------|\n| Result | pf | Я **написав** листа. |\n| Process | impf | Я **писав** листа годину. |\n| Habitual | impf | Я завжди **писав** листи. |\n| Future single | pf | Я **напишу** завтра. |\n| Future ongoing | impf | Я **буду писати** весь день. |\n\n#### 2. Дієслова руху | Motion Verbs (Modules 89-94)\n\n| Prefix | Meaning | Example |\n|--------|---------|---------|\n| при- | arrive | прийти, приїхати |\n| ви- | exit | вийти, виїхати |\n| в-/у- | enter | увійти, в'їхати |\n| пере- | cross | перейти, переїхати |\n| за- | drop by | зайти, заїхати |\n| по- | set off | піти, поїхати |\n\n#### 3. Складні речення | Complex Sentences (Modules 101-110)\n\n| Type | Connector | Example |\n|------|-----------|---------|\n| Relative | який | Людина, яка прийшла... |\n| Purpose | щоб | Прийшов, щоб допомогти. |\n| Conditional | якщо/якби | Якщо матиму час... / Якби я знав... |\n| Concessive | хоча | Хоча це важко... |\n| Causal | тому що | Тому що він хворий... |\n| Temporal | коли | Коли я прийшов... |\n\n#### 4. Непряма мова | Reported Speech (Modules 116-118)\n\n| Type | Structure | Example |\n|------|-----------|---------|\n| Statement | ...що... | Він сказав, що він працює. |\n| Question | ...чи.../question word | Він запитав, чи я прийду. |\n| Command | ...щоб + past | Він попросив, щоб я прийшов. |\n\n#### 5. Дієприкметники та дієприслівники | Participles (Modules 119-121)\n\n| Type | Formation | Example |\n|------|-----------|---------|\n| Past passive | -ний/-тий | написаний, закритий |\n| Short passive | -но/-то | написано, закрито |\n| Adverbial impf | -учи/-ючи | читаючи |\n| Adverbial pf | -вши/-ши | прочитавши |"
+          }
+        ]
+      },
+      {
+        "id": "phase-practice",
+        "name": "practice",
+        "duration": 15,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Integrated Exercises\n\n#### Exercise 1: Aspect + Motion\n\nComplete with correct aspect and motion verb:\n\n1. Вчора я ___ (приходити/прийти) додому о сьомій.\n   → **прийшов** (single completed action)\n\n2. Він завжди ___ (заходити/зайти) до кав'ярні перед роботою.\n   → **заходить** (habitual)\n\n3. Вона ___ (виходити/вийти) з дому, коли я ___ (телефонувати/зателефонувати).\n   → **виходила... зателефонував** (process + interruption)\n\n4. Коли ти ___ (їхати) на роботу, ти ___ (бачити/побачити) той магазин?\n   → **їдеш... бачиш** (habitual + habitual)\n\n#### Exercise 2: Complex Sentences\n\nCombine using appropriate connectors:\n\n1. Він не прийшов. Він захворів.\n   → **Він не прийшов, тому що захворів.**\n\n2. Погода була погана. Ми пішли гуляти.\n   → **Хоча погода була погана, ми пішли гуляти.**\n\n3. Я матиму час. Я тобі зателефоную.\n   → **Якщо матиму час, я тобі зателефоную.**\n\n4. Я хочу. Ти прийдеш.\n   → **Я хочу, щоб ти прийшов.**\n\n#### Exercise 3: Reported Speech\n\nConvert to reported speech:\n\n1. Він сказав: «Я працюю в банку.»\n   → **Він сказав, що він працює в банку.**\n\n2. Вона запитала: «Ти прийдеш завтра?»\n   → **Вона запитала, чи я прийду завтра.**\n\n3. Мама сказала: «Прибери кімнату!»\n   → **Мама сказала, щоб я прибрав кімнату.**\n\n4. Він запитав: «Де ти живеш?»\n   → **Він запитав, де я живу.**\n\n#### Exercise 4: Participles\n\nTransform using participles:\n\n1. Книга, яку він написав, стала бестселером.\n   → **Написана ним книга стала бестселером.**\n\n2. Він читав книгу і пив каву.\n   → **Читаючи книгу, він пив каву.**\n\n3. Вона закінчила роботу і пішла додому.\n   → **Закінчивши роботу, вона пішла додому.**\n\n4. Документ підписали.\n   → **Документ підписано.**"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "Mixed Practice\n\n#### Complete the Story\n\nFill in with appropriate forms:\n\nВчора я (1)___ (вирішувати/вирішити) відвідати друга, (2)___ (який) живе в іншому місті. Я (3)___ (виходити/вийти) з дому рано, (4)___ (тому що/хоча) хотів встигнути на ранковий поїзд.\n\n(5)___ (Їхати/Поїхавши) в поїзді, я читав книгу. Друг (6)___ (сказати) мені раніше, (7)___ (що/щоб) він буде чекати на вокзалі.\n\nКоли я (8)___ (прибувати/прибути), він уже був там. Ми чудово провели час, (9)___ (хоча/тому що) погода була погана.\n\n**Answers:**\n1. вирішив\n2. який\n3. вийшов\n4. тому що\n5. Їдучи\n6. сказав\n7. що\n8. прибув\n9. хоча"
+          },
+          {
+            "type": "activity",
+            "activityId": "act-uk-B1-138-quiz"
+          }
+        ]
+      },
+      {
+        "id": "phase-production",
+        "name": "production",
+        "duration": 10,
+        "items": [
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Tell a Story\n\nUse all B1 grammar to tell a story:\n\nInclude:\n- Motion verbs with prefixes\n- Different aspects\n- Complex sentences (якщо, хоча, тому що)\n- Reported speech\n- At least one participle\n\n**Example start:**\n«Минулого тижня я вирішив поїхати до Львова. Хоча погода була погана, я все одно вирушив...»"
+          }
+        ]
+      }
+    ]
+  },
+  "activities": [
+    {
+      "id": "act-uk-B1-138-quiz",
+      "type": "quiz",
+      "title": "Grammar Integration",
+      "description": "Choose the correct form.",
+      "content": {
+        "type": "quiz",
+        "instructions": "Choose the correct form.",
+        "questions": [
+          {
+            "question": "Він завжди ___ на роботу о восьмій.",
+            "options": [
+              "приходить",
+              "прийшов"
+            ],
+            "correctIndex": 0,
+            "explanation": "Habitual action = imperfective."
+          },
+          {
+            "question": "Вона сказала, ___ вона хвора.",
+            "options": [
+              "що",
+              "чи"
+            ],
+            "correctIndex": 0,
+            "explanation": "Statement = що."
+          },
+          {
+            "question": "___ книгу, він заснув.",
+            "options": [
+              "Прочитавши",
+              "Читаючи"
+            ],
+            "correctIndex": 0,
+            "explanation": "Completed action before main verb."
+          },
+          {
+            "question": "Я прийшов, ___ допомогти.",
+            "options": [
+              "щоб",
+              "що"
+            ],
+            "correctIndex": 0,
+            "explanation": "Purpose = щоб."
+          },
+          {
+            "question": "___ він мав час, він би прийшов.",
+            "options": [
+              "Якби",
+              "Якщо"
+            ],
+            "correctIndex": 0,
+            "explanation": "Unreal conditional = якби."
+          },
+          {
+            "question": "Роботу вже ___.",
+            "options": [
+              "зроблено",
+              "зроблена"
+            ],
+            "correctIndex": 0,
+            "explanation": "Short passive form."
+          }
+        ],
+        "shuffleQuestions": true,
+        "shuffleOptions": true,
+        "showCorrectAnswers": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "B1",
+      "duration": 5,
+      "tags": [
+        "practice",
+        "integration",
+        "grammar",
+        "review"
+      ],
+      "createdAt": "2025-11-30T00:00:00Z",
+      "modifiedAt": "2025-11-30T00:00:00Z"
+    },
+    {
+      "id": "act-uk-B1-138-fillin",
+      "type": "fill-in",
+      "title": "Comprehensive Story",
+      "description": "Перекажіть історію, використовуючи всю граматику B1.",
+      "content": {
+        "type": "fill-in",
+        "instructions": "Перекажіть історію, використовуючи всю граматику B1."
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "B1",
+      "duration": 5,
+      "tags": [
+        "practice",
+        "integration",
+        "grammar",
+        "review"
+      ],
+      "createdAt": "2025-11-30T00:00:00Z",
+      "modifiedAt": "2025-11-30T00:00:00Z"
+    }
+  ],
+  "vocabulary": {
+    "moduleId": "mod-uk-B1-138",
+    "level": "B1",
+    "phase": "B1.4",
+    "wordCount": 0,
+    "transliterationMode": "none",
+    "words": []
+  }
+}
