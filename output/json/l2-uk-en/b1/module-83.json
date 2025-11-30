@@ -5,7 +5,7 @@
     "moduleId": "mod-uk-B1-83",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "methodology": "ppp",
+    "lessonType": "grammar-introduction",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -73,85 +73,8 @@
             "teacherNotes": "The Same Event, Different Perspective\n\n| Imperfective (process) | Perfective (result) |\n|----------------------|---------------------|\n| Я **читав** цю книгу. | Я **прочитав** цю книгу. |\n| I was reading this book. | I read (finished) this book. |\n| Вона **готувала** вечерю. | Вона **приготувала** вечерю. |\n| She was cooking dinner. | She cooked dinner (it's ready). |\n| Він **писав** листа. | Він **написав** листа. |\n| He was writing a letter. | He wrote the letter (done). |\n\n> **Notice:** The same real-world situation can be described with either aspect. The choice depends on what you want to emphasize."
           },
           {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Duration Words Demand Imperfective\n\nExpressions of duration require imperfective:\n\n- **весь день** - all day\n- **цілий тиждень** - the whole week\n- **три години** - for three hours\n- **довго** - for a long time\n- **весь час** - all the time\n\n**Examples:**\n\n- Ми **чекали** на тебе годину. - We were waiting for you for an hour.\n- Він **працював** там п'ять років. - He worked there for five years.\n- Вона **спала** весь день. - She slept all day.\n- Я **думав** про це довго. - I was thinking about it for a long time.\n\n**NOT:** ~~Ми зачекали на тебе годину.~~ (Perfective doesn't combine with duration)"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Result Words Demand Perfective\n\nExpressions of result or completion require perfective:\n\n- **вже** - already\n- **нарешті** - finally\n- **за годину** - in an hour (completion time)\n- **швидко** - quickly (completed quickly)\n\n**Examples:**\n\n- Він **вже приїхав**. - He has already arrived.\n- Нарешті ми **закінчили**! - Finally we finished!\n- Вона **зробила** це за годину. - She did it in an hour.\n- Я швидко **поснідав**. - I quickly had breakfast."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Questions: Process vs Result\n\n**Asking about process (imperfective):**\n\n- Що ти робив? - What were you doing?\n- Чим ти займався? - What were you occupied with?\n- Як ти проводив час? - How were you spending time?\n- Довго ти чекав? - Were you waiting long?\n\n**Asking about result (perfective):**\n\n- Що ти зробив? - What did you do/accomplish?\n- Ти зробив це? - Did you do it?\n- Ти вже поїв? - Have you eaten already?\n- Все зрозумів? - Did you understand everything?"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Interrupted Actions = Imperfective\n\nWhen an action was **interrupted** (not completed), use imperfective:\n\n- Я **читав** книгу, коли він прийшов. - I was reading a book when he came.\n- Вона **готувала** вечерю, але не закінчила. - She was cooking dinner but didn't finish.\n- Ми **дивилися** фільм, коли зникло світло. - We were watching a movie when the power went out.\n\nThe action was in progress but something interrupted it."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Completed Despite Duration = Perfective\n\nIf an action was completed, use perfective even with time:\n\n- Я **прочитав** книгу **за тиждень**. - I read the book in a week.\n- Вона **написала** статтю **за два дні**. - She wrote the article in two days.\n\n**\"За + time\"** means \"within that time, completed.\" Different from duration!\n\nCompare:\n- Я читав книгу тиждень. (Process: spent a week reading)\n- Я прочитав книгу за тиждень. (Result: finished it within a week)"
-          },
-          {
             "type": "activity",
             "activityId": "act-uk-B1-83-matchup"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Choose: Result or Process?\n\n1. Я ___ (дивився/подивився) цей фільм три рази. → **дивився** (three times = process)\n2. Ти вже ___ (снідав/поснідав)? → **поснідав** (already = result)\n3. Вона ___ (працювала/попрацювала) там п'ять років. → **працювала** (duration)\n4. Він швидко ___ (одягався/одягнувся). → **одягнувся** (quickly completed)\n5. Ми ___ (будували/побудували) дім за рік. → **побудували** (completed in a year)\n6. Що ви ___ (робили/зробили) весь день? → **робили** (all day = process)"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Answer the Questions\n\nAnswer using the correct aspect:\n\n**Q:** Що ти робив учора ввечері?\n**A:** Я ___ (читав/прочитав) книгу. → **читав** (process question)\n\n**Q:** Ти вже прочитав цю книгу?\n**A:** Так, я вже ___ (читав/прочитав) її. → **прочитав** (result question)\n\n**Q:** Довго ти готував вечерю?\n**A:** Так, я ___ (готував/приготував) її дві години. → **готував** (duration)\n\n**Q:** Вечеря готова?\n**A:** Так, я вже ___ (готував/приготував) її. → **приготував** (result)"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Complete the Dialogues\n\n**Dialogue 1:**\n- A: Що ти робив у вихідні?\n- B: Я ___ (писав/написав) статтю.\n- A: Ти її закінчив?\n- B: Так, я ___ (писав/написав) її в неділю.\n\n**Answers:** писав (process), написав (result)\n\n**Dialogue 2:**\n- A: Де ти був?\n- B: Я ___ (чекав/зачекав) на автобус.\n- A: Довго?\n- B: Так, я ___ (чекав/зачекав) двадцять хвилин.\n\n**Answers:** чекав (process), чекав (duration = imperfective)"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Transform Sentences\n\nChange perspective from result to process:\n\n1. Він прочитав книгу. → Він **читав** книгу весь вечір.\n2. Ми побудували дім. → Ми **будували** дім два роки.\n3. Вона написала листа. → Вона **писала** листа годину.\n\nChange perspective from process to result:\n\n1. Я вчив нові слова. → Я **вивчив** нові слова.\n2. Вона готувала обід. → Вона **приготувала** обід.\n3. Ми шукали ключі. → Ми **знайшли** ключі."
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-B1-83-quiz"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-B1-83-groupsort"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Describe Your Day: Two Ways\n\nDescribe what you did yesterday using BOTH perspectives:\n\n**Process focus (how you spent time):**\nУчора я працював весь день. Я писав звіти, відповідав на листи, розмовляв з колегами...\n\n**Result focus (what you accomplished):**\nУчора я написав три звіти, відповів на всі листи, домовився про зустріч..."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Interview Questions\n\nAsk your partner:\n1. Що ти робив у вихідні? (process)\n2. Що ти зробив цього тижня? (result)\n3. Над чим ти працював останнім часом? (process)\n4. Що ти вже закінчив? (result)"
           }
         ]
       }

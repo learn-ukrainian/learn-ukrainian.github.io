@@ -5,7 +5,7 @@
     "moduleId": "mod-uk-B1-90",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "methodology": "ppp",
+    "lessonType": "grammar-introduction",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -46,100 +46,7 @@
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "### Prefixes Change Everything\n\nWhen you add a prefix to a motion verb:\n1. It becomes **perfective**\n2. It gains specific **directional meaning**\n3. It creates a new **aspect pair**\n\nToday: три ключові префікси для руху — при-, ви-, в-/у-"
-          }
-        ]
-      },
-      {
-        "id": "phase-presentation",
-        "name": "presentation",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Prefix при- (Arrival)\n\n**Meaning:** Movement TO a destination, arrival\n\n| Base (impf) | Prefixed (pf) | New Imperfective | English |\n|-------------|---------------|------------------|---------|\n| іти/ходити | прийти | приходити | to come, arrive (on foot) |\n| їхати/їздити | приїхати | приїжджати | to arrive (by vehicle) |\n| бігти/бігати | прибігти | прибігати | to come running |\n| летіти/літати | прилетіти | прилітати | to arrive (by plane) |\n| плисти/плавати | приплисти | припливати | to arrive (by water) |\n| нести/носити | принести | приносити | to bring (carrying) |\n| везти/возити | привезти | привозити | to bring (by vehicle) |\n| вести/водити | привести | приводити | to bring (leading) |\n\n**Examples:**\n\n- Він **прийшов** о третій. - He came at three.\n- Вона **приїхала** з Києва. - She arrived from Kyiv.\n- Мама **принесла** вечерю. - Mom brought dinner.\n- Він завжди **приходить** вчасно. - He always comes on time.\n- Літак **прилітає** о восьмій. - The plane arrives at eight.\n\n> **Pattern:** при- = TO a point, arrival at destination"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Prefix ви- (Exit, Out)\n\n**Meaning:** Movement OUT of a place\n\n| Base (impf) | Prefixed (pf) | New Imperfective | English |\n|-------------|---------------|------------------|---------|\n| іти/ходити | вийти | виходити | to go out, exit |\n| їхати/їздити | виїхати | виїжджати | to drive out, leave |\n| бігти/бігати | вибігти | вибігати | to run out |\n| летіти/літати | вилетіти | вилітати | to fly out |\n| нести/носити | винести | виносити | to carry out |\n| везти/возити | вивезти | вивозити | to take out (vehicle) |\n| вести/водити | вивести | виводити | to lead out |\n\n**Examples:**\n\n- Він **вийшов** з кімнати. - He went out of the room.\n- Вона **виїхала** з міста. - She left the city.\n- Дитина **вибігла** на вулицю. - The child ran out to the street.\n- Будь ласка, **винесіть** сміття. - Please take out the trash.\n- Я **виходжу** з дому о восьмій. - I leave home at eight.\n\n> **Pattern:** ви- = OUT of, exit from"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Prefix в-/у- (Entry, In)\n\n**Meaning:** Movement INTO a place\n\n| Base (impf) | Prefixed (pf) | New Imperfective | English |\n|-------------|---------------|------------------|---------|\n| іти/ходити | увійти | входити | to enter (on foot) |\n| їхати/їздити | в'їхати | в'їжджати | to drive in |\n| бігти/бігати | вбігти | вбігати | to run in |\n| летіти/літати | влетіти | влітати | to fly in |\n| нести/носити | внести | вносити | to bring in |\n| везти/возити | ввезти | ввозити | to drive in (cargo) |\n| вести/водити | ввести | вводити | to lead in |\n\n**Note:** Use **у-** before consonants for easier pronunciation (увійти), **в-** before vowels or in writing.\n\n**Examples:**\n\n- Вона **увійшла** до кімнати. - She entered the room.\n- Машина **в'їхала** у двір. - The car drove into the yard.\n- Кіт **вбіг** у дім. - The cat ran into the house.\n- **Внесіть** валізи до кімнати. - Bring the suitcases into the room.\n- Він **входить** без стуку. - He enters without knocking.\n\n> **Pattern:** в-/у- = INTO, entry"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Compare: при- vs в-/у-\n\nBoth involve arrival, but:\n\n- **при-** = arrival at destination (general)\n- **в-/у-** = entry INTO an enclosed space\n\n| при- | в-/у- |\n|------|-------|\n| Він **прийшов** додому. | Він **увійшов** до кімнати. |\n| He came home. | He entered the room. |\n| Вона **приїхала** до Києва. | Вона **в'їхала** до міста. |\n| She arrived in Kyiv. | She drove into the city. |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Conjugation: Key Verbs\n\n**Прийти (pf) - to come:**\n| Pronoun | Past | Future |\n|---------|------|--------|\n| я | прийшов/прийшла | прийду |\n| ти | прийшов/прийшла | прийдеш |\n| він/вона | прийшов/прийшла | прийде |\n| ми | прийшли | прийдемо |\n| ви | прийшли | прийдете |\n| вони | прийшли | прийдуть |\n\n**Приходити (impf) - to come:**\n| Pronoun | Present | Past |\n|---------|---------|------|\n| я | приходжу | приходив/ла |\n| ти | приходиш | приходив/ла |\n| він/вона | приходить | приходив/ла |\n| ми | приходимо | приходили |\n| ви | приходите | приходили |\n| вони | приходять | приходили |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Aspect Pairs After Prefixation\n\n| Perfective (prefix + uni) | Imperfective (new) |\n|---------------------------|-------------------|\n| прийти | приходити |\n| приїхати | приїжджати |\n| вийти | виходити |\n| виїхати | виїжджати |\n| увійти | входити |\n| в'їхати | в'їжджати |\n\n**Note:** The new imperfective is formed from the perfective, often with suffix change (-ити → -джати/-ходити)."
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-B1-90-matchup"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Choose the Correct Prefix\n\n1. Він ___ (прийшов/вийшов) з кімнати. → **вийшов** (out of)\n2. Вона ___ (приїхала/виїхала) до Львова. → **приїхала** (arrived at)\n3. Кіт ___ (вбіг/вибіг) на вулицю. → **вибіг** (out)\n4. Будь ласка, ___ (внесіть/винесіть) квіти до кімнати. → **внесіть** (in)\n5. Літак ___ (прилетів/вилетів) з Києва. → **вилетів** (departed from)\n6. Гості ___ (прийшли/увійшли) о шостій. → **прийшли** (arrived)\n7. Вона ___ (увійшла/вийшла) до кабінету директора. → **увійшла** (entered)"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Form the Aspect Pair\n\nGive the imperfective for these perfective verbs:\n\n1. прийти → **приходити**\n2. вийти → **виходити**\n3. приїхати → **приїжджати**\n4. виїхати → **виїжджати**\n5. увійти → **входити**\n6. принести → **приносити**\n7. винести → **виносити**"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Choose Aspect Based on Context\n\n1. Він завжди ___ (приходить/прийде) вчасно. → **приходить** (always)\n2. Вона вже ___ (приходила/прийшла). → **прийшла** (already, result)\n3. Я ___ (виходжу/вийду) з дому о восьмій щодня. → **виходжу** (every day)\n4. Коли він ___ (входив/увійшов), усі замовкли. → **увійшов** (single event)\n5. Поїзд ___ (прибуває/прибув) о третій щодня. → **прибуває** (every day)"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Complete Sentences\n\nUse correct prefixed verb:\n\n1. Гості ___ о п'ятій. (arrive, pf) → **прийшли/приїхали**\n2. Вона щодня ___ з роботи о шостій. (come, impf) → **приходить**\n3. Діти ___ на вулицю гратися. (run out, pf) → **вибігли**\n4. ___ , будь ласка. (enter, imperative) → **Увійдіть** / **Заходьте**\n5. Він ___ з машини і пішов. (get out, pf) → **вийшов**"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-B1-90-quiz"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-B1-90-groupsort"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Describe Arrivals and Departures\n\nUse при-, ви-, в-/у- to describe:\n\n**Example - airport:**\nМи **приїхали** до аеропорту о шостій. Ми **увійшли** до терміналу і пішли на реєстрацію. Літак **вилетів** о восьмій. Ми **прилетіли** до Барселони о десятій.\n\n**Your turn:** Describe:\n- Arriving at work\n- Leaving home\n- Entering a building"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Daily Routine with Prefixes\n\nDescribe your morning using these verbs:\n\n**Example:**\nЯ встаю о сьомій. **Виходжу** з дому о восьмій. **Входжу** в офіс о дев'ятій. Колеги **приходять** пізніше."
+            "teacherNotes": "### Prefixes Change Everything\n\nWhen you add a prefix to a motion verb:\n1. It becomes **perfective**\n2. It gains specific **directional meaning**\n3. It creates a new **aspect pair**"
           }
         ]
       }

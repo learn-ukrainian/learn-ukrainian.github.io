@@ -5,7 +5,7 @@
     "moduleId": "mod-uk-B1-89",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "methodology": "ppp",
+    "lessonType": "grammar-introduction",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -47,100 +47,7 @@
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "### The Motion Verb Challenge\n\nUkrainian motion verbs are famous for being difficult. But they follow logical patterns!\n\n**The core distinction:**\n- **Unidirectional:** One direction, one trip, right now\n- **Multidirectional:** Multiple directions, round trips, habitual\n\nAt A2, you learned іти/ходити and їхати/їздити. Now: the complete system."
-          }
-        ]
-      },
-      {
-        "id": "phase-presentation",
-        "name": "presentation",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### The Two Types of Motion\n\n**Unidirectional (односпрямовані):**\n- Movement in ONE direction\n- ONE specific trip\n- Happening NOW or a specific moment\n- Linear, goal-oriented\n\n**Multidirectional (різноспрямовані):**\n- Movement in MULTIPLE directions\n- Round trips (there and back)\n- Habitual, repeated motion\n- General ability to move"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "The 14 Motion Verb Pairs\n\n#### On Foot\n\n| Unidirectional | Multidirectional | English |\n|----------------|------------------|---------|\n| іти | ходити | to go (on foot) |\n| бігти | бігати | to run |\n| брести | бродити | to wander, wade |\n| лізти | лазити | to climb |\n| повзти | повзати | to crawl |\n\n#### By Vehicle/Air/Water\n\n| Unidirectional | Multidirectional | English |\n|----------------|------------------|---------|\n| їхати | їздити | to go (by vehicle) |\n| летіти | літати | to fly |\n| плисти | плавати | to swim, sail |\n| котитися | кочатися | to roll |\n\n#### Carrying/Leading\n\n| Unidirectional | Multidirectional | English |\n|----------------|------------------|---------|\n| нести | носити | to carry (on foot) |\n| везти | возити | to carry (by vehicle) |\n| вести | водити | to lead |\n| гнати | ганяти | to chase, drive |\n| тягти | тягати | to pull, drag |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Core 8 Pairs for B1\n\nFocus on these 8 most common pairs:\n\n| # | Uni | Multi | English | Example |\n|---|-----|-------|---------|---------|\n| 1 | іти | ходити | go (foot) | Я йду в магазин. / Я ходжу в магазин щодня. |\n| 2 | їхати | їздити | go (vehicle) | Я їду на роботу. / Я їжджу на роботу щодня. |\n| 3 | бігти | бігати | run | Він біжить. / Він бігає щоранку. |\n| 4 | летіти | літати | fly | Літак летить. / Птахи літають. |\n| 5 | плисти | плавати | swim | Він пливе. / Він плаває добре. |\n| 6 | нести | носити | carry | Він несе сумку. / Він носить окуляри. |\n| 7 | везти | возити | transport | Таксі везе мене. / Він возить товари. |\n| 8 | вести | водити | lead | Він веде дитину. / Він водить машину. |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "When to Use Unidirectional\n\n**1. Right now, one direction:**\n- Куди ти **йдеш**? - Where are you going (right now)?\n- Я **йду** додому. - I'm going home.\n- Дивись, літак **летить**! - Look, a plane is flying!\n\n**2. Single trip in past (narrative):**\n- Учора я **йшов** додому і зустрів друга. - Yesterday I was going home and met a friend.\n- Коли ми **їхали** в Київ, ми бачили красиві краєвиди. - When we were going to Kyiv, we saw beautiful scenery.\n\n**3. Future single trip:**\n- Завтра я **йду** на концерт. - Tomorrow I'm going to a concert.\n- Ми **їдемо** у відпустку. - We're going on vacation."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "When to Use Multidirectional\n\n**1. Round trip (there and back):**\n- Учора я **ходив** у магазин. - Yesterday I went to the store (and came back).\n- Вона **їздила** в Одесу. - She went to Odesa (and returned).\n\n**2. Habitual motion:**\n- Я **ходжу** на роботу пішки. - I walk to work (regularly).\n- Він **їздить** на метро. - He takes the metro (regularly).\n- Вона **бігає** щоранку. - She runs every morning.\n\n**3. General ability:**\n- Риби **плавають**. - Fish swim (can swim).\n- Птахи **літають**. - Birds fly (can fly).\n- Діти вже **ходять**. - The children already walk (can walk).\n\n**4. Motion in various directions:**\n- Діти **бігають** по кімнаті. - Children are running around the room.\n- Він **ходить** туди-сюди. - He's walking back and forth."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Past Tense: Key Difference\n\n**Unidirectional past = in the process of going:**\n- Я **йшов** додому, коли почався дощ. - I was going home when it started to rain.\n\n**Multidirectional past = completed round trip:**\n- Я **ходив** у магазин. - I went to the store (and came back).\n\nCompare:\n- Де ти був? — Я **ходив** у бібліотеку. (completed trip)\n- Що ти робив? — Я **йшов** по вулиці. (process)"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Conjugation Review\n\n**Іти (unidirectional):**\n| Pronoun | Present | Past |\n|---------|---------|------|\n| я | йду | йшов/йшла |\n| ти | йдеш | йшов/йшла |\n| він/вона | йде | йшов/йшла |\n| ми | йдемо | йшли |\n| ви | йдете | йшли |\n| вони | йдуть | йшли |\n\n**Ходити (multidirectional):**\n| Pronoun | Present | Past |\n|---------|---------|------|\n| я | ходжу | ходив/ходила |\n| ти | ходиш | ходив/ходила |\n| він/вона | ходить | ходив/ходила |\n| ми | ходимо | ходили |\n| ви | ходите | ходили |\n| вони | ходять | ходили |"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-B1-89-matchup"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Choose Uni or Multi\n\n1. Куди ти ___ (йдеш/ходиш) зараз? → **йдеш** (right now)\n2. Вона ___ (їде/їздить) на роботу автобусом щодня. → **їздить** (every day)\n3. Дивись, птах ___ (летить/літає)! → **летить** (right now, one direction)\n4. Учора я ___ (йшов/ходив) у кіно. → **ходив** (round trip)\n5. Риби добре ___ (пливуть/плавають). → **плавають** (ability)\n6. Він зараз ___ (несе/носить) важку сумку. → **несе** (right now)\n7. Вона завжди ___ (несе/носить) парасольку. → **носить** (always)\n8. Коли я ___ (їхав/їздив) на роботу, я бачив аварію. → **їхав** (in process of going)"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Complete the Dialogues\n\n**Dialogue 1:**\n- А: Куди ти ___? (йти)\n- Б: Я ___ в магазин. (йти)\n- А: Ти часто туди ___? (ходити)\n- Б: Так, я ___ туди щодня. (ходити)\n\n**Answers:** йдеш, йду, ходиш, ходжу\n\n**Dialogue 2:**\n- А: Ти вчора ___ на роботу на машині? (їздити)\n- Б: Ні, я ___ пішки, бо машина зламалась. (ходити)\n- А: А як ти зараз ___ на роботу? (їхати)\n- Б: Я ___ автобусом. (їхати)\n\n**Answers:** їздив, ходив, їдеш, їду"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Describe Movement\n\nUse the correct verb:\n\n1. Літак ___ над містом. (right now) → **летить**\n2. Він добре ___. (ability to swim) → **плаває**\n3. Діти ___ по двору. (multiple directions) → **бігають**\n4. Машина ___ швидко. (right now, one direction) → **їде**\n5. Вона ___ машину. (ability/regular) → **водить**"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-B1-89-quiz"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-B1-89-groupsort"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Describe Your Commute\n\nUse both types of motion verbs:\n\n**Example:**\nЩодня я **їжджу** на роботу метро. Зранку я **йду** до станції пішки. Коли я **їду** в метро, я читаю книгу. Увечері я **йду** додому тією самою дорогою."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Tell About a Trip\n\nUse multidirectional for completed trips:\n\n**Example:**\nМинулого тижня я **їздив** у Львів. Там я багато **ходив** по місту. Ми **плавали** у басейні в готелі."
+            "teacherNotes": "### The Motion Verb Challenge\n\nUkrainian motion verbs are famous for being difficult. But they follow logical patterns!\n\n**The core distinction:**\n- **Unidirectional:** One direction, one trip, right now\n- **Multidirectional:** Multiple directions, round trips, habitual"
           }
         ]
       }

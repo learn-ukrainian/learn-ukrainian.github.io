@@ -5,7 +5,7 @@
     "moduleId": "mod-uk-B1-86",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "methodology": "ppp",
+    "lessonType": "grammar-introduction",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -48,119 +48,6 @@
             "type": "canvas",
             "canvasData": "{}",
             "teacherNotes": "### Two Ways to Say \"Read!\"\n\n- **Читай!** (imperfective) - Read! / Keep reading! / Start reading!\n- **Прочитай!** (perfective) - Read it! / Finish reading it!\n\nBoth are commands to read, but they give different instructions."
-          }
-        ]
-      },
-      {
-        "id": "phase-presentation",
-        "name": "presentation",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Imperative Formation Review\n\n**Imperfective imperatives:**\n\n| Infinitive | Ти | Ви |\n|------------|----|----|\n| читати | читай | читайте |\n| писати | пиши | пишіть |\n| робити | роби | робіть |\n| говорити | говори | говоріть |\n\n**Perfective imperatives:**\n\n| Infinitive | Ти | Ви |\n|------------|----|----|\n| прочитати | прочитай | прочитайте |\n| написати | напиши | напишіть |\n| зробити | зроби | зробіть |\n| сказати | скажи | скажіть |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "When to Use Each Aspect\n\n**Imperfective imperative:**\n1. **General invitation/suggestion:** Заходь! (Come in! / Feel free to enter)\n2. **Start doing:** Починай! (Start! / Begin!)\n3. **Continue doing:** Читай далі! (Keep reading!)\n4. **Repeated action:** Телефонуй мені щодня! (Call me every day!)\n5. **Process focus:** Слухай уважно! (Listen carefully!)\n\n**Perfective imperative:**\n1. **Complete this specific action:** Прочитай цю книгу! (Read this book!)\n2. **One-time instruction:** Напиши листа! (Write a letter!)\n3. **Result expected:** Зроби це до завтра! (Do this by tomorrow!)\n4. **Urgent single action:** Подзвони мені! (Call me!)"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Compare: Same Verb, Different Meaning\n\n| Imperfective | Perfective | Difference |\n|--------------|------------|------------|\n| **Читай!** | **Прочитай!** | |\n| Read! (start/keep reading) | Read it! (finish it) | |\n| **Пиши!** | **Напиши!** | |\n| Write! (general) | Write! (this specific thing) | |\n| **Сідай!** | **Сядь!** | |\n| Sit down! (invitation) | Sit down! (instruction) | |\n| **Їж!** | **З'їж!** | |\n| Eat! (go ahead, eat) | Eat it up! (finish it) | |\n| **Бери!** | **Візьми!** | |\n| Take! (feel free) | Take it! (specific item) | |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Invitation vs Instruction\n\n**Imperfective = warm invitation:**\n\n- **Заходь!** - Come in! (You're welcome to enter)\n- **Сідай!** - Sit down! (Make yourself comfortable)\n- **Їж!** - Eat! (Please, have some food)\n- **Бери!** - Take! (Help yourself)\n\nThese are welcoming, suggesting the listener is free to do the action.\n\n**Perfective = direct instruction:**\n\n- **Зайди** до мене завтра! - Stop by my place tomorrow!\n- **Сядь** на це місце! - Sit in this seat!\n- **З'їж** це!** - Eat this up!\n- **Візьми** парасольку! - Take an umbrella!\n\nThese are specific instructions about what exactly to do."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Negative Imperatives: Important Pattern!\n\n**Negative commands usually use IMPERFECTIVE:**\n\n- **Не читай** це! - Don't read this!\n- **Не роби** цього! - Don't do this!\n- **Не кури**! - Don't smoke!\n- **Не хвилюйся**! - Don't worry!\n- **Не запізнюйся**! - Don't be late!\n\n**Perfective negative = warning about specific risk:**\n\n- **Не впади**! - Don't fall! (Careful!)\n- **Не забудь**! - Don't forget!\n- **Не загуби** ключі! - Don't lose the keys!\n- **Не зламай** це! - Don't break this!"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Politeness and Softening\n\n**More polite forms:**\n\nUsing **будь ласка** (please):\n- Прочитай, **будь ласка**. - Read it, please.\n- Зроби це, **будь ласка**. - Do this, please.\n\nUsing **Ви** form for formal:\n- **Прочитайте**, будь ласка. - Please read (formal).\n- **Зробіть** це. - Do this (formal).\n\nUsing imperfective for softer tone:\n- **Читай** собі. - Just read. (Relaxed, no pressure)\n- **Сідай**, не стій. - Sit down, don't stand. (Friendly)"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Sequential Commands = Perfective\n\nWhen giving a sequence of actions, use perfective:\n\n- **Встань**, **умийся**, **одягнися** і **йди** на роботу!\n- Get up, wash up, get dressed, and go to work!\n\n- **Прийди**, **сядь**, **почекай** хвилину.\n- Come, sit down, wait a minute.\n\n- Спочатку **прочитай** текст, потім **напиши** відповіді.\n- First read the text, then write the answers."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Encouraging and Urgent Commands\n\n**Encouragement (often imperfective):**\n\n- **Не здавайся**! - Don't give up!\n- **Тримайся**! - Hang in there!\n- **Старайся**! - Try hard!\n- **Продовжуй**! - Keep going!\n\n**Urgency (often perfective):**\n\n- **Швидше зроби** це! - Do it faster!\n- **Негайно зателефонуй**! - Call immediately!\n- **Терміново напиши** йому! - Write to him urgently!"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Common Imperative Pairs\n\n| Imperfective | Perfective | Context |\n|--------------|------------|---------|\n| читай | прочитай | general vs complete |\n| пиши | напиши | general vs complete |\n| роби | зроби | general vs complete |\n| кажи | скажи | tell (ongoing) vs tell (once) |\n| давай | дай | give (offer) vs give (this item) |\n| бери | візьми | take (feel free) vs take (specific) |\n| сідай | сядь | sit (invitation) vs sit (instruction) |\n| вставай | встань | get up (general) vs get up (now) |\n| одягайся | одягнися | get dressed (general) vs get dressed (now) |\n| чекай | почекай | wait (general) vs wait (a moment) |\n| дивись | подивись | look (general) vs look (at this) |\n| слухай | послухай | listen (ongoing) vs listen (to this) |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "\"Let's\" = Давай/Давайте + Infinitive\n\n**Imperfective infinitive (process):**\n- Давай **читати**! - Let's read!\n- Давайте **говорити** українською! - Let's speak Ukrainian!\n\n**Perfective infinitive (specific action):**\n- Давай **прочитаємо** це! - Let's read this!\n- Давайте **зробимо** перерву! - Let's take a break!\n\nAlso: Давай(те) + ми form (perfective):\n- Давай **підемо**! - Let's go!\n- Давайте **почнемо**! - Let's begin!"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-B1-86-matchup"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Choose the Correct Aspect\n\n1. ___ (Заходь/Зайди), у мене тепло! (invitation) → **Заходь**\n2. ___ (Пиши/Напиши) мені листа до понеділка! (deadline) → **Напиши**\n3. ___ (Не читай/Не прочитай) це! (general prohibition) → **Не читай**\n4. ___ (Вставай/Встань), вже пізно! (urgent now) → **Встань**\n5. ___ (Бери/Візьми) цю парасольку! (specific item) → **Візьми**\n6. ___ (Не хвилюйся/Не захвилюйся)! (general advice) → **Не хвилюйся**\n7. ___ (Їж/З'їж) усе! (finish everything) → **З'їж**\n8. ___ (Дивись/Подивись) на це! (look at specific thing) → **Подивись**"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Transform: Invitation to Instruction\n\nChange from imperfective (invitation) to perfective (instruction):\n\n1. Сідай! → **Сядь** на це місце!\n2. Заходь! → **Зайди** до мене завтра!\n3. Бери! → **Візьми** цю книгу!\n4. Їж! → **З'їж** це яблуко!"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Create Command Sequences\n\nPut these actions in imperative perfective sequence:\n\n*встати, умитися, поснідати, піти*\n\n→ **Встань, умийся, поснідай і піди!**\n\n*прийти, сісти, почекати*\n\n→ **Прийди, сядь і почекай!**"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Negative Commands\n\nChoose the correct aspect:\n\n1. ___ (Не торкайся/Не торкнися) цього! (general prohibition) → **Не торкайся**\n2. Обережно, ___ (не падай/не впади)! (warning) → **не впади**\n3. ___ (Не забувай/Не забудь) зателефонувати! (warning) → **Не забудь**\n4. ___ (Не кури/Не покури) тут! (general rule) → **Не кури**"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-B1-86-quiz"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-B1-86-groupsort"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Give Instructions\n\nCreate a sequence of commands for:\n\n**Morning routine:**\nВстань, умийся, почисти зуби, одягнися, поснідай і йди!\n\n**Cooking:**\nВізьми яйця, розбий їх, додай сіль, перемішай і смаж!"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Role Play: Host and Guest\n\n**Host (using inviting imperfective):**\n- Заходь! Сідай! Роздягайся! Їж!\n\n**Giving specific instructions:**\n- Сядь біля вікна. Візьми цю чашку. Покуштуй цей пиріг."
           }
         ]
       }

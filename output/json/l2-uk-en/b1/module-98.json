@@ -5,7 +5,7 @@
     "moduleId": "mod-uk-B1-98",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "methodology": "ppp",
+    "lessonType": "vocabulary-expansion",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -34,119 +34,7 @@
     "version": 1,
     "createdAt": "2025-11-30T00:00:00Z",
     "modifiedAt": "2025-11-30T00:00:00Z",
-    "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### The Art of Disagreeing\n\nIn Ukrainian culture, direct disagreement can seem rude. Today you'll learn:\n- How to agree enthusiastically\n- How to disagree politely\n- How to partially agree\n- How to soften criticism"
-          }
-        ]
-      },
-      {
-        "id": "phase-presentation",
-        "name": "presentation",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Strong Agreement\n\n| Ukrainian | English | Usage |\n|-----------|---------|-------|\n| Так, звісно! | Yes, of course! | enthusiastic |\n| Абсолютно! | Absolutely! | strong |\n| Точно! | Exactly! | confirming |\n| Саме так! | Exactly so! | confirming |\n| Безперечно! | Undoubtedly! | formal |\n| Цілком згоден/згодна! | Completely agree! | strong |\n| Стовідсотково! | 100%! | informal |\n\n**Examples:**\n\n- A: Україна — красива країна.\n- B: **Абсолютно!** / **Точно так!**"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Standard Agreement\n\n| Ukrainian | English |\n|-----------|---------|\n| Я згоден / згодна. | I agree. |\n| Я погоджуюся. | I agree. |\n| Так, це правда. | Yes, that's true. |\n| Ви маєте рацію. | You're right. |\n| Ти маєш рацію. | You're right. (informal) |\n| Це так. | That's so. |\n| Думаю, що так. | I think so. |\n| Я теж так думаю. | I think so too. |\n\n**Examples:**\n\n- A: Вивчати мови корисно.\n- B: **Я погоджуюся.** Це дуже корисно.\n\n- A: Ми повинні почати раніше.\n- B: **Ви маєте рацію.** Давайте почнемо о восьмій."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Partial Agreement\n\n| Ukrainian | English |\n|-----------|---------|\n| Можливо, ви маєте рацію, але... | Maybe you're right, but... |\n| Так, проте... | Yes, however... |\n| Почасти я згоден, але... | I partly agree, but... |\n| Це правда, проте... | That's true, but... |\n| В якомусь сенсі так, але... | In a sense yes, but... |\n| Загалом так, хоча... | Generally yes, although... |\n\n**Examples:**\n\n- A: Дистанційна робота краща.\n- B: **Почасти я згоден**, але іноді важливо бути в офісі.\n\n- A: Потрібно більше грошей на проєкт.\n- B: **Це правда**, **проте** бюджет обмежений."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Polite Disagreement\n\n| Ukrainian | English | Level |\n|-----------|---------|-------|\n| Я не зовсім згоден/згодна. | I don't quite agree. | soft |\n| Не впевнений/а, що це так. | Not sure that's so. | soft |\n| Боюся, що не можу погодитися. | I'm afraid I can't agree. | formal/polite |\n| На жаль, я маю іншу думку. | Unfortunately, I have a different opinion. | polite |\n| Дозвольте не погодитися. | Allow me to disagree. | formal |\n| Не зовсім так. | Not quite so. | soft |\n\n**Examples:**\n\n- A: Це найкращий варіант.\n- B: **Я не зовсім згоден.** Можливо, є кращі.\n\n- A: Ми повинні скасувати проєкт.\n- B: **Боюся, що не можу погодитися.** Давайте обговоримо."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Stronger Disagreement\n\n| Ukrainian | English | Note |\n|-----------|---------|------|\n| Я не згоден / не згодна. | I disagree. | direct |\n| Я категорично проти. | I'm categorically against. | strong |\n| Ні, це не так. | No, that's not so. | direct |\n| Навпаки! | On the contrary! | emphatic |\n| Зовсім ні! | Not at all! | strong |\n| Аж ніяк! | No way! | informal, strong |\n\n**Use with caution** — these are direct and can sound confrontational.\n\n**Examples:**\n\n- A: Всі згодні з цим планом.\n- B: **Ні, я не згоден.** Є серйозні проблеми."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Questioning Without Direct Disagreement\n\n| Ukrainian | English |\n|-----------|---------|\n| А ви впевнені? | Are you sure? |\n| А чи не краще...? | Wouldn't it be better to...? |\n| А як щодо...? | What about...? |\n| Але чи враховували ви...? | But did you consider...? |\n| Чи не здається вам, що...? | Doesn't it seem to you that...? |\n\n**Examples:**\n\n- A: Ми повинні це зробити сьогодні.\n- B: **А ви впевнені?** Може, краще завтра?"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Offering Alternatives\n\n| Ukrainian | English |\n|-----------|---------|\n| А може краще...? | Maybe it would be better to...? |\n| Можна було б... | One could... |\n| Я б запропонував/ла... | I would suggest... |\n| Як варіант... | As an option... |\n| Натомість можна... | Instead one could... |\n\n**Examples:**\n\n- **Я б запропонувала** інший підхід.\n- **Як варіант**, ми можемо почекати.\n- **А може краще** обговорити це з командою?"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Diplomatic Phrases\n\n| Ukrainian | English |\n|-----------|---------|\n| Я розумію вашу точку зору, але... | I understand your point of view, but... |\n| Цікава думка, проте... | Interesting thought, however... |\n| Це одна з можливостей, але... | That's one possibility, but... |\n| Не хочу сперечатися, але... | I don't want to argue, but... |\n\n**Example dialogue:**\n\n- A: Ми повинні звільнити половину команди.\n- B: **Я розумію вашу точку зору**, але **не можу погодитися**. **А чи не краще** спочатку скоротити інші витрати?"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Match Levels of Agreement\n\nCategorize these expressions:\n\n**Strong agree / Agree / Partial / Soft disagree / Strong disagree**\n\n1. Абсолютно! → **Strong agree**\n2. Я не зовсім згоден → **Soft disagree**\n3. Почасти так, але... → **Partial**\n4. Я категорично проти → **Strong disagree**\n5. Ви маєте рацію → **Agree**\n6. Цікава думка, проте... → **Soft disagree**"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Respond to Statements\n\nAgree or disagree politely:\n\n**Statement:** Всі повинні вивчати англійську.\n- **Agree:** Я погоджуюся. Англійська — міжнародна мова.\n- **Partial:** Почасти так, але інші мови теж важливі.\n- **Disagree:** Я не зовсім згоден. Залежить від потреб людини.\n\n**Statement:** Робота важливіша за сім'ю.\n- Your response: ___\n\n**Statement:** Технології роблять нас щасливішими.\n- Your response: ___"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Make These More Polite\n\nTransform direct disagreement into polite disagreement:\n\n1. Ні, ви помиляєтесь. → **Я не зовсім згоден. Мені здається, тут є неточність.**\n2. Це погана ідея. → **Цікава думка, проте я б запропонував інший підхід.**\n3. Ні. → **Боюся, що не можу погодитися.**\n4. Ви не праві. → **Не впевнений, що це так. А ви враховували...?**"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Role Play: Discussion\n\nPractice agreeing and disagreeing:\n\n**Topic:** Чи повинні студенти працювати під час навчання?\n\n**Person A:** За (agrees that students should work)\n**Person B:** Проти (disagrees)\n\nUse: Я вважаю, Я погоджуюся, Я не зовсім згоден, Проте, А чи не краще..."
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-B1-98-quiz"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-B1-98-groupsort"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Debate Practice\n\nChoose a topic and practice both sides:\n\n**Topics:**\n1. Соціальні мережі корисні для суспільства.\n2. Потрібно заборонити автомобілі в центрах міст.\n3. Домашніх тварин не варто тримати в квартирах.\n\nFor each topic:\n- State your opinion\n- Have partner disagree politely\n- Find compromise using partial agreement"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Real-Life Scenarios\n\nHow would you respond?\n\n1. **Колега:** Ми повинні працювати у вихідні.\n   Your polite disagreement: ___\n\n2. **Друг:** Цей фільм — найкращий цього року!\n   Your partial agreement: ___\n\n3. **Начальник:** Проєкт потрібно закінчити завтра.\n   Your diplomatic response: ___"
-          }
-        ]
-      }
-    ]
+    "phases": []
   },
   "activities": [
     {

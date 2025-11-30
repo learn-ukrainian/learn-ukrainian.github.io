@@ -128,6 +128,61 @@ function generateId(prefix: string, level: string, moduleNum: number, suffix?: s
   return suffix ? `${base}-${suffix}` : base;
 }
 
+/**
+ * Determine lesson type based on tags and title.
+ * Vibe uses this to choose default methodology (PPP, TTT, TBL).
+ *
+ * | lessonType              | Description                | Vibe Default |
+ * |-------------------------|----------------------------|--------------|
+ * | grammar-introduction    | New grammar concept        | PPP          |
+ * | vocabulary-expansion    | Building vocabulary        | TTT          |
+ * | skill-practice          | Speaking, writing, etc.    | TBL          |
+ * | revision                | Review/consolidation       | TTT          |
+ * | culture                 | Cultural content           | TBL          |
+ */
+function determineLessonType(tags: string[], title: string): string {
+  const tagsLower = tags.map(t => t.toLowerCase());
+  const titleLower = title.toLowerCase();
+
+  // Check for review/checkpoint modules (only by tags, not title - "Aspect Review" is not a review lesson)
+  if (tagsLower.includes('review') || tagsLower.includes('assessment') ||
+      tagsLower.includes('checkpoint')) {
+    return 'revision';
+  }
+
+  // Check for title-based revision (only if title STARTS with review/checkpoint)
+  if (titleLower.startsWith('review') || titleLower.startsWith('checkpoint') ||
+      titleLower.includes('b1.1 review') || titleLower.includes('b1.1 checkpoint')) {
+    return 'revision';
+  }
+
+  // Check for culture modules
+  if (tagsLower.includes('culture') || tagsLower.includes('cultural')) {
+    return 'culture';
+  }
+
+  // Check for vocabulary-focused modules
+  if (tagsLower.includes('vocabulary') && !tagsLower.includes('grammar')) {
+    return 'vocabulary-expansion';
+  }
+
+  // Check for communication/practice modules
+  if (tagsLower.includes('communication') || tagsLower.includes('speaking') ||
+      tagsLower.includes('practice') || titleLower.includes('practice')) {
+    return 'skill-practice';
+  }
+
+  // Check for grammar modules (most common for language learning)
+  if (tagsLower.includes('grammar') || tagsLower.includes('verbs') ||
+      tagsLower.includes('aspect') || tagsLower.includes('motion') ||
+      tagsLower.includes('cases') || tagsLower.includes('conjugation')) {
+    return 'grammar-introduction';
+  }
+
+  // Default to grammar-introduction for structured language lessons
+  return 'grammar-introduction';
+}
+
 // ============================================================================
 // MARKDOWN PARSER
 // ============================================================================
@@ -458,6 +513,9 @@ function generateVibeJSON(parsed: ParsedModule, langPair: string): any {
     ],
   }));
 
+  // Determine lessonType based on tags and content
+  const lessonType = determineLessonType(fm.tags || [], fm.title || '');
+
   return {
     $schema: '../../../schemas/vibe-module.schema.json',
     lesson: {
@@ -465,7 +523,7 @@ function generateVibeJSON(parsed: ParsedModule, langPair: string): any {
       moduleId: generateId('mod', fm.level, fm.module),
       languagePair: langPair,
       subject: 'language',
-      methodology: 'ppp',
+      lessonType,
       owner: OWNER_ID,
       visibility: 'public',
       language: 'uk',

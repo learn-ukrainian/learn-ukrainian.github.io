@@ -5,7 +5,7 @@
     "moduleId": "mod-uk-B1-87",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "methodology": "ppp",
+    "lessonType": "vocabulary-expansion",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -47,104 +47,6 @@
             "type": "canvas",
             "canvasData": "{}",
             "teacherNotes": "### Building Your Verb Arsenal\n\nAt A2, you learned basic aspect pairs like:\n- робити / зробити\n- читати / прочитати\n- писати / написати\n\nNow it's time to expand systematically. Understanding patterns helps you predict aspect pairs for new verbs."
-          }
-        ]
-      },
-      {
-        "id": "phase-presentation",
-        "name": "presentation",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Pattern 1: Prefix Creates Perfective\n\nMost common pattern: Add prefix to imperfective → perfective.\n\n| Imperfective | Perfective | English |\n|--------------|------------|---------|\n| будувати | **по**будувати | to build |\n| готувати | **при**готувати | to prepare, cook |\n| снідати | **по**снідати | to have breakfast |\n| обідати | **по**обідати | to have lunch |\n| вечеряти | **по**вечеряти | to have dinner |\n| радити | **по**радити | to advise |\n| цілувати | **по**цілувати | to kiss |\n| дякувати | **по**дякувати | to thank |\n| вітати | **при**вітати | to greet, congratulate |\n| рахувати | **по**рахувати | to count |\n\n**Common prefixes for aspectual pairs:**\n- **по-** (most common): поснідати, пообідати, побудувати\n- **при-** (often with cooking/preparing): приготувати\n- **з-/с-** (often with completing): зробити"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Pattern 2: Suffix Change -ува-/-и-\n\nSome verbs switch between **-увати** (imperfective) and **-ити** (perfective):\n\n| Imperfective (-увати) | Perfective (-ити) | English |\n|----------------------|-------------------|---------|\n| виконувати | виконати | to complete, fulfill |\n| використовувати | використати | to use |\n| вирішувати | вирішити | to decide, solve |\n| відповідати | відповісти | to answer |\n| замовляти | замовити | to order |\n| запрошувати | запросити | to invite |\n| здійснювати | здійснити | to implement |\n| знайомитися | познайомитися | to meet (get acquainted) |\n| отримувати | отримати | to receive |\n| показувати | показати | to show |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Pattern 3: Different Roots (Suppletive)\n\nSome pairs use completely different words:\n\n| Imperfective | Perfective | English |\n|--------------|------------|---------|\n| брати | взяти | to take |\n| говорити | сказати | to say |\n| класти | покласти | to put |\n| шукати | знайти | to look for / find |\n| дивитися | побачити | to look / see |\n| ловити | спіймати | to catch |\n\nNote: шукати/знайти is a special pair — looking (process) vs finding (result)."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Pattern 4: Stress Shift\n\nSome pairs differ only in stress or minor changes:\n\n| Imperfective | Perfective | English |\n|--------------|------------|---------|\n| скидати | скинути | to throw off |\n| кидати | кинути | to throw |\n| штовхати | штовхнути | to push |\n| стукати | стукнути | to knock |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "New Aspect Pairs: Communication\n\n| Imperfective | Perfective | English |\n|--------------|------------|---------|\n| питати | спитати | to ask |\n| запитувати | запитати | to ask |\n| повідомляти | повідомити | to inform, notify |\n| пояснювати | пояснити | to explain |\n| обговорювати | обговорити | to discuss |\n| домовлятися | домовитися | to agree, arrange |\n| обіцяти | пообіцяти | to promise |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "New Aspect Pairs: Cognitive\n\n| Imperfective | Perfective | English |\n|--------------|------------|---------|\n| вчити | вивчити | to learn/study |\n| згадувати | згадати | to remember, recall |\n| забувати | забути | to forget |\n| розуміти | зрозуміти | to understand |\n| пам'ятати | запам'ятати | to remember |\n| вирішувати | вирішити | to decide |\n| думати | подумати | to think |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "New Aspect Pairs: Physical Actions\n\n| Imperfective | Perfective | English |\n|--------------|------------|---------|\n| відкривати | відкрити | to open |\n| закривати | закрити | to close |\n| вмикати | увімкнути | to turn on |\n| вимикати | вимкнути | to turn off |\n| ховати | сховати | to hide |\n| знаходити | знайти | to find |\n| губити | загубити | to lose |\n| ламати | зламати | to break |"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-B1-87-matchup"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Match the Pairs\n\nConnect imperfective with perfective:\n\n| Imperfective | Perfective |\n|--------------|------------|\n| будувати | побудувати |\n| готувати | приготувати |\n| вирішувати | вирішити |\n| відповідати | відповісти |\n| брати | взяти |\n| говорити | сказати |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Fill in the Missing Pair\n\n1. запитувати - ___ → **запитати**\n2. ___ - зрозуміти → **розуміти**\n3. показувати - ___ → **показати**\n4. ___ - забути → **забувати**\n5. відкривати - ___ → **відкрити**\n6. ___ - увімкнути → **вмикати**"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Use in Context\n\nChoose the correct aspect:\n\n1. Я довго ___ (вирішував/вирішив) цю проблему. → **вирішував** (duration)\n2. Нарешті він ___ (відповідав/відповів) на моє питання! → **відповів** (finally = result)\n3. Вона щодня ___ (готувала/приготувала) вечерю. → **готувала** (every day)\n4. Ми ___ (домовлялися/домовилися) зустрітися завтра. → **домовилися** (result)\n5. Він часто ___ (забував/забув) свої речі. → **забував** (often)\n6. Я вже ___ (запрошував/запросив) їх на вечірку. → **запросив** (already)"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Transform Sentences\n\nChange aspect while keeping meaning logical:\n\n**Imperfective → Perfective (add result):**\n1. Він готував вечерю. → Він **приготував** вечерю.\n2. Вона відповідала на листи. → Вона **відповіла** на всі листи.\n3. Ми обговорювали плани. → Ми **обговорили** плани.\n\n**Perfective → Imperfective (add duration/repetition):**\n1. Він пояснив правило. → Він **пояснював** правило п'ять хвилин.\n2. Вона запитала. → Вона завжди **запитувала**.\n3. Я вирішив задачу. → Я **вирішував** задачу годину."
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-B1-87-quiz"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-B1-87-groupsort"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Narrate Your Day\n\nUse these aspect pairs to describe:\n- What you did this morning (perfective for completed actions)\n- What you usually do (imperfective for habits)\n\n**Example:**\nСьогодні я **прокинувся** о сьомій, **поснідав**, **відповів** на листи і **пішов** на роботу. Зазвичай я **снідаю** о восьмій і **відповідаю** на листи після обіду."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Create Dialogues\n\nUse at least 5 aspect pairs in a dialogue:\n\n**Example:**\n- A: Ти вже **приготувала** вечерю?\n- B: Ні, я ще **готую**. **Поможеш** мені?\n- A: Звичайно! Що **робити**?\n- B: **Відкрий** холодильник і **візьми** овочі."
           }
         ]
       }
