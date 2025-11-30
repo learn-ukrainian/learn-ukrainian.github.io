@@ -1,10 +1,11 @@
-# Ukrainian L2 Curriculum Plan v2
+# Ukrainian L2 Curriculum Plan v3
 
 ## Overview
 
-- **Total Modules:** 240
-- **Total Vocabulary:** ~7,500 words
+- **Total Modules:** 320 (80 complete + 240 drafted)
+- **Total Vocabulary Target:** ~8,000 words
 - **Levels:** A1 → A2 → A2+ → B1 → B2 → C1
+- **Status:** A1-A2+ complete, B1/B2/C1 drafted
 
 ---
 
@@ -13,11 +14,11 @@
 | Level | Modules | Words | Words/Module | Cumulative | Status |
 |-------|---------|-------|--------------|------------|--------|
 | A1 | 1-30 (30) | 456 | 15 | 456 | ✅ COMPLETE |
-| A2 | 31-60 (30) | 366 | 12 | 822 | ✅ COMPLETE |
-| A2+ | 61-75 (15) | ~580 | ~39 | ~1,400 | 🔲 TO BUILD |
-| B1 | 76-125 (50) | ~1,800 | ~36 | ~3,200 | 🔲 TO BUILD |
-| B2 | 126-180 (55) | ~2,000 | ~36 | ~5,200 | 🔲 TO BUILD |
-| C1 | 181-240 (60) | ~2,300 | ~38 | ~7,500 | 🔲 TO BUILD |
+| A2 | 31-60 (30) | 519 | 17 | 975 | ✅ COMPLETE |
+| A2+ | 61-80 (20) | 433 | 22 | 1,408 | ✅ COMPLETE |
+| B1 | 81-140 (60) | ~1,600 | ~27 | ~3,000 | 📝 DRAFT |
+| B2 | 141-220 (80) | ~2,200 | ~28 | ~5,200 | 📝 DRAFT |
+| C1 | 221-320 (100) | ~2,800 | ~28 | ~8,000 | 📝 DRAFT |
 
 ---
 
@@ -74,7 +75,7 @@
 
 ## A2: Elementary (Modules 31-60) ✅ COMPLETE
 
-**Actual vocabulary:** 366 words (cumulative: 822)
+**Actual vocabulary:** 519 words (cumulative: 975)
 
 ### A2.1 (Modules 31-40): Case Master
 
@@ -123,48 +124,59 @@
 
 ---
 
-## A2+: Bridge (Modules 61-75) 🔲 TO BUILD
+## A2+: Bridge (Modules 61-80) ✅ COMPLETE
 
-**Target vocabulary:** ~580 words (cumulative: ~1,400)
-**Purpose:** Word formation, vocabulary expansion, collocations
+**Actual vocabulary:** 433 words (cumulative: 1,408)
+**Purpose:** Word formation, vocabulary expansion across 12 thematic areas
 
 ### A2+.1 (Modules 61-66): Word Formation
 
-| # | Title | Type | Focus | Target Words |
-|---|-------|------|-------|--------------|
-| 61 | Prefixes I | Word Formation | при-, ви-, за-, роз- | 45 |
-| 62 | Prefixes II | Word Formation | пере-, від-, на-, по- | 45 |
-| 63 | Suffixes I | Word Formation | -ість, -ння, -ття | 40 |
-| 64 | Suffixes II | Word Formation | -ач, -ник, -ок | 40 |
-| 65 | Root Families I | Word Formation | ходити family (вихід, прихід, похід) | 35 |
-| 66 | Root Families II | Word Formation | писати, читати families | 35 |
+| # | Title | Type | Focus |
+|---|-------|------|-------|
+| 61 | Prefixes I: Motion Verbs | Word Formation | при-, ви-, в-/у-, за-, пере-, від-, до-, об- |
+| 62 | Prefixes II: Action Verbs | Word Formation | на-, по-, з-/с-, про-, роз-, ви-, пере-, від- |
+| 63 | Suffixes I: Nouns | Word Formation | -ння/-ття, -ість, -ство/-цтво, -ач/-ник, -ок/-ець |
+| 64 | Suffixes II: Adjectives | Word Formation | -ний/-ній, -ський, -овий, -ливий, -истий, -ів/-ин |
+| 65 | Root Families I: Common Roots | Word Formation | -уч-/-вч-, -роб-, -пис-, -чит-, -говор-/-мов- |
+| 66 | Root Families II: Motion & Perception | Word Formation | -ход-/-хід-, -їзд-, -бач-, -слух-, -знат-/-знай- |
 
-### A2+.2 (Modules 67-73): Vocabulary Expansion
+### A2+.2 (Modules 67-78): Vocabulary Expansion
 
-| # | Title | Type | Focus | Target Words |
-|---|-------|------|-------|--------------|
-| 67 | Expanded Food & Cooking | Vocabulary | Recipes, ingredients, kitchen | 40 |
-| 68 | Expanded Home & Furniture | Vocabulary | Detailed household | 40 |
-| 69 | Expanded City & Services | Vocabulary | Urban life, institutions | 40 |
-| 70 | Nature & Environment | Vocabulary | Basic nature, animals, weather | 40 |
-| 71 | Collocations: Verbs I | Collocations | Common verb+noun pairs | 35 |
-| 72 | Collocations: Verbs II | Collocations | More verb+noun pairs | 35 |
-| 73 | Collocations: Adjectives | Collocations | Adj+noun combinations | 35 |
+| # | Title | Type | Focus |
+|---|-------|------|-------|
+| 67 | Food & Cooking | Vocabulary | Cooking methods, tastes, ingredients, kitchen |
+| 68 | Health & Body | Vocabulary | Body parts, symptoms, medical care |
+| 69 | Home & Furniture | Vocabulary | Rooms, furniture, household actions |
+| 70 | Nature & Weather | Vocabulary | Weather, landscapes, flora & fauna |
+| 71 | Emotions & Personality | Vocabulary | Feelings, traits, emotional expressions |
+| 72 | Work & Professions | Vocabulary | Jobs, workplace, career |
+| 73 | Technology & Media | Vocabulary | Devices, internet, social media |
+| 74 | Hobbies & Leisure | Vocabulary | Free time, games, outdoor activities |
+| 75 | Education & Learning | Vocabulary | School, university, exams |
+| 76 | Shopping & Services | Vocabulary | Stores, banking, services |
+| 77 | Sports & Fitness | Vocabulary | Sports, gym, competitions |
+| 78 | Arts & Culture | Vocabulary | Music, cinema, literature, traditions |
 
-### A2+.3 (Modules 74-75): Review
+### A2+.3 (Modules 79-80): Review
 
-| # | Title | Type | Focus | Target Words |
-|---|-------|------|-------|--------------|
-| 74 | A2+ Review & Practice | Review | Consolidation activities | 25 |
-| 75 | A2+ Checkpoint | Review | Diagnostic assessment | 25 |
+| # | Title | Type | Focus |
+|---|-------|------|-------|
+| 79 | Review: Word Formation | Review | Consolidating prefixes, suffixes, root families |
+| 80 | Review: Vocabulary Expansion | Review | Consolidating 12 thematic vocabulary areas |
 
 ---
 
-## B1: Intermediate (Modules 76-125) 🔲 TO BUILD
+## B1: Intermediate (Modules 81-???) 🔲 TO PLAN
 
-**Target vocabulary:** ~1,800 words (cumulative: ~3,200)
+**⚠️ NEEDS REVISION** - Plan below is outdated. Must be redesigned based on:
+1. CEFR B1 requirements for Slavic languages
+2. Ukrainian-specific grammar (aspect mastery, participles intro, complex motion)
+3. Realistic vocabulary load (~25-30 words/module)
+4. Proper topic coverage without overlap with A2+
 
-### B1.1 (Modules 76-90): Advanced Aspect & Motion
+**Draft target:** ~1,200-1,500 words (cumulative: ~2,600-2,900)
+
+### B1.1 (Modules 81-???): Advanced Aspect & Motion [DRAFT]
 
 | # | Title | Type | Focus |
 |---|-------|------|-------|
@@ -226,9 +238,9 @@
 
 ---
 
-## B2: Upper-Intermediate (Modules 126-180) 🔲 TO BUILD
+## B2: Upper-Intermediate (Modules ???-???) 🔲 TO PLAN
 
-**Target vocabulary:** ~2,000 words (cumulative: ~5,200)
+**⚠️ NEEDS REVISION** - Must be redesigned based on CEFR B2 requirements
 
 ### B2.1 (Modules 126-145): Participles & Passive
 
@@ -260,9 +272,9 @@
 
 ---
 
-## C1: Advanced (Modules 181-240) 🔲 TO BUILD
+## C1: Advanced (Modules ???-???) 🔲 TO PLAN
 
-**Target vocabulary:** ~2,300 words (cumulative: ~7,500)
+**⚠️ NEEDS REVISION** - Must be redesigned based on CEFR C1 requirements
 
 ### C1.1 (Modules 181-200): Literary & Academic
 
@@ -320,18 +332,26 @@
 
 ## Implementation Order
 
-1. **Phase 1:** Build A2+ modules 61-75 (closes vocabulary gap)
-2. **Phase 2:** Build B1 modules 76-125
-3. **Phase 3:** Build B2 modules 126-180
-4. **Phase 4:** Build C1 modules 181-240
+1. **Phase 1:** ✅ Build A2+ modules 61-80 (COMPLETE)
+2. **Phase 2:** 🔲 Research & plan B1 based on CEFR requirements
+3. **Phase 3:** 🔲 Build B1 modules
+4. **Phase 4:** 🔲 Research & plan B2 based on CEFR requirements
+5. **Phase 5:** 🔲 Build B2 modules
+6. **Phase 6:** 🔲 Research & plan C1 based on CEFR requirements
+7. **Phase 7:** 🔲 Build C1 modules
 
 ---
 
 ## Version History
 
 - **v1.0** (Original): 200 modules, 8,000 words target
-- **v2.0** (Current): 240 modules, 7,500 words target
+- **v2.0**: 240 modules, 7,500 words target
   - Fixed vocabulary tracking (actual vs planned)
   - Added A2+ bridge level for word formation
   - Added stylistics, collocations, phraseology
   - Renumbered B1/B2/C1 modules
+- **v3.0** (Current): Content-driven approach
+  - Completed A2+ with 20 modules (61-80), 433 new words
+  - Expanded A2+ to 12 thematic vocabulary areas
+  - B1/B2/C1 marked for revision based on CEFR requirements
+  - Module counts TBD based on actual content needs
