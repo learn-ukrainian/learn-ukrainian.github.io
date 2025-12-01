@@ -35,8 +35,8 @@
       "animate"
     ],
     "version": 1,
-    "createdAt": "2025-11-30T00:00:00Z",
-    "modifiedAt": "2025-11-30T00:00:00Z",
+    "createdAt": "2025-12-01T00:00:00Z",
+    "modifiedAt": "2025-12-01T00:00:00Z",
     "phases": [
       {
         "id": "phase-warm-up",
@@ -164,8 +164,8 @@
         "accusative",
         "animate"
       ],
-      "createdAt": "2025-11-30T00:00:00Z",
-      "modifiedAt": "2025-11-30T00:00:00Z"
+      "createdAt": "2025-12-01T00:00:00Z",
+      "modifiedAt": "2025-12-01T00:00:00Z"
     },
     {
       "id": "act-uk-A1-12-quiz",
@@ -259,8 +259,8 @@
         "accusative",
         "animate"
       ],
-      "createdAt": "2025-11-30T00:00:00Z",
-      "modifiedAt": "2025-11-30T00:00:00Z"
+      "createdAt": "2025-12-01T00:00:00Z",
+      "modifiedAt": "2025-12-01T00:00:00Z"
     },
     {
       "id": "act-uk-A1-12-groupsort",
@@ -306,8 +306,8 @@
         "accusative",
         "animate"
       ],
-      "createdAt": "2025-11-30T00:00:00Z",
-      "modifiedAt": "2025-11-30T00:00:00Z"
+      "createdAt": "2025-12-01T00:00:00Z",
+      "modifiedAt": "2025-12-01T00:00:00Z"
     }
   ],
   "vocabulary": {

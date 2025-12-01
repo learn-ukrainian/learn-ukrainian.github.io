@@ -95,9 +95,9 @@
   <div class="top-nav">
     <a href="../index.html">← l2-uk-en Curriculum</a>
     <div class="module-nav">
-      <span class="module-nav-link disabled">← Prev</span>
+      <a href="module-163.html" class="module-nav-link">← Module 163</a>
       <a href="index.html" class="module-nav-link">B2 Index</a>
-      <span class="module-nav-link disabled">Next →</span>
+      <a href="module-165.html" class="module-nav-link">Module 165 →</a>
     </div>
   </div>
   <nav class="nav">
@@ -133,7 +133,7 @@
     const matchPairs=[];
     const quizData=[];
     const sortData={};
-    const vocabData=[{"uk":"пасив","translit":"","en":"141-146","note":""},{"uk":"регістр","translit":"","en":"147-152","note":""},{"uk":"дієприкметник","translit":"","en":"153-155","note":""},{"uk":"дієприслівник","translit":"","en":"156","note":""},{"uk":"вставний","translit":"","en":"158","note":""},{"uk":"сполучник","translit":"","en":"160","note":""}];
+    const vocabData=[{"uk":"пасив","translit":"","en":"Модулі 141-146","note":""},{"uk":"регістр","translit":"","en":"Модулі 147-152","note":""},{"uk":"дієприкметник","translit":"","en":"Модулі 153-155","note":""},{"uk":"дієприслівник","translit":"","en":"Модуль 156","note":""},{"uk":"вставний","translit":"","en":"Модуль 158","note":""},{"uk":"сполучник","translit":"","en":"Модуль 160","note":""}];
     const totalSort=0;
     function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
     document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));

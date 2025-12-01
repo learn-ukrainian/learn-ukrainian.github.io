@@ -31,8 +31,8 @@
       "syntax"
     ],
     "version": 1,
-    "createdAt": "2025-11-30T00:00:00Z",
-    "modifiedAt": "2025-11-30T00:00:00Z",
+    "createdAt": "2025-12-01T00:00:00Z",
+    "modifiedAt": "2025-12-01T00:00:00Z",
     "phases": []
   },
   "activities": [],
@@ -47,8 +47,8 @@
         "id": "v-m164-001",
         "uk": "пасив",
         "translit": "",
-        "ipa": "passive",
-        "en": "141-146",
+        "ipa": "passive voice",
+        "en": "Модулі 141-146",
         "pos": ""
       },
       {
@@ -56,7 +56,7 @@
         "uk": "регістр",
         "translit": "",
         "ipa": "register",
-        "en": "147-152",
+        "en": "Модулі 147-152",
         "pos": ""
       },
       {
@@ -64,7 +64,7 @@
         "uk": "дієприкметник",
         "translit": "",
         "ipa": "participle",
-        "en": "153-155",
+        "en": "Модулі 153-155",
         "pos": ""
       },
       {
@@ -72,7 +72,7 @@
         "uk": "дієприслівник",
         "translit": "",
         "ipa": "adverbial participle",
-        "en": "156",
+        "en": "Модуль 156",
         "pos": ""
       },
       {
@@ -80,7 +80,7 @@
         "uk": "вставний",
         "translit": "",
         "ipa": "parenthetical",
-        "en": "158",
+        "en": "Модуль 158",
         "pos": ""
       },
       {
@@ -88,7 +88,7 @@
         "uk": "сполучник",
         "translit": "",
         "ipa": "conjunction",
-        "en": "160",
+        "en": "Модуль 160",
         "pos": ""
       }
     ]

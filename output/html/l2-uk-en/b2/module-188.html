@@ -118,32 +118,38 @@
         <p style="color:var(--text-muted)">Інтеграція B2.2: Історичний текст</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>У цьому модулі ми застосуємо знання з B2.2:</h4><div class="md-content"><ul>
-<li>Історія (Трипілля → Польща)</li>
-<li>Ідіоми (тіло, тварини, природа)</li>
-<li>Синоніми (мовлення, мислення, пам'ять)</li>
-<li>Складні сполучники</li>
-</ul></div></div></div>
+      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>Ви завершуєте фазу B2.2! За ці модулі ви опанували:</h4><div class="md-content"><ul>
+<li><strong>Історію України</strong> від Трипілля до Речі Посполитої</li>
+<li><strong>Ідіоми</strong> з тематикою тіла, тварин і природи</li>
+<li><strong>Синоніми</strong> дієслів мовлення, мислення та пам'яті</li>
+<li><strong>Складні сполучники</strong> причини, допустовості, часу та умови</li>
+<li><strong>Лексику</strong> медицини та технологій</li>
+</ul>
+<p>Тепер час об'єднати всі ці знання в одному тексті! Ви прочитаєте історичний нарис про Данила Галицького — короля, який коронувався в XIII столітті, коли Київ лежав у руїнах після монгольської навали.</p>
+<blockquote>
+  <p><strong>Чи знали ви?</strong></p>
+  <p>Данило Галицький — єдиний український правитель, який офіційно носив титул <strong>«короля»</strong> (Rex Russiae). Папа Римський Інокентій IV надіслав йому корону в 1253 році. Цікаво, що Данило спочатку <strong>вагався</strong> — він розумів, що Захід не дасть реальної військової допомоги проти монголів. Але погодився, сподіваючись на дипломатичні переваги.</p>
+</blockquote></div></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('quiz')">Start →</button></div>
     </section>
     
     <section id="quiz" class="section"><div class="card"><h3>Інтеграція B2.2</h3>
-      <div class="score-display"><span class="score"><span id="quiz-score">0</span>/7</span></div>
+      <div class="score-display"><span class="score"><span id="quiz-score">0</span>/10</span></div>
       <div id="quiz-container"></div>
       <div class="completion-message" id="quiz-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
-    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (8)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
+    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (10)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
     </section>
   </main>
   <footer>Module 188 · curricula-opus</footer>
   <script>
     const matchPairs=[];
-    const quizData=[{"question":"«Канути у воду» означає:","options":["зникнути безслідно","потонути"],"correctIndex":0,"explanation":"Ідіома = зникнути."},{"question":"«Оскільки» виражає:","options":["причину","допустовість"],"correctIndex":0,"explanation":"Причиновий сполучник."},{"question":"У реченні «Корону покладено» використано:","options":["пасив -но/-то","активний стан"],"correctIndex":0,"explanation":"Офіційний пасив."},{"question":"«Усвідомлювати» порівняно з «розуміти»:","options":["глибше","поверхневіше"],"correctIndex":0,"explanation":"Глибше розуміння."},{"question":"«Незважаючи на» виражає:","options":["допустовість","причину"],"correctIndex":0,"explanation":"Despite."},{"question":"«Данило не опускав руки» означає:","options":["не здавався","тримав руки вгорі"],"correctIndex":0,"explanation":"Ідіома = не здаватися."},{"question":"«Після того як» — це сполучник:","options":["часовий","умовний"],"correctIndex":0,"explanation":"Часова послідовність."}];
+    const quizData=[{"question":"«Канути у воду» означає:","options":["зникнути безслідно","потонути у воді"],"correctIndex":0,"explanation":"Ідіома = зникнути."},{"question":"«Оскільки» виражає:","options":["причину","допустовість"],"correctIndex":0,"explanation":"Причиновий сполучник."},{"question":"У реченні «Данила коронувано» використано:","options":["пасив -но/-то","активний стан"],"correctIndex":0,"explanation":"Офіційний пасив."},{"question":"«Усвідомлювати» порівняно з «розуміти» означає:","options":["глибше розуміння","поверхневіше"],"correctIndex":0,"explanation":"Усвідомлювати = to be fully aware."},{"question":"«Незважаючи на те що» виражає:","options":["допустовість","причину"],"correctIndex":0,"explanation":"Despite the fact that."},{"question":"«Не схилити голови» означає:","options":["не скоритися","не нахиляти голову"],"correctIndex":0,"explanation":"Ідіома = не підкоритися."},{"question":"«Після того як» — це сполучник:","options":["часовий","умовний"],"correctIndex":0,"explanation":"Часова послідовність."},{"question":"«Через те що» виражає:","options":["негативну причину","позитивну причину"],"correctIndex":0,"explanation":"«Завдяки» — позитивна, «через» — негативна."},{"question":"«Доки династія правила» означає:","options":["as long as / while","because"],"correctIndex":0,"explanation":"Тривалість у часі."},{"question":"«Працювати як кінь» означає:","options":["дуже важко працювати","працювати у полі"],"correctIndex":0,"explanation":"Ідіома = to work very hard."}];
     const sortData={};
-    const vocabData=[{"uk":"король","translit":"","en":"m","note":""},{"uk":"корона","translit":"","en":"f","note":""},{"uk":"коронувати","translit":"","en":"pf/ipf","note":""},{"uk":"союзник","translit":"","en":"m","note":""},{"uk":"загрожувати","translit":"","en":"ipf","note":""},{"uk":"дипломатичний","translit":"","en":"adj","note":""},{"uk":"унія","translit":"","en":"f","note":""},{"uk":"нащадок","translit":"","en":"m","note":""}];
+    const vocabData=[{"uk":"король","translit":"","en":"king","note":"m"},{"uk":"корона","translit":"","en":"crown","note":"f"},{"uk":"коронувати","translit":"","en":"to crown","note":"pf/ipf"},{"uk":"союзник","translit":"","en":"ally","note":"m"},{"uk":"загрожувати","translit":"","en":"to threaten","note":"ipf"},{"uk":"унія","translit":"","en":"union","note":"f"},{"uk":"нащадок","translit":"","en":"descendant","note":"m"},{"uk":"князівство","translit":"","en":"principality","note":"n"},{"uk":"орда","translit":"","en":"horde","note":"f"},{"uk":"хрестоносці","translit":"","en":"crusaders","note":"pl"}];
     const totalSort=0;
     function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
     document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));
