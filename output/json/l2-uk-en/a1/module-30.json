@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-A1-30",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "revision",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -27,114 +26,50 @@
       "Verb tenses: Present, Past, Future",
       "Adjectives, pronouns, numbers"
     ],
-    "totalDuration": 60,
-    "transliterationMode": "full",
     "tags": [
       "review",
       "assessment",
       "capstone",
       "final"
     ],
-    "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
+    "totalDuration": 60,
+    "transliterationMode": "full",
     "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Congratulations - You Made It!\n\nYou've completed A1 - the foundation of your Ukrainian journey! Let's celebrate what you've achieved:\n\n**What you can now do:**\n✅ Read and write Cyrillic\n✅ Understand noun genders and cases\n✅ Conjugate verbs in present, past, and future\n✅ Ask questions and understand answers\n✅ Navigate cities, order food, shop\n✅ Describe people, weather, and daily life\n✅ Talk about your family and routine\n\n> 💡 **Did You Know?**\n>\n> At A1 level, you can:\n> - Understand and use familiar everyday expressions\n> - Introduce yourself and others\n> - Ask and answer simple personal questions\n> - Interact in a simple way if the other person speaks slowly\n>\n> You're now a CEFR A1 Ukrainian speaker!"
-          }
-        ]
-      },
       {
         "id": "phase-presentation",
         "name": "presentation",
-        "duration": 15,
+        "duration": 20,
         "items": [
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "### Grammar Review\n\n**Cases You've Learned:**\n\n| Case | Use | Example |\n|------|-----|---------|\n| Nominative | Subject | **Студент** читає. |\n| Accusative | Direct object | Я бачу **студента**. |\n| Locative | Location | Я в **школі**. |\n| Genitive | Possession/absence | Немає **часу**. |\n\n**Verb Tenses:**\n\n| Tense | Formation | Example |\n|-------|-----------|---------|\n| Present | Stem + endings | Я читаю. |\n| Past | Stem + в/ла/ло/ли | Я читав/читала. |\n| Future | буду + infinitive | Я буду читати. |\n\n**Adjective Agreement:**\n\n| Gender | Ending | Example |\n|--------|--------|---------|\n| Masculine | -ий/-ій | новий дім |\n| Feminine | -а/-я | нова книга |\n| Neuter | -е/-є | нове вікно |\n| Plural | -і | нові друзі |"
+            "teacherNotes": "### Grammar Review\n\n**Cases You've Learned:**\n\n| Case | Use | Example |\n|------|-----|---------|\n| Nominative | Subject | **Студент** читає. |\n| Accusative | Direct object | Я бачу **студента**. |\n| Locative | Location | Я в **школі**. |\n| Genitive | Possession/absence | Немає **часу**. |\n\n**Verb Tenses:**\n\n| Tense | Formation | Example |\n|-------|-----------|---------|\n| Present | Stem + endings | Я читаю. |\n| Past | Stem + в/ла/ло/ли | Я читав/читала. |\n| Future | буду + infinitive | Я буду читати. |\n\n**Adjective Agreement:**\n\n| Gender | Ending | Example |\n|--------|--------|---------|\n| Masculine | -ий/-ій | новий дім |\n| Feminine | -а/-я | нова книга |\n| Neuter | -е/-є | нове вікно |\n| Plural | -і | нові друзі |\n\n### Vocabulary Domains\n\n**A1 Core Vocabulary Areas:**\n1. **Personal:** ім'я, вік, національність, професія\n2. **Numbers:** 0-100, гроші, час\n3. **Family:** родина, батьки, діти\n4. **Home:** кімната, меблі, техніка\n5. **City:** вулиця, транспорт, магазини\n6. **Food:** їжа, напої, ресторан\n7. **Clothes:** одяг, кольори, розмір\n8. **Weather:** погода, сезони\n9. **Time:** дні, місяці, години\n10. **Actions:** повсякденні дії\n\n### Communication Skills\n\n**What you can do:**\n\n| Skill | Example |\n|-------|---------|\n| Introduce yourself | Привіт! Мене звати... |\n| Ask questions | Як справи? Де ти живеш? |\n| Express preferences | Я люблю каву. |\n| Describe things | Це великий будинок. |\n| Talk about time | Я встаю о сьомій. |\n| Make requests | Можна каву, будь ласка? |\n| Give directions | Йдіть прямо, потім праворуч. |\n| Talk about family | У мене є брат. |\n\n> 🎯 **Achievement Unlocked!**\n>\n> From not knowing the alphabet to reading, speaking, and understanding Ukrainian - that's incredible progress! Every conversation, every word you recognize, every sentence you form is a victory. Keep going!\n\n### Ready for A2?\n\n**What comes next at A2:**\n\n| Topic | What You'll Learn |\n|-------|-------------------|\n| Cases | Dative, Instrumental, Vocative |\n| Verbs | Aspect (imperfective/perfective) |\n| Complex | Conditional, reported speech |\n| Vocabulary | 1500+ words |\n| Skills | Reading texts, extended conversations |\n\n> 📜 **History Bite: Your Journey**\n>\n> You've learned a language spoken by 40+ million people, with a 1000+ year written history. You can read Cyrillic - an alphabet created by Byzantine missionaries Cyril and Methodius. You understand cases - grammar that proto-Slavic speakers used 1500 years ago. You're connected to a rich linguistic and cultural heritage!"
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Vocabulary Domains\n\n**A1 Core Vocabulary Areas:**\n1. **Personal:** ім'я, вік, національність, професія\n2. **Numbers:** 0-100, гроші, час\n3. **Family:** родина, батьки, діти\n4. **Home:** кімната, меблі, техніка\n5. **City:** вулиця, транспорт, магазини\n6. **Food:** їжа, напої, ресторан\n7. **Clothes:** одяг, кольори, розмір\n8. **Weather:** погода, сезони\n9. **Time:** дні, місяці, години\n10. **Actions:** повсякденні дії"
+            "teacherNotes": "### Integrated Reading\n\nRead and understand:\n\n> Привіт! Мене звати Олена. Я з Києва. Мені 25 років. Я працюю лікаркою в лікарні. У мене є брат Андрій і сестра Марія. Мій брат студент, він вивчає інформатику. Моя сестра вже працює - вона вчителька.\n>\n> Я живу в маленькій квартирі в центрі міста. Щодня я прокидаюся о шостій, снідаю і їду на роботу метро. Увечері я відпочиваю, читаю книги або дивлюся фільми. На вихідних я люблю гуляти в парку або зустрічатися з друзями в кав'ярні.\n>\n> Зараз зима, холодно, йде сніг. Але я люблю зиму! Скоро Новий рік - моє улюблене свято.\n\n**Comprehension questions:**\n1. Хто Олена за професією?\n2. Скільки братів і сестер у Олени?\n3. Коли Олена прокидається?\n4. Яка зараз пора року?\n\n### Grammar Integration\n\nComplete with correct forms:\n1. Вчора я ___ (читати - past, f) цікаву книгу.\n   > [!answer] читала\n2. Він живе в ___ (Київ - locative).\n   > [!answer] Києві\n3. У мене немає ___ (час - genitive).\n   > [!answer] часу\n4. Завтра ми ___ (бути) вдома.\n   > [!answer] будемо\n5. Це ___ (мій) сестра.\n   > [!answer] моя\n\n### Conversation Practice\n\nPractice this dialogue:\nA: Привіт! Як справи?\nB: Добре, дякую! А в тебе?\nA: Теж добре. Що плануєш на вихідні?\nB: Думаю поїхати до Львова. Ти був там?\nA: Так, був минулого року. Львів дуже гарне місто!\nB: Що там найцікавіше?\nA: Старе місто і кав'ярні. Кава там найкраща!"
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Communication Skills\n\n**What you can do:**\n\n| Skill | Example |\n|-------|---------|\n| Introduce yourself | Привіт! Мене звати... |\n| Ask questions | Як справи? Де ти живеш? |\n| Express preferences | Я люблю каву. |\n| Describe things | Це великий будинок. |\n| Talk about time | Я встаю о сьомій. |\n| Make requests | Можна каву, будь ласка? |\n| Give directions | Йдіть прямо, потім праворуч. |\n| Talk about family | У мене є брат. |\n\n> 🎯 **Achievement Unlocked!**\n>\n> From not knowing the alphabet to reading, speaking, and understanding Ukrainian - that's incredible progress! Every conversation, every word you recognize, every sentence you form is a victory. Keep going!"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Ready for A2?\n\n**What comes next at A2:**\n\n| Topic | What You'll Learn |\n|-------|-------------------|\n| Cases | Dative, Instrumental, Vocative |\n| Verbs | Aspect (imperfective/perfective) |\n| Complex | Conditional, reported speech |\n| Vocabulary | 1500+ words |\n| Skills | Reading texts, extended conversations |\n\n> 📜 **History Bite: Your Journey**\n>\n> You've learned a language spoken by 40+ million people, with a 1000+ year written history. You can read Cyrillic - an alphabet created by Byzantine missionaries Cyril and Methodius. You understand cases - grammar that proto-Slavic speakers used 1500 years ago. You're connected to a rich linguistic and cultural heritage!"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A1-30-matchup"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Integrated Reading\n\nRead and understand:\n\n> Привіт! Мене звати Олена. Я з Києва. Мені 25 років. Я працюю лікаркою в лікарні. У мене є брат Андрій і сестра Марія. Мій брат студент, він вивчає інформатику. Моя сестра вже працює - вона вчителька.\n>\n> Я живу в маленькій квартирі в центрі міста. Щодня я прокидаюся о шостій, снідаю і їду на роботу метро. Увечері я відпочиваю, читаю книги або дивлюся фільми. На вихідних я люблю гуляти в парку або зустрічатися з друзями в кав'ярні.\n>\n> Зараз зима, холодно, йде сніг. Але я люблю зиму! Скоро Новий рік - моє улюблене свято.\n\n**Comprehension questions:**\n1. Хто Олена за професією?\n2. Скільки братів і сестер у Олени?\n3. Коли Олена прокидається?\n4. Яка зараз пора року?"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Grammar Integration\n\nComplete with correct forms:\n1. Вчора я ___ (читати - past, f) цікаву книгу. → читала\n2. Він живе в ___ (Київ - locative). → Києві\n3. У мене немає ___ (час - genitive). → часу\n4. Завтра ми ___ (бути) вдома. → будемо\n5. Це ___ (мій) сестра. → моя"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Conversation Practice\n\nPractice this dialogue:\nA: Привіт! Як справи?\nB: Добре, дякую! А в тебе?\nA: Теж добре. Що плануєш на вихідні?\nB: Думаю поїхати до Львова. Ти був там?\nA: Так, був минулого року. Львів дуже гарне місто!\nB: Що там найцікавіше?\nA: Старе місто і кав'ярні. Кава там найкраща!"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A1-30-quiz"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A1-30-groupsort"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Final Challenge: About Me\n\nWrite or speak about yourself covering:\n1. Ім'я, вік, звідки ви\n2. Ваша родина\n3. Де ви живете\n4. Що ви робите (робота/навчання)\n5. Ваш типовий день\n6. Що ви любите робити\n7. Ваші плани на майбутнє"
+            "teacherNotes": "### Final Challenge: About Me\n\nWrite or speak about yourself covering:\n1. Ім'я, вік, звідки ви\n2. Ваша родина\n3. Де ви живете\n4. Що ви робите (робота/навчання)\n5. Ваш типовий день\n6. Що ви любите робити\n7. Ваші плани на майбутнє\n\n---"
           }
         ]
       }
-    ]
+    ],
+    "createdAt": "2025-12-01T22:58:37.264Z",
+    "modifiedAt": "2025-12-01T22:58:37.264Z",
+    "version": 1
   },
   "activities": [
     {
-      "id": "act-uk-A1-30-quiz",
+      "id": "act-a1-30-quiz",
       "type": "quiz",
       "title": "Comprehensive A1 Final",
       "description": "Test your complete A1 knowledge!",
       "content": {
         "type": "quiz",
-        "instructions": "Test your complete A1 knowledge!",
         "questions": [
           {
             "question": "How do you say \"I see the student (m)\"?",
@@ -279,23 +214,17 @@
       "language": "uk",
       "difficultyLevel": "A1",
       "duration": 5,
-      "tags": [
-        "review",
-        "assessment",
-        "capstone",
-        "final"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.264Z",
+      "modifiedAt": "2025-12-01T22:58:37.264Z"
     },
     {
-      "id": "act-uk-A1-30-matchup",
+      "id": "act-a1-30-matchup",
       "type": "match-up",
       "title": "Core Skills",
       "description": "Match skills to examples.",
       "content": {
         "type": "match-up",
-        "instructions": "Match skills to examples.",
         "pairs": [
           {
             "left": "Greeting",
@@ -330,25 +259,20 @@
       "language": "uk",
       "difficultyLevel": "A1",
       "duration": 5,
-      "tags": [
-        "review",
-        "assessment",
-        "capstone",
-        "final"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.264Z",
+      "modifiedAt": "2025-12-01T22:58:37.264Z"
     },
     {
-      "id": "act-uk-A1-30-groupsort",
+      "id": "act-a1-30-groupsort",
       "type": "group-sort",
       "title": "Grammar Categories",
       "description": "Sort these into correct categories.",
       "content": {
         "type": "group-sort",
-        "instructions": "Sort these into correct categories.",
         "groups": [
           {
+            "id": "accusative-forms",
             "name": "Accusative Forms",
             "items": [
               "книгу (книга)",
@@ -357,6 +281,7 @@
             ]
           },
           {
+            "id": "locative-forms",
             "name": "Locative Forms",
             "items": [
               "у школі (школа)",
@@ -365,6 +290,7 @@
             ]
           },
           {
+            "id": "genitive-forms",
             "name": "Genitive Forms",
             "items": [
               "часу (час)",
@@ -381,14 +307,9 @@
       "language": "uk",
       "difficultyLevel": "A1",
       "duration": 5,
-      "tags": [
-        "review",
-        "assessment",
-        "capstone",
-        "final"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.264Z",
+      "modifiedAt": "2025-12-01T22:58:37.264Z"
     }
   ],
   "vocabulary": {

@@ -170,10 +170,14 @@ Many daily activities use **reflexive verbs** (-ся ending):
 ### Describe Routine Actions
 
 Say in Ukrainian:
-1. I wake up at 7. → Я прокидаюся о сьомій.
-2. She has breakfast at 8. → Вона снідає о восьмій.
-3. We work from 9 to 5. → Ми працюємо з дев'ятої до п'ятої.
-4. They go to bed at 11. → Вони лягають спати о одинадцятій.
+1. I wake up at 7.
+   > [!answer] Я прокидаюся о сьомій.
+2. She has breakfast at 8.
+   > [!answer] Вона снідає о восьмій.
+3. We work from 9 to 5.
+   > [!answer] Ми працюємо з дев'ятої до п'ятої.
+4. They go to bed at 11.
+   > [!answer] Вони лягають спати о одинадцятій.
 
 ### Put in Order
 
@@ -185,10 +189,14 @@ Answer: снідати, обідати, вечеряти
 ### Complete the Routine
 
 Fill in with reflexive verbs:
-1. Вранці я ___ (wake up). → прокидаюся
-2. Потім я ___ (wash). → вмиваюся
-3. Я ___ (get dressed). → одягаюся
-4. Ввечері я ___ (undress). → роздягаюся
+1. Вранці я ___ (wake up).
+   > [!answer] прокидаюся
+2. Потім я ___ (wash).
+   > [!answer] вмиваюся
+3. Я ___ (get dressed).
+   > [!answer] одягаюся
+4. Ввечері я ___ (undress).
+   > [!answer] роздягаюся
 
 ## production
 

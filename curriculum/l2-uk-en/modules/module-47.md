@@ -206,19 +206,19 @@ Change real to unreal conditionals:
 ### Complete with б/би
 
 1. Я ___ хотів поїхати в Україну.
-   → б
+   > [!answer] б
 
 2. Він ___ допоміг, якби міг.
-   → би
+   > [!answer] би
 
 3. Було ___ добре побачитися.
-   → б
+   > [!answer] б
 
 4. Ти ___ зателефонував мені?
-   → б
+   > [!answer] б
 
 5. Вона ___ прийшла раніше.
-   → б / би
+   > [!answer] б / би
 
 ### Make Polite
 
@@ -242,22 +242,22 @@ Transform to polite requests:
 ### Translate Hypotheticals
 
 1. If I had time, I would help.
-   → Якби я мав час, я б допоміг.
+   > [!answer] Якби я мав час, я б допоміг.
 
 2. I would like to learn Ukrainian.
-   → Я хотів би вивчити українську.
+   > [!answer] Я хотів би вивчити українську.
 
 3. Could you please help?
-   → Чи не могли б ви допомогти?
+   > [!answer] Чи не могли б ви допомогти?
 
 4. If she knew, she would tell.
-   → Якби вона знала, вона б сказала.
+   > [!answer] Якби вона знала, вона б сказала.
 
 5. It would be good to meet.
-   → Було б добре зустрітися.
+   > [!answer] Було б добре зустрітися.
 
 6. You should call him.
-   → Ти мав би зателефонувати йому.
+   > [!answer] Ти мав би зателефонувати йому.
 
 ## production
 

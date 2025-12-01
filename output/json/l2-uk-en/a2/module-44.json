@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-A2-44",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "grammar-introduction",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -27,30 +26,15 @@
       "Irregular comparatives",
       "Adverb comparatives"
     ],
-    "totalDuration": 45,
-    "transliterationMode": "partial",
     "tags": [
       "adjectives",
       "comparatives",
       "comparison",
       "grammar"
     ],
-    "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
+    "totalDuration": 45,
+    "transliterationMode": "partial",
     "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Bigger, Better, Faster!\n\nTime to compare things! In Ukrainian, comparatives follow patterns:\n\n**English:** big → bigger\n**Ukrainian:** великий → більший\n\n**The basics:**\n- Київ **більший** ніж Львів. - Kyiv is bigger than Lviv.\n- Вона **старша** за мене. - She is older than me.\n- Цей фільм **кращий**! - This movie is better!\n\n> 💡 **Did You Know?**\n>\n> Ukrainian comparatives are simpler than you might think! Most use the suffix -іший/-ший, and there's no need for \"more\" like English uses for longer adjectives (more beautiful). Ukrainian uses one system for all adjectives!"
-          }
-        ]
-      },
       {
         "id": "phase-presentation",
         "name": "presentation",
@@ -59,102 +43,33 @@
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "### Forming Comparatives: Regular Pattern\n\n**Most adjectives: add -іший or -ший**\n\n| Adjective | Comparative | English |\n|-----------|-------------|---------|\n| новий | нов**іший** | newer |\n| старий | стар**іший** | older |\n| молодий | молод**ший** | younger |\n| довгий | довг**ший** | longer |\n| короткий | корот**ший** | shorter |\n| темний | темн**іший** | darker |\n| світлий | світл**іший** | lighter |\n| теплий | тепл**іший** | warmer |\n| холодний | холодн**іший** | colder |\n\n**Pattern:**\n- If stem ends in consonant cluster: add **-ший** (молодий → молодший)\n- Otherwise: add **-іший** (новий → новіший)\n\n> ⚡ **Pro Tip: Stress Shift**\n>\n> In comparatives, stress usually moves:\n> - новий → новіший (НО-ві-ший)\n> - старий → старіший (ста-РІ-ший)"
+            "teacherNotes": "### Forming Comparatives: Regular Pattern\n\n**Most adjectives: add -іший or -ший**\n\n| Adjective | Comparative | English |\n|-----------|-------------|---------|\n| новий | нов**іший** | newer |\n| старий | стар**іший** | older |\n| молодий | молод**ший** | younger |\n| довгий | довг**ший** | longer |\n| короткий | корот**ший** | shorter |\n| темний | темн**іший** | darker |\n| світлий | світл**іший** | lighter |\n| теплий | тепл**іший** | warmer |\n| холодний | холодн**іший** | colder |\n\n**Pattern:**\n- If stem ends in consonant cluster: add **-ший** (молодий → молодший)\n- Otherwise: add **-іший** (новий → новіший)\n\n> ⚡ **Pro Tip: Stress Shift**\n>\n> In comparatives, stress usually moves:\n> - новий → новіший (НО-ві-ший)\n> - старий → старіший (ста-РІ-ший)\n\n### Irregular Comparatives\n\n**Essential irregulars (memorize these!):**\n\n| Adjective | Comparative | English |\n|-----------|-------------|---------|\n| великий (big) | **більший** | bigger |\n| малий (small) | **менший** | smaller |\n| добрий/хороший (good) | **кращий** | better |\n| поганий (bad) | **гірший** | worse |\n| високий (tall/high) | **вищий** | taller/higher |\n| низький (low/short) | **нижчий** | lower/shorter |\n| широкий (wide) | **ширший** | wider |\n| вузький (narrow) | **вужчий** | narrower |\n| дорогий (expensive) | **дорожчий** | more expensive |\n| дешевий (cheap) | **дешевший** | cheaper |\n\n**Examples:**\n- Цей будинок **більший**. - This building is bigger.\n- Ця вулиця **ширша**. - This street is wider.\n- Якість **краща**. - The quality is better.\n\n> 📜 **History Bite: Sound Changes**\n>\n> The irregular comparatives come from ancient Slavic sound changes. великий → більший shows the \"вел\" → \"біль\" change that happened over 1,000 years ago. These forms were \"irregular\" even then!\n\n### Comparison Constructions\n\n**ніж (than) - with nominative:**\n- Київ більший, **ніж** Львів. - Kyiv is bigger than Lviv.\n- Вона молодша, **ніж** я. - She is younger than me.\n- Це краще, **ніж** я думав. - This is better than I thought.\n\n**за + accusative (than):**\n- Він старший **за мене**. - He is older than me.\n- Вона вища **за сестру**. - She is taller than her sister.\n- Це дорожче **за те**. - This is more expensive than that.\n\n**від + genitive (than):**\n- Він вищий **від брата**. - He is taller than his brother.\n- Це дешевше **від іншого**. - This is cheaper than the other.\n\n> ⚡ **Pro Tip: Which to Use?**\n>\n> - **ніж** - most common, formal, can compare anything\n> - **за** + acc - common in speech, especially with pronouns\n> - **від** + gen - less common, slightly formal\n>\n> All three mean \"than\" - choose what feels natural!\n\n### Comparing Adverbs\n\n**Adverbs also have comparatives:**\n\n| Adverb | Comparative | English |\n|--------|-------------|---------|\n| швидко (quickly) | швид**ше** | faster |\n| повільно (slowly) | повільн**іше** | more slowly |\n| добре (well) | **краще** | better |\n| погано (badly) | **гірше** | worse |\n| багато (much/many) | **більше** | more |\n| мало (little/few) | **менше** | less/fewer |\n| рано (early) | рані**ше** | earlier |\n| пізно (late) | пізні**ше** | later |\n\n**Examples:**\n- Говори **повільніше**, будь ласка. - Speak more slowly, please.\n- Він бігає **швидше** за мене. - He runs faster than me.\n- Я хочу **більше** часу. - I want more time.\n- Це коштує **менше**. - This costs less.\n\n> 🎭 **Culture Corner: Modest Comparisons**\n>\n> Ukrainians often soften comparisons:\n> - \"трохи більший\" (a bit bigger)\n> - \"набагато кращий\" (much better)\n> - \"значно дорожчий\" (significantly more expensive)\n>\n> Direct comparisons without modifiers can sound blunt!\n\n### Intensifying Comparisons\n\n**набагато (much):**\n- Це **набагато** краще! - This is much better!\n- Він **набагато** старший. - He's much older.\n\n**значно (significantly):**\n- Ціни **значно** вищі. - Prices are significantly higher.\n\n**трохи (a bit):**\n- Вона **трохи** молодша. - She's a bit younger.\n\n**ще (even):**\n- Цей **ще** більший. - This one is even bigger.\n\n**не набагато (not much):**\n- Він **не набагато** старший. - He's not much older.\n\n### Comparisons of Equality\n\n**такий... як (as... as):**\n- Він **такий** високий, **як** я. - He is as tall as me.\n- Вона **така** розумна, **як** брат. - She is as smart as her brother.\n\n**так... як (as... as, for adverbs):**\n- Вона бігає **так** швидко, **як** він. - She runs as fast as he does.\n\n**не такий... як (not as... as):**\n- Це **не таке** дороге, **як** я думав. - It's not as expensive as I thought.\n- Він **не такий** високий, **як** батько. - He's not as tall as his father.\n\n**Examples:**\n- Моя квартира така велика, як твоя. - My apartment is as big as yours.\n- Він працює не так багато, як раніше. - He doesn't work as much as before.\n\n### Common Comparison Expressions\n\n**чим... тим (the more... the more):**\n- **Чим** більше, **тим** краще. - The more, the better.\n- **Чим** швидше, **тим** краще. - The faster, the better.\n- **Чим** раніше, **тим** краще. - The earlier, the better.\n\n**все більше і більше (more and more):**\n- Ціни **все вищі і вищі**. - Prices are higher and higher.\n- Я розумію **все краще і краще**. - I understand better and better.\n\n> 💡 **Key Insight**\n>\n> \"Чим... тим...\" is extremely useful:\n> - Чим більше вчиш, тим краще знаєш.\n> - (The more you study, the better you know.)"
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Irregular Comparatives\n\n**Essential irregulars (memorize these!):**\n\n| Adjective | Comparative | English |\n|-----------|-------------|---------|\n| великий (big) | **більший** | bigger |\n| малий (small) | **менший** | smaller |\n| добрий/хороший (good) | **кращий** | better |\n| поганий (bad) | **гірший** | worse |\n| високий (tall/high) | **вищий** | taller/higher |\n| низький (low/short) | **нижчий** | lower/shorter |\n| широкий (wide) | **ширший** | wider |\n| вузький (narrow) | **вужчий** | narrower |\n| дорогий (expensive) | **дорожчий** | more expensive |\n| дешевий (cheap) | **дешевший** | cheaper |\n\n**Examples:**\n- Цей будинок **більший**. - This building is bigger.\n- Ця вулиця **ширша**. - This street is wider.\n- Якість **краща**. - The quality is better.\n\n> 📜 **History Bite: Sound Changes**\n>\n> The irregular comparatives come from ancient Slavic sound changes. великий → більший shows the \"вел\" → \"біль\" change that happened over 1,000 years ago. These forms were \"irregular\" even then!"
+            "teacherNotes": "### Form Comparatives\n\nMake comparatives from these adjectives:\n\n1. новий\n   > [!answer] новіший\n2. старий\n   > [!answer] старіший\n3. великий\n   > [!answer] більший\n4. малий\n   > [!answer] менший\n5. добрий\n   > [!answer] кращий\n6. поганий\n   > [!answer] гірший\n7. дорогий\n   > [!answer] дорожчий\n8. дешевий\n   > [!answer] дешевший\n9. високий\n   > [!answer] вищий\n10. швидкий\n   > [!answer] швидший\n\n### Complete Comparisons\n\n1. Київ ___ (великий), ніж Одеса.\n   > [!answer] більший\n\n2. Зима ___ (холодний), ніж осінь.\n   > [!answer] холодніша\n\n3. Це ___ (дорогий) за те.\n   > [!answer] дорожче\n\n4. Він працює ___ (добре), ніж раніше.\n   > [!answer] краще\n\n5. Я хочу ___ (багато) часу.\n   > [!answer] більше\n\n6. Ця книга ___ (цікавий), ніж та.\n   > [!answer] цікавіша\n\n### Translate Comparisons\n\n1. This is better than that.\n   > [!answer] Це краще, ніж те. / Це краще за те.\n\n2. She is taller than me.\n   > [!answer] Вона вища за мене. / Вона вища, ніж я.\n\n3. He speaks faster than I do.\n   > [!answer] Він говорить швидше за мене.\n\n4. This apartment is bigger.\n   > [!answer] Ця квартира більша.\n\n5. I need more time.\n   > [!answer] Мені потрібно більше часу.\n\n6. The weather is getting warmer.\n   > [!answer] Погода стає теплішою."
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Comparison Constructions\n\n**ніж (than) - with nominative:**\n- Київ більший, **ніж** Львів. - Kyiv is bigger than Lviv.\n- Вона молодша, **ніж** я. - She is younger than me.\n- Це краще, **ніж** я думав. - This is better than I thought.\n\n**за + accusative (than):**\n- Він старший **за мене**. - He is older than me.\n- Вона вища **за сестру**. - She is taller than her sister.\n- Це дорожче **за те**. - This is more expensive than that.\n\n**від + genitive (than):**\n- Він вищий **від брата**. - He is taller than his brother.\n- Це дешевше **від іншого**. - This is cheaper than the other.\n\n> ⚡ **Pro Tip: Which to Use?**\n>\n> - **ніж** - most common, formal, can compare anything\n> - **за** + acc - common in speech, especially with pronouns\n> - **від** + gen - less common, slightly formal\n>\n> All three mean \"than\" - choose what feels natural!"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Comparing Adverbs\n\n**Adverbs also have comparatives:**\n\n| Adverb | Comparative | English |\n|--------|-------------|---------|\n| швидко (quickly) | швид**ше** | faster |\n| повільно (slowly) | повільн**іше** | more slowly |\n| добре (well) | **краще** | better |\n| погано (badly) | **гірше** | worse |\n| багато (much/many) | **більше** | more |\n| мало (little/few) | **менше** | less/fewer |\n| рано (early) | рані**ше** | earlier |\n| пізно (late) | пізні**ше** | later |\n\n**Examples:**\n- Говори **повільніше**, будь ласка. - Speak more slowly, please.\n- Він бігає **швидше** за мене. - He runs faster than me.\n- Я хочу **більше** часу. - I want more time.\n- Це коштує **менше**. - This costs less.\n\n> 🎭 **Culture Corner: Modest Comparisons**\n>\n> Ukrainians often soften comparisons:\n> - \"трохи більший\" (a bit bigger)\n> - \"набагато кращий\" (much better)\n> - \"значно дорожчий\" (significantly more expensive)\n>\n> Direct comparisons without modifiers can sound blunt!"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Intensifying Comparisons\n\n**набагато (much):**\n- Це **набагато** краще! - This is much better!\n- Він **набагато** старший. - He's much older.\n\n**значно (significantly):**\n- Ціни **значно** вищі. - Prices are significantly higher.\n\n**трохи (a bit):**\n- Вона **трохи** молодша. - She's a bit younger.\n\n**ще (even):**\n- Цей **ще** більший. - This one is even bigger.\n\n**не набагато (not much):**\n- Він **не набагато** старший. - He's not much older."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Comparisons of Equality\n\n**такий... як (as... as):**\n- Він **такий** високий, **як** я. - He is as tall as me.\n- Вона **така** розумна, **як** брат. - She is as smart as her brother.\n\n**так... як (as... as, for adverbs):**\n- Вона бігає **так** швидко, **як** він. - She runs as fast as he does.\n\n**не такий... як (not as... as):**\n- Це **не таке** дороге, **як** я думав. - It's not as expensive as I thought.\n- Він **не такий** високий, **як** батько. - He's not as tall as his father.\n\n**Examples:**\n- Моя квартира така велика, як твоя. - My apartment is as big as yours.\n- Він працює не так багато, як раніше. - He doesn't work as much as before."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Common Comparison Expressions\n\n**чим... тим (the more... the more):**\n- **Чим** більше, **тим** краще. - The more, the better.\n- **Чим** швидше, **тим** краще. - The faster, the better.\n- **Чим** раніше, **тим** краще. - The earlier, the better.\n\n**все більше і більше (more and more):**\n- Ціни **все вищі і вищі**. - Prices are higher and higher.\n- Я розумію **все краще і краще**. - I understand better and better.\n\n> 💡 **Key Insight**\n>\n> \"Чим... тим...\" is extremely useful:\n> - Чим більше вчиш, тим краще знаєш.\n> - (The more you study, the better you know.)"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A2-44-matchup"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Form Comparatives\n\nMake comparatives from these adjectives:\n\n1. новий → новіший\n2. старий → старіший\n3. великий → більший\n4. малий → менший\n5. добрий → кращий\n6. поганий → гірший\n7. дорогий → дорожчий\n8. дешевий → дешевший\n9. високий → вищий\n10. швидкий → швидший"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Complete Comparisons\n\n1. Київ ___ (великий), ніж Одеса.\n   → більший\n\n2. Зима ___ (холодний), ніж осінь.\n   → холодніша\n\n3. Це ___ (дорогий) за те.\n   → дорожче\n\n4. Він працює ___ (добре), ніж раніше.\n   → краще\n\n5. Я хочу ___ (багато) часу.\n   → більше\n\n6. Ця книга ___ (цікавий), ніж та.\n   → цікавіша"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Translate Comparisons\n\n1. This is better than that.\n   → Це краще, ніж те. / Це краще за те.\n\n2. She is taller than me.\n   → Вона вища за мене. / Вона вища, ніж я.\n\n3. He speaks faster than I do.\n   → Він говорить швидше за мене.\n\n4. This apartment is bigger.\n   → Ця квартира більша.\n\n5. I need more time.\n   → Мені потрібно більше часу.\n\n6. The weather is getting warmer.\n   → Погода стає теплішою."
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A2-44-quiz"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A2-44-groupsort"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Compare People and Things\n\n**Compare yourself to someone:**\n- Я вищий/нижчий за брата.\n- Я старший/молодший за сестру.\n- Я працюю більше/менше, ніж мої друзі.\n\n**Compare cities:**\n- Київ більший за Львів.\n- Львів старіший за Харків.\n- Одеса тепліша за Київ.\n\n**Compare products:**\n- Цей телефон дорожчий.\n- Ця машина швидша.\n- Та квартира більша, але дорожча."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Shopping Dialogue\n\n- Ця сукня гарна, але чи є щось дешевше?\n- Так, ось ця. Вона дешевша, але трохи менша.\n- А є щось більше?\n- Є, але воно дорожче.\n- Нічого, покажіть. Краща якість важливіша за ціну."
+            "teacherNotes": "### Compare People and Things\n\n**Compare yourself to someone:**\n- Я вищий/нижчий за брата.\n- Я старший/молодший за сестру.\n- Я працюю більше/менше, ніж мої друзі.\n\n**Compare cities:**\n- Київ більший за Львів.\n- Львів старіший за Харків.\n- Одеса тепліша за Київ.\n\n**Compare products:**\n- Цей телефон дорожчий.\n- Ця машина швидша.\n- Та квартира більша, але дорожча.\n\n### Shopping Dialogue\n\n- Ця сукня гарна, але чи є щось дешевше?\n- Так, ось ця. Вона дешевша, але трохи менша.\n- А є щось більше?\n- Є, але воно дорожче.\n- Нічого, покажіть. Краща якість важливіша за ціну.\n\n---"
           }
         ]
       }
-    ]
+    ],
+    "createdAt": "2025-12-01T22:58:37.272Z",
+    "modifiedAt": "2025-12-01T22:58:37.272Z",
+    "version": 1
   },
   "activities": [
     {
-      "id": "act-uk-A2-44-matchup",
+      "id": "act-a2-44-matchup",
       "type": "match-up",
       "title": "Adjective Comparatives",
       "description": "Match adjective with comparative.",
       "content": {
         "type": "match-up",
-        "instructions": "Match adjective with comparative.",
         "pairs": [
           {
             "left": "великий",
@@ -189,23 +104,17 @@
       "language": "uk",
       "difficultyLevel": "A2",
       "duration": 5,
-      "tags": [
-        "adjectives",
-        "comparatives",
-        "comparison",
-        "grammar"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.272Z",
+      "modifiedAt": "2025-12-01T22:58:37.272Z"
     },
     {
-      "id": "act-uk-A2-44-quiz",
+      "id": "act-a2-44-quiz",
       "type": "quiz",
       "title": "Comparatives",
       "description": "Choose the correct form.",
       "content": {
         "type": "quiz",
-        "instructions": "Choose the correct form.",
         "questions": [
           {
             "question": "\"Kyiv is bigger than Lviv\" - Київ ___ за Львів.",
@@ -284,34 +193,31 @@
       "language": "uk",
       "difficultyLevel": "A2",
       "duration": 5,
-      "tags": [
-        "adjectives",
-        "comparatives",
-        "comparison",
-        "grammar"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.272Z",
+      "modifiedAt": "2025-12-01T22:58:37.272Z"
     },
     {
-      "id": "act-uk-A2-44-groupsort",
+      "id": "act-a2-44-groupsort",
       "type": "group-sort",
       "title": "Regular vs Irregular",
       "description": "Sort by comparative formation.",
       "content": {
         "type": "group-sort",
-        "instructions": "Sort by comparative formation.",
         "groups": [
           {
-            "name": "Regular (-іший/-ший)",
+            "id": "regular",
+            "name": "Regular",
             "items": [
               "новий → новіший",
               "старий → старіший",
               "молодий → молодший",
               "холодний → холодніший"
-            ]
+            ],
+            "nameUk": "-іший/-ший"
           },
           {
+            "id": "irregular",
             "name": "Irregular",
             "items": [
               "великий → більший",
@@ -330,14 +236,9 @@
       "language": "uk",
       "difficultyLevel": "A2",
       "duration": 5,
-      "tags": [
-        "adjectives",
-        "comparatives",
-        "comparison",
-        "grammar"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.272Z",
+      "modifiedAt": "2025-12-01T22:58:37.272Z"
     }
   ],
   "vocabulary": {
@@ -348,162 +249,130 @@
     "transliterationMode": "partial",
     "words": [
       {
-        "id": "v-m44-001",
+        "id": "v-krashchyy-44-0",
         "uk": "кращий",
-        "translit": "",
-        "ipa": "/ˈkrɑʃtʃɪj/",
         "en": "better",
         "pos": "adj",
-        "gender": "-",
+        "ipa": "/ˈkrɑʃtʃɪj/",
         "note": "comp of добрий"
       },
       {
-        "id": "v-m44-002",
+        "id": "v-hirshyy-44-1",
         "uk": "гірший",
-        "translit": "",
-        "ipa": "/ˈɦʲirʃɪj/",
         "en": "worse",
         "pos": "adj",
-        "gender": "-",
+        "ipa": "/ˈɦʲirʃɪj/",
         "note": "comp of поганий"
       },
       {
-        "id": "v-m44-003",
+        "id": "v-vyshchyy-44-2",
         "uk": "вищий",
-        "translit": "",
-        "ipa": "/ˈvɪʃtʃɪj/",
         "en": "higher/taller",
         "pos": "adj",
-        "gender": "-",
+        "ipa": "/ˈvɪʃtʃɪj/",
         "note": "comp of високий"
       },
       {
-        "id": "v-m44-004",
+        "id": "v-nyzhchyy-44-3",
         "uk": "нижчий",
-        "translit": "",
-        "ipa": "/ˈnɪʒtʃɪj/",
         "en": "lower/shorter",
         "pos": "adj",
-        "gender": "-",
+        "ipa": "/ˈnɪʒtʃɪj/",
         "note": "comp of низький"
       },
       {
-        "id": "v-m44-005",
+        "id": "v-starishyy-44-4",
         "uk": "старіший",
-        "translit": "",
-        "ipa": "/stɑˈrʲiʃɪj/",
         "en": "older",
         "pos": "adj",
-        "gender": "-",
+        "ipa": "/stɑˈrʲiʃɪj/",
         "note": "comp of старий"
       },
       {
-        "id": "v-m44-006",
+        "id": "v-molodshyy-44-5",
         "uk": "молодший",
-        "translit": "",
-        "ipa": "/moˈlodʃɪj/",
         "en": "younger",
         "pos": "adj",
-        "gender": "-",
+        "ipa": "/moˈlodʃɪj/",
         "note": "comp of молодий"
       },
       {
-        "id": "v-m44-007",
+        "id": "v-dorozhchyy-44-6",
         "uk": "дорожчий",
-        "translit": "",
-        "ipa": "/doˈroʒtʃɪj/",
         "en": "more expensive",
         "pos": "adj",
-        "gender": "-",
+        "ipa": "/doˈroʒtʃɪj/",
         "note": "comp of дорогий"
       },
       {
-        "id": "v-m44-008",
+        "id": "v-deshevshyy-44-7",
         "uk": "дешевший",
-        "translit": "",
-        "ipa": "/dɛˈʃɛvʃɪj/",
         "en": "cheaper",
         "pos": "adj",
-        "gender": "-",
+        "ipa": "/dɛˈʃɛvʃɪj/",
         "note": "comp of дешевий"
       },
       {
-        "id": "v-m44-009",
+        "id": "v-shvydshe-44-8",
         "uk": "швидше",
-        "translit": "",
-        "ipa": "/ˈʃvɪdʃɛ/",
         "en": "faster",
         "pos": "adv",
-        "gender": "-",
+        "ipa": "/ˈʃvɪdʃɛ/",
         "note": "comp of швидко"
       },
       {
-        "id": "v-m44-010",
+        "id": "v-povilьnishe-44-9",
         "uk": "повільніше",
-        "translit": "",
-        "ipa": "/poˈvʲilʲnʲiʃɛ/",
         "en": "more slowly",
         "pos": "adv",
-        "gender": "-",
+        "ipa": "/poˈvʲilʲnʲiʃɛ/",
         "note": "comp of повільно"
       },
       {
-        "id": "v-m44-011",
+        "id": "v-bilьshe-44-10",
         "uk": "більше",
-        "translit": "",
-        "ipa": "/ˈbʲilʲʃɛ/",
         "en": "more",
         "pos": "adv",
-        "gender": "-",
+        "ipa": "/ˈbʲilʲʃɛ/",
         "note": "comp of багато"
       },
       {
-        "id": "v-m44-012",
+        "id": "v-menshe-44-11",
         "uk": "менше",
-        "translit": "",
-        "ipa": "/ˈmɛnʃɛ/",
         "en": "less",
         "pos": "adv",
-        "gender": "-",
+        "ipa": "/ˈmɛnʃɛ/",
         "note": "comp of мало"
       },
       {
-        "id": "v-m44-013",
+        "id": "v-krashche-44-12",
         "uk": "краще",
-        "translit": "",
-        "ipa": "/ˈkrɑʃtʃɛ/",
         "en": "better",
         "pos": "adv",
-        "gender": "-",
+        "ipa": "/ˈkrɑʃtʃɛ/",
         "note": "comp of добре"
       },
       {
-        "id": "v-m44-014",
+        "id": "v-hirshe-44-13",
         "uk": "гірше",
-        "translit": "",
-        "ipa": "/ˈɦʲirʃɛ/",
         "en": "worse",
         "pos": "adv",
-        "gender": "-",
+        "ipa": "/ˈɦʲirʃɛ/",
         "note": "comp of погано"
       },
       {
-        "id": "v-m44-015",
+        "id": "v-nabahato-44-14",
         "uk": "набагато",
-        "translit": "",
-        "ipa": "/nɑbɑˈɦɑto/",
         "en": "much (intensifier)",
         "pos": "adv",
-        "gender": "-"
+        "ipa": "/nɑbɑˈɦɑto/"
       },
       {
-        "id": "v-m44-016",
+        "id": "v-znachno-44-15",
         "uk": "значно",
-        "translit": "",
-        "ipa": "/ˈznɑtʃno/",
         "en": "significantly",
         "pos": "adv",
-        "gender": "-"
+        "ipa": "/ˈznɑtʃno/"
       }
     ]
   }

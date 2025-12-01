@@ -211,34 +211,52 @@ These ALWAYS take instrumental:
 
 Select the right form:
 
-1. Я йду до ___ (магазин). → магазину (gen)
-2. Вона біля ___ (вікно). → вікна (gen)
-3. Ми з ___ (друзі). → друзями (instr)
-4. Кіт під ___ (стіл - location). → столом (instr)
-5. Він за ___ (будинок - motion). → будинок (acc)
-6. Після ___ (урок). → уроку (gen)
+1. Я йду до ___ (магазин).
+   > [!answer] магазину (gen)
+2. Вона біля ___ (вікно).
+   > [!answer] вікна (gen)
+3. Ми з ___ (друзі).
+   > [!answer] друзями (instr)
+4. Кіт під ___ (стіл - location).
+   > [!answer] столом (instr)
+5. Він за ___ (будинок - motion).
+   > [!answer] будинок (acc)
+6. Після ___ (урок).
+   > [!answer] уроку (gen)
 
 ### Location or Motion?
 
 Choose the correct form:
 
-1. Книга лежить ___ (стіл). → на столі (loc - location)
-2. Я кладу книгу ___ (стіл). → на стіл (acc - motion)
-3. Він ___ (кімната). → у кімнаті (loc - location)
-4. Він входить ___ (кімната). → у кімнату (acc - motion)
-5. Собака ___ (ліжко). → під ліжком (instr - location)
-6. Собака забіг ___ (ліжко). → під ліжко (acc - motion)
+1. Книга лежить ___ (стіл).
+   > [!answer] на столі (loc - location)
+2. Я кладу книгу ___ (стіл).
+   > [!answer] на стіл (acc - motion)
+3. Він ___ (кімната).
+   > [!answer] у кімнаті (loc - location)
+4. Він входить ___ (кімната).
+   > [!answer] у кімнату (acc - motion)
+5. Собака ___ (ліжко).
+   > [!answer] під ліжком (instr - location)
+6. Собака забіг ___ (ліжко).
+   > [!answer] під ліжко (acc - motion)
 
 ### Build Sentences
 
 Use the correct preposition + case:
 
-1. near / house → біля дому
-2. after / work → після роботи
-3. with / friend → з другом
-4. to / Kyiv → до Києва
-5. between / us → між нами
-6. above / table → над столом
+1. near / house
+   > [!answer] біля дому
+2. after / work
+   > [!answer] після роботи
+3. with / friend
+   > [!answer] з другом
+4. to / Kyiv
+   > [!answer] до Києва
+5. between / us
+   > [!answer] між нами
+6. above / table
+   > [!answer] над столом
 
 ## production
 

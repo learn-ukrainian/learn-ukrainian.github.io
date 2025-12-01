@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-B1-85",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "grammar-introduction",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -26,86 +25,67 @@
       "Perfective negation for specific cases",
       "Prohibition patterns"
     ],
-    "totalDuration": 45,
-    "transliterationMode": "none",
     "tags": [
       "aspect",
       "grammar",
       "verbs",
       "negation"
     ],
-    "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
+    "totalDuration": 45,
+    "transliterationMode": "none",
     "phases": [
       {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
+        "id": "phase-presentation",
+        "name": "presentation",
+        "duration": 15,
         "items": [
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "### A Common Pattern\n\nCompare these sentences:\n\n- Ти **прочитав** книгу? - Did you read the book?\n- Ні, я **не читав** її. - No, I didn't read it.\n\nNotice: The question uses perfective, but the negative answer uses imperfective!\n\nThis is a fundamental pattern in Ukrainian: **negation prefers imperfective**."
+            "teacherNotes": "### The General Rule\n\n**In negative sentences, Ukrainian strongly prefers imperfective verbs.**\n\nWhy? When you deny an action, you're usually saying \"the action didn't happen at all\" — there was no process, so there's no result to talk about.\n\n**Positive (perfective):** Я **прочитав** книгу. - I read the book.\n**Negative (imperfective):** Я **не читав** цю книгу. - I didn't read this book.\n\n**Positive (perfective):** Він **написав** листа. - He wrote the letter.\n**Negative (imperfective):** Він **не писав** листа. - He didn't write a letter.\n\n### Why Imperfective?\n\nThink of it this way:\n\n- **Perfective** asserts a result: \"The book got read.\"\n- **Imperfective** describes process: \"Reading was happening.\"\n- **Negative imperfective** says: \"No reading process ever occurred.\"\n\nIf no process happened, how could there be a result? So imperfective is more logical.\n\n### Common Negation Patterns\n\n**\"Didn't do\" (general negation):**\n\n| Positive (perfective) | Negative (imperfective) |\n|----------------------|------------------------|\n| Я **зробив** це. | Я **не робив** цього. |\n| Вона **написала** листа. | Вона **не писала** листа. |\n| Ми **купили** хліб. | Ми **не купували** хліба. |\n| Він **сказав** правду. | Він **не говорив** правди. |\n\n> Note: Objects often shift to genitive case in negative sentences.\n\n### Questions and Negative Answers\n\n**Question (often perfective):** Ти зробив домашнє? - Did you do your homework?\n**Negative (imperfective):** Ні, не робив. - No, I didn't.\n\n**Question:** Ви купили квитки? - Did you buy tickets?\n**Negative:** Ні, ми не купували. - No, we didn't.\n\n**Question:** Вона подзвонила? - Did she call?\n**Negative:** Ні, не телефонувала. - No, she didn't.\n\n### When Perfective Negation IS Used\n\nThere are specific cases where perfective is used in negation:\n\n**1. Specific expected result didn't happen:**\n\n- Я **не знайшов** ключів. - I didn't find the keys. (I searched, but no result)\n- Вона **не встигла** на потяг. - She didn't catch the train. (She tried, but failed)\n- Ми **не зрозуміли** його. - We didn't understand him. (Specific failure)\n\n**2. Warning that something won't happen:**\n\n- Обережно, **не впади**! - Careful, don't fall!\n- **Не забудь** ключі! - Don't forget the keys!\n- **Не запізнись**! - Don't be late!\n\n**3. Emphatic denial of specific action:**\n\n- Я цього **не сказав**! - I didn't say that! (denying specific statement)\n- Він цього **не зробив**! - He didn't do that! (denying specific deed)\n\n### Prohibition: Don't Do This!\n\n**General prohibition (imperfective):** Don't do this type of action.\n\n- **Не кури**! - Don't smoke! (in general)\n- **Не бійся**! - Don't be afraid!\n- **Не хвилюйся**! - Don't worry!\n- **Тут не можна паркуватися**. - Parking is not allowed here.\n\n**Specific warning (perfective):** Don't do this one thing!\n\n- **Не впусти** тарілку! - Don't drop the plate!\n- **Не забудь** зателефонувати! - Don't forget to call!\n- **Не відкривай** двері! - Don't open the door! (this specific time)\n\n### \"Never\" - Always Imperfective\n\nWith **ніколи** (never), always use imperfective:\n\n- Я **ніколи не курив**. - I have never smoked.\n- Вона **ніколи не бачила** моря. - She has never seen the sea.\n- Ми **ніколи не ходили** туди. - We have never been there.\n- Він **ніколи не запізнювався**. - He was never late.\n\n**NOT:** ~~Я ніколи не покурив.~~ (Incorrect)\n\n### \"Not yet\" - Usually Perfective\n\nWith **ще не** (not yet), use perfective (result expected but not achieved):\n\n- Я **ще не прочитав** книгу. - I haven't read the book yet.\n- Вона **ще не приїхала**. - She hasn't arrived yet.\n- Ми **ще не вирішили**. - We haven't decided yet.\n- Він **ще не закінчив**. - He hasn't finished yet.\n\n### Future Negation\n\n**General refusal (imperfective):**\n\n- Я **не буду** це **робити**. - I won't do this.\n- Вона **не буде** з ним **розмовляти**. - She won't talk to him.\n\n**Specific action won't happen (perfective):**\n\n- Я цього **не зроблю**. - I won't do this (specific thing).\n- Вона йому **не скаже**. - She won't tell him.\n\n### Genitive Case in Negative Sentences\n\nObjects often shift to genitive in negation:\n\n| Positive (accusative) | Negative (genitive) |\n|----------------------|---------------------|\n| Я **бачив** його (**acc**). | Я **не бачив** його (**gen**). |\n| Вона **купила** хліб (**acc**). | Вона **не купувала** хліба (**gen**). |\n| Ми **пили** каву (**acc**). | Ми **не пили** кави (**gen**). |\n\nThis is called the \"genitive of negation\" — another A2+ topic reinforced here."
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Convert to Negative\n\nChange to negative form (use imperfective):\n\n1. Він прочитав книгу.\n   > [!answer] Він **не читав** книги.\n2. Вона написала листа.\n   > [!answer] Вона **не писала** листа.\n3. Ми купили квитки.\n   > [!answer] Ми **не купували** квитків.\n4. Я зробив домашнє.\n   > [!answer] Я **не робив** домашнього.\n5. Вони подивилися фільм.\n   > [!answer] Вони **не дивилися** фільму.\n\n### Choose Correct Aspect in Negation\n\n1. Я ніколи ___ (не курив/не покурив).\n   > [!answer] **не курив** (ніколи = imperfective)\n2. Обережно, ___ (не падай/не впади)!\n   > [!answer] **не впади** (warning = perfective)\n3. Вона ще ___ (не приїжджала/не приїхала).\n   > [!answer] **не приїхала** (ще не = perfective)\n4. Я ___ (не буду робити/не зроблю) це (general refusal).\n   > [!answer] **не буду робити**\n5. ___ (Не забувай/Не забудь) взяти парасольку!\n   > [!answer] **Не забудь** (warning)\n6. Ми ___ (не говорили/не сказали) йому про це.\n   > [!answer] **не говорили** (general negation)\n\n### Question and Answer\n\nAnswer negatively using imperfective:\n\n**Q:** Ти подзвонив мамі?\n**A:** Ні, я ще **не телефонував**.\n\n**Q:** Ви купили квитки?\n**A:** Ні, ми **не купували**.\n\n**Q:** Вона написала звіт?\n**A:** Ні, вона **не писала** звіту.\n\n**Q:** Він прийшов?\n**A:** Ні, він **не приходив**.\n\n### Prohibition Practice\n\nChoose the right form for prohibition:\n\n1. (General rule) Тут ___ (не палити/не запалити)!\n   > [!answer] **не палити**\n2. (Specific warning) ___ (Не торкайся/Не торкнись) цього!\n   > [!answer] **Не торкайся** OR **Не торкнись**\n3. (General advice) ___ (Не хвилюйся/Не захвилюйся)!\n   > [!answer] **Не хвилюйся**\n4. (Specific moment) ___ (Не відкривай/Не відкрий) двері!\n   > [!answer] **Не відкривай**"
+          },
+          {
+            "type": "canvas",
+            "canvasData": "{}",
+            "teacherNotes": "### Denial Practice\n\nPractice denying things you didn't do:\n\n- Я не робив цього!\n- Я ніколи не казав такого!\n- Ми не брали ваших речей!\n\n### Prohibition Signs\n\nCreate prohibition signs:\n\n- Не палити! (No smoking)\n- Не паркуватися! (No parking)\n- Не входити! (No entry)\n- Не торкатися! (Do not touch)\n\n---\n\n### 🎭 ROLE-PLAY: The Excuse Expert\n\n**Situation:** You're the boss. Your employee didn't complete tasks. They make excuses.\n\n**Partner A (Boss):** Ask why tasks weren't done:\n- Чому ви не зробили звіт?\n- Ви написали листа клієнту?\n- Ви подзвонили партнерам?\n\n**Partner B (Employee):** Make excuses using imperfective negation:\n\n**Example dialogue:**\n```\nA: Чому ви не зробили звіт?\nB: Я не робив звіту, тому що не мав даних.\nA: А ви запитали дані в колег?\nB: Ні, я не питав. Я не знав, кому телефонувати.\nA: Ви хоча б почали працювати над цим?\nB: Я ще не починав, але завтра обов'язково зроблю!\nA: Не забудьте цього разу!\nB: Не забуду, обіцяю!\n```\n\n**Required structures:**\n- ✅ Imperfective for general negation: не робив, не писав, не знав\n- ✅ Perfective for \"not yet\": ще не зробив, ще не почав\n- ✅ Perfective for warnings: Не забудьте! Не запізніться!\n\n**Switch roles and repeat!**\n\n---"
           }
         ]
       }
     ],
-    "rawMarkdown": "# Lesson Content\n\n## warm-up\n\n### A Common Pattern\n\nCompare these sentences:\n\n- Ти **прочитав** книгу? - Did you read the book?\n- Ні, я **не читав** її. - No, I didn't read it.\n\nNotice: The question uses perfective, but the negative answer uses imperfective!\n\nThis is a fundamental pattern in Ukrainian: **negation prefers imperfective**.\n\n---\n\n> **🔑 KEY RULE: NEGATION PREFERS IMPERFECTIVE**\n>\n> When you negate an action, use **IMPERFECTIVE** by default.\n>\n> **Why?** If there's no action, there's no result.\n>\n> | Positive (perfective) | Negative (imperfective) |\n> |----------------------|------------------------|\n> | Я **прочитав** книгу. | Я **не читав** цю книгу. |\n> | I read the book. | I didn't read this book. |\n>\n> **Exceptions:**\n> - \"ще не\" (not yet) → perfective: Я **ще не прочитав**.\n> - Warnings → perfective: **Не забудь!** (Don't forget!)\n\n---\n\n## presentation\n\n### The General Rule\n\n**In negative sentences, Ukrainian strongly prefers imperfective verbs.**\n\nWhy? When you deny an action, you're usually saying \"the action didn't happen at all\" — there was no process, so there's no result to talk about.\n\n**Positive (perfective):** Я **прочитав** книгу. - I read the book.\n**Negative (imperfective):** Я **не читав** цю книгу. - I didn't read this book.\n\n**Positive (perfective):** Він **написав** листа. - He wrote the letter.\n**Negative (imperfective):** Він **не писав** листа. - He didn't write a letter.\n\n### Why Imperfective?\n\nThink of it this way:\n\n- **Perfective** asserts a result: \"The book got read.\"\n- **Imperfective** describes process: \"Reading was happening.\"\n- **Negative imperfective** says: \"No reading process ever occurred.\"\n\nIf no process happened, how could there be a result? So imperfective is more logical.\n\n### Common Negation Patterns\n\n**\"Didn't do\" (general negation):**\n\n| Positive (perfective) | Negative (imperfective) |\n|----------------------|------------------------|\n| Я **зробив** це. | Я **не робив** цього. |\n| Вона **написала** листа. | Вона **не писала** листа. |\n| Ми **купили** хліб. | Ми **не купували** хліба. |\n| Він **сказав** правду. | Він **не говорив** правди. |\n\n> Note: Objects often shift to genitive case in negative sentences.\n\n### Questions and Negative Answers\n\n**Question (often perfective):** Ти зробив домашнє? - Did you do your homework?\n**Negative (imperfective):** Ні, не робив. - No, I didn't.\n\n**Question:** Ви купили квитки? - Did you buy tickets?\n**Negative:** Ні, ми не купували. - No, we didn't.\n\n**Question:** Вона подзвонила? - Did she call?\n**Negative:** Ні, не телефонувала. - No, she didn't.\n\n### When Perfective Negation IS Used\n\nThere are specific cases where perfective is used in negation:\n\n**1. Specific expected result didn't happen:**\n\n- Я **не знайшов** ключів. - I didn't find the keys. (I searched, but no result)\n- Вона **не встигла** на потяг. - She didn't catch the train. (She tried, but failed)\n- Ми **не зрозуміли** його. - We didn't understand him. (Specific failure)\n\n**2. Warning that something won't happen:**\n\n- Обережно, **не впади**! - Careful, don't fall!\n- **Не забудь** ключі! - Don't forget the keys!\n- **Не запізнись**! - Don't be late!\n\n**3. Emphatic denial of specific action:**\n\n- Я цього **не сказав**! - I didn't say that! (denying specific statement)\n- Він цього **не зробив**! - He didn't do that! (denying specific deed)\n\n### Prohibition: Don't Do This!\n\n**General prohibition (imperfective):** Don't do this type of action.\n\n- **Не кури**! - Don't smoke! (in general)\n- **Не бійся**! - Don't be afraid!\n- **Не хвилюйся**! - Don't worry!\n- **Тут не можна паркуватися**. - Parking is not allowed here.\n\n**Specific warning (perfective):** Don't do this one thing!\n\n- **Не впусти** тарілку! - Don't drop the plate!\n- **Не забудь** зателефонувати! - Don't forget to call!\n- **Не відкривай** двері! - Don't open the door! (this specific time)\n\n### \"Never\" - Always Imperfective\n\nWith **ніколи** (never), always use imperfective:\n\n- Я **ніколи не курив**. - I have never smoked.\n- Вона **ніколи не бачила** моря. - She has never seen the sea.\n- Ми **ніколи не ходили** туди. - We have never been there.\n- Він **ніколи не запізнювався**. - He was never late.\n\n**NOT:** ~~Я ніколи не покурив.~~ (Incorrect)\n\n### \"Not yet\" - Usually Perfective\n\nWith **ще не** (not yet), use perfective (result expected but not achieved):\n\n- Я **ще не прочитав** книгу. - I haven't read the book yet.\n- Вона **ще не приїхала**. - She hasn't arrived yet.\n- Ми **ще не вирішили**. - We haven't decided yet.\n- Він **ще не закінчив**. - He hasn't finished yet.\n\n### Future Negation\n\n**General refusal (imperfective):**\n\n- Я **не буду** це **робити**. - I won't do this.\n- Вона **не буде** з ним **розмовляти**. - She won't talk to him.\n\n**Specific action won't happen (perfective):**\n\n- Я цього **не зроблю**. - I won't do this (specific thing).\n- Вона йому **не скаже**. - She won't tell him.\n\n### Genitive Case in Negative Sentences\n\nObjects often shift to genitive in negation:\n\n| Positive (accusative) | Negative (genitive) |\n|----------------------|---------------------|\n| Я **бачив** його (**acc**). | Я **не бачив** його (**gen**). |\n| Вона **купила** хліб (**acc**). | Вона **не купувала** хліба (**gen**). |\n| Ми **пили** каву (**acc**). | Ми **не пили** кави (**gen**). |\n\nThis is called the \"genitive of negation\" — another A2+ topic reinforced here.\n\n## practice\n\n### Convert to Negative\n\nChange to negative form (use imperfective):\n\n1. Він прочитав книгу. → Він **не читав** книги.\n2. Вона написала листа. → Вона **не писала** листа.\n3. Ми купили квитки. → Ми **не купували** квитків.\n4. Я зробив домашнє. → Я **не робив** домашнього.\n5. Вони подивилися фільм. → Вони **не дивилися** фільму.\n\n### Choose Correct Aspect in Negation\n\n1. Я ніколи ___ (не курив/не покурив). → **не курив** (ніколи = imperfective)\n2. Обережно, ___ (не падай/не впади)! → **не впади** (warning = perfective)\n3. Вона ще ___ (не приїжджала/не приїхала). → **не приїхала** (ще не = perfective)\n4. Я ___ (не буду робити/не зроблю) це (general refusal). → **не буду робити**\n5. ___ (Не забувай/Не забудь) взяти парасольку! → **Не забудь** (warning)\n6. Ми ___ (не говорили/не сказали) йому про це. → **не говорили** (general negation)\n\n### Question and Answer\n\nAnswer negatively using imperfective:\n\n**Q:** Ти подзвонив мамі?\n**A:** Ні, я ще **не телефонував**.\n\n**Q:** Ви купили квитки?\n**A:** Ні, ми **не купували**.\n\n**Q:** Вона написала звіт?\n**A:** Ні, вона **не писала** звіту.\n\n**Q:** Він прийшов?\n**A:** Ні, він **не приходив**.\n\n### Prohibition Practice\n\nChoose the right form for prohibition:\n\n1. (General rule) Тут ___ (не палити/не запалити)! → **не палити**\n2. (Specific warning) ___ (Не торкайся/Не торкнись) цього! → **Не торкайся** OR **Не торкнись**\n3. (General advice) ___ (Не хвилюйся/Не захвилюйся)! → **Не хвилюйся**\n4. (Specific moment) ___ (Не відкривай/Не відкрий) двері! → **Не відкривай**\n\n## production\n\n### Denial Practice\n\nPractice denying things you didn't do:\n\n- Я не робив цього!\n- Я ніколи не казав такого!\n- Ми не брали ваших речей!\n\n### Prohibition Signs\n\nCreate prohibition signs:\n\n- Не палити! (No smoking)\n- Не паркуватися! (No parking)\n- Не входити! (No entry)\n- Не торкатися! (Do not touch)\n\n---\n\n### 🎭 ROLE-PLAY: The Excuse Expert\n\n**Situation:** You're the boss. Your employee didn't complete tasks. They make excuses.\n\n**Partner A (Boss):** Ask why tasks weren't done:\n- Чому ви не зробили звіт?\n- Ви написали листа клієнту?\n- Ви подзвонили партнерам?\n\n**Partner B (Employee):** Make excuses using imperfective negation:\n\n**Example dialogue:**\n```\nA: Чому ви не зробили звіт?\nB: Я не робив звіту, тому що не мав даних.\nA: А ви запитали дані в колег?\nB: Ні, я не питав. Я не знав, кому телефонувати.\nA: Ви хоча б почали працювати над цим?\nB: Я ще не починав, але завтра обов'язково зроблю!\nA: Не забудьте цього разу!\nB: Не забуду, обіцяю!\n```\n\n**Required structures:**\n- ✅ Imperfective for general negation: не робив, не писав, не знав\n- ✅ Perfective for \"not yet\": ще не зробив, ще не почав\n- ✅ Perfective for warnings: Не забудьте! Не запізніться!\n\n**Switch roles and repeat!**\n\n---\n\n# Activities\n\n## quiz: Negation Aspect\n\n> Choose the correct aspect.\n\n1. Я ___ цю книгу.\n   - [x] не читав\n   - [ ] не прочитав\n   > General negation = imperfective\n\n2. Обережно, ___ !\n   - [ ] не падай\n   - [x] не впади\n   > Specific warning = perfective\n\n3. Вона ніколи ___ морозива.\n   - [x] не їла\n   - [ ] не з'їла\n   > Ніколи = imperfective\n\n4. Я ще ___ цей фільм.\n   - [ ] не дивився\n   - [x] не подивився\n   > Ще не = perfective\n\n5. ___ ключі!\n   - [ ] Не забувай\n   - [x] Не забудь\n   > Specific warning = perfective\n\n6. Ми ___ йому про це.\n   - [x] не говорили\n   - [ ] не сказали\n   > General negation = imperfective\n\n## group-sort: Negation Patterns\n\n### Use Imperfective\n- general negation (Я не робив)\n- ніколи (never)\n- general prohibition (Не палити!)\n- not used to (Він не курив)\n\n### Use Perfective\n- ще не (not yet)\n- specific warning (Не впади!)\n- specific denial (Я цього не сказав!)\n- expected result failed (Не знайшов)\n\n## match-up: Positive to Negative\n\n| Positive (Perfective) | Negative (Imperfective) |\n|-----------------------|-------------------------|\n| Він прочитав | Він не читав |\n| Вона написала | Вона не писала |\n| Ми купили | Ми не купували |\n| Я зробив | Я не робив |\n| Вони сказали | Вони не говорили |\n\n---",
+    "createdAt": "2025-12-01T22:58:37.289Z",
+    "modifiedAt": "2025-12-01T22:58:37.289Z",
+    "version": 1,
     "immersiveSections": [
       {
-        "id": "warm-up",
-        "title": "warm-up",
-        "content": "### A Common Pattern\n\nCompare these sentences:\n\n- Ти **прочитав** книгу? - Did you read the book?\n- Ні, я **не читав** її. - No, I didn't read it.\n\nNotice: The question uses perfective, but the negative answer uses imperfective!\n\nThis is a fundamental pattern in Ukrainian: **negation prefers imperfective**.\n\n---\n\n> **🔑 KEY RULE: NEGATION PREFERS IMPERFECTIVE**\n>\n> When you negate an action, use **IMPERFECTIVE** by default.\n>\n> **Why?** If there's no action, there's no result.\n>\n> | Positive (perfective) | Negative (imperfective) |\n> |----------------------|------------------------|\n> | Я **прочитав** книгу. | Я **не читав** цю книгу. |\n> | I read the book. | I didn't read this book. |\n>\n> **Exceptions:**\n> - \"ще не\" (not yet) → perfective: Я **ще не прочитав**.\n> - Warnings → perfective: **Не забудь!** (Don't forget!)\n\n---",
-        "type": "topic"
+        "id": "section-intro",
+        "type": "intro",
+        "title": "Introduction",
+        "content": "## warm-up\n\n### A Common Pattern\n\nCompare these sentences:\n\n- Ти **прочитав** книгу? - Did you read the book?\n- Ні, я **не читав** її. - No, I didn't read it.\n\nNotice: The question uses perfective, but the negative answer uses imperfective!\n\nThis is a fundamental pattern in Ukrainian: **negation prefers imperfective**.\n\n---\n\n> **🔑 KEY RULE: NEGATION PREFERS IMPERFECTIVE**\n>\n> When you negate an action, use **IMPERFECTIVE** by default.\n>\n> **Why?** If there's no action, there's no result.\n>\n> | Positive (perfective) | Negative (imperfective) |\n> |----------------------|------------------------|\n> | Я **прочитав** книгу. | Я **не читав** цю книгу. |\n> | I read the book. | I didn't read this book. |\n>\n> **Exceptions:**\n> - \"ще не\" (not yet) → perfective: Я **ще не прочитав**.\n> - Warnings → perfective: **Не забудь!** (Don't forget!)\n\n---\n\n## presentation\n\n### The General Rule\n\n**In negative sentences, Ukrainian strongly prefers imperfective verbs.**\n\nWhy? When you deny an action, you're usually saying \"the action didn't happen at all\" — there was no process, so there's no result to talk about.\n\n**Positive (perfective):** Я **прочитав** книгу. - I read the book.\n**Negative (imperfective):** Я **не читав** цю книгу. - I didn't read this book.\n\n**Positive (perfective):** Він **написав** листа. - He wrote the letter.\n**Negative (imperfective):** Він **не писав** листа. - He didn't write a letter.\n\n### Why Imperfective?\n\nThink of it this way:\n\n- **Perfective** asserts a result: \"The book got read.\"\n- **Imperfective** describes process: \"Reading was happening.\"\n- **Negative imperfective** says: \"No reading process ever occurred.\"\n\nIf no process happened, how could there be a result? So imperfective is more logical.\n\n### Common Negation Patterns\n\n**\"Didn't do\" (general negation):**\n\n| Positive (perfective) | Negative (imperfective) |\n|----------------------|------------------------|\n| Я **зробив** це. | Я **не робив** цього. |\n| Вона **написала** листа. | Вона **не писала** листа. |\n| Ми **купили** хліб. | Ми **не купували** хліба. |\n| Він **сказав** правду. | Він **не говорив** правди. |\n\n> Note: Objects often shift to genitive case in negative sentences.\n\n### Questions and Negative Answers\n\n**Question (often perfective):** Ти зробив домашнє? - Did you do your homework?\n**Negative (imperfective):** Ні, не робив. - No, I didn't.\n\n**Question:** Ви купили квитки? - Did you buy tickets?\n**Negative:** Ні, ми не купували. - No, we didn't.\n\n**Question:** Вона подзвонила? - Did she call?\n**Negative:** Ні, не телефонувала. - No, she didn't.\n\n### When Perfective Negation IS Used\n\nThere are specific cases where perfective is used in negation:\n\n**1. Specific expected result didn't happen:**\n\n- Я **не знайшов** ключів. - I didn't find the keys. (I searched, but no result)\n- Вона **не встигла** на потяг. - She didn't catch the train. (She tried, but failed)\n- Ми **не зрозуміли** його. - We didn't understand him. (Specific failure)\n\n**2. Warning that something won't happen:**\n\n- Обережно, **не впади**! - Careful, don't fall!\n- **Не забудь** ключі! - Don't forget the keys!\n- **Не запізнись**! - Don't be late!\n\n**3. Emphatic denial of specific action:**\n\n- Я цього **не сказав**! - I didn't say that! (denying specific statement)\n- Він цього **не зробив**! - He didn't do that! (denying specific deed)\n\n### Prohibition: Don't Do This!\n\n**General prohibition (imperfective):** Don't do this type of action.\n\n- **Не кури**! - Don't smoke! (in general)\n- **Не бійся**! - Don't be afraid!\n- **Не хвилюйся**! - Don't worry!\n- **Тут не можна паркуватися**. - Parking is not allowed here.\n\n**Specific warning (perfective):** Don't do this one thing!\n\n- **Не впусти** тарілку! - Don't drop the plate!\n- **Не забудь** зателефонувати! - Don't forget to call!\n- **Не відкривай** двері! - Don't open the door! (this specific time)\n\n### \"Never\" - Always Imperfective\n\nWith **ніколи** (never), always use imperfective:\n\n- Я **ніколи не курив**. - I have never smoked.\n- Вона **ніколи не бачила** моря. - She has never seen the sea.\n- Ми **ніколи не ходили** туди. - We have never been there.\n- Він **ніколи не запізнювався**. - He was never late.\n\n**NOT:** ~~Я ніколи не покурив.~~ (Incorrect)\n\n### \"Not yet\" - Usually Perfective\n\nWith **ще не** (not yet), use perfective (result expected but not achieved):\n\n- Я **ще не прочитав** книгу. - I haven't read the book yet.\n- Вона **ще не приїхала**. - She hasn't arrived yet.\n- Ми **ще не вирішили**. - We haven't decided yet.\n- Він **ще не закінчив**. - He hasn't finished yet.\n\n### Future Negation\n\n**General refusal (imperfective):**\n\n- Я **не буду** це **робити**. - I won't do this.\n- Вона **не буде** з ним **розмовляти**. - She won't talk to him.\n\n**Specific action won't happen (perfective):**\n\n- Я цього **не зроблю**. - I won't do this (specific thing).\n- Вона йому **не скаже**. - She won't tell him.\n\n### Genitive Case in Negative Sentences\n\nObjects often shift to genitive in negation:\n\n| Positive (accusative) | Negative (genitive) |\n|----------------------|---------------------|\n| Я **бачив** його (**acc**). | Я **не бачив** його (**gen**). |\n| Вона **купила** хліб (**acc**). | Вона **не купувала** хліба (**gen**). |\n| Ми **пили** каву (**acc**). | Ми **не пили** кави (**gen**). |\n\nThis is called the \"genitive of negation\" — another A2+ topic reinforced here.\n\n## practice\n\n### Convert to Negative\n\nChange to negative form (use imperfective):\n\n1. Він прочитав книгу.\n   > [!answer] Він **не читав** книги.\n2. Вона написала листа.\n   > [!answer] Вона **не писала** листа.\n3. Ми купили квитки.\n   > [!answer] Ми **не купували** квитків.\n4. Я зробив домашнє.\n   > [!answer] Я **не робив** домашнього.\n5. Вони подивилися фільм.\n   > [!answer] Вони **не дивилися** фільму.\n\n### Choose Correct Aspect in Negation\n\n1. Я ніколи ___ (не курив/не покурив).\n   > [!answer] **не курив** (ніколи = imperfective)\n2. Обережно, ___ (не падай/не впади)!\n   > [!answer] **не впади** (warning = perfective)\n3. Вона ще ___ (не приїжджала/не приїхала).\n   > [!answer] **не приїхала** (ще не = perfective)\n4. Я ___ (не буду робити/не зроблю) це (general refusal).\n   > [!answer] **не буду робити**\n5. ___ (Не забувай/Не забудь) взяти парасольку!\n   > [!answer] **Не забудь** (warning)\n6. Ми ___ (не говорили/не сказали) йому про це.\n   > [!answer] **не говорили** (general negation)\n\n### Question and Answer\n\nAnswer negatively using imperfective:\n\n**Q:** Ти подзвонив мамі?\n**A:** Ні, я ще **не телефонував**.\n\n**Q:** Ви купили квитки?\n**A:** Ні, ми **не купували**.\n\n**Q:** Вона написала звіт?\n**A:** Ні, вона **не писала** звіту.\n\n**Q:** Він прийшов?\n**A:** Ні, він **не приходив**.\n\n### Prohibition Practice\n\nChoose the right form for prohibition:\n\n1. (General rule) Тут ___ (не палити/не запалити)!\n   > [!answer] **не палити**\n2. (Specific warning) ___ (Не торкайся/Не торкнись) цього!\n   > [!answer] **Не торкайся** OR **Не торкнись**\n3. (General advice) ___ (Не хвилюйся/Не захвилюйся)!\n   > [!answer] **Не хвилюйся**\n4. (Specific moment) ___ (Не відкривай/Не відкрий) двері!\n   > [!answer] **Не відкривай**\n\n## production\n\n### Denial Practice\n\nPractice denying things you didn't do:\n\n- Я не робив цього!\n- Я ніколи не казав такого!\n- Ми не брали ваших речей!\n\n### Prohibition Signs\n\nCreate prohibition signs:\n\n- Не палити! (No smoking)\n- Не паркуватися! (No parking)\n- Не входити! (No entry)\n- Не торкатися! (Do not touch)\n\n---\n\n### 🎭 ROLE-PLAY: The Excuse Expert\n\n**Situation:** You're the boss. Your employee didn't complete tasks. They make excuses.\n\n**Partner A (Boss):** Ask why tasks weren't done:\n- Чому ви не зробили звіт?\n- Ви написали листа клієнту?\n- Ви подзвонили партнерам?\n\n**Partner B (Employee):** Make excuses using imperfective negation:\n\n**Example dialogue:**\n```\nA: Чому ви не зробили звіт?\nB: Я не робив звіту, тому що не мав даних.\nA: А ви запитали дані в колег?\nB: Ні, я не питав. Я не знав, кому телефонувати.\nA: Ви хоча б почали працювати над цим?\nB: Я ще не починав, але завтра обов'язково зроблю!\nA: Не забудьте цього разу!\nB: Не забуду, обіцяю!\n```\n\n**Required structures:**\n- ✅ Imperfective for general negation: не робив, не писав, не знав\n- ✅ Perfective for \"not yet\": ще не зробив, ще не почав\n- ✅ Perfective for warnings: Не забудьте! Не запізніться!\n\n**Switch roles and repeat!**\n\n---\n\n\n---\n\n\n---",
+        "titleUk": "Вступ"
       },
       {
-        "id": "presentation",
-        "title": "presentation",
-        "content": "### The General Rule\n\n**In negative sentences, Ukrainian strongly prefers imperfective verbs.**\n\nWhy? When you deny an action, you're usually saying \"the action didn't happen at all\" — there was no process, so there's no result to talk about.\n\n**Positive (perfective):** Я **прочитав** книгу. - I read the book.\n**Negative (imperfective):** Я **не читав** цю книгу. - I didn't read this book.\n\n**Positive (perfective):** Він **написав** листа. - He wrote the letter.\n**Negative (imperfective):** Він **не писав** листа. - He didn't write a letter.\n\n### Why Imperfective?\n\nThink of it this way:\n\n- **Perfective** asserts a result: \"The book got read.\"\n- **Imperfective** describes process: \"Reading was happening.\"\n- **Negative imperfective** says: \"No reading process ever occurred.\"\n\nIf no process happened, how could there be a result? So imperfective is more logical.\n\n### Common Negation Patterns\n\n**\"Didn't do\" (general negation):**\n\n| Positive (perfective) | Negative (imperfective) |\n|----------------------|------------------------|\n| Я **зробив** це. | Я **не робив** цього. |\n| Вона **написала** листа. | Вона **не писала** листа. |\n| Ми **купили** хліб. | Ми **не купували** хліба. |\n| Він **сказав** правду. | Він **не говорив** правди. |\n\n> Note: Objects often shift to genitive case in negative sentences.\n\n### Questions and Negative Answers\n\n**Question (often perfective):** Ти зробив домашнє? - Did you do your homework?\n**Negative (imperfective):** Ні, не робив. - No, I didn't.\n\n**Question:** Ви купили квитки? - Did you buy tickets?\n**Negative:** Ні, ми не купували. - No, we didn't.\n\n**Question:** Вона подзвонила? - Did she call?\n**Negative:** Ні, не телефонувала. - No, she didn't.\n\n### When Perfective Negation IS Used\n\nThere are specific cases where perfective is used in negation:\n\n**1. Specific expected result didn't happen:**\n\n- Я **не знайшов** ключів. - I didn't find the keys. (I searched, but no result)\n- Вона **не встигла** на потяг. - She didn't catch the train. (She tried, but failed)\n- Ми **не зрозуміли** його. - We didn't understand him. (Specific failure)\n\n**2. Warning that something won't happen:**\n\n- Обережно, **не впади**! - Careful, don't fall!\n- **Не забудь** ключі! - Don't forget the keys!\n- **Не запізнись**! - Don't be late!\n\n**3. Emphatic denial of specific action:**\n\n- Я цього **не сказав**! - I didn't say that! (denying specific statement)\n- Він цього **не зробив**! - He didn't do that! (denying specific deed)\n\n### Prohibition: Don't Do This!\n\n**General prohibition (imperfective):** Don't do this type of action.\n\n- **Не кури**! - Don't smoke! (in general)\n- **Не бійся**! - Don't be afraid!\n- **Не хвилюйся**! - Don't worry!\n- **Тут не можна паркуватися**. - Parking is not allowed here.\n\n**Specific warning (perfective):** Don't do this one thing!\n\n- **Не впусти** тарілку! - Don't drop the plate!\n- **Не забудь** зателефонувати! - Don't forget to call!\n- **Не відкривай** двері! - Don't open the door! (this specific time)\n\n### \"Never\" - Always Imperfective\n\nWith **ніколи** (never), always use imperfective:\n\n- Я **ніколи не курив**. - I have never smoked.\n- Вона **ніколи не бачила** моря. - She has never seen the sea.\n- Ми **ніколи не ходили** туди. - We have never been there.\n- Він **ніколи не запізнювався**. - He was never late.\n\n**NOT:** ~~Я ніколи не покурив.~~ (Incorrect)\n\n### \"Not yet\" - Usually Perfective\n\nWith **ще не** (not yet), use perfective (result expected but not achieved):\n\n- Я **ще не прочитав** книгу. - I haven't read the book yet.\n- Вона **ще не приїхала**. - She hasn't arrived yet.\n- Ми **ще не вирішили**. - We haven't decided yet.\n- Він **ще не закінчив**. - He hasn't finished yet.\n\n### Future Negation\n\n**General refusal (imperfective):**\n\n- Я **не буду** це **робити**. - I won't do this.\n- Вона **не буде** з ним **розмовляти**. - She won't talk to him.\n\n**Specific action won't happen (perfective):**\n\n- Я цього **не зроблю**. - I won't do this (specific thing).\n- Вона йому **не скаже**. - She won't tell him.\n\n### Genitive Case in Negative Sentences\n\nObjects often shift to genitive in negation:\n\n| Positive (accusative) | Negative (genitive) |\n|----------------------|---------------------|\n| Я **бачив** його (**acc**). | Я **не бачив** його (**gen**). |\n| Вона **купила** хліб (**acc**). | Вона **не купувала** хліба (**gen**). |\n| Ми **пили** каву (**acc**). | Ми **не пили** кави (**gen**). |\n\nThis is called the \"genitive of negation\" — another A2+ topic reinforced here.",
-        "type": "topic"
-      },
-      {
-        "id": "practice",
-        "title": "practice",
-        "content": "### Convert to Negative\n\nChange to negative form (use imperfective):\n\n1. Він прочитав книгу. → Він **не читав** книги.\n2. Вона написала листа. → Вона **не писала** листа.\n3. Ми купили квитки. → Ми **не купували** квитків.\n4. Я зробив домашнє. → Я **не робив** домашнього.\n5. Вони подивилися фільм. → Вони **не дивилися** фільму.\n\n### Choose Correct Aspect in Negation\n\n1. Я ніколи ___ (не курив/не покурив). → **не курив** (ніколи = imperfective)\n2. Обережно, ___ (не падай/не впади)! → **не впади** (warning = perfective)\n3. Вона ще ___ (не приїжджала/не приїхала). → **не приїхала** (ще не = perfective)\n4. Я ___ (не буду робити/не зроблю) це (general refusal). → **не буду робити**\n5. ___ (Не забувай/Не забудь) взяти парасольку! → **Не забудь** (warning)\n6. Ми ___ (не говорили/не сказали) йому про це. → **не говорили** (general negation)\n\n### Question and Answer\n\nAnswer negatively using imperfective:\n\n**Q:** Ти подзвонив мамі?\n**A:** Ні, я ще **не телефонував**.\n\n**Q:** Ви купили квитки?\n**A:** Ні, ми **не купували**.\n\n**Q:** Вона написала звіт?\n**A:** Ні, вона **не писала** звіту.\n\n**Q:** Він прийшов?\n**A:** Ні, він **не приходив**.\n\n### Prohibition Practice\n\nChoose the right form for prohibition:\n\n1. (General rule) Тут ___ (не палити/не запалити)! → **не палити**\n2. (Specific warning) ___ (Не торкайся/Не торкнись) цього! → **Не торкайся** OR **Не торкнись**\n3. (General advice) ___ (Не хвилюйся/Не захвилюйся)! → **Не хвилюйся**\n4. (Specific moment) ___ (Не відкривай/Не відкрий) двері! → **Не відкривай**",
-        "type": "topic"
-      },
-      {
-        "id": "production",
-        "title": "production",
-        "content": "### Denial Practice\n\nPractice denying things you didn't do:\n\n- Я не робив цього!\n- Я ніколи не казав такого!\n- Ми не брали ваших речей!\n\n### Prohibition Signs\n\nCreate prohibition signs:\n\n- Не палити! (No smoking)\n- Не паркуватися! (No parking)\n- Не входити! (No entry)\n- Не торкатися! (Do not touch)\n\n---\n\n### 🎭 ROLE-PLAY: The Excuse Expert\n\n**Situation:** You're the boss. Your employee didn't complete tasks. They make excuses.\n\n**Partner A (Boss):** Ask why tasks weren't done:\n- Чому ви не зробили звіт?\n- Ви написали листа клієнту?\n- Ви подзвонили партнерам?\n\n**Partner B (Employee):** Make excuses using imperfective negation:\n\n**Example dialogue:**\n```\nA: Чому ви не зробили звіт?\nB: Я не робив звіту, тому що не мав даних.\nA: А ви запитали дані в колег?\nB: Ні, я не питав. Я не знав, кому телефонувати.\nA: Ви хоча б почали працювати над цим?\nB: Я ще не починав, але завтра обов'язково зроблю!\nA: Не забудьте цього разу!\nB: Не забуду, обіцяю!\n```\n\n**Required structures:**\n- ✅ Imperfective for general negation: не робив, не писав, не знав\n- ✅ Perfective for \"not yet\": ще не зробив, ще не почав\n- ✅ Perfective for warnings: Не забудьте! Не запізніться!\n\n**Switch roles and repeat!**\n\n---",
-        "type": "topic"
-      },
-      {
-        "id": "activities",
-        "title": "Activities",
-        "content": "## quiz: Negation Aspect\n\n> Choose the correct aspect.\n\n1. Я ___ цю книгу.\n   - [x] не читав\n   - [ ] не прочитав\n   > General negation = imperfective\n\n2. Обережно, ___ !\n   - [ ] не падай\n   - [x] не впади\n   > Specific warning = perfective\n\n3. Вона ніколи ___ морозива.\n   - [x] не їла\n   - [ ] не з'їла\n   > Ніколи = imperfective\n\n4. Я ще ___ цей фільм.\n   - [ ] не дивився\n   - [x] не подивився\n   > Ще не = perfective\n\n5. ___ ключі!\n   - [ ] Не забувай\n   - [x] Не забудь\n   > Specific warning = perfective\n\n6. Ми ___ йому про це.\n   - [x] не говорили\n   - [ ] не сказали\n   > General negation = imperfective\n\n## group-sort: Negation Patterns\n\n### Use Imperfective\n- general negation (Я не робив)\n- ніколи (never)\n- general prohibition (Не палити!)\n- not used to (Він не курив)\n\n### Use Perfective\n- ще не (not yet)\n- specific warning (Не впади!)\n- specific denial (Я цього не сказав!)\n- expected result failed (Не знайшов)\n\n## match-up: Positive to Negative\n\n| Positive (Perfective) | Negative (Imperfective) |\n|-----------------------|-------------------------|\n| Він прочитав | Він не читав |\n| Вона написала | Вона не писала |\n| Ми купили | Ми не купували |\n| Я зробив | Я не робив |\n| Вони сказали | Вони не говорили |\n\n---",
-        "type": "activities"
-      },
-      {
-        "id": "vocabulary",
-        "title": "Vocabulary",
-        "content": "| Word | IPA | English | Notes |\n|------|-----|---------|-------|\n| ніколи | /nʲiˈkolɪ/ | never | + imperfective |\n| ще не | /ʃt͡ʃɛ nɛ/ | not yet | + perfective |\n| більше не | /ˈbʲilʲʃɛ nɛ/ | no longer | + imperfective |\n| ні... ні | /nʲi nʲi/ | neither... nor | - |\n| нічого | /nʲiˈt͡ʃoɦo/ | nothing | genitive |\n| нікого | /nʲiˈkoɦo/ | nobody | genitive |\n| ніде | /nʲiˈdɛ/ | nowhere | - |\n| обережно | /obɛˈrɛʒno/ | carefully, caution | - |\n| заборонено | /zɑboroˈnɛno/ | forbidden | - |\n| не можна | /nɛ ˈmoʒnɑ/ | not allowed | - |\n| не варто | /nɛ ˈvɑrto/ | not worth it | - |\n| не слід | /nɛ slʲid/ | should not | - |\n| даремно | /dɑˈrɛmno/ | in vain | - |\n\n---",
-        "type": "vocabulary"
-      },
-      {
-        "id": "summary",
+        "id": "section-summary",
+        "type": "summary",
         "title": "Summary",
-        "content": "## The Core Rule\n\n**Negation prefers imperfective.**\n\n| Positive | Negative |\n|----------|----------|\n| Я прочитав книгу. | Я не читав книги. |\n| Вона написала. | Вона не писала. |\n| Ми купили. | Ми не купували. |\n\n## Exceptions (Use Perfective)\n\n| Context | Example |\n|---------|---------|\n| \"Not yet\" (ще не) | Я ще не прочитав. |\n| Specific warning | Не впади! Не забудь! |\n| Expected result failed | Я не знайшов ключів. |\n| Emphatic denial | Я цього не сказав! |\n\n## Key Patterns\n\n1. **Ніколи** (never) → always imperfective\n2. **Ще не** (not yet) → perfective\n3. **General prohibition** → imperfective (Не палити!)\n4. **Specific warning** → perfective (Не впади!)\n\n> **Key Takeaways**\n>\n> - Default to imperfective in negative sentences\n> - \"Ніколи\" (never) demands imperfective\n> - \"Ще не\" (not yet) uses perfective\n> - Warnings about specific events use perfective\n> - Objects often shift to genitive in negation\n> - **Note:** Some prohibitions accept BOTH aspects with different nuances!",
-        "type": "summary"
+        "content": "## The Core Rule\n\n**Negation prefers imperfective.**\n\n| Positive | Negative |\n|----------|----------|\n| Я прочитав книгу. | Я не читав книги. |\n| Вона написала. | Вона не писала. |\n| Ми купили. | Ми не купували. |\n\n## Exceptions (Use Perfective)\n\n| Context | Example |\n|---------|---------|\n| \"Not yet\" (ще не) | Я ще не прочитав. |\n| Specific warning | Не впади! Не забудь! |\n| Expected result failed | Я не знайшов ключів. |\n| Emphatic denial | Я цього не сказав! |\n\n## Key Patterns\n\n1. **Ніколи** (never)\n   > [!answer] always imperfective\n2. **Ще не** (not yet)\n   > [!answer] perfective\n3. **General prohibition**\n   > [!answer] imperfective (Не палити!)\n4. **Specific warning**\n   > [!answer] perfective (Не впади!)\n\n> **Key Takeaways**\n>\n> - Default to imperfective in negative sentences\n> - \"Ніколи\" (never) demands imperfective\n> - \"Ще не\" (not yet) uses perfective\n> - Warnings about specific events use perfective\n> - Objects often shift to genitive in negation\n> - **Note:** Some prohibitions accept BOTH aspects with different nuances!",
+        "titleUk": "Підсумок"
       }
-    ]
+    ],
+    "rawMarkdown": "---\nmodule: 85\ntitle: \"Aspect in Negation\"\nsubtitle: \"The Imperfective Preference with Не\"\nlevel: B1\nphase: B1.1\nduration: 45\ntransliteration: none\ntags: [aspect, grammar, verbs, negation]\nobjectives:\n  - Understand why imperfective is preferred in negation\n  - Recognize when perfective negation is appropriate\n  - Master negative constructions with both aspects\n  - Express prohibition and refusal naturally\ngrammar:\n  - Imperfective preference in negation\n  - Perfective negation for specific cases\n  - Prohibition patterns\n---\n\n# Lesson Content\n\n## warm-up\n\n### A Common Pattern\n\nCompare these sentences:\n\n- Ти **прочитав** книгу? - Did you read the book?\n- Ні, я **не читав** її. - No, I didn't read it.\n\nNotice: The question uses perfective, but the negative answer uses imperfective!\n\nThis is a fundamental pattern in Ukrainian: **negation prefers imperfective**.\n\n---\n\n> **🔑 KEY RULE: NEGATION PREFERS IMPERFECTIVE**\n>\n> When you negate an action, use **IMPERFECTIVE** by default.\n>\n> **Why?** If there's no action, there's no result.\n>\n> | Positive (perfective) | Negative (imperfective) |\n> |----------------------|------------------------|\n> | Я **прочитав** книгу. | Я **не читав** цю книгу. |\n> | I read the book. | I didn't read this book. |\n>\n> **Exceptions:**\n> - \"ще не\" (not yet) → perfective: Я **ще не прочитав**.\n> - Warnings → perfective: **Не забудь!** (Don't forget!)\n\n---\n\n## presentation\n\n### The General Rule\n\n**In negative sentences, Ukrainian strongly prefers imperfective verbs.**\n\nWhy? When you deny an action, you're usually saying \"the action didn't happen at all\" — there was no process, so there's no result to talk about.\n\n**Positive (perfective):** Я **прочитав** книгу. - I read the book.\n**Negative (imperfective):** Я **не читав** цю книгу. - I didn't read this book.\n\n**Positive (perfective):** Він **написав** листа. - He wrote the letter.\n**Negative (imperfective):** Він **не писав** листа. - He didn't write a letter.\n\n### Why Imperfective?\n\nThink of it this way:\n\n- **Perfective** asserts a result: \"The book got read.\"\n- **Imperfective** describes process: \"Reading was happening.\"\n- **Negative imperfective** says: \"No reading process ever occurred.\"\n\nIf no process happened, how could there be a result? So imperfective is more logical.\n\n### Common Negation Patterns\n\n**\"Didn't do\" (general negation):**\n\n| Positive (perfective) | Negative (imperfective) |\n|----------------------|------------------------|\n| Я **зробив** це. | Я **не робив** цього. |\n| Вона **написала** листа. | Вона **не писала** листа. |\n| Ми **купили** хліб. | Ми **не купували** хліба. |\n| Він **сказав** правду. | Він **не говорив** правди. |\n\n> Note: Objects often shift to genitive case in negative sentences.\n\n### Questions and Negative Answers\n\n**Question (often perfective):** Ти зробив домашнє? - Did you do your homework?\n**Negative (imperfective):** Ні, не робив. - No, I didn't.\n\n**Question:** Ви купили квитки? - Did you buy tickets?\n**Negative:** Ні, ми не купували. - No, we didn't.\n\n**Question:** Вона подзвонила? - Did she call?\n**Negative:** Ні, не телефонувала. - No, she didn't.\n\n### When Perfective Negation IS Used\n\nThere are specific cases where perfective is used in negation:\n\n**1. Specific expected result didn't happen:**\n\n- Я **не знайшов** ключів. - I didn't find the keys. (I searched, but no result)\n- Вона **не встигла** на потяг. - She didn't catch the train. (She tried, but failed)\n- Ми **не зрозуміли** його. - We didn't understand him. (Specific failure)\n\n**2. Warning that something won't happen:**\n\n- Обережно, **не впади**! - Careful, don't fall!\n- **Не забудь** ключі! - Don't forget the keys!\n- **Не запізнись**! - Don't be late!\n\n**3. Emphatic denial of specific action:**\n\n- Я цього **не сказав**! - I didn't say that! (denying specific statement)\n- Він цього **не зробив**! - He didn't do that! (denying specific deed)\n\n### Prohibition: Don't Do This!\n\n**General prohibition (imperfective):** Don't do this type of action.\n\n- **Не кури**! - Don't smoke! (in general)\n- **Не бійся**! - Don't be afraid!\n- **Не хвилюйся**! - Don't worry!\n- **Тут не можна паркуватися**. - Parking is not allowed here.\n\n**Specific warning (perfective):** Don't do this one thing!\n\n- **Не впусти** тарілку! - Don't drop the plate!\n- **Не забудь** зателефонувати! - Don't forget to call!\n- **Не відкривай** двері! - Don't open the door! (this specific time)\n\n### \"Never\" - Always Imperfective\n\nWith **ніколи** (never), always use imperfective:\n\n- Я **ніколи не курив**. - I have never smoked.\n- Вона **ніколи не бачила** моря. - She has never seen the sea.\n- Ми **ніколи не ходили** туди. - We have never been there.\n- Він **ніколи не запізнювався**. - He was never late.\n\n**NOT:** ~~Я ніколи не покурив.~~ (Incorrect)\n\n### \"Not yet\" - Usually Perfective\n\nWith **ще не** (not yet), use perfective (result expected but not achieved):\n\n- Я **ще не прочитав** книгу. - I haven't read the book yet.\n- Вона **ще не приїхала**. - She hasn't arrived yet.\n- Ми **ще не вирішили**. - We haven't decided yet.\n- Він **ще не закінчив**. - He hasn't finished yet.\n\n### Future Negation\n\n**General refusal (imperfective):**\n\n- Я **не буду** це **робити**. - I won't do this.\n- Вона **не буде** з ним **розмовляти**. - She won't talk to him.\n\n**Specific action won't happen (perfective):**\n\n- Я цього **не зроблю**. - I won't do this (specific thing).\n- Вона йому **не скаже**. - She won't tell him.\n\n### Genitive Case in Negative Sentences\n\nObjects often shift to genitive in negation:\n\n| Positive (accusative) | Negative (genitive) |\n|----------------------|---------------------|\n| Я **бачив** його (**acc**). | Я **не бачив** його (**gen**). |\n| Вона **купила** хліб (**acc**). | Вона **не купувала** хліба (**gen**). |\n| Ми **пили** каву (**acc**). | Ми **не пили** кави (**gen**). |\n\nThis is called the \"genitive of negation\" — another A2+ topic reinforced here.\n\n## practice\n\n### Convert to Negative\n\nChange to negative form (use imperfective):\n\n1. Він прочитав книгу.\n   > [!answer] Він **не читав** книги.\n2. Вона написала листа.\n   > [!answer] Вона **не писала** листа.\n3. Ми купили квитки.\n   > [!answer] Ми **не купували** квитків.\n4. Я зробив домашнє.\n   > [!answer] Я **не робив** домашнього.\n5. Вони подивилися фільм.\n   > [!answer] Вони **не дивилися** фільму.\n\n### Choose Correct Aspect in Negation\n\n1. Я ніколи ___ (не курив/не покурив).\n   > [!answer] **не курив** (ніколи = imperfective)\n2. Обережно, ___ (не падай/не впади)!\n   > [!answer] **не впади** (warning = perfective)\n3. Вона ще ___ (не приїжджала/не приїхала).\n   > [!answer] **не приїхала** (ще не = perfective)\n4. Я ___ (не буду робити/не зроблю) це (general refusal).\n   > [!answer] **не буду робити**\n5. ___ (Не забувай/Не забудь) взяти парасольку!\n   > [!answer] **Не забудь** (warning)\n6. Ми ___ (не говорили/не сказали) йому про це.\n   > [!answer] **не говорили** (general negation)\n\n### Question and Answer\n\nAnswer negatively using imperfective:\n\n**Q:** Ти подзвонив мамі?\n**A:** Ні, я ще **не телефонував**.\n\n**Q:** Ви купили квитки?\n**A:** Ні, ми **не купували**.\n\n**Q:** Вона написала звіт?\n**A:** Ні, вона **не писала** звіту.\n\n**Q:** Він прийшов?\n**A:** Ні, він **не приходив**.\n\n### Prohibition Practice\n\nChoose the right form for prohibition:\n\n1. (General rule) Тут ___ (не палити/не запалити)!\n   > [!answer] **не палити**\n2. (Specific warning) ___ (Не торкайся/Не торкнись) цього!\n   > [!answer] **Не торкайся** OR **Не торкнись**\n3. (General advice) ___ (Не хвилюйся/Не захвилюйся)!\n   > [!answer] **Не хвилюйся**\n4. (Specific moment) ___ (Не відкривай/Не відкрий) двері!\n   > [!answer] **Не відкривай**\n\n## production\n\n### Denial Practice\n\nPractice denying things you didn't do:\n\n- Я не робив цього!\n- Я ніколи не казав такого!\n- Ми не брали ваших речей!\n\n### Prohibition Signs\n\nCreate prohibition signs:\n\n- Не палити! (No smoking)\n- Не паркуватися! (No parking)\n- Не входити! (No entry)\n- Не торкатися! (Do not touch)\n\n---\n\n### 🎭 ROLE-PLAY: The Excuse Expert\n\n**Situation:** You're the boss. Your employee didn't complete tasks. They make excuses.\n\n**Partner A (Boss):** Ask why tasks weren't done:\n- Чому ви не зробили звіт?\n- Ви написали листа клієнту?\n- Ви подзвонили партнерам?\n\n**Partner B (Employee):** Make excuses using imperfective negation:\n\n**Example dialogue:**\n```\nA: Чому ви не зробили звіт?\nB: Я не робив звіту, тому що не мав даних.\nA: А ви запитали дані в колег?\nB: Ні, я не питав. Я не знав, кому телефонувати.\nA: Ви хоча б почали працювати над цим?\nB: Я ще не починав, але завтра обов'язково зроблю!\nA: Не забудьте цього разу!\nB: Не забуду, обіцяю!\n```\n\n**Required structures:**\n- ✅ Imperfective for general negation: не робив, не писав, не знав\n- ✅ Perfective for \"not yet\": ще не зробив, ще не почав\n- ✅ Perfective for warnings: Не забудьте! Не запізніться!\n\n**Switch roles and repeat!**\n\n---\n\n# Activities\n\n## quiz: Negation Aspect\n\n> Choose the correct aspect.\n\n1. Я ___ цю книгу.\n   - [x] не читав\n   - [ ] не прочитав\n   > General negation = imperfective\n\n2. Обережно, ___ !\n   - [ ] не падай\n   - [x] не впади\n   > Specific warning = perfective\n\n3. Вона ніколи ___ морозива.\n   - [x] не їла\n   - [ ] не з'їла\n   > Ніколи = imperfective\n\n4. Я ще ___ цей фільм.\n   - [ ] не дивився\n   - [x] не подивився\n   > Ще не = perfective\n\n5. ___ ключі!\n   - [ ] Не забувай\n   - [x] Не забудь\n   > Specific warning = perfective\n\n6. Ми ___ йому про це.\n   - [x] не говорили\n   - [ ] не сказали\n   > General negation = imperfective\n\n## group-sort: Negation Patterns\n\n### Use Imperfective\n- general negation (Я не робив)\n- ніколи (never)\n- general prohibition (Не палити!)\n- not used to (Він не курив)\n\n### Use Perfective\n- ще не (not yet)\n- specific warning (Не впади!)\n- specific denial (Я цього не сказав!)\n- expected result failed (Не знайшов)\n\n## match-up: Positive to Negative\n\n| Positive (Perfective) | Negative (Imperfective) |\n|-----------------------|-------------------------|\n| Він прочитав | Він не читав |\n| Вона написала | Вона не писала |\n| Ми купили | Ми не купували |\n| Я зробив | Я не робив |\n| Вони сказали | Вони не говорили |\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | Notes |\n|------|-----|---------|-------|\n| ніколи | /nʲiˈkolɪ/ | never | + imperfective |\n| ще не | /ʃt͡ʃɛ nɛ/ | not yet | + perfective |\n| більше не | /ˈbʲilʲʃɛ nɛ/ | no longer | + imperfective |\n| ні... ні | /nʲi nʲi/ | neither... nor | - |\n| нічого | /nʲiˈt͡ʃoɦo/ | nothing | genitive |\n| нікого | /nʲiˈkoɦo/ | nobody | genitive |\n| ніде | /nʲiˈdɛ/ | nowhere | - |\n| обережно | /obɛˈrɛʒno/ | carefully, caution | - |\n| заборонено | /zɑboroˈnɛno/ | forbidden | - |\n| не можна | /nɛ ˈmoʒnɑ/ | not allowed | - |\n| не варто | /nɛ ˈvɑrto/ | not worth it | - |\n| не слід | /nɛ slʲid/ | should not | - |\n| даремно | /dɑˈrɛmno/ | in vain | - |\n\n---\n\n# Summary\n\n## The Core Rule\n\n**Negation prefers imperfective.**\n\n| Positive | Negative |\n|----------|----------|\n| Я прочитав книгу. | Я не читав книги. |\n| Вона написала. | Вона не писала. |\n| Ми купили. | Ми не купували. |\n\n## Exceptions (Use Perfective)\n\n| Context | Example |\n|---------|---------|\n| \"Not yet\" (ще не) | Я ще не прочитав. |\n| Specific warning | Не впади! Не забудь! |\n| Expected result failed | Я не знайшов ключів. |\n| Emphatic denial | Я цього не сказав! |\n\n## Key Patterns\n\n1. **Ніколи** (never)\n   > [!answer] always imperfective\n2. **Ще не** (not yet)\n   > [!answer] perfective\n3. **General prohibition**\n   > [!answer] imperfective (Не палити!)\n4. **Specific warning**\n   > [!answer] perfective (Не впади!)\n\n> **Key Takeaways**\n>\n> - Default to imperfective in negative sentences\n> - \"Ніколи\" (never) demands imperfective\n> - \"Ще не\" (not yet) uses perfective\n> - Warnings about specific events use perfective\n> - Objects often shift to genitive in negation\n> - **Note:** Some prohibitions accept BOTH aspects with different nuances!\n"
   },
   "activities": [
     {
-      "id": "act-uk-B1-85-quiz",
+      "id": "act-b1-85-quiz",
       "type": "quiz",
       "title": "Negation Aspect",
       "description": "Choose the correct aspect.",
       "content": {
         "type": "quiz",
-        "instructions": "Choose the correct aspect.",
         "questions": [
           {
             "question": "Я ___ цю книгу.",
@@ -172,25 +152,20 @@
       "language": "uk",
       "difficultyLevel": "B1",
       "duration": 5,
-      "tags": [
-        "aspect",
-        "grammar",
-        "verbs",
-        "negation"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.289Z",
+      "modifiedAt": "2025-12-01T22:58:37.289Z"
     },
     {
-      "id": "act-uk-B1-85-groupsort",
+      "id": "act-b1-85-groupsort",
       "type": "group-sort",
       "title": "Negation Patterns",
       "description": "Negation Patterns",
       "content": {
         "type": "group-sort",
-        "instructions": "",
         "groups": [
           {
+            "id": "use-imperfective",
             "name": "Use Imperfective",
             "items": [
               "general negation (Я не робив)",
@@ -200,6 +175,7 @@
             ]
           },
           {
+            "id": "use-perfective",
             "name": "Use Perfective",
             "items": [
               "ще не (not yet)",
@@ -217,23 +193,17 @@
       "language": "uk",
       "difficultyLevel": "B1",
       "duration": 5,
-      "tags": [
-        "aspect",
-        "grammar",
-        "verbs",
-        "negation"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.289Z",
+      "modifiedAt": "2025-12-01T22:58:37.289Z"
     },
     {
-      "id": "act-uk-B1-85-matchup",
+      "id": "act-b1-85-matchup",
       "type": "match-up",
       "title": "Positive to Negative",
       "description": "Positive to Negative",
       "content": {
         "type": "match-up",
-        "instructions": "",
         "pairs": [
           {
             "left": "Він прочитав",
@@ -264,14 +234,9 @@
       "language": "uk",
       "difficultyLevel": "B1",
       "duration": 5,
-      "tags": [
-        "aspect",
-        "grammar",
-        "verbs",
-        "negation"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.289Z",
+      "modifiedAt": "2025-12-01T22:58:37.289Z"
     }
   ],
   "vocabulary": {
@@ -282,121 +247,95 @@
     "transliterationMode": "none",
     "words": [
       {
-        "id": "v-m85-001",
+        "id": "v-nikoly-85-0",
         "uk": "ніколи",
-        "translit": "",
-        "ipa": "/nʲiˈkolɪ/",
         "en": "never",
-        "pos": "",
-        "note": "+ imperfective"
+        "pos": "+ imperfective",
+        "ipa": "/nʲiˈkolɪ/"
       },
       {
-        "id": "v-m85-002",
+        "id": "v-shche-ne-85-1",
         "uk": "ще не",
-        "translit": "",
-        "ipa": "/ʃt͡ʃɛ nɛ/",
         "en": "not yet",
-        "pos": "",
-        "note": "+ perfective"
+        "pos": "+ perfective",
+        "ipa": "/ʃt͡ʃɛ nɛ/"
       },
       {
-        "id": "v-m85-003",
+        "id": "v-bilьshe-ne-85-2",
         "uk": "більше не",
-        "translit": "",
-        "ipa": "/ˈbʲilʲʃɛ nɛ/",
         "en": "no longer",
-        "pos": "",
-        "note": "+ imperfective"
+        "pos": "+ imperfective",
+        "ipa": "/ˈbʲilʲʃɛ nɛ/"
       },
       {
-        "id": "v-m85-004",
+        "id": "v-ni...-ni-85-3",
         "uk": "ні... ні",
-        "translit": "",
-        "ipa": "/nʲi nʲi/",
         "en": "neither... nor",
-        "pos": "",
-        "note": "-"
+        "pos": "-",
+        "ipa": "/nʲi nʲi/"
       },
       {
-        "id": "v-m85-005",
+        "id": "v-nichoho-85-4",
         "uk": "нічого",
-        "translit": "",
-        "ipa": "/nʲiˈt͡ʃoɦo/",
         "en": "nothing",
-        "pos": "",
-        "note": "genitive"
+        "pos": "genitive",
+        "ipa": "/nʲiˈt͡ʃoɦo/"
       },
       {
-        "id": "v-m85-006",
+        "id": "v-nikoho-85-5",
         "uk": "нікого",
-        "translit": "",
-        "ipa": "/nʲiˈkoɦo/",
         "en": "nobody",
-        "pos": "",
-        "note": "genitive"
+        "pos": "genitive",
+        "ipa": "/nʲiˈkoɦo/"
       },
       {
-        "id": "v-m85-007",
+        "id": "v-nide-85-6",
         "uk": "ніде",
-        "translit": "",
-        "ipa": "/nʲiˈdɛ/",
         "en": "nowhere",
-        "pos": "",
-        "note": "-"
+        "pos": "-",
+        "ipa": "/nʲiˈdɛ/"
       },
       {
-        "id": "v-m85-008",
+        "id": "v-oberezhno-85-7",
         "uk": "обережно",
-        "translit": "",
-        "ipa": "/obɛˈrɛʒno/",
         "en": "carefully, caution",
-        "pos": "",
-        "note": "-"
+        "pos": "-",
+        "ipa": "/obɛˈrɛʒno/"
       },
       {
-        "id": "v-m85-009",
+        "id": "v-zaboroneno-85-8",
         "uk": "заборонено",
-        "translit": "",
-        "ipa": "/zɑboroˈnɛno/",
         "en": "forbidden",
-        "pos": "",
-        "note": "-"
+        "pos": "-",
+        "ipa": "/zɑboroˈnɛno/"
       },
       {
-        "id": "v-m85-010",
+        "id": "v-ne-mozhna-85-9",
         "uk": "не можна",
-        "translit": "",
-        "ipa": "/nɛ ˈmoʒnɑ/",
         "en": "not allowed",
-        "pos": "",
-        "note": "-"
+        "pos": "-",
+        "ipa": "/nɛ ˈmoʒnɑ/"
       },
       {
-        "id": "v-m85-011",
+        "id": "v-ne-varto-85-10",
         "uk": "не варто",
-        "translit": "",
-        "ipa": "/nɛ ˈvɑrto/",
         "en": "not worth it",
-        "pos": "",
-        "note": "-"
+        "pos": "-",
+        "ipa": "/nɛ ˈvɑrto/"
       },
       {
-        "id": "v-m85-012",
+        "id": "v-ne-slid-85-11",
         "uk": "не слід",
-        "translit": "",
-        "ipa": "/nɛ slʲid/",
         "en": "should not",
-        "pos": "",
-        "note": "-"
+        "pos": "-",
+        "ipa": "/nɛ slʲid/"
       },
       {
-        "id": "v-m85-013",
+        "id": "v-daremno-85-12",
         "uk": "даремно",
-        "translit": "",
-        "ipa": "/dɑˈrɛmno/",
         "en": "in vain",
-        "pos": "",
-        "note": "-"
+        "pos": "-",
+        "ipa": "/dɑˈrɛmno/"
       }
     ]
   }

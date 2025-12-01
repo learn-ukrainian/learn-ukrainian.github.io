@@ -183,53 +183,53 @@ For places, you can use location words:
 ### Complete with Correct Form
 
 1. Людина, ___ (який) тут живе, мій сусід.
-   → яка (f. - людина is feminine)
-
+   > [!answer] яка
+   > [!explanation] f. - людина is feminine
 2. Книга, ___ (який) я читаю, цікава.
-   → яку (f. accusative)
-
+   > [!answer] яку
+   > [!explanation] f. accusative
 3. Друг, ___ (який) я допоміг, подякував.
-   → якому (m. dative)
-
+   > [!answer] якому
+   > [!explanation] m. dative
 4. Місто, у ___ (який) я живу, велике.
-   → якому (n. locative)
-
+   > [!answer] якому
+   > [!explanation] n. locative
 5. Люди, ___ (який) я знаю, добрі.
-   → яких (pl. accusative) / які (pl. nominative depending on meaning)
+   > [!answer] яких (pl. accusative) / які (pl. nominative depending on meaning)
 
 6. Жінка, про ___ (який) ти говориш, моя тітка.
-   → яку (f. accusative after про)
-
+   > [!answer] яку
+   > [!explanation] f. accusative after про
 ### Combine Sentences
 
 1. Це книга. Я прочитав книгу.
-   → Це книга, яку я прочитав.
+   > [!answer] Це книга, яку я прочитав.
 
 2. Ось чоловік. Чоловік мені допоміг.
-   → Ось чоловік, який мені допоміг.
+   > [!answer] Ось чоловік, який мені допоміг.
 
 3. Я знаю жінку. Жінка працює тут.
-   → Я знаю жінку, яка працює тут.
+   > [!answer] Я знаю жінку, яка працює тут.
 
 4. Це ресторан. Ми їли в ресторані.
-   → Це ресторан, у якому ми їли. / Це ресторан, де ми їли.
+   > [!answer] Це ресторан, у якому ми їли. / Це ресторан, де ми їли.
 
 5. Ось друг. Я подорожував з другом.
-   → Ось друг, з яким я подорожував.
+   > [!answer] Ось друг, з яким я подорожував.
 
 ### Translate
 
 1. The woman who called is my sister.
-   → Жінка, яка зателефонувала, — моя сестра.
+   > [!answer] Жінка, яка зателефонувала, — моя сестра.
 
 2. Everything that you said is true.
-   → Все, що ти сказав, — правда.
+   > [!answer] Все, що ти сказав, — правда.
 
 3. The city where I was born is beautiful.
-   → Місто, де я народився, гарне.
+   > [!answer] Місто, де я народився, гарне.
 
 4. This is the book I want to read.
-   → Це книга, яку я хочу прочитати.
+   > [!answer] Це книга, яку я хочу прочитати.
 
 ## production
 

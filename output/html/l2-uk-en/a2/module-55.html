@@ -3,100 +3,316 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Module 55: Travel & Transportation | Ukrainian A2</title>
+  <title>Module 55: Travel &amp; Transportation | Ukrainian A2</title>
   <style>
-    :root { --primary: #1a5fb4; --primary-light: #3584e4; --success: #26a269; --warning: #e5a50a; --danger: #c01c28; --bg: #fafafa; --card-bg: #fff; --text: #1e1e1e; --text-muted: #5e5e5e; --border: #e0e0e0; }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
-    .top-nav { background: #2e2e2e; color: white; padding: 0.5rem 2rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.875rem; }
-    .top-nav a { color: white; text-decoration: none; }
-    .top-nav a:hover { text-decoration: underline; }
-    .module-nav { display: flex; gap: 1rem; align-items: center; }
-    .module-nav-link { color: rgba(255,255,255,0.8); text-decoration: none; padding: 0.25rem 0.5rem; }
-    .module-nav-link:hover { color: white; }
-    .module-nav-link.disabled { color: rgba(255,255,255,0.3); pointer-events: none; }
-    .nav { position: sticky; top: 0; background: var(--primary); color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; z-index: 100; }
-    .nav h1 { font-size: 1.25rem; }
-    .nav-tabs { display: flex; gap: 0.5rem; }
-    .nav-tab { background: rgba(255,255,255,0.2); border: none; color: white; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; }
-    .nav-tab.active { background: white; color: var(--primary); }
-    main { max-width: 1000px; margin: 0 auto; padding: 2rem; }
-    .section { display: none; } .section.active { display: block; }
-    .lesson-header { text-align: center; margin-bottom: 2rem; padding: 2rem; background: linear-gradient(135deg, #e8f4fd, #f0e8fd); border-radius: 12px; }
-    .level-badge { background: var(--primary); color: white; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.875rem; }
-    .card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 1.5rem; margin-bottom: 1.5rem; }
-    .card h3 { color: var(--primary); margin-bottom: 1rem; }
-    .section-intro { border-left: 4px solid var(--primary); }
-    .section-intro h3 { color: var(--primary); }
-    .section-topic { border-left: 4px solid var(--border); }
-    .section-summary { background: linear-gradient(135deg, #f0f9ff, #e8f4fd); border-left: 4px solid var(--success); }
-    .section-summary h3 { color: var(--success); }
-    .canvas-note { background: #fffbeb; border-left: 4px solid var(--warning); padding: 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
-    .canvas-note h4 { color: var(--warning); margin-bottom: 0.5rem; }
-    .md-content { line-height: 1.7; }
-    .md-content p { margin: 0.75rem 0; }
-    .md-content ul, .md-content ol { margin: 0.75rem 0; padding-left: 1.5rem; }
-    .md-content li { margin: 0.25rem 0; }
-    .md-content strong { color: var(--primary); }
-    .md-content blockquote { background: #e8f4fd; border-left: 4px solid var(--primary); padding: 0.75rem 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
-    .md-content blockquote p { margin: 0.25rem 0; }
-    .md-content table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
-    .md-content th, .md-content td { border: 1px solid var(--border); padding: 0.5rem 0.75rem; text-align: left; }
-    .md-content th { background: #f5f5f5; font-weight: 600; }
-    .md-content code { background: #f0f0f0; padding: 0.125rem 0.375rem; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
-    .letter-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0; }
-    .letter-group { border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; }
-    .letter-group.true-friends { border-color: var(--success); } .letter-group.true-friends .letters { color: var(--success); }
-    .letter-group.false-friends { border-color: var(--danger); } .letter-group.false-friends .letters { color: var(--danger); }
-    .letter-group.new-letters { border-color: var(--primary); } .letter-group.new-letters .letters { color: var(--primary); }
-    .letters { font-size: 1.75rem; letter-spacing: 0.3rem; }
-    .match-container { display: flex; gap: 3rem; padding: 1rem; position: relative; }
-    .match-column { flex: 1; display: flex; flex-direction: column; gap: 0.75rem; }
-    .match-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; font-size: 1.25rem; cursor: pointer; }
-    .match-item.selected { border-color: var(--primary); background: #e8f4fd; }
-    .match-item.matched { border-color: var(--success); background: #e8f8f0; }
-    .match-item.wrong { border-color: var(--danger); background: #fde8e8; }
-    .match-lines { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
-    .quiz-question { border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; }
-    .quiz-question.answered { pointer-events: none; }
-    .quiz-question .cyrillic { font-size: 1.5rem; color: var(--primary); font-weight: 600; }
-    .quiz-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-top: 1rem; }
-    .quiz-option { background: #f5f5f5; border: 2px solid var(--border); border-radius: 8px; padding: 1rem; cursor: pointer; text-align: center; }
-    .quiz-option.correct { border-color: var(--success); background: #d4edda; }
-    .quiz-option.wrong { border-color: var(--danger); background: #f8d7da; }
-    .quiz-explanation { margin-top: 1rem; padding: 1rem; background: #e8f4fd; border-radius: 8px; display: none; }
-    .quiz-explanation.show { display: block; }
-    .sort-pool { background: #f5f5f5; border: 2px dashed var(--border); border-radius: 12px; padding: 1.5rem; min-height: 80px; margin-bottom: 1rem; }
-    .sort-items { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; }
-    .sort-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 0.75rem 1.25rem; font-size: 1.5rem; cursor: grab; }
-    .sort-item.correct { border-color: var(--success); background: #e8f8f0; }
-    .sort-item.wrong { border-color: var(--danger); background: #fde8e8; }
-    .sort-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
-    .sort-group { border: 2px solid var(--border); border-radius: 12px; padding: 1rem; min-height: 150px; }
-    .sort-group.drag-over { border-color: var(--primary); background: #e8f4fd; }
-    .sort-group h4 { font-size: 0.875rem; text-align: center; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--border); }
-    .sort-group.true-friends h4 { color: var(--success); border-color: var(--success); }
-    .sort-group.false-friends h4 { color: var(--danger); border-color: var(--danger); }
-    .sort-group.new-letters h4 { color: var(--primary); border-color: var(--primary); }
-    .vocab-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; }
-    .vocab-card { border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; text-align: center; }
-    .vocab-card .uk { font-size: 1.75rem; font-weight: 600; color: var(--primary); }
-    .vocab-card .translit { color: var(--text-muted); font-style: italic; }
-    .vocab-card .en { font-weight: 500; margin: 0.25rem 0; }
-    .vocab-card .note { font-size: 0.75rem; color: #613583; background: #f0e8fd; padding: 0.25rem 0.5rem; border-radius: 4px; }
-    .btn { padding: 0.75rem 1.5rem; border: none; border-radius: 8px; cursor: pointer; }
-    .btn-primary { background: var(--primary); color: white; }
-    .btn-outline { background: transparent; border: 2px solid var(--border); }
-    .btn-group { display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem; }
-    .score-display { text-align: center; padding: 1rem; background: linear-gradient(135deg, #e8f8f0, #e8f4fd); border-radius: 8px; margin-bottom: 1rem; }
-    .score-display .score { font-size: 2rem; font-weight: 700; color: var(--success); }
-    .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
-    .completion-message.show { display: block; }
-    footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+:root { --primary: #1a5fb4; --primary-light: #3584e4; --success: #26a269; --warning: #e5a50a; --danger: #c01c28; --bg: #fafafa; --card-bg: #fff; --text: #1e1e1e; --text-muted: #5e5e5e; --border: #e0e0e0; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+.top-nav { background: #2e2e2e; color: white; padding: 0.5rem 2rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.875rem; }
+.top-nav a { color: white; text-decoration: none; }
+.top-nav a:hover { text-decoration: underline; }
+.module-nav { display: flex; gap: 1rem; align-items: center; }
+.module-nav-link { color: rgba(255,255,255,0.8); text-decoration: none; padding: 0.25rem 0.5rem; }
+.module-nav-link:hover { color: white; }
+.module-nav-link.disabled { color: rgba(255,255,255,0.3); pointer-events: none; }
+.nav { position: sticky; top: 0; background: var(--primary); color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; z-index: 100; }
+.nav h1 { font-size: 1.25rem; }
+.nav-tabs { display: flex; gap: 0.5rem; }
+.nav-tab { background: rgba(255,255,255,0.2); border: none; color: white; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; }
+.nav-tab.active { background: white; color: var(--primary); }
+main { max-width: 1000px; margin: 0 auto; padding: 2rem; }
+.section { display: none; } .section.active { display: block; }
+.lesson-header { text-align: center; margin-bottom: 2rem; padding: 2rem; background: linear-gradient(135deg, #e8f4fd, #f0e8fd); border-radius: 12px; }
+.level-badge { background: var(--primary); color: white; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.875rem; }
+.card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 1.5rem; margin-bottom: 1.5rem; }
+.card h3 { color: var(--primary); margin-bottom: 1rem; }
+.section-intro { border-left: 4px solid var(--primary); }
+.section-intro h3 { color: var(--primary); }
+.section-topic { border-left: 4px solid var(--border); }
+.section-summary { background: linear-gradient(135deg, #f0f9ff, #e8f4fd); border-left: 4px solid var(--success); }
+.section-summary h3 { color: var(--success); }
+.canvas-note { background: #fffbeb; border-left: 4px solid var(--warning); padding: 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+.canvas-note h4 { color: var(--warning); margin-bottom: 0.5rem; }
+.md-content { line-height: 1.7; }
+.md-content p { margin: 0.75rem 0; }
+.md-content ul, .md-content ol { margin: 0.75rem 0; padding-left: 1.5rem; }
+.md-content li { margin: 0.25rem 0; }
+.md-content strong { color: var(--primary); }
+.md-content blockquote { background: #e8f4fd; border-left: 4px solid var(--primary); padding: 0.75rem 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+.md-content blockquote p { margin: 0.25rem 0; }
+.md-content table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+.md-content th, .md-content td { border: 1px solid var(--border); padding: 0.5rem 0.75rem; text-align: left; }
+.md-content th { background: #f5f5f5; font-weight: 600; }
+.md-content code { background: #f0f0f0; padding: 0.125rem 0.375rem; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
+.md-content details { background: #f8f9fa; border: 1px solid var(--border); border-radius: 8px; padding: 0; margin: 1rem 0; }
+.md-content details summary { background: linear-gradient(135deg, #e8f4fd, #f0e8fd); padding: 0.75rem 1rem; cursor: pointer; font-weight: 600; color: var(--primary); border-radius: 8px; list-style: none; display: flex; align-items: center; gap: 0.5rem; }
+.md-content details summary::-webkit-details-marker { display: none; }
+.md-content details summary::before { content: '▶'; font-size: 0.75rem; transition: transform 0.2s; }
+.md-content details[open] summary::before { transform: rotate(90deg); }
+.md-content details[open] summary { border-radius: 8px 8px 0 0; }
+.md-content details > *:not(summary) { padding: 0 1rem; }
+.md-content details > *:last-child { padding-bottom: 1rem; }
+.md-content p > details { margin: 0; }
+.md-content p:has(> details) { margin: 1rem 0; }
+.inline-answer { background: linear-gradient(135deg, #d4edda, #e8f4fd); padding: 0.125rem 0.5rem; border-radius: 4px; transition: opacity 0.2s; }
+.inline-answer.hidden { opacity: 0; user-select: none; }
+.answer-toggle-btn { display: inline-flex; align-items: center; gap: 0.5rem; background: linear-gradient(135deg, #e8f4fd, #f0e8fd); border: 1px solid var(--primary); color: var(--primary); padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-size: 0.875rem; font-weight: 600; margin: 1rem 0; }
+.answer-toggle-btn:hover { background: var(--primary); color: white; }
+.answer-toggle-btn svg { width: 1rem; height: 1rem; }
+.letter-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0; }
+.letter-group { border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; }
+.letter-group.true-friends { border-color: var(--success); } .letter-group.true-friends .letters { color: var(--success); }
+.letter-group.false-friends { border-color: var(--danger); } .letter-group.false-friends .letters { color: var(--danger); }
+.letter-group.new-letters { border-color: var(--primary); } .letter-group.new-letters .letters { color: var(--primary); }
+.letters { font-size: 1.75rem; letter-spacing: 0.3rem; }
+.btn { padding: 0.75rem 1.5rem; border: none; border-radius: 8px; cursor: pointer; }
+.btn-primary { background: var(--primary); color: white; }
+.btn-outline { background: transparent; border: 2px solid var(--border); }
+.btn-group { display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem; }
+.score-display { text-align: center; padding: 1rem; background: linear-gradient(135deg, #e8f8f0, #e8f4fd); border-radius: 8px; margin-bottom: 1rem; }
+.score-display .score { font-size: 2rem; font-weight: 700; color: var(--success); }
+.completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
+.completion-message.show { display: block; }
+footer { text-align: center; padding: 2rem; color: var(--text-muted); }
+@media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+
+
+/**
+ * Layout styles - Navigation, page structure
+ */
+
+/* Top Navigation */
+.top-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1.5rem;
+  background: #f8f8f8;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.875rem;
+}
+
+.top-nav a {
+  color: var(--text-muted);
+}
+
+.top-nav a:hover {
+  color: var(--primary);
+}
+
+.module-nav {
+  display: flex;
+  gap: 1rem;
+}
+
+.module-nav-link {
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+.module-nav-link:hover {
+  background: #e8f4fd;
+}
+
+/* Main Navigation */
+.nav {
+  background: linear-gradient(135deg, #1a5fb4, #613583);
+  color: white;
+  padding: 1.5rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav h1 {
+  font-size: 1.5rem;
+}
+
+.nav-tabs {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.nav-tab {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: background 0.2s;
+}
+
+.nav-tab:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.nav-tab.active {
+  background: white;
+  color: var(--primary);
+}
+
+/* Main Content */
+main {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Sections */
+.section {
+  display: none;
+}
+
+.section.active {
+  display: block;
+}
+
+/* Lesson Header */
+.lesson-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding: 2rem;
+  background: linear-gradient(135deg, #e8f4fd, #f0e8fd);
+  border-radius: 12px;
+}
+
+.lesson-header h2 {
+  font-size: 2rem;
+  margin: 0.5rem 0;
+}
+
+/* Section Cards */
+.section-intro {
+  border-left: 4px solid var(--primary);
+}
+
+.section-intro h3 {
+  color: var(--primary);
+}
+
+.section-topic {
+  border-left: 4px solid var(--border);
+}
+
+.section-summary {
+  background: linear-gradient(135deg, #f0f9ff, #e8f4fd);
+  border-left: 4px solid var(--success);
+}
+
+.section-summary h3 {
+  color: var(--success);
+}
+
+/* Canvas Notes */
+.canvas-note {
+  background: #fffbeb;
+  border-left: 4px solid var(--warning);
+  padding: 1rem;
+  margin: 1rem 0;
+  border-radius: 0 8px 8px 0;
+}
+
+.canvas-note h4 {
+  color: var(--warning);
+  margin-bottom: 0.5rem;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-muted);
+}
+
+/* Responsive Layout */
+@media (max-width: 768px) {
+  .nav {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .nav h1 {
+    font-size: 1.25rem;
+    text-align: center;
+  }
+
+  .nav-tabs {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  main {
+    padding: 1rem;
+  }
+
+  .top-nav {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+
+
+/* Match Activity */
+.match-container { display: flex; gap: 3rem; padding: 1rem; position: relative; }
+.match-column { flex: 1; display: flex; flex-direction: column; gap: 0.75rem; }
+.match-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; font-size: 1.25rem; cursor: pointer; }
+.match-item.selected { border-color: var(--primary); background: #e8f4fd; }
+.match-item.matched { border-color: var(--success); background: #e8f8f0; }
+.match-item.wrong { border-color: var(--danger); background: #fde8e8; }
+.match-lines { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+
+/* Quiz Activity */
+.quiz-question { border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; }
+.quiz-question.answered { pointer-events: none; }
+.quiz-question .cyrillic { font-size: 1.5rem; color: var(--primary); font-weight: 600; }
+.quiz-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-top: 1rem; }
+.quiz-option { background: #f5f5f5; border: 2px solid var(--border); border-radius: 8px; padding: 1rem; cursor: pointer; text-align: center; }
+.quiz-option.correct { border-color: var(--success); background: #d4edda; }
+.quiz-option.wrong { border-color: var(--danger); background: #f8d7da; }
+.quiz-explanation { margin-top: 1rem; padding: 1rem; background: #e8f4fd; border-radius: 8px; display: none; }
+.quiz-explanation.show { display: block; }
+
+/* Sort Activity */
+.sort-pool { background: #f5f5f5; border: 2px dashed var(--border); border-radius: 12px; padding: 1.5rem; min-height: 80px; margin-bottom: 1rem; }
+.sort-items { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; }
+.sort-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 0.75rem 1.25rem; font-size: 1.5rem; cursor: grab; }
+.sort-item.correct { border-color: var(--success); background: #e8f8f0; }
+.sort-item.wrong { border-color: var(--danger); background: #fde8e8; }
+.sort-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+.sort-group { border: 2px solid var(--border); border-radius: 12px; padding: 1rem; min-height: 150px; }
+.sort-group.drag-over { border-color: var(--primary); background: #e8f4fd; }
+.sort-group h4 { font-size: 0.875rem; text-align: center; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--border); }
+.sort-group.true-friends h4 { color: var(--success); border-color: var(--success); }
+.sort-group.false-friends h4 { color: var(--danger); border-color: var(--danger); }
+.sort-group.new-letters h4 { color: var(--primary); border-color: var(--primary); }
+
+/* Vocabulary */
+.vocab-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; }
+.vocab-card { border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; text-align: center; }
+.vocab-card .uk { font-size: 1.75rem; font-weight: 600; color: var(--primary); }
+.vocab-card .translit { color: var(--text-muted); font-style: italic; }
+.vocab-card .en { font-weight: 500; margin: 0.25rem 0; }
+.vocab-card .note { font-size: 0.75rem; color: #613583; background: #f0e8fd; padding: 0.25rem 0.5rem; border-radius: 4px; }
+
+/* Answer Callout Blocks */
+.callout { padding: 0.5rem 1rem; margin: 0.25rem 0; border-radius: 4px; }
+.callout-answer { background: #e8f8f0; border-left: 3px solid var(--success); }
+.callout-explanation { background: #e8f4fd; border-left: 3px solid var(--primary); color: var(--text-muted); font-style: italic; }
+.callout-alt { background: #f5f5f5; border-left: 3px solid var(--border); color: var(--text-muted); }
+
+/* Answer Block Toggle */
+.answer-block { display: none; }
+.answer-block.show { display: block; }
+.show-answer-btn { background: #f0f0f0; border: 1px solid var(--border); border-radius: 6px; padding: 0.25rem 0.75rem; font-size: 0.8rem; cursor: pointer; color: var(--text-muted); margin: 0.25rem 0; }
+.show-answer-btn:hover { background: #e5e5e5; }
+.show-answer-btn.revealed { background: #e8f8f0; border-color: var(--success); color: var(--success); }
+
   </style>
 </head>
 <body>
+  
   <div class="top-nav">
     <a href="../index.html">← l2-uk-en Curriculum</a>
     <div class="module-nav">
@@ -106,7 +322,7 @@
     </div>
   </div>
   <nav class="nav">
-    <h1>Module 55: Travel & Transportation</h1>
+    <h1>Module 55: Travel &amp; Transportation</h1>
     <div class="nav-tabs">
       <button class="nav-tab active" data-section="lesson">Lesson</button>
       <button class="nav-tab" data-section="match">Match</button>
@@ -116,14 +332,17 @@
     </div>
   </nav>
   <main>
+    
     <section id="lesson" class="section active">
       <div class="lesson-header">
         <span class="level-badge">A2 · A2.3</span>
-        <h2 style="font-size:2rem;margin:0.5rem 0">Travel & Transportation</h2>
-        <p style="color:var(--text-muted)">Trains, Planes & Booking</p>
+        <h2 style="font-size:2rem;margin:0.5rem 0">Travel &amp; Transportation</h2>
+        <p style="color:var(--text-muted)">Trains, Planes &amp; Booking</p>
       </div>
-      
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### On the Move</h4><div class="md-content"><p>Ukraine has excellent train networks and growing air connections. Whether traveling domestically or internationally, you'll need this vocabulary!</p>
+      <div class="card"><h3>Theory</h3><div class="md-content"><h1 id="lessoncontent">Lesson Content</h1>
+<h2 id="warmup">warm-up</h2>
+<h3 id="onthemove">On the Move</h3>
+<p>Ukraine has excellent train networks and growing air connections. Whether traveling domestically or internationally, you'll need this vocabulary!</p>
 <p><strong>Key phrases:</strong></p>
 <ul>
 <li>Мені потрібен <strong>квиток</strong> до Львова. - I need a ticket to Lviv.</li>
@@ -133,7 +352,10 @@
 <blockquote>
   <p>💡 <strong>Did You Know?</strong></p>
   <p>Ukrainian trains are legendary! The overnight train (нічний потяг) is a classic experience - you get a bed, tea from the провідник (conductor), and wake up at your destination. The train from Kyiv to Lviv takes about 5-6 hours, while flights take just over an hour.</p>
-</blockquote></div></div><div class="canvas-note"><h4>### Types of Transportation</h4><div class="md-content"><p><strong>Ground transportation:</strong></p>
+</blockquote>
+<h2 id="presentation">presentation</h2>
+<h3 id="typesoftransportation">Types of Transportation</h3>
+<p><strong>Ground transportation:</strong></p>
 <table>
 <thead>
 <tr>
@@ -237,7 +459,9 @@
   <li><strong>Станція</strong> - metro station, smaller stops</li>
   <li><strong>Зупинка</strong> - bus/tram stop (on the street)</li>
   </ul>
-</blockquote></div></div><div class="canvas-note"><h4>Buying Tickets - Купівля квитків</h4><div class="md-content"><p><strong>At the ticket office:</strong></p>
+</blockquote>
+<h3 id="buyingtickets">Buying Tickets - Купівля квитків</h3>
+<p><strong>At the ticket office:</strong></p>
 <ul>
 <li>Дайте, будь ласка, <strong>квиток</strong> до Одеси. - Please give me a ticket to Odesa.</li>
 <li><strong>Два квитки</strong> до Харкова, будь ласка. - Two tickets to Kharkiv, please.</li>
@@ -268,7 +492,9 @@
   <li><strong>СВ (спальний вагон)</strong> - 2-person sleeper (luxury)</li>
   <li><strong>Сидячий</strong> - seats only (day trains)</li>
   </ul>
-</blockquote></div></div><div class="canvas-note"><h4>Train Travel Vocabulary</h4><div class="md-content"><p><strong>On the train:</strong></p>
+</blockquote>
+<h3 id="traintravelvocabulary">Train Travel Vocabulary</h3>
+<p><strong>On the train:</strong></p>
 <table>
 <thead>
 <tr>
@@ -318,7 +544,9 @@
 <blockquote>
   <p>📜 <strong>History Bite: Ukrainian Railways</strong></p>
   <p>Ukraine's railway network was built mostly in the 19th century under the Russian and Austro-Hungarian empires. Today, Укрзалізниця operates one of the largest rail networks in Europe! The Kyiv-Lviv route is one of the most popular.</p>
-</blockquote></div></div><div class="canvas-note"><h4>At the Airport - В аеропорту</h4><div class="md-content"><p><strong>Check-in vocabulary:</strong></p>
+</blockquote>
+<h3 id="attheairport">At the Airport - В аеропорту</h3>
+<p><strong>Check-in vocabulary:</strong></p>
 <table>
 <thead>
 <tr>
@@ -374,7 +602,9 @@
 <ul>
 <li>Увага! Оголошується <strong>посадка</strong> на рейс… - Attention! Boarding is announced for flight…</li>
 <li>Пасажирів рейсу… просимо пройти до виходу… - Passengers of flight… please proceed to gate…</li>
-</ul></div></div><div class="canvas-note"><h4>Booking Online</h4><div class="md-content"><p><strong>Website vocabulary:</strong></p>
+</ul>
+<h3 id="bookingonline">Booking Online</h3>
+<p><strong>Website vocabulary:</strong></p>
 <table>
 <thead>
 <tr>
@@ -432,7 +662,9 @@
   <li><strong>SkyUp</strong>, <strong>МАУ</strong> - Ukrainian airlines</li>
   <li>Apps make booking easier!</li>
   </ul>
-</blockquote></div></div><div class="canvas-note"><h4>Problems and Solutions</h4><div class="md-content"><p><strong>Common issues:</strong></p>
+</blockquote>
+<h3 id="problemsandsolutions">Problems and Solutions</h3>
+<p><strong>Common issues:</strong></p>
 <ul>
 <li>Я <strong>загубив/загубила</strong> квиток. - I lost my ticket.</li>
 <li>Я <strong>спізнився/спізнилась</strong> на потяг. - I missed the train.</li>
@@ -446,7 +678,9 @@
 <li>Коли <strong>наступний</strong> потяг? - When is the next train?</li>
 <li>Де <strong>бюро знахідок</strong>? - Where is lost and found?</li>
 <li>Чи є <strong>альтернативний</strong> рейс? - Is there an alternative flight?</li>
-</ul></div></div><div class="canvas-note"><h4>Travel Dialogue</h4><div class="md-content"><p><strong>Buying a train ticket:</strong></p>
+</ul>
+<h3 id="traveldialogue">Travel Dialogue</h3>
+<p><strong>Buying a train ticket:</strong></p>
 <ul>
 <li>Доброго дня! Мені потрібен квиток до Одеси.</li>
 <li>На коли?</li>
@@ -457,44 +691,90 @@
 <li>Купе, будь ласка. Нижня полиця, якщо можна.</li>
 <li>Звичайно. Ось ваш квиток. Потяг відходить з третьої платформи.</li>
 <li>Дякую!</li>
-</ul></div></div><div class="canvas-note"><h4>### Match Transportation</h4><div class="md-content"><ol>
-<li>потяг → train</li>
-<li>літак → airplane</li>
-<li>вокзал → train station</li>
-<li>аеропорт → airport</li>
-<li>квиток → ticket</li>
-<li>платформа → platform</li>
-</ol></div></div><div class="canvas-note"><h4>Complete Booking Dialogue</h4><div class="md-content"><ol>
-<li><p>Мені потрібен квиток до ___. (Lviv)<br />
-→ Львова</p></li>
-<li><p>На ___, будь ласка. (tomorrow)<br />
-→ завтра</p></li>
-<li><p>Квиток ___ і ___. (there and back)<br />
-→ туди і назад</p></li>
-<li><p>___ коштує? (how much)<br />
-→ Скільки</p></li>
-<li><p>З якої ___? (platform)<br />
-→ платформи</p></li>
-<li><p>О котрій ___? (arrival)<br />
-→ прибуття</p></li>
-</ol></div></div><div class="canvas-note"><h4>Translate</h4><div class="md-content"><ol>
-<li><p>I need a ticket to Kyiv.<br />
-→ Мені потрібен квиток до Києва.</p></li>
-<li><p>What time is departure?<br />
-→ О котрій відправлення?</p></li>
-<li><p>From which platform?<br />
-→ З якої платформи?</p></li>
-<li><p>Is there a flight delay?<br />
-→ Чи є затримка рейсу?</p></li>
-<li><p>I missed the train.<br />
-→ Я спізнився/спізнилась на потяг.</p></li>
-</ol></div></div><div class="canvas-note"><h4>### Plan a Trip</h4><div class="md-content"><p>Describe your travel plans:</p>
+</ul>
+<h2 id="practice">practice</h2>
+<h3 id="matchtransportation">Match Transportation</h3>
+<ol>
+<li><p>потяг</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-0', this)">Показати відповідь</button><div class="answer-block" id="ans-0"><div class="callout callout-answer" data-callout="answer">train</div></div>
+<ol start="2">
+<li><p>літак</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-1', this)">Показати відповідь</button><div class="answer-block" id="ans-1"><div class="callout callout-answer" data-callout="answer">airplane</div></div>
+<ol start="3">
+<li><p>вокзал</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-2', this)">Показати відповідь</button><div class="answer-block" id="ans-2"><div class="callout callout-answer" data-callout="answer">train station</div></div>
+<ol start="4">
+<li><p>аеропорт</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-3', this)">Показати відповідь</button><div class="answer-block" id="ans-3"><div class="callout callout-answer" data-callout="answer">airport</div></div>
+<ol start="5">
+<li><p>квиток</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-4', this)">Показати відповідь</button><div class="answer-block" id="ans-4"><div class="callout callout-answer" data-callout="answer">ticket</div></div>
+<ol start="6">
+<li><p>платформа</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-5', this)">Показати відповідь</button><div class="answer-block" id="ans-5"><div class="callout callout-answer" data-callout="answer">platform</div></div>
+<h3 id="completebookingdialogue">Complete Booking Dialogue</h3>
+<ol>
+<li><p>Мені потрібен квиток до ___. (Lviv)</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-6', this)">Показати відповідь</button><div class="answer-block" id="ans-6"><div class="callout callout-answer" data-callout="answer">Львова</div></div>
+<ol start="2">
+<li><p>На ___, будь ласка. (tomorrow)</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-7', this)">Показати відповідь</button><div class="answer-block" id="ans-7"><div class="callout callout-answer" data-callout="answer">завтра</div></div>
+<ol start="3">
+<li><p>Квиток ___ і ___. (there and back)</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-8', this)">Показати відповідь</button><div class="answer-block" id="ans-8"><div class="callout callout-answer" data-callout="answer">туди і назад</div></div>
+<ol start="4">
+<li><p>___ коштує? (how much)</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-9', this)">Показати відповідь</button><div class="answer-block" id="ans-9"><div class="callout callout-answer" data-callout="answer">Скільки</div></div>
+<ol start="5">
+<li><p>З якої ___? (platform)</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-10', this)">Показати відповідь</button><div class="answer-block" id="ans-10"><div class="callout callout-answer" data-callout="answer">платформи</div></div>
+<ol start="6">
+<li><p>О котрій ___? (arrival)</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-11', this)">Показати відповідь</button><div class="answer-block" id="ans-11"><div class="callout callout-answer" data-callout="answer">прибуття</div></div>
+<h3 id="translate">Translate</h3>
+<ol>
+<li><p>I need a ticket to Kyiv.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-12', this)">Показати відповідь</button><div class="answer-block" id="ans-12"><div class="callout callout-answer" data-callout="answer">Мені потрібен квиток до Києва.</div></div>
+<ol start="2">
+<li><p>What time is departure?</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-13', this)">Показати відповідь</button><div class="answer-block" id="ans-13"><div class="callout callout-answer" data-callout="answer">О котрій відправлення?</div></div>
+<ol start="3">
+<li><p>From which platform?</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-14', this)">Показати відповідь</button><div class="answer-block" id="ans-14"><div class="callout callout-answer" data-callout="answer">З якої платформи?</div></div>
+<ol start="4">
+<li><p>Is there a flight delay?</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-15', this)">Показати відповідь</button><div class="answer-block" id="ans-15"><div class="callout callout-answer" data-callout="answer">Чи є затримка рейсу?</div></div>
+<ol start="5">
+<li><p>I missed the train.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-16', this)">Показати відповідь</button><div class="answer-block" id="ans-16"><div class="callout callout-answer" data-callout="answer">Я спізнився/спізнилась на потяг.</div></div>
+<h2 id="production">production</h2>
+<h3 id="planatrip">Plan a Trip</h3>
+<p>Describe your travel plans:</p>
 <ul>
 <li>Куди ви їдете?</li>
 <li>Яким транспортом?</li>
 <li>Коли відправлення?</li>
 <li>Скільки коштує квиток?</li>
-</ul></div></div><div class="canvas-note"><h4>Role Play: Ticket Office</h4><div class="md-content"><p><strong>Customer:</strong></p>
+</ul>
+<h3 id="roleplayticketoffice">Role Play: Ticket Office</h3>
+<p><strong>Customer:</strong></p>
 <ul>
 <li>Ask for tickets</li>
 <li>Specify date and time</li>
@@ -507,24 +787,146 @@
 <li>Give prices</li>
 <li>Explain platform</li>
 <li>Provide ticket</li>
-</ul></div></div></div>
-      <div class="btn-group"><button class="btn btn-primary" onclick="showSection('match')">Start →</button></div>
+</ul>
+<hr />
+<h1 id="summary">Summary</h1>
+<h2 id="transportationtypes">Transportation Types</h2>
+<table>
+<thead>
+<tr>
+<th>Ground</th>
+<th>Air</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>потяг</td>
+<td>літак</td>
+</tr>
+<tr>
+<td>автобус</td>
+<td>гелікоптер</td>
+</tr>
+<tr>
+<td>таксі</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<h2 id="buyingtickets-1">Buying Tickets</h2>
+<table>
+<thead>
+<tr>
+<th>Phrase</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Квиток до…</td>
+<td>Ticket to…</td>
+</tr>
+<tr>
+<td>В один бік</td>
+<td>One way</td>
+</tr>
+<tr>
+<td>Туди і назад</td>
+<td>Round trip</td>
+</tr>
+<tr>
+<td>О котрій відправлення?</td>
+<td>What time departure?</td>
+</tr>
+</tbody>
+</table>
+<h2 id="trainclasses">Train Classes</h2>
+<table>
+<thead>
+<tr>
+<th>Ukrainian</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>плацкарт</td>
+<td>open carriage</td>
+</tr>
+<tr>
+<td>купе</td>
+<td>compartment</td>
+</tr>
+<tr>
+<td>СВ</td>
+<td>sleeper</td>
+</tr>
+<tr>
+<td>сидячий</td>
+<td>seats only</td>
+</tr>
+</tbody>
+</table>
+<h2 id="airportvocabulary">Airport Vocabulary</h2>
+<table>
+<thead>
+<tr>
+<th>Ukrainian</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>реєстрація</td>
+<td>check-in</td>
+</tr>
+<tr>
+<td>посадковий талон</td>
+<td>boarding pass</td>
+</tr>
+<tr>
+<td>вихід</td>
+<td>gate</td>
+</tr>
+<tr>
+<td>затримка</td>
+<td>delay</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p>💡 <strong>Key Takeaways</strong></p>
+  <ul>
+  <li>До + genitive for destination (до Києва)</li>
+  <li>Туди і назад = round trip</li>
+  <li>Плацкарт/купе = train classes</li>
+  <li>Вокзал = station, платформа = platform</li>
+  <li>О котрій? = at what time?</li>
+  </ul>
+</blockquote></div></div>
+      <div class="btn-group">
+        <button class="btn btn-primary" onclick="showSection('match')">Start →</button>
+      </div>
     </section>
+  
+    
     <section id="match" class="section"><div class="card"><h3>Travel Vocabulary</h3>
       <div class="score-display"><span class="score"><span id="match-score">0</span>/6</span></div>
       <div class="match-container" id="match-container"><svg class="match-lines" id="match-lines"></svg>
         <div class="match-column" id="match-left"><div class="match-item" data-pair="0">потяг</div><div class="match-item" data-pair="1">літак</div><div class="match-item" data-pair="2">квиток</div><div class="match-item" data-pair="3">вокзал</div><div class="match-item" data-pair="4">платформа</div><div class="match-item" data-pair="5">багаж</div></div>
-        <div class="match-column" id="match-right"><div class="match-item" data-pair="5">luggage</div><div class="match-item" data-pair="0">train</div><div class="match-item" data-pair="4">platform</div><div class="match-item" data-pair="3">train station</div><div class="match-item" data-pair="1">airplane</div><div class="match-item" data-pair="2">ticket</div></div>
+        <div class="match-column" id="match-right"><div class="match-item" data-pair="4">platform</div><div class="match-item" data-pair="2">ticket</div><div class="match-item" data-pair="0">train</div><div class="match-item" data-pair="5">luggage</div><div class="match-item" data-pair="3">train station</div><div class="match-item" data-pair="1">airplane</div></div>
       </div>
       <div class="completion-message" id="match-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetMatch()">Reset</button><button class="btn btn-primary" onclick="showSection('quiz')">Next →</button></div>
     </div></section>
+    
     <section id="quiz" class="section"><div class="card"><h3>Travel Situations</h3>
       <div class="score-display"><span class="score"><span id="quiz-score">0</span>/6</span></div>
       <div id="quiz-container"></div>
       <div class="completion-message" id="quiz-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('sort')">Next →</button></div>
     </div></section>
+    
     <section id="sort" class="section"><div class="card"><h3>Train vs Plane</h3>
       <div class="score-display"><span class="score"><span id="sort-score">0</span>/12</span></div>
       <div class="sort-pool" id="sort-pool"><div class="sort-items" id="sort-items"></div></div>
@@ -532,34 +934,235 @@
       <div class="completion-message" id="sort-complete"><h3>All Sorted!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetSort()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Vocab →</button></div>
     </div></section>
+    
     <section id="vocab" class="section"><div class="card"><h3>Vocabulary (11)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
     </section>
-  </main>
-  <footer>Module 55 · curricula-opus</footer>
+  </main><footer>Module 55 · curricula-opus</footer>
   <script>
-    const matchPairs=[{"left":"потяг","right":"train"},{"left":"літак","right":"airplane"},{"left":"квиток","right":"ticket"},{"left":"вокзал","right":"train station"},{"left":"платформа","right":"platform"},{"left":"багаж","right":"luggage"}];
-    const quizData=[{"question":"\"A ticket to Lviv\" - Квиток ___ Львова.","options":["до","в","на","у"],"correctIndex":0,"explanation":"Direction \"to city\" = до."},{"question":"\"Round trip\" - Туди і ___.","options":["назад","звідти","далі","потім"],"correctIndex":0,"explanation":"\"There and back\" = туди і назад."},{"question":"\"What time is departure?\" - О котрій ___?","options":["відправлення","відправляти","відправитися","відправляється"],"correctIndex":0,"explanation":"Noun = відправлення."},{"question":"\"From which platform?\" - З якої ___?","options":["платформи","платформа","платформу","платформою"],"correctIndex":0,"explanation":"Genitive after з = платформи."},{"question":"\"I missed the train\" - Я ___ на потяг.","options":["спізнився/спізнилась","спізнюся","спізнитися","спізнював"],"correctIndex":0,"explanation":"Past tense = спізнився."},{"question":"\"Is there a delay?\" - Чи є ___?","options":["затримка","затримати","затримується","затриманий"],"correctIndex":0,"explanation":"Noun = затримка."}];
-    const sortData={"true-friends":["вокзал","вагон","купе","плацкарт","платформа","провідник"],"false-friends":["аеропорт","реєстрація","посадковий талон","вихід","митниця","ручна поклажа"]};
-    const vocabData=[{"uk":"потяг","translit":"","en":"train","note":""},{"uk":"вокзал","translit":"","en":"train station","note":""},{"uk":"платформа","translit":"","en":"platform","note":""},{"uk":"відправлення","translit":"","en":"departure","note":""},{"uk":"прибуття","translit":"","en":"arrival","note":""},{"uk":"затримка","translit":"","en":"delay","note":""},{"uk":"багаж","translit":"","en":"luggage","note":""},{"uk":"посадковий талон","translit":"","en":"boarding pass","note":""},{"uk":"рейс","translit":"","en":"flight","note":""},{"uk":"купе","translit":"","en":"compartment","note":"indecl"},{"uk":"провідник","translit":"","en":"conductor","note":""}];
-    const totalSort=12;
-    function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
-    document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));
-    let matchSel=null,matchScore=0,matchPairsArr=[];
-    document.querySelectorAll('#match-left .match-item').forEach(item=>{item.addEventListener('click',()=>{if(item.classList.contains('matched'))return;document.querySelectorAll('#match-left .match-item').forEach(i=>i.classList.remove('selected'));item.classList.add('selected');matchSel={el:item,pair:item.dataset.pair};});});
-    document.querySelectorAll('#match-right .match-item').forEach(item=>{item.addEventListener('click',()=>{if(item.classList.contains('matched')||!matchSel)return;if(matchSel.pair===item.dataset.pair){matchSel.el.classList.remove('selected');matchSel.el.classList.add('matched');item.classList.add('matched');matchPairsArr.push({left:matchSel.el,right:item});matchScore++;document.getElementById('match-score').textContent=matchScore;drawLines();if(matchScore===matchPairs.length)document.getElementById('match-complete').classList.add('show');}else{item.classList.add('wrong');setTimeout(()=>item.classList.remove('wrong'),300);}matchSel=null;});});
-    function drawLines(){const svg=document.getElementById('match-lines'),c=document.getElementById('match-container');if(!svg||!c)return;const r=c.getBoundingClientRect();svg.innerHTML='';svg.setAttribute('viewBox','0 0 '+r.width+' '+r.height);matchPairsArr.forEach(p=>{const lr=p.left.getBoundingClientRect(),rr=p.right.getBoundingClientRect();const line=document.createElementNS('http://www.w3.org/2000/svg','line');line.setAttribute('x1',lr.right-r.left);line.setAttribute('y1',lr.top+lr.height/2-r.top);line.setAttribute('x2',rr.left-r.left);line.setAttribute('y2',rr.top+rr.height/2-r.top);line.setAttribute('stroke','#26a269');line.setAttribute('stroke-width','2');svg.appendChild(line);});}
-    function resetMatch(){matchSel=null;matchScore=0;matchPairsArr=[];document.getElementById('match-score').textContent='0';document.getElementById('match-complete')?.classList.remove('show');document.getElementById('match-lines').innerHTML='';document.querySelectorAll('#match-container .match-item').forEach(i=>i.classList.remove('matched','selected','wrong'));}
-    window.addEventListener('resize',drawLines);
-    let quizScore=0,quizAns=0;
-    function initQuiz(){const c=document.getElementById('quiz-container');if(!c||!quizData.length)return;c.innerHTML='';quizData.forEach((q,i)=>{const sh=[...q.options].sort(()=>Math.random()-0.5);const cor=sh.indexOf(q.options[q.correctIndex]);const div=document.createElement('div');div.className='quiz-question';div.innerHTML='<h4>Q'+(i+1)+': '+q.question+'</h4><div class="quiz-options">'+sh.map((o,j)=>'<div class="quiz-option" data-c="'+(j===cor)+'" data-q="'+i+'">'+o+'</div>').join('')+'</div><div class="quiz-explanation" id="exp-'+i+'">'+q.explanation+'</div>';c.appendChild(div);});document.querySelectorAll('.quiz-option').forEach(o=>o.addEventListener('click',handleQuiz));}
-    function handleQuiz(e){const opt=e.target,q=opt.closest('.quiz-question');if(q.classList.contains('answered'))return;q.classList.add('answered');if(opt.dataset.c==='true'){opt.classList.add('correct');quizScore++;}else{opt.classList.add('wrong');q.querySelector('[data-c="true"]').classList.add('correct');}document.getElementById('exp-'+opt.dataset.q).classList.add('show');document.getElementById('quiz-score').textContent=quizScore;quizAns++;if(quizAns===quizData.length)document.getElementById('quiz-complete').classList.add('show');}
-    function resetQuiz(){quizScore=0;quizAns=0;document.getElementById('quiz-score').textContent='0';document.getElementById('quiz-complete')?.classList.remove('show');initQuiz();}
-    let sortScore=0,dragItem=null;
-    function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
-    function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
-    function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
-    document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
+
+    const matchPairs = [{"left":"потяг","right":"train"},{"left":"літак","right":"airplane"},{"left":"квиток","right":"ticket"},{"left":"вокзал","right":"train station"},{"left":"платформа","right":"platform"},{"left":"багаж","right":"luggage"}];
+    const quizData = [{"question":"\"A ticket to Lviv\" - Квиток ___ Львова.","options":["до","в","на","у"],"correctIndex":0,"explanation":"Direction \"to city\" = до."},{"question":"\"Round trip\" - Туди і ___.","options":["назад","звідти","далі","потім"],"correctIndex":0,"explanation":"\"There and back\" = туди і назад."},{"question":"\"What time is departure?\" - О котрій ___?","options":["відправлення","відправляти","відправитися","відправляється"],"correctIndex":0,"explanation":"Noun = відправлення."},{"question":"\"From which platform?\" - З якої ___?","options":["платформи","платформа","платформу","платформою"],"correctIndex":0,"explanation":"Genitive after з = платформи."},{"question":"\"I missed the train\" - Я ___ на потяг.","options":["спізнився/спізнилась","спізнюся","спізнитися","спізнював"],"correctIndex":0,"explanation":"Past tense = спізнився."},{"question":"\"Is there a delay?\" - Чи є ___?","options":["затримка","затримати","затримується","затриманий"],"correctIndex":0,"explanation":"Noun = затримка."}];
+    const sortData = {"true-friends":["вокзал","вагон","купе","плацкарт","платформа","провідник"],"false-friends":["аеропорт","реєстрація","посадковий талон","вихід","митниця","ручна поклажа"]};
+    const vocabData = [{"uk":"потяг","translit":"","en":"train","note":""},{"uk":"вокзал","translit":"","en":"train station","note":""},{"uk":"платформа","translit":"","en":"platform","note":""},{"uk":"відправлення","translit":"","en":"departure","note":""},{"uk":"прибуття","translit":"","en":"arrival","note":""},{"uk":"затримка","translit":"","en":"delay","note":""},{"uk":"багаж","translit":"","en":"luggage","note":""},{"uk":"посадковий талон","translit":"","en":"boarding pass","note":""},{"uk":"рейс","translit":"","en":"flight","note":""},{"uk":"купе","translit":"","en":"compartment","note":"indecl"},{"uk":"провідник","translit":"","en":"conductor","note":""}];
+    const totalSort = 12;
+  
+// Answer callout toggle (for new > [!answer] syntax)
+function toggleAnswer(id, btn) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const isUkrainian = document.querySelector('.level-badge')?.textContent.match(/B[12]|C[12]/);
+  const showText = isUkrainian ? 'Показати відповідь' : 'Show Answer';
+  const hideText = isUkrainian ? 'Сховати відповідь' : 'Hide Answer';
+  const show = !el.classList.contains('show');
+  if (show) {
+    el.classList.add('show');
+    btn.textContent = hideText;
+    btn.classList.add('revealed');
+  } else {
+    el.classList.remove('show');
+    btn.textContent = showText;
+    btn.classList.remove('revealed');
+  }
+}
+
+// Section navigation
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id)?.classList.add('active');
+  document.querySelector('[data-section="' + id + '"]')?.classList.add('active');
+}
+document.querySelectorAll('.nav-tab').forEach(t => t.addEventListener('click', () => showSection(t.dataset.section)));
+
+// Initialize on DOM ready
+document.addEventListener('DOMContentLoaded', () => {
+  initQuiz();
+  initSort();
+  initVocab();
+});
+
+
+// Quiz Activity
+let quizScore = 0, quizAns = 0;
+
+function initQuiz() {
+  const c = document.getElementById('quiz-container');
+  if (!c || !quizData.length) return;
+  c.innerHTML = '';
+  quizData.forEach((q, i) => {
+    const sh = [...q.options].sort(() => Math.random() - 0.5);
+    const cor = sh.indexOf(q.options[q.correctIndex]);
+    const div = document.createElement('div');
+    div.className = 'quiz-question';
+    div.innerHTML = '<h4>Q' + (i + 1) + ': ' + q.question + '</h4><div class="quiz-options">' + sh.map((o, j) => '<div class="quiz-option" data-c="' + (j === cor) + '" data-q="' + i + '">' + o + '</div>').join('') + '</div><div class="quiz-explanation" id="exp-' + i + '">' + q.explanation + '</div>';
+    c.appendChild(div);
+  });
+  document.querySelectorAll('.quiz-option').forEach(o => o.addEventListener('click', handleQuiz));
+}
+
+function handleQuiz(e) {
+  const opt = e.target, q = opt.closest('.quiz-question');
+  if (q.classList.contains('answered')) return;
+  q.classList.add('answered');
+  if (opt.dataset.c === 'true') {
+    opt.classList.add('correct');
+    quizScore++;
+  } else {
+    opt.classList.add('wrong');
+    q.querySelector('[data-c="true"]').classList.add('correct');
+  }
+  document.getElementById('exp-' + opt.dataset.q).classList.add('show');
+  document.getElementById('quiz-score').textContent = quizScore;
+  quizAns++;
+  if (quizAns === quizData.length) document.getElementById('quiz-complete').classList.add('show');
+}
+
+function resetQuiz() {
+  quizScore = 0;
+  quizAns = 0;
+  document.getElementById('quiz-score').textContent = '0';
+  document.getElementById('quiz-complete')?.classList.remove('show');
+  initQuiz();
+}
+
+
+// Match Activity
+let matchSel = null, matchScore = 0, matchPairsArr = [];
+
+document.querySelectorAll('#match-left .match-item').forEach(item => {
+  item.addEventListener('click', () => {
+    if (item.classList.contains('matched')) return;
+    document.querySelectorAll('#match-left .match-item').forEach(i => i.classList.remove('selected'));
+    item.classList.add('selected');
+    matchSel = { el: item, pair: item.dataset.pair };
+  });
+});
+
+document.querySelectorAll('#match-right .match-item').forEach(item => {
+  item.addEventListener('click', () => {
+    if (item.classList.contains('matched') || !matchSel) return;
+    if (matchSel.pair === item.dataset.pair) {
+      matchSel.el.classList.remove('selected');
+      matchSel.el.classList.add('matched');
+      item.classList.add('matched');
+      matchPairsArr.push({ left: matchSel.el, right: item });
+      matchScore++;
+      document.getElementById('match-score').textContent = matchScore;
+      drawLines();
+      if (matchScore === matchPairs.length) document.getElementById('match-complete').classList.add('show');
+    } else {
+      item.classList.add('wrong');
+      setTimeout(() => item.classList.remove('wrong'), 300);
+    }
+    matchSel = null;
+  });
+});
+
+function drawLines() {
+  const svg = document.getElementById('match-lines'), c = document.getElementById('match-container');
+  if (!svg || !c) return;
+  const r = c.getBoundingClientRect();
+  svg.innerHTML = '';
+  svg.setAttribute('viewBox', '0 0 ' + r.width + ' ' + r.height);
+  matchPairsArr.forEach(p => {
+    const lr = p.left.getBoundingClientRect(), rr = p.right.getBoundingClientRect();
+    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    line.setAttribute('x1', lr.right - r.left);
+    line.setAttribute('y1', lr.top + lr.height / 2 - r.top);
+    line.setAttribute('x2', rr.left - r.left);
+    line.setAttribute('y2', rr.top + rr.height / 2 - r.top);
+    line.setAttribute('stroke', '#26a269');
+    line.setAttribute('stroke-width', '2');
+    svg.appendChild(line);
+  });
+}
+
+function resetMatch() {
+  matchSel = null;
+  matchScore = 0;
+  matchPairsArr = [];
+  document.getElementById('match-score').textContent = '0';
+  document.getElementById('match-complete')?.classList.remove('show');
+  document.getElementById('match-lines').innerHTML = '';
+  document.querySelectorAll('#match-container .match-item').forEach(i => i.classList.remove('matched', 'selected', 'wrong'));
+}
+
+window.addEventListener('resize', drawLines);
+
+
+// Sort Activity
+let sortScore = 0, dragItem = null;
+
+function initSort() {
+  const pool = document.getElementById('sort-items');
+  if (!pool || !Object.keys(sortData).length) return;
+  const all = Object.values(sortData).flat().sort(() => Math.random() - 0.5);
+  pool.innerHTML = '';
+  all.forEach(letter => {
+    const group = Object.keys(sortData).find(g => sortData[g].includes(letter));
+    const item = document.createElement('div');
+    item.className = 'sort-item';
+    item.textContent = letter;
+    item.draggable = true;
+    item.dataset.group = group;
+    item.addEventListener('dragstart', e => {
+      dragItem = item;
+      item.classList.add('dragging');
+    });
+    item.addEventListener('dragend', () => {
+      item.classList.remove('dragging');
+      dragItem = null;
+    });
+    pool.appendChild(item);
+  });
+  document.querySelectorAll('.sort-group').forEach(g => {
+    g.addEventListener('dragover', e => {
+      e.preventDefault();
+      g.classList.add('drag-over');
+    });
+    g.addEventListener('dragleave', () => g.classList.remove('drag-over'));
+    g.addEventListener('drop', e => {
+      e.preventDefault();
+      g.classList.remove('drag-over');
+      if (!dragItem) return;
+      if (g.dataset.group === dragItem.dataset.group) {
+        dragItem.classList.add('correct');
+        g.querySelector('.sort-items').appendChild(dragItem);
+        dragItem.draggable = false;
+        sortScore++;
+        document.getElementById('sort-score').textContent = sortScore;
+        if (sortScore === totalSort) document.getElementById('sort-complete').classList.add('show');
+      } else {
+        dragItem.classList.add('wrong');
+        setTimeout(() => dragItem.classList.remove('wrong'), 300);
+      }
+    });
+  });
+}
+
+function resetSort() {
+  sortScore = 0;
+  document.getElementById('sort-score').textContent = '0';
+  document.getElementById('sort-complete')?.classList.remove('show');
+  document.querySelectorAll('.sort-group .sort-items').forEach(g => g.innerHTML = '');
+  initSort();
+}
+
+
+// Vocabulary
+function initVocab() {
+  const grid = document.getElementById('vocab-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  vocabData.forEach(v => {
+    const card = document.createElement('div');
+    card.className = 'vocab-card';
+    card.innerHTML = '<div class="uk">' + v.uk + '</div><div class="translit">' + v.translit + '</div><div class="en">' + v.en + '</div>' + (v.note ? '<div class="note">' + v.note + '</div>' : '');
+    grid.appendChild(card);
+  });
+}
+
   </script>
 </body>
 </html>

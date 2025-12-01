@@ -233,50 +233,60 @@ You use technology daily. Now let's talk about it in Ukrainian!
 
 ### Match Device to Use
 
-1. ноутбук → робота, навчання
-2. смартфон → дзвінки, месенджери
-3. навушники → слухати музику
-4. флешка → зберігати файли
-5. принтер → друкувати документи
+1. ноутбук
+   > [!answer] робота, навчання
+2. смартфон
+   > [!answer] дзвінки, месенджери
+3. навушники
+   > [!answer] слухати музику
+4. флешка
+   > [!answer] зберігати файли
+5. принтер
+   > [!answer] друкувати документи
 
 ### Complete Tech Actions
 
 1. ___ (download) файл з інтернету.
-   → завантаж
+   > [!answer] завантаж
 
 2. ___ (send) мені посилання.
-   → надішли
+   > [!answer] надішли
 
 3. ___ (save) документ у папку.
-   → збережи
+   > [!answer] збережи
 
 4. ___ (delete) спам з пошти.
-   → видали
+   > [!answer] видали
 
 5. ___ (turn on) комп'ютер.
-   → увімкни
+   > [!answer] увімкни
 
 ### Tech Problem Dialogue
 
 **A:** Мій комп'ютер ___ (doesn't work).
-→ не працює
+> [!answer] не працює
 
 **B:** Спробуй ___ (restart).
-→ перезавантажити
+> [!answer] перезавантажити
 
 **A:** Не допомогло. Програма ___ (froze).
-→ зависла
+> [!answer] зависла
 
 **B:** ___ (Delete) її і ___ (install) знову.
-→ видали, встанови
+> [!answer] видали, встанови
 
 ### Translate
 
-1. Download this app. → Завантаж цей застосунок.
-2. The internet is slow. → Інтернет повільний.
-3. Send me a link. → Надішли мені посилання.
-4. Follow me on Instagram. → Підпишися на мене в Інстаграмі.
-5. The battery is dead. → Акумулятор розрядився.
+1. Download this app.
+   > [!answer] Завантаж цей застосунок.
+2. The internet is slow.
+   > [!answer] Інтернет повільний.
+3. Send me a link.
+   > [!answer] Надішли мені посилання.
+4. Follow me on Instagram.
+   > [!answer] Підпишися на мене в Інстаграмі.
+5. The battery is dead.
+   > [!answer] Акумулятор розрядився.
 
 ## production
 

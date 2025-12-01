@@ -231,49 +231,63 @@ In Module 61, you learned prefixes with motion verbs. Now let's see how the **sa
 
 ### Match Prefix to Verb
 
-1. на- + писати → написати (write complete)
-2. по- + бачити → побачити (see/notice)
-3. з- + робити → зробити (make/do)
-4. про- + читати → прочитати (read through)
-5. роз- + казати → розказати (tell/narrate)
-6. від- + крити → відкрити (open)
-7. ви- + вчити → вивчити (learn/master)
-8. за- + крити → закрити (close)
+1. на- + писати
+   > [!answer] написати (write complete)
+2. по- + бачити
+   > [!answer] побачити (see/notice)
+3. з- + робити
+   > [!answer] зробити (make/do)
+4. про- + читати
+   > [!answer] прочитати (read through)
+5. роз- + казати
+   > [!answer] розказати (tell/narrate)
+6. від- + крити
+   > [!answer] відкрити (open)
+7. ви- + вчити
+   > [!answer] вивчити (learn/master)
+8. за- + крити
+   > [!answer] закрити (close)
 
 ### Choose Correct Form
 
 1. Я ___ (wrote) листа вчора.
-   → написав
+   > [!answer] написав
 
 2. Вона ___ (saw) це в новинах.
-   → побачила
+   > [!answer] побачила
 
 3. Ми ___ (made) помилку.
-   → зробили
+   > [!answer] зробили
 
 4. Він ___ (read) всю книгу.
-   → прочитав
+   > [!answer] прочитав
 
 5. ___ (Tell) мені про свою подорож.
-   → Розкажи
+   > [!answer] Розкажи
 
 6. ___ (Open) двері, будь ласка.
-   → Відкрий
+   > [!answer] Відкрий
 
 7. Я ___ (learned) нові слова.
-   → вивчив
+   > [!answer] вивчив
 
 8. ___ (Close) вікно, холодно.
-   → Закрий
+   > [!answer] Закрий
 
 ### Translate
 
-1. I finished my homework. → Я зробив домашнє завдання.
-2. She drank all the tea. → Вона випила весь чай.
-3. Did you hear that? → Ти почув це?
-4. Tell me a story. → Розкажи мені історію.
-5. I forgot my keys. → Я забув ключі.
-6. Open the book. → Відкрий книгу.
+1. I finished my homework.
+   > [!answer] Я зробив домашнє завдання.
+2. She drank all the tea.
+   > [!answer] Вона випила весь чай.
+3. Did you hear that?
+   > [!answer] Ти почув це?
+4. Tell me a story.
+   > [!answer] Розкажи мені історію.
+5. I forgot my keys.
+   > [!answer] Я забув ключі.
+6. Open the book.
+   > [!answer] Відкрий книгу.
 
 ## production
 

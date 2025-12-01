@@ -138,11 +138,16 @@ You've completed A1.2 - the navigation phase! Let's see what you've mastered:
 ### Integrated Case Practice
 
 Fill in the correct case:
-1. Я бачу ___ (студент). → студента (Acc. animate)
-2. Книга на ___ (стіл). → столі (Loc.)
-3. Немає ___ (час). → часу (Gen.)
-4. Я живу в ___ (Київ). → Києві (Loc.)
-5. Кава без ___ (цукор). → цукру (Gen.)
+1. Я бачу ___ (студент).
+   > [!answer] студента (Acc. animate)
+2. Книга на ___ (стіл).
+   > [!answer] столі (Loc.)
+3. Немає ___ (час).
+   > [!answer] часу (Gen.)
+4. Я живу в ___ (Київ).
+   > [!answer] Києві (Loc.)
+5. Кава без ___ (цукор).
+   > [!answer] цукру (Gen.)
 
 ### Dialogue Reconstruction
 

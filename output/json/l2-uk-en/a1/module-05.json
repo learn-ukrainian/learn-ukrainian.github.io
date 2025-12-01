@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-A1-05",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "grammar-introduction",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -26,30 +25,15 @@
       "Possessive pronouns (мій, моя, моє, мої / твій, твоя, твоє, твої)",
       "Gender and number agreement"
     ],
-    "totalDuration": 45,
-    "transliterationMode": "full",
     "tags": [
       "grammar",
       "demonstratives",
       "possessives",
       "gender-agreement"
     ],
-    "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
+    "totalDuration": 45,
+    "transliterationMode": "full",
     "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Why Words Change\n\nIn Module 03, you learned that nouns have gender. Now comes the consequence: **words that describe nouns must match their gender!**\n\nIn English, \"this\" and \"my\" never change:\n- this book, this table, this window\n- my book, my table, my window\n\nIn Ukrainian, they change to match the noun:\n- **ця** книга, **цей** стіл, **це** вікно\n- **моя** книга, **мій** стіл, **моє** вікно\n\nThis is called **agreement** - and once you understand the pattern, it becomes automatic!\n\n> 🔍 **Myth Buster: \"Too Many Forms!\"**\n>\n> When learners see 4 forms for \"this\" and 4 forms for \"my,\" panic sets in. But here's the secret: **they follow the same pattern!**\n>\n> | Gender | Demonstrative | Possessive |\n> |--------|---------------|------------|\n> | Masculine | цей, той | мій, твій |\n> | Feminine | ця, та | моя, твоя |\n> | Neuter | це, те | моє, твоє |\n> | Plural | ці, ті | мої, твої |\n>\n> Learn one pattern, apply it everywhere. Same endings, same logic!\n\n> 💡 **Did You Know?**\n>\n> English **used to** have gender agreement too! In Old English (before 1100 AD):\n> - \"se cyning\" (the king - masculine form)\n> - \"sēo cwēn\" (the queen - feminine form)\n> - \"þæt hūs\" (the house - neuter form)\n>\n> Over time, English simplified and dropped these distinctions. Ukrainian kept them!"
-          }
-        ]
-      },
       {
         "id": "phase-presentation",
         "name": "presentation",
@@ -58,77 +42,33 @@
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "### Demonstratives: This & That\n\n**\"This\" - цей/ця/це/ці:**\n\n| Gender | Form | Example | Translation |\n|--------|------|---------|-------------|\n| Masculine | цей | цей стіл | this table |\n| Feminine | ця | ця книга | this book |\n| Neuter | це | це вікно | this window |\n| Plural | ці | ці люди | these people |\n\n**\"That\" - той/та/те/ті:**\n\n| Gender | Form | Example | Translation |\n|--------|------|---------|-------------|\n| Masculine | той | той студент | that student |\n| Feminine | та | та жінка | that woman |\n| Neuter | те | те яблуко | that apple |\n| Plural | ті | ті книги | those books |\n\n> ⚡ **Pro Tip: Same Endings Pattern**\n>\n> Notice the endings?\n> - Masculine: **-ей** (цей) / **-ой** (той)\n> - Feminine: **-я** (ця) / **-а** (та)\n> - Neuter: **-е** (це) / **-е** (те)\n> - Plural: **-і** (ці) / **-і** (ті)\n>\n> These endings appear everywhere in Ukrainian adjectives!\n\n> 📜 **History Bite: Why Two Forms?**\n>\n> \"Цей\" and \"той\" come from ancient demonstratives:\n> - **Цей** (this) - from Old Slavic \"сьи\" meaning \"here/close\"\n> - **Той** (that) - from \"то\" meaning \"there/far\"\n>\n> The masculine forms added an extra vowel over time, giving us the modern цей/той pattern."
+            "teacherNotes": "### Demonstratives: This & That\n\n**\"This\" - цей/ця/це/ці:**\n\n| Gender | Form | Example | Translation |\n|--------|------|---------|-------------|\n| Masculine | цей | цей стіл | this table |\n| Feminine | ця | ця книга | this book |\n| Neuter | це | це вікно | this window |\n| Plural | ці | ці люди | these people |\n\n**\"That\" - той/та/те/ті:**\n\n| Gender | Form | Example | Translation |\n|--------|------|---------|-------------|\n| Masculine | той | той студент | that student |\n| Feminine | та | та жінка | that woman |\n| Neuter | те | те яблуко | that apple |\n| Plural | ті | ті книги | those books |\n\n> ⚡ **Pro Tip: Same Endings Pattern**\n>\n> Notice the endings?\n> - Masculine: **-ей** (цей) / **-ой** (той)\n> - Feminine: **-я** (ця) / **-а** (та)\n> - Neuter: **-е** (це) / **-е** (те)\n> - Plural: **-і** (ці) / **-і** (ті)\n>\n> These endings appear everywhere in Ukrainian adjectives!\n\n> 📜 **History Bite: Why Two Forms?**\n>\n> \"Цей\" and \"той\" come from ancient demonstratives:\n> - **Цей** (this) - from Old Slavic \"сьи\" meaning \"here/close\"\n> - **Той** (that) - from \"то\" meaning \"there/far\"\n>\n> The masculine forms added an extra vowel over time, giving us the modern цей/той pattern.\n\n### Possessives: My & Your\n\n**\"My\" - мій/моя/моє/мої:**\n\n| Gender | Form | Example | Translation |\n|--------|------|---------|-------------|\n| Masculine | мій | мій брат | my brother |\n| Feminine | моя | моя сестра | my sister |\n| Neuter | моє | моє яблуко | my apple |\n| Plural | мої | мої друзі | my friends |\n\n**\"Your\" (informal) - твій/твоя/твоє/твої:**\n\n| Gender | Form | Example | Translation |\n|--------|------|---------|-------------|\n| Masculine | твій | твій друг | your friend (m) |\n| Feminine | твоя | твоя подруга | your friend (f) |\n| Neuter | твоє | твоє вікно | your window |\n| Plural | твої | твої книги | your books |\n\n> 🔗 **Language Link: Familiar Pattern**\n>\n> Compare possessives across languages:\n>\n> | Language | Masc | Fem | Pattern |\n> |----------|------|-----|---------|\n> | Ukrainian | мій | моя | й → я |\n> | Russian | мой | моя | й → я |\n> | Polish | mój | moja | j → ja |\n> | Czech | můj | moje | j → je/ja |\n>\n> Slavic languages share this pattern. Learn one, recognize all!\n\n> 🎭 **Culture Corner: Formal \"Your\"**\n>\n> For formal \"your\" (Ви form):\n> - **ваш** (masculine) - ваш паспорт (your passport)\n> - **ваша** (feminine) - ваша ручка (your pen)\n> - **ваше** (neuter) - ваше ім'я (your name)\n> - **ваші** (plural) - ваші документи (your documents)\n>\n> In formal situations, you must use ваш/ваша/ваше/ваші, not твій!\n\n### Other Possessives\n\n**\"His/Her/Its/Their\" don't change!**\n\n| Pronoun | Form | Example |\n|---------|------|---------|\n| his | його (yoho) | його книга, його стіл, його вікно |\n| her | її (yiyi) | її книга, її стіл, її вікно |\n| its | його | (same as \"his\") |\n| their | їхній/їхня/їхнє | їхній дім, їхня машина |\n\n> 💡 **Did You Know?**\n>\n> **Його** and **її** never change form! They stay the same regardless of the noun's gender:\n> - його книга (his/its book - feminine noun)\n> - його стіл (his/its table - masculine noun)\n> - його вікно (his/its window - neuter noun)\n>\n> This makes them easier than мій/твій!\n\n> 🎯 **Fun Fact: Whose Chair?**\n>\n> The word **чий** (whose) also follows the gender pattern:\n> - **Чий** це стіл? (Whose table is this? - masc)\n> - **Чия** це книга? (Whose book is this? - fem)\n> - **Чиє** це вікно? (Whose window is this? - neut)\n> - **Чиї** це речі? (Whose things are these? - plural)\n>\n> Same endings as мій/твій!"
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Possessives: My & Your\n\n**\"My\" - мій/моя/моє/мої:**\n\n| Gender | Form | Example | Translation |\n|--------|------|---------|-------------|\n| Masculine | мій | мій брат | my brother |\n| Feminine | моя | моя сестра | my sister |\n| Neuter | моє | моє яблуко | my apple |\n| Plural | мої | мої друзі | my friends |\n\n**\"Your\" (informal) - твій/твоя/твоє/твої:**\n\n| Gender | Form | Example | Translation |\n|--------|------|---------|-------------|\n| Masculine | твій | твій друг | your friend (m) |\n| Feminine | твоя | твоя подруга | your friend (f) |\n| Neuter | твоє | твоє вікно | your window |\n| Plural | твої | твої книги | your books |\n\n> 🔗 **Language Link: Familiar Pattern**\n>\n> Compare possessives across languages:\n>\n> | Language | Masc | Fem | Pattern |\n> |----------|------|-----|---------|\n> | Ukrainian | мій | моя | й → я |\n> | Russian | мой | моя | й → я |\n> | Polish | mój | moja | j → ja |\n> | Czech | můj | moje | j → je/ja |\n>\n> Slavic languages share this pattern. Learn one, recognize all!\n\n> 🎭 **Culture Corner: Formal \"Your\"**\n>\n> For formal \"your\" (Ви form):\n> - **ваш** (masculine) - ваш паспорт (your passport)\n> - **ваша** (feminine) - ваша ручка (your pen)\n> - **ваше** (neuter) - ваше ім'я (your name)\n> - **ваші** (plural) - ваші документи (your documents)\n>\n> In formal situations, you must use ваш/ваша/ваше/ваші, not твій!"
+            "teacherNotes": "### Agreement Decision Tree\n\nWhen using a demonstrative or possessive:\n\n1. **Find the noun** - What are you describing?\n2. **Determine gender** - What's the noun's ending?\n3. **Apply matching form** - Use the correct demonstrative/possessive ending\n\n**Example:** \"this book\"\n1. Noun: книга (book)\n2. Gender: feminine (-а ending)\n3. Form: **ця** книга (feminine demonstrative)\n\n**Example:** \"my table\"\n1. Noun: стіл (table)\n2. Gender: masculine (consonant ending)\n3. Form: **мій** стіл (masculine possessive)\n\n### Common Objects Vocabulary\n\n**In the House:**\n- стіл (m) - table → цей стіл, мій стіл\n- стілець (m) - chair → цей стілець, мій стілець\n- ліжко (n) - bed → це ліжко, моє ліжко\n- лампа (f) - lamp → ця лампа, моя лампа\n- двері (pl) - door → ці двері, мої двері\n\n**Personal Items:**\n- телефон (m) - phone → цей телефон, мій телефон\n- сумка (f) - bag → ця сумка, моя сумка\n- ручка (f) - pen → ця ручка, моя ручка\n- ключ (m) - key → цей ключ, мій ключ\n- гаманець (m) - wallet → цей гаманець, мій гаманець\n\n> 🌍 **Real World: Lost & Found**\n>\n> Useful phrases at hotels, airports, or asking about items:\n>\n> - **Це твоя сумка?** - Is this your bag?\n> - **Це мій паспорт.** - This is my passport.\n> - **Чий це телефон?** - Whose phone is this?\n> - **Де моя ручка?** - Where is my pen?\n> - **Той ключ твій?** - Is that key yours?"
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Other Possessives\n\n**\"His/Her/Its/Their\" don't change!**\n\n| Pronoun | Form | Example |\n|---------|------|---------|\n| his | його (yoho) | його книга, його стіл, його вікно |\n| her | її (yiyi) | її книга, її стіл, її вікно |\n| its | його | (same as \"his\") |\n| their | їхній/їхня/їхнє | їхній дім, їхня машина |\n\n> 💡 **Did You Know?**\n>\n> **Його** and **її** never change form! They stay the same regardless of the noun's gender:\n> - його книга (his/its book - feminine noun)\n> - його стіл (his/its table - masculine noun)\n> - його вікно (his/its window - neuter noun)\n>\n> This makes them easier than мій/твій!\n\n> 🎯 **Fun Fact: Whose Chair?**\n>\n> The word **чий** (whose) also follows the gender pattern:\n> - **Чий** це стіл? (Whose table is this? - masc)\n> - **Чия** це книга? (Whose book is this? - fem)\n> - **Чиє** це вікно? (Whose window is this? - neut)\n> - **Чиї** це речі? (Whose things are these? - plural)\n>\n> Same endings as мій/твій!"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A1-05-matchup"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Agreement Decision Tree\n\nWhen using a demonstrative or possessive:\n\n1. **Find the noun** - What are you describing?\n2. **Determine gender** - What's the noun's ending?\n3. **Apply matching form** - Use the correct demonstrative/possessive ending\n\n**Example:** \"this book\"\n1. Noun: книга (book)\n2. Gender: feminine (-а ending)\n3. Form: **ця** книга (feminine demonstrative)\n\n**Example:** \"my table\"\n1. Noun: стіл (table)\n2. Gender: masculine (consonant ending)\n3. Form: **мій** стіл (masculine possessive)"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Common Objects Vocabulary\n\n**In the House:**\n- стіл (m) - table → цей стіл, мій стіл\n- стілець (m) - chair → цей стілець, мій стілець\n- ліжко (n) - bed → це ліжко, моє ліжко\n- лампа (f) - lamp → ця лампа, моя лампа\n- двері (pl) - door → ці двері, мої двері\n\n**Personal Items:**\n- телефон (m) - phone → цей телефон, мій телефон\n- сумка (f) - bag → ця сумка, моя сумка\n- ручка (f) - pen → ця ручка, моя ручка\n- ключ (m) - key → цей ключ, мій ключ\n- гаманець (m) - wallet → цей гаманець, мій гаманець\n\n> 🌍 **Real World: Lost & Found**\n>\n> Useful phrases at hotels, airports, or asking about items:\n>\n> - **Це твоя сумка?** - Is this your bag?\n> - **Це мій паспорт.** - This is my passport.\n> - **Чий це телефон?** - Whose phone is this?\n> - **Де моя ручка?** - Where is my pen?\n> - **Той ключ твій?** - Is that key yours?"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A1-05-quiz"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A1-05-groupsort"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Describe Your Things\n\nPractice with items around you:\n1. Це _______ (мій/моя/моє) _______ (item).\n2. Цей/Ця/Це _______ (item) - _______ (мій/моя/моє).\n3. Де _______ (твій/твоя/твоє) _______ ?"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Quick Transformation\n\nChange \"this\" to \"that\" and \"my\" to \"your\":\n\n| This/My | That/Your |\n|---------|-----------|\n| ця книга | та книга |\n| мій стіл | твій стіл |\n| це вікно | те вікно |\n| мої друзі | твої друзі |\n| цей телефон | той телефон |\n\n> ⚡ **Pro Tip: Rapid Gender Check**\n>\n> Before speaking, quickly check the noun ending:\n> - Consonant? → masculine → цей/мій\n> - -а/-я? → feminine → ця/моя\n> - -о/-е? → neuter → це/моє\n> - Multiple items? → plural → ці/мої\n>\n> This becomes instant with practice!"
+            "teacherNotes": "### Describe Your Things\n\nPractice with items around you:\n1. Це _______ (мій/моя/моє) _______ (item).\n2. Цей/Ця/Це _______ (item) - _______ (мій/моя/моє).\n3. Де _______ (твій/твоя/твоє) _______ ?\n\n### Quick Transformation\n\nChange \"this\" to \"that\" and \"my\" to \"your\":\n\n| This/My | That/Your |\n|---------|-----------|\n| ця книга | та книга |\n| мій стіл | твій стіл |\n| це вікно | те вікно |\n| мої друзі | твої друзі |\n| цей телефон | той телефон |\n\n> ⚡ **Pro Tip: Rapid Gender Check**\n>\n> Before speaking, quickly check the noun ending:\n> - Consonant? → masculine → цей/мій\n> - -а/-я? → feminine → ця/моя\n> - -о/-е? → neuter → це/моє\n> - Multiple items? → plural → ці/мої\n>\n> This becomes instant with practice!\n\n---"
           }
         ]
       }
-    ]
+    ],
+    "createdAt": "2025-12-01T22:58:37.226Z",
+    "modifiedAt": "2025-12-01T22:58:37.226Z",
+    "version": 1
   },
   "activities": [
     {
-      "id": "act-uk-A1-05-matchup",
+      "id": "act-a1-5-matchup",
       "type": "match-up",
       "title": "Demonstratives by Gender",
       "description": "Match each demonstrative form to its gender/number category.",
       "content": {
         "type": "match-up",
-        "instructions": "Match each demonstrative form to its gender/number category.",
         "pairs": [
           {
             "left": "цей",
@@ -171,23 +111,17 @@
       "language": "uk",
       "difficultyLevel": "A1",
       "duration": 5,
-      "tags": [
-        "grammar",
-        "demonstratives",
-        "possessives",
-        "gender-agreement"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.226Z",
+      "modifiedAt": "2025-12-01T22:58:37.226Z"
     },
     {
-      "id": "act-uk-A1-05-quiz",
+      "id": "act-a1-5-quiz",
       "type": "quiz",
       "title": "Gender Agreement",
       "description": "Choose the correct form that matches the noun's gender.",
       "content": {
         "type": "quiz",
-        "instructions": "Choose the correct form that matches the noun's gender.",
         "questions": [
           {
             "question": "How do you say \"this table\" (стіл = masculine)?",
@@ -288,63 +222,65 @@
       "language": "uk",
       "difficultyLevel": "A1",
       "duration": 5,
-      "tags": [
-        "grammar",
-        "demonstratives",
-        "possessives",
-        "gender-agreement"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.226Z",
+      "modifiedAt": "2025-12-01T22:58:37.226Z"
     },
     {
-      "id": "act-uk-A1-05-groupsort",
+      "id": "act-a1-5-groupsort",
       "type": "group-sort",
       "title": "Sort by Gender Form",
       "description": "Sort these phrases by which gender/number form they use.",
       "content": {
         "type": "group-sort",
-        "instructions": "Sort these phrases by which gender/number form they use.",
         "groups": [
           {
-            "name": "Masculine (цей/мій/твій)",
+            "id": "masculine",
+            "name": "Masculine",
             "items": [
               "цей стіл",
               "мій брат",
               "твій телефон",
               "цей ключ",
               "той студент"
-            ]
+            ],
+            "nameUk": "цей/мій/твій"
           },
           {
-            "name": "Feminine (ця/моя/твоя)",
+            "id": "feminine",
+            "name": "Feminine",
             "items": [
               "ця книга",
               "моя сестра",
               "твоя сумка",
               "ця лампа",
               "та жінка"
-            ]
+            ],
+            "nameUk": "ця/моя/твоя"
           },
           {
-            "name": "Neuter (це/моє/твоє)",
+            "id": "neuter",
+            "name": "Neuter",
             "items": [
               "це вікно",
               "моє яблуко",
               "твоє ліжко",
               "це молоко",
               "те море"
-            ]
+            ],
+            "nameUk": "це/моє/твоє"
           },
           {
-            "name": "Plural (ці/мої/твої)",
+            "id": "plural",
+            "name": "Plural",
             "items": [
               "ці люди",
               "мої друзі",
               "твої книги",
               "ці ключі",
               "ті студенти"
-            ]
+            ],
+            "nameUk": "ці/мої/твої"
           }
         ],
         "shuffleItems": true
@@ -355,240 +291,206 @@
       "language": "uk",
       "difficultyLevel": "A1",
       "duration": 5,
-      "tags": [
-        "grammar",
-        "demonstratives",
-        "possessives",
-        "gender-agreement"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.226Z",
+      "modifiedAt": "2025-12-01T22:58:37.226Z"
     }
   ],
   "vocabulary": {
-    "moduleId": "mod-uk-A1-05",
+    "moduleId": "mod-uk-A1-5",
     "level": "A1",
     "phase": "A1.1",
     "wordCount": 22,
     "transliterationMode": "full",
     "words": [
       {
-        "id": "v-m05-001",
+        "id": "v-tsey-5-0",
         "uk": "цей",
-        "translit": "",
-        "ipa": "/t͡sɛj/",
         "en": "this (masculine)",
         "pos": "pron",
+        "ipa": "/t͡sɛj/",
         "gender": "m",
         "note": "Demonstrative"
       },
       {
-        "id": "v-m05-002",
+        "id": "v-tsya-5-1",
         "uk": "ця",
-        "translit": "",
-        "ipa": "/t͡sʲɑ/",
         "en": "this (feminine)",
         "pos": "pron",
+        "ipa": "/t͡sʲɑ/",
         "gender": "f",
         "note": "Demonstrative"
       },
       {
-        "id": "v-m05-003",
+        "id": "v-tsi-5-2",
         "uk": "ці",
-        "translit": "",
-        "ipa": "/t͡sʲi/",
         "en": "these",
         "pos": "pron",
-        "gender": "pl",
+        "ipa": "/t͡sʲi/",
         "note": "Plural demonstrative"
       },
       {
-        "id": "v-m05-004",
+        "id": "v-toy-5-3",
         "uk": "той",
-        "translit": "",
-        "ipa": "/tɔj/",
         "en": "that (masculine)",
         "pos": "pron",
+        "ipa": "/tɔj/",
         "gender": "m",
         "note": "Demonstrative"
       },
       {
-        "id": "v-m05-005",
+        "id": "v-ta-5-4",
         "uk": "та",
-        "translit": "",
-        "ipa": "/tɑ/",
         "en": "that (feminine)",
         "pos": "pron",
+        "ipa": "/tɑ/",
         "gender": "f",
         "note": "Demonstrative"
       },
       {
-        "id": "v-m05-006",
+        "id": "v-te-5-5",
         "uk": "те",
-        "translit": "",
-        "ipa": "/tɛ/",
         "en": "that (neuter)",
         "pos": "pron",
+        "ipa": "/tɛ/",
         "gender": "n",
         "note": "Demonstrative"
       },
       {
-        "id": "v-m05-007",
+        "id": "v-ti-5-6",
         "uk": "ті",
-        "translit": "",
-        "ipa": "/tʲi/",
         "en": "those",
         "pos": "pron",
-        "gender": "pl",
+        "ipa": "/tʲi/",
         "note": "Plural demonstrative"
       },
       {
-        "id": "v-m05-008",
+        "id": "v-moye-5-7",
         "uk": "моє",
-        "translit": "",
-        "ipa": "/mɔˈjɛ/",
         "en": "my (neuter)",
         "pos": "pron",
+        "ipa": "/mɔˈjɛ/",
         "gender": "n",
         "note": "Possessive"
       },
       {
-        "id": "v-m05-009",
+        "id": "v-moyi-5-8",
         "uk": "мої",
-        "translit": "",
-        "ipa": "/mɔˈji/",
         "en": "my (plural)",
         "pos": "pron",
-        "gender": "pl",
+        "ipa": "/mɔˈji/",
         "note": "Possessive"
       },
       {
-        "id": "v-m05-010",
+        "id": "v-tvoye-5-9",
         "uk": "твоє",
-        "translit": "",
-        "ipa": "/tvɔˈjɛ/",
         "en": "your (n, informal)",
         "pos": "pron",
+        "ipa": "/tvɔˈjɛ/",
         "gender": "n",
         "note": "Informal possessive"
       },
       {
-        "id": "v-m05-011",
+        "id": "v-tvoyi-5-10",
         "uk": "твої",
-        "translit": "",
-        "ipa": "/tvɔˈji/",
         "en": "your (pl, informal)",
         "pos": "pron",
-        "gender": "pl",
+        "ipa": "/tvɔˈji/",
         "note": "Informal possessive"
       },
       {
-        "id": "v-m05-012",
+        "id": "v-yoho-5-11",
         "uk": "його",
-        "translit": "",
-        "ipa": "/jɔˈɦɔ/",
         "en": "his, its",
         "pos": "pron",
-        "gender": "-",
+        "ipa": "/jɔˈɦɔ/",
         "note": "Invariable - never changes"
       },
       {
-        "id": "v-m05-013",
+        "id": "v-yiyi-5-12",
         "uk": "її",
-        "translit": "",
-        "ipa": "/jiˈji/",
         "en": "her, hers",
         "pos": "pron",
-        "gender": "-",
+        "ipa": "/jiˈji/",
         "note": "Invariable - never changes"
       },
       {
-        "id": "v-m05-014",
+        "id": "v-stiletsь-5-13",
         "uk": "стілець",
-        "translit": "",
-        "ipa": "/ˈstʲilɛt͡sʲ/",
         "en": "chair",
         "pos": "noun",
+        "ipa": "/ˈstʲilɛt͡sʲ/",
         "gender": "m",
         "note": "Furniture"
       },
       {
-        "id": "v-m05-015",
+        "id": "v-lizhko-5-14",
         "uk": "ліжко",
-        "translit": "",
-        "ipa": "/ˈlʲiʒkɔ/",
         "en": "bed",
         "pos": "noun",
+        "ipa": "/ˈlʲiʒkɔ/",
         "gender": "n",
         "note": "Furniture"
       },
       {
-        "id": "v-m05-016",
+        "id": "v-lampa-5-15",
         "uk": "лампа",
-        "translit": "",
-        "ipa": "/ˈlɑmpɑ/",
         "en": "lamp",
         "pos": "noun",
+        "ipa": "/ˈlɑmpɑ/",
         "gender": "f",
         "note": "Cognate with English"
       },
       {
-        "id": "v-m05-017",
+        "id": "v-dveri-5-16",
         "uk": "двері",
-        "translit": "",
-        "ipa": "/ˈdvɛrʲi/",
         "en": "door",
         "pos": "noun",
-        "gender": "pl",
+        "ipa": "/ˈdvɛrʲi/",
         "note": "Always plural in Ukrainian!"
       },
       {
-        "id": "v-m05-018",
+        "id": "v-telefon-5-17",
         "uk": "телефон",
-        "translit": "",
-        "ipa": "/tɛlɛˈfɔn/",
         "en": "phone",
         "pos": "noun",
+        "ipa": "/tɛlɛˈfɔn/",
         "gender": "m",
         "note": "Cognate"
       },
       {
-        "id": "v-m05-019",
+        "id": "v-sumka-5-18",
         "uk": "сумка",
-        "translit": "",
-        "ipa": "/ˈsumkɑ/",
         "en": "bag",
         "pos": "noun",
+        "ipa": "/ˈsumkɑ/",
         "gender": "f",
         "note": "Common item"
       },
       {
-        "id": "v-m05-020",
+        "id": "v-ruchka-5-19",
         "uk": "ручка",
-        "translit": "",
-        "ipa": "/ˈrutʃkɑ/",
         "en": "pen",
         "pos": "noun",
+        "ipa": "/ˈrutʃkɑ/",
         "gender": "f",
         "note": "Also means \"handle\""
       },
       {
-        "id": "v-m05-021",
+        "id": "v-klyuch-5-20",
         "uk": "ключ",
-        "translit": "",
-        "ipa": "/klʲutʃ/",
         "en": "key",
         "pos": "noun",
+        "ipa": "/klʲutʃ/",
         "gender": "m",
         "note": "Consonant = masculine"
       },
       {
-        "id": "v-m05-022",
+        "id": "v-hamanetsь-5-21",
         "uk": "гаманець",
-        "translit": "",
-        "ipa": "/ɦɑmɑˈnɛt͡sʲ/",
         "en": "wallet",
         "pos": "noun",
+        "ipa": "/ɦɑmɑˈnɛt͡sʲ/",
         "gender": "m",
         "note": "Personal item"
       }

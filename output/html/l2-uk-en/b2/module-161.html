@@ -3,100 +3,316 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Module 161: Politics & Government | Ukrainian B2</title>
+  <title>Module 161: Politics &amp; Government | Ukrainian B2</title>
   <style>
-    :root { --primary: #1a5fb4; --primary-light: #3584e4; --success: #26a269; --warning: #e5a50a; --danger: #c01c28; --bg: #fafafa; --card-bg: #fff; --text: #1e1e1e; --text-muted: #5e5e5e; --border: #e0e0e0; }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
-    .top-nav { background: #2e2e2e; color: white; padding: 0.5rem 2rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.875rem; }
-    .top-nav a { color: white; text-decoration: none; }
-    .top-nav a:hover { text-decoration: underline; }
-    .module-nav { display: flex; gap: 1rem; align-items: center; }
-    .module-nav-link { color: rgba(255,255,255,0.8); text-decoration: none; padding: 0.25rem 0.5rem; }
-    .module-nav-link:hover { color: white; }
-    .module-nav-link.disabled { color: rgba(255,255,255,0.3); pointer-events: none; }
-    .nav { position: sticky; top: 0; background: var(--primary); color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; z-index: 100; }
-    .nav h1 { font-size: 1.25rem; }
-    .nav-tabs { display: flex; gap: 0.5rem; }
-    .nav-tab { background: rgba(255,255,255,0.2); border: none; color: white; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; }
-    .nav-tab.active { background: white; color: var(--primary); }
-    main { max-width: 1000px; margin: 0 auto; padding: 2rem; }
-    .section { display: none; } .section.active { display: block; }
-    .lesson-header { text-align: center; margin-bottom: 2rem; padding: 2rem; background: linear-gradient(135deg, #e8f4fd, #f0e8fd); border-radius: 12px; }
-    .level-badge { background: var(--primary); color: white; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.875rem; }
-    .card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 1.5rem; margin-bottom: 1.5rem; }
-    .card h3 { color: var(--primary); margin-bottom: 1rem; }
-    .section-intro { border-left: 4px solid var(--primary); }
-    .section-intro h3 { color: var(--primary); }
-    .section-topic { border-left: 4px solid var(--border); }
-    .section-summary { background: linear-gradient(135deg, #f0f9ff, #e8f4fd); border-left: 4px solid var(--success); }
-    .section-summary h3 { color: var(--success); }
-    .canvas-note { background: #fffbeb; border-left: 4px solid var(--warning); padding: 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
-    .canvas-note h4 { color: var(--warning); margin-bottom: 0.5rem; }
-    .md-content { line-height: 1.7; }
-    .md-content p { margin: 0.75rem 0; }
-    .md-content ul, .md-content ol { margin: 0.75rem 0; padding-left: 1.5rem; }
-    .md-content li { margin: 0.25rem 0; }
-    .md-content strong { color: var(--primary); }
-    .md-content blockquote { background: #e8f4fd; border-left: 4px solid var(--primary); padding: 0.75rem 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
-    .md-content blockquote p { margin: 0.25rem 0; }
-    .md-content table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
-    .md-content th, .md-content td { border: 1px solid var(--border); padding: 0.5rem 0.75rem; text-align: left; }
-    .md-content th { background: #f5f5f5; font-weight: 600; }
-    .md-content code { background: #f0f0f0; padding: 0.125rem 0.375rem; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
-    .letter-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0; }
-    .letter-group { border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; }
-    .letter-group.true-friends { border-color: var(--success); } .letter-group.true-friends .letters { color: var(--success); }
-    .letter-group.false-friends { border-color: var(--danger); } .letter-group.false-friends .letters { color: var(--danger); }
-    .letter-group.new-letters { border-color: var(--primary); } .letter-group.new-letters .letters { color: var(--primary); }
-    .letters { font-size: 1.75rem; letter-spacing: 0.3rem; }
-    .match-container { display: flex; gap: 3rem; padding: 1rem; position: relative; }
-    .match-column { flex: 1; display: flex; flex-direction: column; gap: 0.75rem; }
-    .match-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; font-size: 1.25rem; cursor: pointer; }
-    .match-item.selected { border-color: var(--primary); background: #e8f4fd; }
-    .match-item.matched { border-color: var(--success); background: #e8f8f0; }
-    .match-item.wrong { border-color: var(--danger); background: #fde8e8; }
-    .match-lines { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
-    .quiz-question { border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; }
-    .quiz-question.answered { pointer-events: none; }
-    .quiz-question .cyrillic { font-size: 1.5rem; color: var(--primary); font-weight: 600; }
-    .quiz-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-top: 1rem; }
-    .quiz-option { background: #f5f5f5; border: 2px solid var(--border); border-radius: 8px; padding: 1rem; cursor: pointer; text-align: center; }
-    .quiz-option.correct { border-color: var(--success); background: #d4edda; }
-    .quiz-option.wrong { border-color: var(--danger); background: #f8d7da; }
-    .quiz-explanation { margin-top: 1rem; padding: 1rem; background: #e8f4fd; border-radius: 8px; display: none; }
-    .quiz-explanation.show { display: block; }
-    .sort-pool { background: #f5f5f5; border: 2px dashed var(--border); border-radius: 12px; padding: 1.5rem; min-height: 80px; margin-bottom: 1rem; }
-    .sort-items { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; }
-    .sort-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 0.75rem 1.25rem; font-size: 1.5rem; cursor: grab; }
-    .sort-item.correct { border-color: var(--success); background: #e8f8f0; }
-    .sort-item.wrong { border-color: var(--danger); background: #fde8e8; }
-    .sort-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
-    .sort-group { border: 2px solid var(--border); border-radius: 12px; padding: 1rem; min-height: 150px; }
-    .sort-group.drag-over { border-color: var(--primary); background: #e8f4fd; }
-    .sort-group h4 { font-size: 0.875rem; text-align: center; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--border); }
-    .sort-group.true-friends h4 { color: var(--success); border-color: var(--success); }
-    .sort-group.false-friends h4 { color: var(--danger); border-color: var(--danger); }
-    .sort-group.new-letters h4 { color: var(--primary); border-color: var(--primary); }
-    .vocab-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; }
-    .vocab-card { border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; text-align: center; }
-    .vocab-card .uk { font-size: 1.75rem; font-weight: 600; color: var(--primary); }
-    .vocab-card .translit { color: var(--text-muted); font-style: italic; }
-    .vocab-card .en { font-weight: 500; margin: 0.25rem 0; }
-    .vocab-card .note { font-size: 0.75rem; color: #613583; background: #f0e8fd; padding: 0.25rem 0.5rem; border-radius: 4px; }
-    .btn { padding: 0.75rem 1.5rem; border: none; border-radius: 8px; cursor: pointer; }
-    .btn-primary { background: var(--primary); color: white; }
-    .btn-outline { background: transparent; border: 2px solid var(--border); }
-    .btn-group { display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem; }
-    .score-display { text-align: center; padding: 1rem; background: linear-gradient(135deg, #e8f8f0, #e8f4fd); border-radius: 8px; margin-bottom: 1rem; }
-    .score-display .score { font-size: 2rem; font-weight: 700; color: var(--success); }
-    .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
-    .completion-message.show { display: block; }
-    footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+:root { --primary: #1a5fb4; --primary-light: #3584e4; --success: #26a269; --warning: #e5a50a; --danger: #c01c28; --bg: #fafafa; --card-bg: #fff; --text: #1e1e1e; --text-muted: #5e5e5e; --border: #e0e0e0; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+.top-nav { background: #2e2e2e; color: white; padding: 0.5rem 2rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.875rem; }
+.top-nav a { color: white; text-decoration: none; }
+.top-nav a:hover { text-decoration: underline; }
+.module-nav { display: flex; gap: 1rem; align-items: center; }
+.module-nav-link { color: rgba(255,255,255,0.8); text-decoration: none; padding: 0.25rem 0.5rem; }
+.module-nav-link:hover { color: white; }
+.module-nav-link.disabled { color: rgba(255,255,255,0.3); pointer-events: none; }
+.nav { position: sticky; top: 0; background: var(--primary); color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; z-index: 100; }
+.nav h1 { font-size: 1.25rem; }
+.nav-tabs { display: flex; gap: 0.5rem; }
+.nav-tab { background: rgba(255,255,255,0.2); border: none; color: white; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; }
+.nav-tab.active { background: white; color: var(--primary); }
+main { max-width: 1000px; margin: 0 auto; padding: 2rem; }
+.section { display: none; } .section.active { display: block; }
+.lesson-header { text-align: center; margin-bottom: 2rem; padding: 2rem; background: linear-gradient(135deg, #e8f4fd, #f0e8fd); border-radius: 12px; }
+.level-badge { background: var(--primary); color: white; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.875rem; }
+.card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 1.5rem; margin-bottom: 1.5rem; }
+.card h3 { color: var(--primary); margin-bottom: 1rem; }
+.section-intro { border-left: 4px solid var(--primary); }
+.section-intro h3 { color: var(--primary); }
+.section-topic { border-left: 4px solid var(--border); }
+.section-summary { background: linear-gradient(135deg, #f0f9ff, #e8f4fd); border-left: 4px solid var(--success); }
+.section-summary h3 { color: var(--success); }
+.canvas-note { background: #fffbeb; border-left: 4px solid var(--warning); padding: 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+.canvas-note h4 { color: var(--warning); margin-bottom: 0.5rem; }
+.md-content { line-height: 1.7; }
+.md-content p { margin: 0.75rem 0; }
+.md-content ul, .md-content ol { margin: 0.75rem 0; padding-left: 1.5rem; }
+.md-content li { margin: 0.25rem 0; }
+.md-content strong { color: var(--primary); }
+.md-content blockquote { background: #e8f4fd; border-left: 4px solid var(--primary); padding: 0.75rem 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+.md-content blockquote p { margin: 0.25rem 0; }
+.md-content table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+.md-content th, .md-content td { border: 1px solid var(--border); padding: 0.5rem 0.75rem; text-align: left; }
+.md-content th { background: #f5f5f5; font-weight: 600; }
+.md-content code { background: #f0f0f0; padding: 0.125rem 0.375rem; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
+.md-content details { background: #f8f9fa; border: 1px solid var(--border); border-radius: 8px; padding: 0; margin: 1rem 0; }
+.md-content details summary { background: linear-gradient(135deg, #e8f4fd, #f0e8fd); padding: 0.75rem 1rem; cursor: pointer; font-weight: 600; color: var(--primary); border-radius: 8px; list-style: none; display: flex; align-items: center; gap: 0.5rem; }
+.md-content details summary::-webkit-details-marker { display: none; }
+.md-content details summary::before { content: '▶'; font-size: 0.75rem; transition: transform 0.2s; }
+.md-content details[open] summary::before { transform: rotate(90deg); }
+.md-content details[open] summary { border-radius: 8px 8px 0 0; }
+.md-content details > *:not(summary) { padding: 0 1rem; }
+.md-content details > *:last-child { padding-bottom: 1rem; }
+.md-content p > details { margin: 0; }
+.md-content p:has(> details) { margin: 1rem 0; }
+.inline-answer { background: linear-gradient(135deg, #d4edda, #e8f4fd); padding: 0.125rem 0.5rem; border-radius: 4px; transition: opacity 0.2s; }
+.inline-answer.hidden { opacity: 0; user-select: none; }
+.answer-toggle-btn { display: inline-flex; align-items: center; gap: 0.5rem; background: linear-gradient(135deg, #e8f4fd, #f0e8fd); border: 1px solid var(--primary); color: var(--primary); padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-size: 0.875rem; font-weight: 600; margin: 1rem 0; }
+.answer-toggle-btn:hover { background: var(--primary); color: white; }
+.answer-toggle-btn svg { width: 1rem; height: 1rem; }
+.letter-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0; }
+.letter-group { border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; }
+.letter-group.true-friends { border-color: var(--success); } .letter-group.true-friends .letters { color: var(--success); }
+.letter-group.false-friends { border-color: var(--danger); } .letter-group.false-friends .letters { color: var(--danger); }
+.letter-group.new-letters { border-color: var(--primary); } .letter-group.new-letters .letters { color: var(--primary); }
+.letters { font-size: 1.75rem; letter-spacing: 0.3rem; }
+.btn { padding: 0.75rem 1.5rem; border: none; border-radius: 8px; cursor: pointer; }
+.btn-primary { background: var(--primary); color: white; }
+.btn-outline { background: transparent; border: 2px solid var(--border); }
+.btn-group { display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem; }
+.score-display { text-align: center; padding: 1rem; background: linear-gradient(135deg, #e8f8f0, #e8f4fd); border-radius: 8px; margin-bottom: 1rem; }
+.score-display .score { font-size: 2rem; font-weight: 700; color: var(--success); }
+.completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
+.completion-message.show { display: block; }
+footer { text-align: center; padding: 2rem; color: var(--text-muted); }
+@media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+
+
+/**
+ * Layout styles - Navigation, page structure
+ */
+
+/* Top Navigation */
+.top-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1.5rem;
+  background: #f8f8f8;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.875rem;
+}
+
+.top-nav a {
+  color: var(--text-muted);
+}
+
+.top-nav a:hover {
+  color: var(--primary);
+}
+
+.module-nav {
+  display: flex;
+  gap: 1rem;
+}
+
+.module-nav-link {
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+.module-nav-link:hover {
+  background: #e8f4fd;
+}
+
+/* Main Navigation */
+.nav {
+  background: linear-gradient(135deg, #1a5fb4, #613583);
+  color: white;
+  padding: 1.5rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav h1 {
+  font-size: 1.5rem;
+}
+
+.nav-tabs {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.nav-tab {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: background 0.2s;
+}
+
+.nav-tab:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.nav-tab.active {
+  background: white;
+  color: var(--primary);
+}
+
+/* Main Content */
+main {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Sections */
+.section {
+  display: none;
+}
+
+.section.active {
+  display: block;
+}
+
+/* Lesson Header */
+.lesson-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding: 2rem;
+  background: linear-gradient(135deg, #e8f4fd, #f0e8fd);
+  border-radius: 12px;
+}
+
+.lesson-header h2 {
+  font-size: 2rem;
+  margin: 0.5rem 0;
+}
+
+/* Section Cards */
+.section-intro {
+  border-left: 4px solid var(--primary);
+}
+
+.section-intro h3 {
+  color: var(--primary);
+}
+
+.section-topic {
+  border-left: 4px solid var(--border);
+}
+
+.section-summary {
+  background: linear-gradient(135deg, #f0f9ff, #e8f4fd);
+  border-left: 4px solid var(--success);
+}
+
+.section-summary h3 {
+  color: var(--success);
+}
+
+/* Canvas Notes */
+.canvas-note {
+  background: #fffbeb;
+  border-left: 4px solid var(--warning);
+  padding: 1rem;
+  margin: 1rem 0;
+  border-radius: 0 8px 8px 0;
+}
+
+.canvas-note h4 {
+  color: var(--warning);
+  margin-bottom: 0.5rem;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-muted);
+}
+
+/* Responsive Layout */
+@media (max-width: 768px) {
+  .nav {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .nav h1 {
+    font-size: 1.25rem;
+    text-align: center;
+  }
+
+  .nav-tabs {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  main {
+    padding: 1rem;
+  }
+
+  .top-nav {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+
+
+/* Match Activity */
+.match-container { display: flex; gap: 3rem; padding: 1rem; position: relative; }
+.match-column { flex: 1; display: flex; flex-direction: column; gap: 0.75rem; }
+.match-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; font-size: 1.25rem; cursor: pointer; }
+.match-item.selected { border-color: var(--primary); background: #e8f4fd; }
+.match-item.matched { border-color: var(--success); background: #e8f8f0; }
+.match-item.wrong { border-color: var(--danger); background: #fde8e8; }
+.match-lines { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+
+/* Quiz Activity */
+.quiz-question { border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; }
+.quiz-question.answered { pointer-events: none; }
+.quiz-question .cyrillic { font-size: 1.5rem; color: var(--primary); font-weight: 600; }
+.quiz-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-top: 1rem; }
+.quiz-option { background: #f5f5f5; border: 2px solid var(--border); border-radius: 8px; padding: 1rem; cursor: pointer; text-align: center; }
+.quiz-option.correct { border-color: var(--success); background: #d4edda; }
+.quiz-option.wrong { border-color: var(--danger); background: #f8d7da; }
+.quiz-explanation { margin-top: 1rem; padding: 1rem; background: #e8f4fd; border-radius: 8px; display: none; }
+.quiz-explanation.show { display: block; }
+
+/* Sort Activity */
+.sort-pool { background: #f5f5f5; border: 2px dashed var(--border); border-radius: 12px; padding: 1.5rem; min-height: 80px; margin-bottom: 1rem; }
+.sort-items { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; }
+.sort-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 0.75rem 1.25rem; font-size: 1.5rem; cursor: grab; }
+.sort-item.correct { border-color: var(--success); background: #e8f8f0; }
+.sort-item.wrong { border-color: var(--danger); background: #fde8e8; }
+.sort-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+.sort-group { border: 2px solid var(--border); border-radius: 12px; padding: 1rem; min-height: 150px; }
+.sort-group.drag-over { border-color: var(--primary); background: #e8f4fd; }
+.sort-group h4 { font-size: 0.875rem; text-align: center; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--border); }
+.sort-group.true-friends h4 { color: var(--success); border-color: var(--success); }
+.sort-group.false-friends h4 { color: var(--danger); border-color: var(--danger); }
+.sort-group.new-letters h4 { color: var(--primary); border-color: var(--primary); }
+
+/* Vocabulary */
+.vocab-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; }
+.vocab-card { border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; text-align: center; }
+.vocab-card .uk { font-size: 1.75rem; font-weight: 600; color: var(--primary); }
+.vocab-card .translit { color: var(--text-muted); font-style: italic; }
+.vocab-card .en { font-weight: 500; margin: 0.25rem 0; }
+.vocab-card .note { font-size: 0.75rem; color: #613583; background: #f0e8fd; padding: 0.25rem 0.5rem; border-radius: 4px; }
+
+/* Answer Callout Blocks */
+.callout { padding: 0.5rem 1rem; margin: 0.25rem 0; border-radius: 4px; }
+.callout-answer { background: #e8f8f0; border-left: 3px solid var(--success); }
+.callout-explanation { background: #e8f4fd; border-left: 3px solid var(--primary); color: var(--text-muted); font-style: italic; }
+.callout-alt { background: #f5f5f5; border-left: 3px solid var(--border); color: var(--text-muted); }
+
+/* Answer Block Toggle */
+.answer-block { display: none; }
+.answer-block.show { display: block; }
+.show-answer-btn { background: #f0f0f0; border: 1px solid var(--border); border-radius: 6px; padding: 0.25rem 0.75rem; font-size: 0.8rem; cursor: pointer; color: var(--text-muted); margin: 0.25rem 0; }
+.show-answer-btn:hover { background: #e5e5e5; }
+.show-answer-btn.revealed { background: #e8f8f0; border-color: var(--success); color: var(--success); }
+
   </style>
 </head>
 <body>
+  
   <div class="top-nav">
     <a href="../index.html">← l2-uk-en Curriculum</a>
     <div class="module-nav">
@@ -106,7 +322,7 @@
     </div>
   </div>
   <nav class="nav">
-    <h1>Module 161: Politics & Government</h1>
+    <h1>Module 161: Politics &amp; Government</h1>
     <div class="nav-tabs">
       <button class="nav-tab active" data-section="lesson">Lesson</button>
       
@@ -116,18 +332,17 @@
     </div>
   </nav>
   <main>
+    
     <section id="lesson" class="section active">
       <div class="lesson-header">
         <span class="level-badge">B2 · B2.1</span>
-        <h2 style="font-size:2rem;margin:0.5rem 0">Politics & Government</h2>
+        <h2 style="font-size:2rem;margin:0.5rem 0">Politics &amp; Government</h2>
         <p style="color:var(--text-muted)">Політика та державне управління</p>
       </div>
       
-      
-      
-      <div class="card section-intro">
-        <h3>📖 Вступ</h3>
-        <div class="md-content"><p>Якщо хтось скаже вам, що демократія прийшла в Україну тільки після 1991 року — не вірте. Насправді українські демократичні традиції сягають часів, коли більшість європейських країн навіть не мріяла про вибори.</p>
+    <div class="card section-intro">
+      <h3>📖 Introduction</h3>
+      <div class="md-content"><p>Якщо хтось скаже вам, що демократія прийшла в Україну тільки після 1991 року — не вірте. Насправді українські демократичні традиції сягають часів, коли більшість європейських країн навіть не мріяла про вибори.</p>
 <p>XVI століття. Запорозька Січ. Десятки тисяч козаків збираються на <strong>Січову Раду</strong> — загальні збори, де кожен козак має право голосу. Незалежно від походження, багатства чи віку — один козак, один голос. Вони <strong>обирають</strong> гетьмана, <strong>ухвалюють</strong> рішення про війну та мир, <strong>голосують</strong> за закони. І якщо гетьман не виправдав довіри — його можуть <strong>усунути</strong> з посади на наступній раді.</p>
 <p>Подумайте: у той самий час англійські королі вірили в божественне право на владу, французькі монархи казали «держава — це я», а московські царі вважали себе абсолютними правителями. А козаки проводили демократичні вибори. Із передвиборчими кампаніями. Із дебатами. Із підрахунком голосів.</p>
 <p>Гетьман Богдан Хмельницький був <strong>обраний</strong> Військовою Радою у Січі. Іван Мазепа пройшов через складну <strong>передвиборчу кампанію</strong>, де перемагав конкурентів не силою, а переконанням. Пилип Орлик — автор першої в Європі демократичної конституції (1710 рік!) — написав документ, який обмежував владу гетьмана і гарантував права козаків. За 79 років до Французької революції!</p>
@@ -136,10 +351,12 @@
 <p>Сьогодні Україна — парламентсько-президентська республіка. <strong>Верховна Рада</strong> ухвалює закони. <strong>Президент</strong> представляє державу. <strong>Кабінет Міністрів</strong> керує повсякденними справами. Три гілки влади — законодавча, виконавча, судова — мають стримувати одна одну. Ідеальна система? Ні. Українська демократія молода і недосконала. Але вона жива. І за неї борються.</p>
 <p>У цьому модулі ви опануєте лексику, яка дозволить читати політичні новини, розуміти дебати в парламенті та обговорювати українську політику на рівні освіченого громадянина.</p>
 <hr /></div>
-      </div>
-      <div class="card section-topic">
-        <h3>Розминка</h3>
-        <div class="md-content"><h3 id="">Політична новина</h3>
+    </div>
+  
+    <div class="card section-content">
+      <h3>Зміст уроку</h3>
+      <div class="md-content"><h2 id="">Розминка</h2>
+<h3 id="-1">Політична новина</h3>
 <p>Прочитайте заголовок із реального українського медіа:</p>
 <blockquote>
   <p>«Верховна Рада ухвалила законопроєкт про мобілізацію 283 голосами після 4000 поправок та місяців дебатів. Президент підписав закон наступного дня.»</p>
@@ -154,11 +371,9 @@
   <p><strong>Чи знали ви?</strong></p>
   <p>Верховна Рада має 450 депутатів. Для ухвалення звичайного закону потрібна проста більшість — 226 голосів. Для зміни Конституції — 300 голосів (конституційна більшість). 283 голоси за закон про мобілізацію означає, що його підтримали і провладні, і частина опозиційних депутатів.</p>
 </blockquote>
-<hr /></div>
-      </div>
-      <div class="card section-topic">
-        <h3>Презентація</h3>
-        <div class="md-content"><h3 id="">Три гілки влади</h3>
+<hr />
+<h2 id="-2">Презентація</h2>
+<h3 id="-3">Три гілки влади</h3>
 <p>Україна — республіка, де влада розділена на три незалежні гілки. Ця ідея — не українська, але українці знають її ціну краще за багатьох.</p>
 <table>
 <thead>
@@ -192,7 +407,7 @@
   <p>✅ <strong>Факт:</strong> Україна — парламентсько-президентська республіка. Президент має значні повноваження (зовнішня політика, оборона, призначення ключових посадовців), але внутрішню політику формує Кабінет Міністрів на чолі з Прем'єр-міністром. Президент не може самостійно ухвалювати закони — це робить тільки Рада.</p>
 </blockquote>
 <hr />
-<h3 id="-1">Верховна Рада України</h3>
+<h3 id="-4">Верховна Рада України</h3>
 <p>Парламент України має унікальну назву. «Рада» — від давньослов'янського «порада», «збори». Не «дума» (як у Росії), не «парламент» (як у Британії) — саме «рада», що відсилає до козацької традиції.</p>
 <table>
 <thead>
@@ -292,7 +507,7 @@
   <p>Будівля Верховної Ради побудована в 1936-1939 роках як Верховна Рада УРСР. Характерний напівкруглий зал — типова радянська архітектура. Але символіка змінилася: замість серпа і молота — тризуб, замість портрета Леніна — Герб України. За незалежність України проголосували в цьому самому залі 24 серпня 1991 року — 346 голосами «за».</p>
 </blockquote>
 <hr />
-<h3 id="-2">Виконавча влада</h3>
+<h3 id="-5">Виконавча влада</h3>
 <table>
 <thead>
 <tr>
@@ -382,7 +597,7 @@
   <p>✅ <strong>Факт:</strong> Президент <em>вносить</em> кандидатуру Прем'єр-міністра до Ради, але <em>призначає</em> його Верховна Рада голосуванням. Більше того — Рада може висловити недовіру уряду і змусити його піти у відставку. Це і є система стримувань і противаг.</p>
 </blockquote>
 <hr />
-<h3 id="-3">Вибори</h3>
+<h3 id="-6">Вибори</h3>
 <p>Вибори — серце демократії. В Україні вони були справжнім полем битви за право народу вирішувати свою долю.</p>
 <table>
 <thead>
@@ -482,7 +697,7 @@
   <p>Президентські вибори 2019 року встановили рекорд: Володимир Зеленський отримав 73,22% голосів у другому турі — найбільший результат в історії українських виборів. Він переміг у всіх областях, крім Львівської (де його підтримали «лише» 62%). Явка склала 62% — понад 13 мільйонів голосів.</p>
 </blockquote>
 <hr />
-<h3 id="-4">Політичні поняття</h3>
+<h3 id="-7">Політичні поняття</h3>
 <table>
 <thead>
 <tr>
@@ -550,7 +765,7 @@
   <p>✅ <strong>Факт:</strong> Україна подала заявку на членство в ЄС 28 лютого 2022 року — через 4 дні після початку повномасштабного вторгнення. Але статус кандидата (23 червня 2022) — результат десятиліть реформ: децентралізації, судової реформи, антикорупційних органів, цифровізації. Війна прискорила політичне рішення, але не замінила реформи.</p>
 </blockquote>
 <hr />
-<h3 id="-5">Політичні посади</h3>
+<h3 id="-8">Політичні посади</h3>
 <table>
 <thead>
 <tr>
@@ -598,7 +813,7 @@
 </tbody>
 </table>
 <hr />
-<h3 id="-6">Сучасний контекст: Реформи</h3>
+<h3 id="-9">Сучасний контекст: Реформи</h3>
 <p>Реформи — не просто слово для України. Це умова виживання як держави.</p>
 <table>
 <thead>
@@ -640,55 +855,75 @@
   <p><strong>Чи знали ви?</strong></p>
   <p>Децентралізація — найуспішніша реформа незалежної України. До 2014 року 70% податків ішли до Києва. Після реформи громади залишають собі більшість доходів. Результат: нові школи, дороги, лікарні в селах і малих містах. А коли почалася війна, децентралізовані громади виявилися стійкішими — бо вміли приймати рішення самостійно.</p>
 </blockquote>
-<hr /></div>
-      </div>
-      <div class="card section-topic">
-        <h3>Практика</h3>
-        <div class="md-content"><h3 id="1">Вправа 1: Хто що робить?</h3>
+<hr />
+<h2 id="-10">Практика</h2>
+<h3 id="1">Вправа 1: Хто що робить?</h3>
 <p>Оберіть правильний орган влади:</p>
 <ol>
-<li><p>___ ухвалює закони.<br />
-→ <strong>Верховна Рада</strong></p></li>
-<li><p>___ підписує закони.<br />
-→ <strong>Президент</strong></p></li>
-<li><p>___ керує економічною політикою.<br />
-→ <strong>Кабінет Міністрів</strong></p></li>
-<li><p>___ може накласти вето на закон.<br />
-→ <strong>Президент</strong></p></li>
-<li><p>___ призначає Прем'єр-міністра голосуванням.<br />
-→ <strong>Верховна Рада</strong></p></li>
+<li><p>___ ухвалює закони.</p></li>
 </ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-0', this)">Показати відповідь</button><div class="answer-block" id="ans-0"><div class="callout callout-answer" data-callout="answer"><strong>Верховна Рада</strong></div></div>
+<ol start="2">
+<li><p>___ підписує закони.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-1', this)">Показати відповідь</button><div class="answer-block" id="ans-1"><div class="callout callout-answer" data-callout="answer"><strong>Президент</strong></div></div>
+<ol start="3">
+<li><p>___ керує економічною політикою.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-2', this)">Показати відповідь</button><div class="answer-block" id="ans-2"><div class="callout callout-answer" data-callout="answer"><strong>Кабінет Міністрів</strong></div></div>
+<ol start="4">
+<li><p>___ може накласти вето на закон.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-3', this)">Показати відповідь</button><div class="answer-block" id="ans-3"><div class="callout callout-answer" data-callout="answer"><strong>Президент</strong></div></div>
+<ol start="5">
+<li><p>___ призначає Прем'єр-міністра голосуванням.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-4', this)">Показати відповідь</button><div class="answer-block" id="ans-4"><div class="callout callout-answer" data-callout="answer"><strong>Верховна Рада</strong></div></div>
 <h3 id="2">Вправа 2: Заповніть пропуски</h3>
 <ol>
-<li><p>Верховна Рада ___ (ухвалити) новий закон 280 голосами.<br />
-→ <strong>ухвалила</strong></p></li>
-<li><p>Президент ___ (накласти) вето на законопроєкт.<br />
-→ <strong>наклав</strong></p></li>
-<li><p>На виборах громадяни ___ (голосувати) таємно.<br />
-→ <strong>голосують</strong></p></li>
-<li><p>Опозиція ___ (критикувати) рішення уряду.<br />
-→ <strong>критикує / критикувала</strong></p></li>
-<li><p>Прем'єр-міністра ___ (призначити) після голосування в Раді.<br />
-→ <strong>призначили / було призначено</strong></p></li>
+<li><p>Верховна Рада ___ (ухвалити) новий закон 280 голосами.</p></li>
 </ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-5', this)">Показати відповідь</button><div class="answer-block" id="ans-5"><div class="callout callout-answer" data-callout="answer"><strong>ухвалила</strong></div></div>
+<ol start="2">
+<li><p>Президент ___ (накласти) вето на законопроєкт.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-6', this)">Показати відповідь</button><div class="answer-block" id="ans-6"><div class="callout callout-answer" data-callout="answer"><strong>наклав</strong></div></div>
+<ol start="3">
+<li><p>На виборах громадяни ___ (голосувати) таємно.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-7', this)">Показати відповідь</button><div class="answer-block" id="ans-7"><div class="callout callout-answer" data-callout="answer"><strong>голосують</strong></div></div>
+<ol start="4">
+<li><p>Опозиція ___ (критикувати) рішення уряду.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-8', this)">Показати відповідь</button><div class="answer-block" id="ans-8"><div class="callout callout-answer" data-callout="answer"><strong>критикує / критикувала</strong></div></div>
+<ol start="5">
+<li><p>Прем'єр-міністра ___ (призначити) після голосування в Раді.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-9', this)">Показати відповідь</button><div class="answer-block" id="ans-9"><div class="callout callout-answer" data-callout="answer"><strong>призначили / було призначено</strong></div></div>
 <h3 id="3">Вправа 3: Перекладіть</h3>
 <ol>
-<li><p>Parliament passed the bill with 300 votes.<br />
-→ <strong>Парламент (Верховна Рада) ухвалив законопроєкт 300 голосами.</strong></p></li>
-<li><p>The president vetoed the law.<br />
-→ <strong>Президент наклав вето на закон.</strong></p></li>
-<li><p>Voter turnout was 65%.<br />
-→ <strong>Явка виборців склала 65%.</strong></p></li>
-<li><p>The opposition criticized the government's decision.<br />
-→ <strong>Опозиція розкритикувала рішення уряду.</strong></p></li>
-<li><p>The minister was dismissed from office.<br />
-→ <strong>Міністра звільнили з посади. / Міністра було звільнено з посади.</strong></p></li>
+<li><p>Parliament passed the bill with 300 votes.</p></li>
 </ol>
-<hr /></div>
-      </div>
-      <div class="card section-topic">
-        <h3>Продукція</h3>
-        <div class="md-content"><h3 id="">Аналіз новини</h3>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-10', this)">Показати відповідь</button><div class="answer-block" id="ans-10"><div class="callout callout-answer" data-callout="answer"><strong>Парламент (Верховна Рада) ухвалив законопроєкт 300 голосами.</strong></div></div>
+<ol start="2">
+<li><p>The president vetoed the law.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-11', this)">Показати відповідь</button><div class="answer-block" id="ans-11"><div class="callout callout-answer" data-callout="answer"><strong>Президент наклав вето на закон.</strong></div></div>
+<ol start="3">
+<li><p>Voter turnout was 65%.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-12', this)">Показати відповідь</button><div class="answer-block" id="ans-12"><div class="callout callout-answer" data-callout="answer"><strong>Явка виборців склала 65%.</strong></div></div>
+<ol start="4">
+<li><p>The opposition criticized the government's decision.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-13', this)">Показати відповідь</button><div class="answer-block" id="ans-13"><div class="callout callout-answer" data-callout="answer"><strong>Опозиція розкритикувала рішення уряду.</strong></div></div>
+<ol start="5">
+<li><p>The minister was dismissed from office.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-14', this)">Показати відповідь</button><div class="answer-block" id="ans-14"><div class="callout callout-answer" data-callout="answer"><strong>Міністра звільнили з посади. / Міністра було звільнено з посади.</strong></div></div>
+<hr />
+<h2 id="-11">Продукція</h2>
+<h3 id="-12">Аналіз новини</h3>
 <p>Прочитайте реальну новину та дайте відповіді на питання:</p>
 <blockquote>
   <p>«Верховна Рада України 238 голосами ухвалила законопроєкт про обмеження використання російської мови в публічному просторі. Опозиційні фракції голосували проти. Президент очікується підписати закон протягом 15 днів.»</p>
@@ -700,18 +935,21 @@
 <li>Чи може Рада подолати вето?</li>
 </ol>
 <p><em>(Підказки: проста більшість = 226; Президент може накласти вето; для подолання вето потрібно 300 голосів)</em></p>
-<h3 id="-1">Дискусія</h3>
+<h3 id="-13">Дискусія</h3>
 <p>Обговоріть у парах або групах:</p>
 <ol>
 <li>Яка різниця між українською та американською/британською системою влади?</li>
 <li>Чому децентралізація важлива для демократії?</li>
 <li>«Майдани довели, що українці цінують демократію.» Погоджуєтесь?</li>
 </ol>
+<hr />
+<hr />
 <hr /></div>
-      </div>
-      <div class="card section-summary">
-        <h3>📋 Підсумок</h3>
-        <div class="md-content"><h2 id="">Демократія по-українськи</h2>
+    </div>
+  
+    <div class="card section-summary">
+      <h3>📋 Summary</h3>
+      <div class="md-content"><h2 id="">Демократія по-українськи</h2>
 <p>Від козацької Січової Ради до сучасної Верховної Ради — українці століттями боролися за право обирати свою владу.</p>
 <p><strong>Три гілки влади:</strong></p>
 <table>
@@ -781,10 +1019,14 @@
   <p><strong>Головне</strong></p>
   <p>Українська демократія — молода, недосконала, але загартована Майданами. За неї заплачено найвищу ціну. І саме тому кожен термін цього модуля — не просто слово, а частина боротьби за право бути вільним народом.</p>
 </blockquote></div>
+    </div>
+  
+      <div class="btn-group">
+        <button class="btn btn-primary" onclick="showSection('quiz')">Start →</button>
       </div>
-      
-      <div class="btn-group"><button class="btn btn-primary" onclick="showSection('quiz')">Start →</button></div>
     </section>
+  
+    
     
     <section id="quiz" class="section"><div class="card"><h3>Політика та державне управління</h3>
       <div class="score-display"><span class="score"><span id="quiz-score">0</span>/10</span></div>
@@ -793,34 +1035,235 @@
       <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
+    
     <section id="vocab" class="section"><div class="card"><h3>Vocabulary (23)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
     </section>
-  </main>
-  <footer>Module 161 · curricula-opus</footer>
+  </main><footer>Module 161 · curricula-opus</footer>
   <script>
-    const matchPairs=[];
-    const quizData=[{"question":"Верховна Рада — це орган:","options":["законодавчої влади","виконавчої влади"],"correctIndex":0,"explanation":"Парламент приймає закони."},{"question":"Скільки депутатів у Верховній Раді?","options":["450","500","350"],"correctIndex":0,"explanation":"450 народних депутатів."},{"question":"«Ухвалити закон» означає:","options":["прийняти закон","відхилити закон"],"correctIndex":0,"explanation":"Ухвалити = to adopt, pass."},{"question":"Хто очолює Кабінет Міністрів?","options":["Президент","Прем'єр-міністр"],"correctIndex":1,"explanation":"Прем'єр — голова уряду."},{"question":"«Фракція» — це:","options":["група депутатів однієї партії","виборча дільниця"],"correctIndex":0,"explanation":"Фракція = faction, parliamentary group."},{"question":"Що потрібно для подолання вето Президента?","options":["226 голосів","300 голосів","400 голосів"],"correctIndex":1,"explanation":"Конституційна більшість = 2/3 = 300 голосів."},{"question":"Хто призначає Прем'єр-міністра?","options":["Президент одноосібно","Верховна Рада за поданням Президента","Конституційний Суд"],"correctIndex":1,"explanation":"Президент вносить, Рада голосує."},{"question":"**[Інтеграція: пасив + регістр]** Офіційне повідомлення: «Закон ___»","options":["ухвалено","ухвалили","ухвалюється"],"correctIndex":0,"explanation":"Офіційний стиль → -но/-то форма."},{"question":"**[Інтеграція: пасив + регістр]** Розмова з другом: «Мені ___, що закон прийняли.»","options":["повідомлено","сказали","говориться"],"correctIndex":1,"explanation":"Розмовний стиль → активний голос з «вони»."},{"question":"Конституцію України прийнято в:","options":["1991 році","1996 році","2004 році"],"correctIndex":1,"explanation":"28 червня 1996 — День Конституції."}];
-    const sortData={};
-    const vocabData=[{"uk":"Верховна Рада","translit":"","en":"Parliament","note":"f"},{"uk":"народний депутат","translit":"","en":"MP","note":"m"},{"uk":"законопроєкт","translit":"","en":"bill, draft law","note":"m"},{"uk":"закон","translit":"","en":"law","note":"m"},{"uk":"ухвалити","translit":"","en":"to adopt, pass","note":"pf"},{"uk":"відхилити","translit":"","en":"to reject","note":"pf"},{"uk":"голосування","translit":"","en":"voting","note":"n"},{"uk":"голосувати","translit":"","en":"to vote","note":"impf"},{"uk":"виборець","translit":"","en":"voter","note":"m"},{"uk":"вибори","translit":"","en":"elections","note":"pl"},{"uk":"фракція","translit":"","en":"faction","note":"f"},{"uk":"коаліція","translit":"","en":"coalition","note":"f"},{"uk":"опозиція","translit":"","en":"opposition","note":"f"},{"uk":"накласти вето","translit":"","en":"to veto","note":"pf"},{"uk":"указ","translit":"","en":"decree","note":"m"},{"uk":"постанова","translit":"","en":"resolution","note":"f"},{"uk":"призначити","translit":"","en":"to appoint","note":"pf"},{"uk":"звільнити","translit":"","en":"to dismiss","note":"pf"},{"uk":"передвиборча кампанія","translit":"","en":"election campaign","note":"f"},{"uk":"явка","translit":"","en":"turnout","note":"f"},{"uk":"балотуватися","translit":"","en":"to run for office","note":"impf"},{"uk":"реформа","translit":"","en":"reform","note":"f"},{"uk":"євроінтеграція","translit":"","en":"European integration","note":"f"}];
-    const totalSort=0;
-    function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
-    document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));
-    let matchSel=null,matchScore=0,matchPairsArr=[];
-    document.querySelectorAll('#match-left .match-item').forEach(item=>{item.addEventListener('click',()=>{if(item.classList.contains('matched'))return;document.querySelectorAll('#match-left .match-item').forEach(i=>i.classList.remove('selected'));item.classList.add('selected');matchSel={el:item,pair:item.dataset.pair};});});
-    document.querySelectorAll('#match-right .match-item').forEach(item=>{item.addEventListener('click',()=>{if(item.classList.contains('matched')||!matchSel)return;if(matchSel.pair===item.dataset.pair){matchSel.el.classList.remove('selected');matchSel.el.classList.add('matched');item.classList.add('matched');matchPairsArr.push({left:matchSel.el,right:item});matchScore++;document.getElementById('match-score').textContent=matchScore;drawLines();if(matchScore===matchPairs.length)document.getElementById('match-complete').classList.add('show');}else{item.classList.add('wrong');setTimeout(()=>item.classList.remove('wrong'),300);}matchSel=null;});});
-    function drawLines(){const svg=document.getElementById('match-lines'),c=document.getElementById('match-container');if(!svg||!c)return;const r=c.getBoundingClientRect();svg.innerHTML='';svg.setAttribute('viewBox','0 0 '+r.width+' '+r.height);matchPairsArr.forEach(p=>{const lr=p.left.getBoundingClientRect(),rr=p.right.getBoundingClientRect();const line=document.createElementNS('http://www.w3.org/2000/svg','line');line.setAttribute('x1',lr.right-r.left);line.setAttribute('y1',lr.top+lr.height/2-r.top);line.setAttribute('x2',rr.left-r.left);line.setAttribute('y2',rr.top+rr.height/2-r.top);line.setAttribute('stroke','#26a269');line.setAttribute('stroke-width','2');svg.appendChild(line);});}
-    function resetMatch(){matchSel=null;matchScore=0;matchPairsArr=[];document.getElementById('match-score').textContent='0';document.getElementById('match-complete')?.classList.remove('show');document.getElementById('match-lines').innerHTML='';document.querySelectorAll('#match-container .match-item').forEach(i=>i.classList.remove('matched','selected','wrong'));}
-    window.addEventListener('resize',drawLines);
-    let quizScore=0,quizAns=0;
-    function initQuiz(){const c=document.getElementById('quiz-container');if(!c||!quizData.length)return;c.innerHTML='';quizData.forEach((q,i)=>{const sh=[...q.options].sort(()=>Math.random()-0.5);const cor=sh.indexOf(q.options[q.correctIndex]);const div=document.createElement('div');div.className='quiz-question';div.innerHTML='<h4>Q'+(i+1)+': '+q.question+'</h4><div class="quiz-options">'+sh.map((o,j)=>'<div class="quiz-option" data-c="'+(j===cor)+'" data-q="'+i+'">'+o+'</div>').join('')+'</div><div class="quiz-explanation" id="exp-'+i+'">'+q.explanation+'</div>';c.appendChild(div);});document.querySelectorAll('.quiz-option').forEach(o=>o.addEventListener('click',handleQuiz));}
-    function handleQuiz(e){const opt=e.target,q=opt.closest('.quiz-question');if(q.classList.contains('answered'))return;q.classList.add('answered');if(opt.dataset.c==='true'){opt.classList.add('correct');quizScore++;}else{opt.classList.add('wrong');q.querySelector('[data-c="true"]').classList.add('correct');}document.getElementById('exp-'+opt.dataset.q).classList.add('show');document.getElementById('quiz-score').textContent=quizScore;quizAns++;if(quizAns===quizData.length)document.getElementById('quiz-complete').classList.add('show');}
-    function resetQuiz(){quizScore=0;quizAns=0;document.getElementById('quiz-score').textContent='0';document.getElementById('quiz-complete')?.classList.remove('show');initQuiz();}
-    let sortScore=0,dragItem=null;
-    function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
-    function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
-    function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
-    document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
+
+    const matchPairs = [];
+    const quizData = [{"question":"Верховна Рада — це орган:","options":["законодавчої влади","виконавчої влади"],"correctIndex":0,"explanation":"Парламент приймає закони."},{"question":"Скільки депутатів у Верховній Раді?","options":["450","500","350"],"correctIndex":0,"explanation":"450 народних депутатів."},{"question":"«Ухвалити закон» означає:","options":["прийняти закон","відхилити закон"],"correctIndex":0,"explanation":"Ухвалити = to adopt, pass."},{"question":"Хто очолює Кабінет Міністрів?","options":["Президент","Прем'єр-міністр"],"correctIndex":1,"explanation":"Прем'єр — голова уряду."},{"question":"«Фракція» — це:","options":["група депутатів однієї партії","виборча дільниця"],"correctIndex":0,"explanation":"Фракція = faction, parliamentary group."},{"question":"Що потрібно для подолання вето Президента?","options":["226 голосів","300 голосів","400 голосів"],"correctIndex":1,"explanation":"Конституційна більшість = 2/3 = 300 голосів."},{"question":"Хто призначає Прем'єр-міністра?","options":["Президент одноосібно","Верховна Рада за поданням Президента","Конституційний Суд"],"correctIndex":1,"explanation":"Президент вносить, Рада голосує."},{"question":"**[Інтеграція: пасив + регістр]** Офіційне повідомлення: «Закон ___»","options":["ухвалено","ухвалили","ухвалюється"],"correctIndex":0,"explanation":"Офіційний стиль → -но/-то форма."},{"question":"**[Інтеграція: пасив + регістр]** Розмова з другом: «Мені ___, що закон прийняли.»","options":["повідомлено","сказали","говориться"],"correctIndex":1,"explanation":"Розмовний стиль → активний голос з «вони»."},{"question":"Конституцію України прийнято в:","options":["1991 році","1996 році","2004 році"],"correctIndex":1,"explanation":"28 червня 1996 — День Конституції."}];
+    const sortData = {};
+    const vocabData = [{"uk":"Верховна Рада","translit":"","en":"Parliament","note":""},{"uk":"народний депутат","translit":"","en":"MP","note":""},{"uk":"законопроєкт","translit":"","en":"bill, draft law","note":""},{"uk":"закон","translit":"","en":"law","note":""},{"uk":"ухвалити","translit":"","en":"to adopt, pass","note":""},{"uk":"відхилити","translit":"","en":"to reject","note":""},{"uk":"голосування","translit":"","en":"voting","note":""},{"uk":"голосувати","translit":"","en":"to vote","note":""},{"uk":"виборець","translit":"","en":"voter","note":""},{"uk":"вибори","translit":"","en":"elections","note":""},{"uk":"фракція","translit":"","en":"faction","note":""},{"uk":"коаліція","translit":"","en":"coalition","note":""},{"uk":"опозиція","translit":"","en":"opposition","note":""},{"uk":"накласти вето","translit":"","en":"to veto","note":""},{"uk":"указ","translit":"","en":"decree","note":""},{"uk":"постанова","translit":"","en":"resolution","note":""},{"uk":"призначити","translit":"","en":"to appoint","note":""},{"uk":"звільнити","translit":"","en":"to dismiss","note":""},{"uk":"передвиборча кампанія","translit":"","en":"election campaign","note":""},{"uk":"явка","translit":"","en":"turnout","note":""},{"uk":"балотуватися","translit":"","en":"to run for office","note":""},{"uk":"реформа","translit":"","en":"reform","note":""},{"uk":"євроінтеграція","translit":"","en":"European integration","note":""}];
+    const totalSort = 0;
+  
+// Answer callout toggle (for new > [!answer] syntax)
+function toggleAnswer(id, btn) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const isUkrainian = document.querySelector('.level-badge')?.textContent.match(/B[12]|C[12]/);
+  const showText = isUkrainian ? 'Показати відповідь' : 'Show Answer';
+  const hideText = isUkrainian ? 'Сховати відповідь' : 'Hide Answer';
+  const show = !el.classList.contains('show');
+  if (show) {
+    el.classList.add('show');
+    btn.textContent = hideText;
+    btn.classList.add('revealed');
+  } else {
+    el.classList.remove('show');
+    btn.textContent = showText;
+    btn.classList.remove('revealed');
+  }
+}
+
+// Section navigation
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id)?.classList.add('active');
+  document.querySelector('[data-section="' + id + '"]')?.classList.add('active');
+}
+document.querySelectorAll('.nav-tab').forEach(t => t.addEventListener('click', () => showSection(t.dataset.section)));
+
+// Initialize on DOM ready
+document.addEventListener('DOMContentLoaded', () => {
+  initQuiz();
+  initSort();
+  initVocab();
+});
+
+
+// Quiz Activity
+let quizScore = 0, quizAns = 0;
+
+function initQuiz() {
+  const c = document.getElementById('quiz-container');
+  if (!c || !quizData.length) return;
+  c.innerHTML = '';
+  quizData.forEach((q, i) => {
+    const sh = [...q.options].sort(() => Math.random() - 0.5);
+    const cor = sh.indexOf(q.options[q.correctIndex]);
+    const div = document.createElement('div');
+    div.className = 'quiz-question';
+    div.innerHTML = '<h4>Q' + (i + 1) + ': ' + q.question + '</h4><div class="quiz-options">' + sh.map((o, j) => '<div class="quiz-option" data-c="' + (j === cor) + '" data-q="' + i + '">' + o + '</div>').join('') + '</div><div class="quiz-explanation" id="exp-' + i + '">' + q.explanation + '</div>';
+    c.appendChild(div);
+  });
+  document.querySelectorAll('.quiz-option').forEach(o => o.addEventListener('click', handleQuiz));
+}
+
+function handleQuiz(e) {
+  const opt = e.target, q = opt.closest('.quiz-question');
+  if (q.classList.contains('answered')) return;
+  q.classList.add('answered');
+  if (opt.dataset.c === 'true') {
+    opt.classList.add('correct');
+    quizScore++;
+  } else {
+    opt.classList.add('wrong');
+    q.querySelector('[data-c="true"]').classList.add('correct');
+  }
+  document.getElementById('exp-' + opt.dataset.q).classList.add('show');
+  document.getElementById('quiz-score').textContent = quizScore;
+  quizAns++;
+  if (quizAns === quizData.length) document.getElementById('quiz-complete').classList.add('show');
+}
+
+function resetQuiz() {
+  quizScore = 0;
+  quizAns = 0;
+  document.getElementById('quiz-score').textContent = '0';
+  document.getElementById('quiz-complete')?.classList.remove('show');
+  initQuiz();
+}
+
+
+// Match Activity
+let matchSel = null, matchScore = 0, matchPairsArr = [];
+
+document.querySelectorAll('#match-left .match-item').forEach(item => {
+  item.addEventListener('click', () => {
+    if (item.classList.contains('matched')) return;
+    document.querySelectorAll('#match-left .match-item').forEach(i => i.classList.remove('selected'));
+    item.classList.add('selected');
+    matchSel = { el: item, pair: item.dataset.pair };
+  });
+});
+
+document.querySelectorAll('#match-right .match-item').forEach(item => {
+  item.addEventListener('click', () => {
+    if (item.classList.contains('matched') || !matchSel) return;
+    if (matchSel.pair === item.dataset.pair) {
+      matchSel.el.classList.remove('selected');
+      matchSel.el.classList.add('matched');
+      item.classList.add('matched');
+      matchPairsArr.push({ left: matchSel.el, right: item });
+      matchScore++;
+      document.getElementById('match-score').textContent = matchScore;
+      drawLines();
+      if (matchScore === matchPairs.length) document.getElementById('match-complete').classList.add('show');
+    } else {
+      item.classList.add('wrong');
+      setTimeout(() => item.classList.remove('wrong'), 300);
+    }
+    matchSel = null;
+  });
+});
+
+function drawLines() {
+  const svg = document.getElementById('match-lines'), c = document.getElementById('match-container');
+  if (!svg || !c) return;
+  const r = c.getBoundingClientRect();
+  svg.innerHTML = '';
+  svg.setAttribute('viewBox', '0 0 ' + r.width + ' ' + r.height);
+  matchPairsArr.forEach(p => {
+    const lr = p.left.getBoundingClientRect(), rr = p.right.getBoundingClientRect();
+    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    line.setAttribute('x1', lr.right - r.left);
+    line.setAttribute('y1', lr.top + lr.height / 2 - r.top);
+    line.setAttribute('x2', rr.left - r.left);
+    line.setAttribute('y2', rr.top + rr.height / 2 - r.top);
+    line.setAttribute('stroke', '#26a269');
+    line.setAttribute('stroke-width', '2');
+    svg.appendChild(line);
+  });
+}
+
+function resetMatch() {
+  matchSel = null;
+  matchScore = 0;
+  matchPairsArr = [];
+  document.getElementById('match-score').textContent = '0';
+  document.getElementById('match-complete')?.classList.remove('show');
+  document.getElementById('match-lines').innerHTML = '';
+  document.querySelectorAll('#match-container .match-item').forEach(i => i.classList.remove('matched', 'selected', 'wrong'));
+}
+
+window.addEventListener('resize', drawLines);
+
+
+// Sort Activity
+let sortScore = 0, dragItem = null;
+
+function initSort() {
+  const pool = document.getElementById('sort-items');
+  if (!pool || !Object.keys(sortData).length) return;
+  const all = Object.values(sortData).flat().sort(() => Math.random() - 0.5);
+  pool.innerHTML = '';
+  all.forEach(letter => {
+    const group = Object.keys(sortData).find(g => sortData[g].includes(letter));
+    const item = document.createElement('div');
+    item.className = 'sort-item';
+    item.textContent = letter;
+    item.draggable = true;
+    item.dataset.group = group;
+    item.addEventListener('dragstart', e => {
+      dragItem = item;
+      item.classList.add('dragging');
+    });
+    item.addEventListener('dragend', () => {
+      item.classList.remove('dragging');
+      dragItem = null;
+    });
+    pool.appendChild(item);
+  });
+  document.querySelectorAll('.sort-group').forEach(g => {
+    g.addEventListener('dragover', e => {
+      e.preventDefault();
+      g.classList.add('drag-over');
+    });
+    g.addEventListener('dragleave', () => g.classList.remove('drag-over'));
+    g.addEventListener('drop', e => {
+      e.preventDefault();
+      g.classList.remove('drag-over');
+      if (!dragItem) return;
+      if (g.dataset.group === dragItem.dataset.group) {
+        dragItem.classList.add('correct');
+        g.querySelector('.sort-items').appendChild(dragItem);
+        dragItem.draggable = false;
+        sortScore++;
+        document.getElementById('sort-score').textContent = sortScore;
+        if (sortScore === totalSort) document.getElementById('sort-complete').classList.add('show');
+      } else {
+        dragItem.classList.add('wrong');
+        setTimeout(() => dragItem.classList.remove('wrong'), 300);
+      }
+    });
+  });
+}
+
+function resetSort() {
+  sortScore = 0;
+  document.getElementById('sort-score').textContent = '0';
+  document.getElementById('sort-complete')?.classList.remove('show');
+  document.querySelectorAll('.sort-group .sort-items').forEach(g => g.innerHTML = '');
+  initSort();
+}
+
+
+// Vocabulary
+function initVocab() {
+  const grid = document.getElementById('vocab-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  vocabData.forEach(v => {
+    const card = document.createElement('div');
+    card.className = 'vocab-card';
+    card.innerHTML = '<div class="uk">' + v.uk + '</div><div class="translit">' + v.translit + '</div><div class="en">' + v.en + '</div>' + (v.note ? '<div class="note">' + v.note + '</div>' : '');
+    grid.appendChild(card);
+  });
+}
+
   </script>
 </body>
 </html>

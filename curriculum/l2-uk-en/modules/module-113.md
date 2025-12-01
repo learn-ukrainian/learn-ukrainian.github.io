@@ -158,12 +158,18 @@ Environmental issues are important for everyone:
 
 ### Complete with Correct Word
 
-1. ___ (Climate change) — глобальна проблема. → **Зміна клімату**
-2. Заводи ___ (pollute) річки. → **забруднюють**
-3. Треба ___ (to recycle) пластик. → **переробляти**
-4. ___ (Air pollution) шкодить здоров'ю. → **Забруднення повітря**
-5. Ми повинні ___ (to protect) природу. → **захищати**
-6. ___ (Solar energy) — чиста енергія. → **Сонячна енергія**
+1. ___ (Climate change) — глобальна проблема.
+   > [!answer] **Зміна клімату**
+2. Заводи ___ (pollute) річки.
+   > [!answer] **забруднюють**
+3. Треба ___ (to recycle) пластик.
+   > [!answer] **переробляти**
+4. ___ (Air pollution) шкодить здоров'ю.
+   > [!answer] **Забруднення повітря**
+5. Ми повинні ___ (to protect) природу.
+   > [!answer] **захищати**
+6. ___ (Solar energy) — чиста енергія.
+   > [!answer] **Сонячна енергія**
 
 ### Match Problem with Solution
 
@@ -186,20 +192,15 @@ Environmental issues are important for everyone:
 ### Translate to Ukrainian
 
 1. Climate change is a serious problem.
-   → **Зміна клімату — серйозна проблема.**
-
+   > [!answer] **Зміна клімату — серйозна проблема.**
 2. We need to reduce pollution.
-   → **Ми повинні зменшити забруднення.**
-
+   > [!answer] **Ми повинні зменшити забруднення.**
 3. Recycling is important for the environment.
-   → **Переробка важлива для довкілля.**
-
+   > [!answer] **Переробка важлива для довкілля.**
 4. Renewable energy is the future.
-   → **Відновлювана енергія — це майбутнє.**
-
+   > [!answer] **Відновлювана енергія — це майбутнє.**
 5. Everyone should protect nature.
-   → **Кожен повинен захищати природу.**
-
+   > [!answer] **Кожен повинен захищати природу.**
 ## production | Продукція
 
 ### Describe Environmental Actions

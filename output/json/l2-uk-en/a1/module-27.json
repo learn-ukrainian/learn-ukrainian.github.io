@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-A1-27",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "vocabulary-expansion",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -26,30 +25,15 @@
       "Adjective + noun phrases for description",
       "Мати + accusative for features"
     ],
-    "totalDuration": 45,
-    "transliterationMode": "full",
     "tags": [
       "vocabulary",
       "clothes",
       "appearance",
       "practical"
     ],
-    "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
+    "totalDuration": 45,
+    "transliterationMode": "full",
     "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Fashion Talk\n\nWhether shopping or describing someone, clothing vocabulary is essential. Let's learn how to talk about what people wear!\n\n- **Що ти носиш?** - What are you wearing?\n- **Я ношу джинси і футболку.** - I'm wearing jeans and a t-shirt.\n\n> 💡 **Did You Know?**\n>\n> Ukrainian has absorbed many clothing words from other languages:\n> - **Джинси** from English \"jeans\"\n> - **Футболка** from \"football\" (soccer jersey)\n> - **Светр** from English \"sweater\"\n>\n> But traditional clothing like **вишиванка** (embroidered shirt) is uniquely Ukrainian!"
-          }
-        ]
-      },
       {
         "id": "phase-presentation",
         "name": "presentation",
@@ -58,87 +42,33 @@
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "### Basic Clothing\n\n| Ukrainian | Transliteration | English | Gender |\n|-----------|-----------------|---------|--------|\n| сорочка | sorochka | shirt | f |\n| футболка | futbolka | t-shirt | f |\n| светр | svetr | sweater | m |\n| куртка | kurtka | jacket | f |\n| пальто | palto | coat | n |\n| плаття | plattya | dress | n |\n| спідниця | spidnytsya | skirt | f |\n| штани | shtany | pants | pl |\n| джинси | dzhynsy | jeans | pl |\n| шорти | shorty | shorts | pl |\n\n> ⚡ **Pro Tip: Plural-Only Clothes**\n>\n> Like English \"pants\" and \"jeans,\" some Ukrainian clothing is always plural:\n> - штани (pants)\n> - джинси (jeans)\n> - шорти (shorts)\n> - колготки (tights)\n>\n> \"Я ношу штани\" - I wear pants (plural verb agreement)"
+            "teacherNotes": "### Basic Clothing\n\n| Ukrainian | Transliteration | English | Gender |\n|-----------|-----------------|---------|--------|\n| сорочка | sorochka | shirt | f |\n| футболка | futbolka | t-shirt | f |\n| светр | svetr | sweater | m |\n| куртка | kurtka | jacket | f |\n| пальто | palto | coat | n |\n| плаття | plattya | dress | n |\n| спідниця | spidnytsya | skirt | f |\n| штани | shtany | pants | pl |\n| джинси | dzhynsy | jeans | pl |\n| шорти | shorty | shorts | pl |\n\n> ⚡ **Pro Tip: Plural-Only Clothes**\n>\n> Like English \"pants\" and \"jeans,\" some Ukrainian clothing is always plural:\n> - штани (pants)\n> - джинси (jeans)\n> - шорти (shorts)\n> - колготки (tights)\n>\n> \"Я ношу штани\" - I wear pants (plural verb agreement)\n\n### Footwear & Accessories\n\n| Ukrainian | Transliteration | English | Gender |\n|-----------|-----------------|---------|--------|\n| взуття | vzuttya | footwear | n |\n| черевики | cherevyky | shoes/boots | pl |\n| кросівки | krosivky | sneakers | pl |\n| туфлі | tufli | dress shoes | pl |\n| чоботи | choboty | boots | pl |\n| капелюх | kapelyukh | hat | m |\n| шапка | shapka | winter hat | f |\n| шарф | sharf | scarf | m |\n| рукавички | rukavychky | gloves | pl |\n| окуляри | okulyary | glasses | pl |\n| сумка | sumka | bag | f |\n\n> 🎭 **Culture Corner: Вишиванка**\n>\n> The **вишиванка** is a traditional Ukrainian embroidered shirt. Each region has distinct embroidery patterns:\n> - **Полтава** - white-on-white geometric\n> - **Київ** - red and black plant motifs\n> - **Закарпаття** - colorful geometric patterns\n>\n> Ukrainians wear вишиванки on holidays, especially **День вишиванки** (third Thursday of May)!\n\n### Colors Review (with Clothes)\n\n| Ukrainian | Example |\n|-----------|---------|\n| білий | біла сорочка (white shirt) |\n| чорний | чорні штани (black pants) |\n| синій | синя сукня (blue dress) |\n| червоний | червона спідниця (red skirt) |\n| зелений | зелений светр (green sweater) |\n| жовтий | жовта футболка (yellow t-shirt) |\n\n> 📜 **History Bite: Ukrainian Colors**\n>\n> Traditional Ukrainian clothing favored **red** (червоний) and **white** (білий) - symbols of life and purity. Black appeared in mourning and some regional styles. The blue-yellow flag colors became prominent after independence. Today, blue-yellow accessories are patriotic fashion!\n\n### Using Носити (To Wear)\n\n| Person | Form | Example |\n|--------|------|---------|\n| я | ношу | Я ношу джинси. |\n| ти | носиш | Що ти носиш? |\n| він/вона | носить | Вона носить сукню. |\n| ми | носимо | Ми носимо уніформу. |\n| ви | носите | Ви носите окуляри? |\n| вони | носять | Вони носять чорне. |\n\n**Note:** Носити = habitual wearing. For \"wearing right now,\" use \"на мені\":\n- **На мені** джинси. (I'm wearing jeans [right now].)\n- Я **ношу** джинси на роботу. (I wear jeans to work [habitually].)\n\n### Describing Appearance\n\n**Physical features:**\n\n| Ukrainian | English |\n|-----------|---------|\n| високий | tall |\n| низький | short |\n| худий | thin |\n| товстий | fat |\n| стрункий | slim |\n| мати волосся | to have hair |\n| мати очі | to have eyes |\n\n**Hair:**\n- довге волосся (long hair)\n- коротке волосся (short hair)\n- світле волосся (light hair)\n- темне волосся (dark hair)\n- руде волосся (red hair)\n- чорне волосся (black hair)\n\n**Eyes:**\n- карі очі (brown eyes)\n- блакитні очі (blue eyes)\n- зелені очі (green eyes)\n- сірі очі (gray eyes)\n\n> 🔗 **Language Link: Describing Hair**\n>\n> \"Волосся\" (hair) is neuter collective - always singular!\n> - Її волосся **довге**. (Her hair is long.)\n> - Моє волосся **темне**. (My hair is dark.)\n>\n> Never \"волосся довгі\" - always singular!\n\n> 🌍 **Real World: Describing People**\n>\n> - **Як він виглядає?** - What does he look like?\n> - **Він високий з темним волоссям.** - He's tall with dark hair.\n> - **Вона носить окуляри.** - She wears glasses.\n> - **У нього карі очі.** - He has brown eyes."
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Footwear & Accessories\n\n| Ukrainian | Transliteration | English | Gender |\n|-----------|-----------------|---------|--------|\n| взуття | vzuttya | footwear | n |\n| черевики | cherevyky | shoes/boots | pl |\n| кросівки | krosivky | sneakers | pl |\n| туфлі | tufli | dress shoes | pl |\n| чоботи | choboty | boots | pl |\n| капелюх | kapelyukh | hat | m |\n| шапка | shapka | winter hat | f |\n| шарф | sharf | scarf | m |\n| рукавички | rukavychky | gloves | pl |\n| окуляри | okulyary | glasses | pl |\n| сумка | sumka | bag | f |\n\n> 🎭 **Culture Corner: Вишиванка**\n>\n> The **вишиванка** is a traditional Ukrainian embroidered shirt. Each region has distinct embroidery patterns:\n> - **Полтава** - white-on-white geometric\n> - **Київ** - red and black plant motifs\n> - **Закарпаття** - colorful geometric patterns\n>\n> Ukrainians wear вишиванки on holidays, especially **День вишиванки** (third Thursday of May)!"
+            "teacherNotes": "### Describe What You're Wearing\n\nRight now, what are you wearing?\n- На мені... (On me is...)\n- Я ношу... (I wear...)\n\n### Describe a Person\n\nDescribe someone:\n1. Height: Він/Вона високий/а or низький/а\n2. Hair: У нього/неї... волосся\n3. Eyes: У нього/неї... очі\n4. Clothes: Він/Вона носить...\n\n### Match Colors to Clothes\n\n1. red dress\n   > [!answer] червона сукня\n2. blue jeans\n   > [!answer] сині джинси\n3. white shirt\n   > [!answer] біла сорочка\n4. black coat\n   > [!answer] чорне пальто"
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Colors Review (with Clothes)\n\n| Ukrainian | Example |\n|-----------|---------|\n| білий | біла сорочка (white shirt) |\n| чорний | чорні штани (black pants) |\n| синій | синя сукня (blue dress) |\n| червоний | червона спідниця (red skirt) |\n| зелений | зелений светр (green sweater) |\n| жовтий | жовта футболка (yellow t-shirt) |\n\n> 📜 **History Bite: Ukrainian Colors**\n>\n> Traditional Ukrainian clothing favored **red** (червоний) and **white** (білий) - symbols of life and purity. Black appeared in mourning and some regional styles. The blue-yellow flag colors became prominent after independence. Today, blue-yellow accessories are patriotic fashion!"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Using Носити (To Wear)\n\n| Person | Form | Example |\n|--------|------|---------|\n| я | ношу | Я ношу джинси. |\n| ти | носиш | Що ти носиш? |\n| він/вона | носить | Вона носить сукню. |\n| ми | носимо | Ми носимо уніформу. |\n| ви | носите | Ви носите окуляри? |\n| вони | носять | Вони носять чорне. |\n\n**Note:** Носити = habitual wearing. For \"wearing right now,\" use \"на мені\":\n- **На мені** джинси. (I'm wearing jeans [right now].)\n- Я **ношу** джинси на роботу. (I wear jeans to work [habitually].)"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Describing Appearance\n\n**Physical features:**\n\n| Ukrainian | English |\n|-----------|---------|\n| високий | tall |\n| низький | short |\n| худий | thin |\n| товстий | fat |\n| стрункий | slim |\n| мати волосся | to have hair |\n| мати очі | to have eyes |\n\n**Hair:**\n- довге волосся (long hair)\n- коротке волосся (short hair)\n- світле волосся (light hair)\n- темне волосся (dark hair)\n- руде волосся (red hair)\n- чорне волосся (black hair)\n\n**Eyes:**\n- карі очі (brown eyes)\n- блакитні очі (blue eyes)\n- зелені очі (green eyes)\n- сірі очі (gray eyes)\n\n> 🔗 **Language Link: Describing Hair**\n>\n> \"Волосся\" (hair) is neuter collective - always singular!\n> - Її волосся **довге**. (Her hair is long.)\n> - Моє волосся **темне**. (My hair is dark.)\n>\n> Never \"волосся довгі\" - always singular!\n\n> 🌍 **Real World: Describing People**\n>\n> - **Як він виглядає?** - What does he look like?\n> - **Він високий з темним волоссям.** - He's tall with dark hair.\n> - **Вона носить окуляри.** - She wears glasses.\n> - **У нього карі очі.** - He has brown eyes."
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A1-27-matchup"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Describe What You're Wearing\n\nRight now, what are you wearing?\n- На мені... (On me is...)\n- Я ношу... (I wear...)"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Describe a Person\n\nDescribe someone:\n1. Height: Він/Вона високий/а or низький/а\n2. Hair: У нього/неї... волосся\n3. Eyes: У нього/неї... очі\n4. Clothes: Він/Вона носить..."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Match Colors to Clothes\n\n1. red dress → червона сукня\n2. blue jeans → сині джинси\n3. white shirt → біла сорочка\n4. black coat → чорне пальто"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A1-27-quiz"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A1-27-groupsort"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Complete Description\n\nDescribe yourself or a friend:\n- Я... (physical description)\n- У мене... волосся і... очі.\n- Зазвичай я ношу...\n- Сьогодні на мені..."
+            "teacherNotes": "### Complete Description\n\nDescribe yourself or a friend:\n- Я... (physical description)\n- У мене... волосся і... очі.\n- Зазвичай я ношу...\n- Сьогодні на мені...\n\n---"
           }
         ]
       }
-    ]
+    ],
+    "createdAt": "2025-12-01T22:58:37.263Z",
+    "modifiedAt": "2025-12-01T22:58:37.263Z",
+    "version": 1
   },
   "activities": [
     {
-      "id": "act-uk-A1-27-matchup",
+      "id": "act-a1-27-matchup",
       "type": "match-up",
       "title": "Clothing Vocabulary",
       "description": "Match Ukrainian to English.",
       "content": {
         "type": "match-up",
-        "instructions": "Match Ukrainian to English.",
         "pairs": [
           {
             "left": "сорочка",
@@ -173,23 +103,17 @@
       "language": "uk",
       "difficultyLevel": "A1",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "clothes",
-        "appearance",
-        "practical"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.263Z",
+      "modifiedAt": "2025-12-01T22:58:37.263Z"
     },
     {
-      "id": "act-uk-A1-27-quiz",
+      "id": "act-a1-27-quiz",
       "type": "quiz",
       "title": "Clothes & Appearance",
       "description": "Choose the correct answer.",
       "content": {
         "type": "quiz",
-        "instructions": "Choose the correct answer.",
         "questions": [
           {
             "question": "\"I wear jeans\" - Я ___ джинси.",
@@ -290,50 +214,50 @@
       "language": "uk",
       "difficultyLevel": "A1",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "clothes",
-        "appearance",
-        "practical"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.263Z",
+      "modifiedAt": "2025-12-01T22:58:37.263Z"
     },
     {
-      "id": "act-uk-A1-27-groupsort",
+      "id": "act-a1-27-groupsort",
       "type": "group-sort",
       "title": "Clothing Categories",
       "description": "Sort items by category.",
       "content": {
         "type": "group-sort",
-        "instructions": "Sort items by category.",
         "groups": [
           {
-            "name": "Верхній одяг (Outerwear)",
+            "id": "-",
+            "name": "Верхній одяг",
             "items": [
               "куртка",
               "пальто",
               "светр",
               "шарф"
-            ]
+            ],
+            "nameUk": "Outerwear"
           },
           {
-            "name": "Повсякденний одяг (Everyday)",
+            "id": "-",
+            "name": "Повсякденний одяг",
             "items": [
               "футболка",
               "джинси",
               "сорочка",
               "штани"
-            ]
+            ],
+            "nameUk": "Everyday"
           },
           {
-            "name": "Взуття (Footwear)",
+            "id": "",
+            "name": "Взуття",
             "items": [
               "черевики",
               "кросівки",
               "туфлі",
               "чоботи"
-            ]
+            ],
+            "nameUk": "Footwear"
           }
         ],
         "shuffleItems": true
@@ -344,14 +268,9 @@
       "language": "uk",
       "difficultyLevel": "A1",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "clothes",
-        "appearance",
-        "practical"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.263Z",
+      "modifiedAt": "2025-12-01T22:58:37.263Z"
     }
   ],
   "vocabulary": {
@@ -362,164 +281,142 @@
     "transliterationMode": "full",
     "words": [
       {
-        "id": "v-m27-001",
+        "id": "v-odyah-27-0",
         "uk": "одяг",
-        "translit": "",
-        "ipa": "/ˈɔdʲɑɦ/",
         "en": "clothes",
         "pos": "noun",
+        "ipa": "/ˈɔdʲɑɦ/",
         "gender": "m",
         "note": "Collective"
       },
       {
-        "id": "v-m27-002",
+        "id": "v-sorochka-27-1",
         "uk": "сорочка",
-        "translit": "",
-        "ipa": "/sɔˈrɔtʃkɑ/",
         "en": "shirt",
         "pos": "noun",
+        "ipa": "/sɔˈrɔtʃkɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m27-003",
+        "id": "v-futbolka-27-2",
         "uk": "футболка",
-        "translit": "",
-        "ipa": "/futˈbɔlkɑ/",
         "en": "t-shirt",
         "pos": "noun",
+        "ipa": "/futˈbɔlkɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m27-004",
+        "id": "v-svetr-27-3",
         "uk": "светр",
-        "translit": "",
-        "ipa": "/svɛtr/",
         "en": "sweater",
         "pos": "noun",
+        "ipa": "/svɛtr/",
         "gender": "m"
       },
       {
-        "id": "v-m27-005",
+        "id": "v-kurtka-27-4",
         "uk": "куртка",
-        "translit": "",
-        "ipa": "/ˈkurtkɑ/",
         "en": "jacket",
         "pos": "noun",
+        "ipa": "/ˈkurtkɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m27-006",
+        "id": "v-palьto-27-5",
         "uk": "пальто",
-        "translit": "",
-        "ipa": "/pɑlʲˈtɔ/",
         "en": "coat",
         "pos": "noun",
+        "ipa": "/pɑlʲˈtɔ/",
         "gender": "n",
         "note": "Indeclinable"
       },
       {
-        "id": "v-m27-007",
+        "id": "v-suknya-27-6",
         "uk": "сукня",
-        "translit": "",
-        "ipa": "/ˈsuknʲɑ/",
         "en": "dress",
         "pos": "noun",
+        "ipa": "/ˈsuknʲɑ/",
         "gender": "f",
         "note": "Also: плаття"
       },
       {
-        "id": "v-m27-008",
+        "id": "v-spidnytsya-27-7",
         "uk": "спідниця",
-        "translit": "",
-        "ipa": "/spʲidˈnɪt͡sʲɑ/",
         "en": "skirt",
         "pos": "noun",
+        "ipa": "/spʲidˈnɪt͡sʲɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m27-009",
+        "id": "v-shtany-27-8",
         "uk": "штани",
-        "translit": "",
-        "ipa": "/ʃtɑˈnɪ/",
         "en": "pants",
         "pos": "noun",
-        "gender": "pl",
+        "ipa": "/ʃtɑˈnɪ/",
         "note": "Always plural"
       },
       {
-        "id": "v-m27-010",
+        "id": "v-dzhynsy-27-9",
         "uk": "джинси",
-        "translit": "",
-        "ipa": "/ˈd͡ʒɪnsɪ/",
         "en": "jeans",
         "pos": "noun",
-        "gender": "pl",
+        "ipa": "/ˈd͡ʒɪnsɪ/",
         "note": "Always plural"
       },
       {
-        "id": "v-m27-011",
+        "id": "v-cherevyky-27-10",
         "uk": "черевики",
-        "translit": "",
-        "ipa": "/tʃɛrɛˈvɪkɪ/",
         "en": "shoes",
         "pos": "noun",
-        "gender": "pl"
+        "ipa": "/tʃɛrɛˈvɪkɪ/"
       },
       {
-        "id": "v-m27-012",
+        "id": "v-krosivky-27-11",
         "uk": "кросівки",
-        "translit": "",
-        "ipa": "/krɔˈsʲivkɪ/",
         "en": "sneakers",
         "pos": "noun",
-        "gender": "pl"
+        "ipa": "/krɔˈsʲivkɪ/"
       },
       {
-        "id": "v-m27-013",
+        "id": "v-vyshyvanka-27-12",
         "uk": "вишиванка",
-        "translit": "",
-        "ipa": "/vɪʃɪˈvɑnkɑ/",
         "en": "embroidered shirt",
         "pos": "noun",
+        "ipa": "/vɪʃɪˈvɑnkɑ/",
         "gender": "f",
         "note": "Traditional"
       },
       {
-        "id": "v-m27-014",
+        "id": "v-volossya-27-13",
         "uk": "волосся",
-        "translit": "",
-        "ipa": "/vɔˈlɔsʲːɑ/",
         "en": "hair",
         "pos": "noun",
+        "ipa": "/vɔˈlɔsʲːɑ/",
         "gender": "n",
         "note": "Collective, singular"
       },
       {
-        "id": "v-m27-015",
+        "id": "v-ochi-27-14",
         "uk": "очі",
-        "translit": "",
-        "ipa": "/ˈɔtʃʲi/",
         "en": "eyes",
         "pos": "noun",
-        "gender": "pl",
+        "ipa": "/ˈɔtʃʲi/",
         "note": "Singular: око"
       },
       {
-        "id": "v-m27-016",
+        "id": "v-vysokyy-27-15",
         "uk": "високий",
-        "translit": "",
-        "ipa": "/vɪˈsɔkɪj/",
         "en": "tall",
         "pos": "adj",
+        "ipa": "/vɪˈsɔkɪj/",
         "gender": "m"
       },
       {
-        "id": "v-m27-017",
+        "id": "v-khudyy-27-16",
         "uk": "худий",
-        "translit": "",
-        "ipa": "/xuˈdɪj/",
         "en": "thin",
         "pos": "adj",
+        "ipa": "/xuˈdɪj/",
         "gender": "m"
       }
     ]

@@ -246,19 +246,19 @@ In the digital age, communication is key! Let's master Ukrainian for phones, ema
 
 1. - Алло?
    - Добрий день! Можна поговорити з ___? (Maria)
-   → Марією
+   > [!answer] Марією
 
 2. - Вибачте, хто ___? (calling)
-   → дзвонить
+   > [!answer] дзвонить
 
 3. - Одну ___. (moment)
-   → хвилинку
+   > [!answer] хвилинку
 
 4. - Його зараз ___. (not here)
-   → немає
+   > [!answer] немає
 
 5. - ___ пізніше. (call back)
-   → Передзвоніть
+   > [!answer] Передзвоніть
 
 ### Write an Email
 
@@ -283,19 +283,19 @@ Example answer:
 ### Translate
 
 1. Can I speak with Ivan?
-   → Можна поговорити з Іваном?
+   > [!answer] Можна поговорити з Іваном?
 
 2. Please wait.
-   → Зачекайте, будь ласка.
+   > [!answer] Зачекайте, будь ласка.
 
 3. I'm writing to you about...
-   → Пишу вам з приводу...
+   > [!answer] Пишу вам з приводу...
 
 4. Follow me on Instagram!
-   → Підпишись на мене в Інстаграмі!
+   > [!answer] Підпишись на мене в Інстаграмі!
 
 5. Send me the link.
-   → Надішли (скинь) мені посилання.
+   > [!answer] Надішли (скинь) мені посилання.
 
 ## production
 

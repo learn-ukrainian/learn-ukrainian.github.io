@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-A2+-66",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "grammar-introduction",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -26,30 +25,15 @@
       "Perception root patterns (-бач-, -слух-)",
       "Consonant alternations"
     ],
-    "totalDuration": 45,
-    "transliterationMode": "none",
     "tags": [
       "word-formation",
       "roots",
       "vocabulary-expansion",
       "word-families"
     ],
-    "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
+    "totalDuration": 45,
+    "transliterationMode": "none",
     "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### More Root Families\n\nIn Module 65, you learned roots for learning, work, reading, writing, and speech. Now let's explore roots for **motion** and **perception**!\n\n**Motion roots:**\n- **ход-** = going (on foot)\n- вхід (entrance), вихід (exit), прихід (arrival)\n\n**Perception roots:**\n- **бач-** = seeing\n- побачити (to see), побачення (meeting/date)\n\n> 💡 **Remember**\n>\n> Roots + prefixes + suffixes = unlimited vocabulary!"
-          }
-        ]
-      },
       {
         "id": "phase-presentation",
         "name": "presentation",
@@ -58,107 +42,33 @@
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "### Root Family: -ход- / -хід- (Walking, Going)\n\n**Core meaning:** Movement on foot\n\n| Word | Parts | Meaning |\n|------|-------|---------|\n| ходити | ход- + -ити | to walk, to go |\n| хід | хід | movement, course |\n| вхід | в- + хід | entrance |\n| вихід | ви- + хід | exit |\n| прихід | при- + хід | arrival, coming |\n| відхід | від- + хід | departure |\n| перехід | пере- + хід | crossing, transition |\n| похід | по- + хід | hike, campaign |\n| підхід | під- + хід | approach |\n| обхід | об- + хід | bypass, round |\n| дохід | до- + хід | income |\n| витрата/видаток | ви- + трат/дат | expense |\n\n**Examples:**\n- Де **вхід**? - Where's the entrance?\n- **Вихід** там. - The exit is there.\n- Його **прихід** був несподіваним. - His arrival was unexpected.\n- Це пішохідний **перехід**. - This is a pedestrian crossing.\n- Ми йдемо в **похід**. - We're going on a hike.\n- Який твій **дохід**? - What's your income?\n\n> ⚡ **Pro Tip: -ход- vs -хід-**\n>\n> The vowel changes: ходити (verb) but вхід (noun). This is a common pattern in Ukrainian root variations."
+            "teacherNotes": "### Root Family: -ход- / -хід- (Walking, Going)\n\n**Core meaning:** Movement on foot\n\n| Word | Parts | Meaning |\n|------|-------|---------|\n| ходити | ход- + -ити | to walk, to go |\n| хід | хід | movement, course |\n| вхід | в- + хід | entrance |\n| вихід | ви- + хід | exit |\n| прихід | при- + хід | arrival, coming |\n| відхід | від- + хід | departure |\n| перехід | пере- + хід | crossing, transition |\n| похід | по- + хід | hike, campaign |\n| підхід | під- + хід | approach |\n| обхід | об- + хід | bypass, round |\n| дохід | до- + хід | income |\n| витрата/видаток | ви- + трат/дат | expense |\n\n**Examples:**\n- Де **вхід**? - Where's the entrance?\n- **Вихід** там. - The exit is there.\n- Його **прихід** був несподіваним. - His arrival was unexpected.\n- Це пішохідний **перехід**. - This is a pedestrian crossing.\n- Ми йдемо в **похід**. - We're going on a hike.\n- Який твій **дохід**? - What's your income?\n\n> ⚡ **Pro Tip: -ход- vs -хід-**\n>\n> The vowel changes: ходити (verb) but вхід (noun). This is a common pattern in Ukrainian root variations.\n\n### Root Family: -їзд- / -їхат- (Riding, Driving)\n\n**Core meaning:** Movement by vehicle\n\n| Word | Parts | Meaning |\n|------|-------|---------|\n| їздити | їзд- + -ити | to ride, drive (regularly) |\n| їхати | їхат- | to go (by vehicle, one direction) |\n| поїздка | по- + їзд- + -ка | trip |\n| поїзд | по- + їзд | train |\n| виїзд | ви- + їзд | exit (for vehicles), departure |\n| в'їзд | в- + їзд | entrance (for vehicles) |\n| приїзд | при- + їзд | arrival (by vehicle) |\n| від'їзд | від- + їзд | departure (by vehicle) |\n| переїзд | пере- + їзд | move (relocation); crossing |\n| проїзд | про- + їзд | passage; fare |\n\n**Examples:**\n- Вона часто **їздить** на роботу. - She often rides to work.\n- **Поїздка** була чудова. - The trip was wonderful.\n- **Поїзд** відправляється о восьмій. - The train departs at eight.\n- **В'їзд** заборонено. - Entry (for vehicles) prohibited.\n- Ми плануємо **переїзд**. - We're planning a move.\n- Скільки коштує **проїзд**? - How much is the fare?\n\n> 📝 **Note: їздити vs їхати**\n>\n> їздити = habitual, regular trips; їхати = single trip in progress\n\n### Root Family: -бач- (Seeing)\n\n**Core meaning:** Visual perception\n\n| Word | Parts | Meaning |\n|------|-------|---------|\n| бачити | бач- + -ити | to see |\n| побачити | по- + бач- + -ити | to see (perfective) |\n| побачення | побач- + -ення | meeting, date |\n| передбачати | перед- + бач- + -ати | to foresee, predict |\n| передбачення | передбач- + -ення | prediction |\n| забачити | за- + бач- + -ити | to notice |\n| вибачати | ви- + бач- + -ати | to forgive |\n| вибачення | вибач- + -ення | apology |\n| небачений | не- + бач- + -ений | unseen, unprecedented |\n\n**Examples:**\n- Я **бачу** тебе! - I see you!\n- Хочу **побачити** це. - I want to see this.\n- У нас **побачення** о сьомій. - We have a date at seven.\n- Ніхто не **передбачав** цього. - Nobody foresaw this.\n- **Вибач** мені! - Forgive me! / Sorry!\n- Це **небачений** успіх! - This is unprecedented success!\n\n> 🎭 **Culture Note: Побачення**\n>\n> \"Побачення\" means both \"meeting\" and \"romantic date.\" Context determines meaning: \"ділове побачення\" (business meeting) vs \"романтичне побачення\" (romantic date).\n\n### Root Family: -слух- (Hearing, Listening)\n\n**Core meaning:** Auditory perception\n\n| Word | Parts | Meaning |\n|------|-------|---------|\n| слухати | слух- + -ати | to listen |\n| слух | слух | hearing; rumor |\n| слухач | слух- + -ач | listener |\n| послухати | по- + слух- + -ати | to listen (a bit) |\n| вислухати | ви- + слух- + -ати | to hear out |\n| прослухати | про- + слух- + -ати | to listen through |\n| підслухати | під- + слух- + -ати | to eavesdrop |\n| неслухняний | не- + слух- + -няний | disobedient |\n| слухняний | слух- + -няний | obedient |\n\n**Examples:**\n- **Слухай** уважно! - Listen carefully!\n- У неї гарний **слух**. - She has good hearing.\n- Це тільки **слухи**. - These are just rumors.\n- **Послухай** цю пісню. - Listen to this song.\n- Дай мені **вислухати** тебе. - Let me hear you out.\n- Дитина **неслухняна**. - The child is disobedient.\n\n### Root Family: -знат- / -знай- (Knowing)\n\n**Core meaning:** Knowledge, acquaintance\n\n| Word | Parts | Meaning |\n|------|-------|---------|\n| знати | знат- | to know |\n| знання | зна- + -ння | knowledge |\n| знайомий | знай- + -омий | acquaintance; familiar |\n| знайомитися | знайом- + -итися | to get acquainted |\n| познайомитися | по- + знайом- + -итися | to meet (someone) |\n| дізнатися | ді- + знат- + -ися | to find out |\n| пізнавати | пі- + знав- + -ати | to learn, cognize |\n| визнавати | ви- + знав- + -ати | to recognize, admit |\n| визнання | визна- + -ння | recognition |\n| невідомий | не- + від- + -омий | unknown |\n\n**Examples:**\n- Я **знаю** її. - I know her.\n- Він має глибокі **знання**. - He has deep knowledge.\n- Це мій **знайомий**. - This is my acquaintance.\n- **Познайомся** з Олегом! - Meet Oleg!\n- Хочу **дізнатися** правду. - I want to find out the truth.\n- Він **визнав** свою помилку. - He admitted his mistake.\n\n> ⚡ **Pro Tip: знати vs дізнатися**\n>\n> знати = to know (state); дізнатися = to find out, learn (action of acquiring knowledge)\n\n### Summary: Motion & Perception Roots\n\n| Root | Core Meaning | Key Words |\n|------|--------------|-----------|\n| -ход-/-хід- | walking | вхід, вихід, похід |\n| -їзд- | riding/driving | поїздка, поїзд |\n| -бач- | seeing | бачити, побачення |\n| -слух- | hearing | слухати, слухач |\n| -знат-/-знай- | knowing | знання, знайомий |"
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Root Family: -їзд- / -їхат- (Riding, Driving)\n\n**Core meaning:** Movement by vehicle\n\n| Word | Parts | Meaning |\n|------|-------|---------|\n| їздити | їзд- + -ити | to ride, drive (regularly) |\n| їхати | їхат- | to go (by vehicle, one direction) |\n| поїздка | по- + їзд- + -ка | trip |\n| поїзд | по- + їзд | train |\n| виїзд | ви- + їзд | exit (for vehicles), departure |\n| в'їзд | в- + їзд | entrance (for vehicles) |\n| приїзд | при- + їзд | arrival (by vehicle) |\n| від'їзд | від- + їзд | departure (by vehicle) |\n| переїзд | пере- + їзд | move (relocation); crossing |\n| проїзд | про- + їзд | passage; fare |\n\n**Examples:**\n- Вона часто **їздить** на роботу. - She often rides to work.\n- **Поїздка** була чудова. - The trip was wonderful.\n- **Поїзд** відправляється о восьмій. - The train departs at eight.\n- **В'їзд** заборонено. - Entry (for vehicles) prohibited.\n- Ми плануємо **переїзд**. - We're planning a move.\n- Скільки коштує **проїзд**? - How much is the fare?\n\n> 📝 **Note: їздити vs їхати**\n>\n> їздити = habitual, regular trips; їхати = single trip in progress"
+            "teacherNotes": "### Identify the Root\n\n1. вхід\n   > [!answer] -хід- (walking)\n2. поїздка\n   > [!answer] -їзд- (riding)\n3. побачення\n   > [!answer] -бач- (seeing)\n4. слухач\n   > [!answer] -слух- (hearing)\n5. знайомий\n   > [!answer] -знай- (knowing)\n\n### Match Word to Root Family\n\n**-ход-/-хід-:** вихід, перехід, похід, дохід\n**-їзд-:** поїзд, приїзд, переїзд, в'їзд\n**-бач-:** бачити, вибачення, передбачення\n**-слух-:** слухати, слухач, неслухняний\n**-знат-:** знання, дізнатися, визнання\n\n### Complete with the Right Word\n\n1. Де ___ (entrance)? — Там, а ___ (exit) — тут.\n   > [!answer] вхід, вихід\n\n2. ___ (train) приїжджає о десятій. ___ (trip) була довга.\n   > [!answer] поїзд, поїздка\n\n3. ___ (sorry)! Я не ___ (saw) тебе.\n   > [!answer] вибач, бачив\n\n4. ___ (listen) мене! Ти ніколи не ___ (listen).\n   > [!answer] послухай, слухаєш\n\n5. Я хочу ___ (find out) правду. Ти ___ (know) щось?\n   > [!answer] дізнатися, знаєш\n\n### Translate\n\n1. Where is the exit?\n   > [!answer] Де вихід?\n2. The train arrives at 6.\n   > [!answer] Поїзд прибуває о шостій.\n3. I want to see you.\n   > [!answer] Я хочу побачити тебе.\n4. Listen carefully!\n   > [!answer] Слухай уважно!\n5. I found out the truth.\n   > [!answer] Я дізнався/дізналася правду."
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Root Family: -бач- (Seeing)\n\n**Core meaning:** Visual perception\n\n| Word | Parts | Meaning |\n|------|-------|---------|\n| бачити | бач- + -ити | to see |\n| побачити | по- + бач- + -ити | to see (perfective) |\n| побачення | побач- + -ення | meeting, date |\n| передбачати | перед- + бач- + -ати | to foresee, predict |\n| передбачення | передбач- + -ення | prediction |\n| забачити | за- + бач- + -ити | to notice |\n| вибачати | ви- + бач- + -ати | to forgive |\n| вибачення | вибач- + -ення | apology |\n| небачений | не- + бач- + -ений | unseen, unprecedented |\n\n**Examples:**\n- Я **бачу** тебе! - I see you!\n- Хочу **побачити** це. - I want to see this.\n- У нас **побачення** о сьомій. - We have a date at seven.\n- Ніхто не **передбачав** цього. - Nobody foresaw this.\n- **Вибач** мені! - Forgive me! / Sorry!\n- Це **небачений** успіх! - This is unprecedented success!\n\n> 🎭 **Culture Note: Побачення**\n>\n> \"Побачення\" means both \"meeting\" and \"romantic date.\" Context determines meaning: \"ділове побачення\" (business meeting) vs \"романтичне побачення\" (romantic date)."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Root Family: -слух- (Hearing, Listening)\n\n**Core meaning:** Auditory perception\n\n| Word | Parts | Meaning |\n|------|-------|---------|\n| слухати | слух- + -ати | to listen |\n| слух | слух | hearing; rumor |\n| слухач | слух- + -ач | listener |\n| послухати | по- + слух- + -ати | to listen (a bit) |\n| вислухати | ви- + слух- + -ати | to hear out |\n| прослухати | про- + слух- + -ати | to listen through |\n| підслухати | під- + слух- + -ати | to eavesdrop |\n| неслухняний | не- + слух- + -няний | disobedient |\n| слухняний | слух- + -няний | obedient |\n\n**Examples:**\n- **Слухай** уважно! - Listen carefully!\n- У неї гарний **слух**. - She has good hearing.\n- Це тільки **слухи**. - These are just rumors.\n- **Послухай** цю пісню. - Listen to this song.\n- Дай мені **вислухати** тебе. - Let me hear you out.\n- Дитина **неслухняна**. - The child is disobedient."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Root Family: -знат- / -знай- (Knowing)\n\n**Core meaning:** Knowledge, acquaintance\n\n| Word | Parts | Meaning |\n|------|-------|---------|\n| знати | знат- | to know |\n| знання | зна- + -ння | knowledge |\n| знайомий | знай- + -омий | acquaintance; familiar |\n| знайомитися | знайом- + -итися | to get acquainted |\n| познайомитися | по- + знайом- + -итися | to meet (someone) |\n| дізнатися | ді- + знат- + -ися | to find out |\n| пізнавати | пі- + знав- + -ати | to learn, cognize |\n| визнавати | ви- + знав- + -ати | to recognize, admit |\n| визнання | визна- + -ння | recognition |\n| невідомий | не- + від- + -омий | unknown |\n\n**Examples:**\n- Я **знаю** її. - I know her.\n- Він має глибокі **знання**. - He has deep knowledge.\n- Це мій **знайомий**. - This is my acquaintance.\n- **Познайомся** з Олегом! - Meet Oleg!\n- Хочу **дізнатися** правду. - I want to find out the truth.\n- Він **визнав** свою помилку. - He admitted his mistake.\n\n> ⚡ **Pro Tip: знати vs дізнатися**\n>\n> знати = to know (state); дізнатися = to find out, learn (action of acquiring knowledge)"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Summary: Motion & Perception Roots\n\n| Root | Core Meaning | Key Words |\n|------|--------------|-----------|\n| -ход-/-хід- | walking | вхід, вихід, похід |\n| -їзд- | riding/driving | поїздка, поїзд |\n| -бач- | seeing | бачити, побачення |\n| -слух- | hearing | слухати, слухач |\n| -знат-/-знай- | knowing | знання, знайомий |"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A2+-66-matchup"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Identify the Root\n\n1. вхід → -хід- (walking)\n2. поїздка → -їзд- (riding)\n3. побачення → -бач- (seeing)\n4. слухач → -слух- (hearing)\n5. знайомий → -знай- (knowing)"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Match Word to Root Family\n\n**-ход-/-хід-:** вихід, перехід, похід, дохід\n**-їзд-:** поїзд, приїзд, переїзд, в'їзд\n**-бач-:** бачити, вибачення, передбачення\n**-слух-:** слухати, слухач, неслухняний\n**-знат-:** знання, дізнатися, визнання"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Complete with the Right Word\n\n1. Де ___ (entrance)? — Там, а ___ (exit) — тут.\n   → вхід, вихід\n\n2. ___ (train) приїжджає о десятій. ___ (trip) була довга.\n   → поїзд, поїздка\n\n3. ___ (sorry)! Я не ___ (saw) тебе.\n   → вибач, бачив\n\n4. ___ (listen) мене! Ти ніколи не ___ (listen).\n   → послухай, слухаєш\n\n5. Я хочу ___ (find out) правду. Ти ___ (know) щось?\n   → дізнатися, знаєш"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Translate\n\n1. Where is the exit? → Де вихід?\n2. The train arrives at 6. → Поїзд прибуває о шостій.\n3. I want to see you. → Я хочу побачити тебе.\n4. Listen carefully! → Слухай уважно!\n5. I found out the truth. → Я дізнався/дізналася правду."
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A2+-66-quiz"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A2+-66-groupsort"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Discuss Travel\n\nUse -їзд- words:\n- Минулого року я їздив у **поїздку** до Львова.\n- **Поїзд** — найкращий транспорт.\n- **Приїзд** гостей о третій."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Talk About Perception\n\nUse -бач-/-слух- words:\n- Я **бачу** зміни.\n- **Послухай** цю музику!\n- **Вибач**, я запізнився."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Discuss Knowledge\n\nUse -знат- words:\n- Я хочу **дізнатися** більше.\n- Він мій старий **знайомий**.\n- Її **визнали** переможницею."
+            "teacherNotes": "### Discuss Travel\n\nUse -їзд- words:\n- Минулого року я їздив у **поїздку** до Львова.\n- **Поїзд** — найкращий транспорт.\n- **Приїзд** гостей о третій.\n\n### Talk About Perception\n\nUse -бач-/-слух- words:\n- Я **бачу** зміни.\n- **Послухай** цю музику!\n- **Вибач**, я запізнився.\n\n### Discuss Knowledge\n\nUse -знат- words:\n- Я хочу **дізнатися** більше.\n- Він мій старий **знайомий**.\n- Її **визнали** переможницею.\n\n---"
           }
         ]
       }
-    ]
+    ],
+    "createdAt": "2025-12-01T22:58:37.282Z",
+    "modifiedAt": "2025-12-01T22:58:37.282Z",
+    "version": 1
   },
   "activities": [
     {
-      "id": "act-uk-A2+-66-matchup",
+      "id": "act-a2+-66-matchup",
       "type": "match-up",
       "title": "Root → Meaning",
       "description": "Root → Meaning",
       "content": {
         "type": "match-up",
-        "instructions": "",
         "pairs": [
           {
             "left": "-ход-/-хід-",
@@ -189,23 +99,17 @@
       "language": "uk",
       "difficultyLevel": "A2+",
       "duration": 5,
-      "tags": [
-        "word-formation",
-        "roots",
-        "vocabulary-expansion",
-        "word-families"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.282Z",
+      "modifiedAt": "2025-12-01T22:58:37.282Z"
     },
     {
-      "id": "act-uk-A2+-66-quiz",
+      "id": "act-a2+-66-quiz",
       "type": "quiz",
       "title": "Root Families II",
       "description": "Identify words from the same root family.",
       "content": {
         "type": "quiz",
-        "instructions": "Identify words from the same root family.",
         "questions": [
           {
             "question": "Which word is from the same family as \"вхід\"?",
@@ -284,59 +188,61 @@
       "language": "uk",
       "difficultyLevel": "A2+",
       "duration": 5,
-      "tags": [
-        "word-formation",
-        "roots",
-        "vocabulary-expansion",
-        "word-families"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.282Z",
+      "modifiedAt": "2025-12-01T22:58:37.282Z"
     },
     {
-      "id": "act-uk-A2+-66-groupsort",
+      "id": "act-a2+-66-groupsort",
       "type": "group-sort",
       "title": "By Root",
       "description": "By Root",
       "content": {
         "type": "group-sort",
-        "instructions": "",
         "groups": [
           {
-            "name": "-ход-/-хід- (motion on foot)",
+            "id": "----",
+            "name": "-ход-/-хід-",
             "items": [
               "вхід",
               "вихід",
               "перехід",
               "похід"
-            ]
+            ],
+            "nameUk": "motion on foot"
           },
           {
-            "name": "-їзд- (motion by vehicle)",
+            "id": "--",
+            "name": "-їзд-",
             "items": [
               "поїзд",
               "поїздка",
               "приїзд",
               "переїзд"
-            ]
+            ],
+            "nameUk": "motion by vehicle"
           },
           {
-            "name": "-бач- (seeing)",
+            "id": "--",
+            "name": "-бач-",
             "items": [
               "побачити",
               "побачення",
               "вибачення",
               "передбачення"
-            ]
+            ],
+            "nameUk": "seeing"
           },
           {
-            "name": "-слух- (hearing)",
+            "id": "--",
+            "name": "-слух-",
             "items": [
               "слухати",
               "слухач",
               "вислухати",
               "слухняний"
-            ]
+            ],
+            "nameUk": "hearing"
           }
         ],
         "shuffleItems": true
@@ -347,14 +253,9 @@
       "language": "uk",
       "difficultyLevel": "A2+",
       "duration": 5,
-      "tags": [
-        "word-formation",
-        "roots",
-        "vocabulary-expansion",
-        "word-families"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.282Z",
+      "modifiedAt": "2025-12-01T22:58:37.282Z"
     }
   ],
   "vocabulary": {
@@ -365,328 +266,281 @@
     "transliterationMode": "none",
     "words": [
       {
-        "id": "v-m66-001",
+        "id": "v-vkhid-66-0",
         "uk": "вхід",
-        "translit": "",
-        "ipa": "/vxʲid/",
         "en": "entrance",
         "pos": "noun",
+        "ipa": "/vxʲid/",
         "gender": "m"
       },
       {
-        "id": "v-m66-002",
+        "id": "v-vykhid-66-1",
         "uk": "вихід",
-        "translit": "",
-        "ipa": "/ˈvɪxʲid/",
         "en": "exit",
         "pos": "noun",
+        "ipa": "/ˈvɪxʲid/",
         "gender": "m"
       },
       {
-        "id": "v-m66-003",
+        "id": "v-prykhid-66-2",
         "uk": "прихід",
-        "translit": "",
-        "ipa": "/ˈprɪxʲid/",
         "en": "arrival",
         "pos": "noun",
+        "ipa": "/ˈprɪxʲid/",
         "gender": "m"
       },
       {
-        "id": "v-m66-004",
+        "id": "v-vidkhid-66-3",
         "uk": "відхід",
-        "translit": "",
-        "ipa": "/ˈvʲidxʲid/",
         "en": "departure",
         "pos": "noun",
+        "ipa": "/ˈvʲidxʲid/",
         "gender": "m"
       },
       {
-        "id": "v-m66-005",
+        "id": "v-perekhid-66-4",
         "uk": "перехід",
-        "translit": "",
-        "ipa": "/ˈpɛrɛxʲid/",
         "en": "crossing",
         "pos": "noun",
+        "ipa": "/ˈpɛrɛxʲid/",
         "gender": "m"
       },
       {
-        "id": "v-m66-006",
+        "id": "v-pokhid-66-5",
         "uk": "похід",
-        "translit": "",
-        "ipa": "/ˈpoxʲid/",
         "en": "hike, campaign",
         "pos": "noun",
+        "ipa": "/ˈpoxʲid/",
         "gender": "m"
       },
       {
-        "id": "v-m66-007",
+        "id": "v-pidkhid-66-6",
         "uk": "підхід",
-        "translit": "",
-        "ipa": "/ˈpʲidxʲid/",
         "en": "approach",
         "pos": "noun",
+        "ipa": "/ˈpʲidxʲid/",
         "gender": "m"
       },
       {
-        "id": "v-m66-008",
+        "id": "v-dokhid-66-7",
         "uk": "дохід",
-        "translit": "",
-        "ipa": "/ˈdoxʲid/",
         "en": "income",
         "pos": "noun",
+        "ipa": "/ˈdoxʲid/",
         "gender": "m"
       },
       {
-        "id": "v-m66-009",
+        "id": "v-poyizdka-66-8",
         "uk": "поїздка",
-        "translit": "",
-        "ipa": "/poˈjizdkɑ/",
         "en": "trip",
         "pos": "noun",
+        "ipa": "/poˈjizdkɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m66-010",
+        "id": "v-poyizd-66-9",
         "uk": "поїзд",
-        "translit": "",
-        "ipa": "/ˈpojizd/",
         "en": "train",
         "pos": "noun",
+        "ipa": "/ˈpojizd/",
         "gender": "m"
       },
       {
-        "id": "v-m66-011",
+        "id": "v-vyyizd-66-10",
         "uk": "виїзд",
-        "translit": "",
-        "ipa": "/ˈvɪjizd/",
         "en": "exit (vehicles)",
         "pos": "noun",
+        "ipa": "/ˈvɪjizd/",
         "gender": "m"
       },
       {
-        "id": "v-m66-012",
+        "id": "v-v'yizd-66-11",
         "uk": "в'їзд",
-        "translit": "",
-        "ipa": "/vjizd/",
         "en": "entrance (vehicles)",
         "pos": "noun",
+        "ipa": "/vjizd/",
         "gender": "m"
       },
       {
-        "id": "v-m66-013",
+        "id": "v-pryyizd-66-12",
         "uk": "приїзд",
-        "translit": "",
-        "ipa": "/ˈprɪjizd/",
         "en": "arrival (vehicles)",
         "pos": "noun",
+        "ipa": "/ˈprɪjizd/",
         "gender": "m"
       },
       {
-        "id": "v-m66-014",
+        "id": "v-vid'yizd-66-13",
         "uk": "від'їзд",
-        "translit": "",
-        "ipa": "/ˈvʲidjizd/",
         "en": "departure (vehicles)",
         "pos": "noun",
+        "ipa": "/ˈvʲidjizd/",
         "gender": "m"
       },
       {
-        "id": "v-m66-015",
+        "id": "v-pereyizd-66-14",
         "uk": "переїзд",
-        "translit": "",
-        "ipa": "/ˈpɛrɛjizd/",
         "en": "move; crossing",
         "pos": "noun",
+        "ipa": "/ˈpɛrɛjizd/",
         "gender": "m"
       },
       {
-        "id": "v-m66-016",
+        "id": "v-proyizd-66-15",
         "uk": "проїзд",
-        "translit": "",
-        "ipa": "/ˈprojizd/",
         "en": "passage; fare",
         "pos": "noun",
+        "ipa": "/ˈprojizd/",
         "gender": "m"
       },
       {
-        "id": "v-m66-017",
+        "id": "v-pobachyty-66-16",
         "uk": "побачити",
-        "translit": "",
-        "ipa": "/poˈbɑtʃɪtɪ/",
         "en": "to see",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/poˈbɑtʃɪtɪ/",
         "note": "pf"
       },
       {
-        "id": "v-m66-018",
+        "id": "v-pobachennya-66-17",
         "uk": "побачення",
-        "translit": "",
-        "ipa": "/pobɑˈtʃɛnʲːɑ/",
         "en": "meeting, date",
         "pos": "noun",
+        "ipa": "/pobɑˈtʃɛnʲːɑ/",
         "gender": "n"
       },
       {
-        "id": "v-m66-019",
+        "id": "v-peredbachaty-66-18",
         "uk": "передбачати",
-        "translit": "",
-        "ipa": "/pɛrɛdˈbɑtʃɑtɪ/",
         "en": "to foresee",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/pɛrɛdˈbɑtʃɑtɪ/",
         "note": "impf"
       },
       {
-        "id": "v-m66-020",
+        "id": "v-peredbachennya-66-19",
         "uk": "передбачення",
-        "translit": "",
-        "ipa": "/pɛrɛdbɑˈtʃɛnʲːɑ/",
         "en": "prediction",
         "pos": "noun",
+        "ipa": "/pɛrɛdbɑˈtʃɛnʲːɑ/",
         "gender": "n"
       },
       {
-        "id": "v-m66-021",
+        "id": "v-vybachaty-66-20",
         "uk": "вибачати",
-        "translit": "",
-        "ipa": "/vɪbɑˈtʃɑtɪ/",
         "en": "to forgive",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/vɪbɑˈtʃɑtɪ/",
         "note": "impf"
       },
       {
-        "id": "v-m66-022",
+        "id": "v-vybachennya-66-21",
         "uk": "вибачення",
-        "translit": "",
-        "ipa": "/vɪbɑˈtʃɛnʲːɑ/",
         "en": "apology",
         "pos": "noun",
+        "ipa": "/vɪbɑˈtʃɛnʲːɑ/",
         "gender": "n"
       },
       {
-        "id": "v-m66-023",
+        "id": "v-slukh-66-22",
         "uk": "слух",
-        "translit": "",
-        "ipa": "/slux/",
         "en": "hearing; rumor",
         "pos": "noun",
+        "ipa": "/slux/",
         "gender": "m"
       },
       {
-        "id": "v-m66-024",
+        "id": "v-slukhach-66-23",
         "uk": "слухач",
-        "translit": "",
-        "ipa": "/sluˈxɑtʃ/",
         "en": "listener",
         "pos": "noun",
+        "ipa": "/sluˈxɑtʃ/",
         "gender": "m"
       },
       {
-        "id": "v-m66-025",
+        "id": "v-vyslukhaty-66-24",
         "uk": "вислухати",
-        "translit": "",
-        "ipa": "/ˈvɪsluxɑtɪ/",
         "en": "to hear out",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/ˈvɪsluxɑtɪ/",
         "note": "pf"
       },
       {
-        "id": "v-m66-026",
+        "id": "v-pidslukhaty-66-25",
         "uk": "підслухати",
-        "translit": "",
-        "ipa": "/pʲidsluˈxɑtɪ/",
         "en": "to eavesdrop",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/pʲidsluˈxɑtɪ/",
         "note": "pf"
       },
       {
-        "id": "v-m66-027",
+        "id": "v-slukhnyanyy-66-26",
         "uk": "слухняний",
-        "translit": "",
-        "ipa": "/sluxˈnʲɑnɪj/",
         "en": "obedient",
         "pos": "adj",
-        "gender": "-"
+        "ipa": "/sluxˈnʲɑnɪj/"
       },
       {
-        "id": "v-m66-028",
+        "id": "v-neslukhnyanyy-66-27",
         "uk": "неслухняний",
-        "translit": "",
-        "ipa": "/nɛsluxˈnʲɑnɪj/",
         "en": "disobedient",
         "pos": "adj",
-        "gender": "-"
+        "ipa": "/nɛsluxˈnʲɑnɪj/"
       },
       {
-        "id": "v-m66-029",
+        "id": "v-znayomyy-66-28",
         "uk": "знайомий",
-        "translit": "",
-        "ipa": "/znɑˈjomɪj/",
         "en": "acquaintance",
         "pos": "noun",
+        "ipa": "/znɑˈjomɪj/",
         "gender": "m"
       },
       {
-        "id": "v-m66-030",
+        "id": "v-znayomytysya-66-29",
         "uk": "знайомитися",
-        "translit": "",
-        "ipa": "/znɑˈjomɪtɪsʲɑ/",
         "en": "to get acquainted",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/znɑˈjomɪtɪsʲɑ/",
         "note": "impf"
       },
       {
-        "id": "v-m66-031",
+        "id": "v-poznayomytysya-66-30",
         "uk": "познайомитися",
-        "translit": "",
-        "ipa": "/poznɑˈjomɪtɪsʲɑ/",
         "en": "to meet",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/poznɑˈjomɪtɪsʲɑ/",
         "note": "pf"
       },
       {
-        "id": "v-m66-032",
+        "id": "v-diznatysya-66-31",
         "uk": "дізнатися",
-        "translit": "",
-        "ipa": "/dʲizˈnɑtɪsʲɑ/",
         "en": "to find out",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/dʲizˈnɑtɪsʲɑ/",
         "note": "pf"
       },
       {
-        "id": "v-m66-033",
+        "id": "v-piznavaty-66-32",
         "uk": "пізнавати",
-        "translit": "",
-        "ipa": "/pʲiznɑˈvɑtɪ/",
         "en": "to learn, cognize",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/pʲiznɑˈvɑtɪ/",
         "note": "impf"
       },
       {
-        "id": "v-m66-034",
+        "id": "v-vyznavaty-66-33",
         "uk": "визнавати",
-        "translit": "",
-        "ipa": "/vɪznɑˈvɑtɪ/",
         "en": "to admit",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/vɪznɑˈvɑtɪ/",
         "note": "impf"
       },
       {
-        "id": "v-m66-035",
+        "id": "v-vyznannya-66-34",
         "uk": "визнання",
-        "translit": "",
-        "ipa": "/vɪzˈnɑnʲːɑ/",
         "en": "recognition",
         "pos": "noun",
+        "ipa": "/vɪzˈnɑnʲːɑ/",
         "gender": "n"
       }
     ]

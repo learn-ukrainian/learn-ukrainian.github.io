@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-A1-15",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "vocabulary-expansion",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -26,124 +25,50 @@
       "Prepositions of direction (до, біля, навпроти)",
       "Question patterns for location"
     ],
-    "totalDuration": 50,
-    "transliterationMode": "full",
     "tags": [
       "vocabulary",
       "practical",
       "directions",
       "city"
     ],
-    "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
+    "totalDuration": 50,
+    "transliterationMode": "full",
     "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Lost in Kyiv?\n\nYou've landed in Kyiv. You need to find your hotel, a café, the metro... How do you ask for directions?\n\nKey phrases you'll learn:\n- **Де...?** - Where is...?\n- **Як дійти до...?** - How do I get to...?\n- **Йдіть прямо!** - Go straight!\n\n> 💡 **Did You Know?**\n>\n> Ukrainian cities have excellent public transport! Kyiv's metro is one of the deepest in the world (some stations are 100m underground - built to double as bomb shelters). The words \"метро\" and \"станція\" will be among your most useful vocabulary!"
-          }
-        ]
-      },
       {
         "id": "phase-presentation",
         "name": "presentation",
-        "duration": 15,
+        "duration": 17,
         "items": [
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "### Asking \"Where?\"\n\n**Basic patterns:**\n- Де + noun? → Де метро? (Where is the metro?)\n- Де тут + noun? → Де тут банк? (Where is a bank here?)\n- Де найближча/найближчий + noun? → Де найближча аптека? (Where is the nearest pharmacy?)\n\n**Polite patterns:**\n- Скажіть, будь ласка, де...? (Tell me please, where is...?)\n- Вибачте, де...? (Excuse me, where is...?)\n- Ви не підкажете, де...? (Could you tell me where...?)\n\n> ⚡ **Pro Tip: Politeness Matters**\n>\n> Always start with:\n> - **Вибачте** (Excuse me) - literally \"forgive me\"\n> - **Скажіть, будь ласка** (Tell me, please)\n>\n> Ukrainians appreciate polite beginnings to requests!"
+            "teacherNotes": "### Asking \"Where?\"\n\n**Basic patterns:**\n- Де + noun? → Де метро? (Where is the metro?)\n- Де тут + noun? → Де тут банк? (Where is a bank here?)\n- Де найближча/найближчий + noun? → Де найближча аптека? (Where is the nearest pharmacy?)\n\n**Polite patterns:**\n- Скажіть, будь ласка, де...? (Tell me please, where is...?)\n- Вибачте, де...? (Excuse me, where is...?)\n- Ви не підкажете, де...? (Could you tell me where...?)\n\n> ⚡ **Pro Tip: Politeness Matters**\n>\n> Always start with:\n> - **Вибачте** (Excuse me) - literally \"forgive me\"\n> - **Скажіть, будь ласка** (Tell me, please)\n>\n> Ukrainians appreciate polite beginnings to requests!\n\n### Direction Words\n\n| Ukrainian | Transliteration | English |\n|-----------|-----------------|---------|\n| прямо | pryamo | straight |\n| праворуч | pravoruch | to the right |\n| ліворуч | livoruch | to the left |\n| назад | nazad | back |\n| тут | tut | here |\n| там | tam | there |\n| далеко | daleko | far |\n| близько | blyzko | near, close |\n| поруч | poruch | next to, nearby |\n\n> 📜 **History Bite: Право- and Ліво-**\n>\n> \"Праворуч\" (right) contains \"право\" (right/law), connected to \"правда\" (truth) and \"правий\" (correct). In many cultures, right = correct/good. \"Ліворуч\" (left) contains \"ліво\" - connected to concepts of \"other\" or \"different.\" These associations are thousands of years old across Indo-European languages!\n\n### Prepositions for Location\n\n| Ukrainian | English | Example |\n|-----------|---------|---------|\n| до | to, toward | Йдіть до станції. (Go to the station.) |\n| біля | near, by | Банк біля метро. (Bank is near the metro.) |\n| навпроти | opposite | Аптека навпроти готелю. (Pharmacy is opposite the hotel.) |\n| за | behind | За рогом. (Around the corner. / Behind the corner.) |\n| перед | in front of | Перед входом. (In front of the entrance.) |\n| між | between | Між банком і аптекою. (Between the bank and pharmacy.) |\n\n> 🔗 **Language Link: До + Genitive**\n>\n> The preposition \"до\" (to) takes the genitive case:\n> - до станці**ї** (to the station) - станція → станції\n> - до готел**ю** (to the hotel) - готель → готелю\n>\n> You'll learn genitive fully in Module 16, but for now, notice the endings change!\n\n### Giving Directions (Imperatives)\n\n| Infinitive | Imperative (ви) | English |\n|------------|-----------------|---------|\n| йти | йдіть | go (on foot) |\n| іти | ідіть | go |\n| повернути | поверніть | turn |\n| перейти | перейдіть | cross |\n| пройти | пройдіть | pass, go through |\n\n**Common direction sentences:**\n- Йдіть прямо. (Go straight.)\n- Поверніть праворуч. (Turn right.)\n- Поверніть ліворуч. (Turn left.)\n- Перейдіть вулицю. (Cross the street.)\n- Пройдіть два квартали. (Go two blocks.)\n\n> 🎯 **Fun Fact: Metro Station Names**\n>\n> Kyiv metro stations often have meaningful names:\n> - **Майдан Незалежності** - Independence Square\n> - **Золоті ворота** - Golden Gate (medieval gate)\n> - **Хрещатик** - main street name (from хрещення = baptism)\n> - **Університет** - University\n>\n> Learning station names teaches you history and vocabulary!\n\n### City Places Vocabulary\n\n| Ukrainian | Transliteration | English |\n|-----------|-----------------|---------|\n| метро | metro | metro, subway |\n| станція | stantsiya | station |\n| зупинка | zupynka | stop (bus/tram) |\n| вулиця | vulytsya | street |\n| площа | ploshcha | square |\n| квартал | kvartal | block |\n| ріг | rih | corner |\n| перехрестя | perekhrestya | intersection |\n| вхід | vkhid | entrance |\n| вихід | vykhid | exit |\n\n> 🎭 **Culture Corner: Street Names**\n>\n> Ukrainian streets are named after:\n> - **Famous people**: вулиця Шевченка, вулиця Лесі Українки\n> - **Historical events**: вулиця Незалежності (Independence Street)\n> - **Cities**: Київська вулиця, Львівська вулиця\n>\n> Many streets were renamed after 2014 and 2022, replacing Soviet-era names with Ukrainian ones!\n\n### Essential Services\n\n| Ukrainian | Transliteration | English |\n|-----------|-----------------|---------|\n| банк | bank | bank |\n| банкомат | bankomat | ATM |\n| аптека | apteka | pharmacy |\n| лікарня | likarnya | hospital |\n| поліція | politsiya | police |\n| пошта | poshta | post office |\n| супермаркет | supermarket | supermarket |\n| ринок | rynok | market |\n| готель | hotel | hotel |\n| туалет | tualet | toilet, restroom |\n\n> 🌍 **Real World: Finding a Pharmacy**\n>\n> Pharmacies (аптеки) in Ukraine are everywhere and marked with a green cross. Pharmacists can recommend medications - you don't always need a doctor for minor issues.\n>\n> - Де найближча аптека? (Where is the nearest pharmacy?)\n> - У мене болить голова. (I have a headache.)\n> - Дайте, будь ласка, знеболююче. (Give me a painkiller, please.)"
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Direction Words\n\n| Ukrainian | Transliteration | English |\n|-----------|-----------------|---------|\n| прямо | pryamo | straight |\n| праворуч | pravoruch | to the right |\n| ліворуч | livoruch | to the left |\n| назад | nazad | back |\n| тут | tut | here |\n| там | tam | there |\n| далеко | daleko | far |\n| близько | blyzko | near, close |\n| поруч | poruch | next to, nearby |\n\n> 📜 **History Bite: Право- and Ліво-**\n>\n> \"Праворуч\" (right) contains \"право\" (right/law), connected to \"правда\" (truth) and \"правий\" (correct). In many cultures, right = correct/good. \"Ліворуч\" (left) contains \"ліво\" - connected to concepts of \"other\" or \"different.\" These associations are thousands of years old across Indo-European languages!"
+            "teacherNotes": "### Direction Comprehension\n\nMatch the instruction to the action:\n1. Йдіть прямо.\n   > [!answer] Go straight.\n2. Поверніть праворуч.\n   > [!answer] Turn right.\n3. Перейдіть вулицю.\n   > [!answer] Cross the street.\n4. Це за рогом.\n   > [!answer] It's around the corner.\n\n### Complete the Dialogue\n\nA: Вибачте, де найближче метро?\nB: Йдіть ___ (straight), потім поверніть ___ (left). Метро ___ (there).\n\nAnswers: прямо, ліворуч, там\n\n### Ask for These Places\n\nForm questions:\n1. Bank\n   > [!answer] Де банк? / Вибачте, де найближчий банк?\n2. Metro\n   > [!answer] Де метро? / Скажіть, будь ласка, де метро?\n3. Pharmacy\n   > [!answer] Де аптека? / Де найближча аптека?"
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Prepositions for Location\n\n| Ukrainian | English | Example |\n|-----------|---------|---------|\n| до | to, toward | Йдіть до станції. (Go to the station.) |\n| біля | near, by | Банк біля метро. (Bank is near the metro.) |\n| навпроти | opposite | Аптека навпроти готелю. (Pharmacy is opposite the hotel.) |\n| за | behind | За рогом. (Around the corner. / Behind the corner.) |\n| перед | in front of | Перед входом. (In front of the entrance.) |\n| між | between | Між банком і аптекою. (Between the bank and pharmacy.) |\n\n> 🔗 **Language Link: До + Genitive**\n>\n> The preposition \"до\" (to) takes the genitive case:\n> - до станці**ї** (to the station) - станція → станції\n> - до готел**ю** (to the hotel) - готель → готелю\n>\n> You'll learn genitive fully in Module 16, but for now, notice the endings change!"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Giving Directions (Imperatives)\n\n| Infinitive | Imperative (ви) | English |\n|------------|-----------------|---------|\n| йти | йдіть | go (on foot) |\n| іти | ідіть | go |\n| повернути | поверніть | turn |\n| перейти | перейдіть | cross |\n| пройти | пройдіть | pass, go through |\n\n**Common direction sentences:**\n- Йдіть прямо. (Go straight.)\n- Поверніть праворуч. (Turn right.)\n- Поверніть ліворуч. (Turn left.)\n- Перейдіть вулицю. (Cross the street.)\n- Пройдіть два квартали. (Go two blocks.)\n\n> 🎯 **Fun Fact: Metro Station Names**\n>\n> Kyiv metro stations often have meaningful names:\n> - **Майдан Незалежності** - Independence Square\n> - **Золоті ворота** - Golden Gate (medieval gate)\n> - **Хрещатик** - main street name (from хрещення = baptism)\n> - **Університет** - University\n>\n> Learning station names teaches you history and vocabulary!"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "City Places Vocabulary\n\n| Ukrainian | Transliteration | English |\n|-----------|-----------------|---------|\n| метро | metro | metro, subway |\n| станція | stantsiya | station |\n| зупинка | zupynka | stop (bus/tram) |\n| вулиця | vulytsya | street |\n| площа | ploshcha | square |\n| квартал | kvartal | block |\n| ріг | rih | corner |\n| перехрестя | perekhrestya | intersection |\n| вхід | vkhid | entrance |\n| вихід | vykhid | exit |\n\n> 🎭 **Culture Corner: Street Names**\n>\n> Ukrainian streets are named after:\n> - **Famous people**: вулиця Шевченка, вулиця Лесі Українки\n> - **Historical events**: вулиця Незалежності (Independence Street)\n> - **Cities**: Київська вулиця, Львівська вулиця\n>\n> Many streets were renamed after 2014 and 2022, replacing Soviet-era names with Ukrainian ones!"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Essential Services\n\n| Ukrainian | Transliteration | English |\n|-----------|-----------------|---------|\n| банк | bank | bank |\n| банкомат | bankomat | ATM |\n| аптека | apteka | pharmacy |\n| лікарня | likarnya | hospital |\n| поліція | politsiya | police |\n| пошта | poshta | post office |\n| супермаркет | supermarket | supermarket |\n| ринок | rynok | market |\n| готель | hotel | hotel |\n| туалет | tualet | toilet, restroom |\n\n> 🌍 **Real World: Finding a Pharmacy**\n>\n> Pharmacies (аптеки) in Ukraine are everywhere and marked with a green cross. Pharmacists can recommend medications - you don't always need a doctor for minor issues.\n>\n> - Де найближча аптека? (Where is the nearest pharmacy?)\n> - У мене болить голова. (I have a headache.)\n> - Дайте, будь ласка, знеболююче. (Give me a painkiller, please.)"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A1-15-matchup"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Direction Comprehension\n\nMatch the instruction to the action:\n1. Йдіть прямо. → Go straight.\n2. Поверніть праворуч. → Turn right.\n3. Перейдіть вулицю. → Cross the street.\n4. Це за рогом. → It's around the corner."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Complete the Dialogue\n\nA: Вибачте, де найближче метро?\nB: Йдіть ___ (straight), потім поверніть ___ (left). Метро ___ (there).\n\nAnswers: прямо, ліворуч, там"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Ask for These Places\n\nForm questions:\n1. Bank → Де банк? / Вибачте, де найближчий банк?\n2. Metro → Де метро? / Скажіть, будь ласка, де метро?\n3. Pharmacy → Де аптека? / Де найближча аптека?"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A1-15-quiz"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A1-15-groupsort"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Role Play: Tourist\n\nPractice asking for directions to:\n1. The metro station\n2. A pharmacy\n3. Your hotel\n4. A restaurant\n\nExample:\n- Вибачте, скажіть, будь ласка, як дійти до метро?\n- Йдіть прямо, потім поверніть праворуч. Метро біля банку.\n- Дякую!"
+            "teacherNotes": "### Role Play: Tourist\n\nPractice asking for directions to:\n1. The metro station\n2. A pharmacy\n3. Your hotel\n4. A restaurant\n\nExample:\n- Вибачте, скажіть, будь ласка, як дійти до метро?\n- Йдіть прямо, потім поверніть праворуч. Метро біля банку.\n- Дякую!\n\n---"
           }
         ]
       }
-    ]
+    ],
+    "createdAt": "2025-12-01T22:58:37.245Z",
+    "modifiedAt": "2025-12-01T22:58:37.245Z",
+    "version": 1
   },
   "activities": [
     {
-      "id": "act-uk-A1-15-matchup",
+      "id": "act-a1-15-matchup",
       "type": "match-up",
       "title": "Direction Words",
       "description": "Match Ukrainian to English.",
       "content": {
         "type": "match-up",
-        "instructions": "Match Ukrainian to English.",
         "pairs": [
           {
             "left": "прямо",
@@ -186,23 +111,17 @@
       "language": "uk",
       "difficultyLevel": "A1",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "practical",
-        "directions",
-        "city"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.245Z",
+      "modifiedAt": "2025-12-01T22:58:37.245Z"
     },
     {
-      "id": "act-uk-A1-15-quiz",
+      "id": "act-a1-15-quiz",
       "type": "quiz",
       "title": "City Navigation",
       "description": "Choose the correct answer.",
       "content": {
         "type": "quiz",
-        "instructions": "Choose the correct answer.",
         "questions": [
           {
             "question": "How do you ask \"Where is the metro?\"",
@@ -303,25 +222,20 @@
       "language": "uk",
       "difficultyLevel": "A1",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "practical",
-        "directions",
-        "city"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.245Z",
+      "modifiedAt": "2025-12-01T22:58:37.245Z"
     },
     {
-      "id": "act-uk-A1-15-groupsort",
+      "id": "act-a1-15-groupsort",
       "type": "group-sort",
       "title": "Places by Category",
       "description": "Sort these places by category.",
       "content": {
         "type": "group-sort",
-        "instructions": "Sort these places by category.",
         "groups": [
           {
+            "id": "transportation",
             "name": "Transportation",
             "items": [
               "метро",
@@ -331,6 +245,7 @@
             ]
           },
           {
+            "id": "services",
             "name": "Services",
             "items": [
               "банк",
@@ -340,6 +255,7 @@
             ]
           },
           {
+            "id": "streets--areas",
             "name": "Streets & Areas",
             "items": [
               "вулиця",
@@ -357,14 +273,9 @@
       "language": "uk",
       "difficultyLevel": "A1",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "practical",
-        "directions",
-        "city"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.245Z",
+      "modifiedAt": "2025-12-01T22:58:37.245Z"
     }
   ],
   "vocabulary": {
@@ -375,212 +286,177 @@
     "transliterationMode": "full",
     "words": [
       {
-        "id": "v-m15-001",
+        "id": "v-pryamo-15-0",
         "uk": "прямо",
-        "translit": "",
-        "ipa": "/ˈprʲɑmɔ/",
         "en": "straight",
         "pos": "adv",
-        "gender": "-"
+        "ipa": "/ˈprʲɑmɔ/"
       },
       {
-        "id": "v-m15-002",
+        "id": "v-pravoruch-15-1",
         "uk": "праворуч",
-        "translit": "",
-        "ipa": "/prɑˈvɔrutʃ/",
         "en": "to the right",
         "pos": "adv",
-        "gender": "-",
+        "ipa": "/prɑˈvɔrutʃ/",
         "note": "право = right"
       },
       {
-        "id": "v-m15-003",
+        "id": "v-livoruch-15-2",
         "uk": "ліворуч",
-        "translit": "",
-        "ipa": "/lʲiˈvɔrutʃ/",
         "en": "to the left",
         "pos": "adv",
-        "gender": "-",
+        "ipa": "/lʲiˈvɔrutʃ/",
         "note": "ліво = left"
       },
       {
-        "id": "v-m15-004",
+        "id": "v-nazad-15-3",
         "uk": "назад",
-        "translit": "",
-        "ipa": "/nɑˈzɑd/",
         "en": "back",
         "pos": "adv",
-        "gender": "-"
+        "ipa": "/nɑˈzɑd/"
       },
       {
-        "id": "v-m15-005",
+        "id": "v-blyzьko-15-4",
         "uk": "близько",
-        "translit": "",
-        "ipa": "/ˈblɪzʲkɔ/",
         "en": "near, close",
         "pos": "adv",
-        "gender": "-"
+        "ipa": "/ˈblɪzʲkɔ/"
       },
       {
-        "id": "v-m15-006",
+        "id": "v-daleko-15-5",
         "uk": "далеко",
-        "translit": "",
-        "ipa": "/dɑˈlɛkɔ/",
         "en": "far",
         "pos": "adv",
-        "gender": "-"
+        "ipa": "/dɑˈlɛkɔ/"
       },
       {
-        "id": "v-m15-007",
+        "id": "v-bilya-15-6",
         "uk": "біля",
-        "translit": "",
-        "ipa": "/ˈbʲilʲɑ/",
         "en": "near, by",
         "pos": "prep",
-        "gender": "-",
+        "ipa": "/ˈbʲilʲɑ/",
         "note": "+ genitive"
       },
       {
-        "id": "v-m15-008",
+        "id": "v-do-15-7",
         "uk": "до",
-        "translit": "",
-        "ipa": "/dɔ/",
         "en": "to, toward",
         "pos": "prep",
-        "gender": "-",
+        "ipa": "/dɔ/",
         "note": "+ genitive"
       },
       {
-        "id": "v-m15-009",
+        "id": "v-navproty-15-8",
         "uk": "навпроти",
-        "translit": "",
-        "ipa": "/nɑuˈprɔtɪ/",
         "en": "opposite",
         "pos": "prep",
-        "gender": "-",
+        "ipa": "/nɑuˈprɔtɪ/",
         "note": "+ genitive"
       },
       {
-        "id": "v-m15-010",
+        "id": "v-za-15-9",
         "uk": "за",
-        "translit": "",
-        "ipa": "/zɑ/",
         "en": "behind",
         "pos": "prep",
-        "gender": "-",
+        "ipa": "/zɑ/",
         "note": "+ instrumental"
       },
       {
-        "id": "v-m15-011",
+        "id": "v-zupynka-15-10",
         "uk": "зупинка",
-        "translit": "",
-        "ipa": "/zuˈpɪnkɑ/",
         "en": "stop",
         "pos": "noun",
+        "ipa": "/zuˈpɪnkɑ/",
         "gender": "f",
         "note": "Bus, tram stop"
       },
       {
-        "id": "v-m15-012",
+        "id": "v-kvartal-15-11",
         "uk": "квартал",
-        "translit": "",
-        "ipa": "/kvɑrˈtɑl/",
         "en": "block",
         "pos": "noun",
+        "ipa": "/kvɑrˈtɑl/",
         "gender": "m"
       },
       {
-        "id": "v-m15-013",
+        "id": "v-rih-15-12",
         "uk": "ріг",
-        "translit": "",
-        "ipa": "/rʲiɦ/",
         "en": "corner",
         "pos": "noun",
+        "ipa": "/rʲiɦ/",
         "gender": "m",
         "note": "За рогом"
       },
       {
-        "id": "v-m15-014",
+        "id": "v-vkhid-15-13",
         "uk": "вхід",
-        "translit": "",
-        "ipa": "/vxʲid/",
         "en": "entrance",
         "pos": "noun",
+        "ipa": "/vxʲid/",
         "gender": "m"
       },
       {
-        "id": "v-m15-015",
+        "id": "v-vykhid-15-14",
         "uk": "вихід",
-        "translit": "",
-        "ipa": "/ˈvɪxʲid/",
         "en": "exit",
         "pos": "noun",
+        "ipa": "/ˈvɪxʲid/",
         "gender": "m"
       },
       {
-        "id": "v-m15-016",
+        "id": "v-apteka-15-15",
         "uk": "аптека",
-        "translit": "",
-        "ipa": "/ɑpˈtɛkɑ/",
         "en": "pharmacy",
         "pos": "noun",
+        "ipa": "/ɑpˈtɛkɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m15-017",
+        "id": "v-likarnya-15-16",
         "uk": "лікарня",
-        "translit": "",
-        "ipa": "/lʲiˈkɑrnʲɑ/",
         "en": "hospital",
         "pos": "noun",
+        "ipa": "/lʲiˈkɑrnʲɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m15-018",
+        "id": "v-poshta-15-17",
         "uk": "пошта",
-        "translit": "",
-        "ipa": "/ˈpɔʃtɑ/",
         "en": "post office",
         "pos": "noun",
+        "ipa": "/ˈpɔʃtɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m15-019",
+        "id": "v-rynok-15-18",
         "uk": "ринок",
-        "translit": "",
-        "ipa": "/ˈrɪnɔk/",
         "en": "market",
         "pos": "noun",
+        "ipa": "/ˈrɪnɔk/",
         "gender": "m"
       },
       {
-        "id": "v-m15-020",
+        "id": "v-yty-15-19",
         "uk": "йти",
-        "translit": "",
-        "ipa": "/jtɪ/",
         "en": "to go (on foot)",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/jtɪ/",
         "note": "Imp: йди, йдіть"
       },
       {
-        "id": "v-m15-021",
+        "id": "v-povernuty-15-20",
         "uk": "повернути",
-        "translit": "",
-        "ipa": "/pɔvɛrˈnutɪ/",
         "en": "to turn",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/pɔvɛrˈnutɪ/",
         "note": "Imp: поверни, поверніть"
       },
       {
-        "id": "v-m15-022",
+        "id": "v-pereyty-15-21",
         "uk": "перейти",
-        "translit": "",
-        "ipa": "/pɛrɛjˈtɪ/",
         "en": "to cross",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/pɛrɛjˈtɪ/",
         "note": "Imp: перейди, перейдіть"
       }
     ]

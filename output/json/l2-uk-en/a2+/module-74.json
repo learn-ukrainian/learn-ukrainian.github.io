@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-A2+-74",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "vocabulary-expansion",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -26,8 +25,6 @@
       "Frequency expressions with hobbies",
       "Preference structures"
     ],
-    "totalDuration": 45,
-    "transliterationMode": "none",
     "tags": [
       "vocabulary",
       "hobbies",
@@ -35,22 +32,9 @@
       "entertainment",
       "free-time"
     ],
-    "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
+    "totalDuration": 45,
+    "transliterationMode": "none",
     "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### What Do You Do for Fun?\n\nYou know basic activities. Now let's talk about hobbies and leisure!\n\n**Hobbies:**\n- хобі (hobby), захоплення (passion), дозвілля (leisure)\n\n**Activities:**\n- грати в ігри (to play games), збирати (to collect), майструвати (to craft)\n\n> 💡 **Why This Matters**\n>\n> Talking about hobbies helps you connect with people and share what you love!"
-          }
-        ]
-      },
       {
         "id": "phase-presentation",
         "name": "presentation",
@@ -59,117 +43,33 @@
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "### Types of Hobbies\n\n| Ukrainian | English |\n|-----------|---------|\n| хобі | hobby |\n| захоплення | passion, enthusiasm |\n| дозвілля | leisure |\n| вільний час | free time |\n| розвага | entertainment |\n| відпочинок | rest, relaxation |\n\n**Examples:**\n- Яке твоє **хобі**? - What's your hobby?\n- У **вільний час** я читаю. - In my free time I read.\n- Це моє головне **захоплення**. - This is my main passion.\n- Потрібен **відпочинок**! - I need rest!"
+            "teacherNotes": "### Types of Hobbies\n\n| Ukrainian | English |\n|-----------|---------|\n| хобі | hobby |\n| захоплення | passion, enthusiasm |\n| дозвілля | leisure |\n| вільний час | free time |\n| розвага | entertainment |\n| відпочинок | rest, relaxation |\n\n**Examples:**\n- Яке твоє **хобі**? - What's your hobby?\n- У **вільний час** я читаю. - In my free time I read.\n- Це моє головне **захоплення**. - This is my main passion.\n- Потрібен **відпочинок**! - I need rest!\n\n### Creative Hobbies\n\n| Ukrainian | English |\n|-----------|---------|\n| малювання | drawing, painting |\n| фотографія | photography |\n| в'язання | knitting |\n| шиття | sewing |\n| вишивання | embroidery |\n| ліплення | sculpting, modeling |\n| рукоділля | handicrafts |\n| кулінарія | cooking (as hobby) |\n| садівництво | gardening |\n| флористика | floristry |\n\n**Examples:**\n- Я захоплююся **малюванням**. - I'm passionate about drawing.\n- **Фотографія** — це мистецтво. - Photography is an art.\n- Бабуся вміє **в'язати**. - Grandma can knit.\n- **Вишивання** — українська традиція. - Embroidery is a Ukrainian tradition.\n- Люблю **садівництво** влітку. - I love gardening in summer.\n\n> 🎭 **Culture Note: Вишивання**\n>\n> Ukrainian embroidery (вишивка) is a UNESCO-recognized cultural heritage. Traditional patterns have regional meanings.\n\n### Collecting Hobbies\n\n| Ukrainian | English |\n|-----------|---------|\n| колекціонування | collecting |\n| колекція | collection |\n| марки | stamps |\n| монети | coins |\n| антикваріат | antiques |\n| вінілові платівки | vinyl records |\n| комікси | comics |\n| фігурки | figurines |\n| листівки | postcards |\n\n**Examples:**\n- Він **колекціонує** марки. - He collects stamps.\n- Моя **колекція** монет велика. - My coin collection is large.\n- Шукаю рідкісні **вінілові платівки**. - I'm looking for rare vinyl records.\n- Це цінний **антикваріат**. - This is valuable antique.\n\n### Games & Puzzles\n\n| Ukrainian | English |\n|-----------|---------|\n| гра | game |\n| настільна гра | board game |\n| відеогра | video game |\n| карти | cards |\n| шахи | chess |\n| шашки | checkers |\n| пазл | puzzle |\n| кросворд | crossword |\n| судоку | sudoku |\n| головоломка | brain teaser |\n\n**Examples:**\n- Граємо в **настільну гру**? - Shall we play a board game?\n- Я граю в **шахи** онлайн. - I play chess online.\n- **Відеоігри** — це не тільки для дітей. - Video games aren't just for kids.\n- Люблю розгадувати **кросворди**. - I love solving crosswords.\n- Цей **пазл** на 1000 деталей. - This puzzle has 1000 pieces.\n\n> ⚡ **Pro Tip: Грати в / на**\n>\n> Грати в + accusative for games: грати в шахи, грати в футбол. Грати на + locative for instruments: грати на гітарі.\n\n### Outdoor Activities\n\n| Ukrainian | English |\n|-----------|---------|\n| похід | hike, trip |\n| кемпінг | camping |\n| риболовля | fishing |\n| полювання | hunting |\n| альпінізм | mountaineering |\n| велопрогулянка | bike ride |\n| пікнік | picnic |\n| спостереження за птахами | birdwatching |\n| збирання грибів | mushroom picking |\n\n**Examples:**\n- Ідемо в **похід** у Карпати. - We're going hiking in the Carpathians.\n- **Риболовля** — це релакс. - Fishing is relaxing.\n- Люблю **велопрогулянки** вихідними. - I love bike rides on weekends.\n- Восени збираємо **гриби**. - In autumn we pick mushrooms.\n- Організуємо **пікнік** у парку. - Let's organize a picnic in the park.\n\n> 🎭 **Culture Note: Збирання грибів**\n>\n> Mushroom picking is a beloved Ukrainian tradition. Families go to forests in autumn to collect їстівні гриби (edible mushrooms).\n\n### Entertainment\n\n| Ukrainian | English |\n|-----------|---------|\n| кіно | cinema |\n| концерт | concert |\n| театр | theater |\n| виставка | exhibition |\n| фестиваль | festival |\n| караоке | karaoke |\n| боулінг | bowling |\n| більярд | billiards |\n| квест | escape room, quest |\n| парк розваг | amusement park |\n\n**Examples:**\n- Підемо в **кіно** ввечері? - Shall we go to the cinema tonight?\n- Купив квитки на **концерт**. - I bought concert tickets.\n- Цікава **виставка** в музеї. - There's an interesting exhibition at the museum.\n- Любиш **караоке**? - Do you like karaoke?\n- **Квести** зараз популярні. - Escape rooms are popular now.\n\n### Hobby Verbs\n\n| Imperfective | Perfective | Meaning |\n|--------------|------------|---------|\n| займатися | зайнятися | to do, engage in |\n| захоплюватися | захопитися | to be passionate about |\n| грати | пограти / зіграти | to play |\n| збирати | зібрати | to collect |\n| малювати | намалювати | to draw, paint |\n| в'язати | зв'язати | to knit |\n| шити | пошити | to sew |\n| майструвати | змайструвати | to craft |\n| фотографувати | сфотографувати | to photograph |\n\n**Examples:**\n- Чим ти **займаєшся** у вільний час? - What do you do in your free time?\n- Я **захоплююся** фотографією. - I'm passionate about photography.\n- Діти **грають** у настільні ігри. - The kids are playing board games.\n- Вона **збирає** старі листівки. - She collects old postcards.\n- Він **майструє** меблі. - He crafts furniture.\n\n### Talking About Hobbies\n\n**Asking:**\n- Яке у тебе хобі? - What's your hobby?\n- Чим захоплюєшся? - What are you into?\n- Що робиш у вільний час? - What do you do in your free time?\n- Ти граєш у...? - Do you play...?\n\n**Answering:**\n- Моє хобі — це... - My hobby is...\n- Я захоплююся... - I'm passionate about...\n- Люблю... - I love...\n- У вільний час я... - In my free time I...\n\n**Frequency:**\n- щодня (every day), часто (often), іноді (sometimes)\n- рідко (rarely), ніколи (never)\n- раз на тиждень (once a week)"
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Creative Hobbies\n\n| Ukrainian | English |\n|-----------|---------|\n| малювання | drawing, painting |\n| фотографія | photography |\n| в'язання | knitting |\n| шиття | sewing |\n| вишивання | embroidery |\n| ліплення | sculpting, modeling |\n| рукоділля | handicrafts |\n| кулінарія | cooking (as hobby) |\n| садівництво | gardening |\n| флористика | floristry |\n\n**Examples:**\n- Я захоплююся **малюванням**. - I'm passionate about drawing.\n- **Фотографія** — це мистецтво. - Photography is an art.\n- Бабуся вміє **в'язати**. - Grandma can knit.\n- **Вишивання** — українська традиція. - Embroidery is a Ukrainian tradition.\n- Люблю **садівництво** влітку. - I love gardening in summer.\n\n> 🎭 **Culture Note: Вишивання**\n>\n> Ukrainian embroidery (вишивка) is a UNESCO-recognized cultural heritage. Traditional patterns have regional meanings."
+            "teacherNotes": "### Match Hobby to Category\n\n1. малювання\n   > [!answer] творчі (creative)\n2. шахи\n   > [!answer] ігри (games)\n3. риболовля\n   > [!answer] активний відпочинок (outdoor)\n4. колекціонування марок\n   > [!answer] збирання (collecting)\n5. караоке\n   > [!answer] розваги (entertainment)\n\n### Complete Hobby Dialogue\n\n**A:** Яке у тебе ___? (hobby)\n> [!answer] хобі\n\n**B:** Я захоплююся ___. (photography)\n> [!answer] фотографією\n\n**A:** Як часто ___? (do you photograph)\n> [!answer] фотографуєш\n\n**B:** Майже ___. (every day)\n> [!answer] щодня\n\n**A:** Покажеш свої ___? (photos)\n> [!answer] фото / фотографії\n\n### Form Sentences\n\n1. Я / захоплюватися / малювання\n   > [!answer] Я захоплююся малюванням.\n\n2. Вони / грати / шахи / щовечора\n   > [!answer] Вони грають у шахи щовечора.\n\n3. Ми / піти / похід / наступний тиждень\n   > [!answer] Ми підемо в похід наступного тижня.\n\n4. Вона / збирати / марки / з дитинства\n   > [!answer] Вона збирає марки з дитинства.\n\n### Translate\n\n1. What do you do in your free time?\n   > [!answer] Що ти робиш у вільний час?\n2. I'm passionate about gardening.\n   > [!answer] Я захоплююся садівництвом.\n3. Let's play a board game.\n   > [!answer] Давай пограємо в настільну гру.\n4. She collects old coins.\n   > [!answer] Вона колекціонує старі монети.\n5. Do you like hiking?\n   > [!answer] Ти любиш походи?"
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Collecting Hobbies\n\n| Ukrainian | English |\n|-----------|---------|\n| колекціонування | collecting |\n| колекція | collection |\n| марки | stamps |\n| монети | coins |\n| антикваріат | antiques |\n| вінілові платівки | vinyl records |\n| комікси | comics |\n| фігурки | figurines |\n| листівки | postcards |\n\n**Examples:**\n- Він **колекціонує** марки. - He collects stamps.\n- Моя **колекція** монет велика. - My coin collection is large.\n- Шукаю рідкісні **вінілові платівки**. - I'm looking for rare vinyl records.\n- Це цінний **антикваріат**. - This is valuable antique."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Games & Puzzles\n\n| Ukrainian | English |\n|-----------|---------|\n| гра | game |\n| настільна гра | board game |\n| відеогра | video game |\n| карти | cards |\n| шахи | chess |\n| шашки | checkers |\n| пазл | puzzle |\n| кросворд | crossword |\n| судоку | sudoku |\n| головоломка | brain teaser |\n\n**Examples:**\n- Граємо в **настільну гру**? - Shall we play a board game?\n- Я граю в **шахи** онлайн. - I play chess online.\n- **Відеоігри** — це не тільки для дітей. - Video games aren't just for kids.\n- Люблю розгадувати **кросворди**. - I love solving crosswords.\n- Цей **пазл** на 1000 деталей. - This puzzle has 1000 pieces.\n\n> ⚡ **Pro Tip: Грати в / на**\n>\n> Грати в + accusative for games: грати в шахи, грати в футбол. Грати на + locative for instruments: грати на гітарі."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Outdoor Activities\n\n| Ukrainian | English |\n|-----------|---------|\n| похід | hike, trip |\n| кемпінг | camping |\n| риболовля | fishing |\n| полювання | hunting |\n| альпінізм | mountaineering |\n| велопрогулянка | bike ride |\n| пікнік | picnic |\n| спостереження за птахами | birdwatching |\n| збирання грибів | mushroom picking |\n\n**Examples:**\n- Ідемо в **похід** у Карпати. - We're going hiking in the Carpathians.\n- **Риболовля** — це релакс. - Fishing is relaxing.\n- Люблю **велопрогулянки** вихідними. - I love bike rides on weekends.\n- Восени збираємо **гриби**. - In autumn we pick mushrooms.\n- Організуємо **пікнік** у парку. - Let's organize a picnic in the park.\n\n> 🎭 **Culture Note: Збирання грибів**\n>\n> Mushroom picking is a beloved Ukrainian tradition. Families go to forests in autumn to collect їстівні гриби (edible mushrooms)."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Entertainment\n\n| Ukrainian | English |\n|-----------|---------|\n| кіно | cinema |\n| концерт | concert |\n| театр | theater |\n| виставка | exhibition |\n| фестиваль | festival |\n| караоке | karaoke |\n| боулінг | bowling |\n| більярд | billiards |\n| квест | escape room, quest |\n| парк розваг | amusement park |\n\n**Examples:**\n- Підемо в **кіно** ввечері? - Shall we go to the cinema tonight?\n- Купив квитки на **концерт**. - I bought concert tickets.\n- Цікава **виставка** в музеї. - There's an interesting exhibition at the museum.\n- Любиш **караоке**? - Do you like karaoke?\n- **Квести** зараз популярні. - Escape rooms are popular now."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Hobby Verbs\n\n| Imperfective | Perfective | Meaning |\n|--------------|------------|---------|\n| займатися | зайнятися | to do, engage in |\n| захоплюватися | захопитися | to be passionate about |\n| грати | пограти / зіграти | to play |\n| збирати | зібрати | to collect |\n| малювати | намалювати | to draw, paint |\n| в'язати | зв'язати | to knit |\n| шити | пошити | to sew |\n| майструвати | змайструвати | to craft |\n| фотографувати | сфотографувати | to photograph |\n\n**Examples:**\n- Чим ти **займаєшся** у вільний час? - What do you do in your free time?\n- Я **захоплююся** фотографією. - I'm passionate about photography.\n- Діти **грають** у настільні ігри. - The kids are playing board games.\n- Вона **збирає** старі листівки. - She collects old postcards.\n- Він **майструє** меблі. - He crafts furniture."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Talking About Hobbies\n\n**Asking:**\n- Яке у тебе хобі? - What's your hobby?\n- Чим захоплюєшся? - What are you into?\n- Що робиш у вільний час? - What do you do in your free time?\n- Ти граєш у...? - Do you play...?\n\n**Answering:**\n- Моє хобі — це... - My hobby is...\n- Я захоплююся... - I'm passionate about...\n- Люблю... - I love...\n- У вільний час я... - In my free time I...\n\n**Frequency:**\n- щодня (every day), часто (often), іноді (sometimes)\n- рідко (rarely), ніколи (never)\n- раз на тиждень (once a week)"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A2+-74-matchup"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Match Hobby to Category\n\n1. малювання → творчі (creative)\n2. шахи → ігри (games)\n3. риболовля → активний відпочинок (outdoor)\n4. колекціонування марок → збирання (collecting)\n5. караоке → розваги (entertainment)"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Complete Hobby Dialogue\n\n**A:** Яке у тебе ___? (hobby)\n→ хобі\n\n**B:** Я захоплююся ___. (photography)\n→ фотографією\n\n**A:** Як часто ___? (do you photograph)\n→ фотографуєш\n\n**B:** Майже ___. (every day)\n→ щодня\n\n**A:** Покажеш свої ___? (photos)\n→ фото / фотографії"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Form Sentences\n\n1. Я / захоплюватися / малювання\n   → Я захоплююся малюванням.\n\n2. Вони / грати / шахи / щовечора\n   → Вони грають у шахи щовечора.\n\n3. Ми / піти / похід / наступний тиждень\n   → Ми підемо в похід наступного тижня.\n\n4. Вона / збирати / марки / з дитинства\n   → Вона збирає марки з дитинства."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Translate\n\n1. What do you do in your free time? → Що ти робиш у вільний час?\n2. I'm passionate about gardening. → Я захоплююся садівництвом.\n3. Let's play a board game. → Давай пограємо в настільну гру.\n4. She collects old coins. → Вона колекціонує старі монети.\n5. Do you like hiking? → Ти любиш походи?"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A2+-74-quiz"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A2+-74-groupsort"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Describe Your Hobbies\n\n**Example:** \"Моє головне хобі — фотографія. Я фотографую природу і міста. Також люблю настільні ігри — граю з друзями щотижня.\"\n\nDescribe your hobbies and how often you do them."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Hobby Recommendation\n\n**Scenario:** A friend is bored and asks for hobby suggestions.\n- \"Спробуй малювання — це дуже релаксує.\"\n- \"Може, почнеш колекціонувати щось?\"\n- \"Походи в гори — це здорово!\""
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Weekend Plans\n\nDescribe your ideal weekend activities:\n- \"У суботу піду на виставку.\"\n- \"Увечері граємо в настільні ігри.\"\n- \"У неділю — похід за місто.\""
+            "teacherNotes": "### Describe Your Hobbies\n\n**Example:** \"Моє головне хобі — фотографія. Я фотографую природу і міста. Також люблю настільні ігри — граю з друзями щотижня.\"\n\nDescribe your hobbies and how often you do them.\n\n### Hobby Recommendation\n\n**Scenario:** A friend is bored and asks for hobby suggestions.\n- \"Спробуй малювання — це дуже релаксує.\"\n- \"Може, почнеш колекціонувати щось?\"\n- \"Походи в гори — це здорово!\"\n\n### Weekend Plans\n\nDescribe your ideal weekend activities:\n- \"У суботу піду на виставку.\"\n- \"Увечері граємо в настільні ігри.\"\n- \"У неділю — похід за місто.\"\n\n---"
           }
         ]
       }
-    ]
+    ],
+    "createdAt": "2025-12-01T22:58:37.285Z",
+    "modifiedAt": "2025-12-01T22:58:37.285Z",
+    "version": 1
   },
   "activities": [
     {
-      "id": "act-uk-A2+-74-matchup",
+      "id": "act-a2+-74-matchup",
       "type": "match-up",
       "title": "Hobby → Type",
       "description": "Hobby → Type",
       "content": {
         "type": "match-up",
-        "instructions": "",
         "pairs": [
           {
             "left": "в'язання",
@@ -200,24 +100,17 @@
       "language": "uk",
       "difficultyLevel": "A2+",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "hobbies",
-        "leisure",
-        "entertainment",
-        "free-time"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.285Z",
+      "modifiedAt": "2025-12-01T22:58:37.285Z"
     },
     {
-      "id": "act-uk-A2+-74-quiz",
+      "id": "act-a2+-74-quiz",
       "type": "quiz",
       "title": "Hobbies & Leisure",
       "description": "Choose the correct answer.",
       "content": {
         "type": "quiz",
-        "instructions": "Choose the correct answer.",
         "questions": [
           {
             "question": "\"Захоплюватися\" means ___.",
@@ -296,60 +189,61 @@
       "language": "uk",
       "difficultyLevel": "A2+",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "hobbies",
-        "leisure",
-        "entertainment",
-        "free-time"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.285Z",
+      "modifiedAt": "2025-12-01T22:58:37.285Z"
     },
     {
-      "id": "act-uk-A2+-74-groupsort",
+      "id": "act-a2+-74-groupsort",
       "type": "group-sort",
       "title": "By Category",
       "description": "By Category",
       "content": {
         "type": "group-sort",
-        "instructions": "",
         "groups": [
           {
-            "name": "Творчі (Creative)",
+            "id": "",
+            "name": "Творчі",
             "items": [
               "малювання",
               "фотографія",
               "в'язання",
               "вишивання"
-            ]
+            ],
+            "nameUk": "Creative"
           },
           {
-            "name": "Ігри (Games)",
+            "id": "",
+            "name": "Ігри",
             "items": [
               "шахи",
               "настільні ігри",
               "відеоігри",
               "пазли"
-            ]
+            ],
+            "nameUk": "Games"
           },
           {
-            "name": "Активний відпочинок (Outdoor)",
+            "id": "-",
+            "name": "Активний відпочинок",
             "items": [
               "похід",
               "риболовля",
               "велопрогулянка",
               "кемпінг"
-            ]
+            ],
+            "nameUk": "Outdoor"
           },
           {
-            "name": "Збирання (Collecting)",
+            "id": "",
+            "name": "Збирання",
             "items": [
               "марки",
               "монети",
               "вінілові платівки",
               "антикваріат"
-            ]
+            ],
+            "nameUk": "Collecting"
           }
         ],
         "shuffleItems": true
@@ -360,15 +254,9 @@
       "language": "uk",
       "difficultyLevel": "A2+",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "hobbies",
-        "leisure",
-        "entertainment",
-        "free-time"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.285Z",
+      "modifiedAt": "2025-12-01T22:58:37.285Z"
     }
   ],
   "vocabulary": {
@@ -379,381 +267,331 @@
     "transliterationMode": "none",
     "words": [
       {
-        "id": "v-m74-001",
+        "id": "v-khobi-74-0",
         "uk": "хобі",
-        "translit": "",
-        "ipa": "/ˈxobʲi/",
         "en": "hobby",
         "pos": "noun",
+        "ipa": "/ˈxobʲi/",
         "gender": "n",
         "note": "indecl"
       },
       {
-        "id": "v-m74-002",
+        "id": "v-zakhoplennya-74-1",
         "uk": "захоплення",
-        "translit": "",
-        "ipa": "/zɑˈxoplɛnʲːɑ/",
         "en": "passion, enthusiasm",
         "pos": "noun",
+        "ipa": "/zɑˈxoplɛnʲːɑ/",
         "gender": "n"
       },
       {
-        "id": "v-m74-003",
+        "id": "v-dozvillya-74-2",
         "uk": "дозвілля",
-        "translit": "",
-        "ipa": "/doˈzvʲilʲːɑ/",
         "en": "leisure",
         "pos": "noun",
+        "ipa": "/doˈzvʲilʲːɑ/",
         "gender": "n"
       },
       {
-        "id": "v-m74-004",
+        "id": "v-rozvaha-74-3",
         "uk": "розвага",
-        "translit": "",
-        "ipa": "/rozˈvɑɦɑ/",
         "en": "entertainment",
         "pos": "noun",
+        "ipa": "/rozˈvɑɦɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m74-005",
+        "id": "v-vidpochynok-74-4",
         "uk": "відпочинок",
-        "translit": "",
-        "ipa": "/vʲidpoˈtʃɪnok/",
         "en": "rest, relaxation",
         "pos": "noun",
+        "ipa": "/vʲidpoˈtʃɪnok/",
         "gender": "m"
       },
       {
-        "id": "v-m74-006",
+        "id": "v-malyuvannya-74-5",
         "uk": "малювання",
-        "translit": "",
-        "ipa": "/mɑlʲuˈvɑnʲːɑ/",
         "en": "drawing, painting",
         "pos": "noun",
+        "ipa": "/mɑlʲuˈvɑnʲːɑ/",
         "gender": "n"
       },
       {
-        "id": "v-m74-007",
+        "id": "v-fotohrafiya-74-6",
         "uk": "фотографія",
-        "translit": "",
-        "ipa": "/fotoɦrɑˈfʲijɑ/",
         "en": "photography",
         "pos": "noun",
+        "ipa": "/fotoɦrɑˈfʲijɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m74-008",
+        "id": "v-v'yazannya-74-7",
         "uk": "в'язання",
-        "translit": "",
-        "ipa": "/vʲjɑˈzɑnʲːɑ/",
         "en": "knitting",
         "pos": "noun",
+        "ipa": "/vʲjɑˈzɑnʲːɑ/",
         "gender": "n"
       },
       {
-        "id": "v-m74-009",
+        "id": "v-shyttya-74-8",
         "uk": "шиття",
-        "translit": "",
-        "ipa": "/ʃɪtʲˈtʲɑ/",
         "en": "sewing",
         "pos": "noun",
+        "ipa": "/ʃɪtʲˈtʲɑ/",
         "gender": "n"
       },
       {
-        "id": "v-m74-010",
+        "id": "v-vyshyvannya-74-9",
         "uk": "вишивання",
-        "translit": "",
-        "ipa": "/vɪʃɪˈvɑnʲːɑ/",
         "en": "embroidery",
         "pos": "noun",
+        "ipa": "/vɪʃɪˈvɑnʲːɑ/",
         "gender": "n"
       },
       {
-        "id": "v-m74-011",
+        "id": "v-rukodillya-74-10",
         "uk": "рукоділля",
-        "translit": "",
-        "ipa": "/rukodʲiˈlʲːɑ/",
         "en": "handicrafts",
         "pos": "noun",
+        "ipa": "/rukodʲiˈlʲːɑ/",
         "gender": "n"
       },
       {
-        "id": "v-m74-012",
+        "id": "v-sadivnytstvo-74-11",
         "uk": "садівництво",
-        "translit": "",
-        "ipa": "/sɑdʲivˈnɪtstvo/",
         "en": "gardening",
         "pos": "noun",
+        "ipa": "/sɑdʲivˈnɪtstvo/",
         "gender": "n"
       },
       {
-        "id": "v-m74-013",
+        "id": "v-kolektsionuvannya-74-12",
         "uk": "колекціонування",
-        "translit": "",
-        "ipa": "/kolɛktsʲionuˈvɑnʲːɑ/",
         "en": "collecting",
         "pos": "noun",
+        "ipa": "/kolɛktsʲionuˈvɑnʲːɑ/",
         "gender": "n"
       },
       {
-        "id": "v-m74-014",
+        "id": "v-kolektsiya-74-13",
         "uk": "колекція",
-        "translit": "",
-        "ipa": "/koˈlɛktsʲijɑ/",
         "en": "collection",
         "pos": "noun",
+        "ipa": "/koˈlɛktsʲijɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m74-015",
+        "id": "v-marka-74-14",
         "uk": "марка",
-        "translit": "",
-        "ipa": "/ˈmɑrkɑ/",
         "en": "stamp",
         "pos": "noun",
+        "ipa": "/ˈmɑrkɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m74-016",
+        "id": "v-moneta-74-15",
         "uk": "монета",
-        "translit": "",
-        "ipa": "/moˈnɛtɑ/",
         "en": "coin",
         "pos": "noun",
+        "ipa": "/moˈnɛtɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m74-017",
+        "id": "v-antykvariat-74-16",
         "uk": "антикваріат",
-        "translit": "",
-        "ipa": "/ɑntɪkvɑrʲiˈɑt/",
         "en": "antiques",
         "pos": "noun",
+        "ipa": "/ɑntɪkvɑrʲiˈɑt/",
         "gender": "m"
       },
       {
-        "id": "v-m74-018",
+        "id": "v-nastilьna-hra-74-17",
         "uk": "настільна гра",
-        "translit": "",
-        "ipa": "/nɑˈstʲilʲnɑ ɦrɑ/",
         "en": "board game",
         "pos": "noun",
+        "ipa": "/nɑˈstʲilʲnɑ ɦrɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m74-019",
+        "id": "v-videohra-74-18",
         "uk": "відеогра",
-        "translit": "",
-        "ipa": "/vʲidɛoˈɦrɑ/",
         "en": "video game",
         "pos": "noun",
+        "ipa": "/vʲidɛoˈɦrɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m74-020",
+        "id": "v-shakhy-74-19",
         "uk": "шахи",
-        "translit": "",
-        "ipa": "/ˈʃɑxɪ/",
         "en": "chess",
         "pos": "noun",
-        "gender": "pl"
+        "ipa": "/ˈʃɑxɪ/"
       },
       {
-        "id": "v-m74-021",
+        "id": "v-shashky-74-20",
         "uk": "шашки",
-        "translit": "",
-        "ipa": "/ˈʃɑʃkɪ/",
         "en": "checkers",
         "pos": "noun",
-        "gender": "pl"
+        "ipa": "/ˈʃɑʃkɪ/"
       },
       {
-        "id": "v-m74-022",
+        "id": "v-pazl-74-21",
         "uk": "пазл",
-        "translit": "",
-        "ipa": "/pɑzl/",
         "en": "puzzle",
         "pos": "noun",
+        "ipa": "/pɑzl/",
         "gender": "m"
       },
       {
-        "id": "v-m74-023",
+        "id": "v-krosvord-74-22",
         "uk": "кросворд",
-        "translit": "",
-        "ipa": "/krosˈvord/",
         "en": "crossword",
         "pos": "noun",
+        "ipa": "/krosˈvord/",
         "gender": "m"
       },
       {
-        "id": "v-m74-024",
+        "id": "v-holovolomka-74-23",
         "uk": "головоломка",
-        "translit": "",
-        "ipa": "/ɦolovoˈlomkɑ/",
         "en": "brain teaser",
         "pos": "noun",
+        "ipa": "/ɦolovoˈlomkɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m74-025",
+        "id": "v-pokhid-74-24",
         "uk": "похід",
-        "translit": "",
-        "ipa": "/poˈxʲid/",
         "en": "hike, trip",
         "pos": "noun",
+        "ipa": "/poˈxʲid/",
         "gender": "m"
       },
       {
-        "id": "v-m74-026",
+        "id": "v-kempinh-74-25",
         "uk": "кемпінг",
-        "translit": "",
-        "ipa": "/ˈkɛmpʲinɦ/",
         "en": "camping",
         "pos": "noun",
+        "ipa": "/ˈkɛmpʲinɦ/",
         "gender": "m"
       },
       {
-        "id": "v-m74-027",
+        "id": "v-rybolovlya-74-26",
         "uk": "риболовля",
-        "translit": "",
-        "ipa": "/rɪboˈlovlʲɑ/",
         "en": "fishing",
         "pos": "noun",
+        "ipa": "/rɪboˈlovlʲɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m74-028",
+        "id": "v-veloprohulyanka-74-27",
         "uk": "велопрогулянка",
-        "translit": "",
-        "ipa": "/vɛloproɦuˈlʲɑnkɑ/",
         "en": "bike ride",
         "pos": "noun",
+        "ipa": "/vɛloproɦuˈlʲɑnkɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m74-029",
+        "id": "v-piknik-74-28",
         "uk": "пікнік",
-        "translit": "",
-        "ipa": "/pʲikˈnʲik/",
         "en": "picnic",
         "pos": "noun",
+        "ipa": "/pʲikˈnʲik/",
         "gender": "m"
       },
       {
-        "id": "v-m74-030",
+        "id": "v-kontsert-74-29",
         "uk": "концерт",
-        "translit": "",
-        "ipa": "/konˈtsɛrt/",
         "en": "concert",
         "pos": "noun",
+        "ipa": "/konˈtsɛrt/",
         "gender": "m"
       },
       {
-        "id": "v-m74-031",
+        "id": "v-vystavka-74-30",
         "uk": "виставка",
-        "translit": "",
-        "ipa": "/ˈvɪstɑvkɑ/",
         "en": "exhibition",
         "pos": "noun",
+        "ipa": "/ˈvɪstɑvkɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m74-032",
+        "id": "v-festyvalь-74-31",
         "uk": "фестиваль",
-        "translit": "",
-        "ipa": "/fɛstɪˈvɑlʲ/",
         "en": "festival",
         "pos": "noun",
+        "ipa": "/fɛstɪˈvɑlʲ/",
         "gender": "m"
       },
       {
-        "id": "v-m74-033",
+        "id": "v-karaoke-74-32",
         "uk": "караоке",
-        "translit": "",
-        "ipa": "/kɑrɑˈokɛ/",
         "en": "karaoke",
         "pos": "noun",
+        "ipa": "/kɑrɑˈokɛ/",
         "gender": "n",
         "note": "indecl"
       },
       {
-        "id": "v-m74-034",
+        "id": "v-kvest-74-33",
         "uk": "квест",
-        "translit": "",
-        "ipa": "/kvɛst/",
         "en": "escape room",
         "pos": "noun",
+        "ipa": "/kvɛst/",
         "gender": "m"
       },
       {
-        "id": "v-m74-035",
+        "id": "v-zaymatysya-74-34",
         "uk": "займатися",
-        "translit": "",
-        "ipa": "/zɑjˈmɑtɪsʲɑ/",
         "en": "to engage in",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/zɑjˈmɑtɪsʲɑ/",
         "note": "impf"
       },
       {
-        "id": "v-m74-036",
+        "id": "v-zakhoplyuvatysya-74-35",
         "uk": "захоплюватися",
-        "translit": "",
-        "ipa": "/zɑxopˈlʲuvɑtɪsʲɑ/",
         "en": "to be passionate",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/zɑxopˈlʲuvɑtɪsʲɑ/",
         "note": "impf"
       },
       {
-        "id": "v-m74-037",
+        "id": "v-zbyraty-74-36",
         "uk": "збирати",
-        "translit": "",
-        "ipa": "/zbɪˈrɑtɪ/",
         "en": "to collect",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/zbɪˈrɑtɪ/",
         "note": "impf"
       },
       {
-        "id": "v-m74-038",
+        "id": "v-malyuvaty-74-37",
         "uk": "малювати",
-        "translit": "",
-        "ipa": "/mɑlʲuˈvɑtɪ/",
         "en": "to draw, paint",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/mɑlʲuˈvɑtɪ/",
         "note": "impf"
       },
       {
-        "id": "v-m74-039",
+        "id": "v-v'yazaty-74-38",
         "uk": "в'язати",
-        "translit": "",
-        "ipa": "/vʲjɑˈzɑtɪ/",
         "en": "to knit",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/vʲjɑˈzɑtɪ/",
         "note": "impf"
       },
       {
-        "id": "v-m74-040",
+        "id": "v-maystruvaty-74-39",
         "uk": "майструвати",
-        "translit": "",
-        "ipa": "/mɑjstruˈvɑtɪ/",
         "en": "to craft",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/mɑjstruˈvɑtɪ/",
         "note": "impf"
       },
       {
-        "id": "v-m74-041",
+        "id": "v-fotohrafuvaty-74-40",
         "uk": "фотографувати",
-        "translit": "",
-        "ipa": "/fotoɦrɑfuˈvɑtɪ/",
         "en": "to photograph",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/fotoɦrɑfuˈvɑtɪ/",
         "note": "impf"
       }
     ]

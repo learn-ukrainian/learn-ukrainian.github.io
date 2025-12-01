@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-A2-36",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "grammar-introduction",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -27,8 +26,6 @@
       "стати + instrumental (to become)",
       "працювати + instrumental (to work as)"
     ],
-    "totalDuration": 45,
-    "transliterationMode": "partial",
     "tags": [
       "instrumental",
       "professions",
@@ -36,22 +33,9 @@
       "стати",
       "працювати"
     ],
-    "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
+    "totalDuration": 45,
+    "transliterationMode": "partial",
     "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### What Do You Do?\n\nIn English, we say \"I am a doctor\" or \"She works as a teacher.\" Ukrainian uses the **instrumental case** to express professions with certain verbs.\n\n**The pattern:**\n- Він **лікар**. (He's a doctor. - nominative, simple statement)\n- Він працює **лікарем**. (He works as a doctor. - instrumental)\n- Він став **лікарем**. (He became a doctor. - instrumental)\n\nWhen did this happen? The instrumental shows the *role* someone plays, while nominative is a basic identity statement.\n\n> 💡 **Did You Know?**\n>\n> This instrumental use is called the \"predicative instrumental\" - it marks what role or function something serves. It emphasizes the profession as a *role* you perform, not just a label. \"Працювати лікарем\" means you actively fulfill the doctor role!"
-          }
-        ]
-      },
       {
         "id": "phase-presentation",
         "name": "presentation",
@@ -60,92 +44,33 @@
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "### Three Key Verbs\n\n| Verb | Meaning | Case | Example |\n|------|---------|------|---------|\n| бути | to be | instrumental | Він був студентом. |\n| стати | to become | instrumental | Вона стала вчителькою. |\n| працювати | to work as | instrumental | Я працюю інженером. |\n\n**Important:** In present tense, \"to be\" is usually omitted:\n- Він лікар. (He's a doctor - nominative, no verb)\n- Він **є** лікарем. (He is a doctor - formal, with instrumental)\n\nBut in past and future, instrumental is common:\n- Він **був** лікарем. (He was a doctor.)\n- Він **буде** лікарем. (He will be a doctor.)\n\n> ⚡ **Pro Tip: Nominative vs Instrumental**\n>\n> - **Nominative:** Simple identification - Він лікар. (He's a doctor.)\n> - **Instrumental:** Role/function - Він працює лікарем. (He works as a doctor.)\n>\n> Instrumental emphasizes the *activity* of being something!"
+            "teacherNotes": "### Three Key Verbs\n\n| Verb | Meaning | Case | Example |\n|------|---------|------|---------|\n| бути | to be | instrumental | Він був студентом. |\n| стати | to become | instrumental | Вона стала вчителькою. |\n| працювати | to work as | instrumental | Я працюю інженером. |\n\n**Important:** In present tense, \"to be\" is usually omitted:\n- Він лікар. (He's a doctor - nominative, no verb)\n- Він **є** лікарем. (He is a doctor - formal, with instrumental)\n\nBut in past and future, instrumental is common:\n- Він **був** лікарем. (He was a doctor.)\n- Він **буде** лікарем. (He will be a doctor.)\n\n> ⚡ **Pro Tip: Nominative vs Instrumental**\n>\n> - **Nominative:** Simple identification - Він лікар. (He's a doctor.)\n> - **Instrumental:** Role/function - Він працює лікарем. (He works as a doctor.)\n>\n> Instrumental emphasizes the *activity* of being something!\n\n### Common Professions - Masculine\n\n| Nominative | Instrumental | English |\n|------------|--------------|---------|\n| лікар | лікар**ем** | doctor |\n| інженер | інженер**ом** | engineer |\n| програміст | програміст**ом** | programmer |\n| вчитель | вчител**ем** | teacher |\n| журналіст | журналіст**ом** | journalist |\n| юрист | юрист**ом** | lawyer |\n| бухгалтер | бухгалтер**ом** | accountant |\n| менеджер | менеджер**ом** | manager |\n| директор | директор**ом** | director |\n| водій | воді**єм** | driver |\n| пілот | пілот**ом** | pilot |\n| музикант | музикант**ом** | musician |\n| художник | художник**ом** | artist |\n| письменник | письменник**ом** | writer |\n\n**Example sentences:**\n- Він працює **лікарем** у лікарні. - He works as a doctor at a hospital.\n- Мій брат став **програмістом**. - My brother became a programmer.\n- Батько був **інженером**. - Father was an engineer.\n\n> 📜 **History Bite: Soviet Professions**\n>\n> During Soviet times, certain professions carried special prestige: інженер (engineer), лікар (doctor), вчитель (teacher). These were called \"інтелігенція\" (intelligentsia). Today, професіонал (professional) and спеціаліст (specialist) are valued across all fields.\n\n### Common Professions - Feminine\n\n| Nominative | Instrumental | English |\n|------------|--------------|---------|\n| лікарка | лікарк**ою** | doctor (f) |\n| вчителька | вчительк**ою** | teacher (f) |\n| журналістка | журналістк**ою** | journalist (f) |\n| юристка | юристк**ою** | lawyer (f) |\n| програмістка | програмістк**ою** | programmer (f) |\n| медсестра | медсестр**ою** | nurse |\n| секретарка | секретарк**ою** | secretary (f) |\n| актриса | актрис**ою** | actress |\n| співачка | співачк**ою** | singer (f) |\n| письменниця | письменниц**ею** | writer (f) |\n\n**Example sentences:**\n- Вона працює **вчителькою**. - She works as a teacher.\n- Моя сестра стала **лікаркою**. - My sister became a doctor.\n- Мама була **медсестрою**. - Mom was a nurse.\n\n> 🎭 **Culture Corner: Gender in Professions**\n>\n> Ukrainian has feminine forms for most professions. Using them is standard and respectful. Some newer professions (менеджер, програміст) often use masculine forms for women too: \"Вона - менеджер\" or \"Вона працює менеджером.\" Both are acceptable!\n\n### стати - To Become\n\n**Conjugation (perfective):**\n\n| Person | Present/Future |\n|--------|----------------|\n| я | стану |\n| ти | станеш |\n| він/вона | стане |\n| ми | станемо |\n| ви | станете |\n| вони | стануть |\n\n**Past tense:**\n- він став\n- вона стала\n- воно стало\n- вони стали\n\n**Examples:**\n- Я хочу **стати** лікарем. - I want to become a doctor.\n- Вона **стала** відомою письменницею. - She became a famous writer.\n- Він **став** директором компанії. - He became company director.\n- Ми **станемо** професіоналами. - We will become professionals.\n\n> ⚡ **Pro Tip: Want to Become**\n>\n> The most common pattern: хотіти + стати + INSTRUMENTAL\n> - Ким ти хочеш стати? - What do you want to become?\n> - Я хочу стати лікарем. - I want to become a doctor.\n> - Вона мріє стати акторкою. - She dreams of becoming an actress.\n\n### More Verbs + Instrumental Predicate\n\n| Verb | Meaning | Example |\n|------|---------|---------|\n| залишатися | remain, stay | Він залишається директором. |\n| виявитися | turn out to be | Він виявився хорошим другом. |\n| вважатися | be considered | Вона вважається експертом. |\n| називатися | be called | Це називається прогресом. |\n| служити | serve as | Він служить офіцером. |\n\n**Examples:**\n- Він **залишається** найкращим спеціалістом. - He remains the best specialist.\n- Вона **вважається** експертом у цій галузі. - She's considered an expert in this field.\n- Це **виявилося** помилкою. - This turned out to be a mistake.\n\n### Asking About Professions\n\n**Ким? - As whom? / What (profession)?**\n\n| Question | Answer |\n|----------|--------|\n| Ким ти працюєш? | Я працюю вчителем. |\n| Ким він став? | Він став лікарем. |\n| Ким ти хочеш бути? | Я хочу бути інженером. |\n| Ким вона була? | Вона була медсестрою. |\n\n**More detailed questions:**\n- **Де** ти працюєш? - Where do you work?\n- **Ким** ти працюєш? - What do you work as?\n- **Скільки** ти заробляєш? - How much do you earn? (informal)\n- Тобі **подобається** твоя робота? - Do you like your job?\n\n> 💡 **Did You Know?**\n>\n> The question \"Ким?\" uses instrumental case - it's literally asking \"By whom?\" or \"As whom?\" This perfectly matches the instrumental answers: \"Ким ти працюєш?\" - \"Лікарем\" (As a doctor)."
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Common Professions - Masculine\n\n| Nominative | Instrumental | English |\n|------------|--------------|---------|\n| лікар | лікар**ем** | doctor |\n| інженер | інженер**ом** | engineer |\n| програміст | програміст**ом** | programmer |\n| вчитель | вчител**ем** | teacher |\n| журналіст | журналіст**ом** | journalist |\n| юрист | юрист**ом** | lawyer |\n| бухгалтер | бухгалтер**ом** | accountant |\n| менеджер | менеджер**ом** | manager |\n| директор | директор**ом** | director |\n| водій | воді**єм** | driver |\n| пілот | пілот**ом** | pilot |\n| музикант | музикант**ом** | musician |\n| художник | художник**ом** | artist |\n| письменник | письменник**ом** | writer |\n\n**Example sentences:**\n- Він працює **лікарем** у лікарні. - He works as a doctor at a hospital.\n- Мій брат став **програмістом**. - My brother became a programmer.\n- Батько був **інженером**. - Father was an engineer.\n\n> 📜 **History Bite: Soviet Professions**\n>\n> During Soviet times, certain professions carried special prestige: інженер (engineer), лікар (doctor), вчитель (teacher). These were called \"інтелігенція\" (intelligentsia). Today, професіонал (professional) and спеціаліст (specialist) are valued across all fields."
+            "teacherNotes": "### Transform to Instrumental\n\nGive the instrumental form of these professions:\n\n**Masculine:**\n1. лікар\n   > [!answer] лікарем\n2. інженер\n   > [!answer] інженером\n3. вчитель\n   > [!answer] вчителем\n4. програміст\n   > [!answer] програмістом\n5. водій\n   > [!answer] водієм\n\n**Feminine:**\n1. лікарка\n   > [!answer] лікаркою\n2. вчителька\n   > [!answer] вчителькою\n3. медсестра\n   > [!answer] медсестрою\n4. актриса\n   > [!answer] актрисою\n5. письменниця\n   > [!answer] письменницею\n\n### Complete the Sentences\n\nFill in the correct form:\n\n1. Він працює ___ (лікар).\n   > [!answer] лікарем\n2. Вона стала ___ (вчителька).\n   > [!answer] вчителькою\n3. Мій брат хоче бути ___ (програміст).\n   > [!answer] програмістом\n4. Батько був ___ (інженер).\n   > [!answer] інженером\n5. Ким ти працюєш? - ___ (журналіст).\n   > [!answer] Журналістом.\n6. Вона мріє стати ___ (актриса).\n   > [!answer] актрисою\n\n### Build Dialogues\n\nCreate mini-dialogues:\n\n1. A: Ким ти працюєш? B: ___ (teacher)\n   > [!answer] Я працюю вчителем/вчителькою.\n2. A: Ким став твій брат? B: ___ (programmer)\n   > [!answer] Він став програмістом.\n3. A: Ким ти хочеш бути? B: ___ (doctor)\n   > [!answer] Я хочу бути лікарем/лікаркою."
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Common Professions - Feminine\n\n| Nominative | Instrumental | English |\n|------------|--------------|---------|\n| лікарка | лікарк**ою** | doctor (f) |\n| вчителька | вчительк**ою** | teacher (f) |\n| журналістка | журналістк**ою** | journalist (f) |\n| юристка | юристк**ою** | lawyer (f) |\n| програмістка | програмістк**ою** | programmer (f) |\n| медсестра | медсестр**ою** | nurse |\n| секретарка | секретарк**ою** | secretary (f) |\n| актриса | актрис**ою** | actress |\n| співачка | співачк**ою** | singer (f) |\n| письменниця | письменниц**ею** | writer (f) |\n\n**Example sentences:**\n- Вона працює **вчителькою**. - She works as a teacher.\n- Моя сестра стала **лікаркою**. - My sister became a doctor.\n- Мама була **медсестрою**. - Mom was a nurse.\n\n> 🎭 **Culture Corner: Gender in Professions**\n>\n> Ukrainian has feminine forms for most professions. Using them is standard and respectful. Some newer professions (менеджер, програміст) often use masculine forms for women too: \"Вона - менеджер\" or \"Вона працює менеджером.\" Both are acceptable!"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "стати - To Become\n\n**Conjugation (perfective):**\n\n| Person | Present/Future |\n|--------|----------------|\n| я | стану |\n| ти | станеш |\n| він/вона | стане |\n| ми | станемо |\n| ви | станете |\n| вони | стануть |\n\n**Past tense:**\n- він став\n- вона стала\n- воно стало\n- вони стали\n\n**Examples:**\n- Я хочу **стати** лікарем. - I want to become a doctor.\n- Вона **стала** відомою письменницею. - She became a famous writer.\n- Він **став** директором компанії. - He became company director.\n- Ми **станемо** професіоналами. - We will become professionals.\n\n> ⚡ **Pro Tip: Want to Become**\n>\n> The most common pattern: хотіти + стати + INSTRUMENTAL\n> - Ким ти хочеш стати? - What do you want to become?\n> - Я хочу стати лікарем. - I want to become a doctor.\n> - Вона мріє стати акторкою. - She dreams of becoming an actress."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "More Verbs + Instrumental Predicate\n\n| Verb | Meaning | Example |\n|------|---------|---------|\n| залишатися | remain, stay | Він залишається директором. |\n| виявитися | turn out to be | Він виявився хорошим другом. |\n| вважатися | be considered | Вона вважається експертом. |\n| називатися | be called | Це називається прогресом. |\n| служити | serve as | Він служить офіцером. |\n\n**Examples:**\n- Він **залишається** найкращим спеціалістом. - He remains the best specialist.\n- Вона **вважається** експертом у цій галузі. - She's considered an expert in this field.\n- Це **виявилося** помилкою. - This turned out to be a mistake."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Asking About Professions\n\n**Ким? - As whom? / What (profession)?**\n\n| Question | Answer |\n|----------|--------|\n| Ким ти працюєш? | Я працюю вчителем. |\n| Ким він став? | Він став лікарем. |\n| Ким ти хочеш бути? | Я хочу бути інженером. |\n| Ким вона була? | Вона була медсестрою. |\n\n**More detailed questions:**\n- **Де** ти працюєш? - Where do you work?\n- **Ким** ти працюєш? - What do you work as?\n- **Скільки** ти заробляєш? - How much do you earn? (informal)\n- Тобі **подобається** твоя робота? - Do you like your job?\n\n> 💡 **Did You Know?**\n>\n> The question \"Ким?\" uses instrumental case - it's literally asking \"By whom?\" or \"As whom?\" This perfectly matches the instrumental answers: \"Ким ти працюєш?\" - \"Лікарем\" (As a doctor)."
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A2-36-matchup"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Transform to Instrumental\n\nGive the instrumental form of these professions:\n\n**Masculine:**\n1. лікар → лікарем\n2. інженер → інженером\n3. вчитель → вчителем\n4. програміст → програмістом\n5. водій → водієм\n\n**Feminine:**\n1. лікарка → лікаркою\n2. вчителька → вчителькою\n3. медсестра → медсестрою\n4. актриса → актрисою\n5. письменниця → письменницею"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Complete the Sentences\n\nFill in the correct form:\n\n1. Він працює ___ (лікар). → лікарем\n2. Вона стала ___ (вчителька). → вчителькою\n3. Мій брат хоче бути ___ (програміст). → програмістом\n4. Батько був ___ (інженер). → інженером\n5. Ким ти працюєш? - ___ (журналіст). → Журналістом.\n6. Вона мріє стати ___ (актриса). → актрисою"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Build Dialogues\n\nCreate mini-dialogues:\n\n1. A: Ким ти працюєш? B: ___ (teacher) → Я працюю вчителем/вчителькою.\n2. A: Ким став твій брат? B: ___ (programmer) → Він став програмістом.\n3. A: Ким ти хочеш бути? B: ___ (doctor) → Я хочу бути лікарем/лікаркою."
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A2-36-quiz"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A2-36-groupsort"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Real Situations\n\n**Scenario 1: Meeting someone new**\n- Привіт! Я Олег. Ким ти працюєш?\n- Я працюю програмістом в IT-компанії. А ти?\n- Я журналіст. Пишу для онлайн-видання.\n- Цікаво! Тобі подобається твоя робота?\n\n**Scenario 2: Career change**\n- Я чула, ти змінив роботу?\n- Так, раніше я був менеджером, а тепер став підприємцем.\n- Вау! Власний бізнес?\n- Так, відкрив невелике кафе.\n\n**Scenario 3: Dreams and goals**\n- Ким ти хотів стати в дитинстві?\n- Я мріяв стати пілотом!\n- А тепер?\n- Тепер я працюю бухгалтером. Але це теж цікаво!"
+            "teacherNotes": "### Real Situations\n\n**Scenario 1: Meeting someone new**\n- Привіт! Я Олег. Ким ти працюєш?\n- Я працюю програмістом в IT-компанії. А ти?\n- Я журналіст. Пишу для онлайн-видання.\n- Цікаво! Тобі подобається твоя робота?\n\n**Scenario 2: Career change**\n- Я чула, ти змінив роботу?\n- Так, раніше я був менеджером, а тепер став підприємцем.\n- Вау! Власний бізнес?\n- Так, відкрив невелике кафе.\n\n**Scenario 3: Dreams and goals**\n- Ким ти хотів стати в дитинстві?\n- Я мріяв стати пілотом!\n- А тепер?\n- Тепер я працюю бухгалтером. Але це теж цікаво!\n\n---"
           }
         ]
       }
-    ]
+    ],
+    "createdAt": "2025-12-01T22:58:37.268Z",
+    "modifiedAt": "2025-12-01T22:58:37.268Z",
+    "version": 1
   },
   "activities": [
     {
-      "id": "act-uk-A2-36-matchup",
+      "id": "act-a2-36-matchup",
       "type": "match-up",
       "title": "Profession Pairs",
       "description": "Match masculine and feminine forms.",
       "content": {
         "type": "match-up",
-        "instructions": "Match masculine and feminine forms.",
         "pairs": [
           {
             "left": "лікар",
@@ -180,24 +105,17 @@
       "language": "uk",
       "difficultyLevel": "A2",
       "duration": 5,
-      "tags": [
-        "instrumental",
-        "professions",
-        "бути",
-        "стати",
-        "працювати"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.268Z",
+      "modifiedAt": "2025-12-01T22:58:37.268Z"
     },
     {
-      "id": "act-uk-A2-36-quiz",
+      "id": "act-a2-36-quiz",
       "type": "quiz",
       "title": "Professions + Instrumental",
       "description": "Choose the correct form.",
       "content": {
         "type": "quiz",
-        "instructions": "Choose the correct form.",
         "questions": [
           {
             "question": "\"He works as a doctor\" - Він працює ___.",
@@ -298,26 +216,20 @@
       "language": "uk",
       "difficultyLevel": "A2",
       "duration": 5,
-      "tags": [
-        "instrumental",
-        "professions",
-        "бути",
-        "стати",
-        "працювати"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.268Z",
+      "modifiedAt": "2025-12-01T22:58:37.268Z"
     },
     {
-      "id": "act-uk-A2-36-groupsort",
+      "id": "act-a2-36-groupsort",
       "type": "group-sort",
       "title": "Masculine vs Feminine Professions",
       "description": "Sort the professions by gender.",
       "content": {
         "type": "group-sort",
-        "instructions": "Sort the professions by gender.",
         "groups": [
           {
+            "id": "masculine",
             "name": "Masculine",
             "items": [
               "лікарем",
@@ -327,6 +239,7 @@
             ]
           },
           {
+            "id": "feminine",
             "name": "Feminine",
             "items": [
               "лікаркою",
@@ -344,15 +257,9 @@
       "language": "uk",
       "difficultyLevel": "A2",
       "duration": 5,
-      "tags": [
-        "instrumental",
-        "professions",
-        "бути",
-        "стати",
-        "працювати"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.268Z",
+      "modifiedAt": "2025-12-01T22:58:37.268Z"
     }
   ],
   "vocabulary": {
@@ -363,170 +270,147 @@
     "transliterationMode": "partial",
     "words": [
       {
-        "id": "v-m36-001",
+        "id": "v-staty-36-0",
         "uk": "стати",
-        "translit": "",
-        "ipa": "/ˈstɑtɪ/",
         "en": "to become",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/ˈstɑtɪ/",
         "note": "+ instr"
       },
       {
-        "id": "v-m36-002",
+        "id": "v-zalyshatysya-36-1",
         "uk": "залишатися",
-        "translit": "",
-        "ipa": "/zɑlɪˈʃɑtɪsʲɑ/",
         "en": "to remain",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/zɑlɪˈʃɑtɪsʲɑ/",
         "note": "+ instr"
       },
       {
-        "id": "v-m36-003",
+        "id": "v-vyyavytysya-36-2",
         "uk": "виявитися",
-        "translit": "",
-        "ipa": "/vɪjɑˈvɪtɪsʲɑ/",
         "en": "to turn out",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/vɪjɑˈvɪtɪsʲɑ/",
         "note": "+ instr"
       },
       {
-        "id": "v-m36-004",
+        "id": "v-vvazhatysya-36-3",
         "uk": "вважатися",
-        "translit": "",
-        "ipa": "/vvɑˈʒɑtɪsʲɑ/",
         "en": "to be considered",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/vvɑˈʒɑtɪsʲɑ/",
         "note": "+ instr"
       },
       {
-        "id": "v-m36-005",
+        "id": "v-sluzhyty-36-4",
         "uk": "служити",
-        "translit": "",
-        "ipa": "/sluˈʒɪtɪ/",
         "en": "to serve",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/sluˈʒɪtɪ/",
         "note": "+ instr"
       },
       {
-        "id": "v-m36-006",
+        "id": "v-inzhener-36-5",
         "uk": "інженер",
-        "translit": "",
-        "ipa": "/inʒɛˈnɛr/",
         "en": "engineer",
         "pos": "noun",
+        "ipa": "/inʒɛˈnɛr/",
         "gender": "m"
       },
       {
-        "id": "v-m36-007",
+        "id": "v-prohramist-36-6",
         "uk": "програміст",
-        "translit": "",
-        "ipa": "/proɦrɑˈmʲist/",
         "en": "programmer",
         "pos": "noun",
+        "ipa": "/proɦrɑˈmʲist/",
         "gender": "m"
       },
       {
-        "id": "v-m36-008",
+        "id": "v-zhurnalist-36-7",
         "uk": "журналіст",
-        "translit": "",
-        "ipa": "/ʒurnɑˈlʲist/",
         "en": "journalist",
         "pos": "noun",
+        "ipa": "/ʒurnɑˈlʲist/",
         "gender": "m"
       },
       {
-        "id": "v-m36-009",
+        "id": "v-yuryst-36-8",
         "uk": "юрист",
-        "translit": "",
-        "ipa": "/juˈrɪst/",
         "en": "lawyer",
         "pos": "noun",
+        "ipa": "/juˈrɪst/",
         "gender": "m"
       },
       {
-        "id": "v-m36-010",
+        "id": "v-bukhhalter-36-9",
         "uk": "бухгалтер",
-        "translit": "",
-        "ipa": "/buxˈɦɑltɛr/",
         "en": "accountant",
         "pos": "noun",
+        "ipa": "/buxˈɦɑltɛr/",
         "gender": "m"
       },
       {
-        "id": "v-m36-011",
+        "id": "v-pilot-36-10",
         "uk": "пілот",
-        "translit": "",
-        "ipa": "/pʲiˈlot/",
         "en": "pilot",
         "pos": "noun",
+        "ipa": "/pʲiˈlot/",
         "gender": "m"
       },
       {
-        "id": "v-m36-012",
+        "id": "v-muzykant-36-11",
         "uk": "музикант",
-        "translit": "",
-        "ipa": "/muzɪˈkɑnt/",
         "en": "musician",
         "pos": "noun",
+        "ipa": "/muzɪˈkɑnt/",
         "gender": "m"
       },
       {
-        "id": "v-m36-013",
+        "id": "v-khudozhnyk-36-12",
         "uk": "художник",
-        "translit": "",
-        "ipa": "/xuˈdoʒnɪk/",
         "en": "artist",
         "pos": "noun",
+        "ipa": "/xuˈdoʒnɪk/",
         "gender": "m"
       },
       {
-        "id": "v-m36-014",
+        "id": "v-pysьmennyk-36-13",
         "uk": "письменник",
-        "translit": "",
-        "ipa": "/pɪsʲˈmɛnnɪk/",
         "en": "writer",
         "pos": "noun",
+        "ipa": "/pɪsʲˈmɛnnɪk/",
         "gender": "m"
       },
       {
-        "id": "v-m36-015",
+        "id": "v-pidpryyemetsь-36-14",
         "uk": "підприємець",
-        "translit": "",
-        "ipa": "/pʲidprɪˈjɛmɛtsʲ/",
         "en": "entrepreneur",
         "pos": "noun",
+        "ipa": "/pʲidprɪˈjɛmɛtsʲ/",
         "gender": "m"
       },
       {
-        "id": "v-m36-016",
+        "id": "v-spetsialist-36-15",
         "uk": "спеціаліст",
-        "translit": "",
-        "ipa": "/spɛtsʲiɑˈlʲist/",
         "en": "specialist",
         "pos": "noun",
+        "ipa": "/spɛtsʲiɑˈlʲist/",
         "gender": "m"
       },
       {
-        "id": "v-m36-017",
+        "id": "v-ekspert-36-16",
         "uk": "експерт",
-        "translit": "",
-        "ipa": "/ɛksˈpɛrt/",
         "en": "expert",
         "pos": "noun",
+        "ipa": "/ɛksˈpɛrt/",
         "gender": "m"
       },
       {
-        "id": "v-m36-018",
+        "id": "v-profesional-36-17",
         "uk": "професіонал",
-        "translit": "",
-        "ipa": "/profɛsʲioˈnɑl/",
         "en": "professional",
         "pos": "noun",
+        "ipa": "/profɛsʲioˈnɑl/",
         "gender": "m"
       }
     ]

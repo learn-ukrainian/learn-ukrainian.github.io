@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-B1-91",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "grammar-introduction",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -26,30 +25,15 @@
       "Directional prefix meanings",
       "Aspect pair formation"
     ],
-    "totalDuration": 45,
-    "transliterationMode": "none",
     "tags": [
       "verbs",
       "motion",
       "prefixes",
       "grammar"
     ],
-    "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
+    "totalDuration": 45,
+    "transliterationMode": "none",
     "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Review: Prefixes So Far\n\nFrom Module 90:\n- **при-** = arrival (прийти)\n- **ви-** = exit (вийти)\n- **в-/у-** = entry (увійти)\n\nToday: три нові префікси — пере-, про-, об-"
-          }
-        ]
-      },
       {
         "id": "phase-presentation",
         "name": "presentation",
@@ -58,152 +42,50 @@
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "### Prefix пере- (Across, Over, Re-)\n\n**Meaning:** Movement ACROSS or OVER something; also \"re-doing\"\n\n| Base (impf) | Prefixed (pf) | New Imperfective | English |\n|-------------|---------------|------------------|---------|\n| іти/ходити | перейти | переходити | to cross (on foot) |\n| їхати/їздити | переїхати | переїжджати | to move (residence); to drive across |\n| бігти/бігати | перебігти | перебігати | to run across |\n| летіти/літати | перелетіти | перелітати | to fly across |\n| плисти/плавати | переплисти | перепливати | to swim across |\n| нести/носити | перенести | переносити | to carry across; to reschedule |\n| везти/возити | перевезти | перевозити | to transport across |\n| вести/водити | перевести | переводити | to translate; to transfer |\n\n**Examples:**\n\n- **Перейдіть** через дорогу. - Cross the street.\n- Ми **переїхали** до нового будинку. - We moved to a new house.\n- Він **переплив** ріку. - He swam across the river.\n- Вона **переклала** книгу з англійської. - She translated the book from English.\n- **Перенесіть** зустріч на завтра. - Reschedule the meeting to tomorrow.\n\n> **Two meanings of пере-:**\n> 1. Physical: across, over (перейти дорогу)\n> 2. Abstract: re-doing, transferring (перенести зустріч)"
+            "teacherNotes": "### Prefix пере- (Across, Over, Re-)\n\n**Meaning:** Movement ACROSS or OVER something; also \"re-doing\"\n\n| Base (impf) | Prefixed (pf) | New Imperfective | English |\n|-------------|---------------|------------------|---------|\n| іти/ходити | перейти | переходити | to cross (on foot) |\n| їхати/їздити | переїхати | переїжджати | to move (residence); to drive across |\n| бігти/бігати | перебігти | перебігати | to run across |\n| летіти/літати | перелетіти | перелітати | to fly across |\n| плисти/плавати | переплисти | перепливати | to swim across |\n| нести/носити | перенести | переносити | to carry across; to reschedule |\n| везти/возити | перевезти | перевозити | to transport across |\n| вести/водити | перевести | переводити | to translate; to transfer |\n\n**Examples:**\n\n- **Перейдіть** через дорогу. - Cross the street.\n- Ми **переїхали** до нового будинку. - We moved to a new house.\n- Він **переплив** ріку. - He swam across the river.\n- Вона **переклала** книгу з англійської. - She translated the book from English.\n- **Перенесіть** зустріч на завтра. - Reschedule the meeting to tomorrow.\n\n> **Two meanings of пере-:**\n> 1. Physical: across, over (перейти дорогу)\n> 2. Abstract: re-doing, transferring (перенести зустріч)\n\n### Special: Переходити / Перейти\n\nThis verb has extended meanings:\n\n- **переходити дорогу** - to cross the street\n- **переходити на інше місце** - to move to another place\n- **переходити до справи** - to get down to business\n- **переходити на українську** - to switch to Ukrainian\n\n### Prefix про- (Through, Past)\n\n**Meaning:** Movement THROUGH or PAST something; also duration\n\n| Base (impf) | Prefixed (pf) | New Imperfective | English |\n|-------------|---------------|------------------|---------|\n| іти/ходити | пройти | проходити | to pass, go through |\n| їхати/їздити | проїхати | проїжджати | to drive past/through |\n| бігти/бігати | пробігти | пробігати | to run past |\n| летіти/літати | пролетіти | пролітати | to fly past |\n| нести/носити | пронести | проносити | to carry through |\n\n**Examples:**\n\n- Ми **пройшли** повз парк. - We walked past the park.\n- Машина **проїхала** повз нас. - The car drove past us.\n- Він **пробіг** 5 кілометрів. - He ran 5 kilometers.\n- Час **пролетів** швидко. - Time flew by quickly.\n- **Пройдіть** до кінця коридору. - Go to the end of the corridor.\n\n**Про- with time = spending time:**\n\n- Я **просидів** там годину. - I sat there for an hour.\n- Вона **пропрацювала** всю ніч. - She worked all night.\n- Ми **прочекали** дві години. - We waited for two hours.\n\n### Prefix об-/обі- (Around)\n\n**Meaning:** Movement AROUND something\n\n| Base (impf) | Prefixed (pf) | New Imperfective | English |\n|-------------|---------------|------------------|---------|\n| іти/ходити | обійти | обходити | to go around |\n| їхати/їздити | об'їхати | об'їжджати | to drive around |\n| бігти/бігати | обігнати | обганяти | to overtake |\n| летіти/літати | облетіти | облітати | to fly around |\n| плисти/плавати | обплисти | обпливати | to sail around |\n\n**Examples:**\n\n- **Обійдіть** будинок. - Go around the building.\n- Машина **об'їхала** яму. - The car drove around the hole.\n- Він **обігнав** усіх на змаганнях. - He overtook everyone in the competition.\n- Ми **обійшли** все місто. - We walked around the whole city.\n\n**Об- with abstract meaning:**\n\n- **обговорити** - to discuss (go around a topic)\n- **обслуговувати** - to serve (go around customers)\n\n### Compare: про- vs об-\n\n- **про-** = THROUGH or PAST (пройти повз = walk past)\n- **об-** = AROUND (обійти = walk around)\n\n| про- | об- |\n|------|-----|\n| Він **пройшов** повз будинок. | Він **обійшов** будинок. |\n| He walked past the building. | He walked around the building. |\n| Машина **проїхала** тунель. | Машина **об'їхала** місто. |\n| The car drove through the tunnel. | The car drove around the city. |\n\n### Conjugation: Перейти (pf)\n\n| Pronoun | Past | Future |\n|---------|------|--------|\n| я | перейшов/перейшла | перейду |\n| ти | перейшов/перейшла | перейдеш |\n| він/вона | перейшов/перейшла | перейде |\n| ми | перейшли | перейдемо |\n| ви | перейшли | перейдете |\n| вони | перейшли | перейдуть |\n\n### Aspect Pairs Summary\n\n| Perfective | Imperfective | English |\n|------------|--------------|---------|\n| перейти | переходити | to cross |\n| переїхати | переїжджати | to move, drive across |\n| пройти | проходити | to pass through |\n| проїхати | проїжджати | to drive through |\n| обійти | обходити | to go around |\n| об'їхати | об'їжджати | to drive around |"
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Special: Переходити / Перейти\n\nThis verb has extended meanings:\n\n- **переходити дорогу** - to cross the street\n- **переходити на інше місце** - to move to another place\n- **переходити до справи** - to get down to business\n- **переходити на українську** - to switch to Ukrainian"
+            "teacherNotes": "### Choose the Correct Prefix\n\n1. Ми ___ (перейшли/пройшли) через міст.\n   > [!answer] **перейшли** (across)\n2. Машина ___ (переїхала/проїхала) повз нас.\n   > [!answer] **проїхала** (past)\n3. Вона ___ (обійшла/пройшла) магазин.\n   > [!answer] **обійшла** (around)\n4. Він ___ (перебіг/пробіг) 10 кілометрів.\n   > [!answer] **пробіг** (distance)\n5. Ми ___ (переїхали/проїхали) до нового міста.\n   > [!answer] **переїхали** (moved residence)\n6. ___ (Перейдіть/Пройдіть) до кінця вулиці.\n   > [!answer] **Пройдіть** (go to)\n7. Потрібно ___ (обійти/перейти) дорогу.\n   > [!answer] **перейти** (cross)\n\n### Form Aspect Pairs\n\nGive the imperfective:\n\n1. перейти\n   > [!answer] **переходити**\n2. пройти\n   > [!answer] **проходити**\n3. обійти\n   > [!answer] **обходити**\n4. переїхати\n   > [!answer] **переїжджати**\n5. проїхати\n   > [!answer] **проїжджати**\n6. перенести\n   > [!answer] **переносити**\n7. перевести\n   > [!answer] **переводити**\n\n### Translate to Ukrainian\n\n1. We crossed the street.\n   > [!answer] Ми **перейшли** вулицю.\n2. The car drove past us.\n   > [!answer] Машина **проїхала** повз нас.\n3. He walked around the park.\n   > [!answer] Він **обійшов** парк.\n4. She moved to Kyiv.\n   > [!answer] Вона **переїхала** до Києва.\n5. They walked through the forest.\n   > [!answer] Вони **пройшли** через ліс.\n\n### Complete with Correct Form\n\n1. Він завжди ___ (переходить/перейде) дорогу в цьому місці.\n   > [!answer] **переходить** (always)\n2. Вона щодня ___ (проходить/пройде) повз цей магазин.\n   > [!answer] **проходить** (every day)\n3. Ми вже ___ (проходили/пройшли) це місце.\n   > [!answer] **пройшли** (already)\n4. Коли ви ___ (переїжджали/переїхали) сюди?\n   > [!answer] **переїхали** (single event)"
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Prefix про- (Through, Past)\n\n**Meaning:** Movement THROUGH or PAST something; also duration\n\n| Base (impf) | Prefixed (pf) | New Imperfective | English |\n|-------------|---------------|------------------|---------|\n| іти/ходити | пройти | проходити | to pass, go through |\n| їхати/їздити | проїхати | проїжджати | to drive past/through |\n| бігти/бігати | пробігти | пробігати | to run past |\n| летіти/літати | пролетіти | пролітати | to fly past |\n| нести/носити | пронести | проносити | to carry through |\n\n**Examples:**\n\n- Ми **пройшли** повз парк. - We walked past the park.\n- Машина **проїхала** повз нас. - The car drove past us.\n- Він **пробіг** 5 кілометрів. - He ran 5 kilometers.\n- Час **пролетів** швидко. - Time flew by quickly.\n- **Пройдіть** до кінця коридору. - Go to the end of the corridor.\n\n**Про- with time = spending time:**\n\n- Я **просидів** там годину. - I sat there for an hour.\n- Вона **пропрацювала** всю ніч. - She worked all night.\n- Ми **прочекали** дві години. - We waited for two hours."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Prefix об-/обі- (Around)\n\n**Meaning:** Movement AROUND something\n\n| Base (impf) | Prefixed (pf) | New Imperfective | English |\n|-------------|---------------|------------------|---------|\n| іти/ходити | обійти | обходити | to go around |\n| їхати/їздити | об'їхати | об'їжджати | to drive around |\n| бігти/бігати | обігнати | обганяти | to overtake |\n| летіти/літати | облетіти | облітати | to fly around |\n| плисти/плавати | обплисти | обпливати | to sail around |\n\n**Examples:**\n\n- **Обійдіть** будинок. - Go around the building.\n- Машина **об'їхала** яму. - The car drove around the hole.\n- Він **обігнав** усіх на змаганнях. - He overtook everyone in the competition.\n- Ми **обійшли** все місто. - We walked around the whole city.\n\n**Об- with abstract meaning:**\n\n- **обговорити** - to discuss (go around a topic)\n- **обслуговувати** - to serve (go around customers)"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Compare: про- vs об-\n\n- **про-** = THROUGH or PAST (пройти повз = walk past)\n- **об-** = AROUND (обійти = walk around)\n\n| про- | об- |\n|------|-----|\n| Він **пройшов** повз будинок. | Він **обійшов** будинок. |\n| He walked past the building. | He walked around the building. |\n| Машина **проїхала** тунель. | Машина **об'їхала** місто. |\n| The car drove through the tunnel. | The car drove around the city. |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Conjugation: Перейти (pf)\n\n| Pronoun | Past | Future |\n|---------|------|--------|\n| я | перейшов/перейшла | перейду |\n| ти | перейшов/перейшла | перейдеш |\n| він/вона | перейшов/перейшла | перейде |\n| ми | перейшли | перейдемо |\n| ви | перейшли | перейдете |\n| вони | перейшли | перейдуть |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Aspect Pairs Summary\n\n| Perfective | Imperfective | English |\n|------------|--------------|---------|\n| перейти | переходити | to cross |\n| переїхати | переїжджати | to move, drive across |\n| пройти | проходити | to pass through |\n| проїхати | проїжджати | to drive through |\n| обійти | обходити | to go around |\n| об'їхати | об'їжджати | to drive around |"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-B1-91-matchup"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Choose the Correct Prefix\n\n1. Ми ___ (перейшли/пройшли) через міст. → **перейшли** (across)\n2. Машина ___ (переїхала/проїхала) повз нас. → **проїхала** (past)\n3. Вона ___ (обійшла/пройшла) магазин. → **обійшла** (around)\n4. Він ___ (перебіг/пробіг) 10 кілометрів. → **пробіг** (distance)\n5. Ми ___ (переїхали/проїхали) до нового міста. → **переїхали** (moved residence)\n6. ___ (Перейдіть/Пройдіть) до кінця вулиці. → **Пройдіть** (go to)\n7. Потрібно ___ (обійти/перейти) дорогу. → **перейти** (cross)"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Form Aspect Pairs\n\nGive the imperfective:\n\n1. перейти → **переходити**\n2. пройти → **проходити**\n3. обійти → **обходити**\n4. переїхати → **переїжджати**\n5. проїхати → **проїжджати**\n6. перенести → **переносити**\n7. перевести → **переводити**"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Translate to Ukrainian\n\n1. We crossed the street. → Ми **перейшли** вулицю.\n2. The car drove past us. → Машина **проїхала** повз нас.\n3. He walked around the park. → Він **обійшов** парк.\n4. She moved to Kyiv. → Вона **переїхала** до Києва.\n5. They walked through the forest. → Вони **пройшли** через ліс."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Complete with Correct Form\n\n1. Він завжди ___ (переходить/перейде) дорогу в цьому місці. → **переходить** (always)\n2. Вона щодня ___ (проходить/пройде) повз цей магазин. → **проходить** (every day)\n3. Ми вже ___ (проходили/пройшли) це місце. → **пройшли** (already)\n4. Коли ви ___ (переїжджали/переїхали) сюди? → **переїхали** (single event)"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-B1-91-quiz"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-B1-91-groupsort"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Describe a Journey\n\nUse пере-, про-, об- to describe movement:\n\n**Example:**\nМи **вийшли** з дому і **пройшли** вулицею до зупинки. Потім **проїхали** через центр міста. Нам довелося **об'їхати** затор. Нарешті ми **перейшли** міст і **прийшли** до парку."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Give Directions\n\nUse these verbs to give directions:\n\n**Example:**\n**Пройдіть** прямо до кінця вулиці. Потім **перейдіть** дорогу на світлофорі. **Обійдіть** будинок зліва. Там буде вхід."
+            "teacherNotes": "### Describe a Journey\n\nUse пере-, про-, об- to describe movement:\n\n**Example:**\nМи **вийшли** з дому і **пройшли** вулицею до зупинки. Потім **проїхали** через центр міста. Нам довелося **об'їхати** затор. Нарешті ми **перейшли** міст і **прийшли** до парку.\n\n### Give Directions\n\nUse these verbs to give directions:\n\n**Example:**\n**Пройдіть** прямо до кінця вулиці. Потім **перейдіть** дорогу на світлофорі. **Обійдіть** будинок зліва. Там буде вхід.\n\n---"
           }
         ]
       }
     ],
-    "rawMarkdown": "# Lesson Content\n\n## warm-up\n\n### Review: Prefixes So Far\n\nFrom Module 90:\n- **при-** = arrival (прийти)\n- **ви-** = exit (вийти)\n- **в-/у-** = entry (увійти)\n\nToday: три нові префікси — пере-, про-, об-\n\n## presentation\n\n### Prefix пере- (Across, Over, Re-)\n\n**Meaning:** Movement ACROSS or OVER something; also \"re-doing\"\n\n| Base (impf) | Prefixed (pf) | New Imperfective | English |\n|-------------|---------------|------------------|---------|\n| іти/ходити | перейти | переходити | to cross (on foot) |\n| їхати/їздити | переїхати | переїжджати | to move (residence); to drive across |\n| бігти/бігати | перебігти | перебігати | to run across |\n| летіти/літати | перелетіти | перелітати | to fly across |\n| плисти/плавати | переплисти | перепливати | to swim across |\n| нести/носити | перенести | переносити | to carry across; to reschedule |\n| везти/возити | перевезти | перевозити | to transport across |\n| вести/водити | перевести | переводити | to translate; to transfer |\n\n**Examples:**\n\n- **Перейдіть** через дорогу. - Cross the street.\n- Ми **переїхали** до нового будинку. - We moved to a new house.\n- Він **переплив** ріку. - He swam across the river.\n- Вона **переклала** книгу з англійської. - She translated the book from English.\n- **Перенесіть** зустріч на завтра. - Reschedule the meeting to tomorrow.\n\n> **Two meanings of пере-:**\n> 1. Physical: across, over (перейти дорогу)\n> 2. Abstract: re-doing, transferring (перенести зустріч)\n\n### Special: Переходити / Перейти\n\nThis verb has extended meanings:\n\n- **переходити дорогу** - to cross the street\n- **переходити на інше місце** - to move to another place\n- **переходити до справи** - to get down to business\n- **переходити на українську** - to switch to Ukrainian\n\n### Prefix про- (Through, Past)\n\n**Meaning:** Movement THROUGH or PAST something; also duration\n\n| Base (impf) | Prefixed (pf) | New Imperfective | English |\n|-------------|---------------|------------------|---------|\n| іти/ходити | пройти | проходити | to pass, go through |\n| їхати/їздити | проїхати | проїжджати | to drive past/through |\n| бігти/бігати | пробігти | пробігати | to run past |\n| летіти/літати | пролетіти | пролітати | to fly past |\n| нести/носити | пронести | проносити | to carry through |\n\n**Examples:**\n\n- Ми **пройшли** повз парк. - We walked past the park.\n- Машина **проїхала** повз нас. - The car drove past us.\n- Він **пробіг** 5 кілометрів. - He ran 5 kilometers.\n- Час **пролетів** швидко. - Time flew by quickly.\n- **Пройдіть** до кінця коридору. - Go to the end of the corridor.\n\n**Про- with time = spending time:**\n\n- Я **просидів** там годину. - I sat there for an hour.\n- Вона **пропрацювала** всю ніч. - She worked all night.\n- Ми **прочекали** дві години. - We waited for two hours.\n\n### Prefix об-/обі- (Around)\n\n**Meaning:** Movement AROUND something\n\n| Base (impf) | Prefixed (pf) | New Imperfective | English |\n|-------------|---------------|------------------|---------|\n| іти/ходити | обійти | обходити | to go around |\n| їхати/їздити | об'їхати | об'їжджати | to drive around |\n| бігти/бігати | обігнати | обганяти | to overtake |\n| летіти/літати | облетіти | облітати | to fly around |\n| плисти/плавати | обплисти | обпливати | to sail around |\n\n**Examples:**\n\n- **Обійдіть** будинок. - Go around the building.\n- Машина **об'їхала** яму. - The car drove around the hole.\n- Він **обігнав** усіх на змаганнях. - He overtook everyone in the competition.\n- Ми **обійшли** все місто. - We walked around the whole city.\n\n**Об- with abstract meaning:**\n\n- **обговорити** - to discuss (go around a topic)\n- **обслуговувати** - to serve (go around customers)\n\n### Compare: про- vs об-\n\n- **про-** = THROUGH or PAST (пройти повз = walk past)\n- **об-** = AROUND (обійти = walk around)\n\n| про- | об- |\n|------|-----|\n| Він **пройшов** повз будинок. | Він **обійшов** будинок. |\n| He walked past the building. | He walked around the building. |\n| Машина **проїхала** тунель. | Машина **об'їхала** місто. |\n| The car drove through the tunnel. | The car drove around the city. |\n\n### Conjugation: Перейти (pf)\n\n| Pronoun | Past | Future |\n|---------|------|--------|\n| я | перейшов/перейшла | перейду |\n| ти | перейшов/перейшла | перейдеш |\n| він/вона | перейшов/перейшла | перейде |\n| ми | перейшли | перейдемо |\n| ви | перейшли | перейдете |\n| вони | перейшли | перейдуть |\n\n### Aspect Pairs Summary\n\n| Perfective | Imperfective | English |\n|------------|--------------|---------|\n| перейти | переходити | to cross |\n| переїхати | переїжджати | to move, drive across |\n| пройти | проходити | to pass through |\n| проїхати | проїжджати | to drive through |\n| обійти | обходити | to go around |\n| об'їхати | об'їжджати | to drive around |\n\n## practice\n\n### Choose the Correct Prefix\n\n1. Ми ___ (перейшли/пройшли) через міст. → **перейшли** (across)\n2. Машина ___ (переїхала/проїхала) повз нас. → **проїхала** (past)\n3. Вона ___ (обійшла/пройшла) магазин. → **обійшла** (around)\n4. Він ___ (перебіг/пробіг) 10 кілометрів. → **пробіг** (distance)\n5. Ми ___ (переїхали/проїхали) до нового міста. → **переїхали** (moved residence)\n6. ___ (Перейдіть/Пройдіть) до кінця вулиці. → **Пройдіть** (go to)\n7. Потрібно ___ (обійти/перейти) дорогу. → **перейти** (cross)\n\n### Form Aspect Pairs\n\nGive the imperfective:\n\n1. перейти → **переходити**\n2. пройти → **проходити**\n3. обійти → **обходити**\n4. переїхати → **переїжджати**\n5. проїхати → **проїжджати**\n6. перенести → **переносити**\n7. перевести → **переводити**\n\n### Translate to Ukrainian\n\n1. We crossed the street. → Ми **перейшли** вулицю.\n2. The car drove past us. → Машина **проїхала** повз нас.\n3. He walked around the park. → Він **обійшов** парк.\n4. She moved to Kyiv. → Вона **переїхала** до Києва.\n5. They walked through the forest. → Вони **пройшли** через ліс.\n\n### Complete with Correct Form\n\n1. Він завжди ___ (переходить/перейде) дорогу в цьому місці. → **переходить** (always)\n2. Вона щодня ___ (проходить/пройде) повз цей магазин. → **проходить** (every day)\n3. Ми вже ___ (проходили/пройшли) це місце. → **пройшли** (already)\n4. Коли ви ___ (переїжджали/переїхали) сюди? → **переїхали** (single event)\n\n## production\n\n### Describe a Journey\n\nUse пере-, про-, об- to describe movement:\n\n**Example:**\nМи **вийшли** з дому і **пройшли** вулицею до зупинки. Потім **проїхали** через центр міста. Нам довелося **об'їхати** затор. Нарешті ми **перейшли** міст і **прийшли** до парку.\n\n### Give Directions\n\nUse these verbs to give directions:\n\n**Example:**\n**Пройдіть** прямо до кінця вулиці. Потім **перейдіть** дорогу на світлофорі. **Обійдіть** будинок зліва. Там буде вхід.\n\n---\n\n# Activities\n\n## quiz: Prefix Selection\n\n> Choose the correct prefix.\n\n1. Ми ___ вулицю на переході.\n   - [x] перейшли\n   - [ ] пройшли\n   > Cross = пере-\n\n2. Машина ___ повз нас.\n   - [ ] переїхала\n   - [x] проїхала\n   > Past = про-\n\n3. Він ___ все місто пішки.\n   - [x] обійшов\n   - [ ] пройшов\n   > Around = об-\n\n4. Вона ___ книгу з англійської на українську.\n   - [x] переклала\n   - [ ] проклала\n   > Translate = пере-\n\n5. Ми ___ через ліс.\n   - [ ] переходили\n   - [x] проходили\n   > Through = про-\n\n6. Він ___ усіх на перегонах.\n   - [x] обігнав\n   - [ ] перегнав\n   > Overtake = об-\n\n## match-up: Prefix Meanings\n\n| Prefix | Meaning |\n|--------|---------|\n| пере- | across, re- |\n| про- | through, past |\n| об- | around |\n\n## group-sort: Verbs by Prefix\n\n### пере- (across)\n- перейти\n- переїхати\n- перенести\n- переплисти\n\n### про- (through/past)\n- пройти\n- проїхати\n- пробігти\n- пролетіти\n\n### об- (around)\n- обійти\n- об'їхати\n- обігнати\n- облетіти\n\n---",
+    "createdAt": "2025-12-01T22:58:37.291Z",
+    "modifiedAt": "2025-12-01T22:58:37.291Z",
+    "version": 1,
     "immersiveSections": [
       {
-        "id": "warm-up",
-        "title": "warm-up",
-        "content": "### Review: Prefixes So Far\n\nFrom Module 90:\n- **при-** = arrival (прийти)\n- **ви-** = exit (вийти)\n- **в-/у-** = entry (увійти)\n\nToday: три нові префікси — пере-, про-, об-",
-        "type": "topic"
+        "id": "section-intro",
+        "type": "intro",
+        "title": "Introduction",
+        "content": "## warm-up\n\n### Review: Prefixes So Far\n\nFrom Module 90:\n- **при-** = arrival (прийти)\n- **ви-** = exit (вийти)\n- **в-/у-** = entry (увійти)\n\nToday: три нові префікси — пере-, про-, об-\n\n## presentation\n\n### Prefix пере- (Across, Over, Re-)\n\n**Meaning:** Movement ACROSS or OVER something; also \"re-doing\"\n\n| Base (impf) | Prefixed (pf) | New Imperfective | English |\n|-------------|---------------|------------------|---------|\n| іти/ходити | перейти | переходити | to cross (on foot) |\n| їхати/їздити | переїхати | переїжджати | to move (residence); to drive across |\n| бігти/бігати | перебігти | перебігати | to run across |\n| летіти/літати | перелетіти | перелітати | to fly across |\n| плисти/плавати | переплисти | перепливати | to swim across |\n| нести/носити | перенести | переносити | to carry across; to reschedule |\n| везти/возити | перевезти | перевозити | to transport across |\n| вести/водити | перевести | переводити | to translate; to transfer |\n\n**Examples:**\n\n- **Перейдіть** через дорогу. - Cross the street.\n- Ми **переїхали** до нового будинку. - We moved to a new house.\n- Він **переплив** ріку. - He swam across the river.\n- Вона **переклала** книгу з англійської. - She translated the book from English.\n- **Перенесіть** зустріч на завтра. - Reschedule the meeting to tomorrow.\n\n> **Two meanings of пере-:**\n> 1. Physical: across, over (перейти дорогу)\n> 2. Abstract: re-doing, transferring (перенести зустріч)\n\n### Special: Переходити / Перейти\n\nThis verb has extended meanings:\n\n- **переходити дорогу** - to cross the street\n- **переходити на інше місце** - to move to another place\n- **переходити до справи** - to get down to business\n- **переходити на українську** - to switch to Ukrainian\n\n### Prefix про- (Through, Past)\n\n**Meaning:** Movement THROUGH or PAST something; also duration\n\n| Base (impf) | Prefixed (pf) | New Imperfective | English |\n|-------------|---------------|------------------|---------|\n| іти/ходити | пройти | проходити | to pass, go through |\n| їхати/їздити | проїхати | проїжджати | to drive past/through |\n| бігти/бігати | пробігти | пробігати | to run past |\n| летіти/літати | пролетіти | пролітати | to fly past |\n| нести/носити | пронести | проносити | to carry through |\n\n**Examples:**\n\n- Ми **пройшли** повз парк. - We walked past the park.\n- Машина **проїхала** повз нас. - The car drove past us.\n- Він **пробіг** 5 кілометрів. - He ran 5 kilometers.\n- Час **пролетів** швидко. - Time flew by quickly.\n- **Пройдіть** до кінця коридору. - Go to the end of the corridor.\n\n**Про- with time = spending time:**\n\n- Я **просидів** там годину. - I sat there for an hour.\n- Вона **пропрацювала** всю ніч. - She worked all night.\n- Ми **прочекали** дві години. - We waited for two hours.\n\n### Prefix об-/обі- (Around)\n\n**Meaning:** Movement AROUND something\n\n| Base (impf) | Prefixed (pf) | New Imperfective | English |\n|-------------|---------------|------------------|---------|\n| іти/ходити | обійти | обходити | to go around |\n| їхати/їздити | об'їхати | об'їжджати | to drive around |\n| бігти/бігати | обігнати | обганяти | to overtake |\n| летіти/літати | облетіти | облітати | to fly around |\n| плисти/плавати | обплисти | обпливати | to sail around |\n\n**Examples:**\n\n- **Обійдіть** будинок. - Go around the building.\n- Машина **об'їхала** яму. - The car drove around the hole.\n- Він **обігнав** усіх на змаганнях. - He overtook everyone in the competition.\n- Ми **обійшли** все місто. - We walked around the whole city.\n\n**Об- with abstract meaning:**\n\n- **обговорити** - to discuss (go around a topic)\n- **обслуговувати** - to serve (go around customers)\n\n### Compare: про- vs об-\n\n- **про-** = THROUGH or PAST (пройти повз = walk past)\n- **об-** = AROUND (обійти = walk around)\n\n| про- | об- |\n|------|-----|\n| Він **пройшов** повз будинок. | Він **обійшов** будинок. |\n| He walked past the building. | He walked around the building. |\n| Машина **проїхала** тунель. | Машина **об'їхала** місто. |\n| The car drove through the tunnel. | The car drove around the city. |\n\n### Conjugation: Перейти (pf)\n\n| Pronoun | Past | Future |\n|---------|------|--------|\n| я | перейшов/перейшла | перейду |\n| ти | перейшов/перейшла | перейдеш |\n| він/вона | перейшов/перейшла | перейде |\n| ми | перейшли | перейдемо |\n| ви | перейшли | перейдете |\n| вони | перейшли | перейдуть |\n\n### Aspect Pairs Summary\n\n| Perfective | Imperfective | English |\n|------------|--------------|---------|\n| перейти | переходити | to cross |\n| переїхати | переїжджати | to move, drive across |\n| пройти | проходити | to pass through |\n| проїхати | проїжджати | to drive through |\n| обійти | обходити | to go around |\n| об'їхати | об'їжджати | to drive around |\n\n## practice\n\n### Choose the Correct Prefix\n\n1. Ми ___ (перейшли/пройшли) через міст.\n   > [!answer] **перейшли** (across)\n2. Машина ___ (переїхала/проїхала) повз нас.\n   > [!answer] **проїхала** (past)\n3. Вона ___ (обійшла/пройшла) магазин.\n   > [!answer] **обійшла** (around)\n4. Він ___ (перебіг/пробіг) 10 кілометрів.\n   > [!answer] **пробіг** (distance)\n5. Ми ___ (переїхали/проїхали) до нового міста.\n   > [!answer] **переїхали** (moved residence)\n6. ___ (Перейдіть/Пройдіть) до кінця вулиці.\n   > [!answer] **Пройдіть** (go to)\n7. Потрібно ___ (обійти/перейти) дорогу.\n   > [!answer] **перейти** (cross)\n\n### Form Aspect Pairs\n\nGive the imperfective:\n\n1. перейти\n   > [!answer] **переходити**\n2. пройти\n   > [!answer] **проходити**\n3. обійти\n   > [!answer] **обходити**\n4. переїхати\n   > [!answer] **переїжджати**\n5. проїхати\n   > [!answer] **проїжджати**\n6. перенести\n   > [!answer] **переносити**\n7. перевести\n   > [!answer] **переводити**\n\n### Translate to Ukrainian\n\n1. We crossed the street.\n   > [!answer] Ми **перейшли** вулицю.\n2. The car drove past us.\n   > [!answer] Машина **проїхала** повз нас.\n3. He walked around the park.\n   > [!answer] Він **обійшов** парк.\n4. She moved to Kyiv.\n   > [!answer] Вона **переїхала** до Києва.\n5. They walked through the forest.\n   > [!answer] Вони **пройшли** через ліс.\n\n### Complete with Correct Form\n\n1. Він завжди ___ (переходить/перейде) дорогу в цьому місці.\n   > [!answer] **переходить** (always)\n2. Вона щодня ___ (проходить/пройде) повз цей магазин.\n   > [!answer] **проходить** (every day)\n3. Ми вже ___ (проходили/пройшли) це місце.\n   > [!answer] **пройшли** (already)\n4. Коли ви ___ (переїжджали/переїхали) сюди?\n   > [!answer] **переїхали** (single event)\n\n## production\n\n### Describe a Journey\n\nUse пере-, про-, об- to describe movement:\n\n**Example:**\nМи **вийшли** з дому і **пройшли** вулицею до зупинки. Потім **проїхали** через центр міста. Нам довелося **об'їхати** затор. Нарешті ми **перейшли** міст і **прийшли** до парку.\n\n### Give Directions\n\nUse these verbs to give directions:\n\n**Example:**\n**Пройдіть** прямо до кінця вулиці. Потім **перейдіть** дорогу на світлофорі. **Обійдіть** будинок зліва. Там буде вхід.\n\n---\n\n\n---\n\n\n---",
+        "titleUk": "Вступ"
       },
       {
-        "id": "presentation",
-        "title": "presentation",
-        "content": "### Prefix пере- (Across, Over, Re-)\n\n**Meaning:** Movement ACROSS or OVER something; also \"re-doing\"\n\n| Base (impf) | Prefixed (pf) | New Imperfective | English |\n|-------------|---------------|------------------|---------|\n| іти/ходити | перейти | переходити | to cross (on foot) |\n| їхати/їздити | переїхати | переїжджати | to move (residence); to drive across |\n| бігти/бігати | перебігти | перебігати | to run across |\n| летіти/літати | перелетіти | перелітати | to fly across |\n| плисти/плавати | переплисти | перепливати | to swim across |\n| нести/носити | перенести | переносити | to carry across; to reschedule |\n| везти/возити | перевезти | перевозити | to transport across |\n| вести/водити | перевести | переводити | to translate; to transfer |\n\n**Examples:**\n\n- **Перейдіть** через дорогу. - Cross the street.\n- Ми **переїхали** до нового будинку. - We moved to a new house.\n- Він **переплив** ріку. - He swam across the river.\n- Вона **переклала** книгу з англійської. - She translated the book from English.\n- **Перенесіть** зустріч на завтра. - Reschedule the meeting to tomorrow.\n\n> **Two meanings of пере-:**\n> 1. Physical: across, over (перейти дорогу)\n> 2. Abstract: re-doing, transferring (перенести зустріч)\n\n### Special: Переходити / Перейти\n\nThis verb has extended meanings:\n\n- **переходити дорогу** - to cross the street\n- **переходити на інше місце** - to move to another place\n- **переходити до справи** - to get down to business\n- **переходити на українську** - to switch to Ukrainian\n\n### Prefix про- (Through, Past)\n\n**Meaning:** Movement THROUGH or PAST something; also duration\n\n| Base (impf) | Prefixed (pf) | New Imperfective | English |\n|-------------|---------------|------------------|---------|\n| іти/ходити | пройти | проходити | to pass, go through |\n| їхати/їздити | проїхати | проїжджати | to drive past/through |\n| бігти/бігати | пробігти | пробігати | to run past |\n| летіти/літати | пролетіти | пролітати | to fly past |\n| нести/носити | пронести | проносити | to carry through |\n\n**Examples:**\n\n- Ми **пройшли** повз парк. - We walked past the park.\n- Машина **проїхала** повз нас. - The car drove past us.\n- Він **пробіг** 5 кілометрів. - He ran 5 kilometers.\n- Час **пролетів** швидко. - Time flew by quickly.\n- **Пройдіть** до кінця коридору. - Go to the end of the corridor.\n\n**Про- with time = spending time:**\n\n- Я **просидів** там годину. - I sat there for an hour.\n- Вона **пропрацювала** всю ніч. - She worked all night.\n- Ми **прочекали** дві години. - We waited for two hours.\n\n### Prefix об-/обі- (Around)\n\n**Meaning:** Movement AROUND something\n\n| Base (impf) | Prefixed (pf) | New Imperfective | English |\n|-------------|---------------|------------------|---------|\n| іти/ходити | обійти | обходити | to go around |\n| їхати/їздити | об'їхати | об'їжджати | to drive around |\n| бігти/бігати | обігнати | обганяти | to overtake |\n| летіти/літати | облетіти | облітати | to fly around |\n| плисти/плавати | обплисти | обпливати | to sail around |\n\n**Examples:**\n\n- **Обійдіть** будинок. - Go around the building.\n- Машина **об'їхала** яму. - The car drove around the hole.\n- Він **обігнав** усіх на змаганнях. - He overtook everyone in the competition.\n- Ми **обійшли** все місто. - We walked around the whole city.\n\n**Об- with abstract meaning:**\n\n- **обговорити** - to discuss (go around a topic)\n- **обслуговувати** - to serve (go around customers)\n\n### Compare: про- vs об-\n\n- **про-** = THROUGH or PAST (пройти повз = walk past)\n- **об-** = AROUND (обійти = walk around)\n\n| про- | об- |\n|------|-----|\n| Він **пройшов** повз будинок. | Він **обійшов** будинок. |\n| He walked past the building. | He walked around the building. |\n| Машина **проїхала** тунель. | Машина **об'їхала** місто. |\n| The car drove through the tunnel. | The car drove around the city. |\n\n### Conjugation: Перейти (pf)\n\n| Pronoun | Past | Future |\n|---------|------|--------|\n| я | перейшов/перейшла | перейду |\n| ти | перейшов/перейшла | перейдеш |\n| він/вона | перейшов/перейшла | перейде |\n| ми | перейшли | перейдемо |\n| ви | перейшли | перейдете |\n| вони | перейшли | перейдуть |\n\n### Aspect Pairs Summary\n\n| Perfective | Imperfective | English |\n|------------|--------------|---------|\n| перейти | переходити | to cross |\n| переїхати | переїжджати | to move, drive across |\n| пройти | проходити | to pass through |\n| проїхати | проїжджати | to drive through |\n| обійти | обходити | to go around |\n| об'їхати | об'їжджати | to drive around |",
-        "type": "topic"
-      },
-      {
-        "id": "practice",
-        "title": "practice",
-        "content": "### Choose the Correct Prefix\n\n1. Ми ___ (перейшли/пройшли) через міст. → **перейшли** (across)\n2. Машина ___ (переїхала/проїхала) повз нас. → **проїхала** (past)\n3. Вона ___ (обійшла/пройшла) магазин. → **обійшла** (around)\n4. Він ___ (перебіг/пробіг) 10 кілометрів. → **пробіг** (distance)\n5. Ми ___ (переїхали/проїхали) до нового міста. → **переїхали** (moved residence)\n6. ___ (Перейдіть/Пройдіть) до кінця вулиці. → **Пройдіть** (go to)\n7. Потрібно ___ (обійти/перейти) дорогу. → **перейти** (cross)\n\n### Form Aspect Pairs\n\nGive the imperfective:\n\n1. перейти → **переходити**\n2. пройти → **проходити**\n3. обійти → **обходити**\n4. переїхати → **переїжджати**\n5. проїхати → **проїжджати**\n6. перенести → **переносити**\n7. перевести → **переводити**\n\n### Translate to Ukrainian\n\n1. We crossed the street. → Ми **перейшли** вулицю.\n2. The car drove past us. → Машина **проїхала** повз нас.\n3. He walked around the park. → Він **обійшов** парк.\n4. She moved to Kyiv. → Вона **переїхала** до Києва.\n5. They walked through the forest. → Вони **пройшли** через ліс.\n\n### Complete with Correct Form\n\n1. Він завжди ___ (переходить/перейде) дорогу в цьому місці. → **переходить** (always)\n2. Вона щодня ___ (проходить/пройде) повз цей магазин. → **проходить** (every day)\n3. Ми вже ___ (проходили/пройшли) це місце. → **пройшли** (already)\n4. Коли ви ___ (переїжджали/переїхали) сюди? → **переїхали** (single event)",
-        "type": "topic"
-      },
-      {
-        "id": "production",
-        "title": "production",
-        "content": "### Describe a Journey\n\nUse пере-, про-, об- to describe movement:\n\n**Example:**\nМи **вийшли** з дому і **пройшли** вулицею до зупинки. Потім **проїхали** через центр міста. Нам довелося **об'їхати** затор. Нарешті ми **перейшли** міст і **прийшли** до парку.\n\n### Give Directions\n\nUse these verbs to give directions:\n\n**Example:**\n**Пройдіть** прямо до кінця вулиці. Потім **перейдіть** дорогу на світлофорі. **Обійдіть** будинок зліва. Там буде вхід.\n\n---",
-        "type": "topic"
-      },
-      {
-        "id": "activities",
-        "title": "Activities",
-        "content": "## quiz: Prefix Selection\n\n> Choose the correct prefix.\n\n1. Ми ___ вулицю на переході.\n   - [x] перейшли\n   - [ ] пройшли\n   > Cross = пере-\n\n2. Машина ___ повз нас.\n   - [ ] переїхала\n   - [x] проїхала\n   > Past = про-\n\n3. Він ___ все місто пішки.\n   - [x] обійшов\n   - [ ] пройшов\n   > Around = об-\n\n4. Вона ___ книгу з англійської на українську.\n   - [x] переклала\n   - [ ] проклала\n   > Translate = пере-\n\n5. Ми ___ через ліс.\n   - [ ] переходили\n   - [x] проходили\n   > Through = про-\n\n6. Він ___ усіх на перегонах.\n   - [x] обігнав\n   - [ ] перегнав\n   > Overtake = об-\n\n## match-up: Prefix Meanings\n\n| Prefix | Meaning |\n|--------|---------|\n| пере- | across, re- |\n| про- | through, past |\n| об- | around |\n\n## group-sort: Verbs by Prefix\n\n### пере- (across)\n- перейти\n- переїхати\n- перенести\n- переплисти\n\n### про- (through/past)\n- пройти\n- проїхати\n- пробігти\n- пролетіти\n\n### об- (around)\n- обійти\n- об'їхати\n- обігнати\n- облетіти\n\n---",
-        "type": "activities"
-      },
-      {
-        "id": "vocabulary",
-        "title": "Vocabulary",
-        "content": "| Word | IPA | English | Aspect |\n|------|-----|---------|--------|\n| перейти | /pɛrɛjˈtɪ/ | to cross | pf |\n| переходити | /pɛrɛxoˈdɪtɪ/ | to cross | impf |\n| переїхати | /pɛrɛˈjixɑtɪ/ | to move, drive across | pf |\n| переїжджати | /pɛrɛjizˈdʒɑtɪ/ | to move | impf |\n| перенести | /pɛrɛnɛsˈtɪ/ | to transfer, reschedule | pf |\n| переносити | /pɛrɛnoˈsɪtɪ/ | to transfer | impf |\n| пройти | /projˈtɪ/ | to pass through | pf |\n| проходити | /proxoˈdɪtɪ/ | to pass | impf |\n| проїхати | /proˈjixɑtɪ/ | to drive through | pf |\n| проїжджати | /projizˈdʒɑtɪ/ | to drive through | impf |\n| обійти | /obijˈtɪ/ | to go around | pf |\n| обходити | /obxoˈdɪtɪ/ | to go around | impf |\n| об'їхати | /objˈixɑtɪ/ | to drive around | pf |\n| об'їжджати | /objizˈdʒɑtɪ/ | to drive around | impf |\n| обігнати | /obʲiɦˈnɑtɪ/ | to overtake | pf |\n| обганяти | /obɦɑˈnʲɑtɪ/ | to overtake | impf |\n\n---",
-        "type": "vocabulary"
-      },
-      {
-        "id": "summary",
+        "id": "section-summary",
+        "type": "summary",
         "title": "Summary",
         "content": "## Three Prefixes\n\n| Prefix | Meaning | Example |\n|--------|---------|---------|\n| пере- | across, over, re- | перейти дорогу (cross the street) |\n| про- | through, past | пройти повз (walk past) |\n| об- | around | обійти будинок (go around) |\n\n## Key Verbs\n\n| English | Perfective | Imperfective |\n|---------|------------|--------------|\n| to cross | перейти | переходити |\n| to move (residence) | переїхати | переїжджати |\n| to pass through | пройти | проходити |\n| to go around | обійти | обходити |\n| to overtake | обігнати | обганяти |\n\n## Special Meanings\n\n- **переїхати** = to move (residence): Ми переїхали до Києва.\n- **перекласти** = to translate: Вона переклала книгу.\n- **перенести** = to reschedule: Перенесіть зустріч.\n- **про- + time** = spending time: просидіти годину\n\n> **Key Takeaways**\n>\n> - пере- = across or re-doing\n> - про- = through or past (also duration)\n> - об- = around\n> - Each prefix creates new perfective + new imperfective pair",
-        "type": "summary"
+        "titleUk": "Підсумок"
       }
-    ]
+    ],
+    "rawMarkdown": "---\nmodule: 91\ntitle: \"Motion: Passing & Crossing\"\nsubtitle: \"Prefixes пере-, про-, об-\"\nlevel: B1\nphase: B1.1\nduration: 45\ntransliteration: none\ntags: [verbs, motion, prefixes, grammar]\nobjectives:\n  - Master пере- (across, re-) prefix\n  - Master про- (through, past) prefix\n  - Master об- (around) prefix\n  - Use these prefixes with motion verbs\ngrammar:\n  - Motion verb prefixation (continued)\n  - Directional prefix meanings\n  - Aspect pair formation\n---\n\n# Lesson Content\n\n## warm-up\n\n### Review: Prefixes So Far\n\nFrom Module 90:\n- **при-** = arrival (прийти)\n- **ви-** = exit (вийти)\n- **в-/у-** = entry (увійти)\n\nToday: три нові префікси — пере-, про-, об-\n\n## presentation\n\n### Prefix пере- (Across, Over, Re-)\n\n**Meaning:** Movement ACROSS or OVER something; also \"re-doing\"\n\n| Base (impf) | Prefixed (pf) | New Imperfective | English |\n|-------------|---------------|------------------|---------|\n| іти/ходити | перейти | переходити | to cross (on foot) |\n| їхати/їздити | переїхати | переїжджати | to move (residence); to drive across |\n| бігти/бігати | перебігти | перебігати | to run across |\n| летіти/літати | перелетіти | перелітати | to fly across |\n| плисти/плавати | переплисти | перепливати | to swim across |\n| нести/носити | перенести | переносити | to carry across; to reschedule |\n| везти/возити | перевезти | перевозити | to transport across |\n| вести/водити | перевести | переводити | to translate; to transfer |\n\n**Examples:**\n\n- **Перейдіть** через дорогу. - Cross the street.\n- Ми **переїхали** до нового будинку. - We moved to a new house.\n- Він **переплив** ріку. - He swam across the river.\n- Вона **переклала** книгу з англійської. - She translated the book from English.\n- **Перенесіть** зустріч на завтра. - Reschedule the meeting to tomorrow.\n\n> **Two meanings of пере-:**\n> 1. Physical: across, over (перейти дорогу)\n> 2. Abstract: re-doing, transferring (перенести зустріч)\n\n### Special: Переходити / Перейти\n\nThis verb has extended meanings:\n\n- **переходити дорогу** - to cross the street\n- **переходити на інше місце** - to move to another place\n- **переходити до справи** - to get down to business\n- **переходити на українську** - to switch to Ukrainian\n\n### Prefix про- (Through, Past)\n\n**Meaning:** Movement THROUGH or PAST something; also duration\n\n| Base (impf) | Prefixed (pf) | New Imperfective | English |\n|-------------|---------------|------------------|---------|\n| іти/ходити | пройти | проходити | to pass, go through |\n| їхати/їздити | проїхати | проїжджати | to drive past/through |\n| бігти/бігати | пробігти | пробігати | to run past |\n| летіти/літати | пролетіти | пролітати | to fly past |\n| нести/носити | пронести | проносити | to carry through |\n\n**Examples:**\n\n- Ми **пройшли** повз парк. - We walked past the park.\n- Машина **проїхала** повз нас. - The car drove past us.\n- Він **пробіг** 5 кілометрів. - He ran 5 kilometers.\n- Час **пролетів** швидко. - Time flew by quickly.\n- **Пройдіть** до кінця коридору. - Go to the end of the corridor.\n\n**Про- with time = spending time:**\n\n- Я **просидів** там годину. - I sat there for an hour.\n- Вона **пропрацювала** всю ніч. - She worked all night.\n- Ми **прочекали** дві години. - We waited for two hours.\n\n### Prefix об-/обі- (Around)\n\n**Meaning:** Movement AROUND something\n\n| Base (impf) | Prefixed (pf) | New Imperfective | English |\n|-------------|---------------|------------------|---------|\n| іти/ходити | обійти | обходити | to go around |\n| їхати/їздити | об'їхати | об'їжджати | to drive around |\n| бігти/бігати | обігнати | обганяти | to overtake |\n| летіти/літати | облетіти | облітати | to fly around |\n| плисти/плавати | обплисти | обпливати | to sail around |\n\n**Examples:**\n\n- **Обійдіть** будинок. - Go around the building.\n- Машина **об'їхала** яму. - The car drove around the hole.\n- Він **обігнав** усіх на змаганнях. - He overtook everyone in the competition.\n- Ми **обійшли** все місто. - We walked around the whole city.\n\n**Об- with abstract meaning:**\n\n- **обговорити** - to discuss (go around a topic)\n- **обслуговувати** - to serve (go around customers)\n\n### Compare: про- vs об-\n\n- **про-** = THROUGH or PAST (пройти повз = walk past)\n- **об-** = AROUND (обійти = walk around)\n\n| про- | об- |\n|------|-----|\n| Він **пройшов** повз будинок. | Він **обійшов** будинок. |\n| He walked past the building. | He walked around the building. |\n| Машина **проїхала** тунель. | Машина **об'їхала** місто. |\n| The car drove through the tunnel. | The car drove around the city. |\n\n### Conjugation: Перейти (pf)\n\n| Pronoun | Past | Future |\n|---------|------|--------|\n| я | перейшов/перейшла | перейду |\n| ти | перейшов/перейшла | перейдеш |\n| він/вона | перейшов/перейшла | перейде |\n| ми | перейшли | перейдемо |\n| ви | перейшли | перейдете |\n| вони | перейшли | перейдуть |\n\n### Aspect Pairs Summary\n\n| Perfective | Imperfective | English |\n|------------|--------------|---------|\n| перейти | переходити | to cross |\n| переїхати | переїжджати | to move, drive across |\n| пройти | проходити | to pass through |\n| проїхати | проїжджати | to drive through |\n| обійти | обходити | to go around |\n| об'їхати | об'їжджати | to drive around |\n\n## practice\n\n### Choose the Correct Prefix\n\n1. Ми ___ (перейшли/пройшли) через міст.\n   > [!answer] **перейшли** (across)\n2. Машина ___ (переїхала/проїхала) повз нас.\n   > [!answer] **проїхала** (past)\n3. Вона ___ (обійшла/пройшла) магазин.\n   > [!answer] **обійшла** (around)\n4. Він ___ (перебіг/пробіг) 10 кілометрів.\n   > [!answer] **пробіг** (distance)\n5. Ми ___ (переїхали/проїхали) до нового міста.\n   > [!answer] **переїхали** (moved residence)\n6. ___ (Перейдіть/Пройдіть) до кінця вулиці.\n   > [!answer] **Пройдіть** (go to)\n7. Потрібно ___ (обійти/перейти) дорогу.\n   > [!answer] **перейти** (cross)\n\n### Form Aspect Pairs\n\nGive the imperfective:\n\n1. перейти\n   > [!answer] **переходити**\n2. пройти\n   > [!answer] **проходити**\n3. обійти\n   > [!answer] **обходити**\n4. переїхати\n   > [!answer] **переїжджати**\n5. проїхати\n   > [!answer] **проїжджати**\n6. перенести\n   > [!answer] **переносити**\n7. перевести\n   > [!answer] **переводити**\n\n### Translate to Ukrainian\n\n1. We crossed the street.\n   > [!answer] Ми **перейшли** вулицю.\n2. The car drove past us.\n   > [!answer] Машина **проїхала** повз нас.\n3. He walked around the park.\n   > [!answer] Він **обійшов** парк.\n4. She moved to Kyiv.\n   > [!answer] Вона **переїхала** до Києва.\n5. They walked through the forest.\n   > [!answer] Вони **пройшли** через ліс.\n\n### Complete with Correct Form\n\n1. Він завжди ___ (переходить/перейде) дорогу в цьому місці.\n   > [!answer] **переходить** (always)\n2. Вона щодня ___ (проходить/пройде) повз цей магазин.\n   > [!answer] **проходить** (every day)\n3. Ми вже ___ (проходили/пройшли) це місце.\n   > [!answer] **пройшли** (already)\n4. Коли ви ___ (переїжджали/переїхали) сюди?\n   > [!answer] **переїхали** (single event)\n\n## production\n\n### Describe a Journey\n\nUse пере-, про-, об- to describe movement:\n\n**Example:**\nМи **вийшли** з дому і **пройшли** вулицею до зупинки. Потім **проїхали** через центр міста. Нам довелося **об'їхати** затор. Нарешті ми **перейшли** міст і **прийшли** до парку.\n\n### Give Directions\n\nUse these verbs to give directions:\n\n**Example:**\n**Пройдіть** прямо до кінця вулиці. Потім **перейдіть** дорогу на світлофорі. **Обійдіть** будинок зліва. Там буде вхід.\n\n---\n\n# Activities\n\n## quiz: Prefix Selection\n\n> Choose the correct prefix.\n\n1. Ми ___ вулицю на переході.\n   - [x] перейшли\n   - [ ] пройшли\n   > Cross = пере-\n\n2. Машина ___ повз нас.\n   - [ ] переїхала\n   - [x] проїхала\n   > Past = про-\n\n3. Він ___ все місто пішки.\n   - [x] обійшов\n   - [ ] пройшов\n   > Around = об-\n\n4. Вона ___ книгу з англійської на українську.\n   - [x] переклала\n   - [ ] проклала\n   > Translate = пере-\n\n5. Ми ___ через ліс.\n   - [ ] переходили\n   - [x] проходили\n   > Through = про-\n\n6. Він ___ усіх на перегонах.\n   - [x] обігнав\n   - [ ] перегнав\n   > Overtake = об-\n\n## match-up: Prefix Meanings\n\n| Prefix | Meaning |\n|--------|---------|\n| пере- | across, re- |\n| про- | through, past |\n| об- | around |\n\n## group-sort: Verbs by Prefix\n\n### пере- (across)\n- перейти\n- переїхати\n- перенести\n- переплисти\n\n### про- (through/past)\n- пройти\n- проїхати\n- пробігти\n- пролетіти\n\n### об- (around)\n- обійти\n- об'їхати\n- обігнати\n- облетіти\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | Aspect |\n|------|-----|---------|--------|\n| перейти | /pɛrɛjˈtɪ/ | to cross | pf |\n| переходити | /pɛrɛxoˈdɪtɪ/ | to cross | impf |\n| переїхати | /pɛrɛˈjixɑtɪ/ | to move, drive across | pf |\n| переїжджати | /pɛrɛjizˈdʒɑtɪ/ | to move | impf |\n| перенести | /pɛrɛnɛsˈtɪ/ | to transfer, reschedule | pf |\n| переносити | /pɛrɛnoˈsɪtɪ/ | to transfer | impf |\n| пройти | /projˈtɪ/ | to pass through | pf |\n| проходити | /proxoˈdɪtɪ/ | to pass | impf |\n| проїхати | /proˈjixɑtɪ/ | to drive through | pf |\n| проїжджати | /projizˈdʒɑtɪ/ | to drive through | impf |\n| обійти | /obijˈtɪ/ | to go around | pf |\n| обходити | /obxoˈdɪtɪ/ | to go around | impf |\n| об'їхати | /objˈixɑtɪ/ | to drive around | pf |\n| об'їжджати | /objizˈdʒɑtɪ/ | to drive around | impf |\n| обігнати | /obʲiɦˈnɑtɪ/ | to overtake | pf |\n| обганяти | /obɦɑˈnʲɑtɪ/ | to overtake | impf |\n\n---\n\n# Summary\n\n## Three Prefixes\n\n| Prefix | Meaning | Example |\n|--------|---------|---------|\n| пере- | across, over, re- | перейти дорогу (cross the street) |\n| про- | through, past | пройти повз (walk past) |\n| об- | around | обійти будинок (go around) |\n\n## Key Verbs\n\n| English | Perfective | Imperfective |\n|---------|------------|--------------|\n| to cross | перейти | переходити |\n| to move (residence) | переїхати | переїжджати |\n| to pass through | пройти | проходити |\n| to go around | обійти | обходити |\n| to overtake | обігнати | обганяти |\n\n## Special Meanings\n\n- **переїхати** = to move (residence): Ми переїхали до Києва.\n- **перекласти** = to translate: Вона переклала книгу.\n- **перенести** = to reschedule: Перенесіть зустріч.\n- **про- + time** = spending time: просидіти годину\n\n> **Key Takeaways**\n>\n> - пере- = across or re-doing\n> - про- = through or past (also duration)\n> - об- = around\n> - Each prefix creates new perfective + new imperfective pair\n"
   },
   "activities": [
     {
-      "id": "act-uk-B1-91-quiz",
+      "id": "act-b1-91-quiz",
       "type": "quiz",
       "title": "Prefix Selection",
       "description": "Choose the correct prefix.",
       "content": {
         "type": "quiz",
-        "instructions": "Choose the correct prefix.",
         "questions": [
           {
             "question": "Ми ___ вулицю на переході.",
@@ -270,23 +152,17 @@
       "language": "uk",
       "difficultyLevel": "B1",
       "duration": 5,
-      "tags": [
-        "verbs",
-        "motion",
-        "prefixes",
-        "grammar"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.291Z",
+      "modifiedAt": "2025-12-01T22:58:37.291Z"
     },
     {
-      "id": "act-uk-B1-91-matchup",
+      "id": "act-b1-91-matchup",
       "type": "match-up",
       "title": "Prefix Meanings",
       "description": "Prefix Meanings",
       "content": {
         "type": "match-up",
-        "instructions": "",
         "pairs": [
           {
             "left": "пере-",
@@ -309,50 +185,50 @@
       "language": "uk",
       "difficultyLevel": "B1",
       "duration": 5,
-      "tags": [
-        "verbs",
-        "motion",
-        "prefixes",
-        "grammar"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.291Z",
+      "modifiedAt": "2025-12-01T22:58:37.291Z"
     },
     {
-      "id": "act-uk-B1-91-groupsort",
+      "id": "act-b1-91-groupsort",
       "type": "group-sort",
       "title": "Verbs by Prefix",
       "description": "Verbs by Prefix",
       "content": {
         "type": "group-sort",
-        "instructions": "",
         "groups": [
           {
-            "name": "пере- (across)",
+            "id": "-",
+            "name": "пере-",
             "items": [
               "перейти",
               "переїхати",
               "перенести",
               "переплисти"
-            ]
+            ],
+            "nameUk": "across"
           },
           {
-            "name": "про- (through/past)",
+            "id": "-",
+            "name": "про-",
             "items": [
               "пройти",
               "проїхати",
               "пробігти",
               "пролетіти"
-            ]
+            ],
+            "nameUk": "through/past"
           },
           {
-            "name": "об- (around)",
+            "id": "-",
+            "name": "об-",
             "items": [
               "обійти",
               "об'їхати",
               "обігнати",
               "облетіти"
-            ]
+            ],
+            "nameUk": "around"
           }
         ],
         "shuffleItems": true
@@ -363,14 +239,9 @@
       "language": "uk",
       "difficultyLevel": "B1",
       "duration": 5,
-      "tags": [
-        "verbs",
-        "motion",
-        "prefixes",
-        "grammar"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.291Z",
+      "modifiedAt": "2025-12-01T22:58:37.291Z"
     }
   ],
   "vocabulary": {
@@ -381,132 +252,116 @@
     "transliterationMode": "none",
     "words": [
       {
-        "id": "v-m91-001",
+        "id": "v-pereyty-91-0",
         "uk": "перейти",
-        "translit": "",
-        "ipa": "/pɛrɛjˈtɪ/",
         "en": "to cross",
-        "pos": ""
+        "pos": "pf",
+        "ipa": "/pɛrɛjˈtɪ/"
       },
       {
-        "id": "v-m91-002",
+        "id": "v-perekhodyty-91-1",
         "uk": "переходити",
-        "translit": "",
-        "ipa": "/pɛrɛxoˈdɪtɪ/",
         "en": "to cross",
-        "pos": ""
+        "pos": "impf",
+        "ipa": "/pɛrɛxoˈdɪtɪ/"
       },
       {
-        "id": "v-m91-003",
+        "id": "v-pereyikhaty-91-2",
         "uk": "переїхати",
-        "translit": "",
-        "ipa": "/pɛrɛˈjixɑtɪ/",
         "en": "to move, drive across",
-        "pos": ""
+        "pos": "pf",
+        "ipa": "/pɛrɛˈjixɑtɪ/"
       },
       {
-        "id": "v-m91-004",
+        "id": "v-pereyizhdzhaty-91-3",
         "uk": "переїжджати",
-        "translit": "",
-        "ipa": "/pɛrɛjizˈdʒɑtɪ/",
         "en": "to move",
-        "pos": ""
+        "pos": "impf",
+        "ipa": "/pɛrɛjizˈdʒɑtɪ/"
       },
       {
-        "id": "v-m91-005",
+        "id": "v-perenesty-91-4",
         "uk": "перенести",
-        "translit": "",
-        "ipa": "/pɛrɛnɛsˈtɪ/",
         "en": "to transfer, reschedule",
-        "pos": ""
+        "pos": "pf",
+        "ipa": "/pɛrɛnɛsˈtɪ/"
       },
       {
-        "id": "v-m91-006",
+        "id": "v-perenosyty-91-5",
         "uk": "переносити",
-        "translit": "",
-        "ipa": "/pɛrɛnoˈsɪtɪ/",
         "en": "to transfer",
-        "pos": ""
+        "pos": "impf",
+        "ipa": "/pɛrɛnoˈsɪtɪ/"
       },
       {
-        "id": "v-m91-007",
+        "id": "v-proyty-91-6",
         "uk": "пройти",
-        "translit": "",
-        "ipa": "/projˈtɪ/",
         "en": "to pass through",
-        "pos": ""
+        "pos": "pf",
+        "ipa": "/projˈtɪ/"
       },
       {
-        "id": "v-m91-008",
+        "id": "v-prokhodyty-91-7",
         "uk": "проходити",
-        "translit": "",
-        "ipa": "/proxoˈdɪtɪ/",
         "en": "to pass",
-        "pos": ""
+        "pos": "impf",
+        "ipa": "/proxoˈdɪtɪ/"
       },
       {
-        "id": "v-m91-009",
+        "id": "v-proyikhaty-91-8",
         "uk": "проїхати",
-        "translit": "",
-        "ipa": "/proˈjixɑtɪ/",
         "en": "to drive through",
-        "pos": ""
+        "pos": "pf",
+        "ipa": "/proˈjixɑtɪ/"
       },
       {
-        "id": "v-m91-010",
+        "id": "v-proyizhdzhaty-91-9",
         "uk": "проїжджати",
-        "translit": "",
-        "ipa": "/projizˈdʒɑtɪ/",
         "en": "to drive through",
-        "pos": ""
+        "pos": "impf",
+        "ipa": "/projizˈdʒɑtɪ/"
       },
       {
-        "id": "v-m91-011",
+        "id": "v-obiyty-91-10",
         "uk": "обійти",
-        "translit": "",
-        "ipa": "/obijˈtɪ/",
         "en": "to go around",
-        "pos": ""
+        "pos": "pf",
+        "ipa": "/obijˈtɪ/"
       },
       {
-        "id": "v-m91-012",
+        "id": "v-obkhodyty-91-11",
         "uk": "обходити",
-        "translit": "",
-        "ipa": "/obxoˈdɪtɪ/",
         "en": "to go around",
-        "pos": ""
+        "pos": "impf",
+        "ipa": "/obxoˈdɪtɪ/"
       },
       {
-        "id": "v-m91-013",
+        "id": "v-ob'yikhaty-91-12",
         "uk": "об'їхати",
-        "translit": "",
-        "ipa": "/objˈixɑtɪ/",
         "en": "to drive around",
-        "pos": ""
+        "pos": "pf",
+        "ipa": "/objˈixɑtɪ/"
       },
       {
-        "id": "v-m91-014",
+        "id": "v-ob'yizhdzhaty-91-13",
         "uk": "об'їжджати",
-        "translit": "",
-        "ipa": "/objizˈdʒɑtɪ/",
         "en": "to drive around",
-        "pos": ""
+        "pos": "impf",
+        "ipa": "/objizˈdʒɑtɪ/"
       },
       {
-        "id": "v-m91-015",
+        "id": "v-obihnaty-91-14",
         "uk": "обігнати",
-        "translit": "",
-        "ipa": "/obʲiɦˈnɑtɪ/",
         "en": "to overtake",
-        "pos": ""
+        "pos": "pf",
+        "ipa": "/obʲiɦˈnɑtɪ/"
       },
       {
-        "id": "v-m91-016",
+        "id": "v-obhanyaty-91-15",
         "uk": "обганяти",
-        "translit": "",
-        "ipa": "/obɦɑˈnʲɑtɪ/",
         "en": "to overtake",
-        "pos": ""
+        "pos": "impf",
+        "ipa": "/obɦɑˈnʲɑtɪ/"
       }
     ]
   }

@@ -140,23 +140,23 @@ Categorize these nouns into Declension Groups:
 
 1. **Книга** (book)
    - Ends in -а. Not a baby.
-   - → **Group I** (Feminine)
+   > [!answer] **Group I** (Feminine)
 
 2. **Стіл** (table)
    - Ends in consonant.
-   - → **Group II** (Masculine)
+   > [!answer] **Group II** (Masculine)
 
 3. **Вікно** (window)
    - Ends in -о.
-   - → **Group II** (Neuter)
+   > [!answer] **Group II** (Neuter)
 
 4. **Радість** (joy)
    - Ends in -ість.
-   - → **Group III** (Feminine)
+   > [!answer] **Group III** (Feminine)
 
 5. **Кошеня** (kitten)
    - Baby animal in -я.
-   - → **Group IV** (Neuter)
+   > [!answer] **Group IV** (Neuter)
 
 ### Gender Prediction
 

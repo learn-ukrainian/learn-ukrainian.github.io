@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-A2-56",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "skill-practice",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -27,8 +26,6 @@
       "Email structure",
       "Internet vocabulary"
     ],
-    "totalDuration": 45,
-    "transliterationMode": "partial",
     "tags": [
       "communication",
       "phone",
@@ -36,22 +33,9 @@
       "internet",
       "functional"
     ],
-    "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
+    "totalDuration": 45,
+    "transliterationMode": "partial",
     "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Staying Connected\n\nIn the digital age, communication is key! Let's master Ukrainian for phones, emails, and the internet.\n\n**Key phrases:**\n- **Алло?** - Hello? (phone)\n- Я хочу **надіслати** повідомлення. - I want to send a message.\n- Яка у вас **електронна адреса**? - What's your email address?\n\n> 💡 **Did You Know?**\n>\n> Ukrainians are very active on social media! Telegram is extremely popular (more than WhatsApp), followed by Viber. Facebook and Instagram are widely used, and YouTube is the go-to for video content. TikTok is huge among younger generations!"
-          }
-        ]
-      },
       {
         "id": "phase-presentation",
         "name": "presentation",
@@ -60,102 +44,33 @@
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "### Phone Calls - Телефонні дзвінки\n\n**Answering the phone:**\n- **Алло?** - Hello?\n- **Слухаю.** - I'm listening. (formal)\n- **Так, слухаю вас.** - Yes, I'm listening.\n\n**Asking for someone:**\n- Можна **поговорити** з Іваном? - Can I speak with Ivan?\n- Чи є **Марія**? - Is Maria there?\n- Я хотів би **поговорити** з директором. - I'd like to speak with the director.\n\n**Identifying yourself:**\n- Це **Олена**. - This is Olena.\n- **Дзвонить** Петро з компанії... - Petro is calling from the company...\n- Вибачте, **хто дзвонить**? - Sorry, who's calling?\n\n**Common responses:**\n- Одну **хвилинку**. - One moment.\n- **Зачекайте**, будь ласка. - Please wait.\n- Він/Вона **зайнятий/зайнята**. - He/She is busy.\n- Його/Її **немає** зараз. - He/She isn't here right now.\n- **Передзвоніть** пізніше. - Call back later.\n\n> ⚡ **Pro Tip: Formal Phone Calls**\n>\n> For business calls, use formal address:\n> - \"Добрий день, чи можу я поговорити з...?\"\n> - \"Мене звати... Я дзвоню з приводу...\"\n> - \"Дякую за ваш час.\""
+            "teacherNotes": "### Phone Calls - Телефонні дзвінки\n\n**Answering the phone:**\n- **Алло?** - Hello?\n- **Слухаю.** - I'm listening. (formal)\n- **Так, слухаю вас.** - Yes, I'm listening.\n\n**Asking for someone:**\n- Можна **поговорити** з Іваном? - Can I speak with Ivan?\n- Чи є **Марія**? - Is Maria there?\n- Я хотів би **поговорити** з директором. - I'd like to speak with the director.\n\n**Identifying yourself:**\n- Це **Олена**. - This is Olena.\n- **Дзвонить** Петро з компанії... - Petro is calling from the company...\n- Вибачте, **хто дзвонить**? - Sorry, who's calling?\n\n**Common responses:**\n- Одну **хвилинку**. - One moment.\n- **Зачекайте**, будь ласка. - Please wait.\n- Він/Вона **зайнятий/зайнята**. - He/She is busy.\n- Його/Її **немає** зараз. - He/She isn't here right now.\n- **Передзвоніть** пізніше. - Call back later.\n\n> ⚡ **Pro Tip: Formal Phone Calls**\n>\n> For business calls, use formal address:\n> - \"Добрий день, чи можу я поговорити з...?\"\n> - \"Мене звати... Я дзвоню з приводу...\"\n> - \"Дякую за ваш час.\"\n\n### Phone Problems\n\n**Connection issues:**\n- **Погано чути**. - I can't hear well.\n- **Повторіть**, будь ласка. - Please repeat.\n- Говоріть **голосніше**. - Speak louder.\n- Говоріть **повільніше**. - Speak slower.\n- **Зв'язок** поганий. - The connection is bad.\n- Мене **перервало**. - I got cut off.\n\n**Wrong number:**\n- Ви **помилилися** номером. - You have the wrong number.\n- Такого тут **немає**. - There's no one here by that name.\n- **Який** номер ви набрали? - What number did you dial?\n\n### Mobile Phone Vocabulary\n\n| Ukrainian | English |\n|-----------|---------|\n| мобільний (телефон) | mobile phone |\n| смартфон | smartphone |\n| сім-карта | SIM card |\n| зарядка | charger |\n| батарея | battery |\n| екран | screen |\n| застосунок (додаток) | app |\n| повідомлення | message |\n| дзвінок | call |\n| контакт | contact |\n\n**Actions:**\n| Ukrainian | English |\n|-----------|---------|\n| телефонувати / дзвонити | to call |\n| набрати номер | to dial a number |\n| відповісти | to answer |\n| скинути | to decline/drop (call) |\n| надіслати SMS | to send a text |\n| завантажити | to download |\n\n> 🎭 **Culture Corner: Phone Etiquette**\n>\n> Ukrainians often answer calls from unknown numbers - it might be important! When calling someone, it's polite to ask \"Зручно говорити?\" (Is it convenient to talk?) before launching into a long conversation.\n\n### Email - Електронна пошта\n\n**Email vocabulary:**\n| Ukrainian | English |\n|-----------|---------|\n| електронна пошта / імейл | email |\n| адреса | address |\n| тема | subject |\n| вкладення | attachment |\n| відправник | sender |\n| одержувач | recipient |\n| надіслати | to send |\n| отримати | to receive |\n| відповісти | to reply |\n| переслати | to forward |\n\n**Email structure:**\n\n**Greeting:**\n- Шановний/Шановна... - Dear... (formal)\n- Добрий день! - Hello! (semi-formal)\n- Привіт! - Hi! (informal)\n\n**Body:**\n- Пишу вам з приводу... - I'm writing to you about...\n- Хотів/Хотіла б запитати... - I'd like to ask...\n- Прошу надіслати інформацію про... - Please send information about...\n\n**Closing:**\n- З повагою, - Respectfully, / Best regards,\n- З найкращими побажаннями, - With best wishes,\n- До зв'язку! - Talk soon! (informal)\n\n**Signature:**\n- (Ваше ім'я) - (Your name)\n\n> 📜 **History Bite: @ in Ukrainian**\n>\n> The @ symbol is called \"равлик\" (snail) or \"собачка\" (little dog) in Ukrainian! When giving your email, you say: \"іван крапка петренко равлик джімейл крапка ком\" (ivan.petrenko@gmail.com).\n\n### Sample Email\n\n**Formal:**\n```\nТема: Запит на інформацію\n\nШановний пане Коваленко,\n\nПишу вам з приводу вашої вакансії.\nХотів би отримати більше інформації про умови роботи.\n\nБуду вдячний за вашу відповідь.\n\nЗ повагою,\nОлександр Мельник\n```\n\n**Informal:**\n```\nПривіт, Оля!\n\nЯк справи? Хотів запитати про зустріч у суботу.\nО котрій тобі зручно?\n\nДо зв'язку!\nАндрій\n```\n\n### Internet & Social Media\n\n**General internet:**\n| Ukrainian | English |\n|-----------|---------|\n| інтернет | internet |\n| сайт | website |\n| сторінка | page |\n| посилання | link |\n| пошук | search |\n| пароль | password |\n| логін | login/username |\n| профіль | profile |\n| акаунт | account |\n\n**Social media:**\n| Ukrainian | English |\n|-----------|---------|\n| соціальні мережі | social networks |\n| підписатися | to subscribe/follow |\n| лайк | like |\n| коментар | comment |\n| поділитися | to share |\n| публікація (пост) | post |\n| сторіс | story |\n| підписник | follower |\n\n**Actions:**\n- **Підпишись** на мене! - Follow me!\n- **Постав** лайк! - Give it a like!\n- **Напиши** в коментарях. - Write in the comments.\n- **Поділися** з друзями. - Share with friends.\n- Я **надіслав** тобі посилання. - I sent you a link.\n\n> ⚡ **Pro Tip: Ukrainian Internet Slang**\n>\n> Online Ukrainians often mix Ukrainian with English:\n> - \"залогінитися\" - to log in\n> - \"пост\" - post\n> - \"лайкнути\" - to like\n> - \"шерити\" - to share\n> But pure Ukrainian alternatives exist too!\n\n### Messaging Apps\n\n**Common phrases:**\n- Напиши мені в **Телеграм**. - Message me on Telegram.\n- Скинь **посилання**. - Send the link.\n- Я в **онлайні**. - I'm online.\n- Він **оффлайн** / не в мережі. - He's offline.\n- Чекаю на **відповідь**. - Waiting for a reply.\n- **Прочитав**, але не відповів. - Read but didn't reply.\n\n**Status:**\n- **Онлайн** - online\n- **Не в мережі** - offline\n- **Друкує...** - typing...\n- **Переглянуто** - seen/read"
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Phone Problems\n\n**Connection issues:**\n- **Погано чути**. - I can't hear well.\n- **Повторіть**, будь ласка. - Please repeat.\n- Говоріть **голосніше**. - Speak louder.\n- Говоріть **повільніше**. - Speak slower.\n- **Зв'язок** поганий. - The connection is bad.\n- Мене **перервало**. - I got cut off.\n\n**Wrong number:**\n- Ви **помилилися** номером. - You have the wrong number.\n- Такого тут **немає**. - There's no one here by that name.\n- **Який** номер ви набрали? - What number did you dial?"
+            "teacherNotes": "### Phone Dialogue Completion\n\n1. - Алло?\n   - Добрий день! Можна поговорити з ___? (Maria)\n   > [!answer] Марією\n\n2. - Вибачте, хто ___? (calling)\n   > [!answer] дзвонить\n\n3. - Одну ___. (moment)\n   > [!answer] хвилинку\n\n4. - Його зараз ___. (not here)\n   > [!answer] немає\n\n5. - ___ пізніше. (call back)\n   > [!answer] Передзвоніть\n\n### Write an Email\n\nWrite a short email:\n- To: your friend\n- Subject: meeting this weekend\n- Ask about time and place\n\nExample answer:\n```\nТема: Зустріч у вихідні\n\nПривіт!\n\nЯк справи? Хотів запитати - ми ще зустрічаємося цими вихідними?\nО котрій тобі зручно? І де хочеш зустрітися?\n\nЧекаю на відповідь!\n[Твоє ім'я]\n```\n\n### Translate\n\n1. Can I speak with Ivan?\n   > [!answer] Можна поговорити з Іваном?\n\n2. Please wait.\n   > [!answer] Зачекайте, будь ласка.\n\n3. I'm writing to you about...\n   > [!answer] Пишу вам з приводу...\n\n4. Follow me on Instagram!\n   > [!answer] Підпишись на мене в Інстаграмі!\n\n5. Send me the link.\n   > [!answer] Надішли (скинь) мені посилання."
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Mobile Phone Vocabulary\n\n| Ukrainian | English |\n|-----------|---------|\n| мобільний (телефон) | mobile phone |\n| смартфон | smartphone |\n| сім-карта | SIM card |\n| зарядка | charger |\n| батарея | battery |\n| екран | screen |\n| застосунок (додаток) | app |\n| повідомлення | message |\n| дзвінок | call |\n| контакт | contact |\n\n**Actions:**\n| Ukrainian | English |\n|-----------|---------|\n| телефонувати / дзвонити | to call |\n| набрати номер | to dial a number |\n| відповісти | to answer |\n| скинути | to decline/drop (call) |\n| надіслати SMS | to send a text |\n| завантажити | to download |\n\n> 🎭 **Culture Corner: Phone Etiquette**\n>\n> Ukrainians often answer calls from unknown numbers - it might be important! When calling someone, it's polite to ask \"Зручно говорити?\" (Is it convenient to talk?) before launching into a long conversation."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Email - Електронна пошта\n\n**Email vocabulary:**\n| Ukrainian | English |\n|-----------|---------|\n| електронна пошта / імейл | email |\n| адреса | address |\n| тема | subject |\n| вкладення | attachment |\n| відправник | sender |\n| одержувач | recipient |\n| надіслати | to send |\n| отримати | to receive |\n| відповісти | to reply |\n| переслати | to forward |\n\n**Email structure:**\n\n**Greeting:**\n- Шановний/Шановна... - Dear... (formal)\n- Добрий день! - Hello! (semi-formal)\n- Привіт! - Hi! (informal)\n\n**Body:**\n- Пишу вам з приводу... - I'm writing to you about...\n- Хотів/Хотіла б запитати... - I'd like to ask...\n- Прошу надіслати інформацію про... - Please send information about...\n\n**Closing:**\n- З повагою, - Respectfully, / Best regards,\n- З найкращими побажаннями, - With best wishes,\n- До зв'язку! - Talk soon! (informal)\n\n**Signature:**\n- (Ваше ім'я) - (Your name)\n\n> 📜 **History Bite: @ in Ukrainian**\n>\n> The @ symbol is called \"равлик\" (snail) or \"собачка\" (little dog) in Ukrainian! When giving your email, you say: \"іван крапка петренко равлик джімейл крапка ком\" (ivan.petrenko@gmail.com)."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Sample Email\n\n**Formal:**\n```\nТема: Запит на інформацію\n\nШановний пане Коваленко,\n\nПишу вам з приводу вашої вакансії.\nХотів би отримати більше інформації про умови роботи.\n\nБуду вдячний за вашу відповідь.\n\nЗ повагою,\nОлександр Мельник\n```\n\n**Informal:**\n```\nПривіт, Оля!\n\nЯк справи? Хотів запитати про зустріч у суботу.\nО котрій тобі зручно?\n\nДо зв'язку!\nАндрій\n```"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Internet & Social Media\n\n**General internet:**\n| Ukrainian | English |\n|-----------|---------|\n| інтернет | internet |\n| сайт | website |\n| сторінка | page |\n| посилання | link |\n| пошук | search |\n| пароль | password |\n| логін | login/username |\n| профіль | profile |\n| акаунт | account |\n\n**Social media:**\n| Ukrainian | English |\n|-----------|---------|\n| соціальні мережі | social networks |\n| підписатися | to subscribe/follow |\n| лайк | like |\n| коментар | comment |\n| поділитися | to share |\n| публікація (пост) | post |\n| сторіс | story |\n| підписник | follower |\n\n**Actions:**\n- **Підпишись** на мене! - Follow me!\n- **Постав** лайк! - Give it a like!\n- **Напиши** в коментарях. - Write in the comments.\n- **Поділися** з друзями. - Share with friends.\n- Я **надіслав** тобі посилання. - I sent you a link.\n\n> ⚡ **Pro Tip: Ukrainian Internet Slang**\n>\n> Online Ukrainians often mix Ukrainian with English:\n> - \"залогінитися\" - to log in\n> - \"пост\" - post\n> - \"лайкнути\" - to like\n> - \"шерити\" - to share\n> But pure Ukrainian alternatives exist too!"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Messaging Apps\n\n**Common phrases:**\n- Напиши мені в **Телеграм**. - Message me on Telegram.\n- Скинь **посилання**. - Send the link.\n- Я в **онлайні**. - I'm online.\n- Він **оффлайн** / не в мережі. - He's offline.\n- Чекаю на **відповідь**. - Waiting for a reply.\n- **Прочитав**, але не відповів. - Read but didn't reply.\n\n**Status:**\n- **Онлайн** - online\n- **Не в мережі** - offline\n- **Друкує...** - typing...\n- **Переглянуто** - seen/read"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A2-56-matchup"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Phone Dialogue Completion\n\n1. - Алло?\n   - Добрий день! Можна поговорити з ___? (Maria)\n   → Марією\n\n2. - Вибачте, хто ___? (calling)\n   → дзвонить\n\n3. - Одну ___. (moment)\n   → хвилинку\n\n4. - Його зараз ___. (not here)\n   → немає\n\n5. - ___ пізніше. (call back)\n   → Передзвоніть"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Write an Email\n\nWrite a short email:\n- To: your friend\n- Subject: meeting this weekend\n- Ask about time and place\n\nExample answer:\n```\nТема: Зустріч у вихідні\n\nПривіт!\n\nЯк справи? Хотів запитати - ми ще зустрічаємося цими вихідними?\nО котрій тобі зручно? І де хочеш зустрітися?\n\nЧекаю на відповідь!\n[Твоє ім'я]\n```"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Translate\n\n1. Can I speak with Ivan?\n   → Можна поговорити з Іваном?\n\n2. Please wait.\n   → Зачекайте, будь ласка.\n\n3. I'm writing to you about...\n   → Пишу вам з приводу...\n\n4. Follow me on Instagram!\n   → Підпишись на мене в Інстаграмі!\n\n5. Send me the link.\n   → Надішли (скинь) мені посилання."
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A2-56-quiz"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A2-56-groupsort"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Role Play: Phone Call\n\n**Caller:**\n- Call a company\n- Ask for a specific person\n- Leave a message if they're busy\n\n**Receiver:**\n- Answer professionally\n- Ask who's calling\n- Explain person is busy\n- Offer to take a message"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Write Your Profile\n\nDescribe yourself for a social media bio:\n- Ім'я\n- Звідки ви\n- Ваші інтереси\n- Чим займаєтесь"
+            "teacherNotes": "### Role Play: Phone Call\n\n**Caller:**\n- Call a company\n- Ask for a specific person\n- Leave a message if they're busy\n\n**Receiver:**\n- Answer professionally\n- Ask who's calling\n- Explain person is busy\n- Offer to take a message\n\n### Write Your Profile\n\nDescribe yourself for a social media bio:\n- Ім'я\n- Звідки ви\n- Ваші інтереси\n- Чим займаєтесь\n\n---"
           }
         ]
       }
-    ]
+    ],
+    "createdAt": "2025-12-01T22:58:37.277Z",
+    "modifiedAt": "2025-12-01T22:58:37.277Z",
+    "version": 1
   },
   "activities": [
     {
-      "id": "act-uk-A2-56-matchup",
+      "id": "act-a2-56-matchup",
       "type": "match-up",
       "title": "Communication Vocabulary",
       "description": "Match Ukrainian with English.",
       "content": {
         "type": "match-up",
-        "instructions": "Match Ukrainian with English.",
         "pairs": [
           {
             "left": "дзвінок",
@@ -190,24 +105,17 @@
       "language": "uk",
       "difficultyLevel": "A2",
       "duration": 5,
-      "tags": [
-        "communication",
-        "phone",
-        "email",
-        "internet",
-        "functional"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.277Z",
+      "modifiedAt": "2025-12-01T22:58:37.277Z"
     },
     {
-      "id": "act-uk-A2-56-quiz",
+      "id": "act-a2-56-quiz",
       "type": "quiz",
       "title": "Phone & Email",
       "description": "Choose the correct answer.",
       "content": {
         "type": "quiz",
-        "instructions": "Choose the correct answer.",
         "questions": [
           {
             "question": "\"Hello?\" (phone) - ___?",
@@ -286,26 +194,20 @@
       "language": "uk",
       "difficultyLevel": "A2",
       "duration": 5,
-      "tags": [
-        "communication",
-        "phone",
-        "email",
-        "internet",
-        "functional"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.277Z",
+      "modifiedAt": "2025-12-01T22:58:37.277Z"
     },
     {
-      "id": "act-uk-A2-56-groupsort",
+      "id": "act-a2-56-groupsort",
       "type": "group-sort",
       "title": "Formal vs Informal",
       "description": "Sort by register.",
       "content": {
         "type": "group-sort",
-        "instructions": "Sort by register.",
         "groups": [
           {
+            "id": "formal",
             "name": "Formal",
             "items": [
               "Шановний пане...",
@@ -316,6 +218,7 @@
             ]
           },
           {
+            "id": "informal",
             "name": "Informal",
             "items": [
               "Привіт!",
@@ -334,15 +237,9 @@
       "language": "uk",
       "difficultyLevel": "A2",
       "duration": 5,
-      "tags": [
-        "communication",
-        "phone",
-        "email",
-        "internet",
-        "functional"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.277Z",
+      "modifiedAt": "2025-12-01T22:58:37.277Z"
     }
   ],
   "vocabulary": {
@@ -353,85 +250,71 @@
     "transliterationMode": "partial",
     "words": [
       {
-        "id": "v-m56-001",
+        "id": "v-dzvinok-56-0",
         "uk": "дзвінок",
-        "translit": "",
-        "ipa": "/dzvʲiˈnok/",
         "en": "call",
         "pos": "noun",
+        "ipa": "/dzvʲiˈnok/",
         "gender": "m"
       },
       {
-        "id": "v-m56-002",
+        "id": "v-otrymaty-56-1",
         "uk": "отримати",
-        "translit": "",
-        "ipa": "/otrɪˈmɑtɪ/",
         "en": "to receive (perf)",
         "pos": "verb",
-        "gender": "-"
+        "ipa": "/otrɪˈmɑtɪ/"
       },
       {
-        "id": "v-m56-003",
+        "id": "v-pereslaty-56-2",
         "uk": "переслати",
-        "translit": "",
-        "ipa": "/pɛrɛˈslɑtɪ/",
         "en": "to forward (perf)",
         "pos": "verb",
-        "gender": "-"
+        "ipa": "/pɛrɛˈslɑtɪ/"
       },
       {
-        "id": "v-m56-004",
+        "id": "v-vkladennya-56-3",
         "uk": "вкладення",
-        "translit": "",
-        "ipa": "/vklɑˈdɛnʲɑ/",
         "en": "attachment",
         "pos": "noun",
+        "ipa": "/vklɑˈdɛnʲɑ/",
         "gender": "n"
       },
       {
-        "id": "v-m56-005",
+        "id": "v-posylannya-56-4",
         "uk": "посилання",
-        "translit": "",
-        "ipa": "/posɪˈlɑnʲɑ/",
         "en": "link",
         "pos": "noun",
+        "ipa": "/posɪˈlɑnʲɑ/",
         "gender": "n"
       },
       {
-        "id": "v-m56-006",
+        "id": "v-parolь-56-5",
         "uk": "пароль",
-        "translit": "",
-        "ipa": "/pɑˈrolʲ/",
         "en": "password",
         "pos": "noun",
+        "ipa": "/pɑˈrolʲ/",
         "gender": "m"
       },
       {
-        "id": "v-m56-007",
+        "id": "v-pidpysatysya-56-6",
         "uk": "підписатися",
-        "translit": "",
-        "ipa": "/pʲidpɪˈsɑtɪsʲɑ/",
         "en": "to subscribe, follow",
         "pos": "verb",
-        "gender": "-"
+        "ipa": "/pʲidpɪˈsɑtɪsʲɑ/"
       },
       {
-        "id": "v-m56-008",
+        "id": "v-podilytysya-56-7",
         "uk": "поділитися",
-        "translit": "",
-        "ipa": "/podʲiˈlɪtɪsʲɑ/",
         "en": "to share",
         "pos": "verb",
-        "gender": "-"
+        "ipa": "/podʲiˈlɪtɪsʲɑ/"
       },
       {
-        "id": "v-m56-009",
+        "id": "v-zavantazhyty-56-8",
         "uk": "завантажити",
-        "translit": "",
-        "ipa": "/zɑvɑnˈtɑʒɪtɪ/",
         "en": "to download (perf)",
         "pos": "verb",
-        "gender": "-"
+        "ipa": "/zɑvɑnˈtɑʒɪtɪ/"
       }
     ]
   }

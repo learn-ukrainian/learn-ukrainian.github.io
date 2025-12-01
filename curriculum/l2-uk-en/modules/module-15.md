@@ -173,10 +173,14 @@ Key phrases you'll learn:
 ### Direction Comprehension
 
 Match the instruction to the action:
-1. Йдіть прямо. → Go straight.
-2. Поверніть праворуч. → Turn right.
-3. Перейдіть вулицю. → Cross the street.
-4. Це за рогом. → It's around the corner.
+1. Йдіть прямо.
+   > [!answer] Go straight.
+2. Поверніть праворуч.
+   > [!answer] Turn right.
+3. Перейдіть вулицю.
+   > [!answer] Cross the street.
+4. Це за рогом.
+   > [!answer] It's around the corner.
 
 ### Complete the Dialogue
 
@@ -188,9 +192,12 @@ Answers: прямо, ліворуч, там
 ### Ask for These Places
 
 Form questions:
-1. Bank → Де банк? / Вибачте, де найближчий банк?
-2. Metro → Де метро? / Скажіть, будь ласка, де метро?
-3. Pharmacy → Де аптека? / Де найближча аптека?
+1. Bank
+   > [!answer] Де банк? / Вибачте, де найближчий банк?
+2. Metro
+   > [!answer] Де метро? / Скажіть, будь ласка, де метро?
+3. Pharmacy
+   > [!answer] Де аптека? / Де найближча аптека?
 
 ## production
 

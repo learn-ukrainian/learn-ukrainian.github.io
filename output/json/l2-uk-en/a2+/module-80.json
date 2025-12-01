@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-A2+-80",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "revision",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -26,30 +25,15 @@
       "Vocabulary collocations",
       "Cross-topic integration"
     ],
-    "totalDuration": 45,
-    "transliterationMode": "none",
     "tags": [
       "review",
       "vocabulary",
       "thematic",
       "consolidation"
     ],
-    "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
+    "totalDuration": 45,
+    "transliterationMode": "none",
     "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Twelve Topics, One Review\n\nIn Modules 67-78, you expanded your vocabulary across twelve life areas:\n\n1. 🍳 Food & Cooking\n2. 🏥 Health & Body\n3. 🏠 Home & Furniture\n4. 🌿 Nature & Weather\n5. 😊 Emotions & Personality\n6. 💼 Work & Professions\n7. 📱 Technology & Media\n8. 🎮 Hobbies & Leisure\n9. 📚 Education & Learning\n10. 🛒 Shopping & Services\n11. ⚽ Sports & Fitness\n12. 🎭 Arts & Culture\n\nLet's consolidate and connect them!\n\n> 💡 **The Goal**\n>\n> Move vocabulary from recognition to active use in real conversations!"
-          }
-        ]
-      },
       {
         "id": "phase-presentation",
         "name": "presentation",
@@ -58,132 +42,33 @@
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "### Food & Cooking Highlights (Module 67)\n\n**Key Vocabulary:**\n- Cooking verbs: варити, смажити, пекти, готувати\n- Taste: смачний, солоний, солодкий, гострий\n- Kitchen: каструля, сковорода, духовка\n\n**Essential Phrases:**\n- Що на обід? - What's for lunch?\n- Смачного! - Bon appétit!"
+            "teacherNotes": "### Food & Cooking Highlights (Module 67)\n\n**Key Vocabulary:**\n- Cooking verbs: варити, смажити, пекти, готувати\n- Taste: смачний, солоний, солодкий, гострий\n- Kitchen: каструля, сковорода, духовка\n\n**Essential Phrases:**\n- Що на обід? - What's for lunch?\n- Смачного! - Bon appétit!\n\n### Health & Body Highlights (Module 68)\n\n**Key Vocabulary:**\n- Body parts: серце, легені, коліно, плече\n- Symptoms: температура, кашель, нежить\n- Medical: лікар, аптека, рецепт, ліки\n\n**Essential Phrases:**\n- Болить голова. - I have a headache.\n- На що скаржитесь? - What are your complaints?\n\n### Home & Furniture Highlights (Module 69)\n\n**Key Vocabulary:**\n- Furniture: диван, ліжко, шафа, крісло\n- Rooms: вітальня, спальня, кухня\n- Actions: прибирати, пилососити, переїжджати\n\n**Essential Phrases:**\n- Застели ліжко! - Make the bed!\n- Квартира затишна. - The apartment is cozy.\n\n### Nature & Weather Highlights (Module 70)\n\n**Key Vocabulary:**\n- Weather: гроза, туман, спека, заметіль\n- Landscapes: гора, озеро, ліс, степ\n- Animals: вовк, лелека, бджола\n\n**Essential Phrases:**\n- Йде дощ. - It's raining.\n- Яка погода? - What's the weather?\n\n### Emotions & Personality Highlights (Module 71)\n\n**Key Vocabulary:**\n- Positive: щасливий, вдячний, задоволений\n- Negative: сумний, злий, розчарований\n- Traits: добрий, чесний, впертий\n\n**Essential Phrases:**\n- Мені сумно. - I feel sad.\n- Не хвилюйся! - Don't worry!\n\n### Work & Professions Highlights (Module 72)\n\n**Key Vocabulary:**\n- Professions: програміст, юрист, бухгалтер\n- Workplace: офіс, колега, відділ\n- Career: зарплата, співбесіда, резюме\n\n**Essential Phrases:**\n- Де ви працюєте? - Where do you work?\n- Яка ваша посада? - What's your position?\n\n### Technology & Media Highlights (Module 73)\n\n**Key Vocabulary:**\n- Devices: ноутбук, смартфон, навушники\n- Actions: завантажити, надіслати, видалити\n- Problems: не працює, зависло, повільно\n\n**Essential Phrases:**\n- Завантаж цей застосунок. - Download this app.\n- Інтернет не працює. - The internet doesn't work.\n\n### Hobbies & Leisure Highlights (Module 74)\n\n**Key Vocabulary:**\n- Activities: малювання, фотографія, в'язання\n- Games: шахи, настільна гра, пазл\n- Outdoor: похід, кемпінг, риболовля\n\n**Essential Phrases:**\n- Чим захоплюєшся? - What are you into?\n- У вільний час я... - In my free time I...\n\n### Education & Learning Highlights (Module 75)\n\n**Key Vocabulary:**\n- Levels: школа, університет, аспірантура\n- Subjects: математика, історія, біологія\n- Actions: вчитися, складати іспит, закінчити\n\n**Essential Phrases:**\n- На якому ти курсі? - What year are you in?\n- Готуюся до іспиту. - I'm preparing for the exam.\n\n### Shopping & Services Highlights (Module 76)\n\n**Key Vocabulary:**\n- Stores: супермаркет, ринок, бутік\n- Banking: рахунок, картка, переказ\n- Actions: замовляти, повертати, бронювати\n\n**Essential Phrases:**\n- Є знижка? - Is there a discount?\n- Хочу повернути товар. - I want to return an item.\n\n### Sports & Fitness Highlights (Module 77)\n\n**Key Vocabulary:**\n- Sports: футбол, плавання, теніс\n- Gym: тренування, вправа, підхід\n- Competition: перемога, рахунок, медаль\n\n**Essential Phrases:**\n- Наша команда перемогла! - Our team won!\n- Починай з розминки. - Start with a warm-up.\n\n### Arts & Culture Highlights (Module 78)\n\n**Key Vocabulary:**\n- Music: пісня, гурт, концерт\n- Cinema: фільм, режисер, прем'єра\n- Traditions: вишиванка, писанка, колядка\n\n**Essential Phrases:**\n- Яку музику слухаєш? - What music do you listen to?\n- Підемо на виставку? - Shall we go to an exhibition?"
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Health & Body Highlights (Module 68)\n\n**Key Vocabulary:**\n- Body parts: серце, легені, коліно, плече\n- Symptoms: температура, кашель, нежить\n- Medical: лікар, аптека, рецепт, ліки\n\n**Essential Phrases:**\n- Болить голова. - I have a headache.\n- На що скаржитесь? - What are your complaints?"
+            "teacherNotes": "### Cross-Topic Connections\n\nMatch vocabulary to create natural sentences:\n\n1. Я **хворий** (health) + тому **працюю** з дому (work)\n   > [!answer] Я хворий, тому працюю з дому.\n\n2. У **вільний час** (hobbies) + **граю** у футбол (sports)\n   > [!answer] У вільний час граю у футбол.\n\n3. **Замовив** онлайн (shopping) + чекаю на **доставку** (shopping)\n   > [!answer] Замовив онлайн, чекаю на доставку.\n\n4. На **концерті** (arts) + **настрій** чудовий (emotions)\n   > [!answer] На концерті настрій чудовий!\n\n5. **Студент** (education) + **підробляє** в кафе (work)\n   > [!answer] Студент підробляє в кафе.\n\n### Topic Switch Challenge\n\nAnswer questions from all twelve topics:\n\n1. **Food:** Яка твоя улюблена страва?\n   > [!answer] Люблю борщ.\n2. **Health:** Як почуваєшся?\n   > [!answer] Добре, дякую.\n3. **Home:** Яка твоя квартира?\n   > [!answer] Затишна і світла.\n4. **Nature:** Яка погода?\n   > [!answer] Сьогодні сонячно.\n5. **Emotions:** Ти щасливий?\n   > [!answer] Так, задоволений.\n6. **Work:** Ким працюєш?\n   > [!answer] Програмістом.\n7. **Tech:** Які соцмережі?\n   > [!answer] Телеграм і Інстаграм.\n8. **Hobbies:** Чим захоплюєшся?\n   > [!answer] Фотографією.\n9. **Education:** Де вчився?\n   > [!answer] В університеті.\n10. **Shopping:** Де купуєш одяг?\n   > [!answer] В торговому центрі.\n11. **Sports:** Займаєшся спортом?\n   > [!answer] Так, бігаю.\n12. **Arts:** Яку музику слухаєш?\n   > [!answer] Рок і джаз.\n\n### Situational Practice\n\n**Scenario 1: New city**\nCombine: Home + Shopping + Transport\n- \"Переїхав у нову квартиру. Шукаю найближчий супермаркет.\"\n\n**Scenario 2: Weekend plans**\nCombine: Hobbies + Sports + Arts\n- \"У суботу — тренування в залі. Увечері — концерт улюбленого гурту.\"\n\n**Scenario 3: Student life**\nCombine: Education + Work + Tech\n- \"Вчуся в університеті, підробляю онлайн. Все роблю на ноутбуці.\"\n\n### Vocabulary Categories Review\n\n**Complete the sets:**\n\n**Hobbies:** малювання, фотографія, ___\n> [!answer] в'язання / шахи\n\n**Education:** школа, університет, ___\n> [!answer] аспірантура\n\n**Shopping:** супермаркет, ринок, ___\n> [!answer] торговий центр\n\n**Sports:** футбол, плавання, ___\n> [!answer] теніс / біг\n\n**Arts:** концерт, виставка, ___\n> [!answer] прем'єра"
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Home & Furniture Highlights (Module 69)\n\n**Key Vocabulary:**\n- Furniture: диван, ліжко, шафа, крісло\n- Rooms: вітальня, спальня, кухня\n- Actions: прибирати, пилососити, переїжджати\n\n**Essential Phrases:**\n- Застели ліжко! - Make the bed!\n- Квартира затишна. - The apartment is cozy."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Nature & Weather Highlights (Module 70)\n\n**Key Vocabulary:**\n- Weather: гроза, туман, спека, заметіль\n- Landscapes: гора, озеро, ліс, степ\n- Animals: вовк, лелека, бджола\n\n**Essential Phrases:**\n- Йде дощ. - It's raining.\n- Яка погода? - What's the weather?"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Emotions & Personality Highlights (Module 71)\n\n**Key Vocabulary:**\n- Positive: щасливий, вдячний, задоволений\n- Negative: сумний, злий, розчарований\n- Traits: добрий, чесний, впертий\n\n**Essential Phrases:**\n- Мені сумно. - I feel sad.\n- Не хвилюйся! - Don't worry!"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Work & Professions Highlights (Module 72)\n\n**Key Vocabulary:**\n- Professions: програміст, юрист, бухгалтер\n- Workplace: офіс, колега, відділ\n- Career: зарплата, співбесіда, резюме\n\n**Essential Phrases:**\n- Де ви працюєте? - Where do you work?\n- Яка ваша посада? - What's your position?"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Technology & Media Highlights (Module 73)\n\n**Key Vocabulary:**\n- Devices: ноутбук, смартфон, навушники\n- Actions: завантажити, надіслати, видалити\n- Problems: не працює, зависло, повільно\n\n**Essential Phrases:**\n- Завантаж цей застосунок. - Download this app.\n- Інтернет не працює. - The internet doesn't work."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Hobbies & Leisure Highlights (Module 74)\n\n**Key Vocabulary:**\n- Activities: малювання, фотографія, в'язання\n- Games: шахи, настільна гра, пазл\n- Outdoor: похід, кемпінг, риболовля\n\n**Essential Phrases:**\n- Чим захоплюєшся? - What are you into?\n- У вільний час я... - In my free time I..."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Education & Learning Highlights (Module 75)\n\n**Key Vocabulary:**\n- Levels: школа, університет, аспірантура\n- Subjects: математика, історія, біологія\n- Actions: вчитися, складати іспит, закінчити\n\n**Essential Phrases:**\n- На якому ти курсі? - What year are you in?\n- Готуюся до іспиту. - I'm preparing for the exam."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Shopping & Services Highlights (Module 76)\n\n**Key Vocabulary:**\n- Stores: супермаркет, ринок, бутік\n- Banking: рахунок, картка, переказ\n- Actions: замовляти, повертати, бронювати\n\n**Essential Phrases:**\n- Є знижка? - Is there a discount?\n- Хочу повернути товар. - I want to return an item."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Sports & Fitness Highlights (Module 77)\n\n**Key Vocabulary:**\n- Sports: футбол, плавання, теніс\n- Gym: тренування, вправа, підхід\n- Competition: перемога, рахунок, медаль\n\n**Essential Phrases:**\n- Наша команда перемогла! - Our team won!\n- Починай з розминки. - Start with a warm-up."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Arts & Culture Highlights (Module 78)\n\n**Key Vocabulary:**\n- Music: пісня, гурт, концерт\n- Cinema: фільм, режисер, прем'єра\n- Traditions: вишиванка, писанка, колядка\n\n**Essential Phrases:**\n- Яку музику слухаєш? - What music do you listen to?\n- Підемо на виставку? - Shall we go to an exhibition?"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A2+-80-matchup"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Cross-Topic Connections\n\nMatch vocabulary to create natural sentences:\n\n1. Я **хворий** (health) + тому **працюю** з дому (work)\n   → Я хворий, тому працюю з дому.\n\n2. У **вільний час** (hobbies) + **граю** у футбол (sports)\n   → У вільний час граю у футбол.\n\n3. **Замовив** онлайн (shopping) + чекаю на **доставку** (shopping)\n   → Замовив онлайн, чекаю на доставку.\n\n4. На **концерті** (arts) + **настрій** чудовий (emotions)\n   → На концерті настрій чудовий!\n\n5. **Студент** (education) + **підробляє** в кафе (work)\n   → Студент підробляє в кафе."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Topic Switch Challenge\n\nAnswer questions from all twelve topics:\n\n1. **Food:** Яка твоя улюблена страва? → Люблю борщ.\n2. **Health:** Як почуваєшся? → Добре, дякую.\n3. **Home:** Яка твоя квартира? → Затишна і світла.\n4. **Nature:** Яка погода? → Сьогодні сонячно.\n5. **Emotions:** Ти щасливий? → Так, задоволений.\n6. **Work:** Ким працюєш? → Програмістом.\n7. **Tech:** Які соцмережі? → Телеграм і Інстаграм.\n8. **Hobbies:** Чим захоплюєшся? → Фотографією.\n9. **Education:** Де вчився? → В університеті.\n10. **Shopping:** Де купуєш одяг? → В торговому центрі.\n11. **Sports:** Займаєшся спортом? → Так, бігаю.\n12. **Arts:** Яку музику слухаєш? → Рок і джаз."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Situational Practice\n\n**Scenario 1: New city**\nCombine: Home + Shopping + Transport\n- \"Переїхав у нову квартиру. Шукаю найближчий супермаркет.\"\n\n**Scenario 2: Weekend plans**\nCombine: Hobbies + Sports + Arts\n- \"У суботу — тренування в залі. Увечері — концерт улюбленого гурту.\"\n\n**Scenario 3: Student life**\nCombine: Education + Work + Tech\n- \"Вчуся в університеті, підробляю онлайн. Все роблю на ноутбуці.\""
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Vocabulary Categories Review\n\n**Complete the sets:**\n\n**Hobbies:** малювання, фотографія, ___\n→ в'язання / шахи\n\n**Education:** школа, університет, ___\n→ аспірантура\n\n**Shopping:** супермаркет, ринок, ___\n→ торговий центр\n\n**Sports:** футбол, плавання, ___\n→ теніс / біг\n\n**Arts:** концерт, виставка, ___\n→ прем'єра"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A2+-80-quiz"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A2+-80-groupsort"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### A Day in Your Life\n\nDescribe a typical day using ALL twelve topics:\n\n**Example:**\n\"Вранці **прокидаюся** (home), **снідаю** вівсянкою (food). Перевіряю **погоду** (nature) і **месенджери** (tech). **Їду на роботу** (work), де я **програміст**. Увечері **тренування** в залі (sports). Потім **читаю** книгу (hobbies) або дивлюся **серіал** (arts). Якщо **погано почуваюся** (health), лишаюся **вдома** і **замовляю** їжу (shopping).\""
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Discussion: Life Topics\n\nDiscuss these cross-topic questions:\n\n1. **Education + Work:** Як освіта вплинула на кар'єру?\n2. **Sports + Health:** Як спорт впливає на здоров'я?\n3. **Tech + Hobbies:** Які хобі потребують технологій?\n4. **Arts + Emotions:** Як мистецтво впливає на настрій?\n5. **Shopping + Home:** Що потрібно для нової квартири?"
+            "teacherNotes": "### A Day in Your Life\n\nDescribe a typical day using ALL twelve topics:\n\n**Example:**\n\"Вранці **прокидаюся** (home), **снідаю** вівсянкою (food). Перевіряю **погоду** (nature) і **месенджери** (tech). **Їду на роботу** (work), де я **програміст**. Увечері **тренування** в залі (sports). Потім **читаю** книгу (hobbies) або дивлюся **серіал** (arts). Якщо **погано почуваюся** (health), лишаюся **вдома** і **замовляю** їжу (shopping).\"\n\n### Discussion: Life Topics\n\nDiscuss these cross-topic questions:\n\n1. **Education + Work:** Як освіта вплинула на кар'єру?\n2. **Sports + Health:** Як спорт впливає на здоров'я?\n3. **Tech + Hobbies:** Які хобі потребують технологій?\n4. **Arts + Emotions:** Як мистецтво впливає на настрій?\n5. **Shopping + Home:** Що потрібно для нової квартири?\n\n---"
           }
         ]
       }
-    ]
+    ],
+    "createdAt": "2025-12-01T22:58:37.287Z",
+    "modifiedAt": "2025-12-01T22:58:37.287Z",
+    "version": 1
   },
   "activities": [
     {
-      "id": "act-uk-A2+-80-matchup",
+      "id": "act-a2+-80-matchup",
       "type": "match-up",
       "title": "Topic → Key Word",
       "description": "Topic → Key Word",
       "content": {
         "type": "match-up",
-        "instructions": "",
         "pairs": [
           {
             "left": "Food",
@@ -226,23 +111,17 @@
       "language": "uk",
       "difficultyLevel": "A2+",
       "duration": 5,
-      "tags": [
-        "review",
-        "vocabulary",
-        "thematic",
-        "consolidation"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.287Z",
+      "modifiedAt": "2025-12-01T22:58:37.287Z"
     },
     {
-      "id": "act-uk-A2+-80-quiz",
+      "id": "act-a2+-80-quiz",
       "type": "quiz",
       "title": "Vocabulary Review",
       "description": "Test across all twelve topics.",
       "content": {
         "type": "quiz",
-        "instructions": "Test across all twelve topics.",
         "questions": [
           {
             "question": "\"Смажити\" relates to ___.",
@@ -321,59 +200,61 @@
       "language": "uk",
       "difficultyLevel": "A2+",
       "duration": 5,
-      "tags": [
-        "review",
-        "vocabulary",
-        "thematic",
-        "consolidation"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.287Z",
+      "modifiedAt": "2025-12-01T22:58:37.287Z"
     },
     {
-      "id": "act-uk-A2+-80-groupsort",
+      "id": "act-a2+-80-groupsort",
       "type": "group-sort",
       "title": "By Topic",
       "description": "By Topic",
       "content": {
         "type": "group-sort",
-        "instructions": "",
         "groups": [
           {
-            "name": "Освіта (Education)",
+            "id": "",
+            "name": "Освіта",
             "items": [
               "університет",
               "іспит",
               "студент",
               "диплом"
-            ]
+            ],
+            "nameUk": "Education"
           },
           {
-            "name": "Покупки (Shopping)",
+            "id": "",
+            "name": "Покупки",
             "items": [
               "знижка",
               "повернути",
               "рахунок",
               "доставка"
-            ]
+            ],
+            "nameUk": "Shopping"
           },
           {
-            "name": "Спорт (Sports)",
+            "id": "",
+            "name": "Спорт",
             "items": [
               "тренування",
               "перемога",
               "команда",
               "медаль"
-            ]
+            ],
+            "nameUk": "Sports"
           },
           {
-            "name": "Мистецтво (Arts)",
+            "id": "",
+            "name": "Мистецтво",
             "items": [
               "концерт",
               "режисер",
               "пісня",
               "виставка"
-            ]
+            ],
+            "nameUk": "Arts"
           }
         ],
         "shuffleItems": true
@@ -384,14 +265,9 @@
       "language": "uk",
       "difficultyLevel": "A2+",
       "duration": 5,
-      "tags": [
-        "review",
-        "vocabulary",
-        "thematic",
-        "consolidation"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.287Z",
+      "modifiedAt": "2025-12-01T22:58:37.287Z"
     }
   ],
   "vocabulary": {

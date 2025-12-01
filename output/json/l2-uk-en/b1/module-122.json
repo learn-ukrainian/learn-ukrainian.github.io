@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-B1-122",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "vocabulary-expansion",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -22,180 +21,43 @@
       "Use emotional vocabulary in context"
     ],
     "grammarFocus": [],
-    "totalDuration": 45,
-    "transliterationMode": "none",
     "tags": [
       "vocabulary",
       "emotions",
       "relationships",
       "feelings"
     ],
+    "totalDuration": 45,
+    "transliterationMode": "none",
+    "phases": [],
+    "createdAt": "2025-12-01T22:58:37.236Z",
+    "modifiedAt": "2025-12-01T22:58:37.236Z",
     "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
-    "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Емоції та стосунки | Emotions and Relationships\n\nНа рівні B1 ми говоримо про складніші емоції та стосунки:\n\nAt B1 level, we discuss more complex emotions and relationships:\n\n- Як ви описуєте свої **почуття**? | How do you describe your feelings?\n- Які **стосунки** важливі для вас? | What relationships are important to you?\n- Як ви справляєтеся з **конфліктами**? | How do you deal with conflicts?"
-          }
-        ]
-      },
-      {
-        "id": "phase-presentation",
-        "name": "presentation",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Основні емоції | Core Emotions\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| радість | /ˈrɑdʲistʲ/ | joy | Відчувати радість |\n| сум | /sum/ | sadness | Глибокий сум |\n| гнів | /ɦnʲiv/ | anger | Стримувати гнів |\n| страх | /strɑx/ | fear | Долати страх |\n| здивування | /zdɪvuˈvɑnʲːɑ/ | surprise | Приємне здивування |\n| огида | /oˈɦɪdɑ/ | disgust | Відчуття огиди |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Складні емоції | Complex Emotions\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| тривога | /trɪˈvoɦɑ/ | anxiety | Постійна тривога |\n| розчарування | /rozt͡ʃɑruˈvɑnʲːɑ/ | disappointment | Велике розчарування |\n| полегшення | /polɛɦˈʃɛnʲːɑ/ | relief | Відчути полегшення |\n| ревність | /rɛwˈnʲistʲ/ | jealousy | Ревність до успіху |\n| сором | /ˈsorom/ | shame | Відчувати сором |\n| провина | /proˈvɪnɑ/ | guilt | Почуття провини |\n| заздрість | /ˈzɑzdrʲistʲ/ | envy | Заздрість до інших |\n| гордість | /ˈɦordʲistʲ/ | pride | Національна гордість |\n| вдячність | /ˈwdʲɑt͡ʃnʲistʲ/ | gratitude | Глибока вдячність |\n| ніяковість | /nʲiˈjɑkovʲistʲ/ | embarrassment | Відчувати ніяковість |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Дієслова емоцій | Emotion Verbs\n\n| Ukrainian | English | Aspect |\n|-----------|---------|--------|\n| радіти / зрадіти | to rejoice | impf/pf |\n| сумувати | to be sad | impf |\n| злитися / розлютитися | to be angry | impf/pf |\n| боятися / злякатися | to be afraid | impf/pf |\n| хвилюватися / схвилюватися | to worry | impf/pf |\n| розчаровуватися / розчаруватися | to be disappointed | impf/pf |\n| соромитися / засоромитися | to be ashamed | impf/pf |\n| заздрити / позаздрити | to envy | impf/pf |\n| пишатися | to be proud | impf |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Стосунки | Relationships\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| дружба | /ˈdruʒbɑ/ | friendship | Справжня дружба |\n| кохання | /koˈxɑnʲːɑ/ | love (romantic) | Перше кохання |\n| любов | /lʲuˈbow/ | love | Любов до батьків |\n| довіра | /doˈvʲirɑ/ | trust | Повна довіра |\n| підтримка | /pʲidˈtrɪmkɑ/ | support | Емоційна підтримка |\n| конфлікт | /konˈflʲikt/ | conflict | Вирішити конфлікт |\n| сварка | /ˈswɑrkɑ/ | quarrel, argument | Гучна сварка |\n| примирення | /prɪmɪˈrɛnʲːɑ/ | reconciliation | Пошук примирення |\n| розлука | /rozˈlukɑ/ | separation | Болюча розлука |\n| зрада | /ˈzrɑdɑ/ | betrayal | Зрада друга |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Дієслова стосунків | Relationship Verbs\n\n| Ukrainian | English | Aspect |\n|-----------|---------|--------|\n| довіряти / довіритися | to trust | impf/pf |\n| підтримувати / підтримати | to support | impf/pf |\n| сваритися / посваритися | to quarrel | impf/pf |\n| миритися / помиритися | to make up | impf/pf |\n| прощати / пробачити | to forgive | impf/pf |\n| зраджувати / зрадити | to betray | impf/pf |\n| ображати / образити | to offend | impf/pf |\n| ображатися / образитися | to take offense | impf/pf |\n| поважати | to respect | impf |\n| цінувати | to value, appreciate | impf |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Вирази з емоціями | Emotion Expressions\n\n| Ukrainian | English |\n|-----------|---------|\n| бути в захваті | to be thrilled |\n| бути на сьомому небі | to be on cloud nine |\n| серце крається | heart is breaking |\n| не знаходити собі місця | to be restless with worry |\n| виходити з себе | to lose one's temper |\n| тримати зуби стиснутими | to grit one's teeth |\n| мати важке серце | to have a heavy heart |\n| легко на душі | to feel light-hearted |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Опис стосунків | Describing Relationships\n\n| Expression | Meaning |\n|------------|---------|\n| близькі стосунки | close relationship |\n| довірливі стосунки | trusting relationship |\n| напружені стосунки | tense relationship |\n| дружні стосунки | friendly relationship |\n| романтичні стосунки | romantic relationship |\n| родинні стосунки | family relations |\n| складні стосунки | complicated relationship |"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-B1-122-matchup"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Match Emotion to Situation\n\n1. Ви виграли приз. → **радість**\n2. Ваш друг забув про вашу зустріч. → **розчарування**\n3. Ви зробили помилку при всіх. → **сором/ніяковість**\n4. Ваш друг допоміг вам у важкий час. → **вдячність**\n5. Колега отримав підвищення замість вас. → **заздрість/ревність**"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Complete with Correct Verb\n\n1. Я ___ (довіряти) своєму найкращому другу.\n   → Я **довіряю** своєму найкращому другу.\n\n2. Вони ___ (посваритися) через дрібницю.\n   → Вони **посварилися** через дрібницю.\n\n3. Він не може ___ (пробачити) їй цю зраду.\n   → Він не може **пробачити** їй цю зраду.\n\n4. Вона завжди ___ (підтримувати) мене.\n   → Вона завжди **підтримує** мене.\n\n5. Я ___ (пишатися) своїми дітьми.\n   → Я **пишаюся** своїми дітьми."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Discuss Relationships\n\nAnswer these questions:\n\n1. Які якості важливі в дружбі?\n   - довіра, підтримка, чесність...\n\n2. Як ви справляєтеся з конфліктами?\n   - говорю відверто, прошу вибачення...\n\n3. Що може зруйнувати стосунки?\n   - зрада, брехня, неповага..."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Translate to Ukrainian\n\n1. I'm disappointed in his behavior.\n   → **Я розчарований(а) його поведінкою.**\n\n2. She forgave him for everything.\n   → **Вона пробачила йому все.**\n\n3. We have a trusting relationship.\n   → **У нас довірливі стосунки.**\n\n4. He can't get over his jealousy.\n   → **Він не може подолати свою ревність.**"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-B1-122-quiz"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Describe Your Relationships\n\nTalk about important relationships:\n\n- Хто ваш найкращий друг? Чому ви **довіряєте** йому/їй?\n- Чи були у вас **конфлікти** з близькими? Як ви їх вирішували?\n- За що ви **вдячні** своїм друзям/родині?"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Share an Emotional Experience\n\nDescribe a time when you felt:\n- велику **радість**\n- глибоке **розчарування**\n- справжню **вдячність**"
-          }
-        ]
-      }
-    ],
-    "rawMarkdown": "# Зміст уроку | Lesson Content\n\n## warm-up | Розминка\n\n### Емоції та стосунки | Emotions and Relationships\n\nНа рівні B1 ми говоримо про складніші емоції та стосунки:\n\nAt B1 level, we discuss more complex emotions and relationships:\n\n- Як ви описуєте свої **почуття**? | How do you describe your feelings?\n- Які **стосунки** важливі для вас? | What relationships are important to you?\n- Як ви справляєтеся з **конфліктами**? | How do you deal with conflicts?\n\n## presentation | Презентація\n\n### Основні емоції | Core Emotions\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| радість | /ˈrɑdʲistʲ/ | joy | Відчувати радість |\n| сум | /sum/ | sadness | Глибокий сум |\n| гнів | /ɦnʲiv/ | anger | Стримувати гнів |\n| страх | /strɑx/ | fear | Долати страх |\n| здивування | /zdɪvuˈvɑnʲːɑ/ | surprise | Приємне здивування |\n| огида | /oˈɦɪdɑ/ | disgust | Відчуття огиди |\n\n### Складні емоції | Complex Emotions\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| тривога | /trɪˈvoɦɑ/ | anxiety | Постійна тривога |\n| розчарування | /rozt͡ʃɑruˈvɑnʲːɑ/ | disappointment | Велике розчарування |\n| полегшення | /polɛɦˈʃɛnʲːɑ/ | relief | Відчути полегшення |\n| ревність | /rɛwˈnʲistʲ/ | jealousy | Ревність до успіху |\n| сором | /ˈsorom/ | shame | Відчувати сором |\n| провина | /proˈvɪnɑ/ | guilt | Почуття провини |\n| заздрість | /ˈzɑzdrʲistʲ/ | envy | Заздрість до інших |\n| гордість | /ˈɦordʲistʲ/ | pride | Національна гордість |\n| вдячність | /ˈwdʲɑt͡ʃnʲistʲ/ | gratitude | Глибока вдячність |\n| ніяковість | /nʲiˈjɑkovʲistʲ/ | embarrassment | Відчувати ніяковість |\n\n### Дієслова емоцій | Emotion Verbs\n\n| Ukrainian | English | Aspect |\n|-----------|---------|--------|\n| радіти / зрадіти | to rejoice | impf/pf |\n| сумувати | to be sad | impf |\n| злитися / розлютитися | to be angry | impf/pf |\n| боятися / злякатися | to be afraid | impf/pf |\n| хвилюватися / схвилюватися | to worry | impf/pf |\n| розчаровуватися / розчаруватися | to be disappointed | impf/pf |\n| соромитися / засоромитися | to be ashamed | impf/pf |\n| заздрити / позаздрити | to envy | impf/pf |\n| пишатися | to be proud | impf |\n\n### Стосунки | Relationships\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| дружба | /ˈdruʒbɑ/ | friendship | Справжня дружба |\n| кохання | /koˈxɑnʲːɑ/ | love (romantic) | Перше кохання |\n| любов | /lʲuˈbow/ | love | Любов до батьків |\n| довіра | /doˈvʲirɑ/ | trust | Повна довіра |\n| підтримка | /pʲidˈtrɪmkɑ/ | support | Емоційна підтримка |\n| конфлікт | /konˈflʲikt/ | conflict | Вирішити конфлікт |\n| сварка | /ˈswɑrkɑ/ | quarrel, argument | Гучна сварка |\n| примирення | /prɪmɪˈrɛnʲːɑ/ | reconciliation | Пошук примирення |\n| розлука | /rozˈlukɑ/ | separation | Болюча розлука |\n| зрада | /ˈzrɑdɑ/ | betrayal | Зрада друга |\n\n### Дієслова стосунків | Relationship Verbs\n\n| Ukrainian | English | Aspect |\n|-----------|---------|--------|\n| довіряти / довіритися | to trust | impf/pf |\n| підтримувати / підтримати | to support | impf/pf |\n| сваритися / посваритися | to quarrel | impf/pf |\n| миритися / помиритися | to make up | impf/pf |\n| прощати / пробачити | to forgive | impf/pf |\n| зраджувати / зрадити | to betray | impf/pf |\n| ображати / образити | to offend | impf/pf |\n| ображатися / образитися | to take offense | impf/pf |\n| поважати | to respect | impf |\n| цінувати | to value, appreciate | impf |\n\n### Вирази з емоціями | Emotion Expressions\n\n| Ukrainian | English |\n|-----------|---------|\n| бути в захваті | to be thrilled |\n| бути на сьомому небі | to be on cloud nine |\n| серце крається | heart is breaking |\n| не знаходити собі місця | to be restless with worry |\n| виходити з себе | to lose one's temper |\n| тримати зуби стиснутими | to grit one's teeth |\n| мати важке серце | to have a heavy heart |\n| легко на душі | to feel light-hearted |\n\n### Опис стосунків | Describing Relationships\n\n| Expression | Meaning |\n|------------|---------|\n| близькі стосунки | close relationship |\n| довірливі стосунки | trusting relationship |\n| напружені стосунки | tense relationship |\n| дружні стосунки | friendly relationship |\n| романтичні стосунки | romantic relationship |\n| родинні стосунки | family relations |\n| складні стосунки | complicated relationship |\n\n## practice | Практика\n\n### Match Emotion to Situation\n\n1. Ви виграли приз. → **радість**\n2. Ваш друг забув про вашу зустріч. → **розчарування**\n3. Ви зробили помилку при всіх. → **сором/ніяковість**\n4. Ваш друг допоміг вам у важкий час. → **вдячність**\n5. Колега отримав підвищення замість вас. → **заздрість/ревність**\n\n### Complete with Correct Verb\n\n1. Я ___ (довіряти) своєму найкращому другу.\n   → Я **довіряю** своєму найкращому другу.\n\n2. Вони ___ (посваритися) через дрібницю.\n   → Вони **посварилися** через дрібницю.\n\n3. Він не може ___ (пробачити) їй цю зраду.\n   → Він не може **пробачити** їй цю зраду.\n\n4. Вона завжди ___ (підтримувати) мене.\n   → Вона завжди **підтримує** мене.\n\n5. Я ___ (пишатися) своїми дітьми.\n   → Я **пишаюся** своїми дітьми.\n\n### Discuss Relationships\n\nAnswer these questions:\n\n1. Які якості важливі в дружбі?\n   - довіра, підтримка, чесність...\n\n2. Як ви справляєтеся з конфліктами?\n   - говорю відверто, прошу вибачення...\n\n3. Що може зруйнувати стосунки?\n   - зрада, брехня, неповага...\n\n### Translate to Ukrainian\n\n1. I'm disappointed in his behavior.\n   → **Я розчарований(а) його поведінкою.**\n\n2. She forgave him for everything.\n   → **Вона пробачила йому все.**\n\n3. We have a trusting relationship.\n   → **У нас довірливі стосунки.**\n\n4. He can't get over his jealousy.\n   → **Він не може подолати свою ревність.**\n\n## production | Продукція\n\n### Describe Your Relationships\n\nTalk about important relationships:\n\n- Хто ваш найкращий друг? Чому ви **довіряєте** йому/їй?\n- Чи були у вас **конфлікти** з близькими? Як ви їх вирішували?\n- За що ви **вдячні** своїм друзям/родині?\n\n### Share an Emotional Experience\n\nDescribe a time when you felt:\n- велику **радість**\n- глибоке **розчарування**\n- справжню **вдячність**\n\n---\n\n# Activities\n\n## quiz: Emotions and Relationships\n\n> Choose the correct word.\n\n1. Відчуття, коли щось не вийшло, як очікувалося:\n   - [x] розчарування\n   - [ ] полегшення\n   > Disappointment when expectations aren't met.\n\n2. Дієслово: вірити комусь\n   - [x] довіряти\n   - [ ] зраджувати\n   > To trust someone.\n\n3. Протилежність ненависті:\n   - [x] любов\n   - [ ] гнів\n   > Love is opposite of hatred.\n\n4. Коли друзі знову стають друзями після сварки:\n   - [x] примирення\n   - [ ] розлука\n   > Reconciliation after a quarrel.\n\n5. Відчуття, коли хтось інший має те, що хочеш ти:\n   - [x] заздрість\n   - [ ] гордість\n   > Envy of what others have.\n\n6. Дієслово: сказати «вибачте» і забути образу:\n   - [x] пробачити\n   - [ ] образити\n   > To forgive.\n\n## match-up: Emotions and Opposites\n\n| Emotion | Opposite |\n|---------|----------|\n| радість | сум |\n| довіра | недовіра |\n| любов | ненависть |\n| гордість | сором |\n| полегшення | тривога |\n\n---",
     "immersiveSections": [
       {
-        "id": "warm-up-розминка",
-        "title": "warm-up | Розминка",
-        "content": "### Емоції та стосунки | Emotions and Relationships\n\nНа рівні B1 ми говоримо про складніші емоції та стосунки:\n\nAt B1 level, we discuss more complex emotions and relationships:\n\n- Як ви описуєте свої **почуття**? | How do you describe your feelings?\n- Які **стосунки** важливі для вас? | What relationships are important to you?\n- Як ви справляєтеся з **конфліктами**? | How do you deal with conflicts?",
-        "type": "topic"
+        "id": "section-зміст-уроку-lesson-content",
+        "type": "content",
+        "title": "Зміст уроку | Lesson Content",
+        "content": "## warm-up | Розминка\n\n### Емоції та стосунки | Emotions and Relationships\n\nНа рівні B1 ми говоримо про складніші емоції та стосунки:\n\nAt B1 level, we discuss more complex emotions and relationships:\n\n- Як ви описуєте свої **почуття**? | How do you describe your feelings?\n- Які **стосунки** важливі для вас? | What relationships are important to you?\n- Як ви справляєтеся з **конфліктами**? | How do you deal with conflicts?\n\n## presentation | Презентація\n\n### Основні емоції | Core Emotions\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| радість | /ˈrɑdʲistʲ/ | joy | Відчувати радість |\n| сум | /sum/ | sadness | Глибокий сум |\n| гнів | /ɦnʲiv/ | anger | Стримувати гнів |\n| страх | /strɑx/ | fear | Долати страх |\n| здивування | /zdɪvuˈvɑnʲːɑ/ | surprise | Приємне здивування |\n| огида | /oˈɦɪdɑ/ | disgust | Відчуття огиди |\n\n### Складні емоції | Complex Emotions\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| тривога | /trɪˈvoɦɑ/ | anxiety | Постійна тривога |\n| розчарування | /rozt͡ʃɑruˈvɑnʲːɑ/ | disappointment | Велике розчарування |\n| полегшення | /polɛɦˈʃɛnʲːɑ/ | relief | Відчути полегшення |\n| ревність | /rɛwˈnʲistʲ/ | jealousy | Ревність до успіху |\n| сором | /ˈsorom/ | shame | Відчувати сором |\n| провина | /proˈvɪnɑ/ | guilt | Почуття провини |\n| заздрість | /ˈzɑzdrʲistʲ/ | envy | Заздрість до інших |\n| гордість | /ˈɦordʲistʲ/ | pride | Національна гордість |\n| вдячність | /ˈwdʲɑt͡ʃnʲistʲ/ | gratitude | Глибока вдячність |\n| ніяковість | /nʲiˈjɑkovʲistʲ/ | embarrassment | Відчувати ніяковість |\n\n### Дієслова емоцій | Emotion Verbs\n\n| Ukrainian | English | Aspect |\n|-----------|---------|--------|\n| радіти / зрадіти | to rejoice | impf/pf |\n| сумувати | to be sad | impf |\n| злитися / розлютитися | to be angry | impf/pf |\n| боятися / злякатися | to be afraid | impf/pf |\n| хвилюватися / схвилюватися | to worry | impf/pf |\n| розчаровуватися / розчаруватися | to be disappointed | impf/pf |\n| соромитися / засоромитися | to be ashamed | impf/pf |\n| заздрити / позаздрити | to envy | impf/pf |\n| пишатися | to be proud | impf |\n\n### Стосунки | Relationships\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| дружба | /ˈdruʒbɑ/ | friendship | Справжня дружба |\n| кохання | /koˈxɑnʲːɑ/ | love (romantic) | Перше кохання |\n| любов | /lʲuˈbow/ | love | Любов до батьків |\n| довіра | /doˈvʲirɑ/ | trust | Повна довіра |\n| підтримка | /pʲidˈtrɪmkɑ/ | support | Емоційна підтримка |\n| конфлікт | /konˈflʲikt/ | conflict | Вирішити конфлікт |\n| сварка | /ˈswɑrkɑ/ | quarrel, argument | Гучна сварка |\n| примирення | /prɪmɪˈrɛnʲːɑ/ | reconciliation | Пошук примирення |\n| розлука | /rozˈlukɑ/ | separation | Болюча розлука |\n| зрада | /ˈzrɑdɑ/ | betrayal | Зрада друга |\n\n### Дієслова стосунків | Relationship Verbs\n\n| Ukrainian | English | Aspect |\n|-----------|---------|--------|\n| довіряти / довіритися | to trust | impf/pf |\n| підтримувати / підтримати | to support | impf/pf |\n| сваритися / посваритися | to quarrel | impf/pf |\n| миритися / помиритися | to make up | impf/pf |\n| прощати / пробачити | to forgive | impf/pf |\n| зраджувати / зрадити | to betray | impf/pf |\n| ображати / образити | to offend | impf/pf |\n| ображатися / образитися | to take offense | impf/pf |\n| поважати | to respect | impf |\n| цінувати | to value, appreciate | impf |\n\n### Вирази з емоціями | Emotion Expressions\n\n| Ukrainian | English |\n|-----------|---------|\n| бути в захваті | to be thrilled |\n| бути на сьомому небі | to be on cloud nine |\n| серце крається | heart is breaking |\n| не знаходити собі місця | to be restless with worry |\n| виходити з себе | to lose one's temper |\n| тримати зуби стиснутими | to grit one's teeth |\n| мати важке серце | to have a heavy heart |\n| легко на душі | to feel light-hearted |\n\n### Опис стосунків | Describing Relationships\n\n| Expression | Meaning |\n|------------|---------|\n| близькі стосунки | close relationship |\n| довірливі стосунки | trusting relationship |\n| напружені стосунки | tense relationship |\n| дружні стосунки | friendly relationship |\n| романтичні стосунки | romantic relationship |\n| родинні стосунки | family relations |\n| складні стосунки | complicated relationship |\n\n## practice | Практика\n\n### Match Emotion to Situation\n\n1. Ви виграли приз.\n   > [!answer] **радість**\n2. Ваш друг забув про вашу зустріч.\n   > [!answer] **розчарування**\n3. Ви зробили помилку при всіх.\n   > [!answer] **сором/ніяковість**\n4. Ваш друг допоміг вам у важкий час.\n   > [!answer] **вдячність**\n5. Колега отримав підвищення замість вас.\n   > [!answer] **заздрість/ревність**\n\n### Complete with Correct Verb\n\n1. Я ___ (довіряти) своєму найкращому другу.\n   > [!answer] Я **довіряю** своєму найкращому другу.\n\n2. Вони ___ (посваритися) через дрібницю.\n   > [!answer] Вони **посварилися** через дрібницю.\n\n3. Він не може ___ (пробачити) їй цю зраду.\n   > [!answer] Він не може **пробачити** їй цю зраду.\n\n4. Вона завжди ___ (підтримувати) мене.\n   > [!answer] Вона завжди **підтримує** мене.\n\n5. Я ___ (пишатися) своїми дітьми.\n   > [!answer] Я **пишаюся** своїми дітьми.\n\n### Discuss Relationships\n\nAnswer these questions:\n\n1. Які якості важливі в дружбі?\n   - довіра, підтримка, чесність...\n\n2. Як ви справляєтеся з конфліктами?\n   - говорю відверто, прошу вибачення...\n\n3. Що може зруйнувати стосунки?\n   - зрада, брехня, неповага...\n\n### Translate to Ukrainian\n\n1. I'm disappointed in his behavior.\n   > [!answer] **Я розчарований(а) його поведінкою.**\n2. She forgave him for everything.\n   > [!answer] **Вона пробачила йому все.**\n3. We have a trusting relationship.\n   > [!answer] **У нас довірливі стосунки.**\n4. He can't get over his jealousy.\n   > [!answer] **Він не може подолати свою ревність.**\n## production | Продукція\n\n### Describe Your Relationships\n\nTalk about important relationships:\n\n- Хто ваш найкращий друг? Чому ви **довіряєте** йому/їй?\n- Чи були у вас **конфлікти** з близькими? Як ви їх вирішували?\n- За що ви **вдячні** своїм друзям/родині?\n\n### Share an Emotional Experience\n\nDescribe a time when you felt:\n- велику **радість**\n- глибоке **розчарування**\n- справжню **вдячність**\n\n---\n\n\n---\n\n\n---"
       },
       {
-        "id": "presentation-презентація",
-        "title": "presentation | Презентація",
-        "content": "### Основні емоції | Core Emotions\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| радість | /ˈrɑdʲistʲ/ | joy | Відчувати радість |\n| сум | /sum/ | sadness | Глибокий сум |\n| гнів | /ɦnʲiv/ | anger | Стримувати гнів |\n| страх | /strɑx/ | fear | Долати страх |\n| здивування | /zdɪvuˈvɑnʲːɑ/ | surprise | Приємне здивування |\n| огида | /oˈɦɪdɑ/ | disgust | Відчуття огиди |\n\n### Складні емоції | Complex Emotions\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| тривога | /trɪˈvoɦɑ/ | anxiety | Постійна тривога |\n| розчарування | /rozt͡ʃɑruˈvɑnʲːɑ/ | disappointment | Велике розчарування |\n| полегшення | /polɛɦˈʃɛnʲːɑ/ | relief | Відчути полегшення |\n| ревність | /rɛwˈnʲistʲ/ | jealousy | Ревність до успіху |\n| сором | /ˈsorom/ | shame | Відчувати сором |\n| провина | /proˈvɪnɑ/ | guilt | Почуття провини |\n| заздрість | /ˈzɑzdrʲistʲ/ | envy | Заздрість до інших |\n| гордість | /ˈɦordʲistʲ/ | pride | Національна гордість |\n| вдячність | /ˈwdʲɑt͡ʃnʲistʲ/ | gratitude | Глибока вдячність |\n| ніяковість | /nʲiˈjɑkovʲistʲ/ | embarrassment | Відчувати ніяковість |\n\n### Дієслова емоцій | Emotion Verbs\n\n| Ukrainian | English | Aspect |\n|-----------|---------|--------|\n| радіти / зрадіти | to rejoice | impf/pf |\n| сумувати | to be sad | impf |\n| злитися / розлютитися | to be angry | impf/pf |\n| боятися / злякатися | to be afraid | impf/pf |\n| хвилюватися / схвилюватися | to worry | impf/pf |\n| розчаровуватися / розчаруватися | to be disappointed | impf/pf |\n| соромитися / засоромитися | to be ashamed | impf/pf |\n| заздрити / позаздрити | to envy | impf/pf |\n| пишатися | to be proud | impf |\n\n### Стосунки | Relationships\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| дружба | /ˈdruʒbɑ/ | friendship | Справжня дружба |\n| кохання | /koˈxɑnʲːɑ/ | love (romantic) | Перше кохання |\n| любов | /lʲuˈbow/ | love | Любов до батьків |\n| довіра | /doˈvʲirɑ/ | trust | Повна довіра |\n| підтримка | /pʲidˈtrɪmkɑ/ | support | Емоційна підтримка |\n| конфлікт | /konˈflʲikt/ | conflict | Вирішити конфлікт |\n| сварка | /ˈswɑrkɑ/ | quarrel, argument | Гучна сварка |\n| примирення | /prɪmɪˈrɛnʲːɑ/ | reconciliation | Пошук примирення |\n| розлука | /rozˈlukɑ/ | separation | Болюча розлука |\n| зрада | /ˈzrɑdɑ/ | betrayal | Зрада друга |\n\n### Дієслова стосунків | Relationship Verbs\n\n| Ukrainian | English | Aspect |\n|-----------|---------|--------|\n| довіряти / довіритися | to trust | impf/pf |\n| підтримувати / підтримати | to support | impf/pf |\n| сваритися / посваритися | to quarrel | impf/pf |\n| миритися / помиритися | to make up | impf/pf |\n| прощати / пробачити | to forgive | impf/pf |\n| зраджувати / зрадити | to betray | impf/pf |\n| ображати / образити | to offend | impf/pf |\n| ображатися / образитися | to take offense | impf/pf |\n| поважати | to respect | impf |\n| цінувати | to value, appreciate | impf |\n\n### Вирази з емоціями | Emotion Expressions\n\n| Ukrainian | English |\n|-----------|---------|\n| бути в захваті | to be thrilled |\n| бути на сьомому небі | to be on cloud nine |\n| серце крається | heart is breaking |\n| не знаходити собі місця | to be restless with worry |\n| виходити з себе | to lose one's temper |\n| тримати зуби стиснутими | to grit one's teeth |\n| мати важке серце | to have a heavy heart |\n| легко на душі | to feel light-hearted |\n\n### Опис стосунків | Describing Relationships\n\n| Expression | Meaning |\n|------------|---------|\n| близькі стосунки | close relationship |\n| довірливі стосунки | trusting relationship |\n| напружені стосунки | tense relationship |\n| дружні стосунки | friendly relationship |\n| романтичні стосунки | romantic relationship |\n| родинні стосунки | family relations |\n| складні стосунки | complicated relationship |",
-        "type": "topic"
-      },
-      {
-        "id": "practice-практика",
-        "title": "practice | Практика",
-        "content": "### Match Emotion to Situation\n\n1. Ви виграли приз. → **радість**\n2. Ваш друг забув про вашу зустріч. → **розчарування**\n3. Ви зробили помилку при всіх. → **сором/ніяковість**\n4. Ваш друг допоміг вам у важкий час. → **вдячність**\n5. Колега отримав підвищення замість вас. → **заздрість/ревність**\n\n### Complete with Correct Verb\n\n1. Я ___ (довіряти) своєму найкращому другу.\n   → Я **довіряю** своєму найкращому другу.\n\n2. Вони ___ (посваритися) через дрібницю.\n   → Вони **посварилися** через дрібницю.\n\n3. Він не може ___ (пробачити) їй цю зраду.\n   → Він не може **пробачити** їй цю зраду.\n\n4. Вона завжди ___ (підтримувати) мене.\n   → Вона завжди **підтримує** мене.\n\n5. Я ___ (пишатися) своїми дітьми.\n   → Я **пишаюся** своїми дітьми.\n\n### Discuss Relationships\n\nAnswer these questions:\n\n1. Які якості важливі в дружбі?\n   - довіра, підтримка, чесність...\n\n2. Як ви справляєтеся з конфліктами?\n   - говорю відверто, прошу вибачення...\n\n3. Що може зруйнувати стосунки?\n   - зрада, брехня, неповага...\n\n### Translate to Ukrainian\n\n1. I'm disappointed in his behavior.\n   → **Я розчарований(а) його поведінкою.**\n\n2. She forgave him for everything.\n   → **Вона пробачила йому все.**\n\n3. We have a trusting relationship.\n   → **У нас довірливі стосунки.**\n\n4. He can't get over his jealousy.\n   → **Він не може подолати свою ревність.**",
-        "type": "topic"
-      },
-      {
-        "id": "production-продукція",
-        "title": "production | Продукція",
-        "content": "### Describe Your Relationships\n\nTalk about important relationships:\n\n- Хто ваш найкращий друг? Чому ви **довіряєте** йому/їй?\n- Чи були у вас **конфлікти** з близькими? Як ви їх вирішували?\n- За що ви **вдячні** своїм друзям/родині?\n\n### Share an Emotional Experience\n\nDescribe a time when you felt:\n- велику **радість**\n- глибоке **розчарування**\n- справжню **вдячність**\n\n---",
-        "type": "topic"
-      },
-      {
-        "id": "activities",
-        "title": "Activities",
-        "content": "## quiz: Emotions and Relationships\n\n> Choose the correct word.\n\n1. Відчуття, коли щось не вийшло, як очікувалося:\n   - [x] розчарування\n   - [ ] полегшення\n   > Disappointment when expectations aren't met.\n\n2. Дієслово: вірити комусь\n   - [x] довіряти\n   - [ ] зраджувати\n   > To trust someone.\n\n3. Протилежність ненависті:\n   - [x] любов\n   - [ ] гнів\n   > Love is opposite of hatred.\n\n4. Коли друзі знову стають друзями після сварки:\n   - [x] примирення\n   - [ ] розлука\n   > Reconciliation after a quarrel.\n\n5. Відчуття, коли хтось інший має те, що хочеш ти:\n   - [x] заздрість\n   - [ ] гордість\n   > Envy of what others have.\n\n6. Дієслово: сказати «вибачте» і забути образу:\n   - [x] пробачити\n   - [ ] образити\n   > To forgive.\n\n## match-up: Emotions and Opposites\n\n| Emotion | Opposite |\n|---------|----------|\n| радість | сум |\n| довіра | недовіра |\n| любов | ненависть |\n| гордість | сором |\n| полегшення | тривога |\n\n---",
-        "type": "activities"
-      },
-      {
-        "id": "vocabulary",
-        "title": "Vocabulary",
-        "content": "| Word | IPA | English | Notes |\n|------|-----|---------|-------|\n| радість | /ˈrɑdʲistʲ/ | joy | f |\n| сум | /sum/ | sadness | m |\n| гнів | /ɦnʲiv/ | anger | m |\n| тривога | /trɪˈvoɦɑ/ | anxiety | f |\n| розчарування | /rozt͡ʃɑruˈvɑnʲːɑ/ | disappointment | n |\n| полегшення | /polɛɦˈʃɛnʲːɑ/ | relief | n |\n| сором | /ˈsorom/ | shame | m |\n| провина | /proˈvɪnɑ/ | guilt | f |\n| вдячність | /ˈwdʲɑt͡ʃnʲistʲ/ | gratitude | f |\n| дружба | /ˈdruʒbɑ/ | friendship | f |\n| довіра | /doˈvʲirɑ/ | trust | f |\n| підтримка | /pʲidˈtrɪmkɑ/ | support | f |\n| конфлікт | /konˈflʲikt/ | conflict | m |\n| примирення | /prɪmɪˈrɛnʲːɑ/ | reconciliation | n |\n| зрада | /ˈzrɑdɑ/ | betrayal | f |\n\n---",
-        "type": "vocabulary"
-      },
-      {
-        "id": "summary",
+        "id": "section-summary",
+        "type": "summary",
         "title": "Summary",
         "content": "## Key Emotion Vocabulary\n\n### Basic Emotions\nрадість, сум, гнів, страх, здивування\n\n### Complex Emotions\nтривога, розчарування, полегшення, сором, провина, вдячність\n\n### Relationship Words\nдружба, кохання, довіра, підтримка, конфлікт, примирення, зрада\n\n### Key Verbs\nдовіряти, підтримувати, пробачити, миритися, сваритися, зраджувати\n\n> **Key Takeaways**\n>\n> - B1 adds complex emotions beyond basic happy/sad\n> - Relationship vocabulary is essential for discussions\n> - Many emotion verbs have aspectual pairs\n> - Expressions add color to emotional descriptions\n> - Context determines appropriate emotion word choice",
-        "type": "summary"
+        "titleUk": "Підсумок"
       }
-    ]
+    ],
+    "rawMarkdown": "---\nmodule: 122\ntitle: \"Emotions & Relationships Vocabulary\"\nsubtitle: \"Trust, Conflict, Support\"\nlevel: B1\nphase: B1.3\nduration: 45\ntransliteration: none\ntags: [vocabulary, emotions, relationships, feelings]\nobjectives:\n  - Learn vocabulary for complex emotions\n  - Discuss relationships and interpersonal dynamics\n  - Express feelings about trust and conflict\n  - Use emotional vocabulary in context\n---\n\n# Зміст уроку | Lesson Content\n\n## warm-up | Розминка\n\n### Емоції та стосунки | Emotions and Relationships\n\nНа рівні B1 ми говоримо про складніші емоції та стосунки:\n\nAt B1 level, we discuss more complex emotions and relationships:\n\n- Як ви описуєте свої **почуття**? | How do you describe your feelings?\n- Які **стосунки** важливі для вас? | What relationships are important to you?\n- Як ви справляєтеся з **конфліктами**? | How do you deal with conflicts?\n\n## presentation | Презентація\n\n### Основні емоції | Core Emotions\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| радість | /ˈrɑdʲistʲ/ | joy | Відчувати радість |\n| сум | /sum/ | sadness | Глибокий сум |\n| гнів | /ɦnʲiv/ | anger | Стримувати гнів |\n| страх | /strɑx/ | fear | Долати страх |\n| здивування | /zdɪvuˈvɑnʲːɑ/ | surprise | Приємне здивування |\n| огида | /oˈɦɪdɑ/ | disgust | Відчуття огиди |\n\n### Складні емоції | Complex Emotions\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| тривога | /trɪˈvoɦɑ/ | anxiety | Постійна тривога |\n| розчарування | /rozt͡ʃɑruˈvɑnʲːɑ/ | disappointment | Велике розчарування |\n| полегшення | /polɛɦˈʃɛnʲːɑ/ | relief | Відчути полегшення |\n| ревність | /rɛwˈnʲistʲ/ | jealousy | Ревність до успіху |\n| сором | /ˈsorom/ | shame | Відчувати сором |\n| провина | /proˈvɪnɑ/ | guilt | Почуття провини |\n| заздрість | /ˈzɑzdrʲistʲ/ | envy | Заздрість до інших |\n| гордість | /ˈɦordʲistʲ/ | pride | Національна гордість |\n| вдячність | /ˈwdʲɑt͡ʃnʲistʲ/ | gratitude | Глибока вдячність |\n| ніяковість | /nʲiˈjɑkovʲistʲ/ | embarrassment | Відчувати ніяковість |\n\n### Дієслова емоцій | Emotion Verbs\n\n| Ukrainian | English | Aspect |\n|-----------|---------|--------|\n| радіти / зрадіти | to rejoice | impf/pf |\n| сумувати | to be sad | impf |\n| злитися / розлютитися | to be angry | impf/pf |\n| боятися / злякатися | to be afraid | impf/pf |\n| хвилюватися / схвилюватися | to worry | impf/pf |\n| розчаровуватися / розчаруватися | to be disappointed | impf/pf |\n| соромитися / засоромитися | to be ashamed | impf/pf |\n| заздрити / позаздрити | to envy | impf/pf |\n| пишатися | to be proud | impf |\n\n### Стосунки | Relationships\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| дружба | /ˈdruʒbɑ/ | friendship | Справжня дружба |\n| кохання | /koˈxɑnʲːɑ/ | love (romantic) | Перше кохання |\n| любов | /lʲuˈbow/ | love | Любов до батьків |\n| довіра | /doˈvʲirɑ/ | trust | Повна довіра |\n| підтримка | /pʲidˈtrɪmkɑ/ | support | Емоційна підтримка |\n| конфлікт | /konˈflʲikt/ | conflict | Вирішити конфлікт |\n| сварка | /ˈswɑrkɑ/ | quarrel, argument | Гучна сварка |\n| примирення | /prɪmɪˈrɛnʲːɑ/ | reconciliation | Пошук примирення |\n| розлука | /rozˈlukɑ/ | separation | Болюча розлука |\n| зрада | /ˈzrɑdɑ/ | betrayal | Зрада друга |\n\n### Дієслова стосунків | Relationship Verbs\n\n| Ukrainian | English | Aspect |\n|-----------|---------|--------|\n| довіряти / довіритися | to trust | impf/pf |\n| підтримувати / підтримати | to support | impf/pf |\n| сваритися / посваритися | to quarrel | impf/pf |\n| миритися / помиритися | to make up | impf/pf |\n| прощати / пробачити | to forgive | impf/pf |\n| зраджувати / зрадити | to betray | impf/pf |\n| ображати / образити | to offend | impf/pf |\n| ображатися / образитися | to take offense | impf/pf |\n| поважати | to respect | impf |\n| цінувати | to value, appreciate | impf |\n\n### Вирази з емоціями | Emotion Expressions\n\n| Ukrainian | English |\n|-----------|---------|\n| бути в захваті | to be thrilled |\n| бути на сьомому небі | to be on cloud nine |\n| серце крається | heart is breaking |\n| не знаходити собі місця | to be restless with worry |\n| виходити з себе | to lose one's temper |\n| тримати зуби стиснутими | to grit one's teeth |\n| мати важке серце | to have a heavy heart |\n| легко на душі | to feel light-hearted |\n\n### Опис стосунків | Describing Relationships\n\n| Expression | Meaning |\n|------------|---------|\n| близькі стосунки | close relationship |\n| довірливі стосунки | trusting relationship |\n| напружені стосунки | tense relationship |\n| дружні стосунки | friendly relationship |\n| романтичні стосунки | romantic relationship |\n| родинні стосунки | family relations |\n| складні стосунки | complicated relationship |\n\n## practice | Практика\n\n### Match Emotion to Situation\n\n1. Ви виграли приз.\n   > [!answer] **радість**\n2. Ваш друг забув про вашу зустріч.\n   > [!answer] **розчарування**\n3. Ви зробили помилку при всіх.\n   > [!answer] **сором/ніяковість**\n4. Ваш друг допоміг вам у важкий час.\n   > [!answer] **вдячність**\n5. Колега отримав підвищення замість вас.\n   > [!answer] **заздрість/ревність**\n\n### Complete with Correct Verb\n\n1. Я ___ (довіряти) своєму найкращому другу.\n   > [!answer] Я **довіряю** своєму найкращому другу.\n\n2. Вони ___ (посваритися) через дрібницю.\n   > [!answer] Вони **посварилися** через дрібницю.\n\n3. Він не може ___ (пробачити) їй цю зраду.\n   > [!answer] Він не може **пробачити** їй цю зраду.\n\n4. Вона завжди ___ (підтримувати) мене.\n   > [!answer] Вона завжди **підтримує** мене.\n\n5. Я ___ (пишатися) своїми дітьми.\n   > [!answer] Я **пишаюся** своїми дітьми.\n\n### Discuss Relationships\n\nAnswer these questions:\n\n1. Які якості важливі в дружбі?\n   - довіра, підтримка, чесність...\n\n2. Як ви справляєтеся з конфліктами?\n   - говорю відверто, прошу вибачення...\n\n3. Що може зруйнувати стосунки?\n   - зрада, брехня, неповага...\n\n### Translate to Ukrainian\n\n1. I'm disappointed in his behavior.\n   > [!answer] **Я розчарований(а) його поведінкою.**\n2. She forgave him for everything.\n   > [!answer] **Вона пробачила йому все.**\n3. We have a trusting relationship.\n   > [!answer] **У нас довірливі стосунки.**\n4. He can't get over his jealousy.\n   > [!answer] **Він не може подолати свою ревність.**\n## production | Продукція\n\n### Describe Your Relationships\n\nTalk about important relationships:\n\n- Хто ваш найкращий друг? Чому ви **довіряєте** йому/їй?\n- Чи були у вас **конфлікти** з близькими? Як ви їх вирішували?\n- За що ви **вдячні** своїм друзям/родині?\n\n### Share an Emotional Experience\n\nDescribe a time when you felt:\n- велику **радість**\n- глибоке **розчарування**\n- справжню **вдячність**\n\n---\n\n# Activities\n\n## quiz: Emotions and Relationships\n\n> Choose the correct word.\n\n1. Відчуття, коли щось не вийшло, як очікувалося:\n   - [x] розчарування\n   - [ ] полегшення\n   > Disappointment when expectations aren't met.\n\n2. Дієслово: вірити комусь\n   - [x] довіряти\n   - [ ] зраджувати\n   > To trust someone.\n\n3. Протилежність ненависті:\n   - [x] любов\n   - [ ] гнів\n   > Love is opposite of hatred.\n\n4. Коли друзі знову стають друзями після сварки:\n   - [x] примирення\n   - [ ] розлука\n   > Reconciliation after a quarrel.\n\n5. Відчуття, коли хтось інший має те, що хочеш ти:\n   - [x] заздрість\n   - [ ] гордість\n   > Envy of what others have.\n\n6. Дієслово: сказати «вибачте» і забути образу:\n   - [x] пробачити\n   - [ ] образити\n   > To forgive.\n\n## match-up: Emotions and Opposites\n\n| Emotion | Opposite |\n|---------|----------|\n| радість | сум |\n| довіра | недовіра |\n| любов | ненависть |\n| гордість | сором |\n| полегшення | тривога |\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | Notes |\n|------|-----|---------|-------|\n| радість | /ˈrɑdʲistʲ/ | joy | f |\n| сум | /sum/ | sadness | m |\n| гнів | /ɦnʲiv/ | anger | m |\n| тривога | /trɪˈvoɦɑ/ | anxiety | f |\n| розчарування | /rozt͡ʃɑruˈvɑnʲːɑ/ | disappointment | n |\n| полегшення | /polɛɦˈʃɛnʲːɑ/ | relief | n |\n| сором | /ˈsorom/ | shame | m |\n| провина | /proˈvɪnɑ/ | guilt | f |\n| вдячність | /ˈwdʲɑt͡ʃnʲistʲ/ | gratitude | f |\n| дружба | /ˈdruʒbɑ/ | friendship | f |\n| довіра | /doˈvʲirɑ/ | trust | f |\n| підтримка | /pʲidˈtrɪmkɑ/ | support | f |\n| конфлікт | /konˈflʲikt/ | conflict | m |\n| примирення | /prɪmɪˈrɛnʲːɑ/ | reconciliation | n |\n| зрада | /ˈzrɑdɑ/ | betrayal | f |\n\n---\n\n# Summary\n\n## Key Emotion Vocabulary\n\n### Basic Emotions\nрадість, сум, гнів, страх, здивування\n\n### Complex Emotions\nтривога, розчарування, полегшення, сором, провина, вдячність\n\n### Relationship Words\nдружба, кохання, довіра, підтримка, конфлікт, примирення, зрада\n\n### Key Verbs\nдовіряти, підтримувати, пробачити, миритися, сваритися, зраджувати\n\n> **Key Takeaways**\n>\n> - B1 adds complex emotions beyond basic happy/sad\n> - Relationship vocabulary is essential for discussions\n> - Many emotion verbs have aspectual pairs\n> - Expressions add color to emotional descriptions\n> - Context determines appropriate emotion word choice\n"
   },
   "activities": [
     {
-      "id": "act-uk-B1-122-quiz",
+      "id": "act-b1-122-quiz",
       "type": "quiz",
       "title": "Emotions and Relationships",
       "description": "Choose the correct word.",
       "content": {
         "type": "quiz",
-        "instructions": "Choose the correct word.",
         "questions": [
           {
             "question": "Відчуття, коли щось не вийшло, як очікувалося:",
@@ -262,23 +124,17 @@
       "language": "uk",
       "difficultyLevel": "B1",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "emotions",
-        "relationships",
-        "feelings"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.236Z",
+      "modifiedAt": "2025-12-01T22:58:37.236Z"
     },
     {
-      "id": "act-uk-B1-122-matchup",
+      "id": "act-b1-122-matchup",
       "type": "match-up",
       "title": "Emotions and Opposites",
       "description": "Emotions and Opposites",
       "content": {
         "type": "match-up",
-        "instructions": "",
         "pairs": [
           {
             "left": "радість",
@@ -309,14 +165,9 @@
       "language": "uk",
       "difficultyLevel": "B1",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "emotions",
-        "relationships",
-        "feelings"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.236Z",
+      "modifiedAt": "2025-12-01T22:58:37.236Z"
     }
   ],
   "vocabulary": {
@@ -327,139 +178,109 @@
     "transliterationMode": "none",
     "words": [
       {
-        "id": "v-m122-001",
+        "id": "v-radistь-122-0",
         "uk": "радість",
-        "translit": "",
-        "ipa": "/ˈrɑdʲistʲ/",
         "en": "joy",
-        "pos": "",
-        "note": "f"
+        "pos": "f",
+        "ipa": "/ˈrɑdʲistʲ/"
       },
       {
-        "id": "v-m122-002",
+        "id": "v-sum-122-1",
         "uk": "сум",
-        "translit": "",
-        "ipa": "/sum/",
         "en": "sadness",
-        "pos": "",
-        "note": "m"
+        "pos": "m",
+        "ipa": "/sum/"
       },
       {
-        "id": "v-m122-003",
+        "id": "v-hniv-122-2",
         "uk": "гнів",
-        "translit": "",
-        "ipa": "/ɦnʲiv/",
         "en": "anger",
-        "pos": "",
-        "note": "m"
+        "pos": "m",
+        "ipa": "/ɦnʲiv/"
       },
       {
-        "id": "v-m122-004",
+        "id": "v-tryvoha-122-3",
         "uk": "тривога",
-        "translit": "",
-        "ipa": "/trɪˈvoɦɑ/",
         "en": "anxiety",
-        "pos": "",
-        "note": "f"
+        "pos": "f",
+        "ipa": "/trɪˈvoɦɑ/"
       },
       {
-        "id": "v-m122-005",
+        "id": "v-rozcharuvannya-122-4",
         "uk": "розчарування",
-        "translit": "",
-        "ipa": "/rozt͡ʃɑruˈvɑnʲːɑ/",
         "en": "disappointment",
-        "pos": "",
-        "note": "n"
+        "pos": "n",
+        "ipa": "/rozt͡ʃɑruˈvɑnʲːɑ/"
       },
       {
-        "id": "v-m122-006",
+        "id": "v-polehshennya-122-5",
         "uk": "полегшення",
-        "translit": "",
-        "ipa": "/polɛɦˈʃɛnʲːɑ/",
         "en": "relief",
-        "pos": "",
-        "note": "n"
+        "pos": "n",
+        "ipa": "/polɛɦˈʃɛnʲːɑ/"
       },
       {
-        "id": "v-m122-007",
+        "id": "v-sorom-122-6",
         "uk": "сором",
-        "translit": "",
-        "ipa": "/ˈsorom/",
         "en": "shame",
-        "pos": "",
-        "note": "m"
+        "pos": "m",
+        "ipa": "/ˈsorom/"
       },
       {
-        "id": "v-m122-008",
+        "id": "v-provyna-122-7",
         "uk": "провина",
-        "translit": "",
-        "ipa": "/proˈvɪnɑ/",
         "en": "guilt",
-        "pos": "",
-        "note": "f"
+        "pos": "f",
+        "ipa": "/proˈvɪnɑ/"
       },
       {
-        "id": "v-m122-009",
+        "id": "v-vdyachnistь-122-8",
         "uk": "вдячність",
-        "translit": "",
-        "ipa": "/ˈwdʲɑt͡ʃnʲistʲ/",
         "en": "gratitude",
-        "pos": "",
-        "note": "f"
+        "pos": "f",
+        "ipa": "/ˈwdʲɑt͡ʃnʲistʲ/"
       },
       {
-        "id": "v-m122-010",
+        "id": "v-druzhba-122-9",
         "uk": "дружба",
-        "translit": "",
-        "ipa": "/ˈdruʒbɑ/",
         "en": "friendship",
-        "pos": "",
-        "note": "f"
+        "pos": "f",
+        "ipa": "/ˈdruʒbɑ/"
       },
       {
-        "id": "v-m122-011",
+        "id": "v-dovira-122-10",
         "uk": "довіра",
-        "translit": "",
-        "ipa": "/doˈvʲirɑ/",
         "en": "trust",
-        "pos": "",
-        "note": "f"
+        "pos": "f",
+        "ipa": "/doˈvʲirɑ/"
       },
       {
-        "id": "v-m122-012",
+        "id": "v-pidtrymka-122-11",
         "uk": "підтримка",
-        "translit": "",
-        "ipa": "/pʲidˈtrɪmkɑ/",
         "en": "support",
-        "pos": "",
-        "note": "f"
+        "pos": "f",
+        "ipa": "/pʲidˈtrɪmkɑ/"
       },
       {
-        "id": "v-m122-013",
+        "id": "v-konflikt-122-12",
         "uk": "конфлікт",
-        "translit": "",
-        "ipa": "/konˈflʲikt/",
         "en": "conflict",
-        "pos": "",
-        "note": "m"
+        "pos": "m",
+        "ipa": "/konˈflʲikt/"
       },
       {
-        "id": "v-m122-014",
+        "id": "v-prymyrennya-122-13",
         "uk": "примирення",
-        "translit": "",
-        "ipa": "/prɪmɪˈrɛnʲːɑ/",
         "en": "reconciliation",
-        "pos": "",
-        "note": "n"
+        "pos": "n",
+        "ipa": "/prɪmɪˈrɛnʲːɑ/"
       },
       {
-        "id": "v-m122-015",
+        "id": "v-zrada-122-14",
         "uk": "зрада",
-        "translit": "",
-        "ipa": "/ˈzrɑdɑ/",
         "en": "betrayal",
-        "pos": "",
-        "note": "f"
+        "pos": "f",
+        "ipa": "/ˈzrɑdɑ/"
       }
     ]
   }

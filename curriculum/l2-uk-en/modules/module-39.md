@@ -215,28 +215,36 @@ These situations combine everything you've learned - cases, prepositions, polite
 
 **At the post office:**
 1. - Я хочу надіслати ___ (посилка) до Польщі.
-   → посилку (acc)
+   > [!answer] посилку
+   > [!explanation] acc
 2. - Скільки коштує ___ (марка)?
-   → марка (nom, asking price)
+   > [!answer] марка
+   > [!explanation] nom, asking price
 3. - Напишіть адресу ___ (одержувач).
-   → одержувача (gen)
-
+   > [!answer] одержувача
+   > [!explanation] gen
 **At the bank:**
 1. - Я хочу обміняти долари на ___ (гривні).
-   → гривні (acc)
+   > [!answer] гривні
+   > [!explanation] acc
 2. - Де найближчий ___ (банкомат)?
-   → банкомат (nom)
+   > [!answer] банкомат
+   > [!explanation] nom
 3. - Можна зняти гроші з ___ (рахунок)?
-   → рахунку (gen)
-
+   > [!answer] рахунку
+   > [!explanation] gen
 ### Build Requests
 
 Create polite requests:
 
-1. send / letter / friend → Я хочу надіслати листа другові.
-2. exchange / 100 euros / hryvnias → Я хочу обміняти 100 євро на гривні.
-3. withdraw / money / account → Я хочу зняти гроші з рахунку.
-4. buy / stamps / postcards → Мені потрібно купити марки для листівок.
+1. send / letter / friend
+   > [!answer] Я хочу надіслати листа другові.
+2. exchange / 100 euros / hryvnias
+   > [!answer] Я хочу обміняти 100 євро на гривні.
+3. withdraw / money / account
+   > [!answer] Я хочу зняти гроші з рахунку.
+4. buy / stamps / postcards
+   > [!answer] Мені потрібно купити марки для листівок.
 
 ### Role Play Scenarios
 

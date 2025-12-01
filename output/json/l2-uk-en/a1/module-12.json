@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-A1-12",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "grammar-introduction",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -26,30 +25,15 @@
       "Accusative animate masculine = Genitive",
       "Feminine animate = same as inanimate"
     ],
-    "totalDuration": 45,
-    "transliterationMode": "full",
     "tags": [
       "grammar",
       "cases",
       "accusative",
       "animate"
     ],
-    "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
+    "totalDuration": 45,
+    "transliterationMode": "full",
     "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Living vs Non-Living\n\nIn Module 11, you learned masculine inanimate nouns don't change in accusative. But for **animate** nouns (people and animals), there's a twist:\n\n**Masculine animate accusative = Genitive form!**\n\n- Я бачу **стіл**. (I see the table.) - no change\n- Я бачу **студента**. (I see the student.) - adds -а!\n\n> 💡 **Did You Know?**\n>\n> This animate/inanimate distinction exists because Slavic languages evolved to help clarify \"who does what to whom.\" With people, word order alone wasn't clear enough, so distinct endings developed. Tables don't perform actions, but students do - so we mark them differently!"
-          }
-        ]
-      },
       {
         "id": "phase-presentation",
         "name": "presentation",
@@ -58,72 +42,33 @@
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "### Animate Accusative Endings\n\n**Masculine animate (add -а or change -а → -у):**\n\n| Nominative | Accusative | Example |\n|------------|------------|---------|\n| студент | студент**а** | Я бачу студента. |\n| друг | друг**а** | Я бачу друга. |\n| лікар | лікар**я** | Я бачу лікаря. |\n| тато | тат**а** | Я бачу тата. |\n| чоловік | чоловік**а** | Я бачу чоловіка. |\n\n**Feminine animate (same as inanimate!):**\n\n| Nominative | Accusative | Example |\n|------------|------------|---------|\n| студентка | студентк**у** | Я бачу студентку. |\n| подруга | подруг**у** | Я бачу подругу. |\n| жінка | жінк**у** | Я бачу жінку. |\n\n> ⚡ **Pro Tip: Feminine Is Easy**\n>\n> Feminine nouns use the same accusative whether animate or inanimate:\n> - книга → книгу (inanimate)\n> - жінка → жінку (animate)\n>\n> Only masculine has the animate/inanimate split!\n\n> 📜 **History Bite: Why Accusative = Genitive?**\n>\n> The merger of accusative and genitive for animates happened gradually in Slavic languages around 1000-1500 AD. Originally all masculines had distinct accusative forms. The genitive \"invaded\" animate accusative because saying \"I see Ivan\" sounded too similar to \"Ivan sees\" - ambiguous! Adding -а removed the confusion."
+            "teacherNotes": "### Animate Accusative Endings\n\n**Masculine animate (add -а or change -а → -у):**\n\n| Nominative | Accusative | Example |\n|------------|------------|---------|\n| студент | студент**а** | Я бачу студента. |\n| друг | друг**а** | Я бачу друга. |\n| лікар | лікар**я** | Я бачу лікаря. |\n| тато | тат**а** | Я бачу тата. |\n| чоловік | чоловік**а** | Я бачу чоловіка. |\n\n**Feminine animate (same as inanimate!):**\n\n| Nominative | Accusative | Example |\n|------------|------------|---------|\n| студентка | студентк**у** | Я бачу студентку. |\n| подруга | подруг**у** | Я бачу подругу. |\n| жінка | жінк**у** | Я бачу жінку. |\n\n> ⚡ **Pro Tip: Feminine Is Easy**\n>\n> Feminine nouns use the same accusative whether animate or inanimate:\n> - книга → книгу (inanimate)\n> - жінка → жінку (animate)\n>\n> Only masculine has the animate/inanimate split!\n\n> 📜 **History Bite: Why Accusative = Genitive?**\n>\n> The merger of accusative and genitive for animates happened gradually in Slavic languages around 1000-1500 AD. Originally all masculines had distinct accusative forms. The genitive \"invaded\" animate accusative because saying \"I see Ivan\" sounded too similar to \"Ivan sees\" - ambiguous! Adding -а removed the confusion.\n\n### Who Counts as Animate?\n\n**Animate (use genitive-like accusative):**\n- People: студент, лікар, друг, чоловік, тато\n- Animals: собака, кіт, птах, кінь\n- Personified beings: Бог (God), ангел (angel)\n\n**Inanimate (no accusative change):**\n- Objects: стіл, телефон, комп'ютер\n- Abstract things: час (time), успіх (success)\n- Plants: дерево (tree), квітка (flower)\n- Collectives: народ (people/nation), клас (class)\n\n> 🎯 **Fun Fact: Dead People**\n>\n> In Ukrainian, deceased people are still grammatically animate:\n> - Я вивчаю **Шевченка**. (I study Shevchenko.)\n> - Ми читаємо **Франка**. (We read Franko.)\n>\n> The animate rule applies even to historical figures!\n\n### Common People Vocabulary\n\n| Nominative | Accusative | English |\n|------------|------------|---------|\n| друг | друга | friend (m) |\n| подруга | подругу | friend (f) |\n| студент | студента | student (m) |\n| студентка | студентку | student (f) |\n| вчитель | вчителя | teacher (m) |\n| вчителька | вчительку | teacher (f) |\n| лікар | лікаря | doctor (m) |\n| лікарка | лікарку | doctor (f) |\n| чоловік | чоловіка | man/husband |\n| жінка | жінку | woman/wife |\n| хлопець | хлопця | boy/guy |\n| дівчина | дівчину | girl |\n\n> 🎭 **Culture Corner: Чекати на + Accusative**\n>\n> The verb **чекати** (to wait) takes **на + accusative**:\n> - Я чекаю на друга. (I'm waiting for a friend.)\n> - Вона чекає на лікаря. (She's waiting for the doctor.)\n>\n> This is a common construction you'll use often!"
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Who Counts as Animate?\n\n**Animate (use genitive-like accusative):**\n- People: студент, лікар, друг, чоловік, тато\n- Animals: собака, кіт, птах, кінь\n- Personified beings: Бог (God), ангел (angel)\n\n**Inanimate (no accusative change):**\n- Objects: стіл, телефон, комп'ютер\n- Abstract things: час (time), успіх (success)\n- Plants: дерево (tree), квітка (flower)\n- Collectives: народ (people/nation), клас (class)\n\n> 🎯 **Fun Fact: Dead People**\n>\n> In Ukrainian, deceased people are still grammatically animate:\n> - Я вивчаю **Шевченка**. (I study Shevchenko.)\n> - Ми читаємо **Франка**. (We read Franko.)\n>\n> The animate rule applies even to historical figures!"
+            "teacherNotes": "### Transform to Accusative\n\nChange to accusative:\n1. студент\n   > [!answer] студент__ (студента)\n2. подруга\n   > [!answer] подруг__ (подругу)\n3. чоловік\n   > [!answer] чоловік__ (чоловіка)\n4. жінка\n   > [!answer] жінк__ (жінку)\n5. друг\n   > [!answer] друг__ (друга)\n\n### Complete Sentences\n\n1. Я бачу ___ (лікар)\n   > [!answer] лікаря\n2. Вона знає ___ (студентка)\n   > [!answer] студентку\n3. Ми чекаємо на ___ (друг)\n   > [!answer] друга\n4. Він любить ___ (дівчина)\n   > [!answer] дівчину\n\n> 🌍 **Real World: Talking About People**\n>\n> - **Я знаю цього чоловіка.** - I know this man.\n> - **Ти бачиш ту жінку?** - Do you see that woman?\n> - **Ми чекаємо на лікаря.** - We're waiting for the doctor.\n> - **Я люблю свою маму.** - I love my mom."
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Common People Vocabulary\n\n| Nominative | Accusative | English |\n|------------|------------|---------|\n| друг | друга | friend (m) |\n| подруга | подругу | friend (f) |\n| студент | студента | student (m) |\n| студентка | студентку | student (f) |\n| вчитель | вчителя | teacher (m) |\n| вчителька | вчительку | teacher (f) |\n| лікар | лікаря | doctor (m) |\n| лікарка | лікарку | doctor (f) |\n| чоловік | чоловіка | man/husband |\n| жінка | жінку | woman/wife |\n| хлопець | хлопця | boy/guy |\n| дівчина | дівчину | girl |\n\n> 🎭 **Culture Corner: Чекати на + Accusative**\n>\n> The verb **чекати** (to wait) takes **на + accusative**:\n> - Я чекаю на друга. (I'm waiting for a friend.)\n> - Вона чекає на лікаря. (She's waiting for the doctor.)\n>\n> This is a common construction you'll use often!"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A1-12-matchup"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Transform to Accusative\n\nChange to accusative:\n1. студент → студент__ (студента)\n2. подруга → подруг__ (подругу)\n3. чоловік → чоловік__ (чоловіка)\n4. жінка → жінк__ (жінку)\n5. друг → друг__ (друга)"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Complete Sentences\n\n1. Я бачу ___ (лікар) → лікаря\n2. Вона знає ___ (студентка) → студентку\n3. Ми чекаємо на ___ (друг) → друга\n4. Він любить ___ (дівчина) → дівчину\n\n> 🌍 **Real World: Talking About People**\n>\n> - **Я знаю цього чоловіка.** - I know this man.\n> - **Ти бачиш ту жінку?** - Do you see that woman?\n> - **Ми чекаємо на лікаря.** - We're waiting for the doctor.\n> - **Я люблю свою маму.** - I love my mom."
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A1-12-quiz"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A1-12-groupsort"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Describe Who You Know\n\nPractice with real people:\n- Я знаю ___ (name of male friend)\n- Я знаю ___ (name of female friend)\n- Я бачу ___ (profession)"
+            "teacherNotes": "### Describe Who You Know\n\nPractice with real people:\n- Я знаю ___ (name of male friend)\n- Я знаю ___ (name of female friend)\n- Я бачу ___ (profession)\n\n---"
           }
         ]
       }
-    ]
+    ],
+    "createdAt": "2025-12-01T22:58:37.236Z",
+    "modifiedAt": "2025-12-01T22:58:37.236Z",
+    "version": 1
   },
   "activities": [
     {
-      "id": "act-uk-A1-12-matchup",
+      "id": "act-a1-12-matchup",
       "type": "match-up",
       "title": "Animate Accusative",
       "description": "Match nominative to accusative for animate nouns.",
       "content": {
         "type": "match-up",
-        "instructions": "Match nominative to accusative for animate nouns.",
         "pairs": [
           {
             "left": "студент",
@@ -158,23 +103,17 @@
       "language": "uk",
       "difficultyLevel": "A1",
       "duration": 5,
-      "tags": [
-        "grammar",
-        "cases",
-        "accusative",
-        "animate"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.236Z",
+      "modifiedAt": "2025-12-01T22:58:37.236Z"
     },
     {
-      "id": "act-uk-A1-12-quiz",
+      "id": "act-a1-12-quiz",
       "type": "quiz",
       "title": "Animate vs Inanimate Accusative",
       "description": "Choose the correct accusative form.",
       "content": {
         "type": "quiz",
-        "instructions": "Choose the correct accusative form.",
         "questions": [
           {
             "question": "\"I see the student (male)\" - Я бачу ___.",
@@ -253,43 +192,41 @@
       "language": "uk",
       "difficultyLevel": "A1",
       "duration": 5,
-      "tags": [
-        "grammar",
-        "cases",
-        "accusative",
-        "animate"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.236Z",
+      "modifiedAt": "2025-12-01T22:58:37.236Z"
     },
     {
-      "id": "act-uk-A1-12-groupsort",
+      "id": "act-a1-12-groupsort",
       "type": "group-sort",
       "title": "Animate vs Inanimate",
       "description": "Sort these nouns by animacy.",
       "content": {
         "type": "group-sort",
-        "instructions": "Sort these nouns by animacy.",
         "groups": [
           {
-            "name": "Animate (Accusative changes for masculine)",
+            "id": "animate",
+            "name": "Animate",
             "items": [
               "студент",
               "лікар",
               "друг",
               "собака",
               "кіт"
-            ]
+            ],
+            "nameUk": "Accusative changes for masculine"
           },
           {
-            "name": "Inanimate (No accusative change for masculine)",
+            "id": "inanimate",
+            "name": "Inanimate",
             "items": [
               "стіл",
               "телефон",
               "комп'ютер",
               "журнал",
               "вікно"
-            ]
+            ],
+            "nameUk": "No accusative change for masculine"
           }
         ],
         "shuffleItems": true
@@ -300,14 +237,9 @@
       "language": "uk",
       "difficultyLevel": "A1",
       "duration": 5,
-      "tags": [
-        "grammar",
-        "cases",
-        "accusative",
-        "animate"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.236Z",
+      "modifiedAt": "2025-12-01T22:58:37.236Z"
     }
   ],
   "vocabulary": {
@@ -318,142 +250,128 @@
     "transliterationMode": "full",
     "words": [
       {
-        "id": "v-m12-001",
+        "id": "v-koleha-12-0",
         "uk": "колега",
-        "translit": "",
-        "ipa": "/kɔˈlɛɦɑ/",
         "en": "colleague",
         "pos": "noun",
-        "gender": "m/f",
+        "ipa": "/kɔˈlɛɦɑ/",
+        "gender": "m",
         "note": "m: колегу, f: колегу"
       },
       {
-        "id": "v-m12-002",
+        "id": "v-susid-12-1",
         "uk": "сусід",
-        "translit": "",
-        "ipa": "/suˈsʲid/",
         "en": "neighbor (m)",
         "pos": "noun",
+        "ipa": "/suˈsʲid/",
         "gender": "m",
         "note": "Acc: сусіда"
       },
       {
-        "id": "v-m12-003",
+        "id": "v-susidka-12-2",
         "uk": "сусідка",
-        "translit": "",
-        "ipa": "/suˈsʲidkɑ/",
         "en": "neighbor (f)",
         "pos": "noun",
+        "ipa": "/suˈsʲidkɑ/",
         "gender": "f",
         "note": "Acc: сусідку"
       },
       {
-        "id": "v-m12-004",
+        "id": "v-likar-12-3",
         "uk": "лікар",
-        "translit": "",
-        "ipa": "/ˈlʲikɑr/",
         "en": "doctor (m)",
         "pos": "noun",
+        "ipa": "/ˈlʲikɑr/",
         "gender": "m",
         "note": "Acc: лікаря"
       },
       {
-        "id": "v-m12-005",
+        "id": "v-likarka-12-4",
         "uk": "лікарка",
-        "translit": "",
-        "ipa": "/lʲiˈkɑrkɑ/",
         "en": "doctor (f)",
         "pos": "noun",
+        "ipa": "/lʲiˈkɑrkɑ/",
         "gender": "f",
         "note": "Acc: лікарку"
       },
       {
-        "id": "v-m12-006",
+        "id": "v-ofitsiant-12-5",
         "uk": "офіціант",
-        "translit": "",
-        "ipa": "/ɔfʲit͡sʲiˈɑnt/",
         "en": "waiter",
         "pos": "noun",
+        "ipa": "/ɔfʲit͡sʲiˈɑnt/",
         "gender": "m",
         "note": "Acc: офіціанта"
       },
       {
-        "id": "v-m12-007",
+        "id": "v-ofitsiantka-12-6",
         "uk": "офіціантка",
-        "translit": "",
-        "ipa": "/ɔfʲit͡sʲiˈɑntkɑ/",
         "en": "waitress",
         "pos": "noun",
+        "ipa": "/ɔfʲit͡sʲiˈɑntkɑ/",
         "gender": "f",
         "note": "Acc: офіціантку"
       },
       {
-        "id": "v-m12-008",
+        "id": "v-prodavetsь-12-7",
         "uk": "продавець",
-        "translit": "",
-        "ipa": "/prɔdɑˈvɛt͡sʲ/",
         "en": "seller (m)",
         "pos": "noun",
+        "ipa": "/prɔdɑˈvɛt͡sʲ/",
         "gender": "m",
         "note": "Acc: продавця"
       },
       {
-        "id": "v-m12-009",
+        "id": "v-prodavchynya-12-8",
         "uk": "продавчиня",
-        "translit": "",
-        "ipa": "/prɔdɑvˈtʃɪnʲɑ/",
         "en": "seller (f)",
         "pos": "noun",
+        "ipa": "/prɔdɑvˈtʃɪnʲɑ/",
         "gender": "f",
         "note": "Acc: продавчиню"
       },
       {
-        "id": "v-m12-010",
+        "id": "v-vodiy-12-9",
         "uk": "водій",
-        "translit": "",
-        "ipa": "/vɔˈdʲij/",
         "en": "driver",
         "pos": "noun",
+        "ipa": "/vɔˈdʲij/",
         "gender": "m",
         "note": "Acc: водія"
       },
       {
-        "id": "v-m12-011",
+        "id": "v-pasazhyr-12-10",
         "uk": "пасажир",
-        "translit": "",
-        "ipa": "/pɑsɑˈʒɪr/",
         "en": "passenger",
         "pos": "noun",
+        "ipa": "/pɑsɑˈʒɪr/",
         "gender": "m",
         "note": "Acc: пасажира"
       },
       {
-        "id": "v-m12-012",
+        "id": "v-histь-12-11",
         "uk": "гість",
-        "translit": "",
-        "ipa": "/ɦʲistʲ/",
         "en": "guest",
         "pos": "noun",
+        "ipa": "/ɦʲistʲ/",
         "gender": "m",
         "note": "Acc: гостя"
       },
       {
-        "id": "v-m12-013",
+        "id": "v-dyrektor-12-12",
         "uk": "директор",
-        "translit": "",
-        "ipa": "/dɪˈrɛktɔr/",
         "en": "director",
         "pos": "noun",
+        "ipa": "/dɪˈrɛktɔr/",
         "gender": "m",
         "note": "Acc: директора"
       },
       {
-        "id": "v-m12-014",
+        "id": "v-menedzher-12-13",
         "uk": "менеджер",
-        "translit": "",
-        "ipa": "/mɛˈnɛd͡ʒɛr/",
         "en": "manager",
         "pos": "noun",
+        "ipa": "/mɛˈnɛd͡ʒɛr/",
         "gender": "m",
         "note": "Acc: менеджера"
       }

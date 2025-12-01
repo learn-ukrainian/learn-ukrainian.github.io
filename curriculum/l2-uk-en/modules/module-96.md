@@ -142,12 +142,18 @@ Module 95 covered ideas and problems. Now: vocabulary for discussing **life expe
 
 ### Complete with Correct Word
 
-1. У мене десять років ___ (experience). → **досвіду**
-2. Це чудова ___ (opportunity). → **можливість**
-3. Яка ваша ___ (responsibility) в цьому? → **відповідальність**
-4. Який ваш ___ (level) української? → **рівень**
-5. Ми зіткнулися з важкою ___ (situation). → **ситуацією**
-6. Немає ___ (alternative). → **альтернативи**
+1. У мене десять років ___ (experience).
+   > [!answer] **досвіду**
+2. Це чудова ___ (opportunity).
+   > [!answer] **можливість**
+3. Яка ваша ___ (responsibility) в цьому?
+   > [!answer] **відповідальність**
+4. Який ваш ___ (level) української?
+   > [!answer] **рівень**
+5. Ми зіткнулися з важкою ___ (situation).
+   > [!answer] **ситуацією**
+6. Немає ___ (alternative).
+   > [!answer] **альтернативи**
 
 ### Match Opposites
 
@@ -171,11 +177,16 @@ Answer using abstract vocabulary:
 
 ### Translate to Ukrainian
 
-1. I have a lot of experience. → **У мене багато досвіду.**
-2. This is my responsibility. → **Це моя відповідальність.**
-3. We have several options. → **У нас є кілька варіантів.**
-4. Under these circumstances... → **За таких обставин...**
-5. I need stability. → **Мені потрібна стабільність.**
+1. I have a lot of experience.
+   > [!answer] **У мене багато досвіду.**
+2. This is my responsibility.
+   > [!answer] **Це моя відповідальність.**
+3. We have several options.
+   > [!answer] **У нас є кілька варіантів.**
+4. Under these circumstances...
+   > [!answer] **За таких обставин...**
+5. I need stability.
+   > [!answer] **Мені потрібна стабільність.**
 
 ## production | Продукція
 

@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-A2+-72",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "vocabulary-expansion",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -26,8 +25,6 @@
       "Work-related verbs",
       "Workplace prepositions"
     ],
-    "totalDuration": 45,
-    "transliterationMode": "none",
     "tags": [
       "vocabulary",
       "work",
@@ -35,22 +32,9 @@
       "career",
       "business"
     ],
-    "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
+    "totalDuration": 45,
+    "transliterationMode": "none",
     "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Beyond Basic Professions\n\nYou know \"лікар\" and \"вчитель.\" Let's expand your professional vocabulary!\n\n**More professions:**\n- юрист (lawyer), бухгалтер (accountant), програміст (programmer)\n\n**Workplace terms:**\n- офіс (office), співробітник (coworker), зарплата (salary)\n\n> 💡 **Why This Matters**\n>\n> Work vocabulary is essential for job interviews, networking, and discussing careers with friends!"
-          }
-        ]
-      },
       {
         "id": "phase-presentation",
         "name": "presentation",
@@ -59,107 +43,33 @@
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "### Professions by Sector\n\n**Medicine & Health:**\n| Ukrainian | English |\n|-----------|---------|\n| лікар | doctor |\n| медсестра | nurse |\n| хірург | surgeon |\n| терапевт | therapist |\n| стоматолог | dentist |\n| фармацевт | pharmacist |\n| ветеринар | veterinarian |\n| психолог | psychologist |\n\n**Education:**\n| Ukrainian | English |\n|-----------|---------|\n| вчитель | teacher |\n| викладач | lecturer, professor |\n| вихователь | kindergarten teacher |\n| науковець | scientist, researcher |\n| професор | professor |\n\n**Business & Finance:**\n| Ukrainian | English |\n|-----------|---------|\n| бізнесмен | businessman |\n| менеджер | manager |\n| бухгалтер | accountant |\n| економіст | economist |\n| банкір | banker |\n| підприємець | entrepreneur |\n| директор | director |\n\n**Technology:**\n| Ukrainian | English |\n|-----------|---------|\n| програміст | programmer |\n| інженер | engineer |\n| дизайнер | designer |\n| аналітик | analyst |\n| системний адміністратор | system administrator |\n\n**Law & Government:**\n| Ukrainian | English |\n|-----------|---------|\n| юрист | lawyer |\n| адвокат | attorney |\n| суддя | judge |\n| поліцейський | police officer |\n| державний службовець | civil servant |\n\n**Services:**\n| Ukrainian | English |\n|-----------|---------|\n| перукар | hairdresser |\n| кухар | cook, chef |\n| офіціант | waiter |\n| водій | driver |\n| механік | mechanic |\n| електрик | electrician |\n| сантехнік | plumber |\n\n**Creative:**\n| Ukrainian | English |\n|-----------|---------|\n| художник | artist |\n| музикант | musician |\n| актор | actor |\n| журналіст | journalist |\n| фотограф | photographer |\n| архітектор | architect |\n\n> ⚡ **Pro Tip: Gender Forms**\n>\n> Many professions have feminine forms: вчитель → вчителька, лікар → лікарка, програміст → програмістка."
+            "teacherNotes": "### Professions by Sector\n\n**Medicine & Health:**\n| Ukrainian | English |\n|-----------|---------|\n| лікар | doctor |\n| медсестра | nurse |\n| хірург | surgeon |\n| терапевт | therapist |\n| стоматолог | dentist |\n| фармацевт | pharmacist |\n| ветеринар | veterinarian |\n| психолог | psychologist |\n\n**Education:**\n| Ukrainian | English |\n|-----------|---------|\n| вчитель | teacher |\n| викладач | lecturer, professor |\n| вихователь | kindergarten teacher |\n| науковець | scientist, researcher |\n| професор | professor |\n\n**Business & Finance:**\n| Ukrainian | English |\n|-----------|---------|\n| бізнесмен | businessman |\n| менеджер | manager |\n| бухгалтер | accountant |\n| економіст | economist |\n| банкір | banker |\n| підприємець | entrepreneur |\n| директор | director |\n\n**Technology:**\n| Ukrainian | English |\n|-----------|---------|\n| програміст | programmer |\n| інженер | engineer |\n| дизайнер | designer |\n| аналітик | analyst |\n| системний адміністратор | system administrator |\n\n**Law & Government:**\n| Ukrainian | English |\n|-----------|---------|\n| юрист | lawyer |\n| адвокат | attorney |\n| суддя | judge |\n| поліцейський | police officer |\n| державний службовець | civil servant |\n\n**Services:**\n| Ukrainian | English |\n|-----------|---------|\n| перукар | hairdresser |\n| кухар | cook, chef |\n| офіціант | waiter |\n| водій | driver |\n| механік | mechanic |\n| електрик | electrician |\n| сантехнік | plumber |\n\n**Creative:**\n| Ukrainian | English |\n|-----------|---------|\n| художник | artist |\n| музикант | musician |\n| актор | actor |\n| журналіст | journalist |\n| фотограф | photographer |\n| архітектор | architect |\n\n> ⚡ **Pro Tip: Gender Forms**\n>\n> Many professions have feminine forms: вчитель → вчителька, лікар → лікарка, програміст → програмістка.\n\n### Workplace Vocabulary\n\n| Ukrainian | English |\n|-----------|---------|\n| офіс | office |\n| робоче місце | workplace |\n| кабінет | office (room), study |\n| завод | factory |\n| фабрика | factory |\n| компанія | company |\n| фірма | firm |\n| підприємство | enterprise |\n| організація | organization |\n| відділ | department |\n| начальник | boss |\n| колега | colleague |\n| співробітник | coworker |\n| підлеглий | subordinate |\n| клієнт | client |\n| партнер | partner |\n\n**Examples:**\n- Я працюю в **офісі**. - I work in an office.\n- Він **начальник** нашого **відділу**. - He's the boss of our department.\n- Мої **колеги** дружні. - My colleagues are friendly.\n- Це наш головний **клієнт**. - This is our main client.\n\n### Job & Career Terms\n\n| Ukrainian | English |\n|-----------|---------|\n| робота | work, job |\n| професія | profession |\n| посада | position |\n| кар'єра | career |\n| досвід | experience |\n| кваліфікація | qualification |\n| резюме | resume, CV |\n| співбесіда | interview |\n| вакансія | vacancy |\n| зарплата | salary |\n| премія | bonus |\n| відпустка | vacation |\n| графік роботи | work schedule |\n| повний робочий день | full-time |\n| неповний робочий день | part-time |\n| віддалена робота | remote work |\n\n**Examples:**\n- Шукаю **роботу** за **професією**. - I'm looking for a job in my profession.\n- Яка ваша **посада**? - What's your position?\n- Він має великий **досвід**. - He has great experience.\n- Надішліть **резюме** на email. - Send your CV by email.\n- **Зарплата** дуже хороша. - The salary is very good.\n- Я працюю **віддалено**. - I work remotely.\n\n### Work Verbs\n\n| Imperfective | Perfective | Meaning |\n|--------------|------------|---------|\n| працювати | попрацювати | to work |\n| наймати | найняти | to hire |\n| звільняти | звільнити | to fire |\n| звільнятися | звільнитися | to quit |\n| заробляти | заробити | to earn |\n| отримувати | отримати | to receive |\n| виконувати | виконати | to fulfill, complete |\n| керувати | - | to manage |\n| підвищувати | підвищити | to promote |\n| навчати | навчити | to train |\n\n**Examples:**\n- Де ви **працюєте**? - Where do you work?\n- Компанія **наймає** нових працівників. - The company is hiring new employees.\n- Його **звільнили** з роботи. - He was fired from work.\n- Я хочу **звільнитися**. - I want to quit.\n- Скільки ви **заробляєте**? - How much do you earn?\n- Її **підвищили** до менеджера. - She was promoted to manager.\n\n### Job Responsibilities\n\n| Ukrainian | English |\n|-----------|---------|\n| обов'язки | duties |\n| завдання | tasks |\n| проект | project |\n| звіт | report |\n| нарада | meeting |\n| презентація | presentation |\n| договір | contract |\n| дедлайн | deadline |\n| відрядження | business trip |\n\n**Examples:**\n- Мої **обов'язки** включають... - My duties include...\n- Треба здати **звіт** до п'ятниці. - Need to submit the report by Friday.\n- Маємо **нараду** о десятій. - We have a meeting at ten.\n- **Дедлайн** — завтра! - The deadline is tomorrow!\n- Він у **відрядженні**. - He's on a business trip.\n\n> 🎭 **Culture Note: Відпустка**\n>\n> In Ukraine, employees typically get 24+ days of annual paid vacation (відпустка). Many take extended summer vacations.\n\n### Job Seeking Phrases\n\n**At an interview:**\n- Розкажіть про себе. - Tell us about yourself.\n- Чому ви хочете тут працювати? - Why do you want to work here?\n- Який ваш досвід? - What's your experience?\n- Які ваші сильні сторони? - What are your strengths?\n- Коли ви можете почати? - When can you start?\n\n**Candidate responses:**\n- Я маю досвід у... - I have experience in...\n- Моя сильна сторона — це... - My strength is...\n- Я можу почати з наступного тижня. - I can start next week.\n- Яка зарплата? - What's the salary?"
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Workplace Vocabulary\n\n| Ukrainian | English |\n|-----------|---------|\n| офіс | office |\n| робоче місце | workplace |\n| кабінет | office (room), study |\n| завод | factory |\n| фабрика | factory |\n| компанія | company |\n| фірма | firm |\n| підприємство | enterprise |\n| організація | organization |\n| відділ | department |\n| начальник | boss |\n| колега | colleague |\n| співробітник | coworker |\n| підлеглий | subordinate |\n| клієнт | client |\n| партнер | partner |\n\n**Examples:**\n- Я працюю в **офісі**. - I work in an office.\n- Він **начальник** нашого **відділу**. - He's the boss of our department.\n- Мої **колеги** дружні. - My colleagues are friendly.\n- Це наш головний **клієнт**. - This is our main client."
+            "teacherNotes": "### Match Profession to Sector\n\n1. програміст\n   > [!answer] Technology\n2. бухгалтер\n   > [!answer] Business\n3. хірург\n   > [!answer] Medicine\n4. адвокат\n   > [!answer] Law\n5. перукар\n   > [!answer] Services\n6. викладач\n   > [!answer] Education\n\n### Complete Work Dialogue\n\n**A:** Де ви ___? (work)\n> [!answer] працюєте\n\n**B:** У IT-___ (company).\n> [!answer] компанії\n\n**A:** Яка ваша ___? (position)\n> [!answer] посада\n\n**B:** Я ___. (programmer)\n> [!answer] програміст\n\n**A:** Яка ___? (salary)\n> [!answer] зарплата\n\n### Form Feminine Professions\n\n1. вчитель\n   > [!answer] вчителька\n2. програміст\n   > [!answer] програмістка\n3. журналіст\n   > [!answer] журналістка\n4. актор\n   > [!answer] акторка\n5. лікар\n   > [!answer] лікарка\n\n### Translate\n\n1. I'm looking for a job.\n   > [!answer] Я шукаю роботу.\n2. What's your profession?\n   > [!answer] Яка ваша професія?\n3. She was promoted.\n   > [!answer] Її підвищили.\n4. The deadline is tomorrow.\n   > [!answer] Дедлайн завтра.\n5. I work remotely.\n   > [!answer] Я працюю віддалено."
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Job & Career Terms\n\n| Ukrainian | English |\n|-----------|---------|\n| робота | work, job |\n| професія | profession |\n| посада | position |\n| кар'єра | career |\n| досвід | experience |\n| кваліфікація | qualification |\n| резюме | resume, CV |\n| співбесіда | interview |\n| вакансія | vacancy |\n| зарплата | salary |\n| премія | bonus |\n| відпустка | vacation |\n| графік роботи | work schedule |\n| повний робочий день | full-time |\n| неповний робочий день | part-time |\n| віддалена робота | remote work |\n\n**Examples:**\n- Шукаю **роботу** за **професією**. - I'm looking for a job in my profession.\n- Яка ваша **посада**? - What's your position?\n- Він має великий **досвід**. - He has great experience.\n- Надішліть **резюме** на email. - Send your CV by email.\n- **Зарплата** дуже хороша. - The salary is very good.\n- Я працюю **віддалено**. - I work remotely."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Work Verbs\n\n| Imperfective | Perfective | Meaning |\n|--------------|------------|---------|\n| працювати | попрацювати | to work |\n| наймати | найняти | to hire |\n| звільняти | звільнити | to fire |\n| звільнятися | звільнитися | to quit |\n| заробляти | заробити | to earn |\n| отримувати | отримати | to receive |\n| виконувати | виконати | to fulfill, complete |\n| керувати | - | to manage |\n| підвищувати | підвищити | to promote |\n| навчати | навчити | to train |\n\n**Examples:**\n- Де ви **працюєте**? - Where do you work?\n- Компанія **наймає** нових працівників. - The company is hiring new employees.\n- Його **звільнили** з роботи. - He was fired from work.\n- Я хочу **звільнитися**. - I want to quit.\n- Скільки ви **заробляєте**? - How much do you earn?\n- Її **підвищили** до менеджера. - She was promoted to manager."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Job Responsibilities\n\n| Ukrainian | English |\n|-----------|---------|\n| обов'язки | duties |\n| завдання | tasks |\n| проект | project |\n| звіт | report |\n| нарада | meeting |\n| презентація | presentation |\n| договір | contract |\n| дедлайн | deadline |\n| відрядження | business trip |\n\n**Examples:**\n- Мої **обов'язки** включають... - My duties include...\n- Треба здати **звіт** до п'ятниці. - Need to submit the report by Friday.\n- Маємо **нараду** о десятій. - We have a meeting at ten.\n- **Дедлайн** — завтра! - The deadline is tomorrow!\n- Він у **відрядженні**. - He's on a business trip.\n\n> 🎭 **Culture Note: Відпустка**\n>\n> In Ukraine, employees typically get 24+ days of annual paid vacation (відпустка). Many take extended summer vacations."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Job Seeking Phrases\n\n**At an interview:**\n- Розкажіть про себе. - Tell us about yourself.\n- Чому ви хочете тут працювати? - Why do you want to work here?\n- Який ваш досвід? - What's your experience?\n- Які ваші сильні сторони? - What are your strengths?\n- Коли ви можете почати? - When can you start?\n\n**Candidate responses:**\n- Я маю досвід у... - I have experience in...\n- Моя сильна сторона — це... - My strength is...\n- Я можу почати з наступного тижня. - I can start next week.\n- Яка зарплата? - What's the salary?"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A2+-72-matchup"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Match Profession to Sector\n\n1. програміст → Technology\n2. бухгалтер → Business\n3. хірург → Medicine\n4. адвокат → Law\n5. перукар → Services\n6. викладач → Education"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Complete Work Dialogue\n\n**A:** Де ви ___? (work)\n→ працюєте\n\n**B:** У IT-___ (company).\n→ компанії\n\n**A:** Яка ваша ___? (position)\n→ посада\n\n**B:** Я ___. (programmer)\n→ програміст\n\n**A:** Яка ___? (salary)\n→ зарплата"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Form Feminine Professions\n\n1. вчитель → вчителька\n2. програміст → програмістка\n3. журналіст → журналістка\n4. актор → акторка\n5. лікар → лікарка"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Translate\n\n1. I'm looking for a job. → Я шукаю роботу.\n2. What's your profession? → Яка ваша професія?\n3. She was promoted. → Її підвищили.\n4. The deadline is tomorrow. → Дедлайн завтра.\n5. I work remotely. → Я працюю віддалено."
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A2+-72-quiz"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A2+-72-groupsort"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Describe Your Job\n\n**Example:** \"Я працюю програмістом у IT-компанії. Мої обов'язки — писати код і тестувати програми. Зарплата хороша, графік гнучкий.\"\n\nDescribe your job or dream job."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Job Interview Roleplay\n\n**Scenario:** You're at a job interview.\n- Interviewer: \"Розкажіть про себе.\"\n- You: \"Я маю досвід у... Моя сильна сторона — це...\""
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Career Advice\n\nGive advice to someone looking for work:\n- \"Оновіть резюме.\"\n- \"Підготуйтеся до співбесіди.\"\n- \"Шукайте вакансії онлайн.\""
+            "teacherNotes": "### Describe Your Job\n\n**Example:** \"Я працюю програмістом у IT-компанії. Мої обов'язки — писати код і тестувати програми. Зарплата хороша, графік гнучкий.\"\n\nDescribe your job or dream job.\n\n### Job Interview Roleplay\n\n**Scenario:** You're at a job interview.\n- Interviewer: \"Розкажіть про себе.\"\n- You: \"Я маю досвід у... Моя сильна сторона — це...\"\n\n### Career Advice\n\nGive advice to someone looking for work:\n- \"Оновіть резюме.\"\n- \"Підготуйтеся до співбесіди.\"\n- \"Шукайте вакансії онлайн.\"\n\n---"
           }
         ]
       }
-    ]
+    ],
+    "createdAt": "2025-12-01T22:58:37.284Z",
+    "modifiedAt": "2025-12-01T22:58:37.284Z",
+    "version": 1
   },
   "activities": [
     {
-      "id": "act-uk-A2+-72-matchup",
+      "id": "act-a2+-72-matchup",
       "type": "match-up",
       "title": "Place → Profession",
       "description": "Place → Profession",
       "content": {
         "type": "match-up",
-        "instructions": "",
         "pairs": [
           {
             "left": "лікарня",
@@ -190,24 +100,17 @@
       "language": "uk",
       "difficultyLevel": "A2+",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "work",
-        "professions",
-        "career",
-        "business"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.284Z",
+      "modifiedAt": "2025-12-01T22:58:37.284Z"
     },
     {
-      "id": "act-uk-A2+-72-quiz",
+      "id": "act-a2+-72-quiz",
       "type": "quiz",
       "title": "Work Vocabulary",
       "description": "Choose the correct answer.",
       "content": {
         "type": "quiz",
-        "instructions": "Choose the correct answer.",
         "questions": [
           {
             "question": "\"Співбесіда\" means ___.",
@@ -286,35 +189,31 @@
       "language": "uk",
       "difficultyLevel": "A2+",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "work",
-        "professions",
-        "career",
-        "business"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.284Z",
+      "modifiedAt": "2025-12-01T22:58:37.284Z"
     },
     {
-      "id": "act-uk-A2+-72-groupsort",
+      "id": "act-a2+-72-groupsort",
       "type": "group-sort",
       "title": "By Sector",
       "description": "By Sector",
       "content": {
         "type": "group-sort",
-        "instructions": "",
         "groups": [
           {
-            "name": "Медицина (Medicine)",
+            "id": "",
+            "name": "Медицина",
             "items": [
               "лікар",
               "хірург",
               "медсестра",
               "стоматолог"
-            ]
+            ],
+            "nameUk": "Medicine"
           },
           {
+            "id": "it--",
             "name": "IT / Технології",
             "items": [
               "програміст",
@@ -324,22 +223,26 @@
             ]
           },
           {
-            "name": "Бізнес (Business)",
+            "id": "",
+            "name": "Бізнес",
             "items": [
               "бухгалтер",
               "менеджер",
               "директор",
               "підприємець"
-            ]
+            ],
+            "nameUk": "Business"
           },
           {
-            "name": "Право (Law)",
+            "id": "",
+            "name": "Право",
             "items": [
               "юрист",
               "адвокат",
               "суддя",
               "поліцейський"
-            ]
+            ],
+            "nameUk": "Law"
           }
         ],
         "shuffleItems": true
@@ -350,15 +253,9 @@
       "language": "uk",
       "difficultyLevel": "A2+",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "work",
-        "professions",
-        "career",
-        "business"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.284Z",
+      "modifiedAt": "2025-12-01T22:58:37.284Z"
     }
   ],
   "vocabulary": {
@@ -369,341 +266,298 @@
     "transliterationMode": "none",
     "words": [
       {
-        "id": "v-m72-001",
+        "id": "v-yuryst-72-0",
         "uk": "юрист",
-        "translit": "",
-        "ipa": "/juˈrɪst/",
         "en": "lawyer",
         "pos": "noun",
+        "ipa": "/juˈrɪst/",
         "gender": "m"
       },
       {
-        "id": "v-m72-002",
+        "id": "v-advokat-72-1",
         "uk": "адвокат",
-        "translit": "",
-        "ipa": "/ɑdvoˈkɑt/",
         "en": "attorney",
         "pos": "noun",
+        "ipa": "/ɑdvoˈkɑt/",
         "gender": "m"
       },
       {
-        "id": "v-m72-003",
+        "id": "v-bukhhalter-72-2",
         "uk": "бухгалтер",
-        "translit": "",
-        "ipa": "/buxˈɦɑltɛr/",
         "en": "accountant",
         "pos": "noun",
+        "ipa": "/buxˈɦɑltɛr/",
         "gender": "m"
       },
       {
-        "id": "v-m72-004",
+        "id": "v-prohramist-72-3",
         "uk": "програміст",
-        "translit": "",
-        "ipa": "/proɦrɑˈmʲist/",
         "en": "programmer",
         "pos": "noun",
+        "ipa": "/proɦrɑˈmʲist/",
         "gender": "m"
       },
       {
-        "id": "v-m72-005",
+        "id": "v-inzhener-72-4",
         "uk": "інженер",
-        "translit": "",
-        "ipa": "/inʒɛˈnɛr/",
         "en": "engineer",
         "pos": "noun",
+        "ipa": "/inʒɛˈnɛr/",
         "gender": "m"
       },
       {
-        "id": "v-m72-006",
+        "id": "v-menedzher-72-5",
         "uk": "менеджер",
-        "translit": "",
-        "ipa": "/ˈmɛnɛdʒɛr/",
         "en": "manager",
         "pos": "noun",
+        "ipa": "/ˈmɛnɛdʒɛr/",
         "gender": "m"
       },
       {
-        "id": "v-m72-007",
+        "id": "v-pidpryyemetsь-72-6",
         "uk": "підприємець",
-        "translit": "",
-        "ipa": "/pʲidprɪˈjɛmɛtsʲ/",
         "en": "entrepreneur",
         "pos": "noun",
+        "ipa": "/pʲidprɪˈjɛmɛtsʲ/",
         "gender": "m"
       },
       {
-        "id": "v-m72-008",
+        "id": "v-vykladach-72-7",
         "uk": "викладач",
-        "translit": "",
-        "ipa": "/vɪklɑˈdɑtʃ/",
         "en": "lecturer",
         "pos": "noun",
+        "ipa": "/vɪklɑˈdɑtʃ/",
         "gender": "m"
       },
       {
-        "id": "v-m72-009",
+        "id": "v-naukovetsь-72-8",
         "uk": "науковець",
-        "translit": "",
-        "ipa": "/nɑuˈkovɛtsʲ/",
         "en": "scientist",
         "pos": "noun",
+        "ipa": "/nɑuˈkovɛtsʲ/",
         "gender": "m"
       },
       {
-        "id": "v-m72-010",
+        "id": "v-khirurh-72-9",
         "uk": "хірург",
-        "translit": "",
-        "ipa": "/xʲiˈrurɦ/",
         "en": "surgeon",
         "pos": "noun",
+        "ipa": "/xʲiˈrurɦ/",
         "gender": "m"
       },
       {
-        "id": "v-m72-011",
+        "id": "v-stomatoloh-72-10",
         "uk": "стоматолог",
-        "translit": "",
-        "ipa": "/stomɑˈtoloɦ/",
         "en": "dentist",
         "pos": "noun",
+        "ipa": "/stomɑˈtoloɦ/",
         "gender": "m"
       },
       {
-        "id": "v-m72-012",
+        "id": "v-perukar-72-11",
         "uk": "перукар",
-        "translit": "",
-        "ipa": "/pɛruˈkɑr/",
         "en": "hairdresser",
         "pos": "noun",
+        "ipa": "/pɛruˈkɑr/",
         "gender": "m"
       },
       {
-        "id": "v-m72-013",
+        "id": "v-ofis-72-12",
         "uk": "офіс",
-        "translit": "",
-        "ipa": "/ˈofʲis/",
         "en": "office",
         "pos": "noun",
+        "ipa": "/ˈofʲis/",
         "gender": "m"
       },
       {
-        "id": "v-m72-014",
+        "id": "v-viddil-72-13",
         "uk": "відділ",
-        "translit": "",
-        "ipa": "/vʲidˈdʲil/",
         "en": "department",
         "pos": "noun",
+        "ipa": "/vʲidˈdʲil/",
         "gender": "m"
       },
       {
-        "id": "v-m72-015",
+        "id": "v-nachalьnyk-72-14",
         "uk": "начальник",
-        "translit": "",
-        "ipa": "/nɑˈtʃɑlʲnɪk/",
         "en": "boss",
         "pos": "noun",
+        "ipa": "/nɑˈtʃɑlʲnɪk/",
         "gender": "m"
       },
       {
-        "id": "v-m72-016",
+        "id": "v-koleha-72-15",
         "uk": "колега",
-        "translit": "",
-        "ipa": "/koˈlɛɦɑ/",
         "en": "colleague",
         "pos": "noun",
-        "gender": "m/f"
+        "ipa": "/koˈlɛɦɑ/",
+        "gender": "m"
       },
       {
-        "id": "v-m72-017",
+        "id": "v-spivrobitnyk-72-16",
         "uk": "співробітник",
-        "translit": "",
-        "ipa": "/spʲivroˈbʲitnɪk/",
         "en": "coworker",
         "pos": "noun",
+        "ipa": "/spʲivroˈbʲitnɪk/",
         "gender": "m"
       },
       {
-        "id": "v-m72-018",
+        "id": "v-posada-72-17",
         "uk": "посада",
-        "translit": "",
-        "ipa": "/poˈsɑdɑ/",
         "en": "position",
         "pos": "noun",
+        "ipa": "/poˈsɑdɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m72-019",
+        "id": "v-kar'yera-72-18",
         "uk": "кар'єра",
-        "translit": "",
-        "ipa": "/kɑrˈjɛrɑ/",
         "en": "career",
         "pos": "noun",
+        "ipa": "/kɑrˈjɛrɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m72-020",
+        "id": "v-dosvid-72-19",
         "uk": "досвід",
-        "translit": "",
-        "ipa": "/ˈdosvʲid/",
         "en": "experience",
         "pos": "noun",
+        "ipa": "/ˈdosvʲid/",
         "gender": "m"
       },
       {
-        "id": "v-m72-021",
+        "id": "v-rezyume-72-20",
         "uk": "резюме",
-        "translit": "",
-        "ipa": "/rɛzʲuˈmɛ/",
         "en": "resume, CV",
         "pos": "noun",
+        "ipa": "/rɛzʲuˈmɛ/",
         "gender": "n"
       },
       {
-        "id": "v-m72-022",
+        "id": "v-spivbesida-72-21",
         "uk": "співбесіда",
-        "translit": "",
-        "ipa": "/spʲivˈbɛsʲidɑ/",
         "en": "interview",
         "pos": "noun",
+        "ipa": "/spʲivˈbɛsʲidɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m72-023",
+        "id": "v-vakansiya-72-22",
         "uk": "вакансія",
-        "translit": "",
-        "ipa": "/vɑˈkɑnsʲijɑ/",
         "en": "vacancy",
         "pos": "noun",
+        "ipa": "/vɑˈkɑnsʲijɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m72-024",
+        "id": "v-zarplata-72-23",
         "uk": "зарплата",
-        "translit": "",
-        "ipa": "/zɑrˈplɑtɑ/",
         "en": "salary",
         "pos": "noun",
+        "ipa": "/zɑrˈplɑtɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m72-025",
+        "id": "v-premiya-72-24",
         "uk": "премія",
-        "translit": "",
-        "ipa": "/ˈprɛmʲijɑ/",
         "en": "bonus",
         "pos": "noun",
+        "ipa": "/ˈprɛmʲijɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m72-026",
+        "id": "v-vidpustka-72-25",
         "uk": "відпустка",
-        "translit": "",
-        "ipa": "/vʲidˈpustkɑ/",
         "en": "vacation",
         "pos": "noun",
+        "ipa": "/vʲidˈpustkɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m72-027",
+        "id": "v-obov'yazky-72-26",
         "uk": "обов'язки",
-        "translit": "",
-        "ipa": "/oboˈvjɑzkɪ/",
         "en": "duties",
         "pos": "noun",
-        "gender": "pl"
+        "ipa": "/oboˈvjɑzkɪ/"
       },
       {
-        "id": "v-m72-028",
+        "id": "v-zavdannya-72-27",
         "uk": "завдання",
-        "translit": "",
-        "ipa": "/zɑvˈdɑnʲːɑ/",
         "en": "task",
         "pos": "noun",
+        "ipa": "/zɑvˈdɑnʲːɑ/",
         "gender": "n"
       },
       {
-        "id": "v-m72-029",
+        "id": "v-zvit-72-28",
         "uk": "звіт",
-        "translit": "",
-        "ipa": "/zvʲit/",
         "en": "report",
         "pos": "noun",
+        "ipa": "/zvʲit/",
         "gender": "m"
       },
       {
-        "id": "v-m72-030",
+        "id": "v-narada-72-29",
         "uk": "нарада",
-        "translit": "",
-        "ipa": "/nɑˈrɑdɑ/",
         "en": "meeting",
         "pos": "noun",
+        "ipa": "/nɑˈrɑdɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m72-031",
+        "id": "v-dedlayn-72-30",
         "uk": "дедлайн",
-        "translit": "",
-        "ipa": "/ˈdɛdlɑjn/",
         "en": "deadline",
         "pos": "noun",
+        "ipa": "/ˈdɛdlɑjn/",
         "gender": "m"
       },
       {
-        "id": "v-m72-032",
+        "id": "v-vidryadzhennya-72-31",
         "uk": "відрядження",
-        "translit": "",
-        "ipa": "/vʲidrʲɑˈdʒɛnʲːɑ/",
         "en": "business trip",
         "pos": "noun",
+        "ipa": "/vʲidrʲɑˈdʒɛnʲːɑ/",
         "gender": "n"
       },
       {
-        "id": "v-m72-033",
+        "id": "v-naymaty-72-32",
         "uk": "наймати",
-        "translit": "",
-        "ipa": "/nɑjˈmɑtɪ/",
         "en": "to hire",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/nɑjˈmɑtɪ/",
         "note": "impf"
       },
       {
-        "id": "v-m72-034",
+        "id": "v-zvilьnyaty-72-33",
         "uk": "звільняти",
-        "translit": "",
-        "ipa": "/zvʲilʲˈnʲɑtɪ/",
         "en": "to fire",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/zvʲilʲˈnʲɑtɪ/",
         "note": "impf"
       },
       {
-        "id": "v-m72-035",
+        "id": "v-zvilьnyatysya-72-34",
         "uk": "звільнятися",
-        "translit": "",
-        "ipa": "/zvʲilʲˈnʲɑtɪsʲɑ/",
         "en": "to quit",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/zvʲilʲˈnʲɑtɪsʲɑ/",
         "note": "impf"
       },
       {
-        "id": "v-m72-036",
+        "id": "v-pidvyshchuvaty-72-35",
         "uk": "підвищувати",
-        "translit": "",
-        "ipa": "/pʲidvɪˈʃʃuvɑtɪ/",
         "en": "to promote",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/pʲidvɪˈʃʃuvɑtɪ/",
         "note": "impf"
       },
       {
-        "id": "v-m72-037",
+        "id": "v-keruvaty-72-36",
         "uk": "керувати",
-        "translit": "",
-        "ipa": "/kɛruˈvɑtɪ/",
         "en": "to manage",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/kɛruˈvɑtɪ/",
         "note": "impf"
       }
     ]

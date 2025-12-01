@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-A1-20",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "revision",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -27,121 +26,52 @@
       "Review: Genitive case",
       "Review: Possessive pronouns"
     ],
-    "totalDuration": 50,
-    "transliterationMode": "full",
     "tags": [
       "review",
       "assessment",
       "checkpoint"
     ],
-    "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
+    "totalDuration": 50,
+    "transliterationMode": "full",
     "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Halfway Through A1!\n\nYou've completed A1.2 - the navigation phase! Let's see what you've mastered:\n\n✅ **Accusative** - Direct objects (Я бачу книгу)\n✅ **Locative** - Locations (Я в офісі)\n✅ **Genitive** - Possession & absence (немає часу)\n✅ **Possessives** - My, your, his, her (мій, твій, його, її)\n✅ **City vocabulary** - Metro, directions, places\n✅ **Food vocabulary** - Meals, ingredients, ordering\n✅ **Shopping** - Prices, sizes, colors\n\n> 💡 **Did You Know?**\n>\n> With these three cases, you can:\n> - Say what you see, want, and love (accusative)\n> - Say where you are and where things are (locative)\n> - Say what belongs to whom and what's missing (genitive)\n>\n> That covers about 70% of everyday case usage!"
-          }
-        ]
-      },
       {
         "id": "phase-presentation",
         "name": "presentation",
-        "duration": 15,
+        "duration": 17,
         "items": [
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "### Case Review\n\n**Accusative (Знахідний)** - Direct Object\n\n| Type | Nominative → Accusative | Example |\n|------|-------------------------|---------|\n| M. inanimate | no change | бачу стіл |\n| M. animate | → -а/-я | бачу студента |\n| F. -а | → -у | бачу книгу |\n| F. -я | → -ю | бачу землю |\n| N. | no change | бачу вікно |\n\n**Locative (Місцевий)** - Location\n\n| Type | Nominative → Locative | Example |\n|------|----------------------|---------|\n| M. | → -і/-ові/-у | в офісі |\n| F. -а | → -і | в школі |\n| F. -я | → -і | на станції |\n| N. | → -і | на морі |\n\n**Genitive (Родовий)** - Possession/Absence\n\n| Type | Nominative → Genitive | Example |\n|------|----------------------|---------|\n| M. | → -а/-я | немає часу |\n| F. -а | → -и | немає книги |\n| F. -я | → -і | кінець землі |\n| N. | → -а/-я | немає вікна |"
+            "teacherNotes": "### Case Review\n\n**Accusative (Знахідний)** - Direct Object\n\n| Type | Nominative → Accusative | Example |\n|------|-------------------------|---------|\n| M. inanimate | no change | бачу стіл |\n| M. animate | → -а/-я | бачу студента |\n| F. -а | → -у | бачу книгу |\n| F. -я | → -ю | бачу землю |\n| N. | no change | бачу вікно |\n\n**Locative (Місцевий)** - Location\n\n| Type | Nominative → Locative | Example |\n|------|----------------------|---------|\n| M. | → -і/-ові/-у | в офісі |\n| F. -а | → -і | в школі |\n| F. -я | → -і | на станції |\n| N. | → -і | на морі |\n\n**Genitive (Родовий)** - Possession/Absence\n\n| Type | Nominative → Genitive | Example |\n|------|----------------------|---------|\n| M. | → -а/-я | немає часу |\n| F. -а | → -и | немає книги |\n| F. -я | → -і | кінець землі |\n| N. | → -а/-я | немає вікна |\n\n### Possessive Review\n\n| Person | M | F | N | Pl |\n|--------|---|---|---|-----|\n| я | мій | моя | моє | мої |\n| ти | твій | твоя | твоє | твої |\n| він/воно | його | його | його | його |\n| вона | її | її | її | її |\n| ми | наш | наша | наше | наші |\n| ви | ваш | ваша | ваше | ваші |\n| вони | їхній | їхня | їхнє | їхні |\n\n**Remember:** його and її never change!\n\n### Key Prepositions\n\n| Preposition | Case | Meaning | Example |\n|-------------|------|---------|---------|\n| в/у | Loc. | in | в офісі |\n| на | Loc. | on/at | на столі |\n| до | Gen. | to | до станції |\n| без | Gen. | without | без цукру |\n| для | Gen. | for | для друга |\n| біля | Gen. | near | біля метро |\n\n### Direction Commands\n\n| Command | Meaning |\n|---------|---------|\n| Йдіть прямо! | Go straight! |\n| Поверніть праворуч! | Turn right! |\n| Поверніть ліворуч! | Turn left! |\n| Перейдіть вулицю! | Cross the street! |\n\n### Café & Shopping Essentials\n\n**At the café:**\n- Можна меню?\n- Мені каву, будь ласка.\n- Рахунок, будь ласка!\n\n**Shopping:**\n- Скільки коштує?\n- Чи є більший розмір?\n- Я візьму це.\n\n> 🎯 **Self-Assessment Checklist**\n>\n> Can you...\n> - [ ] Form accusative for animate and inanimate nouns?\n> - [ ] Say where you are using locative?\n> - [ ] Express possession and absence with genitive?\n> - [ ] Use possessive pronouns correctly?\n> - [ ] Ask for and understand directions?\n> - [ ] Order at a café?\n> - [ ] Shop and ask about prices, sizes, colors?"
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Possessive Review\n\n| Person | M | F | N | Pl |\n|--------|---|---|---|-----|\n| я | мій | моя | моє | мої |\n| ти | твій | твоя | твоє | твої |\n| він/воно | його | його | його | його |\n| вона | її | її | її | її |\n| ми | наш | наша | наше | наші |\n| ви | ваш | ваша | ваше | ваші |\n| вони | їхній | їхня | їхнє | їхні |\n\n**Remember:** його and її never change!"
+            "teacherNotes": "### Integrated Case Practice\n\nFill in the correct case:\n1. Я бачу ___ (студент).\n   > [!answer] студента (Acc. animate)\n2. Книга на ___ (стіл).\n   > [!answer] столі (Loc.)\n3. Немає ___ (час).\n   > [!answer] часу (Gen.)\n4. Я живу в ___ (Київ).\n   > [!answer] Києві (Loc.)\n5. Кава без ___ (цукор).\n   > [!answer] цукру (Gen.)\n\n### Dialogue Reconstruction\n\nPut in order:\n- Добрий день! Можна меню?\n- Так, прошу. Що замовите?\n- Мені каву з молоком, будь ласка.\n- Щось ще?\n- Ні, дякую. Скільки коштує?\n- Сорок п'ять гривень.\n- Ось, прошу. Дякую!\n\n### Direction Practice\n\nGive directions from A to B:\n- From metro to pharmacy: Йдіть прямо, потім поверніть праворуч. Аптека біля банку.\n- From your location to café: Йдіть два квартали, кав'ярня навпроти станції."
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Key Prepositions\n\n| Preposition | Case | Meaning | Example |\n|-------------|------|---------|---------|\n| в/у | Loc. | in | в офісі |\n| на | Loc. | on/at | на столі |\n| до | Gen. | to | до станції |\n| без | Gen. | without | без цукру |\n| для | Gen. | for | для друга |\n| біля | Gen. | near | біля метро |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Direction Commands\n\n| Command | Meaning |\n|---------|---------|\n| Йдіть прямо! | Go straight! |\n| Поверніть праворуч! | Turn right! |\n| Поверніть ліворуч! | Turn left! |\n| Перейдіть вулицю! | Cross the street! |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Café & Shopping Essentials\n\n**At the café:**\n- Можна меню?\n- Мені каву, будь ласка.\n- Рахунок, будь ласка!\n\n**Shopping:**\n- Скільки коштує?\n- Чи є більший розмір?\n- Я візьму це.\n\n> 🎯 **Self-Assessment Checklist**\n>\n> Can you...\n> - [ ] Form accusative for animate and inanimate nouns?\n> - [ ] Say where you are using locative?\n> - [ ] Express possession and absence with genitive?\n> - [ ] Use possessive pronouns correctly?\n> - [ ] Ask for and understand directions?\n> - [ ] Order at a café?\n> - [ ] Shop and ask about prices, sizes, colors?"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A1-20-matchup"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Integrated Case Practice\n\nFill in the correct case:\n1. Я бачу ___ (студент). → студента (Acc. animate)\n2. Книга на ___ (стіл). → столі (Loc.)\n3. Немає ___ (час). → часу (Gen.)\n4. Я живу в ___ (Київ). → Києві (Loc.)\n5. Кава без ___ (цукор). → цукру (Gen.)"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Dialogue Reconstruction\n\nPut in order:\n- Добрий день! Можна меню?\n- Так, прошу. Що замовите?\n- Мені каву з молоком, будь ласка.\n- Щось ще?\n- Ні, дякую. Скільки коштує?\n- Сорок п'ять гривень.\n- Ось, прошу. Дякую!"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Direction Practice\n\nGive directions from A to B:\n- From metro to pharmacy: Йдіть прямо, потім поверніть праворуч. Аптека біля банку.\n- From your location to café: Йдіть два квартали, кав'ярня навпроти станції."
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A1-20-quiz"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A1-20-groupsort"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Integrated Scenario\n\nYou're a tourist in Kyiv. Practice:\n1. Ask where the metro is\n2. Get directions\n3. At a café, order coffee and food\n4. Pay and leave\n5. Go shopping, ask about a product\n6. Buy something"
+            "teacherNotes": "### Integrated Scenario\n\nYou're a tourist in Kyiv. Practice:\n1. Ask where the metro is\n2. Get directions\n3. At a café, order coffee and food\n4. Pay and leave\n5. Go shopping, ask about a product\n6. Buy something\n\n---"
           }
         ]
       }
-    ]
+    ],
+    "createdAt": "2025-12-01T22:58:37.261Z",
+    "modifiedAt": "2025-12-01T22:58:37.261Z",
+    "version": 1
   },
   "activities": [
     {
-      "id": "act-uk-A1-20-quiz",
+      "id": "act-a1-20-quiz",
       "type": "quiz",
       "title": "Comprehensive A1.2 Review",
       "description": "Test your knowledge of Modules 11-19.",
       "content": {
         "type": "quiz",
-        "instructions": "Test your knowledge of Modules 11-19.",
         "questions": [
           {
-            "question": "1. \"I see the student (male)\" - Я бачу ___.",
+            "question": "\"I see the student (male)\" - Я бачу ___.",
             "options": [
               "студента",
               "студент",
@@ -283,22 +213,17 @@
       "language": "uk",
       "difficultyLevel": "A1",
       "duration": 5,
-      "tags": [
-        "review",
-        "assessment",
-        "checkpoint"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.262Z",
+      "modifiedAt": "2025-12-01T22:58:37.262Z"
     },
     {
-      "id": "act-uk-A1-20-matchup",
+      "id": "act-a1-20-matchup",
       "type": "match-up",
       "title": "Cases & Uses",
       "description": "Match each phrase to its case.",
       "content": {
         "type": "match-up",
-        "instructions": "Match each phrase to its case.",
         "pairs": [
           {
             "left": "Я бачу книгу",
@@ -333,52 +258,53 @@
       "language": "uk",
       "difficultyLevel": "A1",
       "duration": 5,
-      "tags": [
-        "review",
-        "assessment",
-        "checkpoint"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.262Z",
+      "modifiedAt": "2025-12-01T22:58:37.262Z"
     },
     {
-      "id": "act-uk-A1-20-groupsort",
+      "id": "act-a1-20-groupsort",
       "type": "group-sort",
       "title": "Vocabulary Categories",
       "description": "Sort these words by category.",
       "content": {
         "type": "group-sort",
-        "instructions": "Sort these words by category.",
         "groups": [
           {
-            "name": "Місто (City)",
+            "id": "",
+            "name": "Місто",
             "items": [
               "метро",
               "вулиця",
               "станція",
               "площа",
               "зупинка"
-            ]
+            ],
+            "nameUk": "City"
           },
           {
-            "name": "Їжа (Food)",
+            "id": "",
+            "name": "Їжа",
             "items": [
               "хліб",
               "м'ясо",
               "овочі",
               "борщ",
               "кава"
-            ]
+            ],
+            "nameUk": "Food"
           },
           {
-            "name": "Магазин (Shopping)",
+            "id": "",
+            "name": "Магазин",
             "items": [
               "ціна",
               "розмір",
               "колір",
               "знижка",
               "каса"
-            ]
+            ],
+            "nameUk": "Shopping"
           }
         ],
         "shuffleItems": true
@@ -389,86 +315,17 @@
       "language": "uk",
       "difficultyLevel": "A1",
       "duration": 5,
-      "tags": [
-        "review",
-        "assessment",
-        "checkpoint"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.262Z",
+      "modifiedAt": "2025-12-01T22:58:37.262Z"
     }
   ],
   "vocabulary": {
     "moduleId": "mod-uk-A1-20",
     "level": "A1",
     "phase": "A1.3",
-    "wordCount": 8,
+    "wordCount": 0,
     "transliterationMode": "full",
-    "words": [
-      {
-        "id": "v-m20-001",
-        "uk": "11-12",
-        "translit": "",
-        "ipa": "",
-        "en": "Accusative: бачити, читати, любити",
-        "pos": ""
-      },
-      {
-        "id": "v-m20-002",
-        "uk": "13",
-        "translit": "",
-        "ipa": "",
-        "en": "Locative: в, на, де, тут, там",
-        "pos": ""
-      },
-      {
-        "id": "v-m20-003",
-        "uk": "14",
-        "translit": "",
-        "ipa": "",
-        "en": "Possessives: мій, твій, його, її, наш, ваш",
-        "pos": ""
-      },
-      {
-        "id": "v-m20-004",
-        "uk": "15",
-        "translit": "",
-        "ipa": "",
-        "en": "City: метро, вулиця, праворуч, ліворуч",
-        "pos": ""
-      },
-      {
-        "id": "v-m20-005",
-        "uk": "16",
-        "translit": "",
-        "ipa": "",
-        "en": "Genitive: немає, без, для, до",
-        "pos": ""
-      },
-      {
-        "id": "v-m20-006",
-        "uk": "17",
-        "translit": "",
-        "ipa": "",
-        "en": "Food: сніданок, обід, вечеря, борщ",
-        "pos": ""
-      },
-      {
-        "id": "v-m20-007",
-        "uk": "18",
-        "translit": "",
-        "ipa": "",
-        "en": "Café: меню, замовити, рахунок",
-        "pos": ""
-      },
-      {
-        "id": "v-m20-008",
-        "uk": "19",
-        "translit": "",
-        "ipa": "",
-        "en": "Shopping: розмір, колір, ціна, знижка",
-        "pos": ""
-      }
-    ]
+    "words": []
   }
 }

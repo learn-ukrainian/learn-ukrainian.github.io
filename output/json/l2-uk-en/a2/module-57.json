@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-A2-57",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "grammar-introduction",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -27,8 +26,6 @@
       "Work-related verbs",
       "Describing responsibilities"
     ],
-    "totalDuration": 45,
-    "transliterationMode": "partial",
     "tags": [
       "work",
       "jobs",
@@ -36,22 +33,9 @@
       "office",
       "functional"
     ],
-    "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
+    "totalDuration": 45,
+    "transliterationMode": "partial",
     "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### The World of Work\n\nWhether you're working in Ukraine or discussing careers, this vocabulary is essential!\n\n**Key phrases:**\n- Ким ви **працюєте**? - What do you do for work?\n- Я **працюю** менеджером. - I work as a manager.\n- Я **шукаю** роботу. - I'm looking for a job.\n\n> 💡 **Did You Know?**\n>\n> Ukraine has a booming IT sector! Many Ukrainians work in tech, often for international companies. Remote work (віддалена робота) has become very popular. Common job sites include work.ua, rabota.ua, and LinkedIn."
-          }
-        ]
-      },
       {
         "id": "phase-presentation",
         "name": "presentation",
@@ -60,97 +44,33 @@
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "### Professions - Професії\n\n**Office jobs:**\n| Ukrainian | English |\n|-----------|---------|\n| менеджер | manager |\n| директор | director |\n| бухгалтер | accountant |\n| юрист | lawyer |\n| секретар | secretary |\n| адміністратор | administrator |\n| економіст | economist |\n| аналітик | analyst |\n\n**Tech jobs:**\n| Ukrainian | English |\n|-----------|---------|\n| програміст | programmer |\n| розробник | developer |\n| дизайнер | designer |\n| тестувальник | tester (QA) |\n| системний адміністратор | system administrator |\n| аналітик даних | data analyst |\n\n**Service and trades:**\n| Ukrainian | English |\n|-----------|---------|\n| продавець | salesperson |\n| офіціант/офіціантка | waiter/waitress |\n| перукар | hairdresser |\n| кухар | cook/chef |\n| водій | driver |\n| електрик | electrician |\n| будівельник | builder |\n| сантехнік | plumber |\n\n**Medical and education:**\n| Ukrainian | English |\n|-----------|---------|\n| лікар | doctor |\n| медсестра | nurse |\n| вчитель/вчителька | teacher |\n| викладач | lecturer/professor |\n| науковець | scientist |\n| дослідник | researcher |\n\n> ⚡ **Pro Tip: Ким ви працюєте?**\n>\n> When answering \"What do you do?\", use instrumental case:\n> - Я працюю **програмістом**. (m)\n> - Вона працює **вчителькою**. (f)\n> - Він працює **лікарем**. (m)"
+            "teacherNotes": "### Professions - Професії\n\n**Office jobs:**\n| Ukrainian | English |\n|-----------|---------|\n| менеджер | manager |\n| директор | director |\n| бухгалтер | accountant |\n| юрист | lawyer |\n| секретар | secretary |\n| адміністратор | administrator |\n| економіст | economist |\n| аналітик | analyst |\n\n**Tech jobs:**\n| Ukrainian | English |\n|-----------|---------|\n| програміст | programmer |\n| розробник | developer |\n| дизайнер | designer |\n| тестувальник | tester (QA) |\n| системний адміністратор | system administrator |\n| аналітик даних | data analyst |\n\n**Service and trades:**\n| Ukrainian | English |\n|-----------|---------|\n| продавець | salesperson |\n| офіціант/офіціантка | waiter/waitress |\n| перукар | hairdresser |\n| кухар | cook/chef |\n| водій | driver |\n| електрик | electrician |\n| будівельник | builder |\n| сантехнік | plumber |\n\n**Medical and education:**\n| Ukrainian | English |\n|-----------|---------|\n| лікар | doctor |\n| медсестра | nurse |\n| вчитель/вчителька | teacher |\n| викладач | lecturer/professor |\n| науковець | scientist |\n| дослідник | researcher |\n\n> ⚡ **Pro Tip: Ким ви працюєте?**\n>\n> When answering \"What do you do?\", use instrumental case:\n> - Я працюю **програмістом**. (m)\n> - Вона працює **вчителькою**. (f)\n> - Він працює **лікарем**. (m)\n\n### Workplace - Робоче місце\n\n**Places:**\n| Ukrainian | English |\n|-----------|---------|\n| офіс | office |\n| завод | factory |\n| фабрика | factory (light industry) |\n| магазин | store |\n| лікарня | hospital |\n| школа | school |\n| ресторан | restaurant |\n| компанія | company |\n| фірма | firm |\n\n**Office equipment:**\n| Ukrainian | English |\n|-----------|---------|\n| комп'ютер | computer |\n| принтер | printer |\n| телефон | phone |\n| стіл | desk |\n| стілець | chair |\n| документи | documents |\n| папір | paper |\n| ручка | pen |\n\n> 🎭 **Culture Corner: Ukrainian Work Culture**\n>\n> Ukrainian workplaces often have a formal hierarchy but friendly atmosphere. Colleagues often celebrate birthdays together, and the New Year corporate party (корпоратив) is a big tradition! Tea/coffee breaks are common, and many offices have a kitchen area.\n\n### Talking About Work\n\n**Basic questions:**\n- **Ким** ви працюєте? - What do you do for work?\n- **Де** ви працюєте? - Where do you work?\n- Вам **подобається** ваша робота? - Do you like your job?\n- **Скільки** ви заробляєте? - How much do you earn? (often considered rude)\n\n**Describing your job:**\n- Я працюю **в** компанії \"X\". - I work at company \"X\".\n- Я працюю **на** заводі. - I work at a factory.\n- Моя робота **цікава/складна/стресова**. - My job is interesting/difficult/stressful.\n- Я **відповідаю** за... - I'm responsible for...\n- Мої **обов'язки** включають... - My duties include...\n\n**Work schedule:**\n- Я працюю **з 9 до 6**. - I work from 9 to 6.\n- У мене **гнучкий** графік. - I have a flexible schedule.\n- Я працюю **віддалено**. - I work remotely.\n- Я працюю **на повну ставку**. - I work full-time.\n- Я працюю **на часткову ставку**. - I work part-time.\n\n### Looking for Work\n\n**Job search vocabulary:**\n| Ukrainian | English |\n|-----------|---------|\n| вакансія | vacancy/job opening |\n| резюме | resume/CV |\n| співбесіда | interview |\n| роботодавець | employer |\n| кандидат | candidate |\n| досвід | experience |\n| кваліфікація | qualification |\n| зарплата | salary |\n| умови праці | working conditions |\n\n**Phrases:**\n- Я **шукаю** роботу. - I'm looking for a job.\n- Я хочу **подати** резюме. - I want to submit my resume.\n- Коли **співбесіда**? - When is the interview?\n- Які **вимоги**? - What are the requirements?\n- Яка **зарплата**? - What's the salary?\n- Чи є **соціальний пакет**? - Is there a benefits package?\n\n> 📜 **History Bite: Work in Ukraine**\n>\n> During Soviet times, unemployment officially didn't exist - everyone was guaranteed work. Today, Ukraine has a dynamic job market. The IT sector especially has grown tremendously, with cities like Kyiv, Lviv, and Kharkiv becoming tech hubs.\n\n### At Work - На роботі\n\n**Daily activities:**\n- Я **приходжу** на роботу о дев'ятій. - I come to work at nine.\n- Я **перевіряю** пошту. - I check my email.\n- Я **маю** зустрічі з клієнтами. - I have meetings with clients.\n- Ми **обговорюємо** проєкти. - We discuss projects.\n- Я **готую** звіти. - I prepare reports.\n- Я **закінчую** роботу о шостій. - I finish work at six.\n\n**Communication:**\n- Мені потрібно **поговорити** з босом. - I need to talk to the boss.\n- Чи можна взяти **відпустку**? - Can I take vacation?\n- Я **хворію** сьогодні. - I'm sick today.\n- Я **спізнюся** сьогодні. - I'll be late today.\n- Коли **дедлайн**? - When is the deadline?\n- Я **закінчив/закінчила** завдання. - I finished the task.\n\n**Problems:**\n- Я **перевантажений/перевантажена** роботою. - I'm overloaded with work.\n- Мені потрібна **допомога**. - I need help.\n- Це **терміново**. - This is urgent.\n- У нас **проблема** з проєктом. - We have a problem with the project.\n\n### Career Development\n\n**Career vocabulary:**\n| Ukrainian | English |\n|-----------|---------|\n| кар'єра | career |\n| підвищення | promotion |\n| зарплата | salary |\n| премія | bonus |\n| відпустка | vacation |\n| лікарняний | sick leave |\n| звільнення | dismissal/resignation |\n| пенсія | pension/retirement |\n\n**Talking about career:**\n- Я хочу **кар'єрного росту**. - I want career growth.\n- Я отримав/отримала **підвищення**. - I got a promotion.\n- Мені **підвищили зарплату**. - I got a raise.\n- Я **звільняюся**. - I'm quitting.\n- Мене **звільнили**. - I was fired.\n- Я **на пенсії**. - I'm retired."
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Workplace - Робоче місце\n\n**Places:**\n| Ukrainian | English |\n|-----------|---------|\n| офіс | office |\n| завод | factory |\n| фабрика | factory (light industry) |\n| магазин | store |\n| лікарня | hospital |\n| школа | school |\n| ресторан | restaurant |\n| компанія | company |\n| фірма | firm |\n\n**Office equipment:**\n| Ukrainian | English |\n|-----------|---------|\n| комп'ютер | computer |\n| принтер | printer |\n| телефон | phone |\n| стіл | desk |\n| стілець | chair |\n| документи | documents |\n| папір | paper |\n| ручка | pen |\n\n> 🎭 **Culture Corner: Ukrainian Work Culture**\n>\n> Ukrainian workplaces often have a formal hierarchy but friendly atmosphere. Colleagues often celebrate birthdays together, and the New Year corporate party (корпоратив) is a big tradition! Tea/coffee breaks are common, and many offices have a kitchen area."
+            "teacherNotes": "### Match Professions\n\n1. програміст\n   > [!answer] programmer\n2. вчитель\n   > [!answer] teacher\n3. лікар\n   > [!answer] doctor\n4. продавець\n   > [!answer] salesperson\n5. бухгалтер\n   > [!answer] accountant\n6. кухар\n   > [!answer] cook\n\n### Complete Sentences\n\n1. Я працюю ___ (programmer - instrumental).\n   > [!answer] програмістом\n\n2. Вона працює ___ (teacher - instrumental).\n   > [!answer] вчителькою\n\n3. Він працює ___ компанії \"Сім'я\". (at)\n   > [!answer] в / у\n\n4. Я шукаю ___. (job)\n   > [!answer] роботу\n\n5. Коли ___? (interview)\n   > [!answer] співбесіда\n\n6. Яка ___? (salary)\n   > [!answer] зарплата\n\n### Translate\n\n1. What do you do for work?\n   > [!answer] Ким ви працюєте?\n\n2. I work as a manager.\n   > [!answer] Я працюю менеджером.\n\n3. I'm looking for a job.\n   > [!answer] Я шукаю роботу.\n\n4. I work from home.\n   > [!answer] Я працюю вдома / віддалено.\n\n5. I got a promotion.\n   > [!answer] Я отримав/отримала підвищення."
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Talking About Work\n\n**Basic questions:**\n- **Ким** ви працюєте? - What do you do for work?\n- **Де** ви працюєте? - Where do you work?\n- Вам **подобається** ваша робота? - Do you like your job?\n- **Скільки** ви заробляєте? - How much do you earn? (often considered rude)\n\n**Describing your job:**\n- Я працюю **в** компанії \"X\". - I work at company \"X\".\n- Я працюю **на** заводі. - I work at a factory.\n- Моя робота **цікава/складна/стресова**. - My job is interesting/difficult/stressful.\n- Я **відповідаю** за... - I'm responsible for...\n- Мої **обов'язки** включають... - My duties include...\n\n**Work schedule:**\n- Я працюю **з 9 до 6**. - I work from 9 to 6.\n- У мене **гнучкий** графік. - I have a flexible schedule.\n- Я працюю **віддалено**. - I work remotely.\n- Я працюю **на повну ставку**. - I work full-time.\n- Я працюю **на часткову ставку**. - I work part-time."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Looking for Work\n\n**Job search vocabulary:**\n| Ukrainian | English |\n|-----------|---------|\n| вакансія | vacancy/job opening |\n| резюме | resume/CV |\n| співбесіда | interview |\n| роботодавець | employer |\n| кандидат | candidate |\n| досвід | experience |\n| кваліфікація | qualification |\n| зарплата | salary |\n| умови праці | working conditions |\n\n**Phrases:**\n- Я **шукаю** роботу. - I'm looking for a job.\n- Я хочу **подати** резюме. - I want to submit my resume.\n- Коли **співбесіда**? - When is the interview?\n- Які **вимоги**? - What are the requirements?\n- Яка **зарплата**? - What's the salary?\n- Чи є **соціальний пакет**? - Is there a benefits package?\n\n> 📜 **History Bite: Work in Ukraine**\n>\n> During Soviet times, unemployment officially didn't exist - everyone was guaranteed work. Today, Ukraine has a dynamic job market. The IT sector especially has grown tremendously, with cities like Kyiv, Lviv, and Kharkiv becoming tech hubs."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "At Work - На роботі\n\n**Daily activities:**\n- Я **приходжу** на роботу о дев'ятій. - I come to work at nine.\n- Я **перевіряю** пошту. - I check my email.\n- Я **маю** зустрічі з клієнтами. - I have meetings with clients.\n- Ми **обговорюємо** проєкти. - We discuss projects.\n- Я **готую** звіти. - I prepare reports.\n- Я **закінчую** роботу о шостій. - I finish work at six.\n\n**Communication:**\n- Мені потрібно **поговорити** з босом. - I need to talk to the boss.\n- Чи можна взяти **відпустку**? - Can I take vacation?\n- Я **хворію** сьогодні. - I'm sick today.\n- Я **спізнюся** сьогодні. - I'll be late today.\n- Коли **дедлайн**? - When is the deadline?\n- Я **закінчив/закінчила** завдання. - I finished the task.\n\n**Problems:**\n- Я **перевантажений/перевантажена** роботою. - I'm overloaded with work.\n- Мені потрібна **допомога**. - I need help.\n- Це **терміново**. - This is urgent.\n- У нас **проблема** з проєктом. - We have a problem with the project."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Career Development\n\n**Career vocabulary:**\n| Ukrainian | English |\n|-----------|---------|\n| кар'єра | career |\n| підвищення | promotion |\n| зарплата | salary |\n| премія | bonus |\n| відпустка | vacation |\n| лікарняний | sick leave |\n| звільнення | dismissal/resignation |\n| пенсія | pension/retirement |\n\n**Talking about career:**\n- Я хочу **кар'єрного росту**. - I want career growth.\n- Я отримав/отримала **підвищення**. - I got a promotion.\n- Мені **підвищили зарплату**. - I got a raise.\n- Я **звільняюся**. - I'm quitting.\n- Мене **звільнили**. - I was fired.\n- Я **на пенсії**. - I'm retired."
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A2-57-matchup"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Match Professions\n\n1. програміст → programmer\n2. вчитель → teacher\n3. лікар → doctor\n4. продавець → salesperson\n5. бухгалтер → accountant\n6. кухар → cook"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Complete Sentences\n\n1. Я працюю ___ (programmer - instrumental).\n   → програмістом\n\n2. Вона працює ___ (teacher - instrumental).\n   → вчителькою\n\n3. Він працює ___ компанії \"Сім'я\". (at)\n   → в / у\n\n4. Я шукаю ___. (job)\n   → роботу\n\n5. Коли ___? (interview)\n   → співбесіда\n\n6. Яка ___? (salary)\n   → зарплата"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Translate\n\n1. What do you do for work?\n   → Ким ви працюєте?\n\n2. I work as a manager.\n   → Я працюю менеджером.\n\n3. I'm looking for a job.\n   → Я шукаю роботу.\n\n4. I work from home.\n   → Я працюю вдома / віддалено.\n\n5. I got a promotion.\n   → Я отримав/отримала підвищення."
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A2-57-quiz"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A2-57-groupsort"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Describe Your Job\n\nTalk about your work:\n- Ким ви працюєте?\n- Де ви працюєте?\n- Який у вас графік?\n- Що входить у ваші обов'язки?\n- Вам подобається ваша робота?"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Role Play: Job Interview\n\n**Interviewer:**\n- Ask about experience\n- Ask about qualifications\n- Explain the position\n\n**Candidate:**\n- Describe your experience\n- Ask about conditions\n- Express interest"
+            "teacherNotes": "### Describe Your Job\n\nTalk about your work:\n- Ким ви працюєте?\n- Де ви працюєте?\n- Який у вас графік?\n- Що входить у ваші обов'язки?\n- Вам подобається ваша робота?\n\n### Role Play: Job Interview\n\n**Interviewer:**\n- Ask about experience\n- Ask about qualifications\n- Explain the position\n\n**Candidate:**\n- Describe your experience\n- Ask about conditions\n- Express interest\n\n---"
           }
         ]
       }
-    ]
+    ],
+    "createdAt": "2025-12-01T22:58:37.278Z",
+    "modifiedAt": "2025-12-01T22:58:37.278Z",
+    "version": 1
   },
   "activities": [
     {
-      "id": "act-uk-A2-57-matchup",
+      "id": "act-a2-57-matchup",
       "type": "match-up",
       "title": "Professions",
       "description": "Match Ukrainian with English.",
       "content": {
         "type": "match-up",
-        "instructions": "Match Ukrainian with English.",
         "pairs": [
           {
             "left": "програміст",
@@ -185,24 +105,17 @@
       "language": "uk",
       "difficultyLevel": "A2",
       "duration": 5,
-      "tags": [
-        "work",
-        "jobs",
-        "career",
-        "office",
-        "functional"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.278Z",
+      "modifiedAt": "2025-12-01T22:58:37.278Z"
     },
     {
-      "id": "act-uk-A2-57-quiz",
+      "id": "act-a2-57-quiz",
       "type": "quiz",
       "title": "Work Vocabulary",
       "description": "Choose the correct answer.",
       "content": {
         "type": "quiz",
-        "instructions": "Choose the correct answer.",
         "questions": [
           {
             "question": "\"What do you do?\" - ___ ви працюєте?",
@@ -281,26 +194,20 @@
       "language": "uk",
       "difficultyLevel": "A2",
       "duration": 5,
-      "tags": [
-        "work",
-        "jobs",
-        "career",
-        "office",
-        "functional"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.278Z",
+      "modifiedAt": "2025-12-01T22:58:37.278Z"
     },
     {
-      "id": "act-uk-A2-57-groupsort",
+      "id": "act-a2-57-groupsort",
       "type": "group-sort",
       "title": "Office vs Service Jobs",
       "description": "Sort professions.",
       "content": {
         "type": "group-sort",
-        "instructions": "Sort professions.",
         "groups": [
           {
+            "id": "office-jobs",
             "name": "Office Jobs",
             "items": [
               "програміст",
@@ -311,6 +218,7 @@
             ]
           },
           {
+            "id": "service-jobs",
             "name": "Service Jobs",
             "items": [
               "продавець",
@@ -329,15 +237,9 @@
       "language": "uk",
       "difficultyLevel": "A2",
       "duration": 5,
-      "tags": [
-        "work",
-        "jobs",
-        "career",
-        "office",
-        "functional"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.278Z",
+      "modifiedAt": "2025-12-01T22:58:37.278Z"
     }
   ],
   "vocabulary": {
@@ -348,104 +250,92 @@
     "transliterationMode": "partial",
     "words": [
       {
-        "id": "v-m57-001",
+        "id": "v-profesiya-57-0",
         "uk": "професія",
-        "translit": "",
-        "ipa": "/proˈfɛsʲijɑ/",
         "en": "profession",
         "pos": "noun",
+        "ipa": "/proˈfɛsʲijɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m57-002",
+        "id": "v-robota-57-1",
         "uk": "робота",
-        "translit": "",
-        "ipa": "/roˈbotɑ/",
         "en": "work, job",
         "pos": "noun",
+        "ipa": "/roˈbotɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m57-003",
+        "id": "v-vakansiya-57-2",
         "uk": "вакансія",
-        "translit": "",
-        "ipa": "/vɑˈkɑnsʲijɑ/",
         "en": "vacancy, job opening",
         "pos": "noun",
+        "ipa": "/vɑˈkɑnsʲijɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m57-004",
+        "id": "v-rezyume-57-3",
         "uk": "резюме",
-        "translit": "",
-        "ipa": "/rɛzʲuˈmɛ/",
         "en": "resume, CV",
         "pos": "noun",
+        "ipa": "/rɛzʲuˈmɛ/",
         "gender": "n",
         "note": "indecl"
       },
       {
-        "id": "v-m57-005",
+        "id": "v-spivbesida-57-4",
         "uk": "співбесіда",
-        "translit": "",
-        "ipa": "/spʲivˈbɛsʲidɑ/",
         "en": "interview",
         "pos": "noun",
+        "ipa": "/spʲivˈbɛsʲidɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m57-006",
+        "id": "v-zarplata-57-5",
         "uk": "зарплата",
-        "translit": "",
-        "ipa": "/zɑrˈplɑtɑ/",
         "en": "salary",
         "pos": "noun",
+        "ipa": "/zɑrˈplɑtɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m57-007",
+        "id": "v-pidvyshchennya-57-6",
         "uk": "підвищення",
-        "translit": "",
-        "ipa": "/pʲidˈvɪʃtʃɛnʲɑ/",
         "en": "promotion",
         "pos": "noun",
+        "ipa": "/pʲidˈvɪʃtʃɛnʲɑ/",
         "gender": "n"
       },
       {
-        "id": "v-m57-008",
+        "id": "v-vidpustka-57-7",
         "uk": "відпустка",
-        "translit": "",
-        "ipa": "/vʲidˈpustkɑ/",
         "en": "vacation",
         "pos": "noun",
+        "ipa": "/vʲidˈpustkɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m57-009",
+        "id": "v-obov'yazok-57-8",
         "uk": "обов'язок",
-        "translit": "",
-        "ipa": "/oboˈvjɑzok/",
         "en": "duty, responsibility",
         "pos": "noun",
+        "ipa": "/oboˈvjɑzok/",
         "gender": "m"
       },
       {
-        "id": "v-m57-010",
+        "id": "v-hrafik-57-9",
         "uk": "графік",
-        "translit": "",
-        "ipa": "/ˈɦrɑfʲik/",
         "en": "schedule",
         "pos": "noun",
+        "ipa": "/ˈɦrɑfʲik/",
         "gender": "m"
       },
       {
-        "id": "v-m57-011",
+        "id": "v-viddaleno-57-10",
         "uk": "віддалено",
-        "translit": "",
-        "ipa": "/vʲidɑˈlɛno/",
         "en": "remotely",
         "pos": "adv",
-        "gender": "-"
+        "ipa": "/vʲidɑˈlɛno/"
       }
     ]
   }

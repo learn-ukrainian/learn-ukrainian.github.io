@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-A2-33",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "grammar-introduction",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -26,8 +25,6 @@
       "Impersonal + dative constructions",
       "Dative vs accusative verb selection"
     ],
-    "totalDuration": 45,
-    "transliterationMode": "partial",
     "tags": [
       "dative",
       "verbs",
@@ -35,22 +32,9 @@
       "indirect-object",
       "verb-patterns"
     ],
-    "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
+    "totalDuration": 45,
+    "transliterationMode": "partial",
     "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Not Just \"Give\" and \"Tell\"\n\nIn Modules 31-32, you used dative with verbs like давати (give) and казати (tell). But many more Ukrainian verbs require dative - and they're not always the same as English!\n\n**The surprise:**\n- English: I help **him**. (accusative-like)\n- Ukrainian: Я допомагаю **йому**. (dative!)\n\nSome verbs that take direct objects in English use dative in Ukrainian. Today you'll learn which ones - and why.\n\n> 💡 **Did You Know?**\n>\n> The dative case originally marked the \"receiver\" of an action. In Ukrainian, this extends to anyone who *benefits* from or is *affected* by an action - even if they're not receiving a physical object. That's why допомагати (help), дякувати (thank), and заважати (disturb) all use dative!"
-          }
-        ]
-      },
       {
         "id": "phase-presentation",
         "name": "presentation",
@@ -59,92 +43,33 @@
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "### Core Dative Verbs\n\nThese verbs ALWAYS take dative objects:\n\n| Verb | Meaning | Example |\n|------|---------|---------|\n| допомагати | to help | Допомагаю **братові**. |\n| дякувати | to thank | Дякую **вам**! |\n| відповідати | to answer | Відповідаю **вчителеві**. |\n| заважати | to disturb | Не заважай **мені**! |\n| радити | to advise | Раджу **тобі** відпочити. |\n| телефонувати | to phone | Телефоную **мамі**. |\n| належати | to belong | Це належить **йому**. |\n| подобатися | to please/like | Це **мені** подобається. |\n| вдаватися | to succeed | **Йому** вдається все. |\n| бракувати | to lack | **Мені** бракує часу. |\n\n> ⚡ **Pro Tip: The \"Beneficiary\" Test**\n>\n> If someone benefits from, is affected by, or receives the result of an action - even without getting a physical object - use dative. Think: \"Who does this action happen *to* or *for*?\""
+            "teacherNotes": "### Core Dative Verbs\n\nThese verbs ALWAYS take dative objects:\n\n| Verb | Meaning | Example |\n|------|---------|---------|\n| допомагати | to help | Допомагаю **братові**. |\n| дякувати | to thank | Дякую **вам**! |\n| відповідати | to answer | Відповідаю **вчителеві**. |\n| заважати | to disturb | Не заважай **мені**! |\n| радити | to advise | Раджу **тобі** відпочити. |\n| телефонувати | to phone | Телефоную **мамі**. |\n| належати | to belong | Це належить **йому**. |\n| подобатися | to please/like | Це **мені** подобається. |\n| вдаватися | to succeed | **Йому** вдається все. |\n| бракувати | to lack | **Мені** бракує часу. |\n\n> ⚡ **Pro Tip: The \"Beneficiary\" Test**\n>\n> If someone benefits from, is affected by, or receives the result of an action - even without getting a physical object - use dative. Think: \"Who does this action happen *to* or *for*?\"\n\n### Verbs of Communication\n\nSpeaking and writing to someone uses dative:\n\n| Verb | Imperfective | Perfective | Example |\n|------|--------------|------------|---------|\n| відповідати | відповідати | відповісти | Відповідаю **професорові**. |\n| писати | писати | написати | Пишу **другові**. |\n| говорити | говорити | сказати | Кажу **тобі** правду. |\n| дзвонити | дзвонити | подзвонити | Дзвоню **батькам**. |\n| повідомляти | повідомляти | повідомити | Повідомлю **вам** завтра. |\n\n**Pattern:** говорити/казати/писати + DATIVE (person) + ACCUSATIVE (what)\n\n- Я кажу **тобі** (dat) **правду** (acc). - I tell you the truth.\n- Вона пише **другові** (dat) **листа** (acc). - She writes a letter to a friend.\n\n> 📜 **History Bite: Dative of Interest**\n>\n> Slavic languages preserved an ancient Indo-European pattern called the \"dative of interest\" - marking who has a stake in an action. Latin had it, Greek had it, Sanskrit had it. When you say \"Мені подобається\" (to me it pleases), you're using grammar that's over 5,000 years old!\n\n### Impersonal + Dative Constructions\n\nMany impersonal expressions use dative for the person experiencing something:\n\n| Expression | Meaning | Structure |\n|------------|---------|-----------|\n| мені холодно | I'm cold | DAT + adverb |\n| тобі сумно | you're sad | DAT + adverb |\n| йому важко | it's hard for him | DAT + adverb |\n| їй весело | she's having fun | DAT + adverb |\n| нам потрібно | we need | DAT + потрібно |\n| вам треба | you must | DAT + треба |\n| їм можна | they may | DAT + можна |\n| мені не можна | I mustn't | DAT + не можна |\n\n**Examples:**\n- **Мені** холодно. - I'm cold. (lit: To me [it's] cold.)\n- **Тобі** потрібна допомога? - Do you need help?\n- **Йому** важко це зрозуміти. - It's hard for him to understand this.\n- **Їм** не можна палити тут. - They can't smoke here.\n\n> 🎭 **Culture Corner: Indirect Expression**\n>\n> Ukrainian often expresses personal states indirectly: \"Мені сумно\" (to me it's sad) rather than \"I am sad.\" This isn't evasion - it's a different way of experiencing: the feeling happens *to* you rather than *being* you. This subtle difference reflects a worldview where emotions are things that affect us, not just things we are.\n\n### Dative vs Accusative: The Key Difference\n\nSome verbs look similar but take different cases:\n\n| Dative verb | Meaning | Accusative verb | Meaning |\n|-------------|---------|-----------------|---------|\n| допомагати **йому** | help him | бачити **його** | see him |\n| відповідати **їй** | answer her | питати **її** | ask her |\n| дякувати **нам** | thank us | любити **нас** | love us |\n| радити **вам** | advise you | знати **вас** | know you |\n| заважати **їм** | disturb them | чути **їх** | hear them |\n\n**Test:**\n- Accusative = direct action ON someone (see, hear, love, know)\n- Dative = action AFFECTS/BENEFITS someone (help, thank, answer, advise)\n\n> ⚡ **Pro Tip: Memorize These Pairs**\n>\n> Learn these dative verbs as a group:\n> - **Д**опомагати (help)\n> - **Д**якувати (thank)\n> - **В**ідповідати (answer)\n> - **З**аважати (disturb)\n> - **Р**адити (advise)\n>\n> Notice they're about social interaction, not physical action!\n\n### Verbs of Happening/Succeeding\n\nWhen things happen TO someone or succeed FOR someone:\n\n| Verb | Meaning | Example |\n|------|---------|---------|\n| вдаватися | to succeed | **Мені** вдається це зробити. |\n| щастити | to be lucky | **Йому** завжди щастить! |\n| снитися | to dream (appear in dream) | **Їй** сниться море. |\n| здаватися | to seem | **Нам** здається, що... |\n| личити | to suit/become | Ця сукня **їй** личить. |\n\n**Examples:**\n- **Мені** сниться Україна. - I dream of Ukraine. (lit: Ukraine appears in my dream)\n- **Тобі** це личить! - This suits you!\n- **Їм** здається, що все добре. - It seems to them that everything's fine.\n\n### The \"Lacking\" Construction\n\nTo express lacking or missing, use **бракувати** + dative + genitive:\n\n**Structure:** DATIVE (who lacks) + бракувати + GENITIVE (what's lacking)\n\n- **Мені** бракує **часу**. - I lack time.\n- **Тобі** бракує **досвіду**. - You lack experience.\n- **Йому** бракує **грошей**. - He lacks money.\n- **Нам** бракувало **інформації**. - We lacked information.\n\n> 💡 **Did You Know?**\n>\n> The verb бракувати comes from German \"brauchen\" (to need) and entered Ukrainian through Polish. It perfectly captures the dative sense: \"to me there is lacking of time\" rather than \"I lack time.\""
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Verbs of Communication\n\nSpeaking and writing to someone uses dative:\n\n| Verb | Imperfective | Perfective | Example |\n|------|--------------|------------|---------|\n| відповідати | відповідати | відповісти | Відповідаю **професорові**. |\n| писати | писати | написати | Пишу **другові**. |\n| говорити | говорити | сказати | Кажу **тобі** правду. |\n| дзвонити | дзвонити | подзвонити | Дзвоню **батькам**. |\n| повідомляти | повідомляти | повідомити | Повідомлю **вам** завтра. |\n\n**Pattern:** говорити/казати/писати + DATIVE (person) + ACCUSATIVE (what)\n\n- Я кажу **тобі** (dat) **правду** (acc). - I tell you the truth.\n- Вона пише **другові** (dat) **листа** (acc). - She writes a letter to a friend.\n\n> 📜 **History Bite: Dative of Interest**\n>\n> Slavic languages preserved an ancient Indo-European pattern called the \"dative of interest\" - marking who has a stake in an action. Latin had it, Greek had it, Sanskrit had it. When you say \"Мені подобається\" (to me it pleases), you're using grammar that's over 5,000 years old!"
+            "teacherNotes": "### Identify the Dative Verb\n\nWhich verbs require dative?\n\n1. допомагати ✓ (help\n   > [!answer] dative)\n2. бачити ✗ (see\n   > [!answer] accusative)\n3. відповідати ✓ (answer\n   > [!answer] dative)\n4. знати ✗ (know\n   > [!answer] accusative)\n5. дякувати ✓ (thank\n   > [!answer] dative)\n6. любити ✗ (love\n   > [!answer] accusative)\n7. заважати ✓ (disturb\n   > [!answer] dative)\n8. радити ✓ (advise\n   > [!answer] dative)\n\n### Complete with Correct Case\n\nFill in dative or accusative:\n\n1. Я допомагаю ___ (він).\n   > [!answer] йому (dative)\n2. Вона бачить ___ (він).\n   > [!answer] його (accusative)\n3. Ми відповідаємо ___ (вчитель).\n   > [!answer] вчителеві (dative)\n4. Він знає ___ (вона).\n   > [!answer] її (accusative)\n5. Дякую ___ (ви)!\n   > [!answer] вам (dative)\n6. Вони чують ___ (ми).\n   > [!answer] нас (accusative)\n7. Не заважай ___ (я)!\n   > [!answer] мені (dative)\n8. Раджу ___ (ти) відпочити.\n   > [!answer] тобі (dative)\n\n### Build Impersonal Sentences\n\nCreate sentences with impersonal + dative:\n\n1. я / холодно\n   > [!answer] Мені холодно.\n2. він / важко / зрозуміти\n   > [!answer] Йому важко зрозуміти.\n3. вони / потрібно / допомога\n   > [!answer] Їм потрібна допомога.\n4. ти / можна / йти\n   > [!answer] Тобі можна йти.\n5. ми / бракувати / час\n   > [!answer] Нам бракує часу."
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Impersonal + Dative Constructions\n\nMany impersonal expressions use dative for the person experiencing something:\n\n| Expression | Meaning | Structure |\n|------------|---------|-----------|\n| мені холодно | I'm cold | DAT + adverb |\n| тобі сумно | you're sad | DAT + adverb |\n| йому важко | it's hard for him | DAT + adverb |\n| їй весело | she's having fun | DAT + adverb |\n| нам потрібно | we need | DAT + потрібно |\n| вам треба | you must | DAT + треба |\n| їм можна | they may | DAT + можна |\n| мені не можна | I mustn't | DAT + не можна |\n\n**Examples:**\n- **Мені** холодно. - I'm cold. (lit: To me [it's] cold.)\n- **Тобі** потрібна допомога? - Do you need help?\n- **Йому** важко це зрозуміти. - It's hard for him to understand this.\n- **Їм** не можна палити тут. - They can't smoke here.\n\n> 🎭 **Culture Corner: Indirect Expression**\n>\n> Ukrainian often expresses personal states indirectly: \"Мені сумно\" (to me it's sad) rather than \"I am sad.\" This isn't evasion - it's a different way of experiencing: the feeling happens *to* you rather than *being* you. This subtle difference reflects a worldview where emotions are things that affect us, not just things we are."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Dative vs Accusative: The Key Difference\n\nSome verbs look similar but take different cases:\n\n| Dative verb | Meaning | Accusative verb | Meaning |\n|-------------|---------|-----------------|---------|\n| допомагати **йому** | help him | бачити **його** | see him |\n| відповідати **їй** | answer her | питати **її** | ask her |\n| дякувати **нам** | thank us | любити **нас** | love us |\n| радити **вам** | advise you | знати **вас** | know you |\n| заважати **їм** | disturb them | чути **їх** | hear them |\n\n**Test:**\n- Accusative = direct action ON someone (see, hear, love, know)\n- Dative = action AFFECTS/BENEFITS someone (help, thank, answer, advise)\n\n> ⚡ **Pro Tip: Memorize These Pairs**\n>\n> Learn these dative verbs as a group:\n> - **Д**опомагати (help)\n> - **Д**якувати (thank)\n> - **В**ідповідати (answer)\n> - **З**аважати (disturb)\n> - **Р**адити (advise)\n>\n> Notice they're about social interaction, not physical action!"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Verbs of Happening/Succeeding\n\nWhen things happen TO someone or succeed FOR someone:\n\n| Verb | Meaning | Example |\n|------|---------|---------|\n| вдаватися | to succeed | **Мені** вдається це зробити. |\n| щастити | to be lucky | **Йому** завжди щастить! |\n| снитися | to dream (appear in dream) | **Їй** сниться море. |\n| здаватися | to seem | **Нам** здається, що... |\n| личити | to suit/become | Ця сукня **їй** личить. |\n\n**Examples:**\n- **Мені** сниться Україна. - I dream of Ukraine. (lit: Ukraine appears in my dream)\n- **Тобі** це личить! - This suits you!\n- **Їм** здається, що все добре. - It seems to them that everything's fine."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "The \"Lacking\" Construction\n\nTo express lacking or missing, use **бракувати** + dative + genitive:\n\n**Structure:** DATIVE (who lacks) + бракувати + GENITIVE (what's lacking)\n\n- **Мені** бракує **часу**. - I lack time.\n- **Тобі** бракує **досвіду**. - You lack experience.\n- **Йому** бракує **грошей**. - He lacks money.\n- **Нам** бракувало **інформації**. - We lacked information.\n\n> 💡 **Did You Know?**\n>\n> The verb бракувати comes from German \"brauchen\" (to need) and entered Ukrainian through Polish. It perfectly captures the dative sense: \"to me there is lacking of time\" rather than \"I lack time.\""
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A2-33-matchup"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Identify the Dative Verb\n\nWhich verbs require dative?\n\n1. допомагати ✓ (help → dative)\n2. бачити ✗ (see → accusative)\n3. відповідати ✓ (answer → dative)\n4. знати ✗ (know → accusative)\n5. дякувати ✓ (thank → dative)\n6. любити ✗ (love → accusative)\n7. заважати ✓ (disturb → dative)\n8. радити ✓ (advise → dative)"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Complete with Correct Case\n\nFill in dative or accusative:\n\n1. Я допомагаю ___ (він). → йому (dative)\n2. Вона бачить ___ (він). → його (accusative)\n3. Ми відповідаємо ___ (вчитель). → вчителеві (dative)\n4. Він знає ___ (вона). → її (accusative)\n5. Дякую ___ (ви)! → вам (dative)\n6. Вони чують ___ (ми). → нас (accusative)\n7. Не заважай ___ (я)! → мені (dative)\n8. Раджу ___ (ти) відпочити. → тобі (dative)"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Build Impersonal Sentences\n\nCreate sentences with impersonal + dative:\n\n1. я / холодно → Мені холодно.\n2. він / важко / зрозуміти → Йому важко зрозуміти.\n3. вони / потрібно / допомога → Їм потрібна допомога.\n4. ти / можна / йти → Тобі можна йти.\n5. ми / бракувати / час → Нам бракує часу."
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A2-33-quiz"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A2-33-groupsort"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Real Situations\n\n**Scenario 1: Office help**\n- Можеш допомогти мені?\n- Звісно! Що тобі потрібно?\n- Мені важко зрозуміти цей документ.\n- Зараз поясню тобі. Не хвилюйся!\n\n**Scenario 2: Phone call**\n- Алло! Телефоную тобі з новиною!\n- Що сталося? Розкажи мені!\n- Мені вдалося отримати роботу!\n- Вітаю! Я так радий за тебе!\n\n**Scenario 3: Asking for advice**\n- Що ти мені радиш?\n- Раджу тобі поговорити з ним.\n- Мені здається, він не хоче слухати.\n- Все одно спробуй. Йому потрібна твоя підтримка."
+            "teacherNotes": "### Real Situations\n\n**Scenario 1: Office help**\n- Можеш допомогти мені?\n- Звісно! Що тобі потрібно?\n- Мені важко зрозуміти цей документ.\n- Зараз поясню тобі. Не хвилюйся!\n\n**Scenario 2: Phone call**\n- Алло! Телефоную тобі з новиною!\n- Що сталося? Розкажи мені!\n- Мені вдалося отримати роботу!\n- Вітаю! Я так радий за тебе!\n\n**Scenario 3: Asking for advice**\n- Що ти мені радиш?\n- Раджу тобі поговорити з ним.\n- Мені здається, він не хоче слухати.\n- Все одно спробуй. Йому потрібна твоя підтримка.\n\n---"
           }
         ]
       }
-    ]
+    ],
+    "createdAt": "2025-12-01T22:58:37.265Z",
+    "modifiedAt": "2025-12-01T22:58:37.265Z",
+    "version": 1
   },
   "activities": [
     {
-      "id": "act-uk-A2-33-matchup",
+      "id": "act-a2-33-matchup",
       "type": "match-up",
       "title": "Verb + Case",
       "description": "Match the verb with its required case.",
       "content": {
         "type": "match-up",
-        "instructions": "Match the verb with its required case.",
         "pairs": [
           {
             "left": "допомагати",
@@ -187,24 +112,17 @@
       "language": "uk",
       "difficultyLevel": "A2",
       "duration": 5,
-      "tags": [
-        "dative",
-        "verbs",
-        "case",
-        "indirect-object",
-        "verb-patterns"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.265Z",
+      "modifiedAt": "2025-12-01T22:58:37.265Z"
     },
     {
-      "id": "act-uk-A2-33-quiz",
+      "id": "act-a2-33-quiz",
       "type": "quiz",
       "title": "Dative Verbs",
       "description": "Choose the correct form.",
       "content": {
         "type": "quiz",
-        "instructions": "Choose the correct form.",
         "questions": [
           {
             "question": "\"I help my brother\" - Я допомагаю ___.",
@@ -305,42 +223,39 @@
       "language": "uk",
       "difficultyLevel": "A2",
       "duration": 5,
-      "tags": [
-        "dative",
-        "verbs",
-        "case",
-        "indirect-object",
-        "verb-patterns"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.265Z",
+      "modifiedAt": "2025-12-01T22:58:37.265Z"
     },
     {
-      "id": "act-uk-A2-33-groupsort",
+      "id": "act-a2-33-groupsort",
       "type": "group-sort",
       "title": "Dative vs Accusative",
       "description": "Sort the sentences by which case the underlined pronoun is in.",
       "content": {
         "type": "group-sort",
-        "instructions": "Sort the sentences by which case the underlined pronoun is in.",
         "groups": [
           {
-            "name": "Dative (to whom)",
+            "id": "dative",
+            "name": "Dative",
             "items": [
               "Допомагаю йому.",
               "Дякую їй.",
               "Відповідаю вам.",
               "Раджу тобі."
-            ]
+            ],
+            "nameUk": "to whom"
           },
           {
-            "name": "Accusative (whom/what)",
+            "id": "accusative",
+            "name": "Accusative",
             "items": [
               "Бачу його.",
               "Люблю її.",
               "Знаю вас.",
               "Чую тебе."
-            ]
+            ],
+            "nameUk": "whom/what"
           }
         ],
         "shuffleItems": true
@@ -351,15 +266,9 @@
       "language": "uk",
       "difficultyLevel": "A2",
       "duration": 5,
-      "tags": [
-        "dative",
-        "verbs",
-        "case",
-        "indirect-object",
-        "verb-patterns"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.265Z",
+      "modifiedAt": "2025-12-01T22:58:37.265Z"
     }
   ],
   "vocabulary": {
@@ -370,142 +279,115 @@
     "transliterationMode": "partial",
     "words": [
       {
-        "id": "v-m33-001",
+        "id": "v-vidpovidaty-33-0",
         "uk": "відповідати",
-        "translit": "",
-        "ipa": "/vidpoviˈdɑtɪ/",
         "en": "to answer",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/vidpoviˈdɑtɪ/",
         "note": "+ dat"
       },
       {
-        "id": "v-m33-002",
+        "id": "v-zavazhaty-33-1",
         "uk": "заважати",
-        "translit": "",
-        "ipa": "/zɑvɑˈʒɑtɪ/",
         "en": "to disturb",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/zɑvɑˈʒɑtɪ/",
         "note": "+ dat"
       },
       {
-        "id": "v-m33-003",
+        "id": "v-radyty-33-2",
         "uk": "радити",
-        "translit": "",
-        "ipa": "/ˈrɑdɪtɪ/",
         "en": "to advise",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/ˈrɑdɪtɪ/",
         "note": "+ dat"
       },
       {
-        "id": "v-m33-004",
+        "id": "v-nalezhaty-33-3",
         "uk": "належати",
-        "translit": "",
-        "ipa": "/nɑlɛˈʒɑtɪ/",
         "en": "to belong",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/nɑlɛˈʒɑtɪ/",
         "note": "+ dat"
       },
       {
-        "id": "v-m33-005",
+        "id": "v-vdavatysya-33-4",
         "uk": "вдаватися",
-        "translit": "",
-        "ipa": "/vdɑˈvɑtɪsʲɑ/",
         "en": "to succeed",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/vdɑˈvɑtɪsʲɑ/",
         "note": "+ dat"
       },
       {
-        "id": "v-m33-006",
+        "id": "v-shchastyty-33-5",
         "uk": "щастити",
-        "translit": "",
-        "ipa": "/ʃtʃɑˈstɪtɪ/",
         "en": "to be lucky",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/ʃtʃɑˈstɪtɪ/",
         "note": "+ dat"
       },
       {
-        "id": "v-m33-007",
+        "id": "v-snytysya-33-6",
         "uk": "снитися",
-        "translit": "",
-        "ipa": "/snɪˈtɪsʲɑ/",
         "en": "to appear in dream",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/snɪˈtɪsʲɑ/",
         "note": "+ dat"
       },
       {
-        "id": "v-m33-008",
+        "id": "v-lychyty-33-7",
         "uk": "личити",
-        "translit": "",
-        "ipa": "/lɪˈtʃɪtɪ/",
         "en": "to suit/become",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/lɪˈtʃɪtɪ/",
         "note": "+ dat"
       },
       {
-        "id": "v-m33-009",
+        "id": "v-brakuvaty-33-8",
         "uk": "бракувати",
-        "translit": "",
-        "ipa": "/brɑkuˈvɑtɪ/",
         "en": "to lack",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/brɑkuˈvɑtɪ/",
         "note": "+ dat + gen"
       },
       {
-        "id": "v-m33-010",
+        "id": "v-povidomlyaty-33-9",
         "uk": "повідомляти",
-        "translit": "",
-        "ipa": "/poviˈdomlʲɑtɪ/",
         "en": "to inform",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/poviˈdomlʲɑtɪ/",
         "note": "+ dat"
       },
       {
-        "id": "v-m33-011",
+        "id": "v-vazhko-33-10",
         "uk": "важко",
-        "translit": "",
-        "ipa": "/ˈvɑʒko/",
         "en": "hard, difficult",
         "pos": "adv",
-        "gender": "-",
+        "ipa": "/ˈvɑʒko/",
         "note": "+ dat"
       },
       {
-        "id": "v-m33-012",
+        "id": "v-veselo-33-11",
         "uk": "весело",
-        "translit": "",
-        "ipa": "/ˈvɛsɛlo/",
         "en": "fun, merry",
         "pos": "adv",
-        "gender": "-",
+        "ipa": "/ˈvɛsɛlo/",
         "note": "+ dat"
       },
       {
-        "id": "v-m33-013",
+        "id": "v-sumno-33-12",
         "uk": "сумно",
-        "translit": "",
-        "ipa": "/ˈsumno/",
         "en": "sad",
         "pos": "adv",
-        "gender": "-",
+        "ipa": "/ˈsumno/",
         "note": "+ dat"
       },
       {
-        "id": "v-m33-014",
+        "id": "v-dosvid-33-13",
         "uk": "досвід",
-        "translit": "",
-        "ipa": "/ˈdosvʲid/",
         "en": "experience",
         "pos": "noun",
+        "ipa": "/ˈdosvʲid/",
         "gender": "m"
       }
     ]

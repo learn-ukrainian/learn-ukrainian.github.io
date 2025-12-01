@@ -236,17 +236,24 @@ Questions with verbs work the same as with nouns - just change intonation:
 ### Talk About Yourself
 
 Use these verbs to describe yourself:
-1. Я _______ українську мову. (know → знаю / don't know → не знаю)
-2. Я _______ книги. (read → читаю)
-3. Я _______ листи. (write → пишу)
-4. Я _______ кожен день. (work → працюю)
+1. Я _______ українську мову. (know
+   > [!answer] знаю / don't know → не знаю)
+2. Я _______ книги. (read
+   > [!answer] читаю)
+3. Я _______ листи. (write
+   > [!answer] пишу)
+4. Я _______ кожен день. (work
+   > [!answer] працюю)
 
 ### Ask Your Partner
 
 Practice asking questions:
-1. Ти _______ українською? (speak → говориш)
-2. Що ти _______? (read → читаєш)
-3. Де ви _______? (work → працюєте)
+1. Ти _______ українською? (speak
+   > [!answer] говориш)
+2. Що ти _______? (read
+   > [!answer] читаєш)
+3. Де ви _______? (work
+   > [!answer] працюєте)
 
 > ⚡ **Pro Tip: Present = Present AND Future**
 >

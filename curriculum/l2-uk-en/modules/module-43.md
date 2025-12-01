@@ -202,62 +202,62 @@ Ongoing background = imperfective.
 ### Choose the Correct Aspect
 
 1. Я писав листа ___ (дві години / за дві години).
-   → дві години (imperfective + duration)
-
+   > [!answer] дві години
+   > [!explanation] imperfective + duration
 2. Вона прочитала книгу ___ (тиждень / за тиждень).
-   → за тиждень (perfective + time limit)
-
+   > [!answer] за тиждень
+   > [!explanation] perfective + time limit
 3. Коли я ___ (снідав / поснідав), зателефонувала мама.
-   → снідав (background action - imperfective)
-
+   > [!answer] снідав
+   > [!explanation] background action - imperfective
 4. Коли я ___ (снідав / поснідав), я пішов на роботу.
-   → поснідав (completed before next action - perfective)
-
+   > [!answer] поснідав
+   > [!explanation] completed before next action - perfective
 5. Я хочу ___ (читати / прочитати) цю книгу до кінця.
-   → прочитати (complete the book - perfective)
-
+   > [!answer] прочитати
+   > [!explanation] complete the book - perfective
 6. Ти вже ___ (робив / зробив) домашнє завдання?
-   → зробив (вже = already = perfective)
-
+   > [!answer] зробив
+   > [!explanation] вже = already = perfective
 ### Fill in with Correct Aspect
 
 1. Вчора я ___ (прокидатися/прокинутися) о сьомій.
-   → прокинувся (single completed action)
-
+   > [!answer] прокинувся
+   > [!explanation] single completed action
 2. Кожен день я ___ (прокидатися/прокинутися) о сьомій.
-   → прокидаюся (habitual)
-
+   > [!answer] прокидаюся
+   > [!explanation] habitual
 3. Поки він ___ (працювати/попрацювати), я чекала.
-   → працював (simultaneous - imperfective)
-
+   > [!answer] працював
+   > [!explanation] simultaneous - imperfective
 4. Після того як він ___ (закінчувати/закінчити), ми пішли.
-   → закінчив (completed before - perfective)
-
+   > [!answer] закінчив
+   > [!explanation] completed before - perfective
 5. Не ___ (забувати/забути) ключі!
-   → забувай (negative command - imperfective)
-
+   > [!answer] забувай
+   > [!explanation] negative command - imperfective
 6. Я ще не ___ (відповідати/відповісти) на лист.
-   → відповів (ще не + perfective)
-
+   > [!answer] відповів
+   > [!explanation] ще не + perfective
 ### Translate Using Correct Aspect
 
 1. I was reading for three hours.
-   → Я читав три години.
+   > [!answer] Я читав три години.
 
 2. I read the book in three hours.
-   → Я прочитав книгу за три години.
+   > [!answer] Я прочитав книгу за три години.
 
 3. While she was cooking, I watched TV.
-   → Поки вона готувала, я дивився телевізор.
+   > [!answer] Поки вона готувала, я дивився телевізор.
 
 4. Have you ever been to Kyiv?
-   → Ти бував у Києві?
+   > [!answer] Ти бував у Києві?
 
 5. I haven't finished yet.
-   → Я ще не закінчив.
+   > [!answer] Я ще не закінчив.
 
 6. I already called him.
-   → Я вже подзвонив йому.
+   > [!answer] Я вже подзвонив йому.
 
 ## production
 

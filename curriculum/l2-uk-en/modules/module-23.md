@@ -180,25 +180,37 @@ Key questions:
 ### Days Practice
 
 Answer:
-1. Який сьогодні день? → Сьогодні...
-2. What day comes after середа? → четвер
-3. What day comes before неділя? → субота
-4. When is the middle of the week? → середа
+1. Який сьогодні день?
+   > [!answer] Сьогодні...
+2. What day comes after середа?
+   > [!answer] четвер
+3. What day comes before неділя?
+   > [!answer] субота
+4. When is the middle of the week?
+   > [!answer] середа
 
 ### Months Practice
 
-1. When is it cold? → У січні, у лютому, у грудні
-2. When do leaves fall? → У листопаді
-3. When is it hot? → У липні, у серпні
-4. Your birthday month? → У... (+ locative)
+1. When is it cold?
+   > [!answer] У січні, у лютому, у грудні
+2. When do leaves fall?
+   > [!answer] У листопаді
+3. When is it hot?
+   > [!answer] У липні, у серпні
+4. Your birthday month?
+   > [!answer] У... (+ locative)
 
 ### Time Practice
 
 Say in Ukrainian:
-1. It's 5 o'clock. → Зараз п'ята година.
-2. At 3 PM. → О третій.
-3. At 9 in the morning. → О дев'ятій ранку.
-4. At 8 in the evening. → О восьмій вечора.
+1. It's 5 o'clock.
+   > [!answer] Зараз п'ята година.
+2. At 3 PM.
+   > [!answer] О третій.
+3. At 9 in the morning.
+   > [!answer] О дев'ятій ранку.
+4. At 8 in the evening.
+   > [!answer] О восьмій вечора.
 
 ## production
 

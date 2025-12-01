@@ -163,23 +163,34 @@ Review from Module 08:
 
 ### Form Sentences with Modals
 
-1. I can help. → Я можу допомогти.
-2. She must work. → Вона мусить працювати.
-3. We should study. → Ми повинні вчитися.
-4. They want to eat. → Вони хочуть їсти.
-5. I need to go. → Мені треба йти.
+1. I can help.
+   > [!answer] Я можу допомогти.
+2. She must work.
+   > [!answer] Вона мусить працювати.
+3. We should study.
+   > [!answer] Ми повинні вчитися.
+4. They want to eat.
+   > [!answer] Вони хочуть їсти.
+5. I need to go.
+   > [!answer] Мені треба йти.
 
 ### Negative Forms
 
-1. I can't understand. → Я не можу зрозуміти.
-2. You don't have to hurry. → Тобі не треба поспішати.
-3. She doesn't want to wait. → Вона не хоче чекати.
+1. I can't understand.
+   > [!answer] Я не можу зрозуміти.
+2. You don't have to hurry.
+   > [!answer] Тобі не треба поспішати.
+3. She doesn't want to wait.
+   > [!answer] Вона не хоче чекати.
 
 ### Questions with Modals
 
-1. Can you help? → Ти можеш допомогти?
-2. Do you want coffee? → Ти хочеш каву?
-3. Do I have to pay now? → Мені треба платити зараз?
+1. Can you help?
+   > [!answer] Ти можеш допомогти?
+2. Do you want coffee?
+   > [!answer] Ти хочеш каву?
+3. Do I have to pay now?
+   > [!answer] Мені треба платити зараз?
 
 ## production
 

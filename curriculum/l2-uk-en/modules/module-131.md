@@ -129,52 +129,42 @@ The world constantly changes. How do we describe these changes?
 
 ### Describe the Changes
 
-1. Population: 1 million → 1.5 million
-   → **Населення зросло на 50% / на півмільйона.**
-
-2. Prices: $100 → $80
-   → **Ціни знизилися на 20%.**
-
-3. Quality: bad → good
-   → **Якість покращилася.**
-
-4. Temperature: 20°C → 20°C
-   → **Температура залишилася стабільною.**
-
+1. Population: 1 million
+   > [!answer] 1.5 million
+   > [!answer] **Населення зросло на 50% / на півмільйона.**
+2. Prices: $100
+   > [!answer] $80
+   > [!answer] **Ціни знизилися на 20%.**
+3. Quality: bad
+   > [!answer] good
+   > [!answer] **Якість покращилася.**
+4. Temperature: 20°C
+   > [!answer] 20°C
+   > [!answer] **Температура залишилася стабільною.**
 5. Sales: rapid increase
-   → **Продажі різко зросли.**
-
+   > [!answer] **Продажі різко зросли.**
 ### Complete with Correct Verb
 
 1. Ціни на бензин ___ (increase) удвічі.
-   → **зросли / підвищилися**
-
+   > [!answer] **зросли / підвищилися**
 2. Безробіття ___ (decrease) на 5%.
-   → **зменшилося / знизилося**
-
+   > [!answer] **зменшилося / знизилося**
 3. Ситуація поступово ___ (improve).
-   → **покращується**
-
+   > [!answer] **покращується**
 4. Економіка ___ (recover) після кризи.
-   → **відновлюється**
-
+   > [!answer] **відновлюється**
 5. Населення міста ___ (remain stable).
-   → **залишається стабільним**
-
+   > [!answer] **залишається стабільним**
 ### Translate to Ukrainian
 
 1. Prices increased significantly.
-   → **Ціни значно зросли.**
-
+   > [!answer] **Ціни значно зросли.**
 2. The situation gradually improved.
-   → **Ситуація поступово покращилася.**
-
+   > [!answer] **Ситуація поступово покращилася.**
 3. Sales fell sharply compared to last year.
-   → **Продажі різко впали порівняно з минулим роком.**
-
+   > [!answer] **Продажі різко впали порівняно з минулим роком.**
 4. The economy has been developing steadily.
-   → **Економіка стабільно розвивається.**
-
+   > [!answer] **Економіка стабільно розвивається.**
 ## production | Продукція
 
 ### Describe Changes in Your Life

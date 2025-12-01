@@ -165,59 +165,50 @@ Ukrainian has many ways to describe speaking:
 ### Choose the Right Verb
 
 1. Він ___ (said) «Добрий день».
-   → **сказав**
-
+   > [!answer] **сказав**
 2. Вона ___ (told the story) про свою подорож.
-   → **розповіла**
-
+   > [!answer] **розповіла**
 3. Новини ___ (reported) про аварію.
-   → **повідомили**
-
+   > [!answer] **повідомили**
 4. Ми ___ (talked) дві години.
-   → **говорили**
-
+   > [!answer] **говорили**
 5. Президент ___ (declared) про нові реформи.
-   → **заявив**
-
+   > [!answer] **заявив**
 ### Complete with Correct Form
 
 1. Що ти ___ (сказати/говорити)? — What are you saying?
-   → **кажеш**
-
+   > [!answer] **кажеш**
 2. Вона ___ (говорити) трьома мовами.
-   → **говорить**
-
+   > [!answer] **говорить**
 3. Він ___ (розповісти) нам цікаву історію.
-   → **розповів**
-
+   > [!answer] **розповів**
 4. Офіційно ___ (повідомити), що...
-   → **повідомили**
-
+   > [!answer] **повідомили**
 5. ___ (сказати) їй правду!
-   → **Скажи**
-
+   > [!answer] **Скажи**
 ### Match Context to Verb
 
-1. Fairy tale to children → **розповідати**
-2. News announcement → **повідомляти**
-3. Casual chat → **говорити**
-4. Short answer → **сказати**
-5. Official statement → **заявляти**
+1. Fairy tale to children
+   > [!answer] **розповідати**
+2. News announcement
+   > [!answer] **повідомляти**
+3. Casual chat
+   > [!answer] **говорити**
+4. Short answer
+   > [!answer] **сказати**
+5. Official statement
+   > [!answer] **заявляти**
 
 ### Translate
 
 1. What did he say?
-   → **Що він сказав?**
-
+   > [!answer] **Що він сказав?**
 2. She speaks Ukrainian fluently.
-   → **Вона вільно говорить українською.**
-
+   > [!answer] **Вона вільно говорить українською.**
 3. Tell me about yourself.
-   → **Розкажіть про себе.**
-
+   > [!answer] **Розкажіть про себе.**
 4. The news reported an accident.
-   → **Новини повідомили про аварію.**
-
+   > [!answer] **Новини повідомили про аварію.**
 ## production | Продукція
 
 ### Report a Conversation

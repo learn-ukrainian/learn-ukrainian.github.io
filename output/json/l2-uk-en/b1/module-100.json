@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-B1-100",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "revision",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -22,29 +21,14 @@
       "Identify areas for improvement"
     ],
     "grammarFocus": [],
-    "totalDuration": 45,
-    "transliterationMode": "none",
     "tags": [
       "assessment",
       "checkpoint",
       "review"
     ],
-    "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
+    "totalDuration": 45,
+    "transliterationMode": "none",
     "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Огляд контрольної роботи | Checkpoint Overview\n\nЦя контрольна робота перевіряє ваші навички B1.1:\n\nThis checkpoint tests your B1.1 skills:\n\n**Section 1:** Aspect Selection (20 points)\n**Section 2:** Motion Verbs (20 points)\n**Section 3:** Functional Language (20 points)\n**Section 4:** Integrated Skills (20 points)\n**Section 5:** Production (20 points)\n\n**Total:** 100 points\n\n**Passing:** 70 points"
-          }
-        ]
-      },
       {
         "id": "phase-presentation",
         "name": "presentation",
@@ -54,113 +38,48 @@
             "type": "canvas",
             "canvasData": "{}",
             "teacherNotes": "### What to Remember\n\n**Aspect:**\n- Perfective = single, completed, result\n- Imperfective = duration, repetition, process\n- Negation generally uses imperfective\n- \"Ще не\" uses perfective\n\n**Motion:**\n- Unidirectional = one way, now\n- Multidirectional = round trip, habitual\n- Prefixes add direction + perfectivize\n\n**Communication:**\n- Hedge opinions: Мені здається, Можливо\n- Disagree politely: Я не зовсім згоден\n- Give reasons: тому що, оскільки"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Section 1: Aspect Selection (20 points)\n\n*Choose the correct aspect. 2 points each.*\n\n1. Вона ___ (готувала/приготувала) вечерю три години.\n2. Нарешті він ___ (вчив/вивчив) усі правила!\n3. Я ніколи не ___ (бачив/побачив) моря.\n4. Він вже ___ (снідав/поснідав).\n5. Що ти ___ (робив/зробив) весь день?\n6. ___ (Читай/Прочитай) цю статтю до завтра!\n7. Вона завжди ___ (запізнювалася/запізнилася) на роботу.\n8. Я ___ (писав/написав) три листи вчора. (completed all three)\n9. ___ (Не забувай/Не забудь) зателефонувати! (warning)\n10. Він довго ___ (вирішував/вирішив) цю проблему.\n\n**Answer Key:**\n1. готувала (duration)\n2. вивчив (finally = result)\n3. бачив (never = impf)\n4. поснідав (already = result)\n5. робив (duration)\n6. Прочитай (deadline = pf)\n7. запізнювалася (always = impf)\n8. написав (completed = pf)\n9. Не забудь (warning = pf)\n10. вирішував (duration)"
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Section 2: Motion Verbs (20 points)\n\n*Choose the correct motion verb. 2 points each.*\n\n1. Куди ти ___ (йдеш/ходиш) зараз?\n2. Вона ___ (їде/їздить) на роботу автобусом щодня.\n3. Учора я ___ (йшов/ходив) у кіно.\n4. Він ___ (прийшов/вийшов) з кімнати.\n5. ___ (Перейдіть/Пройдіть) вулицю на світлофорі.\n6. Гості ___ (зайшлися/розійшлися) пізно.\n7. Вона ___ (зайшла/прийшла) до мене на каву.\n8. Поїзд ___ (прийшов/відійшов) п'ять хвилин тому.\n9. Риби добре ___ (пливуть/плавають).\n10. Ми ___ (переїхали/проїхали) до нового міста.\n\n**Answer Key:**\n1. йдеш (now = uni)\n2. їздить (every day = multi)\n3. ходив (round trip = multi)\n4. вийшов (out = ви-)\n5. Перейдіть (cross = пере-)\n6. розійшлися (dispersed = роз-)\n7. зайшла (dropped by = за-)\n8. відійшов (departed = від-)\n9. плавають (ability = multi)\n10. переїхали (moved = пере-)"
+            "teacherNotes": "### Section 1: Aspect Selection (20 points)\n\n*Choose the correct aspect. 2 points each.*\n\n1. Вона ___ (готувала/приготувала) вечерю три години.\n2. Нарешті він ___ (вчив/вивчив) усі правила!\n3. Я ніколи не ___ (бачив/побачив) моря.\n4. Він вже ___ (снідав/поснідав).\n5. Що ти ___ (робив/зробив) весь день?\n6. ___ (Читай/Прочитай) цю статтю до завтра!\n7. Вона завжди ___ (запізнювалася/запізнилася) на роботу.\n8. Я ___ (писав/написав) три листи вчора. (completed all three)\n9. ___ (Не забувай/Не забудь) зателефонувати! (warning)\n10. Він довго ___ (вирішував/вирішив) цю проблему.\n\n**Answer Key:**\n1. готувала (duration)\n2. вивчив (finally = result)\n3. бачив (never = impf)\n4. поснідав (already = result)\n5. робив (duration)\n6. Прочитай (deadline = pf)\n7. запізнювалася (always = impf)\n8. написав (completed = pf)\n9. Не забудь (warning = pf)\n10. вирішував (duration)\n\n### Section 2: Motion Verbs (20 points)\n\n*Choose the correct motion verb. 2 points each.*\n\n1. Куди ти ___ (йдеш/ходиш) зараз?\n2. Вона ___ (їде/їздить) на роботу автобусом щодня.\n3. Учора я ___ (йшов/ходив) у кіно.\n4. Він ___ (прийшов/вийшов) з кімнати.\n5. ___ (Перейдіть/Пройдіть) вулицю на світлофорі.\n6. Гості ___ (зайшлися/розійшлися) пізно.\n7. Вона ___ (зайшла/прийшла) до мене на каву.\n8. Поїзд ___ (прийшов/відійшов) п'ять хвилин тому.\n9. Риби добре ___ (пливуть/плавають).\n10. Ми ___ (переїхали/проїхали) до нового міста.\n\n**Answer Key:**\n1. йдеш (now = uni)\n2. їздить (every day = multi)\n3. ходив (round trip = multi)\n4. вийшов (out = ви-)\n5. Перейдіть (cross = пере-)\n6. розійшлися (dispersed = роз-)\n7. зайшла (dropped by = за-)\n8. відійшов (departed = від-)\n9. плавають (ability = multi)\n10. переїхали (moved = пере-)\n\n### Section 3: Functional Language (20 points)\n\n*Complete with appropriate expression. 2 points each.*\n\n1. ___ (In my opinion), це правильне рішення.\n2. Я ___ (am sure), що він прийде.\n3. ___ (Perhaps), ви маєте рацію.\n4. Я ___ (partly agree), але є проблеми.\n5. Вона зробила це ___ (because) мала досвід.\n6. ___ (On one hand), це добре. ___ (On the other hand), дорого.\n7. ___ (I'm afraid) я не можу погодитися.\n8. ___ (In general), я задоволений.\n9. Я ___ (would suggest) інший підхід.\n10. ___ (However), є альтернативи.\n\n**Answer Key:**\n1. На мою думку\n2. впевнений\n3. Можливо\n4. почасти згоден / частково згоден\n5. тому що / оскільки\n6. З одного боку, З іншого боку\n7. Боюся, що\n8. Загалом\n9. б запропонував\n10. Проте / Однак\n\n### Section 4: Integrated Skills (20 points)\n\n*Fill in the story with correct forms. 2 points each.*\n\n> Минулого тижня я (1)___ (їздив/їхав) до Львова. Вранці я (2)___ (вийшов/увійшов) з дому і (3)___ (пішов/ходив) на вокзал. Поїзд (4)___ (відійшов/прийшов) о восьмій. Ми (5)___ (проїхали/переїхали) через багато міст.\n>\n> У Львові я багато (6)___ (ходив/йшов) по місту. Я (7)___ (зайшов/прийшов) у кілька музеїв. Один музей мені дуже сподобався, і я (8)___ (пробув/бував) там три години.\n>\n> (9)___ (На мою думку), Львів — найкрасивіше місто України. (10)___ (Загалом), поїздка була чудовою!\n\n**Answer Key:**\n1. їздив (round trip)\n2. вийшов (out)\n3. пішов (left for)\n4. відійшов (departed)\n5. проїхали (through)\n6. ходив (multiple directions)\n7. зайшов (stopped in)\n8. пробув (spent time)\n9. На мою думку\n10. Загалом\n\n### Section 5: Production (20 points)\n\n*Answer in Ukrainian. 5 points each.*\n\n**5.1** Write 3 sentences about what you did yesterday using different aspects.\n\n**Example answer:**\nУчора я прокинувся о сьомій (pf). Потім я снідав двадцять хвилин (impf). Після сніданку я прочитав статтю (pf).\n\n**5.2** Give directions from your home to a nearby store using motion verbs.\n\n**Example answer:**\nВийдіть з будинку і поверніть праворуч. Пройдіть до кінця вулиці. Перейдіть дорогу на світлофорі. Магазин буде зліва.\n\n**5.3** Express your opinion on learning languages. Use opinion expressions and reasons.\n\n**Example answer:**\nНа мою думку, вивчати іноземні мови дуже важливо, тому що це відкриває нові можливості. Я вважаю, що найкраще вчити мову в країні, де нею говорять.\n\n**5.4** Agree or disagree with this statement politely: \"Технології роблять людей щасливішими.\"\n\n**Example answer:**\nПочасти я згоден, тому що технології роблять життя зручнішим. Проте я не зовсім згоден, що вони роблять нас щасливішими. Можливо, важливіші речі — це відносини з людьми."
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Section 3: Functional Language (20 points)\n\n*Complete with appropriate expression. 2 points each.*\n\n1. ___ (In my opinion), це правильне рішення.\n2. Я ___ (am sure), що він прийде.\n3. ___ (Perhaps), ви маєте рацію.\n4. Я ___ (partly agree), але є проблеми.\n5. Вона зробила це ___ (because) мала досвід.\n6. ___ (On one hand), це добре. ___ (On the other hand), дорого.\n7. ___ (I'm afraid) я не можу погодитися.\n8. ___ (In general), я задоволений.\n9. Я ___ (would suggest) інший підхід.\n10. ___ (However), є альтернативи.\n\n**Answer Key:**\n1. На мою думку\n2. впевнений\n3. Можливо\n4. почасти згоден / частково згоден\n5. тому що / оскільки\n6. З одного боку, З іншого боку\n7. Боюся, що\n8. Загалом\n9. б запропонував\n10. Проте / Однак"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Section 4: Integrated Skills (20 points)\n\n*Fill in the story with correct forms. 2 points each.*\n\n> Минулого тижня я (1)___ (їздив/їхав) до Львова. Вранці я (2)___ (вийшов/увійшов) з дому і (3)___ (пішов/ходив) на вокзал. Поїзд (4)___ (відійшов/прийшов) о восьмій. Ми (5)___ (проїхали/переїхали) через багато міст.\n>\n> У Львові я багато (6)___ (ходив/йшов) по місту. Я (7)___ (зайшов/прийшов) у кілька музеїв. Один музей мені дуже сподобався, і я (8)___ (пробув/бував) там три години.\n>\n> (9)___ (На мою думку), Львів — найкрасивіше місто України. (10)___ (Загалом), поїздка була чудовою!\n\n**Answer Key:**\n1. їздив (round trip)\n2. вийшов (out)\n3. пішов (left for)\n4. відійшов (departed)\n5. проїхали (through)\n6. ходив (multiple directions)\n7. зайшов (stopped in)\n8. пробув (spent time)\n9. На мою думку\n10. Загалом"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Section 5: Production (20 points)\n\n*Answer in Ukrainian. 5 points each.*\n\n**5.1** Write 3 sentences about what you did yesterday using different aspects.\n\n**Example answer:**\nУчора я прокинувся о сьомій (pf). Потім я снідав двадцять хвилин (impf). Після сніданку я прочитав статтю (pf).\n\n**5.2** Give directions from your home to a nearby store using motion verbs.\n\n**Example answer:**\nВийдіть з будинку і поверніть праворуч. Пройдіть до кінця вулиці. Перейдіть дорогу на світлофорі. Магазин буде зліва.\n\n**5.3** Express your opinion on learning languages. Use opinion expressions and reasons.\n\n**Example answer:**\nНа мою думку, вивчати іноземні мови дуже важливо, тому що це відкриває нові можливості. Я вважаю, що найкраще вчити мову в країні, де нею говорять.\n\n**5.4** Agree or disagree with this statement politely: \"Технології роблять людей щасливішими.\"\n\n**Example answer:**\nПочасти я згоден, тому що технології роблять життя зручнішим. Проте я не зовсім згоден, що вони роблять нас щасливішими. Можливо, важливіші речі — це відносини з людьми."
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-B1-100-quiz"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Self-Assessment\n\nAfter completing the checkpoint, assess yourself:\n\n**Aspect:** __ / 20\n- If <14: Review modules 81-88\n- Focus on: past/future? negation? imperatives?\n\n**Motion:** __ / 20\n- If <14: Review modules 89-94\n- Focus on: uni/multi? prefixes? figurative?\n\n**Functional:** __ / 20\n- If <14: Review modules 95-98\n- Focus on: opinions? agreement? hedging?\n\n**Integrated:** __ / 20\n- If <14: Practice combining all skills\n\n**Production:** __ / 20\n- If <14: More speaking/writing practice\n\n**Total:** __ / 100\n- 90+: Excellent! Ready for B1.2\n- 70-89: Good. Review weak areas, then continue.\n- <70: Review B1.1 before continuing."
+            "teacherNotes": "### Self-Assessment\n\nAfter completing the checkpoint, assess yourself:\n\n**Aspect:** __ / 20\n- If <14: Review modules 81-88\n- Focus on: past/future? negation? imperatives?\n\n**Motion:** __ / 20\n- If <14: Review modules 89-94\n- Focus on: uni/multi? prefixes? figurative?\n\n**Functional:** __ / 20\n- If <14: Review modules 95-98\n- Focus on: opinions? agreement? hedging?\n\n**Integrated:** __ / 20\n- If <14: Practice combining all skills\n\n**Production:** __ / 20\n- If <14: More speaking/writing practice\n\n**Total:** __ / 100\n- 90+: Excellent! Ready for B1.2\n- 70-89: Good. Review weak areas, then continue.\n- <70: Review B1.1 before continuing.\n\n---"
           }
         ]
       }
     ],
-    "rawMarkdown": "# Зміст уроку | Lesson Content\n\n## warm-up | Розминка\n\n### Огляд контрольної роботи | Checkpoint Overview\n\nЦя контрольна робота перевіряє ваші навички B1.1:\n\nThis checkpoint tests your B1.1 skills:\n\n**Section 1:** Aspect Selection (20 points)\n**Section 2:** Motion Verbs (20 points)\n**Section 3:** Functional Language (20 points)\n**Section 4:** Integrated Skills (20 points)\n**Section 5:** Production (20 points)\n\n**Total:** 100 points\n\n**Passing:** 70 points\n\n## presentation\n\n### What to Remember\n\n**Aspect:**\n- Perfective = single, completed, result\n- Imperfective = duration, repetition, process\n- Negation generally uses imperfective\n- \"Ще не\" uses perfective\n\n**Motion:**\n- Unidirectional = one way, now\n- Multidirectional = round trip, habitual\n- Prefixes add direction + perfectivize\n\n**Communication:**\n- Hedge opinions: Мені здається, Можливо\n- Disagree politely: Я не зовсім згоден\n- Give reasons: тому що, оскільки\n\n## practice\n\n### Section 1: Aspect Selection (20 points)\n\n*Choose the correct aspect. 2 points each.*\n\n1. Вона ___ (готувала/приготувала) вечерю три години.\n2. Нарешті він ___ (вчив/вивчив) усі правила!\n3. Я ніколи не ___ (бачив/побачив) моря.\n4. Він вже ___ (снідав/поснідав).\n5. Що ти ___ (робив/зробив) весь день?\n6. ___ (Читай/Прочитай) цю статтю до завтра!\n7. Вона завжди ___ (запізнювалася/запізнилася) на роботу.\n8. Я ___ (писав/написав) три листи вчора. (completed all three)\n9. ___ (Не забувай/Не забудь) зателефонувати! (warning)\n10. Він довго ___ (вирішував/вирішив) цю проблему.\n\n**Answer Key:**\n1. готувала (duration)\n2. вивчив (finally = result)\n3. бачив (never = impf)\n4. поснідав (already = result)\n5. робив (duration)\n6. Прочитай (deadline = pf)\n7. запізнювалася (always = impf)\n8. написав (completed = pf)\n9. Не забудь (warning = pf)\n10. вирішував (duration)\n\n### Section 2: Motion Verbs (20 points)\n\n*Choose the correct motion verb. 2 points each.*\n\n1. Куди ти ___ (йдеш/ходиш) зараз?\n2. Вона ___ (їде/їздить) на роботу автобусом щодня.\n3. Учора я ___ (йшов/ходив) у кіно.\n4. Він ___ (прийшов/вийшов) з кімнати.\n5. ___ (Перейдіть/Пройдіть) вулицю на світлофорі.\n6. Гості ___ (зайшлися/розійшлися) пізно.\n7. Вона ___ (зайшла/прийшла) до мене на каву.\n8. Поїзд ___ (прийшов/відійшов) п'ять хвилин тому.\n9. Риби добре ___ (пливуть/плавають).\n10. Ми ___ (переїхали/проїхали) до нового міста.\n\n**Answer Key:**\n1. йдеш (now = uni)\n2. їздить (every day = multi)\n3. ходив (round trip = multi)\n4. вийшов (out = ви-)\n5. Перейдіть (cross = пере-)\n6. розійшлися (dispersed = роз-)\n7. зайшла (dropped by = за-)\n8. відійшов (departed = від-)\n9. плавають (ability = multi)\n10. переїхали (moved = пере-)\n\n### Section 3: Functional Language (20 points)\n\n*Complete with appropriate expression. 2 points each.*\n\n1. ___ (In my opinion), це правильне рішення.\n2. Я ___ (am sure), що він прийде.\n3. ___ (Perhaps), ви маєте рацію.\n4. Я ___ (partly agree), але є проблеми.\n5. Вона зробила це ___ (because) мала досвід.\n6. ___ (On one hand), це добре. ___ (On the other hand), дорого.\n7. ___ (I'm afraid) я не можу погодитися.\n8. ___ (In general), я задоволений.\n9. Я ___ (would suggest) інший підхід.\n10. ___ (However), є альтернативи.\n\n**Answer Key:**\n1. На мою думку\n2. впевнений\n3. Можливо\n4. почасти згоден / частково згоден\n5. тому що / оскільки\n6. З одного боку, З іншого боку\n7. Боюся, що\n8. Загалом\n9. б запропонував\n10. Проте / Однак\n\n### Section 4: Integrated Skills (20 points)\n\n*Fill in the story with correct forms. 2 points each.*\n\n> Минулого тижня я (1)___ (їздив/їхав) до Львова. Вранці я (2)___ (вийшов/увійшов) з дому і (3)___ (пішов/ходив) на вокзал. Поїзд (4)___ (відійшов/прийшов) о восьмій. Ми (5)___ (проїхали/переїхали) через багато міст.\n>\n> У Львові я багато (6)___ (ходив/йшов) по місту. Я (7)___ (зайшов/прийшов) у кілька музеїв. Один музей мені дуже сподобався, і я (8)___ (пробув/бував) там три години.\n>\n> (9)___ (На мою думку), Львів — найкрасивіше місто України. (10)___ (Загалом), поїздка була чудовою!\n\n**Answer Key:**\n1. їздив (round trip)\n2. вийшов (out)\n3. пішов (left for)\n4. відійшов (departed)\n5. проїхали (through)\n6. ходив (multiple directions)\n7. зайшов (stopped in)\n8. пробув (spent time)\n9. На мою думку\n10. Загалом\n\n### Section 5: Production (20 points)\n\n*Answer in Ukrainian. 5 points each.*\n\n**5.1** Write 3 sentences about what you did yesterday using different aspects.\n\n**Example answer:**\nУчора я прокинувся о сьомій (pf). Потім я снідав двадцять хвилин (impf). Після сніданку я прочитав статтю (pf).\n\n**5.2** Give directions from your home to a nearby store using motion verbs.\n\n**Example answer:**\nВийдіть з будинку і поверніть праворуч. Пройдіть до кінця вулиці. Перейдіть дорогу на світлофорі. Магазин буде зліва.\n\n**5.3** Express your opinion on learning languages. Use opinion expressions and reasons.\n\n**Example answer:**\nНа мою думку, вивчати іноземні мови дуже важливо, тому що це відкриває нові можливості. Я вважаю, що найкраще вчити мову в країні, де нею говорять.\n\n**5.4** Agree or disagree with this statement politely: \"Технології роблять людей щасливішими.\"\n\n**Example answer:**\nПочасти я згоден, тому що технології роблять життя зручнішим. Проте я не зовсім згоден, що вони роблять нас щасливішими. Можливо, важливіші речі — це відносини з людьми.\n\n## production\n\n### Self-Assessment\n\nAfter completing the checkpoint, assess yourself:\n\n**Aspect:** __ / 20\n- If <14: Review modules 81-88\n- Focus on: past/future? negation? imperatives?\n\n**Motion:** __ / 20\n- If <14: Review modules 89-94\n- Focus on: uni/multi? prefixes? figurative?\n\n**Functional:** __ / 20\n- If <14: Review modules 95-98\n- Focus on: opinions? agreement? hedging?\n\n**Integrated:** __ / 20\n- If <14: Practice combining all skills\n\n**Production:** __ / 20\n- If <14: More speaking/writing practice\n\n**Total:** __ / 100\n- 90+: Excellent! Ready for B1.2\n- 70-89: Good. Review weak areas, then continue.\n- <70: Review B1.1 before continuing.\n\n---\n\n# Activities\n\n## quiz: Final Assessment\n\n> This quiz tests all B1.1 skills.\n\n1. Він ___ листа і надіслав його.\n   - [x] написав\n   - [ ] писав\n   > The result (\"надіслав\") confirms the letter was completed, requiring perfective.\n\n2. Куди ти ___ ?\n   - [x] йдеш\n   - [ ] ходиш\n\n3. Гості ___ о півночі.\n   - [x] розійшлися\n   - [ ] прийшлися\n\n4. Я ___ , що це правильно.\n   - [x] вважаю\n   - [ ] вважав\n\n5. ___ вулицю тут!\n   - [x] Перейдіть\n   - [ ] Пройдіть\n\n6. Я ___ згоден.\n   - [x] не зовсім\n   - [ ] зовсім не\n\n## fill-in: Comprehensive Test\n\n> Вчора я (1)___ (went) на роботу пішки. По дорозі я (2)___ (stopped by) кав'ярню. Там я (3)___ (met) друга. Ми (4)___ (talked) п'ять хвилин.\n>\n> (5)___ (In my opinion), ходити пішки корисно. (6)___ (I agree) з тим, що це здорово. (7)___ (However), іноді (8)___ (I'm not sure), чи є час.\n\n**Answers:**\n1. пішов/ходив\n2. зайшов\n3. зустрів\n4. поговорили/говорили\n5. На мою думку\n6. Я погоджуюся\n7. Проте\n8. не впевнений\n\n---",
+    "createdAt": "2025-12-01T22:58:37.229Z",
+    "modifiedAt": "2025-12-01T22:58:37.229Z",
+    "version": 1,
     "immersiveSections": [
       {
-        "id": "warm-up-розминка",
-        "title": "warm-up | Розминка",
-        "content": "### Огляд контрольної роботи | Checkpoint Overview\n\nЦя контрольна робота перевіряє ваші навички B1.1:\n\nThis checkpoint tests your B1.1 skills:\n\n**Section 1:** Aspect Selection (20 points)\n**Section 2:** Motion Verbs (20 points)\n**Section 3:** Functional Language (20 points)\n**Section 4:** Integrated Skills (20 points)\n**Section 5:** Production (20 points)\n\n**Total:** 100 points\n\n**Passing:** 70 points",
-        "type": "topic"
+        "id": "section-зміст-уроку-lesson-content",
+        "type": "content",
+        "title": "Зміст уроку | Lesson Content",
+        "content": "## warm-up | Розминка\n\n### Огляд контрольної роботи | Checkpoint Overview\n\nЦя контрольна робота перевіряє ваші навички B1.1:\n\nThis checkpoint tests your B1.1 skills:\n\n**Section 1:** Aspect Selection (20 points)\n**Section 2:** Motion Verbs (20 points)\n**Section 3:** Functional Language (20 points)\n**Section 4:** Integrated Skills (20 points)\n**Section 5:** Production (20 points)\n\n**Total:** 100 points\n\n**Passing:** 70 points\n\n## presentation\n\n### What to Remember\n\n**Aspect:**\n- Perfective = single, completed, result\n- Imperfective = duration, repetition, process\n- Negation generally uses imperfective\n- \"Ще не\" uses perfective\n\n**Motion:**\n- Unidirectional = one way, now\n- Multidirectional = round trip, habitual\n- Prefixes add direction + perfectivize\n\n**Communication:**\n- Hedge opinions: Мені здається, Можливо\n- Disagree politely: Я не зовсім згоден\n- Give reasons: тому що, оскільки\n\n## practice\n\n### Section 1: Aspect Selection (20 points)\n\n*Choose the correct aspect. 2 points each.*\n\n1. Вона ___ (готувала/приготувала) вечерю три години.\n2. Нарешті він ___ (вчив/вивчив) усі правила!\n3. Я ніколи не ___ (бачив/побачив) моря.\n4. Він вже ___ (снідав/поснідав).\n5. Що ти ___ (робив/зробив) весь день?\n6. ___ (Читай/Прочитай) цю статтю до завтра!\n7. Вона завжди ___ (запізнювалася/запізнилася) на роботу.\n8. Я ___ (писав/написав) три листи вчора. (completed all three)\n9. ___ (Не забувай/Не забудь) зателефонувати! (warning)\n10. Він довго ___ (вирішував/вирішив) цю проблему.\n\n**Answer Key:**\n1. готувала (duration)\n2. вивчив (finally = result)\n3. бачив (never = impf)\n4. поснідав (already = result)\n5. робив (duration)\n6. Прочитай (deadline = pf)\n7. запізнювалася (always = impf)\n8. написав (completed = pf)\n9. Не забудь (warning = pf)\n10. вирішував (duration)\n\n### Section 2: Motion Verbs (20 points)\n\n*Choose the correct motion verb. 2 points each.*\n\n1. Куди ти ___ (йдеш/ходиш) зараз?\n2. Вона ___ (їде/їздить) на роботу автобусом щодня.\n3. Учора я ___ (йшов/ходив) у кіно.\n4. Він ___ (прийшов/вийшов) з кімнати.\n5. ___ (Перейдіть/Пройдіть) вулицю на світлофорі.\n6. Гості ___ (зайшлися/розійшлися) пізно.\n7. Вона ___ (зайшла/прийшла) до мене на каву.\n8. Поїзд ___ (прийшов/відійшов) п'ять хвилин тому.\n9. Риби добре ___ (пливуть/плавають).\n10. Ми ___ (переїхали/проїхали) до нового міста.\n\n**Answer Key:**\n1. йдеш (now = uni)\n2. їздить (every day = multi)\n3. ходив (round trip = multi)\n4. вийшов (out = ви-)\n5. Перейдіть (cross = пере-)\n6. розійшлися (dispersed = роз-)\n7. зайшла (dropped by = за-)\n8. відійшов (departed = від-)\n9. плавають (ability = multi)\n10. переїхали (moved = пере-)\n\n### Section 3: Functional Language (20 points)\n\n*Complete with appropriate expression. 2 points each.*\n\n1. ___ (In my opinion), це правильне рішення.\n2. Я ___ (am sure), що він прийде.\n3. ___ (Perhaps), ви маєте рацію.\n4. Я ___ (partly agree), але є проблеми.\n5. Вона зробила це ___ (because) мала досвід.\n6. ___ (On one hand), це добре. ___ (On the other hand), дорого.\n7. ___ (I'm afraid) я не можу погодитися.\n8. ___ (In general), я задоволений.\n9. Я ___ (would suggest) інший підхід.\n10. ___ (However), є альтернативи.\n\n**Answer Key:**\n1. На мою думку\n2. впевнений\n3. Можливо\n4. почасти згоден / частково згоден\n5. тому що / оскільки\n6. З одного боку, З іншого боку\n7. Боюся, що\n8. Загалом\n9. б запропонував\n10. Проте / Однак\n\n### Section 4: Integrated Skills (20 points)\n\n*Fill in the story with correct forms. 2 points each.*\n\n> Минулого тижня я (1)___ (їздив/їхав) до Львова. Вранці я (2)___ (вийшов/увійшов) з дому і (3)___ (пішов/ходив) на вокзал. Поїзд (4)___ (відійшов/прийшов) о восьмій. Ми (5)___ (проїхали/переїхали) через багато міст.\n>\n> У Львові я багато (6)___ (ходив/йшов) по місту. Я (7)___ (зайшов/прийшов) у кілька музеїв. Один музей мені дуже сподобався, і я (8)___ (пробув/бував) там три години.\n>\n> (9)___ (На мою думку), Львів — найкрасивіше місто України. (10)___ (Загалом), поїздка була чудовою!\n\n**Answer Key:**\n1. їздив (round trip)\n2. вийшов (out)\n3. пішов (left for)\n4. відійшов (departed)\n5. проїхали (through)\n6. ходив (multiple directions)\n7. зайшов (stopped in)\n8. пробув (spent time)\n9. На мою думку\n10. Загалом\n\n### Section 5: Production (20 points)\n\n*Answer in Ukrainian. 5 points each.*\n\n**5.1** Write 3 sentences about what you did yesterday using different aspects.\n\n**Example answer:**\nУчора я прокинувся о сьомій (pf). Потім я снідав двадцять хвилин (impf). Після сніданку я прочитав статтю (pf).\n\n**5.2** Give directions from your home to a nearby store using motion verbs.\n\n**Example answer:**\nВийдіть з будинку і поверніть праворуч. Пройдіть до кінця вулиці. Перейдіть дорогу на світлофорі. Магазин буде зліва.\n\n**5.3** Express your opinion on learning languages. Use opinion expressions and reasons.\n\n**Example answer:**\nНа мою думку, вивчати іноземні мови дуже важливо, тому що це відкриває нові можливості. Я вважаю, що найкраще вчити мову в країні, де нею говорять.\n\n**5.4** Agree or disagree with this statement politely: \"Технології роблять людей щасливішими.\"\n\n**Example answer:**\nПочасти я згоден, тому що технології роблять життя зручнішим. Проте я не зовсім згоден, що вони роблять нас щасливішими. Можливо, важливіші речі — це відносини з людьми.\n\n## production\n\n### Self-Assessment\n\nAfter completing the checkpoint, assess yourself:\n\n**Aspect:** __ / 20\n- If <14: Review modules 81-88\n- Focus on: past/future? negation? imperatives?\n\n**Motion:** __ / 20\n- If <14: Review modules 89-94\n- Focus on: uni/multi? prefixes? figurative?\n\n**Functional:** __ / 20\n- If <14: Review modules 95-98\n- Focus on: opinions? agreement? hedging?\n\n**Integrated:** __ / 20\n- If <14: Practice combining all skills\n\n**Production:** __ / 20\n- If <14: More speaking/writing practice\n\n**Total:** __ / 100\n- 90+: Excellent! Ready for B1.2\n- 70-89: Good. Review weak areas, then continue.\n- <70: Review B1.1 before continuing.\n\n---\n\n\n---\n\n\n---"
       },
       {
-        "id": "presentation",
-        "title": "presentation",
-        "content": "### What to Remember\n\n**Aspect:**\n- Perfective = single, completed, result\n- Imperfective = duration, repetition, process\n- Negation generally uses imperfective\n- \"Ще не\" uses perfective\n\n**Motion:**\n- Unidirectional = one way, now\n- Multidirectional = round trip, habitual\n- Prefixes add direction + perfectivize\n\n**Communication:**\n- Hedge opinions: Мені здається, Можливо\n- Disagree politely: Я не зовсім згоден\n- Give reasons: тому що, оскільки",
-        "type": "topic"
-      },
-      {
-        "id": "practice",
-        "title": "practice",
-        "content": "### Section 1: Aspect Selection (20 points)\n\n*Choose the correct aspect. 2 points each.*\n\n1. Вона ___ (готувала/приготувала) вечерю три години.\n2. Нарешті він ___ (вчив/вивчив) усі правила!\n3. Я ніколи не ___ (бачив/побачив) моря.\n4. Він вже ___ (снідав/поснідав).\n5. Що ти ___ (робив/зробив) весь день?\n6. ___ (Читай/Прочитай) цю статтю до завтра!\n7. Вона завжди ___ (запізнювалася/запізнилася) на роботу.\n8. Я ___ (писав/написав) три листи вчора. (completed all three)\n9. ___ (Не забувай/Не забудь) зателефонувати! (warning)\n10. Він довго ___ (вирішував/вирішив) цю проблему.\n\n**Answer Key:**\n1. готувала (duration)\n2. вивчив (finally = result)\n3. бачив (never = impf)\n4. поснідав (already = result)\n5. робив (duration)\n6. Прочитай (deadline = pf)\n7. запізнювалася (always = impf)\n8. написав (completed = pf)\n9. Не забудь (warning = pf)\n10. вирішував (duration)\n\n### Section 2: Motion Verbs (20 points)\n\n*Choose the correct motion verb. 2 points each.*\n\n1. Куди ти ___ (йдеш/ходиш) зараз?\n2. Вона ___ (їде/їздить) на роботу автобусом щодня.\n3. Учора я ___ (йшов/ходив) у кіно.\n4. Він ___ (прийшов/вийшов) з кімнати.\n5. ___ (Перейдіть/Пройдіть) вулицю на світлофорі.\n6. Гості ___ (зайшлися/розійшлися) пізно.\n7. Вона ___ (зайшла/прийшла) до мене на каву.\n8. Поїзд ___ (прийшов/відійшов) п'ять хвилин тому.\n9. Риби добре ___ (пливуть/плавають).\n10. Ми ___ (переїхали/проїхали) до нового міста.\n\n**Answer Key:**\n1. йдеш (now = uni)\n2. їздить (every day = multi)\n3. ходив (round trip = multi)\n4. вийшов (out = ви-)\n5. Перейдіть (cross = пере-)\n6. розійшлися (dispersed = роз-)\n7. зайшла (dropped by = за-)\n8. відійшов (departed = від-)\n9. плавають (ability = multi)\n10. переїхали (moved = пере-)\n\n### Section 3: Functional Language (20 points)\n\n*Complete with appropriate expression. 2 points each.*\n\n1. ___ (In my opinion), це правильне рішення.\n2. Я ___ (am sure), що він прийде.\n3. ___ (Perhaps), ви маєте рацію.\n4. Я ___ (partly agree), але є проблеми.\n5. Вона зробила це ___ (because) мала досвід.\n6. ___ (On one hand), це добре. ___ (On the other hand), дорого.\n7. ___ (I'm afraid) я не можу погодитися.\n8. ___ (In general), я задоволений.\n9. Я ___ (would suggest) інший підхід.\n10. ___ (However), є альтернативи.\n\n**Answer Key:**\n1. На мою думку\n2. впевнений\n3. Можливо\n4. почасти згоден / частково згоден\n5. тому що / оскільки\n6. З одного боку, З іншого боку\n7. Боюся, що\n8. Загалом\n9. б запропонував\n10. Проте / Однак\n\n### Section 4: Integrated Skills (20 points)\n\n*Fill in the story with correct forms. 2 points each.*\n\n> Минулого тижня я (1)___ (їздив/їхав) до Львова. Вранці я (2)___ (вийшов/увійшов) з дому і (3)___ (пішов/ходив) на вокзал. Поїзд (4)___ (відійшов/прийшов) о восьмій. Ми (5)___ (проїхали/переїхали) через багато міст.\n>\n> У Львові я багато (6)___ (ходив/йшов) по місту. Я (7)___ (зайшов/прийшов) у кілька музеїв. Один музей мені дуже сподобався, і я (8)___ (пробув/бував) там три години.\n>\n> (9)___ (На мою думку), Львів — найкрасивіше місто України. (10)___ (Загалом), поїздка була чудовою!\n\n**Answer Key:**\n1. їздив (round trip)\n2. вийшов (out)\n3. пішов (left for)\n4. відійшов (departed)\n5. проїхали (through)\n6. ходив (multiple directions)\n7. зайшов (stopped in)\n8. пробув (spent time)\n9. На мою думку\n10. Загалом\n\n### Section 5: Production (20 points)\n\n*Answer in Ukrainian. 5 points each.*\n\n**5.1** Write 3 sentences about what you did yesterday using different aspects.\n\n**Example answer:**\nУчора я прокинувся о сьомій (pf). Потім я снідав двадцять хвилин (impf). Після сніданку я прочитав статтю (pf).\n\n**5.2** Give directions from your home to a nearby store using motion verbs.\n\n**Example answer:**\nВийдіть з будинку і поверніть праворуч. Пройдіть до кінця вулиці. Перейдіть дорогу на світлофорі. Магазин буде зліва.\n\n**5.3** Express your opinion on learning languages. Use opinion expressions and reasons.\n\n**Example answer:**\nНа мою думку, вивчати іноземні мови дуже важливо, тому що це відкриває нові можливості. Я вважаю, що найкраще вчити мову в країні, де нею говорять.\n\n**5.4** Agree or disagree with this statement politely: \"Технології роблять людей щасливішими.\"\n\n**Example answer:**\nПочасти я згоден, тому що технології роблять життя зручнішим. Проте я не зовсім згоден, що вони роблять нас щасливішими. Можливо, важливіші речі — це відносини з людьми.",
-        "type": "topic"
-      },
-      {
-        "id": "production",
-        "title": "production",
-        "content": "### Self-Assessment\n\nAfter completing the checkpoint, assess yourself:\n\n**Aspect:** __ / 20\n- If <14: Review modules 81-88\n- Focus on: past/future? negation? imperatives?\n\n**Motion:** __ / 20\n- If <14: Review modules 89-94\n- Focus on: uni/multi? prefixes? figurative?\n\n**Functional:** __ / 20\n- If <14: Review modules 95-98\n- Focus on: opinions? agreement? hedging?\n\n**Integrated:** __ / 20\n- If <14: Practice combining all skills\n\n**Production:** __ / 20\n- If <14: More speaking/writing practice\n\n**Total:** __ / 100\n- 90+: Excellent! Ready for B1.2\n- 70-89: Good. Review weak areas, then continue.\n- <70: Review B1.1 before continuing.\n\n---",
-        "type": "topic"
-      },
-      {
-        "id": "activities",
-        "title": "Activities",
-        "content": "## quiz: Final Assessment\n\n> This quiz tests all B1.1 skills.\n\n1. Він ___ листа і надіслав його.\n   - [x] написав\n   - [ ] писав\n   > The result (\"надіслав\") confirms the letter was completed, requiring perfective.\n\n2. Куди ти ___ ?\n   - [x] йдеш\n   - [ ] ходиш\n\n3. Гості ___ о півночі.\n   - [x] розійшлися\n   - [ ] прийшлися\n\n4. Я ___ , що це правильно.\n   - [x] вважаю\n   - [ ] вважав\n\n5. ___ вулицю тут!\n   - [x] Перейдіть\n   - [ ] Пройдіть\n\n6. Я ___ згоден.\n   - [x] не зовсім\n   - [ ] зовсім не\n\n## fill-in: Comprehensive Test\n\n> Вчора я (1)___ (went) на роботу пішки. По дорозі я (2)___ (stopped by) кав'ярню. Там я (3)___ (met) друга. Ми (4)___ (talked) п'ять хвилин.\n>\n> (5)___ (In my opinion), ходити пішки корисно. (6)___ (I agree) з тим, що це здорово. (7)___ (However), іноді (8)___ (I'm not sure), чи є час.\n\n**Answers:**\n1. пішов/ходив\n2. зайшов\n3. зустрів\n4. поговорили/говорили\n5. На мою думку\n6. Я погоджуюся\n7. Проте\n8. не впевнений\n\n---",
-        "type": "activities"
-      },
-      {
-        "id": "vocabulary",
-        "title": "Vocabulary",
-        "content": "| Word | IPA | English | Notes |\n|------|-----|---------|-------|\n| оцінювання | /ot͡sʲiˈnʲuvɑnʲːɑ/ | assessment | n |\n| результат | /rɛzulʲˈtɑt/ | result | m |\n| бал | /bɑl/ | point, score | m |\n| відповідь | /vʲidˈpovʲidʲ/ | answer | f |\n| правильна відповідь | - | correct answer | - |\n| неправильна відповідь | - | wrong answer | - |\n| перевірити | /pɛrɛˈvʲirɪtɪ/ | to check | pf |\n| виправити | /vɪˈprɑvɪtɪ/ | to correct | pf |\n| покращити | /pokrɑˈʃɪtɪ/ | to improve | pf |\n\n---",
-        "type": "vocabulary"
-      },
-      {
-        "id": "summary",
+        "id": "section-summary",
+        "type": "summary",
         "title": "Summary",
         "content": "## B1.1 Complete\n\nCongratulations on completing B1.1!\n\n### Skills Acquired\n\n**Grammar:**\n- Aspect mastery (perfective vs imperfective)\n- Motion verb system (14 pairs + 10 prefixes)\n\n**Vocabulary:**\n- 60+ aspect pairs\n- 30+ prefixed motion verbs\n- Abstract concepts vocabulary\n- Opinion and discussion expressions\n\n**Communication:**\n- Expressing and supporting opinions\n- Agreeing and disagreeing politely\n- Using hedging language\n\n### Next Steps\n\n**B1.2 (Modules 101-115):** Complex Sentences\n- Relative clauses\n- Purpose clauses (щоб)\n- Conditionals (якщо, якби)\n- Concessive and causal clauses\n\n**B1.3 (Modules 116-125):** Reported Speech & Participles\n\n**B1.4 (Modules 126-140):** Expansion & Integration\n\n> **Key Takeaways**\n>\n> - B1.1 builds foundation for complex communication\n> - Aspect and motion are unique to Slavic languages\n> - Functional language enables real conversations\n> - Continue practicing to build automaticity",
-        "type": "summary"
+        "titleUk": "Підсумок"
       }
-    ]
+    ],
+    "rawMarkdown": "---\nmodule: 100\ntitle: \"B1.1 Checkpoint\"\nsubtitle: \"Assessment of Aspect, Motion, and Communication\"\nlevel: B1\nphase: B1.1\nduration: 45\ntransliteration: none\ntags: [assessment, checkpoint, review]\nobjectives:\n  - Assess aspect selection mastery\n  - Assess motion verb competence\n  - Assess functional communication skills\n  - Identify areas for improvement\n---\n\n# Зміст уроку | Lesson Content\n\n## warm-up | Розминка\n\n### Огляд контрольної роботи | Checkpoint Overview\n\nЦя контрольна робота перевіряє ваші навички B1.1:\n\nThis checkpoint tests your B1.1 skills:\n\n**Section 1:** Aspect Selection (20 points)\n**Section 2:** Motion Verbs (20 points)\n**Section 3:** Functional Language (20 points)\n**Section 4:** Integrated Skills (20 points)\n**Section 5:** Production (20 points)\n\n**Total:** 100 points\n\n**Passing:** 70 points\n\n## presentation\n\n### What to Remember\n\n**Aspect:**\n- Perfective = single, completed, result\n- Imperfective = duration, repetition, process\n- Negation generally uses imperfective\n- \"Ще не\" uses perfective\n\n**Motion:**\n- Unidirectional = one way, now\n- Multidirectional = round trip, habitual\n- Prefixes add direction + perfectivize\n\n**Communication:**\n- Hedge opinions: Мені здається, Можливо\n- Disagree politely: Я не зовсім згоден\n- Give reasons: тому що, оскільки\n\n## practice\n\n### Section 1: Aspect Selection (20 points)\n\n*Choose the correct aspect. 2 points each.*\n\n1. Вона ___ (готувала/приготувала) вечерю три години.\n2. Нарешті він ___ (вчив/вивчив) усі правила!\n3. Я ніколи не ___ (бачив/побачив) моря.\n4. Він вже ___ (снідав/поснідав).\n5. Що ти ___ (робив/зробив) весь день?\n6. ___ (Читай/Прочитай) цю статтю до завтра!\n7. Вона завжди ___ (запізнювалася/запізнилася) на роботу.\n8. Я ___ (писав/написав) три листи вчора. (completed all three)\n9. ___ (Не забувай/Не забудь) зателефонувати! (warning)\n10. Він довго ___ (вирішував/вирішив) цю проблему.\n\n**Answer Key:**\n1. готувала (duration)\n2. вивчив (finally = result)\n3. бачив (never = impf)\n4. поснідав (already = result)\n5. робив (duration)\n6. Прочитай (deadline = pf)\n7. запізнювалася (always = impf)\n8. написав (completed = pf)\n9. Не забудь (warning = pf)\n10. вирішував (duration)\n\n### Section 2: Motion Verbs (20 points)\n\n*Choose the correct motion verb. 2 points each.*\n\n1. Куди ти ___ (йдеш/ходиш) зараз?\n2. Вона ___ (їде/їздить) на роботу автобусом щодня.\n3. Учора я ___ (йшов/ходив) у кіно.\n4. Він ___ (прийшов/вийшов) з кімнати.\n5. ___ (Перейдіть/Пройдіть) вулицю на світлофорі.\n6. Гості ___ (зайшлися/розійшлися) пізно.\n7. Вона ___ (зайшла/прийшла) до мене на каву.\n8. Поїзд ___ (прийшов/відійшов) п'ять хвилин тому.\n9. Риби добре ___ (пливуть/плавають).\n10. Ми ___ (переїхали/проїхали) до нового міста.\n\n**Answer Key:**\n1. йдеш (now = uni)\n2. їздить (every day = multi)\n3. ходив (round trip = multi)\n4. вийшов (out = ви-)\n5. Перейдіть (cross = пере-)\n6. розійшлися (dispersed = роз-)\n7. зайшла (dropped by = за-)\n8. відійшов (departed = від-)\n9. плавають (ability = multi)\n10. переїхали (moved = пере-)\n\n### Section 3: Functional Language (20 points)\n\n*Complete with appropriate expression. 2 points each.*\n\n1. ___ (In my opinion), це правильне рішення.\n2. Я ___ (am sure), що він прийде.\n3. ___ (Perhaps), ви маєте рацію.\n4. Я ___ (partly agree), але є проблеми.\n5. Вона зробила це ___ (because) мала досвід.\n6. ___ (On one hand), це добре. ___ (On the other hand), дорого.\n7. ___ (I'm afraid) я не можу погодитися.\n8. ___ (In general), я задоволений.\n9. Я ___ (would suggest) інший підхід.\n10. ___ (However), є альтернативи.\n\n**Answer Key:**\n1. На мою думку\n2. впевнений\n3. Можливо\n4. почасти згоден / частково згоден\n5. тому що / оскільки\n6. З одного боку, З іншого боку\n7. Боюся, що\n8. Загалом\n9. б запропонував\n10. Проте / Однак\n\n### Section 4: Integrated Skills (20 points)\n\n*Fill in the story with correct forms. 2 points each.*\n\n> Минулого тижня я (1)___ (їздив/їхав) до Львова. Вранці я (2)___ (вийшов/увійшов) з дому і (3)___ (пішов/ходив) на вокзал. Поїзд (4)___ (відійшов/прийшов) о восьмій. Ми (5)___ (проїхали/переїхали) через багато міст.\n>\n> У Львові я багато (6)___ (ходив/йшов) по місту. Я (7)___ (зайшов/прийшов) у кілька музеїв. Один музей мені дуже сподобався, і я (8)___ (пробув/бував) там три години.\n>\n> (9)___ (На мою думку), Львів — найкрасивіше місто України. (10)___ (Загалом), поїздка була чудовою!\n\n**Answer Key:**\n1. їздив (round trip)\n2. вийшов (out)\n3. пішов (left for)\n4. відійшов (departed)\n5. проїхали (through)\n6. ходив (multiple directions)\n7. зайшов (stopped in)\n8. пробув (spent time)\n9. На мою думку\n10. Загалом\n\n### Section 5: Production (20 points)\n\n*Answer in Ukrainian. 5 points each.*\n\n**5.1** Write 3 sentences about what you did yesterday using different aspects.\n\n**Example answer:**\nУчора я прокинувся о сьомій (pf). Потім я снідав двадцять хвилин (impf). Після сніданку я прочитав статтю (pf).\n\n**5.2** Give directions from your home to a nearby store using motion verbs.\n\n**Example answer:**\nВийдіть з будинку і поверніть праворуч. Пройдіть до кінця вулиці. Перейдіть дорогу на світлофорі. Магазин буде зліва.\n\n**5.3** Express your opinion on learning languages. Use opinion expressions and reasons.\n\n**Example answer:**\nНа мою думку, вивчати іноземні мови дуже важливо, тому що це відкриває нові можливості. Я вважаю, що найкраще вчити мову в країні, де нею говорять.\n\n**5.4** Agree or disagree with this statement politely: \"Технології роблять людей щасливішими.\"\n\n**Example answer:**\nПочасти я згоден, тому що технології роблять життя зручнішим. Проте я не зовсім згоден, що вони роблять нас щасливішими. Можливо, важливіші речі — це відносини з людьми.\n\n## production\n\n### Self-Assessment\n\nAfter completing the checkpoint, assess yourself:\n\n**Aspect:** __ / 20\n- If <14: Review modules 81-88\n- Focus on: past/future? negation? imperatives?\n\n**Motion:** __ / 20\n- If <14: Review modules 89-94\n- Focus on: uni/multi? prefixes? figurative?\n\n**Functional:** __ / 20\n- If <14: Review modules 95-98\n- Focus on: opinions? agreement? hedging?\n\n**Integrated:** __ / 20\n- If <14: Practice combining all skills\n\n**Production:** __ / 20\n- If <14: More speaking/writing practice\n\n**Total:** __ / 100\n- 90+: Excellent! Ready for B1.2\n- 70-89: Good. Review weak areas, then continue.\n- <70: Review B1.1 before continuing.\n\n---\n\n# Activities\n\n## quiz: Final Assessment\n\n> This quiz tests all B1.1 skills.\n\n1. Він ___ листа і надіслав його.\n   - [x] написав\n   - [ ] писав\n   > The result (\"надіслав\") confirms the letter was completed, requiring perfective.\n\n2. Куди ти ___ ?\n   - [x] йдеш\n   - [ ] ходиш\n\n3. Гості ___ о півночі.\n   - [x] розійшлися\n   - [ ] прийшлися\n\n4. Я ___ , що це правильно.\n   - [x] вважаю\n   - [ ] вважав\n\n5. ___ вулицю тут!\n   - [x] Перейдіть\n   - [ ] Пройдіть\n\n6. Я ___ згоден.\n   - [x] не зовсім\n   - [ ] зовсім не\n\n## fill-in: Comprehensive Test\n\n> Вчора я (1)___ (went) на роботу пішки. По дорозі я (2)___ (stopped by) кав'ярню. Там я (3)___ (met) друга. Ми (4)___ (talked) п'ять хвилин.\n>\n> (5)___ (In my opinion), ходити пішки корисно. (6)___ (I agree) з тим, що це здорово. (7)___ (However), іноді (8)___ (I'm not sure), чи є час.\n\n**Answers:**\n1. пішов/ходив\n2. зайшов\n3. зустрів\n4. поговорили/говорили\n5. На мою думку\n6. Я погоджуюся\n7. Проте\n8. не впевнений\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | Notes |\n|------|-----|---------|-------|\n| оцінювання | /ot͡sʲiˈnʲuvɑnʲːɑ/ | assessment | n |\n| результат | /rɛzulʲˈtɑt/ | result | m |\n| бал | /bɑl/ | point, score | m |\n| відповідь | /vʲidˈpovʲidʲ/ | answer | f |\n| правильна відповідь | - | correct answer | - |\n| неправильна відповідь | - | wrong answer | - |\n| перевірити | /pɛrɛˈvʲirɪtɪ/ | to check | pf |\n| виправити | /vɪˈprɑvɪtɪ/ | to correct | pf |\n| покращити | /pokrɑˈʃɪtɪ/ | to improve | pf |\n\n---\n\n# Summary\n\n## B1.1 Complete\n\nCongratulations on completing B1.1!\n\n### Skills Acquired\n\n**Grammar:**\n- Aspect mastery (perfective vs imperfective)\n- Motion verb system (14 pairs + 10 prefixes)\n\n**Vocabulary:**\n- 60+ aspect pairs\n- 30+ prefixed motion verbs\n- Abstract concepts vocabulary\n- Opinion and discussion expressions\n\n**Communication:**\n- Expressing and supporting opinions\n- Agreeing and disagreeing politely\n- Using hedging language\n\n### Next Steps\n\n**B1.2 (Modules 101-115):** Complex Sentences\n- Relative clauses\n- Purpose clauses (щоб)\n- Conditionals (якщо, якби)\n- Concessive and causal clauses\n\n**B1.3 (Modules 116-125):** Reported Speech & Participles\n\n**B1.4 (Modules 126-140):** Expansion & Integration\n\n> **Key Takeaways**\n>\n> - B1.1 builds foundation for complex communication\n> - Aspect and motion are unique to Slavic languages\n> - Functional language enables real conversations\n> - Continue practicing to build automaticity\n"
   },
   "activities": [
     {
-      "id": "act-uk-B1-100-quiz",
+      "id": "act-b1-100-quiz",
       "type": "quiz",
       "title": "Final Assessment",
       "description": "This quiz tests all B1.1 skills.",
       "content": {
         "type": "quiz",
-        "instructions": "This quiz tests all B1.1 skills.",
         "questions": [
           {
             "question": "Він ___ листа і надіслав його.",
@@ -227,46 +146,49 @@
       "language": "uk",
       "difficultyLevel": "B1",
       "duration": 5,
-      "tags": [
-        "assessment",
-        "checkpoint",
-        "review"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.229Z",
+      "modifiedAt": "2025-12-01T22:58:37.229Z"
     },
     {
-      "id": "act-uk-B1-100-gapfill",
+      "id": "act-b1-100-gapfill",
       "type": "gap-fill",
       "title": "Comprehensive Test",
       "description": "Вчора я (1)___ (went) на роботу пішки. По дорозі я (2)___ (stopped by) кав'ярню. Там я (3)___ (met) друга. Ми (4)___ (talked) п'ять хвилин.  (5)___ (In my opinion), ходити пішки корисно. (6)___ (I agree) з тим, що це здорово. (7)___ (However), іноді (8)___ (I'm not sure), чи є час.",
       "content": {
         "type": "gap-fill",
-        "instructions": "Вчора я (1)___ (went) на роботу пішки. По дорозі я (2)___ (stopped by) кав'ярню. Там я (3)___ (met) друга. Ми (4)___ (talked) п'ять хвилин.  (5)___ (In my opinion), ходити пішки корисно. (6)___ (I agree) з тим, що це здорово. (7)___ (However), іноді (8)___ (I'm not sure), чи є час.",
         "text": "Вчора я (1)___ (went) на роботу пішки. По дорозі я (2)___ (stopped by) кав'ярню. Там я (3)___ (met) друга. Ми (4)___ (talked) п'ять хвилин.\n\n(5)___ (In my opinion), ходити пішки корисно. (6)___ (I agree) з тим, що це здорово. (7)___ (However), іноді (8)___ (I'm not sure), чи є час.",
         "blanks": [
           {
+            "index": 0,
             "hint": "went"
           },
           {
+            "index": 1,
             "hint": "stopped by"
           },
           {
+            "index": 2,
             "hint": "met"
           },
           {
+            "index": 3,
             "hint": "talked"
           },
           {
+            "index": 4,
             "hint": "In my opinion"
           },
           {
+            "index": 5,
             "hint": "I agree"
           },
           {
+            "index": 6,
             "hint": "However"
           },
           {
+            "index": 7,
             "hint": "I'm not sure"
           }
         ],
@@ -280,13 +202,9 @@
       "language": "uk",
       "difficultyLevel": "B1",
       "duration": 5,
-      "tags": [
-        "assessment",
-        "checkpoint",
-        "review"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.229Z",
+      "modifiedAt": "2025-12-01T22:58:37.229Z"
     }
   ],
   "vocabulary": {
@@ -297,85 +215,65 @@
     "transliterationMode": "none",
     "words": [
       {
-        "id": "v-m100-001",
+        "id": "v-otsinyuvannya-100-0",
         "uk": "оцінювання",
-        "translit": "",
-        "ipa": "/ot͡sʲiˈnʲuvɑnʲːɑ/",
         "en": "assessment",
-        "pos": "",
-        "note": "n"
+        "pos": "n",
+        "ipa": "/ot͡sʲiˈnʲuvɑnʲːɑ/"
       },
       {
-        "id": "v-m100-002",
+        "id": "v-rezulьtat-100-1",
         "uk": "результат",
-        "translit": "",
-        "ipa": "/rɛzulʲˈtɑt/",
         "en": "result",
-        "pos": "",
-        "note": "m"
+        "pos": "m",
+        "ipa": "/rɛzulʲˈtɑt/"
       },
       {
-        "id": "v-m100-003",
+        "id": "v-bal-100-2",
         "uk": "бал",
-        "translit": "",
-        "ipa": "/bɑl/",
         "en": "point, score",
-        "pos": "",
-        "note": "m"
+        "pos": "m",
+        "ipa": "/bɑl/"
       },
       {
-        "id": "v-m100-004",
+        "id": "v-vidpovidь-100-3",
         "uk": "відповідь",
-        "translit": "",
-        "ipa": "/vʲidˈpovʲidʲ/",
         "en": "answer",
-        "pos": "",
-        "note": "f"
+        "pos": "f",
+        "ipa": "/vʲidˈpovʲidʲ/"
       },
       {
-        "id": "v-m100-005",
+        "id": "v-pravylьna-vidpovidь-100-4",
         "uk": "правильна відповідь",
-        "translit": "",
-        "ipa": "-",
         "en": "correct answer",
-        "pos": "",
-        "note": "-"
+        "pos": "-"
       },
       {
-        "id": "v-m100-006",
+        "id": "v-nepravylьna-vidpovidь-100-5",
         "uk": "неправильна відповідь",
-        "translit": "",
-        "ipa": "-",
         "en": "wrong answer",
-        "pos": "",
-        "note": "-"
+        "pos": "-"
       },
       {
-        "id": "v-m100-007",
+        "id": "v-pereviryty-100-6",
         "uk": "перевірити",
-        "translit": "",
-        "ipa": "/pɛrɛˈvʲirɪtɪ/",
         "en": "to check",
-        "pos": "",
-        "note": "pf"
+        "pos": "pf",
+        "ipa": "/pɛrɛˈvʲirɪtɪ/"
       },
       {
-        "id": "v-m100-008",
+        "id": "v-vypravyty-100-7",
         "uk": "виправити",
-        "translit": "",
-        "ipa": "/vɪˈprɑvɪtɪ/",
         "en": "to correct",
-        "pos": "",
-        "note": "pf"
+        "pos": "pf",
+        "ipa": "/vɪˈprɑvɪtɪ/"
       },
       {
-        "id": "v-m100-009",
+        "id": "v-pokrashchyty-100-8",
         "uk": "покращити",
-        "translit": "",
-        "ipa": "/pokrɑˈʃɪtɪ/",
         "en": "to improve",
-        "pos": "",
-        "note": "pf"
+        "pos": "pf",
+        "ipa": "/pokrɑˈʃɪtɪ/"
       }
     ]
   }

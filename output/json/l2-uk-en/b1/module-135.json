@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-B1-135",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "vocabulary-expansion",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -22,171 +21,43 @@
       "Expand expressive vocabulary"
     ],
     "grammarFocus": [],
-    "totalDuration": 45,
-    "transliterationMode": "none",
     "tags": [
       "vocabulary",
       "idioms",
       "expressions",
       "figurative"
     ],
+    "totalDuration": 45,
+    "transliterationMode": "none",
+    "phases": [],
+    "createdAt": "2025-12-01T22:58:37.240Z",
+    "modifiedAt": "2025-12-01T22:58:37.240Z",
     "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
-    "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Що таке ідіома? | What Is an Idiom?\n\nІдіома — вираз, значення якого не випливає зі слів:\n\nAn idiom is an expression whose meaning doesn't come from its words:\n\n- **Байдики бити** ≠ to beat idlers\n- **Байдики бити** = to do nothing, be idle\n\nІдіоми роблять мову живою та виразною!"
-          }
-        ]
-      },
-      {
-        "id": "phase-presentation",
-        "name": "presentation",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Ідіоми з частинами тіла | Body Part Idioms\n\n| Idiom | Literal | Meaning | Example |\n|-------|---------|---------|---------|\n| мати голову на плечах | have head on shoulders | be smart | Він має голову на плечах. |\n| ламати голову | break head | think hard | Ламаю голову над задачею. |\n| в одне вухо влітає, в інше вилітає | in one ear, out the other | not remember | Все в одне вухо влітає... |\n| тримати язик за зубами | keep tongue behind teeth | keep secret | Тримай язик за зубами! |\n| показати зуби | show teeth | resist, fight back | Він показав зуби. |\n| з'їсти очима | eat with eyes | stare at | Вона з'їла його очима. |\n| пальцем не ворухнути | not move a finger | do nothing | Він пальцем не ворухнув. |\n| бути по вуха | be up to ears | be deeply in | По вуха в роботі. |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Ідіоми з тваринами | Animal Idioms\n\n| Idiom | Literal | Meaning | Example |\n|-------|---------|---------|---------|\n| коли рак свисне | when crayfish whistles | never | Це станеться, коли рак свисне. |\n| робити з мухи слона | make elephant from fly | exaggerate | Не роби з мухи слона! |\n| собаку з'їсти | eat a dog | be expert | Він собаку з'їв на цьому. |\n| як кіт наплакав | as much as cat cried | very little | Грошей як кіт наплакав. |\n| вовком дивитися | look like wolf | look angry | Чого вовком дивишся? |\n| купувати кота в мішку | buy cat in bag | buy blindly | Не купуй кота в мішку! |\n| робити ведмежу послугу | do bear's service | do disservice | Ти робиш мені ведмежу послугу. |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Ідіоми про час | Time Idioms\n\n| Idiom | Meaning | Example |\n|-------|---------|---------|\n| з ранку до ночі | from morning to night | Працює з ранку до ночі. |\n| тягнути час | drag time, delay | Не тягни час! |\n| час від часу | from time to time | Бачимось час від часу. |\n| на хвилинку | for a minute | Зайди на хвилинку. |\n| вже давно | for a long time now | Я вже давно це знаю. |\n| одного разу | once upon a time | Одного разу він прийшов... |\n| рано чи пізно | sooner or later | Рано чи пізно він зрозуміє. |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Ідіоми про стан | State Idioms\n\n| Idiom | Meaning | Example |\n|-------|---------|---------|\n| бути не в своїй тарілці | feel out of place | Я сьогодні не в своїй тарілці. |\n| бути на сьомому небі | be on cloud nine | Вона на сьомому небі. |\n| сидіти як на голках | sit on pins and needles | Сиджу як на голках. |\n| триматися на плаву | stay afloat | Він ледь тримається на плаву. |\n| бути між двох вогнів | be between two fires | Я між двох вогнів. |\n| висіти на волоску | hang by a thread | Його життя висить на волоску. |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Ідіоми про роботу | Work Idioms\n\n| Idiom | Meaning | Example |\n|-------|---------|---------|\n| байдики бити | be idle | Він цілий день байдики б'є. |\n| працювати не покладаючи рук | work without rest | Вона працює не покладаючи рук. |\n| гнути спину | bend one's back | Гну спину на роботі. |\n| братися за розум | get down to work | Пора братися за розум! |\n| мати руки | be skilled | Він має руки! |\n| без труднощів | without difficulties | Все пройшло без труднощів. |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Ідіоми про гроші | Money Idioms\n\n| Idiom | Meaning | Example |\n|-------|---------|---------|\n| грошей як сміття | loads of money | У нього грошей як сміття. |\n| на мілині | broke | Я на мілині. |\n| кидати гроші на вітер | throw money to the wind | Він кидає гроші на вітер. |\n| платити готівкою | pay cash | Плачу готівкою. |\n| за безцінь | for nothing, very cheap | Купив за безцінь. |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Інші популярні ідіоми | Other Popular Idioms\n\n| Idiom | Meaning | Example |\n|-------|---------|---------|\n| як з неба впасти | fall from sky | Він як з неба впав! |\n| як грім серед ясного неба | like thunder from clear sky | Новина була як грім серед ясного неба. |\n| ні риба ні м'ясо | neither fish nor meat | Він ні риба ні м'ясо. |\n| як вода | easily | Все йде як вода. |\n| палець об палець не вдарити | not lift a finger | Він палець об палець не вдарив. |"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Match Idiom to Meaning\n\n1. коли рак свисне — a) never\n2. робити з мухи слона — b) exaggerate\n3. собаку з'їсти — c) be expert\n4. як кіт наплакав — d) very little\n5. байдики бити — e) be idle"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Complete with Correct Idiom\n\n1. Він дуже розумний. Він ___ (is smart).\n   → **має голову на плечах**\n\n2. Я дуже хвилююся. Сиджу ___ (nervously waiting).\n   → **як на голках**\n\n3. Грошей майже немає — ___ (very little).\n   → **як кіт наплакав**\n\n4. Він спеціаліст — ___ (is expert) в цій справі.\n   → **собаку з'їв**\n\n5. Не перебільшуй! Не ___ (don't exaggerate)!\n   → **роби з мухи слона**"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Translate Using Idioms\n\n1. He does nothing all day.\n   → **Він цілий день байдики б'є.**\n\n2. I'm on cloud nine!\n   → **Я на сьомому небі!**\n\n3. Keep it a secret!\n   → **Тримай язик за зубами!**\n\n4. That will never happen.\n   → **Це станеться, коли рак свисне.**"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-B1-135-quiz"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Use Idioms in Context\n\nTell a story using 3-5 idioms:\n\n**Example:**\n«Одного разу я отримав новину — як грім серед ясного неба! Я був на сьомому небі! Працював не покладаючи рук, щоб все встигнути.»"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Describe Situations\n\nUse idioms to describe:\n\n1. A lazy person\n2. A busy person\n3. A happy moment\n4. A nervous situation"
-          }
-        ]
-      }
-    ],
-    "rawMarkdown": "# Зміст уроку | Lesson Content\n\n## warm-up | Розминка\n\n### Що таке ідіома? | What Is an Idiom?\n\nІдіома — вираз, значення якого не випливає зі слів:\n\nAn idiom is an expression whose meaning doesn't come from its words:\n\n- **Байдики бити** ≠ to beat idlers\n- **Байдики бити** = to do nothing, be idle\n\nІдіоми роблять мову живою та виразною!\n\n## presentation | Презентація\n\n### Ідіоми з частинами тіла | Body Part Idioms\n\n| Idiom | Literal | Meaning | Example |\n|-------|---------|---------|---------|\n| мати голову на плечах | have head on shoulders | be smart | Він має голову на плечах. |\n| ламати голову | break head | think hard | Ламаю голову над задачею. |\n| в одне вухо влітає, в інше вилітає | in one ear, out the other | not remember | Все в одне вухо влітає... |\n| тримати язик за зубами | keep tongue behind teeth | keep secret | Тримай язик за зубами! |\n| показати зуби | show teeth | resist, fight back | Він показав зуби. |\n| з'їсти очима | eat with eyes | stare at | Вона з'їла його очима. |\n| пальцем не ворухнути | not move a finger | do nothing | Він пальцем не ворухнув. |\n| бути по вуха | be up to ears | be deeply in | По вуха в роботі. |\n\n### Ідіоми з тваринами | Animal Idioms\n\n| Idiom | Literal | Meaning | Example |\n|-------|---------|---------|---------|\n| коли рак свисне | when crayfish whistles | never | Це станеться, коли рак свисне. |\n| робити з мухи слона | make elephant from fly | exaggerate | Не роби з мухи слона! |\n| собаку з'їсти | eat a dog | be expert | Він собаку з'їв на цьому. |\n| як кіт наплакав | as much as cat cried | very little | Грошей як кіт наплакав. |\n| вовком дивитися | look like wolf | look angry | Чого вовком дивишся? |\n| купувати кота в мішку | buy cat in bag | buy blindly | Не купуй кота в мішку! |\n| робити ведмежу послугу | do bear's service | do disservice | Ти робиш мені ведмежу послугу. |\n\n### Ідіоми про час | Time Idioms\n\n| Idiom | Meaning | Example |\n|-------|---------|---------|\n| з ранку до ночі | from morning to night | Працює з ранку до ночі. |\n| тягнути час | drag time, delay | Не тягни час! |\n| час від часу | from time to time | Бачимось час від часу. |\n| на хвилинку | for a minute | Зайди на хвилинку. |\n| вже давно | for a long time now | Я вже давно це знаю. |\n| одного разу | once upon a time | Одного разу він прийшов... |\n| рано чи пізно | sooner or later | Рано чи пізно він зрозуміє. |\n\n### Ідіоми про стан | State Idioms\n\n| Idiom | Meaning | Example |\n|-------|---------|---------|\n| бути не в своїй тарілці | feel out of place | Я сьогодні не в своїй тарілці. |\n| бути на сьомому небі | be on cloud nine | Вона на сьомому небі. |\n| сидіти як на голках | sit on pins and needles | Сиджу як на голках. |\n| триматися на плаву | stay afloat | Він ледь тримається на плаву. |\n| бути між двох вогнів | be between two fires | Я між двох вогнів. |\n| висіти на волоску | hang by a thread | Його життя висить на волоску. |\n\n### Ідіоми про роботу | Work Idioms\n\n| Idiom | Meaning | Example |\n|-------|---------|---------|\n| байдики бити | be idle | Він цілий день байдики б'є. |\n| працювати не покладаючи рук | work without rest | Вона працює не покладаючи рук. |\n| гнути спину | bend one's back | Гну спину на роботі. |\n| братися за розум | get down to work | Пора братися за розум! |\n| мати руки | be skilled | Він має руки! |\n| без труднощів | without difficulties | Все пройшло без труднощів. |\n\n### Ідіоми про гроші | Money Idioms\n\n| Idiom | Meaning | Example |\n|-------|---------|---------|\n| грошей як сміття | loads of money | У нього грошей як сміття. |\n| на мілині | broke | Я на мілині. |\n| кидати гроші на вітер | throw money to the wind | Він кидає гроші на вітер. |\n| платити готівкою | pay cash | Плачу готівкою. |\n| за безцінь | for nothing, very cheap | Купив за безцінь. |\n\n### Інші популярні ідіоми | Other Popular Idioms\n\n| Idiom | Meaning | Example |\n|-------|---------|---------|\n| як з неба впасти | fall from sky | Він як з неба впав! |\n| як грім серед ясного неба | like thunder from clear sky | Новина була як грім серед ясного неба. |\n| ні риба ні м'ясо | neither fish nor meat | Він ні риба ні м'ясо. |\n| як вода | easily | Все йде як вода. |\n| палець об палець не вдарити | not lift a finger | Він палець об палець не вдарив. |\n\n## practice | Практика\n\n### Match Idiom to Meaning\n\n1. коли рак свисне — a) never\n2. робити з мухи слона — b) exaggerate\n3. собаку з'їсти — c) be expert\n4. як кіт наплакав — d) very little\n5. байдики бити — e) be idle\n\n### Complete with Correct Idiom\n\n1. Він дуже розумний. Він ___ (is smart).\n   → **має голову на плечах**\n\n2. Я дуже хвилююся. Сиджу ___ (nervously waiting).\n   → **як на голках**\n\n3. Грошей майже немає — ___ (very little).\n   → **як кіт наплакав**\n\n4. Він спеціаліст — ___ (is expert) в цій справі.\n   → **собаку з'їв**\n\n5. Не перебільшуй! Не ___ (don't exaggerate)!\n   → **роби з мухи слона**\n\n### Translate Using Idioms\n\n1. He does nothing all day.\n   → **Він цілий день байдики б'є.**\n\n2. I'm on cloud nine!\n   → **Я на сьомому небі!**\n\n3. Keep it a secret!\n   → **Тримай язик за зубами!**\n\n4. That will never happen.\n   → **Це станеться, коли рак свисне.**\n\n## production | Продукція\n\n### Use Idioms in Context\n\nTell a story using 3-5 idioms:\n\n**Example:**\n«Одного разу я отримав новину — як грім серед ясного неба! Я був на сьомому небі! Працював не покладаючи рук, щоб все встигнути.»\n\n### Describe Situations\n\nUse idioms to describe:\n\n1. A lazy person\n2. A busy person\n3. A happy moment\n4. A nervous situation\n\n---\n\n# Activities\n\n## quiz: Idiom Meanings\n\n> Choose the correct meaning.\n\n1. «Коли рак свисне» означає:\n   - [x] ніколи\n   - [ ] скоро\n   > Never.\n\n2. «Робити з мухи слона»:\n   - [x] перебільшувати\n   - [ ] працювати\n   > Exaggerate.\n\n3. «Як кіт наплакав»:\n   - [x] дуже мало\n   - [ ] дуже багато\n   > Very little.\n\n4. «Бути на сьомому небі»:\n   - [x] бути дуже щасливим\n   - [ ] бути сумним\n   > Be very happy.\n\n5. «Байдики бити»:\n   - [x] нічого не робити\n   - [ ] працювати\n   > Be idle.\n\n6. «Тримати язик за зубами»:\n   - [x] зберігати таємницю\n   - [ ] говорити багато\n   > Keep secret.\n\n## fill-in: Story with Idioms\n\n> Вставте ідіоми.\n\n> Мій друг Петро (1)___ (is very smart). Але минулого тижня він (2)___ (was very nervous) перед іспитом. Він (3)___ (worked hard) цілий тиждень. І — новина (4)___ (was unexpected)! — він здав на відмінно! Тепер він (5)___ (is very happy).\n\n**Answers:**\n1. має голову на плечах\n2. сидів як на голках\n3. працював не покладаючи рук\n4. була як грім серед ясного неба (or: впала як грім)\n5. на сьомому небі\n\n---",
     "immersiveSections": [
       {
-        "id": "warm-up-розминка",
-        "title": "warm-up | Розминка",
-        "content": "### Що таке ідіома? | What Is an Idiom?\n\nІдіома — вираз, значення якого не випливає зі слів:\n\nAn idiom is an expression whose meaning doesn't come from its words:\n\n- **Байдики бити** ≠ to beat idlers\n- **Байдики бити** = to do nothing, be idle\n\nІдіоми роблять мову живою та виразною!",
-        "type": "topic"
+        "id": "section-зміст-уроку-lesson-content",
+        "type": "content",
+        "title": "Зміст уроку | Lesson Content",
+        "content": "## warm-up | Розминка\n\n### Що таке ідіома? | What Is an Idiom?\n\nІдіома — вираз, значення якого не випливає зі слів:\n\nAn idiom is an expression whose meaning doesn't come from its words:\n\n- **Байдики бити** ≠ to beat idlers\n- **Байдики бити** = to do nothing, be idle\n\nІдіоми роблять мову живою та виразною!\n\n## presentation | Презентація\n\n### Ідіоми з частинами тіла | Body Part Idioms\n\n| Idiom | Literal | Meaning | Example |\n|-------|---------|---------|---------|\n| мати голову на плечах | have head on shoulders | be smart | Він має голову на плечах. |\n| ламати голову | break head | think hard | Ламаю голову над задачею. |\n| в одне вухо влітає, в інше вилітає | in one ear, out the other | not remember | Все в одне вухо влітає... |\n| тримати язик за зубами | keep tongue behind teeth | keep secret | Тримай язик за зубами! |\n| показати зуби | show teeth | resist, fight back | Він показав зуби. |\n| з'їсти очима | eat with eyes | stare at | Вона з'їла його очима. |\n| пальцем не ворухнути | not move a finger | do nothing | Він пальцем не ворухнув. |\n| бути по вуха | be up to ears | be deeply in | По вуха в роботі. |\n\n### Ідіоми з тваринами | Animal Idioms\n\n| Idiom | Literal | Meaning | Example |\n|-------|---------|---------|---------|\n| коли рак свисне | when crayfish whistles | never | Це станеться, коли рак свисне. |\n| робити з мухи слона | make elephant from fly | exaggerate | Не роби з мухи слона! |\n| собаку з'їсти | eat a dog | be expert | Він собаку з'їв на цьому. |\n| як кіт наплакав | as much as cat cried | very little | Грошей як кіт наплакав. |\n| вовком дивитися | look like wolf | look angry | Чого вовком дивишся? |\n| купувати кота в мішку | buy cat in bag | buy blindly | Не купуй кота в мішку! |\n| робити ведмежу послугу | do bear's service | do disservice | Ти робиш мені ведмежу послугу. |\n\n### Ідіоми про час | Time Idioms\n\n| Idiom | Meaning | Example |\n|-------|---------|---------|\n| з ранку до ночі | from morning to night | Працює з ранку до ночі. |\n| тягнути час | drag time, delay | Не тягни час! |\n| час від часу | from time to time | Бачимось час від часу. |\n| на хвилинку | for a minute | Зайди на хвилинку. |\n| вже давно | for a long time now | Я вже давно це знаю. |\n| одного разу | once upon a time | Одного разу він прийшов... |\n| рано чи пізно | sooner or later | Рано чи пізно він зрозуміє. |\n\n### Ідіоми про стан | State Idioms\n\n| Idiom | Meaning | Example |\n|-------|---------|---------|\n| бути не в своїй тарілці | feel out of place | Я сьогодні не в своїй тарілці. |\n| бути на сьомому небі | be on cloud nine | Вона на сьомому небі. |\n| сидіти як на голках | sit on pins and needles | Сиджу як на голках. |\n| триматися на плаву | stay afloat | Він ледь тримається на плаву. |\n| бути між двох вогнів | be between two fires | Я між двох вогнів. |\n| висіти на волоску | hang by a thread | Його життя висить на волоску. |\n\n### Ідіоми про роботу | Work Idioms\n\n| Idiom | Meaning | Example |\n|-------|---------|---------|\n| байдики бити | be idle | Він цілий день байдики б'є. |\n| працювати не покладаючи рук | work without rest | Вона працює не покладаючи рук. |\n| гнути спину | bend one's back | Гну спину на роботі. |\n| братися за розум | get down to work | Пора братися за розум! |\n| мати руки | be skilled | Він має руки! |\n| без труднощів | without difficulties | Все пройшло без труднощів. |\n\n### Ідіоми про гроші | Money Idioms\n\n| Idiom | Meaning | Example |\n|-------|---------|---------|\n| грошей як сміття | loads of money | У нього грошей як сміття. |\n| на мілині | broke | Я на мілині. |\n| кидати гроші на вітер | throw money to the wind | Він кидає гроші на вітер. |\n| платити готівкою | pay cash | Плачу готівкою. |\n| за безцінь | for nothing, very cheap | Купив за безцінь. |\n\n### Інші популярні ідіоми | Other Popular Idioms\n\n| Idiom | Meaning | Example |\n|-------|---------|---------|\n| як з неба впасти | fall from sky | Він як з неба впав! |\n| як грім серед ясного неба | like thunder from clear sky | Новина була як грім серед ясного неба. |\n| ні риба ні м'ясо | neither fish nor meat | Він ні риба ні м'ясо. |\n| як вода | easily | Все йде як вода. |\n| палець об палець не вдарити | not lift a finger | Він палець об палець не вдарив. |\n\n## practice | Практика\n\n### Match Idiom to Meaning\n\n1. коли рак свисне — a) never\n2. робити з мухи слона — b) exaggerate\n3. собаку з'їсти — c) be expert\n4. як кіт наплакав — d) very little\n5. байдики бити — e) be idle\n\n### Complete with Correct Idiom\n\n1. Він дуже розумний. Він ___ (is smart).\n   > [!answer] **має голову на плечах**\n2. Я дуже хвилююся. Сиджу ___ (nervously waiting).\n   > [!answer] **як на голках**\n3. Грошей майже немає — ___ (very little).\n   > [!answer] **як кіт наплакав**\n4. Він спеціаліст — ___ (is expert) в цій справі.\n   > [!answer] **собаку з'їв**\n5. Не перебільшуй! Не ___ (don't exaggerate)!\n   > [!answer] **роби з мухи слона**\n### Translate Using Idioms\n\n1. He does nothing all day.\n   > [!answer] **Він цілий день байдики б'є.**\n2. I'm on cloud nine!\n   > [!answer] **Я на сьомому небі!**\n3. Keep it a secret!\n   > [!answer] **Тримай язик за зубами!**\n4. That will never happen.\n   > [!answer] **Це станеться, коли рак свисне.**\n## production | Продукція\n\n### Use Idioms in Context\n\nTell a story using 3-5 idioms:\n\n**Example:**\n«Одного разу я отримав новину — як грім серед ясного неба! Я був на сьомому небі! Працював не покладаючи рук, щоб все встигнути.»\n\n### Describe Situations\n\nUse idioms to describe:\n\n1. A lazy person\n2. A busy person\n3. A happy moment\n4. A nervous situation\n\n---\n\n\n---\n\n\n---"
       },
       {
-        "id": "presentation-презентація",
-        "title": "presentation | Презентація",
-        "content": "### Ідіоми з частинами тіла | Body Part Idioms\n\n| Idiom | Literal | Meaning | Example |\n|-------|---------|---------|---------|\n| мати голову на плечах | have head on shoulders | be smart | Він має голову на плечах. |\n| ламати голову | break head | think hard | Ламаю голову над задачею. |\n| в одне вухо влітає, в інше вилітає | in one ear, out the other | not remember | Все в одне вухо влітає... |\n| тримати язик за зубами | keep tongue behind teeth | keep secret | Тримай язик за зубами! |\n| показати зуби | show teeth | resist, fight back | Він показав зуби. |\n| з'їсти очима | eat with eyes | stare at | Вона з'їла його очима. |\n| пальцем не ворухнути | not move a finger | do nothing | Він пальцем не ворухнув. |\n| бути по вуха | be up to ears | be deeply in | По вуха в роботі. |\n\n### Ідіоми з тваринами | Animal Idioms\n\n| Idiom | Literal | Meaning | Example |\n|-------|---------|---------|---------|\n| коли рак свисне | when crayfish whistles | never | Це станеться, коли рак свисне. |\n| робити з мухи слона | make elephant from fly | exaggerate | Не роби з мухи слона! |\n| собаку з'їсти | eat a dog | be expert | Він собаку з'їв на цьому. |\n| як кіт наплакав | as much as cat cried | very little | Грошей як кіт наплакав. |\n| вовком дивитися | look like wolf | look angry | Чого вовком дивишся? |\n| купувати кота в мішку | buy cat in bag | buy blindly | Не купуй кота в мішку! |\n| робити ведмежу послугу | do bear's service | do disservice | Ти робиш мені ведмежу послугу. |\n\n### Ідіоми про час | Time Idioms\n\n| Idiom | Meaning | Example |\n|-------|---------|---------|\n| з ранку до ночі | from morning to night | Працює з ранку до ночі. |\n| тягнути час | drag time, delay | Не тягни час! |\n| час від часу | from time to time | Бачимось час від часу. |\n| на хвилинку | for a minute | Зайди на хвилинку. |\n| вже давно | for a long time now | Я вже давно це знаю. |\n| одного разу | once upon a time | Одного разу він прийшов... |\n| рано чи пізно | sooner or later | Рано чи пізно він зрозуміє. |\n\n### Ідіоми про стан | State Idioms\n\n| Idiom | Meaning | Example |\n|-------|---------|---------|\n| бути не в своїй тарілці | feel out of place | Я сьогодні не в своїй тарілці. |\n| бути на сьомому небі | be on cloud nine | Вона на сьомому небі. |\n| сидіти як на голках | sit on pins and needles | Сиджу як на голках. |\n| триматися на плаву | stay afloat | Він ледь тримається на плаву. |\n| бути між двох вогнів | be between two fires | Я між двох вогнів. |\n| висіти на волоску | hang by a thread | Його життя висить на волоску. |\n\n### Ідіоми про роботу | Work Idioms\n\n| Idiom | Meaning | Example |\n|-------|---------|---------|\n| байдики бити | be idle | Він цілий день байдики б'є. |\n| працювати не покладаючи рук | work without rest | Вона працює не покладаючи рук. |\n| гнути спину | bend one's back | Гну спину на роботі. |\n| братися за розум | get down to work | Пора братися за розум! |\n| мати руки | be skilled | Він має руки! |\n| без труднощів | without difficulties | Все пройшло без труднощів. |\n\n### Ідіоми про гроші | Money Idioms\n\n| Idiom | Meaning | Example |\n|-------|---------|---------|\n| грошей як сміття | loads of money | У нього грошей як сміття. |\n| на мілині | broke | Я на мілині. |\n| кидати гроші на вітер | throw money to the wind | Він кидає гроші на вітер. |\n| платити готівкою | pay cash | Плачу готівкою. |\n| за безцінь | for nothing, very cheap | Купив за безцінь. |\n\n### Інші популярні ідіоми | Other Popular Idioms\n\n| Idiom | Meaning | Example |\n|-------|---------|---------|\n| як з неба впасти | fall from sky | Він як з неба впав! |\n| як грім серед ясного неба | like thunder from clear sky | Новина була як грім серед ясного неба. |\n| ні риба ні м'ясо | neither fish nor meat | Він ні риба ні м'ясо. |\n| як вода | easily | Все йде як вода. |\n| палець об палець не вдарити | not lift a finger | Він палець об палець не вдарив. |",
-        "type": "topic"
-      },
-      {
-        "id": "practice-практика",
-        "title": "practice | Практика",
-        "content": "### Match Idiom to Meaning\n\n1. коли рак свисне — a) never\n2. робити з мухи слона — b) exaggerate\n3. собаку з'їсти — c) be expert\n4. як кіт наплакав — d) very little\n5. байдики бити — e) be idle\n\n### Complete with Correct Idiom\n\n1. Він дуже розумний. Він ___ (is smart).\n   → **має голову на плечах**\n\n2. Я дуже хвилююся. Сиджу ___ (nervously waiting).\n   → **як на голках**\n\n3. Грошей майже немає — ___ (very little).\n   → **як кіт наплакав**\n\n4. Він спеціаліст — ___ (is expert) в цій справі.\n   → **собаку з'їв**\n\n5. Не перебільшуй! Не ___ (don't exaggerate)!\n   → **роби з мухи слона**\n\n### Translate Using Idioms\n\n1. He does nothing all day.\n   → **Він цілий день байдики б'є.**\n\n2. I'm on cloud nine!\n   → **Я на сьомому небі!**\n\n3. Keep it a secret!\n   → **Тримай язик за зубами!**\n\n4. That will never happen.\n   → **Це станеться, коли рак свисне.**",
-        "type": "topic"
-      },
-      {
-        "id": "production-продукція",
-        "title": "production | Продукція",
-        "content": "### Use Idioms in Context\n\nTell a story using 3-5 idioms:\n\n**Example:**\n«Одного разу я отримав новину — як грім серед ясного неба! Я був на сьомому небі! Працював не покладаючи рук, щоб все встигнути.»\n\n### Describe Situations\n\nUse idioms to describe:\n\n1. A lazy person\n2. A busy person\n3. A happy moment\n4. A nervous situation\n\n---",
-        "type": "topic"
-      },
-      {
-        "id": "activities",
-        "title": "Activities",
-        "content": "## quiz: Idiom Meanings\n\n> Choose the correct meaning.\n\n1. «Коли рак свисне» означає:\n   - [x] ніколи\n   - [ ] скоро\n   > Never.\n\n2. «Робити з мухи слона»:\n   - [x] перебільшувати\n   - [ ] працювати\n   > Exaggerate.\n\n3. «Як кіт наплакав»:\n   - [x] дуже мало\n   - [ ] дуже багато\n   > Very little.\n\n4. «Бути на сьомому небі»:\n   - [x] бути дуже щасливим\n   - [ ] бути сумним\n   > Be very happy.\n\n5. «Байдики бити»:\n   - [x] нічого не робити\n   - [ ] працювати\n   > Be idle.\n\n6. «Тримати язик за зубами»:\n   - [x] зберігати таємницю\n   - [ ] говорити багато\n   > Keep secret.\n\n## fill-in: Story with Idioms\n\n> Вставте ідіоми.\n\n> Мій друг Петро (1)___ (is very smart). Але минулого тижня він (2)___ (was very nervous) перед іспитом. Він (3)___ (worked hard) цілий тиждень. І — новина (4)___ (was unexpected)! — він здав на відмінно! Тепер він (5)___ (is very happy).\n\n**Answers:**\n1. має голову на плечах\n2. сидів як на голках\n3. працював не покладаючи рук\n4. була як грім серед ясного неба (or: впала як грім)\n5. на сьомому небі\n\n---",
-        "type": "activities"
-      },
-      {
-        "id": "vocabulary",
-        "title": "Vocabulary",
-        "content": "| Word | IPA | English | Notes |\n|------|-----|---------|-------|\n| ідіома | /ʲiˈdʲiomɑ/ | idiom | f |\n| сталий вираз | - | set phrase | m |\n| переносне значення | - | figurative meaning | n |\n| перебільшувати | - | to exaggerate | impf |\n| байдики бити | - | to be idle | idiom |\n| на сьомому небі | - | on cloud nine | idiom |\n| як кіт наплакав | - | very little | idiom |\n| коли рак свисне | - | never | idiom |\n| собаку з'їсти | - | be expert | idiom |\n| з мухи слона | - | exaggerate | idiom |\n| тримати язик за зубами | - | keep secret | idiom |\n| не покладаючи рук | - | without rest | idiom |\n\n---",
-        "type": "vocabulary"
-      },
-      {
-        "id": "summary",
+        "id": "section-summary",
+        "type": "summary",
         "title": "Summary",
         "content": "## Popular Ukrainian Idioms\n\n### Body Parts\n- мати голову на плечах (be smart)\n- тримати язик за зубами (keep secret)\n- пальцем не ворухнути (do nothing)\n\n### Animals\n- коли рак свисне (never)\n- як кіт наплакав (very little)\n- собаку з'їсти (be expert)\n\n### States\n- на сьомому небі (very happy)\n- як на голках (nervous)\n- між двох вогнів (in dilemma)\n\n> **Key Takeaways**\n>\n> - Idioms make Ukrainian more expressive\n> - Don't translate literally — learn the meaning\n> - Context determines when to use idioms\n> - Many idioms use body parts or animals\n> - Practice using idioms in sentences",
-        "type": "summary"
+        "titleUk": "Підсумок"
       }
-    ]
+    ],
+    "rawMarkdown": "---\nmodule: 135\ntitle: \"Idioms & Set Phrases I\"\nsubtitle: \"Ідіоми та сталі вирази\"\nlevel: B1\nphase: B1.4\nduration: 45\ntransliteration: none\ntags: [vocabulary, idioms, expressions, figurative]\nobjectives:\n  - Learn common Ukrainian idioms\n  - Understand figurative meanings\n  - Use idioms in appropriate contexts\n  - Expand expressive vocabulary\n---\n\n# Зміст уроку | Lesson Content\n\n## warm-up | Розминка\n\n### Що таке ідіома? | What Is an Idiom?\n\nІдіома — вираз, значення якого не випливає зі слів:\n\nAn idiom is an expression whose meaning doesn't come from its words:\n\n- **Байдики бити** ≠ to beat idlers\n- **Байдики бити** = to do nothing, be idle\n\nІдіоми роблять мову живою та виразною!\n\n## presentation | Презентація\n\n### Ідіоми з частинами тіла | Body Part Idioms\n\n| Idiom | Literal | Meaning | Example |\n|-------|---------|---------|---------|\n| мати голову на плечах | have head on shoulders | be smart | Він має голову на плечах. |\n| ламати голову | break head | think hard | Ламаю голову над задачею. |\n| в одне вухо влітає, в інше вилітає | in one ear, out the other | not remember | Все в одне вухо влітає... |\n| тримати язик за зубами | keep tongue behind teeth | keep secret | Тримай язик за зубами! |\n| показати зуби | show teeth | resist, fight back | Він показав зуби. |\n| з'їсти очима | eat with eyes | stare at | Вона з'їла його очима. |\n| пальцем не ворухнути | not move a finger | do nothing | Він пальцем не ворухнув. |\n| бути по вуха | be up to ears | be deeply in | По вуха в роботі. |\n\n### Ідіоми з тваринами | Animal Idioms\n\n| Idiom | Literal | Meaning | Example |\n|-------|---------|---------|---------|\n| коли рак свисне | when crayfish whistles | never | Це станеться, коли рак свисне. |\n| робити з мухи слона | make elephant from fly | exaggerate | Не роби з мухи слона! |\n| собаку з'їсти | eat a dog | be expert | Він собаку з'їв на цьому. |\n| як кіт наплакав | as much as cat cried | very little | Грошей як кіт наплакав. |\n| вовком дивитися | look like wolf | look angry | Чого вовком дивишся? |\n| купувати кота в мішку | buy cat in bag | buy blindly | Не купуй кота в мішку! |\n| робити ведмежу послугу | do bear's service | do disservice | Ти робиш мені ведмежу послугу. |\n\n### Ідіоми про час | Time Idioms\n\n| Idiom | Meaning | Example |\n|-------|---------|---------|\n| з ранку до ночі | from morning to night | Працює з ранку до ночі. |\n| тягнути час | drag time, delay | Не тягни час! |\n| час від часу | from time to time | Бачимось час від часу. |\n| на хвилинку | for a minute | Зайди на хвилинку. |\n| вже давно | for a long time now | Я вже давно це знаю. |\n| одного разу | once upon a time | Одного разу він прийшов... |\n| рано чи пізно | sooner or later | Рано чи пізно він зрозуміє. |\n\n### Ідіоми про стан | State Idioms\n\n| Idiom | Meaning | Example |\n|-------|---------|---------|\n| бути не в своїй тарілці | feel out of place | Я сьогодні не в своїй тарілці. |\n| бути на сьомому небі | be on cloud nine | Вона на сьомому небі. |\n| сидіти як на голках | sit on pins and needles | Сиджу як на голках. |\n| триматися на плаву | stay afloat | Він ледь тримається на плаву. |\n| бути між двох вогнів | be between two fires | Я між двох вогнів. |\n| висіти на волоску | hang by a thread | Його життя висить на волоску. |\n\n### Ідіоми про роботу | Work Idioms\n\n| Idiom | Meaning | Example |\n|-------|---------|---------|\n| байдики бити | be idle | Він цілий день байдики б'є. |\n| працювати не покладаючи рук | work without rest | Вона працює не покладаючи рук. |\n| гнути спину | bend one's back | Гну спину на роботі. |\n| братися за розум | get down to work | Пора братися за розум! |\n| мати руки | be skilled | Він має руки! |\n| без труднощів | without difficulties | Все пройшло без труднощів. |\n\n### Ідіоми про гроші | Money Idioms\n\n| Idiom | Meaning | Example |\n|-------|---------|---------|\n| грошей як сміття | loads of money | У нього грошей як сміття. |\n| на мілині | broke | Я на мілині. |\n| кидати гроші на вітер | throw money to the wind | Він кидає гроші на вітер. |\n| платити готівкою | pay cash | Плачу готівкою. |\n| за безцінь | for nothing, very cheap | Купив за безцінь. |\n\n### Інші популярні ідіоми | Other Popular Idioms\n\n| Idiom | Meaning | Example |\n|-------|---------|---------|\n| як з неба впасти | fall from sky | Він як з неба впав! |\n| як грім серед ясного неба | like thunder from clear sky | Новина була як грім серед ясного неба. |\n| ні риба ні м'ясо | neither fish nor meat | Він ні риба ні м'ясо. |\n| як вода | easily | Все йде як вода. |\n| палець об палець не вдарити | not lift a finger | Він палець об палець не вдарив. |\n\n## practice | Практика\n\n### Match Idiom to Meaning\n\n1. коли рак свисне — a) never\n2. робити з мухи слона — b) exaggerate\n3. собаку з'їсти — c) be expert\n4. як кіт наплакав — d) very little\n5. байдики бити — e) be idle\n\n### Complete with Correct Idiom\n\n1. Він дуже розумний. Він ___ (is smart).\n   > [!answer] **має голову на плечах**\n2. Я дуже хвилююся. Сиджу ___ (nervously waiting).\n   > [!answer] **як на голках**\n3. Грошей майже немає — ___ (very little).\n   > [!answer] **як кіт наплакав**\n4. Він спеціаліст — ___ (is expert) в цій справі.\n   > [!answer] **собаку з'їв**\n5. Не перебільшуй! Не ___ (don't exaggerate)!\n   > [!answer] **роби з мухи слона**\n### Translate Using Idioms\n\n1. He does nothing all day.\n   > [!answer] **Він цілий день байдики б'є.**\n2. I'm on cloud nine!\n   > [!answer] **Я на сьомому небі!**\n3. Keep it a secret!\n   > [!answer] **Тримай язик за зубами!**\n4. That will never happen.\n   > [!answer] **Це станеться, коли рак свисне.**\n## production | Продукція\n\n### Use Idioms in Context\n\nTell a story using 3-5 idioms:\n\n**Example:**\n«Одного разу я отримав новину — як грім серед ясного неба! Я був на сьомому небі! Працював не покладаючи рук, щоб все встигнути.»\n\n### Describe Situations\n\nUse idioms to describe:\n\n1. A lazy person\n2. A busy person\n3. A happy moment\n4. A nervous situation\n\n---\n\n# Activities\n\n## quiz: Idiom Meanings\n\n> Choose the correct meaning.\n\n1. «Коли рак свисне» означає:\n   - [x] ніколи\n   - [ ] скоро\n   > Never.\n\n2. «Робити з мухи слона»:\n   - [x] перебільшувати\n   - [ ] працювати\n   > Exaggerate.\n\n3. «Як кіт наплакав»:\n   - [x] дуже мало\n   - [ ] дуже багато\n   > Very little.\n\n4. «Бути на сьомому небі»:\n   - [x] бути дуже щасливим\n   - [ ] бути сумним\n   > Be very happy.\n\n5. «Байдики бити»:\n   - [x] нічого не робити\n   - [ ] працювати\n   > Be idle.\n\n6. «Тримати язик за зубами»:\n   - [x] зберігати таємницю\n   - [ ] говорити багато\n   > Keep secret.\n\n## fill-in: Story with Idioms\n\n> Вставте ідіоми.\n\n> Мій друг Петро (1)___ (is very smart). Але минулого тижня він (2)___ (was very nervous) перед іспитом. Він (3)___ (worked hard) цілий тиждень. І — новина (4)___ (was unexpected)! — він здав на відмінно! Тепер він (5)___ (is very happy).\n\n**Answers:**\n1. має голову на плечах\n2. сидів як на голках\n3. працював не покладаючи рук\n4. була як грім серед ясного неба (or: впала як грім)\n5. на сьомому небі\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | Notes |\n|------|-----|---------|-------|\n| ідіома | /ʲiˈdʲiomɑ/ | idiom | f |\n| сталий вираз | - | set phrase | m |\n| переносне значення | - | figurative meaning | n |\n| перебільшувати | - | to exaggerate | impf |\n| байдики бити | - | to be idle | idiom |\n| на сьомому небі | - | on cloud nine | idiom |\n| як кіт наплакав | - | very little | idiom |\n| коли рак свисне | - | never | idiom |\n| собаку з'їсти | - | be expert | idiom |\n| з мухи слона | - | exaggerate | idiom |\n| тримати язик за зубами | - | keep secret | idiom |\n| не покладаючи рук | - | without rest | idiom |\n\n---\n\n# Summary\n\n## Popular Ukrainian Idioms\n\n### Body Parts\n- мати голову на плечах (be smart)\n- тримати язик за зубами (keep secret)\n- пальцем не ворухнути (do nothing)\n\n### Animals\n- коли рак свисне (never)\n- як кіт наплакав (very little)\n- собаку з'їсти (be expert)\n\n### States\n- на сьомому небі (very happy)\n- як на голках (nervous)\n- між двох вогнів (in dilemma)\n\n> **Key Takeaways**\n>\n> - Idioms make Ukrainian more expressive\n> - Don't translate literally — learn the meaning\n> - Context determines when to use idioms\n> - Many idioms use body parts or animals\n> - Practice using idioms in sentences\n"
   },
   "activities": [
     {
-      "id": "act-uk-B1-135-quiz",
+      "id": "act-b1-135-quiz",
       "type": "quiz",
       "title": "Idiom Meanings",
       "description": "Choose the correct meaning.",
       "content": {
         "type": "quiz",
-        "instructions": "Choose the correct meaning.",
         "questions": [
           {
             "question": "«Коли рак свисне» означає:",
@@ -253,38 +124,37 @@
       "language": "uk",
       "difficultyLevel": "B1",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "idioms",
-        "expressions",
-        "figurative"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.240Z",
+      "modifiedAt": "2025-12-01T22:58:37.240Z"
     },
     {
-      "id": "act-uk-B1-135-gapfill",
+      "id": "act-b1-135-gapfill",
       "type": "gap-fill",
       "title": "Story with Idioms",
       "description": "Вставте ідіоми.",
       "content": {
         "type": "gap-fill",
-        "instructions": "Вставте ідіоми.",
         "text": "Вставте ідіоми.\nМій друг Петро (1)___ (is very smart). Але минулого тижня він (2)___ (was very nervous) перед іспитом. Він (3)___ (worked hard) цілий тиждень. І — новина (4)___ (was unexpected)! — він здав на відмінно! Тепер він (5)___ (is very happy).",
         "blanks": [
           {
+            "index": 0,
             "hint": "is very smart"
           },
           {
+            "index": 1,
             "hint": "was very nervous"
           },
           {
+            "index": 2,
             "hint": "worked hard"
           },
           {
+            "index": 3,
             "hint": "was unexpected"
           },
           {
+            "index": 4,
             "hint": "is very happy"
           }
         ],
@@ -298,14 +168,9 @@
       "language": "uk",
       "difficultyLevel": "B1",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "idioms",
-        "expressions",
-        "figurative"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.240Z",
+      "modifiedAt": "2025-12-01T22:58:37.240Z"
     }
   ],
   "vocabulary": {
@@ -316,112 +181,77 @@
     "transliterationMode": "none",
     "words": [
       {
-        "id": "v-m135-001",
+        "id": "v-idioma-135-0",
         "uk": "ідіома",
-        "translit": "",
-        "ipa": "/ʲiˈdʲiomɑ/",
         "en": "idiom",
-        "pos": "",
-        "note": "f"
+        "pos": "f",
+        "ipa": "/ʲiˈdʲiomɑ/"
       },
       {
-        "id": "v-m135-002",
+        "id": "v-stalyy-vyraz-135-1",
         "uk": "сталий вираз",
-        "translit": "",
-        "ipa": "-",
         "en": "set phrase",
-        "pos": "",
-        "note": "m"
+        "pos": "m"
       },
       {
-        "id": "v-m135-003",
+        "id": "v-perenosne-znachennya-135-2",
         "uk": "переносне значення",
-        "translit": "",
-        "ipa": "-",
         "en": "figurative meaning",
-        "pos": "",
-        "note": "n"
+        "pos": "n"
       },
       {
-        "id": "v-m135-004",
+        "id": "v-perebilьshuvaty-135-3",
         "uk": "перебільшувати",
-        "translit": "",
-        "ipa": "-",
         "en": "to exaggerate",
-        "pos": "",
-        "note": "impf"
+        "pos": "impf"
       },
       {
-        "id": "v-m135-005",
+        "id": "v-baydyky-byty-135-4",
         "uk": "байдики бити",
-        "translit": "",
-        "ipa": "-",
         "en": "to be idle",
-        "pos": "",
-        "note": "idiom"
+        "pos": "idiom"
       },
       {
-        "id": "v-m135-006",
+        "id": "v-na-sьomomu-nebi-135-5",
         "uk": "на сьомому небі",
-        "translit": "",
-        "ipa": "-",
         "en": "on cloud nine",
-        "pos": "",
-        "note": "idiom"
+        "pos": "idiom"
       },
       {
-        "id": "v-m135-007",
+        "id": "v-yak-kit-naplakav-135-6",
         "uk": "як кіт наплакав",
-        "translit": "",
-        "ipa": "-",
         "en": "very little",
-        "pos": "",
-        "note": "idiom"
+        "pos": "idiom"
       },
       {
-        "id": "v-m135-008",
+        "id": "v-koly-rak-svysne-135-7",
         "uk": "коли рак свисне",
-        "translit": "",
-        "ipa": "-",
         "en": "never",
-        "pos": "",
-        "note": "idiom"
+        "pos": "idiom"
       },
       {
-        "id": "v-m135-009",
+        "id": "v-sobaku-z'yisty-135-8",
         "uk": "собаку з'їсти",
-        "translit": "",
-        "ipa": "-",
         "en": "be expert",
-        "pos": "",
-        "note": "idiom"
+        "pos": "idiom"
       },
       {
-        "id": "v-m135-010",
+        "id": "v-z-mukhy-slona-135-9",
         "uk": "з мухи слона",
-        "translit": "",
-        "ipa": "-",
         "en": "exaggerate",
-        "pos": "",
-        "note": "idiom"
+        "pos": "idiom"
       },
       {
-        "id": "v-m135-011",
+        "id": "v-trymaty-yazyk-za-zubamy-135-10",
         "uk": "тримати язик за зубами",
-        "translit": "",
-        "ipa": "-",
         "en": "keep secret",
-        "pos": "",
-        "note": "idiom"
+        "pos": "idiom"
       },
       {
-        "id": "v-m135-012",
+        "id": "v-ne-pokladayuchy-ruk-135-11",
         "uk": "не покладаючи рук",
-        "translit": "",
-        "ipa": "-",
         "en": "without rest",
-        "pos": "",
-        "note": "idiom"
+        "pos": "idiom"
       }
     ]
   }

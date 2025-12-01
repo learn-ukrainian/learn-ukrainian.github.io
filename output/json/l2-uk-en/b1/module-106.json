@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-B1-106",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "grammar-introduction",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -22,8 +21,6 @@
       "Express wishes and hypothetical situations"
     ],
     "grammarFocus": [],
-    "totalDuration": 45,
-    "transliterationMode": "none",
     "tags": [
       "grammar",
       "conditionals",
@@ -31,173 +28,37 @@
       "якби",
       "subjunctive"
     ],
+    "totalDuration": 45,
+    "transliterationMode": "none",
+    "phases": [],
+    "createdAt": "2025-12-01T22:58:37.231Z",
+    "modifiedAt": "2025-12-01T22:58:37.231Z",
     "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
-    "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Нереальні умови | Unreal Conditions\n\nУ модулі 105: **якщо** для реальних умов.\n\nIn module 105: **якщо** for real conditions.\n\nТепер: **якби** для нереальних, гіпотетичних умов.\n\nNow: **якби** for unreal, hypothetical conditions.\n\n| Type | Ukrainian | English |\n|------|-----------|---------|\n| Real | Якщо матиму час, прийду. | If I have time, I'll come. |\n| Unreal | **Якби** я мав час, я **б** прийшов. | If I had time, I would come. |"
-          }
-        ]
-      },
-      {
-        "id": "phase-presentation",
-        "name": "presentation",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Якби + Past + Б: Basic Pattern\n\nUnreal conditionals use **якби** + **past tense** + **б(и)**:\n\n| Ukrainian | English |\n|-----------|---------|\n| Якби я **знав**, я **б сказав**. | If I knew, I would tell. |\n| Якби вона **мала** час, вона **б прийшла**. | If she had time, she would come. |\n| Якби ми **могли**, ми **б допомогли**. | If we could, we would help. |\n\n> **⭐ KEY STRUCTURE**\n>\n> **Якби** + past tense, + subject + **б(и)** + past tense\n>\n> The particle **б** (short for **би**) marks the result clause as hypothetical/conditional."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Position of Б(и)\n\n**Б** comes after the first stressed word in the result clause:\n\n| Pattern | Example |\n|---------|---------|\n| After pronoun | Якби він зателефонував, **я б** відповів. |\n| After short word | Якби ти попросив, **ми б** допомогли. |\n| Can combine with якби | **Якби** я знав, сказав **би**. |\n\n**Би** (full form) is used:\n- After consonants: знав **би**\n- For emphasis: **Якби** ти знав!"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Present Unreal Conditionals\n\nFor situations that are **not true now** (but imagined):\n\n| Ukrainian | Reality | Meaning |\n|-----------|---------|---------|\n| Якби я **був** багатим, я **б** подорожував. | I'm not rich. | If I were rich, I would travel. |\n| Якби вона **жила** тут, ми **б** зустрічалися. | She doesn't live here. | If she lived here, we would meet. |\n| Якби він **знав** українську, він **би** розумів. | He doesn't know Ukrainian. | If he knew Ukrainian, he would understand. |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Past Unreal Conditionals\n\nFor situations that **didn't happen in the past** (counterfactual):\n\nThe structure is the **same** as present unreal:\n\n| Ukrainian | Reality | Meaning |\n|-----------|---------|---------|\n| Якби я **знав** раніше, я **б** прийшов. | I didn't know earlier. | If I had known earlier, I would have come. |\n| Якби вона **попросила**, він **би** допоміг. | She didn't ask. | If she had asked, he would have helped. |\n| Якби ми **встали** раніше, ми **б** не запізнилися. | We didn't get up earlier. | If we had gotten up earlier, we wouldn't have been late. |\n\n> **⭐ NO SPECIAL PAST-PAST FORM**\n>\n> Unlike English (had done... would have done), Ukrainian uses the **same form** for both present and past unreal:\n>\n> - **Present unreal:** Якби я знав, я б сказав. (If I knew, I would tell.)\n> - **Past unreal:** Якби я знав (тоді), я б сказав. (If I had known [then], I would have told.)\n>\n> Context (тоді, вчора, раніше) indicates past reference."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Якби + Бути (To Be)\n\nSpecial attention to \"to be\" in hypotheticals:\n\n| Gender | Form | Example |\n|--------|------|---------|\n| m | був | Якби я **був** там... |\n| f | була | Якби вона **була** тут... |\n| n | було | Якби це **було** правдою... |\n| pl | були | Якби ми **були** разом... |\n\n**Examples:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Якби я **був** лікарем, я б допомагав людям. | If I were a doctor, I would help people. |\n| Якби вона **була** вільна, вона б прийшла. | If she were free, she would come. |\n| Якби це **було** можливо, я б зробив. | If it were possible, I would do it. |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Wishes with Якби\n\n**Якби** can express wishes (similar to \"if only\" or \"I wish\"):\n\n| Ukrainian | English |\n|-----------|---------|\n| **Якби** ти знав! | If only you knew! |\n| **Якби** я міг! | If only I could! |\n| **Якби** це було правдою! | If only it were true! |\n| **Якби** ти був тут! | If only you were here! |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Expressing Advice with Якби\n\n\"If I were you\" construction:\n\n| Ukrainian | English |\n|-----------|---------|\n| **Якби** я був **на твоєму місці**, я б подумав. | If I were in your place, I would think. |\n| **Якби** я був **тобою**, я б не робив цього. | If I were you, I wouldn't do this. |\n| **На твоєму місці** я б відпочив. | In your place, I would rest. |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Якщо vs. Якби Summary\n\n| Aspect | Якщо | Якби |\n|--------|------|------|\n| Condition type | Real, possible | Unreal, hypothetical |\n| Verb forms | Present/future | Past + б(и) |\n| Reality | Can happen | Unlikely or impossible |\n\n| Example | Type |\n|---------|------|\n| Якщо матиму час, прийду. | Real future |\n| Якби мав час, прийшов би. | Hypothetical |"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Transform Real to Unreal\n\n**Example:** Якщо матиму час, прийду. (real)\n→ Якби я мав час, я б прийшов. (unreal)\n\n1. Якщо буде гарна погода, поїдемо на море.\n   → Якби була гарна погода, ми б поїхали на море.\n\n2. Якщо він зателефонує, я відповім.\n   → Якби він зателефонував, я б відповів.\n\n3. Якщо вона знає відповідь, вона скаже.\n   → Якби вона знала відповідь, вона б сказала.\n\n4. Якщо ти працюєш, ти заробляєш гроші.\n   → Якби ти працював, ти б заробляв гроші.\n\n5. Якщо ми маємо час, ми допомагаємо.\n   → Якби ми мали час, ми б допомагали."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Choose Якщо or Якби\n\n1. ___ я виграю в лотерею, куплю будинок. (possible)\n   → **Якщо** (still possible)\n\n2. ___ я був президентом, я б змінив закони. (hypothetical)\n   → **Якби** (I'm not president)\n\n3. ___ він зателефонує, передай йому. (possible)\n   → **Якщо** (he might call)\n\n4. ___ я знав раніше, я б прийшов. (counterfactual)\n   → **Якби** (I didn't know)\n\n5. ___ вона мала крила, вона б летіла. (impossible)\n   → **Якби** (impossible condition)"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Complete the Sentences\n\n1. Якби я знав українську добре, я б ___ (to read Ukrainian books).\n   → Якби я знав українську добре, я б **читав українські книги**.\n\n2. Якби у мене було більше грошей, я б ___ (to travel).\n   → Якби у мене було більше грошей, я б **подорожував**.\n\n3. Якби вона була вільна, вона б ___ (to come to the party).\n   → Якби вона була вільна, вона б **прийшла на вечірку**.\n\n4. Якби я міг вибирати, я б ___ (to live by the sea).\n   → Якби я міг вибирати, я б **жив біля моря**."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Translate to Ukrainian\n\n1. If I were you, I would stay home.\n   → **Якби я був на твоєму місці, я б залишився вдома.**\n\n2. If she had time, she would help.\n   → **Якби вона мала час, вона б допомогла.**\n\n3. If only I could fly!\n   → **Якби я міг літати!**\n\n4. If he had known, he would have told me.\n   → **Якби він знав, він би сказав мені.**\n\n5. If we were rich, we would buy a house.\n   → **Якби ми були багаті, ми б купили будинок.**"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-B1-106-quiz"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Imagine Different Life\n\nUse якби to imagine:\n\n1. Якби я жив в іншій країні...\n2. Якби я народився 100 років тому...\n3. Якби я міг змінити одну річ у своєму житті...\n4. Якби я був невидимим...\n5. Якби я міг говорити з тваринами...\n\n**Example:**\nЯкби я жив в Україні, я б ходив на концерти українських співаків. Якби я народився 100 років тому, я б не мав інтернету."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Give Advice\n\nUse \"якби я був на твоєму місці\":\n\n**Situations:**\n- Друг не може вирішити, чи змінювати роботу\n- Подруга думає, чи їхати вчитися за кордон\n- Хтось не знає, що подарувати\n\n**Example:**\nЯкби я був на твоєму місці, я б змінив роботу. Краще ризикувати, ніж жалкувати."
-          }
-        ]
-      }
-    ],
-    "rawMarkdown": "# Зміст уроку | Lesson Content\n\n## warm-up | Розминка\n\n### Нереальні умови | Unreal Conditions\n\nУ модулі 105: **якщо** для реальних умов.\n\nIn module 105: **якщо** for real conditions.\n\nТепер: **якби** для нереальних, гіпотетичних умов.\n\nNow: **якби** for unreal, hypothetical conditions.\n\n| Type | Ukrainian | English |\n|------|-----------|---------|\n| Real | Якщо матиму час, прийду. | If I have time, I'll come. |\n| Unreal | **Якби** я мав час, я **б** прийшов. | If I had time, I would come. |\n\n## presentation | Презентація\n\n### Якби + Past + Б: Basic Pattern\n\nUnreal conditionals use **якби** + **past tense** + **б(и)**:\n\n| Ukrainian | English |\n|-----------|---------|\n| Якби я **знав**, я **б сказав**. | If I knew, I would tell. |\n| Якби вона **мала** час, вона **б прийшла**. | If she had time, she would come. |\n| Якби ми **могли**, ми **б допомогли**. | If we could, we would help. |\n\n> **⭐ KEY STRUCTURE**\n>\n> **Якби** + past tense, + subject + **б(и)** + past tense\n>\n> The particle **б** (short for **би**) marks the result clause as hypothetical/conditional.\n\n### Position of Б(и)\n\n**Б** comes after the first stressed word in the result clause:\n\n| Pattern | Example |\n|---------|---------|\n| After pronoun | Якби він зателефонував, **я б** відповів. |\n| After short word | Якби ти попросив, **ми б** допомогли. |\n| Can combine with якби | **Якби** я знав, сказав **би**. |\n\n**Би** (full form) is used:\n- After consonants: знав **би**\n- For emphasis: **Якби** ти знав!\n\n### Present Unreal Conditionals\n\nFor situations that are **not true now** (but imagined):\n\n| Ukrainian | Reality | Meaning |\n|-----------|---------|---------|\n| Якби я **був** багатим, я **б** подорожував. | I'm not rich. | If I were rich, I would travel. |\n| Якби вона **жила** тут, ми **б** зустрічалися. | She doesn't live here. | If she lived here, we would meet. |\n| Якби він **знав** українську, він **би** розумів. | He doesn't know Ukrainian. | If he knew Ukrainian, he would understand. |\n\n### Past Unreal Conditionals\n\nFor situations that **didn't happen in the past** (counterfactual):\n\nThe structure is the **same** as present unreal:\n\n| Ukrainian | Reality | Meaning |\n|-----------|---------|---------|\n| Якби я **знав** раніше, я **б** прийшов. | I didn't know earlier. | If I had known earlier, I would have come. |\n| Якби вона **попросила**, він **би** допоміг. | She didn't ask. | If she had asked, he would have helped. |\n| Якби ми **встали** раніше, ми **б** не запізнилися. | We didn't get up earlier. | If we had gotten up earlier, we wouldn't have been late. |\n\n> **⭐ NO SPECIAL PAST-PAST FORM**\n>\n> Unlike English (had done... would have done), Ukrainian uses the **same form** for both present and past unreal:\n>\n> - **Present unreal:** Якби я знав, я б сказав. (If I knew, I would tell.)\n> - **Past unreal:** Якби я знав (тоді), я б сказав. (If I had known [then], I would have told.)\n>\n> Context (тоді, вчора, раніше) indicates past reference.\n\n### Якби + Бути (To Be)\n\nSpecial attention to \"to be\" in hypotheticals:\n\n| Gender | Form | Example |\n|--------|------|---------|\n| m | був | Якби я **був** там... |\n| f | була | Якби вона **була** тут... |\n| n | було | Якби це **було** правдою... |\n| pl | були | Якби ми **були** разом... |\n\n**Examples:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Якби я **був** лікарем, я б допомагав людям. | If I were a doctor, I would help people. |\n| Якби вона **була** вільна, вона б прийшла. | If she were free, she would come. |\n| Якби це **було** можливо, я б зробив. | If it were possible, I would do it. |\n\n### Wishes with Якби\n\n**Якби** can express wishes (similar to \"if only\" or \"I wish\"):\n\n| Ukrainian | English |\n|-----------|---------|\n| **Якби** ти знав! | If only you knew! |\n| **Якби** я міг! | If only I could! |\n| **Якби** це було правдою! | If only it were true! |\n| **Якби** ти був тут! | If only you were here! |\n\n### Expressing Advice with Якби\n\n\"If I were you\" construction:\n\n| Ukrainian | English |\n|-----------|---------|\n| **Якби** я був **на твоєму місці**, я б подумав. | If I were in your place, I would think. |\n| **Якби** я був **тобою**, я б не робив цього. | If I were you, I wouldn't do this. |\n| **На твоєму місці** я б відпочив. | In your place, I would rest. |\n\n### Якщо vs. Якби Summary\n\n| Aspect | Якщо | Якби |\n|--------|------|------|\n| Condition type | Real, possible | Unreal, hypothetical |\n| Verb forms | Present/future | Past + б(и) |\n| Reality | Can happen | Unlikely or impossible |\n\n| Example | Type |\n|---------|------|\n| Якщо матиму час, прийду. | Real future |\n| Якби мав час, прийшов би. | Hypothetical |\n\n## practice | Практика\n\n### Transform Real to Unreal\n\n**Example:** Якщо матиму час, прийду. (real)\n→ Якби я мав час, я б прийшов. (unreal)\n\n1. Якщо буде гарна погода, поїдемо на море.\n   → Якби була гарна погода, ми б поїхали на море.\n\n2. Якщо він зателефонує, я відповім.\n   → Якби він зателефонував, я б відповів.\n\n3. Якщо вона знає відповідь, вона скаже.\n   → Якби вона знала відповідь, вона б сказала.\n\n4. Якщо ти працюєш, ти заробляєш гроші.\n   → Якби ти працював, ти б заробляв гроші.\n\n5. Якщо ми маємо час, ми допомагаємо.\n   → Якби ми мали час, ми б допомагали.\n\n### Choose Якщо or Якби\n\n1. ___ я виграю в лотерею, куплю будинок. (possible)\n   → **Якщо** (still possible)\n\n2. ___ я був президентом, я б змінив закони. (hypothetical)\n   → **Якби** (I'm not president)\n\n3. ___ він зателефонує, передай йому. (possible)\n   → **Якщо** (he might call)\n\n4. ___ я знав раніше, я б прийшов. (counterfactual)\n   → **Якби** (I didn't know)\n\n5. ___ вона мала крила, вона б летіла. (impossible)\n   → **Якби** (impossible condition)\n\n### Complete the Sentences\n\n1. Якби я знав українську добре, я б ___ (to read Ukrainian books).\n   → Якби я знав українську добре, я б **читав українські книги**.\n\n2. Якби у мене було більше грошей, я б ___ (to travel).\n   → Якби у мене було більше грошей, я б **подорожував**.\n\n3. Якби вона була вільна, вона б ___ (to come to the party).\n   → Якби вона була вільна, вона б **прийшла на вечірку**.\n\n4. Якби я міг вибирати, я б ___ (to live by the sea).\n   → Якби я міг вибирати, я б **жив біля моря**.\n\n### Translate to Ukrainian\n\n1. If I were you, I would stay home.\n   → **Якби я був на твоєму місці, я б залишився вдома.**\n\n2. If she had time, she would help.\n   → **Якби вона мала час, вона б допомогла.**\n\n3. If only I could fly!\n   → **Якби я міг літати!**\n\n4. If he had known, he would have told me.\n   → **Якби він знав, він би сказав мені.**\n\n5. If we were rich, we would buy a house.\n   → **Якби ми були багаті, ми б купили будинок.**\n\n## production | Продукція\n\n### Imagine Different Life\n\nUse якби to imagine:\n\n1. Якби я жив в іншій країні...\n2. Якби я народився 100 років тому...\n3. Якби я міг змінити одну річ у своєму житті...\n4. Якби я був невидимим...\n5. Якби я міг говорити з тваринами...\n\n**Example:**\nЯкби я жив в Україні, я б ходив на концерти українських співаків. Якби я народився 100 років тому, я б не мав інтернету.\n\n### Give Advice\n\nUse \"якби я був на твоєму місці\":\n\n**Situations:**\n- Друг не може вирішити, чи змінювати роботу\n- Подруга думає, чи їхати вчитися за кордон\n- Хтось не знає, що подарувати\n\n**Example:**\nЯкби я був на твоєму місці, я б змінив роботу. Краще ризикувати, ніж жалкувати.\n\n---\n\n# Activities\n\n## quiz: Unreal Conditionals\n\n> Choose the correct answer.\n\n1. ___ я знав, я б сказав.\n   - [ ] Якщо\n   - [x] Якби\n   > Unreal/hypothetical requires \"якби.\"\n\n2. Якби вона мала час, вона ___ прийшла.\n   - [x] б\n   - [ ] -\n   > The particle \"б\" marks the result clause.\n\n3. Якби я ___ багатим, я б подорожував.\n   - [x] був\n   - [ ] буду\n   > Past tense form with \"якби.\"\n\n4. ___ він зателефонує завтра, передай йому. (possible)\n   - [x] Якщо\n   - [ ] Якби\n   > Real possibility uses \"якщо.\"\n\n5. Якби я був на твоєму ___ , я б відпочив.\n   - [x] місці\n   - [ ] місце\n   > Fixed expression \"на твоєму місці\" (in your place).\n\n6. ___ я міг літати!\n   - [x] Якби\n   - [ ] Якщо\n   > Wish expression uses \"якби.\"\n\n## fill-in: What Would You Do?\n\n> Якби я (1)___ мільйон доларів, я (2)___ купив великий будинок. Якби я (3)___ біля моря, я (4)___ плавав кожен день. Якби у мене (5)___ більше часу, я (6)___ читав більше книг.\n\n**Answers:** мав, б, жив, б, було, б\n\n---",
     "immersiveSections": [
       {
-        "id": "warm-up-розминка",
-        "title": "warm-up | Розминка",
-        "content": "### Нереальні умови | Unreal Conditions\n\nУ модулі 105: **якщо** для реальних умов.\n\nIn module 105: **якщо** for real conditions.\n\nТепер: **якби** для нереальних, гіпотетичних умов.\n\nNow: **якби** for unreal, hypothetical conditions.\n\n| Type | Ukrainian | English |\n|------|-----------|---------|\n| Real | Якщо матиму час, прийду. | If I have time, I'll come. |\n| Unreal | **Якби** я мав час, я **б** прийшов. | If I had time, I would come. |",
-        "type": "topic"
+        "id": "section-зміст-уроку-lesson-content",
+        "type": "content",
+        "title": "Зміст уроку | Lesson Content",
+        "content": "## warm-up | Розминка\n\n### Нереальні умови | Unreal Conditions\n\nУ модулі 105: **якщо** для реальних умов.\n\nIn module 105: **якщо** for real conditions.\n\nТепер: **якби** для нереальних, гіпотетичних умов.\n\nNow: **якби** for unreal, hypothetical conditions.\n\n| Type | Ukrainian | English |\n|------|-----------|---------|\n| Real | Якщо матиму час, прийду. | If I have time, I'll come. |\n| Unreal | **Якби** я мав час, я **б** прийшов. | If I had time, I would come. |\n\n## presentation | Презентація\n\n### Якби + Past + Б: Basic Pattern\n\nUnreal conditionals use **якби** + **past tense** + **б(и)**:\n\n| Ukrainian | English |\n|-----------|---------|\n| Якби я **знав**, я **б сказав**. | If I knew, I would tell. |\n| Якби вона **мала** час, вона **б прийшла**. | If she had time, she would come. |\n| Якби ми **могли**, ми **б допомогли**. | If we could, we would help. |\n\n> **⭐ KEY STRUCTURE**\n>\n> **Якби** + past tense, + subject + **б(и)** + past tense\n>\n> The particle **б** (short for **би**) marks the result clause as hypothetical/conditional.\n\n### Position of Б(и)\n\n**Б** comes after the first stressed word in the result clause:\n\n| Pattern | Example |\n|---------|---------|\n| After pronoun | Якби він зателефонував, **я б** відповів. |\n| After short word | Якби ти попросив, **ми б** допомогли. |\n| Can combine with якби | **Якби** я знав, сказав **би**. |\n\n**Би** (full form) is used:\n- After consonants: знав **би**\n- For emphasis: **Якби** ти знав!\n\n### Present Unreal Conditionals\n\nFor situations that are **not true now** (but imagined):\n\n| Ukrainian | Reality | Meaning |\n|-----------|---------|---------|\n| Якби я **був** багатим, я **б** подорожував. | I'm not rich. | If I were rich, I would travel. |\n| Якби вона **жила** тут, ми **б** зустрічалися. | She doesn't live here. | If she lived here, we would meet. |\n| Якби він **знав** українську, він **би** розумів. | He doesn't know Ukrainian. | If he knew Ukrainian, he would understand. |\n\n### Past Unreal Conditionals\n\nFor situations that **didn't happen in the past** (counterfactual):\n\nThe structure is the **same** as present unreal:\n\n| Ukrainian | Reality | Meaning |\n|-----------|---------|---------|\n| Якби я **знав** раніше, я **б** прийшов. | I didn't know earlier. | If I had known earlier, I would have come. |\n| Якби вона **попросила**, він **би** допоміг. | She didn't ask. | If she had asked, he would have helped. |\n| Якби ми **встали** раніше, ми **б** не запізнилися. | We didn't get up earlier. | If we had gotten up earlier, we wouldn't have been late. |\n\n> **⭐ NO SPECIAL PAST-PAST FORM**\n>\n> Unlike English (had done... would have done), Ukrainian uses the **same form** for both present and past unreal:\n>\n> - **Present unreal:** Якби я знав, я б сказав. (If I knew, I would tell.)\n> - **Past unreal:** Якби я знав (тоді), я б сказав. (If I had known [then], I would have told.)\n>\n> Context (тоді, вчора, раніше) indicates past reference.\n\n### Якби + Бути (To Be)\n\nSpecial attention to \"to be\" in hypotheticals:\n\n| Gender | Form | Example |\n|--------|------|---------|\n| m | був | Якби я **був** там... |\n| f | була | Якби вона **була** тут... |\n| n | було | Якби це **було** правдою... |\n| pl | були | Якби ми **були** разом... |\n\n**Examples:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Якби я **був** лікарем, я б допомагав людям. | If I were a doctor, I would help people. |\n| Якби вона **була** вільна, вона б прийшла. | If she were free, she would come. |\n| Якби це **було** можливо, я б зробив. | If it were possible, I would do it. |\n\n### Wishes with Якби\n\n**Якби** can express wishes (similar to \"if only\" or \"I wish\"):\n\n| Ukrainian | English |\n|-----------|---------|\n| **Якби** ти знав! | If only you knew! |\n| **Якби** я міг! | If only I could! |\n| **Якби** це було правдою! | If only it were true! |\n| **Якби** ти був тут! | If only you were here! |\n\n### Expressing Advice with Якби\n\n\"If I were you\" construction:\n\n| Ukrainian | English |\n|-----------|---------|\n| **Якби** я був **на твоєму місці**, я б подумав. | If I were in your place, I would think. |\n| **Якби** я був **тобою**, я б не робив цього. | If I were you, I wouldn't do this. |\n| **На твоєму місці** я б відпочив. | In your place, I would rest. |\n\n### Якщо vs. Якби Summary\n\n| Aspect | Якщо | Якби |\n|--------|------|------|\n| Condition type | Real, possible | Unreal, hypothetical |\n| Verb forms | Present/future | Past + б(и) |\n| Reality | Can happen | Unlikely or impossible |\n\n| Example | Type |\n|---------|------|\n| Якщо матиму час, прийду. | Real future |\n| Якби мав час, прийшов би. | Hypothetical |\n\n## practice | Практика\n\n### Transform Real to Unreal\n\n**Example:** Якщо матиму час, прийду. (real)\n> [!answer] Якби я мав час, я б прийшов.\n> [!explanation] unreal\n1. Якщо буде гарна погода, поїдемо на море.\n   > [!answer] Якби була гарна погода, ми б поїхали на море.\n\n2. Якщо він зателефонує, я відповім.\n   > [!answer] Якби він зателефонував, я б відповів.\n\n3. Якщо вона знає відповідь, вона скаже.\n   > [!answer] Якби вона знала відповідь, вона б сказала.\n\n4. Якщо ти працюєш, ти заробляєш гроші.\n   > [!answer] Якби ти працював, ти б заробляв гроші.\n\n5. Якщо ми маємо час, ми допомагаємо.\n   > [!answer] Якби ми мали час, ми б допомагали.\n\n### Choose Якщо or Якби\n\n1. ___ я виграю в лотерею, куплю будинок. (possible)\n   > [!answer] **Якщо**\n   > [!explanation] still possible\n2. ___ я був президентом, я б змінив закони. (hypothetical)\n   > [!answer] **Якби**\n   > [!explanation] I'm not president\n3. ___ він зателефонує, передай йому. (possible)\n   > [!answer] **Якщо**\n   > [!explanation] he might call\n4. ___ я знав раніше, я б прийшов. (counterfactual)\n   > [!answer] **Якби**\n   > [!explanation] I didn't know\n5. ___ вона мала крила, вона б летіла. (impossible)\n   > [!answer] **Якби**\n   > [!explanation] impossible condition\n### Complete the Sentences\n\n1. Якби я знав українську добре, я б ___ (to read Ukrainian books).\n   > [!answer] Якби я знав українську добре, я б **читав українські книги**.\n\n2. Якби у мене було більше грошей, я б ___ (to travel).\n   > [!answer] Якби у мене було більше грошей, я б **подорожував**.\n\n3. Якби вона була вільна, вона б ___ (to come to the party).\n   > [!answer] Якби вона була вільна, вона б **прийшла на вечірку**.\n\n4. Якби я міг вибирати, я б ___ (to live by the sea).\n   > [!answer] Якби я міг вибирати, я б **жив біля моря**.\n\n### Translate to Ukrainian\n\n1. If I were you, I would stay home.\n   > [!answer] **Якби я був на твоєму місці, я б залишився вдома.**\n2. If she had time, she would help.\n   > [!answer] **Якби вона мала час, вона б допомогла.**\n3. If only I could fly!\n   > [!answer] **Якби я міг літати!**\n4. If he had known, he would have told me.\n   > [!answer] **Якби він знав, він би сказав мені.**\n5. If we were rich, we would buy a house.\n   > [!answer] **Якби ми були багаті, ми б купили будинок.**\n## production | Продукція\n\n### Imagine Different Life\n\nUse якби to imagine:\n\n1. Якби я жив в іншій країні...\n2. Якби я народився 100 років тому...\n3. Якби я міг змінити одну річ у своєму житті...\n4. Якби я був невидимим...\n5. Якби я міг говорити з тваринами...\n\n**Example:**\nЯкби я жив в Україні, я б ходив на концерти українських співаків. Якби я народився 100 років тому, я б не мав інтернету.\n\n### Give Advice\n\nUse \"якби я був на твоєму місці\":\n\n**Situations:**\n- Друг не може вирішити, чи змінювати роботу\n- Подруга думає, чи їхати вчитися за кордон\n- Хтось не знає, що подарувати\n\n**Example:**\nЯкби я був на твоєму місці, я б змінив роботу. Краще ризикувати, ніж жалкувати.\n\n---\n\n\n---\n\n\n---"
       },
       {
-        "id": "presentation-презентація",
-        "title": "presentation | Презентація",
-        "content": "### Якби + Past + Б: Basic Pattern\n\nUnreal conditionals use **якби** + **past tense** + **б(и)**:\n\n| Ukrainian | English |\n|-----------|---------|\n| Якби я **знав**, я **б сказав**. | If I knew, I would tell. |\n| Якби вона **мала** час, вона **б прийшла**. | If she had time, she would come. |\n| Якби ми **могли**, ми **б допомогли**. | If we could, we would help. |\n\n> **⭐ KEY STRUCTURE**\n>\n> **Якби** + past tense, + subject + **б(и)** + past tense\n>\n> The particle **б** (short for **би**) marks the result clause as hypothetical/conditional.\n\n### Position of Б(и)\n\n**Б** comes after the first stressed word in the result clause:\n\n| Pattern | Example |\n|---------|---------|\n| After pronoun | Якби він зателефонував, **я б** відповів. |\n| After short word | Якби ти попросив, **ми б** допомогли. |\n| Can combine with якби | **Якби** я знав, сказав **би**. |\n\n**Би** (full form) is used:\n- After consonants: знав **би**\n- For emphasis: **Якби** ти знав!\n\n### Present Unreal Conditionals\n\nFor situations that are **not true now** (but imagined):\n\n| Ukrainian | Reality | Meaning |\n|-----------|---------|---------|\n| Якби я **був** багатим, я **б** подорожував. | I'm not rich. | If I were rich, I would travel. |\n| Якби вона **жила** тут, ми **б** зустрічалися. | She doesn't live here. | If she lived here, we would meet. |\n| Якби він **знав** українську, він **би** розумів. | He doesn't know Ukrainian. | If he knew Ukrainian, he would understand. |\n\n### Past Unreal Conditionals\n\nFor situations that **didn't happen in the past** (counterfactual):\n\nThe structure is the **same** as present unreal:\n\n| Ukrainian | Reality | Meaning |\n|-----------|---------|---------|\n| Якби я **знав** раніше, я **б** прийшов. | I didn't know earlier. | If I had known earlier, I would have come. |\n| Якби вона **попросила**, він **би** допоміг. | She didn't ask. | If she had asked, he would have helped. |\n| Якби ми **встали** раніше, ми **б** не запізнилися. | We didn't get up earlier. | If we had gotten up earlier, we wouldn't have been late. |\n\n> **⭐ NO SPECIAL PAST-PAST FORM**\n>\n> Unlike English (had done... would have done), Ukrainian uses the **same form** for both present and past unreal:\n>\n> - **Present unreal:** Якби я знав, я б сказав. (If I knew, I would tell.)\n> - **Past unreal:** Якби я знав (тоді), я б сказав. (If I had known [then], I would have told.)\n>\n> Context (тоді, вчора, раніше) indicates past reference.\n\n### Якби + Бути (To Be)\n\nSpecial attention to \"to be\" in hypotheticals:\n\n| Gender | Form | Example |\n|--------|------|---------|\n| m | був | Якби я **був** там... |\n| f | була | Якби вона **була** тут... |\n| n | було | Якби це **було** правдою... |\n| pl | були | Якби ми **були** разом... |\n\n**Examples:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Якби я **був** лікарем, я б допомагав людям. | If I were a doctor, I would help people. |\n| Якби вона **була** вільна, вона б прийшла. | If she were free, she would come. |\n| Якби це **було** можливо, я б зробив. | If it were possible, I would do it. |\n\n### Wishes with Якби\n\n**Якби** can express wishes (similar to \"if only\" or \"I wish\"):\n\n| Ukrainian | English |\n|-----------|---------|\n| **Якби** ти знав! | If only you knew! |\n| **Якби** я міг! | If only I could! |\n| **Якби** це було правдою! | If only it were true! |\n| **Якби** ти був тут! | If only you were here! |\n\n### Expressing Advice with Якби\n\n\"If I were you\" construction:\n\n| Ukrainian | English |\n|-----------|---------|\n| **Якби** я був **на твоєму місці**, я б подумав. | If I were in your place, I would think. |\n| **Якби** я був **тобою**, я б не робив цього. | If I were you, I wouldn't do this. |\n| **На твоєму місці** я б відпочив. | In your place, I would rest. |\n\n### Якщо vs. Якби Summary\n\n| Aspect | Якщо | Якби |\n|--------|------|------|\n| Condition type | Real, possible | Unreal, hypothetical |\n| Verb forms | Present/future | Past + б(и) |\n| Reality | Can happen | Unlikely or impossible |\n\n| Example | Type |\n|---------|------|\n| Якщо матиму час, прийду. | Real future |\n| Якби мав час, прийшов би. | Hypothetical |",
-        "type": "topic"
-      },
-      {
-        "id": "practice-практика",
-        "title": "practice | Практика",
-        "content": "### Transform Real to Unreal\n\n**Example:** Якщо матиму час, прийду. (real)\n→ Якби я мав час, я б прийшов. (unreal)\n\n1. Якщо буде гарна погода, поїдемо на море.\n   → Якби була гарна погода, ми б поїхали на море.\n\n2. Якщо він зателефонує, я відповім.\n   → Якби він зателефонував, я б відповів.\n\n3. Якщо вона знає відповідь, вона скаже.\n   → Якби вона знала відповідь, вона б сказала.\n\n4. Якщо ти працюєш, ти заробляєш гроші.\n   → Якби ти працював, ти б заробляв гроші.\n\n5. Якщо ми маємо час, ми допомагаємо.\n   → Якби ми мали час, ми б допомагали.\n\n### Choose Якщо or Якби\n\n1. ___ я виграю в лотерею, куплю будинок. (possible)\n   → **Якщо** (still possible)\n\n2. ___ я був президентом, я б змінив закони. (hypothetical)\n   → **Якби** (I'm not president)\n\n3. ___ він зателефонує, передай йому. (possible)\n   → **Якщо** (he might call)\n\n4. ___ я знав раніше, я б прийшов. (counterfactual)\n   → **Якби** (I didn't know)\n\n5. ___ вона мала крила, вона б летіла. (impossible)\n   → **Якби** (impossible condition)\n\n### Complete the Sentences\n\n1. Якби я знав українську добре, я б ___ (to read Ukrainian books).\n   → Якби я знав українську добре, я б **читав українські книги**.\n\n2. Якби у мене було більше грошей, я б ___ (to travel).\n   → Якби у мене було більше грошей, я б **подорожував**.\n\n3. Якби вона була вільна, вона б ___ (to come to the party).\n   → Якби вона була вільна, вона б **прийшла на вечірку**.\n\n4. Якби я міг вибирати, я б ___ (to live by the sea).\n   → Якби я міг вибирати, я б **жив біля моря**.\n\n### Translate to Ukrainian\n\n1. If I were you, I would stay home.\n   → **Якби я був на твоєму місці, я б залишився вдома.**\n\n2. If she had time, she would help.\n   → **Якби вона мала час, вона б допомогла.**\n\n3. If only I could fly!\n   → **Якби я міг літати!**\n\n4. If he had known, he would have told me.\n   → **Якби він знав, він би сказав мені.**\n\n5. If we were rich, we would buy a house.\n   → **Якби ми були багаті, ми б купили будинок.**",
-        "type": "topic"
-      },
-      {
-        "id": "production-продукція",
-        "title": "production | Продукція",
-        "content": "### Imagine Different Life\n\nUse якби to imagine:\n\n1. Якби я жив в іншій країні...\n2. Якби я народився 100 років тому...\n3. Якби я міг змінити одну річ у своєму житті...\n4. Якби я був невидимим...\n5. Якби я міг говорити з тваринами...\n\n**Example:**\nЯкби я жив в Україні, я б ходив на концерти українських співаків. Якби я народився 100 років тому, я б не мав інтернету.\n\n### Give Advice\n\nUse \"якби я був на твоєму місці\":\n\n**Situations:**\n- Друг не може вирішити, чи змінювати роботу\n- Подруга думає, чи їхати вчитися за кордон\n- Хтось не знає, що подарувати\n\n**Example:**\nЯкби я був на твоєму місці, я б змінив роботу. Краще ризикувати, ніж жалкувати.\n\n---",
-        "type": "topic"
-      },
-      {
-        "id": "activities",
-        "title": "Activities",
-        "content": "## quiz: Unreal Conditionals\n\n> Choose the correct answer.\n\n1. ___ я знав, я б сказав.\n   - [ ] Якщо\n   - [x] Якби\n   > Unreal/hypothetical requires \"якби.\"\n\n2. Якби вона мала час, вона ___ прийшла.\n   - [x] б\n   - [ ] -\n   > The particle \"б\" marks the result clause.\n\n3. Якби я ___ багатим, я б подорожував.\n   - [x] був\n   - [ ] буду\n   > Past tense form with \"якби.\"\n\n4. ___ він зателефонує завтра, передай йому. (possible)\n   - [x] Якщо\n   - [ ] Якби\n   > Real possibility uses \"якщо.\"\n\n5. Якби я був на твоєму ___ , я б відпочив.\n   - [x] місці\n   - [ ] місце\n   > Fixed expression \"на твоєму місці\" (in your place).\n\n6. ___ я міг літати!\n   - [x] Якби\n   - [ ] Якщо\n   > Wish expression uses \"якби.\"\n\n## fill-in: What Would You Do?\n\n> Якби я (1)___ мільйон доларів, я (2)___ купив великий будинок. Якби я (3)___ біля моря, я (4)___ плавав кожен день. Якби у мене (5)___ більше часу, я (6)___ читав більше книг.\n\n**Answers:** мав, б, жив, б, було, б\n\n---",
-        "type": "activities"
-      },
-      {
-        "id": "vocabulary",
-        "title": "Vocabulary",
-        "content": "| Word | IPA | English | Gender |\n|------|-----|---------|--------|\n| якби | /jɑkˈbɪ/ | if (unreal) | conj |\n| б / би | /b/ /bɪ/ | would (conditional particle) | part |\n| нереальний | /nɛrɛˈɑlʲnɪj/ | unreal | adj |\n| гіпотетичний | /ɦʲipotɛˈtɪt͡ʃnɪj/ | hypothetical | adj |\n| уявити | /ujɑˈvɪtɪ/ | to imagine | pf |\n| уявляти | /ujɑvˈlʲɑtɪ/ | to imagine | impf |\n| мріяти | /mrʲiˈjɑtɪ/ | to dream | impf |\n| на твоєму місці | - | in your place | phrase |\n| можливо | /moʒˈlɪvo/ | possibly | adv |\n| неможливо | /nɛmoʒˈlɪvo/ | impossible | adv |\n\n---",
-        "type": "vocabulary"
-      },
-      {
-        "id": "summary",
+        "id": "section-summary",
+        "type": "summary",
         "title": "Summary",
         "content": "## Unreal Conditionals with Якби\n\n### Structure\n**Якби** + past tense, subject + **б(и)** + past tense\n\n### Examples\n\n| Ukrainian | English |\n|-----------|---------|\n| Якби я **знав**, я **б сказав**. | If I knew, I would tell. |\n| Якби вона **мала** час, вона **б прийшла**. | If she had time, she would come. |\n| Якби ми **могли**, ми **б допомогли**. | If we could, we would help. |\n\n### Present vs. Past Unreal\n\nSame form — context indicates time:\n- **Present:** Якби я знав (зараз)... — If I knew (now)...\n- **Past:** Якби я знав (тоді)... — If I had known (then)...\n\n### Wishes\n\n| Ukrainian | English |\n|-----------|---------|\n| Якби ти знав! | If only you knew! |\n| Якби я міг! | If only I could! |\n\n### Advice\n\n| Ukrainian | English |\n|-----------|---------|\n| Якби я був на твоєму місці... | If I were in your place... |\n| На твоєму місці я б... | In your place, I would... |\n\n### Якщо vs. Якби\n\n| Word | Condition | Example |\n|------|-----------|---------|\n| Якщо | Real/possible | Якщо прийдеш, подзвони. |\n| Якби | Unreal/hypothetical | Якби прийшов, зателефонував би. |\n\n> **Key Takeaways**\n>\n> - Якби = unreal/hypothetical conditions\n> - Use past tense forms (not about past time!)\n> - Б(и) particle marks the result clause\n> - Same form for present and past unreal (context clarifies)\n> - Next module: mixed and complex conditionals",
-        "type": "summary"
+        "titleUk": "Підсумок"
       }
-    ]
+    ],
+    "rawMarkdown": "---\nmodule: 106\ntitle: \"Conditionals II\"\nsubtitle: \"Unreal Conditions with Якби\"\nlevel: B1\nphase: B1.2\nduration: 45\ntransliteration: none\ntags: [grammar, conditionals, complex-sentences, якби, subjunctive]\nobjectives:\n  - Understand unreal conditional structure\n  - Use якби for hypothetical conditions\n  - Form present and past unreal conditionals\n  - Express wishes and hypothetical situations\n---\n\n# Зміст уроку | Lesson Content\n\n## warm-up | Розминка\n\n### Нереальні умови | Unreal Conditions\n\nУ модулі 105: **якщо** для реальних умов.\n\nIn module 105: **якщо** for real conditions.\n\nТепер: **якби** для нереальних, гіпотетичних умов.\n\nNow: **якби** for unreal, hypothetical conditions.\n\n| Type | Ukrainian | English |\n|------|-----------|---------|\n| Real | Якщо матиму час, прийду. | If I have time, I'll come. |\n| Unreal | **Якби** я мав час, я **б** прийшов. | If I had time, I would come. |\n\n## presentation | Презентація\n\n### Якби + Past + Б: Basic Pattern\n\nUnreal conditionals use **якби** + **past tense** + **б(и)**:\n\n| Ukrainian | English |\n|-----------|---------|\n| Якби я **знав**, я **б сказав**. | If I knew, I would tell. |\n| Якби вона **мала** час, вона **б прийшла**. | If she had time, she would come. |\n| Якби ми **могли**, ми **б допомогли**. | If we could, we would help. |\n\n> **⭐ KEY STRUCTURE**\n>\n> **Якби** + past tense, + subject + **б(и)** + past tense\n>\n> The particle **б** (short for **би**) marks the result clause as hypothetical/conditional.\n\n### Position of Б(и)\n\n**Б** comes after the first stressed word in the result clause:\n\n| Pattern | Example |\n|---------|---------|\n| After pronoun | Якби він зателефонував, **я б** відповів. |\n| After short word | Якби ти попросив, **ми б** допомогли. |\n| Can combine with якби | **Якби** я знав, сказав **би**. |\n\n**Би** (full form) is used:\n- After consonants: знав **би**\n- For emphasis: **Якби** ти знав!\n\n### Present Unreal Conditionals\n\nFor situations that are **not true now** (but imagined):\n\n| Ukrainian | Reality | Meaning |\n|-----------|---------|---------|\n| Якби я **був** багатим, я **б** подорожував. | I'm not rich. | If I were rich, I would travel. |\n| Якби вона **жила** тут, ми **б** зустрічалися. | She doesn't live here. | If she lived here, we would meet. |\n| Якби він **знав** українську, він **би** розумів. | He doesn't know Ukrainian. | If he knew Ukrainian, he would understand. |\n\n### Past Unreal Conditionals\n\nFor situations that **didn't happen in the past** (counterfactual):\n\nThe structure is the **same** as present unreal:\n\n| Ukrainian | Reality | Meaning |\n|-----------|---------|---------|\n| Якби я **знав** раніше, я **б** прийшов. | I didn't know earlier. | If I had known earlier, I would have come. |\n| Якби вона **попросила**, він **би** допоміг. | She didn't ask. | If she had asked, he would have helped. |\n| Якби ми **встали** раніше, ми **б** не запізнилися. | We didn't get up earlier. | If we had gotten up earlier, we wouldn't have been late. |\n\n> **⭐ NO SPECIAL PAST-PAST FORM**\n>\n> Unlike English (had done... would have done), Ukrainian uses the **same form** for both present and past unreal:\n>\n> - **Present unreal:** Якби я знав, я б сказав. (If I knew, I would tell.)\n> - **Past unreal:** Якби я знав (тоді), я б сказав. (If I had known [then], I would have told.)\n>\n> Context (тоді, вчора, раніше) indicates past reference.\n\n### Якби + Бути (To Be)\n\nSpecial attention to \"to be\" in hypotheticals:\n\n| Gender | Form | Example |\n|--------|------|---------|\n| m | був | Якби я **був** там... |\n| f | була | Якби вона **була** тут... |\n| n | було | Якби це **було** правдою... |\n| pl | були | Якби ми **були** разом... |\n\n**Examples:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Якби я **був** лікарем, я б допомагав людям. | If I were a doctor, I would help people. |\n| Якби вона **була** вільна, вона б прийшла. | If she were free, she would come. |\n| Якби це **було** можливо, я б зробив. | If it were possible, I would do it. |\n\n### Wishes with Якби\n\n**Якби** can express wishes (similar to \"if only\" or \"I wish\"):\n\n| Ukrainian | English |\n|-----------|---------|\n| **Якби** ти знав! | If only you knew! |\n| **Якби** я міг! | If only I could! |\n| **Якби** це було правдою! | If only it were true! |\n| **Якби** ти був тут! | If only you were here! |\n\n### Expressing Advice with Якби\n\n\"If I were you\" construction:\n\n| Ukrainian | English |\n|-----------|---------|\n| **Якби** я був **на твоєму місці**, я б подумав. | If I were in your place, I would think. |\n| **Якби** я був **тобою**, я б не робив цього. | If I were you, I wouldn't do this. |\n| **На твоєму місці** я б відпочив. | In your place, I would rest. |\n\n### Якщо vs. Якби Summary\n\n| Aspect | Якщо | Якби |\n|--------|------|------|\n| Condition type | Real, possible | Unreal, hypothetical |\n| Verb forms | Present/future | Past + б(и) |\n| Reality | Can happen | Unlikely or impossible |\n\n| Example | Type |\n|---------|------|\n| Якщо матиму час, прийду. | Real future |\n| Якби мав час, прийшов би. | Hypothetical |\n\n## practice | Практика\n\n### Transform Real to Unreal\n\n**Example:** Якщо матиму час, прийду. (real)\n> [!answer] Якби я мав час, я б прийшов.\n> [!explanation] unreal\n1. Якщо буде гарна погода, поїдемо на море.\n   > [!answer] Якби була гарна погода, ми б поїхали на море.\n\n2. Якщо він зателефонує, я відповім.\n   > [!answer] Якби він зателефонував, я б відповів.\n\n3. Якщо вона знає відповідь, вона скаже.\n   > [!answer] Якби вона знала відповідь, вона б сказала.\n\n4. Якщо ти працюєш, ти заробляєш гроші.\n   > [!answer] Якби ти працював, ти б заробляв гроші.\n\n5. Якщо ми маємо час, ми допомагаємо.\n   > [!answer] Якби ми мали час, ми б допомагали.\n\n### Choose Якщо or Якби\n\n1. ___ я виграю в лотерею, куплю будинок. (possible)\n   > [!answer] **Якщо**\n   > [!explanation] still possible\n2. ___ я був президентом, я б змінив закони. (hypothetical)\n   > [!answer] **Якби**\n   > [!explanation] I'm not president\n3. ___ він зателефонує, передай йому. (possible)\n   > [!answer] **Якщо**\n   > [!explanation] he might call\n4. ___ я знав раніше, я б прийшов. (counterfactual)\n   > [!answer] **Якби**\n   > [!explanation] I didn't know\n5. ___ вона мала крила, вона б летіла. (impossible)\n   > [!answer] **Якби**\n   > [!explanation] impossible condition\n### Complete the Sentences\n\n1. Якби я знав українську добре, я б ___ (to read Ukrainian books).\n   > [!answer] Якби я знав українську добре, я б **читав українські книги**.\n\n2. Якби у мене було більше грошей, я б ___ (to travel).\n   > [!answer] Якби у мене було більше грошей, я б **подорожував**.\n\n3. Якби вона була вільна, вона б ___ (to come to the party).\n   > [!answer] Якби вона була вільна, вона б **прийшла на вечірку**.\n\n4. Якби я міг вибирати, я б ___ (to live by the sea).\n   > [!answer] Якби я міг вибирати, я б **жив біля моря**.\n\n### Translate to Ukrainian\n\n1. If I were you, I would stay home.\n   > [!answer] **Якби я був на твоєму місці, я б залишився вдома.**\n2. If she had time, she would help.\n   > [!answer] **Якби вона мала час, вона б допомогла.**\n3. If only I could fly!\n   > [!answer] **Якби я міг літати!**\n4. If he had known, he would have told me.\n   > [!answer] **Якби він знав, він би сказав мені.**\n5. If we were rich, we would buy a house.\n   > [!answer] **Якби ми були багаті, ми б купили будинок.**\n## production | Продукція\n\n### Imagine Different Life\n\nUse якби to imagine:\n\n1. Якби я жив в іншій країні...\n2. Якби я народився 100 років тому...\n3. Якби я міг змінити одну річ у своєму житті...\n4. Якби я був невидимим...\n5. Якби я міг говорити з тваринами...\n\n**Example:**\nЯкби я жив в Україні, я б ходив на концерти українських співаків. Якби я народився 100 років тому, я б не мав інтернету.\n\n### Give Advice\n\nUse \"якби я був на твоєму місці\":\n\n**Situations:**\n- Друг не може вирішити, чи змінювати роботу\n- Подруга думає, чи їхати вчитися за кордон\n- Хтось не знає, що подарувати\n\n**Example:**\nЯкби я був на твоєму місці, я б змінив роботу. Краще ризикувати, ніж жалкувати.\n\n---\n\n# Activities\n\n## quiz: Unreal Conditionals\n\n> Choose the correct answer.\n\n1. ___ я знав, я б сказав.\n   - [ ] Якщо\n   - [x] Якби\n   > Unreal/hypothetical requires \"якби.\"\n\n2. Якби вона мала час, вона ___ прийшла.\n   - [x] б\n   - [ ] -\n   > The particle \"б\" marks the result clause.\n\n3. Якби я ___ багатим, я б подорожував.\n   - [x] був\n   - [ ] буду\n   > Past tense form with \"якби.\"\n\n4. ___ він зателефонує завтра, передай йому. (possible)\n   - [x] Якщо\n   - [ ] Якби\n   > Real possibility uses \"якщо.\"\n\n5. Якби я був на твоєму ___ , я б відпочив.\n   - [x] місці\n   - [ ] місце\n   > Fixed expression \"на твоєму місці\" (in your place).\n\n6. ___ я міг літати!\n   - [x] Якби\n   - [ ] Якщо\n   > Wish expression uses \"якби.\"\n\n## fill-in: What Would You Do?\n\n> Якби я (1)___ мільйон доларів, я (2)___ купив великий будинок. Якби я (3)___ біля моря, я (4)___ плавав кожен день. Якби у мене (5)___ більше часу, я (6)___ читав більше книг.\n\n**Answers:** мав, б, жив, б, було, б\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | Gender |\n|------|-----|---------|--------|\n| якби | /jɑkˈbɪ/ | if (unreal) | conj |\n| б / би | /b/ /bɪ/ | would (conditional particle) | part |\n| нереальний | /nɛrɛˈɑlʲnɪj/ | unreal | adj |\n| гіпотетичний | /ɦʲipotɛˈtɪt͡ʃnɪj/ | hypothetical | adj |\n| уявити | /ujɑˈvɪtɪ/ | to imagine | pf |\n| уявляти | /ujɑvˈlʲɑtɪ/ | to imagine | impf |\n| мріяти | /mrʲiˈjɑtɪ/ | to dream | impf |\n| на твоєму місці | - | in your place | phrase |\n| можливо | /moʒˈlɪvo/ | possibly | adv |\n| неможливо | /nɛmoʒˈlɪvo/ | impossible | adv |\n\n---\n\n# Summary\n\n## Unreal Conditionals with Якби\n\n### Structure\n**Якби** + past tense, subject + **б(и)** + past tense\n\n### Examples\n\n| Ukrainian | English |\n|-----------|---------|\n| Якби я **знав**, я **б сказав**. | If I knew, I would tell. |\n| Якби вона **мала** час, вона **б прийшла**. | If she had time, she would come. |\n| Якби ми **могли**, ми **б допомогли**. | If we could, we would help. |\n\n### Present vs. Past Unreal\n\nSame form — context indicates time:\n- **Present:** Якби я знав (зараз)... — If I knew (now)...\n- **Past:** Якби я знав (тоді)... — If I had known (then)...\n\n### Wishes\n\n| Ukrainian | English |\n|-----------|---------|\n| Якби ти знав! | If only you knew! |\n| Якби я міг! | If only I could! |\n\n### Advice\n\n| Ukrainian | English |\n|-----------|---------|\n| Якби я був на твоєму місці... | If I were in your place... |\n| На твоєму місці я б... | In your place, I would... |\n\n### Якщо vs. Якби\n\n| Word | Condition | Example |\n|------|-----------|---------|\n| Якщо | Real/possible | Якщо прийдеш, подзвони. |\n| Якби | Unreal/hypothetical | Якби прийшов, зателефонував би. |\n\n> **Key Takeaways**\n>\n> - Якби = unreal/hypothetical conditions\n> - Use past tense forms (not about past time!)\n> - Б(и) particle marks the result clause\n> - Same form for present and past unreal (context clarifies)\n> - Next module: mixed and complex conditionals\n"
   },
   "activities": [
     {
-      "id": "act-uk-B1-106-quiz",
+      "id": "act-b1-106-quiz",
       "type": "quiz",
       "title": "Unreal Conditionals",
       "description": "Choose the correct answer.",
       "content": {
         "type": "quiz",
-        "instructions": "Choose the correct answer.",
         "questions": [
           {
             "question": "___ я знав, я б сказав.",
@@ -264,32 +125,37 @@
       "language": "uk",
       "difficultyLevel": "B1",
       "duration": 5,
-      "tags": [
-        "grammar",
-        "conditionals",
-        "complex-sentences",
-        "якби",
-        "subjunctive"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.231Z",
+      "modifiedAt": "2025-12-01T22:58:37.231Z"
     },
     {
-      "id": "act-uk-B1-106-gapfill",
+      "id": "act-b1-106-gapfill",
       "type": "gap-fill",
       "title": "What Would You Do?",
       "description": "Якби я (1)___ мільйон доларів, я (2)___ купив великий будинок. Якби я (3)___ біля моря, я (4)___ плавав кожен день. Якби у мене (5)___ більше часу, я (6)___ читав більше книг.",
       "content": {
         "type": "gap-fill",
-        "instructions": "Якби я (1)___ мільйон доларів, я (2)___ купив великий будинок. Якби я (3)___ біля моря, я (4)___ плавав кожен день. Якби у мене (5)___ більше часу, я (6)___ читав більше книг.",
         "text": "Якби я (1)___ мільйон доларів, я (2)___ купив великий будинок. Якби я (3)___ біля моря, я (4)___ плавав кожен день. Якби у мене (5)___ більше часу, я (6)___ читав більше книг.",
         "blanks": [
-          {},
-          {},
-          {},
-          {},
-          {},
-          {}
+          {
+            "index": 0
+          },
+          {
+            "index": 1
+          },
+          {
+            "index": 2
+          },
+          {
+            "index": 3
+          },
+          {
+            "index": 4
+          },
+          {
+            "index": 5
+          }
         ],
         "answers": [
           "мав",
@@ -306,15 +172,9 @@
       "language": "uk",
       "difficultyLevel": "B1",
       "duration": 5,
-      "tags": [
-        "grammar",
-        "conditionals",
-        "complex-sentences",
-        "якби",
-        "subjunctive"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.231Z",
+      "modifiedAt": "2025-12-01T22:58:37.231Z"
     }
   ],
   "vocabulary": {
@@ -325,94 +185,73 @@
     "transliterationMode": "none",
     "words": [
       {
-        "id": "v-m106-001",
+        "id": "v-yakby-106-0",
         "uk": "якби",
-        "translit": "",
-        "ipa": "/jɑkˈbɪ/",
         "en": "if (unreal)",
-        "pos": "",
-        "gender": "conj"
+        "pos": "conj",
+        "ipa": "/jɑkˈbɪ/"
       },
       {
-        "id": "v-m106-002",
+        "id": "v-b-/-by-106-1",
         "uk": "б / би",
-        "translit": "",
-        "ipa": "/b/ /bɪ/",
         "en": "would (conditional particle)",
-        "pos": "",
-        "gender": "part"
+        "pos": "part",
+        "ipa": "/b/ /bɪ/"
       },
       {
-        "id": "v-m106-003",
+        "id": "v-nerealьnyy-106-2",
         "uk": "нереальний",
-        "translit": "",
-        "ipa": "/nɛrɛˈɑlʲnɪj/",
         "en": "unreal",
-        "pos": "",
-        "gender": "adj"
+        "pos": "adj",
+        "ipa": "/nɛrɛˈɑlʲnɪj/"
       },
       {
-        "id": "v-m106-004",
+        "id": "v-hipotetychnyy-106-3",
         "uk": "гіпотетичний",
-        "translit": "",
-        "ipa": "/ɦʲipotɛˈtɪt͡ʃnɪj/",
         "en": "hypothetical",
-        "pos": "",
-        "gender": "adj"
+        "pos": "adj",
+        "ipa": "/ɦʲipotɛˈtɪt͡ʃnɪj/"
       },
       {
-        "id": "v-m106-005",
+        "id": "v-uyavyty-106-4",
         "uk": "уявити",
-        "translit": "",
-        "ipa": "/ujɑˈvɪtɪ/",
         "en": "to imagine",
-        "pos": "",
-        "gender": "pf"
+        "pos": "pf",
+        "ipa": "/ujɑˈvɪtɪ/"
       },
       {
-        "id": "v-m106-006",
+        "id": "v-uyavlyaty-106-5",
         "uk": "уявляти",
-        "translit": "",
-        "ipa": "/ujɑvˈlʲɑtɪ/",
         "en": "to imagine",
-        "pos": "",
-        "gender": "impf"
+        "pos": "impf",
+        "ipa": "/ujɑvˈlʲɑtɪ/"
       },
       {
-        "id": "v-m106-007",
+        "id": "v-mriyaty-106-6",
         "uk": "мріяти",
-        "translit": "",
-        "ipa": "/mrʲiˈjɑtɪ/",
         "en": "to dream",
-        "pos": "",
-        "gender": "impf"
+        "pos": "impf",
+        "ipa": "/mrʲiˈjɑtɪ/"
       },
       {
-        "id": "v-m106-008",
+        "id": "v-na-tvoyemu-mistsi-106-7",
         "uk": "на твоєму місці",
-        "translit": "",
-        "ipa": "-",
         "en": "in your place",
-        "pos": "",
-        "gender": "phrase"
+        "pos": "phrase"
       },
       {
-        "id": "v-m106-009",
+        "id": "v-mozhlyvo-106-8",
         "uk": "можливо",
-        "translit": "",
-        "ipa": "/moʒˈlɪvo/",
         "en": "possibly",
-        "pos": "",
-        "gender": "adv"
+        "pos": "adv",
+        "ipa": "/moʒˈlɪvo/"
       },
       {
-        "id": "v-m106-010",
+        "id": "v-nemozhlyvo-106-9",
         "uk": "неможливо",
-        "translit": "",
-        "ipa": "/nɛmoʒˈlɪvo/",
         "en": "impossible",
-        "pos": "",
-        "gender": "adv"
+        "pos": "adv",
+        "ipa": "/nɛmoʒˈlɪvo/"
       }
     ]
   }

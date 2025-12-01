@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-B1-99",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "revision",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -22,30 +21,15 @@
       "Prepare for B1.1 checkpoint"
     ],
     "grammarFocus": [],
-    "totalDuration": 45,
-    "transliterationMode": "none",
     "tags": [
       "review",
       "aspect",
       "motion",
       "vocabulary"
     ],
-    "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
+    "totalDuration": 45,
+    "transliterationMode": "none",
     "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Що ви вивчили в B1.1 | What You've Learned in B1.1\n\n**Modules 81-88: Aspect**\n- Perfective vs imperfective selection\n- Aspect in past, future, negation, imperatives\n- 60+ aspect pairs\n\n**Modules 89-94: Motion Verbs**\n- 8 motion verb pairs (uni/multi)\n- 10 directional prefixes\n- Figurative expressions\n\n**Modules 95-98: Functional Vocabulary**\n- Abstract concepts (ideas, problems, solutions)\n- Expressing opinions\n- Agreement and disagreement"
-          }
-        ]
-      },
       {
         "id": "phase-presentation",
         "name": "presentation",
@@ -54,128 +38,49 @@
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "### Aspect Review\n\n**Core Rules:**\n\n| Context | Aspect | Example |\n|---------|--------|---------|\n| Single completed action | Perfective | Я прочитав книгу. |\n| Duration (весь день) | Imperfective | Я читав весь день. |\n| Repetition (завжди) | Imperfective | Він завжди приходив. |\n| Result focus | Perfective | Вона написала листа. |\n| Process focus | Imperfective | Вона писала листа. |\n| Negation (general) | Imperfective | Я не читав цю книгу. |\n| \"Not yet\" (ще не) | Perfective | Я ще не прочитав. |\n\n**Key Aspect Pairs to Know:**\n\n| Imperfective | Perfective | English |\n|--------------|------------|---------|\n| читати | прочитати | read |\n| писати | написати | write |\n| робити | зробити | do |\n| говорити | сказати | say |\n| брати | взяти | take |\n| давати | дати | give |\n| вирішувати | вирішити | decide |\n| починати | почати | begin |\n| закінчувати | закінчити | finish |"
+            "teacherNotes": "### Aspect Review\n\n**Core Rules:**\n\n| Context | Aspect | Example |\n|---------|--------|---------|\n| Single completed action | Perfective | Я прочитав книгу. |\n| Duration (весь день) | Imperfective | Я читав весь день. |\n| Repetition (завжди) | Imperfective | Він завжди приходив. |\n| Result focus | Perfective | Вона написала листа. |\n| Process focus | Imperfective | Вона писала листа. |\n| Negation (general) | Imperfective | Я не читав цю книгу. |\n| \"Not yet\" (ще не) | Perfective | Я ще не прочитав. |\n\n**Key Aspect Pairs to Know:**\n\n| Imperfective | Perfective | English |\n|--------------|------------|---------|\n| читати | прочитати | read |\n| писати | написати | write |\n| робити | зробити | do |\n| говорити | сказати | say |\n| брати | взяти | take |\n| давати | дати | give |\n| вирішувати | вирішити | decide |\n| починати | почати | begin |\n| закінчувати | закінчити | finish |\n\n### Motion Verb Review\n\n**The Two Types:**\n\n| Unidirectional | Multidirectional | Use |\n|----------------|------------------|-----|\n| йти | ходити | foot |\n| їхати | їздити | vehicle |\n| бігти | бігати | run |\n| летіти | літати | fly |\n| плисти | плавати | swim |\n| нести | носити | carry |\n| везти | возити | transport |\n| вести | водити | lead |\n\n**When to Use:**\n- **Uni:** One direction, now, single trip\n- **Multi:** Round trip, habitual, ability\n\n**10 Prefixes:**\n\n| Prefix | Meaning | Example |\n|--------|---------|---------|\n| при- | TO | прийти (come) |\n| в-/у- | INTO | увійти (enter) |\n| ви- | OUT | вийти (exit) |\n| по- | away | піти (leave) |\n| за- | stop by | зайти (drop in) |\n| пере- | across | перейти (cross) |\n| про- | through | пройти (pass) |\n| об- | around | обійти (go around) |\n| роз- | apart | розійтися (scatter) |\n| від- | from | відійти (depart) |\n\n### Functional Language Review\n\n**Expressing Opinions:**\n- Я думаю/вважаю, що...\n- На мою думку...\n- Мені здається...\n\n**Certainty:**\n- High: Я впевнений, Безперечно\n- Low: Можливо, Мабуть\n\n**Agreement:**\n- Я погоджуюся, Ви маєте рацію, Абсолютно!\n\n**Disagreement:**\n- Я не зовсім згоден, Боюся, що не можу погодитися"
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Motion Verb Review\n\n**The Two Types:**\n\n| Unidirectional | Multidirectional | Use |\n|----------------|------------------|-----|\n| йти | ходити | foot |\n| їхати | їздити | vehicle |\n| бігти | бігати | run |\n| летіти | літати | fly |\n| плисти | плавати | swim |\n| нести | носити | carry |\n| везти | возити | transport |\n| вести | водити | lead |\n\n**When to Use:**\n- **Uni:** One direction, now, single trip\n- **Multi:** Round trip, habitual, ability\n\n**10 Prefixes:**\n\n| Prefix | Meaning | Example |\n|--------|---------|---------|\n| при- | TO | прийти (come) |\n| в-/у- | INTO | увійти (enter) |\n| ви- | OUT | вийти (exit) |\n| по- | away | піти (leave) |\n| за- | stop by | зайти (drop in) |\n| пере- | across | перейти (cross) |\n| про- | through | пройти (pass) |\n| об- | around | обійти (go around) |\n| роз- | apart | розійтися (scatter) |\n| від- | from | відійти (depart) |"
+            "teacherNotes": "### Aspect Practice\n\nChoose correct aspect:\n\n1. Він ___ (читав/прочитав) цю книгу три рази.\n   > [!answer] **читав** (repeated)\n2. Нарешті вона ___ (писала/написала) статтю!\n   > [!answer] **написала** (finally = result)\n3. Я ніколи не ___ (курив/покурив).\n   > [!answer] **курив** (never = impf)\n4. Він вже ___ (снідав/поснідав).\n   > [!answer] **поснідав** (already = result)\n5. Що ти ___ (робив/зробив) весь день?\n   > [!answer] **робив** (duration)\n6. ___ (Читай/Прочитай) цю книгу до завтра!\n   > [!answer] **Прочитай** (deadline = pf)\n\n### Motion Verb Practice\n\nChoose correct form:\n\n1. Куди ти ___ (йдеш/ходиш) зараз?\n   > [!answer] **йдеш** (now)\n2. Вона ___ (їде/їздить) на роботу щодня.\n   > [!answer] **їздить** (every day)\n3. Учора я ___ (йшов/ходив) у театр.\n   > [!answer] **ходив** (round trip)\n4. Він ___ (прийшов/вийшов) з кімнати.\n   > [!answer] **вийшов** (out)\n5. ___ (Перейдіть/Пройдіть) вулицю.\n   > [!answer] **Перейдіть** (cross)\n6. Гості ___ (зайшлися/розійшлися) о півночі.\n   > [!answer] **розійшлися** (dispersed)\n\n### Opinion Practice\n\nComplete the dialogue:\n\nA: ___ (In my opinion), дистанційна робота краща.\nB: ___ (I partly agree), але іноді потрібен офіс.\nA: ___ (You're right). ___ (However), багато професій це дозволяють.\nB: ___ (I'm not sure). ___ (Maybe) у майбутньому.\n\n**Answers:** На мою думку, Почасти я згоден, Ви маєте рацію, Проте, Не впевнений, Можливо\n\n### Integrated Practice\n\nFill in with all types of review material:\n\n> Учора я ___ (пішов/ходив) на роботу пішки, бо машина зламалася. По дорозі я ___ (зайшов/прийшов) у кав'ярню. Там я ___ (зустрічав/зустрів) колегу. Ми ___ (говорили/поговорили) п'ять хвилин. Я ___ (прийшов/приходив) на роботу трохи пізно.\n>\n> **На мою думку**, треба було ___ (їхати/поїхати) таксі. Колега ___ (погодився/погоджувався): \"Ти ___ (маєш/мав) рацію, ___ (проте/тому що) так було б швидше.\"\n\n**Answers:** пішов, зайшов, зустрів, говорили/поговорили, прийшов, поїхати, погодився, маєш, проте"
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Functional Language Review\n\n**Expressing Opinions:**\n- Я думаю/вважаю, що...\n- На мою думку...\n- Мені здається...\n\n**Certainty:**\n- High: Я впевнений, Безперечно\n- Low: Можливо, Мабуть\n\n**Agreement:**\n- Я погоджуюся, Ви маєте рацію, Абсолютно!\n\n**Disagreement:**\n- Я не зовсім згоден, Боюся, що не можу погодитися"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-B1-99-matchup"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Aspect Practice\n\nChoose correct aspect:\n\n1. Він ___ (читав/прочитав) цю книгу три рази. → **читав** (repeated)\n2. Нарешті вона ___ (писала/написала) статтю! → **написала** (finally = result)\n3. Я ніколи не ___ (курив/покурив). → **курив** (never = impf)\n4. Він вже ___ (снідав/поснідав). → **поснідав** (already = result)\n5. Що ти ___ (робив/зробив) весь день? → **робив** (duration)\n6. ___ (Читай/Прочитай) цю книгу до завтра! → **Прочитай** (deadline = pf)"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Motion Verb Practice\n\nChoose correct form:\n\n1. Куди ти ___ (йдеш/ходиш) зараз? → **йдеш** (now)\n2. Вона ___ (їде/їздить) на роботу щодня. → **їздить** (every day)\n3. Учора я ___ (йшов/ходив) у театр. → **ходив** (round trip)\n4. Він ___ (прийшов/вийшов) з кімнати. → **вийшов** (out)\n5. ___ (Перейдіть/Пройдіть) вулицю. → **Перейдіть** (cross)\n6. Гості ___ (зайшлися/розійшлися) о півночі. → **розійшлися** (dispersed)"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Opinion Practice\n\nComplete the dialogue:\n\nA: ___ (In my opinion), дистанційна робота краща.\nB: ___ (I partly agree), але іноді потрібен офіс.\nA: ___ (You're right). ___ (However), багато професій це дозволяють.\nB: ___ (I'm not sure). ___ (Maybe) у майбутньому.\n\n**Answers:** На мою думку, Почасти я згоден, Ви маєте рацію, Проте, Не впевнений, Можливо"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Integrated Practice\n\nFill in with all types of review material:\n\n> Учора я ___ (пішов/ходив) на роботу пішки, бо машина зламалася. По дорозі я ___ (зайшов/прийшов) у кав'ярню. Там я ___ (зустрічав/зустрів) колегу. Ми ___ (говорили/поговорили) п'ять хвилин. Я ___ (прийшов/приходив) на роботу трохи пізно.\n>\n> **На мою думку**, треба було ___ (їхати/поїхати) таксі. Колега ___ (погодився/погоджувався): \"Ти ___ (маєш/мав) рацію, ___ (проте/тому що) так було б швидше.\"\n\n**Answers:** пішов, зайшов, зустрів, говорили/поговорили, прийшов, поїхати, погодився, маєш, проте"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-B1-99-quiz"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Speaking Practice\n\nDiscuss using all skills:\n\n**Topic:** Яка найкраща мова для вивчення?\n\nUse:\n- Opinion expressions (Я вважаю, На мою думку)\n- Reasons (тому що, оскільки)\n- Agreement/disagreement (Я погоджуюся, Я не зовсім згоден)\n- Abstract vocabulary (можливість, досвід, мета)\n\n**Example answer:**\nНа мою думку, англійська — найкорисніша мова для вивчення, тому що це міжнародна мова бізнесу. Проте я вважаю, що вибір залежить від мети людини. Наприклад, якщо хтось хоче працювати в Німеччині, йому варто вивчати німецьку."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Narration Practice\n\nTell a story using motion verbs:\n\n**Prompt:** Describe a trip you took.\n\nInclude:\n- At least 5 prefixed motion verbs\n- Aspect variation (perfective for events, imperfective for background)\n- Time expressions"
+            "teacherNotes": "### Speaking Practice\n\nDiscuss using all skills:\n\n**Topic:** Яка найкраща мова для вивчення?\n\nUse:\n- Opinion expressions (Я вважаю, На мою думку)\n- Reasons (тому що, оскільки)\n- Agreement/disagreement (Я погоджуюся, Я не зовсім згоден)\n- Abstract vocabulary (можливість, досвід, мета)\n\n**Example answer:**\nНа мою думку, англійська — найкорисніша мова для вивчення, тому що це міжнародна мова бізнесу. Проте я вважаю, що вибір залежить від мети людини. Наприклад, якщо хтось хоче працювати в Німеччині, йому варто вивчати німецьку.\n\n### Narration Practice\n\nTell a story using motion verbs:\n\n**Prompt:** Describe a trip you took.\n\nInclude:\n- At least 5 prefixed motion verbs\n- Aspect variation (perfective for events, imperfective for background)\n- Time expressions\n\n---"
           }
         ]
       }
     ],
-    "rawMarkdown": "# Зміст уроку | Lesson Content\n\n## warm-up | Розминка\n\n### Що ви вивчили в B1.1 | What You've Learned in B1.1\n\n**Modules 81-88: Aspect**\n- Perfective vs imperfective selection\n- Aspect in past, future, negation, imperatives\n- 60+ aspect pairs\n\n**Modules 89-94: Motion Verbs**\n- 8 motion verb pairs (uni/multi)\n- 10 directional prefixes\n- Figurative expressions\n\n**Modules 95-98: Functional Vocabulary**\n- Abstract concepts (ideas, problems, solutions)\n- Expressing opinions\n- Agreement and disagreement\n\n## presentation\n\n### Aspect Review\n\n**Core Rules:**\n\n| Context | Aspect | Example |\n|---------|--------|---------|\n| Single completed action | Perfective | Я прочитав книгу. |\n| Duration (весь день) | Imperfective | Я читав весь день. |\n| Repetition (завжди) | Imperfective | Він завжди приходив. |\n| Result focus | Perfective | Вона написала листа. |\n| Process focus | Imperfective | Вона писала листа. |\n| Negation (general) | Imperfective | Я не читав цю книгу. |\n| \"Not yet\" (ще не) | Perfective | Я ще не прочитав. |\n\n**Key Aspect Pairs to Know:**\n\n| Imperfective | Perfective | English |\n|--------------|------------|---------|\n| читати | прочитати | read |\n| писати | написати | write |\n| робити | зробити | do |\n| говорити | сказати | say |\n| брати | взяти | take |\n| давати | дати | give |\n| вирішувати | вирішити | decide |\n| починати | почати | begin |\n| закінчувати | закінчити | finish |\n\n### Motion Verb Review\n\n**The Two Types:**\n\n| Unidirectional | Multidirectional | Use |\n|----------------|------------------|-----|\n| йти | ходити | foot |\n| їхати | їздити | vehicle |\n| бігти | бігати | run |\n| летіти | літати | fly |\n| плисти | плавати | swim |\n| нести | носити | carry |\n| везти | возити | transport |\n| вести | водити | lead |\n\n**When to Use:**\n- **Uni:** One direction, now, single trip\n- **Multi:** Round trip, habitual, ability\n\n**10 Prefixes:**\n\n| Prefix | Meaning | Example |\n|--------|---------|---------|\n| при- | TO | прийти (come) |\n| в-/у- | INTO | увійти (enter) |\n| ви- | OUT | вийти (exit) |\n| по- | away | піти (leave) |\n| за- | stop by | зайти (drop in) |\n| пере- | across | перейти (cross) |\n| про- | through | пройти (pass) |\n| об- | around | обійти (go around) |\n| роз- | apart | розійтися (scatter) |\n| від- | from | відійти (depart) |\n\n### Functional Language Review\n\n**Expressing Opinions:**\n- Я думаю/вважаю, що...\n- На мою думку...\n- Мені здається...\n\n**Certainty:**\n- High: Я впевнений, Безперечно\n- Low: Можливо, Мабуть\n\n**Agreement:**\n- Я погоджуюся, Ви маєте рацію, Абсолютно!\n\n**Disagreement:**\n- Я не зовсім згоден, Боюся, що не можу погодитися\n\n## practice\n\n### Aspect Practice\n\nChoose correct aspect:\n\n1. Він ___ (читав/прочитав) цю книгу три рази. → **читав** (repeated)\n2. Нарешті вона ___ (писала/написала) статтю! → **написала** (finally = result)\n3. Я ніколи не ___ (курив/покурив). → **курив** (never = impf)\n4. Він вже ___ (снідав/поснідав). → **поснідав** (already = result)\n5. Що ти ___ (робив/зробив) весь день? → **робив** (duration)\n6. ___ (Читай/Прочитай) цю книгу до завтра! → **Прочитай** (deadline = pf)\n\n### Motion Verb Practice\n\nChoose correct form:\n\n1. Куди ти ___ (йдеш/ходиш) зараз? → **йдеш** (now)\n2. Вона ___ (їде/їздить) на роботу щодня. → **їздить** (every day)\n3. Учора я ___ (йшов/ходив) у театр. → **ходив** (round trip)\n4. Він ___ (прийшов/вийшов) з кімнати. → **вийшов** (out)\n5. ___ (Перейдіть/Пройдіть) вулицю. → **Перейдіть** (cross)\n6. Гості ___ (зайшлися/розійшлися) о півночі. → **розійшлися** (dispersed)\n\n### Opinion Practice\n\nComplete the dialogue:\n\nA: ___ (In my opinion), дистанційна робота краща.\nB: ___ (I partly agree), але іноді потрібен офіс.\nA: ___ (You're right). ___ (However), багато професій це дозволяють.\nB: ___ (I'm not sure). ___ (Maybe) у майбутньому.\n\n**Answers:** На мою думку, Почасти я згоден, Ви маєте рацію, Проте, Не впевнений, Можливо\n\n### Integrated Practice\n\nFill in with all types of review material:\n\n> Учора я ___ (пішов/ходив) на роботу пішки, бо машина зламалася. По дорозі я ___ (зайшов/прийшов) у кав'ярню. Там я ___ (зустрічав/зустрів) колегу. Ми ___ (говорили/поговорили) п'ять хвилин. Я ___ (прийшов/приходив) на роботу трохи пізно.\n>\n> **На мою думку**, треба було ___ (їхати/поїхати) таксі. Колега ___ (погодився/погоджувався): \"Ти ___ (маєш/мав) рацію, ___ (проте/тому що) так було б швидше.\"\n\n**Answers:** пішов, зайшов, зустрів, говорили/поговорили, прийшов, поїхати, погодився, маєш, проте\n\n## production\n\n### Speaking Practice\n\nDiscuss using all skills:\n\n**Topic:** Яка найкраща мова для вивчення?\n\nUse:\n- Opinion expressions (Я вважаю, На мою думку)\n- Reasons (тому що, оскільки)\n- Agreement/disagreement (Я погоджуюся, Я не зовсім згоден)\n- Abstract vocabulary (можливість, досвід, мета)\n\n**Example answer:**\nНа мою думку, англійська — найкорисніша мова для вивчення, тому що це міжнародна мова бізнесу. Проте я вважаю, що вибір залежить від мети людини. Наприклад, якщо хтось хоче працювати в Німеччині, йому варто вивчати німецьку.\n\n### Narration Practice\n\nTell a story using motion verbs:\n\n**Prompt:** Describe a trip you took.\n\nInclude:\n- At least 5 prefixed motion verbs\n- Aspect variation (perfective for events, imperfective for background)\n- Time expressions\n\n---\n\n# Activities\n\n## quiz: B1.1 Comprehensive\n\n> Test all B1.1 skills.\n\n1. Він ___ книгу весь вечір.\n   - [x] читав\n   - [ ] прочитав\n   > Duration = imperfective\n\n2. Куди ти ___ зараз?\n   - [x] йдеш\n   - [ ] ходиш\n   > Right now = unidirectional\n\n3. ___ вулицю на світлофорі!\n   - [x] Перейдіть\n   - [ ] Пройдіть\n   > Cross = пере-\n\n4. Я ___ згоден з вами.\n   - [ ] зовсім\n   - [x] не зовсім\n   > Soft disagreement\n\n5. Вона ще не ___ книгу.\n   - [ ] читала\n   - [x] прочитала\n   > \"Not yet\" = perfective\n\n6. Гості ___ о півночі.\n   - [x] розійшлися\n   - [ ] зайшлися\n   > Dispersed = роз-\n\n## match-up: Comprehensive\n\n| Start | Complete |\n|-------|----------|\n| Я вважаю, | що це правильно |\n| Нарешті він | прочитав книгу |\n| Куди ти | йдеш? |\n| Учора я | ходив у магазин |\n| Я не зовсім | згоден |\n| Поїзд | відійшов |\n\n## fill-in: Story Completion\n\n> Минулого тижня я ___ (їздив) до Одеси. Вранці я ___ (вийшов) з дому і ___ (поїхав) на вокзал. Поїзд ___ (відійшов) о дев'ятій. Ми ___ (проїхали) через багато міст. О третій я ___ (приїхав) до Одеси.\n>\n> ___ (На мою думку), Одеса — красиве місто. Я ___ (ходив) по вулицях і ___ (зайшов) у кілька музеїв. ___ (Загалом), поїздка була чудовою!\n\n---",
+    "createdAt": "2025-12-01T22:58:37.293Z",
+    "modifiedAt": "2025-12-01T22:58:37.293Z",
+    "version": 1,
     "immersiveSections": [
       {
-        "id": "warm-up-розминка",
-        "title": "warm-up | Розминка",
-        "content": "### Що ви вивчили в B1.1 | What You've Learned in B1.1\n\n**Modules 81-88: Aspect**\n- Perfective vs imperfective selection\n- Aspect in past, future, negation, imperatives\n- 60+ aspect pairs\n\n**Modules 89-94: Motion Verbs**\n- 8 motion verb pairs (uni/multi)\n- 10 directional prefixes\n- Figurative expressions\n\n**Modules 95-98: Functional Vocabulary**\n- Abstract concepts (ideas, problems, solutions)\n- Expressing opinions\n- Agreement and disagreement",
-        "type": "topic"
+        "id": "section-зміст-уроку-lesson-content",
+        "type": "content",
+        "title": "Зміст уроку | Lesson Content",
+        "content": "## warm-up | Розминка\n\n### Що ви вивчили в B1.1 | What You've Learned in B1.1\n\n**Modules 81-88: Aspect**\n- Perfective vs imperfective selection\n- Aspect in past, future, negation, imperatives\n- 60+ aspect pairs\n\n**Modules 89-94: Motion Verbs**\n- 8 motion verb pairs (uni/multi)\n- 10 directional prefixes\n- Figurative expressions\n\n**Modules 95-98: Functional Vocabulary**\n- Abstract concepts (ideas, problems, solutions)\n- Expressing opinions\n- Agreement and disagreement\n\n## presentation\n\n### Aspect Review\n\n**Core Rules:**\n\n| Context | Aspect | Example |\n|---------|--------|---------|\n| Single completed action | Perfective | Я прочитав книгу. |\n| Duration (весь день) | Imperfective | Я читав весь день. |\n| Repetition (завжди) | Imperfective | Він завжди приходив. |\n| Result focus | Perfective | Вона написала листа. |\n| Process focus | Imperfective | Вона писала листа. |\n| Negation (general) | Imperfective | Я не читав цю книгу. |\n| \"Not yet\" (ще не) | Perfective | Я ще не прочитав. |\n\n**Key Aspect Pairs to Know:**\n\n| Imperfective | Perfective | English |\n|--------------|------------|---------|\n| читати | прочитати | read |\n| писати | написати | write |\n| робити | зробити | do |\n| говорити | сказати | say |\n| брати | взяти | take |\n| давати | дати | give |\n| вирішувати | вирішити | decide |\n| починати | почати | begin |\n| закінчувати | закінчити | finish |\n\n### Motion Verb Review\n\n**The Two Types:**\n\n| Unidirectional | Multidirectional | Use |\n|----------------|------------------|-----|\n| йти | ходити | foot |\n| їхати | їздити | vehicle |\n| бігти | бігати | run |\n| летіти | літати | fly |\n| плисти | плавати | swim |\n| нести | носити | carry |\n| везти | возити | transport |\n| вести | водити | lead |\n\n**When to Use:**\n- **Uni:** One direction, now, single trip\n- **Multi:** Round trip, habitual, ability\n\n**10 Prefixes:**\n\n| Prefix | Meaning | Example |\n|--------|---------|---------|\n| при- | TO | прийти (come) |\n| в-/у- | INTO | увійти (enter) |\n| ви- | OUT | вийти (exit) |\n| по- | away | піти (leave) |\n| за- | stop by | зайти (drop in) |\n| пере- | across | перейти (cross) |\n| про- | through | пройти (pass) |\n| об- | around | обійти (go around) |\n| роз- | apart | розійтися (scatter) |\n| від- | from | відійти (depart) |\n\n### Functional Language Review\n\n**Expressing Opinions:**\n- Я думаю/вважаю, що...\n- На мою думку...\n- Мені здається...\n\n**Certainty:**\n- High: Я впевнений, Безперечно\n- Low: Можливо, Мабуть\n\n**Agreement:**\n- Я погоджуюся, Ви маєте рацію, Абсолютно!\n\n**Disagreement:**\n- Я не зовсім згоден, Боюся, що не можу погодитися\n\n## practice\n\n### Aspect Practice\n\nChoose correct aspect:\n\n1. Він ___ (читав/прочитав) цю книгу три рази.\n   > [!answer] **читав** (repeated)\n2. Нарешті вона ___ (писала/написала) статтю!\n   > [!answer] **написала** (finally = result)\n3. Я ніколи не ___ (курив/покурив).\n   > [!answer] **курив** (never = impf)\n4. Він вже ___ (снідав/поснідав).\n   > [!answer] **поснідав** (already = result)\n5. Що ти ___ (робив/зробив) весь день?\n   > [!answer] **робив** (duration)\n6. ___ (Читай/Прочитай) цю книгу до завтра!\n   > [!answer] **Прочитай** (deadline = pf)\n\n### Motion Verb Practice\n\nChoose correct form:\n\n1. Куди ти ___ (йдеш/ходиш) зараз?\n   > [!answer] **йдеш** (now)\n2. Вона ___ (їде/їздить) на роботу щодня.\n   > [!answer] **їздить** (every day)\n3. Учора я ___ (йшов/ходив) у театр.\n   > [!answer] **ходив** (round trip)\n4. Він ___ (прийшов/вийшов) з кімнати.\n   > [!answer] **вийшов** (out)\n5. ___ (Перейдіть/Пройдіть) вулицю.\n   > [!answer] **Перейдіть** (cross)\n6. Гості ___ (зайшлися/розійшлися) о півночі.\n   > [!answer] **розійшлися** (dispersed)\n\n### Opinion Practice\n\nComplete the dialogue:\n\nA: ___ (In my opinion), дистанційна робота краща.\nB: ___ (I partly agree), але іноді потрібен офіс.\nA: ___ (You're right). ___ (However), багато професій це дозволяють.\nB: ___ (I'm not sure). ___ (Maybe) у майбутньому.\n\n**Answers:** На мою думку, Почасти я згоден, Ви маєте рацію, Проте, Не впевнений, Можливо\n\n### Integrated Practice\n\nFill in with all types of review material:\n\n> Учора я ___ (пішов/ходив) на роботу пішки, бо машина зламалася. По дорозі я ___ (зайшов/прийшов) у кав'ярню. Там я ___ (зустрічав/зустрів) колегу. Ми ___ (говорили/поговорили) п'ять хвилин. Я ___ (прийшов/приходив) на роботу трохи пізно.\n>\n> **На мою думку**, треба було ___ (їхати/поїхати) таксі. Колега ___ (погодився/погоджувався): \"Ти ___ (маєш/мав) рацію, ___ (проте/тому що) так було б швидше.\"\n\n**Answers:** пішов, зайшов, зустрів, говорили/поговорили, прийшов, поїхати, погодився, маєш, проте\n\n## production\n\n### Speaking Practice\n\nDiscuss using all skills:\n\n**Topic:** Яка найкраща мова для вивчення?\n\nUse:\n- Opinion expressions (Я вважаю, На мою думку)\n- Reasons (тому що, оскільки)\n- Agreement/disagreement (Я погоджуюся, Я не зовсім згоден)\n- Abstract vocabulary (можливість, досвід, мета)\n\n**Example answer:**\nНа мою думку, англійська — найкорисніша мова для вивчення, тому що це міжнародна мова бізнесу. Проте я вважаю, що вибір залежить від мети людини. Наприклад, якщо хтось хоче працювати в Німеччині, йому варто вивчати німецьку.\n\n### Narration Practice\n\nTell a story using motion verbs:\n\n**Prompt:** Describe a trip you took.\n\nInclude:\n- At least 5 prefixed motion verbs\n- Aspect variation (perfective for events, imperfective for background)\n- Time expressions\n\n---\n\n\n---\n\n\n---"
       },
       {
-        "id": "presentation",
-        "title": "presentation",
-        "content": "### Aspect Review\n\n**Core Rules:**\n\n| Context | Aspect | Example |\n|---------|--------|---------|\n| Single completed action | Perfective | Я прочитав книгу. |\n| Duration (весь день) | Imperfective | Я читав весь день. |\n| Repetition (завжди) | Imperfective | Він завжди приходив. |\n| Result focus | Perfective | Вона написала листа. |\n| Process focus | Imperfective | Вона писала листа. |\n| Negation (general) | Imperfective | Я не читав цю книгу. |\n| \"Not yet\" (ще не) | Perfective | Я ще не прочитав. |\n\n**Key Aspect Pairs to Know:**\n\n| Imperfective | Perfective | English |\n|--------------|------------|---------|\n| читати | прочитати | read |\n| писати | написати | write |\n| робити | зробити | do |\n| говорити | сказати | say |\n| брати | взяти | take |\n| давати | дати | give |\n| вирішувати | вирішити | decide |\n| починати | почати | begin |\n| закінчувати | закінчити | finish |\n\n### Motion Verb Review\n\n**The Two Types:**\n\n| Unidirectional | Multidirectional | Use |\n|----------------|------------------|-----|\n| йти | ходити | foot |\n| їхати | їздити | vehicle |\n| бігти | бігати | run |\n| летіти | літати | fly |\n| плисти | плавати | swim |\n| нести | носити | carry |\n| везти | возити | transport |\n| вести | водити | lead |\n\n**When to Use:**\n- **Uni:** One direction, now, single trip\n- **Multi:** Round trip, habitual, ability\n\n**10 Prefixes:**\n\n| Prefix | Meaning | Example |\n|--------|---------|---------|\n| при- | TO | прийти (come) |\n| в-/у- | INTO | увійти (enter) |\n| ви- | OUT | вийти (exit) |\n| по- | away | піти (leave) |\n| за- | stop by | зайти (drop in) |\n| пере- | across | перейти (cross) |\n| про- | through | пройти (pass) |\n| об- | around | обійти (go around) |\n| роз- | apart | розійтися (scatter) |\n| від- | from | відійти (depart) |\n\n### Functional Language Review\n\n**Expressing Opinions:**\n- Я думаю/вважаю, що...\n- На мою думку...\n- Мені здається...\n\n**Certainty:**\n- High: Я впевнений, Безперечно\n- Low: Можливо, Мабуть\n\n**Agreement:**\n- Я погоджуюся, Ви маєте рацію, Абсолютно!\n\n**Disagreement:**\n- Я не зовсім згоден, Боюся, що не можу погодитися",
-        "type": "topic"
-      },
-      {
-        "id": "practice",
-        "title": "practice",
-        "content": "### Aspect Practice\n\nChoose correct aspect:\n\n1. Він ___ (читав/прочитав) цю книгу три рази. → **читав** (repeated)\n2. Нарешті вона ___ (писала/написала) статтю! → **написала** (finally = result)\n3. Я ніколи не ___ (курив/покурив). → **курив** (never = impf)\n4. Він вже ___ (снідав/поснідав). → **поснідав** (already = result)\n5. Що ти ___ (робив/зробив) весь день? → **робив** (duration)\n6. ___ (Читай/Прочитай) цю книгу до завтра! → **Прочитай** (deadline = pf)\n\n### Motion Verb Practice\n\nChoose correct form:\n\n1. Куди ти ___ (йдеш/ходиш) зараз? → **йдеш** (now)\n2. Вона ___ (їде/їздить) на роботу щодня. → **їздить** (every day)\n3. Учора я ___ (йшов/ходив) у театр. → **ходив** (round trip)\n4. Він ___ (прийшов/вийшов) з кімнати. → **вийшов** (out)\n5. ___ (Перейдіть/Пройдіть) вулицю. → **Перейдіть** (cross)\n6. Гості ___ (зайшлися/розійшлися) о півночі. → **розійшлися** (dispersed)\n\n### Opinion Practice\n\nComplete the dialogue:\n\nA: ___ (In my opinion), дистанційна робота краща.\nB: ___ (I partly agree), але іноді потрібен офіс.\nA: ___ (You're right). ___ (However), багато професій це дозволяють.\nB: ___ (I'm not sure). ___ (Maybe) у майбутньому.\n\n**Answers:** На мою думку, Почасти я згоден, Ви маєте рацію, Проте, Не впевнений, Можливо\n\n### Integrated Practice\n\nFill in with all types of review material:\n\n> Учора я ___ (пішов/ходив) на роботу пішки, бо машина зламалася. По дорозі я ___ (зайшов/прийшов) у кав'ярню. Там я ___ (зустрічав/зустрів) колегу. Ми ___ (говорили/поговорили) п'ять хвилин. Я ___ (прийшов/приходив) на роботу трохи пізно.\n>\n> **На мою думку**, треба було ___ (їхати/поїхати) таксі. Колега ___ (погодився/погоджувався): \"Ти ___ (маєш/мав) рацію, ___ (проте/тому що) так було б швидше.\"\n\n**Answers:** пішов, зайшов, зустрів, говорили/поговорили, прийшов, поїхати, погодився, маєш, проте",
-        "type": "topic"
-      },
-      {
-        "id": "production",
-        "title": "production",
-        "content": "### Speaking Practice\n\nDiscuss using all skills:\n\n**Topic:** Яка найкраща мова для вивчення?\n\nUse:\n- Opinion expressions (Я вважаю, На мою думку)\n- Reasons (тому що, оскільки)\n- Agreement/disagreement (Я погоджуюся, Я не зовсім згоден)\n- Abstract vocabulary (можливість, досвід, мета)\n\n**Example answer:**\nНа мою думку, англійська — найкорисніша мова для вивчення, тому що це міжнародна мова бізнесу. Проте я вважаю, що вибір залежить від мети людини. Наприклад, якщо хтось хоче працювати в Німеччині, йому варто вивчати німецьку.\n\n### Narration Practice\n\nTell a story using motion verbs:\n\n**Prompt:** Describe a trip you took.\n\nInclude:\n- At least 5 prefixed motion verbs\n- Aspect variation (perfective for events, imperfective for background)\n- Time expressions\n\n---",
-        "type": "topic"
-      },
-      {
-        "id": "activities",
-        "title": "Activities",
-        "content": "## quiz: B1.1 Comprehensive\n\n> Test all B1.1 skills.\n\n1. Він ___ книгу весь вечір.\n   - [x] читав\n   - [ ] прочитав\n   > Duration = imperfective\n\n2. Куди ти ___ зараз?\n   - [x] йдеш\n   - [ ] ходиш\n   > Right now = unidirectional\n\n3. ___ вулицю на світлофорі!\n   - [x] Перейдіть\n   - [ ] Пройдіть\n   > Cross = пере-\n\n4. Я ___ згоден з вами.\n   - [ ] зовсім\n   - [x] не зовсім\n   > Soft disagreement\n\n5. Вона ще не ___ книгу.\n   - [ ] читала\n   - [x] прочитала\n   > \"Not yet\" = perfective\n\n6. Гості ___ о півночі.\n   - [x] розійшлися\n   - [ ] зайшлися\n   > Dispersed = роз-\n\n## match-up: Comprehensive\n\n| Start | Complete |\n|-------|----------|\n| Я вважаю, | що це правильно |\n| Нарешті він | прочитав книгу |\n| Куди ти | йдеш? |\n| Учора я | ходив у магазин |\n| Я не зовсім | згоден |\n| Поїзд | відійшов |\n\n## fill-in: Story Completion\n\n> Минулого тижня я ___ (їздив) до Одеси. Вранці я ___ (вийшов) з дому і ___ (поїхав) на вокзал. Поїзд ___ (відійшов) о дев'ятій. Ми ___ (проїхали) через багато міст. О третій я ___ (приїхав) до Одеси.\n>\n> ___ (На мою думку), Одеса — красиве місто. Я ___ (ходив) по вулицях і ___ (зайшов) у кілька музеїв. ___ (Загалом), поїздка була чудовою!\n\n---",
-        "type": "activities"
-      },
-      {
-        "id": "vocabulary",
-        "title": "Vocabulary",
-        "content": "| Word | IPA | English | Notes |\n|------|-----|---------|-------|\n| повторення | /povtoˈrɛnʲːɑ/ | review, repetition | n |\n| перевірка | /pɛrɛˈvʲirkɑ/ | check, test | f |\n| засвоєння | /zɑsvoˈjɛnʲːɑ/ | mastery, acquisition | n |\n| практика | /prɑkˈtɪkɑ/ | practice | f |\n| вправа | /ˈvprɑvɑ/ | exercise | f |\n| завдання | /zɑvˈdɑnʲːɑ/ | task, assignment | n |\n| помилка | /poˈmɪlkɑ/ | mistake | f |\n| правильний | /prɑˈvɪlʲnɪj/ | correct | adj |\n| неправильний | /nɛprɑˈvɪlʲnɪj/ | incorrect | adj |\n\n---",
-        "type": "vocabulary"
-      },
-      {
-        "id": "summary",
+        "id": "section-summary",
+        "type": "summary",
         "title": "Summary",
         "content": "## B1.1 Skills Checklist\n\n### Aspect (Modules 81-88)\n- [ ] Choose aspect in past tense\n- [ ] Choose aspect in future tense\n- [ ] Use aspect correctly in negation\n- [ ] Use aspect correctly in imperatives\n- [ ] Know 60+ aspect pairs\n\n### Motion Verbs (Modules 89-94)\n- [ ] Distinguish uni/multidirectional\n- [ ] Use all 10 prefixes correctly\n- [ ] Form aspect pairs from prefixed verbs\n- [ ] Use figurative motion expressions\n\n### Communication (Modules 95-98)\n- [ ] Use abstract vocabulary\n- [ ] Express opinions with reasons\n- [ ] Agree and disagree politely\n- [ ] Use hedging and diplomatic language\n\n## What's Next\n\nModule 100: B1.1 Checkpoint — comprehensive assessment of all skills.\n\nThen B1.2: Complex Sentences (modules 101-115)\n\n> **Key Takeaways**\n>\n> - Aspect is about perspective, not just time\n> - Motion verbs form a logical system\n> - Politeness matters in Ukrainian communication\n> - Practice integrating all skills together",
-        "type": "summary"
+        "titleUk": "Підсумок"
       }
-    ]
+    ],
+    "rawMarkdown": "---\nmodule: 99\ntitle: \"B1.1 Review\"\nsubtitle: \"Aspect & Motion Mastery Check\"\nlevel: B1\nphase: B1.1\nduration: 45\ntransliteration: none\ntags: [review, aspect, motion, vocabulary]\nobjectives:\n  - Review aspect selection skills\n  - Review motion verb system\n  - Practice expressing opinions\n  - Prepare for B1.1 checkpoint\n---\n\n# Зміст уроку | Lesson Content\n\n## warm-up | Розминка\n\n### Що ви вивчили в B1.1 | What You've Learned in B1.1\n\n**Modules 81-88: Aspect**\n- Perfective vs imperfective selection\n- Aspect in past, future, negation, imperatives\n- 60+ aspect pairs\n\n**Modules 89-94: Motion Verbs**\n- 8 motion verb pairs (uni/multi)\n- 10 directional prefixes\n- Figurative expressions\n\n**Modules 95-98: Functional Vocabulary**\n- Abstract concepts (ideas, problems, solutions)\n- Expressing opinions\n- Agreement and disagreement\n\n## presentation\n\n### Aspect Review\n\n**Core Rules:**\n\n| Context | Aspect | Example |\n|---------|--------|---------|\n| Single completed action | Perfective | Я прочитав книгу. |\n| Duration (весь день) | Imperfective | Я читав весь день. |\n| Repetition (завжди) | Imperfective | Він завжди приходив. |\n| Result focus | Perfective | Вона написала листа. |\n| Process focus | Imperfective | Вона писала листа. |\n| Negation (general) | Imperfective | Я не читав цю книгу. |\n| \"Not yet\" (ще не) | Perfective | Я ще не прочитав. |\n\n**Key Aspect Pairs to Know:**\n\n| Imperfective | Perfective | English |\n|--------------|------------|---------|\n| читати | прочитати | read |\n| писати | написати | write |\n| робити | зробити | do |\n| говорити | сказати | say |\n| брати | взяти | take |\n| давати | дати | give |\n| вирішувати | вирішити | decide |\n| починати | почати | begin |\n| закінчувати | закінчити | finish |\n\n### Motion Verb Review\n\n**The Two Types:**\n\n| Unidirectional | Multidirectional | Use |\n|----------------|------------------|-----|\n| йти | ходити | foot |\n| їхати | їздити | vehicle |\n| бігти | бігати | run |\n| летіти | літати | fly |\n| плисти | плавати | swim |\n| нести | носити | carry |\n| везти | возити | transport |\n| вести | водити | lead |\n\n**When to Use:**\n- **Uni:** One direction, now, single trip\n- **Multi:** Round trip, habitual, ability\n\n**10 Prefixes:**\n\n| Prefix | Meaning | Example |\n|--------|---------|---------|\n| при- | TO | прийти (come) |\n| в-/у- | INTO | увійти (enter) |\n| ви- | OUT | вийти (exit) |\n| по- | away | піти (leave) |\n| за- | stop by | зайти (drop in) |\n| пере- | across | перейти (cross) |\n| про- | through | пройти (pass) |\n| об- | around | обійти (go around) |\n| роз- | apart | розійтися (scatter) |\n| від- | from | відійти (depart) |\n\n### Functional Language Review\n\n**Expressing Opinions:**\n- Я думаю/вважаю, що...\n- На мою думку...\n- Мені здається...\n\n**Certainty:**\n- High: Я впевнений, Безперечно\n- Low: Можливо, Мабуть\n\n**Agreement:**\n- Я погоджуюся, Ви маєте рацію, Абсолютно!\n\n**Disagreement:**\n- Я не зовсім згоден, Боюся, що не можу погодитися\n\n## practice\n\n### Aspect Practice\n\nChoose correct aspect:\n\n1. Він ___ (читав/прочитав) цю книгу три рази.\n   > [!answer] **читав** (repeated)\n2. Нарешті вона ___ (писала/написала) статтю!\n   > [!answer] **написала** (finally = result)\n3. Я ніколи не ___ (курив/покурив).\n   > [!answer] **курив** (never = impf)\n4. Він вже ___ (снідав/поснідав).\n   > [!answer] **поснідав** (already = result)\n5. Що ти ___ (робив/зробив) весь день?\n   > [!answer] **робив** (duration)\n6. ___ (Читай/Прочитай) цю книгу до завтра!\n   > [!answer] **Прочитай** (deadline = pf)\n\n### Motion Verb Practice\n\nChoose correct form:\n\n1. Куди ти ___ (йдеш/ходиш) зараз?\n   > [!answer] **йдеш** (now)\n2. Вона ___ (їде/їздить) на роботу щодня.\n   > [!answer] **їздить** (every day)\n3. Учора я ___ (йшов/ходив) у театр.\n   > [!answer] **ходив** (round trip)\n4. Він ___ (прийшов/вийшов) з кімнати.\n   > [!answer] **вийшов** (out)\n5. ___ (Перейдіть/Пройдіть) вулицю.\n   > [!answer] **Перейдіть** (cross)\n6. Гості ___ (зайшлися/розійшлися) о півночі.\n   > [!answer] **розійшлися** (dispersed)\n\n### Opinion Practice\n\nComplete the dialogue:\n\nA: ___ (In my opinion), дистанційна робота краща.\nB: ___ (I partly agree), але іноді потрібен офіс.\nA: ___ (You're right). ___ (However), багато професій це дозволяють.\nB: ___ (I'm not sure). ___ (Maybe) у майбутньому.\n\n**Answers:** На мою думку, Почасти я згоден, Ви маєте рацію, Проте, Не впевнений, Можливо\n\n### Integrated Practice\n\nFill in with all types of review material:\n\n> Учора я ___ (пішов/ходив) на роботу пішки, бо машина зламалася. По дорозі я ___ (зайшов/прийшов) у кав'ярню. Там я ___ (зустрічав/зустрів) колегу. Ми ___ (говорили/поговорили) п'ять хвилин. Я ___ (прийшов/приходив) на роботу трохи пізно.\n>\n> **На мою думку**, треба було ___ (їхати/поїхати) таксі. Колега ___ (погодився/погоджувався): \"Ти ___ (маєш/мав) рацію, ___ (проте/тому що) так було б швидше.\"\n\n**Answers:** пішов, зайшов, зустрів, говорили/поговорили, прийшов, поїхати, погодився, маєш, проте\n\n## production\n\n### Speaking Practice\n\nDiscuss using all skills:\n\n**Topic:** Яка найкраща мова для вивчення?\n\nUse:\n- Opinion expressions (Я вважаю, На мою думку)\n- Reasons (тому що, оскільки)\n- Agreement/disagreement (Я погоджуюся, Я не зовсім згоден)\n- Abstract vocabulary (можливість, досвід, мета)\n\n**Example answer:**\nНа мою думку, англійська — найкорисніша мова для вивчення, тому що це міжнародна мова бізнесу. Проте я вважаю, що вибір залежить від мети людини. Наприклад, якщо хтось хоче працювати в Німеччині, йому варто вивчати німецьку.\n\n### Narration Practice\n\nTell a story using motion verbs:\n\n**Prompt:** Describe a trip you took.\n\nInclude:\n- At least 5 prefixed motion verbs\n- Aspect variation (perfective for events, imperfective for background)\n- Time expressions\n\n---\n\n# Activities\n\n## quiz: B1.1 Comprehensive\n\n> Test all B1.1 skills.\n\n1. Він ___ книгу весь вечір.\n   - [x] читав\n   - [ ] прочитав\n   > Duration = imperfective\n\n2. Куди ти ___ зараз?\n   - [x] йдеш\n   - [ ] ходиш\n   > Right now = unidirectional\n\n3. ___ вулицю на світлофорі!\n   - [x] Перейдіть\n   - [ ] Пройдіть\n   > Cross = пере-\n\n4. Я ___ згоден з вами.\n   - [ ] зовсім\n   - [x] не зовсім\n   > Soft disagreement\n\n5. Вона ще не ___ книгу.\n   - [ ] читала\n   - [x] прочитала\n   > \"Not yet\" = perfective\n\n6. Гості ___ о півночі.\n   - [x] розійшлися\n   - [ ] зайшлися\n   > Dispersed = роз-\n\n## match-up: Comprehensive\n\n| Start | Complete |\n|-------|----------|\n| Я вважаю, | що це правильно |\n| Нарешті він | прочитав книгу |\n| Куди ти | йдеш? |\n| Учора я | ходив у магазин |\n| Я не зовсім | згоден |\n| Поїзд | відійшов |\n\n## fill-in: Story Completion\n\n> Минулого тижня я ___ (їздив) до Одеси. Вранці я ___ (вийшов) з дому і ___ (поїхав) на вокзал. Поїзд ___ (відійшов) о дев'ятій. Ми ___ (проїхали) через багато міст. О третій я ___ (приїхав) до Одеси.\n>\n> ___ (На мою думку), Одеса — красиве місто. Я ___ (ходив) по вулицях і ___ (зайшов) у кілька музеїв. ___ (Загалом), поїздка була чудовою!\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | Notes |\n|------|-----|---------|-------|\n| повторення | /povtoˈrɛnʲːɑ/ | review, repetition | n |\n| перевірка | /pɛrɛˈvʲirkɑ/ | check, test | f |\n| засвоєння | /zɑsvoˈjɛnʲːɑ/ | mastery, acquisition | n |\n| практика | /prɑkˈtɪkɑ/ | practice | f |\n| вправа | /ˈvprɑvɑ/ | exercise | f |\n| завдання | /zɑvˈdɑnʲːɑ/ | task, assignment | n |\n| помилка | /poˈmɪlkɑ/ | mistake | f |\n| правильний | /prɑˈvɪlʲnɪj/ | correct | adj |\n| неправильний | /nɛprɑˈvɪlʲnɪj/ | incorrect | adj |\n\n---\n\n# Summary\n\n## B1.1 Skills Checklist\n\n### Aspect (Modules 81-88)\n- [ ] Choose aspect in past tense\n- [ ] Choose aspect in future tense\n- [ ] Use aspect correctly in negation\n- [ ] Use aspect correctly in imperatives\n- [ ] Know 60+ aspect pairs\n\n### Motion Verbs (Modules 89-94)\n- [ ] Distinguish uni/multidirectional\n- [ ] Use all 10 prefixes correctly\n- [ ] Form aspect pairs from prefixed verbs\n- [ ] Use figurative motion expressions\n\n### Communication (Modules 95-98)\n- [ ] Use abstract vocabulary\n- [ ] Express opinions with reasons\n- [ ] Agree and disagree politely\n- [ ] Use hedging and diplomatic language\n\n## What's Next\n\nModule 100: B1.1 Checkpoint — comprehensive assessment of all skills.\n\nThen B1.2: Complex Sentences (modules 101-115)\n\n> **Key Takeaways**\n>\n> - Aspect is about perspective, not just time\n> - Motion verbs form a logical system\n> - Politeness matters in Ukrainian communication\n> - Practice integrating all skills together\n"
   },
   "activities": [
     {
-      "id": "act-uk-B1-99-quiz",
+      "id": "act-b1-99-quiz",
       "type": "quiz",
       "title": "B1.1 Comprehensive",
       "description": "Test all B1.1 skills.",
       "content": {
         "type": "quiz",
-        "instructions": "Test all B1.1 skills.",
         "questions": [
           {
             "question": "Він ___ книгу весь вечір.",
@@ -242,23 +147,17 @@
       "language": "uk",
       "difficultyLevel": "B1",
       "duration": 5,
-      "tags": [
-        "review",
-        "aspect",
-        "motion",
-        "vocabulary"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.293Z",
+      "modifiedAt": "2025-12-01T22:58:37.293Z"
     },
     {
-      "id": "act-uk-B1-99-matchup",
+      "id": "act-b1-99-matchup",
       "type": "match-up",
       "title": "Comprehensive",
       "description": "Comprehensive",
       "content": {
         "type": "match-up",
-        "instructions": "",
         "pairs": [
           {
             "left": "Я вважаю,",
@@ -293,53 +192,57 @@
       "language": "uk",
       "difficultyLevel": "B1",
       "duration": 5,
-      "tags": [
-        "review",
-        "aspect",
-        "motion",
-        "vocabulary"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.293Z",
+      "modifiedAt": "2025-12-01T22:58:37.293Z"
     },
     {
-      "id": "act-uk-B1-99-gapfill",
+      "id": "act-b1-99-gapfill",
       "type": "gap-fill",
       "title": "Story Completion",
       "description": "Минулого тижня я ___ (їздив) до Одеси. Вранці я ___ (вийшов) з дому і ___ (поїхав) на вокзал. Поїзд ___ (відійшов) о дев'ятій. Ми ___ (проїхали) через багато міст. О третій я ___ (приїхав) до Одеси.  ___ (На мою думку), Одеса — красиве місто. Я ___ (ходив) по вулицях і ___ (зайшов) у кілька музеїв. ___ (Загалом), поїздка була чудовою!",
       "content": {
         "type": "gap-fill",
-        "instructions": "Минулого тижня я ___ (їздив) до Одеси. Вранці я ___ (вийшов) з дому і ___ (поїхав) на вокзал. Поїзд ___ (відійшов) о дев'ятій. Ми ___ (проїхали) через багато міст. О третій я ___ (приїхав) до Одеси.  ___ (На мою думку), Одеса — красиве місто. Я ___ (ходив) по вулицях і ___ (зайшов) у кілька музеїв. ___ (Загалом), поїздка була чудовою!",
         "text": "Минулого тижня я ___ (їздив) до Одеси. Вранці я ___ (вийшов) з дому і ___ (поїхав) на вокзал. Поїзд ___ (відійшов) о дев'ятій. Ми ___ (проїхали) через багато міст. О третій я ___ (приїхав) до Одеси.\n\n___ (На мою думку), Одеса — красиве місто. Я ___ (ходив) по вулицях і ___ (зайшов) у кілька музеїв. ___ (Загалом), поїздка була чудовою!",
         "blanks": [
           {
+            "index": 0,
             "hint": "їздив"
           },
           {
+            "index": 1,
             "hint": "вийшов"
           },
           {
+            "index": 2,
             "hint": "поїхав"
           },
           {
+            "index": 3,
             "hint": "відійшов"
           },
           {
+            "index": 4,
             "hint": "проїхали"
           },
           {
+            "index": 5,
             "hint": "приїхав"
           },
           {
+            "index": 6,
             "hint": "На мою думку"
           },
           {
+            "index": 7,
             "hint": "ходив"
           },
           {
+            "index": 8,
             "hint": "зайшов"
           },
           {
+            "index": 9,
             "hint": "Загалом"
           }
         ],
@@ -351,14 +254,9 @@
       "language": "uk",
       "difficultyLevel": "B1",
       "duration": 5,
-      "tags": [
-        "review",
-        "aspect",
-        "motion",
-        "vocabulary"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.293Z",
+      "modifiedAt": "2025-12-01T22:58:37.293Z"
     }
   ],
   "vocabulary": {
@@ -369,85 +267,67 @@
     "transliterationMode": "none",
     "words": [
       {
-        "id": "v-m99-001",
+        "id": "v-povtorennya-99-0",
         "uk": "повторення",
-        "translit": "",
-        "ipa": "/povtoˈrɛnʲːɑ/",
         "en": "review, repetition",
-        "pos": "",
-        "note": "n"
+        "pos": "n",
+        "ipa": "/povtoˈrɛnʲːɑ/"
       },
       {
-        "id": "v-m99-002",
+        "id": "v-perevirka-99-1",
         "uk": "перевірка",
-        "translit": "",
-        "ipa": "/pɛrɛˈvʲirkɑ/",
         "en": "check, test",
-        "pos": "",
-        "note": "f"
+        "pos": "f",
+        "ipa": "/pɛrɛˈvʲirkɑ/"
       },
       {
-        "id": "v-m99-003",
+        "id": "v-zasvoyennya-99-2",
         "uk": "засвоєння",
-        "translit": "",
-        "ipa": "/zɑsvoˈjɛnʲːɑ/",
         "en": "mastery, acquisition",
-        "pos": "",
-        "note": "n"
+        "pos": "n",
+        "ipa": "/zɑsvoˈjɛnʲːɑ/"
       },
       {
-        "id": "v-m99-004",
+        "id": "v-praktyka-99-3",
         "uk": "практика",
-        "translit": "",
-        "ipa": "/prɑkˈtɪkɑ/",
         "en": "practice",
-        "pos": "",
-        "note": "f"
+        "pos": "f",
+        "ipa": "/prɑkˈtɪkɑ/"
       },
       {
-        "id": "v-m99-005",
+        "id": "v-vprava-99-4",
         "uk": "вправа",
-        "translit": "",
-        "ipa": "/ˈvprɑvɑ/",
         "en": "exercise",
-        "pos": "",
-        "note": "f"
+        "pos": "f",
+        "ipa": "/ˈvprɑvɑ/"
       },
       {
-        "id": "v-m99-006",
+        "id": "v-zavdannya-99-5",
         "uk": "завдання",
-        "translit": "",
-        "ipa": "/zɑvˈdɑnʲːɑ/",
         "en": "task, assignment",
-        "pos": "",
-        "note": "n"
+        "pos": "n",
+        "ipa": "/zɑvˈdɑnʲːɑ/"
       },
       {
-        "id": "v-m99-007",
+        "id": "v-pomylka-99-6",
         "uk": "помилка",
-        "translit": "",
-        "ipa": "/poˈmɪlkɑ/",
         "en": "mistake",
-        "pos": "",
-        "note": "f"
+        "pos": "f",
+        "ipa": "/poˈmɪlkɑ/"
       },
       {
-        "id": "v-m99-008",
+        "id": "v-pravylьnyy-99-7",
         "uk": "правильний",
-        "translit": "",
-        "ipa": "/prɑˈvɪlʲnɪj/",
         "en": "correct",
-        "pos": "",
-        "note": "adj"
+        "pos": "adj",
+        "ipa": "/prɑˈvɪlʲnɪj/"
       },
       {
-        "id": "v-m99-009",
+        "id": "v-nepravylьnyy-99-8",
         "uk": "неправильний",
-        "translit": "",
-        "ipa": "/nɛprɑˈvɪlʲnɪj/",
         "en": "incorrect",
-        "pos": "",
-        "note": "adj"
+        "pos": "adj",
+        "ipa": "/nɛprɑˈvɪlʲnɪj/"
       }
     ]
   }

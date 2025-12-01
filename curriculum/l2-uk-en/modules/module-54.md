@@ -232,37 +232,49 @@ Nobody likes being sick, but knowing how to describe your symptoms in Ukrainian 
 
 ### Match Body Parts
 
-1. голова → head
-2. рука → arm/hand
-3. нога → leg/foot
-4. горло → throat
-5. живіт → stomach
-6. спина → back
+1. голова
+   > [!answer] head
+2. рука
+   > [!answer] arm/hand
+3. нога
+   > [!answer] leg/foot
+4. горло
+   > [!answer] throat
+5. живіт
+   > [!answer] stomach
+6. спина
+   > [!answer] back
 
 ### Form Sentences with Боліти
 
-1. голова → У мене болить голова.
-2. очі → У мене болять очі.
-3. зуби → У мене болять зуби.
-4. живіт → У мене болить живіт.
-5. ноги → У мене болять ноги.
-6. горло → У мене болить горло.
+1. голова
+   > [!answer] У мене болить голова.
+2. очі
+   > [!answer] У мене болять очі.
+3. зуби
+   > [!answer] У мене болять зуби.
+4. живіт
+   > [!answer] У мене болить живіт.
+5. ноги
+   > [!answer] У мене болять ноги.
+6. горло
+   > [!answer] У мене болить горло.
 
 ### Doctor's Appointment Dialogue
 
 Create responses:
 
 1. "На що скаржитесь?" (headache and fever)
-   → У мене болить голова і температура.
+   > [!answer] У мене болить голова і температура.
 
 2. "Як давно це почалося?" (two days)
-   → Це почалося два дні тому.
+   > [!answer] Це почалося два дні тому.
 
 3. "Відкрийте рот." (understood)
-   → (patient opens mouth)
-
+   > [!answer] 
+   > [!explanation] patient opens mouth
 4. "Приймайте по одній таблетці." (how many times?)
-   → Скільки разів на день?
+   > [!answer] Скільки разів на день?
 
 ## production
 

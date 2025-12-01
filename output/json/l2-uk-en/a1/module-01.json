@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-A1-01",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "grammar-introduction",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -25,30 +24,15 @@
       "Cyrillic alphabet groups 1-3 (18 letters)",
       "Phonetic reading basics"
     ],
-    "totalDuration": 45,
-    "transliterationMode": "full",
     "tags": [
       "alphabet",
       "basics",
       "cyrillic",
       "cognates"
     ],
-    "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
+    "totalDuration": 45,
+    "transliterationMode": "full",
     "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Why Learn Cyrillic?\n\nUkrainian uses the Cyrillic alphabet - 33 letters total. Good news: many look familiar! This module covers 18 letters you can learn quickly.\n\nThe key insight: some letters LOOK like English but make DIFFERENT sounds. We call these \"False Friends\" - they'll trick you if you're not careful!\n\n> 🔍 **Myth Buster: \"Cyrillic is Russian\"**\n>\n> Many people think Cyrillic = Russian. **Wrong!** The Cyrillic alphabet was created in the **9th century in Bulgaria** by disciples of Saints Cyril and Methodius. It spread throughout the Slavic world - Russia adopted it centuries later. Today, Cyrillic is used by dozens of languages including Ukrainian, Bulgarian, Serbian, Mongolian, and many others. Russian doesn't own it!\n\n> 💡 **Did You Know?**\n>\n> Ukrainian Cyrillic has **unique letters** that don't exist in Russian:\n> - **Ї** (yi) - only Ukrainian has this!\n> - **Є** (ye) - Ukrainian form\n> - **Ґ** (hard g) - restored after independence\n>\n> When you see these letters, you know it's Ukrainian, not Russian!"
-          }
-        ]
-      },
       {
         "id": "phase-presentation",
         "name": "presentation",
@@ -57,77 +41,33 @@
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "### Group 1: True Friends (7 letters)\n\nThese letters look AND sound like their Latin equivalents:\n\n| Letter | Sound | Example |\n|--------|-------|---------|\n| А а | A (as in \"father\") | мАмА |\n| Е е | E (as in \"bet\") | мЕтро |\n| І і | I (as in \"machine\") | таксІ |\n| О о | O (as in \"hot\") | фОтО |\n| К к | K | Кафе |\n| М м | M | Мама |\n| Т т | T | Тато |\n\nTrust these! They work exactly as you'd expect.\n\n> 📜 **History Bite: The Greek Connection**\n>\n> Both the Latin alphabet (which English uses) and Cyrillic come from the **Greek alphabet**. That's why letters like A, E, K, M, O, and T look the same - they share Greek ancestors! When you see these \"True Friends,\" you're seeing evidence of how alphabets evolved from ancient Greece to modern times."
+            "teacherNotes": "### Group 1: True Friends (7 letters)\n\nThese letters look AND sound like their Latin equivalents:\n\n| Letter | Sound | Example |\n|--------|-------|---------|\n| А а | A (as in \"father\") | мАмА |\n| Е е | E (as in \"bet\") | мЕтро |\n| І і | I (as in \"machine\") | таксІ |\n| О о | O (as in \"hot\") | фОтО |\n| К к | K | Кафе |\n| М м | M | Мама |\n| Т т | T | Тато |\n\nTrust these! They work exactly as you'd expect.\n\n> 📜 **History Bite: The Greek Connection**\n>\n> Both the Latin alphabet (which English uses) and Cyrillic come from the **Greek alphabet**. That's why letters like A, E, K, M, O, and T look the same - they share Greek ancestors! When you see these \"True Friends,\" you're seeing evidence of how alphabets evolved from ancient Greece to modern times.\n\n### Group 2: False Friends (6 letters)\n\nDANGER! These look Latin but sound completely different:\n\n| Letter | Looks like | Actually sounds like |\n|--------|------------|---------------------|\n| В в | B | V (as in \"van\") |\n| Н н | H | N (as in \"no\") |\n| Р р | P | R (rolled, as in Spanish) |\n| С с | C | S (as in \"sun\") |\n| У у | Y | U (as in \"flute\") |\n| Х х | X | KH (as in German \"Bach\") |\n\nMemorize these! They cause the most confusion for beginners.\n\n> ⚡ **Pro Tip: Remember the False Friends**\n>\n> Each letter looks like one thing but sounds like another:\n> - **В** looks like B → sounds like **V** (as in Violin)\n> - **Н** looks like H → sounds like **N** (as in Noon)\n> - **Р** looks like P → sounds like **R** (rolled, like Spanish)\n> - **С** looks like C → sounds like **S** (always soft)\n> - **У** looks like Y → sounds like **U** (as in flUte)\n> - **Х** looks like X → sounds like **KH** (German \"Bach\")\n>\n> Practice these daily until they become automatic!\n\n> 🎯 **Fun Fact: Why the Confusion?**\n>\n> The \"False Friends\" exist because Cyrillic and Latin alphabets evolved separately from Greek. The Greek letter **Ρ** (rho) became **R** in Latin but **Р** in Cyrillic - same origin, different evolution! Similarly, Greek **Ν** (nu) became **N** in Latin but looks like **Н** in Cyrillic.\n\n### Group 3: New But Easy (6 letters)\n\nThese don't exist in Latin but are straightforward:\n\n| Letter | Sound | Memory tip |\n|--------|-------|------------|\n| Б б | B | Belly with a belt |\n| Д д | D | Like a house |\n| З з | Z | Like the number 3 |\n| Л л | L | Like a tent |\n| П п | P | Like a doorway/portal |\n| Ф ф | F | Like a person with arms out |\n\n> 🔗 **Language Link: B and V**\n>\n> Notice that Ukrainian has **two** letters for B-sounds: **Б** (true B) and **В** (V sound). English only has one! This is why some Ukrainian words borrowed into English seem to swap B and V. For example, the name \"Volodymyr\" (Володимир) is sometimes written \"Vladimir\" because Russian В sounds like V to English ears."
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Group 2: False Friends (6 letters)\n\nDANGER! These look Latin but sound completely different:\n\n| Letter | Looks like | Actually sounds like |\n|--------|------------|---------------------|\n| В в | B | V (as in \"van\") |\n| Н н | H | N (as in \"no\") |\n| Р р | P | R (rolled, as in Spanish) |\n| С с | C | S (as in \"sun\") |\n| У у | Y | U (as in \"flute\") |\n| Х х | X | KH (as in German \"Bach\") |\n\nMemorize these! They cause the most confusion for beginners.\n\n> ⚡ **Pro Tip: Remember the False Friends**\n>\n> Each letter looks like one thing but sounds like another:\n> - **В** looks like B → sounds like **V** (as in Violin)\n> - **Н** looks like H → sounds like **N** (as in Noon)\n> - **Р** looks like P → sounds like **R** (rolled, like Spanish)\n> - **С** looks like C → sounds like **S** (always soft)\n> - **У** looks like Y → sounds like **U** (as in flUte)\n> - **Х** looks like X → sounds like **KH** (German \"Bach\")\n>\n> Practice these daily until they become automatic!\n\n> 🎯 **Fun Fact: Why the Confusion?**\n>\n> The \"False Friends\" exist because Cyrillic and Latin alphabets evolved separately from Greek. The Greek letter **Ρ** (rho) became **R** in Latin but **Р** in Cyrillic - same origin, different evolution! Similarly, Greek **Ν** (nu) became **N** in Latin but looks like **Н** in Cyrillic."
+            "teacherNotes": "### Reading Strategy\n\nWhen you see a Cyrillic word:\n1. Go letter by letter\n2. Watch for False Friends (В=V, Н=N, Р=R, С=S, У=U, Х=KH)\n3. Sound it out slowly\n4. Many words are cognates - they'll sound familiar!\n\n### Try These Words\n\nSound out each word. Most are international words you'll recognize:\n\nБАНК → B-A-N-K → bank\nПАРК → P-A-R-K → park\nМЕТРО → M-E-T-R-O → metro\nКАФЕ → K-A-F-E → café\n\n> 🌍 **Real World: Cognates Everywhere**\n>\n> Ukrainian (like all languages) borrows international words. When you visit Ukraine, you'll see signs you can read immediately:\n> - **БАНК** (bank)\n> - **РЕСТОРАН** (restaurant)\n> - **ГОТЕЛЬ** (hotel)\n> - **АПТЕКА** (pharmacy - from Greek \"apotheke\"!)\n>\n> About 10-15% of everyday Ukrainian words are recognizable cognates. You already know more Ukrainian than you think!"
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Group 3: New But Easy (6 letters)\n\nThese don't exist in Latin but are straightforward:\n\n| Letter | Sound | Memory tip |\n|--------|-------|------------|\n| Б б | B | Belly with a belt |\n| Д д | D | Like a house |\n| З з | Z | Like the number 3 |\n| Л л | L | Like a tent |\n| П п | P | Like a doorway/portal |\n| Ф ф | F | Like a person with arms out |\n\n> 🔗 **Language Link: B and V**\n>\n> Notice that Ukrainian has **two** letters for B-sounds: **Б** (true B) and **В** (V sound). English only has one! This is why some Ukrainian words borrowed into English seem to swap B and V. For example, the name \"Volodymyr\" (Володимир) is sometimes written \"Vladimir\" because Russian В sounds like V to English ears."
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A1-01-matchup"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Reading Strategy\n\nWhen you see a Cyrillic word:\n1. Go letter by letter\n2. Watch for False Friends (В=V, Н=N, Р=R, С=S, У=U, Х=KH)\n3. Sound it out slowly\n4. Many words are cognates - they'll sound familiar!"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Try These Words\n\nSound out each word. Most are international words you'll recognize:\n\nБАНК → B-A-N-K → bank\nПАРК → P-A-R-K → park\nМЕТРО → M-E-T-R-O → metro\nКАФЕ → K-A-F-E → café\n\n> 🌍 **Real World: Cognates Everywhere**\n>\n> Ukrainian (like all languages) borrows international words. When you visit Ukraine, you'll see signs you can read immediately:\n> - **БАНК** (bank)\n> - **РЕСТОРАН** (restaurant)\n> - **ГОТЕЛЬ** (hotel)\n> - **АПТЕКА** (pharmacy - from Greek \"apotheke\"!)\n>\n> About 10-15% of everyday Ukrainian words are recognizable cognates. You already know more Ukrainian than you think!"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A1-01-quiz"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A1-01-groupsort"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Reading Challenge\n\nRead these words without looking at transliteration:\n\n1. МАМА\n2. ТАТО\n3. СТУДЕНТ\n4. ФУТБОЛ\n5. МУЗИКА"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "False Friend Drill\n\nRemember: П = P, Р = R, В = V, Н = N, С = S, Х = KH\n\nRead these tricky words:\n- СУПЕРМАРКЕТ (supermarket)\n- РЕСТОРАН (restaurant)\n- ПАСПОРТ (passport)\n\n> 🎭 **Culture Corner: Names in Cyrillic**\n>\n> Ukrainian names follow Cyrillic spelling, which sometimes surprises English speakers:\n> - **Харків** (Kharkiv) - the Х makes a \"kh\" sound\n> - **Володимир** (Volodymyr) - В is V, not B\n> - **Степан** (Stepan) - С is S, not \"St\"\n>\n> When you see Ukrainian names transliterated to English, you're seeing someone's attempt to represent Cyrillic sounds in Latin letters!"
+            "teacherNotes": "### Reading Challenge\n\nRead these words without looking at transliteration:\n\n1. МАМА\n2. ТАТО\n3. СТУДЕНТ\n4. ФУТБОЛ\n5. МУЗИКА\n\n### False Friend Drill\n\nRemember: П = P, Р = R, В = V, Н = N, С = S, Х = KH\n\nRead these tricky words:\n- СУПЕРМАРКЕТ (supermarket)\n- РЕСТОРАН (restaurant)\n- ПАСПОРТ (passport)\n\n> 🎭 **Culture Corner: Names in Cyrillic**\n>\n> Ukrainian names follow Cyrillic spelling, which sometimes surprises English speakers:\n> - **Харків** (Kharkiv) - the Х makes a \"kh\" sound\n> - **Володимир** (Volodymyr) - В is V, not B\n> - **Степан** (Stepan) - С is S, not \"St\"\n>\n> When you see Ukrainian names transliterated to English, you're seeing someone's attempt to represent Cyrillic sounds in Latin letters!\n\n---"
           }
         ]
       }
-    ]
+    ],
+    "createdAt": "2025-12-01T22:58:37.223Z",
+    "modifiedAt": "2025-12-01T22:58:37.223Z",
+    "version": 1
   },
   "activities": [
     {
-      "id": "act-uk-A1-01-matchup",
+      "id": "act-a1-1-matchup",
       "type": "match-up",
       "title": "False Friends Letter Sounds",
       "description": "Match each Cyrillic \"False Friend\" letter to its actual sound. Don't be fooled by appearances!",
       "content": {
         "type": "match-up",
-        "instructions": "Match each Cyrillic \"False Friend\" letter to its actual sound. Don't be fooled by appearances!",
         "pairs": [
           {
             "left": "В в",
@@ -162,23 +102,17 @@
       "language": "uk",
       "difficultyLevel": "A1",
       "duration": 5,
-      "tags": [
-        "alphabet",
-        "basics",
-        "cyrillic",
-        "cognates"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.223Z",
+      "modifiedAt": "2025-12-01T22:58:37.223Z"
     },
     {
-      "id": "act-uk-A1-01-quiz",
+      "id": "act-a1-1-quiz",
       "type": "quiz",
       "title": "Read International Words",
       "description": "Choose the correct English meaning for each Cyrillic word. Sound out each letter!",
       "content": {
         "type": "quiz",
-        "instructions": "Choose the correct English meaning for each Cyrillic word. Sound out each letter!",
         "questions": [
           {
             "question": "What does БАНК mean?",
@@ -279,26 +213,21 @@
       "language": "uk",
       "difficultyLevel": "A1",
       "duration": 5,
-      "tags": [
-        "alphabet",
-        "basics",
-        "cyrillic",
-        "cognates"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.223Z",
+      "modifiedAt": "2025-12-01T22:58:37.223Z"
     },
     {
-      "id": "act-uk-A1-01-groupsort",
+      "id": "act-a1-1-groupsort",
       "type": "group-sort",
       "title": "Sort the Letters",
       "description": "Drag each letter to the correct category based on how it relates to the Latin alphabet.",
       "content": {
         "type": "group-sort",
-        "instructions": "Drag each letter to the correct category based on how it relates to the Latin alphabet.",
         "groups": [
           {
-            "name": "True Friends (Look & Sound Same)",
+            "id": "true-friends",
+            "name": "True Friends",
             "items": [
               "А",
               "Е",
@@ -307,10 +236,12 @@
               "К",
               "М",
               "Т"
-            ]
+            ],
+            "nameUk": "Look & Sound Same"
           },
           {
-            "name": "False Friends (Look Latin, Sound Different)",
+            "id": "false-friends",
+            "name": "False Friends",
             "items": [
               "В",
               "Н",
@@ -318,10 +249,12 @@
               "С",
               "У",
               "Х"
-            ]
+            ],
+            "nameUk": "Look Latin, Sound Different"
           },
           {
-            "name": "New Letters (Not in Latin)",
+            "id": "new-letters",
+            "name": "New Letters",
             "items": [
               "Б",
               "Д",
@@ -329,7 +262,8 @@
               "Л",
               "П",
               "Ф"
-            ]
+            ],
+            "nameUk": "Not in Latin"
           }
         ],
         "shuffleItems": true
@@ -340,247 +274,195 @@
       "language": "uk",
       "difficultyLevel": "A1",
       "duration": 5,
-      "tags": [
-        "alphabet",
-        "basics",
-        "cyrillic",
-        "cognates"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.223Z",
+      "modifiedAt": "2025-12-01T22:58:37.223Z"
     }
   ],
   "vocabulary": {
-    "moduleId": "mod-uk-A1-01",
+    "moduleId": "mod-uk-A1-1",
     "level": "A1",
     "phase": "A1.1",
     "wordCount": 20,
     "transliterationMode": "full",
-    "letterGroups": {
-      "trueFriends": [
-        "А",
-        "Е",
-        "І",
-        "О",
-        "К",
-        "М",
-        "Т"
-      ],
-      "falseFriends": [
-        "В",
-        "Н",
-        "Р",
-        "С",
-        "У",
-        "Х"
-      ],
-      "newLetters": [
-        "Б",
-        "Д",
-        "З",
-        "Л",
-        "П",
-        "Ф"
-      ]
-    },
     "words": [
       {
-        "id": "v-m01-001",
+        "id": "v-mama-1-0",
         "uk": "мама",
-        "translit": "",
-        "ipa": "/ˈmɑmɑ/",
         "en": "mom",
         "pos": "noun",
+        "ipa": "/ˈmɑmɑ/",
         "gender": "f",
         "note": "True Friends only: М-А-М-А"
       },
       {
-        "id": "v-m01-002",
+        "id": "v-tato-1-1",
         "uk": "тато",
-        "translit": "",
-        "ipa": "/ˈtɑtɔ/",
         "en": "dad",
         "pos": "noun",
+        "ipa": "/ˈtɑtɔ/",
         "gender": "m",
         "note": "True Friends: Т-А-Т-О"
       },
       {
-        "id": "v-m01-003",
+        "id": "v-bank-1-2",
         "uk": "банк",
-        "translit": "",
-        "ipa": "/bɑnk/",
         "en": "bank",
         "pos": "noun",
+        "ipa": "/bɑnk/",
         "gender": "m",
         "note": "Б=B (new), Н=N (false friend)"
       },
       {
-        "id": "v-m01-004",
+        "id": "v-park-1-3",
         "uk": "парк",
-        "translit": "",
-        "ipa": "/pɑrk/",
         "en": "park",
         "pos": "noun",
+        "ipa": "/pɑrk/",
         "gender": "m",
         "note": "П=P (new), Р=R (false friend)"
       },
       {
-        "id": "v-m01-005",
+        "id": "v-kafe-1-4",
         "uk": "кафе",
-        "translit": "",
-        "ipa": "/kɑˈfɛ/",
         "en": "café",
         "pos": "noun",
+        "ipa": "/kɑˈfɛ/",
         "gender": "n",
         "note": "All True Friends + Ф (new)"
       },
       {
-        "id": "v-m01-006",
+        "id": "v-metro-1-5",
         "uk": "метро",
-        "translit": "",
-        "ipa": "/mɛˈtrɔ/",
         "en": "metro",
         "pos": "noun",
+        "ipa": "/mɛˈtrɔ/",
         "gender": "n",
         "note": "Р=R (false friend)"
       },
       {
-        "id": "v-m01-007",
+        "id": "v-taksi-1-6",
         "uk": "таксі",
-        "translit": "",
-        "ipa": "/tɑkˈsi/",
         "en": "taxi",
         "pos": "noun",
+        "ipa": "/tɑkˈsi/",
         "gender": "n",
         "note": "С=S (false friend), І=I"
       },
       {
-        "id": "v-m01-008",
+        "id": "v-radio-1-7",
         "uk": "радіо",
-        "translit": "",
-        "ipa": "/ˈrɑdʲiɔ/",
         "en": "radio",
         "pos": "noun",
+        "ipa": "/ˈrɑdʲiɔ/",
         "gender": "n",
         "note": "Р=R (false friend), Д=D (new)"
       },
       {
-        "id": "v-m01-009",
+        "id": "v-pitsa-1-8",
         "uk": "піца",
-        "translit": "",
-        "ipa": "/ˈpitsɑ/",
         "en": "pizza",
         "pos": "noun",
+        "ipa": "/ˈpitsɑ/",
         "gender": "f",
         "note": "П=P (new), Ц=TS (preview)"
       },
       {
-        "id": "v-m01-010",
+        "id": "v-sup-1-9",
         "uk": "суп",
-        "translit": "",
-        "ipa": "/sup/",
         "en": "soup",
         "pos": "noun",
+        "ipa": "/sup/",
         "gender": "m",
         "note": "С=S, У=U (false friends)"
       },
       {
-        "id": "v-m01-011",
+        "id": "v-salat-1-10",
         "uk": "салат",
-        "translit": "",
-        "ipa": "/sɑˈlɑt/",
         "en": "salad",
         "pos": "noun",
+        "ipa": "/sɑˈlɑt/",
         "gender": "m",
         "note": "С=S (false friend), Л=L (new)"
       },
       {
-        "id": "v-m01-012",
+        "id": "v-lymon-1-11",
         "uk": "лимон",
-        "translit": "",
-        "ipa": "/lɪˈmɔn/",
         "en": "lemon",
         "pos": "noun",
+        "ipa": "/lɪˈmɔn/",
         "gender": "m",
         "note": "Л=L (new), Н=N (false friend)"
       },
       {
-        "id": "v-m01-013",
+        "id": "v-banan-1-12",
         "uk": "банан",
-        "translit": "",
-        "ipa": "/bɑˈnɑn/",
         "en": "banana",
         "pos": "noun",
+        "ipa": "/bɑˈnɑn/",
         "gender": "m",
         "note": "Б=B (new), Н=N (false friend)"
       },
       {
-        "id": "v-m01-014",
+        "id": "v-khokey-1-13",
         "uk": "хокей",
-        "translit": "",
-        "ipa": "/xɔˈkɛj/",
         "en": "hockey",
         "pos": "noun",
+        "ipa": "/xɔˈkɛj/",
         "gender": "m",
         "note": "Х=KH (false friend)"
       },
       {
-        "id": "v-m01-015",
+        "id": "v-futbol-1-14",
         "uk": "футбол",
-        "translit": "",
-        "ipa": "/fudˈbɔl/",
         "en": "football",
         "pos": "noun",
+        "ipa": "/fudˈbɔl/",
         "gender": "m",
         "note": "Ф=F (new), У=U, Б=B, Л=L"
       },
       {
-        "id": "v-m01-016",
+        "id": "v-student-1-15",
         "uk": "студент",
-        "translit": "",
-        "ipa": "/stuˈdɛnt/",
         "en": "student",
         "pos": "noun",
+        "ipa": "/stuˈdɛnt/",
         "gender": "m",
         "note": "С=S, У=U, Н=N (false friends)"
       },
       {
-        "id": "v-m01-017",
+        "id": "v-turyst-1-16",
         "uk": "турист",
-        "translit": "",
-        "ipa": "/tuˈrɪst/",
         "en": "tourist",
         "pos": "noun",
+        "ipa": "/tuˈrɪst/",
         "gender": "m",
         "note": "У=U, Р=R, С=S (false friends)"
       },
       {
-        "id": "v-m01-018",
+        "id": "v-muzyka-1-17",
         "uk": "музика",
-        "translit": "",
-        "ipa": "/ˈmuzɪkɑ/",
         "en": "music",
         "pos": "noun",
+        "ipa": "/ˈmuzɪkɑ/",
         "gender": "f",
         "note": "У=U (false friend), З=Z (new)"
       },
       {
-        "id": "v-m01-019",
+        "id": "v-foto-1-18",
         "uk": "фото",
-        "translit": "",
-        "ipa": "/ˈfɔtɔ/",
         "en": "photo",
         "pos": "noun",
+        "ipa": "/ˈfɔtɔ/",
         "gender": "n",
         "note": "Ф=F (new), rest True Friends"
       },
       {
-        "id": "v-m01-020",
+        "id": "v-video-1-19",
         "uk": "відео",
-        "translit": "",
-        "ipa": "/ˈwideɔ/",
         "en": "video",
         "pos": "noun",
+        "ipa": "/ˈwideɔ/",
         "gender": "n",
         "note": "В=V (false friend), Д=D (new)"
       }

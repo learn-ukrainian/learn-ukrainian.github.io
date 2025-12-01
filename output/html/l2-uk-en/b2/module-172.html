@@ -5,98 +5,314 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Module 172: Synonyms: Speaking | Ukrainian B2</title>
   <style>
-    :root { --primary: #1a5fb4; --primary-light: #3584e4; --success: #26a269; --warning: #e5a50a; --danger: #c01c28; --bg: #fafafa; --card-bg: #fff; --text: #1e1e1e; --text-muted: #5e5e5e; --border: #e0e0e0; }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
-    .top-nav { background: #2e2e2e; color: white; padding: 0.5rem 2rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.875rem; }
-    .top-nav a { color: white; text-decoration: none; }
-    .top-nav a:hover { text-decoration: underline; }
-    .module-nav { display: flex; gap: 1rem; align-items: center; }
-    .module-nav-link { color: rgba(255,255,255,0.8); text-decoration: none; padding: 0.25rem 0.5rem; }
-    .module-nav-link:hover { color: white; }
-    .module-nav-link.disabled { color: rgba(255,255,255,0.3); pointer-events: none; }
-    .nav { position: sticky; top: 0; background: var(--primary); color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; z-index: 100; }
-    .nav h1 { font-size: 1.25rem; }
-    .nav-tabs { display: flex; gap: 0.5rem; }
-    .nav-tab { background: rgba(255,255,255,0.2); border: none; color: white; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; }
-    .nav-tab.active { background: white; color: var(--primary); }
-    main { max-width: 1000px; margin: 0 auto; padding: 2rem; }
-    .section { display: none; } .section.active { display: block; }
-    .lesson-header { text-align: center; margin-bottom: 2rem; padding: 2rem; background: linear-gradient(135deg, #e8f4fd, #f0e8fd); border-radius: 12px; }
-    .level-badge { background: var(--primary); color: white; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.875rem; }
-    .card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 1.5rem; margin-bottom: 1.5rem; }
-    .card h3 { color: var(--primary); margin-bottom: 1rem; }
-    .section-intro { border-left: 4px solid var(--primary); }
-    .section-intro h3 { color: var(--primary); }
-    .section-topic { border-left: 4px solid var(--border); }
-    .section-summary { background: linear-gradient(135deg, #f0f9ff, #e8f4fd); border-left: 4px solid var(--success); }
-    .section-summary h3 { color: var(--success); }
-    .canvas-note { background: #fffbeb; border-left: 4px solid var(--warning); padding: 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
-    .canvas-note h4 { color: var(--warning); margin-bottom: 0.5rem; }
-    .md-content { line-height: 1.7; }
-    .md-content p { margin: 0.75rem 0; }
-    .md-content ul, .md-content ol { margin: 0.75rem 0; padding-left: 1.5rem; }
-    .md-content li { margin: 0.25rem 0; }
-    .md-content strong { color: var(--primary); }
-    .md-content blockquote { background: #e8f4fd; border-left: 4px solid var(--primary); padding: 0.75rem 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
-    .md-content blockquote p { margin: 0.25rem 0; }
-    .md-content table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
-    .md-content th, .md-content td { border: 1px solid var(--border); padding: 0.5rem 0.75rem; text-align: left; }
-    .md-content th { background: #f5f5f5; font-weight: 600; }
-    .md-content code { background: #f0f0f0; padding: 0.125rem 0.375rem; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
-    .letter-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0; }
-    .letter-group { border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; }
-    .letter-group.true-friends { border-color: var(--success); } .letter-group.true-friends .letters { color: var(--success); }
-    .letter-group.false-friends { border-color: var(--danger); } .letter-group.false-friends .letters { color: var(--danger); }
-    .letter-group.new-letters { border-color: var(--primary); } .letter-group.new-letters .letters { color: var(--primary); }
-    .letters { font-size: 1.75rem; letter-spacing: 0.3rem; }
-    .match-container { display: flex; gap: 3rem; padding: 1rem; position: relative; }
-    .match-column { flex: 1; display: flex; flex-direction: column; gap: 0.75rem; }
-    .match-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; font-size: 1.25rem; cursor: pointer; }
-    .match-item.selected { border-color: var(--primary); background: #e8f4fd; }
-    .match-item.matched { border-color: var(--success); background: #e8f8f0; }
-    .match-item.wrong { border-color: var(--danger); background: #fde8e8; }
-    .match-lines { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
-    .quiz-question { border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; }
-    .quiz-question.answered { pointer-events: none; }
-    .quiz-question .cyrillic { font-size: 1.5rem; color: var(--primary); font-weight: 600; }
-    .quiz-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-top: 1rem; }
-    .quiz-option { background: #f5f5f5; border: 2px solid var(--border); border-radius: 8px; padding: 1rem; cursor: pointer; text-align: center; }
-    .quiz-option.correct { border-color: var(--success); background: #d4edda; }
-    .quiz-option.wrong { border-color: var(--danger); background: #f8d7da; }
-    .quiz-explanation { margin-top: 1rem; padding: 1rem; background: #e8f4fd; border-radius: 8px; display: none; }
-    .quiz-explanation.show { display: block; }
-    .sort-pool { background: #f5f5f5; border: 2px dashed var(--border); border-radius: 12px; padding: 1.5rem; min-height: 80px; margin-bottom: 1rem; }
-    .sort-items { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; }
-    .sort-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 0.75rem 1.25rem; font-size: 1.5rem; cursor: grab; }
-    .sort-item.correct { border-color: var(--success); background: #e8f8f0; }
-    .sort-item.wrong { border-color: var(--danger); background: #fde8e8; }
-    .sort-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
-    .sort-group { border: 2px solid var(--border); border-radius: 12px; padding: 1rem; min-height: 150px; }
-    .sort-group.drag-over { border-color: var(--primary); background: #e8f4fd; }
-    .sort-group h4 { font-size: 0.875rem; text-align: center; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--border); }
-    .sort-group.true-friends h4 { color: var(--success); border-color: var(--success); }
-    .sort-group.false-friends h4 { color: var(--danger); border-color: var(--danger); }
-    .sort-group.new-letters h4 { color: var(--primary); border-color: var(--primary); }
-    .vocab-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; }
-    .vocab-card { border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; text-align: center; }
-    .vocab-card .uk { font-size: 1.75rem; font-weight: 600; color: var(--primary); }
-    .vocab-card .translit { color: var(--text-muted); font-style: italic; }
-    .vocab-card .en { font-weight: 500; margin: 0.25rem 0; }
-    .vocab-card .note { font-size: 0.75rem; color: #613583; background: #f0e8fd; padding: 0.25rem 0.5rem; border-radius: 4px; }
-    .btn { padding: 0.75rem 1.5rem; border: none; border-radius: 8px; cursor: pointer; }
-    .btn-primary { background: var(--primary); color: white; }
-    .btn-outline { background: transparent; border: 2px solid var(--border); }
-    .btn-group { display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem; }
-    .score-display { text-align: center; padding: 1rem; background: linear-gradient(135deg, #e8f8f0, #e8f4fd); border-radius: 8px; margin-bottom: 1rem; }
-    .score-display .score { font-size: 2rem; font-weight: 700; color: var(--success); }
-    .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
-    .completion-message.show { display: block; }
-    footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+:root { --primary: #1a5fb4; --primary-light: #3584e4; --success: #26a269; --warning: #e5a50a; --danger: #c01c28; --bg: #fafafa; --card-bg: #fff; --text: #1e1e1e; --text-muted: #5e5e5e; --border: #e0e0e0; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+.top-nav { background: #2e2e2e; color: white; padding: 0.5rem 2rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.875rem; }
+.top-nav a { color: white; text-decoration: none; }
+.top-nav a:hover { text-decoration: underline; }
+.module-nav { display: flex; gap: 1rem; align-items: center; }
+.module-nav-link { color: rgba(255,255,255,0.8); text-decoration: none; padding: 0.25rem 0.5rem; }
+.module-nav-link:hover { color: white; }
+.module-nav-link.disabled { color: rgba(255,255,255,0.3); pointer-events: none; }
+.nav { position: sticky; top: 0; background: var(--primary); color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; z-index: 100; }
+.nav h1 { font-size: 1.25rem; }
+.nav-tabs { display: flex; gap: 0.5rem; }
+.nav-tab { background: rgba(255,255,255,0.2); border: none; color: white; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; }
+.nav-tab.active { background: white; color: var(--primary); }
+main { max-width: 1000px; margin: 0 auto; padding: 2rem; }
+.section { display: none; } .section.active { display: block; }
+.lesson-header { text-align: center; margin-bottom: 2rem; padding: 2rem; background: linear-gradient(135deg, #e8f4fd, #f0e8fd); border-radius: 12px; }
+.level-badge { background: var(--primary); color: white; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.875rem; }
+.card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 1.5rem; margin-bottom: 1.5rem; }
+.card h3 { color: var(--primary); margin-bottom: 1rem; }
+.section-intro { border-left: 4px solid var(--primary); }
+.section-intro h3 { color: var(--primary); }
+.section-topic { border-left: 4px solid var(--border); }
+.section-summary { background: linear-gradient(135deg, #f0f9ff, #e8f4fd); border-left: 4px solid var(--success); }
+.section-summary h3 { color: var(--success); }
+.canvas-note { background: #fffbeb; border-left: 4px solid var(--warning); padding: 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+.canvas-note h4 { color: var(--warning); margin-bottom: 0.5rem; }
+.md-content { line-height: 1.7; }
+.md-content p { margin: 0.75rem 0; }
+.md-content ul, .md-content ol { margin: 0.75rem 0; padding-left: 1.5rem; }
+.md-content li { margin: 0.25rem 0; }
+.md-content strong { color: var(--primary); }
+.md-content blockquote { background: #e8f4fd; border-left: 4px solid var(--primary); padding: 0.75rem 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+.md-content blockquote p { margin: 0.25rem 0; }
+.md-content table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+.md-content th, .md-content td { border: 1px solid var(--border); padding: 0.5rem 0.75rem; text-align: left; }
+.md-content th { background: #f5f5f5; font-weight: 600; }
+.md-content code { background: #f0f0f0; padding: 0.125rem 0.375rem; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
+.md-content details { background: #f8f9fa; border: 1px solid var(--border); border-radius: 8px; padding: 0; margin: 1rem 0; }
+.md-content details summary { background: linear-gradient(135deg, #e8f4fd, #f0e8fd); padding: 0.75rem 1rem; cursor: pointer; font-weight: 600; color: var(--primary); border-radius: 8px; list-style: none; display: flex; align-items: center; gap: 0.5rem; }
+.md-content details summary::-webkit-details-marker { display: none; }
+.md-content details summary::before { content: '▶'; font-size: 0.75rem; transition: transform 0.2s; }
+.md-content details[open] summary::before { transform: rotate(90deg); }
+.md-content details[open] summary { border-radius: 8px 8px 0 0; }
+.md-content details > *:not(summary) { padding: 0 1rem; }
+.md-content details > *:last-child { padding-bottom: 1rem; }
+.md-content p > details { margin: 0; }
+.md-content p:has(> details) { margin: 1rem 0; }
+.inline-answer { background: linear-gradient(135deg, #d4edda, #e8f4fd); padding: 0.125rem 0.5rem; border-radius: 4px; transition: opacity 0.2s; }
+.inline-answer.hidden { opacity: 0; user-select: none; }
+.answer-toggle-btn { display: inline-flex; align-items: center; gap: 0.5rem; background: linear-gradient(135deg, #e8f4fd, #f0e8fd); border: 1px solid var(--primary); color: var(--primary); padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-size: 0.875rem; font-weight: 600; margin: 1rem 0; }
+.answer-toggle-btn:hover { background: var(--primary); color: white; }
+.answer-toggle-btn svg { width: 1rem; height: 1rem; }
+.letter-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0; }
+.letter-group { border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; }
+.letter-group.true-friends { border-color: var(--success); } .letter-group.true-friends .letters { color: var(--success); }
+.letter-group.false-friends { border-color: var(--danger); } .letter-group.false-friends .letters { color: var(--danger); }
+.letter-group.new-letters { border-color: var(--primary); } .letter-group.new-letters .letters { color: var(--primary); }
+.letters { font-size: 1.75rem; letter-spacing: 0.3rem; }
+.btn { padding: 0.75rem 1.5rem; border: none; border-radius: 8px; cursor: pointer; }
+.btn-primary { background: var(--primary); color: white; }
+.btn-outline { background: transparent; border: 2px solid var(--border); }
+.btn-group { display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem; }
+.score-display { text-align: center; padding: 1rem; background: linear-gradient(135deg, #e8f8f0, #e8f4fd); border-radius: 8px; margin-bottom: 1rem; }
+.score-display .score { font-size: 2rem; font-weight: 700; color: var(--success); }
+.completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
+.completion-message.show { display: block; }
+footer { text-align: center; padding: 2rem; color: var(--text-muted); }
+@media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+
+
+/**
+ * Layout styles - Navigation, page structure
+ */
+
+/* Top Navigation */
+.top-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1.5rem;
+  background: #f8f8f8;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.875rem;
+}
+
+.top-nav a {
+  color: var(--text-muted);
+}
+
+.top-nav a:hover {
+  color: var(--primary);
+}
+
+.module-nav {
+  display: flex;
+  gap: 1rem;
+}
+
+.module-nav-link {
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+.module-nav-link:hover {
+  background: #e8f4fd;
+}
+
+/* Main Navigation */
+.nav {
+  background: linear-gradient(135deg, #1a5fb4, #613583);
+  color: white;
+  padding: 1.5rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav h1 {
+  font-size: 1.5rem;
+}
+
+.nav-tabs {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.nav-tab {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: background 0.2s;
+}
+
+.nav-tab:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.nav-tab.active {
+  background: white;
+  color: var(--primary);
+}
+
+/* Main Content */
+main {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Sections */
+.section {
+  display: none;
+}
+
+.section.active {
+  display: block;
+}
+
+/* Lesson Header */
+.lesson-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding: 2rem;
+  background: linear-gradient(135deg, #e8f4fd, #f0e8fd);
+  border-radius: 12px;
+}
+
+.lesson-header h2 {
+  font-size: 2rem;
+  margin: 0.5rem 0;
+}
+
+/* Section Cards */
+.section-intro {
+  border-left: 4px solid var(--primary);
+}
+
+.section-intro h3 {
+  color: var(--primary);
+}
+
+.section-topic {
+  border-left: 4px solid var(--border);
+}
+
+.section-summary {
+  background: linear-gradient(135deg, #f0f9ff, #e8f4fd);
+  border-left: 4px solid var(--success);
+}
+
+.section-summary h3 {
+  color: var(--success);
+}
+
+/* Canvas Notes */
+.canvas-note {
+  background: #fffbeb;
+  border-left: 4px solid var(--warning);
+  padding: 1rem;
+  margin: 1rem 0;
+  border-radius: 0 8px 8px 0;
+}
+
+.canvas-note h4 {
+  color: var(--warning);
+  margin-bottom: 0.5rem;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-muted);
+}
+
+/* Responsive Layout */
+@media (max-width: 768px) {
+  .nav {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .nav h1 {
+    font-size: 1.25rem;
+    text-align: center;
+  }
+
+  .nav-tabs {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  main {
+    padding: 1rem;
+  }
+
+  .top-nav {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+
+
+/* Match Activity */
+.match-container { display: flex; gap: 3rem; padding: 1rem; position: relative; }
+.match-column { flex: 1; display: flex; flex-direction: column; gap: 0.75rem; }
+.match-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; font-size: 1.25rem; cursor: pointer; }
+.match-item.selected { border-color: var(--primary); background: #e8f4fd; }
+.match-item.matched { border-color: var(--success); background: #e8f8f0; }
+.match-item.wrong { border-color: var(--danger); background: #fde8e8; }
+.match-lines { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+
+/* Quiz Activity */
+.quiz-question { border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; }
+.quiz-question.answered { pointer-events: none; }
+.quiz-question .cyrillic { font-size: 1.5rem; color: var(--primary); font-weight: 600; }
+.quiz-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-top: 1rem; }
+.quiz-option { background: #f5f5f5; border: 2px solid var(--border); border-radius: 8px; padding: 1rem; cursor: pointer; text-align: center; }
+.quiz-option.correct { border-color: var(--success); background: #d4edda; }
+.quiz-option.wrong { border-color: var(--danger); background: #f8d7da; }
+.quiz-explanation { margin-top: 1rem; padding: 1rem; background: #e8f4fd; border-radius: 8px; display: none; }
+.quiz-explanation.show { display: block; }
+
+/* Sort Activity */
+.sort-pool { background: #f5f5f5; border: 2px dashed var(--border); border-radius: 12px; padding: 1.5rem; min-height: 80px; margin-bottom: 1rem; }
+.sort-items { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; }
+.sort-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 0.75rem 1.25rem; font-size: 1.5rem; cursor: grab; }
+.sort-item.correct { border-color: var(--success); background: #e8f8f0; }
+.sort-item.wrong { border-color: var(--danger); background: #fde8e8; }
+.sort-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+.sort-group { border: 2px solid var(--border); border-radius: 12px; padding: 1rem; min-height: 150px; }
+.sort-group.drag-over { border-color: var(--primary); background: #e8f4fd; }
+.sort-group h4 { font-size: 0.875rem; text-align: center; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--border); }
+.sort-group.true-friends h4 { color: var(--success); border-color: var(--success); }
+.sort-group.false-friends h4 { color: var(--danger); border-color: var(--danger); }
+.sort-group.new-letters h4 { color: var(--primary); border-color: var(--primary); }
+
+/* Vocabulary */
+.vocab-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; }
+.vocab-card { border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; text-align: center; }
+.vocab-card .uk { font-size: 1.75rem; font-weight: 600; color: var(--primary); }
+.vocab-card .translit { color: var(--text-muted); font-style: italic; }
+.vocab-card .en { font-weight: 500; margin: 0.25rem 0; }
+.vocab-card .note { font-size: 0.75rem; color: #613583; background: #f0e8fd; padding: 0.25rem 0.5rem; border-radius: 4px; }
+
+/* Answer Callout Blocks */
+.callout { padding: 0.5rem 1rem; margin: 0.25rem 0; border-radius: 4px; }
+.callout-answer { background: #e8f8f0; border-left: 3px solid var(--success); }
+.callout-explanation { background: #e8f4fd; border-left: 3px solid var(--primary); color: var(--text-muted); font-style: italic; }
+.callout-alt { background: #f5f5f5; border-left: 3px solid var(--border); color: var(--text-muted); }
+
+/* Answer Block Toggle */
+.answer-block { display: none; }
+.answer-block.show { display: block; }
+.show-answer-btn { background: #f0f0f0; border: 1px solid var(--border); border-radius: 6px; padding: 0.25rem 0.75rem; font-size: 0.8rem; cursor: pointer; color: var(--text-muted); margin: 0.25rem 0; }
+.show-answer-btn:hover { background: #e5e5e5; }
+.show-answer-btn.revealed { background: #e8f8f0; border-color: var(--success); color: var(--success); }
+
   </style>
 </head>
 <body>
+  
   <div class="top-nav">
     <a href="../index.html">← l2-uk-en Curriculum</a>
     <div class="module-nav">
@@ -116,6 +332,7 @@
     </div>
   </nav>
   <main>
+    
     <section id="lesson" class="section active">
       <div class="lesson-header">
         <span class="level-badge">B2 · B2.2</span>
@@ -123,11 +340,9 @@
         <p style="color:var(--text-muted)">Синоніми: Дієслова мовлення</p>
       </div>
       
-      
-      
-      <div class="card section-intro">
-        <h3>📖 Вступ</h3>
-        <div class="md-content"><p>Мова — це не лише слова, а й те, <strong>як</strong> ми їх говоримо. В українській мові існує понад тридцять дієслів для опису самого акту мовлення, і кожне з них несе власний відтінок значення. Коли ви кажете «він сказав», слухач отримує нейтральну інформацію. Але коли ви кажете «він пробурмотів» або «він вигукнув» — ви малюєте цілу картину: настрій, гучність, емоцію. Саме тому письменники так ретельно обирають дієслова мовлення — вони перетворюють діалоги на живі сцени.</p>
+    <div class="card section-intro">
+      <h3>📖 Introduction</h3>
+      <div class="md-content"><p>Мова — це не лише слова, а й те, <strong>як</strong> ми їх говоримо. В українській мові існує понад тридцять дієслів для опису самого акту мовлення, і кожне з них несе власний відтінок значення. Коли ви кажете «він сказав», слухач отримує нейтральну інформацію. Але коли ви кажете «він пробурмотів» або «він вигукнув» — ви малюєте цілу картину: настрій, гучність, емоцію. Саме тому письменники так ретельно обирають дієслова мовлення — вони перетворюють діалоги на живі сцени.</p>
 <p>Три базових дієслова — <strong>казати</strong>, <strong>говорити</strong>, <strong>розповідати</strong> — утворюють фундамент системи. Їхня різниця не завжди очевидна для іноземців, але для носіїв української вона інтуїтивна. «Казати» — це передача короткого факту: «Він казав, що прийде». «Говорити» — це процес, тривалість: «Вони говорили три години». «Розповідати» — це наратив, історія з деталями: «Бабуся розповідала казки».</p>
 <blockquote>
   <p><strong>Чи знали ви?</strong></p>
@@ -143,23 +358,30 @@
 <p>Цікаво, що українська мова має окремі дієслова для різних <strong>мовленнєвих актів</strong> — типів того, що ми робимо словами. Коли ми щось просимо — це «просити». Коли наказуємо — «наказувати». Коли радимо — «радити». Коли обіцяємо — «обіцяти». Ця диференціація допомагає точно передавати комунікативну ситуацію.</p>
 <p>В епоху соціальних мереж з'явилися нові контексти для старих дієслів. «Писати» стало майже синонімом «говорити» в онлайн-комунікації. «Постити», «шерити», «коментувати» — ці англіцизми поступово входять у розмовну мову, хоча пуристи пропонують «публікувати», «ділитися», «коментарювати».</p>
 <hr /></div>
-      </div>
-      <div class="card section-topic">
-        <h3>Розминка</h3>
-        <div class="md-content"><h3 id="">Яка різниця?</h3>
+    </div>
+  
+    <div class="card section-content">
+      <h3>Зміст уроку</h3>
+      <div class="md-content"><h2 id="">Розминка</h2>
+<h3 id="-1">Яка різниця?</h3>
 <p>Прочитайте та порівняйте:</p>
 <ol>
-<li>«Він <strong>сказав</strong> правду.» → <em>одноразова дія, факт</em></li>
-<li>«Він <strong>говорив</strong> правду.» → <em>процес, тривалість</em></li>
-<li>«Він <strong>розповів</strong> правду.» → <em>з деталями, як історію</em></li>
+<li><p>«Він <strong>сказав</strong> правду.»</p></li>
 </ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-0', this)">Показати відповідь</button><div class="answer-block" id="ans-0"><div class="callout callout-answer" data-callout="answer"><em>одноразова дія, факт</em></div></div>
+<ol start="2">
+<li><p>«Він <strong>говорив</strong> правду.»</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-1', this)">Показати відповідь</button><div class="answer-block" id="ans-1"><div class="callout callout-answer" data-callout="answer"><em>процес, тривалість</em></div></div>
+<ol start="3">
+<li><p>«Він <strong>розповів</strong> правду.»</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-2', this)">Показати відповідь</button><div class="answer-block" id="ans-2"><div class="callout callout-answer" data-callout="answer"><em>з деталями, як історію</em></div></div>
 <p><strong>Обговорення:</strong> Чи однакові ці речення? Який відтінок несе кожне дієслово?</p>
-<hr /></div>
-      </div>
-      <div class="card section-topic">
-        <h3>Презентація</h3>
-        <div class="md-content"><h3 id="">Три базові дієслова: казати, говорити, розповідати</h3>
-<h4 id="-1">Казати / Сказати — зміст повідомлення</h4>
+<hr />
+<h2 id="-2">Презентація</h2>
+<h3 id="-3">Три базові дієслова: казати, говорити, розповідати</h3>
+<h4 id="-4">Казати / Сказати — зміст повідомлення</h4>
 <table>
 <thead>
 <tr>
@@ -190,7 +412,7 @@
 <li>❌ <strong>НЕ вживається</strong> з мовами (<em>говорити українською</em>, а не <em>казати українською</em>)</li>
 </ul>
 <p><strong>Етимологія:</strong> Від праслов'янського *kazati — «показувати, вказувати». Первісно — демонструвати жестом, пізніше — словом. Звідси ж «показувати», «доказ».</p>
-<h4 id="-2">Говорити / Поговорити — процес мовлення</h4>
+<h4 id="-5">Говорити / Поговорити — процес мовлення</h4>
 <table>
 <thead>
 <tr>
@@ -220,7 +442,7 @@
 <li>Тема: «Говорити про роботу»</li>
 </ul>
 <p><strong>Керування:</strong> говорити з ким? (орудний) / про що? (знахідний) / якою мовою? (орудний)</p>
-<h4 id="-3">Розповідати / Розповісти — наратив, історія</h4>
+<h4 id="-6">Розповідати / Розповісти — наратив, історія</h4>
 <table>
 <thead>
 <tr>
@@ -249,7 +471,7 @@
 <li>Наратив (що сталося, як розгорталися події)</li>
 </ul>
 <p><strong>Порада:</strong> Якщо можна додати «в деталях» — використовуйте «розповідати».</p>
-<h4 id="-4">Порівняльна таблиця</h4>
+<h4 id="-7">Порівняльна таблиця</h4>
 <table>
 <thead>
 <tr>
@@ -281,8 +503,8 @@
 </tbody>
 </table>
 <hr />
-<h3 id="-5">Стилістична палітра: від книжного до розмовного</h3>
-<h4 id="-6">Нейтральні → Книжні (піднесені)</h4>
+<h3 id="-8">Стилістична палітра: від книжного до розмовного</h3>
+<h4 id="-9">Нейтральні → Книжні (піднесені)</h4>
 <table>
 <thead>
 <tr>
@@ -335,7 +557,7 @@
   <p><strong>Чи знали ви?</strong></p>
   <p>Дієслово <strong>«промовляти»</strong> первісно означало «говорити перед людьми» — від «про» + «мовити». Саме тому «промова» — це публічний виступ, а не приватна розмова. Коли хтось «промовляє» в сучасному тексті — це завжди урочисто, майже пафосно.</p>
 </blockquote>
-<h4 id="-7">Нейтральні → Розмовні (неформальні)</h4>
+<h4 id="-10">Нейтральні → Розмовні (неформальні)</h4>
 <table>
 <thead>
 <tr>
@@ -386,8 +608,8 @@
 <p><strong>Культурний контекст:</strong><br />
 «Балакати» — типово українське слово, яке не має негативного відтінку. «Побалакати» — це просто поговорити в неформальній обстановці. А ось «патякати» — завжди критика: людина говорить багато і без змісту.</p>
 <hr />
-<h3 id="-8">Дієслова за комунікативною функцією</h3>
-<h4 id="-9">Передавати інформацію</h4>
+<h3 id="-11">Дієслова за комунікативною функцією</h3>
+<h4 id="-12">Передавати інформацію</h4>
 <table>
 <thead>
 <tr>
@@ -435,7 +657,7 @@
 <li><strong>Оголошувати</strong> — інформація для всіх (оголосити результати, оголосити перерву)</li>
 <li><strong>Заявляти</strong> — особиста позиція, декларація (заявити про наміри, заявити протест)</li>
 </ul>
-<h4 id="-10">Пояснювати та коментувати</h4>
+<h4 id="-13">Пояснювати та коментувати</h4>
 <table>
 <thead>
 <tr>
@@ -473,7 +695,7 @@
 <li>«МОЗ роз'яснило нові правила карантину.» (офіційне роз'яснення)</li>
 <li>«Експерт прокоментував ситуацію на ринку.» (медійний коментар)</li>
 </ol>
-<h4 id="-11">Обговорювати та сперечатися</h4>
+<h4 id="-14">Обговорювати та сперечатися</h4>
 <table>
 <thead>
 <tr>
@@ -506,7 +728,7 @@
 </tbody>
 </table>
 <hr />
-<h3 id="-12">Мовленнєві акти — що ми робимо словами</h3>
+<h3 id="-15">Мовленнєві акти — що ми робимо словами</h3>
 <table>
 <thead>
 <tr>
@@ -569,7 +791,7 @@
   <p>✅ <strong>Факт:</strong> «Обіцяти» — нейтральне дієслово, а «клястися» має емоційне, драматичне забарвлення і часто передбачає клятву чимось цінним: «Клянуся честю!» В офіційному мовленні «клястися» не вживається.</p>
 </blockquote>
 <hr />
-<h3 id="-13">Керування дієслів мовлення</h3>
+<h3 id="-16">Керування дієслів мовлення</h3>
 <table>
 <thead>
 <tr>
@@ -611,56 +833,71 @@
 </tr>
 </tbody>
 </table>
-<hr /></div>
-      </div>
-      <div class="card section-topic">
-        <h3>Практика</h3>
-        <div class="md-content"><h3 id="">Виберіть правильне дієслово</h3>
+<hr />
+<h2 id="-17">Практика</h2>
+<h3 id="-18">Виберіть правильне дієслово</h3>
 <ol>
-<li><p>Він ___ (казати/говорити) українською мовою.<br />
-→ <strong>говорить</strong> <em>(мова = процес)</em></p></li>
-<li><p>Бабуся ___ (казати/розповідати) казки онукам.<br />
-→ <strong>розповідала</strong> <em>(наратив з деталями)</em></p></li>
-<li><p>Прес-секретар ___ (казати/оголошувати) новину.<br />
-→ <strong>оголосив</strong> <em>(офіційне публічне інформування)</em></p></li>
-<li><p>Вчений ___ (говорити/стверджувати), що гіпотеза правильна.<br />
-→ <strong>стверджує</strong> <em>(впевнена декларація)</em></p></li>
-<li><p>Сусідки ___ (говорити/теревенити) біля під'їзду.<br />
-→ <strong>теревенять</strong> <em>(розмовне, плітки)</em></p></li>
-<li><p>Він ___ (сказав/заявив) про свою відставку.<br />
-→ <strong>заявив</strong> <em>(офіційна декларація)</em></p></li>
+<li><p>Він ___ (казати/говорити) українською мовою.</p></li>
 </ol>
-<h3 id="-1">Замініть повтори синонімами</h3>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-3', this)">Показати відповідь</button><div class="answer-block" id="ans-3"><div class="callout callout-answer" data-callout="answer"><strong>говорить</strong> <em>(мова = процес)</em></div></div>
+<ol start="2">
+<li><p>Бабуся ___ (казати/розповідати) казки онукам.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-4', this)">Показати відповідь</button><div class="answer-block" id="ans-4"><div class="callout callout-answer" data-callout="answer"><strong>розповідала</strong> <em>(наратив з деталями)</em></div></div>
+<ol start="3">
+<li><p>Прес-секретар ___ (казати/оголошувати) новину.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-5', this)">Показати відповідь</button><div class="answer-block" id="ans-5"><div class="callout callout-answer" data-callout="answer"><strong>оголосив</strong> <em>(офіційне публічне інформування)</em></div></div>
+<ol start="4">
+<li><p>Вчений ___ (говорити/стверджувати), що гіпотеза правильна.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-6', this)">Показати відповідь</button><div class="answer-block" id="ans-6"><div class="callout callout-answer" data-callout="answer"><strong>стверджує</strong> <em>(впевнена декларація)</em></div></div>
+<ol start="5">
+<li><p>Сусідки ___ (говорити/теревенити) біля під'їзду.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-7', this)">Показати відповідь</button><div class="answer-block" id="ans-7"><div class="callout callout-answer" data-callout="answer"><strong>теревенять</strong> <em>(розмовне, плітки)</em></div></div>
+<ol start="6">
+<li><p>Він ___ (сказав/заявив) про свою відставку.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-8', this)">Показати відповідь</button><div class="answer-block" id="ans-8"><div class="callout callout-answer" data-callout="answer"><strong>заявив</strong> <em>(офіційна декларація)</em></div></div>
+<h3 id="-19">Замініть повтори синонімами</h3>
 <p>Оригінал (погано): «Він <strong>сказав</strong>, що прийде. Потім <strong>сказав</strong>, що запізниться. Ще <strong>сказав</strong>, що вибачається.»</p>
 <p>Краще: «Він <strong>сказав</strong>, що прийде. Потім <strong>повідомив</strong>, що запізниться. Ще й <strong>вибачився</strong> за незручності.»</p>
-<h3 id="-2">Перекладіть</h3>
+<h3 id="-20">Перекладіть</h3>
 <ol>
-<li><p>He speaks Ukrainian fluently.<br />
-→ <strong>Він вільно говорить українською.</strong></p></li>
-<li><p>She told me an interesting story.<br />
-→ <strong>Вона розповіла мені цікаву історію.</strong></p></li>
-<li><p>The minister announced the decision.<br />
-→ <strong>Міністр оголосив рішення.</strong></p></li>
-<li><p>Scientists assert that the hypothesis is correct.<br />
-→ <strong>Вчені стверджують, що гіпотеза правильна.</strong></p></li>
+<li><p>He speaks Ukrainian fluently.</p></li>
 </ol>
-<hr /></div>
-      </div>
-      <div class="card section-topic">
-        <h3>Продукція</h3>
-        <div class="md-content"><h3 id="">Перекажіть текст</h3>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-9', this)">Показати відповідь</button><div class="answer-block" id="ans-9"><div class="callout callout-answer" data-callout="answer"><strong>Він вільно говорить українською.</strong></div></div>
+<ol start="2">
+<li><p>She told me an interesting story.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-10', this)">Показати відповідь</button><div class="answer-block" id="ans-10"><div class="callout callout-answer" data-callout="answer"><strong>Вона розповіла мені цікаву історію.</strong></div></div>
+<ol start="3">
+<li><p>The minister announced the decision.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-11', this)">Показати відповідь</button><div class="answer-block" id="ans-11"><div class="callout callout-answer" data-callout="answer"><strong>Міністр оголосив рішення.</strong></div></div>
+<ol start="4">
+<li><p>Scientists assert that the hypothesis is correct.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-12', this)">Показати відповідь</button><div class="answer-block" id="ans-12"><div class="callout callout-answer" data-callout="answer"><strong>Вчені стверджують, що гіпотеза правильна.</strong></div></div>
+<hr />
+<h2 id="-21">Продукція</h2>
+<h3 id="-22">Перекажіть текст</h3>
 <p>Перекажіть короткий текст про зустріч друзів, використовуючи різні дієслова мовлення замість «сказав». Включіть: нейтральні, офіційні та розмовні варіанти.</p>
-<h3 id="-1">Діалог з різними регістрами</h3>
+<h3 id="-23">Діалог з різними регістрами</h3>
 <p>Напишіть два варіанти одного діалогу:</p>
 <ol>
 <li>Офіційний (на нараді)</li>
 <li>Розмовний (з другом)</li>
 </ol>
+<hr />
+<hr />
 <hr /></div>
-      </div>
-      <div class="card section-summary">
-        <h3>📋 Підсумок</h3>
-        <div class="md-content"><h2 id="">Три базові дієслова</h2>
+    </div>
+  
+    <div class="card section-summary">
+      <h3>📋 Summary</h3>
+      <div class="md-content"><h2 id="">Три базові дієслова</h2>
 <table>
 <thead>
 <tr>
@@ -725,10 +962,14 @@
   <li>«Говорити» вживається з мовами, «казати» — ні</li>
   </ul>
 </blockquote></div>
+    </div>
+  
+      <div class="btn-group">
+        <button class="btn btn-primary" onclick="showSection('quiz')">Start →</button>
       </div>
-      
-      <div class="btn-group"><button class="btn btn-primary" onclick="showSection('quiz')">Start →</button></div>
     </section>
+  
+    
     
     <section id="quiz" class="section"><div class="card"><h3>Дієслова мовлення</h3>
       <div class="score-display"><span class="score"><span id="quiz-score">0</span>/10</span></div>
@@ -737,34 +978,235 @@
       <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
+    
     <section id="vocab" class="section"><div class="card"><h3>Vocabulary (10)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
     </section>
-  </main>
-  <footer>Module 172 · curricula-opus</footer>
+  </main><footer>Module 172 · curricula-opus</footer>
   <script>
-    const matchPairs=[];
-    const quizData=[{"question":"Для тривалої розмови вживаємо:","options":["казати","говорити","сказати"],"correctIndex":1,"explanation":"Говорити = процес, тривалість."},{"question":"Для історії чи оповідання вживаємо:","options":["казати","говорити","розповідати"],"correctIndex":2,"explanation":"Розповідати = наратив, деталі."},{"question":"«Мовити» — це стиль:","options":["розмовний","художній, піднесений","науковий"],"correctIndex":1,"explanation":"Книжне, урочисте дієслово."},{"question":"«Базікати» має конотацію:","options":["негативну / легковажну","позитивну","нейтральну"],"correctIndex":0,"explanation":"Говорити несерйозно, дурниці."},{"question":"«Стверджувати» означає:","options":["to assert (впевнено декларувати)","to ask","to deny"],"correctIndex":0,"explanation":"Впевнена заява."},{"question":"«Говорити українською» — правильно, а «казати українською» — ні, бо:","options":["«говорити» вживається з мовами, «казати» — ні","це однакові дієслова"],"correctIndex":0,"explanation":"Говорити = процес, мова."},{"question":"**[Інтеграція: пасив]** «На засіданні ___ про нові правила.»","options":["повідомлено","повідомили","повідомляється"],"correctIndex":0,"explanation":"Офіційний звіт → -но/-то форма."},{"question":"**[Інтеграція: регістр]** Новини: «Прес-секретар ___, що переговори тривають.»","options":["сказав","заявив","балакав"],"correctIndex":1,"explanation":"Публіцистичний стиль → офіційне дієслово."},{"question":"«Теревенити» означає:","options":["пліткувати, говорити порожнє","говорити серйозно"],"correctIndex":0,"explanation":"Розмовне, про порожні розмови."},{"question":"Яке дієслово для наукового стилю?","options":["казати","балакати","зазначати"],"correctIndex":2,"explanation":"Науковий стиль → зазначити, констатувати."}];
-    const sortData={};
-    const vocabData=[{"uk":"казати","translit":"","en":"to say","note":"ipf, зміст"},{"uk":"говорити","translit":"","en":"to speak, talk","note":"ipf, процес"},{"uk":"розповідати","translit":"","en":"to tell, narrate","note":"ipf, наратив"},{"uk":"мовити","translit":"","en":"to say (literary)","note":"ipf, книжне"},{"uk":"повідомляти","translit":"","en":"to inform","note":"ipf, офіційне"},{"uk":"оголошувати","translit":"","en":"to announce","note":"ipf, публічне"},{"uk":"заявляти","translit":"","en":"to declare","note":"ipf, позиція"},{"uk":"стверджувати","translit":"","en":"to assert","note":"ipf, наукове"},{"uk":"балакати","translit":"","en":"to chat (colloq.)","note":"ipf, розмовне"},{"uk":"теревенити","translit":"","en":"to gossip, chatter","note":"ipf, негативне"}];
-    const totalSort=0;
-    function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
-    document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));
-    let matchSel=null,matchScore=0,matchPairsArr=[];
-    document.querySelectorAll('#match-left .match-item').forEach(item=>{item.addEventListener('click',()=>{if(item.classList.contains('matched'))return;document.querySelectorAll('#match-left .match-item').forEach(i=>i.classList.remove('selected'));item.classList.add('selected');matchSel={el:item,pair:item.dataset.pair};});});
-    document.querySelectorAll('#match-right .match-item').forEach(item=>{item.addEventListener('click',()=>{if(item.classList.contains('matched')||!matchSel)return;if(matchSel.pair===item.dataset.pair){matchSel.el.classList.remove('selected');matchSel.el.classList.add('matched');item.classList.add('matched');matchPairsArr.push({left:matchSel.el,right:item});matchScore++;document.getElementById('match-score').textContent=matchScore;drawLines();if(matchScore===matchPairs.length)document.getElementById('match-complete').classList.add('show');}else{item.classList.add('wrong');setTimeout(()=>item.classList.remove('wrong'),300);}matchSel=null;});});
-    function drawLines(){const svg=document.getElementById('match-lines'),c=document.getElementById('match-container');if(!svg||!c)return;const r=c.getBoundingClientRect();svg.innerHTML='';svg.setAttribute('viewBox','0 0 '+r.width+' '+r.height);matchPairsArr.forEach(p=>{const lr=p.left.getBoundingClientRect(),rr=p.right.getBoundingClientRect();const line=document.createElementNS('http://www.w3.org/2000/svg','line');line.setAttribute('x1',lr.right-r.left);line.setAttribute('y1',lr.top+lr.height/2-r.top);line.setAttribute('x2',rr.left-r.left);line.setAttribute('y2',rr.top+rr.height/2-r.top);line.setAttribute('stroke','#26a269');line.setAttribute('stroke-width','2');svg.appendChild(line);});}
-    function resetMatch(){matchSel=null;matchScore=0;matchPairsArr=[];document.getElementById('match-score').textContent='0';document.getElementById('match-complete')?.classList.remove('show');document.getElementById('match-lines').innerHTML='';document.querySelectorAll('#match-container .match-item').forEach(i=>i.classList.remove('matched','selected','wrong'));}
-    window.addEventListener('resize',drawLines);
-    let quizScore=0,quizAns=0;
-    function initQuiz(){const c=document.getElementById('quiz-container');if(!c||!quizData.length)return;c.innerHTML='';quizData.forEach((q,i)=>{const sh=[...q.options].sort(()=>Math.random()-0.5);const cor=sh.indexOf(q.options[q.correctIndex]);const div=document.createElement('div');div.className='quiz-question';div.innerHTML='<h4>Q'+(i+1)+': '+q.question+'</h4><div class="quiz-options">'+sh.map((o,j)=>'<div class="quiz-option" data-c="'+(j===cor)+'" data-q="'+i+'">'+o+'</div>').join('')+'</div><div class="quiz-explanation" id="exp-'+i+'">'+q.explanation+'</div>';c.appendChild(div);});document.querySelectorAll('.quiz-option').forEach(o=>o.addEventListener('click',handleQuiz));}
-    function handleQuiz(e){const opt=e.target,q=opt.closest('.quiz-question');if(q.classList.contains('answered'))return;q.classList.add('answered');if(opt.dataset.c==='true'){opt.classList.add('correct');quizScore++;}else{opt.classList.add('wrong');q.querySelector('[data-c="true"]').classList.add('correct');}document.getElementById('exp-'+opt.dataset.q).classList.add('show');document.getElementById('quiz-score').textContent=quizScore;quizAns++;if(quizAns===quizData.length)document.getElementById('quiz-complete').classList.add('show');}
-    function resetQuiz(){quizScore=0;quizAns=0;document.getElementById('quiz-score').textContent='0';document.getElementById('quiz-complete')?.classList.remove('show');initQuiz();}
-    let sortScore=0,dragItem=null;
-    function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
-    function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
-    function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
-    document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
+
+    const matchPairs = [];
+    const quizData = [{"question":"Для тривалої розмови вживаємо:","options":["казати","говорити","сказати"],"correctIndex":1,"explanation":"Говорити = процес, тривалість."},{"question":"Для історії чи оповідання вживаємо:","options":["казати","говорити","розповідати"],"correctIndex":2,"explanation":"Розповідати = наратив, деталі."},{"question":"«Мовити» — це стиль:","options":["розмовний","художній, піднесений","науковий"],"correctIndex":1,"explanation":"Книжне, урочисте дієслово."},{"question":"«Базікати» має конотацію:","options":["негативну / легковажну","позитивну","нейтральну"],"correctIndex":0,"explanation":"Говорити несерйозно, дурниці."},{"question":"«Стверджувати» означає:","options":["to assert (впевнено декларувати)","to ask","to deny"],"correctIndex":0,"explanation":"Впевнена заява."},{"question":"«Говорити українською» — правильно, а «казати українською» — ні, бо:","options":["«говорити» вживається з мовами, «казати» — ні","це однакові дієслова"],"correctIndex":0,"explanation":"Говорити = процес, мова."},{"question":"**[Інтеграція: пасив]** «На засіданні ___ про нові правила.»","options":["повідомлено","повідомили","повідомляється"],"correctIndex":0,"explanation":"Офіційний звіт → -но/-то форма."},{"question":"**[Інтеграція: регістр]** Новини: «Прес-секретар ___, що переговори тривають.»","options":["сказав","заявив","балакав"],"correctIndex":1,"explanation":"Публіцистичний стиль → офіційне дієслово."},{"question":"«Теревенити» означає:","options":["пліткувати, говорити порожнє","говорити серйозно"],"correctIndex":0,"explanation":"Розмовне, про порожні розмови."},{"question":"Яке дієслово для наукового стилю?","options":["казати","балакати","зазначати"],"correctIndex":2,"explanation":"Науковий стиль → зазначити, констатувати."}];
+    const sortData = {};
+    const vocabData = [{"uk":"казати","translit":"","en":"to say","note":""},{"uk":"говорити","translit":"","en":"to speak, talk","note":""},{"uk":"розповідати","translit":"","en":"to tell, narrate","note":""},{"uk":"мовити","translit":"","en":"to say (literary)","note":""},{"uk":"повідомляти","translit":"","en":"to inform","note":""},{"uk":"оголошувати","translit":"","en":"to announce","note":""},{"uk":"заявляти","translit":"","en":"to declare","note":""},{"uk":"стверджувати","translit":"","en":"to assert","note":""},{"uk":"балакати","translit":"","en":"to chat (colloq.)","note":""},{"uk":"теревенити","translit":"","en":"to gossip, chatter","note":""}];
+    const totalSort = 0;
+  
+// Answer callout toggle (for new > [!answer] syntax)
+function toggleAnswer(id, btn) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const isUkrainian = document.querySelector('.level-badge')?.textContent.match(/B[12]|C[12]/);
+  const showText = isUkrainian ? 'Показати відповідь' : 'Show Answer';
+  const hideText = isUkrainian ? 'Сховати відповідь' : 'Hide Answer';
+  const show = !el.classList.contains('show');
+  if (show) {
+    el.classList.add('show');
+    btn.textContent = hideText;
+    btn.classList.add('revealed');
+  } else {
+    el.classList.remove('show');
+    btn.textContent = showText;
+    btn.classList.remove('revealed');
+  }
+}
+
+// Section navigation
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id)?.classList.add('active');
+  document.querySelector('[data-section="' + id + '"]')?.classList.add('active');
+}
+document.querySelectorAll('.nav-tab').forEach(t => t.addEventListener('click', () => showSection(t.dataset.section)));
+
+// Initialize on DOM ready
+document.addEventListener('DOMContentLoaded', () => {
+  initQuiz();
+  initSort();
+  initVocab();
+});
+
+
+// Quiz Activity
+let quizScore = 0, quizAns = 0;
+
+function initQuiz() {
+  const c = document.getElementById('quiz-container');
+  if (!c || !quizData.length) return;
+  c.innerHTML = '';
+  quizData.forEach((q, i) => {
+    const sh = [...q.options].sort(() => Math.random() - 0.5);
+    const cor = sh.indexOf(q.options[q.correctIndex]);
+    const div = document.createElement('div');
+    div.className = 'quiz-question';
+    div.innerHTML = '<h4>Q' + (i + 1) + ': ' + q.question + '</h4><div class="quiz-options">' + sh.map((o, j) => '<div class="quiz-option" data-c="' + (j === cor) + '" data-q="' + i + '">' + o + '</div>').join('') + '</div><div class="quiz-explanation" id="exp-' + i + '">' + q.explanation + '</div>';
+    c.appendChild(div);
+  });
+  document.querySelectorAll('.quiz-option').forEach(o => o.addEventListener('click', handleQuiz));
+}
+
+function handleQuiz(e) {
+  const opt = e.target, q = opt.closest('.quiz-question');
+  if (q.classList.contains('answered')) return;
+  q.classList.add('answered');
+  if (opt.dataset.c === 'true') {
+    opt.classList.add('correct');
+    quizScore++;
+  } else {
+    opt.classList.add('wrong');
+    q.querySelector('[data-c="true"]').classList.add('correct');
+  }
+  document.getElementById('exp-' + opt.dataset.q).classList.add('show');
+  document.getElementById('quiz-score').textContent = quizScore;
+  quizAns++;
+  if (quizAns === quizData.length) document.getElementById('quiz-complete').classList.add('show');
+}
+
+function resetQuiz() {
+  quizScore = 0;
+  quizAns = 0;
+  document.getElementById('quiz-score').textContent = '0';
+  document.getElementById('quiz-complete')?.classList.remove('show');
+  initQuiz();
+}
+
+
+// Match Activity
+let matchSel = null, matchScore = 0, matchPairsArr = [];
+
+document.querySelectorAll('#match-left .match-item').forEach(item => {
+  item.addEventListener('click', () => {
+    if (item.classList.contains('matched')) return;
+    document.querySelectorAll('#match-left .match-item').forEach(i => i.classList.remove('selected'));
+    item.classList.add('selected');
+    matchSel = { el: item, pair: item.dataset.pair };
+  });
+});
+
+document.querySelectorAll('#match-right .match-item').forEach(item => {
+  item.addEventListener('click', () => {
+    if (item.classList.contains('matched') || !matchSel) return;
+    if (matchSel.pair === item.dataset.pair) {
+      matchSel.el.classList.remove('selected');
+      matchSel.el.classList.add('matched');
+      item.classList.add('matched');
+      matchPairsArr.push({ left: matchSel.el, right: item });
+      matchScore++;
+      document.getElementById('match-score').textContent = matchScore;
+      drawLines();
+      if (matchScore === matchPairs.length) document.getElementById('match-complete').classList.add('show');
+    } else {
+      item.classList.add('wrong');
+      setTimeout(() => item.classList.remove('wrong'), 300);
+    }
+    matchSel = null;
+  });
+});
+
+function drawLines() {
+  const svg = document.getElementById('match-lines'), c = document.getElementById('match-container');
+  if (!svg || !c) return;
+  const r = c.getBoundingClientRect();
+  svg.innerHTML = '';
+  svg.setAttribute('viewBox', '0 0 ' + r.width + ' ' + r.height);
+  matchPairsArr.forEach(p => {
+    const lr = p.left.getBoundingClientRect(), rr = p.right.getBoundingClientRect();
+    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    line.setAttribute('x1', lr.right - r.left);
+    line.setAttribute('y1', lr.top + lr.height / 2 - r.top);
+    line.setAttribute('x2', rr.left - r.left);
+    line.setAttribute('y2', rr.top + rr.height / 2 - r.top);
+    line.setAttribute('stroke', '#26a269');
+    line.setAttribute('stroke-width', '2');
+    svg.appendChild(line);
+  });
+}
+
+function resetMatch() {
+  matchSel = null;
+  matchScore = 0;
+  matchPairsArr = [];
+  document.getElementById('match-score').textContent = '0';
+  document.getElementById('match-complete')?.classList.remove('show');
+  document.getElementById('match-lines').innerHTML = '';
+  document.querySelectorAll('#match-container .match-item').forEach(i => i.classList.remove('matched', 'selected', 'wrong'));
+}
+
+window.addEventListener('resize', drawLines);
+
+
+// Sort Activity
+let sortScore = 0, dragItem = null;
+
+function initSort() {
+  const pool = document.getElementById('sort-items');
+  if (!pool || !Object.keys(sortData).length) return;
+  const all = Object.values(sortData).flat().sort(() => Math.random() - 0.5);
+  pool.innerHTML = '';
+  all.forEach(letter => {
+    const group = Object.keys(sortData).find(g => sortData[g].includes(letter));
+    const item = document.createElement('div');
+    item.className = 'sort-item';
+    item.textContent = letter;
+    item.draggable = true;
+    item.dataset.group = group;
+    item.addEventListener('dragstart', e => {
+      dragItem = item;
+      item.classList.add('dragging');
+    });
+    item.addEventListener('dragend', () => {
+      item.classList.remove('dragging');
+      dragItem = null;
+    });
+    pool.appendChild(item);
+  });
+  document.querySelectorAll('.sort-group').forEach(g => {
+    g.addEventListener('dragover', e => {
+      e.preventDefault();
+      g.classList.add('drag-over');
+    });
+    g.addEventListener('dragleave', () => g.classList.remove('drag-over'));
+    g.addEventListener('drop', e => {
+      e.preventDefault();
+      g.classList.remove('drag-over');
+      if (!dragItem) return;
+      if (g.dataset.group === dragItem.dataset.group) {
+        dragItem.classList.add('correct');
+        g.querySelector('.sort-items').appendChild(dragItem);
+        dragItem.draggable = false;
+        sortScore++;
+        document.getElementById('sort-score').textContent = sortScore;
+        if (sortScore === totalSort) document.getElementById('sort-complete').classList.add('show');
+      } else {
+        dragItem.classList.add('wrong');
+        setTimeout(() => dragItem.classList.remove('wrong'), 300);
+      }
+    });
+  });
+}
+
+function resetSort() {
+  sortScore = 0;
+  document.getElementById('sort-score').textContent = '0';
+  document.getElementById('sort-complete')?.classList.remove('show');
+  document.querySelectorAll('.sort-group .sort-items').forEach(g => g.innerHTML = '');
+  initSort();
+}
+
+
+// Vocabulary
+function initVocab() {
+  const grid = document.getElementById('vocab-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  vocabData.forEach(v => {
+    const card = document.createElement('div');
+    card.className = 'vocab-card';
+    card.innerHTML = '<div class="uk">' + v.uk + '</div><div class="translit">' + v.translit + '</div><div class="en">' + v.en + '</div>' + (v.note ? '<div class="note">' + v.note + '</div>' : '');
+    grid.appendChild(card);
+  });
+}
+
   </script>
 </body>
 </html>

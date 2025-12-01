@@ -195,37 +195,59 @@ Suffixes attach to the **end** of words and change their meaning and part of spe
 
 ### Form Nouns from Verbs
 
-1. говорити → говоріння (speaking)
-2. слухати → слухання (listening)
-3. вчити → навчання (learning)
-4. писати → писання (writing)
-5. жити → життя (life)
-6. знати → знання (knowledge)
+1. говорити
+   > [!answer] говоріння (speaking)
+2. слухати
+   > [!answer] слухання (listening)
+3. вчити
+   > [!answer] навчання (learning)
+4. писати
+   > [!answer] писання (writing)
+5. жити
+   > [!answer] життя (life)
+6. знати
+   > [!answer] знання (knowledge)
 
 ### Form Nouns from Adjectives
 
-1. можливий → можливість (possibility)
-2. новий → новість (news)
-3. відповідальний → відповідальність (responsibility)
-4. особливий → особливість (peculiarity)
-5. радісний → радість (joy)
+1. можливий
+   > [!answer] можливість (possibility)
+2. новий
+   > [!answer] новість (news)
+3. відповідальний
+   > [!answer] відповідальність (responsibility)
+4. особливий
+   > [!answer] особливість (peculiarity)
+5. радісний
+   > [!answer] радість (joy)
 
 ### Match Suffix to Meaning
 
-1. -ння/-ття → action/process
-2. -ість → abstract quality
-3. -ство → state/realm
-4. -ач/-ник → person who does
-5. -ок/-ець → result
+1. -ння/-ття
+   > [!answer] action/process
+2. -ість
+   > [!answer] abstract quality
+3. -ство
+   > [!answer] state/realm
+4. -ач/-ник
+   > [!answer] person who does
+5. -ок/-ець
+   > [!answer] result
 
 ### Translate
 
-1. Reading is useful. → Читання корисне.
-2. I heard news. → Я почув новість.
-3. She's a writer. → Вона письменниця.
-4. This is the beginning. → Це початок.
-5. What joy! → Яка радість!
-6. Life is interesting. → Життя цікаве.
+1. Reading is useful.
+   > [!answer] Читання корисне.
+2. I heard news.
+   > [!answer] Я почув новість.
+3. She's a writer.
+   > [!answer] Вона письменниця.
+4. This is the beginning.
+   > [!answer] Це початок.
+5. What joy!
+   > [!answer] Яка радість!
+6. Life is interesting.
+   > [!answer] Життя цікаве.
 
 ## production
 

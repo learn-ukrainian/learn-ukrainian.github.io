@@ -170,37 +170,58 @@ To express lacking or missing, use **бракувати** + dative + genitive:
 
 Which verbs require dative?
 
-1. допомагати ✓ (help → dative)
-2. бачити ✗ (see → accusative)
-3. відповідати ✓ (answer → dative)
-4. знати ✗ (know → accusative)
-5. дякувати ✓ (thank → dative)
-6. любити ✗ (love → accusative)
-7. заважати ✓ (disturb → dative)
-8. радити ✓ (advise → dative)
+1. допомагати ✓ (help
+   > [!answer] dative)
+2. бачити ✗ (see
+   > [!answer] accusative)
+3. відповідати ✓ (answer
+   > [!answer] dative)
+4. знати ✗ (know
+   > [!answer] accusative)
+5. дякувати ✓ (thank
+   > [!answer] dative)
+6. любити ✗ (love
+   > [!answer] accusative)
+7. заважати ✓ (disturb
+   > [!answer] dative)
+8. радити ✓ (advise
+   > [!answer] dative)
 
 ### Complete with Correct Case
 
 Fill in dative or accusative:
 
-1. Я допомагаю ___ (він). → йому (dative)
-2. Вона бачить ___ (він). → його (accusative)
-3. Ми відповідаємо ___ (вчитель). → вчителеві (dative)
-4. Він знає ___ (вона). → її (accusative)
-5. Дякую ___ (ви)! → вам (dative)
-6. Вони чують ___ (ми). → нас (accusative)
-7. Не заважай ___ (я)! → мені (dative)
-8. Раджу ___ (ти) відпочити. → тобі (dative)
+1. Я допомагаю ___ (він).
+   > [!answer] йому (dative)
+2. Вона бачить ___ (він).
+   > [!answer] його (accusative)
+3. Ми відповідаємо ___ (вчитель).
+   > [!answer] вчителеві (dative)
+4. Він знає ___ (вона).
+   > [!answer] її (accusative)
+5. Дякую ___ (ви)!
+   > [!answer] вам (dative)
+6. Вони чують ___ (ми).
+   > [!answer] нас (accusative)
+7. Не заважай ___ (я)!
+   > [!answer] мені (dative)
+8. Раджу ___ (ти) відпочити.
+   > [!answer] тобі (dative)
 
 ### Build Impersonal Sentences
 
 Create sentences with impersonal + dative:
 
-1. я / холодно → Мені холодно.
-2. він / важко / зрозуміти → Йому важко зрозуміти.
-3. вони / потрібно / допомога → Їм потрібна допомога.
-4. ти / можна / йти → Тобі можна йти.
-5. ми / бракувати / час → Нам бракує часу.
+1. я / холодно
+   > [!answer] Мені холодно.
+2. він / важко / зрозуміти
+   > [!answer] Йому важко зрозуміти.
+3. вони / потрібно / допомога
+   > [!answer] Їм потрібна допомога.
+4. ти / можна / йти
+   > [!answer] Тобі можна йти.
+5. ми / бракувати / час
+   > [!answer] Нам бракує часу.
 
 ## production
 

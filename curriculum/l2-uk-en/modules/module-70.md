@@ -227,23 +227,28 @@ You know "сонячно" and "дощ." Now let's expand!
 
 ### Match Weather to Description
 
-1. гроза → блискавка + грім + дощ
-2. заметіль → сніг + сильний вітер
-3. туман → погано видно
-4. злива → дуже сильний дощ
-5. спека → дуже гаряче
+1. гроза
+   > [!answer] блискавка + грім + дощ
+2. заметіль
+   > [!answer] сніг + сильний вітер
+3. туман
+   > [!answer] погано видно
+4. злива
+   > [!answer] дуже сильний дощ
+5. спека
+   > [!answer] дуже гаряче
 
 ### Complete Weather Report
 
 **Прогноз на завтра:**
 Вранці буде ___ (foggy). До обіду ___ (will clear up).
-→ туман, прояснеться
+> [!answer] туман, прояснеться
 
 Вдень ___ (sunny), температура ___ (degrees) двадцять п'ять.
-→ сонячно, градусів
+> [!answer] сонячно, градусів
 
 Увечері можлива ___ (thunderstorm).
-→ гроза
+> [!answer] гроза
 
 ### Group by Category
 
@@ -254,11 +259,16 @@ You know "сонячно" and "дощ." Now let's expand!
 
 ### Translate
 
-1. It's raining heavily. → Йде сильний дощ.
-2. The mountains are beautiful. → Гори красиві.
-3. Sunflowers are a symbol of Ukraine. → Соняшники — символ України.
-4. Tomorrow it will be sunny. → Завтра буде сонячно.
-5. Nature needs protection. → Природа потребує захисту.
+1. It's raining heavily.
+   > [!answer] Йде сильний дощ.
+2. The mountains are beautiful.
+   > [!answer] Гори красиві.
+3. Sunflowers are a symbol of Ukraine.
+   > [!answer] Соняшники — символ України.
+4. Tomorrow it will be sunny.
+   > [!answer] Завтра буде сонячно.
+5. Nature needs protection.
+   > [!answer] Природа потребує захисту.
 
 ## production
 

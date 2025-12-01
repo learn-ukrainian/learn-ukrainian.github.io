@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-A2+-65",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "grammar-introduction",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -26,30 +25,15 @@
       "Consonant alternations in roots",
       "Root + prefix + suffix combinations"
     ],
-    "totalDuration": 45,
-    "transliterationMode": "none",
     "tags": [
       "word-formation",
       "roots",
       "vocabulary-expansion",
       "word-families"
     ],
-    "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
+    "totalDuration": 45,
+    "transliterationMode": "none",
     "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### The Power of Roots\n\nIn Modules 61-64, you learned prefixes and suffixes. Now let's look at what's **between** them — the **root**!\n\n**The root is the core meaning:**\n- **уч-** = learning/teaching\n- вчити (to teach), **уч**ень (student), на**вч**ання (education), **вч**итель (teacher)\n\nOne root generates an entire word family!\n\n> 💡 **Why This Matters**\n>\n> Understanding roots is the key to rapid vocabulary growth. When you know a root, you can often guess the meaning of new words containing it!"
-          }
-        ]
-      },
       {
         "id": "phase-presentation",
         "name": "presentation",
@@ -58,107 +42,33 @@
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "### Root Family: -уч- / -вч- (Learning)\n\n**Core meaning:** Learning, teaching, studying\n\n| Word | Parts | Meaning |\n|------|-------|---------|\n| вчити | вч- + -ити | to teach/learn |\n| учень | уч- + -ень | student, pupil |\n| учениця | учен- + -иця | female student |\n| вчитель | вч- + -итель | teacher (m) |\n| вчителька | вчитель- + -ка | teacher (f) |\n| навчання | на- + вч- + -ання | education, learning |\n| навчатися | на- + вч- + -атися | to study |\n| вчений | вч- + -ений | scientist; learned |\n| наука | на- + ук- + -а | science |\n| науковий | наук- + -овий | scientific |\n\n**Examples:**\n- **Учень** вчиться добре. - The student studies well.\n- **Вчитель** вчить дітей. - The teacher teaches children.\n- Вона здобуває **навчання**. - She's getting education.\n- Він відомий **вчений**. - He's a famous scientist.\n- Це **науковий** журнал. - This is a scientific journal.\n\n> ⚡ **Pro Tip: Root Variations**\n>\n> The same root can have spelling variations: уч-/вч-/наук-. This is due to historical sound changes, but the core meaning \"learning\" remains!"
+            "teacherNotes": "### Root Family: -уч- / -вч- (Learning)\n\n**Core meaning:** Learning, teaching, studying\n\n| Word | Parts | Meaning |\n|------|-------|---------|\n| вчити | вч- + -ити | to teach/learn |\n| учень | уч- + -ень | student, pupil |\n| учениця | учен- + -иця | female student |\n| вчитель | вч- + -итель | teacher (m) |\n| вчителька | вчитель- + -ка | teacher (f) |\n| навчання | на- + вч- + -ання | education, learning |\n| навчатися | на- + вч- + -атися | to study |\n| вчений | вч- + -ений | scientist; learned |\n| наука | на- + ук- + -а | science |\n| науковий | наук- + -овий | scientific |\n\n**Examples:**\n- **Учень** вчиться добре. - The student studies well.\n- **Вчитель** вчить дітей. - The teacher teaches children.\n- Вона здобуває **навчання**. - She's getting education.\n- Він відомий **вчений**. - He's a famous scientist.\n- Це **науковий** журнал. - This is a scientific journal.\n\n> ⚡ **Pro Tip: Root Variations**\n>\n> The same root can have spelling variations: уч-/вч-/наук-. This is due to historical sound changes, but the core meaning \"learning\" remains!\n\n### Root Family: -роб- (Work, Make)\n\n**Core meaning:** Work, labor, making\n\n| Word | Parts | Meaning |\n|------|-------|---------|\n| робота | роб- + -ота | work, job |\n| робити | роб- + -ити | to do, to make |\n| робітник | робіт- + -ник | worker |\n| робочий | роб- + -очий | working (adj) |\n| виробляти | ви- + роб- + -ляти | to produce |\n| виробництво | виробн- + -ицтво | production |\n| виріб | ви- + ріб | product |\n| заробляти | за- + роб- + -ляти | to earn |\n| заробіток | заробіт- + -ок | earnings |\n| переробка | пере- + роб- + -ка | processing |\n\n**Examples:**\n- Яка твоя **робота**? - What's your job?\n- Що ти **робиш**? - What are you doing?\n- **Робітники** страйкують. - The workers are striking.\n- Це **робочий** день. - This is a working day.\n- Завод **виробляє** машини. - The factory produces cars.\n- Скільки він **заробляє**? - How much does he earn?\n\n### Root Family: -пис- (Write)\n\n**Core meaning:** Writing\n\n| Word | Parts | Meaning |\n|------|-------|---------|\n| писати | пис- + -ати | to write |\n| писання | пис- + -ання | writing |\n| письменник | письмен- + -ник | writer |\n| письмо | письм- + -о | letter; writing |\n| підпис | під- + пис | signature |\n| опис | о- + пис | description |\n| запис | за- + пис | record, entry |\n| записка | запис- + -ка | note |\n| записник | запис- + -ник | notebook |\n| переписувати | пере- + пис- + -увати | to rewrite |\n| виписувати | ви- + пис- + -увати | to write out |\n\n**Examples:**\n- Вона **пише** книгу. - She's writing a book.\n- Він відомий **письменник**. - He's a famous writer.\n- Поставте **підпис** тут. - Put your signature here.\n- Я залишу **записку**. - I'll leave a note.\n- Прочитай **опис** товару. - Read the product description.\n- **Перепиши** це чисто. - Rewrite this neatly.\n\n> 📝 **Note: письм- vs пис-**\n>\n> The root пис- sometimes becomes письм- in derived words (письмо, письменник).\n\n### Root Family: -чит- (Read)\n\n**Core meaning:** Reading\n\n| Word | Parts | Meaning |\n|------|-------|---------|\n| читати | чит- + -ати | to read |\n| читання | чит- + -ання | reading |\n| читач | чит- + -ач | reader |\n| читальня | читаль- + -ня | reading room |\n| прочитати | про- + чит- + -ати | to read through |\n| перечитати | пере- + чит- + -ати | to reread |\n| зачитуватися | за- + чит- + -уватися | to be engrossed in reading |\n| начитаний | на- + чит- + -аний | well-read |\n\n**Examples:**\n- Люблю **читати** вранці. - I love reading in the morning.\n- **Читання** — корисне хобі. - Reading is a useful hobby.\n- Бібліотека має **читальню**. - The library has a reading room.\n- **Прочитай** цю статтю. - Read this article (through).\n- Хочу **перечитати** цю книгу. - I want to reread this book.\n- Вона дуже **начитана**. - She's very well-read.\n\n### Root Family: -говор- / -мов- (Speech, Language)\n\n**Core meaning:** Speaking, language, speech\n\n| Word | Parts | Meaning |\n|------|-------|---------|\n| говорити | говор- + -ити | to speak |\n| розмова | роз- + мов- + -а | conversation |\n| розмовляти | роз- + мов- + -ляти | to converse |\n| мова | мов- + -а | language |\n| мовлення | мовл- + -ення | speech |\n| мовчати | мовч- + -ати | to be silent |\n| домовитися | до- + мов- + -итися | to agree |\n| договір | до- + говор- (→ -ір) | contract, agreement |\n| перемовини | пере- + мов- + -ини | negotiations |\n| промова | про- + мов- + -а | speech, address |\n\n**Examples:**\n- Він добре **говорить** українською. - He speaks Ukrainian well.\n- Ми мали цікаву **розмову**. - We had an interesting conversation.\n- Українська **мова** красива. - Ukrainian language is beautiful.\n- **Мовчи**! - Be quiet!\n- Треба **домовитися** про ціну. - We need to agree on the price.\n- Підпишемо **договір**. - We'll sign the contract.\n\n> 🎭 **Culture Note: Мовлення**\n>\n> \"Мовлення\" (speech) is used formally: \"свобода мовлення\" (freedom of speech), \"усне мовлення\" (oral speech).\n\n### Summary: Root Recognition\n\n| Root | Core Meaning | Key Words |\n|------|--------------|-----------|\n| -уч-/-вч- | learning | учень, вчитель, наука |\n| -роб- | work/make | робота, робити, виробництво |\n| -пис- | writing | писати, підпис, записка |\n| -чит- | reading | читати, читач, прочитати |\n| -говор-/-мов- | speech | говорити, мова, розмова |"
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Root Family: -роб- (Work, Make)\n\n**Core meaning:** Work, labor, making\n\n| Word | Parts | Meaning |\n|------|-------|---------|\n| робота | роб- + -ота | work, job |\n| робити | роб- + -ити | to do, to make |\n| робітник | робіт- + -ник | worker |\n| робочий | роб- + -очий | working (adj) |\n| виробляти | ви- + роб- + -ляти | to produce |\n| виробництво | виробн- + -ицтво | production |\n| виріб | ви- + ріб | product |\n| заробляти | за- + роб- + -ляти | to earn |\n| заробіток | заробіт- + -ок | earnings |\n| переробка | пере- + роб- + -ка | processing |\n\n**Examples:**\n- Яка твоя **робота**? - What's your job?\n- Що ти **робиш**? - What are you doing?\n- **Робітники** страйкують. - The workers are striking.\n- Це **робочий** день. - This is a working day.\n- Завод **виробляє** машини. - The factory produces cars.\n- Скільки він **заробляє**? - How much does he earn?"
+            "teacherNotes": "### Identify the Root\n\n1. навчання\n   > [!answer] -вч- (learning)\n2. робітник\n   > [!answer] -роб- (work)\n3. письменник\n   > [!answer] -пис- (writing)\n4. читальня\n   > [!answer] -чит- (reading)\n5. розмовляти\n   > [!answer] -мов- (speech)\n\n### Group by Root Family\n\n**-роб- family:** робота, робити, виробництво, заробляти\n**-пис- family:** писати, підпис, записка, опис\n**-чит- family:** читати, читач, прочитати, перечитати\n\n### Complete with Related Words\n\n1. Він ___ (teaches) у школі. Він ___ (teacher).\n   > [!answer] вчить, вчитель\n\n2. Вона ___ (works) в офісі. Її ___ (work) цікава.\n   > [!answer] працює/робить, робота\n\n3. Я ___ (write) лист. Поставте ___ (signature).\n   > [!answer] пишу, підпис\n\n4. Діти ___ (read) книги. Вони — активні ___ (readers).\n   > [!answer] читають, читачі\n\n5. Ми ___ (converse) годинами. Наша ___ (conversation) цікава.\n   > [!answer] розмовляємо, розмова\n\n### Translate\n\n1. The student is studying.\n   > [!answer] Учень вчиться.\n2. She's a famous writer.\n   > [!answer] Вона відома письменниця.\n3. I love reading.\n   > [!answer] Я люблю читання.\n4. He earns well.\n   > [!answer] Він добре заробляє.\n5. Let's have a conversation.\n   > [!answer] Давай поговоримо / Маймо розмову."
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Root Family: -пис- (Write)\n\n**Core meaning:** Writing\n\n| Word | Parts | Meaning |\n|------|-------|---------|\n| писати | пис- + -ати | to write |\n| писання | пис- + -ання | writing |\n| письменник | письмен- + -ник | writer |\n| письмо | письм- + -о | letter; writing |\n| підпис | під- + пис | signature |\n| опис | о- + пис | description |\n| запис | за- + пис | record, entry |\n| записка | запис- + -ка | note |\n| записник | запис- + -ник | notebook |\n| переписувати | пере- + пис- + -увати | to rewrite |\n| виписувати | ви- + пис- + -увати | to write out |\n\n**Examples:**\n- Вона **пише** книгу. - She's writing a book.\n- Він відомий **письменник**. - He's a famous writer.\n- Поставте **підпис** тут. - Put your signature here.\n- Я залишу **записку**. - I'll leave a note.\n- Прочитай **опис** товару. - Read the product description.\n- **Перепиши** це чисто. - Rewrite this neatly.\n\n> 📝 **Note: письм- vs пис-**\n>\n> The root пис- sometimes becomes письм- in derived words (письмо, письменник)."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Root Family: -чит- (Read)\n\n**Core meaning:** Reading\n\n| Word | Parts | Meaning |\n|------|-------|---------|\n| читати | чит- + -ати | to read |\n| читання | чит- + -ання | reading |\n| читач | чит- + -ач | reader |\n| читальня | читаль- + -ня | reading room |\n| прочитати | про- + чит- + -ати | to read through |\n| перечитати | пере- + чит- + -ати | to reread |\n| зачитуватися | за- + чит- + -уватися | to be engrossed in reading |\n| начитаний | на- + чит- + -аний | well-read |\n\n**Examples:**\n- Люблю **читати** вранці. - I love reading in the morning.\n- **Читання** — корисне хобі. - Reading is a useful hobby.\n- Бібліотека має **читальню**. - The library has a reading room.\n- **Прочитай** цю статтю. - Read this article (through).\n- Хочу **перечитати** цю книгу. - I want to reread this book.\n- Вона дуже **начитана**. - She's very well-read."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Root Family: -говор- / -мов- (Speech, Language)\n\n**Core meaning:** Speaking, language, speech\n\n| Word | Parts | Meaning |\n|------|-------|---------|\n| говорити | говор- + -ити | to speak |\n| розмова | роз- + мов- + -а | conversation |\n| розмовляти | роз- + мов- + -ляти | to converse |\n| мова | мов- + -а | language |\n| мовлення | мовл- + -ення | speech |\n| мовчати | мовч- + -ати | to be silent |\n| домовитися | до- + мов- + -итися | to agree |\n| договір | до- + говор- (→ -ір) | contract, agreement |\n| перемовини | пере- + мов- + -ини | negotiations |\n| промова | про- + мов- + -а | speech, address |\n\n**Examples:**\n- Він добре **говорить** українською. - He speaks Ukrainian well.\n- Ми мали цікаву **розмову**. - We had an interesting conversation.\n- Українська **мова** красива. - Ukrainian language is beautiful.\n- **Мовчи**! - Be quiet!\n- Треба **домовитися** про ціну. - We need to agree on the price.\n- Підпишемо **договір**. - We'll sign the contract.\n\n> 🎭 **Culture Note: Мовлення**\n>\n> \"Мовлення\" (speech) is used formally: \"свобода мовлення\" (freedom of speech), \"усне мовлення\" (oral speech)."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Summary: Root Recognition\n\n| Root | Core Meaning | Key Words |\n|------|--------------|-----------|\n| -уч-/-вч- | learning | учень, вчитель, наука |\n| -роб- | work/make | робота, робити, виробництво |\n| -пис- | writing | писати, підпис, записка |\n| -чит- | reading | читати, читач, прочитати |\n| -говор-/-мов- | speech | говорити, мова, розмова |"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A2+-65-matchup"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Identify the Root\n\n1. навчання → -вч- (learning)\n2. робітник → -роб- (work)\n3. письменник → -пис- (writing)\n4. читальня → -чит- (reading)\n5. розмовляти → -мов- (speech)"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Group by Root Family\n\n**-роб- family:** робота, робити, виробництво, заробляти\n**-пис- family:** писати, підпис, записка, опис\n**-чит- family:** читати, читач, прочитати, перечитати"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Complete with Related Words\n\n1. Він ___ (teaches) у школі. Він ___ (teacher).\n   → вчить, вчитель\n\n2. Вона ___ (works) в офісі. Її ___ (work) цікава.\n   → працює/робить, робота\n\n3. Я ___ (write) лист. Поставте ___ (signature).\n   → пишу, підпис\n\n4. Діти ___ (read) книги. Вони — активні ___ (readers).\n   → читають, читачі\n\n5. Ми ___ (converse) годинами. Наша ___ (conversation) цікава.\n   → розмовляємо, розмова"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Translate\n\n1. The student is studying. → Учень вчиться.\n2. She's a famous writer. → Вона відома письменниця.\n3. I love reading. → Я люблю читання.\n4. He earns well. → Він добре заробляє.\n5. Let's have a conversation. → Давай поговоримо / Маймо розмову."
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A2+-65-quiz"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A2+-65-groupsort"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Talk About Learning\n\nUse -уч-/-вч- words:\n- Я **навчаюся** в університеті.\n- Мої **вчителі** дуже добрі.\n- Вона **вчена** — працює в лабораторії."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Discuss Work\n\nUse -роб- words:\n- Моя **робота** цікава.\n- Завод **виробляє** електроніку.\n- Хочу більше **заробляти**."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Talk About Reading and Writing\n\nUse -чит-/-пис- words:\n- Люблю **читати** українською.\n- Треба **підписати** договір.\n- Я залишив **записку** на столі."
+            "teacherNotes": "### Talk About Learning\n\nUse -уч-/-вч- words:\n- Я **навчаюся** в університеті.\n- Мої **вчителі** дуже добрі.\n- Вона **вчена** — працює в лабораторії.\n\n### Discuss Work\n\nUse -роб- words:\n- Моя **робота** цікава.\n- Завод **виробляє** електроніку.\n- Хочу більше **заробляти**.\n\n### Talk About Reading and Writing\n\nUse -чит-/-пис- words:\n- Люблю **читати** українською.\n- Треба **підписати** договір.\n- Я залишив **записку** на столі.\n\n---"
           }
         ]
       }
-    ]
+    ],
+    "createdAt": "2025-12-01T22:58:37.281Z",
+    "modifiedAt": "2025-12-01T22:58:37.281Z",
+    "version": 1
   },
   "activities": [
     {
-      "id": "act-uk-A2+-65-matchup",
+      "id": "act-a2+-65-matchup",
       "type": "match-up",
       "title": "Root → Meaning",
       "description": "Root → Meaning",
       "content": {
         "type": "match-up",
-        "instructions": "",
         "pairs": [
           {
             "left": "-уч-/-вч-",
@@ -189,23 +99,17 @@
       "language": "uk",
       "difficultyLevel": "A2+",
       "duration": 5,
-      "tags": [
-        "word-formation",
-        "roots",
-        "vocabulary-expansion",
-        "word-families"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.281Z",
+      "modifiedAt": "2025-12-01T22:58:37.281Z"
     },
     {
-      "id": "act-uk-A2+-65-quiz",
+      "id": "act-a2+-65-quiz",
       "type": "quiz",
       "title": "Root Families",
       "description": "Identify the word from the same root family.",
       "content": {
         "type": "quiz",
-        "instructions": "Identify the word from the same root family.",
         "questions": [
           {
             "question": "Which word is from the same family as \"писати\"?",
@@ -284,59 +188,61 @@
       "language": "uk",
       "difficultyLevel": "A2+",
       "duration": 5,
-      "tags": [
-        "word-formation",
-        "roots",
-        "vocabulary-expansion",
-        "word-families"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.281Z",
+      "modifiedAt": "2025-12-01T22:58:37.281Z"
     },
     {
-      "id": "act-uk-A2+-65-groupsort",
+      "id": "act-a2+-65-groupsort",
       "type": "group-sort",
       "title": "By Root",
       "description": "By Root",
       "content": {
         "type": "group-sort",
-        "instructions": "",
         "groups": [
           {
-            "name": "-уч-/-вч- (learning)",
+            "id": "----",
+            "name": "-уч-/-вч-",
             "items": [
               "учень",
               "вчитель",
               "навчання",
               "наука"
-            ]
+            ],
+            "nameUk": "learning"
           },
           {
-            "name": "-роб- (work)",
+            "id": "--",
+            "name": "-роб-",
             "items": [
               "робота",
               "робітник",
               "виробництво",
               "заробляти"
-            ]
+            ],
+            "nameUk": "work"
           },
           {
-            "name": "-пис- (writing)",
+            "id": "--",
+            "name": "-пис-",
             "items": [
               "писати",
               "підпис",
               "записка",
               "письменник"
-            ]
+            ],
+            "nameUk": "writing"
           },
           {
-            "name": "-чит- (reading)",
+            "id": "--",
+            "name": "-чит-",
             "items": [
               "читати",
               "читач",
               "прочитати",
               "читальня"
-            ]
+            ],
+            "nameUk": "reading"
           }
         ],
         "shuffleItems": true
@@ -347,14 +253,9 @@
       "language": "uk",
       "difficultyLevel": "A2+",
       "duration": 5,
-      "tags": [
-        "word-formation",
-        "roots",
-        "vocabulary-expansion",
-        "word-families"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.281Z",
+      "modifiedAt": "2025-12-01T22:58:37.281Z"
     }
   ],
   "vocabulary": {
@@ -365,317 +266,270 @@
     "transliterationMode": "none",
     "words": [
       {
-        "id": "v-m65-001",
+        "id": "v-uchenь-65-0",
         "uk": "учень",
-        "translit": "",
-        "ipa": "/uˈtʃɛnʲ/",
         "en": "student, pupil",
         "pos": "noun",
+        "ipa": "/uˈtʃɛnʲ/",
         "gender": "m"
       },
       {
-        "id": "v-m65-002",
+        "id": "v-uchenytsya-65-1",
         "uk": "учениця",
-        "translit": "",
-        "ipa": "/utʃɛˈnɪtsʲɑ/",
         "en": "female student",
         "pos": "noun",
+        "ipa": "/utʃɛˈnɪtsʲɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m65-003",
+        "id": "v-vchytelь-65-2",
         "uk": "вчитель",
-        "translit": "",
-        "ipa": "/vtʃɪˈtɛlʲ/",
         "en": "teacher (m)",
         "pos": "noun",
+        "ipa": "/vtʃɪˈtɛlʲ/",
         "gender": "m"
       },
       {
-        "id": "v-m65-004",
+        "id": "v-vchytelьka-65-3",
         "uk": "вчителька",
-        "translit": "",
-        "ipa": "/vtʃɪˈtɛlʲkɑ/",
         "en": "teacher (f)",
         "pos": "noun",
+        "ipa": "/vtʃɪˈtɛlʲkɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m65-005",
+        "id": "v-vchenyy-65-4",
         "uk": "вчений",
-        "translit": "",
-        "ipa": "/ˈvtʃɛnɪj/",
         "en": "scientist",
         "pos": "noun",
+        "ipa": "/ˈvtʃɛnɪj/",
         "gender": "m"
       },
       {
-        "id": "v-m65-006",
+        "id": "v-nauka-65-5",
         "uk": "наука",
-        "translit": "",
-        "ipa": "/nɑˈukɑ/",
         "en": "science",
         "pos": "noun",
+        "ipa": "/nɑˈukɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m65-007",
+        "id": "v-naukovyy-65-6",
         "uk": "науковий",
-        "translit": "",
-        "ipa": "/nɑuˈkovɪj/",
         "en": "scientific",
         "pos": "adj",
-        "gender": "-"
+        "ipa": "/nɑuˈkovɪj/"
       },
       {
-        "id": "v-m65-008",
+        "id": "v-navchatysya-65-7",
         "uk": "навчатися",
-        "translit": "",
-        "ipa": "/nɑvˈtʃɑtɪsʲɑ/",
         "en": "to study",
         "pos": "verb",
-        "gender": "-"
+        "ipa": "/nɑvˈtʃɑtɪsʲɑ/"
       },
       {
-        "id": "v-m65-009",
+        "id": "v-robota-65-8",
         "uk": "робота",
-        "translit": "",
-        "ipa": "/roˈbotɑ/",
         "en": "work, job",
         "pos": "noun",
+        "ipa": "/roˈbotɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m65-010",
+        "id": "v-robitnyk-65-9",
         "uk": "робітник",
-        "translit": "",
-        "ipa": "/roˈbʲitnɪk/",
         "en": "worker",
         "pos": "noun",
+        "ipa": "/roˈbʲitnɪk/",
         "gender": "m"
       },
       {
-        "id": "v-m65-011",
+        "id": "v-robochyy-65-10",
         "uk": "робочий",
-        "translit": "",
-        "ipa": "/roˈbotʃɪj/",
         "en": "working",
         "pos": "adj",
-        "gender": "-"
+        "ipa": "/roˈbotʃɪj/"
       },
       {
-        "id": "v-m65-012",
+        "id": "v-vyroblyaty-65-11",
         "uk": "виробляти",
-        "translit": "",
-        "ipa": "/vɪrobˈlʲɑtɪ/",
         "en": "to produce",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/vɪrobˈlʲɑtɪ/",
         "note": "impf"
       },
       {
-        "id": "v-m65-013",
+        "id": "v-vyrobnytstvo-65-12",
         "uk": "виробництво",
-        "translit": "",
-        "ipa": "/vɪrobˈnɪtstvo/",
         "en": "production",
         "pos": "noun",
+        "ipa": "/vɪrobˈnɪtstvo/",
         "gender": "n"
       },
       {
-        "id": "v-m65-014",
+        "id": "v-vyrib-65-13",
         "uk": "виріб",
-        "translit": "",
-        "ipa": "/ˈvɪrʲib/",
         "en": "product",
         "pos": "noun",
+        "ipa": "/ˈvɪrʲib/",
         "gender": "m"
       },
       {
-        "id": "v-m65-015",
+        "id": "v-zaroblyaty-65-14",
         "uk": "заробляти",
-        "translit": "",
-        "ipa": "/zɑrobˈlʲɑtɪ/",
         "en": "to earn",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/zɑrobˈlʲɑtɪ/",
         "note": "impf"
       },
       {
-        "id": "v-m65-016",
+        "id": "v-zarobitok-65-15",
         "uk": "заробіток",
-        "translit": "",
-        "ipa": "/zɑˈrobʲitok/",
         "en": "earnings",
         "pos": "noun",
+        "ipa": "/zɑˈrobʲitok/",
         "gender": "m"
       },
       {
-        "id": "v-m65-017",
+        "id": "v-pidpys-65-16",
         "uk": "підпис",
-        "translit": "",
-        "ipa": "/ˈpʲidpɪs/",
         "en": "signature",
         "pos": "noun",
+        "ipa": "/ˈpʲidpɪs/",
         "gender": "m"
       },
       {
-        "id": "v-m65-018",
+        "id": "v-opys-65-17",
         "uk": "опис",
-        "translit": "",
-        "ipa": "/ˈopɪs/",
         "en": "description",
         "pos": "noun",
+        "ipa": "/ˈopɪs/",
         "gender": "m"
       },
       {
-        "id": "v-m65-019",
+        "id": "v-zapys-65-18",
         "uk": "запис",
-        "translit": "",
-        "ipa": "/ˈzɑpɪs/",
         "en": "record, entry",
         "pos": "noun",
+        "ipa": "/ˈzɑpɪs/",
         "gender": "m"
       },
       {
-        "id": "v-m65-020",
+        "id": "v-zapyska-65-19",
         "uk": "записка",
-        "translit": "",
-        "ipa": "/zɑˈpɪskɑ/",
         "en": "note",
         "pos": "noun",
+        "ipa": "/zɑˈpɪskɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m65-021",
+        "id": "v-perepysuvaty-65-20",
         "uk": "переписувати",
-        "translit": "",
-        "ipa": "/pɛrɛpɪˈsuvɑtɪ/",
         "en": "to rewrite",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/pɛrɛpɪˈsuvɑtɪ/",
         "note": "impf"
       },
       {
-        "id": "v-m65-022",
+        "id": "v-chytach-65-21",
         "uk": "читач",
-        "translit": "",
-        "ipa": "/tʃɪˈtɑtʃ/",
         "en": "reader",
         "pos": "noun",
+        "ipa": "/tʃɪˈtɑtʃ/",
         "gender": "m"
       },
       {
-        "id": "v-m65-023",
+        "id": "v-chytalьnya-65-22",
         "uk": "читальня",
-        "translit": "",
-        "ipa": "/tʃɪˈtɑlʲnʲɑ/",
         "en": "reading room",
         "pos": "noun",
+        "ipa": "/tʃɪˈtɑlʲnʲɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m65-024",
+        "id": "v-prochytaty-65-23",
         "uk": "прочитати",
-        "translit": "",
-        "ipa": "/protʃɪˈtɑtɪ/",
         "en": "to read (through)",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/protʃɪˈtɑtɪ/",
         "note": "pf"
       },
       {
-        "id": "v-m65-025",
+        "id": "v-perechytaty-65-24",
         "uk": "перечитати",
-        "translit": "",
-        "ipa": "/pɛrɛtʃɪˈtɑtɪ/",
         "en": "to reread",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/pɛrɛtʃɪˈtɑtɪ/",
         "note": "pf"
       },
       {
-        "id": "v-m65-026",
+        "id": "v-nachytanyy-65-25",
         "uk": "начитаний",
-        "translit": "",
-        "ipa": "/nɑtʃɪˈtɑnɪj/",
         "en": "well-read",
         "pos": "adj",
-        "gender": "-"
+        "ipa": "/nɑtʃɪˈtɑnɪj/"
       },
       {
-        "id": "v-m65-027",
+        "id": "v-rozmova-65-26",
         "uk": "розмова",
-        "translit": "",
-        "ipa": "/rozˈmovɑ/",
         "en": "conversation",
         "pos": "noun",
+        "ipa": "/rozˈmovɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m65-028",
+        "id": "v-rozmovlyaty-65-27",
         "uk": "розмовляти",
-        "translit": "",
-        "ipa": "/rozmovˈlʲɑtɪ/",
         "en": "to converse",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/rozmovˈlʲɑtɪ/",
         "note": "impf"
       },
       {
-        "id": "v-m65-029",
+        "id": "v-movlennya-65-28",
         "uk": "мовлення",
-        "translit": "",
-        "ipa": "/movˈlɛnʲːɑ/",
         "en": "speech",
         "pos": "noun",
+        "ipa": "/movˈlɛnʲːɑ/",
         "gender": "n"
       },
       {
-        "id": "v-m65-030",
+        "id": "v-movchaty-65-29",
         "uk": "мовчати",
-        "translit": "",
-        "ipa": "/movˈtʃɑtɪ/",
         "en": "to be silent",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/movˈtʃɑtɪ/",
         "note": "impf"
       },
       {
-        "id": "v-m65-031",
+        "id": "v-domovytysya-65-30",
         "uk": "домовитися",
-        "translit": "",
-        "ipa": "/domovˈɪtɪsʲɑ/",
         "en": "to agree",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/domovˈɪtɪsʲɑ/",
         "note": "pf"
       },
       {
-        "id": "v-m65-032",
+        "id": "v-dohovir-65-31",
         "uk": "договір",
-        "translit": "",
-        "ipa": "/doɦoˈvʲir/",
         "en": "contract",
         "pos": "noun",
+        "ipa": "/doɦoˈvʲir/",
         "gender": "m"
       },
       {
-        "id": "v-m65-033",
+        "id": "v-peremovyny-65-32",
         "uk": "перемовини",
-        "translit": "",
-        "ipa": "/pɛrɛˈmovɪnɪ/",
         "en": "negotiations",
         "pos": "noun",
-        "gender": "pl"
+        "ipa": "/pɛrɛˈmovɪnɪ/"
       },
       {
-        "id": "v-m65-034",
+        "id": "v-promova-65-33",
         "uk": "промова",
-        "translit": "",
-        "ipa": "/proˈmovɑ/",
         "en": "speech, address",
         "pos": "noun",
+        "ipa": "/proˈmovɑ/",
         "gender": "f"
       }
     ]

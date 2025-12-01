@@ -149,54 +149,39 @@ Ukrainian has many verbs for describing thinking:
 ### Choose the Right Verb
 
 1. Я ___ (довго обмірковував) цю проблему.
-   → **міркував над**
-
+   > [!answer] **міркував над**
 2. ___ (мені здається), що він правий.
-   → **Мені здається / Гадаю**
-
+   > [!answer] **Мені здається / Гадаю**
 3. Я ___ (твердо переконаний), це помилка.
-   → **вважаю**
-
+   > [!answer] **вважаю**
 4. Не ___ (припускав), що буде так важко.
-   → **гадав**
-
+   > [!answer] **гадав**
 5. Про що ти ___ (process of thinking)?
-   → **думаєш**
-
+   > [!answer] **думаєш**
 ### Complete the Sentences
 
 1. Я ___, що він приїде завтра. (neutral opinion)
-   → **думаю / гадаю**
-
+   > [!answer] **думаю / гадаю**
 2. ___, він не правий. (firm belief)
-   → **Вважаю**
-
+   > [!answer] **Вважаю**
 3. Вона довго ___ над цим питанням. (deep thinking)
-   → **міркувала**
-
+   > [!answer] **міркувала**
 4. ___, буде дощ. (subjective impression)
-   → **Здається / Мені здається**
-
+   > [!answer] **Здається / Мені здається**
 5. Не ___, що це можливо. (didn't suppose)
-   → **гадав**
-
+   > [!answer] **гадав**
 ### Translate Nuances
 
 1. I think he's right. (neutral)
-   → **Думаю, він правий.**
-
+   > [!answer] **Думаю, він правий.**
 2. I believe this is wrong. (firm)
-   → **Вважаю, це неправильно.**
-
+   > [!answer] **Вважаю, це неправильно.**
 3. I suppose she'll come. (guess)
-   → **Гадаю, вона прийде.**
-
+   > [!answer] **Гадаю, вона прийде.**
 4. It seems to me that... (impression)
-   → **Мені здається, що...**
-
+   > [!answer] **Мені здається, що...**
 5. I'm pondering this question. (deep)
-   → **Я міркую над цим питанням.**
-
+   > [!answer] **Я міркую над цим питанням.**
 ## production | Продукція
 
 ### Express Your Opinion

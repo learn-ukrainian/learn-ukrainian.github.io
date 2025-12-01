@@ -5,98 +5,314 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Module 61: Prefixes I: Motion Verbs | Ukrainian A2+</title>
   <style>
-    :root { --primary: #1a5fb4; --primary-light: #3584e4; --success: #26a269; --warning: #e5a50a; --danger: #c01c28; --bg: #fafafa; --card-bg: #fff; --text: #1e1e1e; --text-muted: #5e5e5e; --border: #e0e0e0; }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
-    .top-nav { background: #2e2e2e; color: white; padding: 0.5rem 2rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.875rem; }
-    .top-nav a { color: white; text-decoration: none; }
-    .top-nav a:hover { text-decoration: underline; }
-    .module-nav { display: flex; gap: 1rem; align-items: center; }
-    .module-nav-link { color: rgba(255,255,255,0.8); text-decoration: none; padding: 0.25rem 0.5rem; }
-    .module-nav-link:hover { color: white; }
-    .module-nav-link.disabled { color: rgba(255,255,255,0.3); pointer-events: none; }
-    .nav { position: sticky; top: 0; background: var(--primary); color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; z-index: 100; }
-    .nav h1 { font-size: 1.25rem; }
-    .nav-tabs { display: flex; gap: 0.5rem; }
-    .nav-tab { background: rgba(255,255,255,0.2); border: none; color: white; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; }
-    .nav-tab.active { background: white; color: var(--primary); }
-    main { max-width: 1000px; margin: 0 auto; padding: 2rem; }
-    .section { display: none; } .section.active { display: block; }
-    .lesson-header { text-align: center; margin-bottom: 2rem; padding: 2rem; background: linear-gradient(135deg, #e8f4fd, #f0e8fd); border-radius: 12px; }
-    .level-badge { background: var(--primary); color: white; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.875rem; }
-    .card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 1.5rem; margin-bottom: 1.5rem; }
-    .card h3 { color: var(--primary); margin-bottom: 1rem; }
-    .section-intro { border-left: 4px solid var(--primary); }
-    .section-intro h3 { color: var(--primary); }
-    .section-topic { border-left: 4px solid var(--border); }
-    .section-summary { background: linear-gradient(135deg, #f0f9ff, #e8f4fd); border-left: 4px solid var(--success); }
-    .section-summary h3 { color: var(--success); }
-    .canvas-note { background: #fffbeb; border-left: 4px solid var(--warning); padding: 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
-    .canvas-note h4 { color: var(--warning); margin-bottom: 0.5rem; }
-    .md-content { line-height: 1.7; }
-    .md-content p { margin: 0.75rem 0; }
-    .md-content ul, .md-content ol { margin: 0.75rem 0; padding-left: 1.5rem; }
-    .md-content li { margin: 0.25rem 0; }
-    .md-content strong { color: var(--primary); }
-    .md-content blockquote { background: #e8f4fd; border-left: 4px solid var(--primary); padding: 0.75rem 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
-    .md-content blockquote p { margin: 0.25rem 0; }
-    .md-content table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
-    .md-content th, .md-content td { border: 1px solid var(--border); padding: 0.5rem 0.75rem; text-align: left; }
-    .md-content th { background: #f5f5f5; font-weight: 600; }
-    .md-content code { background: #f0f0f0; padding: 0.125rem 0.375rem; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
-    .letter-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0; }
-    .letter-group { border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; }
-    .letter-group.true-friends { border-color: var(--success); } .letter-group.true-friends .letters { color: var(--success); }
-    .letter-group.false-friends { border-color: var(--danger); } .letter-group.false-friends .letters { color: var(--danger); }
-    .letter-group.new-letters { border-color: var(--primary); } .letter-group.new-letters .letters { color: var(--primary); }
-    .letters { font-size: 1.75rem; letter-spacing: 0.3rem; }
-    .match-container { display: flex; gap: 3rem; padding: 1rem; position: relative; }
-    .match-column { flex: 1; display: flex; flex-direction: column; gap: 0.75rem; }
-    .match-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; font-size: 1.25rem; cursor: pointer; }
-    .match-item.selected { border-color: var(--primary); background: #e8f4fd; }
-    .match-item.matched { border-color: var(--success); background: #e8f8f0; }
-    .match-item.wrong { border-color: var(--danger); background: #fde8e8; }
-    .match-lines { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
-    .quiz-question { border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; }
-    .quiz-question.answered { pointer-events: none; }
-    .quiz-question .cyrillic { font-size: 1.5rem; color: var(--primary); font-weight: 600; }
-    .quiz-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-top: 1rem; }
-    .quiz-option { background: #f5f5f5; border: 2px solid var(--border); border-radius: 8px; padding: 1rem; cursor: pointer; text-align: center; }
-    .quiz-option.correct { border-color: var(--success); background: #d4edda; }
-    .quiz-option.wrong { border-color: var(--danger); background: #f8d7da; }
-    .quiz-explanation { margin-top: 1rem; padding: 1rem; background: #e8f4fd; border-radius: 8px; display: none; }
-    .quiz-explanation.show { display: block; }
-    .sort-pool { background: #f5f5f5; border: 2px dashed var(--border); border-radius: 12px; padding: 1.5rem; min-height: 80px; margin-bottom: 1rem; }
-    .sort-items { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; }
-    .sort-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 0.75rem 1.25rem; font-size: 1.5rem; cursor: grab; }
-    .sort-item.correct { border-color: var(--success); background: #e8f8f0; }
-    .sort-item.wrong { border-color: var(--danger); background: #fde8e8; }
-    .sort-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
-    .sort-group { border: 2px solid var(--border); border-radius: 12px; padding: 1rem; min-height: 150px; }
-    .sort-group.drag-over { border-color: var(--primary); background: #e8f4fd; }
-    .sort-group h4 { font-size: 0.875rem; text-align: center; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--border); }
-    .sort-group.true-friends h4 { color: var(--success); border-color: var(--success); }
-    .sort-group.false-friends h4 { color: var(--danger); border-color: var(--danger); }
-    .sort-group.new-letters h4 { color: var(--primary); border-color: var(--primary); }
-    .vocab-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; }
-    .vocab-card { border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; text-align: center; }
-    .vocab-card .uk { font-size: 1.75rem; font-weight: 600; color: var(--primary); }
-    .vocab-card .translit { color: var(--text-muted); font-style: italic; }
-    .vocab-card .en { font-weight: 500; margin: 0.25rem 0; }
-    .vocab-card .note { font-size: 0.75rem; color: #613583; background: #f0e8fd; padding: 0.25rem 0.5rem; border-radius: 4px; }
-    .btn { padding: 0.75rem 1.5rem; border: none; border-radius: 8px; cursor: pointer; }
-    .btn-primary { background: var(--primary); color: white; }
-    .btn-outline { background: transparent; border: 2px solid var(--border); }
-    .btn-group { display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem; }
-    .score-display { text-align: center; padding: 1rem; background: linear-gradient(135deg, #e8f8f0, #e8f4fd); border-radius: 8px; margin-bottom: 1rem; }
-    .score-display .score { font-size: 2rem; font-weight: 700; color: var(--success); }
-    .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
-    .completion-message.show { display: block; }
-    footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+:root { --primary: #1a5fb4; --primary-light: #3584e4; --success: #26a269; --warning: #e5a50a; --danger: #c01c28; --bg: #fafafa; --card-bg: #fff; --text: #1e1e1e; --text-muted: #5e5e5e; --border: #e0e0e0; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+.top-nav { background: #2e2e2e; color: white; padding: 0.5rem 2rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.875rem; }
+.top-nav a { color: white; text-decoration: none; }
+.top-nav a:hover { text-decoration: underline; }
+.module-nav { display: flex; gap: 1rem; align-items: center; }
+.module-nav-link { color: rgba(255,255,255,0.8); text-decoration: none; padding: 0.25rem 0.5rem; }
+.module-nav-link:hover { color: white; }
+.module-nav-link.disabled { color: rgba(255,255,255,0.3); pointer-events: none; }
+.nav { position: sticky; top: 0; background: var(--primary); color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; z-index: 100; }
+.nav h1 { font-size: 1.25rem; }
+.nav-tabs { display: flex; gap: 0.5rem; }
+.nav-tab { background: rgba(255,255,255,0.2); border: none; color: white; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; }
+.nav-tab.active { background: white; color: var(--primary); }
+main { max-width: 1000px; margin: 0 auto; padding: 2rem; }
+.section { display: none; } .section.active { display: block; }
+.lesson-header { text-align: center; margin-bottom: 2rem; padding: 2rem; background: linear-gradient(135deg, #e8f4fd, #f0e8fd); border-radius: 12px; }
+.level-badge { background: var(--primary); color: white; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.875rem; }
+.card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 1.5rem; margin-bottom: 1.5rem; }
+.card h3 { color: var(--primary); margin-bottom: 1rem; }
+.section-intro { border-left: 4px solid var(--primary); }
+.section-intro h3 { color: var(--primary); }
+.section-topic { border-left: 4px solid var(--border); }
+.section-summary { background: linear-gradient(135deg, #f0f9ff, #e8f4fd); border-left: 4px solid var(--success); }
+.section-summary h3 { color: var(--success); }
+.canvas-note { background: #fffbeb; border-left: 4px solid var(--warning); padding: 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+.canvas-note h4 { color: var(--warning); margin-bottom: 0.5rem; }
+.md-content { line-height: 1.7; }
+.md-content p { margin: 0.75rem 0; }
+.md-content ul, .md-content ol { margin: 0.75rem 0; padding-left: 1.5rem; }
+.md-content li { margin: 0.25rem 0; }
+.md-content strong { color: var(--primary); }
+.md-content blockquote { background: #e8f4fd; border-left: 4px solid var(--primary); padding: 0.75rem 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+.md-content blockquote p { margin: 0.25rem 0; }
+.md-content table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+.md-content th, .md-content td { border: 1px solid var(--border); padding: 0.5rem 0.75rem; text-align: left; }
+.md-content th { background: #f5f5f5; font-weight: 600; }
+.md-content code { background: #f0f0f0; padding: 0.125rem 0.375rem; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
+.md-content details { background: #f8f9fa; border: 1px solid var(--border); border-radius: 8px; padding: 0; margin: 1rem 0; }
+.md-content details summary { background: linear-gradient(135deg, #e8f4fd, #f0e8fd); padding: 0.75rem 1rem; cursor: pointer; font-weight: 600; color: var(--primary); border-radius: 8px; list-style: none; display: flex; align-items: center; gap: 0.5rem; }
+.md-content details summary::-webkit-details-marker { display: none; }
+.md-content details summary::before { content: '▶'; font-size: 0.75rem; transition: transform 0.2s; }
+.md-content details[open] summary::before { transform: rotate(90deg); }
+.md-content details[open] summary { border-radius: 8px 8px 0 0; }
+.md-content details > *:not(summary) { padding: 0 1rem; }
+.md-content details > *:last-child { padding-bottom: 1rem; }
+.md-content p > details { margin: 0; }
+.md-content p:has(> details) { margin: 1rem 0; }
+.inline-answer { background: linear-gradient(135deg, #d4edda, #e8f4fd); padding: 0.125rem 0.5rem; border-radius: 4px; transition: opacity 0.2s; }
+.inline-answer.hidden { opacity: 0; user-select: none; }
+.answer-toggle-btn { display: inline-flex; align-items: center; gap: 0.5rem; background: linear-gradient(135deg, #e8f4fd, #f0e8fd); border: 1px solid var(--primary); color: var(--primary); padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-size: 0.875rem; font-weight: 600; margin: 1rem 0; }
+.answer-toggle-btn:hover { background: var(--primary); color: white; }
+.answer-toggle-btn svg { width: 1rem; height: 1rem; }
+.letter-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0; }
+.letter-group { border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; }
+.letter-group.true-friends { border-color: var(--success); } .letter-group.true-friends .letters { color: var(--success); }
+.letter-group.false-friends { border-color: var(--danger); } .letter-group.false-friends .letters { color: var(--danger); }
+.letter-group.new-letters { border-color: var(--primary); } .letter-group.new-letters .letters { color: var(--primary); }
+.letters { font-size: 1.75rem; letter-spacing: 0.3rem; }
+.btn { padding: 0.75rem 1.5rem; border: none; border-radius: 8px; cursor: pointer; }
+.btn-primary { background: var(--primary); color: white; }
+.btn-outline { background: transparent; border: 2px solid var(--border); }
+.btn-group { display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem; }
+.score-display { text-align: center; padding: 1rem; background: linear-gradient(135deg, #e8f8f0, #e8f4fd); border-radius: 8px; margin-bottom: 1rem; }
+.score-display .score { font-size: 2rem; font-weight: 700; color: var(--success); }
+.completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
+.completion-message.show { display: block; }
+footer { text-align: center; padding: 2rem; color: var(--text-muted); }
+@media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+
+
+/**
+ * Layout styles - Navigation, page structure
+ */
+
+/* Top Navigation */
+.top-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1.5rem;
+  background: #f8f8f8;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.875rem;
+}
+
+.top-nav a {
+  color: var(--text-muted);
+}
+
+.top-nav a:hover {
+  color: var(--primary);
+}
+
+.module-nav {
+  display: flex;
+  gap: 1rem;
+}
+
+.module-nav-link {
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+.module-nav-link:hover {
+  background: #e8f4fd;
+}
+
+/* Main Navigation */
+.nav {
+  background: linear-gradient(135deg, #1a5fb4, #613583);
+  color: white;
+  padding: 1.5rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav h1 {
+  font-size: 1.5rem;
+}
+
+.nav-tabs {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.nav-tab {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: background 0.2s;
+}
+
+.nav-tab:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.nav-tab.active {
+  background: white;
+  color: var(--primary);
+}
+
+/* Main Content */
+main {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Sections */
+.section {
+  display: none;
+}
+
+.section.active {
+  display: block;
+}
+
+/* Lesson Header */
+.lesson-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding: 2rem;
+  background: linear-gradient(135deg, #e8f4fd, #f0e8fd);
+  border-radius: 12px;
+}
+
+.lesson-header h2 {
+  font-size: 2rem;
+  margin: 0.5rem 0;
+}
+
+/* Section Cards */
+.section-intro {
+  border-left: 4px solid var(--primary);
+}
+
+.section-intro h3 {
+  color: var(--primary);
+}
+
+.section-topic {
+  border-left: 4px solid var(--border);
+}
+
+.section-summary {
+  background: linear-gradient(135deg, #f0f9ff, #e8f4fd);
+  border-left: 4px solid var(--success);
+}
+
+.section-summary h3 {
+  color: var(--success);
+}
+
+/* Canvas Notes */
+.canvas-note {
+  background: #fffbeb;
+  border-left: 4px solid var(--warning);
+  padding: 1rem;
+  margin: 1rem 0;
+  border-radius: 0 8px 8px 0;
+}
+
+.canvas-note h4 {
+  color: var(--warning);
+  margin-bottom: 0.5rem;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-muted);
+}
+
+/* Responsive Layout */
+@media (max-width: 768px) {
+  .nav {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .nav h1 {
+    font-size: 1.25rem;
+    text-align: center;
+  }
+
+  .nav-tabs {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  main {
+    padding: 1rem;
+  }
+
+  .top-nav {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+
+
+/* Match Activity */
+.match-container { display: flex; gap: 3rem; padding: 1rem; position: relative; }
+.match-column { flex: 1; display: flex; flex-direction: column; gap: 0.75rem; }
+.match-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; font-size: 1.25rem; cursor: pointer; }
+.match-item.selected { border-color: var(--primary); background: #e8f4fd; }
+.match-item.matched { border-color: var(--success); background: #e8f8f0; }
+.match-item.wrong { border-color: var(--danger); background: #fde8e8; }
+.match-lines { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+
+/* Quiz Activity */
+.quiz-question { border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; }
+.quiz-question.answered { pointer-events: none; }
+.quiz-question .cyrillic { font-size: 1.5rem; color: var(--primary); font-weight: 600; }
+.quiz-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-top: 1rem; }
+.quiz-option { background: #f5f5f5; border: 2px solid var(--border); border-radius: 8px; padding: 1rem; cursor: pointer; text-align: center; }
+.quiz-option.correct { border-color: var(--success); background: #d4edda; }
+.quiz-option.wrong { border-color: var(--danger); background: #f8d7da; }
+.quiz-explanation { margin-top: 1rem; padding: 1rem; background: #e8f4fd; border-radius: 8px; display: none; }
+.quiz-explanation.show { display: block; }
+
+/* Sort Activity */
+.sort-pool { background: #f5f5f5; border: 2px dashed var(--border); border-radius: 12px; padding: 1.5rem; min-height: 80px; margin-bottom: 1rem; }
+.sort-items { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; }
+.sort-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 0.75rem 1.25rem; font-size: 1.5rem; cursor: grab; }
+.sort-item.correct { border-color: var(--success); background: #e8f8f0; }
+.sort-item.wrong { border-color: var(--danger); background: #fde8e8; }
+.sort-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+.sort-group { border: 2px solid var(--border); border-radius: 12px; padding: 1rem; min-height: 150px; }
+.sort-group.drag-over { border-color: var(--primary); background: #e8f4fd; }
+.sort-group h4 { font-size: 0.875rem; text-align: center; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--border); }
+.sort-group.true-friends h4 { color: var(--success); border-color: var(--success); }
+.sort-group.false-friends h4 { color: var(--danger); border-color: var(--danger); }
+.sort-group.new-letters h4 { color: var(--primary); border-color: var(--primary); }
+
+/* Vocabulary */
+.vocab-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; }
+.vocab-card { border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; text-align: center; }
+.vocab-card .uk { font-size: 1.75rem; font-weight: 600; color: var(--primary); }
+.vocab-card .translit { color: var(--text-muted); font-style: italic; }
+.vocab-card .en { font-weight: 500; margin: 0.25rem 0; }
+.vocab-card .note { font-size: 0.75rem; color: #613583; background: #f0e8fd; padding: 0.25rem 0.5rem; border-radius: 4px; }
+
+/* Answer Callout Blocks */
+.callout { padding: 0.5rem 1rem; margin: 0.25rem 0; border-radius: 4px; }
+.callout-answer { background: #e8f8f0; border-left: 3px solid var(--success); }
+.callout-explanation { background: #e8f4fd; border-left: 3px solid var(--primary); color: var(--text-muted); font-style: italic; }
+.callout-alt { background: #f5f5f5; border-left: 3px solid var(--border); color: var(--text-muted); }
+
+/* Answer Block Toggle */
+.answer-block { display: none; }
+.answer-block.show { display: block; }
+.show-answer-btn { background: #f0f0f0; border: 1px solid var(--border); border-radius: 6px; padding: 0.25rem 0.75rem; font-size: 0.8rem; cursor: pointer; color: var(--text-muted); margin: 0.25rem 0; }
+.show-answer-btn:hover { background: #e5e5e5; }
+.show-answer-btn.revealed { background: #e8f8f0; border-color: var(--success); color: var(--success); }
+
   </style>
 </head>
 <body>
+  
   <div class="top-nav">
     <a href="../index.html">← l2-uk-en Curriculum</a>
     <div class="module-nav">
@@ -116,14 +332,17 @@
     </div>
   </nav>
   <main>
+    
     <section id="lesson" class="section active">
       <div class="lesson-header">
         <span class="level-badge">A2+ · A2+.1</span>
         <h2 style="font-size:2rem;margin:0.5rem 0">Prefixes I: Motion Verbs</h2>
         <p style="color:var(--text-muted)">How Prefixes Change Meaning</p>
       </div>
-      
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Welcome to A2+!</h4><div class="md-content"><p>You've mastered A2 grammar. Now it's time to <strong>multiply your vocabulary</strong> through word formation!</p>
+      <div class="card"><h3>Theory</h3><div class="md-content"><h1 id="lessoncontent">Lesson Content</h1>
+<h2 id="warmup">warm-up</h2>
+<h3 id="welcometoa2">Welcome to A2+!</h3>
+<p>You've mastered A2 grammar. Now it's time to <strong>multiply your vocabulary</strong> through word formation!</p>
 <p><strong>The power of prefixes:</strong></p>
 <ul>
 <li>You know: йти (to go), їхати (to drive)</li>
@@ -134,7 +353,10 @@
 <blockquote>
   <p>💡 <strong>Did You Know?</strong></p>
   <p>Ukrainian has about 20 common verb prefixes. Each prefix adds a specific shade of meaning. By learning these prefixes, you can understand hundreds of verbs you've never seen before!</p>
-</blockquote></div></div><div class="canvas-note"><h4>### The Prefix System</h4><div class="md-content"><p><strong>How it works:</strong></p>
+</blockquote>
+<h2 id="presentation">presentation</h2>
+<h3 id="theprefixsystem">The Prefix System</h3>
+<p><strong>How it works:</strong></p>
 <ul>
 <li>Base verb: йти (to go on foot)</li>
 <li>Add prefix: при- + йти = прийти (to arrive)</li>
@@ -166,7 +388,9 @@
 <td>go → drop by</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>при- (Arrival, Addition)</h4><div class="md-content"><p><strong>Meaning:</strong> movement toward, arrival at destination</p>
+</table>
+<h3 id="arrivaladdition">при- (Arrival, Addition)</h3>
+<p><strong>Meaning:</strong> movement toward, arrival at destination</p>
 <table>
 <thead>
 <tr>
@@ -218,7 +442,9 @@
 <blockquote>
   <p>⚡ <strong>Pro Tip: при- = toward/arrival</strong></p>
   <p>Think of при- as "toward the destination." The action ends at a specific point.</p>
-</blockquote></div></div><div class="canvas-note"><h4>ви- (Exit, Out)</h4><div class="md-content"><p><strong>Meaning:</strong> movement out of, exiting</p>
+</blockquote>
+<h3 id="exitout">ви- (Exit, Out)</h3>
+<p><strong>Meaning:</strong> movement out of, exiting</p>
 <table>
 <thead>
 <tr>
@@ -271,7 +497,9 @@
   <p>🎭 <strong>Culture Note: Вихід</strong></p>
   <p>You'll see "ВИХІД" (exit) signs everywhere in Ukraine. It comes from вийти!<br />
   Similarly: вхід (entrance) from увійти.</p>
-</blockquote></div></div><div class="canvas-note"><h4>в-/у- (Entry, Into)</h4><div class="md-content"><p><strong>Meaning:</strong> movement into, entering</p>
+</blockquote>
+<h3 id="entryinto">в-/у- (Entry, Into)</h3>
+<p><strong>Meaning:</strong> movement into, entering</p>
 <table>
 <thead>
 <tr>
@@ -323,7 +551,9 @@
 <blockquote>
   <p>📝 <strong>Note: в- vs у-</strong></p>
   <p>Use у- before consonants (увійти), в- before vowels (ввійти) or after vowels. Both forms are correct.</p>
-</blockquote></div></div><div class="canvas-note"><h4>за- (Behind, Dropping By)</h4><div class="md-content"><p><strong>Meaning:</strong> movement behind something, or brief stop</p>
+</blockquote>
+<h3 id="behinddroppingby">за- (Behind, Dropping By)</h3>
+<p><strong>Meaning:</strong> movement behind something, or brief stop</p>
 <table>
 <thead>
 <tr>
@@ -366,7 +596,9 @@
 <li>Сонце <strong>зайшло</strong> за хмару. - The sun went behind a cloud.</li>
 <li><strong>Заїдь</strong> у магазин по дорозі. - Stop by the store on the way.</li>
 <li>Він часто <strong>заходить</strong> до нас. - He often drops by our place.</li>
-</ul></div></div><div class="canvas-note"><h4>пере- (Across, Over)</h4><div class="md-content"><p><strong>Meaning:</strong> movement across, from one side to another</p>
+</ul>
+<h3 id="acrossover">пере- (Across, Over)</h3>
+<p><strong>Meaning:</strong> movement across, from one side to another</p>
 <table>
 <thead>
 <tr>
@@ -418,7 +650,9 @@
 <blockquote>
   <p>⚡ <strong>Pro Tip: пере- = across/transfer</strong></p>
   <p>Пере- often implies moving from one state/place to another: переїхати (move house), перенести (reschedule/transfer).</p>
-</blockquote></div></div><div class="canvas-note"><h4>від- (Away From)</h4><div class="md-content"><p><strong>Meaning:</strong> movement away from starting point</p>
+</blockquote>
+<h3 id="awayfrom">від- (Away From)</h3>
+<p><strong>Meaning:</strong> movement away from starting point</p>
 <table>
 <thead>
 <tr>
@@ -466,7 +700,9 @@
 <li>Машина <strong>від'їхала</strong>. - The car drove away.</li>
 <li>Птахи <strong>відлетіли</strong> на південь. - The birds flew away to the south.</li>
 <li>Потяг <strong>відходить</strong> о третій. - The train departs at 3.</li>
-</ul></div></div><div class="canvas-note"><h4>до- (Up To, Reaching)</h4><div class="md-content"><p><strong>Meaning:</strong> movement up to a point, reaching destination</p>
+</ul>
+<h3 id="uptoreaching">до- (Up To, Reaching)</h3>
+<p><strong>Meaning:</strong> movement up to a point, reaching destination</p>
 <table>
 <thead>
 <tr>
@@ -509,7 +745,9 @@
 <li>Ми <strong>доїхали</strong> до Львова за 5 годин. - We drove to Lviv in 5 hours.</li>
 <li>Як <strong>дійти</strong> до центру? - How do I get to the center?</li>
 <li>Лист <strong>дійшов</strong> за тиждень. - The letter arrived in a week.</li>
-</ul></div></div><div class="canvas-note"><h4>об- (Around)</h4><div class="md-content"><p><strong>Meaning:</strong> movement around something</p>
+</ul>
+<h3 id="around">об- (Around)</h3>
+<p><strong>Meaning:</strong> movement around something</p>
 <table>
 <thead>
 <tr>
@@ -546,7 +784,9 @@
 <li><strong>Обійди</strong> цю калюжу. - Go around this puddle.</li>
 <li>Ми <strong>об'їхали</strong> затор. - We drove around the traffic jam.</li>
 <li>Вони <strong>оббігли</strong> стадіон. - They ran around the stadium.</li>
-</ul></div></div><div class="canvas-note"><h4>Summary Table: All Prefixes</h4><div class="md-content"><table>
+</ul>
+<h3 id="summarytableallprefixes">Summary Table: All Prefixes</h3>
+<table>
 <thead>
 <tr>
 <th>Prefix</th>
@@ -596,40 +836,102 @@
 <td>обійти (go around)</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>### Match Prefix to Meaning</h4><div class="md-content"><ol>
-<li>при- → arrival</li>
-<li>ви- → exit</li>
-<li>в-/у- → entry</li>
-<li>за- → behind/drop by</li>
-<li>пере- → across</li>
-<li>від- → away from</li>
-<li>до- → reaching</li>
-<li>об- → around</li>
-</ol></div></div><div class="canvas-note"><h4>Complete with Correct Verb</h4><div class="md-content"><ol>
-<li><p>Він ___ (arrive) о восьмій годині.<br />
-→ прийшов</p></li>
-<li><p>Вона ___ (exit) з магазину.<br />
-→ вийшла</p></li>
-<li><p>Ми ___ (cross) вулицю.<br />
-→ перейшли</p></li>
-<li><p>Я ___ (drop by) до друга.<br />
-→ зайшов</p></li>
-<li><p>Поїзд ___ (depart) вчасно.<br />
-→ відійшов</p></li>
-<li><p>Як ___ (reach) до центру?<br />
-→ дійти</p></li>
-<li><p>Вона ___ (enter) в кімнату.<br />
-→ увійшла</p></li>
-<li><p>Ми ___ (drive around) затор.<br />
-→ об'їхали</p></li>
-</ol></div></div><div class="canvas-note"><h4>Translate</h4><div class="md-content"><ol>
-<li>I arrived home at 6. → Я прийшов додому о шостій.</li>
-<li>She went out to the balcony. → Вона вийшла на балкон.</li>
-<li>We crossed the bridge. → Ми перейшли міст.</li>
-<li>Drop by tomorrow! → Зайди завтра!</li>
-<li>The bus departed. → Автобус відійшов.</li>
-<li>How do I get to the station? → Як дійти до станції?</li>
-</ol></div></div><div class="canvas-note"><h4>### Describe Movement</h4><div class="md-content"><p><strong>Use prefixed verbs to describe:</strong></p>
+</table>
+<h2 id="practice">practice</h2>
+<h3 id="matchprefixtomeaning">Match Prefix to Meaning</h3>
+<ol>
+<li><p>при-</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-0', this)">Показати відповідь</button><div class="answer-block" id="ans-0"><div class="callout callout-answer" data-callout="answer">arrival</div></div>
+<ol start="2">
+<li><p>ви-</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-1', this)">Показати відповідь</button><div class="answer-block" id="ans-1"><div class="callout callout-answer" data-callout="answer">exit</div></div>
+<ol start="3">
+<li><p>в-/у-</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-2', this)">Показати відповідь</button><div class="answer-block" id="ans-2"><div class="callout callout-answer" data-callout="answer">entry</div></div>
+<ol start="4">
+<li><p>за-</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-3', this)">Показати відповідь</button><div class="answer-block" id="ans-3"><div class="callout callout-answer" data-callout="answer">behind/drop by</div></div>
+<ol start="5">
+<li><p>пере-</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-4', this)">Показати відповідь</button><div class="answer-block" id="ans-4"><div class="callout callout-answer" data-callout="answer">across</div></div>
+<ol start="6">
+<li><p>від-</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-5', this)">Показати відповідь</button><div class="answer-block" id="ans-5"><div class="callout callout-answer" data-callout="answer">away from</div></div>
+<ol start="7">
+<li><p>до-</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-6', this)">Показати відповідь</button><div class="answer-block" id="ans-6"><div class="callout callout-answer" data-callout="answer">reaching</div></div>
+<ol start="8">
+<li><p>об-</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-7', this)">Показати відповідь</button><div class="answer-block" id="ans-7"><div class="callout callout-answer" data-callout="answer">around</div></div>
+<h3 id="completewithcorrectverb">Complete with Correct Verb</h3>
+<ol>
+<li><p>Він ___ (arrive) о восьмій годині.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-8', this)">Показати відповідь</button><div class="answer-block" id="ans-8"><div class="callout callout-answer" data-callout="answer">прийшов</div></div>
+<ol start="2">
+<li><p>Вона ___ (exit) з магазину.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-9', this)">Показати відповідь</button><div class="answer-block" id="ans-9"><div class="callout callout-answer" data-callout="answer">вийшла</div></div>
+<ol start="3">
+<li><p>Ми ___ (cross) вулицю.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-10', this)">Показати відповідь</button><div class="answer-block" id="ans-10"><div class="callout callout-answer" data-callout="answer">перейшли</div></div>
+<ol start="4">
+<li><p>Я ___ (drop by) до друга.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-11', this)">Показати відповідь</button><div class="answer-block" id="ans-11"><div class="callout callout-answer" data-callout="answer">зайшов</div></div>
+<ol start="5">
+<li><p>Поїзд ___ (depart) вчасно.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-12', this)">Показати відповідь</button><div class="answer-block" id="ans-12"><div class="callout callout-answer" data-callout="answer">відійшов</div></div>
+<ol start="6">
+<li><p>Як ___ (reach) до центру?</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-13', this)">Показати відповідь</button><div class="answer-block" id="ans-13"><div class="callout callout-answer" data-callout="answer">дійти</div></div>
+<ol start="7">
+<li><p>Вона ___ (enter) в кімнату.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-14', this)">Показати відповідь</button><div class="answer-block" id="ans-14"><div class="callout callout-answer" data-callout="answer">увійшла</div></div>
+<ol start="8">
+<li><p>Ми ___ (drive around) затор.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-15', this)">Показати відповідь</button><div class="answer-block" id="ans-15"><div class="callout callout-answer" data-callout="answer">об'їхали</div></div>
+<h3 id="translate">Translate</h3>
+<ol>
+<li><p>I arrived home at 6.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-16', this)">Показати відповідь</button><div class="answer-block" id="ans-16"><div class="callout callout-answer" data-callout="answer">Я прийшов додому о шостій.</div></div>
+<ol start="2">
+<li><p>She went out to the balcony.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-17', this)">Показати відповідь</button><div class="answer-block" id="ans-17"><div class="callout callout-answer" data-callout="answer">Вона вийшла на балкон.</div></div>
+<ol start="3">
+<li><p>We crossed the bridge.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-18', this)">Показати відповідь</button><div class="answer-block" id="ans-18"><div class="callout callout-answer" data-callout="answer">Ми перейшли міст.</div></div>
+<ol start="4">
+<li><p>Drop by tomorrow!</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-19', this)">Показати відповідь</button><div class="answer-block" id="ans-19"><div class="callout callout-answer" data-callout="answer">Зайди завтра!</div></div>
+<ol start="5">
+<li><p>The bus departed.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-20', this)">Показати відповідь</button><div class="answer-block" id="ans-20"><div class="callout callout-answer" data-callout="answer">Автобус відійшов.</div></div>
+<ol start="6">
+<li><p>How do I get to the station?</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-21', this)">Показати відповідь</button><div class="answer-block" id="ans-21"><div class="callout callout-answer" data-callout="answer">Як дійти до станції?</div></div>
+<h2 id="production">production</h2>
+<h3 id="describemovement">Describe Movement</h3>
+<p><strong>Use prefixed verbs to describe:</strong></p>
 <p>Your morning:</p>
 <ul>
 <li>Я <strong>вийшов</strong> з дому о восьмій.</li>
@@ -643,30 +945,146 @@
 <li>Ми <strong>об'їхали</strong> Київ.</li>
 <li>Ми <strong>перетнули</strong> кордон.</li>
 <li>Ми <strong>доїхали</strong> до Варшави ввечері.</li>
-</ul></div></div><div class="canvas-note"><h4>Give Directions</h4><div class="md-content"><p>Practice giving directions using prefixed verbs:</p>
+</ul>
+<h3 id="givedirections">Give Directions</h3>
+<p>Practice giving directions using prefixed verbs:</p>
 <ul>
 <li><strong>Вийдіть</strong> з метро.</li>
 <li><strong>Перейдіть</strong> вулицю.</li>
 <li><strong>Дійдіть</strong> до перехрестя.</li>
 <li><strong>Зайдіть</strong> у двір.</li>
-</ul></div></div></div>
-      <div class="btn-group"><button class="btn btn-primary" onclick="showSection('match')">Start →</button></div>
+</ul>
+<hr />
+<h1 id="summary">Summary</h1>
+<h2 id="motionverbprefixes">Motion Verb Prefixes</h2>
+<table>
+<thead>
+<tr>
+<th>Prefix</th>
+<th>Core Meaning</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>при-</td>
+<td>toward, arrival</td>
+<td>прийти (arrive)</td>
+</tr>
+<tr>
+<td>ви-</td>
+<td>out, exit</td>
+<td>вийти (exit)</td>
+</tr>
+<tr>
+<td>в-/у-</td>
+<td>into, entry</td>
+<td>увійти (enter)</td>
+</tr>
+<tr>
+<td>за-</td>
+<td>behind, drop by</td>
+<td>зайти (drop by)</td>
+</tr>
+<tr>
+<td>пере-</td>
+<td>across, over</td>
+<td>перейти (cross)</td>
+</tr>
+<tr>
+<td>від-</td>
+<td>away from</td>
+<td>відійти (leave)</td>
+</tr>
+<tr>
+<td>до-</td>
+<td>up to, reaching</td>
+<td>дійти (reach)</td>
+</tr>
+<tr>
+<td>об-</td>
+<td>around</td>
+<td>обійти (go around)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="relatednouns">Related Nouns</h2>
+<table>
+<thead>
+<tr>
+<th>Verb</th>
+<th>Noun</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>увійти</td>
+<td>вхід</td>
+<td>entrance</td>
+</tr>
+<tr>
+<td>вийти</td>
+<td>вихід</td>
+<td>exit</td>
+</tr>
+<tr>
+<td>прийти</td>
+<td>прихід</td>
+<td>arrival</td>
+</tr>
+<tr>
+<td>відійти</td>
+<td>відхід</td>
+<td>departure</td>
+</tr>
+<tr>
+<td>перейти</td>
+<td>перехід</td>
+<td>crossing</td>
+</tr>
+</tbody>
+</table>
+<h2 id="keypattern">Key Pattern</h2>
+<p><strong>Base verb + Prefix = New meaning + Perfective aspect</strong></p>
+<ul>
+<li>йти (impf) + при- = прийти (pf) - to arrive</li>
+<li>йти (impf) + ви- = вийти (pf) - to exit</li>
+<li>йти (impf) + пере- = перейти (pf) - to cross</li>
+</ul>
+<blockquote>
+  <p>💡 <strong>Key Takeaways</strong></p>
+  <ul>
+  <li>Prefixes dramatically change verb meaning</li>
+  <li>Most prefixed verbs become perfective</li>
+  <li>Learning prefixes multiplies your vocabulary</li>
+  <li>The same prefixes work with different base verbs</li>
+  <li>Nouns can be formed from prefixed verbs (вийти → вихід)</li>
+  </ul>
+</blockquote></div></div>
+      <div class="btn-group">
+        <button class="btn btn-primary" onclick="showSection('match')">Start →</button>
+      </div>
     </section>
+  
+    
     <section id="match" class="section"><div class="card"><h3>Prefix → Meaning</h3>
       <div class="score-display"><span class="score"><span id="match-score">0</span>/8</span></div>
       <div class="match-container" id="match-container"><svg class="match-lines" id="match-lines"></svg>
         <div class="match-column" id="match-left"><div class="match-item" data-pair="0">при-</div><div class="match-item" data-pair="1">ви-</div><div class="match-item" data-pair="2">в-/у-</div><div class="match-item" data-pair="3">за-</div><div class="match-item" data-pair="4">пере-</div><div class="match-item" data-pair="5">від-</div><div class="match-item" data-pair="6">до-</div><div class="match-item" data-pair="7">об-</div></div>
-        <div class="match-column" id="match-right"><div class="match-item" data-pair="5">away from</div><div class="match-item" data-pair="0">arrival, toward</div><div class="match-item" data-pair="7">around</div><div class="match-item" data-pair="3">behind, drop by</div><div class="match-item" data-pair="6">reaching, up to</div><div class="match-item" data-pair="4">across, over</div><div class="match-item" data-pair="1">out, exit</div><div class="match-item" data-pair="2">into, entry</div></div>
+        <div class="match-column" id="match-right"><div class="match-item" data-pair="2">into, entry</div><div class="match-item" data-pair="1">out, exit</div><div class="match-item" data-pair="5">away from</div><div class="match-item" data-pair="7">around</div><div class="match-item" data-pair="4">across, over</div><div class="match-item" data-pair="0">arrival, toward</div><div class="match-item" data-pair="3">behind, drop by</div><div class="match-item" data-pair="6">reaching, up to</div></div>
       </div>
       <div class="completion-message" id="match-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetMatch()">Reset</button><button class="btn btn-primary" onclick="showSection('quiz')">Next →</button></div>
     </div></section>
+    
     <section id="quiz" class="section"><div class="card"><h3>Prefixed Motion Verbs</h3>
       <div class="score-display"><span class="score"><span id="quiz-score">0</span>/6</span></div>
       <div id="quiz-container"></div>
       <div class="completion-message" id="quiz-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('sort')">Next →</button></div>
     </div></section>
+    
     <section id="sort" class="section"><div class="card"><h3>By Prefix</h3>
       <div class="score-display"><span class="score"><span id="sort-score">0</span>/12</span></div>
       <div class="sort-pool" id="sort-pool"><div class="sort-items" id="sort-items"></div></div>
@@ -674,34 +1092,235 @@
       <div class="completion-message" id="sort-complete"><h3>All Sorted!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetSort()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Vocab →</button></div>
     </div></section>
+    
     <section id="vocab" class="section"><div class="card"><h3>Vocabulary (42)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
     </section>
-  </main>
-  <footer>Module 61 · curricula-opus</footer>
+  </main><footer>Module 61 · curricula-opus</footer>
   <script>
-    const matchPairs=[{"left":"при-","right":"arrival, toward"},{"left":"ви-","right":"out, exit"},{"left":"в-/у-","right":"into, entry"},{"left":"за-","right":"behind, drop by"},{"left":"пере-","right":"across, over"},{"left":"від-","right":"away from"},{"left":"до-","right":"reaching, up to"},{"left":"об-","right":"around"}];
-    const quizData=[{"question":"\"He arrived on time\" - Він ___ вчасно.","options":["прийшов","вийшов","зайшов","дійшов"],"correctIndex":0,"explanation":"При- = arrival."},{"question":"\"She exited the building\" - Вона ___ з будівлі.","options":["вийшла","увійшла","прийшла","зайшла"],"correctIndex":0,"explanation":"Ви- = exit."},{"question":"\"We crossed the street\" - Ми ___ вулицю.","options":["перейшли","вийшли","зайшли","дійшли"],"correctIndex":0,"explanation":"Пере- = across."},{"question":"\"Drop by tomorrow\" - ___ завтра.","options":["Зайди","Вийди","Перейди","Дійди"],"correctIndex":0,"explanation":"За- = drop by."},{"question":"\"The train departed\" - Поїзд ___.","options":["відійшов","прийшов","дійшов","обійшов"],"correctIndex":0,"explanation":"Від- = away, departure."},{"question":"\"How do I get to the center?\" - Як ___ до центру?","options":["дійти","прийти","вийти","зайти"],"correctIndex":0,"explanation":"До- = reaching destination."}];
-    const sortData={"true-friends":["прийти","приїхати","принести","прилетіти"],"false-friends":["вийти","виїхати","винести","вибігти"],"new-letters":["перейти","переїхати","перенести","перебігти"]};
-    const vocabData=[{"uk":"прийти","translit":"","en":"to arrive (on foot)","note":"pf"},{"uk":"приїхати","translit":"","en":"to arrive (by transport)","note":"pf"},{"uk":"прилетіти","translit":"","en":"to arrive (by plane)","note":"pf"},{"uk":"принести","translit":"","en":"to bring (carrying)","note":"pf"},{"uk":"привезти","translit":"","en":"to bring (by transport)","note":"pf"},{"uk":"приходити","translit":"","en":"to come (habitually)","note":"impf"},{"uk":"вийти","translit":"","en":"to go out, exit","note":"pf"},{"uk":"виїхати","translit":"","en":"to drive out, leave","note":"pf"},{"uk":"вилетіти","translit":"","en":"to fly out, depart","note":"pf"},{"uk":"винести","translit":"","en":"to carry out","note":"pf"},{"uk":"виходити","translit":"","en":"to exit (habitually)","note":"impf"},{"uk":"увійти","translit":"","en":"to enter","note":"pf"},{"uk":"в'їхати","translit":"","en":"to drive into","note":"pf"},{"uk":"входити","translit":"","en":"to enter (habitually)","note":"impf"},{"uk":"зайти","translit":"","en":"to drop by","note":"pf"},{"uk":"заїхати","translit":"","en":"to stop by (driving)","note":"pf"},{"uk":"заходити","translit":"","en":"to drop by (habitually)","note":"impf"},{"uk":"перейти","translit":"","en":"to cross (on foot)","note":"pf"},{"uk":"переїхати","translit":"","en":"to move (residence)","note":"pf"},{"uk":"переходити","translit":"","en":"to cross (habitually)","note":"impf"},{"uk":"відійти","translit":"","en":"to step away, leave","note":"pf"},{"uk":"від'їхати","translit":"","en":"to drive away","note":"pf"},{"uk":"відходити","translit":"","en":"to depart (habitually)","note":"impf"},{"uk":"дійти","translit":"","en":"to reach (on foot)","note":"pf"},{"uk":"доїхати","translit":"","en":"to reach (by transport)","note":"pf"},{"uk":"обійти","translit":"","en":"to go around","note":"pf"},{"uk":"об'їхати","translit":"","en":"to drive around","note":"pf"},{"uk":"вхід","translit":"","en":"entrance","note":""},{"uk":"вихід","translit":"","en":"exit","note":""},{"uk":"прихід","translit":"","en":"arrival, coming","note":""},{"uk":"відхід","translit":"","en":"departure","note":""},{"uk":"перехід","translit":"","en":"crossing, transition","note":""},{"uk":"прибуття","translit":"","en":"arrival","note":"formal"},{"uk":"відбуття","translit":"","en":"departure","note":"formal"},{"uk":"переїзд","translit":"","en":"move (relocation)","note":""},{"uk":"заїзд","translit":"","en":"entrance (for vehicles)","note":""},{"uk":"виїзд","translit":"","en":"exit (for vehicles)","note":""},{"uk":"напрямок","translit":"","en":"direction","note":""},{"uk":"затор","translit":"","en":"traffic jam","note":""},{"uk":"світлофор","translit":"","en":"traffic light","note":""},{"uk":"перехрестя","translit":"","en":"intersection","note":""},{"uk":"калюжа","translit":"","en":"puddle","note":""}];
-    const totalSort=12;
-    function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
-    document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));
-    let matchSel=null,matchScore=0,matchPairsArr=[];
-    document.querySelectorAll('#match-left .match-item').forEach(item=>{item.addEventListener('click',()=>{if(item.classList.contains('matched'))return;document.querySelectorAll('#match-left .match-item').forEach(i=>i.classList.remove('selected'));item.classList.add('selected');matchSel={el:item,pair:item.dataset.pair};});});
-    document.querySelectorAll('#match-right .match-item').forEach(item=>{item.addEventListener('click',()=>{if(item.classList.contains('matched')||!matchSel)return;if(matchSel.pair===item.dataset.pair){matchSel.el.classList.remove('selected');matchSel.el.classList.add('matched');item.classList.add('matched');matchPairsArr.push({left:matchSel.el,right:item});matchScore++;document.getElementById('match-score').textContent=matchScore;drawLines();if(matchScore===matchPairs.length)document.getElementById('match-complete').classList.add('show');}else{item.classList.add('wrong');setTimeout(()=>item.classList.remove('wrong'),300);}matchSel=null;});});
-    function drawLines(){const svg=document.getElementById('match-lines'),c=document.getElementById('match-container');if(!svg||!c)return;const r=c.getBoundingClientRect();svg.innerHTML='';svg.setAttribute('viewBox','0 0 '+r.width+' '+r.height);matchPairsArr.forEach(p=>{const lr=p.left.getBoundingClientRect(),rr=p.right.getBoundingClientRect();const line=document.createElementNS('http://www.w3.org/2000/svg','line');line.setAttribute('x1',lr.right-r.left);line.setAttribute('y1',lr.top+lr.height/2-r.top);line.setAttribute('x2',rr.left-r.left);line.setAttribute('y2',rr.top+rr.height/2-r.top);line.setAttribute('stroke','#26a269');line.setAttribute('stroke-width','2');svg.appendChild(line);});}
-    function resetMatch(){matchSel=null;matchScore=0;matchPairsArr=[];document.getElementById('match-score').textContent='0';document.getElementById('match-complete')?.classList.remove('show');document.getElementById('match-lines').innerHTML='';document.querySelectorAll('#match-container .match-item').forEach(i=>i.classList.remove('matched','selected','wrong'));}
-    window.addEventListener('resize',drawLines);
-    let quizScore=0,quizAns=0;
-    function initQuiz(){const c=document.getElementById('quiz-container');if(!c||!quizData.length)return;c.innerHTML='';quizData.forEach((q,i)=>{const sh=[...q.options].sort(()=>Math.random()-0.5);const cor=sh.indexOf(q.options[q.correctIndex]);const div=document.createElement('div');div.className='quiz-question';div.innerHTML='<h4>Q'+(i+1)+': '+q.question+'</h4><div class="quiz-options">'+sh.map((o,j)=>'<div class="quiz-option" data-c="'+(j===cor)+'" data-q="'+i+'">'+o+'</div>').join('')+'</div><div class="quiz-explanation" id="exp-'+i+'">'+q.explanation+'</div>';c.appendChild(div);});document.querySelectorAll('.quiz-option').forEach(o=>o.addEventListener('click',handleQuiz));}
-    function handleQuiz(e){const opt=e.target,q=opt.closest('.quiz-question');if(q.classList.contains('answered'))return;q.classList.add('answered');if(opt.dataset.c==='true'){opt.classList.add('correct');quizScore++;}else{opt.classList.add('wrong');q.querySelector('[data-c="true"]').classList.add('correct');}document.getElementById('exp-'+opt.dataset.q).classList.add('show');document.getElementById('quiz-score').textContent=quizScore;quizAns++;if(quizAns===quizData.length)document.getElementById('quiz-complete').classList.add('show');}
-    function resetQuiz(){quizScore=0;quizAns=0;document.getElementById('quiz-score').textContent='0';document.getElementById('quiz-complete')?.classList.remove('show');initQuiz();}
-    let sortScore=0,dragItem=null;
-    function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
-    function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
-    function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
-    document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
+
+    const matchPairs = [{"left":"при-","right":"arrival, toward"},{"left":"ви-","right":"out, exit"},{"left":"в-/у-","right":"into, entry"},{"left":"за-","right":"behind, drop by"},{"left":"пере-","right":"across, over"},{"left":"від-","right":"away from"},{"left":"до-","right":"reaching, up to"},{"left":"об-","right":"around"}];
+    const quizData = [{"question":"\"He arrived on time\" - Він ___ вчасно.","options":["прийшов","вийшов","зайшов","дійшов"],"correctIndex":0,"explanation":"При- = arrival."},{"question":"\"She exited the building\" - Вона ___ з будівлі.","options":["вийшла","увійшла","прийшла","зайшла"],"correctIndex":0,"explanation":"Ви- = exit."},{"question":"\"We crossed the street\" - Ми ___ вулицю.","options":["перейшли","вийшли","зайшли","дійшли"],"correctIndex":0,"explanation":"Пере- = across."},{"question":"\"Drop by tomorrow\" - ___ завтра.","options":["Зайди","Вийди","Перейди","Дійди"],"correctIndex":0,"explanation":"За- = drop by."},{"question":"\"The train departed\" - Поїзд ___.","options":["відійшов","прийшов","дійшов","обійшов"],"correctIndex":0,"explanation":"Від- = away, departure."},{"question":"\"How do I get to the center?\" - Як ___ до центру?","options":["дійти","прийти","вийти","зайти"],"correctIndex":0,"explanation":"До- = reaching destination."}];
+    const sortData = {"true-friends":["прийти","приїхати","принести","прилетіти"],"false-friends":["вийти","виїхати","винести","вибігти"],"new-letters":["перейти","переїхати","перенести","перебігти"]};
+    const vocabData = [{"uk":"прийти","translit":"","en":"to arrive (on foot)","note":"pf"},{"uk":"приїхати","translit":"","en":"to arrive (by transport)","note":"pf"},{"uk":"прилетіти","translit":"","en":"to arrive (by plane)","note":"pf"},{"uk":"принести","translit":"","en":"to bring (carrying)","note":"pf"},{"uk":"привезти","translit":"","en":"to bring (by transport)","note":"pf"},{"uk":"приходити","translit":"","en":"to come (habitually)","note":"impf"},{"uk":"вийти","translit":"","en":"to go out, exit","note":"pf"},{"uk":"виїхати","translit":"","en":"to drive out, leave","note":"pf"},{"uk":"вилетіти","translit":"","en":"to fly out, depart","note":"pf"},{"uk":"винести","translit":"","en":"to carry out","note":"pf"},{"uk":"виходити","translit":"","en":"to exit (habitually)","note":"impf"},{"uk":"увійти","translit":"","en":"to enter","note":"pf"},{"uk":"в'їхати","translit":"","en":"to drive into","note":"pf"},{"uk":"входити","translit":"","en":"to enter (habitually)","note":"impf"},{"uk":"зайти","translit":"","en":"to drop by","note":"pf"},{"uk":"заїхати","translit":"","en":"to stop by (driving)","note":"pf"},{"uk":"заходити","translit":"","en":"to drop by (habitually)","note":"impf"},{"uk":"перейти","translit":"","en":"to cross (on foot)","note":"pf"},{"uk":"переїхати","translit":"","en":"to move (residence)","note":"pf"},{"uk":"переходити","translit":"","en":"to cross (habitually)","note":"impf"},{"uk":"відійти","translit":"","en":"to step away, leave","note":"pf"},{"uk":"від'їхати","translit":"","en":"to drive away","note":"pf"},{"uk":"відходити","translit":"","en":"to depart (habitually)","note":"impf"},{"uk":"дійти","translit":"","en":"to reach (on foot)","note":"pf"},{"uk":"доїхати","translit":"","en":"to reach (by transport)","note":"pf"},{"uk":"обійти","translit":"","en":"to go around","note":"pf"},{"uk":"об'їхати","translit":"","en":"to drive around","note":"pf"},{"uk":"вхід","translit":"","en":"entrance","note":""},{"uk":"вихід","translit":"","en":"exit","note":""},{"uk":"прихід","translit":"","en":"arrival, coming","note":""},{"uk":"відхід","translit":"","en":"departure","note":""},{"uk":"перехід","translit":"","en":"crossing, transition","note":""},{"uk":"прибуття","translit":"","en":"arrival","note":"formal"},{"uk":"відбуття","translit":"","en":"departure","note":"formal"},{"uk":"переїзд","translit":"","en":"move (relocation)","note":""},{"uk":"заїзд","translit":"","en":"entrance (for vehicles)","note":""},{"uk":"виїзд","translit":"","en":"exit (for vehicles)","note":""},{"uk":"напрямок","translit":"","en":"direction","note":""},{"uk":"затор","translit":"","en":"traffic jam","note":""},{"uk":"світлофор","translit":"","en":"traffic light","note":""},{"uk":"перехрестя","translit":"","en":"intersection","note":""},{"uk":"калюжа","translit":"","en":"puddle","note":""}];
+    const totalSort = 12;
+  
+// Answer callout toggle (for new > [!answer] syntax)
+function toggleAnswer(id, btn) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const isUkrainian = document.querySelector('.level-badge')?.textContent.match(/B[12]|C[12]/);
+  const showText = isUkrainian ? 'Показати відповідь' : 'Show Answer';
+  const hideText = isUkrainian ? 'Сховати відповідь' : 'Hide Answer';
+  const show = !el.classList.contains('show');
+  if (show) {
+    el.classList.add('show');
+    btn.textContent = hideText;
+    btn.classList.add('revealed');
+  } else {
+    el.classList.remove('show');
+    btn.textContent = showText;
+    btn.classList.remove('revealed');
+  }
+}
+
+// Section navigation
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id)?.classList.add('active');
+  document.querySelector('[data-section="' + id + '"]')?.classList.add('active');
+}
+document.querySelectorAll('.nav-tab').forEach(t => t.addEventListener('click', () => showSection(t.dataset.section)));
+
+// Initialize on DOM ready
+document.addEventListener('DOMContentLoaded', () => {
+  initQuiz();
+  initSort();
+  initVocab();
+});
+
+
+// Quiz Activity
+let quizScore = 0, quizAns = 0;
+
+function initQuiz() {
+  const c = document.getElementById('quiz-container');
+  if (!c || !quizData.length) return;
+  c.innerHTML = '';
+  quizData.forEach((q, i) => {
+    const sh = [...q.options].sort(() => Math.random() - 0.5);
+    const cor = sh.indexOf(q.options[q.correctIndex]);
+    const div = document.createElement('div');
+    div.className = 'quiz-question';
+    div.innerHTML = '<h4>Q' + (i + 1) + ': ' + q.question + '</h4><div class="quiz-options">' + sh.map((o, j) => '<div class="quiz-option" data-c="' + (j === cor) + '" data-q="' + i + '">' + o + '</div>').join('') + '</div><div class="quiz-explanation" id="exp-' + i + '">' + q.explanation + '</div>';
+    c.appendChild(div);
+  });
+  document.querySelectorAll('.quiz-option').forEach(o => o.addEventListener('click', handleQuiz));
+}
+
+function handleQuiz(e) {
+  const opt = e.target, q = opt.closest('.quiz-question');
+  if (q.classList.contains('answered')) return;
+  q.classList.add('answered');
+  if (opt.dataset.c === 'true') {
+    opt.classList.add('correct');
+    quizScore++;
+  } else {
+    opt.classList.add('wrong');
+    q.querySelector('[data-c="true"]').classList.add('correct');
+  }
+  document.getElementById('exp-' + opt.dataset.q).classList.add('show');
+  document.getElementById('quiz-score').textContent = quizScore;
+  quizAns++;
+  if (quizAns === quizData.length) document.getElementById('quiz-complete').classList.add('show');
+}
+
+function resetQuiz() {
+  quizScore = 0;
+  quizAns = 0;
+  document.getElementById('quiz-score').textContent = '0';
+  document.getElementById('quiz-complete')?.classList.remove('show');
+  initQuiz();
+}
+
+
+// Match Activity
+let matchSel = null, matchScore = 0, matchPairsArr = [];
+
+document.querySelectorAll('#match-left .match-item').forEach(item => {
+  item.addEventListener('click', () => {
+    if (item.classList.contains('matched')) return;
+    document.querySelectorAll('#match-left .match-item').forEach(i => i.classList.remove('selected'));
+    item.classList.add('selected');
+    matchSel = { el: item, pair: item.dataset.pair };
+  });
+});
+
+document.querySelectorAll('#match-right .match-item').forEach(item => {
+  item.addEventListener('click', () => {
+    if (item.classList.contains('matched') || !matchSel) return;
+    if (matchSel.pair === item.dataset.pair) {
+      matchSel.el.classList.remove('selected');
+      matchSel.el.classList.add('matched');
+      item.classList.add('matched');
+      matchPairsArr.push({ left: matchSel.el, right: item });
+      matchScore++;
+      document.getElementById('match-score').textContent = matchScore;
+      drawLines();
+      if (matchScore === matchPairs.length) document.getElementById('match-complete').classList.add('show');
+    } else {
+      item.classList.add('wrong');
+      setTimeout(() => item.classList.remove('wrong'), 300);
+    }
+    matchSel = null;
+  });
+});
+
+function drawLines() {
+  const svg = document.getElementById('match-lines'), c = document.getElementById('match-container');
+  if (!svg || !c) return;
+  const r = c.getBoundingClientRect();
+  svg.innerHTML = '';
+  svg.setAttribute('viewBox', '0 0 ' + r.width + ' ' + r.height);
+  matchPairsArr.forEach(p => {
+    const lr = p.left.getBoundingClientRect(), rr = p.right.getBoundingClientRect();
+    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    line.setAttribute('x1', lr.right - r.left);
+    line.setAttribute('y1', lr.top + lr.height / 2 - r.top);
+    line.setAttribute('x2', rr.left - r.left);
+    line.setAttribute('y2', rr.top + rr.height / 2 - r.top);
+    line.setAttribute('stroke', '#26a269');
+    line.setAttribute('stroke-width', '2');
+    svg.appendChild(line);
+  });
+}
+
+function resetMatch() {
+  matchSel = null;
+  matchScore = 0;
+  matchPairsArr = [];
+  document.getElementById('match-score').textContent = '0';
+  document.getElementById('match-complete')?.classList.remove('show');
+  document.getElementById('match-lines').innerHTML = '';
+  document.querySelectorAll('#match-container .match-item').forEach(i => i.classList.remove('matched', 'selected', 'wrong'));
+}
+
+window.addEventListener('resize', drawLines);
+
+
+// Sort Activity
+let sortScore = 0, dragItem = null;
+
+function initSort() {
+  const pool = document.getElementById('sort-items');
+  if (!pool || !Object.keys(sortData).length) return;
+  const all = Object.values(sortData).flat().sort(() => Math.random() - 0.5);
+  pool.innerHTML = '';
+  all.forEach(letter => {
+    const group = Object.keys(sortData).find(g => sortData[g].includes(letter));
+    const item = document.createElement('div');
+    item.className = 'sort-item';
+    item.textContent = letter;
+    item.draggable = true;
+    item.dataset.group = group;
+    item.addEventListener('dragstart', e => {
+      dragItem = item;
+      item.classList.add('dragging');
+    });
+    item.addEventListener('dragend', () => {
+      item.classList.remove('dragging');
+      dragItem = null;
+    });
+    pool.appendChild(item);
+  });
+  document.querySelectorAll('.sort-group').forEach(g => {
+    g.addEventListener('dragover', e => {
+      e.preventDefault();
+      g.classList.add('drag-over');
+    });
+    g.addEventListener('dragleave', () => g.classList.remove('drag-over'));
+    g.addEventListener('drop', e => {
+      e.preventDefault();
+      g.classList.remove('drag-over');
+      if (!dragItem) return;
+      if (g.dataset.group === dragItem.dataset.group) {
+        dragItem.classList.add('correct');
+        g.querySelector('.sort-items').appendChild(dragItem);
+        dragItem.draggable = false;
+        sortScore++;
+        document.getElementById('sort-score').textContent = sortScore;
+        if (sortScore === totalSort) document.getElementById('sort-complete').classList.add('show');
+      } else {
+        dragItem.classList.add('wrong');
+        setTimeout(() => dragItem.classList.remove('wrong'), 300);
+      }
+    });
+  });
+}
+
+function resetSort() {
+  sortScore = 0;
+  document.getElementById('sort-score').textContent = '0';
+  document.getElementById('sort-complete')?.classList.remove('show');
+  document.querySelectorAll('.sort-group .sort-items').forEach(g => g.innerHTML = '');
+  initSort();
+}
+
+
+// Vocabulary
+function initVocab() {
+  const grid = document.getElementById('vocab-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  vocabData.forEach(v => {
+    const card = document.createElement('div');
+    card.className = 'vocab-card';
+    card.innerHTML = '<div class="uk">' + v.uk + '</div><div class="translit">' + v.translit + '</div><div class="en">' + v.en + '</div>' + (v.note ? '<div class="note">' + v.note + '</div>' : '');
+    grid.appendChild(card);
+  });
+}
+
   </script>
 </body>
 </html>

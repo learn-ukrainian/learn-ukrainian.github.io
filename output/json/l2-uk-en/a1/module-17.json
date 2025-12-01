@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-A1-17",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "vocabulary-expansion",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -26,129 +25,50 @@
       "Genitive partitive (склянка молока)",
       "любити + accusative (I love pizza)"
     ],
-    "totalDuration": 50,
-    "transliterationMode": "full",
     "tags": [
       "vocabulary",
       "food",
       "drinks",
       "practical"
     ],
-    "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
+    "totalDuration": 50,
+    "transliterationMode": "full",
     "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Їсти, пити, жити!\n\n\"Їж, пий, та веселись!\" (Eat, drink, and be merry!) - a universal saying. Food is central to Ukrainian culture, and you'll need this vocabulary every day!\n\nBasic verbs you know:\n- **їсти** (to eat): я їм, ти їси, він їсть\n- **пити** (to drink): я п'ю, ти п'єш, він п'є\n\n> 💡 **Did You Know?**\n>\n> Ukrainian cuisine is rich and hearty, developed for cold winters and hard physical work. Borsch (борщ) is so iconic that UNESCO added it to the list of Intangible Cultural Heritage! Other staples include varenyky (вареники - dumplings), salo (сало - cured pork fat), and holubtsi (голубці - stuffed cabbage rolls)."
-          }
-        ]
-      },
       {
         "id": "phase-presentation",
         "name": "presentation",
-        "duration": 15,
+        "duration": 17,
         "items": [
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "### Meals of the Day\n\n| Ukrainian | Transliteration | English | Time |\n|-----------|-----------------|---------|------|\n| сніданок | snidanok | breakfast | morning |\n| обід | obid | lunch | midday |\n| вечеря | vecherya | dinner/supper | evening |\n| перекус | perekus | snack | anytime |\n\n**Phrases:**\n- Що ти їси на сніданок? (What do you eat for breakfast?)\n- Коли ви обідаєте? (When do you have lunch?)\n- Що на вечерю? (What's for dinner?)\n\n> 🎭 **Culture Corner: Ukrainian Meal Traditions**\n>\n> - **Сніданок** is often light: каша (porridge), бутерброди (sandwiches), or сирники (cheese pancakes)\n> - **Обід** is the main meal, traditionally hearty with soup + main course\n> - **Вечеря** is lighter, often leftovers or simple dishes\n>\n> Ukrainians often say \"Смачного!\" (Bon appétit!) before eating."
+            "teacherNotes": "### Meals of the Day\n\n| Ukrainian | Transliteration | English | Time |\n|-----------|-----------------|---------|------|\n| сніданок | snidanok | breakfast | morning |\n| обід | obid | lunch | midday |\n| вечеря | vecherya | dinner/supper | evening |\n| перекус | perekus | snack | anytime |\n\n**Phrases:**\n- Що ти їси на сніданок? (What do you eat for breakfast?)\n- Коли ви обідаєте? (When do you have lunch?)\n- Що на вечерю? (What's for dinner?)\n\n> 🎭 **Culture Corner: Ukrainian Meal Traditions**\n>\n> - **Сніданок** is often light: каша (porridge), бутерброди (sandwiches), or сирники (cheese pancakes)\n> - **Обід** is the main meal, traditionally hearty with soup + main course\n> - **Вечеря** is lighter, often leftovers or simple dishes\n>\n> Ukrainians often say \"Смачного!\" (Bon appétit!) before eating.\n\n### Fruits (Фрукти)\n\n| Ukrainian | Transliteration | English |\n|-----------|-----------------|---------|\n| яблуко | yabluko | apple |\n| банан | banan | banana |\n| апельсин | apelsyn | orange |\n| лимон | lymon | lemon |\n| груша | hrusha | pear |\n| виноград | vynograd | grapes |\n| полуниця | polunytsya | strawberry |\n| кавун | kavun | watermelon |\n| персик | persyk | peach |\n| слива | slyva | plum |\n\n> ⚡ **Pro Tip: Gender Recognition**\n>\n> Notice the patterns:\n> - **Masculine:** банан, апельсин, лимон, кавун (consonant endings)\n> - **Feminine:** груша, полуниця, слива (-а endings)\n> - **Neuter:** яблуко (-о ending)\n\n### Vegetables (Овочі)\n\n| Ukrainian | Transliteration | English |\n|-----------|-----------------|---------|\n| картопля | kartoplya | potato |\n| морква | morkva | carrot |\n| цибуля | tsybulya | onion |\n| часник | chasnyk | garlic |\n| помідор | pomidor | tomato |\n| огірок | ohirok | cucumber |\n| капуста | kapusta | cabbage |\n| буряк | buryak | beet |\n| перець | perets | pepper |\n| гриби | hryby | mushrooms |\n\n> 📜 **History Bite: Potato = \"Earth Apple\"**\n>\n> \"Картопля\" came to Ukrainian via German (Kartoffel), which came from Italian \"tartufolo\" (truffle - because they grow underground). Many European languages have similar words. In some Ukrainian dialects, you'll hear \"бульба\" - another word for potato!\n\n### Meat & Protein (М'ясо)\n\n| Ukrainian | Transliteration | English |\n|-----------|-----------------|---------|\n| м'ясо | myaso | meat |\n| курка | kurka | chicken |\n| свинина | svynyna | pork |\n| яловичина | yalovychyna | beef |\n| риба | ryba | fish |\n| яйце | yaitse | egg |\n| ковбаса | kovbasa | sausage |\n| шинка | shynka | ham |\n| сало | salo | pork fat |\n\n> 🎯 **Fun Fact: Сало Culture**\n>\n> Сало (cured pork fat) is so beloved in Ukraine that there are festivals dedicated to it, a monument to it in Lviv, and countless jokes about Ukrainians and сало. It's typically served thinly sliced with garlic on black bread!\n\n### Dairy (Молочні продукти)\n\n| Ukrainian | Transliteration | English |\n|-----------|-----------------|---------|\n| молоко | moloko | milk |\n| сир | syr | cheese/cottage cheese |\n| сметана | smetana | sour cream |\n| масло | maslo | butter |\n| йогурт | yohurt | yogurt |\n| кефір | kefir | kefir |\n| вершки | vershky | cream |\n\n> 🔗 **Language Link: Сир vs Cheese**\n>\n> \"Сир\" traditionally means cottage cheese (творог in Russian). For hard/aged cheese, Ukrainians say \"твердий сир\" or borrowed words like \"пармезан.\" This can cause confusion - if you order \"сирник\" you get a cottage cheese pancake, not a cheese dish!\n\n### Drinks (Напої)\n\n| Ukrainian | Transliteration | English |\n|-----------|-----------------|---------|\n| вода | voda | water |\n| кава | kava | coffee |\n| чай | chai | tea |\n| сік | sik | juice |\n| молоко | moloko | milk |\n| пиво | pyvo | beer |\n| вино | vyno | wine |\n| компот | kompot | fruit drink |\n| узвар | uzvar | dried fruit drink |\n\n### Other Foods\n\n| Ukrainian | Transliteration | English |\n|-----------|-----------------|---------|\n| хліб | khlib | bread |\n| рис | rys | rice |\n| макарони | makarony | pasta |\n| каша | kasha | porridge/cereal |\n| суп | sup | soup |\n| борщ | borshch | borscht |\n| вареники | varenyky | dumplings |\n| салат | salat | salad |\n| піца | pitsa | pizza |\n| бутерброд | buterbrod | sandwich |\n\n> 🌍 **Real World: Shopping Phrases**\n>\n> At the store or market:\n> - **Дайте, будь ласка, хліб.** - Give me bread, please.\n> - **Скільки коштує кілограм яблук?** - How much is a kilo of apples?\n> - **Мені потрібно молоко.** - I need milk.\n> - **Це свіже?** - Is this fresh?\n> - **Пакет потрібен?** - Do you need a bag?"
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Fruits (Фрукти)\n\n| Ukrainian | Transliteration | English |\n|-----------|-----------------|---------|\n| яблуко | yabluko | apple |\n| банан | banan | banana |\n| апельсин | apelsyn | orange |\n| лимон | lymon | lemon |\n| груша | hrusha | pear |\n| виноград | vynograd | grapes |\n| полуниця | polunytsya | strawberry |\n| кавун | kavun | watermelon |\n| персик | persyk | peach |\n| слива | slyva | plum |\n\n> ⚡ **Pro Tip: Gender Recognition**\n>\n> Notice the patterns:\n> - **Masculine:** банан, апельсин, лимон, кавун (consonant endings)\n> - **Feminine:** груша, полуниця, слива (-а endings)\n> - **Neuter:** яблуко (-о ending)"
+            "teacherNotes": "### Express Preferences\n\nUse любити + accusative:\n1. I love coffee.\n   > [!answer] Я люблю каву.\n2. She loves pizza.\n   > [!answer] Вона любить піцу.\n3. They love Ukrainian food.\n   > [!answer] Вони люблять українську їжу.\n\n### Order Quantities\n\nUse genitive after quantities:\n1. A cup of coffee\n   > [!answer] чашка кави\n2. A glass of milk\n   > [!answer] склянка молока\n3. A kilo of apples\n   > [!answer] кілограм яблук\n4. A bottle of water\n   > [!answer] пляшка води\n\n### Talk About Meals\n\n1. What do you eat for breakfast?\n   > [!answer] Що ти їси на сніданок?\n2. I eat porridge and drink coffee.\n   > [!answer] Я їм кашу і п'ю каву.\n3. What's for dinner?\n   > [!answer] Що на вечерю?\n4. Chicken with potatoes.\n   > [!answer] Курка з картоплею."
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Vegetables (Овочі)\n\n| Ukrainian | Transliteration | English |\n|-----------|-----------------|---------|\n| картопля | kartoplya | potato |\n| морква | morkva | carrot |\n| цибуля | tsybulya | onion |\n| часник | chasnyk | garlic |\n| помідор | pomidor | tomato |\n| огірок | ohirok | cucumber |\n| капуста | kapusta | cabbage |\n| буряк | buryak | beet |\n| перець | perets | pepper |\n| гриби | hryby | mushrooms |\n\n> 📜 **History Bite: Potato = \"Earth Apple\"**\n>\n> \"Картопля\" came to Ukrainian via German (Kartoffel), which came from Italian \"tartufolo\" (truffle - because they grow underground). Many European languages have similar words. In some Ukrainian dialects, you'll hear \"бульба\" - another word for potato!"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Meat & Protein (М'ясо)\n\n| Ukrainian | Transliteration | English |\n|-----------|-----------------|---------|\n| м'ясо | myaso | meat |\n| курка | kurka | chicken |\n| свинина | svynyna | pork |\n| яловичина | yalovychyna | beef |\n| риба | ryba | fish |\n| яйце | yaitse | egg |\n| ковбаса | kovbasa | sausage |\n| шинка | shynka | ham |\n| сало | salo | pork fat |\n\n> 🎯 **Fun Fact: Сало Culture**\n>\n> Сало (cured pork fat) is so beloved in Ukraine that there are festivals dedicated to it, a monument to it in Lviv, and countless jokes about Ukrainians and сало. It's typically served thinly sliced with garlic on black bread!"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Dairy (Молочні продукти)\n\n| Ukrainian | Transliteration | English |\n|-----------|-----------------|---------|\n| молоко | moloko | milk |\n| сир | syr | cheese/cottage cheese |\n| сметана | smetana | sour cream |\n| масло | maslo | butter |\n| йогурт | yohurt | yogurt |\n| кефір | kefir | kefir |\n| вершки | vershky | cream |\n\n> 🔗 **Language Link: Сир vs Cheese**\n>\n> \"Сир\" traditionally means cottage cheese (творог in Russian). For hard/aged cheese, Ukrainians say \"твердий сир\" or borrowed words like \"пармезан.\" This can cause confusion - if you order \"сирник\" you get a cottage cheese pancake, not a cheese dish!"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Drinks (Напої)\n\n| Ukrainian | Transliteration | English |\n|-----------|-----------------|---------|\n| вода | voda | water |\n| кава | kava | coffee |\n| чай | chai | tea |\n| сік | sik | juice |\n| молоко | moloko | milk |\n| пиво | pyvo | beer |\n| вино | vyno | wine |\n| компот | kompot | fruit drink |\n| узвар | uzvar | dried fruit drink |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Other Foods\n\n| Ukrainian | Transliteration | English |\n|-----------|-----------------|---------|\n| хліб | khlib | bread |\n| рис | rys | rice |\n| макарони | makarony | pasta |\n| каша | kasha | porridge/cereal |\n| суп | sup | soup |\n| борщ | borshch | borscht |\n| вареники | varenyky | dumplings |\n| салат | salat | salad |\n| піца | pitsa | pizza |\n| бутерброд | buterbrod | sandwich |\n\n> 🌍 **Real World: Shopping Phrases**\n>\n> At the store or market:\n> - **Дайте, будь ласка, хліб.** - Give me bread, please.\n> - **Скільки коштує кілограм яблук?** - How much is a kilo of apples?\n> - **Мені потрібно молоко.** - I need milk.\n> - **Це свіже?** - Is this fresh?\n> - **Пакет потрібен?** - Do you need a bag?"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A1-17-matchup"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Express Preferences\n\nUse любити + accusative:\n1. I love coffee. → Я люблю каву.\n2. She loves pizza. → Вона любить піцу.\n3. They love Ukrainian food. → Вони люблять українську їжу."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Order Quantities\n\nUse genitive after quantities:\n1. A cup of coffee → чашка кави\n2. A glass of milk → склянка молока\n3. A kilo of apples → кілограм яблук\n4. A bottle of water → пляшка води"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Talk About Meals\n\n1. What do you eat for breakfast? → Що ти їси на сніданок?\n2. I eat porridge and drink coffee. → Я їм кашу і п'ю каву.\n3. What's for dinner? → Що на вечерю?\n4. Chicken with potatoes. → Курка з картоплею."
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A1-17-quiz"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A1-17-groupsort"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Describe Your Diet\n\nAnswer these questions:\n1. Що ви зазвичай їсте на сніданок?\n2. Яка ваша улюблена їжа?\n3. Чи ви любите борщ?\n4. Що ви п'єте вранці?"
+            "teacherNotes": "### Describe Your Diet\n\nAnswer these questions:\n1. Що ви зазвичай їсте на сніданок?\n2. Яка ваша улюблена їжа?\n3. Чи ви любите борщ?\n4. Що ви п'єте вранці?\n\n---"
           }
         ]
       }
-    ]
+    ],
+    "createdAt": "2025-12-01T22:58:37.252Z",
+    "modifiedAt": "2025-12-01T22:58:37.252Z",
+    "version": 1
   },
   "activities": [
     {
-      "id": "act-uk-A1-17-matchup",
+      "id": "act-a1-17-matchup",
       "type": "match-up",
       "title": "Food Categories",
       "description": "Match foods to their categories.",
       "content": {
         "type": "match-up",
-        "instructions": "Match foods to their categories.",
         "pairs": [
           {
             "left": "яблуко",
@@ -183,23 +103,17 @@
       "language": "uk",
       "difficultyLevel": "A1",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "food",
-        "drinks",
-        "practical"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.252Z",
+      "modifiedAt": "2025-12-01T22:58:37.252Z"
     },
     {
-      "id": "act-uk-A1-17-quiz",
+      "id": "act-a1-17-quiz",
       "type": "quiz",
       "title": "Food Vocabulary",
       "description": "Choose the correct answer.",
       "content": {
         "type": "quiz",
-        "instructions": "Choose the correct answer.",
         "questions": [
           {
             "question": "What is \"breakfast\" in Ukrainian?",
@@ -300,63 +214,65 @@
       "language": "uk",
       "difficultyLevel": "A1",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "food",
-        "drinks",
-        "practical"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.252Z",
+      "modifiedAt": "2025-12-01T22:58:37.252Z"
     },
     {
-      "id": "act-uk-A1-17-groupsort",
+      "id": "act-a1-17-groupsort",
       "type": "group-sort",
       "title": "Food Groups",
       "description": "Sort these foods into categories.",
       "content": {
         "type": "group-sort",
-        "instructions": "Sort these foods into categories.",
         "groups": [
           {
-            "name": "Фрукти (Fruits)",
+            "id": "",
+            "name": "Фрукти",
             "items": [
               "яблуко",
               "банан",
               "полуниця",
               "кавун",
               "груша"
-            ]
+            ],
+            "nameUk": "Fruits"
           },
           {
-            "name": "Овочі (Vegetables)",
+            "id": "",
+            "name": "Овочі",
             "items": [
               "картопля",
               "морква",
               "цибуля",
               "помідор",
               "огірок"
-            ]
+            ],
+            "nameUk": "Vegetables"
           },
           {
-            "name": "М'ясо (Meat)",
+            "id": "",
+            "name": "М'ясо",
             "items": [
               "курка",
               "свинина",
               "яловичина",
               "ковбаса",
               "риба"
-            ]
+            ],
+            "nameUk": "Meat"
           },
           {
-            "name": "Напої (Drinks)",
+            "id": "",
+            "name": "Напої",
             "items": [
               "кава",
               "чай",
               "сік",
               "вода",
               "молоко"
-            ]
+            ],
+            "nameUk": "Drinks"
           }
         ],
         "shuffleItems": true
@@ -367,14 +283,9 @@
       "language": "uk",
       "difficultyLevel": "A1",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "food",
-        "drinks",
-        "practical"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.252Z",
+      "modifiedAt": "2025-12-01T22:58:37.252Z"
     }
   ],
   "vocabulary": {
@@ -385,164 +296,145 @@
     "transliterationMode": "full",
     "words": [
       {
-        "id": "v-m17-001",
+        "id": "v-yizha-17-0",
         "uk": "їжа",
-        "translit": "",
-        "ipa": "/ˈjizʲɑ/",
         "en": "food",
         "pos": "noun",
+        "ipa": "/ˈjizʲɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m17-002",
+        "id": "v-snidanok-17-1",
         "uk": "сніданок",
-        "translit": "",
-        "ipa": "/snʲiˈdɑnɔk/",
         "en": "breakfast",
         "pos": "noun",
+        "ipa": "/snʲiˈdɑnɔk/",
         "gender": "m"
       },
       {
-        "id": "v-m17-003",
+        "id": "v-obid-17-2",
         "uk": "обід",
-        "translit": "",
-        "ipa": "/ɔˈbʲid/",
         "en": "lunch",
         "pos": "noun",
+        "ipa": "/ɔˈbʲid/",
         "gender": "m"
       },
       {
-        "id": "v-m17-004",
+        "id": "v-vecherya-17-3",
         "uk": "вечеря",
-        "translit": "",
-        "ipa": "/vɛˈtʃɛrʲɑ/",
         "en": "dinner",
         "pos": "noun",
+        "ipa": "/vɛˈtʃɛrʲɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m17-005",
+        "id": "v-kartoplya-17-4",
         "uk": "картопля",
-        "translit": "",
-        "ipa": "/kɑrˈtɔplʲɑ/",
         "en": "potato",
         "pos": "noun",
+        "ipa": "/kɑrˈtɔplʲɑ/",
         "gender": "f",
         "note": "Collective, no plural"
       },
       {
-        "id": "v-m17-006",
+        "id": "v-pomidor-17-5",
         "uk": "помідор",
-        "translit": "",
-        "ipa": "/pɔmʲiˈdɔr/",
         "en": "tomato",
         "pos": "noun",
+        "ipa": "/pɔmʲiˈdɔr/",
         "gender": "m"
       },
       {
-        "id": "v-m17-007",
+        "id": "v-ohirok-17-6",
         "uk": "огірок",
-        "translit": "",
-        "ipa": "/ɔˈɦʲirɔk/",
         "en": "cucumber",
         "pos": "noun",
+        "ipa": "/ɔˈɦʲirɔk/",
         "gender": "m"
       },
       {
-        "id": "v-m17-008",
+        "id": "v-kurka-17-7",
         "uk": "курка",
-        "translit": "",
-        "ipa": "/ˈkurkɑ/",
         "en": "chicken",
         "pos": "noun",
+        "ipa": "/ˈkurkɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m17-009",
+        "id": "v-m'yaso-17-8",
         "uk": "м'ясо",
-        "translit": "",
-        "ipa": "/ˈmjɑsɔ/",
         "en": "meat",
         "pos": "noun",
+        "ipa": "/ˈmjɑsɔ/",
         "gender": "n"
       },
       {
-        "id": "v-m17-010",
+        "id": "v-ryba-17-9",
         "uk": "риба",
-        "translit": "",
-        "ipa": "/ˈrɪbɑ/",
         "en": "fish",
         "pos": "noun",
+        "ipa": "/ˈrɪbɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m17-011",
+        "id": "v-borshch-17-10",
         "uk": "борщ",
-        "translit": "",
-        "ipa": "/bɔrʃtʃ/",
         "en": "borscht",
         "pos": "noun",
+        "ipa": "/bɔrʃtʃ/",
         "gender": "m",
         "note": "Beet soup"
       },
       {
-        "id": "v-m17-012",
+        "id": "v-varenyky-17-11",
         "uk": "вареники",
-        "translit": "",
-        "ipa": "/vɑˈrɛnɪkɪ/",
         "en": "dumplings",
         "pos": "noun",
-        "gender": "pl",
+        "ipa": "/vɑˈrɛnɪkɪ/",
         "note": "Singular: вареник"
       },
       {
-        "id": "v-m17-013",
+        "id": "v-salo-17-12",
         "uk": "сало",
-        "translit": "",
-        "ipa": "/ˈsɑlɔ/",
         "en": "pork fat",
         "pos": "noun",
+        "ipa": "/ˈsɑlɔ/",
         "gender": "n",
         "note": "Cured, sliced thin"
       },
       {
-        "id": "v-m17-014",
+        "id": "v-kasha-17-13",
         "uk": "каша",
-        "translit": "",
-        "ipa": "/ˈkɑʃɑ/",
         "en": "porridge",
         "pos": "noun",
+        "ipa": "/ˈkɑʃɑ/",
         "gender": "f",
         "note": "Buckwheat, oats, etc."
       },
       {
-        "id": "v-m17-015",
+        "id": "v-smachnyy-17-14",
         "uk": "смачний",
-        "translit": "",
-        "ipa": "/ˈsmɑtʃnɪj/",
         "en": "tasty",
         "pos": "adj",
+        "ipa": "/ˈsmɑtʃnɪj/",
         "gender": "m",
         "note": "смачна (f), смачне (n)"
       },
       {
-        "id": "v-m17-016",
+        "id": "v-svizhyy-17-15",
         "uk": "свіжий",
-        "translit": "",
-        "ipa": "/ˈsvʲiʒɪj/",
         "en": "fresh",
         "pos": "adj",
+        "ipa": "/ˈsvʲiʒɪj/",
         "gender": "m",
         "note": "свіжа (f), свіже (n)"
       },
       {
-        "id": "v-m17-017",
+        "id": "v-smachnoho-17-16",
         "uk": "смачного",
-        "translit": "",
-        "ipa": "/smɑtʃˈnɔɦɔ/",
         "en": "bon appétit",
         "pos": "phrase",
-        "gender": "-",
+        "ipa": "/smɑtʃˈnɔɦɔ/",
         "note": "Literally \"of tasty\""
       }
     ]

@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-B1-93",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "grammar-introduction",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -26,30 +25,15 @@
       "Impersonal constructions",
       "Fixed expressions and collocations"
     ],
-    "totalDuration": 45,
-    "transliterationMode": "none",
     "tags": [
       "verbs",
       "motion",
       "idioms",
       "figurative-language"
     ],
-    "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
+    "totalDuration": 45,
+    "transliterationMode": "none",
     "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Beyond Physical Motion\n\nMotion verbs don't just describe physical movement. They create powerful expressions for abstract ideas!\n\n**Compare:**\n\nPhysical: Він **виходить** з кімнати. - He is going out of the room.\nAbstract: **Виходить**, що він мав рацію. - It turns out that he was right.\n\nToday: the most useful figurative uses of motion verbs."
-          }
-        ]
-      },
       {
         "id": "phase-presentation",
         "name": "presentation",
@@ -58,153 +42,50 @@
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "### Виходити / Вийти - Abstract Uses\n\n**1. Виходить, що... = It turns out that...**\n\n- **Виходить**, що ти був правий. - It turns out you were right.\n- **Виходить**, що ми помилилися. - It turns out we were wrong.\n- Як **виходить**, він не знав про це. - As it turns out, he didn't know about it.\n\n**2. Виходити (з чогось) = To result from, come from**\n\n- Що з цього **вийде**? - What will come of this?\n- Нічого доброго з цього не **вийде**. - Nothing good will come of this.\n- У нього все **виходить**. - Everything works out for him.\n\n**3. Виходити заміж / Одружуватися = To get married**\n\n- Вона **виходить заміж** у червні. - She's getting married in June.\n- Вона **вийшла заміж** за лікаря. - She married a doctor."
+            "teacherNotes": "### Виходити / Вийти - Abstract Uses\n\n**1. Виходить, що... = It turns out that...**\n\n- **Виходить**, що ти був правий. - It turns out you were right.\n- **Виходить**, що ми помилилися. - It turns out we were wrong.\n- Як **виходить**, він не знав про це. - As it turns out, he didn't know about it.\n\n**2. Виходити (з чогось) = To result from, come from**\n\n- Що з цього **вийде**? - What will come of this?\n- Нічого доброго з цього не **вийде**. - Nothing good will come of this.\n- У нього все **виходить**. - Everything works out for him.\n\n**3. Виходити заміж / Одружуватися = To get married**\n\n- Вона **виходить заміж** у червні. - She's getting married in June.\n- Вона **вийшла заміж** за лікаря. - She married a doctor.\n\n### Доходити / Дійти - Abstract Uses\n\n**1. Доходити до (чогось) = To reach, get to (a point)**\n\n- Справа **дійшла** до суду. - The matter went to court.\n- Справа **не дійшла** до бійки. - It didn't come to a fight.\n- У нас **дійшли** до третього розділу. - We've gotten to the third chapter.\n\n**2. Доходити (до кого) = To get through (understand)**\n\n- До нього не **доходить**. - It doesn't get through to him. (He doesn't get it.)\n- Нарешті до мене **дійшло**! - It finally dawned on me!\n- Чи **дійшло** до тебе? - Did you get it?\n\n**3. Дохід = Income (that which \"comes to\" you)**\n\n- Місячний **дохід** - monthly income\n\n### Приходити / Прийти - Abstract Uses\n\n**1. Приходити до (висновку) = To come to (a conclusion)**\n\n- Ми **прийшли до висновку**, що... - We came to the conclusion that...\n- Вони **прийшли до згоди**. - They came to an agreement.\n- Він **прийшов до думки**, що... - He came to think that...\n\n**2. Приходити в себе = To come to one's senses**\n\n- Він нарешті **прийшов до тями**. - He finally came to his senses.\n- Вона **прийшла в себе** після операції. - She came to after the surgery.\n\n**3. Приходити на думку = To come to mind**\n\n- Мені **прийшла на думку** ідея. - An idea came to mind.\n- Що тобі **приходить на думку**? - What comes to your mind?\n\n### Переходити / Перейти - Abstract Uses\n\n**1. Переходити до (справи) = To get down to (business)**\n\n- Давайте **перейдемо до справи**. - Let's get down to business.\n- **Перейдемо до** наступного питання. - Let's move on to the next question.\n\n**2. Переходити (межу) = To cross (a line)**\n\n- Він **перейшов** межу. - He crossed the line.\n- Це **переходить** усі межі! - This is beyond all limits!\n\n**3. Переходити на (мову) = To switch to (a language)**\n\n- Давай **перейдемо на** українську. - Let's switch to Ukrainian.\n- Вона **перейшла на** шепіт. - She switched to a whisper.\n\n### Проходити / Пройти - Abstract Uses\n\n**1. Проходити (курс, тест) = To take, pass (a course, test)**\n\n- Я **пройшов** курс з програмування. - I took a programming course.\n- Вона **пройшла** співбесіду. - She passed the interview.\n- Він не **пройшов** тест. - He didn't pass the test.\n\n**2. Проходити (про час) = To pass (time)**\n\n- Час **пройшов** швидко. - Time passed quickly.\n- Три роки **пройшли**. - Three years have passed.\n- Біль **пройде**. - The pain will pass.\n\n**3. Це не пройде = That won't work / fly**\n\n- Така відмовка не **пройде**. - That excuse won't fly.\n\n### Заходити / Зайти - Abstract Uses\n\n**1. Розмова зайшла про... = The conversation turned to...**\n\n- **Розмова зайшла** про політику. - The conversation turned to politics.\n\n**2. Справа зайшла далеко = Things have gone far**\n\n- **Справа зайшла** занадто далеко. - Things have gone too far.\n\n**3. Заходити в глухий кут = To reach a dead end**\n\n- Переговори **зайшли в глухий кут**. - The negotiations reached a dead end.\n\n### Відходити / Відійти - Abstract Uses\n\n**1. Відійти від теми = To go off topic**\n\n- Не **відходьте від** теми! - Don't go off topic!\n- Він **відійшов від** справи. - He got off track.\n\n**2. Відійти від справ = To retire**\n\n- Він **відійшов від справ**. - He retired from business.\n\n### Common Fixed Expressions\n\n| Expression | Literal | Meaning |\n|------------|---------|---------|\n| Виходить, що... | It goes out that | It turns out that |\n| Не дійшло | Didn't reach | Didn't understand |\n| Прийшов до висновку | Came to conclusion | Concluded |\n| Перейти до справи | Cross to business | Get down to business |\n| Пройшов тест | Passed through test | Passed the test |\n| Час летить | Time flies | Time flies |\n| Зайшов у глухий кут | Went into dead corner | Reached dead end |"
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Доходити / Дійти - Abstract Uses\n\n**1. Доходити до (чогось) = To reach, get to (a point)**\n\n- Справа **дійшла** до суду. - The matter went to court.\n- Справа **не дійшла** до бійки. - It didn't come to a fight.\n- У нас **дійшли** до третього розділу. - We've gotten to the third chapter.\n\n**2. Доходити (до кого) = To get through (understand)**\n\n- До нього не **доходить**. - It doesn't get through to him. (He doesn't get it.)\n- Нарешті до мене **дійшло**! - It finally dawned on me!\n- Чи **дійшло** до тебе? - Did you get it?\n\n**3. Дохід = Income (that which \"comes to\" you)**\n\n- Місячний **дохід** - monthly income"
+            "teacherNotes": "### Complete with Figurative Meaning\n\n1. ___, що ми зробили помилку. (It turns out)\n   > [!answer] **Виходить**\n2. Давайте ___ до справи. (get down to)\n   > [!answer] **перейдемо**\n3. Мені ___ гарна ідея. (came to mind)\n   > [!answer] **прийшла на думку**\n4. Справа ___ до суду. (went to)\n   > [!answer] **дійшла**\n5. Він ___ курс з маркетингу. (took)\n   > [!answer] **пройшов**\n6. Три роки ___. (passed)\n   > [!answer] **пройшли/минули**\n7. Вона ___ заміж. (got married)\n   > [!answer] **вийшла**\n8. До нього не ___. (doesn't get it)\n   > [!answer] **доходить**\n\n### Translate to Ukrainian\n\n1. It turns out he was right.\n   > [!answer] **Виходить, що він мав рацію.**\n2. Let's get down to business.\n   > [!answer] **Давайте перейдемо до справи.**\n3. She came to a conclusion.\n   > [!answer] **Вона прийшла до висновку.**\n4. Time passes quickly.\n   > [!answer] **Час проходить/минає швидко.**\n5. It finally dawned on me.\n   > [!answer] **Нарешті до мене дійшло.**\n6. The negotiations reached a dead end.\n   > [!answer] **Переговори зайшли в глухий кут.**\n\n### Match Expression with Meaning\n\n| Expression | Meaning |\n|------------|---------|\n| Виходить, що... | It turns out |\n| Перейти на українську | Switch to Ukrainian |\n| Прийти до згоди | Come to an agreement |\n| Не доходить до нього | He doesn't get it |\n| Час летить | Time flies |\n| Пройти співбесіду | Pass an interview |\n\n### Use in Sentences\n\nCreate sentences using:\n\n1. **виходить, що** — Виходить, що я помилився.\n2. **перейти до** — Давайте перейдемо до питань.\n3. **прийти на думку** — Мені прийшла на думку думка.\n4. **пройти (курс)** — Я пройшов онлайн-курс.\n5. **дійти до** — Справа дійшла до скандалу."
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Приходити / Прийти - Abstract Uses\n\n**1. Приходити до (висновку) = To come to (a conclusion)**\n\n- Ми **прийшли до висновку**, що... - We came to the conclusion that...\n- Вони **прийшли до згоди**. - They came to an agreement.\n- Він **прийшов до думки**, що... - He came to think that...\n\n**2. Приходити в себе = To come to one's senses**\n\n- Він нарешті **прийшов до тями**. - He finally came to his senses.\n- Вона **прийшла в себе** після операції. - She came to after the surgery.\n\n**3. Приходити на думку = To come to mind**\n\n- Мені **прийшла на думку** ідея. - An idea came to mind.\n- Що тобі **приходить на думку**? - What comes to your mind?"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Переходити / Перейти - Abstract Uses\n\n**1. Переходити до (справи) = To get down to (business)**\n\n- Давайте **перейдемо до справи**. - Let's get down to business.\n- **Перейдемо до** наступного питання. - Let's move on to the next question.\n\n**2. Переходити (межу) = To cross (a line)**\n\n- Він **перейшов** межу. - He crossed the line.\n- Це **переходить** усі межі! - This is beyond all limits!\n\n**3. Переходити на (мову) = To switch to (a language)**\n\n- Давай **перейдемо на** українську. - Let's switch to Ukrainian.\n- Вона **перейшла на** шепіт. - She switched to a whisper."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Проходити / Пройти - Abstract Uses\n\n**1. Проходити (курс, тест) = To take, pass (a course, test)**\n\n- Я **пройшов** курс з програмування. - I took a programming course.\n- Вона **пройшла** співбесіду. - She passed the interview.\n- Він не **пройшов** тест. - He didn't pass the test.\n\n**2. Проходити (про час) = To pass (time)**\n\n- Час **пройшов** швидко. - Time passed quickly.\n- Три роки **пройшли**. - Three years have passed.\n- Біль **пройде**. - The pain will pass.\n\n**3. Це не пройде = That won't work / fly**\n\n- Така відмовка не **пройде**. - That excuse won't fly."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Заходити / Зайти - Abstract Uses\n\n**1. Розмова зайшла про... = The conversation turned to...**\n\n- **Розмова зайшла** про політику. - The conversation turned to politics.\n\n**2. Справа зайшла далеко = Things have gone far**\n\n- **Справа зайшла** занадто далеко. - Things have gone too far.\n\n**3. Заходити в глухий кут = To reach a dead end**\n\n- Переговори **зайшли в глухий кут**. - The negotiations reached a dead end."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Відходити / Відійти - Abstract Uses\n\n**1. Відійти від теми = To go off topic**\n\n- Не **відходьте від** теми! - Don't go off topic!\n- Він **відійшов від** справи. - He got off track.\n\n**2. Відійти від справ = To retire**\n\n- Він **відійшов від справ**. - He retired from business."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Common Fixed Expressions\n\n| Expression | Literal | Meaning |\n|------------|---------|---------|\n| Виходить, що... | It goes out that | It turns out that |\n| Не дійшло | Didn't reach | Didn't understand |\n| Прийшов до висновку | Came to conclusion | Concluded |\n| Перейти до справи | Cross to business | Get down to business |\n| Пройшов тест | Passed through test | Passed the test |\n| Час летить | Time flies | Time flies |\n| Зайшов у глухий кут | Went into dead corner | Reached dead end |"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-B1-93-matchup"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Complete with Figurative Meaning\n\n1. ___, що ми зробили помилку. (It turns out) → **Виходить**\n2. Давайте ___ до справи. (get down to) → **перейдемо**\n3. Мені ___ гарна ідея. (came to mind) → **прийшла на думку**\n4. Справа ___ до суду. (went to) → **дійшла**\n5. Він ___ курс з маркетингу. (took) → **пройшов**\n6. Три роки ___. (passed) → **пройшли/минули**\n7. Вона ___ заміж. (got married) → **вийшла**\n8. До нього не ___. (doesn't get it) → **доходить**"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Translate to Ukrainian\n\n1. It turns out he was right. → **Виходить, що він мав рацію.**\n2. Let's get down to business. → **Давайте перейдемо до справи.**\n3. She came to a conclusion. → **Вона прийшла до висновку.**\n4. Time passes quickly. → **Час проходить/минає швидко.**\n5. It finally dawned on me. → **Нарешті до мене дійшло.**\n6. The negotiations reached a dead end. → **Переговори зайшли в глухий кут.**"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Match Expression with Meaning\n\n| Expression | Meaning |\n|------------|---------|\n| Виходить, що... | It turns out |\n| Перейти на українську | Switch to Ukrainian |\n| Прийти до згоди | Come to an agreement |\n| Не доходить до нього | He doesn't get it |\n| Час летить | Time flies |\n| Пройти співбесіду | Pass an interview |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Use in Sentences\n\nCreate sentences using:\n\n1. **виходить, що** — Виходить, що я помилився.\n2. **перейти до** — Давайте перейдемо до питань.\n3. **прийти на думку** — Мені прийшла на думку думка.\n4. **пройти (курс)** — Я пройшов онлайн-курс.\n5. **дійти до** — Справа дійшла до скандалу."
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-B1-93-quiz"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Discussion Phrases\n\nUse these in conversation:\n\n**Starting a new topic:**\n- Давайте перейдемо до наступного питання.\n- Повернемося до головної теми.\n\n**Making conclusions:**\n- Отже, виходить, що...\n- Ми прийшли до висновку, що...\n\n**Talking about progress:**\n- Ми дійшли до другого розділу.\n- Справа не рухається вперед."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Create a Dialogue\n\nUse at least 3 figurative motion expressions:\n\n**Example:**\nA: Давайте **перейдемо до справи**. Що з проєктом?\nB: **Виходить**, що у нас проблема з бюджетом.\nA: До мене **не дійшло**. Поясни детальніше.\nB: Ми **зайшли в глухий кут** з фінансуванням.\nA: Треба **прийти до** якогось рішення."
+            "teacherNotes": "### Discussion Phrases\n\nUse these in conversation:\n\n**Starting a new topic:**\n- Давайте перейдемо до наступного питання.\n- Повернемося до головної теми.\n\n**Making conclusions:**\n- Отже, виходить, що...\n- Ми прийшли до висновку, що...\n\n**Talking about progress:**\n- Ми дійшли до другого розділу.\n- Справа не рухається вперед.\n\n### Create a Dialogue\n\nUse at least 3 figurative motion expressions:\n\n**Example:**\nA: Давайте **перейдемо до справи**. Що з проєктом?\nB: **Виходить**, що у нас проблема з бюджетом.\nA: До мене **не дійшло**. Поясни детальніше.\nB: Ми **зайшли в глухий кут** з фінансуванням.\nA: Треба **прийти до** якогось рішення.\n\n---"
           }
         ]
       }
     ],
-    "rawMarkdown": "# Lesson Content\n\n## warm-up\n\n### Beyond Physical Motion\n\nMotion verbs don't just describe physical movement. They create powerful expressions for abstract ideas!\n\n**Compare:**\n\nPhysical: Він **виходить** з кімнати. - He is going out of the room.\nAbstract: **Виходить**, що він мав рацію. - It turns out that he was right.\n\nToday: the most useful figurative uses of motion verbs.\n\n## presentation\n\n### Виходити / Вийти - Abstract Uses\n\n**1. Виходить, що... = It turns out that...**\n\n- **Виходить**, що ти був правий. - It turns out you were right.\n- **Виходить**, що ми помилилися. - It turns out we were wrong.\n- Як **виходить**, він не знав про це. - As it turns out, he didn't know about it.\n\n**2. Виходити (з чогось) = To result from, come from**\n\n- Що з цього **вийде**? - What will come of this?\n- Нічого доброго з цього не **вийде**. - Nothing good will come of this.\n- У нього все **виходить**. - Everything works out for him.\n\n**3. Виходити заміж / Одружуватися = To get married**\n\n- Вона **виходить заміж** у червні. - She's getting married in June.\n- Вона **вийшла заміж** за лікаря. - She married a doctor.\n\n### Доходити / Дійти - Abstract Uses\n\n**1. Доходити до (чогось) = To reach, get to (a point)**\n\n- Справа **дійшла** до суду. - The matter went to court.\n- Справа **не дійшла** до бійки. - It didn't come to a fight.\n- У нас **дійшли** до третього розділу. - We've gotten to the third chapter.\n\n**2. Доходити (до кого) = To get through (understand)**\n\n- До нього не **доходить**. - It doesn't get through to him. (He doesn't get it.)\n- Нарешті до мене **дійшло**! - It finally dawned on me!\n- Чи **дійшло** до тебе? - Did you get it?\n\n**3. Дохід = Income (that which \"comes to\" you)**\n\n- Місячний **дохід** - monthly income\n\n### Приходити / Прийти - Abstract Uses\n\n**1. Приходити до (висновку) = To come to (a conclusion)**\n\n- Ми **прийшли до висновку**, що... - We came to the conclusion that...\n- Вони **прийшли до згоди**. - They came to an agreement.\n- Він **прийшов до думки**, що... - He came to think that...\n\n**2. Приходити в себе = To come to one's senses**\n\n- Він нарешті **прийшов до тями**. - He finally came to his senses.\n- Вона **прийшла в себе** після операції. - She came to after the surgery.\n\n**3. Приходити на думку = To come to mind**\n\n- Мені **прийшла на думку** ідея. - An idea came to mind.\n- Що тобі **приходить на думку**? - What comes to your mind?\n\n### Переходити / Перейти - Abstract Uses\n\n**1. Переходити до (справи) = To get down to (business)**\n\n- Давайте **перейдемо до справи**. - Let's get down to business.\n- **Перейдемо до** наступного питання. - Let's move on to the next question.\n\n**2. Переходити (межу) = To cross (a line)**\n\n- Він **перейшов** межу. - He crossed the line.\n- Це **переходить** усі межі! - This is beyond all limits!\n\n**3. Переходити на (мову) = To switch to (a language)**\n\n- Давай **перейдемо на** українську. - Let's switch to Ukrainian.\n- Вона **перейшла на** шепіт. - She switched to a whisper.\n\n### Проходити / Пройти - Abstract Uses\n\n**1. Проходити (курс, тест) = To take, pass (a course, test)**\n\n- Я **пройшов** курс з програмування. - I took a programming course.\n- Вона **пройшла** співбесіду. - She passed the interview.\n- Він не **пройшов** тест. - He didn't pass the test.\n\n**2. Проходити (про час) = To pass (time)**\n\n- Час **пройшов** швидко. - Time passed quickly.\n- Три роки **пройшли**. - Three years have passed.\n- Біль **пройде**. - The pain will pass.\n\n**3. Це не пройде = That won't work / fly**\n\n- Така відмовка не **пройде**. - That excuse won't fly.\n\n### Заходити / Зайти - Abstract Uses\n\n**1. Розмова зайшла про... = The conversation turned to...**\n\n- **Розмова зайшла** про політику. - The conversation turned to politics.\n\n**2. Справа зайшла далеко = Things have gone far**\n\n- **Справа зайшла** занадто далеко. - Things have gone too far.\n\n**3. Заходити в глухий кут = To reach a dead end**\n\n- Переговори **зайшли в глухий кут**. - The negotiations reached a dead end.\n\n### Відходити / Відійти - Abstract Uses\n\n**1. Відійти від теми = To go off topic**\n\n- Не **відходьте від** теми! - Don't go off topic!\n- Він **відійшов від** справи. - He got off track.\n\n**2. Відійти від справ = To retire**\n\n- Він **відійшов від справ**. - He retired from business.\n\n### Common Fixed Expressions\n\n| Expression | Literal | Meaning |\n|------------|---------|---------|\n| Виходить, що... | It goes out that | It turns out that |\n| Не дійшло | Didn't reach | Didn't understand |\n| Прийшов до висновку | Came to conclusion | Concluded |\n| Перейти до справи | Cross to business | Get down to business |\n| Пройшов тест | Passed through test | Passed the test |\n| Час летить | Time flies | Time flies |\n| Зайшов у глухий кут | Went into dead corner | Reached dead end |\n\n## practice\n\n### Complete with Figurative Meaning\n\n1. ___, що ми зробили помилку. (It turns out) → **Виходить**\n2. Давайте ___ до справи. (get down to) → **перейдемо**\n3. Мені ___ гарна ідея. (came to mind) → **прийшла на думку**\n4. Справа ___ до суду. (went to) → **дійшла**\n5. Він ___ курс з маркетингу. (took) → **пройшов**\n6. Три роки ___. (passed) → **пройшли/минули**\n7. Вона ___ заміж. (got married) → **вийшла**\n8. До нього не ___. (doesn't get it) → **доходить**\n\n### Translate to Ukrainian\n\n1. It turns out he was right. → **Виходить, що він мав рацію.**\n2. Let's get down to business. → **Давайте перейдемо до справи.**\n3. She came to a conclusion. → **Вона прийшла до висновку.**\n4. Time passes quickly. → **Час проходить/минає швидко.**\n5. It finally dawned on me. → **Нарешті до мене дійшло.**\n6. The negotiations reached a dead end. → **Переговори зайшли в глухий кут.**\n\n### Match Expression with Meaning\n\n| Expression | Meaning |\n|------------|---------|\n| Виходить, що... | It turns out |\n| Перейти на українську | Switch to Ukrainian |\n| Прийти до згоди | Come to an agreement |\n| Не доходить до нього | He doesn't get it |\n| Час летить | Time flies |\n| Пройти співбесіду | Pass an interview |\n\n### Use in Sentences\n\nCreate sentences using:\n\n1. **виходить, що** — Виходить, що я помилився.\n2. **перейти до** — Давайте перейдемо до питань.\n3. **прийти на думку** — Мені прийшла на думку думка.\n4. **пройти (курс)** — Я пройшов онлайн-курс.\n5. **дійти до** — Справа дійшла до скандалу.\n\n## production\n\n### Discussion Phrases\n\nUse these in conversation:\n\n**Starting a new topic:**\n- Давайте перейдемо до наступного питання.\n- Повернемося до головної теми.\n\n**Making conclusions:**\n- Отже, виходить, що...\n- Ми прийшли до висновку, що...\n\n**Talking about progress:**\n- Ми дійшли до другого розділу.\n- Справа не рухається вперед.\n\n### Create a Dialogue\n\nUse at least 3 figurative motion expressions:\n\n**Example:**\nA: Давайте **перейдемо до справи**. Що з проєктом?\nB: **Виходить**, що у нас проблема з бюджетом.\nA: До мене **не дійшло**. Поясни детальніше.\nB: Ми **зайшли в глухий кут** з фінансуванням.\nA: Треба **прийти до** якогось рішення.\n\n---\n\n# Activities\n\n## quiz: Figurative Motion\n\n> Match the expression with its meaning.\n\n1. Виходить, що він мав рацію.\n   - [x] It turns out he was right.\n   - [ ] He went out and was right.\n\n2. До нього не доходить.\n   - [ ] He can't walk there.\n   - [x] He doesn't understand.\n\n3. Вона прийшла до висновку.\n   - [x] She came to a conclusion.\n   - [ ] She came to the entrance.\n\n4. Перейдемо до справи.\n   - [x] Let's get down to business.\n   - [ ] Let's cross to business.\n\n5. Час летить.\n   - [x] Time flies.\n   - [ ] Time is flying (plane).\n\n6. Справа зайшла далеко.\n   - [x] Things have gone far.\n   - [ ] The business went far away.\n\n## match-up: Figurative Expressions\n\n| Expression | Meaning |\n|------------|---------|\n| виходить, що | it turns out |\n| доходить до | gets through to |\n| приходить на думку | comes to mind |\n| переходить до | moves on to |\n| проходить (час) | passes (time) |\n| заходить в глухий кут | reaches dead end |\n\n## fill-in: Complete Expressions\n\n> Complete with the correct verb.\n\n1. ___, що ми помилились. → **Виходить**\n2. Мені ___ ідея. → **прийшла** на думку\n3. До нього не ___. → **доходить**\n4. Час швидко ___. → **проходить/летить**\n5. Вона ___ заміж. → **вийшла**\n6. Справа ___ до суду. → **дійшла**\n\n---",
+    "createdAt": "2025-12-01T22:58:37.291Z",
+    "modifiedAt": "2025-12-01T22:58:37.291Z",
+    "version": 1,
     "immersiveSections": [
       {
-        "id": "warm-up",
-        "title": "warm-up",
-        "content": "### Beyond Physical Motion\n\nMotion verbs don't just describe physical movement. They create powerful expressions for abstract ideas!\n\n**Compare:**\n\nPhysical: Він **виходить** з кімнати. - He is going out of the room.\nAbstract: **Виходить**, що він мав рацію. - It turns out that he was right.\n\nToday: the most useful figurative uses of motion verbs.",
-        "type": "topic"
+        "id": "section-intro",
+        "type": "intro",
+        "title": "Introduction",
+        "content": "## warm-up\n\n### Beyond Physical Motion\n\nMotion verbs don't just describe physical movement. They create powerful expressions for abstract ideas!\n\n**Compare:**\n\nPhysical: Він **виходить** з кімнати. - He is going out of the room.\nAbstract: **Виходить**, що він мав рацію. - It turns out that he was right.\n\nToday: the most useful figurative uses of motion verbs.\n\n## presentation\n\n### Виходити / Вийти - Abstract Uses\n\n**1. Виходить, що... = It turns out that...**\n\n- **Виходить**, що ти був правий. - It turns out you were right.\n- **Виходить**, що ми помилилися. - It turns out we were wrong.\n- Як **виходить**, він не знав про це. - As it turns out, he didn't know about it.\n\n**2. Виходити (з чогось) = To result from, come from**\n\n- Що з цього **вийде**? - What will come of this?\n- Нічого доброго з цього не **вийде**. - Nothing good will come of this.\n- У нього все **виходить**. - Everything works out for him.\n\n**3. Виходити заміж / Одружуватися = To get married**\n\n- Вона **виходить заміж** у червні. - She's getting married in June.\n- Вона **вийшла заміж** за лікаря. - She married a doctor.\n\n### Доходити / Дійти - Abstract Uses\n\n**1. Доходити до (чогось) = To reach, get to (a point)**\n\n- Справа **дійшла** до суду. - The matter went to court.\n- Справа **не дійшла** до бійки. - It didn't come to a fight.\n- У нас **дійшли** до третього розділу. - We've gotten to the third chapter.\n\n**2. Доходити (до кого) = To get through (understand)**\n\n- До нього не **доходить**. - It doesn't get through to him. (He doesn't get it.)\n- Нарешті до мене **дійшло**! - It finally dawned on me!\n- Чи **дійшло** до тебе? - Did you get it?\n\n**3. Дохід = Income (that which \"comes to\" you)**\n\n- Місячний **дохід** - monthly income\n\n### Приходити / Прийти - Abstract Uses\n\n**1. Приходити до (висновку) = To come to (a conclusion)**\n\n- Ми **прийшли до висновку**, що... - We came to the conclusion that...\n- Вони **прийшли до згоди**. - They came to an agreement.\n- Він **прийшов до думки**, що... - He came to think that...\n\n**2. Приходити в себе = To come to one's senses**\n\n- Він нарешті **прийшов до тями**. - He finally came to his senses.\n- Вона **прийшла в себе** після операції. - She came to after the surgery.\n\n**3. Приходити на думку = To come to mind**\n\n- Мені **прийшла на думку** ідея. - An idea came to mind.\n- Що тобі **приходить на думку**? - What comes to your mind?\n\n### Переходити / Перейти - Abstract Uses\n\n**1. Переходити до (справи) = To get down to (business)**\n\n- Давайте **перейдемо до справи**. - Let's get down to business.\n- **Перейдемо до** наступного питання. - Let's move on to the next question.\n\n**2. Переходити (межу) = To cross (a line)**\n\n- Він **перейшов** межу. - He crossed the line.\n- Це **переходить** усі межі! - This is beyond all limits!\n\n**3. Переходити на (мову) = To switch to (a language)**\n\n- Давай **перейдемо на** українську. - Let's switch to Ukrainian.\n- Вона **перейшла на** шепіт. - She switched to a whisper.\n\n### Проходити / Пройти - Abstract Uses\n\n**1. Проходити (курс, тест) = To take, pass (a course, test)**\n\n- Я **пройшов** курс з програмування. - I took a programming course.\n- Вона **пройшла** співбесіду. - She passed the interview.\n- Він не **пройшов** тест. - He didn't pass the test.\n\n**2. Проходити (про час) = To pass (time)**\n\n- Час **пройшов** швидко. - Time passed quickly.\n- Три роки **пройшли**. - Three years have passed.\n- Біль **пройде**. - The pain will pass.\n\n**3. Це не пройде = That won't work / fly**\n\n- Така відмовка не **пройде**. - That excuse won't fly.\n\n### Заходити / Зайти - Abstract Uses\n\n**1. Розмова зайшла про... = The conversation turned to...**\n\n- **Розмова зайшла** про політику. - The conversation turned to politics.\n\n**2. Справа зайшла далеко = Things have gone far**\n\n- **Справа зайшла** занадто далеко. - Things have gone too far.\n\n**3. Заходити в глухий кут = To reach a dead end**\n\n- Переговори **зайшли в глухий кут**. - The negotiations reached a dead end.\n\n### Відходити / Відійти - Abstract Uses\n\n**1. Відійти від теми = To go off topic**\n\n- Не **відходьте від** теми! - Don't go off topic!\n- Він **відійшов від** справи. - He got off track.\n\n**2. Відійти від справ = To retire**\n\n- Він **відійшов від справ**. - He retired from business.\n\n### Common Fixed Expressions\n\n| Expression | Literal | Meaning |\n|------------|---------|---------|\n| Виходить, що... | It goes out that | It turns out that |\n| Не дійшло | Didn't reach | Didn't understand |\n| Прийшов до висновку | Came to conclusion | Concluded |\n| Перейти до справи | Cross to business | Get down to business |\n| Пройшов тест | Passed through test | Passed the test |\n| Час летить | Time flies | Time flies |\n| Зайшов у глухий кут | Went into dead corner | Reached dead end |\n\n## practice\n\n### Complete with Figurative Meaning\n\n1. ___, що ми зробили помилку. (It turns out)\n   > [!answer] **Виходить**\n2. Давайте ___ до справи. (get down to)\n   > [!answer] **перейдемо**\n3. Мені ___ гарна ідея. (came to mind)\n   > [!answer] **прийшла на думку**\n4. Справа ___ до суду. (went to)\n   > [!answer] **дійшла**\n5. Він ___ курс з маркетингу. (took)\n   > [!answer] **пройшов**\n6. Три роки ___. (passed)\n   > [!answer] **пройшли/минули**\n7. Вона ___ заміж. (got married)\n   > [!answer] **вийшла**\n8. До нього не ___. (doesn't get it)\n   > [!answer] **доходить**\n\n### Translate to Ukrainian\n\n1. It turns out he was right.\n   > [!answer] **Виходить, що він мав рацію.**\n2. Let's get down to business.\n   > [!answer] **Давайте перейдемо до справи.**\n3. She came to a conclusion.\n   > [!answer] **Вона прийшла до висновку.**\n4. Time passes quickly.\n   > [!answer] **Час проходить/минає швидко.**\n5. It finally dawned on me.\n   > [!answer] **Нарешті до мене дійшло.**\n6. The negotiations reached a dead end.\n   > [!answer] **Переговори зайшли в глухий кут.**\n\n### Match Expression with Meaning\n\n| Expression | Meaning |\n|------------|---------|\n| Виходить, що... | It turns out |\n| Перейти на українську | Switch to Ukrainian |\n| Прийти до згоди | Come to an agreement |\n| Не доходить до нього | He doesn't get it |\n| Час летить | Time flies |\n| Пройти співбесіду | Pass an interview |\n\n### Use in Sentences\n\nCreate sentences using:\n\n1. **виходить, що** — Виходить, що я помилився.\n2. **перейти до** — Давайте перейдемо до питань.\n3. **прийти на думку** — Мені прийшла на думку думка.\n4. **пройти (курс)** — Я пройшов онлайн-курс.\n5. **дійти до** — Справа дійшла до скандалу.\n\n## production\n\n### Discussion Phrases\n\nUse these in conversation:\n\n**Starting a new topic:**\n- Давайте перейдемо до наступного питання.\n- Повернемося до головної теми.\n\n**Making conclusions:**\n- Отже, виходить, що...\n- Ми прийшли до висновку, що...\n\n**Talking about progress:**\n- Ми дійшли до другого розділу.\n- Справа не рухається вперед.\n\n### Create a Dialogue\n\nUse at least 3 figurative motion expressions:\n\n**Example:**\nA: Давайте **перейдемо до справи**. Що з проєктом?\nB: **Виходить**, що у нас проблема з бюджетом.\nA: До мене **не дійшло**. Поясни детальніше.\nB: Ми **зайшли в глухий кут** з фінансуванням.\nA: Треба **прийти до** якогось рішення.\n\n---\n\n\n---\n\n\n---",
+        "titleUk": "Вступ"
       },
       {
-        "id": "presentation",
-        "title": "presentation",
-        "content": "### Виходити / Вийти - Abstract Uses\n\n**1. Виходить, що... = It turns out that...**\n\n- **Виходить**, що ти був правий. - It turns out you were right.\n- **Виходить**, що ми помилилися. - It turns out we were wrong.\n- Як **виходить**, він не знав про це. - As it turns out, he didn't know about it.\n\n**2. Виходити (з чогось) = To result from, come from**\n\n- Що з цього **вийде**? - What will come of this?\n- Нічого доброго з цього не **вийде**. - Nothing good will come of this.\n- У нього все **виходить**. - Everything works out for him.\n\n**3. Виходити заміж / Одружуватися = To get married**\n\n- Вона **виходить заміж** у червні. - She's getting married in June.\n- Вона **вийшла заміж** за лікаря. - She married a doctor.\n\n### Доходити / Дійти - Abstract Uses\n\n**1. Доходити до (чогось) = To reach, get to (a point)**\n\n- Справа **дійшла** до суду. - The matter went to court.\n- Справа **не дійшла** до бійки. - It didn't come to a fight.\n- У нас **дійшли** до третього розділу. - We've gotten to the third chapter.\n\n**2. Доходити (до кого) = To get through (understand)**\n\n- До нього не **доходить**. - It doesn't get through to him. (He doesn't get it.)\n- Нарешті до мене **дійшло**! - It finally dawned on me!\n- Чи **дійшло** до тебе? - Did you get it?\n\n**3. Дохід = Income (that which \"comes to\" you)**\n\n- Місячний **дохід** - monthly income\n\n### Приходити / Прийти - Abstract Uses\n\n**1. Приходити до (висновку) = To come to (a conclusion)**\n\n- Ми **прийшли до висновку**, що... - We came to the conclusion that...\n- Вони **прийшли до згоди**. - They came to an agreement.\n- Він **прийшов до думки**, що... - He came to think that...\n\n**2. Приходити в себе = To come to one's senses**\n\n- Він нарешті **прийшов до тями**. - He finally came to his senses.\n- Вона **прийшла в себе** після операції. - She came to after the surgery.\n\n**3. Приходити на думку = To come to mind**\n\n- Мені **прийшла на думку** ідея. - An idea came to mind.\n- Що тобі **приходить на думку**? - What comes to your mind?\n\n### Переходити / Перейти - Abstract Uses\n\n**1. Переходити до (справи) = To get down to (business)**\n\n- Давайте **перейдемо до справи**. - Let's get down to business.\n- **Перейдемо до** наступного питання. - Let's move on to the next question.\n\n**2. Переходити (межу) = To cross (a line)**\n\n- Він **перейшов** межу. - He crossed the line.\n- Це **переходить** усі межі! - This is beyond all limits!\n\n**3. Переходити на (мову) = To switch to (a language)**\n\n- Давай **перейдемо на** українську. - Let's switch to Ukrainian.\n- Вона **перейшла на** шепіт. - She switched to a whisper.\n\n### Проходити / Пройти - Abstract Uses\n\n**1. Проходити (курс, тест) = To take, pass (a course, test)**\n\n- Я **пройшов** курс з програмування. - I took a programming course.\n- Вона **пройшла** співбесіду. - She passed the interview.\n- Він не **пройшов** тест. - He didn't pass the test.\n\n**2. Проходити (про час) = To pass (time)**\n\n- Час **пройшов** швидко. - Time passed quickly.\n- Три роки **пройшли**. - Three years have passed.\n- Біль **пройде**. - The pain will pass.\n\n**3. Це не пройде = That won't work / fly**\n\n- Така відмовка не **пройде**. - That excuse won't fly.\n\n### Заходити / Зайти - Abstract Uses\n\n**1. Розмова зайшла про... = The conversation turned to...**\n\n- **Розмова зайшла** про політику. - The conversation turned to politics.\n\n**2. Справа зайшла далеко = Things have gone far**\n\n- **Справа зайшла** занадто далеко. - Things have gone too far.\n\n**3. Заходити в глухий кут = To reach a dead end**\n\n- Переговори **зайшли в глухий кут**. - The negotiations reached a dead end.\n\n### Відходити / Відійти - Abstract Uses\n\n**1. Відійти від теми = To go off topic**\n\n- Не **відходьте від** теми! - Don't go off topic!\n- Він **відійшов від** справи. - He got off track.\n\n**2. Відійти від справ = To retire**\n\n- Він **відійшов від справ**. - He retired from business.\n\n### Common Fixed Expressions\n\n| Expression | Literal | Meaning |\n|------------|---------|---------|\n| Виходить, що... | It goes out that | It turns out that |\n| Не дійшло | Didn't reach | Didn't understand |\n| Прийшов до висновку | Came to conclusion | Concluded |\n| Перейти до справи | Cross to business | Get down to business |\n| Пройшов тест | Passed through test | Passed the test |\n| Час летить | Time flies | Time flies |\n| Зайшов у глухий кут | Went into dead corner | Reached dead end |",
-        "type": "topic"
-      },
-      {
-        "id": "practice",
-        "title": "practice",
-        "content": "### Complete with Figurative Meaning\n\n1. ___, що ми зробили помилку. (It turns out) → **Виходить**\n2. Давайте ___ до справи. (get down to) → **перейдемо**\n3. Мені ___ гарна ідея. (came to mind) → **прийшла на думку**\n4. Справа ___ до суду. (went to) → **дійшла**\n5. Він ___ курс з маркетингу. (took) → **пройшов**\n6. Три роки ___. (passed) → **пройшли/минули**\n7. Вона ___ заміж. (got married) → **вийшла**\n8. До нього не ___. (doesn't get it) → **доходить**\n\n### Translate to Ukrainian\n\n1. It turns out he was right. → **Виходить, що він мав рацію.**\n2. Let's get down to business. → **Давайте перейдемо до справи.**\n3. She came to a conclusion. → **Вона прийшла до висновку.**\n4. Time passes quickly. → **Час проходить/минає швидко.**\n5. It finally dawned on me. → **Нарешті до мене дійшло.**\n6. The negotiations reached a dead end. → **Переговори зайшли в глухий кут.**\n\n### Match Expression with Meaning\n\n| Expression | Meaning |\n|------------|---------|\n| Виходить, що... | It turns out |\n| Перейти на українську | Switch to Ukrainian |\n| Прийти до згоди | Come to an agreement |\n| Не доходить до нього | He doesn't get it |\n| Час летить | Time flies |\n| Пройти співбесіду | Pass an interview |\n\n### Use in Sentences\n\nCreate sentences using:\n\n1. **виходить, що** — Виходить, що я помилився.\n2. **перейти до** — Давайте перейдемо до питань.\n3. **прийти на думку** — Мені прийшла на думку думка.\n4. **пройти (курс)** — Я пройшов онлайн-курс.\n5. **дійти до** — Справа дійшла до скандалу.",
-        "type": "topic"
-      },
-      {
-        "id": "production",
-        "title": "production",
-        "content": "### Discussion Phrases\n\nUse these in conversation:\n\n**Starting a new topic:**\n- Давайте перейдемо до наступного питання.\n- Повернемося до головної теми.\n\n**Making conclusions:**\n- Отже, виходить, що...\n- Ми прийшли до висновку, що...\n\n**Talking about progress:**\n- Ми дійшли до другого розділу.\n- Справа не рухається вперед.\n\n### Create a Dialogue\n\nUse at least 3 figurative motion expressions:\n\n**Example:**\nA: Давайте **перейдемо до справи**. Що з проєктом?\nB: **Виходить**, що у нас проблема з бюджетом.\nA: До мене **не дійшло**. Поясни детальніше.\nB: Ми **зайшли в глухий кут** з фінансуванням.\nA: Треба **прийти до** якогось рішення.\n\n---",
-        "type": "topic"
-      },
-      {
-        "id": "activities",
-        "title": "Activities",
-        "content": "## quiz: Figurative Motion\n\n> Match the expression with its meaning.\n\n1. Виходить, що він мав рацію.\n   - [x] It turns out he was right.\n   - [ ] He went out and was right.\n\n2. До нього не доходить.\n   - [ ] He can't walk there.\n   - [x] He doesn't understand.\n\n3. Вона прийшла до висновку.\n   - [x] She came to a conclusion.\n   - [ ] She came to the entrance.\n\n4. Перейдемо до справи.\n   - [x] Let's get down to business.\n   - [ ] Let's cross to business.\n\n5. Час летить.\n   - [x] Time flies.\n   - [ ] Time is flying (plane).\n\n6. Справа зайшла далеко.\n   - [x] Things have gone far.\n   - [ ] The business went far away.\n\n## match-up: Figurative Expressions\n\n| Expression | Meaning |\n|------------|---------|\n| виходить, що | it turns out |\n| доходить до | gets through to |\n| приходить на думку | comes to mind |\n| переходить до | moves on to |\n| проходить (час) | passes (time) |\n| заходить в глухий кут | reaches dead end |\n\n## fill-in: Complete Expressions\n\n> Complete with the correct verb.\n\n1. ___, що ми помилились. → **Виходить**\n2. Мені ___ ідея. → **прийшла** на думку\n3. До нього не ___. → **доходить**\n4. Час швидко ___. → **проходить/летить**\n5. Вона ___ заміж. → **вийшла**\n6. Справа ___ до суду. → **дійшла**\n\n---",
-        "type": "activities"
-      },
-      {
-        "id": "vocabulary",
-        "title": "Vocabulary",
-        "content": "| Word | IPA | English | Notes |\n|------|-----|---------|-------|\n| виходить, що | /vɪˈxodɪtʲ ʃt͡ʃo/ | it turns out that | impersonal |\n| доходити до | /doxoˈdɪtɪ do/ | to get through to | figurative |\n| дійшло до мене | /dijˈʃlo do ˈmɛnɛ/ | it dawned on me | figurative |\n| прийти до висновку | /prɪjˈtɪ do ˈvɪsnovku/ | to come to conclusion | fixed expr |\n| прийти до згоди | /prɪjˈtɪ do ˈzɦodɪ/ | to come to agreement | fixed expr |\n| прийти на думку | /prɪjˈtɪ nɑ ˈdumku/ | to come to mind | fixed expr |\n| перейти до справи | /pɛrɛjˈtɪ do ˈsprɑvɪ/ | to get to business | fixed expr |\n| пройти курс | /projˈtɪ kurs/ | to take a course | figurative |\n| пройти тест | /projˈtɪ tɛst/ | to pass a test | figurative |\n| зайти в глухий кут | /zɑjˈtɪ v ɦluˈxɪj kut/ | to reach dead end | idiom |\n| вийти заміж | /ˈvɪjtɪ ˈzɑmʲiʒ/ | to get married (f) | fixed expr |\n| відійти від теми | /vʲidijˈtɪ vʲid ˈtɛmɪ/ | to go off topic | fixed expr |\n\n---",
-        "type": "vocabulary"
-      },
-      {
-        "id": "summary",
+        "id": "section-summary",
+        "type": "summary",
         "title": "Summary",
         "content": "## Key Figurative Uses\n\n### Виходити/Вийти\n- Виходить, що... = It turns out...\n- Вийти заміж = Get married (woman)\n\n### Доходити/Дійти\n- До нього не доходить = He doesn't get it\n- Дійшло до мене = It dawned on me\n- Справа дійшла до... = The matter reached...\n\n### Приходити/Прийти\n- Прийти до висновку = Come to conclusion\n- Прийти до згоди = Come to agreement\n- Прийти на думку = Come to mind\n\n### Переходити/Перейти\n- Перейти до справи = Get down to business\n- Перейти на (мову) = Switch to (language)\n- Перейти межу = Cross the line\n\n### Проходити/Пройти\n- Пройти курс/тест = Take/pass course/test\n- Час проходить = Time passes\n\n### Заходити/Зайти\n- Зайти в глухий кут = Reach dead end\n- Розмова зайшла про... = Conversation turned to...\n\n> **Key Takeaways**\n>\n> - Motion verbs have rich figurative meanings\n> - Many fixed expressions use motion verbs\n> - Learn expressions as whole units\n> - These make your Ukrainian sound natural",
-        "type": "summary"
+        "titleUk": "Підсумок"
       }
-    ]
+    ],
+    "rawMarkdown": "---\nmodule: 93\ntitle: \"Motion Verbs: Figurative Uses\"\nsubtitle: \"Виходить, що...; Доходити до...\"\nlevel: B1\nphase: B1.1\nduration: 45\ntransliteration: none\ntags: [verbs, motion, idioms, figurative-language]\nobjectives:\n  - Learn common figurative uses of motion verbs\n  - Understand idiomatic expressions with motion verbs\n  - Use abstract motion expressions naturally\n  - Expand vocabulary with fixed expressions\ngrammar:\n  - Figurative motion expressions\n  - Impersonal constructions\n  - Fixed expressions and collocations\n---\n\n# Lesson Content\n\n## warm-up\n\n### Beyond Physical Motion\n\nMotion verbs don't just describe physical movement. They create powerful expressions for abstract ideas!\n\n**Compare:**\n\nPhysical: Він **виходить** з кімнати. - He is going out of the room.\nAbstract: **Виходить**, що він мав рацію. - It turns out that he was right.\n\nToday: the most useful figurative uses of motion verbs.\n\n## presentation\n\n### Виходити / Вийти - Abstract Uses\n\n**1. Виходить, що... = It turns out that...**\n\n- **Виходить**, що ти був правий. - It turns out you were right.\n- **Виходить**, що ми помилилися. - It turns out we were wrong.\n- Як **виходить**, він не знав про це. - As it turns out, he didn't know about it.\n\n**2. Виходити (з чогось) = To result from, come from**\n\n- Що з цього **вийде**? - What will come of this?\n- Нічого доброго з цього не **вийде**. - Nothing good will come of this.\n- У нього все **виходить**. - Everything works out for him.\n\n**3. Виходити заміж / Одружуватися = To get married**\n\n- Вона **виходить заміж** у червні. - She's getting married in June.\n- Вона **вийшла заміж** за лікаря. - She married a doctor.\n\n### Доходити / Дійти - Abstract Uses\n\n**1. Доходити до (чогось) = To reach, get to (a point)**\n\n- Справа **дійшла** до суду. - The matter went to court.\n- Справа **не дійшла** до бійки. - It didn't come to a fight.\n- У нас **дійшли** до третього розділу. - We've gotten to the third chapter.\n\n**2. Доходити (до кого) = To get through (understand)**\n\n- До нього не **доходить**. - It doesn't get through to him. (He doesn't get it.)\n- Нарешті до мене **дійшло**! - It finally dawned on me!\n- Чи **дійшло** до тебе? - Did you get it?\n\n**3. Дохід = Income (that which \"comes to\" you)**\n\n- Місячний **дохід** - monthly income\n\n### Приходити / Прийти - Abstract Uses\n\n**1. Приходити до (висновку) = To come to (a conclusion)**\n\n- Ми **прийшли до висновку**, що... - We came to the conclusion that...\n- Вони **прийшли до згоди**. - They came to an agreement.\n- Він **прийшов до думки**, що... - He came to think that...\n\n**2. Приходити в себе = To come to one's senses**\n\n- Він нарешті **прийшов до тями**. - He finally came to his senses.\n- Вона **прийшла в себе** після операції. - She came to after the surgery.\n\n**3. Приходити на думку = To come to mind**\n\n- Мені **прийшла на думку** ідея. - An idea came to mind.\n- Що тобі **приходить на думку**? - What comes to your mind?\n\n### Переходити / Перейти - Abstract Uses\n\n**1. Переходити до (справи) = To get down to (business)**\n\n- Давайте **перейдемо до справи**. - Let's get down to business.\n- **Перейдемо до** наступного питання. - Let's move on to the next question.\n\n**2. Переходити (межу) = To cross (a line)**\n\n- Він **перейшов** межу. - He crossed the line.\n- Це **переходить** усі межі! - This is beyond all limits!\n\n**3. Переходити на (мову) = To switch to (a language)**\n\n- Давай **перейдемо на** українську. - Let's switch to Ukrainian.\n- Вона **перейшла на** шепіт. - She switched to a whisper.\n\n### Проходити / Пройти - Abstract Uses\n\n**1. Проходити (курс, тест) = To take, pass (a course, test)**\n\n- Я **пройшов** курс з програмування. - I took a programming course.\n- Вона **пройшла** співбесіду. - She passed the interview.\n- Він не **пройшов** тест. - He didn't pass the test.\n\n**2. Проходити (про час) = To pass (time)**\n\n- Час **пройшов** швидко. - Time passed quickly.\n- Три роки **пройшли**. - Three years have passed.\n- Біль **пройде**. - The pain will pass.\n\n**3. Це не пройде = That won't work / fly**\n\n- Така відмовка не **пройде**. - That excuse won't fly.\n\n### Заходити / Зайти - Abstract Uses\n\n**1. Розмова зайшла про... = The conversation turned to...**\n\n- **Розмова зайшла** про політику. - The conversation turned to politics.\n\n**2. Справа зайшла далеко = Things have gone far**\n\n- **Справа зайшла** занадто далеко. - Things have gone too far.\n\n**3. Заходити в глухий кут = To reach a dead end**\n\n- Переговори **зайшли в глухий кут**. - The negotiations reached a dead end.\n\n### Відходити / Відійти - Abstract Uses\n\n**1. Відійти від теми = To go off topic**\n\n- Не **відходьте від** теми! - Don't go off topic!\n- Він **відійшов від** справи. - He got off track.\n\n**2. Відійти від справ = To retire**\n\n- Він **відійшов від справ**. - He retired from business.\n\n### Common Fixed Expressions\n\n| Expression | Literal | Meaning |\n|------------|---------|---------|\n| Виходить, що... | It goes out that | It turns out that |\n| Не дійшло | Didn't reach | Didn't understand |\n| Прийшов до висновку | Came to conclusion | Concluded |\n| Перейти до справи | Cross to business | Get down to business |\n| Пройшов тест | Passed through test | Passed the test |\n| Час летить | Time flies | Time flies |\n| Зайшов у глухий кут | Went into dead corner | Reached dead end |\n\n## practice\n\n### Complete with Figurative Meaning\n\n1. ___, що ми зробили помилку. (It turns out)\n   > [!answer] **Виходить**\n2. Давайте ___ до справи. (get down to)\n   > [!answer] **перейдемо**\n3. Мені ___ гарна ідея. (came to mind)\n   > [!answer] **прийшла на думку**\n4. Справа ___ до суду. (went to)\n   > [!answer] **дійшла**\n5. Він ___ курс з маркетингу. (took)\n   > [!answer] **пройшов**\n6. Три роки ___. (passed)\n   > [!answer] **пройшли/минули**\n7. Вона ___ заміж. (got married)\n   > [!answer] **вийшла**\n8. До нього не ___. (doesn't get it)\n   > [!answer] **доходить**\n\n### Translate to Ukrainian\n\n1. It turns out he was right.\n   > [!answer] **Виходить, що він мав рацію.**\n2. Let's get down to business.\n   > [!answer] **Давайте перейдемо до справи.**\n3. She came to a conclusion.\n   > [!answer] **Вона прийшла до висновку.**\n4. Time passes quickly.\n   > [!answer] **Час проходить/минає швидко.**\n5. It finally dawned on me.\n   > [!answer] **Нарешті до мене дійшло.**\n6. The negotiations reached a dead end.\n   > [!answer] **Переговори зайшли в глухий кут.**\n\n### Match Expression with Meaning\n\n| Expression | Meaning |\n|------------|---------|\n| Виходить, що... | It turns out |\n| Перейти на українську | Switch to Ukrainian |\n| Прийти до згоди | Come to an agreement |\n| Не доходить до нього | He doesn't get it |\n| Час летить | Time flies |\n| Пройти співбесіду | Pass an interview |\n\n### Use in Sentences\n\nCreate sentences using:\n\n1. **виходить, що** — Виходить, що я помилився.\n2. **перейти до** — Давайте перейдемо до питань.\n3. **прийти на думку** — Мені прийшла на думку думка.\n4. **пройти (курс)** — Я пройшов онлайн-курс.\n5. **дійти до** — Справа дійшла до скандалу.\n\n## production\n\n### Discussion Phrases\n\nUse these in conversation:\n\n**Starting a new topic:**\n- Давайте перейдемо до наступного питання.\n- Повернемося до головної теми.\n\n**Making conclusions:**\n- Отже, виходить, що...\n- Ми прийшли до висновку, що...\n\n**Talking about progress:**\n- Ми дійшли до другого розділу.\n- Справа не рухається вперед.\n\n### Create a Dialogue\n\nUse at least 3 figurative motion expressions:\n\n**Example:**\nA: Давайте **перейдемо до справи**. Що з проєктом?\nB: **Виходить**, що у нас проблема з бюджетом.\nA: До мене **не дійшло**. Поясни детальніше.\nB: Ми **зайшли в глухий кут** з фінансуванням.\nA: Треба **прийти до** якогось рішення.\n\n---\n\n# Activities\n\n## quiz: Figurative Motion\n\n> Match the expression with its meaning.\n\n1. Виходить, що він мав рацію.\n   - [x] It turns out he was right.\n   - [ ] He went out and was right.\n\n2. До нього не доходить.\n   - [ ] He can't walk there.\n   - [x] He doesn't understand.\n\n3. Вона прийшла до висновку.\n   - [x] She came to a conclusion.\n   - [ ] She came to the entrance.\n\n4. Перейдемо до справи.\n   - [x] Let's get down to business.\n   - [ ] Let's cross to business.\n\n5. Час летить.\n   - [x] Time flies.\n   - [ ] Time is flying (plane).\n\n6. Справа зайшла далеко.\n   - [x] Things have gone far.\n   - [ ] The business went far away.\n\n## match-up: Figurative Expressions\n\n| Expression | Meaning |\n|------------|---------|\n| виходить, що | it turns out |\n| доходить до | gets through to |\n| приходить на думку | comes to mind |\n| переходить до | moves on to |\n| проходить (час) | passes (time) |\n| заходить в глухий кут | reaches dead end |\n\n## fill-in: Complete Expressions\n\n> Complete with the correct verb.\n\n1. ___, що ми помилились.\n   > [!answer] **Виходить**\n2. Мені ___ ідея.\n   > [!answer] **прийшла** на думку\n3. До нього не ___.\n   > [!answer] **доходить**\n4. Час швидко ___.\n   > [!answer] **проходить/летить**\n5. Вона ___ заміж.\n   > [!answer] **вийшла**\n6. Справа ___ до суду.\n   > [!answer] **дійшла**\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | Notes |\n|------|-----|---------|-------|\n| виходить, що | /vɪˈxodɪtʲ ʃt͡ʃo/ | it turns out that | impersonal |\n| доходити до | /doxoˈdɪtɪ do/ | to get through to | figurative |\n| дійшло до мене | /dijˈʃlo do ˈmɛnɛ/ | it dawned on me | figurative |\n| прийти до висновку | /prɪjˈtɪ do ˈvɪsnovku/ | to come to conclusion | fixed expr |\n| прийти до згоди | /prɪjˈtɪ do ˈzɦodɪ/ | to come to agreement | fixed expr |\n| прийти на думку | /prɪjˈtɪ nɑ ˈdumku/ | to come to mind | fixed expr |\n| перейти до справи | /pɛrɛjˈtɪ do ˈsprɑvɪ/ | to get to business | fixed expr |\n| пройти курс | /projˈtɪ kurs/ | to take a course | figurative |\n| пройти тест | /projˈtɪ tɛst/ | to pass a test | figurative |\n| зайти в глухий кут | /zɑjˈtɪ v ɦluˈxɪj kut/ | to reach dead end | idiom |\n| вийти заміж | /ˈvɪjtɪ ˈzɑmʲiʒ/ | to get married (f) | fixed expr |\n| відійти від теми | /vʲidijˈtɪ vʲid ˈtɛmɪ/ | to go off topic | fixed expr |\n\n---\n\n# Summary\n\n## Key Figurative Uses\n\n### Виходити/Вийти\n- Виходить, що... = It turns out...\n- Вийти заміж = Get married (woman)\n\n### Доходити/Дійти\n- До нього не доходить = He doesn't get it\n- Дійшло до мене = It dawned on me\n- Справа дійшла до... = The matter reached...\n\n### Приходити/Прийти\n- Прийти до висновку = Come to conclusion\n- Прийти до згоди = Come to agreement\n- Прийти на думку = Come to mind\n\n### Переходити/Перейти\n- Перейти до справи = Get down to business\n- Перейти на (мову) = Switch to (language)\n- Перейти межу = Cross the line\n\n### Проходити/Пройти\n- Пройти курс/тест = Take/pass course/test\n- Час проходить = Time passes\n\n### Заходити/Зайти\n- Зайти в глухий кут = Reach dead end\n- Розмова зайшла про... = Conversation turned to...\n\n> **Key Takeaways**\n>\n> - Motion verbs have rich figurative meanings\n> - Many fixed expressions use motion verbs\n> - Learn expressions as whole units\n> - These make your Ukrainian sound natural\n"
   },
   "activities": [
     {
-      "id": "act-uk-B1-93-quiz",
+      "id": "act-b1-93-quiz",
       "type": "quiz",
       "title": "Figurative Motion",
       "description": "Match the expression with its meaning.",
       "content": {
         "type": "quiz",
-        "instructions": "Match the expression with its meaning.",
         "questions": [
           {
             "question": "Виходить, що він мав рацію.",
@@ -271,23 +152,17 @@
       "language": "uk",
       "difficultyLevel": "B1",
       "duration": 5,
-      "tags": [
-        "verbs",
-        "motion",
-        "idioms",
-        "figurative-language"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.291Z",
+      "modifiedAt": "2025-12-01T22:58:37.291Z"
     },
     {
-      "id": "act-uk-B1-93-matchup",
+      "id": "act-b1-93-matchup",
       "type": "match-up",
       "title": "Figurative Expressions",
       "description": "Figurative Expressions",
       "content": {
         "type": "match-up",
-        "instructions": "",
         "pairs": [
           {
             "left": "виходить, що",
@@ -322,23 +197,17 @@
       "language": "uk",
       "difficultyLevel": "B1",
       "duration": 5,
-      "tags": [
-        "verbs",
-        "motion",
-        "idioms",
-        "figurative-language"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.291Z",
+      "modifiedAt": "2025-12-01T22:58:37.291Z"
     },
     {
-      "id": "act-uk-B1-93-gapfill",
+      "id": "act-b1-93-gapfill",
       "type": "gap-fill",
       "title": "Complete Expressions",
       "description": "Complete with the correct verb.",
       "content": {
         "type": "gap-fill",
-        "instructions": "Complete with the correct verb.",
         "text": "Complete with the correct verb.",
         "blanks": [],
         "answers": []
@@ -349,14 +218,9 @@
       "language": "uk",
       "difficultyLevel": "B1",
       "duration": 5,
-      "tags": [
-        "verbs",
-        "motion",
-        "idioms",
-        "figurative-language"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.291Z",
+      "modifiedAt": "2025-12-01T22:58:37.291Z"
     }
   ],
   "vocabulary": {
@@ -367,112 +231,88 @@
     "transliterationMode": "none",
     "words": [
       {
-        "id": "v-m93-001",
+        "id": "v-vykhodytь,-shcho-93-0",
         "uk": "виходить, що",
-        "translit": "",
-        "ipa": "/vɪˈxodɪtʲ ʃt͡ʃo/",
         "en": "it turns out that",
-        "pos": "",
-        "note": "impersonal"
+        "pos": "impersonal",
+        "ipa": "/vɪˈxodɪtʲ ʃt͡ʃo/"
       },
       {
-        "id": "v-m93-002",
+        "id": "v-dokhodyty-do-93-1",
         "uk": "доходити до",
-        "translit": "",
-        "ipa": "/doxoˈdɪtɪ do/",
         "en": "to get through to",
-        "pos": "",
-        "note": "figurative"
+        "pos": "figurative",
+        "ipa": "/doxoˈdɪtɪ do/"
       },
       {
-        "id": "v-m93-003",
+        "id": "v-diyshlo-do-mene-93-2",
         "uk": "дійшло до мене",
-        "translit": "",
-        "ipa": "/dijˈʃlo do ˈmɛnɛ/",
         "en": "it dawned on me",
-        "pos": "",
-        "note": "figurative"
+        "pos": "figurative",
+        "ipa": "/dijˈʃlo do ˈmɛnɛ/"
       },
       {
-        "id": "v-m93-004",
+        "id": "v-pryyty-do-vysnovku-93-3",
         "uk": "прийти до висновку",
-        "translit": "",
-        "ipa": "/prɪjˈtɪ do ˈvɪsnovku/",
         "en": "to come to conclusion",
-        "pos": "",
-        "note": "fixed expr"
+        "pos": "fixed expr",
+        "ipa": "/prɪjˈtɪ do ˈvɪsnovku/"
       },
       {
-        "id": "v-m93-005",
+        "id": "v-pryyty-do-zhody-93-4",
         "uk": "прийти до згоди",
-        "translit": "",
-        "ipa": "/prɪjˈtɪ do ˈzɦodɪ/",
         "en": "to come to agreement",
-        "pos": "",
-        "note": "fixed expr"
+        "pos": "fixed expr",
+        "ipa": "/prɪjˈtɪ do ˈzɦodɪ/"
       },
       {
-        "id": "v-m93-006",
+        "id": "v-pryyty-na-dumku-93-5",
         "uk": "прийти на думку",
-        "translit": "",
-        "ipa": "/prɪjˈtɪ nɑ ˈdumku/",
         "en": "to come to mind",
-        "pos": "",
-        "note": "fixed expr"
+        "pos": "fixed expr",
+        "ipa": "/prɪjˈtɪ nɑ ˈdumku/"
       },
       {
-        "id": "v-m93-007",
+        "id": "v-pereyty-do-spravy-93-6",
         "uk": "перейти до справи",
-        "translit": "",
-        "ipa": "/pɛrɛjˈtɪ do ˈsprɑvɪ/",
         "en": "to get to business",
-        "pos": "",
-        "note": "fixed expr"
+        "pos": "fixed expr",
+        "ipa": "/pɛrɛjˈtɪ do ˈsprɑvɪ/"
       },
       {
-        "id": "v-m93-008",
+        "id": "v-proyty-kurs-93-7",
         "uk": "пройти курс",
-        "translit": "",
-        "ipa": "/projˈtɪ kurs/",
         "en": "to take a course",
-        "pos": "",
-        "note": "figurative"
+        "pos": "figurative",
+        "ipa": "/projˈtɪ kurs/"
       },
       {
-        "id": "v-m93-009",
+        "id": "v-proyty-test-93-8",
         "uk": "пройти тест",
-        "translit": "",
-        "ipa": "/projˈtɪ tɛst/",
         "en": "to pass a test",
-        "pos": "",
-        "note": "figurative"
+        "pos": "figurative",
+        "ipa": "/projˈtɪ tɛst/"
       },
       {
-        "id": "v-m93-010",
+        "id": "v-zayty-v-hlukhyy-kut-93-9",
         "uk": "зайти в глухий кут",
-        "translit": "",
-        "ipa": "/zɑjˈtɪ v ɦluˈxɪj kut/",
         "en": "to reach dead end",
-        "pos": "",
-        "note": "idiom"
+        "pos": "idiom",
+        "ipa": "/zɑjˈtɪ v ɦluˈxɪj kut/"
       },
       {
-        "id": "v-m93-011",
+        "id": "v-vyyty-zamizh-93-10",
         "uk": "вийти заміж",
-        "translit": "",
-        "ipa": "/ˈvɪjtɪ ˈzɑmʲiʒ/",
         "en": "to get married (f)",
-        "pos": "",
-        "note": "fixed expr"
+        "pos": "fixed expr",
+        "ipa": "/ˈvɪjtɪ ˈzɑmʲiʒ/"
       },
       {
-        "id": "v-m93-012",
+        "id": "v-vidiyty-vid-temy-93-11",
         "uk": "відійти від теми",
-        "translit": "",
-        "ipa": "/vʲidijˈtɪ vʲid ˈtɛmɪ/",
         "en": "to go off topic",
-        "pos": "",
-        "note": "fixed expr"
+        "pos": "fixed expr",
+        "ipa": "/vʲidijˈtɪ vʲid ˈtɛmɪ/"
       }
     ]
   }

@@ -163,17 +163,25 @@ This assessment tests all B1 skills:
 
 *Part A: Form participles. 1 point each.*
 
-1. написати → ___ (past passive)
-2. закрити → ___ (past passive)
-3. читати → ___ (adverbial impf)
-4. прочитати → ___ (adverbial pf)
+1. написати
+   > [!answer] ___ (past passive)
+2. закрити
+   > [!answer] ___ (past passive)
+3. читати
+   > [!answer] ___ (adverbial impf)
+4. прочитати
+   > [!answer] ___ (adverbial pf)
 
 *Part B: Transform. 1.5 points each.*
 
-5. Книгу написали. → Книгу ___ (short form)
-6. Рішення прийняли. → Рішення ___ (short form)
-7. Він читав і пив каву. → ___ книгу, він пив каву. (participle)
-8. Вона закінчила роботу і пішла. → ___ роботу, вона пішла. (participle)
+5. Книгу написали.
+   > [!answer] Книгу ___ (short form)
+6. Рішення прийняли.
+   > [!answer] Рішення ___ (short form)
+7. Він читав і пив каву.
+   > [!answer] ___ книгу, він пив каву. (participle)
+8. Вона закінчила роботу і пішла.
+   > [!answer] ___ роботу, вона пішла. (participle)
 
 **Answer Key:**
 1. написаний
@@ -196,9 +204,12 @@ This assessment tests all B1 skills:
 
 *Part B: Complete collocations. 1 point each.*
 
-5. ___ рішення (make) → **приймати**
-6. ___ участь (take) → **брати**
-7. ___ пораду (give) → **давати**
+5. ___ рішення (make)
+   > [!answer] **приймати**
+6. ___ участь (take)
+   > [!answer] **брати**
+7. ___ пораду (give)
+   > [!answer] **давати**
 
 *Part C: What does the idiom mean? 1 point each.*
 

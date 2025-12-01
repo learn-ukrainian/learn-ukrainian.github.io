@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-A2-38",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "revision",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -26,30 +25,15 @@
       "Multi-case sentence building",
       "Case identification strategies"
     ],
-    "totalDuration": 45,
-    "transliterationMode": "partial",
     "tags": [
       "cases",
       "integration",
       "review",
       "practice"
     ],
-    "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
+    "totalDuration": 45,
+    "transliterationMode": "partial",
     "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### The Complete System\n\nCongratulations! You now know all 7 Ukrainian cases. Let's see them working together:\n\n**One sentence, multiple cases:**\n> Я дав книгу братові біля столу вчора.\n> (I gave a book to my brother near the table yesterday.)\n\n- **Я** - nominative (subject)\n- **книгу** - accusative (direct object)\n- **братові** - dative (to whom)\n- **столу** - genitive (біля + gen)\n\nCases work together to create precise meaning. Today we practice using them all!\n\n> 💡 **Did You Know?**\n>\n> Most Ukrainian sentences use 2-3 different cases. Native speakers don't think about cases consciously - they just \"sound right.\" With practice, you'll develop this intuition too!"
-          }
-        ]
-      },
       {
         "id": "phase-presentation",
         "name": "presentation",
@@ -58,92 +42,33 @@
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "### The 7 Cases: Complete Review\n\n| Case | Question | Function | Example |\n|------|----------|----------|---------|\n| Nominative | Хто? Що? | Subject | **Брат** читає. |\n| Genitive | Кого? Чого? | Possession, absence, quantities | Книга **брата**. |\n| Dative | Кому? Чому? | To/for whom | Даю **братові**. |\n| Accusative | Кого? Що? | Direct object | Бачу **брата**. |\n| Instrumental | Ким? Чим? | With/by means | Йду з **братом**. |\n| Locative | На/у кому/чому? | Location | Думаю про **брата**. |\n| Vocative | - | Direct address | **Брате**! |\n\n> ⚡ **Pro Tip: Case Recognition**\n>\n> To identify a case in a sentence:\n> 1. Find the verb\n> 2. Ask what question the noun answers\n> 3. Check for prepositions (they determine case)\n> 4. Look at the ending"
+            "teacherNotes": "### The 7 Cases: Complete Review\n\n| Case | Question | Function | Example |\n|------|----------|----------|---------|\n| Nominative | Хто? Що? | Subject | **Брат** читає. |\n| Genitive | Кого? Чого? | Possession, absence, quantities | Книга **брата**. |\n| Dative | Кому? Чому? | To/for whom | Даю **братові**. |\n| Accusative | Кого? Що? | Direct object | Бачу **брата**. |\n| Instrumental | Ким? Чим? | With/by means | Йду з **братом**. |\n| Locative | На/у кому/чому? | Location | Думаю про **брата**. |\n| Vocative | - | Direct address | **Брате**! |\n\n> ⚡ **Pro Tip: Case Recognition**\n>\n> To identify a case in a sentence:\n> 1. Find the verb\n> 2. Ask what question the noun answers\n> 3. Check for prepositions (they determine case)\n> 4. Look at the ending\n\n### Multi-Case Sentences\n\n**Simple (2 cases):**\n- **Мама** (nom) готує **вечерю** (acc). - Mom is preparing dinner.\n- **Я** (nom) йду до **магазину** (gen). - I'm going to the store.\n\n**Medium (3 cases):**\n- **Я** (nom) даю **подарунок** (acc) **сестрі** (dat). - I give a gift to sister.\n- **Ми** (nom) живемо біля **річки** (gen) з **батьками** (instr). - We live near the river with parents.\n\n**Complex (4+ cases):**\n- **Я** (nom) написав **листа** (acc) **другові** (dat) про **подорож** (acc after про).\n  - I wrote a letter to a friend about the trip.\n- **Учитель** (nom) пояснює **учням** (dat) правила **граматики** (gen) **олівцем** (instr).\n  - The teacher explains grammar rules to students with a pencil.\n\n> 📜 **History Bite: Case-Rich Languages**\n>\n> Ukrainian's 7 cases come from Proto-Slavic, which had even more! Finnish has 15 cases, Hungarian has 18. Ukrainian strikes a balance - enough cases to be precise, not so many as to be overwhelming.\n\n### Case Chains: Following the Logic\n\n**Nominative starts the chain:**\nБрат читає книгу сестрі.\n- Хто читає? → Брат (nom)\n- Що читає? → Книгу (acc)\n- Кому читає? → Сестрі (dat)\n\n**Genitive for possession/origin:**\nКнига брата лежить на столі.\n- Що лежить? → Книга (nom)\n- Чия книга? → Брата (gen)\n- Де лежить? → На столі (loc)\n\n**Instrumental for means/company:**\nЯ їду з братом автобусом до Львова.\n- Хто їде? → Я (nom)\n- З ким? → З братом (instr)\n- Чим? → Автобусом (instr)\n- Куди? → До Львова (gen)\n\n### Common Multi-Case Patterns\n\n**Pattern 1: Subject + Action + Object + Recipient**\nNOM + verb + ACC + DAT\n- Батько дав гроші синові.\n- Вчителька показала карту студентам.\n\n**Pattern 2: Subject + Action + Object + Location**\nNOM + verb + ACC + у/на + LOC\n- Я поклав книгу на полицю.\n- Вона поставила вазу у кімнаті.\n\n**Pattern 3: Subject + Action + Companion + Means**\nNOM + verb + з + INSTR + INSTR (means)\n- Ми їдемо з друзями поїздом.\n- Вона йде з сестрою пішки.\n\n**Pattern 4: Subject + Action + Destination + Purpose**\nNOM + verb + до + GEN + за + ACC\n- Він пішов до магазину за хлібом.\n- Я біжу до лікаря за допомогою.\n\n> 🎭 **Culture Corner: Formal Requests**\n>\n> In formal Ukrainian, multi-case sentences show politeness:\n> - \"Прошу Вас передати цю інформацію директорові компанії.\"\n> - (I ask you to pass this information to the company director.)\n>\n> The more precise, the more polite!\n\n### Case Conflicts: Choosing Right\n\n**Same verb, different cases by meaning:**\n\nписати:\n- Я пишу **листа** (acc). - I write a letter. (what)\n- Я пишу **другові** (dat). - I write to a friend. (to whom)\n- Я пишу **ручкою** (instr). - I write with a pen. (by what means)\n\nдивитися:\n- Я дивлюся **фільм** (acc). - I watch a film. (what)\n- Я дивлюся **на тебе** (acc). - I look at you. (direction)\n- Я дивлюся **з цікавістю** (instr). - I look with interest. (manner)\n\nдумати:\n- Я думаю **про тебе** (acc). - I think about you.\n- Я думаю **над проблемою** (instr). - I think over a problem.\n\n> ⚡ **Pro Tip: When in Doubt**\n>\n> 1. Check the preposition - it usually determines case\n> 2. Ask the case question (кого? кому? ким? etc.)\n> 3. Think about the FUNCTION (object? recipient? means?)\n\n### Reading Multi-Case Sentences\n\n**Practice parsing:**\n\n**Sentence 1:**\n> Маленька дівчинка дала красивий малюнок своїй бабусі.\n\nParse:\n- Хто? → маленька дівчинка (nom) - subject\n- Що дала? → красивий малюнок (acc) - direct object\n- Кому? → своїй бабусі (dat) - recipient\n\n**Sentence 2:**\n> Студенти з різних країн зустрілися біля університету перед лекцією.\n\nParse:\n- Хто? → студенти (nom) - subject\n- З яких країн? → з різних країн (gen) - origin\n- Де? → біля університету (gen) - location\n- Коли? → перед лекцією (instr) - time\n\n**Sentence 3:**\n> Мій друг, Іване, передай, будь ласка, цю книгу Марії від мене!\n\nParse:\n- Іване (voc) - direct address\n- Що передай? → цю книгу (acc) - object\n- Кому? → Марії (dat) - recipient\n- Від кого? → від мене (gen) - source"
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Multi-Case Sentences\n\n**Simple (2 cases):**\n- **Мама** (nom) готує **вечерю** (acc). - Mom is preparing dinner.\n- **Я** (nom) йду до **магазину** (gen). - I'm going to the store.\n\n**Medium (3 cases):**\n- **Я** (nom) даю **подарунок** (acc) **сестрі** (dat). - I give a gift to sister.\n- **Ми** (nom) живемо біля **річки** (gen) з **батьками** (instr). - We live near the river with parents.\n\n**Complex (4+ cases):**\n- **Я** (nom) написав **листа** (acc) **другові** (dat) про **подорож** (acc after про).\n  - I wrote a letter to a friend about the trip.\n- **Учитель** (nom) пояснює **учням** (dat) правила **граматики** (gen) **олівцем** (instr).\n  - The teacher explains grammar rules to students with a pencil.\n\n> 📜 **History Bite: Case-Rich Languages**\n>\n> Ukrainian's 7 cases come from Proto-Slavic, which had even more! Finnish has 15 cases, Hungarian has 18. Ukrainian strikes a balance - enough cases to be precise, not so many as to be overwhelming."
+            "teacherNotes": "### Identify All Cases\n\nFind and label each case in the sentences:\n\n1. Мама готує смачний обід для сім'ї.\n   - Мама (nom), обід (acc), сім'ї (gen)\n\n2. Я розповів другові про свою подорож.\n   - Я (nom), другові (dat), подорож (acc)\n\n3. Студентка пише листа батькам ручкою.\n   - Студентка (nom), листа (acc), батькам (dat), ручкою (instr)\n\n4. Брате, дай мені книгу зі столу!\n   - Брате (voc), мені (dat), книгу (acc), столу (gen)\n\n### Complete Multi-Case Sentences\n\nFill in ALL blanks:\n\n1. ___ (я) даю ___ (книга) ___ (сестра).\n   > [!answer] Я даю книгу сестрі.\n\n2. ___ (вчитель) пояснює ___ (правило) ___ (студенти).\n   > [!answer] Вчитель пояснює правило студентам.\n\n3. ___ (ми) йдемо з ___ (друзі) до ___ (парк).\n   > [!answer] Ми йдемо з друзями до парку.\n\n4. ___ (дідусь), розкажи ___ (я) про ___ (війна).\n   > [!answer] Дідусю, розкажи мені про війну.\n\n### Build Complex Sentences\n\nCreate sentences using all given elements:\n\n1. [я / писати / лист / друг / ручка]\n   > [!answer] Я пишу листа другові ручкою.\n\n2. [батько / купити / подарунок / мама / магазин]\n   > [!answer] Батько купив подарунок мамі в магазині.\n\n3. [ми / зустрітися / колеги / кафе / після / робота]\n   > [!answer] Ми зустрілися з колегами в кафе після роботи."
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Case Chains: Following the Logic\n\n**Nominative starts the chain:**\nБрат читає книгу сестрі.\n- Хто читає? → Брат (nom)\n- Що читає? → Книгу (acc)\n- Кому читає? → Сестрі (dat)\n\n**Genitive for possession/origin:**\nКнига брата лежить на столі.\n- Що лежить? → Книга (nom)\n- Чия книга? → Брата (gen)\n- Де лежить? → На столі (loc)\n\n**Instrumental for means/company:**\nЯ їду з братом автобусом до Львова.\n- Хто їде? → Я (nom)\n- З ким? → З братом (instr)\n- Чим? → Автобусом (instr)\n- Куди? → До Львова (gen)"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Common Multi-Case Patterns\n\n**Pattern 1: Subject + Action + Object + Recipient**\nNOM + verb + ACC + DAT\n- Батько дав гроші синові.\n- Вчителька показала карту студентам.\n\n**Pattern 2: Subject + Action + Object + Location**\nNOM + verb + ACC + у/на + LOC\n- Я поклав книгу на полицю.\n- Вона поставила вазу у кімнаті.\n\n**Pattern 3: Subject + Action + Companion + Means**\nNOM + verb + з + INSTR + INSTR (means)\n- Ми їдемо з друзями поїздом.\n- Вона йде з сестрою пішки.\n\n**Pattern 4: Subject + Action + Destination + Purpose**\nNOM + verb + до + GEN + за + ACC\n- Він пішов до магазину за хлібом.\n- Я біжу до лікаря за допомогою.\n\n> 🎭 **Culture Corner: Formal Requests**\n>\n> In formal Ukrainian, multi-case sentences show politeness:\n> - \"Прошу Вас передати цю інформацію директорові компанії.\"\n> - (I ask you to pass this information to the company director.)\n>\n> The more precise, the more polite!"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Case Conflicts: Choosing Right\n\n**Same verb, different cases by meaning:**\n\nписати:\n- Я пишу **листа** (acc). - I write a letter. (what)\n- Я пишу **другові** (dat). - I write to a friend. (to whom)\n- Я пишу **ручкою** (instr). - I write with a pen. (by what means)\n\nдивитися:\n- Я дивлюся **фільм** (acc). - I watch a film. (what)\n- Я дивлюся **на тебе** (acc). - I look at you. (direction)\n- Я дивлюся **з цікавістю** (instr). - I look with interest. (manner)\n\nдумати:\n- Я думаю **про тебе** (acc). - I think about you.\n- Я думаю **над проблемою** (instr). - I think over a problem.\n\n> ⚡ **Pro Tip: When in Doubt**\n>\n> 1. Check the preposition - it usually determines case\n> 2. Ask the case question (кого? кому? ким? etc.)\n> 3. Think about the FUNCTION (object? recipient? means?)"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Reading Multi-Case Sentences\n\n**Practice parsing:**\n\n**Sentence 1:**\n> Маленька дівчинка дала красивий малюнок своїй бабусі.\n\nParse:\n- Хто? → маленька дівчинка (nom) - subject\n- Що дала? → красивий малюнок (acc) - direct object\n- Кому? → своїй бабусі (dat) - recipient\n\n**Sentence 2:**\n> Студенти з різних країн зустрілися біля університету перед лекцією.\n\nParse:\n- Хто? → студенти (nom) - subject\n- З яких країн? → з різних країн (gen) - origin\n- Де? → біля університету (gen) - location\n- Коли? → перед лекцією (instr) - time\n\n**Sentence 3:**\n> Мій друг, Іване, передай, будь ласка, цю книгу Марії від мене!\n\nParse:\n- Іване (voc) - direct address\n- Що передай? → цю книгу (acc) - object\n- Кому? → Марії (dat) - recipient\n- Від кого? → від мене (gen) - source"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A2-38-matchup"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Identify All Cases\n\nFind and label each case in the sentences:\n\n1. Мама готує смачний обід для сім'ї.\n   - Мама (nom), обід (acc), сім'ї (gen)\n\n2. Я розповів другові про свою подорож.\n   - Я (nom), другові (dat), подорож (acc)\n\n3. Студентка пише листа батькам ручкою.\n   - Студентка (nom), листа (acc), батькам (dat), ручкою (instr)\n\n4. Брате, дай мені книгу зі столу!\n   - Брате (voc), мені (dat), книгу (acc), столу (gen)"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Complete Multi-Case Sentences\n\nFill in ALL blanks:\n\n1. ___ (я) даю ___ (книга) ___ (сестра).\n   → Я даю книгу сестрі.\n\n2. ___ (вчитель) пояснює ___ (правило) ___ (студенти).\n   → Вчитель пояснює правило студентам.\n\n3. ___ (ми) йдемо з ___ (друзі) до ___ (парк).\n   → Ми йдемо з друзями до парку.\n\n4. ___ (дідусь), розкажи ___ (я) про ___ (війна).\n   → Дідусю, розкажи мені про війну."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Build Complex Sentences\n\nCreate sentences using all given elements:\n\n1. [я / писати / лист / друг / ручка]\n   → Я пишу листа другові ручкою.\n\n2. [батько / купити / подарунок / мама / магазин]\n   → Батько купив подарунок мамі в магазині.\n\n3. [ми / зустрітися / колеги / кафе / після / робота]\n   → Ми зустрілися з колегами в кафе після роботи."
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A2-38-quiz"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A2-38-groupsort"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Real Situations\n\n**Scenario 1: Telling a story**\n- Вчора я пішов до парку з друзями.\n- Ми сиділи біля озера і розмовляли про життя.\n- Потім мій друг дав мені цікаву книгу.\n- Тепер я читаю її з великим задоволенням.\n\n**Scenario 2: Giving instructions**\n- Візьми документи зі столу в кабінеті.\n- Передай їх секретарці на другому поверсі.\n- Скажи їй, що це від директора для бухгалтерії.\n- Після цього повернися до мене.\n\n**Scenario 3: Describing a day**\n- Зранку я їду автобусом на роботу.\n- Протягом дня я працюю з клієнтами.\n- Після обіду я пишу листи партнерам.\n- Увечері зустрічаюся з друзями біля кінотеатру."
+            "teacherNotes": "### Real Situations\n\n**Scenario 1: Telling a story**\n- Вчора я пішов до парку з друзями.\n- Ми сиділи біля озера і розмовляли про життя.\n- Потім мій друг дав мені цікаву книгу.\n- Тепер я читаю її з великим задоволенням.\n\n**Scenario 2: Giving instructions**\n- Візьми документи зі столу в кабінеті.\n- Передай їх секретарці на другому поверсі.\n- Скажи їй, що це від директора для бухгалтерії.\n- Після цього повернися до мене.\n\n**Scenario 3: Describing a day**\n- Зранку я їду автобусом на роботу.\n- Протягом дня я працюю з клієнтами.\n- Після обіду я пишу листи партнерам.\n- Увечері зустрічаюся з друзями біля кінотеатру.\n\n---"
           }
         ]
       }
-    ]
+    ],
+    "createdAt": "2025-12-01T22:58:37.269Z",
+    "modifiedAt": "2025-12-01T22:58:37.269Z",
+    "version": 1
   },
   "activities": [
     {
-      "id": "act-uk-A2-38-matchup",
+      "id": "act-a2-38-matchup",
       "type": "match-up",
       "title": "Case Functions",
       "description": "Match the case with its primary function.",
       "content": {
         "type": "match-up",
-        "instructions": "Match the case with its primary function.",
         "pairs": [
           {
             "left": "Nominative",
@@ -182,23 +107,17 @@
       "language": "uk",
       "difficultyLevel": "A2",
       "duration": 5,
-      "tags": [
-        "cases",
-        "integration",
-        "review",
-        "practice"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.269Z",
+      "modifiedAt": "2025-12-01T22:58:37.269Z"
     },
     {
-      "id": "act-uk-A2-38-quiz",
+      "id": "act-a2-38-quiz",
       "type": "quiz",
       "title": "Case Integration",
       "description": "Identify the case of the underlined word.",
       "content": {
         "type": "quiz",
-        "instructions": "Identify the case of the underlined word.",
         "questions": [
           {
             "question": "\"I give a book to my brother\" - Я даю книгу **братові**.",
@@ -299,25 +218,20 @@
       "language": "uk",
       "difficultyLevel": "A2",
       "duration": 5,
-      "tags": [
-        "cases",
-        "integration",
-        "review",
-        "practice"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.269Z",
+      "modifiedAt": "2025-12-01T22:58:37.269Z"
     },
     {
-      "id": "act-uk-A2-38-groupsort",
+      "id": "act-a2-38-groupsort",
       "type": "group-sort",
       "title": "Multi-Case Analysis",
       "description": "Sort the cases found in the sentence: \"Батько дав синові книгу про Україну.\"",
       "content": {
         "type": "group-sort",
-        "instructions": "Sort the cases found in the sentence: \"Батько дав синові книгу про Україну.\"",
         "groups": [
           {
+            "id": "present-in-this-sentence",
             "name": "Present in this sentence",
             "items": [
               "Nominative (батько)",
@@ -326,6 +240,7 @@
             ]
           },
           {
+            "id": "not-present-in-this-sentence",
             "name": "Not present in this sentence",
             "items": [
               "Genitive",
@@ -343,14 +258,9 @@
       "language": "uk",
       "difficultyLevel": "A2",
       "duration": 5,
-      "tags": [
-        "cases",
-        "integration",
-        "review",
-        "practice"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.269Z",
+      "modifiedAt": "2025-12-01T22:58:37.269Z"
     }
   ],
   "vocabulary": {
@@ -361,112 +271,99 @@
     "transliterationMode": "partial",
     "words": [
       {
-        "id": "v-m38-001",
+        "id": "v-pravylo-38-0",
         "uk": "правило",
-        "translit": "",
-        "ipa": "/prɑˈvɪlo/",
         "en": "rule",
         "pos": "noun",
+        "ipa": "/prɑˈvɪlo/",
         "gender": "n"
       },
       {
-        "id": "v-m38-002",
+        "id": "v-polytsya-38-1",
         "uk": "полиця",
-        "translit": "",
-        "ipa": "/poˈlɪtsʲɑ/",
         "en": "shelf",
         "pos": "noun",
+        "ipa": "/poˈlɪtsʲɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m38-003",
+        "id": "v-vaza-38-2",
         "uk": "ваза",
-        "translit": "",
-        "ipa": "/ˈvɑzɑ/",
         "en": "vase",
         "pos": "noun",
+        "ipa": "/ˈvɑzɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m38-004",
+        "id": "v-poverkh-38-3",
         "uk": "поверх",
-        "translit": "",
-        "ipa": "/ˈpovɛrx/",
         "en": "floor (of building)",
         "pos": "noun",
+        "ipa": "/ˈpovɛrx/",
         "gender": "m"
       },
       {
-        "id": "v-m38-005",
+        "id": "v-kabinet-38-4",
         "uk": "кабінет",
-        "translit": "",
-        "ipa": "/kɑbʲiˈnɛt/",
         "en": "office, study",
         "pos": "noun",
+        "ipa": "/kɑbʲiˈnɛt/",
         "gender": "m"
       },
       {
-        "id": "v-m38-006",
+        "id": "v-sekretarka-38-5",
         "uk": "секретарка",
-        "translit": "",
-        "ipa": "/sɛkrɛˈtɑrkɑ/",
         "en": "secretary (f)",
         "pos": "noun",
+        "ipa": "/sɛkrɛˈtɑrkɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m38-007",
+        "id": "v-bukhhalteriya-38-6",
         "uk": "бухгалтерія",
-        "translit": "",
-        "ipa": "/buxɦɑlˈtɛrʲijɑ/",
         "en": "accounting dept",
         "pos": "noun",
+        "ipa": "/buxɦɑlˈtɛrʲijɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m38-008",
+        "id": "v-partner-38-7",
         "uk": "партнер",
-        "translit": "",
-        "ipa": "/pɑrtˈnɛr/",
         "en": "partner",
         "pos": "noun",
+        "ipa": "/pɑrtˈnɛr/",
         "gender": "m"
       },
       {
-        "id": "v-m38-009",
+        "id": "v-malyunok-38-8",
         "uk": "малюнок",
-        "translit": "",
-        "ipa": "/mɑˈlʲunok/",
         "en": "drawing, picture",
         "pos": "noun",
+        "ipa": "/mɑˈlʲunok/",
         "gender": "m"
       },
       {
-        "id": "v-m38-010",
+        "id": "v-lektsiya-38-9",
         "uk": "лекція",
-        "translit": "",
-        "ipa": "/ˈlɛktsʲijɑ/",
         "en": "lecture",
         "pos": "noun",
+        "ipa": "/ˈlɛktsʲijɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m38-011",
+        "id": "v-zadovolennya-38-10",
         "uk": "задоволення",
-        "translit": "",
-        "ipa": "/zɑdoˈvolɛnʲːɑ/",
         "en": "pleasure, satisfaction",
         "pos": "noun",
+        "ipa": "/zɑdoˈvolɛnʲːɑ/",
         "gender": "n"
       },
       {
-        "id": "v-m38-012",
+        "id": "v-protyahom-38-11",
         "uk": "протягом",
-        "translit": "",
-        "ipa": "/proˈtʲɑɦom/",
         "en": "during, throughout",
         "pos": "prep",
-        "gender": "-",
+        "ipa": "/proˈtʲɑɦom/",
         "note": "+ gen"
       }
     ]

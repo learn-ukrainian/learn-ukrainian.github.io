@@ -279,41 +279,55 @@ You know basic entertainment words. Now let's explore arts and culture!
 
 ### Match Art Form to Person
 
-1. музика → композитор / співак
-2. кіно → режисер / актор
-3. література → письменник / поет
-4. живопис → художник
-5. балет → балерина
+1. музика
+   > [!answer] композитор / співак
+2. кіно
+   > [!answer] режисер / актор
+3. література
+   > [!answer] письменник / поет
+4. живопис
+   > [!answer] художник
+5. балет
+   > [!answer] балерина
 
 ### Complete Culture Dialogue
 
 **A:** Яку ___ слухаєш? (music)
-→ музику
+> [!answer] музику
 
 **B:** Люблю ___ і джаз. (rock)
-→ рок
+> [!answer] рок
 
 **A:** А в ___ ходиш? (cinema)
-→ кіно
+> [!answer] кіно
 
 **B:** Так, люблю ___ і комедії. (dramas)
-→ драми
+> [!answer] драми
 
 ### Ukrainian Traditions
 
 Match:
-1. Великдень → писанка
-2. Різдво → колядка
-3. весілля → вінок, рушник
-4. День вишиванки → вишиванка
+1. Великдень
+   > [!answer] писанка
+2. Різдво
+   > [!answer] колядка
+3. весілля
+   > [!answer] вінок, рушник
+4. День вишиванки
+   > [!answer] вишиванка
 
 ### Translate
 
-1. What music do you listen to? → Яку музику ти слухаєш?
-2. She's a famous actress. → Вона відома акторка.
-3. I love poetry. → Я люблю поезію.
-4. Let's go to the exhibition. → Підемо на виставку.
-5. The vyshyvanka is a Ukrainian tradition. → Вишиванка — українська традиція.
+1. What music do you listen to?
+   > [!answer] Яку музику ти слухаєш?
+2. She's a famous actress.
+   > [!answer] Вона відома акторка.
+3. I love poetry.
+   > [!answer] Я люблю поезію.
+4. Let's go to the exhibition.
+   > [!answer] Підемо на виставку.
+5. The vyshyvanka is a Ukrainian tradition.
+   > [!answer] Вишиванка — українська традиція.
 
 ## production
 

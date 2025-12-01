@@ -177,12 +177,18 @@ Categorize these expressions:
 
 **Strong agree / Agree / Partial / Soft disagree / Strong disagree**
 
-1. Абсолютно! → **Strong agree**
-2. Я не зовсім згоден → **Soft disagree**
-3. Почасти так, але... → **Partial**
-4. Я категорично проти → **Strong disagree**
-5. Ви маєте рацію → **Agree**
-6. Цікава думка, проте... → **Soft disagree**
+1. Абсолютно!
+   > [!answer] **Strong agree**
+2. Я не зовсім згоден
+   > [!answer] **Soft disagree**
+3. Почасти так, але...
+   > [!answer] **Partial**
+4. Я категорично проти
+   > [!answer] **Strong disagree**
+5. Ви маєте рацію
+   > [!answer] **Agree**
+6. Цікава думка, проте...
+   > [!answer] **Soft disagree**
 
 ### Respond to Statements
 
@@ -203,10 +209,14 @@ Agree or disagree politely:
 
 Transform direct disagreement into polite disagreement:
 
-1. Ні, ви помиляєтесь. → **Я не зовсім згоден. Мені здається, тут є неточність.**
-2. Це погана ідея. → **Цікава думка, проте я б запропонував інший підхід.**
-3. Ні. → **Боюся, що не можу погодитися.**
-4. Ви не праві. → **Не впевнений, що це так. А ви враховували...?**
+1. Ні, ви помиляєтесь.
+   > [!answer] **Я не зовсім згоден. Мені здається, тут є неточність.**
+2. Це погана ідея.
+   > [!answer] **Цікава думка, проте я б запропонував інший підхід.**
+3. Ні.
+   > [!answer] **Боюся, що не можу погодитися.**
+4. Ви не праві.
+   > [!answer] **Не впевнений, що це так. А ви враховували...?**
 
 ### Role Play: Discussion
 

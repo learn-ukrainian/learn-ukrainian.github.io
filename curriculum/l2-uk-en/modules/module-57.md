@@ -221,49 +221,55 @@ Whether you're working in Ukraine or discussing careers, this vocabulary is esse
 
 ### Match Professions
 
-1. програміст → programmer
-2. вчитель → teacher
-3. лікар → doctor
-4. продавець → salesperson
-5. бухгалтер → accountant
-6. кухар → cook
+1. програміст
+   > [!answer] programmer
+2. вчитель
+   > [!answer] teacher
+3. лікар
+   > [!answer] doctor
+4. продавець
+   > [!answer] salesperson
+5. бухгалтер
+   > [!answer] accountant
+6. кухар
+   > [!answer] cook
 
 ### Complete Sentences
 
 1. Я працюю ___ (programmer - instrumental).
-   → програмістом
+   > [!answer] програмістом
 
 2. Вона працює ___ (teacher - instrumental).
-   → вчителькою
+   > [!answer] вчителькою
 
 3. Він працює ___ компанії "Сім'я". (at)
-   → в / у
+   > [!answer] в / у
 
 4. Я шукаю ___. (job)
-   → роботу
+   > [!answer] роботу
 
 5. Коли ___? (interview)
-   → співбесіда
+   > [!answer] співбесіда
 
 6. Яка ___? (salary)
-   → зарплата
+   > [!answer] зарплата
 
 ### Translate
 
 1. What do you do for work?
-   → Ким ви працюєте?
+   > [!answer] Ким ви працюєте?
 
 2. I work as a manager.
-   → Я працюю менеджером.
+   > [!answer] Я працюю менеджером.
 
 3. I'm looking for a job.
-   → Я шукаю роботу.
+   > [!answer] Я шукаю роботу.
 
 4. I work from home.
-   → Я працюю вдома / віддалено.
+   > [!answer] Я працюю вдома / віддалено.
 
 5. I got a promotion.
-   → Я отримав/отримала підвищення.
+   > [!answer] Я отримав/отримала підвищення.
 
 ## production
 

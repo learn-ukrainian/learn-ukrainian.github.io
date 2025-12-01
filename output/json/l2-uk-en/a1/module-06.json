@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-A1-06",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "grammar-introduction",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -27,119 +26,50 @@
       "Class I conjugation (-ю/-єш/-є/-ємо/-єте/-ють)",
       "Subject-verb agreement"
     ],
-    "totalDuration": 50,
-    "transliterationMode": "full",
     "tags": [
       "grammar",
       "verbs",
       "conjugation",
       "present-tense"
     ],
-    "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
+    "totalDuration": 50,
+    "transliterationMode": "full",
     "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Verbs Come Alive\n\nUntil now, you've made sentences without verbs using zero copula: \"Я студент.\" (I am a student.) Now it's time to add **action** to your Ukrainian!\n\nUkrainian verbs change their endings based on **who** is doing the action:\n- I read → Я **читаю**\n- You read → Ти **читаєш**\n- She reads → Вона **читає**\n\nThis is called **conjugation** - and while it seems complex at first, Ukrainian conjugation is actually very regular and predictable!\n\n> 🔍 **Myth Buster: \"Too Many Endings!\"**\n>\n> English speakers often panic at verb conjugation. But consider:\n> - English: I read, you read, she read**s**, we read... (only -s changes!)\n> - Ukrainian: same idea, just more consistent changes\n>\n> And here's the secret: **97% of Ukrainian verbs follow just 2 patterns!** Learn these two conjugation classes, and you can conjugate almost any verb.\n\n> 💡 **Did You Know?**\n>\n> English **used to** conjugate verbs fully! In Old English:\n> - Ic sing**e** (I sing)\n> - Þu sing**st** (you sing)\n> - Hē sing**þ** (he sings)\n> - Wē sing**að** (we sing)\n>\n> Over time, English lost most endings. Ukrainian kept the full system!"
-          }
-        ]
-      },
       {
         "id": "phase-presentation",
         "name": "presentation",
-        "duration": 15,
+        "duration": 17,
         "items": [
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "### The Infinitive: The Verb's Name\n\nEvery Ukrainian verb has an **infinitive** - its basic form that means \"to ___\":\n\n| Ukrainian | Transliteration | English |\n|-----------|-----------------|---------|\n| читати | chytaty | to read |\n| писати | pysaty | to write |\n| знати | znaty | to know |\n| говорити | hovoryty | to speak |\n| робити | robyty | to do/make |\n\nAll infinitives end in **-ти** (ty). This is how you find verbs in dictionaries!\n\n> 📜 **History Bite: The -ти Ending**\n>\n> The infinitive ending -ти comes from **Proto-Slavic** (Common Slavic). Compare how different languages evolved it:\n> - Ukrainian: чита**ти** (preserved full form)\n> - Russian: чита**ть** (shortened)\n> - Polish: czyta**ć** (different evolution)\n> - Czech: čís**t** (very short!)\n>\n> Ukrainian preserved the full ancient ending, while other Slavic languages shortened it over time."
+            "teacherNotes": "### The Infinitive: The Verb's Name\n\nEvery Ukrainian verb has an **infinitive** - its basic form that means \"to ___\":\n\n| Ukrainian | Transliteration | English |\n|-----------|-----------------|---------|\n| читати | chytaty | to read |\n| писати | pysaty | to write |\n| знати | znaty | to know |\n| говорити | hovoryty | to speak |\n| робити | robyty | to do/make |\n\nAll infinitives end in **-ти** (ty). This is how you find verbs in dictionaries!\n\n> 📜 **History Bite: The -ти Ending**\n>\n> The infinitive ending -ти comes from **Proto-Slavic** (Common Slavic). Compare how different languages evolved it:\n> - Ukrainian: чита**ти** (preserved full form)\n> - Russian: чита**ть** (shortened)\n> - Polish: czyta**ć** (different evolution)\n> - Czech: čís**t** (very short!)\n>\n> Ukrainian preserved the full ancient ending, while other Slavic languages shortened it over time.\n\n### Two Conjugation Classes\n\nUkrainian verbs fall into **two main classes** based on their endings:\n\n| Class | Infinitive Ends In | Example |\n|-------|-------------------|---------|\n| Class I | -ати, -яти, -іти (some) | читати, знати |\n| Class II | -ити, -іти (most) | говорити, робити |\n\nToday we'll focus on **Class I** - the more common pattern.\n\n> ⚡ **Pro Tip: Recognizing Classes**\n>\n> Quick rule of thumb:\n> - **-ати/-яти** → almost always Class I\n> - **-ити** → almost always Class II\n> - **-іти** → could be either (check individually)\n>\n> When in doubt, look at the first person singular (я) form - it tells you the class!\n\n### Class I Conjugation: -ати/-яти Verbs\n\n**Pattern: читати (to read)**\n\n| Person | Pronoun | Ending | Full Form | English |\n|--------|---------|--------|-----------|---------|\n| 1st sing. | я | -ю | чита**ю** | I read |\n| 2nd sing. | ти | -єш | чита**єш** | you read |\n| 3rd sing. | він/вона | -є | чита**є** | he/she reads |\n| 1st pl. | ми | -ємо | чита**ємо** | we read |\n| 2nd pl. | ви | -єте | чита**єте** | you (pl/formal) read |\n| 3rd pl. | вони | -ють | чита**ють** | they read |\n\n**Key endings to memorize: -ю, -єш, -є, -ємо, -єте, -ють**\n\n> 💡 **Did You Know?**\n>\n> The **-ю** ending in \"я читаю\" comes from the ancient Slavic first person ending. It's related to:\n> - Latin: am**o** (I love)\n> - Greek: λύ**ω** (I loosen)\n> - Sanskrit: bhará**mi** (I carry)\n>\n> You're speaking with endings that are thousands of years old!\n\n> 🔗 **Language Link: The є Pattern**\n>\n> Notice all the є's in Class I endings? The letter **є** (ye) appears in 5 out of 6 forms!\n> - чита**є**ш\n> - чита**є**\n> - чита**є**мо\n> - чита**є**те\n> - But: чита**ю** and чита**ю**ть (no є)\n>\n> This makes Class I very recognizable!\n\n### More Class I Verbs\n\n**знати (to know)**\n\n| | Form | Example Sentence |\n|-|------|-----------------|\n| я | знаю | Я знаю це. (I know this.) |\n| ти | знаєш | Ти знаєш? (Do you know?) |\n| він/вона | знає | Вона знає. (She knows.) |\n| ми | знаємо | Ми знаємо. (We know.) |\n| ви | знаєте | Ви знаєте це? (Do you know this?) |\n| вони | знають | Вони знають. (They know.) |\n\n**писати (to write)**\n\nNote: The stem changes slightly (пис- → пиш- in я form only)\n\n| | Form | Notes |\n|-|------|-------|\n| я | пишу | Stem change: с → ш |\n| ти | пишеш | Same change |\n| він/вона | пише | Same change |\n| ми | пишемо | Same change |\n| ви | пишете | Same change |\n| вони | пишуть | Same change |\n\n> 🎯 **Fun Fact: Consonant Changes**\n>\n> Some Class I verbs have consonant changes in ALL forms (like писати → пиш-):\n> - **с → ш**: писати → пишу (write)\n> - **з → ж**: казати → кажу (say)\n> - **к → ч**: плакати → плачу (cry)\n>\n> These changes happened centuries ago due to how Slavic sounds evolved. The good news: they're consistent - once you know the pattern, you can predict it!\n\n### Negation: Just Add Не\n\nTo make a verb negative, add **не** (not) before it:\n\n| Positive | Negative |\n|----------|----------|\n| Я знаю. | Я **не** знаю. |\n| Вона читає. | Вона **не** читає. |\n| Вони пишуть. | Вони **не** пишуть. |\n\n> 🎭 **Culture Corner: Double Negatives**\n>\n> Unlike English, Ukrainian **requires** double (or triple!) negatives:\n> - \"I don't know anything\" = \"Я **ні**чого **не** знаю.\" (I nothing not know)\n> - \"Nobody writes anything\" = \"**Ні**хто **ні**чого **не** пише.\"\n>\n> In Ukrainian, negatives stack up - and this is grammatically correct! English speakers need to unlearn the \"double negative is wrong\" rule."
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Two Conjugation Classes\n\nUkrainian verbs fall into **two main classes** based on their endings:\n\n| Class | Infinitive Ends In | Example |\n|-------|-------------------|---------|\n| Class I | -ати, -яти, -іти (some) | читати, знати |\n| Class II | -ити, -іти (most) | говорити, робити |\n\nToday we'll focus on **Class I** - the more common pattern.\n\n> ⚡ **Pro Tip: Recognizing Classes**\n>\n> Quick rule of thumb:\n> - **-ати/-яти** → almost always Class I\n> - **-ити** → almost always Class II\n> - **-іти** → could be either (check individually)\n>\n> When in doubt, look at the first person singular (я) form - it tells you the class!"
+            "teacherNotes": "### Conjugation Drill\n\nComplete these conjugations:\n\n**робити (to do/make)** - This is Class II, but practice the pattern:\n- я роб**лю** (I do)\n- ти роб**иш** (you do)\n- він/вона роб**ить** (he/she does)\n- ми роб**имо** (we do)\n- ви роб**ите** (you do)\n- вони роб**лять** (they do)\n\n**Compare: знати (Class I) vs робити (Class II)**\n\n| Person | знати (Class I) | робити (Class II) |\n|--------|-----------------|-------------------|\n| я | зна**ю** | робл**ю** |\n| ти | зна**єш** | роб**иш** |\n| він | зна**є** | роб**ить** |\n| ми | зна**ємо** | роб**имо** |\n| ви | зна**єте** | роб**ите** |\n| вони | зна**ють** | робл**ять** |\n\n> 🌍 **Real World: Daily Conversations**\n>\n> These verb forms appear constantly in everyday Ukrainian:\n>\n> - **Що ти робиш?** - What are you doing?\n> - **Я читаю книгу.** - I'm reading a book.\n> - **Вона не знає.** - She doesn't know.\n> - **Ми пишемо листа.** - We're writing a letter.\n> - **Ви говорите українською?** - Do you speak Ukrainian?\n\n### Making Questions\n\nQuestions with verbs work the same as with nouns - just change intonation:\n\n| Statement | Question |\n|-----------|----------|\n| Ти знаєш. (You know.) | Ти знаєш? (Do you know?) |\n| Вона читає. (She reads.) | Вона читає? (Is she reading?) |\n| Вони пишуть. (They write.) | Вони пишуть? (Are they writing?) |"
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Class I Conjugation: -ати/-яти Verbs\n\n**Pattern: читати (to read)**\n\n| Person | Pronoun | Ending | Full Form | English |\n|--------|---------|--------|-----------|---------|\n| 1st sing. | я | -ю | чита**ю** | I read |\n| 2nd sing. | ти | -єш | чита**єш** | you read |\n| 3rd sing. | він/вона | -є | чита**є** | he/she reads |\n| 1st pl. | ми | -ємо | чита**ємо** | we read |\n| 2nd pl. | ви | -єте | чита**єте** | you (pl/formal) read |\n| 3rd pl. | вони | -ють | чита**ють** | they read |\n\n**Key endings to memorize: -ю, -єш, -є, -ємо, -єте, -ють**\n\n> 💡 **Did You Know?**\n>\n> The **-ю** ending in \"я читаю\" comes from the ancient Slavic first person ending. It's related to:\n> - Latin: am**o** (I love)\n> - Greek: λύ**ω** (I loosen)\n> - Sanskrit: bhará**mi** (I carry)\n>\n> You're speaking with endings that are thousands of years old!\n\n> 🔗 **Language Link: The є Pattern**\n>\n> Notice all the є's in Class I endings? The letter **є** (ye) appears in 5 out of 6 forms!\n> - чита**є**ш\n> - чита**є**\n> - чита**є**мо\n> - чита**є**те\n> - But: чита**ю** and чита**ю**ть (no є)\n>\n> This makes Class I very recognizable!"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "More Class I Verbs\n\n**знати (to know)**\n\n| | Form | Example Sentence |\n|-|------|-----------------|\n| я | знаю | Я знаю це. (I know this.) |\n| ти | знаєш | Ти знаєш? (Do you know?) |\n| він/вона | знає | Вона знає. (She knows.) |\n| ми | знаємо | Ми знаємо. (We know.) |\n| ви | знаєте | Ви знаєте це? (Do you know this?) |\n| вони | знають | Вони знають. (They know.) |\n\n**писати (to write)**\n\nNote: The stem changes slightly (пис- → пиш- in я form only)\n\n| | Form | Notes |\n|-|------|-------|\n| я | пишу | Stem change: с → ш |\n| ти | пишеш | Same change |\n| він/вона | пише | Same change |\n| ми | пишемо | Same change |\n| ви | пишете | Same change |\n| вони | пишуть | Same change |\n\n> 🎯 **Fun Fact: Consonant Changes**\n>\n> Some Class I verbs have consonant changes in ALL forms (like писати → пиш-):\n> - **с → ш**: писати → пишу (write)\n> - **з → ж**: казати → кажу (say)\n> - **к → ч**: плакати → плачу (cry)\n>\n> These changes happened centuries ago due to how Slavic sounds evolved. The good news: they're consistent - once you know the pattern, you can predict it!"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Negation: Just Add Не\n\nTo make a verb negative, add **не** (not) before it:\n\n| Positive | Negative |\n|----------|----------|\n| Я знаю. | Я **не** знаю. |\n| Вона читає. | Вона **не** читає. |\n| Вони пишуть. | Вони **не** пишуть. |\n\n> 🎭 **Culture Corner: Double Negatives**\n>\n> Unlike English, Ukrainian **requires** double (or triple!) negatives:\n> - \"I don't know anything\" = \"Я **ні**чого **не** знаю.\" (I nothing not know)\n> - \"Nobody writes anything\" = \"**Ні**хто **ні**чого **не** пише.\"\n>\n> In Ukrainian, negatives stack up - and this is grammatically correct! English speakers need to unlearn the \"double negative is wrong\" rule."
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A1-06-matchup"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Conjugation Drill\n\nComplete these conjugations:\n\n**робити (to do/make)** - This is Class II, but practice the pattern:\n- я роб**лю** (I do)\n- ти роб**иш** (you do)\n- він/вона роб**ить** (he/she does)\n- ми роб**имо** (we do)\n- ви роб**ите** (you do)\n- вони роб**лять** (they do)\n\n**Compare: знати (Class I) vs робити (Class II)**\n\n| Person | знати (Class I) | робити (Class II) |\n|--------|-----------------|-------------------|\n| я | зна**ю** | робл**ю** |\n| ти | зна**єш** | роб**иш** |\n| він | зна**є** | роб**ить** |\n| ми | зна**ємо** | роб**имо** |\n| ви | зна**єте** | роб**ите** |\n| вони | зна**ють** | робл**ять** |\n\n> 🌍 **Real World: Daily Conversations**\n>\n> These verb forms appear constantly in everyday Ukrainian:\n>\n> - **Що ти робиш?** - What are you doing?\n> - **Я читаю книгу.** - I'm reading a book.\n> - **Вона не знає.** - She doesn't know.\n> - **Ми пишемо листа.** - We're writing a letter.\n> - **Ви говорите українською?** - Do you speak Ukrainian?"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Making Questions\n\nQuestions with verbs work the same as with nouns - just change intonation:\n\n| Statement | Question |\n|-----------|----------|\n| Ти знаєш. (You know.) | Ти знаєш? (Do you know?) |\n| Вона читає. (She reads.) | Вона читає? (Is she reading?) |\n| Вони пишуть. (They write.) | Вони пишуть? (Are they writing?) |"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A1-06-quiz"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A1-06-groupsort"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Talk About Yourself\n\nUse these verbs to describe yourself:\n1. Я _______ українську мову. (know → знаю / don't know → не знаю)\n2. Я _______ книги. (read → читаю)\n3. Я _______ листи. (write → пишу)\n4. Я _______ кожен день. (work → працюю)"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Ask Your Partner\n\nPractice asking questions:\n1. Ти _______ українською? (speak → говориш)\n2. Що ти _______? (read → читаєш)\n3. Де ви _______? (work → працюєте)\n\n> ⚡ **Pro Tip: Present = Present AND Future**\n>\n> Ukrainian present tense can also mean future with context:\n> - **Завтра я читаю** - Tomorrow I read (= I'm reading tomorrow)\n> - **Ввечері ми пишемо** - In the evening we write (= we're writing tonight)\n>\n> Context words like \"завтра\" (tomorrow) make the meaning clear!"
+            "teacherNotes": "### Talk About Yourself\n\nUse these verbs to describe yourself:\n1. Я _______ українську мову. (know\n   > [!answer] знаю / don't know → не знаю)\n2. Я _______ книги. (read\n   > [!answer] читаю)\n3. Я _______ листи. (write\n   > [!answer] пишу)\n4. Я _______ кожен день. (work\n   > [!answer] працюю)\n\n### Ask Your Partner\n\nPractice asking questions:\n1. Ти _______ українською? (speak\n   > [!answer] говориш)\n2. Що ти _______? (read\n   > [!answer] читаєш)\n3. Де ви _______? (work\n   > [!answer] працюєте)\n\n> ⚡ **Pro Tip: Present = Present AND Future**\n>\n> Ukrainian present tense can also mean future with context:\n> - **Завтра я читаю** - Tomorrow I read (= I'm reading tomorrow)\n> - **Ввечері ми пишемо** - In the evening we write (= we're writing tonight)\n>\n> Context words like \"завтра\" (tomorrow) make the meaning clear!\n\n---"
           }
         ]
       }
-    ]
+    ],
+    "createdAt": "2025-12-01T22:58:37.226Z",
+    "modifiedAt": "2025-12-01T22:58:37.226Z",
+    "version": 1
   },
   "activities": [
     {
-      "id": "act-uk-A1-06-matchup",
+      "id": "act-a1-6-matchup",
       "type": "match-up",
       "title": "Pronouns to Verb Endings",
       "description": "Match each pronoun to its Class I verb ending.",
       "content": {
         "type": "match-up",
-        "instructions": "Match each pronoun to its Class I verb ending.",
         "pairs": [
           {
             "left": "я",
@@ -174,23 +104,17 @@
       "language": "uk",
       "difficultyLevel": "A1",
       "duration": 5,
-      "tags": [
-        "grammar",
-        "verbs",
-        "conjugation",
-        "present-tense"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.226Z",
+      "modifiedAt": "2025-12-01T22:58:37.226Z"
     },
     {
-      "id": "act-uk-A1-06-quiz",
+      "id": "act-a1-6-quiz",
       "type": "quiz",
       "title": "Conjugate Class I Verbs",
       "description": "Choose the correct verb form for each sentence.",
       "content": {
         "type": "quiz",
-        "instructions": "Choose the correct verb form for each sentence.",
         "questions": [
           {
             "question": "How do you say \"I know\" (знати, я)?",
@@ -291,39 +215,37 @@
       "language": "uk",
       "difficultyLevel": "A1",
       "duration": 5,
-      "tags": [
-        "grammar",
-        "verbs",
-        "conjugation",
-        "present-tense"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.226Z",
+      "modifiedAt": "2025-12-01T22:58:37.226Z"
     },
     {
-      "id": "act-uk-A1-06-groupsort",
+      "id": "act-a1-6-groupsort",
       "type": "group-sort",
       "title": "Class I Endings by Person",
       "description": "Sort the endings by grammatical person.",
       "content": {
         "type": "group-sort",
-        "instructions": "Sort the endings by grammatical person.",
         "groups": [
           {
-            "name": "Singular (One Person)",
+            "id": "singular",
+            "name": "Singular",
             "items": [
               "-ю (я)",
               "-єш (ти)",
               "-є (він/вона/воно)"
-            ]
+            ],
+            "nameUk": "One Person"
           },
           {
-            "name": "Plural (Multiple People)",
+            "id": "plural",
+            "name": "Plural",
             "items": [
               "-ємо (ми)",
               "-єте (ви)",
               "-ють (вони)"
-            ]
+            ],
+            "nameUk": "Multiple People"
           }
         ],
         "shuffleItems": true
@@ -334,181 +256,145 @@
       "language": "uk",
       "difficultyLevel": "A1",
       "duration": 5,
-      "tags": [
-        "grammar",
-        "verbs",
-        "conjugation",
-        "present-tense"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.226Z",
+      "modifiedAt": "2025-12-01T22:58:37.226Z"
     }
   ],
   "vocabulary": {
-    "moduleId": "mod-uk-A1-06",
+    "moduleId": "mod-uk-A1-6",
     "level": "A1",
     "phase": "A1.2",
     "wordCount": 16,
     "transliterationMode": "full",
     "words": [
       {
-        "id": "v-m06-001",
+        "id": "v-chytaty-6-0",
         "uk": "читати",
-        "translit": "",
-        "ipa": "/tʃɪˈtɑtɪ/",
         "en": "to read",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/tʃɪˈtɑtɪ/",
         "note": "Class I: читаю, читаєш..."
       },
       {
-        "id": "v-m06-002",
+        "id": "v-pysaty-6-1",
         "uk": "писати",
-        "translit": "",
-        "ipa": "/pɪˈsɑtɪ/",
         "en": "to write",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/pɪˈsɑtɪ/",
         "note": "Class I with с→ш: пишу, пишеш..."
       },
       {
-        "id": "v-m06-003",
+        "id": "v-znaty-6-2",
         "uk": "знати",
-        "translit": "",
-        "ipa": "/ˈznɑtɪ/",
         "en": "to know",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/ˈznɑtɪ/",
         "note": "Class I: знаю, знаєш..."
       },
       {
-        "id": "v-m06-004",
+        "id": "v-pratsyuvaty-6-3",
         "uk": "працювати",
-        "translit": "",
-        "ipa": "/prɑt͡sʲuˈvɑtɪ/",
         "en": "to work",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/prɑt͡sʲuˈvɑtɪ/",
         "note": "Class I: працюю, працюєш..."
       },
       {
-        "id": "v-m06-005",
+        "id": "v-hovoryty-6-4",
         "uk": "говорити",
-        "translit": "",
-        "ipa": "/ɦɔvɔˈrɪtɪ/",
         "en": "to speak",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/ɦɔvɔˈrɪtɪ/",
         "note": "Class II: говорю, говориш..."
       },
       {
-        "id": "v-m06-006",
+        "id": "v-robyty-6-5",
         "uk": "робити",
-        "translit": "",
-        "ipa": "/rɔˈbɪtɪ/",
         "en": "to do, to make",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/rɔˈbɪtɪ/",
         "note": "Class II: роблю, робиш..."
       },
       {
-        "id": "v-m06-007",
+        "id": "v-dyvytysya-6-6",
         "uk": "дивитися",
-        "translit": "",
-        "ipa": "/dɪvɪˈtɪsʲɑ/",
         "en": "to watch, look",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/dɪvɪˈtɪsʲɑ/",
         "note": "Reflexive Class II"
       },
       {
-        "id": "v-m06-008",
+        "id": "v-slukhaty-6-7",
         "uk": "слухати",
-        "translit": "",
-        "ipa": "/ˈsluxɑtɪ/",
         "en": "to listen",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/ˈsluxɑtɪ/",
         "note": "Class I: слухаю, слухаєш..."
       },
       {
-        "id": "v-m06-009",
+        "id": "v-rozumity-6-8",
         "uk": "розуміти",
-        "translit": "",
-        "ipa": "/rɔzuˈmʲitɪ/",
         "en": "to understand",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/rɔzuˈmʲitɪ/",
         "note": "Class II: розумію, розумієш..."
       },
       {
-        "id": "v-m06-010",
+        "id": "v-dumaty-6-9",
         "uk": "думати",
-        "translit": "",
-        "ipa": "/ˈdumɑtɪ/",
         "en": "to think",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/ˈdumɑtɪ/",
         "note": "Class I: думаю, думаєш..."
       },
       {
-        "id": "v-m06-011",
+        "id": "v-khotity-6-10",
         "uk": "хотіти",
-        "translit": "",
-        "ipa": "/xɔˈtʲitɪ/",
         "en": "to want",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/xɔˈtʲitɪ/",
         "note": "Irregular: хочу, хочеш..."
       },
       {
-        "id": "v-m06-012",
+        "id": "v-ne-6-11",
         "uk": "не",
-        "translit": "",
-        "ipa": "/nɛ/",
         "en": "not",
         "pos": "part",
-        "gender": "-",
+        "ipa": "/nɛ/",
         "note": "Goes before verb"
       },
       {
-        "id": "v-m06-013",
+        "id": "v-lyst-6-12",
         "uk": "лист",
-        "translit": "",
-        "ipa": "/lɪst/",
         "en": "letter",
         "pos": "noun",
+        "ipa": "/lɪst/",
         "gender": "m",
         "note": "Object of писати"
       },
       {
-        "id": "v-m06-014",
+        "id": "v-kozhen-denь-6-13",
         "uk": "кожен день",
-        "translit": "",
-        "ipa": "/ˈkɔʒɛn dɛnʲ/",
         "en": "every day",
         "pos": "phrase",
-        "gender": "-",
+        "ipa": "/ˈkɔʒɛn dɛnʲ/",
         "note": "Time expression"
       },
       {
-        "id": "v-m06-015",
+        "id": "v-zavtra-6-14",
         "uk": "завтра",
-        "translit": "",
-        "ipa": "/ˈzɑvtrɑ/",
         "en": "tomorrow",
         "pos": "adv",
-        "gender": "-",
+        "ipa": "/ˈzɑvtrɑ/",
         "note": "Time word"
       },
       {
-        "id": "v-m06-016",
+        "id": "v-sьohodni-6-15",
         "uk": "сьогодні",
-        "translit": "",
-        "ipa": "/sʲɔˈɦɔdnʲi/",
         "en": "today",
         "pos": "adv",
-        "gender": "-",
+        "ipa": "/sʲɔˈɦɔdnʲi/",
         "note": "Time word"
       }
     ]

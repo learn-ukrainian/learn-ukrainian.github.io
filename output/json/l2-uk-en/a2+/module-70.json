@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-A2+-70",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "vocabulary-expansion",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -26,8 +25,6 @@
       "Nature-related adjectives",
       "Environmental vocabulary"
     ],
-    "totalDuration": 45,
-    "transliterationMode": "none",
     "tags": [
       "vocabulary",
       "nature",
@@ -35,22 +32,9 @@
       "environment",
       "landscapes"
     ],
-    "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
+    "totalDuration": 45,
+    "transliterationMode": "none",
     "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Beyond Basic Weather\n\nYou know \"сонячно\" and \"дощ.\" Now let's expand!\n\n**Weather phenomena:**\n- гроза (thunderstorm), град (hail), туман (fog)\n\n**Landscapes:**\n- гора (mountain), долина (valley), узбережжя (coast)\n\n> 💡 **Why This Matters**\n>\n> Nature and weather vocabulary helps you discuss travel, outdoor activities, and current events about climate and environment."
-          }
-        ]
-      },
       {
         "id": "phase-presentation",
         "name": "presentation",
@@ -59,107 +43,33 @@
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "### Weather - Extended\n\n| Ukrainian | English |\n|-----------|---------|\n| погода | weather |\n| прогноз погоди | weather forecast |\n| температура | temperature |\n| градус | degree |\n| сонячно | sunny |\n| хмарно | cloudy |\n| похмуро | overcast |\n| дощ | rain |\n| злива | heavy rain, downpour |\n| гроза | thunderstorm |\n| блискавка | lightning |\n| грім | thunder |\n| град | hail |\n| сніг | snow |\n| заметіль | snowstorm |\n| туман | fog |\n| мряка | drizzle |\n| вітер | wind |\n| буря | storm |\n| мороз | frost |\n| спека | heat |\n\n**Examples:**\n- **Прогноз погоди** на завтра? - Weather forecast for tomorrow?\n- Сьогодні **хмарно**, можливий **дощ**. - Today is cloudy, rain possible.\n- Була сильна **гроза** з **блискавками**. - There was a strong thunderstorm with lightning.\n- Узимку буває **заметіль**. - In winter there are snowstorms.\n- Яка **спека**! Тридцять градусів! - What heat! Thirty degrees!\n- **Туман** на дорозі. Їдь обережно. - Fog on the road. Drive carefully.\n\n> ⚡ **Pro Tip: Weather Impersonals**\n>\n> Most weather expressions are impersonal: \"Йде дощ\" (It's raining), \"Йде сніг\" (It's snowing), \"Дме вітер\" (Wind is blowing)."
+            "teacherNotes": "### Weather - Extended\n\n| Ukrainian | English |\n|-----------|---------|\n| погода | weather |\n| прогноз погоди | weather forecast |\n| температура | temperature |\n| градус | degree |\n| сонячно | sunny |\n| хмарно | cloudy |\n| похмуро | overcast |\n| дощ | rain |\n| злива | heavy rain, downpour |\n| гроза | thunderstorm |\n| блискавка | lightning |\n| грім | thunder |\n| град | hail |\n| сніг | snow |\n| заметіль | snowstorm |\n| туман | fog |\n| мряка | drizzle |\n| вітер | wind |\n| буря | storm |\n| мороз | frost |\n| спека | heat |\n\n**Examples:**\n- **Прогноз погоди** на завтра? - Weather forecast for tomorrow?\n- Сьогодні **хмарно**, можливий **дощ**. - Today is cloudy, rain possible.\n- Була сильна **гроза** з **блискавками**. - There was a strong thunderstorm with lightning.\n- Узимку буває **заметіль**. - In winter there are snowstorms.\n- Яка **спека**! Тридцять градусів! - What heat! Thirty degrees!\n- **Туман** на дорозі. Їдь обережно. - Fog on the road. Drive carefully.\n\n> ⚡ **Pro Tip: Weather Impersonals**\n>\n> Most weather expressions are impersonal: \"Йде дощ\" (It's raining), \"Йде сніг\" (It's snowing), \"Дме вітер\" (Wind is blowing).\n\n### Weather Verbs\n\n| Ukrainian | English |\n|-----------|---------|\n| йти (дощ, сніг) | to rain, snow |\n| падати | to fall |\n| дути / дме | to blow (wind) |\n| світити | to shine |\n| гриміти | to thunder |\n| блискати | to lightning |\n| холоднішати | to get colder |\n| теплішати | to get warmer |\n| прояснюватися | to clear up |\n| хмаритися | to become cloudy |\n\n**Examples:**\n- **Йде** сильний **дощ**. - It's raining heavily.\n- **Сніг падає** весь день. - Snow is falling all day.\n- **Дме** холодний **вітер**. - A cold wind is blowing.\n- Завтра **потеплішає**. - Tomorrow it will get warmer.\n- До вечора **прояснеться**. - It will clear up by evening.\n- **Гримить** і **блискає**! - It's thundering and lightning!\n\n### Landscapes\n\n| Ukrainian | English |\n|-----------|---------|\n| гора | mountain |\n| пагорб | hill |\n| долина | valley |\n| рівнина | plain |\n| поле | field |\n| луг / луки | meadow |\n| ліс | forest |\n| гай | grove |\n| степ | steppe |\n| пустеля | desert |\n| узбережжя | coast |\n| пляж | beach |\n| острів | island |\n| півострів | peninsula |\n| озеро | lake |\n| ставок | pond |\n| болото | swamp |\n| печера | cave |\n| скеля | cliff, rock |\n| водоспад | waterfall |\n\n**Examples:**\n- **Карпатські гори** красиві. - The Carpathian Mountains are beautiful.\n- Україна — це переважно **рівнина**. - Ukraine is mostly plains.\n- Купатися на **пляжі**. - Swimming at the beach.\n- **Озеро** Світязь — найглибше. - Lake Svityaz is the deepest.\n- Там є великий **водоспад**. - There's a big waterfall there.\n\n> 🎭 **Culture Note: Ukrainian Landscapes**\n>\n> Ukraine has diverse landscapes: Карпати (Carpathians) in the west, степ (steppe) in the south and east, Чорне море (Black Sea) coast.\n\n### Plants\n\n| Ukrainian | English |\n|-----------|---------|\n| рослина | plant |\n| дерево | tree |\n| кущ | bush |\n| квітка | flower |\n| трава | grass |\n| листок | leaf |\n| гілка | branch |\n| корінь | root |\n| насіння | seed |\n| дуб | oak |\n| сосна | pine |\n| береза | birch |\n| верба | willow |\n| каштан | chestnut |\n| троянда | rose |\n| соняшник | sunflower |\n| тюльпан | tulip |\n| ромашка | daisy |\n\n**Examples:**\n- **Дерева** вже жовтіють. - The trees are already turning yellow.\n- Красиві **квіти** в саду. - Beautiful flowers in the garden.\n- **Соняшники** — символ України. - Sunflowers are a symbol of Ukraine.\n- **Береза** — біле дерево. - Birch is a white tree.\n- **Трава** зелена після дощу. - The grass is green after rain.\n\n### Animals\n\n| Ukrainian | English |\n|-----------|---------|\n| тварина | animal |\n| звір | beast, wild animal |\n| птах | bird |\n| риба | fish |\n| комаха | insect |\n| вовк | wolf |\n| ведмідь | bear |\n| лисиця | fox |\n| заєць | hare |\n| білка | squirrel |\n| їжак | hedgehog |\n| олень | deer |\n| журавель | crane |\n| лелека | stork |\n| горобець | sparrow |\n| ворона | crow |\n| сова | owl |\n| метелик | butterfly |\n| бджола | bee |\n| комар | mosquito |\n\n**Examples:**\n- **Лелека** — символ України. - The stork is a symbol of Ukraine.\n- У лісі живуть **вовки** і **ведмеді**. - Wolves and bears live in the forest.\n- **Білки** збирають горіхи. - Squirrels gather nuts.\n- **Бджоли** роблять мед. - Bees make honey.\n- Багато **комарів** увечері. - Many mosquitoes in the evening.\n\n> 🎭 **Culture Note: Лелека**\n>\n> The stork (лелека) is a beloved symbol in Ukraine. It's believed to bring good luck if storks nest on your roof!\n\n### Environmental Terms\n\n| Ukrainian | English |\n|-----------|---------|\n| природа | nature |\n| навколишнє середовище | environment |\n| клімат | climate |\n| забруднення | pollution |\n| глобальне потепління | global warming |\n| сміття | garbage, litter |\n| переробка | recycling |\n| екологія | ecology |\n| захист природи | nature protection |\n| заповідник | nature reserve |\n\n**Examples:**\n- **Природа** потребує захисту. - Nature needs protection.\n- **Забруднення** повітря — проблема. - Air pollution is a problem.\n- Сортуй **сміття** для **переробки**. - Sort garbage for recycling.\n- **Глобальне потепління** змінює клімат. - Global warming is changing the climate.\n- Це національний **заповідник**. - This is a national reserve."
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Weather Verbs\n\n| Ukrainian | English |\n|-----------|---------|\n| йти (дощ, сніг) | to rain, snow |\n| падати | to fall |\n| дути / дме | to blow (wind) |\n| світити | to shine |\n| гриміти | to thunder |\n| блискати | to lightning |\n| холоднішати | to get colder |\n| теплішати | to get warmer |\n| прояснюватися | to clear up |\n| хмаритися | to become cloudy |\n\n**Examples:**\n- **Йде** сильний **дощ**. - It's raining heavily.\n- **Сніг падає** весь день. - Snow is falling all day.\n- **Дме** холодний **вітер**. - A cold wind is blowing.\n- Завтра **потеплішає**. - Tomorrow it will get warmer.\n- До вечора **прояснеться**. - It will clear up by evening.\n- **Гримить** і **блискає**! - It's thundering and lightning!"
+            "teacherNotes": "### Match Weather to Description\n\n1. гроза\n   > [!answer] блискавка + грім + дощ\n2. заметіль\n   > [!answer] сніг + сильний вітер\n3. туман\n   > [!answer] погано видно\n4. злива\n   > [!answer] дуже сильний дощ\n5. спека\n   > [!answer] дуже гаряче\n\n### Complete Weather Report\n\n**Прогноз на завтра:**\nВранці буде ___ (foggy). До обіду ___ (will clear up).\n> [!answer] туман, прояснеться\n\nВдень ___ (sunny), температура ___ (degrees) двадцять п'ять.\n> [!answer] сонячно, градусів\n\nУвечері можлива ___ (thunderstorm).\n> [!answer] гроза\n\n### Group by Category\n\n**Landscapes:** гора, долина, озеро, пляж\n**Plants:** дуб, троянда, береза, соняшник\n**Animals:** вовк, лелека, білка, бджола\n**Weather:** дощ, гроза, туман, вітер\n\n### Translate\n\n1. It's raining heavily.\n   > [!answer] Йде сильний дощ.\n2. The mountains are beautiful.\n   > [!answer] Гори красиві.\n3. Sunflowers are a symbol of Ukraine.\n   > [!answer] Соняшники — символ України.\n4. Tomorrow it will be sunny.\n   > [!answer] Завтра буде сонячно.\n5. Nature needs protection.\n   > [!answer] Природа потребує захисту."
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Landscapes\n\n| Ukrainian | English |\n|-----------|---------|\n| гора | mountain |\n| пагорб | hill |\n| долина | valley |\n| рівнина | plain |\n| поле | field |\n| луг / луки | meadow |\n| ліс | forest |\n| гай | grove |\n| степ | steppe |\n| пустеля | desert |\n| узбережжя | coast |\n| пляж | beach |\n| острів | island |\n| півострів | peninsula |\n| озеро | lake |\n| ставок | pond |\n| болото | swamp |\n| печера | cave |\n| скеля | cliff, rock |\n| водоспад | waterfall |\n\n**Examples:**\n- **Карпатські гори** красиві. - The Carpathian Mountains are beautiful.\n- Україна — це переважно **рівнина**. - Ukraine is mostly plains.\n- Купатися на **пляжі**. - Swimming at the beach.\n- **Озеро** Світязь — найглибше. - Lake Svityaz is the deepest.\n- Там є великий **водоспад**. - There's a big waterfall there.\n\n> 🎭 **Culture Note: Ukrainian Landscapes**\n>\n> Ukraine has diverse landscapes: Карпати (Carpathians) in the west, степ (steppe) in the south and east, Чорне море (Black Sea) coast."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Plants\n\n| Ukrainian | English |\n|-----------|---------|\n| рослина | plant |\n| дерево | tree |\n| кущ | bush |\n| квітка | flower |\n| трава | grass |\n| листок | leaf |\n| гілка | branch |\n| корінь | root |\n| насіння | seed |\n| дуб | oak |\n| сосна | pine |\n| береза | birch |\n| верба | willow |\n| каштан | chestnut |\n| троянда | rose |\n| соняшник | sunflower |\n| тюльпан | tulip |\n| ромашка | daisy |\n\n**Examples:**\n- **Дерева** вже жовтіють. - The trees are already turning yellow.\n- Красиві **квіти** в саду. - Beautiful flowers in the garden.\n- **Соняшники** — символ України. - Sunflowers are a symbol of Ukraine.\n- **Береза** — біле дерево. - Birch is a white tree.\n- **Трава** зелена після дощу. - The grass is green after rain."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Animals\n\n| Ukrainian | English |\n|-----------|---------|\n| тварина | animal |\n| звір | beast, wild animal |\n| птах | bird |\n| риба | fish |\n| комаха | insect |\n| вовк | wolf |\n| ведмідь | bear |\n| лисиця | fox |\n| заєць | hare |\n| білка | squirrel |\n| їжак | hedgehog |\n| олень | deer |\n| журавель | crane |\n| лелека | stork |\n| горобець | sparrow |\n| ворона | crow |\n| сова | owl |\n| метелик | butterfly |\n| бджола | bee |\n| комар | mosquito |\n\n**Examples:**\n- **Лелека** — символ України. - The stork is a symbol of Ukraine.\n- У лісі живуть **вовки** і **ведмеді**. - Wolves and bears live in the forest.\n- **Білки** збирають горіхи. - Squirrels gather nuts.\n- **Бджоли** роблять мед. - Bees make honey.\n- Багато **комарів** увечері. - Many mosquitoes in the evening.\n\n> 🎭 **Culture Note: Лелека**\n>\n> The stork (лелека) is a beloved symbol in Ukraine. It's believed to bring good luck if storks nest on your roof!"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Environmental Terms\n\n| Ukrainian | English |\n|-----------|---------|\n| природа | nature |\n| навколишнє середовище | environment |\n| клімат | climate |\n| забруднення | pollution |\n| глобальне потепління | global warming |\n| сміття | garbage, litter |\n| переробка | recycling |\n| екологія | ecology |\n| захист природи | nature protection |\n| заповідник | nature reserve |\n\n**Examples:**\n- **Природа** потребує захисту. - Nature needs protection.\n- **Забруднення** повітря — проблема. - Air pollution is a problem.\n- Сортуй **сміття** для **переробки**. - Sort garbage for recycling.\n- **Глобальне потепління** змінює клімат. - Global warming is changing the climate.\n- Це національний **заповідник**. - This is a national reserve."
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A2+-70-matchup"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Match Weather to Description\n\n1. гроза → блискавка + грім + дощ\n2. заметіль → сніг + сильний вітер\n3. туман → погано видно\n4. злива → дуже сильний дощ\n5. спека → дуже гаряче"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Complete Weather Report\n\n**Прогноз на завтра:**\nВранці буде ___ (foggy). До обіду ___ (will clear up).\n→ туман, прояснеться\n\nВдень ___ (sunny), температура ___ (degrees) двадцять п'ять.\n→ сонячно, градусів\n\nУвечері можлива ___ (thunderstorm).\n→ гроза"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Group by Category\n\n**Landscapes:** гора, долина, озеро, пляж\n**Plants:** дуб, троянда, береза, соняшник\n**Animals:** вовк, лелека, білка, бджола\n**Weather:** дощ, гроза, туман, вітер"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Translate\n\n1. It's raining heavily. → Йде сильний дощ.\n2. The mountains are beautiful. → Гори красиві.\n3. Sunflowers are a symbol of Ukraine. → Соняшники — символ України.\n4. Tomorrow it will be sunny. → Завтра буде сонячно.\n5. Nature needs protection. → Природа потребує захисту."
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A2+-70-quiz"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A2+-70-groupsort"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Describe Weather Today\n\n**Example:** \"Сьогодні хмарно, десять градусів. Дме холодний вітер. Можливий дощ увечері.\"\n\nDescribe today's weather in your city."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Describe a Landscape\n\n**Example:** \"Я був у Карпатах. Там високі гори, густі ліси, чисті річки. Дуже красиво!\"\n\nDescribe a natural place you've visited."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Environmental Discussion\n\nDiscuss environmental issues:\n- \"Треба сортувати сміття.\"\n- \"Забруднення повітря — серйозна проблема.\"\n- \"Захист природи важливий для майбутнього.\""
+            "teacherNotes": "### Describe Weather Today\n\n**Example:** \"Сьогодні хмарно, десять градусів. Дме холодний вітер. Можливий дощ увечері.\"\n\nDescribe today's weather in your city.\n\n### Describe a Landscape\n\n**Example:** \"Я був у Карпатах. Там високі гори, густі ліси, чисті річки. Дуже красиво!\"\n\nDescribe a natural place you've visited.\n\n### Environmental Discussion\n\nDiscuss environmental issues:\n- \"Треба сортувати сміття.\"\n- \"Забруднення повітря — серйозна проблема.\"\n- \"Захист природи важливий для майбутнього.\"\n\n---"
           }
         ]
       }
-    ]
+    ],
+    "createdAt": "2025-12-01T22:58:37.283Z",
+    "modifiedAt": "2025-12-01T22:58:37.283Z",
+    "version": 1
   },
   "activities": [
     {
-      "id": "act-uk-A2+-70-matchup",
+      "id": "act-a2+-70-matchup",
       "type": "match-up",
       "title": "Animal → Category",
       "description": "Animal → Category",
       "content": {
         "type": "match-up",
-        "instructions": "",
         "pairs": [
           {
             "left": "вовк",
@@ -190,24 +100,17 @@
       "language": "uk",
       "difficultyLevel": "A2+",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "nature",
-        "weather",
-        "environment",
-        "landscapes"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.283Z",
+      "modifiedAt": "2025-12-01T22:58:37.283Z"
     },
     {
-      "id": "act-uk-A2+-70-quiz",
+      "id": "act-a2+-70-quiz",
       "type": "quiz",
       "title": "Nature & Weather",
       "description": "Choose the correct answer.",
       "content": {
         "type": "quiz",
-        "instructions": "Choose the correct answer.",
         "questions": [
           {
             "question": "\"Гроза\" includes ___.",
@@ -286,60 +189,61 @@
       "language": "uk",
       "difficultyLevel": "A2+",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "nature",
-        "weather",
-        "environment",
-        "landscapes"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.283Z",
+      "modifiedAt": "2025-12-01T22:58:37.283Z"
     },
     {
-      "id": "act-uk-A2+-70-groupsort",
+      "id": "act-a2+-70-groupsort",
       "type": "group-sort",
       "title": "By Type",
       "description": "By Type",
       "content": {
         "type": "group-sort",
-        "instructions": "",
         "groups": [
           {
-            "name": "Погода (Weather)",
+            "id": "",
+            "name": "Погода",
             "items": [
               "гроза",
               "туман",
               "спека",
               "заметіль"
-            ]
+            ],
+            "nameUk": "Weather"
           },
           {
-            "name": "Ландшафти (Landscapes)",
+            "id": "",
+            "name": "Ландшафти",
             "items": [
               "гора",
               "долина",
               "озеро",
               "степ"
-            ]
+            ],
+            "nameUk": "Landscapes"
           },
           {
-            "name": "Рослини (Plants)",
+            "id": "",
+            "name": "Рослини",
             "items": [
               "дуб",
               "сосна",
               "троянда",
               "соняшник"
-            ]
+            ],
+            "nameUk": "Plants"
           },
           {
-            "name": "Тварини (Animals)",
+            "id": "",
+            "name": "Тварини",
             "items": [
               "вовк",
               "лелека",
               "бджола",
               "їжак"
-            ]
+            ],
+            "nameUk": "Animals"
           }
         ],
         "shuffleItems": true
@@ -350,15 +254,9 @@
       "language": "uk",
       "difficultyLevel": "A2+",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "nature",
-        "weather",
-        "environment",
-        "landscapes"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.283Z",
+      "modifiedAt": "2025-12-01T22:58:37.283Z"
     }
   ],
   "vocabulary": {
@@ -369,354 +267,315 @@
     "transliterationMode": "none",
     "words": [
       {
-        "id": "v-m70-001",
+        "id": "v-prohnoz-pohody-70-0",
         "uk": "прогноз погоди",
-        "translit": "",
-        "ipa": "/proɦˈnoz poˈɦodɪ/",
         "en": "weather forecast",
         "pos": "noun",
+        "ipa": "/proɦˈnoz poˈɦodɪ/",
         "gender": "m"
       },
       {
-        "id": "v-m70-002",
+        "id": "v-zlyva-70-1",
         "uk": "злива",
-        "translit": "",
-        "ipa": "/ˈzlɪvɑ/",
         "en": "downpour",
         "pos": "noun",
+        "ipa": "/ˈzlɪvɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m70-003",
+        "id": "v-hroza-70-2",
         "uk": "гроза",
-        "translit": "",
-        "ipa": "/ɦroˈzɑ/",
         "en": "thunderstorm",
         "pos": "noun",
+        "ipa": "/ɦroˈzɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m70-004",
+        "id": "v-blyskavka-70-3",
         "uk": "блискавка",
-        "translit": "",
-        "ipa": "/blɪsˈkɑvkɑ/",
         "en": "lightning",
         "pos": "noun",
+        "ipa": "/blɪsˈkɑvkɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m70-005",
+        "id": "v-hrim-70-4",
         "uk": "грім",
-        "translit": "",
-        "ipa": "/ɦrʲim/",
         "en": "thunder",
         "pos": "noun",
+        "ipa": "/ɦrʲim/",
         "gender": "m"
       },
       {
-        "id": "v-m70-006",
+        "id": "v-hrad-70-5",
         "uk": "град",
-        "translit": "",
-        "ipa": "/ɦrɑd/",
         "en": "hail",
         "pos": "noun",
+        "ipa": "/ɦrɑd/",
         "gender": "m"
       },
       {
-        "id": "v-m70-007",
+        "id": "v-zametilь-70-6",
         "uk": "заметіль",
-        "translit": "",
-        "ipa": "/zɑmɛˈtʲilʲ/",
         "en": "snowstorm",
         "pos": "noun",
+        "ipa": "/zɑmɛˈtʲilʲ/",
         "gender": "f"
       },
       {
-        "id": "v-m70-008",
+        "id": "v-tuman-70-7",
         "uk": "туман",
-        "translit": "",
-        "ipa": "/tuˈmɑn/",
         "en": "fog",
         "pos": "noun",
+        "ipa": "/tuˈmɑn/",
         "gender": "m"
       },
       {
-        "id": "v-m70-009",
+        "id": "v-mryaka-70-8",
         "uk": "мряка",
-        "translit": "",
-        "ipa": "/ˈmrʲɑkɑ/",
         "en": "drizzle",
         "pos": "noun",
+        "ipa": "/ˈmrʲɑkɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m70-010",
+        "id": "v-burya-70-9",
         "uk": "буря",
-        "translit": "",
-        "ipa": "/ˈburʲɑ/",
         "en": "storm",
         "pos": "noun",
+        "ipa": "/ˈburʲɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m70-011",
+        "id": "v-moroz-70-10",
         "uk": "мороз",
-        "translit": "",
-        "ipa": "/moˈroz/",
         "en": "frost",
         "pos": "noun",
+        "ipa": "/moˈroz/",
         "gender": "m"
       },
       {
-        "id": "v-m70-012",
+        "id": "v-speka-70-11",
         "uk": "спека",
-        "translit": "",
-        "ipa": "/ˈspɛkɑ/",
         "en": "heat",
         "pos": "noun",
+        "ipa": "/ˈspɛkɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m70-013",
+        "id": "v-hora-70-12",
         "uk": "гора",
-        "translit": "",
-        "ipa": "/ɦoˈrɑ/",
         "en": "mountain",
         "pos": "noun",
+        "ipa": "/ɦoˈrɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m70-014",
+        "id": "v-dolyna-70-13",
         "uk": "долина",
-        "translit": "",
-        "ipa": "/doˈlɪnɑ/",
         "en": "valley",
         "pos": "noun",
+        "ipa": "/doˈlɪnɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m70-015",
+        "id": "v-rivnyna-70-14",
         "uk": "рівнина",
-        "translit": "",
-        "ipa": "/rʲivˈnɪnɑ/",
         "en": "plain",
         "pos": "noun",
+        "ipa": "/rʲivˈnɪnɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m70-016",
+        "id": "v-step-70-15",
         "uk": "степ",
-        "translit": "",
-        "ipa": "/stɛp/",
         "en": "steppe",
         "pos": "noun",
+        "ipa": "/stɛp/",
         "gender": "m"
       },
       {
-        "id": "v-m70-017",
+        "id": "v-uzberezhzhya-70-16",
         "uk": "узбережжя",
-        "translit": "",
-        "ipa": "/uzˈbɛrɛʒːɑ/",
         "en": "coast",
         "pos": "noun",
+        "ipa": "/uzˈbɛrɛʒːɑ/",
         "gender": "n"
       },
       {
-        "id": "v-m70-018",
+        "id": "v-ostriv-70-17",
         "uk": "острів",
-        "translit": "",
-        "ipa": "/ˈostrʲiv/",
         "en": "island",
         "pos": "noun",
+        "ipa": "/ˈostrʲiv/",
         "gender": "m"
       },
       {
-        "id": "v-m70-019",
+        "id": "v-ozero-70-18",
         "uk": "озеро",
-        "translit": "",
-        "ipa": "/ˈozɛro/",
         "en": "lake",
         "pos": "noun",
+        "ipa": "/ˈozɛro/",
         "gender": "n"
       },
       {
-        "id": "v-m70-020",
+        "id": "v-boloto-70-19",
         "uk": "болото",
-        "translit": "",
-        "ipa": "/boˈloto/",
         "en": "swamp",
         "pos": "noun",
+        "ipa": "/boˈloto/",
         "gender": "n"
       },
       {
-        "id": "v-m70-021",
+        "id": "v-vodospad-70-20",
         "uk": "водоспад",
-        "translit": "",
-        "ipa": "/vodosˈpɑd/",
         "en": "waterfall",
         "pos": "noun",
+        "ipa": "/vodosˈpɑd/",
         "gender": "m"
       },
       {
-        "id": "v-m70-022",
+        "id": "v-dub-70-21",
         "uk": "дуб",
-        "translit": "",
-        "ipa": "/dub/",
         "en": "oak",
         "pos": "noun",
+        "ipa": "/dub/",
         "gender": "m"
       },
       {
-        "id": "v-m70-023",
+        "id": "v-sosna-70-22",
         "uk": "сосна",
-        "translit": "",
-        "ipa": "/sosˈnɑ/",
         "en": "pine",
         "pos": "noun",
+        "ipa": "/sosˈnɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m70-024",
+        "id": "v-bereza-70-23",
         "uk": "береза",
-        "translit": "",
-        "ipa": "/bɛˈrɛzɑ/",
         "en": "birch",
         "pos": "noun",
+        "ipa": "/bɛˈrɛzɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m70-025",
+        "id": "v-sonyashnyk-70-24",
         "uk": "соняшник",
-        "translit": "",
-        "ipa": "/soˈnʲɑʃnɪk/",
         "en": "sunflower",
         "pos": "noun",
+        "ipa": "/soˈnʲɑʃnɪk/",
         "gender": "m"
       },
       {
-        "id": "v-m70-026",
+        "id": "v-troyanda-70-25",
         "uk": "троянда",
-        "translit": "",
-        "ipa": "/troˈjɑndɑ/",
         "en": "rose",
         "pos": "noun",
+        "ipa": "/troˈjɑndɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m70-027",
+        "id": "v-vovk-70-26",
         "uk": "вовк",
-        "translit": "",
-        "ipa": "/vovk/",
         "en": "wolf",
         "pos": "noun",
+        "ipa": "/vovk/",
         "gender": "m"
       },
       {
-        "id": "v-m70-028",
+        "id": "v-vedmidь-70-27",
         "uk": "ведмідь",
-        "translit": "",
-        "ipa": "/vɛdˈmʲidʲ/",
         "en": "bear",
         "pos": "noun",
+        "ipa": "/vɛdˈmʲidʲ/",
         "gender": "m"
       },
       {
-        "id": "v-m70-029",
+        "id": "v-lysytsya-70-28",
         "uk": "лисиця",
-        "translit": "",
-        "ipa": "/lɪˈsɪtsʲɑ/",
         "en": "fox",
         "pos": "noun",
+        "ipa": "/lɪˈsɪtsʲɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m70-030",
+        "id": "v-bilka-70-29",
         "uk": "білка",
-        "translit": "",
-        "ipa": "/ˈbʲilkɑ/",
         "en": "squirrel",
         "pos": "noun",
+        "ipa": "/ˈbʲilkɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m70-031",
+        "id": "v-yizhak-70-30",
         "uk": "їжак",
-        "translit": "",
-        "ipa": "/jiˈʒɑk/",
         "en": "hedgehog",
         "pos": "noun",
+        "ipa": "/jiˈʒɑk/",
         "gender": "m"
       },
       {
-        "id": "v-m70-032",
+        "id": "v-leleka-70-31",
         "uk": "лелека",
-        "translit": "",
-        "ipa": "/lɛˈlɛkɑ/",
         "en": "stork",
         "pos": "noun",
+        "ipa": "/lɛˈlɛkɑ/",
         "gender": "m"
       },
       {
-        "id": "v-m70-033",
+        "id": "v-sova-70-32",
         "uk": "сова",
-        "translit": "",
-        "ipa": "/soˈvɑ/",
         "en": "owl",
         "pos": "noun",
+        "ipa": "/soˈvɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m70-034",
+        "id": "v-metelyk-70-33",
         "uk": "метелик",
-        "translit": "",
-        "ipa": "/mɛˈtɛlɪk/",
         "en": "butterfly",
         "pos": "noun",
+        "ipa": "/mɛˈtɛlɪk/",
         "gender": "m"
       },
       {
-        "id": "v-m70-035",
+        "id": "v-bdzhola-70-34",
         "uk": "бджола",
-        "translit": "",
-        "ipa": "/bdʒoˈlɑ/",
         "en": "bee",
         "pos": "noun",
+        "ipa": "/bdʒoˈlɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m70-036",
+        "id": "v-pryroda-70-35",
         "uk": "природа",
-        "translit": "",
-        "ipa": "/prɪˈrodɑ/",
         "en": "nature",
         "pos": "noun",
+        "ipa": "/prɪˈrodɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m70-037",
+        "id": "v-zabrudnennya-70-36",
         "uk": "забруднення",
-        "translit": "",
-        "ipa": "/zɑbrudˈnɛnʲːɑ/",
         "en": "pollution",
         "pos": "noun",
+        "ipa": "/zɑbrudˈnɛnʲːɑ/",
         "gender": "n"
       },
       {
-        "id": "v-m70-038",
+        "id": "v-pererobka-70-37",
         "uk": "переробка",
-        "translit": "",
-        "ipa": "/pɛrɛˈrobkɑ/",
         "en": "recycling",
         "pos": "noun",
+        "ipa": "/pɛrɛˈrobkɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m70-039",
+        "id": "v-zapovidnyk-70-38",
         "uk": "заповідник",
-        "translit": "",
-        "ipa": "/zɑpoˈvʲidnɪk/",
         "en": "nature reserve",
         "pos": "noun",
+        "ipa": "/zɑpoˈvʲidnɪk/",
         "gender": "m"
       }
     ]

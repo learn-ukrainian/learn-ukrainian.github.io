@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-B1-95",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "vocabulary-expansion",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -22,170 +21,43 @@
       "Use abstract nouns in context"
     ],
     "grammarFocus": [],
-    "totalDuration": 45,
-    "transliterationMode": "none",
     "tags": [
       "vocabulary",
       "abstract",
       "concepts",
       "thinking"
     ],
+    "totalDuration": 45,
+    "transliterationMode": "none",
+    "phases": [],
+    "createdAt": "2025-12-01T22:58:37.292Z",
+    "modifiedAt": "2025-12-01T22:58:37.292Z",
     "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
-    "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Абстрактне мислення | Beyond the Concrete\n\nНа рівні A2 ви вивчили конкретну лексику: їжу, місця, предмети.\n\nAt A2, you learned concrete vocabulary: food, places, objects.\n\nНа рівні B1 потрібна **абстрактна лексика** — слова для речей, яких не можна торкнутися:\n\nAt B1, you need **abstract vocabulary** — words for things you can't touch:\n- Ідеї та думки | Ideas and thoughts\n- Проблеми та рішення | Problems and solutions\n- Причини та результати | Reasons and results"
-          }
-        ]
-      },
-      {
-        "id": "phase-presentation",
-        "name": "presentation",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Ідеї та думки | Ideas and Thoughts\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| ідея | /iˈdɛjɑ/ | idea | У мене є ідея. |\n| думка | /ˈdumkɑ/ | thought, opinion | Яка твоя думка? |\n| поняття | /poˈnʲɑtʲːɑ/ | concept, notion | Це складне поняття. |\n| уявлення | /ujɑvˈlɛnʲːɑ/ | idea, imagination | Не маю уявлення. |\n| погляд | /ˈpoɦlʲɑd/ | view, outlook | Сучасний погляд на проблему. |\n| точка зору | /ˈtot͡ʃkɑ ˈzoru/ | point of view | З моєї точки зору... |\n| припущення | /prɪpuˈʃt͡ʃɛnʲːɑ/ | assumption | Це лише припущення. |\n| висновок | /ˈvɪsnovok/ | conclusion | Який твій висновок? |\n\n**Usage examples:**\n\n- У мене є **ідея**, як це зробити. - I have an idea how to do this.\n- Яка твоя **думка** з цього приводу? - What's your opinion on this?\n- Я не маю **уявлення**, що робити. - I have no idea what to do.\n- З **моєї точки зору**, це неправильно. - From my point of view, this is wrong.\n- Ми **прийшли до висновку**, що... - We came to the conclusion that..."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Проблеми та труднощі | Problems and Difficulties\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| проблема | /probˈlɛmɑ/ | problem | Це серйозна проблема. |\n| питання | /pɪˈtɑnʲːɑ/ | question, issue | Це важливе питання. |\n| труднощі | /trudˈnoʃt͡ʃʲi/ | difficulties | Я маю труднощі з цим. |\n| перешкода | /pɛrɛˈʃkodɑ/ | obstacle | Яка головна перешкода? |\n| складність | /sklɑdˈnʲistʲ/ | complexity | У чому складність? |\n| недолік | /nɛdoˈlʲik/ | shortcoming | Це єдиний недолік. |\n| помилка | /poˈmɪlkɑ/ | mistake, error | Я зробив помилку. |\n| невдача | /nɛvˈdɑt͡ʃɑ/ | failure | Невдача — це урок. |\n\n**Usage examples:**\n\n- Яка **проблема**? - What's the problem?\n- Це не **питання** грошей. - It's not a question of money.\n- Ми зіткнулися з **труднощами**. - We encountered difficulties.\n- Головна **перешкода** — брак часу. - The main obstacle is lack of time.\n- У цьому плані є один **недолік**. - This plan has one shortcoming."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Рішення та результати | Solutions and Results\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| рішення | /rʲiˈʃɛnʲːɑ/ | decision, solution | Це правильне рішення. |\n| вирішення | /vɪrʲiˈʃɛnʲːɑ/ | solving, resolution | Вирішення проблеми. |\n| вихід | /ˈvɪxʲid/ | way out, exit | Завжди є вихід. |\n| результат | /rɛzulʲˈtɑt/ | result | Який результат? |\n| наслідок | /ˈnɑslʲidok/ | consequence | Це наслідок помилки. |\n| успіх | /uˈspʲix/ | success | Бажаю успіху! |\n| досягнення | /dosʲɑɦˈnɛnʲːɑ/ | achievement | Це велике досягнення. |\n| прогрес | /proɦˈrɛs/ | progress | Є прогрес. |\n\n**Usage examples:**\n\n- Ми знайшли **рішення**. - We found a solution.\n- **Вирішення** цієї проблеми займе час. - Solving this problem will take time.\n- Завжди є **вихід**. - There's always a way out.\n- **Результат** перевершив очікування. - The result exceeded expectations.\n- Це **наслідок** недбалості. - This is a consequence of negligence."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Причини | Reasons and Causes\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| причина | /prɪˈt͡ʃɪnɑ/ | reason, cause | Яка причина? |\n| підстава | /pʲidˈstɑvɑ/ | basis, grounds | На якій підставі? |\n| мотив | /moˈtɪv/ | motive | Який його мотив? |\n| мета | /mɛˈtɑ/ | goal, purpose | Яка твоя мета? |\n| сенс | /sɛns/ | sense, meaning | У цьому немає сенсу. |\n| значення | /znɑˈt͡ʃɛnʲːɑ/ | meaning, importance | Це не має значення. |\n\n**Usage examples:**\n\n- **Причина** проблеми — недосвідченість. - The reason for the problem is inexperience.\n- На якій **підставі** ви це стверджуєте? - On what grounds do you claim this?\n- Яка **мета** цього проєкту? - What's the goal of this project?\n- У цьому немає **сенсу**. - There's no point in this.\n- Це не має **значення**. - It doesn't matter."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Дієслова абстрактного мислення | Verbs for Abstract Thinking\n\n| Ukrainian | IPA | English | Aspect |\n|-----------|-----|---------|--------|\n| думати | /ˈdumɑtɪ/ | to think | impf |\n| вважати | /vvɑˈʒɑtɪ/ | to consider, think | impf |\n| припускати | /prɪpusˈkɑtɪ/ | to assume | impf |\n| припустити | /prɪpusˈtɪtɪ/ | to assume | pf |\n| робити висновок | - | to conclude | impf |\n| зробити висновок | - | to conclude | pf |\n| вирішувати | /vɪrʲiˈʃuvɑtɪ/ | to solve, decide | impf |\n| вирішити | /vɪˈrʲiʃɪtɪ/ | to solve, decide | pf |\n| сумніватися | /sumnʲiˈvɑtɪsʲɑ/ | to doubt | impf |\n\n**Usage examples:**\n\n- Я **вважаю**, що це правильно. - I think/consider this is right.\n- **Припускаю**, що він спізниться. - I assume he'll be late.\n- Я **сумніваюся** в цьому. - I doubt this."
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-B1-95-matchup"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Розподіліть слова | Categorize Words\n\nSort these words into categories:\n\n**Words:** проблема, рішення, ідея, причина, результат, труднощі, висновок, мета\n\n| Problems | Solutions | Thinking |\n|----------|-----------|----------|\n| проблема | рішення | ідея |\n| труднощі | результат | висновок |\n| | | причина, мета |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Доповніть речення | Complete Sentences\n\n1. Яка головна ___ цієї проблеми? (reason) → **причина**\n2. Ми знайшли ___ проблеми. (solution) → **вирішення/рішення**\n3. Це цікава ___. (idea) → **ідея**\n4. Який ___ цього експерименту? (result) → **результат**\n5. У мене немає ___, що робити. (idea) → **уявлення**\n6. Яка твоя ___ з цього приводу? (opinion) → **думка**"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Складіть речення | Form Sentences\n\nCreate sentences using:\n\n1. **причина** — Причина моєї відсутності — хвороба.\n2. **рішення** — Це важке рішення.\n3. **труднощі** — Ми зіткнулися з труднощами.\n4. **мета** — Моя мета — вивчити українську.\n5. **висновок** — Який твій висновок?"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Дискусія: Вирішення проблем | Discussion: Problem-Solving\n\nDiscuss using abstract vocabulary:\n\n**Topic:** Learning a new language\n\n- Яка головна **проблема**?\n- Які **труднощі** ви маєте?\n- Яке **рішення** ви знайшли?\n- Який ваш **прогрес**?"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-B1-95-quiz"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Опишіть проблему | Describe a Problem\n\nDescribe a problem you faced using:\n- проблема, причина, труднощі, рішення, результат\n\n**Example:**\nМинулого року я мав **проблему** з роботою. **Причина** була в тому, що компанія закрилася. Я мав **труднощі** з пошуком нової роботи. Але я знайшов **рішення** — почав вивчати нові навички. **Результат** — я знайшов кращу роботу."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Висловіть свої думки | Express Your Ideas\n\nUse abstract vocabulary to discuss:\n- Ваша **точка зору** на вивчення мов\n- Ваші **досягнення** в українській\n- Ваша **мета** на цей рік"
-          }
-        ]
-      }
-    ],
-    "rawMarkdown": "# Зміст уроку | Lesson Content\n\n## warm-up | Розминка\n\n### Абстрактне мислення | Beyond the Concrete\n\nНа рівні A2 ви вивчили конкретну лексику: їжу, місця, предмети.\n\nAt A2, you learned concrete vocabulary: food, places, objects.\n\nНа рівні B1 потрібна **абстрактна лексика** — слова для речей, яких не можна торкнутися:\n\nAt B1, you need **abstract vocabulary** — words for things you can't touch:\n- Ідеї та думки | Ideas and thoughts\n- Проблеми та рішення | Problems and solutions\n- Причини та результати | Reasons and results\n\n## presentation | Презентація\n\n### Ідеї та думки | Ideas and Thoughts\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| ідея | /iˈdɛjɑ/ | idea | У мене є ідея. |\n| думка | /ˈdumkɑ/ | thought, opinion | Яка твоя думка? |\n| поняття | /poˈnʲɑtʲːɑ/ | concept, notion | Це складне поняття. |\n| уявлення | /ujɑvˈlɛnʲːɑ/ | idea, imagination | Не маю уявлення. |\n| погляд | /ˈpoɦlʲɑd/ | view, outlook | Сучасний погляд на проблему. |\n| точка зору | /ˈtot͡ʃkɑ ˈzoru/ | point of view | З моєї точки зору... |\n| припущення | /prɪpuˈʃt͡ʃɛnʲːɑ/ | assumption | Це лише припущення. |\n| висновок | /ˈvɪsnovok/ | conclusion | Який твій висновок? |\n\n**Usage examples:**\n\n- У мене є **ідея**, як це зробити. - I have an idea how to do this.\n- Яка твоя **думка** з цього приводу? - What's your opinion on this?\n- Я не маю **уявлення**, що робити. - I have no idea what to do.\n- З **моєї точки зору**, це неправильно. - From my point of view, this is wrong.\n- Ми **прийшли до висновку**, що... - We came to the conclusion that...\n\n### Проблеми та труднощі | Problems and Difficulties\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| проблема | /probˈlɛmɑ/ | problem | Це серйозна проблема. |\n| питання | /pɪˈtɑnʲːɑ/ | question, issue | Це важливе питання. |\n| труднощі | /trudˈnoʃt͡ʃʲi/ | difficulties | Я маю труднощі з цим. |\n| перешкода | /pɛrɛˈʃkodɑ/ | obstacle | Яка головна перешкода? |\n| складність | /sklɑdˈnʲistʲ/ | complexity | У чому складність? |\n| недолік | /nɛdoˈlʲik/ | shortcoming | Це єдиний недолік. |\n| помилка | /poˈmɪlkɑ/ | mistake, error | Я зробив помилку. |\n| невдача | /nɛvˈdɑt͡ʃɑ/ | failure | Невдача — це урок. |\n\n**Usage examples:**\n\n- Яка **проблема**? - What's the problem?\n- Це не **питання** грошей. - It's not a question of money.\n- Ми зіткнулися з **труднощами**. - We encountered difficulties.\n- Головна **перешкода** — брак часу. - The main obstacle is lack of time.\n- У цьому плані є один **недолік**. - This plan has one shortcoming.\n\n### Рішення та результати | Solutions and Results\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| рішення | /rʲiˈʃɛnʲːɑ/ | decision, solution | Це правильне рішення. |\n| вирішення | /vɪrʲiˈʃɛnʲːɑ/ | solving, resolution | Вирішення проблеми. |\n| вихід | /ˈvɪxʲid/ | way out, exit | Завжди є вихід. |\n| результат | /rɛzulʲˈtɑt/ | result | Який результат? |\n| наслідок | /ˈnɑslʲidok/ | consequence | Це наслідок помилки. |\n| успіх | /uˈspʲix/ | success | Бажаю успіху! |\n| досягнення | /dosʲɑɦˈnɛnʲːɑ/ | achievement | Це велике досягнення. |\n| прогрес | /proɦˈrɛs/ | progress | Є прогрес. |\n\n**Usage examples:**\n\n- Ми знайшли **рішення**. - We found a solution.\n- **Вирішення** цієї проблеми займе час. - Solving this problem will take time.\n- Завжди є **вихід**. - There's always a way out.\n- **Результат** перевершив очікування. - The result exceeded expectations.\n- Це **наслідок** недбалості. - This is a consequence of negligence.\n\n### Причини | Reasons and Causes\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| причина | /prɪˈt͡ʃɪnɑ/ | reason, cause | Яка причина? |\n| підстава | /pʲidˈstɑvɑ/ | basis, grounds | На якій підставі? |\n| мотив | /moˈtɪv/ | motive | Який його мотив? |\n| мета | /mɛˈtɑ/ | goal, purpose | Яка твоя мета? |\n| сенс | /sɛns/ | sense, meaning | У цьому немає сенсу. |\n| значення | /znɑˈt͡ʃɛnʲːɑ/ | meaning, importance | Це не має значення. |\n\n**Usage examples:**\n\n- **Причина** проблеми — недосвідченість. - The reason for the problem is inexperience.\n- На якій **підставі** ви це стверджуєте? - On what grounds do you claim this?\n- Яка **мета** цього проєкту? - What's the goal of this project?\n- У цьому немає **сенсу**. - There's no point in this.\n- Це не має **значення**. - It doesn't matter.\n\n### Дієслова абстрактного мислення | Verbs for Abstract Thinking\n\n| Ukrainian | IPA | English | Aspect |\n|-----------|-----|---------|--------|\n| думати | /ˈdumɑtɪ/ | to think | impf |\n| вважати | /vvɑˈʒɑtɪ/ | to consider, think | impf |\n| припускати | /prɪpusˈkɑtɪ/ | to assume | impf |\n| припустити | /prɪpusˈtɪtɪ/ | to assume | pf |\n| робити висновок | - | to conclude | impf |\n| зробити висновок | - | to conclude | pf |\n| вирішувати | /vɪrʲiˈʃuvɑtɪ/ | to solve, decide | impf |\n| вирішити | /vɪˈrʲiʃɪtɪ/ | to solve, decide | pf |\n| сумніватися | /sumnʲiˈvɑtɪsʲɑ/ | to doubt | impf |\n\n**Usage examples:**\n\n- Я **вважаю**, що це правильно. - I think/consider this is right.\n- **Припускаю**, що він спізниться. - I assume he'll be late.\n- Я **сумніваюся** в цьому. - I doubt this.\n\n## practice | Практика\n\n### Розподіліть слова | Categorize Words\n\nSort these words into categories:\n\n**Words:** проблема, рішення, ідея, причина, результат, труднощі, висновок, мета\n\n| Problems | Solutions | Thinking |\n|----------|-----------|----------|\n| проблема | рішення | ідея |\n| труднощі | результат | висновок |\n| | | причина, мета |\n\n### Доповніть речення | Complete Sentences\n\n1. Яка головна ___ цієї проблеми? (reason) → **причина**\n2. Ми знайшли ___ проблеми. (solution) → **вирішення/рішення**\n3. Це цікава ___. (idea) → **ідея**\n4. Який ___ цього експерименту? (result) → **результат**\n5. У мене немає ___, що робити. (idea) → **уявлення**\n6. Яка твоя ___ з цього приводу? (opinion) → **думка**\n\n### Складіть речення | Form Sentences\n\nCreate sentences using:\n\n1. **причина** — Причина моєї відсутності — хвороба.\n2. **рішення** — Це важке рішення.\n3. **труднощі** — Ми зіткнулися з труднощами.\n4. **мета** — Моя мета — вивчити українську.\n5. **висновок** — Який твій висновок?\n\n### Дискусія: Вирішення проблем | Discussion: Problem-Solving\n\nDiscuss using abstract vocabulary:\n\n**Topic:** Learning a new language\n\n- Яка головна **проблема**?\n- Які **труднощі** ви маєте?\n- Яке **рішення** ви знайшли?\n- Який ваш **прогрес**?\n\n## production | Продукція\n\n### Опишіть проблему | Describe a Problem\n\nDescribe a problem you faced using:\n- проблема, причина, труднощі, рішення, результат\n\n**Example:**\nМинулого року я мав **проблему** з роботою. **Причина** була в тому, що компанія закрилася. Я мав **труднощі** з пошуком нової роботи. Але я знайшов **рішення** — почав вивчати нові навички. **Результат** — я знайшов кращу роботу.\n\n### Висловіть свої думки | Express Your Ideas\n\nUse abstract vocabulary to discuss:\n- Ваша **точка зору** на вивчення мов\n- Ваші **досягнення** в українській\n- Ваша **мета** на цей рік\n\n---\n\n# Activities\n\n## quiz: Abstract Concepts\n\n> Match Ukrainian with English.\n\n1. проблема\n   - [x] problem\n   - [ ] solution\n\n2. рішення\n   - [x] solution\n   - [ ] reason\n\n3. причина\n   - [ ] result\n   - [x] reason\n\n4. висновок\n   - [x] conclusion\n   - [ ] question\n\n5. мета\n   - [ ] meaning\n   - [x] goal\n\n6. труднощі\n   - [x] difficulties\n   - [ ] achievements\n\n## match-up: Pairs\n\n| Problem Words | Solution Words |\n|---------------|----------------|\n| проблема | рішення |\n| труднощі | вирішення |\n| перешкода | вихід |\n| недолік | успіх |\n\n## fill-in: Complete the Story\n\n> Ми почали новий проєкт. Спочатку ми визначили ___ (goal). Потім виникли ___ (difficulties). Головна ___ (problem) — брак часу. ___ (Reason) — занадто багато завдань. Але ми знайшли ___ (solution). ___ (Result) перевершив очікування!\n\n**Answers:** мету, труднощі, проблема, причина, рішення/вихід, результат\n\n---",
     "immersiveSections": [
       {
-        "id": "warm-up-розминка",
-        "title": "warm-up | Розминка",
-        "content": "### Абстрактне мислення | Beyond the Concrete\n\nНа рівні A2 ви вивчили конкретну лексику: їжу, місця, предмети.\n\nAt A2, you learned concrete vocabulary: food, places, objects.\n\nНа рівні B1 потрібна **абстрактна лексика** — слова для речей, яких не можна торкнутися:\n\nAt B1, you need **abstract vocabulary** — words for things you can't touch:\n- Ідеї та думки | Ideas and thoughts\n- Проблеми та рішення | Problems and solutions\n- Причини та результати | Reasons and results",
-        "type": "topic"
+        "id": "section-зміст-уроку-lesson-content",
+        "type": "content",
+        "title": "Зміст уроку | Lesson Content",
+        "content": "## warm-up | Розминка\n\n### Абстрактне мислення | Beyond the Concrete\n\nНа рівні A2 ви вивчили конкретну лексику: їжу, місця, предмети.\n\nAt A2, you learned concrete vocabulary: food, places, objects.\n\nНа рівні B1 потрібна **абстрактна лексика** — слова для речей, яких не можна торкнутися:\n\nAt B1, you need **abstract vocabulary** — words for things you can't touch:\n- Ідеї та думки | Ideas and thoughts\n- Проблеми та рішення | Problems and solutions\n- Причини та результати | Reasons and results\n\n## presentation | Презентація\n\n### Ідеї та думки | Ideas and Thoughts\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| ідея | /iˈdɛjɑ/ | idea | У мене є ідея. |\n| думка | /ˈdumkɑ/ | thought, opinion | Яка твоя думка? |\n| поняття | /poˈnʲɑtʲːɑ/ | concept, notion | Це складне поняття. |\n| уявлення | /ujɑvˈlɛnʲːɑ/ | idea, imagination | Не маю уявлення. |\n| погляд | /ˈpoɦlʲɑd/ | view, outlook | Сучасний погляд на проблему. |\n| точка зору | /ˈtot͡ʃkɑ ˈzoru/ | point of view | З моєї точки зору... |\n| припущення | /prɪpuˈʃt͡ʃɛnʲːɑ/ | assumption | Це лише припущення. |\n| висновок | /ˈvɪsnovok/ | conclusion | Який твій висновок? |\n\n**Usage examples:**\n\n- У мене є **ідея**, як це зробити. - I have an idea how to do this.\n- Яка твоя **думка** з цього приводу? - What's your opinion on this?\n- Я не маю **уявлення**, що робити. - I have no idea what to do.\n- З **моєї точки зору**, це неправильно. - From my point of view, this is wrong.\n- Ми **прийшли до висновку**, що... - We came to the conclusion that...\n\n### Проблеми та труднощі | Problems and Difficulties\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| проблема | /probˈlɛmɑ/ | problem | Це серйозна проблема. |\n| питання | /pɪˈtɑnʲːɑ/ | question, issue | Це важливе питання. |\n| труднощі | /trudˈnoʃt͡ʃʲi/ | difficulties | Я маю труднощі з цим. |\n| перешкода | /pɛrɛˈʃkodɑ/ | obstacle | Яка головна перешкода? |\n| складність | /sklɑdˈnʲistʲ/ | complexity | У чому складність? |\n| недолік | /nɛdoˈlʲik/ | shortcoming | Це єдиний недолік. |\n| помилка | /poˈmɪlkɑ/ | mistake, error | Я зробив помилку. |\n| невдача | /nɛvˈdɑt͡ʃɑ/ | failure | Невдача — це урок. |\n\n**Usage examples:**\n\n- Яка **проблема**? - What's the problem?\n- Це не **питання** грошей. - It's not a question of money.\n- Ми зіткнулися з **труднощами**. - We encountered difficulties.\n- Головна **перешкода** — брак часу. - The main obstacle is lack of time.\n- У цьому плані є один **недолік**. - This plan has one shortcoming.\n\n### Рішення та результати | Solutions and Results\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| рішення | /rʲiˈʃɛnʲːɑ/ | decision, solution | Це правильне рішення. |\n| вирішення | /vɪrʲiˈʃɛnʲːɑ/ | solving, resolution | Вирішення проблеми. |\n| вихід | /ˈvɪxʲid/ | way out, exit | Завжди є вихід. |\n| результат | /rɛzulʲˈtɑt/ | result | Який результат? |\n| наслідок | /ˈnɑslʲidok/ | consequence | Це наслідок помилки. |\n| успіх | /uˈspʲix/ | success | Бажаю успіху! |\n| досягнення | /dosʲɑɦˈnɛnʲːɑ/ | achievement | Це велике досягнення. |\n| прогрес | /proɦˈrɛs/ | progress | Є прогрес. |\n\n**Usage examples:**\n\n- Ми знайшли **рішення**. - We found a solution.\n- **Вирішення** цієї проблеми займе час. - Solving this problem will take time.\n- Завжди є **вихід**. - There's always a way out.\n- **Результат** перевершив очікування. - The result exceeded expectations.\n- Це **наслідок** недбалості. - This is a consequence of negligence.\n\n### Причини | Reasons and Causes\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| причина | /prɪˈt͡ʃɪnɑ/ | reason, cause | Яка причина? |\n| підстава | /pʲidˈstɑvɑ/ | basis, grounds | На якій підставі? |\n| мотив | /moˈtɪv/ | motive | Який його мотив? |\n| мета | /mɛˈtɑ/ | goal, purpose | Яка твоя мета? |\n| сенс | /sɛns/ | sense, meaning | У цьому немає сенсу. |\n| значення | /znɑˈt͡ʃɛnʲːɑ/ | meaning, importance | Це не має значення. |\n\n**Usage examples:**\n\n- **Причина** проблеми — недосвідченість. - The reason for the problem is inexperience.\n- На якій **підставі** ви це стверджуєте? - On what grounds do you claim this?\n- Яка **мета** цього проєкту? - What's the goal of this project?\n- У цьому немає **сенсу**. - There's no point in this.\n- Це не має **значення**. - It doesn't matter.\n\n### Дієслова абстрактного мислення | Verbs for Abstract Thinking\n\n| Ukrainian | IPA | English | Aspect |\n|-----------|-----|---------|--------|\n| думати | /ˈdumɑtɪ/ | to think | impf |\n| вважати | /vvɑˈʒɑtɪ/ | to consider, think | impf |\n| припускати | /prɪpusˈkɑtɪ/ | to assume | impf |\n| припустити | /prɪpusˈtɪtɪ/ | to assume | pf |\n| робити висновок | - | to conclude | impf |\n| зробити висновок | - | to conclude | pf |\n| вирішувати | /vɪrʲiˈʃuvɑtɪ/ | to solve, decide | impf |\n| вирішити | /vɪˈrʲiʃɪtɪ/ | to solve, decide | pf |\n| сумніватися | /sumnʲiˈvɑtɪsʲɑ/ | to doubt | impf |\n\n**Usage examples:**\n\n- Я **вважаю**, що це правильно. - I think/consider this is right.\n- **Припускаю**, що він спізниться. - I assume he'll be late.\n- Я **сумніваюся** в цьому. - I doubt this.\n\n## practice | Практика\n\n### Розподіліть слова | Categorize Words\n\nSort these words into categories:\n\n**Words:** проблема, рішення, ідея, причина, результат, труднощі, висновок, мета\n\n| Problems | Solutions | Thinking |\n|----------|-----------|----------|\n| проблема | рішення | ідея |\n| труднощі | результат | висновок |\n| | | причина, мета |\n\n### Доповніть речення | Complete Sentences\n\n1. Яка головна ___ цієї проблеми? (reason)\n   > [!answer] **причина**\n2. Ми знайшли ___ проблеми. (solution)\n   > [!answer] **вирішення/рішення**\n3. Це цікава ___. (idea)\n   > [!answer] **ідея**\n4. Який ___ цього експерименту? (result)\n   > [!answer] **результат**\n5. У мене немає ___, що робити. (idea)\n   > [!answer] **уявлення**\n6. Яка твоя ___ з цього приводу? (opinion)\n   > [!answer] **думка**\n\n### Складіть речення | Form Sentences\n\nCreate sentences using:\n\n1. **причина** — Причина моєї відсутності — хвороба.\n2. **рішення** — Це важке рішення.\n3. **труднощі** — Ми зіткнулися з труднощами.\n4. **мета** — Моя мета — вивчити українську.\n5. **висновок** — Який твій висновок?\n\n### Дискусія: Вирішення проблем | Discussion: Problem-Solving\n\nDiscuss using abstract vocabulary:\n\n**Topic:** Learning a new language\n\n- Яка головна **проблема**?\n- Які **труднощі** ви маєте?\n- Яке **рішення** ви знайшли?\n- Який ваш **прогрес**?\n\n## production | Продукція\n\n### Опишіть проблему | Describe a Problem\n\nDescribe a problem you faced using:\n- проблема, причина, труднощі, рішення, результат\n\n**Example:**\nМинулого року я мав **проблему** з роботою. **Причина** була в тому, що компанія закрилася. Я мав **труднощі** з пошуком нової роботи. Але я знайшов **рішення** — почав вивчати нові навички. **Результат** — я знайшов кращу роботу.\n\n### Висловіть свої думки | Express Your Ideas\n\nUse abstract vocabulary to discuss:\n- Ваша **точка зору** на вивчення мов\n- Ваші **досягнення** в українській\n- Ваша **мета** на цей рік\n\n---\n\n\n---\n\n\n---"
       },
       {
-        "id": "presentation-презентація",
-        "title": "presentation | Презентація",
-        "content": "### Ідеї та думки | Ideas and Thoughts\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| ідея | /iˈdɛjɑ/ | idea | У мене є ідея. |\n| думка | /ˈdumkɑ/ | thought, opinion | Яка твоя думка? |\n| поняття | /poˈnʲɑtʲːɑ/ | concept, notion | Це складне поняття. |\n| уявлення | /ujɑvˈlɛnʲːɑ/ | idea, imagination | Не маю уявлення. |\n| погляд | /ˈpoɦlʲɑd/ | view, outlook | Сучасний погляд на проблему. |\n| точка зору | /ˈtot͡ʃkɑ ˈzoru/ | point of view | З моєї точки зору... |\n| припущення | /prɪpuˈʃt͡ʃɛnʲːɑ/ | assumption | Це лише припущення. |\n| висновок | /ˈvɪsnovok/ | conclusion | Який твій висновок? |\n\n**Usage examples:**\n\n- У мене є **ідея**, як це зробити. - I have an idea how to do this.\n- Яка твоя **думка** з цього приводу? - What's your opinion on this?\n- Я не маю **уявлення**, що робити. - I have no idea what to do.\n- З **моєї точки зору**, це неправильно. - From my point of view, this is wrong.\n- Ми **прийшли до висновку**, що... - We came to the conclusion that...\n\n### Проблеми та труднощі | Problems and Difficulties\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| проблема | /probˈlɛmɑ/ | problem | Це серйозна проблема. |\n| питання | /pɪˈtɑnʲːɑ/ | question, issue | Це важливе питання. |\n| труднощі | /trudˈnoʃt͡ʃʲi/ | difficulties | Я маю труднощі з цим. |\n| перешкода | /pɛrɛˈʃkodɑ/ | obstacle | Яка головна перешкода? |\n| складність | /sklɑdˈnʲistʲ/ | complexity | У чому складність? |\n| недолік | /nɛdoˈlʲik/ | shortcoming | Це єдиний недолік. |\n| помилка | /poˈmɪlkɑ/ | mistake, error | Я зробив помилку. |\n| невдача | /nɛvˈdɑt͡ʃɑ/ | failure | Невдача — це урок. |\n\n**Usage examples:**\n\n- Яка **проблема**? - What's the problem?\n- Це не **питання** грошей. - It's not a question of money.\n- Ми зіткнулися з **труднощами**. - We encountered difficulties.\n- Головна **перешкода** — брак часу. - The main obstacle is lack of time.\n- У цьому плані є один **недолік**. - This plan has one shortcoming.\n\n### Рішення та результати | Solutions and Results\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| рішення | /rʲiˈʃɛnʲːɑ/ | decision, solution | Це правильне рішення. |\n| вирішення | /vɪrʲiˈʃɛnʲːɑ/ | solving, resolution | Вирішення проблеми. |\n| вихід | /ˈvɪxʲid/ | way out, exit | Завжди є вихід. |\n| результат | /rɛzulʲˈtɑt/ | result | Який результат? |\n| наслідок | /ˈnɑslʲidok/ | consequence | Це наслідок помилки. |\n| успіх | /uˈspʲix/ | success | Бажаю успіху! |\n| досягнення | /dosʲɑɦˈnɛnʲːɑ/ | achievement | Це велике досягнення. |\n| прогрес | /proɦˈrɛs/ | progress | Є прогрес. |\n\n**Usage examples:**\n\n- Ми знайшли **рішення**. - We found a solution.\n- **Вирішення** цієї проблеми займе час. - Solving this problem will take time.\n- Завжди є **вихід**. - There's always a way out.\n- **Результат** перевершив очікування. - The result exceeded expectations.\n- Це **наслідок** недбалості. - This is a consequence of negligence.\n\n### Причини | Reasons and Causes\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| причина | /prɪˈt͡ʃɪnɑ/ | reason, cause | Яка причина? |\n| підстава | /pʲidˈstɑvɑ/ | basis, grounds | На якій підставі? |\n| мотив | /moˈtɪv/ | motive | Який його мотив? |\n| мета | /mɛˈtɑ/ | goal, purpose | Яка твоя мета? |\n| сенс | /sɛns/ | sense, meaning | У цьому немає сенсу. |\n| значення | /znɑˈt͡ʃɛnʲːɑ/ | meaning, importance | Це не має значення. |\n\n**Usage examples:**\n\n- **Причина** проблеми — недосвідченість. - The reason for the problem is inexperience.\n- На якій **підставі** ви це стверджуєте? - On what grounds do you claim this?\n- Яка **мета** цього проєкту? - What's the goal of this project?\n- У цьому немає **сенсу**. - There's no point in this.\n- Це не має **значення**. - It doesn't matter.\n\n### Дієслова абстрактного мислення | Verbs for Abstract Thinking\n\n| Ukrainian | IPA | English | Aspect |\n|-----------|-----|---------|--------|\n| думати | /ˈdumɑtɪ/ | to think | impf |\n| вважати | /vvɑˈʒɑtɪ/ | to consider, think | impf |\n| припускати | /prɪpusˈkɑtɪ/ | to assume | impf |\n| припустити | /prɪpusˈtɪtɪ/ | to assume | pf |\n| робити висновок | - | to conclude | impf |\n| зробити висновок | - | to conclude | pf |\n| вирішувати | /vɪrʲiˈʃuvɑtɪ/ | to solve, decide | impf |\n| вирішити | /vɪˈrʲiʃɪtɪ/ | to solve, decide | pf |\n| сумніватися | /sumnʲiˈvɑtɪsʲɑ/ | to doubt | impf |\n\n**Usage examples:**\n\n- Я **вважаю**, що це правильно. - I think/consider this is right.\n- **Припускаю**, що він спізниться. - I assume he'll be late.\n- Я **сумніваюся** в цьому. - I doubt this.",
-        "type": "topic"
-      },
-      {
-        "id": "practice-практика",
-        "title": "practice | Практика",
-        "content": "### Розподіліть слова | Categorize Words\n\nSort these words into categories:\n\n**Words:** проблема, рішення, ідея, причина, результат, труднощі, висновок, мета\n\n| Problems | Solutions | Thinking |\n|----------|-----------|----------|\n| проблема | рішення | ідея |\n| труднощі | результат | висновок |\n| | | причина, мета |\n\n### Доповніть речення | Complete Sentences\n\n1. Яка головна ___ цієї проблеми? (reason) → **причина**\n2. Ми знайшли ___ проблеми. (solution) → **вирішення/рішення**\n3. Це цікава ___. (idea) → **ідея**\n4. Який ___ цього експерименту? (result) → **результат**\n5. У мене немає ___, що робити. (idea) → **уявлення**\n6. Яка твоя ___ з цього приводу? (opinion) → **думка**\n\n### Складіть речення | Form Sentences\n\nCreate sentences using:\n\n1. **причина** — Причина моєї відсутності — хвороба.\n2. **рішення** — Це важке рішення.\n3. **труднощі** — Ми зіткнулися з труднощами.\n4. **мета** — Моя мета — вивчити українську.\n5. **висновок** — Який твій висновок?\n\n### Дискусія: Вирішення проблем | Discussion: Problem-Solving\n\nDiscuss using abstract vocabulary:\n\n**Topic:** Learning a new language\n\n- Яка головна **проблема**?\n- Які **труднощі** ви маєте?\n- Яке **рішення** ви знайшли?\n- Який ваш **прогрес**?",
-        "type": "topic"
-      },
-      {
-        "id": "production-продукція",
-        "title": "production | Продукція",
-        "content": "### Опишіть проблему | Describe a Problem\n\nDescribe a problem you faced using:\n- проблема, причина, труднощі, рішення, результат\n\n**Example:**\nМинулого року я мав **проблему** з роботою. **Причина** була в тому, що компанія закрилася. Я мав **труднощі** з пошуком нової роботи. Але я знайшов **рішення** — почав вивчати нові навички. **Результат** — я знайшов кращу роботу.\n\n### Висловіть свої думки | Express Your Ideas\n\nUse abstract vocabulary to discuss:\n- Ваша **точка зору** на вивчення мов\n- Ваші **досягнення** в українській\n- Ваша **мета** на цей рік\n\n---",
-        "type": "topic"
-      },
-      {
-        "id": "activities",
-        "title": "Activities",
-        "content": "## quiz: Abstract Concepts\n\n> Match Ukrainian with English.\n\n1. проблема\n   - [x] problem\n   - [ ] solution\n\n2. рішення\n   - [x] solution\n   - [ ] reason\n\n3. причина\n   - [ ] result\n   - [x] reason\n\n4. висновок\n   - [x] conclusion\n   - [ ] question\n\n5. мета\n   - [ ] meaning\n   - [x] goal\n\n6. труднощі\n   - [x] difficulties\n   - [ ] achievements\n\n## match-up: Pairs\n\n| Problem Words | Solution Words |\n|---------------|----------------|\n| проблема | рішення |\n| труднощі | вирішення |\n| перешкода | вихід |\n| недолік | успіх |\n\n## fill-in: Complete the Story\n\n> Ми почали новий проєкт. Спочатку ми визначили ___ (goal). Потім виникли ___ (difficulties). Головна ___ (problem) — брак часу. ___ (Reason) — занадто багато завдань. Але ми знайшли ___ (solution). ___ (Result) перевершив очікування!\n\n**Answers:** мету, труднощі, проблема, причина, рішення/вихід, результат\n\n---",
-        "type": "activities"
-      },
-      {
-        "id": "vocabulary",
-        "title": "Vocabulary",
-        "content": "| Word | IPA | English | Gender |\n|------|-----|---------|--------|\n| ідея | /iˈdɛjɑ/ | idea | f |\n| думка | /ˈdumkɑ/ | thought, opinion | f |\n| поняття | /poˈnʲɑtʲːɑ/ | concept | n |\n| уявлення | /ujɑvˈlɛnʲːɑ/ | imagination, idea | n |\n| погляд | /ˈpoɦlʲɑd/ | view | m |\n| точка зору | /ˈtot͡ʃkɑ ˈzoru/ | point of view | f |\n| проблема | /probˈlɛmɑ/ | problem | f |\n| питання | /pɪˈtɑnʲːɑ/ | question, issue | n |\n| труднощі | /trudˈnoʃt͡ʃʲi/ | difficulties | pl |\n| перешкода | /pɛrɛˈʃkodɑ/ | obstacle | f |\n| рішення | /rʲiˈʃɛnʲːɑ/ | decision, solution | n |\n| результат | /rɛzulʲˈtɑt/ | result | m |\n| наслідок | /ˈnɑslʲidok/ | consequence | m |\n| причина | /prɪˈt͡ʃɪnɑ/ | reason, cause | f |\n| мета | /mɛˈtɑ/ | goal, purpose | f |\n| сенс | /sɛns/ | sense, meaning | m |\n\n---",
-        "type": "vocabulary"
-      },
-      {
-        "id": "summary",
+        "id": "section-summary",
+        "type": "summary",
         "title": "Summary",
         "content": "## Key Abstract Vocabulary\n\n### Ideas & Thoughts\nідея, думка, поняття, уявлення, погляд, точка зору\n\n### Problems\nпроблема, питання, труднощі, перешкода, складність, недолік\n\n### Solutions\nрішення, вирішення, вихід, результат, успіх, досягнення\n\n### Reasons\nпричина, підстава, мотив, мета, сенс, значення\n\n## Useful Expressions\n\n- Яка твоя думка? - What do you think?\n- З моєї точки зору... - From my point of view...\n- У мене немає уявлення. - I have no idea.\n- Завжди є вихід. - There's always a way out.\n- Це не має значення. - It doesn't matter.\n\n> **Key Takeaways**\n>\n> - Abstract vocabulary is essential for B1\n> - These words let you discuss ideas, problems, solutions\n> - Many abstract nouns are neuter (поняття, питання, рішення)\n> - Practice using these in complex sentences",
-        "type": "summary"
+        "titleUk": "Підсумок"
       }
-    ]
+    ],
+    "rawMarkdown": "---\nmodule: 95\ntitle: \"Abstract Concepts I\"\nsubtitle: \"Ideas, Problems, and Solutions\"\nlevel: B1\nphase: B1.1\nduration: 45\ntransliteration: none\ntags: [vocabulary, abstract, concepts, thinking]\nobjectives:\n  - Learn vocabulary for abstract concepts\n  - Discuss ideas and problems\n  - Express reasoning and conclusions\n  - Use abstract nouns in context\n---\n\n# Зміст уроку | Lesson Content\n\n## warm-up | Розминка\n\n### Абстрактне мислення | Beyond the Concrete\n\nНа рівні A2 ви вивчили конкретну лексику: їжу, місця, предмети.\n\nAt A2, you learned concrete vocabulary: food, places, objects.\n\nНа рівні B1 потрібна **абстрактна лексика** — слова для речей, яких не можна торкнутися:\n\nAt B1, you need **abstract vocabulary** — words for things you can't touch:\n- Ідеї та думки | Ideas and thoughts\n- Проблеми та рішення | Problems and solutions\n- Причини та результати | Reasons and results\n\n## presentation | Презентація\n\n### Ідеї та думки | Ideas and Thoughts\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| ідея | /iˈdɛjɑ/ | idea | У мене є ідея. |\n| думка | /ˈdumkɑ/ | thought, opinion | Яка твоя думка? |\n| поняття | /poˈnʲɑtʲːɑ/ | concept, notion | Це складне поняття. |\n| уявлення | /ujɑvˈlɛnʲːɑ/ | idea, imagination | Не маю уявлення. |\n| погляд | /ˈpoɦlʲɑd/ | view, outlook | Сучасний погляд на проблему. |\n| точка зору | /ˈtot͡ʃkɑ ˈzoru/ | point of view | З моєї точки зору... |\n| припущення | /prɪpuˈʃt͡ʃɛnʲːɑ/ | assumption | Це лише припущення. |\n| висновок | /ˈvɪsnovok/ | conclusion | Який твій висновок? |\n\n**Usage examples:**\n\n- У мене є **ідея**, як це зробити. - I have an idea how to do this.\n- Яка твоя **думка** з цього приводу? - What's your opinion on this?\n- Я не маю **уявлення**, що робити. - I have no idea what to do.\n- З **моєї точки зору**, це неправильно. - From my point of view, this is wrong.\n- Ми **прийшли до висновку**, що... - We came to the conclusion that...\n\n### Проблеми та труднощі | Problems and Difficulties\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| проблема | /probˈlɛmɑ/ | problem | Це серйозна проблема. |\n| питання | /pɪˈtɑnʲːɑ/ | question, issue | Це важливе питання. |\n| труднощі | /trudˈnoʃt͡ʃʲi/ | difficulties | Я маю труднощі з цим. |\n| перешкода | /pɛrɛˈʃkodɑ/ | obstacle | Яка головна перешкода? |\n| складність | /sklɑdˈnʲistʲ/ | complexity | У чому складність? |\n| недолік | /nɛdoˈlʲik/ | shortcoming | Це єдиний недолік. |\n| помилка | /poˈmɪlkɑ/ | mistake, error | Я зробив помилку. |\n| невдача | /nɛvˈdɑt͡ʃɑ/ | failure | Невдача — це урок. |\n\n**Usage examples:**\n\n- Яка **проблема**? - What's the problem?\n- Це не **питання** грошей. - It's not a question of money.\n- Ми зіткнулися з **труднощами**. - We encountered difficulties.\n- Головна **перешкода** — брак часу. - The main obstacle is lack of time.\n- У цьому плані є один **недолік**. - This plan has one shortcoming.\n\n### Рішення та результати | Solutions and Results\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| рішення | /rʲiˈʃɛnʲːɑ/ | decision, solution | Це правильне рішення. |\n| вирішення | /vɪrʲiˈʃɛnʲːɑ/ | solving, resolution | Вирішення проблеми. |\n| вихід | /ˈvɪxʲid/ | way out, exit | Завжди є вихід. |\n| результат | /rɛzulʲˈtɑt/ | result | Який результат? |\n| наслідок | /ˈnɑslʲidok/ | consequence | Це наслідок помилки. |\n| успіх | /uˈspʲix/ | success | Бажаю успіху! |\n| досягнення | /dosʲɑɦˈnɛnʲːɑ/ | achievement | Це велике досягнення. |\n| прогрес | /proɦˈrɛs/ | progress | Є прогрес. |\n\n**Usage examples:**\n\n- Ми знайшли **рішення**. - We found a solution.\n- **Вирішення** цієї проблеми займе час. - Solving this problem will take time.\n- Завжди є **вихід**. - There's always a way out.\n- **Результат** перевершив очікування. - The result exceeded expectations.\n- Це **наслідок** недбалості. - This is a consequence of negligence.\n\n### Причини | Reasons and Causes\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| причина | /prɪˈt͡ʃɪnɑ/ | reason, cause | Яка причина? |\n| підстава | /pʲidˈstɑvɑ/ | basis, grounds | На якій підставі? |\n| мотив | /moˈtɪv/ | motive | Який його мотив? |\n| мета | /mɛˈtɑ/ | goal, purpose | Яка твоя мета? |\n| сенс | /sɛns/ | sense, meaning | У цьому немає сенсу. |\n| значення | /znɑˈt͡ʃɛnʲːɑ/ | meaning, importance | Це не має значення. |\n\n**Usage examples:**\n\n- **Причина** проблеми — недосвідченість. - The reason for the problem is inexperience.\n- На якій **підставі** ви це стверджуєте? - On what grounds do you claim this?\n- Яка **мета** цього проєкту? - What's the goal of this project?\n- У цьому немає **сенсу**. - There's no point in this.\n- Це не має **значення**. - It doesn't matter.\n\n### Дієслова абстрактного мислення | Verbs for Abstract Thinking\n\n| Ukrainian | IPA | English | Aspect |\n|-----------|-----|---------|--------|\n| думати | /ˈdumɑtɪ/ | to think | impf |\n| вважати | /vvɑˈʒɑtɪ/ | to consider, think | impf |\n| припускати | /prɪpusˈkɑtɪ/ | to assume | impf |\n| припустити | /prɪpusˈtɪtɪ/ | to assume | pf |\n| робити висновок | - | to conclude | impf |\n| зробити висновок | - | to conclude | pf |\n| вирішувати | /vɪrʲiˈʃuvɑtɪ/ | to solve, decide | impf |\n| вирішити | /vɪˈrʲiʃɪtɪ/ | to solve, decide | pf |\n| сумніватися | /sumnʲiˈvɑtɪsʲɑ/ | to doubt | impf |\n\n**Usage examples:**\n\n- Я **вважаю**, що це правильно. - I think/consider this is right.\n- **Припускаю**, що він спізниться. - I assume he'll be late.\n- Я **сумніваюся** в цьому. - I doubt this.\n\n## practice | Практика\n\n### Розподіліть слова | Categorize Words\n\nSort these words into categories:\n\n**Words:** проблема, рішення, ідея, причина, результат, труднощі, висновок, мета\n\n| Problems | Solutions | Thinking |\n|----------|-----------|----------|\n| проблема | рішення | ідея |\n| труднощі | результат | висновок |\n| | | причина, мета |\n\n### Доповніть речення | Complete Sentences\n\n1. Яка головна ___ цієї проблеми? (reason)\n   > [!answer] **причина**\n2. Ми знайшли ___ проблеми. (solution)\n   > [!answer] **вирішення/рішення**\n3. Це цікава ___. (idea)\n   > [!answer] **ідея**\n4. Який ___ цього експерименту? (result)\n   > [!answer] **результат**\n5. У мене немає ___, що робити. (idea)\n   > [!answer] **уявлення**\n6. Яка твоя ___ з цього приводу? (opinion)\n   > [!answer] **думка**\n\n### Складіть речення | Form Sentences\n\nCreate sentences using:\n\n1. **причина** — Причина моєї відсутності — хвороба.\n2. **рішення** — Це важке рішення.\n3. **труднощі** — Ми зіткнулися з труднощами.\n4. **мета** — Моя мета — вивчити українську.\n5. **висновок** — Який твій висновок?\n\n### Дискусія: Вирішення проблем | Discussion: Problem-Solving\n\nDiscuss using abstract vocabulary:\n\n**Topic:** Learning a new language\n\n- Яка головна **проблема**?\n- Які **труднощі** ви маєте?\n- Яке **рішення** ви знайшли?\n- Який ваш **прогрес**?\n\n## production | Продукція\n\n### Опишіть проблему | Describe a Problem\n\nDescribe a problem you faced using:\n- проблема, причина, труднощі, рішення, результат\n\n**Example:**\nМинулого року я мав **проблему** з роботою. **Причина** була в тому, що компанія закрилася. Я мав **труднощі** з пошуком нової роботи. Але я знайшов **рішення** — почав вивчати нові навички. **Результат** — я знайшов кращу роботу.\n\n### Висловіть свої думки | Express Your Ideas\n\nUse abstract vocabulary to discuss:\n- Ваша **точка зору** на вивчення мов\n- Ваші **досягнення** в українській\n- Ваша **мета** на цей рік\n\n---\n\n# Activities\n\n## quiz: Abstract Concepts\n\n> Match Ukrainian with English.\n\n1. проблема\n   - [x] problem\n   - [ ] solution\n\n2. рішення\n   - [x] solution\n   - [ ] reason\n\n3. причина\n   - [ ] result\n   - [x] reason\n\n4. висновок\n   - [x] conclusion\n   - [ ] question\n\n5. мета\n   - [ ] meaning\n   - [x] goal\n\n6. труднощі\n   - [x] difficulties\n   - [ ] achievements\n\n## match-up: Pairs\n\n| Problem Words | Solution Words |\n|---------------|----------------|\n| проблема | рішення |\n| труднощі | вирішення |\n| перешкода | вихід |\n| недолік | успіх |\n\n## fill-in: Complete the Story\n\n> Ми почали новий проєкт. Спочатку ми визначили ___ (goal). Потім виникли ___ (difficulties). Головна ___ (problem) — брак часу. ___ (Reason) — занадто багато завдань. Але ми знайшли ___ (solution). ___ (Result) перевершив очікування!\n\n**Answers:** мету, труднощі, проблема, причина, рішення/вихід, результат\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | Gender |\n|------|-----|---------|--------|\n| ідея | /iˈdɛjɑ/ | idea | f |\n| думка | /ˈdumkɑ/ | thought, opinion | f |\n| поняття | /poˈnʲɑtʲːɑ/ | concept | n |\n| уявлення | /ujɑvˈlɛnʲːɑ/ | imagination, idea | n |\n| погляд | /ˈpoɦlʲɑd/ | view | m |\n| точка зору | /ˈtot͡ʃkɑ ˈzoru/ | point of view | f |\n| проблема | /probˈlɛmɑ/ | problem | f |\n| питання | /pɪˈtɑnʲːɑ/ | question, issue | n |\n| труднощі | /trudˈnoʃt͡ʃʲi/ | difficulties | pl |\n| перешкода | /pɛrɛˈʃkodɑ/ | obstacle | f |\n| рішення | /rʲiˈʃɛnʲːɑ/ | decision, solution | n |\n| результат | /rɛzulʲˈtɑt/ | result | m |\n| наслідок | /ˈnɑslʲidok/ | consequence | m |\n| причина | /prɪˈt͡ʃɪnɑ/ | reason, cause | f |\n| мета | /mɛˈtɑ/ | goal, purpose | f |\n| сенс | /sɛns/ | sense, meaning | m |\n\n---\n\n# Summary\n\n## Key Abstract Vocabulary\n\n### Ideas & Thoughts\nідея, думка, поняття, уявлення, погляд, точка зору\n\n### Problems\nпроблема, питання, труднощі, перешкода, складність, недолік\n\n### Solutions\nрішення, вирішення, вихід, результат, успіх, досягнення\n\n### Reasons\nпричина, підстава, мотив, мета, сенс, значення\n\n## Useful Expressions\n\n- Яка твоя думка? - What do you think?\n- З моєї точки зору... - From my point of view...\n- У мене немає уявлення. - I have no idea.\n- Завжди є вихід. - There's always a way out.\n- Це не має значення. - It doesn't matter.\n\n> **Key Takeaways**\n>\n> - Abstract vocabulary is essential for B1\n> - These words let you discuss ideas, problems, solutions\n> - Many abstract nouns are neuter (поняття, питання, рішення)\n> - Practice using these in complex sentences\n"
   },
   "activities": [
     {
-      "id": "act-uk-B1-95-quiz",
+      "id": "act-b1-95-quiz",
       "type": "quiz",
       "title": "Abstract Concepts",
       "description": "Match Ukrainian with English.",
       "content": {
         "type": "quiz",
-        "instructions": "Match Ukrainian with English.",
         "questions": [
           {
             "question": "проблема",
@@ -252,23 +124,17 @@
       "language": "uk",
       "difficultyLevel": "B1",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "abstract",
-        "concepts",
-        "thinking"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.292Z",
+      "modifiedAt": "2025-12-01T22:58:37.292Z"
     },
     {
-      "id": "act-uk-B1-95-matchup",
+      "id": "act-b1-95-matchup",
       "type": "match-up",
       "title": "Pairs",
       "description": "Pairs",
       "content": {
         "type": "match-up",
-        "instructions": "",
         "pairs": [
           {
             "left": "проблема",
@@ -295,41 +161,41 @@
       "language": "uk",
       "difficultyLevel": "B1",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "abstract",
-        "concepts",
-        "thinking"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.292Z",
+      "modifiedAt": "2025-12-01T22:58:37.292Z"
     },
     {
-      "id": "act-uk-B1-95-gapfill",
+      "id": "act-b1-95-gapfill",
       "type": "gap-fill",
       "title": "Complete the Story",
       "description": "Ми почали новий проєкт. Спочатку ми визначили ___ (goal). Потім виникли ___ (difficulties). Головна ___ (problem) — брак часу. ___ (Reason) — занадто багато завдань. Але ми знайшли ___ (solution). ___ (Result) перевершив очікування!",
       "content": {
         "type": "gap-fill",
-        "instructions": "Ми почали новий проєкт. Спочатку ми визначили ___ (goal). Потім виникли ___ (difficulties). Головна ___ (problem) — брак часу. ___ (Reason) — занадто багато завдань. Але ми знайшли ___ (solution). ___ (Result) перевершив очікування!",
         "text": "Ми почали новий проєкт. Спочатку ми визначили ___ (goal). Потім виникли ___ (difficulties). Головна ___ (problem) — брак часу. ___ (Reason) — занадто багато завдань. Але ми знайшли ___ (solution). ___ (Result) перевершив очікування!",
         "blanks": [
           {
+            "index": 0,
             "hint": "goal"
           },
           {
+            "index": 1,
             "hint": "difficulties"
           },
           {
+            "index": 2,
             "hint": "problem"
           },
           {
+            "index": 3,
             "hint": "Reason"
           },
           {
+            "index": 4,
             "hint": "solution"
           },
           {
+            "index": 5,
             "hint": "Result"
           }
         ],
@@ -348,14 +214,9 @@
       "language": "uk",
       "difficultyLevel": "B1",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "abstract",
-        "concepts",
-        "thinking"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.292Z",
+      "modifiedAt": "2025-12-01T22:58:37.292Z"
     }
   ],
   "vocabulary": {
@@ -366,148 +227,116 @@
     "transliterationMode": "none",
     "words": [
       {
-        "id": "v-m95-001",
+        "id": "v-ideya-95-0",
         "uk": "ідея",
-        "translit": "",
-        "ipa": "/iˈdɛjɑ/",
         "en": "idea",
-        "pos": "",
-        "gender": "f"
+        "pos": "f",
+        "ipa": "/iˈdɛjɑ/"
       },
       {
-        "id": "v-m95-002",
+        "id": "v-dumka-95-1",
         "uk": "думка",
-        "translit": "",
-        "ipa": "/ˈdumkɑ/",
         "en": "thought, opinion",
-        "pos": "",
-        "gender": "f"
+        "pos": "f",
+        "ipa": "/ˈdumkɑ/"
       },
       {
-        "id": "v-m95-003",
+        "id": "v-ponyattya-95-2",
         "uk": "поняття",
-        "translit": "",
-        "ipa": "/poˈnʲɑtʲːɑ/",
         "en": "concept",
-        "pos": "",
-        "gender": "n"
+        "pos": "n",
+        "ipa": "/poˈnʲɑtʲːɑ/"
       },
       {
-        "id": "v-m95-004",
+        "id": "v-uyavlennya-95-3",
         "uk": "уявлення",
-        "translit": "",
-        "ipa": "/ujɑvˈlɛnʲːɑ/",
         "en": "imagination, idea",
-        "pos": "",
-        "gender": "n"
+        "pos": "n",
+        "ipa": "/ujɑvˈlɛnʲːɑ/"
       },
       {
-        "id": "v-m95-005",
+        "id": "v-pohlyad-95-4",
         "uk": "погляд",
-        "translit": "",
-        "ipa": "/ˈpoɦlʲɑd/",
         "en": "view",
-        "pos": "",
-        "gender": "m"
+        "pos": "m",
+        "ipa": "/ˈpoɦlʲɑd/"
       },
       {
-        "id": "v-m95-006",
+        "id": "v-tochka-zoru-95-5",
         "uk": "точка зору",
-        "translit": "",
-        "ipa": "/ˈtot͡ʃkɑ ˈzoru/",
         "en": "point of view",
-        "pos": "",
-        "gender": "f"
+        "pos": "f",
+        "ipa": "/ˈtot͡ʃkɑ ˈzoru/"
       },
       {
-        "id": "v-m95-007",
+        "id": "v-problema-95-6",
         "uk": "проблема",
-        "translit": "",
-        "ipa": "/probˈlɛmɑ/",
         "en": "problem",
-        "pos": "",
-        "gender": "f"
+        "pos": "f",
+        "ipa": "/probˈlɛmɑ/"
       },
       {
-        "id": "v-m95-008",
+        "id": "v-pytannya-95-7",
         "uk": "питання",
-        "translit": "",
-        "ipa": "/pɪˈtɑnʲːɑ/",
         "en": "question, issue",
-        "pos": "",
-        "gender": "n"
+        "pos": "n",
+        "ipa": "/pɪˈtɑnʲːɑ/"
       },
       {
-        "id": "v-m95-009",
+        "id": "v-trudnoshchi-95-8",
         "uk": "труднощі",
-        "translit": "",
-        "ipa": "/trudˈnoʃt͡ʃʲi/",
         "en": "difficulties",
-        "pos": "",
-        "gender": "pl"
+        "pos": "pl",
+        "ipa": "/trudˈnoʃt͡ʃʲi/"
       },
       {
-        "id": "v-m95-010",
+        "id": "v-pereshkoda-95-9",
         "uk": "перешкода",
-        "translit": "",
-        "ipa": "/pɛrɛˈʃkodɑ/",
         "en": "obstacle",
-        "pos": "",
-        "gender": "f"
+        "pos": "f",
+        "ipa": "/pɛrɛˈʃkodɑ/"
       },
       {
-        "id": "v-m95-011",
+        "id": "v-rishennya-95-10",
         "uk": "рішення",
-        "translit": "",
-        "ipa": "/rʲiˈʃɛnʲːɑ/",
         "en": "decision, solution",
-        "pos": "",
-        "gender": "n"
+        "pos": "n",
+        "ipa": "/rʲiˈʃɛnʲːɑ/"
       },
       {
-        "id": "v-m95-012",
+        "id": "v-rezulьtat-95-11",
         "uk": "результат",
-        "translit": "",
-        "ipa": "/rɛzulʲˈtɑt/",
         "en": "result",
-        "pos": "",
-        "gender": "m"
+        "pos": "m",
+        "ipa": "/rɛzulʲˈtɑt/"
       },
       {
-        "id": "v-m95-013",
+        "id": "v-naslidok-95-12",
         "uk": "наслідок",
-        "translit": "",
-        "ipa": "/ˈnɑslʲidok/",
         "en": "consequence",
-        "pos": "",
-        "gender": "m"
+        "pos": "m",
+        "ipa": "/ˈnɑslʲidok/"
       },
       {
-        "id": "v-m95-014",
+        "id": "v-prychyna-95-13",
         "uk": "причина",
-        "translit": "",
-        "ipa": "/prɪˈt͡ʃɪnɑ/",
         "en": "reason, cause",
-        "pos": "",
-        "gender": "f"
+        "pos": "f",
+        "ipa": "/prɪˈt͡ʃɪnɑ/"
       },
       {
-        "id": "v-m95-015",
+        "id": "v-meta-95-14",
         "uk": "мета",
-        "translit": "",
-        "ipa": "/mɛˈtɑ/",
         "en": "goal, purpose",
-        "pos": "",
-        "gender": "f"
+        "pos": "f",
+        "ipa": "/mɛˈtɑ/"
       },
       {
-        "id": "v-m95-016",
+        "id": "v-sens-95-15",
         "uk": "сенс",
-        "translit": "",
-        "ipa": "/sɛns/",
         "en": "sense, meaning",
-        "pos": "",
-        "gender": "m"
+        "pos": "m",
+        "ipa": "/sɛns/"
       }
     ]
   }

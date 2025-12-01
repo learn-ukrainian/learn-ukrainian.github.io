@@ -174,18 +174,26 @@ B: Ні, дякую. Це все.
 
 ### Complete the Phrases
 
-1. ___ меню, будь ласка? (May I have) → Можна
-2. Каву ___ молоком. (with) → з
-3. ___, будь ласка, рахунок. (Bring) → Принесіть
-4. Скільки ___ мене? (from) → з
+1. ___ меню, будь ласка? (May I have)
+   > [!answer] Можна
+2. Каву ___ молоком. (with)
+   > [!answer] з
+3. ___, будь ласка, рахунок. (Bring)
+   > [!answer] Принесіть
+4. Скільки ___ мене? (from)
+   > [!answer] з
 
 ### Make Requests
 
 Transform to polite requests:
-1. I want coffee. → Мені каву, будь ласка.
-2. Bring water. → Принесіть воду, будь ласка.
-3. The bill. → Рахунок, будь ласка.
-4. May I sit here? → Можна тут сісти?
+1. I want coffee.
+   > [!answer] Мені каву, будь ласка.
+2. Bring water.
+   > [!answer] Принесіть воду, будь ласка.
+3. The bill.
+   > [!answer] Рахунок, будь ласка.
+4. May I sit here?
+   > [!answer] Можна тут сісти?
 
 ## production
 

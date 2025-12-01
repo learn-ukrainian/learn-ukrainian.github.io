@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-B1-127",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "grammar-introduction",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -22,171 +21,43 @@
       "Use approximate quantities"
     ],
     "grammarFocus": [],
-    "totalDuration": 45,
-    "transliterationMode": "none",
     "tags": [
       "grammar",
       "numerals",
       "collectives",
       "fractions"
     ],
+    "totalDuration": 45,
+    "transliterationMode": "none",
+    "phases": [],
+    "createdAt": "2025-12-01T22:58:37.237Z",
+    "modifiedAt": "2025-12-01T22:58:37.237Z",
     "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
-    "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Числівники | Numerals Review\n\nДо B1 ви вивчили кількісні та порядкові числівники:\n\nUp to B1 you learned cardinal and ordinal numerals:\n\n- **Кількісні**: один, два, три... (one, two, three...)\n- **Порядкові**: перший, другий, третій... (first, second, third...)\n\nТепер додаємо збірні числівники та дроби:\n\nNow we add collective numerals and fractions:\n\n- **Збірні**: двоє, троє, четверо... (pair, trio, group of four...)\n- **Дроби**: половина, третина... (half, third...)"
-          }
-        ]
-      },
-      {
-        "id": "phase-presentation",
-        "name": "presentation",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Збірні числівники | Collective Numerals\n\n#### Forms\n\n| Number | Collective | Used with |\n|--------|------------|-----------|\n| 2 | двоє | людей, дітей, тварин |\n| 3 | троє | людей, дітей, тварин |\n| 4 | четверо | людей, дітей, тварин |\n| 5 | п'ятеро | людей, дітей, тварин |\n| 6 | шестеро | людей, дітей, тварин |\n| 7 | семеро | людей, дітей, тварин |\n| 8-10 | восьмеро, дев'ятеро, десятеро | rare |\n\n#### When to Use Collectives\n\n**1. With people (mixed gender or unspecified):**\n- Нас **двоє**. - There are two of us.\n- **Троє** друзів прийшли. - Three friends came.\n- У кімнаті **четверо** людей. - There are four people in the room.\n\n**2. With children:**\n- У них **троє** дітей. - They have three children.\n- **Двоє** малюків грають. - Two toddlers are playing.\n\n**3. With paired or plural-only nouns:**\n- **двоє** дверей - two doors\n- **троє** окулярів - three pairs of glasses\n- **четверо** ножиць - four pairs of scissors\n\n**4. As substantivized numerals:**\n- Ми **обоє** згодні. - We both agree.\n- Вони **двоє** — пара. - They (two) are a couple.\n\n#### Cardinal vs Collective\n\n| Cardinal | Collective | When to Use |\n|----------|------------|-------------|\n| два студенти | двоє студентів | Collective for groups |\n| три хлопці | троє хлопців | Collective more common |\n| дві жінки | двоє жінок | Cardinal for specific gender |\n| п'ять котів | п'ятеро кошенят | Collective for young animals |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Declension of Collectives\n\nCollectives decline like adjectives in plural:\n\n| Case | двоє | троє |\n|------|------|------|\n| Nom | двоє | троє |\n| Gen | двох | трьох |\n| Dat | двом | трьом |\n| Acc | двох/двоє | трьох/троє |\n| Inst | двома | трьома |\n| Loc | (на) двох | (на) трьох |\n\n**Examples:**\n- Для **двох** людей. - For two people.\n- Я бачив **трьох** дітей. - I saw three children.\n- З **четверома** друзями. - With four friends."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Дроби | Fractions\n\n#### Basic Fractions\n\n| Fraction | Ukrainian | Example |\n|----------|-----------|---------|\n| 1/2 | половина | половина яблука |\n| 1/3 | третина | третина торта |\n| 1/4 | чверть | чверть години |\n| 2/3 | дві третини | дві третини учнів |\n| 3/4 | три чверті | три чверті роботи |\n\n#### Reading Fractions\n\n**Formula:** numerator (cardinal) + denominator (ordinal in genitive)\n\n| Fraction | Ukrainian |\n|----------|-----------|\n| 1/5 | одна п'ята |\n| 2/5 | дві п'ятих |\n| 3/7 | три сьомих |\n| 5/8 | п'ять восьмих |\n\n**With nouns:**\n- **Половина** студентів прийшла. - Half of the students came.\n- **Дві третини** роботи зроблено. - Two thirds of the work is done.\n- **Чверть** населення. - A quarter of the population."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Десяткові дроби | Decimals\n\n| Decimal | Ukrainian | Reading |\n|---------|-----------|---------|\n| 0,5 | нуль цілих п'ять десятих | zero point five |\n| 1,5 | одна ціла п'ять десятих | one point five |\n| 2,75 | дві цілих сімдесят п'ять сотих | two point seven five |\n| 3,14 | три цілих чотирнадцять сотих | pi |\n\n**Note:** Ukrainian uses comma (,) not period (.) for decimals!\n\n**Colloquial shortcuts:**\n- 1,5 = **півтора** (m/n) / **півтори** (f)\n- 2,5 = **два з половиною**"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Приблизна кількість | Approximate Quantities\n\n| Expression | Meaning | Example |\n|------------|---------|---------|\n| близько | about, approximately | близько десяти |\n| приблизно | approximately | приблизно сто |\n| майже | almost | майже всі |\n| понад | over, more than | понад тисячу |\n| менше ніж | less than | менше ніж п'ять |\n| більше ніж | more than | більше ніж сто |\n| десь | around, some | десь двадцять |\n| кілька | several | кілька разів |\n| декілька | a few | декілька людей |\n\n**Examples:**\n- **Близько** 50 студентів прийшли. - About 50 students came.\n- Це коштує **понад** 1000 гривень. - It costs over 1000 hryvnias.\n- Я був там **кілька** разів. - I was there several times."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Відсотки | Percentages\n\n| Percentage | Ukrainian |\n|------------|-----------|\n| 1% | один відсоток |\n| 5% | п'ять відсотків |\n| 25% | двадцять п'ять відсотків |\n| 50% | п'ятдесят відсотків |\n| 100% | сто відсотків |\n\n**Case agreement:**\n- 1 відсоток (nom sg)\n- 2-4 відсотки (nom pl)\n- 5+ відсотків (gen pl)"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Choose Cardinal or Collective\n\n1. У них ___ (два/двоє) сини.\n   → **двоє** синів (collective for children)\n\n2. Я бачила ___ (три/троє) жінки.\n   → **трьох** жінок / **три** жінки (both acceptable)\n\n3. У кімнаті ___ (чотири/четверо) людей.\n   → **четверо** людей (collective for mixed group)\n\n4. Вона купила ___ (п'ять/п'ятеро) яблук.\n   → **п'ять** яблук (cardinal for things)\n\n5. У них ___ (шість/шестеро) дітей.\n   → **шестеро** дітей (collective for children)"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Express Fractions\n\n1. 1/2 пирога → **половина пирога**\n2. 1/4 години → **чверть години**\n3. 2/3 роботи → **дві третини роботи**\n4. 3/4 учнів → **три чверті учнів**\n5. 1/5 населення → **одна п'ята населення**"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Approximate Quantities\n\nExpress approximately:\n\n1. ~10 людей → **близько десяти людей**\n2. ~100 гривень → **приблизно сто гривень**\n3. >50 студентів → **понад п'ятдесят студентів**\n4. <20 хвилин → **менше ніж двадцять хвилин**\n5. almost all → **майже всі**"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Translate to Ukrainian\n\n1. We both agree.\n   → **Ми обоє згодні.**\n\n2. Half of the students passed.\n   → **Половина студентів склала іспит.**\n\n3. About 30 people came.\n   → **Близько тридцяти людей прийшло.**\n\n4. They have three children.\n   → **У них троє дітей.**"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-B1-127-quiz"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Talk About Your Family\n\nDescribe family members using collectives:\n\n- Скільки людей у вашій родині?\n- Скільки дітей у ваших батьків?\n- Example: «Нас четверо: батьки і двоє дітей.»"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Statistics Discussion\n\nDiscuss using fractions and percentages:\n\n- Скільки відсотків вашого часу ви працюєте?\n- Яка частина вашої зарплати йде на їжу?\n- Example: «Близько третини зарплати йде на оренду.»"
-          }
-        ]
-      }
-    ],
-    "rawMarkdown": "# Зміст уроку | Lesson Content\n\n## warm-up | Розминка\n\n### Числівники | Numerals Review\n\nДо B1 ви вивчили кількісні та порядкові числівники:\n\nUp to B1 you learned cardinal and ordinal numerals:\n\n- **Кількісні**: один, два, три... (one, two, three...)\n- **Порядкові**: перший, другий, третій... (first, second, third...)\n\nТепер додаємо збірні числівники та дроби:\n\nNow we add collective numerals and fractions:\n\n- **Збірні**: двоє, троє, четверо... (pair, trio, group of four...)\n- **Дроби**: половина, третина... (half, third...)\n\n## presentation | Презентація\n\n### Збірні числівники | Collective Numerals\n\n#### Forms\n\n| Number | Collective | Used with |\n|--------|------------|-----------|\n| 2 | двоє | людей, дітей, тварин |\n| 3 | троє | людей, дітей, тварин |\n| 4 | четверо | людей, дітей, тварин |\n| 5 | п'ятеро | людей, дітей, тварин |\n| 6 | шестеро | людей, дітей, тварин |\n| 7 | семеро | людей, дітей, тварин |\n| 8-10 | восьмеро, дев'ятеро, десятеро | rare |\n\n#### When to Use Collectives\n\n**1. With people (mixed gender or unspecified):**\n- Нас **двоє**. - There are two of us.\n- **Троє** друзів прийшли. - Three friends came.\n- У кімнаті **четверо** людей. - There are four people in the room.\n\n**2. With children:**\n- У них **троє** дітей. - They have three children.\n- **Двоє** малюків грають. - Two toddlers are playing.\n\n**3. With paired or plural-only nouns:**\n- **двоє** дверей - two doors\n- **троє** окулярів - three pairs of glasses\n- **четверо** ножиць - four pairs of scissors\n\n**4. As substantivized numerals:**\n- Ми **обоє** згодні. - We both agree.\n- Вони **двоє** — пара. - They (two) are a couple.\n\n#### Cardinal vs Collective\n\n| Cardinal | Collective | When to Use |\n|----------|------------|-------------|\n| два студенти | двоє студентів | Collective for groups |\n| три хлопці | троє хлопців | Collective more common |\n| дві жінки | двоє жінок | Cardinal for specific gender |\n| п'ять котів | п'ятеро кошенят | Collective for young animals |\n\n### Declension of Collectives\n\nCollectives decline like adjectives in plural:\n\n| Case | двоє | троє |\n|------|------|------|\n| Nom | двоє | троє |\n| Gen | двох | трьох |\n| Dat | двом | трьом |\n| Acc | двох/двоє | трьох/троє |\n| Inst | двома | трьома |\n| Loc | (на) двох | (на) трьох |\n\n**Examples:**\n- Для **двох** людей. - For two people.\n- Я бачив **трьох** дітей. - I saw three children.\n- З **четверома** друзями. - With four friends.\n\n### Дроби | Fractions\n\n#### Basic Fractions\n\n| Fraction | Ukrainian | Example |\n|----------|-----------|---------|\n| 1/2 | половина | половина яблука |\n| 1/3 | третина | третина торта |\n| 1/4 | чверть | чверть години |\n| 2/3 | дві третини | дві третини учнів |\n| 3/4 | три чверті | три чверті роботи |\n\n#### Reading Fractions\n\n**Formula:** numerator (cardinal) + denominator (ordinal in genitive)\n\n| Fraction | Ukrainian |\n|----------|-----------|\n| 1/5 | одна п'ята |\n| 2/5 | дві п'ятих |\n| 3/7 | три сьомих |\n| 5/8 | п'ять восьмих |\n\n**With nouns:**\n- **Половина** студентів прийшла. - Half of the students came.\n- **Дві третини** роботи зроблено. - Two thirds of the work is done.\n- **Чверть** населення. - A quarter of the population.\n\n### Десяткові дроби | Decimals\n\n| Decimal | Ukrainian | Reading |\n|---------|-----------|---------|\n| 0,5 | нуль цілих п'ять десятих | zero point five |\n| 1,5 | одна ціла п'ять десятих | one point five |\n| 2,75 | дві цілих сімдесят п'ять сотих | two point seven five |\n| 3,14 | три цілих чотирнадцять сотих | pi |\n\n**Note:** Ukrainian uses comma (,) not period (.) for decimals!\n\n**Colloquial shortcuts:**\n- 1,5 = **півтора** (m/n) / **півтори** (f)\n- 2,5 = **два з половиною**\n\n### Приблизна кількість | Approximate Quantities\n\n| Expression | Meaning | Example |\n|------------|---------|---------|\n| близько | about, approximately | близько десяти |\n| приблизно | approximately | приблизно сто |\n| майже | almost | майже всі |\n| понад | over, more than | понад тисячу |\n| менше ніж | less than | менше ніж п'ять |\n| більше ніж | more than | більше ніж сто |\n| десь | around, some | десь двадцять |\n| кілька | several | кілька разів |\n| декілька | a few | декілька людей |\n\n**Examples:**\n- **Близько** 50 студентів прийшли. - About 50 students came.\n- Це коштує **понад** 1000 гривень. - It costs over 1000 hryvnias.\n- Я був там **кілька** разів. - I was there several times.\n\n### Відсотки | Percentages\n\n| Percentage | Ukrainian |\n|------------|-----------|\n| 1% | один відсоток |\n| 5% | п'ять відсотків |\n| 25% | двадцять п'ять відсотків |\n| 50% | п'ятдесят відсотків |\n| 100% | сто відсотків |\n\n**Case agreement:**\n- 1 відсоток (nom sg)\n- 2-4 відсотки (nom pl)\n- 5+ відсотків (gen pl)\n\n## practice | Практика\n\n### Choose Cardinal or Collective\n\n1. У них ___ (два/двоє) сини.\n   → **двоє** синів (collective for children)\n\n2. Я бачила ___ (три/троє) жінки.\n   → **трьох** жінок / **три** жінки (both acceptable)\n\n3. У кімнаті ___ (чотири/четверо) людей.\n   → **четверо** людей (collective for mixed group)\n\n4. Вона купила ___ (п'ять/п'ятеро) яблук.\n   → **п'ять** яблук (cardinal for things)\n\n5. У них ___ (шість/шестеро) дітей.\n   → **шестеро** дітей (collective for children)\n\n### Express Fractions\n\n1. 1/2 пирога → **половина пирога**\n2. 1/4 години → **чверть години**\n3. 2/3 роботи → **дві третини роботи**\n4. 3/4 учнів → **три чверті учнів**\n5. 1/5 населення → **одна п'ята населення**\n\n### Approximate Quantities\n\nExpress approximately:\n\n1. ~10 людей → **близько десяти людей**\n2. ~100 гривень → **приблизно сто гривень**\n3. >50 студентів → **понад п'ятдесят студентів**\n4. <20 хвилин → **менше ніж двадцять хвилин**\n5. almost all → **майже всі**\n\n### Translate to Ukrainian\n\n1. We both agree.\n   → **Ми обоє згодні.**\n\n2. Half of the students passed.\n   → **Половина студентів склала іспит.**\n\n3. About 30 people came.\n   → **Близько тридцяти людей прийшло.**\n\n4. They have three children.\n   → **У них троє дітей.**\n\n## production | Продукція\n\n### Talk About Your Family\n\nDescribe family members using collectives:\n\n- Скільки людей у вашій родині?\n- Скільки дітей у ваших батьків?\n- Example: «Нас четверо: батьки і двоє дітей.»\n\n### Statistics Discussion\n\nDiscuss using fractions and percentages:\n\n- Скільки відсотків вашого часу ви працюєте?\n- Яка частина вашої зарплати йде на їжу?\n- Example: «Близько третини зарплати йде на оренду.»\n\n---\n\n# Activities\n\n## quiz: Numerals\n\n> Choose the correct form.\n\n1. У них ___ дітей.\n   - [x] троє\n   - [ ] три\n   > Collective for children.\n\n2. Половина пирога — це:\n   - [x] 1/2\n   - [ ] 1/4\n   > Половина = half.\n\n3. «Близько» означає:\n   - [x] приблизно\n   - [ ] точно\n   > Approximate quantity.\n\n4. Ми ___ згодні.\n   - [x] обоє\n   - [ ] два\n   > Collective as substantive.\n\n5. 2,5 можна сказати:\n   - [x] два з половиною\n   - [ ] двоє половини\n   > Colloquial form for 2.5.\n\n6. Понад 100 означає:\n   - [x] більше ніж 100\n   - [ ] менше ніж 100\n   > Понад = over, more than.\n\n## fill-in: Family Statistics\n\n> Опишіть сім'ю, використовуючи числівники.\n\n> У родини Петренків (1)___ (5) членів. Батьки мають (2)___ (3) дітей: двох синів і одну дочку. (3)___ (1/2) дітей вже дорослі. (4)___ (приблизно) раз на місяць вся родина збирається разом. (5)___ (більше ніж) 80% часу вони проводять у місті.\n\n**Answers:**\n1. п'ятеро\n2. троє\n3. Половина\n4. Близько (одного)\n5. Понад / Більше ніж\n\n---",
     "immersiveSections": [
       {
-        "id": "warm-up-розминка",
-        "title": "warm-up | Розминка",
-        "content": "### Числівники | Numerals Review\n\nДо B1 ви вивчили кількісні та порядкові числівники:\n\nUp to B1 you learned cardinal and ordinal numerals:\n\n- **Кількісні**: один, два, три... (one, two, three...)\n- **Порядкові**: перший, другий, третій... (first, second, third...)\n\nТепер додаємо збірні числівники та дроби:\n\nNow we add collective numerals and fractions:\n\n- **Збірні**: двоє, троє, четверо... (pair, trio, group of four...)\n- **Дроби**: половина, третина... (half, third...)",
-        "type": "topic"
+        "id": "section-зміст-уроку-lesson-content",
+        "type": "content",
+        "title": "Зміст уроку | Lesson Content",
+        "content": "## warm-up | Розминка\n\n### Числівники | Numerals Review\n\nДо B1 ви вивчили кількісні та порядкові числівники:\n\nUp to B1 you learned cardinal and ordinal numerals:\n\n- **Кількісні**: один, два, три... (one, two, three...)\n- **Порядкові**: перший, другий, третій... (first, second, third...)\n\nТепер додаємо збірні числівники та дроби:\n\nNow we add collective numerals and fractions:\n\n- **Збірні**: двоє, троє, четверо... (pair, trio, group of four...)\n- **Дроби**: половина, третина... (half, third...)\n\n## presentation | Презентація\n\n### Збірні числівники | Collective Numerals\n\n#### Forms\n\n| Number | Collective | Used with |\n|--------|------------|-----------|\n| 2 | двоє | людей, дітей, тварин |\n| 3 | троє | людей, дітей, тварин |\n| 4 | четверо | людей, дітей, тварин |\n| 5 | п'ятеро | людей, дітей, тварин |\n| 6 | шестеро | людей, дітей, тварин |\n| 7 | семеро | людей, дітей, тварин |\n| 8-10 | восьмеро, дев'ятеро, десятеро | rare |\n\n#### When to Use Collectives\n\n**1. With people (mixed gender or unspecified):**\n- Нас **двоє**. - There are two of us.\n- **Троє** друзів прийшли. - Three friends came.\n- У кімнаті **четверо** людей. - There are four people in the room.\n\n**2. With children:**\n- У них **троє** дітей. - They have three children.\n- **Двоє** малюків грають. - Two toddlers are playing.\n\n**3. With paired or plural-only nouns:**\n- **двоє** дверей - two doors\n- **троє** окулярів - three pairs of glasses\n- **четверо** ножиць - four pairs of scissors\n\n**4. As substantivized numerals:**\n- Ми **обоє** згодні. - We both agree.\n- Вони **двоє** — пара. - They (two) are a couple.\n\n#### Cardinal vs Collective\n\n| Cardinal | Collective | When to Use |\n|----------|------------|-------------|\n| два студенти | двоє студентів | Collective for groups |\n| три хлопці | троє хлопців | Collective more common |\n| дві жінки | двоє жінок | Cardinal for specific gender |\n| п'ять котів | п'ятеро кошенят | Collective for young animals |\n\n### Declension of Collectives\n\nCollectives decline like adjectives in plural:\n\n| Case | двоє | троє |\n|------|------|------|\n| Nom | двоє | троє |\n| Gen | двох | трьох |\n| Dat | двом | трьом |\n| Acc | двох/двоє | трьох/троє |\n| Inst | двома | трьома |\n| Loc | (на) двох | (на) трьох |\n\n**Examples:**\n- Для **двох** людей. - For two people.\n- Я бачив **трьох** дітей. - I saw three children.\n- З **четверома** друзями. - With four friends.\n\n### Дроби | Fractions\n\n#### Basic Fractions\n\n| Fraction | Ukrainian | Example |\n|----------|-----------|---------|\n| 1/2 | половина | половина яблука |\n| 1/3 | третина | третина торта |\n| 1/4 | чверть | чверть години |\n| 2/3 | дві третини | дві третини учнів |\n| 3/4 | три чверті | три чверті роботи |\n\n#### Reading Fractions\n\n**Formula:** numerator (cardinal) + denominator (ordinal in genitive)\n\n| Fraction | Ukrainian |\n|----------|-----------|\n| 1/5 | одна п'ята |\n| 2/5 | дві п'ятих |\n| 3/7 | три сьомих |\n| 5/8 | п'ять восьмих |\n\n**With nouns:**\n- **Половина** студентів прийшла. - Half of the students came.\n- **Дві третини** роботи зроблено. - Two thirds of the work is done.\n- **Чверть** населення. - A quarter of the population.\n\n### Десяткові дроби | Decimals\n\n| Decimal | Ukrainian | Reading |\n|---------|-----------|---------|\n| 0,5 | нуль цілих п'ять десятих | zero point five |\n| 1,5 | одна ціла п'ять десятих | one point five |\n| 2,75 | дві цілих сімдесят п'ять сотих | two point seven five |\n| 3,14 | три цілих чотирнадцять сотих | pi |\n\n**Note:** Ukrainian uses comma (,) not period (.) for decimals!\n\n**Colloquial shortcuts:**\n- 1,5 = **півтора** (m/n) / **півтори** (f)\n- 2,5 = **два з половиною**\n\n### Приблизна кількість | Approximate Quantities\n\n| Expression | Meaning | Example |\n|------------|---------|---------|\n| близько | about, approximately | близько десяти |\n| приблизно | approximately | приблизно сто |\n| майже | almost | майже всі |\n| понад | over, more than | понад тисячу |\n| менше ніж | less than | менше ніж п'ять |\n| більше ніж | more than | більше ніж сто |\n| десь | around, some | десь двадцять |\n| кілька | several | кілька разів |\n| декілька | a few | декілька людей |\n\n**Examples:**\n- **Близько** 50 студентів прийшли. - About 50 students came.\n- Це коштує **понад** 1000 гривень. - It costs over 1000 hryvnias.\n- Я був там **кілька** разів. - I was there several times.\n\n### Відсотки | Percentages\n\n| Percentage | Ukrainian |\n|------------|-----------|\n| 1% | один відсоток |\n| 5% | п'ять відсотків |\n| 25% | двадцять п'ять відсотків |\n| 50% | п'ятдесят відсотків |\n| 100% | сто відсотків |\n\n**Case agreement:**\n- 1 відсоток (nom sg)\n- 2-4 відсотки (nom pl)\n- 5+ відсотків (gen pl)\n\n## practice | Практика\n\n### Choose Cardinal or Collective\n\n1. У них ___ (два/двоє) сини.\n   > [!answer] **двоє** синів\n   > [!explanation] collective for children\n2. Я бачила ___ (три/троє) жінки.\n   > [!answer] **трьох** жінок / **три** жінки\n   > [!explanation] both acceptable\n3. У кімнаті ___ (чотири/четверо) людей.\n   > [!answer] **четверо** людей\n   > [!explanation] collective for mixed group\n4. Вона купила ___ (п'ять/п'ятеро) яблук.\n   > [!answer] **п'ять** яблук\n   > [!explanation] cardinal for things\n5. У них ___ (шість/шестеро) дітей.\n   > [!answer] **шестеро** дітей\n   > [!explanation] collective for children\n### Express Fractions\n\n1. 1/2 пирога\n   > [!answer] **половина пирога**\n2. 1/4 години\n   > [!answer] **чверть години**\n3. 2/3 роботи\n   > [!answer] **дві третини роботи**\n4. 3/4 учнів\n   > [!answer] **три чверті учнів**\n5. 1/5 населення\n   > [!answer] **одна п'ята населення**\n\n### Approximate Quantities\n\nExpress approximately:\n\n1. ~10 людей\n   > [!answer] **близько десяти людей**\n2. ~100 гривень\n   > [!answer] **приблизно сто гривень**\n3. >50 студентів\n   > [!answer] **понад п'ятдесят студентів**\n4. <20 хвилин\n   > [!answer] **менше ніж двадцять хвилин**\n5. almost all\n   > [!answer] **майже всі**\n\n### Translate to Ukrainian\n\n1. We both agree.\n   > [!answer] **Ми обоє згодні.**\n2. Half of the students passed.\n   > [!answer] **Половина студентів склала іспит.**\n3. About 30 people came.\n   > [!answer] **Близько тридцяти людей прийшло.**\n4. They have three children.\n   > [!answer] **У них троє дітей.**\n## production | Продукція\n\n### Talk About Your Family\n\nDescribe family members using collectives:\n\n- Скільки людей у вашій родині?\n- Скільки дітей у ваших батьків?\n- Example: «Нас четверо: батьки і двоє дітей.»\n\n### Statistics Discussion\n\nDiscuss using fractions and percentages:\n\n- Скільки відсотків вашого часу ви працюєте?\n- Яка частина вашої зарплати йде на їжу?\n- Example: «Близько третини зарплати йде на оренду.»\n\n---\n\n\n---\n\n\n---"
       },
       {
-        "id": "presentation-презентація",
-        "title": "presentation | Презентація",
-        "content": "### Збірні числівники | Collective Numerals\n\n#### Forms\n\n| Number | Collective | Used with |\n|--------|------------|-----------|\n| 2 | двоє | людей, дітей, тварин |\n| 3 | троє | людей, дітей, тварин |\n| 4 | четверо | людей, дітей, тварин |\n| 5 | п'ятеро | людей, дітей, тварин |\n| 6 | шестеро | людей, дітей, тварин |\n| 7 | семеро | людей, дітей, тварин |\n| 8-10 | восьмеро, дев'ятеро, десятеро | rare |\n\n#### When to Use Collectives\n\n**1. With people (mixed gender or unspecified):**\n- Нас **двоє**. - There are two of us.\n- **Троє** друзів прийшли. - Three friends came.\n- У кімнаті **четверо** людей. - There are four people in the room.\n\n**2. With children:**\n- У них **троє** дітей. - They have three children.\n- **Двоє** малюків грають. - Two toddlers are playing.\n\n**3. With paired or plural-only nouns:**\n- **двоє** дверей - two doors\n- **троє** окулярів - three pairs of glasses\n- **четверо** ножиць - four pairs of scissors\n\n**4. As substantivized numerals:**\n- Ми **обоє** згодні. - We both agree.\n- Вони **двоє** — пара. - They (two) are a couple.\n\n#### Cardinal vs Collective\n\n| Cardinal | Collective | When to Use |\n|----------|------------|-------------|\n| два студенти | двоє студентів | Collective for groups |\n| три хлопці | троє хлопців | Collective more common |\n| дві жінки | двоє жінок | Cardinal for specific gender |\n| п'ять котів | п'ятеро кошенят | Collective for young animals |\n\n### Declension of Collectives\n\nCollectives decline like adjectives in plural:\n\n| Case | двоє | троє |\n|------|------|------|\n| Nom | двоє | троє |\n| Gen | двох | трьох |\n| Dat | двом | трьом |\n| Acc | двох/двоє | трьох/троє |\n| Inst | двома | трьома |\n| Loc | (на) двох | (на) трьох |\n\n**Examples:**\n- Для **двох** людей. - For two people.\n- Я бачив **трьох** дітей. - I saw three children.\n- З **четверома** друзями. - With four friends.\n\n### Дроби | Fractions\n\n#### Basic Fractions\n\n| Fraction | Ukrainian | Example |\n|----------|-----------|---------|\n| 1/2 | половина | половина яблука |\n| 1/3 | третина | третина торта |\n| 1/4 | чверть | чверть години |\n| 2/3 | дві третини | дві третини учнів |\n| 3/4 | три чверті | три чверті роботи |\n\n#### Reading Fractions\n\n**Formula:** numerator (cardinal) + denominator (ordinal in genitive)\n\n| Fraction | Ukrainian |\n|----------|-----------|\n| 1/5 | одна п'ята |\n| 2/5 | дві п'ятих |\n| 3/7 | три сьомих |\n| 5/8 | п'ять восьмих |\n\n**With nouns:**\n- **Половина** студентів прийшла. - Half of the students came.\n- **Дві третини** роботи зроблено. - Two thirds of the work is done.\n- **Чверть** населення. - A quarter of the population.\n\n### Десяткові дроби | Decimals\n\n| Decimal | Ukrainian | Reading |\n|---------|-----------|---------|\n| 0,5 | нуль цілих п'ять десятих | zero point five |\n| 1,5 | одна ціла п'ять десятих | one point five |\n| 2,75 | дві цілих сімдесят п'ять сотих | two point seven five |\n| 3,14 | три цілих чотирнадцять сотих | pi |\n\n**Note:** Ukrainian uses comma (,) not period (.) for decimals!\n\n**Colloquial shortcuts:**\n- 1,5 = **півтора** (m/n) / **півтори** (f)\n- 2,5 = **два з половиною**\n\n### Приблизна кількість | Approximate Quantities\n\n| Expression | Meaning | Example |\n|------------|---------|---------|\n| близько | about, approximately | близько десяти |\n| приблизно | approximately | приблизно сто |\n| майже | almost | майже всі |\n| понад | over, more than | понад тисячу |\n| менше ніж | less than | менше ніж п'ять |\n| більше ніж | more than | більше ніж сто |\n| десь | around, some | десь двадцять |\n| кілька | several | кілька разів |\n| декілька | a few | декілька людей |\n\n**Examples:**\n- **Близько** 50 студентів прийшли. - About 50 students came.\n- Це коштує **понад** 1000 гривень. - It costs over 1000 hryvnias.\n- Я був там **кілька** разів. - I was there several times.\n\n### Відсотки | Percentages\n\n| Percentage | Ukrainian |\n|------------|-----------|\n| 1% | один відсоток |\n| 5% | п'ять відсотків |\n| 25% | двадцять п'ять відсотків |\n| 50% | п'ятдесят відсотків |\n| 100% | сто відсотків |\n\n**Case agreement:**\n- 1 відсоток (nom sg)\n- 2-4 відсотки (nom pl)\n- 5+ відсотків (gen pl)",
-        "type": "topic"
-      },
-      {
-        "id": "practice-практика",
-        "title": "practice | Практика",
-        "content": "### Choose Cardinal or Collective\n\n1. У них ___ (два/двоє) сини.\n   → **двоє** синів (collective for children)\n\n2. Я бачила ___ (три/троє) жінки.\n   → **трьох** жінок / **три** жінки (both acceptable)\n\n3. У кімнаті ___ (чотири/четверо) людей.\n   → **четверо** людей (collective for mixed group)\n\n4. Вона купила ___ (п'ять/п'ятеро) яблук.\n   → **п'ять** яблук (cardinal for things)\n\n5. У них ___ (шість/шестеро) дітей.\n   → **шестеро** дітей (collective for children)\n\n### Express Fractions\n\n1. 1/2 пирога → **половина пирога**\n2. 1/4 години → **чверть години**\n3. 2/3 роботи → **дві третини роботи**\n4. 3/4 учнів → **три чверті учнів**\n5. 1/5 населення → **одна п'ята населення**\n\n### Approximate Quantities\n\nExpress approximately:\n\n1. ~10 людей → **близько десяти людей**\n2. ~100 гривень → **приблизно сто гривень**\n3. >50 студентів → **понад п'ятдесят студентів**\n4. <20 хвилин → **менше ніж двадцять хвилин**\n5. almost all → **майже всі**\n\n### Translate to Ukrainian\n\n1. We both agree.\n   → **Ми обоє згодні.**\n\n2. Half of the students passed.\n   → **Половина студентів склала іспит.**\n\n3. About 30 people came.\n   → **Близько тридцяти людей прийшло.**\n\n4. They have three children.\n   → **У них троє дітей.**",
-        "type": "topic"
-      },
-      {
-        "id": "production-продукція",
-        "title": "production | Продукція",
-        "content": "### Talk About Your Family\n\nDescribe family members using collectives:\n\n- Скільки людей у вашій родині?\n- Скільки дітей у ваших батьків?\n- Example: «Нас четверо: батьки і двоє дітей.»\n\n### Statistics Discussion\n\nDiscuss using fractions and percentages:\n\n- Скільки відсотків вашого часу ви працюєте?\n- Яка частина вашої зарплати йде на їжу?\n- Example: «Близько третини зарплати йде на оренду.»\n\n---",
-        "type": "topic"
-      },
-      {
-        "id": "activities",
-        "title": "Activities",
-        "content": "## quiz: Numerals\n\n> Choose the correct form.\n\n1. У них ___ дітей.\n   - [x] троє\n   - [ ] три\n   > Collective for children.\n\n2. Половина пирога — це:\n   - [x] 1/2\n   - [ ] 1/4\n   > Половина = half.\n\n3. «Близько» означає:\n   - [x] приблизно\n   - [ ] точно\n   > Approximate quantity.\n\n4. Ми ___ згодні.\n   - [x] обоє\n   - [ ] два\n   > Collective as substantive.\n\n5. 2,5 можна сказати:\n   - [x] два з половиною\n   - [ ] двоє половини\n   > Colloquial form for 2.5.\n\n6. Понад 100 означає:\n   - [x] більше ніж 100\n   - [ ] менше ніж 100\n   > Понад = over, more than.\n\n## fill-in: Family Statistics\n\n> Опишіть сім'ю, використовуючи числівники.\n\n> У родини Петренків (1)___ (5) членів. Батьки мають (2)___ (3) дітей: двох синів і одну дочку. (3)___ (1/2) дітей вже дорослі. (4)___ (приблизно) раз на місяць вся родина збирається разом. (5)___ (більше ніж) 80% часу вони проводять у місті.\n\n**Answers:**\n1. п'ятеро\n2. троє\n3. Половина\n4. Близько (одного)\n5. Понад / Більше ніж\n\n---",
-        "type": "activities"
-      },
-      {
-        "id": "vocabulary",
-        "title": "Vocabulary",
-        "content": "| Word | IPA | English | Notes |\n|------|-----|---------|-------|\n| збірний | /zbʲirˈnɪj/ | collective | adj |\n| двоє | /ˈdwojɛ/ | two (collective) | num |\n| троє | /ˈtrojɛ/ | three (collective) | num |\n| четверо | /t͡ʃɛˈtwɛro/ | four (collective) | num |\n| п'ятеро | /pjɑˈtɛro/ | five (collective) | num |\n| обоє | /oˈbojɛ/ | both | num |\n| половина | /poloˈvɪnɑ/ | half | f |\n| третина | /trɛˈtɪnɑ/ | third | f |\n| чверть | /t͡ʃwɛrtʲ/ | quarter | f |\n| дріб | /drʲib/ | fraction | m |\n| відсоток | /vʲidˈsotok/ | percent | m |\n| близько | /ˈblɪzʲko/ | approximately | adv |\n| приблизно | /prɪˈblɪzno/ | approximately | adv |\n| понад | /poˈnɑd/ | over, more than | prep |\n| кілька | /ˈkʲilʲkɑ/ | several | num |\n\n---",
-        "type": "vocabulary"
-      },
-      {
-        "id": "summary",
+        "id": "section-summary",
+        "type": "summary",
         "title": "Summary",
         "content": "## Numerals: Key Points\n\n### Collective Numerals\n\n| Form | Use With |\n|------|----------|\n| двоє, троє, четверо | people, children, paired nouns |\n\n### Fractions\n\n| Ukrainian | English |\n|-----------|---------|\n| половина | half (1/2) |\n| третина | third (1/3) |\n| чверть | quarter (1/4) |\n\n### Approximation\n\n| Expression | Meaning |\n|------------|---------|\n| близько | about |\n| приблизно | approximately |\n| понад | over |\n| майже | almost |\n\n> **Key Takeaways**\n>\n> - Collectives for people, children, paired nouns\n> - Cardinal for objects and specific genders\n> - Ukrainian uses comma for decimals\n> - Many ways to express approximate quantities\n> - Fractions: numerator (cardinal) + denominator (ordinal genitive)",
-        "type": "summary"
+        "titleUk": "Підсумок"
       }
-    ]
+    ],
+    "rawMarkdown": "---\nmodule: 127\ntitle: \"Numerals: Collectives & Fractions\"\nsubtitle: \"Двоє, троє; половина, третина\"\nlevel: B1\nphase: B1.4\nduration: 45\ntransliteration: none\ntags: [grammar, numerals, collectives, fractions]\nobjectives:\n  - Learn collective numerals (двоє, троє, etc.)\n  - Understand when to use collective vs cardinal numerals\n  - Master fractions and decimals\n  - Use approximate quantities\n---\n\n# Зміст уроку | Lesson Content\n\n## warm-up | Розминка\n\n### Числівники | Numerals Review\n\nДо B1 ви вивчили кількісні та порядкові числівники:\n\nUp to B1 you learned cardinal and ordinal numerals:\n\n- **Кількісні**: один, два, три... (one, two, three...)\n- **Порядкові**: перший, другий, третій... (first, second, third...)\n\nТепер додаємо збірні числівники та дроби:\n\nNow we add collective numerals and fractions:\n\n- **Збірні**: двоє, троє, четверо... (pair, trio, group of four...)\n- **Дроби**: половина, третина... (half, third...)\n\n## presentation | Презентація\n\n### Збірні числівники | Collective Numerals\n\n#### Forms\n\n| Number | Collective | Used with |\n|--------|------------|-----------|\n| 2 | двоє | людей, дітей, тварин |\n| 3 | троє | людей, дітей, тварин |\n| 4 | четверо | людей, дітей, тварин |\n| 5 | п'ятеро | людей, дітей, тварин |\n| 6 | шестеро | людей, дітей, тварин |\n| 7 | семеро | людей, дітей, тварин |\n| 8-10 | восьмеро, дев'ятеро, десятеро | rare |\n\n#### When to Use Collectives\n\n**1. With people (mixed gender or unspecified):**\n- Нас **двоє**. - There are two of us.\n- **Троє** друзів прийшли. - Three friends came.\n- У кімнаті **четверо** людей. - There are four people in the room.\n\n**2. With children:**\n- У них **троє** дітей. - They have three children.\n- **Двоє** малюків грають. - Two toddlers are playing.\n\n**3. With paired or plural-only nouns:**\n- **двоє** дверей - two doors\n- **троє** окулярів - three pairs of glasses\n- **четверо** ножиць - four pairs of scissors\n\n**4. As substantivized numerals:**\n- Ми **обоє** згодні. - We both agree.\n- Вони **двоє** — пара. - They (two) are a couple.\n\n#### Cardinal vs Collective\n\n| Cardinal | Collective | When to Use |\n|----------|------------|-------------|\n| два студенти | двоє студентів | Collective for groups |\n| три хлопці | троє хлопців | Collective more common |\n| дві жінки | двоє жінок | Cardinal for specific gender |\n| п'ять котів | п'ятеро кошенят | Collective for young animals |\n\n### Declension of Collectives\n\nCollectives decline like adjectives in plural:\n\n| Case | двоє | троє |\n|------|------|------|\n| Nom | двоє | троє |\n| Gen | двох | трьох |\n| Dat | двом | трьом |\n| Acc | двох/двоє | трьох/троє |\n| Inst | двома | трьома |\n| Loc | (на) двох | (на) трьох |\n\n**Examples:**\n- Для **двох** людей. - For two people.\n- Я бачив **трьох** дітей. - I saw three children.\n- З **четверома** друзями. - With four friends.\n\n### Дроби | Fractions\n\n#### Basic Fractions\n\n| Fraction | Ukrainian | Example |\n|----------|-----------|---------|\n| 1/2 | половина | половина яблука |\n| 1/3 | третина | третина торта |\n| 1/4 | чверть | чверть години |\n| 2/3 | дві третини | дві третини учнів |\n| 3/4 | три чверті | три чверті роботи |\n\n#### Reading Fractions\n\n**Formula:** numerator (cardinal) + denominator (ordinal in genitive)\n\n| Fraction | Ukrainian |\n|----------|-----------|\n| 1/5 | одна п'ята |\n| 2/5 | дві п'ятих |\n| 3/7 | три сьомих |\n| 5/8 | п'ять восьмих |\n\n**With nouns:**\n- **Половина** студентів прийшла. - Half of the students came.\n- **Дві третини** роботи зроблено. - Two thirds of the work is done.\n- **Чверть** населення. - A quarter of the population.\n\n### Десяткові дроби | Decimals\n\n| Decimal | Ukrainian | Reading |\n|---------|-----------|---------|\n| 0,5 | нуль цілих п'ять десятих | zero point five |\n| 1,5 | одна ціла п'ять десятих | one point five |\n| 2,75 | дві цілих сімдесят п'ять сотих | two point seven five |\n| 3,14 | три цілих чотирнадцять сотих | pi |\n\n**Note:** Ukrainian uses comma (,) not period (.) for decimals!\n\n**Colloquial shortcuts:**\n- 1,5 = **півтора** (m/n) / **півтори** (f)\n- 2,5 = **два з половиною**\n\n### Приблизна кількість | Approximate Quantities\n\n| Expression | Meaning | Example |\n|------------|---------|---------|\n| близько | about, approximately | близько десяти |\n| приблизно | approximately | приблизно сто |\n| майже | almost | майже всі |\n| понад | over, more than | понад тисячу |\n| менше ніж | less than | менше ніж п'ять |\n| більше ніж | more than | більше ніж сто |\n| десь | around, some | десь двадцять |\n| кілька | several | кілька разів |\n| декілька | a few | декілька людей |\n\n**Examples:**\n- **Близько** 50 студентів прийшли. - About 50 students came.\n- Це коштує **понад** 1000 гривень. - It costs over 1000 hryvnias.\n- Я був там **кілька** разів. - I was there several times.\n\n### Відсотки | Percentages\n\n| Percentage | Ukrainian |\n|------------|-----------|\n| 1% | один відсоток |\n| 5% | п'ять відсотків |\n| 25% | двадцять п'ять відсотків |\n| 50% | п'ятдесят відсотків |\n| 100% | сто відсотків |\n\n**Case agreement:**\n- 1 відсоток (nom sg)\n- 2-4 відсотки (nom pl)\n- 5+ відсотків (gen pl)\n\n## practice | Практика\n\n### Choose Cardinal or Collective\n\n1. У них ___ (два/двоє) сини.\n   > [!answer] **двоє** синів\n   > [!explanation] collective for children\n2. Я бачила ___ (три/троє) жінки.\n   > [!answer] **трьох** жінок / **три** жінки\n   > [!explanation] both acceptable\n3. У кімнаті ___ (чотири/четверо) людей.\n   > [!answer] **четверо** людей\n   > [!explanation] collective for mixed group\n4. Вона купила ___ (п'ять/п'ятеро) яблук.\n   > [!answer] **п'ять** яблук\n   > [!explanation] cardinal for things\n5. У них ___ (шість/шестеро) дітей.\n   > [!answer] **шестеро** дітей\n   > [!explanation] collective for children\n### Express Fractions\n\n1. 1/2 пирога\n   > [!answer] **половина пирога**\n2. 1/4 години\n   > [!answer] **чверть години**\n3. 2/3 роботи\n   > [!answer] **дві третини роботи**\n4. 3/4 учнів\n   > [!answer] **три чверті учнів**\n5. 1/5 населення\n   > [!answer] **одна п'ята населення**\n\n### Approximate Quantities\n\nExpress approximately:\n\n1. ~10 людей\n   > [!answer] **близько десяти людей**\n2. ~100 гривень\n   > [!answer] **приблизно сто гривень**\n3. >50 студентів\n   > [!answer] **понад п'ятдесят студентів**\n4. <20 хвилин\n   > [!answer] **менше ніж двадцять хвилин**\n5. almost all\n   > [!answer] **майже всі**\n\n### Translate to Ukrainian\n\n1. We both agree.\n   > [!answer] **Ми обоє згодні.**\n2. Half of the students passed.\n   > [!answer] **Половина студентів склала іспит.**\n3. About 30 people came.\n   > [!answer] **Близько тридцяти людей прийшло.**\n4. They have three children.\n   > [!answer] **У них троє дітей.**\n## production | Продукція\n\n### Talk About Your Family\n\nDescribe family members using collectives:\n\n- Скільки людей у вашій родині?\n- Скільки дітей у ваших батьків?\n- Example: «Нас четверо: батьки і двоє дітей.»\n\n### Statistics Discussion\n\nDiscuss using fractions and percentages:\n\n- Скільки відсотків вашого часу ви працюєте?\n- Яка частина вашої зарплати йде на їжу?\n- Example: «Близько третини зарплати йде на оренду.»\n\n---\n\n# Activities\n\n## quiz: Numerals\n\n> Choose the correct form.\n\n1. У них ___ дітей.\n   - [x] троє\n   - [ ] три\n   > Collective for children.\n\n2. Половина пирога — це:\n   - [x] 1/2\n   - [ ] 1/4\n   > Половина = half.\n\n3. «Близько» означає:\n   - [x] приблизно\n   - [ ] точно\n   > Approximate quantity.\n\n4. Ми ___ згодні.\n   - [x] обоє\n   - [ ] два\n   > Collective as substantive.\n\n5. 2,5 можна сказати:\n   - [x] два з половиною\n   - [ ] двоє половини\n   > Colloquial form for 2.5.\n\n6. Понад 100 означає:\n   - [x] більше ніж 100\n   - [ ] менше ніж 100\n   > Понад = over, more than.\n\n## fill-in: Family Statistics\n\n> Опишіть сім'ю, використовуючи числівники.\n\n> У родини Петренків (1)___ (5) членів. Батьки мають (2)___ (3) дітей: двох синів і одну дочку. (3)___ (1/2) дітей вже дорослі. (4)___ (приблизно) раз на місяць вся родина збирається разом. (5)___ (більше ніж) 80% часу вони проводять у місті.\n\n**Answers:**\n1. п'ятеро\n2. троє\n3. Половина\n4. Близько (одного)\n5. Понад / Більше ніж\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | Notes |\n|------|-----|---------|-------|\n| збірний | /zbʲirˈnɪj/ | collective | adj |\n| двоє | /ˈdwojɛ/ | two (collective) | num |\n| троє | /ˈtrojɛ/ | three (collective) | num |\n| четверо | /t͡ʃɛˈtwɛro/ | four (collective) | num |\n| п'ятеро | /pjɑˈtɛro/ | five (collective) | num |\n| обоє | /oˈbojɛ/ | both | num |\n| половина | /poloˈvɪnɑ/ | half | f |\n| третина | /trɛˈtɪnɑ/ | third | f |\n| чверть | /t͡ʃwɛrtʲ/ | quarter | f |\n| дріб | /drʲib/ | fraction | m |\n| відсоток | /vʲidˈsotok/ | percent | m |\n| близько | /ˈblɪzʲko/ | approximately | adv |\n| приблизно | /prɪˈblɪzno/ | approximately | adv |\n| понад | /poˈnɑd/ | over, more than | prep |\n| кілька | /ˈkʲilʲkɑ/ | several | num |\n\n---\n\n# Summary\n\n## Numerals: Key Points\n\n### Collective Numerals\n\n| Form | Use With |\n|------|----------|\n| двоє, троє, четверо | people, children, paired nouns |\n\n### Fractions\n\n| Ukrainian | English |\n|-----------|---------|\n| половина | half (1/2) |\n| третина | third (1/3) |\n| чверть | quarter (1/4) |\n\n### Approximation\n\n| Expression | Meaning |\n|------------|---------|\n| близько | about |\n| приблизно | approximately |\n| понад | over |\n| майже | almost |\n\n> **Key Takeaways**\n>\n> - Collectives for people, children, paired nouns\n> - Cardinal for objects and specific genders\n> - Ukrainian uses comma for decimals\n> - Many ways to express approximate quantities\n> - Fractions: numerator (cardinal) + denominator (ordinal genitive)\n"
   },
   "activities": [
     {
-      "id": "act-uk-B1-127-quiz",
+      "id": "act-b1-127-quiz",
       "type": "quiz",
       "title": "Numerals",
       "description": "Choose the correct form.",
       "content": {
         "type": "quiz",
-        "instructions": "Choose the correct form.",
         "questions": [
           {
             "question": "У них ___ дітей.",
@@ -253,38 +124,37 @@
       "language": "uk",
       "difficultyLevel": "B1",
       "duration": 5,
-      "tags": [
-        "grammar",
-        "numerals",
-        "collectives",
-        "fractions"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.237Z",
+      "modifiedAt": "2025-12-01T22:58:37.237Z"
     },
     {
-      "id": "act-uk-B1-127-gapfill",
+      "id": "act-b1-127-gapfill",
       "type": "gap-fill",
       "title": "Family Statistics",
       "description": "Опишіть сім'ю, використовуючи числівники.",
       "content": {
         "type": "gap-fill",
-        "instructions": "Опишіть сім'ю, використовуючи числівники.",
         "text": "Опишіть сім'ю, використовуючи числівники.\nУ родини Петренків (1)___ (5) членів. Батьки мають (2)___ (3) дітей: двох синів і одну дочку. (3)___ (1/2) дітей вже дорослі. (4)___ (приблизно) раз на місяць вся родина збирається разом. (5)___ (більше ніж) 80% часу вони проводять у місті.",
         "blanks": [
           {
+            "index": 0,
             "hint": "5"
           },
           {
+            "index": 1,
             "hint": "3"
           },
           {
+            "index": 2,
             "hint": "1/2"
           },
           {
+            "index": 3,
             "hint": "приблизно"
           },
           {
+            "index": 4,
             "hint": "більше ніж"
           }
         ],
@@ -298,14 +168,9 @@
       "language": "uk",
       "difficultyLevel": "B1",
       "duration": 5,
-      "tags": [
-        "grammar",
-        "numerals",
-        "collectives",
-        "fractions"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.237Z",
+      "modifiedAt": "2025-12-01T22:58:37.237Z"
     }
   ],
   "vocabulary": {
@@ -316,139 +181,109 @@
     "transliterationMode": "none",
     "words": [
       {
-        "id": "v-m127-001",
+        "id": "v-zbirnyy-127-0",
         "uk": "збірний",
-        "translit": "",
-        "ipa": "/zbʲirˈnɪj/",
         "en": "collective",
-        "pos": "",
-        "note": "adj"
+        "pos": "adj",
+        "ipa": "/zbʲirˈnɪj/"
       },
       {
-        "id": "v-m127-002",
+        "id": "v-dvoye-127-1",
         "uk": "двоє",
-        "translit": "",
-        "ipa": "/ˈdwojɛ/",
         "en": "two (collective)",
-        "pos": "",
-        "note": "num"
+        "pos": "num",
+        "ipa": "/ˈdwojɛ/"
       },
       {
-        "id": "v-m127-003",
+        "id": "v-troye-127-2",
         "uk": "троє",
-        "translit": "",
-        "ipa": "/ˈtrojɛ/",
         "en": "three (collective)",
-        "pos": "",
-        "note": "num"
+        "pos": "num",
+        "ipa": "/ˈtrojɛ/"
       },
       {
-        "id": "v-m127-004",
+        "id": "v-chetvero-127-3",
         "uk": "четверо",
-        "translit": "",
-        "ipa": "/t͡ʃɛˈtwɛro/",
         "en": "four (collective)",
-        "pos": "",
-        "note": "num"
+        "pos": "num",
+        "ipa": "/t͡ʃɛˈtwɛro/"
       },
       {
-        "id": "v-m127-005",
+        "id": "v-p'yatero-127-4",
         "uk": "п'ятеро",
-        "translit": "",
-        "ipa": "/pjɑˈtɛro/",
         "en": "five (collective)",
-        "pos": "",
-        "note": "num"
+        "pos": "num",
+        "ipa": "/pjɑˈtɛro/"
       },
       {
-        "id": "v-m127-006",
+        "id": "v-oboye-127-5",
         "uk": "обоє",
-        "translit": "",
-        "ipa": "/oˈbojɛ/",
         "en": "both",
-        "pos": "",
-        "note": "num"
+        "pos": "num",
+        "ipa": "/oˈbojɛ/"
       },
       {
-        "id": "v-m127-007",
+        "id": "v-polovyna-127-6",
         "uk": "половина",
-        "translit": "",
-        "ipa": "/poloˈvɪnɑ/",
         "en": "half",
-        "pos": "",
-        "note": "f"
+        "pos": "f",
+        "ipa": "/poloˈvɪnɑ/"
       },
       {
-        "id": "v-m127-008",
+        "id": "v-tretyna-127-7",
         "uk": "третина",
-        "translit": "",
-        "ipa": "/trɛˈtɪnɑ/",
         "en": "third",
-        "pos": "",
-        "note": "f"
+        "pos": "f",
+        "ipa": "/trɛˈtɪnɑ/"
       },
       {
-        "id": "v-m127-009",
+        "id": "v-chvertь-127-8",
         "uk": "чверть",
-        "translit": "",
-        "ipa": "/t͡ʃwɛrtʲ/",
         "en": "quarter",
-        "pos": "",
-        "note": "f"
+        "pos": "f",
+        "ipa": "/t͡ʃwɛrtʲ/"
       },
       {
-        "id": "v-m127-010",
+        "id": "v-drib-127-9",
         "uk": "дріб",
-        "translit": "",
-        "ipa": "/drʲib/",
         "en": "fraction",
-        "pos": "",
-        "note": "m"
+        "pos": "m",
+        "ipa": "/drʲib/"
       },
       {
-        "id": "v-m127-011",
+        "id": "v-vidsotok-127-10",
         "uk": "відсоток",
-        "translit": "",
-        "ipa": "/vʲidˈsotok/",
         "en": "percent",
-        "pos": "",
-        "note": "m"
+        "pos": "m",
+        "ipa": "/vʲidˈsotok/"
       },
       {
-        "id": "v-m127-012",
+        "id": "v-blyzьko-127-11",
         "uk": "близько",
-        "translit": "",
-        "ipa": "/ˈblɪzʲko/",
         "en": "approximately",
-        "pos": "",
-        "note": "adv"
+        "pos": "adv",
+        "ipa": "/ˈblɪzʲko/"
       },
       {
-        "id": "v-m127-013",
+        "id": "v-pryblyzno-127-12",
         "uk": "приблизно",
-        "translit": "",
-        "ipa": "/prɪˈblɪzno/",
         "en": "approximately",
-        "pos": "",
-        "note": "adv"
+        "pos": "adv",
+        "ipa": "/prɪˈblɪzno/"
       },
       {
-        "id": "v-m127-014",
+        "id": "v-ponad-127-13",
         "uk": "понад",
-        "translit": "",
-        "ipa": "/poˈnɑd/",
         "en": "over, more than",
-        "pos": "",
-        "note": "prep"
+        "pos": "prep",
+        "ipa": "/poˈnɑd/"
       },
       {
-        "id": "v-m127-015",
+        "id": "v-kilьka-127-14",
         "uk": "кілька",
-        "translit": "",
-        "ipa": "/ˈkʲilʲkɑ/",
         "en": "several",
-        "pos": "",
-        "note": "num"
+        "pos": "num",
+        "ipa": "/ˈkʲilʲkɑ/"
       }
     ]
   }

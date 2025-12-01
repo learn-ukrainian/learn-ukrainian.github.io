@@ -5,98 +5,314 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Module 53: Complex Conjunctions | Ukrainian A2</title>
   <style>
-    :root { --primary: #1a5fb4; --primary-light: #3584e4; --success: #26a269; --warning: #e5a50a; --danger: #c01c28; --bg: #fafafa; --card-bg: #fff; --text: #1e1e1e; --text-muted: #5e5e5e; --border: #e0e0e0; }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
-    .top-nav { background: #2e2e2e; color: white; padding: 0.5rem 2rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.875rem; }
-    .top-nav a { color: white; text-decoration: none; }
-    .top-nav a:hover { text-decoration: underline; }
-    .module-nav { display: flex; gap: 1rem; align-items: center; }
-    .module-nav-link { color: rgba(255,255,255,0.8); text-decoration: none; padding: 0.25rem 0.5rem; }
-    .module-nav-link:hover { color: white; }
-    .module-nav-link.disabled { color: rgba(255,255,255,0.3); pointer-events: none; }
-    .nav { position: sticky; top: 0; background: var(--primary); color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; z-index: 100; }
-    .nav h1 { font-size: 1.25rem; }
-    .nav-tabs { display: flex; gap: 0.5rem; }
-    .nav-tab { background: rgba(255,255,255,0.2); border: none; color: white; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; }
-    .nav-tab.active { background: white; color: var(--primary); }
-    main { max-width: 1000px; margin: 0 auto; padding: 2rem; }
-    .section { display: none; } .section.active { display: block; }
-    .lesson-header { text-align: center; margin-bottom: 2rem; padding: 2rem; background: linear-gradient(135deg, #e8f4fd, #f0e8fd); border-radius: 12px; }
-    .level-badge { background: var(--primary); color: white; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.875rem; }
-    .card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 1.5rem; margin-bottom: 1.5rem; }
-    .card h3 { color: var(--primary); margin-bottom: 1rem; }
-    .section-intro { border-left: 4px solid var(--primary); }
-    .section-intro h3 { color: var(--primary); }
-    .section-topic { border-left: 4px solid var(--border); }
-    .section-summary { background: linear-gradient(135deg, #f0f9ff, #e8f4fd); border-left: 4px solid var(--success); }
-    .section-summary h3 { color: var(--success); }
-    .canvas-note { background: #fffbeb; border-left: 4px solid var(--warning); padding: 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
-    .canvas-note h4 { color: var(--warning); margin-bottom: 0.5rem; }
-    .md-content { line-height: 1.7; }
-    .md-content p { margin: 0.75rem 0; }
-    .md-content ul, .md-content ol { margin: 0.75rem 0; padding-left: 1.5rem; }
-    .md-content li { margin: 0.25rem 0; }
-    .md-content strong { color: var(--primary); }
-    .md-content blockquote { background: #e8f4fd; border-left: 4px solid var(--primary); padding: 0.75rem 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
-    .md-content blockquote p { margin: 0.25rem 0; }
-    .md-content table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
-    .md-content th, .md-content td { border: 1px solid var(--border); padding: 0.5rem 0.75rem; text-align: left; }
-    .md-content th { background: #f5f5f5; font-weight: 600; }
-    .md-content code { background: #f0f0f0; padding: 0.125rem 0.375rem; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
-    .letter-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0; }
-    .letter-group { border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; }
-    .letter-group.true-friends { border-color: var(--success); } .letter-group.true-friends .letters { color: var(--success); }
-    .letter-group.false-friends { border-color: var(--danger); } .letter-group.false-friends .letters { color: var(--danger); }
-    .letter-group.new-letters { border-color: var(--primary); } .letter-group.new-letters .letters { color: var(--primary); }
-    .letters { font-size: 1.75rem; letter-spacing: 0.3rem; }
-    .match-container { display: flex; gap: 3rem; padding: 1rem; position: relative; }
-    .match-column { flex: 1; display: flex; flex-direction: column; gap: 0.75rem; }
-    .match-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; font-size: 1.25rem; cursor: pointer; }
-    .match-item.selected { border-color: var(--primary); background: #e8f4fd; }
-    .match-item.matched { border-color: var(--success); background: #e8f8f0; }
-    .match-item.wrong { border-color: var(--danger); background: #fde8e8; }
-    .match-lines { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
-    .quiz-question { border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; }
-    .quiz-question.answered { pointer-events: none; }
-    .quiz-question .cyrillic { font-size: 1.5rem; color: var(--primary); font-weight: 600; }
-    .quiz-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-top: 1rem; }
-    .quiz-option { background: #f5f5f5; border: 2px solid var(--border); border-radius: 8px; padding: 1rem; cursor: pointer; text-align: center; }
-    .quiz-option.correct { border-color: var(--success); background: #d4edda; }
-    .quiz-option.wrong { border-color: var(--danger); background: #f8d7da; }
-    .quiz-explanation { margin-top: 1rem; padding: 1rem; background: #e8f4fd; border-radius: 8px; display: none; }
-    .quiz-explanation.show { display: block; }
-    .sort-pool { background: #f5f5f5; border: 2px dashed var(--border); border-radius: 12px; padding: 1.5rem; min-height: 80px; margin-bottom: 1rem; }
-    .sort-items { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; }
-    .sort-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 0.75rem 1.25rem; font-size: 1.5rem; cursor: grab; }
-    .sort-item.correct { border-color: var(--success); background: #e8f8f0; }
-    .sort-item.wrong { border-color: var(--danger); background: #fde8e8; }
-    .sort-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
-    .sort-group { border: 2px solid var(--border); border-radius: 12px; padding: 1rem; min-height: 150px; }
-    .sort-group.drag-over { border-color: var(--primary); background: #e8f4fd; }
-    .sort-group h4 { font-size: 0.875rem; text-align: center; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--border); }
-    .sort-group.true-friends h4 { color: var(--success); border-color: var(--success); }
-    .sort-group.false-friends h4 { color: var(--danger); border-color: var(--danger); }
-    .sort-group.new-letters h4 { color: var(--primary); border-color: var(--primary); }
-    .vocab-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; }
-    .vocab-card { border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; text-align: center; }
-    .vocab-card .uk { font-size: 1.75rem; font-weight: 600; color: var(--primary); }
-    .vocab-card .translit { color: var(--text-muted); font-style: italic; }
-    .vocab-card .en { font-weight: 500; margin: 0.25rem 0; }
-    .vocab-card .note { font-size: 0.75rem; color: #613583; background: #f0e8fd; padding: 0.25rem 0.5rem; border-radius: 4px; }
-    .btn { padding: 0.75rem 1.5rem; border: none; border-radius: 8px; cursor: pointer; }
-    .btn-primary { background: var(--primary); color: white; }
-    .btn-outline { background: transparent; border: 2px solid var(--border); }
-    .btn-group { display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem; }
-    .score-display { text-align: center; padding: 1rem; background: linear-gradient(135deg, #e8f8f0, #e8f4fd); border-radius: 8px; margin-bottom: 1rem; }
-    .score-display .score { font-size: 2rem; font-weight: 700; color: var(--success); }
-    .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
-    .completion-message.show { display: block; }
-    footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+:root { --primary: #1a5fb4; --primary-light: #3584e4; --success: #26a269; --warning: #e5a50a; --danger: #c01c28; --bg: #fafafa; --card-bg: #fff; --text: #1e1e1e; --text-muted: #5e5e5e; --border: #e0e0e0; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+.top-nav { background: #2e2e2e; color: white; padding: 0.5rem 2rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.875rem; }
+.top-nav a { color: white; text-decoration: none; }
+.top-nav a:hover { text-decoration: underline; }
+.module-nav { display: flex; gap: 1rem; align-items: center; }
+.module-nav-link { color: rgba(255,255,255,0.8); text-decoration: none; padding: 0.25rem 0.5rem; }
+.module-nav-link:hover { color: white; }
+.module-nav-link.disabled { color: rgba(255,255,255,0.3); pointer-events: none; }
+.nav { position: sticky; top: 0; background: var(--primary); color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; z-index: 100; }
+.nav h1 { font-size: 1.25rem; }
+.nav-tabs { display: flex; gap: 0.5rem; }
+.nav-tab { background: rgba(255,255,255,0.2); border: none; color: white; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; }
+.nav-tab.active { background: white; color: var(--primary); }
+main { max-width: 1000px; margin: 0 auto; padding: 2rem; }
+.section { display: none; } .section.active { display: block; }
+.lesson-header { text-align: center; margin-bottom: 2rem; padding: 2rem; background: linear-gradient(135deg, #e8f4fd, #f0e8fd); border-radius: 12px; }
+.level-badge { background: var(--primary); color: white; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.875rem; }
+.card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 1.5rem; margin-bottom: 1.5rem; }
+.card h3 { color: var(--primary); margin-bottom: 1rem; }
+.section-intro { border-left: 4px solid var(--primary); }
+.section-intro h3 { color: var(--primary); }
+.section-topic { border-left: 4px solid var(--border); }
+.section-summary { background: linear-gradient(135deg, #f0f9ff, #e8f4fd); border-left: 4px solid var(--success); }
+.section-summary h3 { color: var(--success); }
+.canvas-note { background: #fffbeb; border-left: 4px solid var(--warning); padding: 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+.canvas-note h4 { color: var(--warning); margin-bottom: 0.5rem; }
+.md-content { line-height: 1.7; }
+.md-content p { margin: 0.75rem 0; }
+.md-content ul, .md-content ol { margin: 0.75rem 0; padding-left: 1.5rem; }
+.md-content li { margin: 0.25rem 0; }
+.md-content strong { color: var(--primary); }
+.md-content blockquote { background: #e8f4fd; border-left: 4px solid var(--primary); padding: 0.75rem 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+.md-content blockquote p { margin: 0.25rem 0; }
+.md-content table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+.md-content th, .md-content td { border: 1px solid var(--border); padding: 0.5rem 0.75rem; text-align: left; }
+.md-content th { background: #f5f5f5; font-weight: 600; }
+.md-content code { background: #f0f0f0; padding: 0.125rem 0.375rem; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
+.md-content details { background: #f8f9fa; border: 1px solid var(--border); border-radius: 8px; padding: 0; margin: 1rem 0; }
+.md-content details summary { background: linear-gradient(135deg, #e8f4fd, #f0e8fd); padding: 0.75rem 1rem; cursor: pointer; font-weight: 600; color: var(--primary); border-radius: 8px; list-style: none; display: flex; align-items: center; gap: 0.5rem; }
+.md-content details summary::-webkit-details-marker { display: none; }
+.md-content details summary::before { content: '▶'; font-size: 0.75rem; transition: transform 0.2s; }
+.md-content details[open] summary::before { transform: rotate(90deg); }
+.md-content details[open] summary { border-radius: 8px 8px 0 0; }
+.md-content details > *:not(summary) { padding: 0 1rem; }
+.md-content details > *:last-child { padding-bottom: 1rem; }
+.md-content p > details { margin: 0; }
+.md-content p:has(> details) { margin: 1rem 0; }
+.inline-answer { background: linear-gradient(135deg, #d4edda, #e8f4fd); padding: 0.125rem 0.5rem; border-radius: 4px; transition: opacity 0.2s; }
+.inline-answer.hidden { opacity: 0; user-select: none; }
+.answer-toggle-btn { display: inline-flex; align-items: center; gap: 0.5rem; background: linear-gradient(135deg, #e8f4fd, #f0e8fd); border: 1px solid var(--primary); color: var(--primary); padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-size: 0.875rem; font-weight: 600; margin: 1rem 0; }
+.answer-toggle-btn:hover { background: var(--primary); color: white; }
+.answer-toggle-btn svg { width: 1rem; height: 1rem; }
+.letter-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0; }
+.letter-group { border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; }
+.letter-group.true-friends { border-color: var(--success); } .letter-group.true-friends .letters { color: var(--success); }
+.letter-group.false-friends { border-color: var(--danger); } .letter-group.false-friends .letters { color: var(--danger); }
+.letter-group.new-letters { border-color: var(--primary); } .letter-group.new-letters .letters { color: var(--primary); }
+.letters { font-size: 1.75rem; letter-spacing: 0.3rem; }
+.btn { padding: 0.75rem 1.5rem; border: none; border-radius: 8px; cursor: pointer; }
+.btn-primary { background: var(--primary); color: white; }
+.btn-outline { background: transparent; border: 2px solid var(--border); }
+.btn-group { display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem; }
+.score-display { text-align: center; padding: 1rem; background: linear-gradient(135deg, #e8f8f0, #e8f4fd); border-radius: 8px; margin-bottom: 1rem; }
+.score-display .score { font-size: 2rem; font-weight: 700; color: var(--success); }
+.completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
+.completion-message.show { display: block; }
+footer { text-align: center; padding: 2rem; color: var(--text-muted); }
+@media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+
+
+/**
+ * Layout styles - Navigation, page structure
+ */
+
+/* Top Navigation */
+.top-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1.5rem;
+  background: #f8f8f8;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.875rem;
+}
+
+.top-nav a {
+  color: var(--text-muted);
+}
+
+.top-nav a:hover {
+  color: var(--primary);
+}
+
+.module-nav {
+  display: flex;
+  gap: 1rem;
+}
+
+.module-nav-link {
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+.module-nav-link:hover {
+  background: #e8f4fd;
+}
+
+/* Main Navigation */
+.nav {
+  background: linear-gradient(135deg, #1a5fb4, #613583);
+  color: white;
+  padding: 1.5rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav h1 {
+  font-size: 1.5rem;
+}
+
+.nav-tabs {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.nav-tab {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: background 0.2s;
+}
+
+.nav-tab:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.nav-tab.active {
+  background: white;
+  color: var(--primary);
+}
+
+/* Main Content */
+main {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Sections */
+.section {
+  display: none;
+}
+
+.section.active {
+  display: block;
+}
+
+/* Lesson Header */
+.lesson-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding: 2rem;
+  background: linear-gradient(135deg, #e8f4fd, #f0e8fd);
+  border-radius: 12px;
+}
+
+.lesson-header h2 {
+  font-size: 2rem;
+  margin: 0.5rem 0;
+}
+
+/* Section Cards */
+.section-intro {
+  border-left: 4px solid var(--primary);
+}
+
+.section-intro h3 {
+  color: var(--primary);
+}
+
+.section-topic {
+  border-left: 4px solid var(--border);
+}
+
+.section-summary {
+  background: linear-gradient(135deg, #f0f9ff, #e8f4fd);
+  border-left: 4px solid var(--success);
+}
+
+.section-summary h3 {
+  color: var(--success);
+}
+
+/* Canvas Notes */
+.canvas-note {
+  background: #fffbeb;
+  border-left: 4px solid var(--warning);
+  padding: 1rem;
+  margin: 1rem 0;
+  border-radius: 0 8px 8px 0;
+}
+
+.canvas-note h4 {
+  color: var(--warning);
+  margin-bottom: 0.5rem;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-muted);
+}
+
+/* Responsive Layout */
+@media (max-width: 768px) {
+  .nav {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .nav h1 {
+    font-size: 1.25rem;
+    text-align: center;
+  }
+
+  .nav-tabs {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  main {
+    padding: 1rem;
+  }
+
+  .top-nav {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+
+
+/* Match Activity */
+.match-container { display: flex; gap: 3rem; padding: 1rem; position: relative; }
+.match-column { flex: 1; display: flex; flex-direction: column; gap: 0.75rem; }
+.match-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; font-size: 1.25rem; cursor: pointer; }
+.match-item.selected { border-color: var(--primary); background: #e8f4fd; }
+.match-item.matched { border-color: var(--success); background: #e8f8f0; }
+.match-item.wrong { border-color: var(--danger); background: #fde8e8; }
+.match-lines { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+
+/* Quiz Activity */
+.quiz-question { border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; }
+.quiz-question.answered { pointer-events: none; }
+.quiz-question .cyrillic { font-size: 1.5rem; color: var(--primary); font-weight: 600; }
+.quiz-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-top: 1rem; }
+.quiz-option { background: #f5f5f5; border: 2px solid var(--border); border-radius: 8px; padding: 1rem; cursor: pointer; text-align: center; }
+.quiz-option.correct { border-color: var(--success); background: #d4edda; }
+.quiz-option.wrong { border-color: var(--danger); background: #f8d7da; }
+.quiz-explanation { margin-top: 1rem; padding: 1rem; background: #e8f4fd; border-radius: 8px; display: none; }
+.quiz-explanation.show { display: block; }
+
+/* Sort Activity */
+.sort-pool { background: #f5f5f5; border: 2px dashed var(--border); border-radius: 12px; padding: 1.5rem; min-height: 80px; margin-bottom: 1rem; }
+.sort-items { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; }
+.sort-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 0.75rem 1.25rem; font-size: 1.5rem; cursor: grab; }
+.sort-item.correct { border-color: var(--success); background: #e8f8f0; }
+.sort-item.wrong { border-color: var(--danger); background: #fde8e8; }
+.sort-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+.sort-group { border: 2px solid var(--border); border-radius: 12px; padding: 1rem; min-height: 150px; }
+.sort-group.drag-over { border-color: var(--primary); background: #e8f4fd; }
+.sort-group h4 { font-size: 0.875rem; text-align: center; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--border); }
+.sort-group.true-friends h4 { color: var(--success); border-color: var(--success); }
+.sort-group.false-friends h4 { color: var(--danger); border-color: var(--danger); }
+.sort-group.new-letters h4 { color: var(--primary); border-color: var(--primary); }
+
+/* Vocabulary */
+.vocab-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; }
+.vocab-card { border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; text-align: center; }
+.vocab-card .uk { font-size: 1.75rem; font-weight: 600; color: var(--primary); }
+.vocab-card .translit { color: var(--text-muted); font-style: italic; }
+.vocab-card .en { font-weight: 500; margin: 0.25rem 0; }
+.vocab-card .note { font-size: 0.75rem; color: #613583; background: #f0e8fd; padding: 0.25rem 0.5rem; border-radius: 4px; }
+
+/* Answer Callout Blocks */
+.callout { padding: 0.5rem 1rem; margin: 0.25rem 0; border-radius: 4px; }
+.callout-answer { background: #e8f8f0; border-left: 3px solid var(--success); }
+.callout-explanation { background: #e8f4fd; border-left: 3px solid var(--primary); color: var(--text-muted); font-style: italic; }
+.callout-alt { background: #f5f5f5; border-left: 3px solid var(--border); color: var(--text-muted); }
+
+/* Answer Block Toggle */
+.answer-block { display: none; }
+.answer-block.show { display: block; }
+.show-answer-btn { background: #f0f0f0; border: 1px solid var(--border); border-radius: 6px; padding: 0.25rem 0.75rem; font-size: 0.8rem; cursor: pointer; color: var(--text-muted); margin: 0.25rem 0; }
+.show-answer-btn:hover { background: #e5e5e5; }
+.show-answer-btn.revealed { background: #e8f8f0; border-color: var(--success); color: var(--success); }
+
   </style>
 </head>
 <body>
+  
   <div class="top-nav">
     <a href="../index.html">← l2-uk-en Curriculum</a>
     <div class="module-nav">
@@ -116,14 +332,17 @@
     </div>
   </nav>
   <main>
+    
     <section id="lesson" class="section active">
       <div class="lesson-header">
         <span class="level-badge">A2 · A2.3</span>
         <h2 style="font-size:2rem;margin:0.5rem 0">Complex Conjunctions</h2>
         <p style="color:var(--text-muted)">Щоб, Хоча, Тому що</p>
       </div>
-      
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Beyond Simple Sentences</h4><div class="md-content"><p>Time to connect ideas more sophisticatedly!</p>
+      <div class="card"><h3>Theory</h3><div class="md-content"><h1 id="lessoncontent">Lesson Content</h1>
+<h2 id="warmup">warm-up</h2>
+<h3 id="beyondsimplesentences">Beyond Simple Sentences</h3>
+<p>Time to connect ideas more sophisticatedly!</p>
 <ul>
 <li>"I study <strong>in order to</strong> learn." - Я вчуся, <strong>щоб</strong> знати.</li>
 <li>"<strong>Although</strong> it's cold, I went out." - <strong>Хоча</strong> холодно, я вийшов.</li>
@@ -133,7 +352,10 @@
 <blockquote>
   <p>💡 <strong>Did You Know?</strong></p>
   <p>Ukrainian has many ways to say "because": тому що, бо, оскільки, через те що, адже… Each has slightly different nuances. We'll focus on the most common ones at A2 level!</p>
-</blockquote></div></div><div class="canvas-note"><h4>### Щоб - In Order To / So That</h4><div class="md-content"><p><strong>Щоб</strong> expresses purpose - why you do something:</p>
+</blockquote>
+<h2 id="presentation">presentation</h2>
+<h3 id="inordertosothat">Щоб - In Order To / So That</h3>
+<p><strong>Щоб</strong> expresses purpose - why you do something:</p>
 <p><strong>Structure: Main clause + щоб + infinitive/past tense</strong></p>
 <p><strong>Same subject (infinitive):</strong></p>
 <ul>
@@ -154,7 +376,9 @@
   <li>Я хочу, щоб ти <strong>прийшов</strong>. (not прийдеш)</li>
   <li>Важливо, щоб вони <strong>зрозуміли</strong>. (not зрозуміють)</li>
   </ul>
-</blockquote></div></div><div class="canvas-note"><h4>Щоб Patterns</h4><div class="md-content"><p><strong>Purpose (why you do something):</strong></p>
+</blockquote>
+<h3 id="patterns">Щоб Patterns</h3>
+<p><strong>Purpose (why you do something):</strong></p>
 <ul>
 <li>Я купив квитки, <strong>щоб</strong> поїхати до Львова. - I bought tickets to go to Lviv.</li>
 <li>Треба рано встати, <strong>щоб</strong> встигнути на потяг. - We need to get up early to catch the train.</li>
@@ -177,12 +401,16 @@
   <li>"Я б хотів, щоб ви мені допомогли" (I would like you to help me)<br />
   This is softer than a direct command!</li>
   </ul>
-</blockquote></div></div><div class="canvas-note"><h4>Щоб не - In Order Not To</h4><div class="md-content"><p><strong>Negative purpose:</strong></p>
+</blockquote>
+<h3 id="inordernotto">Щоб не - In Order Not To</h3>
+<p><strong>Negative purpose:</strong></p>
 <ul>
 <li>Я поспішаю, <strong>щоб не</strong> запізнитися. - I'm hurrying so as not to be late.</li>
 <li>Говори тихіше, <strong>щоб не</strong> розбудити дитину. - Speak quieter so as not to wake the child.</li>
 <li>Вона взяла парасолю, <strong>щоб не</strong> змокнути. - She took an umbrella so as not to get wet.</li>
-</ul></div></div><div class="canvas-note"><h4>Хоча / Хоч - Although</h4><div class="md-content"><p><strong>Хоча</strong> expresses contrast - something unexpected:</p>
+</ul>
+<h3 id="although">Хоча / Хоч - Although</h3>
+<p><strong>Хоча</strong> expresses contrast - something unexpected:</p>
 <p><strong>Structure: Хоча + clause, main clause</strong></p>
 <p><strong>Examples:</strong></p>
 <ul>
@@ -198,7 +426,9 @@
 <blockquote>
   <p>📜 <strong>History Bite: Хоча Origins</strong></p>
   <p>Хоча comes from "хотіти" (to want) - originally meaning "even if you want." Over time it evolved to simply mean "although." The short form "хоч" is more casual.</p>
-</blockquote></div></div><div class="canvas-note"><h4>Хоча vs Але</h4><div class="md-content"><p><strong>Хоча</strong> (although) - subordinating, shows unexpected contrast:</p>
+</blockquote>
+<h3 id="vs">Хоча vs Але</h3>
+<p><strong>Хоча</strong> (although) - subordinating, shows unexpected contrast:</p>
 <ul>
 <li><strong>Хоча</strong> дорого, я куплю. (Despite the high price, I'll buy.)</li>
 </ul>
@@ -210,7 +440,9 @@
 <ul>
 <li><strong>Хоча</strong> він старий, він активний. - Although he's old, he's active.</li>
 <li>Він старий, <strong>але</strong> активний. - He's old, but active.</li>
-</ul></div></div><div class="canvas-note"><h4>Тому що / Бо - Because</h4><div class="md-content"><p><strong>Giving reasons:</strong></p>
+</ul>
+<h3 id="because">Тому що / Бо - Because</h3>
+<p><strong>Giving reasons:</strong></p>
 <p><strong>Тому що (because) - more formal:</strong></p>
 <ul>
 <li>Я залишився вдома, <strong>тому що</strong> був дощ. - I stayed home because it was raining.</li>
@@ -233,7 +465,9 @@
   <li><strong>Бо</strong> - more casual, common in speech</li>
   <li><strong>Через</strong> + noun - for specific causes</li>
   </ul>
-</blockquote></div></div><div class="canvas-note"><h4>Тому / Тому що</h4><div class="md-content"><p>Don't confuse:</p>
+</blockquote>
+<h3 id="">Тому / Тому що</h3>
+<p>Don't confuse:</p>
 <ul>
 <li><strong>Тому</strong> = therefore, that's why (RESULT)</li>
 <li><strong>Тому що</strong> = because (REASON)</li>
@@ -242,7 +476,9 @@
 <ul>
 <li>Був дощ, <strong>тому</strong> я залишився вдома. - It rained, therefore I stayed home.</li>
 <li>Я залишився вдома, <strong>тому що</strong> був дощ. - I stayed home because it rained.</li>
-</ul></div></div><div class="canvas-note"><h4>Other Useful Conjunctions</h4><div class="md-content"><p><strong>Якщо… то (if… then):</strong></p>
+</ul>
+<h3 id="otherusefulconjunctions">Other Useful Conjunctions</h3>
+<p><strong>Якщо… то (if… then):</strong></p>
 <ul>
 <li><strong>Якщо</strong> матимеш час, <strong>то</strong> зателефонуй. - If you have time, then call.</li>
 </ul>
@@ -261,7 +497,9 @@
 <p><strong>Після того як (after):</strong></p>
 <ul>
 <li><strong>Після того як</strong> поїли, пішли гуляти. - After we ate, we went for a walk.</li>
-</ul></div></div><div class="canvas-note"><h4>Complex Sentence Structure</h4><div class="md-content"><p><strong>Word order flexibility:</strong></p>
+</ul>
+<h3 id="complexsentencestructure">Complex Sentence Structure</h3>
+<p><strong>Word order flexibility:</strong></p>
 <ul>
 <li><strong>Тому що</strong> він запізнився, ми почали без нього.</li>
 <li>Ми почали без нього, <strong>тому що</strong> він запізнився.</li>
@@ -270,74 +508,224 @@
 <ul>
 <li><strong>Хоча</strong> я втомився, я продовжував працювати, <strong>тому що</strong> хотів закінчити.</li>
 <li>Although I was tired, I continued working because I wanted to finish.</li>
-</ul></div></div><div class="canvas-note"><h4>### Complete with Correct Conjunction</h4><div class="md-content"><ol>
-<li><p>Я вчу українську, ___ розмовляти з друзями. (purpose)<br />
-→ щоб</p></li>
-<li><p>___ холодно, ми пішли гуляти. (contrast)<br />
-→ Хоча</p></li>
-<li><p>Вона запізнилася, ___ були затори. (reason)<br />
-→ тому що / бо</p></li>
-<li><p>Попроси його, ___ він допоміг. (request)<br />
-→ щоб</p></li>
-<li><p>Я поспішаю, ___ не запізнитися. (negative purpose)<br />
-→ щоб не</p></li>
-<li><p>Він не прийшов ___ хворобу. (cause - noun)<br />
-→ через</p></li>
-</ol></div></div><div class="canvas-note"><h4>Combine Sentences</h4><div class="md-content"><ol>
-<li><p>Я хочу. Ти прийдеш.<br />
-→ Я хочу, щоб ти прийшов.</p></li>
-<li><p>Холодно. Я вийшов.<br />
-→ Хоча холодно, я вийшов.</p></li>
-<li><p>Я залишився вдома. Був дощ.<br />
-→ Я залишився вдома, тому що був дощ.</p></li>
-<li><p>Я рано встав. Хочу встигнути на потяг.<br />
-→ Я рано встав, щоб встигнути на потяг.</p></li>
-<li><p>Він втомився. Він продовжував.<br />
-→ Хоча він втомився, він продовжував.</p></li>
-</ol></div></div><div class="canvas-note"><h4>Translate</h4><div class="md-content"><ol>
-<li><p>I study in order to learn.<br />
-→ Я вчуся, щоб знати. / Я вчуся, щоб вивчити.</p></li>
-<li><p>Although it's raining, I'll go.<br />
-→ Хоча йде дощ, я піду.</p></li>
-<li><p>I stayed home because I was sick.<br />
-→ Я залишився вдома, тому що/бо захворів.</p></li>
-<li><p>Tell him to wait.<br />
-→ Скажи йому, щоб почекав.</p></li>
-<li><p>She was late because of traffic.<br />
-→ Вона запізнилася через затори.</p></li>
-</ol></div></div><div class="canvas-note"><h4>### Explain Your Actions</h4><div class="md-content"><p>Use purpose clauses:</p>
+</ul>
+<h2 id="practice">practice</h2>
+<h3 id="completewithcorrectconjunction">Complete with Correct Conjunction</h3>
+<ol>
+<li><p>Я вчу українську, ___ розмовляти з друзями. (purpose)</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-0', this)">Показати відповідь</button><div class="answer-block" id="ans-0"><div class="callout callout-answer" data-callout="answer">щоб</div></div>
+<ol start="2">
+<li><p>___ холодно, ми пішли гуляти. (contrast)</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-1', this)">Показати відповідь</button><div class="answer-block" id="ans-1"><div class="callout callout-answer" data-callout="answer">Хоча</div></div>
+<ol start="3">
+<li><p>Вона запізнилася, ___ були затори. (reason)</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-2', this)">Показати відповідь</button><div class="answer-block" id="ans-2"><div class="callout callout-answer" data-callout="answer">тому що / бо</div></div>
+<ol start="4">
+<li><p>Попроси його, ___ він допоміг. (request)</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-3', this)">Показати відповідь</button><div class="answer-block" id="ans-3"><div class="callout callout-answer" data-callout="answer">щоб</div></div>
+<ol start="5">
+<li><p>Я поспішаю, ___ не запізнитися. (negative purpose)</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-4', this)">Показати відповідь</button><div class="answer-block" id="ans-4"><div class="callout callout-answer" data-callout="answer">щоб не</div></div>
+<ol start="6">
+<li><p>Він не прийшов ___ хворобу. (cause - noun)</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-5', this)">Показати відповідь</button><div class="answer-block" id="ans-5"><div class="callout callout-answer" data-callout="answer">через</div></div>
+<h3 id="combinesentences">Combine Sentences</h3>
+<ol>
+<li><p>Я хочу. Ти прийдеш.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-6', this)">Показати відповідь</button><div class="answer-block" id="ans-6"><div class="callout callout-answer" data-callout="answer">Я хочу, щоб ти прийшов.</div></div>
+<ol start="2">
+<li><p>Холодно. Я вийшов.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-7', this)">Показати відповідь</button><div class="answer-block" id="ans-7"><div class="callout callout-answer" data-callout="answer">Хоча холодно, я вийшов.</div></div>
+<ol start="3">
+<li><p>Я залишився вдома. Був дощ.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-8', this)">Показати відповідь</button><div class="answer-block" id="ans-8"><div class="callout callout-answer" data-callout="answer">Я залишився вдома, тому що був дощ.</div></div>
+<ol start="4">
+<li><p>Я рано встав. Хочу встигнути на потяг.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-9', this)">Показати відповідь</button><div class="answer-block" id="ans-9"><div class="callout callout-answer" data-callout="answer">Я рано встав, щоб встигнути на потяг.</div></div>
+<ol start="5">
+<li><p>Він втомився. Він продовжував.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-10', this)">Показати відповідь</button><div class="answer-block" id="ans-10"><div class="callout callout-answer" data-callout="answer">Хоча він втомився, він продовжував.</div></div>
+<h3 id="translate">Translate</h3>
+<ol>
+<li><p>I study in order to learn.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-11', this)">Показати відповідь</button><div class="answer-block" id="ans-11"><div class="callout callout-answer" data-callout="answer">Я вчуся, щоб знати. / Я вчуся, щоб вивчити.</div></div>
+<ol start="2">
+<li><p>Although it's raining, I'll go.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-12', this)">Показати відповідь</button><div class="answer-block" id="ans-12"><div class="callout callout-answer" data-callout="answer">Хоча йде дощ, я піду.</div></div>
+<ol start="3">
+<li><p>I stayed home because I was sick.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-13', this)">Показати відповідь</button><div class="answer-block" id="ans-13"><div class="callout callout-answer" data-callout="answer">Я залишився вдома, тому що/бо захворів.</div></div>
+<ol start="4">
+<li><p>Tell him to wait.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-14', this)">Показати відповідь</button><div class="answer-block" id="ans-14"><div class="callout callout-answer" data-callout="answer">Скажи йому, щоб почекав.</div></div>
+<ol start="5">
+<li><p>She was late because of traffic.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-15', this)">Показати відповідь</button><div class="answer-block" id="ans-15"><div class="callout callout-answer" data-callout="answer">Вона запізнилася через затори.</div></div>
+<h2 id="production">production</h2>
+<h3 id="explainyouractions">Explain Your Actions</h3>
+<p>Use purpose clauses:</p>
 <ul>
 <li>Я вивчаю українську, щоб…</li>
 <li>Я працюю, щоб…</li>
 <li>Я прийшов сюди, щоб…</li>
-</ul></div></div><div class="canvas-note"><h4>Express Contrasts</h4><div class="md-content"><p>Use хоча:</p>
+</ul>
+<h3 id="expresscontrasts">Express Contrasts</h3>
+<p>Use хоча:</p>
 <ul>
 <li>Хоча я втомлений, я…</li>
 <li>Хоча це дорого, я…</li>
 <li>Хоча в мене мало часу, я…</li>
-</ul></div></div><div class="canvas-note"><h4>Give Reasons</h4><div class="md-content"><p>Use тому що/бо:</p>
+</ul>
+<h3 id="givereasons">Give Reasons</h3>
+<p>Use тому що/бо:</p>
 <ul>
 <li>Я люблю Україну, тому що…</li>
 <li>Я вивчаю мови, бо…</li>
 <li>Я вибрав цю роботу, тому що…</li>
-</ul></div></div></div>
-      <div class="btn-group"><button class="btn btn-primary" onclick="showSection('match')">Start →</button></div>
+</ul>
+<hr />
+<h1 id="summary">Summary</h1>
+<h2 id="purpose">Purpose: Щоб</h2>
+<table>
+<thead>
+<tr>
+<th>Pattern</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Same subject + infinitive</td>
+<td>вчуся, щоб знати</td>
+</tr>
+<tr>
+<td>Different subject + past</td>
+<td>хочу, щоб ти прийшов</td>
+</tr>
+<tr>
+<td>Negative purpose</td>
+<td>щоб не запізнитися</td>
+</tr>
+</tbody>
+</table>
+<h2 id="contrast">Contrast: Хоча</h2>
+<table>
+<thead>
+<tr>
+<th>Pattern</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Хоча + clause, main</td>
+<td>Хоча холодно, я піду</td>
+</tr>
+<tr>
+<td>Main, хоча…</td>
+<td>Допоможу, хоча зайнятий</td>
+</tr>
+</tbody>
+</table>
+<h2 id="reason">Reason: Тому що / Бо</h2>
+<table>
+<thead>
+<tr>
+<th>Form</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>тому що</td>
+<td>formal/neutral</td>
+</tr>
+<tr>
+<td>бо</td>
+<td>casual</td>
+</tr>
+<tr>
+<td>через + noun</td>
+<td>because of</td>
+</tr>
+</tbody>
+</table>
+<h2 id="keydifferences">Key Differences</h2>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Function</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>тому</td>
+<td>therefore (result)</td>
+</tr>
+<tr>
+<td>тому що</td>
+<td>because (reason)</td>
+</tr>
+<tr>
+<td>щоб</td>
+<td>purpose</td>
+</tr>
+<tr>
+<td>хоча</td>
+<td>contrast</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p>💡 <strong>Key Takeaways</strong></p>
+  <ul>
+  <li>Щоб + infinitive (same subject) or past (different subject)</li>
+  <li>Хоча = although (unexpected contrast)</li>
+  <li>Тому що / бо = because (reason)</li>
+  <li>Через + noun = because of</li>
+  <li>Тому = therefore (don't confuse with тому що!)</li>
+  </ul>
+</blockquote></div></div>
+      <div class="btn-group">
+        <button class="btn btn-primary" onclick="showSection('match')">Start →</button>
+      </div>
     </section>
+  
+    
     <section id="match" class="section"><div class="card"><h3>Conjunctions</h3>
       <div class="score-display"><span class="score"><span id="match-score">0</span>/6</span></div>
       <div class="match-container" id="match-container"><svg class="match-lines" id="match-lines"></svg>
         <div class="match-column" id="match-left"><div class="match-item" data-pair="0">щоб</div><div class="match-item" data-pair="1">хоча</div><div class="match-item" data-pair="2">тому що</div><div class="match-item" data-pair="3">бо</div><div class="match-item" data-pair="4">через</div><div class="match-item" data-pair="5">поки</div></div>
-        <div class="match-column" id="match-right"><div class="match-item" data-pair="4">because of</div><div class="match-item" data-pair="3">because (casual)</div><div class="match-item" data-pair="1">although</div><div class="match-item" data-pair="0">in order to</div><div class="match-item" data-pair="2">because</div><div class="match-item" data-pair="5">while</div></div>
+        <div class="match-column" id="match-right"><div class="match-item" data-pair="1">although</div><div class="match-item" data-pair="2">because</div><div class="match-item" data-pair="0">in order to</div><div class="match-item" data-pair="3">because (casual)</div><div class="match-item" data-pair="4">because of</div><div class="match-item" data-pair="5">while</div></div>
       </div>
       <div class="completion-message" id="match-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetMatch()">Reset</button><button class="btn btn-primary" onclick="showSection('quiz')">Next →</button></div>
     </div></section>
+    
     <section id="quiz" class="section"><div class="card"><h3>Complex Sentences</h3>
       <div class="score-display"><span class="score"><span id="quiz-score">0</span>/6</span></div>
       <div id="quiz-container"></div>
       <div class="completion-message" id="quiz-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('sort')">Next →</button></div>
     </div></section>
+    
     <section id="sort" class="section"><div class="card"><h3>Reason vs Purpose vs Contrast</h3>
       <div class="score-display"><span class="score"><span id="sort-score">0</span>/12</span></div>
       <div class="sort-pool" id="sort-pool"><div class="sort-items" id="sort-items"></div></div>
@@ -345,34 +733,235 @@
       <div class="completion-message" id="sort-complete"><h3>All Sorted!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetSort()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Vocab →</button></div>
     </div></section>
+    
     <section id="vocab" class="section"><div class="card"><h3>Vocabulary (9)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
     </section>
-  </main>
-  <footer>Module 53 · curricula-opus</footer>
+  </main><footer>Module 53 · curricula-opus</footer>
   <script>
-    const matchPairs=[{"left":"щоб","right":"in order to"},{"left":"хоча","right":"although"},{"left":"тому що","right":"because"},{"left":"бо","right":"because (casual)"},{"left":"через","right":"because of"},{"left":"поки","right":"while"}];
-    const quizData=[{"question":"\"I study to learn\" - Я вчуся, ___ знати.","options":["щоб","хоча","тому що","але"],"correctIndex":0,"explanation":"Purpose = щоб."},{"question":"\"Although it's cold\" - ___ холодно, я вийшов.","options":["Хоча","Щоб","Тому що","Бо"],"correctIndex":0,"explanation":"Contrast = хоча."},{"question":"\"I stayed because of rain\" - Я залишився ___ дощ.","options":["через","тому що","щоб","хоча"],"correctIndex":0,"explanation":"Через + noun."},{"question":"\"Tell him to come\" - Скажи йому, ___ прийшов.","options":["щоб","що","який","коли"],"correctIndex":0,"explanation":"Request = щоб + past."},{"question":"\"She's happy because...\" - Вона щаслива, ___ здала екзамен.","options":["бо","щоб","хоча","але"],"correctIndex":0,"explanation":"Reason = бо/тому що."},{"question":"\"In order not to be late\" - ___ не запізнитися.","options":["Щоб","Хоча","Тому що","Через"],"correctIndex":0,"explanation":"Negative purpose = щоб не."}];
-    const sortData={"true-friends":["щоб знати","щоб допомогти","щоб не запізнитися","щоб вони прийшли"],"false-friends":["тому що втомився","бо захворів","через затори","тому що холодно"],"new-letters":["хоча дорого","хоча холодно","хоча втомився","хоча не хотів"]};
-    const vocabData=[{"uk":"щоб","translit":"","en":"in order to, so that","note":""},{"uk":"хоча","translit":"","en":"although","note":""},{"uk":"хоч","translit":"","en":"although (casual)","note":""},{"uk":"тому що","translit":"","en":"because","note":""},{"uk":"бо","translit":"","en":"because (casual)","note":""},{"uk":"неохоче","translit":"","en":"reluctantly","note":""},{"uk":"продовжувати","translit":"","en":"to continue (impf)","note":""},{"uk":"змокнути","translit":"","en":"to get wet (perf)","note":""},{"uk":"розбудити","translit":"","en":"to wake up (sb) (perf)","note":""}];
-    const totalSort=12;
-    function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
-    document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));
-    let matchSel=null,matchScore=0,matchPairsArr=[];
-    document.querySelectorAll('#match-left .match-item').forEach(item=>{item.addEventListener('click',()=>{if(item.classList.contains('matched'))return;document.querySelectorAll('#match-left .match-item').forEach(i=>i.classList.remove('selected'));item.classList.add('selected');matchSel={el:item,pair:item.dataset.pair};});});
-    document.querySelectorAll('#match-right .match-item').forEach(item=>{item.addEventListener('click',()=>{if(item.classList.contains('matched')||!matchSel)return;if(matchSel.pair===item.dataset.pair){matchSel.el.classList.remove('selected');matchSel.el.classList.add('matched');item.classList.add('matched');matchPairsArr.push({left:matchSel.el,right:item});matchScore++;document.getElementById('match-score').textContent=matchScore;drawLines();if(matchScore===matchPairs.length)document.getElementById('match-complete').classList.add('show');}else{item.classList.add('wrong');setTimeout(()=>item.classList.remove('wrong'),300);}matchSel=null;});});
-    function drawLines(){const svg=document.getElementById('match-lines'),c=document.getElementById('match-container');if(!svg||!c)return;const r=c.getBoundingClientRect();svg.innerHTML='';svg.setAttribute('viewBox','0 0 '+r.width+' '+r.height);matchPairsArr.forEach(p=>{const lr=p.left.getBoundingClientRect(),rr=p.right.getBoundingClientRect();const line=document.createElementNS('http://www.w3.org/2000/svg','line');line.setAttribute('x1',lr.right-r.left);line.setAttribute('y1',lr.top+lr.height/2-r.top);line.setAttribute('x2',rr.left-r.left);line.setAttribute('y2',rr.top+rr.height/2-r.top);line.setAttribute('stroke','#26a269');line.setAttribute('stroke-width','2');svg.appendChild(line);});}
-    function resetMatch(){matchSel=null;matchScore=0;matchPairsArr=[];document.getElementById('match-score').textContent='0';document.getElementById('match-complete')?.classList.remove('show');document.getElementById('match-lines').innerHTML='';document.querySelectorAll('#match-container .match-item').forEach(i=>i.classList.remove('matched','selected','wrong'));}
-    window.addEventListener('resize',drawLines);
-    let quizScore=0,quizAns=0;
-    function initQuiz(){const c=document.getElementById('quiz-container');if(!c||!quizData.length)return;c.innerHTML='';quizData.forEach((q,i)=>{const sh=[...q.options].sort(()=>Math.random()-0.5);const cor=sh.indexOf(q.options[q.correctIndex]);const div=document.createElement('div');div.className='quiz-question';div.innerHTML='<h4>Q'+(i+1)+': '+q.question+'</h4><div class="quiz-options">'+sh.map((o,j)=>'<div class="quiz-option" data-c="'+(j===cor)+'" data-q="'+i+'">'+o+'</div>').join('')+'</div><div class="quiz-explanation" id="exp-'+i+'">'+q.explanation+'</div>';c.appendChild(div);});document.querySelectorAll('.quiz-option').forEach(o=>o.addEventListener('click',handleQuiz));}
-    function handleQuiz(e){const opt=e.target,q=opt.closest('.quiz-question');if(q.classList.contains('answered'))return;q.classList.add('answered');if(opt.dataset.c==='true'){opt.classList.add('correct');quizScore++;}else{opt.classList.add('wrong');q.querySelector('[data-c="true"]').classList.add('correct');}document.getElementById('exp-'+opt.dataset.q).classList.add('show');document.getElementById('quiz-score').textContent=quizScore;quizAns++;if(quizAns===quizData.length)document.getElementById('quiz-complete').classList.add('show');}
-    function resetQuiz(){quizScore=0;quizAns=0;document.getElementById('quiz-score').textContent='0';document.getElementById('quiz-complete')?.classList.remove('show');initQuiz();}
-    let sortScore=0,dragItem=null;
-    function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
-    function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
-    function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
-    document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
+
+    const matchPairs = [{"left":"щоб","right":"in order to"},{"left":"хоча","right":"although"},{"left":"тому що","right":"because"},{"left":"бо","right":"because (casual)"},{"left":"через","right":"because of"},{"left":"поки","right":"while"}];
+    const quizData = [{"question":"\"I study to learn\" - Я вчуся, ___ знати.","options":["щоб","хоча","тому що","але"],"correctIndex":0,"explanation":"Purpose = щоб."},{"question":"\"Although it's cold\" - ___ холодно, я вийшов.","options":["Хоча","Щоб","Тому що","Бо"],"correctIndex":0,"explanation":"Contrast = хоча."},{"question":"\"I stayed because of rain\" - Я залишився ___ дощ.","options":["через","тому що","щоб","хоча"],"correctIndex":0,"explanation":"Через + noun."},{"question":"\"Tell him to come\" - Скажи йому, ___ прийшов.","options":["щоб","що","який","коли"],"correctIndex":0,"explanation":"Request = щоб + past."},{"question":"\"She's happy because...\" - Вона щаслива, ___ здала екзамен.","options":["бо","щоб","хоча","але"],"correctIndex":0,"explanation":"Reason = бо/тому що."},{"question":"\"In order not to be late\" - ___ не запізнитися.","options":["Щоб","Хоча","Тому що","Через"],"correctIndex":0,"explanation":"Negative purpose = щоб не."}];
+    const sortData = {"true-friends":["щоб знати","щоб допомогти","щоб не запізнитися","щоб вони прийшли"],"false-friends":["тому що втомився","бо захворів","через затори","тому що холодно"],"new-letters":["хоча дорого","хоча холодно","хоча втомився","хоча не хотів"]};
+    const vocabData = [{"uk":"щоб","translit":"","en":"in order to, so that","note":""},{"uk":"хоча","translit":"","en":"although","note":""},{"uk":"хоч","translit":"","en":"although (casual)","note":""},{"uk":"тому що","translit":"","en":"because","note":""},{"uk":"бо","translit":"","en":"because (casual)","note":""},{"uk":"неохоче","translit":"","en":"reluctantly","note":""},{"uk":"продовжувати","translit":"","en":"to continue (impf)","note":""},{"uk":"змокнути","translit":"","en":"to get wet (perf)","note":""},{"uk":"розбудити","translit":"","en":"to wake up (sb) (perf)","note":""}];
+    const totalSort = 12;
+  
+// Answer callout toggle (for new > [!answer] syntax)
+function toggleAnswer(id, btn) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const isUkrainian = document.querySelector('.level-badge')?.textContent.match(/B[12]|C[12]/);
+  const showText = isUkrainian ? 'Показати відповідь' : 'Show Answer';
+  const hideText = isUkrainian ? 'Сховати відповідь' : 'Hide Answer';
+  const show = !el.classList.contains('show');
+  if (show) {
+    el.classList.add('show');
+    btn.textContent = hideText;
+    btn.classList.add('revealed');
+  } else {
+    el.classList.remove('show');
+    btn.textContent = showText;
+    btn.classList.remove('revealed');
+  }
+}
+
+// Section navigation
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id)?.classList.add('active');
+  document.querySelector('[data-section="' + id + '"]')?.classList.add('active');
+}
+document.querySelectorAll('.nav-tab').forEach(t => t.addEventListener('click', () => showSection(t.dataset.section)));
+
+// Initialize on DOM ready
+document.addEventListener('DOMContentLoaded', () => {
+  initQuiz();
+  initSort();
+  initVocab();
+});
+
+
+// Quiz Activity
+let quizScore = 0, quizAns = 0;
+
+function initQuiz() {
+  const c = document.getElementById('quiz-container');
+  if (!c || !quizData.length) return;
+  c.innerHTML = '';
+  quizData.forEach((q, i) => {
+    const sh = [...q.options].sort(() => Math.random() - 0.5);
+    const cor = sh.indexOf(q.options[q.correctIndex]);
+    const div = document.createElement('div');
+    div.className = 'quiz-question';
+    div.innerHTML = '<h4>Q' + (i + 1) + ': ' + q.question + '</h4><div class="quiz-options">' + sh.map((o, j) => '<div class="quiz-option" data-c="' + (j === cor) + '" data-q="' + i + '">' + o + '</div>').join('') + '</div><div class="quiz-explanation" id="exp-' + i + '">' + q.explanation + '</div>';
+    c.appendChild(div);
+  });
+  document.querySelectorAll('.quiz-option').forEach(o => o.addEventListener('click', handleQuiz));
+}
+
+function handleQuiz(e) {
+  const opt = e.target, q = opt.closest('.quiz-question');
+  if (q.classList.contains('answered')) return;
+  q.classList.add('answered');
+  if (opt.dataset.c === 'true') {
+    opt.classList.add('correct');
+    quizScore++;
+  } else {
+    opt.classList.add('wrong');
+    q.querySelector('[data-c="true"]').classList.add('correct');
+  }
+  document.getElementById('exp-' + opt.dataset.q).classList.add('show');
+  document.getElementById('quiz-score').textContent = quizScore;
+  quizAns++;
+  if (quizAns === quizData.length) document.getElementById('quiz-complete').classList.add('show');
+}
+
+function resetQuiz() {
+  quizScore = 0;
+  quizAns = 0;
+  document.getElementById('quiz-score').textContent = '0';
+  document.getElementById('quiz-complete')?.classList.remove('show');
+  initQuiz();
+}
+
+
+// Match Activity
+let matchSel = null, matchScore = 0, matchPairsArr = [];
+
+document.querySelectorAll('#match-left .match-item').forEach(item => {
+  item.addEventListener('click', () => {
+    if (item.classList.contains('matched')) return;
+    document.querySelectorAll('#match-left .match-item').forEach(i => i.classList.remove('selected'));
+    item.classList.add('selected');
+    matchSel = { el: item, pair: item.dataset.pair };
+  });
+});
+
+document.querySelectorAll('#match-right .match-item').forEach(item => {
+  item.addEventListener('click', () => {
+    if (item.classList.contains('matched') || !matchSel) return;
+    if (matchSel.pair === item.dataset.pair) {
+      matchSel.el.classList.remove('selected');
+      matchSel.el.classList.add('matched');
+      item.classList.add('matched');
+      matchPairsArr.push({ left: matchSel.el, right: item });
+      matchScore++;
+      document.getElementById('match-score').textContent = matchScore;
+      drawLines();
+      if (matchScore === matchPairs.length) document.getElementById('match-complete').classList.add('show');
+    } else {
+      item.classList.add('wrong');
+      setTimeout(() => item.classList.remove('wrong'), 300);
+    }
+    matchSel = null;
+  });
+});
+
+function drawLines() {
+  const svg = document.getElementById('match-lines'), c = document.getElementById('match-container');
+  if (!svg || !c) return;
+  const r = c.getBoundingClientRect();
+  svg.innerHTML = '';
+  svg.setAttribute('viewBox', '0 0 ' + r.width + ' ' + r.height);
+  matchPairsArr.forEach(p => {
+    const lr = p.left.getBoundingClientRect(), rr = p.right.getBoundingClientRect();
+    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    line.setAttribute('x1', lr.right - r.left);
+    line.setAttribute('y1', lr.top + lr.height / 2 - r.top);
+    line.setAttribute('x2', rr.left - r.left);
+    line.setAttribute('y2', rr.top + rr.height / 2 - r.top);
+    line.setAttribute('stroke', '#26a269');
+    line.setAttribute('stroke-width', '2');
+    svg.appendChild(line);
+  });
+}
+
+function resetMatch() {
+  matchSel = null;
+  matchScore = 0;
+  matchPairsArr = [];
+  document.getElementById('match-score').textContent = '0';
+  document.getElementById('match-complete')?.classList.remove('show');
+  document.getElementById('match-lines').innerHTML = '';
+  document.querySelectorAll('#match-container .match-item').forEach(i => i.classList.remove('matched', 'selected', 'wrong'));
+}
+
+window.addEventListener('resize', drawLines);
+
+
+// Sort Activity
+let sortScore = 0, dragItem = null;
+
+function initSort() {
+  const pool = document.getElementById('sort-items');
+  if (!pool || !Object.keys(sortData).length) return;
+  const all = Object.values(sortData).flat().sort(() => Math.random() - 0.5);
+  pool.innerHTML = '';
+  all.forEach(letter => {
+    const group = Object.keys(sortData).find(g => sortData[g].includes(letter));
+    const item = document.createElement('div');
+    item.className = 'sort-item';
+    item.textContent = letter;
+    item.draggable = true;
+    item.dataset.group = group;
+    item.addEventListener('dragstart', e => {
+      dragItem = item;
+      item.classList.add('dragging');
+    });
+    item.addEventListener('dragend', () => {
+      item.classList.remove('dragging');
+      dragItem = null;
+    });
+    pool.appendChild(item);
+  });
+  document.querySelectorAll('.sort-group').forEach(g => {
+    g.addEventListener('dragover', e => {
+      e.preventDefault();
+      g.classList.add('drag-over');
+    });
+    g.addEventListener('dragleave', () => g.classList.remove('drag-over'));
+    g.addEventListener('drop', e => {
+      e.preventDefault();
+      g.classList.remove('drag-over');
+      if (!dragItem) return;
+      if (g.dataset.group === dragItem.dataset.group) {
+        dragItem.classList.add('correct');
+        g.querySelector('.sort-items').appendChild(dragItem);
+        dragItem.draggable = false;
+        sortScore++;
+        document.getElementById('sort-score').textContent = sortScore;
+        if (sortScore === totalSort) document.getElementById('sort-complete').classList.add('show');
+      } else {
+        dragItem.classList.add('wrong');
+        setTimeout(() => dragItem.classList.remove('wrong'), 300);
+      }
+    });
+  });
+}
+
+function resetSort() {
+  sortScore = 0;
+  document.getElementById('sort-score').textContent = '0';
+  document.getElementById('sort-complete')?.classList.remove('show');
+  document.querySelectorAll('.sort-group .sort-items').forEach(g => g.innerHTML = '');
+  initSort();
+}
+
+
+// Vocabulary
+function initVocab() {
+  const grid = document.getElementById('vocab-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  vocabData.forEach(v => {
+    const card = document.createElement('div');
+    card.className = 'vocab-card';
+    card.innerHTML = '<div class="uk">' + v.uk + '</div><div class="translit">' + v.translit + '</div><div class="en">' + v.en + '</div>' + (v.note ? '<div class="note">' + v.note + '</div>' : '');
+    grid.appendChild(card);
+  });
+}
+
   </script>
 </body>
 </html>

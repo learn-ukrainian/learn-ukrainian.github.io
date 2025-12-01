@@ -181,10 +181,14 @@ Describe someone:
 
 ### Match Colors to Clothes
 
-1. red dress → червона сукня
-2. blue jeans → сині джинси
-3. white shirt → біла сорочка
-4. black coat → чорне пальто
+1. red dress
+   > [!answer] червона сукня
+2. blue jeans
+   > [!answer] сині джинси
+3. white shirt
+   > [!answer] біла сорочка
+4. black coat
+   > [!answer] чорне пальто
 
 ## production
 

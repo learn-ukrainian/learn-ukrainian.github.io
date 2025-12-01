@@ -199,49 +199,64 @@ You know "хліб" (bread) and "молоко" (milk). Now let's learn to **cook
 
 ### Match Cooking Verb to Action
 
-1. варити → to boil/cook in liquid
-2. смажити → to fry
-3. пекти → to bake
-4. різати → to cut
-5. мішати → to mix/stir
+1. варити
+   > [!answer] to boil/cook in liquid
+2. смажити
+   > [!answer] to fry
+3. пекти
+   > [!answer] to bake
+4. різати
+   > [!answer] to cut
+5. мішати
+   > [!answer] to mix/stir
 
 ### Complete the Recipe
 
 **Деруни (Potato Pancakes)**
 
 1. ___ (peel) картоплю і цибулю.
-   → почисти
+   > [!answer] почисти
 
 2. Натри на ___ (grater).
-   → терці
+   > [!answer] терці
 
 3. ___ (add) яйце і сіль.
-   → додай
+   > [!answer] додай
 
 4. ___ (mix) все добре.
-   → перемішай
+   > [!answer] перемішай
 
 5. ___ (fry) на ___ (pan) з олією.
-   → смаж, сковороді
+   > [!answer] смаж, сковороді
 
 6. Подавай зі ___ (sour cream).
-   → сметаною
+   > [!answer] сметаною
 
 ### Describe the Taste
 
-1. торт → солодкий
-2. лимон → кислий
-3. чіпси → солоний
-4. перець чилі → гострий
-5. свіже яблуко → соковитий
+1. торт
+   > [!answer] солодкий
+2. лимон
+   > [!answer] кислий
+3. чіпси
+   > [!answer] солоний
+4. перець чилі
+   > [!answer] гострий
+5. свіже яблуко
+   > [!answer] соковитий
 
 ### Translate
 
-1. Boil water for tea. → Звари воду для чаю.
-2. The soup is too salty. → Суп занадто солоний.
-3. What's for lunch? → Що на обід?
-4. Try this dish! → Спробуй цю страву!
-5. I'm full. → Я наївся / наїлася.
+1. Boil water for tea.
+   > [!answer] Звари воду для чаю.
+2. The soup is too salty.
+   > [!answer] Суп занадто солоний.
+3. What's for lunch?
+   > [!answer] Що на обід?
+4. Try this dish!
+   > [!answer] Спробуй цю страву!
+5. I'm full.
+   > [!answer] Я наївся / наїлася.
 
 ## production
 

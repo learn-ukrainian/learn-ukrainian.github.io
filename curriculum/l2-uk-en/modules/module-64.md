@@ -207,45 +207,61 @@ Suffixes transform nouns into adjectives that describe qualities and relationshi
 
 ### Form Adjectives from Nouns
 
-1. Україна → український
-2. місто → міський
-3. книга → книжковий
-4. літо → літній
-5. ніч → нічний
-6. море → морський
+1. Україна
+   > [!answer] український
+2. місто
+   > [!answer] міський
+3. книга
+   > [!answer] книжковий
+4. літо
+   > [!answer] літній
+5. ніч
+   > [!answer] нічний
+6. море
+   > [!answer] морський
 
 ### Match Suffix to Meaning
 
-1. -ський → belonging to
-2. -овий → type/material
-3. -ливий → tendency
-4. -истий → abundance
-5. -ів/-ин → possessive
+1. -ський
+   > [!answer] belonging to
+2. -овий
+   > [!answer] type/material
+3. -ливий
+   > [!answer] tendency
+4. -истий
+   > [!answer] abundance
+5. -ів/-ин
+   > [!answer] possessive
 
 ### Complete Sentences
 
 1. Люблю ___ (Ukrainian) кухню.
-   → українську
+   > [!answer] українську
 
 2. Це ___ (city) парк.
-   → міський
+   > [!answer] міський
 
 3. Купи ___ (fruit) сік.
-   → фруктовий
+   > [!answer] фруктовий
 
 4. Вона ___ (happy) людина.
-   → щаслива
+   > [!answer] щаслива
 
 5. Де ___ (mom's) сумка?
-   → мамина
+   > [!answer] мамина
 
 ### Translate
 
-1. Ukrainian language → українська мова
-2. City transport → міський транспорт
-3. Summer vacation → літній відпочинок
-4. Starry sky → зоряне небо
-5. Father's car → батькова машина
+1. Ukrainian language
+   > [!answer] українська мова
+2. City transport
+   > [!answer] міський транспорт
+3. Summer vacation
+   > [!answer] літній відпочинок
+4. Starry sky
+   > [!answer] зоряне небо
+5. Father's car
+   > [!answer] батькова машина
 
 ## production
 

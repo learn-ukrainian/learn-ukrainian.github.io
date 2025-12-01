@@ -147,12 +147,18 @@ These topics are important for B1 level:
 
 ### Complete with Correct Word
 
-1. В Україні ___ (elections) відбуваються кожні п'ять років. → **вибори**
-2. Він ___ (citizen) України. → **громадянин**
-3. ___ (The government) прийняв новий закон. → **Уряд**
-4. Свобода слова — це важливе ___ (right). → **право**
-5. ___ (Unemployment) — серйозна проблема. → **Безробіття**
-6. Вона працює ___ (deputy) у парламенті. → **депутатом**
+1. В Україні ___ (elections) відбуваються кожні п'ять років.
+   > [!answer] **вибори**
+2. Він ___ (citizen) України.
+   > [!answer] **громадянин**
+3. ___ (The government) прийняв новий закон.
+   > [!answer] **Уряд**
+4. Свобода слова — це важливе ___ (right).
+   > [!answer] **право**
+5. ___ (Unemployment) — серйозна проблема.
+   > [!answer] **Безробіття**
+6. Вона працює ___ (deputy) у парламенті.
+   > [!answer] **депутатом**
 
 ### Match Terms
 
@@ -175,20 +181,15 @@ These topics are important for B1 level:
 ### Translate to Ukrainian
 
 1. Democracy is important for every country.
-   → **Демократія важлива для кожної країни.**
-
+   > [!answer] **Демократія важлива для кожної країни.**
 2. Citizens have the right to vote.
-   → **Громадяни мають право голосувати.**
-
+   > [!answer] **Громадяни мають право голосувати.**
 3. The government adopted a new law.
-   → **Уряд прийняв новий закон.**
-
+   > [!answer] **Уряд прийняв новий закон.**
 4. They are fighting against corruption.
-   → **Вони борються проти корупції.**
-
+   > [!answer] **Вони борються проти корупції.**
 5. Freedom of speech is a human right.
-   → **Свобода слова — це право людини.**
-
+   > [!answer] **Свобода слова — це право людини.**
 ## production | Продукція
 
 ### Describe Political System

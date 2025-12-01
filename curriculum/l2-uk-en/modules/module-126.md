@@ -125,13 +125,16 @@ Some words are always used in diminutive form:
 
 **General patterns:**
 
-1. **Hard consonants** → usually **-ик, -ок**
+1. **Hard consonants**
+   > [!answer] usually **-ик, -ок**
    - стіл → столик, дзвін → дзвіночок
 
-2. **Soft consonants** → usually **-чик, -ечка**
+2. **Soft consonants**
+   > [!answer] usually **-чик, -ечка**
    - ніч → ніченька, ключ → ключик
 
-3. **-ка words** → **-очка, -ечка**
+3. **-ка words**
+   > [!answer] **-очка, -ечка**
    - рука → рученька, донька → донечка
 
 4. **Consonant changes** may occur:
@@ -143,57 +146,57 @@ Some words are always used in diminutive form:
 
 ### Form Diminutives
 
-1. кіт → ___
-   → **котик**
-
-2. стіл → ___
-   → **столик**
-
-3. вікно → ___
-   → **віконко / віконечко**
-
-4. мама → ___
-   → **мамочка / мамуся**
-
-5. ніч → ___
-   → **ніченька**
-
-6. серце → ___
-   → **серденько**
-
-7. хліб → ___
-   → **хлібчик / хлібець**
-
-8. зірка → ___
-   → **зірочка**
-
+1. кіт
+   > [!answer] ___
+   > [!answer] **котик**
+2. стіл
+   > [!answer] ___
+   > [!answer] **столик**
+3. вікно
+   > [!answer] ___
+   > [!answer] **віконко / віконечко**
+4. мама
+   > [!answer] ___
+   > [!answer] **мамочка / мамуся**
+5. ніч
+   > [!answer] ___
+   > [!answer] **ніченька**
+6. серце
+   > [!answer] ___
+   > [!answer] **серденько**
+7. хліб
+   > [!answer] ___
+   > [!answer] **хлібчик / хлібець**
+8. зірка
+   > [!answer] ___
+   > [!answer] **зірочка**
 ### Match Context to Diminutive
 
 Choose the appropriate form:
 
-1. «___, іди сюди!» (to a child) → **Синочку / Донечко**
-2. «Зачекайте ___!» (polite request) → **хвилиночку**
-3. «Який гарний ___!» (small house) → **будиночок**
-4. «Моя ___ захворіла.» (beloved grandmother) → **бабусенька**
-5. «Дайте ___ води.» (polite) → **трішечки / крапельку**
+1. «___, іди сюди!» (to a child)
+   > [!answer] **Синочку / Донечко**
+2. «Зачекайте ___!» (polite request)
+   > [!answer] **хвилиночку**
+3. «Який гарний ___!» (small house)
+   > [!answer] **будиночок**
+4. «Моя ___ захворіла.» (beloved grandmother)
+   > [!answer] **бабусенька**
+5. «Дайте ___ води.» (polite)
+   > [!answer] **трішечки / крапельку**
 
 ### Translate with Diminutives
 
 1. My dear mother is the best.
-   → **Моя мамочка найкраща.**
-
+   > [!answer] **Моя мамочка найкраща.**
 2. Wait just a moment, please.
-   → **Зачекайте хвилиночку, будь ласка.**
-
+   > [!answer] **Зачекайте хвилиночку, будь ласка.**
 3. The kitty is sleeping on the sofa.
-   → **Котик спить на дивані.**
-
+   > [!answer] **Котик спить на дивані.**
 4. What a cozy little house!
-   → **Який затишний будиночок!**
-
+   > [!answer] **Який затишний будиночок!**
 5. She's my little star.
-   → **Вона моя зірочка.**
-
+   > [!answer] **Вона моя зірочка.**
 ## production | Продукція
 
 ### Describe with Diminutives

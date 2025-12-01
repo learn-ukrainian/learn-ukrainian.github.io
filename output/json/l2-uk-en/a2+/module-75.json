@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-A2+-75",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "vocabulary-expansion",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -26,8 +25,6 @@
       "Academic titles and degrees",
       "School subject vocabulary"
     ],
-    "totalDuration": 45,
-    "transliterationMode": "none",
     "tags": [
       "vocabulary",
       "education",
@@ -35,22 +32,9 @@
       "university",
       "learning"
     ],
-    "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
+    "totalDuration": 45,
+    "transliterationMode": "none",
     "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### The World of Education\n\nYou know \"школа\" and \"університет.\" Let's expand your education vocabulary!\n\n**Levels:**\n- дитячий садок (kindergarten), школа (school), університет (university)\n\n**Activities:**\n- вчитися (to study), складати іспит (to take an exam)\n\n> 💡 **Why This Matters**\n>\n> Education vocabulary helps you discuss your background, support learners, and navigate academic settings."
-          }
-        ]
-      },
       {
         "id": "phase-presentation",
         "name": "presentation",
@@ -59,112 +43,33 @@
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "### Education Levels\n\n| Ukrainian | English |\n|-----------|---------|\n| дитячий садок | kindergarten |\n| початкова школа | elementary school |\n| середня школа | middle/high school |\n| гімназія | gymnasium (academic school) |\n| ліцей | lyceum |\n| коледж | college |\n| університет | university |\n| інститут | institute |\n| аспірантура | graduate school |\n| курси | courses |\n\n**Examples:**\n- Дитина ходить у **дитячий садок**. - The child goes to kindergarten.\n- Я закінчив **середню школу** у 2020. - I finished high school in 2020.\n- Він студент **університету**. - He's a university student.\n- Вона вступила до **аспірантури**. - She entered graduate school.\n- Ходжу на **курси** англійської. - I attend English courses.\n\n> 🎭 **Culture Note: Ukrainian Education**\n>\n> Ukrainian education: 4 years початкова школа, 5 years базова середня, 3 years профільна середня. University is typically 4 years (бакалавр) + 2 years (магістр)."
+            "teacherNotes": "### Education Levels\n\n| Ukrainian | English |\n|-----------|---------|\n| дитячий садок | kindergarten |\n| початкова школа | elementary school |\n| середня школа | middle/high school |\n| гімназія | gymnasium (academic school) |\n| ліцей | lyceum |\n| коледж | college |\n| університет | university |\n| інститут | institute |\n| аспірантура | graduate school |\n| курси | courses |\n\n**Examples:**\n- Дитина ходить у **дитячий садок**. - The child goes to kindergarten.\n- Я закінчив **середню школу** у 2020. - I finished high school in 2020.\n- Він студент **університету**. - He's a university student.\n- Вона вступила до **аспірантури**. - She entered graduate school.\n- Ходжу на **курси** англійської. - I attend English courses.\n\n> 🎭 **Culture Note: Ukrainian Education**\n>\n> Ukrainian education: 4 years початкова школа, 5 years базова середня, 3 years профільна середня. University is typically 4 years (бакалавр) + 2 years (магістр).\n\n### School Subjects\n\n| Ukrainian | English |\n|-----------|---------|\n| математика | mathematics |\n| українська мова | Ukrainian language |\n| англійська мова | English language |\n| література | literature |\n| історія | history |\n| географія | geography |\n| біологія | biology |\n| фізика | physics |\n| хімія | chemistry |\n| інформатика | computer science |\n| фізкультура | physical education |\n| музика | music |\n| мистецтво | art |\n\n**Examples:**\n- Мій улюблений предмет — **математика**. - My favorite subject is math.\n- **Історія** України цікава. - Ukrainian history is interesting.\n- Я не люблю **фізику**. - I don't like physics.\n- Сьогодні **фізкультура** і **музика**. - Today is PE and music.\n- **Інформатика** зараз важлива. - Computer science is important now.\n\n### University Terms\n\n| Ukrainian | English |\n|-----------|---------|\n| факультет | faculty, department |\n| спеціальність | major, specialty |\n| курс | year (of study) |\n| семестр | semester |\n| лекція | lecture |\n| семінар | seminar |\n| практика | internship, practice |\n| диплом | diploma |\n| ступінь | degree |\n| бакалавр | bachelor's |\n| магістр | master's |\n| доктор наук | PhD, doctorate |\n\n**Examples:**\n- Який у тебе **факультет**? - What faculty are you in?\n- Моя **спеціальність** — економіка. - My major is economics.\n- Я на третьому **курсі**. - I'm in my third year.\n- Цей **семестр** складний. - This semester is hard.\n- Він захистив **диплом**. - He defended his diploma.\n- Вона отримала **ступінь** магістра. - She received a master's degree.\n\n### People in Education\n\n| Ukrainian | English |\n|-----------|---------|\n| учень / учениця | pupil (m/f) |\n| студент / студентка | student (m/f) |\n| вчитель / вчителька | teacher (m/f) |\n| викладач / викладачка | lecturer (m/f) |\n| професор / професорка | professor (m/f) |\n| декан | dean |\n| ректор | rector (president) |\n| однокласник | classmate (school) |\n| одногрупник | classmate (university) |\n| випускник | graduate |\n\n**Examples:**\n- **Учні** пишуть контрольну. - The pupils are writing a test.\n- **Студенти** слухають лекцію. - Students are listening to a lecture.\n- Наш **викладач** дуже суворий. - Our lecturer is very strict.\n- **Декан** факультету проводить збори. - The dean is holding a meeting.\n- Вона моя **однокласниця**. - She's my classmate.\n\n### Study Actions\n\n| Imperfective | Perfective | Meaning |\n|--------------|------------|---------|\n| вчитися | навчитися | to study, learn |\n| навчатися | - | to be educated |\n| вивчати | вивчити | to study (subject) |\n| готуватися | підготуватися | to prepare |\n| складати | скласти | to take (exam) |\n| здавати | здати | to pass (exam) |\n| провалювати | провалити | to fail |\n| пропускати | пропустити | to miss (class) |\n| відвідувати | відвідати | to attend |\n| закінчувати | закінчити | to graduate |\n\n**Examples:**\n- Я **вчуся** в університеті. - I study at university.\n- Вона **вивчає** медицину. - She's studying medicine.\n- **Готуюся** до іспиту. - I'm preparing for the exam.\n- Він **склав** усі іспити. - He passed all exams.\n- Не **пропускай** заняття! - Don't miss classes!\n- Коли ти **закінчиш** університет? - When will you graduate?\n\n### Exams & Grades\n\n| Ukrainian | English |\n|-----------|---------|\n| іспит | exam |\n| залік | credit, pass/fail test |\n| контрольна робота | test, quiz |\n| домашнє завдання | homework |\n| оцінка | grade |\n| бал | point, score |\n| сесія | exam period |\n| перескладання | retake |\n| відмінник | excellent student |\n| двійка | failing grade (2) |\n\n**Examples:**\n- Завтра **іспит** з математики. - Tomorrow is the math exam.\n- Треба здати **залік**. - Need to pass the credit.\n- Зробив **домашнє завдання**? - Did you do the homework?\n- Яка твоя **оцінка**? - What's your grade?\n- **Сесія** починається в січні. - The exam period starts in January.\n- Він **відмінник** — завжди п'ятірки. - He's an excellent student — always A's.\n\n> 📝 **Note: Ukrainian Grading**\n>\n> Ukrainian schools use 1-12 scale. Universities often use 1-5 or ECTS (A-F). 12 (школа) or 5 (університет) = excellent.\n\n### Learning Materials\n\n| Ukrainian | English |\n|-----------|---------|\n| підручник | textbook |\n| зошит | notebook |\n| конспект | notes, summary |\n| словник | dictionary |\n| довідник | reference book |\n| презентація | presentation |\n| реферат | essay, paper |\n| курсова робота | term paper |\n| дипломна робота | thesis |\n\n**Examples:**\n- Відкрий **підручник** на сторінці 50. - Open the textbook to page 50.\n- Записуй у **зошит**. - Write in your notebook.\n- Покажи свій **конспект**. - Show me your notes.\n- Перевір у **словнику**. - Check in the dictionary.\n- Треба написати **реферат**. - Need to write an essay.\n- Захистила **дипломну роботу**. - She defended her thesis."
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "School Subjects\n\n| Ukrainian | English |\n|-----------|---------|\n| математика | mathematics |\n| українська мова | Ukrainian language |\n| англійська мова | English language |\n| література | literature |\n| історія | history |\n| географія | geography |\n| біологія | biology |\n| фізика | physics |\n| хімія | chemistry |\n| інформатика | computer science |\n| фізкультура | physical education |\n| музика | music |\n| мистецтво | art |\n\n**Examples:**\n- Мій улюблений предмет — **математика**. - My favorite subject is math.\n- **Історія** України цікава. - Ukrainian history is interesting.\n- Я не люблю **фізику**. - I don't like physics.\n- Сьогодні **фізкультура** і **музика**. - Today is PE and music.\n- **Інформатика** зараз важлива. - Computer science is important now."
+            "teacherNotes": "### Match Education Level\n\n1. дитячий садок\n   > [!answer] 3-6 років\n2. початкова школа\n   > [!answer] 6-10 років\n3. середня школа\n   > [!answer] 10-17 років\n4. університет\n   > [!answer] 17+ років\n5. аспірантура\n   > [!answer] після магістра\n\n### Complete Education Dialogue\n\n**A:** Де ти ___? (study)\n> [!answer] вчишся / навчаєшся\n\n**B:** В ___ на економічному факультеті. (university)\n> [!answer] університеті\n\n**A:** На якому ___? (year)\n> [!answer] курсі\n\n**B:** На другому. Зараз ___ до іспитів. (preparing)\n> [!answer] готуюся\n\n### Subject Preferences\n\nMatch the description:\n1. Числа і формули\n   > [!answer] математика\n2. Минуле країн\n   > [!answer] історія\n3. Живі організми\n   > [!answer] біологія\n4. Комп'ютери\n   > [!answer] інформатика\n5. Спорт у школі\n   > [!answer] фізкультура\n\n### Translate\n\n1. I'm a third-year student.\n   > [!answer] Я студент третього курсу.\n2. She passed all exams.\n   > [!answer] Вона склала всі іспити.\n3. What's your major?\n   > [!answer] Яка твоя спеціальність?\n4. Don't miss classes!\n   > [!answer] Не пропускай заняття!\n5. I'm preparing for the exam.\n   > [!answer] Я готуюся до іспиту."
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "University Terms\n\n| Ukrainian | English |\n|-----------|---------|\n| факультет | faculty, department |\n| спеціальність | major, specialty |\n| курс | year (of study) |\n| семестр | semester |\n| лекція | lecture |\n| семінар | seminar |\n| практика | internship, practice |\n| диплом | diploma |\n| ступінь | degree |\n| бакалавр | bachelor's |\n| магістр | master's |\n| доктор наук | PhD, doctorate |\n\n**Examples:**\n- Який у тебе **факультет**? - What faculty are you in?\n- Моя **спеціальність** — економіка. - My major is economics.\n- Я на третьому **курсі**. - I'm in my third year.\n- Цей **семестр** складний. - This semester is hard.\n- Він захистив **диплом**. - He defended his diploma.\n- Вона отримала **ступінь** магістра. - She received a master's degree."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "People in Education\n\n| Ukrainian | English |\n|-----------|---------|\n| учень / учениця | pupil (m/f) |\n| студент / студентка | student (m/f) |\n| вчитель / вчителька | teacher (m/f) |\n| викладач / викладачка | lecturer (m/f) |\n| професор / професорка | professor (m/f) |\n| декан | dean |\n| ректор | rector (president) |\n| однокласник | classmate (school) |\n| одногрупник | classmate (university) |\n| випускник | graduate |\n\n**Examples:**\n- **Учні** пишуть контрольну. - The pupils are writing a test.\n- **Студенти** слухають лекцію. - Students are listening to a lecture.\n- Наш **викладач** дуже суворий. - Our lecturer is very strict.\n- **Декан** факультету проводить збори. - The dean is holding a meeting.\n- Вона моя **однокласниця**. - She's my classmate."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Study Actions\n\n| Imperfective | Perfective | Meaning |\n|--------------|------------|---------|\n| вчитися | навчитися | to study, learn |\n| навчатися | - | to be educated |\n| вивчати | вивчити | to study (subject) |\n| готуватися | підготуватися | to prepare |\n| складати | скласти | to take (exam) |\n| здавати | здати | to pass (exam) |\n| провалювати | провалити | to fail |\n| пропускати | пропустити | to miss (class) |\n| відвідувати | відвідати | to attend |\n| закінчувати | закінчити | to graduate |\n\n**Examples:**\n- Я **вчуся** в університеті. - I study at university.\n- Вона **вивчає** медицину. - She's studying medicine.\n- **Готуюся** до іспиту. - I'm preparing for the exam.\n- Він **склав** усі іспити. - He passed all exams.\n- Не **пропускай** заняття! - Don't miss classes!\n- Коли ти **закінчиш** університет? - When will you graduate?"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Exams & Grades\n\n| Ukrainian | English |\n|-----------|---------|\n| іспит | exam |\n| залік | credit, pass/fail test |\n| контрольна робота | test, quiz |\n| домашнє завдання | homework |\n| оцінка | grade |\n| бал | point, score |\n| сесія | exam period |\n| перескладання | retake |\n| відмінник | excellent student |\n| двійка | failing grade (2) |\n\n**Examples:**\n- Завтра **іспит** з математики. - Tomorrow is the math exam.\n- Треба здати **залік**. - Need to pass the credit.\n- Зробив **домашнє завдання**? - Did you do the homework?\n- Яка твоя **оцінка**? - What's your grade?\n- **Сесія** починається в січні. - The exam period starts in January.\n- Він **відмінник** — завжди п'ятірки. - He's an excellent student — always A's.\n\n> 📝 **Note: Ukrainian Grading**\n>\n> Ukrainian schools use 1-12 scale. Universities often use 1-5 or ECTS (A-F). 12 (школа) or 5 (університет) = excellent."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Learning Materials\n\n| Ukrainian | English |\n|-----------|---------|\n| підручник | textbook |\n| зошит | notebook |\n| конспект | notes, summary |\n| словник | dictionary |\n| довідник | reference book |\n| презентація | presentation |\n| реферат | essay, paper |\n| курсова робота | term paper |\n| дипломна робота | thesis |\n\n**Examples:**\n- Відкрий **підручник** на сторінці 50. - Open the textbook to page 50.\n- Записуй у **зошит**. - Write in your notebook.\n- Покажи свій **конспект**. - Show me your notes.\n- Перевір у **словнику**. - Check in the dictionary.\n- Треба написати **реферат**. - Need to write an essay.\n- Захистила **дипломну роботу**. - She defended her thesis."
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A2+-75-matchup"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Match Education Level\n\n1. дитячий садок → 3-6 років\n2. початкова школа → 6-10 років\n3. середня школа → 10-17 років\n4. університет → 17+ років\n5. аспірантура → після магістра"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Complete Education Dialogue\n\n**A:** Де ти ___? (study)\n→ вчишся / навчаєшся\n\n**B:** В ___ на економічному факультеті. (university)\n→ університеті\n\n**A:** На якому ___? (year)\n→ курсі\n\n**B:** На другому. Зараз ___ до іспитів. (preparing)\n→ готуюся"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Subject Preferences\n\nMatch the description:\n1. Числа і формули → математика\n2. Минуле країн → історія\n3. Живі організми → біологія\n4. Комп'ютери → інформатика\n5. Спорт у школі → фізкультура"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Translate\n\n1. I'm a third-year student. → Я студент третього курсу.\n2. She passed all exams. → Вона склала всі іспити.\n3. What's your major? → Яка твоя спеціальність?\n4. Don't miss classes! → Не пропускай заняття!\n5. I'm preparing for the exam. → Я готуюся до іспиту."
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A2+-75-quiz"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A2+-75-groupsort"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Describe Your Education\n\n**Example:** \"Я закінчив школу у 2018 році. Потім вступив до університету на факультет інформатики. Зараз працюю, але планую магістратуру.\"\n\nDescribe your educational background."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Study Advice\n\n**Scenario:** Give advice to a student:\n- \"Не пропускай лекції.\"\n- \"Готуйся до іспитів заздалегідь.\"\n- \"Веди конспекти.\"\n- \"Питай викладача, якщо щось незрозуміло.\""
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Education Discussion\n\nDiscuss these questions:\n- Яка освіта краща: онлайн чи офлайн?\n- Який предмет був найскладнішим?\n- Чи важливий диплом у сучасному світі?"
+            "teacherNotes": "### Describe Your Education\n\n**Example:** \"Я закінчив школу у 2018 році. Потім вступив до університету на факультет інформатики. Зараз працюю, але планую магістратуру.\"\n\nDescribe your educational background.\n\n### Study Advice\n\n**Scenario:** Give advice to a student:\n- \"Не пропускай лекції.\"\n- \"Готуйся до іспитів заздалегідь.\"\n- \"Веди конспекти.\"\n- \"Питай викладача, якщо щось незрозуміло.\"\n\n### Education Discussion\n\nDiscuss these questions:\n- Яка освіта краща: онлайн чи офлайн?\n- Який предмет був найскладнішим?\n- Чи важливий диплом у сучасному світі?\n\n---"
           }
         ]
       }
-    ]
+    ],
+    "createdAt": "2025-12-01T22:58:37.285Z",
+    "modifiedAt": "2025-12-01T22:58:37.285Z",
+    "version": 1
   },
   "activities": [
     {
-      "id": "act-uk-A2+-75-matchup",
+      "id": "act-a2+-75-matchup",
       "type": "match-up",
       "title": "Term → Category",
       "description": "Term → Category",
       "content": {
         "type": "match-up",
-        "instructions": "",
         "pairs": [
           {
             "left": "математика",
@@ -195,24 +100,17 @@
       "language": "uk",
       "difficultyLevel": "A2+",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "education",
-        "school",
-        "university",
-        "learning"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.285Z",
+      "modifiedAt": "2025-12-01T22:58:37.285Z"
     },
     {
-      "id": "act-uk-A2+-75-quiz",
+      "id": "act-a2+-75-quiz",
       "type": "quiz",
       "title": "Education Vocabulary",
       "description": "Choose the correct answer.",
       "content": {
         "type": "quiz",
-        "instructions": "Choose the correct answer.",
         "questions": [
           {
             "question": "\"Складати іспит\" means ___.",
@@ -291,60 +189,61 @@
       "language": "uk",
       "difficultyLevel": "A2+",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "education",
-        "school",
-        "university",
-        "learning"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.285Z",
+      "modifiedAt": "2025-12-01T22:58:37.285Z"
     },
     {
-      "id": "act-uk-A2+-75-groupsort",
+      "id": "act-a2+-75-groupsort",
       "type": "group-sort",
       "title": "By Category",
       "description": "By Category",
       "content": {
         "type": "group-sort",
-        "instructions": "",
         "groups": [
           {
-            "name": "Предмети (Subjects)",
+            "id": "",
+            "name": "Предмети",
             "items": [
               "математика",
               "історія",
               "біологія",
               "фізика"
-            ]
+            ],
+            "nameUk": "Subjects"
           },
           {
-            "name": "Люди (People)",
+            "id": "",
+            "name": "Люди",
             "items": [
               "студент",
               "викладач",
               "декан",
               "однокласник"
-            ]
+            ],
+            "nameUk": "People"
           },
           {
-            "name": "Документи (Documents)",
+            "id": "",
+            "name": "Документи",
             "items": [
               "диплом",
               "конспект",
               "підручник",
               "реферат"
-            ]
+            ],
+            "nameUk": "Documents"
           },
           {
-            "name": "Дії (Actions)",
+            "id": "",
+            "name": "Дії",
             "items": [
               "вчитися",
               "складати",
               "готуватися",
               "закінчувати"
-            ]
+            ],
+            "nameUk": "Actions"
           }
         ],
         "shuffleItems": true
@@ -355,15 +254,9 @@
       "language": "uk",
       "difficultyLevel": "A2+",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "education",
-        "school",
-        "university",
-        "learning"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.285Z",
+      "modifiedAt": "2025-12-01T22:58:37.285Z"
     }
   ],
   "vocabulary": {
@@ -374,414 +267,363 @@
     "transliterationMode": "none",
     "words": [
       {
-        "id": "v-m75-001",
+        "id": "v-dytyachyy-sadok-75-0",
         "uk": "дитячий садок",
-        "translit": "",
-        "ipa": "/dɪˈtʲɑtʃɪj sɑˈdok/",
         "en": "kindergarten",
         "pos": "noun",
+        "ipa": "/dɪˈtʲɑtʃɪj sɑˈdok/",
         "gender": "m"
       },
       {
-        "id": "v-m75-002",
+        "id": "v-pochatkova-shkola-75-1",
         "uk": "початкова школа",
-        "translit": "",
-        "ipa": "/potʃɑtˈkovɑ ˈʃkolɑ/",
         "en": "elementary school",
         "pos": "noun",
+        "ipa": "/potʃɑtˈkovɑ ˈʃkolɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m75-003",
+        "id": "v-himnaziya-75-2",
         "uk": "гімназія",
-        "translit": "",
-        "ipa": "/ɦʲimˈnɑzʲijɑ/",
         "en": "gymnasium",
         "pos": "noun",
+        "ipa": "/ɦʲimˈnɑzʲijɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m75-004",
+        "id": "v-litsey-75-3",
         "uk": "ліцей",
-        "translit": "",
-        "ipa": "/lʲiˈtsɛj/",
         "en": "lyceum",
         "pos": "noun",
+        "ipa": "/lʲiˈtsɛj/",
         "gender": "m"
       },
       {
-        "id": "v-m75-005",
+        "id": "v-aspirantura-75-4",
         "uk": "аспірантура",
-        "translit": "",
-        "ipa": "/ɑspʲirɑnˈturɑ/",
         "en": "graduate school",
         "pos": "noun",
+        "ipa": "/ɑspʲirɑnˈturɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m75-006",
+        "id": "v-matematyka-75-5",
         "uk": "математика",
-        "translit": "",
-        "ipa": "/mɑtɛˈmɑtɪkɑ/",
         "en": "mathematics",
         "pos": "noun",
+        "ipa": "/mɑtɛˈmɑtɪkɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m75-007",
+        "id": "v-literatura-75-6",
         "uk": "література",
-        "translit": "",
-        "ipa": "/lʲitɛrɑˈturɑ/",
         "en": "literature",
         "pos": "noun",
+        "ipa": "/lʲitɛrɑˈturɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m75-008",
+        "id": "v-istoriya-75-7",
         "uk": "історія",
-        "translit": "",
-        "ipa": "/isˈtorʲijɑ/",
         "en": "history",
         "pos": "noun",
+        "ipa": "/isˈtorʲijɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m75-009",
+        "id": "v-heohrafiya-75-8",
         "uk": "географія",
-        "translit": "",
-        "ipa": "/ɦɛoˈɦrɑfʲijɑ/",
         "en": "geography",
         "pos": "noun",
+        "ipa": "/ɦɛoˈɦrɑfʲijɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m75-010",
+        "id": "v-biolohiya-75-9",
         "uk": "біологія",
-        "translit": "",
-        "ipa": "/bʲioˈloɦʲijɑ/",
         "en": "biology",
         "pos": "noun",
+        "ipa": "/bʲioˈloɦʲijɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m75-011",
+        "id": "v-fizyka-75-10",
         "uk": "фізика",
-        "translit": "",
-        "ipa": "/ˈfʲizɪkɑ/",
         "en": "physics",
         "pos": "noun",
+        "ipa": "/ˈfʲizɪkɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m75-012",
+        "id": "v-khimiya-75-11",
         "uk": "хімія",
-        "translit": "",
-        "ipa": "/ˈxʲimʲijɑ/",
         "en": "chemistry",
         "pos": "noun",
+        "ipa": "/ˈxʲimʲijɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m75-013",
+        "id": "v-informatyka-75-12",
         "uk": "інформатика",
-        "translit": "",
-        "ipa": "/informɑˈtɪkɑ/",
         "en": "computer science",
         "pos": "noun",
+        "ipa": "/informɑˈtɪkɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m75-014",
+        "id": "v-fakulьtet-75-13",
         "uk": "факультет",
-        "translit": "",
-        "ipa": "/fɑkulʲˈtɛt/",
         "en": "faculty",
         "pos": "noun",
+        "ipa": "/fɑkulʲˈtɛt/",
         "gender": "m"
       },
       {
-        "id": "v-m75-015",
+        "id": "v-spetsialьnistь-75-14",
         "uk": "спеціальність",
-        "translit": "",
-        "ipa": "/spɛtsʲiˈɑlʲnʲistʲ/",
         "en": "major, specialty",
         "pos": "noun",
+        "ipa": "/spɛtsʲiˈɑlʲnʲistʲ/",
         "gender": "f"
       },
       {
-        "id": "v-m75-016",
+        "id": "v-semestr-75-15",
         "uk": "семестр",
-        "translit": "",
-        "ipa": "/sɛˈmɛstr/",
         "en": "semester",
         "pos": "noun",
+        "ipa": "/sɛˈmɛstr/",
         "gender": "m"
       },
       {
-        "id": "v-m75-017",
+        "id": "v-lektsiya-75-16",
         "uk": "лекція",
-        "translit": "",
-        "ipa": "/ˈlɛktsʲijɑ/",
         "en": "lecture",
         "pos": "noun",
+        "ipa": "/ˈlɛktsʲijɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m75-018",
+        "id": "v-seminar-75-17",
         "uk": "семінар",
-        "translit": "",
-        "ipa": "/sɛmʲiˈnɑr/",
         "en": "seminar",
         "pos": "noun",
+        "ipa": "/sɛmʲiˈnɑr/",
         "gender": "m"
       },
       {
-        "id": "v-m75-019",
+        "id": "v-dyplom-75-18",
         "uk": "диплом",
-        "translit": "",
-        "ipa": "/dɪpˈlom/",
         "en": "diploma",
         "pos": "noun",
+        "ipa": "/dɪpˈlom/",
         "gender": "m"
       },
       {
-        "id": "v-m75-020",
+        "id": "v-stupinь-75-19",
         "uk": "ступінь",
-        "translit": "",
-        "ipa": "/ˈstupʲinʲ/",
         "en": "degree",
         "pos": "noun",
+        "ipa": "/ˈstupʲinʲ/",
         "gender": "m"
       },
       {
-        "id": "v-m75-021",
+        "id": "v-bakalavr-75-20",
         "uk": "бакалавр",
-        "translit": "",
-        "ipa": "/bɑkɑˈlɑvr/",
         "en": "bachelor's",
         "pos": "noun",
+        "ipa": "/bɑkɑˈlɑvr/",
         "gender": "m"
       },
       {
-        "id": "v-m75-022",
+        "id": "v-mahistr-75-21",
         "uk": "магістр",
-        "translit": "",
-        "ipa": "/mɑˈɦʲistr/",
         "en": "master's",
         "pos": "noun",
+        "ipa": "/mɑˈɦʲistr/",
         "gender": "m"
       },
       {
-        "id": "v-m75-023",
+        "id": "v-uchenь-75-22",
         "uk": "учень",
-        "translit": "",
-        "ipa": "/uˈtʃɛnʲ/",
         "en": "pupil",
         "pos": "noun",
+        "ipa": "/uˈtʃɛnʲ/",
         "gender": "m"
       },
       {
-        "id": "v-m75-024",
+        "id": "v-odnoklasnyk-75-23",
         "uk": "однокласник",
-        "translit": "",
-        "ipa": "/odnoˈklɑsnɪk/",
         "en": "classmate (school)",
         "pos": "noun",
+        "ipa": "/odnoˈklɑsnɪk/",
         "gender": "m"
       },
       {
-        "id": "v-m75-025",
+        "id": "v-odnohrupnyk-75-24",
         "uk": "одногрупник",
-        "translit": "",
-        "ipa": "/odnoˈɦrupnɪk/",
         "en": "classmate (uni)",
         "pos": "noun",
+        "ipa": "/odnoˈɦrupnɪk/",
         "gender": "m"
       },
       {
-        "id": "v-m75-026",
+        "id": "v-vypusknyk-75-25",
         "uk": "випускник",
-        "translit": "",
-        "ipa": "/ˈvɪpusknɪk/",
         "en": "graduate",
         "pos": "noun",
+        "ipa": "/ˈvɪpusknɪk/",
         "gender": "m"
       },
       {
-        "id": "v-m75-027",
+        "id": "v-dekan-75-26",
         "uk": "декан",
-        "translit": "",
-        "ipa": "/dɛˈkɑn/",
         "en": "dean",
         "pos": "noun",
+        "ipa": "/dɛˈkɑn/",
         "gender": "m"
       },
       {
-        "id": "v-m75-028",
+        "id": "v-rektor-75-27",
         "uk": "ректор",
-        "translit": "",
-        "ipa": "/ˈrɛktor/",
         "en": "rector",
         "pos": "noun",
+        "ipa": "/ˈrɛktor/",
         "gender": "m"
       },
       {
-        "id": "v-m75-029",
+        "id": "v-ispyt-75-28",
         "uk": "іспит",
-        "translit": "",
-        "ipa": "/ˈispɪt/",
         "en": "exam",
         "pos": "noun",
+        "ipa": "/ˈispɪt/",
         "gender": "m"
       },
       {
-        "id": "v-m75-030",
+        "id": "v-zalik-75-29",
         "uk": "залік",
-        "translit": "",
-        "ipa": "/zɑˈlʲik/",
         "en": "credit test",
         "pos": "noun",
+        "ipa": "/zɑˈlʲik/",
         "gender": "m"
       },
       {
-        "id": "v-m75-031",
+        "id": "v-otsinka-75-30",
         "uk": "оцінка",
-        "translit": "",
-        "ipa": "/oˈtsʲinkɑ/",
         "en": "grade",
         "pos": "noun",
+        "ipa": "/oˈtsʲinkɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m75-032",
+        "id": "v-sesiya-75-31",
         "uk": "сесія",
-        "translit": "",
-        "ipa": "/ˈsɛsʲijɑ/",
         "en": "exam period",
         "pos": "noun",
+        "ipa": "/ˈsɛsʲijɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m75-033",
+        "id": "v-vidminnyk-75-32",
         "uk": "відмінник",
-        "translit": "",
-        "ipa": "/vʲidˈmʲinnɪk/",
         "en": "excellent student",
         "pos": "noun",
+        "ipa": "/vʲidˈmʲinnɪk/",
         "gender": "m"
       },
       {
-        "id": "v-m75-034",
+        "id": "v-pidruchnyk-75-33",
         "uk": "підручник",
-        "translit": "",
-        "ipa": "/pʲidˈrutʃnɪk/",
         "en": "textbook",
         "pos": "noun",
+        "ipa": "/pʲidˈrutʃnɪk/",
         "gender": "m"
       },
       {
-        "id": "v-m75-035",
+        "id": "v-zoshyt-75-34",
         "uk": "зошит",
-        "translit": "",
-        "ipa": "/ˈzoʃɪt/",
         "en": "notebook",
         "pos": "noun",
+        "ipa": "/ˈzoʃɪt/",
         "gender": "m"
       },
       {
-        "id": "v-m75-036",
+        "id": "v-konspekt-75-35",
         "uk": "конспект",
-        "translit": "",
-        "ipa": "/konˈspɛkt/",
         "en": "notes",
         "pos": "noun",
+        "ipa": "/konˈspɛkt/",
         "gender": "m"
       },
       {
-        "id": "v-m75-037",
+        "id": "v-referat-75-36",
         "uk": "реферат",
-        "translit": "",
-        "ipa": "/rɛfɛˈrɑt/",
         "en": "essay",
         "pos": "noun",
+        "ipa": "/rɛfɛˈrɑt/",
         "gender": "m"
       },
       {
-        "id": "v-m75-038",
+        "id": "v-kursova-robota-75-37",
         "uk": "курсова робота",
-        "translit": "",
-        "ipa": "/kurˈsovɑ roˈbotɑ/",
         "en": "term paper",
         "pos": "noun",
+        "ipa": "/kurˈsovɑ roˈbotɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m75-039",
+        "id": "v-dyplomna-robota-75-38",
         "uk": "дипломна робота",
-        "translit": "",
-        "ipa": "/dɪpˈlomnɑ roˈbotɑ/",
         "en": "thesis",
         "pos": "noun",
+        "ipa": "/dɪpˈlomnɑ roˈbotɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m75-040",
+        "id": "v-vchytysya-75-39",
         "uk": "вчитися",
-        "translit": "",
-        "ipa": "/vtʃɪˈtɪsʲɑ/",
         "en": "to study",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/vtʃɪˈtɪsʲɑ/",
         "note": "impf"
       },
       {
-        "id": "v-m75-041",
+        "id": "v-vyvchaty-75-40",
         "uk": "вивчати",
-        "translit": "",
-        "ipa": "/vɪvˈtʃɑtɪ/",
         "en": "to study (subj)",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/vɪvˈtʃɑtɪ/",
         "note": "impf"
       },
       {
-        "id": "v-m75-042",
+        "id": "v-skladaty-75-41",
         "uk": "складати",
-        "translit": "",
-        "ipa": "/sklɑˈdɑtɪ/",
         "en": "to take (exam)",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/sklɑˈdɑtɪ/",
         "note": "impf"
       },
       {
-        "id": "v-m75-043",
+        "id": "v-zdavaty-75-42",
         "uk": "здавати",
-        "translit": "",
-        "ipa": "/zdɑˈvɑtɪ/",
         "en": "to pass",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/zdɑˈvɑtɪ/",
         "note": "impf"
       },
       {
-        "id": "v-m75-044",
+        "id": "v-propuskaty-75-43",
         "uk": "пропускати",
-        "translit": "",
-        "ipa": "/propusˈkɑtɪ/",
         "en": "to miss",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/propusˈkɑtɪ/",
         "note": "impf"
       },
       {
-        "id": "v-m75-045",
+        "id": "v-zakinchuvaty-75-44",
         "uk": "закінчувати",
-        "translit": "",
-        "ipa": "/zɑˈkʲintʃuvɑtɪ/",
         "en": "to graduate",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/zɑˈkʲintʃuvɑtɪ/",
         "note": "impf"
       }
     ]

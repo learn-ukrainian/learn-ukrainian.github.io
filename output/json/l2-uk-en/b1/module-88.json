@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-B1-88",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "vocabulary-expansion",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -26,30 +25,15 @@
       "Aspect pairs for emotions",
       "Aspect pairs for change/movement"
     ],
-    "totalDuration": 45,
-    "transliterationMode": "none",
     "tags": [
       "aspect",
       "vocabulary",
       "verbs",
       "verb-pairs"
     ],
-    "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
+    "totalDuration": 45,
+    "transliterationMode": "none",
     "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Review: Aspect Selection\n\nQuick check from Module 87:\n- What aspect for duration? → **Imperfective**\n- What aspect for result? → **Perfective**\n- What aspect with \"завжди\"? → **Imperfective**\n- What aspect with \"нарешті\"? → **Perfective**\n\nToday: 30 more essential pairs for everyday communication."
-          }
-        ]
-      },
       {
         "id": "phase-presentation",
         "name": "presentation",
@@ -58,147 +42,50 @@
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "### Verbs of Change\n\n| Imperfective | Perfective | English |\n|--------------|------------|---------|\n| змінювати | змінити | to change |\n| змінюватися | змінитися | to change (oneself) |\n| покращувати | покращити | to improve |\n| покращуватися | покращитися | to get better |\n| погіршувати | погіршити | to worsen |\n| погіршуватися | погіршитися | to get worse |\n| збільшувати | збільшити | to increase |\n| зменшувати | зменшити | to decrease |\n| прискорювати | прискорити | to speed up |\n| сповільнювати | сповільнити | to slow down |\n\n**Examples:**\n\n- Погода **покращилася**. - The weather improved.\n- Ціни **збільшуються** щороку. - Prices increase every year.\n- Він **змінився**! - He has changed!\n- Вона **покращувала** свою українську три місяці. - She was improving her Ukrainian for three months."
+            "teacherNotes": "### Verbs of Change\n\n| Imperfective | Perfective | English |\n|--------------|------------|---------|\n| змінювати | змінити | to change |\n| змінюватися | змінитися | to change (oneself) |\n| покращувати | покращити | to improve |\n| покращуватися | покращитися | to get better |\n| погіршувати | погіршити | to worsen |\n| погіршуватися | погіршитися | to get worse |\n| збільшувати | збільшити | to increase |\n| зменшувати | зменшити | to decrease |\n| прискорювати | прискорити | to speed up |\n| сповільнювати | сповільнити | to slow down |\n\n**Examples:**\n\n- Погода **покращилася**. - The weather improved.\n- Ціни **збільшуються** щороку. - Prices increase every year.\n- Він **змінився**! - He has changed!\n- Вона **покращувала** свою українську три місяці. - She was improving her Ukrainian for three months.\n\n### Verbs of Emotion\n\n| Imperfective | Perfective | English |\n|--------------|------------|---------|\n| радіти | зрадіти | to be happy, rejoice |\n| сумувати | засумувати | to be sad |\n| хвилюватися | захвилюватися | to worry |\n| дивуватися | здивуватися | to be surprised |\n| боятися | злякатися | to be afraid |\n| сердитися | розсердитися | to be angry |\n| засмучуватися | засмутитися | to be upset |\n| заспокоюватися | заспокоїтися | to calm down |\n\n**Examples:**\n\n- Вона дуже **зраділа**! - She was very happy!\n- Не **хвилюйся**! - Don't worry!\n- Він **здивувався**, коли побачив мене. - He was surprised when he saw me.\n- Вона завжди **хвилюється** перед іспитами. - She always worries before exams.\n\n### Verbs of Daily Routine\n\n| Imperfective | Perfective | English |\n|--------------|------------|---------|\n| прокидатися | прокинутися | to wake up |\n| засинати | заснути | to fall asleep |\n| лягати | лягти | to lie down |\n| вставати | встати | to get up |\n| одягатися | одягнутися | to get dressed |\n| роздягатися | роздягнутися | to get undressed |\n| вмиватися | вмитися | to wash (face) |\n| митися | помитися | to wash (body) |\n| голитися | поголитися | to shave |\n| зачісуватися | зачесатися | to comb hair |\n\n**Examples:**\n\n- Я **прокинувся** о сьомій. - I woke up at seven.\n- Вона **засинає** о десятій. - She falls asleep at ten.\n- **Одягнися** швидше! - Get dressed faster!\n- Він **голиться** щоранку. - He shaves every morning.\n\n### Verbs of Starting and Finishing\n\n| Imperfective | Perfective | English |\n|--------------|------------|---------|\n| починати | почати | to begin |\n| починатися | початися | to begin (itself) |\n| закінчувати | закінчити | to finish |\n| закінчуватися | закінчитися | to end (itself) |\n| продовжувати | продовжити | to continue |\n| продовжуватися | продовжитися | to continue (itself) |\n| припиняти | припинити | to stop |\n| припинятися | припинитися | to stop (itself) |\n\n**Examples:**\n\n- Фільм **почався** о восьмій. - The film started at eight.\n- Вона **закінчила** роботу. - She finished work.\n- Дощ **припинився**. - The rain stopped.\n- Вони **продовжують** працювати. - They continue working.\n\n### Verbs of Creation and Destruction\n\n| Imperfective | Perfective | English |\n|--------------|------------|---------|\n| створювати | створити | to create |\n| знищувати | знищити | to destroy |\n| будувати | побудувати | to build |\n| руйнувати | зруйнувати | to ruin, destroy |\n| ремонтувати | відремонтувати | to repair |\n| лагодити | полагодити | to fix |\n\n**Examples:**\n\n- Він **створив** нову програму. - He created a new program.\n- Вони **побудували** будинок за рік. - They built a house in a year.\n- Треба **відремонтувати** машину. - The car needs to be repaired.\n- Хто **зруйнував** це? - Who destroyed this?\n\n### Verbs of Communication (Continued)\n\n| Imperfective | Perfective | English |\n|--------------|------------|---------|\n| телефонувати | зателефонувати | to call (phone) |\n| надсилати | надіслати | to send |\n| отримувати | отримати | to receive |\n| повертати | повернути | to return (something) |\n| позичати | позичити | to borrow/lend |\n| перевіряти | перевірити | to check |\n\n**Examples:**\n\n- **Зателефонуй** мені! - Call me!\n- Я **надіслав** листа вчора. - I sent a letter yesterday.\n- Вона **отримала** подарунок. - She received a gift.\n- **Поверни** мені книгу! - Return my book!"
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Verbs of Emotion\n\n| Imperfective | Perfective | English |\n|--------------|------------|---------|\n| радіти | зрадіти | to be happy, rejoice |\n| сумувати | засумувати | to be sad |\n| хвилюватися | захвилюватися | to worry |\n| дивуватися | здивуватися | to be surprised |\n| боятися | злякатися | to be afraid |\n| сердитися | розсердитися | to be angry |\n| засмучуватися | засмутитися | to be upset |\n| заспокоюватися | заспокоїтися | to calm down |\n\n**Examples:**\n\n- Вона дуже **зраділа**! - She was very happy!\n- Не **хвилюйся**! - Don't worry!\n- Він **здивувався**, коли побачив мене. - He was surprised when he saw me.\n- Вона завжди **хвилюється** перед іспитами. - She always worries before exams."
+            "teacherNotes": "### Aspect Pair Drills\n\nFill in the perfective form:\n\n1. змінювати\n   > [!answer] _____ → **змінити**\n2. починати\n   > [!answer] _____ → **почати**\n3. створювати\n   > [!answer] _____ → **створити**\n4. прокидатися\n   > [!answer] _____ → **прокинутися**\n5. хвилюватися\n   > [!answer] _____ → **захвилюватися**\n6. телефонувати\n   > [!answer] _____ → **зателефонувати**\n\nFill in the imperfective form:\n\n1. _____\n   > [!answer] закінчити → **закінчувати**\n2. _____\n   > [!answer] одягнутися → **одягатися**\n3. _____\n   > [!answer] здивуватися → **дивуватися**\n4. _____\n   > [!answer] заснути → **засинати**\n5. _____\n   > [!answer] отримати → **отримувати**\n6. _____\n   > [!answer] полагодити → **лагодити**\n\n### Use in Context\n\nChoose the correct aspect:\n\n1. Вона ___ (просипалася/прокинулася) о п'ятій ранку.\n   > [!answer] **прокинулася** (single event)\n2. Він завжди ___ (боявся/злякався) собак.\n   > [!answer] **боявся** (always)\n3. Урок ___ (починався/почався) о дев'ятій.\n   > [!answer] **почався** (single event)\n4. Вона три години ___ (змінювала/змінила) свою зачіску.\n   > [!answer] **змінювала** (duration)\n5. Нарешті вона ___ (заспокоювалася/заспокоїлася)!\n   > [!answer] **заспокоїлася** (finally)\n6. Діти ___ (засинають/заснуть) о дев'ятій щовечора.\n   > [!answer] **засинають** (every evening)\n\n### Morning Routine Narrative\n\nComplete with correct aspect:\n\nСьогодні я ___ (прокидався/прокинувся) о сьомій. Я ___ (вставав/встав) і ___ (йшов/пішов) у ванну. Я ___ (вмивався/вмився), ___ (голився/поголився) і ___ (одягався/одягнувся). Потім я ___ (снідав/поснідав) і ___ (виходив/вийшов) з дому.\n\n**Answers:** прокинувся, встав, пішов, вмився, поголився, одягнувся, поснідав, вийшов (all perfective - completed sequence)\n\n### Describe Changes\n\nUse aspect pairs to describe changes:\n\n**Example:**\n- Погода **покращилася** — тепер сонячно.\n- Ціни на бензин **збільшилися** на 10%.\n- Його здоров'я **погіршилося** після хвороби.\n\nYour turn: Describe changes in:\n- Your city\n- Technology\n- Your language skills"
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Verbs of Daily Routine\n\n| Imperfective | Perfective | English |\n|--------------|------------|---------|\n| прокидатися | прокинутися | to wake up |\n| засинати | заснути | to fall asleep |\n| лягати | лягти | to lie down |\n| вставати | встати | to get up |\n| одягатися | одягнутися | to get dressed |\n| роздягатися | роздягнутися | to get undressed |\n| вмиватися | вмитися | to wash (face) |\n| митися | помитися | to wash (body) |\n| голитися | поголитися | to shave |\n| зачісуватися | зачесатися | to comb hair |\n\n**Examples:**\n\n- Я **прокинувся** о сьомій. - I woke up at seven.\n- Вона **засинає** о десятій. - She falls asleep at ten.\n- **Одягнися** швидше! - Get dressed faster!\n- Він **голиться** щоранку. - He shaves every morning."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Verbs of Starting and Finishing\n\n| Imperfective | Perfective | English |\n|--------------|------------|---------|\n| починати | почати | to begin |\n| починатися | початися | to begin (itself) |\n| закінчувати | закінчити | to finish |\n| закінчуватися | закінчитися | to end (itself) |\n| продовжувати | продовжити | to continue |\n| продовжуватися | продовжитися | to continue (itself) |\n| припиняти | припинити | to stop |\n| припинятися | припинитися | to stop (itself) |\n\n**Examples:**\n\n- Фільм **почався** о восьмій. - The film started at eight.\n- Вона **закінчила** роботу. - She finished work.\n- Дощ **припинився**. - The rain stopped.\n- Вони **продовжують** працювати. - They continue working."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Verbs of Creation and Destruction\n\n| Imperfective | Perfective | English |\n|--------------|------------|---------|\n| створювати | створити | to create |\n| знищувати | знищити | to destroy |\n| будувати | побудувати | to build |\n| руйнувати | зруйнувати | to ruin, destroy |\n| ремонтувати | відремонтувати | to repair |\n| лагодити | полагодити | to fix |\n\n**Examples:**\n\n- Він **створив** нову програму. - He created a new program.\n- Вони **побудували** будинок за рік. - They built a house in a year.\n- Треба **відремонтувати** машину. - The car needs to be repaired.\n- Хто **зруйнував** це? - Who destroyed this?"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Verbs of Communication (Continued)\n\n| Imperfective | Perfective | English |\n|--------------|------------|---------|\n| телефонувати | зателефонувати | to call (phone) |\n| надсилати | надіслати | to send |\n| отримувати | отримати | to receive |\n| повертати | повернути | to return (something) |\n| позичати | позичити | to borrow/lend |\n| перевіряти | перевірити | to check |\n\n**Examples:**\n\n- **Зателефонуй** мені! - Call me!\n- Я **надіслав** листа вчора. - I sent a letter yesterday.\n- Вона **отримала** подарунок. - She received a gift.\n- **Поверни** мені книгу! - Return my book!"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-B1-88-matchup"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Aspect Pair Drills\n\nFill in the perfective form:\n\n1. змінювати → _____ → **змінити**\n2. починати → _____ → **почати**\n3. створювати → _____ → **створити**\n4. прокидатися → _____ → **прокинутися**\n5. хвилюватися → _____ → **захвилюватися**\n6. телефонувати → _____ → **зателефонувати**\n\nFill in the imperfective form:\n\n1. _____ → закінчити → **закінчувати**\n2. _____ → одягнутися → **одягатися**\n3. _____ → здивуватися → **дивуватися**\n4. _____ → заснути → **засинати**\n5. _____ → отримати → **отримувати**\n6. _____ → полагодити → **лагодити**"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Use in Context\n\nChoose the correct aspect:\n\n1. Вона ___ (просипалася/прокинулася) о п'ятій ранку. → **прокинулася** (single event)\n2. Він завжди ___ (боявся/злякався) собак. → **боявся** (always)\n3. Урок ___ (починався/почався) о дев'ятій. → **почався** (single event)\n4. Вона три години ___ (змінювала/змінила) свою зачіску. → **змінювала** (duration)\n5. Нарешті вона ___ (заспокоювалася/заспокоїлася)! → **заспокоїлася** (finally)\n6. Діти ___ (засинають/заснуть) о дев'ятій щовечора. → **засинають** (every evening)"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Morning Routine Narrative\n\nComplete with correct aspect:\n\nСьогодні я ___ (прокидався/прокинувся) о сьомій. Я ___ (вставав/встав) і ___ (йшов/пішов) у ванну. Я ___ (вмивався/вмився), ___ (голився/поголився) і ___ (одягався/одягнувся). Потім я ___ (снідав/поснідав) і ___ (виходив/вийшов) з дому.\n\n**Answers:** прокинувся, встав, пішов, вмився, поголився, одягнувся, поснідав, вийшов (all perfective - completed sequence)"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Describe Changes\n\nUse aspect pairs to describe changes:\n\n**Example:**\n- Погода **покращилася** — тепер сонячно.\n- Ціни на бензин **збільшилися** на 10%.\n- Його здоров'я **погіршилося** після хвороби.\n\nYour turn: Describe changes in:\n- Your city\n- Technology\n- Your language skills"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-B1-88-quiz"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-B1-88-groupsort"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Tell a Story Using Emotion Verbs\n\nCreate a short story using at least 5 emotion verbs:\n\n**Example:**\nКоли вона побачила подарунок, вона дуже **зраділа**. Але потім вона **здивувалася**, бо не знала, хто його надіслав. Вона почала **хвилюватися**. Нарешті вона **заспокоїлася**, коли прочитала записку."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Daily Routine Interview\n\nAsk your partner about their routine:\n- О котрій годині ти прокидаєшся?\n- Коли ти засинаєш?\n- Що ти робиш, коли встаєш?"
+            "teacherNotes": "### Tell a Story Using Emotion Verbs\n\nCreate a short story using at least 5 emotion verbs:\n\n**Example:**\nКоли вона побачила подарунок, вона дуже **зраділа**. Але потім вона **здивувалася**, бо не знала, хто його надіслав. Вона почала **хвилюватися**. Нарешті вона **заспокоїлася**, коли прочитала записку.\n\n### Daily Routine Interview\n\nAsk your partner about their routine:\n- О котрій годині ти прокидаєшся?\n- Коли ти засинаєш?\n- Що ти робиш, коли встаєш?\n\n---"
           }
         ]
       }
     ],
-    "rawMarkdown": "# Lesson Content\n\n## warm-up\n\n### Review: Aspect Selection\n\nQuick check from Module 87:\n- What aspect for duration? → **Imperfective**\n- What aspect for result? → **Perfective**\n- What aspect with \"завжди\"? → **Imperfective**\n- What aspect with \"нарешті\"? → **Perfective**\n\nToday: 30 more essential pairs for everyday communication.\n\n## presentation\n\n### Verbs of Change\n\n| Imperfective | Perfective | English |\n|--------------|------------|---------|\n| змінювати | змінити | to change |\n| змінюватися | змінитися | to change (oneself) |\n| покращувати | покращити | to improve |\n| покращуватися | покращитися | to get better |\n| погіршувати | погіршити | to worsen |\n| погіршуватися | погіршитися | to get worse |\n| збільшувати | збільшити | to increase |\n| зменшувати | зменшити | to decrease |\n| прискорювати | прискорити | to speed up |\n| сповільнювати | сповільнити | to slow down |\n\n**Examples:**\n\n- Погода **покращилася**. - The weather improved.\n- Ціни **збільшуються** щороку. - Prices increase every year.\n- Він **змінився**! - He has changed!\n- Вона **покращувала** свою українську три місяці. - She was improving her Ukrainian for three months.\n\n### Verbs of Emotion\n\n| Imperfective | Perfective | English |\n|--------------|------------|---------|\n| радіти | зрадіти | to be happy, rejoice |\n| сумувати | засумувати | to be sad |\n| хвилюватися | захвилюватися | to worry |\n| дивуватися | здивуватися | to be surprised |\n| боятися | злякатися | to be afraid |\n| сердитися | розсердитися | to be angry |\n| засмучуватися | засмутитися | to be upset |\n| заспокоюватися | заспокоїтися | to calm down |\n\n**Examples:**\n\n- Вона дуже **зраділа**! - She was very happy!\n- Не **хвилюйся**! - Don't worry!\n- Він **здивувався**, коли побачив мене. - He was surprised when he saw me.\n- Вона завжди **хвилюється** перед іспитами. - She always worries before exams.\n\n### Verbs of Daily Routine\n\n| Imperfective | Perfective | English |\n|--------------|------------|---------|\n| прокидатися | прокинутися | to wake up |\n| засинати | заснути | to fall asleep |\n| лягати | лягти | to lie down |\n| вставати | встати | to get up |\n| одягатися | одягнутися | to get dressed |\n| роздягатися | роздягнутися | to get undressed |\n| вмиватися | вмитися | to wash (face) |\n| митися | помитися | to wash (body) |\n| голитися | поголитися | to shave |\n| зачісуватися | зачесатися | to comb hair |\n\n**Examples:**\n\n- Я **прокинувся** о сьомій. - I woke up at seven.\n- Вона **засинає** о десятій. - She falls asleep at ten.\n- **Одягнися** швидше! - Get dressed faster!\n- Він **голиться** щоранку. - He shaves every morning.\n\n### Verbs of Starting and Finishing\n\n| Imperfective | Perfective | English |\n|--------------|------------|---------|\n| починати | почати | to begin |\n| починатися | початися | to begin (itself) |\n| закінчувати | закінчити | to finish |\n| закінчуватися | закінчитися | to end (itself) |\n| продовжувати | продовжити | to continue |\n| продовжуватися | продовжитися | to continue (itself) |\n| припиняти | припинити | to stop |\n| припинятися | припинитися | to stop (itself) |\n\n**Examples:**\n\n- Фільм **почався** о восьмій. - The film started at eight.\n- Вона **закінчила** роботу. - She finished work.\n- Дощ **припинився**. - The rain stopped.\n- Вони **продовжують** працювати. - They continue working.\n\n### Verbs of Creation and Destruction\n\n| Imperfective | Perfective | English |\n|--------------|------------|---------|\n| створювати | створити | to create |\n| знищувати | знищити | to destroy |\n| будувати | побудувати | to build |\n| руйнувати | зруйнувати | to ruin, destroy |\n| ремонтувати | відремонтувати | to repair |\n| лагодити | полагодити | to fix |\n\n**Examples:**\n\n- Він **створив** нову програму. - He created a new program.\n- Вони **побудували** будинок за рік. - They built a house in a year.\n- Треба **відремонтувати** машину. - The car needs to be repaired.\n- Хто **зруйнував** це? - Who destroyed this?\n\n### Verbs of Communication (Continued)\n\n| Imperfective | Perfective | English |\n|--------------|------------|---------|\n| телефонувати | зателефонувати | to call (phone) |\n| надсилати | надіслати | to send |\n| отримувати | отримати | to receive |\n| повертати | повернути | to return (something) |\n| позичати | позичити | to borrow/lend |\n| перевіряти | перевірити | to check |\n\n**Examples:**\n\n- **Зателефонуй** мені! - Call me!\n- Я **надіслав** листа вчора. - I sent a letter yesterday.\n- Вона **отримала** подарунок. - She received a gift.\n- **Поверни** мені книгу! - Return my book!\n\n## practice\n\n### Aspect Pair Drills\n\nFill in the perfective form:\n\n1. змінювати → _____ → **змінити**\n2. починати → _____ → **почати**\n3. створювати → _____ → **створити**\n4. прокидатися → _____ → **прокинутися**\n5. хвилюватися → _____ → **захвилюватися**\n6. телефонувати → _____ → **зателефонувати**\n\nFill in the imperfective form:\n\n1. _____ → закінчити → **закінчувати**\n2. _____ → одягнутися → **одягатися**\n3. _____ → здивуватися → **дивуватися**\n4. _____ → заснути → **засинати**\n5. _____ → отримати → **отримувати**\n6. _____ → полагодити → **лагодити**\n\n### Use in Context\n\nChoose the correct aspect:\n\n1. Вона ___ (просипалася/прокинулася) о п'ятій ранку. → **прокинулася** (single event)\n2. Він завжди ___ (боявся/злякався) собак. → **боявся** (always)\n3. Урок ___ (починався/почався) о дев'ятій. → **почався** (single event)\n4. Вона три години ___ (змінювала/змінила) свою зачіску. → **змінювала** (duration)\n5. Нарешті вона ___ (заспокоювалася/заспокоїлася)! → **заспокоїлася** (finally)\n6. Діти ___ (засинають/заснуть) о дев'ятій щовечора. → **засинають** (every evening)\n\n### Morning Routine Narrative\n\nComplete with correct aspect:\n\nСьогодні я ___ (прокидався/прокинувся) о сьомій. Я ___ (вставав/встав) і ___ (йшов/пішов) у ванну. Я ___ (вмивався/вмився), ___ (голився/поголився) і ___ (одягався/одягнувся). Потім я ___ (снідав/поснідав) і ___ (виходив/вийшов) з дому.\n\n**Answers:** прокинувся, встав, пішов, вмився, поголився, одягнувся, поснідав, вийшов (all perfective - completed sequence)\n\n### Describe Changes\n\nUse aspect pairs to describe changes:\n\n**Example:**\n- Погода **покращилася** — тепер сонячно.\n- Ціни на бензин **збільшилися** на 10%.\n- Його здоров'я **погіршилося** після хвороби.\n\nYour turn: Describe changes in:\n- Your city\n- Technology\n- Your language skills\n\n## production\n\n### Tell a Story Using Emotion Verbs\n\nCreate a short story using at least 5 emotion verbs:\n\n**Example:**\nКоли вона побачила подарунок, вона дуже **зраділа**. Але потім вона **здивувалася**, бо не знала, хто його надіслав. Вона почала **хвилюватися**. Нарешті вона **заспокоїлася**, коли прочитала записку.\n\n### Daily Routine Interview\n\nAsk your partner about their routine:\n- О котрій годині ти прокидаєшся?\n- Коли ти засинаєш?\n- Що ти робиш, коли встаєш?\n\n---\n\n# Activities\n\n## quiz: Aspect Selection\n\n> Choose the correct form.\n\n1. Вона ___ вчора о шостій ранку.\n   - [ ] прокидалася\n   - [x] прокинулася\n   > Single past event = perfective\n\n2. Погода ___ щодня.\n   - [x] змінюється\n   - [ ] зміниться\n   > Щодня = imperfective\n\n3. Фільм вже ___ .\n   - [ ] починався\n   - [x] почався\n   > Вже = perfective\n\n4. Він завжди ___ перед виступом.\n   - [x] хвилюється\n   - [ ] захвилюється\n   > Завжди = imperfective\n\n5. Нарешті вони ___ будинок!\n   - [ ] будували\n   - [x] побудували\n   > Нарешті = perfective\n\n6. ___ мені завтра!\n   - [ ] Телефонуй\n   - [x] Зателефонуй\n   > Specific request = perfective\n\n## match-up: Aspect Pairs\n\n| Imperfective | Perfective |\n|--------------|------------|\n| прокидатися | прокинутися |\n| засинати | заснути |\n| починати | почати |\n| хвилюватися | захвилюватися |\n| змінювати | змінити |\n| створювати | створити |\n\n## group-sort: Verb Categories\n\n### Change Verbs\n- змінювати / змінити\n- покращувати / покращити\n- збільшувати / збільшити\n\n### Emotion Verbs\n- радіти / зрадіти\n- хвилюватися / захвилюватися\n- дивуватися / здивуватися\n\n### Daily Routine Verbs\n- прокидатися / прокинутися\n- засинати / заснути\n- одягатися / одягнутися\n\n---",
+    "createdAt": "2025-12-01T22:58:37.290Z",
+    "modifiedAt": "2025-12-01T22:58:37.290Z",
+    "version": 1,
     "immersiveSections": [
       {
-        "id": "warm-up",
-        "title": "warm-up",
-        "content": "### Review: Aspect Selection\n\nQuick check from Module 87:\n- What aspect for duration? → **Imperfective**\n- What aspect for result? → **Perfective**\n- What aspect with \"завжди\"? → **Imperfective**\n- What aspect with \"нарешті\"? → **Perfective**\n\nToday: 30 more essential pairs for everyday communication.",
-        "type": "topic"
+        "id": "section-intro",
+        "type": "intro",
+        "title": "Introduction",
+        "content": "## warm-up\n\n### Review: Aspect Selection\n\nQuick check from Module 87:\n- What aspect for duration? → **Imperfective**\n- What aspect for result? → **Perfective**\n- What aspect with \"завжди\"? → **Imperfective**\n- What aspect with \"нарешті\"? → **Perfective**\n\nToday: 30 more essential pairs for everyday communication.\n\n## presentation\n\n### Verbs of Change\n\n| Imperfective | Perfective | English |\n|--------------|------------|---------|\n| змінювати | змінити | to change |\n| змінюватися | змінитися | to change (oneself) |\n| покращувати | покращити | to improve |\n| покращуватися | покращитися | to get better |\n| погіршувати | погіршити | to worsen |\n| погіршуватися | погіршитися | to get worse |\n| збільшувати | збільшити | to increase |\n| зменшувати | зменшити | to decrease |\n| прискорювати | прискорити | to speed up |\n| сповільнювати | сповільнити | to slow down |\n\n**Examples:**\n\n- Погода **покращилася**. - The weather improved.\n- Ціни **збільшуються** щороку. - Prices increase every year.\n- Він **змінився**! - He has changed!\n- Вона **покращувала** свою українську три місяці. - She was improving her Ukrainian for three months.\n\n### Verbs of Emotion\n\n| Imperfective | Perfective | English |\n|--------------|------------|---------|\n| радіти | зрадіти | to be happy, rejoice |\n| сумувати | засумувати | to be sad |\n| хвилюватися | захвилюватися | to worry |\n| дивуватися | здивуватися | to be surprised |\n| боятися | злякатися | to be afraid |\n| сердитися | розсердитися | to be angry |\n| засмучуватися | засмутитися | to be upset |\n| заспокоюватися | заспокоїтися | to calm down |\n\n**Examples:**\n\n- Вона дуже **зраділа**! - She was very happy!\n- Не **хвилюйся**! - Don't worry!\n- Він **здивувався**, коли побачив мене. - He was surprised when he saw me.\n- Вона завжди **хвилюється** перед іспитами. - She always worries before exams.\n\n### Verbs of Daily Routine\n\n| Imperfective | Perfective | English |\n|--------------|------------|---------|\n| прокидатися | прокинутися | to wake up |\n| засинати | заснути | to fall asleep |\n| лягати | лягти | to lie down |\n| вставати | встати | to get up |\n| одягатися | одягнутися | to get dressed |\n| роздягатися | роздягнутися | to get undressed |\n| вмиватися | вмитися | to wash (face) |\n| митися | помитися | to wash (body) |\n| голитися | поголитися | to shave |\n| зачісуватися | зачесатися | to comb hair |\n\n**Examples:**\n\n- Я **прокинувся** о сьомій. - I woke up at seven.\n- Вона **засинає** о десятій. - She falls asleep at ten.\n- **Одягнися** швидше! - Get dressed faster!\n- Він **голиться** щоранку. - He shaves every morning.\n\n### Verbs of Starting and Finishing\n\n| Imperfective | Perfective | English |\n|--------------|------------|---------|\n| починати | почати | to begin |\n| починатися | початися | to begin (itself) |\n| закінчувати | закінчити | to finish |\n| закінчуватися | закінчитися | to end (itself) |\n| продовжувати | продовжити | to continue |\n| продовжуватися | продовжитися | to continue (itself) |\n| припиняти | припинити | to stop |\n| припинятися | припинитися | to stop (itself) |\n\n**Examples:**\n\n- Фільм **почався** о восьмій. - The film started at eight.\n- Вона **закінчила** роботу. - She finished work.\n- Дощ **припинився**. - The rain stopped.\n- Вони **продовжують** працювати. - They continue working.\n\n### Verbs of Creation and Destruction\n\n| Imperfective | Perfective | English |\n|--------------|------------|---------|\n| створювати | створити | to create |\n| знищувати | знищити | to destroy |\n| будувати | побудувати | to build |\n| руйнувати | зруйнувати | to ruin, destroy |\n| ремонтувати | відремонтувати | to repair |\n| лагодити | полагодити | to fix |\n\n**Examples:**\n\n- Він **створив** нову програму. - He created a new program.\n- Вони **побудували** будинок за рік. - They built a house in a year.\n- Треба **відремонтувати** машину. - The car needs to be repaired.\n- Хто **зруйнував** це? - Who destroyed this?\n\n### Verbs of Communication (Continued)\n\n| Imperfective | Perfective | English |\n|--------------|------------|---------|\n| телефонувати | зателефонувати | to call (phone) |\n| надсилати | надіслати | to send |\n| отримувати | отримати | to receive |\n| повертати | повернути | to return (something) |\n| позичати | позичити | to borrow/lend |\n| перевіряти | перевірити | to check |\n\n**Examples:**\n\n- **Зателефонуй** мені! - Call me!\n- Я **надіслав** листа вчора. - I sent a letter yesterday.\n- Вона **отримала** подарунок. - She received a gift.\n- **Поверни** мені книгу! - Return my book!\n\n## practice\n\n### Aspect Pair Drills\n\nFill in the perfective form:\n\n1. змінювати\n   > [!answer] _____ → **змінити**\n2. починати\n   > [!answer] _____ → **почати**\n3. створювати\n   > [!answer] _____ → **створити**\n4. прокидатися\n   > [!answer] _____ → **прокинутися**\n5. хвилюватися\n   > [!answer] _____ → **захвилюватися**\n6. телефонувати\n   > [!answer] _____ → **зателефонувати**\n\nFill in the imperfective form:\n\n1. _____\n   > [!answer] закінчити → **закінчувати**\n2. _____\n   > [!answer] одягнутися → **одягатися**\n3. _____\n   > [!answer] здивуватися → **дивуватися**\n4. _____\n   > [!answer] заснути → **засинати**\n5. _____\n   > [!answer] отримати → **отримувати**\n6. _____\n   > [!answer] полагодити → **лагодити**\n\n### Use in Context\n\nChoose the correct aspect:\n\n1. Вона ___ (просипалася/прокинулася) о п'ятій ранку.\n   > [!answer] **прокинулася** (single event)\n2. Він завжди ___ (боявся/злякався) собак.\n   > [!answer] **боявся** (always)\n3. Урок ___ (починався/почався) о дев'ятій.\n   > [!answer] **почався** (single event)\n4. Вона три години ___ (змінювала/змінила) свою зачіску.\n   > [!answer] **змінювала** (duration)\n5. Нарешті вона ___ (заспокоювалася/заспокоїлася)!\n   > [!answer] **заспокоїлася** (finally)\n6. Діти ___ (засинають/заснуть) о дев'ятій щовечора.\n   > [!answer] **засинають** (every evening)\n\n### Morning Routine Narrative\n\nComplete with correct aspect:\n\nСьогодні я ___ (прокидався/прокинувся) о сьомій. Я ___ (вставав/встав) і ___ (йшов/пішов) у ванну. Я ___ (вмивався/вмився), ___ (голився/поголився) і ___ (одягався/одягнувся). Потім я ___ (снідав/поснідав) і ___ (виходив/вийшов) з дому.\n\n**Answers:** прокинувся, встав, пішов, вмився, поголився, одягнувся, поснідав, вийшов (all perfective - completed sequence)\n\n### Describe Changes\n\nUse aspect pairs to describe changes:\n\n**Example:**\n- Погода **покращилася** — тепер сонячно.\n- Ціни на бензин **збільшилися** на 10%.\n- Його здоров'я **погіршилося** після хвороби.\n\nYour turn: Describe changes in:\n- Your city\n- Technology\n- Your language skills\n\n## production\n\n### Tell a Story Using Emotion Verbs\n\nCreate a short story using at least 5 emotion verbs:\n\n**Example:**\nКоли вона побачила подарунок, вона дуже **зраділа**. Але потім вона **здивувалася**, бо не знала, хто його надіслав. Вона почала **хвилюватися**. Нарешті вона **заспокоїлася**, коли прочитала записку.\n\n### Daily Routine Interview\n\nAsk your partner about their routine:\n- О котрій годині ти прокидаєшся?\n- Коли ти засинаєш?\n- Що ти робиш, коли встаєш?\n\n---\n\n\n---\n\n\n---",
+        "titleUk": "Вступ"
       },
       {
-        "id": "presentation",
-        "title": "presentation",
-        "content": "### Verbs of Change\n\n| Imperfective | Perfective | English |\n|--------------|------------|---------|\n| змінювати | змінити | to change |\n| змінюватися | змінитися | to change (oneself) |\n| покращувати | покращити | to improve |\n| покращуватися | покращитися | to get better |\n| погіршувати | погіршити | to worsen |\n| погіршуватися | погіршитися | to get worse |\n| збільшувати | збільшити | to increase |\n| зменшувати | зменшити | to decrease |\n| прискорювати | прискорити | to speed up |\n| сповільнювати | сповільнити | to slow down |\n\n**Examples:**\n\n- Погода **покращилася**. - The weather improved.\n- Ціни **збільшуються** щороку. - Prices increase every year.\n- Він **змінився**! - He has changed!\n- Вона **покращувала** свою українську три місяці. - She was improving her Ukrainian for three months.\n\n### Verbs of Emotion\n\n| Imperfective | Perfective | English |\n|--------------|------------|---------|\n| радіти | зрадіти | to be happy, rejoice |\n| сумувати | засумувати | to be sad |\n| хвилюватися | захвилюватися | to worry |\n| дивуватися | здивуватися | to be surprised |\n| боятися | злякатися | to be afraid |\n| сердитися | розсердитися | to be angry |\n| засмучуватися | засмутитися | to be upset |\n| заспокоюватися | заспокоїтися | to calm down |\n\n**Examples:**\n\n- Вона дуже **зраділа**! - She was very happy!\n- Не **хвилюйся**! - Don't worry!\n- Він **здивувався**, коли побачив мене. - He was surprised when he saw me.\n- Вона завжди **хвилюється** перед іспитами. - She always worries before exams.\n\n### Verbs of Daily Routine\n\n| Imperfective | Perfective | English |\n|--------------|------------|---------|\n| прокидатися | прокинутися | to wake up |\n| засинати | заснути | to fall asleep |\n| лягати | лягти | to lie down |\n| вставати | встати | to get up |\n| одягатися | одягнутися | to get dressed |\n| роздягатися | роздягнутися | to get undressed |\n| вмиватися | вмитися | to wash (face) |\n| митися | помитися | to wash (body) |\n| голитися | поголитися | to shave |\n| зачісуватися | зачесатися | to comb hair |\n\n**Examples:**\n\n- Я **прокинувся** о сьомій. - I woke up at seven.\n- Вона **засинає** о десятій. - She falls asleep at ten.\n- **Одягнися** швидше! - Get dressed faster!\n- Він **голиться** щоранку. - He shaves every morning.\n\n### Verbs of Starting and Finishing\n\n| Imperfective | Perfective | English |\n|--------------|------------|---------|\n| починати | почати | to begin |\n| починатися | початися | to begin (itself) |\n| закінчувати | закінчити | to finish |\n| закінчуватися | закінчитися | to end (itself) |\n| продовжувати | продовжити | to continue |\n| продовжуватися | продовжитися | to continue (itself) |\n| припиняти | припинити | to stop |\n| припинятися | припинитися | to stop (itself) |\n\n**Examples:**\n\n- Фільм **почався** о восьмій. - The film started at eight.\n- Вона **закінчила** роботу. - She finished work.\n- Дощ **припинився**. - The rain stopped.\n- Вони **продовжують** працювати. - They continue working.\n\n### Verbs of Creation and Destruction\n\n| Imperfective | Perfective | English |\n|--------------|------------|---------|\n| створювати | створити | to create |\n| знищувати | знищити | to destroy |\n| будувати | побудувати | to build |\n| руйнувати | зруйнувати | to ruin, destroy |\n| ремонтувати | відремонтувати | to repair |\n| лагодити | полагодити | to fix |\n\n**Examples:**\n\n- Він **створив** нову програму. - He created a new program.\n- Вони **побудували** будинок за рік. - They built a house in a year.\n- Треба **відремонтувати** машину. - The car needs to be repaired.\n- Хто **зруйнував** це? - Who destroyed this?\n\n### Verbs of Communication (Continued)\n\n| Imperfective | Perfective | English |\n|--------------|------------|---------|\n| телефонувати | зателефонувати | to call (phone) |\n| надсилати | надіслати | to send |\n| отримувати | отримати | to receive |\n| повертати | повернути | to return (something) |\n| позичати | позичити | to borrow/lend |\n| перевіряти | перевірити | to check |\n\n**Examples:**\n\n- **Зателефонуй** мені! - Call me!\n- Я **надіслав** листа вчора. - I sent a letter yesterday.\n- Вона **отримала** подарунок. - She received a gift.\n- **Поверни** мені книгу! - Return my book!",
-        "type": "topic"
-      },
-      {
-        "id": "practice",
-        "title": "practice",
-        "content": "### Aspect Pair Drills\n\nFill in the perfective form:\n\n1. змінювати → _____ → **змінити**\n2. починати → _____ → **почати**\n3. створювати → _____ → **створити**\n4. прокидатися → _____ → **прокинутися**\n5. хвилюватися → _____ → **захвилюватися**\n6. телефонувати → _____ → **зателефонувати**\n\nFill in the imperfective form:\n\n1. _____ → закінчити → **закінчувати**\n2. _____ → одягнутися → **одягатися**\n3. _____ → здивуватися → **дивуватися**\n4. _____ → заснути → **засинати**\n5. _____ → отримати → **отримувати**\n6. _____ → полагодити → **лагодити**\n\n### Use in Context\n\nChoose the correct aspect:\n\n1. Вона ___ (просипалася/прокинулася) о п'ятій ранку. → **прокинулася** (single event)\n2. Він завжди ___ (боявся/злякався) собак. → **боявся** (always)\n3. Урок ___ (починався/почався) о дев'ятій. → **почався** (single event)\n4. Вона три години ___ (змінювала/змінила) свою зачіску. → **змінювала** (duration)\n5. Нарешті вона ___ (заспокоювалася/заспокоїлася)! → **заспокоїлася** (finally)\n6. Діти ___ (засинають/заснуть) о дев'ятій щовечора. → **засинають** (every evening)\n\n### Morning Routine Narrative\n\nComplete with correct aspect:\n\nСьогодні я ___ (прокидався/прокинувся) о сьомій. Я ___ (вставав/встав) і ___ (йшов/пішов) у ванну. Я ___ (вмивався/вмився), ___ (голився/поголився) і ___ (одягався/одягнувся). Потім я ___ (снідав/поснідав) і ___ (виходив/вийшов) з дому.\n\n**Answers:** прокинувся, встав, пішов, вмився, поголився, одягнувся, поснідав, вийшов (all perfective - completed sequence)\n\n### Describe Changes\n\nUse aspect pairs to describe changes:\n\n**Example:**\n- Погода **покращилася** — тепер сонячно.\n- Ціни на бензин **збільшилися** на 10%.\n- Його здоров'я **погіршилося** після хвороби.\n\nYour turn: Describe changes in:\n- Your city\n- Technology\n- Your language skills",
-        "type": "topic"
-      },
-      {
-        "id": "production",
-        "title": "production",
-        "content": "### Tell a Story Using Emotion Verbs\n\nCreate a short story using at least 5 emotion verbs:\n\n**Example:**\nКоли вона побачила подарунок, вона дуже **зраділа**. Але потім вона **здивувалася**, бо не знала, хто його надіслав. Вона почала **хвилюватися**. Нарешті вона **заспокоїлася**, коли прочитала записку.\n\n### Daily Routine Interview\n\nAsk your partner about their routine:\n- О котрій годині ти прокидаєшся?\n- Коли ти засинаєш?\n- Що ти робиш, коли встаєш?\n\n---",
-        "type": "topic"
-      },
-      {
-        "id": "activities",
-        "title": "Activities",
-        "content": "## quiz: Aspect Selection\n\n> Choose the correct form.\n\n1. Вона ___ вчора о шостій ранку.\n   - [ ] прокидалася\n   - [x] прокинулася\n   > Single past event = perfective\n\n2. Погода ___ щодня.\n   - [x] змінюється\n   - [ ] зміниться\n   > Щодня = imperfective\n\n3. Фільм вже ___ .\n   - [ ] починався\n   - [x] почався\n   > Вже = perfective\n\n4. Він завжди ___ перед виступом.\n   - [x] хвилюється\n   - [ ] захвилюється\n   > Завжди = imperfective\n\n5. Нарешті вони ___ будинок!\n   - [ ] будували\n   - [x] побудували\n   > Нарешті = perfective\n\n6. ___ мені завтра!\n   - [ ] Телефонуй\n   - [x] Зателефонуй\n   > Specific request = perfective\n\n## match-up: Aspect Pairs\n\n| Imperfective | Perfective |\n|--------------|------------|\n| прокидатися | прокинутися |\n| засинати | заснути |\n| починати | почати |\n| хвилюватися | захвилюватися |\n| змінювати | змінити |\n| створювати | створити |\n\n## group-sort: Verb Categories\n\n### Change Verbs\n- змінювати / змінити\n- покращувати / покращити\n- збільшувати / збільшити\n\n### Emotion Verbs\n- радіти / зрадіти\n- хвилюватися / захвилюватися\n- дивуватися / здивуватися\n\n### Daily Routine Verbs\n- прокидатися / прокинутися\n- засинати / заснути\n- одягатися / одягнутися\n\n---",
-        "type": "activities"
-      },
-      {
-        "id": "vocabulary",
-        "title": "Vocabulary",
-        "content": "| Word | IPA | English | Aspect | Pair |\n|------|-----|---------|--------|------|\n| прокидатися | /prokɪˈdɑtɪsʲɑ/ | to wake up | impf | прокинутися |\n| прокинутися | /prokɪˈnutɪsʲɑ/ | to wake up (pf) | pf | прокидатися |\n| засинати | /zɑsɪˈnɑtɪ/ | to fall asleep | impf | заснути |\n| заснути | /zɑsˈnutɪ/ | to fall asleep (pf) | pf | засинати |\n| хвилюватися | /xvɪlʲuˈvɑtɪsʲɑ/ | to worry | impf | захвилюватися |\n| захвилюватися | /zɑxvɪlʲuˈvɑtɪsʲɑ/ | to worry (pf) | pf | хвилюватися |\n| змінювати | /zmʲiˈnʲuvɑtɪ/ | to change | impf | змінити |\n| змінити | /zmʲiˈnɪtɪ/ | to change (pf) | pf | змінювати |\n| покращувати | /pokrɑˈʃuvɑtɪ/ | to improve | impf | покращити |\n| покращити | /pokrɑˈʃɪtɪ/ | to improve (pf) | pf | покращувати |\n| створювати | /stvoˈrʲuvɑtɪ/ | to create | impf | створити |\n| створити | /stvoˈrɪtɪ/ | to create (pf) | pf | створювати |\n| телефонувати | /tɛlɛfonuˈvɑtɪ/ | to call | impf | зателефонувати |\n| зателефонувати | /zɑtɛlɛfonuˈvɑtɪ/ | to call (pf) | pf | телефонувати |\n\n---",
-        "type": "vocabulary"
-      },
-      {
-        "id": "summary",
+        "id": "section-summary",
+        "type": "summary",
         "title": "Summary",
         "content": "## 30 Pairs from This Module\n\n### Change\n1. змінювати / змінити\n2. покращувати / покращити\n3. погіршувати / погіршити\n4. збільшувати / збільшити\n5. зменшувати / зменшити\n\n### Emotion\n6. радіти / зрадіти\n7. хвилюватися / захвилюватися\n8. дивуватися / здивуватися\n9. боятися / злякатися\n10. заспокоюватися / заспокоїтися\n\n### Daily Routine\n11. прокидатися / прокинутися\n12. засинати / заснути\n13. одягатися / одягнутися\n14. вмиватися / вмитися\n15. голитися / поголитися\n\n### Starting/Finishing\n16. починати / почати\n17. закінчувати / закінчити\n18. продовжувати / продовжити\n19. припиняти / припинити\n\n### Communication\n20. телефонувати / зателефонувати\n21. надсилати / надіслати\n22. отримувати / отримати\n\n...and more from the lesson!\n\n## Total B1.1 Aspect Pairs\n\nAfter modules 87-88: **~60 new aspect pairs**\n\nCombined with A2 knowledge: **100+ aspect pairs**\n\n> **Key Takeaways**\n>\n> - Learn verbs in pairs, not individually\n> - Daily routine verbs form sequences (perfective)\n> - Emotion verbs often use з-/за- prefix for perfective\n> - Change verbs (-увати/-ити pattern) are very productive",
-        "type": "summary"
+        "titleUk": "Підсумок"
       }
-    ]
+    ],
+    "rawMarkdown": "---\nmodule: 88\ntitle: \"Aspect Pairs Expansion II\"\nsubtitle: \"30 More Essential Verb Pairs\"\nlevel: B1\nphase: B1.1\nduration: 45\ntransliteration: none\ntags: [aspect, vocabulary, verbs, verb-pairs]\nobjectives:\n  - Learn 30 more aspect pairs\n  - Master verbs for daily activities\n  - Practice aspect pairs in conversation\n  - Build automatic aspect selection\ngrammar:\n  - Aspect pairs for daily life\n  - Aspect pairs for emotions\n  - Aspect pairs for change/movement\n---\n\n# Lesson Content\n\n## warm-up\n\n### Review: Aspect Selection\n\nQuick check from Module 87:\n- What aspect for duration? → **Imperfective**\n- What aspect for result? → **Perfective**\n- What aspect with \"завжди\"? → **Imperfective**\n- What aspect with \"нарешті\"? → **Perfective**\n\nToday: 30 more essential pairs for everyday communication.\n\n## presentation\n\n### Verbs of Change\n\n| Imperfective | Perfective | English |\n|--------------|------------|---------|\n| змінювати | змінити | to change |\n| змінюватися | змінитися | to change (oneself) |\n| покращувати | покращити | to improve |\n| покращуватися | покращитися | to get better |\n| погіршувати | погіршити | to worsen |\n| погіршуватися | погіршитися | to get worse |\n| збільшувати | збільшити | to increase |\n| зменшувати | зменшити | to decrease |\n| прискорювати | прискорити | to speed up |\n| сповільнювати | сповільнити | to slow down |\n\n**Examples:**\n\n- Погода **покращилася**. - The weather improved.\n- Ціни **збільшуються** щороку. - Prices increase every year.\n- Він **змінився**! - He has changed!\n- Вона **покращувала** свою українську три місяці. - She was improving her Ukrainian for three months.\n\n### Verbs of Emotion\n\n| Imperfective | Perfective | English |\n|--------------|------------|---------|\n| радіти | зрадіти | to be happy, rejoice |\n| сумувати | засумувати | to be sad |\n| хвилюватися | захвилюватися | to worry |\n| дивуватися | здивуватися | to be surprised |\n| боятися | злякатися | to be afraid |\n| сердитися | розсердитися | to be angry |\n| засмучуватися | засмутитися | to be upset |\n| заспокоюватися | заспокоїтися | to calm down |\n\n**Examples:**\n\n- Вона дуже **зраділа**! - She was very happy!\n- Не **хвилюйся**! - Don't worry!\n- Він **здивувався**, коли побачив мене. - He was surprised when he saw me.\n- Вона завжди **хвилюється** перед іспитами. - She always worries before exams.\n\n### Verbs of Daily Routine\n\n| Imperfective | Perfective | English |\n|--------------|------------|---------|\n| прокидатися | прокинутися | to wake up |\n| засинати | заснути | to fall asleep |\n| лягати | лягти | to lie down |\n| вставати | встати | to get up |\n| одягатися | одягнутися | to get dressed |\n| роздягатися | роздягнутися | to get undressed |\n| вмиватися | вмитися | to wash (face) |\n| митися | помитися | to wash (body) |\n| голитися | поголитися | to shave |\n| зачісуватися | зачесатися | to comb hair |\n\n**Examples:**\n\n- Я **прокинувся** о сьомій. - I woke up at seven.\n- Вона **засинає** о десятій. - She falls asleep at ten.\n- **Одягнися** швидше! - Get dressed faster!\n- Він **голиться** щоранку. - He shaves every morning.\n\n### Verbs of Starting and Finishing\n\n| Imperfective | Perfective | English |\n|--------------|------------|---------|\n| починати | почати | to begin |\n| починатися | початися | to begin (itself) |\n| закінчувати | закінчити | to finish |\n| закінчуватися | закінчитися | to end (itself) |\n| продовжувати | продовжити | to continue |\n| продовжуватися | продовжитися | to continue (itself) |\n| припиняти | припинити | to stop |\n| припинятися | припинитися | to stop (itself) |\n\n**Examples:**\n\n- Фільм **почався** о восьмій. - The film started at eight.\n- Вона **закінчила** роботу. - She finished work.\n- Дощ **припинився**. - The rain stopped.\n- Вони **продовжують** працювати. - They continue working.\n\n### Verbs of Creation and Destruction\n\n| Imperfective | Perfective | English |\n|--------------|------------|---------|\n| створювати | створити | to create |\n| знищувати | знищити | to destroy |\n| будувати | побудувати | to build |\n| руйнувати | зруйнувати | to ruin, destroy |\n| ремонтувати | відремонтувати | to repair |\n| лагодити | полагодити | to fix |\n\n**Examples:**\n\n- Він **створив** нову програму. - He created a new program.\n- Вони **побудували** будинок за рік. - They built a house in a year.\n- Треба **відремонтувати** машину. - The car needs to be repaired.\n- Хто **зруйнував** це? - Who destroyed this?\n\n### Verbs of Communication (Continued)\n\n| Imperfective | Perfective | English |\n|--------------|------------|---------|\n| телефонувати | зателефонувати | to call (phone) |\n| надсилати | надіслати | to send |\n| отримувати | отримати | to receive |\n| повертати | повернути | to return (something) |\n| позичати | позичити | to borrow/lend |\n| перевіряти | перевірити | to check |\n\n**Examples:**\n\n- **Зателефонуй** мені! - Call me!\n- Я **надіслав** листа вчора. - I sent a letter yesterday.\n- Вона **отримала** подарунок. - She received a gift.\n- **Поверни** мені книгу! - Return my book!\n\n## practice\n\n### Aspect Pair Drills\n\nFill in the perfective form:\n\n1. змінювати\n   > [!answer] _____ → **змінити**\n2. починати\n   > [!answer] _____ → **почати**\n3. створювати\n   > [!answer] _____ → **створити**\n4. прокидатися\n   > [!answer] _____ → **прокинутися**\n5. хвилюватися\n   > [!answer] _____ → **захвилюватися**\n6. телефонувати\n   > [!answer] _____ → **зателефонувати**\n\nFill in the imperfective form:\n\n1. _____\n   > [!answer] закінчити → **закінчувати**\n2. _____\n   > [!answer] одягнутися → **одягатися**\n3. _____\n   > [!answer] здивуватися → **дивуватися**\n4. _____\n   > [!answer] заснути → **засинати**\n5. _____\n   > [!answer] отримати → **отримувати**\n6. _____\n   > [!answer] полагодити → **лагодити**\n\n### Use in Context\n\nChoose the correct aspect:\n\n1. Вона ___ (просипалася/прокинулася) о п'ятій ранку.\n   > [!answer] **прокинулася** (single event)\n2. Він завжди ___ (боявся/злякався) собак.\n   > [!answer] **боявся** (always)\n3. Урок ___ (починався/почався) о дев'ятій.\n   > [!answer] **почався** (single event)\n4. Вона три години ___ (змінювала/змінила) свою зачіску.\n   > [!answer] **змінювала** (duration)\n5. Нарешті вона ___ (заспокоювалася/заспокоїлася)!\n   > [!answer] **заспокоїлася** (finally)\n6. Діти ___ (засинають/заснуть) о дев'ятій щовечора.\n   > [!answer] **засинають** (every evening)\n\n### Morning Routine Narrative\n\nComplete with correct aspect:\n\nСьогодні я ___ (прокидався/прокинувся) о сьомій. Я ___ (вставав/встав) і ___ (йшов/пішов) у ванну. Я ___ (вмивався/вмився), ___ (голився/поголився) і ___ (одягався/одягнувся). Потім я ___ (снідав/поснідав) і ___ (виходив/вийшов) з дому.\n\n**Answers:** прокинувся, встав, пішов, вмився, поголився, одягнувся, поснідав, вийшов (all perfective - completed sequence)\n\n### Describe Changes\n\nUse aspect pairs to describe changes:\n\n**Example:**\n- Погода **покращилася** — тепер сонячно.\n- Ціни на бензин **збільшилися** на 10%.\n- Його здоров'я **погіршилося** після хвороби.\n\nYour turn: Describe changes in:\n- Your city\n- Technology\n- Your language skills\n\n## production\n\n### Tell a Story Using Emotion Verbs\n\nCreate a short story using at least 5 emotion verbs:\n\n**Example:**\nКоли вона побачила подарунок, вона дуже **зраділа**. Але потім вона **здивувалася**, бо не знала, хто його надіслав. Вона почала **хвилюватися**. Нарешті вона **заспокоїлася**, коли прочитала записку.\n\n### Daily Routine Interview\n\nAsk your partner about their routine:\n- О котрій годині ти прокидаєшся?\n- Коли ти засинаєш?\n- Що ти робиш, коли встаєш?\n\n---\n\n# Activities\n\n## quiz: Aspect Selection\n\n> Choose the correct form.\n\n1. Вона ___ вчора о шостій ранку.\n   - [ ] прокидалася\n   - [x] прокинулася\n   > Single past event = perfective\n\n2. Погода ___ щодня.\n   - [x] змінюється\n   - [ ] зміниться\n   > Щодня = imperfective\n\n3. Фільм вже ___ .\n   - [ ] починався\n   - [x] почався\n   > Вже = perfective\n\n4. Він завжди ___ перед виступом.\n   - [x] хвилюється\n   - [ ] захвилюється\n   > Завжди = imperfective\n\n5. Нарешті вони ___ будинок!\n   - [ ] будували\n   - [x] побудували\n   > Нарешті = perfective\n\n6. ___ мені завтра!\n   - [ ] Телефонуй\n   - [x] Зателефонуй\n   > Specific request = perfective\n\n## match-up: Aspect Pairs\n\n| Imperfective | Perfective |\n|--------------|------------|\n| прокидатися | прокинутися |\n| засинати | заснути |\n| починати | почати |\n| хвилюватися | захвилюватися |\n| змінювати | змінити |\n| створювати | створити |\n\n## group-sort: Verb Categories\n\n### Change Verbs\n- змінювати / змінити\n- покращувати / покращити\n- збільшувати / збільшити\n\n### Emotion Verbs\n- радіти / зрадіти\n- хвилюватися / захвилюватися\n- дивуватися / здивуватися\n\n### Daily Routine Verbs\n- прокидатися / прокинутися\n- засинати / заснути\n- одягатися / одягнутися\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | Aspect | Pair |\n|------|-----|---------|--------|------|\n| прокидатися | /prokɪˈdɑtɪsʲɑ/ | to wake up | impf | прокинутися |\n| прокинутися | /prokɪˈnutɪsʲɑ/ | to wake up (pf) | pf | прокидатися |\n| засинати | /zɑsɪˈnɑtɪ/ | to fall asleep | impf | заснути |\n| заснути | /zɑsˈnutɪ/ | to fall asleep (pf) | pf | засинати |\n| хвилюватися | /xvɪlʲuˈvɑtɪsʲɑ/ | to worry | impf | захвилюватися |\n| захвилюватися | /zɑxvɪlʲuˈvɑtɪsʲɑ/ | to worry (pf) | pf | хвилюватися |\n| змінювати | /zmʲiˈnʲuvɑtɪ/ | to change | impf | змінити |\n| змінити | /zmʲiˈnɪtɪ/ | to change (pf) | pf | змінювати |\n| покращувати | /pokrɑˈʃuvɑtɪ/ | to improve | impf | покращити |\n| покращити | /pokrɑˈʃɪtɪ/ | to improve (pf) | pf | покращувати |\n| створювати | /stvoˈrʲuvɑtɪ/ | to create | impf | створити |\n| створити | /stvoˈrɪtɪ/ | to create (pf) | pf | створювати |\n| телефонувати | /tɛlɛfonuˈvɑtɪ/ | to call | impf | зателефонувати |\n| зателефонувати | /zɑtɛlɛfonuˈvɑtɪ/ | to call (pf) | pf | телефонувати |\n\n---\n\n# Summary\n\n## 30 Pairs from This Module\n\n### Change\n1. змінювати / змінити\n2. покращувати / покращити\n3. погіршувати / погіршити\n4. збільшувати / збільшити\n5. зменшувати / зменшити\n\n### Emotion\n6. радіти / зрадіти\n7. хвилюватися / захвилюватися\n8. дивуватися / здивуватися\n9. боятися / злякатися\n10. заспокоюватися / заспокоїтися\n\n### Daily Routine\n11. прокидатися / прокинутися\n12. засинати / заснути\n13. одягатися / одягнутися\n14. вмиватися / вмитися\n15. голитися / поголитися\n\n### Starting/Finishing\n16. починати / почати\n17. закінчувати / закінчити\n18. продовжувати / продовжити\n19. припиняти / припинити\n\n### Communication\n20. телефонувати / зателефонувати\n21. надсилати / надіслати\n22. отримувати / отримати\n\n...and more from the lesson!\n\n## Total B1.1 Aspect Pairs\n\nAfter modules 87-88: **~60 new aspect pairs**\n\nCombined with A2 knowledge: **100+ aspect pairs**\n\n> **Key Takeaways**\n>\n> - Learn verbs in pairs, not individually\n> - Daily routine verbs form sequences (perfective)\n> - Emotion verbs often use з-/за- prefix for perfective\n> - Change verbs (-увати/-ити pattern) are very productive\n"
   },
   "activities": [
     {
-      "id": "act-uk-B1-88-quiz",
+      "id": "act-b1-88-quiz",
       "type": "quiz",
       "title": "Aspect Selection",
       "description": "Choose the correct form.",
       "content": {
         "type": "quiz",
-        "instructions": "Choose the correct form.",
         "questions": [
           {
             "question": "Вона ___ вчора о шостій ранку.",
@@ -265,23 +152,17 @@
       "language": "uk",
       "difficultyLevel": "B1",
       "duration": 5,
-      "tags": [
-        "aspect",
-        "vocabulary",
-        "verbs",
-        "verb-pairs"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.290Z",
+      "modifiedAt": "2025-12-01T22:58:37.290Z"
     },
     {
-      "id": "act-uk-B1-88-matchup",
+      "id": "act-b1-88-matchup",
       "type": "match-up",
       "title": "Aspect Pairs",
       "description": "Aspect Pairs",
       "content": {
         "type": "match-up",
-        "instructions": "",
         "pairs": [
           {
             "left": "прокидатися",
@@ -316,25 +197,20 @@
       "language": "uk",
       "difficultyLevel": "B1",
       "duration": 5,
-      "tags": [
-        "aspect",
-        "vocabulary",
-        "verbs",
-        "verb-pairs"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.290Z",
+      "modifiedAt": "2025-12-01T22:58:37.290Z"
     },
     {
-      "id": "act-uk-B1-88-groupsort",
+      "id": "act-b1-88-groupsort",
       "type": "group-sort",
       "title": "Verb Categories",
       "description": "Verb Categories",
       "content": {
         "type": "group-sort",
-        "instructions": "",
         "groups": [
           {
+            "id": "change-verbs",
             "name": "Change Verbs",
             "items": [
               "змінювати / змінити",
@@ -343,6 +219,7 @@
             ]
           },
           {
+            "id": "emotion-verbs",
             "name": "Emotion Verbs",
             "items": [
               "радіти / зрадіти",
@@ -351,6 +228,7 @@
             ]
           },
           {
+            "id": "daily-routine-verbs",
             "name": "Daily Routine Verbs",
             "items": [
               "прокидатися / прокинутися",
@@ -367,14 +245,9 @@
       "language": "uk",
       "difficultyLevel": "B1",
       "duration": 5,
-      "tags": [
-        "aspect",
-        "vocabulary",
-        "verbs",
-        "verb-pairs"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.290Z",
+      "modifiedAt": "2025-12-01T22:58:37.290Z"
     }
   ],
   "vocabulary": {
@@ -385,116 +258,102 @@
     "transliterationMode": "none",
     "words": [
       {
-        "id": "v-m88-001",
+        "id": "v-prokydatysya-88-0",
         "uk": "прокидатися",
-        "translit": "",
-        "ipa": "/prokɪˈdɑtɪsʲɑ/",
         "en": "to wake up",
-        "pos": ""
+        "pos": "impf",
+        "ipa": "/prokɪˈdɑtɪsʲɑ/"
       },
       {
-        "id": "v-m88-002",
+        "id": "v-prokynutysya-88-1",
         "uk": "прокинутися",
-        "translit": "",
-        "ipa": "/prokɪˈnutɪsʲɑ/",
         "en": "to wake up (pf)",
-        "pos": ""
+        "pos": "pf",
+        "ipa": "/prokɪˈnutɪsʲɑ/"
       },
       {
-        "id": "v-m88-003",
+        "id": "v-zasynaty-88-2",
         "uk": "засинати",
-        "translit": "",
-        "ipa": "/zɑsɪˈnɑtɪ/",
         "en": "to fall asleep",
-        "pos": ""
+        "pos": "impf",
+        "ipa": "/zɑsɪˈnɑtɪ/"
       },
       {
-        "id": "v-m88-004",
+        "id": "v-zasnuty-88-3",
         "uk": "заснути",
-        "translit": "",
-        "ipa": "/zɑsˈnutɪ/",
         "en": "to fall asleep (pf)",
-        "pos": ""
+        "pos": "pf",
+        "ipa": "/zɑsˈnutɪ/"
       },
       {
-        "id": "v-m88-005",
+        "id": "v-khvylyuvatysya-88-4",
         "uk": "хвилюватися",
-        "translit": "",
-        "ipa": "/xvɪlʲuˈvɑtɪsʲɑ/",
         "en": "to worry",
-        "pos": ""
+        "pos": "impf",
+        "ipa": "/xvɪlʲuˈvɑtɪsʲɑ/"
       },
       {
-        "id": "v-m88-006",
+        "id": "v-zakhvylyuvatysya-88-5",
         "uk": "захвилюватися",
-        "translit": "",
-        "ipa": "/zɑxvɪlʲuˈvɑtɪsʲɑ/",
         "en": "to worry (pf)",
-        "pos": ""
+        "pos": "pf",
+        "ipa": "/zɑxvɪlʲuˈvɑtɪsʲɑ/"
       },
       {
-        "id": "v-m88-007",
+        "id": "v-zminyuvaty-88-6",
         "uk": "змінювати",
-        "translit": "",
-        "ipa": "/zmʲiˈnʲuvɑtɪ/",
         "en": "to change",
-        "pos": ""
+        "pos": "impf",
+        "ipa": "/zmʲiˈnʲuvɑtɪ/"
       },
       {
-        "id": "v-m88-008",
+        "id": "v-zminyty-88-7",
         "uk": "змінити",
-        "translit": "",
-        "ipa": "/zmʲiˈnɪtɪ/",
         "en": "to change (pf)",
-        "pos": ""
+        "pos": "pf",
+        "ipa": "/zmʲiˈnɪtɪ/"
       },
       {
-        "id": "v-m88-009",
+        "id": "v-pokrashchuvaty-88-8",
         "uk": "покращувати",
-        "translit": "",
-        "ipa": "/pokrɑˈʃuvɑtɪ/",
         "en": "to improve",
-        "pos": ""
+        "pos": "impf",
+        "ipa": "/pokrɑˈʃuvɑtɪ/"
       },
       {
-        "id": "v-m88-010",
+        "id": "v-pokrashchyty-88-9",
         "uk": "покращити",
-        "translit": "",
-        "ipa": "/pokrɑˈʃɪtɪ/",
         "en": "to improve (pf)",
-        "pos": ""
+        "pos": "pf",
+        "ipa": "/pokrɑˈʃɪtɪ/"
       },
       {
-        "id": "v-m88-011",
+        "id": "v-stvoryuvaty-88-10",
         "uk": "створювати",
-        "translit": "",
-        "ipa": "/stvoˈrʲuvɑtɪ/",
         "en": "to create",
-        "pos": ""
+        "pos": "impf",
+        "ipa": "/stvoˈrʲuvɑtɪ/"
       },
       {
-        "id": "v-m88-012",
+        "id": "v-stvoryty-88-11",
         "uk": "створити",
-        "translit": "",
-        "ipa": "/stvoˈrɪtɪ/",
         "en": "to create (pf)",
-        "pos": ""
+        "pos": "pf",
+        "ipa": "/stvoˈrɪtɪ/"
       },
       {
-        "id": "v-m88-013",
+        "id": "v-telefonuvaty-88-12",
         "uk": "телефонувати",
-        "translit": "",
-        "ipa": "/tɛlɛfonuˈvɑtɪ/",
         "en": "to call",
-        "pos": ""
+        "pos": "impf",
+        "ipa": "/tɛlɛfonuˈvɑtɪ/"
       },
       {
-        "id": "v-m88-014",
+        "id": "v-zatelefonuvaty-88-13",
         "uk": "зателефонувати",
-        "translit": "",
-        "ipa": "/zɑtɛlɛfonuˈvɑtɪ/",
         "en": "to call (pf)",
-        "pos": ""
+        "pos": "pf",
+        "ipa": "/zɑtɛlɛfonuˈvɑtɪ/"
       }
     ]
   }

@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-B1-96",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "vocabulary-expansion",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -22,175 +21,43 @@
       "Use abstract nouns in real contexts"
     ],
     "grammarFocus": [],
-    "totalDuration": 45,
-    "transliterationMode": "none",
     "tags": [
       "vocabulary",
       "abstract",
       "concepts",
       "life"
     ],
+    "totalDuration": 45,
+    "transliterationMode": "none",
+    "phases": [],
+    "createdAt": "2025-12-01T22:58:37.292Z",
+    "modifiedAt": "2025-12-01T22:58:37.292Z",
     "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
-    "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Життєва лексика | Life Vocabulary\n\nУ модулі 95 ми вивчили ідеї та проблеми. Тепер: лексика для обговорення **життєвого досвіду**.\n\nModule 95 covered ideas and problems. Now: vocabulary for discussing **life experiences**.\n\n- Який досвід ви маєте? | What experiences have you had?\n- Які можливості у вас є? | What opportunities do you have?\n- Яку відповідальність ви несете? | What responsibilities do you carry?"
-          }
-        ]
-      },
-      {
-        "id": "phase-presentation",
-        "name": "presentation",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Experience and Knowledge\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| досвід | /ˈdosvʲid/ | experience | У мене великий досвід. |\n| переживання | /pɛrɛʒɪˈvɑnʲːɑ/ | experience (emotional) | Це було сильне переживання. |\n| знання | /znɑnʲˈːɑ/ | knowledge | Знання — сила. |\n| навичка | /nɑˈvɪt͡ʃkɑ/ | skill | Корисна навичка. |\n| вміння | /vˈmʲinʲːɑ/ | ability, skill | Вміння спілкуватися. |\n| рівень | /ˈrʲivɛnʲ/ | level | Високий рівень знань. |\n| розвиток | /ˈrozvɪtok/ | development | Професійний розвиток. |\n| освіта | /osˈvʲitɑ/ | education | Вища освіта. |\n\n**Usage examples:**\n\n- У мене п'ять років **досвіду** роботи. - I have five years of work experience.\n- Це було незабутнє **переживання**. - It was an unforgettable experience.\n- Він має глибокі **знання** в цій галузі. - He has deep knowledge in this field.\n- Мені потрібно покращити свої **навички**. - I need to improve my skills.\n- Який ваш **рівень** української? - What's your Ukrainian level?"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Opportunities and Chances\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| можливість | /moʒˈlɪvʲistʲ/ | opportunity, possibility | Це чудова можливість. |\n| шанс | /ʃɑns/ | chance | Дай йому шанс! |\n| нагода | /nɑˈɦodɑ/ | occasion, opportunity | З нагоди дня народження. |\n| вибір | /ˈvɪbʲir/ | choice | У мене є вибір. |\n| варіант | /vɑrʲiˈɑnt/ | option | Це єдиний варіант. |\n| альтернатива | /ɑlʲtɛrnɑˈtɪvɑ/ | alternative | Немає альтернативи. |\n| перспектива | /pɛrspɛkˈtɪvɑ/ | perspective, prospect | Хороші перспективи. |\n\n**Usage examples:**\n\n- Це унікальна **можливість**! - This is a unique opportunity!\n- Дай мені ще один **шанс**. - Give me one more chance.\n- У нас є кілька **варіантів**. - We have several options.\n- Який **вибір** ти зробив? - What choice did you make?\n- У цій компанії хороші **перспективи**. - This company has good prospects."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Responsibility and Obligation\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| відповідальність | /vʲidpovʲidɑlʲˈnʲistʲ/ | responsibility | Це моя відповідальність. |\n| обов'язок | /oboˈvjɑzok/ | duty, obligation | Це мій обов'язок. |\n| обов'язки | /oboˈvjɑzkɪ/ | duties (pl) | Які ваші обов'язки? |\n| право | /ˈprɑvo/ | right | Маю право знати. |\n| зобов'язання | /zoboˈvjɑzɑnʲːɑ/ | commitment, obligation | Виконати зобов'язання. |\n| борг | /borɦ/ | debt, duty | Моральний борг. |\n\n**Usage examples:**\n\n- Беру на себе **відповідальність**. - I take responsibility.\n- Це ваш **обов'язок**. - This is your duty.\n- Які ваші **обов'язки** на роботі? - What are your duties at work?\n- Ви маєте **право** на відпочинок. - You have the right to rest.\n- Я виконав свої **зобов'язання**. - I fulfilled my obligations."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Situation and Circumstances\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| ситуація | /sɪtuˈɑt͡sʲijɑ/ | situation | Складна ситуація. |\n| обставини | /obˈstɑvɪnɪ/ | circumstances | За таких обставин... |\n| умови | /uˈmovɪ/ | conditions | Складні умови. |\n| стан | /stɑn/ | state, condition | Поганий стан здоров'я. |\n| становище | /stɑˈnovɪʃt͡ʃɛ/ | position, situation | Важке становище. |\n| середовище | /sɛrɛˈdovɪʃt͡ʃɛ/ | environment | Робоче середовище. |\n\n**Usage examples:**\n\n- Яка **ситуація** на роботі? - What's the situation at work?\n- За таких **обставин** я не можу допомогти. - Under these circumstances, I can't help.\n- Які **умови** контракту? - What are the contract conditions?\n- Він у поганому **стані**. - He's in bad condition."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Change and Stability\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| зміна | /ˈzmʲinɑ/ | change | Потрібні зміни. |\n| зміни | /ˈzmʲinɪ/ | changes (pl) | Великі зміни. |\n| стабільність | /stɑˈbʲilʲnʲistʲ/ | stability | Фінансова стабільність. |\n| невизначеність | /nɛvɪznɑˈt͡ʃɛnʲistʲ/ | uncertainty | Час невизначеності. |\n| ризик | /ˈrɪzɪk/ | risk | Великий ризик. |\n| безпека | /bɛzˈpɛkɑ/ | safety, security | Безпека праці. |\n\n**Usage examples:**\n\n- Ми готові до **змін**. - We're ready for changes.\n- Мені потрібна **стабільність**. - I need stability.\n- В умовах **невизначеності** важко планувати. - It's hard to plan in uncertainty.\n- Це пов'язано з **ризиком**. - This involves risk."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Verbs for Life Situations\n\n| Ukrainian | English | Aspect |\n|-----------|---------|--------|\n| переживати / пережити | to experience, go through | impf/pf |\n| стикатися / зіткнутися | to encounter, face | impf/pf |\n| використовувати / використати | to use | impf/pf |\n| вибирати / вибрати | to choose | impf/pf |\n| ризикувати | to risk | impf |\n| покращувати / покращити | to improve | impf/pf |\n| розвивати / розвинути | to develop | impf/pf |"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-B1-96-matchup"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Complete with Correct Word\n\n1. У мене десять років ___ (experience). → **досвіду**\n2. Це чудова ___ (opportunity). → **можливість**\n3. Яка ваша ___ (responsibility) в цьому? → **відповідальність**\n4. Який ваш ___ (level) української? → **рівень**\n5. Ми зіткнулися з важкою ___ (situation). → **ситуацією**\n6. Немає ___ (alternative). → **альтернативи**"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Match Opposites\n\n| Word | Opposite |\n|------|----------|\n| стабільність | невизначеність |\n| можливість | перешкода |\n| успіх | невдача |\n| безпека | ризик |\n| обов'язок | право |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Discussion Questions\n\nAnswer using abstract vocabulary:\n\n1. Який **досвід** ви маєте у вивченні мов?\n2. Яка найважливіша **навичка** для вашої роботи?\n3. Які **можливості** дає знання української?\n4. Які ваші **обов'язки** вдома/на роботі?\n5. Які **зміни** ви хочете внести у своє життя?"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Translate to Ukrainian\n\n1. I have a lot of experience. → **У мене багато досвіду.**\n2. This is my responsibility. → **Це моя відповідальність.**\n3. We have several options. → **У нас є кілька варіантів.**\n4. Under these circumstances... → **За таких обставин...**\n5. I need stability. → **Мені потрібна стабільність.**"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-B1-96-quiz"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Describe Your Experience\n\nUse vocabulary to describe:\n- Your **досвід** (experience)\n- Your **навички** (skills)\n- Your **рівень** in different areas\n\n**Example:**\nУ мене п'ять років **досвіду** роботи в IT. Мої головні **навички** — програмування та аналіз даних. Мій **рівень** англійської — просунутий, а української — середній."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Discuss Opportunities\n\nTalk about:\n- **Можливості** you have\n- **Варіанти** for the future\n- **Ризики** you face"
-          }
-        ]
-      }
-    ],
-    "rawMarkdown": "# Зміст уроку | Lesson Content\n\n## warm-up | Розминка\n\n### Життєва лексика | Life Vocabulary\n\nУ модулі 95 ми вивчили ідеї та проблеми. Тепер: лексика для обговорення **життєвого досвіду**.\n\nModule 95 covered ideas and problems. Now: vocabulary for discussing **life experiences**.\n\n- Який досвід ви маєте? | What experiences have you had?\n- Які можливості у вас є? | What opportunities do you have?\n- Яку відповідальність ви несете? | What responsibilities do you carry?\n\n## presentation | Презентація\n\n### Experience and Knowledge\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| досвід | /ˈdosvʲid/ | experience | У мене великий досвід. |\n| переживання | /pɛrɛʒɪˈvɑnʲːɑ/ | experience (emotional) | Це було сильне переживання. |\n| знання | /znɑnʲˈːɑ/ | knowledge | Знання — сила. |\n| навичка | /nɑˈvɪt͡ʃkɑ/ | skill | Корисна навичка. |\n| вміння | /vˈmʲinʲːɑ/ | ability, skill | Вміння спілкуватися. |\n| рівень | /ˈrʲivɛnʲ/ | level | Високий рівень знань. |\n| розвиток | /ˈrozvɪtok/ | development | Професійний розвиток. |\n| освіта | /osˈvʲitɑ/ | education | Вища освіта. |\n\n**Usage examples:**\n\n- У мене п'ять років **досвіду** роботи. - I have five years of work experience.\n- Це було незабутнє **переживання**. - It was an unforgettable experience.\n- Він має глибокі **знання** в цій галузі. - He has deep knowledge in this field.\n- Мені потрібно покращити свої **навички**. - I need to improve my skills.\n- Який ваш **рівень** української? - What's your Ukrainian level?\n\n### Opportunities and Chances\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| можливість | /moʒˈlɪvʲistʲ/ | opportunity, possibility | Це чудова можливість. |\n| шанс | /ʃɑns/ | chance | Дай йому шанс! |\n| нагода | /nɑˈɦodɑ/ | occasion, opportunity | З нагоди дня народження. |\n| вибір | /ˈvɪbʲir/ | choice | У мене є вибір. |\n| варіант | /vɑrʲiˈɑnt/ | option | Це єдиний варіант. |\n| альтернатива | /ɑlʲtɛrnɑˈtɪvɑ/ | alternative | Немає альтернативи. |\n| перспектива | /pɛrspɛkˈtɪvɑ/ | perspective, prospect | Хороші перспективи. |\n\n**Usage examples:**\n\n- Це унікальна **можливість**! - This is a unique opportunity!\n- Дай мені ще один **шанс**. - Give me one more chance.\n- У нас є кілька **варіантів**. - We have several options.\n- Який **вибір** ти зробив? - What choice did you make?\n- У цій компанії хороші **перспективи**. - This company has good prospects.\n\n### Responsibility and Obligation\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| відповідальність | /vʲidpovʲidɑlʲˈnʲistʲ/ | responsibility | Це моя відповідальність. |\n| обов'язок | /oboˈvjɑzok/ | duty, obligation | Це мій обов'язок. |\n| обов'язки | /oboˈvjɑzkɪ/ | duties (pl) | Які ваші обов'язки? |\n| право | /ˈprɑvo/ | right | Маю право знати. |\n| зобов'язання | /zoboˈvjɑzɑnʲːɑ/ | commitment, obligation | Виконати зобов'язання. |\n| борг | /borɦ/ | debt, duty | Моральний борг. |\n\n**Usage examples:**\n\n- Беру на себе **відповідальність**. - I take responsibility.\n- Це ваш **обов'язок**. - This is your duty.\n- Які ваші **обов'язки** на роботі? - What are your duties at work?\n- Ви маєте **право** на відпочинок. - You have the right to rest.\n- Я виконав свої **зобов'язання**. - I fulfilled my obligations.\n\n### Situation and Circumstances\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| ситуація | /sɪtuˈɑt͡sʲijɑ/ | situation | Складна ситуація. |\n| обставини | /obˈstɑvɪnɪ/ | circumstances | За таких обставин... |\n| умови | /uˈmovɪ/ | conditions | Складні умови. |\n| стан | /stɑn/ | state, condition | Поганий стан здоров'я. |\n| становище | /stɑˈnovɪʃt͡ʃɛ/ | position, situation | Важке становище. |\n| середовище | /sɛrɛˈdovɪʃt͡ʃɛ/ | environment | Робоче середовище. |\n\n**Usage examples:**\n\n- Яка **ситуація** на роботі? - What's the situation at work?\n- За таких **обставин** я не можу допомогти. - Under these circumstances, I can't help.\n- Які **умови** контракту? - What are the contract conditions?\n- Він у поганому **стані**. - He's in bad condition.\n\n### Change and Stability\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| зміна | /ˈzmʲinɑ/ | change | Потрібні зміни. |\n| зміни | /ˈzmʲinɪ/ | changes (pl) | Великі зміни. |\n| стабільність | /stɑˈbʲilʲnʲistʲ/ | stability | Фінансова стабільність. |\n| невизначеність | /nɛvɪznɑˈt͡ʃɛnʲistʲ/ | uncertainty | Час невизначеності. |\n| ризик | /ˈrɪzɪk/ | risk | Великий ризик. |\n| безпека | /bɛzˈpɛkɑ/ | safety, security | Безпека праці. |\n\n**Usage examples:**\n\n- Ми готові до **змін**. - We're ready for changes.\n- Мені потрібна **стабільність**. - I need stability.\n- В умовах **невизначеності** важко планувати. - It's hard to plan in uncertainty.\n- Це пов'язано з **ризиком**. - This involves risk.\n\n### Verbs for Life Situations\n\n| Ukrainian | English | Aspect |\n|-----------|---------|--------|\n| переживати / пережити | to experience, go through | impf/pf |\n| стикатися / зіткнутися | to encounter, face | impf/pf |\n| використовувати / використати | to use | impf/pf |\n| вибирати / вибрати | to choose | impf/pf |\n| ризикувати | to risk | impf |\n| покращувати / покращити | to improve | impf/pf |\n| розвивати / розвинути | to develop | impf/pf |\n\n## practice | Практика\n\n### Complete with Correct Word\n\n1. У мене десять років ___ (experience). → **досвіду**\n2. Це чудова ___ (opportunity). → **можливість**\n3. Яка ваша ___ (responsibility) в цьому? → **відповідальність**\n4. Який ваш ___ (level) української? → **рівень**\n5. Ми зіткнулися з важкою ___ (situation). → **ситуацією**\n6. Немає ___ (alternative). → **альтернативи**\n\n### Match Opposites\n\n| Word | Opposite |\n|------|----------|\n| стабільність | невизначеність |\n| можливість | перешкода |\n| успіх | невдача |\n| безпека | ризик |\n| обов'язок | право |\n\n### Discussion Questions\n\nAnswer using abstract vocabulary:\n\n1. Який **досвід** ви маєте у вивченні мов?\n2. Яка найважливіша **навичка** для вашої роботи?\n3. Які **можливості** дає знання української?\n4. Які ваші **обов'язки** вдома/на роботі?\n5. Які **зміни** ви хочете внести у своє життя?\n\n### Translate to Ukrainian\n\n1. I have a lot of experience. → **У мене багато досвіду.**\n2. This is my responsibility. → **Це моя відповідальність.**\n3. We have several options. → **У нас є кілька варіантів.**\n4. Under these circumstances... → **За таких обставин...**\n5. I need stability. → **Мені потрібна стабільність.**\n\n## production | Продукція\n\n### Describe Your Experience\n\nUse vocabulary to describe:\n- Your **досвід** (experience)\n- Your **навички** (skills)\n- Your **рівень** in different areas\n\n**Example:**\nУ мене п'ять років **досвіду** роботи в IT. Мої головні **навички** — програмування та аналіз даних. Мій **рівень** англійської — просунутий, а української — середній.\n\n### Discuss Opportunities\n\nTalk about:\n- **Можливості** you have\n- **Варіанти** for the future\n- **Ризики** you face\n\n---\n\n# Activities\n\n## quiz: Life Vocabulary\n\n> Choose the correct word.\n\n1. У мене великий ___ роботи.\n   - [x] досвід\n   - [ ] переживання\n\n2. Це моя ___ .\n   - [x] відповідальність\n   - [ ] право\n\n3. У нас кілька ___ .\n   - [x] варіантів\n   - [ ] досвідів\n\n4. Яка ___ на роботі?\n   - [x] ситуація\n   - [ ] навичка\n\n5. Мені потрібна ___ .\n   - [x] стабільність\n   - [ ] невизначеність\n\n6. Які ваші ___ на роботі?\n   - [x] обов'язки\n   - [ ] права\n\n## match-up: Word Categories\n\n| Experience | Opportunity | Responsibility |\n|------------|-------------|----------------|\n| досвід | можливість | відповідальність |\n| знання | шанс | обов'язок |\n| навичка | вибір | борг |\n\n## fill-in: Complete the Paragraph\n\n> Я маю великий ___ (experience) роботи. У мене хороші ___ (skills) і високий ___ (level) кваліфікації. Зараз я шукаю нові ___ (opportunities). Мої ___ (duties) включають управління проєктами. Я готовий до ___ (changes) і нових викликів.\n\n**Answers:** досвід, навички, рівень, можливості, обов'язки, змін\n\n---",
     "immersiveSections": [
       {
-        "id": "warm-up-розминка",
-        "title": "warm-up | Розминка",
-        "content": "### Життєва лексика | Life Vocabulary\n\nУ модулі 95 ми вивчили ідеї та проблеми. Тепер: лексика для обговорення **життєвого досвіду**.\n\nModule 95 covered ideas and problems. Now: vocabulary for discussing **life experiences**.\n\n- Який досвід ви маєте? | What experiences have you had?\n- Які можливості у вас є? | What opportunities do you have?\n- Яку відповідальність ви несете? | What responsibilities do you carry?",
-        "type": "topic"
+        "id": "section-зміст-уроку-lesson-content",
+        "type": "content",
+        "title": "Зміст уроку | Lesson Content",
+        "content": "## warm-up | Розминка\n\n### Життєва лексика | Life Vocabulary\n\nУ модулі 95 ми вивчили ідеї та проблеми. Тепер: лексика для обговорення **життєвого досвіду**.\n\nModule 95 covered ideas and problems. Now: vocabulary for discussing **life experiences**.\n\n- Який досвід ви маєте? | What experiences have you had?\n- Які можливості у вас є? | What opportunities do you have?\n- Яку відповідальність ви несете? | What responsibilities do you carry?\n\n## presentation | Презентація\n\n### Experience and Knowledge\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| досвід | /ˈdosvʲid/ | experience | У мене великий досвід. |\n| переживання | /pɛrɛʒɪˈvɑnʲːɑ/ | experience (emotional) | Це було сильне переживання. |\n| знання | /znɑnʲˈːɑ/ | knowledge | Знання — сила. |\n| навичка | /nɑˈvɪt͡ʃkɑ/ | skill | Корисна навичка. |\n| вміння | /vˈmʲinʲːɑ/ | ability, skill | Вміння спілкуватися. |\n| рівень | /ˈrʲivɛnʲ/ | level | Високий рівень знань. |\n| розвиток | /ˈrozvɪtok/ | development | Професійний розвиток. |\n| освіта | /osˈvʲitɑ/ | education | Вища освіта. |\n\n**Usage examples:**\n\n- У мене п'ять років **досвіду** роботи. - I have five years of work experience.\n- Це було незабутнє **переживання**. - It was an unforgettable experience.\n- Він має глибокі **знання** в цій галузі. - He has deep knowledge in this field.\n- Мені потрібно покращити свої **навички**. - I need to improve my skills.\n- Який ваш **рівень** української? - What's your Ukrainian level?\n\n### Opportunities and Chances\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| можливість | /moʒˈlɪvʲistʲ/ | opportunity, possibility | Це чудова можливість. |\n| шанс | /ʃɑns/ | chance | Дай йому шанс! |\n| нагода | /nɑˈɦodɑ/ | occasion, opportunity | З нагоди дня народження. |\n| вибір | /ˈvɪbʲir/ | choice | У мене є вибір. |\n| варіант | /vɑrʲiˈɑnt/ | option | Це єдиний варіант. |\n| альтернатива | /ɑlʲtɛrnɑˈtɪvɑ/ | alternative | Немає альтернативи. |\n| перспектива | /pɛrspɛkˈtɪvɑ/ | perspective, prospect | Хороші перспективи. |\n\n**Usage examples:**\n\n- Це унікальна **можливість**! - This is a unique opportunity!\n- Дай мені ще один **шанс**. - Give me one more chance.\n- У нас є кілька **варіантів**. - We have several options.\n- Який **вибір** ти зробив? - What choice did you make?\n- У цій компанії хороші **перспективи**. - This company has good prospects.\n\n### Responsibility and Obligation\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| відповідальність | /vʲidpovʲidɑlʲˈnʲistʲ/ | responsibility | Це моя відповідальність. |\n| обов'язок | /oboˈvjɑzok/ | duty, obligation | Це мій обов'язок. |\n| обов'язки | /oboˈvjɑzkɪ/ | duties (pl) | Які ваші обов'язки? |\n| право | /ˈprɑvo/ | right | Маю право знати. |\n| зобов'язання | /zoboˈvjɑzɑnʲːɑ/ | commitment, obligation | Виконати зобов'язання. |\n| борг | /borɦ/ | debt, duty | Моральний борг. |\n\n**Usage examples:**\n\n- Беру на себе **відповідальність**. - I take responsibility.\n- Це ваш **обов'язок**. - This is your duty.\n- Які ваші **обов'язки** на роботі? - What are your duties at work?\n- Ви маєте **право** на відпочинок. - You have the right to rest.\n- Я виконав свої **зобов'язання**. - I fulfilled my obligations.\n\n### Situation and Circumstances\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| ситуація | /sɪtuˈɑt͡sʲijɑ/ | situation | Складна ситуація. |\n| обставини | /obˈstɑvɪnɪ/ | circumstances | За таких обставин... |\n| умови | /uˈmovɪ/ | conditions | Складні умови. |\n| стан | /stɑn/ | state, condition | Поганий стан здоров'я. |\n| становище | /stɑˈnovɪʃt͡ʃɛ/ | position, situation | Важке становище. |\n| середовище | /sɛrɛˈdovɪʃt͡ʃɛ/ | environment | Робоче середовище. |\n\n**Usage examples:**\n\n- Яка **ситуація** на роботі? - What's the situation at work?\n- За таких **обставин** я не можу допомогти. - Under these circumstances, I can't help.\n- Які **умови** контракту? - What are the contract conditions?\n- Він у поганому **стані**. - He's in bad condition.\n\n### Change and Stability\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| зміна | /ˈzmʲinɑ/ | change | Потрібні зміни. |\n| зміни | /ˈzmʲinɪ/ | changes (pl) | Великі зміни. |\n| стабільність | /stɑˈbʲilʲnʲistʲ/ | stability | Фінансова стабільність. |\n| невизначеність | /nɛvɪznɑˈt͡ʃɛnʲistʲ/ | uncertainty | Час невизначеності. |\n| ризик | /ˈrɪzɪk/ | risk | Великий ризик. |\n| безпека | /bɛzˈpɛkɑ/ | safety, security | Безпека праці. |\n\n**Usage examples:**\n\n- Ми готові до **змін**. - We're ready for changes.\n- Мені потрібна **стабільність**. - I need stability.\n- В умовах **невизначеності** важко планувати. - It's hard to plan in uncertainty.\n- Це пов'язано з **ризиком**. - This involves risk.\n\n### Verbs for Life Situations\n\n| Ukrainian | English | Aspect |\n|-----------|---------|--------|\n| переживати / пережити | to experience, go through | impf/pf |\n| стикатися / зіткнутися | to encounter, face | impf/pf |\n| використовувати / використати | to use | impf/pf |\n| вибирати / вибрати | to choose | impf/pf |\n| ризикувати | to risk | impf |\n| покращувати / покращити | to improve | impf/pf |\n| розвивати / розвинути | to develop | impf/pf |\n\n## practice | Практика\n\n### Complete with Correct Word\n\n1. У мене десять років ___ (experience).\n   > [!answer] **досвіду**\n2. Це чудова ___ (opportunity).\n   > [!answer] **можливість**\n3. Яка ваша ___ (responsibility) в цьому?\n   > [!answer] **відповідальність**\n4. Який ваш ___ (level) української?\n   > [!answer] **рівень**\n5. Ми зіткнулися з важкою ___ (situation).\n   > [!answer] **ситуацією**\n6. Немає ___ (alternative).\n   > [!answer] **альтернативи**\n\n### Match Opposites\n\n| Word | Opposite |\n|------|----------|\n| стабільність | невизначеність |\n| можливість | перешкода |\n| успіх | невдача |\n| безпека | ризик |\n| обов'язок | право |\n\n### Discussion Questions\n\nAnswer using abstract vocabulary:\n\n1. Який **досвід** ви маєте у вивченні мов?\n2. Яка найважливіша **навичка** для вашої роботи?\n3. Які **можливості** дає знання української?\n4. Які ваші **обов'язки** вдома/на роботі?\n5. Які **зміни** ви хочете внести у своє життя?\n\n### Translate to Ukrainian\n\n1. I have a lot of experience.\n   > [!answer] **У мене багато досвіду.**\n2. This is my responsibility.\n   > [!answer] **Це моя відповідальність.**\n3. We have several options.\n   > [!answer] **У нас є кілька варіантів.**\n4. Under these circumstances...\n   > [!answer] **За таких обставин...**\n5. I need stability.\n   > [!answer] **Мені потрібна стабільність.**\n\n## production | Продукція\n\n### Describe Your Experience\n\nUse vocabulary to describe:\n- Your **досвід** (experience)\n- Your **навички** (skills)\n- Your **рівень** in different areas\n\n**Example:**\nУ мене п'ять років **досвіду** роботи в IT. Мої головні **навички** — програмування та аналіз даних. Мій **рівень** англійської — просунутий, а української — середній.\n\n### Discuss Opportunities\n\nTalk about:\n- **Можливості** you have\n- **Варіанти** for the future\n- **Ризики** you face\n\n---\n\n\n---\n\n\n---"
       },
       {
-        "id": "presentation-презентація",
-        "title": "presentation | Презентація",
-        "content": "### Experience and Knowledge\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| досвід | /ˈdosvʲid/ | experience | У мене великий досвід. |\n| переживання | /pɛrɛʒɪˈvɑnʲːɑ/ | experience (emotional) | Це було сильне переживання. |\n| знання | /znɑnʲˈːɑ/ | knowledge | Знання — сила. |\n| навичка | /nɑˈvɪt͡ʃkɑ/ | skill | Корисна навичка. |\n| вміння | /vˈmʲinʲːɑ/ | ability, skill | Вміння спілкуватися. |\n| рівень | /ˈrʲivɛnʲ/ | level | Високий рівень знань. |\n| розвиток | /ˈrozvɪtok/ | development | Професійний розвиток. |\n| освіта | /osˈvʲitɑ/ | education | Вища освіта. |\n\n**Usage examples:**\n\n- У мене п'ять років **досвіду** роботи. - I have five years of work experience.\n- Це було незабутнє **переживання**. - It was an unforgettable experience.\n- Він має глибокі **знання** в цій галузі. - He has deep knowledge in this field.\n- Мені потрібно покращити свої **навички**. - I need to improve my skills.\n- Який ваш **рівень** української? - What's your Ukrainian level?\n\n### Opportunities and Chances\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| можливість | /moʒˈlɪvʲistʲ/ | opportunity, possibility | Це чудова можливість. |\n| шанс | /ʃɑns/ | chance | Дай йому шанс! |\n| нагода | /nɑˈɦodɑ/ | occasion, opportunity | З нагоди дня народження. |\n| вибір | /ˈvɪbʲir/ | choice | У мене є вибір. |\n| варіант | /vɑrʲiˈɑnt/ | option | Це єдиний варіант. |\n| альтернатива | /ɑlʲtɛrnɑˈtɪvɑ/ | alternative | Немає альтернативи. |\n| перспектива | /pɛrspɛkˈtɪvɑ/ | perspective, prospect | Хороші перспективи. |\n\n**Usage examples:**\n\n- Це унікальна **можливість**! - This is a unique opportunity!\n- Дай мені ще один **шанс**. - Give me one more chance.\n- У нас є кілька **варіантів**. - We have several options.\n- Який **вибір** ти зробив? - What choice did you make?\n- У цій компанії хороші **перспективи**. - This company has good prospects.\n\n### Responsibility and Obligation\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| відповідальність | /vʲidpovʲidɑlʲˈnʲistʲ/ | responsibility | Це моя відповідальність. |\n| обов'язок | /oboˈvjɑzok/ | duty, obligation | Це мій обов'язок. |\n| обов'язки | /oboˈvjɑzkɪ/ | duties (pl) | Які ваші обов'язки? |\n| право | /ˈprɑvo/ | right | Маю право знати. |\n| зобов'язання | /zoboˈvjɑzɑnʲːɑ/ | commitment, obligation | Виконати зобов'язання. |\n| борг | /borɦ/ | debt, duty | Моральний борг. |\n\n**Usage examples:**\n\n- Беру на себе **відповідальність**. - I take responsibility.\n- Це ваш **обов'язок**. - This is your duty.\n- Які ваші **обов'язки** на роботі? - What are your duties at work?\n- Ви маєте **право** на відпочинок. - You have the right to rest.\n- Я виконав свої **зобов'язання**. - I fulfilled my obligations.\n\n### Situation and Circumstances\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| ситуація | /sɪtuˈɑt͡sʲijɑ/ | situation | Складна ситуація. |\n| обставини | /obˈstɑvɪnɪ/ | circumstances | За таких обставин... |\n| умови | /uˈmovɪ/ | conditions | Складні умови. |\n| стан | /stɑn/ | state, condition | Поганий стан здоров'я. |\n| становище | /stɑˈnovɪʃt͡ʃɛ/ | position, situation | Важке становище. |\n| середовище | /sɛrɛˈdovɪʃt͡ʃɛ/ | environment | Робоче середовище. |\n\n**Usage examples:**\n\n- Яка **ситуація** на роботі? - What's the situation at work?\n- За таких **обставин** я не можу допомогти. - Under these circumstances, I can't help.\n- Які **умови** контракту? - What are the contract conditions?\n- Він у поганому **стані**. - He's in bad condition.\n\n### Change and Stability\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| зміна | /ˈzmʲinɑ/ | change | Потрібні зміни. |\n| зміни | /ˈzmʲinɪ/ | changes (pl) | Великі зміни. |\n| стабільність | /stɑˈbʲilʲnʲistʲ/ | stability | Фінансова стабільність. |\n| невизначеність | /nɛvɪznɑˈt͡ʃɛnʲistʲ/ | uncertainty | Час невизначеності. |\n| ризик | /ˈrɪzɪk/ | risk | Великий ризик. |\n| безпека | /bɛzˈpɛkɑ/ | safety, security | Безпека праці. |\n\n**Usage examples:**\n\n- Ми готові до **змін**. - We're ready for changes.\n- Мені потрібна **стабільність**. - I need stability.\n- В умовах **невизначеності** важко планувати. - It's hard to plan in uncertainty.\n- Це пов'язано з **ризиком**. - This involves risk.\n\n### Verbs for Life Situations\n\n| Ukrainian | English | Aspect |\n|-----------|---------|--------|\n| переживати / пережити | to experience, go through | impf/pf |\n| стикатися / зіткнутися | to encounter, face | impf/pf |\n| використовувати / використати | to use | impf/pf |\n| вибирати / вибрати | to choose | impf/pf |\n| ризикувати | to risk | impf |\n| покращувати / покращити | to improve | impf/pf |\n| розвивати / розвинути | to develop | impf/pf |",
-        "type": "topic"
-      },
-      {
-        "id": "practice-практика",
-        "title": "practice | Практика",
-        "content": "### Complete with Correct Word\n\n1. У мене десять років ___ (experience). → **досвіду**\n2. Це чудова ___ (opportunity). → **можливість**\n3. Яка ваша ___ (responsibility) в цьому? → **відповідальність**\n4. Який ваш ___ (level) української? → **рівень**\n5. Ми зіткнулися з важкою ___ (situation). → **ситуацією**\n6. Немає ___ (alternative). → **альтернативи**\n\n### Match Opposites\n\n| Word | Opposite |\n|------|----------|\n| стабільність | невизначеність |\n| можливість | перешкода |\n| успіх | невдача |\n| безпека | ризик |\n| обов'язок | право |\n\n### Discussion Questions\n\nAnswer using abstract vocabulary:\n\n1. Який **досвід** ви маєте у вивченні мов?\n2. Яка найважливіша **навичка** для вашої роботи?\n3. Які **можливості** дає знання української?\n4. Які ваші **обов'язки** вдома/на роботі?\n5. Які **зміни** ви хочете внести у своє життя?\n\n### Translate to Ukrainian\n\n1. I have a lot of experience. → **У мене багато досвіду.**\n2. This is my responsibility. → **Це моя відповідальність.**\n3. We have several options. → **У нас є кілька варіантів.**\n4. Under these circumstances... → **За таких обставин...**\n5. I need stability. → **Мені потрібна стабільність.**",
-        "type": "topic"
-      },
-      {
-        "id": "production-продукція",
-        "title": "production | Продукція",
-        "content": "### Describe Your Experience\n\nUse vocabulary to describe:\n- Your **досвід** (experience)\n- Your **навички** (skills)\n- Your **рівень** in different areas\n\n**Example:**\nУ мене п'ять років **досвіду** роботи в IT. Мої головні **навички** — програмування та аналіз даних. Мій **рівень** англійської — просунутий, а української — середній.\n\n### Discuss Opportunities\n\nTalk about:\n- **Можливості** you have\n- **Варіанти** for the future\n- **Ризики** you face\n\n---",
-        "type": "topic"
-      },
-      {
-        "id": "activities",
-        "title": "Activities",
-        "content": "## quiz: Life Vocabulary\n\n> Choose the correct word.\n\n1. У мене великий ___ роботи.\n   - [x] досвід\n   - [ ] переживання\n\n2. Це моя ___ .\n   - [x] відповідальність\n   - [ ] право\n\n3. У нас кілька ___ .\n   - [x] варіантів\n   - [ ] досвідів\n\n4. Яка ___ на роботі?\n   - [x] ситуація\n   - [ ] навичка\n\n5. Мені потрібна ___ .\n   - [x] стабільність\n   - [ ] невизначеність\n\n6. Які ваші ___ на роботі?\n   - [x] обов'язки\n   - [ ] права\n\n## match-up: Word Categories\n\n| Experience | Opportunity | Responsibility |\n|------------|-------------|----------------|\n| досвід | можливість | відповідальність |\n| знання | шанс | обов'язок |\n| навичка | вибір | борг |\n\n## fill-in: Complete the Paragraph\n\n> Я маю великий ___ (experience) роботи. У мене хороші ___ (skills) і високий ___ (level) кваліфікації. Зараз я шукаю нові ___ (opportunities). Мої ___ (duties) включають управління проєктами. Я готовий до ___ (changes) і нових викликів.\n\n**Answers:** досвід, навички, рівень, можливості, обов'язки, змін\n\n---",
-        "type": "activities"
-      },
-      {
-        "id": "vocabulary",
-        "title": "Vocabulary",
-        "content": "| Word | IPA | English | Gender |\n|------|-----|---------|--------|\n| досвід | /ˈdosvʲid/ | experience | m |\n| переживання | /pɛrɛʒɪˈvɑnʲːɑ/ | experience (emotional) | n |\n| знання | /znɑnʲˈːɑ/ | knowledge | n (usually pl) |\n| навичка | /nɑˈvɪt͡ʃkɑ/ | skill | f |\n| вміння | /vˈmʲinʲːɑ/ | ability | n |\n| можливість | /moʒˈlɪvʲistʲ/ | opportunity | f |\n| шанс | /ʃɑns/ | chance | m |\n| вибір | /ˈvɪbʲir/ | choice | m |\n| варіант | /vɑrʲiˈɑnt/ | option | m |\n| відповідальність | /vʲidpovʲidɑlʲˈnʲistʲ/ | responsibility | f |\n| обов'язок | /oboˈvjɑzok/ | duty | m |\n| ситуація | /sɪtuˈɑt͡sʲijɑ/ | situation | f |\n| умови | /uˈmovɪ/ | conditions | pl |\n| зміна | /ˈzmʲinɑ/ | change | f |\n| стабільність | /stɑˈbʲilʲnʲistʲ/ | stability | f |\n| ризик | /ˈrɪzɪk/ | risk | m |\n\n---",
-        "type": "vocabulary"
-      },
-      {
-        "id": "summary",
+        "id": "section-summary",
+        "type": "summary",
         "title": "Summary",
         "content": "## Key Vocabulary by Category\n\n### Experience & Skills\nдосвід, знання, навичка, вміння, рівень, освіта\n\n### Opportunities\nможливість, шанс, вибір, варіант, альтернатива, перспектива\n\n### Responsibility\nвідповідальність, обов'язок, право, зобов'язання\n\n### Situation\nситуація, обставини, умови, стан, середовище\n\n### Change\nзміна, стабільність, невизначеність, ризик, безпека\n\n## Useful Expressions\n\n- У мене є досвід... - I have experience...\n- Це моя відповідальність. - This is my responsibility.\n- Яка ситуація? - What's the situation?\n- У нас є кілька варіантів. - We have several options.\n- Готовий до змін. - Ready for changes.\n\n> **Key Takeaways**\n>\n> - Abstract vocabulary helps discuss life situations\n> - Many important abstract nouns are feminine (-ість endings)\n> - Use these words in job interviews, discussions, planning\n> - Practice forming sentences with these concepts",
-        "type": "summary"
+        "titleUk": "Підсумок"
       }
-    ]
+    ],
+    "rawMarkdown": "---\nmodule: 96\ntitle: \"Abstract Concepts II\"\nsubtitle: \"Experience, Opportunity, and Responsibility\"\nlevel: B1\nphase: B1.1\nduration: 45\ntransliteration: none\ntags: [vocabulary, abstract, concepts, life]\nobjectives:\n  - Learn vocabulary for life experiences\n  - Discuss opportunities and challenges\n  - Express responsibility and obligation\n  - Use abstract nouns in real contexts\n---\n\n# Зміст уроку | Lesson Content\n\n## warm-up | Розминка\n\n### Життєва лексика | Life Vocabulary\n\nУ модулі 95 ми вивчили ідеї та проблеми. Тепер: лексика для обговорення **життєвого досвіду**.\n\nModule 95 covered ideas and problems. Now: vocabulary for discussing **life experiences**.\n\n- Який досвід ви маєте? | What experiences have you had?\n- Які можливості у вас є? | What opportunities do you have?\n- Яку відповідальність ви несете? | What responsibilities do you carry?\n\n## presentation | Презентація\n\n### Experience and Knowledge\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| досвід | /ˈdosvʲid/ | experience | У мене великий досвід. |\n| переживання | /pɛrɛʒɪˈvɑnʲːɑ/ | experience (emotional) | Це було сильне переживання. |\n| знання | /znɑnʲˈːɑ/ | knowledge | Знання — сила. |\n| навичка | /nɑˈvɪt͡ʃkɑ/ | skill | Корисна навичка. |\n| вміння | /vˈmʲinʲːɑ/ | ability, skill | Вміння спілкуватися. |\n| рівень | /ˈrʲivɛnʲ/ | level | Високий рівень знань. |\n| розвиток | /ˈrozvɪtok/ | development | Професійний розвиток. |\n| освіта | /osˈvʲitɑ/ | education | Вища освіта. |\n\n**Usage examples:**\n\n- У мене п'ять років **досвіду** роботи. - I have five years of work experience.\n- Це було незабутнє **переживання**. - It was an unforgettable experience.\n- Він має глибокі **знання** в цій галузі. - He has deep knowledge in this field.\n- Мені потрібно покращити свої **навички**. - I need to improve my skills.\n- Який ваш **рівень** української? - What's your Ukrainian level?\n\n### Opportunities and Chances\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| можливість | /moʒˈlɪvʲistʲ/ | opportunity, possibility | Це чудова можливість. |\n| шанс | /ʃɑns/ | chance | Дай йому шанс! |\n| нагода | /nɑˈɦodɑ/ | occasion, opportunity | З нагоди дня народження. |\n| вибір | /ˈvɪbʲir/ | choice | У мене є вибір. |\n| варіант | /vɑrʲiˈɑnt/ | option | Це єдиний варіант. |\n| альтернатива | /ɑlʲtɛrnɑˈtɪvɑ/ | alternative | Немає альтернативи. |\n| перспектива | /pɛrspɛkˈtɪvɑ/ | perspective, prospect | Хороші перспективи. |\n\n**Usage examples:**\n\n- Це унікальна **можливість**! - This is a unique opportunity!\n- Дай мені ще один **шанс**. - Give me one more chance.\n- У нас є кілька **варіантів**. - We have several options.\n- Який **вибір** ти зробив? - What choice did you make?\n- У цій компанії хороші **перспективи**. - This company has good prospects.\n\n### Responsibility and Obligation\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| відповідальність | /vʲidpovʲidɑlʲˈnʲistʲ/ | responsibility | Це моя відповідальність. |\n| обов'язок | /oboˈvjɑzok/ | duty, obligation | Це мій обов'язок. |\n| обов'язки | /oboˈvjɑzkɪ/ | duties (pl) | Які ваші обов'язки? |\n| право | /ˈprɑvo/ | right | Маю право знати. |\n| зобов'язання | /zoboˈvjɑzɑnʲːɑ/ | commitment, obligation | Виконати зобов'язання. |\n| борг | /borɦ/ | debt, duty | Моральний борг. |\n\n**Usage examples:**\n\n- Беру на себе **відповідальність**. - I take responsibility.\n- Це ваш **обов'язок**. - This is your duty.\n- Які ваші **обов'язки** на роботі? - What are your duties at work?\n- Ви маєте **право** на відпочинок. - You have the right to rest.\n- Я виконав свої **зобов'язання**. - I fulfilled my obligations.\n\n### Situation and Circumstances\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| ситуація | /sɪtuˈɑt͡sʲijɑ/ | situation | Складна ситуація. |\n| обставини | /obˈstɑvɪnɪ/ | circumstances | За таких обставин... |\n| умови | /uˈmovɪ/ | conditions | Складні умови. |\n| стан | /stɑn/ | state, condition | Поганий стан здоров'я. |\n| становище | /stɑˈnovɪʃt͡ʃɛ/ | position, situation | Важке становище. |\n| середовище | /sɛrɛˈdovɪʃt͡ʃɛ/ | environment | Робоче середовище. |\n\n**Usage examples:**\n\n- Яка **ситуація** на роботі? - What's the situation at work?\n- За таких **обставин** я не можу допомогти. - Under these circumstances, I can't help.\n- Які **умови** контракту? - What are the contract conditions?\n- Він у поганому **стані**. - He's in bad condition.\n\n### Change and Stability\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| зміна | /ˈzmʲinɑ/ | change | Потрібні зміни. |\n| зміни | /ˈzmʲinɪ/ | changes (pl) | Великі зміни. |\n| стабільність | /stɑˈbʲilʲnʲistʲ/ | stability | Фінансова стабільність. |\n| невизначеність | /nɛvɪznɑˈt͡ʃɛnʲistʲ/ | uncertainty | Час невизначеності. |\n| ризик | /ˈrɪzɪk/ | risk | Великий ризик. |\n| безпека | /bɛzˈpɛkɑ/ | safety, security | Безпека праці. |\n\n**Usage examples:**\n\n- Ми готові до **змін**. - We're ready for changes.\n- Мені потрібна **стабільність**. - I need stability.\n- В умовах **невизначеності** важко планувати. - It's hard to plan in uncertainty.\n- Це пов'язано з **ризиком**. - This involves risk.\n\n### Verbs for Life Situations\n\n| Ukrainian | English | Aspect |\n|-----------|---------|--------|\n| переживати / пережити | to experience, go through | impf/pf |\n| стикатися / зіткнутися | to encounter, face | impf/pf |\n| використовувати / використати | to use | impf/pf |\n| вибирати / вибрати | to choose | impf/pf |\n| ризикувати | to risk | impf |\n| покращувати / покращити | to improve | impf/pf |\n| розвивати / розвинути | to develop | impf/pf |\n\n## practice | Практика\n\n### Complete with Correct Word\n\n1. У мене десять років ___ (experience).\n   > [!answer] **досвіду**\n2. Це чудова ___ (opportunity).\n   > [!answer] **можливість**\n3. Яка ваша ___ (responsibility) в цьому?\n   > [!answer] **відповідальність**\n4. Який ваш ___ (level) української?\n   > [!answer] **рівень**\n5. Ми зіткнулися з важкою ___ (situation).\n   > [!answer] **ситуацією**\n6. Немає ___ (alternative).\n   > [!answer] **альтернативи**\n\n### Match Opposites\n\n| Word | Opposite |\n|------|----------|\n| стабільність | невизначеність |\n| можливість | перешкода |\n| успіх | невдача |\n| безпека | ризик |\n| обов'язок | право |\n\n### Discussion Questions\n\nAnswer using abstract vocabulary:\n\n1. Який **досвід** ви маєте у вивченні мов?\n2. Яка найважливіша **навичка** для вашої роботи?\n3. Які **можливості** дає знання української?\n4. Які ваші **обов'язки** вдома/на роботі?\n5. Які **зміни** ви хочете внести у своє життя?\n\n### Translate to Ukrainian\n\n1. I have a lot of experience.\n   > [!answer] **У мене багато досвіду.**\n2. This is my responsibility.\n   > [!answer] **Це моя відповідальність.**\n3. We have several options.\n   > [!answer] **У нас є кілька варіантів.**\n4. Under these circumstances...\n   > [!answer] **За таких обставин...**\n5. I need stability.\n   > [!answer] **Мені потрібна стабільність.**\n\n## production | Продукція\n\n### Describe Your Experience\n\nUse vocabulary to describe:\n- Your **досвід** (experience)\n- Your **навички** (skills)\n- Your **рівень** in different areas\n\n**Example:**\nУ мене п'ять років **досвіду** роботи в IT. Мої головні **навички** — програмування та аналіз даних. Мій **рівень** англійської — просунутий, а української — середній.\n\n### Discuss Opportunities\n\nTalk about:\n- **Можливості** you have\n- **Варіанти** for the future\n- **Ризики** you face\n\n---\n\n# Activities\n\n## quiz: Life Vocabulary\n\n> Choose the correct word.\n\n1. У мене великий ___ роботи.\n   - [x] досвід\n   - [ ] переживання\n\n2. Це моя ___ .\n   - [x] відповідальність\n   - [ ] право\n\n3. У нас кілька ___ .\n   - [x] варіантів\n   - [ ] досвідів\n\n4. Яка ___ на роботі?\n   - [x] ситуація\n   - [ ] навичка\n\n5. Мені потрібна ___ .\n   - [x] стабільність\n   - [ ] невизначеність\n\n6. Які ваші ___ на роботі?\n   - [x] обов'язки\n   - [ ] права\n\n## match-up: Word Categories\n\n| Experience | Opportunity | Responsibility |\n|------------|-------------|----------------|\n| досвід | можливість | відповідальність |\n| знання | шанс | обов'язок |\n| навичка | вибір | борг |\n\n## fill-in: Complete the Paragraph\n\n> Я маю великий ___ (experience) роботи. У мене хороші ___ (skills) і високий ___ (level) кваліфікації. Зараз я шукаю нові ___ (opportunities). Мої ___ (duties) включають управління проєктами. Я готовий до ___ (changes) і нових викликів.\n\n**Answers:** досвід, навички, рівень, можливості, обов'язки, змін\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | Gender |\n|------|-----|---------|--------|\n| досвід | /ˈdosvʲid/ | experience | m |\n| переживання | /pɛrɛʒɪˈvɑnʲːɑ/ | experience (emotional) | n |\n| знання | /znɑnʲˈːɑ/ | knowledge | n (usually pl) |\n| навичка | /nɑˈvɪt͡ʃkɑ/ | skill | f |\n| вміння | /vˈmʲinʲːɑ/ | ability | n |\n| можливість | /moʒˈlɪvʲistʲ/ | opportunity | f |\n| шанс | /ʃɑns/ | chance | m |\n| вибір | /ˈvɪbʲir/ | choice | m |\n| варіант | /vɑrʲiˈɑnt/ | option | m |\n| відповідальність | /vʲidpovʲidɑlʲˈnʲistʲ/ | responsibility | f |\n| обов'язок | /oboˈvjɑzok/ | duty | m |\n| ситуація | /sɪtuˈɑt͡sʲijɑ/ | situation | f |\n| умови | /uˈmovɪ/ | conditions | pl |\n| зміна | /ˈzmʲinɑ/ | change | f |\n| стабільність | /stɑˈbʲilʲnʲistʲ/ | stability | f |\n| ризик | /ˈrɪzɪk/ | risk | m |\n\n---\n\n# Summary\n\n## Key Vocabulary by Category\n\n### Experience & Skills\nдосвід, знання, навичка, вміння, рівень, освіта\n\n### Opportunities\nможливість, шанс, вибір, варіант, альтернатива, перспектива\n\n### Responsibility\nвідповідальність, обов'язок, право, зобов'язання\n\n### Situation\nситуація, обставини, умови, стан, середовище\n\n### Change\nзміна, стабільність, невизначеність, ризик, безпека\n\n## Useful Expressions\n\n- У мене є досвід... - I have experience...\n- Це моя відповідальність. - This is my responsibility.\n- Яка ситуація? - What's the situation?\n- У нас є кілька варіантів. - We have several options.\n- Готовий до змін. - Ready for changes.\n\n> **Key Takeaways**\n>\n> - Abstract vocabulary helps discuss life situations\n> - Many important abstract nouns are feminine (-ість endings)\n> - Use these words in job interviews, discussions, planning\n> - Practice forming sentences with these concepts\n"
   },
   "activities": [
     {
-      "id": "act-uk-B1-96-quiz",
+      "id": "act-b1-96-quiz",
       "type": "quiz",
       "title": "Life Vocabulary",
       "description": "Choose the correct word.",
       "content": {
         "type": "quiz",
-        "instructions": "Choose the correct word.",
         "questions": [
           {
             "question": "У мене великий ___ роботи.",
@@ -257,23 +124,17 @@
       "language": "uk",
       "difficultyLevel": "B1",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "abstract",
-        "concepts",
-        "life"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.292Z",
+      "modifiedAt": "2025-12-01T22:58:37.292Z"
     },
     {
-      "id": "act-uk-B1-96-matchup",
+      "id": "act-b1-96-matchup",
       "type": "match-up",
       "title": "Word Categories",
       "description": "Word Categories",
       "content": {
         "type": "match-up",
-        "instructions": "",
         "pairs": [
           {
             "left": "досвід",
@@ -296,41 +157,41 @@
       "language": "uk",
       "difficultyLevel": "B1",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "abstract",
-        "concepts",
-        "life"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.292Z",
+      "modifiedAt": "2025-12-01T22:58:37.292Z"
     },
     {
-      "id": "act-uk-B1-96-gapfill",
+      "id": "act-b1-96-gapfill",
       "type": "gap-fill",
       "title": "Complete the Paragraph",
       "description": "Я маю великий ___ (experience) роботи. У мене хороші ___ (skills) і високий ___ (level) кваліфікації. Зараз я шукаю нові ___ (opportunities). Мої ___ (duties) включають управління проєктами. Я готовий до ___ (changes) і нових викликів.",
       "content": {
         "type": "gap-fill",
-        "instructions": "Я маю великий ___ (experience) роботи. У мене хороші ___ (skills) і високий ___ (level) кваліфікації. Зараз я шукаю нові ___ (opportunities). Мої ___ (duties) включають управління проєктами. Я готовий до ___ (changes) і нових викликів.",
         "text": "Я маю великий ___ (experience) роботи. У мене хороші ___ (skills) і високий ___ (level) кваліфікації. Зараз я шукаю нові ___ (opportunities). Мої ___ (duties) включають управління проєктами. Я готовий до ___ (changes) і нових викликів.",
         "blanks": [
           {
+            "index": 0,
             "hint": "experience"
           },
           {
+            "index": 1,
             "hint": "skills"
           },
           {
+            "index": 2,
             "hint": "level"
           },
           {
+            "index": 3,
             "hint": "opportunities"
           },
           {
+            "index": 4,
             "hint": "duties"
           },
           {
+            "index": 5,
             "hint": "changes"
           }
         ],
@@ -349,14 +210,9 @@
       "language": "uk",
       "difficultyLevel": "B1",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "abstract",
-        "concepts",
-        "life"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.292Z",
+      "modifiedAt": "2025-12-01T22:58:37.292Z"
     }
   ],
   "vocabulary": {
@@ -367,148 +223,116 @@
     "transliterationMode": "none",
     "words": [
       {
-        "id": "v-m96-001",
+        "id": "v-dosvid-96-0",
         "uk": "досвід",
-        "translit": "",
-        "ipa": "/ˈdosvʲid/",
         "en": "experience",
-        "pos": "",
-        "gender": "m"
+        "pos": "m",
+        "ipa": "/ˈdosvʲid/"
       },
       {
-        "id": "v-m96-002",
+        "id": "v-perezhyvannya-96-1",
         "uk": "переживання",
-        "translit": "",
-        "ipa": "/pɛrɛʒɪˈvɑnʲːɑ/",
         "en": "experience (emotional)",
-        "pos": "",
-        "gender": "n"
+        "pos": "n",
+        "ipa": "/pɛrɛʒɪˈvɑnʲːɑ/"
       },
       {
-        "id": "v-m96-003",
+        "id": "v-znannya-96-2",
         "uk": "знання",
-        "translit": "",
-        "ipa": "/znɑnʲˈːɑ/",
         "en": "knowledge",
-        "pos": "",
-        "gender": "n (usually pl)"
+        "pos": "n (usually pl)",
+        "ipa": "/znɑnʲˈːɑ/"
       },
       {
-        "id": "v-m96-004",
+        "id": "v-navychka-96-3",
         "uk": "навичка",
-        "translit": "",
-        "ipa": "/nɑˈvɪt͡ʃkɑ/",
         "en": "skill",
-        "pos": "",
-        "gender": "f"
+        "pos": "f",
+        "ipa": "/nɑˈvɪt͡ʃkɑ/"
       },
       {
-        "id": "v-m96-005",
+        "id": "v-vminnya-96-4",
         "uk": "вміння",
-        "translit": "",
-        "ipa": "/vˈmʲinʲːɑ/",
         "en": "ability",
-        "pos": "",
-        "gender": "n"
+        "pos": "n",
+        "ipa": "/vˈmʲinʲːɑ/"
       },
       {
-        "id": "v-m96-006",
+        "id": "v-mozhlyvistь-96-5",
         "uk": "можливість",
-        "translit": "",
-        "ipa": "/moʒˈlɪvʲistʲ/",
         "en": "opportunity",
-        "pos": "",
-        "gender": "f"
+        "pos": "f",
+        "ipa": "/moʒˈlɪvʲistʲ/"
       },
       {
-        "id": "v-m96-007",
+        "id": "v-shans-96-6",
         "uk": "шанс",
-        "translit": "",
-        "ipa": "/ʃɑns/",
         "en": "chance",
-        "pos": "",
-        "gender": "m"
+        "pos": "m",
+        "ipa": "/ʃɑns/"
       },
       {
-        "id": "v-m96-008",
+        "id": "v-vybir-96-7",
         "uk": "вибір",
-        "translit": "",
-        "ipa": "/ˈvɪbʲir/",
         "en": "choice",
-        "pos": "",
-        "gender": "m"
+        "pos": "m",
+        "ipa": "/ˈvɪbʲir/"
       },
       {
-        "id": "v-m96-009",
+        "id": "v-variant-96-8",
         "uk": "варіант",
-        "translit": "",
-        "ipa": "/vɑrʲiˈɑnt/",
         "en": "option",
-        "pos": "",
-        "gender": "m"
+        "pos": "m",
+        "ipa": "/vɑrʲiˈɑnt/"
       },
       {
-        "id": "v-m96-010",
+        "id": "v-vidpovidalьnistь-96-9",
         "uk": "відповідальність",
-        "translit": "",
-        "ipa": "/vʲidpovʲidɑlʲˈnʲistʲ/",
         "en": "responsibility",
-        "pos": "",
-        "gender": "f"
+        "pos": "f",
+        "ipa": "/vʲidpovʲidɑlʲˈnʲistʲ/"
       },
       {
-        "id": "v-m96-011",
+        "id": "v-obov'yazok-96-10",
         "uk": "обов'язок",
-        "translit": "",
-        "ipa": "/oboˈvjɑzok/",
         "en": "duty",
-        "pos": "",
-        "gender": "m"
+        "pos": "m",
+        "ipa": "/oboˈvjɑzok/"
       },
       {
-        "id": "v-m96-012",
+        "id": "v-sytuatsiya-96-11",
         "uk": "ситуація",
-        "translit": "",
-        "ipa": "/sɪtuˈɑt͡sʲijɑ/",
         "en": "situation",
-        "pos": "",
-        "gender": "f"
+        "pos": "f",
+        "ipa": "/sɪtuˈɑt͡sʲijɑ/"
       },
       {
-        "id": "v-m96-013",
+        "id": "v-umovy-96-12",
         "uk": "умови",
-        "translit": "",
-        "ipa": "/uˈmovɪ/",
         "en": "conditions",
-        "pos": "",
-        "gender": "pl"
+        "pos": "pl",
+        "ipa": "/uˈmovɪ/"
       },
       {
-        "id": "v-m96-014",
+        "id": "v-zmina-96-13",
         "uk": "зміна",
-        "translit": "",
-        "ipa": "/ˈzmʲinɑ/",
         "en": "change",
-        "pos": "",
-        "gender": "f"
+        "pos": "f",
+        "ipa": "/ˈzmʲinɑ/"
       },
       {
-        "id": "v-m96-015",
+        "id": "v-stabilьnistь-96-14",
         "uk": "стабільність",
-        "translit": "",
-        "ipa": "/stɑˈbʲilʲnʲistʲ/",
         "en": "stability",
-        "pos": "",
-        "gender": "f"
+        "pos": "f",
+        "ipa": "/stɑˈbʲilʲnʲistʲ/"
       },
       {
-        "id": "v-m96-016",
+        "id": "v-ryzyk-96-15",
         "uk": "ризик",
-        "translit": "",
-        "ipa": "/ˈrɪzɪk/",
         "en": "risk",
-        "pos": "",
-        "gender": "m"
+        "pos": "m",
+        "ipa": "/ˈrɪzɪk/"
       }
     ]
   }

@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-A1-23",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "vocabulary-expansion",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -26,118 +25,49 @@
       "Months with у + locative (у січні)",
       "Telling time (Котра година?)"
     ],
-    "totalDuration": 50,
-    "transliterationMode": "full",
     "tags": [
       "vocabulary",
       "time",
       "practical"
     ],
-    "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
+    "totalDuration": 50,
+    "transliterationMode": "full",
     "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Time Is Everything\n\nTo make plans, set meetings, or just talk about your schedule, you need time vocabulary. Let's master days, months, and telling time in Ukrainian!\n\nKey questions:\n- **Котра година?** - What time is it?\n- **Який сьогодні день?** - What day is it today?\n- **Якого числа?** - What date?\n\n> 💡 **Did You Know?**\n>\n> Ukrainian uses different prepositions for \"on\" depending on what follows:\n> - Days: **у** понеділок (on Monday) - accusative\n> - Months: **у** січні (in January) - locative\n> - Dates: use ordinal numbers with genitive!"
-          }
-        ]
-      },
       {
         "id": "phase-presentation",
         "name": "presentation",
-        "duration": 15,
+        "duration": 17,
         "items": [
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "### Days of the Week (Дні тижня)\n\n| Ukrainian | Transliteration | English | Origin |\n|-----------|-----------------|---------|--------|\n| понеділок | ponedilok | Monday | \"after Sunday\" |\n| вівторок | vivtorok | Tuesday | \"second\" |\n| середа | sereda | Wednesday | \"middle\" |\n| четвер | chetver | Thursday | \"fourth\" |\n| п'ятниця | pyatnytsia | Friday | \"fifth\" |\n| субота | subota | Saturday | from Sabbath |\n| неділя | nedilya | Sunday | \"no work\" |\n\n**Using days:**\n- Сьогодні понеділок. (Today is Monday.)\n- **У** понеділок я працюю. (On Monday I work.)\n- Що ти робиш **у** середу? (What are you doing on Wednesday?)\n\n> 📜 **History Bite: Slavic Week**\n>\n> Ukrainian days reflect an ancient Slavic counting system:\n> - **Вівторок** = second (day after неділя)\n> - **Середа** = middle of the week\n> - **Четвер** = fourth\n> - **П'ятниця** = fifth\n>\n> \"Неділя\" (Sunday) means \"no work\" - it was the day of rest!"
+            "teacherNotes": "### Days of the Week (Дні тижня)\n\n| Ukrainian | Transliteration | English | Origin |\n|-----------|-----------------|---------|--------|\n| понеділок | ponedilok | Monday | \"after Sunday\" |\n| вівторок | vivtorok | Tuesday | \"second\" |\n| середа | sereda | Wednesday | \"middle\" |\n| четвер | chetver | Thursday | \"fourth\" |\n| п'ятниця | pyatnytsia | Friday | \"fifth\" |\n| субота | subota | Saturday | from Sabbath |\n| неділя | nedilya | Sunday | \"no work\" |\n\n**Using days:**\n- Сьогодні понеділок. (Today is Monday.)\n- **У** понеділок я працюю. (On Monday I work.)\n- Що ти робиш **у** середу? (What are you doing on Wednesday?)\n\n> 📜 **History Bite: Slavic Week**\n>\n> Ukrainian days reflect an ancient Slavic counting system:\n> - **Вівторок** = second (day after неділя)\n> - **Середа** = middle of the week\n> - **Четвер** = fourth\n> - **П'ятниця** = fifth\n>\n> \"Неділя\" (Sunday) means \"no work\" - it was the day of rest!\n\n### Months of the Year (Місяці року)\n\n| Ukrainian | Transliteration | English | Meaning |\n|-----------|-----------------|---------|---------|\n| січень | sichen | January | \"cutting\" (frost) |\n| лютий | lyutyi | February | \"fierce\" (cold) |\n| березень | berezen | March | birch tree |\n| квітень | kviten | April | flowers |\n| травень | traven | May | grass |\n| червень | cherven | June | red (berries) |\n| липень | lypen | July | linden tree |\n| серпень | serpen | August | sickle (harvest) |\n| вересень | veresen | September | heather |\n| жовтень | zhovten | October | yellow (leaves) |\n| листопад | lystopad | November | leaf fall |\n| грудень | hruden | December | frozen ground |\n\n> 🎯 **Fun Fact: Nature Calendar**\n>\n> Ukrainian months are NOT named after Roman gods like English months. They describe NATURE:\n> - Квітень = flowers bloom\n> - Листопад = leaves fall (literal translation!)\n> - Грудень = frozen lumps of earth\n>\n> This is a uniquely Slavic tradition shared with Polish, Czech, and Croatian!\n\n**Using months:**\n- Зараз березень. (It's March now.)\n- **У** січ**ні** холодно. (In January it's cold.) - locative!\n- Мій день народження **у** лип**ні**. (My birthday is in July.)\n\n### Seasons (Пори року)\n\n| Ukrainian | Transliteration | English | Months |\n|-----------|-----------------|---------|--------|\n| весна | vesna | spring | березень-травень |\n| літо | lito | summer | червень-серпень |\n| осінь | osin | autumn | вересень-листопад |\n| зима | zyma | winter | грудень-лютий |\n\n**Using seasons:**\n- **Навесні** тепло. (In spring it's warm.)\n- **Влітку** жарко. (In summer it's hot.)\n- **Восени** іде дощ. (In autumn it rains.)\n- **Взимку** холодно. (In winter it's cold.)\n\n> ⚡ **Pro Tip: Season Adverbs**\n>\n> Seasons have special adverb forms:\n> - весна → **навесні** (in spring)\n> - літо → **влітку** (in summer)\n> - осінь → **восени** (in autumn)\n> - зима → **взимку** (in winter)\n\n### Telling Time (Котра година?)\n\n**Hours:**\n\n| Time | Ukrainian | Explanation |\n|------|-----------|-------------|\n| 1:00 | перша година | first hour |\n| 2:00 | друга година | second hour |\n| 3:00 | третя година | third hour |\n| 4:00 | четверта година | fourth hour |\n| 5:00 | п'ята година | fifth hour |\n| 6:00 | шоста година | sixth hour |\n| 7:00 | сьома година | seventh hour |\n| 8:00 | восьма година | eighth hour |\n| 9:00 | дев'ята година | ninth hour |\n| 10:00 | десята година | tenth hour |\n| 11:00 | одинадцята година | eleventh hour |\n| 12:00 | дванадцята година | twelfth hour |\n\n**Asking time:**\n- **Котра година?** - What time is it?\n- **Зараз третя година.** - It's 3 o'clock now.\n- **О котрій годині?** - At what time?\n- **О дев'ятій.** - At 9.\n\n> 🔗 **Language Link: Ordinal Numbers**\n>\n> Telling time uses ordinal (not cardinal) numbers:\n> - один → перший → перша година\n> - два → другий → друга година\n>\n> The ordinals match feminine \"година\"!\n\n### Half & Quarter Hours\n\n| Time | Ukrainian |\n|------|-----------|\n| 2:30 | пів на третю (half toward third) |\n| 3:15 | чверть на четверту |\n| 3:45 | за чверть четверта |\n| 3:30 | пів на четверту |\n\n**Informal way (with numbers):**\n- 2:30 = дві тридцять\n- 3:15 = три п'ятнадцять\n- 3:45 = три сорок п'ять\n\n> 🌍 **Real World: Scheduling**\n>\n> - **Коли ми зустрінемося?** - When will we meet?\n> - **О шостій вечора.** - At 6 PM.\n> - **Зустріч о дев'ятій ранку.** - Meeting at 9 AM.\n> - **Поїзд о двадцять другій.** - Train at 22:00."
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Months of the Year (Місяці року)\n\n| Ukrainian | Transliteration | English | Meaning |\n|-----------|-----------------|---------|---------|\n| січень | sichen | January | \"cutting\" (frost) |\n| лютий | lyutyi | February | \"fierce\" (cold) |\n| березень | berezen | March | birch tree |\n| квітень | kviten | April | flowers |\n| травень | traven | May | grass |\n| червень | cherven | June | red (berries) |\n| липень | lypen | July | linden tree |\n| серпень | serpen | August | sickle (harvest) |\n| вересень | veresen | September | heather |\n| жовтень | zhovten | October | yellow (leaves) |\n| листопад | lystopad | November | leaf fall |\n| грудень | hruden | December | frozen ground |\n\n> 🎯 **Fun Fact: Nature Calendar**\n>\n> Ukrainian months are NOT named after Roman gods like English months. They describe NATURE:\n> - Квітень = flowers bloom\n> - Листопад = leaves fall (literal translation!)\n> - Грудень = frozen lumps of earth\n>\n> This is a uniquely Slavic tradition shared with Polish, Czech, and Croatian!\n\n**Using months:**\n- Зараз березень. (It's March now.)\n- **У** січ**ні** холодно. (In January it's cold.) - locative!\n- Мій день народження **у** лип**ні**. (My birthday is in July.)"
+            "teacherNotes": "### Days Practice\n\nAnswer:\n1. Який сьогодні день?\n   > [!answer] Сьогодні...\n2. What day comes after середа?\n   > [!answer] четвер\n3. What day comes before неділя?\n   > [!answer] субота\n4. When is the middle of the week?\n   > [!answer] середа\n\n### Months Practice\n\n1. When is it cold?\n   > [!answer] У січні, у лютому, у грудні\n2. When do leaves fall?\n   > [!answer] У листопаді\n3. When is it hot?\n   > [!answer] У липні, у серпні\n4. Your birthday month?\n   > [!answer] У... (+ locative)\n\n### Time Practice\n\nSay in Ukrainian:\n1. It's 5 o'clock.\n   > [!answer] Зараз п'ята година.\n2. At 3 PM.\n   > [!answer] О третій.\n3. At 9 in the morning.\n   > [!answer] О дев'ятій ранку.\n4. At 8 in the evening.\n   > [!answer] О восьмій вечора."
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Seasons (Пори року)\n\n| Ukrainian | Transliteration | English | Months |\n|-----------|-----------------|---------|--------|\n| весна | vesna | spring | березень-травень |\n| літо | lito | summer | червень-серпень |\n| осінь | osin | autumn | вересень-листопад |\n| зима | zyma | winter | грудень-лютий |\n\n**Using seasons:**\n- **Навесні** тепло. (In spring it's warm.)\n- **Влітку** жарко. (In summer it's hot.)\n- **Восени** іде дощ. (In autumn it rains.)\n- **Взимку** холодно. (In winter it's cold.)\n\n> ⚡ **Pro Tip: Season Adverbs**\n>\n> Seasons have special adverb forms:\n> - весна → **навесні** (in spring)\n> - літо → **влітку** (in summer)\n> - осінь → **восени** (in autumn)\n> - зима → **взимку** (in winter)"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Telling Time (Котра година?)\n\n**Hours:**\n\n| Time | Ukrainian | Explanation |\n|------|-----------|-------------|\n| 1:00 | перша година | first hour |\n| 2:00 | друга година | second hour |\n| 3:00 | третя година | third hour |\n| 4:00 | четверта година | fourth hour |\n| 5:00 | п'ята година | fifth hour |\n| 6:00 | шоста година | sixth hour |\n| 7:00 | сьома година | seventh hour |\n| 8:00 | восьма година | eighth hour |\n| 9:00 | дев'ята година | ninth hour |\n| 10:00 | десята година | tenth hour |\n| 11:00 | одинадцята година | eleventh hour |\n| 12:00 | дванадцята година | twelfth hour |\n\n**Asking time:**\n- **Котра година?** - What time is it?\n- **Зараз третя година.** - It's 3 o'clock now.\n- **О котрій годині?** - At what time?\n- **О дев'ятій.** - At 9.\n\n> 🔗 **Language Link: Ordinal Numbers**\n>\n> Telling time uses ordinal (not cardinal) numbers:\n> - один → перший → перша година\n> - два → другий → друга година\n>\n> The ordinals match feminine \"година\"!"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Half & Quarter Hours\n\n| Time | Ukrainian |\n|------|-----------|\n| 2:30 | пів на третю (half toward third) |\n| 3:15 | чверть на четверту |\n| 3:45 | за чверть четверта |\n| 3:30 | пів на четверту |\n\n**Informal way (with numbers):**\n- 2:30 = дві тридцять\n- 3:15 = три п'ятнадцять\n- 3:45 = три сорок п'ять\n\n> 🌍 **Real World: Scheduling**\n>\n> - **Коли ми зустрінемося?** - When will we meet?\n> - **О шостій вечора.** - At 6 PM.\n> - **Зустріч о дев'ятій ранку.** - Meeting at 9 AM.\n> - **Поїзд о двадцять другій.** - Train at 22:00."
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A1-23-matchup"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Days Practice\n\nAnswer:\n1. Який сьогодні день? → Сьогодні...\n2. What day comes after середа? → четвер\n3. What day comes before неділя? → субота\n4. When is the middle of the week? → середа"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Months Practice\n\n1. When is it cold? → У січні, у лютому, у грудні\n2. When do leaves fall? → У листопаді\n3. When is it hot? → У липні, у серпні\n4. Your birthday month? → У... (+ locative)"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Time Practice\n\nSay in Ukrainian:\n1. It's 5 o'clock. → Зараз п'ята година.\n2. At 3 PM. → О третій.\n3. At 9 in the morning. → О дев'ятій ранку.\n4. At 8 in the evening. → О восьмій вечора."
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A1-23-quiz"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A1-23-groupsort"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Plan a Meeting\n\nArrange to meet someone:\nA: Коли ти вільний/вільна?\nB: У п'ятницю ввечері.\nA: О котрій годині?\nB: О сьомій.\nA: Добре, домовились!"
+            "teacherNotes": "### Plan a Meeting\n\nArrange to meet someone:\nA: Коли ти вільний/вільна?\nB: У п'ятницю ввечері.\nA: О котрій годині?\nB: О сьомій.\nA: Добре, домовились!\n\n---"
           }
         ]
       }
-    ]
+    ],
+    "createdAt": "2025-12-01T22:58:37.262Z",
+    "modifiedAt": "2025-12-01T22:58:37.262Z",
+    "version": 1
   },
   "activities": [
     {
-      "id": "act-uk-A1-23-matchup",
+      "id": "act-a1-23-matchup",
       "type": "match-up",
       "title": "Days of the Week",
       "description": "Match Ukrainian to English.",
       "content": {
         "type": "match-up",
-        "instructions": "Match Ukrainian to English.",
         "pairs": [
           {
             "left": "понеділок",
@@ -176,22 +106,17 @@
       "language": "uk",
       "difficultyLevel": "A1",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "time",
-        "practical"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.262Z",
+      "modifiedAt": "2025-12-01T22:58:37.262Z"
     },
     {
-      "id": "act-uk-A1-23-quiz",
+      "id": "act-a1-23-quiz",
       "type": "quiz",
       "title": "Time Expressions",
       "description": "Choose the correct answer.",
       "content": {
         "type": "quiz",
-        "instructions": "Choose the correct answer.",
         "questions": [
           {
             "question": "\"On Monday\" in Ukrainian:",
@@ -292,54 +217,57 @@
       "language": "uk",
       "difficultyLevel": "A1",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "time",
-        "practical"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.262Z",
+      "modifiedAt": "2025-12-01T22:58:37.262Z"
     },
     {
-      "id": "act-uk-A1-23-groupsort",
+      "id": "act-a1-23-groupsort",
       "type": "group-sort",
       "title": "Seasons & Months",
       "description": "Sort months into seasons.",
       "content": {
         "type": "group-sort",
-        "instructions": "Sort months into seasons.",
         "groups": [
           {
-            "name": "Весна (Spring)",
+            "id": "",
+            "name": "Весна",
             "items": [
               "березень",
               "квітень",
               "травень"
-            ]
+            ],
+            "nameUk": "Spring"
           },
           {
-            "name": "Літо (Summer)",
+            "id": "",
+            "name": "Літо",
             "items": [
               "червень",
               "липень",
               "серпень"
-            ]
+            ],
+            "nameUk": "Summer"
           },
           {
-            "name": "Осінь (Autumn)",
+            "id": "",
+            "name": "Осінь",
             "items": [
               "вересень",
               "жовтень",
               "листопад"
-            ]
+            ],
+            "nameUk": "Autumn"
           },
           {
-            "name": "Зима (Winter)",
+            "id": "",
+            "name": "Зима",
             "items": [
               "грудень",
               "січень",
               "лютий"
-            ]
+            ],
+            "nameUk": "Winter"
           }
         ],
         "shuffleItems": true
@@ -350,13 +278,9 @@
       "language": "uk",
       "difficultyLevel": "A1",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "time",
-        "practical"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.262Z",
+      "modifiedAt": "2025-12-01T22:58:37.262Z"
     }
   ],
   "vocabulary": {
@@ -367,173 +291,155 @@
     "transliterationMode": "full",
     "words": [
       {
-        "id": "v-m23-001",
+        "id": "v-tyzhdenь-23-0",
         "uk": "тиждень",
-        "translit": "",
-        "ipa": "/ˈtɪʒdɛnʲ/",
         "en": "week",
         "pos": "noun",
+        "ipa": "/ˈtɪʒdɛnʲ/",
         "gender": "m",
         "note": "Gen: тижня"
       },
       {
-        "id": "v-m23-002",
+        "id": "v-misyatsь-23-1",
         "uk": "місяць",
-        "translit": "",
-        "ipa": "/ˈmʲisʲɑt͡sʲ/",
         "en": "month",
         "pos": "noun",
+        "ipa": "/ˈmʲisʲɑt͡sʲ/",
         "gender": "m",
         "note": "Gen: місяця"
       },
       {
-        "id": "v-m23-003",
+        "id": "v-rik-23-2",
         "uk": "рік",
-        "translit": "",
-        "ipa": "/rʲik/",
         "en": "year",
         "pos": "noun",
+        "ipa": "/rʲik/",
         "gender": "m",
         "note": "Gen: року"
       },
       {
-        "id": "v-m23-004",
+        "id": "v-hodyna-23-3",
         "uk": "година",
-        "translit": "",
-        "ipa": "/ɦɔˈdɪnɑ/",
         "en": "hour",
         "pos": "noun",
+        "ipa": "/ɦɔˈdɪnɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m23-005",
+        "id": "v-khvylyna-23-4",
         "uk": "хвилина",
-        "translit": "",
-        "ipa": "/xvɪˈlɪnɑ/",
         "en": "minute",
         "pos": "noun",
+        "ipa": "/xvɪˈlɪnɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m23-006",
+        "id": "v-ponedilok-23-5",
         "uk": "понеділок",
-        "translit": "",
-        "ipa": "/pɔnɛˈdʲilɔk/",
         "en": "Monday",
         "pos": "noun",
+        "ipa": "/pɔnɛˈdʲilɔk/",
         "gender": "m"
       },
       {
-        "id": "v-m23-007",
+        "id": "v-vivtorok-23-6",
         "uk": "вівторок",
-        "translit": "",
-        "ipa": "/vʲivˈtɔrɔk/",
         "en": "Tuesday",
         "pos": "noun",
+        "ipa": "/vʲivˈtɔrɔk/",
         "gender": "m"
       },
       {
-        "id": "v-m23-008",
+        "id": "v-sereda-23-7",
         "uk": "середа",
-        "translit": "",
-        "ipa": "/sɛˈrɛdɑ/",
         "en": "Wednesday",
         "pos": "noun",
+        "ipa": "/sɛˈrɛdɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m23-009",
+        "id": "v-chetver-23-8",
         "uk": "четвер",
-        "translit": "",
-        "ipa": "/ˈtʃɛtvɛr/",
         "en": "Thursday",
         "pos": "noun",
+        "ipa": "/ˈtʃɛtvɛr/",
         "gender": "m"
       },
       {
-        "id": "v-m23-010",
+        "id": "v-p'yatnytsya-23-9",
         "uk": "п'ятниця",
-        "translit": "",
-        "ipa": "/ˈpjɑtnɪt͡sʲɑ/",
         "en": "Friday",
         "pos": "noun",
+        "ipa": "/ˈpjɑtnɪt͡sʲɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m23-011",
+        "id": "v-subota-23-10",
         "uk": "субота",
-        "translit": "",
-        "ipa": "/suˈbɔtɑ/",
         "en": "Saturday",
         "pos": "noun",
+        "ipa": "/suˈbɔtɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m23-012",
+        "id": "v-nedilya-23-11",
         "uk": "неділя",
-        "translit": "",
-        "ipa": "/nɛˈdʲilʲɑ/",
         "en": "Sunday",
         "pos": "noun",
+        "ipa": "/nɛˈdʲilʲɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m23-013",
+        "id": "v-sichenь-23-12",
         "uk": "січень",
-        "translit": "",
-        "ipa": "/ˈsʲitʃɛnʲ/",
         "en": "January",
         "pos": "noun",
+        "ipa": "/ˈsʲitʃɛnʲ/",
         "gender": "m",
         "note": "Loc: у січні"
       },
       {
-        "id": "v-m23-014",
+        "id": "v-lyutyy-23-13",
         "uk": "лютий",
-        "translit": "",
-        "ipa": "/ˈlʲutɪj/",
         "en": "February",
         "pos": "noun",
+        "ipa": "/ˈlʲutɪj/",
         "gender": "m",
         "note": "Loc: у лютому"
       },
       {
-        "id": "v-m23-015",
+        "id": "v-vesna-23-14",
         "uk": "весна",
-        "translit": "",
-        "ipa": "/vɛsˈnɑ/",
         "en": "spring",
         "pos": "noun",
+        "ipa": "/vɛsˈnɑ/",
         "gender": "f",
         "note": "Adv: навесні"
       },
       {
-        "id": "v-m23-016",
+        "id": "v-lito-23-15",
         "uk": "літо",
-        "translit": "",
-        "ipa": "/ˈlʲitɔ/",
         "en": "summer",
         "pos": "noun",
+        "ipa": "/ˈlʲitɔ/",
         "gender": "n",
         "note": "Adv: влітку"
       },
       {
-        "id": "v-m23-017",
+        "id": "v-osinь-23-16",
         "uk": "осінь",
-        "translit": "",
-        "ipa": "/ˈɔsʲinʲ/",
         "en": "autumn",
         "pos": "noun",
+        "ipa": "/ˈɔsʲinʲ/",
         "gender": "f",
         "note": "Adv: восени"
       },
       {
-        "id": "v-m23-018",
+        "id": "v-zyma-23-17",
         "uk": "зима",
-        "translit": "",
-        "ipa": "/zɪˈmɑ/",
         "en": "winter",
         "pos": "noun",
+        "ipa": "/zɪˈmɑ/",
         "gender": "f",
         "note": "Adv: взимку"
       }

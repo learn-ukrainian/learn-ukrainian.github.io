@@ -238,45 +238,61 @@ You know "лікар" and "вчитель." Let's expand your professional vocab
 
 ### Match Profession to Sector
 
-1. програміст → Technology
-2. бухгалтер → Business
-3. хірург → Medicine
-4. адвокат → Law
-5. перукар → Services
-6. викладач → Education
+1. програміст
+   > [!answer] Technology
+2. бухгалтер
+   > [!answer] Business
+3. хірург
+   > [!answer] Medicine
+4. адвокат
+   > [!answer] Law
+5. перукар
+   > [!answer] Services
+6. викладач
+   > [!answer] Education
 
 ### Complete Work Dialogue
 
 **A:** Де ви ___? (work)
-→ працюєте
+> [!answer] працюєте
 
 **B:** У IT-___ (company).
-→ компанії
+> [!answer] компанії
 
 **A:** Яка ваша ___? (position)
-→ посада
+> [!answer] посада
 
 **B:** Я ___. (programmer)
-→ програміст
+> [!answer] програміст
 
 **A:** Яка ___? (salary)
-→ зарплата
+> [!answer] зарплата
 
 ### Form Feminine Professions
 
-1. вчитель → вчителька
-2. програміст → програмістка
-3. журналіст → журналістка
-4. актор → акторка
-5. лікар → лікарка
+1. вчитель
+   > [!answer] вчителька
+2. програміст
+   > [!answer] програмістка
+3. журналіст
+   > [!answer] журналістка
+4. актор
+   > [!answer] акторка
+5. лікар
+   > [!answer] лікарка
 
 ### Translate
 
-1. I'm looking for a job. → Я шукаю роботу.
-2. What's your profession? → Яка ваша професія?
-3. She was promoted. → Її підвищили.
-4. The deadline is tomorrow. → Дедлайн завтра.
-5. I work remotely. → Я працюю віддалено.
+1. I'm looking for a job.
+   > [!answer] Я шукаю роботу.
+2. What's your profession?
+   > [!answer] Яка ваша професія?
+3. She was promoted.
+   > [!answer] Її підвищили.
+4. The deadline is tomorrow.
+   > [!answer] Дедлайн завтра.
+5. I work remotely.
+   > [!answer] Я працюю віддалено.
 
 ## production
 

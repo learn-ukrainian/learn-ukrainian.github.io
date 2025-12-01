@@ -5,98 +5,314 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Module 46: Conditionals I | Ukrainian A2</title>
   <style>
-    :root { --primary: #1a5fb4; --primary-light: #3584e4; --success: #26a269; --warning: #e5a50a; --danger: #c01c28; --bg: #fafafa; --card-bg: #fff; --text: #1e1e1e; --text-muted: #5e5e5e; --border: #e0e0e0; }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
-    .top-nav { background: #2e2e2e; color: white; padding: 0.5rem 2rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.875rem; }
-    .top-nav a { color: white; text-decoration: none; }
-    .top-nav a:hover { text-decoration: underline; }
-    .module-nav { display: flex; gap: 1rem; align-items: center; }
-    .module-nav-link { color: rgba(255,255,255,0.8); text-decoration: none; padding: 0.25rem 0.5rem; }
-    .module-nav-link:hover { color: white; }
-    .module-nav-link.disabled { color: rgba(255,255,255,0.3); pointer-events: none; }
-    .nav { position: sticky; top: 0; background: var(--primary); color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; z-index: 100; }
-    .nav h1 { font-size: 1.25rem; }
-    .nav-tabs { display: flex; gap: 0.5rem; }
-    .nav-tab { background: rgba(255,255,255,0.2); border: none; color: white; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; }
-    .nav-tab.active { background: white; color: var(--primary); }
-    main { max-width: 1000px; margin: 0 auto; padding: 2rem; }
-    .section { display: none; } .section.active { display: block; }
-    .lesson-header { text-align: center; margin-bottom: 2rem; padding: 2rem; background: linear-gradient(135deg, #e8f4fd, #f0e8fd); border-radius: 12px; }
-    .level-badge { background: var(--primary); color: white; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.875rem; }
-    .card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 1.5rem; margin-bottom: 1.5rem; }
-    .card h3 { color: var(--primary); margin-bottom: 1rem; }
-    .section-intro { border-left: 4px solid var(--primary); }
-    .section-intro h3 { color: var(--primary); }
-    .section-topic { border-left: 4px solid var(--border); }
-    .section-summary { background: linear-gradient(135deg, #f0f9ff, #e8f4fd); border-left: 4px solid var(--success); }
-    .section-summary h3 { color: var(--success); }
-    .canvas-note { background: #fffbeb; border-left: 4px solid var(--warning); padding: 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
-    .canvas-note h4 { color: var(--warning); margin-bottom: 0.5rem; }
-    .md-content { line-height: 1.7; }
-    .md-content p { margin: 0.75rem 0; }
-    .md-content ul, .md-content ol { margin: 0.75rem 0; padding-left: 1.5rem; }
-    .md-content li { margin: 0.25rem 0; }
-    .md-content strong { color: var(--primary); }
-    .md-content blockquote { background: #e8f4fd; border-left: 4px solid var(--primary); padding: 0.75rem 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
-    .md-content blockquote p { margin: 0.25rem 0; }
-    .md-content table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
-    .md-content th, .md-content td { border: 1px solid var(--border); padding: 0.5rem 0.75rem; text-align: left; }
-    .md-content th { background: #f5f5f5; font-weight: 600; }
-    .md-content code { background: #f0f0f0; padding: 0.125rem 0.375rem; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
-    .letter-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0; }
-    .letter-group { border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; }
-    .letter-group.true-friends { border-color: var(--success); } .letter-group.true-friends .letters { color: var(--success); }
-    .letter-group.false-friends { border-color: var(--danger); } .letter-group.false-friends .letters { color: var(--danger); }
-    .letter-group.new-letters { border-color: var(--primary); } .letter-group.new-letters .letters { color: var(--primary); }
-    .letters { font-size: 1.75rem; letter-spacing: 0.3rem; }
-    .match-container { display: flex; gap: 3rem; padding: 1rem; position: relative; }
-    .match-column { flex: 1; display: flex; flex-direction: column; gap: 0.75rem; }
-    .match-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; font-size: 1.25rem; cursor: pointer; }
-    .match-item.selected { border-color: var(--primary); background: #e8f4fd; }
-    .match-item.matched { border-color: var(--success); background: #e8f8f0; }
-    .match-item.wrong { border-color: var(--danger); background: #fde8e8; }
-    .match-lines { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
-    .quiz-question { border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; }
-    .quiz-question.answered { pointer-events: none; }
-    .quiz-question .cyrillic { font-size: 1.5rem; color: var(--primary); font-weight: 600; }
-    .quiz-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-top: 1rem; }
-    .quiz-option { background: #f5f5f5; border: 2px solid var(--border); border-radius: 8px; padding: 1rem; cursor: pointer; text-align: center; }
-    .quiz-option.correct { border-color: var(--success); background: #d4edda; }
-    .quiz-option.wrong { border-color: var(--danger); background: #f8d7da; }
-    .quiz-explanation { margin-top: 1rem; padding: 1rem; background: #e8f4fd; border-radius: 8px; display: none; }
-    .quiz-explanation.show { display: block; }
-    .sort-pool { background: #f5f5f5; border: 2px dashed var(--border); border-radius: 12px; padding: 1.5rem; min-height: 80px; margin-bottom: 1rem; }
-    .sort-items { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; }
-    .sort-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 0.75rem 1.25rem; font-size: 1.5rem; cursor: grab; }
-    .sort-item.correct { border-color: var(--success); background: #e8f8f0; }
-    .sort-item.wrong { border-color: var(--danger); background: #fde8e8; }
-    .sort-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
-    .sort-group { border: 2px solid var(--border); border-radius: 12px; padding: 1rem; min-height: 150px; }
-    .sort-group.drag-over { border-color: var(--primary); background: #e8f4fd; }
-    .sort-group h4 { font-size: 0.875rem; text-align: center; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--border); }
-    .sort-group.true-friends h4 { color: var(--success); border-color: var(--success); }
-    .sort-group.false-friends h4 { color: var(--danger); border-color: var(--danger); }
-    .sort-group.new-letters h4 { color: var(--primary); border-color: var(--primary); }
-    .vocab-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; }
-    .vocab-card { border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; text-align: center; }
-    .vocab-card .uk { font-size: 1.75rem; font-weight: 600; color: var(--primary); }
-    .vocab-card .translit { color: var(--text-muted); font-style: italic; }
-    .vocab-card .en { font-weight: 500; margin: 0.25rem 0; }
-    .vocab-card .note { font-size: 0.75rem; color: #613583; background: #f0e8fd; padding: 0.25rem 0.5rem; border-radius: 4px; }
-    .btn { padding: 0.75rem 1.5rem; border: none; border-radius: 8px; cursor: pointer; }
-    .btn-primary { background: var(--primary); color: white; }
-    .btn-outline { background: transparent; border: 2px solid var(--border); }
-    .btn-group { display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem; }
-    .score-display { text-align: center; padding: 1rem; background: linear-gradient(135deg, #e8f8f0, #e8f4fd); border-radius: 8px; margin-bottom: 1rem; }
-    .score-display .score { font-size: 2rem; font-weight: 700; color: var(--success); }
-    .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
-    .completion-message.show { display: block; }
-    footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+:root { --primary: #1a5fb4; --primary-light: #3584e4; --success: #26a269; --warning: #e5a50a; --danger: #c01c28; --bg: #fafafa; --card-bg: #fff; --text: #1e1e1e; --text-muted: #5e5e5e; --border: #e0e0e0; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+.top-nav { background: #2e2e2e; color: white; padding: 0.5rem 2rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.875rem; }
+.top-nav a { color: white; text-decoration: none; }
+.top-nav a:hover { text-decoration: underline; }
+.module-nav { display: flex; gap: 1rem; align-items: center; }
+.module-nav-link { color: rgba(255,255,255,0.8); text-decoration: none; padding: 0.25rem 0.5rem; }
+.module-nav-link:hover { color: white; }
+.module-nav-link.disabled { color: rgba(255,255,255,0.3); pointer-events: none; }
+.nav { position: sticky; top: 0; background: var(--primary); color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; z-index: 100; }
+.nav h1 { font-size: 1.25rem; }
+.nav-tabs { display: flex; gap: 0.5rem; }
+.nav-tab { background: rgba(255,255,255,0.2); border: none; color: white; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; }
+.nav-tab.active { background: white; color: var(--primary); }
+main { max-width: 1000px; margin: 0 auto; padding: 2rem; }
+.section { display: none; } .section.active { display: block; }
+.lesson-header { text-align: center; margin-bottom: 2rem; padding: 2rem; background: linear-gradient(135deg, #e8f4fd, #f0e8fd); border-radius: 12px; }
+.level-badge { background: var(--primary); color: white; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.875rem; }
+.card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 1.5rem; margin-bottom: 1.5rem; }
+.card h3 { color: var(--primary); margin-bottom: 1rem; }
+.section-intro { border-left: 4px solid var(--primary); }
+.section-intro h3 { color: var(--primary); }
+.section-topic { border-left: 4px solid var(--border); }
+.section-summary { background: linear-gradient(135deg, #f0f9ff, #e8f4fd); border-left: 4px solid var(--success); }
+.section-summary h3 { color: var(--success); }
+.canvas-note { background: #fffbeb; border-left: 4px solid var(--warning); padding: 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+.canvas-note h4 { color: var(--warning); margin-bottom: 0.5rem; }
+.md-content { line-height: 1.7; }
+.md-content p { margin: 0.75rem 0; }
+.md-content ul, .md-content ol { margin: 0.75rem 0; padding-left: 1.5rem; }
+.md-content li { margin: 0.25rem 0; }
+.md-content strong { color: var(--primary); }
+.md-content blockquote { background: #e8f4fd; border-left: 4px solid var(--primary); padding: 0.75rem 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+.md-content blockquote p { margin: 0.25rem 0; }
+.md-content table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+.md-content th, .md-content td { border: 1px solid var(--border); padding: 0.5rem 0.75rem; text-align: left; }
+.md-content th { background: #f5f5f5; font-weight: 600; }
+.md-content code { background: #f0f0f0; padding: 0.125rem 0.375rem; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
+.md-content details { background: #f8f9fa; border: 1px solid var(--border); border-radius: 8px; padding: 0; margin: 1rem 0; }
+.md-content details summary { background: linear-gradient(135deg, #e8f4fd, #f0e8fd); padding: 0.75rem 1rem; cursor: pointer; font-weight: 600; color: var(--primary); border-radius: 8px; list-style: none; display: flex; align-items: center; gap: 0.5rem; }
+.md-content details summary::-webkit-details-marker { display: none; }
+.md-content details summary::before { content: '▶'; font-size: 0.75rem; transition: transform 0.2s; }
+.md-content details[open] summary::before { transform: rotate(90deg); }
+.md-content details[open] summary { border-radius: 8px 8px 0 0; }
+.md-content details > *:not(summary) { padding: 0 1rem; }
+.md-content details > *:last-child { padding-bottom: 1rem; }
+.md-content p > details { margin: 0; }
+.md-content p:has(> details) { margin: 1rem 0; }
+.inline-answer { background: linear-gradient(135deg, #d4edda, #e8f4fd); padding: 0.125rem 0.5rem; border-radius: 4px; transition: opacity 0.2s; }
+.inline-answer.hidden { opacity: 0; user-select: none; }
+.answer-toggle-btn { display: inline-flex; align-items: center; gap: 0.5rem; background: linear-gradient(135deg, #e8f4fd, #f0e8fd); border: 1px solid var(--primary); color: var(--primary); padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-size: 0.875rem; font-weight: 600; margin: 1rem 0; }
+.answer-toggle-btn:hover { background: var(--primary); color: white; }
+.answer-toggle-btn svg { width: 1rem; height: 1rem; }
+.letter-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0; }
+.letter-group { border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; }
+.letter-group.true-friends { border-color: var(--success); } .letter-group.true-friends .letters { color: var(--success); }
+.letter-group.false-friends { border-color: var(--danger); } .letter-group.false-friends .letters { color: var(--danger); }
+.letter-group.new-letters { border-color: var(--primary); } .letter-group.new-letters .letters { color: var(--primary); }
+.letters { font-size: 1.75rem; letter-spacing: 0.3rem; }
+.btn { padding: 0.75rem 1.5rem; border: none; border-radius: 8px; cursor: pointer; }
+.btn-primary { background: var(--primary); color: white; }
+.btn-outline { background: transparent; border: 2px solid var(--border); }
+.btn-group { display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem; }
+.score-display { text-align: center; padding: 1rem; background: linear-gradient(135deg, #e8f8f0, #e8f4fd); border-radius: 8px; margin-bottom: 1rem; }
+.score-display .score { font-size: 2rem; font-weight: 700; color: var(--success); }
+.completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
+.completion-message.show { display: block; }
+footer { text-align: center; padding: 2rem; color: var(--text-muted); }
+@media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+
+
+/**
+ * Layout styles - Navigation, page structure
+ */
+
+/* Top Navigation */
+.top-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1.5rem;
+  background: #f8f8f8;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.875rem;
+}
+
+.top-nav a {
+  color: var(--text-muted);
+}
+
+.top-nav a:hover {
+  color: var(--primary);
+}
+
+.module-nav {
+  display: flex;
+  gap: 1rem;
+}
+
+.module-nav-link {
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+.module-nav-link:hover {
+  background: #e8f4fd;
+}
+
+/* Main Navigation */
+.nav {
+  background: linear-gradient(135deg, #1a5fb4, #613583);
+  color: white;
+  padding: 1.5rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav h1 {
+  font-size: 1.5rem;
+}
+
+.nav-tabs {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.nav-tab {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: background 0.2s;
+}
+
+.nav-tab:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.nav-tab.active {
+  background: white;
+  color: var(--primary);
+}
+
+/* Main Content */
+main {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Sections */
+.section {
+  display: none;
+}
+
+.section.active {
+  display: block;
+}
+
+/* Lesson Header */
+.lesson-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding: 2rem;
+  background: linear-gradient(135deg, #e8f4fd, #f0e8fd);
+  border-radius: 12px;
+}
+
+.lesson-header h2 {
+  font-size: 2rem;
+  margin: 0.5rem 0;
+}
+
+/* Section Cards */
+.section-intro {
+  border-left: 4px solid var(--primary);
+}
+
+.section-intro h3 {
+  color: var(--primary);
+}
+
+.section-topic {
+  border-left: 4px solid var(--border);
+}
+
+.section-summary {
+  background: linear-gradient(135deg, #f0f9ff, #e8f4fd);
+  border-left: 4px solid var(--success);
+}
+
+.section-summary h3 {
+  color: var(--success);
+}
+
+/* Canvas Notes */
+.canvas-note {
+  background: #fffbeb;
+  border-left: 4px solid var(--warning);
+  padding: 1rem;
+  margin: 1rem 0;
+  border-radius: 0 8px 8px 0;
+}
+
+.canvas-note h4 {
+  color: var(--warning);
+  margin-bottom: 0.5rem;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-muted);
+}
+
+/* Responsive Layout */
+@media (max-width: 768px) {
+  .nav {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .nav h1 {
+    font-size: 1.25rem;
+    text-align: center;
+  }
+
+  .nav-tabs {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  main {
+    padding: 1rem;
+  }
+
+  .top-nav {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+
+
+/* Match Activity */
+.match-container { display: flex; gap: 3rem; padding: 1rem; position: relative; }
+.match-column { flex: 1; display: flex; flex-direction: column; gap: 0.75rem; }
+.match-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; font-size: 1.25rem; cursor: pointer; }
+.match-item.selected { border-color: var(--primary); background: #e8f4fd; }
+.match-item.matched { border-color: var(--success); background: #e8f8f0; }
+.match-item.wrong { border-color: var(--danger); background: #fde8e8; }
+.match-lines { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+
+/* Quiz Activity */
+.quiz-question { border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; }
+.quiz-question.answered { pointer-events: none; }
+.quiz-question .cyrillic { font-size: 1.5rem; color: var(--primary); font-weight: 600; }
+.quiz-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-top: 1rem; }
+.quiz-option { background: #f5f5f5; border: 2px solid var(--border); border-radius: 8px; padding: 1rem; cursor: pointer; text-align: center; }
+.quiz-option.correct { border-color: var(--success); background: #d4edda; }
+.quiz-option.wrong { border-color: var(--danger); background: #f8d7da; }
+.quiz-explanation { margin-top: 1rem; padding: 1rem; background: #e8f4fd; border-radius: 8px; display: none; }
+.quiz-explanation.show { display: block; }
+
+/* Sort Activity */
+.sort-pool { background: #f5f5f5; border: 2px dashed var(--border); border-radius: 12px; padding: 1.5rem; min-height: 80px; margin-bottom: 1rem; }
+.sort-items { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; }
+.sort-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 0.75rem 1.25rem; font-size: 1.5rem; cursor: grab; }
+.sort-item.correct { border-color: var(--success); background: #e8f8f0; }
+.sort-item.wrong { border-color: var(--danger); background: #fde8e8; }
+.sort-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+.sort-group { border: 2px solid var(--border); border-radius: 12px; padding: 1rem; min-height: 150px; }
+.sort-group.drag-over { border-color: var(--primary); background: #e8f4fd; }
+.sort-group h4 { font-size: 0.875rem; text-align: center; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--border); }
+.sort-group.true-friends h4 { color: var(--success); border-color: var(--success); }
+.sort-group.false-friends h4 { color: var(--danger); border-color: var(--danger); }
+.sort-group.new-letters h4 { color: var(--primary); border-color: var(--primary); }
+
+/* Vocabulary */
+.vocab-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; }
+.vocab-card { border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; text-align: center; }
+.vocab-card .uk { font-size: 1.75rem; font-weight: 600; color: var(--primary); }
+.vocab-card .translit { color: var(--text-muted); font-style: italic; }
+.vocab-card .en { font-weight: 500; margin: 0.25rem 0; }
+.vocab-card .note { font-size: 0.75rem; color: #613583; background: #f0e8fd; padding: 0.25rem 0.5rem; border-radius: 4px; }
+
+/* Answer Callout Blocks */
+.callout { padding: 0.5rem 1rem; margin: 0.25rem 0; border-radius: 4px; }
+.callout-answer { background: #e8f8f0; border-left: 3px solid var(--success); }
+.callout-explanation { background: #e8f4fd; border-left: 3px solid var(--primary); color: var(--text-muted); font-style: italic; }
+.callout-alt { background: #f5f5f5; border-left: 3px solid var(--border); color: var(--text-muted); }
+
+/* Answer Block Toggle */
+.answer-block { display: none; }
+.answer-block.show { display: block; }
+.show-answer-btn { background: #f0f0f0; border: 1px solid var(--border); border-radius: 6px; padding: 0.25rem 0.75rem; font-size: 0.8rem; cursor: pointer; color: var(--text-muted); margin: 0.25rem 0; }
+.show-answer-btn:hover { background: #e5e5e5; }
+.show-answer-btn.revealed { background: #e8f8f0; border-color: var(--success); color: var(--success); }
+
   </style>
 </head>
 <body>
+  
   <div class="top-nav">
     <a href="../index.html">← l2-uk-en Curriculum</a>
     <div class="module-nav">
@@ -116,14 +332,17 @@
     </div>
   </nav>
   <main>
+    
     <section id="lesson" class="section active">
       <div class="lesson-header">
         <span class="level-badge">A2 · A2.2</span>
         <h2 style="font-size:2rem;margin:0.5rem 0">Conditionals I</h2>
         <p style="color:var(--text-muted)">If... Then...</p>
       </div>
-      
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### What If...?</h4><div class="md-content"><p>Time to talk about possibilities! "If it rains, I'll take an umbrella."</p>
+      <div class="card"><h3>Theory</h3><div class="md-content"><h1 id="lessoncontent">Lesson Content</h1>
+<h2 id="warmup">warm-up</h2>
+<h3 id="whatif">What If…?</h3>
+<p>Time to talk about possibilities! "If it rains, I'll take an umbrella."</p>
 <p><strong>Ukrainian conditionals follow a simple pattern:</strong></p>
 <ul>
 <li><strong>Якщо</strong> + condition, result.</li>
@@ -141,7 +360,10 @@
   <li><strong>Synthetic</strong>: infinitive + -му/-меш (Я <strong>читатиму</strong> - I will read)</li>
   </ul>
   <p>Conditionals use future tense in the result clause!</p>
-</blockquote></div></div><div class="canvas-note"><h4>### Real Conditionals: The Basics</h4><div class="md-content"><p><strong>Structure: Якщо + condition, result</strong></p>
+</blockquote>
+<h2 id="presentation">presentation</h2>
+<h3 id="realconditionalsthebasics">Real Conditionals: The Basics</h3>
+<p><strong>Structure: Якщо + condition, result</strong></p>
 <table>
 <thead>
 <tr>
@@ -178,7 +400,9 @@
   <li>Якщо <strong>буде</strong> дощ, я <strong>візьму</strong> парасолю.</li>
   <li>(Literally: If there will be rain, I will take umbrella.)</li>
   </ul>
-</blockquote></div></div><div class="canvas-note"><h4>Common Conditional Patterns</h4><div class="md-content"><p><strong>Possibility:</strong></p>
+</blockquote>
+<h3 id="commonconditionalpatterns">Common Conditional Patterns</h3>
+<p><strong>Possibility:</strong></p>
 <ul>
 <li><strong>Якщо</strong> він зателефонує, скажи мені. - If he calls, tell me.</li>
 <li><strong>Якщо</strong> матимеш час, заходь. - If you have time, stop by.</li>
@@ -202,7 +426,9 @@
   <li>"Якщо вийде…" (If it works out…)</li>
   </ul>
   <p>This isn't pessimism - it's acknowledging life's unpredictability!</p>
-</blockquote></div></div><div class="canvas-note"><h4>Якщо vs Коли</h4><div class="md-content"><p><strong>Якщо (if) - uncertain:</strong></p>
+</blockquote>
+<h3 id="vs">Якщо vs Коли</h3>
+<p><strong>Якщо (if) - uncertain:</strong></p>
 <ul>
 <li><strong>Якщо</strong> він прийде, ми почнемо. - If he comes (maybe he won't).</li>
 <li><strong>Якщо</strong> буде час, заходь. - If there's time (maybe there won't be).</li>
@@ -220,7 +446,9 @@
 <blockquote>
   <p>📜 <strong>History Bite: Slavic Conditionals</strong></p>
   <p>The word "якщо" comes from "як" (how/as) + "що" (what), creating "as-what" → "if." This compound construction is relatively modern - older Ukrainian used "коли" or "аще" for "if." Today "якщо" is standard for uncertainty.</p>
-</blockquote></div></div><div class="canvas-note"><h4>Negative Conditions</h4><div class="md-content"><p><strong>Якщо не… (If not…):</strong></p>
+</blockquote>
+<h3 id="negativeconditions">Negative Conditions</h3>
+<p><strong>Якщо не… (If not…):</strong></p>
 <ul>
 <li><strong>Якщо не</strong> прийдеш, я піду сам. - If you don't come, I'll go alone.</li>
 <li><strong>Якщо не</strong> знайду, куплю новий. - If I don't find it, I'll buy a new one.</li>
@@ -233,7 +461,9 @@
 <p><strong>Якщо ні (if not/otherwise):</strong></p>
 <ul>
 <li>Сподіваюся, що так. <strong>Якщо ні</strong>, зателефоную. - I hope so. If not, I'll call.</li>
-</ul></div></div><div class="canvas-note"><h4>Position of Clauses</h4><div class="md-content"><p><strong>Якщо first (most common):</strong></p>
+</ul>
+<h3 id="positionofclauses">Position of Clauses</h3>
+<p><strong>Якщо first (most common):</strong></p>
 <ul>
 <li><strong>Якщо</strong> буде дощ, я залишуся вдома.</li>
 <li><strong>Якщо</strong> захочеш, дзвони.</li>
@@ -255,7 +485,9 @@
   <li>Якщо хочеш<strong>,</strong> давай поговоримо.</li>
   <li>Я допоможу<strong>,</strong> якщо потрібно.</li>
   </ul>
-</blockquote></div></div><div class="canvas-note"><h4>Useful Conditional Expressions</h4><div class="md-content"><p><strong>Якщо можна… (If possible…):</strong></p>
+</blockquote>
+<h3 id="usefulconditionalexpressions">Useful Conditional Expressions</h3>
+<p><strong>Якщо можна… (If possible…):</strong></p>
 <ul>
 <li><strong>Якщо можна</strong>, допоможіть мені. - If possible, help me.</li>
 </ul>
@@ -282,7 +514,9 @@
   <li>Я буду вдома. Якщо що - дзвони!</li>
   <li>(I'll be home. If anything - call!)</li>
   </ul>
-</blockquote></div></div><div class="canvas-note"><h4>Questions with Conditionals</h4><div class="md-content"><p><strong>Що буде, якщо…? (What will happen if…?):</strong></p>
+</blockquote>
+<h3 id="questionswithconditionals">Questions with Conditionals</h3>
+<p><strong>Що буде, якщо…? (What will happen if…?):</strong></p>
 <ul>
 <li><strong>Що буде</strong>, <strong>якщо</strong> він не прийде? - What happens if he doesn't come?</li>
 <li><strong>Що робити</strong>, <strong>якщо</strong> загублю ключі? - What to do if I lose my keys?</li>
@@ -291,44 +525,82 @@
 <ul>
 <li><strong>А якщо</strong> він скаже "ні"? - And what if he says "no"?</li>
 <li><strong>А якщо</strong> не вийде? - And what if it doesn't work?</li>
-</ul></div></div><div class="canvas-note"><h4>### Complete Conditionals</h4><div class="md-content"><ol>
-<li><p>Якщо ___ (бути) гарна погода, ми підемо на прогулянку.<br />
-→ буде</p></li>
-<li><p>Якщо ти ___ (хотіти), я допоможу.<br />
-→ хочеш / захочеш</p></li>
-<li><p>Я зателефоную, якщо ___ (знайти) інформацію.<br />
-→ знайду</p></li>
-<li><p>Якщо він не ___ (прийти), ми почнемо без нього.<br />
-→ прийде</p></li>
-<li><p>___ (поспішати), ти встигнеш.<br />
-→ Якщо поспішатимеш</p></li>
-<li><p>Ми поїдемо, якщо ___ (мати) час.<br />
-→ матимемо / будемо мати</p></li>
-</ol></div></div><div class="canvas-note"><h4>Choose Якщо or Коли</h4><div class="md-content"><ol>
-<li><p>___ прийдеш додому, зателефонуй. (you definitely will)<br />
-→ Коли</p></li>
-<li><p>___ побачиш Івана, передай йому книгу. (you might not)<br />
-→ Якщо</p></li>
-<li><p>___ закінчу роботу, поїду відпочивати. (I will finish)<br />
-→ Коли</p></li>
-<li><p>___ буде час, заходь. (maybe there won't be)<br />
-→ Якщо</p></li>
-<li><p>___ приїдеш до Києва, обов'язково відвідай Софію. (uncertain if you will)<br />
-→ Якщо</p></li>
-</ol></div></div><div class="canvas-note"><h4>Translate Conditionals</h4><div class="md-content"><ol>
-<li><p>If it rains, I'll stay home.<br />
-→ Якщо буде дощ, я залишуся вдома.</p></li>
-<li><p>If you want, we can go together.<br />
-→ Якщо хочеш, можемо піти разом.</p></li>
-<li><p>Call me if you need help.<br />
-→ Зателефонуй мені, якщо потрібна допомога.</p></li>
-<li><p>What will happen if he doesn't come?<br />
-→ Що буде, якщо він не прийде?</p></li>
-<li><p>If I'm not mistaken, she's from Lviv.<br />
-→ Якщо не помиляюся, вона зі Львова.</p></li>
-<li><p>I'll help you if I have time.<br />
-→ Я допоможу тобі, якщо матиму час.</p></li>
-</ol></div></div><div class="canvas-note"><h4>### Create Conditionals</h4><div class="md-content"><p><strong>Make sentences about:</strong></p>
+</ul>
+<h2 id="practice">practice</h2>
+<h3 id="completeconditionals">Complete Conditionals</h3>
+<ol>
+<li><p>Якщо ___ (бути) гарна погода, ми підемо на прогулянку.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-0', this)">Показати відповідь</button><div class="answer-block" id="ans-0"><div class="callout callout-answer" data-callout="answer">буде</div></div>
+<ol start="2">
+<li><p>Якщо ти ___ (хотіти), я допоможу.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-1', this)">Показати відповідь</button><div class="answer-block" id="ans-1"><div class="callout callout-answer" data-callout="answer">хочеш / захочеш</div></div>
+<ol start="3">
+<li><p>Я зателефоную, якщо ___ (знайти) інформацію.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-2', this)">Показати відповідь</button><div class="answer-block" id="ans-2"><div class="callout callout-answer" data-callout="answer">знайду</div></div>
+<ol start="4">
+<li><p>Якщо він не ___ (прийти), ми почнемо без нього.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-3', this)">Показати відповідь</button><div class="answer-block" id="ans-3"><div class="callout callout-answer" data-callout="answer">прийде</div></div>
+<ol start="5">
+<li><p>___ (поспішати), ти встигнеш.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-4', this)">Показати відповідь</button><div class="answer-block" id="ans-4"><div class="callout callout-answer" data-callout="answer">Якщо поспішатимеш</div></div>
+<ol start="6">
+<li><p>Ми поїдемо, якщо ___ (мати) час.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-5', this)">Показати відповідь</button><div class="answer-block" id="ans-5"><div class="callout callout-answer" data-callout="answer">матимемо / будемо мати</div></div>
+<h3 id="chooseor">Choose Якщо or Коли</h3>
+<ol>
+<li><p>___ прийдеш додому, зателефонуй. (you definitely will)</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-6', this)">Показати відповідь</button><div class="answer-block" id="ans-6"><div class="callout callout-answer" data-callout="answer">Коли</div></div>
+<ol start="2">
+<li><p>___ побачиш Івана, передай йому книгу. (you might not)</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-7', this)">Показати відповідь</button><div class="answer-block" id="ans-7"><div class="callout callout-answer" data-callout="answer">Якщо</div></div>
+<ol start="3">
+<li><p>___ закінчу роботу, поїду відпочивати. (I will finish)</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-8', this)">Показати відповідь</button><div class="answer-block" id="ans-8"><div class="callout callout-answer" data-callout="answer">Коли</div></div>
+<ol start="4">
+<li><p>___ буде час, заходь. (maybe there won't be)</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-9', this)">Показати відповідь</button><div class="answer-block" id="ans-9"><div class="callout callout-answer" data-callout="answer">Якщо</div></div>
+<ol start="5">
+<li><p>___ приїдеш до Києва, обов'язково відвідай Софію. (uncertain if you will)</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-10', this)">Показати відповідь</button><div class="answer-block" id="ans-10"><div class="callout callout-answer" data-callout="answer">Якщо</div></div>
+<h3 id="translateconditionals">Translate Conditionals</h3>
+<ol>
+<li><p>If it rains, I'll stay home.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-11', this)">Показати відповідь</button><div class="answer-block" id="ans-11"><div class="callout callout-answer" data-callout="answer">Якщо буде дощ, я залишуся вдома.</div></div>
+<ol start="2">
+<li><p>If you want, we can go together.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-12', this)">Показати відповідь</button><div class="answer-block" id="ans-12"><div class="callout callout-answer" data-callout="answer">Якщо хочеш, можемо піти разом.</div></div>
+<ol start="3">
+<li><p>Call me if you need help.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-13', this)">Показати відповідь</button><div class="answer-block" id="ans-13"><div class="callout callout-answer" data-callout="answer">Зателефонуй мені, якщо потрібна допомога.</div></div>
+<ol start="4">
+<li><p>What will happen if he doesn't come?</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-14', this)">Показати відповідь</button><div class="answer-block" id="ans-14"><div class="callout callout-answer" data-callout="answer">Що буде, якщо він не прийде?</div></div>
+<ol start="5">
+<li><p>If I'm not mistaken, she's from Lviv.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-15', this)">Показати відповідь</button><div class="answer-block" id="ans-15"><div class="callout callout-answer" data-callout="answer">Якщо не помиляюся, вона зі Львова.</div></div>
+<ol start="6">
+<li><p>I'll help you if I have time.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-16', this)">Показати відповідь</button><div class="answer-block" id="ans-16"><div class="callout callout-answer" data-callout="answer">Я допоможу тобі, якщо матиму час.</div></div>
+<h2 id="production">production</h2>
+<h3 id="createconditionals">Create Conditionals</h3>
+<p><strong>Make sentences about:</strong></p>
 <p>Your plans:</p>
 <ul>
 <li>Якщо матиму час, я…</li>
@@ -340,31 +612,150 @@
 <li>Якщо хочеш вивчити українську, треба…</li>
 <li>Якщо запізнюєшся, краще…</li>
 <li>Якщо не знаєш дорогу, можна…</li>
-</ul></div></div><div class="canvas-note"><h4>Conditional Dialogue</h4><div class="md-content"><ul>
+</ul>
+<h3 id="conditionaldialogue">Conditional Dialogue</h3>
+<ul>
 <li>Що будемо робити у вихідні?</li>
 <li><strong>Якщо</strong> погода буде гарна, можемо поїхати за місто.</li>
 <li>А <strong>якщо</strong> буде дощ?</li>
 <li><strong>Якщо</strong> буде дощ, залишимося вдома і подивимося фільм.</li>
 <li>Добре. <strong>Якщо що</strong> - дзвони завтра вранці.</li>
 <li>Домовились!</li>
-</ul></div></div></div>
-      <div class="btn-group"><button class="btn btn-primary" onclick="showSection('match')">Start →</button></div>
+</ul>
+<hr />
+<h1 id="summary">Summary</h1>
+<h2 id="realconditionalstructure">Real Conditional Structure</h2>
+<table>
+<thead>
+<tr>
+<th>Pattern</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Якщо + future, future</td>
+<td>Якщо буде дощ, візьму парасолю</td>
+</tr>
+<tr>
+<td>Якщо + present, future</td>
+<td>Якщо хочеш, допоможу</td>
+</tr>
+<tr>
+<td>Result, якщо + condition</td>
+<td>Я допоможу, якщо потрібно</td>
+</tr>
+</tbody>
+</table>
+<h2 id="vs-1">Якщо vs Коли</h2>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Use</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Якщо</td>
+<td>Uncertain</td>
+<td>Якщо побачиш… (if you see)</td>
+</tr>
+<tr>
+<td>Коли</td>
+<td>Certain</td>
+<td>Коли прийдеш… (when you come)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="usefulexpressions">Useful Expressions</h2>
+<table>
+<thead>
+<tr>
+<th>Ukrainian</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Якщо можна</td>
+<td>If possible</td>
+</tr>
+<tr>
+<td>Якщо хочеш</td>
+<td>If you want</td>
+</tr>
+<tr>
+<td>Якщо що</td>
+<td>If anything happens</td>
+</tr>
+<tr>
+<td>Якщо не помиляюся</td>
+<td>If I'm not mistaken</td>
+</tr>
+<tr>
+<td>Якщо чесно</td>
+<td>Honestly</td>
+</tr>
+</tbody>
+</table>
+<h2 id="questionpatterns">Question Patterns</h2>
+<table>
+<thead>
+<tr>
+<th>Pattern</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Що буде, якщо…?</td>
+<td>What will happen if…?</td>
+</tr>
+<tr>
+<td>А якщо…?</td>
+<td>And what if…?</td>
+</tr>
+<tr>
+<td>Що робити, якщо…?</td>
+<td>What to do if…?</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p>💡 <strong>Key Takeaways</strong></p>
+  <ul>
+  <li>Якщо + condition, result (comma between)</li>
+  <li>Ukrainian often uses future in BOTH clauses</li>
+  <li>Якщо = uncertain; Коли = certain/expected</li>
+  <li>"Якщо що" is very useful (= if anything)</li>
+  <li>Add "то" for emphasis: Якщо…, то…</li>
+  </ul>
+</blockquote></div></div>
+      <div class="btn-group">
+        <button class="btn btn-primary" onclick="showSection('match')">Start →</button>
+      </div>
     </section>
+  
+    
     <section id="match" class="section"><div class="card"><h3>Condition → Result</h3>
       <div class="score-display"><span class="score"><span id="match-score">0</span>/6</span></div>
       <div class="match-container" id="match-container"><svg class="match-lines" id="match-lines"></svg>
         <div class="match-column" id="match-left"><div class="match-item" data-pair="0">Якщо буде дощ,</div><div class="match-item" data-pair="1">Якщо матиму час,</div><div class="match-item" data-pair="2">Якщо не поспішатимеш,</div><div class="match-item" data-pair="3">Якщо хочеш,</div><div class="match-item" data-pair="4">Якщо він прийде,</div><div class="match-item" data-pair="5">Якщо все буде добре,</div></div>
-        <div class="match-column" id="match-right"><div class="match-item" data-pair="0">візьму парасолю</div><div class="match-item" data-pair="1">зателефоную</div><div class="match-item" data-pair="5">приїду в п'ятницю</div><div class="match-item" data-pair="4">ми почнемо</div><div class="match-item" data-pair="2">запізнишся</div><div class="match-item" data-pair="3">можемо піти разом</div></div>
+        <div class="match-column" id="match-right"><div class="match-item" data-pair="4">ми почнемо</div><div class="match-item" data-pair="2">запізнишся</div><div class="match-item" data-pair="5">приїду в п'ятницю</div><div class="match-item" data-pair="3">можемо піти разом</div><div class="match-item" data-pair="1">зателефоную</div><div class="match-item" data-pair="0">візьму парасолю</div></div>
       </div>
       <div class="completion-message" id="match-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetMatch()">Reset</button><button class="btn btn-primary" onclick="showSection('quiz')">Next →</button></div>
     </div></section>
+    
     <section id="quiz" class="section"><div class="card"><h3>Conditionals</h3>
       <div class="score-display"><span class="score"><span id="quiz-score">0</span>/6</span></div>
       <div id="quiz-container"></div>
       <div class="completion-message" id="quiz-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('sort')">Next →</button></div>
     </div></section>
+    
     <section id="sort" class="section"><div class="card"><h3>Якщо vs Коли</h3>
       <div class="score-display"><span class="score"><span id="sort-score">0</span>/8</span></div>
       <div class="sort-pool" id="sort-pool"><div class="sort-items" id="sort-items"></div></div>
@@ -372,34 +763,235 @@
       <div class="completion-message" id="sort-complete"><h3>All Sorted!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetSort()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Vocab →</button></div>
     </div></section>
+    
     <section id="vocab" class="section"><div class="card"><h3>Vocabulary (13)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
     </section>
-  </main>
-  <footer>Module 46 · curricula-opus</footer>
+  </main><footer>Module 46 · curricula-opus</footer>
   <script>
-    const matchPairs=[{"left":"Якщо буде дощ,","right":"візьму парасолю"},{"left":"Якщо матиму час,","right":"зателефоную"},{"left":"Якщо не поспішатимеш,","right":"запізнишся"},{"left":"Якщо хочеш,","right":"можемо піти разом"},{"left":"Якщо він прийде,","right":"ми почнемо"},{"left":"Якщо все буде добре,","right":"приїду в п'ятницю"}];
-    const quizData=[{"question":"\"If it rains, I'll take an umbrella\" - Якщо ___ дощ, я візьму парасолю.","options":["буде","є","був","бути"],"correctIndex":0,"explanation":"Future in \"if\" clause = буде."},{"question":"\"___ you get home, call me\" (you will) - ___ прийдеш додому, зателефонуй.","options":["Коли","Якщо","Що","Як"],"correctIndex":0,"explanation":"Certain event = коли."},{"question":"\"If you want, we can go\" - ___ хочеш, можемо піти.","options":["Якщо","Коли","Що","Як"],"correctIndex":0,"explanation":"Uncertain/offer = якщо."},{"question":"\"What happens if he doesn't come?\" - Що буде, якщо він не ___?","options":["прийде","приходить","прийшов","прийти"],"correctIndex":0,"explanation":"Future after якщо = прийде."},{"question":"\"I'll call if anything\" - Я зателефоную, ___.","options":["якщо що","якщо коли","що якщо","коли що"],"correctIndex":0,"explanation":"\"If anything\" = якщо що."},{"question":"\"If I'm not mistaken\" - Якщо не ___.","options":["помиляюся","помилюсь","помилятися","помилився"],"correctIndex":0,"explanation":"Present tense in set phrase."}];
-    const sortData={"true-friends":["Якщо побачиш Марію...","Якщо буде час...","Якщо вийде...","Якщо хочеш..."],"false-friends":["Коли прийдеш додому...","Коли закінчу роботу...","Коли він повернеться...","Коли настане літо..."]};
-    const vocabData=[{"uk":"якщо","translit":"","en":"if","note":""},{"uk":"умова","translit":"","en":"condition","note":""},{"uk":"результат","translit":"","en":"result","note":""},{"uk":"інакше","translit":"","en":"otherwise","note":""},{"uk":"можливо","translit":"","en":"possibly, maybe","note":""},{"uk":"обов'язково","translit":"","en":"definitely, certainly","note":""},{"uk":"залишитися","translit":"","en":"to stay (perf)","note":""},{"uk":"запізнюватися","translit":"","en":"to be late (impf)","note":""},{"uk":"запізнитися","translit":"","en":"to be late (perf)","note":""},{"uk":"помилятися","translit":"","en":"to be mistaken","note":""},{"uk":"сподіватися","translit":"","en":"to hope","note":""},{"uk":"домовлятися","translit":"","en":"to agree, arrange","note":""},{"uk":"домовитися","translit":"","en":"to agree (perf)","note":""}];
-    const totalSort=8;
-    function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
-    document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));
-    let matchSel=null,matchScore=0,matchPairsArr=[];
-    document.querySelectorAll('#match-left .match-item').forEach(item=>{item.addEventListener('click',()=>{if(item.classList.contains('matched'))return;document.querySelectorAll('#match-left .match-item').forEach(i=>i.classList.remove('selected'));item.classList.add('selected');matchSel={el:item,pair:item.dataset.pair};});});
-    document.querySelectorAll('#match-right .match-item').forEach(item=>{item.addEventListener('click',()=>{if(item.classList.contains('matched')||!matchSel)return;if(matchSel.pair===item.dataset.pair){matchSel.el.classList.remove('selected');matchSel.el.classList.add('matched');item.classList.add('matched');matchPairsArr.push({left:matchSel.el,right:item});matchScore++;document.getElementById('match-score').textContent=matchScore;drawLines();if(matchScore===matchPairs.length)document.getElementById('match-complete').classList.add('show');}else{item.classList.add('wrong');setTimeout(()=>item.classList.remove('wrong'),300);}matchSel=null;});});
-    function drawLines(){const svg=document.getElementById('match-lines'),c=document.getElementById('match-container');if(!svg||!c)return;const r=c.getBoundingClientRect();svg.innerHTML='';svg.setAttribute('viewBox','0 0 '+r.width+' '+r.height);matchPairsArr.forEach(p=>{const lr=p.left.getBoundingClientRect(),rr=p.right.getBoundingClientRect();const line=document.createElementNS('http://www.w3.org/2000/svg','line');line.setAttribute('x1',lr.right-r.left);line.setAttribute('y1',lr.top+lr.height/2-r.top);line.setAttribute('x2',rr.left-r.left);line.setAttribute('y2',rr.top+rr.height/2-r.top);line.setAttribute('stroke','#26a269');line.setAttribute('stroke-width','2');svg.appendChild(line);});}
-    function resetMatch(){matchSel=null;matchScore=0;matchPairsArr=[];document.getElementById('match-score').textContent='0';document.getElementById('match-complete')?.classList.remove('show');document.getElementById('match-lines').innerHTML='';document.querySelectorAll('#match-container .match-item').forEach(i=>i.classList.remove('matched','selected','wrong'));}
-    window.addEventListener('resize',drawLines);
-    let quizScore=0,quizAns=0;
-    function initQuiz(){const c=document.getElementById('quiz-container');if(!c||!quizData.length)return;c.innerHTML='';quizData.forEach((q,i)=>{const sh=[...q.options].sort(()=>Math.random()-0.5);const cor=sh.indexOf(q.options[q.correctIndex]);const div=document.createElement('div');div.className='quiz-question';div.innerHTML='<h4>Q'+(i+1)+': '+q.question+'</h4><div class="quiz-options">'+sh.map((o,j)=>'<div class="quiz-option" data-c="'+(j===cor)+'" data-q="'+i+'">'+o+'</div>').join('')+'</div><div class="quiz-explanation" id="exp-'+i+'">'+q.explanation+'</div>';c.appendChild(div);});document.querySelectorAll('.quiz-option').forEach(o=>o.addEventListener('click',handleQuiz));}
-    function handleQuiz(e){const opt=e.target,q=opt.closest('.quiz-question');if(q.classList.contains('answered'))return;q.classList.add('answered');if(opt.dataset.c==='true'){opt.classList.add('correct');quizScore++;}else{opt.classList.add('wrong');q.querySelector('[data-c="true"]').classList.add('correct');}document.getElementById('exp-'+opt.dataset.q).classList.add('show');document.getElementById('quiz-score').textContent=quizScore;quizAns++;if(quizAns===quizData.length)document.getElementById('quiz-complete').classList.add('show');}
-    function resetQuiz(){quizScore=0;quizAns=0;document.getElementById('quiz-score').textContent='0';document.getElementById('quiz-complete')?.classList.remove('show');initQuiz();}
-    let sortScore=0,dragItem=null;
-    function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
-    function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
-    function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
-    document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
+
+    const matchPairs = [{"left":"Якщо буде дощ,","right":"візьму парасолю"},{"left":"Якщо матиму час,","right":"зателефоную"},{"left":"Якщо не поспішатимеш,","right":"запізнишся"},{"left":"Якщо хочеш,","right":"можемо піти разом"},{"left":"Якщо він прийде,","right":"ми почнемо"},{"left":"Якщо все буде добре,","right":"приїду в п'ятницю"}];
+    const quizData = [{"question":"\"If it rains, I'll take an umbrella\" - Якщо ___ дощ, я візьму парасолю.","options":["буде","є","був","бути"],"correctIndex":0,"explanation":"Future in \"if\" clause = буде."},{"question":"\"___ you get home, call me\" (you will) - ___ прийдеш додому, зателефонуй.","options":["Коли","Якщо","Що","Як"],"correctIndex":0,"explanation":"Certain event = коли."},{"question":"\"If you want, we can go\" - ___ хочеш, можемо піти.","options":["Якщо","Коли","Що","Як"],"correctIndex":0,"explanation":"Uncertain/offer = якщо."},{"question":"\"What happens if he doesn't come?\" - Що буде, якщо він не ___?","options":["прийде","приходить","прийшов","прийти"],"correctIndex":0,"explanation":"Future after якщо = прийде."},{"question":"\"I'll call if anything\" - Я зателефоную, ___.","options":["якщо що","якщо коли","що якщо","коли що"],"correctIndex":0,"explanation":"\"If anything\" = якщо що."},{"question":"\"If I'm not mistaken\" - Якщо не ___.","options":["помиляюся","помилюсь","помилятися","помилився"],"correctIndex":0,"explanation":"Present tense in set phrase."}];
+    const sortData = {"true-friends":["Якщо побачиш Марію...","Якщо буде час...","Якщо вийде...","Якщо хочеш..."],"false-friends":["Коли прийдеш додому...","Коли закінчу роботу...","Коли він повернеться...","Коли настане літо..."]};
+    const vocabData = [{"uk":"якщо","translit":"","en":"if","note":""},{"uk":"умова","translit":"","en":"condition","note":""},{"uk":"результат","translit":"","en":"result","note":""},{"uk":"інакше","translit":"","en":"otherwise","note":""},{"uk":"можливо","translit":"","en":"possibly, maybe","note":""},{"uk":"обов'язково","translit":"","en":"definitely, certainly","note":""},{"uk":"залишитися","translit":"","en":"to stay (perf)","note":""},{"uk":"запізнюватися","translit":"","en":"to be late (impf)","note":""},{"uk":"запізнитися","translit":"","en":"to be late (perf)","note":""},{"uk":"помилятися","translit":"","en":"to be mistaken","note":""},{"uk":"сподіватися","translit":"","en":"to hope","note":""},{"uk":"домовлятися","translit":"","en":"to agree, arrange","note":""},{"uk":"домовитися","translit":"","en":"to agree (perf)","note":""}];
+    const totalSort = 8;
+  
+// Answer callout toggle (for new > [!answer] syntax)
+function toggleAnswer(id, btn) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const isUkrainian = document.querySelector('.level-badge')?.textContent.match(/B[12]|C[12]/);
+  const showText = isUkrainian ? 'Показати відповідь' : 'Show Answer';
+  const hideText = isUkrainian ? 'Сховати відповідь' : 'Hide Answer';
+  const show = !el.classList.contains('show');
+  if (show) {
+    el.classList.add('show');
+    btn.textContent = hideText;
+    btn.classList.add('revealed');
+  } else {
+    el.classList.remove('show');
+    btn.textContent = showText;
+    btn.classList.remove('revealed');
+  }
+}
+
+// Section navigation
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id)?.classList.add('active');
+  document.querySelector('[data-section="' + id + '"]')?.classList.add('active');
+}
+document.querySelectorAll('.nav-tab').forEach(t => t.addEventListener('click', () => showSection(t.dataset.section)));
+
+// Initialize on DOM ready
+document.addEventListener('DOMContentLoaded', () => {
+  initQuiz();
+  initSort();
+  initVocab();
+});
+
+
+// Quiz Activity
+let quizScore = 0, quizAns = 0;
+
+function initQuiz() {
+  const c = document.getElementById('quiz-container');
+  if (!c || !quizData.length) return;
+  c.innerHTML = '';
+  quizData.forEach((q, i) => {
+    const sh = [...q.options].sort(() => Math.random() - 0.5);
+    const cor = sh.indexOf(q.options[q.correctIndex]);
+    const div = document.createElement('div');
+    div.className = 'quiz-question';
+    div.innerHTML = '<h4>Q' + (i + 1) + ': ' + q.question + '</h4><div class="quiz-options">' + sh.map((o, j) => '<div class="quiz-option" data-c="' + (j === cor) + '" data-q="' + i + '">' + o + '</div>').join('') + '</div><div class="quiz-explanation" id="exp-' + i + '">' + q.explanation + '</div>';
+    c.appendChild(div);
+  });
+  document.querySelectorAll('.quiz-option').forEach(o => o.addEventListener('click', handleQuiz));
+}
+
+function handleQuiz(e) {
+  const opt = e.target, q = opt.closest('.quiz-question');
+  if (q.classList.contains('answered')) return;
+  q.classList.add('answered');
+  if (opt.dataset.c === 'true') {
+    opt.classList.add('correct');
+    quizScore++;
+  } else {
+    opt.classList.add('wrong');
+    q.querySelector('[data-c="true"]').classList.add('correct');
+  }
+  document.getElementById('exp-' + opt.dataset.q).classList.add('show');
+  document.getElementById('quiz-score').textContent = quizScore;
+  quizAns++;
+  if (quizAns === quizData.length) document.getElementById('quiz-complete').classList.add('show');
+}
+
+function resetQuiz() {
+  quizScore = 0;
+  quizAns = 0;
+  document.getElementById('quiz-score').textContent = '0';
+  document.getElementById('quiz-complete')?.classList.remove('show');
+  initQuiz();
+}
+
+
+// Match Activity
+let matchSel = null, matchScore = 0, matchPairsArr = [];
+
+document.querySelectorAll('#match-left .match-item').forEach(item => {
+  item.addEventListener('click', () => {
+    if (item.classList.contains('matched')) return;
+    document.querySelectorAll('#match-left .match-item').forEach(i => i.classList.remove('selected'));
+    item.classList.add('selected');
+    matchSel = { el: item, pair: item.dataset.pair };
+  });
+});
+
+document.querySelectorAll('#match-right .match-item').forEach(item => {
+  item.addEventListener('click', () => {
+    if (item.classList.contains('matched') || !matchSel) return;
+    if (matchSel.pair === item.dataset.pair) {
+      matchSel.el.classList.remove('selected');
+      matchSel.el.classList.add('matched');
+      item.classList.add('matched');
+      matchPairsArr.push({ left: matchSel.el, right: item });
+      matchScore++;
+      document.getElementById('match-score').textContent = matchScore;
+      drawLines();
+      if (matchScore === matchPairs.length) document.getElementById('match-complete').classList.add('show');
+    } else {
+      item.classList.add('wrong');
+      setTimeout(() => item.classList.remove('wrong'), 300);
+    }
+    matchSel = null;
+  });
+});
+
+function drawLines() {
+  const svg = document.getElementById('match-lines'), c = document.getElementById('match-container');
+  if (!svg || !c) return;
+  const r = c.getBoundingClientRect();
+  svg.innerHTML = '';
+  svg.setAttribute('viewBox', '0 0 ' + r.width + ' ' + r.height);
+  matchPairsArr.forEach(p => {
+    const lr = p.left.getBoundingClientRect(), rr = p.right.getBoundingClientRect();
+    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    line.setAttribute('x1', lr.right - r.left);
+    line.setAttribute('y1', lr.top + lr.height / 2 - r.top);
+    line.setAttribute('x2', rr.left - r.left);
+    line.setAttribute('y2', rr.top + rr.height / 2 - r.top);
+    line.setAttribute('stroke', '#26a269');
+    line.setAttribute('stroke-width', '2');
+    svg.appendChild(line);
+  });
+}
+
+function resetMatch() {
+  matchSel = null;
+  matchScore = 0;
+  matchPairsArr = [];
+  document.getElementById('match-score').textContent = '0';
+  document.getElementById('match-complete')?.classList.remove('show');
+  document.getElementById('match-lines').innerHTML = '';
+  document.querySelectorAll('#match-container .match-item').forEach(i => i.classList.remove('matched', 'selected', 'wrong'));
+}
+
+window.addEventListener('resize', drawLines);
+
+
+// Sort Activity
+let sortScore = 0, dragItem = null;
+
+function initSort() {
+  const pool = document.getElementById('sort-items');
+  if (!pool || !Object.keys(sortData).length) return;
+  const all = Object.values(sortData).flat().sort(() => Math.random() - 0.5);
+  pool.innerHTML = '';
+  all.forEach(letter => {
+    const group = Object.keys(sortData).find(g => sortData[g].includes(letter));
+    const item = document.createElement('div');
+    item.className = 'sort-item';
+    item.textContent = letter;
+    item.draggable = true;
+    item.dataset.group = group;
+    item.addEventListener('dragstart', e => {
+      dragItem = item;
+      item.classList.add('dragging');
+    });
+    item.addEventListener('dragend', () => {
+      item.classList.remove('dragging');
+      dragItem = null;
+    });
+    pool.appendChild(item);
+  });
+  document.querySelectorAll('.sort-group').forEach(g => {
+    g.addEventListener('dragover', e => {
+      e.preventDefault();
+      g.classList.add('drag-over');
+    });
+    g.addEventListener('dragleave', () => g.classList.remove('drag-over'));
+    g.addEventListener('drop', e => {
+      e.preventDefault();
+      g.classList.remove('drag-over');
+      if (!dragItem) return;
+      if (g.dataset.group === dragItem.dataset.group) {
+        dragItem.classList.add('correct');
+        g.querySelector('.sort-items').appendChild(dragItem);
+        dragItem.draggable = false;
+        sortScore++;
+        document.getElementById('sort-score').textContent = sortScore;
+        if (sortScore === totalSort) document.getElementById('sort-complete').classList.add('show');
+      } else {
+        dragItem.classList.add('wrong');
+        setTimeout(() => dragItem.classList.remove('wrong'), 300);
+      }
+    });
+  });
+}
+
+function resetSort() {
+  sortScore = 0;
+  document.getElementById('sort-score').textContent = '0';
+  document.getElementById('sort-complete')?.classList.remove('show');
+  document.querySelectorAll('.sort-group .sort-items').forEach(g => g.innerHTML = '');
+  initSort();
+}
+
+
+// Vocabulary
+function initVocab() {
+  const grid = document.getElementById('vocab-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  vocabData.forEach(v => {
+    const card = document.createElement('div');
+    card.className = 'vocab-card';
+    card.innerHTML = '<div class="uk">' + v.uk + '</div><div class="translit">' + v.translit + '</div><div class="en">' + v.en + '</div>' + (v.note ? '<div class="note">' + v.note + '</div>' : '');
+    grid.appendChild(card);
+  });
+}
+
   </script>
 </body>
 </html>

@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-A1-16",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "grammar-introduction",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -27,119 +26,50 @@
       "Немає + genitive (absence)",
       "Numbers 5+ require genitive plural"
     ],
-    "totalDuration": 55,
-    "transliterationMode": "full",
     "tags": [
       "grammar",
       "cases",
       "genitive",
       "possession"
     ],
-    "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
+    "totalDuration": 55,
+    "transliterationMode": "full",
     "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### The Case of Ownership\n\nYou've learned nominative (subject), accusative (direct object), and locative (location). Now meet the **genitive** - the case of possession!\n\nEnglish uses \"of\" or 's: \"the book of the student\" / \"the student's book\"\nUkrainian changes the noun ending: книга **студента** (student's book)\n\n- Nominative: студент (student)\n- Genitive: книга студент**а** (the student's book)\n\n> 💡 **Did You Know?**\n>\n> \"Genitive\" comes from Latin \"genitivus\" meaning \"of birth/origin.\" It originally indicated where something came from. Over time, it expanded to express possession, absence, and quantity. Ukrainian genitive does all this and more!"
-          }
-        ]
-      },
       {
         "id": "phase-presentation",
         "name": "presentation",
-        "duration": 15,
+        "duration": 18,
         "items": [
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "### Genitive Endings\n\n**Masculine:**\n\n| Nominative | Genitive | Example |\n|------------|----------|---------|\n| студент | студент**а** | книга студента |\n| стіл | стол**а** | ніжка стола (table leg) |\n| день | дн**я** | кінець дня (end of day) |\n| чай | ча**ю** | чашка чаю (cup of tea) |\n\n**Feminine:**\n\n| Nominative | Genitive | Example |\n|------------|----------|---------|\n| книга | книг**и** | сторінка книги (page of book) |\n| земля | земл**і** | поверхня землі (surface of earth) |\n| ніч | ноч**і** | кінець ночі (end of night) |\n\n**Neuter:**\n\n| Nominative | Genitive | Example |\n|------------|----------|---------|\n| вікно | вікн**а** | скло вікна (window glass) |\n| море | мор**я** | берег моря (seashore) |\n| ім'я | імен**і** | значення імені (meaning of name) |\n\n> ⚡ **Pro Tip: Pattern Summary**\n>\n> - **Masculine:** add -а or -я\n> - **Feminine -а:** change to -и\n> - **Feminine -я:** change to -і\n> - **Neuter -о:** change to -а\n> - **Neuter -е/-я:** change to -я"
+            "teacherNotes": "### Genitive Endings\n\n**Masculine:**\n\n| Nominative | Genitive | Example |\n|------------|----------|---------|\n| студент | студент**а** | книга студента |\n| стіл | стол**а** | ніжка стола (table leg) |\n| день | дн**я** | кінець дня (end of day) |\n| чай | ча**ю** | чашка чаю (cup of tea) |\n\n**Feminine:**\n\n| Nominative | Genitive | Example |\n|------------|----------|---------|\n| книга | книг**и** | сторінка книги (page of book) |\n| земля | земл**і** | поверхня землі (surface of earth) |\n| ніч | ноч**і** | кінець ночі (end of night) |\n\n**Neuter:**\n\n| Nominative | Genitive | Example |\n|------------|----------|---------|\n| вікно | вікн**а** | скло вікна (window glass) |\n| море | мор**я** | берег моря (seashore) |\n| ім'я | імен**і** | значення імені (meaning of name) |\n\n> ⚡ **Pro Tip: Pattern Summary**\n>\n> - **Masculine:** add -а or -я\n> - **Feminine -а:** change to -и\n> - **Feminine -я:** change to -і\n> - **Neuter -о:** change to -а\n> - **Neuter -е/-я:** change to -я\n\n### Expressing Possession\n\n**Word order: possessed thing + genitive possessor**\n\n- книга студент**а** = the student's book\n- машина брат**а** = my brother's car\n- дім батьк**ів** = parents' house\n- кінець дн**я** = end of day\n\n> 📜 **History Bite: Why No \"Of\"?**\n>\n> English uses prepositions (\"of the student\") or 's (\"student's\") for possession. Ukrainian evolved differently - the genitive ending itself carries the meaning of \"of.\" This is more efficient: one suffix does what English needs extra words for!\n\n### Немає + Genitive (Absence)\n\nTo say \"there is no...\" use **немає** + genitive:\n\n| Nominative | Genitive | \"There is no...\" |\n|------------|----------|------------------|\n| час | часу | Немає часу. (No time.) |\n| хліб | хліба | Немає хліба. (No bread.) |\n| вода | води | Немає води. (No water.) |\n| гроші | грошей | Немає грошей. (No money.) |\n\n**Compare presence vs absence:**\n- Є час. (There is time.) - nominative\n- Немає часу. (There is no time.) - genitive\n\n> 🔍 **Myth Buster: \"Немає Is Difficult\"**\n>\n> Many learners avoid немає. But it's just: немає + genitive!\n> The pattern is simple and incredibly useful:\n> - Немає проблем! (No problem! - literally \"No problems!\")\n> - Немає питань. (No questions.)\n\n### Genitive After Numbers 5+\n\nRemember from Module 09: numbers 5-20 take genitive plural!\n\n| Number | Noun (Genitive Plural) | Example |\n|--------|------------------------|---------|\n| 5 | книг | п'ять книг |\n| 6 | студентів | шість студентів |\n| 10 | гривень | десять гривень |\n| 15 | хвилин | п'ятнадцять хвилин |\n\n**Genitive plural endings:**\n- Masculine: -ів / -ей (студентів, друзів)\n- Feminine -а: drop -а (книга → книг)\n- Feminine -я: -ь (хвилина → хвилин, but земля → земель)\n- Neuter: -Ø or -ів (вікно → вікон, море → морів)\n\n> 🎯 **Fun Fact: Zero Ending**\n>\n> Some genitive plurals have \"zero ending\" - you just remove the final vowel:\n> - книга → книг (5 книг)\n> - гривня → гривень (5 гривень)\n>\n> This \"nothing\" is itself a grammatical marker - the absence of an ending carries meaning!\n\n### Common Genitive Prepositions\n\nThese prepositions always take genitive:\n\n| Preposition | Meaning | Example |\n|-------------|---------|---------|\n| без | without | кава без цукру (coffee without sugar) |\n| для | for | подарунок для друга (gift for a friend) |\n| до | to, until | до станції (to the station) |\n| з/із | from, out of | з України (from Ukraine) |\n| біля | near | біля метро (near the metro) |\n| після | after | після роботи (after work) |\n| від | from | лист від мами (letter from mom) |\n\n> 🎭 **Culture Corner: Ordering Coffee**\n>\n> Ukrainians love their coffee! Use genitive naturally:\n> - Каву **без молока**, будь ласка. (Coffee without milk.)\n> - Каву **з цукром**... wait, that's instrumental!\n> - Каву **без цукру**. (Coffee without sugar.)\n>\n> \"Без\" (without) always takes genitive!"
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Expressing Possession\n\n**Word order: possessed thing + genitive possessor**\n\n- книга студент**а** = the student's book\n- машина брат**а** = my brother's car\n- дім батьк**ів** = parents' house\n- кінець дн**я** = end of day\n\n> 📜 **History Bite: Why No \"Of\"?**\n>\n> English uses prepositions (\"of the student\") or 's (\"student's\") for possession. Ukrainian evolved differently - the genitive ending itself carries the meaning of \"of.\" This is more efficient: one suffix does what English needs extra words for!"
+            "teacherNotes": "### Form Genitive Singular\n\nTransform to genitive:\n1. студент\n   > [!answer] студент__ (студента)\n2. книга\n   > [!answer] книг__ (книги)\n3. вікно\n   > [!answer] вікн__ (вікна)\n4. день\n   > [!answer] дн__ (дня)\n5. ніч\n   > [!answer] ноч__ (ночі)\n\n### Express Absence\n\nUse немає + genitive:\n1. час\n   > [!answer] Немає ___ (часу)\n2. вода\n   > [!answer] Немає ___ (води)\n3. гроші\n   > [!answer] Немає ___ (грошей)\n4. хліб\n   > [!answer] Немає ___ (хліба)\n\n### Possession Phrases\n\nForm possession phrases:\n1. book + student\n   > [!answer] книга студента\n2. car + brother\n   > [!answer] машина брата\n3. end + day\n   > [!answer] кінець дня\n4. cup + tea\n   > [!answer] чашка чаю\n\n> 🌍 **Real World: Daily Genitive**\n>\n> You'll use genitive constantly:\n> - **Скільки часу?** - What time is it? (literally \"How much of time?\")\n> - **Немає проблем!** - No problem!\n> - **Чашка кави** - A cup of coffee\n> - **Пляшка води** - A bottle of water\n> - **Кілограм яблук** - A kilogram of apples"
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Немає + Genitive (Absence)\n\nTo say \"there is no...\" use **немає** + genitive:\n\n| Nominative | Genitive | \"There is no...\" |\n|------------|----------|------------------|\n| час | часу | Немає часу. (No time.) |\n| хліб | хліба | Немає хліба. (No bread.) |\n| вода | води | Немає води. (No water.) |\n| гроші | грошей | Немає грошей. (No money.) |\n\n**Compare presence vs absence:**\n- Є час. (There is time.) - nominative\n- Немає часу. (There is no time.) - genitive\n\n> 🔍 **Myth Buster: \"Немає Is Difficult\"**\n>\n> Many learners avoid немає. But it's just: немає + genitive!\n> The pattern is simple and incredibly useful:\n> - Немає проблем! (No problem! - literally \"No problems!\")\n> - Немає питань. (No questions.)"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Genitive After Numbers 5+\n\nRemember from Module 09: numbers 5-20 take genitive plural!\n\n| Number | Noun (Genitive Plural) | Example |\n|--------|------------------------|---------|\n| 5 | книг | п'ять книг |\n| 6 | студентів | шість студентів |\n| 10 | гривень | десять гривень |\n| 15 | хвилин | п'ятнадцять хвилин |\n\n**Genitive plural endings:**\n- Masculine: -ів / -ей (студентів, друзів)\n- Feminine -а: drop -а (книга → книг)\n- Feminine -я: -ь (хвилина → хвилин, but земля → земель)\n- Neuter: -Ø or -ів (вікно → вікон, море → морів)\n\n> 🎯 **Fun Fact: Zero Ending**\n>\n> Some genitive plurals have \"zero ending\" - you just remove the final vowel:\n> - книга → книг (5 книг)\n> - гривня → гривень (5 гривень)\n>\n> This \"nothing\" is itself a grammatical marker - the absence of an ending carries meaning!"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Common Genitive Prepositions\n\nThese prepositions always take genitive:\n\n| Preposition | Meaning | Example |\n|-------------|---------|---------|\n| без | without | кава без цукру (coffee without sugar) |\n| для | for | подарунок для друга (gift for a friend) |\n| до | to, until | до станції (to the station) |\n| з/із | from, out of | з України (from Ukraine) |\n| біля | near | біля метро (near the metro) |\n| після | after | після роботи (after work) |\n| від | from | лист від мами (letter from mom) |\n\n> 🎭 **Culture Corner: Ordering Coffee**\n>\n> Ukrainians love their coffee! Use genitive naturally:\n> - Каву **без молока**, будь ласка. (Coffee without milk.)\n> - Каву **з цукром**... wait, that's instrumental!\n> - Каву **без цукру**. (Coffee without sugar.)\n>\n> \"Без\" (without) always takes genitive!"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A1-16-matchup"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Form Genitive Singular\n\nTransform to genitive:\n1. студент → студент__ (студента)\n2. книга → книг__ (книги)\n3. вікно → вікн__ (вікна)\n4. день → дн__ (дня)\n5. ніч → ноч__ (ночі)"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Express Absence\n\nUse немає + genitive:\n1. час → Немає ___ (часу)\n2. вода → Немає ___ (води)\n3. гроші → Немає ___ (грошей)\n4. хліб → Немає ___ (хліба)"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Possession Phrases\n\nForm possession phrases:\n1. book + student → книга студента\n2. car + brother → машина брата\n3. end + day → кінець дня\n4. cup + tea → чашка чаю\n\n> 🌍 **Real World: Daily Genitive**\n>\n> You'll use genitive constantly:\n> - **Скільки часу?** - What time is it? (literally \"How much of time?\")\n> - **Немає проблем!** - No problem!\n> - **Чашка кави** - A cup of coffee\n> - **Пляшка води** - A bottle of water\n> - **Кілограм яблук** - A kilogram of apples"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A1-16-quiz"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A1-16-groupsort"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Describe What's Missing\n\nSay what you don't have:\n1. I don't have time. → У мене немає часу.\n2. There's no bread. → Немає хліба.\n3. There's no water. → Немає води.\n4. She doesn't have money. → У неї немає грошей."
+            "teacherNotes": "### Describe What's Missing\n\nSay what you don't have:\n1. I don't have time.\n   > [!answer] У мене немає часу.\n2. There's no bread.\n   > [!answer] Немає хліба.\n3. There's no water.\n   > [!answer] Немає води.\n4. She doesn't have money.\n   > [!answer] У неї немає грошей.\n\n---"
           }
         ]
       }
-    ]
+    ],
+    "createdAt": "2025-12-01T22:58:37.248Z",
+    "modifiedAt": "2025-12-01T22:58:37.248Z",
+    "version": 1
   },
   "activities": [
     {
-      "id": "act-uk-A1-16-matchup",
+      "id": "act-a1-16-matchup",
       "type": "match-up",
       "title": "Nominative to Genitive",
       "description": "Match nominative forms to their genitive forms.",
       "content": {
         "type": "match-up",
-        "instructions": "Match nominative forms to their genitive forms.",
         "pairs": [
           {
             "left": "студент",
@@ -174,23 +104,17 @@
       "language": "uk",
       "difficultyLevel": "A1",
       "duration": 5,
-      "tags": [
-        "grammar",
-        "cases",
-        "genitive",
-        "possession"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.248Z",
+      "modifiedAt": "2025-12-01T22:58:37.248Z"
     },
     {
-      "id": "act-uk-A1-16-quiz",
+      "id": "act-a1-16-quiz",
       "type": "quiz",
       "title": "Genitive Forms",
       "description": "Choose the correct genitive form.",
       "content": {
         "type": "quiz",
-        "instructions": "Choose the correct genitive form.",
         "questions": [
           {
             "question": "\"The student's book\" - книга ___.",
@@ -291,25 +215,20 @@
       "language": "uk",
       "difficultyLevel": "A1",
       "duration": 5,
-      "tags": [
-        "grammar",
-        "cases",
-        "genitive",
-        "possession"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.248Z",
+      "modifiedAt": "2025-12-01T22:58:37.248Z"
     },
     {
-      "id": "act-uk-A1-16-groupsort",
+      "id": "act-a1-16-groupsort",
       "type": "group-sort",
       "title": "Genitive Prepositions",
       "description": "Sort these prepositions by what case they take.",
       "content": {
         "type": "group-sort",
-        "instructions": "Sort these prepositions by what case they take.",
         "groups": [
           {
+            "id": "take-genitive",
             "name": "Take Genitive",
             "items": [
               "без (without)",
@@ -322,6 +241,7 @@
             ]
           },
           {
+            "id": "take-accusative",
             "name": "Take Accusative",
             "items": [
               "в/у (into - motion)",
@@ -339,14 +259,9 @@
       "language": "uk",
       "difficultyLevel": "A1",
       "duration": 5,
-      "tags": [
-        "grammar",
-        "cases",
-        "genitive",
-        "possession"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.248Z",
+      "modifiedAt": "2025-12-01T22:58:37.248Z"
     }
   ],
   "vocabulary": {
@@ -357,162 +272,139 @@
     "transliterationMode": "full",
     "words": [
       {
-        "id": "v-m16-001",
+        "id": "v-nemaye-16-0",
         "uk": "немає",
-        "translit": "",
-        "ipa": "/nɛˈmɑjɛ/",
         "en": "there is no",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/nɛˈmɑjɛ/",
         "note": "+ genitive"
       },
       {
-        "id": "v-m16-002",
+        "id": "v-bez-16-1",
         "uk": "без",
-        "translit": "",
-        "ipa": "/bɛz/",
         "en": "without",
         "pos": "prep",
-        "gender": "-",
+        "ipa": "/bɛz/",
         "note": "+ genitive"
       },
       {
-        "id": "v-m16-003",
+        "id": "v-dlya-16-2",
         "uk": "для",
-        "translit": "",
-        "ipa": "/dlʲɑ/",
         "en": "for",
         "pos": "prep",
-        "gender": "-",
+        "ipa": "/dlʲɑ/",
         "note": "+ genitive"
       },
       {
-        "id": "v-m16-004",
+        "id": "v-z-/-iz-16-3",
         "uk": "з / із",
-        "translit": "",
-        "ipa": "/z/ /iz/",
         "en": "from, out of",
         "pos": "prep",
-        "gender": "-",
+        "ipa": "/z/ /iz/",
         "note": "+ genitive"
       },
       {
-        "id": "v-m16-005",
+        "id": "v-pislya-16-4",
         "uk": "після",
-        "translit": "",
-        "ipa": "/ˈpʲislʲɑ/",
         "en": "after",
         "pos": "prep",
-        "gender": "-",
+        "ipa": "/ˈpʲislʲɑ/",
         "note": "+ genitive"
       },
       {
-        "id": "v-m16-006",
+        "id": "v-vid-16-5",
         "uk": "від",
-        "translit": "",
-        "ipa": "/vʲid/",
         "en": "from",
         "pos": "prep",
-        "gender": "-",
+        "ipa": "/vʲid/",
         "note": "+ genitive"
       },
       {
-        "id": "v-m16-007",
+        "id": "v-chas-16-6",
         "uk": "час",
-        "translit": "",
-        "ipa": "/tʃɑs/",
         "en": "time",
         "pos": "noun",
+        "ipa": "/tʃɑs/",
         "gender": "m",
         "note": "Gen: часу"
       },
       {
-        "id": "v-m16-008",
+        "id": "v-hroshi-16-7",
         "uk": "гроші",
-        "translit": "",
-        "ipa": "/ˈɦrɔʃʲi/",
         "en": "money",
         "pos": "noun",
-        "gender": "pl",
+        "ipa": "/ˈɦrɔʃʲi/",
         "note": "Gen: грошей"
       },
       {
-        "id": "v-m16-009",
+        "id": "v-khlib-16-8",
         "uk": "хліб",
-        "translit": "",
-        "ipa": "/xlʲib/",
         "en": "bread",
         "pos": "noun",
+        "ipa": "/xlʲib/",
         "gender": "m",
         "note": "Gen: хліба"
       },
       {
-        "id": "v-m16-010",
+        "id": "v-tsukor-16-9",
         "uk": "цукор",
-        "translit": "",
-        "ipa": "/ˈt͡sukɔr/",
         "en": "sugar",
         "pos": "noun",
+        "ipa": "/ˈt͡sukɔr/",
         "gender": "m",
         "note": "Gen: цукру"
       },
       {
-        "id": "v-m16-011",
+        "id": "v-chashka-16-10",
         "uk": "чашка",
-        "translit": "",
-        "ipa": "/ˈtʃɑʃkɑ/",
         "en": "cup",
         "pos": "noun",
+        "ipa": "/ˈtʃɑʃkɑ/",
         "gender": "f",
         "note": "Gen: чашки"
       },
       {
-        "id": "v-m16-012",
+        "id": "v-plyashka-16-11",
         "uk": "пляшка",
-        "translit": "",
-        "ipa": "/ˈplʲɑʃkɑ/",
         "en": "bottle",
         "pos": "noun",
+        "ipa": "/ˈplʲɑʃkɑ/",
         "gender": "f",
         "note": "Gen: пляшки"
       },
       {
-        "id": "v-m16-013",
+        "id": "v-storinka-16-12",
         "uk": "сторінка",
-        "translit": "",
-        "ipa": "/stɔˈrʲinkɑ/",
         "en": "page",
         "pos": "noun",
+        "ipa": "/stɔˈrʲinkɑ/",
         "gender": "f",
         "note": "Gen: сторінки"
       },
       {
-        "id": "v-m16-014",
+        "id": "v-kinetsь-16-13",
         "uk": "кінець",
-        "translit": "",
-        "ipa": "/kʲiˈnɛt͡sʲ/",
         "en": "end",
         "pos": "noun",
+        "ipa": "/kʲiˈnɛt͡sʲ/",
         "gender": "m",
         "note": "Gen: кінця"
       },
       {
-        "id": "v-m16-015",
+        "id": "v-pochatok-16-14",
         "uk": "початок",
-        "translit": "",
-        "ipa": "/pɔˈtʃɑtɔk/",
         "en": "beginning",
         "pos": "noun",
+        "ipa": "/pɔˈtʃɑtɔk/",
         "gender": "m",
         "note": "Gen: початку"
       },
       {
-        "id": "v-m16-016",
+        "id": "v-kilohram-16-15",
         "uk": "кілограм",
-        "translit": "",
-        "ipa": "/kʲilɔˈɦrɑm/",
         "en": "kilogram",
         "pos": "noun",
+        "ipa": "/kʲilɔˈɦrɑm/",
         "gender": "m",
         "note": "Gen: кілограма"
       }

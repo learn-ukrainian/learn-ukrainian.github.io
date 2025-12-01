@@ -235,49 +235,63 @@ In Ukrainian, prefixes don't just modify verbs—they create entirely new meanin
 
 ### Match Prefix to Meaning
 
-1. при- → arrival
-2. ви- → exit
-3. в-/у- → entry
-4. за- → behind/drop by
-5. пере- → across
-6. від- → away from
-7. до- → reaching
-8. об- → around
+1. при-
+   > [!answer] arrival
+2. ви-
+   > [!answer] exit
+3. в-/у-
+   > [!answer] entry
+4. за-
+   > [!answer] behind/drop by
+5. пере-
+   > [!answer] across
+6. від-
+   > [!answer] away from
+7. до-
+   > [!answer] reaching
+8. об-
+   > [!answer] around
 
 ### Complete with Correct Verb
 
 1. Він ___ (arrive) о восьмій годині.
-   → прийшов
+   > [!answer] прийшов
 
 2. Вона ___ (exit) з магазину.
-   → вийшла
+   > [!answer] вийшла
 
 3. Ми ___ (cross) вулицю.
-   → перейшли
+   > [!answer] перейшли
 
 4. Я ___ (drop by) до друга.
-   → зайшов
+   > [!answer] зайшов
 
 5. Поїзд ___ (depart) вчасно.
-   → відійшов
+   > [!answer] відійшов
 
 6. Як ___ (reach) до центру?
-   → дійти
+   > [!answer] дійти
 
 7. Вона ___ (enter) в кімнату.
-   → увійшла
+   > [!answer] увійшла
 
 8. Ми ___ (drive around) затор.
-   → об'їхали
+   > [!answer] об'їхали
 
 ### Translate
 
-1. I arrived home at 6. → Я прийшов додому о шостій.
-2. She went out to the balcony. → Вона вийшла на балкон.
-3. We crossed the bridge. → Ми перейшли міст.
-4. Drop by tomorrow! → Зайди завтра!
-5. The bus departed. → Автобус відійшов.
-6. How do I get to the station? → Як дійти до станції?
+1. I arrived home at 6.
+   > [!answer] Я прийшов додому о шостій.
+2. She went out to the balcony.
+   > [!answer] Вона вийшла на балкон.
+3. We crossed the bridge.
+   > [!answer] Ми перейшли міст.
+4. Drop by tomorrow!
+   > [!answer] Зайди завтра!
+5. The bus departed.
+   > [!answer] Автобус відійшов.
+6. How do I get to the station?
+   > [!answer] Як дійти до станції?
 
 ## production
 

@@ -5,98 +5,314 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Module 60: A2 Capstone | Ukrainian A2</title>
   <style>
-    :root { --primary: #1a5fb4; --primary-light: #3584e4; --success: #26a269; --warning: #e5a50a; --danger: #c01c28; --bg: #fafafa; --card-bg: #fff; --text: #1e1e1e; --text-muted: #5e5e5e; --border: #e0e0e0; }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
-    .top-nav { background: #2e2e2e; color: white; padding: 0.5rem 2rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.875rem; }
-    .top-nav a { color: white; text-decoration: none; }
-    .top-nav a:hover { text-decoration: underline; }
-    .module-nav { display: flex; gap: 1rem; align-items: center; }
-    .module-nav-link { color: rgba(255,255,255,0.8); text-decoration: none; padding: 0.25rem 0.5rem; }
-    .module-nav-link:hover { color: white; }
-    .module-nav-link.disabled { color: rgba(255,255,255,0.3); pointer-events: none; }
-    .nav { position: sticky; top: 0; background: var(--primary); color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; z-index: 100; }
-    .nav h1 { font-size: 1.25rem; }
-    .nav-tabs { display: flex; gap: 0.5rem; }
-    .nav-tab { background: rgba(255,255,255,0.2); border: none; color: white; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; }
-    .nav-tab.active { background: white; color: var(--primary); }
-    main { max-width: 1000px; margin: 0 auto; padding: 2rem; }
-    .section { display: none; } .section.active { display: block; }
-    .lesson-header { text-align: center; margin-bottom: 2rem; padding: 2rem; background: linear-gradient(135deg, #e8f4fd, #f0e8fd); border-radius: 12px; }
-    .level-badge { background: var(--primary); color: white; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.875rem; }
-    .card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 1.5rem; margin-bottom: 1.5rem; }
-    .card h3 { color: var(--primary); margin-bottom: 1rem; }
-    .section-intro { border-left: 4px solid var(--primary); }
-    .section-intro h3 { color: var(--primary); }
-    .section-topic { border-left: 4px solid var(--border); }
-    .section-summary { background: linear-gradient(135deg, #f0f9ff, #e8f4fd); border-left: 4px solid var(--success); }
-    .section-summary h3 { color: var(--success); }
-    .canvas-note { background: #fffbeb; border-left: 4px solid var(--warning); padding: 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
-    .canvas-note h4 { color: var(--warning); margin-bottom: 0.5rem; }
-    .md-content { line-height: 1.7; }
-    .md-content p { margin: 0.75rem 0; }
-    .md-content ul, .md-content ol { margin: 0.75rem 0; padding-left: 1.5rem; }
-    .md-content li { margin: 0.25rem 0; }
-    .md-content strong { color: var(--primary); }
-    .md-content blockquote { background: #e8f4fd; border-left: 4px solid var(--primary); padding: 0.75rem 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
-    .md-content blockquote p { margin: 0.25rem 0; }
-    .md-content table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
-    .md-content th, .md-content td { border: 1px solid var(--border); padding: 0.5rem 0.75rem; text-align: left; }
-    .md-content th { background: #f5f5f5; font-weight: 600; }
-    .md-content code { background: #f0f0f0; padding: 0.125rem 0.375rem; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
-    .letter-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0; }
-    .letter-group { border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; }
-    .letter-group.true-friends { border-color: var(--success); } .letter-group.true-friends .letters { color: var(--success); }
-    .letter-group.false-friends { border-color: var(--danger); } .letter-group.false-friends .letters { color: var(--danger); }
-    .letter-group.new-letters { border-color: var(--primary); } .letter-group.new-letters .letters { color: var(--primary); }
-    .letters { font-size: 1.75rem; letter-spacing: 0.3rem; }
-    .match-container { display: flex; gap: 3rem; padding: 1rem; position: relative; }
-    .match-column { flex: 1; display: flex; flex-direction: column; gap: 0.75rem; }
-    .match-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; font-size: 1.25rem; cursor: pointer; }
-    .match-item.selected { border-color: var(--primary); background: #e8f4fd; }
-    .match-item.matched { border-color: var(--success); background: #e8f8f0; }
-    .match-item.wrong { border-color: var(--danger); background: #fde8e8; }
-    .match-lines { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
-    .quiz-question { border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; }
-    .quiz-question.answered { pointer-events: none; }
-    .quiz-question .cyrillic { font-size: 1.5rem; color: var(--primary); font-weight: 600; }
-    .quiz-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-top: 1rem; }
-    .quiz-option { background: #f5f5f5; border: 2px solid var(--border); border-radius: 8px; padding: 1rem; cursor: pointer; text-align: center; }
-    .quiz-option.correct { border-color: var(--success); background: #d4edda; }
-    .quiz-option.wrong { border-color: var(--danger); background: #f8d7da; }
-    .quiz-explanation { margin-top: 1rem; padding: 1rem; background: #e8f4fd; border-radius: 8px; display: none; }
-    .quiz-explanation.show { display: block; }
-    .sort-pool { background: #f5f5f5; border: 2px dashed var(--border); border-radius: 12px; padding: 1.5rem; min-height: 80px; margin-bottom: 1rem; }
-    .sort-items { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; }
-    .sort-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 0.75rem 1.25rem; font-size: 1.5rem; cursor: grab; }
-    .sort-item.correct { border-color: var(--success); background: #e8f8f0; }
-    .sort-item.wrong { border-color: var(--danger); background: #fde8e8; }
-    .sort-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
-    .sort-group { border: 2px solid var(--border); border-radius: 12px; padding: 1rem; min-height: 150px; }
-    .sort-group.drag-over { border-color: var(--primary); background: #e8f4fd; }
-    .sort-group h4 { font-size: 0.875rem; text-align: center; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--border); }
-    .sort-group.true-friends h4 { color: var(--success); border-color: var(--success); }
-    .sort-group.false-friends h4 { color: var(--danger); border-color: var(--danger); }
-    .sort-group.new-letters h4 { color: var(--primary); border-color: var(--primary); }
-    .vocab-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; }
-    .vocab-card { border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; text-align: center; }
-    .vocab-card .uk { font-size: 1.75rem; font-weight: 600; color: var(--primary); }
-    .vocab-card .translit { color: var(--text-muted); font-style: italic; }
-    .vocab-card .en { font-weight: 500; margin: 0.25rem 0; }
-    .vocab-card .note { font-size: 0.75rem; color: #613583; background: #f0e8fd; padding: 0.25rem 0.5rem; border-radius: 4px; }
-    .btn { padding: 0.75rem 1.5rem; border: none; border-radius: 8px; cursor: pointer; }
-    .btn-primary { background: var(--primary); color: white; }
-    .btn-outline { background: transparent; border: 2px solid var(--border); }
-    .btn-group { display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem; }
-    .score-display { text-align: center; padding: 1rem; background: linear-gradient(135deg, #e8f8f0, #e8f4fd); border-radius: 8px; margin-bottom: 1rem; }
-    .score-display .score { font-size: 2rem; font-weight: 700; color: var(--success); }
-    .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
-    .completion-message.show { display: block; }
-    footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+:root { --primary: #1a5fb4; --primary-light: #3584e4; --success: #26a269; --warning: #e5a50a; --danger: #c01c28; --bg: #fafafa; --card-bg: #fff; --text: #1e1e1e; --text-muted: #5e5e5e; --border: #e0e0e0; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+.top-nav { background: #2e2e2e; color: white; padding: 0.5rem 2rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.875rem; }
+.top-nav a { color: white; text-decoration: none; }
+.top-nav a:hover { text-decoration: underline; }
+.module-nav { display: flex; gap: 1rem; align-items: center; }
+.module-nav-link { color: rgba(255,255,255,0.8); text-decoration: none; padding: 0.25rem 0.5rem; }
+.module-nav-link:hover { color: white; }
+.module-nav-link.disabled { color: rgba(255,255,255,0.3); pointer-events: none; }
+.nav { position: sticky; top: 0; background: var(--primary); color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; z-index: 100; }
+.nav h1 { font-size: 1.25rem; }
+.nav-tabs { display: flex; gap: 0.5rem; }
+.nav-tab { background: rgba(255,255,255,0.2); border: none; color: white; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; }
+.nav-tab.active { background: white; color: var(--primary); }
+main { max-width: 1000px; margin: 0 auto; padding: 2rem; }
+.section { display: none; } .section.active { display: block; }
+.lesson-header { text-align: center; margin-bottom: 2rem; padding: 2rem; background: linear-gradient(135deg, #e8f4fd, #f0e8fd); border-radius: 12px; }
+.level-badge { background: var(--primary); color: white; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.875rem; }
+.card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 1.5rem; margin-bottom: 1.5rem; }
+.card h3 { color: var(--primary); margin-bottom: 1rem; }
+.section-intro { border-left: 4px solid var(--primary); }
+.section-intro h3 { color: var(--primary); }
+.section-topic { border-left: 4px solid var(--border); }
+.section-summary { background: linear-gradient(135deg, #f0f9ff, #e8f4fd); border-left: 4px solid var(--success); }
+.section-summary h3 { color: var(--success); }
+.canvas-note { background: #fffbeb; border-left: 4px solid var(--warning); padding: 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+.canvas-note h4 { color: var(--warning); margin-bottom: 0.5rem; }
+.md-content { line-height: 1.7; }
+.md-content p { margin: 0.75rem 0; }
+.md-content ul, .md-content ol { margin: 0.75rem 0; padding-left: 1.5rem; }
+.md-content li { margin: 0.25rem 0; }
+.md-content strong { color: var(--primary); }
+.md-content blockquote { background: #e8f4fd; border-left: 4px solid var(--primary); padding: 0.75rem 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+.md-content blockquote p { margin: 0.25rem 0; }
+.md-content table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+.md-content th, .md-content td { border: 1px solid var(--border); padding: 0.5rem 0.75rem; text-align: left; }
+.md-content th { background: #f5f5f5; font-weight: 600; }
+.md-content code { background: #f0f0f0; padding: 0.125rem 0.375rem; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
+.md-content details { background: #f8f9fa; border: 1px solid var(--border); border-radius: 8px; padding: 0; margin: 1rem 0; }
+.md-content details summary { background: linear-gradient(135deg, #e8f4fd, #f0e8fd); padding: 0.75rem 1rem; cursor: pointer; font-weight: 600; color: var(--primary); border-radius: 8px; list-style: none; display: flex; align-items: center; gap: 0.5rem; }
+.md-content details summary::-webkit-details-marker { display: none; }
+.md-content details summary::before { content: '▶'; font-size: 0.75rem; transition: transform 0.2s; }
+.md-content details[open] summary::before { transform: rotate(90deg); }
+.md-content details[open] summary { border-radius: 8px 8px 0 0; }
+.md-content details > *:not(summary) { padding: 0 1rem; }
+.md-content details > *:last-child { padding-bottom: 1rem; }
+.md-content p > details { margin: 0; }
+.md-content p:has(> details) { margin: 1rem 0; }
+.inline-answer { background: linear-gradient(135deg, #d4edda, #e8f4fd); padding: 0.125rem 0.5rem; border-radius: 4px; transition: opacity 0.2s; }
+.inline-answer.hidden { opacity: 0; user-select: none; }
+.answer-toggle-btn { display: inline-flex; align-items: center; gap: 0.5rem; background: linear-gradient(135deg, #e8f4fd, #f0e8fd); border: 1px solid var(--primary); color: var(--primary); padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-size: 0.875rem; font-weight: 600; margin: 1rem 0; }
+.answer-toggle-btn:hover { background: var(--primary); color: white; }
+.answer-toggle-btn svg { width: 1rem; height: 1rem; }
+.letter-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0; }
+.letter-group { border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; }
+.letter-group.true-friends { border-color: var(--success); } .letter-group.true-friends .letters { color: var(--success); }
+.letter-group.false-friends { border-color: var(--danger); } .letter-group.false-friends .letters { color: var(--danger); }
+.letter-group.new-letters { border-color: var(--primary); } .letter-group.new-letters .letters { color: var(--primary); }
+.letters { font-size: 1.75rem; letter-spacing: 0.3rem; }
+.btn { padding: 0.75rem 1.5rem; border: none; border-radius: 8px; cursor: pointer; }
+.btn-primary { background: var(--primary); color: white; }
+.btn-outline { background: transparent; border: 2px solid var(--border); }
+.btn-group { display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem; }
+.score-display { text-align: center; padding: 1rem; background: linear-gradient(135deg, #e8f8f0, #e8f4fd); border-radius: 8px; margin-bottom: 1rem; }
+.score-display .score { font-size: 2rem; font-weight: 700; color: var(--success); }
+.completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
+.completion-message.show { display: block; }
+footer { text-align: center; padding: 2rem; color: var(--text-muted); }
+@media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+
+
+/**
+ * Layout styles - Navigation, page structure
+ */
+
+/* Top Navigation */
+.top-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1.5rem;
+  background: #f8f8f8;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.875rem;
+}
+
+.top-nav a {
+  color: var(--text-muted);
+}
+
+.top-nav a:hover {
+  color: var(--primary);
+}
+
+.module-nav {
+  display: flex;
+  gap: 1rem;
+}
+
+.module-nav-link {
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+.module-nav-link:hover {
+  background: #e8f4fd;
+}
+
+/* Main Navigation */
+.nav {
+  background: linear-gradient(135deg, #1a5fb4, #613583);
+  color: white;
+  padding: 1.5rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav h1 {
+  font-size: 1.5rem;
+}
+
+.nav-tabs {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.nav-tab {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: background 0.2s;
+}
+
+.nav-tab:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.nav-tab.active {
+  background: white;
+  color: var(--primary);
+}
+
+/* Main Content */
+main {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Sections */
+.section {
+  display: none;
+}
+
+.section.active {
+  display: block;
+}
+
+/* Lesson Header */
+.lesson-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding: 2rem;
+  background: linear-gradient(135deg, #e8f4fd, #f0e8fd);
+  border-radius: 12px;
+}
+
+.lesson-header h2 {
+  font-size: 2rem;
+  margin: 0.5rem 0;
+}
+
+/* Section Cards */
+.section-intro {
+  border-left: 4px solid var(--primary);
+}
+
+.section-intro h3 {
+  color: var(--primary);
+}
+
+.section-topic {
+  border-left: 4px solid var(--border);
+}
+
+.section-summary {
+  background: linear-gradient(135deg, #f0f9ff, #e8f4fd);
+  border-left: 4px solid var(--success);
+}
+
+.section-summary h3 {
+  color: var(--success);
+}
+
+/* Canvas Notes */
+.canvas-note {
+  background: #fffbeb;
+  border-left: 4px solid var(--warning);
+  padding: 1rem;
+  margin: 1rem 0;
+  border-radius: 0 8px 8px 0;
+}
+
+.canvas-note h4 {
+  color: var(--warning);
+  margin-bottom: 0.5rem;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-muted);
+}
+
+/* Responsive Layout */
+@media (max-width: 768px) {
+  .nav {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .nav h1 {
+    font-size: 1.25rem;
+    text-align: center;
+  }
+
+  .nav-tabs {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  main {
+    padding: 1rem;
+  }
+
+  .top-nav {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+
+
+/* Match Activity */
+.match-container { display: flex; gap: 3rem; padding: 1rem; position: relative; }
+.match-column { flex: 1; display: flex; flex-direction: column; gap: 0.75rem; }
+.match-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; font-size: 1.25rem; cursor: pointer; }
+.match-item.selected { border-color: var(--primary); background: #e8f4fd; }
+.match-item.matched { border-color: var(--success); background: #e8f8f0; }
+.match-item.wrong { border-color: var(--danger); background: #fde8e8; }
+.match-lines { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+
+/* Quiz Activity */
+.quiz-question { border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; }
+.quiz-question.answered { pointer-events: none; }
+.quiz-question .cyrillic { font-size: 1.5rem; color: var(--primary); font-weight: 600; }
+.quiz-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-top: 1rem; }
+.quiz-option { background: #f5f5f5; border: 2px solid var(--border); border-radius: 8px; padding: 1rem; cursor: pointer; text-align: center; }
+.quiz-option.correct { border-color: var(--success); background: #d4edda; }
+.quiz-option.wrong { border-color: var(--danger); background: #f8d7da; }
+.quiz-explanation { margin-top: 1rem; padding: 1rem; background: #e8f4fd; border-radius: 8px; display: none; }
+.quiz-explanation.show { display: block; }
+
+/* Sort Activity */
+.sort-pool { background: #f5f5f5; border: 2px dashed var(--border); border-radius: 12px; padding: 1.5rem; min-height: 80px; margin-bottom: 1rem; }
+.sort-items { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; }
+.sort-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 0.75rem 1.25rem; font-size: 1.5rem; cursor: grab; }
+.sort-item.correct { border-color: var(--success); background: #e8f8f0; }
+.sort-item.wrong { border-color: var(--danger); background: #fde8e8; }
+.sort-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+.sort-group { border: 2px solid var(--border); border-radius: 12px; padding: 1rem; min-height: 150px; }
+.sort-group.drag-over { border-color: var(--primary); background: #e8f4fd; }
+.sort-group h4 { font-size: 0.875rem; text-align: center; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--border); }
+.sort-group.true-friends h4 { color: var(--success); border-color: var(--success); }
+.sort-group.false-friends h4 { color: var(--danger); border-color: var(--danger); }
+.sort-group.new-letters h4 { color: var(--primary); border-color: var(--primary); }
+
+/* Vocabulary */
+.vocab-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; }
+.vocab-card { border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; text-align: center; }
+.vocab-card .uk { font-size: 1.75rem; font-weight: 600; color: var(--primary); }
+.vocab-card .translit { color: var(--text-muted); font-style: italic; }
+.vocab-card .en { font-weight: 500; margin: 0.25rem 0; }
+.vocab-card .note { font-size: 0.75rem; color: #613583; background: #f0e8fd; padding: 0.25rem 0.5rem; border-radius: 4px; }
+
+/* Answer Callout Blocks */
+.callout { padding: 0.5rem 1rem; margin: 0.25rem 0; border-radius: 4px; }
+.callout-answer { background: #e8f8f0; border-left: 3px solid var(--success); }
+.callout-explanation { background: #e8f4fd; border-left: 3px solid var(--primary); color: var(--text-muted); font-style: italic; }
+.callout-alt { background: #f5f5f5; border-left: 3px solid var(--border); color: var(--text-muted); }
+
+/* Answer Block Toggle */
+.answer-block { display: none; }
+.answer-block.show { display: block; }
+.show-answer-btn { background: #f0f0f0; border: 1px solid var(--border); border-radius: 6px; padding: 0.25rem 0.75rem; font-size: 0.8rem; cursor: pointer; color: var(--text-muted); margin: 0.25rem 0; }
+.show-answer-btn:hover { background: #e5e5e5; }
+.show-answer-btn.revealed { background: #e8f8f0; border-color: var(--success); color: var(--success); }
+
   </style>
 </head>
 <body>
+  
   <div class="top-nav">
     <a href="../index.html">← l2-uk-en Curriculum</a>
     <div class="module-nav">
@@ -116,14 +332,17 @@
     </div>
   </nav>
   <main>
+    
     <section id="lesson" class="section active">
       <div class="lesson-header">
         <span class="level-badge">A2 · A2.3</span>
         <h2 style="font-size:2rem;margin:0.5rem 0">A2 Capstone</h2>
         <p style="color:var(--text-muted)">Comprehensive Review</p>
       </div>
-      
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### A2 Complete!</h4><div class="md-content"><p>Congratulations! You've completed the A2 level! Let's review everything you've learned and prepare for B1.</p>
+      <div class="card"><h3>Theory</h3><div class="md-content"><h1 id="lessoncontent">Lesson Content</h1>
+<h2 id="warmup">warm-up</h2>
+<h3 id="a2complete">A2 Complete!</h3>
+<p>Congratulations! You've completed the A2 level! Let's review everything you've learned and prepare for B1.</p>
 <p><strong>Your A2 achievements:</strong></p>
 <ul>
 <li>All 6 grammatical cases</li>
@@ -137,7 +356,10 @@
 <blockquote>
   <p>💡 <strong>What's Next?</strong></p>
   <p>B1 level will introduce more complex grammar (participles, advanced aspect usage), expand your vocabulary significantly, and focus on fluent conversation and understanding of native materials. You're ready!</p>
-</blockquote></div></div><div class="canvas-note"><h4>### Grammar Review</h4><div class="md-content"><h4 id="allcases">All Cases</h4>
+</blockquote>
+<h2 id="presentation">presentation</h2>
+<h3 id="grammarreview">Grammar Review</h3>
+<h4 id="allcases">All Cases</h4>
 <table>
 <thead>
 <tr>
@@ -345,204 +567,232 @@
 <td>Не прийшов, бо захворів</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Vocabulary Themes Review</h4><div class="md-content"><h4 id="health">Health (Здоров'я)</h4>
-<ul>
-<li>Body: голова, рука, нога, живіт, спина</li>
-<li>Symptoms: температура, кашель, біль</li>
-<li>Phrases: У мене болить…, Мені погано</li>
-</ul>
-<h4 id="travel">Travel (Подорожі)</h4>
-<ul>
-<li>Transport: потяг, літак, автобус</li>
-<li>Places: вокзал, аеропорт, зупинка</li>
-<li>Phrases: Квиток до…, О котрій відправлення?</li>
-</ul>
-<h4 id="work">Work (Робота)</h4>
-<ul>
-<li>Jobs: програміст, вчитель, лікар</li>
-<li>Workplace: офіс, компанія, зарплата</li>
-<li>Phrases: Ким ви працюєте?, Я шукаю роботу</li>
-</ul>
-<h4 id="communication">Communication (Спілкування)</h4>
-<ul>
-<li>Phone: дзвінок, повідомлення, Алло?</li>
-<li>Email: надіслати, отримати, вкладення</li>
-<li>Social: підписатися, поділитися, лайк</li>
-</ul>
-<h4 id="opinions">Opinions (Думки)</h4>
-<ul>
-<li>Express: Я думаю, На мою думку, Мені здається</li>
-<li>Agree: Я згоден, Ви маєте рацію</li>
-<li>Disagree: Я не згоден, Я думаю інакше</li>
-</ul></div></div><div class="canvas-note"><h4>A2 Self-Assessment</h4><div class="md-content"><p><strong>Can you…?</strong></p>
+</table>
+<h1 id="">#</h1>
+<h1 id="vocabulary">Vocabulary</h1>
 <table>
 <thead>
 <tr>
-<th>Skill</th>
-<th>Yes</th>
-<th>Sometimes</th>
-<th>Need Practice</th>
+<th>Word</th>
+<th>IPA</th>
+<th>English</th>
+<th>POS</th>
+<th>Gender</th>
+<th>Note</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Use all 6 cases correctly</td>
-<td>☐</td>
-<td>☐</td>
-<td>☐</td>
+<td>досягнення</td>
+<td>/dosʲɑɦˈnɛnʲɑ/</td>
+<td>achievement</td>
+<td>noun</td>
+<td>n</td>
+<td></td>
 </tr>
 <tr>
-<td>Choose between perf/impf aspect</td>
-<td>☐</td>
-<td>☐</td>
-<td>☐</td>
+<td>мета</td>
+<td>/mɛˈtɑ/</td>
+<td>goal</td>
+<td>noun</td>
+<td>f</td>
+<td></td>
 </tr>
 <tr>
-<td>Form comparatives and superlatives</td>
-<td>☐</td>
-<td>☐</td>
-<td>☐</td>
+<td>якість</td>
+<td>/ˈjɑkʲistʲ/</td>
+<td>quality</td>
+<td>noun</td>
+<td>f</td>
+<td></td>
 </tr>
 <tr>
-<td>Make conditional sentences</td>
-<td>☐</td>
-<td>☐</td>
-<td>☐</td>
+<td>подорож</td>
+<td>/ˈpodoroʒ/</td>
+<td>journey, trip</td>
+<td>noun</td>
+<td>f</td>
+<td></td>
 </tr>
 <tr>
-<td>Use reflexive verbs</td>
-<td>☐</td>
-<td>☐</td>
-<td>☐</td>
+<td>спогад</td>
+<td>/ˈspoɦɑd/</td>
+<td>memory</td>
+<td>noun</td>
+<td>m</td>
+<td></td>
 </tr>
 <tr>
-<td>Build relative clauses</td>
-<td>☐</td>
-<td>☐</td>
-<td>☐</td>
+<td>враження</td>
+<td>/vrɑˈʒɛnʲɑ/</td>
+<td>impression</td>
+<td>noun</td>
+<td>n</td>
+<td></td>
 </tr>
 <tr>
-<td>Discuss health problems</td>
-<td>☐</td>
-<td>☐</td>
-<td>☐</td>
+<td>здібність</td>
+<td>/zdʲibˈnʲistʲ/</td>
+<td>ability</td>
+<td>noun</td>
+<td>f</td>
+<td></td>
 </tr>
 <tr>
-<td>Book travel tickets</td>
-<td>☐</td>
-<td>☐</td>
-<td>☐</td>
-</tr>
-<tr>
-<td>Talk about work</td>
-<td>☐</td>
-<td>☐</td>
-<td>☐</td>
-</tr>
-<tr>
-<td>Express opinions</td>
-<td>☐</td>
-<td>☐</td>
-<td>☐</td>
+<td>успіх</td>
+<td>/uˈspʲix/</td>
+<td>success</td>
+<td>noun</td>
+<td>m</td>
+<td></td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>### Comprehensive Grammar Exercise</h4><div class="md-content"><p>Fill in with correct forms:</p>
-<ol>
-<li><p>Я живу в ___ (Львів) і працюю ___ (програміст).<br />
-→ Львові, програмістом</p></li>
-<li><p>Якщо ___ (бути) час, я ___ (зателефонувати) тобі.<br />
-→ буде/матиму, зателефоную</p></li>
-<li><p>Книга, ___ (який) я прочитав, дуже цікава.<br />
-→ яку</p></li>
-<li><p>Я вчуся, ___ (щоб) знати українську мову.<br />
-→ щоб</p></li>
-<li><p>Він ___ (старий) за мене, але ___ (молодий) за брата.<br />
-→ старший, молодший</p></li>
-<li><p>Якби я ___ (мати) гроші, я ___ купити цю машину.<br />
-→ мав, б/би</p></li>
-<li><p>Вона ___ (митися) і ___ (одягатися) кожного ранку.<br />
-→ миється, одягається</p></li>
-<li><p>___ (хоча) холодно, ми пішли на прогулянку.<br />
-→ Хоча</p></li>
-</ol></div></div><div class="canvas-note"><h4>Dialogue Completion</h4><div class="md-content"><p><strong>At the doctor:</strong></p>
-<ul>
-<li>Доброго дня! На що ___?</li>
-<li>У мене ___ голова і ___.</li>
-<li>Як давно це ___?</li>
-<li>___ три дні.</li>
-<li>Відкрийте ___. Я вам ___ ліки.</li>
-</ul>
-<p>→ скаржитеся, болить, температура, почалося, Уже/Вже, рот, випишу</p>
-<p><strong>Booking a ticket:</strong></p>
-<ul>
-<li>Мені потрібен ___ до Одеси.</li>
-<li>На ___?</li>
-<li>На завтра. ___ коштує?</li>
-<li>500 гривень. ___ чи купе?</li>
-<li>Купе. О котрій ___?</li>
-<li>О 18:30 з ___ платформи.</li>
-</ul>
-<p>→ квиток, коли, Скільки, Плацкарт, відправлення, третьої</p></div></div><div class="canvas-note"><h4>Translation Challenge</h4><div class="md-content"><ol>
-<li><p>I think that this book is better than the movie.<br />
-→ Я думаю, що ця книга краща, ніж фільм.</p></li>
-<li><p>If I had time, I would travel more.<br />
-→ Якби я мав/мала час, я б більше подорожував/подорожувала.</p></li>
-<li><p>The woman who works here is my sister.<br />
-→ Жінка, яка тут працює, — моя сестра.</p></li>
-<li><p>Although it was raining, we went for a walk.<br />
-→ Хоча йшов дощ, ми пішли на прогулянку.</p></li>
-<li><p>I came here in order to learn Ukrainian.<br />
-→ Я приїхав/приїхала сюди, щоб вивчити українську.</p></li>
-</ol></div></div><div class="canvas-note"><h4>### Comprehensive Speaking Tasks</h4><div class="md-content"><p><strong>Task 1: Introduce Yourself (2 minutes)</strong></p>
-<ul>
-<li>Ваше ім'я, звідки ви</li>
-<li>Ким ви працюєте</li>
-<li>Ваші хобі</li>
-<li>Чому вивчаєте українську</li>
-</ul>
-<p><strong>Task 2: Tell a Story (2 minutes)</strong></p>
-<ul>
-<li>Розкажіть про подорож, яку ви здійснили</li>
-<li>Куди їздили, як добиралися</li>
-<li>Що бачили, що сподобалося</li>
-<li>Чи хотіли б повернутися</li>
-</ul>
-<p><strong>Task 3: Express Opinion (2 minutes)</strong></p>
-<ul>
-<li>Яка, на вашу думку, найважливіша якість друга?</li>
-<li>Чому ви так думаєте?</li>
-<li>Чи згодні ви, що друзі важливіші за сім'ю?</li>
-</ul>
-<p><strong>Task 4: Problem Solving (2 minutes)</strong></p>
-<ul>
-<li>Уявіть: ви захворіли в іншому місті</li>
-<li>Що ви робите?</li>
-<li>Як пояснюєте симптоми лікарю?</li>
-<li>Як купуєте ліки в аптеці?</li>
-</ul></div></div><div class="canvas-note"><h4>Writing Task</h4><div class="md-content"><p>Write a short text (100-150 words) about your ideal job:</p>
-<ul>
-<li>Ким би ви хотіли працювати?</li>
-<li>Чому саме ця професія?</li>
-<li>Які умови роботи для вас важливі?</li>
-<li>Що ви вже зробили для досягнення цієї мети?</li>
-</ul></div></div></div>
-      <div class="btn-group"><button class="btn btn-primary" onclick="showSection('match')">Start →</button></div>
+</table>
+<hr />
+<h1 id="summary">Summary</h1>
+<h2 id="a2levelcomplete">A2 Level Complete!</h2>
+<h3 id="grammarmastered">Grammar Mastered</h3>
+<table>
+<thead>
+<tr>
+<th>Topic</th>
+<th>Key Points</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cases</td>
+<td>All 6: Nom, Acc, Gen, Dat, Inst, Loc</td>
+</tr>
+<tr>
+<td>Aspect</td>
+<td>Imperfective vs Perfective</td>
+</tr>
+<tr>
+<td>Comparatives</td>
+<td>-іший/-ший, ніж/за</td>
+</tr>
+<tr>
+<td>Superlatives</td>
+<td>най- prefix</td>
+</tr>
+<tr>
+<td>Real Conditionals</td>
+<td>Якщо + future</td>
+</tr>
+<tr>
+<td>Unreal Conditionals</td>
+<td>Якби + past + б/би</td>
+</tr>
+<tr>
+<td>Reflexives</td>
+<td>-ся/-сь, себе/собі/собою</td>
+</tr>
+<tr>
+<td>Relative Clauses</td>
+<td>який/яка/яке/які, що</td>
+</tr>
+<tr>
+<td>Complex Sentences</td>
+<td>щоб, хоча, тому що</td>
+</tr>
+</tbody>
+</table>
+<h3 id="vocabularythemes">Vocabulary Themes</h3>
+<table>
+<thead>
+<tr>
+<th>Theme</th>
+<th>Key Words</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Health</td>
+<td>боліти, температура, лікар</td>
+</tr>
+<tr>
+<td>Travel</td>
+<td>потяг, квиток, відправлення</td>
+</tr>
+<tr>
+<td>Work</td>
+<td>професія, зарплата, співбесіда</td>
+</tr>
+<tr>
+<td>Communication</td>
+<td>дзвонити, надіслати, підписатися</td>
+</tr>
+<tr>
+<td>Opinions</td>
+<td>думати, згоден, на мою думку</td>
+</tr>
+</tbody>
+</table>
+<h3 id="whatyoucando">What You Can Do</h3>
+<table>
+<thead>
+<tr>
+<th>Skill</th>
+<th>Examples</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Describe</td>
+<td>Health, plans, work, opinions</td>
+</tr>
+<tr>
+<td>Narrate</td>
+<td>Past events, future plans</td>
+</tr>
+<tr>
+<td>Compare</td>
+<td>People, things, ideas</td>
+</tr>
+<tr>
+<td>Hypothesize</td>
+<td>Real and unreal conditions</td>
+</tr>
+<tr>
+<td>Connect</td>
+<td>Complex sentences, reasons</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p>🎉 <strong>Congratulations!</strong></p>
+  <p>Ви завершили рівень A2! You've completed the A2 level!</p>
+  <p><strong>Your Ukrainian is now at a solid elementary level.</strong><br />
+  You can handle everyday situations, express opinions,<br />
+  and understand the main points of clear standard speech.</p>
+  <p><strong>Next stop: B1 - Intermediate!</strong><br />
+  Далі: рівень B1 - Середній!</p>
+  <p>Слава Україні! 🇺🇦</p>
+</blockquote></div></div>
+      <div class="btn-group">
+        <button class="btn btn-primary" onclick="showSection('match')">Start →</button>
+      </div>
     </section>
+  
+    
     <section id="match" class="section"><div class="card"><h3>A2 Review</h3>
       <div class="score-display"><span class="score"><span id="match-score">0</span>/6</span></div>
       <div class="match-container" id="match-container"><svg class="match-lines" id="match-lines"></svg>
         <div class="match-column" id="match-left"><div class="match-item" data-pair="0">Як ви почуваєтеся?</div><div class="match-item" data-pair="1">О котрій відправлення?</div><div class="match-item" data-pair="2">Ким ви працюєте?</div><div class="match-item" data-pair="3">Я думаю, що...</div><div class="match-item" data-pair="4">Якби я мав час...</div><div class="match-item" data-pair="5">Все, що ти сказав</div></div>
-        <div class="match-column" id="match-right"><div class="match-item" data-pair="5">Everything you said</div><div class="match-item" data-pair="1">What time is departure?</div><div class="match-item" data-pair="0">How do you feel?</div><div class="match-item" data-pair="3">I think that...</div><div class="match-item" data-pair="4">If I had time...</div><div class="match-item" data-pair="2">What do you do for work?</div></div>
+        <div class="match-column" id="match-right"><div class="match-item" data-pair="2">What do you do for work?</div><div class="match-item" data-pair="0">How do you feel?</div><div class="match-item" data-pair="4">If I had time...</div><div class="match-item" data-pair="1">What time is departure?</div><div class="match-item" data-pair="3">I think that...</div><div class="match-item" data-pair="5">Everything you said</div></div>
       </div>
       <div class="completion-message" id="match-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetMatch()">Reset</button><button class="btn btn-primary" onclick="showSection('quiz')">Next →</button></div>
     </div></section>
+    
     <section id="quiz" class="section"><div class="card"><h3>Comprehensive A2</h3>
       <div class="score-display"><span class="score"><span id="quiz-score">0</span>/6</span></div>
       <div id="quiz-container"></div>
       <div class="completion-message" id="quiz-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('sort')">Next →</button></div>
     </div></section>
+    
     <section id="sort" class="section"><div class="card"><h3>Grammar Categories</h3>
       <div class="score-display"><span class="score"><span id="sort-score">0</span>/13</span></div>
       <div class="sort-pool" id="sort-pool"><div class="sort-items" id="sort-items"></div></div>
@@ -550,34 +800,235 @@
       <div class="completion-message" id="sort-complete"><h3>All Sorted!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetSort()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Vocab →</button></div>
     </div></section>
-    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (8)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
+    
+    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (10)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
     </section>
-  </main>
-  <footer>Module 60 · curricula-opus</footer>
+  </main><footer>Module 60 · curricula-opus</footer>
   <script>
-    const matchPairs=[{"left":"Як ви почуваєтеся?","right":"How do you feel?"},{"left":"О котрій відправлення?","right":"What time is departure?"},{"left":"Ким ви працюєте?","right":"What do you do for work?"},{"left":"Я думаю, що...","right":"I think that..."},{"left":"Якби я мав час...","right":"If I had time..."},{"left":"Все, що ти сказав","right":"Everything you said"}];
-    const quizData=[{"question":"\"I live in Kyiv\" - Я живу ___ Києві.","options":["в/у","на","до","з"],"correctIndex":0,"explanation":"Location = в/у + Loc."},{"question":"\"Bigger than\" - Більший ___ Львів.","options":["за","від","з","до"],"correctIndex":0,"explanation":"Comparison = за + Acc (or ніж)."},{"question":"\"If I had money, I would buy\" - Якби я ___ гроші, я б купив.","options":["мав","маю","матиму","мати"],"correctIndex":0,"explanation":"Unreal condition = past form."},{"question":"\"The book that I read\" - Книга, ___ я прочитав.","options":["яку","яка","який","яке"],"correctIndex":0,"explanation":"Книга (f) + Acc = яку."},{"question":"\"In order to learn\" - ___ вивчити.","options":["Щоб","Що","Як","Коли"],"correctIndex":0,"explanation":"Purpose = щоб."},{"question":"\"I work as a teacher\" - Я працюю ___.","options":["вчителем","вчитель","вчителя","вчителю"],"correctIndex":0,"explanation":"Profession = Instrumental."}];
-    const sortData={"true-friends":["у Києві (Loc)","до Львова (Gen)","з братом (Inst)","бачу маму (Acc)","дати мамі (Dat)"],"false-friends":["читав (past impf)","прочитав (past perf)","читатиму (future impf)","прочитаю (future perf)"],"new-letters":["Якщо буде дощ... (real)","Якби мав час... (unreal)","Хоча холодно... (concessive)","Щоб знати... (purpose)"]};
-    const vocabData=[{"uk":"досягнення","translit":"","en":"achievement","note":""},{"uk":"мета","translit":"","en":"goal","note":""},{"uk":"якість","translit":"","en":"quality","note":""},{"uk":"подорож","translit":"","en":"journey, trip","note":""},{"uk":"спогад","translit":"","en":"memory","note":""},{"uk":"враження","translit":"","en":"impression","note":""},{"uk":"здібність","translit":"","en":"ability","note":""},{"uk":"успіх","translit":"","en":"success","note":""}];
-    const totalSort=13;
-    function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
-    document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));
-    let matchSel=null,matchScore=0,matchPairsArr=[];
-    document.querySelectorAll('#match-left .match-item').forEach(item=>{item.addEventListener('click',()=>{if(item.classList.contains('matched'))return;document.querySelectorAll('#match-left .match-item').forEach(i=>i.classList.remove('selected'));item.classList.add('selected');matchSel={el:item,pair:item.dataset.pair};});});
-    document.querySelectorAll('#match-right .match-item').forEach(item=>{item.addEventListener('click',()=>{if(item.classList.contains('matched')||!matchSel)return;if(matchSel.pair===item.dataset.pair){matchSel.el.classList.remove('selected');matchSel.el.classList.add('matched');item.classList.add('matched');matchPairsArr.push({left:matchSel.el,right:item});matchScore++;document.getElementById('match-score').textContent=matchScore;drawLines();if(matchScore===matchPairs.length)document.getElementById('match-complete').classList.add('show');}else{item.classList.add('wrong');setTimeout(()=>item.classList.remove('wrong'),300);}matchSel=null;});});
-    function drawLines(){const svg=document.getElementById('match-lines'),c=document.getElementById('match-container');if(!svg||!c)return;const r=c.getBoundingClientRect();svg.innerHTML='';svg.setAttribute('viewBox','0 0 '+r.width+' '+r.height);matchPairsArr.forEach(p=>{const lr=p.left.getBoundingClientRect(),rr=p.right.getBoundingClientRect();const line=document.createElementNS('http://www.w3.org/2000/svg','line');line.setAttribute('x1',lr.right-r.left);line.setAttribute('y1',lr.top+lr.height/2-r.top);line.setAttribute('x2',rr.left-r.left);line.setAttribute('y2',rr.top+rr.height/2-r.top);line.setAttribute('stroke','#26a269');line.setAttribute('stroke-width','2');svg.appendChild(line);});}
-    function resetMatch(){matchSel=null;matchScore=0;matchPairsArr=[];document.getElementById('match-score').textContent='0';document.getElementById('match-complete')?.classList.remove('show');document.getElementById('match-lines').innerHTML='';document.querySelectorAll('#match-container .match-item').forEach(i=>i.classList.remove('matched','selected','wrong'));}
-    window.addEventListener('resize',drawLines);
-    let quizScore=0,quizAns=0;
-    function initQuiz(){const c=document.getElementById('quiz-container');if(!c||!quizData.length)return;c.innerHTML='';quizData.forEach((q,i)=>{const sh=[...q.options].sort(()=>Math.random()-0.5);const cor=sh.indexOf(q.options[q.correctIndex]);const div=document.createElement('div');div.className='quiz-question';div.innerHTML='<h4>Q'+(i+1)+': '+q.question+'</h4><div class="quiz-options">'+sh.map((o,j)=>'<div class="quiz-option" data-c="'+(j===cor)+'" data-q="'+i+'">'+o+'</div>').join('')+'</div><div class="quiz-explanation" id="exp-'+i+'">'+q.explanation+'</div>';c.appendChild(div);});document.querySelectorAll('.quiz-option').forEach(o=>o.addEventListener('click',handleQuiz));}
-    function handleQuiz(e){const opt=e.target,q=opt.closest('.quiz-question');if(q.classList.contains('answered'))return;q.classList.add('answered');if(opt.dataset.c==='true'){opt.classList.add('correct');quizScore++;}else{opt.classList.add('wrong');q.querySelector('[data-c="true"]').classList.add('correct');}document.getElementById('exp-'+opt.dataset.q).classList.add('show');document.getElementById('quiz-score').textContent=quizScore;quizAns++;if(quizAns===quizData.length)document.getElementById('quiz-complete').classList.add('show');}
-    function resetQuiz(){quizScore=0;quizAns=0;document.getElementById('quiz-score').textContent='0';document.getElementById('quiz-complete')?.classList.remove('show');initQuiz();}
-    let sortScore=0,dragItem=null;
-    function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
-    function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
-    function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
-    document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
+
+    const matchPairs = [{"left":"Як ви почуваєтеся?","right":"How do you feel?"},{"left":"О котрій відправлення?","right":"What time is departure?"},{"left":"Ким ви працюєте?","right":"What do you do for work?"},{"left":"Я думаю, що...","right":"I think that..."},{"left":"Якби я мав час...","right":"If I had time..."},{"left":"Все, що ти сказав","right":"Everything you said"}];
+    const quizData = [{"question":"\"I live in Kyiv\" - Я живу ___ Києві.","options":["в/у","на","до","з"],"correctIndex":0,"explanation":"Location = в/у + Loc."},{"question":"\"Bigger than\" - Більший ___ Львів.","options":["за","від","з","до"],"correctIndex":0,"explanation":"Comparison = за + Acc (or ніж)."},{"question":"\"If I had money, I would buy\" - Якби я ___ гроші, я б купив.","options":["мав","маю","матиму","мати"],"correctIndex":0,"explanation":"Unreal condition = past form."},{"question":"\"The book that I read\" - Книга, ___ я прочитав.","options":["яку","яка","який","яке"],"correctIndex":0,"explanation":"Книга (f) + Acc = яку."},{"question":"\"In order to learn\" - ___ вивчити.","options":["Щоб","Що","Як","Коли"],"correctIndex":0,"explanation":"Purpose = щоб."},{"question":"\"I work as a teacher\" - Я працюю ___.","options":["вчителем","вчитель","вчителя","вчителю"],"correctIndex":0,"explanation":"Profession = Instrumental."}];
+    const sortData = {"true-friends":["у Києві (Loc)","до Львова (Gen)","з братом (Inst)","бачу маму (Acc)","дати мамі (Dat)"],"false-friends":["читав (past impf)","прочитав (past perf)","читатиму (future impf)","прочитаю (future perf)"],"new-letters":["Якщо буде дощ... (real)","Якби мав час... (unreal)","Хоча холодно... (concessive)","Щоб знати... (purpose)"]};
+    const vocabData = [{"uk":"Use all 6 cases correctly","translit":"","en":"☐","note":""},{"uk":"Choose between perf/impf aspect","translit":"","en":"☐","note":""},{"uk":"Form comparatives and superlatives","translit":"","en":"☐","note":""},{"uk":"Make conditional sentences","translit":"","en":"☐","note":""},{"uk":"Use reflexive verbs","translit":"","en":"☐","note":""},{"uk":"Build relative clauses","translit":"","en":"☐","note":""},{"uk":"Discuss health problems","translit":"","en":"☐","note":""},{"uk":"Book travel tickets","translit":"","en":"☐","note":""},{"uk":"Talk about work","translit":"","en":"☐","note":""},{"uk":"Express opinions","translit":"","en":"☐","note":""}];
+    const totalSort = 13;
+  
+// Answer callout toggle (for new > [!answer] syntax)
+function toggleAnswer(id, btn) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const isUkrainian = document.querySelector('.level-badge')?.textContent.match(/B[12]|C[12]/);
+  const showText = isUkrainian ? 'Показати відповідь' : 'Show Answer';
+  const hideText = isUkrainian ? 'Сховати відповідь' : 'Hide Answer';
+  const show = !el.classList.contains('show');
+  if (show) {
+    el.classList.add('show');
+    btn.textContent = hideText;
+    btn.classList.add('revealed');
+  } else {
+    el.classList.remove('show');
+    btn.textContent = showText;
+    btn.classList.remove('revealed');
+  }
+}
+
+// Section navigation
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id)?.classList.add('active');
+  document.querySelector('[data-section="' + id + '"]')?.classList.add('active');
+}
+document.querySelectorAll('.nav-tab').forEach(t => t.addEventListener('click', () => showSection(t.dataset.section)));
+
+// Initialize on DOM ready
+document.addEventListener('DOMContentLoaded', () => {
+  initQuiz();
+  initSort();
+  initVocab();
+});
+
+
+// Quiz Activity
+let quizScore = 0, quizAns = 0;
+
+function initQuiz() {
+  const c = document.getElementById('quiz-container');
+  if (!c || !quizData.length) return;
+  c.innerHTML = '';
+  quizData.forEach((q, i) => {
+    const sh = [...q.options].sort(() => Math.random() - 0.5);
+    const cor = sh.indexOf(q.options[q.correctIndex]);
+    const div = document.createElement('div');
+    div.className = 'quiz-question';
+    div.innerHTML = '<h4>Q' + (i + 1) + ': ' + q.question + '</h4><div class="quiz-options">' + sh.map((o, j) => '<div class="quiz-option" data-c="' + (j === cor) + '" data-q="' + i + '">' + o + '</div>').join('') + '</div><div class="quiz-explanation" id="exp-' + i + '">' + q.explanation + '</div>';
+    c.appendChild(div);
+  });
+  document.querySelectorAll('.quiz-option').forEach(o => o.addEventListener('click', handleQuiz));
+}
+
+function handleQuiz(e) {
+  const opt = e.target, q = opt.closest('.quiz-question');
+  if (q.classList.contains('answered')) return;
+  q.classList.add('answered');
+  if (opt.dataset.c === 'true') {
+    opt.classList.add('correct');
+    quizScore++;
+  } else {
+    opt.classList.add('wrong');
+    q.querySelector('[data-c="true"]').classList.add('correct');
+  }
+  document.getElementById('exp-' + opt.dataset.q).classList.add('show');
+  document.getElementById('quiz-score').textContent = quizScore;
+  quizAns++;
+  if (quizAns === quizData.length) document.getElementById('quiz-complete').classList.add('show');
+}
+
+function resetQuiz() {
+  quizScore = 0;
+  quizAns = 0;
+  document.getElementById('quiz-score').textContent = '0';
+  document.getElementById('quiz-complete')?.classList.remove('show');
+  initQuiz();
+}
+
+
+// Match Activity
+let matchSel = null, matchScore = 0, matchPairsArr = [];
+
+document.querySelectorAll('#match-left .match-item').forEach(item => {
+  item.addEventListener('click', () => {
+    if (item.classList.contains('matched')) return;
+    document.querySelectorAll('#match-left .match-item').forEach(i => i.classList.remove('selected'));
+    item.classList.add('selected');
+    matchSel = { el: item, pair: item.dataset.pair };
+  });
+});
+
+document.querySelectorAll('#match-right .match-item').forEach(item => {
+  item.addEventListener('click', () => {
+    if (item.classList.contains('matched') || !matchSel) return;
+    if (matchSel.pair === item.dataset.pair) {
+      matchSel.el.classList.remove('selected');
+      matchSel.el.classList.add('matched');
+      item.classList.add('matched');
+      matchPairsArr.push({ left: matchSel.el, right: item });
+      matchScore++;
+      document.getElementById('match-score').textContent = matchScore;
+      drawLines();
+      if (matchScore === matchPairs.length) document.getElementById('match-complete').classList.add('show');
+    } else {
+      item.classList.add('wrong');
+      setTimeout(() => item.classList.remove('wrong'), 300);
+    }
+    matchSel = null;
+  });
+});
+
+function drawLines() {
+  const svg = document.getElementById('match-lines'), c = document.getElementById('match-container');
+  if (!svg || !c) return;
+  const r = c.getBoundingClientRect();
+  svg.innerHTML = '';
+  svg.setAttribute('viewBox', '0 0 ' + r.width + ' ' + r.height);
+  matchPairsArr.forEach(p => {
+    const lr = p.left.getBoundingClientRect(), rr = p.right.getBoundingClientRect();
+    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    line.setAttribute('x1', lr.right - r.left);
+    line.setAttribute('y1', lr.top + lr.height / 2 - r.top);
+    line.setAttribute('x2', rr.left - r.left);
+    line.setAttribute('y2', rr.top + rr.height / 2 - r.top);
+    line.setAttribute('stroke', '#26a269');
+    line.setAttribute('stroke-width', '2');
+    svg.appendChild(line);
+  });
+}
+
+function resetMatch() {
+  matchSel = null;
+  matchScore = 0;
+  matchPairsArr = [];
+  document.getElementById('match-score').textContent = '0';
+  document.getElementById('match-complete')?.classList.remove('show');
+  document.getElementById('match-lines').innerHTML = '';
+  document.querySelectorAll('#match-container .match-item').forEach(i => i.classList.remove('matched', 'selected', 'wrong'));
+}
+
+window.addEventListener('resize', drawLines);
+
+
+// Sort Activity
+let sortScore = 0, dragItem = null;
+
+function initSort() {
+  const pool = document.getElementById('sort-items');
+  if (!pool || !Object.keys(sortData).length) return;
+  const all = Object.values(sortData).flat().sort(() => Math.random() - 0.5);
+  pool.innerHTML = '';
+  all.forEach(letter => {
+    const group = Object.keys(sortData).find(g => sortData[g].includes(letter));
+    const item = document.createElement('div');
+    item.className = 'sort-item';
+    item.textContent = letter;
+    item.draggable = true;
+    item.dataset.group = group;
+    item.addEventListener('dragstart', e => {
+      dragItem = item;
+      item.classList.add('dragging');
+    });
+    item.addEventListener('dragend', () => {
+      item.classList.remove('dragging');
+      dragItem = null;
+    });
+    pool.appendChild(item);
+  });
+  document.querySelectorAll('.sort-group').forEach(g => {
+    g.addEventListener('dragover', e => {
+      e.preventDefault();
+      g.classList.add('drag-over');
+    });
+    g.addEventListener('dragleave', () => g.classList.remove('drag-over'));
+    g.addEventListener('drop', e => {
+      e.preventDefault();
+      g.classList.remove('drag-over');
+      if (!dragItem) return;
+      if (g.dataset.group === dragItem.dataset.group) {
+        dragItem.classList.add('correct');
+        g.querySelector('.sort-items').appendChild(dragItem);
+        dragItem.draggable = false;
+        sortScore++;
+        document.getElementById('sort-score').textContent = sortScore;
+        if (sortScore === totalSort) document.getElementById('sort-complete').classList.add('show');
+      } else {
+        dragItem.classList.add('wrong');
+        setTimeout(() => dragItem.classList.remove('wrong'), 300);
+      }
+    });
+  });
+}
+
+function resetSort() {
+  sortScore = 0;
+  document.getElementById('sort-score').textContent = '0';
+  document.getElementById('sort-complete')?.classList.remove('show');
+  document.querySelectorAll('.sort-group .sort-items').forEach(g => g.innerHTML = '');
+  initSort();
+}
+
+
+// Vocabulary
+function initVocab() {
+  const grid = document.getElementById('vocab-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  vocabData.forEach(v => {
+    const card = document.createElement('div');
+    card.className = 'vocab-card';
+    card.innerHTML = '<div class="uk">' + v.uk + '</div><div class="translit">' + v.translit + '</div><div class="en">' + v.en + '</div>' + (v.note ? '<div class="note">' + v.note + '</div>' : '');
+    grid.appendChild(card);
+  });
+}
+
   </script>
 </body>
 </html>

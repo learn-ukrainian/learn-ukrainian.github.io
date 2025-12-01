@@ -5,98 +5,314 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Module 62: Prefixes II: Action Verbs | Ukrainian A2+</title>
   <style>
-    :root { --primary: #1a5fb4; --primary-light: #3584e4; --success: #26a269; --warning: #e5a50a; --danger: #c01c28; --bg: #fafafa; --card-bg: #fff; --text: #1e1e1e; --text-muted: #5e5e5e; --border: #e0e0e0; }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
-    .top-nav { background: #2e2e2e; color: white; padding: 0.5rem 2rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.875rem; }
-    .top-nav a { color: white; text-decoration: none; }
-    .top-nav a:hover { text-decoration: underline; }
-    .module-nav { display: flex; gap: 1rem; align-items: center; }
-    .module-nav-link { color: rgba(255,255,255,0.8); text-decoration: none; padding: 0.25rem 0.5rem; }
-    .module-nav-link:hover { color: white; }
-    .module-nav-link.disabled { color: rgba(255,255,255,0.3); pointer-events: none; }
-    .nav { position: sticky; top: 0; background: var(--primary); color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; z-index: 100; }
-    .nav h1 { font-size: 1.25rem; }
-    .nav-tabs { display: flex; gap: 0.5rem; }
-    .nav-tab { background: rgba(255,255,255,0.2); border: none; color: white; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; }
-    .nav-tab.active { background: white; color: var(--primary); }
-    main { max-width: 1000px; margin: 0 auto; padding: 2rem; }
-    .section { display: none; } .section.active { display: block; }
-    .lesson-header { text-align: center; margin-bottom: 2rem; padding: 2rem; background: linear-gradient(135deg, #e8f4fd, #f0e8fd); border-radius: 12px; }
-    .level-badge { background: var(--primary); color: white; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.875rem; }
-    .card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 1.5rem; margin-bottom: 1.5rem; }
-    .card h3 { color: var(--primary); margin-bottom: 1rem; }
-    .section-intro { border-left: 4px solid var(--primary); }
-    .section-intro h3 { color: var(--primary); }
-    .section-topic { border-left: 4px solid var(--border); }
-    .section-summary { background: linear-gradient(135deg, #f0f9ff, #e8f4fd); border-left: 4px solid var(--success); }
-    .section-summary h3 { color: var(--success); }
-    .canvas-note { background: #fffbeb; border-left: 4px solid var(--warning); padding: 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
-    .canvas-note h4 { color: var(--warning); margin-bottom: 0.5rem; }
-    .md-content { line-height: 1.7; }
-    .md-content p { margin: 0.75rem 0; }
-    .md-content ul, .md-content ol { margin: 0.75rem 0; padding-left: 1.5rem; }
-    .md-content li { margin: 0.25rem 0; }
-    .md-content strong { color: var(--primary); }
-    .md-content blockquote { background: #e8f4fd; border-left: 4px solid var(--primary); padding: 0.75rem 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
-    .md-content blockquote p { margin: 0.25rem 0; }
-    .md-content table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
-    .md-content th, .md-content td { border: 1px solid var(--border); padding: 0.5rem 0.75rem; text-align: left; }
-    .md-content th { background: #f5f5f5; font-weight: 600; }
-    .md-content code { background: #f0f0f0; padding: 0.125rem 0.375rem; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
-    .letter-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0; }
-    .letter-group { border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; }
-    .letter-group.true-friends { border-color: var(--success); } .letter-group.true-friends .letters { color: var(--success); }
-    .letter-group.false-friends { border-color: var(--danger); } .letter-group.false-friends .letters { color: var(--danger); }
-    .letter-group.new-letters { border-color: var(--primary); } .letter-group.new-letters .letters { color: var(--primary); }
-    .letters { font-size: 1.75rem; letter-spacing: 0.3rem; }
-    .match-container { display: flex; gap: 3rem; padding: 1rem; position: relative; }
-    .match-column { flex: 1; display: flex; flex-direction: column; gap: 0.75rem; }
-    .match-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; font-size: 1.25rem; cursor: pointer; }
-    .match-item.selected { border-color: var(--primary); background: #e8f4fd; }
-    .match-item.matched { border-color: var(--success); background: #e8f8f0; }
-    .match-item.wrong { border-color: var(--danger); background: #fde8e8; }
-    .match-lines { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
-    .quiz-question { border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; }
-    .quiz-question.answered { pointer-events: none; }
-    .quiz-question .cyrillic { font-size: 1.5rem; color: var(--primary); font-weight: 600; }
-    .quiz-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-top: 1rem; }
-    .quiz-option { background: #f5f5f5; border: 2px solid var(--border); border-radius: 8px; padding: 1rem; cursor: pointer; text-align: center; }
-    .quiz-option.correct { border-color: var(--success); background: #d4edda; }
-    .quiz-option.wrong { border-color: var(--danger); background: #f8d7da; }
-    .quiz-explanation { margin-top: 1rem; padding: 1rem; background: #e8f4fd; border-radius: 8px; display: none; }
-    .quiz-explanation.show { display: block; }
-    .sort-pool { background: #f5f5f5; border: 2px dashed var(--border); border-radius: 12px; padding: 1.5rem; min-height: 80px; margin-bottom: 1rem; }
-    .sort-items { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; }
-    .sort-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 0.75rem 1.25rem; font-size: 1.5rem; cursor: grab; }
-    .sort-item.correct { border-color: var(--success); background: #e8f8f0; }
-    .sort-item.wrong { border-color: var(--danger); background: #fde8e8; }
-    .sort-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
-    .sort-group { border: 2px solid var(--border); border-radius: 12px; padding: 1rem; min-height: 150px; }
-    .sort-group.drag-over { border-color: var(--primary); background: #e8f4fd; }
-    .sort-group h4 { font-size: 0.875rem; text-align: center; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--border); }
-    .sort-group.true-friends h4 { color: var(--success); border-color: var(--success); }
-    .sort-group.false-friends h4 { color: var(--danger); border-color: var(--danger); }
-    .sort-group.new-letters h4 { color: var(--primary); border-color: var(--primary); }
-    .vocab-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; }
-    .vocab-card { border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; text-align: center; }
-    .vocab-card .uk { font-size: 1.75rem; font-weight: 600; color: var(--primary); }
-    .vocab-card .translit { color: var(--text-muted); font-style: italic; }
-    .vocab-card .en { font-weight: 500; margin: 0.25rem 0; }
-    .vocab-card .note { font-size: 0.75rem; color: #613583; background: #f0e8fd; padding: 0.25rem 0.5rem; border-radius: 4px; }
-    .btn { padding: 0.75rem 1.5rem; border: none; border-radius: 8px; cursor: pointer; }
-    .btn-primary { background: var(--primary); color: white; }
-    .btn-outline { background: transparent; border: 2px solid var(--border); }
-    .btn-group { display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem; }
-    .score-display { text-align: center; padding: 1rem; background: linear-gradient(135deg, #e8f8f0, #e8f4fd); border-radius: 8px; margin-bottom: 1rem; }
-    .score-display .score { font-size: 2rem; font-weight: 700; color: var(--success); }
-    .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
-    .completion-message.show { display: block; }
-    footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+:root { --primary: #1a5fb4; --primary-light: #3584e4; --success: #26a269; --warning: #e5a50a; --danger: #c01c28; --bg: #fafafa; --card-bg: #fff; --text: #1e1e1e; --text-muted: #5e5e5e; --border: #e0e0e0; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+.top-nav { background: #2e2e2e; color: white; padding: 0.5rem 2rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.875rem; }
+.top-nav a { color: white; text-decoration: none; }
+.top-nav a:hover { text-decoration: underline; }
+.module-nav { display: flex; gap: 1rem; align-items: center; }
+.module-nav-link { color: rgba(255,255,255,0.8); text-decoration: none; padding: 0.25rem 0.5rem; }
+.module-nav-link:hover { color: white; }
+.module-nav-link.disabled { color: rgba(255,255,255,0.3); pointer-events: none; }
+.nav { position: sticky; top: 0; background: var(--primary); color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; z-index: 100; }
+.nav h1 { font-size: 1.25rem; }
+.nav-tabs { display: flex; gap: 0.5rem; }
+.nav-tab { background: rgba(255,255,255,0.2); border: none; color: white; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; }
+.nav-tab.active { background: white; color: var(--primary); }
+main { max-width: 1000px; margin: 0 auto; padding: 2rem; }
+.section { display: none; } .section.active { display: block; }
+.lesson-header { text-align: center; margin-bottom: 2rem; padding: 2rem; background: linear-gradient(135deg, #e8f4fd, #f0e8fd); border-radius: 12px; }
+.level-badge { background: var(--primary); color: white; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.875rem; }
+.card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 1.5rem; margin-bottom: 1.5rem; }
+.card h3 { color: var(--primary); margin-bottom: 1rem; }
+.section-intro { border-left: 4px solid var(--primary); }
+.section-intro h3 { color: var(--primary); }
+.section-topic { border-left: 4px solid var(--border); }
+.section-summary { background: linear-gradient(135deg, #f0f9ff, #e8f4fd); border-left: 4px solid var(--success); }
+.section-summary h3 { color: var(--success); }
+.canvas-note { background: #fffbeb; border-left: 4px solid var(--warning); padding: 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+.canvas-note h4 { color: var(--warning); margin-bottom: 0.5rem; }
+.md-content { line-height: 1.7; }
+.md-content p { margin: 0.75rem 0; }
+.md-content ul, .md-content ol { margin: 0.75rem 0; padding-left: 1.5rem; }
+.md-content li { margin: 0.25rem 0; }
+.md-content strong { color: var(--primary); }
+.md-content blockquote { background: #e8f4fd; border-left: 4px solid var(--primary); padding: 0.75rem 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+.md-content blockquote p { margin: 0.25rem 0; }
+.md-content table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+.md-content th, .md-content td { border: 1px solid var(--border); padding: 0.5rem 0.75rem; text-align: left; }
+.md-content th { background: #f5f5f5; font-weight: 600; }
+.md-content code { background: #f0f0f0; padding: 0.125rem 0.375rem; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
+.md-content details { background: #f8f9fa; border: 1px solid var(--border); border-radius: 8px; padding: 0; margin: 1rem 0; }
+.md-content details summary { background: linear-gradient(135deg, #e8f4fd, #f0e8fd); padding: 0.75rem 1rem; cursor: pointer; font-weight: 600; color: var(--primary); border-radius: 8px; list-style: none; display: flex; align-items: center; gap: 0.5rem; }
+.md-content details summary::-webkit-details-marker { display: none; }
+.md-content details summary::before { content: '▶'; font-size: 0.75rem; transition: transform 0.2s; }
+.md-content details[open] summary::before { transform: rotate(90deg); }
+.md-content details[open] summary { border-radius: 8px 8px 0 0; }
+.md-content details > *:not(summary) { padding: 0 1rem; }
+.md-content details > *:last-child { padding-bottom: 1rem; }
+.md-content p > details { margin: 0; }
+.md-content p:has(> details) { margin: 1rem 0; }
+.inline-answer { background: linear-gradient(135deg, #d4edda, #e8f4fd); padding: 0.125rem 0.5rem; border-radius: 4px; transition: opacity 0.2s; }
+.inline-answer.hidden { opacity: 0; user-select: none; }
+.answer-toggle-btn { display: inline-flex; align-items: center; gap: 0.5rem; background: linear-gradient(135deg, #e8f4fd, #f0e8fd); border: 1px solid var(--primary); color: var(--primary); padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-size: 0.875rem; font-weight: 600; margin: 1rem 0; }
+.answer-toggle-btn:hover { background: var(--primary); color: white; }
+.answer-toggle-btn svg { width: 1rem; height: 1rem; }
+.letter-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0; }
+.letter-group { border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; }
+.letter-group.true-friends { border-color: var(--success); } .letter-group.true-friends .letters { color: var(--success); }
+.letter-group.false-friends { border-color: var(--danger); } .letter-group.false-friends .letters { color: var(--danger); }
+.letter-group.new-letters { border-color: var(--primary); } .letter-group.new-letters .letters { color: var(--primary); }
+.letters { font-size: 1.75rem; letter-spacing: 0.3rem; }
+.btn { padding: 0.75rem 1.5rem; border: none; border-radius: 8px; cursor: pointer; }
+.btn-primary { background: var(--primary); color: white; }
+.btn-outline { background: transparent; border: 2px solid var(--border); }
+.btn-group { display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem; }
+.score-display { text-align: center; padding: 1rem; background: linear-gradient(135deg, #e8f8f0, #e8f4fd); border-radius: 8px; margin-bottom: 1rem; }
+.score-display .score { font-size: 2rem; font-weight: 700; color: var(--success); }
+.completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
+.completion-message.show { display: block; }
+footer { text-align: center; padding: 2rem; color: var(--text-muted); }
+@media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+
+
+/**
+ * Layout styles - Navigation, page structure
+ */
+
+/* Top Navigation */
+.top-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1.5rem;
+  background: #f8f8f8;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.875rem;
+}
+
+.top-nav a {
+  color: var(--text-muted);
+}
+
+.top-nav a:hover {
+  color: var(--primary);
+}
+
+.module-nav {
+  display: flex;
+  gap: 1rem;
+}
+
+.module-nav-link {
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+.module-nav-link:hover {
+  background: #e8f4fd;
+}
+
+/* Main Navigation */
+.nav {
+  background: linear-gradient(135deg, #1a5fb4, #613583);
+  color: white;
+  padding: 1.5rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav h1 {
+  font-size: 1.5rem;
+}
+
+.nav-tabs {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.nav-tab {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: background 0.2s;
+}
+
+.nav-tab:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.nav-tab.active {
+  background: white;
+  color: var(--primary);
+}
+
+/* Main Content */
+main {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Sections */
+.section {
+  display: none;
+}
+
+.section.active {
+  display: block;
+}
+
+/* Lesson Header */
+.lesson-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding: 2rem;
+  background: linear-gradient(135deg, #e8f4fd, #f0e8fd);
+  border-radius: 12px;
+}
+
+.lesson-header h2 {
+  font-size: 2rem;
+  margin: 0.5rem 0;
+}
+
+/* Section Cards */
+.section-intro {
+  border-left: 4px solid var(--primary);
+}
+
+.section-intro h3 {
+  color: var(--primary);
+}
+
+.section-topic {
+  border-left: 4px solid var(--border);
+}
+
+.section-summary {
+  background: linear-gradient(135deg, #f0f9ff, #e8f4fd);
+  border-left: 4px solid var(--success);
+}
+
+.section-summary h3 {
+  color: var(--success);
+}
+
+/* Canvas Notes */
+.canvas-note {
+  background: #fffbeb;
+  border-left: 4px solid var(--warning);
+  padding: 1rem;
+  margin: 1rem 0;
+  border-radius: 0 8px 8px 0;
+}
+
+.canvas-note h4 {
+  color: var(--warning);
+  margin-bottom: 0.5rem;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-muted);
+}
+
+/* Responsive Layout */
+@media (max-width: 768px) {
+  .nav {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .nav h1 {
+    font-size: 1.25rem;
+    text-align: center;
+  }
+
+  .nav-tabs {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  main {
+    padding: 1rem;
+  }
+
+  .top-nav {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+
+
+/* Match Activity */
+.match-container { display: flex; gap: 3rem; padding: 1rem; position: relative; }
+.match-column { flex: 1; display: flex; flex-direction: column; gap: 0.75rem; }
+.match-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; font-size: 1.25rem; cursor: pointer; }
+.match-item.selected { border-color: var(--primary); background: #e8f4fd; }
+.match-item.matched { border-color: var(--success); background: #e8f8f0; }
+.match-item.wrong { border-color: var(--danger); background: #fde8e8; }
+.match-lines { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+
+/* Quiz Activity */
+.quiz-question { border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; }
+.quiz-question.answered { pointer-events: none; }
+.quiz-question .cyrillic { font-size: 1.5rem; color: var(--primary); font-weight: 600; }
+.quiz-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-top: 1rem; }
+.quiz-option { background: #f5f5f5; border: 2px solid var(--border); border-radius: 8px; padding: 1rem; cursor: pointer; text-align: center; }
+.quiz-option.correct { border-color: var(--success); background: #d4edda; }
+.quiz-option.wrong { border-color: var(--danger); background: #f8d7da; }
+.quiz-explanation { margin-top: 1rem; padding: 1rem; background: #e8f4fd; border-radius: 8px; display: none; }
+.quiz-explanation.show { display: block; }
+
+/* Sort Activity */
+.sort-pool { background: #f5f5f5; border: 2px dashed var(--border); border-radius: 12px; padding: 1.5rem; min-height: 80px; margin-bottom: 1rem; }
+.sort-items { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; }
+.sort-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 0.75rem 1.25rem; font-size: 1.5rem; cursor: grab; }
+.sort-item.correct { border-color: var(--success); background: #e8f8f0; }
+.sort-item.wrong { border-color: var(--danger); background: #fde8e8; }
+.sort-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+.sort-group { border: 2px solid var(--border); border-radius: 12px; padding: 1rem; min-height: 150px; }
+.sort-group.drag-over { border-color: var(--primary); background: #e8f4fd; }
+.sort-group h4 { font-size: 0.875rem; text-align: center; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--border); }
+.sort-group.true-friends h4 { color: var(--success); border-color: var(--success); }
+.sort-group.false-friends h4 { color: var(--danger); border-color: var(--danger); }
+.sort-group.new-letters h4 { color: var(--primary); border-color: var(--primary); }
+
+/* Vocabulary */
+.vocab-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; }
+.vocab-card { border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; text-align: center; }
+.vocab-card .uk { font-size: 1.75rem; font-weight: 600; color: var(--primary); }
+.vocab-card .translit { color: var(--text-muted); font-style: italic; }
+.vocab-card .en { font-weight: 500; margin: 0.25rem 0; }
+.vocab-card .note { font-size: 0.75rem; color: #613583; background: #f0e8fd; padding: 0.25rem 0.5rem; border-radius: 4px; }
+
+/* Answer Callout Blocks */
+.callout { padding: 0.5rem 1rem; margin: 0.25rem 0; border-radius: 4px; }
+.callout-answer { background: #e8f8f0; border-left: 3px solid var(--success); }
+.callout-explanation { background: #e8f4fd; border-left: 3px solid var(--primary); color: var(--text-muted); font-style: italic; }
+.callout-alt { background: #f5f5f5; border-left: 3px solid var(--border); color: var(--text-muted); }
+
+/* Answer Block Toggle */
+.answer-block { display: none; }
+.answer-block.show { display: block; }
+.show-answer-btn { background: #f0f0f0; border: 1px solid var(--border); border-radius: 6px; padding: 0.25rem 0.75rem; font-size: 0.8rem; cursor: pointer; color: var(--text-muted); margin: 0.25rem 0; }
+.show-answer-btn:hover { background: #e5e5e5; }
+.show-answer-btn.revealed { background: #e8f8f0; border-color: var(--success); color: var(--success); }
+
   </style>
 </head>
 <body>
+  
   <div class="top-nav">
     <a href="../index.html">← l2-uk-en Curriculum</a>
     <div class="module-nav">
@@ -116,14 +332,17 @@
     </div>
   </nav>
   <main>
+    
     <section id="lesson" class="section active">
       <div class="lesson-header">
         <span class="level-badge">A2+ · A2+.1</span>
         <h2 style="font-size:2rem;margin:0.5rem 0">Prefixes II: Action Verbs</h2>
         <p style="color:var(--text-muted)">Transforming Everyday Verbs</p>
       </div>
-      
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Beyond Motion Verbs</h4><div class="md-content"><p>In Module 61, you learned prefixes with motion verbs. Now let's see how the <strong>same prefixes</strong> work with everyday action verbs!</p>
+      <div class="card"><h3>Theory</h3><div class="md-content"><h1 id="lessoncontent">Lesson Content</h1>
+<h2 id="warmup">warm-up</h2>
+<h3 id="beyondmotionverbs">Beyond Motion Verbs</h3>
+<p>In Module 61, you learned prefixes with motion verbs. Now let's see how the <strong>same prefixes</strong> work with everyday action verbs!</p>
 <p><strong>The pattern continues:</strong></p>
 <ul>
 <li>на- + писати = написати (to write → to finish writing)</li>
@@ -137,7 +356,10 @@
   <li>про- = "through" → прочитати (read through), пройти (go through)</li>
   <li>роз- = "apart" → розказати (tell out), розбити (break apart)</li>
   </ul>
-</blockquote></div></div><div class="canvas-note"><h4>### на- (Accumulation, Completion)</h4><div class="md-content"><p><strong>Meaning:</strong> accumulation, filling up, or completing an action on a surface</p>
+</blockquote>
+<h2 id="presentation">presentation</h2>
+<h3 id="accumulationcompletion">на- (Accumulation, Completion)</h3>
+<p><strong>Meaning:</strong> accumulation, filling up, or completing an action on a surface</p>
 <table>
 <thead>
 <tr>
@@ -190,7 +412,9 @@
 <blockquote>
   <p>⚡ <strong>Pro Tip: на- = "onto" or "accumulate"</strong></p>
   <p>Think of на- as putting something onto a surface (написати = write onto paper) or accumulating (назбирати = gather up).</p>
-</blockquote></div></div><div class="canvas-note"><h4>по- (Brief Action, Beginning)</h4><div class="md-content"><p><strong>Meaning:</strong> brief or limited action, sometimes beginning of action</p>
+</blockquote>
+<h3 id="briefactionbeginning">по- (Brief Action, Beginning)</h3>
+<p><strong>Meaning:</strong> brief or limited action, sometimes beginning of action</p>
 <table>
 <thead>
 <tr>
@@ -254,7 +478,9 @@
 <blockquote>
   <p>📝 <strong>Note: по- has multiple uses</strong></p>
   <p>По- can mean: brief action (почитати - read a bit), result (побачити - see/catch sight), or simply perfectivization (подякувати - thank).</p>
-</blockquote></div></div><div class="canvas-note"><h4>з-/с- (Completion, Together)</h4><div class="md-content"><p><strong>Meaning:</strong> completion, bringing together, or making</p>
+</blockquote>
+<h3 id="completiontogether">з-/с- (Completion, Together)</h3>
+<p><strong>Meaning:</strong> completion, bringing together, or making</p>
 <table>
 <thead>
 <tr>
@@ -318,7 +544,9 @@
 <blockquote>
   <p>⚡ <strong>Pro Tip: з-/с- = "complete/together"</strong></p>
   <p>Use з- before voiced consonants (зробити), с- before voiceless (спитати), з- or зі- before з, с, ш (зібрати).</p>
-</blockquote></div></div><div class="canvas-note"><h4>про- (Through, Completion)</h4><div class="md-content"><p><strong>Meaning:</strong> action through something, or completing fully</p>
+</blockquote>
+<h3 id="throughcompletion">про- (Through, Completion)</h3>
+<p><strong>Meaning:</strong> action through something, or completing fully</p>
 <table>
 <thead>
 <tr>
@@ -367,7 +595,9 @@
 <li>Він <strong>прожив</strong> там 10 років. - He lived there for 10 years.</li>
 <li>Вона <strong>пропрацювала</strong> всю ніч. - She worked all night.</li>
 <li>Я <strong>проспав</strong>! - I overslept!</li>
-</ul></div></div><div class="canvas-note"><h4>роз- (Apart, Distribution)</h4><div class="md-content"><p><strong>Meaning:</strong> spreading apart, distribution, or intensification</p>
+</ul>
+<h3 id="apartdistribution">роз- (Apart, Distribution)</h3>
+<p><strong>Meaning:</strong> spreading apart, distribution, or intensification</p>
 <table>
 <thead>
 <tr>
@@ -421,7 +651,9 @@
 <blockquote>
   <p>🎭 <strong>Culture Note: Розповідати/Розказати</strong></p>
   <p>Both mean "to tell" but: розповідати (impf) is more detailed storytelling, розказати (pf) is a completed telling. Казати is just "to say."</p>
-</blockquote></div></div><div class="canvas-note"><h4>від- (Response, Away)</h4><div class="md-content"><p><strong>Meaning:</strong> response to action, separation, or completion</p>
+</blockquote>
+<h3 id="responseaway">від- (Response, Away)</h3>
+<p><strong>Meaning:</strong> response to action, separation, or completion</p>
 <table>
 <thead>
 <tr>
@@ -471,7 +703,9 @@
 <li><strong>Відкрий</strong> двері. - Open the door.</li>
 <li>Мене <strong>відпустили</strong> раніше. - They let me go early.</li>
 <li>Ми <strong>відремонтували</strong> квартиру. - We repaired the apartment.</li>
-</ul></div></div><div class="canvas-note"><h4>ви- (Completion, Result)</h4><div class="md-content"><p><strong>Meaning:</strong> with non-motion verbs: completion with result</p>
+</ul>
+<h3 id="completionresult">ви- (Completion, Result)</h3>
+<p><strong>Meaning:</strong> with non-motion verbs: completion with result</p>
 <table>
 <thead>
 <tr>
@@ -520,7 +754,9 @@
 <li>Він <strong>випив</strong> каву. - He drank (up) the coffee.</li>
 <li>Вона <strong>виграла</strong> змагання. - She won the competition.</li>
 <li>Я <strong>витратив</strong> багато грошей. - I spent a lot of money.</li>
-</ul></div></div><div class="canvas-note"><h4>за- (Beginning, Covering)</h4><div class="md-content"><p><strong>Meaning:</strong> beginning of action, or covering/closing</p>
+</ul>
+<h3 id="beginningcovering">за- (Beginning, Covering)</h3>
+<p><strong>Meaning:</strong> beginning of action, or covering/closing</p>
 <table>
 <thead>
 <tr>
@@ -570,40 +806,102 @@
 <li><strong>Запиши</strong> мій номер. - Write down my number.</li>
 <li>Ми <strong>замовили</strong> піцу. - We ordered pizza.</li>
 <li>Я <strong>забув</strong> пароль. - I forgot the password.</li>
-</ul></div></div><div class="canvas-note"><h4>### Match Prefix to Verb</h4><div class="md-content"><ol>
-<li>на- + писати → написати (write complete)</li>
-<li>по- + бачити → побачити (see/notice)</li>
-<li>з- + робити → зробити (make/do)</li>
-<li>про- + читати → прочитати (read through)</li>
-<li>роз- + казати → розказати (tell/narrate)</li>
-<li>від- + крити → відкрити (open)</li>
-<li>ви- + вчити → вивчити (learn/master)</li>
-<li>за- + крити → закрити (close)</li>
-</ol></div></div><div class="canvas-note"><h4>Choose Correct Form</h4><div class="md-content"><ol>
-<li><p>Я ___ (wrote) листа вчора.<br />
-→ написав</p></li>
-<li><p>Вона ___ (saw) це в новинах.<br />
-→ побачила</p></li>
-<li><p>Ми ___ (made) помилку.<br />
-→ зробили</p></li>
-<li><p>Він ___ (read) всю книгу.<br />
-→ прочитав</p></li>
-<li><p>___ (Tell) мені про свою подорож.<br />
-→ Розкажи</p></li>
-<li><p>___ (Open) двері, будь ласка.<br />
-→ Відкрий</p></li>
-<li><p>Я ___ (learned) нові слова.<br />
-→ вивчив</p></li>
-<li><p>___ (Close) вікно, холодно.<br />
-→ Закрий</p></li>
-</ol></div></div><div class="canvas-note"><h4>Translate</h4><div class="md-content"><ol>
-<li>I finished my homework. → Я зробив домашнє завдання.</li>
-<li>She drank all the tea. → Вона випила весь чай.</li>
-<li>Did you hear that? → Ти почув це?</li>
-<li>Tell me a story. → Розкажи мені історію.</li>
-<li>I forgot my keys. → Я забув ключі.</li>
-<li>Open the book. → Відкрий книгу.</li>
-</ol></div></div><div class="canvas-note"><h4>### Describe Your Day</h4><div class="md-content"><p>Use prefixed verbs:</p>
+</ul>
+<h2 id="practice">practice</h2>
+<h3 id="matchprefixtoverb">Match Prefix to Verb</h3>
+<ol>
+<li><p>на- + писати</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-0', this)">Показати відповідь</button><div class="answer-block" id="ans-0"><div class="callout callout-answer" data-callout="answer">написати (write complete)</div></div>
+<ol start="2">
+<li><p>по- + бачити</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-1', this)">Показати відповідь</button><div class="answer-block" id="ans-1"><div class="callout callout-answer" data-callout="answer">побачити (see/notice)</div></div>
+<ol start="3">
+<li><p>з- + робити</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-2', this)">Показати відповідь</button><div class="answer-block" id="ans-2"><div class="callout callout-answer" data-callout="answer">зробити (make/do)</div></div>
+<ol start="4">
+<li><p>про- + читати</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-3', this)">Показати відповідь</button><div class="answer-block" id="ans-3"><div class="callout callout-answer" data-callout="answer">прочитати (read through)</div></div>
+<ol start="5">
+<li><p>роз- + казати</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-4', this)">Показати відповідь</button><div class="answer-block" id="ans-4"><div class="callout callout-answer" data-callout="answer">розказати (tell/narrate)</div></div>
+<ol start="6">
+<li><p>від- + крити</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-5', this)">Показати відповідь</button><div class="answer-block" id="ans-5"><div class="callout callout-answer" data-callout="answer">відкрити (open)</div></div>
+<ol start="7">
+<li><p>ви- + вчити</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-6', this)">Показати відповідь</button><div class="answer-block" id="ans-6"><div class="callout callout-answer" data-callout="answer">вивчити (learn/master)</div></div>
+<ol start="8">
+<li><p>за- + крити</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-7', this)">Показати відповідь</button><div class="answer-block" id="ans-7"><div class="callout callout-answer" data-callout="answer">закрити (close)</div></div>
+<h3 id="choosecorrectform">Choose Correct Form</h3>
+<ol>
+<li><p>Я ___ (wrote) листа вчора.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-8', this)">Показати відповідь</button><div class="answer-block" id="ans-8"><div class="callout callout-answer" data-callout="answer">написав</div></div>
+<ol start="2">
+<li><p>Вона ___ (saw) це в новинах.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-9', this)">Показати відповідь</button><div class="answer-block" id="ans-9"><div class="callout callout-answer" data-callout="answer">побачила</div></div>
+<ol start="3">
+<li><p>Ми ___ (made) помилку.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-10', this)">Показати відповідь</button><div class="answer-block" id="ans-10"><div class="callout callout-answer" data-callout="answer">зробили</div></div>
+<ol start="4">
+<li><p>Він ___ (read) всю книгу.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-11', this)">Показати відповідь</button><div class="answer-block" id="ans-11"><div class="callout callout-answer" data-callout="answer">прочитав</div></div>
+<ol start="5">
+<li><p>___ (Tell) мені про свою подорож.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-12', this)">Показати відповідь</button><div class="answer-block" id="ans-12"><div class="callout callout-answer" data-callout="answer">Розкажи</div></div>
+<ol start="6">
+<li><p>___ (Open) двері, будь ласка.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-13', this)">Показати відповідь</button><div class="answer-block" id="ans-13"><div class="callout callout-answer" data-callout="answer">Відкрий</div></div>
+<ol start="7">
+<li><p>Я ___ (learned) нові слова.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-14', this)">Показати відповідь</button><div class="answer-block" id="ans-14"><div class="callout callout-answer" data-callout="answer">вивчив</div></div>
+<ol start="8">
+<li><p>___ (Close) вікно, холодно.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-15', this)">Показати відповідь</button><div class="answer-block" id="ans-15"><div class="callout callout-answer" data-callout="answer">Закрий</div></div>
+<h3 id="translate">Translate</h3>
+<ol>
+<li><p>I finished my homework.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-16', this)">Показати відповідь</button><div class="answer-block" id="ans-16"><div class="callout callout-answer" data-callout="answer">Я зробив домашнє завдання.</div></div>
+<ol start="2">
+<li><p>She drank all the tea.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-17', this)">Показати відповідь</button><div class="answer-block" id="ans-17"><div class="callout callout-answer" data-callout="answer">Вона випила весь чай.</div></div>
+<ol start="3">
+<li><p>Did you hear that?</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-18', this)">Показати відповідь</button><div class="answer-block" id="ans-18"><div class="callout callout-answer" data-callout="answer">Ти почув це?</div></div>
+<ol start="4">
+<li><p>Tell me a story.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-19', this)">Показати відповідь</button><div class="answer-block" id="ans-19"><div class="callout callout-answer" data-callout="answer">Розкажи мені історію.</div></div>
+<ol start="5">
+<li><p>I forgot my keys.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-20', this)">Показати відповідь</button><div class="answer-block" id="ans-20"><div class="callout callout-answer" data-callout="answer">Я забув ключі.</div></div>
+<ol start="6">
+<li><p>Open the book.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-21', this)">Показати відповідь</button><div class="answer-block" id="ans-21"><div class="callout callout-answer" data-callout="answer">Відкрий книгу.</div></div>
+<h2 id="production">production</h2>
+<h3 id="describeyourday">Describe Your Day</h3>
+<p>Use prefixed verbs:</p>
 <ul>
 <li>Я <strong>прокинувся</strong> о сьомій.</li>
 <li>Я <strong>поснідав</strong> і <strong>випив</strong> каву.</li>
@@ -611,27 +909,138 @@
 <li>Я <strong>прочитав</strong> новини.</li>
 <li>Я <strong>вивчив</strong> нові слова.</li>
 <li>Я <strong>закінчив</strong> роботу о шостій.</li>
-</ul></div></div><div class="canvas-note"><h4>Create Sentences</h4><div class="md-content"><p>With роз-: Він <strong>розказав</strong> мені цікаву історію.<br />
+</ul>
+<h3 id="createsentences">Create Sentences</h3>
+<p>With роз-: Він <strong>розказав</strong> мені цікаву історію.<br />
 With за-: Я <strong>забув</strong> номер телефону.<br />
 With ви-: Вона <strong>виграла</strong> гру.<br />
-With про-: Ми <strong>прожили</strong> там два роки.</p></div></div></div>
-      <div class="btn-group"><button class="btn btn-primary" onclick="showSection('match')">Start →</button></div>
+With про-: Ми <strong>прожили</strong> там два роки.</p>
+<hr />
+<h1 id="summary">Summary</h1>
+<h2 id="actionverbprefixes">Action Verb Prefixes</h2>
+<table>
+<thead>
+<tr>
+<th>Prefix</th>
+<th>Core Meaning</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>на-</td>
+<td>onto, accumulate</td>
+<td>написати (write)</td>
+</tr>
+<tr>
+<td>по-</td>
+<td>brief, result</td>
+<td>побачити (see)</td>
+</tr>
+<tr>
+<td>з-/с-</td>
+<td>complete, together</td>
+<td>зробити (make)</td>
+</tr>
+<tr>
+<td>про-</td>
+<td>through, fully</td>
+<td>прочитати (read)</td>
+</tr>
+<tr>
+<td>роз-</td>
+<td>apart, distribute</td>
+<td>розказати (tell)</td>
+</tr>
+<tr>
+<td>від-</td>
+<td>back, response</td>
+<td>відкрити (open)</td>
+</tr>
+<tr>
+<td>ви-</td>
+<td>result, mastery</td>
+<td>вивчити (learn)</td>
+</tr>
+<tr>
+<td>за-</td>
+<td>begin, close</td>
+<td>закрити (close)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="sameprefixdifferentverbs">Same Prefix, Different Verbs</h2>
+<table>
+<thead>
+<tr>
+<th>Prefix</th>
+<th>Motion Verb</th>
+<th>Action Verb</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ви-</td>
+<td>вийти (exit)</td>
+<td>вивчити (learn)</td>
+</tr>
+<tr>
+<td>за-</td>
+<td>зайти (drop by)</td>
+<td>закрити (close)</td>
+</tr>
+<tr>
+<td>про-</td>
+<td>пройти (pass)</td>
+<td>прочитати (read)</td>
+</tr>
+<tr>
+<td>від-</td>
+<td>відійти (leave)</td>
+<td>відкрити (open)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="prefixpatterns">Prefix Patterns</h2>
+<p>Most prefixed verbs are <strong>perfective</strong>. To make imperfective pairs:</p>
+<ul>
+<li>написати (pf) ↔ писати (impf)</li>
+<li>зробити (pf) ↔ робити (impf)</li>
+<li>прочитати (pf) ↔ читати (impf)</li>
+</ul>
+<blockquote>
+  <p>💡 <strong>Key Takeaways</strong></p>
+  <ul>
+  <li>Same prefixes work with motion AND action verbs</li>
+  <li>Prefixes usually make verbs perfective</li>
+  <li>Each prefix has a core meaning that adapts to different verbs</li>
+  <li>Learning prefixes = exponential vocabulary growth</li>
+  <li>на- (onto), по- (brief), з- (complete), про- (through), роз- (apart)</li>
+  </ul>
+</blockquote></div></div>
+      <div class="btn-group">
+        <button class="btn btn-primary" onclick="showSection('match')">Start →</button>
+      </div>
     </section>
+  
+    
     <section id="match" class="section"><div class="card"><h3>Prefix Function</h3>
       <div class="score-display"><span class="score"><span id="match-score">0</span>/8</span></div>
       <div class="match-container" id="match-container"><svg class="match-lines" id="match-lines"></svg>
         <div class="match-column" id="match-left"><div class="match-item" data-pair="0">на-</div><div class="match-item" data-pair="1">по-</div><div class="match-item" data-pair="2">з-/с-</div><div class="match-item" data-pair="3">про-</div><div class="match-item" data-pair="4">роз-</div><div class="match-item" data-pair="5">від-</div><div class="match-item" data-pair="6">ви-</div><div class="match-item" data-pair="7">за-</div></div>
-        <div class="match-column" id="match-right"><div class="match-item" data-pair="7">beginning, close</div><div class="match-item" data-pair="4">apart, distribute</div><div class="match-item" data-pair="3">through, fully</div><div class="match-item" data-pair="5">response, back</div><div class="match-item" data-pair="2">completion, together</div><div class="match-item" data-pair="6">result, mastery</div><div class="match-item" data-pair="1">brief action, result</div><div class="match-item" data-pair="0">accumulation, onto</div></div>
+        <div class="match-column" id="match-right"><div class="match-item" data-pair="1">brief action, result</div><div class="match-item" data-pair="6">result, mastery</div><div class="match-item" data-pair="5">response, back</div><div class="match-item" data-pair="2">completion, together</div><div class="match-item" data-pair="0">accumulation, onto</div><div class="match-item" data-pair="3">through, fully</div><div class="match-item" data-pair="7">beginning, close</div><div class="match-item" data-pair="4">apart, distribute</div></div>
       </div>
       <div class="completion-message" id="match-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetMatch()">Reset</button><button class="btn btn-primary" onclick="showSection('quiz')">Next →</button></div>
     </div></section>
+    
     <section id="quiz" class="section"><div class="card"><h3>Action Verb Prefixes</h3>
       <div class="score-display"><span class="score"><span id="quiz-score">0</span>/6</span></div>
       <div id="quiz-container"></div>
       <div class="completion-message" id="quiz-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('sort')">Next →</button></div>
     </div></section>
+    
     <section id="sort" class="section"><div class="card"><h3>By Prefix Type</h3>
       <div class="score-display"><span class="score"><span id="sort-score">0</span>/12</span></div>
       <div class="sort-pool" id="sort-pool"><div class="sort-items" id="sort-items"></div></div>
@@ -639,34 +1048,235 @@ With про-: Ми <strong>прожили</strong> там два роки.</p></
       <div class="completion-message" id="sort-complete"><h3>All Sorted!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetSort()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Vocab →</button></div>
     </div></section>
+    
     <section id="vocab" class="section"><div class="card"><h3>Vocabulary (45)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
     </section>
-  </main>
-  <footer>Module 62 · curricula-opus</footer>
+  </main><footer>Module 62 · curricula-opus</footer>
   <script>
-    const matchPairs=[{"left":"на-","right":"accumulation, onto"},{"left":"по-","right":"brief action, result"},{"left":"з-/с-","right":"completion, together"},{"left":"про-","right":"through, fully"},{"left":"роз-","right":"apart, distribute"},{"left":"від-","right":"response, back"},{"left":"ви-","right":"result, mastery"},{"left":"за-","right":"beginning, close"}];
-    const quizData=[{"question":"\"I wrote a letter\" - Я ___ листа.","options":["написав","записав","виписав","переписав"],"correctIndex":0,"explanation":"На- + писати = complete writing."},{"question":"\"She saw him\" - Вона його ___.","options":["побачила","бачила","забачила","вибачила"],"correctIndex":0,"explanation":"По- + бачити = catch sight of."},{"question":"\"We solved the problem\" - Ми ___ проблему.","options":["вирішили","зарішили","перерішили","розрішили"],"correctIndex":0,"explanation":"Ви- + рішити = solve (result)."},{"question":"\"He read the whole book\" - Він ___ всю книгу.","options":["прочитав","зачитав","начитав","вичитав"],"correctIndex":0,"explanation":"Про- = read through completely."},{"question":"\"Tell me about it\" - ___ мені про це.","options":["Розкажи","Закажи","Покажи","Накажи"],"correctIndex":0,"explanation":"Роз- + казати = narrate/tell."},{"question":"\"Close the door\" - ___ двері.","options":["Закрий","Відкрий","Розкрий","Покрий"],"correctIndex":0,"explanation":"За- + крити = close/cover."}];
-    const sortData={"true-friends":["написати","намалювати","налити","нарізати"],"false-friends":["зробити","з'їсти","зібрати","сфотографувати"],"new-letters":["прочитати","прослухати","прожити","проспати"]};
-    const vocabData=[{"uk":"написати","translit":"","en":"to write (complete)","note":"pf"},{"uk":"намалювати","translit":"","en":"to draw/paint","note":"pf"},{"uk":"навчити","translit":"","en":"to teach","note":"pf"},{"uk":"налити","translit":"","en":"to pour","note":"pf"},{"uk":"нарізати","translit":"","en":"to slice","note":"pf"},{"uk":"побачити","translit":"","en":"to see","note":"pf"},{"uk":"почути","translit":"","en":"to hear","note":"pf"},{"uk":"почитати","translit":"","en":"to read (a while)","note":"pf"},{"uk":"подумати","translit":"","en":"to think over","note":"pf"},{"uk":"подякувати","translit":"","en":"to thank","note":"pf"},{"uk":"поснідати","translit":"","en":"to have breakfast","note":"pf"},{"uk":"пообідати","translit":"","en":"to have lunch","note":"pf"},{"uk":"зробити","translit":"","en":"to do, make","note":"pf"},{"uk":"з'їсти","translit":"","en":"to eat up","note":"pf"},{"uk":"зварити","translit":"","en":"to cook","note":"pf"},{"uk":"збудувати","translit":"","en":"to build","note":"pf"},{"uk":"зібрати","translit":"","en":"to gather","note":"pf"},{"uk":"сфотографувати","translit":"","en":"to photograph","note":"pf"},{"uk":"спитати","translit":"","en":"to ask","note":"pf"},{"uk":"прочитати","translit":"","en":"to read (finish)","note":"pf"},{"uk":"прослухати","translit":"","en":"to listen through","note":"pf"},{"uk":"прожити","translit":"","en":"to live (period)","note":"pf"},{"uk":"проспати","translit":"","en":"to oversleep","note":"pf"},{"uk":"розказати","translit":"","en":"to tell, narrate","note":"pf"},{"uk":"роздати","translit":"","en":"to distribute","note":"pf"},{"uk":"розбити","translit":"","en":"to break","note":"pf"},{"uk":"розрізати","translit":"","en":"to cut apart","note":"pf"},{"uk":"відповісти","translit":"","en":"to answer","note":"pf"},{"uk":"віддати","translit":"","en":"to give back","note":"pf"},{"uk":"відкрити","translit":"","en":"to open","note":"pf"},{"uk":"відпустити","translit":"","en":"to release, let go","note":"pf"},{"uk":"вивчити","translit":"","en":"to learn (master)","note":"pf"},{"uk":"вирішити","translit":"","en":"to decide, solve","note":"pf"},{"uk":"випити","translit":"","en":"to drink up","note":"pf"},{"uk":"виграти","translit":"","en":"to win","note":"pf"},{"uk":"витратити","translit":"","en":"to spend","note":"pf"},{"uk":"закрити","translit":"","en":"to close","note":"pf"},{"uk":"закінчити","translit":"","en":"to finish","note":"pf"},{"uk":"записати","translit":"","en":"to write down","note":"pf"},{"uk":"замовити","translit":"","en":"to order","note":"pf"},{"uk":"запитати","translit":"","en":"to ask","note":"pf"},{"uk":"забути","translit":"","en":"to forget","note":"pf"},{"uk":"історія","translit":"","en":"story, history","note":""},{"uk":"подарунок","translit":"","en":"gift","note":""},{"uk":"помилка","translit":"","en":"mistake","note":""}];
-    const totalSort=12;
-    function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
-    document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));
-    let matchSel=null,matchScore=0,matchPairsArr=[];
-    document.querySelectorAll('#match-left .match-item').forEach(item=>{item.addEventListener('click',()=>{if(item.classList.contains('matched'))return;document.querySelectorAll('#match-left .match-item').forEach(i=>i.classList.remove('selected'));item.classList.add('selected');matchSel={el:item,pair:item.dataset.pair};});});
-    document.querySelectorAll('#match-right .match-item').forEach(item=>{item.addEventListener('click',()=>{if(item.classList.contains('matched')||!matchSel)return;if(matchSel.pair===item.dataset.pair){matchSel.el.classList.remove('selected');matchSel.el.classList.add('matched');item.classList.add('matched');matchPairsArr.push({left:matchSel.el,right:item});matchScore++;document.getElementById('match-score').textContent=matchScore;drawLines();if(matchScore===matchPairs.length)document.getElementById('match-complete').classList.add('show');}else{item.classList.add('wrong');setTimeout(()=>item.classList.remove('wrong'),300);}matchSel=null;});});
-    function drawLines(){const svg=document.getElementById('match-lines'),c=document.getElementById('match-container');if(!svg||!c)return;const r=c.getBoundingClientRect();svg.innerHTML='';svg.setAttribute('viewBox','0 0 '+r.width+' '+r.height);matchPairsArr.forEach(p=>{const lr=p.left.getBoundingClientRect(),rr=p.right.getBoundingClientRect();const line=document.createElementNS('http://www.w3.org/2000/svg','line');line.setAttribute('x1',lr.right-r.left);line.setAttribute('y1',lr.top+lr.height/2-r.top);line.setAttribute('x2',rr.left-r.left);line.setAttribute('y2',rr.top+rr.height/2-r.top);line.setAttribute('stroke','#26a269');line.setAttribute('stroke-width','2');svg.appendChild(line);});}
-    function resetMatch(){matchSel=null;matchScore=0;matchPairsArr=[];document.getElementById('match-score').textContent='0';document.getElementById('match-complete')?.classList.remove('show');document.getElementById('match-lines').innerHTML='';document.querySelectorAll('#match-container .match-item').forEach(i=>i.classList.remove('matched','selected','wrong'));}
-    window.addEventListener('resize',drawLines);
-    let quizScore=0,quizAns=0;
-    function initQuiz(){const c=document.getElementById('quiz-container');if(!c||!quizData.length)return;c.innerHTML='';quizData.forEach((q,i)=>{const sh=[...q.options].sort(()=>Math.random()-0.5);const cor=sh.indexOf(q.options[q.correctIndex]);const div=document.createElement('div');div.className='quiz-question';div.innerHTML='<h4>Q'+(i+1)+': '+q.question+'</h4><div class="quiz-options">'+sh.map((o,j)=>'<div class="quiz-option" data-c="'+(j===cor)+'" data-q="'+i+'">'+o+'</div>').join('')+'</div><div class="quiz-explanation" id="exp-'+i+'">'+q.explanation+'</div>';c.appendChild(div);});document.querySelectorAll('.quiz-option').forEach(o=>o.addEventListener('click',handleQuiz));}
-    function handleQuiz(e){const opt=e.target,q=opt.closest('.quiz-question');if(q.classList.contains('answered'))return;q.classList.add('answered');if(opt.dataset.c==='true'){opt.classList.add('correct');quizScore++;}else{opt.classList.add('wrong');q.querySelector('[data-c="true"]').classList.add('correct');}document.getElementById('exp-'+opt.dataset.q).classList.add('show');document.getElementById('quiz-score').textContent=quizScore;quizAns++;if(quizAns===quizData.length)document.getElementById('quiz-complete').classList.add('show');}
-    function resetQuiz(){quizScore=0;quizAns=0;document.getElementById('quiz-score').textContent='0';document.getElementById('quiz-complete')?.classList.remove('show');initQuiz();}
-    let sortScore=0,dragItem=null;
-    function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
-    function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
-    function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
-    document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
+
+    const matchPairs = [{"left":"на-","right":"accumulation, onto"},{"left":"по-","right":"brief action, result"},{"left":"з-/с-","right":"completion, together"},{"left":"про-","right":"through, fully"},{"left":"роз-","right":"apart, distribute"},{"left":"від-","right":"response, back"},{"left":"ви-","right":"result, mastery"},{"left":"за-","right":"beginning, close"}];
+    const quizData = [{"question":"\"I wrote a letter\" - Я ___ листа.","options":["написав","записав","виписав","переписав"],"correctIndex":0,"explanation":"На- + писати = complete writing."},{"question":"\"She saw him\" - Вона його ___.","options":["побачила","бачила","забачила","вибачила"],"correctIndex":0,"explanation":"По- + бачити = catch sight of."},{"question":"\"We solved the problem\" - Ми ___ проблему.","options":["вирішили","зарішили","перерішили","розрішили"],"correctIndex":0,"explanation":"Ви- + рішити = solve (result)."},{"question":"\"He read the whole book\" - Він ___ всю книгу.","options":["прочитав","зачитав","начитав","вичитав"],"correctIndex":0,"explanation":"Про- = read through completely."},{"question":"\"Tell me about it\" - ___ мені про це.","options":["Розкажи","Закажи","Покажи","Накажи"],"correctIndex":0,"explanation":"Роз- + казати = narrate/tell."},{"question":"\"Close the door\" - ___ двері.","options":["Закрий","Відкрий","Розкрий","Покрий"],"correctIndex":0,"explanation":"За- + крити = close/cover."}];
+    const sortData = {"true-friends":["написати","намалювати","налити","нарізати"],"false-friends":["зробити","з'їсти","зібрати","сфотографувати"],"new-letters":["прочитати","прослухати","прожити","проспати"]};
+    const vocabData = [{"uk":"написати","translit":"","en":"to write (complete)","note":"pf"},{"uk":"намалювати","translit":"","en":"to draw/paint","note":"pf"},{"uk":"навчити","translit":"","en":"to teach","note":"pf"},{"uk":"налити","translit":"","en":"to pour","note":"pf"},{"uk":"нарізати","translit":"","en":"to slice","note":"pf"},{"uk":"побачити","translit":"","en":"to see","note":"pf"},{"uk":"почути","translit":"","en":"to hear","note":"pf"},{"uk":"почитати","translit":"","en":"to read (a while)","note":"pf"},{"uk":"подумати","translit":"","en":"to think over","note":"pf"},{"uk":"подякувати","translit":"","en":"to thank","note":"pf"},{"uk":"поснідати","translit":"","en":"to have breakfast","note":"pf"},{"uk":"пообідати","translit":"","en":"to have lunch","note":"pf"},{"uk":"зробити","translit":"","en":"to do, make","note":"pf"},{"uk":"з'їсти","translit":"","en":"to eat up","note":"pf"},{"uk":"зварити","translit":"","en":"to cook","note":"pf"},{"uk":"збудувати","translit":"","en":"to build","note":"pf"},{"uk":"зібрати","translit":"","en":"to gather","note":"pf"},{"uk":"сфотографувати","translit":"","en":"to photograph","note":"pf"},{"uk":"спитати","translit":"","en":"to ask","note":"pf"},{"uk":"прочитати","translit":"","en":"to read (finish)","note":"pf"},{"uk":"прослухати","translit":"","en":"to listen through","note":"pf"},{"uk":"прожити","translit":"","en":"to live (period)","note":"pf"},{"uk":"проспати","translit":"","en":"to oversleep","note":"pf"},{"uk":"розказати","translit":"","en":"to tell, narrate","note":"pf"},{"uk":"роздати","translit":"","en":"to distribute","note":"pf"},{"uk":"розбити","translit":"","en":"to break","note":"pf"},{"uk":"розрізати","translit":"","en":"to cut apart","note":"pf"},{"uk":"відповісти","translit":"","en":"to answer","note":"pf"},{"uk":"віддати","translit":"","en":"to give back","note":"pf"},{"uk":"відкрити","translit":"","en":"to open","note":"pf"},{"uk":"відпустити","translit":"","en":"to release, let go","note":"pf"},{"uk":"вивчити","translit":"","en":"to learn (master)","note":"pf"},{"uk":"вирішити","translit":"","en":"to decide, solve","note":"pf"},{"uk":"випити","translit":"","en":"to drink up","note":"pf"},{"uk":"виграти","translit":"","en":"to win","note":"pf"},{"uk":"витратити","translit":"","en":"to spend","note":"pf"},{"uk":"закрити","translit":"","en":"to close","note":"pf"},{"uk":"закінчити","translit":"","en":"to finish","note":"pf"},{"uk":"записати","translit":"","en":"to write down","note":"pf"},{"uk":"замовити","translit":"","en":"to order","note":"pf"},{"uk":"запитати","translit":"","en":"to ask","note":"pf"},{"uk":"забути","translit":"","en":"to forget","note":"pf"},{"uk":"історія","translit":"","en":"story, history","note":""},{"uk":"подарунок","translit":"","en":"gift","note":""},{"uk":"помилка","translit":"","en":"mistake","note":""}];
+    const totalSort = 12;
+  
+// Answer callout toggle (for new > [!answer] syntax)
+function toggleAnswer(id, btn) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const isUkrainian = document.querySelector('.level-badge')?.textContent.match(/B[12]|C[12]/);
+  const showText = isUkrainian ? 'Показати відповідь' : 'Show Answer';
+  const hideText = isUkrainian ? 'Сховати відповідь' : 'Hide Answer';
+  const show = !el.classList.contains('show');
+  if (show) {
+    el.classList.add('show');
+    btn.textContent = hideText;
+    btn.classList.add('revealed');
+  } else {
+    el.classList.remove('show');
+    btn.textContent = showText;
+    btn.classList.remove('revealed');
+  }
+}
+
+// Section navigation
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id)?.classList.add('active');
+  document.querySelector('[data-section="' + id + '"]')?.classList.add('active');
+}
+document.querySelectorAll('.nav-tab').forEach(t => t.addEventListener('click', () => showSection(t.dataset.section)));
+
+// Initialize on DOM ready
+document.addEventListener('DOMContentLoaded', () => {
+  initQuiz();
+  initSort();
+  initVocab();
+});
+
+
+// Quiz Activity
+let quizScore = 0, quizAns = 0;
+
+function initQuiz() {
+  const c = document.getElementById('quiz-container');
+  if (!c || !quizData.length) return;
+  c.innerHTML = '';
+  quizData.forEach((q, i) => {
+    const sh = [...q.options].sort(() => Math.random() - 0.5);
+    const cor = sh.indexOf(q.options[q.correctIndex]);
+    const div = document.createElement('div');
+    div.className = 'quiz-question';
+    div.innerHTML = '<h4>Q' + (i + 1) + ': ' + q.question + '</h4><div class="quiz-options">' + sh.map((o, j) => '<div class="quiz-option" data-c="' + (j === cor) + '" data-q="' + i + '">' + o + '</div>').join('') + '</div><div class="quiz-explanation" id="exp-' + i + '">' + q.explanation + '</div>';
+    c.appendChild(div);
+  });
+  document.querySelectorAll('.quiz-option').forEach(o => o.addEventListener('click', handleQuiz));
+}
+
+function handleQuiz(e) {
+  const opt = e.target, q = opt.closest('.quiz-question');
+  if (q.classList.contains('answered')) return;
+  q.classList.add('answered');
+  if (opt.dataset.c === 'true') {
+    opt.classList.add('correct');
+    quizScore++;
+  } else {
+    opt.classList.add('wrong');
+    q.querySelector('[data-c="true"]').classList.add('correct');
+  }
+  document.getElementById('exp-' + opt.dataset.q).classList.add('show');
+  document.getElementById('quiz-score').textContent = quizScore;
+  quizAns++;
+  if (quizAns === quizData.length) document.getElementById('quiz-complete').classList.add('show');
+}
+
+function resetQuiz() {
+  quizScore = 0;
+  quizAns = 0;
+  document.getElementById('quiz-score').textContent = '0';
+  document.getElementById('quiz-complete')?.classList.remove('show');
+  initQuiz();
+}
+
+
+// Match Activity
+let matchSel = null, matchScore = 0, matchPairsArr = [];
+
+document.querySelectorAll('#match-left .match-item').forEach(item => {
+  item.addEventListener('click', () => {
+    if (item.classList.contains('matched')) return;
+    document.querySelectorAll('#match-left .match-item').forEach(i => i.classList.remove('selected'));
+    item.classList.add('selected');
+    matchSel = { el: item, pair: item.dataset.pair };
+  });
+});
+
+document.querySelectorAll('#match-right .match-item').forEach(item => {
+  item.addEventListener('click', () => {
+    if (item.classList.contains('matched') || !matchSel) return;
+    if (matchSel.pair === item.dataset.pair) {
+      matchSel.el.classList.remove('selected');
+      matchSel.el.classList.add('matched');
+      item.classList.add('matched');
+      matchPairsArr.push({ left: matchSel.el, right: item });
+      matchScore++;
+      document.getElementById('match-score').textContent = matchScore;
+      drawLines();
+      if (matchScore === matchPairs.length) document.getElementById('match-complete').classList.add('show');
+    } else {
+      item.classList.add('wrong');
+      setTimeout(() => item.classList.remove('wrong'), 300);
+    }
+    matchSel = null;
+  });
+});
+
+function drawLines() {
+  const svg = document.getElementById('match-lines'), c = document.getElementById('match-container');
+  if (!svg || !c) return;
+  const r = c.getBoundingClientRect();
+  svg.innerHTML = '';
+  svg.setAttribute('viewBox', '0 0 ' + r.width + ' ' + r.height);
+  matchPairsArr.forEach(p => {
+    const lr = p.left.getBoundingClientRect(), rr = p.right.getBoundingClientRect();
+    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    line.setAttribute('x1', lr.right - r.left);
+    line.setAttribute('y1', lr.top + lr.height / 2 - r.top);
+    line.setAttribute('x2', rr.left - r.left);
+    line.setAttribute('y2', rr.top + rr.height / 2 - r.top);
+    line.setAttribute('stroke', '#26a269');
+    line.setAttribute('stroke-width', '2');
+    svg.appendChild(line);
+  });
+}
+
+function resetMatch() {
+  matchSel = null;
+  matchScore = 0;
+  matchPairsArr = [];
+  document.getElementById('match-score').textContent = '0';
+  document.getElementById('match-complete')?.classList.remove('show');
+  document.getElementById('match-lines').innerHTML = '';
+  document.querySelectorAll('#match-container .match-item').forEach(i => i.classList.remove('matched', 'selected', 'wrong'));
+}
+
+window.addEventListener('resize', drawLines);
+
+
+// Sort Activity
+let sortScore = 0, dragItem = null;
+
+function initSort() {
+  const pool = document.getElementById('sort-items');
+  if (!pool || !Object.keys(sortData).length) return;
+  const all = Object.values(sortData).flat().sort(() => Math.random() - 0.5);
+  pool.innerHTML = '';
+  all.forEach(letter => {
+    const group = Object.keys(sortData).find(g => sortData[g].includes(letter));
+    const item = document.createElement('div');
+    item.className = 'sort-item';
+    item.textContent = letter;
+    item.draggable = true;
+    item.dataset.group = group;
+    item.addEventListener('dragstart', e => {
+      dragItem = item;
+      item.classList.add('dragging');
+    });
+    item.addEventListener('dragend', () => {
+      item.classList.remove('dragging');
+      dragItem = null;
+    });
+    pool.appendChild(item);
+  });
+  document.querySelectorAll('.sort-group').forEach(g => {
+    g.addEventListener('dragover', e => {
+      e.preventDefault();
+      g.classList.add('drag-over');
+    });
+    g.addEventListener('dragleave', () => g.classList.remove('drag-over'));
+    g.addEventListener('drop', e => {
+      e.preventDefault();
+      g.classList.remove('drag-over');
+      if (!dragItem) return;
+      if (g.dataset.group === dragItem.dataset.group) {
+        dragItem.classList.add('correct');
+        g.querySelector('.sort-items').appendChild(dragItem);
+        dragItem.draggable = false;
+        sortScore++;
+        document.getElementById('sort-score').textContent = sortScore;
+        if (sortScore === totalSort) document.getElementById('sort-complete').classList.add('show');
+      } else {
+        dragItem.classList.add('wrong');
+        setTimeout(() => dragItem.classList.remove('wrong'), 300);
+      }
+    });
+  });
+}
+
+function resetSort() {
+  sortScore = 0;
+  document.getElementById('sort-score').textContent = '0';
+  document.getElementById('sort-complete')?.classList.remove('show');
+  document.querySelectorAll('.sort-group .sort-items').forEach(g => g.innerHTML = '');
+  initSort();
+}
+
+
+// Vocabulary
+function initVocab() {
+  const grid = document.getElementById('vocab-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  vocabData.forEach(v => {
+    const card = document.createElement('div');
+    card.className = 'vocab-card';
+    card.innerHTML = '<div class="uk">' + v.uk + '</div><div class="translit">' + v.translit + '</div><div class="en">' + v.en + '</div>' + (v.note ? '<div class="note">' + v.note + '</div>' : '');
+    grid.appendChild(card);
+  });
+}
+
   </script>
 </body>
 </html>

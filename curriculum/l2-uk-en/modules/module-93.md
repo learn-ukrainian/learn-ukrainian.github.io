@@ -166,23 +166,37 @@ Today: the most useful figurative uses of motion verbs.
 
 ### Complete with Figurative Meaning
 
-1. ___, що ми зробили помилку. (It turns out) → **Виходить**
-2. Давайте ___ до справи. (get down to) → **перейдемо**
-3. Мені ___ гарна ідея. (came to mind) → **прийшла на думку**
-4. Справа ___ до суду. (went to) → **дійшла**
-5. Він ___ курс з маркетингу. (took) → **пройшов**
-6. Три роки ___. (passed) → **пройшли/минули**
-7. Вона ___ заміж. (got married) → **вийшла**
-8. До нього не ___. (doesn't get it) → **доходить**
+1. ___, що ми зробили помилку. (It turns out)
+   > [!answer] **Виходить**
+2. Давайте ___ до справи. (get down to)
+   > [!answer] **перейдемо**
+3. Мені ___ гарна ідея. (came to mind)
+   > [!answer] **прийшла на думку**
+4. Справа ___ до суду. (went to)
+   > [!answer] **дійшла**
+5. Він ___ курс з маркетингу. (took)
+   > [!answer] **пройшов**
+6. Три роки ___. (passed)
+   > [!answer] **пройшли/минули**
+7. Вона ___ заміж. (got married)
+   > [!answer] **вийшла**
+8. До нього не ___. (doesn't get it)
+   > [!answer] **доходить**
 
 ### Translate to Ukrainian
 
-1. It turns out he was right. → **Виходить, що він мав рацію.**
-2. Let's get down to business. → **Давайте перейдемо до справи.**
-3. She came to a conclusion. → **Вона прийшла до висновку.**
-4. Time passes quickly. → **Час проходить/минає швидко.**
-5. It finally dawned on me. → **Нарешті до мене дійшло.**
-6. The negotiations reached a dead end. → **Переговори зайшли в глухий кут.**
+1. It turns out he was right.
+   > [!answer] **Виходить, що він мав рацію.**
+2. Let's get down to business.
+   > [!answer] **Давайте перейдемо до справи.**
+3. She came to a conclusion.
+   > [!answer] **Вона прийшла до висновку.**
+4. Time passes quickly.
+   > [!answer] **Час проходить/минає швидко.**
+5. It finally dawned on me.
+   > [!answer] **Нарешті до мене дійшло.**
+6. The negotiations reached a dead end.
+   > [!answer] **Переговори зайшли в глухий кут.**
 
 ### Match Expression with Meaning
 
@@ -281,12 +295,18 @@ A: Треба **прийти до** якогось рішення.
 
 > Complete with the correct verb.
 
-1. ___, що ми помилились. → **Виходить**
-2. Мені ___ ідея. → **прийшла** на думку
-3. До нього не ___. → **доходить**
-4. Час швидко ___. → **проходить/летить**
-5. Вона ___ заміж. → **вийшла**
-6. Справа ___ до суду. → **дійшла**
+1. ___, що ми помилились.
+   > [!answer] **Виходить**
+2. Мені ___ ідея.
+   > [!answer] **прийшла** на думку
+3. До нього не ___.
+   > [!answer] **доходить**
+4. Час швидко ___.
+   > [!answer] **проходить/летить**
+5. Вона ___ заміж.
+   > [!answer] **вийшла**
+6. Справа ___ до суду.
+   > [!answer] **дійшла**
 
 ---
 

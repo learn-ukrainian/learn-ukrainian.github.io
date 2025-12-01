@@ -152,12 +152,18 @@ What mass media do you use?
 
 ### Complete with Correct Word
 
-1. Я кожен день читаю ___ (newspaper). → **газету**
-2. Він працює ___ (journalist) на телеканалі. → **журналістом**
-3. Яка ваша улюблена ___ (TV program)? → **передача**
-4. Ви читали цю ___ (article)? → **статтю**
-5. Скільки у вас ___ (followers)? → **підписників**
-6. Я завжди дивлюся вечірній ___ (news broadcast). → **випуск новин**
+1. Я кожен день читаю ___ (newspaper).
+   > [!answer] **газету**
+2. Він працює ___ (journalist) на телеканалі.
+   > [!answer] **журналістом**
+3. Яка ваша улюблена ___ (TV program)?
+   > [!answer] **передача**
+4. Ви читали цю ___ (article)?
+   > [!answer] **статтю**
+5. Скільки у вас ___ (followers)?
+   > [!answer] **підписників**
+6. Я завжди дивлюся вечірній ___ (news broadcast).
+   > [!answer] **випуск новин**
 
 ### Match Media Type with Action
 
@@ -180,20 +186,15 @@ What mass media do you use?
 ### Translate to Ukrainian
 
 1. I read the news every morning.
-   → **Я читаю новини щоранку.**
-
+   > [!answer] **Я читаю новини щоранку.**
 2. This article is about politics.
-   → **Ця стаття про політику.**
-
+   > [!answer] **Ця стаття про політику.**
 3. She works as a journalist.
-   → **Вона працює журналісткою.**
-
+   > [!answer] **Вона працює журналісткою.**
 4. How many subscribers does this channel have?
-   → **Скільки підписників має цей канал?**
-
+   > [!answer] **Скільки підписників має цей канал?**
 5. I shared this post on social media.
-   → **Я поширив цей пост у соціальних мережах.**
-
+   > [!answer] **Я поширив цей пост у соціальних мережах.**
 ## production | Продукція
 
 ### Describe Your Media Habits

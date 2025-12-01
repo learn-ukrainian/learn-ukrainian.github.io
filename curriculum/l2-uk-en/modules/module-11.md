@@ -156,11 +156,16 @@ Remember the **4 Declension Groups** from Module 03? Here is how they behave in 
 ### Transform to Accusative
 
 Change nominative to accusative:
-1. книга → книг__ (книгу)
-2. стіл → ст__ (стіл - no change!)
-3. вода → вод__ (воду)
-4. вікно → вікн__ (вікно - no change!)
-5. газета → газет__ (газету)
+1. книга
+   > [!answer] книг__ (книгу)
+2. стіл
+   > [!answer] ст__ (стіл - no change!)
+3. вода
+   > [!answer] вод__ (воду)
+4. вікно
+   > [!answer] вікн__ (вікно - no change!)
+5. газета
+   > [!answer] газет__ (газету)
 
 ### Build Sentences
 
@@ -183,18 +188,26 @@ Combine subject + verb + object:
 ### Describe What You See
 
 Look around and describe using "Я бачу...":
-1. Я бачу _______ (table) → стіл
-2. Я бачу _______ (book) → книгу
-3. Я бачу _______ (window) → вікно
-4. Я бачу _______ (lamp) → лампу
+1. Я бачу _______ (table)
+   > [!answer] стіл
+2. Я бачу _______ (book)
+   > [!answer] книгу
+3. Я бачу _______ (window)
+   > [!answer] вікно
+4. Я бачу _______ (lamp)
+   > [!answer] лампу
 
 ### Express Wants
 
 Say what you want:
-1. Я хочу _______ (coffee) → каву
-2. Я хочу _______ (tea) → чай
-3. Я хочу _______ (water) → воду
-4. Я хочу _______ (bread) → хліб
+1. Я хочу _______ (coffee)
+   > [!answer] каву
+2. Я хочу _______ (tea)
+   > [!answer] чай
+3. Я хочу _______ (water)
+   > [!answer] воду
+4. Я хочу _______ (bread)
+   > [!answer] хліб
 
 ---
 

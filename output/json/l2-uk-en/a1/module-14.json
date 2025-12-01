@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-A1-14",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "grammar-introduction",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -26,29 +25,14 @@
       "Gender/number agreement",
       "Свій (reflexive possessive)"
     ],
-    "totalDuration": 45,
-    "transliterationMode": "full",
     "tags": [
       "grammar",
       "pronouns",
       "possessives"
     ],
-    "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
+    "totalDuration": 45,
+    "transliterationMode": "full",
     "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Whose Is It?\n\nYou learned demonstratives (цей, ця, це) in Module 05. Possessive pronouns work the same way - they match the noun's gender and number!\n\n- **мій** стіл (my table - masculine)\n- **моя** книга (my book - feminine)\n- **моє** вікно (my window - neuter)\n- **мої** друзі (my friends - plural)\n\nSame root \"мо-\", different endings for each gender.\n\n> 💡 **Did You Know?**\n>\n> Ukrainian possessives come from the genitive (possession) forms of personal pronouns. \"Мій\" literally evolved from something like \"of me.\" This is why possessives in all Slavic languages look similar - they share this ancient origin!"
-          }
-        ]
-      },
       {
         "id": "phase-presentation",
         "name": "presentation",
@@ -57,77 +41,33 @@
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "### First & Second Person Possessives\n\n**Мій (my) - matches noun gender:**\n\n| Gender | Form | Example |\n|--------|------|---------|\n| Masculine | мій | мій брат (my brother) |\n| Feminine | моя | моя сестра (my sister) |\n| Neuter | моє | моє ім'я (my name) |\n| Plural | мої | мої друзі (my friends) |\n\n**Твій (your - informal) - same pattern:**\n\n| Gender | Form | Example |\n|--------|------|---------|\n| Masculine | твій | твій телефон (your phone) |\n| Feminine | твоя | твоя книга (your book) |\n| Neuter | твоє | твоє місто (your city) |\n| Plural | твої | твої речі (your things) |\n\n> ⚡ **Pro Tip: The Pattern**\n>\n> All possessives follow the same endings:\n> - Masculine: -ій (мій, твій, наш)\n> - Feminine: -я (моя, твоя, наша)\n> - Neuter: -є (моє, твоє, наше)\n> - Plural: -і (мої, твої, наші)"
+            "teacherNotes": "### First & Second Person Possessives\n\n**Мій (my) - matches noun gender:**\n\n| Gender | Form | Example |\n|--------|------|---------|\n| Masculine | мій | мій брат (my brother) |\n| Feminine | моя | моя сестра (my sister) |\n| Neuter | моє | моє ім'я (my name) |\n| Plural | мої | мої друзі (my friends) |\n\n**Твій (your - informal) - same pattern:**\n\n| Gender | Form | Example |\n|--------|------|---------|\n| Masculine | твій | твій телефон (your phone) |\n| Feminine | твоя | твоя книга (your book) |\n| Neuter | твоє | твоє місто (your city) |\n| Plural | твої | твої речі (your things) |\n\n> ⚡ **Pro Tip: The Pattern**\n>\n> All possessives follow the same endings:\n> - Masculine: -ій (мій, твій, наш)\n> - Feminine: -я (моя, твоя, наша)\n> - Neuter: -є (моє, твоє, наше)\n> - Plural: -і (мої, твої, наші)\n\n### Third Person Possessives\n\n**Його (his/its) - NEVER changes!**\n- його брат (his brother)\n- його сестра (his sister)\n- його ім'я (his name)\n- його друзі (his friends)\n\n**Її (her) - NEVER changes!**\n- її брат (her brother)\n- її книга (her book)\n- її місто (her city)\n- її друзі (her friends)\n\n**Їхній (their) - changes like мій:**\n\n| Gender | Form | Example |\n|--------|------|---------|\n| Masculine | їхній | їхній дім (their house) |\n| Feminine | їхня | їхня машина (their car) |\n| Neuter | їхнє | їхнє рішення (their decision) |\n| Plural | їхні | їхні діти (their children) |\n\n> 🎯 **Fun Fact: The Unchanging Ones**\n>\n> Why don't його and її change? They're actually genitive forms of він and вона, frozen as possessives:\n> - \"його книга\" literally = \"the book of him\"\n> - \"її дім\" literally = \"the house of her\"\n>\n> This frozen genitive construction is why they never change for gender!\n\n### Plural Possessives\n\n**Наш (our):**\n\n| Gender | Form | Example |\n|--------|------|---------|\n| Masculine | наш | наш клас (our class) |\n| Feminine | наша | наша родина (our family) |\n| Neuter | наше | наше місто (our city) |\n| Plural | наші | наші друзі (our friends) |\n\n**Ваш (your - formal/plural):**\n\n| Gender | Form | Example |\n|--------|------|---------|\n| Masculine | ваш | ваш паспорт (your passport) |\n| Feminine | ваша | ваша валіза (your suitcase) |\n| Neuter | ваше | ваше місце (your seat) |\n| Plural | ваші | ваші документи (your documents) |\n\n> 📜 **History Bite: Наш vs Ваш**\n>\n> \"Наш\" and \"ваш\" have the same ancient root as English \"us\" and Latin \"nos.\" These pronouns have been remarkably stable for thousands of years across Indo-European languages. When you say \"наш,\" you're using a word that Bronze Age speakers would have recognized!\n\n### The Special Свій (Reflexive Possessive)\n\nUkrainian has a special possessive **свій** meaning \"one's own\" - it refers back to the subject:\n\n- Я читаю **свою** книгу. (I read my [own] book.)\n- Він любить **свою** роботу. (He loves his [own] job.)\n- Вона взяла **свій** телефон. (She took her [own] phone.)\n\n**Свій changes like мій:**\n- свій, своя, своє, свої\n\n> 🔍 **Myth Buster: \"Свій is Optional\"**\n>\n> Many learners skip свій, but it matters! Compare:\n> - Він взяв **свій** телефон. = He took his own phone.\n> - Він взяв **його** телефон. = He took his (someone else's) phone.\n>\n> Without свій, you might cause confusion about whose phone was taken!\n\n> 🎭 **Culture Corner: Formal vs Informal**\n>\n> In Ukrainian society:\n> - Use **твій** with friends, family, children, peers\n> - Use **ваш** with strangers, elders, in professional settings\n> - Addressing someone with ти/твій when ви/ваш is expected is considered rude!\n>\n> When in doubt, use ви/ваш - it's always safe."
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Third Person Possessives\n\n**Його (his/its) - NEVER changes!**\n- його брат (his brother)\n- його сестра (his sister)\n- його ім'я (his name)\n- його друзі (his friends)\n\n**Її (her) - NEVER changes!**\n- її брат (her brother)\n- її книга (her book)\n- її місто (her city)\n- її друзі (her friends)\n\n**Їхній (their) - changes like мій:**\n\n| Gender | Form | Example |\n|--------|------|---------|\n| Masculine | їхній | їхній дім (their house) |\n| Feminine | їхня | їхня машина (their car) |\n| Neuter | їхнє | їхнє рішення (their decision) |\n| Plural | їхні | їхні діти (their children) |\n\n> 🎯 **Fun Fact: The Unchanging Ones**\n>\n> Why don't його and її change? They're actually genitive forms of він and вона, frozen as possessives:\n> - \"його книга\" literally = \"the book of him\"\n> - \"її дім\" literally = \"the house of her\"\n>\n> This frozen genitive construction is why they never change for gender!"
+            "teacherNotes": "### Match Possessive to Noun\n\nChoose the correct form:\n1. ___ брат (мій/моя/моє)\n   > [!answer] мій\n2. ___ книга (твій/твоя/твоє)\n   > [!answer] твоя\n3. ___ місто (наш/наша/наше)\n   > [!answer] наше\n4. ___ друзі (ваш/ваша/ваші)\n   > [!answer] ваші\n\n### Complete with Possessives\n\n1. Це ___ (my) телефон.\n   > [!answer] мій\n2. Де ___ (your-informal) книга?\n   > [!answer] твоя\n3. ___ (Our) дім великий.\n   > [!answer] Наш\n4. ___ (Her) брат студент.\n   > [!answer] Її\n5. ___ (Their) машина нова.\n   > [!answer] Їхня\n\n> 🌍 **Real World: Talking About Belongings**\n>\n> - **Чий це телефон?** - Whose phone is this?\n> - **Це мій.** - It's mine.\n> - **Це твоя сумка?** - Is this your bag?\n> - **Ні, це її сумка.** - No, it's her bag.\n> - **Де ваш паспорт?** - Where is your passport?"
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Plural Possessives\n\n**Наш (our):**\n\n| Gender | Form | Example |\n|--------|------|---------|\n| Masculine | наш | наш клас (our class) |\n| Feminine | наша | наша родина (our family) |\n| Neuter | наше | наше місто (our city) |\n| Plural | наші | наші друзі (our friends) |\n\n**Ваш (your - formal/plural):**\n\n| Gender | Form | Example |\n|--------|------|---------|\n| Masculine | ваш | ваш паспорт (your passport) |\n| Feminine | ваша | ваша валіза (your suitcase) |\n| Neuter | ваше | ваше місце (your seat) |\n| Plural | ваші | ваші документи (your documents) |\n\n> 📜 **History Bite: Наш vs Ваш**\n>\n> \"Наш\" and \"ваш\" have the same ancient root as English \"us\" and Latin \"nos.\" These pronouns have been remarkably stable for thousands of years across Indo-European languages. When you say \"наш,\" you're using a word that Bronze Age speakers would have recognized!"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "The Special Свій (Reflexive Possessive)\n\nUkrainian has a special possessive **свій** meaning \"one's own\" - it refers back to the subject:\n\n- Я читаю **свою** книгу. (I read my [own] book.)\n- Він любить **свою** роботу. (He loves his [own] job.)\n- Вона взяла **свій** телефон. (She took her [own] phone.)\n\n**Свій changes like мій:**\n- свій, своя, своє, свої\n\n> 🔍 **Myth Buster: \"Свій is Optional\"**\n>\n> Many learners skip свій, but it matters! Compare:\n> - Він взяв **свій** телефон. = He took his own phone.\n> - Він взяв **його** телефон. = He took his (someone else's) phone.\n>\n> Without свій, you might cause confusion about whose phone was taken!\n\n> 🎭 **Culture Corner: Formal vs Informal**\n>\n> In Ukrainian society:\n> - Use **твій** with friends, family, children, peers\n> - Use **ваш** with strangers, elders, in professional settings\n> - Addressing someone with ти/твій when ви/ваш is expected is considered rude!\n>\n> When in doubt, use ви/ваш - it's always safe."
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A1-14-matchup"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Match Possessive to Noun\n\nChoose the correct form:\n1. ___ брат (мій/моя/моє) → мій\n2. ___ книга (твій/твоя/твоє) → твоя\n3. ___ місто (наш/наша/наше) → наше\n4. ___ друзі (ваш/ваша/ваші) → ваші"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Complete with Possessives\n\n1. Це ___ (my) телефон. → мій\n2. Де ___ (your-informal) книга? → твоя\n3. ___ (Our) дім великий. → Наш\n4. ___ (Her) брат студент. → Її\n5. ___ (Their) машина нова. → Їхня\n\n> 🌍 **Real World: Talking About Belongings**\n>\n> - **Чий це телефон?** - Whose phone is this?\n> - **Це мій.** - It's mine.\n> - **Це твоя сумка?** - Is this your bag?\n> - **Ні, це її сумка.** - No, it's her bag.\n> - **Де ваш паспорт?** - Where is your passport?"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A1-14-quiz"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A1-14-groupsort"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Talk About Your Things\n\nDescribe using possessives:\n1. My phone is on the table. → Мій телефон на столі.\n2. Her book is interesting. → Її книга цікава.\n3. Our city is beautiful. → Наше місто гарне.\n4. Their house is big. → Їхній дім великий."
+            "teacherNotes": "### Talk About Your Things\n\nDescribe using possessives:\n1. My phone is on the table.\n   > [!answer] Мій телефон на столі.\n2. Her book is interesting.\n   > [!answer] Її книга цікава.\n3. Our city is beautiful.\n   > [!answer] Наше місто гарне.\n4. Their house is big.\n   > [!answer] Їхній дім великий.\n\n---"
           }
         ]
       }
-    ]
+    ],
+    "createdAt": "2025-12-01T22:58:37.241Z",
+    "modifiedAt": "2025-12-01T22:58:37.241Z",
+    "version": 1
   },
   "activities": [
     {
-      "id": "act-uk-A1-14-matchup",
+      "id": "act-a1-14-matchup",
       "type": "match-up",
       "title": "Possessive Forms",
       "description": "Match the personal pronoun to its possessive.",
       "content": {
         "type": "match-up",
-        "instructions": "Match the personal pronoun to its possessive.",
         "pairs": [
           {
             "left": "я",
@@ -166,22 +106,17 @@
       "language": "uk",
       "difficultyLevel": "A1",
       "duration": 5,
-      "tags": [
-        "grammar",
-        "pronouns",
-        "possessives"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.241Z",
+      "modifiedAt": "2025-12-01T22:58:37.241Z"
     },
     {
-      "id": "act-uk-A1-14-quiz",
+      "id": "act-a1-14-quiz",
       "type": "quiz",
       "title": "Possessive Agreement",
       "description": "Choose the correct possessive form.",
       "content": {
         "type": "quiz",
-        "instructions": "Choose the correct possessive form.",
         "questions": [
           {
             "question": "\"My brother\" (брат = masculine)",
@@ -282,24 +217,20 @@
       "language": "uk",
       "difficultyLevel": "A1",
       "duration": 5,
-      "tags": [
-        "grammar",
-        "pronouns",
-        "possessives"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.241Z",
+      "modifiedAt": "2025-12-01T22:58:37.241Z"
     },
     {
-      "id": "act-uk-A1-14-groupsort",
+      "id": "act-a1-14-groupsort",
       "type": "group-sort",
       "title": "Changing vs Non-Changing",
       "description": "Sort possessives by whether they change for gender.",
       "content": {
         "type": "group-sort",
-        "instructions": "Sort possessives by whether they change for gender.",
         "groups": [
           {
+            "id": "change-for-gendernumber",
             "name": "Change for Gender/Number",
             "items": [
               "мій/моя/моє/мої",
@@ -311,6 +242,7 @@
             ]
           },
           {
+            "id": "never-change",
             "name": "Never Change",
             "items": [
               "його",
@@ -326,13 +258,9 @@
       "language": "uk",
       "difficultyLevel": "A1",
       "duration": 5,
-      "tags": [
-        "grammar",
-        "pronouns",
-        "possessives"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.241Z",
+      "modifiedAt": "2025-12-01T22:58:37.241Z"
     }
   ],
   "vocabulary": {
@@ -343,81 +271,73 @@
     "transliterationMode": "full",
     "words": [
       {
-        "id": "v-m14-001",
+        "id": "v-nash-14-0",
         "uk": "наш",
-        "translit": "",
-        "ipa": "/nɑʃ/",
         "en": "our (m)",
         "pos": "pron",
+        "ipa": "/nɑʃ/",
         "gender": "m",
         "note": "наша (f), наше (n), наші (pl)"
       },
       {
-        "id": "v-m14-002",
+        "id": "v-vash-14-1",
         "uk": "ваш",
-        "translit": "",
-        "ipa": "/vɑʃ/",
         "en": "your (m, formal)",
         "pos": "pron",
+        "ipa": "/vɑʃ/",
         "gender": "m",
         "note": "ваша (f), ваше (n), ваші (pl)"
       },
       {
-        "id": "v-m14-003",
+        "id": "v-yikhniy-14-2",
         "uk": "їхній",
-        "translit": "",
-        "ipa": "/ˈjixnʲij/",
         "en": "their (m)",
         "pos": "pron",
+        "ipa": "/ˈjixnʲij/",
         "gender": "m",
         "note": "їхня (f), їхнє (n), їхні (pl)"
       },
       {
-        "id": "v-m14-004",
+        "id": "v-sviy-14-3",
         "uk": "свій",
-        "translit": "",
-        "ipa": "/svʲij/",
         "en": "one's own (m)",
         "pos": "pron",
+        "ipa": "/svʲij/",
         "gender": "m",
         "note": "своя (f), своє (n), свої (pl)"
       },
       {
-        "id": "v-m14-005",
+        "id": "v-chyy-14-4",
         "uk": "чий",
-        "translit": "",
-        "ipa": "/tʃɪj/",
         "en": "whose (m)",
         "pos": "pron",
+        "ipa": "/tʃɪj/",
         "gender": "m",
         "note": "чия (f), чиє (n), чиї (pl)"
       },
       {
-        "id": "v-m14-006",
+        "id": "v-rich-14-5",
         "uk": "річ",
-        "translit": "",
-        "ipa": "/rʲitʃ/",
         "en": "thing",
         "pos": "noun",
+        "ipa": "/rʲitʃ/",
         "gender": "f",
         "note": "Plural: речі"
       },
       {
-        "id": "v-m14-007",
+        "id": "v-rodyna-14-6",
         "uk": "родина",
-        "translit": "",
-        "ipa": "/rɔˈdɪnɑ/",
         "en": "family",
         "pos": "noun",
+        "ipa": "/rɔˈdɪnɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m14-008",
+        "id": "v-mashyna-14-7",
         "uk": "машина",
-        "translit": "",
-        "ipa": "/mɑˈʃɪnɑ/",
         "en": "car",
         "pos": "noun",
+        "ipa": "/mɑˈʃɪnɑ/",
         "gender": "f"
       }
     ]

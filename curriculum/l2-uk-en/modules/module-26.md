@@ -161,24 +161,36 @@ Adjectives change endings to match the gender of the noun they describe!
 ### Match Adjectives to Nouns
 
 Form correct phrases:
-1. великий + книга → велика книга
-2. новий + вікно → нове вікно
-3. старий + місто → старе місто
-4. гарний + друзі → гарні друзі
+1. великий + книга
+   > [!answer] велика книга
+2. новий + вікно
+   > [!answer] нове вікно
+3. старий + місто
+   > [!answer] старе місто
+4. гарний + друзі
+   > [!answer] гарні друзі
 
 ### Describe These Items
 
-1. House (big) → великий дім
-2. Book (interesting) → цікава книга
-3. Window (new) → нове вікно
-4. Friends (good) → добрі друзі
+1. House (big)
+   > [!answer] великий дім
+2. Book (interesting)
+   > [!answer] цікава книга
+3. Window (new)
+   > [!answer] нове вікно
+4. Friends (good)
+   > [!answer] добрі друзі
 
 ### Complete Sentences
 
-1. Це ___ (new) дім. → новий
-2. Вона ___ (smart) жінка. → розумна
-3. Вони ___ (happy) люди. → щасливі
-4. Це ___ (tasty) їжа. → смачна
+1. Це ___ (new) дім.
+   > [!answer] новий
+2. Вона ___ (smart) жінка.
+   > [!answer] розумна
+3. Вони ___ (happy) люди.
+   > [!answer] щасливі
+4. Це ___ (tasty) їжа.
+   > [!answer] смачна
 
 ## production
 

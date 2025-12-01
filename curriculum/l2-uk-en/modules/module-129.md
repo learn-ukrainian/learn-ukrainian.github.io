@@ -159,20 +159,15 @@ Do you like traveling? Where have you been?
 ### Complete Sentences
 
 1. Для поїздки за кордон потрібен ___ (passport).
-   → **паспорт**
-
+   > [!answer] **паспорт**
 2. Літак приземлився в ___ (airport).
-   → **аеропорту**
-
+   > [!answer] **аеропорту**
 3. Київ — ___ (capital) України.
-   → **столиця**
-
+   > [!answer] **столиця**
 4. Ми ___ (booked) готель заздалегідь.
-   → **забронювали**
-
+   > [!answer] **забронювали**
 5. Карпати — це ___ (mountains) на заході.
-   → **гори**
-
+   > [!answer] **гори**
 ### Describe a Trip
 
 Use the vocabulary to describe:
@@ -184,17 +179,13 @@ Use the vocabulary to describe:
 ### Translate to Ukrainian
 
 1. We crossed the border by car.
-   → **Ми перетнули кордон на автомобілі.**
-
+   > [!answer] **Ми перетнули кордон на автомобілі.**
 2. The capital of Ukraine is Kyiv.
-   → **Столиця України — Київ.**
-
+   > [!answer] **Столиця України — Київ.**
 3. I booked a direct flight.
-   → **Я забронював прямий рейс.**
-
+   > [!answer] **Я забронював прямий рейс.**
 4. The hotel is near the train station.
-   → **Готель знаходиться біля вокзалу.**
-
+   > [!answer] **Готель знаходиться біля вокзалу.**
 ## production | Продукція
 
 ### Plan a Trip

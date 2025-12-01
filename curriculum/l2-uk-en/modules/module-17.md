@@ -176,24 +176,35 @@ Basic verbs you know:
 ### Express Preferences
 
 Use любити + accusative:
-1. I love coffee. → Я люблю каву.
-2. She loves pizza. → Вона любить піцу.
-3. They love Ukrainian food. → Вони люблять українську їжу.
+1. I love coffee.
+   > [!answer] Я люблю каву.
+2. She loves pizza.
+   > [!answer] Вона любить піцу.
+3. They love Ukrainian food.
+   > [!answer] Вони люблять українську їжу.
 
 ### Order Quantities
 
 Use genitive after quantities:
-1. A cup of coffee → чашка кави
-2. A glass of milk → склянка молока
-3. A kilo of apples → кілограм яблук
-4. A bottle of water → пляшка води
+1. A cup of coffee
+   > [!answer] чашка кави
+2. A glass of milk
+   > [!answer] склянка молока
+3. A kilo of apples
+   > [!answer] кілограм яблук
+4. A bottle of water
+   > [!answer] пляшка води
 
 ### Talk About Meals
 
-1. What do you eat for breakfast? → Що ти їси на сніданок?
-2. I eat porridge and drink coffee. → Я їм кашу і п'ю каву.
-3. What's for dinner? → Що на вечерю?
-4. Chicken with potatoes. → Курка з картоплею.
+1. What do you eat for breakfast?
+   > [!answer] Що ти їси на сніданок?
+2. I eat porridge and drink coffee.
+   > [!answer] Я їм кашу і п'ю каву.
+3. What's for dinner?
+   > [!answer] Що на вечерю?
+4. Chicken with potatoes.
+   > [!answer] Курка з картоплею.
 
 ## production
 

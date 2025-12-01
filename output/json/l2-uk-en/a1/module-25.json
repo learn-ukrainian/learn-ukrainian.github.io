@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-A1-25",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "vocabulary-expansion",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -26,119 +25,50 @@
       "Time expressions with о + locative",
       "Sequence words (потім, після того)"
     ],
-    "totalDuration": 50,
-    "transliterationMode": "full",
     "tags": [
       "vocabulary",
       "practical",
       "verbs",
       "reflexive"
     ],
-    "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
+    "totalDuration": 50,
+    "transliterationMode": "full",
     "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### What's Your Routine?\n\nEvery day we follow patterns: wake up, eat, work, sleep. Let's learn to describe YOUR typical day in Ukrainian!\n\nMany daily activities use **reflexive verbs** (-ся ending):\n- прокидатися (to wake up)\n- вмиватися (to wash oneself)\n- одягатися (to dress oneself)\n\n> 💡 **Did You Know?**\n>\n> Ukrainian reflexive verbs end in -ся (short for \"себе\" = oneself). This suffix stuck to the verb over centuries. Originally, \"я мию себе\" (I wash myself) became \"я миюся.\" Many everyday actions are reflexive - you do them TO yourself!"
-          }
-        ]
-      },
       {
         "id": "phase-presentation",
         "name": "presentation",
-        "duration": 15,
+        "duration": 17,
         "items": [
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "### Morning Routine\n\n| Ukrainian | Transliteration | English |\n|-----------|-----------------|---------|\n| прокидатися | prokydatysya | to wake up |\n| вставати | vstavaty | to get up |\n| вмиватися | vmyvatysya | to wash (oneself) |\n| чистити зуби | chystyty zuby | to brush teeth |\n| голитися | holytysya | to shave |\n| одягатися | odyahatysya | to get dressed |\n| снідати | snidaty | to have breakfast |\n| пити каву | pyty kavu | to drink coffee |\n\n**Sample morning:**\n- Я **прокидаюся** о сьомій годині.\n- Потім я **встаю** і **вмиваюся**.\n- Я **чищу зуби** і **одягаюся**.\n- О пів на восьму я **снідаю**.\n\n> ⚡ **Pro Tip: Reflexive Conjugation**\n>\n> Reflexive verbs conjugate normally, but keep -ся:\n> - я вмиваюся\n> - ти вмиваєшся\n> - він вмивається\n> - ми вмиваємося\n> - ви вмиваєтеся\n> - вони вмиваються\n>\n> Note: -ся after vowels, -сь after consonants (informal)"
+            "teacherNotes": "### Morning Routine\n\n| Ukrainian | Transliteration | English |\n|-----------|-----------------|---------|\n| прокидатися | prokydatysya | to wake up |\n| вставати | vstavaty | to get up |\n| вмиватися | vmyvatysya | to wash (oneself) |\n| чистити зуби | chystyty zuby | to brush teeth |\n| голитися | holytysya | to shave |\n| одягатися | odyahatysya | to get dressed |\n| снідати | snidaty | to have breakfast |\n| пити каву | pyty kavu | to drink coffee |\n\n**Sample morning:**\n- Я **прокидаюся** о сьомій годині.\n- Потім я **встаю** і **вмиваюся**.\n- Я **чищу зуби** і **одягаюся**.\n- О пів на восьму я **снідаю**.\n\n> ⚡ **Pro Tip: Reflexive Conjugation**\n>\n> Reflexive verbs conjugate normally, but keep -ся:\n> - я вмиваюся\n> - ти вмиваєшся\n> - він вмивається\n> - ми вмиваємося\n> - ви вмиваєтеся\n> - вони вмиваються\n>\n> Note: -ся after vowels, -сь after consonants (informal)\n\n### Daytime Activities\n\n| Ukrainian | Transliteration | English |\n|-----------|-----------------|---------|\n| виходити з дому | vykhodity z domu | to leave home |\n| їхати на роботу | yikhaty na robotu | to go to work |\n| працювати | pratsyuvaty | to work |\n| обідати | obidaty | to have lunch |\n| повертатися | povertatysya | to return |\n| відпочивати | vidpochyvaty | to rest |\n\n**Sample day:**\n- О восьмій я **виходжу з дому**.\n- Я **їду на роботу** метро.\n- Я **працюю** з дев'ятої до шостої.\n- О першій я **обідаю**.\n- О сьомій я **повертаюся** додому.\n\n> 📜 **History Bite: Reflexive Evolution**\n>\n> The reflexive -ся comes from the pronoun \"себе\" (self). In Old East Slavic, verbs with \"ся\" were written separately: \"мыти ся.\" Over time, the pronoun merged with the verb. This happened across all Slavic languages - compare Russian \"-ся,\" Polish \"-się,\" Czech \"-se.\"\n\n### Evening Routine\n\n| Ukrainian | Transliteration | English |\n|-----------|-----------------|---------|\n| вечеряти | vecheryaty | to have dinner |\n| дивитися телевізор | dyvytysya televizor | to watch TV |\n| читати | chytaty | to read |\n| гуляти | hulyaty | to walk, stroll |\n| приймати душ | pryimaty dush | to take a shower |\n| роздягатися | rozdyahatysya | to undress |\n| лягати спати | lyahaty spaty | to go to bed |\n| засинати | zasynaty | to fall asleep |\n\n**Sample evening:**\n- О сьомій я **вечеряю** з родиною.\n- Потім я **дивлюся телевізор** або **читаю**.\n- О десятій я **приймаю душ**.\n- О одинадцятій я **лягаю спати**.\n- Я зазвичай **засинаю** швидко.\n\n> 🎯 **Fun Fact: Гуляти**\n>\n> \"Гуляти\" means both \"to walk/stroll\" AND \"to have fun/party\"! Context matters:\n> - Ми гуляємо в парку. (We're walking in the park.)\n> - Ми гуляємо на весіллі. (We're partying at a wedding.)\n>\n> Evening \"гуляння\" can mean a romantic evening stroll or a big party!\n\n### Time Expressions\n\n| Ukrainian | English |\n|-----------|---------|\n| о + locative | at (time) |\n| з... до... | from... to... |\n| вранці | in the morning |\n| вдень | during the day |\n| ввечері | in the evening |\n| вночі | at night |\n| щодня | every day |\n| зазвичай | usually |\n| завжди | always |\n| іноді | sometimes |\n| ніколи | never |\n\n> 🔗 **Language Link: Time Prepositions**\n>\n> - **О** сьомій = at 7 (specific time)\n> - **З** дев'ятої **до** шостої = from 9 to 6 (range)\n> - **Близько** восьмої = around 8 (approximate)\n>\n> All use locative case for hours!\n\n### Sequence Words\n\n| Ukrainian | English |\n|-----------|---------|\n| спочатку | first, at first |\n| потім | then, after that |\n| після того | after that |\n| нарешті | finally |\n| перед тим | before that |\n| одночасно | at the same time |\n\n**Using sequences:**\n- **Спочатку** я вмиваюся, **потім** снідаю.\n- **Перед тим**, як лягти спати, я читаю.\n- **Нарешті** я засинаю.\n\n> 🌍 **Real World: Describing Your Day**\n>\n> - **Як проходить твій день?** - How does your day go?\n> - **Що ти робиш вранці?** - What do you do in the morning?\n> - **О котрій ти встаєш?** - What time do you get up?\n> - **Коли ти лягаєш спати?** - When do you go to bed?"
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Daytime Activities\n\n| Ukrainian | Transliteration | English |\n|-----------|-----------------|---------|\n| виходити з дому | vykhodity z domu | to leave home |\n| їхати на роботу | yikhaty na robotu | to go to work |\n| працювати | pratsyuvaty | to work |\n| обідати | obidaty | to have lunch |\n| повертатися | povertatysya | to return |\n| відпочивати | vidpochyvaty | to rest |\n\n**Sample day:**\n- О восьмій я **виходжу з дому**.\n- Я **їду на роботу** метро.\n- Я **працюю** з дев'ятої до шостої.\n- О першій я **обідаю**.\n- О сьомій я **повертаюся** додому.\n\n> 📜 **History Bite: Reflexive Evolution**\n>\n> The reflexive -ся comes from the pronoun \"себе\" (self). In Old East Slavic, verbs with \"ся\" were written separately: \"мыти ся.\" Over time, the pronoun merged with the verb. This happened across all Slavic languages - compare Russian \"-ся,\" Polish \"-się,\" Czech \"-se.\""
+            "teacherNotes": "### Describe Routine Actions\n\nSay in Ukrainian:\n1. I wake up at 7.\n   > [!answer] Я прокидаюся о сьомій.\n2. She has breakfast at 8.\n   > [!answer] Вона снідає о восьмій.\n3. We work from 9 to 5.\n   > [!answer] Ми працюємо з дев'ятої до п'ятої.\n4. They go to bed at 11.\n   > [!answer] Вони лягають спати о одинадцятій.\n\n### Put in Order\n\nArrange these activities chronologically:\n- вечеряти → снідати → обідати\n\nAnswer: снідати, обідати, вечеряти\n\n### Complete the Routine\n\nFill in with reflexive verbs:\n1. Вранці я ___ (wake up).\n   > [!answer] прокидаюся\n2. Потім я ___ (wash).\n   > [!answer] вмиваюся\n3. Я ___ (get dressed).\n   > [!answer] одягаюся\n4. Ввечері я ___ (undress).\n   > [!answer] роздягаюся"
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Evening Routine\n\n| Ukrainian | Transliteration | English |\n|-----------|-----------------|---------|\n| вечеряти | vecheryaty | to have dinner |\n| дивитися телевізор | dyvytysya televizor | to watch TV |\n| читати | chytaty | to read |\n| гуляти | hulyaty | to walk, stroll |\n| приймати душ | pryimaty dush | to take a shower |\n| роздягатися | rozdyahatysya | to undress |\n| лягати спати | lyahaty spaty | to go to bed |\n| засинати | zasynaty | to fall asleep |\n\n**Sample evening:**\n- О сьомій я **вечеряю** з родиною.\n- Потім я **дивлюся телевізор** або **читаю**.\n- О десятій я **приймаю душ**.\n- О одинадцятій я **лягаю спати**.\n- Я зазвичай **засинаю** швидко.\n\n> 🎯 **Fun Fact: Гуляти**\n>\n> \"Гуляти\" means both \"to walk/stroll\" AND \"to have fun/party\"! Context matters:\n> - Ми гуляємо в парку. (We're walking in the park.)\n> - Ми гуляємо на весіллі. (We're partying at a wedding.)\n>\n> Evening \"гуляння\" can mean a romantic evening stroll or a big party!"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Time Expressions\n\n| Ukrainian | English |\n|-----------|---------|\n| о + locative | at (time) |\n| з... до... | from... to... |\n| вранці | in the morning |\n| вдень | during the day |\n| ввечері | in the evening |\n| вночі | at night |\n| щодня | every day |\n| зазвичай | usually |\n| завжди | always |\n| іноді | sometimes |\n| ніколи | never |\n\n> 🔗 **Language Link: Time Prepositions**\n>\n> - **О** сьомій = at 7 (specific time)\n> - **З** дев'ятої **до** шостої = from 9 to 6 (range)\n> - **Близько** восьмої = around 8 (approximate)\n>\n> All use locative case for hours!"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Sequence Words\n\n| Ukrainian | English |\n|-----------|---------|\n| спочатку | first, at first |\n| потім | then, after that |\n| після того | after that |\n| нарешті | finally |\n| перед тим | before that |\n| одночасно | at the same time |\n\n**Using sequences:**\n- **Спочатку** я вмиваюся, **потім** снідаю.\n- **Перед тим**, як лягти спати, я читаю.\n- **Нарешті** я засинаю.\n\n> 🌍 **Real World: Describing Your Day**\n>\n> - **Як проходить твій день?** - How does your day go?\n> - **Що ти робиш вранці?** - What do you do in the morning?\n> - **О котрій ти встаєш?** - What time do you get up?\n> - **Коли ти лягаєш спати?** - When do you go to bed?"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A1-25-matchup"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Describe Routine Actions\n\nSay in Ukrainian:\n1. I wake up at 7. → Я прокидаюся о сьомій.\n2. She has breakfast at 8. → Вона снідає о восьмій.\n3. We work from 9 to 5. → Ми працюємо з дев'ятої до п'ятої.\n4. They go to bed at 11. → Вони лягають спати о одинадцятій."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Put in Order\n\nArrange these activities chronologically:\n- вечеряти → снідати → обідати\n\nAnswer: снідати, обідати, вечеряти"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Complete the Routine\n\nFill in with reflexive verbs:\n1. Вранці я ___ (wake up). → прокидаюся\n2. Потім я ___ (wash). → вмиваюся\n3. Я ___ (get dressed). → одягаюся\n4. Ввечері я ___ (undress). → роздягаюся"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A1-25-quiz"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A1-25-groupsort"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Describe Your Day\n\nWrite or speak about your typical day:\n- О котрій ви прокидаєтеся?\n- Що ви робите вранці?\n- Коли ви працюєте/навчаєтеся?\n- Що ви робите ввечері?\n- О котрій ви лягаєте спати?"
+            "teacherNotes": "### Describe Your Day\n\nWrite or speak about your typical day:\n- О котрій ви прокидаєтеся?\n- Що ви робите вранці?\n- Коли ви працюєте/навчаєтеся?\n- Що ви робите ввечері?\n- О котрій ви лягаєте спати?\n\n---"
           }
         ]
       }
-    ]
+    ],
+    "createdAt": "2025-12-01T22:58:37.263Z",
+    "modifiedAt": "2025-12-01T22:58:37.263Z",
+    "version": 1
   },
   "activities": [
     {
-      "id": "act-uk-A1-25-matchup",
+      "id": "act-a1-25-matchup",
       "type": "match-up",
       "title": "Daily Activities",
       "description": "Match Ukrainian to English.",
       "content": {
         "type": "match-up",
-        "instructions": "Match Ukrainian to English.",
         "pairs": [
           {
             "left": "прокидатися",
@@ -173,23 +103,17 @@
       "language": "uk",
       "difficultyLevel": "A1",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "practical",
-        "verbs",
-        "reflexive"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.263Z",
+      "modifiedAt": "2025-12-01T22:58:37.263Z"
     },
     {
-      "id": "act-uk-A1-25-quiz",
+      "id": "act-a1-25-quiz",
       "type": "quiz",
       "title": "Daily Routine",
       "description": "Choose the correct answer.",
       "content": {
         "type": "quiz",
-        "instructions": "Choose the correct answer.",
         "questions": [
           {
             "question": "\"I wake up at 7\" - Я прокидаюся ___ сьомій.",
@@ -290,49 +214,49 @@
       "language": "uk",
       "difficultyLevel": "A1",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "practical",
-        "verbs",
-        "reflexive"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.263Z",
+      "modifiedAt": "2025-12-01T22:58:37.263Z"
     },
     {
-      "id": "act-uk-A1-25-groupsort",
+      "id": "act-a1-25-groupsort",
       "type": "group-sort",
       "title": "Time of Day",
       "description": "Sort activities by when they typically happen.",
       "content": {
         "type": "group-sort",
-        "instructions": "Sort activities by when they typically happen.",
         "groups": [
           {
-            "name": "Вранці (Morning)",
+            "id": "",
+            "name": "Вранці",
             "items": [
               "прокидатися",
               "вмиватися",
               "снідати",
               "одягатися"
-            ]
+            ],
+            "nameUk": "Morning"
           },
           {
-            "name": "Вдень (Daytime)",
+            "id": "",
+            "name": "Вдень",
             "items": [
               "працювати",
               "обідати",
               "їздити на роботу"
-            ]
+            ],
+            "nameUk": "Daytime"
           },
           {
-            "name": "Ввечері (Evening)",
+            "id": "",
+            "name": "Ввечері",
             "items": [
               "вечеряти",
               "дивитися телевізор",
               "приймати душ",
               "лягати спати"
-            ]
+            ],
+            "nameUk": "Evening"
           }
         ],
         "shuffleItems": true
@@ -343,14 +267,9 @@
       "language": "uk",
       "difficultyLevel": "A1",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "practical",
-        "verbs",
-        "reflexive"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.263Z",
+      "modifiedAt": "2025-12-01T22:58:37.263Z"
     }
   ],
   "vocabulary": {
@@ -361,186 +280,149 @@
     "transliterationMode": "full",
     "words": [
       {
-        "id": "v-m25-001",
+        "id": "v-prokydatysya-25-0",
         "uk": "прокидатися",
-        "translit": "",
-        "ipa": "/prɔkɪˈdɑtɪsʲɑ/",
         "en": "to wake up",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/prɔkɪˈdɑtɪsʲɑ/",
         "note": "Reflexive"
       },
       {
-        "id": "v-m25-002",
+        "id": "v-vstavaty-25-1",
         "uk": "вставати",
-        "translit": "",
-        "ipa": "/vstɑˈvɑtɪ/",
         "en": "to get up",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/vstɑˈvɑtɪ/",
         "note": "встаю, встаєш"
       },
       {
-        "id": "v-m25-003",
+        "id": "v-vmyvatysya-25-2",
         "uk": "вмиватися",
-        "translit": "",
-        "ipa": "/vmɪˈvɑtɪsʲɑ/",
         "en": "to wash (face)",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/vmɪˈvɑtɪsʲɑ/",
         "note": "Reflexive"
       },
       {
-        "id": "v-m25-004",
+        "id": "v-odyahatysya-25-3",
         "uk": "одягатися",
-        "translit": "",
-        "ipa": "/ɔˈdʲɑɦɑtɪsʲɑ/",
         "en": "to get dressed",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/ɔˈdʲɑɦɑtɪsʲɑ/",
         "note": "Reflexive"
       },
       {
-        "id": "v-m25-005",
+        "id": "v-rozdyahatysya-25-4",
         "uk": "роздягатися",
-        "translit": "",
-        "ipa": "/rɔzˈdʲɑɦɑtɪsʲɑ/",
         "en": "to undress",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/rɔzˈdʲɑɦɑtɪsʲɑ/",
         "note": "Reflexive"
       },
       {
-        "id": "v-m25-006",
+        "id": "v-snidaty-25-5",
         "uk": "снідати",
-        "translit": "",
-        "ipa": "/snʲiˈdɑtɪ/",
         "en": "to have breakfast",
         "pos": "verb",
-        "gender": "-"
+        "ipa": "/snʲiˈdɑtɪ/"
       },
       {
-        "id": "v-m25-007",
+        "id": "v-obidaty-25-6",
         "uk": "обідати",
-        "translit": "",
-        "ipa": "/ɔˈbʲidɑtɪ/",
         "en": "to have lunch",
         "pos": "verb",
-        "gender": "-"
+        "ipa": "/ɔˈbʲidɑtɪ/"
       },
       {
-        "id": "v-m25-008",
+        "id": "v-vecheryaty-25-7",
         "uk": "вечеряти",
-        "translit": "",
-        "ipa": "/vɛtʃɛˈrʲɑtɪ/",
         "en": "to have dinner",
         "pos": "verb",
-        "gender": "-"
+        "ipa": "/vɛtʃɛˈrʲɑtɪ/"
       },
       {
-        "id": "v-m25-009",
+        "id": "v-vykhodyty-25-8",
         "uk": "виходити",
-        "translit": "",
-        "ipa": "/vɪxɔˈdɪtɪ/",
         "en": "to go out, leave",
         "pos": "verb",
-        "gender": "-"
+        "ipa": "/vɪxɔˈdɪtɪ/"
       },
       {
-        "id": "v-m25-010",
+        "id": "v-povertatysya-25-9",
         "uk": "повертатися",
-        "translit": "",
-        "ipa": "/pɔvɛrˈtɑtɪsʲɑ/",
         "en": "to return",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/pɔvɛrˈtɑtɪsʲɑ/",
         "note": "Reflexive"
       },
       {
-        "id": "v-m25-011",
+        "id": "v-lyahaty-25-10",
         "uk": "лягати",
-        "translit": "",
-        "ipa": "/lʲɑˈɦɑtɪ/",
         "en": "to lie down",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/lʲɑˈɦɑtɪ/",
         "note": "лягати спати"
       },
       {
-        "id": "v-m25-012",
+        "id": "v-zasynaty-25-11",
         "uk": "засинати",
-        "translit": "",
-        "ipa": "/zɑsɪˈnɑtɪ/",
         "en": "to fall asleep",
         "pos": "verb",
-        "gender": "-"
+        "ipa": "/zɑsɪˈnɑtɪ/"
       },
       {
-        "id": "v-m25-013",
+        "id": "v-holytysya-25-12",
         "uk": "голитися",
-        "translit": "",
-        "ipa": "/ɦɔˈlɪtɪsʲɑ/",
         "en": "to shave",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/ɦɔˈlɪtɪsʲɑ/",
         "note": "Reflexive"
       },
       {
-        "id": "v-m25-014",
+        "id": "v-chystyty-25-13",
         "uk": "чистити",
-        "translit": "",
-        "ipa": "/ˈtʃɪstɪtɪ/",
         "en": "to clean, brush",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/ˈtʃɪstɪtɪ/",
         "note": "чистити зуби"
       },
       {
-        "id": "v-m25-015",
+        "id": "v-dush-25-14",
         "uk": "душ",
-        "translit": "",
-        "ipa": "/duʃ/",
         "en": "shower",
         "pos": "noun",
+        "ipa": "/duʃ/",
         "gender": "m",
         "note": "приймати душ"
       },
       {
-        "id": "v-m25-016",
+        "id": "v-zuby-25-15",
         "uk": "зуби",
-        "translit": "",
-        "ipa": "/ˈzubɪ/",
         "en": "teeth",
         "pos": "noun",
-        "gender": "pl",
+        "ipa": "/ˈzubɪ/",
         "note": "Singular: зуб"
       },
       {
-        "id": "v-m25-017",
+        "id": "v-spochatku-25-16",
         "uk": "спочатку",
-        "translit": "",
-        "ipa": "/spɔˈtʃɑtku/",
         "en": "first, at first",
         "pos": "adv",
-        "gender": "-"
+        "ipa": "/spɔˈtʃɑtku/"
       },
       {
-        "id": "v-m25-018",
+        "id": "v-zazvychay-25-17",
         "uk": "зазвичай",
-        "translit": "",
-        "ipa": "/zɑˈzvɪtʃɑj/",
         "en": "usually",
         "pos": "adv",
-        "gender": "-"
+        "ipa": "/zɑˈzvɪtʃɑj/"
       },
       {
-        "id": "v-m25-019",
+        "id": "v-shchodnya-25-18",
         "uk": "щодня",
-        "translit": "",
-        "ipa": "/ʃtʃɔˈdnʲɑ/",
         "en": "every day",
         "pos": "adv",
-        "gender": "-"
+        "ipa": "/ʃtʃɔˈdnʲɑ/"
       }
     ]
   }

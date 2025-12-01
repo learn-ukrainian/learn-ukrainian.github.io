@@ -123,34 +123,25 @@ An idiom is an expression whose meaning doesn't come from its words:
 ### Complete with Correct Idiom
 
 1. Він дуже розумний. Він ___ (is smart).
-   → **має голову на плечах**
-
+   > [!answer] **має голову на плечах**
 2. Я дуже хвилююся. Сиджу ___ (nervously waiting).
-   → **як на голках**
-
+   > [!answer] **як на голках**
 3. Грошей майже немає — ___ (very little).
-   → **як кіт наплакав**
-
+   > [!answer] **як кіт наплакав**
 4. Він спеціаліст — ___ (is expert) в цій справі.
-   → **собаку з'їв**
-
+   > [!answer] **собаку з'їв**
 5. Не перебільшуй! Не ___ (don't exaggerate)!
-   → **роби з мухи слона**
-
+   > [!answer] **роби з мухи слона**
 ### Translate Using Idioms
 
 1. He does nothing all day.
-   → **Він цілий день байдики б'є.**
-
+   > [!answer] **Він цілий день байдики б'є.**
 2. I'm on cloud nine!
-   → **Я на сьомому небі!**
-
+   > [!answer] **Я на сьомому небі!**
 3. Keep it a secret!
-   → **Тримай язик за зубами!**
-
+   > [!answer] **Тримай язик за зубами!**
 4. That will never happen.
-   → **Це станеться, коли рак свисне.**
-
+   > [!answer] **Це станеться, коли рак свисне.**
 ## production | Продукція
 
 ### Use Idioms in Context

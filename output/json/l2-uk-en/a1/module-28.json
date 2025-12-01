@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-A1-28",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "vocabulary-expansion",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -26,29 +25,14 @@
       "Йде дощ/сніг (rain/snow is falling)",
       "Weather adjectives"
     ],
-    "totalDuration": 45,
-    "transliterationMode": "full",
     "tags": [
       "vocabulary",
       "weather",
       "practical"
     ],
-    "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
+    "totalDuration": 45,
+    "transliterationMode": "full",
     "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Talking About Weather\n\nWeather is universal small talk! Whether meeting someone or making plans, you'll need weather vocabulary.\n\n- **Яка сьогодні погода?** - What's the weather today?\n- **Сьогодні сонячно.** - It's sunny today.\n- **Завтра буде дощ.** - Tomorrow there will be rain.\n\n> 💡 **Did You Know?**\n>\n> Ukraine has a continental climate with four distinct seasons. Winters can be harsh (-20°C in the east), summers warm (30°C+), and the weather changes dramatically between seasons. That's why Ukrainians always talk about погода!"
-          }
-        ]
-      },
       {
         "id": "phase-presentation",
         "name": "presentation",
@@ -57,87 +41,33 @@
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "### Basic Weather Expressions\n\n**Impersonal expressions (no subject needed):**\n\n| Ukrainian | Transliteration | English |\n|-----------|-----------------|---------|\n| тепло | teplo | it's warm |\n| холодно | kholodno | it's cold |\n| жарко | zharko | it's hot |\n| прохолодно | prokholodno | it's cool |\n| вітряно | vitriano | it's windy |\n| вогко | vohko | it's humid |\n| сухо | sukho | it's dry |\n\n**Example sentences:**\n- Сьогодні **холодно**. (It's cold today.)\n- Вчора було **тепло**. (It was warm yesterday.)\n- Завтра буде **жарко**. (It will be hot tomorrow.)\n\n> ⚡ **Pro Tip: Tense with Weather**\n>\n> Weather expressions change tense with було/буде:\n> - Тепло. (It's warm - now)\n> - **Було** тепло. (It was warm)\n> - **Буде** тепло. (It will be warm)\n>\n> Just add було (past) or буде (future)!"
+            "teacherNotes": "### Basic Weather Expressions\n\n**Impersonal expressions (no subject needed):**\n\n| Ukrainian | Transliteration | English |\n|-----------|-----------------|---------|\n| тепло | teplo | it's warm |\n| холодно | kholodno | it's cold |\n| жарко | zharko | it's hot |\n| прохолодно | prokholodno | it's cool |\n| вітряно | vitriano | it's windy |\n| вогко | vohko | it's humid |\n| сухо | sukho | it's dry |\n\n**Example sentences:**\n- Сьогодні **холодно**. (It's cold today.)\n- Вчора було **тепло**. (It was warm yesterday.)\n- Завтра буде **жарко**. (It will be hot tomorrow.)\n\n> ⚡ **Pro Tip: Tense with Weather**\n>\n> Weather expressions change tense with було/буде:\n> - Тепло. (It's warm - now)\n> - **Було** тепло. (It was warm)\n> - **Буде** тепло. (It will be warm)\n>\n> Just add було (past) or буде (future)!\n\n### Weather Phenomena\n\n| Ukrainian | Transliteration | English |\n|-----------|-----------------|---------|\n| сонце | sontse | sun |\n| хмара | khmara | cloud |\n| дощ | doshch | rain |\n| сніг | snih | snow |\n| вітер | viter | wind |\n| туман | tuman | fog |\n| гроза | hroza | thunderstorm |\n| блискавка | blyskavka | lightning |\n| грім | hrim | thunder |\n| веселка | veselka | rainbow |\n\n**Describing weather:**\n- Йде **дощ**. (It's raining. - literally \"rain goes\")\n- Йде **сніг**. (It's snowing.)\n- Світить **сонце**. (The sun is shining.)\n- Дме **вітер**. (The wind is blowing.)\n\n> 📜 **History Bite: Йде Дощ**\n>\n> Why \"rain goes\" instead of \"rains\"? In Slavic thinking, rain \"walks\" or \"travels\" from the sky. This poetic expression - \"йде дощ\" (the rain goes) - treats weather as a traveler passing through. Similar expressions exist in Polish and Czech!\n\n### Weather Adjectives\n\n| Ukrainian | Transliteration | English |\n|-----------|-----------------|---------|\n| сонячний | sonyachnyi | sunny |\n| хмарний | khmarnyi | cloudy |\n| дощовий | doshchovyi | rainy |\n| сніжний | snizhnyi | snowy |\n| вітряний | vitryanyi | windy |\n| туманний | tumannyi | foggy |\n| ясний | yasnyi | clear |\n| похмурий | pokhmuryy | gloomy |\n\n**With погода:**\n- сонячна погода (sunny weather)\n- похмура погода (gloomy weather)\n- прекрасна погода (wonderful weather)\n- погана погода (bad weather)\n\n> 🎯 **Fun Fact: Веселка**\n>\n> \"Веселка\" (rainbow) comes from \"веселий\" (cheerful)! Ukrainians see the rainbow as a symbol of joy. In folklore, a rainbow was believed to be a bridge between worlds or a sign of good fortune. \"Після дощу буде веселка\" (After rain comes a rainbow) is a saying about hope.\n\n### Seasonal Weather\n\n| Season | Typical Weather |\n|--------|-----------------|\n| Весна | тепло, дощ, квіти цвітуть |\n| Літо | жарко, сонячно, грози |\n| Осінь | прохолодно, дощ, туман |\n| Зима | холодно, сніг, мороз |\n\n**Special winter words:**\n- мороз (frost)\n- лід (ice)\n- заметіль (blizzard)\n- сніжинка (snowflake)\n\n> 🔗 **Language Link: Seasonal Adverbs**\n>\n> Remember from Module 23:\n> - **Навесні** тепліє. (In spring it gets warmer.)\n> - **Влітку** жарко. (In summer it's hot.)\n> - **Восени** часто йде дощ. (In autumn it often rains.)\n> - **Взимку** холодно. (In winter it's cold.)\n\n### Temperature\n\n| Ukrainian | English |\n|-----------|---------|\n| температура | temperature |\n| градус | degree |\n| плюс | plus (above zero) |\n| мінус | minus (below zero) |\n| нуль | zero |\n\n**Expressions:**\n- Скільки градусів? (How many degrees?)\n- Сьогодні +20. (Today it's +20.)\n- Надворі -10. (Outside it's -10.)\n- Температура підвищується. (Temperature is rising.)\n- Температура знижується. (Temperature is dropping.)\n\n> 🌍 **Real World: Weather Small Talk**\n>\n> - **Яка сьогодні погода?** - What's the weather today?\n> - **Гарна погода!** - Nice weather!\n> - **Яка жахлива погода!** - What terrible weather!\n> - **Здається, буде дощ.** - It looks like rain.\n> - **Візьми парасольку!** - Take an umbrella!"
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Weather Phenomena\n\n| Ukrainian | Transliteration | English |\n|-----------|-----------------|---------|\n| сонце | sontse | sun |\n| хмара | khmara | cloud |\n| дощ | doshch | rain |\n| сніг | snih | snow |\n| вітер | viter | wind |\n| туман | tuman | fog |\n| гроза | hroza | thunderstorm |\n| блискавка | blyskavka | lightning |\n| грім | hrim | thunder |\n| веселка | veselka | rainbow |\n\n**Describing weather:**\n- Йде **дощ**. (It's raining. - literally \"rain goes\")\n- Йде **сніг**. (It's snowing.)\n- Світить **сонце**. (The sun is shining.)\n- Дме **вітер**. (The wind is blowing.)\n\n> 📜 **History Bite: Йде Дощ**\n>\n> Why \"rain goes\" instead of \"rains\"? In Slavic thinking, rain \"walks\" or \"travels\" from the sky. This poetic expression - \"йде дощ\" (the rain goes) - treats weather as a traveler passing through. Similar expressions exist in Polish and Czech!"
+            "teacherNotes": "### Describe Today's Weather\n\nAnswer: Яка сьогодні погода?\n- Сьогодні... (sunny/cloudy/rainy)\n- Температура... градусів.\n- Зараз... (cold/warm/hot)\n\n### Match Weather to Seasons\n\n1. сніг\n   > [!answer] зима\n2. квіти цвітуть\n   > [!answer] весна\n3. жарко\n   > [!answer] літо\n4. листя падає\n   > [!answer] осінь\n\n### Complete Sentences\n\n1. Йде ___ (rain).\n   > [!answer] дощ\n2. Світить ___ (sun).\n   > [!answer] сонце\n3. Завтра буде ___ (cold).\n   > [!answer] холодно\n4. Вчора було ___ (warm).\n   > [!answer] тепло"
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Weather Adjectives\n\n| Ukrainian | Transliteration | English |\n|-----------|-----------------|---------|\n| сонячний | sonyachnyi | sunny |\n| хмарний | khmarnyi | cloudy |\n| дощовий | doshchovyi | rainy |\n| сніжний | snizhnyi | snowy |\n| вітряний | vitryanyi | windy |\n| туманний | tumannyi | foggy |\n| ясний | yasnyi | clear |\n| похмурий | pokhmuryy | gloomy |\n\n**With погода:**\n- сонячна погода (sunny weather)\n- похмура погода (gloomy weather)\n- прекрасна погода (wonderful weather)\n- погана погода (bad weather)\n\n> 🎯 **Fun Fact: Веселка**\n>\n> \"Веселка\" (rainbow) comes from \"веселий\" (cheerful)! Ukrainians see the rainbow as a symbol of joy. In folklore, a rainbow was believed to be a bridge between worlds or a sign of good fortune. \"Після дощу буде веселка\" (After rain comes a rainbow) is a saying about hope."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Seasonal Weather\n\n| Season | Typical Weather |\n|--------|-----------------|\n| Весна | тепло, дощ, квіти цвітуть |\n| Літо | жарко, сонячно, грози |\n| Осінь | прохолодно, дощ, туман |\n| Зима | холодно, сніг, мороз |\n\n**Special winter words:**\n- мороз (frost)\n- лід (ice)\n- заметіль (blizzard)\n- сніжинка (snowflake)\n\n> 🔗 **Language Link: Seasonal Adverbs**\n>\n> Remember from Module 23:\n> - **Навесні** тепліє. (In spring it gets warmer.)\n> - **Влітку** жарко. (In summer it's hot.)\n> - **Восени** часто йде дощ. (In autumn it often rains.)\n> - **Взимку** холодно. (In winter it's cold.)"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Temperature\n\n| Ukrainian | English |\n|-----------|---------|\n| температура | temperature |\n| градус | degree |\n| плюс | plus (above zero) |\n| мінус | minus (below zero) |\n| нуль | zero |\n\n**Expressions:**\n- Скільки градусів? (How many degrees?)\n- Сьогодні +20. (Today it's +20.)\n- Надворі -10. (Outside it's -10.)\n- Температура підвищується. (Temperature is rising.)\n- Температура знижується. (Temperature is dropping.)\n\n> 🌍 **Real World: Weather Small Talk**\n>\n> - **Яка сьогодні погода?** - What's the weather today?\n> - **Гарна погода!** - Nice weather!\n> - **Яка жахлива погода!** - What terrible weather!\n> - **Здається, буде дощ.** - It looks like rain.\n> - **Візьми парасольку!** - Take an umbrella!"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A1-28-matchup"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Describe Today's Weather\n\nAnswer: Яка сьогодні погода?\n- Сьогодні... (sunny/cloudy/rainy)\n- Температура... градусів.\n- Зараз... (cold/warm/hot)"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Match Weather to Seasons\n\n1. сніг → зима\n2. квіти цвітуть → весна\n3. жарко → літо\n4. листя падає → осінь"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Complete Sentences\n\n1. Йде ___ (rain). → дощ\n2. Світить ___ (sun). → сонце\n3. Завтра буде ___ (cold). → холодно\n4. Вчора було ___ (warm). → тепло"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A1-28-quiz"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A1-28-groupsort"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Weather Report\n\nDescribe the weather for:\n1. Yesterday: Вчора було...\n2. Today: Сьогодні...\n3. Tomorrow: Завтра буде...\n4. Your favorite season: Моя улюблена пора року - ... тому що..."
+            "teacherNotes": "### Weather Report\n\nDescribe the weather for:\n1. Yesterday: Вчора було...\n2. Today: Сьогодні...\n3. Tomorrow: Завтра буде...\n4. Your favorite season: Моя улюблена пора року - ... тому що...\n\n---"
           }
         ]
       }
-    ]
+    ],
+    "createdAt": "2025-12-01T22:58:37.264Z",
+    "modifiedAt": "2025-12-01T22:58:37.264Z",
+    "version": 1
   },
   "activities": [
     {
-      "id": "act-uk-A1-28-matchup",
+      "id": "act-a1-28-matchup",
       "type": "match-up",
       "title": "Weather Vocabulary",
       "description": "Match Ukrainian to English.",
       "content": {
         "type": "match-up",
-        "instructions": "Match Ukrainian to English.",
         "pairs": [
           {
             "left": "сонце",
@@ -172,22 +102,17 @@
       "language": "uk",
       "difficultyLevel": "A1",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "weather",
-        "practical"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.264Z",
+      "modifiedAt": "2025-12-01T22:58:37.264Z"
     },
     {
-      "id": "act-uk-A1-28-quiz",
+      "id": "act-a1-28-quiz",
       "type": "quiz",
       "title": "Weather Expressions",
       "description": "Choose the correct answer.",
       "content": {
         "type": "quiz",
-        "instructions": "Choose the correct answer.",
         "questions": [
           {
             "question": "\"It's cold\" in Ukrainian:",
@@ -288,24 +213,20 @@
       "language": "uk",
       "difficultyLevel": "A1",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "weather",
-        "practical"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.264Z",
+      "modifiedAt": "2025-12-01T22:58:37.264Z"
     },
     {
-      "id": "act-uk-A1-28-groupsort",
+      "id": "act-a1-28-groupsort",
       "type": "group-sort",
       "title": "Weather Types",
       "description": "Sort weather words by type.",
       "content": {
         "type": "group-sort",
-        "instructions": "Sort weather words by type.",
         "groups": [
           {
+            "id": "precipitation",
             "name": "Precipitation",
             "items": [
               "дощ",
@@ -315,6 +236,7 @@
             ]
           },
           {
+            "id": "temperature",
             "name": "Temperature",
             "items": [
               "тепло",
@@ -324,6 +246,7 @@
             ]
           },
           {
+            "id": "sky-conditions",
             "name": "Sky Conditions",
             "items": [
               "сонячно",
@@ -341,13 +264,9 @@
       "language": "uk",
       "difficultyLevel": "A1",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "weather",
-        "practical"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.264Z",
+      "modifiedAt": "2025-12-01T22:58:37.264Z"
     }
   ],
   "vocabulary": {
@@ -358,162 +277,142 @@
     "transliterationMode": "full",
     "words": [
       {
-        "id": "v-m28-001",
+        "id": "v-pohoda-28-0",
         "uk": "погода",
-        "translit": "",
-        "ipa": "/pɔˈɦɔdɑ/",
         "en": "weather",
         "pos": "noun",
+        "ipa": "/pɔˈɦɔdɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m28-002",
+        "id": "v-khmara-28-1",
         "uk": "хмара",
-        "translit": "",
-        "ipa": "/ˈxmɑrɑ/",
         "en": "cloud",
         "pos": "noun",
+        "ipa": "/ˈxmɑrɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m28-003",
+        "id": "v-doshch-28-2",
         "uk": "дощ",
-        "translit": "",
-        "ipa": "/dɔʃtʃ/",
         "en": "rain",
         "pos": "noun",
+        "ipa": "/dɔʃtʃ/",
         "gender": "m",
         "note": "Йде дощ"
       },
       {
-        "id": "v-m28-004",
+        "id": "v-snih-28-3",
         "uk": "сніг",
-        "translit": "",
-        "ipa": "/snʲiɦ/",
         "en": "snow",
         "pos": "noun",
+        "ipa": "/snʲiɦ/",
         "gender": "m",
         "note": "Йде сніг"
       },
       {
-        "id": "v-m28-005",
+        "id": "v-viter-28-4",
         "uk": "вітер",
-        "translit": "",
-        "ipa": "/ˈvʲitɛr/",
         "en": "wind",
         "pos": "noun",
+        "ipa": "/ˈvʲitɛr/",
         "gender": "m",
         "note": "Дме вітер"
       },
       {
-        "id": "v-m28-006",
+        "id": "v-hroza-28-5",
         "uk": "гроза",
-        "translit": "",
-        "ipa": "/ɦrɔˈzɑ/",
         "en": "thunderstorm",
         "pos": "noun",
+        "ipa": "/ɦrɔˈzɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m28-007",
+        "id": "v-tuman-28-6",
         "uk": "туман",
-        "translit": "",
-        "ipa": "/tuˈmɑn/",
         "en": "fog",
         "pos": "noun",
+        "ipa": "/tuˈmɑn/",
         "gender": "m"
       },
       {
-        "id": "v-m28-008",
+        "id": "v-moroz-28-7",
         "uk": "мороз",
-        "translit": "",
-        "ipa": "/mɔˈrɔz/",
         "en": "frost",
         "pos": "noun",
+        "ipa": "/mɔˈrɔz/",
         "gender": "m"
       },
       {
-        "id": "v-m28-009",
+        "id": "v-veselka-28-8",
         "uk": "веселка",
-        "translit": "",
-        "ipa": "/vɛˈsɛlkɑ/",
         "en": "rainbow",
         "pos": "noun",
+        "ipa": "/vɛˈsɛlkɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m28-010",
+        "id": "v-teplo-28-9",
         "uk": "тепло",
-        "translit": "",
-        "ipa": "/ˈtɛplɔ/",
         "en": "warm (adv)",
         "pos": "adv",
-        "gender": "-",
+        "ipa": "/ˈtɛplɔ/",
         "note": "Impersonal"
       },
       {
-        "id": "v-m28-011",
+        "id": "v-kholodno-28-10",
         "uk": "холодно",
-        "translit": "",
-        "ipa": "/ˈxɔlɔdnɔ/",
         "en": "cold (adv)",
         "pos": "adv",
-        "gender": "-",
+        "ipa": "/ˈxɔlɔdnɔ/",
         "note": "Impersonal"
       },
       {
-        "id": "v-m28-012",
+        "id": "v-zharko-28-11",
         "uk": "жарко",
-        "translit": "",
-        "ipa": "/ˈʒɑrkɔ/",
         "en": "hot (adv)",
         "pos": "adv",
-        "gender": "-",
+        "ipa": "/ˈʒɑrkɔ/",
         "note": "Impersonal"
       },
       {
-        "id": "v-m28-013",
+        "id": "v-sonyachnyy-28-12",
         "uk": "сонячний",
-        "translit": "",
-        "ipa": "/sɔˈnʲɑtʃnɪj/",
         "en": "sunny",
         "pos": "adj",
+        "ipa": "/sɔˈnʲɑtʃnɪj/",
         "gender": "m"
       },
       {
-        "id": "v-m28-014",
+        "id": "v-khmarnyy-28-13",
         "uk": "хмарний",
-        "translit": "",
-        "ipa": "/ˈxmɑrnɪj/",
         "en": "cloudy",
         "pos": "adj",
+        "ipa": "/ˈxmɑrnɪj/",
         "gender": "m"
       },
       {
-        "id": "v-m28-015",
+        "id": "v-temperatura-28-14",
         "uk": "температура",
-        "translit": "",
-        "ipa": "/tɛmpɛrɑˈturɑ/",
         "en": "temperature",
         "pos": "noun",
+        "ipa": "/tɛmpɛrɑˈturɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m28-016",
+        "id": "v-hradus-28-15",
         "uk": "градус",
-        "translit": "",
-        "ipa": "/ˈɦrɑdus/",
         "en": "degree",
         "pos": "noun",
+        "ipa": "/ˈɦrɑdus/",
         "gender": "m"
       },
       {
-        "id": "v-m28-017",
+        "id": "v-parasolьka-28-16",
         "uk": "парасолька",
-        "translit": "",
-        "ipa": "/pɑrɑˈsɔlʲkɑ/",
         "en": "umbrella",
         "pos": "noun",
+        "ipa": "/pɑrɑˈsɔlʲkɑ/",
         "gender": "f"
       }
     ]

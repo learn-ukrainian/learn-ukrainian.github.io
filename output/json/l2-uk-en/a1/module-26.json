@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-A1-26",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "grammar-introduction",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -26,118 +25,49 @@
       "Hard and soft adjective patterns",
       "Position of adjectives"
     ],
-    "totalDuration": 50,
-    "transliterationMode": "full",
     "tags": [
       "grammar",
       "adjectives",
       "agreement"
     ],
-    "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
+    "totalDuration": 50,
+    "transliterationMode": "full",
     "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Bringing Words to Life\n\nSo far, you've talked about WHAT things are. Now let's describe HOW they are!\n\n- новий дім (new house)\n- нова книга (new book)\n- нове місто (new city)\n\nAdjectives change endings to match the gender of the noun they describe!\n\n> 💡 **Did You Know?**\n>\n> Ukrainian adjectives are incredibly flexible - they can go before OR after the noun, unlike English where they usually come before. \"Гарний дім\" and \"дім гарний\" are both correct, though the first is more common. Poets love this flexibility!"
-          }
-        ]
-      },
       {
         "id": "phase-presentation",
         "name": "presentation",
-        "duration": 15,
+        "duration": 17,
         "items": [
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "### Adjective Gender Agreement\n\n**Hard adjectives (most common):**\n\n| Gender | Ending | Example |\n|--------|--------|---------|\n| Masculine | -ий | нов**ий** дім |\n| Feminine | -а | нов**а** книга |\n| Neuter | -е | нов**е** вікно |\n| Plural | -і | нов**і** друзі |\n\n**Soft adjectives (-ній):**\n\n| Gender | Ending | Example |\n|--------|--------|---------|\n| Masculine | -ій | синій колір |\n| Feminine | -я | синя сукня |\n| Neuter | -є | синє небо |\n| Plural | -і | сині очі |\n\n> ⚡ **Pro Tip: Hard vs Soft**\n>\n> Most adjectives are \"hard\" (-ий/-а/-е/-і):\n> - великий, новий, старий, гарний\n>\n> \"Soft\" adjectives have -ь before the ending or are colors:\n> - синій, давній, осінній, літній"
+            "teacherNotes": "### Adjective Gender Agreement\n\n**Hard adjectives (most common):**\n\n| Gender | Ending | Example |\n|--------|--------|---------|\n| Masculine | -ий | нов**ий** дім |\n| Feminine | -а | нов**а** книга |\n| Neuter | -е | нов**е** вікно |\n| Plural | -і | нов**і** друзі |\n\n**Soft adjectives (-ній):**\n\n| Gender | Ending | Example |\n|--------|--------|---------|\n| Masculine | -ій | синій колір |\n| Feminine | -я | синя сукня |\n| Neuter | -є | синє небо |\n| Plural | -і | сині очі |\n\n> ⚡ **Pro Tip: Hard vs Soft**\n>\n> Most adjectives are \"hard\" (-ий/-а/-е/-і):\n> - великий, новий, старий, гарний\n>\n> \"Soft\" adjectives have -ь before the ending or are colors:\n> - синій, давній, осінній, літній\n\n### Common Descriptive Adjectives\n\n**Size:**\n| Ukrainian | Feminine | English |\n|-----------|----------|---------|\n| великий | велика | big, large |\n| маленький | маленька | small |\n| довгий | довга | long |\n| короткий | коротка | short |\n| високий | висока | tall, high |\n| низький | низька | short, low |\n\n**Quality:**\n| Ukrainian | Feminine | English |\n|-----------|----------|---------|\n| гарний | гарна | beautiful, nice |\n| поганий | погана | bad |\n| добрий | добра | good, kind |\n| злий | зла | evil, angry |\n| новий | нова | new |\n| старий | стара | old |\n\n> 📜 **History Bite: Гарний**\n>\n> \"Гарний\" (beautiful, nice) is uniquely Ukrainian! It comes from an old word meaning \"fitting, proper.\" Russian uses \"красивый\" (related to \"красный\" - red), while Ukrainian chose a different word. \"Гарний\" sounds softer and is used widely - гарна погода, гарний день, гарна людина!\n\n### Describing People\n\n| Ukrainian | Feminine | English |\n|-----------|----------|---------|\n| молодий | молода | young |\n| старий | стара | old |\n| розумний | розумна | smart |\n| дурний | дурна | stupid |\n| сильний | сильна | strong |\n| слабкий | слабка | weak |\n| веселий | весела | cheerful |\n| сумний | сумна | sad |\n| щасливий | щаслива | happy |\n| красивий | красива | beautiful |\n\n> 🎯 **Fun Fact: Сильний**\n>\n> \"Сильний\" (strong) is related to \"сила\" (strength, force). Ukraine's national motto is \"Слава Україні! Героям слава!\" but you'll also hear \"Сила в єдності!\" (Strength in unity!) - using this same root.\n\n### Describing Things\n\n| Ukrainian | Feminine | English |\n|-----------|----------|---------|\n| дорогий | дорога | expensive |\n| дешевий | дешева | cheap |\n| легкий | легка | easy, light |\n| важкий | важка | difficult, heavy |\n| чистий | чиста | clean |\n| брудний | брудна | dirty |\n| мокрий | мокра | wet |\n| сухий | суха | dry |\n| гарячий | гаряча | hot |\n| холодний | холодна | cold |\n\n> 🔗 **Language Link: Adjective Position**\n>\n> In Ukrainian, adjectives typically come BEFORE nouns (like English):\n> - **великий** дім (big house)\n> - **смачна** їжа (tasty food)\n>\n> But they can come AFTER for emphasis or in fixed expressions:\n> - дівчина **красива** (a beautiful girl - emphatic)\n> - вода **мінеральна** (mineral water - fixed phrase)\n\n### Common Adjective Pairs\n\n| Positive | Negative |\n|----------|----------|\n| добрий (good) | поганий (bad) |\n| новий (new) | старий (old) |\n| великий (big) | маленький (small) |\n| легкий (easy) | важкий (difficult) |\n| довгий (long) | короткий (short) |\n| чистий (clean) | брудний (dirty) |\n| мокрий (wet) | сухий (dry) |\n| гарячий (hot) | холодний (cold) |\n\n> 🌍 **Real World: Compliments**\n>\n> - **Ти гарна/гарний!** - You're beautiful/handsome!\n> - **У тебе гарні очі.** - You have beautiful eyes.\n> - **Це смачно!** - This is delicious!\n> - **Яка гарна погода!** - What nice weather!"
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Common Descriptive Adjectives\n\n**Size:**\n| Ukrainian | Feminine | English |\n|-----------|----------|---------|\n| великий | велика | big, large |\n| маленький | маленька | small |\n| довгий | довга | long |\n| короткий | коротка | short |\n| високий | висока | tall, high |\n| низький | низька | short, low |\n\n**Quality:**\n| Ukrainian | Feminine | English |\n|-----------|----------|---------|\n| гарний | гарна | beautiful, nice |\n| поганий | погана | bad |\n| добрий | добра | good, kind |\n| злий | зла | evil, angry |\n| новий | нова | new |\n| старий | стара | old |\n\n> 📜 **History Bite: Гарний**\n>\n> \"Гарний\" (beautiful, nice) is uniquely Ukrainian! It comes from an old word meaning \"fitting, proper.\" Russian uses \"красивый\" (related to \"красный\" - red), while Ukrainian chose a different word. \"Гарний\" sounds softer and is used widely - гарна погода, гарний день, гарна людина!"
+            "teacherNotes": "### Match Adjectives to Nouns\n\nForm correct phrases:\n1. великий + книга\n   > [!answer] велика книга\n2. новий + вікно\n   > [!answer] нове вікно\n3. старий + місто\n   > [!answer] старе місто\n4. гарний + друзі\n   > [!answer] гарні друзі\n\n### Describe These Items\n\n1. House (big)\n   > [!answer] великий дім\n2. Book (interesting)\n   > [!answer] цікава книга\n3. Window (new)\n   > [!answer] нове вікно\n4. Friends (good)\n   > [!answer] добрі друзі\n\n### Complete Sentences\n\n1. Це ___ (new) дім.\n   > [!answer] новий\n2. Вона ___ (smart) жінка.\n   > [!answer] розумна\n3. Вони ___ (happy) люди.\n   > [!answer] щасливі\n4. Це ___ (tasty) їжа.\n   > [!answer] смачна"
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Describing People\n\n| Ukrainian | Feminine | English |\n|-----------|----------|---------|\n| молодий | молода | young |\n| старий | стара | old |\n| розумний | розумна | smart |\n| дурний | дурна | stupid |\n| сильний | сильна | strong |\n| слабкий | слабка | weak |\n| веселий | весела | cheerful |\n| сумний | сумна | sad |\n| щасливий | щаслива | happy |\n| красивий | красива | beautiful |\n\n> 🎯 **Fun Fact: Сильний**\n>\n> \"Сильний\" (strong) is related to \"сила\" (strength, force). Ukraine's national motto is \"Слава Україні! Героям слава!\" but you'll also hear \"Сила в єдності!\" (Strength in unity!) - using this same root."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Describing Things\n\n| Ukrainian | Feminine | English |\n|-----------|----------|---------|\n| дорогий | дорога | expensive |\n| дешевий | дешева | cheap |\n| легкий | легка | easy, light |\n| важкий | важка | difficult, heavy |\n| чистий | чиста | clean |\n| брудний | брудна | dirty |\n| мокрий | мокра | wet |\n| сухий | суха | dry |\n| гарячий | гаряча | hot |\n| холодний | холодна | cold |\n\n> 🔗 **Language Link: Adjective Position**\n>\n> In Ukrainian, adjectives typically come BEFORE nouns (like English):\n> - **великий** дім (big house)\n> - **смачна** їжа (tasty food)\n>\n> But they can come AFTER for emphasis or in fixed expressions:\n> - дівчина **красива** (a beautiful girl - emphatic)\n> - вода **мінеральна** (mineral water - fixed phrase)"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Common Adjective Pairs\n\n| Positive | Negative |\n|----------|----------|\n| добрий (good) | поганий (bad) |\n| новий (new) | старий (old) |\n| великий (big) | маленький (small) |\n| легкий (easy) | важкий (difficult) |\n| довгий (long) | короткий (short) |\n| чистий (clean) | брудний (dirty) |\n| мокрий (wet) | сухий (dry) |\n| гарячий (hot) | холодний (cold) |\n\n> 🌍 **Real World: Compliments**\n>\n> - **Ти гарна/гарний!** - You're beautiful/handsome!\n> - **У тебе гарні очі.** - You have beautiful eyes.\n> - **Це смачно!** - This is delicious!\n> - **Яка гарна погода!** - What nice weather!"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A1-26-matchup"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Match Adjectives to Nouns\n\nForm correct phrases:\n1. великий + книга → велика книга\n2. новий + вікно → нове вікно\n3. старий + місто → старе місто\n4. гарний + друзі → гарні друзі"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Describe These Items\n\n1. House (big) → великий дім\n2. Book (interesting) → цікава книга\n3. Window (new) → нове вікно\n4. Friends (good) → добрі друзі"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Complete Sentences\n\n1. Це ___ (new) дім. → новий\n2. Вона ___ (smart) жінка. → розумна\n3. Вони ___ (happy) люди. → щасливі\n4. Це ___ (tasty) їжа. → смачна"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A1-26-quiz"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A1-26-groupsort"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Describe Your World\n\nUse adjectives to describe:\n1. Your home: Мій дім... (великий/маленький/новий/старий)\n2. Your friend: Мій друг... (добрий/розумний/веселий)\n3. Your city: Моє місто... (гарне/старе/велике)\n4. Your work: Моя робота... (цікава/важка/легка)"
+            "teacherNotes": "### Describe Your World\n\nUse adjectives to describe:\n1. Your home: Мій дім... (великий/маленький/новий/старий)\n2. Your friend: Мій друг... (добрий/розумний/веселий)\n3. Your city: Моє місто... (гарне/старе/велике)\n4. Your work: Моя робота... (цікава/важка/легка)\n\n---"
           }
         ]
       }
-    ]
+    ],
+    "createdAt": "2025-12-01T22:58:37.263Z",
+    "modifiedAt": "2025-12-01T22:58:37.263Z",
+    "version": 1
   },
   "activities": [
     {
-      "id": "act-uk-A1-26-matchup",
+      "id": "act-a1-26-matchup",
       "type": "match-up",
       "title": "Adjective Forms",
       "description": "Match masculine to feminine forms.",
       "content": {
         "type": "match-up",
-        "instructions": "Match masculine to feminine forms.",
         "pairs": [
           {
             "left": "новий",
@@ -172,22 +102,17 @@
       "language": "uk",
       "difficultyLevel": "A1",
       "duration": 5,
-      "tags": [
-        "grammar",
-        "adjectives",
-        "agreement"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.263Z",
+      "modifiedAt": "2025-12-01T22:58:37.263Z"
     },
     {
-      "id": "act-uk-A1-26-quiz",
+      "id": "act-a1-26-quiz",
       "type": "quiz",
       "title": "Adjective Agreement",
       "description": "Choose the correct form.",
       "content": {
         "type": "quiz",
-        "instructions": "Choose the correct form.",
         "questions": [
           {
             "question": "\"Big house\" (дім = masculine)",
@@ -288,24 +213,20 @@
       "language": "uk",
       "difficultyLevel": "A1",
       "duration": 5,
-      "tags": [
-        "grammar",
-        "adjectives",
-        "agreement"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.263Z",
+      "modifiedAt": "2025-12-01T22:58:37.263Z"
     },
     {
-      "id": "act-uk-A1-26-groupsort",
+      "id": "act-a1-26-groupsort",
       "type": "group-sort",
       "title": "Adjective Categories",
       "description": "Sort adjectives by category.",
       "content": {
         "type": "group-sort",
-        "instructions": "Sort adjectives by category.",
         "groups": [
           {
+            "id": "size",
             "name": "Size",
             "items": [
               "великий",
@@ -316,6 +237,7 @@
             ]
           },
           {
+            "id": "quality",
             "name": "Quality",
             "items": [
               "гарний",
@@ -326,6 +248,7 @@
             ]
           },
           {
+            "id": "feelingstate",
             "name": "Feeling/State",
             "items": [
               "щасливий",
@@ -344,13 +267,9 @@
       "language": "uk",
       "difficultyLevel": "A1",
       "duration": 5,
-      "tags": [
-        "grammar",
-        "adjectives",
-        "agreement"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.263Z",
+      "modifiedAt": "2025-12-01T22:58:37.263Z"
     }
   ],
   "vocabulary": {
@@ -361,132 +280,119 @@
     "transliterationMode": "full",
     "words": [
       {
-        "id": "v-m26-001",
+        "id": "v-novyy-26-0",
         "uk": "новий",
-        "translit": "",
-        "ipa": "/nɔˈvɪj/",
         "en": "new",
         "pos": "adj",
+        "ipa": "/nɔˈvɪj/",
         "gender": "m",
         "note": "нова (f), нове (n)"
       },
       {
-        "id": "v-m26-002",
+        "id": "v-staryy-26-1",
         "uk": "старий",
-        "translit": "",
-        "ipa": "/stɑˈrɪj/",
         "en": "old",
         "pos": "adj",
+        "ipa": "/stɑˈrɪj/",
         "gender": "m",
         "note": "стара (f), старе (n)"
       },
       {
-        "id": "v-m26-003",
+        "id": "v-harnyy-26-2",
         "uk": "гарний",
-        "translit": "",
-        "ipa": "/ˈɦɑrnɪj/",
         "en": "beautiful, nice",
         "pos": "adj",
+        "ipa": "/ˈɦɑrnɪj/",
         "gender": "m",
         "note": "гарна (f), гарне (n)"
       },
       {
-        "id": "v-m26-004",
+        "id": "v-dobryy-26-3",
         "uk": "добрий",
-        "translit": "",
-        "ipa": "/ˈdɔbrɪj/",
         "en": "good, kind",
         "pos": "adj",
+        "ipa": "/ˈdɔbrɪj/",
         "gender": "m",
         "note": "добра (f), добре (n)"
       },
       {
-        "id": "v-m26-005",
+        "id": "v-pohanyy-26-4",
         "uk": "поганий",
-        "translit": "",
-        "ipa": "/pɔˈɦɑnɪj/",
         "en": "bad",
         "pos": "adj",
+        "ipa": "/pɔˈɦɑnɪj/",
         "gender": "m",
         "note": "погана (f), погане (n)"
       },
       {
-        "id": "v-m26-006",
+        "id": "v-molodyy-26-5",
         "uk": "молодий",
-        "translit": "",
-        "ipa": "/mɔˈlɔdɪj/",
         "en": "young",
         "pos": "adj",
+        "ipa": "/mɔˈlɔdɪj/",
         "gender": "m",
         "note": "молода (f), молоде (n)"
       },
       {
-        "id": "v-m26-007",
+        "id": "v-rozumnyy-26-6",
         "uk": "розумний",
-        "translit": "",
-        "ipa": "/rɔˈzumnɪj/",
         "en": "smart",
         "pos": "adj",
+        "ipa": "/rɔˈzumnɪj/",
         "gender": "m",
         "note": "розумна (f), розумне (n)"
       },
       {
-        "id": "v-m26-008",
+        "id": "v-shchaslyvyy-26-7",
         "uk": "щасливий",
-        "translit": "",
-        "ipa": "/ʃtʃɑsˈlɪvɪj/",
         "en": "happy",
         "pos": "adj",
+        "ipa": "/ʃtʃɑsˈlɪvɪj/",
         "gender": "m",
         "note": "щаслива (f), щасливе (n)"
       },
       {
-        "id": "v-m26-009",
+        "id": "v-sumnyy-26-8",
         "uk": "сумний",
-        "translit": "",
-        "ipa": "/ˈsumnɪj/",
         "en": "sad",
         "pos": "adj",
+        "ipa": "/ˈsumnɪj/",
         "gender": "m",
         "note": "сумна (f), сумне (n)"
       },
       {
-        "id": "v-m26-010",
+        "id": "v-lehkyy-26-9",
         "uk": "легкий",
-        "translit": "",
-        "ipa": "/ˈlɛɦkɪj/",
         "en": "easy, light",
         "pos": "adj",
+        "ipa": "/ˈlɛɦkɪj/",
         "gender": "m",
         "note": "легка (f), легке (n)"
       },
       {
-        "id": "v-m26-011",
+        "id": "v-vazhkyy-26-10",
         "uk": "важкий",
-        "translit": "",
-        "ipa": "/vɑʒˈkɪj/",
         "en": "hard, heavy",
         "pos": "adj",
+        "ipa": "/vɑʒˈkɪj/",
         "gender": "m",
         "note": "важка (f), важке (n)"
       },
       {
-        "id": "v-m26-012",
+        "id": "v-chystyy-26-11",
         "uk": "чистий",
-        "translit": "",
-        "ipa": "/ˈtʃɪstɪj/",
         "en": "clean",
         "pos": "adj",
+        "ipa": "/ˈtʃɪstɪj/",
         "gender": "m",
         "note": "чиста (f), чисте (n)"
       },
       {
-        "id": "v-m26-013",
+        "id": "v-tsikavyy-26-12",
         "uk": "цікавий",
-        "translit": "",
-        "ipa": "/t͡sʲiˈkɑvɪj/",
         "en": "interesting",
         "pos": "adj",
+        "ipa": "/t͡sʲiˈkɑvɪj/",
         "gender": "m",
         "note": "цікава (f), цікаве (n)"
       }

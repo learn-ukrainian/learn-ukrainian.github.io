@@ -178,14 +178,66 @@
 
 ---
 
+### B1.5: Contemporary Ukraine via Media (Modules 141-150)
+
+**Theme:** Сучасна Україна через медіа
+**Immersion:** 30% English / 70% Ukrainian
+**Sources:** Ukrainer, BBC Ukraine, DW Ukraine style content
+
+| # | Title | Type | Focus |
+|---|-------|------|-------|
+| 141 | Українські регіони: Захід | Culture | Львів, Закарпаття, Волинь — Ukrainer style |
+| 142 | Українські регіони: Схід | Culture | Харків, Донбас, Слобожанщина |
+| 143 | Українські регіони: Південь | Culture | Одеса, Херсон, Крим |
+| 144 | Українська музика сьогодні | Culture | Contemporary music scene |
+| 145 | Українське кіно та серіали | Culture | Film industry, popular shows |
+| 146 | Екологія та довкілля | Vocabulary | Environment, sustainability |
+| 147 | Технології та стартапи | Vocabulary | Tech industry, innovation |
+| 148 | Спорт в Україні | Vocabulary | Sports culture, achievements |
+| 149 | Українська кухня: більше ніж борщ | Culture | Regional cuisines, traditions |
+| 150 | B1.5 Checkpoint | Review | Assessment |
+
+### B1.6: Authentic Texts & Media Literacy (Modules 151-160)
+
+**Theme:** Читаємо справжні тексти
+**Immersion:** 20% English / 80% Ukrainian
+**Preparation for B2 immersion level**
+
+| # | Title | Type | Focus |
+|---|-------|------|-------|
+| 151 | Новини: як читати та розуміти | Skills | News literacy, BBC/DW style |
+| 152 | Інтерв'ю: розмовний стиль | Skills | Ukrainer interview format |
+| 153 | Блоги та соцмережі | Skills | Authentic online Ukrainian |
+| 154 | Подкасти: слухаємо українською | Skills | Audio comprehension |
+| 155 | Короткі оповідання I | Literature | Simplified contemporary stories |
+| 156 | Короткі оповідання II | Literature | More contemporary stories |
+| 157 | Документальні фільми | Skills | Ukrainer documentary style |
+| 158 | Подорожі Україною | Vocabulary | Travel, tourism vocabulary |
+| 159 | B1.6 Review | Review | Integration |
+| 160 | B1 Final Checkpoint | Review | Comprehensive B1 assessment |
+
+---
+
 ## Summary
 
-- **Total B1 modules:** 60 (81-140)
+- **Total B1 modules:** 80 (81-160)
 - **Grammar modules:** ~35
-- **Vocabulary modules:** ~20
+- **Vocabulary modules:** ~25
+- **Culture/Media modules:** ~15
 - **Review/checkpoint modules:** ~5
-- **Target new words:** ~1,500-1,800 (~25-30/module average)
-- **Cumulative after B1:** ~2,900-3,200 words
+- **Target new words:** ~2,000-2,400 (~25-30/module average)
+- **Cumulative after B1:** ~3,400-3,800 words
+
+## Immersion Progression
+
+| Phase | Modules | English | Ukrainian |
+|-------|---------|---------|-----------|
+| B1.1 | 81-100 | 70% | 30% |
+| B1.2 | 101-115 | 60% | 40% |
+| B1.3 | 116-125 | 50% | 50% |
+| B1.4 | 126-140 | 40% | 60% |
+| B1.5 | 141-150 | 30% | 70% |
+| B1.6 | 151-160 | 20% | 80% |
 
 ---
 
@@ -251,11 +303,14 @@ Ukrainian aspect is **NOT black and white**. Many situations allow BOTH perfecti
 
 | Phase | Modules | Status |
 |-------|---------|--------|
-| B1.1 | 81-100 | ✅ Implemented |
-| B1.2 | 101-115 | ✅ Implemented |
-| B1.3 | 116-125 | ✅ Implemented |
-| B1.4 | 126-140 | ✅ Implemented |
+| B1.1 | 81-100 | ✅ Implemented (needs quality rewrite) |
+| B1.2 | 101-115 | ✅ Implemented (needs quality rewrite) |
+| B1.3 | 116-125 | ✅ Implemented (needs quality rewrite) |
+| B1.4 | 126-140 | ✅ Implemented (needs quality rewrite) |
+| B1.5 | 141-150 | ⏳ Planned (NEW) |
+| B1.6 | 151-160 | ⏳ Planned (NEW) |
 
 **Related GitHub Issues:**
 - #24: Implement missing modules 101-140
 - #25: Review aspect examples for ambiguous cases
+- #56: Phase 3: Investigate and improve B1 content quality

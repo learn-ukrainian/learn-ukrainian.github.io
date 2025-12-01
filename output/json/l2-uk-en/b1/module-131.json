@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-B1-131",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "vocabulary-expansion",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -22,181 +21,43 @@
       "Compare past and present situations"
     ],
     "grammarFocus": [],
-    "totalDuration": 45,
-    "transliterationMode": "none",
     "tags": [
       "vocabulary",
       "changes",
       "trends",
       "comparison"
     ],
+    "totalDuration": 45,
+    "transliterationMode": "none",
+    "phases": [],
+    "createdAt": "2025-12-01T22:58:37.239Z",
+    "modifiedAt": "2025-12-01T22:58:37.239Z",
     "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
-    "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Світ змін | A World of Changes\n\nСвіт постійно змінюється. Як описати ці зміни?\n\nThe world constantly changes. How do we describe these changes?\n\n- Населення **зростає** | The population is growing\n- Ціни **підвищуються** | Prices are increasing\n- Якість повітря **погіршується** | Air quality is worsening"
-          }
-        ]
-      },
-      {
-        "id": "phase-presentation",
-        "name": "presentation",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Зростання | Increase\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| зростати / зрости | /zrosˈtɑtɪ/ | to grow, increase | Населення зростає. |\n| підвищуватися / підвищитися | - | to rise, increase | Ціни підвищилися. |\n| збільшуватися / збільшитися | - | to increase | Витрати збільшилися. |\n| зростання | /zrosˈtɑnʲːɑ/ | growth | Економічне зростання. |\n| підвищення | /pʲidvɪˈʃɛnʲːɑ/ | rise, increase | Підвищення зарплати. |\n| збільшення | /zbʲilʲˈʃɛnʲːɑ/ | increase | Збільшення обсягів. |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Зменшення | Decrease\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| зменшуватися / зменшитися | - | to decrease | Витрати зменшилися. |\n| знижуватися / знизитися | - | to decline, drop | Ціни знизилися. |\n| падати / впасти | /ˈpɑdɑtɪ/ | to fall, drop | Курс валюти впав. |\n| скорочуватися / скоротитися | - | to shrink, reduce | Виробництво скоротилося. |\n| зменшення | /zmɛnˈʃɛnʲːɑ/ | decrease | Зменшення безробіття. |\n| зниження | /znɪˈʒɛnʲːɑ/ | decline, drop | Зниження цін. |\n| падіння | /pɑˈdʲinʲːɑ/ | fall, drop | Падіння курсу. |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Покращення / Погіршення | Improvement / Deterioration\n\n| Ukrainian | English | Example |\n|-----------|---------|---------|\n| покращуватися / покращитися | to improve | Ситуація покращилася. |\n| погіршуватися / погіршитися | to worsen | Здоров'я погіршилося. |\n| покращення | improvement | Покращення якості. |\n| погіршення | deterioration | Погіршення відносин. |\n| розвиватися / розвинутися | to develop | Технології розвиваються. |\n| розвиток | development | Швидкий розвиток. |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Стабільність | Stability\n\n| Ukrainian | English | Example |\n|-----------|---------|---------|\n| залишатися стабільним | to remain stable | Ціни залишаються стабільними. |\n| не змінюватися | to stay unchanged | Ситуація не змінюється. |\n| стабільність | stability | Економічна стабільність. |\n| зберігати рівень | to maintain level | Зберігати рівень життя. |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Зміна напрямку | Change of Direction\n\n| Ukrainian | English | Example |\n|-----------|---------|---------|\n| змінюватися / змінитися | to change | Ситуація змінилася. |\n| перетворюватися / перетворитися | to transform | Місто перетворилося. |\n| переходити / перейти | to transition | Перейти до нової системи. |\n| коливатися | to fluctuate | Ціни коливаються. |\n| відновлюватися / відновитися | to recover | Економіка відновлюється. |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Інтенсивність | Intensity\n\n| Degree | Ukrainian | Example |\n|--------|-----------|---------|\n| Sharp | різко | Ціни різко зросли. |\n| Significant | значно | Значно покращилося. |\n| Gradual | поступово | Поступово зменшується. |\n| Slight | трохи, незначно | Трохи підвищилася. |\n| Dramatic | різко, драматично | Різко впала. |\n| Steady | стабільно, постійно | Стабільно зростає. |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Швидкість | Speed\n\n| Speed | Ukrainian | Example |\n|-------|-----------|---------|\n| Rapid | швидко | Швидко розвивається. |\n| Slow | повільно | Повільно відновлюється. |\n| Steady | постійно | Постійно зростає. |\n| Sudden | раптово | Раптово змінилося. |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Порівняння | Comparisons\n\n| Ukrainian | English | Example |\n|-----------|---------|---------|\n| більше ніж | more than | Більше ніж удвічі. |\n| менше ніж | less than | Менше ніж на 10%. |\n| удвічі | twice | Зросло удвічі. |\n| утричі | three times | Збільшилося утричі. |\n| на ... відсотків | by ... percent | На 20 відсотків. |\n| порівняно з | compared to | Порівняно з минулим роком. |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Часові вирази | Time Expressions\n\n| Ukrainian | English |\n|-----------|---------|\n| за останні роки | in recent years |\n| протягом десятиліття | over a decade |\n| з року в рік | year after year |\n| з часом | over time |\n| останнім часом | recently, lately |\n| відтоді | since then |"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Describe the Changes\n\n1. Population: 1 million → 1.5 million\n   → **Населення зросло на 50% / на півмільйона.**\n\n2. Prices: $100 → $80\n   → **Ціни знизилися на 20%.**\n\n3. Quality: bad → good\n   → **Якість покращилася.**\n\n4. Temperature: 20°C → 20°C\n   → **Температура залишилася стабільною.**\n\n5. Sales: rapid increase\n   → **Продажі різко зросли.**"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Complete with Correct Verb\n\n1. Ціни на бензин ___ (increase) удвічі.\n   → **зросли / підвищилися**\n\n2. Безробіття ___ (decrease) на 5%.\n   → **зменшилося / знизилося**\n\n3. Ситуація поступово ___ (improve).\n   → **покращується**\n\n4. Економіка ___ (recover) після кризи.\n   → **відновлюється**\n\n5. Населення міста ___ (remain stable).\n   → **залишається стабільним**"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Translate to Ukrainian\n\n1. Prices increased significantly.\n   → **Ціни значно зросли.**\n\n2. The situation gradually improved.\n   → **Ситуація поступово покращилася.**\n\n3. Sales fell sharply compared to last year.\n   → **Продажі різко впали порівняно з минулим роком.**\n\n4. The economy has been developing steadily.\n   → **Економіка стабільно розвивається.**"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-B1-131-quiz"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Describe Changes in Your Life\n\nTalk about changes over the past years:\n\n- Як змінилося ваше життя за останні 5 років?\n- Що покращилося? Що погіршилося?\n- Що залишилося незмінним?"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Discuss Global Trends\n\nDescribe trends using vocabulary:\n\n- Як змінюється клімат?\n- Як розвиваються технології?\n- Як змінюється населення?"
-          }
-        ]
-      }
-    ],
-    "rawMarkdown": "# Зміст уроку | Lesson Content\n\n## warm-up | Розминка\n\n### Світ змін | A World of Changes\n\nСвіт постійно змінюється. Як описати ці зміни?\n\nThe world constantly changes. How do we describe these changes?\n\n- Населення **зростає** | The population is growing\n- Ціни **підвищуються** | Prices are increasing\n- Якість повітря **погіршується** | Air quality is worsening\n\n## presentation | Презентація\n\n### Зростання | Increase\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| зростати / зрости | /zrosˈtɑtɪ/ | to grow, increase | Населення зростає. |\n| підвищуватися / підвищитися | - | to rise, increase | Ціни підвищилися. |\n| збільшуватися / збільшитися | - | to increase | Витрати збільшилися. |\n| зростання | /zrosˈtɑnʲːɑ/ | growth | Економічне зростання. |\n| підвищення | /pʲidvɪˈʃɛnʲːɑ/ | rise, increase | Підвищення зарплати. |\n| збільшення | /zbʲilʲˈʃɛnʲːɑ/ | increase | Збільшення обсягів. |\n\n### Зменшення | Decrease\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| зменшуватися / зменшитися | - | to decrease | Витрати зменшилися. |\n| знижуватися / знизитися | - | to decline, drop | Ціни знизилися. |\n| падати / впасти | /ˈpɑdɑtɪ/ | to fall, drop | Курс валюти впав. |\n| скорочуватися / скоротитися | - | to shrink, reduce | Виробництво скоротилося. |\n| зменшення | /zmɛnˈʃɛnʲːɑ/ | decrease | Зменшення безробіття. |\n| зниження | /znɪˈʒɛnʲːɑ/ | decline, drop | Зниження цін. |\n| падіння | /pɑˈdʲinʲːɑ/ | fall, drop | Падіння курсу. |\n\n### Покращення / Погіршення | Improvement / Deterioration\n\n| Ukrainian | English | Example |\n|-----------|---------|---------|\n| покращуватися / покращитися | to improve | Ситуація покращилася. |\n| погіршуватися / погіршитися | to worsen | Здоров'я погіршилося. |\n| покращення | improvement | Покращення якості. |\n| погіршення | deterioration | Погіршення відносин. |\n| розвиватися / розвинутися | to develop | Технології розвиваються. |\n| розвиток | development | Швидкий розвиток. |\n\n### Стабільність | Stability\n\n| Ukrainian | English | Example |\n|-----------|---------|---------|\n| залишатися стабільним | to remain stable | Ціни залишаються стабільними. |\n| не змінюватися | to stay unchanged | Ситуація не змінюється. |\n| стабільність | stability | Економічна стабільність. |\n| зберігати рівень | to maintain level | Зберігати рівень життя. |\n\n### Зміна напрямку | Change of Direction\n\n| Ukrainian | English | Example |\n|-----------|---------|---------|\n| змінюватися / змінитися | to change | Ситуація змінилася. |\n| перетворюватися / перетворитися | to transform | Місто перетворилося. |\n| переходити / перейти | to transition | Перейти до нової системи. |\n| коливатися | to fluctuate | Ціни коливаються. |\n| відновлюватися / відновитися | to recover | Економіка відновлюється. |\n\n### Інтенсивність | Intensity\n\n| Degree | Ukrainian | Example |\n|--------|-----------|---------|\n| Sharp | різко | Ціни різко зросли. |\n| Significant | значно | Значно покращилося. |\n| Gradual | поступово | Поступово зменшується. |\n| Slight | трохи, незначно | Трохи підвищилася. |\n| Dramatic | різко, драматично | Різко впала. |\n| Steady | стабільно, постійно | Стабільно зростає. |\n\n### Швидкість | Speed\n\n| Speed | Ukrainian | Example |\n|-------|-----------|---------|\n| Rapid | швидко | Швидко розвивається. |\n| Slow | повільно | Повільно відновлюється. |\n| Steady | постійно | Постійно зростає. |\n| Sudden | раптово | Раптово змінилося. |\n\n### Порівняння | Comparisons\n\n| Ukrainian | English | Example |\n|-----------|---------|---------|\n| більше ніж | more than | Більше ніж удвічі. |\n| менше ніж | less than | Менше ніж на 10%. |\n| удвічі | twice | Зросло удвічі. |\n| утричі | three times | Збільшилося утричі. |\n| на ... відсотків | by ... percent | На 20 відсотків. |\n| порівняно з | compared to | Порівняно з минулим роком. |\n\n### Часові вирази | Time Expressions\n\n| Ukrainian | English |\n|-----------|---------|\n| за останні роки | in recent years |\n| протягом десятиліття | over a decade |\n| з року в рік | year after year |\n| з часом | over time |\n| останнім часом | recently, lately |\n| відтоді | since then |\n\n## practice | Практика\n\n### Describe the Changes\n\n1. Population: 1 million → 1.5 million\n   → **Населення зросло на 50% / на півмільйона.**\n\n2. Prices: $100 → $80\n   → **Ціни знизилися на 20%.**\n\n3. Quality: bad → good\n   → **Якість покращилася.**\n\n4. Temperature: 20°C → 20°C\n   → **Температура залишилася стабільною.**\n\n5. Sales: rapid increase\n   → **Продажі різко зросли.**\n\n### Complete with Correct Verb\n\n1. Ціни на бензин ___ (increase) удвічі.\n   → **зросли / підвищилися**\n\n2. Безробіття ___ (decrease) на 5%.\n   → **зменшилося / знизилося**\n\n3. Ситуація поступово ___ (improve).\n   → **покращується**\n\n4. Економіка ___ (recover) після кризи.\n   → **відновлюється**\n\n5. Населення міста ___ (remain stable).\n   → **залишається стабільним**\n\n### Translate to Ukrainian\n\n1. Prices increased significantly.\n   → **Ціни значно зросли.**\n\n2. The situation gradually improved.\n   → **Ситуація поступово покращилася.**\n\n3. Sales fell sharply compared to last year.\n   → **Продажі різко впали порівняно з минулим роком.**\n\n4. The economy has been developing steadily.\n   → **Економіка стабільно розвивається.**\n\n## production | Продукція\n\n### Describe Changes in Your Life\n\nTalk about changes over the past years:\n\n- Як змінилося ваше життя за останні 5 років?\n- Що покращилося? Що погіршилося?\n- Що залишилося незмінним?\n\n### Discuss Global Trends\n\nDescribe trends using vocabulary:\n\n- Як змінюється клімат?\n- Як розвиваються технології?\n- Як змінюється населення?\n\n---\n\n# Activities\n\n## quiz: Describing Changes\n\n> Choose the correct word.\n\n1. Протилежність «зростати»:\n   - [x] зменшуватися\n   - [ ] покращуватися\n   > Decrease is opposite of increase.\n\n2. «Різко» означає:\n   - [x] sharply\n   - [ ] gradually\n   > Sharp, sudden change.\n\n3. «Удвічі» означає:\n   - [x] twice\n   - [ ] half\n   > Doubled.\n\n4. Ціни ___ на 10%:\n   - [x] зросли\n   - [ ] зменшилися\n   > Increased by 10%.\n\n5. «Порівняно з» означає:\n   - [x] compared to\n   - [ ] instead of\n   > Comparison expression.\n\n6. «Поступово» означає:\n   - [x] gradually\n   - [ ] suddenly\n   > Gradual, slow change.\n\n## fill-in: Economic Report\n\n> Опишіть економічні зміни.\n\n> За останні роки економіка України активно (1)___ (develop). ВВП (2)___ (increase) на 15% порівняно з попереднім періодом. Безробіття (3)___ (decrease) значно. Однак інфляція (4)___ (remain) високою. Експорт (5)___ (grow) удвічі. Загалом ситуація поступово (6)___ (improve).\n\n**Answers:**\n1. розвивається / розвивалася\n2. зріс / збільшився\n3. зменшилося / знизилося\n4. залишається / залишилася\n5. зріс / збільшився\n6. покращується\n\n---",
     "immersiveSections": [
       {
-        "id": "warm-up-розминка",
-        "title": "warm-up | Розминка",
-        "content": "### Світ змін | A World of Changes\n\nСвіт постійно змінюється. Як описати ці зміни?\n\nThe world constantly changes. How do we describe these changes?\n\n- Населення **зростає** | The population is growing\n- Ціни **підвищуються** | Prices are increasing\n- Якість повітря **погіршується** | Air quality is worsening",
-        "type": "topic"
+        "id": "section-зміст-уроку-lesson-content",
+        "type": "content",
+        "title": "Зміст уроку | Lesson Content",
+        "content": "## warm-up | Розминка\n\n### Світ змін | A World of Changes\n\nСвіт постійно змінюється. Як описати ці зміни?\n\nThe world constantly changes. How do we describe these changes?\n\n- Населення **зростає** | The population is growing\n- Ціни **підвищуються** | Prices are increasing\n- Якість повітря **погіршується** | Air quality is worsening\n\n## presentation | Презентація\n\n### Зростання | Increase\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| зростати / зрости | /zrosˈtɑtɪ/ | to grow, increase | Населення зростає. |\n| підвищуватися / підвищитися | - | to rise, increase | Ціни підвищилися. |\n| збільшуватися / збільшитися | - | to increase | Витрати збільшилися. |\n| зростання | /zrosˈtɑnʲːɑ/ | growth | Економічне зростання. |\n| підвищення | /pʲidvɪˈʃɛnʲːɑ/ | rise, increase | Підвищення зарплати. |\n| збільшення | /zbʲilʲˈʃɛnʲːɑ/ | increase | Збільшення обсягів. |\n\n### Зменшення | Decrease\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| зменшуватися / зменшитися | - | to decrease | Витрати зменшилися. |\n| знижуватися / знизитися | - | to decline, drop | Ціни знизилися. |\n| падати / впасти | /ˈpɑdɑtɪ/ | to fall, drop | Курс валюти впав. |\n| скорочуватися / скоротитися | - | to shrink, reduce | Виробництво скоротилося. |\n| зменшення | /zmɛnˈʃɛnʲːɑ/ | decrease | Зменшення безробіття. |\n| зниження | /znɪˈʒɛnʲːɑ/ | decline, drop | Зниження цін. |\n| падіння | /pɑˈdʲinʲːɑ/ | fall, drop | Падіння курсу. |\n\n### Покращення / Погіршення | Improvement / Deterioration\n\n| Ukrainian | English | Example |\n|-----------|---------|---------|\n| покращуватися / покращитися | to improve | Ситуація покращилася. |\n| погіршуватися / погіршитися | to worsen | Здоров'я погіршилося. |\n| покращення | improvement | Покращення якості. |\n| погіршення | deterioration | Погіршення відносин. |\n| розвиватися / розвинутися | to develop | Технології розвиваються. |\n| розвиток | development | Швидкий розвиток. |\n\n### Стабільність | Stability\n\n| Ukrainian | English | Example |\n|-----------|---------|---------|\n| залишатися стабільним | to remain stable | Ціни залишаються стабільними. |\n| не змінюватися | to stay unchanged | Ситуація не змінюється. |\n| стабільність | stability | Економічна стабільність. |\n| зберігати рівень | to maintain level | Зберігати рівень життя. |\n\n### Зміна напрямку | Change of Direction\n\n| Ukrainian | English | Example |\n|-----------|---------|---------|\n| змінюватися / змінитися | to change | Ситуація змінилася. |\n| перетворюватися / перетворитися | to transform | Місто перетворилося. |\n| переходити / перейти | to transition | Перейти до нової системи. |\n| коливатися | to fluctuate | Ціни коливаються. |\n| відновлюватися / відновитися | to recover | Економіка відновлюється. |\n\n### Інтенсивність | Intensity\n\n| Degree | Ukrainian | Example |\n|--------|-----------|---------|\n| Sharp | різко | Ціни різко зросли. |\n| Significant | значно | Значно покращилося. |\n| Gradual | поступово | Поступово зменшується. |\n| Slight | трохи, незначно | Трохи підвищилася. |\n| Dramatic | різко, драматично | Різко впала. |\n| Steady | стабільно, постійно | Стабільно зростає. |\n\n### Швидкість | Speed\n\n| Speed | Ukrainian | Example |\n|-------|-----------|---------|\n| Rapid | швидко | Швидко розвивається. |\n| Slow | повільно | Повільно відновлюється. |\n| Steady | постійно | Постійно зростає. |\n| Sudden | раптово | Раптово змінилося. |\n\n### Порівняння | Comparisons\n\n| Ukrainian | English | Example |\n|-----------|---------|---------|\n| більше ніж | more than | Більше ніж удвічі. |\n| менше ніж | less than | Менше ніж на 10%. |\n| удвічі | twice | Зросло удвічі. |\n| утричі | three times | Збільшилося утричі. |\n| на ... відсотків | by ... percent | На 20 відсотків. |\n| порівняно з | compared to | Порівняно з минулим роком. |\n\n### Часові вирази | Time Expressions\n\n| Ukrainian | English |\n|-----------|---------|\n| за останні роки | in recent years |\n| протягом десятиліття | over a decade |\n| з року в рік | year after year |\n| з часом | over time |\n| останнім часом | recently, lately |\n| відтоді | since then |\n\n## practice | Практика\n\n### Describe the Changes\n\n1. Population: 1 million\n   > [!answer] 1.5 million\n   > [!answer] **Населення зросло на 50% / на півмільйона.**\n2. Prices: $100\n   > [!answer] $80\n   > [!answer] **Ціни знизилися на 20%.**\n3. Quality: bad\n   > [!answer] good\n   > [!answer] **Якість покращилася.**\n4. Temperature: 20°C\n   > [!answer] 20°C\n   > [!answer] **Температура залишилася стабільною.**\n5. Sales: rapid increase\n   > [!answer] **Продажі різко зросли.**\n### Complete with Correct Verb\n\n1. Ціни на бензин ___ (increase) удвічі.\n   > [!answer] **зросли / підвищилися**\n2. Безробіття ___ (decrease) на 5%.\n   > [!answer] **зменшилося / знизилося**\n3. Ситуація поступово ___ (improve).\n   > [!answer] **покращується**\n4. Економіка ___ (recover) після кризи.\n   > [!answer] **відновлюється**\n5. Населення міста ___ (remain stable).\n   > [!answer] **залишається стабільним**\n### Translate to Ukrainian\n\n1. Prices increased significantly.\n   > [!answer] **Ціни значно зросли.**\n2. The situation gradually improved.\n   > [!answer] **Ситуація поступово покращилася.**\n3. Sales fell sharply compared to last year.\n   > [!answer] **Продажі різко впали порівняно з минулим роком.**\n4. The economy has been developing steadily.\n   > [!answer] **Економіка стабільно розвивається.**\n## production | Продукція\n\n### Describe Changes in Your Life\n\nTalk about changes over the past years:\n\n- Як змінилося ваше життя за останні 5 років?\n- Що покращилося? Що погіршилося?\n- Що залишилося незмінним?\n\n### Discuss Global Trends\n\nDescribe trends using vocabulary:\n\n- Як змінюється клімат?\n- Як розвиваються технології?\n- Як змінюється населення?\n\n---\n\n\n---\n\n\n---"
       },
       {
-        "id": "presentation-презентація",
-        "title": "presentation | Презентація",
-        "content": "### Зростання | Increase\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| зростати / зрости | /zrosˈtɑtɪ/ | to grow, increase | Населення зростає. |\n| підвищуватися / підвищитися | - | to rise, increase | Ціни підвищилися. |\n| збільшуватися / збільшитися | - | to increase | Витрати збільшилися. |\n| зростання | /zrosˈtɑnʲːɑ/ | growth | Економічне зростання. |\n| підвищення | /pʲidvɪˈʃɛnʲːɑ/ | rise, increase | Підвищення зарплати. |\n| збільшення | /zbʲilʲˈʃɛnʲːɑ/ | increase | Збільшення обсягів. |\n\n### Зменшення | Decrease\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| зменшуватися / зменшитися | - | to decrease | Витрати зменшилися. |\n| знижуватися / знизитися | - | to decline, drop | Ціни знизилися. |\n| падати / впасти | /ˈpɑdɑtɪ/ | to fall, drop | Курс валюти впав. |\n| скорочуватися / скоротитися | - | to shrink, reduce | Виробництво скоротилося. |\n| зменшення | /zmɛnˈʃɛnʲːɑ/ | decrease | Зменшення безробіття. |\n| зниження | /znɪˈʒɛnʲːɑ/ | decline, drop | Зниження цін. |\n| падіння | /pɑˈdʲinʲːɑ/ | fall, drop | Падіння курсу. |\n\n### Покращення / Погіршення | Improvement / Deterioration\n\n| Ukrainian | English | Example |\n|-----------|---------|---------|\n| покращуватися / покращитися | to improve | Ситуація покращилася. |\n| погіршуватися / погіршитися | to worsen | Здоров'я погіршилося. |\n| покращення | improvement | Покращення якості. |\n| погіршення | deterioration | Погіршення відносин. |\n| розвиватися / розвинутися | to develop | Технології розвиваються. |\n| розвиток | development | Швидкий розвиток. |\n\n### Стабільність | Stability\n\n| Ukrainian | English | Example |\n|-----------|---------|---------|\n| залишатися стабільним | to remain stable | Ціни залишаються стабільними. |\n| не змінюватися | to stay unchanged | Ситуація не змінюється. |\n| стабільність | stability | Економічна стабільність. |\n| зберігати рівень | to maintain level | Зберігати рівень життя. |\n\n### Зміна напрямку | Change of Direction\n\n| Ukrainian | English | Example |\n|-----------|---------|---------|\n| змінюватися / змінитися | to change | Ситуація змінилася. |\n| перетворюватися / перетворитися | to transform | Місто перетворилося. |\n| переходити / перейти | to transition | Перейти до нової системи. |\n| коливатися | to fluctuate | Ціни коливаються. |\n| відновлюватися / відновитися | to recover | Економіка відновлюється. |\n\n### Інтенсивність | Intensity\n\n| Degree | Ukrainian | Example |\n|--------|-----------|---------|\n| Sharp | різко | Ціни різко зросли. |\n| Significant | значно | Значно покращилося. |\n| Gradual | поступово | Поступово зменшується. |\n| Slight | трохи, незначно | Трохи підвищилася. |\n| Dramatic | різко, драматично | Різко впала. |\n| Steady | стабільно, постійно | Стабільно зростає. |\n\n### Швидкість | Speed\n\n| Speed | Ukrainian | Example |\n|-------|-----------|---------|\n| Rapid | швидко | Швидко розвивається. |\n| Slow | повільно | Повільно відновлюється. |\n| Steady | постійно | Постійно зростає. |\n| Sudden | раптово | Раптово змінилося. |\n\n### Порівняння | Comparisons\n\n| Ukrainian | English | Example |\n|-----------|---------|---------|\n| більше ніж | more than | Більше ніж удвічі. |\n| менше ніж | less than | Менше ніж на 10%. |\n| удвічі | twice | Зросло удвічі. |\n| утричі | three times | Збільшилося утричі. |\n| на ... відсотків | by ... percent | На 20 відсотків. |\n| порівняно з | compared to | Порівняно з минулим роком. |\n\n### Часові вирази | Time Expressions\n\n| Ukrainian | English |\n|-----------|---------|\n| за останні роки | in recent years |\n| протягом десятиліття | over a decade |\n| з року в рік | year after year |\n| з часом | over time |\n| останнім часом | recently, lately |\n| відтоді | since then |",
-        "type": "topic"
-      },
-      {
-        "id": "practice-практика",
-        "title": "practice | Практика",
-        "content": "### Describe the Changes\n\n1. Population: 1 million → 1.5 million\n   → **Населення зросло на 50% / на півмільйона.**\n\n2. Prices: $100 → $80\n   → **Ціни знизилися на 20%.**\n\n3. Quality: bad → good\n   → **Якість покращилася.**\n\n4. Temperature: 20°C → 20°C\n   → **Температура залишилася стабільною.**\n\n5. Sales: rapid increase\n   → **Продажі різко зросли.**\n\n### Complete with Correct Verb\n\n1. Ціни на бензин ___ (increase) удвічі.\n   → **зросли / підвищилися**\n\n2. Безробіття ___ (decrease) на 5%.\n   → **зменшилося / знизилося**\n\n3. Ситуація поступово ___ (improve).\n   → **покращується**\n\n4. Економіка ___ (recover) після кризи.\n   → **відновлюється**\n\n5. Населення міста ___ (remain stable).\n   → **залишається стабільним**\n\n### Translate to Ukrainian\n\n1. Prices increased significantly.\n   → **Ціни значно зросли.**\n\n2. The situation gradually improved.\n   → **Ситуація поступово покращилася.**\n\n3. Sales fell sharply compared to last year.\n   → **Продажі різко впали порівняно з минулим роком.**\n\n4. The economy has been developing steadily.\n   → **Економіка стабільно розвивається.**",
-        "type": "topic"
-      },
-      {
-        "id": "production-продукція",
-        "title": "production | Продукція",
-        "content": "### Describe Changes in Your Life\n\nTalk about changes over the past years:\n\n- Як змінилося ваше життя за останні 5 років?\n- Що покращилося? Що погіршилося?\n- Що залишилося незмінним?\n\n### Discuss Global Trends\n\nDescribe trends using vocabulary:\n\n- Як змінюється клімат?\n- Як розвиваються технології?\n- Як змінюється населення?\n\n---",
-        "type": "topic"
-      },
-      {
-        "id": "activities",
-        "title": "Activities",
-        "content": "## quiz: Describing Changes\n\n> Choose the correct word.\n\n1. Протилежність «зростати»:\n   - [x] зменшуватися\n   - [ ] покращуватися\n   > Decrease is opposite of increase.\n\n2. «Різко» означає:\n   - [x] sharply\n   - [ ] gradually\n   > Sharp, sudden change.\n\n3. «Удвічі» означає:\n   - [x] twice\n   - [ ] half\n   > Doubled.\n\n4. Ціни ___ на 10%:\n   - [x] зросли\n   - [ ] зменшилися\n   > Increased by 10%.\n\n5. «Порівняно з» означає:\n   - [x] compared to\n   - [ ] instead of\n   > Comparison expression.\n\n6. «Поступово» означає:\n   - [x] gradually\n   - [ ] suddenly\n   > Gradual, slow change.\n\n## fill-in: Economic Report\n\n> Опишіть економічні зміни.\n\n> За останні роки економіка України активно (1)___ (develop). ВВП (2)___ (increase) на 15% порівняно з попереднім періодом. Безробіття (3)___ (decrease) значно. Однак інфляція (4)___ (remain) високою. Експорт (5)___ (grow) удвічі. Загалом ситуація поступово (6)___ (improve).\n\n**Answers:**\n1. розвивається / розвивалася\n2. зріс / збільшився\n3. зменшилося / знизилося\n4. залишається / залишилася\n5. зріс / збільшився\n6. покращується\n\n---",
-        "type": "activities"
-      },
-      {
-        "id": "vocabulary",
-        "title": "Vocabulary",
-        "content": "| Word | IPA | English | Notes |\n|------|-----|---------|-------|\n| зростати | /zrosˈtɑtɪ/ | to grow, increase | impf |\n| зменшуватися | - | to decrease | impf |\n| підвищуватися | - | to rise | impf |\n| знижуватися | - | to decline | impf |\n| покращуватися | - | to improve | impf |\n| погіршуватися | - | to worsen | impf |\n| розвиватися | - | to develop | impf |\n| змінюватися | - | to change | impf |\n| зростання | /zrosˈtɑnʲːɑ/ | growth | n |\n| зменшення | /zmɛnˈʃɛnʲːɑ/ | decrease | n |\n| різко | /ˈrʲizko/ | sharply | adv |\n| поступово | /postuˈpovo/ | gradually | adv |\n| значно | /ˈznɑt͡ʃno/ | significantly | adv |\n| удвічі | /udˈvʲit͡ʃi/ | twice | adv |\n| порівняно з | - | compared to | prep |\n\n---",
-        "type": "vocabulary"
-      },
-      {
-        "id": "summary",
+        "id": "section-summary",
+        "type": "summary",
         "title": "Summary",
         "content": "## Describing Changes: Key Points\n\n### Increase\nзростати, підвищуватися, збільшуватися\n\n### Decrease\nзменшуватися, знижуватися, падати\n\n### Quality Changes\nпокращуватися, погіршуватися\n\n### Intensity\nрізко (sharply), значно (significantly), поступово (gradually)\n\n### Comparisons\nудвічі (twice), на ... % (by ... %), порівняно з (compared to)\n\n> **Key Takeaways**\n>\n> - Rich vocabulary for describing changes\n> - Important for academic and business contexts\n> - Combine verbs with intensity adverbs\n> - Use comparisons for precise descriptions\n> - Time expressions add context to changes",
-        "type": "summary"
+        "titleUk": "Підсумок"
       }
-    ]
+    ],
+    "rawMarkdown": "---\nmodule: 131\ntitle: \"Describing Changes\"\nsubtitle: \"Зміни та тенденції\"\nlevel: B1\nphase: B1.4\nduration: 45\ntransliteration: none\ntags: [vocabulary, changes, trends, comparison]\nobjectives:\n  - Learn vocabulary for describing changes\n  - Express increase, decrease, and stability\n  - Discuss trends and developments\n  - Compare past and present situations\n---\n\n# Зміст уроку | Lesson Content\n\n## warm-up | Розминка\n\n### Світ змін | A World of Changes\n\nСвіт постійно змінюється. Як описати ці зміни?\n\nThe world constantly changes. How do we describe these changes?\n\n- Населення **зростає** | The population is growing\n- Ціни **підвищуються** | Prices are increasing\n- Якість повітря **погіршується** | Air quality is worsening\n\n## presentation | Презентація\n\n### Зростання | Increase\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| зростати / зрости | /zrosˈtɑtɪ/ | to grow, increase | Населення зростає. |\n| підвищуватися / підвищитися | - | to rise, increase | Ціни підвищилися. |\n| збільшуватися / збільшитися | - | to increase | Витрати збільшилися. |\n| зростання | /zrosˈtɑnʲːɑ/ | growth | Економічне зростання. |\n| підвищення | /pʲidvɪˈʃɛnʲːɑ/ | rise, increase | Підвищення зарплати. |\n| збільшення | /zbʲilʲˈʃɛnʲːɑ/ | increase | Збільшення обсягів. |\n\n### Зменшення | Decrease\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| зменшуватися / зменшитися | - | to decrease | Витрати зменшилися. |\n| знижуватися / знизитися | - | to decline, drop | Ціни знизилися. |\n| падати / впасти | /ˈpɑdɑtɪ/ | to fall, drop | Курс валюти впав. |\n| скорочуватися / скоротитися | - | to shrink, reduce | Виробництво скоротилося. |\n| зменшення | /zmɛnˈʃɛnʲːɑ/ | decrease | Зменшення безробіття. |\n| зниження | /znɪˈʒɛnʲːɑ/ | decline, drop | Зниження цін. |\n| падіння | /pɑˈdʲinʲːɑ/ | fall, drop | Падіння курсу. |\n\n### Покращення / Погіршення | Improvement / Deterioration\n\n| Ukrainian | English | Example |\n|-----------|---------|---------|\n| покращуватися / покращитися | to improve | Ситуація покращилася. |\n| погіршуватися / погіршитися | to worsen | Здоров'я погіршилося. |\n| покращення | improvement | Покращення якості. |\n| погіршення | deterioration | Погіршення відносин. |\n| розвиватися / розвинутися | to develop | Технології розвиваються. |\n| розвиток | development | Швидкий розвиток. |\n\n### Стабільність | Stability\n\n| Ukrainian | English | Example |\n|-----------|---------|---------|\n| залишатися стабільним | to remain stable | Ціни залишаються стабільними. |\n| не змінюватися | to stay unchanged | Ситуація не змінюється. |\n| стабільність | stability | Економічна стабільність. |\n| зберігати рівень | to maintain level | Зберігати рівень життя. |\n\n### Зміна напрямку | Change of Direction\n\n| Ukrainian | English | Example |\n|-----------|---------|---------|\n| змінюватися / змінитися | to change | Ситуація змінилася. |\n| перетворюватися / перетворитися | to transform | Місто перетворилося. |\n| переходити / перейти | to transition | Перейти до нової системи. |\n| коливатися | to fluctuate | Ціни коливаються. |\n| відновлюватися / відновитися | to recover | Економіка відновлюється. |\n\n### Інтенсивність | Intensity\n\n| Degree | Ukrainian | Example |\n|--------|-----------|---------|\n| Sharp | різко | Ціни різко зросли. |\n| Significant | значно | Значно покращилося. |\n| Gradual | поступово | Поступово зменшується. |\n| Slight | трохи, незначно | Трохи підвищилася. |\n| Dramatic | різко, драматично | Різко впала. |\n| Steady | стабільно, постійно | Стабільно зростає. |\n\n### Швидкість | Speed\n\n| Speed | Ukrainian | Example |\n|-------|-----------|---------|\n| Rapid | швидко | Швидко розвивається. |\n| Slow | повільно | Повільно відновлюється. |\n| Steady | постійно | Постійно зростає. |\n| Sudden | раптово | Раптово змінилося. |\n\n### Порівняння | Comparisons\n\n| Ukrainian | English | Example |\n|-----------|---------|---------|\n| більше ніж | more than | Більше ніж удвічі. |\n| менше ніж | less than | Менше ніж на 10%. |\n| удвічі | twice | Зросло удвічі. |\n| утричі | three times | Збільшилося утричі. |\n| на ... відсотків | by ... percent | На 20 відсотків. |\n| порівняно з | compared to | Порівняно з минулим роком. |\n\n### Часові вирази | Time Expressions\n\n| Ukrainian | English |\n|-----------|---------|\n| за останні роки | in recent years |\n| протягом десятиліття | over a decade |\n| з року в рік | year after year |\n| з часом | over time |\n| останнім часом | recently, lately |\n| відтоді | since then |\n\n## practice | Практика\n\n### Describe the Changes\n\n1. Population: 1 million\n   > [!answer] 1.5 million\n   > [!answer] **Населення зросло на 50% / на півмільйона.**\n2. Prices: $100\n   > [!answer] $80\n   > [!answer] **Ціни знизилися на 20%.**\n3. Quality: bad\n   > [!answer] good\n   > [!answer] **Якість покращилася.**\n4. Temperature: 20°C\n   > [!answer] 20°C\n   > [!answer] **Температура залишилася стабільною.**\n5. Sales: rapid increase\n   > [!answer] **Продажі різко зросли.**\n### Complete with Correct Verb\n\n1. Ціни на бензин ___ (increase) удвічі.\n   > [!answer] **зросли / підвищилися**\n2. Безробіття ___ (decrease) на 5%.\n   > [!answer] **зменшилося / знизилося**\n3. Ситуація поступово ___ (improve).\n   > [!answer] **покращується**\n4. Економіка ___ (recover) після кризи.\n   > [!answer] **відновлюється**\n5. Населення міста ___ (remain stable).\n   > [!answer] **залишається стабільним**\n### Translate to Ukrainian\n\n1. Prices increased significantly.\n   > [!answer] **Ціни значно зросли.**\n2. The situation gradually improved.\n   > [!answer] **Ситуація поступово покращилася.**\n3. Sales fell sharply compared to last year.\n   > [!answer] **Продажі різко впали порівняно з минулим роком.**\n4. The economy has been developing steadily.\n   > [!answer] **Економіка стабільно розвивається.**\n## production | Продукція\n\n### Describe Changes in Your Life\n\nTalk about changes over the past years:\n\n- Як змінилося ваше життя за останні 5 років?\n- Що покращилося? Що погіршилося?\n- Що залишилося незмінним?\n\n### Discuss Global Trends\n\nDescribe trends using vocabulary:\n\n- Як змінюється клімат?\n- Як розвиваються технології?\n- Як змінюється населення?\n\n---\n\n# Activities\n\n## quiz: Describing Changes\n\n> Choose the correct word.\n\n1. Протилежність «зростати»:\n   - [x] зменшуватися\n   - [ ] покращуватися\n   > Decrease is opposite of increase.\n\n2. «Різко» означає:\n   - [x] sharply\n   - [ ] gradually\n   > Sharp, sudden change.\n\n3. «Удвічі» означає:\n   - [x] twice\n   - [ ] half\n   > Doubled.\n\n4. Ціни ___ на 10%:\n   - [x] зросли\n   - [ ] зменшилися\n   > Increased by 10%.\n\n5. «Порівняно з» означає:\n   - [x] compared to\n   - [ ] instead of\n   > Comparison expression.\n\n6. «Поступово» означає:\n   - [x] gradually\n   - [ ] suddenly\n   > Gradual, slow change.\n\n## fill-in: Economic Report\n\n> Опишіть економічні зміни.\n\n> За останні роки економіка України активно (1)___ (develop). ВВП (2)___ (increase) на 15% порівняно з попереднім періодом. Безробіття (3)___ (decrease) значно. Однак інфляція (4)___ (remain) високою. Експорт (5)___ (grow) удвічі. Загалом ситуація поступово (6)___ (improve).\n\n**Answers:**\n1. розвивається / розвивалася\n2. зріс / збільшився\n3. зменшилося / знизилося\n4. залишається / залишилася\n5. зріс / збільшився\n6. покращується\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | Notes |\n|------|-----|---------|-------|\n| зростати | /zrosˈtɑtɪ/ | to grow, increase | impf |\n| зменшуватися | - | to decrease | impf |\n| підвищуватися | - | to rise | impf |\n| знижуватися | - | to decline | impf |\n| покращуватися | - | to improve | impf |\n| погіршуватися | - | to worsen | impf |\n| розвиватися | - | to develop | impf |\n| змінюватися | - | to change | impf |\n| зростання | /zrosˈtɑnʲːɑ/ | growth | n |\n| зменшення | /zmɛnˈʃɛnʲːɑ/ | decrease | n |\n| різко | /ˈrʲizko/ | sharply | adv |\n| поступово | /postuˈpovo/ | gradually | adv |\n| значно | /ˈznɑt͡ʃno/ | significantly | adv |\n| удвічі | /udˈvʲit͡ʃi/ | twice | adv |\n| порівняно з | - | compared to | prep |\n\n---\n\n# Summary\n\n## Describing Changes: Key Points\n\n### Increase\nзростати, підвищуватися, збільшуватися\n\n### Decrease\nзменшуватися, знижуватися, падати\n\n### Quality Changes\nпокращуватися, погіршуватися\n\n### Intensity\nрізко (sharply), значно (significantly), поступово (gradually)\n\n### Comparisons\nудвічі (twice), на ... % (by ... %), порівняно з (compared to)\n\n> **Key Takeaways**\n>\n> - Rich vocabulary for describing changes\n> - Important for academic and business contexts\n> - Combine verbs with intensity adverbs\n> - Use comparisons for precise descriptions\n> - Time expressions add context to changes\n"
   },
   "activities": [
     {
-      "id": "act-uk-B1-131-quiz",
+      "id": "act-b1-131-quiz",
       "type": "quiz",
       "title": "Describing Changes",
       "description": "Choose the correct word.",
       "content": {
         "type": "quiz",
-        "instructions": "Choose the correct word.",
         "questions": [
           {
             "question": "Протилежність «зростати»:",
@@ -263,41 +124,41 @@
       "language": "uk",
       "difficultyLevel": "B1",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "changes",
-        "trends",
-        "comparison"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.239Z",
+      "modifiedAt": "2025-12-01T22:58:37.239Z"
     },
     {
-      "id": "act-uk-B1-131-gapfill",
+      "id": "act-b1-131-gapfill",
       "type": "gap-fill",
       "title": "Economic Report",
       "description": "Опишіть економічні зміни.",
       "content": {
         "type": "gap-fill",
-        "instructions": "Опишіть економічні зміни.",
         "text": "Опишіть економічні зміни.\nЗа останні роки економіка України активно (1)___ (develop). ВВП (2)___ (increase) на 15% порівняно з попереднім періодом. Безробіття (3)___ (decrease) значно. Однак інфляція (4)___ (remain) високою. Експорт (5)___ (grow) удвічі. Загалом ситуація поступово (6)___ (improve).",
         "blanks": [
           {
+            "index": 0,
             "hint": "develop"
           },
           {
+            "index": 1,
             "hint": "increase"
           },
           {
+            "index": 2,
             "hint": "decrease"
           },
           {
+            "index": 3,
             "hint": "remain"
           },
           {
+            "index": 4,
             "hint": "grow"
           },
           {
+            "index": 5,
             "hint": "improve"
           }
         ],
@@ -311,14 +172,9 @@
       "language": "uk",
       "difficultyLevel": "B1",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "changes",
-        "trends",
-        "comparison"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.239Z",
+      "modifiedAt": "2025-12-01T22:58:37.239Z"
     }
   ],
   "vocabulary": {
@@ -329,139 +185,101 @@
     "transliterationMode": "none",
     "words": [
       {
-        "id": "v-m131-001",
+        "id": "v-zrostaty-131-0",
         "uk": "зростати",
-        "translit": "",
-        "ipa": "/zrosˈtɑtɪ/",
         "en": "to grow, increase",
-        "pos": "",
-        "note": "impf"
+        "pos": "impf",
+        "ipa": "/zrosˈtɑtɪ/"
       },
       {
-        "id": "v-m131-002",
+        "id": "v-zmenshuvatysya-131-1",
         "uk": "зменшуватися",
-        "translit": "",
-        "ipa": "-",
         "en": "to decrease",
-        "pos": "",
-        "note": "impf"
+        "pos": "impf"
       },
       {
-        "id": "v-m131-003",
+        "id": "v-pidvyshchuvatysya-131-2",
         "uk": "підвищуватися",
-        "translit": "",
-        "ipa": "-",
         "en": "to rise",
-        "pos": "",
-        "note": "impf"
+        "pos": "impf"
       },
       {
-        "id": "v-m131-004",
+        "id": "v-znyzhuvatysya-131-3",
         "uk": "знижуватися",
-        "translit": "",
-        "ipa": "-",
         "en": "to decline",
-        "pos": "",
-        "note": "impf"
+        "pos": "impf"
       },
       {
-        "id": "v-m131-005",
+        "id": "v-pokrashchuvatysya-131-4",
         "uk": "покращуватися",
-        "translit": "",
-        "ipa": "-",
         "en": "to improve",
-        "pos": "",
-        "note": "impf"
+        "pos": "impf"
       },
       {
-        "id": "v-m131-006",
+        "id": "v-pohirshuvatysya-131-5",
         "uk": "погіршуватися",
-        "translit": "",
-        "ipa": "-",
         "en": "to worsen",
-        "pos": "",
-        "note": "impf"
+        "pos": "impf"
       },
       {
-        "id": "v-m131-007",
+        "id": "v-rozvyvatysya-131-6",
         "uk": "розвиватися",
-        "translit": "",
-        "ipa": "-",
         "en": "to develop",
-        "pos": "",
-        "note": "impf"
+        "pos": "impf"
       },
       {
-        "id": "v-m131-008",
+        "id": "v-zminyuvatysya-131-7",
         "uk": "змінюватися",
-        "translit": "",
-        "ipa": "-",
         "en": "to change",
-        "pos": "",
-        "note": "impf"
+        "pos": "impf"
       },
       {
-        "id": "v-m131-009",
+        "id": "v-zrostannya-131-8",
         "uk": "зростання",
-        "translit": "",
-        "ipa": "/zrosˈtɑnʲːɑ/",
         "en": "growth",
-        "pos": "",
-        "note": "n"
+        "pos": "n",
+        "ipa": "/zrosˈtɑnʲːɑ/"
       },
       {
-        "id": "v-m131-010",
+        "id": "v-zmenshennya-131-9",
         "uk": "зменшення",
-        "translit": "",
-        "ipa": "/zmɛnˈʃɛnʲːɑ/",
         "en": "decrease",
-        "pos": "",
-        "note": "n"
+        "pos": "n",
+        "ipa": "/zmɛnˈʃɛnʲːɑ/"
       },
       {
-        "id": "v-m131-011",
+        "id": "v-rizko-131-10",
         "uk": "різко",
-        "translit": "",
-        "ipa": "/ˈrʲizko/",
         "en": "sharply",
-        "pos": "",
-        "note": "adv"
+        "pos": "adv",
+        "ipa": "/ˈrʲizko/"
       },
       {
-        "id": "v-m131-012",
+        "id": "v-postupovo-131-11",
         "uk": "поступово",
-        "translit": "",
-        "ipa": "/postuˈpovo/",
         "en": "gradually",
-        "pos": "",
-        "note": "adv"
+        "pos": "adv",
+        "ipa": "/postuˈpovo/"
       },
       {
-        "id": "v-m131-013",
+        "id": "v-znachno-131-12",
         "uk": "значно",
-        "translit": "",
-        "ipa": "/ˈznɑt͡ʃno/",
         "en": "significantly",
-        "pos": "",
-        "note": "adv"
+        "pos": "adv",
+        "ipa": "/ˈznɑt͡ʃno/"
       },
       {
-        "id": "v-m131-014",
+        "id": "v-udvichi-131-13",
         "uk": "удвічі",
-        "translit": "",
-        "ipa": "/udˈvʲit͡ʃi/",
         "en": "twice",
-        "pos": "",
-        "note": "adv"
+        "pos": "adv",
+        "ipa": "/udˈvʲit͡ʃi/"
       },
       {
-        "id": "v-m131-015",
+        "id": "v-porivnyano-z-131-14",
         "uk": "порівняно з",
-        "translit": "",
-        "ipa": "-",
         "en": "compared to",
-        "pos": "",
-        "note": "prep"
+        "pos": "prep"
       }
     ]
   }

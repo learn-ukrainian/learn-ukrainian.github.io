@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-B1-84",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "grammar-introduction",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -26,30 +25,15 @@
       "Imperfective future (буду + infinitive)",
       "Aspect choice in future context"
     ],
-    "totalDuration": 45,
-    "transliterationMode": "none",
     "tags": [
       "aspect",
       "grammar",
       "verbs",
       "future-tense"
     ],
-    "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
+    "totalDuration": 45,
+    "transliterationMode": "none",
     "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Two Futures\n\nUkrainian has two ways to express future:\n\n1. **Perfective future:** Single word (напишу, зроблю, прочитаю)\n2. **Imperfective future:** Буду + infinitive (буду писати, буду робити)\n\nBoth mean \"will,\" but they express different perspectives on the future action."
-          }
-        ]
-      },
       {
         "id": "phase-presentation",
         "name": "presentation",
@@ -58,162 +42,50 @@
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "### Perfective Future: Single Completed Action\n\nForm: Conjugate perfective verb in \"present\" forms.\n\n| Pronoun | зробити | написати | прочитати |\n|---------|---------|----------|-----------|\n| я | зроблю | напишу | прочитаю |\n| ти | зробиш | напишеш | прочитаєш |\n| він/вона | зробить | напише | прочитає |\n| ми | зробимо | напишемо | прочитаємо |\n| ви | зробите | напишете | прочитаєте |\n| вони | зроблять | напишуть | прочитають |\n\n**Meaning:** Single completed action in future, focus on result.\n\n**Examples:**\n\n- Завтра я **напишу** листа. - Tomorrow I will write a letter (complete it).\n- Вона **прочитає** книгу. - She will read the book (finish it).\n- Ми **зробимо** це. - We will do it (get it done).\n- Він **подзвонить** тобі. - He will call you (the call will happen).\n- Я **вивчу** українську! - I will learn Ukrainian (master it)!"
+            "teacherNotes": "### Perfective Future: Single Completed Action\n\nForm: Conjugate perfective verb in \"present\" forms.\n\n| Pronoun | зробити | написати | прочитати |\n|---------|---------|----------|-----------|\n| я | зроблю | напишу | прочитаю |\n| ти | зробиш | напишеш | прочитаєш |\n| він/вона | зробить | напише | прочитає |\n| ми | зробимо | напишемо | прочитаємо |\n| ви | зробите | напишете | прочитаєте |\n| вони | зроблять | напишуть | прочитають |\n\n**Meaning:** Single completed action in future, focus on result.\n\n**Examples:**\n\n- Завтра я **напишу** листа. - Tomorrow I will write a letter (complete it).\n- Вона **прочитає** книгу. - She will read the book (finish it).\n- Ми **зробимо** це. - We will do it (get it done).\n- Він **подзвонить** тобі. - He will call you (the call will happen).\n- Я **вивчу** українську! - I will learn Ukrainian (master it)!\n\n### Imperfective Future: Ongoing or Repeated\n\nForm: Буду/будеш/буде... + imperfective infinitive.\n\n| Pronoun | буду + робити | буду + писати |\n|---------|---------------|---------------|\n| я | буду робити | буду писати |\n| ти | будеш робити | будеш писати |\n| він/вона | буде робити | буде писати |\n| ми | будемо робити | будемо писати |\n| ви | будете робити | будете писати |\n| вони | будуть робити | будуть писати |\n\n**Meaning:** Process, duration, or repetition in future.\n\n**Examples:**\n\n- Завтра я **буду писати** статтю. - Tomorrow I will be writing an article.\n- Вона **буде читати** цю книгу тиждень. - She will be reading this book for a week.\n- Ми **будемо чекати** на тебе. - We will be waiting for you.\n- Він **буде працювати** весь день. - He will be working all day.\n- Я **буду вчити** українську щодня. - I will study Ukrainian every day.\n\n### Alternative Imperfective Future: -му/-меш\n\nSome imperfective verbs also have a synthetic form (less common in speech):\n\n- писатиму = буду писати\n- робитиму = буду робити\n- читатиму = буду читати\n\n| Pronoun | писати |\n|---------|--------|\n| я | писатиму |\n| ти | писатимеш |\n| він/вона | писатиме |\n| ми | писатимемо |\n| ви | писатимете |\n| вони | писатимуть |\n\nThis form is more common in western Ukraine and in writing. Both forms are correct.\n\n### Compare: Same Action, Different Aspect\n\n| Imperfective Future | Perfective Future |\n|--------------------|-------------------|\n| Я **буду читати** книгу. | Я **прочитаю** книгу. |\n| I will be reading the book. | I will read the book (finish it). |\n| Вона **буде писати** листа. | Вона **напише** листа. |\n| She will be writing a letter. | She will write the letter (complete it). |\n| Ми **будемо робити** це. | Ми **зробимо** це. |\n| We will be doing this. | We will do this (get it done). |\n\n### When to Use Each Future\n\n**Use PERFECTIVE future when:**\n\n1. **Promise or commitment:** Я зроблю це! - I'll do it!\n2. **Definite single action:** Він прийде завтра. - He will come tomorrow.\n3. **Sequence of events:** Спочатку поснідаю, потім пішу. - First I'll have breakfast, then I'll go.\n4. **Result expected:** Вона напише статтю до понеділка. - She'll write the article by Monday.\n\n**Use IMPERFECTIVE future when:**\n\n1. **Duration:** Я буду працювати весь день. - I'll be working all day.\n2. **Process description:** Що ти будеш робити? - What will you be doing?\n3. **Repeated future action:** Я буду ходити в спортзал щодня. - I'll go to the gym every day.\n4. **Ongoing activity:** Вона буде чекати біля входу. - She'll be waiting by the entrance.\n\n### Time Expressions and Future Aspect\n\n**With perfective (single event):**\n- завтра - tomorrow (single)\n- післязавтра - day after tomorrow\n- наступного тижня - next week\n- о п'ятій годині - at five o'clock\n- за годину - in an hour\n\n**With imperfective (duration/repetition):**\n- весь день - all day\n- цілий тиждень - the whole week\n- щодня - every day\n- завжди - always\n- поки - while\n\n### Questions in Future\n\n**Process questions (imperfective):**\n\n- Що ти будеш робити завтра? - What will you be doing tomorrow?\n- Де ви будете жити? - Where will you be living?\n- Скільки часу це буде тривати? - How long will this last?\n\n**Result questions (perfective):**\n\n- Коли ти це зробиш? - When will you do/finish it?\n- Ти прийдеш? - Will you come?\n- Вона напише? - Will she write (it)?\n\n### Negation in Future\n\n**Imperfective negative** (general, no specific action):\n- Я **не буду** це **робити**. - I won't be doing this / I won't do this (general refusal).\n\n**Perfective negative** (specific action won't happen):\n- Я цього **не зроблю**. - I won't do this (this specific thing won't get done).\n\nCompare:\n- Я не буду їсти м'ясо. - I won't eat meat. (general principle)\n- Я не з'їм це. - I won't eat this. (this specific thing)"
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Imperfective Future: Ongoing or Repeated\n\nForm: Буду/будеш/буде... + imperfective infinitive.\n\n| Pronoun | буду + робити | буду + писати |\n|---------|---------------|---------------|\n| я | буду робити | буду писати |\n| ти | будеш робити | будеш писати |\n| він/вона | буде робити | буде писати |\n| ми | будемо робити | будемо писати |\n| ви | будете робити | будете писати |\n| вони | будуть робити | будуть писати |\n\n**Meaning:** Process, duration, or repetition in future.\n\n**Examples:**\n\n- Завтра я **буду писати** статтю. - Tomorrow I will be writing an article.\n- Вона **буде читати** цю книгу тиждень. - She will be reading this book for a week.\n- Ми **будемо чекати** на тебе. - We will be waiting for you.\n- Він **буде працювати** весь день. - He will be working all day.\n- Я **буду вчити** українську щодня. - I will study Ukrainian every day."
+            "teacherNotes": "### Choose the Correct Future\n\n1. Завтра я ___ (буду писати/напишу) тобі листа.\n   > [!answer] **напишу** (promise, single)\n2. Я ___ (буду працювати/попрацюю) весь день.\n   > [!answer] **буду працювати** (all day)\n3. Коли ти ___ (будеш закінчувати/закінчиш) проєкт?\n   > [!answer] **закінчиш** (result question)\n4. Вона ___ (буде чекати/зачекає) на нас біля метро.\n   > [!answer] **буде чекати** (ongoing)\n5. Ми ___ (будемо ходити/підемо) в спортзал щотижня.\n   > [!answer] **будемо ходити** (repeated)\n6. Він ___ (буде приходити/прийде) завтра о третій.\n   > [!answer] **прийде** (single scheduled event)\n\n### Transform: Imperfective to Perfective\n\nChange to perfective future (focus on result):\n\n1. Я буду читати книгу.\n   > [!answer] Я **прочитаю** книгу.\n2. Вона буде писати статтю.\n   > [!answer] Вона **напише** статтю.\n3. Ми будемо робити домашнє.\n   > [!answer] Ми **зробимо** домашнє.\n4. Вони будуть вчити нові слова.\n   > [!answer] Вони **вивчать** нові слова.\n\n### Transform: Perfective to Imperfective\n\nChange to imperfective future (focus on process):\n\n1. Завтра я прочитаю цю книгу.\n   > [!answer] Завтра я **буду читати** цю книгу.\n2. Вона приготує вечерю.\n   > [!answer] Вона **буде готувати** вечерю.\n3. Він подзвонить тобі.\n   > [!answer] Він **буде телефонувати** тобі.\n4. Ми напишемо звіт.\n   > [!answer] Ми **будемо писати** звіт.\n\n### Complete the Dialogues\n\n**Dialogue 1:**\n- A: Що ти ___ (робитимеш) завтра?\n- B: Я ___ (працюватиму) з дому.\n- A: А коли ти ___ (закінчиш)?\n- B: Думаю, ___ (закінчу) о шостій.\n\n**Answers:** робитимеш/будеш робити (process), працюватиму/буду працювати (process), закінчиш (result), закінчу (result)\n\n**Dialogue 2:**\n- A: Ти ___ (підеш) на вечірку?\n- B: Так, обов'язково ___ (прийду).\n- A: Що ти там ___ (будеш робити)?\n- B: ___ (Буду танцювати) і ___ (буду спілкуватися) з друзями.\n\n**Answers:** підеш (single), прийду (promise), будеш робити (process), буду танцювати/буду спілкуватися (process)"
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Alternative Imperfective Future: -му/-меш\n\nSome imperfective verbs also have a synthetic form (less common in speech):\n\n- писатиму = буду писати\n- робитиму = буду робити\n- читатиму = буду читати\n\n| Pronoun | писати |\n|---------|--------|\n| я | писатиму |\n| ти | писатимеш |\n| він/вона | писатиме |\n| ми | писатимемо |\n| ви | писатимете |\n| вони | писатимуть |\n\nThis form is more common in western Ukraine and in writing. Both forms are correct."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Compare: Same Action, Different Aspect\n\n| Imperfective Future | Perfective Future |\n|--------------------|-------------------|\n| Я **буду читати** книгу. | Я **прочитаю** книгу. |\n| I will be reading the book. | I will read the book (finish it). |\n| Вона **буде писати** листа. | Вона **напише** листа. |\n| She will be writing a letter. | She will write the letter (complete it). |\n| Ми **будемо робити** це. | Ми **зробимо** це. |\n| We will be doing this. | We will do this (get it done). |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "When to Use Each Future\n\n**Use PERFECTIVE future when:**\n\n1. **Promise or commitment:** Я зроблю це! - I'll do it!\n2. **Definite single action:** Він прийде завтра. - He will come tomorrow.\n3. **Sequence of events:** Спочатку поснідаю, потім пішу. - First I'll have breakfast, then I'll go.\n4. **Result expected:** Вона напише статтю до понеділка. - She'll write the article by Monday.\n\n**Use IMPERFECTIVE future when:**\n\n1. **Duration:** Я буду працювати весь день. - I'll be working all day.\n2. **Process description:** Що ти будеш робити? - What will you be doing?\n3. **Repeated future action:** Я буду ходити в спортзал щодня. - I'll go to the gym every day.\n4. **Ongoing activity:** Вона буде чекати біля входу. - She'll be waiting by the entrance."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Time Expressions and Future Aspect\n\n**With perfective (single event):**\n- завтра - tomorrow (single)\n- післязавтра - day after tomorrow\n- наступного тижня - next week\n- о п'ятій годині - at five o'clock\n- за годину - in an hour\n\n**With imperfective (duration/repetition):**\n- весь день - all day\n- цілий тиждень - the whole week\n- щодня - every day\n- завжди - always\n- поки - while"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Questions in Future\n\n**Process questions (imperfective):**\n\n- Що ти будеш робити завтра? - What will you be doing tomorrow?\n- Де ви будете жити? - Where will you be living?\n- Скільки часу це буде тривати? - How long will this last?\n\n**Result questions (perfective):**\n\n- Коли ти це зробиш? - When will you do/finish it?\n- Ти прийдеш? - Will you come?\n- Вона напише? - Will she write (it)?"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Negation in Future\n\n**Imperfective negative** (general, no specific action):\n- Я **не буду** це **робити**. - I won't be doing this / I won't do this (general refusal).\n\n**Perfective negative** (specific action won't happen):\n- Я цього **не зроблю**. - I won't do this (this specific thing won't get done).\n\nCompare:\n- Я не буду їсти м'ясо. - I won't eat meat. (general principle)\n- Я не з'їм це. - I won't eat this. (this specific thing)"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-B1-84-matchup"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Choose the Correct Future\n\n1. Завтра я ___ (буду писати/напишу) тобі листа. → **напишу** (promise, single)\n2. Я ___ (буду працювати/попрацюю) весь день. → **буду працювати** (all day)\n3. Коли ти ___ (будеш закінчувати/закінчиш) проєкт? → **закінчиш** (result question)\n4. Вона ___ (буде чекати/зачекає) на нас біля метро. → **буде чекати** (ongoing)\n5. Ми ___ (будемо ходити/підемо) в спортзал щотижня. → **будемо ходити** (repeated)\n6. Він ___ (буде приходити/прийде) завтра о третій. → **прийде** (single scheduled event)"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Transform: Imperfective to Perfective\n\nChange to perfective future (focus on result):\n\n1. Я буду читати книгу. → Я **прочитаю** книгу.\n2. Вона буде писати статтю. → Вона **напише** статтю.\n3. Ми будемо робити домашнє. → Ми **зробимо** домашнє.\n4. Вони будуть вчити нові слова. → Вони **вивчать** нові слова."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Transform: Perfective to Imperfective\n\nChange to imperfective future (focus on process):\n\n1. Завтра я прочитаю цю книгу. → Завтра я **буду читати** цю книгу.\n2. Вона приготує вечерю. → Вона **буде готувати** вечерю.\n3. Він подзвонить тобі. → Він **буде телефонувати** тобі.\n4. Ми напишемо звіт. → Ми **будемо писати** звіт."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Complete the Dialogues\n\n**Dialogue 1:**\n- A: Що ти ___ (робитимеш) завтра?\n- B: Я ___ (працюватиму) з дому.\n- A: А коли ти ___ (закінчиш)?\n- B: Думаю, ___ (закінчу) о шостій.\n\n**Answers:** робитимеш/будеш робити (process), працюватиму/буду працювати (process), закінчиш (result), закінчу (result)\n\n**Dialogue 2:**\n- A: Ти ___ (підеш) на вечірку?\n- B: Так, обов'язково ___ (прийду).\n- A: Що ти там ___ (будеш робити)?\n- B: ___ (Буду танцювати) і ___ (буду спілкуватися) з друзями.\n\n**Answers:** підеш (single), прийду (promise), будеш робити (process), буду танцювати/буду спілкуватися (process)"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-B1-84-quiz"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-B1-84-groupsort"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Plan Your Week\n\nDescribe your plans using both aspects:\n\n**Single events (perfective):**\nУ понеділок я напишу звіт. У вівторок зустрінуся з клієнтом. У середу здам проєкт.\n\n**Ongoing activities (imperfective):**\nЦілий тиждень я буду працювати над новим проєктом. Щовечора буду ходити в спортзал."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Make Promises\n\nUse perfective to make promises:\n\n- Я **зроблю** це до завтра!\n- Я **подзвоню** тобі ввечері.\n- Ми **приїдемо** вчасно.\n- Я обіцяю, що **закінчу** роботу."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Describe Your Daily Routine (Future)\n\nUse imperfective for repeated activities:\n\nНаступного тижня я буду вставати о сьомій. Щоранку буду бігати. Буду працювати з дев'ятої до п'ятої..."
+            "teacherNotes": "### Plan Your Week\n\nDescribe your plans using both aspects:\n\n**Single events (perfective):**\nУ понеділок я напишу звіт. У вівторок зустрінуся з клієнтом. У середу здам проєкт.\n\n**Ongoing activities (imperfective):**\nЦілий тиждень я буду працювати над новим проєктом. Щовечора буду ходити в спортзал.\n\n### Make Promises\n\nUse perfective to make promises:\n\n- Я **зроблю** це до завтра!\n- Я **подзвоню** тобі ввечері.\n- Ми **приїдемо** вчасно.\n- Я обіцяю, що **закінчу** роботу.\n\n### Describe Your Daily Routine (Future)\n\nUse imperfective for repeated activities:\n\nНаступного тижня я буду вставати о сьомій. Щоранку буду бігати. Буду працювати з дев'ятої до п'ятої...\n\n---\n\n### 🎭 ROLE-PLAY: Planning a Trip Together\n\n**Situation:** You and a friend are planning a weekend trip.\n\n**Partner A & B:** Discuss your plans using:\n- Definite single actions (perfective): Ми **поїдемо**... Ми **приїдемо**...\n- Ongoing activities (imperfective): Будемо **гуляти**... Будемо **відпочивати**...\n- Negotiations/suggestions: Може, **підемо**...? А якщо **поїдемо**...?\n\n**Example dialogue:**\n```\nA: Куди поїдемо на вихідні?\nB: Давай поїдемо до Львова! Виїдемо в суботу вранці.\nA: Добре. А що там будемо робити?\nB: Будемо гуляти по місту, дивитися архітектуру.\nA: А ввечері?\nB: Підемо в ресторан, замовимо каву і десерт.\nA: Коли повернемося?\nB: Повернемося в неділю ввечері.\n```\n\n**Required structures:**\n- ✅ Perfective for definite plans: поїдемо, приїдемо, замовимо\n- ✅ Imperfective for activities: будемо гуляти, будемо відпочивати\n\n**Switch roles and plan a different trip!**\n\n---"
           }
         ]
       }
     ],
-    "rawMarkdown": "# Lesson Content\n\n## warm-up\n\n### Two Futures\n\nUkrainian has two ways to express future:\n\n1. **Perfective future:** Single word (напишу, зроблю, прочитаю)\n2. **Imperfective future:** Буду + infinitive (буду писати, буду робити)\n\nBoth mean \"will,\" but they express different perspectives on the future action.\n\n## presentation\n\n### Perfective Future: Single Completed Action\n\nForm: Conjugate perfective verb in \"present\" forms.\n\n| Pronoun | зробити | написати | прочитати |\n|---------|---------|----------|-----------|\n| я | зроблю | напишу | прочитаю |\n| ти | зробиш | напишеш | прочитаєш |\n| він/вона | зробить | напише | прочитає |\n| ми | зробимо | напишемо | прочитаємо |\n| ви | зробите | напишете | прочитаєте |\n| вони | зроблять | напишуть | прочитають |\n\n**Meaning:** Single completed action in future, focus on result.\n\n**Examples:**\n\n- Завтра я **напишу** листа. - Tomorrow I will write a letter (complete it).\n- Вона **прочитає** книгу. - She will read the book (finish it).\n- Ми **зробимо** це. - We will do it (get it done).\n- Він **подзвонить** тобі. - He will call you (the call will happen).\n- Я **вивчу** українську! - I will learn Ukrainian (master it)!\n\n### Imperfective Future: Ongoing or Repeated\n\nForm: Буду/будеш/буде... + imperfective infinitive.\n\n| Pronoun | буду + робити | буду + писати |\n|---------|---------------|---------------|\n| я | буду робити | буду писати |\n| ти | будеш робити | будеш писати |\n| він/вона | буде робити | буде писати |\n| ми | будемо робити | будемо писати |\n| ви | будете робити | будете писати |\n| вони | будуть робити | будуть писати |\n\n**Meaning:** Process, duration, or repetition in future.\n\n**Examples:**\n\n- Завтра я **буду писати** статтю. - Tomorrow I will be writing an article.\n- Вона **буде читати** цю книгу тиждень. - She will be reading this book for a week.\n- Ми **будемо чекати** на тебе. - We will be waiting for you.\n- Він **буде працювати** весь день. - He will be working all day.\n- Я **буду вчити** українську щодня. - I will study Ukrainian every day.\n\n### Alternative Imperfective Future: -му/-меш\n\nSome imperfective verbs also have a synthetic form (less common in speech):\n\n- писатиму = буду писати\n- робитиму = буду робити\n- читатиму = буду читати\n\n| Pronoun | писати |\n|---------|--------|\n| я | писатиму |\n| ти | писатимеш |\n| він/вона | писатиме |\n| ми | писатимемо |\n| ви | писатимете |\n| вони | писатимуть |\n\nThis form is more common in western Ukraine and in writing. Both forms are correct.\n\n### Compare: Same Action, Different Aspect\n\n| Imperfective Future | Perfective Future |\n|--------------------|-------------------|\n| Я **буду читати** книгу. | Я **прочитаю** книгу. |\n| I will be reading the book. | I will read the book (finish it). |\n| Вона **буде писати** листа. | Вона **напише** листа. |\n| She will be writing a letter. | She will write the letter (complete it). |\n| Ми **будемо робити** це. | Ми **зробимо** це. |\n| We will be doing this. | We will do this (get it done). |\n\n### When to Use Each Future\n\n**Use PERFECTIVE future when:**\n\n1. **Promise or commitment:** Я зроблю це! - I'll do it!\n2. **Definite single action:** Він прийде завтра. - He will come tomorrow.\n3. **Sequence of events:** Спочатку поснідаю, потім пішу. - First I'll have breakfast, then I'll go.\n4. **Result expected:** Вона напише статтю до понеділка. - She'll write the article by Monday.\n\n**Use IMPERFECTIVE future when:**\n\n1. **Duration:** Я буду працювати весь день. - I'll be working all day.\n2. **Process description:** Що ти будеш робити? - What will you be doing?\n3. **Repeated future action:** Я буду ходити в спортзал щодня. - I'll go to the gym every day.\n4. **Ongoing activity:** Вона буде чекати біля входу. - She'll be waiting by the entrance.\n\n### Time Expressions and Future Aspect\n\n**With perfective (single event):**\n- завтра - tomorrow (single)\n- післязавтра - day after tomorrow\n- наступного тижня - next week\n- о п'ятій годині - at five o'clock\n- за годину - in an hour\n\n**With imperfective (duration/repetition):**\n- весь день - all day\n- цілий тиждень - the whole week\n- щодня - every day\n- завжди - always\n- поки - while\n\n### Questions in Future\n\n**Process questions (imperfective):**\n\n- Що ти будеш робити завтра? - What will you be doing tomorrow?\n- Де ви будете жити? - Where will you be living?\n- Скільки часу це буде тривати? - How long will this last?\n\n**Result questions (perfective):**\n\n- Коли ти це зробиш? - When will you do/finish it?\n- Ти прийдеш? - Will you come?\n- Вона напише? - Will she write (it)?\n\n### Negation in Future\n\n**Imperfective negative** (general, no specific action):\n- Я **не буду** це **робити**. - I won't be doing this / I won't do this (general refusal).\n\n**Perfective negative** (specific action won't happen):\n- Я цього **не зроблю**. - I won't do this (this specific thing won't get done).\n\nCompare:\n- Я не буду їсти м'ясо. - I won't eat meat. (general principle)\n- Я не з'їм це. - I won't eat this. (this specific thing)\n\n## practice\n\n### Choose the Correct Future\n\n1. Завтра я ___ (буду писати/напишу) тобі листа. → **напишу** (promise, single)\n2. Я ___ (буду працювати/попрацюю) весь день. → **буду працювати** (all day)\n3. Коли ти ___ (будеш закінчувати/закінчиш) проєкт? → **закінчиш** (result question)\n4. Вона ___ (буде чекати/зачекає) на нас біля метро. → **буде чекати** (ongoing)\n5. Ми ___ (будемо ходити/підемо) в спортзал щотижня. → **будемо ходити** (repeated)\n6. Він ___ (буде приходити/прийде) завтра о третій. → **прийде** (single scheduled event)\n\n### Transform: Imperfective to Perfective\n\nChange to perfective future (focus on result):\n\n1. Я буду читати книгу. → Я **прочитаю** книгу.\n2. Вона буде писати статтю. → Вона **напише** статтю.\n3. Ми будемо робити домашнє. → Ми **зробимо** домашнє.\n4. Вони будуть вчити нові слова. → Вони **вивчать** нові слова.\n\n### Transform: Perfective to Imperfective\n\nChange to imperfective future (focus on process):\n\n1. Завтра я прочитаю цю книгу. → Завтра я **буду читати** цю книгу.\n2. Вона приготує вечерю. → Вона **буде готувати** вечерю.\n3. Він подзвонить тобі. → Він **буде телефонувати** тобі.\n4. Ми напишемо звіт. → Ми **будемо писати** звіт.\n\n### Complete the Dialogues\n\n**Dialogue 1:**\n- A: Що ти ___ (робитимеш) завтра?\n- B: Я ___ (працюватиму) з дому.\n- A: А коли ти ___ (закінчиш)?\n- B: Думаю, ___ (закінчу) о шостій.\n\n**Answers:** робитимеш/будеш робити (process), працюватиму/буду працювати (process), закінчиш (result), закінчу (result)\n\n**Dialogue 2:**\n- A: Ти ___ (підеш) на вечірку?\n- B: Так, обов'язково ___ (прийду).\n- A: Що ти там ___ (будеш робити)?\n- B: ___ (Буду танцювати) і ___ (буду спілкуватися) з друзями.\n\n**Answers:** підеш (single), прийду (promise), будеш робити (process), буду танцювати/буду спілкуватися (process)\n\n## production\n\n### Plan Your Week\n\nDescribe your plans using both aspects:\n\n**Single events (perfective):**\nУ понеділок я напишу звіт. У вівторок зустрінуся з клієнтом. У середу здам проєкт.\n\n**Ongoing activities (imperfective):**\nЦілий тиждень я буду працювати над новим проєктом. Щовечора буду ходити в спортзал.\n\n### Make Promises\n\nUse perfective to make promises:\n\n- Я **зроблю** це до завтра!\n- Я **подзвоню** тобі ввечері.\n- Ми **приїдемо** вчасно.\n- Я обіцяю, що **закінчу** роботу.\n\n### Describe Your Daily Routine (Future)\n\nUse imperfective for repeated activities:\n\nНаступного тижня я буду вставати о сьомій. Щоранку буду бігати. Буду працювати з дев'ятої до п'ятої...\n\n---\n\n### 🎭 ROLE-PLAY: Planning a Trip Together\n\n**Situation:** You and a friend are planning a weekend trip.\n\n**Partner A & B:** Discuss your plans using:\n- Definite single actions (perfective): Ми **поїдемо**... Ми **приїдемо**...\n- Ongoing activities (imperfective): Будемо **гуляти**... Будемо **відпочивати**...\n- Negotiations/suggestions: Може, **підемо**...? А якщо **поїдемо**...?\n\n**Example dialogue:**\n```\nA: Куди поїдемо на вихідні?\nB: Давай поїдемо до Львова! Виїдемо в суботу вранці.\nA: Добре. А що там будемо робити?\nB: Будемо гуляти по місту, дивитися архітектуру.\nA: А ввечері?\nB: Підемо в ресторан, замовимо каву і десерт.\nA: Коли повернемося?\nB: Повернемося в неділю ввечері.\n```\n\n**Required structures:**\n- ✅ Perfective for definite plans: поїдемо, приїдемо, замовимо\n- ✅ Imperfective for activities: будемо гуляти, будемо відпочивати\n\n**Switch roles and plan a different trip!**\n\n---\n\n# Activities\n\n## quiz: Future Aspect\n\n> Select the correct form.\n\n1. Завтра я ___ їй про все.\n   - [ ] буду розповідати\n   - [x] розповім\n   > Single future action = perfective\n\n2. Ми ___ на тебе біля входу.\n   - [x] будемо чекати\n   - [ ] зачекаємо\n   > Waiting = ongoing process = imperfective\n\n3. Скільки часу ви ___ там?\n   - [x] будете жити\n   - [ ] проживете\n   > Duration question = imperfective\n\n4. Обіцяю, я ___ це!\n   - [ ] буду робити\n   - [x] зроблю\n   > Promise = perfective\n\n5. Він ___ в цій компанії три роки.\n   - [x] буде працювати\n   - [ ] попрацює\n   > Duration (три роки) = imperfective\n\n6. Вона ___ завтра о третій.\n   - [ ] буде приходити\n   - [x] прийде\n   > Scheduled single event = perfective\n\n## match-up: Future Forms\n\n| Imperfective | Perfective |\n|--------------|------------|\n| буду читати | прочитаю |\n| буду писати | напишу |\n| буду робити | зроблю |\n| буду вчити | вивчу |\n| буду готувати | приготую |\n| буду чекати | зачекаю |\n\n## group-sort: When to Use\n\n### Perfective Future\n- promises\n- single scheduled events\n- sequences of events\n- result expected\n\n### Imperfective Future\n- duration (весь день)\n- ongoing activity\n- repeated future action\n- general plans\n\n---",
+    "createdAt": "2025-12-01T22:58:37.289Z",
+    "modifiedAt": "2025-12-01T22:58:37.289Z",
+    "version": 1,
     "immersiveSections": [
       {
-        "id": "warm-up",
-        "title": "warm-up",
-        "content": "### Two Futures\n\nUkrainian has two ways to express future:\n\n1. **Perfective future:** Single word (напишу, зроблю, прочитаю)\n2. **Imperfective future:** Буду + infinitive (буду писати, буду робити)\n\nBoth mean \"will,\" but they express different perspectives on the future action.",
-        "type": "topic"
+        "id": "section-intro",
+        "type": "intro",
+        "title": "Introduction",
+        "content": "## warm-up\n\n### Two Futures\n\nUkrainian has two ways to express future:\n\n1. **Perfective future:** Single word (напишу, зроблю, прочитаю)\n2. **Imperfective future:** Буду + infinitive (буду писати, буду робити)\n\nBoth mean \"will,\" but they express different perspectives on the future action.\n\n## presentation\n\n### Perfective Future: Single Completed Action\n\nForm: Conjugate perfective verb in \"present\" forms.\n\n| Pronoun | зробити | написати | прочитати |\n|---------|---------|----------|-----------|\n| я | зроблю | напишу | прочитаю |\n| ти | зробиш | напишеш | прочитаєш |\n| він/вона | зробить | напише | прочитає |\n| ми | зробимо | напишемо | прочитаємо |\n| ви | зробите | напишете | прочитаєте |\n| вони | зроблять | напишуть | прочитають |\n\n**Meaning:** Single completed action in future, focus on result.\n\n**Examples:**\n\n- Завтра я **напишу** листа. - Tomorrow I will write a letter (complete it).\n- Вона **прочитає** книгу. - She will read the book (finish it).\n- Ми **зробимо** це. - We will do it (get it done).\n- Він **подзвонить** тобі. - He will call you (the call will happen).\n- Я **вивчу** українську! - I will learn Ukrainian (master it)!\n\n### Imperfective Future: Ongoing or Repeated\n\nForm: Буду/будеш/буде... + imperfective infinitive.\n\n| Pronoun | буду + робити | буду + писати |\n|---------|---------------|---------------|\n| я | буду робити | буду писати |\n| ти | будеш робити | будеш писати |\n| він/вона | буде робити | буде писати |\n| ми | будемо робити | будемо писати |\n| ви | будете робити | будете писати |\n| вони | будуть робити | будуть писати |\n\n**Meaning:** Process, duration, or repetition in future.\n\n**Examples:**\n\n- Завтра я **буду писати** статтю. - Tomorrow I will be writing an article.\n- Вона **буде читати** цю книгу тиждень. - She will be reading this book for a week.\n- Ми **будемо чекати** на тебе. - We will be waiting for you.\n- Він **буде працювати** весь день. - He will be working all day.\n- Я **буду вчити** українську щодня. - I will study Ukrainian every day.\n\n### Alternative Imperfective Future: -му/-меш\n\nSome imperfective verbs also have a synthetic form (less common in speech):\n\n- писатиму = буду писати\n- робитиму = буду робити\n- читатиму = буду читати\n\n| Pronoun | писати |\n|---------|--------|\n| я | писатиму |\n| ти | писатимеш |\n| він/вона | писатиме |\n| ми | писатимемо |\n| ви | писатимете |\n| вони | писатимуть |\n\nThis form is more common in western Ukraine and in writing. Both forms are correct.\n\n### Compare: Same Action, Different Aspect\n\n| Imperfective Future | Perfective Future |\n|--------------------|-------------------|\n| Я **буду читати** книгу. | Я **прочитаю** книгу. |\n| I will be reading the book. | I will read the book (finish it). |\n| Вона **буде писати** листа. | Вона **напише** листа. |\n| She will be writing a letter. | She will write the letter (complete it). |\n| Ми **будемо робити** це. | Ми **зробимо** це. |\n| We will be doing this. | We will do this (get it done). |\n\n### When to Use Each Future\n\n**Use PERFECTIVE future when:**\n\n1. **Promise or commitment:** Я зроблю це! - I'll do it!\n2. **Definite single action:** Він прийде завтра. - He will come tomorrow.\n3. **Sequence of events:** Спочатку поснідаю, потім пішу. - First I'll have breakfast, then I'll go.\n4. **Result expected:** Вона напише статтю до понеділка. - She'll write the article by Monday.\n\n**Use IMPERFECTIVE future when:**\n\n1. **Duration:** Я буду працювати весь день. - I'll be working all day.\n2. **Process description:** Що ти будеш робити? - What will you be doing?\n3. **Repeated future action:** Я буду ходити в спортзал щодня. - I'll go to the gym every day.\n4. **Ongoing activity:** Вона буде чекати біля входу. - She'll be waiting by the entrance.\n\n### Time Expressions and Future Aspect\n\n**With perfective (single event):**\n- завтра - tomorrow (single)\n- післязавтра - day after tomorrow\n- наступного тижня - next week\n- о п'ятій годині - at five o'clock\n- за годину - in an hour\n\n**With imperfective (duration/repetition):**\n- весь день - all day\n- цілий тиждень - the whole week\n- щодня - every day\n- завжди - always\n- поки - while\n\n### Questions in Future\n\n**Process questions (imperfective):**\n\n- Що ти будеш робити завтра? - What will you be doing tomorrow?\n- Де ви будете жити? - Where will you be living?\n- Скільки часу це буде тривати? - How long will this last?\n\n**Result questions (perfective):**\n\n- Коли ти це зробиш? - When will you do/finish it?\n- Ти прийдеш? - Will you come?\n- Вона напише? - Will she write (it)?\n\n### Negation in Future\n\n**Imperfective negative** (general, no specific action):\n- Я **не буду** це **робити**. - I won't be doing this / I won't do this (general refusal).\n\n**Perfective negative** (specific action won't happen):\n- Я цього **не зроблю**. - I won't do this (this specific thing won't get done).\n\nCompare:\n- Я не буду їсти м'ясо. - I won't eat meat. (general principle)\n- Я не з'їм це. - I won't eat this. (this specific thing)\n\n## practice\n\n### Choose the Correct Future\n\n1. Завтра я ___ (буду писати/напишу) тобі листа.\n   > [!answer] **напишу** (promise, single)\n2. Я ___ (буду працювати/попрацюю) весь день.\n   > [!answer] **буду працювати** (all day)\n3. Коли ти ___ (будеш закінчувати/закінчиш) проєкт?\n   > [!answer] **закінчиш** (result question)\n4. Вона ___ (буде чекати/зачекає) на нас біля метро.\n   > [!answer] **буде чекати** (ongoing)\n5. Ми ___ (будемо ходити/підемо) в спортзал щотижня.\n   > [!answer] **будемо ходити** (repeated)\n6. Він ___ (буде приходити/прийде) завтра о третій.\n   > [!answer] **прийде** (single scheduled event)\n\n### Transform: Imperfective to Perfective\n\nChange to perfective future (focus on result):\n\n1. Я буду читати книгу.\n   > [!answer] Я **прочитаю** книгу.\n2. Вона буде писати статтю.\n   > [!answer] Вона **напише** статтю.\n3. Ми будемо робити домашнє.\n   > [!answer] Ми **зробимо** домашнє.\n4. Вони будуть вчити нові слова.\n   > [!answer] Вони **вивчать** нові слова.\n\n### Transform: Perfective to Imperfective\n\nChange to imperfective future (focus on process):\n\n1. Завтра я прочитаю цю книгу.\n   > [!answer] Завтра я **буду читати** цю книгу.\n2. Вона приготує вечерю.\n   > [!answer] Вона **буде готувати** вечерю.\n3. Він подзвонить тобі.\n   > [!answer] Він **буде телефонувати** тобі.\n4. Ми напишемо звіт.\n   > [!answer] Ми **будемо писати** звіт.\n\n### Complete the Dialogues\n\n**Dialogue 1:**\n- A: Що ти ___ (робитимеш) завтра?\n- B: Я ___ (працюватиму) з дому.\n- A: А коли ти ___ (закінчиш)?\n- B: Думаю, ___ (закінчу) о шостій.\n\n**Answers:** робитимеш/будеш робити (process), працюватиму/буду працювати (process), закінчиш (result), закінчу (result)\n\n**Dialogue 2:**\n- A: Ти ___ (підеш) на вечірку?\n- B: Так, обов'язково ___ (прийду).\n- A: Що ти там ___ (будеш робити)?\n- B: ___ (Буду танцювати) і ___ (буду спілкуватися) з друзями.\n\n**Answers:** підеш (single), прийду (promise), будеш робити (process), буду танцювати/буду спілкуватися (process)\n\n## production\n\n### Plan Your Week\n\nDescribe your plans using both aspects:\n\n**Single events (perfective):**\nУ понеділок я напишу звіт. У вівторок зустрінуся з клієнтом. У середу здам проєкт.\n\n**Ongoing activities (imperfective):**\nЦілий тиждень я буду працювати над новим проєктом. Щовечора буду ходити в спортзал.\n\n### Make Promises\n\nUse perfective to make promises:\n\n- Я **зроблю** це до завтра!\n- Я **подзвоню** тобі ввечері.\n- Ми **приїдемо** вчасно.\n- Я обіцяю, що **закінчу** роботу.\n\n### Describe Your Daily Routine (Future)\n\nUse imperfective for repeated activities:\n\nНаступного тижня я буду вставати о сьомій. Щоранку буду бігати. Буду працювати з дев'ятої до п'ятої...\n\n---\n\n### 🎭 ROLE-PLAY: Planning a Trip Together\n\n**Situation:** You and a friend are planning a weekend trip.\n\n**Partner A & B:** Discuss your plans using:\n- Definite single actions (perfective): Ми **поїдемо**... Ми **приїдемо**...\n- Ongoing activities (imperfective): Будемо **гуляти**... Будемо **відпочивати**...\n- Negotiations/suggestions: Може, **підемо**...? А якщо **поїдемо**...?\n\n**Example dialogue:**\n```\nA: Куди поїдемо на вихідні?\nB: Давай поїдемо до Львова! Виїдемо в суботу вранці.\nA: Добре. А що там будемо робити?\nB: Будемо гуляти по місту, дивитися архітектуру.\nA: А ввечері?\nB: Підемо в ресторан, замовимо каву і десерт.\nA: Коли повернемося?\nB: Повернемося в неділю ввечері.\n```\n\n**Required structures:**\n- ✅ Perfective for definite plans: поїдемо, приїдемо, замовимо\n- ✅ Imperfective for activities: будемо гуляти, будемо відпочивати\n\n**Switch roles and plan a different trip!**\n\n---\n\n\n---\n\n\n---",
+        "titleUk": "Вступ"
       },
       {
-        "id": "presentation",
-        "title": "presentation",
-        "content": "### Perfective Future: Single Completed Action\n\nForm: Conjugate perfective verb in \"present\" forms.\n\n| Pronoun | зробити | написати | прочитати |\n|---------|---------|----------|-----------|\n| я | зроблю | напишу | прочитаю |\n| ти | зробиш | напишеш | прочитаєш |\n| він/вона | зробить | напише | прочитає |\n| ми | зробимо | напишемо | прочитаємо |\n| ви | зробите | напишете | прочитаєте |\n| вони | зроблять | напишуть | прочитають |\n\n**Meaning:** Single completed action in future, focus on result.\n\n**Examples:**\n\n- Завтра я **напишу** листа. - Tomorrow I will write a letter (complete it).\n- Вона **прочитає** книгу. - She will read the book (finish it).\n- Ми **зробимо** це. - We will do it (get it done).\n- Він **подзвонить** тобі. - He will call you (the call will happen).\n- Я **вивчу** українську! - I will learn Ukrainian (master it)!\n\n### Imperfective Future: Ongoing or Repeated\n\nForm: Буду/будеш/буде... + imperfective infinitive.\n\n| Pronoun | буду + робити | буду + писати |\n|---------|---------------|---------------|\n| я | буду робити | буду писати |\n| ти | будеш робити | будеш писати |\n| він/вона | буде робити | буде писати |\n| ми | будемо робити | будемо писати |\n| ви | будете робити | будете писати |\n| вони | будуть робити | будуть писати |\n\n**Meaning:** Process, duration, or repetition in future.\n\n**Examples:**\n\n- Завтра я **буду писати** статтю. - Tomorrow I will be writing an article.\n- Вона **буде читати** цю книгу тиждень. - She will be reading this book for a week.\n- Ми **будемо чекати** на тебе. - We will be waiting for you.\n- Він **буде працювати** весь день. - He will be working all day.\n- Я **буду вчити** українську щодня. - I will study Ukrainian every day.\n\n### Alternative Imperfective Future: -му/-меш\n\nSome imperfective verbs also have a synthetic form (less common in speech):\n\n- писатиму = буду писати\n- робитиму = буду робити\n- читатиму = буду читати\n\n| Pronoun | писати |\n|---------|--------|\n| я | писатиму |\n| ти | писатимеш |\n| він/вона | писатиме |\n| ми | писатимемо |\n| ви | писатимете |\n| вони | писатимуть |\n\nThis form is more common in western Ukraine and in writing. Both forms are correct.\n\n### Compare: Same Action, Different Aspect\n\n| Imperfective Future | Perfective Future |\n|--------------------|-------------------|\n| Я **буду читати** книгу. | Я **прочитаю** книгу. |\n| I will be reading the book. | I will read the book (finish it). |\n| Вона **буде писати** листа. | Вона **напише** листа. |\n| She will be writing a letter. | She will write the letter (complete it). |\n| Ми **будемо робити** це. | Ми **зробимо** це. |\n| We will be doing this. | We will do this (get it done). |\n\n### When to Use Each Future\n\n**Use PERFECTIVE future when:**\n\n1. **Promise or commitment:** Я зроблю це! - I'll do it!\n2. **Definite single action:** Він прийде завтра. - He will come tomorrow.\n3. **Sequence of events:** Спочатку поснідаю, потім пішу. - First I'll have breakfast, then I'll go.\n4. **Result expected:** Вона напише статтю до понеділка. - She'll write the article by Monday.\n\n**Use IMPERFECTIVE future when:**\n\n1. **Duration:** Я буду працювати весь день. - I'll be working all day.\n2. **Process description:** Що ти будеш робити? - What will you be doing?\n3. **Repeated future action:** Я буду ходити в спортзал щодня. - I'll go to the gym every day.\n4. **Ongoing activity:** Вона буде чекати біля входу. - She'll be waiting by the entrance.\n\n### Time Expressions and Future Aspect\n\n**With perfective (single event):**\n- завтра - tomorrow (single)\n- післязавтра - day after tomorrow\n- наступного тижня - next week\n- о п'ятій годині - at five o'clock\n- за годину - in an hour\n\n**With imperfective (duration/repetition):**\n- весь день - all day\n- цілий тиждень - the whole week\n- щодня - every day\n- завжди - always\n- поки - while\n\n### Questions in Future\n\n**Process questions (imperfective):**\n\n- Що ти будеш робити завтра? - What will you be doing tomorrow?\n- Де ви будете жити? - Where will you be living?\n- Скільки часу це буде тривати? - How long will this last?\n\n**Result questions (perfective):**\n\n- Коли ти це зробиш? - When will you do/finish it?\n- Ти прийдеш? - Will you come?\n- Вона напише? - Will she write (it)?\n\n### Negation in Future\n\n**Imperfective negative** (general, no specific action):\n- Я **не буду** це **робити**. - I won't be doing this / I won't do this (general refusal).\n\n**Perfective negative** (specific action won't happen):\n- Я цього **не зроблю**. - I won't do this (this specific thing won't get done).\n\nCompare:\n- Я не буду їсти м'ясо. - I won't eat meat. (general principle)\n- Я не з'їм це. - I won't eat this. (this specific thing)",
-        "type": "topic"
-      },
-      {
-        "id": "practice",
-        "title": "practice",
-        "content": "### Choose the Correct Future\n\n1. Завтра я ___ (буду писати/напишу) тобі листа. → **напишу** (promise, single)\n2. Я ___ (буду працювати/попрацюю) весь день. → **буду працювати** (all day)\n3. Коли ти ___ (будеш закінчувати/закінчиш) проєкт? → **закінчиш** (result question)\n4. Вона ___ (буде чекати/зачекає) на нас біля метро. → **буде чекати** (ongoing)\n5. Ми ___ (будемо ходити/підемо) в спортзал щотижня. → **будемо ходити** (repeated)\n6. Він ___ (буде приходити/прийде) завтра о третій. → **прийде** (single scheduled event)\n\n### Transform: Imperfective to Perfective\n\nChange to perfective future (focus on result):\n\n1. Я буду читати книгу. → Я **прочитаю** книгу.\n2. Вона буде писати статтю. → Вона **напише** статтю.\n3. Ми будемо робити домашнє. → Ми **зробимо** домашнє.\n4. Вони будуть вчити нові слова. → Вони **вивчать** нові слова.\n\n### Transform: Perfective to Imperfective\n\nChange to imperfective future (focus on process):\n\n1. Завтра я прочитаю цю книгу. → Завтра я **буду читати** цю книгу.\n2. Вона приготує вечерю. → Вона **буде готувати** вечерю.\n3. Він подзвонить тобі. → Він **буде телефонувати** тобі.\n4. Ми напишемо звіт. → Ми **будемо писати** звіт.\n\n### Complete the Dialogues\n\n**Dialogue 1:**\n- A: Що ти ___ (робитимеш) завтра?\n- B: Я ___ (працюватиму) з дому.\n- A: А коли ти ___ (закінчиш)?\n- B: Думаю, ___ (закінчу) о шостій.\n\n**Answers:** робитимеш/будеш робити (process), працюватиму/буду працювати (process), закінчиш (result), закінчу (result)\n\n**Dialogue 2:**\n- A: Ти ___ (підеш) на вечірку?\n- B: Так, обов'язково ___ (прийду).\n- A: Що ти там ___ (будеш робити)?\n- B: ___ (Буду танцювати) і ___ (буду спілкуватися) з друзями.\n\n**Answers:** підеш (single), прийду (promise), будеш робити (process), буду танцювати/буду спілкуватися (process)",
-        "type": "topic"
-      },
-      {
-        "id": "production",
-        "title": "production",
-        "content": "### Plan Your Week\n\nDescribe your plans using both aspects:\n\n**Single events (perfective):**\nУ понеділок я напишу звіт. У вівторок зустрінуся з клієнтом. У середу здам проєкт.\n\n**Ongoing activities (imperfective):**\nЦілий тиждень я буду працювати над новим проєктом. Щовечора буду ходити в спортзал.\n\n### Make Promises\n\nUse perfective to make promises:\n\n- Я **зроблю** це до завтра!\n- Я **подзвоню** тобі ввечері.\n- Ми **приїдемо** вчасно.\n- Я обіцяю, що **закінчу** роботу.\n\n### Describe Your Daily Routine (Future)\n\nUse imperfective for repeated activities:\n\nНаступного тижня я буду вставати о сьомій. Щоранку буду бігати. Буду працювати з дев'ятої до п'ятої...\n\n---\n\n### 🎭 ROLE-PLAY: Planning a Trip Together\n\n**Situation:** You and a friend are planning a weekend trip.\n\n**Partner A & B:** Discuss your plans using:\n- Definite single actions (perfective): Ми **поїдемо**... Ми **приїдемо**...\n- Ongoing activities (imperfective): Будемо **гуляти**... Будемо **відпочивати**...\n- Negotiations/suggestions: Може, **підемо**...? А якщо **поїдемо**...?\n\n**Example dialogue:**\n```\nA: Куди поїдемо на вихідні?\nB: Давай поїдемо до Львова! Виїдемо в суботу вранці.\nA: Добре. А що там будемо робити?\nB: Будемо гуляти по місту, дивитися архітектуру.\nA: А ввечері?\nB: Підемо в ресторан, замовимо каву і десерт.\nA: Коли повернемося?\nB: Повернемося в неділю ввечері.\n```\n\n**Required structures:**\n- ✅ Perfective for definite plans: поїдемо, приїдемо, замовимо\n- ✅ Imperfective for activities: будемо гуляти, будемо відпочивати\n\n**Switch roles and plan a different trip!**\n\n---",
-        "type": "topic"
-      },
-      {
-        "id": "activities",
-        "title": "Activities",
-        "content": "## quiz: Future Aspect\n\n> Select the correct form.\n\n1. Завтра я ___ їй про все.\n   - [ ] буду розповідати\n   - [x] розповім\n   > Single future action = perfective\n\n2. Ми ___ на тебе біля входу.\n   - [x] будемо чекати\n   - [ ] зачекаємо\n   > Waiting = ongoing process = imperfective\n\n3. Скільки часу ви ___ там?\n   - [x] будете жити\n   - [ ] проживете\n   > Duration question = imperfective\n\n4. Обіцяю, я ___ це!\n   - [ ] буду робити\n   - [x] зроблю\n   > Promise = perfective\n\n5. Він ___ в цій компанії три роки.\n   - [x] буде працювати\n   - [ ] попрацює\n   > Duration (три роки) = imperfective\n\n6. Вона ___ завтра о третій.\n   - [ ] буде приходити\n   - [x] прийде\n   > Scheduled single event = perfective\n\n## match-up: Future Forms\n\n| Imperfective | Perfective |\n|--------------|------------|\n| буду читати | прочитаю |\n| буду писати | напишу |\n| буду робити | зроблю |\n| буду вчити | вивчу |\n| буду готувати | приготую |\n| буду чекати | зачекаю |\n\n## group-sort: When to Use\n\n### Perfective Future\n- promises\n- single scheduled events\n- sequences of events\n- result expected\n\n### Imperfective Future\n- duration (весь день)\n- ongoing activity\n- repeated future action\n- general plans\n\n---",
-        "type": "activities"
-      },
-      {
-        "id": "vocabulary",
-        "title": "Vocabulary",
-        "content": "| Word | IPA | English | Notes |\n|------|-----|---------|-------|\n| обіцяти | /oˈbʲit͡sʲɑtɪ/ | to promise | imperfective |\n| пообіцяти | /poobʲiˈt͡sʲɑtɪ/ | to promise (pf) | perfective |\n| планувати | /plɑnuˈvɑtɪ/ | to plan | imperfective |\n| запланувати | /zɑplɑnuˈvɑtɪ/ | to plan (pf) | perfective |\n| збиратися | /zbɪˈrɑtɪsʲɑ/ | to be going to | + infinitive |\n| мати намір | /ˈmɑtɪ nɑˈmʲir/ | to intend | + infinitive |\n| сподіватися | /spodʲiˈvɑtɪsʲɑ/ | to hope | imperfective |\n| спочатку | /spoˈt͡ʃɑtku/ | first, at first | in sequences |\n| потім | /poˈtʲim/ | then, afterwards | in sequences |\n| наступного тижня | /nɑˈstupnoɦo ˈtɪʒnʲɑ/ | next week | - |\n| післязавтра | /pʲisʲlʲɑˈzɑvtrɑ/ | day after tomorrow | - |\n| найближчим часом | /nɑjblɪʒˈt͡ʃɪm ˈt͡ʃɑsom/ | in the near future | - |\n| до понеділка | /do ponɛˈdʲilkɑ/ | by Monday | deadline |\n\n---",
-        "type": "vocabulary"
-      },
-      {
-        "id": "summary",
+        "id": "section-summary",
+        "type": "summary",
         "title": "Summary",
         "content": "## Two Future Forms\n\n| Type | Form | Use |\n|------|------|-----|\n| Perfective | Single word (зроблю) | Completed action, result |\n| Imperfective | Буду + infinitive | Process, duration, repetition |\n\n## Quick Decision Guide\n\n| Context | Aspect | Example |\n|---------|--------|---------|\n| Promise | Perfective | Я зроблю це! |\n| Duration (весь день) | Imperfective | Буду працювати весь день |\n| Single event | Perfective | Він прийде завтра |\n| Repeated future | Imperfective | Буду ходити щодня |\n| Sequence | Perfective | Поснідаю і піду |\n| Process question | Imperfective | Що будеш робити? |\n\n## Remember\n\n- Perfective \"present\" forms = future meaning\n- Буду + imperfective infinitive = imperfective future\n- The -тиму form (писатиму) is alternative imperfective future\n- Aspect choice follows same logic as in past tense\n\n> **Key Takeaways**\n>\n> - Perfective future = single completed action (напишу)\n> - Imperfective future = process/duration/repetition (буду писати)\n> - Promises and commitments usually use perfective\n> - Duration expressions require imperfective future",
-        "type": "summary"
+        "titleUk": "Підсумок"
       }
-    ]
+    ],
+    "rawMarkdown": "---\nmodule: 84\ntitle: \"Aspect in Future: Will Do vs Will Be Doing\"\nsubtitle: \"Зроблю vs Буду робити\"\nlevel: B1\nphase: B1.1\nduration: 45\ntransliteration: none\ntags: [aspect, grammar, verbs, future-tense]\nobjectives:\n  - Form both types of future tense\n  - Use perfective future for completed actions\n  - Use imperfective future for ongoing/repeated actions\n  - Choose the right future form based on meaning\ngrammar:\n  - Perfective future (single-word form)\n  - Imperfective future (буду + infinitive)\n  - Aspect choice in future context\n---\n\n# Lesson Content\n\n## warm-up\n\n### Two Futures\n\nUkrainian has two ways to express future:\n\n1. **Perfective future:** Single word (напишу, зроблю, прочитаю)\n2. **Imperfective future:** Буду + infinitive (буду писати, буду робити)\n\nBoth mean \"will,\" but they express different perspectives on the future action.\n\n## presentation\n\n### Perfective Future: Single Completed Action\n\nForm: Conjugate perfective verb in \"present\" forms.\n\n| Pronoun | зробити | написати | прочитати |\n|---------|---------|----------|-----------|\n| я | зроблю | напишу | прочитаю |\n| ти | зробиш | напишеш | прочитаєш |\n| він/вона | зробить | напише | прочитає |\n| ми | зробимо | напишемо | прочитаємо |\n| ви | зробите | напишете | прочитаєте |\n| вони | зроблять | напишуть | прочитають |\n\n**Meaning:** Single completed action in future, focus on result.\n\n**Examples:**\n\n- Завтра я **напишу** листа. - Tomorrow I will write a letter (complete it).\n- Вона **прочитає** книгу. - She will read the book (finish it).\n- Ми **зробимо** це. - We will do it (get it done).\n- Він **подзвонить** тобі. - He will call you (the call will happen).\n- Я **вивчу** українську! - I will learn Ukrainian (master it)!\n\n### Imperfective Future: Ongoing or Repeated\n\nForm: Буду/будеш/буде... + imperfective infinitive.\n\n| Pronoun | буду + робити | буду + писати |\n|---------|---------------|---------------|\n| я | буду робити | буду писати |\n| ти | будеш робити | будеш писати |\n| він/вона | буде робити | буде писати |\n| ми | будемо робити | будемо писати |\n| ви | будете робити | будете писати |\n| вони | будуть робити | будуть писати |\n\n**Meaning:** Process, duration, or repetition in future.\n\n**Examples:**\n\n- Завтра я **буду писати** статтю. - Tomorrow I will be writing an article.\n- Вона **буде читати** цю книгу тиждень. - She will be reading this book for a week.\n- Ми **будемо чекати** на тебе. - We will be waiting for you.\n- Він **буде працювати** весь день. - He will be working all day.\n- Я **буду вчити** українську щодня. - I will study Ukrainian every day.\n\n### Alternative Imperfective Future: -му/-меш\n\nSome imperfective verbs also have a synthetic form (less common in speech):\n\n- писатиму = буду писати\n- робитиму = буду робити\n- читатиму = буду читати\n\n| Pronoun | писати |\n|---------|--------|\n| я | писатиму |\n| ти | писатимеш |\n| він/вона | писатиме |\n| ми | писатимемо |\n| ви | писатимете |\n| вони | писатимуть |\n\nThis form is more common in western Ukraine and in writing. Both forms are correct.\n\n### Compare: Same Action, Different Aspect\n\n| Imperfective Future | Perfective Future |\n|--------------------|-------------------|\n| Я **буду читати** книгу. | Я **прочитаю** книгу. |\n| I will be reading the book. | I will read the book (finish it). |\n| Вона **буде писати** листа. | Вона **напише** листа. |\n| She will be writing a letter. | She will write the letter (complete it). |\n| Ми **будемо робити** це. | Ми **зробимо** це. |\n| We will be doing this. | We will do this (get it done). |\n\n### When to Use Each Future\n\n**Use PERFECTIVE future when:**\n\n1. **Promise or commitment:** Я зроблю це! - I'll do it!\n2. **Definite single action:** Він прийде завтра. - He will come tomorrow.\n3. **Sequence of events:** Спочатку поснідаю, потім пішу. - First I'll have breakfast, then I'll go.\n4. **Result expected:** Вона напише статтю до понеділка. - She'll write the article by Monday.\n\n**Use IMPERFECTIVE future when:**\n\n1. **Duration:** Я буду працювати весь день. - I'll be working all day.\n2. **Process description:** Що ти будеш робити? - What will you be doing?\n3. **Repeated future action:** Я буду ходити в спортзал щодня. - I'll go to the gym every day.\n4. **Ongoing activity:** Вона буде чекати біля входу. - She'll be waiting by the entrance.\n\n### Time Expressions and Future Aspect\n\n**With perfective (single event):**\n- завтра - tomorrow (single)\n- післязавтра - day after tomorrow\n- наступного тижня - next week\n- о п'ятій годині - at five o'clock\n- за годину - in an hour\n\n**With imperfective (duration/repetition):**\n- весь день - all day\n- цілий тиждень - the whole week\n- щодня - every day\n- завжди - always\n- поки - while\n\n### Questions in Future\n\n**Process questions (imperfective):**\n\n- Що ти будеш робити завтра? - What will you be doing tomorrow?\n- Де ви будете жити? - Where will you be living?\n- Скільки часу це буде тривати? - How long will this last?\n\n**Result questions (perfective):**\n\n- Коли ти це зробиш? - When will you do/finish it?\n- Ти прийдеш? - Will you come?\n- Вона напише? - Will she write (it)?\n\n### Negation in Future\n\n**Imperfective negative** (general, no specific action):\n- Я **не буду** це **робити**. - I won't be doing this / I won't do this (general refusal).\n\n**Perfective negative** (specific action won't happen):\n- Я цього **не зроблю**. - I won't do this (this specific thing won't get done).\n\nCompare:\n- Я не буду їсти м'ясо. - I won't eat meat. (general principle)\n- Я не з'їм це. - I won't eat this. (this specific thing)\n\n## practice\n\n### Choose the Correct Future\n\n1. Завтра я ___ (буду писати/напишу) тобі листа.\n   > [!answer] **напишу** (promise, single)\n2. Я ___ (буду працювати/попрацюю) весь день.\n   > [!answer] **буду працювати** (all day)\n3. Коли ти ___ (будеш закінчувати/закінчиш) проєкт?\n   > [!answer] **закінчиш** (result question)\n4. Вона ___ (буде чекати/зачекає) на нас біля метро.\n   > [!answer] **буде чекати** (ongoing)\n5. Ми ___ (будемо ходити/підемо) в спортзал щотижня.\n   > [!answer] **будемо ходити** (repeated)\n6. Він ___ (буде приходити/прийде) завтра о третій.\n   > [!answer] **прийде** (single scheduled event)\n\n### Transform: Imperfective to Perfective\n\nChange to perfective future (focus on result):\n\n1. Я буду читати книгу.\n   > [!answer] Я **прочитаю** книгу.\n2. Вона буде писати статтю.\n   > [!answer] Вона **напише** статтю.\n3. Ми будемо робити домашнє.\n   > [!answer] Ми **зробимо** домашнє.\n4. Вони будуть вчити нові слова.\n   > [!answer] Вони **вивчать** нові слова.\n\n### Transform: Perfective to Imperfective\n\nChange to imperfective future (focus on process):\n\n1. Завтра я прочитаю цю книгу.\n   > [!answer] Завтра я **буду читати** цю книгу.\n2. Вона приготує вечерю.\n   > [!answer] Вона **буде готувати** вечерю.\n3. Він подзвонить тобі.\n   > [!answer] Він **буде телефонувати** тобі.\n4. Ми напишемо звіт.\n   > [!answer] Ми **будемо писати** звіт.\n\n### Complete the Dialogues\n\n**Dialogue 1:**\n- A: Що ти ___ (робитимеш) завтра?\n- B: Я ___ (працюватиму) з дому.\n- A: А коли ти ___ (закінчиш)?\n- B: Думаю, ___ (закінчу) о шостій.\n\n**Answers:** робитимеш/будеш робити (process), працюватиму/буду працювати (process), закінчиш (result), закінчу (result)\n\n**Dialogue 2:**\n- A: Ти ___ (підеш) на вечірку?\n- B: Так, обов'язково ___ (прийду).\n- A: Що ти там ___ (будеш робити)?\n- B: ___ (Буду танцювати) і ___ (буду спілкуватися) з друзями.\n\n**Answers:** підеш (single), прийду (promise), будеш робити (process), буду танцювати/буду спілкуватися (process)\n\n## production\n\n### Plan Your Week\n\nDescribe your plans using both aspects:\n\n**Single events (perfective):**\nУ понеділок я напишу звіт. У вівторок зустрінуся з клієнтом. У середу здам проєкт.\n\n**Ongoing activities (imperfective):**\nЦілий тиждень я буду працювати над новим проєктом. Щовечора буду ходити в спортзал.\n\n### Make Promises\n\nUse perfective to make promises:\n\n- Я **зроблю** це до завтра!\n- Я **подзвоню** тобі ввечері.\n- Ми **приїдемо** вчасно.\n- Я обіцяю, що **закінчу** роботу.\n\n### Describe Your Daily Routine (Future)\n\nUse imperfective for repeated activities:\n\nНаступного тижня я буду вставати о сьомій. Щоранку буду бігати. Буду працювати з дев'ятої до п'ятої...\n\n---\n\n### 🎭 ROLE-PLAY: Planning a Trip Together\n\n**Situation:** You and a friend are planning a weekend trip.\n\n**Partner A & B:** Discuss your plans using:\n- Definite single actions (perfective): Ми **поїдемо**... Ми **приїдемо**...\n- Ongoing activities (imperfective): Будемо **гуляти**... Будемо **відпочивати**...\n- Negotiations/suggestions: Може, **підемо**...? А якщо **поїдемо**...?\n\n**Example dialogue:**\n```\nA: Куди поїдемо на вихідні?\nB: Давай поїдемо до Львова! Виїдемо в суботу вранці.\nA: Добре. А що там будемо робити?\nB: Будемо гуляти по місту, дивитися архітектуру.\nA: А ввечері?\nB: Підемо в ресторан, замовимо каву і десерт.\nA: Коли повернемося?\nB: Повернемося в неділю ввечері.\n```\n\n**Required structures:**\n- ✅ Perfective for definite plans: поїдемо, приїдемо, замовимо\n- ✅ Imperfective for activities: будемо гуляти, будемо відпочивати\n\n**Switch roles and plan a different trip!**\n\n---\n\n# Activities\n\n## quiz: Future Aspect\n\n> Select the correct form.\n\n1. Завтра я ___ їй про все.\n   - [ ] буду розповідати\n   - [x] розповім\n   > Single future action = perfective\n\n2. Ми ___ на тебе біля входу.\n   - [x] будемо чекати\n   - [ ] зачекаємо\n   > Waiting = ongoing process = imperfective\n\n3. Скільки часу ви ___ там?\n   - [x] будете жити\n   - [ ] проживете\n   > Duration question = imperfective\n\n4. Обіцяю, я ___ це!\n   - [ ] буду робити\n   - [x] зроблю\n   > Promise = perfective\n\n5. Він ___ в цій компанії три роки.\n   - [x] буде працювати\n   - [ ] попрацює\n   > Duration (три роки) = imperfective\n\n6. Вона ___ завтра о третій.\n   - [ ] буде приходити\n   - [x] прийде\n   > Scheduled single event = perfective\n\n## match-up: Future Forms\n\n| Imperfective | Perfective |\n|--------------|------------|\n| буду читати | прочитаю |\n| буду писати | напишу |\n| буду робити | зроблю |\n| буду вчити | вивчу |\n| буду готувати | приготую |\n| буду чекати | зачекаю |\n\n## group-sort: When to Use\n\n### Perfective Future\n- promises\n- single scheduled events\n- sequences of events\n- result expected\n\n### Imperfective Future\n- duration (весь день)\n- ongoing activity\n- repeated future action\n- general plans\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | Notes |\n|------|-----|---------|-------|\n| обіцяти | /oˈbʲit͡sʲɑtɪ/ | to promise | imperfective |\n| пообіцяти | /poobʲiˈt͡sʲɑtɪ/ | to promise (pf) | perfective |\n| планувати | /plɑnuˈvɑtɪ/ | to plan | imperfective |\n| запланувати | /zɑplɑnuˈvɑtɪ/ | to plan (pf) | perfective |\n| збиратися | /zbɪˈrɑtɪsʲɑ/ | to be going to | + infinitive |\n| мати намір | /ˈmɑtɪ nɑˈmʲir/ | to intend | + infinitive |\n| сподіватися | /spodʲiˈvɑtɪsʲɑ/ | to hope | imperfective |\n| спочатку | /spoˈt͡ʃɑtku/ | first, at first | in sequences |\n| потім | /poˈtʲim/ | then, afterwards | in sequences |\n| наступного тижня | /nɑˈstupnoɦo ˈtɪʒnʲɑ/ | next week | - |\n| післязавтра | /pʲisʲlʲɑˈzɑvtrɑ/ | day after tomorrow | - |\n| найближчим часом | /nɑjblɪʒˈt͡ʃɪm ˈt͡ʃɑsom/ | in the near future | - |\n| до понеділка | /do ponɛˈdʲilkɑ/ | by Monday | deadline |\n\n---\n\n# Summary\n\n## Two Future Forms\n\n| Type | Form | Use |\n|------|------|-----|\n| Perfective | Single word (зроблю) | Completed action, result |\n| Imperfective | Буду + infinitive | Process, duration, repetition |\n\n## Quick Decision Guide\n\n| Context | Aspect | Example |\n|---------|--------|---------|\n| Promise | Perfective | Я зроблю це! |\n| Duration (весь день) | Imperfective | Буду працювати весь день |\n| Single event | Perfective | Він прийде завтра |\n| Repeated future | Imperfective | Буду ходити щодня |\n| Sequence | Perfective | Поснідаю і піду |\n| Process question | Imperfective | Що будеш робити? |\n\n## Remember\n\n- Perfective \"present\" forms = future meaning\n- Буду + imperfective infinitive = imperfective future\n- The -тиму form (писатиму) is alternative imperfective future\n- Aspect choice follows same logic as in past tense\n\n> **Key Takeaways**\n>\n> - Perfective future = single completed action (напишу)\n> - Imperfective future = process/duration/repetition (буду писати)\n> - Promises and commitments usually use perfective\n> - Duration expressions require imperfective future\n"
   },
   "activities": [
     {
-      "id": "act-uk-B1-84-quiz",
+      "id": "act-b1-84-quiz",
       "type": "quiz",
       "title": "Future Aspect",
       "description": "Select the correct form.",
       "content": {
         "type": "quiz",
-        "instructions": "Select the correct form.",
         "questions": [
           {
             "question": "Завтра я ___ їй про все.",
@@ -280,23 +152,17 @@
       "language": "uk",
       "difficultyLevel": "B1",
       "duration": 5,
-      "tags": [
-        "aspect",
-        "grammar",
-        "verbs",
-        "future-tense"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.289Z",
+      "modifiedAt": "2025-12-01T22:58:37.289Z"
     },
     {
-      "id": "act-uk-B1-84-matchup",
+      "id": "act-b1-84-matchup",
       "type": "match-up",
       "title": "Future Forms",
       "description": "Future Forms",
       "content": {
         "type": "match-up",
-        "instructions": "",
         "pairs": [
           {
             "left": "буду читати",
@@ -331,25 +197,20 @@
       "language": "uk",
       "difficultyLevel": "B1",
       "duration": 5,
-      "tags": [
-        "aspect",
-        "grammar",
-        "verbs",
-        "future-tense"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.289Z",
+      "modifiedAt": "2025-12-01T22:58:37.289Z"
     },
     {
-      "id": "act-uk-B1-84-groupsort",
+      "id": "act-b1-84-groupsort",
       "type": "group-sort",
       "title": "When to Use",
       "description": "When to Use",
       "content": {
         "type": "group-sort",
-        "instructions": "",
         "groups": [
           {
+            "id": "perfective-future",
             "name": "Perfective Future",
             "items": [
               "promises",
@@ -359,6 +220,7 @@
             ]
           },
           {
+            "id": "imperfective-future",
             "name": "Imperfective Future",
             "items": [
               "duration (весь день)",
@@ -376,14 +238,9 @@
       "language": "uk",
       "difficultyLevel": "B1",
       "duration": 5,
-      "tags": [
-        "aspect",
-        "grammar",
-        "verbs",
-        "future-tense"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.289Z",
+      "modifiedAt": "2025-12-01T22:58:37.289Z"
     }
   ],
   "vocabulary": {
@@ -394,121 +251,95 @@
     "transliterationMode": "none",
     "words": [
       {
-        "id": "v-m84-001",
+        "id": "v-obitsyaty-84-0",
         "uk": "обіцяти",
-        "translit": "",
-        "ipa": "/oˈbʲit͡sʲɑtɪ/",
         "en": "to promise",
-        "pos": "",
-        "note": "imperfective"
+        "pos": "imperfective",
+        "ipa": "/oˈbʲit͡sʲɑtɪ/"
       },
       {
-        "id": "v-m84-002",
+        "id": "v-poobitsyaty-84-1",
         "uk": "пообіцяти",
-        "translit": "",
-        "ipa": "/poobʲiˈt͡sʲɑtɪ/",
         "en": "to promise (pf)",
-        "pos": "",
-        "note": "perfective"
+        "pos": "perfective",
+        "ipa": "/poobʲiˈt͡sʲɑtɪ/"
       },
       {
-        "id": "v-m84-003",
+        "id": "v-planuvaty-84-2",
         "uk": "планувати",
-        "translit": "",
-        "ipa": "/plɑnuˈvɑtɪ/",
         "en": "to plan",
-        "pos": "",
-        "note": "imperfective"
+        "pos": "imperfective",
+        "ipa": "/plɑnuˈvɑtɪ/"
       },
       {
-        "id": "v-m84-004",
+        "id": "v-zaplanuvaty-84-3",
         "uk": "запланувати",
-        "translit": "",
-        "ipa": "/zɑplɑnuˈvɑtɪ/",
         "en": "to plan (pf)",
-        "pos": "",
-        "note": "perfective"
+        "pos": "perfective",
+        "ipa": "/zɑplɑnuˈvɑtɪ/"
       },
       {
-        "id": "v-m84-005",
+        "id": "v-zbyratysya-84-4",
         "uk": "збиратися",
-        "translit": "",
-        "ipa": "/zbɪˈrɑtɪsʲɑ/",
         "en": "to be going to",
-        "pos": "",
-        "note": "+ infinitive"
+        "pos": "+ infinitive",
+        "ipa": "/zbɪˈrɑtɪsʲɑ/"
       },
       {
-        "id": "v-m84-006",
+        "id": "v-maty-namir-84-5",
         "uk": "мати намір",
-        "translit": "",
-        "ipa": "/ˈmɑtɪ nɑˈmʲir/",
         "en": "to intend",
-        "pos": "",
-        "note": "+ infinitive"
+        "pos": "+ infinitive",
+        "ipa": "/ˈmɑtɪ nɑˈmʲir/"
       },
       {
-        "id": "v-m84-007",
+        "id": "v-spodivatysya-84-6",
         "uk": "сподіватися",
-        "translit": "",
-        "ipa": "/spodʲiˈvɑtɪsʲɑ/",
         "en": "to hope",
-        "pos": "",
-        "note": "imperfective"
+        "pos": "imperfective",
+        "ipa": "/spodʲiˈvɑtɪsʲɑ/"
       },
       {
-        "id": "v-m84-008",
+        "id": "v-spochatku-84-7",
         "uk": "спочатку",
-        "translit": "",
-        "ipa": "/spoˈt͡ʃɑtku/",
         "en": "first, at first",
-        "pos": "",
-        "note": "in sequences"
+        "pos": "in sequences",
+        "ipa": "/spoˈt͡ʃɑtku/"
       },
       {
-        "id": "v-m84-009",
+        "id": "v-potim-84-8",
         "uk": "потім",
-        "translit": "",
-        "ipa": "/poˈtʲim/",
         "en": "then, afterwards",
-        "pos": "",
-        "note": "in sequences"
+        "pos": "in sequences",
+        "ipa": "/poˈtʲim/"
       },
       {
-        "id": "v-m84-010",
+        "id": "v-nastupnoho-tyzhnya-84-9",
         "uk": "наступного тижня",
-        "translit": "",
-        "ipa": "/nɑˈstupnoɦo ˈtɪʒnʲɑ/",
         "en": "next week",
-        "pos": "",
-        "note": "-"
+        "pos": "-",
+        "ipa": "/nɑˈstupnoɦo ˈtɪʒnʲɑ/"
       },
       {
-        "id": "v-m84-011",
+        "id": "v-pislyazavtra-84-10",
         "uk": "післязавтра",
-        "translit": "",
-        "ipa": "/pʲisʲlʲɑˈzɑvtrɑ/",
         "en": "day after tomorrow",
-        "pos": "",
-        "note": "-"
+        "pos": "-",
+        "ipa": "/pʲisʲlʲɑˈzɑvtrɑ/"
       },
       {
-        "id": "v-m84-012",
+        "id": "v-nayblyzhchym-chasom-84-11",
         "uk": "найближчим часом",
-        "translit": "",
-        "ipa": "/nɑjblɪʒˈt͡ʃɪm ˈt͡ʃɑsom/",
         "en": "in the near future",
-        "pos": "",
-        "note": "-"
+        "pos": "-",
+        "ipa": "/nɑjblɪʒˈt͡ʃɪm ˈt͡ʃɑsom/"
       },
       {
-        "id": "v-m84-013",
+        "id": "v-do-ponedilka-84-12",
         "uk": "до понеділка",
-        "translit": "",
-        "ipa": "/do ponɛˈdʲilkɑ/",
         "en": "by Monday",
-        "pos": "",
-        "note": "deadline"
+        "pos": "deadline",
+        "ipa": "/do ponɛˈdʲilkɑ/"
       }
     ]
   }

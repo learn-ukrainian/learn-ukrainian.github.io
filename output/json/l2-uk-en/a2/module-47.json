@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-A2-47",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "grammar-introduction",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -27,8 +26,6 @@
       "Conditional mood formation",
       "Polite requests with conditionals"
     ],
-    "totalDuration": 45,
-    "transliterationMode": "partial",
     "tags": [
       "conditionals",
       "subjunctive",
@@ -36,22 +33,9 @@
       "hypothetical",
       "grammar"
     ],
-    "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
+    "totalDuration": 45,
+    "transliterationMode": "partial",
     "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### What Would You Do?\n\nReal conditionals deal with possible futures. Now let's talk about **unreal** situations - things that aren't true or might never happen:\n\n**English:** If I **had** money, I **would** buy a car.\n**Ukrainian:** Якби я **мав** гроші, я **б купив** машину.\n\nThe key word is **би/б** - it means \"would.\"\n\n> 💡 **Did You Know?**\n>\n> The particle \"би/б\" transforms any sentence into hypothetical territory. It comes after the verb and attaches to it. This single particle does the work of \"would,\" \"could,\" and \"might\" in English conditionals!"
-          }
-        ]
-      },
       {
         "id": "phase-presentation",
         "name": "presentation",
@@ -60,112 +44,33 @@
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "### The Conditional Particle: б/би\n\n**Forms:**\n- **б** - after vowels (я б, вона б, ти б)\n- **би** - after consonants (він би, ми би)\n\n**Position:** Usually after the subject or verb:\n- Я **б** хотів... - I would want...\n- Він **би** поїхав... - He would go...\n- Це **було б** добре. - That would be good.\n\n**Examples:**\n- Я **б** допоміг тобі. - I would help you.\n- Вона **б** прийшла. - She would come.\n- Ми **б** зробили це. - We would do this.\n\n> ⚡ **Pro Tip: Placement Flexibility**\n>\n> б/би can move around:\n> - Я б хотів = Я хотів би (I would want)\n> - Він би прийшов = Він прийшов би (He would come)\n>\n> The meaning stays the same!"
+            "teacherNotes": "### The Conditional Particle: б/би\n\n**Forms:**\n- **б** - after vowels (я б, вона б, ти б)\n- **би** - after consonants (він би, ми би)\n\n**Position:** Usually after the subject or verb:\n- Я **б** хотів... - I would want...\n- Він **би** поїхав... - He would go...\n- Це **було б** добре. - That would be good.\n\n**Examples:**\n- Я **б** допоміг тобі. - I would help you.\n- Вона **б** прийшла. - She would come.\n- Ми **б** зробили це. - We would do this.\n\n> ⚡ **Pro Tip: Placement Flexibility**\n>\n> б/би can move around:\n> - Я б хотів = Я хотів би (I would want)\n> - Він би прийшов = Він прийшов би (He would come)\n>\n> The meaning stays the same!\n\n### Unreal Conditionals: Якби + б/би\n\n**Structure: Якби + past tense..., subject + б/би + past tense**\n\n| Якби (If) | Result |\n|-----------|--------|\n| Якби я **мав** час, | я **б прочитав** книгу. |\n| If I had time, | I would read the book. |\n\n**Key pattern:**\n- **Якби** = if (unreal/hypothetical)\n- Both clauses use **past tense** forms\n- Result clause includes **б/би**\n\n**Examples:**\n- **Якби** я знав, я **б** сказав. - If I knew, I would tell.\n- **Якби** вона прийшла, ми **б** почали. - If she came, we would start.\n- **Якби** було тепло, ми **б** пішли гуляти. - If it were warm, we'd go for a walk.\n\n> 📜 **History Bite: Slavic Conditional**\n>\n> The particle \"би\" comes from an old form of \"бути\" (to be). In Old Church Slavonic, conditionals used full auxiliary verbs. Over centuries, these shortened to just \"би/б\" - a perfect example of grammaticalization!\n\n### Якщо vs Якби\n\n**Якщо (if) - possible/real:**\n- **Якщо** матиму час, прочитаю. - If I have time, I'll read. (possible)\n- **Якщо** він прийде, почнемо. - If he comes, we'll start. (might happen)\n\n**Якби (if) - unreal/hypothetical:**\n- **Якби** мав час, прочитав би. - If I had time, I would read. (I don't have time)\n- **Якби** він прийшов, почали б. - If he came, we would start. (he's not coming)\n\n**The difference:**\n- Якщо + future = real possibility\n- Якби + past + би = unreal/contrary to fact\n\n> 🎭 **Culture Corner: Dreams and Wishes**\n>\n> Ukrainians often use якби for dreams:\n> - \"Якби я був багатим...\" (If I were rich...)\n> - \"Якби можна було...\" (If it were possible...)\n> - \"Якби я міг почати знову...\" (If I could start over...)\n>\n> These express wishes for impossible or unlikely things.\n\n### Wishes with \"Якби...\"\n\n**Express wishes about the present:**\n- **Якби** я знав українську краще! - If only I knew Ukrainian better!\n- **Якби** було тепліше! - If only it were warmer!\n- **Якби** мав більше часу! - If only I had more time!\n\n**Express wishes about the past (harder):**\n- **Якби** я **був** вивчив раніше! - If only I had studied earlier!\n\n**Хотів би (would like):**\n- Я **хотів би** поїхати в Україну. - I would like to go to Ukraine.\n- Вона **хотіла б** побачити Львів. - She would like to see Lviv.\n\n### Polite Requests with б/би\n\n**Softening requests:**\n\n| Direct | Polite (with б/би) |\n|--------|---------------------|\n| Допоможи! | Ти б допоміг? |\n| Скажіть! | Ви б сказали? |\n| Дай мені... | Ти б дав мені...? |\n\n**Examples:**\n- Чи не **могли б** ви допомогти? - Could you help? (very polite)\n- **Чи б** ви сказали...? - Would you tell...?\n- Я **хотів би** запитати... - I would like to ask...\n\n**Common polite phrases:**\n- **Було б** добре, якби... - It would be good if...\n- **Мені б хотілося**... - I would like...\n- **Чи не могли б** ви...? - Could you possibly...?\n\n> ⚡ **Pro Tip: Maximum Politeness**\n>\n> Чи не могли б ви...? (Could you possibly...?) is very formal and polite. Use it in:\n> - Business situations\n> - With strangers\n> - When asking for favors\n\n### Could Have / Would Have\n\n**Міг би (could):**\n- Я **міг би** допомогти. - I could help.\n- Вона **могла б** прийти. - She could come.\n\n**Should have (мав би):**\n- Ти **мав би** сказати раніше. - You should have told me earlier.\n- Вона **мала б** зателефонувати. - She should have called.\n\n**Would have (був би + past participle - advanced):**\n- Я **був би пішов**, якби знав. - I would have gone if I had known.\n- Вона **була б прийшла**. - She would have come.\n\nNote: \"Would have\" is more complex; focus on present/future hypotheticals first.\n\n### Conditional with Different Subjects\n\n**Same subject:**\n- Якби **я** мав гроші, **я** б купив машину.\n- If I had money, I would buy a car.\n\n**Different subjects:**\n- Якби **він** прийшов, **ми** б почали.\n- If he came, we would start.\n\n**Impersonal:**\n- Якби **було** можливо, я б поїхав.\n- If it were possible, I would go.\n\n- **Було б** краще, якби ти зателефонував.\n- It would be better if you called."
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Unreal Conditionals: Якби + б/би\n\n**Structure: Якби + past tense..., subject + б/би + past tense**\n\n| Якби (If) | Result |\n|-----------|--------|\n| Якби я **мав** час, | я **б прочитав** книгу. |\n| If I had time, | I would read the book. |\n\n**Key pattern:**\n- **Якби** = if (unreal/hypothetical)\n- Both clauses use **past tense** forms\n- Result clause includes **б/би**\n\n**Examples:**\n- **Якби** я знав, я **б** сказав. - If I knew, I would tell.\n- **Якби** вона прийшла, ми **б** почали. - If she came, we would start.\n- **Якби** було тепло, ми **б** пішли гуляти. - If it were warm, we'd go for a walk.\n\n> 📜 **History Bite: Slavic Conditional**\n>\n> The particle \"би\" comes from an old form of \"бути\" (to be). In Old Church Slavonic, conditionals used full auxiliary verbs. Over centuries, these shortened to just \"би/б\" - a perfect example of grammaticalization!"
+            "teacherNotes": "### Transform to Hypothetical\n\nChange real to unreal conditionals:\n\n1. Якщо матиму час, прочитаю. →\n   Якби мав час, прочитав би.\n\n2. Якщо він прийде, почнемо. →\n   Якби він прийшов, почали б.\n\n3. Якщо погода буде гарна, підемо. →\n   Якби погода була гарна, пішли б.\n\n4. Якщо знатиму, скажу. →\n   Якби знав, сказав би.\n\n5. Якщо вона захоче, допоможе. →\n   Якби вона хотіла, допомогла б.\n\n### Complete with б/би\n\n1. Я ___ хотів поїхати в Україну.\n   > [!answer] б\n\n2. Він ___ допоміг, якби міг.\n   > [!answer] би\n\n3. Було ___ добре побачитися.\n   > [!answer] б\n\n4. Ти ___ зателефонував мені?\n   > [!answer] б\n\n5. Вона ___ прийшла раніше.\n   > [!answer] б / би\n\n### Make Polite\n\nTransform to polite requests:\n\n1. Допоможи мені! →\n   Чи не міг би ти допомогти?\n\n2. Скажіть адресу! →\n   Чи не могли б ви сказати адресу?\n\n3. Дай мені книгу! →\n   Ти б дав мені книгу?\n\n4. Закрий вікно! →\n   Чи не міг би ти закрити вікно?\n\n5. Почекайте! →\n   Чи не могли б ви почекати?\n\n### Translate Hypotheticals\n\n1. If I had time, I would help.\n   > [!answer] Якби я мав час, я б допоміг.\n\n2. I would like to learn Ukrainian.\n   > [!answer] Я хотів би вивчити українську.\n\n3. Could you please help?\n   > [!answer] Чи не могли б ви допомогти?\n\n4. If she knew, she would tell.\n   > [!answer] Якби вона знала, вона б сказала.\n\n5. It would be good to meet.\n   > [!answer] Було б добре зустрітися.\n\n6. You should call him.\n   > [!answer] Ти мав би зателефонувати йому."
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Якщо vs Якби\n\n**Якщо (if) - possible/real:**\n- **Якщо** матиму час, прочитаю. - If I have time, I'll read. (possible)\n- **Якщо** він прийде, почнемо. - If he comes, we'll start. (might happen)\n\n**Якби (if) - unreal/hypothetical:**\n- **Якби** мав час, прочитав би. - If I had time, I would read. (I don't have time)\n- **Якби** він прийшов, почали б. - If he came, we would start. (he's not coming)\n\n**The difference:**\n- Якщо + future = real possibility\n- Якби + past + би = unreal/contrary to fact\n\n> 🎭 **Culture Corner: Dreams and Wishes**\n>\n> Ukrainians often use якби for dreams:\n> - \"Якби я був багатим...\" (If I were rich...)\n> - \"Якби можна було...\" (If it were possible...)\n> - \"Якби я міг почати знову...\" (If I could start over...)\n>\n> These express wishes for impossible or unlikely things."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Wishes with \"Якби...\"\n\n**Express wishes about the present:**\n- **Якби** я знав українську краще! - If only I knew Ukrainian better!\n- **Якби** було тепліше! - If only it were warmer!\n- **Якби** мав більше часу! - If only I had more time!\n\n**Express wishes about the past (harder):**\n- **Якби** я **був** вивчив раніше! - If only I had studied earlier!\n\n**Хотів би (would like):**\n- Я **хотів би** поїхати в Україну. - I would like to go to Ukraine.\n- Вона **хотіла б** побачити Львів. - She would like to see Lviv."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Polite Requests with б/би\n\n**Softening requests:**\n\n| Direct | Polite (with б/би) |\n|--------|---------------------|\n| Допоможи! | Ти б допоміг? |\n| Скажіть! | Ви б сказали? |\n| Дай мені... | Ти б дав мені...? |\n\n**Examples:**\n- Чи не **могли б** ви допомогти? - Could you help? (very polite)\n- **Чи б** ви сказали...? - Would you tell...?\n- Я **хотів би** запитати... - I would like to ask...\n\n**Common polite phrases:**\n- **Було б** добре, якби... - It would be good if...\n- **Мені б хотілося**... - I would like...\n- **Чи не могли б** ви...? - Could you possibly...?\n\n> ⚡ **Pro Tip: Maximum Politeness**\n>\n> Чи не могли б ви...? (Could you possibly...?) is very formal and polite. Use it in:\n> - Business situations\n> - With strangers\n> - When asking for favors"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Could Have / Would Have\n\n**Міг би (could):**\n- Я **міг би** допомогти. - I could help.\n- Вона **могла б** прийти. - She could come.\n\n**Should have (мав би):**\n- Ти **мав би** сказати раніше. - You should have told me earlier.\n- Вона **мала б** зателефонувати. - She should have called.\n\n**Would have (був би + past participle - advanced):**\n- Я **був би пішов**, якби знав. - I would have gone if I had known.\n- Вона **була б прийшла**. - She would have come.\n\nNote: \"Would have\" is more complex; focus on present/future hypotheticals first."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Conditional with Different Subjects\n\n**Same subject:**\n- Якби **я** мав гроші, **я** б купив машину.\n- If I had money, I would buy a car.\n\n**Different subjects:**\n- Якби **він** прийшов, **ми** б почали.\n- If he came, we would start.\n\n**Impersonal:**\n- Якби **було** можливо, я б поїхав.\n- If it were possible, I would go.\n\n- **Було б** краще, якби ти зателефонував.\n- It would be better if you called."
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A2-47-matchup"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Transform to Hypothetical\n\nChange real to unreal conditionals:\n\n1. Якщо матиму час, прочитаю. →\n   Якби мав час, прочитав би.\n\n2. Якщо він прийде, почнемо. →\n   Якби він прийшов, почали б.\n\n3. Якщо погода буде гарна, підемо. →\n   Якби погода була гарна, пішли б.\n\n4. Якщо знатиму, скажу. →\n   Якби знав, сказав би.\n\n5. Якщо вона захоче, допоможе. →\n   Якби вона хотіла, допомогла б."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Complete with б/би\n\n1. Я ___ хотів поїхати в Україну.\n   → б\n\n2. Він ___ допоміг, якби міг.\n   → би\n\n3. Було ___ добре побачитися.\n   → б\n\n4. Ти ___ зателефонував мені?\n   → б\n\n5. Вона ___ прийшла раніше.\n   → б / би"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Make Polite\n\nTransform to polite requests:\n\n1. Допоможи мені! →\n   Чи не міг би ти допомогти?\n\n2. Скажіть адресу! →\n   Чи не могли б ви сказати адресу?\n\n3. Дай мені книгу! →\n   Ти б дав мені книгу?\n\n4. Закрий вікно! →\n   Чи не міг би ти закрити вікно?\n\n5. Почекайте! →\n   Чи не могли б ви почекати?"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Translate Hypotheticals\n\n1. If I had time, I would help.\n   → Якби я мав час, я б допоміг.\n\n2. I would like to learn Ukrainian.\n   → Я хотів би вивчити українську.\n\n3. Could you please help?\n   → Чи не могли б ви допомогти?\n\n4. If she knew, she would tell.\n   → Якби вона знала, вона б сказала.\n\n5. It would be good to meet.\n   → Було б добре зустрітися.\n\n6. You should call him.\n   → Ти мав би зателефонувати йому."
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A2-47-quiz"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A2-47-groupsort"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Express Wishes\n\n**What would you do if...?**\n- Якби я виграв лотерею, я б...\n- Якби я міг жити в будь-якій країні, я б...\n- Якби мав суперсилу, я б...\n- Якби міг зустріти будь-кого, я б..."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Polite Conversation\n\n- Вибачте, **чи не могли б ви** допомогти мені?\n- Звичайно! Що вам потрібно?\n- Я **хотів би** знати, де найближча станція метро.\n- **Було б** краще, якби ви пішли прямо, потім направо.\n- Дякую! Ви дуже люб'язні!\n- Немає за що. Я **радий би** допомогти ще."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Regrets and Advice\n\n**What someone should do:**\n- Ти **мав би** більше спати.\n- Вона **мала б** вивчати українську щодня.\n- Ми **мали б** почати раніше.\n\n**What you would like:**\n- Я **хотів би** подорожувати більше.\n- Вона **хотіла б** працювати з дому.\n- Ми **хотіли б** познайомитися з вами."
+            "teacherNotes": "### Express Wishes\n\n**What would you do if...?**\n- Якби я виграв лотерею, я б...\n- Якби я міг жити в будь-якій країні, я б...\n- Якби мав суперсилу, я б...\n- Якби міг зустріти будь-кого, я б...\n\n### Polite Conversation\n\n- Вибачте, **чи не могли б ви** допомогти мені?\n- Звичайно! Що вам потрібно?\n- Я **хотів би** знати, де найближча станція метро.\n- **Було б** краще, якби ви пішли прямо, потім направо.\n- Дякую! Ви дуже люб'язні!\n- Немає за що. Я **радий би** допомогти ще.\n\n### Regrets and Advice\n\n**What someone should do:**\n- Ти **мав би** більше спати.\n- Вона **мала б** вивчати українську щодня.\n- Ми **мали б** почати раніше.\n\n**What you would like:**\n- Я **хотів би** подорожувати більше.\n- Вона **хотіла б** працювати з дому.\n- Ми **хотіли б** познайомитися з вами.\n\n---"
           }
         ]
       }
-    ]
+    ],
+    "createdAt": "2025-12-01T22:58:37.273Z",
+    "modifiedAt": "2025-12-01T22:58:37.273Z",
+    "version": 1
   },
   "activities": [
     {
-      "id": "act-uk-A2-47-matchup",
+      "id": "act-a2-47-matchup",
       "type": "match-up",
       "title": "Real vs Unreal",
       "description": "Match the condition type.",
       "content": {
         "type": "match-up",
-        "instructions": "Match the condition type.",
         "pairs": [
           {
             "left": "Якщо матиму час",
@@ -200,24 +105,17 @@
       "language": "uk",
       "difficultyLevel": "A2",
       "duration": 5,
-      "tags": [
-        "conditionals",
-        "subjunctive",
-        "would",
-        "hypothetical",
-        "grammar"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.273Z",
+      "modifiedAt": "2025-12-01T22:58:37.273Z"
     },
     {
-      "id": "act-uk-A2-47-quiz",
+      "id": "act-a2-47-quiz",
       "type": "quiz",
       "title": "Conditionals with б/би",
       "description": "Choose the correct form.",
       "content": {
         "type": "quiz",
-        "instructions": "Choose the correct form.",
         "questions": [
           {
             "question": "\"If I had time, I would help\" - Якби я ___ час, я б допоміг.",
@@ -296,40 +194,37 @@
       "language": "uk",
       "difficultyLevel": "A2",
       "duration": 5,
-      "tags": [
-        "conditionals",
-        "subjunctive",
-        "would",
-        "hypothetical",
-        "grammar"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.273Z",
+      "modifiedAt": "2025-12-01T22:58:37.273Z"
     },
     {
-      "id": "act-uk-A2-47-groupsort",
+      "id": "act-a2-47-groupsort",
       "type": "group-sort",
       "title": "Real vs Hypothetical",
       "description": "Sort the sentences.",
       "content": {
         "type": "group-sort",
-        "instructions": "Sort the sentences.",
         "groups": [
           {
-            "name": "Real Conditionals (якщо)",
+            "id": "real-conditionals",
+            "name": "Real Conditionals",
             "items": [
               "Якщо буде час, зроблю.",
               "Якщо він прийде, почнемо.",
               "Якщо хочеш, допоможу."
-            ]
+            ],
+            "nameUk": "якщо"
           },
           {
-            "name": "Hypothetical Conditionals (якби + б)",
+            "id": "hypothetical-conditionals",
+            "name": "Hypothetical Conditionals",
             "items": [
               "Якби мав час, зробив би.",
               "Якби він прийшов, почали б.",
               "Якби хотіла, допомогла б."
-            ]
+            ],
+            "nameUk": "якби + б"
           }
         ],
         "shuffleItems": true
@@ -340,15 +235,9 @@
       "language": "uk",
       "difficultyLevel": "A2",
       "duration": 5,
-      "tags": [
-        "conditionals",
-        "subjunctive",
-        "would",
-        "hypothetical",
-        "grammar"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.273Z",
+      "modifiedAt": "2025-12-01T22:58:37.273Z"
     }
   ],
   "vocabulary": {
@@ -359,157 +248,126 @@
     "transliterationMode": "partial",
     "words": [
       {
-        "id": "v-m47-001",
+        "id": "v-yakby-47-0",
         "uk": "якби",
-        "translit": "",
-        "ipa": "/jɑkˈbɪ/",
         "en": "if (unreal)",
         "pos": "conj",
-        "gender": "-"
+        "ipa": "/jɑkˈbɪ/"
       },
       {
-        "id": "v-m47-002",
+        "id": "v-b-47-1",
         "uk": "б",
-        "translit": "",
-        "ipa": "/b/",
         "en": "would (after vowel)",
         "pos": "part",
-        "gender": "-"
+        "ipa": "/b/"
       },
       {
-        "id": "v-m47-003",
+        "id": "v-by-47-2",
         "uk": "би",
-        "translit": "",
-        "ipa": "/bɪ/",
         "en": "would (after consonant)",
         "pos": "part",
-        "gender": "-"
+        "ipa": "/bɪ/"
       },
       {
-        "id": "v-m47-004",
+        "id": "v-khotiv-by-47-3",
         "uk": "хотів би",
-        "translit": "",
-        "ipa": "/xoˈtʲiv bɪ/",
         "en": "would like (m)",
         "pos": "phrase",
-        "gender": "-"
+        "ipa": "/xoˈtʲiv bɪ/"
       },
       {
-        "id": "v-m47-005",
+        "id": "v-khotila-b-47-4",
         "uk": "хотіла б",
-        "translit": "",
-        "ipa": "/xoˈtʲilɑ b/",
         "en": "would like (f)",
         "pos": "phrase",
-        "gender": "-"
+        "ipa": "/xoˈtʲilɑ b/"
       },
       {
-        "id": "v-m47-006",
+        "id": "v-mohly-b-47-5",
         "uk": "могли б",
-        "translit": "",
-        "ipa": "/moɦˈlɪ b/",
         "en": "could (pl/formal)",
         "pos": "phrase",
-        "gender": "-"
+        "ipa": "/moɦˈlɪ b/"
       },
       {
-        "id": "v-m47-007",
+        "id": "v-mav-by-47-6",
         "uk": "мав би",
-        "translit": "",
-        "ipa": "/mɑv bɪ/",
         "en": "should (m)",
         "pos": "phrase",
-        "gender": "-"
+        "ipa": "/mɑv bɪ/"
       },
       {
-        "id": "v-m47-008",
+        "id": "v-bulo-b-47-7",
         "uk": "було б",
-        "translit": "",
-        "ipa": "/buˈlo b/",
         "en": "would be",
         "pos": "phrase",
-        "gender": "-"
+        "ipa": "/buˈlo b/"
       },
       {
-        "id": "v-m47-009",
+        "id": "v-hipotetychnyy-47-8",
         "uk": "гіпотетичний",
-        "translit": "",
-        "ipa": "/ɦʲipotɛˈtɪtʃnɪj/",
         "en": "hypothetical",
         "pos": "adj",
-        "gender": "-"
+        "ipa": "/ɦʲipotɛˈtɪtʃnɪj/"
       },
       {
-        "id": "v-m47-010",
+        "id": "v-uyavnyy-47-9",
         "uk": "уявний",
-        "translit": "",
-        "ipa": "/ujɑvˈnɪj/",
         "en": "imaginary, hypothetical",
         "pos": "adj",
-        "gender": "-"
+        "ipa": "/ujɑvˈnɪj/"
       },
       {
-        "id": "v-m47-011",
+        "id": "v-mozhlyvistь-47-10",
         "uk": "можливість",
-        "translit": "",
-        "ipa": "/moʒˈlɪvʲistʲ/",
         "en": "possibility",
         "pos": "noun",
+        "ipa": "/moʒˈlɪvʲistʲ/",
         "gender": "f"
       },
       {
-        "id": "v-m47-012",
+        "id": "v-mriya-47-11",
         "uk": "мрія",
-        "translit": "",
-        "ipa": "/ˈmrʲijɑ/",
         "en": "dream",
         "pos": "noun",
+        "ipa": "/ˈmrʲijɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m47-013",
+        "id": "v-mriyaty-47-12",
         "uk": "мріяти",
-        "translit": "",
-        "ipa": "/mrʲiˈjɑtɪ/",
         "en": "to dream",
         "pos": "verb",
-        "gender": "-"
+        "ipa": "/mrʲiˈjɑtɪ/"
       },
       {
-        "id": "v-m47-014",
+        "id": "v-uyavlyaty-47-13",
         "uk": "уявляти",
-        "translit": "",
-        "ipa": "/ujɑvˈlʲɑtɪ/",
         "en": "to imagine (impf)",
         "pos": "verb",
-        "gender": "-"
+        "ipa": "/ujɑvˈlʲɑtɪ/"
       },
       {
-        "id": "v-m47-015",
+        "id": "v-uyavyty-47-14",
         "uk": "уявити",
-        "translit": "",
-        "ipa": "/ujɑˈvɪtɪ/",
         "en": "to imagine (perf)",
         "pos": "verb",
-        "gender": "-"
+        "ipa": "/ujɑˈvɪtɪ/"
       },
       {
-        "id": "v-m47-016",
+        "id": "v-shkoda-47-15",
         "uk": "шкода",
-        "translit": "",
-        "ipa": "/ˈʃkodɑ/",
         "en": "pity, shame",
         "pos": "noun",
+        "ipa": "/ˈʃkodɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m47-017",
+        "id": "v-na-zhalь-47-16",
         "uk": "на жаль",
-        "translit": "",
-        "ipa": "/nɑ ʒɑlʲ/",
         "en": "unfortunately",
         "pos": "phrase",
-        "gender": "-"
+        "ipa": "/nɑ ʒɑlʲ/"
       }
     ]
   }

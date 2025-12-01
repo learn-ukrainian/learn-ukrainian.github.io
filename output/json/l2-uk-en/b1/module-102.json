@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-B1-102",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "grammar-introduction",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -22,170 +21,42 @@
       "Use коли for time relative clauses"
     ],
     "grammarFocus": [],
-    "totalDuration": 45,
-    "transliterationMode": "none",
     "tags": [
       "grammar",
       "relative-clauses",
       "complex-sentences"
     ],
+    "totalDuration": 45,
+    "transliterationMode": "none",
+    "phases": [],
+    "createdAt": "2025-12-01T22:58:37.229Z",
+    "modifiedAt": "2025-12-01T22:58:37.229Z",
     "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
-    "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Альтернативи до який | Alternatives to який\n\nУ модулі 101 ми вивчили який/яка/яке/які.\n\nIn module 101, we learned який/яка/яке/які.\n\nАле є простіші варіанти для місця та часу:\n\nBut there are simpler options for place and time:\n\n| Instead of... | Use... |\n|---------------|--------|\n| місце, в якому | місце, **де** |\n| місце, до якого | місце, **куди** |\n| час, у який | час, **коли** |"
-          }
-        ]
-      },
-      {
-        "id": "phase-presentation",
-        "name": "presentation",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Де — Where (Location)\n\n**Де** replaces \"в/на якому/якій\" for places:\n\n| With який | With де |\n|-----------|---------|\n| Місто, в **якому** я живу... | Місто, **де** я живу... |\n| Країна, в **якій** я народився... | Країна, **де** я народився... |\n| Офіс, у **якому** він працює... | Офіс, **де** він працює... |\n\n**Examples:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Це місто, **де** я виріс. | This is the city where I grew up. |\n| Дім, **де** ми жили, був старим. | The house where we lived was old. |\n| Покажи мені місце, **де** це сталося. | Show me the place where it happened. |\n| Ресторан, **де** ми вечеряли, був чудовим. | The restaurant where we had dinner was wonderful. |\n\n> **⭐ KEY INSIGHT: Де vs. В якому**\n>\n> Both are correct. **Де** is more conversational and simpler:\n> - Місто, **де** я живу... (conversational)\n> - Місто, в **якому** я живу... (more formal)\n>\n> Use **де** when the location is the main point. Use **в якому** when you need more precision or formality."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Куди — Where (Direction To)\n\n**Куди** replaces \"до якого/якої\" or \"в/на яке/яку\" for direction:\n\n| With який | With куди |\n|-----------|-----------|\n| Місто, до **якого** я їду... | Місто, **куди** я їду... |\n| Країна, в **яку** вона переїхала... | Країна, **куди** вона переїхала... |\n\n**Examples:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Місто, **куди** я їду, далеко. | The city where I'm going is far. |\n| Країна, **куди** він емігрував, — Канада. | The country he emigrated to is Canada. |\n| Магазин, **куди** ми йдемо, закритий. | The store we're going to is closed. |\n| Парк, **куди** діти біжать, великий. | The park the children are running to is big. |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Звідки — Where (Origin/From)\n\n**Звідки** replaces \"з якого/якої\" for origin:\n\n| With який | With звідки |\n|-----------|-------------|\n| Місто, з **якого** він приїхав... | Місто, **звідки** він приїхав... |\n| Країна, з **якої** вона родом... | Країна, **звідки** вона родом... |\n\n**Examples:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Місто, **звідки** він родом, — Львів. | The city he's from is Lviv. |\n| Країна, **звідки** вони приїхали, далека. | The country they came from is far. |\n| Офіс, **звідки** я дзвоню, у центрі. | The office I'm calling from is downtown. |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Коли — When (Time)\n\n**Коли** replaces \"у який/яку\" for time expressions:\n\n| With який | With коли |\n|-----------|-----------|\n| День, у **який** я народився... | День, **коли** я народився... |\n| Момент, у **який** це сталося... | Момент, **коли** це сталося... |\n\n**Examples:**\n\n| Ukrainian | English |\n|-----------|---------|\n| День, **коли** ми познайомилися, був сонячним. | The day when we met was sunny. |\n| Час, **коли** я був молодим, пройшов швидко. | The time when I was young passed quickly. |\n| Рік, **коли** вони одружилися, — 2020. | The year when they got married is 2020. |\n| Момент, **коли** він зрозумів правду, був важким. | The moment when he understood the truth was hard. |\n\n> **⭐ OPTIONAL КОЛИ**\n>\n> In informal speech, \"коли\" can be omitted:\n> - День, **коли** я народився... → День, я народився... (less formal)\n>\n> But keeping \"коли\" is clearer and recommended for learners."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Summary Table\n\n| Word | Question | Use for | Example |\n|------|----------|---------|---------|\n| де | де? (where?) | location | Місто, де я живу... |\n| куди | куди? (where to?) | direction | Місто, куди я їду... |\n| звідки | звідки? (from where?) | origin | Місто, звідки я родом... |\n| коли | коли? (when?) | time | День, коли я народився... |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Що — That/Which (Alternative)\n\n**Що** can sometimes replace **який** in informal speech, especially after indefinite antecedents:\n\n| Ukrainian | English |\n|-----------|---------|\n| Все, **що** я знаю... | Everything that I know... |\n| Щось, **що** мені подобається... | Something that I like... |\n| Те, **що** ти сказав... | What (that which) you said... |\n\n**Note:** Що doesn't change for case, making it simpler but less precise:\n- Книга, **що** я читаю... = Книга, **яку** я читаю... (the book I'm reading)"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Choose де, куди, звідки, or коли\n\n1. Місто, ___ я народився, — Одеса.\n   → **де** (location)\n\n2. Країна, ___ вони переїхали, — Німеччина.\n   → **куди** (direction to)\n\n3. Університет, ___ він приїхав, дуже відомий.\n   → **звідки** (origin from)\n\n4. Рік, ___ вона закінчила школу, — 2018.\n   → **коли** (time)\n\n5. Ресторан, ___ ми йдемо, новий.\n   → **куди** (direction to)\n\n6. Офіс, ___ він працює, знаходиться на п'ятому поверсі.\n   → **де** (location)"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Transform Using де/куди/звідки/коли\n\n**Example:** Місто, в якому я живу, велике.\n→ Місто, **де** я живу, велике.\n\n1. Країна, з якої вона родом, — Україна.\n   → Країна, **звідки** вона родом, — Україна.\n\n2. День, у який ми познайомилися, був дощовим.\n   → День, **коли** ми познайомилися, був дощовим.\n\n3. Готель, до якого ми їдемо, п'ятизірковий.\n   → Готель, **куди** ми їдемо, п'ятизірковий.\n\n4. Бібліотека, в якій я працюю, стара.\n   → Бібліотека, **де** я працюю, стара.\n\n5. Момент, у який він зрозумів, був важливим.\n   → Момент, **коли** він зрозумів, був важливим."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Translate to Ukrainian\n\n1. The country where I was born is Ukraine.\n   → Країна, **де** я народився, — Україна.\n\n2. The city he's traveling to is Kyiv.\n   → Місто, **куди** він їде, — Київ.\n\n3. The year when she graduated was difficult.\n   → Рік, **коли** вона закінчила університет, був важким.\n\n4. The place I come from is small.\n   → Місце, **звідки** я родом, невелике.\n\n5. Everything that I have is here.\n   → Все, **що** я маю, тут."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Complete the Sentences\n\n1. Це місто, ___ я мрію відвідати. (I dream of visiting)\n   → **куди** (direction)\n\n2. Час, ___ ми були разом, був найщасливішим.\n   → **коли** (time)\n\n3. Компанія, ___ я працюю, міжнародна.\n   → **де** (location)\n\n4. Село, ___ приїхала моя бабуся, дуже гарне.\n   → **звідки** (origin)"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-B1-102-quiz"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Describe Your Life\n\nUse де, куди, звідки, коли to talk about:\n\n1. Місце, **де** ви виросли\n2. Місце, **куди** ви хочете поїхати\n3. Місце, **звідки** ваша родина\n4. Час, **коли** ви почали вчити українську\n\n**Example:**\nЯ виріс у місті, **де** є багато парків. Зараз я живу в країні, **куди** приїхав п'ять років тому. Моя родина **звідки** я — з невеликого села. Час, **коли** я почав вивчати українську, — 2022 рік."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Discussion Questions\n\nDiscuss using relative clauses:\n\n1. Яке місце, **де** ви найбільше любите бути?\n2. Куди є місце, **куди** ви хочете поїхати?\n3. Який час у житті, **коли** ви були найщасливішими?"
-          }
-        ]
-      }
-    ],
-    "rawMarkdown": "# Зміст уроку | Lesson Content\n\n## warm-up | Розминка\n\n### Альтернативи до який | Alternatives to який\n\nУ модулі 101 ми вивчили який/яка/яке/які.\n\nIn module 101, we learned який/яка/яке/які.\n\nАле є простіші варіанти для місця та часу:\n\nBut there are simpler options for place and time:\n\n| Instead of... | Use... |\n|---------------|--------|\n| місце, в якому | місце, **де** |\n| місце, до якого | місце, **куди** |\n| час, у який | час, **коли** |\n\n## presentation | Презентація\n\n### Де — Where (Location)\n\n**Де** replaces \"в/на якому/якій\" for places:\n\n| With який | With де |\n|-----------|---------|\n| Місто, в **якому** я живу... | Місто, **де** я живу... |\n| Країна, в **якій** я народився... | Країна, **де** я народився... |\n| Офіс, у **якому** він працює... | Офіс, **де** він працює... |\n\n**Examples:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Це місто, **де** я виріс. | This is the city where I grew up. |\n| Дім, **де** ми жили, був старим. | The house where we lived was old. |\n| Покажи мені місце, **де** це сталося. | Show me the place where it happened. |\n| Ресторан, **де** ми вечеряли, був чудовим. | The restaurant where we had dinner was wonderful. |\n\n> **⭐ KEY INSIGHT: Де vs. В якому**\n>\n> Both are correct. **Де** is more conversational and simpler:\n> - Місто, **де** я живу... (conversational)\n> - Місто, в **якому** я живу... (more formal)\n>\n> Use **де** when the location is the main point. Use **в якому** when you need more precision or formality.\n\n### Куди — Where (Direction To)\n\n**Куди** replaces \"до якого/якої\" or \"в/на яке/яку\" for direction:\n\n| With який | With куди |\n|-----------|-----------|\n| Місто, до **якого** я їду... | Місто, **куди** я їду... |\n| Країна, в **яку** вона переїхала... | Країна, **куди** вона переїхала... |\n\n**Examples:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Місто, **куди** я їду, далеко. | The city where I'm going is far. |\n| Країна, **куди** він емігрував, — Канада. | The country he emigrated to is Canada. |\n| Магазин, **куди** ми йдемо, закритий. | The store we're going to is closed. |\n| Парк, **куди** діти біжать, великий. | The park the children are running to is big. |\n\n### Звідки — Where (Origin/From)\n\n**Звідки** replaces \"з якого/якої\" for origin:\n\n| With який | With звідки |\n|-----------|-------------|\n| Місто, з **якого** він приїхав... | Місто, **звідки** він приїхав... |\n| Країна, з **якої** вона родом... | Країна, **звідки** вона родом... |\n\n**Examples:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Місто, **звідки** він родом, — Львів. | The city he's from is Lviv. |\n| Країна, **звідки** вони приїхали, далека. | The country they came from is far. |\n| Офіс, **звідки** я дзвоню, у центрі. | The office I'm calling from is downtown. |\n\n### Коли — When (Time)\n\n**Коли** replaces \"у який/яку\" for time expressions:\n\n| With який | With коли |\n|-----------|-----------|\n| День, у **який** я народився... | День, **коли** я народився... |\n| Момент, у **який** це сталося... | Момент, **коли** це сталося... |\n\n**Examples:**\n\n| Ukrainian | English |\n|-----------|---------|\n| День, **коли** ми познайомилися, був сонячним. | The day when we met was sunny. |\n| Час, **коли** я був молодим, пройшов швидко. | The time when I was young passed quickly. |\n| Рік, **коли** вони одружилися, — 2020. | The year when they got married is 2020. |\n| Момент, **коли** він зрозумів правду, був важким. | The moment when he understood the truth was hard. |\n\n> **⭐ OPTIONAL КОЛИ**\n>\n> In informal speech, \"коли\" can be omitted:\n> - День, **коли** я народився... → День, я народився... (less formal)\n>\n> But keeping \"коли\" is clearer and recommended for learners.\n\n### Summary Table\n\n| Word | Question | Use for | Example |\n|------|----------|---------|---------|\n| де | де? (where?) | location | Місто, де я живу... |\n| куди | куди? (where to?) | direction | Місто, куди я їду... |\n| звідки | звідки? (from where?) | origin | Місто, звідки я родом... |\n| коли | коли? (when?) | time | День, коли я народився... |\n\n### Що — That/Which (Alternative)\n\n**Що** can sometimes replace **який** in informal speech, especially after indefinite antecedents:\n\n| Ukrainian | English |\n|-----------|---------|\n| Все, **що** я знаю... | Everything that I know... |\n| Щось, **що** мені подобається... | Something that I like... |\n| Те, **що** ти сказав... | What (that which) you said... |\n\n**Note:** Що doesn't change for case, making it simpler but less precise:\n- Книга, **що** я читаю... = Книга, **яку** я читаю... (the book I'm reading)\n\n## practice | Практика\n\n### Choose де, куди, звідки, or коли\n\n1. Місто, ___ я народився, — Одеса.\n   → **де** (location)\n\n2. Країна, ___ вони переїхали, — Німеччина.\n   → **куди** (direction to)\n\n3. Університет, ___ він приїхав, дуже відомий.\n   → **звідки** (origin from)\n\n4. Рік, ___ вона закінчила школу, — 2018.\n   → **коли** (time)\n\n5. Ресторан, ___ ми йдемо, новий.\n   → **куди** (direction to)\n\n6. Офіс, ___ він працює, знаходиться на п'ятому поверсі.\n   → **де** (location)\n\n### Transform Using де/куди/звідки/коли\n\n**Example:** Місто, в якому я живу, велике.\n→ Місто, **де** я живу, велике.\n\n1. Країна, з якої вона родом, — Україна.\n   → Країна, **звідки** вона родом, — Україна.\n\n2. День, у який ми познайомилися, був дощовим.\n   → День, **коли** ми познайомилися, був дощовим.\n\n3. Готель, до якого ми їдемо, п'ятизірковий.\n   → Готель, **куди** ми їдемо, п'ятизірковий.\n\n4. Бібліотека, в якій я працюю, стара.\n   → Бібліотека, **де** я працюю, стара.\n\n5. Момент, у який він зрозумів, був важливим.\n   → Момент, **коли** він зрозумів, був важливим.\n\n### Translate to Ukrainian\n\n1. The country where I was born is Ukraine.\n   → Країна, **де** я народився, — Україна.\n\n2. The city he's traveling to is Kyiv.\n   → Місто, **куди** він їде, — Київ.\n\n3. The year when she graduated was difficult.\n   → Рік, **коли** вона закінчила університет, був важким.\n\n4. The place I come from is small.\n   → Місце, **звідки** я родом, невелике.\n\n5. Everything that I have is here.\n   → Все, **що** я маю, тут.\n\n### Complete the Sentences\n\n1. Це місто, ___ я мрію відвідати. (I dream of visiting)\n   → **куди** (direction)\n\n2. Час, ___ ми були разом, був найщасливішим.\n   → **коли** (time)\n\n3. Компанія, ___ я працюю, міжнародна.\n   → **де** (location)\n\n4. Село, ___ приїхала моя бабуся, дуже гарне.\n   → **звідки** (origin)\n\n## production | Продукція\n\n### Describe Your Life\n\nUse де, куди, звідки, коли to talk about:\n\n1. Місце, **де** ви виросли\n2. Місце, **куди** ви хочете поїхати\n3. Місце, **звідки** ваша родина\n4. Час, **коли** ви почали вчити українську\n\n**Example:**\nЯ виріс у місті, **де** є багато парків. Зараз я живу в країні, **куди** приїхав п'ять років тому. Моя родина **звідки** я — з невеликого села. Час, **коли** я почав вивчати українську, — 2022 рік.\n\n### Discussion Questions\n\nDiscuss using relative clauses:\n\n1. Яке місце, **де** ви найбільше любите бути?\n2. Куди є місце, **куди** ви хочете поїхати?\n3. Який час у житті, **коли** ви були найщасливішими?\n\n---\n\n# Activities\n\n## quiz: Location and Time Relatives\n\n> Choose the correct relative word.\n\n1. Місто, ___ я народився, — Харків.\n   - [x] де\n   - [ ] куди\n   > \"Де\" for static location (where I was born).\n\n2. Країна, ___ вони переїхали, — Польща.\n   - [ ] де\n   - [x] куди\n   > \"Куди\" for direction/destination (where they moved to).\n\n3. Рік, ___ я закінчив університет, — 2019.\n   - [ ] де\n   - [x] коли\n   > \"Коли\" for time expressions.\n\n4. Місто, ___ він родом, — Одеса.\n   - [ ] куди\n   - [x] звідки\n   > \"Звідки\" for origin (where from).\n\n5. Офіс, ___ я працюю, на третьому поверсі.\n   - [x] де\n   - [ ] куди\n   > \"Де\" for location of work.\n\n6. Все, ___ я знаю, — правда.\n   - [ ] яке\n   - [x] що\n   > \"Що\" after indefinite pronouns like \"все.\"\n\n## fill-in: Complete the Story\n\n> Я народився в місті, (1)___ живуть мої батьки. Село, (2)___ родом моя бабуся, знаходиться недалеко. Університет, (3)___ я вступив, один з найкращих. Рік, (4)___ я закінчив навчання, — 2020.\n\n**Answers:** де, звідки, куди, коли\n\n---",
     "immersiveSections": [
       {
-        "id": "warm-up-розминка",
-        "title": "warm-up | Розминка",
-        "content": "### Альтернативи до який | Alternatives to який\n\nУ модулі 101 ми вивчили який/яка/яке/які.\n\nIn module 101, we learned який/яка/яке/які.\n\nАле є простіші варіанти для місця та часу:\n\nBut there are simpler options for place and time:\n\n| Instead of... | Use... |\n|---------------|--------|\n| місце, в якому | місце, **де** |\n| місце, до якого | місце, **куди** |\n| час, у який | час, **коли** |",
-        "type": "topic"
+        "id": "section-зміст-уроку-lesson-content",
+        "type": "content",
+        "title": "Зміст уроку | Lesson Content",
+        "content": "## warm-up | Розминка\n\n### Альтернативи до який | Alternatives to який\n\nУ модулі 101 ми вивчили який/яка/яке/які.\n\nIn module 101, we learned який/яка/яке/які.\n\nАле є простіші варіанти для місця та часу:\n\nBut there are simpler options for place and time:\n\n| Instead of... | Use... |\n|---------------|--------|\n| місце, в якому | місце, **де** |\n| місце, до якого | місце, **куди** |\n| час, у який | час, **коли** |\n\n## presentation | Презентація\n\n### Де — Where (Location)\n\n**Де** replaces \"в/на якому/якій\" for places:\n\n| With який | With де |\n|-----------|---------|\n| Місто, в **якому** я живу... | Місто, **де** я живу... |\n| Країна, в **якій** я народився... | Країна, **де** я народився... |\n| Офіс, у **якому** він працює... | Офіс, **де** він працює... |\n\n**Examples:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Це місто, **де** я виріс. | This is the city where I grew up. |\n| Дім, **де** ми жили, був старим. | The house where we lived was old. |\n| Покажи мені місце, **де** це сталося. | Show me the place where it happened. |\n| Ресторан, **де** ми вечеряли, був чудовим. | The restaurant where we had dinner was wonderful. |\n\n> **⭐ KEY INSIGHT: Де vs. В якому**\n>\n> Both are correct. **Де** is more conversational and simpler:\n> - Місто, **де** я живу... (conversational)\n> - Місто, в **якому** я живу... (more formal)\n>\n> Use **де** when the location is the main point. Use **в якому** when you need more precision or formality.\n\n### Куди — Where (Direction To)\n\n**Куди** replaces \"до якого/якої\" or \"в/на яке/яку\" for direction:\n\n| With який | With куди |\n|-----------|-----------|\n| Місто, до **якого** я їду... | Місто, **куди** я їду... |\n| Країна, в **яку** вона переїхала... | Країна, **куди** вона переїхала... |\n\n**Examples:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Місто, **куди** я їду, далеко. | The city where I'm going is far. |\n| Країна, **куди** він емігрував, — Канада. | The country he emigrated to is Canada. |\n| Магазин, **куди** ми йдемо, закритий. | The store we're going to is closed. |\n| Парк, **куди** діти біжать, великий. | The park the children are running to is big. |\n\n### Звідки — Where (Origin/From)\n\n**Звідки** replaces \"з якого/якої\" for origin:\n\n| With який | With звідки |\n|-----------|-------------|\n| Місто, з **якого** він приїхав... | Місто, **звідки** він приїхав... |\n| Країна, з **якої** вона родом... | Країна, **звідки** вона родом... |\n\n**Examples:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Місто, **звідки** він родом, — Львів. | The city he's from is Lviv. |\n| Країна, **звідки** вони приїхали, далека. | The country they came from is far. |\n| Офіс, **звідки** я дзвоню, у центрі. | The office I'm calling from is downtown. |\n\n### Коли — When (Time)\n\n**Коли** replaces \"у який/яку\" for time expressions:\n\n| With який | With коли |\n|-----------|-----------|\n| День, у **який** я народився... | День, **коли** я народився... |\n| Момент, у **який** це сталося... | Момент, **коли** це сталося... |\n\n**Examples:**\n\n| Ukrainian | English |\n|-----------|---------|\n| День, **коли** ми познайомилися, був сонячним. | The day when we met was sunny. |\n| Час, **коли** я був молодим, пройшов швидко. | The time when I was young passed quickly. |\n| Рік, **коли** вони одружилися, — 2020. | The year when they got married is 2020. |\n| Момент, **коли** він зрозумів правду, був важким. | The moment when he understood the truth was hard. |\n\n> **⭐ OPTIONAL КОЛИ**\n>\n> In informal speech, \"коли\" can be omitted:\n> - День, **коли** я народився... → День, я народився... (less formal)\n>\n> But keeping \"коли\" is clearer and recommended for learners.\n\n### Summary Table\n\n| Word | Question | Use for | Example |\n|------|----------|---------|---------|\n| де | де? (where?) | location | Місто, де я живу... |\n| куди | куди? (where to?) | direction | Місто, куди я їду... |\n| звідки | звідки? (from where?) | origin | Місто, звідки я родом... |\n| коли | коли? (when?) | time | День, коли я народився... |\n\n### Що — That/Which (Alternative)\n\n**Що** can sometimes replace **який** in informal speech, especially after indefinite antecedents:\n\n| Ukrainian | English |\n|-----------|---------|\n| Все, **що** я знаю... | Everything that I know... |\n| Щось, **що** мені подобається... | Something that I like... |\n| Те, **що** ти сказав... | What (that which) you said... |\n\n**Note:** Що doesn't change for case, making it simpler but less precise:\n- Книга, **що** я читаю... = Книга, **яку** я читаю... (the book I'm reading)\n\n## practice | Практика\n\n### Choose де, куди, звідки, or коли\n\n1. Місто, ___ я народився, — Одеса.\n   > [!answer] **де**\n   > [!explanation] location\n2. Країна, ___ вони переїхали, — Німеччина.\n   > [!answer] **куди**\n   > [!explanation] direction to\n3. Університет, ___ він приїхав, дуже відомий.\n   > [!answer] **звідки**\n   > [!explanation] origin from\n4. Рік, ___ вона закінчила школу, — 2018.\n   > [!answer] **коли**\n   > [!explanation] time\n5. Ресторан, ___ ми йдемо, новий.\n   > [!answer] **куди**\n   > [!explanation] direction to\n6. Офіс, ___ він працює, знаходиться на п'ятому поверсі.\n   > [!answer] **де**\n   > [!explanation] location\n### Transform Using де/куди/звідки/коли\n\n**Example:** Місто, в якому я живу, велике.\n> [!answer] Місто, **де** я живу, велике.\n\n1. Країна, з якої вона родом, — Україна.\n   > [!answer] Країна, **звідки** вона родом, — Україна.\n\n2. День, у який ми познайомилися, був дощовим.\n   > [!answer] День, **коли** ми познайомилися, був дощовим.\n\n3. Готель, до якого ми їдемо, п'ятизірковий.\n   > [!answer] Готель, **куди** ми їдемо, п'ятизірковий.\n\n4. Бібліотека, в якій я працюю, стара.\n   > [!answer] Бібліотека, **де** я працюю, стара.\n\n5. Момент, у який він зрозумів, був важливим.\n   > [!answer] Момент, **коли** він зрозумів, був важливим.\n\n### Translate to Ukrainian\n\n1. The country where I was born is Ukraine.\n   > [!answer] Країна, **де** я народився, — Україна.\n\n2. The city he's traveling to is Kyiv.\n   > [!answer] Місто, **куди** він їде, — Київ.\n\n3. The year when she graduated was difficult.\n   > [!answer] Рік, **коли** вона закінчила університет, був важким.\n\n4. The place I come from is small.\n   > [!answer] Місце, **звідки** я родом, невелике.\n\n5. Everything that I have is here.\n   > [!answer] Все, **що** я маю, тут.\n\n### Complete the Sentences\n\n1. Це місто, ___ я мрію відвідати. (I dream of visiting)\n   > [!answer] **куди**\n   > [!explanation] direction\n2. Час, ___ ми були разом, був найщасливішим.\n   > [!answer] **коли**\n   > [!explanation] time\n3. Компанія, ___ я працюю, міжнародна.\n   > [!answer] **де**\n   > [!explanation] location\n4. Село, ___ приїхала моя бабуся, дуже гарне.\n   > [!answer] **звідки**\n   > [!explanation] origin\n## production | Продукція\n\n### Describe Your Life\n\nUse де, куди, звідки, коли to talk about:\n\n1. Місце, **де** ви виросли\n2. Місце, **куди** ви хочете поїхати\n3. Місце, **звідки** ваша родина\n4. Час, **коли** ви почали вчити українську\n\n**Example:**\nЯ виріс у місті, **де** є багато парків. Зараз я живу в країні, **куди** приїхав п'ять років тому. Моя родина **звідки** я — з невеликого села. Час, **коли** я почав вивчати українську, — 2022 рік.\n\n### Discussion Questions\n\nDiscuss using relative clauses:\n\n1. Яке місце, **де** ви найбільше любите бути?\n2. Куди є місце, **куди** ви хочете поїхати?\n3. Який час у житті, **коли** ви були найщасливішими?\n\n---\n\n\n---\n\n\n---"
       },
       {
-        "id": "presentation-презентація",
-        "title": "presentation | Презентація",
-        "content": "### Де — Where (Location)\n\n**Де** replaces \"в/на якому/якій\" for places:\n\n| With який | With де |\n|-----------|---------|\n| Місто, в **якому** я живу... | Місто, **де** я живу... |\n| Країна, в **якій** я народився... | Країна, **де** я народився... |\n| Офіс, у **якому** він працює... | Офіс, **де** він працює... |\n\n**Examples:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Це місто, **де** я виріс. | This is the city where I grew up. |\n| Дім, **де** ми жили, був старим. | The house where we lived was old. |\n| Покажи мені місце, **де** це сталося. | Show me the place where it happened. |\n| Ресторан, **де** ми вечеряли, був чудовим. | The restaurant where we had dinner was wonderful. |\n\n> **⭐ KEY INSIGHT: Де vs. В якому**\n>\n> Both are correct. **Де** is more conversational and simpler:\n> - Місто, **де** я живу... (conversational)\n> - Місто, в **якому** я живу... (more formal)\n>\n> Use **де** when the location is the main point. Use **в якому** when you need more precision or formality.\n\n### Куди — Where (Direction To)\n\n**Куди** replaces \"до якого/якої\" or \"в/на яке/яку\" for direction:\n\n| With який | With куди |\n|-----------|-----------|\n| Місто, до **якого** я їду... | Місто, **куди** я їду... |\n| Країна, в **яку** вона переїхала... | Країна, **куди** вона переїхала... |\n\n**Examples:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Місто, **куди** я їду, далеко. | The city where I'm going is far. |\n| Країна, **куди** він емігрував, — Канада. | The country he emigrated to is Canada. |\n| Магазин, **куди** ми йдемо, закритий. | The store we're going to is closed. |\n| Парк, **куди** діти біжать, великий. | The park the children are running to is big. |\n\n### Звідки — Where (Origin/From)\n\n**Звідки** replaces \"з якого/якої\" for origin:\n\n| With який | With звідки |\n|-----------|-------------|\n| Місто, з **якого** він приїхав... | Місто, **звідки** він приїхав... |\n| Країна, з **якої** вона родом... | Країна, **звідки** вона родом... |\n\n**Examples:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Місто, **звідки** він родом, — Львів. | The city he's from is Lviv. |\n| Країна, **звідки** вони приїхали, далека. | The country they came from is far. |\n| Офіс, **звідки** я дзвоню, у центрі. | The office I'm calling from is downtown. |\n\n### Коли — When (Time)\n\n**Коли** replaces \"у який/яку\" for time expressions:\n\n| With який | With коли |\n|-----------|-----------|\n| День, у **який** я народився... | День, **коли** я народився... |\n| Момент, у **який** це сталося... | Момент, **коли** це сталося... |\n\n**Examples:**\n\n| Ukrainian | English |\n|-----------|---------|\n| День, **коли** ми познайомилися, був сонячним. | The day when we met was sunny. |\n| Час, **коли** я був молодим, пройшов швидко. | The time when I was young passed quickly. |\n| Рік, **коли** вони одружилися, — 2020. | The year when they got married is 2020. |\n| Момент, **коли** він зрозумів правду, був важким. | The moment when he understood the truth was hard. |\n\n> **⭐ OPTIONAL КОЛИ**\n>\n> In informal speech, \"коли\" can be omitted:\n> - День, **коли** я народився... → День, я народився... (less formal)\n>\n> But keeping \"коли\" is clearer and recommended for learners.\n\n### Summary Table\n\n| Word | Question | Use for | Example |\n|------|----------|---------|---------|\n| де | де? (where?) | location | Місто, де я живу... |\n| куди | куди? (where to?) | direction | Місто, куди я їду... |\n| звідки | звідки? (from where?) | origin | Місто, звідки я родом... |\n| коли | коли? (when?) | time | День, коли я народився... |\n\n### Що — That/Which (Alternative)\n\n**Що** can sometimes replace **який** in informal speech, especially after indefinite antecedents:\n\n| Ukrainian | English |\n|-----------|---------|\n| Все, **що** я знаю... | Everything that I know... |\n| Щось, **що** мені подобається... | Something that I like... |\n| Те, **що** ти сказав... | What (that which) you said... |\n\n**Note:** Що doesn't change for case, making it simpler but less precise:\n- Книга, **що** я читаю... = Книга, **яку** я читаю... (the book I'm reading)",
-        "type": "topic"
-      },
-      {
-        "id": "practice-практика",
-        "title": "practice | Практика",
-        "content": "### Choose де, куди, звідки, or коли\n\n1. Місто, ___ я народився, — Одеса.\n   → **де** (location)\n\n2. Країна, ___ вони переїхали, — Німеччина.\n   → **куди** (direction to)\n\n3. Університет, ___ він приїхав, дуже відомий.\n   → **звідки** (origin from)\n\n4. Рік, ___ вона закінчила школу, — 2018.\n   → **коли** (time)\n\n5. Ресторан, ___ ми йдемо, новий.\n   → **куди** (direction to)\n\n6. Офіс, ___ він працює, знаходиться на п'ятому поверсі.\n   → **де** (location)\n\n### Transform Using де/куди/звідки/коли\n\n**Example:** Місто, в якому я живу, велике.\n→ Місто, **де** я живу, велике.\n\n1. Країна, з якої вона родом, — Україна.\n   → Країна, **звідки** вона родом, — Україна.\n\n2. День, у який ми познайомилися, був дощовим.\n   → День, **коли** ми познайомилися, був дощовим.\n\n3. Готель, до якого ми їдемо, п'ятизірковий.\n   → Готель, **куди** ми їдемо, п'ятизірковий.\n\n4. Бібліотека, в якій я працюю, стара.\n   → Бібліотека, **де** я працюю, стара.\n\n5. Момент, у який він зрозумів, був важливим.\n   → Момент, **коли** він зрозумів, був важливим.\n\n### Translate to Ukrainian\n\n1. The country where I was born is Ukraine.\n   → Країна, **де** я народився, — Україна.\n\n2. The city he's traveling to is Kyiv.\n   → Місто, **куди** він їде, — Київ.\n\n3. The year when she graduated was difficult.\n   → Рік, **коли** вона закінчила університет, був важким.\n\n4. The place I come from is small.\n   → Місце, **звідки** я родом, невелике.\n\n5. Everything that I have is here.\n   → Все, **що** я маю, тут.\n\n### Complete the Sentences\n\n1. Це місто, ___ я мрію відвідати. (I dream of visiting)\n   → **куди** (direction)\n\n2. Час, ___ ми були разом, був найщасливішим.\n   → **коли** (time)\n\n3. Компанія, ___ я працюю, міжнародна.\n   → **де** (location)\n\n4. Село, ___ приїхала моя бабуся, дуже гарне.\n   → **звідки** (origin)",
-        "type": "topic"
-      },
-      {
-        "id": "production-продукція",
-        "title": "production | Продукція",
-        "content": "### Describe Your Life\n\nUse де, куди, звідки, коли to talk about:\n\n1. Місце, **де** ви виросли\n2. Місце, **куди** ви хочете поїхати\n3. Місце, **звідки** ваша родина\n4. Час, **коли** ви почали вчити українську\n\n**Example:**\nЯ виріс у місті, **де** є багато парків. Зараз я живу в країні, **куди** приїхав п'ять років тому. Моя родина **звідки** я — з невеликого села. Час, **коли** я почав вивчати українську, — 2022 рік.\n\n### Discussion Questions\n\nDiscuss using relative clauses:\n\n1. Яке місце, **де** ви найбільше любите бути?\n2. Куди є місце, **куди** ви хочете поїхати?\n3. Який час у житті, **коли** ви були найщасливішими?\n\n---",
-        "type": "topic"
-      },
-      {
-        "id": "activities",
-        "title": "Activities",
-        "content": "## quiz: Location and Time Relatives\n\n> Choose the correct relative word.\n\n1. Місто, ___ я народився, — Харків.\n   - [x] де\n   - [ ] куди\n   > \"Де\" for static location (where I was born).\n\n2. Країна, ___ вони переїхали, — Польща.\n   - [ ] де\n   - [x] куди\n   > \"Куди\" for direction/destination (where they moved to).\n\n3. Рік, ___ я закінчив університет, — 2019.\n   - [ ] де\n   - [x] коли\n   > \"Коли\" for time expressions.\n\n4. Місто, ___ він родом, — Одеса.\n   - [ ] куди\n   - [x] звідки\n   > \"Звідки\" for origin (where from).\n\n5. Офіс, ___ я працюю, на третьому поверсі.\n   - [x] де\n   - [ ] куди\n   > \"Де\" for location of work.\n\n6. Все, ___ я знаю, — правда.\n   - [ ] яке\n   - [x] що\n   > \"Що\" after indefinite pronouns like \"все.\"\n\n## fill-in: Complete the Story\n\n> Я народився в місті, (1)___ живуть мої батьки. Село, (2)___ родом моя бабуся, знаходиться недалеко. Університет, (3)___ я вступив, один з найкращих. Рік, (4)___ я закінчив навчання, — 2020.\n\n**Answers:** де, звідки, куди, коли\n\n---",
-        "type": "activities"
-      },
-      {
-        "id": "vocabulary",
-        "title": "Vocabulary",
-        "content": "| Word | IPA | English | Gender |\n|------|-----|---------|--------|\n| де | /dɛ/ | where (location) | adv |\n| куди | /kuˈdɪ/ | where (to), whither | adv |\n| звідки | /ˈzvʲidkɪ/ | from where, whence | adv |\n| коли | /koˈlɪ/ | when | adv |\n| що | /ʃt͡ʃo/ | that, which, what | pron |\n| місце | /ˈmʲist͡sɛ/ | place | n |\n| час | /t͡ʃɑs/ | time | m |\n| момент | /moˈmɛnt/ | moment | m |\n| рік | /rʲik/ | year | m |\n| день | /dɛnʲ/ | day | m |\n| родом | /ˈrodom/ | originally from | adv |\n| переїхати | /pɛrɛˈjixɑtɪ/ | to move (residence) | pf |\n\n---",
-        "type": "vocabulary"
-      },
-      {
-        "id": "summary",
+        "id": "section-summary",
+        "type": "summary",
         "title": "Summary",
         "content": "## Relative Words for Place and Time\n\n| Word | Meaning | Replaces | Example |\n|------|---------|----------|---------|\n| де | where (location) | в якому/якій | Місто, де я живу... |\n| куди | where (to) | до якого/якої | Місто, куди я їду... |\n| звідки | from where | з якого/якої | Місто, звідки я родом... |\n| коли | when | у який/яку | День, коли я народився... |\n| що | that/which | який/яка/яке | Все, що я знаю... |\n\n## Usage Guidelines\n\n1. **Де** — for static location (living, working, being)\n2. **Куди** — for direction/destination (going, moving, traveling)\n3. **Звідки** — for origin (coming from, originating)\n4. **Коли** — for time expressions (days, years, moments)\n5. **Що** — general relative, doesn't decline, informal\n\n> **Key Takeaways**\n>\n> - Де/куди/звідки/коли are simpler than який for place/time\n> - Choose based on the question word (де? куди? звідки? коли?)\n> - Що is a universal relative but doesn't show case\n> - These words make complex sentences more natural",
-        "type": "summary"
+        "titleUk": "Підсумок"
       }
-    ]
+    ],
+    "rawMarkdown": "---\nmodule: 102\ntitle: \"Relative Clauses II\"\nsubtitle: \"Де, куди, звідки, коли\"\nlevel: B1\nphase: B1.2\nduration: 45\ntransliteration: none\ntags: [grammar, relative-clauses, complex-sentences]\nobjectives:\n  - Use де for location relative clauses\n  - Use куди for direction (to) relative clauses\n  - Use звідки for origin (from) relative clauses\n  - Use коли for time relative clauses\n---\n\n# Зміст уроку | Lesson Content\n\n## warm-up | Розминка\n\n### Альтернативи до який | Alternatives to який\n\nУ модулі 101 ми вивчили який/яка/яке/які.\n\nIn module 101, we learned який/яка/яке/які.\n\nАле є простіші варіанти для місця та часу:\n\nBut there are simpler options for place and time:\n\n| Instead of... | Use... |\n|---------------|--------|\n| місце, в якому | місце, **де** |\n| місце, до якого | місце, **куди** |\n| час, у який | час, **коли** |\n\n## presentation | Презентація\n\n### Де — Where (Location)\n\n**Де** replaces \"в/на якому/якій\" for places:\n\n| With який | With де |\n|-----------|---------|\n| Місто, в **якому** я живу... | Місто, **де** я живу... |\n| Країна, в **якій** я народився... | Країна, **де** я народився... |\n| Офіс, у **якому** він працює... | Офіс, **де** він працює... |\n\n**Examples:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Це місто, **де** я виріс. | This is the city where I grew up. |\n| Дім, **де** ми жили, був старим. | The house where we lived was old. |\n| Покажи мені місце, **де** це сталося. | Show me the place where it happened. |\n| Ресторан, **де** ми вечеряли, був чудовим. | The restaurant where we had dinner was wonderful. |\n\n> **⭐ KEY INSIGHT: Де vs. В якому**\n>\n> Both are correct. **Де** is more conversational and simpler:\n> - Місто, **де** я живу... (conversational)\n> - Місто, в **якому** я живу... (more formal)\n>\n> Use **де** when the location is the main point. Use **в якому** when you need more precision or formality.\n\n### Куди — Where (Direction To)\n\n**Куди** replaces \"до якого/якої\" or \"в/на яке/яку\" for direction:\n\n| With який | With куди |\n|-----------|-----------|\n| Місто, до **якого** я їду... | Місто, **куди** я їду... |\n| Країна, в **яку** вона переїхала... | Країна, **куди** вона переїхала... |\n\n**Examples:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Місто, **куди** я їду, далеко. | The city where I'm going is far. |\n| Країна, **куди** він емігрував, — Канада. | The country he emigrated to is Canada. |\n| Магазин, **куди** ми йдемо, закритий. | The store we're going to is closed. |\n| Парк, **куди** діти біжать, великий. | The park the children are running to is big. |\n\n### Звідки — Where (Origin/From)\n\n**Звідки** replaces \"з якого/якої\" for origin:\n\n| With який | With звідки |\n|-----------|-------------|\n| Місто, з **якого** він приїхав... | Місто, **звідки** він приїхав... |\n| Країна, з **якої** вона родом... | Країна, **звідки** вона родом... |\n\n**Examples:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Місто, **звідки** він родом, — Львів. | The city he's from is Lviv. |\n| Країна, **звідки** вони приїхали, далека. | The country they came from is far. |\n| Офіс, **звідки** я дзвоню, у центрі. | The office I'm calling from is downtown. |\n\n### Коли — When (Time)\n\n**Коли** replaces \"у який/яку\" for time expressions:\n\n| With який | With коли |\n|-----------|-----------|\n| День, у **який** я народився... | День, **коли** я народився... |\n| Момент, у **який** це сталося... | Момент, **коли** це сталося... |\n\n**Examples:**\n\n| Ukrainian | English |\n|-----------|---------|\n| День, **коли** ми познайомилися, був сонячним. | The day when we met was sunny. |\n| Час, **коли** я був молодим, пройшов швидко. | The time when I was young passed quickly. |\n| Рік, **коли** вони одружилися, — 2020. | The year when they got married is 2020. |\n| Момент, **коли** він зрозумів правду, був важким. | The moment when he understood the truth was hard. |\n\n> **⭐ OPTIONAL КОЛИ**\n>\n> In informal speech, \"коли\" can be omitted:\n> - День, **коли** я народився... → День, я народився... (less formal)\n>\n> But keeping \"коли\" is clearer and recommended for learners.\n\n### Summary Table\n\n| Word | Question | Use for | Example |\n|------|----------|---------|---------|\n| де | де? (where?) | location | Місто, де я живу... |\n| куди | куди? (where to?) | direction | Місто, куди я їду... |\n| звідки | звідки? (from where?) | origin | Місто, звідки я родом... |\n| коли | коли? (when?) | time | День, коли я народився... |\n\n### Що — That/Which (Alternative)\n\n**Що** can sometimes replace **який** in informal speech, especially after indefinite antecedents:\n\n| Ukrainian | English |\n|-----------|---------|\n| Все, **що** я знаю... | Everything that I know... |\n| Щось, **що** мені подобається... | Something that I like... |\n| Те, **що** ти сказав... | What (that which) you said... |\n\n**Note:** Що doesn't change for case, making it simpler but less precise:\n- Книга, **що** я читаю... = Книга, **яку** я читаю... (the book I'm reading)\n\n## practice | Практика\n\n### Choose де, куди, звідки, or коли\n\n1. Місто, ___ я народився, — Одеса.\n   > [!answer] **де**\n   > [!explanation] location\n2. Країна, ___ вони переїхали, — Німеччина.\n   > [!answer] **куди**\n   > [!explanation] direction to\n3. Університет, ___ він приїхав, дуже відомий.\n   > [!answer] **звідки**\n   > [!explanation] origin from\n4. Рік, ___ вона закінчила школу, — 2018.\n   > [!answer] **коли**\n   > [!explanation] time\n5. Ресторан, ___ ми йдемо, новий.\n   > [!answer] **куди**\n   > [!explanation] direction to\n6. Офіс, ___ він працює, знаходиться на п'ятому поверсі.\n   > [!answer] **де**\n   > [!explanation] location\n### Transform Using де/куди/звідки/коли\n\n**Example:** Місто, в якому я живу, велике.\n> [!answer] Місто, **де** я живу, велике.\n\n1. Країна, з якої вона родом, — Україна.\n   > [!answer] Країна, **звідки** вона родом, — Україна.\n\n2. День, у який ми познайомилися, був дощовим.\n   > [!answer] День, **коли** ми познайомилися, був дощовим.\n\n3. Готель, до якого ми їдемо, п'ятизірковий.\n   > [!answer] Готель, **куди** ми їдемо, п'ятизірковий.\n\n4. Бібліотека, в якій я працюю, стара.\n   > [!answer] Бібліотека, **де** я працюю, стара.\n\n5. Момент, у який він зрозумів, був важливим.\n   > [!answer] Момент, **коли** він зрозумів, був важливим.\n\n### Translate to Ukrainian\n\n1. The country where I was born is Ukraine.\n   > [!answer] Країна, **де** я народився, — Україна.\n\n2. The city he's traveling to is Kyiv.\n   > [!answer] Місто, **куди** він їде, — Київ.\n\n3. The year when she graduated was difficult.\n   > [!answer] Рік, **коли** вона закінчила університет, був важким.\n\n4. The place I come from is small.\n   > [!answer] Місце, **звідки** я родом, невелике.\n\n5. Everything that I have is here.\n   > [!answer] Все, **що** я маю, тут.\n\n### Complete the Sentences\n\n1. Це місто, ___ я мрію відвідати. (I dream of visiting)\n   > [!answer] **куди**\n   > [!explanation] direction\n2. Час, ___ ми були разом, був найщасливішим.\n   > [!answer] **коли**\n   > [!explanation] time\n3. Компанія, ___ я працюю, міжнародна.\n   > [!answer] **де**\n   > [!explanation] location\n4. Село, ___ приїхала моя бабуся, дуже гарне.\n   > [!answer] **звідки**\n   > [!explanation] origin\n## production | Продукція\n\n### Describe Your Life\n\nUse де, куди, звідки, коли to talk about:\n\n1. Місце, **де** ви виросли\n2. Місце, **куди** ви хочете поїхати\n3. Місце, **звідки** ваша родина\n4. Час, **коли** ви почали вчити українську\n\n**Example:**\nЯ виріс у місті, **де** є багато парків. Зараз я живу в країні, **куди** приїхав п'ять років тому. Моя родина **звідки** я — з невеликого села. Час, **коли** я почав вивчати українську, — 2022 рік.\n\n### Discussion Questions\n\nDiscuss using relative clauses:\n\n1. Яке місце, **де** ви найбільше любите бути?\n2. Куди є місце, **куди** ви хочете поїхати?\n3. Який час у житті, **коли** ви були найщасливішими?\n\n---\n\n# Activities\n\n## quiz: Location and Time Relatives\n\n> Choose the correct relative word.\n\n1. Місто, ___ я народився, — Харків.\n   - [x] де\n   - [ ] куди\n   > \"Де\" for static location (where I was born).\n\n2. Країна, ___ вони переїхали, — Польща.\n   - [ ] де\n   - [x] куди\n   > \"Куди\" for direction/destination (where they moved to).\n\n3. Рік, ___ я закінчив університет, — 2019.\n   - [ ] де\n   - [x] коли\n   > \"Коли\" for time expressions.\n\n4. Місто, ___ він родом, — Одеса.\n   - [ ] куди\n   - [x] звідки\n   > \"Звідки\" for origin (where from).\n\n5. Офіс, ___ я працюю, на третьому поверсі.\n   - [x] де\n   - [ ] куди\n   > \"Де\" for location of work.\n\n6. Все, ___ я знаю, — правда.\n   - [ ] яке\n   - [x] що\n   > \"Що\" after indefinite pronouns like \"все.\"\n\n## fill-in: Complete the Story\n\n> Я народився в місті, (1)___ живуть мої батьки. Село, (2)___ родом моя бабуся, знаходиться недалеко. Університет, (3)___ я вступив, один з найкращих. Рік, (4)___ я закінчив навчання, — 2020.\n\n**Answers:** де, звідки, куди, коли\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | Gender |\n|------|-----|---------|--------|\n| де | /dɛ/ | where (location) | adv |\n| куди | /kuˈdɪ/ | where (to), whither | adv |\n| звідки | /ˈzvʲidkɪ/ | from where, whence | adv |\n| коли | /koˈlɪ/ | when | adv |\n| що | /ʃt͡ʃo/ | that, which, what | pron |\n| місце | /ˈmʲist͡sɛ/ | place | n |\n| час | /t͡ʃɑs/ | time | m |\n| момент | /moˈmɛnt/ | moment | m |\n| рік | /rʲik/ | year | m |\n| день | /dɛnʲ/ | day | m |\n| родом | /ˈrodom/ | originally from | adv |\n| переїхати | /pɛrɛˈjixɑtɪ/ | to move (residence) | pf |\n\n---\n\n# Summary\n\n## Relative Words for Place and Time\n\n| Word | Meaning | Replaces | Example |\n|------|---------|----------|---------|\n| де | where (location) | в якому/якій | Місто, де я живу... |\n| куди | where (to) | до якого/якої | Місто, куди я їду... |\n| звідки | from where | з якого/якої | Місто, звідки я родом... |\n| коли | when | у який/яку | День, коли я народився... |\n| що | that/which | який/яка/яке | Все, що я знаю... |\n\n## Usage Guidelines\n\n1. **Де** — for static location (living, working, being)\n2. **Куди** — for direction/destination (going, moving, traveling)\n3. **Звідки** — for origin (coming from, originating)\n4. **Коли** — for time expressions (days, years, moments)\n5. **Що** — general relative, doesn't decline, informal\n\n> **Key Takeaways**\n>\n> - Де/куди/звідки/коли are simpler than який for place/time\n> - Choose based on the question word (де? куди? звідки? коли?)\n> - Що is a universal relative but doesn't show case\n> - These words make complex sentences more natural\n"
   },
   "activities": [
     {
-      "id": "act-uk-B1-102-quiz",
+      "id": "act-b1-102-quiz",
       "type": "quiz",
       "title": "Location and Time Relatives",
       "description": "Choose the correct relative word.",
       "content": {
         "type": "quiz",
-        "instructions": "Choose the correct relative word.",
         "questions": [
           {
             "question": "Місто, ___ я народився, — Харків.",
@@ -252,28 +123,31 @@
       "language": "uk",
       "difficultyLevel": "B1",
       "duration": 5,
-      "tags": [
-        "grammar",
-        "relative-clauses",
-        "complex-sentences"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.229Z",
+      "modifiedAt": "2025-12-01T22:58:37.229Z"
     },
     {
-      "id": "act-uk-B1-102-gapfill",
+      "id": "act-b1-102-gapfill",
       "type": "gap-fill",
       "title": "Complete the Story",
       "description": "Я народився в місті, (1)___ живуть мої батьки. Село, (2)___ родом моя бабуся, знаходиться недалеко. Університет, (3)___ я вступив, один з найкращих. Рік, (4)___ я закінчив навчання, — 2020.",
       "content": {
         "type": "gap-fill",
-        "instructions": "Я народився в місті, (1)___ живуть мої батьки. Село, (2)___ родом моя бабуся, знаходиться недалеко. Університет, (3)___ я вступив, один з найкращих. Рік, (4)___ я закінчив навчання, — 2020.",
         "text": "Я народився в місті, (1)___ живуть мої батьки. Село, (2)___ родом моя бабуся, знаходиться недалеко. Університет, (3)___ я вступив, один з найкращих. Рік, (4)___ я закінчив навчання, — 2020.",
         "blanks": [
-          {},
-          {},
-          {},
-          {}
+          {
+            "index": 0
+          },
+          {
+            "index": 1
+          },
+          {
+            "index": 2
+          },
+          {
+            "index": 3
+          }
         ],
         "answers": [
           "де",
@@ -288,13 +162,9 @@
       "language": "uk",
       "difficultyLevel": "B1",
       "duration": 5,
-      "tags": [
-        "grammar",
-        "relative-clauses",
-        "complex-sentences"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.229Z",
+      "modifiedAt": "2025-12-01T22:58:37.229Z"
     }
   ],
   "vocabulary": {
@@ -305,112 +175,88 @@
     "transliterationMode": "none",
     "words": [
       {
-        "id": "v-m102-001",
+        "id": "v-de-102-0",
         "uk": "де",
-        "translit": "",
-        "ipa": "/dɛ/",
         "en": "where (location)",
-        "pos": "",
-        "gender": "adv"
+        "pos": "adv",
+        "ipa": "/dɛ/"
       },
       {
-        "id": "v-m102-002",
+        "id": "v-kudy-102-1",
         "uk": "куди",
-        "translit": "",
-        "ipa": "/kuˈdɪ/",
         "en": "where (to), whither",
-        "pos": "",
-        "gender": "adv"
+        "pos": "adv",
+        "ipa": "/kuˈdɪ/"
       },
       {
-        "id": "v-m102-003",
+        "id": "v-zvidky-102-2",
         "uk": "звідки",
-        "translit": "",
-        "ipa": "/ˈzvʲidkɪ/",
         "en": "from where, whence",
-        "pos": "",
-        "gender": "adv"
+        "pos": "adv",
+        "ipa": "/ˈzvʲidkɪ/"
       },
       {
-        "id": "v-m102-004",
+        "id": "v-koly-102-3",
         "uk": "коли",
-        "translit": "",
-        "ipa": "/koˈlɪ/",
         "en": "when",
-        "pos": "",
-        "gender": "adv"
+        "pos": "adv",
+        "ipa": "/koˈlɪ/"
       },
       {
-        "id": "v-m102-005",
+        "id": "v-shcho-102-4",
         "uk": "що",
-        "translit": "",
-        "ipa": "/ʃt͡ʃo/",
         "en": "that, which, what",
-        "pos": "",
-        "gender": "pron"
+        "pos": "pron",
+        "ipa": "/ʃt͡ʃo/"
       },
       {
-        "id": "v-m102-006",
+        "id": "v-mistse-102-5",
         "uk": "місце",
-        "translit": "",
-        "ipa": "/ˈmʲist͡sɛ/",
         "en": "place",
-        "pos": "",
-        "gender": "n"
+        "pos": "n",
+        "ipa": "/ˈmʲist͡sɛ/"
       },
       {
-        "id": "v-m102-007",
+        "id": "v-chas-102-6",
         "uk": "час",
-        "translit": "",
-        "ipa": "/t͡ʃɑs/",
         "en": "time",
-        "pos": "",
-        "gender": "m"
+        "pos": "m",
+        "ipa": "/t͡ʃɑs/"
       },
       {
-        "id": "v-m102-008",
+        "id": "v-moment-102-7",
         "uk": "момент",
-        "translit": "",
-        "ipa": "/moˈmɛnt/",
         "en": "moment",
-        "pos": "",
-        "gender": "m"
+        "pos": "m",
+        "ipa": "/moˈmɛnt/"
       },
       {
-        "id": "v-m102-009",
+        "id": "v-rik-102-8",
         "uk": "рік",
-        "translit": "",
-        "ipa": "/rʲik/",
         "en": "year",
-        "pos": "",
-        "gender": "m"
+        "pos": "m",
+        "ipa": "/rʲik/"
       },
       {
-        "id": "v-m102-010",
+        "id": "v-denь-102-9",
         "uk": "день",
-        "translit": "",
-        "ipa": "/dɛnʲ/",
         "en": "day",
-        "pos": "",
-        "gender": "m"
+        "pos": "m",
+        "ipa": "/dɛnʲ/"
       },
       {
-        "id": "v-m102-011",
+        "id": "v-rodom-102-10",
         "uk": "родом",
-        "translit": "",
-        "ipa": "/ˈrodom/",
         "en": "originally from",
-        "pos": "",
-        "gender": "adv"
+        "pos": "adv",
+        "ipa": "/ˈrodom/"
       },
       {
-        "id": "v-m102-012",
+        "id": "v-pereyikhaty-102-11",
         "uk": "переїхати",
-        "translit": "",
-        "ipa": "/pɛrɛˈjixɑtɪ/",
         "en": "to move (residence)",
-        "pos": "",
-        "gender": "pf"
+        "pos": "pf",
+        "ipa": "/pɛrɛˈjixɑtɪ/"
       }
     ]
   }

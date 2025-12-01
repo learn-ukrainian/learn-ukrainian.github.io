@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-B1-112",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "vocabulary-expansion",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -22,175 +21,43 @@
       "Express opinions on civic topics"
     ],
     "grammarFocus": [],
-    "totalDuration": 45,
-    "transliterationMode": "none",
     "tags": [
       "vocabulary",
       "society",
       "politics",
       "government"
     ],
+    "totalDuration": 45,
+    "transliterationMode": "none",
+    "phases": [],
+    "createdAt": "2025-12-01T22:58:37.233Z",
+    "modifiedAt": "2025-12-01T22:58:37.233Z",
     "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
-    "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Суспільство і політика | Society and Politics\n\nЦі теми важливі для B1 рівня:\n\nThese topics are important for B1 level:\n\n- Як працює **уряд**? | How does the government work?\n- Що таке **демократія**? | What is democracy?\n- Як проходять **вибори**? | How do elections work?"
-          }
-        ]
-      },
-      {
-        "id": "phase-presentation",
-        "name": "presentation",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Держава та уряд | State and Government\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| держава | /dɛrˈʒɑvɑ/ | state, country | Незалежна держава |\n| країна | /krɑˈjinɑ/ | country | Європейська країна |\n| уряд | /uˈrʲɑd/ | government | Формувати уряд |\n| влада | /vlɑˈdɑ/ | power, authorities | Прийти до влади |\n| політика | /poˈlʲitɪkɑ/ | politics, policy | Внутрішня політика |\n| політик | /poˈlʲitɪk/ | politician | Відомий політик |\n| парламент | /pɑrlɑˈmɛnt/ | parliament | Верховна Рада |\n| президент | /prɛzɪˈdɛnt/ | president | Президент України |\n| прем'єр-міністр | /prɛmˈjɛr mʲiˈnʲistr/ | prime minister | Новий прем'єр-міністр |\n| міністр | /mʲiˈnʲistr/ | minister | Міністр освіти |\n| міністерство | /mʲinʲisˈtɛrstvo/ | ministry | Міністерство фінансів |\n\n**Usage:**\n- Хто зараз **президент** України? - Who is currently the president of Ukraine?\n- **Уряд** прийняв нові закони. - The government adopted new laws.\n- Він працює в **міністерстві** закордонних справ. - He works in the Ministry of Foreign Affairs."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Демократія і вибори | Democracy and Elections\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| демократія | /dɛmokrɑˈtʲijɑ/ | democracy | Захищати демократію |\n| вибори | /ˈvɪborɪ/ | elections | Президентські вибори |\n| голосування | /ɦolosuˈvɑnʲːɑ/ | voting | День голосування |\n| голосувати | /ɦolosuˈvɑtɪ/ | to vote | Голосувати за кандидата |\n| виборець | /vɪˈborɛt͡sʲ/ | voter | Права виборця |\n| кандидат | /kɑndɪˈdɑt/ | candidate | Кандидат у президенти |\n| партія | /ˈpɑrtʲijɑ/ | party | Політична партія |\n| депутат | /dɛpuˈtɑt/ | deputy, MP | Народний депутат |\n| мер | /mɛr/ | mayor | Мер міста |\n| округ | /ˈokruɦ/ | district | Виборчий округ |\n\n**Usage:**\n- **Вибори** відбудуться восени. - Elections will take place in autumn.\n- Ви будете **голосувати**? - Will you vote?\n- За якого **кандидата** ви голосували? - Which candidate did you vote for?"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Закон і право | Law and Rights\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| закон | /zɑˈkon/ | law | Прийняти закон |\n| право | /ˈprɑvo/ | right, law | Права людини |\n| конституція | /konstɪˈtut͡sʲijɑ/ | constitution | Конституція України |\n| законодавство | /zɑkonodɑvˈstvo/ | legislation | Нове законодавство |\n| суд | /sud/ | court | Верховний суд |\n| суддя | /sudˈdʲːɑ/ | judge | Справедливий суддя |\n| правосуддя | /prɑvoˈsudʲːɑ/ | justice | Система правосуддя |\n| злочин | /zlot͡ʃɪn/ | crime | Тяжкий злочин |\n| покарання | /pokɑˈrɑnʲːɑ/ | punishment | Суворе покарання |\n\n**Usage:**\n- **Закон** забороняє це. - The law prohibits this.\n- Кожна людина має **права**. - Every person has rights.\n- Його засудили за **злочин**. - He was convicted for a crime."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Громадянство | Citizenship\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| громадянин | /ɦromɑdʲɑˈnɪn/ | citizen (m) | Громадянин України |\n| громадянка | /ɦromɑdʲˈɑnkɑ/ | citizen (f) | Вона громадянка ЄС |\n| громадянство | /ɦromɑdʲˈɑnstvo/ | citizenship | Отримати громадянство |\n| суспільство | /susˈpʲilʲstvo/ | society | Сучасне суспільство |\n| громада | /ɦroˈmɑdɑ/ | community | Місцева громада |\n| населення | /nɑˈsɛlɛnʲːɑ/ | population | Населення міста |\n| народ | /nɑˈrod/ | people, nation | Український народ |\n\n**Usage:**\n- Він **громадянин** України. - He is a citizen of Ukraine.\n- Як отримати **громадянство**? - How to obtain citizenship?\n- **Суспільство** змінюється. - Society is changing."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Соціальні питання | Social Issues\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| проблема | /probˈlɛmɑ/ | problem | Соціальна проблема |\n| безробіття | /bɛzroˈbʲitʲːɑ/ | unemployment | Рівень безробіття |\n| бідність | /bʲidˈnʲistʲ/ | poverty | Боротьба з бідністю |\n| нерівність | /nɛˈrʲivnʲistʲ/ | inequality | Соціальна нерівність |\n| корупція | /koˈrupt͡sʲijɑ/ | corruption | Боротьба з корупцією |\n| реформа | /rɛˈformɑ/ | reform | Економічні реформи |\n| свобода | /svoˈbodɑ/ | freedom | Свобода слова |\n| рівність | /rʲivˈnʲistʲ/ | equality | Гендерна рівність |\n\n**Usage:**\n- **Безробіття** — серйозна **проблема**. - Unemployment is a serious problem.\n- Потрібні **реформи**. - Reforms are needed.\n- **Свобода слова** дуже важлива. - Freedom of speech is very important."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Політичні дії | Political Actions\n\n| Ukrainian | English | Aspect |\n|-----------|---------|--------|\n| голосувати / проголосувати | to vote | impf/pf |\n| обирати / обрати | to elect | impf/pf |\n| керувати | to govern, manage | impf |\n| приймати / прийняти (закон) | to adopt (a law) | impf/pf |\n| протестувати | to protest | impf |\n| підтримувати / підтримати | to support | impf/pf |\n| критикувати / розкритикувати | to criticize | impf/pf |\n| боротися | to fight, struggle | impf |\n\n**Usage:**\n- Вони **проголосували** за нового президента. - They voted for a new president.\n- Народ **обрав** нового лідера. - The people elected a new leader.\n- Вони **протестують** проти корупції. - They are protesting against corruption."
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-B1-112-matchup"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Complete with Correct Word\n\n1. В Україні ___ (elections) відбуваються кожні п'ять років. → **вибори**\n2. Він ___ (citizen) України. → **громадянин**\n3. ___ (The government) прийняв новий закон. → **Уряд**\n4. Свобода слова — це важливе ___ (right). → **право**\n5. ___ (Unemployment) — серйозна проблема. → **Безробіття**\n6. Вона працює ___ (deputy) у парламенті. → **депутатом**"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Match Terms\n\n| Term | Definition |\n|------|------------|\n| демократія | система, де влада належить народу |\n| конституція | основний закон країни |\n| вибори | процес обрання представників |\n| корупція | незаконне використання влади для особистої вигоди |\n| громадянин | особа, яка має права та обов'язки в державі |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Discussion Questions\n\n1. Яка **політична система** у вашій країні?\n2. Чи важлива **демократія**? Чому?\n3. Які **соціальні проблеми** є у вашому суспільстві?\n4. Чи ви **голосуєте** на виборах?\n5. Яку роль грають **реформи** у розвитку країни?"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Translate to Ukrainian\n\n1. Democracy is important for every country.\n   → **Демократія важлива для кожної країни.**\n\n2. Citizens have the right to vote.\n   → **Громадяни мають право голосувати.**\n\n3. The government adopted a new law.\n   → **Уряд прийняв новий закон.**\n\n4. They are fighting against corruption.\n   → **Вони борються проти корупції.**\n\n5. Freedom of speech is a human right.\n   → **Свобода слова — це право людини.**"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-B1-112-quiz"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Describe Political System\n\nDescribe the political system of your country:\n\n- Хто є главою **держави**?\n- Як працює **уряд**?\n- Як проходять **вибори**?\n\n**Example:**\nУ моїй країні **президент** є главою держави. **Уряд** складається з міністрів. **Вибори** відбуваються кожні чотири роки. **Громадяни**, яким виповнилося 18 років, мають **право голосувати**."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Discuss Social Issues\n\nDiscuss using vocabulary from this module:\n\n- Які **проблеми** є у вашому суспільстві?\n- Які **реформи** потрібні?\n- Як можна боротися з **нерівністю**?"
-          }
-        ]
-      }
-    ],
-    "rawMarkdown": "# Зміст уроку | Lesson Content\n\n## warm-up | Розминка\n\n### Суспільство і політика | Society and Politics\n\nЦі теми важливі для B1 рівня:\n\nThese topics are important for B1 level:\n\n- Як працює **уряд**? | How does the government work?\n- Що таке **демократія**? | What is democracy?\n- Як проходять **вибори**? | How do elections work?\n\n## presentation | Презентація\n\n### Держава та уряд | State and Government\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| держава | /dɛrˈʒɑvɑ/ | state, country | Незалежна держава |\n| країна | /krɑˈjinɑ/ | country | Європейська країна |\n| уряд | /uˈrʲɑd/ | government | Формувати уряд |\n| влада | /vlɑˈdɑ/ | power, authorities | Прийти до влади |\n| політика | /poˈlʲitɪkɑ/ | politics, policy | Внутрішня політика |\n| політик | /poˈlʲitɪk/ | politician | Відомий політик |\n| парламент | /pɑrlɑˈmɛnt/ | parliament | Верховна Рада |\n| президент | /prɛzɪˈdɛnt/ | president | Президент України |\n| прем'єр-міністр | /prɛmˈjɛr mʲiˈnʲistr/ | prime minister | Новий прем'єр-міністр |\n| міністр | /mʲiˈnʲistr/ | minister | Міністр освіти |\n| міністерство | /mʲinʲisˈtɛrstvo/ | ministry | Міністерство фінансів |\n\n**Usage:**\n- Хто зараз **президент** України? - Who is currently the president of Ukraine?\n- **Уряд** прийняв нові закони. - The government adopted new laws.\n- Він працює в **міністерстві** закордонних справ. - He works in the Ministry of Foreign Affairs.\n\n### Демократія і вибори | Democracy and Elections\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| демократія | /dɛmokrɑˈtʲijɑ/ | democracy | Захищати демократію |\n| вибори | /ˈvɪborɪ/ | elections | Президентські вибори |\n| голосування | /ɦolosuˈvɑnʲːɑ/ | voting | День голосування |\n| голосувати | /ɦolosuˈvɑtɪ/ | to vote | Голосувати за кандидата |\n| виборець | /vɪˈborɛt͡sʲ/ | voter | Права виборця |\n| кандидат | /kɑndɪˈdɑt/ | candidate | Кандидат у президенти |\n| партія | /ˈpɑrtʲijɑ/ | party | Політична партія |\n| депутат | /dɛpuˈtɑt/ | deputy, MP | Народний депутат |\n| мер | /mɛr/ | mayor | Мер міста |\n| округ | /ˈokruɦ/ | district | Виборчий округ |\n\n**Usage:**\n- **Вибори** відбудуться восени. - Elections will take place in autumn.\n- Ви будете **голосувати**? - Will you vote?\n- За якого **кандидата** ви голосували? - Which candidate did you vote for?\n\n### Закон і право | Law and Rights\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| закон | /zɑˈkon/ | law | Прийняти закон |\n| право | /ˈprɑvo/ | right, law | Права людини |\n| конституція | /konstɪˈtut͡sʲijɑ/ | constitution | Конституція України |\n| законодавство | /zɑkonodɑvˈstvo/ | legislation | Нове законодавство |\n| суд | /sud/ | court | Верховний суд |\n| суддя | /sudˈdʲːɑ/ | judge | Справедливий суддя |\n| правосуддя | /prɑvoˈsudʲːɑ/ | justice | Система правосуддя |\n| злочин | /zlot͡ʃɪn/ | crime | Тяжкий злочин |\n| покарання | /pokɑˈrɑnʲːɑ/ | punishment | Суворе покарання |\n\n**Usage:**\n- **Закон** забороняє це. - The law prohibits this.\n- Кожна людина має **права**. - Every person has rights.\n- Його засудили за **злочин**. - He was convicted for a crime.\n\n### Громадянство | Citizenship\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| громадянин | /ɦromɑdʲɑˈnɪn/ | citizen (m) | Громадянин України |\n| громадянка | /ɦromɑdʲˈɑnkɑ/ | citizen (f) | Вона громадянка ЄС |\n| громадянство | /ɦromɑdʲˈɑnstvo/ | citizenship | Отримати громадянство |\n| суспільство | /susˈpʲilʲstvo/ | society | Сучасне суспільство |\n| громада | /ɦroˈmɑdɑ/ | community | Місцева громада |\n| населення | /nɑˈsɛlɛnʲːɑ/ | population | Населення міста |\n| народ | /nɑˈrod/ | people, nation | Український народ |\n\n**Usage:**\n- Він **громадянин** України. - He is a citizen of Ukraine.\n- Як отримати **громадянство**? - How to obtain citizenship?\n- **Суспільство** змінюється. - Society is changing.\n\n### Соціальні питання | Social Issues\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| проблема | /probˈlɛmɑ/ | problem | Соціальна проблема |\n| безробіття | /bɛzroˈbʲitʲːɑ/ | unemployment | Рівень безробіття |\n| бідність | /bʲidˈnʲistʲ/ | poverty | Боротьба з бідністю |\n| нерівність | /nɛˈrʲivnʲistʲ/ | inequality | Соціальна нерівність |\n| корупція | /koˈrupt͡sʲijɑ/ | corruption | Боротьба з корупцією |\n| реформа | /rɛˈformɑ/ | reform | Економічні реформи |\n| свобода | /svoˈbodɑ/ | freedom | Свобода слова |\n| рівність | /rʲivˈnʲistʲ/ | equality | Гендерна рівність |\n\n**Usage:**\n- **Безробіття** — серйозна **проблема**. - Unemployment is a serious problem.\n- Потрібні **реформи**. - Reforms are needed.\n- **Свобода слова** дуже важлива. - Freedom of speech is very important.\n\n### Політичні дії | Political Actions\n\n| Ukrainian | English | Aspect |\n|-----------|---------|--------|\n| голосувати / проголосувати | to vote | impf/pf |\n| обирати / обрати | to elect | impf/pf |\n| керувати | to govern, manage | impf |\n| приймати / прийняти (закон) | to adopt (a law) | impf/pf |\n| протестувати | to protest | impf |\n| підтримувати / підтримати | to support | impf/pf |\n| критикувати / розкритикувати | to criticize | impf/pf |\n| боротися | to fight, struggle | impf |\n\n**Usage:**\n- Вони **проголосували** за нового президента. - They voted for a new president.\n- Народ **обрав** нового лідера. - The people elected a new leader.\n- Вони **протестують** проти корупції. - They are protesting against corruption.\n\n## practice | Практика\n\n### Complete with Correct Word\n\n1. В Україні ___ (elections) відбуваються кожні п'ять років. → **вибори**\n2. Він ___ (citizen) України. → **громадянин**\n3. ___ (The government) прийняв новий закон. → **Уряд**\n4. Свобода слова — це важливе ___ (right). → **право**\n5. ___ (Unemployment) — серйозна проблема. → **Безробіття**\n6. Вона працює ___ (deputy) у парламенті. → **депутатом**\n\n### Match Terms\n\n| Term | Definition |\n|------|------------|\n| демократія | система, де влада належить народу |\n| конституція | основний закон країни |\n| вибори | процес обрання представників |\n| корупція | незаконне використання влади для особистої вигоди |\n| громадянин | особа, яка має права та обов'язки в державі |\n\n### Discussion Questions\n\n1. Яка **політична система** у вашій країні?\n2. Чи важлива **демократія**? Чому?\n3. Які **соціальні проблеми** є у вашому суспільстві?\n4. Чи ви **голосуєте** на виборах?\n5. Яку роль грають **реформи** у розвитку країни?\n\n### Translate to Ukrainian\n\n1. Democracy is important for every country.\n   → **Демократія важлива для кожної країни.**\n\n2. Citizens have the right to vote.\n   → **Громадяни мають право голосувати.**\n\n3. The government adopted a new law.\n   → **Уряд прийняв новий закон.**\n\n4. They are fighting against corruption.\n   → **Вони борються проти корупції.**\n\n5. Freedom of speech is a human right.\n   → **Свобода слова — це право людини.**\n\n## production | Продукція\n\n### Describe Political System\n\nDescribe the political system of your country:\n\n- Хто є главою **держави**?\n- Як працює **уряд**?\n- Як проходять **вибори**?\n\n**Example:**\nУ моїй країні **президент** є главою держави. **Уряд** складається з міністрів. **Вибори** відбуваються кожні чотири роки. **Громадяни**, яким виповнилося 18 років, мають **право голосувати**.\n\n### Discuss Social Issues\n\nDiscuss using vocabulary from this module:\n\n- Які **проблеми** є у вашому суспільстві?\n- Які **реформи** потрібні?\n- Як можна боротися з **нерівністю**?\n\n---\n\n# Activities\n\n## quiz: Politics Vocabulary\n\n> Choose the correct word.\n\n1. Він працює ___ у парламенті.\n   - [x] депутатом\n   - [ ] депутат\n\n2. ___ відбудуться восени.\n   - [x] Вибори\n   - [ ] Голосування\n\n3. ___ прийняв новий закон.\n   - [x] Уряд\n   - [ ] Влади\n\n4. Вона ___ України.\n   - [x] громадянка\n   - [ ] громадянство\n\n5. Свобода слова — це ___ .\n   - [x] право\n   - [ ] закон\n\n6. Вони ___ проти корупції.\n   - [x] борються\n   - [ ] боротися\n\n## match-up: Government Structure\n\n| Position | Role |\n|----------|------|\n| президент | глава держави |\n| прем'єр-міністр | глава уряду |\n| депутат | член парламенту |\n| мер | глава міста |\n| міністр | керівник міністерства |\n\n---",
     "immersiveSections": [
       {
-        "id": "warm-up-розминка",
-        "title": "warm-up | Розминка",
-        "content": "### Суспільство і політика | Society and Politics\n\nЦі теми важливі для B1 рівня:\n\nThese topics are important for B1 level:\n\n- Як працює **уряд**? | How does the government work?\n- Що таке **демократія**? | What is democracy?\n- Як проходять **вибори**? | How do elections work?",
-        "type": "topic"
+        "id": "section-зміст-уроку-lesson-content",
+        "type": "content",
+        "title": "Зміст уроку | Lesson Content",
+        "content": "## warm-up | Розминка\n\n### Суспільство і політика | Society and Politics\n\nЦі теми важливі для B1 рівня:\n\nThese topics are important for B1 level:\n\n- Як працює **уряд**? | How does the government work?\n- Що таке **демократія**? | What is democracy?\n- Як проходять **вибори**? | How do elections work?\n\n## presentation | Презентація\n\n### Держава та уряд | State and Government\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| держава | /dɛrˈʒɑvɑ/ | state, country | Незалежна держава |\n| країна | /krɑˈjinɑ/ | country | Європейська країна |\n| уряд | /uˈrʲɑd/ | government | Формувати уряд |\n| влада | /vlɑˈdɑ/ | power, authorities | Прийти до влади |\n| політика | /poˈlʲitɪkɑ/ | politics, policy | Внутрішня політика |\n| політик | /poˈlʲitɪk/ | politician | Відомий політик |\n| парламент | /pɑrlɑˈmɛnt/ | parliament | Верховна Рада |\n| президент | /prɛzɪˈdɛnt/ | president | Президент України |\n| прем'єр-міністр | /prɛmˈjɛr mʲiˈnʲistr/ | prime minister | Новий прем'єр-міністр |\n| міністр | /mʲiˈnʲistr/ | minister | Міністр освіти |\n| міністерство | /mʲinʲisˈtɛrstvo/ | ministry | Міністерство фінансів |\n\n**Usage:**\n- Хто зараз **президент** України? - Who is currently the president of Ukraine?\n- **Уряд** прийняв нові закони. - The government adopted new laws.\n- Він працює в **міністерстві** закордонних справ. - He works in the Ministry of Foreign Affairs.\n\n### Демократія і вибори | Democracy and Elections\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| демократія | /dɛmokrɑˈtʲijɑ/ | democracy | Захищати демократію |\n| вибори | /ˈvɪborɪ/ | elections | Президентські вибори |\n| голосування | /ɦolosuˈvɑnʲːɑ/ | voting | День голосування |\n| голосувати | /ɦolosuˈvɑtɪ/ | to vote | Голосувати за кандидата |\n| виборець | /vɪˈborɛt͡sʲ/ | voter | Права виборця |\n| кандидат | /kɑndɪˈdɑt/ | candidate | Кандидат у президенти |\n| партія | /ˈpɑrtʲijɑ/ | party | Політична партія |\n| депутат | /dɛpuˈtɑt/ | deputy, MP | Народний депутат |\n| мер | /mɛr/ | mayor | Мер міста |\n| округ | /ˈokruɦ/ | district | Виборчий округ |\n\n**Usage:**\n- **Вибори** відбудуться восени. - Elections will take place in autumn.\n- Ви будете **голосувати**? - Will you vote?\n- За якого **кандидата** ви голосували? - Which candidate did you vote for?\n\n### Закон і право | Law and Rights\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| закон | /zɑˈkon/ | law | Прийняти закон |\n| право | /ˈprɑvo/ | right, law | Права людини |\n| конституція | /konstɪˈtut͡sʲijɑ/ | constitution | Конституція України |\n| законодавство | /zɑkonodɑvˈstvo/ | legislation | Нове законодавство |\n| суд | /sud/ | court | Верховний суд |\n| суддя | /sudˈdʲːɑ/ | judge | Справедливий суддя |\n| правосуддя | /prɑvoˈsudʲːɑ/ | justice | Система правосуддя |\n| злочин | /zlot͡ʃɪn/ | crime | Тяжкий злочин |\n| покарання | /pokɑˈrɑnʲːɑ/ | punishment | Суворе покарання |\n\n**Usage:**\n- **Закон** забороняє це. - The law prohibits this.\n- Кожна людина має **права**. - Every person has rights.\n- Його засудили за **злочин**. - He was convicted for a crime.\n\n### Громадянство | Citizenship\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| громадянин | /ɦromɑdʲɑˈnɪn/ | citizen (m) | Громадянин України |\n| громадянка | /ɦromɑdʲˈɑnkɑ/ | citizen (f) | Вона громадянка ЄС |\n| громадянство | /ɦromɑdʲˈɑnstvo/ | citizenship | Отримати громадянство |\n| суспільство | /susˈpʲilʲstvo/ | society | Сучасне суспільство |\n| громада | /ɦroˈmɑdɑ/ | community | Місцева громада |\n| населення | /nɑˈsɛlɛnʲːɑ/ | population | Населення міста |\n| народ | /nɑˈrod/ | people, nation | Український народ |\n\n**Usage:**\n- Він **громадянин** України. - He is a citizen of Ukraine.\n- Як отримати **громадянство**? - How to obtain citizenship?\n- **Суспільство** змінюється. - Society is changing.\n\n### Соціальні питання | Social Issues\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| проблема | /probˈlɛmɑ/ | problem | Соціальна проблема |\n| безробіття | /bɛzroˈbʲitʲːɑ/ | unemployment | Рівень безробіття |\n| бідність | /bʲidˈnʲistʲ/ | poverty | Боротьба з бідністю |\n| нерівність | /nɛˈrʲivnʲistʲ/ | inequality | Соціальна нерівність |\n| корупція | /koˈrupt͡sʲijɑ/ | corruption | Боротьба з корупцією |\n| реформа | /rɛˈformɑ/ | reform | Економічні реформи |\n| свобода | /svoˈbodɑ/ | freedom | Свобода слова |\n| рівність | /rʲivˈnʲistʲ/ | equality | Гендерна рівність |\n\n**Usage:**\n- **Безробіття** — серйозна **проблема**. - Unemployment is a serious problem.\n- Потрібні **реформи**. - Reforms are needed.\n- **Свобода слова** дуже важлива. - Freedom of speech is very important.\n\n### Політичні дії | Political Actions\n\n| Ukrainian | English | Aspect |\n|-----------|---------|--------|\n| голосувати / проголосувати | to vote | impf/pf |\n| обирати / обрати | to elect | impf/pf |\n| керувати | to govern, manage | impf |\n| приймати / прийняти (закон) | to adopt (a law) | impf/pf |\n| протестувати | to protest | impf |\n| підтримувати / підтримати | to support | impf/pf |\n| критикувати / розкритикувати | to criticize | impf/pf |\n| боротися | to fight, struggle | impf |\n\n**Usage:**\n- Вони **проголосували** за нового президента. - They voted for a new president.\n- Народ **обрав** нового лідера. - The people elected a new leader.\n- Вони **протестують** проти корупції. - They are protesting against corruption.\n\n## practice | Практика\n\n### Complete with Correct Word\n\n1. В Україні ___ (elections) відбуваються кожні п'ять років.\n   > [!answer] **вибори**\n2. Він ___ (citizen) України.\n   > [!answer] **громадянин**\n3. ___ (The government) прийняв новий закон.\n   > [!answer] **Уряд**\n4. Свобода слова — це важливе ___ (right).\n   > [!answer] **право**\n5. ___ (Unemployment) — серйозна проблема.\n   > [!answer] **Безробіття**\n6. Вона працює ___ (deputy) у парламенті.\n   > [!answer] **депутатом**\n\n### Match Terms\n\n| Term | Definition |\n|------|------------|\n| демократія | система, де влада належить народу |\n| конституція | основний закон країни |\n| вибори | процес обрання представників |\n| корупція | незаконне використання влади для особистої вигоди |\n| громадянин | особа, яка має права та обов'язки в державі |\n\n### Discussion Questions\n\n1. Яка **політична система** у вашій країні?\n2. Чи важлива **демократія**? Чому?\n3. Які **соціальні проблеми** є у вашому суспільстві?\n4. Чи ви **голосуєте** на виборах?\n5. Яку роль грають **реформи** у розвитку країни?\n\n### Translate to Ukrainian\n\n1. Democracy is important for every country.\n   > [!answer] **Демократія важлива для кожної країни.**\n2. Citizens have the right to vote.\n   > [!answer] **Громадяни мають право голосувати.**\n3. The government adopted a new law.\n   > [!answer] **Уряд прийняв новий закон.**\n4. They are fighting against corruption.\n   > [!answer] **Вони борються проти корупції.**\n5. Freedom of speech is a human right.\n   > [!answer] **Свобода слова — це право людини.**\n## production | Продукція\n\n### Describe Political System\n\nDescribe the political system of your country:\n\n- Хто є главою **держави**?\n- Як працює **уряд**?\n- Як проходять **вибори**?\n\n**Example:**\nУ моїй країні **президент** є главою держави. **Уряд** складається з міністрів. **Вибори** відбуваються кожні чотири роки. **Громадяни**, яким виповнилося 18 років, мають **право голосувати**.\n\n### Discuss Social Issues\n\nDiscuss using vocabulary from this module:\n\n- Які **проблеми** є у вашому суспільстві?\n- Які **реформи** потрібні?\n- Як можна боротися з **нерівністю**?\n\n---\n\n\n---\n\n\n---"
       },
       {
-        "id": "presentation-презентація",
-        "title": "presentation | Презентація",
-        "content": "### Держава та уряд | State and Government\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| держава | /dɛrˈʒɑvɑ/ | state, country | Незалежна держава |\n| країна | /krɑˈjinɑ/ | country | Європейська країна |\n| уряд | /uˈrʲɑd/ | government | Формувати уряд |\n| влада | /vlɑˈdɑ/ | power, authorities | Прийти до влади |\n| політика | /poˈlʲitɪkɑ/ | politics, policy | Внутрішня політика |\n| політик | /poˈlʲitɪk/ | politician | Відомий політик |\n| парламент | /pɑrlɑˈmɛnt/ | parliament | Верховна Рада |\n| президент | /prɛzɪˈdɛnt/ | president | Президент України |\n| прем'єр-міністр | /prɛmˈjɛr mʲiˈnʲistr/ | prime minister | Новий прем'єр-міністр |\n| міністр | /mʲiˈnʲistr/ | minister | Міністр освіти |\n| міністерство | /mʲinʲisˈtɛrstvo/ | ministry | Міністерство фінансів |\n\n**Usage:**\n- Хто зараз **президент** України? - Who is currently the president of Ukraine?\n- **Уряд** прийняв нові закони. - The government adopted new laws.\n- Він працює в **міністерстві** закордонних справ. - He works in the Ministry of Foreign Affairs.\n\n### Демократія і вибори | Democracy and Elections\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| демократія | /dɛmokrɑˈtʲijɑ/ | democracy | Захищати демократію |\n| вибори | /ˈvɪborɪ/ | elections | Президентські вибори |\n| голосування | /ɦolosuˈvɑnʲːɑ/ | voting | День голосування |\n| голосувати | /ɦolosuˈvɑtɪ/ | to vote | Голосувати за кандидата |\n| виборець | /vɪˈborɛt͡sʲ/ | voter | Права виборця |\n| кандидат | /kɑndɪˈdɑt/ | candidate | Кандидат у президенти |\n| партія | /ˈpɑrtʲijɑ/ | party | Політична партія |\n| депутат | /dɛpuˈtɑt/ | deputy, MP | Народний депутат |\n| мер | /mɛr/ | mayor | Мер міста |\n| округ | /ˈokruɦ/ | district | Виборчий округ |\n\n**Usage:**\n- **Вибори** відбудуться восени. - Elections will take place in autumn.\n- Ви будете **голосувати**? - Will you vote?\n- За якого **кандидата** ви голосували? - Which candidate did you vote for?\n\n### Закон і право | Law and Rights\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| закон | /zɑˈkon/ | law | Прийняти закон |\n| право | /ˈprɑvo/ | right, law | Права людини |\n| конституція | /konstɪˈtut͡sʲijɑ/ | constitution | Конституція України |\n| законодавство | /zɑkonodɑvˈstvo/ | legislation | Нове законодавство |\n| суд | /sud/ | court | Верховний суд |\n| суддя | /sudˈdʲːɑ/ | judge | Справедливий суддя |\n| правосуддя | /prɑvoˈsudʲːɑ/ | justice | Система правосуддя |\n| злочин | /zlot͡ʃɪn/ | crime | Тяжкий злочин |\n| покарання | /pokɑˈrɑnʲːɑ/ | punishment | Суворе покарання |\n\n**Usage:**\n- **Закон** забороняє це. - The law prohibits this.\n- Кожна людина має **права**. - Every person has rights.\n- Його засудили за **злочин**. - He was convicted for a crime.\n\n### Громадянство | Citizenship\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| громадянин | /ɦromɑdʲɑˈnɪn/ | citizen (m) | Громадянин України |\n| громадянка | /ɦromɑdʲˈɑnkɑ/ | citizen (f) | Вона громадянка ЄС |\n| громадянство | /ɦromɑdʲˈɑnstvo/ | citizenship | Отримати громадянство |\n| суспільство | /susˈpʲilʲstvo/ | society | Сучасне суспільство |\n| громада | /ɦroˈmɑdɑ/ | community | Місцева громада |\n| населення | /nɑˈsɛlɛnʲːɑ/ | population | Населення міста |\n| народ | /nɑˈrod/ | people, nation | Український народ |\n\n**Usage:**\n- Він **громадянин** України. - He is a citizen of Ukraine.\n- Як отримати **громадянство**? - How to obtain citizenship?\n- **Суспільство** змінюється. - Society is changing.\n\n### Соціальні питання | Social Issues\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| проблема | /probˈlɛmɑ/ | problem | Соціальна проблема |\n| безробіття | /bɛzroˈbʲitʲːɑ/ | unemployment | Рівень безробіття |\n| бідність | /bʲidˈnʲistʲ/ | poverty | Боротьба з бідністю |\n| нерівність | /nɛˈrʲivnʲistʲ/ | inequality | Соціальна нерівність |\n| корупція | /koˈrupt͡sʲijɑ/ | corruption | Боротьба з корупцією |\n| реформа | /rɛˈformɑ/ | reform | Економічні реформи |\n| свобода | /svoˈbodɑ/ | freedom | Свобода слова |\n| рівність | /rʲivˈnʲistʲ/ | equality | Гендерна рівність |\n\n**Usage:**\n- **Безробіття** — серйозна **проблема**. - Unemployment is a serious problem.\n- Потрібні **реформи**. - Reforms are needed.\n- **Свобода слова** дуже важлива. - Freedom of speech is very important.\n\n### Політичні дії | Political Actions\n\n| Ukrainian | English | Aspect |\n|-----------|---------|--------|\n| голосувати / проголосувати | to vote | impf/pf |\n| обирати / обрати | to elect | impf/pf |\n| керувати | to govern, manage | impf |\n| приймати / прийняти (закон) | to adopt (a law) | impf/pf |\n| протестувати | to protest | impf |\n| підтримувати / підтримати | to support | impf/pf |\n| критикувати / розкритикувати | to criticize | impf/pf |\n| боротися | to fight, struggle | impf |\n\n**Usage:**\n- Вони **проголосували** за нового президента. - They voted for a new president.\n- Народ **обрав** нового лідера. - The people elected a new leader.\n- Вони **протестують** проти корупції. - They are protesting against corruption.",
-        "type": "topic"
-      },
-      {
-        "id": "practice-практика",
-        "title": "practice | Практика",
-        "content": "### Complete with Correct Word\n\n1. В Україні ___ (elections) відбуваються кожні п'ять років. → **вибори**\n2. Він ___ (citizen) України. → **громадянин**\n3. ___ (The government) прийняв новий закон. → **Уряд**\n4. Свобода слова — це важливе ___ (right). → **право**\n5. ___ (Unemployment) — серйозна проблема. → **Безробіття**\n6. Вона працює ___ (deputy) у парламенті. → **депутатом**\n\n### Match Terms\n\n| Term | Definition |\n|------|------------|\n| демократія | система, де влада належить народу |\n| конституція | основний закон країни |\n| вибори | процес обрання представників |\n| корупція | незаконне використання влади для особистої вигоди |\n| громадянин | особа, яка має права та обов'язки в державі |\n\n### Discussion Questions\n\n1. Яка **політична система** у вашій країні?\n2. Чи важлива **демократія**? Чому?\n3. Які **соціальні проблеми** є у вашому суспільстві?\n4. Чи ви **голосуєте** на виборах?\n5. Яку роль грають **реформи** у розвитку країни?\n\n### Translate to Ukrainian\n\n1. Democracy is important for every country.\n   → **Демократія важлива для кожної країни.**\n\n2. Citizens have the right to vote.\n   → **Громадяни мають право голосувати.**\n\n3. The government adopted a new law.\n   → **Уряд прийняв новий закон.**\n\n4. They are fighting against corruption.\n   → **Вони борються проти корупції.**\n\n5. Freedom of speech is a human right.\n   → **Свобода слова — це право людини.**",
-        "type": "topic"
-      },
-      {
-        "id": "production-продукція",
-        "title": "production | Продукція",
-        "content": "### Describe Political System\n\nDescribe the political system of your country:\n\n- Хто є главою **держави**?\n- Як працює **уряд**?\n- Як проходять **вибори**?\n\n**Example:**\nУ моїй країні **президент** є главою держави. **Уряд** складається з міністрів. **Вибори** відбуваються кожні чотири роки. **Громадяни**, яким виповнилося 18 років, мають **право голосувати**.\n\n### Discuss Social Issues\n\nDiscuss using vocabulary from this module:\n\n- Які **проблеми** є у вашому суспільстві?\n- Які **реформи** потрібні?\n- Як можна боротися з **нерівністю**?\n\n---",
-        "type": "topic"
-      },
-      {
-        "id": "activities",
-        "title": "Activities",
-        "content": "## quiz: Politics Vocabulary\n\n> Choose the correct word.\n\n1. Він працює ___ у парламенті.\n   - [x] депутатом\n   - [ ] депутат\n\n2. ___ відбудуться восени.\n   - [x] Вибори\n   - [ ] Голосування\n\n3. ___ прийняв новий закон.\n   - [x] Уряд\n   - [ ] Влади\n\n4. Вона ___ України.\n   - [x] громадянка\n   - [ ] громадянство\n\n5. Свобода слова — це ___ .\n   - [x] право\n   - [ ] закон\n\n6. Вони ___ проти корупції.\n   - [x] борються\n   - [ ] боротися\n\n## match-up: Government Structure\n\n| Position | Role |\n|----------|------|\n| президент | глава держави |\n| прем'єр-міністр | глава уряду |\n| депутат | член парламенту |\n| мер | глава міста |\n| міністр | керівник міністерства |\n\n---",
-        "type": "activities"
-      },
-      {
-        "id": "vocabulary",
-        "title": "Vocabulary",
-        "content": "| Word | IPA | English | Gender |\n|------|-----|---------|--------|\n| держава | /dɛrˈʒɑvɑ/ | state | f |\n| уряд | /uˈrʲɑd/ | government | m |\n| політика | /poˈlʲitɪkɑ/ | politics | f |\n| демократія | /dɛmokrɑˈtʲijɑ/ | democracy | f |\n| вибори | /ˈvɪborɪ/ | elections | pl |\n| голосувати | /ɦolosuˈvɑtɪ/ | to vote | impf |\n| партія | /ˈpɑrtʲijɑ/ | party | f |\n| закон | /zɑˈkon/ | law | m |\n| право | /ˈprɑvo/ | right | n |\n| громадянин | /ɦromɑdʲɑˈnɪn/ | citizen | m |\n| суспільство | /susˈpʲilʲstvo/ | society | n |\n| свобода | /svoˈbodɑ/ | freedom | f |\n| рівність | /rʲivˈnʲistʲ/ | equality | f |\n| реформа | /rɛˈformɑ/ | reform | f |\n| корупція | /koˈrupt͡sʲijɑ/ | corruption | f |\n\n---",
-        "type": "vocabulary"
-      },
-      {
-        "id": "summary",
+        "id": "section-summary",
+        "type": "summary",
         "title": "Summary",
         "content": "## Key Political Vocabulary\n\n### Government\nдержава, уряд, влада, парламент, президент, міністр\n\n### Elections\nвибори, голосування, кандидат, партія, депутат, виборець\n\n### Law\nзакон, право, конституція, суд, правосуддя\n\n### Citizenship\nгромадянин, громадянство, суспільство, народ\n\n### Social Issues\nбезробіття, бідність, нерівність, корупція, реформа\n\n### Values\nдемократія, свобода, рівність, права людини\n\n## Useful Expressions\n\n- Прийти до влади - To come to power\n- Прийняти закон - To adopt a law\n- Права людини - Human rights\n- Свобода слова - Freedom of speech\n- Боротися з корупцією - To fight corruption\n- Провести реформи - To carry out reforms\n\n> **Key Takeaways**\n>\n> - уряд (government) vs влада (power/authorities)\n> - громадянин (m) / громадянка (f) = citizen\n> - право = right (also: law as a field)\n> - закон = law (specific law)\n> - вибори is always plural",
-        "type": "summary"
+        "titleUk": "Підсумок"
       }
-    ]
+    ],
+    "rawMarkdown": "---\nmodule: 112\ntitle: \"Society & Politics Vocabulary\"\nsubtitle: \"Government, Elections, and Civic Life\"\nlevel: B1\nphase: B1.2\nduration: 45\ntransliteration: none\ntags: [vocabulary, society, politics, government]\nobjectives:\n  - Learn vocabulary for government and politics\n  - Discuss elections and democracy\n  - Talk about social issues\n  - Express opinions on civic topics\n---\n\n# Зміст уроку | Lesson Content\n\n## warm-up | Розминка\n\n### Суспільство і політика | Society and Politics\n\nЦі теми важливі для B1 рівня:\n\nThese topics are important for B1 level:\n\n- Як працює **уряд**? | How does the government work?\n- Що таке **демократія**? | What is democracy?\n- Як проходять **вибори**? | How do elections work?\n\n## presentation | Презентація\n\n### Держава та уряд | State and Government\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| держава | /dɛrˈʒɑvɑ/ | state, country | Незалежна держава |\n| країна | /krɑˈjinɑ/ | country | Європейська країна |\n| уряд | /uˈrʲɑd/ | government | Формувати уряд |\n| влада | /vlɑˈdɑ/ | power, authorities | Прийти до влади |\n| політика | /poˈlʲitɪkɑ/ | politics, policy | Внутрішня політика |\n| політик | /poˈlʲitɪk/ | politician | Відомий політик |\n| парламент | /pɑrlɑˈmɛnt/ | parliament | Верховна Рада |\n| президент | /prɛzɪˈdɛnt/ | president | Президент України |\n| прем'єр-міністр | /prɛmˈjɛr mʲiˈnʲistr/ | prime minister | Новий прем'єр-міністр |\n| міністр | /mʲiˈnʲistr/ | minister | Міністр освіти |\n| міністерство | /mʲinʲisˈtɛrstvo/ | ministry | Міністерство фінансів |\n\n**Usage:**\n- Хто зараз **президент** України? - Who is currently the president of Ukraine?\n- **Уряд** прийняв нові закони. - The government adopted new laws.\n- Він працює в **міністерстві** закордонних справ. - He works in the Ministry of Foreign Affairs.\n\n### Демократія і вибори | Democracy and Elections\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| демократія | /dɛmokrɑˈtʲijɑ/ | democracy | Захищати демократію |\n| вибори | /ˈvɪborɪ/ | elections | Президентські вибори |\n| голосування | /ɦolosuˈvɑnʲːɑ/ | voting | День голосування |\n| голосувати | /ɦolosuˈvɑtɪ/ | to vote | Голосувати за кандидата |\n| виборець | /vɪˈborɛt͡sʲ/ | voter | Права виборця |\n| кандидат | /kɑndɪˈdɑt/ | candidate | Кандидат у президенти |\n| партія | /ˈpɑrtʲijɑ/ | party | Політична партія |\n| депутат | /dɛpuˈtɑt/ | deputy, MP | Народний депутат |\n| мер | /mɛr/ | mayor | Мер міста |\n| округ | /ˈokruɦ/ | district | Виборчий округ |\n\n**Usage:**\n- **Вибори** відбудуться восени. - Elections will take place in autumn.\n- Ви будете **голосувати**? - Will you vote?\n- За якого **кандидата** ви голосували? - Which candidate did you vote for?\n\n### Закон і право | Law and Rights\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| закон | /zɑˈkon/ | law | Прийняти закон |\n| право | /ˈprɑvo/ | right, law | Права людини |\n| конституція | /konstɪˈtut͡sʲijɑ/ | constitution | Конституція України |\n| законодавство | /zɑkonodɑvˈstvo/ | legislation | Нове законодавство |\n| суд | /sud/ | court | Верховний суд |\n| суддя | /sudˈdʲːɑ/ | judge | Справедливий суддя |\n| правосуддя | /prɑvoˈsudʲːɑ/ | justice | Система правосуддя |\n| злочин | /zlot͡ʃɪn/ | crime | Тяжкий злочин |\n| покарання | /pokɑˈrɑnʲːɑ/ | punishment | Суворе покарання |\n\n**Usage:**\n- **Закон** забороняє це. - The law prohibits this.\n- Кожна людина має **права**. - Every person has rights.\n- Його засудили за **злочин**. - He was convicted for a crime.\n\n### Громадянство | Citizenship\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| громадянин | /ɦromɑdʲɑˈnɪn/ | citizen (m) | Громадянин України |\n| громадянка | /ɦromɑdʲˈɑnkɑ/ | citizen (f) | Вона громадянка ЄС |\n| громадянство | /ɦromɑdʲˈɑnstvo/ | citizenship | Отримати громадянство |\n| суспільство | /susˈpʲilʲstvo/ | society | Сучасне суспільство |\n| громада | /ɦroˈmɑdɑ/ | community | Місцева громада |\n| населення | /nɑˈsɛlɛnʲːɑ/ | population | Населення міста |\n| народ | /nɑˈrod/ | people, nation | Український народ |\n\n**Usage:**\n- Він **громадянин** України. - He is a citizen of Ukraine.\n- Як отримати **громадянство**? - How to obtain citizenship?\n- **Суспільство** змінюється. - Society is changing.\n\n### Соціальні питання | Social Issues\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| проблема | /probˈlɛmɑ/ | problem | Соціальна проблема |\n| безробіття | /bɛzroˈbʲitʲːɑ/ | unemployment | Рівень безробіття |\n| бідність | /bʲidˈnʲistʲ/ | poverty | Боротьба з бідністю |\n| нерівність | /nɛˈrʲivnʲistʲ/ | inequality | Соціальна нерівність |\n| корупція | /koˈrupt͡sʲijɑ/ | corruption | Боротьба з корупцією |\n| реформа | /rɛˈformɑ/ | reform | Економічні реформи |\n| свобода | /svoˈbodɑ/ | freedom | Свобода слова |\n| рівність | /rʲivˈnʲistʲ/ | equality | Гендерна рівність |\n\n**Usage:**\n- **Безробіття** — серйозна **проблема**. - Unemployment is a serious problem.\n- Потрібні **реформи**. - Reforms are needed.\n- **Свобода слова** дуже важлива. - Freedom of speech is very important.\n\n### Політичні дії | Political Actions\n\n| Ukrainian | English | Aspect |\n|-----------|---------|--------|\n| голосувати / проголосувати | to vote | impf/pf |\n| обирати / обрати | to elect | impf/pf |\n| керувати | to govern, manage | impf |\n| приймати / прийняти (закон) | to adopt (a law) | impf/pf |\n| протестувати | to protest | impf |\n| підтримувати / підтримати | to support | impf/pf |\n| критикувати / розкритикувати | to criticize | impf/pf |\n| боротися | to fight, struggle | impf |\n\n**Usage:**\n- Вони **проголосували** за нового президента. - They voted for a new president.\n- Народ **обрав** нового лідера. - The people elected a new leader.\n- Вони **протестують** проти корупції. - They are protesting against corruption.\n\n## practice | Практика\n\n### Complete with Correct Word\n\n1. В Україні ___ (elections) відбуваються кожні п'ять років.\n   > [!answer] **вибори**\n2. Він ___ (citizen) України.\n   > [!answer] **громадянин**\n3. ___ (The government) прийняв новий закон.\n   > [!answer] **Уряд**\n4. Свобода слова — це важливе ___ (right).\n   > [!answer] **право**\n5. ___ (Unemployment) — серйозна проблема.\n   > [!answer] **Безробіття**\n6. Вона працює ___ (deputy) у парламенті.\n   > [!answer] **депутатом**\n\n### Match Terms\n\n| Term | Definition |\n|------|------------|\n| демократія | система, де влада належить народу |\n| конституція | основний закон країни |\n| вибори | процес обрання представників |\n| корупція | незаконне використання влади для особистої вигоди |\n| громадянин | особа, яка має права та обов'язки в державі |\n\n### Discussion Questions\n\n1. Яка **політична система** у вашій країні?\n2. Чи важлива **демократія**? Чому?\n3. Які **соціальні проблеми** є у вашому суспільстві?\n4. Чи ви **голосуєте** на виборах?\n5. Яку роль грають **реформи** у розвитку країни?\n\n### Translate to Ukrainian\n\n1. Democracy is important for every country.\n   > [!answer] **Демократія важлива для кожної країни.**\n2. Citizens have the right to vote.\n   > [!answer] **Громадяни мають право голосувати.**\n3. The government adopted a new law.\n   > [!answer] **Уряд прийняв новий закон.**\n4. They are fighting against corruption.\n   > [!answer] **Вони борються проти корупції.**\n5. Freedom of speech is a human right.\n   > [!answer] **Свобода слова — це право людини.**\n## production | Продукція\n\n### Describe Political System\n\nDescribe the political system of your country:\n\n- Хто є главою **держави**?\n- Як працює **уряд**?\n- Як проходять **вибори**?\n\n**Example:**\nУ моїй країні **президент** є главою держави. **Уряд** складається з міністрів. **Вибори** відбуваються кожні чотири роки. **Громадяни**, яким виповнилося 18 років, мають **право голосувати**.\n\n### Discuss Social Issues\n\nDiscuss using vocabulary from this module:\n\n- Які **проблеми** є у вашому суспільстві?\n- Які **реформи** потрібні?\n- Як можна боротися з **нерівністю**?\n\n---\n\n# Activities\n\n## quiz: Politics Vocabulary\n\n> Choose the correct word.\n\n1. Він працює ___ у парламенті.\n   - [x] депутатом\n   - [ ] депутат\n\n2. ___ відбудуться восени.\n   - [x] Вибори\n   - [ ] Голосування\n\n3. ___ прийняв новий закон.\n   - [x] Уряд\n   - [ ] Влади\n\n4. Вона ___ України.\n   - [x] громадянка\n   - [ ] громадянство\n\n5. Свобода слова — це ___ .\n   - [x] право\n   - [ ] закон\n\n6. Вони ___ проти корупції.\n   - [x] борються\n   - [ ] боротися\n\n## match-up: Government Structure\n\n| Position | Role |\n|----------|------|\n| президент | глава держави |\n| прем'єр-міністр | глава уряду |\n| депутат | член парламенту |\n| мер | глава міста |\n| міністр | керівник міністерства |\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | Gender |\n|------|-----|---------|--------|\n| держава | /dɛrˈʒɑvɑ/ | state | f |\n| уряд | /uˈrʲɑd/ | government | m |\n| політика | /poˈlʲitɪkɑ/ | politics | f |\n| демократія | /dɛmokrɑˈtʲijɑ/ | democracy | f |\n| вибори | /ˈvɪborɪ/ | elections | pl |\n| голосувати | /ɦolosuˈvɑtɪ/ | to vote | impf |\n| партія | /ˈpɑrtʲijɑ/ | party | f |\n| закон | /zɑˈkon/ | law | m |\n| право | /ˈprɑvo/ | right | n |\n| громадянин | /ɦromɑdʲɑˈnɪn/ | citizen | m |\n| суспільство | /susˈpʲilʲstvo/ | society | n |\n| свобода | /svoˈbodɑ/ | freedom | f |\n| рівність | /rʲivˈnʲistʲ/ | equality | f |\n| реформа | /rɛˈformɑ/ | reform | f |\n| корупція | /koˈrupt͡sʲijɑ/ | corruption | f |\n\n---\n\n# Summary\n\n## Key Political Vocabulary\n\n### Government\nдержава, уряд, влада, парламент, президент, міністр\n\n### Elections\nвибори, голосування, кандидат, партія, депутат, виборець\n\n### Law\nзакон, право, конституція, суд, правосуддя\n\n### Citizenship\nгромадянин, громадянство, суспільство, народ\n\n### Social Issues\nбезробіття, бідність, нерівність, корупція, реформа\n\n### Values\nдемократія, свобода, рівність, права людини\n\n## Useful Expressions\n\n- Прийти до влади - To come to power\n- Прийняти закон - To adopt a law\n- Права людини - Human rights\n- Свобода слова - Freedom of speech\n- Боротися з корупцією - To fight corruption\n- Провести реформи - To carry out reforms\n\n> **Key Takeaways**\n>\n> - уряд (government) vs влада (power/authorities)\n> - громадянин (m) / громадянка (f) = citizen\n> - право = right (also: law as a field)\n> - закон = law (specific law)\n> - вибори is always plural\n"
   },
   "activities": [
     {
-      "id": "act-uk-B1-112-quiz",
+      "id": "act-b1-112-quiz",
       "type": "quiz",
       "title": "Politics Vocabulary",
       "description": "Choose the correct word.",
       "content": {
         "type": "quiz",
-        "instructions": "Choose the correct word.",
         "questions": [
           {
             "question": "Він працює ___ у парламенті.",
@@ -257,23 +124,17 @@
       "language": "uk",
       "difficultyLevel": "B1",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "society",
-        "politics",
-        "government"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.233Z",
+      "modifiedAt": "2025-12-01T22:58:37.233Z"
     },
     {
-      "id": "act-uk-B1-112-matchup",
+      "id": "act-b1-112-matchup",
       "type": "match-up",
       "title": "Government Structure",
       "description": "Government Structure",
       "content": {
         "type": "match-up",
-        "instructions": "",
         "pairs": [
           {
             "left": "президент",
@@ -304,14 +165,9 @@
       "language": "uk",
       "difficultyLevel": "B1",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "society",
-        "politics",
-        "government"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.233Z",
+      "modifiedAt": "2025-12-01T22:58:37.233Z"
     }
   ],
   "vocabulary": {
@@ -322,139 +178,109 @@
     "transliterationMode": "none",
     "words": [
       {
-        "id": "v-m112-001",
+        "id": "v-derzhava-112-0",
         "uk": "держава",
-        "translit": "",
-        "ipa": "/dɛrˈʒɑvɑ/",
         "en": "state",
-        "pos": "",
-        "gender": "f"
+        "pos": "f",
+        "ipa": "/dɛrˈʒɑvɑ/"
       },
       {
-        "id": "v-m112-002",
+        "id": "v-uryad-112-1",
         "uk": "уряд",
-        "translit": "",
-        "ipa": "/uˈrʲɑd/",
         "en": "government",
-        "pos": "",
-        "gender": "m"
+        "pos": "m",
+        "ipa": "/uˈrʲɑd/"
       },
       {
-        "id": "v-m112-003",
+        "id": "v-polityka-112-2",
         "uk": "політика",
-        "translit": "",
-        "ipa": "/poˈlʲitɪkɑ/",
         "en": "politics",
-        "pos": "",
-        "gender": "f"
+        "pos": "f",
+        "ipa": "/poˈlʲitɪkɑ/"
       },
       {
-        "id": "v-m112-004",
+        "id": "v-demokratiya-112-3",
         "uk": "демократія",
-        "translit": "",
-        "ipa": "/dɛmokrɑˈtʲijɑ/",
         "en": "democracy",
-        "pos": "",
-        "gender": "f"
+        "pos": "f",
+        "ipa": "/dɛmokrɑˈtʲijɑ/"
       },
       {
-        "id": "v-m112-005",
+        "id": "v-vybory-112-4",
         "uk": "вибори",
-        "translit": "",
-        "ipa": "/ˈvɪborɪ/",
         "en": "elections",
-        "pos": "",
-        "gender": "pl"
+        "pos": "pl",
+        "ipa": "/ˈvɪborɪ/"
       },
       {
-        "id": "v-m112-006",
+        "id": "v-holosuvaty-112-5",
         "uk": "голосувати",
-        "translit": "",
-        "ipa": "/ɦolosuˈvɑtɪ/",
         "en": "to vote",
-        "pos": "",
-        "gender": "impf"
+        "pos": "impf",
+        "ipa": "/ɦolosuˈvɑtɪ/"
       },
       {
-        "id": "v-m112-007",
+        "id": "v-partiya-112-6",
         "uk": "партія",
-        "translit": "",
-        "ipa": "/ˈpɑrtʲijɑ/",
         "en": "party",
-        "pos": "",
-        "gender": "f"
+        "pos": "f",
+        "ipa": "/ˈpɑrtʲijɑ/"
       },
       {
-        "id": "v-m112-008",
+        "id": "v-zakon-112-7",
         "uk": "закон",
-        "translit": "",
-        "ipa": "/zɑˈkon/",
         "en": "law",
-        "pos": "",
-        "gender": "m"
+        "pos": "m",
+        "ipa": "/zɑˈkon/"
       },
       {
-        "id": "v-m112-009",
+        "id": "v-pravo-112-8",
         "uk": "право",
-        "translit": "",
-        "ipa": "/ˈprɑvo/",
         "en": "right",
-        "pos": "",
-        "gender": "n"
+        "pos": "n",
+        "ipa": "/ˈprɑvo/"
       },
       {
-        "id": "v-m112-010",
+        "id": "v-hromadyanyn-112-9",
         "uk": "громадянин",
-        "translit": "",
-        "ipa": "/ɦromɑdʲɑˈnɪn/",
         "en": "citizen",
-        "pos": "",
-        "gender": "m"
+        "pos": "m",
+        "ipa": "/ɦromɑdʲɑˈnɪn/"
       },
       {
-        "id": "v-m112-011",
+        "id": "v-suspilьstvo-112-10",
         "uk": "суспільство",
-        "translit": "",
-        "ipa": "/susˈpʲilʲstvo/",
         "en": "society",
-        "pos": "",
-        "gender": "n"
+        "pos": "n",
+        "ipa": "/susˈpʲilʲstvo/"
       },
       {
-        "id": "v-m112-012",
+        "id": "v-svoboda-112-11",
         "uk": "свобода",
-        "translit": "",
-        "ipa": "/svoˈbodɑ/",
         "en": "freedom",
-        "pos": "",
-        "gender": "f"
+        "pos": "f",
+        "ipa": "/svoˈbodɑ/"
       },
       {
-        "id": "v-m112-013",
+        "id": "v-rivnistь-112-12",
         "uk": "рівність",
-        "translit": "",
-        "ipa": "/rʲivˈnʲistʲ/",
         "en": "equality",
-        "pos": "",
-        "gender": "f"
+        "pos": "f",
+        "ipa": "/rʲivˈnʲistʲ/"
       },
       {
-        "id": "v-m112-014",
+        "id": "v-reforma-112-13",
         "uk": "реформа",
-        "translit": "",
-        "ipa": "/rɛˈformɑ/",
         "en": "reform",
-        "pos": "",
-        "gender": "f"
+        "pos": "f",
+        "ipa": "/rɛˈformɑ/"
       },
       {
-        "id": "v-m112-015",
+        "id": "v-koruptsiya-112-14",
         "uk": "корупція",
-        "translit": "",
-        "ipa": "/koˈrupt͡sʲijɑ/",
         "en": "corruption",
-        "pos": "",
-        "gender": "f"
+        "pos": "f",
+        "ipa": "/koˈrupt͡sʲijɑ/"
       }
     ]
   }

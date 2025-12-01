@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-A2-43",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "skill-practice",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -27,8 +26,6 @@
       "Aspect after modal verbs",
       "Common aspect mistakes"
     ],
-    "totalDuration": 45,
-    "transliterationMode": "partial",
     "tags": [
       "verbs",
       "aspect",
@@ -36,22 +33,9 @@
       "usage",
       "practice"
     ],
-    "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
+    "totalDuration": 45,
+    "transliterationMode": "partial",
     "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Aspect Mastery\n\nYou know aspect pairs and their meanings. Now the challenge: choosing the RIGHT aspect in real situations!\n\n**The key insight:**\nContext determines aspect. The same verb might need different aspects depending on:\n- Time expressions (за годину vs годину)\n- The whole situation (habit vs single event)\n- What you want to emphasize (process vs result)\n\n> 💡 **Did You Know?**\n>\n> Even native speakers occasionally pause to choose the right aspect! The good news: both options are usually understood. The better news: with practice, aspect becomes intuitive. This module gives you that practice!"
-          }
-        ]
-      },
       {
         "id": "phase-presentation",
         "name": "presentation",
@@ -60,102 +44,33 @@
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "### Aspect with Time Expressions\n\n**Duration (how long?) → Imperfective:**\n- Я читав **дві години**. - I was reading for two hours.\n- Вона працювала **весь день**. - She was working all day.\n- Ми чекали **довго**. - We were waiting for a long time.\n\n**Time limit (in how long?) → Perfective:**\n- Я прочитав книгу **за два дні**. - I read the book in two days.\n- Вона приготувала обід **за годину**. - She made lunch in an hour.\n- Він написав лист **за п'ять хвилин**. - He wrote the letter in five minutes.\n\n> ⚡ **Pro Tip: за vs No Preposition**\n>\n> - **дві години** (for two hours) → imperfective (duration)\n> - **за дві години** (in two hours) → perfective (completion)\n>\n> \"Я читав дві години\" = I was reading for 2 hours (process)\n> \"Я прочитав за дві години\" = I finished in 2 hours (result)"
+            "teacherNotes": "### Aspect with Time Expressions\n\n**Duration (how long?) → Imperfective:**\n- Я читав **дві години**. - I was reading for two hours.\n- Вона працювала **весь день**. - She was working all day.\n- Ми чекали **довго**. - We were waiting for a long time.\n\n**Time limit (in how long?) → Perfective:**\n- Я прочитав книгу **за два дні**. - I read the book in two days.\n- Вона приготувала обід **за годину**. - She made lunch in an hour.\n- Він написав лист **за п'ять хвилин**. - He wrote the letter in five minutes.\n\n> ⚡ **Pro Tip: за vs No Preposition**\n>\n> - **дві години** (for two hours) → imperfective (duration)\n> - **за дві години** (in two hours) → perfective (completion)\n>\n> \"Я читав дві години\" = I was reading for 2 hours (process)\n> \"Я прочитав за дві години\" = I finished in 2 hours (result)\n\n### Aspect in Storytelling\n\n**Narrative sequence → Perfective:**\nWhen telling what happened (sequence of events):\n\n> Вчора я **прокинувся**, **поснідав**, **поїхав** на роботу, **попрацював**, **повернувся** додому і **подивився** фільм.\n> (Yesterday I woke up, had breakfast, went to work, worked, came home, and watched a movie.)\n\nAll actions completed, one after another = perfective chain.\n\n**Background/setting → Imperfective:**\nWhen describing what was happening:\n\n> Коли я **йшов** додому, **світило** сонце, птахи **співали**, люди **гуляли** в парку.\n> (When I was walking home, the sun was shining, birds were singing, people were strolling in the park.)\n\nOngoing background = imperfective.\n\n> 📜 **History Bite: Aspectual Storytelling**\n>\n> Old Church Slavonic texts from the 9th century already showed this pattern: perfective for main events, imperfective for background. Ukrainian continues this 1,200-year tradition of aspectual narration!\n\n### \"While\" and \"When\" Constructions\n\n**Коли (when) + background → Imperfective:**\n- **Коли** я **снідав**, зателефонував друг.\n- (When I was having breakfast, a friend called.)\n\n**Коли (when) + completed action → Perfective:**\n- **Коли** я **поснідав**, я пішов на роботу.\n- (When I finished breakfast, I went to work.)\n\n**Поки (while) → Usually Imperfective:**\n- **Поки** вона **готувала**, я **читав**.\n- (While she was cooking, I was reading.)\n\n**Перш ніж (before) → Perfective:**\n- **Перш ніж** **піти**, він подзвонив.\n- (Before leaving, he called.)\n\n**Після того як (after) → Perfective:**\n- **Після того як** він **прийшов**, ми почали.\n- (After he arrived, we started.)\n\n> ⚡ **Pro Tip: Simultaneous vs Sequential**\n>\n> Simultaneous actions (happening at the same time) → imperfective\n> Sequential actions (one after another) → perfective\n\n### Aspect After Modal Expressions\n\n**хотіти (to want) - both possible:**\n- Я хочу **читати**. (I want to read - in general)\n- Я хочу **прочитати** цю книгу. (I want to finish this book)\n\n**могти (can/able) - both possible:**\n- Я можу **читати** українською. (I can read Ukrainian - ability)\n- Я можу **прочитати** це за день. (I can finish this in a day)\n\n**треба/потрібно (need to) - usually perfective:**\n- Мені треба **зробити** це. (I need to get this done)\n- Тобі потрібно **написати** їм. (You need to write to them)\n\n**починати/почати (start) - imperfective follows:**\n- Я починаю **читати**. (I'm starting to read)\n- Він почав **працювати**. (He started working)\n\n**закінчувати/закінчити (finish) - imperfective follows:**\n- Я закінчив **читати**. (I finished reading)\n- Вона закінчує **готувати**. (She's finishing cooking)\n\n> 🎭 **Culture Corner: Polite Aspect**\n>\n> In Ukrainian, using imperfective can sound softer:\n> - \"Можна **запитати**?\" (May I ask? - polite, perfective)\n> - \"Можна **питати**?\" (May I ask? - very soft, imperfective)\n>\n> But for requests: \"Чи можете **сказати**...?\" (perfective) is standard.\n\n### Aspect with Negation Revisited\n\n**Не + imperfective = didn't do:**\n- Я **не читав** цю книгу. - I haven't read this book. (never)\n- Він **не писав** мені. - He didn't write to me. (no writing happened)\n\n**Не + perfective = didn't complete/couldn't:**\n- Я **не прочитав** книгу. - I didn't finish the book.\n- Він **не написав** листа. - He didn't manage to write the letter.\n\n**Special case - ще не (not yet) → usually perfective:**\n- Я **ще не прочитав**. - I haven't read it yet. (but will)\n- Вона **ще не приїхала**. - She hasn't arrived yet.\n\n**вже (already) → perfective:**\n- Я **вже прочитав**. - I've already read it.\n- Він **вже пішов**. - He's already left.\n\n### Common Aspect Mistakes\n\n**❌ Wrong: \"Я буду прочитати.\"**\n✅ Right: \"Я прочитаю.\" (Perfective future = conjugated verb)\n✅ Right: \"Я буду читати.\" (Imperfective future = буду + infinitive)\n\n**❌ Wrong: \"Я зараз прочитаю.\" (for process)**\n✅ Right: \"Я зараз читаю.\" (Now = in progress = imperfective)\n\n**❌ Wrong: \"Він завжди написав листи.\"**\n✅ Right: \"Він завжди писав листи.\" (Always = habitual = imperfective)\n\n**❌ Wrong: \"Не зроби це!\" (negative command)**\n✅ Right: \"Не роби це!\" (Negative commands = imperfective)\n\n> ⚡ **Pro Tip: When in Doubt**\n>\n> - Is it ongoing/repeated? → Imperfective\n> - Is it completed/single? → Perfective\n> - Present tense? → Imperfective only\n> - Negative command? → Imperfective\n> - \"вже\" or \"ще не\"? → Perfective\n\n### Aspect in Questions\n\n**Asking about experience (ever?) → Imperfective:**\n- Ти **читав** \"Кобзар\"? - Have you (ever) read \"Kobzar\"?\n- Ви **бували** в Україні? - Have you (ever) been to Ukraine?\n\n**Asking about specific result → Perfective:**\n- Ти **прочитав** статтю, яку я надіслав? - Did you read the article I sent?\n- Ви **побачили** мій лист? - Did you see my letter?\n\n**Asking about current activity → Imperfective:**\n- Що ти **робиш**? - What are you doing?\n- Що ви **читаєте**? - What are you reading?\n\n**Asking what was accomplished → Perfective:**\n- Що ти **зробив** сьогодні? - What did you get done today?\n- Що ви **приготували**? - What did you cook/make?"
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Aspect in Storytelling\n\n**Narrative sequence → Perfective:**\nWhen telling what happened (sequence of events):\n\n> Вчора я **прокинувся**, **поснідав**, **поїхав** на роботу, **попрацював**, **повернувся** додому і **подивився** фільм.\n> (Yesterday I woke up, had breakfast, went to work, worked, came home, and watched a movie.)\n\nAll actions completed, one after another = perfective chain.\n\n**Background/setting → Imperfective:**\nWhen describing what was happening:\n\n> Коли я **йшов** додому, **світило** сонце, птахи **співали**, люди **гуляли** в парку.\n> (When I was walking home, the sun was shining, birds were singing, people were strolling in the park.)\n\nOngoing background = imperfective.\n\n> 📜 **History Bite: Aspectual Storytelling**\n>\n> Old Church Slavonic texts from the 9th century already showed this pattern: perfective for main events, imperfective for background. Ukrainian continues this 1,200-year tradition of aspectual narration!"
+            "teacherNotes": "### Choose the Correct Aspect\n\n1. Я писав листа ___ (дві години / за дві години).\n   > [!answer] дві години\n   > [!explanation] imperfective + duration\n2. Вона прочитала книгу ___ (тиждень / за тиждень).\n   > [!answer] за тиждень\n   > [!explanation] perfective + time limit\n3. Коли я ___ (снідав / поснідав), зателефонувала мама.\n   > [!answer] снідав\n   > [!explanation] background action - imperfective\n4. Коли я ___ (снідав / поснідав), я пішов на роботу.\n   > [!answer] поснідав\n   > [!explanation] completed before next action - perfective\n5. Я хочу ___ (читати / прочитати) цю книгу до кінця.\n   > [!answer] прочитати\n   > [!explanation] complete the book - perfective\n6. Ти вже ___ (робив / зробив) домашнє завдання?\n   > [!answer] зробив\n   > [!explanation] вже = already = perfective\n### Fill in with Correct Aspect\n\n1. Вчора я ___ (прокидатися/прокинутися) о сьомій.\n   > [!answer] прокинувся\n   > [!explanation] single completed action\n2. Кожен день я ___ (прокидатися/прокинутися) о сьомій.\n   > [!answer] прокидаюся\n   > [!explanation] habitual\n3. Поки він ___ (працювати/попрацювати), я чекала.\n   > [!answer] працював\n   > [!explanation] simultaneous - imperfective\n4. Після того як він ___ (закінчувати/закінчити), ми пішли.\n   > [!answer] закінчив\n   > [!explanation] completed before - perfective\n5. Не ___ (забувати/забути) ключі!\n   > [!answer] забувай\n   > [!explanation] negative command - imperfective\n6. Я ще не ___ (відповідати/відповісти) на лист.\n   > [!answer] відповів\n   > [!explanation] ще не + perfective\n### Translate Using Correct Aspect\n\n1. I was reading for three hours.\n   > [!answer] Я читав три години.\n\n2. I read the book in three hours.\n   > [!answer] Я прочитав книгу за три години.\n\n3. While she was cooking, I watched TV.\n   > [!answer] Поки вона готувала, я дивився телевізор.\n\n4. Have you ever been to Kyiv?\n   > [!answer] Ти бував у Києві?\n\n5. I haven't finished yet.\n   > [!answer] Я ще не закінчив.\n\n6. I already called him.\n   > [!answer] Я вже подзвонив йому."
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "\"While\" and \"When\" Constructions\n\n**Коли (when) + background → Imperfective:**\n- **Коли** я **снідав**, зателефонував друг.\n- (When I was having breakfast, a friend called.)\n\n**Коли (when) + completed action → Perfective:**\n- **Коли** я **поснідав**, я пішов на роботу.\n- (When I finished breakfast, I went to work.)\n\n**Поки (while) → Usually Imperfective:**\n- **Поки** вона **готувала**, я **читав**.\n- (While she was cooking, I was reading.)\n\n**Перш ніж (before) → Perfective:**\n- **Перш ніж** **піти**, він подзвонив.\n- (Before leaving, he called.)\n\n**Після того як (after) → Perfective:**\n- **Після того як** він **прийшов**, ми почали.\n- (After he arrived, we started.)\n\n> ⚡ **Pro Tip: Simultaneous vs Sequential**\n>\n> Simultaneous actions (happening at the same time) → imperfective\n> Sequential actions (one after another) → perfective"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Aspect After Modal Expressions\n\n**хотіти (to want) - both possible:**\n- Я хочу **читати**. (I want to read - in general)\n- Я хочу **прочитати** цю книгу. (I want to finish this book)\n\n**могти (can/able) - both possible:**\n- Я можу **читати** українською. (I can read Ukrainian - ability)\n- Я можу **прочитати** це за день. (I can finish this in a day)\n\n**треба/потрібно (need to) - usually perfective:**\n- Мені треба **зробити** це. (I need to get this done)\n- Тобі потрібно **написати** їм. (You need to write to them)\n\n**починати/почати (start) - imperfective follows:**\n- Я починаю **читати**. (I'm starting to read)\n- Він почав **працювати**. (He started working)\n\n**закінчувати/закінчити (finish) - imperfective follows:**\n- Я закінчив **читати**. (I finished reading)\n- Вона закінчує **готувати**. (She's finishing cooking)\n\n> 🎭 **Culture Corner: Polite Aspect**\n>\n> In Ukrainian, using imperfective can sound softer:\n> - \"Можна **запитати**?\" (May I ask? - polite, perfective)\n> - \"Можна **питати**?\" (May I ask? - very soft, imperfective)\n>\n> But for requests: \"Чи можете **сказати**...?\" (perfective) is standard."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Aspect with Negation Revisited\n\n**Не + imperfective = didn't do:**\n- Я **не читав** цю книгу. - I haven't read this book. (never)\n- Він **не писав** мені. - He didn't write to me. (no writing happened)\n\n**Не + perfective = didn't complete/couldn't:**\n- Я **не прочитав** книгу. - I didn't finish the book.\n- Він **не написав** листа. - He didn't manage to write the letter.\n\n**Special case - ще не (not yet) → usually perfective:**\n- Я **ще не прочитав**. - I haven't read it yet. (but will)\n- Вона **ще не приїхала**. - She hasn't arrived yet.\n\n**вже (already) → perfective:**\n- Я **вже прочитав**. - I've already read it.\n- Він **вже пішов**. - He's already left."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Common Aspect Mistakes\n\n**❌ Wrong: \"Я буду прочитати.\"**\n✅ Right: \"Я прочитаю.\" (Perfective future = conjugated verb)\n✅ Right: \"Я буду читати.\" (Imperfective future = буду + infinitive)\n\n**❌ Wrong: \"Я зараз прочитаю.\" (for process)**\n✅ Right: \"Я зараз читаю.\" (Now = in progress = imperfective)\n\n**❌ Wrong: \"Він завжди написав листи.\"**\n✅ Right: \"Він завжди писав листи.\" (Always = habitual = imperfective)\n\n**❌ Wrong: \"Не зроби це!\" (negative command)**\n✅ Right: \"Не роби це!\" (Negative commands = imperfective)\n\n> ⚡ **Pro Tip: When in Doubt**\n>\n> - Is it ongoing/repeated? → Imperfective\n> - Is it completed/single? → Perfective\n> - Present tense? → Imperfective only\n> - Negative command? → Imperfective\n> - \"вже\" or \"ще не\"? → Perfective"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Aspect in Questions\n\n**Asking about experience (ever?) → Imperfective:**\n- Ти **читав** \"Кобзар\"? - Have you (ever) read \"Kobzar\"?\n- Ви **бували** в Україні? - Have you (ever) been to Ukraine?\n\n**Asking about specific result → Perfective:**\n- Ти **прочитав** статтю, яку я надіслав? - Did you read the article I sent?\n- Ви **побачили** мій лист? - Did you see my letter?\n\n**Asking about current activity → Imperfective:**\n- Що ти **робиш**? - What are you doing?\n- Що ви **читаєте**? - What are you reading?\n\n**Asking what was accomplished → Perfective:**\n- Що ти **зробив** сьогодні? - What did you get done today?\n- Що ви **приготували**? - What did you cook/make?"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A2-43-matchup"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Choose the Correct Aspect\n\n1. Я писав листа ___ (дві години / за дві години).\n   → дві години (imperfective + duration)\n\n2. Вона прочитала книгу ___ (тиждень / за тиждень).\n   → за тиждень (perfective + time limit)\n\n3. Коли я ___ (снідав / поснідав), зателефонувала мама.\n   → снідав (background action - imperfective)\n\n4. Коли я ___ (снідав / поснідав), я пішов на роботу.\n   → поснідав (completed before next action - perfective)\n\n5. Я хочу ___ (читати / прочитати) цю книгу до кінця.\n   → прочитати (complete the book - perfective)\n\n6. Ти вже ___ (робив / зробив) домашнє завдання?\n   → зробив (вже = already = perfective)"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Fill in with Correct Aspect\n\n1. Вчора я ___ (прокидатися/прокинутися) о сьомій.\n   → прокинувся (single completed action)\n\n2. Кожен день я ___ (прокидатися/прокинутися) о сьомій.\n   → прокидаюся (habitual)\n\n3. Поки він ___ (працювати/попрацювати), я чекала.\n   → працював (simultaneous - imperfective)\n\n4. Після того як він ___ (закінчувати/закінчити), ми пішли.\n   → закінчив (completed before - perfective)\n\n5. Не ___ (забувати/забути) ключі!\n   → забувай (negative command - imperfective)\n\n6. Я ще не ___ (відповідати/відповісти) на лист.\n   → відповів (ще не + perfective)"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Translate Using Correct Aspect\n\n1. I was reading for three hours.\n   → Я читав три години.\n\n2. I read the book in three hours.\n   → Я прочитав книгу за три години.\n\n3. While she was cooking, I watched TV.\n   → Поки вона готувала, я дивився телевізор.\n\n4. Have you ever been to Kyiv?\n   → Ти бував у Києві?\n\n5. I haven't finished yet.\n   → Я ще не закінчив.\n\n6. I already called him.\n   → Я вже подзвонив йому."
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A2-43-quiz"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A2-43-groupsort"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Tell a Story\n\n**Use both aspects appropriately:**\n\n> Минулої неділі я **вирішив** поїхати на природу. Рано вранці я **прокинувся**, **поснідав** і **зібрав** речі. Погода **була** чудова - **світило** сонце, **співали** птахи. Я **їхав** автобусом дві години. Коли я **приїхав**, я **пішов** до озера. Там я **відпочивав** весь день - **читав** книгу, **плавав**, **обідав** на траві. Увечері я **повернувся** додому задоволений.\n\nNotice:\n- Perfective for main events (вирішив, прокинувся, приїхав...)\n- Imperfective for background (була, світило, співали...)\n- Imperfective for duration (їхав дві години, відпочивав весь день...)"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Practice Dialogues\n\n**Asking about results:**\n- Ти вже **прочитав** ту статтю?\n- Так, **прочитав** учора.\n- І що **подумав**?\n- Цікаво! Треба **обговорити**.\n\n**Asking about experience:**\n- Ти **читав** Шевченка?\n- Звичайно, **читав** у школі.\n- А \"Заповіт\" **пам'ятаєш**?\n- Так, можу навіть **прочитати** напам'ять!"
+            "teacherNotes": "### Tell a Story\n\n**Use both aspects appropriately:**\n\n> Минулої неділі я **вирішив** поїхати на природу. Рано вранці я **прокинувся**, **поснідав** і **зібрав** речі. Погода **була** чудова - **світило** сонце, **співали** птахи. Я **їхав** автобусом дві години. Коли я **приїхав**, я **пішов** до озера. Там я **відпочивав** весь день - **читав** книгу, **плавав**, **обідав** на траві. Увечері я **повернувся** додому задоволений.\n\nNotice:\n- Perfective for main events (вирішив, прокинувся, приїхав...)\n- Imperfective for background (була, світило, співали...)\n- Imperfective for duration (їхав дві години, відпочивав весь день...)\n\n### Practice Dialogues\n\n**Asking about results:**\n- Ти вже **прочитав** ту статтю?\n- Так, **прочитав** учора.\n- І що **подумав**?\n- Цікаво! Треба **обговорити**.\n\n**Asking about experience:**\n- Ти **читав** Шевченка?\n- Звичайно, **читав** у школі.\n- А \"Заповіт\" **пам'ятаєш**?\n- Так, можу навіть **прочитати** напам'ять!\n\n---"
           }
         ]
       }
-    ]
+    ],
+    "createdAt": "2025-12-01T22:58:37.272Z",
+    "modifiedAt": "2025-12-01T22:58:37.272Z",
+    "version": 1
   },
   "activities": [
     {
-      "id": "act-uk-A2-43-matchup",
+      "id": "act-a2-43-matchup",
       "type": "match-up",
       "title": "Time Expressions + Aspect",
       "description": "Match time expression with typical aspect.",
       "content": {
         "type": "match-up",
-        "instructions": "Match time expression with typical aspect.",
         "pairs": [
           {
             "left": "дві години",
@@ -190,24 +105,17 @@
       "language": "uk",
       "difficultyLevel": "A2",
       "duration": 5,
-      "tags": [
-        "verbs",
-        "aspect",
-        "context",
-        "usage",
-        "practice"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.272Z",
+      "modifiedAt": "2025-12-01T22:58:37.272Z"
     },
     {
-      "id": "act-uk-A2-43-quiz",
+      "id": "act-a2-43-quiz",
       "type": "quiz",
       "title": "Aspect in Context",
       "description": "Choose the correct form.",
       "content": {
         "type": "quiz",
-        "instructions": "Choose the correct form.",
         "questions": [
           {
             "question": "\"I was writing for two hours\" - Я ___ дві години.",
@@ -286,26 +194,20 @@
       "language": "uk",
       "difficultyLevel": "A2",
       "duration": 5,
-      "tags": [
-        "verbs",
-        "aspect",
-        "context",
-        "usage",
-        "practice"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.272Z",
+      "modifiedAt": "2025-12-01T22:58:37.272Z"
     },
     {
-      "id": "act-uk-A2-43-groupsort",
+      "id": "act-a2-43-groupsort",
       "type": "group-sort",
       "title": "Context Determines Aspect",
       "description": "Sort by which aspect fits.",
       "content": {
         "type": "group-sort",
-        "instructions": "Sort by which aspect fits.",
         "groups": [
           {
+            "id": "imperfective-context",
             "name": "Imperfective Context",
             "items": [
               "\"щодня\" (every day)",
@@ -315,6 +217,7 @@
             ]
           },
           {
+            "id": "perfective-context",
             "name": "Perfective Context",
             "items": [
               "\"за дві години\" (in two hours)",
@@ -332,15 +235,9 @@
       "language": "uk",
       "difficultyLevel": "A2",
       "duration": 5,
-      "tags": [
-        "verbs",
-        "aspect",
-        "context",
-        "usage",
-        "practice"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.272Z",
+      "modifiedAt": "2025-12-01T22:58:37.272Z"
     }
   ],
   "vocabulary": {
@@ -351,96 +248,76 @@
     "transliterationMode": "partial",
     "words": [
       {
-        "id": "v-m43-001",
+        "id": "v-poky-43-0",
         "uk": "поки",
-        "translit": "",
-        "ipa": "/poˈkɪ/",
         "en": "while",
         "pos": "conj",
-        "gender": "-"
+        "ipa": "/poˈkɪ/"
       },
       {
-        "id": "v-m43-002",
+        "id": "v-persh-nizh-43-1",
         "uk": "перш ніж",
-        "translit": "",
-        "ipa": "/pɛrʃ nʲiʒ/",
         "en": "before",
         "pos": "conj",
-        "gender": "-",
+        "ipa": "/pɛrʃ nʲiʒ/",
         "note": "+ perfective"
       },
       {
-        "id": "v-m43-003",
+        "id": "v-pislya-toho-yak-43-2",
         "uk": "після того як",
-        "translit": "",
-        "ipa": "/ˈpʲislʲɑ toˈɦo jɑk/",
         "en": "after",
         "pos": "conj",
-        "gender": "-",
+        "ipa": "/ˈpʲislʲɑ toˈɦo jɑk/",
         "note": "+ perfective"
       },
       {
-        "id": "v-m43-004",
+        "id": "v-nareshti-43-3",
         "uk": "нарешті",
-        "translit": "",
-        "ipa": "/nɑˈrɛʃtʲi/",
         "en": "finally",
         "pos": "adv",
-        "gender": "-"
+        "ipa": "/nɑˈrɛʃtʲi/"
       },
       {
-        "id": "v-m43-005",
+        "id": "v-raptom-43-4",
         "uk": "раптом",
-        "translit": "",
-        "ipa": "/ˈrɑptom/",
         "en": "suddenly",
         "pos": "adv",
-        "gender": "-"
+        "ipa": "/ˈrɑptom/"
       },
       {
-        "id": "v-m43-006",
+        "id": "v-prokynutysya-43-5",
         "uk": "прокинутися",
-        "translit": "",
-        "ipa": "/proˈkɪnutɪsʲɑ/",
         "en": "to wake up (perf)",
         "pos": "verb",
-        "gender": "-"
+        "ipa": "/proˈkɪnutɪsʲɑ/"
       },
       {
-        "id": "v-m43-007",
+        "id": "v-povernutysya-43-6",
         "uk": "повернутися",
-        "translit": "",
-        "ipa": "/povɛrˈnutɪsʲɑ/",
         "en": "to return (perf)",
         "pos": "verb",
-        "gender": "-"
+        "ipa": "/povɛrˈnutɪsʲɑ/"
       },
       {
-        "id": "v-m43-008",
+        "id": "v-zbyraty-43-7",
         "uk": "збирати",
-        "translit": "",
-        "ipa": "/zbɪˈrɑtɪ/",
         "en": "to gather (impf)",
         "pos": "verb",
-        "gender": "-"
+        "ipa": "/zbɪˈrɑtɪ/"
       },
       {
-        "id": "v-m43-009",
+        "id": "v-zibraty-43-8",
         "uk": "зібрати",
-        "translit": "",
-        "ipa": "/zʲiˈbrɑtɪ/",
         "en": "to gather (perf)",
         "pos": "verb",
-        "gender": "-"
+        "ipa": "/zʲiˈbrɑtɪ/"
       },
       {
-        "id": "v-m43-010",
+        "id": "v-vidpochyvaty-43-9",
         "uk": "відпочивати",
-        "translit": "",
-        "ipa": "/vʲidpotʃɪˈvɑtɪ/",
         "en": "to rest (impf)",
         "pos": "verb",
-        "gender": "-"
+        "ipa": "/vʲidpotʃɪˈvɑtɪ/"
       }
     ]
   }

@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-B1-103",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "grammar-introduction",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -22,176 +21,43 @@
       "Distinguish purpose from result"
     ],
     "grammarFocus": [],
-    "totalDuration": 45,
-    "transliterationMode": "none",
     "tags": [
       "grammar",
       "purpose-clauses",
       "complex-sentences",
       "щоб"
     ],
+    "totalDuration": 45,
+    "transliterationMode": "none",
+    "phases": [],
+    "createdAt": "2025-12-01T22:58:37.230Z",
+    "modifiedAt": "2025-12-01T22:58:37.230Z",
     "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
-    "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Мета та намір | Purpose and Intention\n\nЯк сказати \"навіщо\" ви щось робите?\n\nHow do you say \"why\" (for what purpose) you do something?\n\nEnglish uses \"to\" or \"in order to\":\n- I came **to** help.\n- I study **in order to** learn.\n\nUkrainian uses **щоб** (in order to):\n- Я прийшов, **щоб** допомогти.\n- Я вчуся, **щоб** знати."
-          }
-        ]
-      },
-      {
-        "id": "phase-presentation",
-        "name": "presentation",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Щоб + Infinitive: Basic Pattern\n\nWhen the **same person** does both actions, use **щоб + infinitive**:\n\n| Ukrainian | English |\n|-----------|---------|\n| Я прийшов, **щоб допомогти**. | I came to help. |\n| Вона поїхала, **щоб відпочити**. | She left to rest. |\n| Ми працюємо, **щоб заробити** гроші. | We work to earn money. |\n\n**Structure:** Main clause + щоб + infinitive\n\n> **⭐ KEY RULE: Same Subject**\n>\n> Use **щоб + infinitive** when the subject of both clauses is the **same person**:\n> - **Я** прийшов, щоб **[-]** допомогти. (I came to help [myself doing it])\n>\n> When subjects are **different**, use **щоб + past tense** (Module 104):\n> - **Я** хочу, щоб **ти** допоміг. (I want you to help)"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Common Verbs with Щоб + Infinitive\n\n**Motion verbs:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Він пішов, щоб купити хліб. | He went to buy bread. |\n| Вона приїхала, щоб побачити родину. | She came to see her family. |\n| Ми зайшли, щоб випити кави. | We stopped by to drink coffee. |\n\n**Action verbs:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Я зателефонував, щоб запитати. | I called to ask. |\n| Вона відкрила вікно, щоб провітрити. | She opened the window to air out. |\n| Він увімкнув світло, щоб читати. | He turned on the light to read. |\n\n**Effort verbs:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Вони працюють, щоб жити краще. | They work to live better. |\n| Я вчуся, щоб здати іспит. | I'm studying to pass the exam. |\n| Вона тренується, щоб перемогти. | She trains to win. |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Aspect Choice with Щоб\n\nBoth perfective and imperfective can follow щоб:\n\n| Aspect | Meaning | Example |\n|--------|---------|---------|\n| **Perfective** | Complete the action | Я прийшов, щоб **сказати** правду. (to tell — one time) |\n| **Imperfective** | Ongoing/repeated action | Я прийшов, щоб **допомагати** тобі. (to help — ongoing) |\n\n**Compare:**\n\n| Ukrainian | Meaning |\n|-----------|---------|\n| Він пішов, щоб **купити** газету. | He went to buy a newspaper. (complete the purchase) |\n| Він пішов, щоб **купувати** продукти. | He went to buy groceries. (the buying process) |\n\n> **⭐ GUIDELINE**\n>\n> - **Perfective** is more common after щоб (focus on achieving the goal)\n> - **Imperfective** emphasizes ongoing help, regular activity, or the process"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Negative Purpose: Щоб не\n\nTo express negative purpose (\"in order not to\"):\n\n| Ukrainian | English |\n|-----------|---------|\n| Я поспішаю, **щоб не** запізнитися. | I'm hurrying so as not to be late. |\n| Вона говорить тихо, **щоб не** розбудити дитину. | She speaks quietly so as not to wake the child. |\n| Він записав, **щоб не** забути. | He wrote it down so as not to forget. |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Alternatives to Щоб\n\n**Для того щоб** (more formal/emphatic):\n\n| Ukrainian | English |\n|-----------|---------|\n| Я прийшов, **для того щоб** допомогти. | I came in order to help. |\n| **Для того щоб** досягти успіху, треба працювати. | In order to achieve success, one must work. |\n\n**Задля + genitive** (literary):\n\n| Ukrainian | English |\n|-----------|---------|\n| Він робить це **задля** друзів. | He does this for the sake of friends. |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Word Order\n\nThe purpose clause typically comes **after** the main clause:\n\n✅ Я прийшов, **щоб допомогти**. (normal)\n✅ **Щоб допомогти**, я прийшов. (emphatic, less common)\n\nWhen starting with \"щоб,\" the purpose is emphasized:\n- **Щоб вивчити мову**, потрібно практикуватися. (To learn a language, one needs to practice.)"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Purpose vs. Result\n\nDon't confuse purpose (intention) with result (outcome):\n\n| Type | Ukrainian | English |\n|------|-----------|---------|\n| **Purpose** (intention) | Він вчиться, **щоб** знати. | He studies **to** know. |\n| **Result** (outcome) | Він вчиться **так, що** вже знає багато. | He studies **so that** he already knows a lot. |\n\nPurpose = why you START the action\nResult = what happens BECAUSE of the action"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Combine with Щоб\n\n**Example:** Я пішов у магазин. Я хотів купити молоко.\n→ Я пішов у магазин, **щоб купити** молоко.\n\n1. Вона відкрила вікно. Вона хотіла провітрити кімнату.\n   → Вона відкрила вікно, **щоб провітрити** кімнату.\n\n2. Він зателефонував. Він хотів запитати про роботу.\n   → Він зателефонував, **щоб запитати** про роботу.\n\n3. Ми приїхали. Ми хотіли побачити тебе.\n   → Ми приїхали, **щоб побачити** тебе.\n\n4. Вона вчить українську. Вона хоче працювати в Україні.\n   → Вона вчить українську, **щоб працювати** в Україні.\n\n5. Я встав рано. Я не хотів запізнитися.\n   → Я встав рано, **щоб не запізнитися**."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Choose the Correct Form\n\n1. Вона пішла в магазин, щоб ___ хліб.\n   - a) купить\n   - b) купити ✓\n   - c) купила\n\n2. Я зателефонував, щоб ___ новини.\n   - a) дізнаюся\n   - b) дізнатися ✓\n   - c) дізнався\n\n3. Він відкрив книгу, щоб ___ .\n   - a) читав\n   - b) читати ✓\n   - c) прочитав\n\n4. Вони працюють, щоб ___ гроші.\n   - a) заробляти ✓\n   - b) заробляють\n   - c) заробили\n\n5. Я поспішаю, щоб ___ не запізнитися.\n   - a) ✓ (no word needed)\n   - b) я\n   - c) щоб"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Translate to Ukrainian\n\n1. I came to ask a question.\n   → Я прийшов, **щоб запитати**.\n\n2. She studies to pass the exam.\n   → Вона вчиться, **щоб скласти іспит**.\n\n3. We work to live better.\n   → Ми працюємо, **щоб жити краще**.\n\n4. He called to say hello.\n   → Він зателефонував, **щоб привітатися**.\n\n5. I woke up early so as not to be late.\n   → Я прокинувся рано, **щоб не запізнитися**."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Answer the Questions\n\nUse \"щоб + infinitive\" in your answers:\n\n1. Навіщо ви вчите українську?\n   → Я вчу українську, **щоб**... (говорити з друзями / працювати в Україні / подорожувати)\n\n2. Навіщо люди працюють?\n   → Люди працюють, **щоб**... (заробляти гроші / допомагати родині / мати цікаве життя)\n\n3. Навіщо ви прийшли на урок?\n   → Я прийшов на урок, **щоб**... (вчитися / практикувати мову / знайомитися з людьми)"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-B1-103-quiz"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Express Your Goals\n\nComplete with your real goals:\n\n1. Я вчу українську, щоб...\n2. Я працюю, щоб...\n3. Я хочу подорожувати, щоб...\n4. Я читаю книги, щоб...\n5. Я встаю рано, щоб...\n\n**Example:**\nЯ вчу українську, **щоб говорити** з моєю родиною в Україні. Я також хочу **щоб читати** українські книги в оригіналі."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Discussion: Life Goals\n\nDiscuss using purpose clauses:\n\n- Що ви робите, **щоб** бути здоровими?\n- Що треба робити, **щоб** вивчити мову?\n- Що ви робите, **щоб** бути щасливими?"
-          }
-        ]
-      }
-    ],
-    "rawMarkdown": "# Зміст уроку | Lesson Content\n\n## warm-up | Розминка\n\n### Мета та намір | Purpose and Intention\n\nЯк сказати \"навіщо\" ви щось робите?\n\nHow do you say \"why\" (for what purpose) you do something?\n\nEnglish uses \"to\" or \"in order to\":\n- I came **to** help.\n- I study **in order to** learn.\n\nUkrainian uses **щоб** (in order to):\n- Я прийшов, **щоб** допомогти.\n- Я вчуся, **щоб** знати.\n\n## presentation | Презентація\n\n### Щоб + Infinitive: Basic Pattern\n\nWhen the **same person** does both actions, use **щоб + infinitive**:\n\n| Ukrainian | English |\n|-----------|---------|\n| Я прийшов, **щоб допомогти**. | I came to help. |\n| Вона поїхала, **щоб відпочити**. | She left to rest. |\n| Ми працюємо, **щоб заробити** гроші. | We work to earn money. |\n\n**Structure:** Main clause + щоб + infinitive\n\n> **⭐ KEY RULE: Same Subject**\n>\n> Use **щоб + infinitive** when the subject of both clauses is the **same person**:\n> - **Я** прийшов, щоб **[-]** допомогти. (I came to help [myself doing it])\n>\n> When subjects are **different**, use **щоб + past tense** (Module 104):\n> - **Я** хочу, щоб **ти** допоміг. (I want you to help)\n\n### Common Verbs with Щоб + Infinitive\n\n**Motion verbs:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Він пішов, щоб купити хліб. | He went to buy bread. |\n| Вона приїхала, щоб побачити родину. | She came to see her family. |\n| Ми зайшли, щоб випити кави. | We stopped by to drink coffee. |\n\n**Action verbs:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Я зателефонував, щоб запитати. | I called to ask. |\n| Вона відкрила вікно, щоб провітрити. | She opened the window to air out. |\n| Він увімкнув світло, щоб читати. | He turned on the light to read. |\n\n**Effort verbs:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Вони працюють, щоб жити краще. | They work to live better. |\n| Я вчуся, щоб здати іспит. | I'm studying to pass the exam. |\n| Вона тренується, щоб перемогти. | She trains to win. |\n\n### Aspect Choice with Щоб\n\nBoth perfective and imperfective can follow щоб:\n\n| Aspect | Meaning | Example |\n|--------|---------|---------|\n| **Perfective** | Complete the action | Я прийшов, щоб **сказати** правду. (to tell — one time) |\n| **Imperfective** | Ongoing/repeated action | Я прийшов, щоб **допомагати** тобі. (to help — ongoing) |\n\n**Compare:**\n\n| Ukrainian | Meaning |\n|-----------|---------|\n| Він пішов, щоб **купити** газету. | He went to buy a newspaper. (complete the purchase) |\n| Він пішов, щоб **купувати** продукти. | He went to buy groceries. (the buying process) |\n\n> **⭐ GUIDELINE**\n>\n> - **Perfective** is more common after щоб (focus on achieving the goal)\n> - **Imperfective** emphasizes ongoing help, regular activity, or the process\n\n### Negative Purpose: Щоб не\n\nTo express negative purpose (\"in order not to\"):\n\n| Ukrainian | English |\n|-----------|---------|\n| Я поспішаю, **щоб не** запізнитися. | I'm hurrying so as not to be late. |\n| Вона говорить тихо, **щоб не** розбудити дитину. | She speaks quietly so as not to wake the child. |\n| Він записав, **щоб не** забути. | He wrote it down so as not to forget. |\n\n### Alternatives to Щоб\n\n**Для того щоб** (more formal/emphatic):\n\n| Ukrainian | English |\n|-----------|---------|\n| Я прийшов, **для того щоб** допомогти. | I came in order to help. |\n| **Для того щоб** досягти успіху, треба працювати. | In order to achieve success, one must work. |\n\n**Задля + genitive** (literary):\n\n| Ukrainian | English |\n|-----------|---------|\n| Він робить це **задля** друзів. | He does this for the sake of friends. |\n\n### Word Order\n\nThe purpose clause typically comes **after** the main clause:\n\n✅ Я прийшов, **щоб допомогти**. (normal)\n✅ **Щоб допомогти**, я прийшов. (emphatic, less common)\n\nWhen starting with \"щоб,\" the purpose is emphasized:\n- **Щоб вивчити мову**, потрібно практикуватися. (To learn a language, one needs to practice.)\n\n### Purpose vs. Result\n\nDon't confuse purpose (intention) with result (outcome):\n\n| Type | Ukrainian | English |\n|------|-----------|---------|\n| **Purpose** (intention) | Він вчиться, **щоб** знати. | He studies **to** know. |\n| **Result** (outcome) | Він вчиться **так, що** вже знає багато. | He studies **so that** he already knows a lot. |\n\nPurpose = why you START the action\nResult = what happens BECAUSE of the action\n\n## practice | Практика\n\n### Combine with Щоб\n\n**Example:** Я пішов у магазин. Я хотів купити молоко.\n→ Я пішов у магазин, **щоб купити** молоко.\n\n1. Вона відкрила вікно. Вона хотіла провітрити кімнату.\n   → Вона відкрила вікно, **щоб провітрити** кімнату.\n\n2. Він зателефонував. Він хотів запитати про роботу.\n   → Він зателефонував, **щоб запитати** про роботу.\n\n3. Ми приїхали. Ми хотіли побачити тебе.\n   → Ми приїхали, **щоб побачити** тебе.\n\n4. Вона вчить українську. Вона хоче працювати в Україні.\n   → Вона вчить українську, **щоб працювати** в Україні.\n\n5. Я встав рано. Я не хотів запізнитися.\n   → Я встав рано, **щоб не запізнитися**.\n\n### Choose the Correct Form\n\n1. Вона пішла в магазин, щоб ___ хліб.\n   - a) купить\n   - b) купити ✓\n   - c) купила\n\n2. Я зателефонував, щоб ___ новини.\n   - a) дізнаюся\n   - b) дізнатися ✓\n   - c) дізнався\n\n3. Він відкрив книгу, щоб ___ .\n   - a) читав\n   - b) читати ✓\n   - c) прочитав\n\n4. Вони працюють, щоб ___ гроші.\n   - a) заробляти ✓\n   - b) заробляють\n   - c) заробили\n\n5. Я поспішаю, щоб ___ не запізнитися.\n   - a) ✓ (no word needed)\n   - b) я\n   - c) щоб\n\n### Translate to Ukrainian\n\n1. I came to ask a question.\n   → Я прийшов, **щоб запитати**.\n\n2. She studies to pass the exam.\n   → Вона вчиться, **щоб скласти іспит**.\n\n3. We work to live better.\n   → Ми працюємо, **щоб жити краще**.\n\n4. He called to say hello.\n   → Він зателефонував, **щоб привітатися**.\n\n5. I woke up early so as not to be late.\n   → Я прокинувся рано, **щоб не запізнитися**.\n\n### Answer the Questions\n\nUse \"щоб + infinitive\" in your answers:\n\n1. Навіщо ви вчите українську?\n   → Я вчу українську, **щоб**... (говорити з друзями / працювати в Україні / подорожувати)\n\n2. Навіщо люди працюють?\n   → Люди працюють, **щоб**... (заробляти гроші / допомагати родині / мати цікаве життя)\n\n3. Навіщо ви прийшли на урок?\n   → Я прийшов на урок, **щоб**... (вчитися / практикувати мову / знайомитися з людьми)\n\n## production | Продукція\n\n### Express Your Goals\n\nComplete with your real goals:\n\n1. Я вчу українську, щоб...\n2. Я працюю, щоб...\n3. Я хочу подорожувати, щоб...\n4. Я читаю книги, щоб...\n5. Я встаю рано, щоб...\n\n**Example:**\nЯ вчу українську, **щоб говорити** з моєю родиною в Україні. Я також хочу **щоб читати** українські книги в оригіналі.\n\n### Discussion: Life Goals\n\nDiscuss using purpose clauses:\n\n- Що ви робите, **щоб** бути здоровими?\n- Що треба робити, **щоб** вивчити мову?\n- Що ви робите, **щоб** бути щасливими?\n\n---\n\n# Activities\n\n## quiz: Purpose Clauses\n\n> Choose the correct answer.\n\n1. Я пішов у магазин, щоб ___ хліб.\n   - [x] купити\n   - [ ] купив\n   > After \"щоб\" with same subject, use infinitive.\n\n2. Вона вчиться, щоб ___ іспит.\n   - [x] скласти\n   - [ ] складала\n   > Infinitive follows \"щоб.\"\n\n3. Він говорить тихо, щоб ___ розбудити дитину.\n   - [x] не\n   - [ ] ні\n   > \"Щоб не\" = \"so as not to.\"\n\n4. ___ вивчити мову, треба практикуватися.\n   - [x] Щоб\n   - [ ] Що\n   > \"Щоб\" can start a sentence for emphasis.\n\n5. Я зателефонував, ___ запитати про роботу.\n   - [x] щоб\n   - [ ] що\n   > \"Щоб\" introduces purpose.\n\n6. Вона поїхала до Києва, щоб ___ виставку.\n   - [x] відвідати\n   - [ ] відвідає\n   > Infinitive (perfective) after \"щоб.\"\n\n## fill-in: Complete with Purpose Clauses\n\n> Учора я рано встав, (1)___ не запізнитися на роботу. Я випив каву, (2)___ прокинутися. Потім я поїхав на роботу, (3)___ почати день вчасно. Увечері я пішов у спортзал, (4)___ потренуватися.\n\n**Answers:** щоб, щоб, щоб, щоб\n\n---",
     "immersiveSections": [
       {
-        "id": "warm-up-розминка",
-        "title": "warm-up | Розминка",
-        "content": "### Мета та намір | Purpose and Intention\n\nЯк сказати \"навіщо\" ви щось робите?\n\nHow do you say \"why\" (for what purpose) you do something?\n\nEnglish uses \"to\" or \"in order to\":\n- I came **to** help.\n- I study **in order to** learn.\n\nUkrainian uses **щоб** (in order to):\n- Я прийшов, **щоб** допомогти.\n- Я вчуся, **щоб** знати.",
-        "type": "topic"
+        "id": "section-зміст-уроку-lesson-content",
+        "type": "content",
+        "title": "Зміст уроку | Lesson Content",
+        "content": "## warm-up | Розминка\n\n### Мета та намір | Purpose and Intention\n\nЯк сказати \"навіщо\" ви щось робите?\n\nHow do you say \"why\" (for what purpose) you do something?\n\nEnglish uses \"to\" or \"in order to\":\n- I came **to** help.\n- I study **in order to** learn.\n\nUkrainian uses **щоб** (in order to):\n- Я прийшов, **щоб** допомогти.\n- Я вчуся, **щоб** знати.\n\n## presentation | Презентація\n\n### Щоб + Infinitive: Basic Pattern\n\nWhen the **same person** does both actions, use **щоб + infinitive**:\n\n| Ukrainian | English |\n|-----------|---------|\n| Я прийшов, **щоб допомогти**. | I came to help. |\n| Вона поїхала, **щоб відпочити**. | She left to rest. |\n| Ми працюємо, **щоб заробити** гроші. | We work to earn money. |\n\n**Structure:** Main clause + щоб + infinitive\n\n> **⭐ KEY RULE: Same Subject**\n>\n> Use **щоб + infinitive** when the subject of both clauses is the **same person**:\n> - **Я** прийшов, щоб **[-]** допомогти. (I came to help [myself doing it])\n>\n> When subjects are **different**, use **щоб + past tense** (Module 104):\n> - **Я** хочу, щоб **ти** допоміг. (I want you to help)\n\n### Common Verbs with Щоб + Infinitive\n\n**Motion verbs:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Він пішов, щоб купити хліб. | He went to buy bread. |\n| Вона приїхала, щоб побачити родину. | She came to see her family. |\n| Ми зайшли, щоб випити кави. | We stopped by to drink coffee. |\n\n**Action verbs:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Я зателефонував, щоб запитати. | I called to ask. |\n| Вона відкрила вікно, щоб провітрити. | She opened the window to air out. |\n| Він увімкнув світло, щоб читати. | He turned on the light to read. |\n\n**Effort verbs:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Вони працюють, щоб жити краще. | They work to live better. |\n| Я вчуся, щоб здати іспит. | I'm studying to pass the exam. |\n| Вона тренується, щоб перемогти. | She trains to win. |\n\n### Aspect Choice with Щоб\n\nBoth perfective and imperfective can follow щоб:\n\n| Aspect | Meaning | Example |\n|--------|---------|---------|\n| **Perfective** | Complete the action | Я прийшов, щоб **сказати** правду. (to tell — one time) |\n| **Imperfective** | Ongoing/repeated action | Я прийшов, щоб **допомагати** тобі. (to help — ongoing) |\n\n**Compare:**\n\n| Ukrainian | Meaning |\n|-----------|---------|\n| Він пішов, щоб **купити** газету. | He went to buy a newspaper. (complete the purchase) |\n| Він пішов, щоб **купувати** продукти. | He went to buy groceries. (the buying process) |\n\n> **⭐ GUIDELINE**\n>\n> - **Perfective** is more common after щоб (focus on achieving the goal)\n> - **Imperfective** emphasizes ongoing help, regular activity, or the process\n\n### Negative Purpose: Щоб не\n\nTo express negative purpose (\"in order not to\"):\n\n| Ukrainian | English |\n|-----------|---------|\n| Я поспішаю, **щоб не** запізнитися. | I'm hurrying so as not to be late. |\n| Вона говорить тихо, **щоб не** розбудити дитину. | She speaks quietly so as not to wake the child. |\n| Він записав, **щоб не** забути. | He wrote it down so as not to forget. |\n\n### Alternatives to Щоб\n\n**Для того щоб** (more formal/emphatic):\n\n| Ukrainian | English |\n|-----------|---------|\n| Я прийшов, **для того щоб** допомогти. | I came in order to help. |\n| **Для того щоб** досягти успіху, треба працювати. | In order to achieve success, one must work. |\n\n**Задля + genitive** (literary):\n\n| Ukrainian | English |\n|-----------|---------|\n| Він робить це **задля** друзів. | He does this for the sake of friends. |\n\n### Word Order\n\nThe purpose clause typically comes **after** the main clause:\n\n✅ Я прийшов, **щоб допомогти**. (normal)\n✅ **Щоб допомогти**, я прийшов. (emphatic, less common)\n\nWhen starting with \"щоб,\" the purpose is emphasized:\n- **Щоб вивчити мову**, потрібно практикуватися. (To learn a language, one needs to practice.)\n\n### Purpose vs. Result\n\nDon't confuse purpose (intention) with result (outcome):\n\n| Type | Ukrainian | English |\n|------|-----------|---------|\n| **Purpose** (intention) | Він вчиться, **щоб** знати. | He studies **to** know. |\n| **Result** (outcome) | Він вчиться **так, що** вже знає багато. | He studies **so that** he already knows a lot. |\n\nPurpose = why you START the action\nResult = what happens BECAUSE of the action\n\n## practice | Практика\n\n### Combine with Щоб\n\n**Example:** Я пішов у магазин. Я хотів купити молоко.\n> [!answer] Я пішов у магазин, **щоб купити** молоко.\n\n1. Вона відкрила вікно. Вона хотіла провітрити кімнату.\n   > [!answer] Вона відкрила вікно, **щоб провітрити** кімнату.\n\n2. Він зателефонував. Він хотів запитати про роботу.\n   > [!answer] Він зателефонував, **щоб запитати** про роботу.\n\n3. Ми приїхали. Ми хотіли побачити тебе.\n   > [!answer] Ми приїхали, **щоб побачити** тебе.\n\n4. Вона вчить українську. Вона хоче працювати в Україні.\n   > [!answer] Вона вчить українську, **щоб працювати** в Україні.\n\n5. Я встав рано. Я не хотів запізнитися.\n   > [!answer] Я встав рано, **щоб не запізнитися**.\n\n### Choose the Correct Form\n\n1. Вона пішла в магазин, щоб ___ хліб.\n   - a) купить\n   - b) купити ✓\n   - c) купила\n\n2. Я зателефонував, щоб ___ новини.\n   - a) дізнаюся\n   - b) дізнатися ✓\n   - c) дізнався\n\n3. Він відкрив книгу, щоб ___ .\n   - a) читав\n   - b) читати ✓\n   - c) прочитав\n\n4. Вони працюють, щоб ___ гроші.\n   - a) заробляти ✓\n   - b) заробляють\n   - c) заробили\n\n5. Я поспішаю, щоб ___ не запізнитися.\n   - a) ✓ (no word needed)\n   - b) я\n   - c) щоб\n\n### Translate to Ukrainian\n\n1. I came to ask a question.\n   > [!answer] Я прийшов, **щоб запитати**.\n\n2. She studies to pass the exam.\n   > [!answer] Вона вчиться, **щоб скласти іспит**.\n\n3. We work to live better.\n   > [!answer] Ми працюємо, **щоб жити краще**.\n\n4. He called to say hello.\n   > [!answer] Він зателефонував, **щоб привітатися**.\n\n5. I woke up early so as not to be late.\n   > [!answer] Я прокинувся рано, **щоб не запізнитися**.\n\n### Answer the Questions\n\nUse \"щоб + infinitive\" in your answers:\n\n1. Навіщо ви вчите українську?\n   > [!answer] Я вчу українську, **щоб**...\n   > [!explanation] говорити з друзями / працювати в Україні / подорожувати\n2. Навіщо люди працюють?\n   > [!answer] Люди працюють, **щоб**...\n   > [!explanation] заробляти гроші / допомагати родині / мати цікаве життя\n3. Навіщо ви прийшли на урок?\n   > [!answer] Я прийшов на урок, **щоб**...\n   > [!explanation] вчитися / практикувати мову / знайомитися з людьми\n## production | Продукція\n\n### Express Your Goals\n\nComplete with your real goals:\n\n1. Я вчу українську, щоб...\n2. Я працюю, щоб...\n3. Я хочу подорожувати, щоб...\n4. Я читаю книги, щоб...\n5. Я встаю рано, щоб...\n\n**Example:**\nЯ вчу українську, **щоб говорити** з моєю родиною в Україні. Я також хочу **щоб читати** українські книги в оригіналі.\n\n### Discussion: Life Goals\n\nDiscuss using purpose clauses:\n\n- Що ви робите, **щоб** бути здоровими?\n- Що треба робити, **щоб** вивчити мову?\n- Що ви робите, **щоб** бути щасливими?\n\n---\n\n\n---\n\n\n---"
       },
       {
-        "id": "presentation-презентація",
-        "title": "presentation | Презентація",
-        "content": "### Щоб + Infinitive: Basic Pattern\n\nWhen the **same person** does both actions, use **щоб + infinitive**:\n\n| Ukrainian | English |\n|-----------|---------|\n| Я прийшов, **щоб допомогти**. | I came to help. |\n| Вона поїхала, **щоб відпочити**. | She left to rest. |\n| Ми працюємо, **щоб заробити** гроші. | We work to earn money. |\n\n**Structure:** Main clause + щоб + infinitive\n\n> **⭐ KEY RULE: Same Subject**\n>\n> Use **щоб + infinitive** when the subject of both clauses is the **same person**:\n> - **Я** прийшов, щоб **[-]** допомогти. (I came to help [myself doing it])\n>\n> When subjects are **different**, use **щоб + past tense** (Module 104):\n> - **Я** хочу, щоб **ти** допоміг. (I want you to help)\n\n### Common Verbs with Щоб + Infinitive\n\n**Motion verbs:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Він пішов, щоб купити хліб. | He went to buy bread. |\n| Вона приїхала, щоб побачити родину. | She came to see her family. |\n| Ми зайшли, щоб випити кави. | We stopped by to drink coffee. |\n\n**Action verbs:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Я зателефонував, щоб запитати. | I called to ask. |\n| Вона відкрила вікно, щоб провітрити. | She opened the window to air out. |\n| Він увімкнув світло, щоб читати. | He turned on the light to read. |\n\n**Effort verbs:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Вони працюють, щоб жити краще. | They work to live better. |\n| Я вчуся, щоб здати іспит. | I'm studying to pass the exam. |\n| Вона тренується, щоб перемогти. | She trains to win. |\n\n### Aspect Choice with Щоб\n\nBoth perfective and imperfective can follow щоб:\n\n| Aspect | Meaning | Example |\n|--------|---------|---------|\n| **Perfective** | Complete the action | Я прийшов, щоб **сказати** правду. (to tell — one time) |\n| **Imperfective** | Ongoing/repeated action | Я прийшов, щоб **допомагати** тобі. (to help — ongoing) |\n\n**Compare:**\n\n| Ukrainian | Meaning |\n|-----------|---------|\n| Він пішов, щоб **купити** газету. | He went to buy a newspaper. (complete the purchase) |\n| Він пішов, щоб **купувати** продукти. | He went to buy groceries. (the buying process) |\n\n> **⭐ GUIDELINE**\n>\n> - **Perfective** is more common after щоб (focus on achieving the goal)\n> - **Imperfective** emphasizes ongoing help, regular activity, or the process\n\n### Negative Purpose: Щоб не\n\nTo express negative purpose (\"in order not to\"):\n\n| Ukrainian | English |\n|-----------|---------|\n| Я поспішаю, **щоб не** запізнитися. | I'm hurrying so as not to be late. |\n| Вона говорить тихо, **щоб не** розбудити дитину. | She speaks quietly so as not to wake the child. |\n| Він записав, **щоб не** забути. | He wrote it down so as not to forget. |\n\n### Alternatives to Щоб\n\n**Для того щоб** (more formal/emphatic):\n\n| Ukrainian | English |\n|-----------|---------|\n| Я прийшов, **для того щоб** допомогти. | I came in order to help. |\n| **Для того щоб** досягти успіху, треба працювати. | In order to achieve success, one must work. |\n\n**Задля + genitive** (literary):\n\n| Ukrainian | English |\n|-----------|---------|\n| Він робить це **задля** друзів. | He does this for the sake of friends. |\n\n### Word Order\n\nThe purpose clause typically comes **after** the main clause:\n\n✅ Я прийшов, **щоб допомогти**. (normal)\n✅ **Щоб допомогти**, я прийшов. (emphatic, less common)\n\nWhen starting with \"щоб,\" the purpose is emphasized:\n- **Щоб вивчити мову**, потрібно практикуватися. (To learn a language, one needs to practice.)\n\n### Purpose vs. Result\n\nDon't confuse purpose (intention) with result (outcome):\n\n| Type | Ukrainian | English |\n|------|-----------|---------|\n| **Purpose** (intention) | Він вчиться, **щоб** знати. | He studies **to** know. |\n| **Result** (outcome) | Він вчиться **так, що** вже знає багато. | He studies **so that** he already knows a lot. |\n\nPurpose = why you START the action\nResult = what happens BECAUSE of the action",
-        "type": "topic"
-      },
-      {
-        "id": "practice-практика",
-        "title": "practice | Практика",
-        "content": "### Combine with Щоб\n\n**Example:** Я пішов у магазин. Я хотів купити молоко.\n→ Я пішов у магазин, **щоб купити** молоко.\n\n1. Вона відкрила вікно. Вона хотіла провітрити кімнату.\n   → Вона відкрила вікно, **щоб провітрити** кімнату.\n\n2. Він зателефонував. Він хотів запитати про роботу.\n   → Він зателефонував, **щоб запитати** про роботу.\n\n3. Ми приїхали. Ми хотіли побачити тебе.\n   → Ми приїхали, **щоб побачити** тебе.\n\n4. Вона вчить українську. Вона хоче працювати в Україні.\n   → Вона вчить українську, **щоб працювати** в Україні.\n\n5. Я встав рано. Я не хотів запізнитися.\n   → Я встав рано, **щоб не запізнитися**.\n\n### Choose the Correct Form\n\n1. Вона пішла в магазин, щоб ___ хліб.\n   - a) купить\n   - b) купити ✓\n   - c) купила\n\n2. Я зателефонував, щоб ___ новини.\n   - a) дізнаюся\n   - b) дізнатися ✓\n   - c) дізнався\n\n3. Він відкрив книгу, щоб ___ .\n   - a) читав\n   - b) читати ✓\n   - c) прочитав\n\n4. Вони працюють, щоб ___ гроші.\n   - a) заробляти ✓\n   - b) заробляють\n   - c) заробили\n\n5. Я поспішаю, щоб ___ не запізнитися.\n   - a) ✓ (no word needed)\n   - b) я\n   - c) щоб\n\n### Translate to Ukrainian\n\n1. I came to ask a question.\n   → Я прийшов, **щоб запитати**.\n\n2. She studies to pass the exam.\n   → Вона вчиться, **щоб скласти іспит**.\n\n3. We work to live better.\n   → Ми працюємо, **щоб жити краще**.\n\n4. He called to say hello.\n   → Він зателефонував, **щоб привітатися**.\n\n5. I woke up early so as not to be late.\n   → Я прокинувся рано, **щоб не запізнитися**.\n\n### Answer the Questions\n\nUse \"щоб + infinitive\" in your answers:\n\n1. Навіщо ви вчите українську?\n   → Я вчу українську, **щоб**... (говорити з друзями / працювати в Україні / подорожувати)\n\n2. Навіщо люди працюють?\n   → Люди працюють, **щоб**... (заробляти гроші / допомагати родині / мати цікаве життя)\n\n3. Навіщо ви прийшли на урок?\n   → Я прийшов на урок, **щоб**... (вчитися / практикувати мову / знайомитися з людьми)",
-        "type": "topic"
-      },
-      {
-        "id": "production-продукція",
-        "title": "production | Продукція",
-        "content": "### Express Your Goals\n\nComplete with your real goals:\n\n1. Я вчу українську, щоб...\n2. Я працюю, щоб...\n3. Я хочу подорожувати, щоб...\n4. Я читаю книги, щоб...\n5. Я встаю рано, щоб...\n\n**Example:**\nЯ вчу українську, **щоб говорити** з моєю родиною в Україні. Я також хочу **щоб читати** українські книги в оригіналі.\n\n### Discussion: Life Goals\n\nDiscuss using purpose clauses:\n\n- Що ви робите, **щоб** бути здоровими?\n- Що треба робити, **щоб** вивчити мову?\n- Що ви робите, **щоб** бути щасливими?\n\n---",
-        "type": "topic"
-      },
-      {
-        "id": "activities",
-        "title": "Activities",
-        "content": "## quiz: Purpose Clauses\n\n> Choose the correct answer.\n\n1. Я пішов у магазин, щоб ___ хліб.\n   - [x] купити\n   - [ ] купив\n   > After \"щоб\" with same subject, use infinitive.\n\n2. Вона вчиться, щоб ___ іспит.\n   - [x] скласти\n   - [ ] складала\n   > Infinitive follows \"щоб.\"\n\n3. Він говорить тихо, щоб ___ розбудити дитину.\n   - [x] не\n   - [ ] ні\n   > \"Щоб не\" = \"so as not to.\"\n\n4. ___ вивчити мову, треба практикуватися.\n   - [x] Щоб\n   - [ ] Що\n   > \"Щоб\" can start a sentence for emphasis.\n\n5. Я зателефонував, ___ запитати про роботу.\n   - [x] щоб\n   - [ ] що\n   > \"Щоб\" introduces purpose.\n\n6. Вона поїхала до Києва, щоб ___ виставку.\n   - [x] відвідати\n   - [ ] відвідає\n   > Infinitive (perfective) after \"щоб.\"\n\n## fill-in: Complete with Purpose Clauses\n\n> Учора я рано встав, (1)___ не запізнитися на роботу. Я випив каву, (2)___ прокинутися. Потім я поїхав на роботу, (3)___ почати день вчасно. Увечері я пішов у спортзал, (4)___ потренуватися.\n\n**Answers:** щоб, щоб, щоб, щоб\n\n---",
-        "type": "activities"
-      },
-      {
-        "id": "vocabulary",
-        "title": "Vocabulary",
-        "content": "| Word | IPA | English | Gender |\n|------|-----|---------|--------|\n| щоб | /ʃt͡ʃob/ | in order to, so that | conj |\n| мета | /mɛˈtɑ/ | goal, purpose | f |\n| намір | /ˈnɑmʲir/ | intention | m |\n| ціль | /t͡sʲilʲ/ | aim, target | f |\n| задля | /ˈzɑdlʲɑ/ | for the sake of | prep |\n| для того щоб | - | in order to | conj |\n| навіщо | /nɑˈvʲiʃt͡ʃo/ | why (for what purpose) | adv |\n| досягти | /doˈsʲɑɦtɪ/ | to achieve | pf |\n| досягати | /dosʲɑˈɦɑtɪ/ | to achieve | impf |\n\n---",
-        "type": "vocabulary"
-      },
-      {
-        "id": "summary",
+        "id": "section-summary",
+        "type": "summary",
         "title": "Summary",
         "content": "## Щоб + Infinitive Pattern\n\n### When to Use\n- Same subject in both clauses\n- Expressing purpose/intention\n\n### Structure\nMain clause + **щоб** + infinitive\n\n### Examples\n| Ukrainian | English |\n|-----------|---------|\n| Я прийшов, **щоб допомогти**. | I came to help. |\n| Він вчиться, **щоб знати**. | He studies to know. |\n| Вона їде, **щоб відпочити**. | She's going to rest. |\n\n### Negative Purpose\n**Щоб не** + infinitive = \"so as not to\"\n- Я поспішаю, **щоб не запізнитися**. (I'm hurrying so as not to be late.)\n\n### Aspect Choice\n- **Perfective**: complete the action (more common)\n- **Imperfective**: ongoing/repeated action\n\n> **Key Takeaways**\n>\n> - Щоб + infinitive when subjects are the same\n> - Perfective infinitive is more common\n> - Щоб не = negative purpose\n> - Purpose clause usually follows main clause\n> - Next module: щоб + past (different subjects)",
-        "type": "summary"
+        "titleUk": "Підсумок"
       }
-    ]
+    ],
+    "rawMarkdown": "---\nmodule: 103\ntitle: \"Purpose Clauses I\"\nsubtitle: \"Щоб + Infinitive (Same Subject)\"\nlevel: B1\nphase: B1.2\nduration: 45\ntransliteration: none\ntags: [grammar, purpose-clauses, complex-sentences, щоб]\nobjectives:\n  - Understand purpose clause structure with щоб\n  - Use щоб + infinitive when subjects are the same\n  - Express goals and intentions\n  - Distinguish purpose from result\n---\n\n# Зміст уроку | Lesson Content\n\n## warm-up | Розминка\n\n### Мета та намір | Purpose and Intention\n\nЯк сказати \"навіщо\" ви щось робите?\n\nHow do you say \"why\" (for what purpose) you do something?\n\nEnglish uses \"to\" or \"in order to\":\n- I came **to** help.\n- I study **in order to** learn.\n\nUkrainian uses **щоб** (in order to):\n- Я прийшов, **щоб** допомогти.\n- Я вчуся, **щоб** знати.\n\n## presentation | Презентація\n\n### Щоб + Infinitive: Basic Pattern\n\nWhen the **same person** does both actions, use **щоб + infinitive**:\n\n| Ukrainian | English |\n|-----------|---------|\n| Я прийшов, **щоб допомогти**. | I came to help. |\n| Вона поїхала, **щоб відпочити**. | She left to rest. |\n| Ми працюємо, **щоб заробити** гроші. | We work to earn money. |\n\n**Structure:** Main clause + щоб + infinitive\n\n> **⭐ KEY RULE: Same Subject**\n>\n> Use **щоб + infinitive** when the subject of both clauses is the **same person**:\n> - **Я** прийшов, щоб **[-]** допомогти. (I came to help [myself doing it])\n>\n> When subjects are **different**, use **щоб + past tense** (Module 104):\n> - **Я** хочу, щоб **ти** допоміг. (I want you to help)\n\n### Common Verbs with Щоб + Infinitive\n\n**Motion verbs:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Він пішов, щоб купити хліб. | He went to buy bread. |\n| Вона приїхала, щоб побачити родину. | She came to see her family. |\n| Ми зайшли, щоб випити кави. | We stopped by to drink coffee. |\n\n**Action verbs:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Я зателефонував, щоб запитати. | I called to ask. |\n| Вона відкрила вікно, щоб провітрити. | She opened the window to air out. |\n| Він увімкнув світло, щоб читати. | He turned on the light to read. |\n\n**Effort verbs:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Вони працюють, щоб жити краще. | They work to live better. |\n| Я вчуся, щоб здати іспит. | I'm studying to pass the exam. |\n| Вона тренується, щоб перемогти. | She trains to win. |\n\n### Aspect Choice with Щоб\n\nBoth perfective and imperfective can follow щоб:\n\n| Aspect | Meaning | Example |\n|--------|---------|---------|\n| **Perfective** | Complete the action | Я прийшов, щоб **сказати** правду. (to tell — one time) |\n| **Imperfective** | Ongoing/repeated action | Я прийшов, щоб **допомагати** тобі. (to help — ongoing) |\n\n**Compare:**\n\n| Ukrainian | Meaning |\n|-----------|---------|\n| Він пішов, щоб **купити** газету. | He went to buy a newspaper. (complete the purchase) |\n| Він пішов, щоб **купувати** продукти. | He went to buy groceries. (the buying process) |\n\n> **⭐ GUIDELINE**\n>\n> - **Perfective** is more common after щоб (focus on achieving the goal)\n> - **Imperfective** emphasizes ongoing help, regular activity, or the process\n\n### Negative Purpose: Щоб не\n\nTo express negative purpose (\"in order not to\"):\n\n| Ukrainian | English |\n|-----------|---------|\n| Я поспішаю, **щоб не** запізнитися. | I'm hurrying so as not to be late. |\n| Вона говорить тихо, **щоб не** розбудити дитину. | She speaks quietly so as not to wake the child. |\n| Він записав, **щоб не** забути. | He wrote it down so as not to forget. |\n\n### Alternatives to Щоб\n\n**Для того щоб** (more formal/emphatic):\n\n| Ukrainian | English |\n|-----------|---------|\n| Я прийшов, **для того щоб** допомогти. | I came in order to help. |\n| **Для того щоб** досягти успіху, треба працювати. | In order to achieve success, one must work. |\n\n**Задля + genitive** (literary):\n\n| Ukrainian | English |\n|-----------|---------|\n| Він робить це **задля** друзів. | He does this for the sake of friends. |\n\n### Word Order\n\nThe purpose clause typically comes **after** the main clause:\n\n✅ Я прийшов, **щоб допомогти**. (normal)\n✅ **Щоб допомогти**, я прийшов. (emphatic, less common)\n\nWhen starting with \"щоб,\" the purpose is emphasized:\n- **Щоб вивчити мову**, потрібно практикуватися. (To learn a language, one needs to practice.)\n\n### Purpose vs. Result\n\nDon't confuse purpose (intention) with result (outcome):\n\n| Type | Ukrainian | English |\n|------|-----------|---------|\n| **Purpose** (intention) | Він вчиться, **щоб** знати. | He studies **to** know. |\n| **Result** (outcome) | Він вчиться **так, що** вже знає багато. | He studies **so that** he already knows a lot. |\n\nPurpose = why you START the action\nResult = what happens BECAUSE of the action\n\n## practice | Практика\n\n### Combine with Щоб\n\n**Example:** Я пішов у магазин. Я хотів купити молоко.\n> [!answer] Я пішов у магазин, **щоб купити** молоко.\n\n1. Вона відкрила вікно. Вона хотіла провітрити кімнату.\n   > [!answer] Вона відкрила вікно, **щоб провітрити** кімнату.\n\n2. Він зателефонував. Він хотів запитати про роботу.\n   > [!answer] Він зателефонував, **щоб запитати** про роботу.\n\n3. Ми приїхали. Ми хотіли побачити тебе.\n   > [!answer] Ми приїхали, **щоб побачити** тебе.\n\n4. Вона вчить українську. Вона хоче працювати в Україні.\n   > [!answer] Вона вчить українську, **щоб працювати** в Україні.\n\n5. Я встав рано. Я не хотів запізнитися.\n   > [!answer] Я встав рано, **щоб не запізнитися**.\n\n### Choose the Correct Form\n\n1. Вона пішла в магазин, щоб ___ хліб.\n   - a) купить\n   - b) купити ✓\n   - c) купила\n\n2. Я зателефонував, щоб ___ новини.\n   - a) дізнаюся\n   - b) дізнатися ✓\n   - c) дізнався\n\n3. Він відкрив книгу, щоб ___ .\n   - a) читав\n   - b) читати ✓\n   - c) прочитав\n\n4. Вони працюють, щоб ___ гроші.\n   - a) заробляти ✓\n   - b) заробляють\n   - c) заробили\n\n5. Я поспішаю, щоб ___ не запізнитися.\n   - a) ✓ (no word needed)\n   - b) я\n   - c) щоб\n\n### Translate to Ukrainian\n\n1. I came to ask a question.\n   > [!answer] Я прийшов, **щоб запитати**.\n\n2. She studies to pass the exam.\n   > [!answer] Вона вчиться, **щоб скласти іспит**.\n\n3. We work to live better.\n   > [!answer] Ми працюємо, **щоб жити краще**.\n\n4. He called to say hello.\n   > [!answer] Він зателефонував, **щоб привітатися**.\n\n5. I woke up early so as not to be late.\n   > [!answer] Я прокинувся рано, **щоб не запізнитися**.\n\n### Answer the Questions\n\nUse \"щоб + infinitive\" in your answers:\n\n1. Навіщо ви вчите українську?\n   > [!answer] Я вчу українську, **щоб**...\n   > [!explanation] говорити з друзями / працювати в Україні / подорожувати\n2. Навіщо люди працюють?\n   > [!answer] Люди працюють, **щоб**...\n   > [!explanation] заробляти гроші / допомагати родині / мати цікаве життя\n3. Навіщо ви прийшли на урок?\n   > [!answer] Я прийшов на урок, **щоб**...\n   > [!explanation] вчитися / практикувати мову / знайомитися з людьми\n## production | Продукція\n\n### Express Your Goals\n\nComplete with your real goals:\n\n1. Я вчу українську, щоб...\n2. Я працюю, щоб...\n3. Я хочу подорожувати, щоб...\n4. Я читаю книги, щоб...\n5. Я встаю рано, щоб...\n\n**Example:**\nЯ вчу українську, **щоб говорити** з моєю родиною в Україні. Я також хочу **щоб читати** українські книги в оригіналі.\n\n### Discussion: Life Goals\n\nDiscuss using purpose clauses:\n\n- Що ви робите, **щоб** бути здоровими?\n- Що треба робити, **щоб** вивчити мову?\n- Що ви робите, **щоб** бути щасливими?\n\n---\n\n# Activities\n\n## quiz: Purpose Clauses\n\n> Choose the correct answer.\n\n1. Я пішов у магазин, щоб ___ хліб.\n   - [x] купити\n   - [ ] купив\n   > After \"щоб\" with same subject, use infinitive.\n\n2. Вона вчиться, щоб ___ іспит.\n   - [x] скласти\n   - [ ] складала\n   > Infinitive follows \"щоб.\"\n\n3. Він говорить тихо, щоб ___ розбудити дитину.\n   - [x] не\n   - [ ] ні\n   > \"Щоб не\" = \"so as not to.\"\n\n4. ___ вивчити мову, треба практикуватися.\n   - [x] Щоб\n   - [ ] Що\n   > \"Щоб\" can start a sentence for emphasis.\n\n5. Я зателефонував, ___ запитати про роботу.\n   - [x] щоб\n   - [ ] що\n   > \"Щоб\" introduces purpose.\n\n6. Вона поїхала до Києва, щоб ___ виставку.\n   - [x] відвідати\n   - [ ] відвідає\n   > Infinitive (perfective) after \"щоб.\"\n\n## fill-in: Complete with Purpose Clauses\n\n> Учора я рано встав, (1)___ не запізнитися на роботу. Я випив каву, (2)___ прокинутися. Потім я поїхав на роботу, (3)___ почати день вчасно. Увечері я пішов у спортзал, (4)___ потренуватися.\n\n**Answers:** щоб, щоб, щоб, щоб\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | Gender |\n|------|-----|---------|--------|\n| щоб | /ʃt͡ʃob/ | in order to, so that | conj |\n| мета | /mɛˈtɑ/ | goal, purpose | f |\n| намір | /ˈnɑmʲir/ | intention | m |\n| ціль | /t͡sʲilʲ/ | aim, target | f |\n| задля | /ˈzɑdlʲɑ/ | for the sake of | prep |\n| для того щоб | - | in order to | conj |\n| навіщо | /nɑˈvʲiʃt͡ʃo/ | why (for what purpose) | adv |\n| досягти | /doˈsʲɑɦtɪ/ | to achieve | pf |\n| досягати | /dosʲɑˈɦɑtɪ/ | to achieve | impf |\n\n---\n\n# Summary\n\n## Щоб + Infinitive Pattern\n\n### When to Use\n- Same subject in both clauses\n- Expressing purpose/intention\n\n### Structure\nMain clause + **щоб** + infinitive\n\n### Examples\n| Ukrainian | English |\n|-----------|---------|\n| Я прийшов, **щоб допомогти**. | I came to help. |\n| Він вчиться, **щоб знати**. | He studies to know. |\n| Вона їде, **щоб відпочити**. | She's going to rest. |\n\n### Negative Purpose\n**Щоб не** + infinitive = \"so as not to\"\n- Я поспішаю, **щоб не запізнитися**. (I'm hurrying so as not to be late.)\n\n### Aspect Choice\n- **Perfective**: complete the action (more common)\n- **Imperfective**: ongoing/repeated action\n\n> **Key Takeaways**\n>\n> - Щоб + infinitive when subjects are the same\n> - Perfective infinitive is more common\n> - Щоб не = negative purpose\n> - Purpose clause usually follows main clause\n> - Next module: щоб + past (different subjects)\n"
   },
   "activities": [
     {
-      "id": "act-uk-B1-103-quiz",
+      "id": "act-b1-103-quiz",
       "type": "quiz",
       "title": "Purpose Clauses",
       "description": "Choose the correct answer.",
       "content": {
         "type": "quiz",
-        "instructions": "Choose the correct answer.",
         "questions": [
           {
             "question": "Я пішов у магазин, щоб ___ хліб.",
@@ -258,29 +124,31 @@
       "language": "uk",
       "difficultyLevel": "B1",
       "duration": 5,
-      "tags": [
-        "grammar",
-        "purpose-clauses",
-        "complex-sentences",
-        "щоб"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.230Z",
+      "modifiedAt": "2025-12-01T22:58:37.230Z"
     },
     {
-      "id": "act-uk-B1-103-gapfill",
+      "id": "act-b1-103-gapfill",
       "type": "gap-fill",
       "title": "Complete with Purpose Clauses",
       "description": "Учора я рано встав, (1)___ не запізнитися на роботу. Я випив каву, (2)___ прокинутися. Потім я поїхав на роботу, (3)___ почати день вчасно. Увечері я пішов у спортзал, (4)___ потренуватися.",
       "content": {
         "type": "gap-fill",
-        "instructions": "Учора я рано встав, (1)___ не запізнитися на роботу. Я випив каву, (2)___ прокинутися. Потім я поїхав на роботу, (3)___ почати день вчасно. Увечері я пішов у спортзал, (4)___ потренуватися.",
         "text": "Учора я рано встав, (1)___ не запізнитися на роботу. Я випив каву, (2)___ прокинутися. Потім я поїхав на роботу, (3)___ почати день вчасно. Увечері я пішов у спортзал, (4)___ потренуватися.",
         "blanks": [
-          {},
-          {},
-          {},
-          {}
+          {
+            "index": 0
+          },
+          {
+            "index": 1
+          },
+          {
+            "index": 2
+          },
+          {
+            "index": 3
+          }
         ],
         "answers": [
           "щоб",
@@ -295,14 +163,9 @@
       "language": "uk",
       "difficultyLevel": "B1",
       "duration": 5,
-      "tags": [
-        "grammar",
-        "purpose-clauses",
-        "complex-sentences",
-        "щоб"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.230Z",
+      "modifiedAt": "2025-12-01T22:58:37.230Z"
     }
   ],
   "vocabulary": {
@@ -313,85 +176,66 @@
     "transliterationMode": "none",
     "words": [
       {
-        "id": "v-m103-001",
+        "id": "v-shchob-103-0",
         "uk": "щоб",
-        "translit": "",
-        "ipa": "/ʃt͡ʃob/",
         "en": "in order to, so that",
-        "pos": "",
-        "gender": "conj"
+        "pos": "conj",
+        "ipa": "/ʃt͡ʃob/"
       },
       {
-        "id": "v-m103-002",
+        "id": "v-meta-103-1",
         "uk": "мета",
-        "translit": "",
-        "ipa": "/mɛˈtɑ/",
         "en": "goal, purpose",
-        "pos": "",
-        "gender": "f"
+        "pos": "f",
+        "ipa": "/mɛˈtɑ/"
       },
       {
-        "id": "v-m103-003",
+        "id": "v-namir-103-2",
         "uk": "намір",
-        "translit": "",
-        "ipa": "/ˈnɑmʲir/",
         "en": "intention",
-        "pos": "",
-        "gender": "m"
+        "pos": "m",
+        "ipa": "/ˈnɑmʲir/"
       },
       {
-        "id": "v-m103-004",
+        "id": "v-tsilь-103-3",
         "uk": "ціль",
-        "translit": "",
-        "ipa": "/t͡sʲilʲ/",
         "en": "aim, target",
-        "pos": "",
-        "gender": "f"
+        "pos": "f",
+        "ipa": "/t͡sʲilʲ/"
       },
       {
-        "id": "v-m103-005",
+        "id": "v-zadlya-103-4",
         "uk": "задля",
-        "translit": "",
-        "ipa": "/ˈzɑdlʲɑ/",
         "en": "for the sake of",
-        "pos": "",
-        "gender": "prep"
+        "pos": "prep",
+        "ipa": "/ˈzɑdlʲɑ/"
       },
       {
-        "id": "v-m103-006",
+        "id": "v-dlya-toho-shchob-103-5",
         "uk": "для того щоб",
-        "translit": "",
-        "ipa": "-",
         "en": "in order to",
-        "pos": "",
-        "gender": "conj"
+        "pos": "conj"
       },
       {
-        "id": "v-m103-007",
+        "id": "v-navishcho-103-6",
         "uk": "навіщо",
-        "translit": "",
-        "ipa": "/nɑˈvʲiʃt͡ʃo/",
         "en": "why (for what purpose)",
-        "pos": "",
-        "gender": "adv"
+        "pos": "adv",
+        "ipa": "/nɑˈvʲiʃt͡ʃo/"
       },
       {
-        "id": "v-m103-008",
+        "id": "v-dosyahty-103-7",
         "uk": "досягти",
-        "translit": "",
-        "ipa": "/doˈsʲɑɦtɪ/",
         "en": "to achieve",
-        "pos": "",
-        "gender": "pf"
+        "pos": "pf",
+        "ipa": "/doˈsʲɑɦtɪ/"
       },
       {
-        "id": "v-m103-009",
+        "id": "v-dosyahaty-103-8",
         "uk": "досягати",
-        "translit": "",
-        "ipa": "/dosʲɑˈɦɑtɪ/",
         "en": "to achieve",
-        "pos": "",
-        "gender": "impf"
+        "pos": "impf",
+        "ipa": "/dosʲɑˈɦɑtɪ/"
       }
     ]
   }

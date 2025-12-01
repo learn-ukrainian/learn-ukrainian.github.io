@@ -213,49 +213,55 @@ Ukraine has excellent train networks and growing air connections. Whether travel
 
 ### Match Transportation
 
-1. потяг → train
-2. літак → airplane
-3. вокзал → train station
-4. аеропорт → airport
-5. квиток → ticket
-6. платформа → platform
+1. потяг
+   > [!answer] train
+2. літак
+   > [!answer] airplane
+3. вокзал
+   > [!answer] train station
+4. аеропорт
+   > [!answer] airport
+5. квиток
+   > [!answer] ticket
+6. платформа
+   > [!answer] platform
 
 ### Complete Booking Dialogue
 
 1. Мені потрібен квиток до ___. (Lviv)
-   → Львова
+   > [!answer] Львова
 
 2. На ___, будь ласка. (tomorrow)
-   → завтра
+   > [!answer] завтра
 
 3. Квиток ___ і ___. (there and back)
-   → туди і назад
+   > [!answer] туди і назад
 
 4. ___ коштує? (how much)
-   → Скільки
+   > [!answer] Скільки
 
 5. З якої ___? (platform)
-   → платформи
+   > [!answer] платформи
 
 6. О котрій ___? (arrival)
-   → прибуття
+   > [!answer] прибуття
 
 ### Translate
 
 1. I need a ticket to Kyiv.
-   → Мені потрібен квиток до Києва.
+   > [!answer] Мені потрібен квиток до Києва.
 
 2. What time is departure?
-   → О котрій відправлення?
+   > [!answer] О котрій відправлення?
 
 3. From which platform?
-   → З якої платформи?
+   > [!answer] З якої платформи?
 
 4. Is there a flight delay?
-   → Чи є затримка рейсу?
+   > [!answer] Чи є затримка рейсу?
 
 5. I missed the train.
-   → Я спізнився/спізнилась на потяг.
+   > [!answer] Я спізнився/спізнилась на потяг.
 
 ## production
 

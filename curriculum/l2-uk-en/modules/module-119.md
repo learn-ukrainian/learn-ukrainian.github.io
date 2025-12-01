@@ -139,31 +139,39 @@ Some participles have become regular adjectives:
 
 ### Form Participles
 
-1. написати → **написаний**
-2. зробити → **зроблений**
-3. відкрити → **відкритий**
-4. прочитати → **прочитаний**
-5. забути → **забутий**
-6. купити → **куплений**
-7. приготувати → **приготовлений**
-8. збудувати → **збудований**
+1. написати
+   > [!answer] **написаний**
+2. зробити
+   > [!answer] **зроблений**
+3. відкрити
+   > [!answer] **відкритий**
+4. прочитати
+   > [!answer] **прочитаний**
+5. забути
+   > [!answer] **забутий**
+6. купити
+   > [!answer] **куплений**
+7. приготувати
+   > [!answer] **приготовлений**
+8. збудувати
+   > [!answer] **збудований**
 
 ### Complete with Correct Form
 
 1. ___ (написати) лист лежить на столі.
-   → **Написаний** лист лежить на столі.
+   > [!answer] **Написаний** лист лежить на столі.
 
 2. Двері ___ (закрити).
-   → Двері **закриті**.
+   > [!answer] Двері **закриті**.
 
 3. Я прочитав ___ (рекомендувати) книгу.
-   → Я прочитав **рекомендовану** книгу.
+   > [!answer] Я прочитав **рекомендовану** книгу.
 
 4. ___ (запросити) гості вже прийшли.
-   → **Запрошені** гості вже прийшли.
+   > [!answer] **Запрошені** гості вже прийшли.
 
 5. Вечеря вже ___ (приготувати).
-   → Вечеря вже **приготовлена**.
+   > [!answer] Вечеря вже **приготовлена**.
 
 ### Match Verb to Participle
 
@@ -178,20 +186,15 @@ Some participles have become regular adjectives:
 ### Translate to Ukrainian
 
 1. The closed door
-   → **Закриті двері**
-
+   > [!answer] **Закриті двері**
 2. A written letter
-   → **Написаний лист**
-
+   > [!answer] **Написаний лист**
 3. The invited guests
-   → **Запрошені гості**
-
+   > [!answer] **Запрошені гості**
 4. The book is read
-   → **Книга прочитана**
-
+   > [!answer] **Книга прочитана**
 5. Prepared food
-   → **Приготовлена їжа**
-
+   > [!answer] **Приготовлена їжа**
 ## production | Продукція
 
 ### Describe Your Room
@@ -218,17 +221,20 @@ Describe completed actions using participles:
 
 > Choose the correct participle.
 
-1. Verb: написати → Participle: ___
+1. Verb: написати
+   > [!answer] Participle: ___
    - [x] написаний
    - [ ] написений
    > -ати verbs → -аний.
 
-2. Verb: закрити → Participle: ___
+2. Verb: закрити
+   > [!answer] Participle: ___
    - [x] закритий
    - [ ] закрений
    > Vowel + -ти → -тий.
 
-3. Verb: зробити → Participle: ___
+3. Verb: зробити
+   > [!answer] Participle: ___
    - [x] зроблений
    - [ ] зроблятий
    > -ити verbs → -ений.
@@ -243,7 +249,8 @@ Describe completed actions using participles:
    - [ ] закрита
    > Plural noun "двері" needs plural participle.
 
-6. Verb: забути → Participle: ___
+6. Verb: забути
+   > [!answer] Participle: ___
    - [x] забутий
    - [ ] забутений
    > -ути → -утий.

@@ -210,29 +210,35 @@ In A1, you learned basic shopping. Now let's handle more complex situations: try
 
 ### Match Situations to Phrases
 
-1. Too small → замале
-2. Where's the fitting room? → Де примірочна?
-3. Any discounts? → Чи є знижки?
-4. I want to return this → Я хочу повернути це
-5. What size are you? → Який у вас розмір?
-6. It fits well → Добре сидить
+1. Too small
+   > [!answer] замале
+2. Where's the fitting room?
+   > [!answer] Де примірочна?
+3. Any discounts?
+   > [!answer] Чи є знижки?
+4. I want to return this
+   > [!answer] Я хочу повернути це
+5. What size are you?
+   > [!answer] Який у вас розмір?
+6. It fits well
+   > [!answer] Добре сидить
 
 ### Complete Dialogues
 
 1. - Чи є ця куртка в ___ (чорний) кольорі?
-   → чорному
+   > [!answer] чорному
 
 2. - Яка ___ (гарантія) на цей телефон?
-   → гарантія
+   > [!answer] гарантія
 
 3. - Це ___ (занадто великий). Дайте менший.
-   → завелике
+   > [!answer] завелике
 
 4. - Чи можна ___ (обміняти), якщо не підійде?
-   → обміняти
+   > [!answer] обміняти
 
 5. - ___ (скільки) тримає батарея?
-   → Скільки
+   > [!answer] Скільки
 
 ### Role Play: Shopping Scenarios
 

@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-A2-53",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "grammar-introduction",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -27,8 +26,6 @@
       "Causal clauses with тому що/бо",
       "Word order in complex sentences"
     ],
-    "totalDuration": 45,
-    "transliterationMode": "partial",
     "tags": [
       "grammar",
       "conjunctions",
@@ -36,22 +33,9 @@
       "хоча",
       "clauses"
     ],
-    "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
+    "totalDuration": 45,
+    "transliterationMode": "partial",
     "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Beyond Simple Sentences\n\nTime to connect ideas more sophisticatedly!\n\n- \"I study **in order to** learn.\" - Я вчуся, **щоб** знати.\n- \"**Although** it's cold, I went out.\" - **Хоча** холодно, я вийшов.\n- \"I stayed home **because** it rained.\" - Я залишився вдома, **тому що** був дощ.\n\nThese conjunctions help you express complex thoughts!\n\n> 💡 **Did You Know?**\n>\n> Ukrainian has many ways to say \"because\": тому що, бо, оскільки, через те що, адже... Each has slightly different nuances. We'll focus on the most common ones at A2 level!"
-          }
-        ]
-      },
       {
         "id": "phase-presentation",
         "name": "presentation",
@@ -60,117 +44,33 @@
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "### Щоб - In Order To / So That\n\n**Щоб** expresses purpose - why you do something:\n\n**Structure: Main clause + щоб + infinitive/past tense**\n\n**Same subject (infinitive):**\n- Я вчуся, **щоб** знати українську. - I study to know Ukrainian.\n- Вона працює, **щоб** заробляти гроші. - She works to earn money.\n- Ми прийшли, **щоб** допомогти. - We came to help.\n\n**Different subjects (past tense form):**\n- Я сказав, **щоб** він прийшов. - I told him to come. (lit: so that he came)\n- Вона хоче, **щоб** ти зателефонував. - She wants you to call.\n- Треба, **щоб** усі були готові. - Everyone needs to be ready.\n\n> ⚡ **Pro Tip: Щоб + Past Tense**\n>\n> When subjects differ, use past tense after щоб (even for present/future meaning!):\n> - Я хочу, щоб ти **прийшов**. (not прийдеш)\n> - Важливо, щоб вони **зрозуміли**. (not зрозуміють)"
+            "teacherNotes": "### Щоб - In Order To / So That\n\n**Щоб** expresses purpose - why you do something:\n\n**Structure: Main clause + щоб + infinitive/past tense**\n\n**Same subject (infinitive):**\n- Я вчуся, **щоб** знати українську. - I study to know Ukrainian.\n- Вона працює, **щоб** заробляти гроші. - She works to earn money.\n- Ми прийшли, **щоб** допомогти. - We came to help.\n\n**Different subjects (past tense form):**\n- Я сказав, **щоб** він прийшов. - I told him to come. (lit: so that he came)\n- Вона хоче, **щоб** ти зателефонував. - She wants you to call.\n- Треба, **щоб** усі були готові. - Everyone needs to be ready.\n\n> ⚡ **Pro Tip: Щоб + Past Tense**\n>\n> When subjects differ, use past tense after щоб (even for present/future meaning!):\n> - Я хочу, щоб ти **прийшов**. (not прийдеш)\n> - Важливо, щоб вони **зрозуміли**. (not зрозуміють)\n\n### Щоб Patterns\n\n**Purpose (why you do something):**\n- Я купив квитки, **щоб** поїхати до Львова. - I bought tickets to go to Lviv.\n- Треба рано встати, **щоб** встигнути на потяг. - We need to get up early to catch the train.\n\n**Desire/Request (what you want others to do):**\n- Я хочу, **щоб** ви мене зрозуміли. - I want you to understand me.\n- Попроси, **щоб** він почекав. - Ask him to wait.\n- Скажи йому, **щоб** зателефонував. - Tell him to call.\n\n**Necessity:**\n- Потрібно, **щоб** документи були готові. - The documents need to be ready.\n- Важливо, **щоб** усі прийшли вчасно. - It's important that everyone comes on time.\n\n> 🎭 **Culture Corner: Indirect Requests**\n>\n> Ukrainians often use щоб for polite, indirect requests:\n> - \"Я б хотів, щоб ви мені допомогли\" (I would like you to help me)\n> This is softer than a direct command!\n\n### Щоб не - In Order Not To\n\n**Negative purpose:**\n- Я поспішаю, **щоб не** запізнитися. - I'm hurrying so as not to be late.\n- Говори тихіше, **щоб не** розбудити дитину. - Speak quieter so as not to wake the child.\n- Вона взяла парасолю, **щоб не** змокнути. - She took an umbrella so as not to get wet.\n\n### Хоча / Хоч - Although\n\n**Хоча** expresses contrast - something unexpected:\n\n**Structure: Хоча + clause, main clause**\n\n**Examples:**\n- **Хоча** йде дощ, я піду на прогулянку. - Although it's raining, I'll go for a walk.\n- **Хоча** він втомився, він продовжував працювати. - Although he was tired, he continued working.\n- Я допоможу, **хоча** в мене мало часу. - I'll help, although I have little time.\n\n**Хоча at the end:**\n- Він погодився, **хоча** й неохоче. - He agreed, although reluctantly.\n- Це правда, **хоча** звучить дивно. - It's true, although it sounds strange.\n\n> 📜 **History Bite: Хоча Origins**\n>\n> Хоча comes from \"хотіти\" (to want) - originally meaning \"even if you want.\" Over time it evolved to simply mean \"although.\" The short form \"хоч\" is more casual.\n\n### Хоча vs Але\n\n**Хоча** (although) - subordinating, shows unexpected contrast:\n- **Хоча** дорого, я куплю. (Despite the high price, I'll buy.)\n\n**Але** (but) - coordinating, simple contrast:\n- Дорого, **але** я куплю. (It's expensive, but I'll buy.)\n\n**Compare:**\n- **Хоча** він старий, він активний. - Although he's old, he's active.\n- Він старий, **але** активний. - He's old, but active.\n\n### Тому що / Бо - Because\n\n**Giving reasons:**\n\n**Тому що (because) - more formal:**\n- Я залишився вдома, **тому що** був дощ. - I stayed home because it was raining.\n- Вона запізнилася, **тому що** були затори. - She was late because there were traffic jams.\n\n**Бо (because) - casual:**\n- Я не прийшов, **бо** захворів. - I didn't come because I got sick.\n- Він щасливий, **бо** здав екзамен. - He's happy because he passed the exam.\n\n**Through (через) - because of (+ noun):**\n- Я запізнився **через** затори. - I was late because of traffic jams.\n- **Через** дощ ми залишилися вдома. - Because of the rain, we stayed home.\n\n> ⚡ **Pro Tip: Тому що vs Бо**\n>\n> - **Тому що** - neutral, can be used anywhere\n> - **Бо** - more casual, common in speech\n> - **Через** + noun - for specific causes\n\n### Тому / Тому що\n\nDon't confuse:\n- **Тому** = therefore, that's why (RESULT)\n- **Тому що** = because (REASON)\n\n**Examples:**\n- Був дощ, **тому** я залишився вдома. - It rained, therefore I stayed home.\n- Я залишився вдома, **тому що** був дощ. - I stayed home because it rained.\n\n### Other Useful Conjunctions\n\n**Якщо... то (if... then):**\n- **Якщо** матимеш час, **то** зателефонуй. - If you have time, then call.\n\n**Коли (when):**\n- **Коли** прийдеш, подзвони. - When you arrive, call.\n\n**Поки (while):**\n- **Поки** я працюю, ти відпочивай. - While I work, you rest.\n\n**Перш ніж (before):**\n- **Перш ніж** піти, зателефонуй. - Before leaving, call.\n\n**Після того як (after):**\n- **Після того як** поїли, пішли гуляти. - After we ate, we went for a walk.\n\n### Complex Sentence Structure\n\n**Word order flexibility:**\n- **Тому що** він запізнився, ми почали без нього.\n- Ми почали без нього, **тому що** він запізнився.\n\n**Combining conjunctions:**\n- **Хоча** я втомився, я продовжував працювати, **тому що** хотів закінчити.\n- Although I was tired, I continued working because I wanted to finish."
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Щоб Patterns\n\n**Purpose (why you do something):**\n- Я купив квитки, **щоб** поїхати до Львова. - I bought tickets to go to Lviv.\n- Треба рано встати, **щоб** встигнути на потяг. - We need to get up early to catch the train.\n\n**Desire/Request (what you want others to do):**\n- Я хочу, **щоб** ви мене зрозуміли. - I want you to understand me.\n- Попроси, **щоб** він почекав. - Ask him to wait.\n- Скажи йому, **щоб** зателефонував. - Tell him to call.\n\n**Necessity:**\n- Потрібно, **щоб** документи були готові. - The documents need to be ready.\n- Важливо, **щоб** усі прийшли вчасно. - It's important that everyone comes on time.\n\n> 🎭 **Culture Corner: Indirect Requests**\n>\n> Ukrainians often use щоб for polite, indirect requests:\n> - \"Я б хотів, щоб ви мені допомогли\" (I would like you to help me)\n> This is softer than a direct command!"
+            "teacherNotes": "### Complete with Correct Conjunction\n\n1. Я вчу українську, ___ розмовляти з друзями. (purpose)\n   > [!answer] щоб\n\n2. ___ холодно, ми пішли гуляти. (contrast)\n   > [!answer] Хоча\n\n3. Вона запізнилася, ___ були затори. (reason)\n   > [!answer] тому що / бо\n\n4. Попроси його, ___ він допоміг. (request)\n   > [!answer] щоб\n\n5. Я поспішаю, ___ не запізнитися. (negative purpose)\n   > [!answer] щоб не\n\n6. Він не прийшов ___ хворобу. (cause - noun)\n   > [!answer] через\n\n### Combine Sentences\n\n1. Я хочу. Ти прийдеш.\n   > [!answer] Я хочу, щоб ти прийшов.\n\n2. Холодно. Я вийшов.\n   > [!answer] Хоча холодно, я вийшов.\n\n3. Я залишився вдома. Був дощ.\n   > [!answer] Я залишився вдома, тому що був дощ.\n\n4. Я рано встав. Хочу встигнути на потяг.\n   > [!answer] Я рано встав, щоб встигнути на потяг.\n\n5. Він втомився. Він продовжував.\n   > [!answer] Хоча він втомився, він продовжував.\n\n### Translate\n\n1. I study in order to learn.\n   > [!answer] Я вчуся, щоб знати. / Я вчуся, щоб вивчити.\n\n2. Although it's raining, I'll go.\n   > [!answer] Хоча йде дощ, я піду.\n\n3. I stayed home because I was sick.\n   > [!answer] Я залишився вдома, тому що/бо захворів.\n\n4. Tell him to wait.\n   > [!answer] Скажи йому, щоб почекав.\n\n5. She was late because of traffic.\n   > [!answer] Вона запізнилася через затори."
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Щоб не - In Order Not To\n\n**Negative purpose:**\n- Я поспішаю, **щоб не** запізнитися. - I'm hurrying so as not to be late.\n- Говори тихіше, **щоб не** розбудити дитину. - Speak quieter so as not to wake the child.\n- Вона взяла парасолю, **щоб не** змокнути. - She took an umbrella so as not to get wet."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Хоча / Хоч - Although\n\n**Хоча** expresses contrast - something unexpected:\n\n**Structure: Хоча + clause, main clause**\n\n**Examples:**\n- **Хоча** йде дощ, я піду на прогулянку. - Although it's raining, I'll go for a walk.\n- **Хоча** він втомився, він продовжував працювати. - Although he was tired, he continued working.\n- Я допоможу, **хоча** в мене мало часу. - I'll help, although I have little time.\n\n**Хоча at the end:**\n- Він погодився, **хоча** й неохоче. - He agreed, although reluctantly.\n- Це правда, **хоча** звучить дивно. - It's true, although it sounds strange.\n\n> 📜 **History Bite: Хоча Origins**\n>\n> Хоча comes from \"хотіти\" (to want) - originally meaning \"even if you want.\" Over time it evolved to simply mean \"although.\" The short form \"хоч\" is more casual."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Хоча vs Але\n\n**Хоча** (although) - subordinating, shows unexpected contrast:\n- **Хоча** дорого, я куплю. (Despite the high price, I'll buy.)\n\n**Але** (but) - coordinating, simple contrast:\n- Дорого, **але** я куплю. (It's expensive, but I'll buy.)\n\n**Compare:**\n- **Хоча** він старий, він активний. - Although he's old, he's active.\n- Він старий, **але** активний. - He's old, but active."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Тому що / Бо - Because\n\n**Giving reasons:**\n\n**Тому що (because) - more formal:**\n- Я залишився вдома, **тому що** був дощ. - I stayed home because it was raining.\n- Вона запізнилася, **тому що** були затори. - She was late because there were traffic jams.\n\n**Бо (because) - casual:**\n- Я не прийшов, **бо** захворів. - I didn't come because I got sick.\n- Він щасливий, **бо** здав екзамен. - He's happy because he passed the exam.\n\n**Through (через) - because of (+ noun):**\n- Я запізнився **через** затори. - I was late because of traffic jams.\n- **Через** дощ ми залишилися вдома. - Because of the rain, we stayed home.\n\n> ⚡ **Pro Tip: Тому що vs Бо**\n>\n> - **Тому що** - neutral, can be used anywhere\n> - **Бо** - more casual, common in speech\n> - **Через** + noun - for specific causes"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Тому / Тому що\n\nDon't confuse:\n- **Тому** = therefore, that's why (RESULT)\n- **Тому що** = because (REASON)\n\n**Examples:**\n- Був дощ, **тому** я залишився вдома. - It rained, therefore I stayed home.\n- Я залишився вдома, **тому що** був дощ. - I stayed home because it rained."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Other Useful Conjunctions\n\n**Якщо... то (if... then):**\n- **Якщо** матимеш час, **то** зателефонуй. - If you have time, then call.\n\n**Коли (when):**\n- **Коли** прийдеш, подзвони. - When you arrive, call.\n\n**Поки (while):**\n- **Поки** я працюю, ти відпочивай. - While I work, you rest.\n\n**Перш ніж (before):**\n- **Перш ніж** піти, зателефонуй. - Before leaving, call.\n\n**Після того як (after):**\n- **Після того як** поїли, пішли гуляти. - After we ate, we went for a walk."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Complex Sentence Structure\n\n**Word order flexibility:**\n- **Тому що** він запізнився, ми почали без нього.\n- Ми почали без нього, **тому що** він запізнився.\n\n**Combining conjunctions:**\n- **Хоча** я втомився, я продовжував працювати, **тому що** хотів закінчити.\n- Although I was tired, I continued working because I wanted to finish."
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A2-53-matchup"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Complete with Correct Conjunction\n\n1. Я вчу українську, ___ розмовляти з друзями. (purpose)\n   → щоб\n\n2. ___ холодно, ми пішли гуляти. (contrast)\n   → Хоча\n\n3. Вона запізнилася, ___ були затори. (reason)\n   → тому що / бо\n\n4. Попроси його, ___ він допоміг. (request)\n   → щоб\n\n5. Я поспішаю, ___ не запізнитися. (negative purpose)\n   → щоб не\n\n6. Він не прийшов ___ хворобу. (cause - noun)\n   → через"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Combine Sentences\n\n1. Я хочу. Ти прийдеш.\n   → Я хочу, щоб ти прийшов.\n\n2. Холодно. Я вийшов.\n   → Хоча холодно, я вийшов.\n\n3. Я залишився вдома. Був дощ.\n   → Я залишився вдома, тому що був дощ.\n\n4. Я рано встав. Хочу встигнути на потяг.\n   → Я рано встав, щоб встигнути на потяг.\n\n5. Він втомився. Він продовжував.\n   → Хоча він втомився, він продовжував."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Translate\n\n1. I study in order to learn.\n   → Я вчуся, щоб знати. / Я вчуся, щоб вивчити.\n\n2. Although it's raining, I'll go.\n   → Хоча йде дощ, я піду.\n\n3. I stayed home because I was sick.\n   → Я залишився вдома, тому що/бо захворів.\n\n4. Tell him to wait.\n   → Скажи йому, щоб почекав.\n\n5. She was late because of traffic.\n   → Вона запізнилася через затори."
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A2-53-quiz"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A2-53-groupsort"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Explain Your Actions\n\nUse purpose clauses:\n- Я вивчаю українську, щоб...\n- Я працюю, щоб...\n- Я прийшов сюди, щоб..."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Express Contrasts\n\nUse хоча:\n- Хоча я втомлений, я...\n- Хоча це дорого, я...\n- Хоча в мене мало часу, я..."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Give Reasons\n\nUse тому що/бо:\n- Я люблю Україну, тому що...\n- Я вивчаю мови, бо...\n- Я вибрав цю роботу, тому що..."
+            "teacherNotes": "### Explain Your Actions\n\nUse purpose clauses:\n- Я вивчаю українську, щоб...\n- Я працюю, щоб...\n- Я прийшов сюди, щоб...\n\n### Express Contrasts\n\nUse хоча:\n- Хоча я втомлений, я...\n- Хоча це дорого, я...\n- Хоча в мене мало часу, я...\n\n### Give Reasons\n\nUse тому що/бо:\n- Я люблю Україну, тому що...\n- Я вивчаю мови, бо...\n- Я вибрав цю роботу, тому що...\n\n---"
           }
         ]
       }
-    ]
+    ],
+    "createdAt": "2025-12-01T22:58:37.276Z",
+    "modifiedAt": "2025-12-01T22:58:37.276Z",
+    "version": 1
   },
   "activities": [
     {
-      "id": "act-uk-A2-53-matchup",
+      "id": "act-a2-53-matchup",
       "type": "match-up",
       "title": "Conjunctions",
       "description": "Match with meaning.",
       "content": {
         "type": "match-up",
-        "instructions": "Match with meaning.",
         "pairs": [
           {
             "left": "щоб",
@@ -205,24 +105,17 @@
       "language": "uk",
       "difficultyLevel": "A2",
       "duration": 5,
-      "tags": [
-        "grammar",
-        "conjunctions",
-        "щоб",
-        "хоча",
-        "clauses"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.276Z",
+      "modifiedAt": "2025-12-01T22:58:37.276Z"
     },
     {
-      "id": "act-uk-A2-53-quiz",
+      "id": "act-a2-53-quiz",
       "type": "quiz",
       "title": "Complex Sentences",
       "description": "Choose the correct conjunction.",
       "content": {
         "type": "quiz",
-        "instructions": "Choose the correct conjunction.",
         "questions": [
           {
             "question": "\"I study to learn\" - Я вчуся, ___ знати.",
@@ -301,51 +194,50 @@
       "language": "uk",
       "difficultyLevel": "A2",
       "duration": 5,
-      "tags": [
-        "grammar",
-        "conjunctions",
-        "щоб",
-        "хоча",
-        "clauses"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.276Z",
+      "modifiedAt": "2025-12-01T22:58:37.276Z"
     },
     {
-      "id": "act-uk-A2-53-groupsort",
+      "id": "act-a2-53-groupsort",
       "type": "group-sort",
       "title": "Reason vs Purpose vs Contrast",
       "description": "Sort by function.",
       "content": {
         "type": "group-sort",
-        "instructions": "Sort by function.",
         "groups": [
           {
-            "name": "Purpose (щоб)",
+            "id": "purpose",
+            "name": "Purpose",
             "items": [
               "щоб знати",
               "щоб допомогти",
               "щоб не запізнитися",
               "щоб вони прийшли"
-            ]
+            ],
+            "nameUk": "щоб"
           },
           {
-            "name": "Reason (тому що/бо)",
+            "id": "reason",
+            "name": "Reason",
             "items": [
               "тому що втомився",
               "бо захворів",
               "через затори",
               "тому що холодно"
-            ]
+            ],
+            "nameUk": "тому що/бо"
           },
           {
-            "name": "Contrast (хоча)",
+            "id": "contrast",
+            "name": "Contrast",
             "items": [
               "хоча дорого",
               "хоча холодно",
               "хоча втомився",
               "хоча не хотів"
-            ]
+            ],
+            "nameUk": "хоча"
           }
         ],
         "shuffleItems": true
@@ -356,15 +248,9 @@
       "language": "uk",
       "difficultyLevel": "A2",
       "duration": 5,
-      "tags": [
-        "grammar",
-        "conjunctions",
-        "щоб",
-        "хоча",
-        "clauses"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.276Z",
+      "modifiedAt": "2025-12-01T22:58:37.276Z"
     }
   ],
   "vocabulary": {
@@ -375,85 +261,67 @@
     "transliterationMode": "partial",
     "words": [
       {
-        "id": "v-m53-001",
+        "id": "v-shchob-53-0",
         "uk": "щоб",
-        "translit": "",
-        "ipa": "/ʃtʃob/",
         "en": "in order to, so that",
         "pos": "conj",
-        "gender": "-"
+        "ipa": "/ʃtʃob/"
       },
       {
-        "id": "v-m53-002",
+        "id": "v-khocha-53-1",
         "uk": "хоча",
-        "translit": "",
-        "ipa": "/xoˈtʃɑ/",
         "en": "although",
         "pos": "conj",
-        "gender": "-"
+        "ipa": "/xoˈtʃɑ/"
       },
       {
-        "id": "v-m53-003",
+        "id": "v-khoch-53-2",
         "uk": "хоч",
-        "translit": "",
-        "ipa": "/xotʃ/",
         "en": "although (casual)",
         "pos": "conj",
-        "gender": "-"
+        "ipa": "/xotʃ/"
       },
       {
-        "id": "v-m53-004",
+        "id": "v-tomu-shcho-53-3",
         "uk": "тому що",
-        "translit": "",
-        "ipa": "/toˈmu ʃtʃo/",
         "en": "because",
         "pos": "conj",
-        "gender": "-"
+        "ipa": "/toˈmu ʃtʃo/"
       },
       {
-        "id": "v-m53-005",
+        "id": "v-bo-53-4",
         "uk": "бо",
-        "translit": "",
-        "ipa": "/bo/",
         "en": "because (casual)",
         "pos": "conj",
-        "gender": "-"
+        "ipa": "/bo/"
       },
       {
-        "id": "v-m53-006",
+        "id": "v-neokhoche-53-5",
         "uk": "неохоче",
-        "translit": "",
-        "ipa": "/nɛˈoxotʃɛ/",
         "en": "reluctantly",
         "pos": "adv",
-        "gender": "-"
+        "ipa": "/nɛˈoxotʃɛ/"
       },
       {
-        "id": "v-m53-007",
+        "id": "v-prodovzhuvaty-53-6",
         "uk": "продовжувати",
-        "translit": "",
-        "ipa": "/prodovˈʒuvɑtɪ/",
         "en": "to continue (impf)",
         "pos": "verb",
-        "gender": "-"
+        "ipa": "/prodovˈʒuvɑtɪ/"
       },
       {
-        "id": "v-m53-008",
+        "id": "v-zmoknuty-53-7",
         "uk": "змокнути",
-        "translit": "",
-        "ipa": "/zˈmoknʊtɪ/",
         "en": "to get wet (perf)",
         "pos": "verb",
-        "gender": "-"
+        "ipa": "/zˈmoknʊtɪ/"
       },
       {
-        "id": "v-m53-009",
+        "id": "v-rozbudyty-53-8",
         "uk": "розбудити",
-        "translit": "",
-        "ipa": "/rozbuˈdɪtɪ/",
         "en": "to wake up (sb) (perf)",
         "pos": "verb",
-        "gender": "-"
+        "ipa": "/rozbuˈdɪtɪ/"
       }
     ]
   }

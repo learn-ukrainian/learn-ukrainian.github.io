@@ -218,50 +218,60 @@ You know basic activities. Now let's talk about hobbies and leisure!
 
 ### Match Hobby to Category
 
-1. малювання → творчі (creative)
-2. шахи → ігри (games)
-3. риболовля → активний відпочинок (outdoor)
-4. колекціонування марок → збирання (collecting)
-5. караоке → розваги (entertainment)
+1. малювання
+   > [!answer] творчі (creative)
+2. шахи
+   > [!answer] ігри (games)
+3. риболовля
+   > [!answer] активний відпочинок (outdoor)
+4. колекціонування марок
+   > [!answer] збирання (collecting)
+5. караоке
+   > [!answer] розваги (entertainment)
 
 ### Complete Hobby Dialogue
 
 **A:** Яке у тебе ___? (hobby)
-→ хобі
+> [!answer] хобі
 
 **B:** Я захоплююся ___. (photography)
-→ фотографією
+> [!answer] фотографією
 
 **A:** Як часто ___? (do you photograph)
-→ фотографуєш
+> [!answer] фотографуєш
 
 **B:** Майже ___. (every day)
-→ щодня
+> [!answer] щодня
 
 **A:** Покажеш свої ___? (photos)
-→ фото / фотографії
+> [!answer] фото / фотографії
 
 ### Form Sentences
 
 1. Я / захоплюватися / малювання
-   → Я захоплююся малюванням.
+   > [!answer] Я захоплююся малюванням.
 
 2. Вони / грати / шахи / щовечора
-   → Вони грають у шахи щовечора.
+   > [!answer] Вони грають у шахи щовечора.
 
 3. Ми / піти / похід / наступний тиждень
-   → Ми підемо в похід наступного тижня.
+   > [!answer] Ми підемо в похід наступного тижня.
 
 4. Вона / збирати / марки / з дитинства
-   → Вона збирає марки з дитинства.
+   > [!answer] Вона збирає марки з дитинства.
 
 ### Translate
 
-1. What do you do in your free time? → Що ти робиш у вільний час?
-2. I'm passionate about gardening. → Я захоплююся садівництвом.
-3. Let's play a board game. → Давай пограємо в настільну гру.
-4. She collects old coins. → Вона колекціонує старі монети.
-5. Do you like hiking? → Ти любиш походи?
+1. What do you do in your free time?
+   > [!answer] Що ти робиш у вільний час?
+2. I'm passionate about gardening.
+   > [!answer] Я захоплююся садівництвом.
+3. Let's play a board game.
+   > [!answer] Давай пограємо в настільну гру.
+4. She collects old coins.
+   > [!answer] Вона колекціонує старі монети.
+5. Do you like hiking?
+   > [!answer] Ти любиш походи?
 
 ## production
 

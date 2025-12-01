@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-A1-22",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "grammar-introduction",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -26,118 +25,49 @@
       "Introduction to perfective aspect",
       "Future of бути"
     ],
-    "totalDuration": 50,
-    "transliterationMode": "full",
     "tags": [
       "grammar",
       "verbs",
       "future-tense"
     ],
-    "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
+    "totalDuration": 50,
+    "transliterationMode": "full",
     "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Tomorrow and Beyond\n\nYou can now talk about the past! Let's complete your time-travel toolkit with the FUTURE tense.\n\nUkrainian has TWO ways to express future:\n1. **Compound future:** буду + infinitive (I will be reading)\n2. **Simple future:** perfective verb (I will read/finish reading)\n\nAt A1, we'll focus on the compound future - it's simpler and more versatile!\n\n> 💡 **Did You Know?**\n>\n> The compound future (буду читати) is used for ongoing or repeated future actions, while the simple future (прочитаю) implies completion. This distinction - called \"aspect\" - is one of the most unique features of Slavic languages. For now, just master буду + infinitive!"
-          }
-        ]
-      },
       {
         "id": "phase-presentation",
         "name": "presentation",
-        "duration": 15,
+        "duration": 17,
         "items": [
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "### Future of Бути (To Be)\n\nFirst, learn the future forms of \"to be\":\n\n| Person | Future | Example |\n|--------|--------|---------|\n| я | буду | Я буду там. (I will be there.) |\n| ти | будеш | Ти будеш готовий? (Will you be ready?) |\n| він/вона/воно | буде | Він буде вдома. (He will be at home.) |\n| ми | будемо | Ми будемо разом. (We will be together.) |\n| ви | будете | Ви будете на концерті? (Will you be at the concert?) |\n| вони | будуть | Вони будуть щасливі. (They will be happy.) |\n\n> ⚡ **Pro Tip: Memorize Буду!**\n>\n> The future of бути is your key to the future tense:\n> буду, будеш, буде, будемо, будете, будуть\n>\n> Once you know this, you can form future for ANY verb!"
+            "teacherNotes": "### Future of Бути (To Be)\n\nFirst, learn the future forms of \"to be\":\n\n| Person | Future | Example |\n|--------|--------|---------|\n| я | буду | Я буду там. (I will be there.) |\n| ти | будеш | Ти будеш готовий? (Will you be ready?) |\n| він/вона/воно | буде | Він буде вдома. (He will be at home.) |\n| ми | будемо | Ми будемо разом. (We will be together.) |\n| ви | будете | Ви будете на концерті? (Will you be at the concert?) |\n| вони | будуть | Вони будуть щасливі. (They will be happy.) |\n\n> ⚡ **Pro Tip: Memorize Буду!**\n>\n> The future of бути is your key to the future tense:\n> буду, будеш, буде, будемо, будете, будуть\n>\n> Once you know this, you can form future for ANY verb!\n\n### Compound Future Formation\n\n**буду/будеш/буде... + infinitive**\n\n| Person | читати | працювати | говорити |\n|--------|--------|-----------|----------|\n| я | буду читати | буду працювати | буду говорити |\n| ти | будеш читати | будеш працювати | будеш говорити |\n| він/вона | буде читати | буде працювати | буде говорити |\n| ми | будемо читати | будемо працювати | будемо говорити |\n| ви | будете читати | будете працювати | будете говорити |\n| вони | будуть читати | будуть працювати | будуть говорити |\n\n**Examples:**\n- Я буду читати книгу. (I will read/be reading a book.)\n- Вона буде працювати завтра. (She will work tomorrow.)\n- Ми будемо вивчати українську. (We will study Ukrainian.)\n\n> 📜 **History Bite: The Eternal Бути**\n>\n> \"Бути\" (to be) is one of the oldest verbs in any language. Its Proto-Indo-European root *bʰuH- appears in English \"be,\" Latin \"fui\" (I was), and Sanskrit \"bhū.\" The future \"буду\" continues this 6,000-year-old root!\n\n### Time Expressions for Future\n\n| Ukrainian | Transliteration | English |\n|-----------|-----------------|---------|\n| завтра | zavtra | tomorrow |\n| післязавтра | pislyazavtra | day after tomorrow |\n| наступного тижня | nastupnoho tyzhnya | next week |\n| наступного місяця | nastupnoho misyatsya | next month |\n| наступного року | nastupnoho roku | next year |\n| скоро | skoro | soon |\n| пізніше | piznishe | later |\n| увечері | uvecheri | in the evening |\n| вранці | vrantsi | in the morning |\n\n> 🔗 **Language Link: Наступний vs Минулий**\n>\n> Notice the pattern:\n> - **минулого** тижня = last week (past = genitive)\n> - **наступного** тижня = next week (future = genitive)\n>\n> Both use genitive case for time expressions!\n\n### Introduction to Perfective Future\n\nUkrainian verbs have TWO aspects:\n- **Imperfective** (ongoing/repeated): читати, писати, робити\n- **Perfective** (completed): прочитати, написати, зробити\n\nPerfective verbs form simple future with present-tense endings:\n\n| Imperfective | Perfective | Meaning |\n|--------------|------------|---------|\n| читати | прочитати | to read (through) |\n| писати | написати | to write (completely) |\n| робити | зробити | to do/make (complete) |\n| купувати | купити | to buy |\n| вчити | вивчити | to learn (master) |\n\n**Simple future with perfective:**\n- Я **прочитаю** книгу. (I will read the book [finish it].)\n- Він **напише** листа. (He will write a letter [complete it].)\n- Ми **купимо** машину. (We will buy a car.)\n\n> 🎯 **Fun Fact: Prefix Power**\n>\n> Perfective verbs often add a prefix:\n> - читати → **про**читати (read through)\n> - писати → **на**писати (write up)\n> - робити → **з**робити (make done)\n>\n> Prefixes are like adding \"finish\" or \"complete\" to the action!\n\n### Expressing Plans & Intentions\n\n| Ukrainian | English |\n|-----------|---------|\n| Я буду... | I will (be doing)... |\n| Я хочу... | I want to... |\n| Я планую... | I plan to... |\n| Я збираюся... | I'm going to... |\n| Я думаю... | I think I'll... |\n\n**Examples:**\n- Що ти будеш робити завтра? (What will you do tomorrow?)\n- Я буду працювати. (I will work.)\n- Ми збираємося поїхати у Львів. (We're going to go to Lviv.)\n\n> 🌍 **Real World: Making Plans**\n>\n> - **Що плануєш на вихідні?** - What are you planning for the weekend?\n> - **Я буду відпочивати.** - I will rest.\n> - **Може, зустрінемося?** - Maybe we'll meet up?\n> - **Так, добре! О котрій?** - Yes, okay! At what time?"
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Compound Future Formation\n\n**буду/будеш/буде... + infinitive**\n\n| Person | читати | працювати | говорити |\n|--------|--------|-----------|----------|\n| я | буду читати | буду працювати | буду говорити |\n| ти | будеш читати | будеш працювати | будеш говорити |\n| він/вона | буде читати | буде працювати | буде говорити |\n| ми | будемо читати | будемо працювати | будемо говорити |\n| ви | будете читати | будете працювати | будете говорити |\n| вони | будуть читати | будуть працювати | будуть говорити |\n\n**Examples:**\n- Я буду читати книгу. (I will read/be reading a book.)\n- Вона буде працювати завтра. (She will work tomorrow.)\n- Ми будемо вивчати українську. (We will study Ukrainian.)\n\n> 📜 **History Bite: The Eternal Бути**\n>\n> \"Бути\" (to be) is one of the oldest verbs in any language. Its Proto-Indo-European root *bʰuH- appears in English \"be,\" Latin \"fui\" (I was), and Sanskrit \"bhū.\" The future \"буду\" continues this 6,000-year-old root!"
+            "teacherNotes": "### Form Compound Future\n\nMake future tense:\n1. я / читати\n   > [!answer] я буду читати\n2. вона / працювати\n   > [!answer] вона буде працювати\n3. ми / говорити\n   > [!answer] ми будемо говорити\n4. ви / їсти\n   > [!answer] ви будете їсти\n5. вони / дивитися\n   > [!answer] вони будуть дивитися\n\n### Complete Sentences\n\n1. Завтра він ___ (працювати).\n   > [!answer] буде працювати\n2. Ми ___ (бути) вдома ввечері.\n   > [!answer] будемо\n3. Я ___ (читати) цю книгу наступного тижня.\n   > [!answer] буду читати\n4. Вони ___ (жити) у новій квартирі.\n   > [!answer] будуть жити\n\n### Talk About Tomorrow\n\nAnswer these questions:\n1. Що ви будете робити завтра вранці?\n2. Де ви будете ввечері?\n3. Чи будете ви працювати наступного тижня?\n4. Що ви плануєте на вихідні?"
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Time Expressions for Future\n\n| Ukrainian | Transliteration | English |\n|-----------|-----------------|---------|\n| завтра | zavtra | tomorrow |\n| післязавтра | pislyazavtra | day after tomorrow |\n| наступного тижня | nastupnoho tyzhnya | next week |\n| наступного місяця | nastupnoho misyatsya | next month |\n| наступного року | nastupnoho roku | next year |\n| скоро | skoro | soon |\n| пізніше | piznishe | later |\n| увечері | uvecheri | in the evening |\n| вранці | vrantsi | in the morning |\n\n> 🔗 **Language Link: Наступний vs Минулий**\n>\n> Notice the pattern:\n> - **минулого** тижня = last week (past = genitive)\n> - **наступного** тижня = next week (future = genitive)\n>\n> Both use genitive case for time expressions!"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Introduction to Perfective Future\n\nUkrainian verbs have TWO aspects:\n- **Imperfective** (ongoing/repeated): читати, писати, робити\n- **Perfective** (completed): прочитати, написати, зробити\n\nPerfective verbs form simple future with present-tense endings:\n\n| Imperfective | Perfective | Meaning |\n|--------------|------------|---------|\n| читати | прочитати | to read (through) |\n| писати | написати | to write (completely) |\n| робити | зробити | to do/make (complete) |\n| купувати | купити | to buy |\n| вчити | вивчити | to learn (master) |\n\n**Simple future with perfective:**\n- Я **прочитаю** книгу. (I will read the book [finish it].)\n- Він **напише** листа. (He will write a letter [complete it].)\n- Ми **купимо** машину. (We will buy a car.)\n\n> 🎯 **Fun Fact: Prefix Power**\n>\n> Perfective verbs often add a prefix:\n> - читати → **про**читати (read through)\n> - писати → **на**писати (write up)\n> - робити → **з**робити (make done)\n>\n> Prefixes are like adding \"finish\" or \"complete\" to the action!"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Expressing Plans & Intentions\n\n| Ukrainian | English |\n|-----------|---------|\n| Я буду... | I will (be doing)... |\n| Я хочу... | I want to... |\n| Я планую... | I plan to... |\n| Я збираюся... | I'm going to... |\n| Я думаю... | I think I'll... |\n\n**Examples:**\n- Що ти будеш робити завтра? (What will you do tomorrow?)\n- Я буду працювати. (I will work.)\n- Ми збираємося поїхати у Львів. (We're going to go to Lviv.)\n\n> 🌍 **Real World: Making Plans**\n>\n> - **Що плануєш на вихідні?** - What are you planning for the weekend?\n> - **Я буду відпочивати.** - I will rest.\n> - **Може, зустрінемося?** - Maybe we'll meet up?\n> - **Так, добре! О котрій?** - Yes, okay! At what time?"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A1-22-matchup"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Form Compound Future\n\nMake future tense:\n1. я / читати → я буду читати\n2. вона / працювати → вона буде працювати\n3. ми / говорити → ми будемо говорити\n4. ви / їсти → ви будете їсти\n5. вони / дивитися → вони будуть дивитися"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Complete Sentences\n\n1. Завтра він ___ (працювати). → буде працювати\n2. Ми ___ (бути) вдома ввечері. → будемо\n3. Я ___ (читати) цю книгу наступного тижня. → буду читати\n4. Вони ___ (жити) у новій квартирі. → будуть жити"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Talk About Tomorrow\n\nAnswer these questions:\n1. Що ви будете робити завтра вранці?\n2. Де ви будете ввечері?\n3. Чи будете ви працювати наступного тижня?\n4. Що ви плануєте на вихідні?"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A1-22-quiz"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A1-22-groupsort"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Plan Your Week\n\nDescribe your plans for the coming days:\n- Завтра я буду...\n- Наступного тижня я буду...\n- На вихідних я буду..."
+            "teacherNotes": "### Plan Your Week\n\nDescribe your plans for the coming days:\n- Завтра я буду...\n- Наступного тижня я буду...\n- На вихідних я буду...\n\n---"
           }
         ]
       }
-    ]
+    ],
+    "createdAt": "2025-12-01T22:58:37.262Z",
+    "modifiedAt": "2025-12-01T22:58:37.262Z",
+    "version": 1
   },
   "activities": [
     {
-      "id": "act-uk-A1-22-matchup",
+      "id": "act-a1-22-matchup",
       "type": "match-up",
       "title": "Бути Future Forms",
       "description": "Match subject to future form of бути.",
       "content": {
         "type": "match-up",
-        "instructions": "Match subject to future form of бути.",
         "pairs": [
           {
             "left": "я",
@@ -172,22 +102,17 @@
       "language": "uk",
       "difficultyLevel": "A1",
       "duration": 5,
-      "tags": [
-        "grammar",
-        "verbs",
-        "future-tense"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.262Z",
+      "modifiedAt": "2025-12-01T22:58:37.262Z"
     },
     {
-      "id": "act-uk-A1-22-quiz",
+      "id": "act-a1-22-quiz",
       "type": "quiz",
       "title": "Future Tense",
       "description": "Choose the correct future form.",
       "content": {
         "type": "quiz",
-        "instructions": "Choose the correct future form.",
         "questions": [
           {
             "question": "Завтра я ___ працювати.",
@@ -288,24 +213,20 @@
       "language": "uk",
       "difficultyLevel": "A1",
       "duration": 5,
-      "tags": [
-        "grammar",
-        "verbs",
-        "future-tense"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.262Z",
+      "modifiedAt": "2025-12-01T22:58:37.262Z"
     },
     {
-      "id": "act-uk-A1-22-groupsort",
+      "id": "act-a1-22-groupsort",
       "type": "group-sort",
       "title": "Time Expressions",
       "description": "Sort these expressions by tense.",
       "content": {
         "type": "group-sort",
-        "instructions": "Sort these expressions by tense.",
         "groups": [
           {
+            "id": "past",
             "name": "Past",
             "items": [
               "вчора",
@@ -315,6 +236,7 @@
             ]
           },
           {
+            "id": "present",
             "name": "Present",
             "items": [
               "сьогодні",
@@ -323,6 +245,7 @@
             ]
           },
           {
+            "id": "future",
             "name": "Future",
             "items": [
               "завтра",
@@ -340,13 +263,9 @@
       "language": "uk",
       "difficultyLevel": "A1",
       "duration": 5,
-      "tags": [
-        "grammar",
-        "verbs",
-        "future-tense"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.262Z",
+      "modifiedAt": "2025-12-01T22:58:37.262Z"
     }
   ],
   "vocabulary": {
@@ -357,150 +276,121 @@
     "transliterationMode": "full",
     "words": [
       {
-        "id": "v-m22-001",
+        "id": "v-budu-22-0",
         "uk": "буду",
-        "translit": "",
-        "ipa": "/ˈbudu/",
         "en": "I will be",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/ˈbudu/",
         "note": "Future of бути"
       },
       {
-        "id": "v-m22-002",
+        "id": "v-budesh-22-1",
         "uk": "будеш",
-        "translit": "",
-        "ipa": "/ˈbudɛʃ/",
         "en": "you will be",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/ˈbudɛʃ/",
         "note": "ти form"
       },
       {
-        "id": "v-m22-003",
+        "id": "v-bude-22-2",
         "uk": "буде",
-        "translit": "",
-        "ipa": "/ˈbudɛ/",
         "en": "will be",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/ˈbudɛ/",
         "note": "він/вона/воно"
       },
       {
-        "id": "v-m22-004",
+        "id": "v-budemo-22-3",
         "uk": "будемо",
-        "translit": "",
-        "ipa": "/ˈbudɛmɔ/",
         "en": "we will be",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/ˈbudɛmɔ/",
         "note": "ми form"
       },
       {
-        "id": "v-m22-005",
+        "id": "v-budete-22-4",
         "uk": "будете",
-        "translit": "",
-        "ipa": "/ˈbudɛtɛ/",
         "en": "you will be",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/ˈbudɛtɛ/",
         "note": "ви form"
       },
       {
-        "id": "v-m22-006",
+        "id": "v-budutь-22-5",
         "uk": "будуть",
-        "translit": "",
-        "ipa": "/ˈbudutʲ/",
         "en": "they will be",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/ˈbudutʲ/",
         "note": "вони form"
       },
       {
-        "id": "v-m22-007",
+        "id": "v-pislyazavtra-22-6",
         "uk": "післязавтра",
-        "translit": "",
-        "ipa": "/pʲislʲɑˈzɑvtrɑ/",
         "en": "day after tomorrow",
         "pos": "adv",
-        "gender": "-"
+        "ipa": "/pʲislʲɑˈzɑvtrɑ/"
       },
       {
-        "id": "v-m22-008",
+        "id": "v-nastupnyy-22-7",
         "uk": "наступний",
-        "translit": "",
-        "ipa": "/nɑˈstupnɪj/",
         "en": "next",
         "pos": "adj",
+        "ipa": "/nɑˈstupnɪj/",
         "gender": "m",
         "note": "наступного тижня"
       },
       {
-        "id": "v-m22-009",
+        "id": "v-skoro-22-8",
         "uk": "скоро",
-        "translit": "",
-        "ipa": "/ˈskɔrɔ/",
         "en": "soon",
         "pos": "adv",
-        "gender": "-"
+        "ipa": "/ˈskɔrɔ/"
       },
       {
-        "id": "v-m22-010",
+        "id": "v-piznishe-22-9",
         "uk": "пізніше",
-        "translit": "",
-        "ipa": "/ˈpʲizʲnʲiʃɛ/",
         "en": "later",
         "pos": "adv",
-        "gender": "-"
+        "ipa": "/ˈpʲizʲnʲiʃɛ/"
       },
       {
-        "id": "v-m22-011",
+        "id": "v-planuvaty-22-10",
         "uk": "планувати",
-        "translit": "",
-        "ipa": "/plɑnuˈvɑtɪ/",
         "en": "to plan",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/plɑnuˈvɑtɪ/",
         "note": "планую"
       },
       {
-        "id": "v-m22-012",
+        "id": "v-zbyratysya-22-11",
         "uk": "збиратися",
-        "translit": "",
-        "ipa": "/zbɪˈrɑtɪsʲɑ/",
         "en": "to be going to",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/zbɪˈrɑtɪsʲɑ/",
         "note": "збираюся"
       },
       {
-        "id": "v-m22-013",
+        "id": "v-prochytaty-22-12",
         "uk": "прочитати",
-        "translit": "",
-        "ipa": "/prɔtʃɪˈtɑtɪ/",
         "en": "to read (perf)",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/prɔtʃɪˈtɑtɪ/",
         "note": "Simple future: прочитаю"
       },
       {
-        "id": "v-m22-014",
+        "id": "v-napysaty-22-13",
         "uk": "написати",
-        "translit": "",
-        "ipa": "/nɑpɪˈsɑtɪ/",
         "en": "to write (perf)",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/nɑpɪˈsɑtɪ/",
         "note": "Simple future: напишу"
       },
       {
-        "id": "v-m22-015",
+        "id": "v-zrobyty-22-14",
         "uk": "зробити",
-        "translit": "",
-        "ipa": "/zrɔˈbɪtɪ/",
         "en": "to do (perf)",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/zrɔˈbɪtɪ/",
         "note": "Simple future: зроблю"
       }
     ]

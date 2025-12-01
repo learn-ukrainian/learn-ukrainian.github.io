@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-B1-123",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "vocabulary-expansion",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -22,176 +21,43 @@
       "Express health-related concerns and advice"
     ],
     "grammarFocus": [],
-    "totalDuration": 45,
-    "transliterationMode": "none",
     "tags": [
       "vocabulary",
       "health",
       "wellness",
       "lifestyle"
     ],
+    "totalDuration": 45,
+    "transliterationMode": "none",
+    "phases": [],
+    "createdAt": "2025-12-01T22:58:37.237Z",
+    "modifiedAt": "2025-12-01T22:58:37.237Z",
     "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
-    "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Здоров'я та самопочуття | Health and Wellness\n\nНа рівні B1 ми обговорюємо здоров'я глибше:\n\nAt B1 level, we discuss health more deeply:\n\n- Як ви **піклуєтеся** про своє здоров'я? | How do you take care of your health?\n- Що допомагає вам **справлятися зі стресом**? | What helps you cope with stress?\n- Яку роль грає **харчування** у вашому житті? | What role does nutrition play in your life?"
-          }
-        ]
-      },
-      {
-        "id": "phase-presentation",
-        "name": "presentation",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Загальне здоров'я | General Health\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| здоров'я | /zdoˈrowjɑ/ | health | Міцне здоров'я |\n| самопочуття | /sɑmopoˈt͡ʃutʲːɑ/ | well-being | Гарне самопочуття |\n| імунітет | /imuˈnʲitɛt/ | immunity | Зміцнювати імунітет |\n| організм | /orɦɑˈnʲizm/ | organism, body | Здоровий організм |\n| симптом | /sɪmˈptom/ | symptom | Перші симптоми |\n| діагноз | /dʲiɑɦˈnoz/ | diagnosis | Поставити діагноз |\n| лікування | /lʲikuˈvɑnʲːɑ/ | treatment | Курс лікування |\n| одужання | /oduˈʒɑnʲːɑ/ | recovery | Швидке одужання |\n| профілактика | /profilʲɑkˈtɪkɑ/ | prevention | Профілактика хвороб |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Стрес і психічне здоров'я | Stress and Mental Health\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| стрес | /strɛs/ | stress | Хронічний стрес |\n| тривожність | /trɪˈvoʒnʲistʲ/ | anxiety | Підвищена тривожність |\n| депресія | /dɛˈprɛsʲijɑ/ | depression | Симптоми депресії |\n| втома | /ˈftomɑ/ | fatigue | Хронічна втома |\n| виснаження | /vɪsˈnɑʒɛnʲːɑ/ | exhaustion | Емоційне виснаження |\n| вигорання | /vɪɦoˈrɑnʲːɑ/ | burnout | Професійне вигорання |\n| релаксація | /rɛlɑkˈsɑt͡sʲijɑ/ | relaxation | Техніки релаксації |\n| медитація | /mɛdɪˈtɑt͡sʲijɑ/ | meditation | Практикувати медитацію |\n| психолог | /psɪˈxoloɦ/ | psychologist | Консультація психолога |\n| терапія | /tɛrɑˈpʲijɑ/ | therapy | Когнітивна терапія |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Дієслова здоров'я | Health Verbs\n\n| Ukrainian | English | Aspect |\n|-----------|---------|--------|\n| хворіти / захворіти | to be ill / to fall ill | impf/pf |\n| одужувати / одужати | to recover | impf/pf |\n| лікувати / вилікувати | to treat / to cure | impf/pf |\n| лікуватися | to receive treatment | impf |\n| відпочивати / відпочити | to rest | impf/pf |\n| відновлюватися / відновитися | to recover, restore | impf/pf |\n| розслаблятися / розслабитися | to relax | impf/pf |\n| справлятися / справитися | to cope | impf/pf |\n| стресувати | to stress | impf |\n| турбуватися | to worry | impf |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Харчування | Nutrition\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| харчування | /xɑrt͡ʃuˈvɑnʲːɑ/ | nutrition | Здорове харчування |\n| дієта | /dʲiˈjɛtɑ/ | diet | Дотримуватися дієти |\n| калорії | /kɑˈlorʲiʲi/ | calories | Рахувати калорії |\n| білки | /bʲilˈkɪ/ | proteins | Достатньо білків |\n| вуглеводи | /wuɦlɛˈvodɪ/ | carbohydrates | Прості вуглеводи |\n| жири | /ˈʒɪrɪ/ | fats | Корисні жири |\n| вітаміни | /vʲitɑˈmʲinɪ/ | vitamins | Приймати вітаміни |\n| клітковина | /klʲitkoˈvɪnɑ/ | fiber | Багато клітковини |\n| добавки | /doˈbɑwkɪ/ | supplements | Харчові добавки |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Фізична активність | Physical Activity\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| тренування | /trɛnuˈvɑnʲːɑ/ | training, workout | Регулярні тренування |\n| вправа | /ˈwprɑvɑ/ | exercise | Фізичні вправи |\n| кардіо | /ˈkɑrdʲio/ | cardio | Кардіо тренування |\n| силові вправи | - | strength training | - |\n| йога | /ˈjoɦɑ/ | yoga | Заняття йогою |\n| біг | /bʲiɦ/ | running | Ранковий біг |\n| плавання | /ˈplɑvɑnʲːɑ/ | swimming | Користь плавання |\n| розтяжка | /rozˈtʲɑʒkɑ/ | stretching | Вправи на розтяжку |\n| витривалість | /vɪtrɪˈvɑlʲistʲ/ | endurance | Розвивати витривалість |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Сон і відпочинок | Sleep and Rest\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| сон | /son/ | sleep | Здоровий сон |\n| безсоння | /bɛzˈsonʲːɑ/ | insomnia | Страждати на безсоння |\n| відпочинок | /vʲidpoˈt͡ʃɪnok/ | rest | Активний відпочинок |\n| режим | /rɛˈʒɪm/ | regime, schedule | Режим дня |\n| засинати / заснути | - | to fall asleep | impf/pf |\n| прокидатися / прокинутися | - | to wake up | impf/pf |\n| висипатися / виспатися | - | to get enough sleep | impf/pf |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Корисні вирази | Useful Expressions\n\n| Ukrainian | English |\n|-----------|---------|\n| вести здоровий спосіб життя | to lead a healthy lifestyle |\n| піклуватися про здоров'я | to take care of one's health |\n| справлятися зі стресом | to cope with stress |\n| дотримуватися режиму | to follow a schedule |\n| слідкувати за вагою | to watch one's weight |\n| бути у формі | to be in shape |\n| зміцнювати здоров'я | to strengthen health |\n| позбуватися шкідливих звичок | to get rid of bad habits |"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Complete with Correct Word\n\n1. Він страждає на хронічний ___ (stress).\n   → Він страждає на хронічний **стрес**.\n\n2. Вона дотримується здорової ___ (diet).\n   → Вона дотримується здорової **дієти**.\n\n3. Мені потрібно більше ___ (sleep).\n   → Мені потрібно більше **сну**.\n\n4. Регулярні ___ (workouts) корисні для здоров'я.\n   → Регулярні **тренування** корисні для здоров'я.\n\n5. Вітаміни зміцнюють ___ (immunity).\n   → Вітаміни зміцнюють **імунітет**."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Match Problem to Solution\n\n| Problem | Solution |\n|---------|----------|\n| стрес | медитація, релаксація |\n| безсоння | режим сну, відпочинок |\n| втома | відпочинок, здоровий сон |\n| зайва вага | дієта, тренування |\n| слабкий імунітет | вітаміни, здорове харчування |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Discussion Questions\n\n1. Як ви справляєтеся зі **стресом**?\n2. Чи дотримуєтеся ви **режиму дня**?\n3. Скільки годин ви **спите**?\n4. Чи займаєтеся ви **спортом**?\n5. Що для вас означає **здоровий спосіб життя**?"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Translate to Ukrainian\n\n1. I need to reduce stress.\n   → **Мені потрібно зменшити стрес.**\n\n2. She follows a healthy diet.\n   → **Вона дотримується здорової дієти.**\n\n3. Regular exercise is important for health.\n   → **Регулярні фізичні вправи важливі для здоров'я.**\n\n4. I'm trying to get more sleep.\n   → **Я намагаюся більше спати / висипатися.**"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-B1-123-quiz"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Describe Your Wellness Routine\n\nTalk about your health habits:\n\n- Що ви робите для **фізичного** здоров'я?\n- Як ви піклуєтеся про **психічне** здоров'я?\n- Як виглядає ваш **режим дня**?"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Give Health Advice\n\nA friend is stressed and tired. What do you advise?\n\n- Раджу тобі більше відпочивати...\n- Спробуй медитацію...\n- Важливо висипатися..."
-          }
-        ]
-      }
-    ],
-    "rawMarkdown": "# Зміст уроку | Lesson Content\n\n## warm-up | Розминка\n\n### Здоров'я та самопочуття | Health and Wellness\n\nНа рівні B1 ми обговорюємо здоров'я глибше:\n\nAt B1 level, we discuss health more deeply:\n\n- Як ви **піклуєтеся** про своє здоров'я? | How do you take care of your health?\n- Що допомагає вам **справлятися зі стресом**? | What helps you cope with stress?\n- Яку роль грає **харчування** у вашому житті? | What role does nutrition play in your life?\n\n## presentation | Презентація\n\n### Загальне здоров'я | General Health\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| здоров'я | /zdoˈrowjɑ/ | health | Міцне здоров'я |\n| самопочуття | /sɑmopoˈt͡ʃutʲːɑ/ | well-being | Гарне самопочуття |\n| імунітет | /imuˈnʲitɛt/ | immunity | Зміцнювати імунітет |\n| організм | /orɦɑˈnʲizm/ | organism, body | Здоровий організм |\n| симптом | /sɪmˈptom/ | symptom | Перші симптоми |\n| діагноз | /dʲiɑɦˈnoz/ | diagnosis | Поставити діагноз |\n| лікування | /lʲikuˈvɑnʲːɑ/ | treatment | Курс лікування |\n| одужання | /oduˈʒɑnʲːɑ/ | recovery | Швидке одужання |\n| профілактика | /profilʲɑkˈtɪkɑ/ | prevention | Профілактика хвороб |\n\n### Стрес і психічне здоров'я | Stress and Mental Health\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| стрес | /strɛs/ | stress | Хронічний стрес |\n| тривожність | /trɪˈvoʒnʲistʲ/ | anxiety | Підвищена тривожність |\n| депресія | /dɛˈprɛsʲijɑ/ | depression | Симптоми депресії |\n| втома | /ˈftomɑ/ | fatigue | Хронічна втома |\n| виснаження | /vɪsˈnɑʒɛnʲːɑ/ | exhaustion | Емоційне виснаження |\n| вигорання | /vɪɦoˈrɑnʲːɑ/ | burnout | Професійне вигорання |\n| релаксація | /rɛlɑkˈsɑt͡sʲijɑ/ | relaxation | Техніки релаксації |\n| медитація | /mɛdɪˈtɑt͡sʲijɑ/ | meditation | Практикувати медитацію |\n| психолог | /psɪˈxoloɦ/ | psychologist | Консультація психолога |\n| терапія | /tɛrɑˈpʲijɑ/ | therapy | Когнітивна терапія |\n\n### Дієслова здоров'я | Health Verbs\n\n| Ukrainian | English | Aspect |\n|-----------|---------|--------|\n| хворіти / захворіти | to be ill / to fall ill | impf/pf |\n| одужувати / одужати | to recover | impf/pf |\n| лікувати / вилікувати | to treat / to cure | impf/pf |\n| лікуватися | to receive treatment | impf |\n| відпочивати / відпочити | to rest | impf/pf |\n| відновлюватися / відновитися | to recover, restore | impf/pf |\n| розслаблятися / розслабитися | to relax | impf/pf |\n| справлятися / справитися | to cope | impf/pf |\n| стресувати | to stress | impf |\n| турбуватися | to worry | impf |\n\n### Харчування | Nutrition\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| харчування | /xɑrt͡ʃuˈvɑnʲːɑ/ | nutrition | Здорове харчування |\n| дієта | /dʲiˈjɛtɑ/ | diet | Дотримуватися дієти |\n| калорії | /kɑˈlorʲiʲi/ | calories | Рахувати калорії |\n| білки | /bʲilˈkɪ/ | proteins | Достатньо білків |\n| вуглеводи | /wuɦlɛˈvodɪ/ | carbohydrates | Прості вуглеводи |\n| жири | /ˈʒɪrɪ/ | fats | Корисні жири |\n| вітаміни | /vʲitɑˈmʲinɪ/ | vitamins | Приймати вітаміни |\n| клітковина | /klʲitkoˈvɪnɑ/ | fiber | Багато клітковини |\n| добавки | /doˈbɑwkɪ/ | supplements | Харчові добавки |\n\n### Фізична активність | Physical Activity\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| тренування | /trɛnuˈvɑnʲːɑ/ | training, workout | Регулярні тренування |\n| вправа | /ˈwprɑvɑ/ | exercise | Фізичні вправи |\n| кардіо | /ˈkɑrdʲio/ | cardio | Кардіо тренування |\n| силові вправи | - | strength training | - |\n| йога | /ˈjoɦɑ/ | yoga | Заняття йогою |\n| біг | /bʲiɦ/ | running | Ранковий біг |\n| плавання | /ˈplɑvɑnʲːɑ/ | swimming | Користь плавання |\n| розтяжка | /rozˈtʲɑʒkɑ/ | stretching | Вправи на розтяжку |\n| витривалість | /vɪtrɪˈvɑlʲistʲ/ | endurance | Розвивати витривалість |\n\n### Сон і відпочинок | Sleep and Rest\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| сон | /son/ | sleep | Здоровий сон |\n| безсоння | /bɛzˈsonʲːɑ/ | insomnia | Страждати на безсоння |\n| відпочинок | /vʲidpoˈt͡ʃɪnok/ | rest | Активний відпочинок |\n| режим | /rɛˈʒɪm/ | regime, schedule | Режим дня |\n| засинати / заснути | - | to fall asleep | impf/pf |\n| прокидатися / прокинутися | - | to wake up | impf/pf |\n| висипатися / виспатися | - | to get enough sleep | impf/pf |\n\n### Корисні вирази | Useful Expressions\n\n| Ukrainian | English |\n|-----------|---------|\n| вести здоровий спосіб життя | to lead a healthy lifestyle |\n| піклуватися про здоров'я | to take care of one's health |\n| справлятися зі стресом | to cope with stress |\n| дотримуватися режиму | to follow a schedule |\n| слідкувати за вагою | to watch one's weight |\n| бути у формі | to be in shape |\n| зміцнювати здоров'я | to strengthen health |\n| позбуватися шкідливих звичок | to get rid of bad habits |\n\n## practice | Практика\n\n### Complete with Correct Word\n\n1. Він страждає на хронічний ___ (stress).\n   → Він страждає на хронічний **стрес**.\n\n2. Вона дотримується здорової ___ (diet).\n   → Вона дотримується здорової **дієти**.\n\n3. Мені потрібно більше ___ (sleep).\n   → Мені потрібно більше **сну**.\n\n4. Регулярні ___ (workouts) корисні для здоров'я.\n   → Регулярні **тренування** корисні для здоров'я.\n\n5. Вітаміни зміцнюють ___ (immunity).\n   → Вітаміни зміцнюють **імунітет**.\n\n### Match Problem to Solution\n\n| Problem | Solution |\n|---------|----------|\n| стрес | медитація, релаксація |\n| безсоння | режим сну, відпочинок |\n| втома | відпочинок, здоровий сон |\n| зайва вага | дієта, тренування |\n| слабкий імунітет | вітаміни, здорове харчування |\n\n### Discussion Questions\n\n1. Як ви справляєтеся зі **стресом**?\n2. Чи дотримуєтеся ви **режиму дня**?\n3. Скільки годин ви **спите**?\n4. Чи займаєтеся ви **спортом**?\n5. Що для вас означає **здоровий спосіб життя**?\n\n### Translate to Ukrainian\n\n1. I need to reduce stress.\n   → **Мені потрібно зменшити стрес.**\n\n2. She follows a healthy diet.\n   → **Вона дотримується здорової дієти.**\n\n3. Regular exercise is important for health.\n   → **Регулярні фізичні вправи важливі для здоров'я.**\n\n4. I'm trying to get more sleep.\n   → **Я намагаюся більше спати / висипатися.**\n\n## production | Продукція\n\n### Describe Your Wellness Routine\n\nTalk about your health habits:\n\n- Що ви робите для **фізичного** здоров'я?\n- Як ви піклуєтеся про **психічне** здоров'я?\n- Як виглядає ваш **режим дня**?\n\n### Give Health Advice\n\nA friend is stressed and tired. What do you advise?\n\n- Раджу тобі більше відпочивати...\n- Спробуй медитацію...\n- Важливо висипатися...\n\n---\n\n# Activities\n\n## quiz: Health and Wellness\n\n> Choose the correct word.\n\n1. Chronic tiredness:\n   - [x] хронічна втома\n   - [ ] хронічний сон\n   > Втома = fatigue/tiredness.\n\n2. To cope with stress:\n   - [x] справлятися зі стресом\n   - [ ] робити стрес\n   > Справлятися = to cope.\n\n3. Healthy eating:\n   - [x] здорове харчування\n   - [ ] здорова їжа\n   > Харчування = nutrition/eating habits.\n\n4. Professional burnout:\n   - [x] професійне вигорання\n   - [ ] професійна втома\n   > Вигорання = burnout.\n\n5. To follow a diet:\n   - [x] дотримуватися дієти\n   - [ ] тримати дієту\n   > Дотримуватися = to follow/adhere to.\n\n6. Immunity:\n   - [x] імунітет\n   - [ ] імуна\n   > Імунітет = immunity.\n\n## fill-in: Healthy Lifestyle Tips\n\n> Для здоров'я важливо:\n>\n> 1. Достатньо (1)___ (sleep) — 7-8 годин\n> 2. Дотримуватися здорового (2)___ (nutrition)\n> 3. Регулярно займатися (3)___ (sport)\n> 4. Справлятися зі (4)___ (stress)\n> 5. Пити достатньо (5)___ (water)\n\n**Answers:**\n1. спати / сну\n2. харчування\n3. спортом\n4. стресом\n5. води\n\n---",
     "immersiveSections": [
       {
-        "id": "warm-up-розминка",
-        "title": "warm-up | Розминка",
-        "content": "### Здоров'я та самопочуття | Health and Wellness\n\nНа рівні B1 ми обговорюємо здоров'я глибше:\n\nAt B1 level, we discuss health more deeply:\n\n- Як ви **піклуєтеся** про своє здоров'я? | How do you take care of your health?\n- Що допомагає вам **справлятися зі стресом**? | What helps you cope with stress?\n- Яку роль грає **харчування** у вашому житті? | What role does nutrition play in your life?",
-        "type": "topic"
+        "id": "section-зміст-уроку-lesson-content",
+        "type": "content",
+        "title": "Зміст уроку | Lesson Content",
+        "content": "## warm-up | Розминка\n\n### Здоров'я та самопочуття | Health and Wellness\n\nНа рівні B1 ми обговорюємо здоров'я глибше:\n\nAt B1 level, we discuss health more deeply:\n\n- Як ви **піклуєтеся** про своє здоров'я? | How do you take care of your health?\n- Що допомагає вам **справлятися зі стресом**? | What helps you cope with stress?\n- Яку роль грає **харчування** у вашому житті? | What role does nutrition play in your life?\n\n## presentation | Презентація\n\n### Загальне здоров'я | General Health\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| здоров'я | /zdoˈrowjɑ/ | health | Міцне здоров'я |\n| самопочуття | /sɑmopoˈt͡ʃutʲːɑ/ | well-being | Гарне самопочуття |\n| імунітет | /imuˈnʲitɛt/ | immunity | Зміцнювати імунітет |\n| організм | /orɦɑˈnʲizm/ | organism, body | Здоровий організм |\n| симптом | /sɪmˈptom/ | symptom | Перші симптоми |\n| діагноз | /dʲiɑɦˈnoz/ | diagnosis | Поставити діагноз |\n| лікування | /lʲikuˈvɑnʲːɑ/ | treatment | Курс лікування |\n| одужання | /oduˈʒɑnʲːɑ/ | recovery | Швидке одужання |\n| профілактика | /profilʲɑkˈtɪkɑ/ | prevention | Профілактика хвороб |\n\n### Стрес і психічне здоров'я | Stress and Mental Health\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| стрес | /strɛs/ | stress | Хронічний стрес |\n| тривожність | /trɪˈvoʒnʲistʲ/ | anxiety | Підвищена тривожність |\n| депресія | /dɛˈprɛsʲijɑ/ | depression | Симптоми депресії |\n| втома | /ˈftomɑ/ | fatigue | Хронічна втома |\n| виснаження | /vɪsˈnɑʒɛnʲːɑ/ | exhaustion | Емоційне виснаження |\n| вигорання | /vɪɦoˈrɑnʲːɑ/ | burnout | Професійне вигорання |\n| релаксація | /rɛlɑkˈsɑt͡sʲijɑ/ | relaxation | Техніки релаксації |\n| медитація | /mɛdɪˈtɑt͡sʲijɑ/ | meditation | Практикувати медитацію |\n| психолог | /psɪˈxoloɦ/ | psychologist | Консультація психолога |\n| терапія | /tɛrɑˈpʲijɑ/ | therapy | Когнітивна терапія |\n\n### Дієслова здоров'я | Health Verbs\n\n| Ukrainian | English | Aspect |\n|-----------|---------|--------|\n| хворіти / захворіти | to be ill / to fall ill | impf/pf |\n| одужувати / одужати | to recover | impf/pf |\n| лікувати / вилікувати | to treat / to cure | impf/pf |\n| лікуватися | to receive treatment | impf |\n| відпочивати / відпочити | to rest | impf/pf |\n| відновлюватися / відновитися | to recover, restore | impf/pf |\n| розслаблятися / розслабитися | to relax | impf/pf |\n| справлятися / справитися | to cope | impf/pf |\n| стресувати | to stress | impf |\n| турбуватися | to worry | impf |\n\n### Харчування | Nutrition\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| харчування | /xɑrt͡ʃuˈvɑnʲːɑ/ | nutrition | Здорове харчування |\n| дієта | /dʲiˈjɛtɑ/ | diet | Дотримуватися дієти |\n| калорії | /kɑˈlorʲiʲi/ | calories | Рахувати калорії |\n| білки | /bʲilˈkɪ/ | proteins | Достатньо білків |\n| вуглеводи | /wuɦlɛˈvodɪ/ | carbohydrates | Прості вуглеводи |\n| жири | /ˈʒɪrɪ/ | fats | Корисні жири |\n| вітаміни | /vʲitɑˈmʲinɪ/ | vitamins | Приймати вітаміни |\n| клітковина | /klʲitkoˈvɪnɑ/ | fiber | Багато клітковини |\n| добавки | /doˈbɑwkɪ/ | supplements | Харчові добавки |\n\n### Фізична активність | Physical Activity\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| тренування | /trɛnuˈvɑnʲːɑ/ | training, workout | Регулярні тренування |\n| вправа | /ˈwprɑvɑ/ | exercise | Фізичні вправи |\n| кардіо | /ˈkɑrdʲio/ | cardio | Кардіо тренування |\n| силові вправи | - | strength training | - |\n| йога | /ˈjoɦɑ/ | yoga | Заняття йогою |\n| біг | /bʲiɦ/ | running | Ранковий біг |\n| плавання | /ˈplɑvɑnʲːɑ/ | swimming | Користь плавання |\n| розтяжка | /rozˈtʲɑʒkɑ/ | stretching | Вправи на розтяжку |\n| витривалість | /vɪtrɪˈvɑlʲistʲ/ | endurance | Розвивати витривалість |\n\n### Сон і відпочинок | Sleep and Rest\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| сон | /son/ | sleep | Здоровий сон |\n| безсоння | /bɛzˈsonʲːɑ/ | insomnia | Страждати на безсоння |\n| відпочинок | /vʲidpoˈt͡ʃɪnok/ | rest | Активний відпочинок |\n| режим | /rɛˈʒɪm/ | regime, schedule | Режим дня |\n| засинати / заснути | - | to fall asleep | impf/pf |\n| прокидатися / прокинутися | - | to wake up | impf/pf |\n| висипатися / виспатися | - | to get enough sleep | impf/pf |\n\n### Корисні вирази | Useful Expressions\n\n| Ukrainian | English |\n|-----------|---------|\n| вести здоровий спосіб життя | to lead a healthy lifestyle |\n| піклуватися про здоров'я | to take care of one's health |\n| справлятися зі стресом | to cope with stress |\n| дотримуватися режиму | to follow a schedule |\n| слідкувати за вагою | to watch one's weight |\n| бути у формі | to be in shape |\n| зміцнювати здоров'я | to strengthen health |\n| позбуватися шкідливих звичок | to get rid of bad habits |\n\n## practice | Практика\n\n### Complete with Correct Word\n\n1. Він страждає на хронічний ___ (stress).\n   > [!answer] Він страждає на хронічний **стрес**.\n\n2. Вона дотримується здорової ___ (diet).\n   > [!answer] Вона дотримується здорової **дієти**.\n\n3. Мені потрібно більше ___ (sleep).\n   > [!answer] Мені потрібно більше **сну**.\n\n4. Регулярні ___ (workouts) корисні для здоров'я.\n   > [!answer] Регулярні **тренування** корисні для здоров'я.\n\n5. Вітаміни зміцнюють ___ (immunity).\n   > [!answer] Вітаміни зміцнюють **імунітет**.\n\n### Match Problem to Solution\n\n| Problem | Solution |\n|---------|----------|\n| стрес | медитація, релаксація |\n| безсоння | режим сну, відпочинок |\n| втома | відпочинок, здоровий сон |\n| зайва вага | дієта, тренування |\n| слабкий імунітет | вітаміни, здорове харчування |\n\n### Discussion Questions\n\n1. Як ви справляєтеся зі **стресом**?\n2. Чи дотримуєтеся ви **режиму дня**?\n3. Скільки годин ви **спите**?\n4. Чи займаєтеся ви **спортом**?\n5. Що для вас означає **здоровий спосіб життя**?\n\n### Translate to Ukrainian\n\n1. I need to reduce stress.\n   > [!answer] **Мені потрібно зменшити стрес.**\n2. She follows a healthy diet.\n   > [!answer] **Вона дотримується здорової дієти.**\n3. Regular exercise is important for health.\n   > [!answer] **Регулярні фізичні вправи важливі для здоров'я.**\n4. I'm trying to get more sleep.\n   > [!answer] **Я намагаюся більше спати / висипатися.**\n## production | Продукція\n\n### Describe Your Wellness Routine\n\nTalk about your health habits:\n\n- Що ви робите для **фізичного** здоров'я?\n- Як ви піклуєтеся про **психічне** здоров'я?\n- Як виглядає ваш **режим дня**?\n\n### Give Health Advice\n\nA friend is stressed and tired. What do you advise?\n\n- Раджу тобі більше відпочивати...\n- Спробуй медитацію...\n- Важливо висипатися...\n\n---\n\n\n---\n\n\n---"
       },
       {
-        "id": "presentation-презентація",
-        "title": "presentation | Презентація",
-        "content": "### Загальне здоров'я | General Health\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| здоров'я | /zdoˈrowjɑ/ | health | Міцне здоров'я |\n| самопочуття | /sɑmopoˈt͡ʃutʲːɑ/ | well-being | Гарне самопочуття |\n| імунітет | /imuˈnʲitɛt/ | immunity | Зміцнювати імунітет |\n| організм | /orɦɑˈnʲizm/ | organism, body | Здоровий організм |\n| симптом | /sɪmˈptom/ | symptom | Перші симптоми |\n| діагноз | /dʲiɑɦˈnoz/ | diagnosis | Поставити діагноз |\n| лікування | /lʲikuˈvɑnʲːɑ/ | treatment | Курс лікування |\n| одужання | /oduˈʒɑnʲːɑ/ | recovery | Швидке одужання |\n| профілактика | /profilʲɑkˈtɪkɑ/ | prevention | Профілактика хвороб |\n\n### Стрес і психічне здоров'я | Stress and Mental Health\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| стрес | /strɛs/ | stress | Хронічний стрес |\n| тривожність | /trɪˈvoʒnʲistʲ/ | anxiety | Підвищена тривожність |\n| депресія | /dɛˈprɛsʲijɑ/ | depression | Симптоми депресії |\n| втома | /ˈftomɑ/ | fatigue | Хронічна втома |\n| виснаження | /vɪsˈnɑʒɛnʲːɑ/ | exhaustion | Емоційне виснаження |\n| вигорання | /vɪɦoˈrɑnʲːɑ/ | burnout | Професійне вигорання |\n| релаксація | /rɛlɑkˈsɑt͡sʲijɑ/ | relaxation | Техніки релаксації |\n| медитація | /mɛdɪˈtɑt͡sʲijɑ/ | meditation | Практикувати медитацію |\n| психолог | /psɪˈxoloɦ/ | psychologist | Консультація психолога |\n| терапія | /tɛrɑˈpʲijɑ/ | therapy | Когнітивна терапія |\n\n### Дієслова здоров'я | Health Verbs\n\n| Ukrainian | English | Aspect |\n|-----------|---------|--------|\n| хворіти / захворіти | to be ill / to fall ill | impf/pf |\n| одужувати / одужати | to recover | impf/pf |\n| лікувати / вилікувати | to treat / to cure | impf/pf |\n| лікуватися | to receive treatment | impf |\n| відпочивати / відпочити | to rest | impf/pf |\n| відновлюватися / відновитися | to recover, restore | impf/pf |\n| розслаблятися / розслабитися | to relax | impf/pf |\n| справлятися / справитися | to cope | impf/pf |\n| стресувати | to stress | impf |\n| турбуватися | to worry | impf |\n\n### Харчування | Nutrition\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| харчування | /xɑrt͡ʃuˈvɑnʲːɑ/ | nutrition | Здорове харчування |\n| дієта | /dʲiˈjɛtɑ/ | diet | Дотримуватися дієти |\n| калорії | /kɑˈlorʲiʲi/ | calories | Рахувати калорії |\n| білки | /bʲilˈkɪ/ | proteins | Достатньо білків |\n| вуглеводи | /wuɦlɛˈvodɪ/ | carbohydrates | Прості вуглеводи |\n| жири | /ˈʒɪrɪ/ | fats | Корисні жири |\n| вітаміни | /vʲitɑˈmʲinɪ/ | vitamins | Приймати вітаміни |\n| клітковина | /klʲitkoˈvɪnɑ/ | fiber | Багато клітковини |\n| добавки | /doˈbɑwkɪ/ | supplements | Харчові добавки |\n\n### Фізична активність | Physical Activity\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| тренування | /trɛnuˈvɑnʲːɑ/ | training, workout | Регулярні тренування |\n| вправа | /ˈwprɑvɑ/ | exercise | Фізичні вправи |\n| кардіо | /ˈkɑrdʲio/ | cardio | Кардіо тренування |\n| силові вправи | - | strength training | - |\n| йога | /ˈjoɦɑ/ | yoga | Заняття йогою |\n| біг | /bʲiɦ/ | running | Ранковий біг |\n| плавання | /ˈplɑvɑnʲːɑ/ | swimming | Користь плавання |\n| розтяжка | /rozˈtʲɑʒkɑ/ | stretching | Вправи на розтяжку |\n| витривалість | /vɪtrɪˈvɑlʲistʲ/ | endurance | Розвивати витривалість |\n\n### Сон і відпочинок | Sleep and Rest\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| сон | /son/ | sleep | Здоровий сон |\n| безсоння | /bɛzˈsonʲːɑ/ | insomnia | Страждати на безсоння |\n| відпочинок | /vʲidpoˈt͡ʃɪnok/ | rest | Активний відпочинок |\n| режим | /rɛˈʒɪm/ | regime, schedule | Режим дня |\n| засинати / заснути | - | to fall asleep | impf/pf |\n| прокидатися / прокинутися | - | to wake up | impf/pf |\n| висипатися / виспатися | - | to get enough sleep | impf/pf |\n\n### Корисні вирази | Useful Expressions\n\n| Ukrainian | English |\n|-----------|---------|\n| вести здоровий спосіб життя | to lead a healthy lifestyle |\n| піклуватися про здоров'я | to take care of one's health |\n| справлятися зі стресом | to cope with stress |\n| дотримуватися режиму | to follow a schedule |\n| слідкувати за вагою | to watch one's weight |\n| бути у формі | to be in shape |\n| зміцнювати здоров'я | to strengthen health |\n| позбуватися шкідливих звичок | to get rid of bad habits |",
-        "type": "topic"
-      },
-      {
-        "id": "practice-практика",
-        "title": "practice | Практика",
-        "content": "### Complete with Correct Word\n\n1. Він страждає на хронічний ___ (stress).\n   → Він страждає на хронічний **стрес**.\n\n2. Вона дотримується здорової ___ (diet).\n   → Вона дотримується здорової **дієти**.\n\n3. Мені потрібно більше ___ (sleep).\n   → Мені потрібно більше **сну**.\n\n4. Регулярні ___ (workouts) корисні для здоров'я.\n   → Регулярні **тренування** корисні для здоров'я.\n\n5. Вітаміни зміцнюють ___ (immunity).\n   → Вітаміни зміцнюють **імунітет**.\n\n### Match Problem to Solution\n\n| Problem | Solution |\n|---------|----------|\n| стрес | медитація, релаксація |\n| безсоння | режим сну, відпочинок |\n| втома | відпочинок, здоровий сон |\n| зайва вага | дієта, тренування |\n| слабкий імунітет | вітаміни, здорове харчування |\n\n### Discussion Questions\n\n1. Як ви справляєтеся зі **стресом**?\n2. Чи дотримуєтеся ви **режиму дня**?\n3. Скільки годин ви **спите**?\n4. Чи займаєтеся ви **спортом**?\n5. Що для вас означає **здоровий спосіб життя**?\n\n### Translate to Ukrainian\n\n1. I need to reduce stress.\n   → **Мені потрібно зменшити стрес.**\n\n2. She follows a healthy diet.\n   → **Вона дотримується здорової дієти.**\n\n3. Regular exercise is important for health.\n   → **Регулярні фізичні вправи важливі для здоров'я.**\n\n4. I'm trying to get more sleep.\n   → **Я намагаюся більше спати / висипатися.**",
-        "type": "topic"
-      },
-      {
-        "id": "production-продукція",
-        "title": "production | Продукція",
-        "content": "### Describe Your Wellness Routine\n\nTalk about your health habits:\n\n- Що ви робите для **фізичного** здоров'я?\n- Як ви піклуєтеся про **психічне** здоров'я?\n- Як виглядає ваш **режим дня**?\n\n### Give Health Advice\n\nA friend is stressed and tired. What do you advise?\n\n- Раджу тобі більше відпочивати...\n- Спробуй медитацію...\n- Важливо висипатися...\n\n---",
-        "type": "topic"
-      },
-      {
-        "id": "activities",
-        "title": "Activities",
-        "content": "## quiz: Health and Wellness\n\n> Choose the correct word.\n\n1. Chronic tiredness:\n   - [x] хронічна втома\n   - [ ] хронічний сон\n   > Втома = fatigue/tiredness.\n\n2. To cope with stress:\n   - [x] справлятися зі стресом\n   - [ ] робити стрес\n   > Справлятися = to cope.\n\n3. Healthy eating:\n   - [x] здорове харчування\n   - [ ] здорова їжа\n   > Харчування = nutrition/eating habits.\n\n4. Professional burnout:\n   - [x] професійне вигорання\n   - [ ] професійна втома\n   > Вигорання = burnout.\n\n5. To follow a diet:\n   - [x] дотримуватися дієти\n   - [ ] тримати дієту\n   > Дотримуватися = to follow/adhere to.\n\n6. Immunity:\n   - [x] імунітет\n   - [ ] імуна\n   > Імунітет = immunity.\n\n## fill-in: Healthy Lifestyle Tips\n\n> Для здоров'я важливо:\n>\n> 1. Достатньо (1)___ (sleep) — 7-8 годин\n> 2. Дотримуватися здорового (2)___ (nutrition)\n> 3. Регулярно займатися (3)___ (sport)\n> 4. Справлятися зі (4)___ (stress)\n> 5. Пити достатньо (5)___ (water)\n\n**Answers:**\n1. спати / сну\n2. харчування\n3. спортом\n4. стресом\n5. води\n\n---",
-        "type": "activities"
-      },
-      {
-        "id": "vocabulary",
-        "title": "Vocabulary",
-        "content": "| Word | IPA | English | Notes |\n|------|-----|---------|-------|\n| здоров'я | /zdoˈrowjɑ/ | health | n |\n| самопочуття | /sɑmopoˈt͡ʃutʲːɑ/ | well-being | n |\n| стрес | /strɛs/ | stress | m |\n| втома | /ˈftomɑ/ | fatigue | f |\n| вигорання | /vɪɦoˈrɑnʲːɑ/ | burnout | n |\n| депресія | /dɛˈprɛsʲijɑ/ | depression | f |\n| харчування | /xɑrt͡ʃuˈvɑnʲːɑ/ | nutrition | n |\n| дієта | /dʲiˈjɛtɑ/ | diet | f |\n| тренування | /trɛnuˈvɑnʲːɑ/ | workout | n |\n| вправа | /ˈwprɑvɑ/ | exercise | f |\n| сон | /son/ | sleep | m |\n| безсоння | /bɛzˈsonʲːɑ/ | insomnia | n |\n| відпочинок | /vʲidpoˈt͡ʃɪnok/ | rest | m |\n| імунітет | /imuˈnʲitɛt/ | immunity | m |\n| одужання | /oduˈʒɑnʲːɑ/ | recovery | n |\n\n---",
-        "type": "vocabulary"
-      },
-      {
-        "id": "summary",
+        "id": "section-summary",
+        "type": "summary",
         "title": "Summary",
         "content": "## Key Health Vocabulary\n\n### General Health\nздоров'я, самопочуття, імунітет, симптом, лікування, одужання\n\n### Mental Health\nстрес, тривожність, депресія, втома, вигорання, релаксація\n\n### Nutrition\nхарчування, дієта, калорії, білки, вуглеводи, вітаміни\n\n### Exercise\nтренування, вправа, кардіо, йога, біг, плавання\n\n### Sleep\nсон, безсоння, режим, відпочинок\n\n### Key Expressions\n- вести здоровий спосіб життя\n- справлятися зі стресом\n- дотримуватися режиму\n- піклуватися про здоров'я\n\n> **Key Takeaways**\n>\n> - Health vocabulary covers physical and mental well-being\n> - Mental health terms are increasingly important at B1\n> - Nutrition vocabulary includes macros (білки, вуглеводи, жири)\n> - Lifestyle expressions help discuss health habits\n> - Verbs like справлятися, дотримуватися are key",
-        "type": "summary"
+        "titleUk": "Підсумок"
       }
-    ]
+    ],
+    "rawMarkdown": "---\nmodule: 123\ntitle: \"Health & Wellness Vocabulary\"\nsubtitle: \"Stress, Recovery, Diet\"\nlevel: B1\nphase: B1.3\nduration: 45\ntransliteration: none\ntags: [vocabulary, health, wellness, lifestyle]\nobjectives:\n  - Learn vocabulary for health and wellness topics\n  - Discuss stress and mental health\n  - Talk about diet and exercise\n  - Express health-related concerns and advice\n---\n\n# Зміст уроку | Lesson Content\n\n## warm-up | Розминка\n\n### Здоров'я та самопочуття | Health and Wellness\n\nНа рівні B1 ми обговорюємо здоров'я глибше:\n\nAt B1 level, we discuss health more deeply:\n\n- Як ви **піклуєтеся** про своє здоров'я? | How do you take care of your health?\n- Що допомагає вам **справлятися зі стресом**? | What helps you cope with stress?\n- Яку роль грає **харчування** у вашому житті? | What role does nutrition play in your life?\n\n## presentation | Презентація\n\n### Загальне здоров'я | General Health\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| здоров'я | /zdoˈrowjɑ/ | health | Міцне здоров'я |\n| самопочуття | /sɑmopoˈt͡ʃutʲːɑ/ | well-being | Гарне самопочуття |\n| імунітет | /imuˈnʲitɛt/ | immunity | Зміцнювати імунітет |\n| організм | /orɦɑˈnʲizm/ | organism, body | Здоровий організм |\n| симптом | /sɪmˈptom/ | symptom | Перші симптоми |\n| діагноз | /dʲiɑɦˈnoz/ | diagnosis | Поставити діагноз |\n| лікування | /lʲikuˈvɑnʲːɑ/ | treatment | Курс лікування |\n| одужання | /oduˈʒɑnʲːɑ/ | recovery | Швидке одужання |\n| профілактика | /profilʲɑkˈtɪkɑ/ | prevention | Профілактика хвороб |\n\n### Стрес і психічне здоров'я | Stress and Mental Health\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| стрес | /strɛs/ | stress | Хронічний стрес |\n| тривожність | /trɪˈvoʒnʲistʲ/ | anxiety | Підвищена тривожність |\n| депресія | /dɛˈprɛsʲijɑ/ | depression | Симптоми депресії |\n| втома | /ˈftomɑ/ | fatigue | Хронічна втома |\n| виснаження | /vɪsˈnɑʒɛnʲːɑ/ | exhaustion | Емоційне виснаження |\n| вигорання | /vɪɦoˈrɑnʲːɑ/ | burnout | Професійне вигорання |\n| релаксація | /rɛlɑkˈsɑt͡sʲijɑ/ | relaxation | Техніки релаксації |\n| медитація | /mɛdɪˈtɑt͡sʲijɑ/ | meditation | Практикувати медитацію |\n| психолог | /psɪˈxoloɦ/ | psychologist | Консультація психолога |\n| терапія | /tɛrɑˈpʲijɑ/ | therapy | Когнітивна терапія |\n\n### Дієслова здоров'я | Health Verbs\n\n| Ukrainian | English | Aspect |\n|-----------|---------|--------|\n| хворіти / захворіти | to be ill / to fall ill | impf/pf |\n| одужувати / одужати | to recover | impf/pf |\n| лікувати / вилікувати | to treat / to cure | impf/pf |\n| лікуватися | to receive treatment | impf |\n| відпочивати / відпочити | to rest | impf/pf |\n| відновлюватися / відновитися | to recover, restore | impf/pf |\n| розслаблятися / розслабитися | to relax | impf/pf |\n| справлятися / справитися | to cope | impf/pf |\n| стресувати | to stress | impf |\n| турбуватися | to worry | impf |\n\n### Харчування | Nutrition\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| харчування | /xɑrt͡ʃuˈvɑnʲːɑ/ | nutrition | Здорове харчування |\n| дієта | /dʲiˈjɛtɑ/ | diet | Дотримуватися дієти |\n| калорії | /kɑˈlorʲiʲi/ | calories | Рахувати калорії |\n| білки | /bʲilˈkɪ/ | proteins | Достатньо білків |\n| вуглеводи | /wuɦlɛˈvodɪ/ | carbohydrates | Прості вуглеводи |\n| жири | /ˈʒɪrɪ/ | fats | Корисні жири |\n| вітаміни | /vʲitɑˈmʲinɪ/ | vitamins | Приймати вітаміни |\n| клітковина | /klʲitkoˈvɪnɑ/ | fiber | Багато клітковини |\n| добавки | /doˈbɑwkɪ/ | supplements | Харчові добавки |\n\n### Фізична активність | Physical Activity\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| тренування | /trɛnuˈvɑnʲːɑ/ | training, workout | Регулярні тренування |\n| вправа | /ˈwprɑvɑ/ | exercise | Фізичні вправи |\n| кардіо | /ˈkɑrdʲio/ | cardio | Кардіо тренування |\n| силові вправи | - | strength training | - |\n| йога | /ˈjoɦɑ/ | yoga | Заняття йогою |\n| біг | /bʲiɦ/ | running | Ранковий біг |\n| плавання | /ˈplɑvɑnʲːɑ/ | swimming | Користь плавання |\n| розтяжка | /rozˈtʲɑʒkɑ/ | stretching | Вправи на розтяжку |\n| витривалість | /vɪtrɪˈvɑlʲistʲ/ | endurance | Розвивати витривалість |\n\n### Сон і відпочинок | Sleep and Rest\n\n| Ukrainian | IPA | English | Example |\n|-----------|-----|---------|---------|\n| сон | /son/ | sleep | Здоровий сон |\n| безсоння | /bɛzˈsonʲːɑ/ | insomnia | Страждати на безсоння |\n| відпочинок | /vʲidpoˈt͡ʃɪnok/ | rest | Активний відпочинок |\n| режим | /rɛˈʒɪm/ | regime, schedule | Режим дня |\n| засинати / заснути | - | to fall asleep | impf/pf |\n| прокидатися / прокинутися | - | to wake up | impf/pf |\n| висипатися / виспатися | - | to get enough sleep | impf/pf |\n\n### Корисні вирази | Useful Expressions\n\n| Ukrainian | English |\n|-----------|---------|\n| вести здоровий спосіб життя | to lead a healthy lifestyle |\n| піклуватися про здоров'я | to take care of one's health |\n| справлятися зі стресом | to cope with stress |\n| дотримуватися режиму | to follow a schedule |\n| слідкувати за вагою | to watch one's weight |\n| бути у формі | to be in shape |\n| зміцнювати здоров'я | to strengthen health |\n| позбуватися шкідливих звичок | to get rid of bad habits |\n\n## practice | Практика\n\n### Complete with Correct Word\n\n1. Він страждає на хронічний ___ (stress).\n   > [!answer] Він страждає на хронічний **стрес**.\n\n2. Вона дотримується здорової ___ (diet).\n   > [!answer] Вона дотримується здорової **дієти**.\n\n3. Мені потрібно більше ___ (sleep).\n   > [!answer] Мені потрібно більше **сну**.\n\n4. Регулярні ___ (workouts) корисні для здоров'я.\n   > [!answer] Регулярні **тренування** корисні для здоров'я.\n\n5. Вітаміни зміцнюють ___ (immunity).\n   > [!answer] Вітаміни зміцнюють **імунітет**.\n\n### Match Problem to Solution\n\n| Problem | Solution |\n|---------|----------|\n| стрес | медитація, релаксація |\n| безсоння | режим сну, відпочинок |\n| втома | відпочинок, здоровий сон |\n| зайва вага | дієта, тренування |\n| слабкий імунітет | вітаміни, здорове харчування |\n\n### Discussion Questions\n\n1. Як ви справляєтеся зі **стресом**?\n2. Чи дотримуєтеся ви **режиму дня**?\n3. Скільки годин ви **спите**?\n4. Чи займаєтеся ви **спортом**?\n5. Що для вас означає **здоровий спосіб життя**?\n\n### Translate to Ukrainian\n\n1. I need to reduce stress.\n   > [!answer] **Мені потрібно зменшити стрес.**\n2. She follows a healthy diet.\n   > [!answer] **Вона дотримується здорової дієти.**\n3. Regular exercise is important for health.\n   > [!answer] **Регулярні фізичні вправи важливі для здоров'я.**\n4. I'm trying to get more sleep.\n   > [!answer] **Я намагаюся більше спати / висипатися.**\n## production | Продукція\n\n### Describe Your Wellness Routine\n\nTalk about your health habits:\n\n- Що ви робите для **фізичного** здоров'я?\n- Як ви піклуєтеся про **психічне** здоров'я?\n- Як виглядає ваш **режим дня**?\n\n### Give Health Advice\n\nA friend is stressed and tired. What do you advise?\n\n- Раджу тобі більше відпочивати...\n- Спробуй медитацію...\n- Важливо висипатися...\n\n---\n\n# Activities\n\n## quiz: Health and Wellness\n\n> Choose the correct word.\n\n1. Chronic tiredness:\n   - [x] хронічна втома\n   - [ ] хронічний сон\n   > Втома = fatigue/tiredness.\n\n2. To cope with stress:\n   - [x] справлятися зі стресом\n   - [ ] робити стрес\n   > Справлятися = to cope.\n\n3. Healthy eating:\n   - [x] здорове харчування\n   - [ ] здорова їжа\n   > Харчування = nutrition/eating habits.\n\n4. Professional burnout:\n   - [x] професійне вигорання\n   - [ ] професійна втома\n   > Вигорання = burnout.\n\n5. To follow a diet:\n   - [x] дотримуватися дієти\n   - [ ] тримати дієту\n   > Дотримуватися = to follow/adhere to.\n\n6. Immunity:\n   - [x] імунітет\n   - [ ] імуна\n   > Імунітет = immunity.\n\n## fill-in: Healthy Lifestyle Tips\n\n> Для здоров'я важливо:\n>\n> 1. Достатньо (1)___ (sleep) — 7-8 годин\n> 2. Дотримуватися здорового (2)___ (nutrition)\n> 3. Регулярно займатися (3)___ (sport)\n> 4. Справлятися зі (4)___ (stress)\n> 5. Пити достатньо (5)___ (water)\n\n**Answers:**\n1. спати / сну\n2. харчування\n3. спортом\n4. стресом\n5. води\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | Notes |\n|------|-----|---------|-------|\n| здоров'я | /zdoˈrowjɑ/ | health | n |\n| самопочуття | /sɑmopoˈt͡ʃutʲːɑ/ | well-being | n |\n| стрес | /strɛs/ | stress | m |\n| втома | /ˈftomɑ/ | fatigue | f |\n| вигорання | /vɪɦoˈrɑnʲːɑ/ | burnout | n |\n| депресія | /dɛˈprɛsʲijɑ/ | depression | f |\n| харчування | /xɑrt͡ʃuˈvɑnʲːɑ/ | nutrition | n |\n| дієта | /dʲiˈjɛtɑ/ | diet | f |\n| тренування | /trɛnuˈvɑnʲːɑ/ | workout | n |\n| вправа | /ˈwprɑvɑ/ | exercise | f |\n| сон | /son/ | sleep | m |\n| безсоння | /bɛzˈsonʲːɑ/ | insomnia | n |\n| відпочинок | /vʲidpoˈt͡ʃɪnok/ | rest | m |\n| імунітет | /imuˈnʲitɛt/ | immunity | m |\n| одужання | /oduˈʒɑnʲːɑ/ | recovery | n |\n\n---\n\n# Summary\n\n## Key Health Vocabulary\n\n### General Health\nздоров'я, самопочуття, імунітет, симптом, лікування, одужання\n\n### Mental Health\nстрес, тривожність, депресія, втома, вигорання, релаксація\n\n### Nutrition\nхарчування, дієта, калорії, білки, вуглеводи, вітаміни\n\n### Exercise\nтренування, вправа, кардіо, йога, біг, плавання\n\n### Sleep\nсон, безсоння, режим, відпочинок\n\n### Key Expressions\n- вести здоровий спосіб життя\n- справлятися зі стресом\n- дотримуватися режиму\n- піклуватися про здоров'я\n\n> **Key Takeaways**\n>\n> - Health vocabulary covers physical and mental well-being\n> - Mental health terms are increasingly important at B1\n> - Nutrition vocabulary includes macros (білки, вуглеводи, жири)\n> - Lifestyle expressions help discuss health habits\n> - Verbs like справлятися, дотримуватися are key\n"
   },
   "activities": [
     {
-      "id": "act-uk-B1-123-quiz",
+      "id": "act-b1-123-quiz",
       "type": "quiz",
       "title": "Health and Wellness",
       "description": "Choose the correct word.",
       "content": {
         "type": "quiz",
-        "instructions": "Choose the correct word.",
         "questions": [
           {
             "question": "Chronic tiredness:",
@@ -258,38 +124,37 @@
       "language": "uk",
       "difficultyLevel": "B1",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "health",
-        "wellness",
-        "lifestyle"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.237Z",
+      "modifiedAt": "2025-12-01T22:58:37.237Z"
     },
     {
-      "id": "act-uk-B1-123-gapfill",
+      "id": "act-b1-123-gapfill",
       "type": "gap-fill",
       "title": "Healthy Lifestyle Tips",
       "description": "Для здоров'я важливо:  1. Достатньо (1)___ (sleep) — 7-8 годин 2. Дотримуватися здорового (2)___ (nutrition) 3. Регулярно займатися (3)___ (sport) 4. Справлятися зі (4)___ (stress) 5. Пити достатньо (5)___ (water)",
       "content": {
         "type": "gap-fill",
-        "instructions": "Для здоров'я важливо:  1. Достатньо (1)___ (sleep) — 7-8 годин 2. Дотримуватися здорового (2)___ (nutrition) 3. Регулярно займатися (3)___ (sport) 4. Справлятися зі (4)___ (stress) 5. Пити достатньо (5)___ (water)",
         "text": "Для здоров'я важливо:\n\n1. Достатньо (1)___ (sleep) — 7-8 годин\n2. Дотримуватися здорового (2)___ (nutrition)\n3. Регулярно займатися (3)___ (sport)\n4. Справлятися зі (4)___ (stress)\n5. Пити достатньо (5)___ (water)",
         "blanks": [
           {
+            "index": 0,
             "hint": "sleep"
           },
           {
+            "index": 1,
             "hint": "nutrition"
           },
           {
+            "index": 2,
             "hint": "sport"
           },
           {
+            "index": 3,
             "hint": "stress"
           },
           {
+            "index": 4,
             "hint": "water"
           }
         ],
@@ -303,14 +168,9 @@
       "language": "uk",
       "difficultyLevel": "B1",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "health",
-        "wellness",
-        "lifestyle"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.237Z",
+      "modifiedAt": "2025-12-01T22:58:37.237Z"
     }
   ],
   "vocabulary": {
@@ -321,139 +181,109 @@
     "transliterationMode": "none",
     "words": [
       {
-        "id": "v-m123-001",
+        "id": "v-zdorov'ya-123-0",
         "uk": "здоров'я",
-        "translit": "",
-        "ipa": "/zdoˈrowjɑ/",
         "en": "health",
-        "pos": "",
-        "note": "n"
+        "pos": "n",
+        "ipa": "/zdoˈrowjɑ/"
       },
       {
-        "id": "v-m123-002",
+        "id": "v-samopochuttya-123-1",
         "uk": "самопочуття",
-        "translit": "",
-        "ipa": "/sɑmopoˈt͡ʃutʲːɑ/",
         "en": "well-being",
-        "pos": "",
-        "note": "n"
+        "pos": "n",
+        "ipa": "/sɑmopoˈt͡ʃutʲːɑ/"
       },
       {
-        "id": "v-m123-003",
+        "id": "v-stres-123-2",
         "uk": "стрес",
-        "translit": "",
-        "ipa": "/strɛs/",
         "en": "stress",
-        "pos": "",
-        "note": "m"
+        "pos": "m",
+        "ipa": "/strɛs/"
       },
       {
-        "id": "v-m123-004",
+        "id": "v-vtoma-123-3",
         "uk": "втома",
-        "translit": "",
-        "ipa": "/ˈftomɑ/",
         "en": "fatigue",
-        "pos": "",
-        "note": "f"
+        "pos": "f",
+        "ipa": "/ˈftomɑ/"
       },
       {
-        "id": "v-m123-005",
+        "id": "v-vyhorannya-123-4",
         "uk": "вигорання",
-        "translit": "",
-        "ipa": "/vɪɦoˈrɑnʲːɑ/",
         "en": "burnout",
-        "pos": "",
-        "note": "n"
+        "pos": "n",
+        "ipa": "/vɪɦoˈrɑnʲːɑ/"
       },
       {
-        "id": "v-m123-006",
+        "id": "v-depresiya-123-5",
         "uk": "депресія",
-        "translit": "",
-        "ipa": "/dɛˈprɛsʲijɑ/",
         "en": "depression",
-        "pos": "",
-        "note": "f"
+        "pos": "f",
+        "ipa": "/dɛˈprɛsʲijɑ/"
       },
       {
-        "id": "v-m123-007",
+        "id": "v-kharchuvannya-123-6",
         "uk": "харчування",
-        "translit": "",
-        "ipa": "/xɑrt͡ʃuˈvɑnʲːɑ/",
         "en": "nutrition",
-        "pos": "",
-        "note": "n"
+        "pos": "n",
+        "ipa": "/xɑrt͡ʃuˈvɑnʲːɑ/"
       },
       {
-        "id": "v-m123-008",
+        "id": "v-diyeta-123-7",
         "uk": "дієта",
-        "translit": "",
-        "ipa": "/dʲiˈjɛtɑ/",
         "en": "diet",
-        "pos": "",
-        "note": "f"
+        "pos": "f",
+        "ipa": "/dʲiˈjɛtɑ/"
       },
       {
-        "id": "v-m123-009",
+        "id": "v-trenuvannya-123-8",
         "uk": "тренування",
-        "translit": "",
-        "ipa": "/trɛnuˈvɑnʲːɑ/",
         "en": "workout",
-        "pos": "",
-        "note": "n"
+        "pos": "n",
+        "ipa": "/trɛnuˈvɑnʲːɑ/"
       },
       {
-        "id": "v-m123-010",
+        "id": "v-vprava-123-9",
         "uk": "вправа",
-        "translit": "",
-        "ipa": "/ˈwprɑvɑ/",
         "en": "exercise",
-        "pos": "",
-        "note": "f"
+        "pos": "f",
+        "ipa": "/ˈwprɑvɑ/"
       },
       {
-        "id": "v-m123-011",
+        "id": "v-son-123-10",
         "uk": "сон",
-        "translit": "",
-        "ipa": "/son/",
         "en": "sleep",
-        "pos": "",
-        "note": "m"
+        "pos": "m",
+        "ipa": "/son/"
       },
       {
-        "id": "v-m123-012",
+        "id": "v-bezsonnya-123-11",
         "uk": "безсоння",
-        "translit": "",
-        "ipa": "/bɛzˈsonʲːɑ/",
         "en": "insomnia",
-        "pos": "",
-        "note": "n"
+        "pos": "n",
+        "ipa": "/bɛzˈsonʲːɑ/"
       },
       {
-        "id": "v-m123-013",
+        "id": "v-vidpochynok-123-12",
         "uk": "відпочинок",
-        "translit": "",
-        "ipa": "/vʲidpoˈt͡ʃɪnok/",
         "en": "rest",
-        "pos": "",
-        "note": "m"
+        "pos": "m",
+        "ipa": "/vʲidpoˈt͡ʃɪnok/"
       },
       {
-        "id": "v-m123-014",
+        "id": "v-imunitet-123-13",
         "uk": "імунітет",
-        "translit": "",
-        "ipa": "/imuˈnʲitɛt/",
         "en": "immunity",
-        "pos": "",
-        "note": "m"
+        "pos": "m",
+        "ipa": "/imuˈnʲitɛt/"
       },
       {
-        "id": "v-m123-015",
+        "id": "v-oduzhannya-123-14",
         "uk": "одужання",
-        "translit": "",
-        "ipa": "/oduˈʒɑnʲːɑ/",
         "en": "recovery",
-        "pos": "",
-        "note": "n"
+        "pos": "n",
+        "ipa": "/oduˈʒɑnʲːɑ/"
       }
     ]
   }

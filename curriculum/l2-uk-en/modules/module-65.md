@@ -187,11 +187,16 @@ One root generates an entire word family!
 
 ### Identify the Root
 
-1. навчання → -вч- (learning)
-2. робітник → -роб- (work)
-3. письменник → -пис- (writing)
-4. читальня → -чит- (reading)
-5. розмовляти → -мов- (speech)
+1. навчання
+   > [!answer] -вч- (learning)
+2. робітник
+   > [!answer] -роб- (work)
+3. письменник
+   > [!answer] -пис- (writing)
+4. читальня
+   > [!answer] -чит- (reading)
+5. розмовляти
+   > [!answer] -мов- (speech)
 
 ### Group by Root Family
 
@@ -202,27 +207,32 @@ One root generates an entire word family!
 ### Complete with Related Words
 
 1. Він ___ (teaches) у школі. Він ___ (teacher).
-   → вчить, вчитель
+   > [!answer] вчить, вчитель
 
 2. Вона ___ (works) в офісі. Її ___ (work) цікава.
-   → працює/робить, робота
+   > [!answer] працює/робить, робота
 
 3. Я ___ (write) лист. Поставте ___ (signature).
-   → пишу, підпис
+   > [!answer] пишу, підпис
 
 4. Діти ___ (read) книги. Вони — активні ___ (readers).
-   → читають, читачі
+   > [!answer] читають, читачі
 
 5. Ми ___ (converse) годинами. Наша ___ (conversation) цікава.
-   → розмовляємо, розмова
+   > [!answer] розмовляємо, розмова
 
 ### Translate
 
-1. The student is studying. → Учень вчиться.
-2. She's a famous writer. → Вона відома письменниця.
-3. I love reading. → Я люблю читання.
-4. He earns well. → Він добре заробляє.
-5. Let's have a conversation. → Давай поговоримо / Маймо розмову.
+1. The student is studying.
+   > [!answer] Учень вчиться.
+2. She's a famous writer.
+   > [!answer] Вона відома письменниця.
+3. I love reading.
+   > [!answer] Я люблю читання.
+4. He earns well.
+   > [!answer] Він добре заробляє.
+5. Let's have a conversation.
+   > [!answer] Давай поговоримо / Маймо розмову.
 
 ## production
 

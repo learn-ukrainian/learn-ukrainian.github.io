@@ -179,16 +179,23 @@ A: Добре, я візьму.
 ### Ask About Products
 
 Form questions:
-1. Is there a bigger size? → Чи є більший розмір?
-2. Is this available in black? → Чи є це в чорному?
-3. Can I try this on? → Можна приміряти?
-4. Where is the fitting room? → Де примірочна?
+1. Is there a bigger size?
+   > [!answer] Чи є більший розмір?
+2. Is this available in black?
+   > [!answer] Чи є це в чорному?
+3. Can I try this on?
+   > [!answer] Можна приміряти?
+4. Where is the fitting room?
+   > [!answer] Де примірочна?
 
 ### Describe What You Want
 
-1. I want a red dress. → Я хочу червону сукню.
-2. I'm looking for black shoes. → Я шукаю чорне взуття.
-3. Do you have this in medium? → Чи є це в середньому розмірі?
+1. I want a red dress.
+   > [!answer] Я хочу червону сукню.
+2. I'm looking for black shoes.
+   > [!answer] Я шукаю чорне взуття.
+3. Do you have this in medium?
+   > [!answer] Чи є це в середньому розмірі?
 
 ## production
 

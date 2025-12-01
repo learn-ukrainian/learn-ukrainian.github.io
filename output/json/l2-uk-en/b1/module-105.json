@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-B1-105",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "grammar-introduction",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -22,186 +21,43 @@
       "Express conditions and consequences"
     ],
     "grammarFocus": [],
-    "totalDuration": 45,
-    "transliterationMode": "none",
     "tags": [
       "grammar",
       "conditionals",
       "complex-sentences",
       "якщо"
     ],
+    "totalDuration": 45,
+    "transliterationMode": "none",
+    "phases": [],
+    "createdAt": "2025-12-01T22:58:37.230Z",
+    "modifiedAt": "2025-12-01T22:58:37.230Z",
     "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
-    "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Умовні речення | Conditional Sentences\n\nConditionals express \"if...then\" relationships:\n\n| English | Ukrainian |\n|---------|-----------|\n| If it rains, I'll stay home. | **Якщо** піде дощ, я залишуся вдома. |\n| If you study, you'll learn. | **Якщо** ти будеш вчитися, ти навчишся. |\n\n**Якщо** = if (for real, possible conditions)"
-          }
-        ]
-      },
-      {
-        "id": "phase-presentation",
-        "name": "presentation",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Real Conditionals: Overview\n\nReal conditionals describe **possible** situations — things that can/could happen:\n\n| Type | Example |\n|------|---------|\n| Present general | Якщо йде дощ, я беру парасольку. (If it rains, I take an umbrella.) |\n| Future possible | Якщо піде дощ, я візьму парасольку. (If it rains, I'll take an umbrella.) |\n| Past factual | Якщо він приходив, ми говорили. (If/When he came, we talked.) |\n\n> **⭐ KEY DIFFERENCE FROM ENGLISH**\n>\n> In English, future \"if\" clauses use present tense:\n> - If it **rains** tomorrow... (not \"will rain\")\n>\n> In Ukrainian, future \"if\" clauses can use **future tense**:\n> - Якщо **піде** дощ завтра... (future perfective)\n> - Якщо **буде йти** дощ... (future imperfective)"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Present General Conditionals\n\nFor habits, general truths, and regular patterns:\n\n**Structure:** Якщо + present, present\n\n| Ukrainian | English |\n|-----------|---------|\n| Якщо йде дощ, я беру парасольку. | If it rains, I take an umbrella. |\n| Якщо він не снідає, він голодний. | If he doesn't eat breakfast, he's hungry. |\n| Якщо ти вчишся, ти знаєш. | If you study, you know. |\n\nThese describe what **generally happens** when a condition is true."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Future Conditionals\n\nFor possible future events:\n\n**Structure:** Якщо + future, future\n\n| Ukrainian | English |\n|-----------|---------|\n| Якщо **матиму** час, **подзвоню**. | If I have time, I'll call. |\n| Якщо він **прийде**, ми **поговоримо**. | If he comes, we'll talk. |\n| Якщо **буде** гарна погода, ми **підемо** на прогулянку. | If the weather is good, we'll go for a walk. |\n\n**Aspect in future conditionals:**\n\n| Aspect in \"if\" clause | Meaning |\n|-----------------------|---------|\n| Perfective | Single completed condition | Якщо **напишеш**, я відповім. |\n| Imperfective | Ongoing/repeated condition | Якщо **будеш писати**, я читатиму. |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Future: тоді for Emphasis\n\nUse **тоді** (then) to emphasize the consequence:\n\n| Ukrainian | English |\n|-----------|---------|\n| Якщо він прийде, **тоді** поговоримо. | If he comes, **then** we'll talk. |\n| Якщо матимеш питання, **тоді** зателефонуй. | If you have questions, **then** call. |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Past Factual Conditionals\n\nFor things that actually happened (or could have happened) in the past:\n\n**Structure:** Якщо + past, past\n\n| Ukrainian | English |\n|-----------|---------|\n| Якщо він **приходив**, ми **говорили**. | When/If he came, we talked. |\n| Якщо вона **запізнювалася**, він **сердився**. | If she was late, he got angry. |\n| Якщо я **мав** час, я **читав** книги. | If I had time, I read books. |\n\n**Note:** Past \"якщо\" often translates as \"when\" in English, describing what habitually happened."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Word Order\n\nThe \"якщо\" clause can come first or second:\n\n| Order | Example |\n|-------|---------|\n| Condition first | **Якщо** матиму час, подзвоню. |\n| Result first | Подзвоню, **якщо** матиму час. |\n\nWhen \"якщо\" comes first, a comma separates the clauses."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Synonyms for Якщо\n\n| Word | Usage | Example |\n|------|-------|---------|\n| **якщо** | neutral, most common | Якщо він прийде... |\n| **як** | informal/spoken | Як прийде, скажи. (If he comes, tell me.) |\n| **коли** | \"if/when\" (interchangeable) | Коли матиму час... |\n| **за умови, що** | formal, \"provided that\" | За умови, що погода буде гарна... |\n| **у разі, якщо** | formal, \"in case\" | У разі, якщо виникнуть питання... |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Negative Conditions\n\nFor \"if not\" conditions:\n\n| Ukrainian | English |\n|-----------|---------|\n| Якщо **не** прийдеш, я засмучуся. | If you don't come, I'll be upset. |\n| Якщо він **не** зателефонує, зателефонуй ти. | If he doesn't call, you call. |\n| Якщо **не** буде дощу, підемо. | If there's no rain, we'll go. |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Common Conditional Patterns\n\n**Warnings:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Якщо не поспішиш, запізнишся. | If you don't hurry, you'll be late. |\n| Якщо не будеш вчитися, не здаси іспит. | If you don't study, you won't pass. |\n\n**Offers and suggestions:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Якщо хочеш, допоможу. | If you want, I'll help. |\n| Якщо маєш час, зайди. | If you have time, stop by. |\n\n**Promises:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Якщо приїдеш, покажу місто. | If you come, I'll show you the city. |\n| Якщо скажеш правду, не буду сердитися. | If you tell the truth, I won't be angry. |"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Complete the Conditionals\n\n1. Якщо він ___ (to call), я відповім.\n   → Якщо він **зателефонує**, я відповім.\n\n2. Якщо ___ (there is) гарна погода, ми підемо на пляж.\n   → Якщо **буде** гарна погода, ми підемо на пляж.\n\n3. Якщо ти не ___ (to study), ти не здаси іспит.\n   → Якщо ти не **будеш вчитися**, ти не здаси іспит.\n\n4. Якщо вона ___ (to come), передай їй це.\n   → Якщо вона **прийде**, передай їй це.\n\n5. ___ (If) матимеш питання, зателефонуй.\n   → **Якщо** матимеш питання, зателефонуй."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Choose the Correct Form\n\n1. Якщо він ___ , ми поговоримо.\n   - a) приходить\n   - b) прийде ✓\n   - c) прийшов\n\n2. Якщо я ___ час, я прочитаю цю книгу.\n   - a) маю\n   - b) мав\n   - c) матиму ✓\n\n3. Якщо вона не ___ , я засмучуся.\n   - a) приїжджає\n   - b) приїде ✓\n   - c) приїхала\n\n4. Подзвони мені, якщо ___ питання.\n   - a) маєш\n   - b) матимеш ✓\n   - c) мав"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Translate to Ukrainian\n\n1. If I have time, I'll come.\n   → **Якщо матиму час, я прийду.**\n\n2. If it rains, we'll stay home.\n   → **Якщо піде дощ, ми залишимося вдома.**\n\n3. If you don't hurry, you'll be late.\n   → **Якщо не поспішиш, запізнишся.**\n\n4. Call me if you need help.\n   → **Зателефонуй мені, якщо потрібна допомога.**\n\n5. If she comes, tell her.\n   → **Якщо вона прийде, скажи їй.**"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Create Conditionals\n\nMake conditionals using these elements:\n\n1. мати час / читати книги\n   → Якщо матиму час, читатиму книги.\n\n2. йти дощ / брати парасольку\n   → Якщо піде дощ, візьму парасольку.\n\n3. вчитися / здати іспит\n   → Якщо будеш вчитися, здаси іспит.\n\n4. приїхати друзі / бути свято\n   → Якщо приїдуть друзі, буде свято."
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-B1-105-quiz"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Make Plans\n\nUse conditionals to talk about your plans:\n\n- Якщо буде гарна погода цими вихідними...\n- Якщо матиму достатньо грошей...\n- Якщо вивчу українську добре...\n\n**Example:**\nЯкщо буде гарна погода цими вихідними, я поїду на природу. Якщо матиму достатньо грошей, я куплю нову книгу."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Discussion: Consequences\n\nDiscuss using conditionals:\n\n1. Що буде, якщо ви не будете вчитися?\n2. Що ви зробите, якщо виграєте в лотерею?\n3. Що станеться, якщо не буде інтернету?"
-          }
-        ]
-      }
-    ],
-    "rawMarkdown": "# Зміст уроку | Lesson Content\n\n## warm-up | Розминка\n\n### Умовні речення | Conditional Sentences\n\nConditionals express \"if...then\" relationships:\n\n| English | Ukrainian |\n|---------|-----------|\n| If it rains, I'll stay home. | **Якщо** піде дощ, я залишуся вдома. |\n| If you study, you'll learn. | **Якщо** ти будеш вчитися, ти навчишся. |\n\n**Якщо** = if (for real, possible conditions)\n\n## presentation | Презентація\n\n### Real Conditionals: Overview\n\nReal conditionals describe **possible** situations — things that can/could happen:\n\n| Type | Example |\n|------|---------|\n| Present general | Якщо йде дощ, я беру парасольку. (If it rains, I take an umbrella.) |\n| Future possible | Якщо піде дощ, я візьму парасольку. (If it rains, I'll take an umbrella.) |\n| Past factual | Якщо він приходив, ми говорили. (If/When he came, we talked.) |\n\n> **⭐ KEY DIFFERENCE FROM ENGLISH**\n>\n> In English, future \"if\" clauses use present tense:\n> - If it **rains** tomorrow... (not \"will rain\")\n>\n> In Ukrainian, future \"if\" clauses can use **future tense**:\n> - Якщо **піде** дощ завтра... (future perfective)\n> - Якщо **буде йти** дощ... (future imperfective)\n\n### Present General Conditionals\n\nFor habits, general truths, and regular patterns:\n\n**Structure:** Якщо + present, present\n\n| Ukrainian | English |\n|-----------|---------|\n| Якщо йде дощ, я беру парасольку. | If it rains, I take an umbrella. |\n| Якщо він не снідає, він голодний. | If he doesn't eat breakfast, he's hungry. |\n| Якщо ти вчишся, ти знаєш. | If you study, you know. |\n\nThese describe what **generally happens** when a condition is true.\n\n### Future Conditionals\n\nFor possible future events:\n\n**Structure:** Якщо + future, future\n\n| Ukrainian | English |\n|-----------|---------|\n| Якщо **матиму** час, **подзвоню**. | If I have time, I'll call. |\n| Якщо він **прийде**, ми **поговоримо**. | If he comes, we'll talk. |\n| Якщо **буде** гарна погода, ми **підемо** на прогулянку. | If the weather is good, we'll go for a walk. |\n\n**Aspect in future conditionals:**\n\n| Aspect in \"if\" clause | Meaning |\n|-----------------------|---------|\n| Perfective | Single completed condition | Якщо **напишеш**, я відповім. |\n| Imperfective | Ongoing/repeated condition | Якщо **будеш писати**, я читатиму. |\n\n### Future: тоді for Emphasis\n\nUse **тоді** (then) to emphasize the consequence:\n\n| Ukrainian | English |\n|-----------|---------|\n| Якщо він прийде, **тоді** поговоримо. | If he comes, **then** we'll talk. |\n| Якщо матимеш питання, **тоді** зателефонуй. | If you have questions, **then** call. |\n\n### Past Factual Conditionals\n\nFor things that actually happened (or could have happened) in the past:\n\n**Structure:** Якщо + past, past\n\n| Ukrainian | English |\n|-----------|---------|\n| Якщо він **приходив**, ми **говорили**. | When/If he came, we talked. |\n| Якщо вона **запізнювалася**, він **сердився**. | If she was late, he got angry. |\n| Якщо я **мав** час, я **читав** книги. | If I had time, I read books. |\n\n**Note:** Past \"якщо\" often translates as \"when\" in English, describing what habitually happened.\n\n### Word Order\n\nThe \"якщо\" clause can come first or second:\n\n| Order | Example |\n|-------|---------|\n| Condition first | **Якщо** матиму час, подзвоню. |\n| Result first | Подзвоню, **якщо** матиму час. |\n\nWhen \"якщо\" comes first, a comma separates the clauses.\n\n### Synonyms for Якщо\n\n| Word | Usage | Example |\n|------|-------|---------|\n| **якщо** | neutral, most common | Якщо він прийде... |\n| **як** | informal/spoken | Як прийде, скажи. (If he comes, tell me.) |\n| **коли** | \"if/when\" (interchangeable) | Коли матиму час... |\n| **за умови, що** | formal, \"provided that\" | За умови, що погода буде гарна... |\n| **у разі, якщо** | formal, \"in case\" | У разі, якщо виникнуть питання... |\n\n### Negative Conditions\n\nFor \"if not\" conditions:\n\n| Ukrainian | English |\n|-----------|---------|\n| Якщо **не** прийдеш, я засмучуся. | If you don't come, I'll be upset. |\n| Якщо він **не** зателефонує, зателефонуй ти. | If he doesn't call, you call. |\n| Якщо **не** буде дощу, підемо. | If there's no rain, we'll go. |\n\n### Common Conditional Patterns\n\n**Warnings:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Якщо не поспішиш, запізнишся. | If you don't hurry, you'll be late. |\n| Якщо не будеш вчитися, не здаси іспит. | If you don't study, you won't pass. |\n\n**Offers and suggestions:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Якщо хочеш, допоможу. | If you want, I'll help. |\n| Якщо маєш час, зайди. | If you have time, stop by. |\n\n**Promises:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Якщо приїдеш, покажу місто. | If you come, I'll show you the city. |\n| Якщо скажеш правду, не буду сердитися. | If you tell the truth, I won't be angry. |\n\n## practice | Практика\n\n### Complete the Conditionals\n\n1. Якщо він ___ (to call), я відповім.\n   → Якщо він **зателефонує**, я відповім.\n\n2. Якщо ___ (there is) гарна погода, ми підемо на пляж.\n   → Якщо **буде** гарна погода, ми підемо на пляж.\n\n3. Якщо ти не ___ (to study), ти не здаси іспит.\n   → Якщо ти не **будеш вчитися**, ти не здаси іспит.\n\n4. Якщо вона ___ (to come), передай їй це.\n   → Якщо вона **прийде**, передай їй це.\n\n5. ___ (If) матимеш питання, зателефонуй.\n   → **Якщо** матимеш питання, зателефонуй.\n\n### Choose the Correct Form\n\n1. Якщо він ___ , ми поговоримо.\n   - a) приходить\n   - b) прийде ✓\n   - c) прийшов\n\n2. Якщо я ___ час, я прочитаю цю книгу.\n   - a) маю\n   - b) мав\n   - c) матиму ✓\n\n3. Якщо вона не ___ , я засмучуся.\n   - a) приїжджає\n   - b) приїде ✓\n   - c) приїхала\n\n4. Подзвони мені, якщо ___ питання.\n   - a) маєш\n   - b) матимеш ✓\n   - c) мав\n\n### Translate to Ukrainian\n\n1. If I have time, I'll come.\n   → **Якщо матиму час, я прийду.**\n\n2. If it rains, we'll stay home.\n   → **Якщо піде дощ, ми залишимося вдома.**\n\n3. If you don't hurry, you'll be late.\n   → **Якщо не поспішиш, запізнишся.**\n\n4. Call me if you need help.\n   → **Зателефонуй мені, якщо потрібна допомога.**\n\n5. If she comes, tell her.\n   → **Якщо вона прийде, скажи їй.**\n\n### Create Conditionals\n\nMake conditionals using these elements:\n\n1. мати час / читати книги\n   → Якщо матиму час, читатиму книги.\n\n2. йти дощ / брати парасольку\n   → Якщо піде дощ, візьму парасольку.\n\n3. вчитися / здати іспит\n   → Якщо будеш вчитися, здаси іспит.\n\n4. приїхати друзі / бути свято\n   → Якщо приїдуть друзі, буде свято.\n\n## production | Продукція\n\n### Make Plans\n\nUse conditionals to talk about your plans:\n\n- Якщо буде гарна погода цими вихідними...\n- Якщо матиму достатньо грошей...\n- Якщо вивчу українську добре...\n\n**Example:**\nЯкщо буде гарна погода цими вихідними, я поїду на природу. Якщо матиму достатньо грошей, я куплю нову книгу.\n\n### Discussion: Consequences\n\nDiscuss using conditionals:\n\n1. Що буде, якщо ви не будете вчитися?\n2. Що ви зробите, якщо виграєте в лотерею?\n3. Що станеться, якщо не буде інтернету?\n\n---\n\n# Activities\n\n## quiz: Real Conditionals\n\n> Choose the correct form.\n\n1. Якщо він ___ , ми підемо в кіно.\n   - [x] прийде\n   - [ ] приходить\n   > Future condition requires future tense.\n\n2. Якщо ___ дощ, візьми парасольку.\n   - [x] піде\n   - [ ] йде\n   > Future possible condition.\n\n3. Якщо ти не ___ , запізнишся.\n   - [x] поспішиш\n   - [ ] поспішаєш\n   > Future warning.\n\n4. ___ матиму час, зателефоную.\n   - [x] Якщо\n   - [ ] Якби\n   > \"Якщо\" for real conditions, \"якби\" for unreal.\n\n5. Якщо хочеш, я ___ .\n   - [x] допоможу\n   - [ ] допомагаю\n   > Offer in the future.\n\n6. Якщо вона не ___ , ми почнемо без неї.\n   - [x] прийде\n   - [ ] приходить\n   > Future condition.\n\n## fill-in: Complete the Story\n\n> Завтра буде гарний день. (1)___ буде сонячно, я піду на прогулянку. (2)___ зустріну друзів, ми підемо в кафе. (3)___ буде час, я також відвідаю музей. А (4)___ буде дощ, залишуся вдома і читатиму книгу.\n\n**Answers:** Якщо, Якщо, Якщо, якщо\n\n---",
     "immersiveSections": [
       {
-        "id": "warm-up-розминка",
-        "title": "warm-up | Розминка",
-        "content": "### Умовні речення | Conditional Sentences\n\nConditionals express \"if...then\" relationships:\n\n| English | Ukrainian |\n|---------|-----------|\n| If it rains, I'll stay home. | **Якщо** піде дощ, я залишуся вдома. |\n| If you study, you'll learn. | **Якщо** ти будеш вчитися, ти навчишся. |\n\n**Якщо** = if (for real, possible conditions)",
-        "type": "topic"
+        "id": "section-зміст-уроку-lesson-content",
+        "type": "content",
+        "title": "Зміст уроку | Lesson Content",
+        "content": "## warm-up | Розминка\n\n### Умовні речення | Conditional Sentences\n\nConditionals express \"if...then\" relationships:\n\n| English | Ukrainian |\n|---------|-----------|\n| If it rains, I'll stay home. | **Якщо** піде дощ, я залишуся вдома. |\n| If you study, you'll learn. | **Якщо** ти будеш вчитися, ти навчишся. |\n\n**Якщо** = if (for real, possible conditions)\n\n## presentation | Презентація\n\n### Real Conditionals: Overview\n\nReal conditionals describe **possible** situations — things that can/could happen:\n\n| Type | Example |\n|------|---------|\n| Present general | Якщо йде дощ, я беру парасольку. (If it rains, I take an umbrella.) |\n| Future possible | Якщо піде дощ, я візьму парасольку. (If it rains, I'll take an umbrella.) |\n| Past factual | Якщо він приходив, ми говорили. (If/When he came, we talked.) |\n\n> **⭐ KEY DIFFERENCE FROM ENGLISH**\n>\n> In English, future \"if\" clauses use present tense:\n> - If it **rains** tomorrow... (not \"will rain\")\n>\n> In Ukrainian, future \"if\" clauses can use **future tense**:\n> - Якщо **піде** дощ завтра... (future perfective)\n> - Якщо **буде йти** дощ... (future imperfective)\n\n### Present General Conditionals\n\nFor habits, general truths, and regular patterns:\n\n**Structure:** Якщо + present, present\n\n| Ukrainian | English |\n|-----------|---------|\n| Якщо йде дощ, я беру парасольку. | If it rains, I take an umbrella. |\n| Якщо він не снідає, він голодний. | If he doesn't eat breakfast, he's hungry. |\n| Якщо ти вчишся, ти знаєш. | If you study, you know. |\n\nThese describe what **generally happens** when a condition is true.\n\n### Future Conditionals\n\nFor possible future events:\n\n**Structure:** Якщо + future, future\n\n| Ukrainian | English |\n|-----------|---------|\n| Якщо **матиму** час, **подзвоню**. | If I have time, I'll call. |\n| Якщо він **прийде**, ми **поговоримо**. | If he comes, we'll talk. |\n| Якщо **буде** гарна погода, ми **підемо** на прогулянку. | If the weather is good, we'll go for a walk. |\n\n**Aspect in future conditionals:**\n\n| Aspect in \"if\" clause | Meaning |\n|-----------------------|---------|\n| Perfective | Single completed condition | Якщо **напишеш**, я відповім. |\n| Imperfective | Ongoing/repeated condition | Якщо **будеш писати**, я читатиму. |\n\n### Future: тоді for Emphasis\n\nUse **тоді** (then) to emphasize the consequence:\n\n| Ukrainian | English |\n|-----------|---------|\n| Якщо він прийде, **тоді** поговоримо. | If he comes, **then** we'll talk. |\n| Якщо матимеш питання, **тоді** зателефонуй. | If you have questions, **then** call. |\n\n### Past Factual Conditionals\n\nFor things that actually happened (or could have happened) in the past:\n\n**Structure:** Якщо + past, past\n\n| Ukrainian | English |\n|-----------|---------|\n| Якщо він **приходив**, ми **говорили**. | When/If he came, we talked. |\n| Якщо вона **запізнювалася**, він **сердився**. | If she was late, he got angry. |\n| Якщо я **мав** час, я **читав** книги. | If I had time, I read books. |\n\n**Note:** Past \"якщо\" often translates as \"when\" in English, describing what habitually happened.\n\n### Word Order\n\nThe \"якщо\" clause can come first or second:\n\n| Order | Example |\n|-------|---------|\n| Condition first | **Якщо** матиму час, подзвоню. |\n| Result first | Подзвоню, **якщо** матиму час. |\n\nWhen \"якщо\" comes first, a comma separates the clauses.\n\n### Synonyms for Якщо\n\n| Word | Usage | Example |\n|------|-------|---------|\n| **якщо** | neutral, most common | Якщо він прийде... |\n| **як** | informal/spoken | Як прийде, скажи. (If he comes, tell me.) |\n| **коли** | \"if/when\" (interchangeable) | Коли матиму час... |\n| **за умови, що** | formal, \"provided that\" | За умови, що погода буде гарна... |\n| **у разі, якщо** | formal, \"in case\" | У разі, якщо виникнуть питання... |\n\n### Negative Conditions\n\nFor \"if not\" conditions:\n\n| Ukrainian | English |\n|-----------|---------|\n| Якщо **не** прийдеш, я засмучуся. | If you don't come, I'll be upset. |\n| Якщо він **не** зателефонує, зателефонуй ти. | If he doesn't call, you call. |\n| Якщо **не** буде дощу, підемо. | If there's no rain, we'll go. |\n\n### Common Conditional Patterns\n\n**Warnings:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Якщо не поспішиш, запізнишся. | If you don't hurry, you'll be late. |\n| Якщо не будеш вчитися, не здаси іспит. | If you don't study, you won't pass. |\n\n**Offers and suggestions:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Якщо хочеш, допоможу. | If you want, I'll help. |\n| Якщо маєш час, зайди. | If you have time, stop by. |\n\n**Promises:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Якщо приїдеш, покажу місто. | If you come, I'll show you the city. |\n| Якщо скажеш правду, не буду сердитися. | If you tell the truth, I won't be angry. |\n\n## practice | Практика\n\n### Complete the Conditionals\n\n1. Якщо він ___ (to call), я відповім.\n   > [!answer] Якщо він **зателефонує**, я відповім.\n\n2. Якщо ___ (there is) гарна погода, ми підемо на пляж.\n   > [!answer] Якщо **буде** гарна погода, ми підемо на пляж.\n\n3. Якщо ти не ___ (to study), ти не здаси іспит.\n   > [!answer] Якщо ти не **будеш вчитися**, ти не здаси іспит.\n\n4. Якщо вона ___ (to come), передай їй це.\n   > [!answer] Якщо вона **прийде**, передай їй це.\n\n5. ___ (If) матимеш питання, зателефонуй.\n   > [!answer] **Якщо** матимеш питання, зателефонуй.\n\n### Choose the Correct Form\n\n1. Якщо він ___ , ми поговоримо.\n   - a) приходить\n   - b) прийде ✓\n   - c) прийшов\n\n2. Якщо я ___ час, я прочитаю цю книгу.\n   - a) маю\n   - b) мав\n   - c) матиму ✓\n\n3. Якщо вона не ___ , я засмучуся.\n   - a) приїжджає\n   - b) приїде ✓\n   - c) приїхала\n\n4. Подзвони мені, якщо ___ питання.\n   - a) маєш\n   - b) матимеш ✓\n   - c) мав\n\n### Translate to Ukrainian\n\n1. If I have time, I'll come.\n   > [!answer] **Якщо матиму час, я прийду.**\n2. If it rains, we'll stay home.\n   > [!answer] **Якщо піде дощ, ми залишимося вдома.**\n3. If you don't hurry, you'll be late.\n   > [!answer] **Якщо не поспішиш, запізнишся.**\n4. Call me if you need help.\n   > [!answer] **Зателефонуй мені, якщо потрібна допомога.**\n5. If she comes, tell her.\n   > [!answer] **Якщо вона прийде, скажи їй.**\n### Create Conditionals\n\nMake conditionals using these elements:\n\n1. мати час / читати книги\n   > [!answer] Якщо матиму час, читатиму книги.\n\n2. йти дощ / брати парасольку\n   > [!answer] Якщо піде дощ, візьму парасольку.\n\n3. вчитися / здати іспит\n   > [!answer] Якщо будеш вчитися, здаси іспит.\n\n4. приїхати друзі / бути свято\n   > [!answer] Якщо приїдуть друзі, буде свято.\n\n## production | Продукція\n\n### Make Plans\n\nUse conditionals to talk about your plans:\n\n- Якщо буде гарна погода цими вихідними...\n- Якщо матиму достатньо грошей...\n- Якщо вивчу українську добре...\n\n**Example:**\nЯкщо буде гарна погода цими вихідними, я поїду на природу. Якщо матиму достатньо грошей, я куплю нову книгу.\n\n### Discussion: Consequences\n\nDiscuss using conditionals:\n\n1. Що буде, якщо ви не будете вчитися?\n2. Що ви зробите, якщо виграєте в лотерею?\n3. Що станеться, якщо не буде інтернету?\n\n---\n\n\n---\n\n\n---"
       },
       {
-        "id": "presentation-презентація",
-        "title": "presentation | Презентація",
-        "content": "### Real Conditionals: Overview\n\nReal conditionals describe **possible** situations — things that can/could happen:\n\n| Type | Example |\n|------|---------|\n| Present general | Якщо йде дощ, я беру парасольку. (If it rains, I take an umbrella.) |\n| Future possible | Якщо піде дощ, я візьму парасольку. (If it rains, I'll take an umbrella.) |\n| Past factual | Якщо він приходив, ми говорили. (If/When he came, we talked.) |\n\n> **⭐ KEY DIFFERENCE FROM ENGLISH**\n>\n> In English, future \"if\" clauses use present tense:\n> - If it **rains** tomorrow... (not \"will rain\")\n>\n> In Ukrainian, future \"if\" clauses can use **future tense**:\n> - Якщо **піде** дощ завтра... (future perfective)\n> - Якщо **буде йти** дощ... (future imperfective)\n\n### Present General Conditionals\n\nFor habits, general truths, and regular patterns:\n\n**Structure:** Якщо + present, present\n\n| Ukrainian | English |\n|-----------|---------|\n| Якщо йде дощ, я беру парасольку. | If it rains, I take an umbrella. |\n| Якщо він не снідає, він голодний. | If he doesn't eat breakfast, he's hungry. |\n| Якщо ти вчишся, ти знаєш. | If you study, you know. |\n\nThese describe what **generally happens** when a condition is true.\n\n### Future Conditionals\n\nFor possible future events:\n\n**Structure:** Якщо + future, future\n\n| Ukrainian | English |\n|-----------|---------|\n| Якщо **матиму** час, **подзвоню**. | If I have time, I'll call. |\n| Якщо він **прийде**, ми **поговоримо**. | If he comes, we'll talk. |\n| Якщо **буде** гарна погода, ми **підемо** на прогулянку. | If the weather is good, we'll go for a walk. |\n\n**Aspect in future conditionals:**\n\n| Aspect in \"if\" clause | Meaning |\n|-----------------------|---------|\n| Perfective | Single completed condition | Якщо **напишеш**, я відповім. |\n| Imperfective | Ongoing/repeated condition | Якщо **будеш писати**, я читатиму. |\n\n### Future: тоді for Emphasis\n\nUse **тоді** (then) to emphasize the consequence:\n\n| Ukrainian | English |\n|-----------|---------|\n| Якщо він прийде, **тоді** поговоримо. | If he comes, **then** we'll talk. |\n| Якщо матимеш питання, **тоді** зателефонуй. | If you have questions, **then** call. |\n\n### Past Factual Conditionals\n\nFor things that actually happened (or could have happened) in the past:\n\n**Structure:** Якщо + past, past\n\n| Ukrainian | English |\n|-----------|---------|\n| Якщо він **приходив**, ми **говорили**. | When/If he came, we talked. |\n| Якщо вона **запізнювалася**, він **сердився**. | If she was late, he got angry. |\n| Якщо я **мав** час, я **читав** книги. | If I had time, I read books. |\n\n**Note:** Past \"якщо\" often translates as \"when\" in English, describing what habitually happened.\n\n### Word Order\n\nThe \"якщо\" clause can come first or second:\n\n| Order | Example |\n|-------|---------|\n| Condition first | **Якщо** матиму час, подзвоню. |\n| Result first | Подзвоню, **якщо** матиму час. |\n\nWhen \"якщо\" comes first, a comma separates the clauses.\n\n### Synonyms for Якщо\n\n| Word | Usage | Example |\n|------|-------|---------|\n| **якщо** | neutral, most common | Якщо він прийде... |\n| **як** | informal/spoken | Як прийде, скажи. (If he comes, tell me.) |\n| **коли** | \"if/when\" (interchangeable) | Коли матиму час... |\n| **за умови, що** | formal, \"provided that\" | За умови, що погода буде гарна... |\n| **у разі, якщо** | formal, \"in case\" | У разі, якщо виникнуть питання... |\n\n### Negative Conditions\n\nFor \"if not\" conditions:\n\n| Ukrainian | English |\n|-----------|---------|\n| Якщо **не** прийдеш, я засмучуся. | If you don't come, I'll be upset. |\n| Якщо він **не** зателефонує, зателефонуй ти. | If he doesn't call, you call. |\n| Якщо **не** буде дощу, підемо. | If there's no rain, we'll go. |\n\n### Common Conditional Patterns\n\n**Warnings:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Якщо не поспішиш, запізнишся. | If you don't hurry, you'll be late. |\n| Якщо не будеш вчитися, не здаси іспит. | If you don't study, you won't pass. |\n\n**Offers and suggestions:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Якщо хочеш, допоможу. | If you want, I'll help. |\n| Якщо маєш час, зайди. | If you have time, stop by. |\n\n**Promises:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Якщо приїдеш, покажу місто. | If you come, I'll show you the city. |\n| Якщо скажеш правду, не буду сердитися. | If you tell the truth, I won't be angry. |",
-        "type": "topic"
-      },
-      {
-        "id": "practice-практика",
-        "title": "practice | Практика",
-        "content": "### Complete the Conditionals\n\n1. Якщо він ___ (to call), я відповім.\n   → Якщо він **зателефонує**, я відповім.\n\n2. Якщо ___ (there is) гарна погода, ми підемо на пляж.\n   → Якщо **буде** гарна погода, ми підемо на пляж.\n\n3. Якщо ти не ___ (to study), ти не здаси іспит.\n   → Якщо ти не **будеш вчитися**, ти не здаси іспит.\n\n4. Якщо вона ___ (to come), передай їй це.\n   → Якщо вона **прийде**, передай їй це.\n\n5. ___ (If) матимеш питання, зателефонуй.\n   → **Якщо** матимеш питання, зателефонуй.\n\n### Choose the Correct Form\n\n1. Якщо він ___ , ми поговоримо.\n   - a) приходить\n   - b) прийде ✓\n   - c) прийшов\n\n2. Якщо я ___ час, я прочитаю цю книгу.\n   - a) маю\n   - b) мав\n   - c) матиму ✓\n\n3. Якщо вона не ___ , я засмучуся.\n   - a) приїжджає\n   - b) приїде ✓\n   - c) приїхала\n\n4. Подзвони мені, якщо ___ питання.\n   - a) маєш\n   - b) матимеш ✓\n   - c) мав\n\n### Translate to Ukrainian\n\n1. If I have time, I'll come.\n   → **Якщо матиму час, я прийду.**\n\n2. If it rains, we'll stay home.\n   → **Якщо піде дощ, ми залишимося вдома.**\n\n3. If you don't hurry, you'll be late.\n   → **Якщо не поспішиш, запізнишся.**\n\n4. Call me if you need help.\n   → **Зателефонуй мені, якщо потрібна допомога.**\n\n5. If she comes, tell her.\n   → **Якщо вона прийде, скажи їй.**\n\n### Create Conditionals\n\nMake conditionals using these elements:\n\n1. мати час / читати книги\n   → Якщо матиму час, читатиму книги.\n\n2. йти дощ / брати парасольку\n   → Якщо піде дощ, візьму парасольку.\n\n3. вчитися / здати іспит\n   → Якщо будеш вчитися, здаси іспит.\n\n4. приїхати друзі / бути свято\n   → Якщо приїдуть друзі, буде свято.",
-        "type": "topic"
-      },
-      {
-        "id": "production-продукція",
-        "title": "production | Продукція",
-        "content": "### Make Plans\n\nUse conditionals to talk about your plans:\n\n- Якщо буде гарна погода цими вихідними...\n- Якщо матиму достатньо грошей...\n- Якщо вивчу українську добре...\n\n**Example:**\nЯкщо буде гарна погода цими вихідними, я поїду на природу. Якщо матиму достатньо грошей, я куплю нову книгу.\n\n### Discussion: Consequences\n\nDiscuss using conditionals:\n\n1. Що буде, якщо ви не будете вчитися?\n2. Що ви зробите, якщо виграєте в лотерею?\n3. Що станеться, якщо не буде інтернету?\n\n---",
-        "type": "topic"
-      },
-      {
-        "id": "activities",
-        "title": "Activities",
-        "content": "## quiz: Real Conditionals\n\n> Choose the correct form.\n\n1. Якщо він ___ , ми підемо в кіно.\n   - [x] прийде\n   - [ ] приходить\n   > Future condition requires future tense.\n\n2. Якщо ___ дощ, візьми парасольку.\n   - [x] піде\n   - [ ] йде\n   > Future possible condition.\n\n3. Якщо ти не ___ , запізнишся.\n   - [x] поспішиш\n   - [ ] поспішаєш\n   > Future warning.\n\n4. ___ матиму час, зателефоную.\n   - [x] Якщо\n   - [ ] Якби\n   > \"Якщо\" for real conditions, \"якби\" for unreal.\n\n5. Якщо хочеш, я ___ .\n   - [x] допоможу\n   - [ ] допомагаю\n   > Offer in the future.\n\n6. Якщо вона не ___ , ми почнемо без неї.\n   - [x] прийде\n   - [ ] приходить\n   > Future condition.\n\n## fill-in: Complete the Story\n\n> Завтра буде гарний день. (1)___ буде сонячно, я піду на прогулянку. (2)___ зустріну друзів, ми підемо в кафе. (3)___ буде час, я також відвідаю музей. А (4)___ буде дощ, залишуся вдома і читатиму книгу.\n\n**Answers:** Якщо, Якщо, Якщо, якщо\n\n---",
-        "type": "activities"
-      },
-      {
-        "id": "vocabulary",
-        "title": "Vocabulary",
-        "content": "| Word | IPA | English | Gender |\n|------|-----|---------|--------|\n| якщо | /jɑkˈʃt͡ʃo/ | if | conj |\n| як | /jɑk/ | if (informal), as, how | conj |\n| тоді | /toˈdʲi/ | then | adv |\n| умова | /uˈmovɑ/ | condition | f |\n| наслідок | /ˈnɑslʲidok/ | consequence | m |\n| результат | /rɛzulʲˈtɑt/ | result | m |\n| можливо | /moʒˈlɪvo/ | possibly | adv |\n| імовірно | /imoˈvʲirno/ | probably | adv |\n| у разі | /u ˈrɑzʲi/ | in case | prep |\n| за умови | /zɑ uˈmovɪ/ | provided that | prep |\n\n---",
-        "type": "vocabulary"
-      },
-      {
-        "id": "summary",
+        "id": "section-summary",
+        "type": "summary",
         "title": "Summary",
         "content": "## Real Conditionals with Якщо\n\n### Types\n\n| Type | Structure | Example |\n|------|-----------|---------|\n| Present general | Якщо + present, present | Якщо йде дощ, я беру парасольку. |\n| Future possible | Якщо + future, future | Якщо піде дощ, я візьму парасольку. |\n| Past factual | Якщо + past, past | Якщо він приходив, ми говорили. |\n\n### Key Features\n\n1. **Word order**: Якщо clause can come first or second\n2. **Tense in \"if\" clause**: Unlike English, Ukrainian uses future tense\n3. **Comma**: Separate clauses with comma when якщо comes first\n4. **Тоді**: Optional, emphasizes the consequence\n\n### Common Patterns\n\n| Pattern | Example |\n|---------|---------|\n| Warning | Якщо не поспішиш, запізнишся. |\n| Offer | Якщо хочеш, допоможу. |\n| Promise | Якщо приїдеш, покажу місто. |\n| Plan | Якщо матиму час, подзвоню. |\n\n### Якщо vs. Якби\n\n| Word | Meaning | Condition type |\n|------|---------|----------------|\n| **якщо** | if | Real, possible |\n| **якби** | if (were) | Unreal, hypothetical |\n\n> **Key Takeaways**\n>\n> - Якщо = real/possible conditions\n> - Ukrainian uses future tense in \"if\" clauses\n> - Word order is flexible (якщо first or second)\n> - Next module: якби for unreal conditions",
-        "type": "summary"
+        "titleUk": "Підсумок"
       }
-    ]
+    ],
+    "rawMarkdown": "---\nmodule: 105\ntitle: \"Conditionals I\"\nsubtitle: \"Real Conditions with Якщо\"\nlevel: B1\nphase: B1.2\nduration: 45\ntransliteration: none\ntags: [grammar, conditionals, complex-sentences, якщо]\nobjectives:\n  - Understand real conditional structure\n  - Use якщо for possible conditions\n  - Form conditionals in present, past, and future\n  - Express conditions and consequences\n---\n\n# Зміст уроку | Lesson Content\n\n## warm-up | Розминка\n\n### Умовні речення | Conditional Sentences\n\nConditionals express \"if...then\" relationships:\n\n| English | Ukrainian |\n|---------|-----------|\n| If it rains, I'll stay home. | **Якщо** піде дощ, я залишуся вдома. |\n| If you study, you'll learn. | **Якщо** ти будеш вчитися, ти навчишся. |\n\n**Якщо** = if (for real, possible conditions)\n\n## presentation | Презентація\n\n### Real Conditionals: Overview\n\nReal conditionals describe **possible** situations — things that can/could happen:\n\n| Type | Example |\n|------|---------|\n| Present general | Якщо йде дощ, я беру парасольку. (If it rains, I take an umbrella.) |\n| Future possible | Якщо піде дощ, я візьму парасольку. (If it rains, I'll take an umbrella.) |\n| Past factual | Якщо він приходив, ми говорили. (If/When he came, we talked.) |\n\n> **⭐ KEY DIFFERENCE FROM ENGLISH**\n>\n> In English, future \"if\" clauses use present tense:\n> - If it **rains** tomorrow... (not \"will rain\")\n>\n> In Ukrainian, future \"if\" clauses can use **future tense**:\n> - Якщо **піде** дощ завтра... (future perfective)\n> - Якщо **буде йти** дощ... (future imperfective)\n\n### Present General Conditionals\n\nFor habits, general truths, and regular patterns:\n\n**Structure:** Якщо + present, present\n\n| Ukrainian | English |\n|-----------|---------|\n| Якщо йде дощ, я беру парасольку. | If it rains, I take an umbrella. |\n| Якщо він не снідає, він голодний. | If he doesn't eat breakfast, he's hungry. |\n| Якщо ти вчишся, ти знаєш. | If you study, you know. |\n\nThese describe what **generally happens** when a condition is true.\n\n### Future Conditionals\n\nFor possible future events:\n\n**Structure:** Якщо + future, future\n\n| Ukrainian | English |\n|-----------|---------|\n| Якщо **матиму** час, **подзвоню**. | If I have time, I'll call. |\n| Якщо він **прийде**, ми **поговоримо**. | If he comes, we'll talk. |\n| Якщо **буде** гарна погода, ми **підемо** на прогулянку. | If the weather is good, we'll go for a walk. |\n\n**Aspect in future conditionals:**\n\n| Aspect in \"if\" clause | Meaning |\n|-----------------------|---------|\n| Perfective | Single completed condition | Якщо **напишеш**, я відповім. |\n| Imperfective | Ongoing/repeated condition | Якщо **будеш писати**, я читатиму. |\n\n### Future: тоді for Emphasis\n\nUse **тоді** (then) to emphasize the consequence:\n\n| Ukrainian | English |\n|-----------|---------|\n| Якщо він прийде, **тоді** поговоримо. | If he comes, **then** we'll talk. |\n| Якщо матимеш питання, **тоді** зателефонуй. | If you have questions, **then** call. |\n\n### Past Factual Conditionals\n\nFor things that actually happened (or could have happened) in the past:\n\n**Structure:** Якщо + past, past\n\n| Ukrainian | English |\n|-----------|---------|\n| Якщо він **приходив**, ми **говорили**. | When/If he came, we talked. |\n| Якщо вона **запізнювалася**, він **сердився**. | If she was late, he got angry. |\n| Якщо я **мав** час, я **читав** книги. | If I had time, I read books. |\n\n**Note:** Past \"якщо\" often translates as \"when\" in English, describing what habitually happened.\n\n### Word Order\n\nThe \"якщо\" clause can come first or second:\n\n| Order | Example |\n|-------|---------|\n| Condition first | **Якщо** матиму час, подзвоню. |\n| Result first | Подзвоню, **якщо** матиму час. |\n\nWhen \"якщо\" comes first, a comma separates the clauses.\n\n### Synonyms for Якщо\n\n| Word | Usage | Example |\n|------|-------|---------|\n| **якщо** | neutral, most common | Якщо він прийде... |\n| **як** | informal/spoken | Як прийде, скажи. (If he comes, tell me.) |\n| **коли** | \"if/when\" (interchangeable) | Коли матиму час... |\n| **за умови, що** | formal, \"provided that\" | За умови, що погода буде гарна... |\n| **у разі, якщо** | formal, \"in case\" | У разі, якщо виникнуть питання... |\n\n### Negative Conditions\n\nFor \"if not\" conditions:\n\n| Ukrainian | English |\n|-----------|---------|\n| Якщо **не** прийдеш, я засмучуся. | If you don't come, I'll be upset. |\n| Якщо він **не** зателефонує, зателефонуй ти. | If he doesn't call, you call. |\n| Якщо **не** буде дощу, підемо. | If there's no rain, we'll go. |\n\n### Common Conditional Patterns\n\n**Warnings:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Якщо не поспішиш, запізнишся. | If you don't hurry, you'll be late. |\n| Якщо не будеш вчитися, не здаси іспит. | If you don't study, you won't pass. |\n\n**Offers and suggestions:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Якщо хочеш, допоможу. | If you want, I'll help. |\n| Якщо маєш час, зайди. | If you have time, stop by. |\n\n**Promises:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Якщо приїдеш, покажу місто. | If you come, I'll show you the city. |\n| Якщо скажеш правду, не буду сердитися. | If you tell the truth, I won't be angry. |\n\n## practice | Практика\n\n### Complete the Conditionals\n\n1. Якщо він ___ (to call), я відповім.\n   > [!answer] Якщо він **зателефонує**, я відповім.\n\n2. Якщо ___ (there is) гарна погода, ми підемо на пляж.\n   > [!answer] Якщо **буде** гарна погода, ми підемо на пляж.\n\n3. Якщо ти не ___ (to study), ти не здаси іспит.\n   > [!answer] Якщо ти не **будеш вчитися**, ти не здаси іспит.\n\n4. Якщо вона ___ (to come), передай їй це.\n   > [!answer] Якщо вона **прийде**, передай їй це.\n\n5. ___ (If) матимеш питання, зателефонуй.\n   > [!answer] **Якщо** матимеш питання, зателефонуй.\n\n### Choose the Correct Form\n\n1. Якщо він ___ , ми поговоримо.\n   - a) приходить\n   - b) прийде ✓\n   - c) прийшов\n\n2. Якщо я ___ час, я прочитаю цю книгу.\n   - a) маю\n   - b) мав\n   - c) матиму ✓\n\n3. Якщо вона не ___ , я засмучуся.\n   - a) приїжджає\n   - b) приїде ✓\n   - c) приїхала\n\n4. Подзвони мені, якщо ___ питання.\n   - a) маєш\n   - b) матимеш ✓\n   - c) мав\n\n### Translate to Ukrainian\n\n1. If I have time, I'll come.\n   > [!answer] **Якщо матиму час, я прийду.**\n2. If it rains, we'll stay home.\n   > [!answer] **Якщо піде дощ, ми залишимося вдома.**\n3. If you don't hurry, you'll be late.\n   > [!answer] **Якщо не поспішиш, запізнишся.**\n4. Call me if you need help.\n   > [!answer] **Зателефонуй мені, якщо потрібна допомога.**\n5. If she comes, tell her.\n   > [!answer] **Якщо вона прийде, скажи їй.**\n### Create Conditionals\n\nMake conditionals using these elements:\n\n1. мати час / читати книги\n   > [!answer] Якщо матиму час, читатиму книги.\n\n2. йти дощ / брати парасольку\n   > [!answer] Якщо піде дощ, візьму парасольку.\n\n3. вчитися / здати іспит\n   > [!answer] Якщо будеш вчитися, здаси іспит.\n\n4. приїхати друзі / бути свято\n   > [!answer] Якщо приїдуть друзі, буде свято.\n\n## production | Продукція\n\n### Make Plans\n\nUse conditionals to talk about your plans:\n\n- Якщо буде гарна погода цими вихідними...\n- Якщо матиму достатньо грошей...\n- Якщо вивчу українську добре...\n\n**Example:**\nЯкщо буде гарна погода цими вихідними, я поїду на природу. Якщо матиму достатньо грошей, я куплю нову книгу.\n\n### Discussion: Consequences\n\nDiscuss using conditionals:\n\n1. Що буде, якщо ви не будете вчитися?\n2. Що ви зробите, якщо виграєте в лотерею?\n3. Що станеться, якщо не буде інтернету?\n\n---\n\n# Activities\n\n## quiz: Real Conditionals\n\n> Choose the correct form.\n\n1. Якщо він ___ , ми підемо в кіно.\n   - [x] прийде\n   - [ ] приходить\n   > Future condition requires future tense.\n\n2. Якщо ___ дощ, візьми парасольку.\n   - [x] піде\n   - [ ] йде\n   > Future possible condition.\n\n3. Якщо ти не ___ , запізнишся.\n   - [x] поспішиш\n   - [ ] поспішаєш\n   > Future warning.\n\n4. ___ матиму час, зателефоную.\n   - [x] Якщо\n   - [ ] Якби\n   > \"Якщо\" for real conditions, \"якби\" for unreal.\n\n5. Якщо хочеш, я ___ .\n   - [x] допоможу\n   - [ ] допомагаю\n   > Offer in the future.\n\n6. Якщо вона не ___ , ми почнемо без неї.\n   - [x] прийде\n   - [ ] приходить\n   > Future condition.\n\n## fill-in: Complete the Story\n\n> Завтра буде гарний день. (1)___ буде сонячно, я піду на прогулянку. (2)___ зустріну друзів, ми підемо в кафе. (3)___ буде час, я також відвідаю музей. А (4)___ буде дощ, залишуся вдома і читатиму книгу.\n\n**Answers:** Якщо, Якщо, Якщо, якщо\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | Gender |\n|------|-----|---------|--------|\n| якщо | /jɑkˈʃt͡ʃo/ | if | conj |\n| як | /jɑk/ | if (informal), as, how | conj |\n| тоді | /toˈdʲi/ | then | adv |\n| умова | /uˈmovɑ/ | condition | f |\n| наслідок | /ˈnɑslʲidok/ | consequence | m |\n| результат | /rɛzulʲˈtɑt/ | result | m |\n| можливо | /moʒˈlɪvo/ | possibly | adv |\n| імовірно | /imoˈvʲirno/ | probably | adv |\n| у разі | /u ˈrɑzʲi/ | in case | prep |\n| за умови | /zɑ uˈmovɪ/ | provided that | prep |\n\n---\n\n# Summary\n\n## Real Conditionals with Якщо\n\n### Types\n\n| Type | Structure | Example |\n|------|-----------|---------|\n| Present general | Якщо + present, present | Якщо йде дощ, я беру парасольку. |\n| Future possible | Якщо + future, future | Якщо піде дощ, я візьму парасольку. |\n| Past factual | Якщо + past, past | Якщо він приходив, ми говорили. |\n\n### Key Features\n\n1. **Word order**: Якщо clause can come first or second\n2. **Tense in \"if\" clause**: Unlike English, Ukrainian uses future tense\n3. **Comma**: Separate clauses with comma when якщо comes first\n4. **Тоді**: Optional, emphasizes the consequence\n\n### Common Patterns\n\n| Pattern | Example |\n|---------|---------|\n| Warning | Якщо не поспішиш, запізнишся. |\n| Offer | Якщо хочеш, допоможу. |\n| Promise | Якщо приїдеш, покажу місто. |\n| Plan | Якщо матиму час, подзвоню. |\n\n### Якщо vs. Якби\n\n| Word | Meaning | Condition type |\n|------|---------|----------------|\n| **якщо** | if | Real, possible |\n| **якби** | if (were) | Unreal, hypothetical |\n\n> **Key Takeaways**\n>\n> - Якщо = real/possible conditions\n> - Ukrainian uses future tense in \"if\" clauses\n> - Word order is flexible (якщо first or second)\n> - Next module: якби for unreal conditions\n"
   },
   "activities": [
     {
-      "id": "act-uk-B1-105-quiz",
+      "id": "act-b1-105-quiz",
       "type": "quiz",
       "title": "Real Conditionals",
       "description": "Choose the correct form.",
       "content": {
         "type": "quiz",
-        "instructions": "Choose the correct form.",
         "questions": [
           {
             "question": "Якщо він ___ , ми підемо в кіно.",
@@ -268,29 +124,31 @@
       "language": "uk",
       "difficultyLevel": "B1",
       "duration": 5,
-      "tags": [
-        "grammar",
-        "conditionals",
-        "complex-sentences",
-        "якщо"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.230Z",
+      "modifiedAt": "2025-12-01T22:58:37.230Z"
     },
     {
-      "id": "act-uk-B1-105-gapfill",
+      "id": "act-b1-105-gapfill",
       "type": "gap-fill",
       "title": "Complete the Story",
       "description": "Завтра буде гарний день. (1)___ буде сонячно, я піду на прогулянку. (2)___ зустріну друзів, ми підемо в кафе. (3)___ буде час, я також відвідаю музей. А (4)___ буде дощ, залишуся вдома і читатиму книгу.",
       "content": {
         "type": "gap-fill",
-        "instructions": "Завтра буде гарний день. (1)___ буде сонячно, я піду на прогулянку. (2)___ зустріну друзів, ми підемо в кафе. (3)___ буде час, я також відвідаю музей. А (4)___ буде дощ, залишуся вдома і читатиму книгу.",
         "text": "Завтра буде гарний день. (1)___ буде сонячно, я піду на прогулянку. (2)___ зустріну друзів, ми підемо в кафе. (3)___ буде час, я також відвідаю музей. А (4)___ буде дощ, залишуся вдома і читатиму книгу.",
         "blanks": [
-          {},
-          {},
-          {},
-          {}
+          {
+            "index": 0
+          },
+          {
+            "index": 1
+          },
+          {
+            "index": 2
+          },
+          {
+            "index": 3
+          }
         ],
         "answers": [
           "Якщо",
@@ -305,14 +163,9 @@
       "language": "uk",
       "difficultyLevel": "B1",
       "duration": 5,
-      "tags": [
-        "grammar",
-        "conditionals",
-        "complex-sentences",
-        "якщо"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.230Z",
+      "modifiedAt": "2025-12-01T22:58:37.230Z"
     }
   ],
   "vocabulary": {
@@ -323,94 +176,74 @@
     "transliterationMode": "none",
     "words": [
       {
-        "id": "v-m105-001",
+        "id": "v-yakshcho-105-0",
         "uk": "якщо",
-        "translit": "",
-        "ipa": "/jɑkˈʃt͡ʃo/",
         "en": "if",
-        "pos": "",
-        "gender": "conj"
+        "pos": "conj",
+        "ipa": "/jɑkˈʃt͡ʃo/"
       },
       {
-        "id": "v-m105-002",
+        "id": "v-yak-105-1",
         "uk": "як",
-        "translit": "",
-        "ipa": "/jɑk/",
         "en": "if (informal), as, how",
-        "pos": "",
-        "gender": "conj"
+        "pos": "conj",
+        "ipa": "/jɑk/"
       },
       {
-        "id": "v-m105-003",
+        "id": "v-todi-105-2",
         "uk": "тоді",
-        "translit": "",
-        "ipa": "/toˈdʲi/",
         "en": "then",
-        "pos": "",
-        "gender": "adv"
+        "pos": "adv",
+        "ipa": "/toˈdʲi/"
       },
       {
-        "id": "v-m105-004",
+        "id": "v-umova-105-3",
         "uk": "умова",
-        "translit": "",
-        "ipa": "/uˈmovɑ/",
         "en": "condition",
-        "pos": "",
-        "gender": "f"
+        "pos": "f",
+        "ipa": "/uˈmovɑ/"
       },
       {
-        "id": "v-m105-005",
+        "id": "v-naslidok-105-4",
         "uk": "наслідок",
-        "translit": "",
-        "ipa": "/ˈnɑslʲidok/",
         "en": "consequence",
-        "pos": "",
-        "gender": "m"
+        "pos": "m",
+        "ipa": "/ˈnɑslʲidok/"
       },
       {
-        "id": "v-m105-006",
+        "id": "v-rezulьtat-105-5",
         "uk": "результат",
-        "translit": "",
-        "ipa": "/rɛzulʲˈtɑt/",
         "en": "result",
-        "pos": "",
-        "gender": "m"
+        "pos": "m",
+        "ipa": "/rɛzulʲˈtɑt/"
       },
       {
-        "id": "v-m105-007",
+        "id": "v-mozhlyvo-105-6",
         "uk": "можливо",
-        "translit": "",
-        "ipa": "/moʒˈlɪvo/",
         "en": "possibly",
-        "pos": "",
-        "gender": "adv"
+        "pos": "adv",
+        "ipa": "/moʒˈlɪvo/"
       },
       {
-        "id": "v-m105-008",
+        "id": "v-imovirno-105-7",
         "uk": "імовірно",
-        "translit": "",
-        "ipa": "/imoˈvʲirno/",
         "en": "probably",
-        "pos": "",
-        "gender": "adv"
+        "pos": "adv",
+        "ipa": "/imoˈvʲirno/"
       },
       {
-        "id": "v-m105-009",
+        "id": "v-u-razi-105-8",
         "uk": "у разі",
-        "translit": "",
-        "ipa": "/u ˈrɑzʲi/",
         "en": "in case",
-        "pos": "",
-        "gender": "prep"
+        "pos": "prep",
+        "ipa": "/u ˈrɑzʲi/"
       },
       {
-        "id": "v-m105-010",
+        "id": "v-za-umovy-105-9",
         "uk": "за умови",
-        "translit": "",
-        "ipa": "/zɑ uˈmovɪ/",
         "en": "provided that",
-        "pos": "",
-        "gender": "prep"
+        "pos": "prep",
+        "ipa": "/zɑ uˈmovɪ/"
       }
     ]
   }

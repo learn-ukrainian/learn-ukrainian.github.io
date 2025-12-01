@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-A2+-71",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "vocabulary-expansion",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -26,8 +25,6 @@
       "Adjective pairs (positive/negative)",
       "Reflexive emotion verbs"
     ],
-    "totalDuration": 45,
-    "transliterationMode": "none",
     "tags": [
       "vocabulary",
       "emotions",
@@ -35,22 +32,9 @@
       "feelings",
       "descriptions"
     ],
-    "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
+    "totalDuration": 45,
+    "transliterationMode": "none",
     "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Beyond Happy and Sad\n\nYou know \"щасливий\" and \"сумний.\" Let's expand your emotional vocabulary!\n\n**Nuanced emotions:**\n- схвильований (excited/anxious), розчарований (disappointed)\n- вдячний (grateful), заздрісний (jealous)\n\n**Personality traits:**\n- терплячий (patient), впертий (stubborn)\n\n> 💡 **Why This Matters**\n>\n> Rich emotional vocabulary helps you express yourself precisely and understand others better!"
-          }
-        ]
-      },
       {
         "id": "phase-presentation",
         "name": "presentation",
@@ -59,112 +43,33 @@
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "### Positive Emotions\n\n| Ukrainian | English |\n|-----------|---------|\n| щасливий | happy |\n| радісний | joyful |\n| задоволений | satisfied, pleased |\n| вдячний | grateful |\n| схвильований | excited |\n| захоплений | delighted, fascinated |\n| натхненний | inspired |\n| впевнений | confident |\n| спокійний | calm |\n| розслаблений | relaxed |\n| здивований | surprised |\n| гордий | proud |\n| закоханий | in love |\n| оптимістичний | optimistic |\n\n**Examples:**\n- Я такий **щасливий** сьогодні! - I'm so happy today!\n- Вона **задоволена** результатом. - She's satisfied with the result.\n- Я **вдячний** за допомогу. - I'm grateful for the help.\n- Він **натхненний** цією ідеєю. - He's inspired by this idea.\n- Вони **закохані** одне в одного. - They're in love with each other.\n- Батьки **горді** за сина. - The parents are proud of their son.\n\n> ⚡ **Pro Tip: схвильований**\n>\n> \"Схвильований\" can mean both excited (positive) and anxious/worried (negative), depending on context."
+            "teacherNotes": "### Positive Emotions\n\n| Ukrainian | English |\n|-----------|---------|\n| щасливий | happy |\n| радісний | joyful |\n| задоволений | satisfied, pleased |\n| вдячний | grateful |\n| схвильований | excited |\n| захоплений | delighted, fascinated |\n| натхненний | inspired |\n| впевнений | confident |\n| спокійний | calm |\n| розслаблений | relaxed |\n| здивований | surprised |\n| гордий | proud |\n| закоханий | in love |\n| оптимістичний | optimistic |\n\n**Examples:**\n- Я такий **щасливий** сьогодні! - I'm so happy today!\n- Вона **задоволена** результатом. - She's satisfied with the result.\n- Я **вдячний** за допомогу. - I'm grateful for the help.\n- Він **натхненний** цією ідеєю. - He's inspired by this idea.\n- Вони **закохані** одне в одного. - They're in love with each other.\n- Батьки **горді** за сина. - The parents are proud of their son.\n\n> ⚡ **Pro Tip: схвильований**\n>\n> \"Схвильований\" can mean both excited (positive) and anxious/worried (negative), depending on context.\n\n### Negative Emotions\n\n| Ukrainian | English |\n|-----------|---------|\n| сумний | sad |\n| засмучений | upset |\n| розчарований | disappointed |\n| злий | angry |\n| роздратований | irritated |\n| знервований | nervous |\n| стривожений | anxious, worried |\n| переляканий | scared |\n| заздрісний | jealous, envious |\n| самотній | lonely |\n| нудьгуючий | bored |\n| втомлений | tired |\n| пригнічений | depressed |\n| песимістичний | pessimistic |\n\n**Examples:**\n- Чому ти такий **сумний**? - Why are you so sad?\n- Я **розчарований** результатом. - I'm disappointed with the result.\n- Він **злий** на мене. - He's angry at me.\n- Вона **стривожена** через новини. - She's worried about the news.\n- Мені **самотньо** без тебе. - I'm lonely without you.\n- Я дуже **втомлений**. - I'm very tired.\n\n### Expressing Emotions\n\n| Structure | Example | Meaning |\n|-----------|---------|---------|\n| Мені + adverb | Мені сумно. | I feel sad. |\n| Я + adjective | Я щасливий. | I am happy. |\n| Мене + verb | Мене дратує це. | This irritates me. |\n| Я відчуваю + noun | Я відчуваю радість. | I feel joy. |\n\n**Examples:**\n- **Мені весело**! - I'm having fun!\n- **Мені страшно**. - I'm scared.\n- **Мені нудно**. - I'm bored.\n- **Мене засмучує** ця ситуація. - This situation upsets me.\n- **Я відчуваю** полегшення. - I feel relief.\n\n> 📝 **Note: Мені vs Я**\n>\n> \"Мені сумно\" (I feel sad - state/mood) vs \"Я сумний\" (I am sad - characteristic). Мені + adverb is for temporary states.\n\n### Emotion Verbs\n\n| Imperfective | Perfective | Meaning |\n|--------------|------------|---------|\n| радіти | порадіти | to be happy/rejoice |\n| сумувати | засумувати | to be sad |\n| злитися | розізлитися | to be angry |\n| боятися | злякатися | to be afraid |\n| хвилюватися | схвилюватися | to worry |\n| дивуватися | здивуватися | to be surprised |\n| сміятися | засміятися | to laugh |\n| плакати | заплакати | to cry |\n| сердитися | розсердитися | to get angry |\n| заздрити | позаздрити | to envy |\n\n**Examples:**\n- Не **хвилюйся**, все буде добре! - Don't worry, everything will be fine!\n- Вона **боїться** темряви. - She's afraid of the dark.\n- Діти **сміються** весело. - The children are laughing happily.\n- Чому ти **плачеш**? - Why are you crying?\n- Я **радію** за тебе! - I'm happy for you!\n- Не **заздри** іншим! - Don't envy others!\n\n### Personality Traits - Positive\n\n| Ukrainian | English |\n|-----------|---------|\n| добрий | kind |\n| щедрий | generous |\n| чесний | honest |\n| відповідальний | responsible |\n| терплячий | patient |\n| ввічливий | polite |\n| дружелюбний | friendly |\n| надійний | reliable |\n| сміливий | brave |\n| працьовитий | hardworking |\n| товариський | sociable |\n| креативний | creative |\n| організований | organized |\n| розумний | smart |\n| мудрий | wise |\n\n**Examples:**\n- Він дуже **добрий** і **щедрий**. - He's very kind and generous.\n- Вона **чесна** і **надійна**. - She's honest and reliable.\n- Мій друг — **терплячий** вчитель. - My friend is a patient teacher.\n- Потрібен **відповідальний** працівник. - We need a responsible employee.\n- Вона **сміливо** захищає свою позицію. - She bravely defends her position.\n\n### Personality Traits - Negative\n\n| Ukrainian | English |\n|-----------|---------|\n| злий | mean, angry |\n| жадібний | greedy |\n| брехливий | dishonest, lying |\n| безвідповідальний | irresponsible |\n| нетерплячий | impatient |\n| грубий | rude |\n| егоїстичний | selfish |\n| впертий | stubborn |\n| лінивий | lazy |\n| боягузливий | cowardly |\n| замкнутий | reserved, introverted |\n| зарозумілий | arrogant |\n| неорганізований | disorganized |\n\n**Examples:**\n- Не будь таким **жадібним**! - Don't be so greedy!\n- Він занадто **впертий**. - He's too stubborn.\n- Я трохи **лінивий** сьогодні. - I'm a bit lazy today.\n- Це було **грубо**. - That was rude.\n- Вона занадто **зарозуміла**. - She's too arrogant.\n\n> 🎭 **Culture Note: Directness**\n>\n> Ukrainians tend to be direct about personality traits. \"Він впертий\" isn't always negative - it can mean \"determined, persistent.\"\n\n### Describing Character\n\n**Patterns:**\n- Він/Вона + adjective + людина\n- У нього/неї + adjective + характер\n- Він/Вона по характеру + adjective\n\n**Examples:**\n- Вона **добра** людина. - She's a good person.\n- У нього **складний** характер. - He has a difficult character.\n- Вона по характеру **спокійна**. - She's calm by nature.\n- Він **за природою** оптиміст. - He's an optimist by nature."
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Negative Emotions\n\n| Ukrainian | English |\n|-----------|---------|\n| сумний | sad |\n| засмучений | upset |\n| розчарований | disappointed |\n| злий | angry |\n| роздратований | irritated |\n| знервований | nervous |\n| стривожений | anxious, worried |\n| переляканий | scared |\n| заздрісний | jealous, envious |\n| самотній | lonely |\n| нудьгуючий | bored |\n| втомлений | tired |\n| пригнічений | depressed |\n| песимістичний | pessimistic |\n\n**Examples:**\n- Чому ти такий **сумний**? - Why are you so sad?\n- Я **розчарований** результатом. - I'm disappointed with the result.\n- Він **злий** на мене. - He's angry at me.\n- Вона **стривожена** через новини. - She's worried about the news.\n- Мені **самотньо** без тебе. - I'm lonely without you.\n- Я дуже **втомлений**. - I'm very tired."
+            "teacherNotes": "### Match Emotion to Situation\n\n1. Отримав гарну новину\n   > [!answer] радісний / щасливий\n2. Хтось зробив щось погане тобі\n   > [!answer] злий\n3. Чекаєш важливого результату\n   > [!answer] схвильований / знервований\n4. Друг досяг успіху\n   > [!answer] гордий / радію за нього\n5. Ніхто не дзвонить\n   > [!answer] самотній\n\n### Opposite Traits\n\n1. добрий ↔ злий\n2. щедрий ↔ жадібний\n3. чесний ↔ брехливий\n4. сміливий ↔ боягузливий\n5. терплячий ↔ нетерплячий\n6. працьовитий ↔ лінивий\n\n### Complete with Emotion\n\n1. Я отримав подарунок. Я дуже ___!\n   > [!answer] радий / щасливий\n\n2. Вона не прийшла на зустріч. Я ___.\n   > [!answer] розчарований / засмучений\n\n3. Завтра важливий іспит. Я трохи ___.\n   > [!answer] знервований / схвильований\n\n4. Він мені допоміг. Я йому ___.\n   > [!answer] вдячний\n\n5. Мій друг виграв. Я ___ за нього!\n   > [!answer] радію / гордий\n\n### Translate\n\n1. I'm happy for you!\n   > [!answer] Я радий за тебе!\n2. Don't worry!\n   > [!answer] Не хвилюйся!\n3. She's kind and honest.\n   > [!answer] Вона добра і чесна.\n4. I feel sad.\n   > [!answer] Мені сумно.\n5. He's too stubborn.\n   > [!answer] Він занадто впертий."
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Expressing Emotions\n\n| Structure | Example | Meaning |\n|-----------|---------|---------|\n| Мені + adverb | Мені сумно. | I feel sad. |\n| Я + adjective | Я щасливий. | I am happy. |\n| Мене + verb | Мене дратує це. | This irritates me. |\n| Я відчуваю + noun | Я відчуваю радість. | I feel joy. |\n\n**Examples:**\n- **Мені весело**! - I'm having fun!\n- **Мені страшно**. - I'm scared.\n- **Мені нудно**. - I'm bored.\n- **Мене засмучує** ця ситуація. - This situation upsets me.\n- **Я відчуваю** полегшення. - I feel relief.\n\n> 📝 **Note: Мені vs Я**\n>\n> \"Мені сумно\" (I feel sad - state/mood) vs \"Я сумний\" (I am sad - characteristic). Мені + adverb is for temporary states."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Emotion Verbs\n\n| Imperfective | Perfective | Meaning |\n|--------------|------------|---------|\n| радіти | порадіти | to be happy/rejoice |\n| сумувати | засумувати | to be sad |\n| злитися | розізлитися | to be angry |\n| боятися | злякатися | to be afraid |\n| хвилюватися | схвилюватися | to worry |\n| дивуватися | здивуватися | to be surprised |\n| сміятися | засміятися | to laugh |\n| плакати | заплакати | to cry |\n| сердитися | розсердитися | to get angry |\n| заздрити | позаздрити | to envy |\n\n**Examples:**\n- Не **хвилюйся**, все буде добре! - Don't worry, everything will be fine!\n- Вона **боїться** темряви. - She's afraid of the dark.\n- Діти **сміються** весело. - The children are laughing happily.\n- Чому ти **плачеш**? - Why are you crying?\n- Я **радію** за тебе! - I'm happy for you!\n- Не **заздри** іншим! - Don't envy others!"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Personality Traits - Positive\n\n| Ukrainian | English |\n|-----------|---------|\n| добрий | kind |\n| щедрий | generous |\n| чесний | honest |\n| відповідальний | responsible |\n| терплячий | patient |\n| ввічливий | polite |\n| дружелюбний | friendly |\n| надійний | reliable |\n| сміливий | brave |\n| працьовитий | hardworking |\n| товариський | sociable |\n| креативний | creative |\n| організований | organized |\n| розумний | smart |\n| мудрий | wise |\n\n**Examples:**\n- Він дуже **добрий** і **щедрий**. - He's very kind and generous.\n- Вона **чесна** і **надійна**. - She's honest and reliable.\n- Мій друг — **терплячий** вчитель. - My friend is a patient teacher.\n- Потрібен **відповідальний** працівник. - We need a responsible employee.\n- Вона **сміливо** захищає свою позицію. - She bravely defends her position."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Personality Traits - Negative\n\n| Ukrainian | English |\n|-----------|---------|\n| злий | mean, angry |\n| жадібний | greedy |\n| брехливий | dishonest, lying |\n| безвідповідальний | irresponsible |\n| нетерплячий | impatient |\n| грубий | rude |\n| егоїстичний | selfish |\n| впертий | stubborn |\n| лінивий | lazy |\n| боягузливий | cowardly |\n| замкнутий | reserved, introverted |\n| зарозумілий | arrogant |\n| неорганізований | disorganized |\n\n**Examples:**\n- Не будь таким **жадібним**! - Don't be so greedy!\n- Він занадто **впертий**. - He's too stubborn.\n- Я трохи **лінивий** сьогодні. - I'm a bit lazy today.\n- Це було **грубо**. - That was rude.\n- Вона занадто **зарозуміла**. - She's too arrogant.\n\n> 🎭 **Culture Note: Directness**\n>\n> Ukrainians tend to be direct about personality traits. \"Він впертий\" isn't always negative - it can mean \"determined, persistent.\""
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Describing Character\n\n**Patterns:**\n- Він/Вона + adjective + людина\n- У нього/неї + adjective + характер\n- Він/Вона по характеру + adjective\n\n**Examples:**\n- Вона **добра** людина. - She's a good person.\n- У нього **складний** характер. - He has a difficult character.\n- Вона по характеру **спокійна**. - She's calm by nature.\n- Він **за природою** оптиміст. - He's an optimist by nature."
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A2+-71-matchup"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Match Emotion to Situation\n\n1. Отримав гарну новину → радісний / щасливий\n2. Хтось зробив щось погане тобі → злий\n3. Чекаєш важливого результату → схвильований / знервований\n4. Друг досяг успіху → гордий / радію за нього\n5. Ніхто не дзвонить → самотній"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Opposite Traits\n\n1. добрий ↔ злий\n2. щедрий ↔ жадібний\n3. чесний ↔ брехливий\n4. сміливий ↔ боягузливий\n5. терплячий ↔ нетерплячий\n6. працьовитий ↔ лінивий"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Complete with Emotion\n\n1. Я отримав подарунок. Я дуже ___!\n   → радий / щасливий\n\n2. Вона не прийшла на зустріч. Я ___.\n   → розчарований / засмучений\n\n3. Завтра важливий іспит. Я трохи ___.\n   → знервований / схвильований\n\n4. Він мені допоміг. Я йому ___.\n   → вдячний\n\n5. Мій друг виграв. Я ___ за нього!\n   → радію / гордий"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Translate\n\n1. I'm happy for you! → Я радий за тебе!\n2. Don't worry! → Не хвилюйся!\n3. She's kind and honest. → Вона добра і чесна.\n4. I feel sad. → Мені сумно.\n5. He's too stubborn. → Він занадто впертий."
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A2+-71-quiz"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A2+-71-groupsort"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Describe How You Feel\n\n**Example:** \"Сьогодні я трохи втомлений, але загалом задоволений. Вчора був напружений день, тому зараз відчуваю полегшення.\"\n\nDescribe your current emotional state."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Describe Someone's Personality\n\n**Example:** \"Моя подруга дуже добра і надійна. Вона завжди допомагає і ніколи не бреше. Іноді вона вперта, але це означає, що вона цілеспрямована.\"\n\nDescribe a friend or family member."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "React to Situations\n\nGive emotional reactions:\n- Ви виграли конкурс → \"Я такий радий! Не можу повірити!\"\n- Друг захворів → \"Мені прикро. Хвилююся за нього.\"\n- Поїзд запізнюється → \"Як дратівливо! Я роздратований.\""
+            "teacherNotes": "### Describe How You Feel\n\n**Example:** \"Сьогодні я трохи втомлений, але загалом задоволений. Вчора був напружений день, тому зараз відчуваю полегшення.\"\n\nDescribe your current emotional state.\n\n### Describe Someone's Personality\n\n**Example:** \"Моя подруга дуже добра і надійна. Вона завжди допомагає і ніколи не бреше. Іноді вона вперта, але це означає, що вона цілеспрямована.\"\n\nDescribe a friend or family member.\n\n### React to Situations\n\nGive emotional reactions:\n- Ви виграли конкурс → \"Я такий радий! Не можу повірити!\"\n- Друг захворів → \"Мені прикро. Хвилююся за нього.\"\n- Поїзд запізнюється → \"Як дратівливо! Я роздратований.\"\n\n---"
           }
         ]
       }
-    ]
+    ],
+    "createdAt": "2025-12-01T22:58:37.284Z",
+    "modifiedAt": "2025-12-01T22:58:37.284Z",
+    "version": 1
   },
   "activities": [
     {
-      "id": "act-uk-A2+-71-matchup",
+      "id": "act-a2+-71-matchup",
       "type": "match-up",
       "title": "Emotion → Situation",
       "description": "Emotion → Situation",
       "content": {
         "type": "match-up",
-        "instructions": "",
         "pairs": [
           {
             "left": "радісний",
@@ -195,24 +100,17 @@
       "language": "uk",
       "difficultyLevel": "A2+",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "emotions",
-        "personality",
-        "feelings",
-        "descriptions"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.284Z",
+      "modifiedAt": "2025-12-01T22:58:37.284Z"
     },
     {
-      "id": "act-uk-A2+-71-quiz",
+      "id": "act-a2+-71-quiz",
       "type": "quiz",
       "title": "Emotions & Personality",
       "description": "Choose the correct answer.",
       "content": {
         "type": "quiz",
-        "instructions": "Choose the correct answer.",
         "questions": [
           {
             "question": "\"Мені сумно\" means ___.",
@@ -291,42 +189,39 @@
       "language": "uk",
       "difficultyLevel": "A2+",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "emotions",
-        "personality",
-        "feelings",
-        "descriptions"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.284Z",
+      "modifiedAt": "2025-12-01T22:58:37.284Z"
     },
     {
-      "id": "act-uk-A2+-71-groupsort",
+      "id": "act-a2+-71-groupsort",
       "type": "group-sort",
       "title": "Positive vs Negative",
       "description": "Positive vs Negative",
       "content": {
         "type": "group-sort",
-        "instructions": "",
         "groups": [
           {
-            "name": "Позитивні (Positive)",
+            "id": "",
+            "name": "Позитивні",
             "items": [
               "щасливий",
               "вдячний",
               "добрий",
               "надійний"
-            ]
+            ],
+            "nameUk": "Positive"
           },
           {
-            "name": "Негативні (Negative)",
+            "id": "",
+            "name": "Негативні",
             "items": [
               "злий",
               "заздрісний",
               "лінивий",
               "грубий"
-            ]
+            ],
+            "nameUk": "Negative"
           }
         ],
         "shuffleItems": true
@@ -337,15 +232,9 @@
       "language": "uk",
       "difficultyLevel": "A2+",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "emotions",
-        "personality",
-        "feelings",
-        "descriptions"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.284Z",
+      "modifiedAt": "2025-12-01T22:58:37.284Z"
     }
   ],
   "vocabulary": {
@@ -356,351 +245,275 @@
     "transliterationMode": "none",
     "words": [
       {
-        "id": "v-m71-001",
+        "id": "v-shchaslyvyy-71-0",
         "uk": "щасливий",
-        "translit": "",
-        "ipa": "/ʃtʃɑsˈlɪvɪj/",
         "en": "happy",
         "pos": "adj",
-        "gender": "-"
+        "ipa": "/ʃtʃɑsˈlɪvɪj/"
       },
       {
-        "id": "v-m71-002",
+        "id": "v-radisnyy-71-1",
         "uk": "радісний",
-        "translit": "",
-        "ipa": "/ˈrɑdʲisnɪj/",
         "en": "joyful",
         "pos": "adj",
-        "gender": "-"
+        "ipa": "/ˈrɑdʲisnɪj/"
       },
       {
-        "id": "v-m71-003",
+        "id": "v-zadovolenyy-71-2",
         "uk": "задоволений",
-        "translit": "",
-        "ipa": "/zɑdoˈvolɛnɪj/",
         "en": "satisfied",
         "pos": "adj",
-        "gender": "-"
+        "ipa": "/zɑdoˈvolɛnɪj/"
       },
       {
-        "id": "v-m71-004",
+        "id": "v-vdyachnyy-71-3",
         "uk": "вдячний",
-        "translit": "",
-        "ipa": "/ˈvdʲɑtʃnɪj/",
         "en": "grateful",
         "pos": "adj",
-        "gender": "-"
+        "ipa": "/ˈvdʲɑtʃnɪj/"
       },
       {
-        "id": "v-m71-005",
+        "id": "v-skhvylьovanyy-71-4",
         "uk": "схвильований",
-        "translit": "",
-        "ipa": "/sxvɪlʲoˈvɑnɪj/",
         "en": "excited, anxious",
         "pos": "adj",
-        "gender": "-"
+        "ipa": "/sxvɪlʲoˈvɑnɪj/"
       },
       {
-        "id": "v-m71-006",
+        "id": "v-zakhoplenyy-71-5",
         "uk": "захоплений",
-        "translit": "",
-        "ipa": "/zɑˈxoplɛnɪj/",
         "en": "delighted",
         "pos": "adj",
-        "gender": "-"
+        "ipa": "/zɑˈxoplɛnɪj/"
       },
       {
-        "id": "v-m71-007",
+        "id": "v-natkhnennyy-71-6",
         "uk": "натхненний",
-        "translit": "",
-        "ipa": "/nɑtxˈnɛnːɪj/",
         "en": "inspired",
         "pos": "adj",
-        "gender": "-"
+        "ipa": "/nɑtxˈnɛnːɪj/"
       },
       {
-        "id": "v-m71-008",
+        "id": "v-vpevnenyy-71-7",
         "uk": "впевнений",
-        "translit": "",
-        "ipa": "/vpɛvˈnɛnɪj/",
         "en": "confident",
         "pos": "adj",
-        "gender": "-"
+        "ipa": "/vpɛvˈnɛnɪj/"
       },
       {
-        "id": "v-m71-009",
+        "id": "v-hordyy-71-8",
         "uk": "гордий",
-        "translit": "",
-        "ipa": "/ˈɦordɪj/",
         "en": "proud",
         "pos": "adj",
-        "gender": "-"
+        "ipa": "/ˈɦordɪj/"
       },
       {
-        "id": "v-m71-010",
+        "id": "v-zakokhanyy-71-9",
         "uk": "закоханий",
-        "translit": "",
-        "ipa": "/zɑkoˈxɑnɪj/",
         "en": "in love",
         "pos": "adj",
-        "gender": "-"
+        "ipa": "/zɑkoˈxɑnɪj/"
       },
       {
-        "id": "v-m71-011",
+        "id": "v-sumnyy-71-10",
         "uk": "сумний",
-        "translit": "",
-        "ipa": "/ˈsumnɪj/",
         "en": "sad",
         "pos": "adj",
-        "gender": "-"
+        "ipa": "/ˈsumnɪj/"
       },
       {
-        "id": "v-m71-012",
+        "id": "v-zasmuchenyy-71-11",
         "uk": "засмучений",
-        "translit": "",
-        "ipa": "/zɑsˈmutʃɛnɪj/",
         "en": "upset",
         "pos": "adj",
-        "gender": "-"
+        "ipa": "/zɑsˈmutʃɛnɪj/"
       },
       {
-        "id": "v-m71-013",
+        "id": "v-rozcharovanyy-71-12",
         "uk": "розчарований",
-        "translit": "",
-        "ipa": "/rostʃɑˈrovɑnɪj/",
         "en": "disappointed",
         "pos": "adj",
-        "gender": "-"
+        "ipa": "/rostʃɑˈrovɑnɪj/"
       },
       {
-        "id": "v-m71-014",
+        "id": "v-zlyy-71-13",
         "uk": "злий",
-        "translit": "",
-        "ipa": "/zlɪj/",
         "en": "angry",
         "pos": "adj",
-        "gender": "-"
+        "ipa": "/zlɪj/"
       },
       {
-        "id": "v-m71-015",
+        "id": "v-rozdratovanyy-71-14",
         "uk": "роздратований",
-        "translit": "",
-        "ipa": "/rozdrɑˈtovɑnɪj/",
         "en": "irritated",
         "pos": "adj",
-        "gender": "-"
+        "ipa": "/rozdrɑˈtovɑnɪj/"
       },
       {
-        "id": "v-m71-016",
+        "id": "v-znervovanyy-71-15",
         "uk": "знервований",
-        "translit": "",
-        "ipa": "/znɛrˈvovɑnɪj/",
         "en": "nervous",
         "pos": "adj",
-        "gender": "-"
+        "ipa": "/znɛrˈvovɑnɪj/"
       },
       {
-        "id": "v-m71-017",
+        "id": "v-stryvozhenyy-71-16",
         "uk": "стривожений",
-        "translit": "",
-        "ipa": "/strɪˈvoʒɛnɪj/",
         "en": "anxious",
         "pos": "adj",
-        "gender": "-"
+        "ipa": "/strɪˈvoʒɛnɪj/"
       },
       {
-        "id": "v-m71-018",
+        "id": "v-zazdrisnyy-71-17",
         "uk": "заздрісний",
-        "translit": "",
-        "ipa": "/ˈzɑzdrʲisnɪj/",
         "en": "jealous",
         "pos": "adj",
-        "gender": "-"
+        "ipa": "/ˈzɑzdrʲisnɪj/"
       },
       {
-        "id": "v-m71-019",
+        "id": "v-samotniy-71-18",
         "uk": "самотній",
-        "translit": "",
-        "ipa": "/sɑˈmotnʲij/",
         "en": "lonely",
         "pos": "adj",
-        "gender": "-"
+        "ipa": "/sɑˈmotnʲij/"
       },
       {
-        "id": "v-m71-020",
+        "id": "v-vtomlenyy-71-19",
         "uk": "втомлений",
-        "translit": "",
-        "ipa": "/ˈvtomlɛnɪj/",
         "en": "tired",
         "pos": "adj",
-        "gender": "-"
+        "ipa": "/ˈvtomlɛnɪj/"
       },
       {
-        "id": "v-m71-021",
+        "id": "v-dobryy-71-20",
         "uk": "добрий",
-        "translit": "",
-        "ipa": "/ˈdobrɪj/",
         "en": "kind",
         "pos": "adj",
-        "gender": "-"
+        "ipa": "/ˈdobrɪj/"
       },
       {
-        "id": "v-m71-022",
+        "id": "v-shchedryy-71-21",
         "uk": "щедрий",
-        "translit": "",
-        "ipa": "/ˈʃtʃɛdrɪj/",
         "en": "generous",
         "pos": "adj",
-        "gender": "-"
+        "ipa": "/ˈʃtʃɛdrɪj/"
       },
       {
-        "id": "v-m71-023",
+        "id": "v-chesnyy-71-22",
         "uk": "чесний",
-        "translit": "",
-        "ipa": "/ˈtʃɛsnɪj/",
         "en": "honest",
         "pos": "adj",
-        "gender": "-"
+        "ipa": "/ˈtʃɛsnɪj/"
       },
       {
-        "id": "v-m71-024",
+        "id": "v-terplyachyy-71-23",
         "uk": "терплячий",
-        "translit": "",
-        "ipa": "/tɛrpˈlʲɑtʃɪj/",
         "en": "patient",
         "pos": "adj",
-        "gender": "-"
+        "ipa": "/tɛrpˈlʲɑtʃɪj/"
       },
       {
-        "id": "v-m71-025",
+        "id": "v-nadiynyy-71-24",
         "uk": "надійний",
-        "translit": "",
-        "ipa": "/nɑˈdʲijnɪj/",
         "en": "reliable",
         "pos": "adj",
-        "gender": "-"
+        "ipa": "/nɑˈdʲijnɪj/"
       },
       {
-        "id": "v-m71-026",
+        "id": "v-smilyvyy-71-25",
         "uk": "сміливий",
-        "translit": "",
-        "ipa": "/smʲiˈlɪvɪj/",
         "en": "brave",
         "pos": "adj",
-        "gender": "-"
+        "ipa": "/smʲiˈlɪvɪj/"
       },
       {
-        "id": "v-m71-027",
+        "id": "v-pratsьovytyy-71-26",
         "uk": "працьовитий",
-        "translit": "",
-        "ipa": "/prɑtsʲoˈvɪtɪj/",
         "en": "hardworking",
         "pos": "adj",
-        "gender": "-"
+        "ipa": "/prɑtsʲoˈvɪtɪj/"
       },
       {
-        "id": "v-m71-028",
+        "id": "v-zhadibnyy-71-27",
         "uk": "жадібний",
-        "translit": "",
-        "ipa": "/ʒɑˈdʲibnɪj/",
         "en": "greedy",
         "pos": "adj",
-        "gender": "-"
+        "ipa": "/ʒɑˈdʲibnɪj/"
       },
       {
-        "id": "v-m71-029",
+        "id": "v-vpertyy-71-28",
         "uk": "впертий",
-        "translit": "",
-        "ipa": "/ˈvpɛrtɪj/",
         "en": "stubborn",
         "pos": "adj",
-        "gender": "-"
+        "ipa": "/ˈvpɛrtɪj/"
       },
       {
-        "id": "v-m71-030",
+        "id": "v-linyvyy-71-29",
         "uk": "лінивий",
-        "translit": "",
-        "ipa": "/lʲiˈnɪvɪj/",
         "en": "lazy",
         "pos": "adj",
-        "gender": "-"
+        "ipa": "/lʲiˈnɪvɪj/"
       },
       {
-        "id": "v-m71-031",
+        "id": "v-hrubyy-71-30",
         "uk": "грубий",
-        "translit": "",
-        "ipa": "/ˈɦrubɪj/",
         "en": "rude",
         "pos": "adj",
-        "gender": "-"
+        "ipa": "/ˈɦrubɪj/"
       },
       {
-        "id": "v-m71-032",
+        "id": "v-zarozumilyy-71-31",
         "uk": "зарозумілий",
-        "translit": "",
-        "ipa": "/zɑrozuˈmʲilɪj/",
         "en": "arrogant",
         "pos": "adj",
-        "gender": "-"
+        "ipa": "/zɑrozuˈmʲilɪj/"
       },
       {
-        "id": "v-m71-033",
+        "id": "v-khvylyuvatysya-71-32",
         "uk": "хвилюватися",
-        "translit": "",
-        "ipa": "/xvɪlʲuˈvɑtɪsʲɑ/",
         "en": "to worry",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/xvɪlʲuˈvɑtɪsʲɑ/",
         "note": "impf"
       },
       {
-        "id": "v-m71-034",
+        "id": "v-boyatysya-71-33",
         "uk": "боятися",
-        "translit": "",
-        "ipa": "/boˈjɑtɪsʲɑ/",
         "en": "to be afraid",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/boˈjɑtɪsʲɑ/",
         "note": "impf"
       },
       {
-        "id": "v-m71-035",
+        "id": "v-smiyatysya-71-34",
         "uk": "сміятися",
-        "translit": "",
-        "ipa": "/smʲiˈjɑtɪsʲɑ/",
         "en": "to laugh",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/smʲiˈjɑtɪsʲɑ/",
         "note": "impf"
       },
       {
-        "id": "v-m71-036",
+        "id": "v-plakaty-71-35",
         "uk": "плакати",
-        "translit": "",
-        "ipa": "/ˈplɑkɑtɪ/",
         "en": "to cry",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/ˈplɑkɑtɪ/",
         "note": "impf"
       },
       {
-        "id": "v-m71-037",
+        "id": "v-radity-71-36",
         "uk": "радіти",
-        "translit": "",
-        "ipa": "/ˈrɑdʲitɪ/",
         "en": "to rejoice",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/ˈrɑdʲitɪ/",
         "note": "impf"
       },
       {
-        "id": "v-m71-038",
+        "id": "v-zazdryty-71-37",
         "uk": "заздрити",
-        "translit": "",
-        "ipa": "/ˈzɑzdrɪtɪ/",
         "en": "to envy",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/ˈzɑzdrɪtɪ/",
         "note": "impf"
       }
     ]

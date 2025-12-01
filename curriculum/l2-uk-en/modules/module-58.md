@@ -198,32 +198,32 @@ Time to express what you think! In Ukrainian, there are many ways to share opini
 ### Express Your Opinion
 
 1. (think / good idea)
-   → Я думаю, що це хороша ідея.
+   > [!answer] Я думаю, що це хороша ідея.
 
 2. (in my opinion / expensive)
-   → На мою думку, це дорого.
+   > [!answer] На мою думку, це дорого.
 
 3. (seems to me / difficult)
-   → Мені здається, що це важко.
+   > [!answer] Мені здається, що це важко.
 
 4. (convinced / right)
-   → Я переконаний, що він має рацію.
+   > [!answer] Я переконаний, що він має рацію.
 
 ### Agree or Disagree
 
 Respond to these statements:
 
 1. "Українська мова дуже красива." (agree strongly)
-   → Абсолютно згоден! / Повністю погоджуюся!
+   > [!answer] Абсолютно згоден! / Повністю погоджуюся!
 
 2. "Всі мають вивчати програмування." (partially agree)
-   → В цілому згоден, але не всім це потрібно.
+   > [!answer] В цілому згоден, але не всім це потрібно.
 
 3. "Зима — найкраща пора року." (disagree politely)
-   → Я думаю інакше. Мені більше подобається літо.
+   > [!answer] Я думаю інакше. Мені більше подобається літо.
 
 4. "Читати книги краще, ніж дивитися фільми." (your opinion)
-   → [Your own response]
+   > [!answer] [Your own response]
 
 ### Give Reasons
 

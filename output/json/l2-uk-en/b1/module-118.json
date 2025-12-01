@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-B1-118",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "grammar-introduction",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -22,171 +21,43 @@
       "Master the щоб + past tense structure"
     ],
     "grammarFocus": [],
-    "totalDuration": 45,
-    "transliterationMode": "none",
     "tags": [
       "grammar",
       "reported-speech",
       "commands",
       "requests"
     ],
+    "totalDuration": 45,
+    "transliterationMode": "none",
+    "phases": [],
+    "createdAt": "2025-12-01T22:58:37.235Z",
+    "modifiedAt": "2025-12-01T22:58:37.235Z",
     "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
-    "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Накази та прохання | Commands and Requests\n\nПорівняйте пряму та непряму мову для наказів:\n\nCompare direct and indirect speech for commands:\n\n**Пряма мова (Direct):**\n- Він сказав: «Закрий двері!» - He said: \"Close the door!\"\n\n**Непряма мова (Reported):**\n- Він попросив, **щоб** я закрив двері. - He asked me to close the door."
-          }
-        ]
-      },
-      {
-        "id": "phase-presentation",
-        "name": "presentation",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Структура непрямих наказів | Reported Commands Structure\n\n**Formula:**\n```\nReporting verb + щоб + subject + past tense verb\n```\n\n**Important:** After щоб, use **past tense** form, NOT infinitive!\n\n| Direct Command | Reported Command |\n|----------------|------------------|\n| «Прийди!» | Він попросив, щоб я **прийшов**. |\n| «Допоможи!» | Вона попросила, щоб я **допоміг**. |\n| «Зателефонуй!» | Він сказав, щоб я **зателефонував**. |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Дієслова для наказів і прохань | Reporting Verbs for Commands\n\n| Ukrainian | English | Formality | Example |\n|-----------|---------|-----------|---------|\n| попросити (pf) | to ask, request | polite | Він попросив, щоб... |\n| просити (impf) | to ask, request | polite | Вона просила, щоб... |\n| сказати (pf) | to tell | neutral | Він сказав, щоб... |\n| наказати (pf) | to order | formal/strong | Командир наказав, щоб... |\n| вимагати (impf) | to demand | strong | Він вимагав, щоб... |\n| порадити (pf) | to advise | advisory | Лікар порадив, щоб... |\n| радити (impf) | to advise | advisory | Вона радила, щоб... |\n| запропонувати (pf) | to suggest | suggestion | Він запропонував, щоб... |\n| заборонити (pf) | to forbid | prohibition | Батьки заборонили, щоб... |\n| дозволити (pf) | to allow | permission | Вчитель дозволив, щоб... |\n| благати (impf) | to beg | emotional | Вона благала, щоб... |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Позитивні та негативні команди | Positive and Negative Commands\n\n**Positive:**\n- Він попросив, щоб я **прийшов**. - He asked me to come.\n- Вона сказала, щоб ми **почекали**. - She told us to wait.\n\n**Negative:**\n- Він попросив, щоб я **не запізнювався**. - He asked me not to be late.\n- Вона сказала, щоб ми **не хвилювалися**. - She told us not to worry."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Рід і число після щоб | Gender and Number after щоб\n\nThe past tense verb agrees with the subject:\n\n| Subject | Verb Form | Example |\n|---------|-----------|---------|\n| я (m) | -в/-ив | ...щоб я **прийшов** |\n| я (f) | -ла | ...щоб я **прийшла** |\n| ти (m) | -в/-ив | ...щоб ти **прийшов** |\n| ти (f) | -ла | ...щоб ти **прийшла** |\n| він | -в/-ив | ...щоб він **прийшов** |\n| вона | -ла | ...щоб вона **прийшла** |\n| ми | -ли | ...щоб ми **прийшли** |\n| ви | -ли | ...щоб ви **прийшли** |\n| вони | -ли | ...щоб вони **прийшли** |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Приклади за контекстом | Examples by Context\n\n**Прохання (Requests):**\n- Вона попросила, щоб я купив хліб. - She asked me to buy bread.\n- Він попросив, щоб ми допомогли йому. - He asked us to help him.\n\n**Накази (Orders):**\n- Начальник наказав, щоб всі залишились. - The boss ordered everyone to stay.\n- Поліцейський сказав, щоб я зупинився. - The policeman told me to stop.\n\n**Поради (Advice):**\n- Лікар порадив, щоб я більше відпочивав. - The doctor advised me to rest more.\n- Вона порадила, щоб ми спробували цей ресторан. - She advised us to try this restaurant.\n\n**Заборони (Prohibitions):**\n- Батьки заборонили, щоб діти грали на вулиці. - The parents forbade the children to play outside.\n- Лікар заборонив, щоб він палив. - The doctor forbade him to smoke.\n\n**Дозволи (Permissions):**\n- Мама дозволила, щоб я пішов на вечірку. - Mom allowed me to go to the party.\n- Вчитель дозволив, щоб ми вийшли раніше. - The teacher allowed us to leave early."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Скорочена форма | Short Form\n\nIn spoken Ukrainian, you might hear a shorter construction:\n\n**Full:** Він попросив, щоб я прийшов.\n**Short:** Він попросив мене прийти. (+ infinitive)\n\nBoth are correct, but **щоб + past** is more common in formal speech."
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Convert to Reported Commands\n\n1. Мама сказала: «Прибери кімнату!»\n   → Мама сказала, щоб я **прибрав кімнату**.\n\n2. Вчитель сказав: «Відкрийте підручники!»\n   → Вчитель сказав, щоб ми **відкрили підручники**.\n\n3. Лікар порадив: «Пийте більше води!»\n   → Лікар порадив, щоб я **пив більше води**.\n\n4. Батько сказав: «Не приходь пізно!»\n   → Батько сказав, щоб я **не приходив пізно**.\n\n5. Подруга попросила: «Зателефонуй мені!»\n   → Подруга попросила, щоб я **зателефонував їй**."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Choose the Correct Reporting Verb\n\n1. Командир ___ (попросив/наказав), щоб солдати стояли смирно.\n   → **наказав** (military order)\n\n2. Лікар ___ (порадив/вимагав), щоб пацієнт більше гуляв.\n   → **порадив** (medical advice)\n\n3. Вона ___ (сказала/благала), щоб він не йшов.\n   → **благала** (emotional plea)\n\n4. Батьки ___ (заборонили/попросили), щоб діти дивились цей фільм.\n   → **заборонили** (prohibition)\n\n5. Друг ___ (наказав/запропонував), щоб ми пішли в кіно.\n   → **запропонував** (suggestion)"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Complete with Correct Form\n\n1. Він попросив, щоб вона ___ (допомогти).\n   → **допомогла**\n\n2. Мама сказала, щоб діти ___ (лягти) спати.\n   → **лягли**\n\n3. Вчитель порадив, щоб студенти ___ (читати) більше.\n   → **читали**\n\n4. Вона попросила, щоб ми ___ (не забути) про зустріч.\n   → **не забули**"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Translate to Ukrainian\n\n1. She asked me to wait.\n   → **Вона попросила, щоб я почекав.**\n\n2. The teacher told us to be quiet.\n   → **Вчитель сказав, щоб ми мовчали.**\n\n3. The doctor advised him not to smoke.\n   → **Лікар порадив, щоб він не палив.**\n\n4. They demanded that she leave.\n   → **Вони вимагали, щоб вона пішла.**"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-B1-118-quiz"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Report Commands You Received\n\nThink about commands/requests you received recently:\n\n- Що вам сказав ваш начальник/вчитель?\n- Про що вас попросили друзі?\n- Яку пораду вам дав лікар?\n\n**Example:**\nМій начальник попросив, щоб я закінчив проєкт до п'ятниці."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Role Play\n\nReport what these people typically say:\n\n1. Батьки дітям → Батьки кажуть, щоб діти...\n2. Вчителі учням → Вчителі кажуть, щоб учні...\n3. Лікарі пацієнтам → Лікарі радять, щоб пацієнти..."
-          }
-        ]
-      }
-    ],
-    "rawMarkdown": "# Зміст уроку | Lesson Content\n\n## warm-up | Розминка\n\n### Накази та прохання | Commands and Requests\n\nПорівняйте пряму та непряму мову для наказів:\n\nCompare direct and indirect speech for commands:\n\n**Пряма мова (Direct):**\n- Він сказав: «Закрий двері!» - He said: \"Close the door!\"\n\n**Непряма мова (Reported):**\n- Він попросив, **щоб** я закрив двері. - He asked me to close the door.\n\n## presentation | Презентація\n\n### Структура непрямих наказів | Reported Commands Structure\n\n**Formula:**\n```\nReporting verb + щоб + subject + past tense verb\n```\n\n**Important:** After щоб, use **past tense** form, NOT infinitive!\n\n| Direct Command | Reported Command |\n|----------------|------------------|\n| «Прийди!» | Він попросив, щоб я **прийшов**. |\n| «Допоможи!» | Вона попросила, щоб я **допоміг**. |\n| «Зателефонуй!» | Він сказав, щоб я **зателефонував**. |\n\n### Дієслова для наказів і прохань | Reporting Verbs for Commands\n\n| Ukrainian | English | Formality | Example |\n|-----------|---------|-----------|---------|\n| попросити (pf) | to ask, request | polite | Він попросив, щоб... |\n| просити (impf) | to ask, request | polite | Вона просила, щоб... |\n| сказати (pf) | to tell | neutral | Він сказав, щоб... |\n| наказати (pf) | to order | formal/strong | Командир наказав, щоб... |\n| вимагати (impf) | to demand | strong | Він вимагав, щоб... |\n| порадити (pf) | to advise | advisory | Лікар порадив, щоб... |\n| радити (impf) | to advise | advisory | Вона радила, щоб... |\n| запропонувати (pf) | to suggest | suggestion | Він запропонував, щоб... |\n| заборонити (pf) | to forbid | prohibition | Батьки заборонили, щоб... |\n| дозволити (pf) | to allow | permission | Вчитель дозволив, щоб... |\n| благати (impf) | to beg | emotional | Вона благала, щоб... |\n\n### Позитивні та негативні команди | Positive and Negative Commands\n\n**Positive:**\n- Він попросив, щоб я **прийшов**. - He asked me to come.\n- Вона сказала, щоб ми **почекали**. - She told us to wait.\n\n**Negative:**\n- Він попросив, щоб я **не запізнювався**. - He asked me not to be late.\n- Вона сказала, щоб ми **не хвилювалися**. - She told us not to worry.\n\n### Рід і число після щоб | Gender and Number after щоб\n\nThe past tense verb agrees with the subject:\n\n| Subject | Verb Form | Example |\n|---------|-----------|---------|\n| я (m) | -в/-ив | ...щоб я **прийшов** |\n| я (f) | -ла | ...щоб я **прийшла** |\n| ти (m) | -в/-ив | ...щоб ти **прийшов** |\n| ти (f) | -ла | ...щоб ти **прийшла** |\n| він | -в/-ив | ...щоб він **прийшов** |\n| вона | -ла | ...щоб вона **прийшла** |\n| ми | -ли | ...щоб ми **прийшли** |\n| ви | -ли | ...щоб ви **прийшли** |\n| вони | -ли | ...щоб вони **прийшли** |\n\n### Приклади за контекстом | Examples by Context\n\n**Прохання (Requests):**\n- Вона попросила, щоб я купив хліб. - She asked me to buy bread.\n- Він попросив, щоб ми допомогли йому. - He asked us to help him.\n\n**Накази (Orders):**\n- Начальник наказав, щоб всі залишились. - The boss ordered everyone to stay.\n- Поліцейський сказав, щоб я зупинився. - The policeman told me to stop.\n\n**Поради (Advice):**\n- Лікар порадив, щоб я більше відпочивав. - The doctor advised me to rest more.\n- Вона порадила, щоб ми спробували цей ресторан. - She advised us to try this restaurant.\n\n**Заборони (Prohibitions):**\n- Батьки заборонили, щоб діти грали на вулиці. - The parents forbade the children to play outside.\n- Лікар заборонив, щоб він палив. - The doctor forbade him to smoke.\n\n**Дозволи (Permissions):**\n- Мама дозволила, щоб я пішов на вечірку. - Mom allowed me to go to the party.\n- Вчитель дозволив, щоб ми вийшли раніше. - The teacher allowed us to leave early.\n\n### Скорочена форма | Short Form\n\nIn spoken Ukrainian, you might hear a shorter construction:\n\n**Full:** Він попросив, щоб я прийшов.\n**Short:** Він попросив мене прийти. (+ infinitive)\n\nBoth are correct, but **щоб + past** is more common in formal speech.\n\n## practice | Практика\n\n### Convert to Reported Commands\n\n1. Мама сказала: «Прибери кімнату!»\n   → Мама сказала, щоб я **прибрав кімнату**.\n\n2. Вчитель сказав: «Відкрийте підручники!»\n   → Вчитель сказав, щоб ми **відкрили підручники**.\n\n3. Лікар порадив: «Пийте більше води!»\n   → Лікар порадив, щоб я **пив більше води**.\n\n4. Батько сказав: «Не приходь пізно!»\n   → Батько сказав, щоб я **не приходив пізно**.\n\n5. Подруга попросила: «Зателефонуй мені!»\n   → Подруга попросила, щоб я **зателефонував їй**.\n\n### Choose the Correct Reporting Verb\n\n1. Командир ___ (попросив/наказав), щоб солдати стояли смирно.\n   → **наказав** (military order)\n\n2. Лікар ___ (порадив/вимагав), щоб пацієнт більше гуляв.\n   → **порадив** (medical advice)\n\n3. Вона ___ (сказала/благала), щоб він не йшов.\n   → **благала** (emotional plea)\n\n4. Батьки ___ (заборонили/попросили), щоб діти дивились цей фільм.\n   → **заборонили** (prohibition)\n\n5. Друг ___ (наказав/запропонував), щоб ми пішли в кіно.\n   → **запропонував** (suggestion)\n\n### Complete with Correct Form\n\n1. Він попросив, щоб вона ___ (допомогти).\n   → **допомогла**\n\n2. Мама сказала, щоб діти ___ (лягти) спати.\n   → **лягли**\n\n3. Вчитель порадив, щоб студенти ___ (читати) більше.\n   → **читали**\n\n4. Вона попросила, щоб ми ___ (не забути) про зустріч.\n   → **не забули**\n\n### Translate to Ukrainian\n\n1. She asked me to wait.\n   → **Вона попросила, щоб я почекав.**\n\n2. The teacher told us to be quiet.\n   → **Вчитель сказав, щоб ми мовчали.**\n\n3. The doctor advised him not to smoke.\n   → **Лікар порадив, щоб він не палив.**\n\n4. They demanded that she leave.\n   → **Вони вимагали, щоб вона пішла.**\n\n## production | Продукція\n\n### Report Commands You Received\n\nThink about commands/requests you received recently:\n\n- Що вам сказав ваш начальник/вчитель?\n- Про що вас попросили друзі?\n- Яку пораду вам дав лікар?\n\n**Example:**\nМій начальник попросив, щоб я закінчив проєкт до п'ятниці.\n\n### Role Play\n\nReport what these people typically say:\n\n1. Батьки дітям → Батьки кажуть, щоб діти...\n2. Вчителі учням → Вчителі кажуть, щоб учні...\n3. Лікарі пацієнтам → Лікарі радять, щоб пацієнти...\n\n---\n\n# Activities\n\n## quiz: Reported Commands\n\n> Choose the correct form.\n\n1. Він попросив, ___ я допоміг.\n   - [x] щоб\n   - [ ] що\n   > щоб for commands and requests.\n\n2. Вона попросила, щоб він ___ раніше.\n   - [x] прийшов\n   - [ ] прийти\n   > Past tense after щоб.\n\n3. Лікар ___, щоб пацієнт відпочивав.\n   - [x] порадив\n   - [ ] запитав\n   > порадив for advice.\n\n4. Він сказав, щоб ми не ___.\n   - [x] хвилювалися\n   - [ ] хвилюватися\n   > Past tense plural after ми.\n\n5. Батьки ___, щоб діти не грали пізно.\n   - [x] заборонили\n   - [ ] дозволили\n   > заборонили for prohibitions.\n\n6. Начальник ___, щоб всі залишились.\n   - [x] наказав\n   - [ ] попросив\n   > наказав for strong orders.\n\n## fill-in: At the Doctor's Office\n\n> Лікар дав пацієнту багато порад.\n>\n> Лікар (1)___ (порадити), щоб пацієнт більше (2)___ (гуляти).\n> Він (3)___ (сказати), щоб він менше (4)___ (працювати).\n> Лікар (5)___ (заборонити), щоб він (6)___ (палити).\n> Він також (7)___ (порекомендувати), щоб пацієнт (8)___ (приймати) вітаміни.\n\n**Answers:**\n1. порадив\n2. гуляв\n3. сказав\n4. працював\n5. заборонив\n6. палив\n7. порекомендував\n8. приймав\n\n---",
     "immersiveSections": [
       {
-        "id": "warm-up-розминка",
-        "title": "warm-up | Розминка",
-        "content": "### Накази та прохання | Commands and Requests\n\nПорівняйте пряму та непряму мову для наказів:\n\nCompare direct and indirect speech for commands:\n\n**Пряма мова (Direct):**\n- Він сказав: «Закрий двері!» - He said: \"Close the door!\"\n\n**Непряма мова (Reported):**\n- Він попросив, **щоб** я закрив двері. - He asked me to close the door.",
-        "type": "topic"
+        "id": "section-зміст-уроку-lesson-content",
+        "type": "content",
+        "title": "Зміст уроку | Lesson Content",
+        "content": "## warm-up | Розминка\n\n### Накази та прохання | Commands and Requests\n\nПорівняйте пряму та непряму мову для наказів:\n\nCompare direct and indirect speech for commands:\n\n**Пряма мова (Direct):**\n- Він сказав: «Закрий двері!» - He said: \"Close the door!\"\n\n**Непряма мова (Reported):**\n- Він попросив, **щоб** я закрив двері. - He asked me to close the door.\n\n## presentation | Презентація\n\n### Структура непрямих наказів | Reported Commands Structure\n\n**Formula:**\n```\nReporting verb + щоб + subject + past tense verb\n```\n\n**Important:** After щоб, use **past tense** form, NOT infinitive!\n\n| Direct Command | Reported Command |\n|----------------|------------------|\n| «Прийди!» | Він попросив, щоб я **прийшов**. |\n| «Допоможи!» | Вона попросила, щоб я **допоміг**. |\n| «Зателефонуй!» | Він сказав, щоб я **зателефонував**. |\n\n### Дієслова для наказів і прохань | Reporting Verbs for Commands\n\n| Ukrainian | English | Formality | Example |\n|-----------|---------|-----------|---------|\n| попросити (pf) | to ask, request | polite | Він попросив, щоб... |\n| просити (impf) | to ask, request | polite | Вона просила, щоб... |\n| сказати (pf) | to tell | neutral | Він сказав, щоб... |\n| наказати (pf) | to order | formal/strong | Командир наказав, щоб... |\n| вимагати (impf) | to demand | strong | Він вимагав, щоб... |\n| порадити (pf) | to advise | advisory | Лікар порадив, щоб... |\n| радити (impf) | to advise | advisory | Вона радила, щоб... |\n| запропонувати (pf) | to suggest | suggestion | Він запропонував, щоб... |\n| заборонити (pf) | to forbid | prohibition | Батьки заборонили, щоб... |\n| дозволити (pf) | to allow | permission | Вчитель дозволив, щоб... |\n| благати (impf) | to beg | emotional | Вона благала, щоб... |\n\n### Позитивні та негативні команди | Positive and Negative Commands\n\n**Positive:**\n- Він попросив, щоб я **прийшов**. - He asked me to come.\n- Вона сказала, щоб ми **почекали**. - She told us to wait.\n\n**Negative:**\n- Він попросив, щоб я **не запізнювався**. - He asked me not to be late.\n- Вона сказала, щоб ми **не хвилювалися**. - She told us not to worry.\n\n### Рід і число після щоб | Gender and Number after щоб\n\nThe past tense verb agrees with the subject:\n\n| Subject | Verb Form | Example |\n|---------|-----------|---------|\n| я (m) | -в/-ив | ...щоб я **прийшов** |\n| я (f) | -ла | ...щоб я **прийшла** |\n| ти (m) | -в/-ив | ...щоб ти **прийшов** |\n| ти (f) | -ла | ...щоб ти **прийшла** |\n| він | -в/-ив | ...щоб він **прийшов** |\n| вона | -ла | ...щоб вона **прийшла** |\n| ми | -ли | ...щоб ми **прийшли** |\n| ви | -ли | ...щоб ви **прийшли** |\n| вони | -ли | ...щоб вони **прийшли** |\n\n### Приклади за контекстом | Examples by Context\n\n**Прохання (Requests):**\n- Вона попросила, щоб я купив хліб. - She asked me to buy bread.\n- Він попросив, щоб ми допомогли йому. - He asked us to help him.\n\n**Накази (Orders):**\n- Начальник наказав, щоб всі залишились. - The boss ordered everyone to stay.\n- Поліцейський сказав, щоб я зупинився. - The policeman told me to stop.\n\n**Поради (Advice):**\n- Лікар порадив, щоб я більше відпочивав. - The doctor advised me to rest more.\n- Вона порадила, щоб ми спробували цей ресторан. - She advised us to try this restaurant.\n\n**Заборони (Prohibitions):**\n- Батьки заборонили, щоб діти грали на вулиці. - The parents forbade the children to play outside.\n- Лікар заборонив, щоб він палив. - The doctor forbade him to smoke.\n\n**Дозволи (Permissions):**\n- Мама дозволила, щоб я пішов на вечірку. - Mom allowed me to go to the party.\n- Вчитель дозволив, щоб ми вийшли раніше. - The teacher allowed us to leave early.\n\n### Скорочена форма | Short Form\n\nIn spoken Ukrainian, you might hear a shorter construction:\n\n**Full:** Він попросив, щоб я прийшов.\n**Short:** Він попросив мене прийти. (+ infinitive)\n\nBoth are correct, but **щоб + past** is more common in formal speech.\n\n## practice | Практика\n\n### Convert to Reported Commands\n\n1. Мама сказала: «Прибери кімнату!»\n   > [!answer] Мама сказала, щоб я **прибрав кімнату**.\n\n2. Вчитель сказав: «Відкрийте підручники!»\n   > [!answer] Вчитель сказав, щоб ми **відкрили підручники**.\n\n3. Лікар порадив: «Пийте більше води!»\n   > [!answer] Лікар порадив, щоб я **пив більше води**.\n\n4. Батько сказав: «Не приходь пізно!»\n   > [!answer] Батько сказав, щоб я **не приходив пізно**.\n\n5. Подруга попросила: «Зателефонуй мені!»\n   > [!answer] Подруга попросила, щоб я **зателефонував їй**.\n\n### Choose the Correct Reporting Verb\n\n1. Командир ___ (попросив/наказав), щоб солдати стояли смирно.\n   > [!answer] **наказав**\n   > [!explanation] military order\n2. Лікар ___ (порадив/вимагав), щоб пацієнт більше гуляв.\n   > [!answer] **порадив**\n   > [!explanation] medical advice\n3. Вона ___ (сказала/благала), щоб він не йшов.\n   > [!answer] **благала**\n   > [!explanation] emotional plea\n4. Батьки ___ (заборонили/попросили), щоб діти дивились цей фільм.\n   > [!answer] **заборонили**\n   > [!explanation] prohibition\n5. Друг ___ (наказав/запропонував), щоб ми пішли в кіно.\n   > [!answer] **запропонував**\n   > [!explanation] suggestion\n### Complete with Correct Form\n\n1. Він попросив, щоб вона ___ (допомогти).\n   > [!answer] **допомогла**\n2. Мама сказала, щоб діти ___ (лягти) спати.\n   > [!answer] **лягли**\n3. Вчитель порадив, щоб студенти ___ (читати) більше.\n   > [!answer] **читали**\n4. Вона попросила, щоб ми ___ (не забути) про зустріч.\n   > [!answer] **не забули**\n### Translate to Ukrainian\n\n1. She asked me to wait.\n   > [!answer] **Вона попросила, щоб я почекав.**\n2. The teacher told us to be quiet.\n   > [!answer] **Вчитель сказав, щоб ми мовчали.**\n3. The doctor advised him not to smoke.\n   > [!answer] **Лікар порадив, щоб він не палив.**\n4. They demanded that she leave.\n   > [!answer] **Вони вимагали, щоб вона пішла.**\n## production | Продукція\n\n### Report Commands You Received\n\nThink about commands/requests you received recently:\n\n- Що вам сказав ваш начальник/вчитель?\n- Про що вас попросили друзі?\n- Яку пораду вам дав лікар?\n\n**Example:**\nМій начальник попросив, щоб я закінчив проєкт до п'ятниці.\n\n### Role Play\n\nReport what these people typically say:\n\n1. Батьки дітям\n   > [!answer] Батьки кажуть, щоб діти...\n2. Вчителі учням\n   > [!answer] Вчителі кажуть, щоб учні...\n3. Лікарі пацієнтам\n   > [!answer] Лікарі радять, щоб пацієнти...\n\n---\n\n\n---\n\n\n---"
       },
       {
-        "id": "presentation-презентація",
-        "title": "presentation | Презентація",
-        "content": "### Структура непрямих наказів | Reported Commands Structure\n\n**Formula:**\n```\nReporting verb + щоб + subject + past tense verb\n```\n\n**Important:** After щоб, use **past tense** form, NOT infinitive!\n\n| Direct Command | Reported Command |\n|----------------|------------------|\n| «Прийди!» | Він попросив, щоб я **прийшов**. |\n| «Допоможи!» | Вона попросила, щоб я **допоміг**. |\n| «Зателефонуй!» | Він сказав, щоб я **зателефонував**. |\n\n### Дієслова для наказів і прохань | Reporting Verbs for Commands\n\n| Ukrainian | English | Formality | Example |\n|-----------|---------|-----------|---------|\n| попросити (pf) | to ask, request | polite | Він попросив, щоб... |\n| просити (impf) | to ask, request | polite | Вона просила, щоб... |\n| сказати (pf) | to tell | neutral | Він сказав, щоб... |\n| наказати (pf) | to order | formal/strong | Командир наказав, щоб... |\n| вимагати (impf) | to demand | strong | Він вимагав, щоб... |\n| порадити (pf) | to advise | advisory | Лікар порадив, щоб... |\n| радити (impf) | to advise | advisory | Вона радила, щоб... |\n| запропонувати (pf) | to suggest | suggestion | Він запропонував, щоб... |\n| заборонити (pf) | to forbid | prohibition | Батьки заборонили, щоб... |\n| дозволити (pf) | to allow | permission | Вчитель дозволив, щоб... |\n| благати (impf) | to beg | emotional | Вона благала, щоб... |\n\n### Позитивні та негативні команди | Positive and Negative Commands\n\n**Positive:**\n- Він попросив, щоб я **прийшов**. - He asked me to come.\n- Вона сказала, щоб ми **почекали**. - She told us to wait.\n\n**Negative:**\n- Він попросив, щоб я **не запізнювався**. - He asked me not to be late.\n- Вона сказала, щоб ми **не хвилювалися**. - She told us not to worry.\n\n### Рід і число після щоб | Gender and Number after щоб\n\nThe past tense verb agrees with the subject:\n\n| Subject | Verb Form | Example |\n|---------|-----------|---------|\n| я (m) | -в/-ив | ...щоб я **прийшов** |\n| я (f) | -ла | ...щоб я **прийшла** |\n| ти (m) | -в/-ив | ...щоб ти **прийшов** |\n| ти (f) | -ла | ...щоб ти **прийшла** |\n| він | -в/-ив | ...щоб він **прийшов** |\n| вона | -ла | ...щоб вона **прийшла** |\n| ми | -ли | ...щоб ми **прийшли** |\n| ви | -ли | ...щоб ви **прийшли** |\n| вони | -ли | ...щоб вони **прийшли** |\n\n### Приклади за контекстом | Examples by Context\n\n**Прохання (Requests):**\n- Вона попросила, щоб я купив хліб. - She asked me to buy bread.\n- Він попросив, щоб ми допомогли йому. - He asked us to help him.\n\n**Накази (Orders):**\n- Начальник наказав, щоб всі залишились. - The boss ordered everyone to stay.\n- Поліцейський сказав, щоб я зупинився. - The policeman told me to stop.\n\n**Поради (Advice):**\n- Лікар порадив, щоб я більше відпочивав. - The doctor advised me to rest more.\n- Вона порадила, щоб ми спробували цей ресторан. - She advised us to try this restaurant.\n\n**Заборони (Prohibitions):**\n- Батьки заборонили, щоб діти грали на вулиці. - The parents forbade the children to play outside.\n- Лікар заборонив, щоб він палив. - The doctor forbade him to smoke.\n\n**Дозволи (Permissions):**\n- Мама дозволила, щоб я пішов на вечірку. - Mom allowed me to go to the party.\n- Вчитель дозволив, щоб ми вийшли раніше. - The teacher allowed us to leave early.\n\n### Скорочена форма | Short Form\n\nIn spoken Ukrainian, you might hear a shorter construction:\n\n**Full:** Він попросив, щоб я прийшов.\n**Short:** Він попросив мене прийти. (+ infinitive)\n\nBoth are correct, but **щоб + past** is more common in formal speech.",
-        "type": "topic"
-      },
-      {
-        "id": "practice-практика",
-        "title": "practice | Практика",
-        "content": "### Convert to Reported Commands\n\n1. Мама сказала: «Прибери кімнату!»\n   → Мама сказала, щоб я **прибрав кімнату**.\n\n2. Вчитель сказав: «Відкрийте підручники!»\n   → Вчитель сказав, щоб ми **відкрили підручники**.\n\n3. Лікар порадив: «Пийте більше води!»\n   → Лікар порадив, щоб я **пив більше води**.\n\n4. Батько сказав: «Не приходь пізно!»\n   → Батько сказав, щоб я **не приходив пізно**.\n\n5. Подруга попросила: «Зателефонуй мені!»\n   → Подруга попросила, щоб я **зателефонував їй**.\n\n### Choose the Correct Reporting Verb\n\n1. Командир ___ (попросив/наказав), щоб солдати стояли смирно.\n   → **наказав** (military order)\n\n2. Лікар ___ (порадив/вимагав), щоб пацієнт більше гуляв.\n   → **порадив** (medical advice)\n\n3. Вона ___ (сказала/благала), щоб він не йшов.\n   → **благала** (emotional plea)\n\n4. Батьки ___ (заборонили/попросили), щоб діти дивились цей фільм.\n   → **заборонили** (prohibition)\n\n5. Друг ___ (наказав/запропонував), щоб ми пішли в кіно.\n   → **запропонував** (suggestion)\n\n### Complete with Correct Form\n\n1. Він попросив, щоб вона ___ (допомогти).\n   → **допомогла**\n\n2. Мама сказала, щоб діти ___ (лягти) спати.\n   → **лягли**\n\n3. Вчитель порадив, щоб студенти ___ (читати) більше.\n   → **читали**\n\n4. Вона попросила, щоб ми ___ (не забути) про зустріч.\n   → **не забули**\n\n### Translate to Ukrainian\n\n1. She asked me to wait.\n   → **Вона попросила, щоб я почекав.**\n\n2. The teacher told us to be quiet.\n   → **Вчитель сказав, щоб ми мовчали.**\n\n3. The doctor advised him not to smoke.\n   → **Лікар порадив, щоб він не палив.**\n\n4. They demanded that she leave.\n   → **Вони вимагали, щоб вона пішла.**",
-        "type": "topic"
-      },
-      {
-        "id": "production-продукція",
-        "title": "production | Продукція",
-        "content": "### Report Commands You Received\n\nThink about commands/requests you received recently:\n\n- Що вам сказав ваш начальник/вчитель?\n- Про що вас попросили друзі?\n- Яку пораду вам дав лікар?\n\n**Example:**\nМій начальник попросив, щоб я закінчив проєкт до п'ятниці.\n\n### Role Play\n\nReport what these people typically say:\n\n1. Батьки дітям → Батьки кажуть, щоб діти...\n2. Вчителі учням → Вчителі кажуть, щоб учні...\n3. Лікарі пацієнтам → Лікарі радять, щоб пацієнти...\n\n---",
-        "type": "topic"
-      },
-      {
-        "id": "activities",
-        "title": "Activities",
-        "content": "## quiz: Reported Commands\n\n> Choose the correct form.\n\n1. Він попросив, ___ я допоміг.\n   - [x] щоб\n   - [ ] що\n   > щоб for commands and requests.\n\n2. Вона попросила, щоб він ___ раніше.\n   - [x] прийшов\n   - [ ] прийти\n   > Past tense after щоб.\n\n3. Лікар ___, щоб пацієнт відпочивав.\n   - [x] порадив\n   - [ ] запитав\n   > порадив for advice.\n\n4. Він сказав, щоб ми не ___.\n   - [x] хвилювалися\n   - [ ] хвилюватися\n   > Past tense plural after ми.\n\n5. Батьки ___, щоб діти не грали пізно.\n   - [x] заборонили\n   - [ ] дозволили\n   > заборонили for prohibitions.\n\n6. Начальник ___, щоб всі залишились.\n   - [x] наказав\n   - [ ] попросив\n   > наказав for strong orders.\n\n## fill-in: At the Doctor's Office\n\n> Лікар дав пацієнту багато порад.\n>\n> Лікар (1)___ (порадити), щоб пацієнт більше (2)___ (гуляти).\n> Він (3)___ (сказати), щоб він менше (4)___ (працювати).\n> Лікар (5)___ (заборонити), щоб він (6)___ (палити).\n> Він також (7)___ (порекомендувати), щоб пацієнт (8)___ (приймати) вітаміни.\n\n**Answers:**\n1. порадив\n2. гуляв\n3. сказав\n4. працював\n5. заборонив\n6. палив\n7. порекомендував\n8. приймав\n\n---",
-        "type": "activities"
-      },
-      {
-        "id": "vocabulary",
-        "title": "Vocabulary",
-        "content": "| Word | IPA | English | Notes |\n|------|-----|---------|-------|\n| попросити | /poprosɪˈtɪ/ | to ask, request | pf |\n| просити | /proˈsɪtɪ/ | to ask, request | impf |\n| наказати | /nɑkɑˈzɑtɪ/ | to order | pf |\n| вимагати | /vɪmɑˈɦɑtɪ/ | to demand | impf |\n| порадити | /porɑˈdɪtɪ/ | to advise | pf |\n| радити | /ˈrɑdɪtɪ/ | to advise | impf |\n| запропонувати | /zɑproponuˈvɑtɪ/ | to suggest | pf |\n| заборонити | /zɑboroˈnɪtɪ/ | to forbid | pf |\n| дозволити | /dozvoˈlɪtɪ/ | to allow, permit | pf |\n| благати | /blɑˈɦɑtɪ/ | to beg | impf |\n| наказ | /nɑˈkɑz/ | order, command | m |\n| прохання | /proˈxɑnʲːɑ/ | request | n |\n| порада | /poˈrɑdɑ/ | advice | f |\n| заборона | /zɑboˈronɑ/ | prohibition | f |\n| дозвіл | /ˈdozʲvʲil/ | permission | m |\n\n---",
-        "type": "vocabulary"
-      },
-      {
-        "id": "summary",
+        "id": "section-summary",
+        "type": "summary",
         "title": "Summary",
         "content": "## Reported Commands: Key Points\n\n### Structure\n```\nReporting verb + щоб + subject + past tense\n```\n\n### Reporting Verbs by Function\n\n| Function | Verbs |\n|----------|-------|\n| Requests | попросити, просити |\n| Orders | сказати, наказати |\n| Demands | вимагати |\n| Advice | порадити, радити |\n| Suggestions | запропонувати |\n| Prohibitions | заборонити |\n| Permissions | дозволити |\n\n### Key Points\n- Use **past tense** after щоб (not infinitive)\n- Verb agrees with subject in gender/number\n- Negative: щоб + не + past tense\n\n> **Key Takeaways**\n>\n> - щоб + past tense is the standard structure\n> - Different verbs show different levels of authority\n> - Verb form must agree with the subject\n> - Negative commands: щоб + не + verb\n> - Short form (просити + infinitive) exists but is less formal",
-        "type": "summary"
+        "titleUk": "Підсумок"
       }
-    ]
+    ],
+    "rawMarkdown": "---\nmodule: 118\ntitle: \"Reported Commands\"\nsubtitle: \"Він попросив, щоб...\"\nlevel: B1\nphase: B1.3\nduration: 45\ntransliteration: none\ntags: [grammar, reported-speech, commands, requests]\nobjectives:\n  - Report commands and requests using щоб\n  - Use appropriate verbs for commands, requests, and advice\n  - Distinguish between different levels of formality\n  - Master the щоб + past tense structure\n---\n\n# Зміст уроку | Lesson Content\n\n## warm-up | Розминка\n\n### Накази та прохання | Commands and Requests\n\nПорівняйте пряму та непряму мову для наказів:\n\nCompare direct and indirect speech for commands:\n\n**Пряма мова (Direct):**\n- Він сказав: «Закрий двері!» - He said: \"Close the door!\"\n\n**Непряма мова (Reported):**\n- Він попросив, **щоб** я закрив двері. - He asked me to close the door.\n\n## presentation | Презентація\n\n### Структура непрямих наказів | Reported Commands Structure\n\n**Formula:**\n```\nReporting verb + щоб + subject + past tense verb\n```\n\n**Important:** After щоб, use **past tense** form, NOT infinitive!\n\n| Direct Command | Reported Command |\n|----------------|------------------|\n| «Прийди!» | Він попросив, щоб я **прийшов**. |\n| «Допоможи!» | Вона попросила, щоб я **допоміг**. |\n| «Зателефонуй!» | Він сказав, щоб я **зателефонував**. |\n\n### Дієслова для наказів і прохань | Reporting Verbs for Commands\n\n| Ukrainian | English | Formality | Example |\n|-----------|---------|-----------|---------|\n| попросити (pf) | to ask, request | polite | Він попросив, щоб... |\n| просити (impf) | to ask, request | polite | Вона просила, щоб... |\n| сказати (pf) | to tell | neutral | Він сказав, щоб... |\n| наказати (pf) | to order | formal/strong | Командир наказав, щоб... |\n| вимагати (impf) | to demand | strong | Він вимагав, щоб... |\n| порадити (pf) | to advise | advisory | Лікар порадив, щоб... |\n| радити (impf) | to advise | advisory | Вона радила, щоб... |\n| запропонувати (pf) | to suggest | suggestion | Він запропонував, щоб... |\n| заборонити (pf) | to forbid | prohibition | Батьки заборонили, щоб... |\n| дозволити (pf) | to allow | permission | Вчитель дозволив, щоб... |\n| благати (impf) | to beg | emotional | Вона благала, щоб... |\n\n### Позитивні та негативні команди | Positive and Negative Commands\n\n**Positive:**\n- Він попросив, щоб я **прийшов**. - He asked me to come.\n- Вона сказала, щоб ми **почекали**. - She told us to wait.\n\n**Negative:**\n- Він попросив, щоб я **не запізнювався**. - He asked me not to be late.\n- Вона сказала, щоб ми **не хвилювалися**. - She told us not to worry.\n\n### Рід і число після щоб | Gender and Number after щоб\n\nThe past tense verb agrees with the subject:\n\n| Subject | Verb Form | Example |\n|---------|-----------|---------|\n| я (m) | -в/-ив | ...щоб я **прийшов** |\n| я (f) | -ла | ...щоб я **прийшла** |\n| ти (m) | -в/-ив | ...щоб ти **прийшов** |\n| ти (f) | -ла | ...щоб ти **прийшла** |\n| він | -в/-ив | ...щоб він **прийшов** |\n| вона | -ла | ...щоб вона **прийшла** |\n| ми | -ли | ...щоб ми **прийшли** |\n| ви | -ли | ...щоб ви **прийшли** |\n| вони | -ли | ...щоб вони **прийшли** |\n\n### Приклади за контекстом | Examples by Context\n\n**Прохання (Requests):**\n- Вона попросила, щоб я купив хліб. - She asked me to buy bread.\n- Він попросив, щоб ми допомогли йому. - He asked us to help him.\n\n**Накази (Orders):**\n- Начальник наказав, щоб всі залишились. - The boss ordered everyone to stay.\n- Поліцейський сказав, щоб я зупинився. - The policeman told me to stop.\n\n**Поради (Advice):**\n- Лікар порадив, щоб я більше відпочивав. - The doctor advised me to rest more.\n- Вона порадила, щоб ми спробували цей ресторан. - She advised us to try this restaurant.\n\n**Заборони (Prohibitions):**\n- Батьки заборонили, щоб діти грали на вулиці. - The parents forbade the children to play outside.\n- Лікар заборонив, щоб він палив. - The doctor forbade him to smoke.\n\n**Дозволи (Permissions):**\n- Мама дозволила, щоб я пішов на вечірку. - Mom allowed me to go to the party.\n- Вчитель дозволив, щоб ми вийшли раніше. - The teacher allowed us to leave early.\n\n### Скорочена форма | Short Form\n\nIn spoken Ukrainian, you might hear a shorter construction:\n\n**Full:** Він попросив, щоб я прийшов.\n**Short:** Він попросив мене прийти. (+ infinitive)\n\nBoth are correct, but **щоб + past** is more common in formal speech.\n\n## practice | Практика\n\n### Convert to Reported Commands\n\n1. Мама сказала: «Прибери кімнату!»\n   > [!answer] Мама сказала, щоб я **прибрав кімнату**.\n\n2. Вчитель сказав: «Відкрийте підручники!»\n   > [!answer] Вчитель сказав, щоб ми **відкрили підручники**.\n\n3. Лікар порадив: «Пийте більше води!»\n   > [!answer] Лікар порадив, щоб я **пив більше води**.\n\n4. Батько сказав: «Не приходь пізно!»\n   > [!answer] Батько сказав, щоб я **не приходив пізно**.\n\n5. Подруга попросила: «Зателефонуй мені!»\n   > [!answer] Подруга попросила, щоб я **зателефонував їй**.\n\n### Choose the Correct Reporting Verb\n\n1. Командир ___ (попросив/наказав), щоб солдати стояли смирно.\n   > [!answer] **наказав**\n   > [!explanation] military order\n2. Лікар ___ (порадив/вимагав), щоб пацієнт більше гуляв.\n   > [!answer] **порадив**\n   > [!explanation] medical advice\n3. Вона ___ (сказала/благала), щоб він не йшов.\n   > [!answer] **благала**\n   > [!explanation] emotional plea\n4. Батьки ___ (заборонили/попросили), щоб діти дивились цей фільм.\n   > [!answer] **заборонили**\n   > [!explanation] prohibition\n5. Друг ___ (наказав/запропонував), щоб ми пішли в кіно.\n   > [!answer] **запропонував**\n   > [!explanation] suggestion\n### Complete with Correct Form\n\n1. Він попросив, щоб вона ___ (допомогти).\n   > [!answer] **допомогла**\n2. Мама сказала, щоб діти ___ (лягти) спати.\n   > [!answer] **лягли**\n3. Вчитель порадив, щоб студенти ___ (читати) більше.\n   > [!answer] **читали**\n4. Вона попросила, щоб ми ___ (не забути) про зустріч.\n   > [!answer] **не забули**\n### Translate to Ukrainian\n\n1. She asked me to wait.\n   > [!answer] **Вона попросила, щоб я почекав.**\n2. The teacher told us to be quiet.\n   > [!answer] **Вчитель сказав, щоб ми мовчали.**\n3. The doctor advised him not to smoke.\n   > [!answer] **Лікар порадив, щоб він не палив.**\n4. They demanded that she leave.\n   > [!answer] **Вони вимагали, щоб вона пішла.**\n## production | Продукція\n\n### Report Commands You Received\n\nThink about commands/requests you received recently:\n\n- Що вам сказав ваш начальник/вчитель?\n- Про що вас попросили друзі?\n- Яку пораду вам дав лікар?\n\n**Example:**\nМій начальник попросив, щоб я закінчив проєкт до п'ятниці.\n\n### Role Play\n\nReport what these people typically say:\n\n1. Батьки дітям\n   > [!answer] Батьки кажуть, щоб діти...\n2. Вчителі учням\n   > [!answer] Вчителі кажуть, щоб учні...\n3. Лікарі пацієнтам\n   > [!answer] Лікарі радять, щоб пацієнти...\n\n---\n\n# Activities\n\n## quiz: Reported Commands\n\n> Choose the correct form.\n\n1. Він попросив, ___ я допоміг.\n   - [x] щоб\n   - [ ] що\n   > щоб for commands and requests.\n\n2. Вона попросила, щоб він ___ раніше.\n   - [x] прийшов\n   - [ ] прийти\n   > Past tense after щоб.\n\n3. Лікар ___, щоб пацієнт відпочивав.\n   - [x] порадив\n   - [ ] запитав\n   > порадив for advice.\n\n4. Він сказав, щоб ми не ___.\n   - [x] хвилювалися\n   - [ ] хвилюватися\n   > Past tense plural after ми.\n\n5. Батьки ___, щоб діти не грали пізно.\n   - [x] заборонили\n   - [ ] дозволили\n   > заборонили for prohibitions.\n\n6. Начальник ___, щоб всі залишились.\n   - [x] наказав\n   - [ ] попросив\n   > наказав for strong orders.\n\n## fill-in: At the Doctor's Office\n\n> Лікар дав пацієнту багато порад.\n>\n> Лікар (1)___ (порадити), щоб пацієнт більше (2)___ (гуляти).\n> Він (3)___ (сказати), щоб він менше (4)___ (працювати).\n> Лікар (5)___ (заборонити), щоб він (6)___ (палити).\n> Він також (7)___ (порекомендувати), щоб пацієнт (8)___ (приймати) вітаміни.\n\n**Answers:**\n1. порадив\n2. гуляв\n3. сказав\n4. працював\n5. заборонив\n6. палив\n7. порекомендував\n8. приймав\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | Notes |\n|------|-----|---------|-------|\n| попросити | /poprosɪˈtɪ/ | to ask, request | pf |\n| просити | /proˈsɪtɪ/ | to ask, request | impf |\n| наказати | /nɑkɑˈzɑtɪ/ | to order | pf |\n| вимагати | /vɪmɑˈɦɑtɪ/ | to demand | impf |\n| порадити | /porɑˈdɪtɪ/ | to advise | pf |\n| радити | /ˈrɑdɪtɪ/ | to advise | impf |\n| запропонувати | /zɑproponuˈvɑtɪ/ | to suggest | pf |\n| заборонити | /zɑboroˈnɪtɪ/ | to forbid | pf |\n| дозволити | /dozvoˈlɪtɪ/ | to allow, permit | pf |\n| благати | /blɑˈɦɑtɪ/ | to beg | impf |\n| наказ | /nɑˈkɑz/ | order, command | m |\n| прохання | /proˈxɑnʲːɑ/ | request | n |\n| порада | /poˈrɑdɑ/ | advice | f |\n| заборона | /zɑboˈronɑ/ | prohibition | f |\n| дозвіл | /ˈdozʲvʲil/ | permission | m |\n\n---\n\n# Summary\n\n## Reported Commands: Key Points\n\n### Structure\n```\nReporting verb + щоб + subject + past tense\n```\n\n### Reporting Verbs by Function\n\n| Function | Verbs |\n|----------|-------|\n| Requests | попросити, просити |\n| Orders | сказати, наказати |\n| Demands | вимагати |\n| Advice | порадити, радити |\n| Suggestions | запропонувати |\n| Prohibitions | заборонити |\n| Permissions | дозволити |\n\n### Key Points\n- Use **past tense** after щоб (not infinitive)\n- Verb agrees with subject in gender/number\n- Negative: щоб + не + past tense\n\n> **Key Takeaways**\n>\n> - щоб + past tense is the standard structure\n> - Different verbs show different levels of authority\n> - Verb form must agree with the subject\n> - Negative commands: щоб + не + verb\n> - Short form (просити + infinitive) exists but is less formal\n"
   },
   "activities": [
     {
-      "id": "act-uk-B1-118-quiz",
+      "id": "act-b1-118-quiz",
       "type": "quiz",
       "title": "Reported Commands",
       "description": "Choose the correct form.",
       "content": {
         "type": "quiz",
-        "instructions": "Choose the correct form.",
         "questions": [
           {
             "question": "Він попросив, ___ я допоміг.",
@@ -253,47 +124,49 @@
       "language": "uk",
       "difficultyLevel": "B1",
       "duration": 5,
-      "tags": [
-        "grammar",
-        "reported-speech",
-        "commands",
-        "requests"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.235Z",
+      "modifiedAt": "2025-12-01T22:58:37.235Z"
     },
     {
-      "id": "act-uk-B1-118-gapfill",
+      "id": "act-b1-118-gapfill",
       "type": "gap-fill",
       "title": "At the Doctor's Office",
       "description": "Лікар дав пацієнту багато порад.  Лікар (1)___ (порадити), щоб пацієнт більше (2)___ (гуляти). Він (3)___ (сказати), щоб він менше (4)___ (працювати). Лікар (5)___ (заборонити), щоб він (6)___ (палити). Він також (7)___ (порекомендувати), щоб пацієнт (8)___ (приймати) вітаміни.",
       "content": {
         "type": "gap-fill",
-        "instructions": "Лікар дав пацієнту багато порад.  Лікар (1)___ (порадити), щоб пацієнт більше (2)___ (гуляти). Він (3)___ (сказати), щоб він менше (4)___ (працювати). Лікар (5)___ (заборонити), щоб він (6)___ (палити). Він також (7)___ (порекомендувати), щоб пацієнт (8)___ (приймати) вітаміни.",
         "text": "Лікар дав пацієнту багато порад.\n\nЛікар (1)___ (порадити), щоб пацієнт більше (2)___ (гуляти).\nВін (3)___ (сказати), щоб він менше (4)___ (працювати).\nЛікар (5)___ (заборонити), щоб він (6)___ (палити).\nВін також (7)___ (порекомендувати), щоб пацієнт (8)___ (приймати) вітаміни.",
         "blanks": [
           {
+            "index": 0,
             "hint": "порадити"
           },
           {
+            "index": 1,
             "hint": "гуляти"
           },
           {
+            "index": 2,
             "hint": "сказати"
           },
           {
+            "index": 3,
             "hint": "працювати"
           },
           {
+            "index": 4,
             "hint": "заборонити"
           },
           {
+            "index": 5,
             "hint": "палити"
           },
           {
+            "index": 6,
             "hint": "порекомендувати"
           },
           {
+            "index": 7,
             "hint": "приймати"
           }
         ],
@@ -307,14 +180,9 @@
       "language": "uk",
       "difficultyLevel": "B1",
       "duration": 5,
-      "tags": [
-        "grammar",
-        "reported-speech",
-        "commands",
-        "requests"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.235Z",
+      "modifiedAt": "2025-12-01T22:58:37.235Z"
     }
   ],
   "vocabulary": {
@@ -325,139 +193,109 @@
     "transliterationMode": "none",
     "words": [
       {
-        "id": "v-m118-001",
+        "id": "v-poprosyty-118-0",
         "uk": "попросити",
-        "translit": "",
-        "ipa": "/poprosɪˈtɪ/",
         "en": "to ask, request",
-        "pos": "",
-        "note": "pf"
+        "pos": "pf",
+        "ipa": "/poprosɪˈtɪ/"
       },
       {
-        "id": "v-m118-002",
+        "id": "v-prosyty-118-1",
         "uk": "просити",
-        "translit": "",
-        "ipa": "/proˈsɪtɪ/",
         "en": "to ask, request",
-        "pos": "",
-        "note": "impf"
+        "pos": "impf",
+        "ipa": "/proˈsɪtɪ/"
       },
       {
-        "id": "v-m118-003",
+        "id": "v-nakazaty-118-2",
         "uk": "наказати",
-        "translit": "",
-        "ipa": "/nɑkɑˈzɑtɪ/",
         "en": "to order",
-        "pos": "",
-        "note": "pf"
+        "pos": "pf",
+        "ipa": "/nɑkɑˈzɑtɪ/"
       },
       {
-        "id": "v-m118-004",
+        "id": "v-vymahaty-118-3",
         "uk": "вимагати",
-        "translit": "",
-        "ipa": "/vɪmɑˈɦɑtɪ/",
         "en": "to demand",
-        "pos": "",
-        "note": "impf"
+        "pos": "impf",
+        "ipa": "/vɪmɑˈɦɑtɪ/"
       },
       {
-        "id": "v-m118-005",
+        "id": "v-poradyty-118-4",
         "uk": "порадити",
-        "translit": "",
-        "ipa": "/porɑˈdɪtɪ/",
         "en": "to advise",
-        "pos": "",
-        "note": "pf"
+        "pos": "pf",
+        "ipa": "/porɑˈdɪtɪ/"
       },
       {
-        "id": "v-m118-006",
+        "id": "v-radyty-118-5",
         "uk": "радити",
-        "translit": "",
-        "ipa": "/ˈrɑdɪtɪ/",
         "en": "to advise",
-        "pos": "",
-        "note": "impf"
+        "pos": "impf",
+        "ipa": "/ˈrɑdɪtɪ/"
       },
       {
-        "id": "v-m118-007",
+        "id": "v-zaproponuvaty-118-6",
         "uk": "запропонувати",
-        "translit": "",
-        "ipa": "/zɑproponuˈvɑtɪ/",
         "en": "to suggest",
-        "pos": "",
-        "note": "pf"
+        "pos": "pf",
+        "ipa": "/zɑproponuˈvɑtɪ/"
       },
       {
-        "id": "v-m118-008",
+        "id": "v-zaboronyty-118-7",
         "uk": "заборонити",
-        "translit": "",
-        "ipa": "/zɑboroˈnɪtɪ/",
         "en": "to forbid",
-        "pos": "",
-        "note": "pf"
+        "pos": "pf",
+        "ipa": "/zɑboroˈnɪtɪ/"
       },
       {
-        "id": "v-m118-009",
+        "id": "v-dozvolyty-118-8",
         "uk": "дозволити",
-        "translit": "",
-        "ipa": "/dozvoˈlɪtɪ/",
         "en": "to allow, permit",
-        "pos": "",
-        "note": "pf"
+        "pos": "pf",
+        "ipa": "/dozvoˈlɪtɪ/"
       },
       {
-        "id": "v-m118-010",
+        "id": "v-blahaty-118-9",
         "uk": "благати",
-        "translit": "",
-        "ipa": "/blɑˈɦɑtɪ/",
         "en": "to beg",
-        "pos": "",
-        "note": "impf"
+        "pos": "impf",
+        "ipa": "/blɑˈɦɑtɪ/"
       },
       {
-        "id": "v-m118-011",
+        "id": "v-nakaz-118-10",
         "uk": "наказ",
-        "translit": "",
-        "ipa": "/nɑˈkɑz/",
         "en": "order, command",
-        "pos": "",
-        "note": "m"
+        "pos": "m",
+        "ipa": "/nɑˈkɑz/"
       },
       {
-        "id": "v-m118-012",
+        "id": "v-prokhannya-118-11",
         "uk": "прохання",
-        "translit": "",
-        "ipa": "/proˈxɑnʲːɑ/",
         "en": "request",
-        "pos": "",
-        "note": "n"
+        "pos": "n",
+        "ipa": "/proˈxɑnʲːɑ/"
       },
       {
-        "id": "v-m118-013",
+        "id": "v-porada-118-12",
         "uk": "порада",
-        "translit": "",
-        "ipa": "/poˈrɑdɑ/",
         "en": "advice",
-        "pos": "",
-        "note": "f"
+        "pos": "f",
+        "ipa": "/poˈrɑdɑ/"
       },
       {
-        "id": "v-m118-014",
+        "id": "v-zaborona-118-13",
         "uk": "заборона",
-        "translit": "",
-        "ipa": "/zɑboˈronɑ/",
         "en": "prohibition",
-        "pos": "",
-        "note": "f"
+        "pos": "f",
+        "ipa": "/zɑboˈronɑ/"
       },
       {
-        "id": "v-m118-015",
+        "id": "v-dozvil-118-14",
         "uk": "дозвіл",
-        "translit": "",
-        "ipa": "/ˈdozʲvʲil/",
         "en": "permission",
-        "pos": "",
-        "note": "m"
+        "pos": "m",
+        "ipa": "/ˈdozʲvʲil/"
       }
     ]
   }

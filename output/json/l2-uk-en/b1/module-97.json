@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-B1-97",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "vocabulary-expansion",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -22,30 +21,15 @@
       "Participate in discussions confidently"
     ],
     "grammarFocus": [],
-    "totalDuration": 45,
-    "transliterationMode": "none",
     "tags": [
       "vocabulary",
       "communication",
       "opinions",
       "speaking"
     ],
-    "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
+    "totalDuration": 45,
+    "transliterationMode": "none",
     "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Висловлюємо свою думку | Speaking Your Mind\n\nНа рівні B1 потрібно вміти брати участь у дискусіях. Це означає:\n\nAt B1, you need to participate in discussions. That means:\n- Чітко висловлювати свою думку | Stating your opinion clearly\n- Обґрунтовувати свою позицію | Supporting your position\n- Реагувати на думки інших | Responding to others' views\n\n**Сьогодні:** основні вирази для висловлення думок українською мовою."
-          }
-        ]
-      },
       {
         "id": "phase-presentation",
         "name": "presentation",
@@ -54,148 +38,49 @@
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "### Stating Your Opinion\n\n**Direct expressions:**\n\n| Ukrainian | English | Formality |\n|-----------|---------|-----------|\n| Я думаю, що... | I think that... | neutral |\n| Я вважаю, що... | I consider/believe that... | neutral-formal |\n| Я гадаю, що... | I think/suppose that... | neutral |\n| На мою думку, ... | In my opinion, ... | neutral |\n| На мій погляд, ... | In my view, ... | formal |\n| З моєї точки зору, ... | From my point of view, ... | formal |\n| Мені здається, що... | It seems to me that... | softer |\n| Як на мене, ... | As for me, ... | informal |\n\n**Examples:**\n\n- **Я думаю**, що це гарна ідея. - I think it's a good idea.\n- **Я вважаю**, що він має рацію. - I believe he's right.\n- **На мою думку**, це найкраще рішення. - In my opinion, this is the best solution.\n- **Мені здається**, що ми помиляємося. - It seems to me we're wrong.\n- **Як на мене**, це занадто дорого. - As for me, it's too expensive."
+            "teacherNotes": "### Stating Your Opinion\n\n**Direct expressions:**\n\n| Ukrainian | English | Formality |\n|-----------|---------|-----------|\n| Я думаю, що... | I think that... | neutral |\n| Я вважаю, що... | I consider/believe that... | neutral-formal |\n| Я гадаю, що... | I think/suppose that... | neutral |\n| На мою думку, ... | In my opinion, ... | neutral |\n| На мій погляд, ... | In my view, ... | formal |\n| З моєї точки зору, ... | From my point of view, ... | formal |\n| Мені здається, що... | It seems to me that... | softer |\n| Як на мене, ... | As for me, ... | informal |\n\n**Examples:**\n\n- **Я думаю**, що це гарна ідея. - I think it's a good idea.\n- **Я вважаю**, що він має рацію. - I believe he's right.\n- **На мою думку**, це найкраще рішення. - In my opinion, this is the best solution.\n- **Мені здається**, що ми помиляємося. - It seems to me we're wrong.\n- **Як на мене**, це занадто дорого. - As for me, it's too expensive.\n\n### Expressing Certainty\n\n**Strong certainty:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Я впевнений/а, що... | I'm sure that... |\n| Я переконаний/а, що... | I'm convinced that... |\n| Без сумніву, ... | Without a doubt, ... |\n| Безперечно, ... | Undoubtedly, ... |\n| Очевидно, що... | Obviously, ... |\n| Звісно, що... | Of course, ... |\n\n**Examples:**\n\n- **Я впевнений**, що це правда. - I'm sure this is true.\n- **Без сумніву**, він найкращий кандидат. - Without a doubt, he's the best candidate.\n- **Очевидно**, що потрібні зміни. - Obviously, changes are needed.\n\n### Hedging: Expressing Uncertainty\n\n**Less certain:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Можливо, ... | Perhaps, ... |\n| Напевно, ... | Probably, ... |\n| Мабуть, ... | Probably, maybe... |\n| Здається, ... | It seems... |\n| Ймовірно, ... | Probably, likely... |\n| Не впевнений/а, але... | Not sure, but... |\n| Важко сказати, але... | Hard to say, but... |\n\n**Examples:**\n\n- **Можливо**, це правда. - Perhaps this is true.\n- **Мабуть**, він запізниться. - He'll probably be late.\n- **Не впевнений**, але здається, що так. - Not sure, but it seems so.\n\n### Giving Reasons\n\n**Connectors for reasoning:**\n\n| Ukrainian | English |\n|-----------|---------|\n| тому що | because |\n| оскільки | since, as |\n| через те, що | because of the fact that |\n| завдяки тому, що | thanks to the fact that |\n| адже | for, since, because |\n| бо | because (informal) |\n\n**Examples:**\n\n- Я так думаю, **тому що** це логічно. - I think so because it's logical.\n- Вона права, **оскільки** має досвід. - She's right since she has experience.\n- Це важливо, **адже** впливає на всіх. - This is important because it affects everyone.\n\n### Comparing Viewpoints\n\n| Ukrainian | English |\n|-----------|---------|\n| З одного боку, ... з іншого боку, ... | On one hand, ... on the other hand, ... |\n| На відміну від... | Unlike... |\n| Порівняно з... | Compared to... |\n| Проте / Однак | However |\n| Незважаючи на те, що... | Despite the fact that... |\n\n**Examples:**\n\n- **З одного боку**, це дорого. **З іншого боку**, це якісно. - On one hand, it's expensive. On the other hand, it's quality.\n- **На відміну від** інших, він завжди приходить вчасно. - Unlike others, he always comes on time.\n- Це добре. **Проте** є недоліки. - This is good. However, there are drawbacks.\n\n### Emphasizing Your Point\n\n| Ukrainian | English |\n|-----------|---------|\n| Головне, що... | The main thing is that... |\n| Найважливіше, що... | The most important thing is that... |\n| Перш за все, ... | First of all, ... |\n| До того ж, ... | Moreover, ... |\n| Крім того, ... | Besides, ... |\n| Особливо... | Especially... |\n\n**Examples:**\n\n- **Головне**, що всі здорові. - The main thing is that everyone's healthy.\n- **Перш за все**, це безпечно. - First of all, it's safe.\n- **До того ж**, це ще й дешево. - Moreover, it's also cheap.\n\n### Summarizing\n\n| Ukrainian | English |\n|-----------|---------|\n| Отже, ... | So, therefore, ... |\n| Загалом, ... | In general, ... |\n| Підсумовуючи, ... | Summarizing, ... |\n| Одним словом, ... | In a word, ... |\n| В цілому, ... | On the whole, ... |\n\n**Examples:**\n\n- **Отже**, ми вирішили погодитися. - So, we decided to agree.\n- **Загалом**, я задоволений. - In general, I'm satisfied.\n- **Підсумовуючи**, це був успіх. - Summarizing, it was a success."
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Expressing Certainty\n\n**Strong certainty:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Я впевнений/а, що... | I'm sure that... |\n| Я переконаний/а, що... | I'm convinced that... |\n| Без сумніву, ... | Without a doubt, ... |\n| Безперечно, ... | Undoubtedly, ... |\n| Очевидно, що... | Obviously, ... |\n| Звісно, що... | Of course, ... |\n\n**Examples:**\n\n- **Я впевнений**, що це правда. - I'm sure this is true.\n- **Без сумніву**, він найкращий кандидат. - Without a doubt, he's the best candidate.\n- **Очевидно**, що потрібні зміни. - Obviously, changes are needed."
+            "teacherNotes": "### Доповніть вирази | Complete the Expressions\n\n*Виберіть правильне слово. Choose the correct word.*\n\n1. ___ думку, це правильно. (In my)\n   > [!answer] **На мою**\n2. Я ___, що він має рацію. (think/believe)\n   > [!answer] **вважаю/думаю**\n3. ___ боку, це добре. (On one)\n   > [!answer] **З одного**\n4. ___ сумніву, це найкращий варіант. (Without)\n   > [!answer] **Без**\n5. Він помилився, ___ не мав досвіду. (because)\n   > [!answer] **тому що/бо**\n6. ___, це хороша ідея. (In general)\n   > [!answer] **Загалом**\n\n### Order from Certain to Uncertain\n\nRank these from most to least certain:\n\n1. Я впевнений, що...\n   > [!answer] **1 (most certain)**\n2. Мені здається, що...\n   > [!answer] **4**\n3. Безперечно, ...\n   > [!answer] **2**\n4. Можливо, ...\n   > [!answer] **5 (least certain)**\n5. Напевно, ...\n   > [!answer] **3**\n\n### Дайте відповідь | Respond to Questions\n\n*Висловіть свою думку, використовуючи відповідні вирази:*\n\n**Q:** Чи важливо вивчати іноземні мови?\n**A:** На мою думку, це дуже важливо, тому що...\n\n**Q:** Яка найкраща пора року?\n**A:** Я вважаю, що..., оскільки...\n\n**Q:** Чи варто читати книги замість дивитися фільми?\n**A:** З одного боку, ... з іншого боку, ...\n\n### Transform Sentences\n\nMake these opinions softer/more hedged:\n\n1. Він помилився.\n   > [!answer] **Мені здається, що він, можливо, помилився.**\n2. Це погана ідея.\n   > [!answer] **На мою думку, це, мабуть, не найкраща ідея.**\n3. Вона права.\n   > [!answer] **Здається, вона має рацію.**\n\nMake these stronger/more certain:\n\n1. Можливо, це правильно.\n   > [!answer] **Я впевнений, що це правильно.**\n2. Мабуть, він знає.\n   > [!answer] **Безперечно, він знає.**"
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Hedging: Expressing Uncertainty\n\n**Less certain:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Можливо, ... | Perhaps, ... |\n| Напевно, ... | Probably, ... |\n| Мабуть, ... | Probably, maybe... |\n| Здається, ... | It seems... |\n| Ймовірно, ... | Probably, likely... |\n| Не впевнений/а, але... | Not sure, but... |\n| Важко сказати, але... | Hard to say, but... |\n\n**Examples:**\n\n- **Можливо**, це правда. - Perhaps this is true.\n- **Мабуть**, він запізниться. - He'll probably be late.\n- **Не впевнений**, але здається, що так. - Not sure, but it seems so."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Giving Reasons\n\n**Connectors for reasoning:**\n\n| Ukrainian | English |\n|-----------|---------|\n| тому що | because |\n| оскільки | since, as |\n| через те, що | because of the fact that |\n| завдяки тому, що | thanks to the fact that |\n| адже | for, since, because |\n| бо | because (informal) |\n\n**Examples:**\n\n- Я так думаю, **тому що** це логічно. - I think so because it's logical.\n- Вона права, **оскільки** має досвід. - She's right since she has experience.\n- Це важливо, **адже** впливає на всіх. - This is important because it affects everyone."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Comparing Viewpoints\n\n| Ukrainian | English |\n|-----------|---------|\n| З одного боку, ... з іншого боку, ... | On one hand, ... on the other hand, ... |\n| На відміну від... | Unlike... |\n| Порівняно з... | Compared to... |\n| Проте / Однак | However |\n| Незважаючи на те, що... | Despite the fact that... |\n\n**Examples:**\n\n- **З одного боку**, це дорого. **З іншого боку**, це якісно. - On one hand, it's expensive. On the other hand, it's quality.\n- **На відміну від** інших, він завжди приходить вчасно. - Unlike others, he always comes on time.\n- Це добре. **Проте** є недоліки. - This is good. However, there are drawbacks."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Emphasizing Your Point\n\n| Ukrainian | English |\n|-----------|---------|\n| Головне, що... | The main thing is that... |\n| Найважливіше, що... | The most important thing is that... |\n| Перш за все, ... | First of all, ... |\n| До того ж, ... | Moreover, ... |\n| Крім того, ... | Besides, ... |\n| Особливо... | Especially... |\n\n**Examples:**\n\n- **Головне**, що всі здорові. - The main thing is that everyone's healthy.\n- **Перш за все**, це безпечно. - First of all, it's safe.\n- **До того ж**, це ще й дешево. - Moreover, it's also cheap."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Summarizing\n\n| Ukrainian | English |\n|-----------|---------|\n| Отже, ... | So, therefore, ... |\n| Загалом, ... | In general, ... |\n| Підсумовуючи, ... | Summarizing, ... |\n| Одним словом, ... | In a word, ... |\n| В цілому, ... | On the whole, ... |\n\n**Examples:**\n\n- **Отже**, ми вирішили погодитися. - So, we decided to agree.\n- **Загалом**, я задоволений. - In general, I'm satisfied.\n- **Підсумовуючи**, це був успіх. - Summarizing, it was a success."
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Доповніть вирази | Complete the Expressions\n\n*Виберіть правильне слово. Choose the correct word.*\n\n1. ___ думку, це правильно. (In my) → **На мою**\n2. Я ___, що він має рацію. (think/believe) → **вважаю/думаю**\n3. ___ боку, це добре. (On one) → **З одного**\n4. ___ сумніву, це найкращий варіант. (Without) → **Без**\n5. Він помилився, ___ не мав досвіду. (because) → **тому що/бо**\n6. ___, це хороша ідея. (In general) → **Загалом**"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Order from Certain to Uncertain\n\nRank these from most to least certain:\n\n1. Я впевнений, що... → **1 (most certain)**\n2. Мені здається, що... → **4**\n3. Безперечно, ... → **2**\n4. Можливо, ... → **5 (least certain)**\n5. Напевно, ... → **3**"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Дайте відповідь | Respond to Questions\n\n*Висловіть свою думку, використовуючи відповідні вирази:*\n\n**Q:** Чи важливо вивчати іноземні мови?\n**A:** На мою думку, це дуже важливо, тому що...\n\n**Q:** Яка найкраща пора року?\n**A:** Я вважаю, що..., оскільки...\n\n**Q:** Чи варто читати книги замість дивитися фільми?\n**A:** З одного боку, ... з іншого боку, ..."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Transform Sentences\n\nMake these opinions softer/more hedged:\n\n1. Він помилився. → **Мені здається, що він, можливо, помилився.**\n2. Це погана ідея. → **На мою думку, це, мабуть, не найкраща ідея.**\n3. Вона права. → **Здається, вона має рацію.**\n\nMake these stronger/more certain:\n\n1. Можливо, це правильно. → **Я впевнений, що це правильно.**\n2. Мабуть, він знає. → **Безперечно, він знає.**"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-B1-97-quiz"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-B1-97-groupsort"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Теми для дискусії | Discussion Topics\n\n*Висловіть свою думку на такі теми:*\n\n1. **Дистанційна робота**\n   - Це добре чи погано? Чому?\n   - Які переваги та недоліки?\n\n2. **Соціальні мережі**\n   - Більше користі чи шкоди?\n   - Що ви думаєте про це?\n\n3. **Вивчення мов**\n   - Яка мова найважливіша?\n   - Як найкраще вчити мови?\n\nUse: на мою думку, я вважаю, з одного боку, тому що, однак, загалом"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Mini-Debate\n\nPractice stating opinions for and against:\n\n**Тема:** Чи повинна освіта бути безкоштовною?\n\n**За:** Я вважаю, що так, тому що...\n**Проти:** На мій погляд, ні, оскільки..."
+            "teacherNotes": "### Теми для дискусії | Discussion Topics\n\n*Висловіть свою думку на такі теми:*\n\n1. **Дистанційна робота**\n   - Це добре чи погано? Чому?\n   - Які переваги та недоліки?\n\n2. **Соціальні мережі**\n   - Більше користі чи шкоди?\n   - Що ви думаєте про це?\n\n3. **Вивчення мов**\n   - Яка мова найважливіша?\n   - Як найкраще вчити мови?\n\nUse: на мою думку, я вважаю, з одного боку, тому що, однак, загалом\n\n### Mini-Debate\n\nPractice stating opinions for and against:\n\n**Тема:** Чи повинна освіта бути безкоштовною?\n\n**За:** Я вважаю, що так, тому що...\n**Проти:** На мій погляд, ні, оскільки...\n\n---"
           }
         ]
       }
     ],
-    "rawMarkdown": "# Зміст уроку | Lesson Content\n\n## warm-up | Розминка\n\n### Висловлюємо свою думку | Speaking Your Mind\n\nНа рівні B1 потрібно вміти брати участь у дискусіях. Це означає:\n\nAt B1, you need to participate in discussions. That means:\n- Чітко висловлювати свою думку | Stating your opinion clearly\n- Обґрунтовувати свою позицію | Supporting your position\n- Реагувати на думки інших | Responding to others' views\n\n**Сьогодні:** основні вирази для висловлення думок українською мовою.\n\n## presentation\n\n### Stating Your Opinion\n\n**Direct expressions:**\n\n| Ukrainian | English | Formality |\n|-----------|---------|-----------|\n| Я думаю, що... | I think that... | neutral |\n| Я вважаю, що... | I consider/believe that... | neutral-formal |\n| Я гадаю, що... | I think/suppose that... | neutral |\n| На мою думку, ... | In my opinion, ... | neutral |\n| На мій погляд, ... | In my view, ... | formal |\n| З моєї точки зору, ... | From my point of view, ... | formal |\n| Мені здається, що... | It seems to me that... | softer |\n| Як на мене, ... | As for me, ... | informal |\n\n**Examples:**\n\n- **Я думаю**, що це гарна ідея. - I think it's a good idea.\n- **Я вважаю**, що він має рацію. - I believe he's right.\n- **На мою думку**, це найкраще рішення. - In my opinion, this is the best solution.\n- **Мені здається**, що ми помиляємося. - It seems to me we're wrong.\n- **Як на мене**, це занадто дорого. - As for me, it's too expensive.\n\n### Expressing Certainty\n\n**Strong certainty:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Я впевнений/а, що... | I'm sure that... |\n| Я переконаний/а, що... | I'm convinced that... |\n| Без сумніву, ... | Without a doubt, ... |\n| Безперечно, ... | Undoubtedly, ... |\n| Очевидно, що... | Obviously, ... |\n| Звісно, що... | Of course, ... |\n\n**Examples:**\n\n- **Я впевнений**, що це правда. - I'm sure this is true.\n- **Без сумніву**, він найкращий кандидат. - Without a doubt, he's the best candidate.\n- **Очевидно**, що потрібні зміни. - Obviously, changes are needed.\n\n### Hedging: Expressing Uncertainty\n\n**Less certain:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Можливо, ... | Perhaps, ... |\n| Напевно, ... | Probably, ... |\n| Мабуть, ... | Probably, maybe... |\n| Здається, ... | It seems... |\n| Ймовірно, ... | Probably, likely... |\n| Не впевнений/а, але... | Not sure, but... |\n| Важко сказати, але... | Hard to say, but... |\n\n**Examples:**\n\n- **Можливо**, це правда. - Perhaps this is true.\n- **Мабуть**, він запізниться. - He'll probably be late.\n- **Не впевнений**, але здається, що так. - Not sure, but it seems so.\n\n### Giving Reasons\n\n**Connectors for reasoning:**\n\n| Ukrainian | English |\n|-----------|---------|\n| тому що | because |\n| оскільки | since, as |\n| через те, що | because of the fact that |\n| завдяки тому, що | thanks to the fact that |\n| адже | for, since, because |\n| бо | because (informal) |\n\n**Examples:**\n\n- Я так думаю, **тому що** це логічно. - I think so because it's logical.\n- Вона права, **оскільки** має досвід. - She's right since she has experience.\n- Це важливо, **адже** впливає на всіх. - This is important because it affects everyone.\n\n### Comparing Viewpoints\n\n| Ukrainian | English |\n|-----------|---------|\n| З одного боку, ... з іншого боку, ... | On one hand, ... on the other hand, ... |\n| На відміну від... | Unlike... |\n| Порівняно з... | Compared to... |\n| Проте / Однак | However |\n| Незважаючи на те, що... | Despite the fact that... |\n\n**Examples:**\n\n- **З одного боку**, це дорого. **З іншого боку**, це якісно. - On one hand, it's expensive. On the other hand, it's quality.\n- **На відміну від** інших, він завжди приходить вчасно. - Unlike others, he always comes on time.\n- Це добре. **Проте** є недоліки. - This is good. However, there are drawbacks.\n\n### Emphasizing Your Point\n\n| Ukrainian | English |\n|-----------|---------|\n| Головне, що... | The main thing is that... |\n| Найважливіше, що... | The most important thing is that... |\n| Перш за все, ... | First of all, ... |\n| До того ж, ... | Moreover, ... |\n| Крім того, ... | Besides, ... |\n| Особливо... | Especially... |\n\n**Examples:**\n\n- **Головне**, що всі здорові. - The main thing is that everyone's healthy.\n- **Перш за все**, це безпечно. - First of all, it's safe.\n- **До того ж**, це ще й дешево. - Moreover, it's also cheap.\n\n### Summarizing\n\n| Ukrainian | English |\n|-----------|---------|\n| Отже, ... | So, therefore, ... |\n| Загалом, ... | In general, ... |\n| Підсумовуючи, ... | Summarizing, ... |\n| Одним словом, ... | In a word, ... |\n| В цілому, ... | On the whole, ... |\n\n**Examples:**\n\n- **Отже**, ми вирішили погодитися. - So, we decided to agree.\n- **Загалом**, я задоволений. - In general, I'm satisfied.\n- **Підсумовуючи**, це був успіх. - Summarizing, it was a success.\n\n## practice | Практика\n\n### Доповніть вирази | Complete the Expressions\n\n*Виберіть правильне слово. Choose the correct word.*\n\n1. ___ думку, це правильно. (In my) → **На мою**\n2. Я ___, що він має рацію. (think/believe) → **вважаю/думаю**\n3. ___ боку, це добре. (On one) → **З одного**\n4. ___ сумніву, це найкращий варіант. (Without) → **Без**\n5. Він помилився, ___ не мав досвіду. (because) → **тому що/бо**\n6. ___, це хороша ідея. (In general) → **Загалом**\n\n### Order from Certain to Uncertain\n\nRank these from most to least certain:\n\n1. Я впевнений, що... → **1 (most certain)**\n2. Мені здається, що... → **4**\n3. Безперечно, ... → **2**\n4. Можливо, ... → **5 (least certain)**\n5. Напевно, ... → **3**\n\n### Дайте відповідь | Respond to Questions\n\n*Висловіть свою думку, використовуючи відповідні вирази:*\n\n**Q:** Чи важливо вивчати іноземні мови?\n**A:** На мою думку, це дуже важливо, тому що...\n\n**Q:** Яка найкраща пора року?\n**A:** Я вважаю, що..., оскільки...\n\n**Q:** Чи варто читати книги замість дивитися фільми?\n**A:** З одного боку, ... з іншого боку, ...\n\n### Transform Sentences\n\nMake these opinions softer/more hedged:\n\n1. Він помилився. → **Мені здається, що він, можливо, помилився.**\n2. Це погана ідея. → **На мою думку, це, мабуть, не найкраща ідея.**\n3. Вона права. → **Здається, вона має рацію.**\n\nMake these stronger/more certain:\n\n1. Можливо, це правильно. → **Я впевнений, що це правильно.**\n2. Мабуть, він знає. → **Безперечно, він знає.**\n\n## production | Продукція\n\n### Теми для дискусії | Discussion Topics\n\n*Висловіть свою думку на такі теми:*\n\n1. **Дистанційна робота**\n   - Це добре чи погано? Чому?\n   - Які переваги та недоліки?\n\n2. **Соціальні мережі**\n   - Більше користі чи шкоди?\n   - Що ви думаєте про це?\n\n3. **Вивчення мов**\n   - Яка мова найважливіша?\n   - Як найкраще вчити мови?\n\nUse: на мою думку, я вважаю, з одного боку, тому що, однак, загалом\n\n### Mini-Debate\n\nPractice stating opinions for and against:\n\n**Тема:** Чи повинна освіта бути безкоштовною?\n\n**За:** Я вважаю, що так, тому що...\n**Проти:** На мій погляд, ні, оскільки...\n\n---\n\n# Activities\n\n## quiz: Opinion Expressions\n\n> Match Ukrainian with English.\n\n1. На мою думку\n   - [x] In my opinion\n   - [ ] I'm sure\n\n2. Я впевнений\n   - [x] I'm sure\n   - [ ] Perhaps\n\n3. Можливо\n   - [x] Perhaps\n   - [ ] Without a doubt\n\n4. З одного боку\n   - [x] On one hand\n   - [ ] Moreover\n\n5. Тому що\n   - [x] Because\n   - [ ] However\n\n6. Загалом\n   - [x] In general\n   - [ ] Especially\n\n## group-sort: Certainty Level\n\n### High Certainty\n- Я впевнений\n- Безперечно\n- Без сумніву\n- Очевидно\n\n### Medium Certainty\n- Я думаю\n- На мою думку\n- Напевно\n\n### Low Certainty\n- Можливо\n- Мабуть\n- Здається\n- Не впевнений\n\n## fill-in: Complete the Discussion\n\n> A: ___ (In my opinion), це хороша ідея.\n> B: Я не ___ (sure). ___ (Perhaps), є кращі варіанти.\n> A: ___ (I think), ми повинні спробувати.\n> B: ___ (On one hand), так. ___ (However), це ризиковано.\n> A: ___ (In general), ризик виправданий.\n\n**Answers:** На мою думку, впевнений, Можливо, Я думаю, З одного боку, Однак/Проте, Загалом\n\n---",
+    "createdAt": "2025-12-01T22:58:37.293Z",
+    "modifiedAt": "2025-12-01T22:58:37.293Z",
+    "version": 1,
     "immersiveSections": [
       {
-        "id": "warm-up-розминка",
-        "title": "warm-up | Розминка",
-        "content": "### Висловлюємо свою думку | Speaking Your Mind\n\nНа рівні B1 потрібно вміти брати участь у дискусіях. Це означає:\n\nAt B1, you need to participate in discussions. That means:\n- Чітко висловлювати свою думку | Stating your opinion clearly\n- Обґрунтовувати свою позицію | Supporting your position\n- Реагувати на думки інших | Responding to others' views\n\n**Сьогодні:** основні вирази для висловлення думок українською мовою.",
-        "type": "topic"
+        "id": "section-зміст-уроку-lesson-content",
+        "type": "content",
+        "title": "Зміст уроку | Lesson Content",
+        "content": "## warm-up | Розминка\n\n### Висловлюємо свою думку | Speaking Your Mind\n\nНа рівні B1 потрібно вміти брати участь у дискусіях. Це означає:\n\nAt B1, you need to participate in discussions. That means:\n- Чітко висловлювати свою думку | Stating your opinion clearly\n- Обґрунтовувати свою позицію | Supporting your position\n- Реагувати на думки інших | Responding to others' views\n\n**Сьогодні:** основні вирази для висловлення думок українською мовою.\n\n## presentation\n\n### Stating Your Opinion\n\n**Direct expressions:**\n\n| Ukrainian | English | Formality |\n|-----------|---------|-----------|\n| Я думаю, що... | I think that... | neutral |\n| Я вважаю, що... | I consider/believe that... | neutral-formal |\n| Я гадаю, що... | I think/suppose that... | neutral |\n| На мою думку, ... | In my opinion, ... | neutral |\n| На мій погляд, ... | In my view, ... | formal |\n| З моєї точки зору, ... | From my point of view, ... | formal |\n| Мені здається, що... | It seems to me that... | softer |\n| Як на мене, ... | As for me, ... | informal |\n\n**Examples:**\n\n- **Я думаю**, що це гарна ідея. - I think it's a good idea.\n- **Я вважаю**, що він має рацію. - I believe he's right.\n- **На мою думку**, це найкраще рішення. - In my opinion, this is the best solution.\n- **Мені здається**, що ми помиляємося. - It seems to me we're wrong.\n- **Як на мене**, це занадто дорого. - As for me, it's too expensive.\n\n### Expressing Certainty\n\n**Strong certainty:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Я впевнений/а, що... | I'm sure that... |\n| Я переконаний/а, що... | I'm convinced that... |\n| Без сумніву, ... | Without a doubt, ... |\n| Безперечно, ... | Undoubtedly, ... |\n| Очевидно, що... | Obviously, ... |\n| Звісно, що... | Of course, ... |\n\n**Examples:**\n\n- **Я впевнений**, що це правда. - I'm sure this is true.\n- **Без сумніву**, він найкращий кандидат. - Without a doubt, he's the best candidate.\n- **Очевидно**, що потрібні зміни. - Obviously, changes are needed.\n\n### Hedging: Expressing Uncertainty\n\n**Less certain:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Можливо, ... | Perhaps, ... |\n| Напевно, ... | Probably, ... |\n| Мабуть, ... | Probably, maybe... |\n| Здається, ... | It seems... |\n| Ймовірно, ... | Probably, likely... |\n| Не впевнений/а, але... | Not sure, but... |\n| Важко сказати, але... | Hard to say, but... |\n\n**Examples:**\n\n- **Можливо**, це правда. - Perhaps this is true.\n- **Мабуть**, він запізниться. - He'll probably be late.\n- **Не впевнений**, але здається, що так. - Not sure, but it seems so.\n\n### Giving Reasons\n\n**Connectors for reasoning:**\n\n| Ukrainian | English |\n|-----------|---------|\n| тому що | because |\n| оскільки | since, as |\n| через те, що | because of the fact that |\n| завдяки тому, що | thanks to the fact that |\n| адже | for, since, because |\n| бо | because (informal) |\n\n**Examples:**\n\n- Я так думаю, **тому що** це логічно. - I think so because it's logical.\n- Вона права, **оскільки** має досвід. - She's right since she has experience.\n- Це важливо, **адже** впливає на всіх. - This is important because it affects everyone.\n\n### Comparing Viewpoints\n\n| Ukrainian | English |\n|-----------|---------|\n| З одного боку, ... з іншого боку, ... | On one hand, ... on the other hand, ... |\n| На відміну від... | Unlike... |\n| Порівняно з... | Compared to... |\n| Проте / Однак | However |\n| Незважаючи на те, що... | Despite the fact that... |\n\n**Examples:**\n\n- **З одного боку**, це дорого. **З іншого боку**, це якісно. - On one hand, it's expensive. On the other hand, it's quality.\n- **На відміну від** інших, він завжди приходить вчасно. - Unlike others, he always comes on time.\n- Це добре. **Проте** є недоліки. - This is good. However, there are drawbacks.\n\n### Emphasizing Your Point\n\n| Ukrainian | English |\n|-----------|---------|\n| Головне, що... | The main thing is that... |\n| Найважливіше, що... | The most important thing is that... |\n| Перш за все, ... | First of all, ... |\n| До того ж, ... | Moreover, ... |\n| Крім того, ... | Besides, ... |\n| Особливо... | Especially... |\n\n**Examples:**\n\n- **Головне**, що всі здорові. - The main thing is that everyone's healthy.\n- **Перш за все**, це безпечно. - First of all, it's safe.\n- **До того ж**, це ще й дешево. - Moreover, it's also cheap.\n\n### Summarizing\n\n| Ukrainian | English |\n|-----------|---------|\n| Отже, ... | So, therefore, ... |\n| Загалом, ... | In general, ... |\n| Підсумовуючи, ... | Summarizing, ... |\n| Одним словом, ... | In a word, ... |\n| В цілому, ... | On the whole, ... |\n\n**Examples:**\n\n- **Отже**, ми вирішили погодитися. - So, we decided to agree.\n- **Загалом**, я задоволений. - In general, I'm satisfied.\n- **Підсумовуючи**, це був успіх. - Summarizing, it was a success.\n\n## practice | Практика\n\n### Доповніть вирази | Complete the Expressions\n\n*Виберіть правильне слово. Choose the correct word.*\n\n1. ___ думку, це правильно. (In my)\n   > [!answer] **На мою**\n2. Я ___, що він має рацію. (think/believe)\n   > [!answer] **вважаю/думаю**\n3. ___ боку, це добре. (On one)\n   > [!answer] **З одного**\n4. ___ сумніву, це найкращий варіант. (Without)\n   > [!answer] **Без**\n5. Він помилився, ___ не мав досвіду. (because)\n   > [!answer] **тому що/бо**\n6. ___, це хороша ідея. (In general)\n   > [!answer] **Загалом**\n\n### Order from Certain to Uncertain\n\nRank these from most to least certain:\n\n1. Я впевнений, що...\n   > [!answer] **1 (most certain)**\n2. Мені здається, що...\n   > [!answer] **4**\n3. Безперечно, ...\n   > [!answer] **2**\n4. Можливо, ...\n   > [!answer] **5 (least certain)**\n5. Напевно, ...\n   > [!answer] **3**\n\n### Дайте відповідь | Respond to Questions\n\n*Висловіть свою думку, використовуючи відповідні вирази:*\n\n**Q:** Чи важливо вивчати іноземні мови?\n**A:** На мою думку, це дуже важливо, тому що...\n\n**Q:** Яка найкраща пора року?\n**A:** Я вважаю, що..., оскільки...\n\n**Q:** Чи варто читати книги замість дивитися фільми?\n**A:** З одного боку, ... з іншого боку, ...\n\n### Transform Sentences\n\nMake these opinions softer/more hedged:\n\n1. Він помилився.\n   > [!answer] **Мені здається, що він, можливо, помилився.**\n2. Це погана ідея.\n   > [!answer] **На мою думку, це, мабуть, не найкраща ідея.**\n3. Вона права.\n   > [!answer] **Здається, вона має рацію.**\n\nMake these stronger/more certain:\n\n1. Можливо, це правильно.\n   > [!answer] **Я впевнений, що це правильно.**\n2. Мабуть, він знає.\n   > [!answer] **Безперечно, він знає.**\n\n## production | Продукція\n\n### Теми для дискусії | Discussion Topics\n\n*Висловіть свою думку на такі теми:*\n\n1. **Дистанційна робота**\n   - Це добре чи погано? Чому?\n   - Які переваги та недоліки?\n\n2. **Соціальні мережі**\n   - Більше користі чи шкоди?\n   - Що ви думаєте про це?\n\n3. **Вивчення мов**\n   - Яка мова найважливіша?\n   - Як найкраще вчити мови?\n\nUse: на мою думку, я вважаю, з одного боку, тому що, однак, загалом\n\n### Mini-Debate\n\nPractice stating opinions for and against:\n\n**Тема:** Чи повинна освіта бути безкоштовною?\n\n**За:** Я вважаю, що так, тому що...\n**Проти:** На мій погляд, ні, оскільки...\n\n---\n\n\n---\n\n\n---"
       },
       {
-        "id": "presentation",
-        "title": "presentation",
-        "content": "### Stating Your Opinion\n\n**Direct expressions:**\n\n| Ukrainian | English | Formality |\n|-----------|---------|-----------|\n| Я думаю, що... | I think that... | neutral |\n| Я вважаю, що... | I consider/believe that... | neutral-formal |\n| Я гадаю, що... | I think/suppose that... | neutral |\n| На мою думку, ... | In my opinion, ... | neutral |\n| На мій погляд, ... | In my view, ... | formal |\n| З моєї точки зору, ... | From my point of view, ... | formal |\n| Мені здається, що... | It seems to me that... | softer |\n| Як на мене, ... | As for me, ... | informal |\n\n**Examples:**\n\n- **Я думаю**, що це гарна ідея. - I think it's a good idea.\n- **Я вважаю**, що він має рацію. - I believe he's right.\n- **На мою думку**, це найкраще рішення. - In my opinion, this is the best solution.\n- **Мені здається**, що ми помиляємося. - It seems to me we're wrong.\n- **Як на мене**, це занадто дорого. - As for me, it's too expensive.\n\n### Expressing Certainty\n\n**Strong certainty:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Я впевнений/а, що... | I'm sure that... |\n| Я переконаний/а, що... | I'm convinced that... |\n| Без сумніву, ... | Without a doubt, ... |\n| Безперечно, ... | Undoubtedly, ... |\n| Очевидно, що... | Obviously, ... |\n| Звісно, що... | Of course, ... |\n\n**Examples:**\n\n- **Я впевнений**, що це правда. - I'm sure this is true.\n- **Без сумніву**, він найкращий кандидат. - Without a doubt, he's the best candidate.\n- **Очевидно**, що потрібні зміни. - Obviously, changes are needed.\n\n### Hedging: Expressing Uncertainty\n\n**Less certain:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Можливо, ... | Perhaps, ... |\n| Напевно, ... | Probably, ... |\n| Мабуть, ... | Probably, maybe... |\n| Здається, ... | It seems... |\n| Ймовірно, ... | Probably, likely... |\n| Не впевнений/а, але... | Not sure, but... |\n| Важко сказати, але... | Hard to say, but... |\n\n**Examples:**\n\n- **Можливо**, це правда. - Perhaps this is true.\n- **Мабуть**, він запізниться. - He'll probably be late.\n- **Не впевнений**, але здається, що так. - Not sure, but it seems so.\n\n### Giving Reasons\n\n**Connectors for reasoning:**\n\n| Ukrainian | English |\n|-----------|---------|\n| тому що | because |\n| оскільки | since, as |\n| через те, що | because of the fact that |\n| завдяки тому, що | thanks to the fact that |\n| адже | for, since, because |\n| бо | because (informal) |\n\n**Examples:**\n\n- Я так думаю, **тому що** це логічно. - I think so because it's logical.\n- Вона права, **оскільки** має досвід. - She's right since she has experience.\n- Це важливо, **адже** впливає на всіх. - This is important because it affects everyone.\n\n### Comparing Viewpoints\n\n| Ukrainian | English |\n|-----------|---------|\n| З одного боку, ... з іншого боку, ... | On one hand, ... on the other hand, ... |\n| На відміну від... | Unlike... |\n| Порівняно з... | Compared to... |\n| Проте / Однак | However |\n| Незважаючи на те, що... | Despite the fact that... |\n\n**Examples:**\n\n- **З одного боку**, це дорого. **З іншого боку**, це якісно. - On one hand, it's expensive. On the other hand, it's quality.\n- **На відміну від** інших, він завжди приходить вчасно. - Unlike others, he always comes on time.\n- Це добре. **Проте** є недоліки. - This is good. However, there are drawbacks.\n\n### Emphasizing Your Point\n\n| Ukrainian | English |\n|-----------|---------|\n| Головне, що... | The main thing is that... |\n| Найважливіше, що... | The most important thing is that... |\n| Перш за все, ... | First of all, ... |\n| До того ж, ... | Moreover, ... |\n| Крім того, ... | Besides, ... |\n| Особливо... | Especially... |\n\n**Examples:**\n\n- **Головне**, що всі здорові. - The main thing is that everyone's healthy.\n- **Перш за все**, це безпечно. - First of all, it's safe.\n- **До того ж**, це ще й дешево. - Moreover, it's also cheap.\n\n### Summarizing\n\n| Ukrainian | English |\n|-----------|---------|\n| Отже, ... | So, therefore, ... |\n| Загалом, ... | In general, ... |\n| Підсумовуючи, ... | Summarizing, ... |\n| Одним словом, ... | In a word, ... |\n| В цілому, ... | On the whole, ... |\n\n**Examples:**\n\n- **Отже**, ми вирішили погодитися. - So, we decided to agree.\n- **Загалом**, я задоволений. - In general, I'm satisfied.\n- **Підсумовуючи**, це був успіх. - Summarizing, it was a success.",
-        "type": "topic"
-      },
-      {
-        "id": "practice-практика",
-        "title": "practice | Практика",
-        "content": "### Доповніть вирази | Complete the Expressions\n\n*Виберіть правильне слово. Choose the correct word.*\n\n1. ___ думку, це правильно. (In my) → **На мою**\n2. Я ___, що він має рацію. (think/believe) → **вважаю/думаю**\n3. ___ боку, це добре. (On one) → **З одного**\n4. ___ сумніву, це найкращий варіант. (Without) → **Без**\n5. Він помилився, ___ не мав досвіду. (because) → **тому що/бо**\n6. ___, це хороша ідея. (In general) → **Загалом**\n\n### Order from Certain to Uncertain\n\nRank these from most to least certain:\n\n1. Я впевнений, що... → **1 (most certain)**\n2. Мені здається, що... → **4**\n3. Безперечно, ... → **2**\n4. Можливо, ... → **5 (least certain)**\n5. Напевно, ... → **3**\n\n### Дайте відповідь | Respond to Questions\n\n*Висловіть свою думку, використовуючи відповідні вирази:*\n\n**Q:** Чи важливо вивчати іноземні мови?\n**A:** На мою думку, це дуже важливо, тому що...\n\n**Q:** Яка найкраща пора року?\n**A:** Я вважаю, що..., оскільки...\n\n**Q:** Чи варто читати книги замість дивитися фільми?\n**A:** З одного боку, ... з іншого боку, ...\n\n### Transform Sentences\n\nMake these opinions softer/more hedged:\n\n1. Він помилився. → **Мені здається, що він, можливо, помилився.**\n2. Це погана ідея. → **На мою думку, це, мабуть, не найкраща ідея.**\n3. Вона права. → **Здається, вона має рацію.**\n\nMake these stronger/more certain:\n\n1. Можливо, це правильно. → **Я впевнений, що це правильно.**\n2. Мабуть, він знає. → **Безперечно, він знає.**",
-        "type": "topic"
-      },
-      {
-        "id": "production-продукція",
-        "title": "production | Продукція",
-        "content": "### Теми для дискусії | Discussion Topics\n\n*Висловіть свою думку на такі теми:*\n\n1. **Дистанційна робота**\n   - Це добре чи погано? Чому?\n   - Які переваги та недоліки?\n\n2. **Соціальні мережі**\n   - Більше користі чи шкоди?\n   - Що ви думаєте про це?\n\n3. **Вивчення мов**\n   - Яка мова найважливіша?\n   - Як найкраще вчити мови?\n\nUse: на мою думку, я вважаю, з одного боку, тому що, однак, загалом\n\n### Mini-Debate\n\nPractice stating opinions for and against:\n\n**Тема:** Чи повинна освіта бути безкоштовною?\n\n**За:** Я вважаю, що так, тому що...\n**Проти:** На мій погляд, ні, оскільки...\n\n---",
-        "type": "topic"
-      },
-      {
-        "id": "activities",
-        "title": "Activities",
-        "content": "## quiz: Opinion Expressions\n\n> Match Ukrainian with English.\n\n1. На мою думку\n   - [x] In my opinion\n   - [ ] I'm sure\n\n2. Я впевнений\n   - [x] I'm sure\n   - [ ] Perhaps\n\n3. Можливо\n   - [x] Perhaps\n   - [ ] Without a doubt\n\n4. З одного боку\n   - [x] On one hand\n   - [ ] Moreover\n\n5. Тому що\n   - [x] Because\n   - [ ] However\n\n6. Загалом\n   - [x] In general\n   - [ ] Especially\n\n## group-sort: Certainty Level\n\n### High Certainty\n- Я впевнений\n- Безперечно\n- Без сумніву\n- Очевидно\n\n### Medium Certainty\n- Я думаю\n- На мою думку\n- Напевно\n\n### Low Certainty\n- Можливо\n- Мабуть\n- Здається\n- Не впевнений\n\n## fill-in: Complete the Discussion\n\n> A: ___ (In my opinion), це хороша ідея.\n> B: Я не ___ (sure). ___ (Perhaps), є кращі варіанти.\n> A: ___ (I think), ми повинні спробувати.\n> B: ___ (On one hand), так. ___ (However), це ризиковано.\n> A: ___ (In general), ризик виправданий.\n\n**Answers:** На мою думку, впевнений, Можливо, Я думаю, З одного боку, Однак/Проте, Загалом\n\n---",
-        "type": "activities"
-      },
-      {
-        "id": "vocabulary",
-        "title": "Vocabulary",
-        "content": "| Word | IPA | English | Notes |\n|------|-----|---------|-------|\n| думка | /ˈdumkɑ/ | opinion, thought | - |\n| погляд | /ˈpoɦlʲɑd/ | view | - |\n| точка зору | /ˈtot͡ʃkɑ ˈzoru/ | point of view | - |\n| вважати | /vvɑˈʒɑtɪ/ | to consider, believe | impf |\n| гадати | /ɦɑˈdɑtɪ/ | to think, suppose | impf |\n| здаватися | /zdɑˈvɑtɪsʲɑ/ | to seem | impf |\n| впевнений | /vpɛvˈnɛnɪj/ | sure, confident | adj |\n| переконаний | /pɛrɛˈkonɑnɪj/ | convinced | adj |\n| безперечно | /bɛzpɛˈrɛt͡ʃno/ | undoubtedly | adv |\n| можливо | /moʒˈlɪvo/ | perhaps, possibly | adv |\n| мабуть | /mɑˈbutʲ/ | probably | adv |\n| ймовірно | /jmoˈvʲirno/ | probably, likely | adv |\n| проте | /proˈtɛ/ | however | conj |\n| однак | /odˈnɑk/ | however | conj |\n| загалом | /zɑˈɦɑlom/ | in general | adv |\n| отже | /ˈotʒɛ/ | so, therefore | conj |\n\n---",
-        "type": "vocabulary"
-      },
-      {
-        "id": "summary",
+        "id": "section-summary",
+        "type": "summary",
         "title": "Summary",
         "content": "## Opinion Expressions\n\n### Stating Opinion\n- Я думаю/вважаю/гадаю, що...\n- На мою думку / На мій погляд\n- Мені здається, що...\n\n### Certainty\n- High: Я впевнений, Безперечно\n- Medium: Напевно, Ймовірно\n- Low: Можливо, Мабуть\n\n### Reasoning\n- тому що, оскільки, адже, бо\n\n### Comparing\n- З одного боку... з іншого боку\n- Проте, Однак\n\n### Concluding\n- Отже, Загалом, Підсумовуючи\n\n## Key Patterns\n\n1. **Opinion + reason:** Я думаю, що..., тому що...\n2. **Comparison:** З одного боку... проте...\n3. **Conclusion:** Отже, ...\n\n> **Key Takeaways**\n>\n> - Use hedging for polite uncertainty\n> - Match formality to situation\n> - Always support opinions with reasons\n> - Use comparing expressions for balanced views",
-        "type": "summary"
+        "titleUk": "Підсумок"
       }
-    ]
+    ],
+    "rawMarkdown": "---\nmodule: 97\ntitle: \"Expressing Opinions\"\nsubtitle: \"Я вважаю, На мою думку...\"\nlevel: B1\nphase: B1.1\nduration: 45\ntransliteration: none\ntags: [vocabulary, communication, opinions, speaking]\nobjectives:\n  - Learn expressions for stating opinions\n  - Practice agreeing and disagreeing politely\n  - Use hedging language appropriately\n  - Participate in discussions confidently\n---\n\n# Зміст уроку | Lesson Content\n\n## warm-up | Розминка\n\n### Висловлюємо свою думку | Speaking Your Mind\n\nНа рівні B1 потрібно вміти брати участь у дискусіях. Це означає:\n\nAt B1, you need to participate in discussions. That means:\n- Чітко висловлювати свою думку | Stating your opinion clearly\n- Обґрунтовувати свою позицію | Supporting your position\n- Реагувати на думки інших | Responding to others' views\n\n**Сьогодні:** основні вирази для висловлення думок українською мовою.\n\n## presentation\n\n### Stating Your Opinion\n\n**Direct expressions:**\n\n| Ukrainian | English | Formality |\n|-----------|---------|-----------|\n| Я думаю, що... | I think that... | neutral |\n| Я вважаю, що... | I consider/believe that... | neutral-formal |\n| Я гадаю, що... | I think/suppose that... | neutral |\n| На мою думку, ... | In my opinion, ... | neutral |\n| На мій погляд, ... | In my view, ... | formal |\n| З моєї точки зору, ... | From my point of view, ... | formal |\n| Мені здається, що... | It seems to me that... | softer |\n| Як на мене, ... | As for me, ... | informal |\n\n**Examples:**\n\n- **Я думаю**, що це гарна ідея. - I think it's a good idea.\n- **Я вважаю**, що він має рацію. - I believe he's right.\n- **На мою думку**, це найкраще рішення. - In my opinion, this is the best solution.\n- **Мені здається**, що ми помиляємося. - It seems to me we're wrong.\n- **Як на мене**, це занадто дорого. - As for me, it's too expensive.\n\n### Expressing Certainty\n\n**Strong certainty:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Я впевнений/а, що... | I'm sure that... |\n| Я переконаний/а, що... | I'm convinced that... |\n| Без сумніву, ... | Without a doubt, ... |\n| Безперечно, ... | Undoubtedly, ... |\n| Очевидно, що... | Obviously, ... |\n| Звісно, що... | Of course, ... |\n\n**Examples:**\n\n- **Я впевнений**, що це правда. - I'm sure this is true.\n- **Без сумніву**, він найкращий кандидат. - Without a doubt, he's the best candidate.\n- **Очевидно**, що потрібні зміни. - Obviously, changes are needed.\n\n### Hedging: Expressing Uncertainty\n\n**Less certain:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Можливо, ... | Perhaps, ... |\n| Напевно, ... | Probably, ... |\n| Мабуть, ... | Probably, maybe... |\n| Здається, ... | It seems... |\n| Ймовірно, ... | Probably, likely... |\n| Не впевнений/а, але... | Not sure, but... |\n| Важко сказати, але... | Hard to say, but... |\n\n**Examples:**\n\n- **Можливо**, це правда. - Perhaps this is true.\n- **Мабуть**, він запізниться. - He'll probably be late.\n- **Не впевнений**, але здається, що так. - Not sure, but it seems so.\n\n### Giving Reasons\n\n**Connectors for reasoning:**\n\n| Ukrainian | English |\n|-----------|---------|\n| тому що | because |\n| оскільки | since, as |\n| через те, що | because of the fact that |\n| завдяки тому, що | thanks to the fact that |\n| адже | for, since, because |\n| бо | because (informal) |\n\n**Examples:**\n\n- Я так думаю, **тому що** це логічно. - I think so because it's logical.\n- Вона права, **оскільки** має досвід. - She's right since she has experience.\n- Це важливо, **адже** впливає на всіх. - This is important because it affects everyone.\n\n### Comparing Viewpoints\n\n| Ukrainian | English |\n|-----------|---------|\n| З одного боку, ... з іншого боку, ... | On one hand, ... on the other hand, ... |\n| На відміну від... | Unlike... |\n| Порівняно з... | Compared to... |\n| Проте / Однак | However |\n| Незважаючи на те, що... | Despite the fact that... |\n\n**Examples:**\n\n- **З одного боку**, це дорого. **З іншого боку**, це якісно. - On one hand, it's expensive. On the other hand, it's quality.\n- **На відміну від** інших, він завжди приходить вчасно. - Unlike others, he always comes on time.\n- Це добре. **Проте** є недоліки. - This is good. However, there are drawbacks.\n\n### Emphasizing Your Point\n\n| Ukrainian | English |\n|-----------|---------|\n| Головне, що... | The main thing is that... |\n| Найважливіше, що... | The most important thing is that... |\n| Перш за все, ... | First of all, ... |\n| До того ж, ... | Moreover, ... |\n| Крім того, ... | Besides, ... |\n| Особливо... | Especially... |\n\n**Examples:**\n\n- **Головне**, що всі здорові. - The main thing is that everyone's healthy.\n- **Перш за все**, це безпечно. - First of all, it's safe.\n- **До того ж**, це ще й дешево. - Moreover, it's also cheap.\n\n### Summarizing\n\n| Ukrainian | English |\n|-----------|---------|\n| Отже, ... | So, therefore, ... |\n| Загалом, ... | In general, ... |\n| Підсумовуючи, ... | Summarizing, ... |\n| Одним словом, ... | In a word, ... |\n| В цілому, ... | On the whole, ... |\n\n**Examples:**\n\n- **Отже**, ми вирішили погодитися. - So, we decided to agree.\n- **Загалом**, я задоволений. - In general, I'm satisfied.\n- **Підсумовуючи**, це був успіх. - Summarizing, it was a success.\n\n## practice | Практика\n\n### Доповніть вирази | Complete the Expressions\n\n*Виберіть правильне слово. Choose the correct word.*\n\n1. ___ думку, це правильно. (In my)\n   > [!answer] **На мою**\n2. Я ___, що він має рацію. (think/believe)\n   > [!answer] **вважаю/думаю**\n3. ___ боку, це добре. (On one)\n   > [!answer] **З одного**\n4. ___ сумніву, це найкращий варіант. (Without)\n   > [!answer] **Без**\n5. Він помилився, ___ не мав досвіду. (because)\n   > [!answer] **тому що/бо**\n6. ___, це хороша ідея. (In general)\n   > [!answer] **Загалом**\n\n### Order from Certain to Uncertain\n\nRank these from most to least certain:\n\n1. Я впевнений, що...\n   > [!answer] **1 (most certain)**\n2. Мені здається, що...\n   > [!answer] **4**\n3. Безперечно, ...\n   > [!answer] **2**\n4. Можливо, ...\n   > [!answer] **5 (least certain)**\n5. Напевно, ...\n   > [!answer] **3**\n\n### Дайте відповідь | Respond to Questions\n\n*Висловіть свою думку, використовуючи відповідні вирази:*\n\n**Q:** Чи важливо вивчати іноземні мови?\n**A:** На мою думку, це дуже важливо, тому що...\n\n**Q:** Яка найкраща пора року?\n**A:** Я вважаю, що..., оскільки...\n\n**Q:** Чи варто читати книги замість дивитися фільми?\n**A:** З одного боку, ... з іншого боку, ...\n\n### Transform Sentences\n\nMake these opinions softer/more hedged:\n\n1. Він помилився.\n   > [!answer] **Мені здається, що він, можливо, помилився.**\n2. Це погана ідея.\n   > [!answer] **На мою думку, це, мабуть, не найкраща ідея.**\n3. Вона права.\n   > [!answer] **Здається, вона має рацію.**\n\nMake these stronger/more certain:\n\n1. Можливо, це правильно.\n   > [!answer] **Я впевнений, що це правильно.**\n2. Мабуть, він знає.\n   > [!answer] **Безперечно, він знає.**\n\n## production | Продукція\n\n### Теми для дискусії | Discussion Topics\n\n*Висловіть свою думку на такі теми:*\n\n1. **Дистанційна робота**\n   - Це добре чи погано? Чому?\n   - Які переваги та недоліки?\n\n2. **Соціальні мережі**\n   - Більше користі чи шкоди?\n   - Що ви думаєте про це?\n\n3. **Вивчення мов**\n   - Яка мова найважливіша?\n   - Як найкраще вчити мови?\n\nUse: на мою думку, я вважаю, з одного боку, тому що, однак, загалом\n\n### Mini-Debate\n\nPractice stating opinions for and against:\n\n**Тема:** Чи повинна освіта бути безкоштовною?\n\n**За:** Я вважаю, що так, тому що...\n**Проти:** На мій погляд, ні, оскільки...\n\n---\n\n# Activities\n\n## quiz: Opinion Expressions\n\n> Match Ukrainian with English.\n\n1. На мою думку\n   - [x] In my opinion\n   - [ ] I'm sure\n\n2. Я впевнений\n   - [x] I'm sure\n   - [ ] Perhaps\n\n3. Можливо\n   - [x] Perhaps\n   - [ ] Without a doubt\n\n4. З одного боку\n   - [x] On one hand\n   - [ ] Moreover\n\n5. Тому що\n   - [x] Because\n   - [ ] However\n\n6. Загалом\n   - [x] In general\n   - [ ] Especially\n\n## group-sort: Certainty Level\n\n### High Certainty\n- Я впевнений\n- Безперечно\n- Без сумніву\n- Очевидно\n\n### Medium Certainty\n- Я думаю\n- На мою думку\n- Напевно\n\n### Low Certainty\n- Можливо\n- Мабуть\n- Здається\n- Не впевнений\n\n## fill-in: Complete the Discussion\n\n> A: ___ (In my opinion), це хороша ідея.\n> B: Я не ___ (sure). ___ (Perhaps), є кращі варіанти.\n> A: ___ (I think), ми повинні спробувати.\n> B: ___ (On one hand), так. ___ (However), це ризиковано.\n> A: ___ (In general), ризик виправданий.\n\n**Answers:** На мою думку, впевнений, Можливо, Я думаю, З одного боку, Однак/Проте, Загалом\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | Notes |\n|------|-----|---------|-------|\n| думка | /ˈdumkɑ/ | opinion, thought | - |\n| погляд | /ˈpoɦlʲɑd/ | view | - |\n| точка зору | /ˈtot͡ʃkɑ ˈzoru/ | point of view | - |\n| вважати | /vvɑˈʒɑtɪ/ | to consider, believe | impf |\n| гадати | /ɦɑˈdɑtɪ/ | to think, suppose | impf |\n| здаватися | /zdɑˈvɑtɪsʲɑ/ | to seem | impf |\n| впевнений | /vpɛvˈnɛnɪj/ | sure, confident | adj |\n| переконаний | /pɛrɛˈkonɑnɪj/ | convinced | adj |\n| безперечно | /bɛzpɛˈrɛt͡ʃno/ | undoubtedly | adv |\n| можливо | /moʒˈlɪvo/ | perhaps, possibly | adv |\n| мабуть | /mɑˈbutʲ/ | probably | adv |\n| ймовірно | /jmoˈvʲirno/ | probably, likely | adv |\n| проте | /proˈtɛ/ | however | conj |\n| однак | /odˈnɑk/ | however | conj |\n| загалом | /zɑˈɦɑlom/ | in general | adv |\n| отже | /ˈotʒɛ/ | so, therefore | conj |\n\n---\n\n# Summary\n\n## Opinion Expressions\n\n### Stating Opinion\n- Я думаю/вважаю/гадаю, що...\n- На мою думку / На мій погляд\n- Мені здається, що...\n\n### Certainty\n- High: Я впевнений, Безперечно\n- Medium: Напевно, Ймовірно\n- Low: Можливо, Мабуть\n\n### Reasoning\n- тому що, оскільки, адже, бо\n\n### Comparing\n- З одного боку... з іншого боку\n- Проте, Однак\n\n### Concluding\n- Отже, Загалом, Підсумовуючи\n\n## Key Patterns\n\n1. **Opinion + reason:** Я думаю, що..., тому що...\n2. **Comparison:** З одного боку... проте...\n3. **Conclusion:** Отже, ...\n\n> **Key Takeaways**\n>\n> - Use hedging for polite uncertainty\n> - Match formality to situation\n> - Always support opinions with reasons\n> - Use comparing expressions for balanced views\n"
   },
   "activities": [
     {
-      "id": "act-uk-B1-97-quiz",
+      "id": "act-b1-97-quiz",
       "type": "quiz",
       "title": "Opinion Expressions",
       "description": "Match Ukrainian with English.",
       "content": {
         "type": "quiz",
-        "instructions": "Match Ukrainian with English.",
         "questions": [
           {
             "question": "На мою думку",
@@ -262,25 +147,20 @@
       "language": "uk",
       "difficultyLevel": "B1",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "communication",
-        "opinions",
-        "speaking"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.293Z",
+      "modifiedAt": "2025-12-01T22:58:37.293Z"
     },
     {
-      "id": "act-uk-B1-97-groupsort",
+      "id": "act-b1-97-groupsort",
       "type": "group-sort",
       "title": "Certainty Level",
       "description": "Certainty Level",
       "content": {
         "type": "group-sort",
-        "instructions": "",
         "groups": [
           {
+            "id": "high-certainty",
             "name": "High Certainty",
             "items": [
               "Я впевнений",
@@ -290,6 +170,7 @@
             ]
           },
           {
+            "id": "medium-certainty",
             "name": "Medium Certainty",
             "items": [
               "Я думаю",
@@ -298,6 +179,7 @@
             ]
           },
           {
+            "id": "low-certainty",
             "name": "Low Certainty",
             "items": [
               "Можливо",
@@ -315,44 +197,45 @@
       "language": "uk",
       "difficultyLevel": "B1",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "communication",
-        "opinions",
-        "speaking"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.293Z",
+      "modifiedAt": "2025-12-01T22:58:37.293Z"
     },
     {
-      "id": "act-uk-B1-97-gapfill",
+      "id": "act-b1-97-gapfill",
       "type": "gap-fill",
       "title": "Complete the Discussion",
       "description": "A: ___ (In my opinion), це хороша ідея. B: Я не ___ (sure). ___ (Perhaps), є кращі варіанти. A: ___ (I think), ми повинні спробувати. B: ___ (On one hand), так. ___ (However), це ризиковано. A: ___ (In general), ризик виправданий.",
       "content": {
         "type": "gap-fill",
-        "instructions": "A: ___ (In my opinion), це хороша ідея. B: Я не ___ (sure). ___ (Perhaps), є кращі варіанти. A: ___ (I think), ми повинні спробувати. B: ___ (On one hand), так. ___ (However), це ризиковано. A: ___ (In general), ризик виправданий.",
         "text": "A: ___ (In my opinion), це хороша ідея.\nB: Я не ___ (sure). ___ (Perhaps), є кращі варіанти.\nA: ___ (I think), ми повинні спробувати.\nB: ___ (On one hand), так. ___ (However), це ризиковано.\nA: ___ (In general), ризик виправданий.",
         "blanks": [
           {
+            "index": 0,
             "hint": "In my opinion"
           },
           {
+            "index": 1,
             "hint": "sure"
           },
           {
+            "index": 2,
             "hint": "Perhaps"
           },
           {
+            "index": 3,
             "hint": "I think"
           },
           {
+            "index": 4,
             "hint": "On one hand"
           },
           {
+            "index": 5,
             "hint": "However"
           },
           {
+            "index": 6,
             "hint": "In general"
           }
         ],
@@ -372,14 +255,9 @@
       "language": "uk",
       "difficultyLevel": "B1",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "communication",
-        "opinions",
-        "speaking"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.293Z",
+      "modifiedAt": "2025-12-01T22:58:37.293Z"
     }
   ],
   "vocabulary": {
@@ -390,148 +268,116 @@
     "transliterationMode": "none",
     "words": [
       {
-        "id": "v-m97-001",
+        "id": "v-dumka-97-0",
         "uk": "думка",
-        "translit": "",
-        "ipa": "/ˈdumkɑ/",
         "en": "opinion, thought",
-        "pos": "",
-        "note": "-"
+        "pos": "-",
+        "ipa": "/ˈdumkɑ/"
       },
       {
-        "id": "v-m97-002",
+        "id": "v-pohlyad-97-1",
         "uk": "погляд",
-        "translit": "",
-        "ipa": "/ˈpoɦlʲɑd/",
         "en": "view",
-        "pos": "",
-        "note": "-"
+        "pos": "-",
+        "ipa": "/ˈpoɦlʲɑd/"
       },
       {
-        "id": "v-m97-003",
+        "id": "v-tochka-zoru-97-2",
         "uk": "точка зору",
-        "translit": "",
-        "ipa": "/ˈtot͡ʃkɑ ˈzoru/",
         "en": "point of view",
-        "pos": "",
-        "note": "-"
+        "pos": "-",
+        "ipa": "/ˈtot͡ʃkɑ ˈzoru/"
       },
       {
-        "id": "v-m97-004",
+        "id": "v-vvazhaty-97-3",
         "uk": "вважати",
-        "translit": "",
-        "ipa": "/vvɑˈʒɑtɪ/",
         "en": "to consider, believe",
-        "pos": "",
-        "note": "impf"
+        "pos": "impf",
+        "ipa": "/vvɑˈʒɑtɪ/"
       },
       {
-        "id": "v-m97-005",
+        "id": "v-hadaty-97-4",
         "uk": "гадати",
-        "translit": "",
-        "ipa": "/ɦɑˈdɑtɪ/",
         "en": "to think, suppose",
-        "pos": "",
-        "note": "impf"
+        "pos": "impf",
+        "ipa": "/ɦɑˈdɑtɪ/"
       },
       {
-        "id": "v-m97-006",
+        "id": "v-zdavatysya-97-5",
         "uk": "здаватися",
-        "translit": "",
-        "ipa": "/zdɑˈvɑtɪsʲɑ/",
         "en": "to seem",
-        "pos": "",
-        "note": "impf"
+        "pos": "impf",
+        "ipa": "/zdɑˈvɑtɪsʲɑ/"
       },
       {
-        "id": "v-m97-007",
+        "id": "v-vpevnenyy-97-6",
         "uk": "впевнений",
-        "translit": "",
-        "ipa": "/vpɛvˈnɛnɪj/",
         "en": "sure, confident",
-        "pos": "",
-        "note": "adj"
+        "pos": "adj",
+        "ipa": "/vpɛvˈnɛnɪj/"
       },
       {
-        "id": "v-m97-008",
+        "id": "v-perekonanyy-97-7",
         "uk": "переконаний",
-        "translit": "",
-        "ipa": "/pɛrɛˈkonɑnɪj/",
         "en": "convinced",
-        "pos": "",
-        "note": "adj"
+        "pos": "adj",
+        "ipa": "/pɛrɛˈkonɑnɪj/"
       },
       {
-        "id": "v-m97-009",
+        "id": "v-bezperechno-97-8",
         "uk": "безперечно",
-        "translit": "",
-        "ipa": "/bɛzpɛˈrɛt͡ʃno/",
         "en": "undoubtedly",
-        "pos": "",
-        "note": "adv"
+        "pos": "adv",
+        "ipa": "/bɛzpɛˈrɛt͡ʃno/"
       },
       {
-        "id": "v-m97-010",
+        "id": "v-mozhlyvo-97-9",
         "uk": "можливо",
-        "translit": "",
-        "ipa": "/moʒˈlɪvo/",
         "en": "perhaps, possibly",
-        "pos": "",
-        "note": "adv"
+        "pos": "adv",
+        "ipa": "/moʒˈlɪvo/"
       },
       {
-        "id": "v-m97-011",
+        "id": "v-mabutь-97-10",
         "uk": "мабуть",
-        "translit": "",
-        "ipa": "/mɑˈbutʲ/",
         "en": "probably",
-        "pos": "",
-        "note": "adv"
+        "pos": "adv",
+        "ipa": "/mɑˈbutʲ/"
       },
       {
-        "id": "v-m97-012",
+        "id": "v-ymovirno-97-11",
         "uk": "ймовірно",
-        "translit": "",
-        "ipa": "/jmoˈvʲirno/",
         "en": "probably, likely",
-        "pos": "",
-        "note": "adv"
+        "pos": "adv",
+        "ipa": "/jmoˈvʲirno/"
       },
       {
-        "id": "v-m97-013",
+        "id": "v-prote-97-12",
         "uk": "проте",
-        "translit": "",
-        "ipa": "/proˈtɛ/",
         "en": "however",
-        "pos": "",
-        "note": "conj"
+        "pos": "conj",
+        "ipa": "/proˈtɛ/"
       },
       {
-        "id": "v-m97-014",
+        "id": "v-odnak-97-13",
         "uk": "однак",
-        "translit": "",
-        "ipa": "/odˈnɑk/",
         "en": "however",
-        "pos": "",
-        "note": "conj"
+        "pos": "conj",
+        "ipa": "/odˈnɑk/"
       },
       {
-        "id": "v-m97-015",
+        "id": "v-zahalom-97-14",
         "uk": "загалом",
-        "translit": "",
-        "ipa": "/zɑˈɦɑlom/",
         "en": "in general",
-        "pos": "",
-        "note": "adv"
+        "pos": "adv",
+        "ipa": "/zɑˈɦɑlom/"
       },
       {
-        "id": "v-m97-016",
+        "id": "v-otzhe-97-15",
         "uk": "отже",
-        "translit": "",
-        "ipa": "/ˈotʒɛ/",
         "en": "so, therefore",
-        "pos": "",
-        "note": "conj"
+        "pos": "conj",
+        "ipa": "/ˈotʒɛ/"
       }
     ]
   }

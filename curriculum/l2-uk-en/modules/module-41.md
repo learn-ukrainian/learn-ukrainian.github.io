@@ -211,49 +211,65 @@ Note: Imperfective future = буду + infinitive; Perfective future = conjugate
 
 Determine if imperfective (I) or perfective (P):
 
-1. Я читаю книгу. → I (in progress)
-2. Я прочитав книгу. → P (completed)
-3. Вона писала весь день. → I (duration)
-4. Він написав листа. → P (completed)
-5. Ми їмо сніданок. → I (in progress)
-6. Вони з'їли все. → P (completed)
-7. Я вчу українську щодня. → I (habitual)
-8. Я вивчив нові слова. → P (completed)
+1. Я читаю книгу.
+   > [!answer] I (in progress)
+2. Я прочитав книгу.
+   > [!answer] P (completed)
+3. Вона писала весь день.
+   > [!answer] I (duration)
+4. Він написав листа.
+   > [!answer] P (completed)
+5. Ми їмо сніданок.
+   > [!answer] I (in progress)
+6. Вони з'їли все.
+   > [!answer] P (completed)
+7. Я вчу українську щодня.
+   > [!answer] I (habitual)
+8. Я вивчив нові слова.
+   > [!answer] P (completed)
 
 ### Choose the Correct Aspect
 
 Select imperfective or perfective:
 
 1. Я ___ (читати/прочитати) кожен вечір.
-   → читаю (habitual action - imperfective)
-
+   > [!answer] читаю
+   > [!explanation] habitual action - imperfective
 2. Вчора я ___ (читати/прочитати) цю книгу.
-   → прочитав (completed - perfective)
-
+   > [!answer] прочитав
+   > [!explanation] completed - perfective
 3. Що ти ___ (робити/зробити) зараз?
-   → робиш (right now - imperfective)
-
+   > [!answer] робиш
+   > [!explanation] right now - imperfective
 4. Вона ___ (готувати/приготувати) вечерю за годину.
-   → приготувала (completed in one hour - perfective)
-
+   > [!answer] приготувала
+   > [!explanation] completed in one hour - perfective
 5. Він завжди ___ (писати/написати) листи батькам.
-   → пише (always - imperfective)
-
+   > [!answer] пише
+   > [!explanation] always - imperfective
 6. Завтра я ___ (писати/написати) тобі.
-   → напишу (single future action - perfective)
-
+   > [!answer] напишу
+   > [!explanation] single future action - perfective
 ### Form Aspect Pairs
 
 Give the perfective form:
 
-1. читати → прочитати
-2. писати → написати
-3. робити → зробити
-4. їсти → з'їсти
-5. пити → випити
-6. вчити → вивчити
-7. готувати → приготувати
-8. давати → дати
+1. читати
+   > [!answer] прочитати
+2. писати
+   > [!answer] написати
+3. робити
+   > [!answer] зробити
+4. їсти
+   > [!answer] з'їсти
+5. пити
+   > [!answer] випити
+6. вчити
+   > [!answer] вивчити
+7. готувати
+   > [!answer] приготувати
+8. давати
+   > [!answer] дати
 
 ## production
 

@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-B1-136",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "vocabulary-expansion",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -22,176 +21,43 @@
       "Recognize idioms in context"
     ],
     "grammarFocus": [],
-    "totalDuration": 45,
-    "transliterationMode": "none",
     "tags": [
       "vocabulary",
       "idioms",
       "expressions",
       "figurative"
     ],
+    "totalDuration": 45,
+    "transliterationMode": "none",
+    "phases": [],
+    "createdAt": "2025-12-01T22:58:37.240Z",
+    "modifiedAt": "2025-12-01T22:58:37.240Z",
     "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
-    "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Приказки та прислів'я | Proverbs and Sayings\n\nУкраїнські приказки — народна мудрість:\n\nUkrainian proverbs are folk wisdom:\n\n- **Без труда нема плода.** (No pain, no gain.)\n- **Хто рано встає, тому Бог дає.** (The early bird catches the worm.)"
-          }
-        ]
-      },
-      {
-        "id": "phase-presentation",
-        "name": "presentation",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Ідіоми про спілкування | Communication Idioms\n\n| Idiom | Meaning | Example |\n|-------|---------|---------|\n| говорити на вітер | speak in vain | Говорю йому, а все на вітер. |\n| слово за слово | word for word | Слово за слово — і посварились. |\n| з першого слова | from the first word | Зрозумів з першого слова. |\n| за словом у кишеню не лізти | never at loss for words | Він за словом у кишеню не лізе. |\n| давати слово | give one's word | Даю слово! |\n| тримати слово | keep one's word | Він завжди тримає слово. |\n| брати свої слова назад | take back words | Я беру свої слова назад. |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Ідіоми про знання | Knowledge Idioms\n\n| Idiom | Meaning | Example |\n|-------|---------|---------|\n| знати як свої п'ять пальців | know like back of hand | Знаю місто як свої п'ять пальців. |\n| мати ні сном ні духом | have no idea | Я ні сном ні духом! |\n| очі відкрилися | eyes opened | Мені очі відкрилися. |\n| бути не в темі | be out of loop | Я не в темі. |\n| вийти сухим з води | get away with it | Він вийшов сухим з води. |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Ідіоми про успіх і невдачу | Success/Failure Idioms\n\n| Idiom | Meaning | Example |\n|-------|---------|---------|\n| справа в капелюсі | it's in the bag | Справа в капелюсі! |\n| дістати зірку з неба | achieve impossible | Він дістане зірку з неба. |\n| ловити момент | seize the moment | Треба ловити момент! |\n| все пішло шкереберть | everything went wrong | Все пішло шкереберть. |\n| пасти задніх | lag behind | Він пасе задніх. |\n| вийти на поверхню | come to light | Правда вийшла на поверхню. |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Ідіоми про стосунки | Relationship Idioms\n\n| Idiom | Meaning | Example |\n|-------|---------|---------|\n| як риба у воді | like fish in water | Він тут як риба у воді. |\n| жити душа в душу | live in harmony | Вони живуть душа в душу. |\n| знайти спільну мову | find common language | Ми знайшли спільну мову. |\n| бути під каблуком | be under thumb | Він під каблуком у дружини. |\n| на ножах | at odds | Вони на ножах. |\n| підставити плече | lend a hand | Він підставив плече в скрутну хвилину. |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Популярні приказки | Popular Proverbs\n\n| Proverb | English Equivalent |\n|---------|-------------------|\n| Без труда нема плода. | No pain, no gain. |\n| Хто рано встає, тому Бог дає. | Early bird catches worm. |\n| Не кажи «гоп», поки не перескочиш. | Don't count chickens before they hatch. |\n| Краще пізно, ніж ніколи. | Better late than never. |\n| Яблуко від яблуні недалеко падає. | Apple doesn't fall far from tree. |\n| Не все те золото, що блищить. | All that glitters is not gold. |\n| Тихше їдеш — далі будеш. | Slow and steady wins the race. |\n| Що посієш, те й пожнеш. | You reap what you sow. |\n| Сім разів відмір, один раз відріж. | Measure twice, cut once. |\n| У чужому оці і соломинку бачить. | See splinter in other's eye. |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Вирази ввічливості | Polite Expressions\n\n| Expression | Usage |\n|------------|-------|\n| Будь ласка! | Please! / You're welcome! |\n| Прошу! | Please! / Here you go! |\n| Дякую за увагу! | Thank you for attention! |\n| Вибачте за турботу. | Sorry to bother you. |\n| Не за що! | Don't mention it! |\n| Нема за що! | No problem! |\n| На здоров'я! | You're welcome! (after thanks) |\n| Будьте здорові! | Bless you! (after sneeze) |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Розмовні вирази | Conversational Expressions\n\n| Expression | Meaning |\n|------------|---------|\n| До речі... | By the way... |\n| Справа в тому, що... | The thing is... |\n| Як на мене... | In my opinion... |\n| Ні за що! | No way! / Never! |\n| Ще чого! | No way! / As if! |\n| Ось так так! | Well, well! / My, my! |\n| Отакої! | Wow! / Really! |\n| Та ну! | Come on! / Really? |"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Match Proverb to Meaning\n\n1. Без труда нема плода — a) hard work pays off\n2. Краще пізно, ніж ніколи — b) better late than never\n3. Тихше їдеш — далі будеш — c) slow and steady\n4. Яблуко від яблуні недалеко падає — d) like parent like child\n5. Що посієш, те й пожнеш — e) you reap what you sow"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Complete with Idioms\n\n1. Я дуже добре знаю це місто — ___ (very well).\n   → **як свої п'ять пальців**\n\n2. Вони завжди погоджуються — живуть ___ (in harmony).\n   → **душа в душу**\n\n3. Він нічого не знав — ___ (had no idea).\n   → **ні сном ні духом**\n\n4. Вона завжди ___ (keeps her word).\n   → **тримає слово**\n\n5. Все йде добре — ___ (in the bag)!\n   → **справа в капелюсі**"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Use in Sentences\n\nCreate sentences with:\n\n1. знайти спільну мову\n2. ловити момент\n3. краще пізно, ніж ніколи"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Respond with Expression\n\n1. «Дякую!» → **Будь ласка! / Нема за що!**\n2. «Апчхи!» → **Будьте здорові!**\n3. «Можна тебе запитати?» → **Звичайно! / Прошу!**"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-B1-136-quiz"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Share Wisdom\n\nShare a situation where a proverb applies:\n\n**Example:**\n«Одного разу я поспішав і зробив помилку. Тепер я завжди пам'ятаю: \"Тихше їдеш — далі будеш.\"»"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Discuss Proverbs\n\nAre there similar proverbs in your language?\n\n- «Без труда нема плода» — чи є схожа приказка?\n- Чи погоджуєтеся з приказкою?"
-          }
-        ]
-      }
-    ],
-    "rawMarkdown": "# Зміст уроку | Lesson Content\n\n## warm-up | Розминка\n\n### Приказки та прислів'я | Proverbs and Sayings\n\nУкраїнські приказки — народна мудрість:\n\nUkrainian proverbs are folk wisdom:\n\n- **Без труда нема плода.** (No pain, no gain.)\n- **Хто рано встає, тому Бог дає.** (The early bird catches the worm.)\n\n## presentation | Презентація\n\n### Ідіоми про спілкування | Communication Idioms\n\n| Idiom | Meaning | Example |\n|-------|---------|---------|\n| говорити на вітер | speak in vain | Говорю йому, а все на вітер. |\n| слово за слово | word for word | Слово за слово — і посварились. |\n| з першого слова | from the first word | Зрозумів з першого слова. |\n| за словом у кишеню не лізти | never at loss for words | Він за словом у кишеню не лізе. |\n| давати слово | give one's word | Даю слово! |\n| тримати слово | keep one's word | Він завжди тримає слово. |\n| брати свої слова назад | take back words | Я беру свої слова назад. |\n\n### Ідіоми про знання | Knowledge Idioms\n\n| Idiom | Meaning | Example |\n|-------|---------|---------|\n| знати як свої п'ять пальців | know like back of hand | Знаю місто як свої п'ять пальців. |\n| мати ні сном ні духом | have no idea | Я ні сном ні духом! |\n| очі відкрилися | eyes opened | Мені очі відкрилися. |\n| бути не в темі | be out of loop | Я не в темі. |\n| вийти сухим з води | get away with it | Він вийшов сухим з води. |\n\n### Ідіоми про успіх і невдачу | Success/Failure Idioms\n\n| Idiom | Meaning | Example |\n|-------|---------|---------|\n| справа в капелюсі | it's in the bag | Справа в капелюсі! |\n| дістати зірку з неба | achieve impossible | Він дістане зірку з неба. |\n| ловити момент | seize the moment | Треба ловити момент! |\n| все пішло шкереберть | everything went wrong | Все пішло шкереберть. |\n| пасти задніх | lag behind | Він пасе задніх. |\n| вийти на поверхню | come to light | Правда вийшла на поверхню. |\n\n### Ідіоми про стосунки | Relationship Idioms\n\n| Idiom | Meaning | Example |\n|-------|---------|---------|\n| як риба у воді | like fish in water | Він тут як риба у воді. |\n| жити душа в душу | live in harmony | Вони живуть душа в душу. |\n| знайти спільну мову | find common language | Ми знайшли спільну мову. |\n| бути під каблуком | be under thumb | Він під каблуком у дружини. |\n| на ножах | at odds | Вони на ножах. |\n| підставити плече | lend a hand | Він підставив плече в скрутну хвилину. |\n\n### Популярні приказки | Popular Proverbs\n\n| Proverb | English Equivalent |\n|---------|-------------------|\n| Без труда нема плода. | No pain, no gain. |\n| Хто рано встає, тому Бог дає. | Early bird catches worm. |\n| Не кажи «гоп», поки не перескочиш. | Don't count chickens before they hatch. |\n| Краще пізно, ніж ніколи. | Better late than never. |\n| Яблуко від яблуні недалеко падає. | Apple doesn't fall far from tree. |\n| Не все те золото, що блищить. | All that glitters is not gold. |\n| Тихше їдеш — далі будеш. | Slow and steady wins the race. |\n| Що посієш, те й пожнеш. | You reap what you sow. |\n| Сім разів відмір, один раз відріж. | Measure twice, cut once. |\n| У чужому оці і соломинку бачить. | See splinter in other's eye. |\n\n### Вирази ввічливості | Polite Expressions\n\n| Expression | Usage |\n|------------|-------|\n| Будь ласка! | Please! / You're welcome! |\n| Прошу! | Please! / Here you go! |\n| Дякую за увагу! | Thank you for attention! |\n| Вибачте за турботу. | Sorry to bother you. |\n| Не за що! | Don't mention it! |\n| Нема за що! | No problem! |\n| На здоров'я! | You're welcome! (after thanks) |\n| Будьте здорові! | Bless you! (after sneeze) |\n\n### Розмовні вирази | Conversational Expressions\n\n| Expression | Meaning |\n|------------|---------|\n| До речі... | By the way... |\n| Справа в тому, що... | The thing is... |\n| Як на мене... | In my opinion... |\n| Ні за що! | No way! / Never! |\n| Ще чого! | No way! / As if! |\n| Ось так так! | Well, well! / My, my! |\n| Отакої! | Wow! / Really! |\n| Та ну! | Come on! / Really? |\n\n## practice | Практика\n\n### Match Proverb to Meaning\n\n1. Без труда нема плода — a) hard work pays off\n2. Краще пізно, ніж ніколи — b) better late than never\n3. Тихше їдеш — далі будеш — c) slow and steady\n4. Яблуко від яблуні недалеко падає — d) like parent like child\n5. Що посієш, те й пожнеш — e) you reap what you sow\n\n### Complete with Idioms\n\n1. Я дуже добре знаю це місто — ___ (very well).\n   → **як свої п'ять пальців**\n\n2. Вони завжди погоджуються — живуть ___ (in harmony).\n   → **душа в душу**\n\n3. Він нічого не знав — ___ (had no idea).\n   → **ні сном ні духом**\n\n4. Вона завжди ___ (keeps her word).\n   → **тримає слово**\n\n5. Все йде добре — ___ (in the bag)!\n   → **справа в капелюсі**\n\n### Use in Sentences\n\nCreate sentences with:\n\n1. знайти спільну мову\n2. ловити момент\n3. краще пізно, ніж ніколи\n\n### Respond with Expression\n\n1. «Дякую!» → **Будь ласка! / Нема за що!**\n2. «Апчхи!» → **Будьте здорові!**\n3. «Можна тебе запитати?» → **Звичайно! / Прошу!**\n\n## production | Продукція\n\n### Share Wisdom\n\nShare a situation where a proverb applies:\n\n**Example:**\n«Одного разу я поспішав і зробив помилку. Тепер я завжди пам'ятаю: \"Тихше їдеш — далі будеш.\"»\n\n### Discuss Proverbs\n\nAre there similar proverbs in your language?\n\n- «Без труда нема плода» — чи є схожа приказка?\n- Чи погоджуєтеся з приказкою?\n\n---\n\n# Activities\n\n## quiz: Idioms and Proverbs\n\n> Choose the correct meaning.\n\n1. «Тримати слово» означає:\n   - [x] дотримуватися обіцянки\n   - [ ] мовчати\n   > Keep one's word.\n\n2. «Як свої п'ять пальців» означає:\n   - [x] дуже добре знати\n   - [ ] мало знати\n   > Know very well.\n\n3. «Краще пізно, ніж ніколи»:\n   - [x] Better late than never\n   - [ ] Never say never\n   > Better to do something late than not at all.\n\n4. «Справа в капелюсі» означає:\n   - [x] все вирішено\n   - [ ] все пропало\n   > It's in the bag.\n\n5. «На ножах» означає:\n   - [x] у ворожих стосунках\n   - [ ] у дружніх стосунках\n   > At odds.\n\n6. «Без труда нема плода»:\n   - [x] No pain, no gain\n   - [ ] Easy come, easy go\n   > Hard work is needed for results.\n\n## fill-in: Conversation with Expressions\n\n> Заповніть розмову.\n\n> — Привіт! Давно не бачились! (1)___ (By the way), як справи?\n> — (2)___ (The thing is), я був зайнятий. Працював (3)___ (without rest).\n> — Розумію. (4)___ (In my opinion), треба відпочивати.\n> — Так, ти правий. (5)___ (No pain, no gain), але здоров'я важливіше!\n\n**Answers:**\n1. До речі\n2. Справа в тому, що\n3. не покладаючи рук\n4. Як на мене\n5. Без труда нема плода\n\n---",
     "immersiveSections": [
       {
-        "id": "warm-up-розминка",
-        "title": "warm-up | Розминка",
-        "content": "### Приказки та прислів'я | Proverbs and Sayings\n\nУкраїнські приказки — народна мудрість:\n\nUkrainian proverbs are folk wisdom:\n\n- **Без труда нема плода.** (No pain, no gain.)\n- **Хто рано встає, тому Бог дає.** (The early bird catches the worm.)",
-        "type": "topic"
+        "id": "section-зміст-уроку-lesson-content",
+        "type": "content",
+        "title": "Зміст уроку | Lesson Content",
+        "content": "## warm-up | Розминка\n\n### Приказки та прислів'я | Proverbs and Sayings\n\nУкраїнські приказки — народна мудрість:\n\nUkrainian proverbs are folk wisdom:\n\n- **Без труда нема плода.** (No pain, no gain.)\n- **Хто рано встає, тому Бог дає.** (The early bird catches the worm.)\n\n## presentation | Презентація\n\n### Ідіоми про спілкування | Communication Idioms\n\n| Idiom | Meaning | Example |\n|-------|---------|---------|\n| говорити на вітер | speak in vain | Говорю йому, а все на вітер. |\n| слово за слово | word for word | Слово за слово — і посварились. |\n| з першого слова | from the first word | Зрозумів з першого слова. |\n| за словом у кишеню не лізти | never at loss for words | Він за словом у кишеню не лізе. |\n| давати слово | give one's word | Даю слово! |\n| тримати слово | keep one's word | Він завжди тримає слово. |\n| брати свої слова назад | take back words | Я беру свої слова назад. |\n\n### Ідіоми про знання | Knowledge Idioms\n\n| Idiom | Meaning | Example |\n|-------|---------|---------|\n| знати як свої п'ять пальців | know like back of hand | Знаю місто як свої п'ять пальців. |\n| мати ні сном ні духом | have no idea | Я ні сном ні духом! |\n| очі відкрилися | eyes opened | Мені очі відкрилися. |\n| бути не в темі | be out of loop | Я не в темі. |\n| вийти сухим з води | get away with it | Він вийшов сухим з води. |\n\n### Ідіоми про успіх і невдачу | Success/Failure Idioms\n\n| Idiom | Meaning | Example |\n|-------|---------|---------|\n| справа в капелюсі | it's in the bag | Справа в капелюсі! |\n| дістати зірку з неба | achieve impossible | Він дістане зірку з неба. |\n| ловити момент | seize the moment | Треба ловити момент! |\n| все пішло шкереберть | everything went wrong | Все пішло шкереберть. |\n| пасти задніх | lag behind | Він пасе задніх. |\n| вийти на поверхню | come to light | Правда вийшла на поверхню. |\n\n### Ідіоми про стосунки | Relationship Idioms\n\n| Idiom | Meaning | Example |\n|-------|---------|---------|\n| як риба у воді | like fish in water | Він тут як риба у воді. |\n| жити душа в душу | live in harmony | Вони живуть душа в душу. |\n| знайти спільну мову | find common language | Ми знайшли спільну мову. |\n| бути під каблуком | be under thumb | Він під каблуком у дружини. |\n| на ножах | at odds | Вони на ножах. |\n| підставити плече | lend a hand | Він підставив плече в скрутну хвилину. |\n\n### Популярні приказки | Popular Proverbs\n\n| Proverb | English Equivalent |\n|---------|-------------------|\n| Без труда нема плода. | No pain, no gain. |\n| Хто рано встає, тому Бог дає. | Early bird catches worm. |\n| Не кажи «гоп», поки не перескочиш. | Don't count chickens before they hatch. |\n| Краще пізно, ніж ніколи. | Better late than never. |\n| Яблуко від яблуні недалеко падає. | Apple doesn't fall far from tree. |\n| Не все те золото, що блищить. | All that glitters is not gold. |\n| Тихше їдеш — далі будеш. | Slow and steady wins the race. |\n| Що посієш, те й пожнеш. | You reap what you sow. |\n| Сім разів відмір, один раз відріж. | Measure twice, cut once. |\n| У чужому оці і соломинку бачить. | See splinter in other's eye. |\n\n### Вирази ввічливості | Polite Expressions\n\n| Expression | Usage |\n|------------|-------|\n| Будь ласка! | Please! / You're welcome! |\n| Прошу! | Please! / Here you go! |\n| Дякую за увагу! | Thank you for attention! |\n| Вибачте за турботу. | Sorry to bother you. |\n| Не за що! | Don't mention it! |\n| Нема за що! | No problem! |\n| На здоров'я! | You're welcome! (after thanks) |\n| Будьте здорові! | Bless you! (after sneeze) |\n\n### Розмовні вирази | Conversational Expressions\n\n| Expression | Meaning |\n|------------|---------|\n| До речі... | By the way... |\n| Справа в тому, що... | The thing is... |\n| Як на мене... | In my opinion... |\n| Ні за що! | No way! / Never! |\n| Ще чого! | No way! / As if! |\n| Ось так так! | Well, well! / My, my! |\n| Отакої! | Wow! / Really! |\n| Та ну! | Come on! / Really? |\n\n## practice | Практика\n\n### Match Proverb to Meaning\n\n1. Без труда нема плода — a) hard work pays off\n2. Краще пізно, ніж ніколи — b) better late than never\n3. Тихше їдеш — далі будеш — c) slow and steady\n4. Яблуко від яблуні недалеко падає — d) like parent like child\n5. Що посієш, те й пожнеш — e) you reap what you sow\n\n### Complete with Idioms\n\n1. Я дуже добре знаю це місто — ___ (very well).\n   > [!answer] **як свої п'ять пальців**\n2. Вони завжди погоджуються — живуть ___ (in harmony).\n   > [!answer] **душа в душу**\n3. Він нічого не знав — ___ (had no idea).\n   > [!answer] **ні сном ні духом**\n4. Вона завжди ___ (keeps her word).\n   > [!answer] **тримає слово**\n5. Все йде добре — ___ (in the bag)!\n   > [!answer] **справа в капелюсі**\n### Use in Sentences\n\nCreate sentences with:\n\n1. знайти спільну мову\n2. ловити момент\n3. краще пізно, ніж ніколи\n\n### Respond with Expression\n\n1. «Дякую!»\n   > [!answer] **Будь ласка! / Нема за що!**\n2. «Апчхи!»\n   > [!answer] **Будьте здорові!**\n3. «Можна тебе запитати?»\n   > [!answer] **Звичайно! / Прошу!**\n\n## production | Продукція\n\n### Share Wisdom\n\nShare a situation where a proverb applies:\n\n**Example:**\n«Одного разу я поспішав і зробив помилку. Тепер я завжди пам'ятаю: \"Тихше їдеш — далі будеш.\"»\n\n### Discuss Proverbs\n\nAre there similar proverbs in your language?\n\n- «Без труда нема плода» — чи є схожа приказка?\n- Чи погоджуєтеся з приказкою?\n\n---\n\n\n---\n\n\n---"
       },
       {
-        "id": "presentation-презентація",
-        "title": "presentation | Презентація",
-        "content": "### Ідіоми про спілкування | Communication Idioms\n\n| Idiom | Meaning | Example |\n|-------|---------|---------|\n| говорити на вітер | speak in vain | Говорю йому, а все на вітер. |\n| слово за слово | word for word | Слово за слово — і посварились. |\n| з першого слова | from the first word | Зрозумів з першого слова. |\n| за словом у кишеню не лізти | never at loss for words | Він за словом у кишеню не лізе. |\n| давати слово | give one's word | Даю слово! |\n| тримати слово | keep one's word | Він завжди тримає слово. |\n| брати свої слова назад | take back words | Я беру свої слова назад. |\n\n### Ідіоми про знання | Knowledge Idioms\n\n| Idiom | Meaning | Example |\n|-------|---------|---------|\n| знати як свої п'ять пальців | know like back of hand | Знаю місто як свої п'ять пальців. |\n| мати ні сном ні духом | have no idea | Я ні сном ні духом! |\n| очі відкрилися | eyes opened | Мені очі відкрилися. |\n| бути не в темі | be out of loop | Я не в темі. |\n| вийти сухим з води | get away with it | Він вийшов сухим з води. |\n\n### Ідіоми про успіх і невдачу | Success/Failure Idioms\n\n| Idiom | Meaning | Example |\n|-------|---------|---------|\n| справа в капелюсі | it's in the bag | Справа в капелюсі! |\n| дістати зірку з неба | achieve impossible | Він дістане зірку з неба. |\n| ловити момент | seize the moment | Треба ловити момент! |\n| все пішло шкереберть | everything went wrong | Все пішло шкереберть. |\n| пасти задніх | lag behind | Він пасе задніх. |\n| вийти на поверхню | come to light | Правда вийшла на поверхню. |\n\n### Ідіоми про стосунки | Relationship Idioms\n\n| Idiom | Meaning | Example |\n|-------|---------|---------|\n| як риба у воді | like fish in water | Він тут як риба у воді. |\n| жити душа в душу | live in harmony | Вони живуть душа в душу. |\n| знайти спільну мову | find common language | Ми знайшли спільну мову. |\n| бути під каблуком | be under thumb | Він під каблуком у дружини. |\n| на ножах | at odds | Вони на ножах. |\n| підставити плече | lend a hand | Він підставив плече в скрутну хвилину. |\n\n### Популярні приказки | Popular Proverbs\n\n| Proverb | English Equivalent |\n|---------|-------------------|\n| Без труда нема плода. | No pain, no gain. |\n| Хто рано встає, тому Бог дає. | Early bird catches worm. |\n| Не кажи «гоп», поки не перескочиш. | Don't count chickens before they hatch. |\n| Краще пізно, ніж ніколи. | Better late than never. |\n| Яблуко від яблуні недалеко падає. | Apple doesn't fall far from tree. |\n| Не все те золото, що блищить. | All that glitters is not gold. |\n| Тихше їдеш — далі будеш. | Slow and steady wins the race. |\n| Що посієш, те й пожнеш. | You reap what you sow. |\n| Сім разів відмір, один раз відріж. | Measure twice, cut once. |\n| У чужому оці і соломинку бачить. | See splinter in other's eye. |\n\n### Вирази ввічливості | Polite Expressions\n\n| Expression | Usage |\n|------------|-------|\n| Будь ласка! | Please! / You're welcome! |\n| Прошу! | Please! / Here you go! |\n| Дякую за увагу! | Thank you for attention! |\n| Вибачте за турботу. | Sorry to bother you. |\n| Не за що! | Don't mention it! |\n| Нема за що! | No problem! |\n| На здоров'я! | You're welcome! (after thanks) |\n| Будьте здорові! | Bless you! (after sneeze) |\n\n### Розмовні вирази | Conversational Expressions\n\n| Expression | Meaning |\n|------------|---------|\n| До речі... | By the way... |\n| Справа в тому, що... | The thing is... |\n| Як на мене... | In my opinion... |\n| Ні за що! | No way! / Never! |\n| Ще чого! | No way! / As if! |\n| Ось так так! | Well, well! / My, my! |\n| Отакої! | Wow! / Really! |\n| Та ну! | Come on! / Really? |",
-        "type": "topic"
-      },
-      {
-        "id": "practice-практика",
-        "title": "practice | Практика",
-        "content": "### Match Proverb to Meaning\n\n1. Без труда нема плода — a) hard work pays off\n2. Краще пізно, ніж ніколи — b) better late than never\n3. Тихше їдеш — далі будеш — c) slow and steady\n4. Яблуко від яблуні недалеко падає — d) like parent like child\n5. Що посієш, те й пожнеш — e) you reap what you sow\n\n### Complete with Idioms\n\n1. Я дуже добре знаю це місто — ___ (very well).\n   → **як свої п'ять пальців**\n\n2. Вони завжди погоджуються — живуть ___ (in harmony).\n   → **душа в душу**\n\n3. Він нічого не знав — ___ (had no idea).\n   → **ні сном ні духом**\n\n4. Вона завжди ___ (keeps her word).\n   → **тримає слово**\n\n5. Все йде добре — ___ (in the bag)!\n   → **справа в капелюсі**\n\n### Use in Sentences\n\nCreate sentences with:\n\n1. знайти спільну мову\n2. ловити момент\n3. краще пізно, ніж ніколи\n\n### Respond with Expression\n\n1. «Дякую!» → **Будь ласка! / Нема за що!**\n2. «Апчхи!» → **Будьте здорові!**\n3. «Можна тебе запитати?» → **Звичайно! / Прошу!**",
-        "type": "topic"
-      },
-      {
-        "id": "production-продукція",
-        "title": "production | Продукція",
-        "content": "### Share Wisdom\n\nShare a situation where a proverb applies:\n\n**Example:**\n«Одного разу я поспішав і зробив помилку. Тепер я завжди пам'ятаю: \"Тихше їдеш — далі будеш.\"»\n\n### Discuss Proverbs\n\nAre there similar proverbs in your language?\n\n- «Без труда нема плода» — чи є схожа приказка?\n- Чи погоджуєтеся з приказкою?\n\n---",
-        "type": "topic"
-      },
-      {
-        "id": "activities",
-        "title": "Activities",
-        "content": "## quiz: Idioms and Proverbs\n\n> Choose the correct meaning.\n\n1. «Тримати слово» означає:\n   - [x] дотримуватися обіцянки\n   - [ ] мовчати\n   > Keep one's word.\n\n2. «Як свої п'ять пальців» означає:\n   - [x] дуже добре знати\n   - [ ] мало знати\n   > Know very well.\n\n3. «Краще пізно, ніж ніколи»:\n   - [x] Better late than never\n   - [ ] Never say never\n   > Better to do something late than not at all.\n\n4. «Справа в капелюсі» означає:\n   - [x] все вирішено\n   - [ ] все пропало\n   > It's in the bag.\n\n5. «На ножах» означає:\n   - [x] у ворожих стосунках\n   - [ ] у дружніх стосунках\n   > At odds.\n\n6. «Без труда нема плода»:\n   - [x] No pain, no gain\n   - [ ] Easy come, easy go\n   > Hard work is needed for results.\n\n## fill-in: Conversation with Expressions\n\n> Заповніть розмову.\n\n> — Привіт! Давно не бачились! (1)___ (By the way), як справи?\n> — (2)___ (The thing is), я був зайнятий. Працював (3)___ (without rest).\n> — Розумію. (4)___ (In my opinion), треба відпочивати.\n> — Так, ти правий. (5)___ (No pain, no gain), але здоров'я важливіше!\n\n**Answers:**\n1. До речі\n2. Справа в тому, що\n3. не покладаючи рук\n4. Як на мене\n5. Без труда нема плода\n\n---",
-        "type": "activities"
-      },
-      {
-        "id": "vocabulary",
-        "title": "Vocabulary",
-        "content": "| Word | IPA | English | Notes |\n|------|-----|---------|-------|\n| приказка | /prɪˈkɑzkɑ/ | proverb, saying | f |\n| прислів'я | /prɪsˈlʲivjɑ/ | proverb | n |\n| народна мудрість | - | folk wisdom | f |\n| тримати слово | - | keep one's word | idiom |\n| давати слово | - | give one's word | idiom |\n| справа в капелюсі | - | it's in the bag | idiom |\n| душа в душу | - | in harmony | idiom |\n| ні сном ні духом | - | have no idea | idiom |\n| на ножах | - | at odds | idiom |\n| без труда нема плода | - | no pain no gain | proverb |\n| краще пізно ніж ніколи | - | better late than never | proverb |\n| до речі | - | by the way | expression |\n\n---",
-        "type": "vocabulary"
-      },
-      {
-        "id": "summary",
+        "id": "section-summary",
+        "type": "summary",
         "title": "Summary",
         "content": "## More Idioms and Proverbs\n\n### Communication\n- тримати/давати слово\n- за словом у кишеню не лізти\n- говорити на вітер\n\n### Relationships\n- душа в душу\n- знайти спільну мову\n- на ножах\n\n### Success\n- справа в капелюсі\n- ловити момент\n\n### Popular Proverbs\n- Без труда нема плода\n- Краще пізно, ніж ніколи\n- Тихше їдеш — далі будеш\n\n> **Key Takeaways**\n>\n> - Proverbs express folk wisdom\n> - Many have English equivalents\n> - Polite expressions are essential\n> - Conversational fillers add naturalness\n> - Practice using idioms in context",
-        "type": "summary"
+        "titleUk": "Підсумок"
       }
-    ]
+    ],
+    "rawMarkdown": "---\nmodule: 136\ntitle: \"Idioms & Set Phrases II\"\nsubtitle: \"Більше ідіом та виразів\"\nlevel: B1\nphase: B1.4\nduration: 45\ntransliteration: none\ntags: [vocabulary, idioms, expressions, figurative]\nobjectives:\n  - Learn more Ukrainian idioms\n  - Understand proverbs and sayings\n  - Use set expressions in conversation\n  - Recognize idioms in context\n---\n\n# Зміст уроку | Lesson Content\n\n## warm-up | Розминка\n\n### Приказки та прислів'я | Proverbs and Sayings\n\nУкраїнські приказки — народна мудрість:\n\nUkrainian proverbs are folk wisdom:\n\n- **Без труда нема плода.** (No pain, no gain.)\n- **Хто рано встає, тому Бог дає.** (The early bird catches the worm.)\n\n## presentation | Презентація\n\n### Ідіоми про спілкування | Communication Idioms\n\n| Idiom | Meaning | Example |\n|-------|---------|---------|\n| говорити на вітер | speak in vain | Говорю йому, а все на вітер. |\n| слово за слово | word for word | Слово за слово — і посварились. |\n| з першого слова | from the first word | Зрозумів з першого слова. |\n| за словом у кишеню не лізти | never at loss for words | Він за словом у кишеню не лізе. |\n| давати слово | give one's word | Даю слово! |\n| тримати слово | keep one's word | Він завжди тримає слово. |\n| брати свої слова назад | take back words | Я беру свої слова назад. |\n\n### Ідіоми про знання | Knowledge Idioms\n\n| Idiom | Meaning | Example |\n|-------|---------|---------|\n| знати як свої п'ять пальців | know like back of hand | Знаю місто як свої п'ять пальців. |\n| мати ні сном ні духом | have no idea | Я ні сном ні духом! |\n| очі відкрилися | eyes opened | Мені очі відкрилися. |\n| бути не в темі | be out of loop | Я не в темі. |\n| вийти сухим з води | get away with it | Він вийшов сухим з води. |\n\n### Ідіоми про успіх і невдачу | Success/Failure Idioms\n\n| Idiom | Meaning | Example |\n|-------|---------|---------|\n| справа в капелюсі | it's in the bag | Справа в капелюсі! |\n| дістати зірку з неба | achieve impossible | Він дістане зірку з неба. |\n| ловити момент | seize the moment | Треба ловити момент! |\n| все пішло шкереберть | everything went wrong | Все пішло шкереберть. |\n| пасти задніх | lag behind | Він пасе задніх. |\n| вийти на поверхню | come to light | Правда вийшла на поверхню. |\n\n### Ідіоми про стосунки | Relationship Idioms\n\n| Idiom | Meaning | Example |\n|-------|---------|---------|\n| як риба у воді | like fish in water | Він тут як риба у воді. |\n| жити душа в душу | live in harmony | Вони живуть душа в душу. |\n| знайти спільну мову | find common language | Ми знайшли спільну мову. |\n| бути під каблуком | be under thumb | Він під каблуком у дружини. |\n| на ножах | at odds | Вони на ножах. |\n| підставити плече | lend a hand | Він підставив плече в скрутну хвилину. |\n\n### Популярні приказки | Popular Proverbs\n\n| Proverb | English Equivalent |\n|---------|-------------------|\n| Без труда нема плода. | No pain, no gain. |\n| Хто рано встає, тому Бог дає. | Early bird catches worm. |\n| Не кажи «гоп», поки не перескочиш. | Don't count chickens before they hatch. |\n| Краще пізно, ніж ніколи. | Better late than never. |\n| Яблуко від яблуні недалеко падає. | Apple doesn't fall far from tree. |\n| Не все те золото, що блищить. | All that glitters is not gold. |\n| Тихше їдеш — далі будеш. | Slow and steady wins the race. |\n| Що посієш, те й пожнеш. | You reap what you sow. |\n| Сім разів відмір, один раз відріж. | Measure twice, cut once. |\n| У чужому оці і соломинку бачить. | See splinter in other's eye. |\n\n### Вирази ввічливості | Polite Expressions\n\n| Expression | Usage |\n|------------|-------|\n| Будь ласка! | Please! / You're welcome! |\n| Прошу! | Please! / Here you go! |\n| Дякую за увагу! | Thank you for attention! |\n| Вибачте за турботу. | Sorry to bother you. |\n| Не за що! | Don't mention it! |\n| Нема за що! | No problem! |\n| На здоров'я! | You're welcome! (after thanks) |\n| Будьте здорові! | Bless you! (after sneeze) |\n\n### Розмовні вирази | Conversational Expressions\n\n| Expression | Meaning |\n|------------|---------|\n| До речі... | By the way... |\n| Справа в тому, що... | The thing is... |\n| Як на мене... | In my opinion... |\n| Ні за що! | No way! / Never! |\n| Ще чого! | No way! / As if! |\n| Ось так так! | Well, well! / My, my! |\n| Отакої! | Wow! / Really! |\n| Та ну! | Come on! / Really? |\n\n## practice | Практика\n\n### Match Proverb to Meaning\n\n1. Без труда нема плода — a) hard work pays off\n2. Краще пізно, ніж ніколи — b) better late than never\n3. Тихше їдеш — далі будеш — c) slow and steady\n4. Яблуко від яблуні недалеко падає — d) like parent like child\n5. Що посієш, те й пожнеш — e) you reap what you sow\n\n### Complete with Idioms\n\n1. Я дуже добре знаю це місто — ___ (very well).\n   > [!answer] **як свої п'ять пальців**\n2. Вони завжди погоджуються — живуть ___ (in harmony).\n   > [!answer] **душа в душу**\n3. Він нічого не знав — ___ (had no idea).\n   > [!answer] **ні сном ні духом**\n4. Вона завжди ___ (keeps her word).\n   > [!answer] **тримає слово**\n5. Все йде добре — ___ (in the bag)!\n   > [!answer] **справа в капелюсі**\n### Use in Sentences\n\nCreate sentences with:\n\n1. знайти спільну мову\n2. ловити момент\n3. краще пізно, ніж ніколи\n\n### Respond with Expression\n\n1. «Дякую!»\n   > [!answer] **Будь ласка! / Нема за що!**\n2. «Апчхи!»\n   > [!answer] **Будьте здорові!**\n3. «Можна тебе запитати?»\n   > [!answer] **Звичайно! / Прошу!**\n\n## production | Продукція\n\n### Share Wisdom\n\nShare a situation where a proverb applies:\n\n**Example:**\n«Одного разу я поспішав і зробив помилку. Тепер я завжди пам'ятаю: \"Тихше їдеш — далі будеш.\"»\n\n### Discuss Proverbs\n\nAre there similar proverbs in your language?\n\n- «Без труда нема плода» — чи є схожа приказка?\n- Чи погоджуєтеся з приказкою?\n\n---\n\n# Activities\n\n## quiz: Idioms and Proverbs\n\n> Choose the correct meaning.\n\n1. «Тримати слово» означає:\n   - [x] дотримуватися обіцянки\n   - [ ] мовчати\n   > Keep one's word.\n\n2. «Як свої п'ять пальців» означає:\n   - [x] дуже добре знати\n   - [ ] мало знати\n   > Know very well.\n\n3. «Краще пізно, ніж ніколи»:\n   - [x] Better late than never\n   - [ ] Never say never\n   > Better to do something late than not at all.\n\n4. «Справа в капелюсі» означає:\n   - [x] все вирішено\n   - [ ] все пропало\n   > It's in the bag.\n\n5. «На ножах» означає:\n   - [x] у ворожих стосунках\n   - [ ] у дружніх стосунках\n   > At odds.\n\n6. «Без труда нема плода»:\n   - [x] No pain, no gain\n   - [ ] Easy come, easy go\n   > Hard work is needed for results.\n\n## fill-in: Conversation with Expressions\n\n> Заповніть розмову.\n\n> — Привіт! Давно не бачились! (1)___ (By the way), як справи?\n> — (2)___ (The thing is), я був зайнятий. Працював (3)___ (without rest).\n> — Розумію. (4)___ (In my opinion), треба відпочивати.\n> — Так, ти правий. (5)___ (No pain, no gain), але здоров'я важливіше!\n\n**Answers:**\n1. До речі\n2. Справа в тому, що\n3. не покладаючи рук\n4. Як на мене\n5. Без труда нема плода\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | Notes |\n|------|-----|---------|-------|\n| приказка | /prɪˈkɑzkɑ/ | proverb, saying | f |\n| прислів'я | /prɪsˈlʲivjɑ/ | proverb | n |\n| народна мудрість | - | folk wisdom | f |\n| тримати слово | - | keep one's word | idiom |\n| давати слово | - | give one's word | idiom |\n| справа в капелюсі | - | it's in the bag | idiom |\n| душа в душу | - | in harmony | idiom |\n| ні сном ні духом | - | have no idea | idiom |\n| на ножах | - | at odds | idiom |\n| без труда нема плода | - | no pain no gain | proverb |\n| краще пізно ніж ніколи | - | better late than never | proverb |\n| до речі | - | by the way | expression |\n\n---\n\n# Summary\n\n## More Idioms and Proverbs\n\n### Communication\n- тримати/давати слово\n- за словом у кишеню не лізти\n- говорити на вітер\n\n### Relationships\n- душа в душу\n- знайти спільну мову\n- на ножах\n\n### Success\n- справа в капелюсі\n- ловити момент\n\n### Popular Proverbs\n- Без труда нема плода\n- Краще пізно, ніж ніколи\n- Тихше їдеш — далі будеш\n\n> **Key Takeaways**\n>\n> - Proverbs express folk wisdom\n> - Many have English equivalents\n> - Polite expressions are essential\n> - Conversational fillers add naturalness\n> - Practice using idioms in context\n"
   },
   "activities": [
     {
-      "id": "act-uk-B1-136-quiz",
+      "id": "act-b1-136-quiz",
       "type": "quiz",
       "title": "Idioms and Proverbs",
       "description": "Choose the correct meaning.",
       "content": {
         "type": "quiz",
-        "instructions": "Choose the correct meaning.",
         "questions": [
           {
             "question": "«Тримати слово» означає:",
@@ -258,38 +124,37 @@
       "language": "uk",
       "difficultyLevel": "B1",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "idioms",
-        "expressions",
-        "figurative"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.240Z",
+      "modifiedAt": "2025-12-01T22:58:37.240Z"
     },
     {
-      "id": "act-uk-B1-136-gapfill",
+      "id": "act-b1-136-gapfill",
       "type": "gap-fill",
       "title": "Conversation with Expressions",
       "description": "Заповніть розмову.",
       "content": {
         "type": "gap-fill",
-        "instructions": "Заповніть розмову.",
         "text": "Заповніть розмову.\n— Привіт! Давно не бачились! (1)___ (By the way), як справи?\n— (2)___ (The thing is), я був зайнятий. Працював (3)___ (without rest).\n— Розумію. (4)___ (In my opinion), треба відпочивати.\n— Так, ти правий. (5)___ (No pain, no gain), але здоров'я важливіше!",
         "blanks": [
           {
+            "index": 0,
             "hint": "By the way"
           },
           {
+            "index": 1,
             "hint": "The thing is"
           },
           {
+            "index": 2,
             "hint": "without rest"
           },
           {
+            "index": 3,
             "hint": "In my opinion"
           },
           {
+            "index": 4,
             "hint": "No pain, no gain"
           }
         ],
@@ -303,14 +168,9 @@
       "language": "uk",
       "difficultyLevel": "B1",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "idioms",
-        "expressions",
-        "figurative"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.240Z",
+      "modifiedAt": "2025-12-01T22:58:37.240Z"
     }
   ],
   "vocabulary": {
@@ -321,112 +181,78 @@
     "transliterationMode": "none",
     "words": [
       {
-        "id": "v-m136-001",
+        "id": "v-prykazka-136-0",
         "uk": "приказка",
-        "translit": "",
-        "ipa": "/prɪˈkɑzkɑ/",
         "en": "proverb, saying",
-        "pos": "",
-        "note": "f"
+        "pos": "f",
+        "ipa": "/prɪˈkɑzkɑ/"
       },
       {
-        "id": "v-m136-002",
+        "id": "v-prysliv'ya-136-1",
         "uk": "прислів'я",
-        "translit": "",
-        "ipa": "/prɪsˈlʲivjɑ/",
         "en": "proverb",
-        "pos": "",
-        "note": "n"
+        "pos": "n",
+        "ipa": "/prɪsˈlʲivjɑ/"
       },
       {
-        "id": "v-m136-003",
+        "id": "v-narodna-mudristь-136-2",
         "uk": "народна мудрість",
-        "translit": "",
-        "ipa": "-",
         "en": "folk wisdom",
-        "pos": "",
-        "note": "f"
+        "pos": "f"
       },
       {
-        "id": "v-m136-004",
+        "id": "v-trymaty-slovo-136-3",
         "uk": "тримати слово",
-        "translit": "",
-        "ipa": "-",
         "en": "keep one's word",
-        "pos": "",
-        "note": "idiom"
+        "pos": "idiom"
       },
       {
-        "id": "v-m136-005",
+        "id": "v-davaty-slovo-136-4",
         "uk": "давати слово",
-        "translit": "",
-        "ipa": "-",
         "en": "give one's word",
-        "pos": "",
-        "note": "idiom"
+        "pos": "idiom"
       },
       {
-        "id": "v-m136-006",
+        "id": "v-sprava-v-kapelyusi-136-5",
         "uk": "справа в капелюсі",
-        "translit": "",
-        "ipa": "-",
         "en": "it's in the bag",
-        "pos": "",
-        "note": "idiom"
+        "pos": "idiom"
       },
       {
-        "id": "v-m136-007",
+        "id": "v-dusha-v-dushu-136-6",
         "uk": "душа в душу",
-        "translit": "",
-        "ipa": "-",
         "en": "in harmony",
-        "pos": "",
-        "note": "idiom"
+        "pos": "idiom"
       },
       {
-        "id": "v-m136-008",
+        "id": "v-ni-snom-ni-dukhom-136-7",
         "uk": "ні сном ні духом",
-        "translit": "",
-        "ipa": "-",
         "en": "have no idea",
-        "pos": "",
-        "note": "idiom"
+        "pos": "idiom"
       },
       {
-        "id": "v-m136-009",
+        "id": "v-na-nozhakh-136-8",
         "uk": "на ножах",
-        "translit": "",
-        "ipa": "-",
         "en": "at odds",
-        "pos": "",
-        "note": "idiom"
+        "pos": "idiom"
       },
       {
-        "id": "v-m136-010",
+        "id": "v-bez-truda-nema-ploda-136-9",
         "uk": "без труда нема плода",
-        "translit": "",
-        "ipa": "-",
         "en": "no pain no gain",
-        "pos": "",
-        "note": "proverb"
+        "pos": "proverb"
       },
       {
-        "id": "v-m136-011",
+        "id": "v-krashche-pizno-nizh-nikoly-136-10",
         "uk": "краще пізно ніж ніколи",
-        "translit": "",
-        "ipa": "-",
         "en": "better late than never",
-        "pos": "",
-        "note": "proverb"
+        "pos": "proverb"
       },
       {
-        "id": "v-m136-012",
+        "id": "v-do-rechi-136-11",
         "uk": "до речі",
-        "translit": "",
-        "ipa": "-",
         "en": "by the way",
-        "pos": "",
-        "note": "expression"
+        "pos": "expression"
       }
     ]
   }

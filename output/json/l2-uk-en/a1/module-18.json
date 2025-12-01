@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-A1-18",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "vocabulary-expansion",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -26,30 +25,15 @@
       "Imperative review (дайте, принесіть)",
       "Хотіти + accusative (I would like...)"
     ],
-    "totalDuration": 45,
-    "transliterationMode": "full",
     "tags": [
       "vocabulary",
       "practical",
       "conversation",
       "café"
     ],
-    "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
+    "totalDuration": 45,
+    "transliterationMode": "full",
     "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Ukrainian Café Culture\n\nUkrainians love their кав'ярні (coffee houses)! From trendy Kyiv spots to cozy Lviv cafés, coffee culture runs deep. Lviv, in particular, is famous for its coffee traditions.\n\nKey phrases you'll master:\n- **Можна меню?** - May I have the menu?\n- **Я хочу...** - I want...\n- **Рахунок, будь ласка!** - The bill, please!\n\n> 💡 **Did You Know?**\n>\n> Lviv has been a coffee capital since the 17th century when a Ukrainian Cossack, Yuri Kulchytsky, opened one of Europe's first coffee houses in Vienna. Legend says he discovered coffee beans left behind by the Ottoman army! Today Lviv has the highest density of cafés per capita in Ukraine."
-          }
-        ]
-      },
       {
         "id": "phase-presentation",
         "name": "presentation",
@@ -58,92 +42,33 @@
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "### Entering & Seating\n\n| Ukrainian | Transliteration | English |\n|-----------|-----------------|---------|\n| Добрий день! | Dobryi den! | Good day! |\n| Столик на двох | Stolyk na dvokh | Table for two |\n| Можна меню? | Mozhna menyu? | May I have the menu? |\n| Ми хочемо замовити. | My khochemo zamovyty. | We'd like to order. |\n| Є вільні місця? | Ye vilni mistsya? | Are there free seats? |\n\n> ⚡ **Pro Tip: Можна**\n>\n> \"Можна\" is incredibly useful - it means \"May I?\" or \"Is it possible?\"\n> - Можна меню? (May I have the menu?)\n> - Можна рахунок? (May I have the bill?)\n> - Можна тут сісти? (May I sit here?)\n>\n> Just add what you want after \"можна\"!"
+            "teacherNotes": "### Entering & Seating\n\n| Ukrainian | Transliteration | English |\n|-----------|-----------------|---------|\n| Добрий день! | Dobryi den! | Good day! |\n| Столик на двох | Stolyk na dvokh | Table for two |\n| Можна меню? | Mozhna menyu? | May I have the menu? |\n| Ми хочемо замовити. | My khochemo zamovyty. | We'd like to order. |\n| Є вільні місця? | Ye vilni mistsya? | Are there free seats? |\n\n> ⚡ **Pro Tip: Можна**\n>\n> \"Можна\" is incredibly useful - it means \"May I?\" or \"Is it possible?\"\n> - Можна меню? (May I have the menu?)\n> - Можна рахунок? (May I have the bill?)\n> - Можна тут сісти? (May I sit here?)\n>\n> Just add what you want after \"можна\"!\n\n### Ordering Drinks\n\n| Ukrainian | Transliteration | English |\n|-----------|-----------------|---------|\n| Мені каву, будь ласка. | Meni kavu, bud laska. | Coffee for me, please. |\n| Каву з молоком. | Kavu z molokom. | Coffee with milk. |\n| Каву без цукру. | Kavu bez tsukru. | Coffee without sugar. |\n| Чай з лимоном. | Chai z lymonom. | Tea with lemon. |\n| Склянку води. | Sklyanku vody. | A glass of water. |\n| Пляшку мінералки. | Plyashku mineralky. | A bottle of mineral water. |\n\n**Coffee types:**\n- еспресо (espresso)\n- американо (americano)\n- капучино (cappuccino)\n- лате (latte)\n- по-турецьки (Turkish coffee)\n- раф (raf - cream coffee with vanilla)\n\n> 🎭 **Culture Corner: Coffee Customs**\n>\n> Ukrainian coffee culture tips:\n> - **Кава по-львівськи** - Lviv-style coffee, strong and aromatic\n> - Coffee is often served with a glass of water\n> - \"На виніс\" means \"to go\" (literally \"to carry out\")\n> - \"Тут\" means \"for here\"\n>\n> Ask: **Тут чи на виніс?** (For here or to go?)\n\n### Ordering Food\n\n| Ukrainian | Transliteration | English |\n|-----------|-----------------|---------|\n| Що порекомендуєте? | Shcho porekomenduyete? | What do you recommend? |\n| Яка страва дня? | Yaka strava dnya? | What's the dish of the day? |\n| Я візьму... | Ya vizmu... | I'll take... |\n| Мені, будь ласка... | Meni, bud laska... | For me, please... |\n| І ще... | I shche... | And also... |\n| Це все. | Tse vse. | That's all. |\n\n**Common café foods:**\n- круасан (croissant)\n- сирник (cottage cheese pancake)\n- тістечко (pastry/cake)\n- сендвіч (sandwich)\n- салат (salad)\n- суп (soup)\n\n> 📜 **History Bite: Сирники**\n>\n> Сирники (cottage cheese pancakes) are a Slavic breakfast staple dating back centuries. The word comes from \"сир\" (cottage cheese). They're pan-fried and served with сметана (sour cream) or варення (jam). A perfect café breakfast!\n\n### Making Requests\n\n**Polite imperatives (ви form):**\n\n| Infinitive | Imperative | Example |\n|------------|------------|---------|\n| дати | дайте | Дайте меню. (Give me the menu.) |\n| принести | принесіть | Принесіть воду. (Bring water.) |\n| повторити | повторіть | Повторіть, будь ласка. (Repeat, please.) |\n| показати | покажіть | Покажіть це. (Show me this.) |\n\n> 🔍 **Myth Buster: \"Imperatives Are Rude\"**\n>\n> In Ukrainian, imperatives with \"будь ласка\" are perfectly polite:\n> - Дайте, будь ласка, каву. (Give me coffee, please.) ✓\n> - Принесіть рахунок, будь ласка. (Bring the bill, please.) ✓\n>\n> This is the normal way to order - not rude at all!\n\n### Special Requests\n\n| Ukrainian | English |\n|-----------|---------|\n| Без цукру, будь ласка. | Without sugar, please. |\n| Без молока. | Without milk. |\n| Трохи більше... | A little more... |\n| Менше цукру. | Less sugar. |\n| Гаряче / холодне. | Hot / cold. |\n| Я вегетаріанець. | I'm vegetarian (m). |\n| Я вегетаріанка. | I'm vegetarian (f). |\n| У мене алергія на... | I'm allergic to... |\n\n### Paying\n\n| Ukrainian | Transliteration | English |\n|-----------|-----------------|---------|\n| Рахунок, будь ласка! | Rakhunok, bud laska! | The bill, please! |\n| Скільки з мене? | Skilky z mene? | How much do I owe? |\n| Можна карткою? | Mozhna kartkoyu? | Can I pay by card? |\n| Готівкою. | Hotivkoyu. | In cash. |\n| Решта - ваша. | Reshta - vasha. | Keep the change. |\n| Без решти. | Bez reshty. | No change needed. |\n| Дякую, все було смачно! | Dyakuyu, vse bulo smachno! | Thank you, everything was delicious! |\n\n> 🌍 **Real World: Tipping in Ukraine**\n>\n> - Tips (чайові - literally \"for tea\") are not mandatory\n> - 10% is standard for good service\n> - You can say \"Без решти\" (No change) or \"Решта - ваша\" (Keep the change)\n> - In upscale places, tips may be included (обслуговування)\n> - Cash tips are preferred by staff"
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Ordering Drinks\n\n| Ukrainian | Transliteration | English |\n|-----------|-----------------|---------|\n| Мені каву, будь ласка. | Meni kavu, bud laska. | Coffee for me, please. |\n| Каву з молоком. | Kavu z molokom. | Coffee with milk. |\n| Каву без цукру. | Kavu bez tsukru. | Coffee without sugar. |\n| Чай з лимоном. | Chai z lymonom. | Tea with lemon. |\n| Склянку води. | Sklyanku vody. | A glass of water. |\n| Пляшку мінералки. | Plyashku mineralky. | A bottle of mineral water. |\n\n**Coffee types:**\n- еспресо (espresso)\n- американо (americano)\n- капучино (cappuccino)\n- лате (latte)\n- по-турецьки (Turkish coffee)\n- раф (raf - cream coffee with vanilla)\n\n> 🎭 **Culture Corner: Coffee Customs**\n>\n> Ukrainian coffee culture tips:\n> - **Кава по-львівськи** - Lviv-style coffee, strong and aromatic\n> - Coffee is often served with a glass of water\n> - \"На виніс\" means \"to go\" (literally \"to carry out\")\n> - \"Тут\" means \"for here\"\n>\n> Ask: **Тут чи на виніс?** (For here or to go?)"
+            "teacherNotes": "### Role Play Ordering\n\nPractice this dialogue:\nA: Добрий день! Що замовите?\nB: Мені каву, будь ласка.\nA: Яку каву? Еспресо, американо, лате?\nB: Американо, будь ласка. Без цукру.\nA: Щось ще?\nB: Ні, дякую. Це все.\n\n### Complete the Phrases\n\n1. ___ меню, будь ласка? (May I have)\n   > [!answer] Можна\n2. Каву ___ молоком. (with)\n   > [!answer] з\n3. ___, будь ласка, рахунок. (Bring)\n   > [!answer] Принесіть\n4. Скільки ___ мене? (from)\n   > [!answer] з\n\n### Make Requests\n\nTransform to polite requests:\n1. I want coffee.\n   > [!answer] Мені каву, будь ласка.\n2. Bring water.\n   > [!answer] Принесіть воду, будь ласка.\n3. The bill.\n   > [!answer] Рахунок, будь ласка.\n4. May I sit here?\n   > [!answer] Можна тут сісти?"
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Ordering Food\n\n| Ukrainian | Transliteration | English |\n|-----------|-----------------|---------|\n| Що порекомендуєте? | Shcho porekomenduyete? | What do you recommend? |\n| Яка страва дня? | Yaka strava dnya? | What's the dish of the day? |\n| Я візьму... | Ya vizmu... | I'll take... |\n| Мені, будь ласка... | Meni, bud laska... | For me, please... |\n| І ще... | I shche... | And also... |\n| Це все. | Tse vse. | That's all. |\n\n**Common café foods:**\n- круасан (croissant)\n- сирник (cottage cheese pancake)\n- тістечко (pastry/cake)\n- сендвіч (sandwich)\n- салат (salad)\n- суп (soup)\n\n> 📜 **History Bite: Сирники**\n>\n> Сирники (cottage cheese pancakes) are a Slavic breakfast staple dating back centuries. The word comes from \"сир\" (cottage cheese). They're pan-fried and served with сметана (sour cream) or варення (jam). A perfect café breakfast!"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Making Requests\n\n**Polite imperatives (ви form):**\n\n| Infinitive | Imperative | Example |\n|------------|------------|---------|\n| дати | дайте | Дайте меню. (Give me the menu.) |\n| принести | принесіть | Принесіть воду. (Bring water.) |\n| повторити | повторіть | Повторіть, будь ласка. (Repeat, please.) |\n| показати | покажіть | Покажіть це. (Show me this.) |\n\n> 🔍 **Myth Buster: \"Imperatives Are Rude\"**\n>\n> In Ukrainian, imperatives with \"будь ласка\" are perfectly polite:\n> - Дайте, будь ласка, каву. (Give me coffee, please.) ✓\n> - Принесіть рахунок, будь ласка. (Bring the bill, please.) ✓\n>\n> This is the normal way to order - not rude at all!"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Special Requests\n\n| Ukrainian | English |\n|-----------|---------|\n| Без цукру, будь ласка. | Without sugar, please. |\n| Без молока. | Without milk. |\n| Трохи більше... | A little more... |\n| Менше цукру. | Less sugar. |\n| Гаряче / холодне. | Hot / cold. |\n| Я вегетаріанець. | I'm vegetarian (m). |\n| Я вегетаріанка. | I'm vegetarian (f). |\n| У мене алергія на... | I'm allergic to... |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Paying\n\n| Ukrainian | Transliteration | English |\n|-----------|-----------------|---------|\n| Рахунок, будь ласка! | Rakhunok, bud laska! | The bill, please! |\n| Скільки з мене? | Skilky z mene? | How much do I owe? |\n| Можна карткою? | Mozhna kartkoyu? | Can I pay by card? |\n| Готівкою. | Hotivkoyu. | In cash. |\n| Решта - ваша. | Reshta - vasha. | Keep the change. |\n| Без решти. | Bez reshty. | No change needed. |\n| Дякую, все було смачно! | Dyakuyu, vse bulo smachno! | Thank you, everything was delicious! |\n\n> 🌍 **Real World: Tipping in Ukraine**\n>\n> - Tips (чайові - literally \"for tea\") are not mandatory\n> - 10% is standard for good service\n> - You can say \"Без решти\" (No change) or \"Решта - ваша\" (Keep the change)\n> - In upscale places, tips may be included (обслуговування)\n> - Cash tips are preferred by staff"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A1-18-matchup"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Role Play Ordering\n\nPractice this dialogue:\nA: Добрий день! Що замовите?\nB: Мені каву, будь ласка.\nA: Яку каву? Еспресо, американо, лате?\nB: Американо, будь ласка. Без цукру.\nA: Щось ще?\nB: Ні, дякую. Це все."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Complete the Phrases\n\n1. ___ меню, будь ласка? (May I have) → Можна\n2. Каву ___ молоком. (with) → з\n3. ___, будь ласка, рахунок. (Bring) → Принесіть\n4. Скільки ___ мене? (from) → з"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Make Requests\n\nTransform to polite requests:\n1. I want coffee. → Мені каву, будь ласка.\n2. Bring water. → Принесіть воду, будь ласка.\n3. The bill. → Рахунок, будь ласка.\n4. May I sit here? → Можна тут сісти?"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A1-18-quiz"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A1-18-groupsort"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Full Café Scenario\n\nPractice the complete café experience:\n1. Enter and greet\n2. Ask for a table\n3. Request the menu\n4. Order drinks and food\n5. Make a special request\n6. Ask for the bill\n7. Pay and thank"
+            "teacherNotes": "### Full Café Scenario\n\nPractice the complete café experience:\n1. Enter and greet\n2. Ask for a table\n3. Request the menu\n4. Order drinks and food\n5. Make a special request\n6. Ask for the bill\n7. Pay and thank\n\n---"
           }
         ]
       }
-    ]
+    ],
+    "createdAt": "2025-12-01T22:58:37.256Z",
+    "modifiedAt": "2025-12-01T22:58:37.256Z",
+    "version": 1
   },
   "activities": [
     {
-      "id": "act-uk-A1-18-matchup",
+      "id": "act-a1-18-matchup",
       "type": "match-up",
       "title": "Café Phrases",
       "description": "Match Ukrainian phrases to English.",
       "content": {
         "type": "match-up",
-        "instructions": "Match Ukrainian phrases to English.",
         "pairs": [
           {
             "left": "Можна меню?",
@@ -178,23 +103,17 @@
       "language": "uk",
       "difficultyLevel": "A1",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "practical",
-        "conversation",
-        "café"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.256Z",
+      "modifiedAt": "2025-12-01T22:58:37.256Z"
     },
     {
-      "id": "act-uk-A1-18-quiz",
+      "id": "act-a1-18-quiz",
       "type": "quiz",
       "title": "Café Language",
       "description": "Choose the correct answer.",
       "content": {
         "type": "quiz",
-        "instructions": "Choose the correct answer.",
         "questions": [
           {
             "question": "How do you politely ask for the menu?",
@@ -295,25 +214,20 @@
       "language": "uk",
       "difficultyLevel": "A1",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "practical",
-        "conversation",
-        "café"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.256Z",
+      "modifiedAt": "2025-12-01T22:58:37.256Z"
     },
     {
-      "id": "act-uk-A1-18-groupsort",
+      "id": "act-a1-18-groupsort",
       "type": "group-sort",
       "title": "Requests by Type",
       "description": "Sort these phrases by what they're asking for.",
       "content": {
         "type": "group-sort",
-        "instructions": "Sort these phrases by what they're asking for.",
         "groups": [
           {
+            "id": "ordering",
             "name": "Ordering",
             "items": [
               "Мені каву, будь ласка.",
@@ -323,6 +237,7 @@
             ]
           },
           {
+            "id": "asking-for-information",
             "name": "Asking for Information",
             "items": [
               "Що порекомендуєте?",
@@ -332,6 +247,7 @@
             ]
           },
           {
+            "id": "paying",
             "name": "Paying",
             "items": [
               "Рахунок, будь ласка!",
@@ -349,14 +265,9 @@
       "language": "uk",
       "difficultyLevel": "A1",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "practical",
-        "conversation",
-        "café"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.256Z",
+      "modifiedAt": "2025-12-01T22:58:37.256Z"
     }
   ],
   "vocabulary": {
@@ -367,137 +278,117 @@
     "transliterationMode": "full",
     "words": [
       {
-        "id": "v-m18-001",
+        "id": "v-menyu-18-0",
         "uk": "меню",
-        "translit": "",
-        "ipa": "/mɛˈnʲu/",
         "en": "menu",
         "pos": "noun",
+        "ipa": "/mɛˈnʲu/",
         "gender": "n",
         "note": "Indeclinable"
       },
       {
-        "id": "v-m18-002",
+        "id": "v-zamovlyaty-18-1",
         "uk": "замовляти",
-        "translit": "",
-        "ipa": "/zɑmɔvˈlʲɑtɪ/",
         "en": "to order",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/zɑmɔvˈlʲɑtɪ/",
         "note": "замовляю, замовляєш"
       },
       {
-        "id": "v-m18-003",
+        "id": "v-rakhunok-18-2",
         "uk": "рахунок",
-        "translit": "",
-        "ipa": "/rɑˈxunɔk/",
         "en": "bill, check",
         "pos": "noun",
+        "ipa": "/rɑˈxunɔk/",
         "gender": "m"
       },
       {
-        "id": "v-m18-004",
+        "id": "v-stolyk-18-3",
         "uk": "столик",
-        "translit": "",
-        "ipa": "/ˈstɔlɪk/",
         "en": "table (small)",
         "pos": "noun",
+        "ipa": "/ˈstɔlɪk/",
         "gender": "m",
         "note": "Diminutive of стіл"
       },
       {
-        "id": "v-m18-005",
+        "id": "v-mistse-18-4",
         "uk": "місце",
-        "translit": "",
-        "ipa": "/ˈmʲist͡sɛ/",
         "en": "seat, place",
         "pos": "noun",
+        "ipa": "/ˈmʲist͡sɛ/",
         "gender": "n"
       },
       {
-        "id": "v-m18-006",
+        "id": "v-prynesty-18-5",
         "uk": "принести",
-        "translit": "",
-        "ipa": "/prɪnɛsˈtɪ/",
         "en": "to bring",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/prɪnɛsˈtɪ/",
         "note": "Imp: принеси, принесіть"
       },
       {
-        "id": "v-m18-007",
+        "id": "v-vzyaty-18-6",
         "uk": "взяти",
-        "translit": "",
-        "ipa": "/ˈvzʲɑtɪ/",
         "en": "to take",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/ˈvzʲɑtɪ/",
         "note": "Я візьму (I'll take)"
       },
       {
-        "id": "v-m18-008",
+        "id": "v-mozhna-18-7",
         "uk": "можна",
-        "translit": "",
-        "ipa": "/ˈmɔʒnɑ/",
         "en": "may, can",
         "pos": "adv",
-        "gender": "-",
+        "ipa": "/ˈmɔʒnɑ/",
         "note": "Permission"
       },
       {
-        "id": "v-m18-009",
+        "id": "v-sklyanka-18-8",
         "uk": "склянка",
-        "translit": "",
-        "ipa": "/ˈsklʲɑnkɑ/",
         "en": "glass",
         "pos": "noun",
+        "ipa": "/ˈsklʲɑnkɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m18-010",
+        "id": "v-na-vynis-18-9",
         "uk": "на виніс",
-        "translit": "",
-        "ipa": "/nɑ ˈvɪnʲis/",
         "en": "to go",
         "pos": "phrase",
-        "gender": "-",
+        "ipa": "/nɑ ˈvɪnʲis/",
         "note": "Takeaway"
       },
       {
-        "id": "v-m18-011",
+        "id": "v-haryachyy-18-10",
         "uk": "гарячий",
-        "translit": "",
-        "ipa": "/ɦɑˈrʲɑtʃɪj/",
         "en": "hot",
         "pos": "adj",
+        "ipa": "/ɦɑˈrʲɑtʃɪj/",
         "gender": "m"
       },
       {
-        "id": "v-m18-012",
+        "id": "v-kholodnyy-18-11",
         "uk": "холодний",
-        "translit": "",
-        "ipa": "/xɔˈlɔdnɪj/",
         "en": "cold",
         "pos": "adj",
+        "ipa": "/xɔˈlɔdnɪj/",
         "gender": "m"
       },
       {
-        "id": "v-m18-013",
+        "id": "v-strava-18-12",
         "uk": "страва",
-        "translit": "",
-        "ipa": "/ˈstrɑvɑ/",
         "en": "dish, course",
         "pos": "noun",
+        "ipa": "/ˈstrɑvɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m18-014",
+        "id": "v-chayovi-18-13",
         "uk": "чайові",
-        "translit": "",
-        "ipa": "/tʃɑjɔˈvʲi/",
         "en": "tip",
         "pos": "noun",
-        "gender": "pl",
+        "ipa": "/tʃɑjɔˈvʲi/",
         "note": "Literally \"for tea\""
       }
     ]

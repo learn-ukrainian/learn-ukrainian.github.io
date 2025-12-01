@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-B1-110",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "grammar-introduction",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -22,196 +21,43 @@
       "Use поки/доки for \"while\" and \"until\""
     ],
     "grammarFocus": [],
-    "totalDuration": 45,
-    "transliterationMode": "none",
     "tags": [
       "grammar",
       "temporal-clauses",
       "complex-sentences",
       "time"
     ],
+    "totalDuration": 45,
+    "transliterationMode": "none",
+    "phases": [],
+    "createdAt": "2025-12-01T22:58:37.233Z",
+    "modifiedAt": "2025-12-01T22:58:37.233Z",
     "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
-    "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Часові речення | Temporal Clauses\n\nTemporal clauses describe **when** something happens in relation to another event:\n\n| Relation | Ukrainian | Example |\n|----------|-----------|---------|\n| When | коли | Коли він прийшов... |\n| Before | перед тим як | Перед тим як піти... |\n| After | після того як | Після того як він прийшов... |\n| While | поки | Поки я чекав... |\n| Until | доки | Доки він не прийде... |"
-          }
-        ]
-      },
-      {
-        "id": "phase-presentation",
-        "name": "presentation",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Коли — When\n\n**Коли** is the most basic temporal conjunction:\n\n| Ukrainian | English |\n|-----------|---------|\n| **Коли** він прийшов, ми вечеряли. | When he arrived, we were having dinner. |\n| Зателефонуй мені, **коли** матимеш час. | Call me when you have time. |\n| **Коли** я був молодим, я багато подорожував. | When I was young, I traveled a lot. |\n\n**Word order:** The \"коли\" clause can come first or second."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Коли + Past for Habitual Actions\n\n**Коли** + imperfective past = repeated past actions (≈ \"whenever\"):\n\n| Ukrainian | English |\n|-----------|---------|\n| **Коли** він приходив, ми говорили. | Whenever he came, we talked. |\n| **Коли** я бачив її, я посміхався. | Whenever I saw her, I smiled. |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Перед тим як — Before\n\n**Перед тим як** + infinitive/clause = \"before\":\n\n| Ukrainian | English |\n|-----------|---------|\n| **Перед тим як** піти, він попрощався. | Before leaving, he said goodbye. |\n| Подумай **перед тим як** відповідати. | Think before answering. |\n| **Перед тим як** я прийшов, вона вже пішла. | Before I came, she had already left. |\n\n**Alternative forms:**\n- **До того як** — synonymous, slightly more formal\n- **Перш ніж** — literary, \"ere\" / \"before\"\n\n| Ukrainian | English |\n|-----------|---------|\n| **До того як** почати, підготуйся. | Before starting, prepare. |\n| **Перш ніж** говорити, подумай. | Before speaking, think. |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "До + Noun — Before/Until + Noun\n\n**До** + genitive noun for \"before\" or \"until\":\n\n| Ukrainian | English |\n|-----------|---------|\n| **До** вечері я закінчу. | I'll finish before dinner. |\n| **До** його приїзду все було готово. | Before his arrival, everything was ready. |\n| Зачекай **до** понеділка. | Wait until Monday. |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Після того як — After\n\n**Після того як** + clause = \"after\":\n\n| Ukrainian | English |\n|-----------|---------|\n| **Після того як** він прийшов, ми почали. | After he arrived, we started. |\n| Я відпочину **після того як** закінчу. | I'll rest after I finish. |\n| **Після того як** вона сказала це, всі замовкли. | After she said that, everyone fell silent. |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Після + Noun — After + Noun\n\n**Після** + genitive noun for \"after\":\n\n| Ukrainian | English |\n|-----------|---------|\n| **Після** роботи я піду додому. | After work, I'll go home. |\n| **Після** вечері ми поговоримо. | After dinner, we'll talk. |\n| **Після** його від'їзду стало тихо. | After his departure, it became quiet. |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Поки / Доки — While, Until\n\n**Поки** and **доки** have two meanings:\n\n**1. While (simultaneous actions):**\n\n| Ukrainian | English |\n|-----------|---------|\n| **Поки** я чекав, я читав книгу. | While I waited, I read a book. |\n| **Доки** вона готувала, він дивився телевізор. | While she was cooking, he watched TV. |\n\n**2. Until (with negation):**\n\n| Ukrainian | English |\n|-----------|---------|\n| Чекай, **поки** він не прийде. | Wait until he comes. |\n| Не йди, **доки** я не скажу. | Don't go until I say. |\n\n> **⭐ ПОКИ / ДОКИ + НЕ = UNTIL**\n>\n> \"Until\" requires **не** in Ukrainian even though English is positive:\n> - Wait **until** he comes = Чекай, **поки** він **не** прийде.\n>\n> Without \"не,\" поки/доки means \"while.\""
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Щойно — As soon as\n\n**Щойно** = \"as soon as\" or \"just (now)\":\n\n| Ukrainian | English |\n|-----------|---------|\n| **Щойно** він прийшов, ми почали. | As soon as he arrived, we started. |\n| Зателефонуй, **щойно** отримаєш новини. | Call as soon as you get news. |\n| Він **щойно** прийшов. | He just arrived. |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Як тільки — As soon as\n\n**Як тільки** is synonymous with \"щойно\":\n\n| Ukrainian | English |\n|-----------|---------|\n| **Як тільки** я дізнаюся, скажу тобі. | As soon as I find out, I'll tell you. |\n| **Як тільки** він вийшов, почався дощ. | As soon as he left, rain started. |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Ледве — Hardly, Barely (when)\n\n**Ледве** for \"barely/hardly...when\" (immediate sequence):\n\n| Ukrainian | English |\n|-----------|---------|\n| **Ледве** він зайшов, як почалася гроза. | Hardly had he entered when a storm started. |\n| **Ледве** я ліг, як зателефонували. | I had barely lain down when they called. |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Summary Table\n\n| Meaning | Expression | Example |\n|---------|------------|---------|\n| when | коли | Коли він прийшов... |\n| before | перед тим як / до того як | Перед тим як піти... |\n| before (noun) | до + gen | До вечері... |\n| after | після того як | Після того як закінчив... |\n| after (noun) | після + gen | Після роботи... |\n| while | поки / доки | Поки я чекав... |\n| until | поки не / доки не | Поки він не прийде... |\n| as soon as | щойно / як тільки | Щойно дізнаюся... |"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Choose the Correct Conjunction\n\n1. ___ він прийшов, ми вечеряли.\n   - a) Коли ✓\n   - b) Поки\n   - c) Після\n\n2. Подумай ___ відповідати.\n   - a) після того як\n   - b) перед тим як ✓\n   - c) коли\n\n3. Я відпочину ___ закінчу роботу.\n   - a) поки\n   - b) після того як ✓\n   - c) перед тим як\n\n4. Чекай, ___ він не прийде.\n   - a) коли\n   - b) поки ✓\n   - c) після того як\n\n5. ___ я дізнаюся, скажу тобі.\n   - a) Поки\n   - b) Щойно ✓\n   - c) До того як"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Complete with Temporal Conjunctions\n\n1. ___ я був студентом, я жив у гуртожитку.\n   → **Коли** я був студентом, я жив у гуртожитку.\n\n2. ___ піти, перевір усе ще раз.\n   → **Перед тим як** піти, перевір усе ще раз.\n\n3. ___ закінчився фільм, всі заплескали.\n   → **Після того як** / **Коли** закінчився фільм, всі заплескали.\n\n4. Не виходь, ___ дощ не закінчиться.\n   → Не виходь, **поки** / **доки** дощ не закінчиться.\n\n5. ___ отримаю результати, зателефоную.\n   → **Щойно** / **Як тільки** отримаю результати, зателефоную."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Translate to Ukrainian\n\n1. When I was young, I lived in Kyiv.\n   → **Коли я був молодим, я жив у Києві.**\n\n2. Before leaving, check everything.\n   → **Перед тим як піти, перевір усе.**\n\n3. After the meeting, we'll discuss it.\n   → **Після зустрічі ми обговоримо це.**\n\n4. Wait until I call you.\n   → **Чекай, поки я не зателефоную.**\n\n5. As soon as he arrives, we'll start.\n   → **Щойно він приїде, ми почнемо.**"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Transform Using Different Structures\n\n**With clause → with noun:**\n\n1. Після того як він прийшов...\n   → **Після його приходу...**\n\n2. Перед тим як вона виступила...\n   → **Перед її виступом...**\n\n3. До того як розпочнеться зустріч...\n   → **До початку зустрічі...**"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-B1-110-quiz"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Tell About Your Day\n\nDescribe your typical day using temporal clauses:\n\n**Template:**\n- Коли я прокидаюся...\n- Перед тим як іти на роботу...\n- Після того як закінчую роботу...\n- Поки я їду додому...\n\n**Example:**\nКоли я прокидаюся, я п'ю каву. Перед тим як іти на роботу, я снідаю. Після того як закінчую роботу, я йду на тренування. Поки я їду додому, я слухаю подкасти."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Tell About Your Past\n\nUse temporal clauses to talk about past events:\n\n- Коли я був/була дитиною...\n- Перед тим як почати вчити українську...\n- Після того як закінчив/закінчила школу..."
-          }
-        ]
-      }
-    ],
-    "rawMarkdown": "# Зміст уроку | Lesson Content\n\n## warm-up | Розминка\n\n### Часові речення | Temporal Clauses\n\nTemporal clauses describe **when** something happens in relation to another event:\n\n| Relation | Ukrainian | Example |\n|----------|-----------|---------|\n| When | коли | Коли він прийшов... |\n| Before | перед тим як | Перед тим як піти... |\n| After | після того як | Після того як він прийшов... |\n| While | поки | Поки я чекав... |\n| Until | доки | Доки він не прийде... |\n\n## presentation | Презентація\n\n### Коли — When\n\n**Коли** is the most basic temporal conjunction:\n\n| Ukrainian | English |\n|-----------|---------|\n| **Коли** він прийшов, ми вечеряли. | When he arrived, we were having dinner. |\n| Зателефонуй мені, **коли** матимеш час. | Call me when you have time. |\n| **Коли** я був молодим, я багато подорожував. | When I was young, I traveled a lot. |\n\n**Word order:** The \"коли\" clause can come first or second.\n\n### Коли + Past for Habitual Actions\n\n**Коли** + imperfective past = repeated past actions (≈ \"whenever\"):\n\n| Ukrainian | English |\n|-----------|---------|\n| **Коли** він приходив, ми говорили. | Whenever he came, we talked. |\n| **Коли** я бачив її, я посміхався. | Whenever I saw her, I smiled. |\n\n### Перед тим як — Before\n\n**Перед тим як** + infinitive/clause = \"before\":\n\n| Ukrainian | English |\n|-----------|---------|\n| **Перед тим як** піти, він попрощався. | Before leaving, he said goodbye. |\n| Подумай **перед тим як** відповідати. | Think before answering. |\n| **Перед тим як** я прийшов, вона вже пішла. | Before I came, she had already left. |\n\n**Alternative forms:**\n- **До того як** — synonymous, slightly more formal\n- **Перш ніж** — literary, \"ere\" / \"before\"\n\n| Ukrainian | English |\n|-----------|---------|\n| **До того як** почати, підготуйся. | Before starting, prepare. |\n| **Перш ніж** говорити, подумай. | Before speaking, think. |\n\n### До + Noun — Before/Until + Noun\n\n**До** + genitive noun for \"before\" or \"until\":\n\n| Ukrainian | English |\n|-----------|---------|\n| **До** вечері я закінчу. | I'll finish before dinner. |\n| **До** його приїзду все було готово. | Before his arrival, everything was ready. |\n| Зачекай **до** понеділка. | Wait until Monday. |\n\n### Після того як — After\n\n**Після того як** + clause = \"after\":\n\n| Ukrainian | English |\n|-----------|---------|\n| **Після того як** він прийшов, ми почали. | After he arrived, we started. |\n| Я відпочину **після того як** закінчу. | I'll rest after I finish. |\n| **Після того як** вона сказала це, всі замовкли. | After she said that, everyone fell silent. |\n\n### Після + Noun — After + Noun\n\n**Після** + genitive noun for \"after\":\n\n| Ukrainian | English |\n|-----------|---------|\n| **Після** роботи я піду додому. | After work, I'll go home. |\n| **Після** вечері ми поговоримо. | After dinner, we'll talk. |\n| **Після** його від'їзду стало тихо. | After his departure, it became quiet. |\n\n### Поки / Доки — While, Until\n\n**Поки** and **доки** have two meanings:\n\n**1. While (simultaneous actions):**\n\n| Ukrainian | English |\n|-----------|---------|\n| **Поки** я чекав, я читав книгу. | While I waited, I read a book. |\n| **Доки** вона готувала, він дивився телевізор. | While she was cooking, he watched TV. |\n\n**2. Until (with negation):**\n\n| Ukrainian | English |\n|-----------|---------|\n| Чекай, **поки** він не прийде. | Wait until he comes. |\n| Не йди, **доки** я не скажу. | Don't go until I say. |\n\n> **⭐ ПОКИ / ДОКИ + НЕ = UNTIL**\n>\n> \"Until\" requires **не** in Ukrainian even though English is positive:\n> - Wait **until** he comes = Чекай, **поки** він **не** прийде.\n>\n> Without \"не,\" поки/доки means \"while.\"\n\n### Щойно — As soon as\n\n**Щойно** = \"as soon as\" or \"just (now)\":\n\n| Ukrainian | English |\n|-----------|---------|\n| **Щойно** він прийшов, ми почали. | As soon as he arrived, we started. |\n| Зателефонуй, **щойно** отримаєш новини. | Call as soon as you get news. |\n| Він **щойно** прийшов. | He just arrived. |\n\n### Як тільки — As soon as\n\n**Як тільки** is synonymous with \"щойно\":\n\n| Ukrainian | English |\n|-----------|---------|\n| **Як тільки** я дізнаюся, скажу тобі. | As soon as I find out, I'll tell you. |\n| **Як тільки** він вийшов, почався дощ. | As soon as he left, rain started. |\n\n### Ледве — Hardly, Barely (when)\n\n**Ледве** for \"barely/hardly...when\" (immediate sequence):\n\n| Ukrainian | English |\n|-----------|---------|\n| **Ледве** він зайшов, як почалася гроза. | Hardly had he entered when a storm started. |\n| **Ледве** я ліг, як зателефонували. | I had barely lain down when they called. |\n\n### Summary Table\n\n| Meaning | Expression | Example |\n|---------|------------|---------|\n| when | коли | Коли він прийшов... |\n| before | перед тим як / до того як | Перед тим як піти... |\n| before (noun) | до + gen | До вечері... |\n| after | після того як | Після того як закінчив... |\n| after (noun) | після + gen | Після роботи... |\n| while | поки / доки | Поки я чекав... |\n| until | поки не / доки не | Поки він не прийде... |\n| as soon as | щойно / як тільки | Щойно дізнаюся... |\n\n## practice | Практика\n\n### Choose the Correct Conjunction\n\n1. ___ він прийшов, ми вечеряли.\n   - a) Коли ✓\n   - b) Поки\n   - c) Після\n\n2. Подумай ___ відповідати.\n   - a) після того як\n   - b) перед тим як ✓\n   - c) коли\n\n3. Я відпочину ___ закінчу роботу.\n   - a) поки\n   - b) після того як ✓\n   - c) перед тим як\n\n4. Чекай, ___ він не прийде.\n   - a) коли\n   - b) поки ✓\n   - c) після того як\n\n5. ___ я дізнаюся, скажу тобі.\n   - a) Поки\n   - b) Щойно ✓\n   - c) До того як\n\n### Complete with Temporal Conjunctions\n\n1. ___ я був студентом, я жив у гуртожитку.\n   → **Коли** я був студентом, я жив у гуртожитку.\n\n2. ___ піти, перевір усе ще раз.\n   → **Перед тим як** піти, перевір усе ще раз.\n\n3. ___ закінчився фільм, всі заплескали.\n   → **Після того як** / **Коли** закінчився фільм, всі заплескали.\n\n4. Не виходь, ___ дощ не закінчиться.\n   → Не виходь, **поки** / **доки** дощ не закінчиться.\n\n5. ___ отримаю результати, зателефоную.\n   → **Щойно** / **Як тільки** отримаю результати, зателефоную.\n\n### Translate to Ukrainian\n\n1. When I was young, I lived in Kyiv.\n   → **Коли я був молодим, я жив у Києві.**\n\n2. Before leaving, check everything.\n   → **Перед тим як піти, перевір усе.**\n\n3. After the meeting, we'll discuss it.\n   → **Після зустрічі ми обговоримо це.**\n\n4. Wait until I call you.\n   → **Чекай, поки я не зателефоную.**\n\n5. As soon as he arrives, we'll start.\n   → **Щойно він приїде, ми почнемо.**\n\n### Transform Using Different Structures\n\n**With clause → with noun:**\n\n1. Після того як він прийшов...\n   → **Після його приходу...**\n\n2. Перед тим як вона виступила...\n   → **Перед її виступом...**\n\n3. До того як розпочнеться зустріч...\n   → **До початку зустрічі...**\n\n## production | Продукція\n\n### Tell About Your Day\n\nDescribe your typical day using temporal clauses:\n\n**Template:**\n- Коли я прокидаюся...\n- Перед тим як іти на роботу...\n- Після того як закінчую роботу...\n- Поки я їду додому...\n\n**Example:**\nКоли я прокидаюся, я п'ю каву. Перед тим як іти на роботу, я снідаю. Після того як закінчую роботу, я йду на тренування. Поки я їду додому, я слухаю подкасти.\n\n### Tell About Your Past\n\nUse temporal clauses to talk about past events:\n\n- Коли я був/була дитиною...\n- Перед тим як почати вчити українську...\n- Після того як закінчив/закінчила школу...\n\n---\n\n# Activities\n\n## quiz: Temporal Clauses\n\n> Choose the correct answer.\n\n1. ___ він прийшов, ми вже вечеряли.\n   - [x] Коли\n   - [ ] Поки\n   > \"Коли\" for \"when.\"\n\n2. Подумай ___ тим як говорити.\n   - [x] перед\n   - [ ] після\n   > \"Before\" = \"перед тим як.\"\n\n3. Чекай, ___ він не прийде.\n   - [x] поки\n   - [ ] після того як\n   > \"Until\" requires \"поки...не.\"\n\n4. ___ закінчу, відпочину.\n   - [ ] Перед тим як\n   - [x] Після того як\n   > \"After\" I finish, I'll rest.\n\n5. ___ я дізнаюся, скажу.\n   - [x] Як тільки\n   - [ ] Поки\n   > \"As soon as\" = \"як тільки.\"\n\n6. ___ роботи я йду додому.\n   - [x] Після\n   - [ ] Після того як\n   > With noun, use \"після + gen.\"\n\n## fill-in: Complete the Story\n\n> (1)___ я був молодим, я багато подорожував. (2)___ тим як поїхати в нову країну, я завжди вчив трохи мови. (3)___ я приїхав в Україну, я одразу закохався в цю країну. (4)___ я там жив, я щодня вчив нові слова.\n\n**Answers:** Коли, Перед, Коли/Щойно, Поки\n\n---",
     "immersiveSections": [
       {
-        "id": "warm-up-розминка",
-        "title": "warm-up | Розминка",
-        "content": "### Часові речення | Temporal Clauses\n\nTemporal clauses describe **when** something happens in relation to another event:\n\n| Relation | Ukrainian | Example |\n|----------|-----------|---------|\n| When | коли | Коли він прийшов... |\n| Before | перед тим як | Перед тим як піти... |\n| After | після того як | Після того як він прийшов... |\n| While | поки | Поки я чекав... |\n| Until | доки | Доки він не прийде... |",
-        "type": "topic"
+        "id": "section-зміст-уроку-lesson-content",
+        "type": "content",
+        "title": "Зміст уроку | Lesson Content",
+        "content": "## warm-up | Розминка\n\n### Часові речення | Temporal Clauses\n\nTemporal clauses describe **when** something happens in relation to another event:\n\n| Relation | Ukrainian | Example |\n|----------|-----------|---------|\n| When | коли | Коли він прийшов... |\n| Before | перед тим як | Перед тим як піти... |\n| After | після того як | Після того як він прийшов... |\n| While | поки | Поки я чекав... |\n| Until | доки | Доки він не прийде... |\n\n## presentation | Презентація\n\n### Коли — When\n\n**Коли** is the most basic temporal conjunction:\n\n| Ukrainian | English |\n|-----------|---------|\n| **Коли** він прийшов, ми вечеряли. | When he arrived, we were having dinner. |\n| Зателефонуй мені, **коли** матимеш час. | Call me when you have time. |\n| **Коли** я був молодим, я багато подорожував. | When I was young, I traveled a lot. |\n\n**Word order:** The \"коли\" clause can come first or second.\n\n### Коли + Past for Habitual Actions\n\n**Коли** + imperfective past = repeated past actions (≈ \"whenever\"):\n\n| Ukrainian | English |\n|-----------|---------|\n| **Коли** він приходив, ми говорили. | Whenever he came, we talked. |\n| **Коли** я бачив її, я посміхався. | Whenever I saw her, I smiled. |\n\n### Перед тим як — Before\n\n**Перед тим як** + infinitive/clause = \"before\":\n\n| Ukrainian | English |\n|-----------|---------|\n| **Перед тим як** піти, він попрощався. | Before leaving, he said goodbye. |\n| Подумай **перед тим як** відповідати. | Think before answering. |\n| **Перед тим як** я прийшов, вона вже пішла. | Before I came, she had already left. |\n\n**Alternative forms:**\n- **До того як** — synonymous, slightly more formal\n- **Перш ніж** — literary, \"ere\" / \"before\"\n\n| Ukrainian | English |\n|-----------|---------|\n| **До того як** почати, підготуйся. | Before starting, prepare. |\n| **Перш ніж** говорити, подумай. | Before speaking, think. |\n\n### До + Noun — Before/Until + Noun\n\n**До** + genitive noun for \"before\" or \"until\":\n\n| Ukrainian | English |\n|-----------|---------|\n| **До** вечері я закінчу. | I'll finish before dinner. |\n| **До** його приїзду все було готово. | Before his arrival, everything was ready. |\n| Зачекай **до** понеділка. | Wait until Monday. |\n\n### Після того як — After\n\n**Після того як** + clause = \"after\":\n\n| Ukrainian | English |\n|-----------|---------|\n| **Після того як** він прийшов, ми почали. | After he arrived, we started. |\n| Я відпочину **після того як** закінчу. | I'll rest after I finish. |\n| **Після того як** вона сказала це, всі замовкли. | After she said that, everyone fell silent. |\n\n### Після + Noun — After + Noun\n\n**Після** + genitive noun for \"after\":\n\n| Ukrainian | English |\n|-----------|---------|\n| **Після** роботи я піду додому. | After work, I'll go home. |\n| **Після** вечері ми поговоримо. | After dinner, we'll talk. |\n| **Після** його від'їзду стало тихо. | After his departure, it became quiet. |\n\n### Поки / Доки — While, Until\n\n**Поки** and **доки** have two meanings:\n\n**1. While (simultaneous actions):**\n\n| Ukrainian | English |\n|-----------|---------|\n| **Поки** я чекав, я читав книгу. | While I waited, I read a book. |\n| **Доки** вона готувала, він дивився телевізор. | While she was cooking, he watched TV. |\n\n**2. Until (with negation):**\n\n| Ukrainian | English |\n|-----------|---------|\n| Чекай, **поки** він не прийде. | Wait until he comes. |\n| Не йди, **доки** я не скажу. | Don't go until I say. |\n\n> **⭐ ПОКИ / ДОКИ + НЕ = UNTIL**\n>\n> \"Until\" requires **не** in Ukrainian even though English is positive:\n> - Wait **until** he comes = Чекай, **поки** він **не** прийде.\n>\n> Without \"не,\" поки/доки means \"while.\"\n\n### Щойно — As soon as\n\n**Щойно** = \"as soon as\" or \"just (now)\":\n\n| Ukrainian | English |\n|-----------|---------|\n| **Щойно** він прийшов, ми почали. | As soon as he arrived, we started. |\n| Зателефонуй, **щойно** отримаєш новини. | Call as soon as you get news. |\n| Він **щойно** прийшов. | He just arrived. |\n\n### Як тільки — As soon as\n\n**Як тільки** is synonymous with \"щойно\":\n\n| Ukrainian | English |\n|-----------|---------|\n| **Як тільки** я дізнаюся, скажу тобі. | As soon as I find out, I'll tell you. |\n| **Як тільки** він вийшов, почався дощ. | As soon as he left, rain started. |\n\n### Ледве — Hardly, Barely (when)\n\n**Ледве** for \"barely/hardly...when\" (immediate sequence):\n\n| Ukrainian | English |\n|-----------|---------|\n| **Ледве** він зайшов, як почалася гроза. | Hardly had he entered when a storm started. |\n| **Ледве** я ліг, як зателефонували. | I had barely lain down when they called. |\n\n### Summary Table\n\n| Meaning | Expression | Example |\n|---------|------------|---------|\n| when | коли | Коли він прийшов... |\n| before | перед тим як / до того як | Перед тим як піти... |\n| before (noun) | до + gen | До вечері... |\n| after | після того як | Після того як закінчив... |\n| after (noun) | після + gen | Після роботи... |\n| while | поки / доки | Поки я чекав... |\n| until | поки не / доки не | Поки він не прийде... |\n| as soon as | щойно / як тільки | Щойно дізнаюся... |\n\n## practice | Практика\n\n### Choose the Correct Conjunction\n\n1. ___ він прийшов, ми вечеряли.\n   - a) Коли ✓\n   - b) Поки\n   - c) Після\n\n2. Подумай ___ відповідати.\n   - a) після того як\n   - b) перед тим як ✓\n   - c) коли\n\n3. Я відпочину ___ закінчу роботу.\n   - a) поки\n   - b) після того як ✓\n   - c) перед тим як\n\n4. Чекай, ___ він не прийде.\n   - a) коли\n   - b) поки ✓\n   - c) після того як\n\n5. ___ я дізнаюся, скажу тобі.\n   - a) Поки\n   - b) Щойно ✓\n   - c) До того як\n\n### Complete with Temporal Conjunctions\n\n1. ___ я був студентом, я жив у гуртожитку.\n   > [!answer] **Коли** я був студентом, я жив у гуртожитку.\n\n2. ___ піти, перевір усе ще раз.\n   > [!answer] **Перед тим як** піти, перевір усе ще раз.\n\n3. ___ закінчився фільм, всі заплескали.\n   > [!answer] **Після того як** / **Коли** закінчився фільм, всі заплескали.\n\n4. Не виходь, ___ дощ не закінчиться.\n   > [!answer] Не виходь, **поки** / **доки** дощ не закінчиться.\n\n5. ___ отримаю результати, зателефоную.\n   > [!answer] **Щойно** / **Як тільки** отримаю результати, зателефоную.\n\n### Translate to Ukrainian\n\n1. When I was young, I lived in Kyiv.\n   > [!answer] **Коли я був молодим, я жив у Києві.**\n2. Before leaving, check everything.\n   > [!answer] **Перед тим як піти, перевір усе.**\n3. After the meeting, we'll discuss it.\n   > [!answer] **Після зустрічі ми обговоримо це.**\n4. Wait until I call you.\n   > [!answer] **Чекай, поки я не зателефоную.**\n5. As soon as he arrives, we'll start.\n   > [!answer] **Щойно він приїде, ми почнемо.**\n### Transform Using Different Structures\n\n**With clause → with noun:**\n\n1. Після того як він прийшов...\n   > [!answer] **Після його приходу...**\n2. Перед тим як вона виступила...\n   > [!answer] **Перед її виступом...**\n3. До того як розпочнеться зустріч...\n   > [!answer] **До початку зустрічі...**\n## production | Продукція\n\n### Tell About Your Day\n\nDescribe your typical day using temporal clauses:\n\n**Template:**\n- Коли я прокидаюся...\n- Перед тим як іти на роботу...\n- Після того як закінчую роботу...\n- Поки я їду додому...\n\n**Example:**\nКоли я прокидаюся, я п'ю каву. Перед тим як іти на роботу, я снідаю. Після того як закінчую роботу, я йду на тренування. Поки я їду додому, я слухаю подкасти.\n\n### Tell About Your Past\n\nUse temporal clauses to talk about past events:\n\n- Коли я був/була дитиною...\n- Перед тим як почати вчити українську...\n- Після того як закінчив/закінчила школу...\n\n---\n\n\n---\n\n\n---"
       },
       {
-        "id": "presentation-презентація",
-        "title": "presentation | Презентація",
-        "content": "### Коли — When\n\n**Коли** is the most basic temporal conjunction:\n\n| Ukrainian | English |\n|-----------|---------|\n| **Коли** він прийшов, ми вечеряли. | When he arrived, we were having dinner. |\n| Зателефонуй мені, **коли** матимеш час. | Call me when you have time. |\n| **Коли** я був молодим, я багато подорожував. | When I was young, I traveled a lot. |\n\n**Word order:** The \"коли\" clause can come first or second.\n\n### Коли + Past for Habitual Actions\n\n**Коли** + imperfective past = repeated past actions (≈ \"whenever\"):\n\n| Ukrainian | English |\n|-----------|---------|\n| **Коли** він приходив, ми говорили. | Whenever he came, we talked. |\n| **Коли** я бачив її, я посміхався. | Whenever I saw her, I smiled. |\n\n### Перед тим як — Before\n\n**Перед тим як** + infinitive/clause = \"before\":\n\n| Ukrainian | English |\n|-----------|---------|\n| **Перед тим як** піти, він попрощався. | Before leaving, he said goodbye. |\n| Подумай **перед тим як** відповідати. | Think before answering. |\n| **Перед тим як** я прийшов, вона вже пішла. | Before I came, she had already left. |\n\n**Alternative forms:**\n- **До того як** — synonymous, slightly more formal\n- **Перш ніж** — literary, \"ere\" / \"before\"\n\n| Ukrainian | English |\n|-----------|---------|\n| **До того як** почати, підготуйся. | Before starting, prepare. |\n| **Перш ніж** говорити, подумай. | Before speaking, think. |\n\n### До + Noun — Before/Until + Noun\n\n**До** + genitive noun for \"before\" or \"until\":\n\n| Ukrainian | English |\n|-----------|---------|\n| **До** вечері я закінчу. | I'll finish before dinner. |\n| **До** його приїзду все було готово. | Before his arrival, everything was ready. |\n| Зачекай **до** понеділка. | Wait until Monday. |\n\n### Після того як — After\n\n**Після того як** + clause = \"after\":\n\n| Ukrainian | English |\n|-----------|---------|\n| **Після того як** він прийшов, ми почали. | After he arrived, we started. |\n| Я відпочину **після того як** закінчу. | I'll rest after I finish. |\n| **Після того як** вона сказала це, всі замовкли. | After she said that, everyone fell silent. |\n\n### Після + Noun — After + Noun\n\n**Після** + genitive noun for \"after\":\n\n| Ukrainian | English |\n|-----------|---------|\n| **Після** роботи я піду додому. | After work, I'll go home. |\n| **Після** вечері ми поговоримо. | After dinner, we'll talk. |\n| **Після** його від'їзду стало тихо. | After his departure, it became quiet. |\n\n### Поки / Доки — While, Until\n\n**Поки** and **доки** have two meanings:\n\n**1. While (simultaneous actions):**\n\n| Ukrainian | English |\n|-----------|---------|\n| **Поки** я чекав, я читав книгу. | While I waited, I read a book. |\n| **Доки** вона готувала, він дивився телевізор. | While she was cooking, he watched TV. |\n\n**2. Until (with negation):**\n\n| Ukrainian | English |\n|-----------|---------|\n| Чекай, **поки** він не прийде. | Wait until he comes. |\n| Не йди, **доки** я не скажу. | Don't go until I say. |\n\n> **⭐ ПОКИ / ДОКИ + НЕ = UNTIL**\n>\n> \"Until\" requires **не** in Ukrainian even though English is positive:\n> - Wait **until** he comes = Чекай, **поки** він **не** прийде.\n>\n> Without \"не,\" поки/доки means \"while.\"\n\n### Щойно — As soon as\n\n**Щойно** = \"as soon as\" or \"just (now)\":\n\n| Ukrainian | English |\n|-----------|---------|\n| **Щойно** він прийшов, ми почали. | As soon as he arrived, we started. |\n| Зателефонуй, **щойно** отримаєш новини. | Call as soon as you get news. |\n| Він **щойно** прийшов. | He just arrived. |\n\n### Як тільки — As soon as\n\n**Як тільки** is synonymous with \"щойно\":\n\n| Ukrainian | English |\n|-----------|---------|\n| **Як тільки** я дізнаюся, скажу тобі. | As soon as I find out, I'll tell you. |\n| **Як тільки** він вийшов, почався дощ. | As soon as he left, rain started. |\n\n### Ледве — Hardly, Barely (when)\n\n**Ледве** for \"barely/hardly...when\" (immediate sequence):\n\n| Ukrainian | English |\n|-----------|---------|\n| **Ледве** він зайшов, як почалася гроза. | Hardly had he entered when a storm started. |\n| **Ледве** я ліг, як зателефонували. | I had barely lain down when they called. |\n\n### Summary Table\n\n| Meaning | Expression | Example |\n|---------|------------|---------|\n| when | коли | Коли він прийшов... |\n| before | перед тим як / до того як | Перед тим як піти... |\n| before (noun) | до + gen | До вечері... |\n| after | після того як | Після того як закінчив... |\n| after (noun) | після + gen | Після роботи... |\n| while | поки / доки | Поки я чекав... |\n| until | поки не / доки не | Поки він не прийде... |\n| as soon as | щойно / як тільки | Щойно дізнаюся... |",
-        "type": "topic"
-      },
-      {
-        "id": "practice-практика",
-        "title": "practice | Практика",
-        "content": "### Choose the Correct Conjunction\n\n1. ___ він прийшов, ми вечеряли.\n   - a) Коли ✓\n   - b) Поки\n   - c) Після\n\n2. Подумай ___ відповідати.\n   - a) після того як\n   - b) перед тим як ✓\n   - c) коли\n\n3. Я відпочину ___ закінчу роботу.\n   - a) поки\n   - b) після того як ✓\n   - c) перед тим як\n\n4. Чекай, ___ він не прийде.\n   - a) коли\n   - b) поки ✓\n   - c) після того як\n\n5. ___ я дізнаюся, скажу тобі.\n   - a) Поки\n   - b) Щойно ✓\n   - c) До того як\n\n### Complete with Temporal Conjunctions\n\n1. ___ я був студентом, я жив у гуртожитку.\n   → **Коли** я був студентом, я жив у гуртожитку.\n\n2. ___ піти, перевір усе ще раз.\n   → **Перед тим як** піти, перевір усе ще раз.\n\n3. ___ закінчився фільм, всі заплескали.\n   → **Після того як** / **Коли** закінчився фільм, всі заплескали.\n\n4. Не виходь, ___ дощ не закінчиться.\n   → Не виходь, **поки** / **доки** дощ не закінчиться.\n\n5. ___ отримаю результати, зателефоную.\n   → **Щойно** / **Як тільки** отримаю результати, зателефоную.\n\n### Translate to Ukrainian\n\n1. When I was young, I lived in Kyiv.\n   → **Коли я був молодим, я жив у Києві.**\n\n2. Before leaving, check everything.\n   → **Перед тим як піти, перевір усе.**\n\n3. After the meeting, we'll discuss it.\n   → **Після зустрічі ми обговоримо це.**\n\n4. Wait until I call you.\n   → **Чекай, поки я не зателефоную.**\n\n5. As soon as he arrives, we'll start.\n   → **Щойно він приїде, ми почнемо.**\n\n### Transform Using Different Structures\n\n**With clause → with noun:**\n\n1. Після того як він прийшов...\n   → **Після його приходу...**\n\n2. Перед тим як вона виступила...\n   → **Перед її виступом...**\n\n3. До того як розпочнеться зустріч...\n   → **До початку зустрічі...**",
-        "type": "topic"
-      },
-      {
-        "id": "production-продукція",
-        "title": "production | Продукція",
-        "content": "### Tell About Your Day\n\nDescribe your typical day using temporal clauses:\n\n**Template:**\n- Коли я прокидаюся...\n- Перед тим як іти на роботу...\n- Після того як закінчую роботу...\n- Поки я їду додому...\n\n**Example:**\nКоли я прокидаюся, я п'ю каву. Перед тим як іти на роботу, я снідаю. Після того як закінчую роботу, я йду на тренування. Поки я їду додому, я слухаю подкасти.\n\n### Tell About Your Past\n\nUse temporal clauses to talk about past events:\n\n- Коли я був/була дитиною...\n- Перед тим як почати вчити українську...\n- Після того як закінчив/закінчила школу...\n\n---",
-        "type": "topic"
-      },
-      {
-        "id": "activities",
-        "title": "Activities",
-        "content": "## quiz: Temporal Clauses\n\n> Choose the correct answer.\n\n1. ___ він прийшов, ми вже вечеряли.\n   - [x] Коли\n   - [ ] Поки\n   > \"Коли\" for \"when.\"\n\n2. Подумай ___ тим як говорити.\n   - [x] перед\n   - [ ] після\n   > \"Before\" = \"перед тим як.\"\n\n3. Чекай, ___ він не прийде.\n   - [x] поки\n   - [ ] після того як\n   > \"Until\" requires \"поки...не.\"\n\n4. ___ закінчу, відпочину.\n   - [ ] Перед тим як\n   - [x] Після того як\n   > \"After\" I finish, I'll rest.\n\n5. ___ я дізнаюся, скажу.\n   - [x] Як тільки\n   - [ ] Поки\n   > \"As soon as\" = \"як тільки.\"\n\n6. ___ роботи я йду додому.\n   - [x] Після\n   - [ ] Після того як\n   > With noun, use \"після + gen.\"\n\n## fill-in: Complete the Story\n\n> (1)___ я був молодим, я багато подорожував. (2)___ тим як поїхати в нову країну, я завжди вчив трохи мови. (3)___ я приїхав в Україну, я одразу закохався в цю країну. (4)___ я там жив, я щодня вчив нові слова.\n\n**Answers:** Коли, Перед, Коли/Щойно, Поки\n\n---",
-        "type": "activities"
-      },
-      {
-        "id": "vocabulary",
-        "title": "Vocabulary",
-        "content": "| Word | IPA | English | Notes |\n|------|-----|---------|-------|\n| коли | /koˈlɪ/ | when | conj |\n| перед тим як | - | before | conj |\n| до того як | - | before | conj (formal) |\n| перш ніж | - | before | conj (literary) |\n| після того як | - | after | conj |\n| до | /do/ | before, until | prep + gen |\n| після | /ˈpʲislʲɑ/ | after | prep + gen |\n| поки | /poˈkɪ/ | while, until | conj |\n| доки | /doˈkɪ/ | while, until | conj |\n| щойно | /ˈʃt͡ʃojno/ | as soon as, just | adv/conj |\n| як тільки | /jɑk ˈtʲilʲkɪ/ | as soon as | conj |\n| ледве | /ˈlɛdvɛ/ | hardly, barely | adv |\n| тим часом | /tɪm ˈt͡ʃɑsom/ | meanwhile | adv |\n\n---",
-        "type": "vocabulary"
-      },
-      {
-        "id": "summary",
+        "id": "section-summary",
+        "type": "summary",
         "title": "Summary",
         "content": "## Temporal Conjunctions\n\n| Meaning | Expression | Structure |\n|---------|------------|-----------|\n| when | коли | + clause |\n| before | перед тим як | + infinitive/clause |\n| before | до того як | + clause |\n| after | після того як | + clause |\n| while | поки / доки | + clause |\n| until | поки не / доки не | + clause (note: не required!) |\n| as soon as | щойно / як тільки | + clause |\n\n## Prepositions + Nouns\n\n| Meaning | Preposition | Case | Example |\n|---------|-------------|------|---------|\n| before | до | genitive | до вечері |\n| after | після | genitive | після роботи |\n\n## Key Pattern: Until\n\nUkrainian \"until\" requires negation:\n- **поки не** / **доки не** + verb\n- Wait until he comes = Чекай, **поки він не прийде**.\n\n> **Key Takeaways**\n>\n> - Коли = when (most common)\n> - Перед тим як / до того як = before\n> - Після того як = after\n> - Поки/доки = while; поки не/доки не = until\n> - Щойно / як тільки = as soon as\n> - With nouns: до/після + genitive",
-        "type": "summary"
+        "titleUk": "Підсумок"
       }
-    ]
+    ],
+    "rawMarkdown": "---\nmodule: 110\ntitle: \"Temporal Clauses\"\nsubtitle: \"When, Before, After, While, Until\"\nlevel: B1\nphase: B1.2\nduration: 45\ntransliteration: none\ntags: [grammar, temporal-clauses, complex-sentences, time]\nobjectives:\n  - Use коли for \"when\" clauses\n  - Express \"before\" with перед тим як, до того як\n  - Express \"after\" with після того як\n  - Use поки/доки for \"while\" and \"until\"\n---\n\n# Зміст уроку | Lesson Content\n\n## warm-up | Розминка\n\n### Часові речення | Temporal Clauses\n\nTemporal clauses describe **when** something happens in relation to another event:\n\n| Relation | Ukrainian | Example |\n|----------|-----------|---------|\n| When | коли | Коли він прийшов... |\n| Before | перед тим як | Перед тим як піти... |\n| After | після того як | Після того як він прийшов... |\n| While | поки | Поки я чекав... |\n| Until | доки | Доки він не прийде... |\n\n## presentation | Презентація\n\n### Коли — When\n\n**Коли** is the most basic temporal conjunction:\n\n| Ukrainian | English |\n|-----------|---------|\n| **Коли** він прийшов, ми вечеряли. | When he arrived, we were having dinner. |\n| Зателефонуй мені, **коли** матимеш час. | Call me when you have time. |\n| **Коли** я був молодим, я багато подорожував. | When I was young, I traveled a lot. |\n\n**Word order:** The \"коли\" clause can come first or second.\n\n### Коли + Past for Habitual Actions\n\n**Коли** + imperfective past = repeated past actions (≈ \"whenever\"):\n\n| Ukrainian | English |\n|-----------|---------|\n| **Коли** він приходив, ми говорили. | Whenever he came, we talked. |\n| **Коли** я бачив її, я посміхався. | Whenever I saw her, I smiled. |\n\n### Перед тим як — Before\n\n**Перед тим як** + infinitive/clause = \"before\":\n\n| Ukrainian | English |\n|-----------|---------|\n| **Перед тим як** піти, він попрощався. | Before leaving, he said goodbye. |\n| Подумай **перед тим як** відповідати. | Think before answering. |\n| **Перед тим як** я прийшов, вона вже пішла. | Before I came, she had already left. |\n\n**Alternative forms:**\n- **До того як** — synonymous, slightly more formal\n- **Перш ніж** — literary, \"ere\" / \"before\"\n\n| Ukrainian | English |\n|-----------|---------|\n| **До того як** почати, підготуйся. | Before starting, prepare. |\n| **Перш ніж** говорити, подумай. | Before speaking, think. |\n\n### До + Noun — Before/Until + Noun\n\n**До** + genitive noun for \"before\" or \"until\":\n\n| Ukrainian | English |\n|-----------|---------|\n| **До** вечері я закінчу. | I'll finish before dinner. |\n| **До** його приїзду все було готово. | Before his arrival, everything was ready. |\n| Зачекай **до** понеділка. | Wait until Monday. |\n\n### Після того як — After\n\n**Після того як** + clause = \"after\":\n\n| Ukrainian | English |\n|-----------|---------|\n| **Після того як** він прийшов, ми почали. | After he arrived, we started. |\n| Я відпочину **після того як** закінчу. | I'll rest after I finish. |\n| **Після того як** вона сказала це, всі замовкли. | After she said that, everyone fell silent. |\n\n### Після + Noun — After + Noun\n\n**Після** + genitive noun for \"after\":\n\n| Ukrainian | English |\n|-----------|---------|\n| **Після** роботи я піду додому. | After work, I'll go home. |\n| **Після** вечері ми поговоримо. | After dinner, we'll talk. |\n| **Після** його від'їзду стало тихо. | After his departure, it became quiet. |\n\n### Поки / Доки — While, Until\n\n**Поки** and **доки** have two meanings:\n\n**1. While (simultaneous actions):**\n\n| Ukrainian | English |\n|-----------|---------|\n| **Поки** я чекав, я читав книгу. | While I waited, I read a book. |\n| **Доки** вона готувала, він дивився телевізор. | While she was cooking, he watched TV. |\n\n**2. Until (with negation):**\n\n| Ukrainian | English |\n|-----------|---------|\n| Чекай, **поки** він не прийде. | Wait until he comes. |\n| Не йди, **доки** я не скажу. | Don't go until I say. |\n\n> **⭐ ПОКИ / ДОКИ + НЕ = UNTIL**\n>\n> \"Until\" requires **не** in Ukrainian even though English is positive:\n> - Wait **until** he comes = Чекай, **поки** він **не** прийде.\n>\n> Without \"не,\" поки/доки means \"while.\"\n\n### Щойно — As soon as\n\n**Щойно** = \"as soon as\" or \"just (now)\":\n\n| Ukrainian | English |\n|-----------|---------|\n| **Щойно** він прийшов, ми почали. | As soon as he arrived, we started. |\n| Зателефонуй, **щойно** отримаєш новини. | Call as soon as you get news. |\n| Він **щойно** прийшов. | He just arrived. |\n\n### Як тільки — As soon as\n\n**Як тільки** is synonymous with \"щойно\":\n\n| Ukrainian | English |\n|-----------|---------|\n| **Як тільки** я дізнаюся, скажу тобі. | As soon as I find out, I'll tell you. |\n| **Як тільки** він вийшов, почався дощ. | As soon as he left, rain started. |\n\n### Ледве — Hardly, Barely (when)\n\n**Ледве** for \"barely/hardly...when\" (immediate sequence):\n\n| Ukrainian | English |\n|-----------|---------|\n| **Ледве** він зайшов, як почалася гроза. | Hardly had he entered when a storm started. |\n| **Ледве** я ліг, як зателефонували. | I had barely lain down when they called. |\n\n### Summary Table\n\n| Meaning | Expression | Example |\n|---------|------------|---------|\n| when | коли | Коли він прийшов... |\n| before | перед тим як / до того як | Перед тим як піти... |\n| before (noun) | до + gen | До вечері... |\n| after | після того як | Після того як закінчив... |\n| after (noun) | після + gen | Після роботи... |\n| while | поки / доки | Поки я чекав... |\n| until | поки не / доки не | Поки він не прийде... |\n| as soon as | щойно / як тільки | Щойно дізнаюся... |\n\n## practice | Практика\n\n### Choose the Correct Conjunction\n\n1. ___ він прийшов, ми вечеряли.\n   - a) Коли ✓\n   - b) Поки\n   - c) Після\n\n2. Подумай ___ відповідати.\n   - a) після того як\n   - b) перед тим як ✓\n   - c) коли\n\n3. Я відпочину ___ закінчу роботу.\n   - a) поки\n   - b) після того як ✓\n   - c) перед тим як\n\n4. Чекай, ___ він не прийде.\n   - a) коли\n   - b) поки ✓\n   - c) після того як\n\n5. ___ я дізнаюся, скажу тобі.\n   - a) Поки\n   - b) Щойно ✓\n   - c) До того як\n\n### Complete with Temporal Conjunctions\n\n1. ___ я був студентом, я жив у гуртожитку.\n   > [!answer] **Коли** я був студентом, я жив у гуртожитку.\n\n2. ___ піти, перевір усе ще раз.\n   > [!answer] **Перед тим як** піти, перевір усе ще раз.\n\n3. ___ закінчився фільм, всі заплескали.\n   > [!answer] **Після того як** / **Коли** закінчився фільм, всі заплескали.\n\n4. Не виходь, ___ дощ не закінчиться.\n   > [!answer] Не виходь, **поки** / **доки** дощ не закінчиться.\n\n5. ___ отримаю результати, зателефоную.\n   > [!answer] **Щойно** / **Як тільки** отримаю результати, зателефоную.\n\n### Translate to Ukrainian\n\n1. When I was young, I lived in Kyiv.\n   > [!answer] **Коли я був молодим, я жив у Києві.**\n2. Before leaving, check everything.\n   > [!answer] **Перед тим як піти, перевір усе.**\n3. After the meeting, we'll discuss it.\n   > [!answer] **Після зустрічі ми обговоримо це.**\n4. Wait until I call you.\n   > [!answer] **Чекай, поки я не зателефоную.**\n5. As soon as he arrives, we'll start.\n   > [!answer] **Щойно він приїде, ми почнемо.**\n### Transform Using Different Structures\n\n**With clause → with noun:**\n\n1. Після того як він прийшов...\n   > [!answer] **Після його приходу...**\n2. Перед тим як вона виступила...\n   > [!answer] **Перед її виступом...**\n3. До того як розпочнеться зустріч...\n   > [!answer] **До початку зустрічі...**\n## production | Продукція\n\n### Tell About Your Day\n\nDescribe your typical day using temporal clauses:\n\n**Template:**\n- Коли я прокидаюся...\n- Перед тим як іти на роботу...\n- Після того як закінчую роботу...\n- Поки я їду додому...\n\n**Example:**\nКоли я прокидаюся, я п'ю каву. Перед тим як іти на роботу, я снідаю. Після того як закінчую роботу, я йду на тренування. Поки я їду додому, я слухаю подкасти.\n\n### Tell About Your Past\n\nUse temporal clauses to talk about past events:\n\n- Коли я був/була дитиною...\n- Перед тим як почати вчити українську...\n- Після того як закінчив/закінчила школу...\n\n---\n\n# Activities\n\n## quiz: Temporal Clauses\n\n> Choose the correct answer.\n\n1. ___ він прийшов, ми вже вечеряли.\n   - [x] Коли\n   - [ ] Поки\n   > \"Коли\" for \"when.\"\n\n2. Подумай ___ тим як говорити.\n   - [x] перед\n   - [ ] після\n   > \"Before\" = \"перед тим як.\"\n\n3. Чекай, ___ він не прийде.\n   - [x] поки\n   - [ ] після того як\n   > \"Until\" requires \"поки...не.\"\n\n4. ___ закінчу, відпочину.\n   - [ ] Перед тим як\n   - [x] Після того як\n   > \"After\" I finish, I'll rest.\n\n5. ___ я дізнаюся, скажу.\n   - [x] Як тільки\n   - [ ] Поки\n   > \"As soon as\" = \"як тільки.\"\n\n6. ___ роботи я йду додому.\n   - [x] Після\n   - [ ] Після того як\n   > With noun, use \"після + gen.\"\n\n## fill-in: Complete the Story\n\n> (1)___ я був молодим, я багато подорожував. (2)___ тим як поїхати в нову країну, я завжди вчив трохи мови. (3)___ я приїхав в Україну, я одразу закохався в цю країну. (4)___ я там жив, я щодня вчив нові слова.\n\n**Answers:** Коли, Перед, Коли/Щойно, Поки\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | Notes |\n|------|-----|---------|-------|\n| коли | /koˈlɪ/ | when | conj |\n| перед тим як | - | before | conj |\n| до того як | - | before | conj (formal) |\n| перш ніж | - | before | conj (literary) |\n| після того як | - | after | conj |\n| до | /do/ | before, until | prep + gen |\n| після | /ˈpʲislʲɑ/ | after | prep + gen |\n| поки | /poˈkɪ/ | while, until | conj |\n| доки | /doˈkɪ/ | while, until | conj |\n| щойно | /ˈʃt͡ʃojno/ | as soon as, just | adv/conj |\n| як тільки | /jɑk ˈtʲilʲkɪ/ | as soon as | conj |\n| ледве | /ˈlɛdvɛ/ | hardly, barely | adv |\n| тим часом | /tɪm ˈt͡ʃɑsom/ | meanwhile | adv |\n\n---\n\n# Summary\n\n## Temporal Conjunctions\n\n| Meaning | Expression | Structure |\n|---------|------------|-----------|\n| when | коли | + clause |\n| before | перед тим як | + infinitive/clause |\n| before | до того як | + clause |\n| after | після того як | + clause |\n| while | поки / доки | + clause |\n| until | поки не / доки не | + clause (note: не required!) |\n| as soon as | щойно / як тільки | + clause |\n\n## Prepositions + Nouns\n\n| Meaning | Preposition | Case | Example |\n|---------|-------------|------|---------|\n| before | до | genitive | до вечері |\n| after | після | genitive | після роботи |\n\n## Key Pattern: Until\n\nUkrainian \"until\" requires negation:\n- **поки не** / **доки не** + verb\n- Wait until he comes = Чекай, **поки він не прийде**.\n\n> **Key Takeaways**\n>\n> - Коли = when (most common)\n> - Перед тим як / до того як = before\n> - Після того як = after\n> - Поки/доки = while; поки не/доки не = until\n> - Щойно / як тільки = as soon as\n> - With nouns: до/після + genitive\n"
   },
   "activities": [
     {
-      "id": "act-uk-B1-110-quiz",
+      "id": "act-b1-110-quiz",
       "type": "quiz",
       "title": "Temporal Clauses",
       "description": "Choose the correct answer.",
       "content": {
         "type": "quiz",
-        "instructions": "Choose the correct answer.",
         "questions": [
           {
             "question": "___ він прийшов, ми вже вечеряли.",
@@ -278,29 +124,31 @@
       "language": "uk",
       "difficultyLevel": "B1",
       "duration": 5,
-      "tags": [
-        "grammar",
-        "temporal-clauses",
-        "complex-sentences",
-        "time"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.233Z",
+      "modifiedAt": "2025-12-01T22:58:37.233Z"
     },
     {
-      "id": "act-uk-B1-110-gapfill",
+      "id": "act-b1-110-gapfill",
       "type": "gap-fill",
       "title": "Complete the Story",
       "description": "(1)___ я був молодим, я багато подорожував. (2)___ тим як поїхати в нову країну, я завжди вчив трохи мови. (3)___ я приїхав в Україну, я одразу закохався в цю країну. (4)___ я там жив, я щодня вчив нові слова.",
       "content": {
         "type": "gap-fill",
-        "instructions": "(1)___ я був молодим, я багато подорожував. (2)___ тим як поїхати в нову країну, я завжди вчив трохи мови. (3)___ я приїхав в Україну, я одразу закохався в цю країну. (4)___ я там жив, я щодня вчив нові слова.",
         "text": "(1)___ я був молодим, я багато подорожував. (2)___ тим як поїхати в нову країну, я завжди вчив трохи мови. (3)___ я приїхав в Україну, я одразу закохався в цю країну. (4)___ я там жив, я щодня вчив нові слова.",
         "blanks": [
-          {},
-          {},
-          {},
-          {}
+          {
+            "index": 0
+          },
+          {
+            "index": 1
+          },
+          {
+            "index": 2
+          },
+          {
+            "index": 3
+          }
         ],
         "answers": [
           "Коли",
@@ -315,14 +163,9 @@
       "language": "uk",
       "difficultyLevel": "B1",
       "duration": 5,
-      "tags": [
-        "grammar",
-        "temporal-clauses",
-        "complex-sentences",
-        "time"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.233Z",
+      "modifiedAt": "2025-12-01T22:58:37.233Z"
     }
   ],
   "vocabulary": {
@@ -333,121 +176,91 @@
     "transliterationMode": "none",
     "words": [
       {
-        "id": "v-m110-001",
+        "id": "v-koly-110-0",
         "uk": "коли",
-        "translit": "",
-        "ipa": "/koˈlɪ/",
         "en": "when",
-        "pos": "",
-        "note": "conj"
+        "pos": "conj",
+        "ipa": "/koˈlɪ/"
       },
       {
-        "id": "v-m110-002",
+        "id": "v-pered-tym-yak-110-1",
         "uk": "перед тим як",
-        "translit": "",
-        "ipa": "-",
         "en": "before",
-        "pos": "",
-        "note": "conj"
+        "pos": "conj"
       },
       {
-        "id": "v-m110-003",
+        "id": "v-do-toho-yak-110-2",
         "uk": "до того як",
-        "translit": "",
-        "ipa": "-",
         "en": "before",
-        "pos": "",
-        "note": "conj (formal)"
+        "pos": "conj (formal)"
       },
       {
-        "id": "v-m110-004",
+        "id": "v-persh-nizh-110-3",
         "uk": "перш ніж",
-        "translit": "",
-        "ipa": "-",
         "en": "before",
-        "pos": "",
-        "note": "conj (literary)"
+        "pos": "conj (literary)"
       },
       {
-        "id": "v-m110-005",
+        "id": "v-pislya-toho-yak-110-4",
         "uk": "після того як",
-        "translit": "",
-        "ipa": "-",
         "en": "after",
-        "pos": "",
-        "note": "conj"
+        "pos": "conj"
       },
       {
-        "id": "v-m110-006",
+        "id": "v-do-110-5",
         "uk": "до",
-        "translit": "",
-        "ipa": "/do/",
         "en": "before, until",
-        "pos": "",
-        "note": "prep + gen"
+        "pos": "prep + gen",
+        "ipa": "/do/"
       },
       {
-        "id": "v-m110-007",
+        "id": "v-pislya-110-6",
         "uk": "після",
-        "translit": "",
-        "ipa": "/ˈpʲislʲɑ/",
         "en": "after",
-        "pos": "",
-        "note": "prep + gen"
+        "pos": "prep + gen",
+        "ipa": "/ˈpʲislʲɑ/"
       },
       {
-        "id": "v-m110-008",
+        "id": "v-poky-110-7",
         "uk": "поки",
-        "translit": "",
-        "ipa": "/poˈkɪ/",
         "en": "while, until",
-        "pos": "",
-        "note": "conj"
+        "pos": "conj",
+        "ipa": "/poˈkɪ/"
       },
       {
-        "id": "v-m110-009",
+        "id": "v-doky-110-8",
         "uk": "доки",
-        "translit": "",
-        "ipa": "/doˈkɪ/",
         "en": "while, until",
-        "pos": "",
-        "note": "conj"
+        "pos": "conj",
+        "ipa": "/doˈkɪ/"
       },
       {
-        "id": "v-m110-010",
+        "id": "v-shchoyno-110-9",
         "uk": "щойно",
-        "translit": "",
-        "ipa": "/ˈʃt͡ʃojno/",
         "en": "as soon as, just",
-        "pos": "",
-        "note": "adv/conj"
+        "pos": "adv/conj",
+        "ipa": "/ˈʃt͡ʃojno/"
       },
       {
-        "id": "v-m110-011",
+        "id": "v-yak-tilьky-110-10",
         "uk": "як тільки",
-        "translit": "",
-        "ipa": "/jɑk ˈtʲilʲkɪ/",
         "en": "as soon as",
-        "pos": "",
-        "note": "conj"
+        "pos": "conj",
+        "ipa": "/jɑk ˈtʲilʲkɪ/"
       },
       {
-        "id": "v-m110-012",
+        "id": "v-ledve-110-11",
         "uk": "ледве",
-        "translit": "",
-        "ipa": "/ˈlɛdvɛ/",
         "en": "hardly, barely",
-        "pos": "",
-        "note": "adv"
+        "pos": "adv",
+        "ipa": "/ˈlɛdvɛ/"
       },
       {
-        "id": "v-m110-013",
+        "id": "v-tym-chasom-110-12",
         "uk": "тим часом",
-        "translit": "",
-        "ipa": "/tɪm ˈt͡ʃɑsom/",
         "en": "meanwhile",
-        "pos": "",
-        "note": "adv"
+        "pos": "adv",
+        "ipa": "/tɪm ˈt͡ʃɑsom/"
       }
     ]
   }

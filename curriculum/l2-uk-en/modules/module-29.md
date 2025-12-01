@@ -171,17 +171,25 @@ Answer these questions:
 ### Family Tree
 
 Create phrases about family relationships:
-1. My sister → моя сестра
-2. His children → його діти
-3. Her husband → її чоловік
-4. Our grandmother → наша бабуся
+1. My sister
+   > [!answer] моя сестра
+2. His children
+   > [!answer] його діти
+3. Her husband
+   > [!answer] її чоловік
+4. Our grandmother
+   > [!answer] наша бабуся
 
 ### Complete Sentences
 
-1. ___ мене є два брати. (I have) → У
-2. Моя ___ вчителька. (mother) → мама
-3. Мій батько ___ . (engineer) → інженер
-4. У них троє ___ . (children) → дітей
+1. ___ мене є два брати. (I have)
+   > [!answer] У
+2. Моя ___ вчителька. (mother)
+   > [!answer] мама
+3. Мій батько ___ . (engineer)
+   > [!answer] інженер
+4. У них троє ___ . (children)
+   > [!answer] дітей
 
 ## production
 

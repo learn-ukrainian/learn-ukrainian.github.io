@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-A2-40",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "revision",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -27,8 +26,6 @@
       "Instrumental patterns consolidation",
       "Preposition + case review"
     ],
-    "totalDuration": 45,
-    "transliterationMode": "partial",
     "tags": [
       "review",
       "checkpoint",
@@ -37,22 +34,9 @@
       "instrumental",
       "assessment"
     ],
-    "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
+    "totalDuration": 45,
+    "transliterationMode": "partial",
     "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### A2.1 Complete!\n\nCongratulations! You've completed Phase A2.1. Let's review everything:\n\n**What you've learned (Modules 31-39):**\n- ✅ Dative case (pronouns, nouns, verbs)\n- ✅ Instrumental case (accompaniment, means, professions)\n- ✅ All 7 cases working together\n- ✅ Preposition + case combinations\n- ✅ Service interactions (post office, bank)\n\nThis checkpoint will help you consolidate your knowledge and identify areas for more practice.\n\n> 💡 **Self-Assessment Goal**\n>\n> By the end of this module, you should feel confident:\n> - Choosing the right case for any situation\n> - Using dative verbs correctly\n> - Forming instrumental endings\n> - Navigating real-world service situations"
-          }
-        ]
-      },
       {
         "id": "phase-presentation",
         "name": "presentation",
@@ -61,102 +45,33 @@
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "### The 7 Cases: Complete Review\n\n| Case | Question | Function | Example |\n|------|----------|----------|---------|\n| **Nominative** | Хто? Що? | Subject | Брат читає. |\n| **Genitive** | Кого? Чого? | Possession, absence, after certain prepositions | Книга брата. Немає часу. |\n| **Dative** | Кому? Чому? | Recipient, with certain verbs | Даю братові. Допомагаю йому. |\n| **Accusative** | Кого? Що? | Direct object, direction | Бачу брата. Йду в парк. |\n| **Instrumental** | Ким? Чим? | Means, accompaniment, profession | Пишу ручкою. Йду з братом. Працюю лікарем. |\n| **Locative** | На/у кому/чому? | Location (with prepositions) | У парку. На столі. |\n| **Vocative** | — | Direct address | Брате! Мамо! |"
+            "teacherNotes": "### The 7 Cases: Complete Review\n\n| Case | Question | Function | Example |\n|------|----------|----------|---------|\n| **Nominative** | Хто? Що? | Subject | Брат читає. |\n| **Genitive** | Кого? Чого? | Possession, absence, after certain prepositions | Книга брата. Немає часу. |\n| **Dative** | Кому? Чому? | Recipient, with certain verbs | Даю братові. Допомагаю йому. |\n| **Accusative** | Кого? Що? | Direct object, direction | Бачу брата. Йду в парк. |\n| **Instrumental** | Ким? Чим? | Means, accompaniment, profession | Пишу ручкою. Йду з братом. Працюю лікарем. |\n| **Locative** | На/у кому/чому? | Location (with prepositions) | У парку. На столі. |\n| **Vocative** | — | Direct address | Брате! Мамо! |\n\n### Dative Review (Modules 31-33)\n\n**Dative pronouns:**\n| Nom | Dat |\n|-----|-----|\n| я | мені |\n| ти | тобі |\n| він/воно | йому |\n| вона | їй |\n| ми | нам |\n| ви | вам |\n| вони | їм |\n\n**Dative noun endings:**\n| Gender | Ending | Example |\n|--------|--------|---------|\n| Masculine | -ові/-у | братові, брату |\n| Feminine | -і | сестрі |\n| Neuter | -у/-ові | місту |\n| Plural | -ам/-ям | друзям |\n\n**Key dative verbs:**\n- допомагати (help)\n- дякувати (thank)\n- відповідати (answer)\n- радити (advise)\n- заважати (disturb)\n- подобатися (please/like)\n- дзвонити (call)\n\n**Impersonal + dative:**\n- Мені холодно. (I'm cold.)\n- Тобі потрібно. (You need.)\n- Йому важко. (It's hard for him.)\n\n### Instrumental Review (Modules 34-36)\n\n**Instrumental pronouns:**\n| Nom | Instr |\n|-----|-------|\n| я | мною |\n| ти | тобою |\n| він/воно | ним |\n| вона | нею |\n| ми | нами |\n| ви | вами |\n| вони | ними |\n\n**Instrumental noun endings:**\n| Gender | Ending | Example |\n|--------|--------|---------|\n| Masculine | -ом/-ем | другом, вчителем |\n| Feminine | -ою/-ею | сестрою, Марією |\n| Neuter | -ом/-ем | вікном |\n| Plural | -ами/-ями | друзями |\n\n**Instrumental uses:**\n1. **Accompaniment (з +):** Йду з другом.\n2. **Means (no prep):** Їду автобусом. Пишу ручкою.\n3. **Profession:** Працюю лікарем. Став інженером.\n\n### Preposition + Case Map (Module 37)\n\n**Always Genitive:**\nдо, від, для, без, після, біля, з (from)\n\n**Always Instrumental:**\nз (with), над, перед, між\n\n**Location vs Motion:**\n| Preposition | Location (де?) | Motion (куди?) |\n|-------------|----------------|----------------|\n| у/в | у парку (loc) | у парк (acc) |\n| на | на столі (loc) | на стіл (acc) |\n| під | під столом (instr) | під стіл (acc) |\n| за | за будинком (instr) | за будинок (acc) |\n\n### Service Phrases Review (Module 39)\n\n**Post office:**\n- Я хочу надіслати листа. (acc)\n- Посилка до Америки. (gen)\n- Скільки коштує марка? (nom)\n\n**Bank:**\n- Обміняти долари на гривні. (acc на acc)\n- Зняти гроші з рахунку. (acc з gen)\n- Переказати гроші мамі. (acc dat)"
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Dative Review (Modules 31-33)\n\n**Dative pronouns:**\n| Nom | Dat |\n|-----|-----|\n| я | мені |\n| ти | тобі |\n| він/воно | йому |\n| вона | їй |\n| ми | нам |\n| ви | вам |\n| вони | їм |\n\n**Dative noun endings:**\n| Gender | Ending | Example |\n|--------|--------|---------|\n| Masculine | -ові/-у | братові, брату |\n| Feminine | -і | сестрі |\n| Neuter | -у/-ові | місту |\n| Plural | -ам/-ям | друзям |\n\n**Key dative verbs:**\n- допомагати (help)\n- дякувати (thank)\n- відповідати (answer)\n- радити (advise)\n- заважати (disturb)\n- подобатися (please/like)\n- дзвонити (call)\n\n**Impersonal + dative:**\n- Мені холодно. (I'm cold.)\n- Тобі потрібно. (You need.)\n- Йому важко. (It's hard for him.)"
+            "teacherNotes": "### Case Identification Challenge\n\nIdentify the case of each underlined word:\n\n1. **Брат** читає книгу.\n   > [!answer] Nominative (subject)\n2. Я бачу **сестру**.\n   > [!answer] Accusative (direct object)\n3. Це книга **батька**.\n   > [!answer] Genitive (possession)\n4. Даю подарунок **мамі**.\n   > [!answer] Dative (recipient)\n5. Йду з **другом**.\n   > [!answer] Instrumental (accompaniment)\n6. Живу у **Києві**.\n   > [!answer] Locative (location)\n7. **Тарасе**, йди сюди!\n   > [!answer] Vocative (address)\n\n### Dative or Accusative?\n\nChoose the correct case:\n\n1. Я допомагаю ___ (брат).\n   > [!answer] братові (dat - допомагати + dat)\n2. Я бачу ___ (брат).\n   > [!answer] брата (acc - бачити + acc)\n3. Вона дзвонить ___ (мама).\n   > [!answer] мамі (dat - дзвонити + dat)\n4. Він любить ___ (мама).\n   > [!answer] маму (acc - любити + acc)\n5. Ми відповідаємо ___ (вчитель).\n   > [!answer] вчителеві (dat - відповідати + dat)\n6. Вони знають ___ (вчитель).\n   > [!answer] вчителя (acc - знати + acc)\n\n### Instrumental Forms\n\nGive the instrumental:\n\n1. друг\n   > [!answer] другом\n2. сестра\n   > [!answer] сестрою\n3. вчитель\n   > [!answer] вчителем\n4. ручка\n   > [!answer] ручкою\n5. автобус\n   > [!answer] автобусом\n6. батьки\n   > [!answer] батьками\n7. я\n   > [!answer] мною\n8. вони\n   > [!answer] ними\n\n### Preposition + Case\n\nComplete with correct form:\n\n1. Я йду до ___ (магазин).\n   > [!answer] магазину (gen)\n2. Книга на ___ (стіл).\n   > [!answer] столі (loc)\n3. Йду з ___ (друг).\n   > [!answer] другом (instr)\n4. Їду у ___ (Київ).\n   > [!answer] Київ (acc - motion)\n5. Живу в ___ (Київ).\n   > [!answer] Києві (loc - location)\n6. Посилка від ___ (брат).\n   > [!answer] брата (gen)\n7. Сиджу між ___ (друзі).\n   > [!answer] друзями (instr)\n8. Кіт під ___ (стіл - location).\n   > [!answer] столом (instr)\n\n### Multi-Case Sentences\n\nFill in ALL blanks:\n\n1. ___ (Я) даю ___ (книга) ___ (сестра).\n   > [!answer] Я даю книгу сестрі.\n\n2. ___ (Ми) їдемо з ___ (друзі) до ___ (Львів) ___ (поїзд).\n   > [!answer] Ми їдемо з друзями до Львова поїздом.\n\n3. ___ (Вона) працює ___ (лікар) у ___ (лікарня).\n   > [!answer] Вона працює лікарем у лікарні.\n\n4. ___ (Вчитель) пояснює ___ (правило) ___ (студенти).\n   > [!answer] Вчитель пояснює правило студентам."
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Instrumental Review (Modules 34-36)\n\n**Instrumental pronouns:**\n| Nom | Instr |\n|-----|-------|\n| я | мною |\n| ти | тобою |\n| він/воно | ним |\n| вона | нею |\n| ми | нами |\n| ви | вами |\n| вони | ними |\n\n**Instrumental noun endings:**\n| Gender | Ending | Example |\n|--------|--------|---------|\n| Masculine | -ом/-ем | другом, вчителем |\n| Feminine | -ою/-ею | сестрою, Марією |\n| Neuter | -ом/-ем | вікном |\n| Plural | -ами/-ями | друзями |\n\n**Instrumental uses:**\n1. **Accompaniment (з +):** Йду з другом.\n2. **Means (no prep):** Їду автобусом. Пишу ручкою.\n3. **Profession:** Працюю лікарем. Став інженером."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Preposition + Case Map (Module 37)\n\n**Always Genitive:**\nдо, від, для, без, після, біля, з (from)\n\n**Always Instrumental:**\nз (with), над, перед, між\n\n**Location vs Motion:**\n| Preposition | Location (де?) | Motion (куди?) |\n|-------------|----------------|----------------|\n| у/в | у парку (loc) | у парк (acc) |\n| на | на столі (loc) | на стіл (acc) |\n| під | під столом (instr) | під стіл (acc) |\n| за | за будинком (instr) | за будинок (acc) |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Service Phrases Review (Module 39)\n\n**Post office:**\n- Я хочу надіслати листа. (acc)\n- Посилка до Америки. (gen)\n- Скільки коштує марка? (nom)\n\n**Bank:**\n- Обміняти долари на гривні. (acc на acc)\n- Зняти гроші з рахунку. (acc з gen)\n- Переказати гроші мамі. (acc dat)"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A2-40-matchup"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Case Identification Challenge\n\nIdentify the case of each underlined word:\n\n1. **Брат** читає книгу. → Nominative (subject)\n2. Я бачу **сестру**. → Accusative (direct object)\n3. Це книга **батька**. → Genitive (possession)\n4. Даю подарунок **мамі**. → Dative (recipient)\n5. Йду з **другом**. → Instrumental (accompaniment)\n6. Живу у **Києві**. → Locative (location)\n7. **Тарасе**, йди сюди! → Vocative (address)"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Dative or Accusative?\n\nChoose the correct case:\n\n1. Я допомагаю ___ (брат). → братові (dat - допомагати + dat)\n2. Я бачу ___ (брат). → брата (acc - бачити + acc)\n3. Вона дзвонить ___ (мама). → мамі (dat - дзвонити + dat)\n4. Він любить ___ (мама). → маму (acc - любити + acc)\n5. Ми відповідаємо ___ (вчитель). → вчителеві (dat - відповідати + dat)\n6. Вони знають ___ (вчитель). → вчителя (acc - знати + acc)"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Instrumental Forms\n\nGive the instrumental:\n\n1. друг → другом\n2. сестра → сестрою\n3. вчитель → вчителем\n4. ручка → ручкою\n5. автобус → автобусом\n6. батьки → батьками\n7. я → мною\n8. вони → ними"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Preposition + Case\n\nComplete with correct form:\n\n1. Я йду до ___ (магазин). → магазину (gen)\n2. Книга на ___ (стіл). → столі (loc)\n3. Йду з ___ (друг). → другом (instr)\n4. Їду у ___ (Київ). → Київ (acc - motion)\n5. Живу в ___ (Київ). → Києві (loc - location)\n6. Посилка від ___ (брат). → брата (gen)\n7. Сиджу між ___ (друзі). → друзями (instr)\n8. Кіт під ___ (стіл - location). → столом (instr)"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Multi-Case Sentences\n\nFill in ALL blanks:\n\n1. ___ (Я) даю ___ (книга) ___ (сестра).\n   → Я даю книгу сестрі.\n\n2. ___ (Ми) їдемо з ___ (друзі) до ___ (Львів) ___ (поїзд).\n   → Ми їдемо з друзями до Львова поїздом.\n\n3. ___ (Вона) працює ___ (лікар) у ___ (лікарня).\n   → Вона працює лікарем у лікарні.\n\n4. ___ (Вчитель) пояснює ___ (правило) ___ (студенти).\n   → Вчитель пояснює правило студентам."
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A2-40-quiz"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A2-40-groupsort"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Self-Assessment Dialogues\n\n**Test yourself - can you handle these situations?**\n\n**Situation 1: Helping a friend**\nCreate a dialogue using: допомагати + dat, з + instr\n\nExample:\n- Кому ти допомагаєш?\n- Я допомагаю братові з домашнім завданням.\n\n**Situation 2: At the post office**\nCreate sentences using: надіслати + acc + dat, до + gen\n\nExample:\n- Я хочу надіслати посилку мамі до Києва.\n\n**Situation 3: Talking about work**\nCreate sentences using: працювати + instr, з + instr\n\nExample:\n- Я працюю програмістом. Працюю з хорошими колегами."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Can-Do Checklist\n\n**Check your abilities:**\n\n| Skill | Can Do? |\n|-------|---------|\n| I can use dative pronouns (мені, тобі, йому...) | ☐ |\n| I can form dative nouns (братові, сестрі...) | ☐ |\n| I can use dative verbs correctly (допомагати, дякувати...) | ☐ |\n| I can form instrumental nouns (братом, сестрою...) | ☐ |\n| I can use instrumental for means (автобусом, ручкою) | ☐ |\n| I can use instrumental for professions (працюю лікарем) | ☐ |\n| I can choose the right preposition + case | ☐ |\n| I can handle post office transactions | ☐ |\n| I can handle basic bank transactions | ☐ |\n| I can build multi-case sentences | ☐ |\n\n**How did you do?**\n- 8-10 checks: Excellent! Ready for A2.2\n- 5-7 checks: Good progress, review weak areas\n- 0-4 checks: Review Modules 31-39 before continuing"
+            "teacherNotes": "### Self-Assessment Dialogues\n\n**Test yourself - can you handle these situations?**\n\n**Situation 1: Helping a friend**\nCreate a dialogue using: допомагати + dat, з + instr\n\nExample:\n- Кому ти допомагаєш?\n- Я допомагаю братові з домашнім завданням.\n\n**Situation 2: At the post office**\nCreate sentences using: надіслати + acc + dat, до + gen\n\nExample:\n- Я хочу надіслати посилку мамі до Києва.\n\n**Situation 3: Talking about work**\nCreate sentences using: працювати + instr, з + instr\n\nExample:\n- Я працюю програмістом. Працюю з хорошими колегами.\n\n### Can-Do Checklist\n\n**Check your abilities:**\n\n| Skill | Can Do? |\n|-------|---------|\n| I can use dative pronouns (мені, тобі, йому...) | ☐ |\n| I can form dative nouns (братові, сестрі...) | ☐ |\n| I can use dative verbs correctly (допомагати, дякувати...) | ☐ |\n| I can form instrumental nouns (братом, сестрою...) | ☐ |\n| I can use instrumental for means (автобусом, ручкою) | ☐ |\n| I can use instrumental for professions (працюю лікарем) | ☐ |\n| I can choose the right preposition + case | ☐ |\n| I can handle post office transactions | ☐ |\n| I can handle basic bank transactions | ☐ |\n| I can build multi-case sentences | ☐ |\n\n**How did you do?**\n- 8-10 checks: Excellent! Ready for A2.2\n- 5-7 checks: Good progress, review weak areas\n- 0-4 checks: Review Modules 31-39 before continuing\n\n---"
           }
         ]
       }
-    ]
+    ],
+    "createdAt": "2025-12-01T22:58:37.270Z",
+    "modifiedAt": "2025-12-01T22:58:37.270Z",
+    "version": 1
   },
   "activities": [
     {
-      "id": "act-uk-A2-40-matchup",
+      "id": "act-a2-40-matchup",
       "type": "match-up",
       "title": "Case Functions",
       "description": "Match case with primary function.",
       "content": {
         "type": "match-up",
-        "instructions": "Match case with primary function.",
         "pairs": [
           {
             "left": "Nominative",
@@ -195,28 +110,20 @@
       "language": "uk",
       "difficultyLevel": "A2",
       "duration": 5,
-      "tags": [
-        "review",
-        "checkpoint",
-        "cases",
-        "dative",
-        "instrumental",
-        "assessment"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.270Z",
+      "modifiedAt": "2025-12-01T22:58:37.270Z"
     },
     {
-      "id": "act-uk-A2-40-quiz",
+      "id": "act-a2-40-quiz",
       "type": "quiz",
       "title": "A2.1 Comprehensive Review",
       "description": "Test your knowledge from Modules 31-39.",
       "content": {
         "type": "quiz",
-        "instructions": "Test your knowledge from Modules 31-39.",
         "questions": [
           {
-            "question": "1. \"I help my brother\" - Я допомагаю ___.",
+            "question": "\"I help my brother\" - Я допомагаю ___.",
             "options": [
               "братові",
               "брата",
@@ -314,27 +221,20 @@
       "language": "uk",
       "difficultyLevel": "A2",
       "duration": 5,
-      "tags": [
-        "review",
-        "checkpoint",
-        "cases",
-        "dative",
-        "instrumental",
-        "assessment"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.270Z",
+      "modifiedAt": "2025-12-01T22:58:37.270Z"
     },
     {
-      "id": "act-uk-A2-40-groupsort",
+      "id": "act-a2-40-groupsort",
       "type": "group-sort",
       "title": "Dative vs Instrumental Verbs",
       "description": "Sort the verbs by required case.",
       "content": {
         "type": "group-sort",
-        "instructions": "Sort the verbs by required case.",
         "groups": [
           {
+            "id": "dative-verbs",
             "name": "Dative Verbs",
             "items": [
               "допомагати",
@@ -345,6 +245,7 @@
             ]
           },
           {
+            "id": "instrumental-verbspatterns",
             "name": "Instrumental Verbs/Patterns",
             "items": [
               "працювати (profession)",
@@ -363,16 +264,9 @@
       "language": "uk",
       "difficultyLevel": "A2",
       "duration": 5,
-      "tags": [
-        "review",
-        "checkpoint",
-        "cases",
-        "dative",
-        "instrumental",
-        "assessment"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.270Z",
+      "modifiedAt": "2025-12-01T22:58:37.270Z"
     }
   ],
   "vocabulary": {

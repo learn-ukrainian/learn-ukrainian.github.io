@@ -15,7 +15,8 @@
     "vocab:build": "python3 scripts/vocab-manager.py build l2-uk-en",
     "vocab:stats": "python3 scripts/vocab-manager.py stats l2-uk-en",
     "vocab:duplicates": "python3 scripts/vocab-manager.py duplicates l2-uk-en",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "ts-node scripts/test-html.ts",
+    "test:html": "ts-node scripts/test-html.ts"
   },
   "repository": {
     "type": "git",

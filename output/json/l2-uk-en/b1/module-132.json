@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-B1-132",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "vocabulary-expansion",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -22,181 +21,43 @@
       "Understand nuances in meaning"
     ],
     "grammarFocus": [],
-    "totalDuration": 45,
-    "transliterationMode": "none",
     "tags": [
       "vocabulary",
       "synonyms",
       "verbs",
       "thinking"
     ],
+    "totalDuration": 45,
+    "transliterationMode": "none",
+    "phases": [],
+    "createdAt": "2025-12-01T22:58:37.239Z",
+    "modifiedAt": "2025-12-01T22:58:37.239Z",
     "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
-    "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Синоніми | Synonyms\n\nВ українській мові багато дієслів для опису мислення:\n\nUkrainian has many verbs for describing thinking:\n\n- Я **думаю**, що він правий.\n- Я **вважаю**, що це неправильно.\n- Я **гадаю**, він прийде.\n- Мені **здається**, це добра ідея.\n\nЧи це одне й те саме? | Is it all the same?"
-          }
-        ]
-      },
-      {
-        "id": "phase-presentation",
-        "name": "presentation",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Думати | To Think (General)\n\n**Думати** — найзагальніше дієслово для процесу мислення.\n\n| Usage | Example | English |\n|-------|---------|---------|\n| Process | Я думаю про тебе. | I'm thinking about you. |\n| Opinion | Я думаю, що так. | I think so. |\n| Considering | Думаю поїхати. | I'm thinking of going. |\n\n**Forms:** думати (impf) / подумати (pf)"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Гадати | To Think, Suppose\n\n**Гадати** — припускати, мати думку (часто невпевнено).\n\n| Usage | Example | English |\n|-------|---------|---------|\n| Suppose | Гадаю, він спізниться. | I suppose he'll be late. |\n| Guess | Не гадав, що так буде. | Didn't think it would be so. |\n| Believe | Гадаю, що так. | I believe so. |\n\n**Note:** Often implies less certainty than думати.\n\n**Forms:** гадати (impf) / only imperfective commonly used"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Вважати | To Consider, Believe\n\n**Вважати** — мати тверду думку, переконання.\n\n| Usage | Example | English |\n|-------|---------|---------|\n| Believe firmly | Я вважаю це помилкою. | I consider this a mistake. |\n| Consider | Вважаю його другом. | I consider him a friend. |\n| Hold opinion | Вважаю, що він правий. | I believe he's right. |\n\n**Note:** Stronger opinion than думати/гадати.\n\n**Forms:** вважати (impf) / only imperfective commonly used"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Міркувати | To Ponder, Reflect\n\n**Міркувати** — глибоко обдумувати, розмірковувати.\n\n| Usage | Example | English |\n|-------|---------|---------|\n| Ponder | Він міркує над проблемою. | He's pondering the problem. |\n| Reflect | Міркую про майбутнє. | I'm reflecting on the future. |\n| Reason | Логічно міркувати. | To reason logically. |\n\n**Note:** Implies deeper, longer thinking process.\n\n**Forms:** міркувати (impf) / only imperfective commonly used"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Здаватися | To Seem\n\n**Здаватися** — суб'єктивне враження.\n\n| Usage | Example | English |\n|-------|---------|---------|\n| Seem | Мені здається, він хворий. | It seems to me he's sick. |\n| Appear | Здається, що дощ. | It seems like rain. |\n| Have feeling | Мені здається так. | I have a feeling it's so. |\n\n**Structure:** Мені/тобі/йому здається, що...\n\n**Forms:** здаватися (impf) / здатися (pf)"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Роздумувати | To Deliberate\n\n**Роздумувати** — довго обмірковувати, вагатися.\n\n| Usage | Example | English |\n|-------|---------|---------|\n| Deliberate | Роздумую, чи погодитися. | I'm deliberating whether to agree. |\n| Mull over | Роздумував цілий день. | Mulled it over all day. |\n\n**Forms:** роздумувати (impf) / роздумати (pf) — rare"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Порівняння | Comparison Chart\n\n| Verb | Certainty | Depth | Example |\n|------|-----------|-------|---------|\n| думати | medium | general | Думаю, так. |\n| гадати | low | guess | Гадаю, він прийде. |\n| вважати | high | conviction | Вважаю це правильним. |\n| міркувати | — | deep | Міркую над цим. |\n| здаватися | low | impression | Здається, дощ. |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Колокації | Collocations\n\n| Verb | Common Patterns |\n|------|-----------------|\n| думати | думати про, думати над, думати що |\n| гадати | гадати що, не гадав би |\n| вважати | вважати за потрібне, вважати своїм обов'язком |\n| міркувати | міркувати над, міркувати про, логічно міркувати |\n| здаватися | мені здається, здається що |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Вирази | Expressions\n\n| Ukrainian | English |\n|-----------|---------|\n| Я так не думаю. | I don't think so. |\n| Що ти про це думаєш? | What do you think about it? |\n| Я вважаю за краще... | I consider it better to... |\n| Не гадав би! | I wouldn't think so! |\n| Якщо не помиляюся... | If I'm not mistaken... |\n| Наскільки я розумію... | As far as I understand... |\n| Здається мені... | It seems to me... |"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Choose the Right Verb\n\n1. Я ___ (довго обмірковував) цю проблему.\n   → **міркував над**\n\n2. ___ (мені здається), що він правий.\n   → **Мені здається / Гадаю**\n\n3. Я ___ (твердо переконаний), це помилка.\n   → **вважаю**\n\n4. Не ___ (припускав), що буде так важко.\n   → **гадав**\n\n5. Про що ти ___ (process of thinking)?\n   → **думаєш**"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Complete the Sentences\n\n1. Я ___, що він приїде завтра. (neutral opinion)\n   → **думаю / гадаю**\n\n2. ___, він не правий. (firm belief)\n   → **Вважаю**\n\n3. Вона довго ___ над цим питанням. (deep thinking)\n   → **міркувала**\n\n4. ___, буде дощ. (subjective impression)\n   → **Здається / Мені здається**\n\n5. Не ___, що це можливо. (didn't suppose)\n   → **гадав**"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Translate Nuances\n\n1. I think he's right. (neutral)\n   → **Думаю, він правий.**\n\n2. I believe this is wrong. (firm)\n   → **Вважаю, це неправильно.**\n\n3. I suppose she'll come. (guess)\n   → **Гадаю, вона прийде.**\n\n4. It seems to me that... (impression)\n   → **Мені здається, що...**\n\n5. I'm pondering this question. (deep)\n   → **Я міркую над цим питанням.**"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-B1-132-quiz"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Express Your Opinion\n\nUse different verbs to express opinions on:\n\n1. **Екологія:** Я вважаю, що... / Мені здається...\n2. **Освіта:** Думаю, що... / Гадаю...\n3. **Технології:** Міркуючи над цим... / Я вважаю..."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Discuss a Topic\n\nChoose a topic and discuss using variety:\n\n- Що ви **думаєте** про...?\n- Я **вважаю**, що...\n- Мені **здається**...\n- **Гадаю**, що...\n- **Міркуючи** над цим..."
-          }
-        ]
-      }
-    ],
-    "rawMarkdown": "# Зміст уроку | Lesson Content\n\n## warm-up | Розминка\n\n### Синоніми | Synonyms\n\nВ українській мові багато дієслів для опису мислення:\n\nUkrainian has many verbs for describing thinking:\n\n- Я **думаю**, що він правий.\n- Я **вважаю**, що це неправильно.\n- Я **гадаю**, він прийде.\n- Мені **здається**, це добра ідея.\n\nЧи це одне й те саме? | Is it all the same?\n\n## presentation | Презентація\n\n### Думати | To Think (General)\n\n**Думати** — найзагальніше дієслово для процесу мислення.\n\n| Usage | Example | English |\n|-------|---------|---------|\n| Process | Я думаю про тебе. | I'm thinking about you. |\n| Opinion | Я думаю, що так. | I think so. |\n| Considering | Думаю поїхати. | I'm thinking of going. |\n\n**Forms:** думати (impf) / подумати (pf)\n\n### Гадати | To Think, Suppose\n\n**Гадати** — припускати, мати думку (часто невпевнено).\n\n| Usage | Example | English |\n|-------|---------|---------|\n| Suppose | Гадаю, він спізниться. | I suppose he'll be late. |\n| Guess | Не гадав, що так буде. | Didn't think it would be so. |\n| Believe | Гадаю, що так. | I believe so. |\n\n**Note:** Often implies less certainty than думати.\n\n**Forms:** гадати (impf) / only imperfective commonly used\n\n### Вважати | To Consider, Believe\n\n**Вважати** — мати тверду думку, переконання.\n\n| Usage | Example | English |\n|-------|---------|---------|\n| Believe firmly | Я вважаю це помилкою. | I consider this a mistake. |\n| Consider | Вважаю його другом. | I consider him a friend. |\n| Hold opinion | Вважаю, що він правий. | I believe he's right. |\n\n**Note:** Stronger opinion than думати/гадати.\n\n**Forms:** вважати (impf) / only imperfective commonly used\n\n### Міркувати | To Ponder, Reflect\n\n**Міркувати** — глибоко обдумувати, розмірковувати.\n\n| Usage | Example | English |\n|-------|---------|---------|\n| Ponder | Він міркує над проблемою. | He's pondering the problem. |\n| Reflect | Міркую про майбутнє. | I'm reflecting on the future. |\n| Reason | Логічно міркувати. | To reason logically. |\n\n**Note:** Implies deeper, longer thinking process.\n\n**Forms:** міркувати (impf) / only imperfective commonly used\n\n### Здаватися | To Seem\n\n**Здаватися** — суб'єктивне враження.\n\n| Usage | Example | English |\n|-------|---------|---------|\n| Seem | Мені здається, він хворий. | It seems to me he's sick. |\n| Appear | Здається, що дощ. | It seems like rain. |\n| Have feeling | Мені здається так. | I have a feeling it's so. |\n\n**Structure:** Мені/тобі/йому здається, що...\n\n**Forms:** здаватися (impf) / здатися (pf)\n\n### Роздумувати | To Deliberate\n\n**Роздумувати** — довго обмірковувати, вагатися.\n\n| Usage | Example | English |\n|-------|---------|---------|\n| Deliberate | Роздумую, чи погодитися. | I'm deliberating whether to agree. |\n| Mull over | Роздумував цілий день. | Mulled it over all day. |\n\n**Forms:** роздумувати (impf) / роздумати (pf) — rare\n\n### Порівняння | Comparison Chart\n\n| Verb | Certainty | Depth | Example |\n|------|-----------|-------|---------|\n| думати | medium | general | Думаю, так. |\n| гадати | low | guess | Гадаю, він прийде. |\n| вважати | high | conviction | Вважаю це правильним. |\n| міркувати | — | deep | Міркую над цим. |\n| здаватися | low | impression | Здається, дощ. |\n\n### Колокації | Collocations\n\n| Verb | Common Patterns |\n|------|-----------------|\n| думати | думати про, думати над, думати що |\n| гадати | гадати що, не гадав би |\n| вважати | вважати за потрібне, вважати своїм обов'язком |\n| міркувати | міркувати над, міркувати про, логічно міркувати |\n| здаватися | мені здається, здається що |\n\n### Вирази | Expressions\n\n| Ukrainian | English |\n|-----------|---------|\n| Я так не думаю. | I don't think so. |\n| Що ти про це думаєш? | What do you think about it? |\n| Я вважаю за краще... | I consider it better to... |\n| Не гадав би! | I wouldn't think so! |\n| Якщо не помиляюся... | If I'm not mistaken... |\n| Наскільки я розумію... | As far as I understand... |\n| Здається мені... | It seems to me... |\n\n## practice | Практика\n\n### Choose the Right Verb\n\n1. Я ___ (довго обмірковував) цю проблему.\n   → **міркував над**\n\n2. ___ (мені здається), що він правий.\n   → **Мені здається / Гадаю**\n\n3. Я ___ (твердо переконаний), це помилка.\n   → **вважаю**\n\n4. Не ___ (припускав), що буде так важко.\n   → **гадав**\n\n5. Про що ти ___ (process of thinking)?\n   → **думаєш**\n\n### Complete the Sentences\n\n1. Я ___, що він приїде завтра. (neutral opinion)\n   → **думаю / гадаю**\n\n2. ___, він не правий. (firm belief)\n   → **Вважаю**\n\n3. Вона довго ___ над цим питанням. (deep thinking)\n   → **міркувала**\n\n4. ___, буде дощ. (subjective impression)\n   → **Здається / Мені здається**\n\n5. Не ___, що це можливо. (didn't suppose)\n   → **гадав**\n\n### Translate Nuances\n\n1. I think he's right. (neutral)\n   → **Думаю, він правий.**\n\n2. I believe this is wrong. (firm)\n   → **Вважаю, це неправильно.**\n\n3. I suppose she'll come. (guess)\n   → **Гадаю, вона прийде.**\n\n4. It seems to me that... (impression)\n   → **Мені здається, що...**\n\n5. I'm pondering this question. (deep)\n   → **Я міркую над цим питанням.**\n\n## production | Продукція\n\n### Express Your Opinion\n\nUse different verbs to express opinions on:\n\n1. **Екологія:** Я вважаю, що... / Мені здається...\n2. **Освіта:** Думаю, що... / Гадаю...\n3. **Технології:** Міркуючи над цим... / Я вважаю...\n\n### Discuss a Topic\n\nChoose a topic and discuss using variety:\n\n- Що ви **думаєте** про...?\n- Я **вважаю**, що...\n- Мені **здається**...\n- **Гадаю**, що...\n- **Міркуючи** над цим...\n\n---\n\n# Activities\n\n## quiz: Thinking Verbs\n\n> Choose the verb with the right nuance.\n\n1. Тверде переконання:\n   - [x] вважати\n   - [ ] гадати\n   > Strong opinion/belief.\n\n2. Невпевнене припущення:\n   - [x] гадати\n   - [ ] вважати\n   > Uncertain supposition.\n\n3. Глибокий роздум:\n   - [x] міркувати\n   - [ ] думати\n   > Deep pondering.\n\n4. Суб'єктивне враження:\n   - [x] здаватися\n   - [ ] вважати\n   > Subjective impression.\n\n5. «Мені здається» means:\n   - [x] it seems to me\n   - [ ] I firmly believe\n   > Subjective feeling.\n\n6. Найзагальніше дієслово:\n   - [x] думати\n   - [ ] міркувати\n   > Most general verb.\n\n## fill-in: Opinion Paragraph\n\n> Виразіть свою думку.\n\n> (1)___ (I think), що технології змінюють наше життя. (2)___ (I believe firmly), це позитивні зміни. Однак (3)___ (it seems to me), що ми занадто залежні від гаджетів. (4)___ (Pondering) над цим, (5)___ (I suppose), потрібен баланс.\n\n**Answers:**\n1. Думаю / Гадаю\n2. Вважаю\n3. мені здається\n4. Міркуючи\n5. гадаю\n\n---",
     "immersiveSections": [
       {
-        "id": "warm-up-розминка",
-        "title": "warm-up | Розминка",
-        "content": "### Синоніми | Synonyms\n\nВ українській мові багато дієслів для опису мислення:\n\nUkrainian has many verbs for describing thinking:\n\n- Я **думаю**, що він правий.\n- Я **вважаю**, що це неправильно.\n- Я **гадаю**, він прийде.\n- Мені **здається**, це добра ідея.\n\nЧи це одне й те саме? | Is it all the same?",
-        "type": "topic"
+        "id": "section-зміст-уроку-lesson-content",
+        "type": "content",
+        "title": "Зміст уроку | Lesson Content",
+        "content": "## warm-up | Розминка\n\n### Синоніми | Synonyms\n\nВ українській мові багато дієслів для опису мислення:\n\nUkrainian has many verbs for describing thinking:\n\n- Я **думаю**, що він правий.\n- Я **вважаю**, що це неправильно.\n- Я **гадаю**, він прийде.\n- Мені **здається**, це добра ідея.\n\nЧи це одне й те саме? | Is it all the same?\n\n## presentation | Презентація\n\n### Думати | To Think (General)\n\n**Думати** — найзагальніше дієслово для процесу мислення.\n\n| Usage | Example | English |\n|-------|---------|---------|\n| Process | Я думаю про тебе. | I'm thinking about you. |\n| Opinion | Я думаю, що так. | I think so. |\n| Considering | Думаю поїхати. | I'm thinking of going. |\n\n**Forms:** думати (impf) / подумати (pf)\n\n### Гадати | To Think, Suppose\n\n**Гадати** — припускати, мати думку (часто невпевнено).\n\n| Usage | Example | English |\n|-------|---------|---------|\n| Suppose | Гадаю, він спізниться. | I suppose he'll be late. |\n| Guess | Не гадав, що так буде. | Didn't think it would be so. |\n| Believe | Гадаю, що так. | I believe so. |\n\n**Note:** Often implies less certainty than думати.\n\n**Forms:** гадати (impf) / only imperfective commonly used\n\n### Вважати | To Consider, Believe\n\n**Вважати** — мати тверду думку, переконання.\n\n| Usage | Example | English |\n|-------|---------|---------|\n| Believe firmly | Я вважаю це помилкою. | I consider this a mistake. |\n| Consider | Вважаю його другом. | I consider him a friend. |\n| Hold opinion | Вважаю, що він правий. | I believe he's right. |\n\n**Note:** Stronger opinion than думати/гадати.\n\n**Forms:** вважати (impf) / only imperfective commonly used\n\n### Міркувати | To Ponder, Reflect\n\n**Міркувати** — глибоко обдумувати, розмірковувати.\n\n| Usage | Example | English |\n|-------|---------|---------|\n| Ponder | Він міркує над проблемою. | He's pondering the problem. |\n| Reflect | Міркую про майбутнє. | I'm reflecting on the future. |\n| Reason | Логічно міркувати. | To reason logically. |\n\n**Note:** Implies deeper, longer thinking process.\n\n**Forms:** міркувати (impf) / only imperfective commonly used\n\n### Здаватися | To Seem\n\n**Здаватися** — суб'єктивне враження.\n\n| Usage | Example | English |\n|-------|---------|---------|\n| Seem | Мені здається, він хворий. | It seems to me he's sick. |\n| Appear | Здається, що дощ. | It seems like rain. |\n| Have feeling | Мені здається так. | I have a feeling it's so. |\n\n**Structure:** Мені/тобі/йому здається, що...\n\n**Forms:** здаватися (impf) / здатися (pf)\n\n### Роздумувати | To Deliberate\n\n**Роздумувати** — довго обмірковувати, вагатися.\n\n| Usage | Example | English |\n|-------|---------|---------|\n| Deliberate | Роздумую, чи погодитися. | I'm deliberating whether to agree. |\n| Mull over | Роздумував цілий день. | Mulled it over all day. |\n\n**Forms:** роздумувати (impf) / роздумати (pf) — rare\n\n### Порівняння | Comparison Chart\n\n| Verb | Certainty | Depth | Example |\n|------|-----------|-------|---------|\n| думати | medium | general | Думаю, так. |\n| гадати | low | guess | Гадаю, він прийде. |\n| вважати | high | conviction | Вважаю це правильним. |\n| міркувати | — | deep | Міркую над цим. |\n| здаватися | low | impression | Здається, дощ. |\n\n### Колокації | Collocations\n\n| Verb | Common Patterns |\n|------|-----------------|\n| думати | думати про, думати над, думати що |\n| гадати | гадати що, не гадав би |\n| вважати | вважати за потрібне, вважати своїм обов'язком |\n| міркувати | міркувати над, міркувати про, логічно міркувати |\n| здаватися | мені здається, здається що |\n\n### Вирази | Expressions\n\n| Ukrainian | English |\n|-----------|---------|\n| Я так не думаю. | I don't think so. |\n| Що ти про це думаєш? | What do you think about it? |\n| Я вважаю за краще... | I consider it better to... |\n| Не гадав би! | I wouldn't think so! |\n| Якщо не помиляюся... | If I'm not mistaken... |\n| Наскільки я розумію... | As far as I understand... |\n| Здається мені... | It seems to me... |\n\n## practice | Практика\n\n### Choose the Right Verb\n\n1. Я ___ (довго обмірковував) цю проблему.\n   > [!answer] **міркував над**\n2. ___ (мені здається), що він правий.\n   > [!answer] **Мені здається / Гадаю**\n3. Я ___ (твердо переконаний), це помилка.\n   > [!answer] **вважаю**\n4. Не ___ (припускав), що буде так важко.\n   > [!answer] **гадав**\n5. Про що ти ___ (process of thinking)?\n   > [!answer] **думаєш**\n### Complete the Sentences\n\n1. Я ___, що він приїде завтра. (neutral opinion)\n   > [!answer] **думаю / гадаю**\n2. ___, він не правий. (firm belief)\n   > [!answer] **Вважаю**\n3. Вона довго ___ над цим питанням. (deep thinking)\n   > [!answer] **міркувала**\n4. ___, буде дощ. (subjective impression)\n   > [!answer] **Здається / Мені здається**\n5. Не ___, що це можливо. (didn't suppose)\n   > [!answer] **гадав**\n### Translate Nuances\n\n1. I think he's right. (neutral)\n   > [!answer] **Думаю, він правий.**\n2. I believe this is wrong. (firm)\n   > [!answer] **Вважаю, це неправильно.**\n3. I suppose she'll come. (guess)\n   > [!answer] **Гадаю, вона прийде.**\n4. It seems to me that... (impression)\n   > [!answer] **Мені здається, що...**\n5. I'm pondering this question. (deep)\n   > [!answer] **Я міркую над цим питанням.**\n## production | Продукція\n\n### Express Your Opinion\n\nUse different verbs to express opinions on:\n\n1. **Екологія:** Я вважаю, що... / Мені здається...\n2. **Освіта:** Думаю, що... / Гадаю...\n3. **Технології:** Міркуючи над цим... / Я вважаю...\n\n### Discuss a Topic\n\nChoose a topic and discuss using variety:\n\n- Що ви **думаєте** про...?\n- Я **вважаю**, що...\n- Мені **здається**...\n- **Гадаю**, що...\n- **Міркуючи** над цим...\n\n---\n\n\n---\n\n\n---"
       },
       {
-        "id": "presentation-презентація",
-        "title": "presentation | Презентація",
-        "content": "### Думати | To Think (General)\n\n**Думати** — найзагальніше дієслово для процесу мислення.\n\n| Usage | Example | English |\n|-------|---------|---------|\n| Process | Я думаю про тебе. | I'm thinking about you. |\n| Opinion | Я думаю, що так. | I think so. |\n| Considering | Думаю поїхати. | I'm thinking of going. |\n\n**Forms:** думати (impf) / подумати (pf)\n\n### Гадати | To Think, Suppose\n\n**Гадати** — припускати, мати думку (часто невпевнено).\n\n| Usage | Example | English |\n|-------|---------|---------|\n| Suppose | Гадаю, він спізниться. | I suppose he'll be late. |\n| Guess | Не гадав, що так буде. | Didn't think it would be so. |\n| Believe | Гадаю, що так. | I believe so. |\n\n**Note:** Often implies less certainty than думати.\n\n**Forms:** гадати (impf) / only imperfective commonly used\n\n### Вважати | To Consider, Believe\n\n**Вважати** — мати тверду думку, переконання.\n\n| Usage | Example | English |\n|-------|---------|---------|\n| Believe firmly | Я вважаю це помилкою. | I consider this a mistake. |\n| Consider | Вважаю його другом. | I consider him a friend. |\n| Hold opinion | Вважаю, що він правий. | I believe he's right. |\n\n**Note:** Stronger opinion than думати/гадати.\n\n**Forms:** вважати (impf) / only imperfective commonly used\n\n### Міркувати | To Ponder, Reflect\n\n**Міркувати** — глибоко обдумувати, розмірковувати.\n\n| Usage | Example | English |\n|-------|---------|---------|\n| Ponder | Він міркує над проблемою. | He's pondering the problem. |\n| Reflect | Міркую про майбутнє. | I'm reflecting on the future. |\n| Reason | Логічно міркувати. | To reason logically. |\n\n**Note:** Implies deeper, longer thinking process.\n\n**Forms:** міркувати (impf) / only imperfective commonly used\n\n### Здаватися | To Seem\n\n**Здаватися** — суб'єктивне враження.\n\n| Usage | Example | English |\n|-------|---------|---------|\n| Seem | Мені здається, він хворий. | It seems to me he's sick. |\n| Appear | Здається, що дощ. | It seems like rain. |\n| Have feeling | Мені здається так. | I have a feeling it's so. |\n\n**Structure:** Мені/тобі/йому здається, що...\n\n**Forms:** здаватися (impf) / здатися (pf)\n\n### Роздумувати | To Deliberate\n\n**Роздумувати** — довго обмірковувати, вагатися.\n\n| Usage | Example | English |\n|-------|---------|---------|\n| Deliberate | Роздумую, чи погодитися. | I'm deliberating whether to agree. |\n| Mull over | Роздумував цілий день. | Mulled it over all day. |\n\n**Forms:** роздумувати (impf) / роздумати (pf) — rare\n\n### Порівняння | Comparison Chart\n\n| Verb | Certainty | Depth | Example |\n|------|-----------|-------|---------|\n| думати | medium | general | Думаю, так. |\n| гадати | low | guess | Гадаю, він прийде. |\n| вважати | high | conviction | Вважаю це правильним. |\n| міркувати | — | deep | Міркую над цим. |\n| здаватися | low | impression | Здається, дощ. |\n\n### Колокації | Collocations\n\n| Verb | Common Patterns |\n|------|-----------------|\n| думати | думати про, думати над, думати що |\n| гадати | гадати що, не гадав би |\n| вважати | вважати за потрібне, вважати своїм обов'язком |\n| міркувати | міркувати над, міркувати про, логічно міркувати |\n| здаватися | мені здається, здається що |\n\n### Вирази | Expressions\n\n| Ukrainian | English |\n|-----------|---------|\n| Я так не думаю. | I don't think so. |\n| Що ти про це думаєш? | What do you think about it? |\n| Я вважаю за краще... | I consider it better to... |\n| Не гадав би! | I wouldn't think so! |\n| Якщо не помиляюся... | If I'm not mistaken... |\n| Наскільки я розумію... | As far as I understand... |\n| Здається мені... | It seems to me... |",
-        "type": "topic"
-      },
-      {
-        "id": "practice-практика",
-        "title": "practice | Практика",
-        "content": "### Choose the Right Verb\n\n1. Я ___ (довго обмірковував) цю проблему.\n   → **міркував над**\n\n2. ___ (мені здається), що він правий.\n   → **Мені здається / Гадаю**\n\n3. Я ___ (твердо переконаний), це помилка.\n   → **вважаю**\n\n4. Не ___ (припускав), що буде так важко.\n   → **гадав**\n\n5. Про що ти ___ (process of thinking)?\n   → **думаєш**\n\n### Complete the Sentences\n\n1. Я ___, що він приїде завтра. (neutral opinion)\n   → **думаю / гадаю**\n\n2. ___, він не правий. (firm belief)\n   → **Вважаю**\n\n3. Вона довго ___ над цим питанням. (deep thinking)\n   → **міркувала**\n\n4. ___, буде дощ. (subjective impression)\n   → **Здається / Мені здається**\n\n5. Не ___, що це можливо. (didn't suppose)\n   → **гадав**\n\n### Translate Nuances\n\n1. I think he's right. (neutral)\n   → **Думаю, він правий.**\n\n2. I believe this is wrong. (firm)\n   → **Вважаю, це неправильно.**\n\n3. I suppose she'll come. (guess)\n   → **Гадаю, вона прийде.**\n\n4. It seems to me that... (impression)\n   → **Мені здається, що...**\n\n5. I'm pondering this question. (deep)\n   → **Я міркую над цим питанням.**",
-        "type": "topic"
-      },
-      {
-        "id": "production-продукція",
-        "title": "production | Продукція",
-        "content": "### Express Your Opinion\n\nUse different verbs to express opinions on:\n\n1. **Екологія:** Я вважаю, що... / Мені здається...\n2. **Освіта:** Думаю, що... / Гадаю...\n3. **Технології:** Міркуючи над цим... / Я вважаю...\n\n### Discuss a Topic\n\nChoose a topic and discuss using variety:\n\n- Що ви **думаєте** про...?\n- Я **вважаю**, що...\n- Мені **здається**...\n- **Гадаю**, що...\n- **Міркуючи** над цим...\n\n---",
-        "type": "topic"
-      },
-      {
-        "id": "activities",
-        "title": "Activities",
-        "content": "## quiz: Thinking Verbs\n\n> Choose the verb with the right nuance.\n\n1. Тверде переконання:\n   - [x] вважати\n   - [ ] гадати\n   > Strong opinion/belief.\n\n2. Невпевнене припущення:\n   - [x] гадати\n   - [ ] вважати\n   > Uncertain supposition.\n\n3. Глибокий роздум:\n   - [x] міркувати\n   - [ ] думати\n   > Deep pondering.\n\n4. Суб'єктивне враження:\n   - [x] здаватися\n   - [ ] вважати\n   > Subjective impression.\n\n5. «Мені здається» means:\n   - [x] it seems to me\n   - [ ] I firmly believe\n   > Subjective feeling.\n\n6. Найзагальніше дієслово:\n   - [x] думати\n   - [ ] міркувати\n   > Most general verb.\n\n## fill-in: Opinion Paragraph\n\n> Виразіть свою думку.\n\n> (1)___ (I think), що технології змінюють наше життя. (2)___ (I believe firmly), це позитивні зміни. Однак (3)___ (it seems to me), що ми занадто залежні від гаджетів. (4)___ (Pondering) над цим, (5)___ (I suppose), потрібен баланс.\n\n**Answers:**\n1. Думаю / Гадаю\n2. Вважаю\n3. мені здається\n4. Міркуючи\n5. гадаю\n\n---",
-        "type": "activities"
-      },
-      {
-        "id": "vocabulary",
-        "title": "Vocabulary",
-        "content": "| Word | IPA | English | Notes |\n|------|-----|---------|-------|\n| думати | /ˈdumɑtɪ/ | to think | impf, general |\n| гадати | /ɦɑˈdɑtɪ/ | to suppose, think | impf, uncertain |\n| вважати | /vvɑˈʒɑtɪ/ | to consider, believe | impf, firm |\n| міркувати | /mʲirkuˈvɑtɪ/ | to ponder, reflect | impf, deep |\n| здаватися | /zdɑˈvɑtɪsʲɑ/ | to seem | impf |\n| роздумувати | /rozduˈmuvɑtɪ/ | to deliberate | impf |\n| припускати | /prɪpusˈkɑtɪ/ | to suppose, assume | impf |\n| переконання | /pɛrɛkoˈnɑnʲːɑ/ | belief, conviction | n |\n| думка | /ˈdumkɑ/ | thought, opinion | f |\n| враження | /vrɑˈʒɛnʲːɑ/ | impression | n |\n| роздум | /ˈrozdum/ | reflection, thought | m |\n| помилятися | /pomɪˈlʲɑtɪsʲɑ/ | to be mistaken | impf |\n\n---",
-        "type": "vocabulary"
-      },
-      {
-        "id": "summary",
+        "id": "section-summary",
+        "type": "summary",
         "title": "Summary",
         "content": "## Thinking Verbs: Key Distinctions\n\n| Verb | Use When |\n|------|----------|\n| думати | General thinking, neutral opinion |\n| гадати | Uncertain, guessing, supposing |\n| вважати | Strong belief, firm conviction |\n| міркувати | Deep reflection, pondering |\n| здаватися | Subjective impression |\n\n### Quick Reference\n\n- **Neutral:** Я думаю, що...\n- **Unsure:** Я гадаю, що... / Мені здається...\n- **Certain:** Я вважаю, що...\n- **Deep:** Я міркую над...\n\n> **Key Takeaways**\n>\n> - Different verbs show different certainty levels\n> - вважати = strongest conviction\n> - гадати/здаватися = least certain\n> - міркувати = process, not result\n> - Choose verb based on how sure you are",
-        "type": "summary"
+        "titleUk": "Підсумок"
       }
-    ]
+    ],
+    "rawMarkdown": "---\nmodule: 132\ntitle: \"Synonymy I: Thinking\"\nsubtitle: \"Думати, гадати, вважати, міркувати\"\nlevel: B1\nphase: B1.4\nduration: 45\ntransliteration: none\ntags: [vocabulary, synonyms, verbs, thinking]\nobjectives:\n  - Distinguish between Ukrainian verbs of thinking\n  - Choose the right verb for the context\n  - Expand expressive vocabulary\n  - Understand nuances in meaning\n---\n\n# Зміст уроку | Lesson Content\n\n## warm-up | Розминка\n\n### Синоніми | Synonyms\n\nВ українській мові багато дієслів для опису мислення:\n\nUkrainian has many verbs for describing thinking:\n\n- Я **думаю**, що він правий.\n- Я **вважаю**, що це неправильно.\n- Я **гадаю**, він прийде.\n- Мені **здається**, це добра ідея.\n\nЧи це одне й те саме? | Is it all the same?\n\n## presentation | Презентація\n\n### Думати | To Think (General)\n\n**Думати** — найзагальніше дієслово для процесу мислення.\n\n| Usage | Example | English |\n|-------|---------|---------|\n| Process | Я думаю про тебе. | I'm thinking about you. |\n| Opinion | Я думаю, що так. | I think so. |\n| Considering | Думаю поїхати. | I'm thinking of going. |\n\n**Forms:** думати (impf) / подумати (pf)\n\n### Гадати | To Think, Suppose\n\n**Гадати** — припускати, мати думку (часто невпевнено).\n\n| Usage | Example | English |\n|-------|---------|---------|\n| Suppose | Гадаю, він спізниться. | I suppose he'll be late. |\n| Guess | Не гадав, що так буде. | Didn't think it would be so. |\n| Believe | Гадаю, що так. | I believe so. |\n\n**Note:** Often implies less certainty than думати.\n\n**Forms:** гадати (impf) / only imperfective commonly used\n\n### Вважати | To Consider, Believe\n\n**Вважати** — мати тверду думку, переконання.\n\n| Usage | Example | English |\n|-------|---------|---------|\n| Believe firmly | Я вважаю це помилкою. | I consider this a mistake. |\n| Consider | Вважаю його другом. | I consider him a friend. |\n| Hold opinion | Вважаю, що він правий. | I believe he's right. |\n\n**Note:** Stronger opinion than думати/гадати.\n\n**Forms:** вважати (impf) / only imperfective commonly used\n\n### Міркувати | To Ponder, Reflect\n\n**Міркувати** — глибоко обдумувати, розмірковувати.\n\n| Usage | Example | English |\n|-------|---------|---------|\n| Ponder | Він міркує над проблемою. | He's pondering the problem. |\n| Reflect | Міркую про майбутнє. | I'm reflecting on the future. |\n| Reason | Логічно міркувати. | To reason logically. |\n\n**Note:** Implies deeper, longer thinking process.\n\n**Forms:** міркувати (impf) / only imperfective commonly used\n\n### Здаватися | To Seem\n\n**Здаватися** — суб'єктивне враження.\n\n| Usage | Example | English |\n|-------|---------|---------|\n| Seem | Мені здається, він хворий. | It seems to me he's sick. |\n| Appear | Здається, що дощ. | It seems like rain. |\n| Have feeling | Мені здається так. | I have a feeling it's so. |\n\n**Structure:** Мені/тобі/йому здається, що...\n\n**Forms:** здаватися (impf) / здатися (pf)\n\n### Роздумувати | To Deliberate\n\n**Роздумувати** — довго обмірковувати, вагатися.\n\n| Usage | Example | English |\n|-------|---------|---------|\n| Deliberate | Роздумую, чи погодитися. | I'm deliberating whether to agree. |\n| Mull over | Роздумував цілий день. | Mulled it over all day. |\n\n**Forms:** роздумувати (impf) / роздумати (pf) — rare\n\n### Порівняння | Comparison Chart\n\n| Verb | Certainty | Depth | Example |\n|------|-----------|-------|---------|\n| думати | medium | general | Думаю, так. |\n| гадати | low | guess | Гадаю, він прийде. |\n| вважати | high | conviction | Вважаю це правильним. |\n| міркувати | — | deep | Міркую над цим. |\n| здаватися | low | impression | Здається, дощ. |\n\n### Колокації | Collocations\n\n| Verb | Common Patterns |\n|------|-----------------|\n| думати | думати про, думати над, думати що |\n| гадати | гадати що, не гадав би |\n| вважати | вважати за потрібне, вважати своїм обов'язком |\n| міркувати | міркувати над, міркувати про, логічно міркувати |\n| здаватися | мені здається, здається що |\n\n### Вирази | Expressions\n\n| Ukrainian | English |\n|-----------|---------|\n| Я так не думаю. | I don't think so. |\n| Що ти про це думаєш? | What do you think about it? |\n| Я вважаю за краще... | I consider it better to... |\n| Не гадав би! | I wouldn't think so! |\n| Якщо не помиляюся... | If I'm not mistaken... |\n| Наскільки я розумію... | As far as I understand... |\n| Здається мені... | It seems to me... |\n\n## practice | Практика\n\n### Choose the Right Verb\n\n1. Я ___ (довго обмірковував) цю проблему.\n   > [!answer] **міркував над**\n2. ___ (мені здається), що він правий.\n   > [!answer] **Мені здається / Гадаю**\n3. Я ___ (твердо переконаний), це помилка.\n   > [!answer] **вважаю**\n4. Не ___ (припускав), що буде так важко.\n   > [!answer] **гадав**\n5. Про що ти ___ (process of thinking)?\n   > [!answer] **думаєш**\n### Complete the Sentences\n\n1. Я ___, що він приїде завтра. (neutral opinion)\n   > [!answer] **думаю / гадаю**\n2. ___, він не правий. (firm belief)\n   > [!answer] **Вважаю**\n3. Вона довго ___ над цим питанням. (deep thinking)\n   > [!answer] **міркувала**\n4. ___, буде дощ. (subjective impression)\n   > [!answer] **Здається / Мені здається**\n5. Не ___, що це можливо. (didn't suppose)\n   > [!answer] **гадав**\n### Translate Nuances\n\n1. I think he's right. (neutral)\n   > [!answer] **Думаю, він правий.**\n2. I believe this is wrong. (firm)\n   > [!answer] **Вважаю, це неправильно.**\n3. I suppose she'll come. (guess)\n   > [!answer] **Гадаю, вона прийде.**\n4. It seems to me that... (impression)\n   > [!answer] **Мені здається, що...**\n5. I'm pondering this question. (deep)\n   > [!answer] **Я міркую над цим питанням.**\n## production | Продукція\n\n### Express Your Opinion\n\nUse different verbs to express opinions on:\n\n1. **Екологія:** Я вважаю, що... / Мені здається...\n2. **Освіта:** Думаю, що... / Гадаю...\n3. **Технології:** Міркуючи над цим... / Я вважаю...\n\n### Discuss a Topic\n\nChoose a topic and discuss using variety:\n\n- Що ви **думаєте** про...?\n- Я **вважаю**, що...\n- Мені **здається**...\n- **Гадаю**, що...\n- **Міркуючи** над цим...\n\n---\n\n# Activities\n\n## quiz: Thinking Verbs\n\n> Choose the verb with the right nuance.\n\n1. Тверде переконання:\n   - [x] вважати\n   - [ ] гадати\n   > Strong opinion/belief.\n\n2. Невпевнене припущення:\n   - [x] гадати\n   - [ ] вважати\n   > Uncertain supposition.\n\n3. Глибокий роздум:\n   - [x] міркувати\n   - [ ] думати\n   > Deep pondering.\n\n4. Суб'єктивне враження:\n   - [x] здаватися\n   - [ ] вважати\n   > Subjective impression.\n\n5. «Мені здається» means:\n   - [x] it seems to me\n   - [ ] I firmly believe\n   > Subjective feeling.\n\n6. Найзагальніше дієслово:\n   - [x] думати\n   - [ ] міркувати\n   > Most general verb.\n\n## fill-in: Opinion Paragraph\n\n> Виразіть свою думку.\n\n> (1)___ (I think), що технології змінюють наше життя. (2)___ (I believe firmly), це позитивні зміни. Однак (3)___ (it seems to me), що ми занадто залежні від гаджетів. (4)___ (Pondering) над цим, (5)___ (I suppose), потрібен баланс.\n\n**Answers:**\n1. Думаю / Гадаю\n2. Вважаю\n3. мені здається\n4. Міркуючи\n5. гадаю\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | Notes |\n|------|-----|---------|-------|\n| думати | /ˈdumɑtɪ/ | to think | impf, general |\n| гадати | /ɦɑˈdɑtɪ/ | to suppose, think | impf, uncertain |\n| вважати | /vvɑˈʒɑtɪ/ | to consider, believe | impf, firm |\n| міркувати | /mʲirkuˈvɑtɪ/ | to ponder, reflect | impf, deep |\n| здаватися | /zdɑˈvɑtɪsʲɑ/ | to seem | impf |\n| роздумувати | /rozduˈmuvɑtɪ/ | to deliberate | impf |\n| припускати | /prɪpusˈkɑtɪ/ | to suppose, assume | impf |\n| переконання | /pɛrɛkoˈnɑnʲːɑ/ | belief, conviction | n |\n| думка | /ˈdumkɑ/ | thought, opinion | f |\n| враження | /vrɑˈʒɛnʲːɑ/ | impression | n |\n| роздум | /ˈrozdum/ | reflection, thought | m |\n| помилятися | /pomɪˈlʲɑtɪsʲɑ/ | to be mistaken | impf |\n\n---\n\n# Summary\n\n## Thinking Verbs: Key Distinctions\n\n| Verb | Use When |\n|------|----------|\n| думати | General thinking, neutral opinion |\n| гадати | Uncertain, guessing, supposing |\n| вважати | Strong belief, firm conviction |\n| міркувати | Deep reflection, pondering |\n| здаватися | Subjective impression |\n\n### Quick Reference\n\n- **Neutral:** Я думаю, що...\n- **Unsure:** Я гадаю, що... / Мені здається...\n- **Certain:** Я вважаю, що...\n- **Deep:** Я міркую над...\n\n> **Key Takeaways**\n>\n> - Different verbs show different certainty levels\n> - вважати = strongest conviction\n> - гадати/здаватися = least certain\n> - міркувати = process, not result\n> - Choose verb based on how sure you are\n"
   },
   "activities": [
     {
-      "id": "act-uk-B1-132-quiz",
+      "id": "act-b1-132-quiz",
       "type": "quiz",
       "title": "Thinking Verbs",
       "description": "Choose the verb with the right nuance.",
       "content": {
         "type": "quiz",
-        "instructions": "Choose the verb with the right nuance.",
         "questions": [
           {
             "question": "Тверде переконання:",
@@ -263,38 +124,37 @@
       "language": "uk",
       "difficultyLevel": "B1",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "synonyms",
-        "verbs",
-        "thinking"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.239Z",
+      "modifiedAt": "2025-12-01T22:58:37.239Z"
     },
     {
-      "id": "act-uk-B1-132-gapfill",
+      "id": "act-b1-132-gapfill",
       "type": "gap-fill",
       "title": "Opinion Paragraph",
       "description": "Виразіть свою думку.",
       "content": {
         "type": "gap-fill",
-        "instructions": "Виразіть свою думку.",
         "text": "Виразіть свою думку.\n(1)___ (I think), що технології змінюють наше життя. (2)___ (I believe firmly), це позитивні зміни. Однак (3)___ (it seems to me), що ми занадто залежні від гаджетів. (4)___ (Pondering) над цим, (5)___ (I suppose), потрібен баланс.",
         "blanks": [
           {
+            "index": 0,
             "hint": "I think"
           },
           {
+            "index": 1,
             "hint": "I believe firmly"
           },
           {
+            "index": 2,
             "hint": "it seems to me"
           },
           {
+            "index": 3,
             "hint": "Pondering"
           },
           {
+            "index": 4,
             "hint": "I suppose"
           }
         ],
@@ -308,14 +168,9 @@
       "language": "uk",
       "difficultyLevel": "B1",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "synonyms",
-        "verbs",
-        "thinking"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.239Z",
+      "modifiedAt": "2025-12-01T22:58:37.239Z"
     }
   ],
   "vocabulary": {
@@ -326,112 +181,88 @@
     "transliterationMode": "none",
     "words": [
       {
-        "id": "v-m132-001",
+        "id": "v-dumaty-132-0",
         "uk": "думати",
-        "translit": "",
-        "ipa": "/ˈdumɑtɪ/",
         "en": "to think",
-        "pos": "",
-        "note": "impf, general"
+        "pos": "impf, general",
+        "ipa": "/ˈdumɑtɪ/"
       },
       {
-        "id": "v-m132-002",
+        "id": "v-hadaty-132-1",
         "uk": "гадати",
-        "translit": "",
-        "ipa": "/ɦɑˈdɑtɪ/",
         "en": "to suppose, think",
-        "pos": "",
-        "note": "impf, uncertain"
+        "pos": "impf, uncertain",
+        "ipa": "/ɦɑˈdɑtɪ/"
       },
       {
-        "id": "v-m132-003",
+        "id": "v-vvazhaty-132-2",
         "uk": "вважати",
-        "translit": "",
-        "ipa": "/vvɑˈʒɑtɪ/",
         "en": "to consider, believe",
-        "pos": "",
-        "note": "impf, firm"
+        "pos": "impf, firm",
+        "ipa": "/vvɑˈʒɑtɪ/"
       },
       {
-        "id": "v-m132-004",
+        "id": "v-mirkuvaty-132-3",
         "uk": "міркувати",
-        "translit": "",
-        "ipa": "/mʲirkuˈvɑtɪ/",
         "en": "to ponder, reflect",
-        "pos": "",
-        "note": "impf, deep"
+        "pos": "impf, deep",
+        "ipa": "/mʲirkuˈvɑtɪ/"
       },
       {
-        "id": "v-m132-005",
+        "id": "v-zdavatysya-132-4",
         "uk": "здаватися",
-        "translit": "",
-        "ipa": "/zdɑˈvɑtɪsʲɑ/",
         "en": "to seem",
-        "pos": "",
-        "note": "impf"
+        "pos": "impf",
+        "ipa": "/zdɑˈvɑtɪsʲɑ/"
       },
       {
-        "id": "v-m132-006",
+        "id": "v-rozdumuvaty-132-5",
         "uk": "роздумувати",
-        "translit": "",
-        "ipa": "/rozduˈmuvɑtɪ/",
         "en": "to deliberate",
-        "pos": "",
-        "note": "impf"
+        "pos": "impf",
+        "ipa": "/rozduˈmuvɑtɪ/"
       },
       {
-        "id": "v-m132-007",
+        "id": "v-prypuskaty-132-6",
         "uk": "припускати",
-        "translit": "",
-        "ipa": "/prɪpusˈkɑtɪ/",
         "en": "to suppose, assume",
-        "pos": "",
-        "note": "impf"
+        "pos": "impf",
+        "ipa": "/prɪpusˈkɑtɪ/"
       },
       {
-        "id": "v-m132-008",
+        "id": "v-perekonannya-132-7",
         "uk": "переконання",
-        "translit": "",
-        "ipa": "/pɛrɛkoˈnɑnʲːɑ/",
         "en": "belief, conviction",
-        "pos": "",
-        "note": "n"
+        "pos": "n",
+        "ipa": "/pɛrɛkoˈnɑnʲːɑ/"
       },
       {
-        "id": "v-m132-009",
+        "id": "v-dumka-132-8",
         "uk": "думка",
-        "translit": "",
-        "ipa": "/ˈdumkɑ/",
         "en": "thought, opinion",
-        "pos": "",
-        "note": "f"
+        "pos": "f",
+        "ipa": "/ˈdumkɑ/"
       },
       {
-        "id": "v-m132-010",
+        "id": "v-vrazhennya-132-9",
         "uk": "враження",
-        "translit": "",
-        "ipa": "/vrɑˈʒɛnʲːɑ/",
         "en": "impression",
-        "pos": "",
-        "note": "n"
+        "pos": "n",
+        "ipa": "/vrɑˈʒɛnʲːɑ/"
       },
       {
-        "id": "v-m132-011",
+        "id": "v-rozdum-132-10",
         "uk": "роздум",
-        "translit": "",
-        "ipa": "/ˈrozdum/",
         "en": "reflection, thought",
-        "pos": "",
-        "note": "m"
+        "pos": "m",
+        "ipa": "/ˈrozdum/"
       },
       {
-        "id": "v-m132-012",
+        "id": "v-pomylyatysya-132-11",
         "uk": "помилятися",
-        "translit": "",
-        "ipa": "/pomɪˈlʲɑtɪsʲɑ/",
         "en": "to be mistaken",
-        "pos": "",
-        "note": "impf"
+        "pos": "impf",
+        "ipa": "/pomɪˈlʲɑtɪsʲɑ/"
       }
     ]
   }

@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-A2+-67",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "vocabulary-expansion",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -26,8 +25,6 @@
       "Food-related collocations",
       "Measurement expressions"
     ],
-    "totalDuration": 45,
-    "transliterationMode": "none",
     "tags": [
       "vocabulary",
       "food",
@@ -35,22 +32,9 @@
       "kitchen",
       "daily-life"
     ],
-    "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
+    "totalDuration": 45,
+    "transliterationMode": "none",
     "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Beyond Basic Food\n\nYou know \"хліб\" (bread) and \"молоко\" (milk). Now let's learn to **cook**!\n\n**Kitchen actions:**\n- варити / зварити (to boil/cook)\n- смажити / засмажити (to fry)\n- пекти / спекти (to bake)\n\n**How food tastes:**\n- смачний (delicious)\n- солоний (salty)\n- гострий (spicy)\n\n> 💡 **Why This Matters**\n>\n> Understanding cooking vocabulary helps you follow recipes, order in restaurants, and discuss Ukrainian cuisine!"
-          }
-        ]
-      },
       {
         "id": "phase-presentation",
         "name": "presentation",
@@ -59,107 +43,33 @@
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "### Cooking Verbs\n\n| Imperfective | Perfective | Meaning |\n|--------------|------------|---------|\n| варити | зварити | to boil, cook |\n| смажити | засмажити | to fry |\n| пекти | спекти | to bake |\n| готувати | приготувати | to prepare, cook |\n| різати | порізати | to cut |\n| чистити | почистити | to peel, clean |\n| мішати | перемішати | to mix, stir |\n| додавати | додати | to add |\n| підігрівати | підігріти | to heat up |\n| охолоджувати | охолодити | to cool down |\n\n**Examples:**\n- **Звари** воду для чаю. - Boil water for tea.\n- Мама **смажить** картоплю. - Mom is frying potatoes.\n- Бабуся **пече** хліб. - Grandma bakes bread.\n- **Приготуй** обід! - Prepare lunch!\n- **Поріж** цибулю дрібно. - Chop the onion finely.\n- **Додай** трохи солі. - Add some salt.\n\n> ⚡ **Pro Tip: готувати vs варити**\n>\n> готувати = to prepare any food; варити = specifically to boil/simmer. \"Готувати обід\" (prepare lunch) vs \"варити суп\" (cook soup)."
+            "teacherNotes": "### Cooking Verbs\n\n| Imperfective | Perfective | Meaning |\n|--------------|------------|---------|\n| варити | зварити | to boil, cook |\n| смажити | засмажити | to fry |\n| пекти | спекти | to bake |\n| готувати | приготувати | to prepare, cook |\n| різати | порізати | to cut |\n| чистити | почистити | to peel, clean |\n| мішати | перемішати | to mix, stir |\n| додавати | додати | to add |\n| підігрівати | підігріти | to heat up |\n| охолоджувати | охолодити | to cool down |\n\n**Examples:**\n- **Звари** воду для чаю. - Boil water for tea.\n- Мама **смажить** картоплю. - Mom is frying potatoes.\n- Бабуся **пече** хліб. - Grandma bakes bread.\n- **Приготуй** обід! - Prepare lunch!\n- **Поріж** цибулю дрібно. - Chop the onion finely.\n- **Додай** трохи солі. - Add some salt.\n\n> ⚡ **Pro Tip: готувати vs варити**\n>\n> готувати = to prepare any food; варити = specifically to boil/simmer. \"Готувати обід\" (prepare lunch) vs \"варити суп\" (cook soup).\n\n### Kitchen Tools\n\n| Ukrainian | English |\n|-----------|---------|\n| ніж | knife |\n| виделка | fork |\n| ложка | spoon |\n| тарілка | plate |\n| чашка | cup |\n| склянка | glass |\n| каструля | pot |\n| сковорода | frying pan |\n| духовка | oven |\n| плита | stove |\n| холодильник | refrigerator |\n| мікрохвильовка | microwave |\n| чайник | kettle |\n| дошка | cutting board |\n| терка | grater |\n\n**Examples:**\n- Візьми гострий **ніж**. - Take a sharp knife.\n- Поклади на **тарілку**. - Put it on a plate.\n- Постав **каструлю** на **плиту**. - Put the pot on the stove.\n- Розігрій у **мікрохвильовці**. - Heat in the microwave.\n- Натри сир на **терці**. - Grate cheese on the grater.\n\n### Ingredients\n\n| Category | Words |\n|----------|-------|\n| **М'ясо (meat)** | курятина (chicken), свинина (pork), яловичина (beef), риба (fish), фарш (ground meat) |\n| **Овочі (vegetables)** | цибуля (onion), часник (garlic), морква (carrot), капуста (cabbage), буряк (beet), перець (pepper) |\n| **Крупи (grains)** | рис (rice), гречка (buckwheat), пшоно (millet), вівсянка (oatmeal) |\n| **Молочні (dairy)** | сметана (sour cream), сир (cheese/cottage cheese), вершки (cream), кефір (kefir) |\n| **Приправи (seasonings)** | сіль (salt), перець (pepper), цукор (sugar), олія (oil), оцет (vinegar) |\n\n**Examples:**\n- Купи **курятину** і **рис**. - Buy chicken and rice.\n- Додай **цибулю** і **часник**. - Add onion and garlic.\n- Борщ готують із **буряка**. - Borscht is made with beet.\n- Полий **сметаною**. - Pour sour cream on it.\n- Посоли і **поперчи**. - Add salt and pepper.\n\n> 🎭 **Culture Note: Сметана**\n>\n> Sour cream (сметана) is essential in Ukrainian cuisine! It's added to борщ, вареники, деруни, and many other dishes.\n\n### Taste & Texture\n\n| Ukrainian | English |\n|-----------|---------|\n| смачний | delicious, tasty |\n| несмачний | not tasty |\n| солоний | salty |\n| солодкий | sweet |\n| кислий | sour |\n| гіркий | bitter |\n| гострий | spicy, hot |\n| прісний | bland |\n| свіжий | fresh |\n| несвіжий | not fresh |\n| м'який | soft |\n| твердий | hard |\n| соковитий | juicy |\n| сухий | dry |\n\n**Examples:**\n- Суп дуже **смачний**! - The soup is very delicious!\n- Це занадто **солоне**. - This is too salty.\n- Торт **солодкий**. - The cake is sweet.\n- Лимон **кислий**. - Lemon is sour.\n- Перець чилі **гострий**. - Chili pepper is spicy.\n- Яблука **соковиті** і **свіжі**. - The apples are juicy and fresh.\n\n### Meal Expressions\n\n| Ukrainian | English |\n|-----------|---------|\n| сніданок | breakfast |\n| обід | lunch |\n| вечеря | dinner |\n| перекус | snack |\n| страва | dish |\n| рецепт | recipe |\n| порція | portion |\n| інгредієнт | ingredient |\n| смакувати | to taste (enjoy) |\n| пробувати | to try, taste |\n| наїстися | to eat one's fill |\n\n**Examples:**\n- На **сніданок** я їм вівсянку. - For breakfast I eat oatmeal.\n- **Обід** о першій годині. - Lunch is at one o'clock.\n- Яка твоя улюблена **страва**? - What's your favorite dish?\n- Дай мені **рецепт**! - Give me the recipe!\n- **Смакує**? - Does it taste good?\n- **Спробуй** це! - Try this!\n- Я вже **наївся**. - I'm already full.\n\n### Ukrainian Dishes\n\n| Dish | Description |\n|------|-------------|\n| борщ | beet soup with vegetables |\n| вареники | dumplings (sweet or savory) |\n| деруни | potato pancakes |\n| голубці | stuffed cabbage rolls |\n| котлети | cutlets, patties |\n| сирники | cottage cheese pancakes |\n| млинці | thin pancakes, crepes |\n| салат Олів'є | Olivier salad |\n| холодець | meat jelly |\n| пампушки | garlic bread rolls |\n\n**Examples:**\n- **Борщ** зі сметаною — найкраще! - Borscht with sour cream is the best!\n- Бабуся робить **вареники** з картоплею. - Grandma makes dumplings with potatoes.\n- **Деруни** смажать на олії. - Potato pancakes are fried in oil.\n- **Голубці** — це капуста з фаршем. - Stuffed cabbage is cabbage with ground meat.\n- **Сирники** на сніданок? - Cottage cheese pancakes for breakfast?\n\n> 🎭 **Culture Note: Борщ**\n>\n> Borscht (борщ) is Ukraine's national dish! Every family has their own recipe. It's always served with smetana and often with pampushky (garlic rolls)."
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Kitchen Tools\n\n| Ukrainian | English |\n|-----------|---------|\n| ніж | knife |\n| виделка | fork |\n| ложка | spoon |\n| тарілка | plate |\n| чашка | cup |\n| склянка | glass |\n| каструля | pot |\n| сковорода | frying pan |\n| духовка | oven |\n| плита | stove |\n| холодильник | refrigerator |\n| мікрохвильовка | microwave |\n| чайник | kettle |\n| дошка | cutting board |\n| терка | grater |\n\n**Examples:**\n- Візьми гострий **ніж**. - Take a sharp knife.\n- Поклади на **тарілку**. - Put it on a plate.\n- Постав **каструлю** на **плиту**. - Put the pot on the stove.\n- Розігрій у **мікрохвильовці**. - Heat in the microwave.\n- Натри сир на **терці**. - Grate cheese on the grater."
+            "teacherNotes": "### Match Cooking Verb to Action\n\n1. варити\n   > [!answer] to boil/cook in liquid\n2. смажити\n   > [!answer] to fry\n3. пекти\n   > [!answer] to bake\n4. різати\n   > [!answer] to cut\n5. мішати\n   > [!answer] to mix/stir\n\n### Complete the Recipe\n\n**Деруни (Potato Pancakes)**\n\n1. ___ (peel) картоплю і цибулю.\n   > [!answer] почисти\n\n2. Натри на ___ (grater).\n   > [!answer] терці\n\n3. ___ (add) яйце і сіль.\n   > [!answer] додай\n\n4. ___ (mix) все добре.\n   > [!answer] перемішай\n\n5. ___ (fry) на ___ (pan) з олією.\n   > [!answer] смаж, сковороді\n\n6. Подавай зі ___ (sour cream).\n   > [!answer] сметаною\n\n### Describe the Taste\n\n1. торт\n   > [!answer] солодкий\n2. лимон\n   > [!answer] кислий\n3. чіпси\n   > [!answer] солоний\n4. перець чилі\n   > [!answer] гострий\n5. свіже яблуко\n   > [!answer] соковитий\n\n### Translate\n\n1. Boil water for tea.\n   > [!answer] Звари воду для чаю.\n2. The soup is too salty.\n   > [!answer] Суп занадто солоний.\n3. What's for lunch?\n   > [!answer] Що на обід?\n4. Try this dish!\n   > [!answer] Спробуй цю страву!\n5. I'm full.\n   > [!answer] Я наївся / наїлася."
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Ingredients\n\n| Category | Words |\n|----------|-------|\n| **М'ясо (meat)** | курятина (chicken), свинина (pork), яловичина (beef), риба (fish), фарш (ground meat) |\n| **Овочі (vegetables)** | цибуля (onion), часник (garlic), морква (carrot), капуста (cabbage), буряк (beet), перець (pepper) |\n| **Крупи (grains)** | рис (rice), гречка (buckwheat), пшоно (millet), вівсянка (oatmeal) |\n| **Молочні (dairy)** | сметана (sour cream), сир (cheese/cottage cheese), вершки (cream), кефір (kefir) |\n| **Приправи (seasonings)** | сіль (salt), перець (pepper), цукор (sugar), олія (oil), оцет (vinegar) |\n\n**Examples:**\n- Купи **курятину** і **рис**. - Buy chicken and rice.\n- Додай **цибулю** і **часник**. - Add onion and garlic.\n- Борщ готують із **буряка**. - Borscht is made with beet.\n- Полий **сметаною**. - Pour sour cream on it.\n- Посоли і **поперчи**. - Add salt and pepper.\n\n> 🎭 **Culture Note: Сметана**\n>\n> Sour cream (сметана) is essential in Ukrainian cuisine! It's added to борщ, вареники, деруни, and many other dishes."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Taste & Texture\n\n| Ukrainian | English |\n|-----------|---------|\n| смачний | delicious, tasty |\n| несмачний | not tasty |\n| солоний | salty |\n| солодкий | sweet |\n| кислий | sour |\n| гіркий | bitter |\n| гострий | spicy, hot |\n| прісний | bland |\n| свіжий | fresh |\n| несвіжий | not fresh |\n| м'який | soft |\n| твердий | hard |\n| соковитий | juicy |\n| сухий | dry |\n\n**Examples:**\n- Суп дуже **смачний**! - The soup is very delicious!\n- Це занадто **солоне**. - This is too salty.\n- Торт **солодкий**. - The cake is sweet.\n- Лимон **кислий**. - Lemon is sour.\n- Перець чилі **гострий**. - Chili pepper is spicy.\n- Яблука **соковиті** і **свіжі**. - The apples are juicy and fresh."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Meal Expressions\n\n| Ukrainian | English |\n|-----------|---------|\n| сніданок | breakfast |\n| обід | lunch |\n| вечеря | dinner |\n| перекус | snack |\n| страва | dish |\n| рецепт | recipe |\n| порція | portion |\n| інгредієнт | ingredient |\n| смакувати | to taste (enjoy) |\n| пробувати | to try, taste |\n| наїстися | to eat one's fill |\n\n**Examples:**\n- На **сніданок** я їм вівсянку. - For breakfast I eat oatmeal.\n- **Обід** о першій годині. - Lunch is at one o'clock.\n- Яка твоя улюблена **страва**? - What's your favorite dish?\n- Дай мені **рецепт**! - Give me the recipe!\n- **Смакує**? - Does it taste good?\n- **Спробуй** це! - Try this!\n- Я вже **наївся**. - I'm already full."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Ukrainian Dishes\n\n| Dish | Description |\n|------|-------------|\n| борщ | beet soup with vegetables |\n| вареники | dumplings (sweet or savory) |\n| деруни | potato pancakes |\n| голубці | stuffed cabbage rolls |\n| котлети | cutlets, patties |\n| сирники | cottage cheese pancakes |\n| млинці | thin pancakes, crepes |\n| салат Олів'є | Olivier salad |\n| холодець | meat jelly |\n| пампушки | garlic bread rolls |\n\n**Examples:**\n- **Борщ** зі сметаною — найкраще! - Borscht with sour cream is the best!\n- Бабуся робить **вареники** з картоплею. - Grandma makes dumplings with potatoes.\n- **Деруни** смажать на олії. - Potato pancakes are fried in oil.\n- **Голубці** — це капуста з фаршем. - Stuffed cabbage is cabbage with ground meat.\n- **Сирники** на сніданок? - Cottage cheese pancakes for breakfast?\n\n> 🎭 **Culture Note: Борщ**\n>\n> Borscht (борщ) is Ukraine's national dish! Every family has their own recipe. It's always served with smetana and often with pampushky (garlic rolls)."
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A2+-67-matchup"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Match Cooking Verb to Action\n\n1. варити → to boil/cook in liquid\n2. смажити → to fry\n3. пекти → to bake\n4. різати → to cut\n5. мішати → to mix/stir"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Complete the Recipe\n\n**Деруни (Potato Pancakes)**\n\n1. ___ (peel) картоплю і цибулю.\n   → почисти\n\n2. Натри на ___ (grater).\n   → терці\n\n3. ___ (add) яйце і сіль.\n   → додай\n\n4. ___ (mix) все добре.\n   → перемішай\n\n5. ___ (fry) на ___ (pan) з олією.\n   → смаж, сковороді\n\n6. Подавай зі ___ (sour cream).\n   → сметаною"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Describe the Taste\n\n1. торт → солодкий\n2. лимон → кислий\n3. чіпси → солоний\n4. перець чилі → гострий\n5. свіже яблуко → соковитий"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Translate\n\n1. Boil water for tea. → Звари воду для чаю.\n2. The soup is too salty. → Суп занадто солоний.\n3. What's for lunch? → Що на обід?\n4. Try this dish! → Спробуй цю страву!\n5. I'm full. → Я наївся / наїлася."
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A2+-67-quiz"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A2+-67-groupsort"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Describe Your Cooking\n\n**Example:** Спочатку я чищу картоплю. Потім ріжу її і варю. Додаю сіль і масло.\n\nYour turn: Describe how you make your favorite dish."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Restaurant Dialogue\n\n**Situations:**\n- Ordering: \"Я хочу замовити борщ зі сметаною.\"\n- Asking about taste: \"Це гостре?\"\n- Giving feedback: \"Дуже смачно!\""
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Recipe Sharing\n\nShare a simple recipe:\n- \"Для сирників потрібен сир, яйця, цукор і борошно.\"\n- \"Змішай все і смаж на сковороді.\""
+            "teacherNotes": "### Describe Your Cooking\n\n**Example:** Спочатку я чищу картоплю. Потім ріжу її і варю. Додаю сіль і масло.\n\nYour turn: Describe how you make your favorite dish.\n\n### Restaurant Dialogue\n\n**Situations:**\n- Ordering: \"Я хочу замовити борщ зі сметаною.\"\n- Asking about taste: \"Це гостре?\"\n- Giving feedback: \"Дуже смачно!\"\n\n### Recipe Sharing\n\nShare a simple recipe:\n- \"Для сирників потрібен сир, яйця, цукор і борошно.\"\n- \"Змішай все і смаж на сковороді.\"\n\n---"
           }
         ]
       }
-    ]
+    ],
+    "createdAt": "2025-12-01T22:58:37.282Z",
+    "modifiedAt": "2025-12-01T22:58:37.282Z",
+    "version": 1
   },
   "activities": [
     {
-      "id": "act-uk-A2+-67-matchup",
+      "id": "act-a2+-67-matchup",
       "type": "match-up",
       "title": "Tool → Action",
       "description": "Tool → Action",
       "content": {
         "type": "match-up",
-        "instructions": "",
         "pairs": [
           {
             "left": "ніж",
@@ -190,24 +100,17 @@
       "language": "uk",
       "difficultyLevel": "A2+",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "food",
-        "cooking",
-        "kitchen",
-        "daily-life"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.282Z",
+      "modifiedAt": "2025-12-01T22:58:37.282Z"
     },
     {
-      "id": "act-uk-A2+-67-quiz",
+      "id": "act-a2+-67-quiz",
       "type": "quiz",
       "title": "Food & Cooking",
       "description": "Choose the correct word.",
       "content": {
         "type": "quiz",
-        "instructions": "Choose the correct word.",
         "questions": [
           {
             "question": "To boil water, you ___ it.",
@@ -286,60 +189,61 @@
       "language": "uk",
       "difficultyLevel": "A2+",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "food",
-        "cooking",
-        "kitchen",
-        "daily-life"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.282Z",
+      "modifiedAt": "2025-12-01T22:58:37.282Z"
     },
     {
-      "id": "act-uk-A2+-67-groupsort",
+      "id": "act-a2+-67-groupsort",
       "type": "group-sort",
       "title": "Food Categories",
       "description": "Food Categories",
       "content": {
         "type": "group-sort",
-        "instructions": "",
         "groups": [
           {
-            "name": "М'ясо (Meat)",
+            "id": "",
+            "name": "М'ясо",
             "items": [
               "курятина",
               "свинина",
               "яловичина",
               "фарш"
-            ]
+            ],
+            "nameUk": "Meat"
           },
           {
-            "name": "Овочі (Vegetables)",
+            "id": "",
+            "name": "Овочі",
             "items": [
               "цибуля",
               "морква",
               "капуста",
               "буряк"
-            ]
+            ],
+            "nameUk": "Vegetables"
           },
           {
-            "name": "Молочні (Dairy)",
+            "id": "",
+            "name": "Молочні",
             "items": [
               "сметана",
               "сир",
               "вершки",
               "кефір"
-            ]
+            ],
+            "nameUk": "Dairy"
           },
           {
-            "name": "Смаки (Tastes)",
+            "id": "",
+            "name": "Смаки",
             "items": [
               "солодкий",
               "солоний",
               "кислий",
               "гострий"
-            ]
+            ],
+            "nameUk": "Tastes"
           }
         ],
         "shuffleItems": true
@@ -350,15 +254,9 @@
       "language": "uk",
       "difficultyLevel": "A2+",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "food",
-        "cooking",
-        "kitchen",
-        "daily-life"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.282Z",
+      "modifiedAt": "2025-12-01T22:58:37.282Z"
     }
   ],
   "vocabulary": {
@@ -369,401 +267,335 @@
     "transliterationMode": "none",
     "words": [
       {
-        "id": "v-m67-001",
+        "id": "v-varyty-67-0",
         "uk": "варити",
-        "translit": "",
-        "ipa": "/vɑˈrɪtɪ/",
         "en": "to boil, cook",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/vɑˈrɪtɪ/",
         "note": "impf"
       },
       {
-        "id": "v-m67-002",
+        "id": "v-smazhyty-67-1",
         "uk": "смажити",
-        "translit": "",
-        "ipa": "/ˈsmɑʒɪtɪ/",
         "en": "to fry",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/ˈsmɑʒɪtɪ/",
         "note": "impf"
       },
       {
-        "id": "v-m67-003",
+        "id": "v-pekty-67-2",
         "uk": "пекти",
-        "translit": "",
-        "ipa": "/ˈpɛktɪ/",
         "en": "to bake",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/ˈpɛktɪ/",
         "note": "impf"
       },
       {
-        "id": "v-m67-004",
+        "id": "v-hotuvaty-67-3",
         "uk": "готувати",
-        "translit": "",
-        "ipa": "/ɦotuˈvɑtɪ/",
         "en": "to prepare, cook",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/ɦotuˈvɑtɪ/",
         "note": "impf"
       },
       {
-        "id": "v-m67-005",
+        "id": "v-rizaty-67-4",
         "uk": "різати",
-        "translit": "",
-        "ipa": "/ˈrʲizɑtɪ/",
         "en": "to cut",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/ˈrʲizɑtɪ/",
         "note": "impf"
       },
       {
-        "id": "v-m67-006",
+        "id": "v-chystyty-67-5",
         "uk": "чистити",
-        "translit": "",
-        "ipa": "/ˈtʃɪstɪtɪ/",
         "en": "to peel, clean",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/ˈtʃɪstɪtɪ/",
         "note": "impf"
       },
       {
-        "id": "v-m67-007",
+        "id": "v-mishaty-67-6",
         "uk": "мішати",
-        "translit": "",
-        "ipa": "/mʲiˈʃɑtɪ/",
         "en": "to mix, stir",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/mʲiˈʃɑtɪ/",
         "note": "impf"
       },
       {
-        "id": "v-m67-008",
+        "id": "v-dodavaty-67-7",
         "uk": "додавати",
-        "translit": "",
-        "ipa": "/dodɑˈvɑtɪ/",
         "en": "to add",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/dodɑˈvɑtɪ/",
         "note": "impf"
       },
       {
-        "id": "v-m67-009",
+        "id": "v-kastrulya-67-8",
         "uk": "каструля",
-        "translit": "",
-        "ipa": "/kɑsˈtrulʲɑ/",
         "en": "pot",
         "pos": "noun",
+        "ipa": "/kɑsˈtrulʲɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m67-010",
+        "id": "v-skovoroda-67-9",
         "uk": "сковорода",
-        "translit": "",
-        "ipa": "/skovoroˈdɑ/",
         "en": "frying pan",
         "pos": "noun",
+        "ipa": "/skovoroˈdɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m67-011",
+        "id": "v-dukhovka-67-10",
         "uk": "духовка",
-        "translit": "",
-        "ipa": "/duˈxovkɑ/",
         "en": "oven",
         "pos": "noun",
+        "ipa": "/duˈxovkɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m67-012",
+        "id": "v-terka-67-11",
         "uk": "терка",
-        "translit": "",
-        "ipa": "/ˈtɛrkɑ/",
         "en": "grater",
         "pos": "noun",
+        "ipa": "/ˈtɛrkɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m67-013",
+        "id": "v-doshka-67-12",
         "uk": "дошка",
-        "translit": "",
-        "ipa": "/ˈdoʃkɑ/",
         "en": "cutting board",
         "pos": "noun",
+        "ipa": "/ˈdoʃkɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m67-014",
+        "id": "v-kuryatyna-67-13",
         "uk": "курятина",
-        "translit": "",
-        "ipa": "/kurʲɑˈtɪnɑ/",
         "en": "chicken (meat)",
         "pos": "noun",
+        "ipa": "/kurʲɑˈtɪnɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m67-015",
+        "id": "v-svynyna-67-14",
         "uk": "свинина",
-        "translit": "",
-        "ipa": "/svɪˈnɪnɑ/",
         "en": "pork",
         "pos": "noun",
+        "ipa": "/svɪˈnɪnɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m67-016",
+        "id": "v-yalovychyna-67-15",
         "uk": "яловичина",
-        "translit": "",
-        "ipa": "/jɑloˈvɪtʃɪnɑ/",
         "en": "beef",
         "pos": "noun",
+        "ipa": "/jɑloˈvɪtʃɪnɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m67-017",
+        "id": "v-farsh-67-16",
         "uk": "фарш",
-        "translit": "",
-        "ipa": "/fɑrʃ/",
         "en": "ground meat",
         "pos": "noun",
+        "ipa": "/fɑrʃ/",
         "gender": "m"
       },
       {
-        "id": "v-m67-018",
+        "id": "v-tsybulya-67-17",
         "uk": "цибуля",
-        "translit": "",
-        "ipa": "/tsɪˈbulʲɑ/",
         "en": "onion",
         "pos": "noun",
+        "ipa": "/tsɪˈbulʲɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m67-019",
+        "id": "v-chasnyk-67-18",
         "uk": "часник",
-        "translit": "",
-        "ipa": "/tʃɑsˈnɪk/",
         "en": "garlic",
         "pos": "noun",
+        "ipa": "/tʃɑsˈnɪk/",
         "gender": "m"
       },
       {
-        "id": "v-m67-020",
+        "id": "v-morkva-67-19",
         "uk": "морква",
-        "translit": "",
-        "ipa": "/ˈmorkvɑ/",
         "en": "carrot",
         "pos": "noun",
+        "ipa": "/ˈmorkvɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m67-021",
+        "id": "v-kapusta-67-20",
         "uk": "капуста",
-        "translit": "",
-        "ipa": "/kɑˈpustɑ/",
         "en": "cabbage",
         "pos": "noun",
+        "ipa": "/kɑˈpustɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m67-022",
+        "id": "v-buryak-67-21",
         "uk": "буряк",
-        "translit": "",
-        "ipa": "/burʲˈɑk/",
         "en": "beet",
         "pos": "noun",
+        "ipa": "/burʲˈɑk/",
         "gender": "m"
       },
       {
-        "id": "v-m67-023",
+        "id": "v-hrechka-67-22",
         "uk": "гречка",
-        "translit": "",
-        "ipa": "/ˈɦrɛtʃkɑ/",
         "en": "buckwheat",
         "pos": "noun",
+        "ipa": "/ˈɦrɛtʃkɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m67-024",
+        "id": "v-smetana-67-23",
         "uk": "сметана",
-        "translit": "",
-        "ipa": "/smɛˈtɑnɑ/",
         "en": "sour cream",
         "pos": "noun",
+        "ipa": "/smɛˈtɑnɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m67-025",
+        "id": "v-vershky-67-24",
         "uk": "вершки",
-        "translit": "",
-        "ipa": "/vɛrˈʃkɪ/",
         "en": "cream",
         "pos": "noun",
-        "gender": "pl"
+        "ipa": "/vɛrˈʃkɪ/"
       },
       {
-        "id": "v-m67-026",
+        "id": "v-smachnyy-67-25",
         "uk": "смачний",
-        "translit": "",
-        "ipa": "/ˈsmɑtʃnɪj/",
         "en": "delicious",
         "pos": "adj",
-        "gender": "-"
+        "ipa": "/ˈsmɑtʃnɪj/"
       },
       {
-        "id": "v-m67-027",
+        "id": "v-solonyy-67-26",
         "uk": "солоний",
-        "translit": "",
-        "ipa": "/soˈlonɪj/",
         "en": "salty",
         "pos": "adj",
-        "gender": "-"
+        "ipa": "/soˈlonɪj/"
       },
       {
-        "id": "v-m67-028",
+        "id": "v-solodkyy-67-27",
         "uk": "солодкий",
-        "translit": "",
-        "ipa": "/soˈlodkɪj/",
         "en": "sweet",
         "pos": "adj",
-        "gender": "-"
+        "ipa": "/soˈlodkɪj/"
       },
       {
-        "id": "v-m67-029",
+        "id": "v-kyslyy-67-28",
         "uk": "кислий",
-        "translit": "",
-        "ipa": "/ˈkɪslɪj/",
         "en": "sour",
         "pos": "adj",
-        "gender": "-"
+        "ipa": "/ˈkɪslɪj/"
       },
       {
-        "id": "v-m67-030",
+        "id": "v-hirkyy-67-29",
         "uk": "гіркий",
-        "translit": "",
-        "ipa": "/ˈɦʲirkɪj/",
         "en": "bitter",
         "pos": "adj",
-        "gender": "-"
+        "ipa": "/ˈɦʲirkɪj/"
       },
       {
-        "id": "v-m67-031",
+        "id": "v-hostryy-67-30",
         "uk": "гострий",
-        "translit": "",
-        "ipa": "/ˈɦostrɪj/",
         "en": "spicy, sharp",
         "pos": "adj",
-        "gender": "-"
+        "ipa": "/ˈɦostrɪj/"
       },
       {
-        "id": "v-m67-032",
+        "id": "v-svizhyy-67-31",
         "uk": "свіжий",
-        "translit": "",
-        "ipa": "/ˈsvʲiʒɪj/",
         "en": "fresh",
         "pos": "adj",
-        "gender": "-"
+        "ipa": "/ˈsvʲiʒɪj/"
       },
       {
-        "id": "v-m67-033",
+        "id": "v-sokovytyy-67-32",
         "uk": "соковитий",
-        "translit": "",
-        "ipa": "/sokoˈvɪtɪj/",
         "en": "juicy",
         "pos": "adj",
-        "gender": "-"
+        "ipa": "/sokoˈvɪtɪj/"
       },
       {
-        "id": "v-m67-034",
+        "id": "v-strava-67-33",
         "uk": "страва",
-        "translit": "",
-        "ipa": "/ˈstrɑvɑ/",
         "en": "dish",
         "pos": "noun",
+        "ipa": "/ˈstrɑvɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m67-035",
+        "id": "v-retsept-67-34",
         "uk": "рецепт",
-        "translit": "",
-        "ipa": "/rɛˈtsɛpt/",
         "en": "recipe",
         "pos": "noun",
+        "ipa": "/rɛˈtsɛpt/",
         "gender": "m"
       },
       {
-        "id": "v-m67-036",
+        "id": "v-portsiya-67-35",
         "uk": "порція",
-        "translit": "",
-        "ipa": "/ˈportsʲijɑ/",
         "en": "portion",
         "pos": "noun",
+        "ipa": "/ˈportsʲijɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m67-037",
+        "id": "v-smakuvaty-67-36",
         "uk": "смакувати",
-        "translit": "",
-        "ipa": "/smɑkuˈvɑtɪ/",
         "en": "to taste (enjoy)",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/smɑkuˈvɑtɪ/",
         "note": "impf"
       },
       {
-        "id": "v-m67-038",
+        "id": "v-nayistysya-67-37",
         "uk": "наїстися",
-        "translit": "",
-        "ipa": "/nɑˈjistɪsʲɑ/",
         "en": "to eat one's fill",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/nɑˈjistɪsʲɑ/",
         "note": "pf"
       },
       {
-        "id": "v-m67-039",
+        "id": "v-borshch-67-38",
         "uk": "борщ",
-        "translit": "",
-        "ipa": "/borʃtʃ/",
         "en": "borscht",
         "pos": "noun",
+        "ipa": "/borʃtʃ/",
         "gender": "m"
       },
       {
-        "id": "v-m67-040",
+        "id": "v-varenyky-67-39",
         "uk": "вареники",
-        "translit": "",
-        "ipa": "/vɑˈrɛnɪkɪ/",
         "en": "dumplings",
         "pos": "noun",
-        "gender": "pl"
+        "ipa": "/vɑˈrɛnɪkɪ/"
       },
       {
-        "id": "v-m67-041",
+        "id": "v-deruny-67-40",
         "uk": "деруни",
-        "translit": "",
-        "ipa": "/dɛˈrunɪ/",
         "en": "potato pancakes",
         "pos": "noun",
-        "gender": "pl"
+        "ipa": "/dɛˈrunɪ/"
       },
       {
-        "id": "v-m67-042",
+        "id": "v-holubtsi-67-41",
         "uk": "голубці",
-        "translit": "",
-        "ipa": "/ɦoluˈptsʲi/",
         "en": "stuffed cabbage",
         "pos": "noun",
-        "gender": "pl"
+        "ipa": "/ɦoluˈptsʲi/"
       },
       {
-        "id": "v-m67-043",
+        "id": "v-syrnyky-67-42",
         "uk": "сирники",
-        "translit": "",
-        "ipa": "/sɪrˈnɪkɪ/",
         "en": "cottage cheese pancakes",
         "pos": "noun",
-        "gender": "pl"
+        "ipa": "/sɪrˈnɪkɪ/"
       }
     ]
   }

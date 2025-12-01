@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-A1-02",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "grammar-introduction",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -27,8 +26,6 @@
       "Soft sign function",
       "Print vs cursive awareness"
     ],
-    "totalDuration": 45,
-    "transliterationMode": "full",
     "tags": [
       "alphabet",
       "basics",
@@ -36,22 +33,9 @@
       "iotated",
       "cursive"
     ],
-    "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
+    "totalDuration": 45,
+    "transliterationMode": "full",
     "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Completing Your Alphabet\n\nIn Module 01, you learned 18 letters. Now let's complete the Ukrainian alphabet with the remaining 15 letters. After this module, you'll be able to read ANY Ukrainian word!\n\nToday's letters include some special ones that make Ukrainian unique - letters that don't exist in Russian or other Slavic languages.\n\n> 🔍 **Myth Buster: \"Ukrainian is a Russian Dialect\"**\n>\n> Some people claim Ukrainian is just \"a dialect of Russian.\" This is **completely false** - and politically charged misinformation. Ukrainian and Russian are separate languages that split from a common ancestor about 1,000 years ago. They have:\n> - Different sounds and phonology\n> - Different grammar rules\n> - Different vocabulary (only ~60% lexical similarity)\n> - **Different letters** - Ukrainian has Ї, Є, Ґ that Russian lacks!\n>\n> Would you call Spanish a \"dialect of Italian\"? Same logic applies here."
-          }
-        ]
-      },
       {
         "id": "phase-presentation",
         "name": "presentation",
@@ -60,81 +44,33 @@
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "### Group 4: Unique Consonants (7 letters)\n\nThese consonants have sounds that English speakers need to practice:\n\n| Letter | Sound | English approximation |\n|--------|-------|----------------------|\n| Г г | H | \"H\" in \"hello\" (soft, breathy) |\n| Ґ ґ | G | \"G\" in \"go\" (hard g - rare in Ukrainian!) |\n| Ж ж | ZH | \"S\" in \"pleasure\" or \"vision\" |\n| Ш ш | SH | \"SH\" in \"ship\" |\n| Щ щ | SHCH | \"SH+CH\" combined (fresh cheese) |\n| Ч ч | CH | \"CH\" in \"church\" |\n| Ц ц | TS | \"TS\" in \"cats\" |\n\n> 💡 **Did You Know?**\n>\n> The letter **Ґ** (hard G) has a fascinating history! It was **banned** during the Soviet era as part of Russification policies. After Ukrainian independence in 1991, it was officially restored. Today, words with Ґ like **ґанок** (porch) and **ґудзик** (button) are markers of authentic Ukrainian spelling. When you see Ґ, you're seeing a letter that survived cultural suppression!\n\n> ⚡ **Pro Tip: Г vs Ґ**\n>\n> - **Г** = soft H sound (like \"hello\") - VERY common\n> - **Ґ** = hard G sound (like \"go\") - rare, mostly in borrowed words\n>\n> Russian has only Г (pronounced as G), so Russians often mispronounce Ukrainian Г. This is a telltale accent marker!"
+            "teacherNotes": "### Group 4: Unique Consonants (7 letters)\n\nThese consonants have sounds that English speakers need to practice:\n\n| Letter | Sound | English approximation |\n|--------|-------|----------------------|\n| Г г | H | \"H\" in \"hello\" (soft, breathy) |\n| Ґ ґ | G | \"G\" in \"go\" (hard g - rare in Ukrainian!) |\n| Ж ж | ZH | \"S\" in \"pleasure\" or \"vision\" |\n| Ш ш | SH | \"SH\" in \"ship\" |\n| Щ щ | SHCH | \"SH+CH\" combined (fresh cheese) |\n| Ч ч | CH | \"CH\" in \"church\" |\n| Ц ц | TS | \"TS\" in \"cats\" |\n\n> 💡 **Did You Know?**\n>\n> The letter **Ґ** (hard G) has a fascinating history! It was **banned** during the Soviet era as part of Russification policies. After Ukrainian independence in 1991, it was officially restored. Today, words with Ґ like **ґанок** (porch) and **ґудзик** (button) are markers of authentic Ukrainian spelling. When you see Ґ, you're seeing a letter that survived cultural suppression!\n\n> ⚡ **Pro Tip: Г vs Ґ**\n>\n> - **Г** = soft H sound (like \"hello\") - VERY common\n> - **Ґ** = hard G sound (like \"go\") - rare, mostly in borrowed words\n>\n> Russian has only Г (pronounced as G), so Russians often mispronounce Ukrainian Г. This is a telltale accent marker!\n\n### Group 5: Iotated Vowels (4 letters)\n\nThese vowels start with a \"Y\" sound (like \"yes\"):\n\n| Letter | Sound | Example |\n|--------|-------|---------|\n| Є є | YE | \"YE\" in \"yes\" |\n| Ї ї | YI | \"YEE\" (yi as in \"yeast\") |\n| Ю ю | YU | \"YU\" in \"universe\" |\n| Я я | YA | \"YA\" in \"yard\" |\n\n> 📜 **History Bite: The Iotated Vowels**\n>\n> The term \"iotated\" comes from the Greek letter **iota** (ι). These vowels combine a \"y\" glide (called \"iot\") with a regular vowel:\n> - Є = Й + Е (y + e)\n> - Ї = Й + І (y + i)\n> - Ю = Й + У (y + u)\n> - Я = Й + А (y + a)\n>\n> After a consonant, they soften that consonant instead of adding \"y\". This is key to Ukrainian pronunciation!\n\n> 🎯 **Fun Fact: Ї - Ukraine's Signature Letter**\n>\n> The letter **Ї** exists ONLY in Ukrainian - no other language in the world uses it! It's so iconic that there's a famous Ukrainian cultural magazine called \"Ї\" (Yi). When you see this letter, you know 100% you're reading Ukrainian, not Russian, Bulgarian, or any other Cyrillic language.\n\n### Group 6: Special Letters (4 letters)\n\n| Letter | Sound | Function |\n|--------|-------|----------|\n| И и | Y (short) | Like \"i\" in \"bit\" (not \"ee\"!) |\n| Й й | Y (consonant) | Like \"y\" in \"yes\" |\n| Ь ь | — (silent) | Softens the previous consonant |\n| ' | — (pause) | Apostrophe - separates sounds |\n\n> 🔗 **Language Link: И vs І vs Ї**\n>\n> Ukrainian has THREE \"i\" sounds - confusing at first, but logical:\n> - **І** = \"ee\" as in \"m**ee**t\" (True Friend from Module 01)\n> - **И** = short \"i\" as in \"b**i**t\" (no English equivalent - between \"i\" and \"u\")\n> - **Ї** = \"yee\" as in \"**yea**st\" (y + ee combined)\n>\n> Listen carefully to native speakers - these are distinct sounds!\n\n> 💡 **Did You Know? The Silent Letter**\n>\n> The **soft sign (Ь)** makes no sound by itself! Instead, it **changes** the consonant before it:\n> - **кон** (horse) → **кінь** (different horse form, softer ending)\n> - **мат** (checkmate) → **мать** (mother - archaic)\n>\n> Think of Ь as an instruction: \"soften what came before me!\""
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Group 5: Iotated Vowels (4 letters)\n\nThese vowels start with a \"Y\" sound (like \"yes\"):\n\n| Letter | Sound | Example |\n|--------|-------|---------|\n| Є є | YE | \"YE\" in \"yes\" |\n| Ї ї | YI | \"YEE\" (yi as in \"yeast\") |\n| Ю ю | YU | \"YU\" in \"universe\" |\n| Я я | YA | \"YA\" in \"yard\" |\n\n> 📜 **History Bite: The Iotated Vowels**\n>\n> The term \"iotated\" comes from the Greek letter **iota** (ι). These vowels combine a \"y\" glide (called \"iot\") with a regular vowel:\n> - Є = Й + Е (y + e)\n> - Ї = Й + І (y + i)\n> - Ю = Й + У (y + u)\n> - Я = Й + А (y + a)\n>\n> After a consonant, they soften that consonant instead of adding \"y\". This is key to Ukrainian pronunciation!\n\n> 🎯 **Fun Fact: Ї - Ukraine's Signature Letter**\n>\n> The letter **Ї** exists ONLY in Ukrainian - no other language in the world uses it! It's so iconic that there's a famous Ukrainian cultural magazine called \"Ї\" (Yi). When you see this letter, you know 100% you're reading Ukrainian, not Russian, Bulgarian, or any other Cyrillic language."
+            "teacherNotes": "### The Cursive Trap\n\n**WARNING:** Ukrainian cursive (italic) letters can look VERY different from print!\n\n| Print | Cursive | Trap Level |\n|-------|---------|------------|\n| т | m-like | ⚠️ HIGH - looks like Latin \"m\"! |\n| п | n-like | ⚠️ HIGH - looks like Latin \"n\"! |\n| д | g-like | ⚠️ HIGH - looks like Latin \"g\"! |\n| и | u-like | ⚠️ MEDIUM - looks like Latin \"u\" |\n| л | hook | ⚠️ MEDIUM - connected differently |\n| г | ∂-like | ⚠️ MEDIUM - loops differently |\n\n> 🎭 **Culture Corner: Handwriting in Ukraine**\n>\n> Ukrainians learn cursive writing in first grade and use it throughout life. Official documents, signatures, and handwritten notes are almost always in cursive. If you ever receive a handwritten letter from Ukraine, remember: that \"m\" is probably **т**, that \"n\" is probably **п**, and that \"g\" is probably **д**!\n\n### Reading Practice\n\nNow try reading words with ALL 33 letters:\n\n**Basic words:**\n- УКРАЇНА → U-K-R-A-YI-N-A → Ukraine\n- КИЇВ → K-Y-YI-V → Kyiv\n- МОВА → M-O-V-A → language\n- ДЯКУЮ → D-YA-K-U-YU → thank you\n\n**Phrases:**\n- ДОБРЕ → D-O-B-R-E → good/okay\n- БУДЬ ЛАСКА → BUD' LAS-KA → please\n- ДО ПОБАЧЕННЯ → DO PO-BA-CHEN-NYA → goodbye\n\n> 🌍 **Real World: Your First Ukrainian Phrases**\n>\n> You just learned some of the most useful Ukrainian phrases:\n> - **Привіт!** (pryvit) - Hi!\n> - **Дякую!** (dyakuyu) - Thank you!\n> - **Будь ласка** (bud' laska) - Please / You're welcome\n> - **Так** (tak) - Yes\n> - **Ні** (ni) - No\n>\n> With just these words, you can already be polite in Ukraine!"
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Group 6: Special Letters (4 letters)\n\n| Letter | Sound | Function |\n|--------|-------|----------|\n| И и | Y (short) | Like \"i\" in \"bit\" (not \"ee\"!) |\n| Й й | Y (consonant) | Like \"y\" in \"yes\" |\n| Ь ь | — (silent) | Softens the previous consonant |\n| ' | — (pause) | Apostrophe - separates sounds |\n\n> 🔗 **Language Link: И vs І vs Ї**\n>\n> Ukrainian has THREE \"i\" sounds - confusing at first, but logical:\n> - **І** = \"ee\" as in \"m**ee**t\" (True Friend from Module 01)\n> - **И** = short \"i\" as in \"b**i**t\" (no English equivalent - between \"i\" and \"u\")\n> - **Ї** = \"yee\" as in \"**yea**st\" (y + ee combined)\n>\n> Listen carefully to native speakers - these are distinct sounds!\n\n> 💡 **Did You Know? The Silent Letter**\n>\n> The **soft sign (Ь)** makes no sound by itself! Instead, it **changes** the consonant before it:\n> - **кон** (horse) → **кінь** (different horse form, softer ending)\n> - **мат** (checkmate) → **мать** (mother - archaic)\n>\n> Think of Ь as an instruction: \"soften what came before me!\""
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A1-02-matchup"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A1-02-matchup"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### The Cursive Trap\n\n**WARNING:** Ukrainian cursive (italic) letters can look VERY different from print!\n\n| Print | Cursive | Trap Level |\n|-------|---------|------------|\n| т | m-like | ⚠️ HIGH - looks like Latin \"m\"! |\n| п | n-like | ⚠️ HIGH - looks like Latin \"n\"! |\n| д | g-like | ⚠️ HIGH - looks like Latin \"g\"! |\n| и | u-like | ⚠️ MEDIUM - looks like Latin \"u\" |\n| л | hook | ⚠️ MEDIUM - connected differently |\n| г | ∂-like | ⚠️ MEDIUM - loops differently |\n\n> 🎭 **Culture Corner: Handwriting in Ukraine**\n>\n> Ukrainians learn cursive writing in first grade and use it throughout life. Official documents, signatures, and handwritten notes are almost always in cursive. If you ever receive a handwritten letter from Ukraine, remember: that \"m\" is probably **т**, that \"n\" is probably **п**, and that \"g\" is probably **д**!"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Reading Practice\n\nNow try reading words with ALL 33 letters:\n\n**Basic words:**\n- УКРАЇНА → U-K-R-A-YI-N-A → Ukraine\n- КИЇВ → K-Y-YI-V → Kyiv\n- МОВА → M-O-V-A → language\n- ДЯКУЮ → D-YA-K-U-YU → thank you\n\n**Phrases:**\n- ДОБРЕ → D-O-B-R-E → good/okay\n- БУДЬ ЛАСКА → BUD' LAS-KA → please\n- ДО ПОБАЧЕННЯ → DO PO-BA-CHEN-NYA → goodbye\n\n> 🌍 **Real World: Your First Ukrainian Phrases**\n>\n> You just learned some of the most useful Ukrainian phrases:\n> - **Привіт!** (pryvit) - Hi!\n> - **Дякую!** (dyakuyu) - Thank you!\n> - **Будь ласка** (bud' laska) - Please / You're welcome\n> - **Так** (tak) - Yes\n> - **Ні** (ni) - No\n>\n> With just these words, you can already be polite in Ukraine!"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A1-02-quiz"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A1-02-groupsort"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Complete Alphabet Challenge\n\nYou now know all 33 letters! Here's the full Ukrainian alphabet:\n\n**А Б В Г Ґ Д Е Є Ж З И І Ї Й К Л М Н О П Р С Т У Ф Х Ц Ч Ш Щ Ь Ю Я**\n\nRead these words that use letters from both modules:\n\n1. ШКОЛА (shkola) - school\n2. ЛЮДИНА (lyudyna) - person\n3. ЇЖА (yizha) - food\n4. ЩАСТЯ (shchastya) - happiness\n5. ЦЕНТР (tsentr) - center"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Alphabet Song Order\n\nThe Ukrainian alphabet has a specific order (like ABC in English). Practice saying:\n\nА, Б, В, Г, Ґ, Д, Е, Є, Ж, З, И, І, Ї, Й, К, Л, М, Н, О, П, Р, С, Т, У, Ф, Х, Ц, Ч, Ш, Щ, Ь, Ю, Я\n\n> 🎯 **Fun Fact: No Ъ in Ukrainian!**\n>\n> Russian has a \"hard sign\" (Ъ), but Ukrainian doesn't! Ukrainian uses an apostrophe (') instead to separate sounds. This is another easy way to tell Ukrainian from Russian text - if you see Ъ, it's not Ukrainian!"
+            "teacherNotes": "### Complete Alphabet Challenge\n\nYou now know all 33 letters! Here's the full Ukrainian alphabet:\n\n**А Б В Г Ґ Д Е Є Ж З И І Ї Й К Л М Н О П Р С Т У Ф Х Ц Ч Ш Щ Ь Ю Я**\n\nRead these words that use letters from both modules:\n\n1. ШКОЛА (shkola) - school\n2. ЛЮДИНА (lyudyna) - person\n3. ЇЖА (yizha) - food\n4. ЩАСТЯ (shchastya) - happiness\n5. ЦЕНТР (tsentr) - center\n\n### Alphabet Song Order\n\nThe Ukrainian alphabet has a specific order (like ABC in English). Practice saying:\n\nА, Б, В, Г, Ґ, Д, Е, Є, Ж, З, И, І, Ї, Й, К, Л, М, Н, О, П, Р, С, Т, У, Ф, Х, Ц, Ч, Ш, Щ, Ь, Ю, Я\n\n> 🎯 **Fun Fact: No Ъ in Ukrainian!**\n>\n> Russian has a \"hard sign\" (Ъ), but Ukrainian doesn't! Ukrainian uses an apostrophe (') instead to separate sounds. This is another easy way to tell Ukrainian from Russian text - if you see Ъ, it's not Ukrainian!\n\n---"
           }
         ]
       }
-    ]
+    ],
+    "createdAt": "2025-12-01T22:58:37.224Z",
+    "modifiedAt": "2025-12-01T22:58:37.224Z",
+    "version": 1
   },
   "activities": [
     {
-      "id": "act-uk-A1-02-matchup",
+      "id": "act-a1-2-matchup",
       "type": "match-up",
       "title": "New Letter Sounds",
       "description": "Match each new letter to its sound. Focus on the unique consonants and iotated vowels!",
       "content": {
         "type": "match-up",
-        "instructions": "Match each new letter to its sound. Focus on the unique consonants and iotated vowels!",
         "pairs": [
           {
             "left": "Г г",
@@ -189,24 +125,17 @@
       "language": "uk",
       "difficultyLevel": "A1",
       "duration": 5,
-      "tags": [
-        "alphabet",
-        "basics",
-        "cyrillic",
-        "iotated",
-        "cursive"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.224Z",
+      "modifiedAt": "2025-12-01T22:58:37.224Z"
     },
     {
-      "id": "act-uk-A1-02-quiz",
+      "id": "act-a1-2-quiz",
       "type": "quiz",
       "title": "Read Complete Words",
       "description": "Now that you know all 33 letters, read these Ukrainian words!",
       "content": {
         "type": "quiz",
-        "instructions": "Now that you know all 33 letters, read these Ukrainian words!",
         "questions": [
           {
             "question": "What does ШКОЛА mean?",
@@ -307,24 +236,17 @@
       "language": "uk",
       "difficultyLevel": "A1",
       "duration": 5,
-      "tags": [
-        "alphabet",
-        "basics",
-        "cyrillic",
-        "iotated",
-        "cursive"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.224Z",
+      "modifiedAt": "2025-12-01T22:58:37.224Z"
     },
     {
-      "id": "act-uk-A1-02-matchup",
+      "id": "act-a1-2-matchup",
       "type": "match-up",
       "title": "Print to Cursive",
       "description": "Match the print letter to its cursive/italic form. Watch out for the traps!",
       "content": {
         "type": "match-up",
-        "instructions": "Match the print letter to its cursive/italic form. Watch out for the traps!",
         "pairs": [
           {
             "left": "т",
@@ -359,26 +281,20 @@
       "language": "uk",
       "difficultyLevel": "A1",
       "duration": 5,
-      "tags": [
-        "alphabet",
-        "basics",
-        "cyrillic",
-        "iotated",
-        "cursive"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.224Z",
+      "modifiedAt": "2025-12-01T22:58:37.224Z"
     },
     {
-      "id": "act-uk-A1-02-groupsort",
+      "id": "act-a1-2-groupsort",
       "type": "group-sort",
       "title": "Categorize All Letters",
       "description": "Sort all the new letters into their categories.",
       "content": {
         "type": "group-sort",
-        "instructions": "Sort all the new letters into their categories.",
         "groups": [
           {
+            "id": "unique-consonants",
             "name": "Unique Consonants",
             "items": [
               "Г",
@@ -391,6 +307,7 @@
             ]
           },
           {
+            "id": "iotated-vowels",
             "name": "Iotated Vowels",
             "items": [
               "Є",
@@ -400,6 +317,7 @@
             ]
           },
           {
+            "id": "special-letters",
             "name": "Special Letters",
             "items": [
               "И",
@@ -416,222 +334,182 @@
       "language": "uk",
       "difficultyLevel": "A1",
       "duration": 5,
-      "tags": [
-        "alphabet",
-        "basics",
-        "cyrillic",
-        "iotated",
-        "cursive"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.224Z",
+      "modifiedAt": "2025-12-01T22:58:37.224Z"
     }
   ],
   "vocabulary": {
-    "moduleId": "mod-uk-A1-02",
+    "moduleId": "mod-uk-A1-2",
     "level": "A1",
     "phase": "A1.1",
     "wordCount": 20,
     "transliterationMode": "full",
     "words": [
       {
-        "id": "v-m02-001",
+        "id": "v-bukva-2-0",
         "uk": "буква",
-        "translit": "",
-        "ipa": "/ˈbukvɑ/",
         "en": "letter (of alphabet)",
         "pos": "noun",
+        "ipa": "/ˈbukvɑ/",
         "gender": "f",
         "note": "Б, У - uses new letters"
       },
       {
-        "id": "v-m02-002",
+        "id": "v-slovo-2-1",
         "uk": "слово",
-        "translit": "",
-        "ipa": "/ˈslɔvɔ/",
         "en": "word",
         "pos": "noun",
+        "ipa": "/ˈslɔvɔ/",
         "gender": "n",
         "note": "Basic vocabulary"
       },
       {
-        "id": "v-m02-003",
+        "id": "v-alfavit-2-2",
         "uk": "алфавіт",
-        "translit": "",
-        "ipa": "/ɑlfɑˈvʲit/",
         "en": "alphabet",
         "pos": "noun",
+        "ipa": "/ɑlfɑˈvʲit/",
         "gender": "m",
         "note": "Also: абетка (traditional)"
       },
       {
-        "id": "v-m02-004",
+        "id": "v-mova-2-3",
         "uk": "мова",
-        "translit": "",
-        "ipa": "/ˈmɔvɑ/",
         "en": "language",
         "pos": "noun",
+        "ipa": "/ˈmɔvɑ/",
         "gender": "f",
         "note": "Українська мова = Ukrainian language"
       },
       {
-        "id": "v-m02-005",
+        "id": "v-ukrayinsьka-2-4",
         "uk": "українська",
-        "translit": "",
-        "ipa": "/ukrɑˈjinʲsʲkɑ/",
         "en": "Ukrainian (adj)",
         "pos": "adj",
+        "ipa": "/ukrɑˈjinʲsʲkɑ/",
         "gender": "f",
         "note": "Uses Ї!"
       },
       {
-        "id": "v-m02-006",
+        "id": "v-anhliysьka-2-5",
         "uk": "англійська",
-        "translit": "",
-        "ipa": "/ɑnˈɦlʲijsʲkɑ/",
         "en": "English (adj)",
         "pos": "adj",
+        "ipa": "/ɑnˈɦlʲijsʲkɑ/",
         "gender": "f",
         "note": "Г = H sound"
       },
       {
-        "id": "v-m02-007",
+        "id": "v-tak-2-6",
         "uk": "так",
-        "translit": "",
-        "ipa": "/tɑk/",
         "en": "yes",
         "pos": "particle",
-        "gender": "-",
+        "ipa": "/tɑk/",
         "note": "Essential word"
       },
       {
-        "id": "v-m02-008",
+        "id": "v-ni-2-7",
         "uk": "ні",
-        "translit": "",
-        "ipa": "/nʲi/",
         "en": "no",
         "pos": "particle",
-        "gender": "-",
+        "ipa": "/nʲi/",
         "note": "Essential word"
       },
       {
-        "id": "v-m02-009",
+        "id": "v-dobre-2-8",
         "uk": "добре",
-        "translit": "",
-        "ipa": "/ˈdɔbrɛ/",
         "en": "good, okay",
         "pos": "adv",
-        "gender": "-",
+        "ipa": "/ˈdɔbrɛ/",
         "note": "Common response"
       },
       {
-        "id": "v-m02-010",
+        "id": "v-dyakuyu-2-9",
         "uk": "дякую",
-        "translit": "",
-        "ipa": "/ˈdʲakuju/",
         "en": "thank you",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/ˈdʲakuju/",
         "note": "Я, Ю = iotated"
       },
       {
-        "id": "v-m02-011",
+        "id": "v-budь-laska-2-10",
         "uk": "будь ласка",
-        "translit": "",
-        "ipa": "/budʲ ˈlɑskɑ/",
         "en": "please",
         "pos": "phrase",
-        "gender": "-",
+        "ipa": "/budʲ ˈlɑskɑ/",
         "note": "Ь = soft sign"
       },
       {
-        "id": "v-m02-012",
+        "id": "v-pryvit-2-11",
         "uk": "привіт",
-        "translit": "",
-        "ipa": "/prɪˈvʲit/",
         "en": "hi, hello",
         "pos": "interj",
-        "gender": "-",
+        "ipa": "/prɪˈvʲit/",
         "note": "Informal greeting"
       },
       {
-        "id": "v-m02-013",
+        "id": "v-do-pobachennya-2-12",
         "uk": "до побачення",
-        "translit": "",
-        "ipa": "/dɔ pɔˈbɑtʃɛnʲːɑ/",
         "en": "goodbye",
         "pos": "phrase",
-        "gender": "-",
+        "ipa": "/dɔ pɔˈbɑtʃɛnʲːɑ/",
         "note": "Ч = CH"
       },
       {
-        "id": "v-m02-014",
+        "id": "v-vybachte-2-13",
         "uk": "вибачте",
-        "translit": "",
-        "ipa": "/vɪˈbɑtʃtɛ/",
         "en": "excuse me, sorry",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/vɪˈbɑtʃtɛ/",
         "note": "Ч = CH"
       },
       {
-        "id": "v-m02-015",
+        "id": "v-proshu-2-14",
         "uk": "прошу",
-        "translit": "",
-        "ipa": "/ˈprɔʃu/",
         "en": "please/you're welcome",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/ˈprɔʃu/",
         "note": "Ш = SH"
       },
       {
-        "id": "v-m02-016",
+        "id": "v-laskavo-prosymo-2-15",
         "uk": "ласкаво просимо",
-        "translit": "",
-        "ipa": "/ˈlɑskɑvɔ ˈprɔsɪmɔ/",
         "en": "welcome",
         "pos": "phrase",
-        "gender": "-",
+        "ipa": "/ˈlɑskɑvɔ ˈprɔsɪmɔ/",
         "note": "Formal welcome"
       },
       {
-        "id": "v-m02-017",
+        "id": "v-shcho-2-16",
         "uk": "що",
-        "translit": "",
-        "ipa": "/ʃtʃɔ/",
         "en": "what",
         "pos": "pron",
-        "gender": "-",
+        "ipa": "/ʃtʃɔ/",
         "note": "Щ = SHCH"
       },
       {
-        "id": "v-m02-018",
+        "id": "v-yak-2-17",
         "uk": "як",
-        "translit": "",
-        "ipa": "/jɑk/",
         "en": "how",
         "pos": "adv",
-        "gender": "-",
+        "ipa": "/jɑk/",
         "note": "Я = YA"
       },
       {
-        "id": "v-m02-019",
+        "id": "v-de-2-18",
         "uk": "де",
-        "translit": "",
-        "ipa": "/dɛ/",
         "en": "where",
         "pos": "adv",
-        "gender": "-",
+        "ipa": "/dɛ/",
         "note": "Simple question word"
       },
       {
-        "id": "v-m02-020",
+        "id": "v-khto-2-19",
         "uk": "хто",
-        "translit": "",
-        "ipa": "/xtɔ/",
         "en": "who",
         "pos": "pron",
-        "gender": "-",
+        "ipa": "/xtɔ/",
         "note": "Х = KH"
       }
     ]

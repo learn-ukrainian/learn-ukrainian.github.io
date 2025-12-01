@@ -168,51 +168,52 @@ objectives:
 
 ### Choose: бачити or дивитися
 
-1. Я ___ телевізор. → **дивлюся** (active watching)
-2. Ти ___ того чоловіка? → **бачиш** (passive seeing)
-3. ___ на мене! → **Дивися** (command to look)
-4. Я ___ її вчора в магазині. → **бачив** (noticed)
-5. Вона ___ у вікно. → **дивиться** (looking out)
+1. Я ___ телевізор.
+   > [!answer] **дивлюся** (active watching)
+2. Ти ___ того чоловіка?
+   > [!answer] **бачиш** (passive seeing)
+3. ___ на мене!
+   > [!answer] **Дивися** (command to look)
+4. Я ___ її вчора в магазині.
+   > [!answer] **бачив** (noticed)
+5. Вона ___ у вікно.
+   > [!answer] **дивиться** (looking out)
 
 ### Choose: знати or розуміти
 
-1. Я ___ це слово. → **знаю** (know the word)
-2. Я ___, що він сказав. → **розумію** (understand meaning)
-3. Ти ___, де він живе? → **знаєш** (have information)
-4. Вони не ___ один одного. → **розуміють** (don't understand each other)
-5. Я ___ п'ять мов. → **знаю** (know languages)
+1. Я ___ це слово.
+   > [!answer] **знаю** (know the word)
+2. Я ___, що він сказав.
+   > [!answer] **розумію** (understand meaning)
+3. Ти ___, де він живе?
+   > [!answer] **знаєш** (have information)
+4. Вони не ___ один одного.
+   > [!answer] **розуміють** (don't understand each other)
+5. Я ___ п'ять мов.
+   > [!answer] **знаю** (know languages)
 
 ### Complete with Correct Verb
 
 1. Лікар ___ (examined) пацієнта.
-   → **оглянув**
-
+   > [!answer] **оглянув**
 2. Він ___ (noticed) помилку в тексті.
-   → **помітив**
-
+   > [!answer] **помітив**
 3. Вона ___ (realized) свою помилку.
-   → **усвідомила**
-
+   > [!answer] **усвідомила**
 4. Я ___ (observe) за погодою.
-   → **спостерігаю**
-
+   > [!answer] **спостерігаю**
 5. Він ___ (acknowledged) свою провину.
-   → **визнав**
-
+   > [!answer] **визнав**
 ### Translate
 
 1. I see a bird in the tree.
-   → **Я бачу птаха на дереві.**
-
+   > [!answer] **Я бачу птаха на дереві.**
 2. Look at this photo!
-   → **Подивися на це фото!**
-
+   > [!answer] **Подивися на це фото!**
 3. I don't understand this question.
-   → **Я не розумію це питання.**
-
+   > [!answer] **Я не розумію це питання.**
 4. Do you know where she lives?
-   → **Ти знаєш, де вона живе?**
-
+   > [!answer] **Ти знаєш, де вона живе?**
 ## production | Продукція
 
 ### Describe What You See

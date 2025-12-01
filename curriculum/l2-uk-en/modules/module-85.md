@@ -186,20 +186,31 @@ This is called the "genitive of negation" — another A2+ topic reinforced here.
 
 Change to negative form (use imperfective):
 
-1. Він прочитав книгу. → Він **не читав** книги.
-2. Вона написала листа. → Вона **не писала** листа.
-3. Ми купили квитки. → Ми **не купували** квитків.
-4. Я зробив домашнє. → Я **не робив** домашнього.
-5. Вони подивилися фільм. → Вони **не дивилися** фільму.
+1. Він прочитав книгу.
+   > [!answer] Він **не читав** книги.
+2. Вона написала листа.
+   > [!answer] Вона **не писала** листа.
+3. Ми купили квитки.
+   > [!answer] Ми **не купували** квитків.
+4. Я зробив домашнє.
+   > [!answer] Я **не робив** домашнього.
+5. Вони подивилися фільм.
+   > [!answer] Вони **не дивилися** фільму.
 
 ### Choose Correct Aspect in Negation
 
-1. Я ніколи ___ (не курив/не покурив). → **не курив** (ніколи = imperfective)
-2. Обережно, ___ (не падай/не впади)! → **не впади** (warning = perfective)
-3. Вона ще ___ (не приїжджала/не приїхала). → **не приїхала** (ще не = perfective)
-4. Я ___ (не буду робити/не зроблю) це (general refusal). → **не буду робити**
-5. ___ (Не забувай/Не забудь) взяти парасольку! → **Не забудь** (warning)
-6. Ми ___ (не говорили/не сказали) йому про це. → **не говорили** (general negation)
+1. Я ніколи ___ (не курив/не покурив).
+   > [!answer] **не курив** (ніколи = imperfective)
+2. Обережно, ___ (не падай/не впади)!
+   > [!answer] **не впади** (warning = perfective)
+3. Вона ще ___ (не приїжджала/не приїхала).
+   > [!answer] **не приїхала** (ще не = perfective)
+4. Я ___ (не буду робити/не зроблю) це (general refusal).
+   > [!answer] **не буду робити**
+5. ___ (Не забувай/Не забудь) взяти парасольку!
+   > [!answer] **Не забудь** (warning)
+6. Ми ___ (не говорили/не сказали) йому про це.
+   > [!answer] **не говорили** (general negation)
 
 ### Question and Answer
 
@@ -221,10 +232,14 @@ Answer negatively using imperfective:
 
 Choose the right form for prohibition:
 
-1. (General rule) Тут ___ (не палити/не запалити)! → **не палити**
-2. (Specific warning) ___ (Не торкайся/Не торкнись) цього! → **Не торкайся** OR **Не торкнись**
-3. (General advice) ___ (Не хвилюйся/Не захвилюйся)! → **Не хвилюйся**
-4. (Specific moment) ___ (Не відкривай/Не відкрий) двері! → **Не відкривай**
+1. (General rule) Тут ___ (не палити/не запалити)!
+   > [!answer] **не палити**
+2. (Specific warning) ___ (Не торкайся/Не торкнись) цього!
+   > [!answer] **Не торкайся** OR **Не торкнись**
+3. (General advice) ___ (Не хвилюйся/Не захвилюйся)!
+   > [!answer] **Не хвилюйся**
+4. (Specific moment) ___ (Не відкривай/Не відкрий) двері!
+   > [!answer] **Не відкривай**
 
 ## production
 
@@ -384,10 +399,14 @@ B: Не забуду, обіцяю!
 
 ## Key Patterns
 
-1. **Ніколи** (never) → always imperfective
-2. **Ще не** (not yet) → perfective
-3. **General prohibition** → imperfective (Не палити!)
-4. **Specific warning** → perfective (Не впади!)
+1. **Ніколи** (never)
+   > [!answer] always imperfective
+2. **Ще не** (not yet)
+   > [!answer] perfective
+3. **General prohibition**
+   > [!answer] imperfective (Не палити!)
+4. **Specific warning**
+   > [!answer] perfective (Не впади!)
 
 > **Key Takeaways**
 >

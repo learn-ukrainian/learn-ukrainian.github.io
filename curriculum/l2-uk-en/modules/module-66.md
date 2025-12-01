@@ -195,11 +195,16 @@ In Module 65, you learned roots for learning, work, reading, writing, and speech
 
 ### Identify the Root
 
-1. вхід → -хід- (walking)
-2. поїздка → -їзд- (riding)
-3. побачення → -бач- (seeing)
-4. слухач → -слух- (hearing)
-5. знайомий → -знай- (knowing)
+1. вхід
+   > [!answer] -хід- (walking)
+2. поїздка
+   > [!answer] -їзд- (riding)
+3. побачення
+   > [!answer] -бач- (seeing)
+4. слухач
+   > [!answer] -слух- (hearing)
+5. знайомий
+   > [!answer] -знай- (knowing)
 
 ### Match Word to Root Family
 
@@ -212,27 +217,32 @@ In Module 65, you learned roots for learning, work, reading, writing, and speech
 ### Complete with the Right Word
 
 1. Де ___ (entrance)? — Там, а ___ (exit) — тут.
-   → вхід, вихід
+   > [!answer] вхід, вихід
 
 2. ___ (train) приїжджає о десятій. ___ (trip) була довга.
-   → поїзд, поїздка
+   > [!answer] поїзд, поїздка
 
 3. ___ (sorry)! Я не ___ (saw) тебе.
-   → вибач, бачив
+   > [!answer] вибач, бачив
 
 4. ___ (listen) мене! Ти ніколи не ___ (listen).
-   → послухай, слухаєш
+   > [!answer] послухай, слухаєш
 
 5. Я хочу ___ (find out) правду. Ти ___ (know) щось?
-   → дізнатися, знаєш
+   > [!answer] дізнатися, знаєш
 
 ### Translate
 
-1. Where is the exit? → Де вихід?
-2. The train arrives at 6. → Поїзд прибуває о шостій.
-3. I want to see you. → Я хочу побачити тебе.
-4. Listen carefully! → Слухай уважно!
-5. I found out the truth. → Я дізнався/дізналася правду.
+1. Where is the exit?
+   > [!answer] Де вихід?
+2. The train arrives at 6.
+   > [!answer] Поїзд прибуває о шостій.
+3. I want to see you.
+   > [!answer] Я хочу побачити тебе.
+4. Listen carefully!
+   > [!answer] Слухай уважно!
+5. I found out the truth.
+   > [!answer] Я дізнався/дізналася правду.
 
 ## production
 

@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-A2-59",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "grammar-introduction",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -27,30 +26,15 @@
       "-но/-то participles",
       "Common passive expressions"
     ],
-    "totalDuration": 45,
-    "transliterationMode": "partial",
     "tags": [
       "grammar",
       "passive",
       "impersonal",
       "constructions"
     ],
-    "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
+    "totalDuration": 45,
+    "transliterationMode": "partial",
     "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Beyond Active Voice\n\nSometimes we don't know or don't want to say who did something:\n- \"The door **was opened**.\"\n- \"**It is said** that...\"\n- \"**One must** be careful.\"\n\nUkrainian has special constructions for these situations!\n\n> 💡 **Did You Know?**\n>\n> Ukrainian uses passive constructions less frequently than English. Instead, it often prefers active voice with impersonal subjects or reflexive verbs. But knowing passive is essential for understanding news, official documents, and formal texts!"
-          }
-        ]
-      },
       {
         "id": "phase-presentation",
         "name": "presentation",
@@ -59,97 +43,33 @@
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "### Impersonal Constructions\n\n**Impersonal sentences** don't have a specific subject - they describe general situations:\n\n**Common patterns:**\n\n| Ukrainian | Meaning |\n|-----------|---------|\n| Треба... | It's necessary to... / One must... |\n| Можна... | It's possible to... / One may... |\n| Не можна... | It's forbidden to... / One mustn't... |\n| Потрібно... | It's needed to... |\n| Варто... | It's worth... |\n| Слід... | One should... |\n| Заборонено... | It's forbidden... |\n| Дозволено... | It's allowed... |\n\n**Examples:**\n- **Треба** працювати. - One must work. / It's necessary to work.\n- **Можна** запитати? - May I ask? / Is it possible to ask?\n- Тут **не можна** курити. - Smoking is not allowed here.\n- **Варто** спробувати. - It's worth trying.\n- **Заборонено** входити. - Entry is forbidden.\n\n> ⚡ **Pro Tip: Adding Subject**\n>\n> To specify WHO, use dative case:\n> - **Мені** треба працювати. - I need to work.\n> - **Тобі** можна йти. - You may go.\n> - **Нам** варто подумати. - We should think about it."
+            "teacherNotes": "### Impersonal Constructions\n\n**Impersonal sentences** don't have a specific subject - they describe general situations:\n\n**Common patterns:**\n\n| Ukrainian | Meaning |\n|-----------|---------|\n| Треба... | It's necessary to... / One must... |\n| Можна... | It's possible to... / One may... |\n| Не можна... | It's forbidden to... / One mustn't... |\n| Потрібно... | It's needed to... |\n| Варто... | It's worth... |\n| Слід... | One should... |\n| Заборонено... | It's forbidden... |\n| Дозволено... | It's allowed... |\n\n**Examples:**\n- **Треба** працювати. - One must work. / It's necessary to work.\n- **Можна** запитати? - May I ask? / Is it possible to ask?\n- Тут **не можна** курити. - Smoking is not allowed here.\n- **Варто** спробувати. - It's worth trying.\n- **Заборонено** входити. - Entry is forbidden.\n\n> ⚡ **Pro Tip: Adding Subject**\n>\n> To specify WHO, use dative case:\n> - **Мені** треба працювати. - I need to work.\n> - **Тобі** можна йти. - You may go.\n> - **Нам** варто подумати. - We should think about it.\n\n### Reflexive as Passive\n\nUkrainian often uses **reflexive verbs (-ся)** where English uses passive:\n\n**Active → Reflexive (passive meaning):**\n- Будують будинок. → Будинок **будується**. - A house is being built.\n- Продають квитки. → Квитки **продаються**. - Tickets are sold.\n- Говорять, що... → **Говориться**, що... - It is said that...\n\n**Common reflexive passives:**\n| Reflexive | Meaning |\n|-----------|---------|\n| продається | is sold |\n| здається | is rented out |\n| вважається | is considered |\n| називається | is called |\n| готується | is being prepared |\n| пишеться | is written |\n\n**Examples:**\n- Ця книга **продається** в магазині. - This book is sold in the store.\n- Квартира **здається**. - Apartment for rent.\n- Це **вважається** поганим. - This is considered bad.\n- Як це **пишеться**? - How is this written?\n- Як це **називається**? - What is this called?\n\n> 🎭 **Culture Corner: Signs and Notices**\n>\n> You'll see reflexive passives everywhere in Ukraine:\n> - \"Продається\" - For sale\n> - \"Здається\" - For rent\n> - \"Відчинено/Зачинено\" - Open/Closed\n> - \"Вхід заборонено\" - Entry forbidden\n\n### -но/-то Participles (Passive Result)\n\nThese forms show the **result** of a completed action (who did it is unknown/unimportant):\n\n**Formation:** verb stem + -но (most) or -то (some verbs)\n\n| Infinitive | -но/-то form | Meaning |\n|------------|--------------|---------|\n| зробити | зроблено | done/made |\n| написати | написано | written |\n| сказати | сказано | said |\n| відкрити | відкрито | opened |\n| закрити | закрито | closed |\n| зайняти | зайнято | occupied |\n| продати | продано | sold |\n| прийняти | прийнято | accepted |\n\n**Usage:**\n- Роботу **зроблено**. - The work is done.\n- Лист **написано**. - The letter is written.\n- **Сказано** — **зроблено**. - Said — done. (proverb)\n- Це місце **зайнято**. - This seat is taken.\n- Рішення **прийнято**. - The decision has been made.\n- Магазин **закрито**. - The store is closed.\n\n> 📜 **History Bite: Impersonal Forms**\n>\n> The -но/-то forms are distinctly Ukrainian (and Belarusian). Russian uses different constructions. These forms are ancient and very common in everyday speech and official language.\n\n### Passive with \"бути\" + Participle\n\nFor more formal passive, use **бути** + passive participle (-ний/-тий):\n\n**Formation:** бути + participle (agrees with subject)\n\n| Verb | Participle (m/f/n/pl) |\n|------|----------------------|\n| зробити | зроблений/зроблена/зроблене/зроблені |\n| написати | написаний/написана/написане/написані |\n| відкрити | відкритий/відкрита/відкрите/відкриті |\n| побудувати | побудований/побудована/побудоване/побудовані |\n\n**Examples:**\n- Лист **був написаний** вчора. - The letter was written yesterday.\n- Книга **буде опублікована** завтра. - The book will be published tomorrow.\n- Ці будинки **були побудовані** в 19 столітті. - These buildings were built in the 19th century.\n- Музей **зараз зачинений**. - The museum is currently closed.\n\n### Common Passive Expressions\n\n**In daily life:**\n- Вхід **заборонено**. - Entry forbidden.\n- Вихід **тут**. - Exit here.\n- **Зачинено** на ремонт. - Closed for repairs.\n- **Продано**! - Sold!\n- **Зайнято**. - Occupied/Busy.\n- **Вільно**. - Free/Available.\n\n**In news/formal:**\n- **Повідомляється**, що... - It is reported that...\n- **Очікується**, що... - It is expected that...\n- **Було прийнято** рішення. - A decision was made.\n- **Буде оголошено** завтра. - It will be announced tomorrow.\n\n### They Say / It Is Said\n\n**General statements without specific subject:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Кажуть, що... | They say that... |\n| Говорять, що... | They say that... |\n| Вважають, що... | It's believed that... |\n| Відомо, що... | It's known that... |\n| Вважається, що... | It's considered that... |\n\n**Examples:**\n- **Кажуть**, що завтра буде дощ. - They say it will rain tomorrow.\n- **Говорять**, він дуже розумний. - They say he's very smart.\n- **Відомо**, що це небезпечно. - It's known that this is dangerous.\n- **Вважається**, що це найкращий варіант. - It's considered the best option."
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Reflexive as Passive\n\nUkrainian often uses **reflexive verbs (-ся)** where English uses passive:\n\n**Active → Reflexive (passive meaning):**\n- Будують будинок. → Будинок **будується**. - A house is being built.\n- Продають квитки. → Квитки **продаються**. - Tickets are sold.\n- Говорять, що... → **Говориться**, що... - It is said that...\n\n**Common reflexive passives:**\n| Reflexive | Meaning |\n|-----------|---------|\n| продається | is sold |\n| здається | is rented out |\n| вважається | is considered |\n| називається | is called |\n| готується | is being prepared |\n| пишеться | is written |\n\n**Examples:**\n- Ця книга **продається** в магазині. - This book is sold in the store.\n- Квартира **здається**. - Apartment for rent.\n- Це **вважається** поганим. - This is considered bad.\n- Як це **пишеться**? - How is this written?\n- Як це **називається**? - What is this called?\n\n> 🎭 **Culture Corner: Signs and Notices**\n>\n> You'll see reflexive passives everywhere in Ukraine:\n> - \"Продається\" - For sale\n> - \"Здається\" - For rent\n> - \"Відчинено/Зачинено\" - Open/Closed\n> - \"Вхід заборонено\" - Entry forbidden"
+            "teacherNotes": "### Transform to Passive/Impersonal\n\n1. Хтось відкрив двері. (someone opened the door)\n   > [!answer] Двері відкрито. / Двері були відкриті.\n\n2. Хтось написав книгу. (someone wrote the book)\n   > [!answer] Книгу написано. / Книга написана.\n\n3. Тут курять. (they smoke here)\n   > [!answer] Тут можна курити. (allowed) / Тут не можна курити. (forbidden)\n\n4. Люди кажуть, що він багатий.\n   > [!answer] Кажуть, що він багатий.\n\n5. Хтось зайняв це місце.\n   > [!answer] Це місце зайнято.\n\n### Choose the Correct Form\n\n1. The work is done. - Роботу ___.\n   > [!answer] зроблено\n\n2. The store is closed. - Магазин ___.\n   > [!answer] закрито / зачинено\n\n3. It is said that... - ___, що...\n   > [!answer] Кажуть / Говорять\n\n4. Entry is forbidden. - Вхід ___.\n   > [!answer] заборонено\n\n5. This seat is taken. - Це місце ___.\n   > [!answer] зайнято\n\n### Translate\n\n1. One must study.\n   > [!answer] Треба вчитися.\n\n2. It's not allowed to smoke here.\n   > [!answer] Тут не можна курити. / Тут заборонено курити.\n\n3. The decision has been made.\n   > [!answer] Рішення прийнято.\n\n4. They say it will rain.\n   > [!answer] Кажуть, що буде дощ.\n\n5. This is considered important.\n   > [!answer] Це вважається важливим."
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "-но/-то Participles (Passive Result)\n\nThese forms show the **result** of a completed action (who did it is unknown/unimportant):\n\n**Formation:** verb stem + -но (most) or -то (some verbs)\n\n| Infinitive | -но/-то form | Meaning |\n|------------|--------------|---------|\n| зробити | зроблено | done/made |\n| написати | написано | written |\n| сказати | сказано | said |\n| відкрити | відкрито | opened |\n| закрити | закрито | closed |\n| зайняти | зайнято | occupied |\n| продати | продано | sold |\n| прийняти | прийнято | accepted |\n\n**Usage:**\n- Роботу **зроблено**. - The work is done.\n- Лист **написано**. - The letter is written.\n- **Сказано** — **зроблено**. - Said — done. (proverb)\n- Це місце **зайнято**. - This seat is taken.\n- Рішення **прийнято**. - The decision has been made.\n- Магазин **закрито**. - The store is closed.\n\n> 📜 **History Bite: Impersonal Forms**\n>\n> The -но/-то forms are distinctly Ukrainian (and Belarusian). Russian uses different constructions. These forms are ancient and very common in everyday speech and official language."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Passive with \"бути\" + Participle\n\nFor more formal passive, use **бути** + passive participle (-ний/-тий):\n\n**Formation:** бути + participle (agrees with subject)\n\n| Verb | Participle (m/f/n/pl) |\n|------|----------------------|\n| зробити | зроблений/зроблена/зроблене/зроблені |\n| написати | написаний/написана/написане/написані |\n| відкрити | відкритий/відкрита/відкрите/відкриті |\n| побудувати | побудований/побудована/побудоване/побудовані |\n\n**Examples:**\n- Лист **був написаний** вчора. - The letter was written yesterday.\n- Книга **буде опублікована** завтра. - The book will be published tomorrow.\n- Ці будинки **були побудовані** в 19 столітті. - These buildings were built in the 19th century.\n- Музей **зараз зачинений**. - The museum is currently closed."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Common Passive Expressions\n\n**In daily life:**\n- Вхід **заборонено**. - Entry forbidden.\n- Вихід **тут**. - Exit here.\n- **Зачинено** на ремонт. - Closed for repairs.\n- **Продано**! - Sold!\n- **Зайнято**. - Occupied/Busy.\n- **Вільно**. - Free/Available.\n\n**In news/formal:**\n- **Повідомляється**, що... - It is reported that...\n- **Очікується**, що... - It is expected that...\n- **Було прийнято** рішення. - A decision was made.\n- **Буде оголошено** завтра. - It will be announced tomorrow."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "They Say / It Is Said\n\n**General statements without specific subject:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Кажуть, що... | They say that... |\n| Говорять, що... | They say that... |\n| Вважають, що... | It's believed that... |\n| Відомо, що... | It's known that... |\n| Вважається, що... | It's considered that... |\n\n**Examples:**\n- **Кажуть**, що завтра буде дощ. - They say it will rain tomorrow.\n- **Говорять**, він дуже розумний. - They say he's very smart.\n- **Відомо**, що це небезпечно. - It's known that this is dangerous.\n- **Вважається**, що це найкращий варіант. - It's considered the best option."
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A2-59-matchup"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Transform to Passive/Impersonal\n\n1. Хтось відкрив двері. (someone opened the door)\n   → Двері відкрито. / Двері були відкриті.\n\n2. Хтось написав книгу. (someone wrote the book)\n   → Книгу написано. / Книга написана.\n\n3. Тут курять. (they smoke here)\n   → Тут можна курити. (allowed) / Тут не можна курити. (forbidden)\n\n4. Люди кажуть, що він багатий.\n   → Кажуть, що він багатий.\n\n5. Хтось зайняв це місце.\n   → Це місце зайнято."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Choose the Correct Form\n\n1. The work is done. - Роботу ___.\n   → зроблено\n\n2. The store is closed. - Магазин ___.\n   → закрито / зачинено\n\n3. It is said that... - ___, що...\n   → Кажуть / Говорять\n\n4. Entry is forbidden. - Вхід ___.\n   → заборонено\n\n5. This seat is taken. - Це місце ___.\n   → зайнято"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Translate\n\n1. One must study.\n   → Треба вчитися.\n\n2. It's not allowed to smoke here.\n   → Тут не можна курити. / Тут заборонено курити.\n\n3. The decision has been made.\n   → Рішення прийнято.\n\n4. They say it will rain.\n   → Кажуть, що буде дощ.\n\n5. This is considered important.\n   → Це вважається важливим."
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A2-59-quiz"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A2-59-groupsort"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Describe Situations\n\nUse passive/impersonal constructions:\n\n**At a restaurant:**\n- Столик зайнято/вільно.\n- Тут не можна курити.\n- Замовлення прийнято.\n\n**At an office:**\n- Документи підготовлено.\n- Рішення буде прийнято завтра.\n- Зачинено на обід."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "News Report\n\nCreate sentences about news:\n- Повідомляється, що...\n- Було оголошено...\n- Очікується, що...\n- Вважається, що..."
+            "teacherNotes": "### Describe Situations\n\nUse passive/impersonal constructions:\n\n**At a restaurant:**\n- Столик зайнято/вільно.\n- Тут не можна курити.\n- Замовлення прийнято.\n\n**At an office:**\n- Документи підготовлено.\n- Рішення буде прийнято завтра.\n- Зачинено на обід.\n\n### News Report\n\nCreate sentences about news:\n- Повідомляється, що...\n- Було оголошено...\n- Очікується, що...\n- Вважається, що...\n\n---"
           }
         ]
       }
-    ]
+    ],
+    "createdAt": "2025-12-01T22:58:37.278Z",
+    "modifiedAt": "2025-12-01T22:58:37.278Z",
+    "version": 1
   },
   "activities": [
     {
-      "id": "act-uk-A2-59-matchup",
+      "id": "act-a2-59-matchup",
       "type": "match-up",
       "title": "-но/-то Forms",
       "description": "Match infinitive with passive form.",
       "content": {
         "type": "match-up",
-        "instructions": "Match infinitive with passive form.",
         "pairs": [
           {
             "left": "зробити",
@@ -184,23 +104,17 @@
       "language": "uk",
       "difficultyLevel": "A2",
       "duration": 5,
-      "tags": [
-        "grammar",
-        "passive",
-        "impersonal",
-        "constructions"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.278Z",
+      "modifiedAt": "2025-12-01T22:58:37.278Z"
     },
     {
-      "id": "act-uk-A2-59-quiz",
+      "id": "act-a2-59-quiz",
       "type": "quiz",
       "title": "Passive & Impersonal",
       "description": "Choose the correct form.",
       "content": {
         "type": "quiz",
-        "instructions": "Choose the correct form.",
         "questions": [
           {
             "question": "\"The work is done\" - Роботу ___.",
@@ -279,25 +193,20 @@
       "language": "uk",
       "difficultyLevel": "A2",
       "duration": 5,
-      "tags": [
-        "grammar",
-        "passive",
-        "impersonal",
-        "constructions"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.278Z",
+      "modifiedAt": "2025-12-01T22:58:37.278Z"
     },
     {
-      "id": "act-uk-A2-59-groupsort",
+      "id": "act-a2-59-groupsort",
       "type": "group-sort",
       "title": "Impersonal Types",
       "description": "Sort by construction type.",
       "content": {
         "type": "group-sort",
-        "instructions": "Sort by construction type.",
         "groups": [
           {
+            "id": "modal-impersonal",
             "name": "Modal Impersonal",
             "items": [
               "треба",
@@ -308,6 +217,7 @@
             ]
           },
           {
+            "id": "---participles",
             "name": "-но/-то Participles",
             "items": [
               "зроблено",
@@ -318,6 +228,7 @@
             ]
           },
           {
+            "id": "reflexive-passive",
             "name": "Reflexive Passive",
             "items": [
               "продається",
@@ -336,14 +247,9 @@
       "language": "uk",
       "difficultyLevel": "A2",
       "duration": 5,
-      "tags": [
-        "grammar",
-        "passive",
-        "impersonal",
-        "constructions"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.278Z",
+      "modifiedAt": "2025-12-01T22:58:37.278Z"
     }
   ],
   "vocabulary": {
@@ -354,103 +260,83 @@
     "transliterationMode": "partial",
     "words": [
       {
-        "id": "v-m59-001",
+        "id": "v-zaboroneno-59-0",
         "uk": "заборонено",
-        "translit": "",
-        "ipa": "/zɑboroˈnɛno/",
         "en": "forbidden",
         "pos": "part",
-        "gender": "-",
+        "ipa": "/zɑboroˈnɛno/",
         "note": "-но form"
       },
       {
-        "id": "v-m59-002",
+        "id": "v-dozvoleno-59-1",
         "uk": "дозволено",
-        "translit": "",
-        "ipa": "/dozˈvolɛno/",
         "en": "allowed",
         "pos": "part",
-        "gender": "-",
+        "ipa": "/dozˈvolɛno/",
         "note": "-но form"
       },
       {
-        "id": "v-m59-003",
+        "id": "v-zrobleno-59-2",
         "uk": "зроблено",
-        "translit": "",
-        "ipa": "/ˈzroblɛno/",
         "en": "done, made",
         "pos": "part",
-        "gender": "-",
+        "ipa": "/ˈzroblɛno/",
         "note": "-но form"
       },
       {
-        "id": "v-m59-004",
+        "id": "v-zakryto-59-3",
         "uk": "закрито",
-        "translit": "",
-        "ipa": "/zɑˈkrɪto/",
         "en": "closed",
         "pos": "part",
-        "gender": "-",
+        "ipa": "/zɑˈkrɪto/",
         "note": "-то form"
       },
       {
-        "id": "v-m59-005",
+        "id": "v-vidkryto-59-4",
         "uk": "відкрито",
-        "translit": "",
-        "ipa": "/vʲidˈkrɪto/",
         "en": "open(ed)",
         "pos": "part",
-        "gender": "-",
+        "ipa": "/vʲidˈkrɪto/",
         "note": "-то form"
       },
       {
-        "id": "v-m59-006",
+        "id": "v-zaynyato-59-5",
         "uk": "зайнято",
-        "translit": "",
-        "ipa": "/ˈzɑjnʲɑto/",
         "en": "occupied, taken",
         "pos": "part",
-        "gender": "-",
+        "ipa": "/ˈzɑjnʲɑto/",
         "note": "-то form"
       },
       {
-        "id": "v-m59-007",
+        "id": "v-nazyvatysya-59-6",
         "uk": "називатися",
-        "translit": "",
-        "ipa": "/nɑzɪˈvɑtɪsʲɑ/",
         "en": "to be called",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/nɑzɪˈvɑtɪsʲɑ/",
         "note": "refl"
       },
       {
-        "id": "v-m59-008",
+        "id": "v-prodavatysya-59-7",
         "uk": "продаватися",
-        "translit": "",
-        "ipa": "/prodɑˈvɑtɪsʲɑ/",
         "en": "to be sold",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/prodɑˈvɑtɪsʲɑ/",
         "note": "refl"
       },
       {
-        "id": "v-m59-009",
+        "id": "v-varto-59-8",
         "uk": "варто",
-        "translit": "",
-        "ipa": "/ˈvɑrto/",
         "en": "it's worth",
         "pos": "adv",
-        "gender": "-",
+        "ipa": "/ˈvɑrto/",
         "note": "+ infinitive"
       },
       {
-        "id": "v-m59-010",
+        "id": "v-slid-59-9",
         "uk": "слід",
-        "translit": "",
-        "ipa": "/slʲid/",
         "en": "one should",
         "pos": "adv",
-        "gender": "-",
+        "ipa": "/slʲid/",
         "note": "+ infinitive"
       }
     ]

@@ -230,50 +230,60 @@ You know basic rooms. Now let's furnish them!
 
 ### Match Furniture to Room
 
-1. диван → вітальня
-2. ліжко → спальня
-3. холодильник → кухня
-4. душ → ванна кімната
-5. письмовий стіл → кабінет
+1. диван
+   > [!answer] вітальня
+2. ліжко
+   > [!answer] спальня
+3. холодильник
+   > [!answer] кухня
+4. душ
+   > [!answer] ванна кімната
+5. письмовий стіл
+   > [!answer] кабінет
 
 ### Complete with Correct Item
 
 1. Я сплю на ___ (bed) з м'яким ___ (mattress).
-   → ліжку, матрацом
+   > [!answer] ліжку, матрацом
 
 2. Посуд у ___ (sink). Помий його!
-   → мийці
+   > [!answer] мийці
 
 3. Візьми ___ (towel) з ванної.
-   → рушник
+   > [!answer] рушник
 
 4. Сядь у ___ (armchair) біля вікна.
-   → крісло
+   > [!answer] крісло
 
 5. Увімкни ___ (washing machine). Треба прати.
-   → пральну машину
+   > [!answer] пральну машину
 
 ### Housing Dialogue
 
 **A:** Яка у вас ___ (apartment)?
-→ квартира
+> [!answer] квартира
 
 **B:** Двокімнатна, на третьому ___ (floor).
-→ поверсі
+> [!answer] поверсі
 
 **A:** Є ___ (balcony)?
-→ балкон
+> [!answer] балкон
 
 **B:** Так, і великий ___ (living room).
-→ зал / вітальня
+> [!answer] зал / вітальня
 
 ### Translate
 
-1. Make the bed. → Застели ліжко.
-2. We're moving tomorrow. → Ми переїжджаємо завтра.
-3. The apartment is cozy. → Квартира затишна.
-4. Turn on the washing machine. → Увімкни пральну машину.
-5. Where are the keys? → Де ключі?
+1. Make the bed.
+   > [!answer] Застели ліжко.
+2. We're moving tomorrow.
+   > [!answer] Ми переїжджаємо завтра.
+3. The apartment is cozy.
+   > [!answer] Квартира затишна.
+4. Turn on the washing machine.
+   > [!answer] Увімкни пральну машину.
+5. Where are the keys?
+   > [!answer] Де ключі?
 
 ## production
 

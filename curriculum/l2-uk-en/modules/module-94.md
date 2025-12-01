@@ -162,34 +162,52 @@ Imperative forms:
 
 Choose the correct prefix:
 
-1. Він ___ (при/по)їхав з Києва. → **приїхав** (arrived from)
-2. Вона ___ (ви/в)йшла з дому. → **вийшла** (went out)
-3. Ми ___ (пере/про)йшли повз музей. → **пройшли** (went past)
-4. Вони ___ (об/від)ійшли будинок. → **обійшли** (went around)
-5. Гості ___ (роз/за)йшлися. → **розійшлися** (dispersed)
-6. ___ (За/При)йдіть до мене завтра! → **Зайдіть** (stop by)
+1. Він ___ (при/по)їхав з Києва.
+   > [!answer] **приїхав** (arrived from)
+2. Вона ___ (ви/в)йшла з дому.
+   > [!answer] **вийшла** (went out)
+3. Ми ___ (пере/про)йшли повз музей.
+   > [!answer] **пройшли** (went past)
+4. Вони ___ (об/від)ійшли будинок.
+   > [!answer] **обійшли** (went around)
+5. Гості ___ (роз/за)йшлися.
+   > [!answer] **розійшлися** (dispersed)
+6. ___ (За/При)йдіть до мене завтра!
+   > [!answer] **Зайдіть** (stop by)
 
 ### Scenario 5: Figurative vs Literal
 
 Choose literal (L) or figurative (F):
 
-1. Він пройшов курс. → **F** (took a course)
-2. Він пройшов повз будинок. → **L** (walked past)
-3. Виходить, що він мав рацію. → **F** (it turns out)
-4. Він виходить з кімнати. → **L** (going out)
-5. До нього не доходить. → **F** (doesn't understand)
-6. Він дійшов до магазину. → **L** (reached the store)
+1. Він пройшов курс.
+   > [!answer] **F** (took a course)
+2. Він пройшов повз будинок.
+   > [!answer] **L** (walked past)
+3. Виходить, що він мав рацію.
+   > [!answer] **F** (it turns out)
+4. Він виходить з кімнати.
+   > [!answer] **L** (going out)
+5. До нього не доходить.
+   > [!answer] **F** (doesn't understand)
+6. Він дійшов до магазину.
+   > [!answer] **L** (reached the store)
 
 ### Scenario 6: Translation Challenge
 
 Translate to Ukrainian:
 
-1. I walk to work every day. → **Я ходжу на роботу пішки щодня.**
-2. She came to visit me. → **Вона прийшла до мене в гості.**
-3. The train departed. → **Поїзд відійшов.**
-4. Let's get down to business. → **Давайте перейдемо до справи.**
-5. He dropped by the store. → **Він зайшов до магазину.**
-6. The guests scattered. → **Гості розійшлися.**
+1. I walk to work every day.
+   > [!answer] **Я ходжу на роботу пішки щодня.**
+2. She came to visit me.
+   > [!answer] **Вона прийшла до мене в гості.**
+3. The train departed.
+   > [!answer] **Поїзд відійшов.**
+4. Let's get down to business.
+   > [!answer] **Давайте перейдемо до справи.**
+5. He dropped by the store.
+   > [!answer] **Він зайшов до магазину.**
+6. The guests scattered.
+   > [!answer] **Гості розійшлися.**
 
 ## production
 

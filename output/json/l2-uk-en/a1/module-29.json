@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-A1-29",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "vocabulary-expansion",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -26,118 +25,49 @@
       "У мене є + family members",
       "Possessives with family terms"
     ],
-    "totalDuration": 50,
-    "transliterationMode": "full",
     "tags": [
       "vocabulary",
       "family",
       "relationships"
     ],
-    "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
+    "totalDuration": 50,
+    "transliterationMode": "full",
     "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Your Ukrainian Family Tree\n\nFamily is central to Ukrainian culture. Learning family terms helps you talk about yourself and understand Ukrainian society!\n\n- **У мене велика родина.** - I have a big family.\n- **Моя мама лікарка.** - My mom is a doctor.\n- **Мого брата звати Андрій.** - My brother's name is Andriy.\n\n> 💡 **Did You Know?**\n>\n> Ukrainian has more specific family terms than English! Where English uses \"uncle,\" Ukrainian distinguishes:\n> - **дядько** - father's or mother's brother\n> - **вуйко** - mother's brother (Western Ukraine)\n> - **стрийко** - father's brother (Western Ukraine)\n>\n> Family relationships are precisely named!"
-          }
-        ]
-      },
       {
         "id": "phase-presentation",
         "name": "presentation",
-        "duration": 15,
+        "duration": 17,
         "items": [
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "### Immediate Family\n\n| Ukrainian | Transliteration | English | Gender |\n|-----------|-----------------|---------|--------|\n| родина | rodyna | family | f |\n| мама | mama | mom | f |\n| тато | tato | dad | m |\n| батько | batko | father | m |\n| мати | maty | mother | f |\n| батьки | batky | parents | pl |\n| брат | brat | brother | m |\n| сестра | sestra | sister | f |\n| син | syn | son | m |\n| дочка | dochka | daughter | f |\n| дитина | dytyna | child | f |\n| діти | dity | children | pl |\n\n> ⚡ **Pro Tip: Informal vs Formal**\n>\n> Ukrainian has casual and formal parent words:\n> - **Мама/тато** - mom/dad (informal, everyday)\n> - **Мати/батько** - mother/father (formal, documents)\n>\n> Most people say \"мама\" and \"тато\" in conversation!"
+            "teacherNotes": "### Immediate Family\n\n| Ukrainian | Transliteration | English | Gender |\n|-----------|-----------------|---------|--------|\n| родина | rodyna | family | f |\n| мама | mama | mom | f |\n| тато | tato | dad | m |\n| батько | batko | father | m |\n| мати | maty | mother | f |\n| батьки | batky | parents | pl |\n| брат | brat | brother | m |\n| сестра | sestra | sister | f |\n| син | syn | son | m |\n| дочка | dochka | daughter | f |\n| дитина | dytyna | child | f |\n| діти | dity | children | pl |\n\n> ⚡ **Pro Tip: Informal vs Formal**\n>\n> Ukrainian has casual and formal parent words:\n> - **Мама/тато** - mom/dad (informal, everyday)\n> - **Мати/батько** - mother/father (formal, documents)\n>\n> Most people say \"мама\" and \"тато\" in conversation!\n\n### Extended Family\n\n| Ukrainian | Transliteration | English |\n|-----------|-----------------|---------|\n| дідусь | didus | grandfather |\n| бабуся | babusya | grandmother |\n| онук | onuk | grandson |\n| онука | onuka | granddaughter |\n| дядько | dyadko | uncle |\n| тітка | titka | aunt |\n| небіж | nebizh | nephew |\n| небога | neboha | niece |\n| двоюрідний брат | dvoyuridnyi brat | cousin (m) |\n| двоюрідна сестра | dvoyuridna sestra | cousin (f) |\n\n> 📜 **History Bite: Дідусь і Бабуся**\n>\n> \"Дідусь\" and \"бабуся\" are affectionate diminutives. The formal terms are \"дід\" and \"баба.\" In Ukrainian tradition, grandparents play a central role - many children are raised partly by бабуся while parents work. \"Бабусині казки\" (grandma's fairy tales) are cherished memories!\n\n### In-Laws & Marriage\n\n| Ukrainian | Transliteration | English |\n|-----------|-----------------|---------|\n| чоловік | cholovik | husband |\n| дружина | druzhyna | wife |\n| свекор | svekor | father-in-law (husband's father) |\n| свекруха | svekrukha | mother-in-law (husband's mother) |\n| тесть | test | father-in-law (wife's father) |\n| теща | teshcha | mother-in-law (wife's mother) |\n| зять | zyat | son-in-law |\n| невістка | nevistka | daughter-in-law |\n| наречений | narechenyi | fiancé |\n| наречена | narechena | fiancée |\n\n> 🎭 **Culture Corner: Ukrainian Wedding**\n>\n> Traditional Ukrainian weddings (весілля) can last 2-3 days! Key elements include:\n> - **Сватання** - matchmaking/proposal ritual\n> - **Вишиті рушники** - embroidered towels as symbols\n> - **Коровай** - decorated wedding bread\n> - **Викуп нареченої** - \"buying\" the bride (fun negotiations)\n>\n> Marriage is a major family celebration involving everyone!\n\n### Talking About Family\n\n**Having family members:**\n- У мене є брат. (I have a brother.)\n- У неї два сини. (She has two sons.)\n- У нього немає сестри. (He doesn't have a sister.)\n\n**Describing family:**\n- Мій батько - інженер. (My father is an engineer.)\n- Моя сестра студентка. (My sister is a student.)\n- Моєму брату 25 років. (My brother is 25 years old.)\n\n**Asking about family:**\n- У тебе є брати чи сестри? (Do you have brothers or sisters?)\n- Чи ти одружений/одружена? (Are you married?)\n- Скільки у вас дітей? (How many children do you have?)\n\n> 🔗 **Language Link: Irregular Plurals**\n>\n> Some family words have irregular plurals:\n> - дитина → **діти** (children) - totally different!\n> - брат → **брати** (brothers)\n> - сестра → **сестри** (sisters)\n> - дочка → **дочки** (daughters)\n>\n> \"Діти\" is especially important - memorize it!\n\n### Marital Status\n\n| Ukrainian | English |\n|-----------|---------|\n| одружений | married (m) |\n| одружена | married (f) |\n| неодружений | unmarried (m) |\n| неодружена | unmarried (f) |\n| розлучений | divorced (m) |\n| розлучена | divorced (f) |\n| вдівець | widower |\n| вдова | widow |\n\n> 🌍 **Real World: Family Conversations**\n>\n> - **Розкажи про свою родину.** - Tell me about your family.\n> - **Скільки вас у родині?** - How many are in your family?\n> - **Ви схожі!** - You look alike!\n> - **Він весь у батька.** - He takes after his father.\n> - **Вона - копія мами.** - She's a copy of her mom."
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Extended Family\n\n| Ukrainian | Transliteration | English |\n|-----------|-----------------|---------|\n| дідусь | didus | grandfather |\n| бабуся | babusya | grandmother |\n| онук | onuk | grandson |\n| онука | onuka | granddaughter |\n| дядько | dyadko | uncle |\n| тітка | titka | aunt |\n| небіж | nebizh | nephew |\n| небога | neboha | niece |\n| двоюрідний брат | dvoyuridnyi brat | cousin (m) |\n| двоюрідна сестра | dvoyuridna sestra | cousin (f) |\n\n> 📜 **History Bite: Дідусь і Бабуся**\n>\n> \"Дідусь\" and \"бабуся\" are affectionate diminutives. The formal terms are \"дід\" and \"баба.\" In Ukrainian tradition, grandparents play a central role - many children are raised partly by бабуся while parents work. \"Бабусині казки\" (grandma's fairy tales) are cherished memories!"
+            "teacherNotes": "### Describe Your Family\n\nAnswer these questions:\n1. У тебе велика родина? (Do you have a big family?)\n2. У тебе є брати або сестри? (Do you have siblings?)\n3. Де живуть твої батьки? (Where do your parents live?)\n4. Як звати твою маму? (What's your mom's name?)\n\n### Family Tree\n\nCreate phrases about family relationships:\n1. My sister\n   > [!answer] моя сестра\n2. His children\n   > [!answer] його діти\n3. Her husband\n   > [!answer] її чоловік\n4. Our grandmother\n   > [!answer] наша бабуся\n\n### Complete Sentences\n\n1. ___ мене є два брати. (I have)\n   > [!answer] У\n2. Моя ___ вчителька. (mother)\n   > [!answer] мама\n3. Мій батько ___ . (engineer)\n   > [!answer] інженер\n4. У них троє ___ . (children)\n   > [!answer] дітей"
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "In-Laws & Marriage\n\n| Ukrainian | Transliteration | English |\n|-----------|-----------------|---------|\n| чоловік | cholovik | husband |\n| дружина | druzhyna | wife |\n| свекор | svekor | father-in-law (husband's father) |\n| свекруха | svekrukha | mother-in-law (husband's mother) |\n| тесть | test | father-in-law (wife's father) |\n| теща | teshcha | mother-in-law (wife's mother) |\n| зять | zyat | son-in-law |\n| невістка | nevistka | daughter-in-law |\n| наречений | narechenyi | fiancé |\n| наречена | narechena | fiancée |\n\n> 🎭 **Culture Corner: Ukrainian Wedding**\n>\n> Traditional Ukrainian weddings (весілля) can last 2-3 days! Key elements include:\n> - **Сватання** - matchmaking/proposal ritual\n> - **Вишиті рушники** - embroidered towels as symbols\n> - **Коровай** - decorated wedding bread\n> - **Викуп нареченої** - \"buying\" the bride (fun negotiations)\n>\n> Marriage is a major family celebration involving everyone!"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Talking About Family\n\n**Having family members:**\n- У мене є брат. (I have a brother.)\n- У неї два сини. (She has two sons.)\n- У нього немає сестри. (He doesn't have a sister.)\n\n**Describing family:**\n- Мій батько - інженер. (My father is an engineer.)\n- Моя сестра студентка. (My sister is a student.)\n- Моєму брату 25 років. (My brother is 25 years old.)\n\n**Asking about family:**\n- У тебе є брати чи сестри? (Do you have brothers or sisters?)\n- Чи ти одружений/одружена? (Are you married?)\n- Скільки у вас дітей? (How many children do you have?)\n\n> 🔗 **Language Link: Irregular Plurals**\n>\n> Some family words have irregular plurals:\n> - дитина → **діти** (children) - totally different!\n> - брат → **брати** (brothers)\n> - сестра → **сестри** (sisters)\n> - дочка → **дочки** (daughters)\n>\n> \"Діти\" is especially important - memorize it!"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Marital Status\n\n| Ukrainian | English |\n|-----------|---------|\n| одружений | married (m) |\n| одружена | married (f) |\n| неодружений | unmarried (m) |\n| неодружена | unmarried (f) |\n| розлучений | divorced (m) |\n| розлучена | divorced (f) |\n| вдівець | widower |\n| вдова | widow |\n\n> 🌍 **Real World: Family Conversations**\n>\n> - **Розкажи про свою родину.** - Tell me about your family.\n> - **Скільки вас у родині?** - How many are in your family?\n> - **Ви схожі!** - You look alike!\n> - **Він весь у батька.** - He takes after his father.\n> - **Вона - копія мами.** - She's a copy of her mom."
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A1-29-matchup"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Describe Your Family\n\nAnswer these questions:\n1. У тебе велика родина? (Do you have a big family?)\n2. У тебе є брати або сестри? (Do you have siblings?)\n3. Де живуть твої батьки? (Where do your parents live?)\n4. Як звати твою маму? (What's your mom's name?)"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Family Tree\n\nCreate phrases about family relationships:\n1. My sister → моя сестра\n2. His children → його діти\n3. Her husband → її чоловік\n4. Our grandmother → наша бабуся"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Complete Sentences\n\n1. ___ мене є два брати. (I have) → У\n2. Моя ___ вчителька. (mother) → мама\n3. Мій батько ___ . (engineer) → інженер\n4. У них троє ___ . (children) → дітей"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A1-29-quiz"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A1-29-groupsort"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Introduce Your Family\n\nTell about your family:\n- У мене... (big/small family)\n- Мої батьки... (where they live, what they do)\n- У мене є... (siblings)\n- Мого брата/сестру звати... (names)"
+            "teacherNotes": "### Introduce Your Family\n\nTell about your family:\n- У мене... (big/small family)\n- Мої батьки... (where they live, what they do)\n- У мене є... (siblings)\n- Мого брата/сестру звати... (names)\n\n---"
           }
         ]
       }
-    ]
+    ],
+    "createdAt": "2025-12-01T22:58:37.264Z",
+    "modifiedAt": "2025-12-01T22:58:37.264Z",
+    "version": 1
   },
   "activities": [
     {
-      "id": "act-uk-A1-29-matchup",
+      "id": "act-a1-29-matchup",
       "type": "match-up",
       "title": "Family Relations",
       "description": "Match Ukrainian to English.",
       "content": {
         "type": "match-up",
-        "instructions": "Match Ukrainian to English.",
         "pairs": [
           {
             "left": "мама",
@@ -172,22 +102,17 @@
       "language": "uk",
       "difficultyLevel": "A1",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "family",
-        "relationships"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.264Z",
+      "modifiedAt": "2025-12-01T22:58:37.264Z"
     },
     {
-      "id": "act-uk-A1-29-quiz",
+      "id": "act-a1-29-quiz",
       "type": "quiz",
       "title": "Family Vocabulary",
       "description": "Choose the correct answer.",
       "content": {
         "type": "quiz",
-        "instructions": "Choose the correct answer.",
         "questions": [
           {
             "question": "\"I have a brother\" - У мене є ___.",
@@ -288,49 +213,50 @@
       "language": "uk",
       "difficultyLevel": "A1",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "family",
-        "relationships"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.264Z",
+      "modifiedAt": "2025-12-01T22:58:37.264Z"
     },
     {
-      "id": "act-uk-A1-29-groupsort",
+      "id": "act-a1-29-groupsort",
       "type": "group-sort",
       "title": "Family by Generation",
       "description": "Sort family members by generation.",
       "content": {
         "type": "group-sort",
-        "instructions": "Sort family members by generation.",
         "groups": [
           {
-            "name": "Старше покоління (Older)",
+            "id": "-",
+            "name": "Старше покоління",
             "items": [
               "дідусь",
               "бабуся",
               "мама",
               "тато"
-            ]
+            ],
+            "nameUk": "Older"
           },
           {
-            "name": "Моє покоління (My Generation)",
+            "id": "-",
+            "name": "Моє покоління",
             "items": [
               "брат",
               "сестра",
               "чоловік",
               "дружина"
-            ]
+            ],
+            "nameUk": "My Generation"
           },
           {
-            "name": "Молодше покоління (Younger)",
+            "id": "-",
+            "name": "Молодше покоління",
             "items": [
               "син",
               "дочка",
               "онук",
               "онука"
-            ]
+            ],
+            "nameUk": "Younger"
           }
         ],
         "shuffleItems": true
@@ -341,13 +267,9 @@
       "language": "uk",
       "difficultyLevel": "A1",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "family",
-        "relationships"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.264Z",
+      "modifiedAt": "2025-12-01T22:58:37.264Z"
     }
   ],
   "vocabulary": {
@@ -358,108 +280,96 @@
     "transliterationMode": "full",
     "words": [
       {
-        "id": "v-m29-001",
+        "id": "v-batьko-29-0",
         "uk": "батько",
-        "translit": "",
-        "ipa": "/ˈbɑtʲkɔ/",
         "en": "father",
         "pos": "noun",
+        "ipa": "/ˈbɑtʲkɔ/",
         "gender": "m",
         "note": "Formal"
       },
       {
-        "id": "v-m29-002",
+        "id": "v-batьky-29-1",
         "uk": "батьки",
-        "translit": "",
-        "ipa": "/ˈbɑtʲkɪ/",
         "en": "parents",
         "pos": "noun",
-        "gender": "pl"
+        "ipa": "/ˈbɑtʲkɪ/"
       },
       {
-        "id": "v-m29-003",
+        "id": "v-syn-29-2",
         "uk": "син",
-        "translit": "",
-        "ipa": "/sɪn/",
         "en": "son",
         "pos": "noun",
+        "ipa": "/sɪn/",
         "gender": "m",
         "note": "Pl: сини"
       },
       {
-        "id": "v-m29-004",
+        "id": "v-dochka-29-3",
         "uk": "дочка",
-        "translit": "",
-        "ipa": "/ˈdɔtʃkɑ/",
         "en": "daughter",
         "pos": "noun",
+        "ipa": "/ˈdɔtʃkɑ/",
         "gender": "f",
         "note": "Pl: дочки"
       },
       {
-        "id": "v-m29-005",
+        "id": "v-dytyna-29-4",
         "uk": "дитина",
-        "translit": "",
-        "ipa": "/dɪˈtɪnɑ/",
         "en": "child",
         "pos": "noun",
+        "ipa": "/dɪˈtɪnɑ/",
         "gender": "f",
         "note": "Pl: діти!"
       },
       {
-        "id": "v-m29-006",
+        "id": "v-didusь-29-5",
         "uk": "дідусь",
-        "translit": "",
-        "ipa": "/dʲiˈdusʲ/",
         "en": "grandpa",
         "pos": "noun",
+        "ipa": "/dʲiˈdusʲ/",
         "gender": "m"
       },
       {
-        "id": "v-m29-007",
+        "id": "v-babusya-29-6",
         "uk": "бабуся",
-        "translit": "",
-        "ipa": "/bɑˈbusʲɑ/",
         "en": "grandma",
         "pos": "noun",
+        "ipa": "/bɑˈbusʲɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m29-008",
+        "id": "v-cholovik-29-7",
         "uk": "чоловік",
-        "translit": "",
-        "ipa": "/tʃɔlɔˈvʲik/",
         "en": "husband",
         "pos": "noun",
+        "ipa": "/tʃɔlɔˈvʲik/",
         "gender": "m",
         "note": "Also: man"
       },
       {
-        "id": "v-m29-009",
+        "id": "v-druzhyna-29-8",
         "uk": "дружина",
-        "translit": "",
-        "ipa": "/druˈʒɪnɑ/",
         "en": "wife",
         "pos": "noun",
+        "ipa": "/druˈʒɪnɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m29-010",
+        "id": "v-odruzhenyy-29-9",
         "uk": "одружений",
-        "translit": "",
-        "ipa": "/ɔˈdruʒɛnɪj/",
         "en": "married (m)",
         "pos": "adj",
+        "ipa": "/ɔˈdruʒɛnɪj/",
         "gender": "m",
         "note": "одружена (f)"
       },
       {
-        "id": "v-m29-011",
+        "id": "v-rodych-29-10",
         "uk": "родич",
-        "translit": "",
-        "ipa": "/ˈrɔdɪtʃ/",
         "en": "relative",
         "pos": "noun",
+        "ipa": "/ˈrɔdɪtʃ/",
         "gender": "m",
         "note": "Pl: родичі"
       }

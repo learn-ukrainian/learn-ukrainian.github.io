@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-A2+-78",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "culture",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -26,8 +25,6 @@
       "Genre vocabulary",
       "Cultural expression phrases"
     ],
-    "totalDuration": 45,
-    "transliterationMode": "none",
     "tags": [
       "vocabulary",
       "arts",
@@ -36,22 +33,9 @@
       "cinema",
       "literature"
     ],
-    "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
+    "totalDuration": 45,
+    "transliterationMode": "none",
     "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### The World of Arts\n\nYou know basic entertainment words. Now let's explore arts and culture!\n\n**Arts:**\n- музика (music), кіно (cinema), література (literature)\n\n**Culture:**\n- традиція (tradition), свято (holiday), обряд (ritual)\n\n> 💡 **Why This Matters**\n>\n> Arts vocabulary helps you discuss culture, attend events, and understand Ukrainian traditions."
-          }
-        ]
-      },
       {
         "id": "phase-presentation",
         "name": "presentation",
@@ -60,127 +44,33 @@
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "### Music\n\n| Ukrainian | English |\n|-----------|---------|\n| музика | music |\n| пісня | song |\n| мелодія | melody |\n| текст | lyrics |\n| альбом | album |\n| концерт | concert |\n| виступ | performance |\n| гурт | band |\n| співак / співачка | singer (m/f) |\n| композитор | composer |\n| диригент | conductor |\n| оркестр | orchestra |\n\n**Examples:**\n- Яку **музику** слухаєш? - What music do you listen to?\n- Це моя улюблена **пісня**. - This is my favorite song.\n- Новий **альбом** вийшов учора. - The new album came out yesterday.\n- Вони грають у **гурті**. - They play in a band.\n- **Концерт** був чудовий! - The concert was wonderful!"
+            "teacherNotes": "### Music\n\n| Ukrainian | English |\n|-----------|---------|\n| музика | music |\n| пісня | song |\n| мелодія | melody |\n| текст | lyrics |\n| альбом | album |\n| концерт | concert |\n| виступ | performance |\n| гурт | band |\n| співак / співачка | singer (m/f) |\n| композитор | composer |\n| диригент | conductor |\n| оркестр | orchestra |\n\n**Examples:**\n- Яку **музику** слухаєш? - What music do you listen to?\n- Це моя улюблена **пісня**. - This is my favorite song.\n- Новий **альбом** вийшов учора. - The new album came out yesterday.\n- Вони грають у **гурті**. - They play in a band.\n- **Концерт** був чудовий! - The concert was wonderful!\n\n### Musical Genres\n\n| Ukrainian | English |\n|-----------|---------|\n| поп | pop |\n| рок | rock |\n| джаз | jazz |\n| класична музика | classical music |\n| народна музика | folk music |\n| електронна музика | electronic music |\n| хіп-хоп | hip-hop |\n| блюз | blues |\n| метал | metal |\n| інді | indie |\n\n**Examples:**\n- Люблю **рок** і **джаз**. - I love rock and jazz.\n- Українська **народна музика** красива. - Ukrainian folk music is beautiful.\n- Вона слухає тільки **класичну музику**. - She only listens to classical music.\n- **Електронна музика** для танців. - Electronic music is for dancing.\n\n> 🎭 **Culture Note: Ukrainian Music**\n>\n> Ukraine has rich folk traditions. Modern artists like Okean Elzy, KAZKA, and Go_A blend folk with contemporary styles. Eurovision 2022 winner Kalush Orchestra showcased Ukrainian folk rap.\n\n### Musical Instruments\n\n| Ukrainian | English |\n|-----------|---------|\n| інструмент | instrument |\n| гітара | guitar |\n| піаніно / фортепіано | piano |\n| скрипка | violin |\n| барабани | drums |\n| флейта | flute |\n| саксофон | saxophone |\n| бандура | bandura |\n| сопілка | sopilka (flute) |\n| труба | trumpet |\n\n**Examples:**\n- Він грає на **гітарі**. - He plays guitar.\n- Вона вчиться грати на **піаніно**. - She's learning to play piano.\n- **Бандура** — український інструмент. - Bandura is a Ukrainian instrument.\n- У оркестрі є **скрипки** і **флейти**. - The orchestra has violins and flutes.\n\n### Cinema\n\n| Ukrainian | English |\n|-----------|---------|\n| кіно | cinema, film |\n| фільм | film, movie |\n| кінотеатр | movie theater |\n| режисер | director |\n| актор / акторка | actor (m/f) |\n| сценарій | screenplay |\n| зйомки | filming, shooting |\n| прем'єра | premiere |\n| трейлер | trailer |\n| субтитри | subtitles |\n| дубляж | dubbing |\n| сеанс | showing, screening |\n\n**Examples:**\n- Підемо в **кінотеатр**? - Shall we go to the movies?\n- Хто **режисер** цього **фільму**? - Who directed this film?\n- Вона відома **акторка**. - She's a famous actress.\n- **Прем'єра** наступного тижня. - The premiere is next week.\n- Дивлюся з **субтитрами**. - I watch with subtitles.\n\n### Film Genres\n\n| Ukrainian | English |\n|-----------|---------|\n| комедія | comedy |\n| драма | drama |\n| бойовик | action film |\n| трилер | thriller |\n| жахи | horror |\n| фантастика | sci-fi |\n| мультфільм | cartoon |\n| документальний | documentary |\n| романтичний | romantic |\n| пригодницький | adventure |\n\n**Examples:**\n- Люблю **комедії** і **драми**. - I love comedies and dramas.\n- Не люблю **жахи**. - I don't like horror films.\n- Це **документальний фільм** про війну. - This is a documentary about war.\n- Дітям подобаються **мультфільми**. - Kids like cartoons.\n\n### Literature\n\n| Ukrainian | English |\n|-----------|---------|\n| література | literature |\n| книга | book |\n| роман | novel |\n| повість | novella |\n| оповідання | short story |\n| поезія | poetry |\n| вірш | poem |\n| письменник | writer |\n| поет | poet |\n| видавництво | publishing house |\n| бестселер | bestseller |\n| переклад | translation |\n\n**Examples:**\n- Читаю **роман** Шевченка. - I'm reading a Shevchenko novel.\n- Вона пише **поезію**. - She writes poetry.\n- Цей **вірш** дуже красивий. - This poem is very beautiful.\n- Він відомий **письменник**. - He's a famous writer.\n- Книга — **бестселер**. - The book is a bestseller.\n\n> 🎭 **Culture Note: Ukrainian Literature**\n>\n> Taras Shevchenko is Ukraine's national poet. Other greats: Lesya Ukrainka, Ivan Franko. Modern authors include Serhiy Zhadan and Oksana Zabuzhko.\n\n### Visual Arts\n\n| Ukrainian | English |\n|-----------|---------|\n| мистецтво | art |\n| живопис | painting |\n| скульптура | sculpture |\n| фотографія | photography |\n| графіка | graphic art |\n| виставка | exhibition |\n| музей | museum |\n| галерея | gallery |\n| художник | artist |\n| картина | painting (work) |\n| портрет | portrait |\n| пейзаж | landscape |\n\n**Examples:**\n- Люблю **живопис** і **скульптуру**. - I love painting and sculpture.\n- Підемо на **виставку**? - Shall we go to an exhibition?\n- У **музеї** цікава колекція. - The museum has an interesting collection.\n- Він відомий **художник**. - He's a famous artist.\n- Красивий **пейзаж**! - Beautiful landscape!\n\n### Theater & Dance\n\n| Ukrainian | English |\n|-----------|---------|\n| театр | theater |\n| вистава | performance, play |\n| п'єса | play (written) |\n| опера | opera |\n| балет | ballet |\n| танець | dance |\n| хореографія | choreography |\n| сцена | stage |\n| глядач | spectator |\n| аплодисменти | applause |\n| антракт | intermission |\n\n**Examples:**\n- **Вистава** починається о сьомій. - The show starts at seven.\n- Люблю **оперу** і **балет**. - I love opera and ballet.\n- **Танець** був чудовий! - The dance was wonderful!\n- Гучні **аплодисменти**! - Loud applause!\n- Під час **антракту** п'ємо каву. - During intermission we drink coffee.\n\n### Ukrainian Traditions\n\n| Ukrainian | English |\n|-----------|---------|\n| традиція | tradition |\n| свято | holiday |\n| обряд | ritual |\n| звичай | custom |\n| народний | folk |\n| вишиванка | embroidered shirt |\n| рушник | ritual towel |\n| вінок | wreath |\n| писанка | decorated Easter egg |\n| колядка | Christmas carol |\n| щедрівка | New Year carol |\n\n**Examples:**\n- **Вишиванка** — українська **традиція**. - Vyshyvanka is a Ukrainian tradition.\n- На Великдень робимо **писанки**. - On Easter we make pysanky.\n- На Різдво співають **колядки**. - At Christmas they sing carols.\n- Наречена носить **вінок**. - The bride wears a wreath.\n- **Рушник** — символ долі. - The rushnyk is a symbol of destiny.\n\n> 🎭 **Culture Note: Вишиванка**\n>\n> Vyshyvanka Day (third Thursday of May) celebrates Ukrainian embroidered shirts. Each region has distinctive patterns and colors.\n\n### Cultural Events\n\n| Ukrainian | English |\n|-----------|---------|\n| фестиваль | festival |\n| ярмарок | fair |\n| карнавал | carnival |\n| парад | parade |\n| церемонія | ceremony |\n| нагородження | award ceremony |\n| виставка | exhibition |\n| прем'єра | premiere |\n| автограф-сесія | book signing |\n\n**Examples:**\n- Львівський **фестиваль** кави. - Lviv Coffee Festival.\n- Різдвяний **ярмарок** у центрі. - Christmas fair in the center.\n- **Церемонія** нагородження. - Award ceremony.\n- Автор проводить **автограф-сесію**. - The author is doing a book signing."
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Musical Genres\n\n| Ukrainian | English |\n|-----------|---------|\n| поп | pop |\n| рок | rock |\n| джаз | jazz |\n| класична музика | classical music |\n| народна музика | folk music |\n| електронна музика | electronic music |\n| хіп-хоп | hip-hop |\n| блюз | blues |\n| метал | metal |\n| інді | indie |\n\n**Examples:**\n- Люблю **рок** і **джаз**. - I love rock and jazz.\n- Українська **народна музика** красива. - Ukrainian folk music is beautiful.\n- Вона слухає тільки **класичну музику**. - She only listens to classical music.\n- **Електронна музика** для танців. - Electronic music is for dancing.\n\n> 🎭 **Culture Note: Ukrainian Music**\n>\n> Ukraine has rich folk traditions. Modern artists like Okean Elzy, KAZKA, and Go_A blend folk with contemporary styles. Eurovision 2022 winner Kalush Orchestra showcased Ukrainian folk rap."
+            "teacherNotes": "### Match Art Form to Person\n\n1. музика\n   > [!answer] композитор / співак\n2. кіно\n   > [!answer] режисер / актор\n3. література\n   > [!answer] письменник / поет\n4. живопис\n   > [!answer] художник\n5. балет\n   > [!answer] балерина\n\n### Complete Culture Dialogue\n\n**A:** Яку ___ слухаєш? (music)\n> [!answer] музику\n\n**B:** Люблю ___ і джаз. (rock)\n> [!answer] рок\n\n**A:** А в ___ ходиш? (cinema)\n> [!answer] кіно\n\n**B:** Так, люблю ___ і комедії. (dramas)\n> [!answer] драми\n\n### Ukrainian Traditions\n\nMatch:\n1. Великдень\n   > [!answer] писанка\n2. Різдво\n   > [!answer] колядка\n3. весілля\n   > [!answer] вінок, рушник\n4. День вишиванки\n   > [!answer] вишиванка\n\n### Translate\n\n1. What music do you listen to?\n   > [!answer] Яку музику ти слухаєш?\n2. She's a famous actress.\n   > [!answer] Вона відома акторка.\n3. I love poetry.\n   > [!answer] Я люблю поезію.\n4. Let's go to the exhibition.\n   > [!answer] Підемо на виставку.\n5. The vyshyvanka is a Ukrainian tradition.\n   > [!answer] Вишиванка — українська традиція."
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Musical Instruments\n\n| Ukrainian | English |\n|-----------|---------|\n| інструмент | instrument |\n| гітара | guitar |\n| піаніно / фортепіано | piano |\n| скрипка | violin |\n| барабани | drums |\n| флейта | flute |\n| саксофон | saxophone |\n| бандура | bandura |\n| сопілка | sopilka (flute) |\n| труба | trumpet |\n\n**Examples:**\n- Він грає на **гітарі**. - He plays guitar.\n- Вона вчиться грати на **піаніно**. - She's learning to play piano.\n- **Бандура** — український інструмент. - Bandura is a Ukrainian instrument.\n- У оркестрі є **скрипки** і **флейти**. - The orchestra has violins and flutes."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Cinema\n\n| Ukrainian | English |\n|-----------|---------|\n| кіно | cinema, film |\n| фільм | film, movie |\n| кінотеатр | movie theater |\n| режисер | director |\n| актор / акторка | actor (m/f) |\n| сценарій | screenplay |\n| зйомки | filming, shooting |\n| прем'єра | premiere |\n| трейлер | trailer |\n| субтитри | subtitles |\n| дубляж | dubbing |\n| сеанс | showing, screening |\n\n**Examples:**\n- Підемо в **кінотеатр**? - Shall we go to the movies?\n- Хто **режисер** цього **фільму**? - Who directed this film?\n- Вона відома **акторка**. - She's a famous actress.\n- **Прем'єра** наступного тижня. - The premiere is next week.\n- Дивлюся з **субтитрами**. - I watch with subtitles."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Film Genres\n\n| Ukrainian | English |\n|-----------|---------|\n| комедія | comedy |\n| драма | drama |\n| бойовик | action film |\n| трилер | thriller |\n| жахи | horror |\n| фантастика | sci-fi |\n| мультфільм | cartoon |\n| документальний | documentary |\n| романтичний | romantic |\n| пригодницький | adventure |\n\n**Examples:**\n- Люблю **комедії** і **драми**. - I love comedies and dramas.\n- Не люблю **жахи**. - I don't like horror films.\n- Це **документальний фільм** про війну. - This is a documentary about war.\n- Дітям подобаються **мультфільми**. - Kids like cartoons."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Literature\n\n| Ukrainian | English |\n|-----------|---------|\n| література | literature |\n| книга | book |\n| роман | novel |\n| повість | novella |\n| оповідання | short story |\n| поезія | poetry |\n| вірш | poem |\n| письменник | writer |\n| поет | poet |\n| видавництво | publishing house |\n| бестселер | bestseller |\n| переклад | translation |\n\n**Examples:**\n- Читаю **роман** Шевченка. - I'm reading a Shevchenko novel.\n- Вона пише **поезію**. - She writes poetry.\n- Цей **вірш** дуже красивий. - This poem is very beautiful.\n- Він відомий **письменник**. - He's a famous writer.\n- Книга — **бестселер**. - The book is a bestseller.\n\n> 🎭 **Culture Note: Ukrainian Literature**\n>\n> Taras Shevchenko is Ukraine's national poet. Other greats: Lesya Ukrainka, Ivan Franko. Modern authors include Serhiy Zhadan and Oksana Zabuzhko."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Visual Arts\n\n| Ukrainian | English |\n|-----------|---------|\n| мистецтво | art |\n| живопис | painting |\n| скульптура | sculpture |\n| фотографія | photography |\n| графіка | graphic art |\n| виставка | exhibition |\n| музей | museum |\n| галерея | gallery |\n| художник | artist |\n| картина | painting (work) |\n| портрет | portrait |\n| пейзаж | landscape |\n\n**Examples:**\n- Люблю **живопис** і **скульптуру**. - I love painting and sculpture.\n- Підемо на **виставку**? - Shall we go to an exhibition?\n- У **музеї** цікава колекція. - The museum has an interesting collection.\n- Він відомий **художник**. - He's a famous artist.\n- Красивий **пейзаж**! - Beautiful landscape!"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Theater & Dance\n\n| Ukrainian | English |\n|-----------|---------|\n| театр | theater |\n| вистава | performance, play |\n| п'єса | play (written) |\n| опера | opera |\n| балет | ballet |\n| танець | dance |\n| хореографія | choreography |\n| сцена | stage |\n| глядач | spectator |\n| аплодисменти | applause |\n| антракт | intermission |\n\n**Examples:**\n- **Вистава** починається о сьомій. - The show starts at seven.\n- Люблю **оперу** і **балет**. - I love opera and ballet.\n- **Танець** був чудовий! - The dance was wonderful!\n- Гучні **аплодисменти**! - Loud applause!\n- Під час **антракту** п'ємо каву. - During intermission we drink coffee."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Ukrainian Traditions\n\n| Ukrainian | English |\n|-----------|---------|\n| традиція | tradition |\n| свято | holiday |\n| обряд | ritual |\n| звичай | custom |\n| народний | folk |\n| вишиванка | embroidered shirt |\n| рушник | ritual towel |\n| вінок | wreath |\n| писанка | decorated Easter egg |\n| колядка | Christmas carol |\n| щедрівка | New Year carol |\n\n**Examples:**\n- **Вишиванка** — українська **традиція**. - Vyshyvanka is a Ukrainian tradition.\n- На Великдень робимо **писанки**. - On Easter we make pysanky.\n- На Різдво співають **колядки**. - At Christmas they sing carols.\n- Наречена носить **вінок**. - The bride wears a wreath.\n- **Рушник** — символ долі. - The rushnyk is a symbol of destiny.\n\n> 🎭 **Culture Note: Вишиванка**\n>\n> Vyshyvanka Day (third Thursday of May) celebrates Ukrainian embroidered shirts. Each region has distinctive patterns and colors."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Cultural Events\n\n| Ukrainian | English |\n|-----------|---------|\n| фестиваль | festival |\n| ярмарок | fair |\n| карнавал | carnival |\n| парад | parade |\n| церемонія | ceremony |\n| нагородження | award ceremony |\n| виставка | exhibition |\n| прем'єра | premiere |\n| автограф-сесія | book signing |\n\n**Examples:**\n- Львівський **фестиваль** кави. - Lviv Coffee Festival.\n- Різдвяний **ярмарок** у центрі. - Christmas fair in the center.\n- **Церемонія** нагородження. - Award ceremony.\n- Автор проводить **автограф-сесію**. - The author is doing a book signing."
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A2+-78-matchup"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Match Art Form to Person\n\n1. музика → композитор / співак\n2. кіно → режисер / актор\n3. література → письменник / поет\n4. живопис → художник\n5. балет → балерина"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Complete Culture Dialogue\n\n**A:** Яку ___ слухаєш? (music)\n→ музику\n\n**B:** Люблю ___ і джаз. (rock)\n→ рок\n\n**A:** А в ___ ходиш? (cinema)\n→ кіно\n\n**B:** Так, люблю ___ і комедії. (dramas)\n→ драми"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Ukrainian Traditions\n\nMatch:\n1. Великдень → писанка\n2. Різдво → колядка\n3. весілля → вінок, рушник\n4. День вишиванки → вишиванка"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Translate\n\n1. What music do you listen to? → Яку музику ти слухаєш?\n2. She's a famous actress. → Вона відома акторка.\n3. I love poetry. → Я люблю поезію.\n4. Let's go to the exhibition. → Підемо на виставку.\n5. The vyshyvanka is a Ukrainian tradition. → Вишиванка — українська традиція."
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A2+-78-quiz"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A2+-78-groupsort"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Describe Your Cultural Interests\n\n**Example:** \"Люблю слухати рок і джаз. Часто ходжу в кіно — люблю драми і документальні фільми. Читаю українську поезію.\"\n\nDescribe your interests in music, cinema, and literature."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Cultural Event\n\n**Scenario:** Invite a friend to a cultural event:\n- \"Хочеш піти на концерт?\"\n- \"У суботу є цікава виставка.\"\n- \"Прем'єра нового фільму!\""
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Ukrainian Culture Discussion\n\nDiscuss:\n- Яка українська традиція тобі найбільше подобається?\n- Яких українських співаків знаєш?\n- Чи читав українську літературу?"
+            "teacherNotes": "### Describe Your Cultural Interests\n\n**Example:** \"Люблю слухати рок і джаз. Часто ходжу в кіно — люблю драми і документальні фільми. Читаю українську поезію.\"\n\nDescribe your interests in music, cinema, and literature.\n\n### Cultural Event\n\n**Scenario:** Invite a friend to a cultural event:\n- \"Хочеш піти на концерт?\"\n- \"У суботу є цікава виставка.\"\n- \"Прем'єра нового фільму!\"\n\n### Ukrainian Culture Discussion\n\nDiscuss:\n- Яка українська традиція тобі найбільше подобається?\n- Яких українських співаків знаєш?\n- Чи читав українську літературу?\n\n---"
           }
         ]
       }
-    ]
+    ],
+    "createdAt": "2025-12-01T22:58:37.287Z",
+    "modifiedAt": "2025-12-01T22:58:37.287Z",
+    "version": 1
   },
   "activities": [
     {
-      "id": "act-uk-A2+-78-matchup",
+      "id": "act-a2+-78-matchup",
       "type": "match-up",
       "title": "Genre → Category",
       "description": "Genre → Category",
       "content": {
         "type": "match-up",
-        "instructions": "",
         "pairs": [
           {
             "left": "рок",
@@ -211,25 +101,17 @@
       "language": "uk",
       "difficultyLevel": "A2+",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "arts",
-        "culture",
-        "music",
-        "cinema",
-        "literature"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.287Z",
+      "modifiedAt": "2025-12-01T22:58:37.287Z"
     },
     {
-      "id": "act-uk-A2+-78-quiz",
+      "id": "act-a2+-78-quiz",
       "type": "quiz",
       "title": "Arts & Culture",
       "description": "Choose the correct answer.",
       "content": {
         "type": "quiz",
-        "instructions": "Choose the correct answer.",
         "questions": [
           {
             "question": "\"Гурт\" is ___.",
@@ -308,61 +190,61 @@
       "language": "uk",
       "difficultyLevel": "A2+",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "arts",
-        "culture",
-        "music",
-        "cinema",
-        "literature"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.287Z",
+      "modifiedAt": "2025-12-01T22:58:37.287Z"
     },
     {
-      "id": "act-uk-A2+-78-groupsort",
+      "id": "act-a2+-78-groupsort",
       "type": "group-sort",
       "title": "By Art Form",
       "description": "By Art Form",
       "content": {
         "type": "group-sort",
-        "instructions": "",
         "groups": [
           {
-            "name": "Музика (Music)",
+            "id": "",
+            "name": "Музика",
             "items": [
               "пісня",
               "альбом",
               "гурт",
               "концерт"
-            ]
+            ],
+            "nameUk": "Music"
           },
           {
-            "name": "Кіно (Cinema)",
+            "id": "",
+            "name": "Кіно",
             "items": [
               "фільм",
               "режисер",
               "акторка",
               "прем'єра"
-            ]
+            ],
+            "nameUk": "Cinema"
           },
           {
-            "name": "Література (Literature)",
+            "id": "",
+            "name": "Література",
             "items": [
               "роман",
               "поезія",
               "письменник",
               "бестселер"
-            ]
+            ],
+            "nameUk": "Literature"
           },
           {
-            "name": "Традиції (Traditions)",
+            "id": "",
+            "name": "Традиції",
             "items": [
               "вишиванка",
               "писанка",
               "колядка",
               "рушник"
-            ]
+            ],
+            "nameUk": "Traditions"
           }
         ],
         "shuffleItems": true
@@ -373,16 +255,9 @@
       "language": "uk",
       "difficultyLevel": "A2+",
       "duration": 5,
-      "tags": [
-        "vocabulary",
-        "arts",
-        "culture",
-        "music",
-        "cinema",
-        "literature"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.287Z",
+      "modifiedAt": "2025-12-01T22:58:37.287Z"
     }
   ],
   "vocabulary": {
@@ -393,426 +268,376 @@
     "transliterationMode": "none",
     "words": [
       {
-        "id": "v-m78-001",
+        "id": "v-pisnya-78-0",
         "uk": "пісня",
-        "translit": "",
-        "ipa": "/ˈpʲisnʲɑ/",
         "en": "song",
         "pos": "noun",
+        "ipa": "/ˈpʲisnʲɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m78-002",
+        "id": "v-melodiya-78-1",
         "uk": "мелодія",
-        "translit": "",
-        "ipa": "/mɛˈlodʲijɑ/",
         "en": "melody",
         "pos": "noun",
+        "ipa": "/mɛˈlodʲijɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m78-003",
+        "id": "v-alьbom-78-2",
         "uk": "альбом",
-        "translit": "",
-        "ipa": "/ɑlʲˈbom/",
         "en": "album",
         "pos": "noun",
+        "ipa": "/ɑlʲˈbom/",
         "gender": "m"
       },
       {
-        "id": "v-m78-004",
+        "id": "v-hurt-78-3",
         "uk": "гурт",
-        "translit": "",
-        "ipa": "/ɦurt/",
         "en": "band",
         "pos": "noun",
+        "ipa": "/ɦurt/",
         "gender": "m"
       },
       {
-        "id": "v-m78-005",
+        "id": "v-spivak-78-4",
         "uk": "співак",
-        "translit": "",
-        "ipa": "/spʲiˈvɑk/",
         "en": "singer",
         "pos": "noun",
+        "ipa": "/spʲiˈvɑk/",
         "gender": "m"
       },
       {
-        "id": "v-m78-006",
+        "id": "v-kompozytor-78-5",
         "uk": "композитор",
-        "translit": "",
-        "ipa": "/kompozɪˈtor/",
         "en": "composer",
         "pos": "noun",
+        "ipa": "/kompozɪˈtor/",
         "gender": "m"
       },
       {
-        "id": "v-m78-007",
+        "id": "v-orkestr-78-6",
         "uk": "оркестр",
-        "translit": "",
-        "ipa": "/orˈkɛstr/",
         "en": "orchestra",
         "pos": "noun",
+        "ipa": "/orˈkɛstr/",
         "gender": "m"
       },
       {
-        "id": "v-m78-008",
+        "id": "v-dzhaz-78-7",
         "uk": "джаз",
-        "translit": "",
-        "ipa": "/dʒɑz/",
         "en": "jazz",
         "pos": "noun",
+        "ipa": "/dʒɑz/",
         "gender": "m"
       },
       {
-        "id": "v-m78-009",
+        "id": "v-narodna-muzyka-78-8",
         "uk": "народна музика",
-        "translit": "",
-        "ipa": "/nɑˈrodnɑ ˈmuzɪkɑ/",
         "en": "folk music",
         "pos": "noun",
+        "ipa": "/nɑˈrodnɑ ˈmuzɪkɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m78-010",
+        "id": "v-hitara-78-9",
         "uk": "гітара",
-        "translit": "",
-        "ipa": "/ɦʲiˈtɑrɑ/",
         "en": "guitar",
         "pos": "noun",
+        "ipa": "/ɦʲiˈtɑrɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m78-011",
+        "id": "v-pianino-78-10",
         "uk": "піаніно",
-        "translit": "",
-        "ipa": "/pʲiɑˈnʲino/",
         "en": "piano",
         "pos": "noun",
+        "ipa": "/pʲiɑˈnʲino/",
         "gender": "n"
       },
       {
-        "id": "v-m78-012",
+        "id": "v-skrypka-78-11",
         "uk": "скрипка",
-        "translit": "",
-        "ipa": "/ˈskrɪpkɑ/",
         "en": "violin",
         "pos": "noun",
+        "ipa": "/ˈskrɪpkɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m78-013",
+        "id": "v-bandura-78-12",
         "uk": "бандура",
-        "translit": "",
-        "ipa": "/bɑnˈdurɑ/",
         "en": "bandura",
         "pos": "noun",
+        "ipa": "/bɑnˈdurɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m78-014",
+        "id": "v-kinoteatr-78-13",
         "uk": "кінотеатр",
-        "translit": "",
-        "ipa": "/kʲinotɛˈɑtr/",
         "en": "movie theater",
         "pos": "noun",
+        "ipa": "/kʲinotɛˈɑtr/",
         "gender": "m"
       },
       {
-        "id": "v-m78-015",
+        "id": "v-rezhyser-78-14",
         "uk": "режисер",
-        "translit": "",
-        "ipa": "/rɛʒɪˈsɛr/",
         "en": "director",
         "pos": "noun",
+        "ipa": "/rɛʒɪˈsɛr/",
         "gender": "m"
       },
       {
-        "id": "v-m78-016",
+        "id": "v-aktorka-78-15",
         "uk": "акторка",
-        "translit": "",
-        "ipa": "/ɑkˈtorkɑ/",
         "en": "actress",
         "pos": "noun",
+        "ipa": "/ɑkˈtorkɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m78-017",
+        "id": "v-stsenariy-78-16",
         "uk": "сценарій",
-        "translit": "",
-        "ipa": "/stsɛˈnɑrʲij/",
         "en": "screenplay",
         "pos": "noun",
+        "ipa": "/stsɛˈnɑrʲij/",
         "gender": "m"
       },
       {
-        "id": "v-m78-018",
+        "id": "v-prem'yera-78-17",
         "uk": "прем'єра",
-        "translit": "",
-        "ipa": "/prɛmˈjɛrɑ/",
         "en": "premiere",
         "pos": "noun",
+        "ipa": "/prɛmˈjɛrɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m78-019",
+        "id": "v-subtytry-78-18",
         "uk": "субтитри",
-        "translit": "",
-        "ipa": "/subˈtɪtrɪ/",
         "en": "subtitles",
         "pos": "noun",
-        "gender": "pl"
+        "ipa": "/subˈtɪtrɪ/"
       },
       {
-        "id": "v-m78-020",
+        "id": "v-komediya-78-19",
         "uk": "комедія",
-        "translit": "",
-        "ipa": "/koˈmɛdʲijɑ/",
         "en": "comedy",
         "pos": "noun",
+        "ipa": "/koˈmɛdʲijɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m78-021",
+        "id": "v-drama-78-20",
         "uk": "драма",
-        "translit": "",
-        "ipa": "/ˈdrɑmɑ/",
         "en": "drama",
         "pos": "noun",
+        "ipa": "/ˈdrɑmɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m78-022",
+        "id": "v-boyovyk-78-21",
         "uk": "бойовик",
-        "translit": "",
-        "ipa": "/bojoˈvɪk/",
         "en": "action film",
         "pos": "noun",
+        "ipa": "/bojoˈvɪk/",
         "gender": "m"
       },
       {
-        "id": "v-m78-023",
+        "id": "v-zhakhy-78-22",
         "uk": "жахи",
-        "translit": "",
-        "ipa": "/ˈʒɑxɪ/",
         "en": "horror",
         "pos": "noun",
-        "gender": "pl"
+        "ipa": "/ˈʒɑxɪ/"
       },
       {
-        "id": "v-m78-024",
+        "id": "v-mulьtfilьm-78-23",
         "uk": "мультфільм",
-        "translit": "",
-        "ipa": "/mulʲtˈfʲilʲm/",
         "en": "cartoon",
         "pos": "noun",
+        "ipa": "/mulʲtˈfʲilʲm/",
         "gender": "m"
       },
       {
-        "id": "v-m78-025",
+        "id": "v-roman-78-24",
         "uk": "роман",
-        "translit": "",
-        "ipa": "/roˈmɑn/",
         "en": "novel",
         "pos": "noun",
+        "ipa": "/roˈmɑn/",
         "gender": "m"
       },
       {
-        "id": "v-m78-026",
+        "id": "v-poeziya-78-25",
         "uk": "поезія",
-        "translit": "",
-        "ipa": "/poˈɛzʲijɑ/",
         "en": "poetry",
         "pos": "noun",
+        "ipa": "/poˈɛzʲijɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m78-027",
+        "id": "v-virsh-78-26",
         "uk": "вірш",
-        "translit": "",
-        "ipa": "/vʲirʃ/",
         "en": "poem",
         "pos": "noun",
+        "ipa": "/vʲirʃ/",
         "gender": "m"
       },
       {
-        "id": "v-m78-028",
+        "id": "v-poet-78-27",
         "uk": "поет",
-        "translit": "",
-        "ipa": "/poˈɛt/",
         "en": "poet",
         "pos": "noun",
+        "ipa": "/poˈɛt/",
         "gender": "m"
       },
       {
-        "id": "v-m78-029",
+        "id": "v-bestseler-78-28",
         "uk": "бестселер",
-        "translit": "",
-        "ipa": "/bɛstsɛˈlɛr/",
         "en": "bestseller",
         "pos": "noun",
+        "ipa": "/bɛstsɛˈlɛr/",
         "gender": "m"
       },
       {
-        "id": "v-m78-030",
+        "id": "v-zhyvopys-78-29",
         "uk": "живопис",
-        "translit": "",
-        "ipa": "/ʒɪˈvopɪs/",
         "en": "painting",
         "pos": "noun",
+        "ipa": "/ʒɪˈvopɪs/",
         "gender": "m"
       },
       {
-        "id": "v-m78-031",
+        "id": "v-skulьptura-78-30",
         "uk": "скульптура",
-        "translit": "",
-        "ipa": "/skulʲpˈturɑ/",
         "en": "sculpture",
         "pos": "noun",
+        "ipa": "/skulʲpˈturɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m78-032",
+        "id": "v-halereya-78-31",
         "uk": "галерея",
-        "translit": "",
-        "ipa": "/ɦɑlɛˈrɛjɑ/",
         "en": "gallery",
         "pos": "noun",
+        "ipa": "/ɦɑlɛˈrɛjɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m78-033",
+        "id": "v-khudozhnyk-78-32",
         "uk": "художник",
-        "translit": "",
-        "ipa": "/xuˈdoʒnɪk/",
         "en": "artist",
         "pos": "noun",
+        "ipa": "/xuˈdoʒnɪk/",
         "gender": "m"
       },
       {
-        "id": "v-m78-034",
+        "id": "v-kartyna-78-33",
         "uk": "картина",
-        "translit": "",
-        "ipa": "/kɑrˈtɪnɑ/",
         "en": "painting (work)",
         "pos": "noun",
+        "ipa": "/kɑrˈtɪnɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m78-035",
+        "id": "v-vystava-78-34",
         "uk": "вистава",
-        "translit": "",
-        "ipa": "/ˈvɪstɑvɑ/",
         "en": "performance",
         "pos": "noun",
+        "ipa": "/ˈvɪstɑvɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m78-036",
+        "id": "v-opera-78-35",
         "uk": "опера",
-        "translit": "",
-        "ipa": "/ˈopɛrɑ/",
         "en": "opera",
         "pos": "noun",
+        "ipa": "/ˈopɛrɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m78-037",
+        "id": "v-balet-78-36",
         "uk": "балет",
-        "translit": "",
-        "ipa": "/bɑˈlɛt/",
         "en": "ballet",
         "pos": "noun",
+        "ipa": "/bɑˈlɛt/",
         "gender": "m"
       },
       {
-        "id": "v-m78-038",
+        "id": "v-aplodysmenty-78-37",
         "uk": "аплодисменти",
-        "translit": "",
-        "ipa": "/ɑplodɪsˈmɛntɪ/",
         "en": "applause",
         "pos": "noun",
-        "gender": "pl"
+        "ipa": "/ɑplodɪsˈmɛntɪ/"
       },
       {
-        "id": "v-m78-039",
+        "id": "v-antrakt-78-38",
         "uk": "антракт",
-        "translit": "",
-        "ipa": "/ɑnˈtrɑkt/",
         "en": "intermission",
         "pos": "noun",
+        "ipa": "/ɑnˈtrɑkt/",
         "gender": "m"
       },
       {
-        "id": "v-m78-040",
+        "id": "v-tradytsiya-78-39",
         "uk": "традиція",
-        "translit": "",
-        "ipa": "/trɑˈdɪtsʲijɑ/",
         "en": "tradition",
         "pos": "noun",
+        "ipa": "/trɑˈdɪtsʲijɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m78-041",
+        "id": "v-svyato-78-40",
         "uk": "свято",
-        "translit": "",
-        "ipa": "/ˈsvʲɑto/",
         "en": "holiday",
         "pos": "noun",
+        "ipa": "/ˈsvʲɑto/",
         "gender": "n"
       },
       {
-        "id": "v-m78-042",
+        "id": "v-vyshyvanka-78-41",
         "uk": "вишиванка",
-        "translit": "",
-        "ipa": "/vɪʃɪˈvɑnkɑ/",
         "en": "embroidered shirt",
         "pos": "noun",
+        "ipa": "/vɪʃɪˈvɑnkɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m78-043",
+        "id": "v-pysanka-78-42",
         "uk": "писанка",
-        "translit": "",
-        "ipa": "/ˈpɪsɑnkɑ/",
         "en": "Easter egg",
         "pos": "noun",
+        "ipa": "/ˈpɪsɑnkɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m78-044",
+        "id": "v-kolyadka-78-43",
         "uk": "колядка",
-        "translit": "",
-        "ipa": "/koˈlʲɑdkɑ/",
         "en": "Christmas carol",
         "pos": "noun",
+        "ipa": "/koˈlʲɑdkɑ/",
         "gender": "f"
       },
       {
-        "id": "v-m78-045",
+        "id": "v-rushnyk-78-44",
         "uk": "рушник",
-        "translit": "",
-        "ipa": "/ruʃˈnɪk/",
         "en": "ritual towel",
         "pos": "noun",
+        "ipa": "/ruʃˈnɪk/",
         "gender": "m"
       },
       {
-        "id": "v-m78-046",
+        "id": "v-vinok-78-45",
         "uk": "вінок",
-        "translit": "",
-        "ipa": "/vʲiˈnok/",
         "en": "wreath",
         "pos": "noun",
+        "ipa": "/vʲiˈnok/",
         "gender": "m"
       },
       {
-        "id": "v-m78-047",
+        "id": "v-festyvalь-78-46",
         "uk": "фестиваль",
-        "translit": "",
-        "ipa": "/fɛstɪˈvɑlʲ/",
         "en": "festival",
         "pos": "noun",
+        "ipa": "/fɛstɪˈvɑlʲ/",
         "gender": "m"
       }
     ]

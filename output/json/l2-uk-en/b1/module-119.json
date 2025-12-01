@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-B1-119",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "grammar-introduction",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -22,183 +21,46 @@
       "Use participles as adjectives"
     ],
     "grammarFocus": [],
-    "totalDuration": 45,
-    "transliterationMode": "none",
     "tags": [
       "grammar",
       "participles",
       "passive",
       "formation"
     ],
+    "totalDuration": 45,
+    "transliterationMode": "none",
+    "phases": [],
+    "createdAt": "2025-12-01T22:58:37.235Z",
+    "modifiedAt": "2025-12-01T22:58:37.235Z",
     "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
-    "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Що таке дієприкметник? | What is a Participle?\n\nДієприкметник — це слово, яке поєднує властивості дієслова та прикметника:\n\nA participle is a word that combines properties of a verb and an adjective:\n\n- **Написана** книга - A **written** book (participle from \"написати\")\n- **Закрите** вікно - A **closed** window (participle from \"закрити\")\n- **Зроблена** робота - **Done** work (participle from \"зробити\")"
-          }
-        ]
-      },
-      {
-        "id": "phase-presentation",
-        "name": "presentation",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Пасивні дієприкметники | Passive Participles\n\n**Passive participles** describe a state resulting from an action done TO something:\n\n| Verb | Participle | Meaning |\n|------|------------|---------|\n| читати → прочитати | прочитан**ий** | read (having been read) |\n| писати → написати | написан**ий** | written |\n| відкривати → відкрити | відкрит**ий** | opened |\n| закривати → закрити | закрит**ий** | closed |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Утворення з -ний | Formation with -ний\n\n**Most common pattern:** perfective verb stem + **-н-** + adjective ending\n\n| Verb | Stem | Participle |\n|------|------|------------|\n| зроби**ти** | зробл- | зробл**ений** |\n| напис**ати** | напис- | напис**аний** |\n| прочит**ати** | прочит- | прочит**аний** |\n| вивч**ити** | вивч- | вивч**ений** |\n| побуд**увати** | побудов- | побудов**аний** |\n| приготув**ати** | приготов- | приготов**лений** |\n\n**Stem changes to watch:**\n\n| Pattern | Example |\n|---------|---------|\n| -ити → -ений | зробити → зроблений |\n| -ати → -аний | написати → написаний |\n| -увати → -ований | намалювати → намальований |\n| -ювати → -йований | організувати → організований |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Утворення з -тий | Formation with -тий\n\n**For verbs with stems ending in vowel or certain consonants:**\n\n| Verb | Stem | Participle |\n|------|------|------------|\n| відкри**ти** | відкри- | відкри**тий** |\n| закри**ти** | закри- | закри**тий** |\n| поми**ти** | поми- | поми**тий** |\n| взя**ти** | взя- | взя**тий** |\n| поча**ти** | поча- | поча**тий** |\n| забу**ти** | забу- | забу**тий** |\n| одягну**ти** | одягну- | одягну**тий** |\n| розпоча**ти** | розпоча- | розпоча**тий** |\n\n**Pattern:** -ти verbs with vowel before -ти usually get **-тий**"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Відмінювання дієприкметників | Participle Declension\n\nParticiples decline like adjectives:\n\n| Case | Masculine | Feminine | Neuter | Plural |\n|------|-----------|----------|--------|--------|\n| Nom | написаний | написана | написане | написані |\n| Gen | написаного | написаної | написаного | написаних |\n| Dat | написаному | написаній | написаному | написаним |\n| Acc | написаний/ого | написану | написане | написані/их |\n| Inst | написаним | написаною | написаним | написаними |\n| Loc | написаному | написаній | написаному | написаних |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Дієприкметники як прикметники | Participles as Adjectives\n\nParticiples function exactly like adjectives:\n\n**Before noun:**\n- **Написана** книга лежить на столі. - The written book is on the table.\n- Я бачу **відкриті** двері. - I see the open(ed) door.\n\n**After noun (predicate):**\n- Книга **написана**. - The book is written.\n- Двері **відкриті**. - The door is open."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Поширені дієприкметники | Common Participles\n\n| Participle | From Verb | English |\n|------------|-----------|---------|\n| написаний | написати | written |\n| прочитаний | прочитати | read |\n| зроблений | зробити | done, made |\n| закритий | закрити | closed |\n| відкритий | відкрити | open(ed) |\n| забутий | забути | forgotten |\n| втрачений | втратити | lost |\n| знайдений | знайти | found |\n| куплений | купити | bought |\n| проданий | продати | sold |\n| приготовлений | приготувати | prepared, cooked |\n| вимитий | вимити | washed |\n| збудований | збудувати | built |\n| організований | організувати | organized |\n| запрошений | запросити | invited |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Порівняння: дієприкметник vs прикметник | Participle vs Adjective\n\nSome participles have become regular adjectives:\n\n| Participle (action) | Adjective (quality) |\n|---------------------|---------------------|\n| відкритий (opened by someone) | відкритий (open personality) |\n| закритий (closed by someone) | закритий (closed system) |\n| зайнятий (occupied) | зайнятий (busy) |"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-B1-119-matchup"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Form Participles\n\n1. написати → **написаний**\n2. зробити → **зроблений**\n3. відкрити → **відкритий**\n4. прочитати → **прочитаний**\n5. забути → **забутий**\n6. купити → **куплений**\n7. приготувати → **приготовлений**\n8. збудувати → **збудований**"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Complete with Correct Form\n\n1. ___ (написати) лист лежить на столі.\n   → **Написаний** лист лежить на столі.\n\n2. Двері ___ (закрити).\n   → Двері **закриті**.\n\n3. Я прочитав ___ (рекомендувати) книгу.\n   → Я прочитав **рекомендовану** книгу.\n\n4. ___ (запросити) гості вже прийшли.\n   → **Запрошені** гості вже прийшли.\n\n5. Вечеря вже ___ (приготувати).\n   → Вечеря вже **приготовлена**."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Match Verb to Participle\n\n| Verb | Participle |\n|------|------------|\n| знайти | знайдений |\n| втратити | втрачений |\n| продати | проданий |\n| організувати | організований |\n| вимити | вимитий |"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Translate to Ukrainian\n\n1. The closed door\n   → **Закриті двері**\n\n2. A written letter\n   → **Написаний лист**\n\n3. The invited guests\n   → **Запрошені гості**\n\n4. The book is read\n   → **Книга прочитана**\n\n5. Prepared food\n   → **Приготовлена їжа**"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-B1-119-quiz"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Describe Your Room\n\nUse participles to describe objects:\n\n- Ліжко застелене. - The bed is made.\n- Книги розставлені на полиці. - Books are arranged on the shelf.\n- Вікно відкрите. - The window is open."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "What Was Done?\n\nDescribe completed actions using participles:\n\n- Домашнє завдання зроблене.\n- Лист написаний і відправлений.\n- Вечеря приготовлена."
-          }
-        ]
-      }
-    ],
-    "rawMarkdown": "# Зміст уроку | Lesson Content\n\n## warm-up | Розминка\n\n### Що таке дієприкметник? | What is a Participle?\n\nДієприкметник — це слово, яке поєднує властивості дієслова та прикметника:\n\nA participle is a word that combines properties of a verb and an adjective:\n\n- **Написана** книга - A **written** book (participle from \"написати\")\n- **Закрите** вікно - A **closed** window (participle from \"закрити\")\n- **Зроблена** робота - **Done** work (participle from \"зробити\")\n\n## presentation | Презентація\n\n### Пасивні дієприкметники | Passive Participles\n\n**Passive participles** describe a state resulting from an action done TO something:\n\n| Verb | Participle | Meaning |\n|------|------------|---------|\n| читати → прочитати | прочитан**ий** | read (having been read) |\n| писати → написати | написан**ий** | written |\n| відкривати → відкрити | відкрит**ий** | opened |\n| закривати → закрити | закрит**ий** | closed |\n\n### Утворення з -ний | Formation with -ний\n\n**Most common pattern:** perfective verb stem + **-н-** + adjective ending\n\n| Verb | Stem | Participle |\n|------|------|------------|\n| зроби**ти** | зробл- | зробл**ений** |\n| напис**ати** | напис- | напис**аний** |\n| прочит**ати** | прочит- | прочит**аний** |\n| вивч**ити** | вивч- | вивч**ений** |\n| побуд**увати** | побудов- | побудов**аний** |\n| приготув**ати** | приготов- | приготов**лений** |\n\n**Stem changes to watch:**\n\n| Pattern | Example |\n|---------|---------|\n| -ити → -ений | зробити → зроблений |\n| -ати → -аний | написати → написаний |\n| -увати → -ований | намалювати → намальований |\n| -ювати → -йований | організувати → організований |\n\n### Утворення з -тий | Formation with -тий\n\n**For verbs with stems ending in vowel or certain consonants:**\n\n| Verb | Stem | Participle |\n|------|------|------------|\n| відкри**ти** | відкри- | відкри**тий** |\n| закри**ти** | закри- | закри**тий** |\n| поми**ти** | поми- | поми**тий** |\n| взя**ти** | взя- | взя**тий** |\n| поча**ти** | поча- | поча**тий** |\n| забу**ти** | забу- | забу**тий** |\n| одягну**ти** | одягну- | одягну**тий** |\n| розпоча**ти** | розпоча- | розпоча**тий** |\n\n**Pattern:** -ти verbs with vowel before -ти usually get **-тий**\n\n### Відмінювання дієприкметників | Participle Declension\n\nParticiples decline like adjectives:\n\n| Case | Masculine | Feminine | Neuter | Plural |\n|------|-----------|----------|--------|--------|\n| Nom | написаний | написана | написане | написані |\n| Gen | написаного | написаної | написаного | написаних |\n| Dat | написаному | написаній | написаному | написаним |\n| Acc | написаний/ого | написану | написане | написані/их |\n| Inst | написаним | написаною | написаним | написаними |\n| Loc | написаному | написаній | написаному | написаних |\n\n### Дієприкметники як прикметники | Participles as Adjectives\n\nParticiples function exactly like adjectives:\n\n**Before noun:**\n- **Написана** книга лежить на столі. - The written book is on the table.\n- Я бачу **відкриті** двері. - I see the open(ed) door.\n\n**After noun (predicate):**\n- Книга **написана**. - The book is written.\n- Двері **відкриті**. - The door is open.\n\n### Поширені дієприкметники | Common Participles\n\n| Participle | From Verb | English |\n|------------|-----------|---------|\n| написаний | написати | written |\n| прочитаний | прочитати | read |\n| зроблений | зробити | done, made |\n| закритий | закрити | closed |\n| відкритий | відкрити | open(ed) |\n| забутий | забути | forgotten |\n| втрачений | втратити | lost |\n| знайдений | знайти | found |\n| куплений | купити | bought |\n| проданий | продати | sold |\n| приготовлений | приготувати | prepared, cooked |\n| вимитий | вимити | washed |\n| збудований | збудувати | built |\n| організований | організувати | organized |\n| запрошений | запросити | invited |\n\n### Порівняння: дієприкметник vs прикметник | Participle vs Adjective\n\nSome participles have become regular adjectives:\n\n| Participle (action) | Adjective (quality) |\n|---------------------|---------------------|\n| відкритий (opened by someone) | відкритий (open personality) |\n| закритий (closed by someone) | закритий (closed system) |\n| зайнятий (occupied) | зайнятий (busy) |\n\n## practice | Практика\n\n### Form Participles\n\n1. написати → **написаний**\n2. зробити → **зроблений**\n3. відкрити → **відкритий**\n4. прочитати → **прочитаний**\n5. забути → **забутий**\n6. купити → **куплений**\n7. приготувати → **приготовлений**\n8. збудувати → **збудований**\n\n### Complete with Correct Form\n\n1. ___ (написати) лист лежить на столі.\n   → **Написаний** лист лежить на столі.\n\n2. Двері ___ (закрити).\n   → Двері **закриті**.\n\n3. Я прочитав ___ (рекомендувати) книгу.\n   → Я прочитав **рекомендовану** книгу.\n\n4. ___ (запросити) гості вже прийшли.\n   → **Запрошені** гості вже прийшли.\n\n5. Вечеря вже ___ (приготувати).\n   → Вечеря вже **приготовлена**.\n\n### Match Verb to Participle\n\n| Verb | Participle |\n|------|------------|\n| знайти | знайдений |\n| втратити | втрачений |\n| продати | проданий |\n| організувати | організований |\n| вимити | вимитий |\n\n### Translate to Ukrainian\n\n1. The closed door\n   → **Закриті двері**\n\n2. A written letter\n   → **Написаний лист**\n\n3. The invited guests\n   → **Запрошені гості**\n\n4. The book is read\n   → **Книга прочитана**\n\n5. Prepared food\n   → **Приготовлена їжа**\n\n## production | Продукція\n\n### Describe Your Room\n\nUse participles to describe objects:\n\n- Ліжко застелене. - The bed is made.\n- Книги розставлені на полиці. - Books are arranged on the shelf.\n- Вікно відкрите. - The window is open.\n\n### What Was Done?\n\nDescribe completed actions using participles:\n\n- Домашнє завдання зроблене.\n- Лист написаний і відправлений.\n- Вечеря приготовлена.\n\n---\n\n# Activities\n\n## quiz: Participle Formation\n\n> Choose the correct participle.\n\n1. Verb: написати → Participle: ___\n   - [x] написаний\n   - [ ] написений\n   > -ати verbs → -аний.\n\n2. Verb: закрити → Participle: ___\n   - [x] закритий\n   - [ ] закрений\n   > Vowel + -ти → -тий.\n\n3. Verb: зробити → Participle: ___\n   - [x] зроблений\n   - [ ] зроблятий\n   > -ити verbs → -ений.\n\n4. ___ книга лежить на столі.\n   - [x] Прочитана\n   - [ ] Прочитаний\n   > Feminine noun \"книга\" needs feminine participle.\n\n5. Двері ___.\n   - [x] закриті\n   - [ ] закрита\n   > Plural noun \"двері\" needs plural participle.\n\n6. Verb: забути → Participle: ___\n   - [x] забутий\n   - [ ] забутений\n   > -ути → -утий.\n\n## match-up: Verbs and Participles\n\n| Verb | Participle |\n|------|------------|\n| купити | куплений |\n| відкрити | відкритий |\n| приготувати | приготовлений |\n| знайти | знайдений |\n| запросити | запрошений |\n\n---",
     "immersiveSections": [
       {
-        "id": "warm-up-розминка",
-        "title": "warm-up | Розминка",
-        "content": "### Що таке дієприкметник? | What is a Participle?\n\nДієприкметник — це слово, яке поєднує властивості дієслова та прикметника:\n\nA participle is a word that combines properties of a verb and an adjective:\n\n- **Написана** книга - A **written** book (participle from \"написати\")\n- **Закрите** вікно - A **closed** window (participle from \"закрити\")\n- **Зроблена** робота - **Done** work (participle from \"зробити\")",
-        "type": "topic"
+        "id": "section-зміст-уроку-lesson-content",
+        "type": "content",
+        "title": "Зміст уроку | Lesson Content",
+        "content": "## warm-up | Розминка\n\n### Що таке дієприкметник? | What is a Participle?\n\nДієприкметник — це слово, яке поєднує властивості дієслова та прикметника:\n\nA participle is a word that combines properties of a verb and an adjective:\n\n- **Написана** книга - A **written** book (participle from \"написати\")\n- **Закрите** вікно - A **closed** window (participle from \"закрити\")\n- **Зроблена** робота - **Done** work (participle from \"зробити\")\n\n## presentation | Презентація\n\n### Пасивні дієприкметники | Passive Participles\n\n**Passive participles** describe a state resulting from an action done TO something:\n\n| Verb | Participle | Meaning |\n|------|------------|---------|\n| читати → прочитати | прочитан**ий** | read (having been read) |\n| писати → написати | написан**ий** | written |\n| відкривати → відкрити | відкрит**ий** | opened |\n| закривати → закрити | закрит**ий** | closed |\n\n### Утворення з -ний | Formation with -ний\n\n**Most common pattern:** perfective verb stem + **-н-** + adjective ending\n\n| Verb | Stem | Participle |\n|------|------|------------|\n| зроби**ти** | зробл- | зробл**ений** |\n| напис**ати** | напис- | напис**аний** |\n| прочит**ати** | прочит- | прочит**аний** |\n| вивч**ити** | вивч- | вивч**ений** |\n| побуд**увати** | побудов- | побудов**аний** |\n| приготув**ати** | приготов- | приготов**лений** |\n\n**Stem changes to watch:**\n\n| Pattern | Example |\n|---------|---------|\n| -ити → -ений | зробити → зроблений |\n| -ати → -аний | написати → написаний |\n| -увати → -ований | намалювати → намальований |\n| -ювати → -йований | організувати → організований |\n\n### Утворення з -тий | Formation with -тий\n\n**For verbs with stems ending in vowel or certain consonants:**\n\n| Verb | Stem | Participle |\n|------|------|------------|\n| відкри**ти** | відкри- | відкри**тий** |\n| закри**ти** | закри- | закри**тий** |\n| поми**ти** | поми- | поми**тий** |\n| взя**ти** | взя- | взя**тий** |\n| поча**ти** | поча- | поча**тий** |\n| забу**ти** | забу- | забу**тий** |\n| одягну**ти** | одягну- | одягну**тий** |\n| розпоча**ти** | розпоча- | розпоча**тий** |\n\n**Pattern:** -ти verbs with vowel before -ти usually get **-тий**\n\n### Відмінювання дієприкметників | Participle Declension\n\nParticiples decline like adjectives:\n\n| Case | Masculine | Feminine | Neuter | Plural |\n|------|-----------|----------|--------|--------|\n| Nom | написаний | написана | написане | написані |\n| Gen | написаного | написаної | написаного | написаних |\n| Dat | написаному | написаній | написаному | написаним |\n| Acc | написаний/ого | написану | написане | написані/их |\n| Inst | написаним | написаною | написаним | написаними |\n| Loc | написаному | написаній | написаному | написаних |\n\n### Дієприкметники як прикметники | Participles as Adjectives\n\nParticiples function exactly like adjectives:\n\n**Before noun:**\n- **Написана** книга лежить на столі. - The written book is on the table.\n- Я бачу **відкриті** двері. - I see the open(ed) door.\n\n**After noun (predicate):**\n- Книга **написана**. - The book is written.\n- Двері **відкриті**. - The door is open.\n\n### Поширені дієприкметники | Common Participles\n\n| Participle | From Verb | English |\n|------------|-----------|---------|\n| написаний | написати | written |\n| прочитаний | прочитати | read |\n| зроблений | зробити | done, made |\n| закритий | закрити | closed |\n| відкритий | відкрити | open(ed) |\n| забутий | забути | forgotten |\n| втрачений | втратити | lost |\n| знайдений | знайти | found |\n| куплений | купити | bought |\n| проданий | продати | sold |\n| приготовлений | приготувати | prepared, cooked |\n| вимитий | вимити | washed |\n| збудований | збудувати | built |\n| організований | організувати | organized |\n| запрошений | запросити | invited |\n\n### Порівняння: дієприкметник vs прикметник | Participle vs Adjective\n\nSome participles have become regular adjectives:\n\n| Participle (action) | Adjective (quality) |\n|---------------------|---------------------|\n| відкритий (opened by someone) | відкритий (open personality) |\n| закритий (closed by someone) | закритий (closed system) |\n| зайнятий (occupied) | зайнятий (busy) |\n\n## practice | Практика\n\n### Form Participles\n\n1. написати\n   > [!answer] **написаний**\n2. зробити\n   > [!answer] **зроблений**\n3. відкрити\n   > [!answer] **відкритий**\n4. прочитати\n   > [!answer] **прочитаний**\n5. забути\n   > [!answer] **забутий**\n6. купити\n   > [!answer] **куплений**\n7. приготувати\n   > [!answer] **приготовлений**\n8. збудувати\n   > [!answer] **збудований**\n\n### Complete with Correct Form\n\n1. ___ (написати) лист лежить на столі.\n   > [!answer] **Написаний** лист лежить на столі.\n\n2. Двері ___ (закрити).\n   > [!answer] Двері **закриті**.\n\n3. Я прочитав ___ (рекомендувати) книгу.\n   > [!answer] Я прочитав **рекомендовану** книгу.\n\n4. ___ (запросити) гості вже прийшли.\n   > [!answer] **Запрошені** гості вже прийшли.\n\n5. Вечеря вже ___ (приготувати).\n   > [!answer] Вечеря вже **приготовлена**.\n\n### Match Verb to Participle\n\n| Verb | Participle |\n|------|------------|\n| знайти | знайдений |\n| втратити | втрачений |\n| продати | проданий |\n| організувати | організований |\n| вимити | вимитий |\n\n### Translate to Ukrainian\n\n1. The closed door\n   > [!answer] **Закриті двері**\n2. A written letter\n   > [!answer] **Написаний лист**\n3. The invited guests\n   > [!answer] **Запрошені гості**\n4. The book is read\n   > [!answer] **Книга прочитана**\n5. Prepared food\n   > [!answer] **Приготовлена їжа**\n## production | Продукція\n\n### Describe Your Room\n\nUse participles to describe objects:\n\n- Ліжко застелене. - The bed is made.\n- Книги розставлені на полиці. - Books are arranged on the shelf.\n- Вікно відкрите. - The window is open.\n\n### What Was Done?\n\nDescribe completed actions using participles:\n\n- Домашнє завдання зроблене.\n- Лист написаний і відправлений.\n- Вечеря приготовлена.\n\n---\n\n\n---\n\n\n---"
       },
       {
-        "id": "presentation-презентація",
-        "title": "presentation | Презентація",
-        "content": "### Пасивні дієприкметники | Passive Participles\n\n**Passive participles** describe a state resulting from an action done TO something:\n\n| Verb | Participle | Meaning |\n|------|------------|---------|\n| читати → прочитати | прочитан**ий** | read (having been read) |\n| писати → написати | написан**ий** | written |\n| відкривати → відкрити | відкрит**ий** | opened |\n| закривати → закрити | закрит**ий** | closed |\n\n### Утворення з -ний | Formation with -ний\n\n**Most common pattern:** perfective verb stem + **-н-** + adjective ending\n\n| Verb | Stem | Participle |\n|------|------|------------|\n| зроби**ти** | зробл- | зробл**ений** |\n| напис**ати** | напис- | напис**аний** |\n| прочит**ати** | прочит- | прочит**аний** |\n| вивч**ити** | вивч- | вивч**ений** |\n| побуд**увати** | побудов- | побудов**аний** |\n| приготув**ати** | приготов- | приготов**лений** |\n\n**Stem changes to watch:**\n\n| Pattern | Example |\n|---------|---------|\n| -ити → -ений | зробити → зроблений |\n| -ати → -аний | написати → написаний |\n| -увати → -ований | намалювати → намальований |\n| -ювати → -йований | організувати → організований |\n\n### Утворення з -тий | Formation with -тий\n\n**For verbs with stems ending in vowel or certain consonants:**\n\n| Verb | Stem | Participle |\n|------|------|------------|\n| відкри**ти** | відкри- | відкри**тий** |\n| закри**ти** | закри- | закри**тий** |\n| поми**ти** | поми- | поми**тий** |\n| взя**ти** | взя- | взя**тий** |\n| поча**ти** | поча- | поча**тий** |\n| забу**ти** | забу- | забу**тий** |\n| одягну**ти** | одягну- | одягну**тий** |\n| розпоча**ти** | розпоча- | розпоча**тий** |\n\n**Pattern:** -ти verbs with vowel before -ти usually get **-тий**\n\n### Відмінювання дієприкметників | Participle Declension\n\nParticiples decline like adjectives:\n\n| Case | Masculine | Feminine | Neuter | Plural |\n|------|-----------|----------|--------|--------|\n| Nom | написаний | написана | написане | написані |\n| Gen | написаного | написаної | написаного | написаних |\n| Dat | написаному | написаній | написаному | написаним |\n| Acc | написаний/ого | написану | написане | написані/их |\n| Inst | написаним | написаною | написаним | написаними |\n| Loc | написаному | написаній | написаному | написаних |\n\n### Дієприкметники як прикметники | Participles as Adjectives\n\nParticiples function exactly like adjectives:\n\n**Before noun:**\n- **Написана** книга лежить на столі. - The written book is on the table.\n- Я бачу **відкриті** двері. - I see the open(ed) door.\n\n**After noun (predicate):**\n- Книга **написана**. - The book is written.\n- Двері **відкриті**. - The door is open.\n\n### Поширені дієприкметники | Common Participles\n\n| Participle | From Verb | English |\n|------------|-----------|---------|\n| написаний | написати | written |\n| прочитаний | прочитати | read |\n| зроблений | зробити | done, made |\n| закритий | закрити | closed |\n| відкритий | відкрити | open(ed) |\n| забутий | забути | forgotten |\n| втрачений | втратити | lost |\n| знайдений | знайти | found |\n| куплений | купити | bought |\n| проданий | продати | sold |\n| приготовлений | приготувати | prepared, cooked |\n| вимитий | вимити | washed |\n| збудований | збудувати | built |\n| організований | організувати | organized |\n| запрошений | запросити | invited |\n\n### Порівняння: дієприкметник vs прикметник | Participle vs Adjective\n\nSome participles have become regular adjectives:\n\n| Participle (action) | Adjective (quality) |\n|---------------------|---------------------|\n| відкритий (opened by someone) | відкритий (open personality) |\n| закритий (closed by someone) | закритий (closed system) |\n| зайнятий (occupied) | зайнятий (busy) |",
-        "type": "topic"
-      },
-      {
-        "id": "practice-практика",
-        "title": "practice | Практика",
-        "content": "### Form Participles\n\n1. написати → **написаний**\n2. зробити → **зроблений**\n3. відкрити → **відкритий**\n4. прочитати → **прочитаний**\n5. забути → **забутий**\n6. купити → **куплений**\n7. приготувати → **приготовлений**\n8. збудувати → **збудований**\n\n### Complete with Correct Form\n\n1. ___ (написати) лист лежить на столі.\n   → **Написаний** лист лежить на столі.\n\n2. Двері ___ (закрити).\n   → Двері **закриті**.\n\n3. Я прочитав ___ (рекомендувати) книгу.\n   → Я прочитав **рекомендовану** книгу.\n\n4. ___ (запросити) гості вже прийшли.\n   → **Запрошені** гості вже прийшли.\n\n5. Вечеря вже ___ (приготувати).\n   → Вечеря вже **приготовлена**.\n\n### Match Verb to Participle\n\n| Verb | Participle |\n|------|------------|\n| знайти | знайдений |\n| втратити | втрачений |\n| продати | проданий |\n| організувати | організований |\n| вимити | вимитий |\n\n### Translate to Ukrainian\n\n1. The closed door\n   → **Закриті двері**\n\n2. A written letter\n   → **Написаний лист**\n\n3. The invited guests\n   → **Запрошені гості**\n\n4. The book is read\n   → **Книга прочитана**\n\n5. Prepared food\n   → **Приготовлена їжа**",
-        "type": "topic"
-      },
-      {
-        "id": "production-продукція",
-        "title": "production | Продукція",
-        "content": "### Describe Your Room\n\nUse participles to describe objects:\n\n- Ліжко застелене. - The bed is made.\n- Книги розставлені на полиці. - Books are arranged on the shelf.\n- Вікно відкрите. - The window is open.\n\n### What Was Done?\n\nDescribe completed actions using participles:\n\n- Домашнє завдання зроблене.\n- Лист написаний і відправлений.\n- Вечеря приготовлена.\n\n---",
-        "type": "topic"
-      },
-      {
-        "id": "activities",
-        "title": "Activities",
-        "content": "## quiz: Participle Formation\n\n> Choose the correct participle.\n\n1. Verb: написати → Participle: ___\n   - [x] написаний\n   - [ ] написений\n   > -ати verbs → -аний.\n\n2. Verb: закрити → Participle: ___\n   - [x] закритий\n   - [ ] закрений\n   > Vowel + -ти → -тий.\n\n3. Verb: зробити → Participle: ___\n   - [x] зроблений\n   - [ ] зроблятий\n   > -ити verbs → -ений.\n\n4. ___ книга лежить на столі.\n   - [x] Прочитана\n   - [ ] Прочитаний\n   > Feminine noun \"книга\" needs feminine participle.\n\n5. Двері ___.\n   - [x] закриті\n   - [ ] закрита\n   > Plural noun \"двері\" needs plural participle.\n\n6. Verb: забути → Participle: ___\n   - [x] забутий\n   - [ ] забутений\n   > -ути → -утий.\n\n## match-up: Verbs and Participles\n\n| Verb | Participle |\n|------|------------|\n| купити | куплений |\n| відкрити | відкритий |\n| приготувати | приготовлений |\n| знайти | знайдений |\n| запросити | запрошений |\n\n---",
-        "type": "activities"
-      },
-      {
-        "id": "vocabulary",
-        "title": "Vocabulary",
-        "content": "| Word | IPA | English | Notes |\n|------|-----|---------|-------|\n| дієприкметник | /dʲijɛprɪˈkmɛtnɪk/ | participle | m |\n| пасивний | /pɑˈsɪwnɪj/ | passive | adj |\n| написаний | /nɑˈpɪsɑnɪj/ | written | participle |\n| прочитаний | /prot͡ʃɪˈtɑnɪj/ | read | participle |\n| зроблений | /ˈzroblɛnɪj/ | done, made | participle |\n| закритий | /zɑˈkrɪtɪj/ | closed | participle |\n| відкритий | /vʲidˈkrɪtɪj/ | open(ed) | participle |\n| забутий | /zɑˈbutɪj/ | forgotten | participle |\n| знайдений | /znɑjˈdɛnɪj/ | found | participle |\n| куплений | /ˈkuplɛnɪj/ | bought | participle |\n| приготовлений | /prɪɦotoˈwlɛnɪj/ | prepared | participle |\n| запрошений | /zɑˈproʃɛnɪj/ | invited | participle |\n| збудований | /zbuˈdovɑnɪj/ | built | participle |\n| організований | /orɦɑnʲiˈzovɑnɪj/ | organized | participle |\n| втрачений | /vˈtrɑt͡ʃɛnɪj/ | lost | participle |\n\n---",
-        "type": "vocabulary"
-      },
-      {
-        "id": "summary",
+        "id": "section-summary",
+        "type": "summary",
         "title": "Summary",
         "content": "## Past Passive Participle Formation\n\n### Two Main Suffixes\n\n| Suffix | When | Example |\n|--------|------|---------|\n| **-ний/-ений/-аний** | Most verbs | зроблений, написаний |\n| **-тий** | Vowel stems | відкритий, забутий |\n\n### Common Patterns\n\n| Verb Type | Participle | Example |\n|-----------|------------|---------|\n| -ити | -ений | зробити → зроблений |\n| -ати | -аний | написати → написаний |\n| -увати | -ований | намалювати → намальований |\n| -ти (vowel) | -тий | відкрити → відкритий |\n\n### Usage\n- Participles decline like adjectives\n- Can be used before or after nouns\n- Agree in gender, number, case\n\n> **Key Takeaways**\n>\n> - Passive participles = verb meaning + adjective form\n> - Two main suffixes: -ний and -тий\n> - Decline exactly like adjectives\n> - Formed from perfective verbs\n> - Very common in written Ukrainian",
-        "type": "summary"
+        "titleUk": "Підсумок"
       }
-    ]
+    ],
+    "rawMarkdown": "---\nmodule: 119\ntitle: \"Past Passive Participles I\"\nsubtitle: \"Formation: -ний/-тий\"\nlevel: B1\nphase: B1.3\nduration: 45\ntransliteration: none\ntags: [grammar, participles, passive, formation]\nobjectives:\n  - Understand passive participle concept\n  - Form participles with -ний and -тий suffixes\n  - Recognize participle patterns from verb stems\n  - Use participles as adjectives\n---\n\n# Зміст уроку | Lesson Content\n\n## warm-up | Розминка\n\n### Що таке дієприкметник? | What is a Participle?\n\nДієприкметник — це слово, яке поєднує властивості дієслова та прикметника:\n\nA participle is a word that combines properties of a verb and an adjective:\n\n- **Написана** книга - A **written** book (participle from \"написати\")\n- **Закрите** вікно - A **closed** window (participle from \"закрити\")\n- **Зроблена** робота - **Done** work (participle from \"зробити\")\n\n## presentation | Презентація\n\n### Пасивні дієприкметники | Passive Participles\n\n**Passive participles** describe a state resulting from an action done TO something:\n\n| Verb | Participle | Meaning |\n|------|------------|---------|\n| читати → прочитати | прочитан**ий** | read (having been read) |\n| писати → написати | написан**ий** | written |\n| відкривати → відкрити | відкрит**ий** | opened |\n| закривати → закрити | закрит**ий** | closed |\n\n### Утворення з -ний | Formation with -ний\n\n**Most common pattern:** perfective verb stem + **-н-** + adjective ending\n\n| Verb | Stem | Participle |\n|------|------|------------|\n| зроби**ти** | зробл- | зробл**ений** |\n| напис**ати** | напис- | напис**аний** |\n| прочит**ати** | прочит- | прочит**аний** |\n| вивч**ити** | вивч- | вивч**ений** |\n| побуд**увати** | побудов- | побудов**аний** |\n| приготув**ати** | приготов- | приготов**лений** |\n\n**Stem changes to watch:**\n\n| Pattern | Example |\n|---------|---------|\n| -ити → -ений | зробити → зроблений |\n| -ати → -аний | написати → написаний |\n| -увати → -ований | намалювати → намальований |\n| -ювати → -йований | організувати → організований |\n\n### Утворення з -тий | Formation with -тий\n\n**For verbs with stems ending in vowel or certain consonants:**\n\n| Verb | Stem | Participle |\n|------|------|------------|\n| відкри**ти** | відкри- | відкри**тий** |\n| закри**ти** | закри- | закри**тий** |\n| поми**ти** | поми- | поми**тий** |\n| взя**ти** | взя- | взя**тий** |\n| поча**ти** | поча- | поча**тий** |\n| забу**ти** | забу- | забу**тий** |\n| одягну**ти** | одягну- | одягну**тий** |\n| розпоча**ти** | розпоча- | розпоча**тий** |\n\n**Pattern:** -ти verbs with vowel before -ти usually get **-тий**\n\n### Відмінювання дієприкметників | Participle Declension\n\nParticiples decline like adjectives:\n\n| Case | Masculine | Feminine | Neuter | Plural |\n|------|-----------|----------|--------|--------|\n| Nom | написаний | написана | написане | написані |\n| Gen | написаного | написаної | написаного | написаних |\n| Dat | написаному | написаній | написаному | написаним |\n| Acc | написаний/ого | написану | написане | написані/их |\n| Inst | написаним | написаною | написаним | написаними |\n| Loc | написаному | написаній | написаному | написаних |\n\n### Дієприкметники як прикметники | Participles as Adjectives\n\nParticiples function exactly like adjectives:\n\n**Before noun:**\n- **Написана** книга лежить на столі. - The written book is on the table.\n- Я бачу **відкриті** двері. - I see the open(ed) door.\n\n**After noun (predicate):**\n- Книга **написана**. - The book is written.\n- Двері **відкриті**. - The door is open.\n\n### Поширені дієприкметники | Common Participles\n\n| Participle | From Verb | English |\n|------------|-----------|---------|\n| написаний | написати | written |\n| прочитаний | прочитати | read |\n| зроблений | зробити | done, made |\n| закритий | закрити | closed |\n| відкритий | відкрити | open(ed) |\n| забутий | забути | forgotten |\n| втрачений | втратити | lost |\n| знайдений | знайти | found |\n| куплений | купити | bought |\n| проданий | продати | sold |\n| приготовлений | приготувати | prepared, cooked |\n| вимитий | вимити | washed |\n| збудований | збудувати | built |\n| організований | організувати | organized |\n| запрошений | запросити | invited |\n\n### Порівняння: дієприкметник vs прикметник | Participle vs Adjective\n\nSome participles have become regular adjectives:\n\n| Participle (action) | Adjective (quality) |\n|---------------------|---------------------|\n| відкритий (opened by someone) | відкритий (open personality) |\n| закритий (closed by someone) | закритий (closed system) |\n| зайнятий (occupied) | зайнятий (busy) |\n\n## practice | Практика\n\n### Form Participles\n\n1. написати\n   > [!answer] **написаний**\n2. зробити\n   > [!answer] **зроблений**\n3. відкрити\n   > [!answer] **відкритий**\n4. прочитати\n   > [!answer] **прочитаний**\n5. забути\n   > [!answer] **забутий**\n6. купити\n   > [!answer] **куплений**\n7. приготувати\n   > [!answer] **приготовлений**\n8. збудувати\n   > [!answer] **збудований**\n\n### Complete with Correct Form\n\n1. ___ (написати) лист лежить на столі.\n   > [!answer] **Написаний** лист лежить на столі.\n\n2. Двері ___ (закрити).\n   > [!answer] Двері **закриті**.\n\n3. Я прочитав ___ (рекомендувати) книгу.\n   > [!answer] Я прочитав **рекомендовану** книгу.\n\n4. ___ (запросити) гості вже прийшли.\n   > [!answer] **Запрошені** гості вже прийшли.\n\n5. Вечеря вже ___ (приготувати).\n   > [!answer] Вечеря вже **приготовлена**.\n\n### Match Verb to Participle\n\n| Verb | Participle |\n|------|------------|\n| знайти | знайдений |\n| втратити | втрачений |\n| продати | проданий |\n| організувати | організований |\n| вимити | вимитий |\n\n### Translate to Ukrainian\n\n1. The closed door\n   > [!answer] **Закриті двері**\n2. A written letter\n   > [!answer] **Написаний лист**\n3. The invited guests\n   > [!answer] **Запрошені гості**\n4. The book is read\n   > [!answer] **Книга прочитана**\n5. Prepared food\n   > [!answer] **Приготовлена їжа**\n## production | Продукція\n\n### Describe Your Room\n\nUse participles to describe objects:\n\n- Ліжко застелене. - The bed is made.\n- Книги розставлені на полиці. - Books are arranged on the shelf.\n- Вікно відкрите. - The window is open.\n\n### What Was Done?\n\nDescribe completed actions using participles:\n\n- Домашнє завдання зроблене.\n- Лист написаний і відправлений.\n- Вечеря приготовлена.\n\n---\n\n# Activities\n\n## quiz: Participle Formation\n\n> Choose the correct participle.\n\n1. Verb: написати\n   > [!answer] Participle: ___\n   - [x] написаний\n   - [ ] написений\n   > -ати verbs → -аний.\n\n2. Verb: закрити\n   > [!answer] Participle: ___\n   - [x] закритий\n   - [ ] закрений\n   > Vowel + -ти → -тий.\n\n3. Verb: зробити\n   > [!answer] Participle: ___\n   - [x] зроблений\n   - [ ] зроблятий\n   > -ити verbs → -ений.\n\n4. ___ книга лежить на столі.\n   - [x] Прочитана\n   - [ ] Прочитаний\n   > Feminine noun \"книга\" needs feminine participle.\n\n5. Двері ___.\n   - [x] закриті\n   - [ ] закрита\n   > Plural noun \"двері\" needs plural participle.\n\n6. Verb: забути\n   > [!answer] Participle: ___\n   - [x] забутий\n   - [ ] забутений\n   > -ути → -утий.\n\n## match-up: Verbs and Participles\n\n| Verb | Participle |\n|------|------------|\n| купити | куплений |\n| відкрити | відкритий |\n| приготувати | приготовлений |\n| знайти | знайдений |\n| запросити | запрошений |\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | Notes |\n|------|-----|---------|-------|\n| дієприкметник | /dʲijɛprɪˈkmɛtnɪk/ | participle | m |\n| пасивний | /pɑˈsɪwnɪj/ | passive | adj |\n| написаний | /nɑˈpɪsɑnɪj/ | written | participle |\n| прочитаний | /prot͡ʃɪˈtɑnɪj/ | read | participle |\n| зроблений | /ˈzroblɛnɪj/ | done, made | participle |\n| закритий | /zɑˈkrɪtɪj/ | closed | participle |\n| відкритий | /vʲidˈkrɪtɪj/ | open(ed) | participle |\n| забутий | /zɑˈbutɪj/ | forgotten | participle |\n| знайдений | /znɑjˈdɛnɪj/ | found | participle |\n| куплений | /ˈkuplɛnɪj/ | bought | participle |\n| приготовлений | /prɪɦotoˈwlɛnɪj/ | prepared | participle |\n| запрошений | /zɑˈproʃɛnɪj/ | invited | participle |\n| збудований | /zbuˈdovɑnɪj/ | built | participle |\n| організований | /orɦɑnʲiˈzovɑnɪj/ | organized | participle |\n| втрачений | /vˈtrɑt͡ʃɛnɪj/ | lost | participle |\n\n---\n\n# Summary\n\n## Past Passive Participle Formation\n\n### Two Main Suffixes\n\n| Suffix | When | Example |\n|--------|------|---------|\n| **-ний/-ений/-аний** | Most verbs | зроблений, написаний |\n| **-тий** | Vowel stems | відкритий, забутий |\n\n### Common Patterns\n\n| Verb Type | Participle | Example |\n|-----------|------------|---------|\n| -ити | -ений | зробити → зроблений |\n| -ати | -аний | написати → написаний |\n| -увати | -ований | намалювати → намальований |\n| -ти (vowel) | -тий | відкрити → відкритий |\n\n### Usage\n- Participles decline like adjectives\n- Can be used before or after nouns\n- Agree in gender, number, case\n\n> **Key Takeaways**\n>\n> - Passive participles = verb meaning + adjective form\n> - Two main suffixes: -ний and -тий\n> - Decline exactly like adjectives\n> - Formed from perfective verbs\n> - Very common in written Ukrainian\n"
   },
   "activities": [
     {
-      "id": "act-uk-B1-119-quiz",
+      "id": "act-b1-119-quiz",
       "type": "quiz",
       "title": "Participle Formation",
       "description": "Choose the correct participle.",
       "content": {
         "type": "quiz",
-        "instructions": "Choose the correct participle.",
         "questions": [
           {
-            "question": "Verb: написати → Participle: ___",
+            "question": "Verb: написати",
             "options": [
               "написаний",
               "написений"
@@ -207,7 +69,7 @@
             "explanation": "-ати verbs → -аний."
           },
           {
-            "question": "Verb: закрити → Participle: ___",
+            "question": "Verb: закрити",
             "options": [
               "закритий",
               "закрений"
@@ -216,7 +78,7 @@
             "explanation": "Vowel + -ти → -тий."
           },
           {
-            "question": "Verb: зробити → Participle: ___",
+            "question": "Verb: зробити",
             "options": [
               "зроблений",
               "зроблятий"
@@ -243,7 +105,7 @@
             "explanation": "Plural noun \"двері\" needs plural participle."
           },
           {
-            "question": "Verb: забути → Participle: ___",
+            "question": "Verb: забути",
             "options": [
               "забутий",
               "забутений"
@@ -262,23 +124,17 @@
       "language": "uk",
       "difficultyLevel": "B1",
       "duration": 5,
-      "tags": [
-        "grammar",
-        "participles",
-        "passive",
-        "formation"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.235Z",
+      "modifiedAt": "2025-12-01T22:58:37.235Z"
     },
     {
-      "id": "act-uk-B1-119-matchup",
+      "id": "act-b1-119-matchup",
       "type": "match-up",
       "title": "Verbs and Participles",
       "description": "Verbs and Participles",
       "content": {
         "type": "match-up",
-        "instructions": "",
         "pairs": [
           {
             "left": "купити",
@@ -309,14 +165,9 @@
       "language": "uk",
       "difficultyLevel": "B1",
       "duration": 5,
-      "tags": [
-        "grammar",
-        "participles",
-        "passive",
-        "formation"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.235Z",
+      "modifiedAt": "2025-12-01T22:58:37.235Z"
     }
   ],
   "vocabulary": {
@@ -327,139 +178,109 @@
     "transliterationMode": "none",
     "words": [
       {
-        "id": "v-m119-001",
+        "id": "v-diyeprykmetnyk-119-0",
         "uk": "дієприкметник",
-        "translit": "",
-        "ipa": "/dʲijɛprɪˈkmɛtnɪk/",
         "en": "participle",
-        "pos": "",
-        "note": "m"
+        "pos": "m",
+        "ipa": "/dʲijɛprɪˈkmɛtnɪk/"
       },
       {
-        "id": "v-m119-002",
+        "id": "v-pasyvnyy-119-1",
         "uk": "пасивний",
-        "translit": "",
-        "ipa": "/pɑˈsɪwnɪj/",
         "en": "passive",
-        "pos": "",
-        "note": "adj"
+        "pos": "adj",
+        "ipa": "/pɑˈsɪwnɪj/"
       },
       {
-        "id": "v-m119-003",
+        "id": "v-napysanyy-119-2",
         "uk": "написаний",
-        "translit": "",
-        "ipa": "/nɑˈpɪsɑnɪj/",
         "en": "written",
-        "pos": "",
-        "note": "participle"
+        "pos": "participle",
+        "ipa": "/nɑˈpɪsɑnɪj/"
       },
       {
-        "id": "v-m119-004",
+        "id": "v-prochytanyy-119-3",
         "uk": "прочитаний",
-        "translit": "",
-        "ipa": "/prot͡ʃɪˈtɑnɪj/",
         "en": "read",
-        "pos": "",
-        "note": "participle"
+        "pos": "participle",
+        "ipa": "/prot͡ʃɪˈtɑnɪj/"
       },
       {
-        "id": "v-m119-005",
+        "id": "v-zroblenyy-119-4",
         "uk": "зроблений",
-        "translit": "",
-        "ipa": "/ˈzroblɛnɪj/",
         "en": "done, made",
-        "pos": "",
-        "note": "participle"
+        "pos": "participle",
+        "ipa": "/ˈzroblɛnɪj/"
       },
       {
-        "id": "v-m119-006",
+        "id": "v-zakrytyy-119-5",
         "uk": "закритий",
-        "translit": "",
-        "ipa": "/zɑˈkrɪtɪj/",
         "en": "closed",
-        "pos": "",
-        "note": "participle"
+        "pos": "participle",
+        "ipa": "/zɑˈkrɪtɪj/"
       },
       {
-        "id": "v-m119-007",
+        "id": "v-vidkrytyy-119-6",
         "uk": "відкритий",
-        "translit": "",
-        "ipa": "/vʲidˈkrɪtɪj/",
         "en": "open(ed)",
-        "pos": "",
-        "note": "participle"
+        "pos": "participle",
+        "ipa": "/vʲidˈkrɪtɪj/"
       },
       {
-        "id": "v-m119-008",
+        "id": "v-zabutyy-119-7",
         "uk": "забутий",
-        "translit": "",
-        "ipa": "/zɑˈbutɪj/",
         "en": "forgotten",
-        "pos": "",
-        "note": "participle"
+        "pos": "participle",
+        "ipa": "/zɑˈbutɪj/"
       },
       {
-        "id": "v-m119-009",
+        "id": "v-znaydenyy-119-8",
         "uk": "знайдений",
-        "translit": "",
-        "ipa": "/znɑjˈdɛnɪj/",
         "en": "found",
-        "pos": "",
-        "note": "participle"
+        "pos": "participle",
+        "ipa": "/znɑjˈdɛnɪj/"
       },
       {
-        "id": "v-m119-010",
+        "id": "v-kuplenyy-119-9",
         "uk": "куплений",
-        "translit": "",
-        "ipa": "/ˈkuplɛnɪj/",
         "en": "bought",
-        "pos": "",
-        "note": "participle"
+        "pos": "participle",
+        "ipa": "/ˈkuplɛnɪj/"
       },
       {
-        "id": "v-m119-011",
+        "id": "v-pryhotovlenyy-119-10",
         "uk": "приготовлений",
-        "translit": "",
-        "ipa": "/prɪɦotoˈwlɛnɪj/",
         "en": "prepared",
-        "pos": "",
-        "note": "participle"
+        "pos": "participle",
+        "ipa": "/prɪɦotoˈwlɛnɪj/"
       },
       {
-        "id": "v-m119-012",
+        "id": "v-zaproshenyy-119-11",
         "uk": "запрошений",
-        "translit": "",
-        "ipa": "/zɑˈproʃɛnɪj/",
         "en": "invited",
-        "pos": "",
-        "note": "participle"
+        "pos": "participle",
+        "ipa": "/zɑˈproʃɛnɪj/"
       },
       {
-        "id": "v-m119-013",
+        "id": "v-zbudovanyy-119-12",
         "uk": "збудований",
-        "translit": "",
-        "ipa": "/zbuˈdovɑnɪj/",
         "en": "built",
-        "pos": "",
-        "note": "participle"
+        "pos": "participle",
+        "ipa": "/zbuˈdovɑnɪj/"
       },
       {
-        "id": "v-m119-014",
+        "id": "v-orhanizovanyy-119-13",
         "uk": "організований",
-        "translit": "",
-        "ipa": "/orɦɑnʲiˈzovɑnɪj/",
         "en": "organized",
-        "pos": "",
-        "note": "participle"
+        "pos": "participle",
+        "ipa": "/orɦɑnʲiˈzovɑnɪj/"
       },
       {
-        "id": "v-m119-015",
+        "id": "v-vtrachenyy-119-14",
         "uk": "втрачений",
-        "translit": "",
-        "ipa": "/vˈtrɑt͡ʃɛnɪj/",
         "en": "lost",
-        "pos": "",
-        "note": "participle"
+        "pos": "participle",
+        "ipa": "/vˈtrɑt͡ʃɛnɪj/"
       }
     ]
   }

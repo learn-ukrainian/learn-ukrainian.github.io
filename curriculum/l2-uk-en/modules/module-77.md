@@ -233,48 +233,58 @@ You know basic sports. Now let's expand your fitness vocabulary!
 
 ### Match Sport to Category
 
-1. футбол → командний спорт
-2. плавання → індивідуальний спорт
-3. йога → фітнес
-4. бокс → бойовий спорт
-5. теніс → ракеткові ігри
+1. футбол
+   > [!answer] командний спорт
+2. плавання
+   > [!answer] індивідуальний спорт
+3. йога
+   > [!answer] фітнес
+4. бокс
+   > [!answer] бойовий спорт
+5. теніс
+   > [!answer] ракеткові ігри
 
 ### Complete Gym Dialogue
 
 **A:** Яке у тебе ___ сьогодні? (workout)
-→ тренування
+> [!answer] тренування
 
 **B:** Ноги і **___**. (abs)
-→ прес
+> [!answer] прес
 
 **A:** Скільки ___? (sets)
-→ підходів
+> [!answer] підходів
 
 **B:** Три підходи по п'ятнадцять ___. (reps)
-→ повторень
+> [!answer] повторень
 
 ### Sports Results
 
 Fill in:
 1. Наша команда ___ 3:1. (won)
-   → перемогла
+   > [!answer] перемогла
 
 2. Він забив два ___. (goals)
-   → голи
+   > [!answer] голи
 
 3. Вона виграла золоту ___. (medal)
-   → медаль
+   > [!answer] медаль
 
 4. Новий світовий ___! (record)
-   → рекорд
+   > [!answer] рекорд
 
 ### Translate
 
-1. I go to the gym every day. → Я ходжу в спортзал щодня.
-2. She plays tennis professionally. → Вона грає в теніс професійно.
-3. Our team won the championship. → Наша команда виграла чемпіонат.
-4. Don't forget to warm up! → Не забудь про розминку!
-5. The score is 2-2. → Рахунок 2:2.
+1. I go to the gym every day.
+   > [!answer] Я ходжу в спортзал щодня.
+2. She plays tennis professionally.
+   > [!answer] Вона грає в теніс професійно.
+3. Our team won the championship.
+   > [!answer] Наша команда виграла чемпіонат.
+4. Don't forget to warm up!
+   > [!answer] Не забудь про розминку!
+5. The score is 2-2.
+   > [!answer] Рахунок 2:2.
 
 ## production
 

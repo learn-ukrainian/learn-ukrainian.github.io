@@ -28,7 +28,8 @@ You've learned powerful tools for building Ukrainian vocabulary. Let's consolida
 
 **Three key skills:**
 1. **Prefixes** change meaning (direction, completion, etc.)
-2. **Suffixes** change word type (verb → noun, noun → adjective)
+2. **Suffixes** change word type (verb
+   > [!answer] noun, noun → adjective)
 3. **Roots** connect word families (one root = many words)
 
 > 💡 **The Goal**
@@ -148,31 +149,46 @@ You've learned powerful tools for building Ukrainian vocabulary. Let's consolida
 
 Identify the prefix and its meaning:
 
-1. **приїхати** → при- (arrival) + їхати = to arrive (by vehicle)
-2. **вийти** → ви- (out) + йти = to exit
-3. **переробити** → пере- (re-) + робити = to remake
-4. **написати** → на- (completion) + писати = to write (completed)
-5. **розказати** → роз- (out, spreading) + казати = to tell
+1. **приїхати**
+   > [!answer] при- (arrival) + їхати = to arrive (by vehicle)
+2. **вийти**
+   > [!answer] ви- (out) + йти = to exit
+3. **переробити**
+   > [!answer] пере- (re-) + робити = to remake
+4. **написати**
+   > [!answer] на- (completion) + писати = to write (completed)
+5. **розказати**
+   > [!answer] роз- (out, spreading) + казати = to tell
 
 ### Suffix Identification
 
 Identify the suffix and what it creates:
 
-1. **читання** → чита- + -ння (verbal noun) = reading
-2. **можливість** → можлив- + -ість (abstract quality) = possibility
-3. **письменник** → письмен- + -ник (agent) = writer
-4. **міський** → міськ- + -ий (adjective) = urban
-5. **щасливий** → щас- + -ливий (tendency) = happy
+1. **читання**
+   > [!answer] чита- + -ння (verbal noun) = reading
+2. **можливість**
+   > [!answer] можлив- + -ість (abstract quality) = possibility
+3. **письменник**
+   > [!answer] письмен- + -ник (agent) = writer
+4. **міський**
+   > [!answer] міськ- + -ий (adjective) = urban
+5. **щасливий**
+   > [!answer] щас- + -ливий (tendency) = happy
 
 ### Root Identification
 
 Identify the root and meaning:
 
-1. **виробництво** → -роб- (work) = production
-2. **прочитати** → -чит- (read) = to read through
-3. **розмова** → -мов- (speech) = conversation
-4. **перехід** → -хід- (going) = crossing
-5. **дізнатися** → -знат- (know) = to find out
+1. **виробництво**
+   > [!answer] -роб- (work) = production
+2. **прочитати**
+   > [!answer] -чит- (read) = to read through
+3. **розмова**
+   > [!answer] -мов- (speech) = conversation
+4. **перехід**
+   > [!answer] -хід- (going) = crossing
+5. **дізнатися**
+   > [!answer] -знат- (know) = to find out
 
 ### Build Words
 
@@ -205,11 +221,16 @@ Break down these words:
 
 ### Translate Using Word Formation
 
-1. To earn money → заробляти гроші (за- + роб-)
-2. The entrance is here → вхід тут (в- + хід-)
-3. I found out the truth → Я дізнався правду (ді- + знат-)
-4. Reading is useful → Читання корисне (-чит- + -ання)
-5. Urban transport → Міський транспорт (-ськ- from місто)
+1. To earn money
+   > [!answer] заробляти гроші (за- + роб-)
+2. The entrance is here
+   > [!answer] вхід тут (в- + хід-)
+3. I found out the truth
+   > [!answer] Я дізнався правду (ді- + знат-)
+4. Reading is useful
+   > [!answer] Читання корисне (-чит- + -ання)
+5. Urban transport
+   > [!answer] Міський транспорт (-ськ- from місто)
 
 ## production
 
@@ -239,13 +260,13 @@ Explain these words using their parts:
 Use word formation knowledge to complete:
 
 1. Де ___ (entrance)? А де ___ (exit)?
-   → вхід, вихід
+   > [!answer] вхід, вихід
 
 2. Він ___ (writer), вона ___ (reader).
-   → письменник, читачка
+   > [!answer] письменник, читачка
 
 3. ___ (urban) життя дуже ___ (busy).
-   → міське, зайняте
+   > [!answer] міське, зайняте
 
 ---
 

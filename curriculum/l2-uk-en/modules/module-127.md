@@ -179,52 +179,58 @@ Collectives decline like adjectives in plural:
 ### Choose Cardinal or Collective
 
 1. У них ___ (два/двоє) сини.
-   → **двоє** синів (collective for children)
-
+   > [!answer] **двоє** синів
+   > [!explanation] collective for children
 2. Я бачила ___ (три/троє) жінки.
-   → **трьох** жінок / **три** жінки (both acceptable)
-
+   > [!answer] **трьох** жінок / **три** жінки
+   > [!explanation] both acceptable
 3. У кімнаті ___ (чотири/четверо) людей.
-   → **четверо** людей (collective for mixed group)
-
+   > [!answer] **четверо** людей
+   > [!explanation] collective for mixed group
 4. Вона купила ___ (п'ять/п'ятеро) яблук.
-   → **п'ять** яблук (cardinal for things)
-
+   > [!answer] **п'ять** яблук
+   > [!explanation] cardinal for things
 5. У них ___ (шість/шестеро) дітей.
-   → **шестеро** дітей (collective for children)
-
+   > [!answer] **шестеро** дітей
+   > [!explanation] collective for children
 ### Express Fractions
 
-1. 1/2 пирога → **половина пирога**
-2. 1/4 години → **чверть години**
-3. 2/3 роботи → **дві третини роботи**
-4. 3/4 учнів → **три чверті учнів**
-5. 1/5 населення → **одна п'ята населення**
+1. 1/2 пирога
+   > [!answer] **половина пирога**
+2. 1/4 години
+   > [!answer] **чверть години**
+3. 2/3 роботи
+   > [!answer] **дві третини роботи**
+4. 3/4 учнів
+   > [!answer] **три чверті учнів**
+5. 1/5 населення
+   > [!answer] **одна п'ята населення**
 
 ### Approximate Quantities
 
 Express approximately:
 
-1. ~10 людей → **близько десяти людей**
-2. ~100 гривень → **приблизно сто гривень**
-3. >50 студентів → **понад п'ятдесят студентів**
-4. <20 хвилин → **менше ніж двадцять хвилин**
-5. almost all → **майже всі**
+1. ~10 людей
+   > [!answer] **близько десяти людей**
+2. ~100 гривень
+   > [!answer] **приблизно сто гривень**
+3. >50 студентів
+   > [!answer] **понад п'ятдесят студентів**
+4. <20 хвилин
+   > [!answer] **менше ніж двадцять хвилин**
+5. almost all
+   > [!answer] **майже всі**
 
 ### Translate to Ukrainian
 
 1. We both agree.
-   → **Ми обоє згодні.**
-
+   > [!answer] **Ми обоє згодні.**
 2. Half of the students passed.
-   → **Половина студентів склала іспит.**
-
+   > [!answer] **Половина студентів склала іспит.**
 3. About 30 people came.
-   → **Близько тридцяти людей прийшло.**
-
+   > [!answer] **Близько тридцяти людей прийшло.**
 4. They have three children.
-   → **У них троє дітей.**
-
+   > [!answer] **У них троє дітей.**
 ## production | Продукція
 
 ### Talk About Your Family

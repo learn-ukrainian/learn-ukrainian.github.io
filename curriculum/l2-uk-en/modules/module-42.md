@@ -226,43 +226,57 @@ Some common verbs have completely different stems:
 
 Connect imperfective with perfective:
 
-1. відкривати → відкрити
-2. закривати → закрити
-3. починати → почати
-4. питати → запитати
-5. відповідати → відповісти
-6. брати → взяти
-7. шукати → знайти
-8. бачити → побачити
+1. відкривати
+   > [!answer] відкрити
+2. закривати
+   > [!answer] закрити
+3. починати
+   > [!answer] почати
+4. питати
+   > [!answer] запитати
+5. відповідати
+   > [!answer] відповісти
+6. брати
+   > [!answer] взяти
+7. шукати
+   > [!answer] знайти
+8. бачити
+   > [!answer] побачити
 
 ### Choose Correct Aspect
 
 1. Він ___ (відкривати/відкрити) вікно кожен ранок.
-   → відкриває (habitual - imperfective)
-
+   > [!answer] відкриває
+   > [!explanation] habitual - imperfective
 2. Вона ___ (закривати/закрити) двері і пішла.
-   → закрила (completed - perfective)
-
+   > [!answer] закрила
+   > [!explanation] completed - perfective
 3. Я ___ (питати/запитати) його вчора про це.
-   → запитав (once - perfective)
-
+   > [!answer] запитав
+   > [!explanation] once - perfective
 4. Вони завжди ___ (відповідати/відповісти) швидко.
-   → відповідають (always - imperfective)
-
+   > [!answer] відповідають
+   > [!explanation] always - imperfective
 5. Де ти ___ (брати/взяти) цю книгу?
-   → взяв (completed - perfective)
-
+   > [!answer] взяв
+   > [!explanation] completed - perfective
 6. Я ___ (шукати/знайти) ключі вже годину!
-   → шукаю (process - imperfective)
-
+   > [!answer] шукаю
+   > [!explanation] process - imperfective
 ### Translate Using Correct Aspect
 
-1. I'm opening the window. → Я відкриваю вікно.
-2. She opened the door. → Вона відкрила двері.
-3. He always asks questions. → Він завжди питає.
-4. I asked her yesterday. → Я запитав її вчора.
-5. They're looking for an apartment. → Вони шукають квартиру.
-6. We found a good restaurant! → Ми знайшли гарний ресторан!
+1. I'm opening the window.
+   > [!answer] Я відкриваю вікно.
+2. She opened the door.
+   > [!answer] Вона відкрила двері.
+3. He always asks questions.
+   > [!answer] Він завжди питає.
+4. I asked her yesterday.
+   > [!answer] Я запитав її вчора.
+5. They're looking for an apartment.
+   > [!answer] Вони шукають квартиру.
+6. We found a good restaurant!
+   > [!answer] Ми знайшли гарний ресторан!
 
 ## production
 

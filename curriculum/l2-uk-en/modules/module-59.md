@@ -190,53 +190,53 @@ For more formal passive, use **бути** + passive participle (-ний/-тий)
 ### Transform to Passive/Impersonal
 
 1. Хтось відкрив двері. (someone opened the door)
-   → Двері відкрито. / Двері були відкриті.
+   > [!answer] Двері відкрито. / Двері були відкриті.
 
 2. Хтось написав книгу. (someone wrote the book)
-   → Книгу написано. / Книга написана.
+   > [!answer] Книгу написано. / Книга написана.
 
 3. Тут курять. (they smoke here)
-   → Тут можна курити. (allowed) / Тут не можна курити. (forbidden)
+   > [!answer] Тут можна курити. (allowed) / Тут не можна курити. (forbidden)
 
 4. Люди кажуть, що він багатий.
-   → Кажуть, що він багатий.
+   > [!answer] Кажуть, що він багатий.
 
 5. Хтось зайняв це місце.
-   → Це місце зайнято.
+   > [!answer] Це місце зайнято.
 
 ### Choose the Correct Form
 
 1. The work is done. - Роботу ___.
-   → зроблено
+   > [!answer] зроблено
 
 2. The store is closed. - Магазин ___.
-   → закрито / зачинено
+   > [!answer] закрито / зачинено
 
 3. It is said that... - ___, що...
-   → Кажуть / Говорять
+   > [!answer] Кажуть / Говорять
 
 4. Entry is forbidden. - Вхід ___.
-   → заборонено
+   > [!answer] заборонено
 
 5. This seat is taken. - Це місце ___.
-   → зайнято
+   > [!answer] зайнято
 
 ### Translate
 
 1. One must study.
-   → Треба вчитися.
+   > [!answer] Треба вчитися.
 
 2. It's not allowed to smoke here.
-   → Тут не можна курити. / Тут заборонено курити.
+   > [!answer] Тут не можна курити. / Тут заборонено курити.
 
 3. The decision has been made.
-   → Рішення прийнято.
+   > [!answer] Рішення прийнято.
 
 4. They say it will rain.
-   → Кажуть, що буде дощ.
+   > [!answer] Кажуть, що буде дощ.
 
 5. This is considered important.
-   → Це вважається важливим.
+   > [!answer] Це вважається важливим.
 
 ## production
 

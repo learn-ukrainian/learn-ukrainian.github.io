@@ -5,7 +5,6 @@
     "moduleId": "mod-uk-A1-24",
     "languagePair": "l2-uk-en",
     "subject": "language",
-    "lessonType": "grammar-introduction",
     "owner": "curricula-opus",
     "visibility": "public",
     "language": "uk",
@@ -26,29 +25,14 @@
       "Мусити and повинен/повинна",
       "Треба/потрібно (impersonal necessity)"
     ],
-    "totalDuration": 45,
-    "transliterationMode": "full",
     "tags": [
       "grammar",
       "verbs",
       "modals"
     ],
-    "version": 1,
-    "createdAt": "2025-12-01T00:00:00Z",
-    "modifiedAt": "2025-12-01T00:00:00Z",
+    "totalDuration": 45,
+    "transliterationMode": "full",
     "phases": [
-      {
-        "id": "phase-warm-up",
-        "name": "warm-up",
-        "duration": 5,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### What Can You Do?\n\nModal verbs express ability, necessity, and desire. They're essential for everyday communication:\n\n- **Я можу говорити українською.** (I can speak Ukrainian.)\n- **Я мушу працювати.** (I must work.)\n- **Я хочу їсти.** (I want to eat.)\n\nAll modals work the same way: **modal verb + infinitive**\n\n> 💡 **Did You Know?**\n>\n> Ukrainian has multiple ways to say \"must\" - with subtle differences:\n> - **Мусити** - personal obligation (I must)\n> - **Повинен** - duty/should (I should)\n> - **Треба** - impersonal necessity (it's necessary)\n>\n> English just has \"must\" for all of these!"
-          }
-        ]
-      },
       {
         "id": "phase-presentation",
         "name": "presentation",
@@ -57,87 +41,33 @@
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "### Могти (Can, To Be Able)\n\n| Person | Form | Example |\n|--------|------|---------|\n| я | можу | Я можу допомогти. |\n| ти | можеш | Ти можеш прийти? |\n| він/вона | може | Він може зробити це. |\n| ми | можемо | Ми можемо зустрітися. |\n| ви | можете | Ви можете почекати? |\n| вони | можуть | Вони можуть приїхати. |\n\n**Examples:**\n- Я **можу** говорити українською. (I can speak Ukrainian.)\n- Ти **можеш** мені допомогти? (Can you help me?)\n- Вона **не може** прийти завтра. (She can't come tomorrow.)\n\n> ⚡ **Pro Tip: Past & Future of Могти**\n>\n> **Past:** міг/могла/могло/могли + infinitive\n> - Я не міг зрозуміти. (I couldn't understand.)\n>\n> **Future:** зможу/зможеш... (perfective)\n> - Я зможу допомогти завтра. (I'll be able to help tomorrow.)"
+            "teacherNotes": "### Могти (Can, To Be Able)\n\n| Person | Form | Example |\n|--------|------|---------|\n| я | можу | Я можу допомогти. |\n| ти | можеш | Ти можеш прийти? |\n| він/вона | може | Він може зробити це. |\n| ми | можемо | Ми можемо зустрітися. |\n| ви | можете | Ви можете почекати? |\n| вони | можуть | Вони можуть приїхати. |\n\n**Examples:**\n- Я **можу** говорити українською. (I can speak Ukrainian.)\n- Ти **можеш** мені допомогти? (Can you help me?)\n- Вона **не може** прийти завтра. (She can't come tomorrow.)\n\n> ⚡ **Pro Tip: Past & Future of Могти**\n>\n> **Past:** міг/могла/могло/могли + infinitive\n> - Я не міг зрозуміти. (I couldn't understand.)\n>\n> **Future:** зможу/зможеш... (perfective)\n> - Я зможу допомогти завтра. (I'll be able to help tomorrow.)\n\n### Мусити (Must, Have To)\n\n| Person | Form | Example |\n|--------|------|---------|\n| я | мушу | Я мушу йти. |\n| ти | мусиш | Ти мусиш вивчити це. |\n| він/вона | мусить | Вона мусить працювати. |\n| ми | мусимо | Ми мусимо поспішати. |\n| ви | мусите | Ви мусите бути обережні. |\n| вони | мусять | Вони мусять платити. |\n\n**Examples:**\n- Я **мушу** йти. (I must go.)\n- Він **мусить** закінчити роботу. (He must finish work.)\n- Ми **мусимо** поспішати! (We must hurry!)\n\n> 📜 **History Bite: Мусити Origins**\n>\n> \"Мусити\" came to Ukrainian through Polish from German \"müssen.\" It entered during centuries of cultural contact. The native Slavic way to express necessity uses \"повинен\" or \"треба.\" You'll hear both in modern Ukrainian!\n\n### Повинен/Повинна (Should, Must)\n\nThis is an adjective, not a verb - it changes for gender!\n\n| Form | Used with | Example |\n|------|-----------|---------|\n| повинен | він, я(m), ти(m) | Він повинен допомогти. |\n| повинна | вона, я(f), ти(f) | Вона повинна прийти. |\n| повинне | воно | Воно повинне працювати. |\n| повинні | ми, ви, вони | Ми повинні вчитися. |\n\n**Examples:**\n- Я **повинен** (m) / **повинна** (f) працювати. (I should work.)\n- Ти **повинен** бути чесним. (You should be honest.)\n- Вони **повинні** знати правду. (They should know the truth.)\n\n> 🔗 **Language Link: Мусити vs Повинен**\n>\n> Both mean \"must\" but with nuance:\n> - **Мусити** = have to (external pressure)\n> - **Повинен** = ought to, should (duty, moral obligation)\n>\n> \"Я мушу їсти\" = I have to eat (hungry!)\n> \"Я повинен їсти здорову їжу\" = I should eat healthy food (it's the right thing)\n\n### Треба / Потрібно (It's Necessary)\n\nThese are impersonal - no subject needed:\n\n| Expression | Example | Meaning |\n|------------|---------|---------|\n| треба | Треба працювати. | One must work. / It's necessary to work. |\n| потрібно | Потрібно вчитися. | It's necessary to study. |\n| не треба | Не треба хвилюватися. | Don't worry. / No need to worry. |\n\n**With dative for \"person who needs to\":**\n- **Мені** треба йти. (I need to go.)\n- **Тобі** потрібно відпочити. (You need to rest.)\n- **Нам** не треба поспішати. (We don't need to hurry.)\n\n> 🎯 **Fun Fact: Не треба!**\n>\n> \"Не треба\" is a common way to refuse politely or tell someone not to bother:\n> - Можна допомогти? - Ні, не треба, дякую!\n> (Can I help? - No, no need, thanks!)\n>\n> It's gentler than saying \"ні\"!\n\n### Хотіти (To Want)\n\nReview from Module 08:\n\n| Person | Form | Example |\n|--------|------|---------|\n| я | хочу | Я хочу їсти. |\n| ти | хочеш | Ти хочеш каву? |\n| він/вона | хоче | Вона хоче спати. |\n| ми | хочемо | Ми хочемо поїхати. |\n| ви | хочете | Ви хочете замовити? |\n| вони | хочуть | Вони хочуть допомогти. |\n\n**Polite form: Я хотів би / Я хотіла б (I would like)**\n- Я хотів би каву. (I would like coffee. - male)\n- Я хотіла б замовити. (I would like to order. - female)\n\n> 🌍 **Real World: Polite Requests**\n>\n> - **Чи можете ви допомогти?** - Can you help?\n> - **Чи можна тут сісти?** - May I sit here?\n> - **Я хотів би запитати.** - I'd like to ask.\n> - **Вам потрібна допомога?** - Do you need help?"
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Мусити (Must, Have To)\n\n| Person | Form | Example |\n|--------|------|---------|\n| я | мушу | Я мушу йти. |\n| ти | мусиш | Ти мусиш вивчити це. |\n| він/вона | мусить | Вона мусить працювати. |\n| ми | мусимо | Ми мусимо поспішати. |\n| ви | мусите | Ви мусите бути обережні. |\n| вони | мусять | Вони мусять платити. |\n\n**Examples:**\n- Я **мушу** йти. (I must go.)\n- Він **мусить** закінчити роботу. (He must finish work.)\n- Ми **мусимо** поспішати! (We must hurry!)\n\n> 📜 **History Bite: Мусити Origins**\n>\n> \"Мусити\" came to Ukrainian through Polish from German \"müssen.\" It entered during centuries of cultural contact. The native Slavic way to express necessity uses \"повинен\" or \"треба.\" You'll hear both in modern Ukrainian!"
+            "teacherNotes": "### Form Sentences with Modals\n\n1. I can help.\n   > [!answer] Я можу допомогти.\n2. She must work.\n   > [!answer] Вона мусить працювати.\n3. We should study.\n   > [!answer] Ми повинні вчитися.\n4. They want to eat.\n   > [!answer] Вони хочуть їсти.\n5. I need to go.\n   > [!answer] Мені треба йти.\n\n### Negative Forms\n\n1. I can't understand.\n   > [!answer] Я не можу зрозуміти.\n2. You don't have to hurry.\n   > [!answer] Тобі не треба поспішати.\n3. She doesn't want to wait.\n   > [!answer] Вона не хоче чекати.\n\n### Questions with Modals\n\n1. Can you help?\n   > [!answer] Ти можеш допомогти?\n2. Do you want coffee?\n   > [!answer] Ти хочеш каву?\n3. Do I have to pay now?\n   > [!answer] Мені треба платити зараз?"
           },
           {
             "type": "canvas",
             "canvasData": "{}",
-            "teacherNotes": "Повинен/Повинна (Should, Must)\n\nThis is an adjective, not a verb - it changes for gender!\n\n| Form | Used with | Example |\n|------|-----------|---------|\n| повинен | він, я(m), ти(m) | Він повинен допомогти. |\n| повинна | вона, я(f), ти(f) | Вона повинна прийти. |\n| повинне | воно | Воно повинне працювати. |\n| повинні | ми, ви, вони | Ми повинні вчитися. |\n\n**Examples:**\n- Я **повинен** (m) / **повинна** (f) працювати. (I should work.)\n- Ти **повинен** бути чесним. (You should be honest.)\n- Вони **повинні** знати правду. (They should know the truth.)\n\n> 🔗 **Language Link: Мусити vs Повинен**\n>\n> Both mean \"must\" but with nuance:\n> - **Мусити** = have to (external pressure)\n> - **Повинен** = ought to, should (duty, moral obligation)\n>\n> \"Я мушу їсти\" = I have to eat (hungry!)\n> \"Я повинен їсти здорову їжу\" = I should eat healthy food (it's the right thing)"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Треба / Потрібно (It's Necessary)\n\nThese are impersonal - no subject needed:\n\n| Expression | Example | Meaning |\n|------------|---------|---------|\n| треба | Треба працювати. | One must work. / It's necessary to work. |\n| потрібно | Потрібно вчитися. | It's necessary to study. |\n| не треба | Не треба хвилюватися. | Don't worry. / No need to worry. |\n\n**With dative for \"person who needs to\":**\n- **Мені** треба йти. (I need to go.)\n- **Тобі** потрібно відпочити. (You need to rest.)\n- **Нам** не треба поспішати. (We don't need to hurry.)\n\n> 🎯 **Fun Fact: Не треба!**\n>\n> \"Не треба\" is a common way to refuse politely or tell someone not to bother:\n> - Можна допомогти? - Ні, не треба, дякую!\n> (Can I help? - No, no need, thanks!)\n>\n> It's gentler than saying \"ні\"!"
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Хотіти (To Want)\n\nReview from Module 08:\n\n| Person | Form | Example |\n|--------|------|---------|\n| я | хочу | Я хочу їсти. |\n| ти | хочеш | Ти хочеш каву? |\n| він/вона | хоче | Вона хоче спати. |\n| ми | хочемо | Ми хочемо поїхати. |\n| ви | хочете | Ви хочете замовити? |\n| вони | хочуть | Вони хочуть допомогти. |\n\n**Polite form: Я хотів би / Я хотіла б (I would like)**\n- Я хотів би каву. (I would like coffee. - male)\n- Я хотіла б замовити. (I would like to order. - female)\n\n> 🌍 **Real World: Polite Requests**\n>\n> - **Чи можете ви допомогти?** - Can you help?\n> - **Чи можна тут сісти?** - May I sit here?\n> - **Я хотів би запитати.** - I'd like to ask.\n> - **Вам потрібна допомога?** - Do you need help?"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A1-24-matchup"
-          }
-        ]
-      },
-      {
-        "id": "phase-practice",
-        "name": "practice",
-        "duration": 15,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Form Sentences with Modals\n\n1. I can help. → Я можу допомогти.\n2. She must work. → Вона мусить працювати.\n3. We should study. → Ми повинні вчитися.\n4. They want to eat. → Вони хочуть їсти.\n5. I need to go. → Мені треба йти."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Negative Forms\n\n1. I can't understand. → Я не можу зрозуміти.\n2. You don't have to hurry. → Тобі не треба поспішати.\n3. She doesn't want to wait. → Вона не хоче чекати."
-          },
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "Questions with Modals\n\n1. Can you help? → Ти можеш допомогти?\n2. Do you want coffee? → Ти хочеш каву?\n3. Do I have to pay now? → Мені треба платити зараз?"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A1-24-quiz"
-          },
-          {
-            "type": "activity",
-            "activityId": "act-uk-A1-24-groupsort"
-          }
-        ]
-      },
-      {
-        "id": "phase-production",
-        "name": "production",
-        "duration": 10,
-        "items": [
-          {
-            "type": "canvas",
-            "canvasData": "{}",
-            "teacherNotes": "### Talk About Your Abilities\n\nAnswer:\n1. Що ви можете робити добре?\n2. Якими мовами ви можете говорити?\n3. Що ви мусите робити щодня?\n4. Що ви хочете вивчити?"
+            "teacherNotes": "### Talk About Your Abilities\n\nAnswer:\n1. Що ви можете робити добре?\n2. Якими мовами ви можете говорити?\n3. Що ви мусите робити щодня?\n4. Що ви хочете вивчити?\n\n---"
           }
         ]
       }
-    ]
+    ],
+    "createdAt": "2025-12-01T22:58:37.263Z",
+    "modifiedAt": "2025-12-01T22:58:37.263Z",
+    "version": 1
   },
   "activities": [
     {
-      "id": "act-uk-A1-24-matchup",
+      "id": "act-a1-24-matchup",
       "type": "match-up",
       "title": "Modal Translations",
       "description": "Match Ukrainian to English.",
       "content": {
         "type": "match-up",
-        "instructions": "Match Ukrainian to English.",
         "pairs": [
           {
             "left": "Я можу",
@@ -172,22 +102,17 @@
       "language": "uk",
       "difficultyLevel": "A1",
       "duration": 5,
-      "tags": [
-        "grammar",
-        "verbs",
-        "modals"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.263Z",
+      "modifiedAt": "2025-12-01T22:58:37.263Z"
     },
     {
-      "id": "act-uk-A1-24-quiz",
+      "id": "act-a1-24-quiz",
       "type": "quiz",
       "title": "Modal Verbs",
       "description": "Choose the correct form.",
       "content": {
         "type": "quiz",
-        "instructions": "Choose the correct form.",
         "questions": [
           {
             "question": "\"I can speak Ukrainian\" - Я ___ говорити українською.",
@@ -288,49 +213,50 @@
       "language": "uk",
       "difficultyLevel": "A1",
       "duration": 5,
-      "tags": [
-        "grammar",
-        "verbs",
-        "modals"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.263Z",
+      "modifiedAt": "2025-12-01T22:58:37.263Z"
     },
     {
-      "id": "act-uk-A1-24-groupsort",
+      "id": "act-a1-24-groupsort",
       "type": "group-sort",
       "title": "Types of Modals",
       "description": "Sort expressions by meaning.",
       "content": {
         "type": "group-sort",
-        "instructions": "Sort expressions by meaning.",
         "groups": [
           {
-            "name": "Ability (Can)",
+            "id": "ability",
+            "name": "Ability",
             "items": [
               "можу",
               "можеш",
               "можемо",
               "не можу"
-            ]
+            ],
+            "nameUk": "Can"
           },
           {
-            "name": "Obligation (Must)",
+            "id": "obligation",
+            "name": "Obligation",
             "items": [
               "мушу",
               "повинен",
               "треба",
               "потрібно"
-            ]
+            ],
+            "nameUk": "Must"
           },
           {
-            "name": "Desire (Want)",
+            "id": "desire",
+            "name": "Desire",
             "items": [
               "хочу",
               "хочеш",
               "хотів би",
               "хочуть"
-            ]
+            ],
+            "nameUk": "Want"
           }
         ],
         "shuffleItems": true
@@ -341,13 +267,9 @@
       "language": "uk",
       "difficultyLevel": "A1",
       "duration": 5,
-      "tags": [
-        "grammar",
-        "verbs",
-        "modals"
-      ],
-      "createdAt": "2025-12-01T00:00:00Z",
-      "modifiedAt": "2025-12-01T00:00:00Z"
+      "tags": [],
+      "createdAt": "2025-12-01T22:58:37.263Z",
+      "modifiedAt": "2025-12-01T22:58:37.263Z"
     }
   ],
   "vocabulary": {
@@ -358,117 +280,94 @@
     "transliterationMode": "full",
     "words": [
       {
-        "id": "v-m24-001",
+        "id": "v-mohty-24-0",
         "uk": "могти",
-        "translit": "",
-        "ipa": "/mɔɦˈtɪ/",
         "en": "can, to be able",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/mɔɦˈtɪ/",
         "note": "можу, можеш, може"
       },
       {
-        "id": "v-m24-002",
+        "id": "v-musyty-24-1",
         "uk": "мусити",
-        "translit": "",
-        "ipa": "/muˈsɪtɪ/",
         "en": "must, have to",
         "pos": "verb",
-        "gender": "-",
+        "ipa": "/muˈsɪtɪ/",
         "note": "мушу, мусиш, мусить"
       },
       {
-        "id": "v-m24-003",
+        "id": "v-povynen-24-2",
         "uk": "повинен",
-        "translit": "",
-        "ipa": "/pɔˈvɪnɛn/",
         "en": "should, ought to (m)",
         "pos": "adj",
+        "ipa": "/pɔˈvɪnɛn/",
         "gender": "m",
         "note": "повинна (f), повинні (pl)"
       },
       {
-        "id": "v-m24-004",
+        "id": "v-treba-24-3",
         "uk": "треба",
-        "translit": "",
-        "ipa": "/ˈtrɛbɑ/",
         "en": "it's necessary",
         "pos": "adv",
-        "gender": "-",
+        "ipa": "/ˈtrɛbɑ/",
         "note": "+ dative + infinitive"
       },
       {
-        "id": "v-m24-005",
+        "id": "v-potribno-24-4",
         "uk": "потрібно",
-        "translit": "",
-        "ipa": "/pɔˈtrʲibnɔ/",
         "en": "it's needed",
         "pos": "adv",
-        "gender": "-",
+        "ipa": "/pɔˈtrʲibnɔ/",
         "note": "= треба"
       },
       {
-        "id": "v-m24-006",
+        "id": "v-dopomohty-24-5",
         "uk": "допомогти",
-        "translit": "",
-        "ipa": "/dɔpɔmɔɦˈtɪ/",
         "en": "to help (perf)",
         "pos": "verb",
-        "gender": "-"
+        "ipa": "/dɔpɔmɔɦˈtɪ/"
       },
       {
-        "id": "v-m24-007",
+        "id": "v-zrozumity-24-6",
         "uk": "зрозуміти",
-        "translit": "",
-        "ipa": "/zrɔzuˈmʲitɪ/",
         "en": "to understand (perf)",
         "pos": "verb",
-        "gender": "-"
+        "ipa": "/zrɔzuˈmʲitɪ/"
       },
       {
-        "id": "v-m24-008",
+        "id": "v-pospishaty-24-7",
         "uk": "поспішати",
-        "translit": "",
-        "ipa": "/pɔspʲiˈʃɑtɪ/",
         "en": "to hurry",
         "pos": "verb",
-        "gender": "-"
+        "ipa": "/pɔspʲiˈʃɑtɪ/"
       },
       {
-        "id": "v-m24-009",
+        "id": "v-zakinchyty-24-8",
         "uk": "закінчити",
-        "translit": "",
-        "ipa": "/zɑˈkʲintʃɪtɪ/",
         "en": "to finish",
         "pos": "verb",
-        "gender": "-"
+        "ipa": "/zɑˈkʲintʃɪtɪ/"
       },
       {
-        "id": "v-m24-010",
+        "id": "v-pochekaty-24-9",
         "uk": "почекати",
-        "translit": "",
-        "ipa": "/pɔtʃɛˈkɑtɪ/",
         "en": "to wait (perf)",
         "pos": "verb",
-        "gender": "-"
+        "ipa": "/pɔtʃɛˈkɑtɪ/"
       },
       {
-        "id": "v-m24-011",
+        "id": "v-vidpochyty-24-10",
         "uk": "відпочити",
-        "translit": "",
-        "ipa": "/vʲidpɔˈtʃɪtɪ/",
         "en": "to rest",
         "pos": "verb",
-        "gender": "-"
+        "ipa": "/vʲidpɔˈtʃɪtɪ/"
       },
       {
-        "id": "v-m24-012",
+        "id": "v-platyty-24-11",
         "uk": "платити",
-        "translit": "",
-        "ipa": "/plɑˈtɪtɪ/",
         "en": "to pay",
         "pos": "verb",
-        "gender": "-"
+        "ipa": "/plɑˈtɪtɪ/"
       }
     ]
   }
