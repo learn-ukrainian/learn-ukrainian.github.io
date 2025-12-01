@@ -797,12 +797,15 @@ function generateHTML(vibeJSON: any, nav: NavInfo): string {
     : '';
 
   // For immersive modules: convert each section to HTML
-  const sectionCards = immersiveSections.map((section: any) => ({
-    id: section.id,
-    title: section.title,
-    type: section.type,
-    html: mdConverter.makeHtml(section.content),
-  }));
+  // Exclude "vocabulary" type sections - they're shown in the Vocab tab
+  const sectionCards = immersiveSections
+    .filter((section: any) => section.type !== 'vocabulary')
+    .map((section: any) => ({
+      id: section.id,
+      title: section.title,
+      type: section.type,
+      html: mdConverter.makeHtml(section.content),
+    }));
 
   // Navigation links
   const prevLink = nav.prevModule
