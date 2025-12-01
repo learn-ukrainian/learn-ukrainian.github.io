@@ -97,7 +97,7 @@ interface ImmersiveSection {
   id: string;
   title: string;
   content: string;
-  type: 'intro' | 'topic' | 'practice' | 'vocabulary' | 'summary';
+  type: 'intro' | 'topic' | 'practice' | 'vocabulary' | 'summary' | 'activities';
 }
 
 interface ParsedModule {
@@ -686,50 +686,94 @@ function parseLetterGroups(body: string): LetterGroups | undefined {
 
 /**
  * Parse immersive (B1+) module content into sections
- * Sections are delimited by # headers
+ * Sections are delimited by # headers, with ## subsections expanded
  */
 function parseImmersiveSections(body: string): ImmersiveSection[] {
   const sections: ImmersiveSection[] = [];
 
-  // Split by # headers (but not ## or ###)
-  const sectionMatches = body.split(/\n(?=# [^#])/);
-
-  for (const sectionText of sectionMatches) {
-    if (!sectionText.trim()) continue;
-
-    // Extract title from first line
-    const lines = sectionText.trim().split('\n');
-    const titleLine = lines[0];
-
-    // Check if this is a # header
-    const titleMatch = titleLine.match(/^# (.+)$/);
-    if (!titleMatch) continue;
-
-    const title = titleMatch[1].trim();
-    const content = lines.slice(1).join('\n').trim();
-
-    // Determine section type based on title
-    let type: ImmersiveSection['type'] = 'topic';
+  // Helper to determine section type
+  const getSectionType = (title: string): ImmersiveSection['type'] => {
     const titleLower = title.toLowerCase();
+    if (titleLower.includes('вступ') || titleLower === 'introduction') return 'intro';
+    // Only "Вправи" (exercises) section - not "Практика" (practice in lesson)
+    if (titleLower === 'вправи' || titleLower === 'activities' || titleLower === 'exercises') return 'activities';
+    if (titleLower.includes('словник') || titleLower === 'vocabulary') return 'vocabulary';
+    if (titleLower.includes('підсумок') || titleLower === 'summary') return 'summary';
+    return 'topic';
+  };
 
-    if (titleLower.includes('вступ') || titleLower === 'introduction') {
-      type = 'intro';
-    } else if (titleLower.includes('практика') || titleLower === 'practice' || titleLower.includes('вправ')) {
-      type = 'practice';
-    } else if (titleLower.includes('словник') || titleLower === 'vocabulary') {
-      type = 'vocabulary';
-    } else if (titleLower.includes('підсумок') || titleLower === 'summary') {
-      type = 'summary';
-    }
-
-    // Generate ID from title
-    const id = title
+  // Helper to generate section ID
+  const generateSectionId = (title: string): string => {
+    return title
       .toLowerCase()
       .replace(/[^a-zа-яіїєґ0-9]+/g, '-')
       .replace(/^-|-$/g, '')
       .substring(0, 30);
+  };
 
-    sections.push({ id, title, content, type });
+  // Split by # headers (but not ## or ###)
+  const h1Sections = body.split(/\n(?=# [^#])/);
+
+  for (const h1Text of h1Sections) {
+    if (!h1Text.trim()) continue;
+
+    const lines = h1Text.trim().split('\n');
+    const titleLine = lines[0];
+    const titleMatch = titleLine.match(/^# (.+)$/);
+    if (!titleMatch) continue;
+
+    const h1Title = titleMatch[1].trim();
+    const h1Content = lines.slice(1).join('\n').trim();
+    const h1Type = getSectionType(h1Title);
+
+    // Check if this section has ## subsections
+    const hasSubsections = /\n## [^#]/.test(h1Content);
+
+    // For "topic" type sections with ## subsections, expand them into separate sections
+    if (h1Type === 'topic' && hasSubsections) {
+      // Split content by ## headers
+      const h2Parts = h1Content.split(/\n(?=## [^#])/);
+
+      for (const h2Text of h2Parts) {
+        if (!h2Text.trim()) continue;
+
+        const h2Lines = h2Text.trim().split('\n');
+        const h2TitleLine = h2Lines[0];
+        const h2TitleMatch = h2TitleLine.match(/^## (.+)$/);
+
+        if (h2TitleMatch) {
+          // This is a ## subsection
+          const h2Title = h2TitleMatch[1].trim();
+          const h2Content = h2Lines.slice(1).join('\n').trim();
+          const h2Type = getSectionType(h2Title);
+
+          sections.push({
+            id: generateSectionId(h2Title),
+            title: h2Title,
+            content: h2Content,
+            type: h2Type,
+          });
+        } else {
+          // Content before first ## (intro text)
+          if (h2Text.trim()) {
+            sections.push({
+              id: generateSectionId(h1Title + '-intro'),
+              title: h1Title,
+              content: h2Text.trim(),
+              type: 'intro',
+            });
+          }
+        }
+      }
+    } else {
+      // No ## subsections or non-topic type - keep as single section
+      sections.push({
+        id: generateSectionId(h1Title),
+        title: h1Title,
+        content: h1Content,
+        type: h1Type,
+      });
+    }
   }
 
   return sections;
@@ -899,9 +943,9 @@ function generateHTML(vibeJSON: any, nav: NavInfo): string {
     : '';
 
   // For immersive modules: convert each section to HTML
-  // Exclude "vocabulary" type sections - they're shown in the Vocab tab
+  // Exclude vocabulary/activities/summary - they're shown in separate tabs
   const sectionCards = immersiveSections
-    .filter((section: any) => section.type !== 'vocabulary')
+    .filter((section: any) => !['vocabulary', 'activities', 'summary'].includes(section.type))
     .map((section: any) => ({
       id: section.id,
       title: section.title,
