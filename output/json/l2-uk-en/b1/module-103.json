@@ -250,13 +250,26 @@
       "modifiedAt": "2025-12-01T00:00:00Z"
     },
     {
-      "id": "act-uk-B1-103-fillin",
-      "type": "fill-in",
+      "id": "act-uk-B1-103-gapfill",
+      "type": "gap-fill",
       "title": "Complete with Purpose Clauses",
       "description": "Учора я рано встав, (1)___ не запізнитися на роботу. Я випив каву, (2)___ прокинутися. Потім я поїхав на роботу, (3)___ почати день вчасно. Увечері я пішов у спортзал, (4)___ потренуватися.",
       "content": {
-        "type": "fill-in",
-        "instructions": "Учора я рано встав, (1)___ не запізнитися на роботу. Я випив каву, (2)___ прокинутися. Потім я поїхав на роботу, (3)___ почати день вчасно. Увечері я пішов у спортзал, (4)___ потренуватися."
+        "type": "gap-fill",
+        "instructions": "Учора я рано встав, (1)___ не запізнитися на роботу. Я випив каву, (2)___ прокинутися. Потім я поїхав на роботу, (3)___ почати день вчасно. Увечері я пішов у спортзал, (4)___ потренуватися.",
+        "text": "Учора я рано встав, (1)___ не запізнитися на роботу. Я випив каву, (2)___ прокинутися. Потім я поїхав на роботу, (3)___ почати день вчасно. Увечері я пішов у спортзал, (4)___ потренуватися.",
+        "blanks": [
+          {},
+          {},
+          {},
+          {}
+        ],
+        "answers": [
+          "щоб",
+          "щоб",
+          "щоб",
+          "щоб"
+        ]
       },
       "subject": "language",
       "owner": "curricula-opus",
@@ -278,8 +291,90 @@
     "moduleId": "mod-uk-B1-103",
     "level": "B1",
     "phase": "B1.2",
-    "wordCount": 0,
+    "wordCount": 9,
     "transliterationMode": "none",
-    "words": []
+    "words": [
+      {
+        "id": "v-m103-001",
+        "uk": "щоб",
+        "translit": "",
+        "ipa": "/ʃt͡ʃob/",
+        "en": "in order to, so that",
+        "pos": "",
+        "gender": "conj"
+      },
+      {
+        "id": "v-m103-002",
+        "uk": "мета",
+        "translit": "",
+        "ipa": "/mɛˈtɑ/",
+        "en": "goal, purpose",
+        "pos": "",
+        "gender": "f"
+      },
+      {
+        "id": "v-m103-003",
+        "uk": "намір",
+        "translit": "",
+        "ipa": "/ˈnɑmʲir/",
+        "en": "intention",
+        "pos": "",
+        "gender": "m"
+      },
+      {
+        "id": "v-m103-004",
+        "uk": "ціль",
+        "translit": "",
+        "ipa": "/t͡sʲilʲ/",
+        "en": "aim, target",
+        "pos": "",
+        "gender": "f"
+      },
+      {
+        "id": "v-m103-005",
+        "uk": "задля",
+        "translit": "",
+        "ipa": "/ˈzɑdlʲɑ/",
+        "en": "for the sake of",
+        "pos": "",
+        "gender": "prep"
+      },
+      {
+        "id": "v-m103-006",
+        "uk": "для того щоб",
+        "translit": "",
+        "ipa": "-",
+        "en": "in order to",
+        "pos": "",
+        "gender": "conj"
+      },
+      {
+        "id": "v-m103-007",
+        "uk": "навіщо",
+        "translit": "",
+        "ipa": "/nɑˈvʲiʃt͡ʃo/",
+        "en": "why (for what purpose)",
+        "pos": "",
+        "gender": "adv"
+      },
+      {
+        "id": "v-m103-008",
+        "uk": "досягти",
+        "translit": "",
+        "ipa": "/doˈsʲɑɦtɪ/",
+        "en": "to achieve",
+        "pos": "",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m103-009",
+        "uk": "досягати",
+        "translit": "",
+        "ipa": "/dosʲɑˈɦɑtɪ/",
+        "en": "to achieve",
+        "pos": "",
+        "gender": "impf"
+      }
+    ]
   }
 }

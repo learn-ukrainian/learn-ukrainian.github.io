@@ -304,13 +304,42 @@
       "modifiedAt": "2025-12-01T00:00:00Z"
     },
     {
-      "id": "act-uk-B1-82-fillin",
-      "type": "fill-in",
+      "id": "act-uk-B1-82-gapfill",
+      "type": "gap-fill",
       "title": "Complete the Story",
       "description": "Коли я ___ (жив/прожив) у Києві, я ___ (ходив/пішов) на роботу пішки щодня. Зазвичай я ___ (купував/купив) каву по дорозі. Одного ранку я ___ (зустрічав/зустрів) старого друга. Ми ___ (говорили/поговорили) годину і я ___ (запізнювався/запізнився) на роботу.",
       "content": {
-        "type": "fill-in",
-        "instructions": "Коли я ___ (жив/прожив) у Києві, я ___ (ходив/пішов) на роботу пішки щодня. Зазвичай я ___ (купував/купив) каву по дорозі. Одного ранку я ___ (зустрічав/зустрів) старого друга. Ми ___ (говорили/поговорили) годину і я ___ (запізнювався/запізнився) на роботу."
+        "type": "gap-fill",
+        "instructions": "Коли я ___ (жив/прожив) у Києві, я ___ (ходив/пішов) на роботу пішки щодня. Зазвичай я ___ (купував/купив) каву по дорозі. Одного ранку я ___ (зустрічав/зустрів) старого друга. Ми ___ (говорили/поговорили) годину і я ___ (запізнювався/запізнився) на роботу.",
+        "text": "Коли я ___ (жив/прожив) у Києві, я ___ (ходив/пішов) на роботу пішки щодня. Зазвичай я ___ (купував/купив) каву по дорозі. Одного ранку я ___ (зустрічав/зустрів) старого друга. Ми ___ (говорили/поговорили) годину і я ___ (запізнювався/запізнився) на роботу.",
+        "blanks": [
+          {
+            "hint": "жив/прожив"
+          },
+          {
+            "hint": "ходив/пішов"
+          },
+          {
+            "hint": "купував/купив"
+          },
+          {
+            "hint": "зустрічав/зустрів"
+          },
+          {
+            "hint": "говорили/поговорили"
+          },
+          {
+            "hint": "запізнювався/запізнився"
+          }
+        ],
+        "answers": [
+          "жив (ongoing)",
+          "ходив (repeated)",
+          "купував (repeated)",
+          "зустрів (single)",
+          "поговорили (completed)",
+          "запізнився (single result)"
+        ]
       },
       "subject": "language",
       "owner": "curricula-opus",
@@ -333,8 +362,135 @@
     "moduleId": "mod-uk-B1-82",
     "level": "B1",
     "phase": "B1.1",
-    "wordCount": 0,
+    "wordCount": 14,
     "transliterationMode": "none",
-    "words": []
+    "words": [
+      {
+        "id": "v-m82-001",
+        "uk": "одного разу",
+        "translit": "",
+        "ipa": "/odnoˈɦo ˈrɑzu/",
+        "en": "once, one time",
+        "pos": "",
+        "note": "signals perfective"
+      },
+      {
+        "id": "v-m82-002",
+        "uk": "раптом",
+        "translit": "",
+        "ipa": "/ˈrɑptom/",
+        "en": "suddenly",
+        "pos": "",
+        "note": "signals perfective"
+      },
+      {
+        "id": "v-m82-003",
+        "uk": "нарешті",
+        "translit": "",
+        "ipa": "/nɑˈrɛʃtʲi/",
+        "en": "finally",
+        "pos": "",
+        "note": "signals perfective"
+      },
+      {
+        "id": "v-m82-004",
+        "uk": "минулого тижня",
+        "translit": "",
+        "ipa": "/mɪnuˈloɦo ˈtɪʒnʲɑ/",
+        "en": "last week",
+        "pos": "",
+        "note": "often with perfective"
+      },
+      {
+        "id": "v-m82-005",
+        "uk": "завжди",
+        "translit": "",
+        "ipa": "/ˈzɑvʒdɪ/",
+        "en": "always",
+        "pos": "",
+        "note": "signals imperfective"
+      },
+      {
+        "id": "v-m82-006",
+        "uk": "ніколи",
+        "translit": "",
+        "ipa": "/nʲiˈkolɪ/",
+        "en": "never",
+        "pos": "",
+        "note": "signals imperfective"
+      },
+      {
+        "id": "v-m82-007",
+        "uk": "часто",
+        "translit": "",
+        "ipa": "/ˈt͡ʃɑsto/",
+        "en": "often",
+        "pos": "",
+        "note": "signals imperfective"
+      },
+      {
+        "id": "v-m82-008",
+        "uk": "рідко",
+        "translit": "",
+        "ipa": "/ˈrʲidko/",
+        "en": "rarely",
+        "pos": "",
+        "note": "signals imperfective"
+      },
+      {
+        "id": "v-m82-009",
+        "uk": "щодня",
+        "translit": "",
+        "ipa": "/ʃt͡ʃoˈdnʲɑ/",
+        "en": "every day",
+        "pos": "",
+        "note": "signals imperfective"
+      },
+      {
+        "id": "v-m82-010",
+        "uk": "щотижня",
+        "translit": "",
+        "ipa": "/ʃt͡ʃoˈtɪʒnʲɑ/",
+        "en": "every week",
+        "pos": "",
+        "note": "signals imperfective"
+      },
+      {
+        "id": "v-m82-011",
+        "uk": "зазвичай",
+        "translit": "",
+        "ipa": "/zɑˈzvɪt͡ʃɑj/",
+        "en": "usually",
+        "pos": "",
+        "note": "signals imperfective"
+      },
+      {
+        "id": "v-m82-012",
+        "uk": "іноді",
+        "translit": "",
+        "ipa": "/iˈnodʲi/",
+        "en": "sometimes",
+        "pos": "",
+        "note": "signals imperfective"
+      },
+      {
+        "id": "v-m82-013",
+        "uk": "кожного разу",
+        "translit": "",
+        "ipa": "/ˈkoʒnoɦo ˈrɑzu/",
+        "en": "each time, every time",
+        "pos": "",
+        "note": "signals imperfective"
+      },
+      {
+        "id": "v-m82-014",
+        "uk": "раніше",
+        "translit": "",
+        "ipa": "/rɑˈnʲiʃɛ/",
+        "en": "earlier, formerly",
+        "pos": "",
+        "note": "often with imperfective"
+      }
+    ]
   }
 }

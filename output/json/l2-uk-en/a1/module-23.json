@@ -369,155 +369,173 @@
       {
         "id": "v-m23-001",
         "uk": "тиждень",
-        "translit": "/ˈtɪʒdɛnʲ/",
-        "ipa": "week",
-        "en": "noun",
-        "pos": "m",
-        "gender": "Gen: тижня"
+        "translit": "",
+        "ipa": "/ˈtɪʒdɛnʲ/",
+        "en": "week",
+        "pos": "noun",
+        "gender": "m",
+        "note": "Gen: тижня"
       },
       {
         "id": "v-m23-002",
         "uk": "місяць",
-        "translit": "/ˈmʲisʲɑt͡sʲ/",
-        "ipa": "month",
-        "en": "noun",
-        "pos": "m",
-        "gender": "Gen: місяця"
+        "translit": "",
+        "ipa": "/ˈmʲisʲɑt͡sʲ/",
+        "en": "month",
+        "pos": "noun",
+        "gender": "m",
+        "note": "Gen: місяця"
       },
       {
         "id": "v-m23-003",
         "uk": "рік",
-        "translit": "/rʲik/",
-        "ipa": "year",
-        "en": "noun",
-        "pos": "m",
-        "gender": "Gen: року"
+        "translit": "",
+        "ipa": "/rʲik/",
+        "en": "year",
+        "pos": "noun",
+        "gender": "m",
+        "note": "Gen: року"
       },
       {
         "id": "v-m23-004",
         "uk": "година",
-        "translit": "/ɦɔˈdɪnɑ/",
-        "ipa": "hour",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ɦɔˈdɪnɑ/",
+        "en": "hour",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m23-005",
         "uk": "хвилина",
-        "translit": "/xvɪˈlɪnɑ/",
-        "ipa": "minute",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/xvɪˈlɪnɑ/",
+        "en": "minute",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m23-006",
         "uk": "понеділок",
-        "translit": "/pɔnɛˈdʲilɔk/",
-        "ipa": "Monday",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/pɔnɛˈdʲilɔk/",
+        "en": "Monday",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m23-007",
         "uk": "вівторок",
-        "translit": "/vʲivˈtɔrɔk/",
-        "ipa": "Tuesday",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/vʲivˈtɔrɔk/",
+        "en": "Tuesday",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m23-008",
         "uk": "середа",
-        "translit": "/sɛˈrɛdɑ/",
-        "ipa": "Wednesday",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/sɛˈrɛdɑ/",
+        "en": "Wednesday",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m23-009",
         "uk": "четвер",
-        "translit": "/ˈtʃɛtvɛr/",
-        "ipa": "Thursday",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ˈtʃɛtvɛr/",
+        "en": "Thursday",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m23-010",
         "uk": "п'ятниця",
-        "translit": "/ˈpjɑtnɪt͡sʲɑ/",
-        "ipa": "Friday",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈpjɑtnɪt͡sʲɑ/",
+        "en": "Friday",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m23-011",
         "uk": "субота",
-        "translit": "/suˈbɔtɑ/",
-        "ipa": "Saturday",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/suˈbɔtɑ/",
+        "en": "Saturday",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m23-012",
         "uk": "неділя",
-        "translit": "/nɛˈdʲilʲɑ/",
-        "ipa": "Sunday",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/nɛˈdʲilʲɑ/",
+        "en": "Sunday",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m23-013",
         "uk": "січень",
-        "translit": "/ˈsʲitʃɛnʲ/",
-        "ipa": "January",
-        "en": "noun",
-        "pos": "m",
-        "gender": "Loc: у січні"
+        "translit": "",
+        "ipa": "/ˈsʲitʃɛnʲ/",
+        "en": "January",
+        "pos": "noun",
+        "gender": "m",
+        "note": "Loc: у січні"
       },
       {
         "id": "v-m23-014",
         "uk": "лютий",
-        "translit": "/ˈlʲutɪj/",
-        "ipa": "February",
-        "en": "noun",
-        "pos": "m",
-        "gender": "Loc: у лютому"
+        "translit": "",
+        "ipa": "/ˈlʲutɪj/",
+        "en": "February",
+        "pos": "noun",
+        "gender": "m",
+        "note": "Loc: у лютому"
       },
       {
         "id": "v-m23-015",
         "uk": "весна",
-        "translit": "/vɛsˈnɑ/",
-        "ipa": "spring",
-        "en": "noun",
-        "pos": "f",
-        "gender": "Adv: навесні"
+        "translit": "",
+        "ipa": "/vɛsˈnɑ/",
+        "en": "spring",
+        "pos": "noun",
+        "gender": "f",
+        "note": "Adv: навесні"
       },
       {
         "id": "v-m23-016",
         "uk": "літо",
-        "translit": "/ˈlʲitɔ/",
-        "ipa": "summer",
-        "en": "noun",
-        "pos": "n",
-        "gender": "Adv: влітку"
+        "translit": "",
+        "ipa": "/ˈlʲitɔ/",
+        "en": "summer",
+        "pos": "noun",
+        "gender": "n",
+        "note": "Adv: влітку"
       },
       {
         "id": "v-m23-017",
         "uk": "осінь",
-        "translit": "/ˈɔsʲinʲ/",
-        "ipa": "autumn",
-        "en": "noun",
-        "pos": "f",
-        "gender": "Adv: восени"
+        "translit": "",
+        "ipa": "/ˈɔsʲinʲ/",
+        "en": "autumn",
+        "pos": "noun",
+        "gender": "f",
+        "note": "Adv: восени"
       },
       {
         "id": "v-m23-018",
         "uk": "зима",
-        "translit": "/zɪˈmɑ/",
-        "ipa": "winter",
-        "en": "noun",
-        "pos": "f",
-        "gender": "Adv: взимку"
+        "translit": "",
+        "ipa": "/zɪˈmɑ/",
+        "en": "winter",
+        "pos": "noun",
+        "gender": "f",
+        "note": "Adv: взимку"
       }
     ]
   }

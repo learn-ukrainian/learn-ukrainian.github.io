@@ -380,367 +380,409 @@
       {
         "id": "v-m61-001",
         "uk": "прийти",
-        "translit": "/prɪjˈtɪ/",
-        "ipa": "to arrive (on foot)",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/prɪjˈtɪ/",
+        "en": "to arrive (on foot)",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m61-002",
         "uk": "приїхати",
-        "translit": "/prɪˈjixɑtɪ/",
-        "ipa": "to arrive (by transport)",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/prɪˈjixɑtɪ/",
+        "en": "to arrive (by transport)",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m61-003",
         "uk": "прилетіти",
-        "translit": "/prɪlɛˈtʲitɪ/",
-        "ipa": "to arrive (by plane)",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/prɪlɛˈtʲitɪ/",
+        "en": "to arrive (by plane)",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m61-004",
         "uk": "принести",
-        "translit": "/prɪnɛsˈtɪ/",
-        "ipa": "to bring (carrying)",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/prɪnɛsˈtɪ/",
+        "en": "to bring (carrying)",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m61-005",
         "uk": "привезти",
-        "translit": "/prɪvɛzˈtɪ/",
-        "ipa": "to bring (by transport)",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/prɪvɛzˈtɪ/",
+        "en": "to bring (by transport)",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m61-006",
         "uk": "приходити",
-        "translit": "/prɪxoˈdɪtɪ/",
-        "ipa": "to come (habitually)",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/prɪxoˈdɪtɪ/",
+        "en": "to come (habitually)",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m61-007",
         "uk": "вийти",
-        "translit": "/ˈvɪjtɪ/",
-        "ipa": "to go out, exit",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/ˈvɪjtɪ/",
+        "en": "to go out, exit",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m61-008",
         "uk": "виїхати",
-        "translit": "/ˈvɪjixɑtɪ/",
-        "ipa": "to drive out, leave",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/ˈvɪjixɑtɪ/",
+        "en": "to drive out, leave",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m61-009",
         "uk": "вилетіти",
-        "translit": "/vɪlɛˈtʲitɪ/",
-        "ipa": "to fly out, depart",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/vɪlɛˈtʲitɪ/",
+        "en": "to fly out, depart",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m61-010",
         "uk": "винести",
-        "translit": "/vɪnɛsˈtɪ/",
-        "ipa": "to carry out",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/vɪnɛsˈtɪ/",
+        "en": "to carry out",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m61-011",
         "uk": "виходити",
-        "translit": "/vɪxoˈdɪtɪ/",
-        "ipa": "to exit (habitually)",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/vɪxoˈdɪtɪ/",
+        "en": "to exit (habitually)",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m61-012",
         "uk": "увійти",
-        "translit": "/uˈvʲijtɪ/",
-        "ipa": "to enter",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/uˈvʲijtɪ/",
+        "en": "to enter",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m61-013",
         "uk": "в'їхати",
-        "translit": "/ˈvjixɑtɪ/",
-        "ipa": "to drive into",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/ˈvjixɑtɪ/",
+        "en": "to drive into",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m61-014",
         "uk": "входити",
-        "translit": "/vxoˈdɪtɪ/",
-        "ipa": "to enter (habitually)",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/vxoˈdɪtɪ/",
+        "en": "to enter (habitually)",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m61-015",
         "uk": "зайти",
-        "translit": "/zɑjˈtɪ/",
-        "ipa": "to drop by",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/zɑjˈtɪ/",
+        "en": "to drop by",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m61-016",
         "uk": "заїхати",
-        "translit": "/zɑˈjixɑtɪ/",
-        "ipa": "to stop by (driving)",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/zɑˈjixɑtɪ/",
+        "en": "to stop by (driving)",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m61-017",
         "uk": "заходити",
-        "translit": "/zɑxoˈdɪtɪ/",
-        "ipa": "to drop by (habitually)",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/zɑxoˈdɪtɪ/",
+        "en": "to drop by (habitually)",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m61-018",
         "uk": "перейти",
-        "translit": "/pɛrɛjˈtɪ/",
-        "ipa": "to cross (on foot)",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/pɛrɛjˈtɪ/",
+        "en": "to cross (on foot)",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m61-019",
         "uk": "переїхати",
-        "translit": "/pɛrɛˈjixɑtɪ/",
-        "ipa": "to move (residence)",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/pɛrɛˈjixɑtɪ/",
+        "en": "to move (residence)",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m61-020",
         "uk": "переходити",
-        "translit": "/pɛrɛxoˈdɪtɪ/",
-        "ipa": "to cross (habitually)",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/pɛrɛxoˈdɪtɪ/",
+        "en": "to cross (habitually)",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m61-021",
         "uk": "відійти",
-        "translit": "/vʲidʲijˈtɪ/",
-        "ipa": "to step away, leave",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/vʲidʲijˈtɪ/",
+        "en": "to step away, leave",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m61-022",
         "uk": "від'їхати",
-        "translit": "/vʲidˈjixɑtɪ/",
-        "ipa": "to drive away",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/vʲidˈjixɑtɪ/",
+        "en": "to drive away",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m61-023",
         "uk": "відходити",
-        "translit": "/vʲidxoˈdɪtɪ/",
-        "ipa": "to depart (habitually)",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/vʲidxoˈdɪtɪ/",
+        "en": "to depart (habitually)",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m61-024",
         "uk": "дійти",
-        "translit": "/dʲijˈtɪ/",
-        "ipa": "to reach (on foot)",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/dʲijˈtɪ/",
+        "en": "to reach (on foot)",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m61-025",
         "uk": "доїхати",
-        "translit": "/doˈjixɑtɪ/",
-        "ipa": "to reach (by transport)",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/doˈjixɑtɪ/",
+        "en": "to reach (by transport)",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m61-026",
         "uk": "обійти",
-        "translit": "/obʲijˈtɪ/",
-        "ipa": "to go around",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/obʲijˈtɪ/",
+        "en": "to go around",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m61-027",
         "uk": "об'їхати",
-        "translit": "/obˈjixɑtɪ/",
-        "ipa": "to drive around",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/obˈjixɑtɪ/",
+        "en": "to drive around",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m61-028",
         "uk": "вхід",
-        "translit": "/vxʲid/",
-        "ipa": "entrance",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/vxʲid/",
+        "en": "entrance",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m61-029",
         "uk": "вихід",
-        "translit": "/ˈvɪxʲid/",
-        "ipa": "exit",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ˈvɪxʲid/",
+        "en": "exit",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m61-030",
         "uk": "прихід",
-        "translit": "/ˈprɪxʲid/",
-        "ipa": "arrival, coming",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ˈprɪxʲid/",
+        "en": "arrival, coming",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m61-031",
         "uk": "відхід",
-        "translit": "/ˈvʲidxʲid/",
-        "ipa": "departure",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ˈvʲidxʲid/",
+        "en": "departure",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m61-032",
         "uk": "перехід",
-        "translit": "/ˈpɛrɛxʲid/",
-        "ipa": "crossing, transition",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ˈpɛrɛxʲid/",
+        "en": "crossing, transition",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m61-033",
         "uk": "прибуття",
-        "translit": "/prɪˈbutʲːɑ/",
-        "ipa": "arrival",
-        "en": "noun",
-        "pos": "n",
-        "gender": "formal"
+        "translit": "",
+        "ipa": "/prɪˈbutʲːɑ/",
+        "en": "arrival",
+        "pos": "noun",
+        "gender": "n",
+        "note": "formal"
       },
       {
         "id": "v-m61-034",
         "uk": "відбуття",
-        "translit": "/vʲidˈbutʲːɑ/",
-        "ipa": "departure",
-        "en": "noun",
-        "pos": "n",
-        "gender": "formal"
+        "translit": "",
+        "ipa": "/vʲidˈbutʲːɑ/",
+        "en": "departure",
+        "pos": "noun",
+        "gender": "n",
+        "note": "formal"
       },
       {
         "id": "v-m61-035",
         "uk": "переїзд",
-        "translit": "/pɛrɛˈjizd/",
-        "ipa": "move (relocation)",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/pɛrɛˈjizd/",
+        "en": "move (relocation)",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m61-036",
         "uk": "заїзд",
-        "translit": "/ˈzɑjizd/",
-        "ipa": "entrance (for vehicles)",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ˈzɑjizd/",
+        "en": "entrance (for vehicles)",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m61-037",
         "uk": "виїзд",
-        "translit": "/ˈvɪjizd/",
-        "ipa": "exit (for vehicles)",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ˈvɪjizd/",
+        "en": "exit (for vehicles)",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m61-038",
         "uk": "напрямок",
-        "translit": "/nɑˈprʲɑmok/",
-        "ipa": "direction",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/nɑˈprʲɑmok/",
+        "en": "direction",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m61-039",
         "uk": "затор",
-        "translit": "/zɑˈtor/",
-        "ipa": "traffic jam",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/zɑˈtor/",
+        "en": "traffic jam",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m61-040",
         "uk": "світлофор",
-        "translit": "/svʲitloˈfor/",
-        "ipa": "traffic light",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/svʲitloˈfor/",
+        "en": "traffic light",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m61-041",
         "uk": "перехрестя",
-        "translit": "/pɛrɛˈxrɛstʲɑ/",
-        "ipa": "intersection",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/pɛrɛˈxrɛstʲɑ/",
+        "en": "intersection",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m61-042",
         "uk": "калюжа",
-        "translit": "/kɑˈlʲuʒɑ/",
-        "ipa": "puddle",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/kɑˈlʲuʒɑ/",
+        "en": "puddle",
+        "pos": "noun",
+        "gender": "f"
       }
     ]
   }

@@ -602,7 +602,7 @@
       <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
-    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (0)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
+    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (9)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
     </section>
   </main>
@@ -611,7 +611,7 @@
     const matchPairs=[];
     const quizData=[{"question":"Він завжди ___ на роботу о восьмій.","options":["приходить","прийшов"],"correctIndex":0,"explanation":"Habitual action = imperfective."},{"question":"Вона сказала, ___ вона хвора.","options":["що","чи"],"correctIndex":0,"explanation":"Statement = що."},{"question":"___ книгу, він заснув.","options":["Прочитавши","Читаючи"],"correctIndex":0,"explanation":"Completed action before main verb."},{"question":"Я прийшов, ___ допомогти.","options":["щоб","що"],"correctIndex":0,"explanation":"Purpose = щоб."},{"question":"___ він мав час, він би прийшов.","options":["Якби","Якщо"],"correctIndex":0,"explanation":"Unreal conditional = якби."},{"question":"Роботу вже ___.","options":["зроблено","зроблена"],"correctIndex":0,"explanation":"Short passive form."}];
     const sortData={};
-    const vocabData=[];
+    const vocabData=[{"uk":"інтеграція","translit":"","en":"integration","note":"f"},{"uk":"вид дієслова","translit":"","en":"verb aspect","note":"m"},{"uk":"доконаний","translit":"","en":"perfective","note":"adj"},{"uk":"недоконаний","translit":"","en":"imperfective","note":"adj"},{"uk":"сполучник","translit":"","en":"conjunction","note":"m"},{"uk":"підрядне речення","translit":"","en":"subordinate clause","note":"n"},{"uk":"непряма мова","translit":"","en":"reported speech","note":"f"},{"uk":"дієприкметник","translit":"","en":"participle","note":"m"},{"uk":"дієприслівник","translit":"","en":"adverbial participle","note":"m"}];
     const totalSort=0;
     function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
     document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));

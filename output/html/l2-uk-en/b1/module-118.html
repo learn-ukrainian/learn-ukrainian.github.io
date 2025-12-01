@@ -675,7 +675,7 @@
       <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
-    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (0)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
+    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (15)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
     </section>
   </main>
@@ -684,7 +684,7 @@
     const matchPairs=[];
     const quizData=[{"question":"Він попросив, ___ я допоміг.","options":["щоб","що"],"correctIndex":0,"explanation":"щоб for commands and requests."},{"question":"Вона попросила, щоб він ___ раніше.","options":["прийшов","прийти"],"correctIndex":0,"explanation":"Past tense after щоб."},{"question":"Лікар ___, щоб пацієнт відпочивав.","options":["порадив","запитав"],"correctIndex":0,"explanation":"порадив for advice."},{"question":"Він сказав, щоб ми не ___.","options":["хвилювалися","хвилюватися"],"correctIndex":0,"explanation":"Past tense plural after ми."},{"question":"Батьки ___, щоб діти не грали пізно.","options":["заборонили","дозволили"],"correctIndex":0,"explanation":"заборонили for prohibitions."},{"question":"Начальник ___, щоб всі залишились.","options":["наказав","попросив"],"correctIndex":0,"explanation":"наказав for strong orders."}];
     const sortData={};
-    const vocabData=[];
+    const vocabData=[{"uk":"попросити","translit":"","en":"to ask, request","note":"pf"},{"uk":"просити","translit":"","en":"to ask, request","note":"impf"},{"uk":"наказати","translit":"","en":"to order","note":"pf"},{"uk":"вимагати","translit":"","en":"to demand","note":"impf"},{"uk":"порадити","translit":"","en":"to advise","note":"pf"},{"uk":"радити","translit":"","en":"to advise","note":"impf"},{"uk":"запропонувати","translit":"","en":"to suggest","note":"pf"},{"uk":"заборонити","translit":"","en":"to forbid","note":"pf"},{"uk":"дозволити","translit":"","en":"to allow, permit","note":"pf"},{"uk":"благати","translit":"","en":"to beg","note":"impf"},{"uk":"наказ","translit":"","en":"order, command","note":"m"},{"uk":"прохання","translit":"","en":"request","note":"n"},{"uk":"порада","translit":"","en":"advice","note":"f"},{"uk":"заборона","translit":"","en":"prohibition","note":"f"},{"uk":"дозвіл","translit":"","en":"permission","note":"m"}];
     const totalSort=0;
     function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
     document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));

@@ -718,7 +718,7 @@
       <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
-    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (0)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
+    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (9)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
     </section>
   </main>
@@ -727,7 +727,7 @@
     const matchPairs=[];
     const quizData=[{"question":"Для твердої думки вживаємо:","options":["вважаю","гадаю"],"correctIndex":0,"explanation":"Strong opinion = вважаю."},{"question":"«Прийняти ___» — правильна колокація:","options":["рішення","помилку"],"correctIndex":0,"explanation":"приймати рішення."},{"question":"«Він собаку з'їв» означає:","options":["він експерт","він їсть собак"],"correctIndex":0,"explanation":"He's an expert."},{"question":"Слово для контрасту:","options":["проте","крім того"],"correctIndex":0,"explanation":"However = contrast."},{"question":"Зростання = ___:","options":["increase","decrease"],"correctIndex":0,"explanation":"зростання = growth/increase."},{"question":"«Вести ___» — правильна колокація:","options":["переговори","рішення"],"correctIndex":0,"explanation":"вести переговори."}];
     const sortData={};
-    const vocabData=[];
+    const vocabData=[{"uk":"лексика","translit":"","en":"vocabulary","note":"f"},{"uk":"комунікація","translit":"","en":"communication","note":"f"},{"uk":"дискурс","translit":"","en":"discourse","note":"m"},{"uk":"синонім","translit":"","en":"synonym","note":"m"},{"uk":"колокація","translit":"","en":"collocation","note":"f"},{"uk":"ідіома","translit":"","en":"idiom","note":"f"},{"uk":"вираження думки","translit":"","en":"opinion expression","note":"n"},{"uk":"абстрактний","translit":"","en":"abstract","note":"adj"},{"uk":"контекст","translit":"","en":"context","note":"m"}];
     const totalSort=0;
     function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
     document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));

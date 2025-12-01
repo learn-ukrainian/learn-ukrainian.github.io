@@ -122,81 +122,91 @@
         "id": "v-m147-001",
         "uk": "регістр",
         "translit": "",
-        "ipa": "register",
-        "en": "рівень формальності",
-        "pos": ""
+        "ipa": "",
+        "en": "register",
+        "pos": "",
+        "note": "рівень формальності"
       },
       {
         "id": "v-m147-002",
         "uk": "функціональний стиль",
         "translit": "",
-        "ipa": "functional style",
-        "en": "п'ять стилів",
-        "pos": ""
+        "ipa": "",
+        "en": "functional style",
+        "pos": "",
+        "note": "п'ять стилів"
       },
       {
         "id": "v-m147-003",
         "uk": "розмовний",
         "translit": "",
-        "ipa": "colloquial",
-        "en": "побутовий",
-        "pos": ""
+        "ipa": "",
+        "en": "colloquial",
+        "pos": "",
+        "note": "побутовий"
       },
       {
         "id": "v-m147-004",
         "uk": "художній",
         "translit": "",
-        "ipa": "literary, artistic",
-        "en": "для літератури",
-        "pos": ""
+        "ipa": "",
+        "en": "literary, artistic",
+        "pos": "",
+        "note": "для літератури"
       },
       {
         "id": "v-m147-005",
         "uk": "публіцистичний",
         "translit": "",
-        "ipa": "journalistic",
-        "en": "для ЗМІ",
-        "pos": ""
+        "ipa": "",
+        "en": "journalistic",
+        "pos": "",
+        "note": "для ЗМІ"
       },
       {
         "id": "v-m147-006",
         "uk": "науковий",
         "translit": "",
-        "ipa": "scientific, academic",
-        "en": "для науки",
-        "pos": ""
+        "ipa": "",
+        "en": "scientific, academic",
+        "pos": "",
+        "note": "для науки"
       },
       {
         "id": "v-m147-007",
         "uk": "офіційно-діловий",
         "translit": "",
-        "ipa": "official, formal",
-        "en": "для документів",
-        "pos": ""
+        "ipa": "",
+        "en": "official, formal",
+        "pos": "",
+        "note": "для документів"
       },
       {
         "id": "v-m147-008",
         "uk": "кліше",
         "translit": "",
-        "ipa": "cliché",
-        "en": "стандартний вираз",
-        "pos": ""
+        "ipa": "",
+        "en": "cliché",
+        "pos": "",
+        "note": "стандартний вираз"
       },
       {
         "id": "v-m147-009",
         "uk": "канцеляризм",
         "translit": "",
-        "ipa": "bureaucratese",
-        "en": "офіційний штамп",
-        "pos": ""
+        "ipa": "",
+        "en": "bureaucratese",
+        "pos": "",
+        "note": "офіційний штамп"
       },
       {
         "id": "v-m147-010",
         "uk": "маркер",
         "translit": "",
-        "ipa": "marker",
-        "en": "ознака стилю",
-        "pos": ""
+        "ipa": "",
+        "en": "marker",
+        "pos": "",
+        "note": "ознака стилю"
       }
     ]
   }

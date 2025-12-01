@@ -891,7 +891,7 @@
       <div class="score-display"><span class="score"><span id="match-score">0</span>/5</span></div>
       <div class="match-container" id="match-container"><svg class="match-lines" id="match-lines"></svg>
         <div class="match-column" id="match-left"><div class="match-item" data-pair="0">забруднення</div><div class="match-item" data-pair="1">посуха</div><div class="match-item" data-pair="2">вирубка лісів</div><div class="match-item" data-pair="3">викиди CO₂</div><div class="match-item" data-pair="4">відходи</div></div>
-        <div class="match-column" id="match-right"><div class="match-item" data-pair="1">climate</div><div class="match-item" data-pair="0">pollution</div><div class="match-item" data-pair="3">emissions</div><div class="match-item" data-pair="2">deforestation</div><div class="match-item" data-pair="4">waste</div></div>
+        <div class="match-column" id="match-right"><div class="match-item" data-pair="0">pollution</div><div class="match-item" data-pair="1">climate</div><div class="match-item" data-pair="2">deforestation</div><div class="match-item" data-pair="4">waste</div><div class="match-item" data-pair="3">emissions</div></div>
       </div>
       <div class="completion-message" id="match-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetMatch()">Reset</button><button class="btn btn-primary" onclick="showSection('quiz')">Next →</button></div>
@@ -903,7 +903,7 @@
       <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
-    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (0)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
+    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (15)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
     </section>
   </main>
@@ -912,7 +912,7 @@
     const matchPairs=[{"left":"забруднення","right":"pollution"},{"left":"посуха","right":"climate"},{"left":"вирубка лісів","right":"deforestation"},{"left":"викиди CO₂","right":"emissions"},{"left":"відходи","right":"waste"}];
     const quizData=[{"question":"___ — глобальна проблема.","options":["Зміна клімату","Клімат зміни"],"correctIndex":0,"explanation":""},{"question":"Заводи ___ річки.","options":["забруднюють","забруднення"],"correctIndex":0,"explanation":""},{"question":"Треба ___ пластик.","options":["переробляти","переробка"],"correctIndex":0,"explanation":""},{"question":"Ми повинні ___ природу.","options":["захищати","захист"],"correctIndex":0,"explanation":""},{"question":"___ повітря шкодить здоров'ю.","options":["Забруднення","Забруднювати"],"correctIndex":0,"explanation":""},{"question":"___ енергія — чиста.","options":["Сонячна","Сонце"],"correctIndex":0,"explanation":""}];
     const sortData={};
-    const vocabData=[];
+    const vocabData=[{"uk":"довкілля","translit":"","en":"environment","note":""},{"uk":"природа","translit":"","en":"nature","note":""},{"uk":"клімат","translit":"","en":"climate","note":""},{"uk":"забруднення","translit":"","en":"pollution","note":""},{"uk":"сміття","translit":"","en":"garbage","note":""},{"uk":"відходи","translit":"","en":"waste","note":""},{"uk":"ресурси","translit":"","en":"resources","note":""},{"uk":"енергія","translit":"","en":"energy","note":""},{"uk":"переробка","translit":"","en":"recycling","note":""},{"uk":"захист","translit":"","en":"protection","note":""},{"uk":"заповідник","translit":"","en":"nature reserve","note":""},{"uk":"стійкість","translit":"","en":"sustainability","note":""},{"uk":"посуха","translit":"","en":"drought","note":""},{"uk":"повінь","translit":"","en":"flood","note":""},{"uk":"викиди","translit":"","en":"emissions","note":""}];
     const totalSort=0;
     function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
     document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));

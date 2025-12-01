@@ -363,298 +363,335 @@
       {
         "id": "v-m64-001",
         "uk": "річний",
-        "translit": "/ˈrʲitʃnɪj/",
-        "ipa": "annual",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ˈrʲitʃnɪj/",
+        "en": "annual",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m64-002",
         "uk": "денний",
-        "translit": "/ˈdɛnːɪj/",
-        "ipa": "daily, daytime",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ˈdɛnːɪj/",
+        "en": "daily, daytime",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m64-003",
         "uk": "нічний",
-        "translit": "/ˈnʲitʃnɪj/",
-        "ipa": "night",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ˈnʲitʃnɪj/",
+        "en": "night",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m64-004",
         "uk": "літній",
-        "translit": "/ˈlʲitnʲij/",
-        "ipa": "summer",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ˈlʲitnʲij/",
+        "en": "summer",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m64-005",
         "uk": "зимовий",
-        "translit": "/zɪˈmovɪj/",
-        "ipa": "winter",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/zɪˈmovɪj/",
+        "en": "winter",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m64-006",
         "uk": "весняний",
-        "translit": "/vɛsˈnʲɑnɪj/",
-        "ipa": "spring",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/vɛsˈnʲɑnɪj/",
+        "en": "spring",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m64-007",
         "uk": "осінній",
-        "translit": "/oˈsʲinʲːij/",
-        "ipa": "autumn",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/oˈsʲinʲːij/",
+        "en": "autumn",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m64-008",
         "uk": "сонячний",
-        "translit": "/ˈsonʲɑtʃnɪj/",
-        "ipa": "sunny",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ˈsonʲɑtʃnɪj/",
+        "en": "sunny",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m64-009",
         "uk": "морський",
-        "translit": "/ˈmorskɪj/",
-        "ipa": "sea, marine",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ˈmorskɪj/",
+        "en": "sea, marine",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m64-010",
         "uk": "український",
-        "translit": "/ukrɑˈjinsʲkɪj/",
-        "ipa": "Ukrainian",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ukrɑˈjinsʲkɪj/",
+        "en": "Ukrainian",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m64-011",
         "uk": "міський",
-        "translit": "/ˈmʲiskɪj/",
-        "ipa": "city, urban",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ˈmʲiskɪj/",
+        "en": "city, urban",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m64-012",
         "uk": "сільський",
-        "translit": "/ˈsʲilʲsʲkɪj/",
-        "ipa": "village, rural",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ˈsʲilʲsʲkɪj/",
+        "en": "village, rural",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m64-013",
         "uk": "студентський",
-        "translit": "/stuˈdɛntsʲkɪj/",
-        "ipa": "student",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/stuˈdɛntsʲkɪj/",
+        "en": "student",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m64-014",
         "uk": "людський",
-        "translit": "/ˈlʲudsʲkɪj/",
-        "ipa": "human",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ˈlʲudsʲkɪj/",
+        "en": "human",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m64-015",
         "uk": "дитячий",
-        "translit": "/dɪˈtʲɑtʃɪj/",
-        "ipa": "children's",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/dɪˈtʲɑtʃɪj/",
+        "en": "children's",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m64-016",
         "uk": "жіночий",
-        "translit": "/ʒʲiˈnotʃɪj/",
-        "ipa": "women's",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ʒʲiˈnotʃɪj/",
+        "en": "women's",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m64-017",
         "uk": "чоловічий",
-        "translit": "/tʃoloˈvʲitʃɪj/",
-        "ipa": "men's",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/tʃoloˈvʲitʃɪj/",
+        "en": "men's",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m64-018",
         "uk": "київський",
-        "translit": "/ˈkɪjivskɪj/",
-        "ipa": "Kyivan",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ˈkɪjivskɪj/",
+        "en": "Kyivan",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m64-019",
         "uk": "книжковий",
-        "translit": "/knɪʒˈkovɪj/",
-        "ipa": "book",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/knɪʒˈkovɪj/",
+        "en": "book",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m64-020",
         "uk": "фруктовий",
-        "translit": "/frukˈtovɪj/",
-        "ipa": "fruit",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/frukˈtovɪj/",
+        "en": "fruit",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m64-021",
         "uk": "овочевий",
-        "translit": "/ovoˈtʃɛvɪj/",
-        "ipa": "vegetable",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ovoˈtʃɛvɪj/",
+        "en": "vegetable",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m64-022",
         "uk": "спортивний",
-        "translit": "/sporˈtɪvnɪj/",
-        "ipa": "sports",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/sporˈtɪvnɪj/",
+        "en": "sports",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m64-023",
         "uk": "музичний",
-        "translit": "/muˈzɪtʃnɪj/",
-        "ipa": "musical",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/muˈzɪtʃnɪj/",
+        "en": "musical",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m64-024",
         "uk": "театральний",
-        "translit": "/tɛɑˈtrɑlʲnɪj/",
-        "ipa": "theater",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/tɛɑˈtrɑlʲnɪj/",
+        "en": "theater",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m64-025",
         "uk": "щасливий",
-        "translit": "/ʃtʃɑsˈlɪvɪj/",
-        "ipa": "happy",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ʃtʃɑsˈlɪvɪj/",
+        "en": "happy",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m64-026",
         "uk": "талановитий",
-        "translit": "/tɑlɑnoˈvɪtɪj/",
-        "ipa": "talented",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/tɑlɑnoˈvɪtɪj/",
+        "en": "talented",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m64-027",
         "uk": "корисний",
-        "translit": "/koˈrɪsnɪj/",
-        "ipa": "useful",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/koˈrɪsnɪj/",
+        "en": "useful",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m64-028",
         "uk": "дбайливий",
-        "translit": "/ˈdbɑjlɪvɪj/",
-        "ipa": "caring",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ˈdbɑjlɪvɪj/",
+        "en": "caring",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m64-029",
         "uk": "кам'янистий",
-        "translit": "/kɑmjɑˈnɪstɪj/",
-        "ipa": "rocky",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/kɑmjɑˈnɪstɪj/",
+        "en": "rocky",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m64-030",
         "uk": "хмарний",
-        "translit": "/ˈxmɑrnɪj/",
-        "ipa": "cloudy",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ˈxmɑrnɪj/",
+        "en": "cloudy",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m64-031",
         "uk": "зоряний",
-        "translit": "/ˈzorʲɑnɪj/",
-        "ipa": "starry",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ˈzorʲɑnɪj/",
+        "en": "starry",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m64-032",
         "uk": "гірський",
-        "translit": "/ˈɦʲirskɪj/",
-        "ipa": "mountain",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ˈɦʲirskɪj/",
+        "en": "mountain",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m64-033",
         "uk": "лісовий",
-        "translit": "/lʲisoˈvɪj/",
-        "ipa": "forest",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/lʲisoˈvɪj/",
+        "en": "forest",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m64-034",
         "uk": "батьків",
-        "translit": "/ˈbɑtʲkʲiv/",
-        "ipa": "father's",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ˈbɑtʲkʲiv/",
+        "en": "father's",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m64-035",
         "uk": "мамин",
-        "translit": "/ˈmɑmɪn/",
-        "ipa": "mother's",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ˈmɑmɪn/",
+        "en": "mother's",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m64-036",
         "uk": "сестрин",
-        "translit": "/sɛsˈtrɪn/",
-        "ipa": "sister's",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/sɛsˈtrɪn/",
+        "en": "sister's",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m64-037",
         "uk": "бабусин",
-        "translit": "/bɑˈbusɪn/",
-        "ipa": "grandmother's",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/bɑˈbusɪn/",
+        "en": "grandmother's",
+        "pos": "adj",
+        "gender": "-"
       }
     ]
   }

@@ -243,13 +243,26 @@
       "modifiedAt": "2025-12-01T00:00:00Z"
     },
     {
-      "id": "act-uk-B1-102-fillin",
-      "type": "fill-in",
+      "id": "act-uk-B1-102-gapfill",
+      "type": "gap-fill",
       "title": "Complete the Story",
       "description": "Я народився в місті, (1)___ живуть мої батьки. Село, (2)___ родом моя бабуся, знаходиться недалеко. Університет, (3)___ я вступив, один з найкращих. Рік, (4)___ я закінчив навчання, — 2020.",
       "content": {
-        "type": "fill-in",
-        "instructions": "Я народився в місті, (1)___ живуть мої батьки. Село, (2)___ родом моя бабуся, знаходиться недалеко. Університет, (3)___ я вступив, один з найкращих. Рік, (4)___ я закінчив навчання, — 2020."
+        "type": "gap-fill",
+        "instructions": "Я народився в місті, (1)___ живуть мої батьки. Село, (2)___ родом моя бабуся, знаходиться недалеко. Університет, (3)___ я вступив, один з найкращих. Рік, (4)___ я закінчив навчання, — 2020.",
+        "text": "Я народився в місті, (1)___ живуть мої батьки. Село, (2)___ родом моя бабуся, знаходиться недалеко. Університет, (3)___ я вступив, один з найкращих. Рік, (4)___ я закінчив навчання, — 2020.",
+        "blanks": [
+          {},
+          {},
+          {},
+          {}
+        ],
+        "answers": [
+          "де",
+          "звідки",
+          "куди",
+          "коли"
+        ]
       },
       "subject": "language",
       "owner": "curricula-opus",
@@ -270,8 +283,117 @@
     "moduleId": "mod-uk-B1-102",
     "level": "B1",
     "phase": "B1.2",
-    "wordCount": 0,
+    "wordCount": 12,
     "transliterationMode": "none",
-    "words": []
+    "words": [
+      {
+        "id": "v-m102-001",
+        "uk": "де",
+        "translit": "",
+        "ipa": "/dɛ/",
+        "en": "where (location)",
+        "pos": "",
+        "gender": "adv"
+      },
+      {
+        "id": "v-m102-002",
+        "uk": "куди",
+        "translit": "",
+        "ipa": "/kuˈdɪ/",
+        "en": "where (to), whither",
+        "pos": "",
+        "gender": "adv"
+      },
+      {
+        "id": "v-m102-003",
+        "uk": "звідки",
+        "translit": "",
+        "ipa": "/ˈzvʲidkɪ/",
+        "en": "from where, whence",
+        "pos": "",
+        "gender": "adv"
+      },
+      {
+        "id": "v-m102-004",
+        "uk": "коли",
+        "translit": "",
+        "ipa": "/koˈlɪ/",
+        "en": "when",
+        "pos": "",
+        "gender": "adv"
+      },
+      {
+        "id": "v-m102-005",
+        "uk": "що",
+        "translit": "",
+        "ipa": "/ʃt͡ʃo/",
+        "en": "that, which, what",
+        "pos": "",
+        "gender": "pron"
+      },
+      {
+        "id": "v-m102-006",
+        "uk": "місце",
+        "translit": "",
+        "ipa": "/ˈmʲist͡sɛ/",
+        "en": "place",
+        "pos": "",
+        "gender": "n"
+      },
+      {
+        "id": "v-m102-007",
+        "uk": "час",
+        "translit": "",
+        "ipa": "/t͡ʃɑs/",
+        "en": "time",
+        "pos": "",
+        "gender": "m"
+      },
+      {
+        "id": "v-m102-008",
+        "uk": "момент",
+        "translit": "",
+        "ipa": "/moˈmɛnt/",
+        "en": "moment",
+        "pos": "",
+        "gender": "m"
+      },
+      {
+        "id": "v-m102-009",
+        "uk": "рік",
+        "translit": "",
+        "ipa": "/rʲik/",
+        "en": "year",
+        "pos": "",
+        "gender": "m"
+      },
+      {
+        "id": "v-m102-010",
+        "uk": "день",
+        "translit": "",
+        "ipa": "/dɛnʲ/",
+        "en": "day",
+        "pos": "",
+        "gender": "m"
+      },
+      {
+        "id": "v-m102-011",
+        "uk": "родом",
+        "translit": "",
+        "ipa": "/ˈrodom/",
+        "en": "originally from",
+        "pos": "",
+        "gender": "adv"
+      },
+      {
+        "id": "v-m102-012",
+        "uk": "переїхати",
+        "translit": "",
+        "ipa": "/pɛrɛˈjixɑtɪ/",
+        "en": "to move (residence)",
+        "pos": "",
+        "gender": "pf"
+      }
+    ]
   }
 }

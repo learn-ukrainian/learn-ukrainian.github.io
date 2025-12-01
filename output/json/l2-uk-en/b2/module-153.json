@@ -110,81 +110,91 @@
         "id": "v-m153-001",
         "uk": "активний дієприкметник",
         "translit": "",
-        "ipa": "active participle",
-        "en": "книжна форма",
-        "pos": ""
+        "ipa": "",
+        "en": "active participle",
+        "pos": "",
+        "note": "книжна форма"
       },
       {
         "id": "v-m153-002",
         "uk": "підрядне речення",
         "translit": "",
-        "ipa": "subordinate clause",
-        "en": "нейтральна альтернатива",
-        "pos": ""
+        "ipa": "",
+        "en": "subordinate clause",
+        "pos": "",
+        "note": "нейтральна альтернатива"
       },
       {
         "id": "v-m153-003",
         "uk": "книжний",
         "translit": "",
-        "ipa": "bookish, literary",
-        "en": "офіційний стиль",
-        "pos": ""
+        "ipa": "",
+        "en": "bookish, literary",
+        "pos": "",
+        "note": "офіційний стиль"
       },
       {
         "id": "v-m153-004",
         "uk": "субстантивований",
         "translit": "",
-        "ipa": "substantivized",
-        "en": "перехід у іменник",
-        "pos": ""
+        "ipa": "",
+        "en": "substantivized",
+        "pos": "",
+        "note": "перехід у іменник"
       },
       {
         "id": "v-m153-005",
         "uk": "усталений",
         "translit": "",
-        "ipa": "established, set",
-        "en": "фіксований вираз",
-        "pos": ""
+        "ipa": "",
+        "en": "established, set",
+        "pos": "",
+        "note": "фіксований вираз"
       },
       {
         "id": "v-m153-006",
         "uk": "чинний",
         "translit": "",
-        "ipa": "current, valid",
-        "en": "про закони",
-        "pos": ""
+        "ipa": "",
+        "en": "current, valid",
+        "pos": "",
+        "note": "про закони"
       },
       {
         "id": "v-m153-007",
         "uk": "існуючий",
         "translit": "",
-        "ipa": "existing",
-        "en": "про проблеми",
-        "pos": ""
+        "ipa": "",
+        "en": "existing",
+        "pos": "",
+        "note": "про проблеми"
       },
       {
         "id": "v-m153-008",
         "uk": "зростаючий",
         "translit": "",
-        "ipa": "growing",
-        "en": "про попит",
-        "pos": ""
+        "ipa": "",
+        "en": "growing",
+        "pos": "",
+        "note": "про попит"
       },
       {
         "id": "v-m153-009",
         "uk": "пануючий",
         "translit": "",
-        "ipa": "prevailing",
-        "en": "про думку",
-        "pos": ""
+        "ipa": "",
+        "en": "prevailing",
+        "pos": "",
+        "note": "про думку"
       },
       {
         "id": "v-m153-010",
         "uk": "завідувач",
         "translit": "",
-        "ipa": "manager (correct)",
-        "en": "не «завідуючий»!",
-        "pos": ""
+        "ipa": "",
+        "en": "manager (correct)",
+        "pos": "",
+        "note": "не «завідуючий»!"
       }
     ]
   }

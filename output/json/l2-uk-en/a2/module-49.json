@@ -355,114 +355,128 @@
       {
         "id": "v-m49-001",
         "uk": "план",
-        "translit": "/plɑn/",
-        "ipa": "plan",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/plɑn/",
+        "en": "plan",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m49-002",
         "uk": "запрошувати",
-        "translit": "/zɑproˈʃuvɑtɪ/",
-        "ipa": "to invite (impf)",
-        "en": "verb",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/zɑproˈʃuvɑtɪ/",
+        "en": "to invite (impf)",
+        "pos": "verb",
+        "gender": "-"
       },
       {
         "id": "v-m49-003",
         "uk": "призначити",
-        "translit": "/prɪznɑˈtʃɪtɪ/",
-        "ipa": "to schedule (perf)",
-        "en": "verb",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/prɪznɑˈtʃɪtɪ/",
+        "en": "to schedule (perf)",
+        "pos": "verb",
+        "gender": "-"
       },
       {
         "id": "v-m49-004",
         "uk": "зустріч",
-        "translit": "/ˈzustrʲitʃ/",
-        "ipa": "meeting",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈzustrʲitʃ/",
+        "en": "meeting",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m49-005",
         "uk": "перенести",
-        "translit": "/pɛrɛˈnɛstɪ/",
-        "ipa": "to reschedule (perf)",
-        "en": "verb",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/pɛrɛˈnɛstɪ/",
+        "en": "to reschedule (perf)",
+        "pos": "verb",
+        "gender": "-"
       },
       {
         "id": "v-m49-006",
         "uk": "скасувати",
-        "translit": "/skɑsuˈvɑtɪ/",
-        "ipa": "to cancel (perf)",
-        "en": "verb",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/skɑsuˈvɑtɪ/",
+        "en": "to cancel (perf)",
+        "pos": "verb",
+        "gender": "-"
       },
       {
         "id": "v-m49-007",
         "uk": "зручний",
-        "translit": "/zrutʃˈnɪj/",
-        "ipa": "convenient",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/zrutʃˈnɪj/",
+        "en": "convenient",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m49-008",
         "uk": "зайнятий",
-        "translit": "/zɑjˈnʲɑtɪj/",
-        "ipa": "busy",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/zɑjˈnʲɑtɪj/",
+        "en": "busy",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m49-009",
         "uk": "вільний",
-        "translit": "/ˈvʲilʲnɪj/",
-        "ipa": "free, available",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ˈvʲilʲnɪj/",
+        "en": "free, available",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m49-010",
         "uk": "пропозиція",
-        "translit": "/propoˈzɪtsʲijɑ/",
-        "ipa": "suggestion, proposal",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/propoˈzɪtsʲijɑ/",
+        "en": "suggestion, proposal",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m49-011",
         "uk": "підтвердити",
-        "translit": "/pʲidˈtvɛrdɪtɪ/",
-        "ipa": "to confirm (perf)",
-        "en": "verb",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/pʲidˈtvɛrdɪtɪ/",
+        "en": "to confirm (perf)",
+        "pos": "verb",
+        "gender": "-"
       },
       {
         "id": "v-m49-012",
         "uk": "нагадати",
-        "translit": "/nɑɦɑˈdɑtɪ/",
-        "ipa": "to remind (perf)",
-        "en": "verb",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/nɑɦɑˈdɑtɪ/",
+        "en": "to remind (perf)",
+        "pos": "verb",
+        "gender": "-"
       },
       {
         "id": "v-m49-013",
         "uk": "опівдні",
-        "translit": "/oˈpʲivdnʲi/",
-        "ipa": "at noon",
-        "en": "adv",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/oˈpʲivdnʲi/",
+        "en": "at noon",
+        "pos": "adv",
+        "gender": "-"
       },
       {
         "id": "v-m49-014",
         "uk": "чекатиму",
-        "translit": "/tʃɛˈkɑtɪmu/",
-        "ipa": "I will wait",
-        "en": "verb",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/tʃɛˈkɑtɪmu/",
+        "en": "I will wait",
+        "pos": "verb",
+        "gender": "-"
       }
     ]
   }

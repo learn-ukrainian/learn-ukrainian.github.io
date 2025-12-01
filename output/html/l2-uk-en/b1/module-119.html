@@ -841,7 +841,7 @@
       <div class="score-display"><span class="score"><span id="match-score">0</span>/5</span></div>
       <div class="match-container" id="match-container"><svg class="match-lines" id="match-lines"></svg>
         <div class="match-column" id="match-left"><div class="match-item" data-pair="0">купити</div><div class="match-item" data-pair="1">відкрити</div><div class="match-item" data-pair="2">приготувати</div><div class="match-item" data-pair="3">знайти</div><div class="match-item" data-pair="4">запросити</div></div>
-        <div class="match-column" id="match-right"><div class="match-item" data-pair="3">знайдений</div><div class="match-item" data-pair="1">відкритий</div><div class="match-item" data-pair="4">запрошений</div><div class="match-item" data-pair="0">куплений</div><div class="match-item" data-pair="2">приготовлений</div></div>
+        <div class="match-column" id="match-right"><div class="match-item" data-pair="4">запрошений</div><div class="match-item" data-pair="3">знайдений</div><div class="match-item" data-pair="1">відкритий</div><div class="match-item" data-pair="0">куплений</div><div class="match-item" data-pair="2">приготовлений</div></div>
       </div>
       <div class="completion-message" id="match-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetMatch()">Reset</button><button class="btn btn-primary" onclick="showSection('quiz')">Next →</button></div>
@@ -853,7 +853,7 @@
       <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
-    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (0)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
+    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (15)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
     </section>
   </main>
@@ -862,7 +862,7 @@
     const matchPairs=[{"left":"купити","right":"куплений"},{"left":"відкрити","right":"відкритий"},{"left":"приготувати","right":"приготовлений"},{"left":"знайти","right":"знайдений"},{"left":"запросити","right":"запрошений"}];
     const quizData=[{"question":"Verb: написати → Participle: ___","options":["написаний","написений"],"correctIndex":0,"explanation":"-ати verbs → -аний."},{"question":"Verb: закрити → Participle: ___","options":["закритий","закрений"],"correctIndex":0,"explanation":"Vowel + -ти → -тий."},{"question":"Verb: зробити → Participle: ___","options":["зроблений","зроблятий"],"correctIndex":0,"explanation":"-ити verbs → -ений."},{"question":"___ книга лежить на столі.","options":["Прочитана","Прочитаний"],"correctIndex":0,"explanation":"Feminine noun \"книга\" needs feminine participle."},{"question":"Двері ___.","options":["закриті","закрита"],"correctIndex":0,"explanation":"Plural noun \"двері\" needs plural participle."},{"question":"Verb: забути → Participle: ___","options":["забутий","забутений"],"correctIndex":0,"explanation":"-ути → -утий."}];
     const sortData={};
-    const vocabData=[];
+    const vocabData=[{"uk":"дієприкметник","translit":"","en":"participle","note":"m"},{"uk":"пасивний","translit":"","en":"passive","note":"adj"},{"uk":"написаний","translit":"","en":"written","note":"participle"},{"uk":"прочитаний","translit":"","en":"read","note":"participle"},{"uk":"зроблений","translit":"","en":"done, made","note":"participle"},{"uk":"закритий","translit":"","en":"closed","note":"participle"},{"uk":"відкритий","translit":"","en":"open(ed)","note":"participle"},{"uk":"забутий","translit":"","en":"forgotten","note":"participle"},{"uk":"знайдений","translit":"","en":"found","note":"participle"},{"uk":"куплений","translit":"","en":"bought","note":"participle"},{"uk":"приготовлений","translit":"","en":"prepared","note":"participle"},{"uk":"запрошений","translit":"","en":"invited","note":"participle"},{"uk":"збудований","translit":"","en":"built","note":"participle"},{"uk":"організований","translit":"","en":"organized","note":"participle"},{"uk":"втрачений","translit":"","en":"lost","note":"participle"}];
     const totalSort=0;
     function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
     document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));

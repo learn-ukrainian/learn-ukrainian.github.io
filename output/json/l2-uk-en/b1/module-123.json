@@ -250,13 +250,34 @@
       "modifiedAt": "2025-12-01T00:00:00Z"
     },
     {
-      "id": "act-uk-B1-123-fillin",
-      "type": "fill-in",
+      "id": "act-uk-B1-123-gapfill",
+      "type": "gap-fill",
       "title": "Healthy Lifestyle Tips",
-      "description": "Для здоров'я важливо:",
+      "description": "Для здоров'я важливо:  1. Достатньо (1)___ (sleep) — 7-8 годин 2. Дотримуватися здорового (2)___ (nutrition) 3. Регулярно займатися (3)___ (sport) 4. Справлятися зі (4)___ (stress) 5. Пити достатньо (5)___ (water)",
       "content": {
-        "type": "fill-in",
-        "instructions": "Для здоров'я важливо:"
+        "type": "gap-fill",
+        "instructions": "Для здоров'я важливо:  1. Достатньо (1)___ (sleep) — 7-8 годин 2. Дотримуватися здорового (2)___ (nutrition) 3. Регулярно займатися (3)___ (sport) 4. Справлятися зі (4)___ (stress) 5. Пити достатньо (5)___ (water)",
+        "text": "Для здоров'я важливо:\n\n1. Достатньо (1)___ (sleep) — 7-8 годин\n2. Дотримуватися здорового (2)___ (nutrition)\n3. Регулярно займатися (3)___ (sport)\n4. Справлятися зі (4)___ (stress)\n5. Пити достатньо (5)___ (water)",
+        "blanks": [
+          {
+            "hint": "sleep"
+          },
+          {
+            "hint": "nutrition"
+          },
+          {
+            "hint": "sport"
+          },
+          {
+            "hint": "stress"
+          },
+          {
+            "hint": "water"
+          }
+        ],
+        "answers": [
+          "1. спати / сну"
+        ]
       },
       "subject": "language",
       "owner": "curricula-opus",
@@ -278,8 +299,144 @@
     "moduleId": "mod-uk-B1-123",
     "level": "B1",
     "phase": "B1.3",
-    "wordCount": 0,
+    "wordCount": 15,
     "transliterationMode": "none",
-    "words": []
+    "words": [
+      {
+        "id": "v-m123-001",
+        "uk": "здоров'я",
+        "translit": "",
+        "ipa": "/zdoˈrowjɑ/",
+        "en": "health",
+        "pos": "",
+        "note": "n"
+      },
+      {
+        "id": "v-m123-002",
+        "uk": "самопочуття",
+        "translit": "",
+        "ipa": "/sɑmopoˈt͡ʃutʲːɑ/",
+        "en": "well-being",
+        "pos": "",
+        "note": "n"
+      },
+      {
+        "id": "v-m123-003",
+        "uk": "стрес",
+        "translit": "",
+        "ipa": "/strɛs/",
+        "en": "stress",
+        "pos": "",
+        "note": "m"
+      },
+      {
+        "id": "v-m123-004",
+        "uk": "втома",
+        "translit": "",
+        "ipa": "/ˈftomɑ/",
+        "en": "fatigue",
+        "pos": "",
+        "note": "f"
+      },
+      {
+        "id": "v-m123-005",
+        "uk": "вигорання",
+        "translit": "",
+        "ipa": "/vɪɦoˈrɑnʲːɑ/",
+        "en": "burnout",
+        "pos": "",
+        "note": "n"
+      },
+      {
+        "id": "v-m123-006",
+        "uk": "депресія",
+        "translit": "",
+        "ipa": "/dɛˈprɛsʲijɑ/",
+        "en": "depression",
+        "pos": "",
+        "note": "f"
+      },
+      {
+        "id": "v-m123-007",
+        "uk": "харчування",
+        "translit": "",
+        "ipa": "/xɑrt͡ʃuˈvɑnʲːɑ/",
+        "en": "nutrition",
+        "pos": "",
+        "note": "n"
+      },
+      {
+        "id": "v-m123-008",
+        "uk": "дієта",
+        "translit": "",
+        "ipa": "/dʲiˈjɛtɑ/",
+        "en": "diet",
+        "pos": "",
+        "note": "f"
+      },
+      {
+        "id": "v-m123-009",
+        "uk": "тренування",
+        "translit": "",
+        "ipa": "/trɛnuˈvɑnʲːɑ/",
+        "en": "workout",
+        "pos": "",
+        "note": "n"
+      },
+      {
+        "id": "v-m123-010",
+        "uk": "вправа",
+        "translit": "",
+        "ipa": "/ˈwprɑvɑ/",
+        "en": "exercise",
+        "pos": "",
+        "note": "f"
+      },
+      {
+        "id": "v-m123-011",
+        "uk": "сон",
+        "translit": "",
+        "ipa": "/son/",
+        "en": "sleep",
+        "pos": "",
+        "note": "m"
+      },
+      {
+        "id": "v-m123-012",
+        "uk": "безсоння",
+        "translit": "",
+        "ipa": "/bɛzˈsonʲːɑ/",
+        "en": "insomnia",
+        "pos": "",
+        "note": "n"
+      },
+      {
+        "id": "v-m123-013",
+        "uk": "відпочинок",
+        "translit": "",
+        "ipa": "/vʲidpoˈt͡ʃɪnok/",
+        "en": "rest",
+        "pos": "",
+        "note": "m"
+      },
+      {
+        "id": "v-m123-014",
+        "uk": "імунітет",
+        "translit": "",
+        "ipa": "/imuˈnʲitɛt/",
+        "en": "immunity",
+        "pos": "",
+        "note": "m"
+      },
+      {
+        "id": "v-m123-015",
+        "uk": "одужання",
+        "translit": "",
+        "ipa": "/oduˈʒɑnʲːɑ/",
+        "en": "recovery",
+        "pos": "",
+        "note": "n"
+      }
+    ]
   }
 }

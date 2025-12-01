@@ -402,8 +402,73 @@
     "moduleId": "mod-uk-A1-20",
     "level": "A1",
     "phase": "A1.3",
-    "wordCount": 0,
+    "wordCount": 8,
     "transliterationMode": "full",
-    "words": []
+    "words": [
+      {
+        "id": "v-m20-001",
+        "uk": "11-12",
+        "translit": "",
+        "ipa": "",
+        "en": "Accusative: бачити, читати, любити",
+        "pos": ""
+      },
+      {
+        "id": "v-m20-002",
+        "uk": "13",
+        "translit": "",
+        "ipa": "",
+        "en": "Locative: в, на, де, тут, там",
+        "pos": ""
+      },
+      {
+        "id": "v-m20-003",
+        "uk": "14",
+        "translit": "",
+        "ipa": "",
+        "en": "Possessives: мій, твій, його, її, наш, ваш",
+        "pos": ""
+      },
+      {
+        "id": "v-m20-004",
+        "uk": "15",
+        "translit": "",
+        "ipa": "",
+        "en": "City: метро, вулиця, праворуч, ліворуч",
+        "pos": ""
+      },
+      {
+        "id": "v-m20-005",
+        "uk": "16",
+        "translit": "",
+        "ipa": "",
+        "en": "Genitive: немає, без, для, до",
+        "pos": ""
+      },
+      {
+        "id": "v-m20-006",
+        "uk": "17",
+        "translit": "",
+        "ipa": "",
+        "en": "Food: сніданок, обід, вечеря, борщ",
+        "pos": ""
+      },
+      {
+        "id": "v-m20-007",
+        "uk": "18",
+        "translit": "",
+        "ipa": "",
+        "en": "Café: меню, замовити, рахунок",
+        "pos": ""
+      },
+      {
+        "id": "v-m20-008",
+        "uk": "19",
+        "translit": "",
+        "ipa": "",
+        "en": "Shopping: розмір, колір, ціна, знижка",
+        "pos": ""
+      }
+    ]
   }
 }

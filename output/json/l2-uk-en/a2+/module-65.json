@@ -367,282 +367,316 @@
       {
         "id": "v-m65-001",
         "uk": "учень",
-        "translit": "/uˈtʃɛnʲ/",
-        "ipa": "student, pupil",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/uˈtʃɛnʲ/",
+        "en": "student, pupil",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m65-002",
         "uk": "учениця",
-        "translit": "/utʃɛˈnɪtsʲɑ/",
-        "ipa": "female student",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/utʃɛˈnɪtsʲɑ/",
+        "en": "female student",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m65-003",
         "uk": "вчитель",
-        "translit": "/vtʃɪˈtɛlʲ/",
-        "ipa": "teacher (m)",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/vtʃɪˈtɛlʲ/",
+        "en": "teacher (m)",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m65-004",
         "uk": "вчителька",
-        "translit": "/vtʃɪˈtɛlʲkɑ/",
-        "ipa": "teacher (f)",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/vtʃɪˈtɛlʲkɑ/",
+        "en": "teacher (f)",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m65-005",
         "uk": "вчений",
-        "translit": "/ˈvtʃɛnɪj/",
-        "ipa": "scientist",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ˈvtʃɛnɪj/",
+        "en": "scientist",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m65-006",
         "uk": "наука",
-        "translit": "/nɑˈukɑ/",
-        "ipa": "science",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/nɑˈukɑ/",
+        "en": "science",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m65-007",
         "uk": "науковий",
-        "translit": "/nɑuˈkovɪj/",
-        "ipa": "scientific",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/nɑuˈkovɪj/",
+        "en": "scientific",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m65-008",
         "uk": "навчатися",
-        "translit": "/nɑvˈtʃɑtɪsʲɑ/",
-        "ipa": "to study",
-        "en": "verb",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/nɑvˈtʃɑtɪsʲɑ/",
+        "en": "to study",
+        "pos": "verb",
+        "gender": "-"
       },
       {
         "id": "v-m65-009",
         "uk": "робота",
-        "translit": "/roˈbotɑ/",
-        "ipa": "work, job",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/roˈbotɑ/",
+        "en": "work, job",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m65-010",
         "uk": "робітник",
-        "translit": "/roˈbʲitnɪk/",
-        "ipa": "worker",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/roˈbʲitnɪk/",
+        "en": "worker",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m65-011",
         "uk": "робочий",
-        "translit": "/roˈbotʃɪj/",
-        "ipa": "working",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/roˈbotʃɪj/",
+        "en": "working",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m65-012",
         "uk": "виробляти",
-        "translit": "/vɪrobˈlʲɑtɪ/",
-        "ipa": "to produce",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/vɪrobˈlʲɑtɪ/",
+        "en": "to produce",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m65-013",
         "uk": "виробництво",
-        "translit": "/vɪrobˈnɪtstvo/",
-        "ipa": "production",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/vɪrobˈnɪtstvo/",
+        "en": "production",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m65-014",
         "uk": "виріб",
-        "translit": "/ˈvɪrʲib/",
-        "ipa": "product",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ˈvɪrʲib/",
+        "en": "product",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m65-015",
         "uk": "заробляти",
-        "translit": "/zɑrobˈlʲɑtɪ/",
-        "ipa": "to earn",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/zɑrobˈlʲɑtɪ/",
+        "en": "to earn",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m65-016",
         "uk": "заробіток",
-        "translit": "/zɑˈrobʲitok/",
-        "ipa": "earnings",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/zɑˈrobʲitok/",
+        "en": "earnings",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m65-017",
         "uk": "підпис",
-        "translit": "/ˈpʲidpɪs/",
-        "ipa": "signature",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ˈpʲidpɪs/",
+        "en": "signature",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m65-018",
         "uk": "опис",
-        "translit": "/ˈopɪs/",
-        "ipa": "description",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ˈopɪs/",
+        "en": "description",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m65-019",
         "uk": "запис",
-        "translit": "/ˈzɑpɪs/",
-        "ipa": "record, entry",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ˈzɑpɪs/",
+        "en": "record, entry",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m65-020",
         "uk": "записка",
-        "translit": "/zɑˈpɪskɑ/",
-        "ipa": "note",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/zɑˈpɪskɑ/",
+        "en": "note",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m65-021",
         "uk": "переписувати",
-        "translit": "/pɛrɛpɪˈsuvɑtɪ/",
-        "ipa": "to rewrite",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/pɛrɛpɪˈsuvɑtɪ/",
+        "en": "to rewrite",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m65-022",
         "uk": "читач",
-        "translit": "/tʃɪˈtɑtʃ/",
-        "ipa": "reader",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/tʃɪˈtɑtʃ/",
+        "en": "reader",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m65-023",
         "uk": "читальня",
-        "translit": "/tʃɪˈtɑlʲnʲɑ/",
-        "ipa": "reading room",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/tʃɪˈtɑlʲnʲɑ/",
+        "en": "reading room",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m65-024",
         "uk": "прочитати",
-        "translit": "/protʃɪˈtɑtɪ/",
-        "ipa": "to read (through)",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/protʃɪˈtɑtɪ/",
+        "en": "to read (through)",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m65-025",
         "uk": "перечитати",
-        "translit": "/pɛrɛtʃɪˈtɑtɪ/",
-        "ipa": "to reread",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/pɛrɛtʃɪˈtɑtɪ/",
+        "en": "to reread",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m65-026",
         "uk": "начитаний",
-        "translit": "/nɑtʃɪˈtɑnɪj/",
-        "ipa": "well-read",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/nɑtʃɪˈtɑnɪj/",
+        "en": "well-read",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m65-027",
         "uk": "розмова",
-        "translit": "/rozˈmovɑ/",
-        "ipa": "conversation",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/rozˈmovɑ/",
+        "en": "conversation",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m65-028",
         "uk": "розмовляти",
-        "translit": "/rozmovˈlʲɑtɪ/",
-        "ipa": "to converse",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/rozmovˈlʲɑtɪ/",
+        "en": "to converse",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m65-029",
         "uk": "мовлення",
-        "translit": "/movˈlɛnʲːɑ/",
-        "ipa": "speech",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/movˈlɛnʲːɑ/",
+        "en": "speech",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m65-030",
         "uk": "мовчати",
-        "translit": "/movˈtʃɑtɪ/",
-        "ipa": "to be silent",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/movˈtʃɑtɪ/",
+        "en": "to be silent",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m65-031",
         "uk": "домовитися",
-        "translit": "/domovˈɪtɪsʲɑ/",
-        "ipa": "to agree",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/domovˈɪtɪsʲɑ/",
+        "en": "to agree",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m65-032",
         "uk": "договір",
-        "translit": "/doɦoˈvʲir/",
-        "ipa": "contract",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/doɦoˈvʲir/",
+        "en": "contract",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m65-033",
         "uk": "перемовини",
-        "translit": "/pɛrɛˈmovɪnɪ/",
-        "ipa": "negotiations",
-        "en": "noun",
-        "pos": "pl"
+        "translit": "",
+        "ipa": "/pɛrɛˈmovɪnɪ/",
+        "en": "negotiations",
+        "pos": "noun",
+        "gender": "pl"
       },
       {
         "id": "v-m65-034",
         "uk": "промова",
-        "translit": "/proˈmovɑ/",
-        "ipa": "speech, address",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/proˈmovɑ/",
+        "en": "speech, address",
+        "pos": "noun",
+        "gender": "f"
       }
     ]
   }

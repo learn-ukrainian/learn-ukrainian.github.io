@@ -255,13 +255,34 @@
       "modifiedAt": "2025-12-01T00:00:00Z"
     },
     {
-      "id": "act-uk-B1-121-fillin",
-      "type": "fill-in",
+      "id": "act-uk-B1-121-gapfill",
+      "type": "gap-fill",
       "title": "Complete the Story",
-      "description": "Мій ранок",
+      "description": "Мій ранок  (1)___ (прокинутися) о сьомій, я йду в душ. (2)___ (приймати) душ, я думаю про день. (3)___ (поснідати), я виходжу з дому. (4)___ (йти) на роботу, я слухаю подкаст. (5)___ (прийти) на роботу, я перевіряю пошту.",
       "content": {
-        "type": "fill-in",
-        "instructions": "Мій ранок"
+        "type": "gap-fill",
+        "instructions": "Мій ранок  (1)___ (прокинутися) о сьомій, я йду в душ. (2)___ (приймати) душ, я думаю про день. (3)___ (поснідати), я виходжу з дому. (4)___ (йти) на роботу, я слухаю подкаст. (5)___ (прийти) на роботу, я перевіряю пошту.",
+        "text": "Мій ранок\n\n(1)___ (прокинутися) о сьомій, я йду в душ.\n(2)___ (приймати) душ, я думаю про день.\n(3)___ (поснідати), я виходжу з дому.\n(4)___ (йти) на роботу, я слухаю подкаст.\n(5)___ (прийти) на роботу, я перевіряю пошту.",
+        "blanks": [
+          {
+            "hint": "прокинутися"
+          },
+          {
+            "hint": "приймати"
+          },
+          {
+            "hint": "поснідати"
+          },
+          {
+            "hint": "йти"
+          },
+          {
+            "hint": "прийти"
+          }
+        ],
+        "answers": [
+          "1. Прокинувшись"
+        ]
       },
       "subject": "language",
       "owner": "curricula-opus",
@@ -283,8 +304,144 @@
     "moduleId": "mod-uk-B1-121",
     "level": "B1",
     "phase": "B1.3",
-    "wordCount": 0,
+    "wordCount": 15,
     "transliterationMode": "none",
-    "words": []
+    "words": [
+      {
+        "id": "v-m121-001",
+        "uk": "дієприслівник",
+        "translit": "",
+        "ipa": "/dʲijɛprɪˈslʲivnɪk/",
+        "en": "adverbial participle",
+        "pos": "",
+        "note": "m"
+      },
+      {
+        "id": "v-m121-002",
+        "uk": "читаючи",
+        "translit": "",
+        "ipa": "/t͡ʃɪˈtɑjut͡ʃɪ/",
+        "en": "while reading",
+        "pos": "",
+        "note": "impf"
+      },
+      {
+        "id": "v-m121-003",
+        "uk": "прочитавши",
+        "translit": "",
+        "ipa": "/prot͡ʃɪˈtɑwʃɪ/",
+        "en": "having read",
+        "pos": "",
+        "note": "pf"
+      },
+      {
+        "id": "v-m121-004",
+        "uk": "пишучи",
+        "translit": "",
+        "ipa": "/pɪˈʃut͡ʃɪ/",
+        "en": "while writing",
+        "pos": "",
+        "note": "impf"
+      },
+      {
+        "id": "v-m121-005",
+        "uk": "написавши",
+        "translit": "",
+        "ipa": "/nɑpɪˈsɑwʃɪ/",
+        "en": "having written",
+        "pos": "",
+        "note": "pf"
+      },
+      {
+        "id": "v-m121-006",
+        "uk": "говорячи",
+        "translit": "",
+        "ipa": "/ɦovoˈrʲɑt͡ʃɪ/",
+        "en": "while speaking",
+        "pos": "",
+        "note": "impf"
+      },
+      {
+        "id": "v-m121-007",
+        "uk": "сказавши",
+        "translit": "",
+        "ipa": "/skɑˈzɑwʃɪ/",
+        "en": "having said",
+        "pos": "",
+        "note": "pf"
+      },
+      {
+        "id": "v-m121-008",
+        "uk": "йдучи",
+        "translit": "",
+        "ipa": "/jˈdut͡ʃɪ/",
+        "en": "while going",
+        "pos": "",
+        "note": "impf"
+      },
+      {
+        "id": "v-m121-009",
+        "uk": "прийшовши",
+        "translit": "",
+        "ipa": "/prɪjˈʃowʃɪ/",
+        "en": "having come",
+        "pos": "",
+        "note": "pf"
+      },
+      {
+        "id": "v-m121-010",
+        "uk": "слухаючи",
+        "translit": "",
+        "ipa": "/sluˈxɑjut͡ʃɪ/",
+        "en": "while listening",
+        "pos": "",
+        "note": "impf"
+      },
+      {
+        "id": "v-m121-011",
+        "uk": "почувши",
+        "translit": "",
+        "ipa": "/poˈt͡ʃuwʃɪ/",
+        "en": "having heard",
+        "pos": "",
+        "note": "pf"
+      },
+      {
+        "id": "v-m121-012",
+        "uk": "дивлячись",
+        "translit": "",
+        "ipa": "/dɪwˈlʲɑt͡ʃɪsʲ/",
+        "en": "while watching",
+        "pos": "",
+        "note": "impf"
+      },
+      {
+        "id": "v-m121-013",
+        "uk": "побачивши",
+        "translit": "",
+        "ipa": "/poˈbɑt͡ʃɪwʃɪ/",
+        "en": "having seen",
+        "pos": "",
+        "note": "pf"
+      },
+      {
+        "id": "v-m121-014",
+        "uk": "повернувшись",
+        "translit": "",
+        "ipa": "/powɛrˈnuwʃɪsʲ/",
+        "en": "having returned",
+        "pos": "",
+        "note": "pf"
+      },
+      {
+        "id": "v-m121-015",
+        "uk": "дізнавшись",
+        "translit": "",
+        "ipa": "/dʲizˈnɑwʃɪsʲ/",
+        "en": "having learned",
+        "pos": "",
+        "note": "pf"
+      }
+    ]
   }
 }

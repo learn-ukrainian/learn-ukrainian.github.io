@@ -372,127 +372,141 @@
       {
         "id": "v-m33-001",
         "uk": "відповідати",
-        "translit": "/vidpoviˈdɑtɪ/",
-        "ipa": "to answer",
-        "en": "verb",
-        "pos": "-",
-        "gender": "+ dat"
+        "translit": "",
+        "ipa": "/vidpoviˈdɑtɪ/",
+        "en": "to answer",
+        "pos": "verb",
+        "gender": "-",
+        "note": "+ dat"
       },
       {
         "id": "v-m33-002",
         "uk": "заважати",
-        "translit": "/zɑvɑˈʒɑtɪ/",
-        "ipa": "to disturb",
-        "en": "verb",
-        "pos": "-",
-        "gender": "+ dat"
+        "translit": "",
+        "ipa": "/zɑvɑˈʒɑtɪ/",
+        "en": "to disturb",
+        "pos": "verb",
+        "gender": "-",
+        "note": "+ dat"
       },
       {
         "id": "v-m33-003",
         "uk": "радити",
-        "translit": "/ˈrɑdɪtɪ/",
-        "ipa": "to advise",
-        "en": "verb",
-        "pos": "-",
-        "gender": "+ dat"
+        "translit": "",
+        "ipa": "/ˈrɑdɪtɪ/",
+        "en": "to advise",
+        "pos": "verb",
+        "gender": "-",
+        "note": "+ dat"
       },
       {
         "id": "v-m33-004",
         "uk": "належати",
-        "translit": "/nɑlɛˈʒɑtɪ/",
-        "ipa": "to belong",
-        "en": "verb",
-        "pos": "-",
-        "gender": "+ dat"
+        "translit": "",
+        "ipa": "/nɑlɛˈʒɑtɪ/",
+        "en": "to belong",
+        "pos": "verb",
+        "gender": "-",
+        "note": "+ dat"
       },
       {
         "id": "v-m33-005",
         "uk": "вдаватися",
-        "translit": "/vdɑˈvɑtɪsʲɑ/",
-        "ipa": "to succeed",
-        "en": "verb",
-        "pos": "-",
-        "gender": "+ dat"
+        "translit": "",
+        "ipa": "/vdɑˈvɑtɪsʲɑ/",
+        "en": "to succeed",
+        "pos": "verb",
+        "gender": "-",
+        "note": "+ dat"
       },
       {
         "id": "v-m33-006",
         "uk": "щастити",
-        "translit": "/ʃtʃɑˈstɪtɪ/",
-        "ipa": "to be lucky",
-        "en": "verb",
-        "pos": "-",
-        "gender": "+ dat"
+        "translit": "",
+        "ipa": "/ʃtʃɑˈstɪtɪ/",
+        "en": "to be lucky",
+        "pos": "verb",
+        "gender": "-",
+        "note": "+ dat"
       },
       {
         "id": "v-m33-007",
         "uk": "снитися",
-        "translit": "/snɪˈtɪsʲɑ/",
-        "ipa": "to appear in dream",
-        "en": "verb",
-        "pos": "-",
-        "gender": "+ dat"
+        "translit": "",
+        "ipa": "/snɪˈtɪsʲɑ/",
+        "en": "to appear in dream",
+        "pos": "verb",
+        "gender": "-",
+        "note": "+ dat"
       },
       {
         "id": "v-m33-008",
         "uk": "личити",
-        "translit": "/lɪˈtʃɪtɪ/",
-        "ipa": "to suit/become",
-        "en": "verb",
-        "pos": "-",
-        "gender": "+ dat"
+        "translit": "",
+        "ipa": "/lɪˈtʃɪtɪ/",
+        "en": "to suit/become",
+        "pos": "verb",
+        "gender": "-",
+        "note": "+ dat"
       },
       {
         "id": "v-m33-009",
         "uk": "бракувати",
-        "translit": "/brɑkuˈvɑtɪ/",
-        "ipa": "to lack",
-        "en": "verb",
-        "pos": "-",
-        "gender": "+ dat + gen"
+        "translit": "",
+        "ipa": "/brɑkuˈvɑtɪ/",
+        "en": "to lack",
+        "pos": "verb",
+        "gender": "-",
+        "note": "+ dat + gen"
       },
       {
         "id": "v-m33-010",
         "uk": "повідомляти",
-        "translit": "/poviˈdomlʲɑtɪ/",
-        "ipa": "to inform",
-        "en": "verb",
-        "pos": "-",
-        "gender": "+ dat"
+        "translit": "",
+        "ipa": "/poviˈdomlʲɑtɪ/",
+        "en": "to inform",
+        "pos": "verb",
+        "gender": "-",
+        "note": "+ dat"
       },
       {
         "id": "v-m33-011",
         "uk": "важко",
-        "translit": "/ˈvɑʒko/",
-        "ipa": "hard, difficult",
-        "en": "adv",
-        "pos": "-",
-        "gender": "+ dat"
+        "translit": "",
+        "ipa": "/ˈvɑʒko/",
+        "en": "hard, difficult",
+        "pos": "adv",
+        "gender": "-",
+        "note": "+ dat"
       },
       {
         "id": "v-m33-012",
         "uk": "весело",
-        "translit": "/ˈvɛsɛlo/",
-        "ipa": "fun, merry",
-        "en": "adv",
-        "pos": "-",
-        "gender": "+ dat"
+        "translit": "",
+        "ipa": "/ˈvɛsɛlo/",
+        "en": "fun, merry",
+        "pos": "adv",
+        "gender": "-",
+        "note": "+ dat"
       },
       {
         "id": "v-m33-013",
         "uk": "сумно",
-        "translit": "/ˈsumno/",
-        "ipa": "sad",
-        "en": "adv",
-        "pos": "-",
-        "gender": "+ dat"
+        "translit": "",
+        "ipa": "/ˈsumno/",
+        "en": "sad",
+        "pos": "adv",
+        "gender": "-",
+        "note": "+ dat"
       },
       {
         "id": "v-m33-014",
         "uk": "досвід",
-        "translit": "/ˈdosvʲid/",
-        "ipa": "experience",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ˈdosvʲid/",
+        "en": "experience",
+        "pos": "noun",
+        "gender": "m"
       }
     ]
   }

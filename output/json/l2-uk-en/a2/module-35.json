@@ -369,152 +369,170 @@
       {
         "id": "v-m35-001",
         "uk": "автобус",
-        "translit": "/ɑfˈtobus/",
-        "ipa": "bus",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ɑfˈtobus/",
+        "en": "bus",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m35-002",
         "uk": "тролейбус",
-        "translit": "/troˈlɛjbus/",
-        "ipa": "trolleybus",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/troˈlɛjbus/",
+        "en": "trolleybus",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m35-003",
         "uk": "трамвай",
-        "translit": "/trɑmˈvɑj/",
-        "ipa": "tram",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/trɑmˈvɑj/",
+        "en": "tram",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m35-004",
         "uk": "поїзд",
-        "translit": "/ˈpojizd/",
-        "ipa": "train",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ˈpojizd/",
+        "en": "train",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m35-005",
         "uk": "літак",
-        "translit": "/lʲiˈtɑk/",
-        "ipa": "airplane",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/lʲiˈtɑk/",
+        "en": "airplane",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m35-006",
         "uk": "велосипед",
-        "translit": "/vɛlosɪˈpɛd/",
-        "ipa": "bicycle",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/vɛlosɪˈpɛd/",
+        "en": "bicycle",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m35-007",
         "uk": "олівець",
-        "translit": "/oliˈvɛtsʲ/",
-        "ipa": "pencil",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/oliˈvɛtsʲ/",
+        "en": "pencil",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m35-008",
         "uk": "ніж",
-        "translit": "/nʲiʒ/",
-        "ipa": "knife",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/nʲiʒ/",
+        "en": "knife",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m35-009",
         "uk": "виделка",
-        "translit": "/vɪˈdɛlkɑ/",
-        "ipa": "fork",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/vɪˈdɛlkɑ/",
+        "en": "fork",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m35-010",
         "uk": "ложка",
-        "translit": "/ˈloʒkɑ/",
-        "ipa": "spoon",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈloʒkɑ/",
+        "en": "spoon",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m35-011",
         "uk": "голос",
-        "translit": "/ˈɦolos/",
-        "ipa": "voice",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ˈɦolos/",
+        "en": "voice",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m35-012",
         "uk": "шепіт",
-        "translit": "/ˈʃɛpʲit/",
-        "ipa": "whisper",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ˈʃɛpʲit/",
+        "en": "whisper",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m35-013",
         "uk": "керувати",
-        "translit": "/kɛruˈvɑtɪ/",
-        "ipa": "to drive, manage",
-        "en": "verb",
-        "pos": "-",
-        "gender": "+ instr"
+        "translit": "",
+        "ipa": "/kɛruˈvɑtɪ/",
+        "en": "to drive, manage",
+        "pos": "verb",
+        "gender": "-",
+        "note": "+ instr"
       },
       {
         "id": "v-m35-014",
         "uk": "володіти",
-        "translit": "/voloˈdʲitɪ/",
-        "ipa": "to master, own",
-        "en": "verb",
-        "pos": "-",
-        "gender": "+ instr"
+        "translit": "",
+        "ipa": "/voloˈdʲitɪ/",
+        "en": "to master, own",
+        "pos": "verb",
+        "gender": "-",
+        "note": "+ instr"
       },
       {
         "id": "v-m35-015",
         "uk": "захоплюватися",
-        "translit": "/zɑxoplʲuˈvɑtɪsʲɑ/",
-        "ipa": "to be fascinated",
-        "en": "verb",
-        "pos": "-",
-        "gender": "+ instr"
+        "translit": "",
+        "ipa": "/zɑxoplʲuˈvɑtɪsʲɑ/",
+        "en": "to be fascinated",
+        "pos": "verb",
+        "gender": "-",
+        "note": "+ instr"
       },
       {
         "id": "v-m35-016",
         "uk": "цікавитися",
-        "translit": "/tsʲikɑˈvɪtɪsʲɑ/",
-        "ipa": "to be interested",
-        "en": "verb",
-        "pos": "-",
-        "gender": "+ instr"
+        "translit": "",
+        "ipa": "/tsʲikɑˈvɪtɪsʲɑ/",
+        "en": "to be interested",
+        "pos": "verb",
+        "gender": "-",
+        "note": "+ instr"
       },
       {
         "id": "v-m35-017",
         "uk": "займатися",
-        "translit": "/zɑjmɑˈtɪsʲɑ/",
-        "ipa": "to be engaged in",
-        "en": "verb",
-        "pos": "-",
-        "gender": "+ instr"
+        "translit": "",
+        "ipa": "/zɑjmɑˈtɪsʲɑ/",
+        "en": "to be engaged in",
+        "pos": "verb",
+        "gender": "-",
+        "note": "+ instr"
       },
       {
         "id": "v-m35-018",
         "uk": "кивати",
-        "translit": "/kɪˈvɑtɪ/",
-        "ipa": "to nod",
-        "en": "verb",
-        "pos": "-",
-        "gender": "+ instr"
+        "translit": "",
+        "ipa": "/kɪˈvɑtɪ/",
+        "en": "to nod",
+        "pos": "verb",
+        "gender": "-",
+        "note": "+ instr"
       }
     ]
   }

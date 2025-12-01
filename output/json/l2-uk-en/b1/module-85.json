@@ -260,8 +260,126 @@
     "moduleId": "mod-uk-B1-85",
     "level": "B1",
     "phase": "B1.1",
-    "wordCount": 0,
+    "wordCount": 13,
     "transliterationMode": "none",
-    "words": []
+    "words": [
+      {
+        "id": "v-m85-001",
+        "uk": "ніколи",
+        "translit": "",
+        "ipa": "/nʲiˈkolɪ/",
+        "en": "never",
+        "pos": "",
+        "note": "+ imperfective"
+      },
+      {
+        "id": "v-m85-002",
+        "uk": "ще не",
+        "translit": "",
+        "ipa": "/ʃt͡ʃɛ nɛ/",
+        "en": "not yet",
+        "pos": "",
+        "note": "+ perfective"
+      },
+      {
+        "id": "v-m85-003",
+        "uk": "більше не",
+        "translit": "",
+        "ipa": "/ˈbʲilʲʃɛ nɛ/",
+        "en": "no longer",
+        "pos": "",
+        "note": "+ imperfective"
+      },
+      {
+        "id": "v-m85-004",
+        "uk": "ні... ні",
+        "translit": "",
+        "ipa": "/nʲi nʲi/",
+        "en": "neither... nor",
+        "pos": "",
+        "note": "-"
+      },
+      {
+        "id": "v-m85-005",
+        "uk": "нічого",
+        "translit": "",
+        "ipa": "/nʲiˈt͡ʃoɦo/",
+        "en": "nothing",
+        "pos": "",
+        "note": "genitive"
+      },
+      {
+        "id": "v-m85-006",
+        "uk": "нікого",
+        "translit": "",
+        "ipa": "/nʲiˈkoɦo/",
+        "en": "nobody",
+        "pos": "",
+        "note": "genitive"
+      },
+      {
+        "id": "v-m85-007",
+        "uk": "ніде",
+        "translit": "",
+        "ipa": "/nʲiˈdɛ/",
+        "en": "nowhere",
+        "pos": "",
+        "note": "-"
+      },
+      {
+        "id": "v-m85-008",
+        "uk": "обережно",
+        "translit": "",
+        "ipa": "/obɛˈrɛʒno/",
+        "en": "carefully, caution",
+        "pos": "",
+        "note": "-"
+      },
+      {
+        "id": "v-m85-009",
+        "uk": "заборонено",
+        "translit": "",
+        "ipa": "/zɑboroˈnɛno/",
+        "en": "forbidden",
+        "pos": "",
+        "note": "-"
+      },
+      {
+        "id": "v-m85-010",
+        "uk": "не можна",
+        "translit": "",
+        "ipa": "/nɛ ˈmoʒnɑ/",
+        "en": "not allowed",
+        "pos": "",
+        "note": "-"
+      },
+      {
+        "id": "v-m85-011",
+        "uk": "не варто",
+        "translit": "",
+        "ipa": "/nɛ ˈvɑrto/",
+        "en": "not worth it",
+        "pos": "",
+        "note": "-"
+      },
+      {
+        "id": "v-m85-012",
+        "uk": "не слід",
+        "translit": "",
+        "ipa": "/nɛ slʲid/",
+        "en": "should not",
+        "pos": "",
+        "note": "-"
+      },
+      {
+        "id": "v-m85-013",
+        "uk": "даремно",
+        "translit": "",
+        "ipa": "/dɑˈrɛmno/",
+        "en": "in vain",
+        "pos": "",
+        "note": "-"
+      }
+    ]
   }
 }

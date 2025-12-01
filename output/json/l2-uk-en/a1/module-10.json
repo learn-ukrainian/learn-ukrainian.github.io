@@ -411,8 +411,137 @@
     "moduleId": "mod-uk-A1-10",
     "level": "A1",
     "phase": "A1.2",
-    "wordCount": 0,
+    "wordCount": 16,
     "transliterationMode": "full",
-    "words": []
+    "words": [
+      {
+        "id": "v-m10-001",
+        "uk": "буква",
+        "translit": "",
+        "ipa": "",
+        "en": "letter",
+        "pos": ""
+      },
+      {
+        "id": "v-m10-002",
+        "uk": "слово",
+        "translit": "",
+        "ipa": "",
+        "en": "word",
+        "pos": ""
+      },
+      {
+        "id": "v-m10-003",
+        "uk": "чоловічий",
+        "translit": "",
+        "ipa": "",
+        "en": "masculine",
+        "pos": ""
+      },
+      {
+        "id": "v-m10-004",
+        "uk": "жіночий",
+        "translit": "",
+        "ipa": "",
+        "en": "feminine",
+        "pos": ""
+      },
+      {
+        "id": "v-m10-005",
+        "uk": "середній",
+        "translit": "",
+        "ipa": "",
+        "en": "neuter",
+        "pos": ""
+      },
+      {
+        "id": "v-m10-006",
+        "uk": "я, ти, він, вона",
+        "translit": "",
+        "ipa": "",
+        "en": "I, you, he, she",
+        "pos": ""
+      },
+      {
+        "id": "v-m10-007",
+        "uk": "цей, ця, це, ці",
+        "translit": "",
+        "ipa": "",
+        "en": "this (m/f/n/pl)",
+        "pos": ""
+      },
+      {
+        "id": "v-m10-008",
+        "uk": "читати",
+        "translit": "",
+        "ipa": "",
+        "en": "to read",
+        "pos": ""
+      },
+      {
+        "id": "v-m10-009",
+        "uk": "знати",
+        "translit": "",
+        "ipa": "",
+        "en": "to know",
+        "pos": ""
+      },
+      {
+        "id": "v-m10-010",
+        "uk": "говорити",
+        "translit": "",
+        "ipa": "",
+        "en": "to speak",
+        "pos": ""
+      },
+      {
+        "id": "v-m10-011",
+        "uk": "робити",
+        "translit": "",
+        "ipa": "",
+        "en": "to do/make",
+        "pos": ""
+      },
+      {
+        "id": "v-m10-012",
+        "uk": "що, хто, де",
+        "translit": "",
+        "ipa": "",
+        "en": "what, who, where",
+        "pos": ""
+      },
+      {
+        "id": "v-m10-013",
+        "uk": "не, ніхто, ніколи",
+        "translit": "",
+        "ipa": "",
+        "en": "not, nobody, never",
+        "pos": ""
+      },
+      {
+        "id": "v-m10-014",
+        "uk": "один, два, три",
+        "translit": "",
+        "ipa": "",
+        "en": "one, two, three",
+        "pos": ""
+      },
+      {
+        "id": "v-m10-015",
+        "uk": "гривня",
+        "translit": "",
+        "ipa": "",
+        "en": "hryvnia",
+        "pos": ""
+      },
+      {
+        "id": "v-m10-016",
+        "uk": "скільки коштує",
+        "translit": "",
+        "ipa": "",
+        "en": "how much does it cost",
+        "pos": ""
+      }
+    ]
   }
 }

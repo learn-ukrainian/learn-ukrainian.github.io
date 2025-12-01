@@ -135,89 +135,100 @@
         "id": "v-m156-001",
         "uk": "допуст",
         "translit": "",
-        "ipa": "concession",
-        "en": "хоча, незважаючи на",
-        "pos": ""
+        "ipa": "",
+        "en": "concession",
+        "pos": "",
+        "note": "хоча, незважаючи на"
       },
       {
         "id": "v-m156-002",
         "uk": "супровід",
         "translit": "",
-        "ipa": "accompaniment",
-        "en": "одночасно",
-        "pos": ""
+        "ipa": "",
+        "en": "accompaniment",
+        "pos": "",
+        "note": "одночасно"
       },
       {
         "id": "v-m156-003",
         "uk": "зворот",
         "translit": "",
-        "ipa": "phrase, construction",
-        "en": "стійкий вираз",
-        "pos": ""
+        "ipa": "",
+        "en": "phrase, construction",
+        "pos": "",
+        "note": "стійкий вираз"
       },
       {
         "id": "v-m156-004",
         "uk": "жестикулювати",
         "translit": "",
-        "ipa": "to gesticulate",
-        "en": "рухати руками",
-        "pos": ""
+        "ipa": "",
+        "en": "to gesticulate",
+        "pos": "",
+        "note": "рухати руками"
       },
       {
         "id": "v-m156-005",
         "uk": "насвистувати",
         "translit": "",
-        "ipa": "to whistle",
-        "en": "свистіти мелодію",
-        "pos": ""
+        "ipa": "",
+        "en": "to whistle",
+        "pos": "",
+        "note": "свистіти мелодію"
       },
       {
         "id": "v-m156-006",
         "uk": "заблукати",
         "translit": "",
-        "ipa": "to get lost",
-        "en": "загубити дорогу",
-        "pos": ""
+        "ipa": "",
+        "en": "to get lost",
+        "pos": "",
+        "note": "загубити дорогу"
       },
       {
         "id": "v-m156-007",
         "uk": "відверто",
         "translit": "",
-        "ipa": "frankly",
-        "en": "чесно",
-        "pos": ""
+        "ipa": "",
+        "en": "frankly",
+        "pos": "",
+        "note": "чесно"
       },
       {
         "id": "v-m156-008",
         "uk": "зважаючи",
         "translit": "",
-        "ipa": "considering",
-        "en": "враховуючи",
-        "pos": ""
+        "ipa": "",
+        "en": "considering",
+        "pos": "",
+        "note": "враховуючи"
       },
       {
         "id": "v-m156-009",
         "uk": "виходячи",
         "translit": "",
-        "ipa": "based on",
-        "en": "спираючись на",
-        "pos": ""
+        "ipa": "",
+        "en": "based on",
+        "pos": "",
+        "note": "спираючись на"
       },
       {
         "id": "v-m156-010",
         "uk": "ланцюжок",
         "translit": "",
-        "ipa": "chain",
-        "en": "кілька поспіль",
-        "pos": ""
+        "ipa": "",
+        "en": "chain",
+        "pos": "",
+        "note": "кілька поспіль"
       },
       {
         "id": "v-m156-011",
         "uk": "двозначний",
         "translit": "",
-        "ipa": "ambiguous",
-        "en": "неясний",
-        "pos": ""
+        "ipa": "",
+        "en": "ambiguous",
+        "pos": "",
+        "note": "неясний"
       }
     ]
   }

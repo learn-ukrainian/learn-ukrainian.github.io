@@ -750,7 +750,7 @@
       <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
-    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (0)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
+    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (10)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
     </section>
   </main>
@@ -759,7 +759,7 @@
     const matchPairs=[];
     const quizData=[{"question":"___ рішення:","options":["приймати","робити"],"correctIndex":0,"explanation":"Make a decision = приймати рішення."},{"question":"___ помилку:","options":["робити","приймати"],"correctIndex":0,"explanation":"Make a mistake = робити помилку."},{"question":"___ участь:","options":["брати","давати"],"correctIndex":0,"explanation":"Take part = брати участь."},{"question":"___ пораду:","options":["давати","робити"],"correctIndex":0,"explanation":"Give advice = давати пораду."},{"question":"___ сенс:","options":["мати","робити"],"correctIndex":0,"explanation":"Make sense = мати сенс."},{"question":"___ переговори:","options":["вести","робити"],"correctIndex":0,"explanation":"Conduct negotiations = вести переговори."}];
     const sortData={};
-    const vocabData=[];
+    const vocabData=[{"uk":"колокація","translit":"","en":"collocation","note":"f"},{"uk":"словосполучення","translit":"","en":"word combination","note":"n"},{"uk":"приймати рішення","translit":"","en":"make a decision","note":"colloc"},{"uk":"робити помилку","translit":"","en":"make a mistake","note":"colloc"},{"uk":"брати участь","translit":"","en":"take part","note":"colloc"},{"uk":"давати пораду","translit":"","en":"give advice","note":"colloc"},{"uk":"мати сенс","translit":"","en":"make sense","note":"colloc"},{"uk":"вести переговори","translit":"","en":"conduct negotiations","note":"colloc"},{"uk":"мати значення","translit":"","en":"matter, be important","note":"colloc"},{"uk":"брати до уваги","translit":"","en":"take into account","note":"colloc"}];
     const totalSort=0;
     function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
     document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));

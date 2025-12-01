@@ -782,7 +782,7 @@
       <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
-    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (0)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
+    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (12)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
     </section>
   </main>
@@ -791,7 +791,7 @@
     const matchPairs=[];
     const quizData=[{"question":"Пасивне сприйняття очима:","options":["бачити","дивитися"],"correctIndex":0,"explanation":"Passive seeing."},{"question":"Активний погляд:","options":["дивитися","бачити"],"correctIndex":0,"explanation":"Active looking."},{"question":"Мати інформацію:","options":["знати","розуміти"],"correctIndex":0,"explanation":"Have information."},{"question":"Осягати сенс:","options":["розуміти","знати"],"correctIndex":0,"explanation":"Comprehend meaning."},{"question":"«Я ___ фільм» — дивитися:","options":["дивлюся","бачу"],"correctIndex":0,"explanation":"Watching a movie."},{"question":"«Усвідомити» означає:","options":["to realize","to know"],"correctIndex":0,"explanation":"Realize importance."}];
     const sortData={};
-    const vocabData=[];
+    const vocabData=[{"uk":"бачити","translit":"","en":"to see","note":"impf, passive"},{"uk":"дивитися","translit":"","en":"to look, watch","note":"impf, active"},{"uk":"оглядати","translit":"","en":"to examine","note":"impf"},{"uk":"спостерігати","translit":"","en":"to observe","note":"impf"},{"uk":"помічати","translit":"","en":"to notice","note":"impf"},{"uk":"знати","translit":"","en":"to know","note":"impf"},{"uk":"розуміти","translit":"","en":"to understand","note":"impf"},{"uk":"усвідомлювати","translit":"","en":"to realize","note":"impf"},{"uk":"визнавати","translit":"","en":"to acknowledge","note":"impf"},{"uk":"пізнавати","translit":"","en":"to get to know","note":"impf"},{"uk":"погляд","translit":"","en":"glance, look","note":"m"},{"uk":"знання","translit":"","en":"knowledge","note":"n"}];
     const totalSort=0;
     function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
     document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));

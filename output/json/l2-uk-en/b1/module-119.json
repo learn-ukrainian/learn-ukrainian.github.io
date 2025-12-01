@@ -305,8 +305,144 @@
     "moduleId": "mod-uk-B1-119",
     "level": "B1",
     "phase": "B1.3",
-    "wordCount": 0,
+    "wordCount": 15,
     "transliterationMode": "none",
-    "words": []
+    "words": [
+      {
+        "id": "v-m119-001",
+        "uk": "дієприкметник",
+        "translit": "",
+        "ipa": "/dʲijɛprɪˈkmɛtnɪk/",
+        "en": "participle",
+        "pos": "",
+        "note": "m"
+      },
+      {
+        "id": "v-m119-002",
+        "uk": "пасивний",
+        "translit": "",
+        "ipa": "/pɑˈsɪwnɪj/",
+        "en": "passive",
+        "pos": "",
+        "note": "adj"
+      },
+      {
+        "id": "v-m119-003",
+        "uk": "написаний",
+        "translit": "",
+        "ipa": "/nɑˈpɪsɑnɪj/",
+        "en": "written",
+        "pos": "",
+        "note": "participle"
+      },
+      {
+        "id": "v-m119-004",
+        "uk": "прочитаний",
+        "translit": "",
+        "ipa": "/prot͡ʃɪˈtɑnɪj/",
+        "en": "read",
+        "pos": "",
+        "note": "participle"
+      },
+      {
+        "id": "v-m119-005",
+        "uk": "зроблений",
+        "translit": "",
+        "ipa": "/ˈzroblɛnɪj/",
+        "en": "done, made",
+        "pos": "",
+        "note": "participle"
+      },
+      {
+        "id": "v-m119-006",
+        "uk": "закритий",
+        "translit": "",
+        "ipa": "/zɑˈkrɪtɪj/",
+        "en": "closed",
+        "pos": "",
+        "note": "participle"
+      },
+      {
+        "id": "v-m119-007",
+        "uk": "відкритий",
+        "translit": "",
+        "ipa": "/vʲidˈkrɪtɪj/",
+        "en": "open(ed)",
+        "pos": "",
+        "note": "participle"
+      },
+      {
+        "id": "v-m119-008",
+        "uk": "забутий",
+        "translit": "",
+        "ipa": "/zɑˈbutɪj/",
+        "en": "forgotten",
+        "pos": "",
+        "note": "participle"
+      },
+      {
+        "id": "v-m119-009",
+        "uk": "знайдений",
+        "translit": "",
+        "ipa": "/znɑjˈdɛnɪj/",
+        "en": "found",
+        "pos": "",
+        "note": "participle"
+      },
+      {
+        "id": "v-m119-010",
+        "uk": "куплений",
+        "translit": "",
+        "ipa": "/ˈkuplɛnɪj/",
+        "en": "bought",
+        "pos": "",
+        "note": "participle"
+      },
+      {
+        "id": "v-m119-011",
+        "uk": "приготовлений",
+        "translit": "",
+        "ipa": "/prɪɦotoˈwlɛnɪj/",
+        "en": "prepared",
+        "pos": "",
+        "note": "participle"
+      },
+      {
+        "id": "v-m119-012",
+        "uk": "запрошений",
+        "translit": "",
+        "ipa": "/zɑˈproʃɛnɪj/",
+        "en": "invited",
+        "pos": "",
+        "note": "participle"
+      },
+      {
+        "id": "v-m119-013",
+        "uk": "збудований",
+        "translit": "",
+        "ipa": "/zbuˈdovɑnɪj/",
+        "en": "built",
+        "pos": "",
+        "note": "participle"
+      },
+      {
+        "id": "v-m119-014",
+        "uk": "організований",
+        "translit": "",
+        "ipa": "/orɦɑnʲiˈzovɑnɪj/",
+        "en": "organized",
+        "pos": "",
+        "note": "participle"
+      },
+      {
+        "id": "v-m119-015",
+        "uk": "втрачений",
+        "translit": "",
+        "ipa": "/vˈtrɑt͡ʃɛnɪj/",
+        "en": "lost",
+        "pos": "",
+        "note": "participle"
+      }
+    ]
   }
 }

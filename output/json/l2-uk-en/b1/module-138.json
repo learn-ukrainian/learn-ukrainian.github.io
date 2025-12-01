@@ -205,13 +205,46 @@
       "modifiedAt": "2025-12-01T00:00:00Z"
     },
     {
-      "id": "act-uk-B1-138-fillin",
-      "type": "fill-in",
+      "id": "act-uk-B1-138-gapfill",
+      "type": "gap-fill",
       "title": "Comprehensive Story",
       "description": "Перекажіть історію, використовуючи всю граматику B1.",
       "content": {
-        "type": "fill-in",
-        "instructions": "Перекажіть історію, використовуючи всю граматику B1."
+        "type": "gap-fill",
+        "instructions": "Перекажіть історію, використовуючи всю граматику B1.",
+        "text": "Перекажіть історію, використовуючи всю граматику B1.\nУчора мій друг (1)___ (say), що він хоче (2)___ (visit) мене. Він (3)___ (ask), чи я буду вдома. Я відповів, (4)___ (that) буду.\n(5)___ (If) матиму час, я приготую обід. (6)___ (Although) я був зайнятий, я (7)___ (make a decision) знайти час.\nВін (8)___ (arrive/pf) о третій. (9)___ (Having eaten) обід, ми поговорили про життя.",
+        "blanks": [
+          {
+            "hint": "say"
+          },
+          {
+            "hint": "visit"
+          },
+          {
+            "hint": "ask"
+          },
+          {
+            "hint": "that"
+          },
+          {
+            "hint": "If"
+          },
+          {
+            "hint": "Although"
+          },
+          {
+            "hint": "make a decision"
+          },
+          {
+            "hint": "arrive/pf"
+          },
+          {
+            "hint": "Having eaten"
+          }
+        ],
+        "answers": [
+          "1. сказав"
+        ]
       },
       "subject": "language",
       "owner": "curricula-opus",
@@ -233,8 +266,90 @@
     "moduleId": "mod-uk-B1-138",
     "level": "B1",
     "phase": "B1.4",
-    "wordCount": 0,
+    "wordCount": 9,
     "transliterationMode": "none",
-    "words": []
+    "words": [
+      {
+        "id": "v-m138-001",
+        "uk": "інтеграція",
+        "translit": "",
+        "ipa": "/ʲintɛɦrɑˈt͡sʲijɑ/",
+        "en": "integration",
+        "pos": "",
+        "note": "f"
+      },
+      {
+        "id": "v-m138-002",
+        "uk": "вид дієслова",
+        "translit": "",
+        "ipa": "-",
+        "en": "verb aspect",
+        "pos": "",
+        "note": "m"
+      },
+      {
+        "id": "v-m138-003",
+        "uk": "доконаний",
+        "translit": "",
+        "ipa": "-",
+        "en": "perfective",
+        "pos": "",
+        "note": "adj"
+      },
+      {
+        "id": "v-m138-004",
+        "uk": "недоконаний",
+        "translit": "",
+        "ipa": "-",
+        "en": "imperfective",
+        "pos": "",
+        "note": "adj"
+      },
+      {
+        "id": "v-m138-005",
+        "uk": "сполучник",
+        "translit": "",
+        "ipa": "/spoˈlut͡ʃnɪk/",
+        "en": "conjunction",
+        "pos": "",
+        "note": "m"
+      },
+      {
+        "id": "v-m138-006",
+        "uk": "підрядне речення",
+        "translit": "",
+        "ipa": "-",
+        "en": "subordinate clause",
+        "pos": "",
+        "note": "n"
+      },
+      {
+        "id": "v-m138-007",
+        "uk": "непряма мова",
+        "translit": "",
+        "ipa": "-",
+        "en": "reported speech",
+        "pos": "",
+        "note": "f"
+      },
+      {
+        "id": "v-m138-008",
+        "uk": "дієприкметник",
+        "translit": "",
+        "ipa": "/dʲijɛprɪˈkmɛtnɪk/",
+        "en": "participle",
+        "pos": "",
+        "note": "m"
+      },
+      {
+        "id": "v-m138-009",
+        "uk": "дієприслівник",
+        "translit": "",
+        "ipa": "/dʲijɛprɪˈslʲivnɪk/",
+        "en": "adverbial participle",
+        "pos": "",
+        "note": "m"
+      }
+    ]
   }
 }

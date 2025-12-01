@@ -288,13 +288,42 @@
       "modifiedAt": "2025-12-01T00:00:00Z"
     },
     {
-      "id": "act-uk-B1-96-fillin",
-      "type": "fill-in",
+      "id": "act-uk-B1-96-gapfill",
+      "type": "gap-fill",
       "title": "Complete the Paragraph",
       "description": "Я маю великий ___ (experience) роботи. У мене хороші ___ (skills) і високий ___ (level) кваліфікації. Зараз я шукаю нові ___ (opportunities). Мої ___ (duties) включають управління проєктами. Я готовий до ___ (changes) і нових викликів.",
       "content": {
-        "type": "fill-in",
-        "instructions": "Я маю великий ___ (experience) роботи. У мене хороші ___ (skills) і високий ___ (level) кваліфікації. Зараз я шукаю нові ___ (opportunities). Мої ___ (duties) включають управління проєктами. Я готовий до ___ (changes) і нових викликів."
+        "type": "gap-fill",
+        "instructions": "Я маю великий ___ (experience) роботи. У мене хороші ___ (skills) і високий ___ (level) кваліфікації. Зараз я шукаю нові ___ (opportunities). Мої ___ (duties) включають управління проєктами. Я готовий до ___ (changes) і нових викликів.",
+        "text": "Я маю великий ___ (experience) роботи. У мене хороші ___ (skills) і високий ___ (level) кваліфікації. Зараз я шукаю нові ___ (opportunities). Мої ___ (duties) включають управління проєктами. Я готовий до ___ (changes) і нових викликів.",
+        "blanks": [
+          {
+            "hint": "experience"
+          },
+          {
+            "hint": "skills"
+          },
+          {
+            "hint": "level"
+          },
+          {
+            "hint": "opportunities"
+          },
+          {
+            "hint": "duties"
+          },
+          {
+            "hint": "changes"
+          }
+        ],
+        "answers": [
+          "досвід",
+          "навички",
+          "рівень",
+          "можливості",
+          "обов'язки",
+          "змін"
+        ]
       },
       "subject": "language",
       "owner": "curricula-opus",
@@ -316,8 +345,153 @@
     "moduleId": "mod-uk-B1-96",
     "level": "B1",
     "phase": "B1.1",
-    "wordCount": 0,
+    "wordCount": 16,
     "transliterationMode": "none",
-    "words": []
+    "words": [
+      {
+        "id": "v-m96-001",
+        "uk": "досвід",
+        "translit": "",
+        "ipa": "/ˈdosvʲid/",
+        "en": "experience",
+        "pos": "",
+        "gender": "m"
+      },
+      {
+        "id": "v-m96-002",
+        "uk": "переживання",
+        "translit": "",
+        "ipa": "/pɛrɛʒɪˈvɑnʲːɑ/",
+        "en": "experience (emotional)",
+        "pos": "",
+        "gender": "n"
+      },
+      {
+        "id": "v-m96-003",
+        "uk": "знання",
+        "translit": "",
+        "ipa": "/znɑnʲˈːɑ/",
+        "en": "knowledge",
+        "pos": "",
+        "gender": "n (usually pl)"
+      },
+      {
+        "id": "v-m96-004",
+        "uk": "навичка",
+        "translit": "",
+        "ipa": "/nɑˈvɪt͡ʃkɑ/",
+        "en": "skill",
+        "pos": "",
+        "gender": "f"
+      },
+      {
+        "id": "v-m96-005",
+        "uk": "вміння",
+        "translit": "",
+        "ipa": "/vˈmʲinʲːɑ/",
+        "en": "ability",
+        "pos": "",
+        "gender": "n"
+      },
+      {
+        "id": "v-m96-006",
+        "uk": "можливість",
+        "translit": "",
+        "ipa": "/moʒˈlɪvʲistʲ/",
+        "en": "opportunity",
+        "pos": "",
+        "gender": "f"
+      },
+      {
+        "id": "v-m96-007",
+        "uk": "шанс",
+        "translit": "",
+        "ipa": "/ʃɑns/",
+        "en": "chance",
+        "pos": "",
+        "gender": "m"
+      },
+      {
+        "id": "v-m96-008",
+        "uk": "вибір",
+        "translit": "",
+        "ipa": "/ˈvɪbʲir/",
+        "en": "choice",
+        "pos": "",
+        "gender": "m"
+      },
+      {
+        "id": "v-m96-009",
+        "uk": "варіант",
+        "translit": "",
+        "ipa": "/vɑrʲiˈɑnt/",
+        "en": "option",
+        "pos": "",
+        "gender": "m"
+      },
+      {
+        "id": "v-m96-010",
+        "uk": "відповідальність",
+        "translit": "",
+        "ipa": "/vʲidpovʲidɑlʲˈnʲistʲ/",
+        "en": "responsibility",
+        "pos": "",
+        "gender": "f"
+      },
+      {
+        "id": "v-m96-011",
+        "uk": "обов'язок",
+        "translit": "",
+        "ipa": "/oboˈvjɑzok/",
+        "en": "duty",
+        "pos": "",
+        "gender": "m"
+      },
+      {
+        "id": "v-m96-012",
+        "uk": "ситуація",
+        "translit": "",
+        "ipa": "/sɪtuˈɑt͡sʲijɑ/",
+        "en": "situation",
+        "pos": "",
+        "gender": "f"
+      },
+      {
+        "id": "v-m96-013",
+        "uk": "умови",
+        "translit": "",
+        "ipa": "/uˈmovɪ/",
+        "en": "conditions",
+        "pos": "",
+        "gender": "pl"
+      },
+      {
+        "id": "v-m96-014",
+        "uk": "зміна",
+        "translit": "",
+        "ipa": "/ˈzmʲinɑ/",
+        "en": "change",
+        "pos": "",
+        "gender": "f"
+      },
+      {
+        "id": "v-m96-015",
+        "uk": "стабільність",
+        "translit": "",
+        "ipa": "/stɑˈbʲilʲnʲistʲ/",
+        "en": "stability",
+        "pos": "",
+        "gender": "f"
+      },
+      {
+        "id": "v-m96-016",
+        "uk": "ризик",
+        "translit": "",
+        "ipa": "/ˈrɪzɪk/",
+        "en": "risk",
+        "pos": "",
+        "gender": "m"
+      }
+    ]
   }
 }

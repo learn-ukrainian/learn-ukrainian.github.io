@@ -371,356 +371,399 @@
       {
         "id": "v-m67-001",
         "uk": "варити",
-        "translit": "/vɑˈrɪtɪ/",
-        "ipa": "to boil, cook",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/vɑˈrɪtɪ/",
+        "en": "to boil, cook",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m67-002",
         "uk": "смажити",
-        "translit": "/ˈsmɑʒɪtɪ/",
-        "ipa": "to fry",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/ˈsmɑʒɪtɪ/",
+        "en": "to fry",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m67-003",
         "uk": "пекти",
-        "translit": "/ˈpɛktɪ/",
-        "ipa": "to bake",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/ˈpɛktɪ/",
+        "en": "to bake",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m67-004",
         "uk": "готувати",
-        "translit": "/ɦotuˈvɑtɪ/",
-        "ipa": "to prepare, cook",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/ɦotuˈvɑtɪ/",
+        "en": "to prepare, cook",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m67-005",
         "uk": "різати",
-        "translit": "/ˈrʲizɑtɪ/",
-        "ipa": "to cut",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/ˈrʲizɑtɪ/",
+        "en": "to cut",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m67-006",
         "uk": "чистити",
-        "translit": "/ˈtʃɪstɪtɪ/",
-        "ipa": "to peel, clean",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/ˈtʃɪstɪtɪ/",
+        "en": "to peel, clean",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m67-007",
         "uk": "мішати",
-        "translit": "/mʲiˈʃɑtɪ/",
-        "ipa": "to mix, stir",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/mʲiˈʃɑtɪ/",
+        "en": "to mix, stir",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m67-008",
         "uk": "додавати",
-        "translit": "/dodɑˈvɑtɪ/",
-        "ipa": "to add",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/dodɑˈvɑtɪ/",
+        "en": "to add",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m67-009",
         "uk": "каструля",
-        "translit": "/kɑsˈtrulʲɑ/",
-        "ipa": "pot",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/kɑsˈtrulʲɑ/",
+        "en": "pot",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m67-010",
         "uk": "сковорода",
-        "translit": "/skovoroˈdɑ/",
-        "ipa": "frying pan",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/skovoroˈdɑ/",
+        "en": "frying pan",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m67-011",
         "uk": "духовка",
-        "translit": "/duˈxovkɑ/",
-        "ipa": "oven",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/duˈxovkɑ/",
+        "en": "oven",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m67-012",
         "uk": "терка",
-        "translit": "/ˈtɛrkɑ/",
-        "ipa": "grater",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈtɛrkɑ/",
+        "en": "grater",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m67-013",
         "uk": "дошка",
-        "translit": "/ˈdoʃkɑ/",
-        "ipa": "cutting board",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈdoʃkɑ/",
+        "en": "cutting board",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m67-014",
         "uk": "курятина",
-        "translit": "/kurʲɑˈtɪnɑ/",
-        "ipa": "chicken (meat)",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/kurʲɑˈtɪnɑ/",
+        "en": "chicken (meat)",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m67-015",
         "uk": "свинина",
-        "translit": "/svɪˈnɪnɑ/",
-        "ipa": "pork",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/svɪˈnɪnɑ/",
+        "en": "pork",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m67-016",
         "uk": "яловичина",
-        "translit": "/jɑloˈvɪtʃɪnɑ/",
-        "ipa": "beef",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/jɑloˈvɪtʃɪnɑ/",
+        "en": "beef",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m67-017",
         "uk": "фарш",
-        "translit": "/fɑrʃ/",
-        "ipa": "ground meat",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/fɑrʃ/",
+        "en": "ground meat",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m67-018",
         "uk": "цибуля",
-        "translit": "/tsɪˈbulʲɑ/",
-        "ipa": "onion",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/tsɪˈbulʲɑ/",
+        "en": "onion",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m67-019",
         "uk": "часник",
-        "translit": "/tʃɑsˈnɪk/",
-        "ipa": "garlic",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/tʃɑsˈnɪk/",
+        "en": "garlic",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m67-020",
         "uk": "морква",
-        "translit": "/ˈmorkvɑ/",
-        "ipa": "carrot",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈmorkvɑ/",
+        "en": "carrot",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m67-021",
         "uk": "капуста",
-        "translit": "/kɑˈpustɑ/",
-        "ipa": "cabbage",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/kɑˈpustɑ/",
+        "en": "cabbage",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m67-022",
         "uk": "буряк",
-        "translit": "/burʲˈɑk/",
-        "ipa": "beet",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/burʲˈɑk/",
+        "en": "beet",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m67-023",
         "uk": "гречка",
-        "translit": "/ˈɦrɛtʃkɑ/",
-        "ipa": "buckwheat",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈɦrɛtʃkɑ/",
+        "en": "buckwheat",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m67-024",
         "uk": "сметана",
-        "translit": "/smɛˈtɑnɑ/",
-        "ipa": "sour cream",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/smɛˈtɑnɑ/",
+        "en": "sour cream",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m67-025",
         "uk": "вершки",
-        "translit": "/vɛrˈʃkɪ/",
-        "ipa": "cream",
-        "en": "noun",
-        "pos": "pl"
+        "translit": "",
+        "ipa": "/vɛrˈʃkɪ/",
+        "en": "cream",
+        "pos": "noun",
+        "gender": "pl"
       },
       {
         "id": "v-m67-026",
         "uk": "смачний",
-        "translit": "/ˈsmɑtʃnɪj/",
-        "ipa": "delicious",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ˈsmɑtʃnɪj/",
+        "en": "delicious",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m67-027",
         "uk": "солоний",
-        "translit": "/soˈlonɪj/",
-        "ipa": "salty",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/soˈlonɪj/",
+        "en": "salty",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m67-028",
         "uk": "солодкий",
-        "translit": "/soˈlodkɪj/",
-        "ipa": "sweet",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/soˈlodkɪj/",
+        "en": "sweet",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m67-029",
         "uk": "кислий",
-        "translit": "/ˈkɪslɪj/",
-        "ipa": "sour",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ˈkɪslɪj/",
+        "en": "sour",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m67-030",
         "uk": "гіркий",
-        "translit": "/ˈɦʲirkɪj/",
-        "ipa": "bitter",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ˈɦʲirkɪj/",
+        "en": "bitter",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m67-031",
         "uk": "гострий",
-        "translit": "/ˈɦostrɪj/",
-        "ipa": "spicy, sharp",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ˈɦostrɪj/",
+        "en": "spicy, sharp",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m67-032",
         "uk": "свіжий",
-        "translit": "/ˈsvʲiʒɪj/",
-        "ipa": "fresh",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ˈsvʲiʒɪj/",
+        "en": "fresh",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m67-033",
         "uk": "соковитий",
-        "translit": "/sokoˈvɪtɪj/",
-        "ipa": "juicy",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/sokoˈvɪtɪj/",
+        "en": "juicy",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m67-034",
         "uk": "страва",
-        "translit": "/ˈstrɑvɑ/",
-        "ipa": "dish",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈstrɑvɑ/",
+        "en": "dish",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m67-035",
         "uk": "рецепт",
-        "translit": "/rɛˈtsɛpt/",
-        "ipa": "recipe",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/rɛˈtsɛpt/",
+        "en": "recipe",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m67-036",
         "uk": "порція",
-        "translit": "/ˈportsʲijɑ/",
-        "ipa": "portion",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈportsʲijɑ/",
+        "en": "portion",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m67-037",
         "uk": "смакувати",
-        "translit": "/smɑkuˈvɑtɪ/",
-        "ipa": "to taste (enjoy)",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/smɑkuˈvɑtɪ/",
+        "en": "to taste (enjoy)",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m67-038",
         "uk": "наїстися",
-        "translit": "/nɑˈjistɪsʲɑ/",
-        "ipa": "to eat one's fill",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/nɑˈjistɪsʲɑ/",
+        "en": "to eat one's fill",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m67-039",
         "uk": "борщ",
-        "translit": "/borʃtʃ/",
-        "ipa": "borscht",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/borʃtʃ/",
+        "en": "borscht",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m67-040",
         "uk": "вареники",
-        "translit": "/vɑˈrɛnɪkɪ/",
-        "ipa": "dumplings",
-        "en": "noun",
-        "pos": "pl"
+        "translit": "",
+        "ipa": "/vɑˈrɛnɪkɪ/",
+        "en": "dumplings",
+        "pos": "noun",
+        "gender": "pl"
       },
       {
         "id": "v-m67-041",
         "uk": "деруни",
-        "translit": "/dɛˈrunɪ/",
-        "ipa": "potato pancakes",
-        "en": "noun",
-        "pos": "pl"
+        "translit": "",
+        "ipa": "/dɛˈrunɪ/",
+        "en": "potato pancakes",
+        "pos": "noun",
+        "gender": "pl"
       },
       {
         "id": "v-m67-042",
         "uk": "голубці",
-        "translit": "/ɦoluˈptsʲi/",
-        "ipa": "stuffed cabbage",
-        "en": "noun",
-        "pos": "pl"
+        "translit": "",
+        "ipa": "/ɦoluˈptsʲi/",
+        "en": "stuffed cabbage",
+        "pos": "noun",
+        "gender": "pl"
       },
       {
         "id": "v-m67-043",
         "uk": "сирники",
-        "translit": "/sɪrˈnɪkɪ/",
-        "ipa": "cottage cheese pancakes",
-        "en": "noun",
-        "pos": "pl"
+        "translit": "",
+        "ipa": "/sɪrˈnɪkɪ/",
+        "en": "cottage cheese pancakes",
+        "pos": "noun",
+        "gender": "pl"
       }
     ]
   }

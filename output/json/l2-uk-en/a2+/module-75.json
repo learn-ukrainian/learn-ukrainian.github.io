@@ -376,368 +376,413 @@
       {
         "id": "v-m75-001",
         "uk": "дитячий садок",
-        "translit": "/dɪˈtʲɑtʃɪj sɑˈdok/",
-        "ipa": "kindergarten",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/dɪˈtʲɑtʃɪj sɑˈdok/",
+        "en": "kindergarten",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m75-002",
         "uk": "початкова школа",
-        "translit": "/potʃɑtˈkovɑ ˈʃkolɑ/",
-        "ipa": "elementary school",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/potʃɑtˈkovɑ ˈʃkolɑ/",
+        "en": "elementary school",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m75-003",
         "uk": "гімназія",
-        "translit": "/ɦʲimˈnɑzʲijɑ/",
-        "ipa": "gymnasium",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ɦʲimˈnɑzʲijɑ/",
+        "en": "gymnasium",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m75-004",
         "uk": "ліцей",
-        "translit": "/lʲiˈtsɛj/",
-        "ipa": "lyceum",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/lʲiˈtsɛj/",
+        "en": "lyceum",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m75-005",
         "uk": "аспірантура",
-        "translit": "/ɑspʲirɑnˈturɑ/",
-        "ipa": "graduate school",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ɑspʲirɑnˈturɑ/",
+        "en": "graduate school",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m75-006",
         "uk": "математика",
-        "translit": "/mɑtɛˈmɑtɪkɑ/",
-        "ipa": "mathematics",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/mɑtɛˈmɑtɪkɑ/",
+        "en": "mathematics",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m75-007",
         "uk": "література",
-        "translit": "/lʲitɛrɑˈturɑ/",
-        "ipa": "literature",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/lʲitɛrɑˈturɑ/",
+        "en": "literature",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m75-008",
         "uk": "історія",
-        "translit": "/isˈtorʲijɑ/",
-        "ipa": "history",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/isˈtorʲijɑ/",
+        "en": "history",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m75-009",
         "uk": "географія",
-        "translit": "/ɦɛoˈɦrɑfʲijɑ/",
-        "ipa": "geography",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ɦɛoˈɦrɑfʲijɑ/",
+        "en": "geography",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m75-010",
         "uk": "біологія",
-        "translit": "/bʲioˈloɦʲijɑ/",
-        "ipa": "biology",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/bʲioˈloɦʲijɑ/",
+        "en": "biology",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m75-011",
         "uk": "фізика",
-        "translit": "/ˈfʲizɪkɑ/",
-        "ipa": "physics",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈfʲizɪkɑ/",
+        "en": "physics",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m75-012",
         "uk": "хімія",
-        "translit": "/ˈxʲimʲijɑ/",
-        "ipa": "chemistry",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈxʲimʲijɑ/",
+        "en": "chemistry",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m75-013",
         "uk": "інформатика",
-        "translit": "/informɑˈtɪkɑ/",
-        "ipa": "computer science",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/informɑˈtɪkɑ/",
+        "en": "computer science",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m75-014",
         "uk": "факультет",
-        "translit": "/fɑkulʲˈtɛt/",
-        "ipa": "faculty",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/fɑkulʲˈtɛt/",
+        "en": "faculty",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m75-015",
         "uk": "спеціальність",
-        "translit": "/spɛtsʲiˈɑlʲnʲistʲ/",
-        "ipa": "major, specialty",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/spɛtsʲiˈɑlʲnʲistʲ/",
+        "en": "major, specialty",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m75-016",
         "uk": "семестр",
-        "translit": "/sɛˈmɛstr/",
-        "ipa": "semester",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/sɛˈmɛstr/",
+        "en": "semester",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m75-017",
         "uk": "лекція",
-        "translit": "/ˈlɛktsʲijɑ/",
-        "ipa": "lecture",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈlɛktsʲijɑ/",
+        "en": "lecture",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m75-018",
         "uk": "семінар",
-        "translit": "/sɛmʲiˈnɑr/",
-        "ipa": "seminar",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/sɛmʲiˈnɑr/",
+        "en": "seminar",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m75-019",
         "uk": "диплом",
-        "translit": "/dɪpˈlom/",
-        "ipa": "diploma",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/dɪpˈlom/",
+        "en": "diploma",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m75-020",
         "uk": "ступінь",
-        "translit": "/ˈstupʲinʲ/",
-        "ipa": "degree",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ˈstupʲinʲ/",
+        "en": "degree",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m75-021",
         "uk": "бакалавр",
-        "translit": "/bɑkɑˈlɑvr/",
-        "ipa": "bachelor's",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/bɑkɑˈlɑvr/",
+        "en": "bachelor's",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m75-022",
         "uk": "магістр",
-        "translit": "/mɑˈɦʲistr/",
-        "ipa": "master's",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/mɑˈɦʲistr/",
+        "en": "master's",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m75-023",
         "uk": "учень",
-        "translit": "/uˈtʃɛnʲ/",
-        "ipa": "pupil",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/uˈtʃɛnʲ/",
+        "en": "pupil",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m75-024",
         "uk": "однокласник",
-        "translit": "/odnoˈklɑsnɪk/",
-        "ipa": "classmate (school)",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/odnoˈklɑsnɪk/",
+        "en": "classmate (school)",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m75-025",
         "uk": "одногрупник",
-        "translit": "/odnoˈɦrupnɪk/",
-        "ipa": "classmate (uni)",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/odnoˈɦrupnɪk/",
+        "en": "classmate (uni)",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m75-026",
         "uk": "випускник",
-        "translit": "/ˈvɪpusknɪk/",
-        "ipa": "graduate",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ˈvɪpusknɪk/",
+        "en": "graduate",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m75-027",
         "uk": "декан",
-        "translit": "/dɛˈkɑn/",
-        "ipa": "dean",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/dɛˈkɑn/",
+        "en": "dean",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m75-028",
         "uk": "ректор",
-        "translit": "/ˈrɛktor/",
-        "ipa": "rector",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ˈrɛktor/",
+        "en": "rector",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m75-029",
         "uk": "іспит",
-        "translit": "/ˈispɪt/",
-        "ipa": "exam",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ˈispɪt/",
+        "en": "exam",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m75-030",
         "uk": "залік",
-        "translit": "/zɑˈlʲik/",
-        "ipa": "credit test",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/zɑˈlʲik/",
+        "en": "credit test",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m75-031",
         "uk": "оцінка",
-        "translit": "/oˈtsʲinkɑ/",
-        "ipa": "grade",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/oˈtsʲinkɑ/",
+        "en": "grade",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m75-032",
         "uk": "сесія",
-        "translit": "/ˈsɛsʲijɑ/",
-        "ipa": "exam period",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈsɛsʲijɑ/",
+        "en": "exam period",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m75-033",
         "uk": "відмінник",
-        "translit": "/vʲidˈmʲinnɪk/",
-        "ipa": "excellent student",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/vʲidˈmʲinnɪk/",
+        "en": "excellent student",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m75-034",
         "uk": "підручник",
-        "translit": "/pʲidˈrutʃnɪk/",
-        "ipa": "textbook",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/pʲidˈrutʃnɪk/",
+        "en": "textbook",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m75-035",
         "uk": "зошит",
-        "translit": "/ˈzoʃɪt/",
-        "ipa": "notebook",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ˈzoʃɪt/",
+        "en": "notebook",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m75-036",
         "uk": "конспект",
-        "translit": "/konˈspɛkt/",
-        "ipa": "notes",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/konˈspɛkt/",
+        "en": "notes",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m75-037",
         "uk": "реферат",
-        "translit": "/rɛfɛˈrɑt/",
-        "ipa": "essay",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/rɛfɛˈrɑt/",
+        "en": "essay",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m75-038",
         "uk": "курсова робота",
-        "translit": "/kurˈsovɑ roˈbotɑ/",
-        "ipa": "term paper",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/kurˈsovɑ roˈbotɑ/",
+        "en": "term paper",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m75-039",
         "uk": "дипломна робота",
-        "translit": "/dɪpˈlomnɑ roˈbotɑ/",
-        "ipa": "thesis",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/dɪpˈlomnɑ roˈbotɑ/",
+        "en": "thesis",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m75-040",
         "uk": "вчитися",
-        "translit": "/vtʃɪˈtɪsʲɑ/",
-        "ipa": "to study",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/vtʃɪˈtɪsʲɑ/",
+        "en": "to study",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m75-041",
         "uk": "вивчати",
-        "translit": "/vɪvˈtʃɑtɪ/",
-        "ipa": "to study (subj)",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/vɪvˈtʃɑtɪ/",
+        "en": "to study (subj)",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m75-042",
         "uk": "складати",
-        "translit": "/sklɑˈdɑtɪ/",
-        "ipa": "to take (exam)",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/sklɑˈdɑtɪ/",
+        "en": "to take (exam)",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m75-043",
         "uk": "здавати",
-        "translit": "/zdɑˈvɑtɪ/",
-        "ipa": "to pass",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/zdɑˈvɑtɪ/",
+        "en": "to pass",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m75-044",
         "uk": "пропускати",
-        "translit": "/propusˈkɑtɪ/",
-        "ipa": "to miss",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/propusˈkɑtɪ/",
+        "en": "to miss",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m75-045",
         "uk": "закінчувати",
-        "translit": "/zɑˈkʲintʃuvɑtɪ/",
-        "ipa": "to graduate",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/zɑˈkʲintʃuvɑtɪ/",
+        "en": "to graduate",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       }
     ]
   }

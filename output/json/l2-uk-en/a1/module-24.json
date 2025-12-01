@@ -360,103 +360,115 @@
       {
         "id": "v-m24-001",
         "uk": "могти",
-        "translit": "/mɔɦˈtɪ/",
-        "ipa": "can, to be able",
-        "en": "verb",
-        "pos": "-",
-        "gender": "можу, можеш, може"
+        "translit": "",
+        "ipa": "/mɔɦˈtɪ/",
+        "en": "can, to be able",
+        "pos": "verb",
+        "gender": "-",
+        "note": "можу, можеш, може"
       },
       {
         "id": "v-m24-002",
         "uk": "мусити",
-        "translit": "/muˈsɪtɪ/",
-        "ipa": "must, have to",
-        "en": "verb",
-        "pos": "-",
-        "gender": "мушу, мусиш, мусить"
+        "translit": "",
+        "ipa": "/muˈsɪtɪ/",
+        "en": "must, have to",
+        "pos": "verb",
+        "gender": "-",
+        "note": "мушу, мусиш, мусить"
       },
       {
         "id": "v-m24-003",
         "uk": "повинен",
-        "translit": "/pɔˈvɪnɛn/",
-        "ipa": "should, ought to (m)",
-        "en": "adj",
-        "pos": "m",
-        "gender": "повинна (f), повинні (pl)"
+        "translit": "",
+        "ipa": "/pɔˈvɪnɛn/",
+        "en": "should, ought to (m)",
+        "pos": "adj",
+        "gender": "m",
+        "note": "повинна (f), повинні (pl)"
       },
       {
         "id": "v-m24-004",
         "uk": "треба",
-        "translit": "/ˈtrɛbɑ/",
-        "ipa": "it's necessary",
-        "en": "adv",
-        "pos": "-",
-        "gender": "+ dative + infinitive"
+        "translit": "",
+        "ipa": "/ˈtrɛbɑ/",
+        "en": "it's necessary",
+        "pos": "adv",
+        "gender": "-",
+        "note": "+ dative + infinitive"
       },
       {
         "id": "v-m24-005",
         "uk": "потрібно",
-        "translit": "/pɔˈtrʲibnɔ/",
-        "ipa": "it's needed",
-        "en": "adv",
-        "pos": "-",
-        "gender": "= треба"
+        "translit": "",
+        "ipa": "/pɔˈtrʲibnɔ/",
+        "en": "it's needed",
+        "pos": "adv",
+        "gender": "-",
+        "note": "= треба"
       },
       {
         "id": "v-m24-006",
         "uk": "допомогти",
-        "translit": "/dɔpɔmɔɦˈtɪ/",
-        "ipa": "to help (perf)",
-        "en": "verb",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/dɔpɔmɔɦˈtɪ/",
+        "en": "to help (perf)",
+        "pos": "verb",
+        "gender": "-"
       },
       {
         "id": "v-m24-007",
         "uk": "зрозуміти",
-        "translit": "/zrɔzuˈmʲitɪ/",
-        "ipa": "to understand (perf)",
-        "en": "verb",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/zrɔzuˈmʲitɪ/",
+        "en": "to understand (perf)",
+        "pos": "verb",
+        "gender": "-"
       },
       {
         "id": "v-m24-008",
         "uk": "поспішати",
-        "translit": "/pɔspʲiˈʃɑtɪ/",
-        "ipa": "to hurry",
-        "en": "verb",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/pɔspʲiˈʃɑtɪ/",
+        "en": "to hurry",
+        "pos": "verb",
+        "gender": "-"
       },
       {
         "id": "v-m24-009",
         "uk": "закінчити",
-        "translit": "/zɑˈkʲintʃɪtɪ/",
-        "ipa": "to finish",
-        "en": "verb",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/zɑˈkʲintʃɪtɪ/",
+        "en": "to finish",
+        "pos": "verb",
+        "gender": "-"
       },
       {
         "id": "v-m24-010",
         "uk": "почекати",
-        "translit": "/pɔtʃɛˈkɑtɪ/",
-        "ipa": "to wait (perf)",
-        "en": "verb",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/pɔtʃɛˈkɑtɪ/",
+        "en": "to wait (perf)",
+        "pos": "verb",
+        "gender": "-"
       },
       {
         "id": "v-m24-011",
         "uk": "відпочити",
-        "translit": "/vʲidpɔˈtʃɪtɪ/",
-        "ipa": "to rest",
-        "en": "verb",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/vʲidpɔˈtʃɪtɪ/",
+        "en": "to rest",
+        "pos": "verb",
+        "gender": "-"
       },
       {
         "id": "v-m24-012",
         "uk": "платити",
-        "translit": "/plɑˈtɪtɪ/",
-        "ipa": "to pay",
-        "en": "verb",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/plɑˈtɪtɪ/",
+        "en": "to pay",
+        "pos": "verb",
+        "gender": "-"
       }
     ]
   }

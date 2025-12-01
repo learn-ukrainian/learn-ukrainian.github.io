@@ -372,8 +372,126 @@
     "moduleId": "mod-uk-B1-84",
     "level": "B1",
     "phase": "B1.1",
-    "wordCount": 0,
+    "wordCount": 13,
     "transliterationMode": "none",
-    "words": []
+    "words": [
+      {
+        "id": "v-m84-001",
+        "uk": "обіцяти",
+        "translit": "",
+        "ipa": "/oˈbʲit͡sʲɑtɪ/",
+        "en": "to promise",
+        "pos": "",
+        "note": "imperfective"
+      },
+      {
+        "id": "v-m84-002",
+        "uk": "пообіцяти",
+        "translit": "",
+        "ipa": "/poobʲiˈt͡sʲɑtɪ/",
+        "en": "to promise (pf)",
+        "pos": "",
+        "note": "perfective"
+      },
+      {
+        "id": "v-m84-003",
+        "uk": "планувати",
+        "translit": "",
+        "ipa": "/plɑnuˈvɑtɪ/",
+        "en": "to plan",
+        "pos": "",
+        "note": "imperfective"
+      },
+      {
+        "id": "v-m84-004",
+        "uk": "запланувати",
+        "translit": "",
+        "ipa": "/zɑplɑnuˈvɑtɪ/",
+        "en": "to plan (pf)",
+        "pos": "",
+        "note": "perfective"
+      },
+      {
+        "id": "v-m84-005",
+        "uk": "збиратися",
+        "translit": "",
+        "ipa": "/zbɪˈrɑtɪsʲɑ/",
+        "en": "to be going to",
+        "pos": "",
+        "note": "+ infinitive"
+      },
+      {
+        "id": "v-m84-006",
+        "uk": "мати намір",
+        "translit": "",
+        "ipa": "/ˈmɑtɪ nɑˈmʲir/",
+        "en": "to intend",
+        "pos": "",
+        "note": "+ infinitive"
+      },
+      {
+        "id": "v-m84-007",
+        "uk": "сподіватися",
+        "translit": "",
+        "ipa": "/spodʲiˈvɑtɪsʲɑ/",
+        "en": "to hope",
+        "pos": "",
+        "note": "imperfective"
+      },
+      {
+        "id": "v-m84-008",
+        "uk": "спочатку",
+        "translit": "",
+        "ipa": "/spoˈt͡ʃɑtku/",
+        "en": "first, at first",
+        "pos": "",
+        "note": "in sequences"
+      },
+      {
+        "id": "v-m84-009",
+        "uk": "потім",
+        "translit": "",
+        "ipa": "/poˈtʲim/",
+        "en": "then, afterwards",
+        "pos": "",
+        "note": "in sequences"
+      },
+      {
+        "id": "v-m84-010",
+        "uk": "наступного тижня",
+        "translit": "",
+        "ipa": "/nɑˈstupnoɦo ˈtɪʒnʲɑ/",
+        "en": "next week",
+        "pos": "",
+        "note": "-"
+      },
+      {
+        "id": "v-m84-011",
+        "uk": "післязавтра",
+        "translit": "",
+        "ipa": "/pʲisʲlʲɑˈzɑvtrɑ/",
+        "en": "day after tomorrow",
+        "pos": "",
+        "note": "-"
+      },
+      {
+        "id": "v-m84-012",
+        "uk": "найближчим часом",
+        "translit": "",
+        "ipa": "/nɑjblɪʒˈt͡ʃɪm ˈt͡ʃɑsom/",
+        "en": "in the near future",
+        "pos": "",
+        "note": "-"
+      },
+      {
+        "id": "v-m84-013",
+        "uk": "до понеділка",
+        "translit": "",
+        "ipa": "/do ponɛˈdʲilkɑ/",
+        "en": "by Monday",
+        "pos": "",
+        "note": "deadline"
+      }
+    ]
   }
 }

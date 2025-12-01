@@ -140,113 +140,127 @@
         "id": "v-m158-001",
         "uk": "вставний",
         "translit": "",
-        "ipa": "parenthetical",
-        "en": "не член речення",
-        "pos": ""
+        "ipa": "",
+        "en": "parenthetical",
+        "pos": "",
+        "note": "не член речення"
       },
       {
         "id": "v-m158-002",
         "uk": "мабуть",
         "translit": "",
-        "ipa": "perhaps, probably",
-        "en": "припущення",
-        "pos": ""
+        "ipa": "",
+        "en": "perhaps, probably",
+        "pos": "",
+        "note": "припущення"
       },
       {
         "id": "v-m158-003",
         "uk": "напевно",
         "translit": "",
-        "ipa": "surely, probably",
-        "en": "вища впевненість",
-        "pos": ""
+        "ipa": "",
+        "en": "surely, probably",
+        "pos": "",
+        "note": "вища впевненість"
       },
       {
         "id": "v-m158-004",
         "uk": "безумовно",
         "translit": "",
-        "ipa": "undoubtedly",
-        "en": "повна впевненість",
-        "pos": ""
+        "ipa": "",
+        "en": "undoubtedly",
+        "pos": "",
+        "note": "повна впевненість"
       },
       {
         "id": "v-m158-005",
         "uk": "до речі",
         "translit": "",
-        "ipa": "by the way",
-        "en": "додаткова думка",
-        "pos": ""
+        "ipa": "",
+        "en": "by the way",
+        "pos": "",
+        "note": "додаткова думка"
       },
       {
         "id": "v-m158-006",
         "uk": "між іншим",
         "translit": "",
-        "ipa": "by the way",
-        "en": "додаткова думка",
-        "pos": ""
+        "ipa": "",
+        "en": "by the way",
+        "pos": "",
+        "note": "додаткова думка"
       },
       {
         "id": "v-m158-007",
         "uk": "на жаль",
         "translit": "",
-        "ipa": "unfortunately",
-        "en": "сум",
-        "pos": ""
+        "ipa": "",
+        "en": "unfortunately",
+        "pos": "",
+        "note": "сум"
       },
       {
         "id": "v-m158-008",
         "uk": "на щастя",
         "translit": "",
-        "ipa": "fortunately",
-        "en": "радість",
-        "pos": ""
+        "ipa": "",
+        "en": "fortunately",
+        "pos": "",
+        "note": "радість"
       },
       {
         "id": "v-m158-009",
         "uk": "по-перше",
         "translit": "",
-        "ipa": "firstly",
-        "en": "порядок",
-        "pos": ""
+        "ipa": "",
+        "en": "firstly",
+        "pos": "",
+        "note": "порядок"
       },
       {
         "id": "v-m158-010",
         "uk": "отже",
         "translit": "",
-        "ipa": "so, therefore",
-        "en": "підсумок",
-        "pos": ""
+        "ipa": "",
+        "en": "so, therefore",
+        "pos": "",
+        "note": "підсумок"
       },
       {
         "id": "v-m158-011",
         "uk": "словом",
         "translit": "",
-        "ipa": "in a word",
-        "en": "підсумок",
-        "pos": ""
+        "ipa": "",
+        "en": "in a word",
+        "pos": "",
+        "note": "підсумок"
       },
       {
         "id": "v-m158-012",
         "uk": "інакше кажучи",
         "translit": "",
-        "ipa": "in other words",
-        "en": "пояснення",
-        "pos": ""
+        "ipa": "",
+        "en": "in other words",
+        "pos": "",
+        "note": "пояснення"
       },
       {
         "id": "v-m158-013",
         "uk": "за словами",
         "translit": "",
-        "ipa": "according to",
-        "en": "джерело",
-        "pos": ""
+        "ipa": "",
+        "en": "according to",
+        "pos": "",
+        "note": "джерело"
       },
       {
         "id": "v-m158-014",
         "uk": "на думку",
         "translit": "",
-        "ipa": "in the opinion of",
-        "en": "джерело",
-        "pos": ""
+        "ipa": "",
+        "en": "in the opinion of",
+        "pos": "",
+        "note": "джерело"
       }
     ]
   }

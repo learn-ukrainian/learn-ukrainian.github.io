@@ -305,8 +305,144 @@
     "moduleId": "mod-uk-B1-113",
     "level": "B1",
     "phase": "B1.2",
-    "wordCount": 0,
+    "wordCount": 15,
     "transliterationMode": "none",
-    "words": []
+    "words": [
+      {
+        "id": "v-m113-001",
+        "uk": "довкілля",
+        "translit": "",
+        "ipa": "/dovˈkʲilʲːɑ/",
+        "en": "environment",
+        "pos": "",
+        "gender": "n"
+      },
+      {
+        "id": "v-m113-002",
+        "uk": "природа",
+        "translit": "",
+        "ipa": "/prɪˈrodɑ/",
+        "en": "nature",
+        "pos": "",
+        "gender": "f"
+      },
+      {
+        "id": "v-m113-003",
+        "uk": "клімат",
+        "translit": "",
+        "ipa": "/klʲiˈmɑt/",
+        "en": "climate",
+        "pos": "",
+        "gender": "m"
+      },
+      {
+        "id": "v-m113-004",
+        "uk": "забруднення",
+        "translit": "",
+        "ipa": "/zɑˈbrudnɛnʲːɑ/",
+        "en": "pollution",
+        "pos": "",
+        "gender": "n"
+      },
+      {
+        "id": "v-m113-005",
+        "uk": "сміття",
+        "translit": "",
+        "ipa": "/smʲiˈtʲːɑ/",
+        "en": "garbage",
+        "pos": "",
+        "gender": "n"
+      },
+      {
+        "id": "v-m113-006",
+        "uk": "відходи",
+        "translit": "",
+        "ipa": "/vʲidˈxodɪ/",
+        "en": "waste",
+        "pos": "",
+        "gender": "pl"
+      },
+      {
+        "id": "v-m113-007",
+        "uk": "ресурси",
+        "translit": "",
+        "ipa": "/rɛˈsursɪ/",
+        "en": "resources",
+        "pos": "",
+        "gender": "pl"
+      },
+      {
+        "id": "v-m113-008",
+        "uk": "енергія",
+        "translit": "",
+        "ipa": "/ɛˈnɛrɦʲijɑ/",
+        "en": "energy",
+        "pos": "",
+        "gender": "f"
+      },
+      {
+        "id": "v-m113-009",
+        "uk": "переробка",
+        "translit": "",
+        "ipa": "/pɛrɛˈrobkɑ/",
+        "en": "recycling",
+        "pos": "",
+        "gender": "f"
+      },
+      {
+        "id": "v-m113-010",
+        "uk": "захист",
+        "translit": "",
+        "ipa": "/ˈzɑxɪst/",
+        "en": "protection",
+        "pos": "",
+        "gender": "m"
+      },
+      {
+        "id": "v-m113-011",
+        "uk": "заповідник",
+        "translit": "",
+        "ipa": "/zɑpoˈvʲidnɪk/",
+        "en": "nature reserve",
+        "pos": "",
+        "gender": "m"
+      },
+      {
+        "id": "v-m113-012",
+        "uk": "стійкість",
+        "translit": "",
+        "ipa": "/stʲijˈkʲistʲ/",
+        "en": "sustainability",
+        "pos": "",
+        "gender": "f"
+      },
+      {
+        "id": "v-m113-013",
+        "uk": "посуха",
+        "translit": "",
+        "ipa": "/poˈsuxɑ/",
+        "en": "drought",
+        "pos": "",
+        "gender": "f"
+      },
+      {
+        "id": "v-m113-014",
+        "uk": "повінь",
+        "translit": "",
+        "ipa": "/poˈvʲinʲ/",
+        "en": "flood",
+        "pos": "",
+        "gender": "f"
+      },
+      {
+        "id": "v-m113-015",
+        "uk": "викиди",
+        "translit": "",
+        "ipa": "/ˈvɪkɪdɪ/",
+        "en": "emissions",
+        "pos": "",
+        "gender": "pl"
+      }
+    ]
   }
 }

@@ -704,7 +704,7 @@
       <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
-    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (0)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
+    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (12)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
     </section>
   </main>
@@ -713,7 +713,7 @@
     const matchPairs=[];
     const quizData=[{"question":"«Тримати слово» означає:","options":["дотримуватися обіцянки","мовчати"],"correctIndex":0,"explanation":"Keep one's word."},{"question":"«Як свої п'ять пальців» означає:","options":["дуже добре знати","мало знати"],"correctIndex":0,"explanation":"Know very well."},{"question":"«Краще пізно, ніж ніколи»:","options":["Better late than never","Never say never"],"correctIndex":0,"explanation":"Better to do something late than not at all."},{"question":"«Справа в капелюсі» означає:","options":["все вирішено","все пропало"],"correctIndex":0,"explanation":"It's in the bag."},{"question":"«На ножах» означає:","options":["у ворожих стосунках","у дружніх стосунках"],"correctIndex":0,"explanation":"At odds."},{"question":"«Без труда нема плода»:","options":["No pain, no gain","Easy come, easy go"],"correctIndex":0,"explanation":"Hard work is needed for results."}];
     const sortData={};
-    const vocabData=[];
+    const vocabData=[{"uk":"приказка","translit":"","en":"proverb, saying","note":"f"},{"uk":"прислів'я","translit":"","en":"proverb","note":"n"},{"uk":"народна мудрість","translit":"","en":"folk wisdom","note":"f"},{"uk":"тримати слово","translit":"","en":"keep one's word","note":"idiom"},{"uk":"давати слово","translit":"","en":"give one's word","note":"idiom"},{"uk":"справа в капелюсі","translit":"","en":"it's in the bag","note":"idiom"},{"uk":"душа в душу","translit":"","en":"in harmony","note":"idiom"},{"uk":"ні сном ні духом","translit":"","en":"have no idea","note":"idiom"},{"uk":"на ножах","translit":"","en":"at odds","note":"idiom"},{"uk":"без труда нема плода","translit":"","en":"no pain no gain","note":"proverb"},{"uk":"краще пізно ніж ніколи","translit":"","en":"better late than never","note":"proverb"},{"uk":"до речі","translit":"","en":"by the way","note":"expression"}];
     const totalSort=0;
     function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
     document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));

@@ -305,8 +305,144 @@
     "moduleId": "mod-uk-B1-122",
     "level": "B1",
     "phase": "B1.3",
-    "wordCount": 0,
+    "wordCount": 15,
     "transliterationMode": "none",
-    "words": []
+    "words": [
+      {
+        "id": "v-m122-001",
+        "uk": "радість",
+        "translit": "",
+        "ipa": "/ˈrɑdʲistʲ/",
+        "en": "joy",
+        "pos": "",
+        "note": "f"
+      },
+      {
+        "id": "v-m122-002",
+        "uk": "сум",
+        "translit": "",
+        "ipa": "/sum/",
+        "en": "sadness",
+        "pos": "",
+        "note": "m"
+      },
+      {
+        "id": "v-m122-003",
+        "uk": "гнів",
+        "translit": "",
+        "ipa": "/ɦnʲiv/",
+        "en": "anger",
+        "pos": "",
+        "note": "m"
+      },
+      {
+        "id": "v-m122-004",
+        "uk": "тривога",
+        "translit": "",
+        "ipa": "/trɪˈvoɦɑ/",
+        "en": "anxiety",
+        "pos": "",
+        "note": "f"
+      },
+      {
+        "id": "v-m122-005",
+        "uk": "розчарування",
+        "translit": "",
+        "ipa": "/rozt͡ʃɑruˈvɑnʲːɑ/",
+        "en": "disappointment",
+        "pos": "",
+        "note": "n"
+      },
+      {
+        "id": "v-m122-006",
+        "uk": "полегшення",
+        "translit": "",
+        "ipa": "/polɛɦˈʃɛnʲːɑ/",
+        "en": "relief",
+        "pos": "",
+        "note": "n"
+      },
+      {
+        "id": "v-m122-007",
+        "uk": "сором",
+        "translit": "",
+        "ipa": "/ˈsorom/",
+        "en": "shame",
+        "pos": "",
+        "note": "m"
+      },
+      {
+        "id": "v-m122-008",
+        "uk": "провина",
+        "translit": "",
+        "ipa": "/proˈvɪnɑ/",
+        "en": "guilt",
+        "pos": "",
+        "note": "f"
+      },
+      {
+        "id": "v-m122-009",
+        "uk": "вдячність",
+        "translit": "",
+        "ipa": "/ˈwdʲɑt͡ʃnʲistʲ/",
+        "en": "gratitude",
+        "pos": "",
+        "note": "f"
+      },
+      {
+        "id": "v-m122-010",
+        "uk": "дружба",
+        "translit": "",
+        "ipa": "/ˈdruʒbɑ/",
+        "en": "friendship",
+        "pos": "",
+        "note": "f"
+      },
+      {
+        "id": "v-m122-011",
+        "uk": "довіра",
+        "translit": "",
+        "ipa": "/doˈvʲirɑ/",
+        "en": "trust",
+        "pos": "",
+        "note": "f"
+      },
+      {
+        "id": "v-m122-012",
+        "uk": "підтримка",
+        "translit": "",
+        "ipa": "/pʲidˈtrɪmkɑ/",
+        "en": "support",
+        "pos": "",
+        "note": "f"
+      },
+      {
+        "id": "v-m122-013",
+        "uk": "конфлікт",
+        "translit": "",
+        "ipa": "/konˈflʲikt/",
+        "en": "conflict",
+        "pos": "",
+        "note": "m"
+      },
+      {
+        "id": "v-m122-014",
+        "uk": "примирення",
+        "translit": "",
+        "ipa": "/prɪmɪˈrɛnʲːɑ/",
+        "en": "reconciliation",
+        "pos": "",
+        "note": "n"
+      },
+      {
+        "id": "v-m122-015",
+        "uk": "зрада",
+        "translit": "",
+        "ipa": "/ˈzrɑdɑ/",
+        "en": "betrayal",
+        "pos": "",
+        "note": "f"
+      }
+    ]
   }
 }

@@ -818,7 +818,7 @@
       <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
-    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (0)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
+    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (15)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
     </section>
   </main>
@@ -827,7 +827,7 @@
     const matchPairs=[];
     const quizData=[{"question":"Місце, де працюють:","options":["офіс","контракт"],"correctIndex":0,"explanation":"Office is the workplace."},{"question":"Документ про співпрацю:","options":["договір","звіт"],"correctIndex":0,"explanation":"Agreement/contract for cooperation."},{"question":"Гроші, які платять за роботу:","options":["зарплата","прибуток"],"correctIndex":0,"explanation":"Salary is payment for work."},{"question":"Зустріч для обговорення:","options":["нарада","контракт"],"correctIndex":0,"explanation":"Meeting for discussion."},{"question":"Дохід мінус витрати:","options":["прибуток","податок"],"correctIndex":0,"explanation":"Profit = revenue - expenses."},{"question":"Закінчити до певної дати:","options":["дотримуватися дедлайну","подати звіт"],"correctIndex":0,"explanation":"Meeting a deadline."}];
     const sortData={};
-    const vocabData=[];
+    const vocabData=[{"uk":"компанія","translit":"","en":"company","note":"f"},{"uk":"офіс","translit":"","en":"office","note":"m"},{"uk":"відділ","translit":"","en":"department","note":"m"},{"uk":"філія","translit":"","en":"branch","note":"f"},{"uk":"директор","translit":"","en":"director","note":"m"},{"uk":"менеджер","translit":"","en":"manager","note":"m"},{"uk":"колега","translit":"","en":"colleague","note":"m/f"},{"uk":"зустріч","translit":"","en":"meeting","note":"f"},{"uk":"нарада","translit":"","en":"meeting, conference","note":"f"},{"uk":"переговори","translit":"","en":"negotiations","note":"pl"},{"uk":"контракт","translit":"","en":"contract","note":"m"},{"uk":"договір","translit":"","en":"agreement","note":"m"},{"uk":"звіт","translit":"","en":"report","note":"m"},{"uk":"прибуток","translit":"","en":"profit","note":"m"},{"uk":"зарплата","translit":"","en":"salary","note":"f"}];
     const totalSort=0;
     function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
     document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));

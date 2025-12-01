@@ -122,81 +122,91 @@
         "id": "v-m145-001",
         "uk": "невизначено-особовий",
         "translit": "",
-        "ipa": "indefinite-personal",
-        "en": "граматичний термін",
-        "pos": ""
+        "ipa": "",
+        "en": "indefinite-personal",
+        "pos": "",
+        "note": "граматичний термін"
       },
       {
         "id": "v-m145-002",
         "uk": "попросити",
         "translit": "",
-        "ipa": "to ask (request)",
-        "en": "доконаний вид",
-        "pos": ""
+        "ipa": "",
+        "en": "to ask (request)",
+        "pos": "",
+        "note": "доконаний вид"
       },
       {
         "id": "v-m145-003",
         "uk": "запросити",
         "translit": "",
-        "ipa": "to invite",
-        "en": "доконаний вид",
-        "pos": ""
+        "ipa": "",
+        "en": "to invite",
+        "pos": "",
+        "note": "доконаний вид"
       },
       {
         "id": "v-m145-004",
         "uk": "попередити",
         "translit": "",
-        "ipa": "to warn",
-        "en": "доконаний вид",
-        "pos": ""
+        "ipa": "",
+        "en": "to warn",
+        "pos": "",
+        "note": "доконаний вид"
       },
       {
         "id": "v-m145-005",
         "uk": "повідомити",
         "translit": "",
-        "ipa": "to inform",
-        "en": "доконаний вид",
-        "pos": ""
+        "ipa": "",
+        "en": "to inform",
+        "pos": "",
+        "note": "доконаний вид"
       },
       {
         "id": "v-m145-006",
         "uk": "пояснити",
         "translit": "",
-        "ipa": "to explain",
-        "en": "доконаний вид",
-        "pos": ""
+        "ipa": "",
+        "en": "to explain",
+        "pos": "",
+        "note": "доконаний вид"
       },
       {
         "id": "v-m145-007",
         "uk": "навчити",
         "translit": "",
-        "ipa": "to teach",
-        "en": "доконаний вид",
-        "pos": ""
+        "ipa": "",
+        "en": "to teach",
+        "pos": "",
+        "note": "доконаний вид"
       },
       {
         "id": "v-m145-008",
         "uk": "запропонувати",
         "translit": "",
-        "ipa": "to offer",
-        "en": "доконаний вид",
-        "pos": ""
+        "ipa": "",
+        "en": "to offer",
+        "pos": "",
+        "note": "доконаний вид"
       },
       {
         "id": "v-m145-009",
         "uk": "порадити",
         "translit": "",
-        "ipa": "to advise",
-        "en": "доконаний вид",
-        "pos": ""
+        "ipa": "",
+        "en": "to advise",
+        "pos": "",
+        "note": "доконаний вид"
       },
       {
         "id": "v-m145-010",
         "uk": "зателефонувати",
         "translit": "",
-        "ipa": "to call (phone)",
-        "en": "доконаний вид",
-        "pos": ""
+        "ipa": "",
+        "en": "to call (phone)",
+        "pos": "",
+        "note": "доконаний вид"
       }
     ]
   }

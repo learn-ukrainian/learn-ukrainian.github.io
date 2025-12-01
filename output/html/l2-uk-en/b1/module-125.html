@@ -557,7 +557,7 @@
       <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
-    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (0)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
+    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (7)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
     </section>
   </main>
@@ -566,7 +566,7 @@
     const matchPairs=[];
     const quizData=[{"question":"Він сказав, ___ він працює.","options":["що","чи"],"correctIndex":0,"explanation":"що for statements."},{"question":"Вона запитала, ___ я прийду.","options":["чи","що"],"correctIndex":0,"explanation":"чи for yes/no questions."},{"question":"Він попросив, щоб я ___.","options":["допоміг","допомогти"],"correctIndex":0,"explanation":"Past tense after щоб."},{"question":"Verb: закрити → Participle: ___","options":["закритий","закрений"],"correctIndex":0,"explanation":"-тий after vowel."},{"question":"Роботу ___.","options":["зроблено","зроблена"],"correctIndex":0,"explanation":"Short form is invariable."},{"question":"___ книгу, він заснув.","options":["Прочитавши","Читаючи"],"correctIndex":0,"explanation":"Completed action before main verb."}];
     const sortData={};
-    const vocabData=[];
+    const vocabData=[{"uk":"контрольна робота","translit":"","en":"test, checkpoint","note":"f"},{"uk":"оцінювання","translit":"","en":"assessment","note":"n"},{"uk":"бал","translit":"","en":"point, score","note":"m"},{"uk":"результат","translit":"","en":"result","note":"m"},{"uk":"перевірити","translit":"","en":"to check","note":"pf"},{"uk":"покращити","translit":"","en":"to improve","note":"pf"},{"uk":"повторити","translit":"","en":"to review, repeat","note":"pf"}];
     const totalSort=0;
     function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
     document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));

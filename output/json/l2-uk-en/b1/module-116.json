@@ -238,13 +238,27 @@
       "modifiedAt": "2025-12-01T00:00:00Z"
     },
     {
-      "id": "act-uk-B1-116-fillin",
-      "type": "fill-in",
+      "id": "act-uk-B1-116-gapfill",
+      "type": "gap-fill",
       "title": "Convert to Reported Speech",
-      "description": "Марія: «(1)___ живу в Києві. Мій чоловік (2)___ вчителем. Ми (3)___ двох дітей. Вони (4)___ в школу.»",
+      "description": "Марія: «(1)___ живу в Києві. Мій чоловік (2)___ вчителем. Ми (3)___ двох дітей. Вони (4)___ в школу.»  Марія сказала, що (5)___ живе в Києві. Її чоловік (6)___ вчителем. Вони (7)___ двох дітей. Вони (8)___ в школу.",
       "content": {
-        "type": "fill-in",
-        "instructions": "Марія: «(1)___ живу в Києві. Мій чоловік (2)___ вчителем. Ми (3)___ двох дітей. Вони (4)___ в школу.»"
+        "type": "gap-fill",
+        "instructions": "Марія: «(1)___ живу в Києві. Мій чоловік (2)___ вчителем. Ми (3)___ двох дітей. Вони (4)___ в школу.»  Марія сказала, що (5)___ живе в Києві. Її чоловік (6)___ вчителем. Вони (7)___ двох дітей. Вони (8)___ в школу.",
+        "text": "Марія: «(1)___ живу в Києві. Мій чоловік (2)___ вчителем. Ми (3)___ двох дітей. Вони (4)___ в школу.»\n\nМарія сказала, що (5)___ живе в Києві. Її чоловік (6)___ вчителем. Вони (7)___ двох дітей. Вони (8)___ в школу.",
+        "blanks": [
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {}
+        ],
+        "answers": [
+          "1. Я"
+        ]
       },
       "subject": "language",
       "owner": "curricula-opus",
@@ -265,8 +279,135 @@
     "moduleId": "mod-uk-B1-116",
     "level": "B1",
     "phase": "B1.3",
-    "wordCount": 0,
+    "wordCount": 14,
     "transliterationMode": "none",
-    "words": []
+    "words": [
+      {
+        "id": "v-m116-001",
+        "uk": "непряма мова",
+        "translit": "",
+        "ipa": "/nɛˈprʲɑmɑ ˈmovɑ/",
+        "en": "reported speech",
+        "pos": "",
+        "note": "f"
+      },
+      {
+        "id": "v-m116-002",
+        "uk": "пряма мова",
+        "translit": "",
+        "ipa": "/prʲɑˈmɑ ˈmovɑ/",
+        "en": "direct speech",
+        "pos": "",
+        "note": "f"
+      },
+      {
+        "id": "v-m116-003",
+        "uk": "сказати",
+        "translit": "",
+        "ipa": "/skɑˈzɑtɪ/",
+        "en": "to say",
+        "pos": "",
+        "note": "pf"
+      },
+      {
+        "id": "v-m116-004",
+        "uk": "казати",
+        "translit": "",
+        "ipa": "/kɑˈzɑtɪ/",
+        "en": "to say",
+        "pos": "",
+        "note": "impf"
+      },
+      {
+        "id": "v-m116-005",
+        "uk": "повідомити",
+        "translit": "",
+        "ipa": "/povʲiˈdomɪtɪ/",
+        "en": "to inform, report",
+        "pos": "",
+        "note": "pf"
+      },
+      {
+        "id": "v-m116-006",
+        "uk": "стверджувати",
+        "translit": "",
+        "ipa": "/stvɛˈrd͡ʒuvɑtɪ/",
+        "en": "to claim, assert",
+        "pos": "",
+        "note": "impf"
+      },
+      {
+        "id": "v-m116-007",
+        "uk": "заявити",
+        "translit": "",
+        "ipa": "/zɑjɑˈvɪtɪ/",
+        "en": "to declare, announce",
+        "pos": "",
+        "note": "pf"
+      },
+      {
+        "id": "v-m116-008",
+        "uk": "пояснити",
+        "translit": "",
+        "ipa": "/pojɑsˈnɪtɪ/",
+        "en": "to explain",
+        "pos": "",
+        "note": "pf"
+      },
+      {
+        "id": "v-m116-009",
+        "uk": "додати",
+        "translit": "",
+        "ipa": "/doˈdɑtɪ/",
+        "en": "to add",
+        "pos": "",
+        "note": "pf"
+      },
+      {
+        "id": "v-m116-010",
+        "uk": "визнати",
+        "translit": "",
+        "ipa": "/vɪˈznɑtɪ/",
+        "en": "to admit",
+        "pos": "",
+        "note": "pf"
+      },
+      {
+        "id": "v-m116-011",
+        "uk": "напередодні",
+        "translit": "",
+        "ipa": "/nɑpɛrɛˈdodnʲi/",
+        "en": "the day before",
+        "pos": "",
+        "note": "adv"
+      },
+      {
+        "id": "v-m116-012",
+        "uk": "наступного дня",
+        "translit": "",
+        "ipa": "-",
+        "en": "the next day",
+        "pos": "",
+        "note": "-"
+      },
+      {
+        "id": "v-m116-013",
+        "uk": "того дня",
+        "translit": "",
+        "ipa": "-",
+        "en": "that day",
+        "pos": "",
+        "note": "-"
+      },
+      {
+        "id": "v-m116-014",
+        "uk": "тоді",
+        "translit": "",
+        "ipa": "/toˈdʲi/",
+        "en": "then",
+        "pos": "",
+        "note": "adv"
+      }
+    ]
   }
 }

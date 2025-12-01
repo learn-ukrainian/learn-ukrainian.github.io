@@ -835,7 +835,7 @@
       <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
-    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (0)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
+    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (15)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
     </section>
   </main>
@@ -844,7 +844,7 @@
     const matchPairs=[];
     const quizData=[{"question":"У них ___ дітей.","options":["троє","три"],"correctIndex":0,"explanation":"Collective for children."},{"question":"Половина пирога — це:","options":["1/2","1/4"],"correctIndex":0,"explanation":"Половина = half."},{"question":"«Близько» означає:","options":["приблизно","точно"],"correctIndex":0,"explanation":"Approximate quantity."},{"question":"Ми ___ згодні.","options":["обоє","два"],"correctIndex":0,"explanation":"Collective as substantive."},{"question":"2,5 можна сказати:","options":["два з половиною","двоє половини"],"correctIndex":0,"explanation":"Colloquial form for 2.5."},{"question":"Понад 100 означає:","options":["більше ніж 100","менше ніж 100"],"correctIndex":0,"explanation":"Понад = over, more than."}];
     const sortData={};
-    const vocabData=[];
+    const vocabData=[{"uk":"збірний","translit":"","en":"collective","note":"adj"},{"uk":"двоє","translit":"","en":"two (collective)","note":"num"},{"uk":"троє","translit":"","en":"three (collective)","note":"num"},{"uk":"четверо","translit":"","en":"four (collective)","note":"num"},{"uk":"п'ятеро","translit":"","en":"five (collective)","note":"num"},{"uk":"обоє","translit":"","en":"both","note":"num"},{"uk":"половина","translit":"","en":"half","note":"f"},{"uk":"третина","translit":"","en":"third","note":"f"},{"uk":"чверть","translit":"","en":"quarter","note":"f"},{"uk":"дріб","translit":"","en":"fraction","note":"m"},{"uk":"відсоток","translit":"","en":"percent","note":"m"},{"uk":"близько","translit":"","en":"approximately","note":"adv"},{"uk":"приблизно","translit":"","en":"approximately","note":"adv"},{"uk":"понад","translit":"","en":"over, more than","note":"prep"},{"uk":"кілька","translit":"","en":"several","note":"num"}];
     const totalSort=0;
     function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
     document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));

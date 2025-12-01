@@ -287,13 +287,42 @@
       "modifiedAt": "2025-12-01T00:00:00Z"
     },
     {
-      "id": "act-uk-B1-95-fillin",
-      "type": "fill-in",
+      "id": "act-uk-B1-95-gapfill",
+      "type": "gap-fill",
       "title": "Complete the Story",
       "description": "Ми почали новий проєкт. Спочатку ми визначили ___ (goal). Потім виникли ___ (difficulties). Головна ___ (problem) — брак часу. ___ (Reason) — занадто багато завдань. Але ми знайшли ___ (solution). ___ (Result) перевершив очікування!",
       "content": {
-        "type": "fill-in",
-        "instructions": "Ми почали новий проєкт. Спочатку ми визначили ___ (goal). Потім виникли ___ (difficulties). Головна ___ (problem) — брак часу. ___ (Reason) — занадто багато завдань. Але ми знайшли ___ (solution). ___ (Result) перевершив очікування!"
+        "type": "gap-fill",
+        "instructions": "Ми почали новий проєкт. Спочатку ми визначили ___ (goal). Потім виникли ___ (difficulties). Головна ___ (problem) — брак часу. ___ (Reason) — занадто багато завдань. Але ми знайшли ___ (solution). ___ (Result) перевершив очікування!",
+        "text": "Ми почали новий проєкт. Спочатку ми визначили ___ (goal). Потім виникли ___ (difficulties). Головна ___ (problem) — брак часу. ___ (Reason) — занадто багато завдань. Але ми знайшли ___ (solution). ___ (Result) перевершив очікування!",
+        "blanks": [
+          {
+            "hint": "goal"
+          },
+          {
+            "hint": "difficulties"
+          },
+          {
+            "hint": "problem"
+          },
+          {
+            "hint": "Reason"
+          },
+          {
+            "hint": "solution"
+          },
+          {
+            "hint": "Result"
+          }
+        ],
+        "answers": [
+          "мету",
+          "труднощі",
+          "проблема",
+          "причина",
+          "рішення/вихід",
+          "результат"
+        ]
       },
       "subject": "language",
       "owner": "curricula-opus",
@@ -315,8 +344,153 @@
     "moduleId": "mod-uk-B1-95",
     "level": "B1",
     "phase": "B1.1",
-    "wordCount": 0,
+    "wordCount": 16,
     "transliterationMode": "none",
-    "words": []
+    "words": [
+      {
+        "id": "v-m95-001",
+        "uk": "ідея",
+        "translit": "",
+        "ipa": "/iˈdɛjɑ/",
+        "en": "idea",
+        "pos": "",
+        "gender": "f"
+      },
+      {
+        "id": "v-m95-002",
+        "uk": "думка",
+        "translit": "",
+        "ipa": "/ˈdumkɑ/",
+        "en": "thought, opinion",
+        "pos": "",
+        "gender": "f"
+      },
+      {
+        "id": "v-m95-003",
+        "uk": "поняття",
+        "translit": "",
+        "ipa": "/poˈnʲɑtʲːɑ/",
+        "en": "concept",
+        "pos": "",
+        "gender": "n"
+      },
+      {
+        "id": "v-m95-004",
+        "uk": "уявлення",
+        "translit": "",
+        "ipa": "/ujɑvˈlɛnʲːɑ/",
+        "en": "imagination, idea",
+        "pos": "",
+        "gender": "n"
+      },
+      {
+        "id": "v-m95-005",
+        "uk": "погляд",
+        "translit": "",
+        "ipa": "/ˈpoɦlʲɑd/",
+        "en": "view",
+        "pos": "",
+        "gender": "m"
+      },
+      {
+        "id": "v-m95-006",
+        "uk": "точка зору",
+        "translit": "",
+        "ipa": "/ˈtot͡ʃkɑ ˈzoru/",
+        "en": "point of view",
+        "pos": "",
+        "gender": "f"
+      },
+      {
+        "id": "v-m95-007",
+        "uk": "проблема",
+        "translit": "",
+        "ipa": "/probˈlɛmɑ/",
+        "en": "problem",
+        "pos": "",
+        "gender": "f"
+      },
+      {
+        "id": "v-m95-008",
+        "uk": "питання",
+        "translit": "",
+        "ipa": "/pɪˈtɑnʲːɑ/",
+        "en": "question, issue",
+        "pos": "",
+        "gender": "n"
+      },
+      {
+        "id": "v-m95-009",
+        "uk": "труднощі",
+        "translit": "",
+        "ipa": "/trudˈnoʃt͡ʃʲi/",
+        "en": "difficulties",
+        "pos": "",
+        "gender": "pl"
+      },
+      {
+        "id": "v-m95-010",
+        "uk": "перешкода",
+        "translit": "",
+        "ipa": "/pɛrɛˈʃkodɑ/",
+        "en": "obstacle",
+        "pos": "",
+        "gender": "f"
+      },
+      {
+        "id": "v-m95-011",
+        "uk": "рішення",
+        "translit": "",
+        "ipa": "/rʲiˈʃɛnʲːɑ/",
+        "en": "decision, solution",
+        "pos": "",
+        "gender": "n"
+      },
+      {
+        "id": "v-m95-012",
+        "uk": "результат",
+        "translit": "",
+        "ipa": "/rɛzulʲˈtɑt/",
+        "en": "result",
+        "pos": "",
+        "gender": "m"
+      },
+      {
+        "id": "v-m95-013",
+        "uk": "наслідок",
+        "translit": "",
+        "ipa": "/ˈnɑslʲidok/",
+        "en": "consequence",
+        "pos": "",
+        "gender": "m"
+      },
+      {
+        "id": "v-m95-014",
+        "uk": "причина",
+        "translit": "",
+        "ipa": "/prɪˈt͡ʃɪnɑ/",
+        "en": "reason, cause",
+        "pos": "",
+        "gender": "f"
+      },
+      {
+        "id": "v-m95-015",
+        "uk": "мета",
+        "translit": "",
+        "ipa": "/mɛˈtɑ/",
+        "en": "goal, purpose",
+        "pos": "",
+        "gender": "f"
+      },
+      {
+        "id": "v-m95-016",
+        "uk": "сенс",
+        "translit": "",
+        "ipa": "/sɛns/",
+        "en": "sense, meaning",
+        "pos": "",
+        "gender": "m"
+      }
+    ]
   }
 }

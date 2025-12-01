@@ -381,339 +381,380 @@
       {
         "id": "v-m74-001",
         "uk": "хобі",
-        "translit": "/ˈxobʲi/",
-        "ipa": "hobby",
-        "en": "noun",
-        "pos": "n",
-        "gender": "indecl"
+        "translit": "",
+        "ipa": "/ˈxobʲi/",
+        "en": "hobby",
+        "pos": "noun",
+        "gender": "n",
+        "note": "indecl"
       },
       {
         "id": "v-m74-002",
         "uk": "захоплення",
-        "translit": "/zɑˈxoplɛnʲːɑ/",
-        "ipa": "passion, enthusiasm",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/zɑˈxoplɛnʲːɑ/",
+        "en": "passion, enthusiasm",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m74-003",
         "uk": "дозвілля",
-        "translit": "/doˈzvʲilʲːɑ/",
-        "ipa": "leisure",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/doˈzvʲilʲːɑ/",
+        "en": "leisure",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m74-004",
         "uk": "розвага",
-        "translit": "/rozˈvɑɦɑ/",
-        "ipa": "entertainment",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/rozˈvɑɦɑ/",
+        "en": "entertainment",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m74-005",
         "uk": "відпочинок",
-        "translit": "/vʲidpoˈtʃɪnok/",
-        "ipa": "rest, relaxation",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/vʲidpoˈtʃɪnok/",
+        "en": "rest, relaxation",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m74-006",
         "uk": "малювання",
-        "translit": "/mɑlʲuˈvɑnʲːɑ/",
-        "ipa": "drawing, painting",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/mɑlʲuˈvɑnʲːɑ/",
+        "en": "drawing, painting",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m74-007",
         "uk": "фотографія",
-        "translit": "/fotoɦrɑˈfʲijɑ/",
-        "ipa": "photography",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/fotoɦrɑˈfʲijɑ/",
+        "en": "photography",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m74-008",
         "uk": "в'язання",
-        "translit": "/vʲjɑˈzɑnʲːɑ/",
-        "ipa": "knitting",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/vʲjɑˈzɑnʲːɑ/",
+        "en": "knitting",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m74-009",
         "uk": "шиття",
-        "translit": "/ʃɪtʲˈtʲɑ/",
-        "ipa": "sewing",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/ʃɪtʲˈtʲɑ/",
+        "en": "sewing",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m74-010",
         "uk": "вишивання",
-        "translit": "/vɪʃɪˈvɑnʲːɑ/",
-        "ipa": "embroidery",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/vɪʃɪˈvɑnʲːɑ/",
+        "en": "embroidery",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m74-011",
         "uk": "рукоділля",
-        "translit": "/rukodʲiˈlʲːɑ/",
-        "ipa": "handicrafts",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/rukodʲiˈlʲːɑ/",
+        "en": "handicrafts",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m74-012",
         "uk": "садівництво",
-        "translit": "/sɑdʲivˈnɪtstvo/",
-        "ipa": "gardening",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/sɑdʲivˈnɪtstvo/",
+        "en": "gardening",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m74-013",
         "uk": "колекціонування",
-        "translit": "/kolɛktsʲionuˈvɑnʲːɑ/",
-        "ipa": "collecting",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/kolɛktsʲionuˈvɑnʲːɑ/",
+        "en": "collecting",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m74-014",
         "uk": "колекція",
-        "translit": "/koˈlɛktsʲijɑ/",
-        "ipa": "collection",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/koˈlɛktsʲijɑ/",
+        "en": "collection",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m74-015",
         "uk": "марка",
-        "translit": "/ˈmɑrkɑ/",
-        "ipa": "stamp",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈmɑrkɑ/",
+        "en": "stamp",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m74-016",
         "uk": "монета",
-        "translit": "/moˈnɛtɑ/",
-        "ipa": "coin",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/moˈnɛtɑ/",
+        "en": "coin",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m74-017",
         "uk": "антикваріат",
-        "translit": "/ɑntɪkvɑrʲiˈɑt/",
-        "ipa": "antiques",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ɑntɪkvɑrʲiˈɑt/",
+        "en": "antiques",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m74-018",
         "uk": "настільна гра",
-        "translit": "/nɑˈstʲilʲnɑ ɦrɑ/",
-        "ipa": "board game",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/nɑˈstʲilʲnɑ ɦrɑ/",
+        "en": "board game",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m74-019",
         "uk": "відеогра",
-        "translit": "/vʲidɛoˈɦrɑ/",
-        "ipa": "video game",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/vʲidɛoˈɦrɑ/",
+        "en": "video game",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m74-020",
         "uk": "шахи",
-        "translit": "/ˈʃɑxɪ/",
-        "ipa": "chess",
-        "en": "noun",
-        "pos": "pl"
+        "translit": "",
+        "ipa": "/ˈʃɑxɪ/",
+        "en": "chess",
+        "pos": "noun",
+        "gender": "pl"
       },
       {
         "id": "v-m74-021",
         "uk": "шашки",
-        "translit": "/ˈʃɑʃkɪ/",
-        "ipa": "checkers",
-        "en": "noun",
-        "pos": "pl"
+        "translit": "",
+        "ipa": "/ˈʃɑʃkɪ/",
+        "en": "checkers",
+        "pos": "noun",
+        "gender": "pl"
       },
       {
         "id": "v-m74-022",
         "uk": "пазл",
-        "translit": "/pɑzl/",
-        "ipa": "puzzle",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/pɑzl/",
+        "en": "puzzle",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m74-023",
         "uk": "кросворд",
-        "translit": "/krosˈvord/",
-        "ipa": "crossword",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/krosˈvord/",
+        "en": "crossword",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m74-024",
         "uk": "головоломка",
-        "translit": "/ɦolovoˈlomkɑ/",
-        "ipa": "brain teaser",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ɦolovoˈlomkɑ/",
+        "en": "brain teaser",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m74-025",
         "uk": "похід",
-        "translit": "/poˈxʲid/",
-        "ipa": "hike, trip",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/poˈxʲid/",
+        "en": "hike, trip",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m74-026",
         "uk": "кемпінг",
-        "translit": "/ˈkɛmpʲinɦ/",
-        "ipa": "camping",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ˈkɛmpʲinɦ/",
+        "en": "camping",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m74-027",
         "uk": "риболовля",
-        "translit": "/rɪboˈlovlʲɑ/",
-        "ipa": "fishing",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/rɪboˈlovlʲɑ/",
+        "en": "fishing",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m74-028",
         "uk": "велопрогулянка",
-        "translit": "/vɛloproɦuˈlʲɑnkɑ/",
-        "ipa": "bike ride",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/vɛloproɦuˈlʲɑnkɑ/",
+        "en": "bike ride",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m74-029",
         "uk": "пікнік",
-        "translit": "/pʲikˈnʲik/",
-        "ipa": "picnic",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/pʲikˈnʲik/",
+        "en": "picnic",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m74-030",
         "uk": "концерт",
-        "translit": "/konˈtsɛrt/",
-        "ipa": "concert",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/konˈtsɛrt/",
+        "en": "concert",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m74-031",
         "uk": "виставка",
-        "translit": "/ˈvɪstɑvkɑ/",
-        "ipa": "exhibition",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈvɪstɑvkɑ/",
+        "en": "exhibition",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m74-032",
         "uk": "фестиваль",
-        "translit": "/fɛstɪˈvɑlʲ/",
-        "ipa": "festival",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/fɛstɪˈvɑlʲ/",
+        "en": "festival",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m74-033",
         "uk": "караоке",
-        "translit": "/kɑrɑˈokɛ/",
-        "ipa": "karaoke",
-        "en": "noun",
-        "pos": "n",
-        "gender": "indecl"
+        "translit": "",
+        "ipa": "/kɑrɑˈokɛ/",
+        "en": "karaoke",
+        "pos": "noun",
+        "gender": "n",
+        "note": "indecl"
       },
       {
         "id": "v-m74-034",
         "uk": "квест",
-        "translit": "/kvɛst/",
-        "ipa": "escape room",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/kvɛst/",
+        "en": "escape room",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m74-035",
         "uk": "займатися",
-        "translit": "/zɑjˈmɑtɪsʲɑ/",
-        "ipa": "to engage in",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/zɑjˈmɑtɪsʲɑ/",
+        "en": "to engage in",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m74-036",
         "uk": "захоплюватися",
-        "translit": "/zɑxopˈlʲuvɑtɪsʲɑ/",
-        "ipa": "to be passionate",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/zɑxopˈlʲuvɑtɪsʲɑ/",
+        "en": "to be passionate",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m74-037",
         "uk": "збирати",
-        "translit": "/zbɪˈrɑtɪ/",
-        "ipa": "to collect",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/zbɪˈrɑtɪ/",
+        "en": "to collect",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m74-038",
         "uk": "малювати",
-        "translit": "/mɑlʲuˈvɑtɪ/",
-        "ipa": "to draw, paint",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/mɑlʲuˈvɑtɪ/",
+        "en": "to draw, paint",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m74-039",
         "uk": "в'язати",
-        "translit": "/vʲjɑˈzɑtɪ/",
-        "ipa": "to knit",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/vʲjɑˈzɑtɪ/",
+        "en": "to knit",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m74-040",
         "uk": "майструвати",
-        "translit": "/mɑjstruˈvɑtɪ/",
-        "ipa": "to craft",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/mɑjstruˈvɑtɪ/",
+        "en": "to craft",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m74-041",
         "uk": "фотографувати",
-        "translit": "/fotoɦrɑfuˈvɑtɪ/",
-        "ipa": "to photograph",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/fotoɦrɑfuˈvɑtɪ/",
+        "en": "to photograph",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       }
     ]
   }

@@ -248,13 +248,26 @@
       "modifiedAt": "2025-12-01T00:00:00Z"
     },
     {
-      "id": "act-uk-B1-101-fillin",
-      "type": "fill-in",
+      "id": "act-uk-B1-101-gapfill",
+      "type": "gap-fill",
       "title": "Complete with Relative Clauses",
       "description": "Це моя подруга Оксана, (1)___ працює вчителькою. Школа, в (2)___ вона працює, знаходиться в центрі міста. Учні, (3)___ вона вчить, дуже люблять її. Предмети, (4)___ вона викладає, — математика і фізика.",
       "content": {
-        "type": "fill-in",
-        "instructions": "Це моя подруга Оксана, (1)___ працює вчителькою. Школа, в (2)___ вона працює, знаходиться в центрі міста. Учні, (3)___ вона вчить, дуже люблять її. Предмети, (4)___ вона викладає, — математика і фізика."
+        "type": "gap-fill",
+        "instructions": "Це моя подруга Оксана, (1)___ працює вчителькою. Школа, в (2)___ вона працює, знаходиться в центрі міста. Учні, (3)___ вона вчить, дуже люблять її. Предмети, (4)___ вона викладає, — математика і фізика.",
+        "text": "Це моя подруга Оксана, (1)___ працює вчителькою. Школа, в (2)___ вона працює, знаходиться в центрі міста. Учні, (3)___ вона вчить, дуже люблять її. Предмети, (4)___ вона викладає, — математика і фізика.",
+        "blanks": [
+          {},
+          {},
+          {},
+          {}
+        ],
+        "answers": [
+          "яка",
+          "якій",
+          "яких",
+          "які"
+        ]
       },
       "subject": "language",
       "owner": "curricula-opus",
@@ -275,8 +288,99 @@
     "moduleId": "mod-uk-B1-101",
     "level": "B1",
     "phase": "B1.2",
-    "wordCount": 0,
+    "wordCount": 10,
     "transliterationMode": "none",
-    "words": []
+    "words": [
+      {
+        "id": "v-m101-001",
+        "uk": "який",
+        "translit": "",
+        "ipa": "/jɑˈkɪj/",
+        "en": "which, who, that (m)",
+        "pos": "",
+        "gender": "m"
+      },
+      {
+        "id": "v-m101-002",
+        "uk": "яка",
+        "translit": "",
+        "ipa": "/jɑˈkɑ/",
+        "en": "which, who, that (f)",
+        "pos": "",
+        "gender": "f"
+      },
+      {
+        "id": "v-m101-003",
+        "uk": "яке",
+        "translit": "",
+        "ipa": "/jɑˈkɛ/",
+        "en": "which, who, that (n)",
+        "pos": "",
+        "gender": "n"
+      },
+      {
+        "id": "v-m101-004",
+        "uk": "які",
+        "translit": "",
+        "ipa": "/jɑˈkʲi/",
+        "en": "which, who, that (pl)",
+        "pos": "",
+        "gender": "pl"
+      },
+      {
+        "id": "v-m101-005",
+        "uk": "речення",
+        "translit": "",
+        "ipa": "/ˈrɛt͡ʃɛnʲːɑ/",
+        "en": "sentence",
+        "pos": "",
+        "gender": "n"
+      },
+      {
+        "id": "v-m101-006",
+        "uk": "складний",
+        "translit": "",
+        "ipa": "/sklɑdˈnɪj/",
+        "en": "complex, difficult",
+        "pos": "",
+        "gender": "adj"
+      },
+      {
+        "id": "v-m101-007",
+        "uk": "простий",
+        "translit": "",
+        "ipa": "/prosˈtɪj/",
+        "en": "simple",
+        "pos": "",
+        "gender": "adj"
+      },
+      {
+        "id": "v-m101-008",
+        "uk": "з'єднувати",
+        "translit": "",
+        "ipa": "/zjedˈnuvɑtɪ/",
+        "en": "to connect",
+        "pos": "",
+        "gender": "impf"
+      },
+      {
+        "id": "v-m101-009",
+        "uk": "з'єднати",
+        "translit": "",
+        "ipa": "/zjedˈnɑtɪ/",
+        "en": "to connect",
+        "pos": "",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m101-010",
+        "uk": "відноситися",
+        "translit": "",
+        "ipa": "/vʲidnoˈsɪtɪsʲɑ/",
+        "en": "to relate to",
+        "pos": "",
+        "gender": "impf"
+      }
+    ]
   }
 }

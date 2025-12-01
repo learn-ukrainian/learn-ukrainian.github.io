@@ -369,114 +369,114 @@
       {
         "id": "v-m88-001",
         "uk": "прокидатися",
-        "translit": "/prokɪˈdɑtɪsʲɑ/",
-        "ipa": "to wake up",
-        "en": "impf",
-        "pos": "прокинутися"
+        "translit": "",
+        "ipa": "/prokɪˈdɑtɪsʲɑ/",
+        "en": "to wake up",
+        "pos": ""
       },
       {
         "id": "v-m88-002",
         "uk": "прокинутися",
-        "translit": "/prokɪˈnutɪsʲɑ/",
-        "ipa": "to wake up (pf)",
-        "en": "pf",
-        "pos": "прокидатися"
+        "translit": "",
+        "ipa": "/prokɪˈnutɪsʲɑ/",
+        "en": "to wake up (pf)",
+        "pos": ""
       },
       {
         "id": "v-m88-003",
         "uk": "засинати",
-        "translit": "/zɑsɪˈnɑtɪ/",
-        "ipa": "to fall asleep",
-        "en": "impf",
-        "pos": "заснути"
+        "translit": "",
+        "ipa": "/zɑsɪˈnɑtɪ/",
+        "en": "to fall asleep",
+        "pos": ""
       },
       {
         "id": "v-m88-004",
         "uk": "заснути",
-        "translit": "/zɑsˈnutɪ/",
-        "ipa": "to fall asleep (pf)",
-        "en": "pf",
-        "pos": "засинати"
+        "translit": "",
+        "ipa": "/zɑsˈnutɪ/",
+        "en": "to fall asleep (pf)",
+        "pos": ""
       },
       {
         "id": "v-m88-005",
         "uk": "хвилюватися",
-        "translit": "/xvɪlʲuˈvɑtɪsʲɑ/",
-        "ipa": "to worry",
-        "en": "impf",
-        "pos": "захвилюватися"
+        "translit": "",
+        "ipa": "/xvɪlʲuˈvɑtɪsʲɑ/",
+        "en": "to worry",
+        "pos": ""
       },
       {
         "id": "v-m88-006",
         "uk": "захвилюватися",
-        "translit": "/zɑxvɪlʲuˈvɑtɪsʲɑ/",
-        "ipa": "to worry (pf)",
-        "en": "pf",
-        "pos": "хвилюватися"
+        "translit": "",
+        "ipa": "/zɑxvɪlʲuˈvɑtɪsʲɑ/",
+        "en": "to worry (pf)",
+        "pos": ""
       },
       {
         "id": "v-m88-007",
         "uk": "змінювати",
-        "translit": "/zmʲiˈnʲuvɑtɪ/",
-        "ipa": "to change",
-        "en": "impf",
-        "pos": "змінити"
+        "translit": "",
+        "ipa": "/zmʲiˈnʲuvɑtɪ/",
+        "en": "to change",
+        "pos": ""
       },
       {
         "id": "v-m88-008",
         "uk": "змінити",
-        "translit": "/zmʲiˈnɪtɪ/",
-        "ipa": "to change (pf)",
-        "en": "pf",
-        "pos": "змінювати"
+        "translit": "",
+        "ipa": "/zmʲiˈnɪtɪ/",
+        "en": "to change (pf)",
+        "pos": ""
       },
       {
         "id": "v-m88-009",
         "uk": "покращувати",
-        "translit": "/pokrɑˈʃuvɑtɪ/",
-        "ipa": "to improve",
-        "en": "impf",
-        "pos": "покращити"
+        "translit": "",
+        "ipa": "/pokrɑˈʃuvɑtɪ/",
+        "en": "to improve",
+        "pos": ""
       },
       {
         "id": "v-m88-010",
         "uk": "покращити",
-        "translit": "/pokrɑˈʃɪtɪ/",
-        "ipa": "to improve (pf)",
-        "en": "pf",
-        "pos": "покращувати"
+        "translit": "",
+        "ipa": "/pokrɑˈʃɪtɪ/",
+        "en": "to improve (pf)",
+        "pos": ""
       },
       {
         "id": "v-m88-011",
         "uk": "створювати",
-        "translit": "/stvoˈrʲuvɑtɪ/",
-        "ipa": "to create",
-        "en": "impf",
-        "pos": "створити"
+        "translit": "",
+        "ipa": "/stvoˈrʲuvɑtɪ/",
+        "en": "to create",
+        "pos": ""
       },
       {
         "id": "v-m88-012",
         "uk": "створити",
-        "translit": "/stvoˈrɪtɪ/",
-        "ipa": "to create (pf)",
-        "en": "pf",
-        "pos": "створювати"
+        "translit": "",
+        "ipa": "/stvoˈrɪtɪ/",
+        "en": "to create (pf)",
+        "pos": ""
       },
       {
         "id": "v-m88-013",
         "uk": "телефонувати",
-        "translit": "/tɛlɛfonuˈvɑtɪ/",
-        "ipa": "to call",
-        "en": "impf",
-        "pos": "зателефонувати"
+        "translit": "",
+        "ipa": "/tɛlɛfonuˈvɑtɪ/",
+        "en": "to call",
+        "pos": ""
       },
       {
         "id": "v-m88-014",
         "uk": "зателефонувати",
-        "translit": "/zɑtɛlɛfonuˈvɑtɪ/",
-        "ipa": "to call (pf)",
-        "en": "pf",
-        "pos": "телефонувати"
+        "translit": "",
+        "ipa": "/zɑtɛlɛfonuˈvɑtɪ/",
+        "en": "to call (pf)",
+        "pos": ""
       }
     ]
   }

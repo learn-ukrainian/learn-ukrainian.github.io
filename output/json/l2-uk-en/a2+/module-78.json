@@ -395,378 +395,425 @@
       {
         "id": "v-m78-001",
         "uk": "пісня",
-        "translit": "/ˈpʲisnʲɑ/",
-        "ipa": "song",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈpʲisnʲɑ/",
+        "en": "song",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m78-002",
         "uk": "мелодія",
-        "translit": "/mɛˈlodʲijɑ/",
-        "ipa": "melody",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/mɛˈlodʲijɑ/",
+        "en": "melody",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m78-003",
         "uk": "альбом",
-        "translit": "/ɑlʲˈbom/",
-        "ipa": "album",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ɑlʲˈbom/",
+        "en": "album",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m78-004",
         "uk": "гурт",
-        "translit": "/ɦurt/",
-        "ipa": "band",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ɦurt/",
+        "en": "band",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m78-005",
         "uk": "співак",
-        "translit": "/spʲiˈvɑk/",
-        "ipa": "singer",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/spʲiˈvɑk/",
+        "en": "singer",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m78-006",
         "uk": "композитор",
-        "translit": "/kompozɪˈtor/",
-        "ipa": "composer",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/kompozɪˈtor/",
+        "en": "composer",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m78-007",
         "uk": "оркестр",
-        "translit": "/orˈkɛstr/",
-        "ipa": "orchestra",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/orˈkɛstr/",
+        "en": "orchestra",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m78-008",
         "uk": "джаз",
-        "translit": "/dʒɑz/",
-        "ipa": "jazz",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/dʒɑz/",
+        "en": "jazz",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m78-009",
         "uk": "народна музика",
-        "translit": "/nɑˈrodnɑ ˈmuzɪkɑ/",
-        "ipa": "folk music",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/nɑˈrodnɑ ˈmuzɪkɑ/",
+        "en": "folk music",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m78-010",
         "uk": "гітара",
-        "translit": "/ɦʲiˈtɑrɑ/",
-        "ipa": "guitar",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ɦʲiˈtɑrɑ/",
+        "en": "guitar",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m78-011",
         "uk": "піаніно",
-        "translit": "/pʲiɑˈnʲino/",
-        "ipa": "piano",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/pʲiɑˈnʲino/",
+        "en": "piano",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m78-012",
         "uk": "скрипка",
-        "translit": "/ˈskrɪpkɑ/",
-        "ipa": "violin",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈskrɪpkɑ/",
+        "en": "violin",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m78-013",
         "uk": "бандура",
-        "translit": "/bɑnˈdurɑ/",
-        "ipa": "bandura",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/bɑnˈdurɑ/",
+        "en": "bandura",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m78-014",
         "uk": "кінотеатр",
-        "translit": "/kʲinotɛˈɑtr/",
-        "ipa": "movie theater",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/kʲinotɛˈɑtr/",
+        "en": "movie theater",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m78-015",
         "uk": "режисер",
-        "translit": "/rɛʒɪˈsɛr/",
-        "ipa": "director",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/rɛʒɪˈsɛr/",
+        "en": "director",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m78-016",
         "uk": "акторка",
-        "translit": "/ɑkˈtorkɑ/",
-        "ipa": "actress",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ɑkˈtorkɑ/",
+        "en": "actress",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m78-017",
         "uk": "сценарій",
-        "translit": "/stsɛˈnɑrʲij/",
-        "ipa": "screenplay",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/stsɛˈnɑrʲij/",
+        "en": "screenplay",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m78-018",
         "uk": "прем'єра",
-        "translit": "/prɛmˈjɛrɑ/",
-        "ipa": "premiere",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/prɛmˈjɛrɑ/",
+        "en": "premiere",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m78-019",
         "uk": "субтитри",
-        "translit": "/subˈtɪtrɪ/",
-        "ipa": "subtitles",
-        "en": "noun",
-        "pos": "pl"
+        "translit": "",
+        "ipa": "/subˈtɪtrɪ/",
+        "en": "subtitles",
+        "pos": "noun",
+        "gender": "pl"
       },
       {
         "id": "v-m78-020",
         "uk": "комедія",
-        "translit": "/koˈmɛdʲijɑ/",
-        "ipa": "comedy",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/koˈmɛdʲijɑ/",
+        "en": "comedy",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m78-021",
         "uk": "драма",
-        "translit": "/ˈdrɑmɑ/",
-        "ipa": "drama",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈdrɑmɑ/",
+        "en": "drama",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m78-022",
         "uk": "бойовик",
-        "translit": "/bojoˈvɪk/",
-        "ipa": "action film",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/bojoˈvɪk/",
+        "en": "action film",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m78-023",
         "uk": "жахи",
-        "translit": "/ˈʒɑxɪ/",
-        "ipa": "horror",
-        "en": "noun",
-        "pos": "pl"
+        "translit": "",
+        "ipa": "/ˈʒɑxɪ/",
+        "en": "horror",
+        "pos": "noun",
+        "gender": "pl"
       },
       {
         "id": "v-m78-024",
         "uk": "мультфільм",
-        "translit": "/mulʲtˈfʲilʲm/",
-        "ipa": "cartoon",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/mulʲtˈfʲilʲm/",
+        "en": "cartoon",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m78-025",
         "uk": "роман",
-        "translit": "/roˈmɑn/",
-        "ipa": "novel",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/roˈmɑn/",
+        "en": "novel",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m78-026",
         "uk": "поезія",
-        "translit": "/poˈɛzʲijɑ/",
-        "ipa": "poetry",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/poˈɛzʲijɑ/",
+        "en": "poetry",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m78-027",
         "uk": "вірш",
-        "translit": "/vʲirʃ/",
-        "ipa": "poem",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/vʲirʃ/",
+        "en": "poem",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m78-028",
         "uk": "поет",
-        "translit": "/poˈɛt/",
-        "ipa": "poet",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/poˈɛt/",
+        "en": "poet",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m78-029",
         "uk": "бестселер",
-        "translit": "/bɛstsɛˈlɛr/",
-        "ipa": "bestseller",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/bɛstsɛˈlɛr/",
+        "en": "bestseller",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m78-030",
         "uk": "живопис",
-        "translit": "/ʒɪˈvopɪs/",
-        "ipa": "painting",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ʒɪˈvopɪs/",
+        "en": "painting",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m78-031",
         "uk": "скульптура",
-        "translit": "/skulʲpˈturɑ/",
-        "ipa": "sculpture",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/skulʲpˈturɑ/",
+        "en": "sculpture",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m78-032",
         "uk": "галерея",
-        "translit": "/ɦɑlɛˈrɛjɑ/",
-        "ipa": "gallery",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ɦɑlɛˈrɛjɑ/",
+        "en": "gallery",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m78-033",
         "uk": "художник",
-        "translit": "/xuˈdoʒnɪk/",
-        "ipa": "artist",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/xuˈdoʒnɪk/",
+        "en": "artist",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m78-034",
         "uk": "картина",
-        "translit": "/kɑrˈtɪnɑ/",
-        "ipa": "painting (work)",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/kɑrˈtɪnɑ/",
+        "en": "painting (work)",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m78-035",
         "uk": "вистава",
-        "translit": "/ˈvɪstɑvɑ/",
-        "ipa": "performance",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈvɪstɑvɑ/",
+        "en": "performance",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m78-036",
         "uk": "опера",
-        "translit": "/ˈopɛrɑ/",
-        "ipa": "opera",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈopɛrɑ/",
+        "en": "opera",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m78-037",
         "uk": "балет",
-        "translit": "/bɑˈlɛt/",
-        "ipa": "ballet",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/bɑˈlɛt/",
+        "en": "ballet",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m78-038",
         "uk": "аплодисменти",
-        "translit": "/ɑplodɪsˈmɛntɪ/",
-        "ipa": "applause",
-        "en": "noun",
-        "pos": "pl"
+        "translit": "",
+        "ipa": "/ɑplodɪsˈmɛntɪ/",
+        "en": "applause",
+        "pos": "noun",
+        "gender": "pl"
       },
       {
         "id": "v-m78-039",
         "uk": "антракт",
-        "translit": "/ɑnˈtrɑkt/",
-        "ipa": "intermission",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ɑnˈtrɑkt/",
+        "en": "intermission",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m78-040",
         "uk": "традиція",
-        "translit": "/trɑˈdɪtsʲijɑ/",
-        "ipa": "tradition",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/trɑˈdɪtsʲijɑ/",
+        "en": "tradition",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m78-041",
         "uk": "свято",
-        "translit": "/ˈsvʲɑto/",
-        "ipa": "holiday",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/ˈsvʲɑto/",
+        "en": "holiday",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m78-042",
         "uk": "вишиванка",
-        "translit": "/vɪʃɪˈvɑnkɑ/",
-        "ipa": "embroidered shirt",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/vɪʃɪˈvɑnkɑ/",
+        "en": "embroidered shirt",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m78-043",
         "uk": "писанка",
-        "translit": "/ˈpɪsɑnkɑ/",
-        "ipa": "Easter egg",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈpɪsɑnkɑ/",
+        "en": "Easter egg",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m78-044",
         "uk": "колядка",
-        "translit": "/koˈlʲɑdkɑ/",
-        "ipa": "Christmas carol",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/koˈlʲɑdkɑ/",
+        "en": "Christmas carol",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m78-045",
         "uk": "рушник",
-        "translit": "/ruʃˈnɪk/",
-        "ipa": "ritual towel",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ruʃˈnɪk/",
+        "en": "ritual towel",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m78-046",
         "uk": "вінок",
-        "translit": "/vʲiˈnok/",
-        "ipa": "wreath",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/vʲiˈnok/",
+        "en": "wreath",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m78-047",
         "uk": "фестиваль",
-        "translit": "/fɛstɪˈvɑlʲ/",
-        "ipa": "festival",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/fɛstɪˈvɑlʲ/",
+        "en": "festival",
+        "pos": "noun",
+        "gender": "m"
       }
     ]
   }

@@ -713,7 +713,7 @@
       <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
-    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (0)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
+    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (12)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
     </section>
   </main>
@@ -722,7 +722,7 @@
     const matchPairs=[];
     const quizData=[{"question":"«Коли рак свисне» означає:","options":["ніколи","скоро"],"correctIndex":0,"explanation":"Never."},{"question":"«Робити з мухи слона»:","options":["перебільшувати","працювати"],"correctIndex":0,"explanation":"Exaggerate."},{"question":"«Як кіт наплакав»:","options":["дуже мало","дуже багато"],"correctIndex":0,"explanation":"Very little."},{"question":"«Бути на сьомому небі»:","options":["бути дуже щасливим","бути сумним"],"correctIndex":0,"explanation":"Be very happy."},{"question":"«Байдики бити»:","options":["нічого не робити","працювати"],"correctIndex":0,"explanation":"Be idle."},{"question":"«Тримати язик за зубами»:","options":["зберігати таємницю","говорити багато"],"correctIndex":0,"explanation":"Keep secret."}];
     const sortData={};
-    const vocabData=[];
+    const vocabData=[{"uk":"ідіома","translit":"","en":"idiom","note":"f"},{"uk":"сталий вираз","translit":"","en":"set phrase","note":"m"},{"uk":"переносне значення","translit":"","en":"figurative meaning","note":"n"},{"uk":"перебільшувати","translit":"","en":"to exaggerate","note":"impf"},{"uk":"байдики бити","translit":"","en":"to be idle","note":"idiom"},{"uk":"на сьомому небі","translit":"","en":"on cloud nine","note":"idiom"},{"uk":"як кіт наплакав","translit":"","en":"very little","note":"idiom"},{"uk":"коли рак свисне","translit":"","en":"never","note":"idiom"},{"uk":"собаку з'їсти","translit":"","en":"be expert","note":"idiom"},{"uk":"з мухи слона","translit":"","en":"exaggerate","note":"idiom"},{"uk":"тримати язик за зубами","translit":"","en":"keep secret","note":"idiom"},{"uk":"не покладаючи рук","translit":"","en":"without rest","note":"idiom"}];
     const totalSort=0;
     function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
     document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));

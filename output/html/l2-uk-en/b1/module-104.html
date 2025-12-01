@@ -844,7 +844,7 @@
       <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
-    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (0)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
+    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (12)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
     </section>
   </main>
@@ -853,7 +853,7 @@
     const matchPairs=[];
     const quizData=[{"question":"Я хочу, щоб вона ___ .","options":["прийшла","прийти"],"correctIndex":0,"explanation":"Past tense form with different subject."},{"question":"Він просить, щоб я йому ___ .","options":["допоміг","допомогти"],"correctIndex":0,"explanation":"Different subjects require past tense form."},{"question":"Важливо, щоб всі ___ правила.","options":["знали","знати"],"correctIndex":0,"explanation":"Impersonal expression + different subject = past form."},{"question":"Вона хоче ___ відпочити. (same subject)","options":["щоб вона","- (just infinitive)"],"correctIndex":1,"explanation":"Same subject = just infinitive, no щоб needed."},{"question":"Лікар радить, щоб він ___ ліки.","options":["приймав","приймати"],"correctIndex":0,"explanation":"Different subject (doctor ≠ he)."},{"question":"Ми сподіваємося, щоб погода ___ гарна.","options":["була","бути"],"correctIndex":0,"explanation":"\"Погода\" is a different subject."}];
     const sortData={};
-    const vocabData=[];
+    const vocabData=[{"uk":"хотіти","translit":"","en":"to want","note":""},{"uk":"бажати","translit":"","en":"to wish","note":""},{"uk":"просити","translit":"","en":"to ask, request","note":""},{"uk":"попросити","translit":"","en":"to ask, request","note":""},{"uk":"наказувати","translit":"","en":"to order","note":""},{"uk":"наказати","translit":"","en":"to order","note":""},{"uk":"радити","translit":"","en":"to advise","note":""},{"uk":"порадити","translit":"","en":"to advise","note":""},{"uk":"сподіватися","translit":"","en":"to hope","note":""},{"uk":"вимагати","translit":"","en":"to demand","note":""},{"uk":"пропонувати","translit":"","en":"to suggest","note":""},{"uk":"запропонувати","translit":"","en":"to suggest","note":""}];
     const totalSort=0;
     function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
     document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));

@@ -320,128 +320,142 @@
       {
         "id": "v-m12-001",
         "uk": "колега",
-        "translit": "/kɔˈlɛɦɑ/",
-        "ipa": "colleague",
-        "en": "noun",
-        "pos": "m/f",
-        "gender": "m: колегу, f: колегу"
+        "translit": "",
+        "ipa": "/kɔˈlɛɦɑ/",
+        "en": "colleague",
+        "pos": "noun",
+        "gender": "m/f",
+        "note": "m: колегу, f: колегу"
       },
       {
         "id": "v-m12-002",
         "uk": "сусід",
-        "translit": "/suˈsʲid/",
-        "ipa": "neighbor (m)",
-        "en": "noun",
-        "pos": "m",
-        "gender": "Acc: сусіда"
+        "translit": "",
+        "ipa": "/suˈsʲid/",
+        "en": "neighbor (m)",
+        "pos": "noun",
+        "gender": "m",
+        "note": "Acc: сусіда"
       },
       {
         "id": "v-m12-003",
         "uk": "сусідка",
-        "translit": "/suˈsʲidkɑ/",
-        "ipa": "neighbor (f)",
-        "en": "noun",
-        "pos": "f",
-        "gender": "Acc: сусідку"
+        "translit": "",
+        "ipa": "/suˈsʲidkɑ/",
+        "en": "neighbor (f)",
+        "pos": "noun",
+        "gender": "f",
+        "note": "Acc: сусідку"
       },
       {
         "id": "v-m12-004",
         "uk": "лікар",
-        "translit": "/ˈlʲikɑr/",
-        "ipa": "doctor (m)",
-        "en": "noun",
-        "pos": "m",
-        "gender": "Acc: лікаря"
+        "translit": "",
+        "ipa": "/ˈlʲikɑr/",
+        "en": "doctor (m)",
+        "pos": "noun",
+        "gender": "m",
+        "note": "Acc: лікаря"
       },
       {
         "id": "v-m12-005",
         "uk": "лікарка",
-        "translit": "/lʲiˈkɑrkɑ/",
-        "ipa": "doctor (f)",
-        "en": "noun",
-        "pos": "f",
-        "gender": "Acc: лікарку"
+        "translit": "",
+        "ipa": "/lʲiˈkɑrkɑ/",
+        "en": "doctor (f)",
+        "pos": "noun",
+        "gender": "f",
+        "note": "Acc: лікарку"
       },
       {
         "id": "v-m12-006",
         "uk": "офіціант",
-        "translit": "/ɔfʲit͡sʲiˈɑnt/",
-        "ipa": "waiter",
-        "en": "noun",
-        "pos": "m",
-        "gender": "Acc: офіціанта"
+        "translit": "",
+        "ipa": "/ɔfʲit͡sʲiˈɑnt/",
+        "en": "waiter",
+        "pos": "noun",
+        "gender": "m",
+        "note": "Acc: офіціанта"
       },
       {
         "id": "v-m12-007",
         "uk": "офіціантка",
-        "translit": "/ɔfʲit͡sʲiˈɑntkɑ/",
-        "ipa": "waitress",
-        "en": "noun",
-        "pos": "f",
-        "gender": "Acc: офіціантку"
+        "translit": "",
+        "ipa": "/ɔfʲit͡sʲiˈɑntkɑ/",
+        "en": "waitress",
+        "pos": "noun",
+        "gender": "f",
+        "note": "Acc: офіціантку"
       },
       {
         "id": "v-m12-008",
         "uk": "продавець",
-        "translit": "/prɔdɑˈvɛt͡sʲ/",
-        "ipa": "seller (m)",
-        "en": "noun",
-        "pos": "m",
-        "gender": "Acc: продавця"
+        "translit": "",
+        "ipa": "/prɔdɑˈvɛt͡sʲ/",
+        "en": "seller (m)",
+        "pos": "noun",
+        "gender": "m",
+        "note": "Acc: продавця"
       },
       {
         "id": "v-m12-009",
         "uk": "продавчиня",
-        "translit": "/prɔdɑvˈtʃɪnʲɑ/",
-        "ipa": "seller (f)",
-        "en": "noun",
-        "pos": "f",
-        "gender": "Acc: продавчиню"
+        "translit": "",
+        "ipa": "/prɔdɑvˈtʃɪnʲɑ/",
+        "en": "seller (f)",
+        "pos": "noun",
+        "gender": "f",
+        "note": "Acc: продавчиню"
       },
       {
         "id": "v-m12-010",
         "uk": "водій",
-        "translit": "/vɔˈdʲij/",
-        "ipa": "driver",
-        "en": "noun",
-        "pos": "m",
-        "gender": "Acc: водія"
+        "translit": "",
+        "ipa": "/vɔˈdʲij/",
+        "en": "driver",
+        "pos": "noun",
+        "gender": "m",
+        "note": "Acc: водія"
       },
       {
         "id": "v-m12-011",
         "uk": "пасажир",
-        "translit": "/pɑsɑˈʒɪr/",
-        "ipa": "passenger",
-        "en": "noun",
-        "pos": "m",
-        "gender": "Acc: пасажира"
+        "translit": "",
+        "ipa": "/pɑsɑˈʒɪr/",
+        "en": "passenger",
+        "pos": "noun",
+        "gender": "m",
+        "note": "Acc: пасажира"
       },
       {
         "id": "v-m12-012",
         "uk": "гість",
-        "translit": "/ɦʲistʲ/",
-        "ipa": "guest",
-        "en": "noun",
-        "pos": "m",
-        "gender": "Acc: гостя"
+        "translit": "",
+        "ipa": "/ɦʲistʲ/",
+        "en": "guest",
+        "pos": "noun",
+        "gender": "m",
+        "note": "Acc: гостя"
       },
       {
         "id": "v-m12-013",
         "uk": "директор",
-        "translit": "/dɪˈrɛktɔr/",
-        "ipa": "director",
-        "en": "noun",
-        "pos": "m",
-        "gender": "Acc: директора"
+        "translit": "",
+        "ipa": "/dɪˈrɛktɔr/",
+        "en": "director",
+        "pos": "noun",
+        "gender": "m",
+        "note": "Acc: директора"
       },
       {
         "id": "v-m12-014",
         "uk": "менеджер",
-        "translit": "/mɛˈnɛd͡ʒɛr/",
-        "ipa": "manager",
-        "en": "noun",
-        "pos": "m",
-        "gender": "Acc: менеджера"
+        "translit": "",
+        "ipa": "/mɛˈnɛd͡ʒɛr/",
+        "en": "manager",
+        "pos": "noun",
+        "gender": "m",
+        "note": "Acc: менеджера"
       }
     ]
   }

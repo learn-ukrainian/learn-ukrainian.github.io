@@ -370,404 +370,449 @@
       {
         "id": "v-m62-001",
         "uk": "написати",
-        "translit": "/nɑpɪˈsɑtɪ/",
-        "ipa": "to write (complete)",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/nɑpɪˈsɑtɪ/",
+        "en": "to write (complete)",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m62-002",
         "uk": "намалювати",
-        "translit": "/nɑmɑlʲuˈvɑtɪ/",
-        "ipa": "to draw/paint",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/nɑmɑlʲuˈvɑtɪ/",
+        "en": "to draw/paint",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m62-003",
         "uk": "навчити",
-        "translit": "/nɑvˈtʃɪtɪ/",
-        "ipa": "to teach",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/nɑvˈtʃɪtɪ/",
+        "en": "to teach",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m62-004",
         "uk": "налити",
-        "translit": "/nɑˈlɪtɪ/",
-        "ipa": "to pour",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/nɑˈlɪtɪ/",
+        "en": "to pour",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m62-005",
         "uk": "нарізати",
-        "translit": "/nɑˈrʲizɑtɪ/",
-        "ipa": "to slice",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/nɑˈrʲizɑtɪ/",
+        "en": "to slice",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m62-006",
         "uk": "побачити",
-        "translit": "/poˈbɑtʃɪtɪ/",
-        "ipa": "to see",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/poˈbɑtʃɪtɪ/",
+        "en": "to see",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m62-007",
         "uk": "почути",
-        "translit": "/poˈtʃutɪ/",
-        "ipa": "to hear",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/poˈtʃutɪ/",
+        "en": "to hear",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m62-008",
         "uk": "почитати",
-        "translit": "/potʃɪˈtɑtɪ/",
-        "ipa": "to read (a while)",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/potʃɪˈtɑtɪ/",
+        "en": "to read (a while)",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m62-009",
         "uk": "подумати",
-        "translit": "/poˈdumɑtɪ/",
-        "ipa": "to think over",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/poˈdumɑtɪ/",
+        "en": "to think over",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m62-010",
         "uk": "подякувати",
-        "translit": "/podʲɑkuˈvɑtɪ/",
-        "ipa": "to thank",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/podʲɑkuˈvɑtɪ/",
+        "en": "to thank",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m62-011",
         "uk": "поснідати",
-        "translit": "/posnʲiˈdɑtɪ/",
-        "ipa": "to have breakfast",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/posnʲiˈdɑtɪ/",
+        "en": "to have breakfast",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m62-012",
         "uk": "пообідати",
-        "translit": "/pooˈbʲidɑtɪ/",
-        "ipa": "to have lunch",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/pooˈbʲidɑtɪ/",
+        "en": "to have lunch",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m62-013",
         "uk": "зробити",
-        "translit": "/zroˈbɪtɪ/",
-        "ipa": "to do, make",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/zroˈbɪtɪ/",
+        "en": "to do, make",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m62-014",
         "uk": "з'їсти",
-        "translit": "/ˈzjistɪ/",
-        "ipa": "to eat up",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/ˈzjistɪ/",
+        "en": "to eat up",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m62-015",
         "uk": "зварити",
-        "translit": "/zvɑˈrɪtɪ/",
-        "ipa": "to cook",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/zvɑˈrɪtɪ/",
+        "en": "to cook",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m62-016",
         "uk": "збудувати",
-        "translit": "/zbuduˈvɑtɪ/",
-        "ipa": "to build",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/zbuduˈvɑtɪ/",
+        "en": "to build",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m62-017",
         "uk": "зібрати",
-        "translit": "/zʲiˈbrɑtɪ/",
-        "ipa": "to gather",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/zʲiˈbrɑtɪ/",
+        "en": "to gather",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m62-018",
         "uk": "сфотографувати",
-        "translit": "/sfotoɦrɑfuˈvɑtɪ/",
-        "ipa": "to photograph",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/sfotoɦrɑfuˈvɑtɪ/",
+        "en": "to photograph",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m62-019",
         "uk": "спитати",
-        "translit": "/spɪˈtɑtɪ/",
-        "ipa": "to ask",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/spɪˈtɑtɪ/",
+        "en": "to ask",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m62-020",
         "uk": "прочитати",
-        "translit": "/protʃɪˈtɑtɪ/",
-        "ipa": "to read (finish)",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/protʃɪˈtɑtɪ/",
+        "en": "to read (finish)",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m62-021",
         "uk": "прослухати",
-        "translit": "/prosˈluxɑtɪ/",
-        "ipa": "to listen through",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/prosˈluxɑtɪ/",
+        "en": "to listen through",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m62-022",
         "uk": "прожити",
-        "translit": "/proˈʒɪtɪ/",
-        "ipa": "to live (period)",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/proˈʒɪtɪ/",
+        "en": "to live (period)",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m62-023",
         "uk": "проспати",
-        "translit": "/prosˈpɑtɪ/",
-        "ipa": "to oversleep",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/prosˈpɑtɪ/",
+        "en": "to oversleep",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m62-024",
         "uk": "розказати",
-        "translit": "/rozkɑˈzɑtɪ/",
-        "ipa": "to tell, narrate",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/rozkɑˈzɑtɪ/",
+        "en": "to tell, narrate",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m62-025",
         "uk": "роздати",
-        "translit": "/rozˈdɑtɪ/",
-        "ipa": "to distribute",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/rozˈdɑtɪ/",
+        "en": "to distribute",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m62-026",
         "uk": "розбити",
-        "translit": "/rozˈbɪtɪ/",
-        "ipa": "to break",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/rozˈbɪtɪ/",
+        "en": "to break",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m62-027",
         "uk": "розрізати",
-        "translit": "/rozˈrʲizɑtɪ/",
-        "ipa": "to cut apart",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/rozˈrʲizɑtɪ/",
+        "en": "to cut apart",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m62-028",
         "uk": "відповісти",
-        "translit": "/vʲidpoˈvʲistɪ/",
-        "ipa": "to answer",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/vʲidpoˈvʲistɪ/",
+        "en": "to answer",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m62-029",
         "uk": "віддати",
-        "translit": "/vʲiˈdːɑtɪ/",
-        "ipa": "to give back",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/vʲiˈdːɑtɪ/",
+        "en": "to give back",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m62-030",
         "uk": "відкрити",
-        "translit": "/vʲidˈkrɪtɪ/",
-        "ipa": "to open",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/vʲidˈkrɪtɪ/",
+        "en": "to open",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m62-031",
         "uk": "відпустити",
-        "translit": "/vʲidpusˈtɪtɪ/",
-        "ipa": "to release, let go",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/vʲidpusˈtɪtɪ/",
+        "en": "to release, let go",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m62-032",
         "uk": "вивчити",
-        "translit": "/ˈvɪvtʃɪtɪ/",
-        "ipa": "to learn (master)",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/ˈvɪvtʃɪtɪ/",
+        "en": "to learn (master)",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m62-033",
         "uk": "вирішити",
-        "translit": "/vɪˈrʲiʃɪtɪ/",
-        "ipa": "to decide, solve",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/vɪˈrʲiʃɪtɪ/",
+        "en": "to decide, solve",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m62-034",
         "uk": "випити",
-        "translit": "/ˈvɪpɪtɪ/",
-        "ipa": "to drink up",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/ˈvɪpɪtɪ/",
+        "en": "to drink up",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m62-035",
         "uk": "виграти",
-        "translit": "/ˈvɪɦrɑtɪ/",
-        "ipa": "to win",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/ˈvɪɦrɑtɪ/",
+        "en": "to win",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m62-036",
         "uk": "витратити",
-        "translit": "/ˈvɪtrɑtɪtɪ/",
-        "ipa": "to spend",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/ˈvɪtrɑtɪtɪ/",
+        "en": "to spend",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m62-037",
         "uk": "закрити",
-        "translit": "/zɑˈkrɪtɪ/",
-        "ipa": "to close",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/zɑˈkrɪtɪ/",
+        "en": "to close",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m62-038",
         "uk": "закінчити",
-        "translit": "/zɑˈkʲintʃɪtɪ/",
-        "ipa": "to finish",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/zɑˈkʲintʃɪtɪ/",
+        "en": "to finish",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m62-039",
         "uk": "записати",
-        "translit": "/zɑpɪˈsɑtɪ/",
-        "ipa": "to write down",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/zɑpɪˈsɑtɪ/",
+        "en": "to write down",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m62-040",
         "uk": "замовити",
-        "translit": "/zɑˈmovɪtɪ/",
-        "ipa": "to order",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/zɑˈmovɪtɪ/",
+        "en": "to order",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m62-041",
         "uk": "запитати",
-        "translit": "/zɑpɪˈtɑtɪ/",
-        "ipa": "to ask",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/zɑpɪˈtɑtɪ/",
+        "en": "to ask",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m62-042",
         "uk": "забути",
-        "translit": "/zɑˈbutɪ/",
-        "ipa": "to forget",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/zɑˈbutɪ/",
+        "en": "to forget",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m62-043",
         "uk": "історія",
-        "translit": "/isˈtorʲijɑ/",
-        "ipa": "story, history",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/isˈtorʲijɑ/",
+        "en": "story, history",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m62-044",
         "uk": "подарунок",
-        "translit": "/podɑˈrunok/",
-        "ipa": "gift",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/podɑˈrunok/",
+        "en": "gift",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m62-045",
         "uk": "помилка",
-        "translit": "/poˈmɪlkɑ/",
-        "ipa": "mistake",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/poˈmɪlkɑ/",
+        "en": "mistake",
+        "pos": "noun",
+        "gender": "f"
       }
     ]
   }

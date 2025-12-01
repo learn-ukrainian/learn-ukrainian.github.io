@@ -374,142 +374,158 @@
       {
         "id": "v-m34-001",
         "uk": "з/із/зі",
-        "translit": "/z/, /iz/, /zʲi/",
-        "ipa": "with",
-        "en": "prep",
-        "pos": "-",
-        "gender": "+ instr"
+        "translit": "",
+        "ipa": "/z/, /iz/, /zʲi/",
+        "en": "with",
+        "pos": "prep",
+        "gender": "-",
+        "note": "+ instr"
       },
       {
         "id": "v-m34-002",
         "uk": "разом",
-        "translit": "/ˈrɑzom/",
-        "ipa": "together",
-        "en": "adv",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ˈrɑzom/",
+        "en": "together",
+        "pos": "adv",
+        "gender": "-"
       },
       {
         "id": "v-m34-003",
         "uk": "удвох",
-        "translit": "/udˈvox/",
-        "ipa": "the two (together)",
-        "en": "adv",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/udˈvox/",
+        "en": "the two (together)",
+        "pos": "adv",
+        "gender": "-"
       },
       {
         "id": "v-m34-004",
         "uk": "утрьох",
-        "translit": "/uˈtrʲox/",
-        "ipa": "the three (together)",
-        "en": "adv",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/uˈtrʲox/",
+        "en": "the three (together)",
+        "pos": "adv",
+        "gender": "-"
       },
       {
         "id": "v-m34-005",
         "uk": "зустрічатися",
-        "translit": "/zustriˈtʃɑtɪsʲɑ/",
-        "ipa": "to meet",
-        "en": "verb",
-        "pos": "-",
-        "gender": "з + instr"
+        "translit": "",
+        "ipa": "/zustriˈtʃɑtɪsʲɑ/",
+        "en": "to meet",
+        "pos": "verb",
+        "gender": "-",
+        "note": "з + instr"
       },
       {
         "id": "v-m34-006",
         "uk": "вітатися",
-        "translit": "/viˈtɑtɪsʲɑ/",
-        "ipa": "to greet",
-        "en": "verb",
-        "pos": "-",
-        "gender": "з + instr"
+        "translit": "",
+        "ipa": "/viˈtɑtɪsʲɑ/",
+        "en": "to greet",
+        "pos": "verb",
+        "gender": "-",
+        "note": "з + instr"
       },
       {
         "id": "v-m34-007",
         "uk": "прощатися",
-        "translit": "/proʃˈtʃɑtɪsʲɑ/",
-        "ipa": "to say goodbye",
-        "en": "verb",
-        "pos": "-",
-        "gender": "з + instr"
+        "translit": "",
+        "ipa": "/proʃˈtʃɑtɪsʲɑ/",
+        "en": "to say goodbye",
+        "pos": "verb",
+        "gender": "-",
+        "note": "з + instr"
       },
       {
         "id": "v-m34-008",
         "uk": "знайомитися",
-        "translit": "/znɑˈjomɪtɪsʲɑ/",
-        "ipa": "to get acquainted",
-        "en": "verb",
-        "pos": "-",
-        "gender": "з + instr"
+        "translit": "",
+        "ipa": "/znɑˈjomɪtɪsʲɑ/",
+        "en": "to get acquainted",
+        "pos": "verb",
+        "gender": "-",
+        "note": "з + instr"
       },
       {
         "id": "v-m34-009",
         "uk": "мною",
-        "translit": "/mnoju/",
-        "ipa": "(with) me",
-        "en": "pron",
-        "pos": "-",
-        "gender": "Instr. of я"
+        "translit": "",
+        "ipa": "/mnoju/",
+        "en": "(with) me",
+        "pos": "pron",
+        "gender": "-",
+        "note": "Instr. of я"
       },
       {
         "id": "v-m34-010",
         "uk": "тобою",
-        "translit": "/toˈboju/",
-        "ipa": "(with) you",
-        "en": "pron",
-        "pos": "-",
-        "gender": "Instr. of ти"
+        "translit": "",
+        "ipa": "/toˈboju/",
+        "en": "(with) you",
+        "pos": "pron",
+        "gender": "-",
+        "note": "Instr. of ти"
       },
       {
         "id": "v-m34-011",
         "uk": "ним",
-        "translit": "/nɪm/",
-        "ipa": "(with) him/it",
-        "en": "pron",
-        "pos": "-",
-        "gender": "Instr. of він/воно"
+        "translit": "",
+        "ipa": "/nɪm/",
+        "en": "(with) him/it",
+        "pos": "pron",
+        "gender": "-",
+        "note": "Instr. of він/воно"
       },
       {
         "id": "v-m34-012",
         "uk": "нею",
-        "translit": "/ˈnɛju/",
-        "ipa": "(with) her",
-        "en": "pron",
-        "pos": "-",
-        "gender": "Instr. of вона"
+        "translit": "",
+        "ipa": "/ˈnɛju/",
+        "en": "(with) her",
+        "pos": "pron",
+        "gender": "-",
+        "note": "Instr. of вона"
       },
       {
         "id": "v-m34-013",
         "uk": "нами",
-        "translit": "/ˈnɑmɪ/",
-        "ipa": "(with) us",
-        "en": "pron",
-        "pos": "-",
-        "gender": "Instr. of ми"
+        "translit": "",
+        "ipa": "/ˈnɑmɪ/",
+        "en": "(with) us",
+        "pos": "pron",
+        "gender": "-",
+        "note": "Instr. of ми"
       },
       {
         "id": "v-m34-014",
         "uk": "вами",
-        "translit": "/ˈvɑmɪ/",
-        "ipa": "(with) you",
-        "en": "pron",
-        "pos": "-",
-        "gender": "Instr. of ви"
+        "translit": "",
+        "ipa": "/ˈvɑmɪ/",
+        "en": "(with) you",
+        "pos": "pron",
+        "gender": "-",
+        "note": "Instr. of ви"
       },
       {
         "id": "v-m34-015",
         "uk": "ними",
-        "translit": "/ˈnɪmɪ/",
-        "ipa": "(with) them",
-        "en": "pron",
-        "pos": "-",
-        "gender": "Instr. of вони"
+        "translit": "",
+        "ipa": "/ˈnɪmɪ/",
+        "en": "(with) them",
+        "pos": "pron",
+        "gender": "-",
+        "note": "Instr. of вони"
       },
       {
         "id": "v-m34-016",
         "uk": "компанія",
-        "translit": "/kompɑˈnʲijɑ/",
-        "ipa": "company, group",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/kompɑˈnʲijɑ/",
+        "en": "company, group",
+        "pos": "noun",
+        "gender": "f"
       }
     ]
   }

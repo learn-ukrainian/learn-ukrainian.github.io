@@ -374,75 +374,84 @@
       {
         "id": "v-m32-001",
         "uk": "клієнт",
-        "translit": "/klʲiˈjɛnt/",
-        "ipa": "client",
-        "en": "noun",
-        "pos": "m",
-        "gender": "Dat: клієнтові"
+        "translit": "",
+        "ipa": "/klʲiˈjɛnt/",
+        "en": "client",
+        "pos": "noun",
+        "gender": "m",
+        "note": "Dat: клієнтові"
       },
       {
         "id": "v-m32-002",
         "uk": "повідомлення",
-        "translit": "/poʋʲiˈdomlɛnʲːɑ/",
-        "ipa": "message",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/poʋʲiˈdomlɛnʲːɑ/",
+        "en": "message",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m32-003",
         "uk": "запрошення",
-        "translit": "/zɑproˈʃɛnʲːɑ/",
-        "ipa": "invitation",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/zɑproˈʃɛnʲːɑ/",
+        "en": "invitation",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m32-004",
         "uk": "відповідь",
-        "translit": "/ʋʲidpoˈʋʲidʲ/",
-        "ipa": "answer",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ʋʲidpoˈʋʲidʲ/",
+        "en": "answer",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m32-005",
         "uk": "допомога",
-        "translit": "/dopoˈmoɦɑ/",
-        "ipa": "help",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/dopoˈmoɦɑ/",
+        "en": "help",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m32-006",
         "uk": "порада",
-        "translit": "/poˈrɑdɑ/",
-        "ipa": "advice",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/poˈrɑdɑ/",
+        "en": "advice",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m32-007",
         "uk": "підтримка",
-        "translit": "/pʲidˈtrɪmkɑ/",
-        "ipa": "support",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/pʲidˈtrɪmkɑ/",
+        "en": "support",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m32-008",
         "uk": "отримувач",
-        "translit": "/otrɪˈmuvɑtʃ/",
-        "ipa": "recipient",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/otrɪˈmuvɑtʃ/",
+        "en": "recipient",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m32-009",
         "uk": "адресат",
-        "translit": "/ɑdrɛˈsɑt/",
-        "ipa": "addressee",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ɑdrɛˈsɑt/",
+        "en": "addressee",
+        "pos": "noun",
+        "gender": "m"
       }
     ]
   }

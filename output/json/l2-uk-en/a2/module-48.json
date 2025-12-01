@@ -345,99 +345,111 @@
       {
         "id": "v-m48-001",
         "uk": "ремінь",
-        "translit": "/rɛˈmʲinʲ/",
-        "ipa": "belt",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/rɛˈmʲinʲ/",
+        "en": "belt",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m48-002",
         "uk": "акція",
-        "translit": "/ˈɑktsʲijɑ/",
-        "ipa": "promotion, sale",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈɑktsʲijɑ/",
+        "en": "promotion, sale",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m48-003",
         "uk": "розпродаж",
-        "translit": "/rozpˈrodɑʒ/",
-        "ipa": "sale (clearance)",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/rozpˈrodɑʒ/",
+        "en": "sale (clearance)",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m48-004",
         "uk": "батарея",
-        "translit": "/bɑtɑˈrɛjɑ/",
-        "ipa": "battery",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/bɑtɑˈrɛjɑ/",
+        "en": "battery",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m48-005",
         "uk": "пам'ять",
-        "translit": "/ˈpɑmjɑtʲ/",
-        "ipa": "memory",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈpɑmjɑtʲ/",
+        "en": "memory",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m48-006",
         "uk": "екран",
-        "translit": "/ɛˈkrɑn/",
-        "ipa": "screen",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ɛˈkrɑn/",
+        "en": "screen",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m48-007",
         "uk": "навушники",
-        "translit": "/nɑˈvuʃnɪkɪ/",
-        "ipa": "headphones",
-        "en": "noun",
-        "pos": "m",
-        "gender": "pl-only"
+        "translit": "",
+        "ipa": "/nɑˈvuʃnɪkɪ/",
+        "en": "headphones",
+        "pos": "noun",
+        "gender": "m",
+        "note": "pl-only"
       },
       {
         "id": "v-m48-008",
         "uk": "бездротовий",
-        "translit": "/bɛzdroˈtovɪj/",
-        "ipa": "wireless",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/bɛzdroˈtovɪj/",
+        "en": "wireless",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m48-009",
         "uk": "водонепроникний",
-        "translit": "/vodonɛproˈnɪknɪj/",
-        "ipa": "waterproof",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/vodonɛproˈnɪknɪj/",
+        "en": "waterproof",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m48-010",
         "uk": "чохол",
-        "translit": "/tʃoˈxol/",
-        "ipa": "case, cover",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/tʃoˈxol/",
+        "en": "case, cover",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m48-011",
         "uk": "зарядка",
-        "translit": "/zɑˈrʲɑdkɑ/",
-        "ipa": "charger",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/zɑˈrʲɑdkɑ/",
+        "en": "charger",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m48-012",
         "uk": "дефект",
-        "translit": "/dɛˈfɛkt/",
-        "ipa": "defect",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/dɛˈfɛkt/",
+        "en": "defect",
+        "pos": "noun",
+        "gender": "m"
       }
     ]
   }

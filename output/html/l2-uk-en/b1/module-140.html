@@ -628,7 +628,7 @@
       <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
-    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (0)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
+    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (8)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
     </section>
   </main>
@@ -637,7 +637,7 @@
     const matchPairs=[];
     const quizData=[{"question":"1. «Вчора я читав книгу» — вид:","options":["недоконаний","доконаний"],"correctIndex":0,"explanation":"Process, no completion stated."},{"question":"«Він прийшов» — значення:","options":["arrived on foot","arrived by vehicle"],"correctIndex":0,"explanation":"прийти = arrive on foot."},{"question":"«Щоб» вводить:","options":["мету або прохання","твердження"],"correctIndex":0,"explanation":"Purpose or command clause."},{"question":"«Він сказав, що...» — це:","options":["непряме твердження","непряме питання"],"correctIndex":0,"explanation":"Statement in reported speech."},{"question":"«Написано» — це:","options":["коротка форма","повна форма"],"correctIndex":0,"explanation":"Short passive form."},{"question":"«Приймати рішення» — правильно?","options":["так","ні"],"correctIndex":0,"explanation":"Correct collocation."}];
     const sortData={};
-    const vocabData=[];
+    const vocabData=[{"uk":"контрольна робота","translit":"","en":"test, assessment","note":"f"},{"uk":"оцінка","translit":"","en":"grade, assessment","note":"f"},{"uk":"бал","translit":"","en":"point","note":"m"},{"uk":"результат","translit":"","en":"result","note":"m"},{"uk":"рівень","translit":"","en":"level","note":"m"},{"uk":"компетенція","translit":"","en":"competency","note":"f"},{"uk":"готовність","translit":"","en":"readiness","note":"f"},{"uk":"досягнення","translit":"","en":"achievement","note":"n"}];
     const totalSort=0;
     function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
     document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));

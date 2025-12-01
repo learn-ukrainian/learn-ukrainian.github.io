@@ -239,8 +239,81 @@
     "moduleId": "mod-uk-B1-140",
     "level": "B1",
     "phase": "B1.4",
-    "wordCount": 0,
+    "wordCount": 8,
     "transliterationMode": "none",
-    "words": []
+    "words": [
+      {
+        "id": "v-m140-001",
+        "uk": "контрольна робота",
+        "translit": "",
+        "ipa": "-",
+        "en": "test, assessment",
+        "pos": "",
+        "note": "f"
+      },
+      {
+        "id": "v-m140-002",
+        "uk": "оцінка",
+        "translit": "",
+        "ipa": "/oˈt͡sʲinkɑ/",
+        "en": "grade, assessment",
+        "pos": "",
+        "note": "f"
+      },
+      {
+        "id": "v-m140-003",
+        "uk": "бал",
+        "translit": "",
+        "ipa": "/bɑl/",
+        "en": "point",
+        "pos": "",
+        "note": "m"
+      },
+      {
+        "id": "v-m140-004",
+        "uk": "результат",
+        "translit": "",
+        "ipa": "/rɛzulʲˈtɑt/",
+        "en": "result",
+        "pos": "",
+        "note": "m"
+      },
+      {
+        "id": "v-m140-005",
+        "uk": "рівень",
+        "translit": "",
+        "ipa": "/ˈrʲivɛnʲ/",
+        "en": "level",
+        "pos": "",
+        "note": "m"
+      },
+      {
+        "id": "v-m140-006",
+        "uk": "компетенція",
+        "translit": "",
+        "ipa": "/kompɛˈtɛnt͡sʲijɑ/",
+        "en": "competency",
+        "pos": "",
+        "note": "f"
+      },
+      {
+        "id": "v-m140-007",
+        "uk": "готовність",
+        "translit": "",
+        "ipa": "/ɦoˈtownʲistʲ/",
+        "en": "readiness",
+        "pos": "",
+        "note": "f"
+      },
+      {
+        "id": "v-m140-008",
+        "uk": "досягнення",
+        "translit": "",
+        "ipa": "/dosʲɑɦˈnɛnʲːɑ/",
+        "en": "achievement",
+        "pos": "",
+        "note": "n"
+      }
+    ]
   }
 }

@@ -670,7 +670,7 @@ B: ___ (I'm not sure). ___ (Maybe) у майбутньому.</p>
       <div class="score-display"><span class="score"><span id="match-score">0</span>/6</span></div>
       <div class="match-container" id="match-container"><svg class="match-lines" id="match-lines"></svg>
         <div class="match-column" id="match-left"><div class="match-item" data-pair="0">Я вважаю,</div><div class="match-item" data-pair="1">Нарешті він</div><div class="match-item" data-pair="2">Куди ти</div><div class="match-item" data-pair="3">Учора я</div><div class="match-item" data-pair="4">Я не зовсім</div><div class="match-item" data-pair="5">Поїзд</div></div>
-        <div class="match-column" id="match-right"><div class="match-item" data-pair="4">згоден</div><div class="match-item" data-pair="5">відійшов</div><div class="match-item" data-pair="1">прочитав книгу</div><div class="match-item" data-pair="0">що це правильно</div><div class="match-item" data-pair="2">йдеш?</div><div class="match-item" data-pair="3">ходив у магазин</div></div>
+        <div class="match-column" id="match-right"><div class="match-item" data-pair="2">йдеш?</div><div class="match-item" data-pair="3">ходив у магазин</div><div class="match-item" data-pair="0">що це правильно</div><div class="match-item" data-pair="4">згоден</div><div class="match-item" data-pair="1">прочитав книгу</div><div class="match-item" data-pair="5">відійшов</div></div>
       </div>
       <div class="completion-message" id="match-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetMatch()">Reset</button><button class="btn btn-primary" onclick="showSection('quiz')">Next →</button></div>
@@ -682,7 +682,7 @@ B: ___ (I'm not sure). ___ (Maybe) у майбутньому.</p>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
-    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (0)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
+    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (9)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
     </section>
   </main>
@@ -691,7 +691,7 @@ B: ___ (I'm not sure). ___ (Maybe) у майбутньому.</p>
     const matchPairs=[{"left":"Я вважаю,","right":"що це правильно"},{"left":"Нарешті він","right":"прочитав книгу"},{"left":"Куди ти","right":"йдеш?"},{"left":"Учора я","right":"ходив у магазин"},{"left":"Я не зовсім","right":"згоден"},{"left":"Поїзд","right":"відійшов"}];
     const quizData=[{"question":"Він ___ книгу весь вечір.","options":["читав","прочитав"],"correctIndex":0,"explanation":"Duration = imperfective"},{"question":"Куди ти ___ зараз?","options":["йдеш","ходиш"],"correctIndex":0,"explanation":"Right now = unidirectional"},{"question":"___ вулицю на світлофорі!","options":["Перейдіть","Пройдіть"],"correctIndex":0,"explanation":"Cross = пере-"},{"question":"Я ___ згоден з вами.","options":["зовсім","не зовсім"],"correctIndex":1,"explanation":"Soft disagreement"},{"question":"Вона ще не ___ книгу.","options":["читала","прочитала"],"correctIndex":1,"explanation":"\"Not yet\" = perfective"},{"question":"Гості ___ о півночі.","options":["розійшлися","зайшлися"],"correctIndex":0,"explanation":"Dispersed = роз-"}];
     const sortData={};
-    const vocabData=[];
+    const vocabData=[{"uk":"повторення","translit":"","en":"review, repetition","note":"n"},{"uk":"перевірка","translit":"","en":"check, test","note":"f"},{"uk":"засвоєння","translit":"","en":"mastery, acquisition","note":"n"},{"uk":"практика","translit":"","en":"practice","note":"f"},{"uk":"вправа","translit":"","en":"exercise","note":"f"},{"uk":"завдання","translit":"","en":"task, assignment","note":"n"},{"uk":"помилка","translit":"","en":"mistake","note":"f"},{"uk":"правильний","translit":"","en":"correct","note":"adj"},{"uk":"неправильний","translit":"","en":"incorrect","note":"adj"}];
     const totalSort=0;
     function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
     document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));

@@ -603,7 +603,7 @@
       <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
-    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (0)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
+    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (14)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
     </section>
   </main>
@@ -612,7 +612,7 @@
     const matchPairs=[];
     const quizData=[{"question":"Вона сказала, ___ вона хоче допомогти.","options":["що","щоб"],"correctIndex":0,"explanation":"що introduces reported statements."},{"question":"Він ___, що все буде добре.","options":["сказав","запитав"],"correctIndex":0,"explanation":"сказав for statements, запитав for questions."},{"question":"Вона сказала, що ___ втомлена.","options":["вона","я"],"correctIndex":0,"explanation":"Pronoun changes from я to вона in reported speech."},{"question":"Новини ___, що буде дощ.","options":["повідомили","сказали"],"correctIndex":0,"explanation":"повідомити is more appropriate for news/official reports."},{"question":"Він сказав: «Я тут». → Він сказав, що він ___.","options":["там","тут"],"correctIndex":0,"explanation":"тут changes to там in reported speech."},{"question":"Він стверджує, що ___ правду.","options":["знає","знав"],"correctIndex":0,"explanation":"Present tense is acceptable in Ukrainian reported speech."}];
     const sortData={};
-    const vocabData=[];
+    const vocabData=[{"uk":"непряма мова","translit":"","en":"reported speech","note":"f"},{"uk":"пряма мова","translit":"","en":"direct speech","note":"f"},{"uk":"сказати","translit":"","en":"to say","note":"pf"},{"uk":"казати","translit":"","en":"to say","note":"impf"},{"uk":"повідомити","translit":"","en":"to inform, report","note":"pf"},{"uk":"стверджувати","translit":"","en":"to claim, assert","note":"impf"},{"uk":"заявити","translit":"","en":"to declare, announce","note":"pf"},{"uk":"пояснити","translit":"","en":"to explain","note":"pf"},{"uk":"додати","translit":"","en":"to add","note":"pf"},{"uk":"визнати","translit":"","en":"to admit","note":"pf"},{"uk":"напередодні","translit":"","en":"the day before","note":"adv"},{"uk":"наступного дня","translit":"","en":"the next day","note":"-"},{"uk":"того дня","translit":"","en":"that day","note":"-"},{"uk":"тоді","translit":"","en":"then","note":"adv"}];
     const totalSort=0;
     function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
     document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));

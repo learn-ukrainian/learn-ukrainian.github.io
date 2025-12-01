@@ -566,7 +566,7 @@
     const matchPairs=[];
     const quizData=[];
     const sortData={};
-    const vocabData=[{"uk":"трансформація","translit":"","en":"перетворення","note":""},{"uk":"маркер","translit":"","en":"ознака стилю","note":""},{"uk":"змішування","translit":"","en":"помилка стилю","note":""},{"uk":"перемикання","translit":"","en":"зміна регістру","note":""},{"uk":"адекватний","translit":"","en":"доречний","note":""},{"uk":"троп","translit":"","en":"образний засіб","note":""},{"uk":"комплексний","translit":"","en":"багатоаспектний","note":""},{"uk":"непередбачений","translit":"","en":"несподіваний","note":""}];
+    const vocabData=[{"uk":"трансформація","translit":"","en":"transformation","note":"перетворення"},{"uk":"маркер","translit":"","en":"marker","note":"ознака стилю"},{"uk":"змішування","translit":"","en":"mixing","note":"помилка стилю"},{"uk":"перемикання","translit":"","en":"code-switching","note":"зміна регістру"},{"uk":"адекватний","translit":"","en":"appropriate","note":"доречний"},{"uk":"троп","translit":"","en":"trope","note":"образний засіб"},{"uk":"комплексний","translit":"","en":"complex","note":"багатоаспектний"},{"uk":"непередбачений","translit":"","en":"unforeseen","note":"несподіваний"}];
     const totalSort=0;
     function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
     document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));

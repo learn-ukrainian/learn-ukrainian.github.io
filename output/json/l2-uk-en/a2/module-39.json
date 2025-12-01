@@ -366,225 +366,252 @@
       {
         "id": "v-m39-001",
         "uk": "листівка",
-        "translit": "/lɪsˈtʲifkɑ/",
-        "ipa": "postcard",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/lɪsˈtʲifkɑ/",
+        "en": "postcard",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m39-002",
         "uk": "бандероль",
-        "translit": "/bɑndɛˈrolʲ/",
-        "ipa": "small parcel",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/bɑndɛˈrolʲ/",
+        "en": "small parcel",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m39-003",
         "uk": "марка",
-        "translit": "/ˈmɑrkɑ/",
-        "ipa": "stamp",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈmɑrkɑ/",
+        "en": "stamp",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m39-004",
         "uk": "відправник",
-        "translit": "/vʲidprɑvˈnɪk/",
-        "ipa": "sender",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/vʲidprɑvˈnɪk/",
+        "en": "sender",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m39-005",
         "uk": "одержувач",
-        "translit": "/odɛrˈʒuvɑtʃ/",
-        "ipa": "recipient",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/odɛrˈʒuvɑtʃ/",
+        "en": "recipient",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m39-006",
         "uk": "індекс",
-        "translit": "/ˈindɛks/",
-        "ipa": "postal code",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ˈindɛks/",
+        "en": "postal code",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m39-007",
         "uk": "квитанція",
-        "translit": "/kvɪˈtɑntsʲijɑ/",
-        "ipa": "receipt",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/kvɪˈtɑntsʲijɑ/",
+        "en": "receipt",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m39-008",
         "uk": "доставка",
-        "translit": "/dosˈtɑfkɑ/",
-        "ipa": "delivery",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/dosˈtɑfkɑ/",
+        "en": "delivery",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m39-009",
         "uk": "вага",
-        "translit": "/vɑˈɦɑ/",
-        "ipa": "weight",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/vɑˈɦɑ/",
+        "en": "weight",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m39-010",
         "uk": "переказ",
-        "translit": "/pɛrɛˈkɑz/",
-        "ipa": "transfer",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/pɛrɛˈkɑz/",
+        "en": "transfer",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m39-011",
         "uk": "обмін",
-        "translit": "/obˈmʲin/",
-        "ipa": "exchange",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/obˈmʲin/",
+        "en": "exchange",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m39-012",
         "uk": "курс",
-        "translit": "/kurs/",
-        "ipa": "rate",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/kurs/",
+        "en": "rate",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m39-013",
         "uk": "депозит",
-        "translit": "/dɛpoˈzɪt/",
-        "ipa": "deposit",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/dɛpoˈzɪt/",
+        "en": "deposit",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m39-014",
         "uk": "кредит",
-        "translit": "/krɛˈdɪt/",
-        "ipa": "credit, loan",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/krɛˈdɪt/",
+        "en": "credit, loan",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m39-015",
         "uk": "відсоток",
-        "translit": "/vʲidˈsotok/",
-        "ipa": "percent, interest",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/vʲidˈsotok/",
+        "en": "percent, interest",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m39-016",
         "uk": "банкомат",
-        "translit": "/bɑnkoˈmɑt/",
-        "ipa": "ATM",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/bɑnkoˈmɑt/",
+        "en": "ATM",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m39-017",
         "uk": "комісія",
-        "translit": "/koˈmʲisʲijɑ/",
-        "ipa": "commission",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/koˈmʲisʲijɑ/",
+        "en": "commission",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m39-018",
         "uk": "підпис",
-        "translit": "/ˈpʲidpɪs/",
-        "ipa": "signature",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ˈpʲidpɪs/",
+        "en": "signature",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m39-019",
         "uk": "виписка",
-        "translit": "/ˈvɪpɪskɑ/",
-        "ipa": "statement",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈvɪpɪskɑ/",
+        "en": "statement",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m39-020",
         "uk": "надіслати",
-        "translit": "/nɑdʲisˈlɑtɪ/",
-        "ipa": "to send",
-        "en": "verb",
-        "pos": "-",
-        "gender": "+ acc + dat"
+        "translit": "",
+        "ipa": "/nɑdʲisˈlɑtɪ/",
+        "en": "to send",
+        "pos": "verb",
+        "gender": "-",
+        "note": "+ acc + dat"
       },
       {
         "id": "v-m39-021",
         "uk": "відправити",
-        "translit": "/vʲidprɑˈvɪtɪ/",
-        "ipa": "to send, dispatch",
-        "en": "verb",
-        "pos": "-",
-        "gender": "+ acc"
+        "translit": "",
+        "ipa": "/vʲidprɑˈvɪtɪ/",
+        "en": "to send, dispatch",
+        "pos": "verb",
+        "gender": "-",
+        "note": "+ acc"
       },
       {
         "id": "v-m39-022",
         "uk": "обміняти",
-        "translit": "/obmʲiˈnʲɑtɪ/",
-        "ipa": "to exchange",
-        "en": "verb",
-        "pos": "-",
-        "gender": "+ acc + на + acc"
+        "translit": "",
+        "ipa": "/obmʲiˈnʲɑtɪ/",
+        "en": "to exchange",
+        "pos": "verb",
+        "gender": "-",
+        "note": "+ acc + на + acc"
       },
       {
         "id": "v-m39-023",
         "uk": "зняти",
-        "translit": "/znʲɑˈtɪ/",
-        "ipa": "to withdraw",
-        "en": "verb",
-        "pos": "-",
-        "gender": "+ acc + з + gen"
+        "translit": "",
+        "ipa": "/znʲɑˈtɪ/",
+        "en": "to withdraw",
+        "pos": "verb",
+        "gender": "-",
+        "note": "+ acc + з + gen"
       },
       {
         "id": "v-m39-024",
         "uk": "переказати",
-        "translit": "/pɛrɛkɑˈzɑtɪ/",
-        "ipa": "to transfer",
-        "en": "verb",
-        "pos": "-",
-        "gender": "+ acc + dat"
+        "translit": "",
+        "ipa": "/pɛrɛkɑˈzɑtɪ/",
+        "en": "to transfer",
+        "pos": "verb",
+        "gender": "-",
+        "note": "+ acc + dat"
       },
       {
         "id": "v-m39-025",
         "uk": "заповнити",
-        "translit": "/zɑˈpovnɪtɪ/",
-        "ipa": "to fill out",
-        "en": "verb",
-        "pos": "-",
-        "gender": "+ acc"
+        "translit": "",
+        "ipa": "/zɑˈpovnɪtɪ/",
+        "en": "to fill out",
+        "pos": "verb",
+        "gender": "-",
+        "note": "+ acc"
       },
       {
         "id": "v-m39-026",
         "uk": "розписатися",
-        "translit": "/rozpɪˈsɑtɪsʲɑ/",
-        "ipa": "to sign",
-        "en": "verb",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/rozpɪˈsɑtɪsʲɑ/",
+        "en": "to sign",
+        "pos": "verb",
+        "gender": "-"
       },
       {
         "id": "v-m39-027",
         "uk": "перерахувати",
-        "translit": "/pɛrɛrɑxuˈvɑtɪ/",
-        "ipa": "to count, recount",
-        "en": "verb",
-        "pos": "-",
-        "gender": "+ acc"
+        "translit": "",
+        "ipa": "/pɛrɛrɑxuˈvɑtɪ/",
+        "en": "to count, recount",
+        "pos": "verb",
+        "gender": "-",
+        "note": "+ acc"
       }
     ]
   }

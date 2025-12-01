@@ -616,7 +616,7 @@ A: Треба <strong>прийти до</strong> якогось рішення.<
       <div class="score-display"><span class="score"><span id="match-score">0</span>/6</span></div>
       <div class="match-container" id="match-container"><svg class="match-lines" id="match-lines"></svg>
         <div class="match-column" id="match-left"><div class="match-item" data-pair="0">виходить, що</div><div class="match-item" data-pair="1">доходить до</div><div class="match-item" data-pair="2">приходить на думку</div><div class="match-item" data-pair="3">переходить до</div><div class="match-item" data-pair="4">проходить (час)</div><div class="match-item" data-pair="5">заходить в глухий кут</div></div>
-        <div class="match-column" id="match-right"><div class="match-item" data-pair="1">gets through to</div><div class="match-item" data-pair="0">it turns out</div><div class="match-item" data-pair="5">reaches dead end</div><div class="match-item" data-pair="3">moves on to</div><div class="match-item" data-pair="4">passes (time)</div><div class="match-item" data-pair="2">comes to mind</div></div>
+        <div class="match-column" id="match-right"><div class="match-item" data-pair="1">gets through to</div><div class="match-item" data-pair="3">moves on to</div><div class="match-item" data-pair="5">reaches dead end</div><div class="match-item" data-pair="0">it turns out</div><div class="match-item" data-pair="4">passes (time)</div><div class="match-item" data-pair="2">comes to mind</div></div>
       </div>
       <div class="completion-message" id="match-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetMatch()">Reset</button><button class="btn btn-primary" onclick="showSection('quiz')">Next →</button></div>
@@ -628,7 +628,7 @@ A: Треба <strong>прийти до</strong> якогось рішення.<
       <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
-    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (0)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
+    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (12)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
     </section>
   </main>
@@ -637,7 +637,7 @@ A: Треба <strong>прийти до</strong> якогось рішення.<
     const matchPairs=[{"left":"виходить, що","right":"it turns out"},{"left":"доходить до","right":"gets through to"},{"left":"приходить на думку","right":"comes to mind"},{"left":"переходить до","right":"moves on to"},{"left":"проходить (час)","right":"passes (time)"},{"left":"заходить в глухий кут","right":"reaches dead end"}];
     const quizData=[{"question":"Виходить, що він мав рацію.","options":["It turns out he was right.","He went out and was right."],"correctIndex":0,"explanation":""},{"question":"До нього не доходить.","options":["He can't walk there.","He doesn't understand."],"correctIndex":1,"explanation":""},{"question":"Вона прийшла до висновку.","options":["She came to a conclusion.","She came to the entrance."],"correctIndex":0,"explanation":""},{"question":"Перейдемо до справи.","options":["Let's get down to business.","Let's cross to business."],"correctIndex":0,"explanation":""},{"question":"Час летить.","options":["Time flies.","Time is flying (plane)."],"correctIndex":0,"explanation":""},{"question":"Справа зайшла далеко.","options":["Things have gone far.","The business went far away."],"correctIndex":0,"explanation":""}];
     const sortData={};
-    const vocabData=[];
+    const vocabData=[{"uk":"виходить, що","translit":"","en":"it turns out that","note":"impersonal"},{"uk":"доходити до","translit":"","en":"to get through to","note":"figurative"},{"uk":"дійшло до мене","translit":"","en":"it dawned on me","note":"figurative"},{"uk":"прийти до висновку","translit":"","en":"to come to conclusion","note":"fixed expr"},{"uk":"прийти до згоди","translit":"","en":"to come to agreement","note":"fixed expr"},{"uk":"прийти на думку","translit":"","en":"to come to mind","note":"fixed expr"},{"uk":"перейти до справи","translit":"","en":"to get to business","note":"fixed expr"},{"uk":"пройти курс","translit":"","en":"to take a course","note":"figurative"},{"uk":"пройти тест","translit":"","en":"to pass a test","note":"figurative"},{"uk":"зайти в глухий кут","translit":"","en":"to reach dead end","note":"idiom"},{"uk":"вийти заміж","translit":"","en":"to get married (f)","note":"fixed expr"},{"uk":"відійти від теми","translit":"","en":"to go off topic","note":"fixed expr"}];
     const totalSort=0;
     function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
     document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));

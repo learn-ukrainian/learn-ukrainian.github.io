@@ -371,303 +371,340 @@
       {
         "id": "v-m72-001",
         "uk": "юрист",
-        "translit": "/juˈrɪst/",
-        "ipa": "lawyer",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/juˈrɪst/",
+        "en": "lawyer",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m72-002",
         "uk": "адвокат",
-        "translit": "/ɑdvoˈkɑt/",
-        "ipa": "attorney",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ɑdvoˈkɑt/",
+        "en": "attorney",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m72-003",
         "uk": "бухгалтер",
-        "translit": "/buxˈɦɑltɛr/",
-        "ipa": "accountant",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/buxˈɦɑltɛr/",
+        "en": "accountant",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m72-004",
         "uk": "програміст",
-        "translit": "/proɦrɑˈmʲist/",
-        "ipa": "programmer",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/proɦrɑˈmʲist/",
+        "en": "programmer",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m72-005",
         "uk": "інженер",
-        "translit": "/inʒɛˈnɛr/",
-        "ipa": "engineer",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/inʒɛˈnɛr/",
+        "en": "engineer",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m72-006",
         "uk": "менеджер",
-        "translit": "/ˈmɛnɛdʒɛr/",
-        "ipa": "manager",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ˈmɛnɛdʒɛr/",
+        "en": "manager",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m72-007",
         "uk": "підприємець",
-        "translit": "/pʲidprɪˈjɛmɛtsʲ/",
-        "ipa": "entrepreneur",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/pʲidprɪˈjɛmɛtsʲ/",
+        "en": "entrepreneur",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m72-008",
         "uk": "викладач",
-        "translit": "/vɪklɑˈdɑtʃ/",
-        "ipa": "lecturer",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/vɪklɑˈdɑtʃ/",
+        "en": "lecturer",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m72-009",
         "uk": "науковець",
-        "translit": "/nɑuˈkovɛtsʲ/",
-        "ipa": "scientist",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/nɑuˈkovɛtsʲ/",
+        "en": "scientist",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m72-010",
         "uk": "хірург",
-        "translit": "/xʲiˈrurɦ/",
-        "ipa": "surgeon",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/xʲiˈrurɦ/",
+        "en": "surgeon",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m72-011",
         "uk": "стоматолог",
-        "translit": "/stomɑˈtoloɦ/",
-        "ipa": "dentist",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/stomɑˈtoloɦ/",
+        "en": "dentist",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m72-012",
         "uk": "перукар",
-        "translit": "/pɛruˈkɑr/",
-        "ipa": "hairdresser",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/pɛruˈkɑr/",
+        "en": "hairdresser",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m72-013",
         "uk": "офіс",
-        "translit": "/ˈofʲis/",
-        "ipa": "office",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ˈofʲis/",
+        "en": "office",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m72-014",
         "uk": "відділ",
-        "translit": "/vʲidˈdʲil/",
-        "ipa": "department",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/vʲidˈdʲil/",
+        "en": "department",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m72-015",
         "uk": "начальник",
-        "translit": "/nɑˈtʃɑlʲnɪk/",
-        "ipa": "boss",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/nɑˈtʃɑlʲnɪk/",
+        "en": "boss",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m72-016",
         "uk": "колега",
-        "translit": "/koˈlɛɦɑ/",
-        "ipa": "colleague",
-        "en": "noun",
-        "pos": "m/f"
+        "translit": "",
+        "ipa": "/koˈlɛɦɑ/",
+        "en": "colleague",
+        "pos": "noun",
+        "gender": "m/f"
       },
       {
         "id": "v-m72-017",
         "uk": "співробітник",
-        "translit": "/spʲivroˈbʲitnɪk/",
-        "ipa": "coworker",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/spʲivroˈbʲitnɪk/",
+        "en": "coworker",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m72-018",
         "uk": "посада",
-        "translit": "/poˈsɑdɑ/",
-        "ipa": "position",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/poˈsɑdɑ/",
+        "en": "position",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m72-019",
         "uk": "кар'єра",
-        "translit": "/kɑrˈjɛrɑ/",
-        "ipa": "career",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/kɑrˈjɛrɑ/",
+        "en": "career",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m72-020",
         "uk": "досвід",
-        "translit": "/ˈdosvʲid/",
-        "ipa": "experience",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ˈdosvʲid/",
+        "en": "experience",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m72-021",
         "uk": "резюме",
-        "translit": "/rɛzʲuˈmɛ/",
-        "ipa": "resume, CV",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/rɛzʲuˈmɛ/",
+        "en": "resume, CV",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m72-022",
         "uk": "співбесіда",
-        "translit": "/spʲivˈbɛsʲidɑ/",
-        "ipa": "interview",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/spʲivˈbɛsʲidɑ/",
+        "en": "interview",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m72-023",
         "uk": "вакансія",
-        "translit": "/vɑˈkɑnsʲijɑ/",
-        "ipa": "vacancy",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/vɑˈkɑnsʲijɑ/",
+        "en": "vacancy",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m72-024",
         "uk": "зарплата",
-        "translit": "/zɑrˈplɑtɑ/",
-        "ipa": "salary",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/zɑrˈplɑtɑ/",
+        "en": "salary",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m72-025",
         "uk": "премія",
-        "translit": "/ˈprɛmʲijɑ/",
-        "ipa": "bonus",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈprɛmʲijɑ/",
+        "en": "bonus",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m72-026",
         "uk": "відпустка",
-        "translit": "/vʲidˈpustkɑ/",
-        "ipa": "vacation",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/vʲidˈpustkɑ/",
+        "en": "vacation",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m72-027",
         "uk": "обов'язки",
-        "translit": "/oboˈvjɑzkɪ/",
-        "ipa": "duties",
-        "en": "noun",
-        "pos": "pl"
+        "translit": "",
+        "ipa": "/oboˈvjɑzkɪ/",
+        "en": "duties",
+        "pos": "noun",
+        "gender": "pl"
       },
       {
         "id": "v-m72-028",
         "uk": "завдання",
-        "translit": "/zɑvˈdɑnʲːɑ/",
-        "ipa": "task",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/zɑvˈdɑnʲːɑ/",
+        "en": "task",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m72-029",
         "uk": "звіт",
-        "translit": "/zvʲit/",
-        "ipa": "report",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/zvʲit/",
+        "en": "report",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m72-030",
         "uk": "нарада",
-        "translit": "/nɑˈrɑdɑ/",
-        "ipa": "meeting",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/nɑˈrɑdɑ/",
+        "en": "meeting",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m72-031",
         "uk": "дедлайн",
-        "translit": "/ˈdɛdlɑjn/",
-        "ipa": "deadline",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ˈdɛdlɑjn/",
+        "en": "deadline",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m72-032",
         "uk": "відрядження",
-        "translit": "/vʲidrʲɑˈdʒɛnʲːɑ/",
-        "ipa": "business trip",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/vʲidrʲɑˈdʒɛnʲːɑ/",
+        "en": "business trip",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m72-033",
         "uk": "наймати",
-        "translit": "/nɑjˈmɑtɪ/",
-        "ipa": "to hire",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/nɑjˈmɑtɪ/",
+        "en": "to hire",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m72-034",
         "uk": "звільняти",
-        "translit": "/zvʲilʲˈnʲɑtɪ/",
-        "ipa": "to fire",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/zvʲilʲˈnʲɑtɪ/",
+        "en": "to fire",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m72-035",
         "uk": "звільнятися",
-        "translit": "/zvʲilʲˈnʲɑtɪsʲɑ/",
-        "ipa": "to quit",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/zvʲilʲˈnʲɑtɪsʲɑ/",
+        "en": "to quit",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m72-036",
         "uk": "підвищувати",
-        "translit": "/pʲidvɪˈʃʃuvɑtɪ/",
-        "ipa": "to promote",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/pʲidvɪˈʃʃuvɑtɪ/",
+        "en": "to promote",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m72-037",
         "uk": "керувати",
-        "translit": "/kɛruˈvɑtɪ/",
-        "ipa": "to manage",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/kɛruˈvɑtɪ/",
+        "en": "to manage",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       }
     ]
   }

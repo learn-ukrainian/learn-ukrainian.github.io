@@ -245,13 +245,34 @@
       "modifiedAt": "2025-12-01T00:00:00Z"
     },
     {
-      "id": "act-uk-B1-127-fillin",
-      "type": "fill-in",
+      "id": "act-uk-B1-127-gapfill",
+      "type": "gap-fill",
       "title": "Family Statistics",
       "description": "Опишіть сім'ю, використовуючи числівники.",
       "content": {
-        "type": "fill-in",
-        "instructions": "Опишіть сім'ю, використовуючи числівники."
+        "type": "gap-fill",
+        "instructions": "Опишіть сім'ю, використовуючи числівники.",
+        "text": "Опишіть сім'ю, використовуючи числівники.\nУ родини Петренків (1)___ (5) членів. Батьки мають (2)___ (3) дітей: двох синів і одну дочку. (3)___ (1/2) дітей вже дорослі. (4)___ (приблизно) раз на місяць вся родина збирається разом. (5)___ (більше ніж) 80% часу вони проводять у місті.",
+        "blanks": [
+          {
+            "hint": "5"
+          },
+          {
+            "hint": "3"
+          },
+          {
+            "hint": "1/2"
+          },
+          {
+            "hint": "приблизно"
+          },
+          {
+            "hint": "більше ніж"
+          }
+        ],
+        "answers": [
+          "1. п'ятеро"
+        ]
       },
       "subject": "language",
       "owner": "curricula-opus",
@@ -273,8 +294,144 @@
     "moduleId": "mod-uk-B1-127",
     "level": "B1",
     "phase": "B1.4",
-    "wordCount": 0,
+    "wordCount": 15,
     "transliterationMode": "none",
-    "words": []
+    "words": [
+      {
+        "id": "v-m127-001",
+        "uk": "збірний",
+        "translit": "",
+        "ipa": "/zbʲirˈnɪj/",
+        "en": "collective",
+        "pos": "",
+        "note": "adj"
+      },
+      {
+        "id": "v-m127-002",
+        "uk": "двоє",
+        "translit": "",
+        "ipa": "/ˈdwojɛ/",
+        "en": "two (collective)",
+        "pos": "",
+        "note": "num"
+      },
+      {
+        "id": "v-m127-003",
+        "uk": "троє",
+        "translit": "",
+        "ipa": "/ˈtrojɛ/",
+        "en": "three (collective)",
+        "pos": "",
+        "note": "num"
+      },
+      {
+        "id": "v-m127-004",
+        "uk": "четверо",
+        "translit": "",
+        "ipa": "/t͡ʃɛˈtwɛro/",
+        "en": "four (collective)",
+        "pos": "",
+        "note": "num"
+      },
+      {
+        "id": "v-m127-005",
+        "uk": "п'ятеро",
+        "translit": "",
+        "ipa": "/pjɑˈtɛro/",
+        "en": "five (collective)",
+        "pos": "",
+        "note": "num"
+      },
+      {
+        "id": "v-m127-006",
+        "uk": "обоє",
+        "translit": "",
+        "ipa": "/oˈbojɛ/",
+        "en": "both",
+        "pos": "",
+        "note": "num"
+      },
+      {
+        "id": "v-m127-007",
+        "uk": "половина",
+        "translit": "",
+        "ipa": "/poloˈvɪnɑ/",
+        "en": "half",
+        "pos": "",
+        "note": "f"
+      },
+      {
+        "id": "v-m127-008",
+        "uk": "третина",
+        "translit": "",
+        "ipa": "/trɛˈtɪnɑ/",
+        "en": "third",
+        "pos": "",
+        "note": "f"
+      },
+      {
+        "id": "v-m127-009",
+        "uk": "чверть",
+        "translit": "",
+        "ipa": "/t͡ʃwɛrtʲ/",
+        "en": "quarter",
+        "pos": "",
+        "note": "f"
+      },
+      {
+        "id": "v-m127-010",
+        "uk": "дріб",
+        "translit": "",
+        "ipa": "/drʲib/",
+        "en": "fraction",
+        "pos": "",
+        "note": "m"
+      },
+      {
+        "id": "v-m127-011",
+        "uk": "відсоток",
+        "translit": "",
+        "ipa": "/vʲidˈsotok/",
+        "en": "percent",
+        "pos": "",
+        "note": "m"
+      },
+      {
+        "id": "v-m127-012",
+        "uk": "близько",
+        "translit": "",
+        "ipa": "/ˈblɪzʲko/",
+        "en": "approximately",
+        "pos": "",
+        "note": "adv"
+      },
+      {
+        "id": "v-m127-013",
+        "uk": "приблизно",
+        "translit": "",
+        "ipa": "/prɪˈblɪzno/",
+        "en": "approximately",
+        "pos": "",
+        "note": "adv"
+      },
+      {
+        "id": "v-m127-014",
+        "uk": "понад",
+        "translit": "",
+        "ipa": "/poˈnɑd/",
+        "en": "over, more than",
+        "pos": "",
+        "note": "prep"
+      },
+      {
+        "id": "v-m127-015",
+        "uk": "кілька",
+        "translit": "",
+        "ipa": "/ˈkʲilʲkɑ/",
+        "en": "several",
+        "pos": "",
+        "note": "num"
+      }
+    ]
   }
 }

@@ -358,314 +358,353 @@
       {
         "id": "v-m63-001",
         "uk": "читання",
-        "translit": "/tʃɪˈtɑnʲːɑ/",
-        "ipa": "reading",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/tʃɪˈtɑnʲːɑ/",
+        "en": "reading",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m63-002",
         "uk": "писання",
-        "translit": "/pɪˈsɑnʲːɑ/",
-        "ipa": "writing",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/pɪˈsɑnʲːɑ/",
+        "en": "writing",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m63-003",
         "uk": "навчання",
-        "translit": "/nɑvˈtʃɑnʲːɑ/",
-        "ipa": "learning, education",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/nɑvˈtʃɑnʲːɑ/",
+        "en": "learning, education",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m63-004",
         "uk": "слухання",
-        "translit": "/sluˈxɑnʲːɑ/",
-        "ipa": "listening",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/sluˈxɑnʲːɑ/",
+        "en": "listening",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m63-005",
         "uk": "говоріння",
-        "translit": "/ɦovoˈrʲinʲːɑ/",
-        "ipa": "speaking",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/ɦovoˈrʲinʲːɑ/",
+        "en": "speaking",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m63-006",
         "uk": "життя",
-        "translit": "/ʒɪtʲˈtʲɑ/",
-        "ipa": "life",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/ʒɪtʲˈtʲɑ/",
+        "en": "life",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m63-007",
         "uk": "буття",
-        "translit": "/butʲˈtʲɑ/",
-        "ipa": "being, existence",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/butʲˈtʲɑ/",
+        "en": "being, existence",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m63-008",
         "uk": "знання",
-        "translit": "/ˈznɑnʲːɑ/",
-        "ipa": "knowledge",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/ˈznɑnʲːɑ/",
+        "en": "knowledge",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m63-009",
         "uk": "питання",
-        "translit": "/pɪˈtɑnʲːɑ/",
-        "ipa": "question",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/pɪˈtɑnʲːɑ/",
+        "en": "question",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m63-010",
         "uk": "завдання",
-        "translit": "/zɑvˈdɑnʲːɑ/",
-        "ipa": "task, assignment",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/zɑvˈdɑnʲːɑ/",
+        "en": "task, assignment",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m63-011",
         "uk": "можливість",
-        "translit": "/moʒˈlɪvʲistʲ/",
-        "ipa": "possibility",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/moʒˈlɪvʲistʲ/",
+        "en": "possibility",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m63-012",
         "uk": "новість",
-        "translit": "/ˈnovʲistʲ/",
-        "ipa": "news",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈnovʲistʲ/",
+        "en": "news",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m63-013",
         "uk": "радість",
-        "translit": "/ˈrɑdʲistʲ/",
-        "ipa": "joy",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈrɑdʲistʲ/",
+        "en": "joy",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m63-014",
         "uk": "молодість",
-        "translit": "/ˈmolodʲistʲ/",
-        "ipa": "youth",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈmolodʲistʲ/",
+        "en": "youth",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m63-015",
         "uk": "старість",
-        "translit": "/ˈstɑrʲistʲ/",
-        "ipa": "old age",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈstɑrʲistʲ/",
+        "en": "old age",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m63-016",
         "uk": "відповідальність",
-        "translit": "/vʲidpovʲiˈdɑlʲnʲistʲ/",
-        "ipa": "responsibility",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/vʲidpovʲiˈdɑlʲnʲistʲ/",
+        "en": "responsibility",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m63-017",
         "uk": "особливість",
-        "translit": "/osobˈlɪvʲistʲ/",
-        "ipa": "peculiarity",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/osobˈlɪvʲistʲ/",
+        "en": "peculiarity",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m63-018",
         "uk": "вільність",
-        "translit": "/ˈvʲilʲnʲistʲ/",
-        "ipa": "freedom",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈvʲilʲnʲistʲ/",
+        "en": "freedom",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m63-019",
         "uk": "людство",
-        "translit": "/ˈlʲudstvo/",
-        "ipa": "humanity",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/ˈlʲudstvo/",
+        "en": "humanity",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m63-020",
         "uk": "братство",
-        "translit": "/ˈbrɑtstvo/",
-        "ipa": "brotherhood",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/ˈbrɑtstvo/",
+        "en": "brotherhood",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m63-021",
         "uk": "багатство",
-        "translit": "/bɑˈɦɑtstvo/",
-        "ipa": "wealth",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/bɑˈɦɑtstvo/",
+        "en": "wealth",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m63-022",
         "uk": "мистецтво",
-        "translit": "/mɪsˈtɛtstvo/",
-        "ipa": "art",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/mɪsˈtɛtstvo/",
+        "en": "art",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m63-023",
         "uk": "суспільство",
-        "translit": "/susˈpʲilʲstvo/",
-        "ipa": "society",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/susˈpʲilʲstvo/",
+        "en": "society",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m63-024",
         "uk": "виробництво",
-        "translit": "/vɪrobˈnɪtstvo/",
-        "ipa": "production",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/vɪrobˈnɪtstvo/",
+        "en": "production",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m63-025",
         "uk": "господарство",
-        "translit": "/ɦospoˈdɑrstvo/",
-        "ipa": "economy, farm",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/ɦospoˈdɑrstvo/",
+        "en": "economy, farm",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m63-026",
         "uk": "читач",
-        "translit": "/tʃɪˈtɑtʃ/",
-        "ipa": "reader",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/tʃɪˈtɑtʃ/",
+        "en": "reader",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m63-027",
         "uk": "слухач",
-        "translit": "/sluˈxɑtʃ/",
-        "ipa": "listener",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/sluˈxɑtʃ/",
+        "en": "listener",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m63-028",
         "uk": "глядач",
-        "translit": "/ɦlʲɑˈdɑtʃ/",
-        "ipa": "viewer",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ɦlʲɑˈdɑtʃ/",
+        "en": "viewer",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m63-029",
         "uk": "письменник",
-        "translit": "/pɪsʲˈmɛnːɪk/",
-        "ipa": "writer",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/pɪsʲˈmɛnːɪk/",
+        "en": "writer",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m63-030",
         "uk": "робітник",
-        "translit": "/roˈbʲitnɪk/",
-        "ipa": "worker",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/roˈbʲitnɪk/",
+        "en": "worker",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m63-031",
         "uk": "працівник",
-        "translit": "/prɑˈtsʲivnɪk/",
-        "ipa": "employee",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/prɑˈtsʲivnɪk/",
+        "en": "employee",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m63-032",
         "uk": "мешканець",
-        "translit": "/mɛʃˈkɑnɛtsʲ/",
-        "ipa": "resident",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/mɛʃˈkɑnɛtsʲ/",
+        "en": "resident",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m63-033",
         "uk": "початок",
-        "translit": "/poˈtʃɑtok/",
-        "ipa": "beginning",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/poˈtʃɑtok/",
+        "en": "beginning",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m63-034",
         "uk": "кінець",
-        "translit": "/kʲiˈnɛtsʲ/",
-        "ipa": "end",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/kʲiˈnɛtsʲ/",
+        "en": "end",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m63-035",
         "uk": "подарунок",
-        "translit": "/podɑˈrunok/",
-        "ipa": "gift",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/podɑˈrunok/",
+        "en": "gift",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m63-036",
         "uk": "малюнок",
-        "translit": "/mɑˈlʲunok/",
-        "ipa": "drawing",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/mɑˈlʲunok/",
+        "en": "drawing",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m63-037",
         "uk": "будинок",
-        "translit": "/buˈdɪnok/",
-        "ipa": "building, house",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/buˈdɪnok/",
+        "en": "building, house",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m63-038",
         "uk": "записник",
-        "translit": "/zɑˈpɪsnɪk/",
-        "ipa": "notebook",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/zɑˈpɪsnɪk/",
+        "en": "notebook",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m63-039",
         "uk": "молодець",
-        "translit": "/moloˈdɛtsʲ/",
-        "ipa": "well done! fine fellow",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/moloˈdɛtsʲ/",
+        "en": "well done! fine fellow",
+        "pos": "noun",
+        "gender": "m"
       }
     ]
   }

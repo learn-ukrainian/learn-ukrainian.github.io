@@ -265,13 +265,34 @@
       "modifiedAt": "2025-12-01T00:00:00Z"
     },
     {
-      "id": "act-uk-B1-133-fillin",
-      "type": "fill-in",
+      "id": "act-uk-B1-133-gapfill",
+      "type": "gap-fill",
       "title": "News Report",
       "description": "Напишіть новинний репортаж.",
       "content": {
-        "type": "fill-in",
-        "instructions": "Напишіть новинний репортаж."
+        "type": "gap-fill",
+        "instructions": "Напишіть новинний репортаж.",
+        "text": "Напишіть новинний репортаж.\nСьогодні ЗМІ (1)___ (reported) про важливу подію. Президент (2)___ (declared), що підпише новий закон. Міністр (3)___ (said), що це позитивний крок. Очевидці (4)___ (told) журналістам про те, що бачили. Експерти (5)___ (spoke) про можливі наслідки.",
+        "blanks": [
+          {
+            "hint": "reported"
+          },
+          {
+            "hint": "declared"
+          },
+          {
+            "hint": "said"
+          },
+          {
+            "hint": "told"
+          },
+          {
+            "hint": "spoke"
+          }
+        ],
+        "answers": [
+          "1. повідомили"
+        ]
       },
       "subject": "language",
       "owner": "curricula-opus",
@@ -293,8 +314,117 @@
     "moduleId": "mod-uk-B1-133",
     "level": "B1",
     "phase": "B1.4",
-    "wordCount": 0,
+    "wordCount": 12,
     "transliterationMode": "none",
-    "words": []
+    "words": [
+      {
+        "id": "v-m133-001",
+        "uk": "казати",
+        "translit": "",
+        "ipa": "/kɑˈzɑtɪ/",
+        "en": "to say",
+        "pos": "",
+        "note": "impf"
+      },
+      {
+        "id": "v-m133-002",
+        "uk": "сказати",
+        "translit": "",
+        "ipa": "/skɑˈzɑtɪ/",
+        "en": "to say",
+        "pos": "",
+        "note": "pf"
+      },
+      {
+        "id": "v-m133-003",
+        "uk": "говорити",
+        "translit": "",
+        "ipa": "/ɦovoˈrɪtɪ/",
+        "en": "to speak, talk",
+        "pos": "",
+        "note": "impf"
+      },
+      {
+        "id": "v-m133-004",
+        "uk": "розповідати",
+        "translit": "",
+        "ipa": "/rospovʲiˈdɑtɪ/",
+        "en": "to tell, narrate",
+        "pos": "",
+        "note": "impf"
+      },
+      {
+        "id": "v-m133-005",
+        "uk": "розповісти",
+        "translit": "",
+        "ipa": "/rospoˈvʲistɪ/",
+        "en": "to tell",
+        "pos": "",
+        "note": "pf"
+      },
+      {
+        "id": "v-m133-006",
+        "uk": "повідомляти",
+        "translit": "",
+        "ipa": "/povʲidomˈlʲɑtɪ/",
+        "en": "to inform, report",
+        "pos": "",
+        "note": "impf"
+      },
+      {
+        "id": "v-m133-007",
+        "uk": "повідомити",
+        "translit": "",
+        "ipa": "/povʲiˈdomɪtɪ/",
+        "en": "to inform",
+        "pos": "",
+        "note": "pf"
+      },
+      {
+        "id": "v-m133-008",
+        "uk": "заявляти",
+        "translit": "",
+        "ipa": "/zɑjɑvˈlʲɑtɪ/",
+        "en": "to declare",
+        "pos": "",
+        "note": "impf"
+      },
+      {
+        "id": "v-m133-009",
+        "uk": "заявити",
+        "translit": "",
+        "ipa": "/zɑˈjɑvɪtɪ/",
+        "en": "to declare",
+        "pos": "",
+        "note": "pf"
+      },
+      {
+        "id": "v-m133-010",
+        "uk": "стверджувати",
+        "translit": "",
+        "ipa": "/stˈvɛrd͡ʒuvɑtɪ/",
+        "en": "to claim, assert",
+        "pos": "",
+        "note": "impf"
+      },
+      {
+        "id": "v-m133-011",
+        "uk": "оповідати",
+        "translit": "",
+        "ipa": "/opovʲiˈdɑtɪ/",
+        "en": "to narrate",
+        "pos": "",
+        "note": "impf, literary"
+      },
+      {
+        "id": "v-m133-012",
+        "uk": "мова",
+        "translit": "",
+        "ipa": "/ˈmovɑ/",
+        "en": "language, speech",
+        "pos": "",
+        "note": "f"
+      }
+    ]
   }
 }

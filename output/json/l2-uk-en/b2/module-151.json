@@ -129,73 +129,82 @@
         "id": "v-m151-001",
         "uk": "просторіччя",
         "translit": "",
-        "ipa": "colloquialism",
-        "en": "розмовна лексика",
-        "pos": ""
+        "ipa": "",
+        "en": "colloquialism",
+        "pos": "",
+        "note": "розмовна лексика"
       },
       {
         "id": "v-m151-002",
         "uk": "сленг",
         "translit": "",
-        "ipa": "slang",
-        "en": "молодіжна лексика",
-        "pos": ""
+        "ipa": "",
+        "en": "slang",
+        "pos": "",
+        "note": "молодіжна лексика"
       },
       {
         "id": "v-m151-003",
         "uk": "частка",
         "translit": "",
-        "ipa": "particle",
-        "en": "ну, от, та, ж",
-        "pos": ""
+        "ipa": "",
+        "en": "particle",
+        "pos": "",
+        "note": "ну, от, та, ж"
       },
       {
         "id": "v-m151-004",
         "uk": "вигук",
         "translit": "",
-        "ipa": "interjection",
-        "en": "ого, ой, ех",
-        "pos": ""
+        "ipa": "",
+        "en": "interjection",
+        "pos": "",
+        "note": "ого, ой, ех"
       },
       {
         "id": "v-m151-005",
         "uk": "редукція",
         "translit": "",
-        "ipa": "reduction",
-        "en": "скорочення звуків",
-        "pos": ""
+        "ipa": "",
+        "en": "reduction",
+        "pos": "",
+        "note": "скорочення звуків"
       },
       {
         "id": "v-m151-006",
         "uk": "гаразд",
         "translit": "",
-        "ipa": "okay, alright",
-        "en": "розмовне «добре»",
-        "pos": ""
+        "ipa": "",
+        "en": "okay, alright",
+        "pos": "",
+        "note": "розмовне «добре»"
       },
       {
         "id": "v-m151-007",
         "uk": "русизм",
         "translit": "",
-        "ipa": "Russianism",
-        "en": "запозичення з російської",
-        "pos": ""
+        "ipa": "",
+        "en": "Russianism",
+        "pos": "",
+        "note": "запозичення з російської"
       },
       {
         "id": "v-m151-008",
         "uk": "суржик",
         "translit": "",
-        "ipa": "surzhyk",
-        "en": "мішанина мов",
-        "pos": ""
+        "ipa": "",
+        "en": "surzhyk",
+        "pos": "",
+        "note": "мішанина мов"
       },
       {
         "id": "v-m151-009",
         "uk": "демінутив",
         "translit": "",
-        "ipa": "diminutive",
-        "en": "зменшувальна форма",
-        "pos": ""
+        "ipa": "",
+        "en": "diminutive",
+        "pos": "",
+        "note": "зменшувальна форма"
       }
     ]
   }

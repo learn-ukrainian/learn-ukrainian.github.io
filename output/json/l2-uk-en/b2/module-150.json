@@ -129,73 +129,82 @@
         "id": "v-m150-001",
         "uk": "публіцистика",
         "translit": "",
-        "ipa": "journalism, media writing",
-        "en": "стиль ЗМІ",
-        "pos": ""
+        "ipa": "",
+        "en": "journalism, media writing",
+        "pos": "",
+        "note": "стиль ЗМІ"
       },
       {
         "id": "v-m150-002",
         "uk": "заголовок",
         "translit": "",
-        "ipa": "headline",
-        "en": "назва статті",
-        "pos": ""
+        "ipa": "",
+        "en": "headline",
+        "pos": "",
+        "note": "назва статті"
       },
       {
         "id": "v-m150-003",
         "uk": "лід",
         "translit": "",
-        "ipa": "lead",
-        "en": "початок новини",
-        "pos": ""
+        "ipa": "",
+        "en": "lead",
+        "pos": "",
+        "note": "початок новини"
       },
       {
         "id": "v-m150-004",
         "uk": "репортаж",
         "translit": "",
-        "ipa": "report",
-        "en": "жанр",
-        "pos": ""
+        "ipa": "",
+        "en": "report",
+        "pos": "",
+        "note": "жанр"
       },
       {
         "id": "v-m150-005",
         "uk": "оцінність",
         "translit": "",
-        "ipa": "evaluativeness",
-        "en": "суб'єктивність",
-        "pos": ""
+        "ipa": "",
+        "en": "evaluativeness",
+        "pos": "",
+        "note": "суб'єктивність"
       },
       {
         "id": "v-m150-006",
         "uk": "риторичний",
         "translit": "",
-        "ipa": "rhetorical",
-        "en": "для впливу",
-        "pos": ""
+        "ipa": "",
+        "en": "rhetorical",
+        "pos": "",
+        "note": "для впливу"
       },
       {
         "id": "v-m150-007",
         "uk": "коаліція",
         "translit": "",
-        "ipa": "coalition",
-        "en": "об'єднання",
-        "pos": ""
+        "ipa": "",
+        "en": "coalition",
+        "pos": "",
+        "note": "об'єднання"
       },
       {
         "id": "v-m150-008",
         "uk": "опозиція",
         "translit": "",
-        "ipa": "opposition",
-        "en": "політична сила",
-        "pos": ""
+        "ipa": "",
+        "en": "opposition",
+        "pos": "",
+        "note": "політична сила"
       },
       {
         "id": "v-m150-009",
         "uk": "фреймування",
         "translit": "",
-        "ipa": "framing",
-        "en": "обрамлення реальності",
-        "pos": ""
+        "ipa": "",
+        "en": "framing",
+        "pos": "",
+        "note": "обрамлення реальності"
       }
     ]
   }

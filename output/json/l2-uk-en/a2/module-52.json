@@ -353,59 +353,66 @@
       {
         "id": "v-m52-001",
         "uk": "які",
-        "translit": "/jɑˈkʲi/",
-        "ipa": "which, that, who (pl)",
-        "en": "pron",
-        "pos": "pl"
+        "translit": "",
+        "ipa": "/jɑˈkʲi/",
+        "en": "which, that, who (pl)",
+        "pos": "pron",
+        "gender": "pl"
       },
       {
         "id": "v-m52-002",
         "uk": "котрий",
-        "translit": "/koˈtrɪj/",
-        "ipa": "which (formal)",
-        "en": "pron",
-        "pos": "m",
-        "gender": "formal"
+        "translit": "",
+        "ipa": "/koˈtrɪj/",
+        "en": "which (formal)",
+        "pos": "pron",
+        "gender": "m",
+        "note": "formal"
       },
       {
         "id": "v-m52-003",
         "uk": "усе",
-        "translit": "/uˈsɛ/",
-        "ipa": "everything",
-        "en": "pron",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/uˈsɛ/",
+        "en": "everything",
+        "pos": "pron",
+        "gender": "n"
       },
       {
         "id": "v-m52-004",
         "uk": "щось",
-        "translit": "/ʃtʃosʲ/",
-        "ipa": "something",
-        "en": "pron",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/ʃtʃosʲ/",
+        "en": "something",
+        "pos": "pron",
+        "gender": "n"
       },
       {
         "id": "v-m52-005",
         "uk": "нічого",
-        "translit": "/nʲiˈtʃoɦo/",
-        "ipa": "nothing",
-        "en": "pron",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/nʲiˈtʃoɦo/",
+        "en": "nothing",
+        "pos": "pron",
+        "gender": "-"
       },
       {
         "id": "v-m52-006",
         "uk": "згадувати",
-        "translit": "/zɦɑˈduvɑtɪ/",
-        "ipa": "to mention (impf)",
-        "en": "verb",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/zɦɑˈduvɑtɪ/",
+        "en": "to mention (impf)",
+        "pos": "verb",
+        "gender": "-"
       },
       {
         "id": "v-m52-007",
         "uk": "підписувати",
-        "translit": "/pʲidpɪˈsuvɑtɪ/",
-        "ipa": "to sign (impf)",
-        "en": "verb",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/pʲidpɪˈsuvɑtɪ/",
+        "en": "to sign (impf)",
+        "pos": "verb",
+        "gender": "-"
       }
     ]
   }

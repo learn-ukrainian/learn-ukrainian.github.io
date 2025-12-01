@@ -129,97 +129,109 @@
         "id": "v-m159-001",
         "uk": "інверсія",
         "translit": "",
-        "ipa": "inversion",
-        "en": "зміна порядку",
-        "pos": ""
+        "ipa": "",
+        "en": "inversion",
+        "pos": "",
+        "note": "зміна порядку"
       },
       {
         "id": "v-m159-002",
         "uk": "емфаза",
         "translit": "",
-        "ipa": "emphasis",
-        "en": "підсилення",
-        "pos": ""
+        "ipa": "",
+        "en": "emphasis",
+        "pos": "",
+        "note": "підсилення"
       },
       {
         "id": "v-m159-003",
         "uk": "порядок слів",
         "translit": "",
-        "ipa": "word order",
-        "en": "синтаксис",
-        "pos": ""
+        "ipa": "",
+        "en": "word order",
+        "pos": "",
+        "note": "синтаксис"
       },
       {
         "id": "v-m159-004",
         "uk": "тема",
         "translit": "",
-        "ipa": "theme (given)",
-        "en": "відоме",
-        "pos": ""
+        "ipa": "",
+        "en": "theme (given)",
+        "pos": "",
+        "note": "відоме"
       },
       {
         "id": "v-m159-005",
         "uk": "рема",
         "translit": "",
-        "ipa": "rheme (new)",
-        "en": "нове",
-        "pos": ""
+        "ipa": "",
+        "en": "rheme (new)",
+        "pos": "",
+        "note": "нове"
       },
       {
         "id": "v-m159-006",
         "uk": "підсилення",
         "translit": "",
-        "ipa": "intensification",
-        "en": "акцент",
-        "pos": ""
+        "ipa": "",
+        "en": "intensification",
+        "pos": "",
+        "note": "акцент"
       },
       {
         "id": "v-m159-007",
         "uk": "саме",
         "translit": "",
-        "ipa": "exactly, particularly",
-        "en": "найсильніший засіб",
-        "pos": ""
+        "ipa": "",
+        "en": "exactly, particularly",
+        "pos": "",
+        "note": "найсильніший засіб"
       },
       {
         "id": "v-m159-008",
         "uk": "навіть",
         "translit": "",
-        "ipa": "even",
-        "en": "несподіванка",
-        "pos": ""
+        "ipa": "",
+        "en": "even",
+        "pos": "",
+        "note": "несподіванка"
       },
       {
         "id": "v-m159-009",
         "uk": "лише",
         "translit": "",
-        "ipa": "only",
-        "en": "обмеження",
-        "pos": ""
+        "ipa": "",
+        "en": "only",
+        "pos": "",
+        "note": "обмеження"
       },
       {
         "id": "v-m159-010",
         "uk": "справді",
         "translit": "",
-        "ipa": "really, truly",
-        "en": "підтвердження",
-        "pos": ""
+        "ipa": "",
+        "en": "really, truly",
+        "pos": "",
+        "note": "підтвердження"
       },
       {
         "id": "v-m159-011",
         "uk": "аж",
         "translit": "",
-        "ipa": "even, as much as",
-        "en": "інтенсивність",
-        "pos": ""
+        "ipa": "",
+        "en": "even, as much as",
+        "pos": "",
+        "note": "інтенсивність"
       },
       {
         "id": "v-m159-012",
         "uk": "ж/же",
         "translit": "",
-        "ipa": "(emphatic particle)",
-        "en": "очевидність",
-        "pos": ""
+        "ipa": "",
+        "en": "(emphatic particle)",
+        "pos": "",
+        "note": "очевидність"
       }
     ]
   }

@@ -744,7 +744,7 @@
       <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
-    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (0)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
+    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (12)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
     </section>
   </main>
@@ -753,7 +753,7 @@
     const matchPairs=[];
     const quizData=[{"question":"Для новин:","options":["повідомляти","казати"],"correctIndex":0,"explanation":"Formal reporting."},{"question":"Для історії:","options":["розповідати","говорити"],"correctIndex":0,"explanation":"Narrative telling."},{"question":"Для процесу розмови:","options":["говорити","сказати"],"correctIndex":0,"explanation":"Process of speaking."},{"question":"Для короткої відповіді:","options":["сказати","розповідати"],"correctIndex":0,"explanation":"Short statement."},{"question":"Для офіційної заяви:","options":["заявити","казати"],"correctIndex":0,"explanation":"Official declaration."},{"question":"«Чесно кажучи» means:","options":["honestly speaking","telling a story"],"correctIndex":0,"explanation":"Expression with казати."}];
     const sortData={};
-    const vocabData=[];
+    const vocabData=[{"uk":"казати","translit":"","en":"to say","note":"impf"},{"uk":"сказати","translit":"","en":"to say","note":"pf"},{"uk":"говорити","translit":"","en":"to speak, talk","note":"impf"},{"uk":"розповідати","translit":"","en":"to tell, narrate","note":"impf"},{"uk":"розповісти","translit":"","en":"to tell","note":"pf"},{"uk":"повідомляти","translit":"","en":"to inform, report","note":"impf"},{"uk":"повідомити","translit":"","en":"to inform","note":"pf"},{"uk":"заявляти","translit":"","en":"to declare","note":"impf"},{"uk":"заявити","translit":"","en":"to declare","note":"pf"},{"uk":"стверджувати","translit":"","en":"to claim, assert","note":"impf"},{"uk":"оповідати","translit":"","en":"to narrate","note":"impf, literary"},{"uk":"мова","translit":"","en":"language, speech","note":"f"}];
     const totalSort=0;
     function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
     document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));

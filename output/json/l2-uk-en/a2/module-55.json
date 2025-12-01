@@ -357,91 +357,102 @@
       {
         "id": "v-m55-001",
         "uk": "потяг",
-        "translit": "/ˈpotʲɑɦ/",
-        "ipa": "train",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ˈpotʲɑɦ/",
+        "en": "train",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m55-002",
         "uk": "вокзал",
-        "translit": "/vokˈzɑl/",
-        "ipa": "train station",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/vokˈzɑl/",
+        "en": "train station",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m55-003",
         "uk": "платформа",
-        "translit": "/plɑtˈformɑ/",
-        "ipa": "platform",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/plɑtˈformɑ/",
+        "en": "platform",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m55-004",
         "uk": "відправлення",
-        "translit": "/vʲidprɑvˈlɛnʲɑ/",
-        "ipa": "departure",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/vʲidprɑvˈlɛnʲɑ/",
+        "en": "departure",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m55-005",
         "uk": "прибуття",
-        "translit": "/prɪˈbutʲɑ/",
-        "ipa": "arrival",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/prɪˈbutʲɑ/",
+        "en": "arrival",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m55-006",
         "uk": "затримка",
-        "translit": "/zɑˈtrɪmkɑ/",
-        "ipa": "delay",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/zɑˈtrɪmkɑ/",
+        "en": "delay",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m55-007",
         "uk": "багаж",
-        "translit": "/bɑˈɦɑʒ/",
-        "ipa": "luggage",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/bɑˈɦɑʒ/",
+        "en": "luggage",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m55-008",
         "uk": "посадковий талон",
-        "translit": "/posɑdˈkovɪj tɑˈlon/",
-        "ipa": "boarding pass",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/posɑdˈkovɪj tɑˈlon/",
+        "en": "boarding pass",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m55-009",
         "uk": "рейс",
-        "translit": "/rɛjs/",
-        "ipa": "flight",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/rɛjs/",
+        "en": "flight",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m55-010",
         "uk": "купе",
-        "translit": "/kuˈpɛ/",
-        "ipa": "compartment",
-        "en": "noun",
-        "pos": "n",
-        "gender": "indecl"
+        "translit": "",
+        "ipa": "/kuˈpɛ/",
+        "en": "compartment",
+        "pos": "noun",
+        "gender": "n",
+        "note": "indecl"
       },
       {
         "id": "v-m55-011",
         "uk": "провідник",
-        "translit": "/provʲidˈnɪk/",
-        "ipa": "conductor",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/provʲidˈnɪk/",
+        "en": "conductor",
+        "pos": "noun",
+        "gender": "m"
       }
     ]
   }

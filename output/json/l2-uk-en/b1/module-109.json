@@ -265,13 +265,26 @@
       "modifiedAt": "2025-12-01T00:00:00Z"
     },
     {
-      "id": "act-uk-B1-109-fillin",
-      "type": "fill-in",
+      "id": "act-uk-B1-109-gapfill",
+      "type": "gap-fill",
       "title": "Complete the Explanation",
       "description": "Я не зміг приїхати на зустріч (1)___ несподіваних обставин. Мій поїзд затримався (2)___ того, що була аварія на дорозі. (3)___ я спізнився на зустріч. Але (4)___ вашому розумінню все закінчилося добре.",
       "content": {
-        "type": "fill-in",
-        "instructions": "Я не зміг приїхати на зустріч (1)___ несподіваних обставин. Мій поїзд затримався (2)___ того, що була аварія на дорозі. (3)___ я спізнився на зустріч. Але (4)___ вашому розумінню все закінчилося добре."
+        "type": "gap-fill",
+        "instructions": "Я не зміг приїхати на зустріч (1)___ несподіваних обставин. Мій поїзд затримався (2)___ того, що була аварія на дорозі. (3)___ я спізнився на зустріч. Але (4)___ вашому розумінню все закінчилося добре.",
+        "text": "Я не зміг приїхати на зустріч (1)___ несподіваних обставин. Мій поїзд затримався (2)___ того, що була аварія на дорозі. (3)___ я спізнився на зустріч. Але (4)___ вашому розумінню все закінчилося добре.",
+        "blanks": [
+          {},
+          {},
+          {},
+          {}
+        ],
+        "answers": [
+          "через",
+          "через те",
+          "Тому",
+          "завдяки"
+        ]
       },
       "subject": "language",
       "owner": "curricula-opus",
@@ -293,8 +306,126 @@
     "moduleId": "mod-uk-B1-109",
     "level": "B1",
     "phase": "B1.2",
-    "wordCount": 0,
+    "wordCount": 13,
     "transliterationMode": "none",
-    "words": []
+    "words": [
+      {
+        "id": "v-m109-001",
+        "uk": "тому що",
+        "translit": "",
+        "ipa": "/toˈmu ʃt͡ʃo/",
+        "en": "because",
+        "pos": "",
+        "note": "conj"
+      },
+      {
+        "id": "v-m109-002",
+        "uk": "бо",
+        "translit": "",
+        "ipa": "/bo/",
+        "en": "because (informal)",
+        "pos": "",
+        "note": "conj"
+      },
+      {
+        "id": "v-m109-003",
+        "uk": "оскільки",
+        "translit": "",
+        "ipa": "/osˈkʲilʲkɪ/",
+        "en": "since, because",
+        "pos": "",
+        "note": "conj (formal)"
+      },
+      {
+        "id": "v-m109-004",
+        "uk": "через",
+        "translit": "",
+        "ipa": "/t͡ʃɛˈrɛz/",
+        "en": "because of, due to",
+        "pos": "",
+        "note": "prep + acc"
+      },
+      {
+        "id": "v-m109-005",
+        "uk": "через те, що",
+        "translit": "",
+        "ipa": "-",
+        "en": "due to the fact that",
+        "pos": "",
+        "note": "conj"
+      },
+      {
+        "id": "v-m109-006",
+        "uk": "завдяки",
+        "translit": "",
+        "ipa": "/zɑvˈdʲɑkɪ/",
+        "en": "thanks to",
+        "pos": "",
+        "note": "prep + dat"
+      },
+      {
+        "id": "v-m109-007",
+        "uk": "завдяки тому, що",
+        "translit": "",
+        "ipa": "-",
+        "en": "thanks to the fact that",
+        "pos": "",
+        "note": "conj"
+      },
+      {
+        "id": "v-m109-008",
+        "uk": "тому",
+        "translit": "",
+        "ipa": "/toˈmu/",
+        "en": "therefore, that's why",
+        "pos": "",
+        "note": "adv"
+      },
+      {
+        "id": "v-m109-009",
+        "uk": "отже",
+        "translit": "",
+        "ipa": "/ˈotʒɛ/",
+        "en": "therefore, thus",
+        "pos": "",
+        "note": "adv (formal)"
+      },
+      {
+        "id": "v-m109-010",
+        "uk": "тож",
+        "translit": "",
+        "ipa": "/toʒ/",
+        "en": "so, therefore",
+        "pos": "",
+        "note": "adv (informal)"
+      },
+      {
+        "id": "v-m109-011",
+        "uk": "так що",
+        "translit": "",
+        "ipa": "/tɑk ʃt͡ʃo/",
+        "en": "so that, so",
+        "pos": "",
+        "note": "conj"
+      },
+      {
+        "id": "v-m109-012",
+        "uk": "причина",
+        "translit": "",
+        "ipa": "/prɪˈt͡ʃɪnɑ/",
+        "en": "reason, cause",
+        "pos": "",
+        "note": "f"
+      },
+      {
+        "id": "v-m109-013",
+        "uk": "наслідок",
+        "translit": "",
+        "ipa": "/ˈnɑslʲidok/",
+        "en": "consequence, result",
+        "pos": "",
+        "note": "m"
+      }
+    ]
   }
 }

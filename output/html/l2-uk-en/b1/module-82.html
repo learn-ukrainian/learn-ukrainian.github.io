@@ -618,7 +618,7 @@ B: Одного разу я впіймав величезну рибу! Бабу
       <div class="completion-message" id="sort-complete"><h3>All Sorted!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetSort()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Vocab →</button></div>
     </div></section>
-    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (0)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
+    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (14)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
     </section>
   </main>
@@ -627,7 +627,7 @@ B: Одного разу я впіймав величезну рибу! Бабу
     const matchPairs=[];
     const quizData=[{"question":"Вона ___ мені щодня.","options":["телефонувала","зателефонувала"],"correctIndex":0,"explanation":"Щодня = repeated action = imperfective"},{"question":"Одного разу він ___ дуже смішний жарт.","options":["розповідав","розповів"],"correctIndex":1,"explanation":"Одного разу = single event = perfective"},{"question":"Ми завжди ___ разом.","options":["обідали","пообідали"],"correctIndex":0,"explanation":"Завжди = repeated = imperfective"},{"question":"Нарешті я ___ цікавий фільм до кінця.","options":["дивився","подивився"],"correctIndex":1,"explanation":"\"Нарешті\" + \"до кінця\" = clear result = perfective"},{"question":"Раніше він часто ___ у цьому кафе.","options":["снідав","поснідав"],"correctIndex":0,"explanation":"Часто = repeated = imperfective"},{"question":"Раптом вона ___ і вийшла.","options":["вставала","встала"],"correctIndex":1,"explanation":"Раптом = sudden single action = perfective"}];
     const sortData={"true-friends":["одного разу","раптом","вчора","нарешті","минулого тижня"],"false-friends":["завжди","часто","щодня","зазвичай","кожного разу","іноді"]};
-    const vocabData=[];
+    const vocabData=[{"uk":"одного разу","translit":"","en":"once, one time","note":"signals perfective"},{"uk":"раптом","translit":"","en":"suddenly","note":"signals perfective"},{"uk":"нарешті","translit":"","en":"finally","note":"signals perfective"},{"uk":"минулого тижня","translit":"","en":"last week","note":"often with perfective"},{"uk":"завжди","translit":"","en":"always","note":"signals imperfective"},{"uk":"ніколи","translit":"","en":"never","note":"signals imperfective"},{"uk":"часто","translit":"","en":"often","note":"signals imperfective"},{"uk":"рідко","translit":"","en":"rarely","note":"signals imperfective"},{"uk":"щодня","translit":"","en":"every day","note":"signals imperfective"},{"uk":"щотижня","translit":"","en":"every week","note":"signals imperfective"},{"uk":"зазвичай","translit":"","en":"usually","note":"signals imperfective"},{"uk":"іноді","translit":"","en":"sometimes","note":"signals imperfective"},{"uk":"кожного разу","translit":"","en":"each time, every time","note":"signals imperfective"},{"uk":"раніше","translit":"","en":"earlier, formerly","note":"often with imperfective"}];
     const totalSort=11;
     function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
     document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));

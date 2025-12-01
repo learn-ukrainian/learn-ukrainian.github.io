@@ -363,165 +363,184 @@
       {
         "id": "v-m25-001",
         "uk": "прокидатися",
-        "translit": "/prɔkɪˈdɑtɪsʲɑ/",
-        "ipa": "to wake up",
-        "en": "verb",
-        "pos": "-",
-        "gender": "Reflexive"
+        "translit": "",
+        "ipa": "/prɔkɪˈdɑtɪsʲɑ/",
+        "en": "to wake up",
+        "pos": "verb",
+        "gender": "-",
+        "note": "Reflexive"
       },
       {
         "id": "v-m25-002",
         "uk": "вставати",
-        "translit": "/vstɑˈvɑtɪ/",
-        "ipa": "to get up",
-        "en": "verb",
-        "pos": "-",
-        "gender": "встаю, встаєш"
+        "translit": "",
+        "ipa": "/vstɑˈvɑtɪ/",
+        "en": "to get up",
+        "pos": "verb",
+        "gender": "-",
+        "note": "встаю, встаєш"
       },
       {
         "id": "v-m25-003",
         "uk": "вмиватися",
-        "translit": "/vmɪˈvɑtɪsʲɑ/",
-        "ipa": "to wash (face)",
-        "en": "verb",
-        "pos": "-",
-        "gender": "Reflexive"
+        "translit": "",
+        "ipa": "/vmɪˈvɑtɪsʲɑ/",
+        "en": "to wash (face)",
+        "pos": "verb",
+        "gender": "-",
+        "note": "Reflexive"
       },
       {
         "id": "v-m25-004",
         "uk": "одягатися",
-        "translit": "/ɔˈdʲɑɦɑtɪsʲɑ/",
-        "ipa": "to get dressed",
-        "en": "verb",
-        "pos": "-",
-        "gender": "Reflexive"
+        "translit": "",
+        "ipa": "/ɔˈdʲɑɦɑtɪsʲɑ/",
+        "en": "to get dressed",
+        "pos": "verb",
+        "gender": "-",
+        "note": "Reflexive"
       },
       {
         "id": "v-m25-005",
         "uk": "роздягатися",
-        "translit": "/rɔzˈdʲɑɦɑtɪsʲɑ/",
-        "ipa": "to undress",
-        "en": "verb",
-        "pos": "-",
-        "gender": "Reflexive"
+        "translit": "",
+        "ipa": "/rɔzˈdʲɑɦɑtɪsʲɑ/",
+        "en": "to undress",
+        "pos": "verb",
+        "gender": "-",
+        "note": "Reflexive"
       },
       {
         "id": "v-m25-006",
         "uk": "снідати",
-        "translit": "/snʲiˈdɑtɪ/",
-        "ipa": "to have breakfast",
-        "en": "verb",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/snʲiˈdɑtɪ/",
+        "en": "to have breakfast",
+        "pos": "verb",
+        "gender": "-"
       },
       {
         "id": "v-m25-007",
         "uk": "обідати",
-        "translit": "/ɔˈbʲidɑtɪ/",
-        "ipa": "to have lunch",
-        "en": "verb",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ɔˈbʲidɑtɪ/",
+        "en": "to have lunch",
+        "pos": "verb",
+        "gender": "-"
       },
       {
         "id": "v-m25-008",
         "uk": "вечеряти",
-        "translit": "/vɛtʃɛˈrʲɑtɪ/",
-        "ipa": "to have dinner",
-        "en": "verb",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/vɛtʃɛˈrʲɑtɪ/",
+        "en": "to have dinner",
+        "pos": "verb",
+        "gender": "-"
       },
       {
         "id": "v-m25-009",
         "uk": "виходити",
-        "translit": "/vɪxɔˈdɪtɪ/",
-        "ipa": "to go out, leave",
-        "en": "verb",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/vɪxɔˈdɪtɪ/",
+        "en": "to go out, leave",
+        "pos": "verb",
+        "gender": "-"
       },
       {
         "id": "v-m25-010",
         "uk": "повертатися",
-        "translit": "/pɔvɛrˈtɑtɪsʲɑ/",
-        "ipa": "to return",
-        "en": "verb",
-        "pos": "-",
-        "gender": "Reflexive"
+        "translit": "",
+        "ipa": "/pɔvɛrˈtɑtɪsʲɑ/",
+        "en": "to return",
+        "pos": "verb",
+        "gender": "-",
+        "note": "Reflexive"
       },
       {
         "id": "v-m25-011",
         "uk": "лягати",
-        "translit": "/lʲɑˈɦɑtɪ/",
-        "ipa": "to lie down",
-        "en": "verb",
-        "pos": "-",
-        "gender": "лягати спати"
+        "translit": "",
+        "ipa": "/lʲɑˈɦɑtɪ/",
+        "en": "to lie down",
+        "pos": "verb",
+        "gender": "-",
+        "note": "лягати спати"
       },
       {
         "id": "v-m25-012",
         "uk": "засинати",
-        "translit": "/zɑsɪˈnɑtɪ/",
-        "ipa": "to fall asleep",
-        "en": "verb",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/zɑsɪˈnɑtɪ/",
+        "en": "to fall asleep",
+        "pos": "verb",
+        "gender": "-"
       },
       {
         "id": "v-m25-013",
         "uk": "голитися",
-        "translit": "/ɦɔˈlɪtɪsʲɑ/",
-        "ipa": "to shave",
-        "en": "verb",
-        "pos": "-",
-        "gender": "Reflexive"
+        "translit": "",
+        "ipa": "/ɦɔˈlɪtɪsʲɑ/",
+        "en": "to shave",
+        "pos": "verb",
+        "gender": "-",
+        "note": "Reflexive"
       },
       {
         "id": "v-m25-014",
         "uk": "чистити",
-        "translit": "/ˈtʃɪstɪtɪ/",
-        "ipa": "to clean, brush",
-        "en": "verb",
-        "pos": "-",
-        "gender": "чистити зуби"
+        "translit": "",
+        "ipa": "/ˈtʃɪstɪtɪ/",
+        "en": "to clean, brush",
+        "pos": "verb",
+        "gender": "-",
+        "note": "чистити зуби"
       },
       {
         "id": "v-m25-015",
         "uk": "душ",
-        "translit": "/duʃ/",
-        "ipa": "shower",
-        "en": "noun",
-        "pos": "m",
-        "gender": "приймати душ"
+        "translit": "",
+        "ipa": "/duʃ/",
+        "en": "shower",
+        "pos": "noun",
+        "gender": "m",
+        "note": "приймати душ"
       },
       {
         "id": "v-m25-016",
         "uk": "зуби",
-        "translit": "/ˈzubɪ/",
-        "ipa": "teeth",
-        "en": "noun",
-        "pos": "pl",
-        "gender": "Singular: зуб"
+        "translit": "",
+        "ipa": "/ˈzubɪ/",
+        "en": "teeth",
+        "pos": "noun",
+        "gender": "pl",
+        "note": "Singular: зуб"
       },
       {
         "id": "v-m25-017",
         "uk": "спочатку",
-        "translit": "/spɔˈtʃɑtku/",
-        "ipa": "first, at first",
-        "en": "adv",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/spɔˈtʃɑtku/",
+        "en": "first, at first",
+        "pos": "adv",
+        "gender": "-"
       },
       {
         "id": "v-m25-018",
         "uk": "зазвичай",
-        "translit": "/zɑˈzvɪtʃɑj/",
-        "ipa": "usually",
-        "en": "adv",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/zɑˈzvɪtʃɑj/",
+        "en": "usually",
+        "pos": "adv",
+        "gender": "-"
       },
       {
         "id": "v-m25-019",
         "uk": "щодня",
-        "translit": "/ʃtʃɔˈdnʲɑ/",
-        "ipa": "every day",
-        "en": "adv",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ʃtʃɔˈdnʲɑ/",
+        "en": "every day",
+        "pos": "adv",
+        "gender": "-"
       }
     ]
   }

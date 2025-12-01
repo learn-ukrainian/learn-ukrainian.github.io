@@ -359,8 +359,137 @@
     "moduleId": "mod-uk-B1-91",
     "level": "B1",
     "phase": "B1.1",
-    "wordCount": 0,
+    "wordCount": 16,
     "transliterationMode": "none",
-    "words": []
+    "words": [
+      {
+        "id": "v-m91-001",
+        "uk": "перейти",
+        "translit": "",
+        "ipa": "/pɛrɛjˈtɪ/",
+        "en": "to cross",
+        "pos": ""
+      },
+      {
+        "id": "v-m91-002",
+        "uk": "переходити",
+        "translit": "",
+        "ipa": "/pɛrɛxoˈdɪtɪ/",
+        "en": "to cross",
+        "pos": ""
+      },
+      {
+        "id": "v-m91-003",
+        "uk": "переїхати",
+        "translit": "",
+        "ipa": "/pɛrɛˈjixɑtɪ/",
+        "en": "to move, drive across",
+        "pos": ""
+      },
+      {
+        "id": "v-m91-004",
+        "uk": "переїжджати",
+        "translit": "",
+        "ipa": "/pɛrɛjizˈdʒɑtɪ/",
+        "en": "to move",
+        "pos": ""
+      },
+      {
+        "id": "v-m91-005",
+        "uk": "перенести",
+        "translit": "",
+        "ipa": "/pɛrɛnɛsˈtɪ/",
+        "en": "to transfer, reschedule",
+        "pos": ""
+      },
+      {
+        "id": "v-m91-006",
+        "uk": "переносити",
+        "translit": "",
+        "ipa": "/pɛrɛnoˈsɪtɪ/",
+        "en": "to transfer",
+        "pos": ""
+      },
+      {
+        "id": "v-m91-007",
+        "uk": "пройти",
+        "translit": "",
+        "ipa": "/projˈtɪ/",
+        "en": "to pass through",
+        "pos": ""
+      },
+      {
+        "id": "v-m91-008",
+        "uk": "проходити",
+        "translit": "",
+        "ipa": "/proxoˈdɪtɪ/",
+        "en": "to pass",
+        "pos": ""
+      },
+      {
+        "id": "v-m91-009",
+        "uk": "проїхати",
+        "translit": "",
+        "ipa": "/proˈjixɑtɪ/",
+        "en": "to drive through",
+        "pos": ""
+      },
+      {
+        "id": "v-m91-010",
+        "uk": "проїжджати",
+        "translit": "",
+        "ipa": "/projizˈdʒɑtɪ/",
+        "en": "to drive through",
+        "pos": ""
+      },
+      {
+        "id": "v-m91-011",
+        "uk": "обійти",
+        "translit": "",
+        "ipa": "/obijˈtɪ/",
+        "en": "to go around",
+        "pos": ""
+      },
+      {
+        "id": "v-m91-012",
+        "uk": "обходити",
+        "translit": "",
+        "ipa": "/obxoˈdɪtɪ/",
+        "en": "to go around",
+        "pos": ""
+      },
+      {
+        "id": "v-m91-013",
+        "uk": "об'їхати",
+        "translit": "",
+        "ipa": "/objˈixɑtɪ/",
+        "en": "to drive around",
+        "pos": ""
+      },
+      {
+        "id": "v-m91-014",
+        "uk": "об'їжджати",
+        "translit": "",
+        "ipa": "/objizˈdʒɑtɪ/",
+        "en": "to drive around",
+        "pos": ""
+      },
+      {
+        "id": "v-m91-015",
+        "uk": "обігнати",
+        "translit": "",
+        "ipa": "/obʲiɦˈnɑtɪ/",
+        "en": "to overtake",
+        "pos": ""
+      },
+      {
+        "id": "v-m91-016",
+        "uk": "обганяти",
+        "translit": "",
+        "ipa": "/obɦɑˈnʲɑtɪ/",
+        "en": "to overtake",
+        "pos": ""
+      }
+    ]
   }
 }

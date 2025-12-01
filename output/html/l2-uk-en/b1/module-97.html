@@ -764,7 +764,7 @@
       <div class="completion-message" id="sort-complete"><h3>All Sorted!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetSort()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Vocab →</button></div>
     </div></section>
-    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (0)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
+    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (16)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
     </section>
   </main>
@@ -773,7 +773,7 @@
     const matchPairs=[];
     const quizData=[{"question":"На мою думку","options":["In my opinion","I'm sure"],"correctIndex":0,"explanation":""},{"question":"Я впевнений","options":["I'm sure","Perhaps"],"correctIndex":0,"explanation":""},{"question":"Можливо","options":["Perhaps","Without a doubt"],"correctIndex":0,"explanation":""},{"question":"З одного боку","options":["On one hand","Moreover"],"correctIndex":0,"explanation":""},{"question":"Тому що","options":["Because","However"],"correctIndex":0,"explanation":""},{"question":"Загалом","options":["In general","Especially"],"correctIndex":0,"explanation":""}];
     const sortData={"true-friends":["Я впевнений","Безперечно","Без сумніву","Очевидно"],"false-friends":["Я думаю","На мою думку","Напевно"],"new-letters":["Можливо","Мабуть","Здається","Не впевнений"]};
-    const vocabData=[];
+    const vocabData=[{"uk":"думка","translit":"","en":"opinion, thought","note":"-"},{"uk":"погляд","translit":"","en":"view","note":"-"},{"uk":"точка зору","translit":"","en":"point of view","note":"-"},{"uk":"вважати","translit":"","en":"to consider, believe","note":"impf"},{"uk":"гадати","translit":"","en":"to think, suppose","note":"impf"},{"uk":"здаватися","translit":"","en":"to seem","note":"impf"},{"uk":"впевнений","translit":"","en":"sure, confident","note":"adj"},{"uk":"переконаний","translit":"","en":"convinced","note":"adj"},{"uk":"безперечно","translit":"","en":"undoubtedly","note":"adv"},{"uk":"можливо","translit":"","en":"perhaps, possibly","note":"adv"},{"uk":"мабуть","translit":"","en":"probably","note":"adv"},{"uk":"ймовірно","translit":"","en":"probably, likely","note":"adv"},{"uk":"проте","translit":"","en":"however","note":"conj"},{"uk":"однак","translit":"","en":"however","note":"conj"},{"uk":"загалом","translit":"","en":"in general","note":"adv"},{"uk":"отже","translit":"","en":"so, therefore","note":"conj"}];
     const totalSort=11;
     function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
     document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));

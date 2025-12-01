@@ -300,8 +300,135 @@
     "moduleId": "mod-uk-B1-83",
     "level": "B1",
     "phase": "B1.1",
-    "wordCount": 0,
+    "wordCount": 14,
     "transliterationMode": "none",
-    "words": []
+    "words": [
+      {
+        "id": "v-m83-001",
+        "uk": "результат",
+        "translit": "",
+        "ipa": "/rɛzulʲˈtɑt/",
+        "en": "result",
+        "pos": "",
+        "note": "perfective focus"
+      },
+      {
+        "id": "v-m83-002",
+        "uk": "процес",
+        "translit": "",
+        "ipa": "/proˈt͡sɛs/",
+        "en": "process",
+        "pos": "",
+        "note": "imperfective focus"
+      },
+      {
+        "id": "v-m83-003",
+        "uk": "завершити",
+        "translit": "",
+        "ipa": "/zɑvɛrˈʃɪtɪ/",
+        "en": "to complete",
+        "pos": "",
+        "note": "perfective"
+      },
+      {
+        "id": "v-m83-004",
+        "uk": "закінчити",
+        "translit": "",
+        "ipa": "/zɑkʲinˈt͡ʃɪtɪ/",
+        "en": "to finish",
+        "pos": "",
+        "note": "perfective"
+      },
+      {
+        "id": "v-m83-005",
+        "uk": "закінчувати",
+        "translit": "",
+        "ipa": "/zɑkʲinˈt͡ʃuvɑtɪ/",
+        "en": "to be finishing",
+        "pos": "",
+        "note": "imperfective"
+      },
+      {
+        "id": "v-m83-006",
+        "uk": "досягти",
+        "translit": "",
+        "ipa": "/doˈsʲɑɦtɪ/",
+        "en": "to achieve",
+        "pos": "",
+        "note": "perfective"
+      },
+      {
+        "id": "v-m83-007",
+        "uk": "досягати",
+        "translit": "",
+        "ipa": "/dosʲɑˈɦɑtɪ/",
+        "en": "to be achieving",
+        "pos": "",
+        "note": "imperfective"
+      },
+      {
+        "id": "v-m83-008",
+        "uk": "тривати",
+        "translit": "",
+        "ipa": "/trɪˈvɑtɪ/",
+        "en": "to last, to continue",
+        "pos": "",
+        "note": "imperfective only"
+      },
+      {
+        "id": "v-m83-009",
+        "uk": "продовжувати",
+        "translit": "",
+        "ipa": "/prodovˈʒuvɑtɪ/",
+        "en": "to continue",
+        "pos": "",
+        "note": "imperfective"
+      },
+      {
+        "id": "v-m83-010",
+        "uk": "продовжити",
+        "translit": "",
+        "ipa": "/prodovˈʒɪtɪ/",
+        "en": "to continue (one step)",
+        "pos": "",
+        "note": "perfective"
+      },
+      {
+        "id": "v-m83-011",
+        "uk": "перервати",
+        "translit": "",
+        "ipa": "/pɛrɛrˈvɑtɪ/",
+        "en": "to interrupt",
+        "pos": "",
+        "note": "perfective"
+      },
+      {
+        "id": "v-m83-012",
+        "uk": "переривати",
+        "translit": "",
+        "ipa": "/pɛrɛrɪˈvɑtɪ/",
+        "en": "to be interrupting",
+        "pos": "",
+        "note": "imperfective"
+      },
+      {
+        "id": "v-m83-013",
+        "uk": "за годину",
+        "translit": "",
+        "ipa": "/zɑ ɦoˈdɪnu/",
+        "en": "in an hour (completion)",
+        "pos": "",
+        "note": "signals perfective"
+      },
+      {
+        "id": "v-m83-014",
+        "uk": "цілий",
+        "translit": "",
+        "ipa": "/ˈt͡sʲilɪj/",
+        "en": "whole, entire",
+        "pos": "",
+        "note": "with imperfective"
+      }
+    ]
   }
 }

@@ -387,182 +387,202 @@
       {
         "id": "v-m01-001",
         "uk": "мама",
-        "translit": "/ˈmɑmɑ/",
-        "ipa": "mom",
-        "en": "noun",
-        "pos": "f",
-        "gender": "True Friends only: М-А-М-А"
+        "translit": "",
+        "ipa": "/ˈmɑmɑ/",
+        "en": "mom",
+        "pos": "noun",
+        "gender": "f",
+        "note": "True Friends only: М-А-М-А"
       },
       {
         "id": "v-m01-002",
         "uk": "тато",
-        "translit": "/ˈtɑtɔ/",
-        "ipa": "dad",
-        "en": "noun",
-        "pos": "m",
-        "gender": "True Friends: Т-А-Т-О"
+        "translit": "",
+        "ipa": "/ˈtɑtɔ/",
+        "en": "dad",
+        "pos": "noun",
+        "gender": "m",
+        "note": "True Friends: Т-А-Т-О"
       },
       {
         "id": "v-m01-003",
         "uk": "банк",
-        "translit": "/bɑnk/",
-        "ipa": "bank",
-        "en": "noun",
-        "pos": "m",
-        "gender": "Б=B (new), Н=N (false friend)"
+        "translit": "",
+        "ipa": "/bɑnk/",
+        "en": "bank",
+        "pos": "noun",
+        "gender": "m",
+        "note": "Б=B (new), Н=N (false friend)"
       },
       {
         "id": "v-m01-004",
         "uk": "парк",
-        "translit": "/pɑrk/",
-        "ipa": "park",
-        "en": "noun",
-        "pos": "m",
-        "gender": "П=P (new), Р=R (false friend)"
+        "translit": "",
+        "ipa": "/pɑrk/",
+        "en": "park",
+        "pos": "noun",
+        "gender": "m",
+        "note": "П=P (new), Р=R (false friend)"
       },
       {
         "id": "v-m01-005",
         "uk": "кафе",
-        "translit": "/kɑˈfɛ/",
-        "ipa": "café",
-        "en": "noun",
-        "pos": "n",
-        "gender": "All True Friends + Ф (new)"
+        "translit": "",
+        "ipa": "/kɑˈfɛ/",
+        "en": "café",
+        "pos": "noun",
+        "gender": "n",
+        "note": "All True Friends + Ф (new)"
       },
       {
         "id": "v-m01-006",
         "uk": "метро",
-        "translit": "/mɛˈtrɔ/",
-        "ipa": "metro",
-        "en": "noun",
-        "pos": "n",
-        "gender": "Р=R (false friend)"
+        "translit": "",
+        "ipa": "/mɛˈtrɔ/",
+        "en": "metro",
+        "pos": "noun",
+        "gender": "n",
+        "note": "Р=R (false friend)"
       },
       {
         "id": "v-m01-007",
         "uk": "таксі",
-        "translit": "/tɑkˈsi/",
-        "ipa": "taxi",
-        "en": "noun",
-        "pos": "n",
-        "gender": "С=S (false friend), І=I"
+        "translit": "",
+        "ipa": "/tɑkˈsi/",
+        "en": "taxi",
+        "pos": "noun",
+        "gender": "n",
+        "note": "С=S (false friend), І=I"
       },
       {
         "id": "v-m01-008",
         "uk": "радіо",
-        "translit": "/ˈrɑdʲiɔ/",
-        "ipa": "radio",
-        "en": "noun",
-        "pos": "n",
-        "gender": "Р=R (false friend), Д=D (new)"
+        "translit": "",
+        "ipa": "/ˈrɑdʲiɔ/",
+        "en": "radio",
+        "pos": "noun",
+        "gender": "n",
+        "note": "Р=R (false friend), Д=D (new)"
       },
       {
         "id": "v-m01-009",
         "uk": "піца",
-        "translit": "/ˈpitsɑ/",
-        "ipa": "pizza",
-        "en": "noun",
-        "pos": "f",
-        "gender": "П=P (new), Ц=TS (preview)"
+        "translit": "",
+        "ipa": "/ˈpitsɑ/",
+        "en": "pizza",
+        "pos": "noun",
+        "gender": "f",
+        "note": "П=P (new), Ц=TS (preview)"
       },
       {
         "id": "v-m01-010",
         "uk": "суп",
-        "translit": "/sup/",
-        "ipa": "soup",
-        "en": "noun",
-        "pos": "m",
-        "gender": "С=S, У=U (false friends)"
+        "translit": "",
+        "ipa": "/sup/",
+        "en": "soup",
+        "pos": "noun",
+        "gender": "m",
+        "note": "С=S, У=U (false friends)"
       },
       {
         "id": "v-m01-011",
         "uk": "салат",
-        "translit": "/sɑˈlɑt/",
-        "ipa": "salad",
-        "en": "noun",
-        "pos": "m",
-        "gender": "С=S (false friend), Л=L (new)"
+        "translit": "",
+        "ipa": "/sɑˈlɑt/",
+        "en": "salad",
+        "pos": "noun",
+        "gender": "m",
+        "note": "С=S (false friend), Л=L (new)"
       },
       {
         "id": "v-m01-012",
         "uk": "лимон",
-        "translit": "/lɪˈmɔn/",
-        "ipa": "lemon",
-        "en": "noun",
-        "pos": "m",
-        "gender": "Л=L (new), Н=N (false friend)"
+        "translit": "",
+        "ipa": "/lɪˈmɔn/",
+        "en": "lemon",
+        "pos": "noun",
+        "gender": "m",
+        "note": "Л=L (new), Н=N (false friend)"
       },
       {
         "id": "v-m01-013",
         "uk": "банан",
-        "translit": "/bɑˈnɑn/",
-        "ipa": "banana",
-        "en": "noun",
-        "pos": "m",
-        "gender": "Б=B (new), Н=N (false friend)"
+        "translit": "",
+        "ipa": "/bɑˈnɑn/",
+        "en": "banana",
+        "pos": "noun",
+        "gender": "m",
+        "note": "Б=B (new), Н=N (false friend)"
       },
       {
         "id": "v-m01-014",
         "uk": "хокей",
-        "translit": "/xɔˈkɛj/",
-        "ipa": "hockey",
-        "en": "noun",
-        "pos": "m",
-        "gender": "Х=KH (false friend)"
+        "translit": "",
+        "ipa": "/xɔˈkɛj/",
+        "en": "hockey",
+        "pos": "noun",
+        "gender": "m",
+        "note": "Х=KH (false friend)"
       },
       {
         "id": "v-m01-015",
         "uk": "футбол",
-        "translit": "/fudˈbɔl/",
-        "ipa": "football",
-        "en": "noun",
-        "pos": "m",
-        "gender": "Ф=F (new), У=U, Б=B, Л=L"
+        "translit": "",
+        "ipa": "/fudˈbɔl/",
+        "en": "football",
+        "pos": "noun",
+        "gender": "m",
+        "note": "Ф=F (new), У=U, Б=B, Л=L"
       },
       {
         "id": "v-m01-016",
         "uk": "студент",
-        "translit": "/stuˈdɛnt/",
-        "ipa": "student",
-        "en": "noun",
-        "pos": "m",
-        "gender": "С=S, У=U, Н=N (false friends)"
+        "translit": "",
+        "ipa": "/stuˈdɛnt/",
+        "en": "student",
+        "pos": "noun",
+        "gender": "m",
+        "note": "С=S, У=U, Н=N (false friends)"
       },
       {
         "id": "v-m01-017",
         "uk": "турист",
-        "translit": "/tuˈrɪst/",
-        "ipa": "tourist",
-        "en": "noun",
-        "pos": "m",
-        "gender": "У=U, Р=R, С=S (false friends)"
+        "translit": "",
+        "ipa": "/tuˈrɪst/",
+        "en": "tourist",
+        "pos": "noun",
+        "gender": "m",
+        "note": "У=U, Р=R, С=S (false friends)"
       },
       {
         "id": "v-m01-018",
         "uk": "музика",
-        "translit": "/ˈmuzɪkɑ/",
-        "ipa": "music",
-        "en": "noun",
-        "pos": "f",
-        "gender": "У=U (false friend), З=Z (new)"
+        "translit": "",
+        "ipa": "/ˈmuzɪkɑ/",
+        "en": "music",
+        "pos": "noun",
+        "gender": "f",
+        "note": "У=U (false friend), З=Z (new)"
       },
       {
         "id": "v-m01-019",
         "uk": "фото",
-        "translit": "/ˈfɔtɔ/",
-        "ipa": "photo",
-        "en": "noun",
-        "pos": "n",
-        "gender": "Ф=F (new), rest True Friends"
+        "translit": "",
+        "ipa": "/ˈfɔtɔ/",
+        "en": "photo",
+        "pos": "noun",
+        "gender": "n",
+        "note": "Ф=F (new), rest True Friends"
       },
       {
         "id": "v-m01-020",
         "uk": "відео",
-        "translit": "/ˈwideɔ/",
-        "ipa": "video",
-        "en": "noun",
-        "pos": "n",
-        "gender": "В=V (false friend), Д=D (new)"
+        "translit": "",
+        "ipa": "/ˈwideɔ/",
+        "en": "video",
+        "pos": "noun",
+        "gender": "n",
+        "note": "В=V (false friend), Д=D (new)"
       }
     ]
   }

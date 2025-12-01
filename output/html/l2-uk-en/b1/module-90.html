@@ -927,7 +927,7 @@ B: Прошу! Приїжджайте ще!
       <div class="score-display"><span class="score"><span id="match-score">0</span>/6</span></div>
       <div class="match-container" id="match-container"><svg class="match-lines" id="match-lines"></svg>
         <div class="match-column" id="match-left"><div class="match-item" data-pair="0">прийти</div><div class="match-item" data-pair="1">вийти</div><div class="match-item" data-pair="2">увійти</div><div class="match-item" data-pair="3">приїхати</div><div class="match-item" data-pair="4">виїхати</div><div class="match-item" data-pair="5">принести</div></div>
-        <div class="match-column" id="match-right"><div class="match-item" data-pair="3">приїжджати</div><div class="match-item" data-pair="5">приносити</div><div class="match-item" data-pair="0">приходити</div><div class="match-item" data-pair="4">виїжджати</div><div class="match-item" data-pair="1">виходити</div><div class="match-item" data-pair="2">входити</div></div>
+        <div class="match-column" id="match-right"><div class="match-item" data-pair="3">приїжджати</div><div class="match-item" data-pair="1">виходити</div><div class="match-item" data-pair="0">приходити</div><div class="match-item" data-pair="2">входити</div><div class="match-item" data-pair="5">приносити</div><div class="match-item" data-pair="4">виїжджати</div></div>
       </div>
       <div class="completion-message" id="match-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetMatch()">Reset</button><button class="btn btn-primary" onclick="showSection('quiz')">Next →</button></div>
@@ -945,7 +945,7 @@ B: Прошу! Приїжджайте ще!
       <div class="completion-message" id="sort-complete"><h3>All Sorted!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetSort()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Vocab →</button></div>
     </div></section>
-    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (0)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
+    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (14)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
     </section>
   </main>
@@ -954,7 +954,7 @@ B: Прошу! Приїжджайте ще!
     const matchPairs=[{"left":"прийти","right":"приходити"},{"left":"вийти","right":"виходити"},{"left":"увійти","right":"входити"},{"left":"приїхати","right":"приїжджати"},{"left":"виїхати","right":"виїжджати"},{"left":"принести","right":"приносити"}];
     const quizData=[{"question":"Вона ___ з кімнати.","options":["прийшла","вийшла"],"correctIndex":1,"explanation":"Exit = ви-"},{"question":"Він ___ до Києва вчора.","options":["приїхав","виїхав"],"correctIndex":0,"explanation":"Arrival = при-"},{"question":"Кіт ___ до хати.","options":["вибіг","вбіг"],"correctIndex":1,"explanation":"Entry = в-"},{"question":"Вона завжди ___ о дев'ятій.","options":["приходить","прийде"],"correctIndex":0,"explanation":"Always = imperfective"},{"question":"Літак ___ з Лондона.","options":["прилетів","вилетів"],"correctIndex":1,"explanation":"Departed from = ви-"},{"question":"___ валізу до кімнати!","options":["Внеси","Винеси"],"correctIndex":0,"explanation":"In = в-"}];
     const sortData={"true-friends":["прийти","приїхати","принести","прилетіти"],"false-friends":["вийти","виїхати","винести","вилетіти"],"new-letters":["увійти","в'їхати","внести","влетіти"]};
-    const vocabData=[];
+    const vocabData=[{"uk":"прийти","translit":"","en":"to come, arrive","note":""},{"uk":"приходити","translit":"","en":"to come","note":""},{"uk":"приїхати","translit":"","en":"to arrive (vehicle)","note":""},{"uk":"приїжджати","translit":"","en":"to arrive","note":""},{"uk":"принести","translit":"","en":"to bring","note":""},{"uk":"приносити","translit":"","en":"to bring","note":""},{"uk":"вийти","translit":"","en":"to go out","note":""},{"uk":"виходити","translit":"","en":"to go out","note":""},{"uk":"виїхати","translit":"","en":"to drive out","note":""},{"uk":"виїжджати","translit":"","en":"to drive out","note":""},{"uk":"увійти","translit":"","en":"to enter","note":""},{"uk":"входити","translit":"","en":"to enter","note":""},{"uk":"в'їхати","translit":"","en":"to drive in","note":""},{"uk":"в'їжджати","translit":"","en":"to drive in","note":""}];
     const totalSort=12;
     function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
     document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));

@@ -350,91 +350,102 @@
       {
         "id": "v-m57-001",
         "uk": "професія",
-        "translit": "/proˈfɛsʲijɑ/",
-        "ipa": "profession",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/proˈfɛsʲijɑ/",
+        "en": "profession",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m57-002",
         "uk": "робота",
-        "translit": "/roˈbotɑ/",
-        "ipa": "work, job",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/roˈbotɑ/",
+        "en": "work, job",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m57-003",
         "uk": "вакансія",
-        "translit": "/vɑˈkɑnsʲijɑ/",
-        "ipa": "vacancy, job opening",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/vɑˈkɑnsʲijɑ/",
+        "en": "vacancy, job opening",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m57-004",
         "uk": "резюме",
-        "translit": "/rɛzʲuˈmɛ/",
-        "ipa": "resume, CV",
-        "en": "noun",
-        "pos": "n",
-        "gender": "indecl"
+        "translit": "",
+        "ipa": "/rɛzʲuˈmɛ/",
+        "en": "resume, CV",
+        "pos": "noun",
+        "gender": "n",
+        "note": "indecl"
       },
       {
         "id": "v-m57-005",
         "uk": "співбесіда",
-        "translit": "/spʲivˈbɛsʲidɑ/",
-        "ipa": "interview",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/spʲivˈbɛsʲidɑ/",
+        "en": "interview",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m57-006",
         "uk": "зарплата",
-        "translit": "/zɑrˈplɑtɑ/",
-        "ipa": "salary",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/zɑrˈplɑtɑ/",
+        "en": "salary",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m57-007",
         "uk": "підвищення",
-        "translit": "/pʲidˈvɪʃtʃɛnʲɑ/",
-        "ipa": "promotion",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/pʲidˈvɪʃtʃɛnʲɑ/",
+        "en": "promotion",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m57-008",
         "uk": "відпустка",
-        "translit": "/vʲidˈpustkɑ/",
-        "ipa": "vacation",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/vʲidˈpustkɑ/",
+        "en": "vacation",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m57-009",
         "uk": "обов'язок",
-        "translit": "/oboˈvjɑzok/",
-        "ipa": "duty, responsibility",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/oboˈvjɑzok/",
+        "en": "duty, responsibility",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m57-010",
         "uk": "графік",
-        "translit": "/ˈɦrɑfʲik/",
-        "ipa": "schedule",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ˈɦrɑfʲik/",
+        "en": "schedule",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m57-011",
         "uk": "віддалено",
-        "translit": "/vʲidɑˈlɛno/",
-        "ipa": "remotely",
-        "en": "adv",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/vʲidɑˈlɛno/",
+        "en": "remotely",
+        "pos": "adv",
+        "gender": "-"
       }
     ]
   }

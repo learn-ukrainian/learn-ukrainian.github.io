@@ -375,200 +375,222 @@
       {
         "id": "v-m05-001",
         "uk": "цей",
-        "translit": "/t͡sɛj/",
-        "ipa": "this (masculine)",
-        "en": "pron",
-        "pos": "m",
-        "gender": "Demonstrative"
+        "translit": "",
+        "ipa": "/t͡sɛj/",
+        "en": "this (masculine)",
+        "pos": "pron",
+        "gender": "m",
+        "note": "Demonstrative"
       },
       {
         "id": "v-m05-002",
         "uk": "ця",
-        "translit": "/t͡sʲɑ/",
-        "ipa": "this (feminine)",
-        "en": "pron",
-        "pos": "f",
-        "gender": "Demonstrative"
+        "translit": "",
+        "ipa": "/t͡sʲɑ/",
+        "en": "this (feminine)",
+        "pos": "pron",
+        "gender": "f",
+        "note": "Demonstrative"
       },
       {
         "id": "v-m05-003",
         "uk": "ці",
-        "translit": "/t͡sʲi/",
-        "ipa": "these",
-        "en": "pron",
-        "pos": "pl",
-        "gender": "Plural demonstrative"
+        "translit": "",
+        "ipa": "/t͡sʲi/",
+        "en": "these",
+        "pos": "pron",
+        "gender": "pl",
+        "note": "Plural demonstrative"
       },
       {
         "id": "v-m05-004",
         "uk": "той",
-        "translit": "/tɔj/",
-        "ipa": "that (masculine)",
-        "en": "pron",
-        "pos": "m",
-        "gender": "Demonstrative"
+        "translit": "",
+        "ipa": "/tɔj/",
+        "en": "that (masculine)",
+        "pos": "pron",
+        "gender": "m",
+        "note": "Demonstrative"
       },
       {
         "id": "v-m05-005",
         "uk": "та",
-        "translit": "/tɑ/",
-        "ipa": "that (feminine)",
-        "en": "pron",
-        "pos": "f",
-        "gender": "Demonstrative"
+        "translit": "",
+        "ipa": "/tɑ/",
+        "en": "that (feminine)",
+        "pos": "pron",
+        "gender": "f",
+        "note": "Demonstrative"
       },
       {
         "id": "v-m05-006",
         "uk": "те",
-        "translit": "/tɛ/",
-        "ipa": "that (neuter)",
-        "en": "pron",
-        "pos": "n",
-        "gender": "Demonstrative"
+        "translit": "",
+        "ipa": "/tɛ/",
+        "en": "that (neuter)",
+        "pos": "pron",
+        "gender": "n",
+        "note": "Demonstrative"
       },
       {
         "id": "v-m05-007",
         "uk": "ті",
-        "translit": "/tʲi/",
-        "ipa": "those",
-        "en": "pron",
-        "pos": "pl",
-        "gender": "Plural demonstrative"
+        "translit": "",
+        "ipa": "/tʲi/",
+        "en": "those",
+        "pos": "pron",
+        "gender": "pl",
+        "note": "Plural demonstrative"
       },
       {
         "id": "v-m05-008",
         "uk": "моє",
-        "translit": "/mɔˈjɛ/",
-        "ipa": "my (neuter)",
-        "en": "pron",
-        "pos": "n",
-        "gender": "Possessive"
+        "translit": "",
+        "ipa": "/mɔˈjɛ/",
+        "en": "my (neuter)",
+        "pos": "pron",
+        "gender": "n",
+        "note": "Possessive"
       },
       {
         "id": "v-m05-009",
         "uk": "мої",
-        "translit": "/mɔˈji/",
-        "ipa": "my (plural)",
-        "en": "pron",
-        "pos": "pl",
-        "gender": "Possessive"
+        "translit": "",
+        "ipa": "/mɔˈji/",
+        "en": "my (plural)",
+        "pos": "pron",
+        "gender": "pl",
+        "note": "Possessive"
       },
       {
         "id": "v-m05-010",
         "uk": "твоє",
-        "translit": "/tvɔˈjɛ/",
-        "ipa": "your (n, informal)",
-        "en": "pron",
-        "pos": "n",
-        "gender": "Informal possessive"
+        "translit": "",
+        "ipa": "/tvɔˈjɛ/",
+        "en": "your (n, informal)",
+        "pos": "pron",
+        "gender": "n",
+        "note": "Informal possessive"
       },
       {
         "id": "v-m05-011",
         "uk": "твої",
-        "translit": "/tvɔˈji/",
-        "ipa": "your (pl, informal)",
-        "en": "pron",
-        "pos": "pl",
-        "gender": "Informal possessive"
+        "translit": "",
+        "ipa": "/tvɔˈji/",
+        "en": "your (pl, informal)",
+        "pos": "pron",
+        "gender": "pl",
+        "note": "Informal possessive"
       },
       {
         "id": "v-m05-012",
         "uk": "його",
-        "translit": "/jɔˈɦɔ/",
-        "ipa": "his, its",
-        "en": "pron",
-        "pos": "-",
-        "gender": "Invariable - never changes"
+        "translit": "",
+        "ipa": "/jɔˈɦɔ/",
+        "en": "his, its",
+        "pos": "pron",
+        "gender": "-",
+        "note": "Invariable - never changes"
       },
       {
         "id": "v-m05-013",
         "uk": "її",
-        "translit": "/jiˈji/",
-        "ipa": "her, hers",
-        "en": "pron",
-        "pos": "-",
-        "gender": "Invariable - never changes"
+        "translit": "",
+        "ipa": "/jiˈji/",
+        "en": "her, hers",
+        "pos": "pron",
+        "gender": "-",
+        "note": "Invariable - never changes"
       },
       {
         "id": "v-m05-014",
         "uk": "стілець",
-        "translit": "/ˈstʲilɛt͡sʲ/",
-        "ipa": "chair",
-        "en": "noun",
-        "pos": "m",
-        "gender": "Furniture"
+        "translit": "",
+        "ipa": "/ˈstʲilɛt͡sʲ/",
+        "en": "chair",
+        "pos": "noun",
+        "gender": "m",
+        "note": "Furniture"
       },
       {
         "id": "v-m05-015",
         "uk": "ліжко",
-        "translit": "/ˈlʲiʒkɔ/",
-        "ipa": "bed",
-        "en": "noun",
-        "pos": "n",
-        "gender": "Furniture"
+        "translit": "",
+        "ipa": "/ˈlʲiʒkɔ/",
+        "en": "bed",
+        "pos": "noun",
+        "gender": "n",
+        "note": "Furniture"
       },
       {
         "id": "v-m05-016",
         "uk": "лампа",
-        "translit": "/ˈlɑmpɑ/",
-        "ipa": "lamp",
-        "en": "noun",
-        "pos": "f",
-        "gender": "Cognate with English"
+        "translit": "",
+        "ipa": "/ˈlɑmpɑ/",
+        "en": "lamp",
+        "pos": "noun",
+        "gender": "f",
+        "note": "Cognate with English"
       },
       {
         "id": "v-m05-017",
         "uk": "двері",
-        "translit": "/ˈdvɛrʲi/",
-        "ipa": "door",
-        "en": "noun",
-        "pos": "pl",
-        "gender": "Always plural in Ukrainian!"
+        "translit": "",
+        "ipa": "/ˈdvɛrʲi/",
+        "en": "door",
+        "pos": "noun",
+        "gender": "pl",
+        "note": "Always plural in Ukrainian!"
       },
       {
         "id": "v-m05-018",
         "uk": "телефон",
-        "translit": "/tɛlɛˈfɔn/",
-        "ipa": "phone",
-        "en": "noun",
-        "pos": "m",
-        "gender": "Cognate"
+        "translit": "",
+        "ipa": "/tɛlɛˈfɔn/",
+        "en": "phone",
+        "pos": "noun",
+        "gender": "m",
+        "note": "Cognate"
       },
       {
         "id": "v-m05-019",
         "uk": "сумка",
-        "translit": "/ˈsumkɑ/",
-        "ipa": "bag",
-        "en": "noun",
-        "pos": "f",
-        "gender": "Common item"
+        "translit": "",
+        "ipa": "/ˈsumkɑ/",
+        "en": "bag",
+        "pos": "noun",
+        "gender": "f",
+        "note": "Common item"
       },
       {
         "id": "v-m05-020",
         "uk": "ручка",
-        "translit": "/ˈrutʃkɑ/",
-        "ipa": "pen",
-        "en": "noun",
-        "pos": "f",
-        "gender": "Also means \"handle\""
+        "translit": "",
+        "ipa": "/ˈrutʃkɑ/",
+        "en": "pen",
+        "pos": "noun",
+        "gender": "f",
+        "note": "Also means \"handle\""
       },
       {
         "id": "v-m05-021",
         "uk": "ключ",
-        "translit": "/klʲutʃ/",
-        "ipa": "key",
-        "en": "noun",
-        "pos": "m",
-        "gender": "Consonant = masculine"
+        "translit": "",
+        "ipa": "/klʲutʃ/",
+        "en": "key",
+        "pos": "noun",
+        "gender": "m",
+        "note": "Consonant = masculine"
       },
       {
         "id": "v-m05-022",
         "uk": "гаманець",
-        "translit": "/ɦɑmɑˈnɛt͡sʲ/",
-        "ipa": "wallet",
-        "en": "noun",
-        "pos": "m",
-        "gender": "Personal item"
+        "translit": "",
+        "ipa": "/ɦɑmɑˈnɛt͡sʲ/",
+        "en": "wallet",
+        "pos": "noun",
+        "gender": "m",
+        "note": "Personal item"
       }
     ]
   }

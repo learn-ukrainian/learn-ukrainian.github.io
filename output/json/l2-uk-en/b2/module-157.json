@@ -128,97 +128,109 @@
         "id": "v-m157-001",
         "uk": "підрядне речення",
         "translit": "",
-        "ipa": "subordinate clause",
-        "en": "залежне від головного",
-        "pos": ""
+        "ipa": "",
+        "en": "subordinate clause",
+        "pos": "",
+        "note": "залежне від головного"
       },
       {
         "id": "v-m157-002",
         "uk": "головне речення",
         "translit": "",
-        "ipa": "main clause",
-        "en": "незалежне",
-        "pos": ""
+        "ipa": "",
+        "en": "main clause",
+        "pos": "",
+        "note": "незалежне"
       },
       {
         "id": "v-m157-003",
         "uk": "сполучник",
         "translit": "",
-        "ipa": "conjunction",
-        "en": "що, якщо, коли",
-        "pos": ""
+        "ipa": "",
+        "en": "conjunction",
+        "pos": "",
+        "note": "що, якщо, коли"
       },
       {
         "id": "v-m157-004",
         "uk": "сполучне слово",
         "translit": "",
-        "ipa": "relative pronoun",
-        "en": "який, де, куди",
-        "pos": ""
+        "ipa": "",
+        "en": "relative pronoun",
+        "pos": "",
+        "note": "який, де, куди"
       },
       {
         "id": "v-m157-005",
         "uk": "підпорядкування",
         "translit": "",
-        "ipa": "subordination",
-        "en": "залежність",
-        "pos": ""
+        "ipa": "",
+        "en": "subordination",
+        "pos": "",
+        "note": "залежність"
       },
       {
         "id": "v-m157-006",
         "uk": "послідовний",
         "translit": "",
-        "ipa": "sequential",
-        "en": "один за одним",
-        "pos": ""
+        "ipa": "",
+        "en": "sequential",
+        "pos": "",
+        "note": "один за одним"
       },
       {
         "id": "v-m157-007",
         "uk": "паралельний",
         "translit": "",
-        "ipa": "parallel",
-        "en": "на одному рівні",
-        "pos": ""
+        "ipa": "",
+        "en": "parallel",
+        "pos": "",
+        "note": "на одному рівні"
       },
       {
         "id": "v-m157-008",
         "uk": "однорідний",
         "translit": "",
-        "ipa": "homogeneous",
-        "en": "однотипний",
-        "pos": ""
+        "ipa": "",
+        "en": "homogeneous",
+        "pos": "",
+        "note": "однотипний"
       },
       {
         "id": "v-m157-009",
         "uk": "означальний",
         "translit": "",
-        "ipa": "attributive",
-        "en": "який? котрий?",
-        "pos": ""
+        "ipa": "",
+        "en": "attributive",
+        "pos": "",
+        "note": "який? котрий?"
       },
       {
         "id": "v-m157-010",
         "uk": "з'ясувальний",
         "translit": "",
-        "ipa": "object (clause)",
-        "en": "що? про що?",
-        "pos": ""
+        "ipa": "",
+        "en": "object (clause)",
+        "pos": "",
+        "note": "що? про що?"
       },
       {
         "id": "v-m157-011",
         "uk": "стик",
         "translit": "",
-        "ipa": "junction",
-        "en": "місце з'єднання",
-        "pos": ""
+        "ipa": "",
+        "en": "junction",
+        "pos": "",
+        "note": "місце з'єднання"
       },
       {
         "id": "v-m157-012",
         "uk": "зміщення",
         "translit": "",
-        "ipa": "shift",
-        "en": "зміна порядку",
-        "pos": ""
+        "ipa": "",
+        "en": "shift",
+        "pos": "",
+        "note": "зміна порядку"
       }
     ]
   }

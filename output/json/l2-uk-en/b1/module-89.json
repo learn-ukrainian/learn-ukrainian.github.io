@@ -276,8 +276,137 @@
     "moduleId": "mod-uk-B1-89",
     "level": "B1",
     "phase": "B1.1",
-    "wordCount": 0,
+    "wordCount": 16,
     "transliterationMode": "none",
-    "words": []
+    "words": [
+      {
+        "id": "v-m89-001",
+        "uk": "іти",
+        "translit": "",
+        "ipa": "/iˈtɪ/",
+        "en": "to go (on foot)",
+        "pos": ""
+      },
+      {
+        "id": "v-m89-002",
+        "uk": "ходити",
+        "translit": "",
+        "ipa": "/xoˈdɪtɪ/",
+        "en": "to go (on foot)",
+        "pos": ""
+      },
+      {
+        "id": "v-m89-003",
+        "uk": "їхати",
+        "translit": "",
+        "ipa": "/ˈjixɑtɪ/",
+        "en": "to go (by vehicle)",
+        "pos": ""
+      },
+      {
+        "id": "v-m89-004",
+        "uk": "їздити",
+        "translit": "",
+        "ipa": "/ˈjizdɪtɪ/",
+        "en": "to go (by vehicle)",
+        "pos": ""
+      },
+      {
+        "id": "v-m89-005",
+        "uk": "бігти",
+        "translit": "",
+        "ipa": "/ˈbʲiɦtɪ/",
+        "en": "to run",
+        "pos": ""
+      },
+      {
+        "id": "v-m89-006",
+        "uk": "бігати",
+        "translit": "",
+        "ipa": "/ˈbʲiɦɑtɪ/",
+        "en": "to run",
+        "pos": ""
+      },
+      {
+        "id": "v-m89-007",
+        "uk": "летіти",
+        "translit": "",
+        "ipa": "/lɛˈtʲitɪ/",
+        "en": "to fly",
+        "pos": ""
+      },
+      {
+        "id": "v-m89-008",
+        "uk": "літати",
+        "translit": "",
+        "ipa": "/lʲiˈtɑtɪ/",
+        "en": "to fly",
+        "pos": ""
+      },
+      {
+        "id": "v-m89-009",
+        "uk": "плисти",
+        "translit": "",
+        "ipa": "/plɪsˈtɪ/",
+        "en": "to swim",
+        "pos": ""
+      },
+      {
+        "id": "v-m89-010",
+        "uk": "плавати",
+        "translit": "",
+        "ipa": "/ˈplɑvɑtɪ/",
+        "en": "to swim",
+        "pos": ""
+      },
+      {
+        "id": "v-m89-011",
+        "uk": "нести",
+        "translit": "",
+        "ipa": "/nɛsˈtɪ/",
+        "en": "to carry",
+        "pos": ""
+      },
+      {
+        "id": "v-m89-012",
+        "uk": "носити",
+        "translit": "",
+        "ipa": "/noˈsɪtɪ/",
+        "en": "to carry, wear",
+        "pos": ""
+      },
+      {
+        "id": "v-m89-013",
+        "uk": "везти",
+        "translit": "",
+        "ipa": "/vɛzˈtɪ/",
+        "en": "to transport",
+        "pos": ""
+      },
+      {
+        "id": "v-m89-014",
+        "uk": "возити",
+        "translit": "",
+        "ipa": "/voˈzɪtɪ/",
+        "en": "to transport",
+        "pos": ""
+      },
+      {
+        "id": "v-m89-015",
+        "uk": "вести",
+        "translit": "",
+        "ipa": "/vɛsˈtɪ/",
+        "en": "to lead",
+        "pos": ""
+      },
+      {
+        "id": "v-m89-016",
+        "uk": "водити",
+        "translit": "",
+        "ipa": "/voˈdɪtɪ/",
+        "en": "to lead, drive",
+        "pos": ""
+      }
+    ]
   }
 }

@@ -371,314 +371,353 @@
       {
         "id": "v-m70-001",
         "uk": "прогноз погоди",
-        "translit": "/proɦˈnoz poˈɦodɪ/",
-        "ipa": "weather forecast",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/proɦˈnoz poˈɦodɪ/",
+        "en": "weather forecast",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m70-002",
         "uk": "злива",
-        "translit": "/ˈzlɪvɑ/",
-        "ipa": "downpour",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈzlɪvɑ/",
+        "en": "downpour",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m70-003",
         "uk": "гроза",
-        "translit": "/ɦroˈzɑ/",
-        "ipa": "thunderstorm",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ɦroˈzɑ/",
+        "en": "thunderstorm",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m70-004",
         "uk": "блискавка",
-        "translit": "/blɪsˈkɑvkɑ/",
-        "ipa": "lightning",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/blɪsˈkɑvkɑ/",
+        "en": "lightning",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m70-005",
         "uk": "грім",
-        "translit": "/ɦrʲim/",
-        "ipa": "thunder",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ɦrʲim/",
+        "en": "thunder",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m70-006",
         "uk": "град",
-        "translit": "/ɦrɑd/",
-        "ipa": "hail",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ɦrɑd/",
+        "en": "hail",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m70-007",
         "uk": "заметіль",
-        "translit": "/zɑmɛˈtʲilʲ/",
-        "ipa": "snowstorm",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/zɑmɛˈtʲilʲ/",
+        "en": "snowstorm",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m70-008",
         "uk": "туман",
-        "translit": "/tuˈmɑn/",
-        "ipa": "fog",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/tuˈmɑn/",
+        "en": "fog",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m70-009",
         "uk": "мряка",
-        "translit": "/ˈmrʲɑkɑ/",
-        "ipa": "drizzle",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈmrʲɑkɑ/",
+        "en": "drizzle",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m70-010",
         "uk": "буря",
-        "translit": "/ˈburʲɑ/",
-        "ipa": "storm",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈburʲɑ/",
+        "en": "storm",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m70-011",
         "uk": "мороз",
-        "translit": "/moˈroz/",
-        "ipa": "frost",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/moˈroz/",
+        "en": "frost",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m70-012",
         "uk": "спека",
-        "translit": "/ˈspɛkɑ/",
-        "ipa": "heat",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈspɛkɑ/",
+        "en": "heat",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m70-013",
         "uk": "гора",
-        "translit": "/ɦoˈrɑ/",
-        "ipa": "mountain",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ɦoˈrɑ/",
+        "en": "mountain",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m70-014",
         "uk": "долина",
-        "translit": "/doˈlɪnɑ/",
-        "ipa": "valley",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/doˈlɪnɑ/",
+        "en": "valley",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m70-015",
         "uk": "рівнина",
-        "translit": "/rʲivˈnɪnɑ/",
-        "ipa": "plain",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/rʲivˈnɪnɑ/",
+        "en": "plain",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m70-016",
         "uk": "степ",
-        "translit": "/stɛp/",
-        "ipa": "steppe",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/stɛp/",
+        "en": "steppe",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m70-017",
         "uk": "узбережжя",
-        "translit": "/uzˈbɛrɛʒːɑ/",
-        "ipa": "coast",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/uzˈbɛrɛʒːɑ/",
+        "en": "coast",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m70-018",
         "uk": "острів",
-        "translit": "/ˈostrʲiv/",
-        "ipa": "island",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ˈostrʲiv/",
+        "en": "island",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m70-019",
         "uk": "озеро",
-        "translit": "/ˈozɛro/",
-        "ipa": "lake",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/ˈozɛro/",
+        "en": "lake",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m70-020",
         "uk": "болото",
-        "translit": "/boˈloto/",
-        "ipa": "swamp",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/boˈloto/",
+        "en": "swamp",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m70-021",
         "uk": "водоспад",
-        "translit": "/vodosˈpɑd/",
-        "ipa": "waterfall",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/vodosˈpɑd/",
+        "en": "waterfall",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m70-022",
         "uk": "дуб",
-        "translit": "/dub/",
-        "ipa": "oak",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/dub/",
+        "en": "oak",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m70-023",
         "uk": "сосна",
-        "translit": "/sosˈnɑ/",
-        "ipa": "pine",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/sosˈnɑ/",
+        "en": "pine",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m70-024",
         "uk": "береза",
-        "translit": "/bɛˈrɛzɑ/",
-        "ipa": "birch",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/bɛˈrɛzɑ/",
+        "en": "birch",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m70-025",
         "uk": "соняшник",
-        "translit": "/soˈnʲɑʃnɪk/",
-        "ipa": "sunflower",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/soˈnʲɑʃnɪk/",
+        "en": "sunflower",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m70-026",
         "uk": "троянда",
-        "translit": "/troˈjɑndɑ/",
-        "ipa": "rose",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/troˈjɑndɑ/",
+        "en": "rose",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m70-027",
         "uk": "вовк",
-        "translit": "/vovk/",
-        "ipa": "wolf",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/vovk/",
+        "en": "wolf",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m70-028",
         "uk": "ведмідь",
-        "translit": "/vɛdˈmʲidʲ/",
-        "ipa": "bear",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/vɛdˈmʲidʲ/",
+        "en": "bear",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m70-029",
         "uk": "лисиця",
-        "translit": "/lɪˈsɪtsʲɑ/",
-        "ipa": "fox",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/lɪˈsɪtsʲɑ/",
+        "en": "fox",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m70-030",
         "uk": "білка",
-        "translit": "/ˈbʲilkɑ/",
-        "ipa": "squirrel",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈbʲilkɑ/",
+        "en": "squirrel",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m70-031",
         "uk": "їжак",
-        "translit": "/jiˈʒɑk/",
-        "ipa": "hedgehog",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/jiˈʒɑk/",
+        "en": "hedgehog",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m70-032",
         "uk": "лелека",
-        "translit": "/lɛˈlɛkɑ/",
-        "ipa": "stork",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/lɛˈlɛkɑ/",
+        "en": "stork",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m70-033",
         "uk": "сова",
-        "translit": "/soˈvɑ/",
-        "ipa": "owl",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/soˈvɑ/",
+        "en": "owl",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m70-034",
         "uk": "метелик",
-        "translit": "/mɛˈtɛlɪk/",
-        "ipa": "butterfly",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/mɛˈtɛlɪk/",
+        "en": "butterfly",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m70-035",
         "uk": "бджола",
-        "translit": "/bdʒoˈlɑ/",
-        "ipa": "bee",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/bdʒoˈlɑ/",
+        "en": "bee",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m70-036",
         "uk": "природа",
-        "translit": "/prɪˈrodɑ/",
-        "ipa": "nature",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/prɪˈrodɑ/",
+        "en": "nature",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m70-037",
         "uk": "забруднення",
-        "translit": "/zɑbrudˈnɛnʲːɑ/",
-        "ipa": "pollution",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/zɑbrudˈnɛnʲːɑ/",
+        "en": "pollution",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m70-038",
         "uk": "переробка",
-        "translit": "/pɛrɛˈrobkɑ/",
-        "ipa": "recycling",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/pɛrɛˈrobkɑ/",
+        "en": "recycling",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m70-039",
         "uk": "заповідник",
-        "translit": "/zɑpoˈvʲidnɪk/",
-        "ipa": "nature reserve",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/zɑpoˈvʲidnɪk/",
+        "en": "nature reserve",
+        "pos": "noun",
+        "gender": "m"
       }
     ]
   }

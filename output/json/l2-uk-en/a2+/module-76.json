@@ -381,344 +381,386 @@
       {
         "id": "v-m76-001",
         "uk": "супермаркет",
-        "translit": "/supɛrˈmɑrkɛt/",
-        "ipa": "supermarket",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/supɛrˈmɑrkɛt/",
+        "en": "supermarket",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m76-002",
         "uk": "торговий центр",
-        "translit": "/torˈɦovɪj tsɛntr/",
-        "ipa": "shopping mall",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/torˈɦovɪj tsɛntr/",
+        "en": "shopping mall",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m76-003",
         "uk": "ринок",
-        "translit": "/ˈrɪnok/",
-        "ipa": "market",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ˈrɪnok/",
+        "en": "market",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m76-004",
         "uk": "універмаг",
-        "translit": "/unʲivɛrˈmɑɦ/",
-        "ipa": "department store",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/unʲivɛrˈmɑɦ/",
+        "en": "department store",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m76-005",
         "uk": "секонд-хенд",
-        "translit": "/sɛˈkond xɛnd/",
-        "ipa": "secondhand store",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/sɛˈkond xɛnd/",
+        "en": "secondhand store",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m76-006",
         "uk": "булочна",
-        "translit": "/buˈlotʃnɑ/",
-        "ipa": "bakery",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/buˈlotʃnɑ/",
+        "en": "bakery",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m76-007",
         "uk": "кондитерська",
-        "translit": "/kondɪˈtɛrskɑ/",
-        "ipa": "confectionery",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/kondɪˈtɛrskɑ/",
+        "en": "confectionery",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m76-008",
         "uk": "зоомагазин",
-        "translit": "/zoomɑɦɑˈzɪn/",
-        "ipa": "pet store",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/zoomɑɦɑˈzɪn/",
+        "en": "pet store",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m76-009",
         "uk": "ювелірний магазин",
-        "translit": "/juvɛˈlʲirnɪj mɑɦɑˈzɪn/",
-        "ipa": "jewelry store",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/juvɛˈlʲirnɪj mɑɦɑˈzɪn/",
+        "en": "jewelry store",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m76-010",
         "uk": "канцтовари",
-        "translit": "/kɑntstoˈvɑrɪ/",
-        "ipa": "stationery",
-        "en": "noun",
-        "pos": "pl"
+        "translit": "",
+        "ipa": "/kɑntstoˈvɑrɪ/",
+        "en": "stationery",
+        "pos": "noun",
+        "gender": "pl"
       },
       {
         "id": "v-m76-011",
         "uk": "рахунок",
-        "translit": "/rɑˈxunok/",
-        "ipa": "account",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/rɑˈxunok/",
+        "en": "account",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m76-012",
         "uk": "картка",
-        "translit": "/ˈkɑrtkɑ/",
-        "ipa": "card",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈkɑrtkɑ/",
+        "en": "card",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m76-013",
         "uk": "готівка",
-        "translit": "/ɦoˈtʲivkɑ/",
-        "ipa": "cash",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ɦoˈtʲivkɑ/",
+        "en": "cash",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m76-014",
         "uk": "переказ",
-        "translit": "/pɛrɛˈkɑz/",
-        "ipa": "transfer",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/pɛrɛˈkɑz/",
+        "en": "transfer",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m76-015",
         "uk": "вклад",
-        "translit": "/vklɑd/",
-        "ipa": "deposit",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/vklɑd/",
+        "en": "deposit",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m76-016",
         "uk": "кредит",
-        "translit": "/krɛˈdɪt/",
-        "ipa": "credit, loan",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/krɛˈdɪt/",
+        "en": "credit, loan",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m76-017",
         "uk": "відсоток",
-        "translit": "/vʲidˈsotok/",
-        "ipa": "interest rate",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/vʲidˈsotok/",
+        "en": "interest rate",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m76-018",
         "uk": "банкомат",
-        "translit": "/bɑnkoˈmɑt/",
-        "ipa": "ATM",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/bɑnkoˈmɑt/",
+        "en": "ATM",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m76-019",
         "uk": "валюта",
-        "translit": "/vɑˈlʲutɑ/",
-        "ipa": "currency",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/vɑˈlʲutɑ/",
+        "en": "currency",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m76-020",
         "uk": "перукарня",
-        "translit": "/pɛruˈkɑrnʲɑ/",
-        "ipa": "hair salon",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/pɛruˈkɑrnʲɑ/",
+        "en": "hair salon",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m76-021",
         "uk": "хімчистка",
-        "translit": "/xʲimˈtʃɪstkɑ/",
-        "ipa": "dry cleaner",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/xʲimˈtʃɪstkɑ/",
+        "en": "dry cleaner",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m76-022",
         "uk": "майстерня",
-        "translit": "/mɑjˈstɛrnʲɑ/",
-        "ipa": "repair shop",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/mɑjˈstɛrnʲɑ/",
+        "en": "repair shop",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m76-023",
         "uk": "автосервіс",
-        "translit": "/ɑvtosɛrˈvʲis/",
-        "ipa": "car service",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ɑvtosɛrˈvʲis/",
+        "en": "car service",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m76-024",
         "uk": "ательє",
-        "translit": "/ɑtɛˈlʲjɛ/",
-        "ipa": "tailor shop",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/ɑtɛˈlʲjɛ/",
+        "en": "tailor shop",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m76-025",
         "uk": "знижка",
-        "translit": "/ˈznɪʒkɑ/",
-        "ipa": "discount",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈznɪʒkɑ/",
+        "en": "discount",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m76-026",
         "uk": "акція",
-        "translit": "/ˈɑktsʲijɑ/",
-        "ipa": "sale, promotion",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈɑktsʲijɑ/",
+        "en": "sale, promotion",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m76-027",
         "uk": "розпродаж",
-        "translit": "/rozpˈrodɑʒ/",
-        "ipa": "clearance sale",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/rozpˈrodɑʒ/",
+        "en": "clearance sale",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m76-028",
         "uk": "чек",
-        "translit": "/tʃɛk/",
-        "ipa": "receipt",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/tʃɛk/",
+        "en": "receipt",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m76-029",
         "uk": "здача",
-        "translit": "/ˈzdɑtʃɑ/",
-        "ipa": "change",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈzdɑtʃɑ/",
+        "en": "change",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m76-030",
         "uk": "передоплата",
-        "translit": "/pɛrɛdopˈlɑtɑ/",
-        "ipa": "prepayment",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/pɛrɛdopˈlɑtɑ/",
+        "en": "prepayment",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m76-031",
         "uk": "розстрочка",
-        "translit": "/rozˈstrotʃkɑ/",
-        "ipa": "installment",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/rozˈstrotʃkɑ/",
+        "en": "installment",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m76-032",
         "uk": "доставка",
-        "translit": "/dosˈtɑvkɑ/",
-        "ipa": "delivery",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/dosˈtɑvkɑ/",
+        "en": "delivery",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m76-033",
         "uk": "самовивіз",
-        "translit": "/sɑmovɪˈvʲiz/",
-        "ipa": "pickup",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/sɑmovɪˈvʲiz/",
+        "en": "pickup",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m76-034",
         "uk": "повернення",
-        "translit": "/povɛrˈnɛnʲːɑ/",
-        "ipa": "return",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/povɛrˈnɛnʲːɑ/",
+        "en": "return",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m76-035",
         "uk": "гарантія",
-        "translit": "/ɦɑˈrɑntʲijɑ/",
-        "ipa": "warranty",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ɦɑˈrɑntʲijɑ/",
+        "en": "warranty",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m76-036",
         "uk": "відстеження",
-        "translit": "/vʲidˈstɛʒɛnʲːɑ/",
-        "ipa": "tracking",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/vʲidˈstɛʒɛnʲːɑ/",
+        "en": "tracking",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m76-037",
         "uk": "замовляти",
-        "translit": "/zɑmovˈlʲɑtɪ/",
-        "ipa": "to order",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/zɑmovˈlʲɑtɪ/",
+        "en": "to order",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m76-038",
         "uk": "повертати",
-        "translit": "/povɛrˈtɑtɪ/",
-        "ipa": "to return",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/povɛrˈtɑtɪ/",
+        "en": "to return",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m76-039",
         "uk": "обмінювати",
-        "translit": "/obmʲiˈnʲuvɑtɪ/",
-        "ipa": "to exchange",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/obmʲiˈnʲuvɑtɪ/",
+        "en": "to exchange",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m76-040",
         "uk": "бронювати",
-        "translit": "/broˈnʲuvɑtɪ/",
-        "ipa": "to book",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/broˈnʲuvɑtɪ/",
+        "en": "to book",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m76-041",
         "uk": "доставляти",
-        "translit": "/dostɑvˈlʲɑtɪ/",
-        "ipa": "to deliver",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/dostɑvˈlʲɑtɪ/",
+        "en": "to deliver",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m76-042",
         "uk": "скаржитися",
-        "translit": "/ˈskɑrʒɪtɪsʲɑ/",
-        "ipa": "to complain",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/ˈskɑrʒɪtɪsʲɑ/",
+        "en": "to complain",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       }
     ]
   }

@@ -376,291 +376,326 @@
       {
         "id": "v-m73-001",
         "uk": "комп'ютер",
-        "translit": "/kompˈjutɛr/",
-        "ipa": "computer",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/kompˈjutɛr/",
+        "en": "computer",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m73-002",
         "uk": "ноутбук",
-        "translit": "/noˈutbuk/",
-        "ipa": "laptop",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/noˈutbuk/",
+        "en": "laptop",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m73-003",
         "uk": "смартфон",
-        "translit": "/smɑrtˈfon/",
-        "ipa": "smartphone",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/smɑrtˈfon/",
+        "en": "smartphone",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m73-004",
         "uk": "планшет",
-        "translit": "/plɑnˈʃɛt/",
-        "ipa": "tablet",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/plɑnˈʃɛt/",
+        "en": "tablet",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m73-005",
         "uk": "екран",
-        "translit": "/ɛkˈrɑn/",
-        "ipa": "screen",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ɛkˈrɑn/",
+        "en": "screen",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m73-006",
         "uk": "клавіатура",
-        "translit": "/klɑvʲiɑˈturɑ/",
-        "ipa": "keyboard",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/klɑvʲiɑˈturɑ/",
+        "en": "keyboard",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m73-007",
         "uk": "навушники",
-        "translit": "/nɑˈvuʃnɪkɪ/",
-        "ipa": "headphones",
-        "en": "noun",
-        "pos": "pl"
+        "translit": "",
+        "ipa": "/nɑˈvuʃnɪkɪ/",
+        "en": "headphones",
+        "pos": "noun",
+        "gender": "pl"
       },
       {
         "id": "v-m73-008",
         "uk": "зарядка",
-        "translit": "/zɑˈrʲɑdkɑ/",
-        "ipa": "charger",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/zɑˈrʲɑdkɑ/",
+        "en": "charger",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m73-009",
         "uk": "акумулятор",
-        "translit": "/ɑkumuˈlʲɑtor/",
-        "ipa": "battery",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ɑkumuˈlʲɑtor/",
+        "en": "battery",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m73-010",
         "uk": "файл",
-        "translit": "/fɑjl/",
-        "ipa": "file",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/fɑjl/",
+        "en": "file",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m73-011",
         "uk": "папка",
-        "translit": "/ˈpɑpkɑ/",
-        "ipa": "folder",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈpɑpkɑ/",
+        "en": "folder",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m73-012",
         "uk": "застосунок",
-        "translit": "/zɑstoˈsunok/",
-        "ipa": "application, app",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/zɑstoˈsunok/",
+        "en": "application, app",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m73-013",
         "uk": "пароль",
-        "translit": "/pɑˈrolʲ/",
-        "ipa": "password",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/pɑˈrolʲ/",
+        "en": "password",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m73-014",
         "uk": "налаштування",
-        "translit": "/nɑlɑʃtuˈvɑnʲːɑ/",
-        "ipa": "settings",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/nɑlɑʃtuˈvɑnʲːɑ/",
+        "en": "settings",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m73-015",
         "uk": "оновлення",
-        "translit": "/onovˈlɛnʲːɑ/",
-        "ipa": "update",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/onovˈlɛnʲːɑ/",
+        "en": "update",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m73-016",
         "uk": "резервна копія",
-        "translit": "/rɛˈzɛrvnɑ ˈkopʲijɑ/",
-        "ipa": "backup",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/rɛˈzɛrvnɑ ˈkopʲijɑ/",
+        "en": "backup",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m73-017",
         "uk": "сайт",
-        "translit": "/sɑjt/",
-        "ipa": "website",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/sɑjt/",
+        "en": "website",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m73-018",
         "uk": "посилання",
-        "translit": "/posɪˈlɑnʲːɑ/",
-        "ipa": "link",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/posɪˈlɑnʲːɑ/",
+        "en": "link",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m73-019",
         "uk": "пошук",
-        "translit": "/ˈpoʃuk/",
-        "ipa": "search",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ˈpoʃuk/",
+        "en": "search",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m73-020",
         "uk": "вірус",
-        "translit": "/ˈvʲirus/",
-        "ipa": "virus",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ˈvʲirus/",
+        "en": "virus",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m73-021",
         "uk": "завантажувати",
-        "translit": "/zɑvɑntɑˈʒuvɑtɪ/",
-        "ipa": "to download",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/zɑvɑntɑˈʒuvɑtɪ/",
+        "en": "to download",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m73-022",
         "uk": "вивантажувати",
-        "translit": "/vɪvɑntɑˈʒuvɑtɪ/",
-        "ipa": "to upload",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/vɪvɑntɑˈʒuvɑtɪ/",
+        "en": "to upload",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m73-023",
         "uk": "надсилати",
-        "translit": "/nɑdsɪˈlɑtɪ/",
-        "ipa": "to send",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/nɑdsɪˈlɑtɪ/",
+        "en": "to send",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m73-024",
         "uk": "зберігати",
-        "translit": "/zbɛrʲiˈɦɑtɪ/",
-        "ipa": "to save",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/zbɛrʲiˈɦɑtɪ/",
+        "en": "to save",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m73-025",
         "uk": "видаляти",
-        "translit": "/vɪdɑˈlʲɑtɪ/",
-        "ipa": "to delete",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/vɪdɑˈlʲɑtɪ/",
+        "en": "to delete",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m73-026",
         "uk": "вмикати",
-        "translit": "/vmɪˈkɑtɪ/",
-        "ipa": "to turn on",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/vmɪˈkɑtɪ/",
+        "en": "to turn on",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m73-027",
         "uk": "вимикати",
-        "translit": "/vɪmɪˈkɑtɪ/",
-        "ipa": "to turn off",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/vɪmɪˈkɑtɪ/",
+        "en": "to turn off",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m73-028",
         "uk": "перезавантажувати",
-        "translit": "/pɛrɛzɑvɑntɑˈʒuvɑtɪ/",
-        "ipa": "to restart",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/pɛrɛzɑvɑntɑˈʒuvɑtɪ/",
+        "en": "to restart",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m73-029",
         "uk": "встановлювати",
-        "translit": "/vstɑˈnovlʲuvɑtɪ/",
-        "ipa": "to install",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/vstɑˈnovlʲuvɑtɪ/",
+        "en": "to install",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m73-030",
         "uk": "підписник",
-        "translit": "/pʲidˈpɪsnɪk/",
-        "ipa": "follower",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/pʲidˈpɪsnɪk/",
+        "en": "follower",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m73-031",
         "uk": "лайк",
-        "translit": "/lɑjk/",
-        "ipa": "like",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/lɑjk/",
+        "en": "like",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m73-032",
         "uk": "коментар",
-        "translit": "/komɛnˈtɑr/",
-        "ipa": "comment",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/komɛnˈtɑr/",
+        "en": "comment",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m73-033",
         "uk": "стрічка",
-        "translit": "/ˈstrʲitʃkɑ/",
-        "ipa": "feed",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈstrʲitʃkɑ/",
+        "en": "feed",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m73-034",
         "uk": "повідомлення",
-        "translit": "/povʲiˈdomlɛnʲːɑ/",
-        "ipa": "message",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/povʲiˈdomlɛnʲːɑ/",
+        "en": "message",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m73-035",
         "uk": "відеодзвінок",
-        "translit": "/vʲidɛoˈdzvʲinok/",
-        "ipa": "video call",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/vʲidɛoˈdzvʲinok/",
+        "en": "video call",
+        "pos": "noun",
+        "gender": "m"
       }
     ]
   }

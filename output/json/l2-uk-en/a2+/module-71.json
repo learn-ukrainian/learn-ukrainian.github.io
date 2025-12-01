@@ -358,312 +358,350 @@
       {
         "id": "v-m71-001",
         "uk": "щасливий",
-        "translit": "/ʃtʃɑsˈlɪvɪj/",
-        "ipa": "happy",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ʃtʃɑsˈlɪvɪj/",
+        "en": "happy",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m71-002",
         "uk": "радісний",
-        "translit": "/ˈrɑdʲisnɪj/",
-        "ipa": "joyful",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ˈrɑdʲisnɪj/",
+        "en": "joyful",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m71-003",
         "uk": "задоволений",
-        "translit": "/zɑdoˈvolɛnɪj/",
-        "ipa": "satisfied",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/zɑdoˈvolɛnɪj/",
+        "en": "satisfied",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m71-004",
         "uk": "вдячний",
-        "translit": "/ˈvdʲɑtʃnɪj/",
-        "ipa": "grateful",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ˈvdʲɑtʃnɪj/",
+        "en": "grateful",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m71-005",
         "uk": "схвильований",
-        "translit": "/sxvɪlʲoˈvɑnɪj/",
-        "ipa": "excited, anxious",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/sxvɪlʲoˈvɑnɪj/",
+        "en": "excited, anxious",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m71-006",
         "uk": "захоплений",
-        "translit": "/zɑˈxoplɛnɪj/",
-        "ipa": "delighted",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/zɑˈxoplɛnɪj/",
+        "en": "delighted",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m71-007",
         "uk": "натхненний",
-        "translit": "/nɑtxˈnɛnːɪj/",
-        "ipa": "inspired",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/nɑtxˈnɛnːɪj/",
+        "en": "inspired",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m71-008",
         "uk": "впевнений",
-        "translit": "/vpɛvˈnɛnɪj/",
-        "ipa": "confident",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/vpɛvˈnɛnɪj/",
+        "en": "confident",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m71-009",
         "uk": "гордий",
-        "translit": "/ˈɦordɪj/",
-        "ipa": "proud",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ˈɦordɪj/",
+        "en": "proud",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m71-010",
         "uk": "закоханий",
-        "translit": "/zɑkoˈxɑnɪj/",
-        "ipa": "in love",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/zɑkoˈxɑnɪj/",
+        "en": "in love",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m71-011",
         "uk": "сумний",
-        "translit": "/ˈsumnɪj/",
-        "ipa": "sad",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ˈsumnɪj/",
+        "en": "sad",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m71-012",
         "uk": "засмучений",
-        "translit": "/zɑsˈmutʃɛnɪj/",
-        "ipa": "upset",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/zɑsˈmutʃɛnɪj/",
+        "en": "upset",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m71-013",
         "uk": "розчарований",
-        "translit": "/rostʃɑˈrovɑnɪj/",
-        "ipa": "disappointed",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/rostʃɑˈrovɑnɪj/",
+        "en": "disappointed",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m71-014",
         "uk": "злий",
-        "translit": "/zlɪj/",
-        "ipa": "angry",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/zlɪj/",
+        "en": "angry",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m71-015",
         "uk": "роздратований",
-        "translit": "/rozdrɑˈtovɑnɪj/",
-        "ipa": "irritated",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/rozdrɑˈtovɑnɪj/",
+        "en": "irritated",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m71-016",
         "uk": "знервований",
-        "translit": "/znɛrˈvovɑnɪj/",
-        "ipa": "nervous",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/znɛrˈvovɑnɪj/",
+        "en": "nervous",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m71-017",
         "uk": "стривожений",
-        "translit": "/strɪˈvoʒɛnɪj/",
-        "ipa": "anxious",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/strɪˈvoʒɛnɪj/",
+        "en": "anxious",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m71-018",
         "uk": "заздрісний",
-        "translit": "/ˈzɑzdrʲisnɪj/",
-        "ipa": "jealous",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ˈzɑzdrʲisnɪj/",
+        "en": "jealous",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m71-019",
         "uk": "самотній",
-        "translit": "/sɑˈmotnʲij/",
-        "ipa": "lonely",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/sɑˈmotnʲij/",
+        "en": "lonely",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m71-020",
         "uk": "втомлений",
-        "translit": "/ˈvtomlɛnɪj/",
-        "ipa": "tired",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ˈvtomlɛnɪj/",
+        "en": "tired",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m71-021",
         "uk": "добрий",
-        "translit": "/ˈdobrɪj/",
-        "ipa": "kind",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ˈdobrɪj/",
+        "en": "kind",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m71-022",
         "uk": "щедрий",
-        "translit": "/ˈʃtʃɛdrɪj/",
-        "ipa": "generous",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ˈʃtʃɛdrɪj/",
+        "en": "generous",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m71-023",
         "uk": "чесний",
-        "translit": "/ˈtʃɛsnɪj/",
-        "ipa": "honest",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ˈtʃɛsnɪj/",
+        "en": "honest",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m71-024",
         "uk": "терплячий",
-        "translit": "/tɛrpˈlʲɑtʃɪj/",
-        "ipa": "patient",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/tɛrpˈlʲɑtʃɪj/",
+        "en": "patient",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m71-025",
         "uk": "надійний",
-        "translit": "/nɑˈdʲijnɪj/",
-        "ipa": "reliable",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/nɑˈdʲijnɪj/",
+        "en": "reliable",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m71-026",
         "uk": "сміливий",
-        "translit": "/smʲiˈlɪvɪj/",
-        "ipa": "brave",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/smʲiˈlɪvɪj/",
+        "en": "brave",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m71-027",
         "uk": "працьовитий",
-        "translit": "/prɑtsʲoˈvɪtɪj/",
-        "ipa": "hardworking",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/prɑtsʲoˈvɪtɪj/",
+        "en": "hardworking",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m71-028",
         "uk": "жадібний",
-        "translit": "/ʒɑˈdʲibnɪj/",
-        "ipa": "greedy",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ʒɑˈdʲibnɪj/",
+        "en": "greedy",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m71-029",
         "uk": "впертий",
-        "translit": "/ˈvpɛrtɪj/",
-        "ipa": "stubborn",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ˈvpɛrtɪj/",
+        "en": "stubborn",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m71-030",
         "uk": "лінивий",
-        "translit": "/lʲiˈnɪvɪj/",
-        "ipa": "lazy",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/lʲiˈnɪvɪj/",
+        "en": "lazy",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m71-031",
         "uk": "грубий",
-        "translit": "/ˈɦrubɪj/",
-        "ipa": "rude",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ˈɦrubɪj/",
+        "en": "rude",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m71-032",
         "uk": "зарозумілий",
-        "translit": "/zɑrozuˈmʲilɪj/",
-        "ipa": "arrogant",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/zɑrozuˈmʲilɪj/",
+        "en": "arrogant",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m71-033",
         "uk": "хвилюватися",
-        "translit": "/xvɪlʲuˈvɑtɪsʲɑ/",
-        "ipa": "to worry",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/xvɪlʲuˈvɑtɪsʲɑ/",
+        "en": "to worry",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m71-034",
         "uk": "боятися",
-        "translit": "/boˈjɑtɪsʲɑ/",
-        "ipa": "to be afraid",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/boˈjɑtɪsʲɑ/",
+        "en": "to be afraid",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m71-035",
         "uk": "сміятися",
-        "translit": "/smʲiˈjɑtɪsʲɑ/",
-        "ipa": "to laugh",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/smʲiˈjɑtɪsʲɑ/",
+        "en": "to laugh",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m71-036",
         "uk": "плакати",
-        "translit": "/ˈplɑkɑtɪ/",
-        "ipa": "to cry",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/ˈplɑkɑtɪ/",
+        "en": "to cry",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m71-037",
         "uk": "радіти",
-        "translit": "/ˈrɑdʲitɪ/",
-        "ipa": "to rejoice",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/ˈrɑdʲitɪ/",
+        "en": "to rejoice",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m71-038",
         "uk": "заздрити",
-        "translit": "/ˈzɑzdrɪtɪ/",
-        "ipa": "to envy",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/ˈzɑzdrɪtɪ/",
+        "en": "to envy",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       }
     ]
   }

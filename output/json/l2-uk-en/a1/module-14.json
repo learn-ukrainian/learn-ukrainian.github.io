@@ -345,72 +345,80 @@
       {
         "id": "v-m14-001",
         "uk": "наш",
-        "translit": "/nɑʃ/",
-        "ipa": "our (m)",
-        "en": "pron",
-        "pos": "m",
-        "gender": "наша (f), наше (n), наші (pl)"
+        "translit": "",
+        "ipa": "/nɑʃ/",
+        "en": "our (m)",
+        "pos": "pron",
+        "gender": "m",
+        "note": "наша (f), наше (n), наші (pl)"
       },
       {
         "id": "v-m14-002",
         "uk": "ваш",
-        "translit": "/vɑʃ/",
-        "ipa": "your (m, formal)",
-        "en": "pron",
-        "pos": "m",
-        "gender": "ваша (f), ваше (n), ваші (pl)"
+        "translit": "",
+        "ipa": "/vɑʃ/",
+        "en": "your (m, formal)",
+        "pos": "pron",
+        "gender": "m",
+        "note": "ваша (f), ваше (n), ваші (pl)"
       },
       {
         "id": "v-m14-003",
         "uk": "їхній",
-        "translit": "/ˈjixnʲij/",
-        "ipa": "their (m)",
-        "en": "pron",
-        "pos": "m",
-        "gender": "їхня (f), їхнє (n), їхні (pl)"
+        "translit": "",
+        "ipa": "/ˈjixnʲij/",
+        "en": "their (m)",
+        "pos": "pron",
+        "gender": "m",
+        "note": "їхня (f), їхнє (n), їхні (pl)"
       },
       {
         "id": "v-m14-004",
         "uk": "свій",
-        "translit": "/svʲij/",
-        "ipa": "one's own (m)",
-        "en": "pron",
-        "pos": "m",
-        "gender": "своя (f), своє (n), свої (pl)"
+        "translit": "",
+        "ipa": "/svʲij/",
+        "en": "one's own (m)",
+        "pos": "pron",
+        "gender": "m",
+        "note": "своя (f), своє (n), свої (pl)"
       },
       {
         "id": "v-m14-005",
         "uk": "чий",
-        "translit": "/tʃɪj/",
-        "ipa": "whose (m)",
-        "en": "pron",
-        "pos": "m",
-        "gender": "чия (f), чиє (n), чиї (pl)"
+        "translit": "",
+        "ipa": "/tʃɪj/",
+        "en": "whose (m)",
+        "pos": "pron",
+        "gender": "m",
+        "note": "чия (f), чиє (n), чиї (pl)"
       },
       {
         "id": "v-m14-006",
         "uk": "річ",
-        "translit": "/rʲitʃ/",
-        "ipa": "thing",
-        "en": "noun",
-        "pos": "f",
-        "gender": "Plural: речі"
+        "translit": "",
+        "ipa": "/rʲitʃ/",
+        "en": "thing",
+        "pos": "noun",
+        "gender": "f",
+        "note": "Plural: речі"
       },
       {
         "id": "v-m14-007",
         "uk": "родина",
-        "translit": "/rɔˈdɪnɑ/",
-        "ipa": "family",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/rɔˈdɪnɑ/",
+        "en": "family",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m14-008",
         "uk": "машина",
-        "translit": "/mɑˈʃɪnɑ/",
-        "ipa": "car",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/mɑˈʃɪnɑ/",
+        "en": "car",
+        "pos": "noun",
+        "gender": "f"
       }
     ]
   }

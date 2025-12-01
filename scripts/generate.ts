@@ -361,13 +361,23 @@ function parseActivities(body: string, level: string, moduleNum: number): { acti
     const headerMatch = lines[0].match(/^([\w-]+):\s*(.+)$/);
 
     if (headerMatch) {
-      const type = headerMatch[1];
+      let type = headerMatch[1];
       const title = headerMatch[2].trim();
       const content = lines.slice(1).join('\n').trim();
 
-      // Parse instructions (> lines at start)
-      const instructionsMatch = content.match(/^>\s*(.+)$/m);
-      const instructions = instructionsMatch ? instructionsMatch[1] : '';
+      // Normalize activity types (fill-in → gap-fill for schema compliance)
+      if (type === 'fill-in') type = 'gap-fill';
+
+      // Parse instructions (> lines at start - can be multiple lines)
+      const instructionLines: string[] = [];
+      for (const line of content.split('\n')) {
+        if (line.startsWith('>')) {
+          instructionLines.push(line.replace(/^>\s*/, '').trim());
+        } else if (instructionLines.length > 0) {
+          break; // Stop at first non-instruction line
+        }
+      }
+      const instructions = instructionLines.join(' ');
 
       const actId = generateId('act', level, moduleNum, type.replace('-', ''));
       let actContent: any = { type, instructions };
@@ -435,6 +445,42 @@ function parseActivities(body: string, level: string, moduleNum: number): { acti
 
         actContent.groups = groups;
         actContent.shuffleItems = true;
+      } else if (type === 'gap-fill') {
+        // Parse gap-fill format:
+        // > Text with ___ (hint) blanks.
+        // **Answers:** ans1, ans2, ans3
+
+        // Extract the text with blanks (all > lines after instructions)
+        const textLines: string[] = [];
+        let foundText = false;
+        for (const line of content.split('\n')) {
+          if (line.startsWith('>')) {
+            textLines.push(line.replace(/^>\s*/, ''));
+            foundText = true;
+          } else if (foundText && line.trim() === '') {
+            // Allow blank lines within the text
+          } else if (foundText) {
+            break;
+          }
+        }
+        const textWithBlanks = textLines.join('\n').trim();
+
+        // Extract answers
+        const answersMatch = content.match(/\*\*Answers?:\*\*\s*(.+)/i);
+        const answers = answersMatch
+          ? answersMatch[1].split(/[,;]/).map(a => a.trim()).filter(Boolean)
+          : [];
+
+        // Extract hints from ___ (hint) pattern
+        const blanks: { hint?: string }[] = [];
+        const blankMatches = textWithBlanks.matchAll(/___\s*(?:\(([^)]+)\))?/g);
+        for (const match of blankMatches) {
+          blanks.push({ hint: match[1] || undefined });
+        }
+
+        actContent.text = textWithBlanks;
+        actContent.blanks = blanks;
+        actContent.answers = answers;
       }
 
       activities.push({
@@ -454,52 +500,58 @@ function parseVocabulary(body: string, moduleNum: number): { vocabulary: VocabWo
   const vocabulary: VocabWord[] = [];
 
   // Find "# Vocabulary" or "# Словник" section
-  const vocabMatch = body.match(/# (?:Vocabulary|Словник)[^\n]*\n([\s\S]*?)(?=\n---|\n# (?:Letter Groups|Підсумок)|$)/);
+  const vocabMatch = body.match(/# (?:Vocabulary|Словник)[^\n]*\n([\s\S]*?)(?=\n---|\n# (?:Letter Groups|Підсумок|Summary)|$)/);
   if (!vocabMatch) return { vocabulary: [], restBody: body };
 
   const vocabContent = vocabMatch[1];
   let restBody = body.replace(vocabMatch[0], '');
 
-  // Parse table - supports both old format (uk|translit|ipa|en|pos) and B2+ format (Слово|Вимова|Переклад|Примітки)
-  const tableMatch = vocabContent.match(/\|[^\n]+\|\n\|[-|\s]+\|\n([\s\S]*?)(?=\n\n|$)/);
+  // Parse table with header keyword detection
+  const tableMatch = vocabContent.match(/\|([^\n]+)\|\n\|[-|\s]+\|\n([\s\S]*?)(?=\n\n|$)/);
   if (tableMatch) {
-    const rows = tableMatch[1].trim().split('\n');
+    const headerLine = tableMatch[1];
+    const tableBody = tableMatch[2].trim();
+    const headers = headerLine.split('|').map(c => c.trim().toLowerCase());
+    const rows = tableBody.split('\n');
+
+    // Detect column indices by header keywords
+    const findCol = (patterns: RegExp[]): number => {
+      return headers.findIndex(h => patterns.some(p => p.test(h)));
+    };
+
+    const ukCol = findCol([/^(word|слово|uk|укр)/i]);
+    const ipaCol = findCol([/^(ipa|вимова|pronunciation)/i]);
+    const enCol = findCol([/^(english|en|переклад|meaning|translation)/i]);
+    const noteCol = findCol([/^(note|notes|примітки?|приклад)/i]);
+    const posCol = findCol([/^(pos|part|частина)/i]);
+    const genderCol = findCol([/^(gender|рід)/i]);
+
     let wordIndex = 1;
-
-    // Check header to determine format
-    const headerMatch = vocabContent.match(/\|([^\n]+)\|/);
-    const headerCells = headerMatch ? headerMatch[1].split('|').map(c => c.trim().toLowerCase()) : [];
-    const isB2Format = headerCells.some(h => h === 'слово' || h === 'вимова');
-
     for (const row of rows) {
       const cells = row.split('|').map(c => c.trim()).filter(Boolean);
-      if (cells.length >= 3) {
-        if (isB2Format) {
-          // B2+ format: Слово | Вимова | Переклад | Примітки
+      if (cells.length >= 2) {
+        // Get values from detected column positions, with fallbacks
+        const uk = ukCol >= 0 ? cells[ukCol] : cells[0] || '';
+        const ipa = ipaCol >= 0 ? cells[ipaCol] : '';
+        const en = enCol >= 0 ? cells[enCol] : cells[1] || cells[2] || '';
+        const note = noteCol >= 0 ? cells[noteCol] : undefined;
+        const pos = posCol >= 0 ? cells[posCol] : '';
+        const gender = genderCol >= 0 ? cells[genderCol] : undefined;
+
+        // Only add if we have at least Ukrainian and English
+        if (uk && en) {
           vocabulary.push({
             id: `v-m${padNumber(moduleNum)}-${padNumber(wordIndex, 3)}`,
-            uk: cells[0] || '',
-            translit: '', // B2 doesn't use transliteration
-            ipa: cells[1] || '',
-            en: cells[2] || '',
-            pos: '',
-            gender: undefined,
-            note: cells[3] || undefined,
+            uk,
+            translit: '', // Only A1 uses transliteration, handled separately
+            ipa: ipa || '',
+            en,
+            pos: pos || '',
+            gender: gender || undefined,
+            note: note || undefined,
           });
-        } else if (cells.length >= 5) {
-          // Old format: uk | translit | ipa | en | pos | gender | note
-          vocabulary.push({
-            id: `v-m${padNumber(moduleNum)}-${padNumber(wordIndex, 3)}`,
-            uk: cells[0] || '',
-            translit: cells[1] || '',
-            ipa: cells[2] || '',
-            en: cells[3] || '',
-            pos: cells[4] || '',
-            gender: cells[5] || undefined,
-            note: cells[6] || undefined,
-          });
+          wordIndex++;
         }
-        wordIndex++;
       }
     }
   }

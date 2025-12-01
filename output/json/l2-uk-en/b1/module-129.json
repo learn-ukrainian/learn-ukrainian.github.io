@@ -260,13 +260,40 @@
       "modifiedAt": "2025-12-01T00:00:00Z"
     },
     {
-      "id": "act-uk-B1-129-fillin",
-      "type": "fill-in",
+      "id": "act-uk-B1-129-gapfill",
+      "type": "gap-fill",
       "title": "Planning a Trip",
       "description": "Заплануйте поїздку.",
       "content": {
-        "type": "fill-in",
-        "instructions": "Заплануйте поїздку."
+        "type": "gap-fill",
+        "instructions": "Заплануйте поїздку.",
+        "text": "Заплануйте поїздку.\nНаступного місяця я хочу (1)___ (to travel) до Львова. Я вже (2)___ (booked) квитки на поїзд. Поїзд (3)___ (departs) о восьмій ранку з київського (4)___ (train station). Час у дорозі — близько шести годин. Я (5)___ (booked) готель у центрі міста. Хочу (6)___ (to visit) старе місто і (7)___ (to explore) місцеву кухню.",
+        "blanks": [
+          {
+            "hint": "to travel"
+          },
+          {
+            "hint": "booked"
+          },
+          {
+            "hint": "departs"
+          },
+          {
+            "hint": "train station"
+          },
+          {
+            "hint": "booked"
+          },
+          {
+            "hint": "to visit"
+          },
+          {
+            "hint": "to explore"
+          }
+        ],
+        "answers": [
+          "1. подорожувати / поїхати"
+        ]
       },
       "subject": "language",
       "owner": "curricula-opus",
@@ -288,8 +315,144 @@
     "moduleId": "mod-uk-B1-129",
     "level": "B1",
     "phase": "B1.4",
-    "wordCount": 0,
+    "wordCount": 15,
     "transliterationMode": "none",
-    "words": []
+    "words": [
+      {
+        "id": "v-m129-001",
+        "uk": "паспорт",
+        "translit": "",
+        "ipa": "/ˈpɑsport/",
+        "en": "passport",
+        "pos": "",
+        "note": "m"
+      },
+      {
+        "id": "v-m129-002",
+        "uk": "віза",
+        "translit": "",
+        "ipa": "/ˈvʲizɑ/",
+        "en": "visa",
+        "pos": "",
+        "note": "f"
+      },
+      {
+        "id": "v-m129-003",
+        "uk": "кордон",
+        "translit": "",
+        "ipa": "/korˈdon/",
+        "en": "border",
+        "pos": "",
+        "note": "m"
+      },
+      {
+        "id": "v-m129-004",
+        "uk": "митниця",
+        "translit": "",
+        "ipa": "/ˈmɪtnɪt͡sʲɑ/",
+        "en": "customs",
+        "pos": "",
+        "note": "f"
+      },
+      {
+        "id": "v-m129-005",
+        "uk": "країна",
+        "translit": "",
+        "ipa": "/krɑˈjinɑ/",
+        "en": "country",
+        "pos": "",
+        "note": "f"
+      },
+      {
+        "id": "v-m129-006",
+        "uk": "столиця",
+        "translit": "",
+        "ipa": "/stoˈlɪt͡sʲɑ/",
+        "en": "capital",
+        "pos": "",
+        "note": "f"
+      },
+      {
+        "id": "v-m129-007",
+        "uk": "аеропорт",
+        "translit": "",
+        "ipa": "/ɑɛroˈport/",
+        "en": "airport",
+        "pos": "",
+        "note": "m"
+      },
+      {
+        "id": "v-m129-008",
+        "uk": "вокзал",
+        "translit": "",
+        "ipa": "/wokˈzɑl/",
+        "en": "train station",
+        "pos": "",
+        "note": "m"
+      },
+      {
+        "id": "v-m129-009",
+        "uk": "готель",
+        "translit": "",
+        "ipa": "/ɦoˈtɛlʲ/",
+        "en": "hotel",
+        "pos": "",
+        "note": "m"
+      },
+      {
+        "id": "v-m129-010",
+        "uk": "бронювати",
+        "translit": "",
+        "ipa": "/bronʲuˈvɑtɪ/",
+        "en": "to book",
+        "pos": "",
+        "note": "impf"
+      },
+      {
+        "id": "v-m129-011",
+        "uk": "подорожувати",
+        "translit": "",
+        "ipa": "/podoroʒuˈvɑtɪ/",
+        "en": "to travel",
+        "pos": "",
+        "note": "impf"
+      },
+      {
+        "id": "v-m129-012",
+        "uk": "відвідувати",
+        "translit": "",
+        "ipa": "/vʲidvʲiˈduvɑtɪ/",
+        "en": "to visit",
+        "pos": "",
+        "note": "impf"
+      },
+      {
+        "id": "v-m129-013",
+        "uk": "прибувати",
+        "translit": "",
+        "ipa": "/prɪbuˈvɑtɪ/",
+        "en": "to arrive",
+        "pos": "",
+        "note": "impf"
+      },
+      {
+        "id": "v-m129-014",
+        "uk": "відправлятися",
+        "translit": "",
+        "ipa": "/vʲidprɑvˈlʲɑtɪsʲɑ/",
+        "en": "to depart",
+        "pos": "",
+        "note": "impf"
+      },
+      {
+        "id": "v-m129-015",
+        "uk": "пункт призначення",
+        "translit": "",
+        "ipa": "-",
+        "en": "destination",
+        "pos": "",
+        "note": "m"
+      }
+    ]
   }
 }

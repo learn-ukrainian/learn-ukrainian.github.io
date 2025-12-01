@@ -381,310 +381,348 @@
       {
         "id": "v-m69-001",
         "uk": "диван",
-        "translit": "/dɪˈvɑn/",
-        "ipa": "sofa",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/dɪˈvɑn/",
+        "en": "sofa",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m69-002",
         "uk": "крісло",
-        "translit": "/ˈkrʲislo/",
-        "ipa": "armchair",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/ˈkrʲislo/",
+        "en": "armchair",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m69-003",
         "uk": "журнальний столик",
-        "translit": "/ʒurnɑlʲnɪj ˈstolɪk/",
-        "ipa": "coffee table",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ʒurnɑlʲnɪj ˈstolɪk/",
+        "en": "coffee table",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m69-004",
         "uk": "килим",
-        "translit": "/kɪˈlɪm/",
-        "ipa": "carpet, rug",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/kɪˈlɪm/",
+        "en": "carpet, rug",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m69-005",
         "uk": "штори",
-        "translit": "/ˈʃtorɪ/",
-        "ipa": "curtains",
-        "en": "noun",
-        "pos": "pl"
+        "translit": "",
+        "ipa": "/ˈʃtorɪ/",
+        "en": "curtains",
+        "pos": "noun",
+        "gender": "pl"
       },
       {
         "id": "v-m69-006",
         "uk": "ліжко",
-        "translit": "/ˈlʲiʒko/",
-        "ipa": "bed",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/ˈlʲiʒko/",
+        "en": "bed",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m69-007",
         "uk": "матрац",
-        "translit": "/mɑˈtrɑts/",
-        "ipa": "mattress",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/mɑˈtrɑts/",
+        "en": "mattress",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m69-008",
         "uk": "подушка",
-        "translit": "/poˈduʃkɑ/",
-        "ipa": "pillow",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/poˈduʃkɑ/",
+        "en": "pillow",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m69-009",
         "uk": "ковдра",
-        "translit": "/ˈkovdrɑ/",
-        "ipa": "blanket",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈkovdrɑ/",
+        "en": "blanket",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m69-010",
         "uk": "простирадло",
-        "translit": "/prostɪˈrɑdlo/",
-        "ipa": "sheet",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/prostɪˈrɑdlo/",
+        "en": "sheet",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m69-011",
         "uk": "тумбочка",
-        "translit": "/tumˈbotʃkɑ/",
-        "ipa": "nightstand",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/tumˈbotʃkɑ/",
+        "en": "nightstand",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m69-012",
         "uk": "шафа",
-        "translit": "/ˈʃɑfɑ/",
-        "ipa": "wardrobe",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈʃɑfɑ/",
+        "en": "wardrobe",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m69-013",
         "uk": "комод",
-        "translit": "/koˈmod/",
-        "ipa": "dresser",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/koˈmod/",
+        "en": "dresser",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m69-014",
         "uk": "дзеркало",
-        "translit": "/ˈdzɛrkɑlo/",
-        "ipa": "mirror",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/ˈdzɛrkɑlo/",
+        "en": "mirror",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m69-015",
         "uk": "мийка",
-        "translit": "/ˈmɪjkɑ/",
-        "ipa": "sink",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈmɪjkɑ/",
+        "en": "sink",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m69-016",
         "uk": "посуд",
-        "translit": "/ˈposud/",
-        "ipa": "dishes",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ˈposud/",
+        "en": "dishes",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m69-017",
         "uk": "ванна",
-        "translit": "/ˈvɑnːɑ/",
-        "ipa": "bathtub",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈvɑnːɑ/",
+        "en": "bathtub",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m69-018",
         "uk": "душ",
-        "translit": "/duʃ/",
-        "ipa": "shower",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/duʃ/",
+        "en": "shower",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m69-019",
         "uk": "умивальник",
-        "translit": "/umɪˈvɑlʲnɪk/",
-        "ipa": "sink (bathroom)",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/umɪˈvɑlʲnɪk/",
+        "en": "sink (bathroom)",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m69-020",
         "uk": "рушник",
-        "translit": "/ruʃˈnɪk/",
-        "ipa": "towel",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ruʃˈnɪk/",
+        "en": "towel",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m69-021",
         "uk": "мило",
-        "translit": "/ˈmɪlo/",
-        "ipa": "soap",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/ˈmɪlo/",
+        "en": "soap",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m69-022",
         "uk": "пральна машина",
-        "translit": "/ˈprɑlʲnɑ mɑˈʃɪnɑ/",
-        "ipa": "washing machine",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈprɑlʲnɑ mɑˈʃɪnɑ/",
+        "en": "washing machine",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m69-023",
         "uk": "письмовий стіл",
-        "translit": "/pɪsʲˈmovɪj stʲil/",
-        "ipa": "desk",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/pɪsʲˈmovɪj stʲil/",
+        "en": "desk",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m69-024",
         "uk": "шухляда",
-        "translit": "/ʃuxˈlʲɑdɑ/",
-        "ipa": "drawer",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ʃuxˈlʲɑdɑ/",
+        "en": "drawer",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m69-025",
         "uk": "квартира",
-        "translit": "/kvɑrˈtɪrɑ/",
-        "ipa": "apartment",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/kvɑrˈtɪrɑ/",
+        "en": "apartment",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m69-026",
         "uk": "поверх",
-        "translit": "/ˈpovɛrx/",
-        "ipa": "floor (level)",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ˈpovɛrx/",
+        "en": "floor (level)",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m69-027",
         "uk": "балкон",
-        "translit": "/bɑlˈkon/",
-        "ipa": "balcony",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/bɑlˈkon/",
+        "en": "balcony",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m69-028",
         "uk": "ліфт",
-        "translit": "/lʲift/",
-        "ipa": "elevator",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/lʲift/",
+        "en": "elevator",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m69-029",
         "uk": "сходи",
-        "translit": "/ˈsxodɪ/",
-        "ipa": "stairs",
-        "en": "noun",
-        "pos": "pl"
+        "translit": "",
+        "ipa": "/ˈsxodɪ/",
+        "en": "stairs",
+        "pos": "noun",
+        "gender": "pl"
       },
       {
         "id": "v-m69-030",
         "uk": "орендувати",
-        "translit": "/orɛnduˈvɑtɪ/",
-        "ipa": "to rent",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/orɛnduˈvɑtɪ/",
+        "en": "to rent",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m69-031",
         "uk": "переїжджати",
-        "translit": "/pɛrɛˈjiʒdʒɑtɪ/",
-        "ipa": "to move",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/pɛrɛˈjiʒdʒɑtɪ/",
+        "en": "to move",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m69-032",
         "uk": "прибирати",
-        "translit": "/prɪbɪˈrɑtɪ/",
-        "ipa": "to clean",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/prɪbɪˈrɑtɪ/",
+        "en": "to clean",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m69-033",
         "uk": "пилососити",
-        "translit": "/pɪloˈsosɪtɪ/",
-        "ipa": "to vacuum",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/pɪloˈsosɪtɪ/",
+        "en": "to vacuum",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m69-034",
         "uk": "просторий",
-        "translit": "/prosˈtorɪj/",
-        "ipa": "spacious",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/prosˈtorɪj/",
+        "en": "spacious",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m69-035",
         "uk": "затишний",
-        "translit": "/zɑˈtɪʃnɪj/",
-        "ipa": "cozy",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/zɑˈtɪʃnɪj/",
+        "en": "cozy",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m69-036",
         "uk": "світлий",
-        "translit": "/ˈsvʲitlɪj/",
-        "ipa": "bright",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ˈsvʲitlɪj/",
+        "en": "bright",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m69-037",
         "uk": "сучасний",
-        "translit": "/sutʃɑsˈnɪj/",
-        "ipa": "modern",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/sutʃɑsˈnɪj/",
+        "en": "modern",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m69-038",
         "uk": "обладнаний",
-        "translit": "/oblɑdˈnɑnɪj/",
-        "ipa": "furnished",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/oblɑdˈnɑnɪj/",
+        "en": "furnished",
+        "pos": "adj",
+        "gender": "-"
       }
     ]
   }

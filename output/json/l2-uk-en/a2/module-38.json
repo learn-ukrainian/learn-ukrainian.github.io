@@ -363,99 +363,111 @@
       {
         "id": "v-m38-001",
         "uk": "правило",
-        "translit": "/prɑˈvɪlo/",
-        "ipa": "rule",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/prɑˈvɪlo/",
+        "en": "rule",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m38-002",
         "uk": "полиця",
-        "translit": "/poˈlɪtsʲɑ/",
-        "ipa": "shelf",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/poˈlɪtsʲɑ/",
+        "en": "shelf",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m38-003",
         "uk": "ваза",
-        "translit": "/ˈvɑzɑ/",
-        "ipa": "vase",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈvɑzɑ/",
+        "en": "vase",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m38-004",
         "uk": "поверх",
-        "translit": "/ˈpovɛrx/",
-        "ipa": "floor (of building)",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ˈpovɛrx/",
+        "en": "floor (of building)",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m38-005",
         "uk": "кабінет",
-        "translit": "/kɑbʲiˈnɛt/",
-        "ipa": "office, study",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/kɑbʲiˈnɛt/",
+        "en": "office, study",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m38-006",
         "uk": "секретарка",
-        "translit": "/sɛkrɛˈtɑrkɑ/",
-        "ipa": "secretary (f)",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/sɛkrɛˈtɑrkɑ/",
+        "en": "secretary (f)",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m38-007",
         "uk": "бухгалтерія",
-        "translit": "/buxɦɑlˈtɛrʲijɑ/",
-        "ipa": "accounting dept",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/buxɦɑlˈtɛrʲijɑ/",
+        "en": "accounting dept",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m38-008",
         "uk": "партнер",
-        "translit": "/pɑrtˈnɛr/",
-        "ipa": "partner",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/pɑrtˈnɛr/",
+        "en": "partner",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m38-009",
         "uk": "малюнок",
-        "translit": "/mɑˈlʲunok/",
-        "ipa": "drawing, picture",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/mɑˈlʲunok/",
+        "en": "drawing, picture",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m38-010",
         "uk": "лекція",
-        "translit": "/ˈlɛktsʲijɑ/",
-        "ipa": "lecture",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈlɛktsʲijɑ/",
+        "en": "lecture",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m38-011",
         "uk": "задоволення",
-        "translit": "/zɑdoˈvolɛnʲːɑ/",
-        "ipa": "pleasure, satisfaction",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/zɑdoˈvolɛnʲːɑ/",
+        "en": "pleasure, satisfaction",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m38-012",
         "uk": "протягом",
-        "translit": "/proˈtʲɑɦom/",
-        "ipa": "during, throughout",
-        "en": "prep",
-        "pos": "-",
-        "gender": "+ gen"
+        "translit": "",
+        "ipa": "/proˈtʲɑɦom/",
+        "en": "during, throughout",
+        "pos": "prep",
+        "gender": "-",
+        "note": "+ gen"
       }
     ]
   }

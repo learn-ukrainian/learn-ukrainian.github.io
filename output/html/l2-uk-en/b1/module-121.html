@@ -691,7 +691,7 @@
       <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
-    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (0)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
+    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (15)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
     </section>
   </main>
@@ -700,7 +700,7 @@
     const matchPairs=[];
     const quizData=[{"question":"While reading: ___","options":["читаючи","прочитавши"],"correctIndex":0,"explanation":"Imperfective for simultaneous action."},{"question":"Having written: ___","options":["написавши","пишучи"],"correctIndex":0,"explanation":"Perfective for completed action."},{"question":"___ книгу, він заснув. (simultaneous)","options":["Читаючи","Прочитавши"],"correctIndex":0,"explanation":"Simultaneous action = imperfective."},{"question":"___ роботу, вона пішла додому. (completed first)","options":["Закінчивши","Закінчуючи"],"correctIndex":0,"explanation":"Prior action = perfective."},{"question":"Imperfective of \"говорити\": ___","options":["говорячи","говоривши"],"correctIndex":0,"explanation":"3rd plural говорять → говорячи."},{"question":"Perfective of \"повернутися\": ___","options":["повернувшись","повертаючись"],"correctIndex":0,"explanation":"Past stem + -вшись."}];
     const sortData={};
-    const vocabData=[];
+    const vocabData=[{"uk":"дієприслівник","translit":"","en":"adverbial participle","note":"m"},{"uk":"читаючи","translit":"","en":"while reading","note":"impf"},{"uk":"прочитавши","translit":"","en":"having read","note":"pf"},{"uk":"пишучи","translit":"","en":"while writing","note":"impf"},{"uk":"написавши","translit":"","en":"having written","note":"pf"},{"uk":"говорячи","translit":"","en":"while speaking","note":"impf"},{"uk":"сказавши","translit":"","en":"having said","note":"pf"},{"uk":"йдучи","translit":"","en":"while going","note":"impf"},{"uk":"прийшовши","translit":"","en":"having come","note":"pf"},{"uk":"слухаючи","translit":"","en":"while listening","note":"impf"},{"uk":"почувши","translit":"","en":"having heard","note":"pf"},{"uk":"дивлячись","translit":"","en":"while watching","note":"impf"},{"uk":"побачивши","translit":"","en":"having seen","note":"pf"},{"uk":"повернувшись","translit":"","en":"having returned","note":"pf"},{"uk":"дізнавшись","translit":"","en":"having learned","note":"pf"}];
     const totalSort=0;
     function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
     document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));

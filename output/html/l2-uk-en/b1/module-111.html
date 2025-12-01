@@ -921,7 +921,7 @@
       <div class="score-display"><span class="score"><span id="match-score">0</span>/3</span></div>
       <div class="match-container" id="match-container"><svg class="match-lines" id="match-lines"></svg>
         <div class="match-column" id="match-left"><div class="match-item" data-pair="0">газета</div><div class="match-item" data-pair="1">журнал</div><div class="match-item" data-pair="2">стаття</div></div>
-        <div class="match-column" id="match-right"><div class="match-item" data-pair="1">радіо</div><div class="match-item" data-pair="0">телебачення</div><div class="match-item" data-pair="2">передача</div></div>
+        <div class="match-column" id="match-right"><div class="match-item" data-pair="0">телебачення</div><div class="match-item" data-pair="1">радіо</div><div class="match-item" data-pair="2">передача</div></div>
       </div>
       <div class="completion-message" id="match-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetMatch()">Reset</button><button class="btn btn-primary" onclick="showSection('quiz')">Next →</button></div>
@@ -933,7 +933,7 @@
       <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
-    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (0)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
+    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (16)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
     </section>
   </main>
@@ -942,7 +942,7 @@
     const matchPairs=[{"left":"газета","right":"телебачення"},{"left":"журнал","right":"радіо"},{"left":"стаття","right":"передача"}];
     const quizData=[{"question":"Він працює ___ на телеканалі.","options":["журналістом","газетою"],"correctIndex":0,"explanation":""},{"question":"Я читаю ___ щоранку.","options":["новини","новина"],"correctIndex":0,"explanation":""},{"question":"Яка ваша улюблена ___?","options":["передача","передачу"],"correctIndex":0,"explanation":""},{"question":"Ця ___ дуже цікава.","options":["стаття","статтю"],"correctIndex":0,"explanation":""},{"question":"Скільки у вас ___?","options":["підписників","підписники"],"correctIndex":0,"explanation":""},{"question":"Я поставив ___ під фото.","options":["лайк","лайком"],"correctIndex":0,"explanation":""}];
     const sortData={};
-    const vocabData=[];
+    const vocabData=[{"uk":"газета","translit":"","en":"newspaper","note":""},{"uk":"журнал","translit":"","en":"magazine","note":""},{"uk":"стаття","translit":"","en":"article","note":""},{"uk":"заголовок","translit":"","en":"headline","note":""},{"uk":"журналіст","translit":"","en":"journalist","note":""},{"uk":"редактор","translit":"","en":"editor","note":""},{"uk":"новини","translit":"","en":"news","note":""},{"uk":"телебачення","translit":"","en":"television","note":""},{"uk":"радіо","translit":"","en":"radio","note":""},{"uk":"передача","translit":"","en":"program","note":""},{"uk":"інтернет","translit":"","en":"internet","note":""},{"uk":"вебсайт","translit":"","en":"website","note":""},{"uk":"блог","translit":"","en":"blog","note":""},{"uk":"соціальна мережа","translit":"","en":"social network","note":""},{"uk":"підписник","translit":"","en":"subscriber","note":""},{"uk":"коментар","translit":"","en":"comment","note":""}];
     const totalSort=0;
     function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
     document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));

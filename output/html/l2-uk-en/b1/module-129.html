@@ -824,7 +824,7 @@
       <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
-    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (0)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
+    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (15)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
     </section>
   </main>
@@ -833,7 +833,7 @@
     const matchPairs=[];
     const quizData=[{"question":"Документ для міжнародних поїздок:","options":["паспорт","квиток"],"correctIndex":0,"explanation":"Passport for international travel."},{"question":"Лінія між двома країнами:","options":["кордон","митниця"],"correctIndex":0,"explanation":"Border between countries."},{"question":"Київ — це:","options":["столиця","область"],"correctIndex":0,"explanation":"Capital city."},{"question":"Місце, де зупиняються поїзди:","options":["вокзал","аеропорт"],"correctIndex":0,"explanation":"Train station."},{"question":"Гори на заході України:","options":["Карпати","Альпи"],"correctIndex":0,"explanation":"Carpathian mountains."},{"question":"Перевірка на кордоні:","options":["паспортний контроль","бронювання"],"correctIndex":0,"explanation":"Passport control at the border."}];
     const sortData={};
-    const vocabData=[];
+    const vocabData=[{"uk":"паспорт","translit":"","en":"passport","note":"m"},{"uk":"віза","translit":"","en":"visa","note":"f"},{"uk":"кордон","translit":"","en":"border","note":"m"},{"uk":"митниця","translit":"","en":"customs","note":"f"},{"uk":"країна","translit":"","en":"country","note":"f"},{"uk":"столиця","translit":"","en":"capital","note":"f"},{"uk":"аеропорт","translit":"","en":"airport","note":"m"},{"uk":"вокзал","translit":"","en":"train station","note":"m"},{"uk":"готель","translit":"","en":"hotel","note":"m"},{"uk":"бронювати","translit":"","en":"to book","note":"impf"},{"uk":"подорожувати","translit":"","en":"to travel","note":"impf"},{"uk":"відвідувати","translit":"","en":"to visit","note":"impf"},{"uk":"прибувати","translit":"","en":"to arrive","note":"impf"},{"uk":"відправлятися","translit":"","en":"to depart","note":"impf"},{"uk":"пункт призначення","translit":"","en":"destination","note":"m"}];
     const totalSort=0;
     function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
     document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));

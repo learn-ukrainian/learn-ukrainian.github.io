@@ -361,138 +361,155 @@
       {
         "id": "v-m47-001",
         "uk": "якби",
-        "translit": "/jɑkˈbɪ/",
-        "ipa": "if (unreal)",
-        "en": "conj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/jɑkˈbɪ/",
+        "en": "if (unreal)",
+        "pos": "conj",
+        "gender": "-"
       },
       {
         "id": "v-m47-002",
         "uk": "б",
-        "translit": "/b/",
-        "ipa": "would (after vowel)",
-        "en": "part",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/b/",
+        "en": "would (after vowel)",
+        "pos": "part",
+        "gender": "-"
       },
       {
         "id": "v-m47-003",
         "uk": "би",
-        "translit": "/bɪ/",
-        "ipa": "would (after consonant)",
-        "en": "part",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/bɪ/",
+        "en": "would (after consonant)",
+        "pos": "part",
+        "gender": "-"
       },
       {
         "id": "v-m47-004",
         "uk": "хотів би",
-        "translit": "/xoˈtʲiv bɪ/",
-        "ipa": "would like (m)",
-        "en": "phrase",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/xoˈtʲiv bɪ/",
+        "en": "would like (m)",
+        "pos": "phrase",
+        "gender": "-"
       },
       {
         "id": "v-m47-005",
         "uk": "хотіла б",
-        "translit": "/xoˈtʲilɑ b/",
-        "ipa": "would like (f)",
-        "en": "phrase",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/xoˈtʲilɑ b/",
+        "en": "would like (f)",
+        "pos": "phrase",
+        "gender": "-"
       },
       {
         "id": "v-m47-006",
         "uk": "могли б",
-        "translit": "/moɦˈlɪ b/",
-        "ipa": "could (pl/formal)",
-        "en": "phrase",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/moɦˈlɪ b/",
+        "en": "could (pl/formal)",
+        "pos": "phrase",
+        "gender": "-"
       },
       {
         "id": "v-m47-007",
         "uk": "мав би",
-        "translit": "/mɑv bɪ/",
-        "ipa": "should (m)",
-        "en": "phrase",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/mɑv bɪ/",
+        "en": "should (m)",
+        "pos": "phrase",
+        "gender": "-"
       },
       {
         "id": "v-m47-008",
         "uk": "було б",
-        "translit": "/buˈlo b/",
-        "ipa": "would be",
-        "en": "phrase",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/buˈlo b/",
+        "en": "would be",
+        "pos": "phrase",
+        "gender": "-"
       },
       {
         "id": "v-m47-009",
         "uk": "гіпотетичний",
-        "translit": "/ɦʲipotɛˈtɪtʃnɪj/",
-        "ipa": "hypothetical",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ɦʲipotɛˈtɪtʃnɪj/",
+        "en": "hypothetical",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m47-010",
         "uk": "уявний",
-        "translit": "/ujɑvˈnɪj/",
-        "ipa": "imaginary, hypothetical",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ujɑvˈnɪj/",
+        "en": "imaginary, hypothetical",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m47-011",
         "uk": "можливість",
-        "translit": "/moʒˈlɪvʲistʲ/",
-        "ipa": "possibility",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/moʒˈlɪvʲistʲ/",
+        "en": "possibility",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m47-012",
         "uk": "мрія",
-        "translit": "/ˈmrʲijɑ/",
-        "ipa": "dream",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈmrʲijɑ/",
+        "en": "dream",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m47-013",
         "uk": "мріяти",
-        "translit": "/mrʲiˈjɑtɪ/",
-        "ipa": "to dream",
-        "en": "verb",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/mrʲiˈjɑtɪ/",
+        "en": "to dream",
+        "pos": "verb",
+        "gender": "-"
       },
       {
         "id": "v-m47-014",
         "uk": "уявляти",
-        "translit": "/ujɑvˈlʲɑtɪ/",
-        "ipa": "to imagine (impf)",
-        "en": "verb",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ujɑvˈlʲɑtɪ/",
+        "en": "to imagine (impf)",
+        "pos": "verb",
+        "gender": "-"
       },
       {
         "id": "v-m47-015",
         "uk": "уявити",
-        "translit": "/ujɑˈvɪtɪ/",
-        "ipa": "to imagine (perf)",
-        "en": "verb",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ujɑˈvɪtɪ/",
+        "en": "to imagine (perf)",
+        "pos": "verb",
+        "gender": "-"
       },
       {
         "id": "v-m47-016",
         "uk": "шкода",
-        "translit": "/ˈʃkodɑ/",
-        "ipa": "pity, shame",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈʃkodɑ/",
+        "en": "pity, shame",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m47-017",
         "uk": "на жаль",
-        "translit": "/nɑ ʒɑlʲ/",
-        "ipa": "unfortunately",
-        "en": "phrase",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/nɑ ʒɑlʲ/",
+        "en": "unfortunately",
+        "pos": "phrase",
+        "gender": "-"
       }
     ]
   }

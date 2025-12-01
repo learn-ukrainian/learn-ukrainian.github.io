@@ -769,7 +769,7 @@
       <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
-    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (0)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
+    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (10)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
     </section>
   </main>
@@ -778,7 +778,7 @@
     const matchPairs=[];
     const quizData=[{"question":"___ я знав, я б сказав.","options":["Якщо","Якби"],"correctIndex":1,"explanation":"Unreal/hypothetical requires \"якби.\""},{"question":"Якби вона мала час, вона ___ прийшла.","options":["б","-"],"correctIndex":0,"explanation":"The particle \"б\" marks the result clause."},{"question":"Якби я ___ багатим, я б подорожував.","options":["був","буду"],"correctIndex":0,"explanation":"Past tense form with \"якби.\""},{"question":"___ він зателефонує завтра, передай йому. (possible)","options":["Якщо","Якби"],"correctIndex":0,"explanation":"Real possibility uses \"якщо.\""},{"question":"Якби я був на твоєму ___ , я б відпочив.","options":["місці","місце"],"correctIndex":0,"explanation":"Fixed expression \"на твоєму місці\" (in your place)."},{"question":"___ я міг літати!","options":["Якби","Якщо"],"correctIndex":0,"explanation":"Wish expression uses \"якби.\""}];
     const sortData={};
-    const vocabData=[];
+    const vocabData=[{"uk":"якби","translit":"","en":"if (unreal)","note":""},{"uk":"б / би","translit":"","en":"would (conditional particle)","note":""},{"uk":"нереальний","translit":"","en":"unreal","note":""},{"uk":"гіпотетичний","translit":"","en":"hypothetical","note":""},{"uk":"уявити","translit":"","en":"to imagine","note":""},{"uk":"уявляти","translit":"","en":"to imagine","note":""},{"uk":"мріяти","translit":"","en":"to dream","note":""},{"uk":"на твоєму місці","translit":"","en":"in your place","note":""},{"uk":"можливо","translit":"","en":"possibly","note":""},{"uk":"неможливо","translit":"","en":"impossible","note":""}];
     const totalSort=0;
     function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
     document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));

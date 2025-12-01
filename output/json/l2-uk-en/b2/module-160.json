@@ -146,105 +146,118 @@
         "id": "v-m160-001",
         "uk": "проте",
         "translit": "",
-        "ipa": "however",
-        "en": "книжний",
-        "pos": ""
+        "ipa": "",
+        "en": "however",
+        "pos": "",
+        "note": "книжний"
       },
       {
         "id": "v-m160-002",
         "uk": "однак",
         "translit": "",
-        "ipa": "however, yet",
-        "en": "несподіванка",
-        "pos": ""
+        "ipa": "",
+        "en": "however, yet",
+        "pos": "",
+        "note": "несподіванка"
       },
       {
         "id": "v-m160-003",
         "uk": "втім",
         "translit": "",
-        "ipa": "however, though",
-        "en": "застереження",
-        "pos": ""
+        "ipa": "",
+        "en": "however, though",
+        "pos": "",
+        "note": "застереження"
       },
       {
         "id": "v-m160-004",
         "uk": "зате",
         "translit": "",
-        "ipa": "but (in exchange)",
-        "en": "компенсація",
-        "pos": ""
+        "ipa": "",
+        "en": "but (in exchange)",
+        "pos": "",
+        "note": "компенсація"
       },
       {
         "id": "v-m160-005",
         "uk": "до того ж",
         "translit": "",
-        "ipa": "moreover",
-        "en": "додавання",
-        "pos": ""
+        "ipa": "",
+        "en": "moreover",
+        "pos": "",
+        "note": "додавання"
       },
       {
         "id": "v-m160-006",
         "uk": "крім того",
         "translit": "",
-        "ipa": "besides",
-        "en": "додавання",
-        "pos": ""
+        "ipa": "",
+        "en": "besides",
+        "pos": "",
+        "note": "додавання"
       },
       {
         "id": "v-m160-007",
         "uk": "більше того",
         "translit": "",
-        "ipa": "what's more",
-        "en": "підсилення",
-        "pos": ""
+        "ipa": "",
+        "en": "what's more",
+        "pos": "",
+        "note": "підсилення"
       },
       {
         "id": "v-m160-008",
         "uk": "тобто",
         "translit": "",
-        "ipa": "that is",
-        "en": "пояснення",
-        "pos": ""
+        "ipa": "",
+        "en": "that is",
+        "pos": "",
+        "note": "пояснення"
       },
       {
         "id": "v-m160-009",
         "uk": "отже",
         "translit": "",
-        "ipa": "so, thus",
-        "en": "наслідок",
-        "pos": ""
+        "ipa": "",
+        "en": "so, thus",
+        "pos": "",
+        "note": "наслідок"
       },
       {
         "id": "v-m160-010",
         "uk": "відтак",
         "translit": "",
-        "ipa": "consequently",
-        "en": "наслідок",
-        "pos": ""
+        "ipa": "",
+        "en": "consequently",
+        "pos": "",
+        "note": "наслідок"
       },
       {
         "id": "v-m160-011",
         "uk": "тож",
         "translit": "",
-        "ipa": "so",
-        "en": "наслідок",
-        "pos": ""
+        "ipa": "",
+        "en": "so",
+        "pos": "",
+        "note": "наслідок"
       },
       {
         "id": "v-m160-012",
         "uk": "попри",
         "translit": "",
-        "ipa": "despite",
-        "en": "допуст",
-        "pos": ""
+        "ipa": "",
+        "en": "despite",
+        "pos": "",
+        "note": "допуст"
       },
       {
         "id": "v-m160-013",
         "uk": "дарма що",
         "translit": "",
-        "ipa": "although",
-        "en": "допуст",
-        "pos": ""
+        "ipa": "",
+        "en": "although",
+        "pos": "",
+        "note": "допуст"
       }
     ]
   }

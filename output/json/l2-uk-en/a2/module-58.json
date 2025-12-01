@@ -351,101 +351,113 @@
       {
         "id": "v-m58-001",
         "uk": "думка",
-        "translit": "/ˈdumkɑ/",
-        "ipa": "opinion, thought",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈdumkɑ/",
+        "en": "opinion, thought",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m58-002",
         "uk": "вважати",
-        "translit": "/vvɑˈʒɑtɪ/",
-        "ipa": "to believe, consider",
-        "en": "verb",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/vvɑˈʒɑtɪ/",
+        "en": "to believe, consider",
+        "pos": "verb",
+        "gender": "-"
       },
       {
         "id": "v-m58-003",
         "uk": "погоджуватися",
-        "translit": "/poɦoˈdʒuvɑtɪsʲɑ/",
-        "ipa": "to agree (impf)",
-        "en": "verb",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/poɦoˈdʒuvɑtɪsʲɑ/",
+        "en": "to agree (impf)",
+        "pos": "verb",
+        "gender": "-"
       },
       {
         "id": "v-m58-004",
         "uk": "згоден",
-        "translit": "/ˈzɦodɛn/",
-        "ipa": "agree (m)",
-        "en": "adj",
-        "pos": "m",
-        "gender": "short form"
+        "translit": "",
+        "ipa": "/ˈzɦodɛn/",
+        "en": "agree (m)",
+        "pos": "adj",
+        "gender": "m",
+        "note": "short form"
       },
       {
         "id": "v-m58-005",
         "uk": "згодна",
-        "translit": "/ˈzɦodnɑ/",
-        "ipa": "agree (f)",
-        "en": "adj",
-        "pos": "f",
-        "gender": "short form"
+        "translit": "",
+        "ipa": "/ˈzɦodnɑ/",
+        "en": "agree (f)",
+        "pos": "adj",
+        "gender": "f",
+        "note": "short form"
       },
       {
         "id": "v-m58-006",
         "uk": "рація",
-        "translit": "/ˈrɑtsʲijɑ/",
-        "ipa": "rightness",
-        "en": "noun",
-        "pos": "f",
-        "gender": "мати рацію"
+        "translit": "",
+        "ipa": "/ˈrɑtsʲijɑ/",
+        "en": "rightness",
+        "pos": "noun",
+        "gender": "f",
+        "note": "мати рацію"
       },
       {
         "id": "v-m58-007",
         "uk": "переконаний",
-        "translit": "/pɛrɛˈkonɑnɪj/",
-        "ipa": "convinced",
-        "en": "adj",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/pɛrɛˈkonɑnɪj/",
+        "en": "convinced",
+        "pos": "adj",
+        "gender": "m"
       },
       {
         "id": "v-m58-008",
         "uk": "сумніватися",
-        "translit": "/sumnʲiˈvɑtɪsʲɑ/",
-        "ipa": "to doubt",
-        "en": "verb",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/sumnʲiˈvɑtɪsʲɑ/",
+        "en": "to doubt",
+        "pos": "verb",
+        "gender": "-"
       },
       {
         "id": "v-m58-009",
         "uk": "впевнений",
-        "translit": "/vˈpɛvnɛnɪj/",
-        "ipa": "sure, certain",
-        "en": "adj",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/vˈpɛvnɛnɪj/",
+        "en": "sure, certain",
+        "pos": "adj",
+        "gender": "m"
       },
       {
         "id": "v-m58-010",
         "uk": "навпаки",
-        "translit": "/nɑvˈpɑkɪ/",
-        "ipa": "on the contrary",
-        "en": "adv",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/nɑvˈpɑkɪ/",
+        "en": "on the contrary",
+        "pos": "adv",
+        "gender": "-"
       },
       {
         "id": "v-m58-011",
         "uk": "загалом",
-        "translit": "/zɑˈɦɑlom/",
-        "ipa": "in general",
-        "en": "adv",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/zɑˈɦɑlom/",
+        "en": "in general",
+        "pos": "adv",
+        "gender": "-"
       },
       {
         "id": "v-m58-012",
         "uk": "отже",
-        "translit": "/ˈotʒɛ/",
-        "ipa": "so, therefore",
-        "en": "conj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ˈotʒɛ/",
+        "en": "so, therefore",
+        "pos": "conj",
+        "gender": "-"
       }
     ]
   }

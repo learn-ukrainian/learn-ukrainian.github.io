@@ -351,69 +351,77 @@
       {
         "id": "v-m51-001",
         "uk": "митися",
-        "translit": "/ˈmɪtɪsʲɑ/",
-        "ipa": "to wash oneself",
-        "en": "verb",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ˈmɪtɪsʲɑ/",
+        "en": "to wash oneself",
+        "pos": "verb",
+        "gender": "-"
       },
       {
         "id": "v-m51-002",
         "uk": "зачісуватися",
-        "translit": "/zɑtʃʲisuˈvɑtɪsʲɑ/",
-        "ipa": "to comb one's hair",
-        "en": "verb",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/zɑtʃʲisuˈvɑtɪsʲɑ/",
+        "en": "to comb one's hair",
+        "pos": "verb",
+        "gender": "-"
       },
       {
         "id": "v-m51-003",
         "uk": "сміятися",
-        "translit": "/smʲiˈjɑtɪsʲɑ/",
-        "ipa": "to laugh",
-        "en": "verb",
-        "pos": "-",
-        "gender": "always refl"
+        "translit": "",
+        "ipa": "/smʲiˈjɑtɪsʲɑ/",
+        "en": "to laugh",
+        "pos": "verb",
+        "gender": "-",
+        "note": "always refl"
       },
       {
         "id": "v-m51-004",
         "uk": "боятися",
-        "translit": "/boˈjɑtɪsʲɑ/",
-        "ipa": "to be afraid",
-        "en": "verb",
-        "pos": "-",
-        "gender": "always refl"
+        "translit": "",
+        "ipa": "/boˈjɑtɪsʲɑ/",
+        "en": "to be afraid",
+        "pos": "verb",
+        "gender": "-",
+        "note": "always refl"
       },
       {
         "id": "v-m51-005",
         "uk": "намагатися",
-        "translit": "/nɑmɑˈɦɑtɪsʲɑ/",
-        "ipa": "to try",
-        "en": "verb",
-        "pos": "-",
-        "gender": "always refl"
+        "translit": "",
+        "ipa": "/nɑmɑˈɦɑtɪsʲɑ/",
+        "en": "to try",
+        "pos": "verb",
+        "gender": "-",
+        "note": "always refl"
       },
       {
         "id": "v-m51-006",
         "uk": "себе",
-        "translit": "/sɛˈbɛ/",
-        "ipa": "oneself (acc/gen)",
-        "en": "pron",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/sɛˈbɛ/",
+        "en": "oneself (acc/gen)",
+        "pos": "pron",
+        "gender": "-"
       },
       {
         "id": "v-m51-007",
         "uk": "собі",
-        "translit": "/soˈbʲi/",
-        "ipa": "oneself (dat/loc)",
-        "en": "pron",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/soˈbʲi/",
+        "en": "oneself (dat/loc)",
+        "pos": "pron",
+        "gender": "-"
       },
       {
         "id": "v-m51-008",
         "uk": "собою",
-        "translit": "/soˈboju/",
-        "ipa": "oneself (inst)",
-        "en": "pron",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/soˈboju/",
+        "en": "oneself (inst)",
+        "pos": "pron",
+        "gender": "-"
       }
     ]
   }

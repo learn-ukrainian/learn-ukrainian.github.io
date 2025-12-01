@@ -649,7 +649,7 @@
       <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
-    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (0)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
+    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (7)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
     </section>
   </main>
@@ -658,7 +658,7 @@
     const matchPairs=[];
     const quizData=[{"question":"Людина, ___ мені допомогла, дуже добра.","options":["яка","яку"],"correctIndex":0,"explanation":"Subject of \"допомогла\" = nominative."},{"question":"Я хочу, щоб він ___ .","options":["прийшов","прийти"],"correctIndex":0,"explanation":"Different subjects = past tense after щоб."},{"question":"___ буде час, зателефоную.","options":["Якщо","Якби"],"correctIndex":0,"explanation":"Real future condition."},{"question":"Він не прийшов ___ хвороби.","options":["через","завдяки"],"correctIndex":0,"explanation":"Negative cause = через."},{"question":"Чекай, ___ він не зателефонує.","options":["поки","коли"],"correctIndex":0,"explanation":"Until = поки не."},{"question":"___ погода була погана, ми пішли.","options":["Хоча","Тому що"],"correctIndex":0,"explanation":"Concessive = although."}];
     const sortData={};
-    const vocabData=[];
+    const vocabData=[{"uk":"контрольна робота","translit":"","en":"test, assessment","note":"f"},{"uk":"оцінювання","translit":"","en":"assessment","note":"n"},{"uk":"бал","translit":"","en":"point, score","note":"m"},{"uk":"результат","translit":"","en":"result","note":"m"},{"uk":"відповідь","translit":"","en":"answer","note":"f"},{"uk":"перевірити","translit":"","en":"to check","note":"pf"},{"uk":"покращити","translit":"","en":"to improve","note":"pf"}];
     const totalSort=0;
     function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
     document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));

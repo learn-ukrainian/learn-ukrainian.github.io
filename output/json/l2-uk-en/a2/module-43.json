@@ -353,84 +353,94 @@
       {
         "id": "v-m43-001",
         "uk": "поки",
-        "translit": "/poˈkɪ/",
-        "ipa": "while",
-        "en": "conj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/poˈkɪ/",
+        "en": "while",
+        "pos": "conj",
+        "gender": "-"
       },
       {
         "id": "v-m43-002",
         "uk": "перш ніж",
-        "translit": "/pɛrʃ nʲiʒ/",
-        "ipa": "before",
-        "en": "conj",
-        "pos": "-",
-        "gender": "+ perfective"
+        "translit": "",
+        "ipa": "/pɛrʃ nʲiʒ/",
+        "en": "before",
+        "pos": "conj",
+        "gender": "-",
+        "note": "+ perfective"
       },
       {
         "id": "v-m43-003",
         "uk": "після того як",
-        "translit": "/ˈpʲislʲɑ toˈɦo jɑk/",
-        "ipa": "after",
-        "en": "conj",
-        "pos": "-",
-        "gender": "+ perfective"
+        "translit": "",
+        "ipa": "/ˈpʲislʲɑ toˈɦo jɑk/",
+        "en": "after",
+        "pos": "conj",
+        "gender": "-",
+        "note": "+ perfective"
       },
       {
         "id": "v-m43-004",
         "uk": "нарешті",
-        "translit": "/nɑˈrɛʃtʲi/",
-        "ipa": "finally",
-        "en": "adv",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/nɑˈrɛʃtʲi/",
+        "en": "finally",
+        "pos": "adv",
+        "gender": "-"
       },
       {
         "id": "v-m43-005",
         "uk": "раптом",
-        "translit": "/ˈrɑptom/",
-        "ipa": "suddenly",
-        "en": "adv",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ˈrɑptom/",
+        "en": "suddenly",
+        "pos": "adv",
+        "gender": "-"
       },
       {
         "id": "v-m43-006",
         "uk": "прокинутися",
-        "translit": "/proˈkɪnutɪsʲɑ/",
-        "ipa": "to wake up (perf)",
-        "en": "verb",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/proˈkɪnutɪsʲɑ/",
+        "en": "to wake up (perf)",
+        "pos": "verb",
+        "gender": "-"
       },
       {
         "id": "v-m43-007",
         "uk": "повернутися",
-        "translit": "/povɛrˈnutɪsʲɑ/",
-        "ipa": "to return (perf)",
-        "en": "verb",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/povɛrˈnutɪsʲɑ/",
+        "en": "to return (perf)",
+        "pos": "verb",
+        "gender": "-"
       },
       {
         "id": "v-m43-008",
         "uk": "збирати",
-        "translit": "/zbɪˈrɑtɪ/",
-        "ipa": "to gather (impf)",
-        "en": "verb",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/zbɪˈrɑtɪ/",
+        "en": "to gather (impf)",
+        "pos": "verb",
+        "gender": "-"
       },
       {
         "id": "v-m43-009",
         "uk": "зібрати",
-        "translit": "/zʲiˈbrɑtɪ/",
-        "ipa": "to gather (perf)",
-        "en": "verb",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/zʲiˈbrɑtɪ/",
+        "en": "to gather (perf)",
+        "pos": "verb",
+        "gender": "-"
       },
       {
         "id": "v-m43-010",
         "uk": "відпочивати",
-        "translit": "/vʲidpotʃɪˈvɑtɪ/",
-        "ipa": "to rest (impf)",
-        "en": "verb",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/vʲidpotʃɪˈvɑtɪ/",
+        "en": "to rest (impf)",
+        "pos": "verb",
+        "gender": "-"
       }
     ]
   }

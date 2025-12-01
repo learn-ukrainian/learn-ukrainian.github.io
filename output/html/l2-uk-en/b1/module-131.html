@@ -776,7 +776,7 @@
       <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
-    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (0)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
+    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (15)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
     </section>
   </main>
@@ -785,7 +785,7 @@
     const matchPairs=[];
     const quizData=[{"question":"Протилежність «зростати»:","options":["зменшуватися","покращуватися"],"correctIndex":0,"explanation":"Decrease is opposite of increase."},{"question":"«Різко» означає:","options":["sharply","gradually"],"correctIndex":0,"explanation":"Sharp, sudden change."},{"question":"«Удвічі» означає:","options":["twice","half"],"correctIndex":0,"explanation":"Doubled."},{"question":"Ціни ___ на 10%:","options":["зросли","зменшилися"],"correctIndex":0,"explanation":"Increased by 10%."},{"question":"«Порівняно з» означає:","options":["compared to","instead of"],"correctIndex":0,"explanation":"Comparison expression."},{"question":"«Поступово» означає:","options":["gradually","suddenly"],"correctIndex":0,"explanation":"Gradual, slow change."}];
     const sortData={};
-    const vocabData=[];
+    const vocabData=[{"uk":"зростати","translit":"","en":"to grow, increase","note":"impf"},{"uk":"зменшуватися","translit":"","en":"to decrease","note":"impf"},{"uk":"підвищуватися","translit":"","en":"to rise","note":"impf"},{"uk":"знижуватися","translit":"","en":"to decline","note":"impf"},{"uk":"покращуватися","translit":"","en":"to improve","note":"impf"},{"uk":"погіршуватися","translit":"","en":"to worsen","note":"impf"},{"uk":"розвиватися","translit":"","en":"to develop","note":"impf"},{"uk":"змінюватися","translit":"","en":"to change","note":"impf"},{"uk":"зростання","translit":"","en":"growth","note":"n"},{"uk":"зменшення","translit":"","en":"decrease","note":"n"},{"uk":"різко","translit":"","en":"sharply","note":"adv"},{"uk":"поступово","translit":"","en":"gradually","note":"adv"},{"uk":"значно","translit":"","en":"significantly","note":"adv"},{"uk":"удвічі","translit":"","en":"twice","note":"adv"},{"uk":"порівняно з","translit":"","en":"compared to","note":"prep"}];
     const totalSort=0;
     function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
     document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));

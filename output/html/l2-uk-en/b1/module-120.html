@@ -632,7 +632,7 @@
       <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
-    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (0)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
+    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (14)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
     </section>
   </main>
@@ -641,7 +641,7 @@
     const matchPairs=[];
     const quizData=[{"question":"Роботу ___ (зроблена/зроблено).","options":["зроблено","зроблена"],"correctIndex":0,"explanation":"Short form with accusative subject."},{"question":"Книга ___ Шевченком.","options":["написана","написано"],"correctIndex":0,"explanation":"Full form agrees with subject."},{"question":"Засідання ___ (відкрите/відкрито).","options":["відкрито","відкрите"],"correctIndex":0,"explanation":"Official announcement uses short form."},{"question":"Вікно було ___ учора.","options":["відкрито","відкрити"],"correctIndex":0,"explanation":"Past passive with було + short form."},{"question":"Угоду підписано ___ (президент).","options":["президентом","президента"],"correctIndex":0,"explanation":"Agent in instrumental case."},{"question":"Рішення вже ___.","options":["прийнято","прийняте"],"correctIndex":0,"explanation":"Short form is preferred for formal contexts."}];
     const sortData={};
-    const vocabData=[];
+    const vocabData=[{"uk":"пасивний стан","translit":"","en":"passive voice","note":"-"},{"uk":"активний стан","translit":"","en":"active voice","note":"-"},{"uk":"діяч","translit":"","en":"agent","note":"m"},{"uk":"коротка форма","translit":"","en":"short form","note":"f"},{"uk":"прийнято","translit":"","en":"accepted, adopted","note":"short form"},{"uk":"ухвалено","translit":"","en":"passed (law)","note":"short form"},{"uk":"підписано","translit":"","en":"signed","note":"short form"},{"uk":"відкрито","translit":"","en":"opened","note":"short form"},{"uk":"закрито","translit":"","en":"closed","note":"short form"},{"uk":"завершено","translit":"","en":"completed","note":"short form"},{"uk":"затримано","translit":"","en":"detained","note":"short form"},{"uk":"заборонено","translit":"","en":"forbidden","note":"short form"},{"uk":"дозволено","translit":"","en":"allowed","note":"short form"},{"uk":"виконано","translit":"","en":"performed, done","note":"short form"}];
     const totalSort=0;
     function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
     document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));

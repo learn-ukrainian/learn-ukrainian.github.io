@@ -357,91 +357,102 @@
       {
         "id": "v-m54-001",
         "uk": "голова",
-        "translit": "/ɦoloˈvɑ/",
-        "ipa": "head",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ɦoloˈvɑ/",
+        "en": "head",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m54-002",
         "uk": "горло",
-        "translit": "/ˈɦorlo/",
-        "ipa": "throat",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/ˈɦorlo/",
+        "en": "throat",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m54-003",
         "uk": "живіт",
-        "translit": "/ʒɪˈvʲit/",
-        "ipa": "stomach, belly",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ʒɪˈvʲit/",
+        "en": "stomach, belly",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m54-004",
         "uk": "спина",
-        "translit": "/spɪˈnɑ/",
-        "ipa": "back",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/spɪˈnɑ/",
+        "en": "back",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m54-005",
         "uk": "боліти",
-        "translit": "/boˈlʲitɪ/",
-        "ipa": "to hurt, ache",
-        "en": "verb",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/boˈlʲitɪ/",
+        "en": "to hurt, ache",
+        "pos": "verb",
+        "gender": "-"
       },
       {
         "id": "v-m54-006",
         "uk": "кашель",
-        "translit": "/ˈkɑʃɛlʲ/",
-        "ipa": "cough",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ˈkɑʃɛlʲ/",
+        "en": "cough",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m54-007",
         "uk": "нежить",
-        "translit": "/ˈnɛʒɪtʲ/",
-        "ipa": "runny nose",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ˈnɛʒɪtʲ/",
+        "en": "runny nose",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m54-008",
         "uk": "застуда",
-        "translit": "/zɑˈstudɑ/",
-        "ipa": "cold (illness)",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/zɑˈstudɑ/",
+        "en": "cold (illness)",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m54-009",
         "uk": "ліки",
-        "translit": "/ˈlʲikɪ/",
-        "ipa": "medicine",
-        "en": "noun",
-        "pos": "m",
-        "gender": "pl-only"
+        "translit": "",
+        "ipa": "/ˈlʲikɪ/",
+        "en": "medicine",
+        "pos": "noun",
+        "gender": "m",
+        "note": "pl-only"
       },
       {
         "id": "v-m54-010",
         "uk": "таблетка",
-        "translit": "/tɑbˈlɛtkɑ/",
-        "ipa": "tablet, pill",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/tɑbˈlɛtkɑ/",
+        "en": "tablet, pill",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m54-011",
         "uk": "рецепт",
-        "translit": "/rɛˈtsɛpt/",
-        "ipa": "prescription",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/rɛˈtsɛpt/",
+        "en": "prescription",
+        "pos": "noun",
+        "gender": "m"
       }
     ]
   }

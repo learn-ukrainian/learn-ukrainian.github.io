@@ -377,217 +377,243 @@
       {
         "id": "v-m09-001",
         "uk": "нуль",
-        "translit": "/nulʲ/",
-        "ipa": "zero",
-        "en": "num",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/nulʲ/",
+        "en": "zero",
+        "pos": "num",
+        "gender": "m"
       },
       {
         "id": "v-m09-002",
         "uk": "один",
-        "translit": "/ɔˈdɪn/",
-        "ipa": "one (m)",
-        "en": "num",
-        "pos": "m",
-        "gender": "одна (f), одне (n)"
+        "translit": "",
+        "ipa": "/ɔˈdɪn/",
+        "en": "one (m)",
+        "pos": "num",
+        "gender": "m",
+        "note": "одна (f), одне (n)"
       },
       {
         "id": "v-m09-003",
         "uk": "два",
-        "translit": "/dvɑ/",
-        "ipa": "two (m/n)",
-        "en": "num",
-        "pos": "-",
-        "gender": "дві (f)"
+        "translit": "",
+        "ipa": "/dvɑ/",
+        "en": "two (m/n)",
+        "pos": "num",
+        "gender": "-",
+        "note": "дві (f)"
       },
       {
         "id": "v-m09-004",
         "uk": "три",
-        "translit": "/trɪ/",
-        "ipa": "three",
-        "en": "num",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/trɪ/",
+        "en": "three",
+        "pos": "num",
+        "gender": "-"
       },
       {
         "id": "v-m09-005",
         "uk": "чотири",
-        "translit": "/tʃɔˈtɪrɪ/",
-        "ipa": "four",
-        "en": "num",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/tʃɔˈtɪrɪ/",
+        "en": "four",
+        "pos": "num",
+        "gender": "-"
       },
       {
         "id": "v-m09-006",
         "uk": "п'ять",
-        "translit": "/pjɑtʲ/",
-        "ipa": "five",
-        "en": "num",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/pjɑtʲ/",
+        "en": "five",
+        "pos": "num",
+        "gender": "-"
       },
       {
         "id": "v-m09-007",
         "uk": "шість",
-        "translit": "/ʃʲistʲ/",
-        "ipa": "six",
-        "en": "num",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ʃʲistʲ/",
+        "en": "six",
+        "pos": "num",
+        "gender": "-"
       },
       {
         "id": "v-m09-008",
         "uk": "сім",
-        "translit": "/sʲim/",
-        "ipa": "seven",
-        "en": "num",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/sʲim/",
+        "en": "seven",
+        "pos": "num",
+        "gender": "-"
       },
       {
         "id": "v-m09-009",
         "uk": "вісім",
-        "translit": "/ˈvʲisʲim/",
-        "ipa": "eight",
-        "en": "num",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ˈvʲisʲim/",
+        "en": "eight",
+        "pos": "num",
+        "gender": "-"
       },
       {
         "id": "v-m09-010",
         "uk": "дев'ять",
-        "translit": "/ˈdɛvjɑtʲ/",
-        "ipa": "nine",
-        "en": "num",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ˈdɛvjɑtʲ/",
+        "en": "nine",
+        "pos": "num",
+        "gender": "-"
       },
       {
         "id": "v-m09-011",
         "uk": "десять",
-        "translit": "/ˈdɛsʲɑtʲ/",
-        "ipa": "ten",
-        "en": "num",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ˈdɛsʲɑtʲ/",
+        "en": "ten",
+        "pos": "num",
+        "gender": "-"
       },
       {
         "id": "v-m09-012",
         "uk": "двадцять",
-        "translit": "/ˈdvɑd͡tsʲɑtʲ/",
-        "ipa": "twenty",
-        "en": "num",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ˈdvɑd͡tsʲɑtʲ/",
+        "en": "twenty",
+        "pos": "num",
+        "gender": "-"
       },
       {
         "id": "v-m09-013",
         "uk": "тридцять",
-        "translit": "/ˈtrɪd͡tsʲɑtʲ/",
-        "ipa": "thirty",
-        "en": "num",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ˈtrɪd͡tsʲɑtʲ/",
+        "en": "thirty",
+        "pos": "num",
+        "gender": "-"
       },
       {
         "id": "v-m09-014",
         "uk": "сорок",
-        "translit": "/ˈsɔrɔk/",
-        "ipa": "forty",
-        "en": "num",
-        "pos": "-",
-        "gender": "Irregular!"
+        "translit": "",
+        "ipa": "/ˈsɔrɔk/",
+        "en": "forty",
+        "pos": "num",
+        "gender": "-",
+        "note": "Irregular!"
       },
       {
         "id": "v-m09-015",
         "uk": "п'ятдесят",
-        "translit": "/pjɑtdɛˈsʲɑt/",
-        "ipa": "fifty",
-        "en": "num",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/pjɑtdɛˈsʲɑt/",
+        "en": "fifty",
+        "pos": "num",
+        "gender": "-"
       },
       {
         "id": "v-m09-016",
         "uk": "сто",
-        "translit": "/stɔ/",
-        "ipa": "hundred",
-        "en": "num",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/stɔ/",
+        "en": "hundred",
+        "pos": "num",
+        "gender": "-"
       },
       {
         "id": "v-m09-017",
         "uk": "гривня",
-        "translit": "/ˈɦrɪvnʲɑ/",
-        "ipa": "hryvnia (₴)",
-        "en": "noun",
-        "pos": "f",
-        "gender": "2-4: гривні, 5+: гривень"
+        "translit": "",
+        "ipa": "/ˈɦrɪvnʲɑ/",
+        "en": "hryvnia (₴)",
+        "pos": "noun",
+        "gender": "f",
+        "note": "2-4: гривні, 5+: гривень"
       },
       {
         "id": "v-m09-018",
         "uk": "копійка",
-        "translit": "/kɔˈpʲijkɑ/",
-        "ipa": "kopeck",
-        "en": "noun",
-        "pos": "f",
-        "gender": "2-4: копійки, 5+: копійок"
+        "translit": "",
+        "ipa": "/kɔˈpʲijkɑ/",
+        "en": "kopeck",
+        "pos": "noun",
+        "gender": "f",
+        "note": "2-4: копійки, 5+: копійок"
       },
       {
         "id": "v-m09-019",
         "uk": "ціна",
-        "translit": "/t͡sʲiˈnɑ/",
-        "ipa": "price",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/t͡sʲiˈnɑ/",
+        "en": "price",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m09-020",
         "uk": "коштувати",
-        "translit": "/kɔʃtuˈvɑtɪ/",
-        "ipa": "to cost",
-        "en": "verb",
-        "pos": "-",
-        "gender": "коштує (it costs)"
+        "translit": "",
+        "ipa": "/kɔʃtuˈvɑtɪ/",
+        "en": "to cost",
+        "pos": "verb",
+        "gender": "-",
+        "note": "коштує (it costs)"
       },
       {
         "id": "v-m09-021",
         "uk": "дорого",
-        "translit": "/ˈdɔrɔɦɔ/",
-        "ipa": "expensive",
-        "en": "adv",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ˈdɔrɔɦɔ/",
+        "en": "expensive",
+        "pos": "adv",
+        "gender": "-"
       },
       {
         "id": "v-m09-022",
         "uk": "дешево",
-        "translit": "/ˈdɛʃɛvɔ/",
-        "ipa": "cheap",
-        "en": "adv",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ˈdɛʃɛvɔ/",
+        "en": "cheap",
+        "pos": "adv",
+        "gender": "-"
       },
       {
         "id": "v-m09-023",
         "uk": "знижка",
-        "translit": "/ˈznɪʒkɑ/",
-        "ipa": "discount",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈznɪʒkɑ/",
+        "en": "discount",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m09-024",
         "uk": "решта",
-        "translit": "/ˈrɛʃtɑ/",
-        "ipa": "change (money)",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈrɛʃtɑ/",
+        "en": "change (money)",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m09-025",
         "uk": "готівка",
-        "translit": "/ɦɔˈtʲivkɑ/",
-        "ipa": "cash",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ɦɔˈtʲivkɑ/",
+        "en": "cash",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m09-026",
         "uk": "картка",
-        "translit": "/ˈkɑrtkɑ/",
-        "ipa": "card",
-        "en": "noun",
-        "pos": "f",
-        "gender": "Bank card"
+        "translit": "",
+        "ipa": "/ˈkɑrtkɑ/",
+        "en": "card",
+        "pos": "noun",
+        "gender": "f",
+        "note": "Bank card"
       }
     ]
   }

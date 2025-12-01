@@ -365,114 +365,114 @@
       {
         "id": "v-m81-001",
         "uk": "доконаний",
-        "translit": "/dokoˈnɑnɪj/",
-        "ipa": "perfective",
-        "en": "-",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/dokoˈnɑnɪj/",
+        "en": "perfective",
+        "pos": ""
       },
       {
         "id": "v-m81-002",
         "uk": "недоконаний",
-        "translit": "/nɛdokoˈnɑnɪj/",
-        "ipa": "imperfective",
-        "en": "-",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/nɛdokoˈnɑnɪj/",
+        "en": "imperfective",
+        "pos": ""
       },
       {
         "id": "v-m81-003",
         "uk": "вид",
-        "translit": "/wɪd/",
-        "ipa": "aspect (gram.)",
-        "en": "-",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/wɪd/",
+        "en": "aspect (gram.)",
+        "pos": ""
       },
       {
         "id": "v-m81-004",
         "uk": "тривалість",
-        "translit": "/trɪˈvɑlʲistʲ/",
-        "ipa": "duration",
-        "en": "-",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/trɪˈvɑlʲistʲ/",
+        "en": "duration",
+        "pos": ""
       },
       {
         "id": "v-m81-005",
         "uk": "результат",
-        "translit": "/rɛzulʲˈtɑt/",
-        "ipa": "result",
-        "en": "-",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/rɛzulʲˈtɑt/",
+        "en": "result",
+        "pos": ""
       },
       {
         "id": "v-m81-006",
         "uk": "процес",
-        "translit": "/proˈt͡sɛs/",
-        "ipa": "process",
-        "en": "-",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/proˈt͡sɛs/",
+        "en": "process",
+        "pos": ""
       },
       {
         "id": "v-m81-007",
         "uk": "повторення",
-        "translit": "/povtoˈrɛnʲːɑ/",
-        "ipa": "repetition",
-        "en": "-",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/povtoˈrɛnʲːɑ/",
+        "en": "repetition",
+        "pos": ""
       },
       {
         "id": "v-m81-008",
         "uk": "завершення",
-        "translit": "/zɑvɛrˈʃɛnʲːɑ/",
-        "ipa": "completion",
-        "en": "-",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/zɑvɛrˈʃɛnʲːɑ/",
+        "en": "completion",
+        "pos": ""
       },
       {
         "id": "v-m81-009",
         "uk": "раптом",
-        "translit": "/ˈrɑptom/",
-        "ipa": "suddenly",
-        "en": "-",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ˈrɑptom/",
+        "en": "suddenly",
+        "pos": ""
       },
       {
         "id": "v-m81-010",
         "uk": "нарешті",
-        "translit": "/nɑˈrɛʃtʲi/",
-        "ipa": "finally",
-        "en": "-",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/nɑˈrɛʃtʲi/",
+        "en": "finally",
+        "pos": ""
       },
       {
         "id": "v-m81-011",
         "uk": "зазвичай",
-        "translit": "/zɑˈzvɪt͡ʃɑj/",
-        "ipa": "usually",
-        "en": "-",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/zɑˈzvɪt͡ʃɑj/",
+        "en": "usually",
+        "pos": ""
       },
       {
         "id": "v-m81-012",
         "uk": "одного разу",
-        "translit": "/odnoˈɦo ˈrɑzu/",
-        "ipa": "once (upon a time)",
-        "en": "-",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/odnoˈɦo ˈrɑzu/",
+        "en": "once (upon a time)",
+        "pos": ""
       },
       {
         "id": "v-m81-013",
         "uk": "весь час",
-        "translit": "/wɛsʲ t͡ʃɑs/",
-        "ipa": "all the time",
-        "en": "-",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/wɛsʲ t͡ʃɑs/",
+        "en": "all the time",
+        "pos": ""
       },
       {
         "id": "v-m81-014",
         "uk": "за годину",
-        "translit": "/zɑ ɦoˈdɪnu/",
-        "ipa": "in an hour",
-        "en": "-",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/zɑ ɦoˈdɪnu/",
+        "en": "in an hour",
+        "pos": ""
       }
     ]
   }

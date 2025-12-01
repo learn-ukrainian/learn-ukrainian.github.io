@@ -369,122 +369,136 @@
       {
         "id": "v-m18-001",
         "uk": "меню",
-        "translit": "/mɛˈnʲu/",
-        "ipa": "menu",
-        "en": "noun",
-        "pos": "n",
-        "gender": "Indeclinable"
+        "translit": "",
+        "ipa": "/mɛˈnʲu/",
+        "en": "menu",
+        "pos": "noun",
+        "gender": "n",
+        "note": "Indeclinable"
       },
       {
         "id": "v-m18-002",
         "uk": "замовляти",
-        "translit": "/zɑmɔvˈlʲɑtɪ/",
-        "ipa": "to order",
-        "en": "verb",
-        "pos": "-",
-        "gender": "замовляю, замовляєш"
+        "translit": "",
+        "ipa": "/zɑmɔvˈlʲɑtɪ/",
+        "en": "to order",
+        "pos": "verb",
+        "gender": "-",
+        "note": "замовляю, замовляєш"
       },
       {
         "id": "v-m18-003",
         "uk": "рахунок",
-        "translit": "/rɑˈxunɔk/",
-        "ipa": "bill, check",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/rɑˈxunɔk/",
+        "en": "bill, check",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m18-004",
         "uk": "столик",
-        "translit": "/ˈstɔlɪk/",
-        "ipa": "table (small)",
-        "en": "noun",
-        "pos": "m",
-        "gender": "Diminutive of стіл"
+        "translit": "",
+        "ipa": "/ˈstɔlɪk/",
+        "en": "table (small)",
+        "pos": "noun",
+        "gender": "m",
+        "note": "Diminutive of стіл"
       },
       {
         "id": "v-m18-005",
         "uk": "місце",
-        "translit": "/ˈmʲist͡sɛ/",
-        "ipa": "seat, place",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/ˈmʲist͡sɛ/",
+        "en": "seat, place",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m18-006",
         "uk": "принести",
-        "translit": "/prɪnɛsˈtɪ/",
-        "ipa": "to bring",
-        "en": "verb",
-        "pos": "-",
-        "gender": "Imp: принеси, принесіть"
+        "translit": "",
+        "ipa": "/prɪnɛsˈtɪ/",
+        "en": "to bring",
+        "pos": "verb",
+        "gender": "-",
+        "note": "Imp: принеси, принесіть"
       },
       {
         "id": "v-m18-007",
         "uk": "взяти",
-        "translit": "/ˈvzʲɑtɪ/",
-        "ipa": "to take",
-        "en": "verb",
-        "pos": "-",
-        "gender": "Я візьму (I'll take)"
+        "translit": "",
+        "ipa": "/ˈvzʲɑtɪ/",
+        "en": "to take",
+        "pos": "verb",
+        "gender": "-",
+        "note": "Я візьму (I'll take)"
       },
       {
         "id": "v-m18-008",
         "uk": "можна",
-        "translit": "/ˈmɔʒnɑ/",
-        "ipa": "may, can",
-        "en": "adv",
-        "pos": "-",
-        "gender": "Permission"
+        "translit": "",
+        "ipa": "/ˈmɔʒnɑ/",
+        "en": "may, can",
+        "pos": "adv",
+        "gender": "-",
+        "note": "Permission"
       },
       {
         "id": "v-m18-009",
         "uk": "склянка",
-        "translit": "/ˈsklʲɑnkɑ/",
-        "ipa": "glass",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈsklʲɑnkɑ/",
+        "en": "glass",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m18-010",
         "uk": "на виніс",
-        "translit": "/nɑ ˈvɪnʲis/",
-        "ipa": "to go",
-        "en": "phrase",
-        "pos": "-",
-        "gender": "Takeaway"
+        "translit": "",
+        "ipa": "/nɑ ˈvɪnʲis/",
+        "en": "to go",
+        "pos": "phrase",
+        "gender": "-",
+        "note": "Takeaway"
       },
       {
         "id": "v-m18-011",
         "uk": "гарячий",
-        "translit": "/ɦɑˈrʲɑtʃɪj/",
-        "ipa": "hot",
-        "en": "adj",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ɦɑˈrʲɑtʃɪj/",
+        "en": "hot",
+        "pos": "adj",
+        "gender": "m"
       },
       {
         "id": "v-m18-012",
         "uk": "холодний",
-        "translit": "/xɔˈlɔdnɪj/",
-        "ipa": "cold",
-        "en": "adj",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/xɔˈlɔdnɪj/",
+        "en": "cold",
+        "pos": "adj",
+        "gender": "m"
       },
       {
         "id": "v-m18-013",
         "uk": "страва",
-        "translit": "/ˈstrɑvɑ/",
-        "ipa": "dish, course",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈstrɑvɑ/",
+        "en": "dish, course",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m18-014",
         "uk": "чайові",
-        "translit": "/tʃɑjɔˈvʲi/",
-        "ipa": "tip",
-        "en": "noun",
-        "pos": "pl",
-        "gender": "Literally \"for tea\""
+        "translit": "",
+        "ipa": "/tʃɑjɔˈvʲi/",
+        "en": "tip",
+        "pos": "noun",
+        "gender": "pl",
+        "note": "Literally \"for tea\""
       }
     ]
   }

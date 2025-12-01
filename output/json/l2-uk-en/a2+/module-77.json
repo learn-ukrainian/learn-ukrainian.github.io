@@ -381,353 +381,396 @@
       {
         "id": "v-m77-001",
         "uk": "футбол",
-        "translit": "/futˈbol/",
-        "ipa": "football",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/futˈbol/",
+        "en": "football",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m77-002",
         "uk": "баскетбол",
-        "translit": "/bɑskɛtˈbol/",
-        "ipa": "basketball",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/bɑskɛtˈbol/",
+        "en": "basketball",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m77-003",
         "uk": "волейбол",
-        "translit": "/volɛjˈbol/",
-        "ipa": "volleyball",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/volɛjˈbol/",
+        "en": "volleyball",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m77-004",
         "uk": "плавання",
-        "translit": "/ˈplɑvɑnʲːɑ/",
-        "ipa": "swimming",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/ˈplɑvɑnʲːɑ/",
+        "en": "swimming",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m77-005",
         "uk": "біг",
-        "translit": "/bʲiɦ/",
-        "ipa": "running",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/bʲiɦ/",
+        "en": "running",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m77-006",
         "uk": "бокс",
-        "translit": "/boks/",
-        "ipa": "boxing",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/boks/",
+        "en": "boxing",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m77-007",
         "uk": "гімнастика",
-        "translit": "/ɦʲimˈnɑstɪkɑ/",
-        "ipa": "gymnastics",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ɦʲimˈnɑstɪkɑ/",
+        "en": "gymnastics",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m77-008",
         "uk": "команда",
-        "translit": "/koˈmɑndɑ/",
-        "ipa": "team",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/koˈmɑndɑ/",
+        "en": "team",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m77-009",
         "uk": "гравець",
-        "translit": "/ɦrɑˈvɛtsʲ/",
-        "ipa": "player",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ɦrɑˈvɛtsʲ/",
+        "en": "player",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m77-010",
         "uk": "тренер",
-        "translit": "/ˈtrɛnɛr/",
-        "ipa": "coach",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ˈtrɛnɛr/",
+        "en": "coach",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m77-011",
         "uk": "матч",
-        "translit": "/mɑtʃ/",
-        "ipa": "match",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/mɑtʃ/",
+        "en": "match",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m77-012",
         "uk": "чемпіонат",
-        "translit": "/tʃɛmpʲioˈnɑt/",
-        "ipa": "championship",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/tʃɛmpʲioˈnɑt/",
+        "en": "championship",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m77-013",
         "uk": "турнір",
-        "translit": "/turˈnʲir/",
-        "ipa": "tournament",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/turˈnʲir/",
+        "en": "tournament",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m77-014",
         "uk": "спортзал",
-        "translit": "/sportˈzɑl/",
-        "ipa": "gym",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/sportˈzɑl/",
+        "en": "gym",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m77-015",
         "uk": "тренування",
-        "translit": "/trɛnuˈvɑnʲːɑ/",
-        "ipa": "training",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/trɛnuˈvɑnʲːɑ/",
+        "en": "training",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m77-016",
         "uk": "вправа",
-        "translit": "/ˈvprɑvɑ/",
-        "ipa": "exercise",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈvprɑvɑ/",
+        "en": "exercise",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m77-017",
         "uk": "підхід",
-        "translit": "/pʲidˈxʲid/",
-        "ipa": "set",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/pʲidˈxʲid/",
+        "en": "set",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m77-018",
         "uk": "повторення",
-        "translit": "/povtoˈrɛnʲːɑ/",
-        "ipa": "repetition",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/povtoˈrɛnʲːɑ/",
+        "en": "repetition",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m77-019",
         "uk": "розминка",
-        "translit": "/rozˈmɪnkɑ/",
-        "ipa": "warm-up",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/rozˈmɪnkɑ/",
+        "en": "warm-up",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m77-020",
         "uk": "розтяжка",
-        "translit": "/rozˈtʲɑʒkɑ/",
-        "ipa": "stretching",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/rozˈtʲɑʒkɑ/",
+        "en": "stretching",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m77-021",
         "uk": "гантелі",
-        "translit": "/ɦɑnˈtɛlʲi/",
-        "ipa": "dumbbells",
-        "en": "noun",
-        "pos": "pl"
+        "translit": "",
+        "ipa": "/ɦɑnˈtɛlʲi/",
+        "en": "dumbbells",
+        "pos": "noun",
+        "gender": "pl"
       },
       {
         "id": "v-m77-022",
         "uk": "штанга",
-        "translit": "/ˈʃtɑnɦɑ/",
-        "ipa": "barbell",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈʃtɑnɦɑ/",
+        "en": "barbell",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m77-023",
         "uk": "килимок",
-        "translit": "/kɪˈlɪmok/",
-        "ipa": "mat",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/kɪˈlɪmok/",
+        "en": "mat",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m77-024",
         "uk": "йога",
-        "translit": "/ˈjoɦɑ/",
-        "ipa": "yoga",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈjoɦɑ/",
+        "en": "yoga",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m77-025",
         "uk": "кросфіт",
-        "translit": "/krosˈfʲit/",
-        "ipa": "crossfit",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/krosˈfʲit/",
+        "en": "crossfit",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m77-026",
         "uk": "карате",
-        "translit": "/kɑrɑˈtɛ/",
-        "ipa": "karate",
-        "en": "noun",
-        "pos": "n",
-        "gender": "indecl"
+        "translit": "",
+        "ipa": "/kɑrɑˈtɛ/",
+        "en": "karate",
+        "pos": "noun",
+        "gender": "n",
+        "note": "indecl"
       },
       {
         "id": "v-m77-027",
         "uk": "перемога",
-        "translit": "/pɛrɛˈmoɦɑ/",
-        "ipa": "victory",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/pɛrɛˈmoɦɑ/",
+        "en": "victory",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m77-028",
         "uk": "поразка",
-        "translit": "/poˈrɑzkɑ/",
-        "ipa": "defeat",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/poˈrɑzkɑ/",
+        "en": "defeat",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m77-029",
         "uk": "рахунок",
-        "translit": "/rɑˈxunok/",
-        "ipa": "score",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/rɑˈxunok/",
+        "en": "score",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m77-030",
         "uk": "гол",
-        "translit": "/ɦol/",
-        "ipa": "goal",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ɦol/",
+        "en": "goal",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m77-031",
         "uk": "медаль",
-        "translit": "/mɛˈdɑlʲ/",
-        "ipa": "medal",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/mɛˈdɑlʲ/",
+        "en": "medal",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m77-032",
         "uk": "рекорд",
-        "translit": "/rɛˈkord/",
-        "ipa": "record",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/rɛˈkord/",
+        "en": "record",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m77-033",
         "uk": "чемпіон",
-        "translit": "/tʃɛmpʲiˈon/",
-        "ipa": "champion",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/tʃɛmpʲiˈon/",
+        "en": "champion",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m77-034",
         "uk": "фінал",
-        "translit": "/fʲiˈnɑl/",
-        "ipa": "final",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/fʲiˈnɑl/",
+        "en": "final",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m77-035",
         "uk": "витривалість",
-        "translit": "/vɪtrɪˈvɑlʲistʲ/",
-        "ipa": "endurance",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/vɪtrɪˈvɑlʲistʲ/",
+        "en": "endurance",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m77-036",
         "uk": "сила",
-        "translit": "/ˈsɪlɑ/",
-        "ipa": "strength",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈsɪlɑ/",
+        "en": "strength",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m77-037",
         "uk": "гнучкість",
-        "translit": "/ɦnutʃˈkʲistʲ/",
-        "ipa": "flexibility",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ɦnutʃˈkʲistʲ/",
+        "en": "flexibility",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m77-038",
         "uk": "тренуватися",
-        "translit": "/trɛnuˈvɑtɪsʲɑ/",
-        "ipa": "to train",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/trɛnuˈvɑtɪsʲɑ/",
+        "en": "to train",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m77-039",
         "uk": "перемагати",
-        "translit": "/pɛrɛmɑˈɦɑtɪ/",
-        "ipa": "to win",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/pɛrɛmɑˈɦɑtɪ/",
+        "en": "to win",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m77-040",
         "uk": "програвати",
-        "translit": "/proɦrɑˈvɑtɪ/",
-        "ipa": "to lose",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/proɦrɑˈvɑtɪ/",
+        "en": "to lose",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m77-041",
         "uk": "змагатися",
-        "translit": "/zmɑˈɦɑtɪsʲɑ/",
-        "ipa": "to compete",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/zmɑˈɦɑtɪsʲɑ/",
+        "en": "to compete",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m77-042",
         "uk": "бігати",
-        "translit": "/ˈbʲiɦɑtɪ/",
-        "ipa": "to run",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/ˈbʲiɦɑtɪ/",
+        "en": "to run",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m77-043",
         "uk": "плавати",
-        "translit": "/ˈplɑvɑtɪ/",
-        "ipa": "to swim",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/ˈplɑvɑtɪ/",
+        "en": "to swim",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       }
     ]
   }

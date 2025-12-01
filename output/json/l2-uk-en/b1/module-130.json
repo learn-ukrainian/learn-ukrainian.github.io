@@ -255,13 +255,37 @@
       "modifiedAt": "2025-12-01T00:00:00Z"
     },
     {
-      "id": "act-uk-B1-130-fillin",
-      "type": "fill-in",
+      "id": "act-uk-B1-130-gapfill",
+      "type": "gap-fill",
       "title": "Essay Structure",
       "description": "Напишіть есе про важливість освіти.",
       "content": {
-        "type": "fill-in",
-        "instructions": "Напишіть есе про важливість освіти."
+        "type": "gap-fill",
+        "instructions": "Напишіть есе про важливість освіти.",
+        "text": "Напишіть есе про важливість освіти.\n(1)___ (In my opinion), освіта дуже важлива. (2)___ (Firstly), вона допомагає знайти роботу. (3)___ (Secondly), вона розширює кругозір. (4)___ (Moreover), освічені люди краще розуміють світ. (5)___ (However), не всі мають доступ до якісної освіти. (6)___ (In conclusion), ми повинні підтримувати освіту для всіх.",
+        "blanks": [
+          {
+            "hint": "In my opinion"
+          },
+          {
+            "hint": "Firstly"
+          },
+          {
+            "hint": "Secondly"
+          },
+          {
+            "hint": "Moreover"
+          },
+          {
+            "hint": "However"
+          },
+          {
+            "hint": "In conclusion"
+          }
+        ],
+        "answers": [
+          "1. На мою думку"
+        ]
       },
       "subject": "language",
       "owner": "curricula-opus",
@@ -283,8 +307,144 @@
     "moduleId": "mod-uk-B1-130",
     "level": "B1",
     "phase": "B1.4",
-    "wordCount": 0,
+    "wordCount": 15,
     "transliterationMode": "none",
-    "words": []
+    "words": [
+      {
+        "id": "v-m130-001",
+        "uk": "також",
+        "translit": "",
+        "ipa": "/tɑˈkoʒ/",
+        "en": "also",
+        "pos": "",
+        "note": "adv"
+      },
+      {
+        "id": "v-m130-002",
+        "uk": "крім того",
+        "translit": "",
+        "ipa": "-",
+        "en": "besides, moreover",
+        "pos": "",
+        "note": "phrase"
+      },
+      {
+        "id": "v-m130-003",
+        "uk": "але",
+        "translit": "",
+        "ipa": "/ɑˈlɛ/",
+        "en": "but",
+        "pos": "",
+        "note": "conj"
+      },
+      {
+        "id": "v-m130-004",
+        "uk": "проте",
+        "translit": "",
+        "ipa": "/proˈtɛ/",
+        "en": "however",
+        "pos": "",
+        "note": "conj"
+      },
+      {
+        "id": "v-m130-005",
+        "uk": "однак",
+        "translit": "",
+        "ipa": "/odˈnɑk/",
+        "en": "however, yet",
+        "pos": "",
+        "note": "conj"
+      },
+      {
+        "id": "v-m130-006",
+        "uk": "тому",
+        "translit": "",
+        "ipa": "/toˈmu/",
+        "en": "therefore, so",
+        "pos": "",
+        "note": "adv"
+      },
+      {
+        "id": "v-m130-007",
+        "uk": "тому що",
+        "translit": "",
+        "ipa": "-",
+        "en": "because",
+        "pos": "",
+        "note": "conj"
+      },
+      {
+        "id": "v-m130-008",
+        "uk": "отже",
+        "translit": "",
+        "ipa": "/ˈotʒɛ/",
+        "en": "therefore, thus",
+        "pos": "",
+        "note": "adv"
+      },
+      {
+        "id": "v-m130-009",
+        "uk": "по-перше",
+        "translit": "",
+        "ipa": "-",
+        "en": "firstly",
+        "pos": "",
+        "note": "adv"
+      },
+      {
+        "id": "v-m130-010",
+        "uk": "нарешті",
+        "translit": "",
+        "ipa": "/nɑˈrɛʃtʲi/",
+        "en": "finally",
+        "pos": "",
+        "note": "adv"
+      },
+      {
+        "id": "v-m130-011",
+        "uk": "наприклад",
+        "translit": "",
+        "ipa": "/nɑprɪˈklɑd/",
+        "en": "for example",
+        "pos": "",
+        "note": "adv"
+      },
+      {
+        "id": "v-m130-012",
+        "uk": "підсумовуючи",
+        "translit": "",
+        "ipa": "-",
+        "en": "to sum up",
+        "pos": "",
+        "note": "adv part"
+      },
+      {
+        "id": "v-m130-013",
+        "uk": "загалом",
+        "translit": "",
+        "ipa": "/zɑˈɦɑlom/",
+        "en": "in general",
+        "pos": "",
+        "note": "adv"
+      },
+      {
+        "id": "v-m130-014",
+        "uk": "на мою думку",
+        "translit": "",
+        "ipa": "-",
+        "en": "in my opinion",
+        "pos": "",
+        "note": "phrase"
+      },
+      {
+        "id": "v-m130-015",
+        "uk": "тобто",
+        "translit": "",
+        "ipa": "/tobˈto/",
+        "en": "that is",
+        "pos": "",
+        "note": "adv"
+      }
+    ]
   }
 }

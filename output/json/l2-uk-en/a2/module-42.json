@@ -359,137 +359,153 @@
       {
         "id": "v-m42-001",
         "uk": "відкрити",
-        "translit": "/vʲidˈkrɪtɪ/",
-        "ipa": "to open (perf)",
-        "en": "verb",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/vʲidˈkrɪtɪ/",
+        "en": "to open (perf)",
+        "pos": "verb",
+        "gender": "-"
       },
       {
         "id": "v-m42-002",
         "uk": "закрити",
-        "translit": "/zɑˈkrɪtɪ/",
-        "ipa": "to close (perf)",
-        "en": "verb",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/zɑˈkrɪtɪ/",
+        "en": "to close (perf)",
+        "pos": "verb",
+        "gender": "-"
       },
       {
         "id": "v-m42-003",
         "uk": "починати",
-        "translit": "/potʃɪˈnɑtɪ/",
-        "ipa": "to begin (impf)",
-        "en": "verb",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/potʃɪˈnɑtɪ/",
+        "en": "to begin (impf)",
+        "pos": "verb",
+        "gender": "-"
       },
       {
         "id": "v-m42-004",
         "uk": "почати",
-        "translit": "/poˈtʃɑtɪ/",
-        "ipa": "to begin (perf)",
-        "en": "verb",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/poˈtʃɑtɪ/",
+        "en": "to begin (perf)",
+        "pos": "verb",
+        "gender": "-"
       },
       {
         "id": "v-m42-005",
         "uk": "кінчати",
-        "translit": "/kʲinˈtʃɑtɪ/",
-        "ipa": "to finish (impf)",
-        "en": "verb",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/kʲinˈtʃɑtɪ/",
+        "en": "to finish (impf)",
+        "pos": "verb",
+        "gender": "-"
       },
       {
         "id": "v-m42-006",
         "uk": "запитати",
-        "translit": "/zɑpɪˈtɑtɪ/",
-        "ipa": "to ask (perf)",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf of питати"
+        "translit": "",
+        "ipa": "/zɑpɪˈtɑtɪ/",
+        "en": "to ask (perf)",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf of питати"
       },
       {
         "id": "v-m42-007",
         "uk": "відповісти",
-        "translit": "/vʲidpoˈvʲistɪ/",
-        "ipa": "to answer (perf)",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf of відповідати"
+        "translit": "",
+        "ipa": "/vʲidpoˈvʲistɪ/",
+        "en": "to answer (perf)",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf of відповідати"
       },
       {
         "id": "v-m42-008",
         "uk": "пояснити",
-        "translit": "/pojɑsˈnɪtɪ/",
-        "ipa": "to explain (perf)",
-        "en": "verb",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/pojɑsˈnɪtɪ/",
+        "en": "to explain (perf)",
+        "pos": "verb",
+        "gender": "-"
       },
       {
         "id": "v-m42-009",
         "uk": "розповісти",
-        "translit": "/rɔzpoˈvʲistɪ/",
-        "ipa": "to tell (perf)",
-        "en": "verb",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/rɔzpoˈvʲistɪ/",
+        "en": "to tell (perf)",
+        "pos": "verb",
+        "gender": "-"
       },
       {
         "id": "v-m42-010",
         "uk": "запросити",
-        "translit": "/zɑproˈsɪtɪ/",
-        "ipa": "to invite (perf)",
-        "en": "verb",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/zɑproˈsɪtɪ/",
+        "en": "to invite (perf)",
+        "pos": "verb",
+        "gender": "-"
       },
       {
         "id": "v-m42-011",
         "uk": "прийти",
-        "translit": "/prɪjˈtɪ/",
-        "ipa": "to arrive (on foot)",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf of йти"
+        "translit": "",
+        "ipa": "/prɪjˈtɪ/",
+        "en": "to arrive (on foot)",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf of йти"
       },
       {
         "id": "v-m42-012",
         "uk": "приїхати",
-        "translit": "/prɪˈjixɑtɪ/",
-        "ipa": "to arrive (by transport)",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf of їхати"
+        "translit": "",
+        "ipa": "/prɪˈjixɑtɪ/",
+        "en": "to arrive (by transport)",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf of їхати"
       },
       {
         "id": "v-m42-013",
         "uk": "вийти",
-        "translit": "/ˈvɪjtɪ/",
-        "ipa": "to go out",
-        "en": "verb",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ˈvɪjtɪ/",
+        "en": "to go out",
+        "pos": "verb",
+        "gender": "-"
       },
       {
         "id": "v-m42-014",
         "uk": "побачити",
-        "translit": "/poˈbɑtʃɪtɪ/",
-        "ipa": "to see (perf)",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf of бачити"
+        "translit": "",
+        "ipa": "/poˈbɑtʃɪtɪ/",
+        "en": "to see (perf)",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf of бачити"
       },
       {
         "id": "v-m42-015",
         "uk": "почути",
-        "translit": "/poˈtʃutɪ/",
-        "ipa": "to hear (perf)",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf of чути"
+        "translit": "",
+        "ipa": "/poˈtʃutɪ/",
+        "en": "to hear (perf)",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf of чути"
       },
       {
         "id": "v-m42-016",
         "uk": "знайти",
-        "translit": "/znɑjˈtɪ/",
-        "ipa": "to find (perf)",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf of шукати"
+        "translit": "",
+        "ipa": "/znɑjˈtɪ/",
+        "en": "to find (perf)",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf of шукати"
       }
     ]
   }

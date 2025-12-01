@@ -341,66 +341,74 @@
       {
         "id": "v-m60-001",
         "uk": "досягнення",
-        "translit": "/dosʲɑɦˈnɛnʲɑ/",
-        "ipa": "achievement",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/dosʲɑɦˈnɛnʲɑ/",
+        "en": "achievement",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m60-002",
         "uk": "мета",
-        "translit": "/mɛˈtɑ/",
-        "ipa": "goal",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/mɛˈtɑ/",
+        "en": "goal",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m60-003",
         "uk": "якість",
-        "translit": "/ˈjɑkʲistʲ/",
-        "ipa": "quality",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈjɑkʲistʲ/",
+        "en": "quality",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m60-004",
         "uk": "подорож",
-        "translit": "/ˈpodoroʒ/",
-        "ipa": "journey, trip",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈpodoroʒ/",
+        "en": "journey, trip",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m60-005",
         "uk": "спогад",
-        "translit": "/ˈspoɦɑd/",
-        "ipa": "memory",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ˈspoɦɑd/",
+        "en": "memory",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m60-006",
         "uk": "враження",
-        "translit": "/vrɑˈʒɛnʲɑ/",
-        "ipa": "impression",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/vrɑˈʒɛnʲɑ/",
+        "en": "impression",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m60-007",
         "uk": "здібність",
-        "translit": "/zdʲibˈnʲistʲ/",
-        "ipa": "ability",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/zdʲibˈnʲistʲ/",
+        "en": "ability",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m60-008",
         "uk": "успіх",
-        "translit": "/uˈspʲix/",
-        "ipa": "success",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/uˈspʲix/",
+        "en": "success",
+        "pos": "noun",
+        "gender": "m"
       }
     ]
   }

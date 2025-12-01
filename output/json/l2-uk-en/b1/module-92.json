@@ -388,8 +388,121 @@
     "moduleId": "mod-uk-B1-92",
     "level": "B1",
     "phase": "B1.1",
-    "wordCount": 0,
+    "wordCount": 14,
     "transliterationMode": "none",
-    "words": []
+    "words": [
+      {
+        "id": "v-m92-001",
+        "uk": "піти",
+        "translit": "",
+        "ipa": "/pʲiˈtɪ/",
+        "en": "to go, leave",
+        "pos": ""
+      },
+      {
+        "id": "v-m92-002",
+        "uk": "поїхати",
+        "translit": "",
+        "ipa": "/poˈjixɑtɪ/",
+        "en": "to leave (vehicle)",
+        "pos": ""
+      },
+      {
+        "id": "v-m92-003",
+        "uk": "зайти",
+        "translit": "",
+        "ipa": "/zɑjˈtɪ/",
+        "en": "to drop by",
+        "pos": ""
+      },
+      {
+        "id": "v-m92-004",
+        "uk": "заходити",
+        "translit": "",
+        "ipa": "/zɑxoˈdɪtɪ/",
+        "en": "to drop by",
+        "pos": ""
+      },
+      {
+        "id": "v-m92-005",
+        "uk": "заїхати",
+        "translit": "",
+        "ipa": "/zɑˈjixɑtɪ/",
+        "en": "to drive by",
+        "pos": ""
+      },
+      {
+        "id": "v-m92-006",
+        "uk": "заїжджати",
+        "translit": "",
+        "ipa": "/zɑjizˈdʒɑtɪ/",
+        "en": "to drive by",
+        "pos": ""
+      },
+      {
+        "id": "v-m92-007",
+        "uk": "розійтися",
+        "translit": "",
+        "ipa": "/rozijˈtɪsʲɑ/",
+        "en": "to disperse",
+        "pos": ""
+      },
+      {
+        "id": "v-m92-008",
+        "uk": "розходитися",
+        "translit": "",
+        "ipa": "/rozxoˈdɪtɪsʲɑ/",
+        "en": "to disperse",
+        "pos": ""
+      },
+      {
+        "id": "v-m92-009",
+        "uk": "роз'їхатися",
+        "translit": "",
+        "ipa": "/rozˈjixɑtɪsʲɑ/",
+        "en": "to drive apart",
+        "pos": ""
+      },
+      {
+        "id": "v-m92-010",
+        "uk": "відійти",
+        "translit": "",
+        "ipa": "/vʲidijˈtɪ/",
+        "en": "to step away",
+        "pos": ""
+      },
+      {
+        "id": "v-m92-011",
+        "uk": "відходити",
+        "translit": "",
+        "ipa": "/vʲidxoˈdɪtɪ/",
+        "en": "to depart",
+        "pos": ""
+      },
+      {
+        "id": "v-m92-012",
+        "uk": "від'їхати",
+        "translit": "",
+        "ipa": "/vʲidˈjixɑtɪ/",
+        "en": "to drive away",
+        "pos": ""
+      },
+      {
+        "id": "v-m92-013",
+        "uk": "від'їжджати",
+        "translit": "",
+        "ipa": "/vʲidjizˈdʒɑtɪ/",
+        "en": "to drive away",
+        "pos": ""
+      },
+      {
+        "id": "v-m92-014",
+        "uk": "віднести",
+        "translit": "",
+        "ipa": "/vʲidnɛsˈtɪ/",
+        "en": "to take back",
+        "pos": ""
+      }
+    ]
   }
 }

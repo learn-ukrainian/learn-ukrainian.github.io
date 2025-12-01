@@ -364,191 +364,212 @@
       {
         "id": "v-m04-001",
         "uk": "це",
-        "translit": "/t͡sɛ/",
-        "ipa": "this, this is",
-        "en": "pron",
-        "pos": "-",
-        "gender": "Invariable - never changes"
+        "translit": "",
+        "ipa": "/t͡sɛ/",
+        "en": "this, this is",
+        "pos": "pron",
+        "gender": "-",
+        "note": "Invariable - never changes"
       },
       {
         "id": "v-m04-002",
         "uk": "то",
-        "translit": "/tɔ/",
-        "ipa": "that",
-        "en": "pron",
-        "pos": "-",
-        "gender": "Less common than це"
+        "translit": "",
+        "ipa": "/tɔ/",
+        "en": "that",
+        "pos": "pron",
+        "gender": "-",
+        "note": "Less common than це"
       },
       {
         "id": "v-m04-003",
         "uk": "я",
-        "translit": "/jɑ/",
-        "ipa": "I",
-        "en": "pron",
-        "pos": "-",
-        "gender": "First person singular"
+        "translit": "",
+        "ipa": "/jɑ/",
+        "en": "I",
+        "pos": "pron",
+        "gender": "-",
+        "note": "First person singular"
       },
       {
         "id": "v-m04-004",
         "uk": "ти",
-        "translit": "/tɪ/",
-        "ipa": "you (informal)",
-        "en": "pron",
-        "pos": "-",
-        "gender": "For friends/family"
+        "translit": "",
+        "ipa": "/tɪ/",
+        "en": "you (informal)",
+        "pos": "pron",
+        "gender": "-",
+        "note": "For friends/family"
       },
       {
         "id": "v-m04-005",
         "uk": "він",
-        "translit": "/wʲin/",
-        "ipa": "he",
-        "en": "pron",
-        "pos": "m",
-        "gender": "Third person masculine"
+        "translit": "",
+        "ipa": "/wʲin/",
+        "en": "he",
+        "pos": "pron",
+        "gender": "m",
+        "note": "Third person masculine"
       },
       {
         "id": "v-m04-006",
         "uk": "вона",
-        "translit": "/wɔˈnɑ/",
-        "ipa": "she",
-        "en": "pron",
-        "pos": "f",
-        "gender": "Third person feminine"
+        "translit": "",
+        "ipa": "/wɔˈnɑ/",
+        "en": "she",
+        "pos": "pron",
+        "gender": "f",
+        "note": "Third person feminine"
       },
       {
         "id": "v-m04-007",
         "uk": "воно",
-        "translit": "/wɔˈnɔ/",
-        "ipa": "it",
-        "en": "pron",
-        "pos": "n",
-        "gender": "Third person neuter"
+        "translit": "",
+        "ipa": "/wɔˈnɔ/",
+        "en": "it",
+        "pos": "pron",
+        "gender": "n",
+        "note": "Third person neuter"
       },
       {
         "id": "v-m04-008",
         "uk": "ми",
-        "translit": "/mɪ/",
-        "ipa": "we",
-        "en": "pron",
-        "pos": "-",
-        "gender": "First person plural"
+        "translit": "",
+        "ipa": "/mɪ/",
+        "en": "we",
+        "pos": "pron",
+        "gender": "-",
+        "note": "First person plural"
       },
       {
         "id": "v-m04-009",
         "uk": "ви",
-        "translit": "/vɪ/",
-        "ipa": "you (formal/plural)",
-        "en": "pron",
-        "pos": "-",
-        "gender": "Formal or plural"
+        "translit": "",
+        "ipa": "/vɪ/",
+        "en": "you (formal/plural)",
+        "pos": "pron",
+        "gender": "-",
+        "note": "Formal or plural"
       },
       {
         "id": "v-m04-010",
         "uk": "вони",
-        "translit": "/wɔˈnɪ/",
-        "ipa": "they",
-        "en": "pron",
-        "pos": "-",
-        "gender": "Third person plural"
+        "translit": "",
+        "ipa": "/wɔˈnɪ/",
+        "en": "they",
+        "pos": "pron",
+        "gender": "-",
+        "note": "Third person plural"
       },
       {
         "id": "v-m04-011",
         "uk": "друг",
-        "translit": "/druɦ/",
-        "ipa": "friend (male)",
-        "en": "noun",
-        "pos": "m",
-        "gender": "Plural: друзі"
+        "translit": "",
+        "ipa": "/druɦ/",
+        "en": "friend (male)",
+        "pos": "noun",
+        "gender": "m",
+        "note": "Plural: друзі"
       },
       {
         "id": "v-m04-012",
         "uk": "подруга",
-        "translit": "/pɔˈdruɦɑ/",
-        "ipa": "friend (female)",
-        "en": "noun",
-        "pos": "f",
-        "gender": "Female friend"
+        "translit": "",
+        "ipa": "/pɔˈdruɦɑ/",
+        "en": "friend (female)",
+        "pos": "noun",
+        "gender": "f",
+        "note": "Female friend"
       },
       {
         "id": "v-m04-013",
         "uk": "українець",
-        "translit": "/ukrɑˈjinɛt͡sʲ/",
-        "ipa": "Ukrainian (male)",
-        "en": "noun",
-        "pos": "m",
-        "gender": "Nationality"
+        "translit": "",
+        "ipa": "/ukrɑˈjinɛt͡sʲ/",
+        "en": "Ukrainian (male)",
+        "pos": "noun",
+        "gender": "m",
+        "note": "Nationality"
       },
       {
         "id": "v-m04-014",
         "uk": "українка",
-        "translit": "/ukrɑˈjinkɑ/",
-        "ipa": "Ukrainian (female)",
-        "en": "noun",
-        "pos": "f",
-        "gender": "Nationality"
+        "translit": "",
+        "ipa": "/ukrɑˈjinkɑ/",
+        "en": "Ukrainian (female)",
+        "pos": "noun",
+        "gender": "f",
+        "note": "Nationality"
       },
       {
         "id": "v-m04-015",
         "uk": "з",
-        "translit": "/z/",
-        "ipa": "from",
-        "en": "prep",
-        "pos": "-",
-        "gender": "Я з України = I'm from Ukraine"
+        "translit": "",
+        "ipa": "/z/",
+        "en": "from",
+        "pos": "prep",
+        "gender": "-",
+        "note": "Я з України = I'm from Ukraine"
       },
       {
         "id": "v-m04-016",
         "uk": "тут",
-        "translit": "/tut/",
-        "ipa": "here",
-        "en": "adv",
-        "pos": "-",
-        "gender": "Location"
+        "translit": "",
+        "ipa": "/tut/",
+        "en": "here",
+        "pos": "adv",
+        "gender": "-",
+        "note": "Location"
       },
       {
         "id": "v-m04-017",
         "uk": "там",
-        "translit": "/tɑm/",
-        "ipa": "there",
-        "en": "adv",
-        "pos": "-",
-        "gender": "Location"
+        "translit": "",
+        "ipa": "/tɑm/",
+        "en": "there",
+        "pos": "adv",
+        "gender": "-",
+        "note": "Location"
       },
       {
         "id": "v-m04-018",
         "uk": "мій",
-        "translit": "/mʲij/",
-        "ipa": "my (masculine)",
-        "en": "pron",
-        "pos": "m",
-        "gender": "Possessive pronoun"
+        "translit": "",
+        "ipa": "/mʲij/",
+        "en": "my (masculine)",
+        "pos": "pron",
+        "gender": "m",
+        "note": "Possessive pronoun"
       },
       {
         "id": "v-m04-019",
         "uk": "моя",
-        "translit": "/mɔˈjɑ/",
-        "ipa": "my (feminine)",
-        "en": "pron",
-        "pos": "f",
-        "gender": "Possessive pronoun"
+        "translit": "",
+        "ipa": "/mɔˈjɑ/",
+        "en": "my (feminine)",
+        "pos": "pron",
+        "gender": "f",
+        "note": "Possessive pronoun"
       },
       {
         "id": "v-m04-020",
         "uk": "твій",
-        "translit": "/tvʲij/",
-        "ipa": "your (masc, informal)",
-        "en": "pron",
-        "pos": "m",
-        "gender": "Informal possessive"
+        "translit": "",
+        "ipa": "/tvʲij/",
+        "en": "your (masc, informal)",
+        "pos": "pron",
+        "gender": "m",
+        "note": "Informal possessive"
       },
       {
         "id": "v-m04-021",
         "uk": "твоя",
-        "translit": "/tvɔˈjɑ/",
-        "ipa": "your (fem, informal)",
-        "en": "pron",
-        "pos": "f",
-        "gender": "Informal possessive"
+        "translit": "",
+        "ipa": "/tvɔˈjɑ/",
+        "en": "your (fem, informal)",
+        "pos": "pron",
+        "gender": "f",
+        "note": "Informal possessive"
       }
     ]
   }

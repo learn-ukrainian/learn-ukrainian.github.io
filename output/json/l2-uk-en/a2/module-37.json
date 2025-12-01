@@ -380,110 +380,122 @@
       {
         "id": "v-m37-001",
         "uk": "над",
-        "translit": "/nɑd/",
-        "ipa": "above",
-        "en": "prep",
-        "pos": "-",
-        "gender": "+ instr"
+        "translit": "",
+        "ipa": "/nɑd/",
+        "en": "above",
+        "pos": "prep",
+        "gender": "-",
+        "note": "+ instr"
       },
       {
         "id": "v-m37-002",
         "uk": "під",
-        "translit": "/pʲid/",
-        "ipa": "under",
-        "en": "prep",
-        "pos": "-",
-        "gender": "+ acc/instr"
+        "translit": "",
+        "ipa": "/pʲid/",
+        "en": "under",
+        "pos": "prep",
+        "gender": "-",
+        "note": "+ acc/instr"
       },
       {
         "id": "v-m37-003",
         "uk": "перед",
-        "translit": "/ˈpɛrɛd/",
-        "ipa": "in front of",
-        "en": "prep",
-        "pos": "-",
-        "gender": "+ instr"
+        "translit": "",
+        "ipa": "/ˈpɛrɛd/",
+        "en": "in front of",
+        "pos": "prep",
+        "gender": "-",
+        "note": "+ instr"
       },
       {
         "id": "v-m37-004",
         "uk": "між",
-        "translit": "/mʲiʒ/",
-        "ipa": "between",
-        "en": "prep",
-        "pos": "-",
-        "gender": "+ instr"
+        "translit": "",
+        "ipa": "/mʲiʒ/",
+        "en": "between",
+        "pos": "prep",
+        "gender": "-",
+        "note": "+ instr"
       },
       {
         "id": "v-m37-005",
         "uk": "поруч",
-        "translit": "/ˈporutʃ/",
-        "ipa": "next to",
-        "en": "adv",
-        "pos": "-",
-        "gender": "з + instr"
+        "translit": "",
+        "ipa": "/ˈporutʃ/",
+        "en": "next to",
+        "pos": "adv",
+        "gender": "-",
+        "note": "з + instr"
       },
       {
         "id": "v-m37-006",
         "uk": "вздовж",
-        "translit": "/vzdoʋʒ/",
-        "ipa": "along",
-        "en": "prep",
-        "pos": "-",
-        "gender": "+ gen"
+        "translit": "",
+        "ipa": "/vzdoʋʒ/",
+        "en": "along",
+        "pos": "prep",
+        "gender": "-",
+        "note": "+ gen"
       },
       {
         "id": "v-m37-007",
         "uk": "навколо",
-        "translit": "/nɑfˈkolo/",
-        "ipa": "around",
-        "en": "prep",
-        "pos": "-",
-        "gender": "+ gen"
+        "translit": "",
+        "ipa": "/nɑfˈkolo/",
+        "en": "around",
+        "pos": "prep",
+        "gender": "-",
+        "note": "+ gen"
       },
       {
         "id": "v-m37-008",
         "uk": "посеред",
-        "translit": "/poˈsɛrɛd/",
-        "ipa": "in the middle",
-        "en": "prep",
-        "pos": "-",
-        "gender": "+ gen"
+        "translit": "",
+        "ipa": "/poˈsɛrɛd/",
+        "en": "in the middle",
+        "pos": "prep",
+        "gender": "-",
+        "note": "+ gen"
       },
       {
         "id": "v-m37-009",
         "uk": "позаду",
-        "translit": "/poˈzɑdu/",
-        "ipa": "behind",
-        "en": "prep",
-        "pos": "-",
-        "gender": "+ gen"
+        "translit": "",
+        "ipa": "/poˈzɑdu/",
+        "en": "behind",
+        "pos": "prep",
+        "gender": "-",
+        "note": "+ gen"
       },
       {
         "id": "v-m37-010",
         "uk": "попереду",
-        "translit": "/popɛˈrɛdu/",
-        "ipa": "in front, ahead",
-        "en": "prep",
-        "pos": "-",
-        "gender": "+ gen"
+        "translit": "",
+        "ipa": "/popɛˈrɛdu/",
+        "en": "in front, ahead",
+        "pos": "prep",
+        "gender": "-",
+        "note": "+ gen"
       },
       {
         "id": "v-m37-011",
         "uk": "серед",
-        "translit": "/sɛˈrɛd/",
-        "ipa": "among",
-        "en": "prep",
-        "pos": "-",
-        "gender": "+ gen"
+        "translit": "",
+        "ipa": "/sɛˈrɛd/",
+        "en": "among",
+        "pos": "prep",
+        "gender": "-",
+        "note": "+ gen"
       },
       {
         "id": "v-m37-012",
         "uk": "замість",
-        "translit": "/zɑˈmʲistʲ/",
-        "ipa": "instead of",
-        "en": "prep",
-        "pos": "-",
-        "gender": "+ gen"
+        "translit": "",
+        "ipa": "/zɑˈmʲistʲ/",
+        "en": "instead of",
+        "pos": "prep",
+        "gender": "-",
+        "note": "+ gen"
       }
     ]
   }

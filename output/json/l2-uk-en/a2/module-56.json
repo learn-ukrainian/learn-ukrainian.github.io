@@ -355,74 +355,83 @@
       {
         "id": "v-m56-001",
         "uk": "дзвінок",
-        "translit": "/dzvʲiˈnok/",
-        "ipa": "call",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/dzvʲiˈnok/",
+        "en": "call",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m56-002",
         "uk": "отримати",
-        "translit": "/otrɪˈmɑtɪ/",
-        "ipa": "to receive (perf)",
-        "en": "verb",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/otrɪˈmɑtɪ/",
+        "en": "to receive (perf)",
+        "pos": "verb",
+        "gender": "-"
       },
       {
         "id": "v-m56-003",
         "uk": "переслати",
-        "translit": "/pɛrɛˈslɑtɪ/",
-        "ipa": "to forward (perf)",
-        "en": "verb",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/pɛrɛˈslɑtɪ/",
+        "en": "to forward (perf)",
+        "pos": "verb",
+        "gender": "-"
       },
       {
         "id": "v-m56-004",
         "uk": "вкладення",
-        "translit": "/vklɑˈdɛnʲɑ/",
-        "ipa": "attachment",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/vklɑˈdɛnʲɑ/",
+        "en": "attachment",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m56-005",
         "uk": "посилання",
-        "translit": "/posɪˈlɑnʲɑ/",
-        "ipa": "link",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/posɪˈlɑnʲɑ/",
+        "en": "link",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m56-006",
         "uk": "пароль",
-        "translit": "/pɑˈrolʲ/",
-        "ipa": "password",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/pɑˈrolʲ/",
+        "en": "password",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m56-007",
         "uk": "підписатися",
-        "translit": "/pʲidpɪˈsɑtɪsʲɑ/",
-        "ipa": "to subscribe, follow",
-        "en": "verb",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/pʲidpɪˈsɑtɪsʲɑ/",
+        "en": "to subscribe, follow",
+        "pos": "verb",
+        "gender": "-"
       },
       {
         "id": "v-m56-008",
         "uk": "поділитися",
-        "translit": "/podʲiˈlɪtɪsʲɑ/",
-        "ipa": "to share",
-        "en": "verb",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/podʲiˈlɪtɪsʲɑ/",
+        "en": "to share",
+        "pos": "verb",
+        "gender": "-"
       },
       {
         "id": "v-m56-009",
         "uk": "завантажити",
-        "translit": "/zɑvɑnˈtɑʒɪtɪ/",
-        "ipa": "to download (perf)",
-        "en": "verb",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/zɑvɑnˈtɑʒɪtɪ/",
+        "en": "to download (perf)",
+        "pos": "verb",
+        "gender": "-"
       }
     ]
   }

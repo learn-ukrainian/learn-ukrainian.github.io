@@ -245,13 +245,34 @@
       "modifiedAt": "2025-12-01T00:00:00Z"
     },
     {
-      "id": "act-uk-B1-135-fillin",
-      "type": "fill-in",
+      "id": "act-uk-B1-135-gapfill",
+      "type": "gap-fill",
       "title": "Story with Idioms",
       "description": "Вставте ідіоми.",
       "content": {
-        "type": "fill-in",
-        "instructions": "Вставте ідіоми."
+        "type": "gap-fill",
+        "instructions": "Вставте ідіоми.",
+        "text": "Вставте ідіоми.\nМій друг Петро (1)___ (is very smart). Але минулого тижня він (2)___ (was very nervous) перед іспитом. Він (3)___ (worked hard) цілий тиждень. І — новина (4)___ (was unexpected)! — він здав на відмінно! Тепер він (5)___ (is very happy).",
+        "blanks": [
+          {
+            "hint": "is very smart"
+          },
+          {
+            "hint": "was very nervous"
+          },
+          {
+            "hint": "worked hard"
+          },
+          {
+            "hint": "was unexpected"
+          },
+          {
+            "hint": "is very happy"
+          }
+        ],
+        "answers": [
+          "1. має голову на плечах"
+        ]
       },
       "subject": "language",
       "owner": "curricula-opus",
@@ -273,8 +294,117 @@
     "moduleId": "mod-uk-B1-135",
     "level": "B1",
     "phase": "B1.4",
-    "wordCount": 0,
+    "wordCount": 12,
     "transliterationMode": "none",
-    "words": []
+    "words": [
+      {
+        "id": "v-m135-001",
+        "uk": "ідіома",
+        "translit": "",
+        "ipa": "/ʲiˈdʲiomɑ/",
+        "en": "idiom",
+        "pos": "",
+        "note": "f"
+      },
+      {
+        "id": "v-m135-002",
+        "uk": "сталий вираз",
+        "translit": "",
+        "ipa": "-",
+        "en": "set phrase",
+        "pos": "",
+        "note": "m"
+      },
+      {
+        "id": "v-m135-003",
+        "uk": "переносне значення",
+        "translit": "",
+        "ipa": "-",
+        "en": "figurative meaning",
+        "pos": "",
+        "note": "n"
+      },
+      {
+        "id": "v-m135-004",
+        "uk": "перебільшувати",
+        "translit": "",
+        "ipa": "-",
+        "en": "to exaggerate",
+        "pos": "",
+        "note": "impf"
+      },
+      {
+        "id": "v-m135-005",
+        "uk": "байдики бити",
+        "translit": "",
+        "ipa": "-",
+        "en": "to be idle",
+        "pos": "",
+        "note": "idiom"
+      },
+      {
+        "id": "v-m135-006",
+        "uk": "на сьомому небі",
+        "translit": "",
+        "ipa": "-",
+        "en": "on cloud nine",
+        "pos": "",
+        "note": "idiom"
+      },
+      {
+        "id": "v-m135-007",
+        "uk": "як кіт наплакав",
+        "translit": "",
+        "ipa": "-",
+        "en": "very little",
+        "pos": "",
+        "note": "idiom"
+      },
+      {
+        "id": "v-m135-008",
+        "uk": "коли рак свисне",
+        "translit": "",
+        "ipa": "-",
+        "en": "never",
+        "pos": "",
+        "note": "idiom"
+      },
+      {
+        "id": "v-m135-009",
+        "uk": "собаку з'їсти",
+        "translit": "",
+        "ipa": "-",
+        "en": "be expert",
+        "pos": "",
+        "note": "idiom"
+      },
+      {
+        "id": "v-m135-010",
+        "uk": "з мухи слона",
+        "translit": "",
+        "ipa": "-",
+        "en": "exaggerate",
+        "pos": "",
+        "note": "idiom"
+      },
+      {
+        "id": "v-m135-011",
+        "uk": "тримати язик за зубами",
+        "translit": "",
+        "ipa": "-",
+        "en": "keep secret",
+        "pos": "",
+        "note": "idiom"
+      },
+      {
+        "id": "v-m135-012",
+        "uk": "не покладаючи рук",
+        "translit": "",
+        "ipa": "-",
+        "en": "without rest",
+        "pos": "",
+        "note": "idiom"
+      }
+    ]
   }
 }

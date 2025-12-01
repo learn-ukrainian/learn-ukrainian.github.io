@@ -351,150 +351,167 @@
       {
         "id": "v-m45-001",
         "uk": "найбільший",
-        "translit": "/nɑjˈbʲilʲʃɪj/",
-        "ipa": "biggest",
-        "en": "adj",
-        "pos": "-",
-        "gender": "sup of великий"
+        "translit": "",
+        "ipa": "/nɑjˈbʲilʲʃɪj/",
+        "en": "biggest",
+        "pos": "adj",
+        "gender": "-",
+        "note": "sup of великий"
       },
       {
         "id": "v-m45-002",
         "uk": "найменший",
-        "translit": "/nɑjˈmɛnʃɪj/",
-        "ipa": "smallest",
-        "en": "adj",
-        "pos": "-",
-        "gender": "sup of малий"
+        "translit": "",
+        "ipa": "/nɑjˈmɛnʃɪj/",
+        "en": "smallest",
+        "pos": "adj",
+        "gender": "-",
+        "note": "sup of малий"
       },
       {
         "id": "v-m45-003",
         "uk": "найкращий",
-        "translit": "/nɑjˈkrɑʃtʃɪj/",
-        "ipa": "best",
-        "en": "adj",
-        "pos": "-",
-        "gender": "sup of добрий"
+        "translit": "",
+        "ipa": "/nɑjˈkrɑʃtʃɪj/",
+        "en": "best",
+        "pos": "adj",
+        "gender": "-",
+        "note": "sup of добрий"
       },
       {
         "id": "v-m45-004",
         "uk": "найгірший",
-        "translit": "/nɑjˈɦʲirʃɪj/",
-        "ipa": "worst",
-        "en": "adj",
-        "pos": "-",
-        "gender": "sup of поганий"
+        "translit": "",
+        "ipa": "/nɑjˈɦʲirʃɪj/",
+        "en": "worst",
+        "pos": "adj",
+        "gender": "-",
+        "note": "sup of поганий"
       },
       {
         "id": "v-m45-005",
         "uk": "найвищий",
-        "translit": "/nɑjˈvɪʃtʃɪj/",
-        "ipa": "highest/tallest",
-        "en": "adj",
-        "pos": "-",
-        "gender": "sup of високий"
+        "translit": "",
+        "ipa": "/nɑjˈvɪʃtʃɪj/",
+        "en": "highest/tallest",
+        "pos": "adj",
+        "gender": "-",
+        "note": "sup of високий"
       },
       {
         "id": "v-m45-006",
         "uk": "найдорожчий",
-        "translit": "/nɑjdoˈroʒtʃɪj/",
-        "ipa": "most expensive",
-        "en": "adj",
-        "pos": "-",
-        "gender": "sup of дорогий"
+        "translit": "",
+        "ipa": "/nɑjdoˈroʒtʃɪj/",
+        "en": "most expensive",
+        "pos": "adj",
+        "gender": "-",
+        "note": "sup of дорогий"
       },
       {
         "id": "v-m45-007",
         "uk": "найдешевший",
-        "translit": "/nɑjdɛˈʃɛvʃɪj/",
-        "ipa": "cheapest",
-        "en": "adj",
-        "pos": "-",
-        "gender": "sup of дешевий"
+        "translit": "",
+        "ipa": "/nɑjdɛˈʃɛvʃɪj/",
+        "en": "cheapest",
+        "pos": "adj",
+        "gender": "-",
+        "note": "sup of дешевий"
       },
       {
         "id": "v-m45-008",
         "uk": "найважливіший",
-        "translit": "/nɑjvɑʒˈlɪvʲiʃɪj/",
-        "ipa": "most important",
-        "en": "adj",
-        "pos": "-",
-        "gender": "sup of важливий"
+        "translit": "",
+        "ipa": "/nɑjvɑʒˈlɪvʲiʃɪj/",
+        "en": "most important",
+        "pos": "adj",
+        "gender": "-",
+        "note": "sup of важливий"
       },
       {
         "id": "v-m45-009",
         "uk": "найцікавіший",
-        "translit": "/nɑjtsʲikɑˈvʲiʃɪj/",
-        "ipa": "most interesting",
-        "en": "adj",
-        "pos": "-",
-        "gender": "sup of цікавий"
+        "translit": "",
+        "ipa": "/nɑjtsʲikɑˈvʲiʃɪj/",
+        "en": "most interesting",
+        "pos": "adj",
+        "gender": "-",
+        "note": "sup of цікавий"
       },
       {
         "id": "v-m45-010",
         "uk": "найшвидше",
-        "translit": "/nɑjˈʃvɪdʃɛ/",
-        "ipa": "fastest",
-        "en": "adv",
-        "pos": "-",
-        "gender": "sup of швидко"
+        "translit": "",
+        "ipa": "/nɑjˈʃvɪdʃɛ/",
+        "en": "fastest",
+        "pos": "adv",
+        "gender": "-",
+        "note": "sup of швидко"
       },
       {
         "id": "v-m45-011",
         "uk": "найкраще",
-        "translit": "/nɑjˈkrɑʃtʃɛ/",
-        "ipa": "best (adv)",
-        "en": "adv",
-        "pos": "-",
-        "gender": "sup of добре"
+        "translit": "",
+        "ipa": "/nɑjˈkrɑʃtʃɛ/",
+        "en": "best (adv)",
+        "pos": "adv",
+        "gender": "-",
+        "note": "sup of добре"
       },
       {
         "id": "v-m45-012",
         "uk": "найбільше",
-        "translit": "/nɑjˈbʲilʲʃɛ/",
-        "ipa": "most (adv)",
-        "en": "adv",
-        "pos": "-",
-        "gender": "sup of багато"
+        "translit": "",
+        "ipa": "/nɑjˈbʲilʲʃɛ/",
+        "en": "most (adv)",
+        "pos": "adv",
+        "gender": "-",
+        "note": "sup of багато"
       },
       {
         "id": "v-m45-013",
         "uk": "щонайменше",
-        "translit": "/ʃtʃonɑjˈmɛnʃɛ/",
-        "ipa": "at least",
-        "en": "adv",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ʃtʃonɑjˈmɛnʃɛ/",
+        "en": "at least",
+        "pos": "adv",
+        "gender": "-"
       },
       {
         "id": "v-m45-014",
         "uk": "щонайбільше",
-        "translit": "/ʃtʃonɑjˈbʲilʲʃɛ/",
-        "ipa": "at most",
-        "en": "adv",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ʃtʃonɑjˈbʲilʲʃɛ/",
+        "en": "at most",
+        "pos": "adv",
+        "gender": "-"
       },
       {
         "id": "v-m45-015",
         "uk": "найголовніший",
-        "translit": "/nɑjɦolovˈnʲiʃɪj/",
-        "ipa": "most main/important",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/nɑjɦolovˈnʲiʃɪj/",
+        "en": "most main/important",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m45-016",
         "uk": "надзвичайно",
-        "translit": "/nɑdzvɪˈtʃɑjno/",
-        "ipa": "extraordinarily",
-        "en": "adv",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/nɑdzvɪˈtʃɑjno/",
+        "en": "extraordinarily",
+        "pos": "adv",
+        "gender": "-"
       },
       {
         "id": "v-m45-017",
         "uk": "неймовірно",
-        "translit": "/nɛjmoˈvʲirno/",
-        "ipa": "incredibly",
-        "en": "adv",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/nɛjmoˈvʲirno/",
+        "en": "incredibly",
+        "pos": "adv",
+        "gender": "-"
       }
     ]
   }

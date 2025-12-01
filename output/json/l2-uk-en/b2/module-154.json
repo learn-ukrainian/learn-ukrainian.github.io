@@ -117,105 +117,118 @@
         "id": "v-m154-001",
         "uk": "зів'ялий",
         "translit": "",
-        "ipa": "wilted",
-        "en": "adj, від зів'янути",
-        "pos": ""
+        "ipa": "",
+        "en": "wilted",
+        "pos": "",
+        "note": "adj, від зів'янути"
       },
       {
         "id": "v-m154-002",
         "uk": "посивілий",
         "translit": "",
-        "ipa": "gray-haired",
-        "en": "adj, від посивіти",
-        "pos": ""
+        "ipa": "",
+        "en": "gray-haired",
+        "pos": "",
+        "note": "adj, від посивіти"
       },
       {
         "id": "v-m154-003",
         "uk": "змарнілий",
         "translit": "",
-        "ipa": "emaciated",
-        "en": "adj, від змарніти",
-        "pos": ""
+        "ipa": "",
+        "en": "emaciated",
+        "pos": "",
+        "note": "adj, від змарніти"
       },
       {
         "id": "v-m154-004",
         "uk": "застарілий",
         "translit": "",
-        "ipa": "outdated",
-        "en": "adj, від застаріти",
-        "pos": ""
+        "ipa": "",
+        "en": "outdated",
+        "pos": "",
+        "note": "adj, від застаріти"
       },
       {
         "id": "v-m154-005",
         "uk": "похилий",
         "translit": "",
-        "ipa": "tilted; elderly",
-        "en": "adj, «похилого віку»",
-        "pos": ""
+        "ipa": "",
+        "en": "tilted; elderly",
+        "pos": "",
+        "note": "adj, «похилого віку»"
       },
       {
         "id": "v-m154-006",
         "uk": "минулий",
         "translit": "",
-        "ipa": "past",
-        "en": "adj, не «минувший»!",
-        "pos": ""
+        "ipa": "",
+        "en": "past",
+        "pos": "",
+        "note": "adj, не «минувший»!"
       },
       {
         "id": "v-m154-007",
         "uk": "колишній",
         "translit": "",
-        "ipa": "former",
-        "en": "adj, не «бувший»!",
-        "pos": ""
+        "ipa": "",
+        "en": "former",
+        "pos": "",
+        "note": "adj, не «бувший»!"
       },
       {
         "id": "v-m154-008",
         "uk": "бувалий",
         "translit": "",
-        "ipa": "experienced",
-        "en": "adj",
-        "pos": ""
+        "ipa": "",
+        "en": "experienced",
+        "pos": "",
+        "note": "adj"
       },
       {
         "id": "v-m154-009",
         "uk": "зрілий",
         "translit": "",
-        "ipa": "mature, ripe",
-        "en": "adj",
-        "pos": ""
+        "ipa": "",
+        "en": "mature, ripe",
+        "pos": "",
+        "note": "adj"
       },
       {
         "id": "v-m154-010",
         "uk": "спілий",
         "translit": "",
-        "ipa": "ripe",
-        "en": "adj",
-        "pos": ""
+        "ipa": "",
+        "en": "ripe",
+        "pos": "",
+        "note": "adj"
       },
       {
         "id": "v-m154-011",
         "uk": "запеклий",
         "translit": "",
-        "ipa": "fierce",
-        "en": "adj",
-        "pos": ""
+        "ipa": "",
+        "en": "fierce",
+        "pos": "",
+        "note": "adj"
       },
       {
         "id": "v-m154-012",
         "uk": "перехідний",
         "translit": "",
-        "ipa": "transitive",
-        "en": "про дієслова",
-        "pos": ""
+        "ipa": "",
+        "en": "transitive",
+        "pos": "",
+        "note": "про дієслова"
       },
       {
         "id": "v-m154-013",
         "uk": "неперехідний",
         "translit": "",
-        "ipa": "intransitive",
-        "en": "про дієслова",
-        "pos": ""
+        "ipa": "",
+        "en": "intransitive",
+        "pos": "",
+        "note": "про дієслова"
       }
     ]
   }

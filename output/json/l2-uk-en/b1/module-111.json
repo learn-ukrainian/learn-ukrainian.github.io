@@ -302,8 +302,153 @@
     "moduleId": "mod-uk-B1-111",
     "level": "B1",
     "phase": "B1.2",
-    "wordCount": 0,
+    "wordCount": 16,
     "transliterationMode": "none",
-    "words": []
+    "words": [
+      {
+        "id": "v-m111-001",
+        "uk": "газета",
+        "translit": "",
+        "ipa": "/ɦɑˈzɛtɑ/",
+        "en": "newspaper",
+        "pos": "",
+        "gender": "f"
+      },
+      {
+        "id": "v-m111-002",
+        "uk": "журнал",
+        "translit": "",
+        "ipa": "/ʒurˈnɑl/",
+        "en": "magazine",
+        "pos": "",
+        "gender": "m"
+      },
+      {
+        "id": "v-m111-003",
+        "uk": "стаття",
+        "translit": "",
+        "ipa": "/stɑˈtʲːɑ/",
+        "en": "article",
+        "pos": "",
+        "gender": "f"
+      },
+      {
+        "id": "v-m111-004",
+        "uk": "заголовок",
+        "translit": "",
+        "ipa": "/zɑˈɦolovok/",
+        "en": "headline",
+        "pos": "",
+        "gender": "m"
+      },
+      {
+        "id": "v-m111-005",
+        "uk": "журналіст",
+        "translit": "",
+        "ipa": "/ʒurnɑˈlʲist/",
+        "en": "journalist",
+        "pos": "",
+        "gender": "m"
+      },
+      {
+        "id": "v-m111-006",
+        "uk": "редактор",
+        "translit": "",
+        "ipa": "/rɛˈdɑktor/",
+        "en": "editor",
+        "pos": "",
+        "gender": "m"
+      },
+      {
+        "id": "v-m111-007",
+        "uk": "новини",
+        "translit": "",
+        "ipa": "/noˈvɪnɪ/",
+        "en": "news",
+        "pos": "",
+        "gender": "pl"
+      },
+      {
+        "id": "v-m111-008",
+        "uk": "телебачення",
+        "translit": "",
+        "ipa": "/tɛlɛˈbɑt͡ʃɛnʲːɑ/",
+        "en": "television",
+        "pos": "",
+        "gender": "n"
+      },
+      {
+        "id": "v-m111-009",
+        "uk": "радіо",
+        "translit": "",
+        "ipa": "/ˈrɑdʲio/",
+        "en": "radio",
+        "pos": "",
+        "gender": "n"
+      },
+      {
+        "id": "v-m111-010",
+        "uk": "передача",
+        "translit": "",
+        "ipa": "/pɛrɛˈdɑt͡ʃɑ/",
+        "en": "program",
+        "pos": "",
+        "gender": "f"
+      },
+      {
+        "id": "v-m111-011",
+        "uk": "інтернет",
+        "translit": "",
+        "ipa": "/intɛrˈnɛt/",
+        "en": "internet",
+        "pos": "",
+        "gender": "m"
+      },
+      {
+        "id": "v-m111-012",
+        "uk": "вебсайт",
+        "translit": "",
+        "ipa": "/vɛbˈsɑjt/",
+        "en": "website",
+        "pos": "",
+        "gender": "m"
+      },
+      {
+        "id": "v-m111-013",
+        "uk": "блог",
+        "translit": "",
+        "ipa": "/bloɦ/",
+        "en": "blog",
+        "pos": "",
+        "gender": "m"
+      },
+      {
+        "id": "v-m111-014",
+        "uk": "соціальна мережа",
+        "translit": "",
+        "ipa": "-",
+        "en": "social network",
+        "pos": "",
+        "gender": "f"
+      },
+      {
+        "id": "v-m111-015",
+        "uk": "підписник",
+        "translit": "",
+        "ipa": "/pʲidˈpɪsnɪk/",
+        "en": "subscriber",
+        "pos": "",
+        "gender": "m"
+      },
+      {
+        "id": "v-m111-016",
+        "uk": "коментар",
+        "translit": "",
+        "ipa": "/komɛnˈtɑr/",
+        "en": "comment",
+        "pos": "",
+        "gender": "m"
+      }
+    ]
   }
 }

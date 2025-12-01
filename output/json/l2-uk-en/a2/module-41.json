@@ -352,73 +352,81 @@
       {
         "id": "v-m41-001",
         "uk": "вид",
-        "translit": "/vɪd/",
-        "ipa": "aspect (grammatical)",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/vɪd/",
+        "en": "aspect (grammatical)",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m41-002",
         "uk": "недоконаний",
-        "translit": "/nɛdoˈkonɑnɪj/",
-        "ipa": "imperfective",
-        "en": "adj",
-        "pos": "-",
-        "gender": "lit. \"unfinished\""
+        "translit": "",
+        "ipa": "/nɛdoˈkonɑnɪj/",
+        "en": "imperfective",
+        "pos": "adj",
+        "gender": "-",
+        "note": "lit. \"unfinished\""
       },
       {
         "id": "v-m41-003",
         "uk": "доконаний",
-        "translit": "/doˈkonɑnɪj/",
-        "ipa": "perfective",
-        "en": "adj",
-        "pos": "-",
-        "gender": "lit. \"finished\""
+        "translit": "",
+        "ipa": "/doˈkonɑnɪj/",
+        "en": "perfective",
+        "pos": "adj",
+        "gender": "-",
+        "note": "lit. \"finished\""
       },
       {
         "id": "v-m41-004",
         "uk": "з'їсти",
-        "translit": "/ˈzjistɪ/",
-        "ipa": "to eat (perf)",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf of їсти"
+        "translit": "",
+        "ipa": "/ˈzjistɪ/",
+        "en": "to eat (perf)",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf of їсти"
       },
       {
         "id": "v-m41-005",
         "uk": "випити",
-        "translit": "/ˈvɪpɪtɪ/",
-        "ipa": "to drink (perf)",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf of пити"
+        "translit": "",
+        "ipa": "/ˈvɪpɪtɪ/",
+        "en": "to drink (perf)",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf of пити"
       },
       {
         "id": "v-m41-006",
         "uk": "вивчити",
-        "translit": "/ˈvɪvtʃɪtɪ/",
-        "ipa": "to learn (perf)",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf of вчити"
+        "translit": "",
+        "ipa": "/ˈvɪvtʃɪtɪ/",
+        "en": "to learn (perf)",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf of вчити"
       },
       {
         "id": "v-m41-007",
         "uk": "приготувати",
-        "translit": "/prɪɦotuˈvɑtɪ/",
-        "ipa": "to cook/prepare (perf)",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf of готувати"
+        "translit": "",
+        "ipa": "/prɪɦotuˈvɑtɪ/",
+        "en": "to cook/prepare (perf)",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf of готувати"
       },
       {
         "id": "v-m41-008",
         "uk": "купити",
-        "translit": "/kuˈpɪtɪ/",
-        "ipa": "to buy (perf)",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf of купувати"
+        "translit": "",
+        "ipa": "/kuˈpɪtɪ/",
+        "en": "to buy (perf)",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf of купувати"
       }
     ]
   }

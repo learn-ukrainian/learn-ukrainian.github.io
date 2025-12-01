@@ -710,7 +710,7 @@
       <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
-    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (0)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
+    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (12)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
     </section>
   </main>
@@ -719,7 +719,7 @@
     const matchPairs=[];
     const quizData=[{"question":"Тверде переконання:","options":["вважати","гадати"],"correctIndex":0,"explanation":"Strong opinion/belief."},{"question":"Невпевнене припущення:","options":["гадати","вважати"],"correctIndex":0,"explanation":"Uncertain supposition."},{"question":"Глибокий роздум:","options":["міркувати","думати"],"correctIndex":0,"explanation":"Deep pondering."},{"question":"Суб'єктивне враження:","options":["здаватися","вважати"],"correctIndex":0,"explanation":"Subjective impression."},{"question":"«Мені здається» means:","options":["it seems to me","I firmly believe"],"correctIndex":0,"explanation":"Subjective feeling."},{"question":"Найзагальніше дієслово:","options":["думати","міркувати"],"correctIndex":0,"explanation":"Most general verb."}];
     const sortData={};
-    const vocabData=[];
+    const vocabData=[{"uk":"думати","translit":"","en":"to think","note":"impf, general"},{"uk":"гадати","translit":"","en":"to suppose, think","note":"impf, uncertain"},{"uk":"вважати","translit":"","en":"to consider, believe","note":"impf, firm"},{"uk":"міркувати","translit":"","en":"to ponder, reflect","note":"impf, deep"},{"uk":"здаватися","translit":"","en":"to seem","note":"impf"},{"uk":"роздумувати","translit":"","en":"to deliberate","note":"impf"},{"uk":"припускати","translit":"","en":"to suppose, assume","note":"impf"},{"uk":"переконання","translit":"","en":"belief, conviction","note":"n"},{"uk":"думка","translit":"","en":"thought, opinion","note":"f"},{"uk":"враження","translit":"","en":"impression","note":"n"},{"uk":"роздум","translit":"","en":"reflection, thought","note":"m"},{"uk":"помилятися","translit":"","en":"to be mistaken","note":"impf"}];
     const totalSort=0;
     function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
     document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));

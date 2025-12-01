@@ -255,13 +255,34 @@
       "modifiedAt": "2025-12-01T00:00:00Z"
     },
     {
-      "id": "act-uk-B1-132-fillin",
-      "type": "fill-in",
+      "id": "act-uk-B1-132-gapfill",
+      "type": "gap-fill",
       "title": "Opinion Paragraph",
       "description": "Виразіть свою думку.",
       "content": {
-        "type": "fill-in",
-        "instructions": "Виразіть свою думку."
+        "type": "gap-fill",
+        "instructions": "Виразіть свою думку.",
+        "text": "Виразіть свою думку.\n(1)___ (I think), що технології змінюють наше життя. (2)___ (I believe firmly), це позитивні зміни. Однак (3)___ (it seems to me), що ми занадто залежні від гаджетів. (4)___ (Pondering) над цим, (5)___ (I suppose), потрібен баланс.",
+        "blanks": [
+          {
+            "hint": "I think"
+          },
+          {
+            "hint": "I believe firmly"
+          },
+          {
+            "hint": "it seems to me"
+          },
+          {
+            "hint": "Pondering"
+          },
+          {
+            "hint": "I suppose"
+          }
+        ],
+        "answers": [
+          "1. Думаю / Гадаю"
+        ]
       },
       "subject": "language",
       "owner": "curricula-opus",
@@ -283,8 +304,117 @@
     "moduleId": "mod-uk-B1-132",
     "level": "B1",
     "phase": "B1.4",
-    "wordCount": 0,
+    "wordCount": 12,
     "transliterationMode": "none",
-    "words": []
+    "words": [
+      {
+        "id": "v-m132-001",
+        "uk": "думати",
+        "translit": "",
+        "ipa": "/ˈdumɑtɪ/",
+        "en": "to think",
+        "pos": "",
+        "note": "impf, general"
+      },
+      {
+        "id": "v-m132-002",
+        "uk": "гадати",
+        "translit": "",
+        "ipa": "/ɦɑˈdɑtɪ/",
+        "en": "to suppose, think",
+        "pos": "",
+        "note": "impf, uncertain"
+      },
+      {
+        "id": "v-m132-003",
+        "uk": "вважати",
+        "translit": "",
+        "ipa": "/vvɑˈʒɑtɪ/",
+        "en": "to consider, believe",
+        "pos": "",
+        "note": "impf, firm"
+      },
+      {
+        "id": "v-m132-004",
+        "uk": "міркувати",
+        "translit": "",
+        "ipa": "/mʲirkuˈvɑtɪ/",
+        "en": "to ponder, reflect",
+        "pos": "",
+        "note": "impf, deep"
+      },
+      {
+        "id": "v-m132-005",
+        "uk": "здаватися",
+        "translit": "",
+        "ipa": "/zdɑˈvɑtɪsʲɑ/",
+        "en": "to seem",
+        "pos": "",
+        "note": "impf"
+      },
+      {
+        "id": "v-m132-006",
+        "uk": "роздумувати",
+        "translit": "",
+        "ipa": "/rozduˈmuvɑtɪ/",
+        "en": "to deliberate",
+        "pos": "",
+        "note": "impf"
+      },
+      {
+        "id": "v-m132-007",
+        "uk": "припускати",
+        "translit": "",
+        "ipa": "/prɪpusˈkɑtɪ/",
+        "en": "to suppose, assume",
+        "pos": "",
+        "note": "impf"
+      },
+      {
+        "id": "v-m132-008",
+        "uk": "переконання",
+        "translit": "",
+        "ipa": "/pɛrɛkoˈnɑnʲːɑ/",
+        "en": "belief, conviction",
+        "pos": "",
+        "note": "n"
+      },
+      {
+        "id": "v-m132-009",
+        "uk": "думка",
+        "translit": "",
+        "ipa": "/ˈdumkɑ/",
+        "en": "thought, opinion",
+        "pos": "",
+        "note": "f"
+      },
+      {
+        "id": "v-m132-010",
+        "uk": "враження",
+        "translit": "",
+        "ipa": "/vrɑˈʒɛnʲːɑ/",
+        "en": "impression",
+        "pos": "",
+        "note": "n"
+      },
+      {
+        "id": "v-m132-011",
+        "uk": "роздум",
+        "translit": "",
+        "ipa": "/ˈrozdum/",
+        "en": "reflection, thought",
+        "pos": "",
+        "note": "m"
+      },
+      {
+        "id": "v-m132-012",
+        "uk": "помилятися",
+        "translit": "",
+        "ipa": "/pomɪˈlʲɑtɪsʲɑ/",
+        "en": "to be mistaken",
+        "pos": "",
+        "note": "impf"
+      }
+    ]
   }
 }

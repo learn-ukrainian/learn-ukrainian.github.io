@@ -751,7 +751,7 @@
       <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
-    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (0)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
+    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (15)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
     </section>
   </main>
@@ -760,7 +760,7 @@
     const matchPairs=[];
     const quizData=[{"question":"Зменшувальна форма від «стіл»:","options":["столик","столець"],"correctIndex":0,"explanation":"-ик is the common suffix for masculine nouns."},{"question":"«Мамочка» виражає:","options":["ласку","іронію"],"correctIndex":0,"explanation":"Affection is the primary meaning."},{"question":"Зменшувальна форма від «вікно»:","options":["віконечко","вікночко"],"correctIndex":0,"explanation":"-ечко for neuter after consonant."},{"question":"«Зачекайте хвилиночку» — це:","options":["ввічливе прохання","наказ"],"correctIndex":0,"explanation":"Diminutive softens the request."},{"question":"Яке слово НЕ є зменшувальним:","options":["батько","котик"],"correctIndex":0,"explanation":"батько is the base form."},{"question":"«Гарненька ситуація» може означати:","options":["іронію","захоплення"],"correctIndex":0,"explanation":"Diminutives can express irony."}];
     const sortData={};
-    const vocabData=[];
+    const vocabData=[{"uk":"зменшувальний","translit":"","en":"diminutive","note":"adj"},{"uk":"пестливий","translit":"","en":"affectionate, tender","note":"adj"},{"uk":"ласкавий","translit":"","en":"kind, gentle","note":"adj"},{"uk":"суфікс","translit":"","en":"suffix","note":"m"},{"uk":"столик","translit":"","en":"small table","note":"m, dim"},{"uk":"котик","translit":"","en":"kitty","note":"m, dim"},{"uk":"мамочка","translit":"","en":"mommy","note":"f, dim"},{"uk":"бабусенька","translit":"","en":"dear grandma","note":"f, dim"},{"uk":"синочок","translit":"","en":"dear son","note":"m, dim"},{"uk":"донечка","translit":"","en":"dear daughter","note":"f, dim"},{"uk":"серденько","translit":"","en":"dear heart","note":"n, dim"},{"uk":"сонечко","translit":"","en":"sun (dear)","note":"n, dim"},{"uk":"зірочка","translit":"","en":"little star","note":"f, dim"},{"uk":"хвилиночка","translit":"","en":"just a moment","note":"f, dim"},{"uk":"маленький","translit":"","en":"small, little","note":"adj, dim"}];
     const totalSort=0;
     function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
     document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));

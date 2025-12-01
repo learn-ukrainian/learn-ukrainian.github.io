@@ -365,151 +365,169 @@
       {
         "id": "v-m36-001",
         "uk": "стати",
-        "translit": "/ˈstɑtɪ/",
-        "ipa": "to become",
-        "en": "verb",
-        "pos": "-",
-        "gender": "+ instr"
+        "translit": "",
+        "ipa": "/ˈstɑtɪ/",
+        "en": "to become",
+        "pos": "verb",
+        "gender": "-",
+        "note": "+ instr"
       },
       {
         "id": "v-m36-002",
         "uk": "залишатися",
-        "translit": "/zɑlɪˈʃɑtɪsʲɑ/",
-        "ipa": "to remain",
-        "en": "verb",
-        "pos": "-",
-        "gender": "+ instr"
+        "translit": "",
+        "ipa": "/zɑlɪˈʃɑtɪsʲɑ/",
+        "en": "to remain",
+        "pos": "verb",
+        "gender": "-",
+        "note": "+ instr"
       },
       {
         "id": "v-m36-003",
         "uk": "виявитися",
-        "translit": "/vɪjɑˈvɪtɪsʲɑ/",
-        "ipa": "to turn out",
-        "en": "verb",
-        "pos": "-",
-        "gender": "+ instr"
+        "translit": "",
+        "ipa": "/vɪjɑˈvɪtɪsʲɑ/",
+        "en": "to turn out",
+        "pos": "verb",
+        "gender": "-",
+        "note": "+ instr"
       },
       {
         "id": "v-m36-004",
         "uk": "вважатися",
-        "translit": "/vvɑˈʒɑtɪsʲɑ/",
-        "ipa": "to be considered",
-        "en": "verb",
-        "pos": "-",
-        "gender": "+ instr"
+        "translit": "",
+        "ipa": "/vvɑˈʒɑtɪsʲɑ/",
+        "en": "to be considered",
+        "pos": "verb",
+        "gender": "-",
+        "note": "+ instr"
       },
       {
         "id": "v-m36-005",
         "uk": "служити",
-        "translit": "/sluˈʒɪtɪ/",
-        "ipa": "to serve",
-        "en": "verb",
-        "pos": "-",
-        "gender": "+ instr"
+        "translit": "",
+        "ipa": "/sluˈʒɪtɪ/",
+        "en": "to serve",
+        "pos": "verb",
+        "gender": "-",
+        "note": "+ instr"
       },
       {
         "id": "v-m36-006",
         "uk": "інженер",
-        "translit": "/inʒɛˈnɛr/",
-        "ipa": "engineer",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/inʒɛˈnɛr/",
+        "en": "engineer",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m36-007",
         "uk": "програміст",
-        "translit": "/proɦrɑˈmʲist/",
-        "ipa": "programmer",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/proɦrɑˈmʲist/",
+        "en": "programmer",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m36-008",
         "uk": "журналіст",
-        "translit": "/ʒurnɑˈlʲist/",
-        "ipa": "journalist",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ʒurnɑˈlʲist/",
+        "en": "journalist",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m36-009",
         "uk": "юрист",
-        "translit": "/juˈrɪst/",
-        "ipa": "lawyer",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/juˈrɪst/",
+        "en": "lawyer",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m36-010",
         "uk": "бухгалтер",
-        "translit": "/buxˈɦɑltɛr/",
-        "ipa": "accountant",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/buxˈɦɑltɛr/",
+        "en": "accountant",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m36-011",
         "uk": "пілот",
-        "translit": "/pʲiˈlot/",
-        "ipa": "pilot",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/pʲiˈlot/",
+        "en": "pilot",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m36-012",
         "uk": "музикант",
-        "translit": "/muzɪˈkɑnt/",
-        "ipa": "musician",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/muzɪˈkɑnt/",
+        "en": "musician",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m36-013",
         "uk": "художник",
-        "translit": "/xuˈdoʒnɪk/",
-        "ipa": "artist",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/xuˈdoʒnɪk/",
+        "en": "artist",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m36-014",
         "uk": "письменник",
-        "translit": "/pɪsʲˈmɛnnɪk/",
-        "ipa": "writer",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/pɪsʲˈmɛnnɪk/",
+        "en": "writer",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m36-015",
         "uk": "підприємець",
-        "translit": "/pʲidprɪˈjɛmɛtsʲ/",
-        "ipa": "entrepreneur",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/pʲidprɪˈjɛmɛtsʲ/",
+        "en": "entrepreneur",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m36-016",
         "uk": "спеціаліст",
-        "translit": "/spɛtsʲiɑˈlʲist/",
-        "ipa": "specialist",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/spɛtsʲiɑˈlʲist/",
+        "en": "specialist",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m36-017",
         "uk": "експерт",
-        "translit": "/ɛksˈpɛrt/",
-        "ipa": "expert",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ɛksˈpɛrt/",
+        "en": "expert",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m36-018",
         "uk": "професіонал",
-        "translit": "/profɛsʲioˈnɑl/",
-        "ipa": "professional",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/profɛsʲioˈnɑl/",
+        "en": "professional",
+        "pos": "noun",
+        "gender": "m"
       }
     ]
   }

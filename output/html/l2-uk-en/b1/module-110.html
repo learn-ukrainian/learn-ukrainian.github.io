@@ -859,7 +859,7 @@
       <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
-    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (0)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
+    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (13)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
     </section>
   </main>
@@ -868,7 +868,7 @@
     const matchPairs=[];
     const quizData=[{"question":"___ він прийшов, ми вже вечеряли.","options":["Коли","Поки"],"correctIndex":0,"explanation":"\"Коли\" for \"when.\""},{"question":"Подумай ___ тим як говорити.","options":["перед","після"],"correctIndex":0,"explanation":"\"Before\" = \"перед тим як.\""},{"question":"Чекай, ___ він не прийде.","options":["поки","після того як"],"correctIndex":0,"explanation":"\"Until\" requires \"поки...не.\""},{"question":"___ закінчу, відпочину.","options":["Перед тим як","Після того як"],"correctIndex":1,"explanation":"\"After\" I finish, I'll rest."},{"question":"___ я дізнаюся, скажу.","options":["Як тільки","Поки"],"correctIndex":0,"explanation":"\"As soon as\" = \"як тільки.\""},{"question":"___ роботи я йду додому.","options":["Після","Після того як"],"correctIndex":0,"explanation":"With noun, use \"після + gen.\""}];
     const sortData={};
-    const vocabData=[];
+    const vocabData=[{"uk":"коли","translit":"","en":"when","note":"conj"},{"uk":"перед тим як","translit":"","en":"before","note":"conj"},{"uk":"до того як","translit":"","en":"before","note":"conj (formal)"},{"uk":"перш ніж","translit":"","en":"before","note":"conj (literary)"},{"uk":"після того як","translit":"","en":"after","note":"conj"},{"uk":"до","translit":"","en":"before, until","note":"prep + gen"},{"uk":"після","translit":"","en":"after","note":"prep + gen"},{"uk":"поки","translit":"","en":"while, until","note":"conj"},{"uk":"доки","translit":"","en":"while, until","note":"conj"},{"uk":"щойно","translit":"","en":"as soon as, just","note":"adv/conj"},{"uk":"як тільки","translit":"","en":"as soon as","note":"conj"},{"uk":"ледве","translit":"","en":"hardly, barely","note":"adv"},{"uk":"тим часом","translit":"","en":"meanwhile","note":"adv"}];
     const totalSort=0;
     function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
     document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));

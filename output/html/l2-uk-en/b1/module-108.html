@@ -736,7 +736,7 @@
       <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
-    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (0)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
+    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (10)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
     </section>
   </main>
@@ -745,7 +745,7 @@
     const matchPairs=[];
     const quizData=[{"question":"___ я втомився, я продовжу працювати.","options":["Хоча","Тому що"],"correctIndex":0,"explanation":"\"Хоча\" introduces concession (despite being tired)."},{"question":"___ погану погоду, ми пішли гуляти.","options":["Незважаючи на","Хоча"],"correctIndex":0,"explanation":"\"Незважаючи на\" + noun (accusative)."},{"question":"Вона працює, ___ хвора.","options":["хоча","тому що"],"correctIndex":0,"explanation":"Unexpected result: working despite being sick."},{"question":"Він не здався, ___ всі труднощі.","options":["попри","хоча"],"correctIndex":0,"explanation":"\"Попри\" + noun for \"despite.\""},{"question":"Було холодно. ___ ми вийшли на прогулянку.","options":["Хоча","Проте"],"correctIndex":1,"explanation":"\"Проте\" is a coordinating conjunction after period."},{"question":"___ те, що йшов дощ, ми пішли в парк.","options":["Незважаючи на","Попри"],"correctIndex":0,"explanation":"\"Незважаючи на те, що\" + clause."}];
     const sortData={};
-    const vocabData=[];
+    const vocabData=[{"uk":"хоча","translit":"","en":"although, though","note":"conj"},{"uk":"хоч","translit":"","en":"though (informal)","note":"conj"},{"uk":"незважаючи на","translit":"","en":"despite","note":"prep + acc"},{"uk":"незважаючи на те, що","translit":"","en":"despite the fact that","note":"conj"},{"uk":"попри","translit":"","en":"despite (literary)","note":"prep + acc"},{"uk":"дарма що","translit":"","en":"even though","note":"conj (colloq)"},{"uk":"але","translit":"","en":"but","note":"conj"},{"uk":"проте","translit":"","en":"however","note":"conj"},{"uk":"однак","translit":"","en":"yet, however","note":"conj"},{"uk":"усупереч","translit":"","en":"contrary to","note":"prep + dat"}];
     const totalSort=0;
     function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
     document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));

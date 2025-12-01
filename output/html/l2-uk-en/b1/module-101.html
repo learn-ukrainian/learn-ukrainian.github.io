@@ -688,7 +688,7 @@
       <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
-    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (0)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
+    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (10)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
     </section>
   </main>
@@ -697,7 +697,7 @@
     const matchPairs=[];
     const quizData=[{"question":"Людина, ___ мені допомогла, була дуже добра.","options":["яка","яку"],"correctIndex":0,"explanation":"\"Яка\" is nominative because it's the subject of \"допомогла.\""},{"question":"Місто, в ___ я живу, невелике.","options":["якому","яке"],"correctIndex":0,"explanation":"Locative case after \"в\" for location."},{"question":"Книги, ___ я прочитав, були цікаві.","options":["які","яких"],"correctIndex":0,"explanation":"\"Які\" is accusative (inanimate plural = nominative form) as object of \"прочитав.\""},{"question":"Чоловік, ___ ми чекаємо, запізнюється.","options":["який","якого"],"correctIndex":1,"explanation":"Genitive case: \"чекати\" + genitive for people."},{"question":"Друзі, з ___ я працюю, дуже професійні.","options":["якими","яких"],"correctIndex":0,"explanation":"Instrumental case after \"з\" (with)."},{"question":"Питання, на ___ я відповів, було складним.","options":["яке","якому"],"correctIndex":0,"explanation":"Accusative case: \"відповідати на\" + accusative."}];
     const sortData={};
-    const vocabData=[];
+    const vocabData=[{"uk":"який","translit":"","en":"which, who, that (m)","note":""},{"uk":"яка","translit":"","en":"which, who, that (f)","note":""},{"uk":"яке","translit":"","en":"which, who, that (n)","note":""},{"uk":"які","translit":"","en":"which, who, that (pl)","note":""},{"uk":"речення","translit":"","en":"sentence","note":""},{"uk":"складний","translit":"","en":"complex, difficult","note":""},{"uk":"простий","translit":"","en":"simple","note":""},{"uk":"з'єднувати","translit":"","en":"to connect","note":""},{"uk":"з'єднати","translit":"","en":"to connect","note":""},{"uk":"відноситися","translit":"","en":"to relate to","note":""}];
     const totalSort=0;
     function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
     document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));

@@ -377,74 +377,83 @@
       {
         "id": "v-m53-001",
         "uk": "щоб",
-        "translit": "/ʃtʃob/",
-        "ipa": "in order to, so that",
-        "en": "conj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ʃtʃob/",
+        "en": "in order to, so that",
+        "pos": "conj",
+        "gender": "-"
       },
       {
         "id": "v-m53-002",
         "uk": "хоча",
-        "translit": "/xoˈtʃɑ/",
-        "ipa": "although",
-        "en": "conj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/xoˈtʃɑ/",
+        "en": "although",
+        "pos": "conj",
+        "gender": "-"
       },
       {
         "id": "v-m53-003",
         "uk": "хоч",
-        "translit": "/xotʃ/",
-        "ipa": "although (casual)",
-        "en": "conj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/xotʃ/",
+        "en": "although (casual)",
+        "pos": "conj",
+        "gender": "-"
       },
       {
         "id": "v-m53-004",
         "uk": "тому що",
-        "translit": "/toˈmu ʃtʃo/",
-        "ipa": "because",
-        "en": "conj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/toˈmu ʃtʃo/",
+        "en": "because",
+        "pos": "conj",
+        "gender": "-"
       },
       {
         "id": "v-m53-005",
         "uk": "бо",
-        "translit": "/bo/",
-        "ipa": "because (casual)",
-        "en": "conj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/bo/",
+        "en": "because (casual)",
+        "pos": "conj",
+        "gender": "-"
       },
       {
         "id": "v-m53-006",
         "uk": "неохоче",
-        "translit": "/nɛˈoxotʃɛ/",
-        "ipa": "reluctantly",
-        "en": "adv",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/nɛˈoxotʃɛ/",
+        "en": "reluctantly",
+        "pos": "adv",
+        "gender": "-"
       },
       {
         "id": "v-m53-007",
         "uk": "продовжувати",
-        "translit": "/prodovˈʒuvɑtɪ/",
-        "ipa": "to continue (impf)",
-        "en": "verb",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/prodovˈʒuvɑtɪ/",
+        "en": "to continue (impf)",
+        "pos": "verb",
+        "gender": "-"
       },
       {
         "id": "v-m53-008",
         "uk": "змокнути",
-        "translit": "/zˈmoknʊtɪ/",
-        "ipa": "to get wet (perf)",
-        "en": "verb",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/zˈmoknʊtɪ/",
+        "en": "to get wet (perf)",
+        "pos": "verb",
+        "gender": "-"
       },
       {
         "id": "v-m53-009",
         "uk": "розбудити",
-        "translit": "/rozbuˈdɪtɪ/",
-        "ipa": "to wake up (sb) (perf)",
-        "en": "verb",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/rozbuˈdɪtɪ/",
+        "en": "to wake up (sb) (perf)",
+        "pos": "verb",
+        "gender": "-"
       }
     ]
   }

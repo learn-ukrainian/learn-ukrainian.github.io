@@ -122,81 +122,91 @@
         "id": "v-m141-001",
         "uk": "пасивний стан",
         "translit": "",
-        "ipa": "passive voice",
-        "en": "граматична категорія",
-        "pos": ""
+        "ipa": "",
+        "en": "passive voice",
+        "pos": "",
+        "note": "граматична категорія"
       },
       {
         "id": "v-m141-002",
         "uk": "активний стан",
         "translit": "",
-        "ipa": "active voice",
-        "en": "протилежність пасиву",
-        "pos": ""
+        "ipa": "",
+        "en": "active voice",
+        "pos": "",
+        "note": "протилежність пасиву"
       },
       {
         "id": "v-m141-003",
         "uk": "дієприкметник",
         "translit": "",
-        "ipa": "participle",
-        "en": "форма дієслова",
-        "pos": ""
+        "ipa": "",
+        "en": "participle",
+        "pos": "",
+        "note": "форма дієслова"
       },
       {
         "id": "v-m141-004",
         "uk": "зворотне дієслово",
         "translit": "",
-        "ipa": "reflexive verb",
-        "en": "дієслово на -ся",
-        "pos": ""
+        "ipa": "",
+        "en": "reflexive verb",
+        "pos": "",
+        "note": "дієслово на -ся"
       },
       {
         "id": "v-m141-005",
         "uk": "діяч",
         "translit": "",
-        "ipa": "agent",
-        "en": "хто виконує дію",
-        "pos": ""
+        "ipa": "",
+        "en": "agent",
+        "pos": "",
+        "note": "хто виконує дію"
       },
       {
         "id": "v-m141-006",
         "uk": "орудний відмінок",
         "translit": "",
-        "ipa": "instrumental case",
-        "en": "відмінок діяча",
-        "pos": ""
+        "ipa": "",
+        "en": "instrumental case",
+        "pos": "",
+        "note": "відмінок діяча"
       },
       {
         "id": "v-m141-007",
         "uk": "знахідний відмінок",
         "translit": "",
-        "ipa": "accusative case",
-        "en": "відмінок додатка",
-        "pos": ""
+        "ipa": "",
+        "en": "accusative case",
+        "pos": "",
+        "note": "відмінок додатка"
       },
       {
         "id": "v-m141-008",
         "uk": "узгодження",
         "translit": "",
-        "ipa": "agreement",
-        "en": "граматичний зв'язок",
-        "pos": ""
+        "ipa": "",
+        "en": "agreement",
+        "pos": "",
+        "note": "граматичний зв'язок"
       },
       {
         "id": "v-m141-009",
         "uk": "офіційний стиль",
         "translit": "",
-        "ipa": "official style",
-        "en": "мова документів",
-        "pos": ""
+        "ipa": "",
+        "en": "official style",
+        "pos": "",
+        "note": "мова документів"
       },
       {
         "id": "v-m141-010",
         "uk": "розмовний стиль",
         "translit": "",
-        "ipa": "colloquial style",
-        "en": "повсякденна мова",
-        "pos": ""
+        "ipa": "",
+        "en": "colloquial style",
+        "pos": "",
+        "note": "повсякденна мова"
       }
     ]
   }

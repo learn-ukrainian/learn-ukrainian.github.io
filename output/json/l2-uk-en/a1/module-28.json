@@ -360,144 +360,161 @@
       {
         "id": "v-m28-001",
         "uk": "погода",
-        "translit": "/pɔˈɦɔdɑ/",
-        "ipa": "weather",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/pɔˈɦɔdɑ/",
+        "en": "weather",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m28-002",
         "uk": "хмара",
-        "translit": "/ˈxmɑrɑ/",
-        "ipa": "cloud",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈxmɑrɑ/",
+        "en": "cloud",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m28-003",
         "uk": "дощ",
-        "translit": "/dɔʃtʃ/",
-        "ipa": "rain",
-        "en": "noun",
-        "pos": "m",
-        "gender": "Йде дощ"
+        "translit": "",
+        "ipa": "/dɔʃtʃ/",
+        "en": "rain",
+        "pos": "noun",
+        "gender": "m",
+        "note": "Йде дощ"
       },
       {
         "id": "v-m28-004",
         "uk": "сніг",
-        "translit": "/snʲiɦ/",
-        "ipa": "snow",
-        "en": "noun",
-        "pos": "m",
-        "gender": "Йде сніг"
+        "translit": "",
+        "ipa": "/snʲiɦ/",
+        "en": "snow",
+        "pos": "noun",
+        "gender": "m",
+        "note": "Йде сніг"
       },
       {
         "id": "v-m28-005",
         "uk": "вітер",
-        "translit": "/ˈvʲitɛr/",
-        "ipa": "wind",
-        "en": "noun",
-        "pos": "m",
-        "gender": "Дме вітер"
+        "translit": "",
+        "ipa": "/ˈvʲitɛr/",
+        "en": "wind",
+        "pos": "noun",
+        "gender": "m",
+        "note": "Дме вітер"
       },
       {
         "id": "v-m28-006",
         "uk": "гроза",
-        "translit": "/ɦrɔˈzɑ/",
-        "ipa": "thunderstorm",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ɦrɔˈzɑ/",
+        "en": "thunderstorm",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m28-007",
         "uk": "туман",
-        "translit": "/tuˈmɑn/",
-        "ipa": "fog",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/tuˈmɑn/",
+        "en": "fog",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m28-008",
         "uk": "мороз",
-        "translit": "/mɔˈrɔz/",
-        "ipa": "frost",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/mɔˈrɔz/",
+        "en": "frost",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m28-009",
         "uk": "веселка",
-        "translit": "/vɛˈsɛlkɑ/",
-        "ipa": "rainbow",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/vɛˈsɛlkɑ/",
+        "en": "rainbow",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m28-010",
         "uk": "тепло",
-        "translit": "/ˈtɛplɔ/",
-        "ipa": "warm (adv)",
-        "en": "adv",
-        "pos": "-",
-        "gender": "Impersonal"
+        "translit": "",
+        "ipa": "/ˈtɛplɔ/",
+        "en": "warm (adv)",
+        "pos": "adv",
+        "gender": "-",
+        "note": "Impersonal"
       },
       {
         "id": "v-m28-011",
         "uk": "холодно",
-        "translit": "/ˈxɔlɔdnɔ/",
-        "ipa": "cold (adv)",
-        "en": "adv",
-        "pos": "-",
-        "gender": "Impersonal"
+        "translit": "",
+        "ipa": "/ˈxɔlɔdnɔ/",
+        "en": "cold (adv)",
+        "pos": "adv",
+        "gender": "-",
+        "note": "Impersonal"
       },
       {
         "id": "v-m28-012",
         "uk": "жарко",
-        "translit": "/ˈʒɑrkɔ/",
-        "ipa": "hot (adv)",
-        "en": "adv",
-        "pos": "-",
-        "gender": "Impersonal"
+        "translit": "",
+        "ipa": "/ˈʒɑrkɔ/",
+        "en": "hot (adv)",
+        "pos": "adv",
+        "gender": "-",
+        "note": "Impersonal"
       },
       {
         "id": "v-m28-013",
         "uk": "сонячний",
-        "translit": "/sɔˈnʲɑtʃnɪj/",
-        "ipa": "sunny",
-        "en": "adj",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/sɔˈnʲɑtʃnɪj/",
+        "en": "sunny",
+        "pos": "adj",
+        "gender": "m"
       },
       {
         "id": "v-m28-014",
         "uk": "хмарний",
-        "translit": "/ˈxmɑrnɪj/",
-        "ipa": "cloudy",
-        "en": "adj",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ˈxmɑrnɪj/",
+        "en": "cloudy",
+        "pos": "adj",
+        "gender": "m"
       },
       {
         "id": "v-m28-015",
         "uk": "температура",
-        "translit": "/tɛmpɛrɑˈturɑ/",
-        "ipa": "temperature",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/tɛmpɛrɑˈturɑ/",
+        "en": "temperature",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m28-016",
         "uk": "градус",
-        "translit": "/ˈɦrɑdus/",
-        "ipa": "degree",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ˈɦrɑdus/",
+        "en": "degree",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m28-017",
         "uk": "парасолька",
-        "translit": "/pɑrɑˈsɔlʲkɑ/",
-        "ipa": "umbrella",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/pɑrɑˈsɔlʲkɑ/",
+        "en": "umbrella",
+        "pos": "noun",
+        "gender": "f"
       }
     ]
   }

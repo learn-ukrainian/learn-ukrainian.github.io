@@ -265,13 +265,28 @@
       "modifiedAt": "2025-12-01T00:00:00Z"
     },
     {
-      "id": "act-uk-B1-107-fillin",
-      "type": "fill-in",
+      "id": "act-uk-B1-107-gapfill",
+      "type": "gap-fill",
       "title": "Complete the Scenarios",
       "description": "(1)___ я знав раніше, я б прийшов на зустріч. Тепер (2)___, що я не був там. (3)___ якщо буде ще одна зустріч, я піду. (4)___ він запросить мене, (5)___ якщо матиму багато роботи.",
       "content": {
-        "type": "fill-in",
-        "instructions": "(1)___ я знав раніше, я б прийшов на зустріч. Тепер (2)___, що я не був там. (3)___ якщо буде ще одна зустріч, я піду. (4)___ він запросить мене, (5)___ якщо матиму багато роботи."
+        "type": "gap-fill",
+        "instructions": "(1)___ я знав раніше, я б прийшов на зустріч. Тепер (2)___, що я не був там. (3)___ якщо буде ще одна зустріч, я піду. (4)___ він запросить мене, (5)___ якщо матиму багато роботи.",
+        "text": "(1)___ я знав раніше, я б прийшов на зустріч. Тепер (2)___, що я не був там. (3)___ якщо буде ще одна зустріч, я піду. (4)___ він запросить мене, (5)___ якщо матиму багато роботи.",
+        "blanks": [
+          {},
+          {},
+          {},
+          {},
+          {}
+        ],
+        "answers": [
+          "Якби",
+          "шкода",
+          "Якщо",
+          "Навіть",
+          "навіть"
+        ]
       },
       "subject": "language",
       "owner": "curricula-opus",
@@ -293,8 +308,99 @@
     "moduleId": "mod-uk-B1-107",
     "level": "B1",
     "phase": "B1.2",
-    "wordCount": 0,
+    "wordCount": 10,
     "transliterationMode": "none",
-    "words": []
+    "words": [
+      {
+        "id": "v-m107-001",
+        "uk": "навіть якщо",
+        "translit": "",
+        "ipa": "/nɑˈvʲitʲ jɑkˈʃt͡ʃo/",
+        "en": "even if (real)",
+        "pos": "",
+        "note": "conj"
+      },
+      {
+        "id": "v-m107-002",
+        "uk": "навіть якби",
+        "translit": "",
+        "ipa": "/nɑˈvʲitʲ jɑkˈbɪ/",
+        "en": "even if (unreal)",
+        "pos": "",
+        "note": "conj"
+      },
+      {
+        "id": "v-m107-003",
+        "uk": "хіба що",
+        "translit": "",
+        "ipa": "/xʲiˈbɑ ʃt͡ʃo/",
+        "en": "unless",
+        "pos": "",
+        "note": "conj"
+      },
+      {
+        "id": "v-m107-004",
+        "uk": "на випадок",
+        "translit": "",
+        "ipa": "/nɑ ˈvɪpɑdok/",
+        "en": "in case",
+        "pos": "",
+        "note": "prep"
+      },
+      {
+        "id": "v-m107-005",
+        "uk": "а якщо",
+        "translit": "",
+        "ipa": "/ɑ jɑkˈʃt͡ʃo/",
+        "en": "what if",
+        "pos": "",
+        "note": "phrase"
+      },
+      {
+        "id": "v-m107-006",
+        "uk": "шкода",
+        "translit": "",
+        "ipa": "/ˈʃkodɑ/",
+        "en": "it's a pity",
+        "pos": "",
+        "note": "pred"
+      },
+      {
+        "id": "v-m107-007",
+        "uk": "жаль",
+        "translit": "",
+        "ipa": "/ʒɑlʲ/",
+        "en": "it's a pity, regret",
+        "pos": "",
+        "note": "m"
+      },
+      {
+        "id": "v-m107-008",
+        "uk": "жалкувати",
+        "translit": "",
+        "ipa": "/ʒɑlkuˈvɑtɪ/",
+        "en": "to regret",
+        "pos": "",
+        "note": "impf"
+      },
+      {
+        "id": "v-m107-009",
+        "uk": "інакше",
+        "translit": "",
+        "ipa": "/iˈnɑkʃɛ/",
+        "en": "otherwise, differently",
+        "pos": "",
+        "note": "adv"
+      },
+      {
+        "id": "v-m107-010",
+        "uk": "раніше",
+        "translit": "",
+        "ipa": "/rɑˈnʲiʃɛ/",
+        "en": "earlier",
+        "pos": "",
+        "note": "adv"
+      }
+    ]
   }
 }

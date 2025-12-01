@@ -300,8 +300,144 @@
     "moduleId": "mod-uk-B1-112",
     "level": "B1",
     "phase": "B1.2",
-    "wordCount": 0,
+    "wordCount": 15,
     "transliterationMode": "none",
-    "words": []
+    "words": [
+      {
+        "id": "v-m112-001",
+        "uk": "держава",
+        "translit": "",
+        "ipa": "/dɛrˈʒɑvɑ/",
+        "en": "state",
+        "pos": "",
+        "gender": "f"
+      },
+      {
+        "id": "v-m112-002",
+        "uk": "уряд",
+        "translit": "",
+        "ipa": "/uˈrʲɑd/",
+        "en": "government",
+        "pos": "",
+        "gender": "m"
+      },
+      {
+        "id": "v-m112-003",
+        "uk": "політика",
+        "translit": "",
+        "ipa": "/poˈlʲitɪkɑ/",
+        "en": "politics",
+        "pos": "",
+        "gender": "f"
+      },
+      {
+        "id": "v-m112-004",
+        "uk": "демократія",
+        "translit": "",
+        "ipa": "/dɛmokrɑˈtʲijɑ/",
+        "en": "democracy",
+        "pos": "",
+        "gender": "f"
+      },
+      {
+        "id": "v-m112-005",
+        "uk": "вибори",
+        "translit": "",
+        "ipa": "/ˈvɪborɪ/",
+        "en": "elections",
+        "pos": "",
+        "gender": "pl"
+      },
+      {
+        "id": "v-m112-006",
+        "uk": "голосувати",
+        "translit": "",
+        "ipa": "/ɦolosuˈvɑtɪ/",
+        "en": "to vote",
+        "pos": "",
+        "gender": "impf"
+      },
+      {
+        "id": "v-m112-007",
+        "uk": "партія",
+        "translit": "",
+        "ipa": "/ˈpɑrtʲijɑ/",
+        "en": "party",
+        "pos": "",
+        "gender": "f"
+      },
+      {
+        "id": "v-m112-008",
+        "uk": "закон",
+        "translit": "",
+        "ipa": "/zɑˈkon/",
+        "en": "law",
+        "pos": "",
+        "gender": "m"
+      },
+      {
+        "id": "v-m112-009",
+        "uk": "право",
+        "translit": "",
+        "ipa": "/ˈprɑvo/",
+        "en": "right",
+        "pos": "",
+        "gender": "n"
+      },
+      {
+        "id": "v-m112-010",
+        "uk": "громадянин",
+        "translit": "",
+        "ipa": "/ɦromɑdʲɑˈnɪn/",
+        "en": "citizen",
+        "pos": "",
+        "gender": "m"
+      },
+      {
+        "id": "v-m112-011",
+        "uk": "суспільство",
+        "translit": "",
+        "ipa": "/susˈpʲilʲstvo/",
+        "en": "society",
+        "pos": "",
+        "gender": "n"
+      },
+      {
+        "id": "v-m112-012",
+        "uk": "свобода",
+        "translit": "",
+        "ipa": "/svoˈbodɑ/",
+        "en": "freedom",
+        "pos": "",
+        "gender": "f"
+      },
+      {
+        "id": "v-m112-013",
+        "uk": "рівність",
+        "translit": "",
+        "ipa": "/rʲivˈnʲistʲ/",
+        "en": "equality",
+        "pos": "",
+        "gender": "f"
+      },
+      {
+        "id": "v-m112-014",
+        "uk": "реформа",
+        "translit": "",
+        "ipa": "/rɛˈformɑ/",
+        "en": "reform",
+        "pos": "",
+        "gender": "f"
+      },
+      {
+        "id": "v-m112-015",
+        "uk": "корупція",
+        "translit": "",
+        "ipa": "/koˈrupt͡sʲijɑ/",
+        "en": "corruption",
+        "pos": "",
+        "gender": "f"
+      }
+    ]
   }
 }

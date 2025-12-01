@@ -361,137 +361,152 @@
       {
         "id": "v-m03-001",
         "uk": "відміна",
-        "translit": "/vʲidˈmʲinɑ/",
-        "ipa": "declension",
-        "en": "noun",
-        "pos": "f",
-        "gender": "Group I"
+        "translit": "",
+        "ipa": "/vʲidˈmʲinɑ/",
+        "en": "declension",
+        "pos": "noun",
+        "gender": "f",
+        "note": "Group I"
       },
       {
         "id": "v-m03-002",
         "uk": "група",
-        "translit": "/ˈhrupɑ/",
-        "ipa": "group",
-        "en": "noun",
-        "pos": "f",
-        "gender": "Group I"
+        "translit": "",
+        "ipa": "/ˈhrupɑ/",
+        "en": "group",
+        "pos": "noun",
+        "gender": "f",
+        "note": "Group I"
       },
       {
         "id": "v-m03-003",
         "uk": "стіл",
-        "translit": "/stʲil/",
-        "ipa": "table",
-        "en": "noun",
-        "pos": "m",
-        "gender": "Group II (hard)"
+        "translit": "",
+        "ipa": "/stʲil/",
+        "en": "table",
+        "pos": "noun",
+        "gender": "m",
+        "note": "Group II (hard)"
       },
       {
         "id": "v-m03-004",
         "uk": "вікно",
-        "translit": "/wʲikˈnɔ/",
-        "ipa": "window",
-        "en": "noun",
-        "pos": "n",
-        "gender": "Group II (hard)"
+        "translit": "",
+        "ipa": "/wʲikˈnɔ/",
+        "en": "window",
+        "pos": "noun",
+        "gender": "n",
+        "note": "Group II (hard)"
       },
       {
         "id": "v-m03-005",
         "uk": "книга",
-        "translit": "/ˈknɪɦɑ/",
-        "ipa": "book",
-        "en": "noun",
-        "pos": "f",
-        "gender": "Group I (hard)"
+        "translit": "",
+        "ipa": "/ˈknɪɦɑ/",
+        "en": "book",
+        "pos": "noun",
+        "gender": "f",
+        "note": "Group I (hard)"
       },
       {
         "id": "v-m03-006",
         "uk": "ніч",
-        "translit": "/nʲitʃ/",
-        "ipa": "night",
-        "en": "noun",
-        "pos": "f",
-        "gender": "Group III"
+        "translit": "",
+        "ipa": "/nʲitʃ/",
+        "en": "night",
+        "pos": "noun",
+        "gender": "f",
+        "note": "Group III"
       },
       {
         "id": "v-m03-007",
         "uk": "теля",
-        "translit": "/tɛˈlʲa/",
-        "ipa": "calf",
-        "en": "noun",
-        "pos": "n",
-        "gender": "Group IV"
+        "translit": "",
+        "ipa": "/tɛˈlʲa/",
+        "en": "calf",
+        "pos": "noun",
+        "gender": "n",
+        "note": "Group IV"
       },
       {
         "id": "v-m03-008",
         "uk": "кошеня",
-        "translit": "/kɔʃɛˈnʲa/",
-        "ipa": "kitten",
-        "en": "noun",
-        "pos": "n",
-        "gender": "Group IV"
+        "translit": "",
+        "ipa": "/kɔʃɛˈnʲa/",
+        "en": "kitten",
+        "pos": "noun",
+        "gender": "n",
+        "note": "Group IV"
       },
       {
         "id": "v-m03-009",
         "uk": "радість",
-        "translit": "/ˈrɑdʲistʲ/",
-        "ipa": "joy",
-        "en": "noun",
-        "pos": "f",
-        "gender": "Group III"
+        "translit": "",
+        "ipa": "/ˈrɑdʲistʲ/",
+        "en": "joy",
+        "pos": "noun",
+        "gender": "f",
+        "note": "Group III"
       },
       {
         "id": "v-m03-010",
         "uk": "сіль",
-        "translit": "/sʲilʲ/",
-        "ipa": "salt",
-        "en": "noun",
-        "pos": "f",
-        "gender": "Group III"
+        "translit": "",
+        "ipa": "/sʲilʲ/",
+        "en": "salt",
+        "pos": "noun",
+        "gender": "f",
+        "note": "Group III"
       },
       {
         "id": "v-m03-011",
         "uk": "день",
-        "translit": "/dɛnʲ/",
-        "ipa": "day",
-        "en": "noun",
-        "pos": "m",
-        "gender": "Group II (soft)"
+        "translit": "",
+        "ipa": "/dɛnʲ/",
+        "en": "day",
+        "pos": "noun",
+        "gender": "m",
+        "note": "Group II (soft)"
       },
       {
         "id": "v-m03-012",
         "uk": "сонце",
-        "translit": "/ˈsɔnt͡sɛ/",
-        "ipa": "sun",
-        "en": "noun",
-        "pos": "n",
-        "gender": "Group II (hard)"
+        "translit": "",
+        "ipa": "/ˈsɔnt͡sɛ/",
+        "en": "sun",
+        "pos": "noun",
+        "gender": "n",
+        "note": "Group II (hard)"
       },
       {
         "id": "v-m03-013",
         "uk": "море",
-        "translit": "/ˈmɔrɛ/",
-        "ipa": "sea",
-        "en": "noun",
-        "pos": "n",
-        "gender": "Group II (soft)"
+        "translit": "",
+        "ipa": "/ˈmɔrɛ/",
+        "en": "sea",
+        "pos": "noun",
+        "gender": "n",
+        "note": "Group II (soft)"
       },
       {
         "id": "v-m03-014",
         "uk": "земля",
-        "translit": "/zɛmˈlʲa/",
-        "ipa": "earth",
-        "en": "noun",
-        "pos": "f",
-        "gender": "Group I (soft)"
+        "translit": "",
+        "ipa": "/zɛmˈlʲa/",
+        "en": "earth",
+        "pos": "noun",
+        "gender": "f",
+        "note": "Group I (soft)"
       },
       {
         "id": "v-m03-015",
         "uk": "сім'я",
-        "translit": "/sʲiˈmjuɑ/",
-        "ipa": "family",
-        "en": "noun",
-        "pos": "f",
-        "gender": "Group I (soft)"
+        "translit": "",
+        "ipa": "/sʲiˈmjuɑ/",
+        "en": "family",
+        "pos": "noun",
+        "gender": "f",
+        "note": "Group I (soft)"
       }
     ]
   }

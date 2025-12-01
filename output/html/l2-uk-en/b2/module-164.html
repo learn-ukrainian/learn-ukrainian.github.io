@@ -773,7 +773,7 @@
     const matchPairs=[];
     const quizData=[];
     const sortData={};
-    const vocabData=[{"uk":"пасив","translit":"","en":"Модулі 141-146","note":""},{"uk":"регістр","translit":"","en":"Модулі 147-152","note":""},{"uk":"дієприкметник","translit":"","en":"Модулі 153-155","note":""},{"uk":"дієприслівник","translit":"","en":"Модуль 156","note":""},{"uk":"вставний","translit":"","en":"Модуль 158","note":""},{"uk":"сполучник","translit":"","en":"Модуль 160","note":""}];
+    const vocabData=[{"uk":"пасив","translit":"","en":"passive voice","note":""},{"uk":"регістр","translit":"","en":"register","note":""},{"uk":"дієприкметник","translit":"","en":"participle","note":""},{"uk":"дієприслівник","translit":"","en":"adverbial participle","note":""},{"uk":"вставний","translit":"","en":"parenthetical","note":""},{"uk":"сполучник","translit":"","en":"conjunction","note":""}];
     const totalSort=0;
     function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
     document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));

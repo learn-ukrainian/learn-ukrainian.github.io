@@ -814,7 +814,7 @@
       <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
-    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (0)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
+    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (15)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
     </section>
   </main>
@@ -823,7 +823,7 @@
     const matchPairs=[];
     const quizData=[{"question":"«Але» виражає:","options":["контраст","додавання"],"correctIndex":0,"explanation":"But expresses contrast."},{"question":"«Тому» виражає:","options":["наслідок","контраст"],"correctIndex":0,"explanation":"Therefore shows consequence."},{"question":"«По-перше» використовується для:","options":["послідовності","прикладу"],"correctIndex":0,"explanation":"Firstly for sequence."},{"question":"«Крім того» означає:","options":["on top of that","instead"],"correctIndex":0,"explanation":"Besides, moreover."},{"question":"«Отже» використовується для:","options":["підсумку","прикладу"],"correctIndex":0,"explanation":"Therefore/so for conclusions."},{"question":"«Незважаючи на» виражає:","options":["контраст","причину"],"correctIndex":0,"explanation":"Despite expresses contrast."}];
     const sortData={};
-    const vocabData=[];
+    const vocabData=[{"uk":"також","translit":"","en":"also","note":"adv"},{"uk":"крім того","translit":"","en":"besides, moreover","note":"phrase"},{"uk":"але","translit":"","en":"but","note":"conj"},{"uk":"проте","translit":"","en":"however","note":"conj"},{"uk":"однак","translit":"","en":"however, yet","note":"conj"},{"uk":"тому","translit":"","en":"therefore, so","note":"adv"},{"uk":"тому що","translit":"","en":"because","note":"conj"},{"uk":"отже","translit":"","en":"therefore, thus","note":"adv"},{"uk":"по-перше","translit":"","en":"firstly","note":"adv"},{"uk":"нарешті","translit":"","en":"finally","note":"adv"},{"uk":"наприклад","translit":"","en":"for example","note":"adv"},{"uk":"підсумовуючи","translit":"","en":"to sum up","note":"adv part"},{"uk":"загалом","translit":"","en":"in general","note":"adv"},{"uk":"на мою думку","translit":"","en":"in my opinion","note":"phrase"},{"uk":"тобто","translit":"","en":"that is","note":"adv"}];
     const totalSort=0;
     function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
     document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));

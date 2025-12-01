@@ -350,144 +350,160 @@
       {
         "id": "v-m44-001",
         "uk": "кращий",
-        "translit": "/ˈkrɑʃtʃɪj/",
-        "ipa": "better",
-        "en": "adj",
-        "pos": "-",
-        "gender": "comp of добрий"
+        "translit": "",
+        "ipa": "/ˈkrɑʃtʃɪj/",
+        "en": "better",
+        "pos": "adj",
+        "gender": "-",
+        "note": "comp of добрий"
       },
       {
         "id": "v-m44-002",
         "uk": "гірший",
-        "translit": "/ˈɦʲirʃɪj/",
-        "ipa": "worse",
-        "en": "adj",
-        "pos": "-",
-        "gender": "comp of поганий"
+        "translit": "",
+        "ipa": "/ˈɦʲirʃɪj/",
+        "en": "worse",
+        "pos": "adj",
+        "gender": "-",
+        "note": "comp of поганий"
       },
       {
         "id": "v-m44-003",
         "uk": "вищий",
-        "translit": "/ˈvɪʃtʃɪj/",
-        "ipa": "higher/taller",
-        "en": "adj",
-        "pos": "-",
-        "gender": "comp of високий"
+        "translit": "",
+        "ipa": "/ˈvɪʃtʃɪj/",
+        "en": "higher/taller",
+        "pos": "adj",
+        "gender": "-",
+        "note": "comp of високий"
       },
       {
         "id": "v-m44-004",
         "uk": "нижчий",
-        "translit": "/ˈnɪʒtʃɪj/",
-        "ipa": "lower/shorter",
-        "en": "adj",
-        "pos": "-",
-        "gender": "comp of низький"
+        "translit": "",
+        "ipa": "/ˈnɪʒtʃɪj/",
+        "en": "lower/shorter",
+        "pos": "adj",
+        "gender": "-",
+        "note": "comp of низький"
       },
       {
         "id": "v-m44-005",
         "uk": "старіший",
-        "translit": "/stɑˈrʲiʃɪj/",
-        "ipa": "older",
-        "en": "adj",
-        "pos": "-",
-        "gender": "comp of старий"
+        "translit": "",
+        "ipa": "/stɑˈrʲiʃɪj/",
+        "en": "older",
+        "pos": "adj",
+        "gender": "-",
+        "note": "comp of старий"
       },
       {
         "id": "v-m44-006",
         "uk": "молодший",
-        "translit": "/moˈlodʃɪj/",
-        "ipa": "younger",
-        "en": "adj",
-        "pos": "-",
-        "gender": "comp of молодий"
+        "translit": "",
+        "ipa": "/moˈlodʃɪj/",
+        "en": "younger",
+        "pos": "adj",
+        "gender": "-",
+        "note": "comp of молодий"
       },
       {
         "id": "v-m44-007",
         "uk": "дорожчий",
-        "translit": "/doˈroʒtʃɪj/",
-        "ipa": "more expensive",
-        "en": "adj",
-        "pos": "-",
-        "gender": "comp of дорогий"
+        "translit": "",
+        "ipa": "/doˈroʒtʃɪj/",
+        "en": "more expensive",
+        "pos": "adj",
+        "gender": "-",
+        "note": "comp of дорогий"
       },
       {
         "id": "v-m44-008",
         "uk": "дешевший",
-        "translit": "/dɛˈʃɛvʃɪj/",
-        "ipa": "cheaper",
-        "en": "adj",
-        "pos": "-",
-        "gender": "comp of дешевий"
+        "translit": "",
+        "ipa": "/dɛˈʃɛvʃɪj/",
+        "en": "cheaper",
+        "pos": "adj",
+        "gender": "-",
+        "note": "comp of дешевий"
       },
       {
         "id": "v-m44-009",
         "uk": "швидше",
-        "translit": "/ˈʃvɪdʃɛ/",
-        "ipa": "faster",
-        "en": "adv",
-        "pos": "-",
-        "gender": "comp of швидко"
+        "translit": "",
+        "ipa": "/ˈʃvɪdʃɛ/",
+        "en": "faster",
+        "pos": "adv",
+        "gender": "-",
+        "note": "comp of швидко"
       },
       {
         "id": "v-m44-010",
         "uk": "повільніше",
-        "translit": "/poˈvʲilʲnʲiʃɛ/",
-        "ipa": "more slowly",
-        "en": "adv",
-        "pos": "-",
-        "gender": "comp of повільно"
+        "translit": "",
+        "ipa": "/poˈvʲilʲnʲiʃɛ/",
+        "en": "more slowly",
+        "pos": "adv",
+        "gender": "-",
+        "note": "comp of повільно"
       },
       {
         "id": "v-m44-011",
         "uk": "більше",
-        "translit": "/ˈbʲilʲʃɛ/",
-        "ipa": "more",
-        "en": "adv",
-        "pos": "-",
-        "gender": "comp of багато"
+        "translit": "",
+        "ipa": "/ˈbʲilʲʃɛ/",
+        "en": "more",
+        "pos": "adv",
+        "gender": "-",
+        "note": "comp of багато"
       },
       {
         "id": "v-m44-012",
         "uk": "менше",
-        "translit": "/ˈmɛnʃɛ/",
-        "ipa": "less",
-        "en": "adv",
-        "pos": "-",
-        "gender": "comp of мало"
+        "translit": "",
+        "ipa": "/ˈmɛnʃɛ/",
+        "en": "less",
+        "pos": "adv",
+        "gender": "-",
+        "note": "comp of мало"
       },
       {
         "id": "v-m44-013",
         "uk": "краще",
-        "translit": "/ˈkrɑʃtʃɛ/",
-        "ipa": "better",
-        "en": "adv",
-        "pos": "-",
-        "gender": "comp of добре"
+        "translit": "",
+        "ipa": "/ˈkrɑʃtʃɛ/",
+        "en": "better",
+        "pos": "adv",
+        "gender": "-",
+        "note": "comp of добре"
       },
       {
         "id": "v-m44-014",
         "uk": "гірше",
-        "translit": "/ˈɦʲirʃɛ/",
-        "ipa": "worse",
-        "en": "adv",
-        "pos": "-",
-        "gender": "comp of погано"
+        "translit": "",
+        "ipa": "/ˈɦʲirʃɛ/",
+        "en": "worse",
+        "pos": "adv",
+        "gender": "-",
+        "note": "comp of погано"
       },
       {
         "id": "v-m44-015",
         "uk": "набагато",
-        "translit": "/nɑbɑˈɦɑto/",
-        "ipa": "much (intensifier)",
-        "en": "adv",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/nɑbɑˈɦɑto/",
+        "en": "much (intensifier)",
+        "pos": "adv",
+        "gender": "-"
       },
       {
         "id": "v-m44-016",
         "uk": "значно",
-        "translit": "/ˈznɑtʃno/",
-        "ipa": "significantly",
-        "en": "adv",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ˈznɑtʃno/",
+        "en": "significantly",
+        "pos": "adv",
+        "gender": "-"
       }
     ]
   }

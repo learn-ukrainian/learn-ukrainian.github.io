@@ -255,13 +255,34 @@
       "modifiedAt": "2025-12-01T00:00:00Z"
     },
     {
-      "id": "act-uk-B1-120-fillin",
-      "type": "fill-in",
+      "id": "act-uk-B1-120-gapfill",
+      "type": "gap-fill",
       "title": "News Report",
-      "description": "Учора в Києві відбулося важливе засідання.",
+      "description": "Учора в Києві відбулося важливе засідання.  Засідання (1)___ (відкрити) о 10 годині. Доповідь (2)___ (представити) міністром. Новий закон (3)___ (ухвалити) парламентом. Угоду (4)___ (підписати) обома сторонами. Засідання (5)___ (закрити) о 17 годині.",
       "content": {
-        "type": "fill-in",
-        "instructions": "Учора в Києві відбулося важливе засідання."
+        "type": "gap-fill",
+        "instructions": "Учора в Києві відбулося важливе засідання.  Засідання (1)___ (відкрити) о 10 годині. Доповідь (2)___ (представити) міністром. Новий закон (3)___ (ухвалити) парламентом. Угоду (4)___ (підписати) обома сторонами. Засідання (5)___ (закрити) о 17 годині.",
+        "text": "Учора в Києві відбулося важливе засідання.\n\nЗасідання (1)___ (відкрити) о 10 годині.\nДоповідь (2)___ (представити) міністром.\nНовий закон (3)___ (ухвалити) парламентом.\nУгоду (4)___ (підписати) обома сторонами.\nЗасідання (5)___ (закрити) о 17 годині.",
+        "blanks": [
+          {
+            "hint": "відкрити"
+          },
+          {
+            "hint": "представити"
+          },
+          {
+            "hint": "ухвалити"
+          },
+          {
+            "hint": "підписати"
+          },
+          {
+            "hint": "закрити"
+          }
+        ],
+        "answers": [
+          "1. відкрито"
+        ]
       },
       "subject": "language",
       "owner": "curricula-opus",
@@ -283,8 +304,135 @@
     "moduleId": "mod-uk-B1-120",
     "level": "B1",
     "phase": "B1.3",
-    "wordCount": 0,
+    "wordCount": 14,
     "transliterationMode": "none",
-    "words": []
+    "words": [
+      {
+        "id": "v-m120-001",
+        "uk": "пасивний стан",
+        "translit": "",
+        "ipa": "/pɑˈsɪwnɪj stɑn/",
+        "en": "passive voice",
+        "pos": "",
+        "note": "-"
+      },
+      {
+        "id": "v-m120-002",
+        "uk": "активний стан",
+        "translit": "",
+        "ipa": "/ɑkˈtɪwnɪj stɑn/",
+        "en": "active voice",
+        "pos": "",
+        "note": "-"
+      },
+      {
+        "id": "v-m120-003",
+        "uk": "діяч",
+        "translit": "",
+        "ipa": "/ˈdʲijɑt͡ʃ/",
+        "en": "agent",
+        "pos": "",
+        "note": "m"
+      },
+      {
+        "id": "v-m120-004",
+        "uk": "коротка форма",
+        "translit": "",
+        "ipa": "/koˈrotkɑ ˈformɑ/",
+        "en": "short form",
+        "pos": "",
+        "note": "f"
+      },
+      {
+        "id": "v-m120-005",
+        "uk": "прийнято",
+        "translit": "",
+        "ipa": "/prɪjˈnʲɑto/",
+        "en": "accepted, adopted",
+        "pos": "",
+        "note": "short form"
+      },
+      {
+        "id": "v-m120-006",
+        "uk": "ухвалено",
+        "translit": "",
+        "ipa": "/uxˈvɑlɛno/",
+        "en": "passed (law)",
+        "pos": "",
+        "note": "short form"
+      },
+      {
+        "id": "v-m120-007",
+        "uk": "підписано",
+        "translit": "",
+        "ipa": "/pʲidˈpɪsɑno/",
+        "en": "signed",
+        "pos": "",
+        "note": "short form"
+      },
+      {
+        "id": "v-m120-008",
+        "uk": "відкрито",
+        "translit": "",
+        "ipa": "/vʲidˈkrɪto/",
+        "en": "opened",
+        "pos": "",
+        "note": "short form"
+      },
+      {
+        "id": "v-m120-009",
+        "uk": "закрито",
+        "translit": "",
+        "ipa": "/zɑˈkrɪto/",
+        "en": "closed",
+        "pos": "",
+        "note": "short form"
+      },
+      {
+        "id": "v-m120-010",
+        "uk": "завершено",
+        "translit": "",
+        "ipa": "/zɑvɛrˈʃɛno/",
+        "en": "completed",
+        "pos": "",
+        "note": "short form"
+      },
+      {
+        "id": "v-m120-011",
+        "uk": "затримано",
+        "translit": "",
+        "ipa": "/zɑˈtrɪmɑno/",
+        "en": "detained",
+        "pos": "",
+        "note": "short form"
+      },
+      {
+        "id": "v-m120-012",
+        "uk": "заборонено",
+        "translit": "",
+        "ipa": "/zɑboroˈnɛno/",
+        "en": "forbidden",
+        "pos": "",
+        "note": "short form"
+      },
+      {
+        "id": "v-m120-013",
+        "uk": "дозволено",
+        "translit": "",
+        "ipa": "/dozˈvolɛno/",
+        "en": "allowed",
+        "pos": "",
+        "note": "short form"
+      },
+      {
+        "id": "v-m120-014",
+        "uk": "виконано",
+        "translit": "",
+        "ipa": "/vɪˈkonɑno/",
+        "en": "performed, done",
+        "pos": "",
+        "note": "short form"
+      }
+    ]
   }
 }

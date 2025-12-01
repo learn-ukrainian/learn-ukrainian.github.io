@@ -363,119 +363,132 @@
       {
         "id": "v-m26-001",
         "uk": "новий",
-        "translit": "/nɔˈvɪj/",
-        "ipa": "new",
-        "en": "adj",
-        "pos": "m",
-        "gender": "нова (f), нове (n)"
+        "translit": "",
+        "ipa": "/nɔˈvɪj/",
+        "en": "new",
+        "pos": "adj",
+        "gender": "m",
+        "note": "нова (f), нове (n)"
       },
       {
         "id": "v-m26-002",
         "uk": "старий",
-        "translit": "/stɑˈrɪj/",
-        "ipa": "old",
-        "en": "adj",
-        "pos": "m",
-        "gender": "стара (f), старе (n)"
+        "translit": "",
+        "ipa": "/stɑˈrɪj/",
+        "en": "old",
+        "pos": "adj",
+        "gender": "m",
+        "note": "стара (f), старе (n)"
       },
       {
         "id": "v-m26-003",
         "uk": "гарний",
-        "translit": "/ˈɦɑrnɪj/",
-        "ipa": "beautiful, nice",
-        "en": "adj",
-        "pos": "m",
-        "gender": "гарна (f), гарне (n)"
+        "translit": "",
+        "ipa": "/ˈɦɑrnɪj/",
+        "en": "beautiful, nice",
+        "pos": "adj",
+        "gender": "m",
+        "note": "гарна (f), гарне (n)"
       },
       {
         "id": "v-m26-004",
         "uk": "добрий",
-        "translit": "/ˈdɔbrɪj/",
-        "ipa": "good, kind",
-        "en": "adj",
-        "pos": "m",
-        "gender": "добра (f), добре (n)"
+        "translit": "",
+        "ipa": "/ˈdɔbrɪj/",
+        "en": "good, kind",
+        "pos": "adj",
+        "gender": "m",
+        "note": "добра (f), добре (n)"
       },
       {
         "id": "v-m26-005",
         "uk": "поганий",
-        "translit": "/pɔˈɦɑnɪj/",
-        "ipa": "bad",
-        "en": "adj",
-        "pos": "m",
-        "gender": "погана (f), погане (n)"
+        "translit": "",
+        "ipa": "/pɔˈɦɑnɪj/",
+        "en": "bad",
+        "pos": "adj",
+        "gender": "m",
+        "note": "погана (f), погане (n)"
       },
       {
         "id": "v-m26-006",
         "uk": "молодий",
-        "translit": "/mɔˈlɔdɪj/",
-        "ipa": "young",
-        "en": "adj",
-        "pos": "m",
-        "gender": "молода (f), молоде (n)"
+        "translit": "",
+        "ipa": "/mɔˈlɔdɪj/",
+        "en": "young",
+        "pos": "adj",
+        "gender": "m",
+        "note": "молода (f), молоде (n)"
       },
       {
         "id": "v-m26-007",
         "uk": "розумний",
-        "translit": "/rɔˈzumnɪj/",
-        "ipa": "smart",
-        "en": "adj",
-        "pos": "m",
-        "gender": "розумна (f), розумне (n)"
+        "translit": "",
+        "ipa": "/rɔˈzumnɪj/",
+        "en": "smart",
+        "pos": "adj",
+        "gender": "m",
+        "note": "розумна (f), розумне (n)"
       },
       {
         "id": "v-m26-008",
         "uk": "щасливий",
-        "translit": "/ʃtʃɑsˈlɪvɪj/",
-        "ipa": "happy",
-        "en": "adj",
-        "pos": "m",
-        "gender": "щаслива (f), щасливе (n)"
+        "translit": "",
+        "ipa": "/ʃtʃɑsˈlɪvɪj/",
+        "en": "happy",
+        "pos": "adj",
+        "gender": "m",
+        "note": "щаслива (f), щасливе (n)"
       },
       {
         "id": "v-m26-009",
         "uk": "сумний",
-        "translit": "/ˈsumnɪj/",
-        "ipa": "sad",
-        "en": "adj",
-        "pos": "m",
-        "gender": "сумна (f), сумне (n)"
+        "translit": "",
+        "ipa": "/ˈsumnɪj/",
+        "en": "sad",
+        "pos": "adj",
+        "gender": "m",
+        "note": "сумна (f), сумне (n)"
       },
       {
         "id": "v-m26-010",
         "uk": "легкий",
-        "translit": "/ˈlɛɦkɪj/",
-        "ipa": "easy, light",
-        "en": "adj",
-        "pos": "m",
-        "gender": "легка (f), легке (n)"
+        "translit": "",
+        "ipa": "/ˈlɛɦkɪj/",
+        "en": "easy, light",
+        "pos": "adj",
+        "gender": "m",
+        "note": "легка (f), легке (n)"
       },
       {
         "id": "v-m26-011",
         "uk": "важкий",
-        "translit": "/vɑʒˈkɪj/",
-        "ipa": "hard, heavy",
-        "en": "adj",
-        "pos": "m",
-        "gender": "важка (f), важке (n)"
+        "translit": "",
+        "ipa": "/vɑʒˈkɪj/",
+        "en": "hard, heavy",
+        "pos": "adj",
+        "gender": "m",
+        "note": "важка (f), важке (n)"
       },
       {
         "id": "v-m26-012",
         "uk": "чистий",
-        "translit": "/ˈtʃɪstɪj/",
-        "ipa": "clean",
-        "en": "adj",
-        "pos": "m",
-        "gender": "чиста (f), чисте (n)"
+        "translit": "",
+        "ipa": "/ˈtʃɪstɪj/",
+        "en": "clean",
+        "pos": "adj",
+        "gender": "m",
+        "note": "чиста (f), чисте (n)"
       },
       {
         "id": "v-m26-013",
         "uk": "цікавий",
-        "translit": "/t͡sʲiˈkɑvɪj/",
-        "ipa": "interesting",
-        "en": "adj",
-        "pos": "m",
-        "gender": "цікава (f), цікаве (n)"
+        "translit": "",
+        "ipa": "/t͡sʲiˈkɑvɪj/",
+        "en": "interesting",
+        "pos": "adj",
+        "gender": "m",
+        "note": "цікава (f), цікаве (n)"
       }
     ]
   }

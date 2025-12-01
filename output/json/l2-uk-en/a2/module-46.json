@@ -353,106 +353,119 @@
       {
         "id": "v-m46-001",
         "uk": "якщо",
-        "translit": "/jɑkˈʃtʃo/",
-        "ipa": "if",
-        "en": "conj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/jɑkˈʃtʃo/",
+        "en": "if",
+        "pos": "conj",
+        "gender": "-"
       },
       {
         "id": "v-m46-002",
         "uk": "умова",
-        "translit": "/uˈmovɑ/",
-        "ipa": "condition",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/uˈmovɑ/",
+        "en": "condition",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m46-003",
         "uk": "результат",
-        "translit": "/rɛzulʲˈtɑt/",
-        "ipa": "result",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/rɛzulʲˈtɑt/",
+        "en": "result",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m46-004",
         "uk": "інакше",
-        "translit": "/ˈinɑkʃɛ/",
-        "ipa": "otherwise",
-        "en": "adv",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/ˈinɑkʃɛ/",
+        "en": "otherwise",
+        "pos": "adv",
+        "gender": "-"
       },
       {
         "id": "v-m46-005",
         "uk": "можливо",
-        "translit": "/moʒˈlɪvo/",
-        "ipa": "possibly, maybe",
-        "en": "adv",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/moʒˈlɪvo/",
+        "en": "possibly, maybe",
+        "pos": "adv",
+        "gender": "-"
       },
       {
         "id": "v-m46-006",
         "uk": "обов'язково",
-        "translit": "/obovjɑzˈkovo/",
-        "ipa": "definitely, certainly",
-        "en": "adv",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/obovjɑzˈkovo/",
+        "en": "definitely, certainly",
+        "pos": "adv",
+        "gender": "-"
       },
       {
         "id": "v-m46-007",
         "uk": "залишитися",
-        "translit": "/zɑlɪˈʃɪtɪsʲɑ/",
-        "ipa": "to stay (perf)",
-        "en": "verb",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/zɑlɪˈʃɪtɪsʲɑ/",
+        "en": "to stay (perf)",
+        "pos": "verb",
+        "gender": "-"
       },
       {
         "id": "v-m46-008",
         "uk": "запізнюватися",
-        "translit": "/zɑpʲizˈnʲuvɑtɪsʲɑ/",
-        "ipa": "to be late (impf)",
-        "en": "verb",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/zɑpʲizˈnʲuvɑtɪsʲɑ/",
+        "en": "to be late (impf)",
+        "pos": "verb",
+        "gender": "-"
       },
       {
         "id": "v-m46-009",
         "uk": "запізнитися",
-        "translit": "/zɑpʲizˈnɪtɪsʲɑ/",
-        "ipa": "to be late (perf)",
-        "en": "verb",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/zɑpʲizˈnɪtɪsʲɑ/",
+        "en": "to be late (perf)",
+        "pos": "verb",
+        "gender": "-"
       },
       {
         "id": "v-m46-010",
         "uk": "помилятися",
-        "translit": "/pomɪˈlʲɑtɪsʲɑ/",
-        "ipa": "to be mistaken",
-        "en": "verb",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/pomɪˈlʲɑtɪsʲɑ/",
+        "en": "to be mistaken",
+        "pos": "verb",
+        "gender": "-"
       },
       {
         "id": "v-m46-011",
         "uk": "сподіватися",
-        "translit": "/spodʲiˈvɑtɪsʲɑ/",
-        "ipa": "to hope",
-        "en": "verb",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/spodʲiˈvɑtɪsʲɑ/",
+        "en": "to hope",
+        "pos": "verb",
+        "gender": "-"
       },
       {
         "id": "v-m46-012",
         "uk": "домовлятися",
-        "translit": "/domovˈlʲɑtɪsʲɑ/",
-        "ipa": "to agree, arrange",
-        "en": "verb",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/domovˈlʲɑtɪsʲɑ/",
+        "en": "to agree, arrange",
+        "pos": "verb",
+        "gender": "-"
       },
       {
         "id": "v-m46-013",
         "uk": "домовитися",
-        "translit": "/domoˈvɪtɪsʲɑ/",
-        "ipa": "to agree (perf)",
-        "en": "verb",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/domoˈvɪtɪsʲɑ/",
+        "en": "to agree (perf)",
+        "pos": "verb",
+        "gender": "-"
       }
     ]
   }

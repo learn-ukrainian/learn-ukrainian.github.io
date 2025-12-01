@@ -122,97 +122,109 @@
         "id": "v-m143-001",
         "uk": "безособовий",
         "translit": "",
-        "ipa": "impersonal",
-        "en": "граматичний термін",
-        "pos": ""
+        "ipa": "",
+        "en": "impersonal",
+        "pos": "",
+        "note": "граматичний термін"
       },
       {
         "id": "v-m143-002",
         "uk": "затверджено",
         "translit": "",
-        "ipa": "approved",
-        "en": "офіційна формула",
-        "pos": ""
+        "ipa": "",
+        "en": "approved",
+        "pos": "",
+        "note": "офіційна формула"
       },
       {
         "id": "v-m143-003",
         "uk": "погоджено",
         "translit": "",
-        "ipa": "agreed",
-        "en": "офіційна формула",
-        "pos": ""
+        "ipa": "",
+        "en": "agreed",
+        "pos": "",
+        "note": "офіційна формула"
       },
       {
         "id": "v-m143-004",
         "uk": "виконано",
         "translit": "",
-        "ipa": "completed",
-        "en": "офіційна формула",
-        "pos": ""
+        "ipa": "",
+        "en": "completed",
+        "pos": "",
+        "note": "офіційна формула"
       },
       {
         "id": "v-m143-005",
         "uk": "відхилено",
         "translit": "",
-        "ipa": "rejected",
-        "en": "офіційна формула",
-        "pos": ""
+        "ipa": "",
+        "en": "rejected",
+        "pos": "",
+        "note": "офіційна формула"
       },
       {
         "id": "v-m143-006",
         "uk": "розглянуто",
         "translit": "",
-        "ipa": "considered",
-        "en": "офіційна формула",
-        "pos": ""
+        "ipa": "",
+        "en": "considered",
+        "pos": "",
+        "note": "офіційна формула"
       },
       {
         "id": "v-m143-007",
         "uk": "ухвалено",
         "translit": "",
-        "ipa": "adopted, passed",
-        "en": "для законів",
-        "pos": ""
+        "ipa": "",
+        "en": "adopted, passed",
+        "pos": "",
+        "note": "для законів"
       },
       {
         "id": "v-m143-008",
         "uk": "доручено",
         "translit": "",
-        "ipa": "entrusted, assigned",
-        "en": "для завдань",
-        "pos": ""
+        "ipa": "",
+        "en": "entrusted, assigned",
+        "pos": "",
+        "note": "для завдань"
       },
       {
         "id": "v-m143-009",
         "uk": "заслухано",
         "translit": "",
-        "ipa": "heard (report)",
-        "en": "для доповідей",
-        "pos": ""
+        "ipa": "",
+        "en": "heard (report)",
+        "pos": "",
+        "note": "для доповідей"
       },
       {
         "id": "v-m143-010",
         "uk": "протокол",
         "translit": "",
-        "ipa": "minutes, protocol",
-        "en": "документ",
-        "pos": ""
+        "ipa": "",
+        "en": "minutes, protocol",
+        "pos": "",
+        "note": "документ"
       },
       {
         "id": "v-m143-011",
         "uk": "порядок денний",
         "translit": "",
-        "ipa": "agenda",
-        "en": "список питань",
-        "pos": ""
+        "ipa": "",
+        "en": "agenda",
+        "pos": "",
+        "note": "список питань"
       },
       {
         "id": "v-m143-012",
         "uk": "засідання",
         "translit": "",
-        "ipa": "meeting, session",
-        "en": "збори",
-        "pos": ""
+        "ipa": "",
+        "en": "meeting, session",
+        "pos": "",
+        "note": "збори"
       }
     ]
   }

@@ -307,13 +307,46 @@
       "modifiedAt": "2025-12-01T00:00:00Z"
     },
     {
-      "id": "act-uk-B1-97-fillin",
-      "type": "fill-in",
+      "id": "act-uk-B1-97-gapfill",
+      "type": "gap-fill",
       "title": "Complete the Discussion",
-      "description": "A: ___ (In my opinion), це хороша ідея.",
+      "description": "A: ___ (In my opinion), це хороша ідея. B: Я не ___ (sure). ___ (Perhaps), є кращі варіанти. A: ___ (I think), ми повинні спробувати. B: ___ (On one hand), так. ___ (However), це ризиковано. A: ___ (In general), ризик виправданий.",
       "content": {
-        "type": "fill-in",
-        "instructions": "A: ___ (In my opinion), це хороша ідея."
+        "type": "gap-fill",
+        "instructions": "A: ___ (In my opinion), це хороша ідея. B: Я не ___ (sure). ___ (Perhaps), є кращі варіанти. A: ___ (I think), ми повинні спробувати. B: ___ (On one hand), так. ___ (However), це ризиковано. A: ___ (In general), ризик виправданий.",
+        "text": "A: ___ (In my opinion), це хороша ідея.\nB: Я не ___ (sure). ___ (Perhaps), є кращі варіанти.\nA: ___ (I think), ми повинні спробувати.\nB: ___ (On one hand), так. ___ (However), це ризиковано.\nA: ___ (In general), ризик виправданий.",
+        "blanks": [
+          {
+            "hint": "In my opinion"
+          },
+          {
+            "hint": "sure"
+          },
+          {
+            "hint": "Perhaps"
+          },
+          {
+            "hint": "I think"
+          },
+          {
+            "hint": "On one hand"
+          },
+          {
+            "hint": "However"
+          },
+          {
+            "hint": "In general"
+          }
+        ],
+        "answers": [
+          "На мою думку",
+          "впевнений",
+          "Можливо",
+          "Я думаю",
+          "З одного боку",
+          "Однак/Проте",
+          "Загалом"
+        ]
       },
       "subject": "language",
       "owner": "curricula-opus",
@@ -335,8 +368,153 @@
     "moduleId": "mod-uk-B1-97",
     "level": "B1",
     "phase": "B1.1",
-    "wordCount": 0,
+    "wordCount": 16,
     "transliterationMode": "none",
-    "words": []
+    "words": [
+      {
+        "id": "v-m97-001",
+        "uk": "думка",
+        "translit": "",
+        "ipa": "/ˈdumkɑ/",
+        "en": "opinion, thought",
+        "pos": "",
+        "note": "-"
+      },
+      {
+        "id": "v-m97-002",
+        "uk": "погляд",
+        "translit": "",
+        "ipa": "/ˈpoɦlʲɑd/",
+        "en": "view",
+        "pos": "",
+        "note": "-"
+      },
+      {
+        "id": "v-m97-003",
+        "uk": "точка зору",
+        "translit": "",
+        "ipa": "/ˈtot͡ʃkɑ ˈzoru/",
+        "en": "point of view",
+        "pos": "",
+        "note": "-"
+      },
+      {
+        "id": "v-m97-004",
+        "uk": "вважати",
+        "translit": "",
+        "ipa": "/vvɑˈʒɑtɪ/",
+        "en": "to consider, believe",
+        "pos": "",
+        "note": "impf"
+      },
+      {
+        "id": "v-m97-005",
+        "uk": "гадати",
+        "translit": "",
+        "ipa": "/ɦɑˈdɑtɪ/",
+        "en": "to think, suppose",
+        "pos": "",
+        "note": "impf"
+      },
+      {
+        "id": "v-m97-006",
+        "uk": "здаватися",
+        "translit": "",
+        "ipa": "/zdɑˈvɑtɪsʲɑ/",
+        "en": "to seem",
+        "pos": "",
+        "note": "impf"
+      },
+      {
+        "id": "v-m97-007",
+        "uk": "впевнений",
+        "translit": "",
+        "ipa": "/vpɛvˈnɛnɪj/",
+        "en": "sure, confident",
+        "pos": "",
+        "note": "adj"
+      },
+      {
+        "id": "v-m97-008",
+        "uk": "переконаний",
+        "translit": "",
+        "ipa": "/pɛrɛˈkonɑnɪj/",
+        "en": "convinced",
+        "pos": "",
+        "note": "adj"
+      },
+      {
+        "id": "v-m97-009",
+        "uk": "безперечно",
+        "translit": "",
+        "ipa": "/bɛzpɛˈrɛt͡ʃno/",
+        "en": "undoubtedly",
+        "pos": "",
+        "note": "adv"
+      },
+      {
+        "id": "v-m97-010",
+        "uk": "можливо",
+        "translit": "",
+        "ipa": "/moʒˈlɪvo/",
+        "en": "perhaps, possibly",
+        "pos": "",
+        "note": "adv"
+      },
+      {
+        "id": "v-m97-011",
+        "uk": "мабуть",
+        "translit": "",
+        "ipa": "/mɑˈbutʲ/",
+        "en": "probably",
+        "pos": "",
+        "note": "adv"
+      },
+      {
+        "id": "v-m97-012",
+        "uk": "ймовірно",
+        "translit": "",
+        "ipa": "/jmoˈvʲirno/",
+        "en": "probably, likely",
+        "pos": "",
+        "note": "adv"
+      },
+      {
+        "id": "v-m97-013",
+        "uk": "проте",
+        "translit": "",
+        "ipa": "/proˈtɛ/",
+        "en": "however",
+        "pos": "",
+        "note": "conj"
+      },
+      {
+        "id": "v-m97-014",
+        "uk": "однак",
+        "translit": "",
+        "ipa": "/odˈnɑk/",
+        "en": "however",
+        "pos": "",
+        "note": "conj"
+      },
+      {
+        "id": "v-m97-015",
+        "uk": "загалом",
+        "translit": "",
+        "ipa": "/zɑˈɦɑlom/",
+        "en": "in general",
+        "pos": "",
+        "note": "adv"
+      },
+      {
+        "id": "v-m97-016",
+        "uk": "отже",
+        "translit": "",
+        "ipa": "/ˈotʒɛ/",
+        "en": "so, therefore",
+        "pos": "",
+        "note": "conj"
+      }
+    ]
   }
 }

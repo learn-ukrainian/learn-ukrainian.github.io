@@ -250,13 +250,34 @@
       "modifiedAt": "2025-12-01T00:00:00Z"
     },
     {
-      "id": "act-uk-B1-136-fillin",
-      "type": "fill-in",
+      "id": "act-uk-B1-136-gapfill",
+      "type": "gap-fill",
       "title": "Conversation with Expressions",
       "description": "Заповніть розмову.",
       "content": {
-        "type": "fill-in",
-        "instructions": "Заповніть розмову."
+        "type": "gap-fill",
+        "instructions": "Заповніть розмову.",
+        "text": "Заповніть розмову.\n— Привіт! Давно не бачились! (1)___ (By the way), як справи?\n— (2)___ (The thing is), я був зайнятий. Працював (3)___ (without rest).\n— Розумію. (4)___ (In my opinion), треба відпочивати.\n— Так, ти правий. (5)___ (No pain, no gain), але здоров'я важливіше!",
+        "blanks": [
+          {
+            "hint": "By the way"
+          },
+          {
+            "hint": "The thing is"
+          },
+          {
+            "hint": "without rest"
+          },
+          {
+            "hint": "In my opinion"
+          },
+          {
+            "hint": "No pain, no gain"
+          }
+        ],
+        "answers": [
+          "1. До речі"
+        ]
       },
       "subject": "language",
       "owner": "curricula-opus",
@@ -278,8 +299,117 @@
     "moduleId": "mod-uk-B1-136",
     "level": "B1",
     "phase": "B1.4",
-    "wordCount": 0,
+    "wordCount": 12,
     "transliterationMode": "none",
-    "words": []
+    "words": [
+      {
+        "id": "v-m136-001",
+        "uk": "приказка",
+        "translit": "",
+        "ipa": "/prɪˈkɑzkɑ/",
+        "en": "proverb, saying",
+        "pos": "",
+        "note": "f"
+      },
+      {
+        "id": "v-m136-002",
+        "uk": "прислів'я",
+        "translit": "",
+        "ipa": "/prɪsˈlʲivjɑ/",
+        "en": "proverb",
+        "pos": "",
+        "note": "n"
+      },
+      {
+        "id": "v-m136-003",
+        "uk": "народна мудрість",
+        "translit": "",
+        "ipa": "-",
+        "en": "folk wisdom",
+        "pos": "",
+        "note": "f"
+      },
+      {
+        "id": "v-m136-004",
+        "uk": "тримати слово",
+        "translit": "",
+        "ipa": "-",
+        "en": "keep one's word",
+        "pos": "",
+        "note": "idiom"
+      },
+      {
+        "id": "v-m136-005",
+        "uk": "давати слово",
+        "translit": "",
+        "ipa": "-",
+        "en": "give one's word",
+        "pos": "",
+        "note": "idiom"
+      },
+      {
+        "id": "v-m136-006",
+        "uk": "справа в капелюсі",
+        "translit": "",
+        "ipa": "-",
+        "en": "it's in the bag",
+        "pos": "",
+        "note": "idiom"
+      },
+      {
+        "id": "v-m136-007",
+        "uk": "душа в душу",
+        "translit": "",
+        "ipa": "-",
+        "en": "in harmony",
+        "pos": "",
+        "note": "idiom"
+      },
+      {
+        "id": "v-m136-008",
+        "uk": "ні сном ні духом",
+        "translit": "",
+        "ipa": "-",
+        "en": "have no idea",
+        "pos": "",
+        "note": "idiom"
+      },
+      {
+        "id": "v-m136-009",
+        "uk": "на ножах",
+        "translit": "",
+        "ipa": "-",
+        "en": "at odds",
+        "pos": "",
+        "note": "idiom"
+      },
+      {
+        "id": "v-m136-010",
+        "uk": "без труда нема плода",
+        "translit": "",
+        "ipa": "-",
+        "en": "no pain no gain",
+        "pos": "",
+        "note": "proverb"
+      },
+      {
+        "id": "v-m136-011",
+        "uk": "краще пізно ніж ніколи",
+        "translit": "",
+        "ipa": "-",
+        "en": "better late than never",
+        "pos": "",
+        "note": "proverb"
+      },
+      {
+        "id": "v-m136-012",
+        "uk": "до речі",
+        "translit": "",
+        "ipa": "-",
+        "en": "by the way",
+        "pos": "",
+        "note": "expression"
+      }
+    ]
   }
 }

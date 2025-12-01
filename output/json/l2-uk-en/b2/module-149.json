@@ -117,81 +117,91 @@
         "id": "v-m149-001",
         "uk": "заява",
         "translit": "",
-        "ipa": "application, statement",
-        "en": "документ-прохання",
-        "pos": ""
+        "ipa": "",
+        "en": "application, statement",
+        "pos": "",
+        "note": "документ-прохання"
       },
       {
         "id": "v-m149-002",
         "uk": "довідка",
         "translit": "",
-        "ipa": "certificate, reference",
-        "en": "підтвердження",
-        "pos": ""
+        "ipa": "",
+        "en": "certificate, reference",
+        "pos": "",
+        "note": "підтвердження"
       },
       {
         "id": "v-m149-003",
         "uk": "наказ",
         "translit": "",
-        "ipa": "order, decree",
-        "en": "розпорядження",
-        "pos": ""
+        "ipa": "",
+        "en": "order, decree",
+        "pos": "",
+        "note": "розпорядження"
       },
       {
         "id": "v-m149-004",
         "uk": "скарга",
         "translit": "",
-        "ipa": "complaint",
-        "en": "претензія",
-        "pos": ""
+        "ipa": "",
+        "en": "complaint",
+        "pos": "",
+        "note": "претензія"
       },
       {
         "id": "v-m149-005",
         "uk": "договір",
         "translit": "",
-        "ipa": "contract, agreement",
-        "en": "угода",
-        "pos": ""
+        "ipa": "",
+        "en": "contract, agreement",
+        "pos": "",
+        "note": "угода"
       },
       {
         "id": "v-m149-006",
         "uk": "підпис",
         "translit": "",
-        "ipa": "signature",
-        "en": "засвідчення",
-        "pos": ""
+        "ipa": "",
+        "en": "signature",
+        "pos": "",
+        "note": "засвідчення"
       },
       {
         "id": "v-m149-007",
         "uk": "адресат",
         "translit": "",
-        "ipa": "addressee",
-        "en": "кому",
-        "pos": ""
+        "ipa": "",
+        "en": "addressee",
+        "pos": "",
+        "note": "кому"
       },
       {
         "id": "v-m149-008",
         "uk": "заявник",
         "translit": "",
-        "ipa": "applicant",
-        "en": "від кого",
-        "pos": ""
+        "ipa": "",
+        "en": "applicant",
+        "pos": "",
+        "note": "від кого"
       },
       {
         "id": "v-m149-009",
         "uk": "канцеляризм",
         "translit": "",
-        "ipa": "bureaucratese",
-        "en": "офіційний штамп",
-        "pos": ""
+        "ipa": "",
+        "en": "bureaucratese",
+        "pos": "",
+        "note": "офіційний штамп"
       },
       {
         "id": "v-m149-010",
         "uk": "волевиявлення",
         "translit": "",
-        "ipa": "declaration of will",
-        "en": "юридичний термін",
-        "pos": ""
+        "ipa": "",
+        "en": "declaration of will",
+        "pos": "",
+        "note": "юридичний термін"
       }
     ]
   }

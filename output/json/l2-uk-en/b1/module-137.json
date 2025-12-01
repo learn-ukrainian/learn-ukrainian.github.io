@@ -235,13 +235,34 @@
       "modifiedAt": "2025-12-01T00:00:00Z"
     },
     {
-      "id": "act-uk-B1-137-fillin",
-      "type": "fill-in",
+      "id": "act-uk-B1-137-gapfill",
+      "type": "gap-fill",
       "title": "Business Meeting",
       "description": "Використайте колокації.",
       "content": {
-        "type": "fill-in",
-        "instructions": "Використайте колокації."
+        "type": "gap-fill",
+        "instructions": "Використайте колокації.",
+        "text": "Використайте колокації.\nСьогодні ми (1)___ (conducted) важливі переговори. Колеги (2)___ (gave) корисні поради. Нам потрібно (3)___ (make) рішення до кінця тижня. Ця справа (4)___ (makes sense). Усі (5)___ (took part) в обговоренні.",
+        "blanks": [
+          {
+            "hint": "conducted"
+          },
+          {
+            "hint": "gave"
+          },
+          {
+            "hint": "make"
+          },
+          {
+            "hint": "makes sense"
+          },
+          {
+            "hint": "took part"
+          }
+        ],
+        "answers": [
+          "1. вели"
+        ]
       },
       "subject": "language",
       "owner": "curricula-opus",
@@ -263,8 +284,99 @@
     "moduleId": "mod-uk-B1-137",
     "level": "B1",
     "phase": "B1.4",
-    "wordCount": 0,
+    "wordCount": 10,
     "transliterationMode": "none",
-    "words": []
+    "words": [
+      {
+        "id": "v-m137-001",
+        "uk": "колокація",
+        "translit": "",
+        "ipa": "/kolokɑˈt͡sʲijɑ/",
+        "en": "collocation",
+        "pos": "",
+        "note": "f"
+      },
+      {
+        "id": "v-m137-002",
+        "uk": "словосполучення",
+        "translit": "",
+        "ipa": "-",
+        "en": "word combination",
+        "pos": "",
+        "note": "n"
+      },
+      {
+        "id": "v-m137-003",
+        "uk": "приймати рішення",
+        "translit": "",
+        "ipa": "-",
+        "en": "make a decision",
+        "pos": "",
+        "note": "colloc"
+      },
+      {
+        "id": "v-m137-004",
+        "uk": "робити помилку",
+        "translit": "",
+        "ipa": "-",
+        "en": "make a mistake",
+        "pos": "",
+        "note": "colloc"
+      },
+      {
+        "id": "v-m137-005",
+        "uk": "брати участь",
+        "translit": "",
+        "ipa": "-",
+        "en": "take part",
+        "pos": "",
+        "note": "colloc"
+      },
+      {
+        "id": "v-m137-006",
+        "uk": "давати пораду",
+        "translit": "",
+        "ipa": "-",
+        "en": "give advice",
+        "pos": "",
+        "note": "colloc"
+      },
+      {
+        "id": "v-m137-007",
+        "uk": "мати сенс",
+        "translit": "",
+        "ipa": "-",
+        "en": "make sense",
+        "pos": "",
+        "note": "colloc"
+      },
+      {
+        "id": "v-m137-008",
+        "uk": "вести переговори",
+        "translit": "",
+        "ipa": "-",
+        "en": "conduct negotiations",
+        "pos": "",
+        "note": "colloc"
+      },
+      {
+        "id": "v-m137-009",
+        "uk": "мати значення",
+        "translit": "",
+        "ipa": "-",
+        "en": "matter, be important",
+        "pos": "",
+        "note": "colloc"
+      },
+      {
+        "id": "v-m137-010",
+        "uk": "брати до уваги",
+        "translit": "",
+        "ipa": "-",
+        "en": "take into account",
+        "pos": "",
+        "note": "colloc"
+      }
+    ]
   }
 }

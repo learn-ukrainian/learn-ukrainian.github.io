@@ -117,81 +117,91 @@
         "id": "v-m148-001",
         "uk": "звертання",
         "translit": "",
-        "ipa": "form of address",
-        "en": "як називаємо людину",
-        "pos": ""
+        "ipa": "",
+        "en": "form of address",
+        "pos": "",
+        "note": "як називаємо людину"
       },
       {
         "id": "v-m148-002",
         "uk": "шановний",
         "translit": "",
-        "ipa": "dear, respected",
-        "en": "офіційне звертання",
-        "pos": ""
+        "ipa": "",
+        "en": "dear, respected",
+        "pos": "",
+        "note": "офіційне звертання"
       },
       {
         "id": "v-m148-003",
         "uk": "вельмишановний",
         "translit": "",
-        "ipa": "highly respected",
-        "en": "дуже офіційне",
-        "pos": ""
+        "ipa": "",
+        "en": "highly respected",
+        "pos": "",
+        "note": "дуже офіційне"
       },
       {
         "id": "v-m148-004",
         "uk": "з повагою",
         "translit": "",
-        "ipa": "respectfully",
-        "en": "формула в листах",
-        "pos": ""
+        "ipa": "",
+        "en": "respectfully",
+        "pos": "",
+        "note": "формула в листах"
       },
       {
         "id": "v-m148-005",
         "uk": "вдячний",
         "translit": "",
-        "ipa": "grateful",
-        "en": "офіційна подяка",
-        "pos": ""
+        "ipa": "",
+        "en": "grateful",
+        "pos": "",
+        "note": "офіційна подяка"
       },
       {
         "id": "v-m148-006",
         "uk": "перепрошую",
         "translit": "",
-        "ipa": "I apologize",
-        "en": "формальне вибачення",
-        "pos": ""
+        "ipa": "",
+        "en": "I apologize",
+        "pos": "",
+        "note": "формальне вибачення"
       },
       {
         "id": "v-m148-007",
         "uk": "залюбки",
         "translit": "",
-        "ipa": "gladly",
-        "en": "погодження",
-        "pos": ""
+        "ipa": "",
+        "en": "gladly",
+        "pos": "",
+        "note": "погодження"
       },
       {
         "id": "v-m148-008",
         "uk": "по батькові",
         "translit": "",
-        "ipa": "patronymic",
-        "en": "Петрович, Петрівна",
-        "pos": ""
+        "ipa": "",
+        "en": "patronymic",
+        "pos": "",
+        "note": "Петрович, Петрівна"
       },
       {
         "id": "v-m148-009",
         "uk": "етикет",
         "translit": "",
-        "ipa": "etiquette",
-        "en": "правила поведінки",
-        "pos": ""
+        "ipa": "",
+        "en": "etiquette",
+        "pos": "",
+        "note": "правила поведінки"
       },
       {
         "id": "v-m148-010",
         "uk": "ровесник",
         "translit": "",
-        "ipa": "peer (same age)",
-        "en": "однолітки",
-        "pos": ""
+        "ipa": "",
+        "en": "peer (same age)",
+        "pos": "",
+        "note": "однолітки"
       }
     ]
   }

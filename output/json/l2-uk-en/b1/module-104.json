@@ -252,13 +252,26 @@
       "modifiedAt": "2025-12-01T00:00:00Z"
     },
     {
-      "id": "act-uk-B1-104-fillin",
-      "type": "fill-in",
+      "id": "act-uk-B1-104-gapfill",
+      "type": "gap-fill",
       "title": "Complete the Requests",
       "description": "Мій керівник хоче, (1)___ я закінчив звіт до понеділка. Він також просить, (2)___ всі працівники були на зустрічі. Важливо, (3)___ ми підготували презентацію. Я сподіваюся, (4)___ все пройшло добре.",
       "content": {
-        "type": "fill-in",
-        "instructions": "Мій керівник хоче, (1)___ я закінчив звіт до понеділка. Він також просить, (2)___ всі працівники були на зустрічі. Важливо, (3)___ ми підготували презентацію. Я сподіваюся, (4)___ все пройшло добре."
+        "type": "gap-fill",
+        "instructions": "Мій керівник хоче, (1)___ я закінчив звіт до понеділка. Він також просить, (2)___ всі працівники були на зустрічі. Важливо, (3)___ ми підготували презентацію. Я сподіваюся, (4)___ все пройшло добре.",
+        "text": "Мій керівник хоче, (1)___ я закінчив звіт до понеділка. Він також просить, (2)___ всі працівники були на зустрічі. Важливо, (3)___ ми підготували презентацію. Я сподіваюся, (4)___ все пройшло добре.",
+        "blanks": [
+          {},
+          {},
+          {},
+          {}
+        ],
+        "answers": [
+          "щоб",
+          "щоб",
+          "щоб",
+          "щоб"
+        ]
       },
       "subject": "language",
       "owner": "curricula-opus",
@@ -281,8 +294,117 @@
     "moduleId": "mod-uk-B1-104",
     "level": "B1",
     "phase": "B1.2",
-    "wordCount": 0,
+    "wordCount": 12,
     "transliterationMode": "none",
-    "words": []
+    "words": [
+      {
+        "id": "v-m104-001",
+        "uk": "хотіти",
+        "translit": "",
+        "ipa": "/xoˈtʲitɪ/",
+        "en": "to want",
+        "pos": "",
+        "gender": "impf"
+      },
+      {
+        "id": "v-m104-002",
+        "uk": "бажати",
+        "translit": "",
+        "ipa": "/bɑˈʒɑtɪ/",
+        "en": "to wish",
+        "pos": "",
+        "gender": "impf"
+      },
+      {
+        "id": "v-m104-003",
+        "uk": "просити",
+        "translit": "",
+        "ipa": "/proˈsɪtɪ/",
+        "en": "to ask, request",
+        "pos": "",
+        "gender": "impf"
+      },
+      {
+        "id": "v-m104-004",
+        "uk": "попросити",
+        "translit": "",
+        "ipa": "/poproˈsɪtɪ/",
+        "en": "to ask, request",
+        "pos": "",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m104-005",
+        "uk": "наказувати",
+        "translit": "",
+        "ipa": "/nɑˈkɑzuvɑtɪ/",
+        "en": "to order",
+        "pos": "",
+        "gender": "impf"
+      },
+      {
+        "id": "v-m104-006",
+        "uk": "наказати",
+        "translit": "",
+        "ipa": "/nɑkɑˈzɑtɪ/",
+        "en": "to order",
+        "pos": "",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m104-007",
+        "uk": "радити",
+        "translit": "",
+        "ipa": "/ˈrɑdɪtɪ/",
+        "en": "to advise",
+        "pos": "",
+        "gender": "impf"
+      },
+      {
+        "id": "v-m104-008",
+        "uk": "порадити",
+        "translit": "",
+        "ipa": "/porɑˈdɪtɪ/",
+        "en": "to advise",
+        "pos": "",
+        "gender": "pf"
+      },
+      {
+        "id": "v-m104-009",
+        "uk": "сподіватися",
+        "translit": "",
+        "ipa": "/spodʲiˈvɑtɪsʲɑ/",
+        "en": "to hope",
+        "pos": "",
+        "gender": "impf"
+      },
+      {
+        "id": "v-m104-010",
+        "uk": "вимагати",
+        "translit": "",
+        "ipa": "/vɪmɑˈɦɑtɪ/",
+        "en": "to demand",
+        "pos": "",
+        "gender": "impf"
+      },
+      {
+        "id": "v-m104-011",
+        "uk": "пропонувати",
+        "translit": "",
+        "ipa": "/proponuˈvɑtɪ/",
+        "en": "to suggest",
+        "pos": "",
+        "gender": "impf"
+      },
+      {
+        "id": "v-m104-012",
+        "uk": "запропонувати",
+        "translit": "",
+        "ipa": "/zɑproponuˈvɑtɪ/",
+        "en": "to suggest",
+        "pos": "",
+        "gender": "pf"
+      }
+    ]
   }
 }

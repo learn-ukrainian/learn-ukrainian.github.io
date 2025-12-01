@@ -110,65 +110,73 @@
         "id": "v-m152-001",
         "uk": "трансформація",
         "translit": "",
-        "ipa": "transformation",
-        "en": "перетворення",
-        "pos": ""
+        "ipa": "",
+        "en": "transformation",
+        "pos": "",
+        "note": "перетворення"
       },
       {
         "id": "v-m152-002",
         "uk": "маркер",
         "translit": "",
-        "ipa": "marker",
-        "en": "ознака стилю",
-        "pos": ""
+        "ipa": "",
+        "en": "marker",
+        "pos": "",
+        "note": "ознака стилю"
       },
       {
         "id": "v-m152-003",
         "uk": "змішування",
         "translit": "",
-        "ipa": "mixing",
-        "en": "помилка стилю",
-        "pos": ""
+        "ipa": "",
+        "en": "mixing",
+        "pos": "",
+        "note": "помилка стилю"
       },
       {
         "id": "v-m152-004",
         "uk": "перемикання",
         "translit": "",
-        "ipa": "code-switching",
-        "en": "зміна регістру",
-        "pos": ""
+        "ipa": "",
+        "en": "code-switching",
+        "pos": "",
+        "note": "зміна регістру"
       },
       {
         "id": "v-m152-005",
         "uk": "адекватний",
         "translit": "",
-        "ipa": "appropriate",
-        "en": "доречний",
-        "pos": ""
+        "ipa": "",
+        "en": "appropriate",
+        "pos": "",
+        "note": "доречний"
       },
       {
         "id": "v-m152-006",
         "uk": "троп",
         "translit": "",
-        "ipa": "trope",
-        "en": "образний засіб",
-        "pos": ""
+        "ipa": "",
+        "en": "trope",
+        "pos": "",
+        "note": "образний засіб"
       },
       {
         "id": "v-m152-007",
         "uk": "комплексний",
         "translit": "",
-        "ipa": "complex",
-        "en": "багатоаспектний",
-        "pos": ""
+        "ipa": "",
+        "en": "complex",
+        "pos": "",
+        "note": "багатоаспектний"
       },
       {
         "id": "v-m152-008",
         "uk": "непередбачений",
         "translit": "",
-        "ipa": "unforeseen",
-        "en": "несподіваний",
-        "pos": ""
+        "ipa": "",
+        "en": "unforeseen",
+        "pos": "",
+        "note": "несподіваний"
       }
     ]
   }

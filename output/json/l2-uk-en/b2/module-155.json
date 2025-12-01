@@ -135,81 +135,91 @@
         "id": "v-m155-001",
         "uk": "підрядне речення",
         "translit": "",
-        "ipa": "subordinate clause",
-        "en": "основний спосіб",
-        "pos": ""
+        "ipa": "",
+        "en": "subordinate clause",
+        "pos": "",
+        "note": "основний спосіб"
       },
       {
         "id": "v-m155-002",
         "uk": "дієприслівник",
         "translit": "",
-        "ipa": "adverbial participle",
-        "en": "широко вживаний",
-        "pos": ""
+        "ipa": "",
+        "en": "adverbial participle",
+        "pos": "",
+        "note": "широко вживаний"
       },
       {
         "id": "v-m155-003",
         "uk": "трансформація",
         "translit": "",
-        "ipa": "transformation",
-        "en": "перетворення",
-        "pos": ""
+        "ipa": "",
+        "en": "transformation",
+        "pos": "",
+        "note": "перетворення"
       },
       {
         "id": "v-m155-004",
         "uk": "стислість",
         "translit": "",
-        "ipa": "conciseness",
-        "en": "коротка форма",
-        "pos": ""
+        "ipa": "",
+        "en": "conciseness",
+        "pos": "",
+        "note": "коротка форма"
       },
       {
         "id": "v-m155-005",
         "uk": "природність",
         "translit": "",
-        "ipa": "naturalness",
-        "en": "відповідність мові",
-        "pos": ""
+        "ipa": "",
+        "en": "naturalness",
+        "pos": "",
+        "note": "відповідність мові"
       },
       {
         "id": "v-m155-006",
         "uk": "книжний",
         "translit": "",
-        "ipa": "bookish",
-        "en": "офіційний, штучний",
-        "pos": ""
+        "ipa": "",
+        "en": "bookish",
+        "pos": "",
+        "note": "офіційний, штучний"
       },
       {
         "id": "v-m155-007",
         "uk": "нейтральний",
         "translit": "",
-        "ipa": "neutral",
-        "en": "звичайний стиль",
-        "pos": ""
+        "ipa": "",
+        "en": "neutral",
+        "pos": "",
+        "note": "звичайний стиль"
       },
       {
         "id": "v-m155-008",
         "uk": "допустимий",
         "translit": "",
-        "ipa": "permissible",
-        "en": "можна вживати",
-        "pos": ""
+        "ipa": "",
+        "en": "permissible",
+        "pos": "",
+        "note": "можна вживати"
       },
       {
         "id": "v-m155-009",
         "uk": "редакція",
         "translit": "",
-        "ipa": "editing",
-        "en": "виправлення",
-        "pos": ""
+        "ipa": "",
+        "en": "editing",
+        "pos": "",
+        "note": "виправлення"
       },
       {
         "id": "v-m155-010",
         "uk": "калька",
         "translit": "",
-        "ipa": "calque",
-        "en": "дослівний переклад",
-        "pos": ""
+        "ipa": "",
+        "en": "calque",
+        "pos": "",
+        "note": "дослівний переклад"
       }
     ]
   }

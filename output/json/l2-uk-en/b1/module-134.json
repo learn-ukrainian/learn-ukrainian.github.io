@@ -232,13 +232,37 @@
       "modifiedAt": "2025-12-01T00:00:00Z"
     },
     {
-      "id": "act-uk-B1-134-fillin",
-      "type": "fill-in",
+      "id": "act-uk-B1-134-gapfill",
+      "type": "gap-fill",
       "title": "Perception and Cognition",
       "description": "Використайте правильні дієслова.",
       "content": {
-        "type": "fill-in",
-        "instructions": "Використайте правильні дієслова."
+        "type": "gap-fill",
+        "instructions": "Використайте правильні дієслова.",
+        "text": "Використайте правильні дієслова.\nВчора я (1)___ (saw) цікавий фільм. Спочатку я не (2)___ (understood) сюжет, але потім (3)___ (realized), що це детектив. Я уважно (4)___ (watched) кожну сцену і (5)___ (noticed) багато деталей. Тепер я (6)___ (know), чому цей фільм популярний.",
+        "blanks": [
+          {
+            "hint": "saw"
+          },
+          {
+            "hint": "understood"
+          },
+          {
+            "hint": "realized"
+          },
+          {
+            "hint": "watched"
+          },
+          {
+            "hint": "noticed"
+          },
+          {
+            "hint": "know"
+          }
+        ],
+        "answers": [
+          "1. бачив / дивився"
+        ]
       },
       "subject": "language",
       "owner": "curricula-opus",
@@ -261,8 +285,117 @@
     "moduleId": "mod-uk-B1-134",
     "level": "B1",
     "phase": "B1.4",
-    "wordCount": 0,
+    "wordCount": 12,
     "transliterationMode": "none",
-    "words": []
+    "words": [
+      {
+        "id": "v-m134-001",
+        "uk": "бачити",
+        "translit": "",
+        "ipa": "/ˈbɑt͡ʃɪtɪ/",
+        "en": "to see",
+        "pos": "",
+        "note": "impf, passive"
+      },
+      {
+        "id": "v-m134-002",
+        "uk": "дивитися",
+        "translit": "",
+        "ipa": "/dɪˈvɪtɪsʲɑ/",
+        "en": "to look, watch",
+        "pos": "",
+        "note": "impf, active"
+      },
+      {
+        "id": "v-m134-003",
+        "uk": "оглядати",
+        "translit": "",
+        "ipa": "/oɦlʲɑˈdɑtɪ/",
+        "en": "to examine",
+        "pos": "",
+        "note": "impf"
+      },
+      {
+        "id": "v-m134-004",
+        "uk": "спостерігати",
+        "translit": "",
+        "ipa": "/spostɛrʲiˈɦɑtɪ/",
+        "en": "to observe",
+        "pos": "",
+        "note": "impf"
+      },
+      {
+        "id": "v-m134-005",
+        "uk": "помічати",
+        "translit": "",
+        "ipa": "/pomʲiˈt͡ʃɑtɪ/",
+        "en": "to notice",
+        "pos": "",
+        "note": "impf"
+      },
+      {
+        "id": "v-m134-006",
+        "uk": "знати",
+        "translit": "",
+        "ipa": "/ˈznɑtɪ/",
+        "en": "to know",
+        "pos": "",
+        "note": "impf"
+      },
+      {
+        "id": "v-m134-007",
+        "uk": "розуміти",
+        "translit": "",
+        "ipa": "/rozuˈmʲitɪ/",
+        "en": "to understand",
+        "pos": "",
+        "note": "impf"
+      },
+      {
+        "id": "v-m134-008",
+        "uk": "усвідомлювати",
+        "translit": "",
+        "ipa": "/usvʲiˈdomlʲuvɑtɪ/",
+        "en": "to realize",
+        "pos": "",
+        "note": "impf"
+      },
+      {
+        "id": "v-m134-009",
+        "uk": "визнавати",
+        "translit": "",
+        "ipa": "/vɪznɑˈvɑtɪ/",
+        "en": "to acknowledge",
+        "pos": "",
+        "note": "impf"
+      },
+      {
+        "id": "v-m134-010",
+        "uk": "пізнавати",
+        "translit": "",
+        "ipa": "/pʲiznɑˈvɑtɪ/",
+        "en": "to get to know",
+        "pos": "",
+        "note": "impf"
+      },
+      {
+        "id": "v-m134-011",
+        "uk": "погляд",
+        "translit": "",
+        "ipa": "/ˈpoɦlʲɑd/",
+        "en": "glance, look",
+        "pos": "",
+        "note": "m"
+      },
+      {
+        "id": "v-m134-012",
+        "uk": "знання",
+        "translit": "",
+        "ipa": "/ˈznɑnʲːɑ/",
+        "en": "knowledge",
+        "pos": "",
+        "note": "n"
+      }
+    ]
   }
 }

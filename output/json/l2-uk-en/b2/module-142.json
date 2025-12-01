@@ -110,81 +110,91 @@
         "id": "v-m142-001",
         "uk": "чергування",
         "translit": "",
-        "ipa": "alternation",
-        "en": "фонетичне явище",
-        "pos": ""
+        "ipa": "",
+        "en": "alternation",
+        "pos": "",
+        "note": "фонетичне явище"
       },
       {
         "id": "v-m142-002",
         "uk": "приголосний",
         "translit": "",
-        "ipa": "consonant",
-        "en": "тип звука",
-        "pos": ""
+        "ipa": "",
+        "en": "consonant",
+        "pos": "",
+        "note": "тип звука"
       },
       {
         "id": "v-m142-003",
         "uk": "суфікс",
         "translit": "",
-        "ipa": "suffix",
-        "en": "частина слова",
-        "pos": ""
+        "ipa": "",
+        "en": "suffix",
+        "pos": "",
+        "note": "частина слова"
       },
       {
         "id": "v-m142-004",
         "uk": "зворот",
         "translit": "",
-        "ipa": "phrase, construction",
-        "en": "синтаксична одиниця",
-        "pos": ""
+        "ipa": "",
+        "en": "phrase, construction",
+        "pos": "",
+        "note": "синтаксична одиниця"
       },
       {
         "id": "v-m142-005",
         "uk": "книжний стиль",
         "translit": "",
-        "ipa": "bookish style",
-        "en": "письмова мова",
-        "pos": ""
+        "ipa": "",
+        "en": "bookish style",
+        "pos": "",
+        "note": "письмова мова"
       },
       {
         "id": "v-m142-006",
         "uk": "підрядне речення",
         "translit": "",
-        "ipa": "subordinate clause",
-        "en": "залежне речення",
-        "pos": ""
+        "ipa": "",
+        "en": "subordinate clause",
+        "pos": "",
+        "note": "залежне речення"
       },
       {
         "id": "v-m142-007",
         "uk": "освічений",
         "translit": "",
-        "ipa": "educated",
-        "en": "прикметник",
-        "pos": ""
+        "ipa": "",
+        "en": "educated",
+        "pos": "",
+        "note": "прикметник"
       },
       {
         "id": "v-m142-008",
         "uk": "вихований",
         "translit": "",
-        "ipa": "well-mannered",
-        "en": "прикметник",
-        "pos": ""
+        "ipa": "",
+        "en": "well-mannered",
+        "pos": "",
+        "note": "прикметник"
       },
       {
         "id": "v-m142-009",
         "uk": "визнаний",
         "translit": "",
-        "ipa": "recognized",
-        "en": "дієприкметник",
-        "pos": ""
+        "ipa": "",
+        "en": "recognized",
+        "pos": "",
+        "note": "дієприкметник"
       },
       {
         "id": "v-m142-010",
         "uk": "збережений",
         "translit": "",
-        "ipa": "preserved",
-        "en": "дієприкметник",
-        "pos": ""
+        "ipa": "",
+        "en": "preserved",
+        "pos": "",
+        "note": "дієприкметник"
       }
     ]
   }

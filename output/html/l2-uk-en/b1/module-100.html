@@ -497,7 +497,7 @@
       <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
-    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (0)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
+    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (9)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
     </section>
   </main>
@@ -506,7 +506,7 @@
     const matchPairs=[];
     const quizData=[{"question":"Він ___ листа і надіслав його.","options":["написав","писав"],"correctIndex":0,"explanation":"The result (\"надіслав\") confirms the letter was completed, requiring perfective."},{"question":"Куди ти ___ ?","options":["йдеш","ходиш"],"correctIndex":0,"explanation":""},{"question":"Гості ___ о півночі.","options":["розійшлися","прийшлися"],"correctIndex":0,"explanation":""},{"question":"Я ___ , що це правильно.","options":["вважаю","вважав"],"correctIndex":0,"explanation":""},{"question":"___ вулицю тут!","options":["Перейдіть","Пройдіть"],"correctIndex":0,"explanation":""},{"question":"Я ___ згоден.","options":["не зовсім","зовсім не"],"correctIndex":0,"explanation":""}];
     const sortData={};
-    const vocabData=[];
+    const vocabData=[{"uk":"оцінювання","translit":"","en":"assessment","note":"n"},{"uk":"результат","translit":"","en":"result","note":"m"},{"uk":"бал","translit":"","en":"point, score","note":"m"},{"uk":"відповідь","translit":"","en":"answer","note":"f"},{"uk":"правильна відповідь","translit":"","en":"correct answer","note":"-"},{"uk":"неправильна відповідь","translit":"","en":"wrong answer","note":"-"},{"uk":"перевірити","translit":"","en":"to check","note":"pf"},{"uk":"виправити","translit":"","en":"to correct","note":"pf"},{"uk":"покращити","translit":"","en":"to improve","note":"pf"}];
     const totalSort=0;
     function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
     document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));

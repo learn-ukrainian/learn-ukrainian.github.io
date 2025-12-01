@@ -255,13 +255,37 @@
       "modifiedAt": "2025-12-01T00:00:00Z"
     },
     {
-      "id": "act-uk-B1-128-fillin",
-      "type": "fill-in",
+      "id": "act-uk-B1-128-gapfill",
+      "type": "gap-fill",
       "title": "Company Description",
       "description": "Опишіть компанію.",
       "content": {
-        "type": "fill-in",
-        "instructions": "Опишіть компанію."
+        "type": "gap-fill",
+        "instructions": "Опишіть компанію.",
+        "text": "Опишіть компанію.\nНаша (1)___ (company) називається «Укртех». Ми маємо головний (2)___ (office) у Києві і три (3)___ (branches) в інших містах. (4)___ (CEO) керує всією компанією. У кожному відділі є (5)___ (manager). Щотижня ми проводимо (6)___ (meetings) для обговорення проєктів.",
+        "blanks": [
+          {
+            "hint": "company"
+          },
+          {
+            "hint": "office"
+          },
+          {
+            "hint": "branches"
+          },
+          {
+            "hint": "CEO"
+          },
+          {
+            "hint": "manager"
+          },
+          {
+            "hint": "meetings"
+          }
+        ],
+        "answers": [
+          "1. компанія"
+        ]
       },
       "subject": "language",
       "owner": "curricula-opus",
@@ -283,8 +307,144 @@
     "moduleId": "mod-uk-B1-128",
     "level": "B1",
     "phase": "B1.4",
-    "wordCount": 0,
+    "wordCount": 15,
     "transliterationMode": "none",
-    "words": []
+    "words": [
+      {
+        "id": "v-m128-001",
+        "uk": "компанія",
+        "translit": "",
+        "ipa": "/kompɑˈnʲijɑ/",
+        "en": "company",
+        "pos": "",
+        "note": "f"
+      },
+      {
+        "id": "v-m128-002",
+        "uk": "офіс",
+        "translit": "",
+        "ipa": "/ˈofʲis/",
+        "en": "office",
+        "pos": "",
+        "note": "m"
+      },
+      {
+        "id": "v-m128-003",
+        "uk": "відділ",
+        "translit": "",
+        "ipa": "/vʲidˈdʲil/",
+        "en": "department",
+        "pos": "",
+        "note": "m"
+      },
+      {
+        "id": "v-m128-004",
+        "uk": "філія",
+        "translit": "",
+        "ipa": "/fʲiˈlʲijɑ/",
+        "en": "branch",
+        "pos": "",
+        "note": "f"
+      },
+      {
+        "id": "v-m128-005",
+        "uk": "директор",
+        "translit": "",
+        "ipa": "/dɪˈrɛktor/",
+        "en": "director",
+        "pos": "",
+        "note": "m"
+      },
+      {
+        "id": "v-m128-006",
+        "uk": "менеджер",
+        "translit": "",
+        "ipa": "/ˈmɛnɛd͡ʒɛr/",
+        "en": "manager",
+        "pos": "",
+        "note": "m"
+      },
+      {
+        "id": "v-m128-007",
+        "uk": "колега",
+        "translit": "",
+        "ipa": "/koˈlɛɦɑ/",
+        "en": "colleague",
+        "pos": "",
+        "note": "m/f"
+      },
+      {
+        "id": "v-m128-008",
+        "uk": "зустріч",
+        "translit": "",
+        "ipa": "/ˈzustrʲit͡ʃ/",
+        "en": "meeting",
+        "pos": "",
+        "note": "f"
+      },
+      {
+        "id": "v-m128-009",
+        "uk": "нарада",
+        "translit": "",
+        "ipa": "/nɑˈrɑdɑ/",
+        "en": "meeting, conference",
+        "pos": "",
+        "note": "f"
+      },
+      {
+        "id": "v-m128-010",
+        "uk": "переговори",
+        "translit": "",
+        "ipa": "/pɛrɛɦoˈvorɪ/",
+        "en": "negotiations",
+        "pos": "",
+        "note": "pl"
+      },
+      {
+        "id": "v-m128-011",
+        "uk": "контракт",
+        "translit": "",
+        "ipa": "/konˈtrɑkt/",
+        "en": "contract",
+        "pos": "",
+        "note": "m"
+      },
+      {
+        "id": "v-m128-012",
+        "uk": "договір",
+        "translit": "",
+        "ipa": "/doɦoˈvʲir/",
+        "en": "agreement",
+        "pos": "",
+        "note": "m"
+      },
+      {
+        "id": "v-m128-013",
+        "uk": "звіт",
+        "translit": "",
+        "ipa": "/zvʲit/",
+        "en": "report",
+        "pos": "",
+        "note": "m"
+      },
+      {
+        "id": "v-m128-014",
+        "uk": "прибуток",
+        "translit": "",
+        "ipa": "/prɪˈbutok/",
+        "en": "profit",
+        "pos": "",
+        "note": "m"
+      },
+      {
+        "id": "v-m128-015",
+        "uk": "зарплата",
+        "translit": "",
+        "ipa": "/zɑrˈplɑtɑ/",
+        "en": "salary",
+        "pos": "",
+        "note": "f"
+      }
+    ]
   }
 }

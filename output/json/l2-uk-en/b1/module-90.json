@@ -273,8 +273,121 @@
     "moduleId": "mod-uk-B1-90",
     "level": "B1",
     "phase": "B1.1",
-    "wordCount": 0,
+    "wordCount": 14,
     "transliterationMode": "none",
-    "words": []
+    "words": [
+      {
+        "id": "v-m90-001",
+        "uk": "прийти",
+        "translit": "",
+        "ipa": "/prɪjˈtɪ/",
+        "en": "to come, arrive",
+        "pos": ""
+      },
+      {
+        "id": "v-m90-002",
+        "uk": "приходити",
+        "translit": "",
+        "ipa": "/prɪxoˈdɪtɪ/",
+        "en": "to come",
+        "pos": ""
+      },
+      {
+        "id": "v-m90-003",
+        "uk": "приїхати",
+        "translit": "",
+        "ipa": "/prɪˈjixɑtɪ/",
+        "en": "to arrive (vehicle)",
+        "pos": ""
+      },
+      {
+        "id": "v-m90-004",
+        "uk": "приїжджати",
+        "translit": "",
+        "ipa": "/prɪjizˈdʒɑtɪ/",
+        "en": "to arrive",
+        "pos": ""
+      },
+      {
+        "id": "v-m90-005",
+        "uk": "принести",
+        "translit": "",
+        "ipa": "/prɪnɛsˈtɪ/",
+        "en": "to bring",
+        "pos": ""
+      },
+      {
+        "id": "v-m90-006",
+        "uk": "приносити",
+        "translit": "",
+        "ipa": "/prɪnoˈsɪtɪ/",
+        "en": "to bring",
+        "pos": ""
+      },
+      {
+        "id": "v-m90-007",
+        "uk": "вийти",
+        "translit": "",
+        "ipa": "/ˈvɪjtɪ/",
+        "en": "to go out",
+        "pos": ""
+      },
+      {
+        "id": "v-m90-008",
+        "uk": "виходити",
+        "translit": "",
+        "ipa": "/vɪxoˈdɪtɪ/",
+        "en": "to go out",
+        "pos": ""
+      },
+      {
+        "id": "v-m90-009",
+        "uk": "виїхати",
+        "translit": "",
+        "ipa": "/vɪˈjixɑtɪ/",
+        "en": "to drive out",
+        "pos": ""
+      },
+      {
+        "id": "v-m90-010",
+        "uk": "виїжджати",
+        "translit": "",
+        "ipa": "/vɪjizˈdʒɑtɪ/",
+        "en": "to drive out",
+        "pos": ""
+      },
+      {
+        "id": "v-m90-011",
+        "uk": "увійти",
+        "translit": "",
+        "ipa": "/uvijˈtɪ/",
+        "en": "to enter",
+        "pos": ""
+      },
+      {
+        "id": "v-m90-012",
+        "uk": "входити",
+        "translit": "",
+        "ipa": "/vxoˈdɪtɪ/",
+        "en": "to enter",
+        "pos": ""
+      },
+      {
+        "id": "v-m90-013",
+        "uk": "в'їхати",
+        "translit": "",
+        "ipa": "/vˈjixɑtɪ/",
+        "en": "to drive in",
+        "pos": ""
+      },
+      {
+        "id": "v-m90-014",
+        "uk": "в'їжджати",
+        "translit": "",
+        "ipa": "/vjizˈdʒɑtɪ/",
+        "en": "to drive in",
+        "pos": ""
+      }
+    ]
   }
 }

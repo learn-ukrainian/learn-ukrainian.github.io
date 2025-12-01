@@ -122,81 +122,91 @@
         "id": "v-m144-001",
         "uk": "зворотний",
         "translit": "",
-        "ipa": "reflexive",
-        "en": "граматичний термін",
-        "pos": ""
+        "ipa": "",
+        "en": "reflexive",
+        "pos": "",
+        "note": "граматичний термін"
       },
       {
         "id": "v-m144-002",
         "uk": "постфікс",
         "translit": "",
-        "ipa": "postfix",
-        "en": "частина слова після кореня",
-        "pos": ""
+        "ipa": "",
+        "en": "postfix",
+        "pos": "",
+        "note": "частина слова після кореня"
       },
       {
         "id": "v-m144-003",
         "uk": "процес",
         "translit": "",
-        "ipa": "process",
-        "en": "тривала дія",
-        "pos": ""
+        "ipa": "",
+        "en": "process",
+        "pos": "",
+        "note": "тривала дія"
       },
       {
         "id": "v-m144-004",
         "uk": "вироблятися",
         "translit": "",
-        "ipa": "to be produced",
-        "en": "-ся пасив",
-        "pos": ""
+        "ipa": "",
+        "en": "to be produced",
+        "pos": "",
+        "note": "-ся пасив"
       },
       {
         "id": "v-m144-005",
         "uk": "застосовуватися",
         "translit": "",
-        "ipa": "to be applied",
-        "en": "-ся пасив",
-        "pos": ""
+        "ipa": "",
+        "en": "to be applied",
+        "pos": "",
+        "note": "-ся пасив"
       },
       {
         "id": "v-m144-006",
         "uk": "досліджуватися",
         "translit": "",
-        "ipa": "to be researched",
-        "en": "-ся пасив",
-        "pos": ""
+        "ipa": "",
+        "en": "to be researched",
+        "pos": "",
+        "note": "-ся пасив"
       },
       {
         "id": "v-m144-007",
         "uk": "публікуватися",
         "translit": "",
-        "ipa": "to be published",
-        "en": "-ся пасив",
-        "pos": ""
+        "ipa": "",
+        "en": "to be published",
+        "pos": "",
+        "note": "-ся пасив"
       },
       {
         "id": "v-m144-008",
         "uk": "розглядатися",
         "translit": "",
-        "ipa": "to be considered",
-        "en": "-ся пасив",
-        "pos": ""
+        "ipa": "",
+        "en": "to be considered",
+        "pos": "",
+        "note": "-ся пасив"
       },
       {
         "id": "v-m144-009",
         "uk": "аналізуватися",
         "translit": "",
-        "ipa": "to be analyzed",
-        "en": "-ся пасив",
-        "pos": ""
+        "ipa": "",
+        "en": "to be analyzed",
+        "pos": "",
+        "note": "-ся пасив"
       },
       {
         "id": "v-m144-010",
         "uk": "оновлюватися",
         "translit": "",
-        "ipa": "to be updated",
-        "en": "-ся пасив",
-        "pos": ""
+        "ipa": "",
+        "en": "to be updated",
+        "pos": "",
+        "note": "-ся пасив"
       }
     ]
   }

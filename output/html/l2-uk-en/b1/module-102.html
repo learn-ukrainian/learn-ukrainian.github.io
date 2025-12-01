@@ -731,7 +731,7 @@
       <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
-    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (0)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
+    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (12)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
     </section>
   </main>
@@ -740,7 +740,7 @@
     const matchPairs=[];
     const quizData=[{"question":"Місто, ___ я народився, — Харків.","options":["де","куди"],"correctIndex":0,"explanation":"\"Де\" for static location (where I was born)."},{"question":"Країна, ___ вони переїхали, — Польща.","options":["де","куди"],"correctIndex":1,"explanation":"\"Куди\" for direction/destination (where they moved to)."},{"question":"Рік, ___ я закінчив університет, — 2019.","options":["де","коли"],"correctIndex":1,"explanation":"\"Коли\" for time expressions."},{"question":"Місто, ___ він родом, — Одеса.","options":["куди","звідки"],"correctIndex":1,"explanation":"\"Звідки\" for origin (where from)."},{"question":"Офіс, ___ я працюю, на третьому поверсі.","options":["де","куди"],"correctIndex":0,"explanation":"\"Де\" for location of work."},{"question":"Все, ___ я знаю, — правда.","options":["яке","що"],"correctIndex":1,"explanation":"\"Що\" after indefinite pronouns like \"все.\""}];
     const sortData={};
-    const vocabData=[];
+    const vocabData=[{"uk":"де","translit":"","en":"where (location)","note":""},{"uk":"куди","translit":"","en":"where (to), whither","note":""},{"uk":"звідки","translit":"","en":"from where, whence","note":""},{"uk":"коли","translit":"","en":"when","note":""},{"uk":"що","translit":"","en":"that, which, what","note":""},{"uk":"місце","translit":"","en":"place","note":""},{"uk":"час","translit":"","en":"time","note":""},{"uk":"момент","translit":"","en":"moment","note":""},{"uk":"рік","translit":"","en":"year","note":""},{"uk":"день","translit":"","en":"day","note":""},{"uk":"родом","translit":"","en":"originally from","note":""},{"uk":"переїхати","translit":"","en":"to move (residence)","note":""}];
     const totalSort=0;
     function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
     document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));

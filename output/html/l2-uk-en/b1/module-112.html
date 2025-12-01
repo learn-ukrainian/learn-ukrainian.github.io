@@ -865,7 +865,7 @@
       <div class="score-display"><span class="score"><span id="match-score">0</span>/5</span></div>
       <div class="match-container" id="match-container"><svg class="match-lines" id="match-lines"></svg>
         <div class="match-column" id="match-left"><div class="match-item" data-pair="0">президент</div><div class="match-item" data-pair="1">прем'єр-міністр</div><div class="match-item" data-pair="2">депутат</div><div class="match-item" data-pair="3">мер</div><div class="match-item" data-pair="4">міністр</div></div>
-        <div class="match-column" id="match-right"><div class="match-item" data-pair="3">глава міста</div><div class="match-item" data-pair="2">член парламенту</div><div class="match-item" data-pair="0">глава держави</div><div class="match-item" data-pair="4">керівник міністерства</div><div class="match-item" data-pair="1">глава уряду</div></div>
+        <div class="match-column" id="match-right"><div class="match-item" data-pair="0">глава держави</div><div class="match-item" data-pair="4">керівник міністерства</div><div class="match-item" data-pair="1">глава уряду</div><div class="match-item" data-pair="3">глава міста</div><div class="match-item" data-pair="2">член парламенту</div></div>
       </div>
       <div class="completion-message" id="match-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetMatch()">Reset</button><button class="btn btn-primary" onclick="showSection('quiz')">Next →</button></div>
@@ -877,7 +877,7 @@
       <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
-    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (0)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
+    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (15)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
     </section>
   </main>
@@ -886,7 +886,7 @@
     const matchPairs=[{"left":"президент","right":"глава держави"},{"left":"прем'єр-міністр","right":"глава уряду"},{"left":"депутат","right":"член парламенту"},{"left":"мер","right":"глава міста"},{"left":"міністр","right":"керівник міністерства"}];
     const quizData=[{"question":"Він працює ___ у парламенті.","options":["депутатом","депутат"],"correctIndex":0,"explanation":""},{"question":"___ відбудуться восени.","options":["Вибори","Голосування"],"correctIndex":0,"explanation":""},{"question":"___ прийняв новий закон.","options":["Уряд","Влади"],"correctIndex":0,"explanation":""},{"question":"Вона ___ України.","options":["громадянка","громадянство"],"correctIndex":0,"explanation":""},{"question":"Свобода слова — це ___ .","options":["право","закон"],"correctIndex":0,"explanation":""},{"question":"Вони ___ проти корупції.","options":["борються","боротися"],"correctIndex":0,"explanation":""}];
     const sortData={};
-    const vocabData=[];
+    const vocabData=[{"uk":"держава","translit":"","en":"state","note":""},{"uk":"уряд","translit":"","en":"government","note":""},{"uk":"політика","translit":"","en":"politics","note":""},{"uk":"демократія","translit":"","en":"democracy","note":""},{"uk":"вибори","translit":"","en":"elections","note":""},{"uk":"голосувати","translit":"","en":"to vote","note":""},{"uk":"партія","translit":"","en":"party","note":""},{"uk":"закон","translit":"","en":"law","note":""},{"uk":"право","translit":"","en":"right","note":""},{"uk":"громадянин","translit":"","en":"citizen","note":""},{"uk":"суспільство","translit":"","en":"society","note":""},{"uk":"свобода","translit":"","en":"freedom","note":""},{"uk":"рівність","translit":"","en":"equality","note":""},{"uk":"реформа","translit":"","en":"reform","note":""},{"uk":"корупція","translit":"","en":"corruption","note":""}];
     const totalSort=0;
     function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
     document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));

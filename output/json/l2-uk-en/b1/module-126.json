@@ -240,13 +240,40 @@
       "modifiedAt": "2025-12-01T00:00:00Z"
     },
     {
-      "id": "act-uk-B1-126-fillin",
-      "type": "fill-in",
+      "id": "act-uk-B1-126-gapfill",
+      "type": "gap-fill",
       "title": "Using Diminutives",
       "description": "Виберіть правильну форму.",
       "content": {
-        "type": "fill-in",
-        "instructions": "Виберіть правильну форму."
+        "type": "gap-fill",
+        "instructions": "Виберіть правильну форму.",
+        "text": "Виберіть правильну форму.\nМоя (1)___ (бабуся) живе в маленькому (2)___ (село). У неї є затишний (3)___ (будинок) з гарним (4)___ (сад). Коли я приїжджаю, вона завжди готує мої улюблені (5)___ (пиріг). «(6)___ (Онук), ти такий худенький!» — каже вона. Я люблю свою (7)___ (бабуся)!",
+        "blanks": [
+          {
+            "hint": "бабуся"
+          },
+          {
+            "hint": "село"
+          },
+          {
+            "hint": "будинок"
+          },
+          {
+            "hint": "сад"
+          },
+          {
+            "hint": "пиріг"
+          },
+          {
+            "hint": "Онук"
+          },
+          {
+            "hint": "бабуся"
+          }
+        ],
+        "answers": [
+          "1. бабусенька"
+        ]
       },
       "subject": "language",
       "owner": "curricula-opus",
@@ -268,8 +295,144 @@
     "moduleId": "mod-uk-B1-126",
     "level": "B1",
     "phase": "B1.4",
-    "wordCount": 0,
+    "wordCount": 15,
     "transliterationMode": "none",
-    "words": []
+    "words": [
+      {
+        "id": "v-m126-001",
+        "uk": "зменшувальний",
+        "translit": "",
+        "ipa": "/zmɛnˈʃuvɑlʲnɪj/",
+        "en": "diminutive",
+        "pos": "",
+        "note": "adj"
+      },
+      {
+        "id": "v-m126-002",
+        "uk": "пестливий",
+        "translit": "",
+        "ipa": "/pɛstˈlɪvɪj/",
+        "en": "affectionate, tender",
+        "pos": "",
+        "note": "adj"
+      },
+      {
+        "id": "v-m126-003",
+        "uk": "ласкавий",
+        "translit": "",
+        "ipa": "/lɑsˈkɑvɪj/",
+        "en": "kind, gentle",
+        "pos": "",
+        "note": "adj"
+      },
+      {
+        "id": "v-m126-004",
+        "uk": "суфікс",
+        "translit": "",
+        "ipa": "/ˈsufʲiks/",
+        "en": "suffix",
+        "pos": "",
+        "note": "m"
+      },
+      {
+        "id": "v-m126-005",
+        "uk": "столик",
+        "translit": "",
+        "ipa": "/ˈstolɪk/",
+        "en": "small table",
+        "pos": "",
+        "note": "m, dim"
+      },
+      {
+        "id": "v-m126-006",
+        "uk": "котик",
+        "translit": "",
+        "ipa": "/ˈkotɪk/",
+        "en": "kitty",
+        "pos": "",
+        "note": "m, dim"
+      },
+      {
+        "id": "v-m126-007",
+        "uk": "мамочка",
+        "translit": "",
+        "ipa": "/ˈmɑmot͡ʃkɑ/",
+        "en": "mommy",
+        "pos": "",
+        "note": "f, dim"
+      },
+      {
+        "id": "v-m126-008",
+        "uk": "бабусенька",
+        "translit": "",
+        "ipa": "/bɑbuˈsɛnʲkɑ/",
+        "en": "dear grandma",
+        "pos": "",
+        "note": "f, dim"
+      },
+      {
+        "id": "v-m126-009",
+        "uk": "синочок",
+        "translit": "",
+        "ipa": "/sɪˈnot͡ʃok/",
+        "en": "dear son",
+        "pos": "",
+        "note": "m, dim"
+      },
+      {
+        "id": "v-m126-010",
+        "uk": "донечка",
+        "translit": "",
+        "ipa": "/ˈdonɛt͡ʃkɑ/",
+        "en": "dear daughter",
+        "pos": "",
+        "note": "f, dim"
+      },
+      {
+        "id": "v-m126-011",
+        "uk": "серденько",
+        "translit": "",
+        "ipa": "/sɛrˈdɛnʲko/",
+        "en": "dear heart",
+        "pos": "",
+        "note": "n, dim"
+      },
+      {
+        "id": "v-m126-012",
+        "uk": "сонечко",
+        "translit": "",
+        "ipa": "/ˈsonɛt͡ʃko/",
+        "en": "sun (dear)",
+        "pos": "",
+        "note": "n, dim"
+      },
+      {
+        "id": "v-m126-013",
+        "uk": "зірочка",
+        "translit": "",
+        "ipa": "/ˈzʲirot͡ʃkɑ/",
+        "en": "little star",
+        "pos": "",
+        "note": "f, dim"
+      },
+      {
+        "id": "v-m126-014",
+        "uk": "хвилиночка",
+        "translit": "",
+        "ipa": "/xvɪlɪˈnot͡ʃkɑ/",
+        "en": "just a moment",
+        "pos": "",
+        "note": "f, dim"
+      },
+      {
+        "id": "v-m126-015",
+        "uk": "маленький",
+        "translit": "",
+        "ipa": "/mɑˈlɛnʲkɪj/",
+        "en": "small, little",
+        "pos": "",
+        "note": "adj, dim"
+      }
+    ]
   }
 }

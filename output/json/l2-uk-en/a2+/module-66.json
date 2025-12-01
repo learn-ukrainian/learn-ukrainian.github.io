@@ -367,292 +367,327 @@
       {
         "id": "v-m66-001",
         "uk": "вхід",
-        "translit": "/vxʲid/",
-        "ipa": "entrance",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/vxʲid/",
+        "en": "entrance",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m66-002",
         "uk": "вихід",
-        "translit": "/ˈvɪxʲid/",
-        "ipa": "exit",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ˈvɪxʲid/",
+        "en": "exit",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m66-003",
         "uk": "прихід",
-        "translit": "/ˈprɪxʲid/",
-        "ipa": "arrival",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ˈprɪxʲid/",
+        "en": "arrival",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m66-004",
         "uk": "відхід",
-        "translit": "/ˈvʲidxʲid/",
-        "ipa": "departure",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ˈvʲidxʲid/",
+        "en": "departure",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m66-005",
         "uk": "перехід",
-        "translit": "/ˈpɛrɛxʲid/",
-        "ipa": "crossing",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ˈpɛrɛxʲid/",
+        "en": "crossing",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m66-006",
         "uk": "похід",
-        "translit": "/ˈpoxʲid/",
-        "ipa": "hike, campaign",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ˈpoxʲid/",
+        "en": "hike, campaign",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m66-007",
         "uk": "підхід",
-        "translit": "/ˈpʲidxʲid/",
-        "ipa": "approach",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ˈpʲidxʲid/",
+        "en": "approach",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m66-008",
         "uk": "дохід",
-        "translit": "/ˈdoxʲid/",
-        "ipa": "income",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ˈdoxʲid/",
+        "en": "income",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m66-009",
         "uk": "поїздка",
-        "translit": "/poˈjizdkɑ/",
-        "ipa": "trip",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/poˈjizdkɑ/",
+        "en": "trip",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m66-010",
         "uk": "поїзд",
-        "translit": "/ˈpojizd/",
-        "ipa": "train",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ˈpojizd/",
+        "en": "train",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m66-011",
         "uk": "виїзд",
-        "translit": "/ˈvɪjizd/",
-        "ipa": "exit (vehicles)",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ˈvɪjizd/",
+        "en": "exit (vehicles)",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m66-012",
         "uk": "в'їзд",
-        "translit": "/vjizd/",
-        "ipa": "entrance (vehicles)",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/vjizd/",
+        "en": "entrance (vehicles)",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m66-013",
         "uk": "приїзд",
-        "translit": "/ˈprɪjizd/",
-        "ipa": "arrival (vehicles)",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ˈprɪjizd/",
+        "en": "arrival (vehicles)",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m66-014",
         "uk": "від'їзд",
-        "translit": "/ˈvʲidjizd/",
-        "ipa": "departure (vehicles)",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ˈvʲidjizd/",
+        "en": "departure (vehicles)",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m66-015",
         "uk": "переїзд",
-        "translit": "/ˈpɛrɛjizd/",
-        "ipa": "move; crossing",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ˈpɛrɛjizd/",
+        "en": "move; crossing",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m66-016",
         "uk": "проїзд",
-        "translit": "/ˈprojizd/",
-        "ipa": "passage; fare",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ˈprojizd/",
+        "en": "passage; fare",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m66-017",
         "uk": "побачити",
-        "translit": "/poˈbɑtʃɪtɪ/",
-        "ipa": "to see",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/poˈbɑtʃɪtɪ/",
+        "en": "to see",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m66-018",
         "uk": "побачення",
-        "translit": "/pobɑˈtʃɛnʲːɑ/",
-        "ipa": "meeting, date",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/pobɑˈtʃɛnʲːɑ/",
+        "en": "meeting, date",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m66-019",
         "uk": "передбачати",
-        "translit": "/pɛrɛdˈbɑtʃɑtɪ/",
-        "ipa": "to foresee",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/pɛrɛdˈbɑtʃɑtɪ/",
+        "en": "to foresee",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m66-020",
         "uk": "передбачення",
-        "translit": "/pɛrɛdbɑˈtʃɛnʲːɑ/",
-        "ipa": "prediction",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/pɛrɛdbɑˈtʃɛnʲːɑ/",
+        "en": "prediction",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m66-021",
         "uk": "вибачати",
-        "translit": "/vɪbɑˈtʃɑtɪ/",
-        "ipa": "to forgive",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/vɪbɑˈtʃɑtɪ/",
+        "en": "to forgive",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m66-022",
         "uk": "вибачення",
-        "translit": "/vɪbɑˈtʃɛnʲːɑ/",
-        "ipa": "apology",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/vɪbɑˈtʃɛnʲːɑ/",
+        "en": "apology",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m66-023",
         "uk": "слух",
-        "translit": "/slux/",
-        "ipa": "hearing; rumor",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/slux/",
+        "en": "hearing; rumor",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m66-024",
         "uk": "слухач",
-        "translit": "/sluˈxɑtʃ/",
-        "ipa": "listener",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/sluˈxɑtʃ/",
+        "en": "listener",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m66-025",
         "uk": "вислухати",
-        "translit": "/ˈvɪsluxɑtɪ/",
-        "ipa": "to hear out",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/ˈvɪsluxɑtɪ/",
+        "en": "to hear out",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m66-026",
         "uk": "підслухати",
-        "translit": "/pʲidsluˈxɑtɪ/",
-        "ipa": "to eavesdrop",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/pʲidsluˈxɑtɪ/",
+        "en": "to eavesdrop",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m66-027",
         "uk": "слухняний",
-        "translit": "/sluxˈnʲɑnɪj/",
-        "ipa": "obedient",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/sluxˈnʲɑnɪj/",
+        "en": "obedient",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m66-028",
         "uk": "неслухняний",
-        "translit": "/nɛsluxˈnʲɑnɪj/",
-        "ipa": "disobedient",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/nɛsluxˈnʲɑnɪj/",
+        "en": "disobedient",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m66-029",
         "uk": "знайомий",
-        "translit": "/znɑˈjomɪj/",
-        "ipa": "acquaintance",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/znɑˈjomɪj/",
+        "en": "acquaintance",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m66-030",
         "uk": "знайомитися",
-        "translit": "/znɑˈjomɪtɪsʲɑ/",
-        "ipa": "to get acquainted",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/znɑˈjomɪtɪsʲɑ/",
+        "en": "to get acquainted",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m66-031",
         "uk": "познайомитися",
-        "translit": "/poznɑˈjomɪtɪsʲɑ/",
-        "ipa": "to meet",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/poznɑˈjomɪtɪsʲɑ/",
+        "en": "to meet",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m66-032",
         "uk": "дізнатися",
-        "translit": "/dʲizˈnɑtɪsʲɑ/",
-        "ipa": "to find out",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/dʲizˈnɑtɪsʲɑ/",
+        "en": "to find out",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m66-033",
         "uk": "пізнавати",
-        "translit": "/pʲiznɑˈvɑtɪ/",
-        "ipa": "to learn, cognize",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/pʲiznɑˈvɑtɪ/",
+        "en": "to learn, cognize",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m66-034",
         "uk": "визнавати",
-        "translit": "/vɪznɑˈvɑtɪ/",
-        "ipa": "to admit",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/vɪznɑˈvɑtɪ/",
+        "en": "to admit",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       },
       {
         "id": "v-m66-035",
         "uk": "визнання",
-        "translit": "/vɪzˈnɑnʲːɑ/",
-        "ipa": "recognition",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/vɪzˈnɑnʲːɑ/",
+        "en": "recognition",
+        "pos": "noun",
+        "gender": "n"
       }
     ]
   }

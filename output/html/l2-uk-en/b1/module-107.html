@@ -826,7 +826,7 @@ d. …я б допоміг їй.</p>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
-    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (0)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
+    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (10)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
     </section>
   </main>
@@ -835,7 +835,7 @@ d. …я б допоміг їй.</p>
     const matchPairs=[];
     const quizData=[{"question":"___ буде гарна погода, ми поїдемо на пікнік. (real)","options":["Якщо","Якби"],"correctIndex":0,"explanation":"Real future condition."},{"question":"___ я був багатим, я б не працював.","options":["Якщо","Якби"],"correctIndex":1,"explanation":"Unreal hypothetical."},{"question":"Я прийду, ___ не захворію.","options":["якщо","якби"],"correctIndex":0,"explanation":"\"Unless\" = \"якщо не\" with real condition."},{"question":"___ якщо він не прийде?","options":["А","І"],"correctIndex":0,"explanation":"\"What if\" = \"А якщо\""},{"question":"Візьми гроші ___ випадок, якщо треба буде.","options":["на","у"],"correctIndex":0,"explanation":"\"In case\" = \"на випадок, якщо\""},{"question":"___ якби він попросив, я б не погодився.","options":["Навіть","Тільки"],"correctIndex":0,"explanation":"\"Even if (unreal)\" = \"Навіть якби\""}];
     const sortData={};
-    const vocabData=[];
+    const vocabData=[{"uk":"навіть якщо","translit":"","en":"even if (real)","note":"conj"},{"uk":"навіть якби","translit":"","en":"even if (unreal)","note":"conj"},{"uk":"хіба що","translit":"","en":"unless","note":"conj"},{"uk":"на випадок","translit":"","en":"in case","note":"prep"},{"uk":"а якщо","translit":"","en":"what if","note":"phrase"},{"uk":"шкода","translit":"","en":"it's a pity","note":"pred"},{"uk":"жаль","translit":"","en":"it's a pity, regret","note":"m"},{"uk":"жалкувати","translit":"","en":"to regret","note":"impf"},{"uk":"інакше","translit":"","en":"otherwise, differently","note":"adv"},{"uk":"раніше","translit":"","en":"earlier","note":"adv"}];
     const totalSort=0;
     function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
     document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));

@@ -784,7 +784,7 @@
       <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
-    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (0)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
+    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (10)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
     </section>
   </main>
@@ -793,7 +793,7 @@
     const matchPairs=[];
     const quizData=[{"question":"Якщо він ___ , ми підемо в кіно.","options":["прийде","приходить"],"correctIndex":0,"explanation":"Future condition requires future tense."},{"question":"Якщо ___ дощ, візьми парасольку.","options":["піде","йде"],"correctIndex":0,"explanation":"Future possible condition."},{"question":"Якщо ти не ___ , запізнишся.","options":["поспішиш","поспішаєш"],"correctIndex":0,"explanation":"Future warning."},{"question":"___ матиму час, зателефоную.","options":["Якщо","Якби"],"correctIndex":0,"explanation":"\"Якщо\" for real conditions, \"якби\" for unreal."},{"question":"Якщо хочеш, я ___ .","options":["допоможу","допомагаю"],"correctIndex":0,"explanation":"Offer in the future."},{"question":"Якщо вона не ___ , ми почнемо без неї.","options":["прийде","приходить"],"correctIndex":0,"explanation":"Future condition."}];
     const sortData={};
-    const vocabData=[];
+    const vocabData=[{"uk":"якщо","translit":"","en":"if","note":""},{"uk":"як","translit":"","en":"if (informal), as, how","note":""},{"uk":"тоді","translit":"","en":"then","note":""},{"uk":"умова","translit":"","en":"condition","note":""},{"uk":"наслідок","translit":"","en":"consequence","note":""},{"uk":"результат","translit":"","en":"result","note":""},{"uk":"можливо","translit":"","en":"possibly","note":""},{"uk":"імовірно","translit":"","en":"probably","note":""},{"uk":"у разі","translit":"","en":"in case","note":""},{"uk":"за умови","translit":"","en":"provided that","note":""}];
     const totalSort=0;
     function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
     document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));

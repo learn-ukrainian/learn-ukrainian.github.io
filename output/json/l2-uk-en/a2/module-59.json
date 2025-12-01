@@ -356,92 +356,102 @@
       {
         "id": "v-m59-001",
         "uk": "заборонено",
-        "translit": "/zɑboroˈnɛno/",
-        "ipa": "forbidden",
-        "en": "part",
-        "pos": "-",
-        "gender": "-но form"
+        "translit": "",
+        "ipa": "/zɑboroˈnɛno/",
+        "en": "forbidden",
+        "pos": "part",
+        "gender": "-",
+        "note": "-но form"
       },
       {
         "id": "v-m59-002",
         "uk": "дозволено",
-        "translit": "/dozˈvolɛno/",
-        "ipa": "allowed",
-        "en": "part",
-        "pos": "-",
-        "gender": "-но form"
+        "translit": "",
+        "ipa": "/dozˈvolɛno/",
+        "en": "allowed",
+        "pos": "part",
+        "gender": "-",
+        "note": "-но form"
       },
       {
         "id": "v-m59-003",
         "uk": "зроблено",
-        "translit": "/ˈzroblɛno/",
-        "ipa": "done, made",
-        "en": "part",
-        "pos": "-",
-        "gender": "-но form"
+        "translit": "",
+        "ipa": "/ˈzroblɛno/",
+        "en": "done, made",
+        "pos": "part",
+        "gender": "-",
+        "note": "-но form"
       },
       {
         "id": "v-m59-004",
         "uk": "закрито",
-        "translit": "/zɑˈkrɪto/",
-        "ipa": "closed",
-        "en": "part",
-        "pos": "-",
-        "gender": "-то form"
+        "translit": "",
+        "ipa": "/zɑˈkrɪto/",
+        "en": "closed",
+        "pos": "part",
+        "gender": "-",
+        "note": "-то form"
       },
       {
         "id": "v-m59-005",
         "uk": "відкрито",
-        "translit": "/vʲidˈkrɪto/",
-        "ipa": "open(ed)",
-        "en": "part",
-        "pos": "-",
-        "gender": "-то form"
+        "translit": "",
+        "ipa": "/vʲidˈkrɪto/",
+        "en": "open(ed)",
+        "pos": "part",
+        "gender": "-",
+        "note": "-то form"
       },
       {
         "id": "v-m59-006",
         "uk": "зайнято",
-        "translit": "/ˈzɑjnʲɑto/",
-        "ipa": "occupied, taken",
-        "en": "part",
-        "pos": "-",
-        "gender": "-то form"
+        "translit": "",
+        "ipa": "/ˈzɑjnʲɑto/",
+        "en": "occupied, taken",
+        "pos": "part",
+        "gender": "-",
+        "note": "-то form"
       },
       {
         "id": "v-m59-007",
         "uk": "називатися",
-        "translit": "/nɑzɪˈvɑtɪsʲɑ/",
-        "ipa": "to be called",
-        "en": "verb",
-        "pos": "-",
-        "gender": "refl"
+        "translit": "",
+        "ipa": "/nɑzɪˈvɑtɪsʲɑ/",
+        "en": "to be called",
+        "pos": "verb",
+        "gender": "-",
+        "note": "refl"
       },
       {
         "id": "v-m59-008",
         "uk": "продаватися",
-        "translit": "/prodɑˈvɑtɪsʲɑ/",
-        "ipa": "to be sold",
-        "en": "verb",
-        "pos": "-",
-        "gender": "refl"
+        "translit": "",
+        "ipa": "/prodɑˈvɑtɪsʲɑ/",
+        "en": "to be sold",
+        "pos": "verb",
+        "gender": "-",
+        "note": "refl"
       },
       {
         "id": "v-m59-009",
         "uk": "варто",
-        "translit": "/ˈvɑrto/",
-        "ipa": "it's worth",
-        "en": "adv",
-        "pos": "-",
-        "gender": "+ infinitive"
+        "translit": "",
+        "ipa": "/ˈvɑrto/",
+        "en": "it's worth",
+        "pos": "adv",
+        "gender": "-",
+        "note": "+ infinitive"
       },
       {
         "id": "v-m59-010",
         "uk": "слід",
-        "translit": "/slʲid/",
-        "ipa": "one should",
-        "en": "adv",
-        "pos": "-",
-        "gender": "+ infinitive"
+        "translit": "",
+        "ipa": "/slʲid/",
+        "en": "one should",
+        "pos": "adv",
+        "gender": "-",
+        "note": "+ infinitive"
       }
     ]
   }

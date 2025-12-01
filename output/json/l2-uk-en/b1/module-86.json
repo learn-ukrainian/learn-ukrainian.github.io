@@ -268,8 +268,117 @@
     "moduleId": "mod-uk-B1-86",
     "level": "B1",
     "phase": "B1.1",
-    "wordCount": 0,
+    "wordCount": 12,
     "transliterationMode": "none",
-    "words": []
+    "words": [
+      {
+        "id": "v-m86-001",
+        "uk": "негайно",
+        "translit": "",
+        "ipa": "/nɛˈɦɑjno/",
+        "en": "immediately",
+        "pos": "",
+        "note": "urgency"
+      },
+      {
+        "id": "v-m86-002",
+        "uk": "терміново",
+        "translit": "",
+        "ipa": "/tɛrmʲiˈnovo/",
+        "en": "urgently",
+        "pos": "",
+        "note": "urgency"
+      },
+      {
+        "id": "v-m86-003",
+        "uk": "швидше",
+        "translit": "",
+        "ipa": "/ˈʃvɪdʃɛ/",
+        "en": "faster, quicker",
+        "pos": "",
+        "note": "with perfective"
+      },
+      {
+        "id": "v-m86-004",
+        "uk": "спочатку",
+        "translit": "",
+        "ipa": "/spoˈt͡ʃɑtku/",
+        "en": "first, at first",
+        "pos": "",
+        "note": "sequences"
+      },
+      {
+        "id": "v-m86-005",
+        "uk": "потім",
+        "translit": "",
+        "ipa": "/poˈtʲim/",
+        "en": "then, afterwards",
+        "pos": "",
+        "note": "sequences"
+      },
+      {
+        "id": "v-m86-006",
+        "uk": "не здаватися",
+        "translit": "",
+        "ipa": "/nɛ zdɑˈvɑtɪsʲɑ/",
+        "en": "to not give up",
+        "pos": "",
+        "note": "encouragement"
+      },
+      {
+        "id": "v-m86-007",
+        "uk": "триматися",
+        "translit": "",
+        "ipa": "/trɪˈmɑtɪsʲɑ/",
+        "en": "to hold on",
+        "pos": "",
+        "note": "encouragement"
+      },
+      {
+        "id": "v-m86-008",
+        "uk": "старатися",
+        "translit": "",
+        "ipa": "/stɑˈrɑtɪsʲɑ/",
+        "en": "to try hard",
+        "pos": "",
+        "note": "encouragement"
+      },
+      {
+        "id": "v-m86-009",
+        "uk": "продовжувати",
+        "translit": "",
+        "ipa": "/prodovˈʒuvɑtɪ/",
+        "en": "to continue",
+        "pos": "",
+        "note": "encouragement"
+      },
+      {
+        "id": "v-m86-010",
+        "uk": "обережно",
+        "translit": "",
+        "ipa": "/obɛˈrɛʒno/",
+        "en": "carefully",
+        "pos": "",
+        "note": "warnings"
+      },
+      {
+        "id": "v-m86-011",
+        "uk": "давай",
+        "translit": "",
+        "ipa": "/dɑˈvɑj/",
+        "en": "let's (informal)",
+        "pos": "",
+        "note": "+ infinitive"
+      },
+      {
+        "id": "v-m86-012",
+        "uk": "давайте",
+        "translit": "",
+        "ipa": "/dɑˈvɑjtɛ/",
+        "en": "let's (formal)",
+        "pos": "",
+        "note": "+ infinitive"
+      }
+    ]
   }
 }

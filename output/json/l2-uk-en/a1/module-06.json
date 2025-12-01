@@ -354,146 +354,162 @@
       {
         "id": "v-m06-001",
         "uk": "читати",
-        "translit": "/tʃɪˈtɑtɪ/",
-        "ipa": "to read",
-        "en": "verb",
-        "pos": "-",
-        "gender": "Class I: читаю, читаєш..."
+        "translit": "",
+        "ipa": "/tʃɪˈtɑtɪ/",
+        "en": "to read",
+        "pos": "verb",
+        "gender": "-",
+        "note": "Class I: читаю, читаєш..."
       },
       {
         "id": "v-m06-002",
         "uk": "писати",
-        "translit": "/pɪˈsɑtɪ/",
-        "ipa": "to write",
-        "en": "verb",
-        "pos": "-",
-        "gender": "Class I with с→ш: пишу, пишеш..."
+        "translit": "",
+        "ipa": "/pɪˈsɑtɪ/",
+        "en": "to write",
+        "pos": "verb",
+        "gender": "-",
+        "note": "Class I with с→ш: пишу, пишеш..."
       },
       {
         "id": "v-m06-003",
         "uk": "знати",
-        "translit": "/ˈznɑtɪ/",
-        "ipa": "to know",
-        "en": "verb",
-        "pos": "-",
-        "gender": "Class I: знаю, знаєш..."
+        "translit": "",
+        "ipa": "/ˈznɑtɪ/",
+        "en": "to know",
+        "pos": "verb",
+        "gender": "-",
+        "note": "Class I: знаю, знаєш..."
       },
       {
         "id": "v-m06-004",
         "uk": "працювати",
-        "translit": "/prɑt͡sʲuˈvɑtɪ/",
-        "ipa": "to work",
-        "en": "verb",
-        "pos": "-",
-        "gender": "Class I: працюю, працюєш..."
+        "translit": "",
+        "ipa": "/prɑt͡sʲuˈvɑtɪ/",
+        "en": "to work",
+        "pos": "verb",
+        "gender": "-",
+        "note": "Class I: працюю, працюєш..."
       },
       {
         "id": "v-m06-005",
         "uk": "говорити",
-        "translit": "/ɦɔvɔˈrɪtɪ/",
-        "ipa": "to speak",
-        "en": "verb",
-        "pos": "-",
-        "gender": "Class II: говорю, говориш..."
+        "translit": "",
+        "ipa": "/ɦɔvɔˈrɪtɪ/",
+        "en": "to speak",
+        "pos": "verb",
+        "gender": "-",
+        "note": "Class II: говорю, говориш..."
       },
       {
         "id": "v-m06-006",
         "uk": "робити",
-        "translit": "/rɔˈbɪtɪ/",
-        "ipa": "to do, to make",
-        "en": "verb",
-        "pos": "-",
-        "gender": "Class II: роблю, робиш..."
+        "translit": "",
+        "ipa": "/rɔˈbɪtɪ/",
+        "en": "to do, to make",
+        "pos": "verb",
+        "gender": "-",
+        "note": "Class II: роблю, робиш..."
       },
       {
         "id": "v-m06-007",
         "uk": "дивитися",
-        "translit": "/dɪvɪˈtɪsʲɑ/",
-        "ipa": "to watch, look",
-        "en": "verb",
-        "pos": "-",
-        "gender": "Reflexive Class II"
+        "translit": "",
+        "ipa": "/dɪvɪˈtɪsʲɑ/",
+        "en": "to watch, look",
+        "pos": "verb",
+        "gender": "-",
+        "note": "Reflexive Class II"
       },
       {
         "id": "v-m06-008",
         "uk": "слухати",
-        "translit": "/ˈsluxɑtɪ/",
-        "ipa": "to listen",
-        "en": "verb",
-        "pos": "-",
-        "gender": "Class I: слухаю, слухаєш..."
+        "translit": "",
+        "ipa": "/ˈsluxɑtɪ/",
+        "en": "to listen",
+        "pos": "verb",
+        "gender": "-",
+        "note": "Class I: слухаю, слухаєш..."
       },
       {
         "id": "v-m06-009",
         "uk": "розуміти",
-        "translit": "/rɔzuˈmʲitɪ/",
-        "ipa": "to understand",
-        "en": "verb",
-        "pos": "-",
-        "gender": "Class II: розумію, розумієш..."
+        "translit": "",
+        "ipa": "/rɔzuˈmʲitɪ/",
+        "en": "to understand",
+        "pos": "verb",
+        "gender": "-",
+        "note": "Class II: розумію, розумієш..."
       },
       {
         "id": "v-m06-010",
         "uk": "думати",
-        "translit": "/ˈdumɑtɪ/",
-        "ipa": "to think",
-        "en": "verb",
-        "pos": "-",
-        "gender": "Class I: думаю, думаєш..."
+        "translit": "",
+        "ipa": "/ˈdumɑtɪ/",
+        "en": "to think",
+        "pos": "verb",
+        "gender": "-",
+        "note": "Class I: думаю, думаєш..."
       },
       {
         "id": "v-m06-011",
         "uk": "хотіти",
-        "translit": "/xɔˈtʲitɪ/",
-        "ipa": "to want",
-        "en": "verb",
-        "pos": "-",
-        "gender": "Irregular: хочу, хочеш..."
+        "translit": "",
+        "ipa": "/xɔˈtʲitɪ/",
+        "en": "to want",
+        "pos": "verb",
+        "gender": "-",
+        "note": "Irregular: хочу, хочеш..."
       },
       {
         "id": "v-m06-012",
         "uk": "не",
-        "translit": "/nɛ/",
-        "ipa": "not",
-        "en": "part",
-        "pos": "-",
-        "gender": "Goes before verb"
+        "translit": "",
+        "ipa": "/nɛ/",
+        "en": "not",
+        "pos": "part",
+        "gender": "-",
+        "note": "Goes before verb"
       },
       {
         "id": "v-m06-013",
         "uk": "лист",
-        "translit": "/lɪst/",
-        "ipa": "letter",
-        "en": "noun",
-        "pos": "m",
-        "gender": "Object of писати"
+        "translit": "",
+        "ipa": "/lɪst/",
+        "en": "letter",
+        "pos": "noun",
+        "gender": "m",
+        "note": "Object of писати"
       },
       {
         "id": "v-m06-014",
         "uk": "кожен день",
-        "translit": "/ˈkɔʒɛn dɛnʲ/",
-        "ipa": "every day",
-        "en": "phrase",
-        "pos": "-",
-        "gender": "Time expression"
+        "translit": "",
+        "ipa": "/ˈkɔʒɛn dɛnʲ/",
+        "en": "every day",
+        "pos": "phrase",
+        "gender": "-",
+        "note": "Time expression"
       },
       {
         "id": "v-m06-015",
         "uk": "завтра",
-        "translit": "/ˈzɑvtrɑ/",
-        "ipa": "tomorrow",
-        "en": "adv",
-        "pos": "-",
-        "gender": "Time word"
+        "translit": "",
+        "ipa": "/ˈzɑvtrɑ/",
+        "en": "tomorrow",
+        "pos": "adv",
+        "gender": "-",
+        "note": "Time word"
       },
       {
         "id": "v-m06-016",
         "uk": "сьогодні",
-        "translit": "/sʲɔˈɦɔdnʲi/",
-        "ipa": "today",
-        "en": "adv",
-        "pos": "-",
-        "gender": "Time word"
+        "translit": "",
+        "ipa": "/sʲɔˈɦɔdnʲi/",
+        "en": "today",
+        "pos": "adv",
+        "gender": "-",
+        "note": "Time word"
       }
     ]
   }

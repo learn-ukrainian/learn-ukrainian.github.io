@@ -314,13 +314,16 @@
       "modifiedAt": "2025-12-01T00:00:00Z"
     },
     {
-      "id": "act-uk-B1-93-fillin",
-      "type": "fill-in",
+      "id": "act-uk-B1-93-gapfill",
+      "type": "gap-fill",
       "title": "Complete Expressions",
       "description": "Complete with the correct verb.",
       "content": {
-        "type": "fill-in",
-        "instructions": "Complete with the correct verb."
+        "type": "gap-fill",
+        "instructions": "Complete with the correct verb.",
+        "text": "Complete with the correct verb.",
+        "blanks": [],
+        "answers": []
       },
       "subject": "language",
       "owner": "curricula-opus",
@@ -342,8 +345,117 @@
     "moduleId": "mod-uk-B1-93",
     "level": "B1",
     "phase": "B1.1",
-    "wordCount": 0,
+    "wordCount": 12,
     "transliterationMode": "none",
-    "words": []
+    "words": [
+      {
+        "id": "v-m93-001",
+        "uk": "виходить, що",
+        "translit": "",
+        "ipa": "/vɪˈxodɪtʲ ʃt͡ʃo/",
+        "en": "it turns out that",
+        "pos": "",
+        "note": "impersonal"
+      },
+      {
+        "id": "v-m93-002",
+        "uk": "доходити до",
+        "translit": "",
+        "ipa": "/doxoˈdɪtɪ do/",
+        "en": "to get through to",
+        "pos": "",
+        "note": "figurative"
+      },
+      {
+        "id": "v-m93-003",
+        "uk": "дійшло до мене",
+        "translit": "",
+        "ipa": "/dijˈʃlo do ˈmɛnɛ/",
+        "en": "it dawned on me",
+        "pos": "",
+        "note": "figurative"
+      },
+      {
+        "id": "v-m93-004",
+        "uk": "прийти до висновку",
+        "translit": "",
+        "ipa": "/prɪjˈtɪ do ˈvɪsnovku/",
+        "en": "to come to conclusion",
+        "pos": "",
+        "note": "fixed expr"
+      },
+      {
+        "id": "v-m93-005",
+        "uk": "прийти до згоди",
+        "translit": "",
+        "ipa": "/prɪjˈtɪ do ˈzɦodɪ/",
+        "en": "to come to agreement",
+        "pos": "",
+        "note": "fixed expr"
+      },
+      {
+        "id": "v-m93-006",
+        "uk": "прийти на думку",
+        "translit": "",
+        "ipa": "/prɪjˈtɪ nɑ ˈdumku/",
+        "en": "to come to mind",
+        "pos": "",
+        "note": "fixed expr"
+      },
+      {
+        "id": "v-m93-007",
+        "uk": "перейти до справи",
+        "translit": "",
+        "ipa": "/pɛrɛjˈtɪ do ˈsprɑvɪ/",
+        "en": "to get to business",
+        "pos": "",
+        "note": "fixed expr"
+      },
+      {
+        "id": "v-m93-008",
+        "uk": "пройти курс",
+        "translit": "",
+        "ipa": "/projˈtɪ kurs/",
+        "en": "to take a course",
+        "pos": "",
+        "note": "figurative"
+      },
+      {
+        "id": "v-m93-009",
+        "uk": "пройти тест",
+        "translit": "",
+        "ipa": "/projˈtɪ tɛst/",
+        "en": "to pass a test",
+        "pos": "",
+        "note": "figurative"
+      },
+      {
+        "id": "v-m93-010",
+        "uk": "зайти в глухий кут",
+        "translit": "",
+        "ipa": "/zɑjˈtɪ v ɦluˈxɪj kut/",
+        "en": "to reach dead end",
+        "pos": "",
+        "note": "idiom"
+      },
+      {
+        "id": "v-m93-011",
+        "uk": "вийти заміж",
+        "translit": "",
+        "ipa": "/ˈvɪjtɪ ˈzɑmʲiʒ/",
+        "en": "to get married (f)",
+        "pos": "",
+        "note": "fixed expr"
+      },
+      {
+        "id": "v-m93-012",
+        "uk": "відійти від теми",
+        "translit": "",
+        "ipa": "/vʲidijˈtɪ vʲid ˈtɛmɪ/",
+        "en": "to go off topic",
+        "pos": "",
+        "note": "fixed expr"
+      }
+    ]
   }
 }

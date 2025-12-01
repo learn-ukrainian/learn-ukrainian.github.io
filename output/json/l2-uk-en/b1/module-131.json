@@ -255,13 +255,37 @@
       "modifiedAt": "2025-12-01T00:00:00Z"
     },
     {
-      "id": "act-uk-B1-131-fillin",
-      "type": "fill-in",
+      "id": "act-uk-B1-131-gapfill",
+      "type": "gap-fill",
       "title": "Economic Report",
       "description": "Опишіть економічні зміни.",
       "content": {
-        "type": "fill-in",
-        "instructions": "Опишіть економічні зміни."
+        "type": "gap-fill",
+        "instructions": "Опишіть економічні зміни.",
+        "text": "Опишіть економічні зміни.\nЗа останні роки економіка України активно (1)___ (develop). ВВП (2)___ (increase) на 15% порівняно з попереднім періодом. Безробіття (3)___ (decrease) значно. Однак інфляція (4)___ (remain) високою. Експорт (5)___ (grow) удвічі. Загалом ситуація поступово (6)___ (improve).",
+        "blanks": [
+          {
+            "hint": "develop"
+          },
+          {
+            "hint": "increase"
+          },
+          {
+            "hint": "decrease"
+          },
+          {
+            "hint": "remain"
+          },
+          {
+            "hint": "grow"
+          },
+          {
+            "hint": "improve"
+          }
+        ],
+        "answers": [
+          "1. розвивається / розвивалася"
+        ]
       },
       "subject": "language",
       "owner": "curricula-opus",
@@ -283,8 +307,144 @@
     "moduleId": "mod-uk-B1-131",
     "level": "B1",
     "phase": "B1.4",
-    "wordCount": 0,
+    "wordCount": 15,
     "transliterationMode": "none",
-    "words": []
+    "words": [
+      {
+        "id": "v-m131-001",
+        "uk": "зростати",
+        "translit": "",
+        "ipa": "/zrosˈtɑtɪ/",
+        "en": "to grow, increase",
+        "pos": "",
+        "note": "impf"
+      },
+      {
+        "id": "v-m131-002",
+        "uk": "зменшуватися",
+        "translit": "",
+        "ipa": "-",
+        "en": "to decrease",
+        "pos": "",
+        "note": "impf"
+      },
+      {
+        "id": "v-m131-003",
+        "uk": "підвищуватися",
+        "translit": "",
+        "ipa": "-",
+        "en": "to rise",
+        "pos": "",
+        "note": "impf"
+      },
+      {
+        "id": "v-m131-004",
+        "uk": "знижуватися",
+        "translit": "",
+        "ipa": "-",
+        "en": "to decline",
+        "pos": "",
+        "note": "impf"
+      },
+      {
+        "id": "v-m131-005",
+        "uk": "покращуватися",
+        "translit": "",
+        "ipa": "-",
+        "en": "to improve",
+        "pos": "",
+        "note": "impf"
+      },
+      {
+        "id": "v-m131-006",
+        "uk": "погіршуватися",
+        "translit": "",
+        "ipa": "-",
+        "en": "to worsen",
+        "pos": "",
+        "note": "impf"
+      },
+      {
+        "id": "v-m131-007",
+        "uk": "розвиватися",
+        "translit": "",
+        "ipa": "-",
+        "en": "to develop",
+        "pos": "",
+        "note": "impf"
+      },
+      {
+        "id": "v-m131-008",
+        "uk": "змінюватися",
+        "translit": "",
+        "ipa": "-",
+        "en": "to change",
+        "pos": "",
+        "note": "impf"
+      },
+      {
+        "id": "v-m131-009",
+        "uk": "зростання",
+        "translit": "",
+        "ipa": "/zrosˈtɑnʲːɑ/",
+        "en": "growth",
+        "pos": "",
+        "note": "n"
+      },
+      {
+        "id": "v-m131-010",
+        "uk": "зменшення",
+        "translit": "",
+        "ipa": "/zmɛnˈʃɛnʲːɑ/",
+        "en": "decrease",
+        "pos": "",
+        "note": "n"
+      },
+      {
+        "id": "v-m131-011",
+        "uk": "різко",
+        "translit": "",
+        "ipa": "/ˈrʲizko/",
+        "en": "sharply",
+        "pos": "",
+        "note": "adv"
+      },
+      {
+        "id": "v-m131-012",
+        "uk": "поступово",
+        "translit": "",
+        "ipa": "/postuˈpovo/",
+        "en": "gradually",
+        "pos": "",
+        "note": "adv"
+      },
+      {
+        "id": "v-m131-013",
+        "uk": "значно",
+        "translit": "",
+        "ipa": "/ˈznɑt͡ʃno/",
+        "en": "significantly",
+        "pos": "",
+        "note": "adv"
+      },
+      {
+        "id": "v-m131-014",
+        "uk": "удвічі",
+        "translit": "",
+        "ipa": "/udˈvʲit͡ʃi/",
+        "en": "twice",
+        "pos": "",
+        "note": "adv"
+      },
+      {
+        "id": "v-m131-015",
+        "uk": "порівняно з",
+        "translit": "",
+        "ipa": "-",
+        "en": "compared to",
+        "pos": "",
+        "note": "prep"
+      }
+    ]
   }
 }

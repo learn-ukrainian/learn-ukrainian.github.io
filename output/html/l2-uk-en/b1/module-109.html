@@ -850,7 +850,7 @@
       <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
-    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (0)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
+    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (13)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
     </section>
   </main>
@@ -859,7 +859,7 @@
     const matchPairs=[];
     const quizData=[{"question":"Він не прийшов, ___ захворів.","options":["тому що","тому"],"correctIndex":0,"explanation":"\"Тому що\" introduces cause (reason)."},{"question":"Вона досягла успіху ___ наполегливості.","options":["завдяки","через"],"correctIndex":0,"explanation":"\"Завдяки\" + dative for positive cause."},{"question":"___ поганої погоди, захід скасували.","options":["Через","Завдяки"],"correctIndex":0,"explanation":"\"Через\" + accusative for negative cause."},{"question":"Йшов дощ, ___ ми не пішли.","options":["бо","тому"],"correctIndex":1,"explanation":"\"Тому\" introduces result."},{"question":"___ він не готовий, перенесемо зустріч.","options":["Оскільки","Тому що"],"correctIndex":0,"explanation":"\"Оскільки\" at the start is more formal."},{"question":"Він працював багато, ___ втомився.","options":["так що","бо"],"correctIndex":0,"explanation":"\"Так що\" introduces result."}];
     const sortData={};
-    const vocabData=[];
+    const vocabData=[{"uk":"тому що","translit":"","en":"because","note":"conj"},{"uk":"бо","translit":"","en":"because (informal)","note":"conj"},{"uk":"оскільки","translit":"","en":"since, because","note":"conj (formal)"},{"uk":"через","translit":"","en":"because of, due to","note":"prep + acc"},{"uk":"через те, що","translit":"","en":"due to the fact that","note":"conj"},{"uk":"завдяки","translit":"","en":"thanks to","note":"prep + dat"},{"uk":"завдяки тому, що","translit":"","en":"thanks to the fact that","note":"conj"},{"uk":"тому","translit":"","en":"therefore, that's why","note":"adv"},{"uk":"отже","translit":"","en":"therefore, thus","note":"adv (formal)"},{"uk":"тож","translit":"","en":"so, therefore","note":"adv (informal)"},{"uk":"так що","translit":"","en":"so that, so","note":"conj"},{"uk":"причина","translit":"","en":"reason, cause","note":"f"},{"uk":"наслідок","translit":"","en":"consequence, result","note":"m"}];
     const totalSort=0;
     function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
     document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));

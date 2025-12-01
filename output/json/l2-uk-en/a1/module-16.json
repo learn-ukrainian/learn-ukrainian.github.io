@@ -359,146 +359,162 @@
       {
         "id": "v-m16-001",
         "uk": "немає",
-        "translit": "/nɛˈmɑjɛ/",
-        "ipa": "there is no",
-        "en": "verb",
-        "pos": "-",
-        "gender": "+ genitive"
+        "translit": "",
+        "ipa": "/nɛˈmɑjɛ/",
+        "en": "there is no",
+        "pos": "verb",
+        "gender": "-",
+        "note": "+ genitive"
       },
       {
         "id": "v-m16-002",
         "uk": "без",
-        "translit": "/bɛz/",
-        "ipa": "without",
-        "en": "prep",
-        "pos": "-",
-        "gender": "+ genitive"
+        "translit": "",
+        "ipa": "/bɛz/",
+        "en": "without",
+        "pos": "prep",
+        "gender": "-",
+        "note": "+ genitive"
       },
       {
         "id": "v-m16-003",
         "uk": "для",
-        "translit": "/dlʲɑ/",
-        "ipa": "for",
-        "en": "prep",
-        "pos": "-",
-        "gender": "+ genitive"
+        "translit": "",
+        "ipa": "/dlʲɑ/",
+        "en": "for",
+        "pos": "prep",
+        "gender": "-",
+        "note": "+ genitive"
       },
       {
         "id": "v-m16-004",
         "uk": "з / із",
-        "translit": "/z/ /iz/",
-        "ipa": "from, out of",
-        "en": "prep",
-        "pos": "-",
-        "gender": "+ genitive"
+        "translit": "",
+        "ipa": "/z/ /iz/",
+        "en": "from, out of",
+        "pos": "prep",
+        "gender": "-",
+        "note": "+ genitive"
       },
       {
         "id": "v-m16-005",
         "uk": "після",
-        "translit": "/ˈpʲislʲɑ/",
-        "ipa": "after",
-        "en": "prep",
-        "pos": "-",
-        "gender": "+ genitive"
+        "translit": "",
+        "ipa": "/ˈpʲislʲɑ/",
+        "en": "after",
+        "pos": "prep",
+        "gender": "-",
+        "note": "+ genitive"
       },
       {
         "id": "v-m16-006",
         "uk": "від",
-        "translit": "/vʲid/",
-        "ipa": "from",
-        "en": "prep",
-        "pos": "-",
-        "gender": "+ genitive"
+        "translit": "",
+        "ipa": "/vʲid/",
+        "en": "from",
+        "pos": "prep",
+        "gender": "-",
+        "note": "+ genitive"
       },
       {
         "id": "v-m16-007",
         "uk": "час",
-        "translit": "/tʃɑs/",
-        "ipa": "time",
-        "en": "noun",
-        "pos": "m",
-        "gender": "Gen: часу"
+        "translit": "",
+        "ipa": "/tʃɑs/",
+        "en": "time",
+        "pos": "noun",
+        "gender": "m",
+        "note": "Gen: часу"
       },
       {
         "id": "v-m16-008",
         "uk": "гроші",
-        "translit": "/ˈɦrɔʃʲi/",
-        "ipa": "money",
-        "en": "noun",
-        "pos": "pl",
-        "gender": "Gen: грошей"
+        "translit": "",
+        "ipa": "/ˈɦrɔʃʲi/",
+        "en": "money",
+        "pos": "noun",
+        "gender": "pl",
+        "note": "Gen: грошей"
       },
       {
         "id": "v-m16-009",
         "uk": "хліб",
-        "translit": "/xlʲib/",
-        "ipa": "bread",
-        "en": "noun",
-        "pos": "m",
-        "gender": "Gen: хліба"
+        "translit": "",
+        "ipa": "/xlʲib/",
+        "en": "bread",
+        "pos": "noun",
+        "gender": "m",
+        "note": "Gen: хліба"
       },
       {
         "id": "v-m16-010",
         "uk": "цукор",
-        "translit": "/ˈt͡sukɔr/",
-        "ipa": "sugar",
-        "en": "noun",
-        "pos": "m",
-        "gender": "Gen: цукру"
+        "translit": "",
+        "ipa": "/ˈt͡sukɔr/",
+        "en": "sugar",
+        "pos": "noun",
+        "gender": "m",
+        "note": "Gen: цукру"
       },
       {
         "id": "v-m16-011",
         "uk": "чашка",
-        "translit": "/ˈtʃɑʃkɑ/",
-        "ipa": "cup",
-        "en": "noun",
-        "pos": "f",
-        "gender": "Gen: чашки"
+        "translit": "",
+        "ipa": "/ˈtʃɑʃkɑ/",
+        "en": "cup",
+        "pos": "noun",
+        "gender": "f",
+        "note": "Gen: чашки"
       },
       {
         "id": "v-m16-012",
         "uk": "пляшка",
-        "translit": "/ˈplʲɑʃkɑ/",
-        "ipa": "bottle",
-        "en": "noun",
-        "pos": "f",
-        "gender": "Gen: пляшки"
+        "translit": "",
+        "ipa": "/ˈplʲɑʃkɑ/",
+        "en": "bottle",
+        "pos": "noun",
+        "gender": "f",
+        "note": "Gen: пляшки"
       },
       {
         "id": "v-m16-013",
         "uk": "сторінка",
-        "translit": "/stɔˈrʲinkɑ/",
-        "ipa": "page",
-        "en": "noun",
-        "pos": "f",
-        "gender": "Gen: сторінки"
+        "translit": "",
+        "ipa": "/stɔˈrʲinkɑ/",
+        "en": "page",
+        "pos": "noun",
+        "gender": "f",
+        "note": "Gen: сторінки"
       },
       {
         "id": "v-m16-014",
         "uk": "кінець",
-        "translit": "/kʲiˈnɛt͡sʲ/",
-        "ipa": "end",
-        "en": "noun",
-        "pos": "m",
-        "gender": "Gen: кінця"
+        "translit": "",
+        "ipa": "/kʲiˈnɛt͡sʲ/",
+        "en": "end",
+        "pos": "noun",
+        "gender": "m",
+        "note": "Gen: кінця"
       },
       {
         "id": "v-m16-015",
         "uk": "початок",
-        "translit": "/pɔˈtʃɑtɔk/",
-        "ipa": "beginning",
-        "en": "noun",
-        "pos": "m",
-        "gender": "Gen: початку"
+        "translit": "",
+        "ipa": "/pɔˈtʃɑtɔk/",
+        "en": "beginning",
+        "pos": "noun",
+        "gender": "m",
+        "note": "Gen: початку"
       },
       {
         "id": "v-m16-016",
         "uk": "кілограм",
-        "translit": "/kʲilɔˈɦrɑm/",
-        "ipa": "kilogram",
-        "en": "noun",
-        "pos": "m",
-        "gender": "Gen: кілограма"
+        "translit": "",
+        "ipa": "/kʲilɔˈɦrɑm/",
+        "en": "kilogram",
+        "pos": "noun",
+        "gender": "m",
+        "note": "Gen: кілограма"
       }
     ]
   }

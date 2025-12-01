@@ -362,341 +362,383 @@
       {
         "id": "v-m68-001",
         "uk": "серце",
-        "translit": "/ˈsɛrtsɛ/",
-        "ipa": "heart",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/ˈsɛrtsɛ/",
+        "en": "heart",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m68-002",
         "uk": "легені",
-        "translit": "/lɛˈɦɛnʲi/",
-        "ipa": "lungs",
-        "en": "noun",
-        "pos": "pl"
+        "translit": "",
+        "ipa": "/lɛˈɦɛnʲi/",
+        "en": "lungs",
+        "pos": "noun",
+        "gender": "pl"
       },
       {
         "id": "v-m68-003",
         "uk": "шлунок",
-        "translit": "/ˈʃlunok/",
-        "ipa": "stomach",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ˈʃlunok/",
+        "en": "stomach",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m68-004",
         "uk": "печінка",
-        "translit": "/pɛˈtʃʲinkɑ/",
-        "ipa": "liver",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/pɛˈtʃʲinkɑ/",
+        "en": "liver",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m68-005",
         "uk": "нирки",
-        "translit": "/ˈnɪrkɪ/",
-        "ipa": "kidneys",
-        "en": "noun",
-        "pos": "pl"
+        "translit": "",
+        "ipa": "/ˈnɪrkɪ/",
+        "en": "kidneys",
+        "pos": "noun",
+        "gender": "pl"
       },
       {
         "id": "v-m68-006",
         "uk": "м'яз",
-        "translit": "/mjɑz/",
-        "ipa": "muscle",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/mjɑz/",
+        "en": "muscle",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m68-007",
         "uk": "кістка",
-        "translit": "/ˈkʲistkɑ/",
-        "ipa": "bone",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈkʲistkɑ/",
+        "en": "bone",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m68-008",
         "uk": "суглоб",
-        "translit": "/ˈsuɦlob/",
-        "ipa": "joint",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ˈsuɦlob/",
+        "en": "joint",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m68-009",
         "uk": "шкіра",
-        "translit": "/ˈʃkʲirɑ/",
-        "ipa": "skin",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈʃkʲirɑ/",
+        "en": "skin",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m68-010",
         "uk": "кров",
-        "translit": "/krov/",
-        "ipa": "blood",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/krov/",
+        "en": "blood",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m68-011",
         "uk": "коліно",
-        "translit": "/koˈlʲino/",
-        "ipa": "knee",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/koˈlʲino/",
+        "en": "knee",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m68-012",
         "uk": "плече",
-        "translit": "/plɛˈtʃɛ/",
-        "ipa": "shoulder",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/plɛˈtʃɛ/",
+        "en": "shoulder",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m68-013",
         "uk": "лікоть",
-        "translit": "/ˈlʲikotʲ/",
-        "ipa": "elbow",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ˈlʲikotʲ/",
+        "en": "elbow",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m68-014",
         "uk": "щиколотка",
-        "translit": "/ʃtʃɪˈkolotkɑ/",
-        "ipa": "ankle",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ʃtʃɪˈkolotkɑ/",
+        "en": "ankle",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m68-015",
         "uk": "болить",
-        "translit": "/boˈlɪtʲ/",
-        "ipa": "hurts",
-        "en": "verb",
-        "pos": "-",
-        "gender": "3sg"
+        "translit": "",
+        "ipa": "/boˈlɪtʲ/",
+        "en": "hurts",
+        "pos": "verb",
+        "gender": "-",
+        "note": "3sg"
       },
       {
         "id": "v-m68-016",
         "uk": "боляче",
-        "translit": "/boˈlʲɑtʃɛ/",
-        "ipa": "painful, it hurts",
-        "en": "adv",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/boˈlʲɑtʃɛ/",
+        "en": "painful, it hurts",
+        "pos": "adv",
+        "gender": "-"
       },
       {
         "id": "v-m68-017",
         "uk": "температура",
-        "translit": "/tɛmpɛrɑˈturɑ/",
-        "ipa": "fever, temperature",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/tɛmpɛrɑˈturɑ/",
+        "en": "fever, temperature",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m68-018",
         "uk": "кашель",
-        "translit": "/ˈkɑʃɛlʲ/",
-        "ipa": "cough",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ˈkɑʃɛlʲ/",
+        "en": "cough",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m68-019",
         "uk": "нежить",
-        "translit": "/ˈnɛʒɪtʲ/",
-        "ipa": "runny nose",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ˈnɛʒɪtʲ/",
+        "en": "runny nose",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m68-020",
         "uk": "запаморочення",
-        "translit": "/zɑpɑmoˈrotʃɛnʲːɑ/",
-        "ipa": "dizziness",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/zɑpɑmoˈrotʃɛnʲːɑ/",
+        "en": "dizziness",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m68-021",
         "uk": "нудота",
-        "translit": "/nuˈdotɑ/",
-        "ipa": "nausea",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/nuˈdotɑ/",
+        "en": "nausea",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m68-022",
         "uk": "набряк",
-        "translit": "/ˈnɑbrʲɑk/",
-        "ipa": "swelling",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ˈnɑbrʲɑk/",
+        "en": "swelling",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m68-023",
         "uk": "слабкість",
-        "translit": "/ˈslɑbkʲistʲ/",
-        "ipa": "weakness",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈslɑbkʲistʲ/",
+        "en": "weakness",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m68-024",
         "uk": "втома",
-        "translit": "/ˈvtomɑ/",
-        "ipa": "fatigue",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈvtomɑ/",
+        "en": "fatigue",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m68-025",
         "uk": "застуда",
-        "translit": "/zɑsˈtudɑ/",
-        "ipa": "cold",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/zɑsˈtudɑ/",
+        "en": "cold",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m68-026",
         "uk": "грип",
-        "translit": "/ɦrɪp/",
-        "ipa": "flu",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ɦrɪp/",
+        "en": "flu",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m68-027",
         "uk": "алергія",
-        "translit": "/ɑˈlɛrɦʲijɑ/",
-        "ipa": "allergy",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ɑˈlɛrɦʲijɑ/",
+        "en": "allergy",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m68-028",
         "uk": "інфекція",
-        "translit": "/inˈfɛktsʲijɑ/",
-        "ipa": "infection",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/inˈfɛktsʲijɑ/",
+        "en": "infection",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m68-029",
         "uk": "травма",
-        "translit": "/ˈtrɑvmɑ/",
-        "ipa": "injury",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈtrɑvmɑ/",
+        "en": "injury",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m68-030",
         "uk": "лікар",
-        "translit": "/ˈlʲikɑr/",
-        "ipa": "doctor",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/ˈlʲikɑr/",
+        "en": "doctor",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m68-031",
         "uk": "пацієнт",
-        "translit": "/pɑtsʲiˈjɛnt/",
-        "ipa": "patient",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/pɑtsʲiˈjɛnt/",
+        "en": "patient",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m68-032",
         "uk": "діагноз",
-        "translit": "/dʲiɑɦˈnoz/",
-        "ipa": "diagnosis",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/dʲiɑɦˈnoz/",
+        "en": "diagnosis",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m68-033",
         "uk": "рецепт",
-        "translit": "/rɛˈtsɛpt/",
-        "ipa": "prescription",
-        "en": "noun",
-        "pos": "m"
+        "translit": "",
+        "ipa": "/rɛˈtsɛpt/",
+        "en": "prescription",
+        "pos": "noun",
+        "gender": "m"
       },
       {
         "id": "v-m68-034",
         "uk": "ліки",
-        "translit": "/ˈlʲikɪ/",
-        "ipa": "medicine",
-        "en": "noun",
-        "pos": "pl"
+        "translit": "",
+        "ipa": "/ˈlʲikɪ/",
+        "en": "medicine",
+        "pos": "noun",
+        "gender": "pl"
       },
       {
         "id": "v-m68-035",
         "uk": "таблетка",
-        "translit": "/tɑbˈlɛtkɑ/",
-        "ipa": "pill, tablet",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/tɑbˈlɛtkɑ/",
+        "en": "pill, tablet",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m68-036",
         "uk": "аптека",
-        "translit": "/ɑpˈtɛkɑ/",
-        "ipa": "pharmacy",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ɑpˈtɛkɑ/",
+        "en": "pharmacy",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m68-037",
         "uk": "лікарня",
-        "translit": "/lʲiˈkɑrnʲɑ/",
-        "ipa": "hospital",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/lʲiˈkɑrnʲɑ/",
+        "en": "hospital",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m68-038",
         "uk": "швидка допомога",
-        "translit": "/ˈʃvɪdkɑ doˈpomoɦɑ/",
-        "ipa": "ambulance",
-        "en": "noun",
-        "pos": "f"
+        "translit": "",
+        "ipa": "/ˈʃvɪdkɑ doˈpomoɦɑ/",
+        "en": "ambulance",
+        "pos": "noun",
+        "gender": "f"
       },
       {
         "id": "v-m68-039",
         "uk": "здоров'я",
-        "translit": "/zdoˈrovj'ɑ/",
-        "ipa": "health",
-        "en": "noun",
-        "pos": "n"
+        "translit": "",
+        "ipa": "/zdoˈrovj'ɑ/",
+        "en": "health",
+        "pos": "noun",
+        "gender": "n"
       },
       {
         "id": "v-m68-040",
         "uk": "хворий",
-        "translit": "/xvoˈrɪj/",
-        "ipa": "sick",
-        "en": "adj",
-        "pos": "-"
+        "translit": "",
+        "ipa": "/xvoˈrɪj/",
+        "en": "sick",
+        "pos": "adj",
+        "gender": "-"
       },
       {
         "id": "v-m68-041",
         "uk": "одужати",
-        "translit": "/oduˈʒɑtɪ/",
-        "ipa": "to recover",
-        "en": "verb",
-        "pos": "-",
-        "gender": "pf"
+        "translit": "",
+        "ipa": "/oduˈʒɑtɪ/",
+        "en": "to recover",
+        "pos": "verb",
+        "gender": "-",
+        "note": "pf"
       },
       {
         "id": "v-m68-042",
         "uk": "почуватися",
-        "translit": "/potʃuˈvɑtɪsʲɑ/",
-        "ipa": "to feel",
-        "en": "verb",
-        "pos": "-",
-        "gender": "impf"
+        "translit": "",
+        "ipa": "/potʃuˈvɑtɪsʲɑ/",
+        "en": "to feel",
+        "pos": "verb",
+        "gender": "-",
+        "note": "impf"
       }
     ]
   }

@@ -356,8 +356,113 @@
     "moduleId": "mod-uk-A2+-79",
     "level": "A2+",
     "phase": "A2+.3",
-    "wordCount": 0,
+    "wordCount": 13,
     "transliterationMode": "none",
-    "words": []
+    "words": [
+      {
+        "id": "v-m79-001",
+        "uk": "приходити",
+        "translit": "",
+        "ipa": "/prɪˈxodɪtɪ/",
+        "en": "to arrive",
+        "pos": ""
+      },
+      {
+        "id": "v-m79-002",
+        "uk": "виходити",
+        "translit": "",
+        "ipa": "/vɪˈxodɪtɪ/",
+        "en": "to exit",
+        "pos": ""
+      },
+      {
+        "id": "v-m79-003",
+        "uk": "переходити",
+        "translit": "",
+        "ipa": "/pɛrɛˈxodɪtɪ/",
+        "en": "to cross",
+        "pos": ""
+      },
+      {
+        "id": "v-m79-004",
+        "uk": "читання",
+        "translit": "",
+        "ipa": "/tʃɪˈtɑnʲːɑ/",
+        "en": "reading",
+        "pos": ""
+      },
+      {
+        "id": "v-m79-005",
+        "uk": "можливість",
+        "translit": "",
+        "ipa": "/moʒˈlɪvʲistʲ/",
+        "en": "possibility",
+        "pos": ""
+      },
+      {
+        "id": "v-m79-006",
+        "uk": "письменник",
+        "translit": "",
+        "ipa": "/pɪsʲˈmɛnːɪk/",
+        "en": "writer",
+        "pos": ""
+      },
+      {
+        "id": "v-m79-007",
+        "uk": "міський",
+        "translit": "",
+        "ipa": "/ˈmʲiskɪj/",
+        "en": "urban",
+        "pos": ""
+      },
+      {
+        "id": "v-m79-008",
+        "uk": "книжковий",
+        "translit": "",
+        "ipa": "/knɪʒˈkovɪj/",
+        "en": "book (adj)",
+        "pos": ""
+      },
+      {
+        "id": "v-m79-009",
+        "uk": "навчання",
+        "translit": "",
+        "ipa": "/nɑvˈtʃɑnʲːɑ/",
+        "en": "education",
+        "pos": ""
+      },
+      {
+        "id": "v-m79-010",
+        "uk": "робітник",
+        "translit": "",
+        "ipa": "/roˈbʲitnɪk/",
+        "en": "worker",
+        "pos": ""
+      },
+      {
+        "id": "v-m79-011",
+        "uk": "розмова",
+        "translit": "",
+        "ipa": "/rozˈmovɑ/",
+        "en": "conversation",
+        "pos": ""
+      },
+      {
+        "id": "v-m79-012",
+        "uk": "поїздка",
+        "translit": "",
+        "ipa": "/poˈjizdkɑ/",
+        "en": "trip",
+        "pos": ""
+      },
+      {
+        "id": "v-m79-013",
+        "uk": "побачення",
+        "translit": "",
+        "ipa": "/pobɑˈtʃɛnʲːɑ/",
+        "en": "meeting",
+        "pos": ""
+      }
+    ]
   }
 }

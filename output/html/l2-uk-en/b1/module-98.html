@@ -805,7 +805,7 @@ Your diplomatic response: ___</p></li>
       <div class="completion-message" id="sort-complete"><h3>All Sorted!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetSort()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Vocab →</button></div>
     </div></section>
-    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (0)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
+    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (15)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
     </section>
   </main>
@@ -814,7 +814,7 @@ Your diplomatic response: ___</p></li>
     const matchPairs=[];
     const quizData=[{"question":"Someone says something completely true:","options":["Абсолютно!","Я не зовсім згоден."],"correctIndex":0,"explanation":""},{"question":"You partially agree with boss:","options":["Це правда, проте...","Ні, це не так."],"correctIndex":0,"explanation":""},{"question":"Polite disagreement:","options":["Боюся, що не можу погодитися.","Аж ніяк!"],"correctIndex":0,"explanation":""},{"question":"Suggesting alternative:","options":["А може краще...?","Ви помиляєтесь."],"correctIndex":0,"explanation":""},{"question":"Strong agreement:","options":["Цілком згоден!","Можливо, ви маєте рацію."],"correctIndex":0,"explanation":""}];
     const sortData={"true-friends":["Абсолютно!","Цілком згоден!","Безперечно!"],"false-friends":["Я погоджуюся","Ви маєте рацію","Це так"],"new-letters":["Почасти так, але...","Загалом так, хоча...","Це правда, проте..."],"undefined":["Я не зовсім згоден","Боюся, не можу погодитися","Дозвольте не погодитися"]};
-    const vocabData=[];
+    const vocabData=[{"uk":"згоден","translit":"","en":"agree (m)","note":"adj"},{"uk":"згодна","translit":"","en":"agree (f)","note":"adj"},{"uk":"погоджуватися","translit":"","en":"to agree","note":"impf"},{"uk":"погодитися","translit":"","en":"to agree","note":"pf"},{"uk":"рація","translit":"","en":"right (as in \"you're right\")","note":"f"},{"uk":"сперечатися","translit":"","en":"to argue","note":"impf"},{"uk":"заперечувати","translit":"","en":"to object","note":"impf"},{"uk":"заперечити","translit":"","en":"to object","note":"pf"},{"uk":"навпаки","translit":"","en":"on the contrary","note":"adv"},{"uk":"натомість","translit":"","en":"instead","note":"adv"},{"uk":"почасти","translit":"","en":"partly","note":"adv"},{"uk":"враховувати","translit":"","en":"to consider, take into account","note":"impf"},{"uk":"врахувати","translit":"","en":"to consider","note":"pf"},{"uk":"запропонувати","translit":"","en":"to suggest","note":"pf"},{"uk":"пропонувати","translit":"","en":"to suggest","note":"impf"}];
     const totalSort=12;
     function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
     document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));

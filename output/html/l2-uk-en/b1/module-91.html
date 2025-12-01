@@ -809,7 +809,7 @@
       <div class="score-display"><span class="score"><span id="match-score">0</span>/3</span></div>
       <div class="match-container" id="match-container"><svg class="match-lines" id="match-lines"></svg>
         <div class="match-column" id="match-left"><div class="match-item" data-pair="0">пере-</div><div class="match-item" data-pair="1">про-</div><div class="match-item" data-pair="2">об-</div></div>
-        <div class="match-column" id="match-right"><div class="match-item" data-pair="1">through, past</div><div class="match-item" data-pair="0">across, re-</div><div class="match-item" data-pair="2">around</div></div>
+        <div class="match-column" id="match-right"><div class="match-item" data-pair="0">across, re-</div><div class="match-item" data-pair="1">through, past</div><div class="match-item" data-pair="2">around</div></div>
       </div>
       <div class="completion-message" id="match-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetMatch()">Reset</button><button class="btn btn-primary" onclick="showSection('quiz')">Next →</button></div>
@@ -827,7 +827,7 @@
       <div class="completion-message" id="sort-complete"><h3>All Sorted!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetSort()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Vocab →</button></div>
     </div></section>
-    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (0)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
+    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (16)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
     </section>
   </main>
@@ -836,7 +836,7 @@
     const matchPairs=[{"left":"пере-","right":"across, re-"},{"left":"про-","right":"through, past"},{"left":"об-","right":"around"}];
     const quizData=[{"question":"Ми ___ вулицю на переході.","options":["перейшли","пройшли"],"correctIndex":0,"explanation":"Cross = пере-"},{"question":"Машина ___ повз нас.","options":["переїхала","проїхала"],"correctIndex":1,"explanation":"Past = про-"},{"question":"Він ___ все місто пішки.","options":["обійшов","пройшов"],"correctIndex":0,"explanation":"Around = об-"},{"question":"Вона ___ книгу з англійської на українську.","options":["переклала","проклала"],"correctIndex":0,"explanation":"Translate = пере-"},{"question":"Ми ___ через ліс.","options":["переходили","проходили"],"correctIndex":1,"explanation":"Through = про-"},{"question":"Він ___ усіх на перегонах.","options":["обігнав","перегнав"],"correctIndex":0,"explanation":"Overtake = об-"}];
     const sortData={"true-friends":["перейти","переїхати","перенести","переплисти"],"false-friends":["пройти","проїхати","пробігти","пролетіти"],"new-letters":["обійти","об'їхати","обігнати","облетіти"]};
-    const vocabData=[];
+    const vocabData=[{"uk":"перейти","translit":"","en":"to cross","note":""},{"uk":"переходити","translit":"","en":"to cross","note":""},{"uk":"переїхати","translit":"","en":"to move, drive across","note":""},{"uk":"переїжджати","translit":"","en":"to move","note":""},{"uk":"перенести","translit":"","en":"to transfer, reschedule","note":""},{"uk":"переносити","translit":"","en":"to transfer","note":""},{"uk":"пройти","translit":"","en":"to pass through","note":""},{"uk":"проходити","translit":"","en":"to pass","note":""},{"uk":"проїхати","translit":"","en":"to drive through","note":""},{"uk":"проїжджати","translit":"","en":"to drive through","note":""},{"uk":"обійти","translit":"","en":"to go around","note":""},{"uk":"обходити","translit":"","en":"to go around","note":""},{"uk":"об'їхати","translit":"","en":"to drive around","note":""},{"uk":"об'їжджати","translit":"","en":"to drive around","note":""},{"uk":"обігнати","translit":"","en":"to overtake","note":""},{"uk":"обганяти","translit":"","en":"to overtake","note":""}];
     const totalSort=12;
     function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
     document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));

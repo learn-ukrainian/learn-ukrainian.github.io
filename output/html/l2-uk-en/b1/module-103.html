@@ -693,7 +693,7 @@ Result = what happens BECAUSE of the action</p>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
-    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (0)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
+    <section id="vocab" class="section"><div class="card"><h3>Vocabulary (9)</h3><div class="vocab-grid" id="vocab-grid"></div></div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('lesson')">← Back</button></div>
     </section>
   </main>
@@ -702,7 +702,7 @@ Result = what happens BECAUSE of the action</p>
     const matchPairs=[];
     const quizData=[{"question":"Я пішов у магазин, щоб ___ хліб.","options":["купити","купив"],"correctIndex":0,"explanation":"After \"щоб\" with same subject, use infinitive."},{"question":"Вона вчиться, щоб ___ іспит.","options":["скласти","складала"],"correctIndex":0,"explanation":"Infinitive follows \"щоб.\""},{"question":"Він говорить тихо, щоб ___ розбудити дитину.","options":["не","ні"],"correctIndex":0,"explanation":"\"Щоб не\" = \"so as not to.\""},{"question":"___ вивчити мову, треба практикуватися.","options":["Щоб","Що"],"correctIndex":0,"explanation":"\"Щоб\" can start a sentence for emphasis."},{"question":"Я зателефонував, ___ запитати про роботу.","options":["щоб","що"],"correctIndex":0,"explanation":"\"Щоб\" introduces purpose."},{"question":"Вона поїхала до Києва, щоб ___ виставку.","options":["відвідати","відвідає"],"correctIndex":0,"explanation":"Infinitive (perfective) after \"щоб.\""}];
     const sortData={};
-    const vocabData=[];
+    const vocabData=[{"uk":"щоб","translit":"","en":"in order to, so that","note":""},{"uk":"мета","translit":"","en":"goal, purpose","note":""},{"uk":"намір","translit":"","en":"intention","note":""},{"uk":"ціль","translit":"","en":"aim, target","note":""},{"uk":"задля","translit":"","en":"for the sake of","note":""},{"uk":"для того щоб","translit":"","en":"in order to","note":""},{"uk":"навіщо","translit":"","en":"why (for what purpose)","note":""},{"uk":"досягти","translit":"","en":"to achieve","note":""},{"uk":"досягати","translit":"","en":"to achieve","note":""}];
     const totalSort=0;
     function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById(id)?.classList.add('active');document.querySelector('[data-section="'+id+'"]')?.classList.add('active');}
     document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>showSection(t.dataset.section)));

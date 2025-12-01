@@ -357,191 +357,212 @@
       {
         "id": "v-m31-001",
         "uk": "мені",
-        "translit": "/meˈnʲi/",
-        "ipa": "to me",
-        "en": "pron",
-        "pos": "-",
-        "gender": "Dat. of я"
+        "translit": "",
+        "ipa": "/meˈnʲi/",
+        "en": "to me",
+        "pos": "pron",
+        "gender": "-",
+        "note": "Dat. of я"
       },
       {
         "id": "v-m31-002",
         "uk": "тобі",
-        "translit": "/toˈbʲi/",
-        "ipa": "to you",
-        "en": "pron",
-        "pos": "-",
-        "gender": "Dat. of ти"
+        "translit": "",
+        "ipa": "/toˈbʲi/",
+        "en": "to you",
+        "pos": "pron",
+        "gender": "-",
+        "note": "Dat. of ти"
       },
       {
         "id": "v-m31-003",
         "uk": "йому",
-        "translit": "/joˈmu/",
-        "ipa": "to him/it",
-        "en": "pron",
-        "pos": "-",
-        "gender": "Dat. of він/воно"
+        "translit": "",
+        "ipa": "/joˈmu/",
+        "en": "to him/it",
+        "pos": "pron",
+        "gender": "-",
+        "note": "Dat. of він/воно"
       },
       {
         "id": "v-m31-004",
         "uk": "їй",
-        "translit": "/jij/",
-        "ipa": "to her",
-        "en": "pron",
-        "pos": "-",
-        "gender": "Dat. of вона"
+        "translit": "",
+        "ipa": "/jij/",
+        "en": "to her",
+        "pos": "pron",
+        "gender": "-",
+        "note": "Dat. of вона"
       },
       {
         "id": "v-m31-005",
         "uk": "нам",
-        "translit": "/nɑm/",
-        "ipa": "to us",
-        "en": "pron",
-        "pos": "-",
-        "gender": "Dat. of ми"
+        "translit": "",
+        "ipa": "/nɑm/",
+        "en": "to us",
+        "pos": "pron",
+        "gender": "-",
+        "note": "Dat. of ми"
       },
       {
         "id": "v-m31-006",
         "uk": "вам",
-        "translit": "/vɑm/",
-        "ipa": "to you",
-        "en": "pron",
-        "pos": "-",
-        "gender": "Dat. of ви"
+        "translit": "",
+        "ipa": "/vɑm/",
+        "en": "to you",
+        "pos": "pron",
+        "gender": "-",
+        "note": "Dat. of ви"
       },
       {
         "id": "v-m31-007",
         "uk": "їм",
-        "translit": "/jim/",
-        "ipa": "to them",
-        "en": "pron",
-        "pos": "-",
-        "gender": "Dat. of вони"
+        "translit": "",
+        "ipa": "/jim/",
+        "en": "to them",
+        "pos": "pron",
+        "gender": "-",
+        "note": "Dat. of вони"
       },
       {
         "id": "v-m31-008",
         "uk": "кому",
-        "translit": "/koˈmu/",
-        "ipa": "to whom",
-        "en": "pron",
-        "pos": "-",
-        "gender": "Dat. question"
+        "translit": "",
+        "ipa": "/koˈmu/",
+        "en": "to whom",
+        "pos": "pron",
+        "gender": "-",
+        "note": "Dat. question"
       },
       {
         "id": "v-m31-009",
         "uk": "дати",
-        "translit": "/ˈdɑtɪ/",
-        "ipa": "to give (pf)",
-        "en": "verb",
-        "pos": "-",
-        "gender": "+ dat"
+        "translit": "",
+        "ipa": "/ˈdɑtɪ/",
+        "en": "to give (pf)",
+        "pos": "verb",
+        "gender": "-",
+        "note": "+ dat"
       },
       {
         "id": "v-m31-010",
         "uk": "казати",
-        "translit": "/kɑˈzɑtɪ/",
-        "ipa": "to tell (impf)",
-        "en": "verb",
-        "pos": "-",
-        "gender": "+ dat"
+        "translit": "",
+        "ipa": "/kɑˈzɑtɪ/",
+        "en": "to tell (impf)",
+        "pos": "verb",
+        "gender": "-",
+        "note": "+ dat"
       },
       {
         "id": "v-m31-011",
         "uk": "сказати",
-        "translit": "/skɑˈzɑtɪ/",
-        "ipa": "to tell (pf)",
-        "en": "verb",
-        "pos": "-",
-        "gender": "+ dat"
+        "translit": "",
+        "ipa": "/skɑˈzɑtɪ/",
+        "en": "to tell (pf)",
+        "pos": "verb",
+        "gender": "-",
+        "note": "+ dat"
       },
       {
         "id": "v-m31-012",
         "uk": "показувати",
-        "translit": "/pokɑˈzuvɑtɪ/",
-        "ipa": "to show (impf)",
-        "en": "verb",
-        "pos": "-",
-        "gender": "+ dat"
+        "translit": "",
+        "ipa": "/pokɑˈzuvɑtɪ/",
+        "en": "to show (impf)",
+        "pos": "verb",
+        "gender": "-",
+        "note": "+ dat"
       },
       {
         "id": "v-m31-013",
         "uk": "показати",
-        "translit": "/pokɑˈzɑtɪ/",
-        "ipa": "to show (pf)",
-        "en": "verb",
-        "pos": "-",
-        "gender": "+ dat"
+        "translit": "",
+        "ipa": "/pokɑˈzɑtɪ/",
+        "en": "to show (pf)",
+        "pos": "verb",
+        "gender": "-",
+        "note": "+ dat"
       },
       {
         "id": "v-m31-014",
         "uk": "допомагати",
-        "translit": "/dopoˈmɑɦɑtɪ/",
-        "ipa": "to help (impf)",
-        "en": "verb",
-        "pos": "-",
-        "gender": "+ dat"
+        "translit": "",
+        "ipa": "/dopoˈmɑɦɑtɪ/",
+        "en": "to help (impf)",
+        "pos": "verb",
+        "gender": "-",
+        "note": "+ dat"
       },
       {
         "id": "v-m31-015",
         "uk": "дзвонити",
-        "translit": "/dzvoˈnɪtɪ/",
-        "ipa": "to call (impf)",
-        "en": "verb",
-        "pos": "-",
-        "gender": "+ dat"
+        "translit": "",
+        "ipa": "/dzvoˈnɪtɪ/",
+        "en": "to call (impf)",
+        "pos": "verb",
+        "gender": "-",
+        "note": "+ dat"
       },
       {
         "id": "v-m31-016",
         "uk": "подзвонити",
-        "translit": "/podzvonɪtɪ/",
-        "ipa": "to call (pf)",
-        "en": "verb",
-        "pos": "-",
-        "gender": "+ dat"
+        "translit": "",
+        "ipa": "/podzvonɪtɪ/",
+        "en": "to call (pf)",
+        "pos": "verb",
+        "gender": "-",
+        "note": "+ dat"
       },
       {
         "id": "v-m31-017",
         "uk": "потрібний",
-        "translit": "/poˈtrʲibnɪj/",
-        "ipa": "needed",
-        "en": "adj",
-        "pos": "m",
-        "gender": "+ dat for person"
+        "translit": "",
+        "ipa": "/poˈtrʲibnɪj/",
+        "en": "needed",
+        "pos": "adj",
+        "gender": "m",
+        "note": "+ dat for person"
       },
       {
         "id": "v-m31-018",
         "uk": "подобатися",
-        "translit": "/podoˈbɑtɪsʲɑ/",
-        "ipa": "to please, like",
-        "en": "verb",
-        "pos": "-",
-        "gender": "+ dat"
+        "translit": "",
+        "ipa": "/podoˈbɑtɪsʲɑ/",
+        "en": "to please, like",
+        "pos": "verb",
+        "gender": "-",
+        "note": "+ dat"
       },
       {
         "id": "v-m31-019",
         "uk": "здаватися",
-        "translit": "/zdɑˈvɑtɪsʲɑ/",
-        "ipa": "to seem",
-        "en": "verb",
-        "pos": "-",
-        "gender": "+ dat"
+        "translit": "",
+        "ipa": "/zdɑˈvɑtɪsʲɑ/",
+        "en": "to seem",
+        "pos": "verb",
+        "gender": "-",
+        "note": "+ dat"
       },
       {
         "id": "v-m31-020",
         "uk": "дарувати",
-        "translit": "/dɑruˈvɑtɪ/",
-        "ipa": "to gift (impf)",
-        "en": "verb",
-        "pos": "-",
-        "gender": "+ dat"
+        "translit": "",
+        "ipa": "/dɑruˈvɑtɪ/",
+        "en": "to gift (impf)",
+        "pos": "verb",
+        "gender": "-",
+        "note": "+ dat"
       },
       {
         "id": "v-m31-021",
         "uk": "подарувати",
-        "translit": "/podɑruˈvɑtɪ/",
-        "ipa": "to gift (pf)",
-        "en": "verb",
-        "pos": "-",
-        "gender": "+ dat"
+        "translit": "",
+        "ipa": "/podɑruˈvɑtɪ/",
+        "en": "to gift (pf)",
+        "pos": "verb",
+        "gender": "-",
+        "note": "+ dat"
       }
     ]
   }

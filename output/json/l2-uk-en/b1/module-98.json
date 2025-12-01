@@ -312,13 +312,38 @@
       "modifiedAt": "2025-12-01T00:00:00Z"
     },
     {
-      "id": "act-uk-B1-98-fillin",
-      "type": "fill-in",
+      "id": "act-uk-B1-98-gapfill",
+      "type": "gap-fill",
       "title": "Dialogue",
-      "description": "A: Я думаю, що всім потрібно вчитися до 30 років.",
+      "description": "A: Я думаю, що всім потрібно вчитися до 30 років. B: ___ (Interesting thought), ___ (however) не всі мають таку можливість. A: ___ (You're right). Але освіта важлива! B: ___ (I agree). Проте форми освіти різні. A: ___ (Exactly)!",
       "content": {
-        "type": "fill-in",
-        "instructions": "A: Я думаю, що всім потрібно вчитися до 30 років."
+        "type": "gap-fill",
+        "instructions": "A: Я думаю, що всім потрібно вчитися до 30 років. B: ___ (Interesting thought), ___ (however) не всі мають таку можливість. A: ___ (You're right). Але освіта важлива! B: ___ (I agree). Проте форми освіти різні. A: ___ (Exactly)!",
+        "text": "A: Я думаю, що всім потрібно вчитися до 30 років.\nB: ___ (Interesting thought), ___ (however) не всі мають таку можливість.\nA: ___ (You're right). Але освіта важлива!\nB: ___ (I agree). Проте форми освіти різні.\nA: ___ (Exactly)!",
+        "blanks": [
+          {
+            "hint": "Interesting thought"
+          },
+          {
+            "hint": "however"
+          },
+          {
+            "hint": "You're right"
+          },
+          {
+            "hint": "I agree"
+          },
+          {
+            "hint": "Exactly"
+          }
+        ],
+        "answers": [
+          "Цікава думка",
+          "проте",
+          "Ви маєте рацію",
+          "Я погоджуюся",
+          "Саме так"
+        ]
       },
       "subject": "language",
       "owner": "curricula-opus",
@@ -341,8 +366,144 @@
     "moduleId": "mod-uk-B1-98",
     "level": "B1",
     "phase": "B1.1",
-    "wordCount": 0,
+    "wordCount": 15,
     "transliterationMode": "none",
-    "words": []
+    "words": [
+      {
+        "id": "v-m98-001",
+        "uk": "згоден",
+        "translit": "",
+        "ipa": "/ˈzɦodɛn/",
+        "en": "agree (m)",
+        "pos": "",
+        "note": "adj"
+      },
+      {
+        "id": "v-m98-002",
+        "uk": "згодна",
+        "translit": "",
+        "ipa": "/ˈzɦodnɑ/",
+        "en": "agree (f)",
+        "pos": "",
+        "note": "adj"
+      },
+      {
+        "id": "v-m98-003",
+        "uk": "погоджуватися",
+        "translit": "",
+        "ipa": "/poɦoˈdʒuvɑtɪsʲɑ/",
+        "en": "to agree",
+        "pos": "",
+        "note": "impf"
+      },
+      {
+        "id": "v-m98-004",
+        "uk": "погодитися",
+        "translit": "",
+        "ipa": "/poɦoˈdɪtɪsʲɑ/",
+        "en": "to agree",
+        "pos": "",
+        "note": "pf"
+      },
+      {
+        "id": "v-m98-005",
+        "uk": "рація",
+        "translit": "",
+        "ipa": "/ˈrɑt͡sʲijɑ/",
+        "en": "right (as in \"you're right\")",
+        "pos": "",
+        "note": "f"
+      },
+      {
+        "id": "v-m98-006",
+        "uk": "сперечатися",
+        "translit": "",
+        "ipa": "/spɛrɛˈt͡ʃɑtɪsʲɑ/",
+        "en": "to argue",
+        "pos": "",
+        "note": "impf"
+      },
+      {
+        "id": "v-m98-007",
+        "uk": "заперечувати",
+        "translit": "",
+        "ipa": "/zɑpɛrɛˈt͡ʃuvɑtɪ/",
+        "en": "to object",
+        "pos": "",
+        "note": "impf"
+      },
+      {
+        "id": "v-m98-008",
+        "uk": "заперечити",
+        "translit": "",
+        "ipa": "/zɑpɛˈrɛt͡ʃɪtɪ/",
+        "en": "to object",
+        "pos": "",
+        "note": "pf"
+      },
+      {
+        "id": "v-m98-009",
+        "uk": "навпаки",
+        "translit": "",
+        "ipa": "/nɑvˈpɑkɪ/",
+        "en": "on the contrary",
+        "pos": "",
+        "note": "adv"
+      },
+      {
+        "id": "v-m98-010",
+        "uk": "натомість",
+        "translit": "",
+        "ipa": "/nɑˈtomʲistʲ/",
+        "en": "instead",
+        "pos": "",
+        "note": "adv"
+      },
+      {
+        "id": "v-m98-011",
+        "uk": "почасти",
+        "translit": "",
+        "ipa": "/poˈt͡ʃɑstɪ/",
+        "en": "partly",
+        "pos": "",
+        "note": "adv"
+      },
+      {
+        "id": "v-m98-012",
+        "uk": "враховувати",
+        "translit": "",
+        "ipa": "/vrɑxoˈvuvɑtɪ/",
+        "en": "to consider, take into account",
+        "pos": "",
+        "note": "impf"
+      },
+      {
+        "id": "v-m98-013",
+        "uk": "врахувати",
+        "translit": "",
+        "ipa": "/vrɑxuˈvɑtɪ/",
+        "en": "to consider",
+        "pos": "",
+        "note": "pf"
+      },
+      {
+        "id": "v-m98-014",
+        "uk": "запропонувати",
+        "translit": "",
+        "ipa": "/zɑproponuˈvɑtɪ/",
+        "en": "to suggest",
+        "pos": "",
+        "note": "pf"
+      },
+      {
+        "id": "v-m98-015",
+        "uk": "пропонувати",
+        "translit": "",
+        "ipa": "/proponuˈvɑtɪ/",
+        "en": "to suggest",
+        "pos": "",
+        "note": "impf"
+      }
+    ]
   }
 }
