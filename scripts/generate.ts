@@ -95,6 +95,7 @@ interface ParsedModule {
   activities: Activity[];
   vocabulary: VocabWord[];
   letterGroups?: LetterGroups;
+  rawMarkdown?: string;  // For B2+ modules with free-form content
 }
 
 // ============================================================================
@@ -527,7 +528,18 @@ function parseModule(content: string): ParsedModule {
   const { vocabulary } = parseVocabulary(body3, frontmatter.module);
   const letterGroups = parseLetterGroups(body3);
 
-  return { frontmatter, phases, activities, vocabulary, letterGroups };
+  // For B2+ modules without structured phases, store raw markdown content
+  // Extract content between frontmatter and vocabulary/summary sections
+  let rawMarkdown: string | undefined;
+  if (phases.length === 0) {
+    // Remove vocabulary and summary sections to get main content
+    const contentMatch = body.match(/^([\s\S]*?)(?=\n# (?:Словник|Vocabulary|Підсумок|Summary)|$)/);
+    if (contentMatch && contentMatch[1].trim()) {
+      rawMarkdown = contentMatch[1].trim();
+    }
+  }
+
+  return { frontmatter, phases, activities, vocabulary, letterGroups, rawMarkdown };
 }
 
 // ============================================================================
@@ -535,7 +547,7 @@ function parseModule(content: string): ParsedModule {
 // ============================================================================
 
 function generateVibeJSON(parsed: ParsedModule, langPair: string): any {
-  const { frontmatter: fm, phases, activities, vocabulary, letterGroups } = parsed;
+  const { frontmatter: fm, phases, activities, vocabulary, letterGroups, rawMarkdown } = parsed;
   const now = new Date().toISOString().split('T')[0] + 'T00:00:00Z';
 
   // Add activity references to phases
@@ -581,6 +593,7 @@ function generateVibeJSON(parsed: ParsedModule, langPair: string): any {
       createdAt: now,
       modifiedAt: now,
       phases: phasesWithActivities,
+      rawMarkdown,  // For B2+ modules with free-form content
     },
     activities: activities.map(a => ({
       ...a,
@@ -640,6 +653,11 @@ function generateHTML(vibeJSON: any, nav: NavInfo): string {
         return { title, content };
       })
     );
+
+  // For B2+ modules: use rawMarkdown if no structured phases
+  const rawMarkdownHtml = lesson.rawMarkdown
+    ? mdConverter.makeHtml(lesson.rawMarkdown)
+    : '';
 
   // Navigation links
   const prevLink = nav.prevModule
@@ -773,7 +791,9 @@ function generateHTML(vibeJSON: any, nav: NavInfo): string {
         <div class="letter-group false-friends"><h4>⚠ False Friends</h4><p class="letters">${vocabulary.letterGroups.falseFriends?.join(' ')}</p></div>
         <div class="letter-group new-letters"><h4>★ New Letters</h4><p class="letters">${vocabulary.letterGroups.newLetters?.join(' ')}</p></div>
       </div></div>` : ''}
-      <div class="card"><h3>Theory</h3>${theoryContent.map((t: any) => `<div class="canvas-note"><h4>${t.title}</h4><div class="md-content">${mdConverter.makeHtml(t.content)}</div></div>`).join('')}</div>
+      <div class="card"><h3>Theory</h3>${theoryContent.length > 0
+        ? theoryContent.map((t: any) => `<div class="canvas-note"><h4>${t.title}</h4><div class="md-content">${mdConverter.makeHtml(t.content)}</div></div>`).join('')
+        : rawMarkdownHtml ? `<div class="md-content">${rawMarkdownHtml}</div>` : ''}</div>
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('${matchActivity ? 'match' : quizActivity ? 'quiz' : 'vocab'}')">Start →</button></div>
     </section>
     ${matchActivity ? `<section id="match" class="section"><div class="card"><h3>${matchActivity.title}</h3>
