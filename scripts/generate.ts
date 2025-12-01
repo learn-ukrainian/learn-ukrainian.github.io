@@ -89,6 +89,9 @@ interface LetterGroups {
   newLetters: string[];
 }
 
+// Image lookup map for vocabulary images
+type ImageLookupMap = Map<string, string>;
+
 // For B1+ immersive modules with free-form content
 interface ImmersiveSection {
   id: string;
@@ -136,6 +139,85 @@ function padNumber(n: number, len: number = 2): string {
 function generateId(prefix: string, level: string, moduleNum: number, suffix?: string): string {
   const base = `${prefix}-uk-${level}-${padNumber(moduleNum)}`;
   return suffix ? `${base}-${suffix}` : base;
+}
+
+/**
+ * Load vocabulary.csv and build a lookup map for image URLs.
+ * Maps both Ukrainian lemma and English translation to image URL.
+ */
+async function loadImageLookupMap(langPair: string): Promise<ImageLookupMap> {
+  const map: ImageLookupMap = new Map();
+  const csvPath = join(CURRICULUM_DIR, langPair, 'vocabulary.csv');
+
+  if (!existsSync(csvPath)) {
+    return map;
+  }
+
+  try {
+    const csvContent = await readFile(csvPath, 'utf-8');
+    const lines = csvContent.split('\n');
+
+    if (lines.length < 2) return map;
+
+    // Parse header to find column indices
+    const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
+    const lemmaCol = headers.indexOf('lemma');
+    const englishCol = headers.indexOf('english');
+    const imageCol = headers.indexOf('image_url');
+
+    if (imageCol < 0) return map; // No image column
+
+    // Parse each row
+    for (let i = 1; i < lines.length; i++) {
+      const line = lines[i].trim();
+      if (!line) continue;
+
+      // Simple CSV parsing (handles quoted fields)
+      const cells: string[] = [];
+      let current = '';
+      let inQuotes = false;
+
+      for (const char of line) {
+        if (char === '"') {
+          inQuotes = !inQuotes;
+        } else if (char === ',' && !inQuotes) {
+          cells.push(current.trim());
+          current = '';
+        } else {
+          current += char;
+        }
+      }
+      cells.push(current.trim());
+
+      const imageUrl = cells[imageCol];
+      if (imageUrl) {
+        // Map both lemma and english to the image URL
+        if (lemmaCol >= 0 && cells[lemmaCol]) {
+          map.set(cells[lemmaCol].toLowerCase(), imageUrl);
+        }
+        if (englishCol >= 0 && cells[englishCol]) {
+          map.set(cells[englishCol].toLowerCase(), imageUrl);
+        }
+      }
+    }
+  } catch (error) {
+    console.warn(`  ⚠ Could not load vocabulary.csv for images:`, error);
+  }
+
+  return map;
+}
+
+/**
+ * Find image URL for text by checking if any vocabulary word is present.
+ */
+function findImageForText(text: string, imageMap: ImageLookupMap): string | undefined {
+  const textLower = text.toLowerCase();
+  for (const [word, url] of imageMap) {
+    if (textLower.includes(word)) {
+      return url;
+    }
+  }
+  return undefined;
 }
 
 /**
@@ -343,7 +425,7 @@ function parsePhases(body: string, moduleNum: number): { phases: LessonPhase[]; 
   return { phases, restBody };
 }
 
-function parseActivities(body: string, level: string, moduleNum: number): { activities: Activity[]; restBody: string } {
+function parseActivities(body: string, level: string, moduleNum: number, imageMap: ImageLookupMap = new Map()): { activities: Activity[]; restBody: string } {
   const activities: Activity[] = [];
 
   // Find "# Activities" or "# Вправи" section
@@ -389,7 +471,15 @@ function parseActivities(body: string, level: string, moduleNum: number): { acti
           const rows = tableMatch[1].trim().split('\n');
           actContent.pairs = rows.map(row => {
             const cells = row.split('|').filter(c => c.trim());
-            return { left: cells[0]?.trim() || '', right: cells[1]?.trim() || '' };
+            const left = cells[0]?.trim() || '';
+            const right = cells[1]?.trim() || '';
+            const pair: any = { left, right };
+            // Add image URLs if vocabulary has them
+            const leftImage = imageMap.get(left.toLowerCase());
+            const rightImage = imageMap.get(right.toLowerCase());
+            if (leftImage) pair.leftImageUrl = leftImage;
+            if (rightImage) pair.rightImageUrl = rightImage;
+            return pair;
           });
           actContent.shuffleRight = true;
         }
@@ -419,12 +509,16 @@ function parseActivities(body: string, level: string, moduleNum: number): { acti
           const expMatch = optionsBlock.match(/>\s+(.+)$/m);
           if (expMatch) explanation = expMatch[1].trim();
 
-          questions.push({
+          // Add image URL if found for question text
+          const questionImage = findImageForText(questionText, imageMap);
+          const q: any = {
             question: questionText,
             options,
             correctIndex,
             explanation,
-          });
+          };
+          if (questionImage) q.imageUrl = questionImage;
+          questions.push(q);
         }
 
         actContent.questions = questions;
@@ -439,7 +533,15 @@ function parseActivities(body: string, level: string, moduleNum: number): { acti
         for (const gMatch of groupMatches) {
           const name = gMatch[1].trim();
           const itemsBlock = gMatch[2];
-          const items = itemsBlock.match(/-\s+(.+)/g)?.map(m => m.replace(/^-\s+/, '').trim()) || [];
+          const rawItems = itemsBlock.match(/-\s+(.+)/g)?.map(m => m.replace(/^-\s+/, '').trim()) || [];
+          // Convert items to objects if they have images
+          const items = rawItems.map(item => {
+            const itemImage = imageMap.get(item.toLowerCase());
+            if (itemImage) {
+              return { text: item, imageUrl: itemImage };
+            }
+            return item; // Keep as string if no image
+          });
           groups.push({ name, items });
         }
 
@@ -649,10 +751,10 @@ function isImmersiveModule(level: string, phases: LessonPhase[]): boolean {
   return false;
 }
 
-function parseModule(content: string): ParsedModule {
+function parseModule(content: string, imageMap: ImageLookupMap = new Map()): ParsedModule {
   const { frontmatter, body } = parseFrontmatter(content);
   const { phases, restBody: body2 } = parsePhases(body, frontmatter.module);
-  const { activities, restBody: body3 } = parseActivities(body2, frontmatter.level, frontmatter.module);
+  const { activities, restBody: body3 } = parseActivities(body2, frontmatter.level, frontmatter.module, imageMap);
   const { vocabulary } = parseVocabulary(body3, frontmatter.module);
   const letterGroups = parseLetterGroups(body3);
 
@@ -1378,6 +1480,12 @@ async function main() {
       .filter(f => f.startsWith('module-') && f.endsWith('.md'))
       .sort();
 
+    // Load image lookup map for this language pair
+    const imageMap = await loadImageLookupMap(langPair);
+    if (imageMap.size > 0) {
+      console.log(`  📷 Loaded ${imageMap.size} image URLs from vocabulary.csv`);
+    }
+
     // First pass: parse all modules and collect info
     const modules: ModuleInfo[] = [];
 
@@ -1388,7 +1496,7 @@ async function main() {
       try {
         const mdPath = join(modulesDir, mdFile);
         const mdContent = await readFile(mdPath, 'utf-8');
-        const parsed = parseModule(mdContent);
+        const parsed = parseModule(mdContent, imageMap);
         const vibeJSON = generateVibeJSON(parsed, langPair);
 
         modules.push({
