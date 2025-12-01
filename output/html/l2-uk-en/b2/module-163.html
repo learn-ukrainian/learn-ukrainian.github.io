@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,7 +136,38 @@
         <p style="color:var(--text-muted)">Економіка та бізнес</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Економічна новина</h4><div class="md-content"><p>Прочитайте заголовок із реального українського медіа:</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Вступ</li><li class="toc-item" data-target="section-1">Зміст уроку</li><li class="toc-item" data-target="section-2">Вправи</li><li class="toc-item" data-target="section-3">Словник</li><li class="toc-item" data-target="section-4">Підсумок</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Вступ</h3>
+          <span class="section-type intro">intro</span>
+        </div>
+        <div class="section-body md-content"><p>1991 рік. Перші місяці незалежності. В українських магазинах — порожні полиці. Люди стоять у чергах за хлібом. <strong>Інфляція</strong> сягає тисяч відсотків на рік. Замість грошей — «купони», які знецінюються щодня. Зарплату виплачують консервами, цукром, горілкою — бо гроші втрачають вартість швидше, ніж їх встигаєш витратити.</p>
+<p>Це був колапс радянської економіки. Система, де держава вирішувала, що виробляти, скільки платити, за якою <strong>ціною</strong> продавати — розсипалася за лічені місяці. Україна опинилася в економічному хаосі без власної <strong>валюти</strong>, без <strong>банківської системи</strong>, без досвіду <strong>ринкової економіки</strong>.</p>
+<p>А тепер перемотаємо на 2023 рік. Друга річниця повномасштабної війни. Російські ракети щодня б'ють по інфраструктурі. Мільйони українців виїхали за кордон. Третина економіки окупована або зруйнована. І що? <strong>ВВП</strong> падає, але не катастрофічно. <strong>Гривня</strong> стабільна (фіксований <strong>курс</strong>). Магазини повні. Зарплати виплачують вчасно. <strong>Інфляція</strong> під контролем.</p>
+<p>Як це можливо?</p>
+<p>Відповідь — у трансформації, яку Україна пройшла за 30 років. Від хаосу 1990-х через кризи 1998, 2008, 2014 років — до однієї з найстійкіших економік у світі. Не найбагатшої — але найстійкішої. Війна це довела.</p>
+<p>Центральний банк — <strong>Національний банк України</strong> (НБУ) — навчився керувати кризами. У 2022 році, за два дні до вторгнення, банки отримали вказівку: готуйтеся. Коли почалася війна, система продовжила працювати. Люди знімали гроші з банкоматів під обстрілами. Бізнеси переказували <strong>кредити</strong>. Держава платила зарплати військовим і пенсіонерам.</p>
+<p>А ще — IT. Український IT-сектор став феноменом. 300 000 спеціалістів. $8 мільярдів експорту послуг щороку. <strong>Компанії</strong>, що працюють на весь світ — від Кремнієвої долини до Токіо. Grammarly, GitLab, Firefly Aerospace — всі з українським корінням. Це економіка знань, яка не залежить від території. Навіть під ракетами програмісти працюють.</p>
+<p>І, звісно, агро. Україна — один із найбільших <strong>експортерів</strong> зерна у світі. «Житниця Європи» — не метафора. Чорноземи, яким немає рівних. Зернові, олія, яйця — все це йде на <strong>експорт</strong>. Коли Росія заблокувала порти, світ зрозумів: українське зерно — це глобальна продовольча безпека.</p>
+<p>У цьому модулі ви опануєте лексику, яка дозволить читати фінансові новини, розуміти бізнес-контракти та обговорювати економіку на рівні фахівця.</p>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Зміст уроку</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Розминка</h2>
+<h3 id="-1">Економічна новина</h3>
+<p>Прочитайте заголовок із реального українського медіа:</p>
 <blockquote>
   <p>«НБУ зберіг облікову ставку на рівні 13%. ВВП зріс на 5,3% за рік. Інфляція сповільнилася до 4,8%. Курс гривні залишається фіксованим на рівні 41,25 грн/$»</p>
 </blockquote>
@@ -131,7 +180,958 @@
 <blockquote>
   <p><strong>Чи знали ви?</strong></p>
   <p><strong>Облікова ставка</strong> — головний інструмент НБУ для контролю інфляції. Коли ставка висока (25% у 2022 році), кредити дорогі, люди менше витрачають, ціни стабілізуються. Коли ставка низька — економіка зростає, але й інфляція може піти вгору. Баланс — мистецтво центрального банку.</p>
-</blockquote></div></div></div>
+</blockquote>
+<hr />
+<h2 id="-2">Презентація</h2>
+<h3 id="-3">Макроекономіка</h3>
+<p>Макроекономіка — це економіка країни в цілому. Великі цифри, великі тренди.</p>
+<table>
+<thead>
+<tr>
+<th>Термін</th>
+<th>Переклад</th>
+<th>Пояснення</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>економіка</td>
+<td>economy</td>
+<td>Система виробництва та споживання</td>
+</tr>
+<tr>
+<td>ВВП (валовий внутрішній продукт)</td>
+<td>GDP</td>
+<td>Загальна вартість усього, що країна виробляє за рік</td>
+</tr>
+<tr>
+<td>інфляція</td>
+<td>inflation</td>
+<td>Зростання цін (гроші втрачають вартість)</td>
+</tr>
+<tr>
+<td>дефляція</td>
+<td>deflation</td>
+<td>Падіння цін (рідко, але небезпечно)</td>
+</tr>
+<tr>
+<td>безробіття</td>
+<td>unemployment</td>
+<td>Відсоток людей без роботи</td>
+</tr>
+<tr>
+<td>зростання</td>
+<td>growth</td>
+<td>ВВП збільшується</td>
+</tr>
+<tr>
+<td>спад / рецесія</td>
+<td>recession</td>
+<td>ВВП падає два квартали поспіль</td>
+</tr>
+<tr>
+<td>криза</td>
+<td>crisis</td>
+<td>Серйозні економічні проблеми</td>
+</tr>
+<tr>
+<td>бюджет</td>
+<td>budget</td>
+<td>План доходів і витрат держави</td>
+</tr>
+<tr>
+<td>дефіцит</td>
+<td>deficit</td>
+<td>Витрати більші за доходи</td>
+</tr>
+<tr>
+<td>профіцит</td>
+<td>surplus</td>
+<td>Доходи більші за витрати</td>
+</tr>
+<tr>
+<td>державний борг</td>
+<td>national debt</td>
+<td>Скільки держава винна</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p><strong>Міф vs Факт</strong></p>
+  <p>❌ <strong>Міф:</strong> Інфляція — це завжди погано.</p>
+  <p>✅ <strong>Факт:</strong> Невелика інфляція (2-5%) — норма і навіть корисна. Вона стимулює людей витрачати гроші (бо завтра вони будуть вартувати менше), а це підтримує економіку. Проблема — гіперінфляція, як в Україні 1990-х або Зімбабве 2000-х, коли ціни зростають на тисячі відсотків.</p>
+</blockquote>
+<hr />
+<h3 id="-4">Фінанси та банківська система</h3>
+<table>
+<thead>
+<tr>
+<th>Термін</th>
+<th>Переклад</th>
+<th>Контекст</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>банк</td>
+<td>bank</td>
+<td>комерційний / державний банк</td>
+</tr>
+<tr>
+<td>Національний банк (НБУ)</td>
+<td>National Bank</td>
+<td>Центральний банк України</td>
+</tr>
+<tr>
+<td>відсоткова ставка</td>
+<td>interest rate</td>
+<td>ставка за кредитом</td>
+</tr>
+<tr>
+<td>облікова ставка</td>
+<td>discount rate</td>
+<td>ставка НБУ</td>
+</tr>
+<tr>
+<td>кредит</td>
+<td>loan, credit</td>
+<td>взяти кредит у банку</td>
+</tr>
+<tr>
+<td>депозит</td>
+<td>deposit</td>
+<td>покласти гроші на депозит</td>
+</tr>
+<tr>
+<td>валюта</td>
+<td>currency</td>
+<td>іноземна валюта</td>
+</tr>
+<tr>
+<td>обмінний курс</td>
+<td>exchange rate</td>
+<td>курс гривні до долара</td>
+</tr>
+<tr>
+<td>гривня (₴)</td>
+<td>hryvnia</td>
+<td>національна валюта України</td>
+</tr>
+<tr>
+<td>інвестиція</td>
+<td>investment</td>
+<td>залучити інвестиції</td>
+</tr>
+<tr>
+<td>акція</td>
+<td>stock, share</td>
+<td>купити акції компанії</td>
+</tr>
+<tr>
+<td>облігація</td>
+<td>bond</td>
+<td>державні облігації</td>
+</tr>
+<tr>
+<td>біржа</td>
+<td>stock exchange</td>
+<td>торгувати на біржі</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Ключові дієслова фінансів:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Дієслово</th>
+<th>Значення</th>
+<th>Приклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>інвестувати</strong></td>
+<td>to invest</td>
+<td>інвестувати в стартап</td>
+</tr>
+<tr>
+<td><strong>кредитувати</strong></td>
+<td>to lend</td>
+<td>банк кредитує бізнес</td>
+</tr>
+<tr>
+<td><strong>позичати</strong></td>
+<td>to borrow</td>
+<td>позичати гроші</td>
+</tr>
+<tr>
+<td><strong>заробляти</strong></td>
+<td>to earn</td>
+<td>заробляти на експорті</td>
+</tr>
+<tr>
+<td><strong>витрачати</strong></td>
+<td>to spend</td>
+<td>витрачати на оборону</td>
+</tr>
+<tr>
+<td><strong>економити</strong></td>
+<td>to save</td>
+<td>економити ресурси</td>
+</tr>
+<tr>
+<td><strong>зростати</strong></td>
+<td>to grow</td>
+<td>економіка зростає</td>
+</tr>
+<tr>
+<td><strong>падати</strong></td>
+<td>to fall</td>
+<td>курс падає</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p><strong>Чи знали ви?</strong></p>
+  <p><strong>Гривня</strong> — одна з найстаріших валют Європи за назвою. У Київській Русі гривнею називали срібний зливок вагою близько 200 грамів. Сучасну гривню введено в 1996 році замість «купоно-карбованця». Курс при введенні: 1,76 грн за долар. Назву «гривня» запропонував історик Михайло Грушевський ще в 1918 році для валюти УНР.</p>
+</blockquote>
+<hr />
+<h3 id="-5">Бізнес-структури</h3>
+<table>
+<thead>
+<tr>
+<th>Термін</th>
+<th>Переклад</th>
+<th>Особливості</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>підприємство</td>
+<td>enterprise</td>
+<td>загальна назва</td>
+</tr>
+<tr>
+<td>компанія</td>
+<td>company</td>
+<td>середній і великий бізнес</td>
+</tr>
+<tr>
+<td>фірма</td>
+<td>firm</td>
+<td>часто — юридичні, консалтингові</td>
+</tr>
+<tr>
+<td>корпорація</td>
+<td>corporation</td>
+<td>великий бізнес, акціонерний</td>
+</tr>
+<tr>
+<td>стартап</td>
+<td>startup</td>
+<td>новий інноваційний бізнес</td>
+</tr>
+<tr>
+<td>підприємець</td>
+<td>entrepreneur</td>
+<td>засновник бізнесу</td>
+</tr>
+<tr>
+<td>власник</td>
+<td>owner</td>
+<td>володіє компанією</td>
+</tr>
+<tr>
+<td>партнер</td>
+<td>partner</td>
+<td>співвласник</td>
+</tr>
+<tr>
+<td>конкурент</td>
+<td>competitor</td>
+<td>інша компанія на ринку</td>
+</tr>
+<tr>
+<td>клієнт</td>
+<td>client</td>
+<td>замовник послуг</td>
+</tr>
+<tr>
+<td>постачальник</td>
+<td>supplier</td>
+<td>хто постачає товари/сировину</td>
+</tr>
+<tr>
+<td>споживач</td>
+<td>consumer</td>
+<td>кінцевий покупець</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Форми бізнесу в Україні:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Скорочення</th>
+<th>Повна назва</th>
+<th>Переклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>ФОП</strong></td>
+<td>Фізична особа-підприємець</td>
+<td>Sole proprietor</td>
+</tr>
+<tr>
+<td><strong>ТОВ</strong></td>
+<td>Товариство з обмеженою відповідальністю</td>
+<td>LLC</td>
+</tr>
+<tr>
+<td><strong>АТ</strong></td>
+<td>Акціонерне товариство</td>
+<td>Joint-stock company</td>
+</tr>
+<tr>
+<td><strong>ПП</strong></td>
+<td>Приватне підприємство</td>
+<td>Private enterprise</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p><strong>Чи знали ви?</strong></p>
+  <p><strong>ФОП</strong> — найпопулярніша форма бізнесу в Україні. Більше 2 мільйонів ФОПів! Спрощена система оподаткування робить її привабливою для малого бізнесу та фрілансерів. Багато IT-спеціалістів працюють як ФОПи. Це пояснює, чому український IT-сектор такий конкурентний — низькі податки + високий рівень освіти.</p>
+</blockquote>
+<hr />
+<h3 id="-6">Торгівля та експорт</h3>
+<table>
+<thead>
+<tr>
+<th>Термін</th>
+<th>Переклад</th>
+<th>Контекст</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ринок</td>
+<td>market</td>
+<td>внутрішній / зовнішній ринок</td>
+</tr>
+<tr>
+<td>торгівля</td>
+<td>trade</td>
+<td>міжнародна торгівля</td>
+</tr>
+<tr>
+<td>імпорт</td>
+<td>import</td>
+<td>імпорт товарів</td>
+</tr>
+<tr>
+<td>експорт</td>
+<td>export</td>
+<td>експорт зерна</td>
+</tr>
+<tr>
+<td>товар</td>
+<td>goods, product</td>
+<td>експортний товар</td>
+</tr>
+<tr>
+<td>послуга</td>
+<td>service</td>
+<td>IT-послуги</td>
+</tr>
+<tr>
+<td>ціна</td>
+<td>price</td>
+<td>ціна товару</td>
+</tr>
+<tr>
+<td>вартість</td>
+<td>cost, value</td>
+<td>загальна вартість</td>
+</tr>
+<tr>
+<td>знижка</td>
+<td>discount</td>
+<td>знижка 20%</td>
+</tr>
+<tr>
+<td>прибуток</td>
+<td>profit</td>
+<td>отримати прибуток</td>
+</tr>
+<tr>
+<td>збиток</td>
+<td>loss</td>
+<td>зазнати збитків</td>
+</tr>
+<tr>
+<td>оборот</td>
+<td>turnover</td>
+<td>річний оборот компанії</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p><strong>Міф vs Факт</strong></p>
+  <p>❌ <strong>Міф:</strong> Україна експортує тільки зерно і метал.</p>
+  <p>✅ <strong>Факт:</strong> Структура українського експорту змінилася. У 2023 році IT-послуги ($7+ млрд) обігнали металургію. Топ-експорт: зернові та олія (40%), IT-послуги (15%), метали (10%), хімія (8%). Україна — третій у світі експортер кукурудзи та соняшникової олії (№1 у світі!).</p>
+</blockquote>
+<hr />
+<h3 id="-7">Переговори та контракти</h3>
+<table>
+<thead>
+<tr>
+<th>Термін</th>
+<th>Переклад</th>
+<th>Контекст</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>переговори</td>
+<td>negotiations</td>
+<td>вести переговори</td>
+</tr>
+<tr>
+<td>контракт</td>
+<td>contract</td>
+<td>підписати контракт</td>
+</tr>
+<tr>
+<td>угода</td>
+<td>deal, agreement</td>
+<td>укласти угоду</td>
+</tr>
+<tr>
+<td>умови</td>
+<td>terms</td>
+<td>умови контракту</td>
+</tr>
+<tr>
+<td>компроміс</td>
+<td>compromise</td>
+<td>знайти компроміс</td>
+</tr>
+<tr>
+<td>пропозиція</td>
+<td>proposal, offer</td>
+<td>комерційна пропозиція</td>
+</tr>
+<tr>
+<td>домовленість</td>
+<td>agreement</td>
+<td>досягти домовленості</td>
+</tr>
+<tr>
+<td>підписання</td>
+<td>signing</td>
+<td>церемонія підписання</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Фрази для бізнес-переговорів:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Функція</th>
+<th>Фраза</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Пропозиція</td>
+<td>Ми хотіли б запропонувати…</td>
+</tr>
+<tr>
+<td>Умова</td>
+<td>За умови, що…</td>
+</tr>
+<tr>
+<td>Згода</td>
+<td>Ми згодні на ваші умови.</td>
+</tr>
+<tr>
+<td>Незгода</td>
+<td>На жаль, ми не можемо прийняти цю пропозицію.</td>
+</tr>
+<tr>
+<td>Компроміс</td>
+<td>Давайте знайдемо компроміс.</td>
+</tr>
+<tr>
+<td>Уточнення</td>
+<td>Чи могли б ви уточнити деталі?</td>
+</tr>
+<tr>
+<td>Підсумок</td>
+<td>Отже, ми домовилися про…</td>
+</tr>
+<tr>
+<td>Завершення</td>
+<td>Дякуємо за продуктивну зустріч.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="-8">Економіка війни</h3>
+<p>Війна 2022+ створила унікальну економічну ситуацію.</p>
+<table>
+<thead>
+<tr>
+<th>Термін</th>
+<th>Переклад</th>
+<th>Контекст</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>воєнний стан</td>
+<td>martial law</td>
+<td>економіка в умовах воєнного стану</td>
+</tr>
+<tr>
+<td>оборонний бюджет</td>
+<td>defense budget</td>
+<td>50%+ бюджету — на оборону</td>
+</tr>
+<tr>
+<td>санкції</td>
+<td>sanctions</td>
+<td>санкції проти Росії</td>
+</tr>
+<tr>
+<td>міжнародна допомога</td>
+<td>international aid</td>
+<td>фінансова допомога ЄС/США</td>
+</tr>
+<tr>
+<td>відбудова</td>
+<td>reconstruction</td>
+<td>план відбудови України</td>
+</tr>
+<tr>
+<td>репарації</td>
+<td>reparations</td>
+<td>відшкодування від Росії</td>
+</tr>
+<tr>
+<td>військові облігації</td>
+<td>war bonds</td>
+<td>українці купують облігації</td>
+</tr>
+<tr>
+<td>резерви</td>
+<td>reserves</td>
+<td>валютні резерви НБУ</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p><strong>Чи знали ви?</strong></p>
+  <p><strong>Військові облігації</strong> (ОВДП) — спосіб, як звичайні українці фінансують оборону. Купуєш облігацію за 1000 грн — держава використовує гроші на армію — через рік отримуєш 1000 грн + відсотки. За перші 2 роки війни українці купили військових облігацій на понад 150 мільярдів гривень. Це патріотизм, який можна виміряти.</p>
+</blockquote>
+<hr />
+<h3 id="diia">Diia: Цифрова економіка</h3>
+<p>Україна — світовий лідер цифровізації державних послуг.</p>
+<table>
+<thead>
+<tr>
+<th>Термін</th>
+<th>Переклад</th>
+<th>У Diia</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>електронний підпис</td>
+<td>digital signature</td>
+<td>Diia.Підпис</td>
+</tr>
+<tr>
+<td>електронний документ</td>
+<td>digital document</td>
+<td>паспорт у смартфоні</td>
+</tr>
+<tr>
+<td>онлайн-послуга</td>
+<td>online service</td>
+<td>відкрити ФОП за 10 хвилин</td>
+</tr>
+<tr>
+<td>цифровізація</td>
+<td>digitalization</td>
+<td>«держава в смартфоні»</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p><strong>Чи знали ви?</strong></p>
+  <p>Додаток <strong>Diia</strong> (укр. «дія») — унікальний український продукт, який копіюють інші країни. Цифровий паспорт, права водія, COVID-сертифікат, реєстрація бізнесу, оплата штрафів — все в одному додатку. Під час війни Diia дозволила мільйонам біженців підтвердити особу за кордоном. Естонія, визнаний світовий лідер e-government, вивчає український досвід.</p>
+</blockquote>
+<hr />
+<h2 id="-9">Практика</h2>
+<h3 id="1">Вправа 1: Розшифруйте терміни</h3>
+<p>Що означають ці скорочення?</p>
+<ol>
+<li>ВВП → <strong>Валовий внутрішній продукт</strong></li>
+<li>НБУ → <strong>Національний банк України</strong></li>
+<li>ФОП → <strong>Фізична особа-підприємець</strong></li>
+<li>ТОВ → <strong>Товариство з обмеженою відповідальністю</strong></li>
+<li>ОВДП → <strong>Облігації внутрішньої державної позики</strong></li>
+</ol>
+<h3 id="2">Вправа 2: Заповніть пропуски</h3>
+<ol>
+<li><p>Курс гривні ___ (зростати/падати) на 2%.<br />
+→ <strong>зріс / впав</strong></p></li>
+<li><p>IT-компанія ___ (залучити) 10 мільйонів інвестицій.<br />
+→ <strong>залучила</strong></p></li>
+<li><p>НБУ ___ (зберегти) облікову ставку.<br />
+→ <strong>зберіг</strong></p></li>
+<li><p>Сторони ___ (підписати) контракт на 3 роки.<br />
+→ <strong>підписали</strong></p></li>
+<li><p>Економіка ___ (зростати) п'ятий квартал поспіль.<br />
+→ <strong>зростає</strong></p></li>
+</ol>
+<h3 id="3">Вправа 3: Перекладіть</h3>
+<ol>
+<li><p>The exchange rate fell by 5%.<br />
+→ <strong>Обмінний курс впав на 5%.</strong></p></li>
+<li><p>The company attracted foreign investment.<br />
+→ <strong>Компанія залучила іноземні інвестиції.</strong></p></li>
+<li><p>Inflation slowed to 5% per year.<br />
+→ <strong>Інфляція сповільнилася до 5% на рік.</strong></p></li>
+<li><p>We agreed on the terms of the contract.<br />
+→ <strong>Ми погодили умови контракту. / Ми домовилися про умови контракту.</strong></p></li>
+<li><p>Ukraine is one of the largest grain exporters.<br />
+→ <strong>Україна — один із найбільших експортерів зерна.</strong></p></li>
+</ol>
+<hr />
+<h2 id="-10">Продукція</h2>
+<h3 id="-11">Рольова гра: Інвестиційні переговори</h3>
+<p>Проведіть переговори:</p>
+<p><strong>Сторона A:</strong> Український IT-стартап, шукає інвестора</p>
+<ul>
+<li>Продукт: AI для перекладу</li>
+<li>Команда: 15 осіб</li>
+<li>Потреба: $2 мільйони на розвиток</li>
+</ul>
+<p><strong>Сторона B:</strong> Міжнародний інвестиційний фонд</p>
+<ul>
+<li>Бюджет: є</li>
+<li>Питання: частка, умови виходу, ринки</li>
+</ul>
+<p><strong>Використовуйте фрази:</strong></p>
+<ul>
+<li>Ми хотіли б запропонувати…</li>
+<li>За умови, що…</li>
+<li>Чи могли б ви уточнити…?</li>
+<li>Давайте знайдемо компроміс.</li>
+</ul>
+<h3 id="-12">Дискусія</h3>
+<p>Обговоріть у групі:</p>
+<ol>
+<li>Чому український IT-сектор такий успішний?</li>
+<li>Як війна вплинула на економіку України?</li>
+<li>«Diia — найкращий цифровий продукт у світі.» Погоджуєтесь?</li>
+</ol>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Вправи</h3>
+          <span class="section-type practice">practice</span>
+        </div>
+        <div class="section-body md-content"><h2 id="quiz">quiz: Економіка та бізнес</h2>
+<blockquote>
+  <p>Виберіть правильну відповідь.</p>
+</blockquote>
+<ol>
+<li>«ВВП» означає:</li>
+</ol>
+<ul>
+<li>[x] валовий внутрішній продукт</li>
+<li>[ ] валютний внутрішній продукт</li>
+</ul>
+<blockquote>
+  <p>GDP = Gross Domestic Product.</p>
+</blockquote>
+<ol start="2">
+<li>«Інфляція» — це:</li>
+</ol>
+<ul>
+<li>[x] зростання цін</li>
+<li>[ ] падіння цін</li>
+</ul>
+<blockquote>
+  <p>Інфляція = ціни ростуть, гроші втрачають вартість.</p>
+</blockquote>
+<ol start="3">
+<li>Що таке НБУ?</li>
+</ol>
+<ul>
+<li>[x] Національний банк України (центральний банк)</li>
+<li>[ ] Найбільший банк України</li>
+</ul>
+<blockquote>
+  <p>НБУ — центральний банк, регулює всю банківську систему.</p>
+</blockquote>
+<ol start="4">
+<li>«Акція» — це:</li>
+</ol>
+<ul>
+<li>[x] частка власності компанії</li>
+<li>[ ] банківський кредит</li>
+</ul>
+<blockquote>
+  <p>Акція = stock, share — володієш часткою компанії.</p>
+</blockquote>
+<ol start="5">
+<li>ФОП — це:</li>
+</ol>
+<ul>
+<li>[x] фізична особа-підприємець</li>
+<li>[ ] федерація об'єднаних підприємців</li>
+</ul>
+<blockquote>
+  <p>ФОП — найпопулярніша форма малого бізнесу в Україні.</p>
+</blockquote>
+<ol start="6">
+<li>Що Україна експортує найбільше?</li>
+</ol>
+<ul>
+<li>[x] зернові та соняшникову олію</li>
+<li>[ ] автомобілі</li>
+<li>[ ] нафту</li>
+</ul>
+<blockquote>
+  <p>Україна — №1 у світі з експорту соняшникової олії.</p>
+</blockquote>
+<ol start="7">
+<li>«Залучити інвестиції» означає:</li>
+</ol>
+<ul>
+<li>[x] отримати гроші від інвесторів</li>
+<li>[ ] інвестувати свої гроші</li>
+</ul>
+<blockquote>
+  <p>Залучити = to attract, raise (investments).</p>
+</blockquote>
+<ol start="8">
+<li><strong>[Інтеграція: пасив + регістр]</strong> Офіційний звіт НБУ: «Облікову ставку ___»</li>
+</ol>
+<ul>
+<li>[x] збережено</li>
+<li>[ ] зберегли</li>
+<li>[ ] зберігається</li>
+</ul>
+<blockquote>
+  <p>Офіційний документ → -но/-то форма.</p>
+</blockquote>
+<ol start="9">
+<li><strong>[Інтеграція: пасив + регістр]</strong> Розмова з колегою: «Мені ___, що компанія збанкрутувала.»</li>
+</ol>
+<ul>
+<li>[ ] повідомлено</li>
+<li>[x] сказали</li>
+<li>[ ] говориться</li>
+</ul>
+<blockquote>
+  <p>Розмовний стиль → активний голос з «вони».</p>
+</blockquote>
+<ol start="10">
+<li>Коли введено сучасну гривню?<ul>
+<li>[ ] 1991</li>
+<li>[x] 1996</li>
+<li>[ ] 2000<br />
+&gt; Гривню введено 2 вересня 1996 року.</li></ul></li>
+</ol>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Словник</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Слово</th>
+<th>Вимова</th>
+<th>Переклад</th>
+<th>Примітки</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>економіка</td>
+<td>/ɛkɔˈnɔmʲikɑ/</td>
+<td>economy</td>
+<td>f</td>
+</tr>
+<tr>
+<td>інфляція</td>
+<td>/ʲinˈflʲat͡sʲijɑ/</td>
+<td>inflation</td>
+<td>f</td>
+</tr>
+<tr>
+<td>ВВП</td>
+<td>/wɛ wɛ pɛ/</td>
+<td>GDP</td>
+<td>m</td>
+</tr>
+<tr>
+<td>кредит</td>
+<td>/krɛˈdɪt/</td>
+<td>loan, credit</td>
+<td>m</td>
+</tr>
+<tr>
+<td>депозит</td>
+<td>/dɛpɔˈzɪt/</td>
+<td>deposit</td>
+<td>m</td>
+</tr>
+<tr>
+<td>інвестиція</td>
+<td>/ʲinwɛsˈtɪt͡sʲijɑ/</td>
+<td>investment</td>
+<td>f</td>
+</tr>
+<tr>
+<td>акція</td>
+<td>/ˈɑkt͡sʲijɑ/</td>
+<td>stock, share</td>
+<td>f</td>
+</tr>
+<tr>
+<td>біржа</td>
+<td>/ˈbʲirʒɑ/</td>
+<td>stock exchange</td>
+<td>f</td>
+</tr>
+<tr>
+<td>прибуток</td>
+<td>/prɪˈbutɔk/</td>
+<td>profit</td>
+<td>m</td>
+</tr>
+<tr>
+<td>збиток</td>
+<td>/ˈzbɪtɔk/</td>
+<td>loss</td>
+<td>m</td>
+</tr>
+<tr>
+<td>підприємець</td>
+<td>/pʲidprɪˈjɛmɛt͡sʲ/</td>
+<td>entrepreneur</td>
+<td>m</td>
+</tr>
+<tr>
+<td>постачальник</td>
+<td>/pɔstɑˈtʃɑlʲnɪk/</td>
+<td>supplier</td>
+<td>m</td>
+</tr>
+<tr>
+<td>переговори</td>
+<td>/pɛrɛɦɔˈwɔrɪ/</td>
+<td>negotiations</td>
+<td>pl</td>
+</tr>
+<tr>
+<td>угода</td>
+<td>/uˈɦɔdɑ/</td>
+<td>deal, agreement</td>
+<td>f</td>
+</tr>
+<tr>
+<td>контракт</td>
+<td>/kɔnˈtrɑkt/</td>
+<td>contract</td>
+<td>m</td>
+</tr>
+<tr>
+<td>експорт</td>
+<td>/ˈɛkspɔrt/</td>
+<td>export</td>
+<td>m</td>
+</tr>
+<tr>
+<td>імпорт</td>
+<td>/ˈimpɔrt/</td>
+<td>import</td>
+<td>m</td>
+</tr>
+<tr>
+<td>облікова ставка</td>
+<td>/ɔbˈlʲikɔwɑ ˈstɑwkɑ/</td>
+<td>discount rate</td>
+<td>f</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-4">
+        <div class="section-header" onclick="toggleSection(4)">
+          <h3>Підсумок</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="diia">Від хаосу до Diia</h2>
+<p>Українська економіка пройшла шлях від гіперінфляції 1990-х до цифрового лідерства. Війна загартувала, а не знищила.</p>
+<p><strong>Ключові показники:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Показник</th>
+<th>Що означає</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ВВП</td>
+<td>Загальний обсяг економіки</td>
+</tr>
+<tr>
+<td>Інфляція</td>
+<td>Як швидко ростуть ціни</td>
+</tr>
+<tr>
+<td>Безробіття</td>
+<td>Відсоток людей без роботи</td>
+</tr>
+<tr>
+<td>Курс гривні</td>
+<td>Скільки коштує долар</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Структура експорту:</strong></p>
+<ol>
+<li>Агро (зернові, олія) — 40%</li>
+<li>IT-послуги — 15%</li>
+<li>Метали — 10%</li>
+</ol>
+<p><strong>Форми бізнесу:</strong></p>
+<ul>
+<li>ФОП — для малого бізнесу/фрілансерів</li>
+<li>ТОВ — середній бізнес</li>
+<li>АТ — великий бізнес</li>
+</ul>
+<blockquote>
+  <p><strong>Головне</strong></p>
+  <p>Економіка — це не абстрактні цифри. Це мільйони людей, що працюють, торгують, створюють. Українська економіка витримала те, що мало б її знищити. Від порожніх полиць 1991 року до Diia 2024-го — це історія, яку варто знати.</p>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('quiz')">Start →</button></div>
     </section>
     
@@ -169,6 +1169,10 @@
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

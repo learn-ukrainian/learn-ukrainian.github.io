@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,7 +136,22 @@
         <p style="color:var(--text-muted)">Він запитав, чи... / що...</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Пряме vs непряме запитання | Direct vs Indirect Questions</h4><div class="md-content"><p>Порівняйте два типи запитань:</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Зміст уроку | Lesson Content</li><li class="toc-item" data-target="section-1">Activities</li><li class="toc-item" data-target="section-2">Vocabulary</li><li class="toc-item" data-target="section-3">Summary</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Зміст уроку | Lesson Content</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="warmup">warm-up | Розминка</h2>
+<h3 id="vsdirectvsindirectquestions">Пряме vs непряме запитання | Direct vs Indirect Questions</h3>
+<p>Порівняйте два типи запитань:</p>
 <p>Compare two types of questions:</p>
 <p><strong>Пряме запитання (Direct question):</strong></p>
 <ul>
@@ -127,7 +160,10 @@
 <p><strong>Непряме запитання (Reported question):</strong></p>
 <ul>
 <li>Він запитав, <strong>чи</strong> я прийду. - He asked if I would come.</li>
-</ul></div></div><div class="canvas-note"><h4>### Дієслова для запитань | Reporting Verbs for Questions</h4><div class="md-content"><table>
+</ul>
+<h2 id="presentation">presentation | Презентація</h2>
+<h3 id="reportingverbsforquestions">Дієслова для запитань | Reporting Verbs for Questions</h3>
+<table>
 <thead>
 <tr>
 <th>Ukrainian</th>
@@ -162,7 +198,9 @@
 <td>Він поцікавився, коли…</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Так/ні запитання → чи | Yes/No Questions → чи</h4><div class="md-content"><p><strong>Structure:</strong></p>
+</table>
+<h3 id="yesnoquestions">Так/ні запитання → чи | Yes/No Questions → чи</h3>
+<p><strong>Structure:</strong></p>
 <pre><code>запитати + чи + subject + verb
 </code></pre>
 <table>
@@ -191,7 +229,9 @@
 </tr>
 </tbody>
 </table>
-<p><strong>Note:</strong> чи = if/whether in reported questions</p></div></div><div class="canvas-note"><h4>Спеціальні запитання | Information Questions</h4><div class="md-content"><p><strong>Structure:</strong></p>
+<p><strong>Note:</strong> чи = if/whether in reported questions</p>
+<h3 id="informationquestions">Спеціальні запитання | Information Questions</h3>
+<p><strong>Structure:</strong></p>
 <pre><code>запитати + question word + subject + verb
 </code></pre>
 <table>
@@ -243,7 +283,9 @@
 <td>Вони запитали, <strong>звідки</strong> він.</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Порядок слів | Word Order</h4><div class="md-content"><p><strong>Important difference from English:</strong></p>
+</table>
+<h3 id="wordorder">Порядок слів | Word Order</h3>
+<p><strong>Important difference from English:</strong></p>
 <p>In reported questions, Ukrainian uses <strong>statement word order</strong>, not question word order:</p>
 <table>
 <thead>
@@ -271,19 +313,25 @@
 </tr>
 </tbody>
 </table>
-<p><strong>No inversion needed!</strong></p></div></div><div class="canvas-note"><h4>Приклади з чи | Examples with чи</h4><div class="md-content"><p><strong>Direct:</strong> «Ти любиш каву?»<br />
+<p><strong>No inversion needed!</strong></p>
+<h3 id="exampleswith">Приклади з чи | Examples with чи</h3>
+<p><strong>Direct:</strong> «Ти любиш каву?»<br />
 <strong>Reported:</strong> Він запитав, <strong>чи</strong> я люблю каву.</p>
 <p><strong>Direct:</strong> «Вона прийде на вечірку?»<br />
 <strong>Reported:</strong> Ми запитали, <strong>чи</strong> вона прийде на вечірку.</p>
 <p><strong>Direct:</strong> «Ви бачили цей фільм?»<br />
-<strong>Reported:</strong> Вони запитали, <strong>чи</strong> ми бачили цей фільм.</p></div></div><div class="canvas-note"><h4>Приклади з питальними словами | Examples with Question Words</h4><div class="md-content"><p><strong>Direct:</strong> «Де ти працюєш?»<br />
+<strong>Reported:</strong> Вони запитали, <strong>чи</strong> ми бачили цей фільм.</p>
+<h3 id="exampleswithquestionwords">Приклади з питальними словами | Examples with Question Words</h3>
+<p><strong>Direct:</strong> «Де ти працюєш?»<br />
 <strong>Reported:</strong> Він запитав, <strong>де</strong> я працюю.</p>
 <p><strong>Direct:</strong> «Коли починається урок?»<br />
 <strong>Reported:</strong> Студент запитав, <strong>коли</strong> починається урок.</p>
 <p><strong>Direct:</strong> «Чому ти запізнився?»<br />
 <strong>Reported:</strong> Вона запитала, <strong>чому</strong> я запізнився.</p>
 <p><strong>Direct:</strong> «Скільки коштує квиток?»<br />
-<strong>Reported:</strong> Турист запитав, <strong>скільки</strong> коштує квиток.</p></div></div><div class="canvas-note"><h4>Зміни займенників і часу | Pronoun and Time Changes</h4><div class="md-content"><p>Same changes as in reported statements:</p>
+<strong>Reported:</strong> Турист запитав, <strong>скільки</strong> коштує квиток.</p>
+<h3 id="pronounandtimechanges">Зміни займенників і часу | Pronoun and Time Changes</h3>
+<p>Same changes as in reported statements:</p>
 <table>
 <thead>
 <tr>
@@ -314,7 +362,10 @@
 <ul>
 <li>Direct: «Що <strong>ти</strong> робиш <strong>зараз</strong>?»</li>
 <li>Reported: Він запитав, що <strong>я</strong> роблю <strong>тоді</strong>.</li>
-</ul></div></div><div class="canvas-note"><h4>### Convert Yes/No Questions</h4><div class="md-content"><ol>
+</ul>
+<h2 id="practice">practice | Практика</h2>
+<h3 id="convertyesnoquestions">Convert Yes/No Questions</h3>
+<ol>
 <li><p>«Ти голодний?» (він запитав)<br />
 → Він запитав, <strong>чи я голодний</strong>.</p></li>
 <li><p>«Вона знає про це?» (ми запитали)<br />
@@ -323,7 +374,9 @@
 → Вона запитала, <strong>чи ми були в Україні</strong>.</p></li>
 <li><p>«Він приїде завтра?» (я запитав)<br />
 → Я запитав, <strong>чи він приїде завтра</strong>.</p></li>
-</ol></div></div><div class="canvas-note"><h4>Convert Information Questions</h4><div class="md-content"><ol>
+</ol>
+<h3 id="convertinformationquestions">Convert Information Questions</h3>
+<ol>
 <li><p>«Де знаходиться вокзал?» (турист запитав)<br />
 → Турист запитав, <strong>де знаходиться вокзал</strong>.</p></li>
 <li><p>«Коли ти народився?» (вона запитала)<br />
@@ -334,7 +387,9 @@
 → Він запитав, <strong>як мене звати</strong>.</p></li>
 <li><p>«Скільки у вас дітей?» (вона запитала)<br />
 → Вона запитала, <strong>скільки в нас дітей</strong>.</p></li>
-</ol></div></div><div class="canvas-note"><h4>Choose чи or Question Word</h4><div class="md-content"><ol>
+</ol>
+<h3 id="chooseorquestionword">Choose чи or Question Word</h3>
+<ol>
 <li><p>Він запитав, ___ я люблю музику.<br />
 → <strong>чи</strong> (yes/no question)</p></li>
 <li><p>Вона запитала, ___ я живу.<br />
@@ -345,7 +400,9 @@
 → <strong>чи</strong> (yes/no question)</p></li>
 <li><p>Він поцікавився, ___ я вибрав цей подарунок.<br />
 → <strong>чому</strong> (why)</p></li>
-</ol></div></div><div class="canvas-note"><h4>Translate to Ukrainian</h4><div class="md-content"><ol>
+</ol>
+<h3 id="translatetoukrainian">Translate to Ukrainian</h3>
+<ol>
 <li><p>She asked if I spoke Ukrainian.<br />
 → <strong>Вона запитала, чи я говорю українською.</strong></p></li>
 <li><p>He wanted to know where the museum was.<br />
@@ -354,7 +411,10 @@
 → <strong>Вони запитали, коли приїжджає потяг.</strong></p></li>
 <li><p>I wondered if she was coming.<br />
 → <strong>Мене цікавило, чи вона прийде.</strong></p></li>
-</ol></div></div><div class="canvas-note"><h4>### Report These Questions</h4><div class="md-content"><p>Imagine someone asked you these questions. Report them:</p>
+</ol>
+<h2 id="production">production | Продукція</h2>
+<h3 id="reportthesequestions">Report These Questions</h3>
+<p>Imagine someone asked you these questions. Report them:</p>
 <ol>
 <li><p>Незнайомець: «Як пройти до центру?»<br />
 → Незнайомець запитав, як пройти до центру.</p></li>
@@ -362,12 +422,254 @@
 → Друг запитав, чи я піду на концерт.</p></li>
 <li><p>Колега: «Чому ти такий втомлений?»<br />
 → Колега запитав, чому я такий втомлений.</p></li>
-</ol></div></div><div class="canvas-note"><h4>Discussion</h4><div class="md-content"><p>Report questions you were asked today:</p>
+</ol>
+<h3 id="discussion">Discussion</h3>
+<p>Report questions you were asked today:</p>
 <ul>
 <li>Що вас запитали на роботі/в школі?</li>
 <li>Про що вас питали друзі?</li>
 <li>Які питання ви чули сьогодні?</li>
-</ul></div></div></div>
+</ul>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Activities</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="quizreportedquestions">quiz: Reported Questions</h2>
+<blockquote>
+  <p>Choose the correct form.</p>
+</blockquote>
+<ol>
+<li>Він запитав, ___ я прийду.</li>
+</ol>
+<ul>
+<li>[x] чи</li>
+<li>[ ] що</li>
+</ul>
+<blockquote>
+  <p>чи for yes/no questions.</p>
+</blockquote>
+<ol start="2">
+<li>Вона запитала, ___ я живу.</li>
+</ol>
+<ul>
+<li>[x] де</li>
+<li>[ ] чи</li>
+</ul>
+<blockquote>
+  <p>де for "where" questions.</p>
+</blockquote>
+<ol start="3">
+<li>Мене цікавить, ___ це коштує.</li>
+</ol>
+<ul>
+<li>[x] скільки</li>
+<li>[ ] чи</li>
+</ul>
+<blockquote>
+  <p>скільки for "how much" questions.</p>
+</blockquote>
+<ol start="4">
+<li>Вони запитали, ___ приїде потяг.</li>
+</ol>
+<ul>
+<li>[x] коли</li>
+<li>[ ] що</li>
+</ul>
+<blockquote>
+  <p>коли for "when" questions.</p>
+</blockquote>
+<ol start="5">
+<li>Він хотів знати, ___ вона не прийшла.</li>
+</ol>
+<ul>
+<li>[x] чому</li>
+<li>[ ] чи</li>
+</ul>
+<blockquote>
+  <p>чому for "why" questions.</p>
+</blockquote>
+<ol start="6">
+<li>«Ти вдома?» → Він запитав, ___ я вдома.</li>
+</ol>
+<ul>
+<li>[x] чи</li>
+<li>[ ] де</li>
+</ul>
+<blockquote>
+  <p>Yes/no question uses чи.</p>
+</blockquote>
+<h2 id="fillinreporttheinterview">fill-in: Report the Interview</h2>
+<blockquote>
+  <p>Журналіст запитав актора багато питань.</p>
+  <p>«Скільки вам років?» — Він запитав, (1)<strong>_ йому років.
+«Де ви народилися?» — Він запитав, (2)</strong>_ він народився.<br />
+  «Чи вам подобається ваша робота?» — Він запитав, (3)<strong>_ йому подобається його робота.
+«Коли ви почали зніматися?» — Він запитав, (4)</strong>_ він почав зніматися.<br />
+  «Який ваш улюблений фільм?» — Він запитав, (5)___ його улюблений фільм.</p>
+</blockquote>
+<p><strong>Answers:</strong></p>
+<ol>
+<li>скільки</li>
+<li>де</li>
+<li>чи</li>
+<li>коли</li>
+<li>який</li>
+</ol>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Vocabulary</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Word</th>
+<th>IPA</th>
+<th>English</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>запитати</td>
+<td>/zɑpɪˈtɑtɪ/</td>
+<td>to ask</td>
+<td>pf</td>
+</tr>
+<tr>
+<td>питати</td>
+<td>/pɪˈtɑtɪ/</td>
+<td>to ask</td>
+<td>impf</td>
+</tr>
+<tr>
+<td>цікавитися</td>
+<td>/t͡sʲikɑˈvɪtɪsʲɑ/</td>
+<td>to wonder, be interested</td>
+<td>impf</td>
+</tr>
+<tr>
+<td>поцікавитися</td>
+<td>/pot͡sʲikɑˈvɪtɪsʲɑ/</td>
+<td>to inquire</td>
+<td>pf</td>
+</tr>
+<tr>
+<td>чи</td>
+<td>/t͡ʃɪ/</td>
+<td>if, whether</td>
+<td>conjunction</td>
+</tr>
+<tr>
+<td>хто</td>
+<td>/xto/</td>
+<td>who</td>
+<td>pronoun</td>
+</tr>
+<tr>
+<td>що</td>
+<td>/ʃt͡ʃo/</td>
+<td>what</td>
+<td>pronoun</td>
+</tr>
+<tr>
+<td>де</td>
+<td>/dɛ/</td>
+<td>where</td>
+<td>adv</td>
+</tr>
+<tr>
+<td>коли</td>
+<td>/koˈlɪ/</td>
+<td>when</td>
+<td>adv</td>
+</tr>
+<tr>
+<td>чому</td>
+<td>/t͡ʃoˈmu/</td>
+<td>why</td>
+<td>adv</td>
+</tr>
+<tr>
+<td>як</td>
+<td>/jɑk/</td>
+<td>how</td>
+<td>adv</td>
+</tr>
+<tr>
+<td>скільки</td>
+<td>/ˈskʲilʲkɪ/</td>
+<td>how much/many</td>
+<td>adv</td>
+</tr>
+<tr>
+<td>який</td>
+<td>/jɑˈkɪj/</td>
+<td>which, what kind</td>
+<td>adj</td>
+</tr>
+<tr>
+<td>куди</td>
+<td>/kuˈdɪ/</td>
+<td>where to</td>
+<td>adv</td>
+</tr>
+<tr>
+<td>звідки</td>
+<td>/ˈzvʲidkɪ/</td>
+<td>where from</td>
+<td>adv</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Summary</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="reportedquestionskeypoints">Reported Questions: Key Points</h2>
+<h3 id="yesnoquestions">Yes/No Questions → чи</h3>
+<pre><code>запитати + чи + subject + verb
+</code></pre>
+<ul>
+<li>Він запитав, <strong>чи</strong> я прийду.</li>
+</ul>
+<h3 id="informationquestionsquestionword">Information Questions → Question Word</h3>
+<pre><code>запитати + question word + subject + verb
+</code></pre>
+<ul>
+<li>Він запитав, <strong>де</strong> я живу.</li>
+</ul>
+<h3 id="questionwords">Question Words</h3>
+<ul>
+<li>що (what), хто (who), де (where), коли (when)</li>
+<li>чому (why), як (how), скільки (how much)</li>
+<li>який (which), куди (where to), звідки (where from)</li>
+</ul>
+<h3 id="wordorder">Word Order</h3>
+<ul>
+<li>Use statement word order (no inversion)</li>
+<li>Same pronoun/time changes as reported statements</li>
+</ul>
+<blockquote>
+  <p><strong>Key Takeaways</strong></p>
+  <ul>
+  <li>чи is the Ukrainian equivalent of "if/whether"</li>
+  <li>Question words remain the same in reported speech</li>
+  <li>Word order changes to statement order</li>
+  <li>Pronouns and time references shift like in statements</li>
+  <li>Common verbs: запитати, питати, цікавитися</li>
+  </ul>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('quiz')">Start →</button></div>
     </section>
     
@@ -405,6 +707,10 @@
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

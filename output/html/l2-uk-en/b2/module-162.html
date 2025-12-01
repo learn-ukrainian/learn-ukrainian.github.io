@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,7 +136,36 @@
         <p style="color:var(--text-muted)">Право та правосуддя</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Судова новина</h4><div class="md-content"><p>Прочитайте заголовок із реального українського медіа:</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Вступ</li><li class="toc-item" data-target="section-1">Зміст уроку</li><li class="toc-item" data-target="section-2">Вправи</li><li class="toc-item" data-target="section-3">Словник</li><li class="toc-item" data-target="section-4">Підсумок</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Вступ</h3>
+          <span class="section-type intro">intro</span>
+        </div>
+        <div class="section-body md-content"><p>1016 рік. Київ. Князь Ярослав Мудрий сідає за стіл і починає писати. Не казку, не літопис — закони. Так народжується «Руська Правда» — перший письмовий правовий кодекс на теренах Східної Європи.</p>
+<p>Вдумайтеся: за тисячу років до сучасних судів, за століття до Magna Carta в Англії — українські землі вже мали систематизований звід законів. «Руська Правда» визначала <strong>покарання</strong> за злочини, правила <strong>судочинства</strong>, права <strong>свідків</strong>. Ще цікавіше — смертної кари там не було. Максимальним покаранням була «віра» — грошовий штраф. Життя людини цінувалося навіть у ті «темні часи».</p>
+<p>А тепер порівняйте: у Московському царстві XV-XVII століть страта була звичайною справою. Четвертування, закопування живцем, палення — все це було нормою. В Україні ж навіть запорозькі козаки, яких зображують «дикими», мали чітку систему <strong>правосуддя</strong>. На Січі існував суд старшини, де <strong>підсудний</strong> мав право на <strong>захист</strong>. Так, покарання були суворі — але за законом, не за примхою.</p>
+<p>Особливо вражає правова культура Гетьманщини. Литовський статут — один із найпрогресивніших правових кодексів Європи — діяв на українських землях до 1840-х років. Уявіть: руською (староукраїнською) мовою були написані закони, які захищали право власності, регулювали спадкування, гарантували певні права селянам. Навіть жінки мали майнові права — рідкість для тієї епохи.</p>
+<p>Російська імперія систематично знищувала цю правову традицію. Замість місцевих судів — імперські. Замість звичаєвого права — централізовані закони з Петербурга. Замість руської мови в судах — російська. А потім прийшов Радянський Союз — і поняття «незалежний суд» стало оксимороном. <strong>Прокурор</strong> виконував вказівки партії. <strong>Суддя</strong> підписував вирок, написаний у Москві. <strong>Адвокат</strong> був декорацією.</p>
+<p>Сьогодні Україна перебудовує судову систему з нуля. Це боляче, повільно, з корупційними скандалами — але це єдиний шлях. Вищий антикорупційний суд (ВАКС), НАБУ, нові конкурси на посади суддів за участі міжнародних експертів — все це спроба побудувати те, що знищували століттями: справедливий суд.</p>
+<p>У цьому модулі ви опануєте лексику, яка дозволить читати судові новини, розуміти юридичні документи та обговорювати реформи української юстиції.</p>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Зміст уроку</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Розминка</h2>
+<h3 id="-1">Судова новина</h3>
+<p>Прочитайте заголовок із реального українського медіа:</p>
 <blockquote>
   <p>«ВАКС виніс вирок у справі колишнього судді: 9 років позбавлення волі за хабарництво. Захист оголосив про намір подати апеляцію. Прокуратура задоволена рішенням.»</p>
 </blockquote>
@@ -131,7 +178,813 @@
 <blockquote>
   <p><strong>Чи знали ви?</strong></p>
   <p>ВАКС (Вищий антикорупційний суд) створено у 2019 році спеціально для розгляду корупційних справ. До його створення справи проти високопосадовців роками «гуляли» звичайними судами і закінчувалися нічим. За перші роки роботи ВАКС виніс сотні обвинувальних вироків — і це революція для української юстиції.</p>
-</blockquote></div></div></div>
+</blockquote>
+<hr />
+<h2 id="-2">Презентація</h2>
+<h3 id="-3">Судова система України</h3>
+<p>Українська судова система має три рівні — як піраміда. Справа починається внизу і може дійти до вершини.</p>
+<table>
+<thead>
+<tr>
+<th>Рівень</th>
+<th>Суд</th>
+<th>Функція</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Перша інстанція</strong></td>
+<td>Місцеві суди</td>
+<td>Розглядають справи вперше</td>
+</tr>
+<tr>
+<td><strong>Апеляція</strong></td>
+<td>Апеляційні суди</td>
+<td>Переглядають рішення місцевих судів</td>
+</tr>
+<tr>
+<td><strong>Касація</strong></td>
+<td>Верховний Суд</td>
+<td>Найвища інстанція, перевіряє законність</td>
+</tr>
+<tr>
+<td><strong>Конституційний</strong></td>
+<td>Конституційний Суд</td>
+<td>Тлумачить Конституцію</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p><strong>Міф vs Факт</strong></p>
+  <p>❌ <strong>Міф:</strong> Верховний Суд може переглянути будь-яку справу.</p>
+  <p>✅ <strong>Факт:</strong> Верховний Суд — це касаційна інстанція. Він не досліджує факти заново, а перевіряє, чи правильно нижчі суди застосували закон. Якщо хочете переглянути докази — йдіть в апеляцію. Якщо вважаєте, що закон порушено — у касацію.</p>
+</blockquote>
+<hr />
+<h3 id="-4">Учасники судового процесу</h3>
+<table>
+<thead>
+<tr>
+<th>Термін</th>
+<th>Переклад</th>
+<th>Роль</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>суддя</td>
+<td>judge</td>
+<td>Веде засідання, виносить рішення</td>
+</tr>
+<tr>
+<td>прокурор</td>
+<td>prosecutor</td>
+<td>Обвинувачує (представляє державу)</td>
+</tr>
+<tr>
+<td>адвокат</td>
+<td>lawyer, attorney</td>
+<td>Представляє клієнта</td>
+</tr>
+<tr>
+<td>захисник</td>
+<td>defense attorney</td>
+<td>Захищає обвинуваченого</td>
+</tr>
+<tr>
+<td>позивач</td>
+<td>plaintiff</td>
+<td>Подає позов (цивільне)</td>
+</tr>
+<tr>
+<td>відповідач</td>
+<td>defendant (civil)</td>
+<td>Відповідає на позов</td>
+</tr>
+<tr>
+<td>підсудний</td>
+<td>defendant (criminal)</td>
+<td>Обвинувачений у кримінальній справі</td>
+</tr>
+<tr>
+<td>свідок</td>
+<td>witness</td>
+<td>Дає показання</td>
+</tr>
+<tr>
+<td>потерпілий</td>
+<td>victim</td>
+<td>Постраждав від злочину</td>
+</tr>
+<tr>
+<td>підозрюваний</td>
+<td>suspect</td>
+<td>Підозрюється у злочині</td>
+</tr>
+<tr>
+<td>присяжний</td>
+<td>juror</td>
+<td>Член журі присяжних</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p><strong>Чи знали ви?</strong></p>
+  <p>Суд присяжних існував в Україні до 1917 року (в рамках Російської імперії після реформи 1864 року). Радянська влада його скасувала. Відновили у 2012 році, але лише для окремих категорій справ. Присяжні в Україні вирішують питання винуватості, а суддя — призначає покарання.</p>
+</blockquote>
+<hr />
+<h3 id="-5">Види судочинства</h3>
+<p>Різні справи — різні суди.</p>
+<table>
+<thead>
+<tr>
+<th>Вид</th>
+<th>Що розглядає</th>
+<th>Приклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Кримінальне</strong></td>
+<td>Злочини</td>
+<td>Крадіжка, вбивство, шахрайство</td>
+</tr>
+<tr>
+<td><strong>Цивільне</strong></td>
+<td>Спори між людьми</td>
+<td>Розлучення, спадщина, борги</td>
+</tr>
+<tr>
+<td><strong>Адміністративне</strong></td>
+<td>Спори з владою</td>
+<td>Оскарження рішень чиновників</td>
+</tr>
+<tr>
+<td><strong>Господарське</strong></td>
+<td>Бізнес-спори</td>
+<td>Контракти, банкрутства</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="-6">Кримінальне право</h3>
+<table>
+<thead>
+<tr>
+<th>Термін</th>
+<th>Переклад</th>
+<th>Приклад вживання</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>злочин</td>
+<td>crime</td>
+<td>вчинити тяжкий злочин</td>
+</tr>
+<tr>
+<td>правопорушення</td>
+<td>offense</td>
+<td>адміністративне правопорушення</td>
+</tr>
+<tr>
+<td>кримінальна справа</td>
+<td>criminal case</td>
+<td>порушити кримінальну справу</td>
+</tr>
+<tr>
+<td>обвинувачення</td>
+<td>charge, accusation</td>
+<td>пред'явити обвинувачення</td>
+</tr>
+<tr>
+<td>вирок</td>
+<td>verdict, sentence</td>
+<td>обвинувальний / виправдувальний вирок</td>
+</tr>
+<tr>
+<td>покарання</td>
+<td>punishment</td>
+<td>призначити покарання</td>
+</tr>
+<tr>
+<td>позбавлення волі</td>
+<td>imprisonment</td>
+<td>5 років позбавлення волі</td>
+</tr>
+<tr>
+<td>умовний термін</td>
+<td>suspended sentence</td>
+<td>3 роки умовно</td>
+</tr>
+<tr>
+<td>штраф</td>
+<td>fine</td>
+<td>штраф 50 000 гривень</td>
+</tr>
+<tr>
+<td>виправдання</td>
+<td>acquittal</td>
+<td>суд виправдав підсудного</td>
+</tr>
+<tr>
+<td>апеляція</td>
+<td>appeal</td>
+<td>подати апеляцію</td>
+</tr>
+<tr>
+<td>касація</td>
+<td>cassation</td>
+<td>касаційна скарга</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Ключові дієслова кримінального процесу:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Дієслово</th>
+<th>Значення</th>
+<th>Типовий контекст</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>порушити справу</strong></td>
+<td>to open a case</td>
+<td>порушити кримінальну справу</td>
+</tr>
+<tr>
+<td><strong>пред'явити обвинувачення</strong></td>
+<td>to bring charges</td>
+<td>пред'явити обвинувачення у вбивстві</td>
+</tr>
+<tr>
+<td><strong>винести вирок</strong></td>
+<td>to pass sentence</td>
+<td>суд виніс обвинувальний вирок</td>
+</tr>
+<tr>
+<td><strong>визнати винним</strong></td>
+<td>to find guilty</td>
+<td>присяжні визнали підсудного винним</td>
+</tr>
+<tr>
+<td><strong>виправдати</strong></td>
+<td>to acquit</td>
+<td>суд виправдав обвинуваченого</td>
+</tr>
+<tr>
+<td><strong>засудити</strong></td>
+<td>to convict, sentence</td>
+<td>засудити до 7 років</td>
+</tr>
+<tr>
+<td><strong>оскаржити</strong></td>
+<td>to appeal</td>
+<td>оскаржити рішення в апеляційному суді</td>
+</tr>
+<tr>
+<td><strong>помилувати</strong></td>
+<td>to pardon</td>
+<td>Президент помилував засудженого</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p><strong>Міф vs Факт</strong></p>
+  <p>❌ <strong>Міф:</strong> В Україні суди завжди виносять обвинувальні вироки.</p>
+  <p>✅ <strong>Факт:</strong> Статистика справді вражає: понад 95% справ закінчуються обвинувальними вироками. Але це не означає, що суди несправедливі. Причина — прокурори передають до суду лише ті справи, де впевнені в доказах. Слабкі справи закривають на етапі слідства. У західних країнах схожа статистика.</p>
+</blockquote>
+<hr />
+<h3 id="-7">Цивільне право</h3>
+<table>
+<thead>
+<tr>
+<th>Термін</th>
+<th>Переклад</th>
+<th>Контекст</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>позов</td>
+<td>lawsuit</td>
+<td>подати позов до суду</td>
+</tr>
+<tr>
+<td>цивільна справа</td>
+<td>civil case</td>
+<td>розглядати цивільну справу</td>
+</tr>
+<tr>
+<td>спір</td>
+<td>dispute</td>
+<td>майновий спір</td>
+</tr>
+<tr>
+<td>договір</td>
+<td>contract</td>
+<td>порушення договору</td>
+</tr>
+<tr>
+<td>угода</td>
+<td>agreement</td>
+<td>мирова угода</td>
+</tr>
+<tr>
+<td>відшкодування</td>
+<td>compensation</td>
+<td>відшкодування збитків</td>
+</tr>
+<tr>
+<td>збитки</td>
+<td>damages</td>
+<td>моральні збитки</td>
+</tr>
+<tr>
+<td>позовна давність</td>
+<td>statute of limitations</td>
+<td>позовна давність — 3 роки</td>
+</tr>
+<tr>
+<td>спадщина</td>
+<td>inheritance</td>
+<td>спір про спадщину</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="-8">Права людини в Україні</h3>
+<p>Конституція України гарантує права, за які люди боролися століттями.</p>
+<table>
+<thead>
+<tr>
+<th>Право</th>
+<th>Стаття Конституції</th>
+<th>Суть</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>право на життя</td>
+<td>Ст. 27</td>
+<td>Ніхто не може бути свавільно позбавлений життя</td>
+</tr>
+<tr>
+<td>право на свободу</td>
+<td>Ст. 29</td>
+<td>Арешт — тільки за рішенням суду</td>
+</tr>
+<tr>
+<td>право на справедливий суд</td>
+<td>Ст. 55</td>
+<td>Кожен має право на судовий захист</td>
+</tr>
+<tr>
+<td>презумпція невинуватості</td>
+<td>Ст. 62</td>
+<td>Невинен, поки не доведено інше</td>
+</tr>
+<tr>
+<td>право на захист</td>
+<td>Ст. 59</td>
+<td>Кожен має право на адвоката</td>
+</tr>
+<tr>
+<td>свобода слова</td>
+<td>Ст. 34</td>
+<td>Вільно висловлювати думки</td>
+</tr>
+<tr>
+<td>заборона катувань</td>
+<td>Ст. 28</td>
+<td>Ніхто не може зазнавати тортур</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p><strong>Чи знали ви?</strong></p>
+  <p><strong>Презумпція невинуватості</strong> — один із найважливіших принципів права. Це означає, що людина вважається невинною, поки суд не доведе її провину. Тягар доказування лежить на обвинуваченні, не на підсудному. Підсудний не зобов'язаний доводити свою невинуватість — прокурор зобов'язаний довести вину.</p>
+</blockquote>
+<hr />
+<h3 id="-9">Антикорупційна система</h3>
+<p>Україна створила унікальну систему боротьби з корупцією — таку, якої немає в більшості країн світу.</p>
+<table>
+<thead>
+<tr>
+<th>Орган</th>
+<th>Повна назва</th>
+<th>Функція</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>НАБУ</strong></td>
+<td>Національне антикорупційне бюро</td>
+<td>Розслідує корупцію високопосадовців</td>
+</tr>
+<tr>
+<td><strong>САП</strong></td>
+<td>Спеціалізована антикорупційна прокуратура</td>
+<td>Підтримує обвинувачення</td>
+</tr>
+<tr>
+<td><strong>ВАКС</strong></td>
+<td>Вищий антикорупційний суд</td>
+<td>Розглядає справи НАБУ/САП</td>
+</tr>
+<tr>
+<td><strong>НАЗК</strong></td>
+<td>Національне агентство з питань запобігання корупції</td>
+<td>Перевіряє декларації чиновників</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p><strong>Чи знали ви?</strong></p>
+  <p>НАБУ (створене 2015 року) — єдина правоохоронна структура в Україні, директора якої неможливо просто звільнити. Потрібна згода кількох органів. Це гарантує незалежність від політичного тиску. Коли Україна отримала статус кандидата в ЄС, однією з умов було посилення незалежності антикорупційних органів.</p>
+</blockquote>
+<hr />
+<h3 id="-10">Приклад судової новини</h3>
+<p><strong>Детальний розбір:</strong></p>
+<blockquote>
+  <p>«Вищий антикорупційний суд виніс вирок у справі колишнього голови митниці. Підсудного визнано винним у хабарництві у великих розмірах та засуджено до 9 років позбавлення волі з конфіскацією майна. Захист заявив про намір подати апеляцію протягом 30 днів. За словами адвоката, є підстави для перегляду справи.»</p>
+</blockquote>
+<p><strong>Аналіз термінів:</strong></p>
+<ul>
+<li><strong>виніс вирок</strong> — оголосив рішення суду</li>
+<li><strong>визнано винним</strong> — суд встановив провину</li>
+<li><strong>хабарництво</strong> — отримання незаконної винагороди</li>
+<li><strong>конфіскація майна</strong> — примусове вилучення майна на користь держави</li>
+<li><strong>подати апеляцію</strong> — оскаржити в вищому суді</li>
+</ul>
+<hr />
+<h2 id="-11">Практика</h2>
+<h3 id="1">Вправа 1: Хто є хто в суді?</h3>
+<p>Оберіть правильну роль:</p>
+<ol>
+<li>Представляє інтереси держави, обвинувачує → <strong>прокурор</strong></li>
+<li>Веде засідання, виносить рішення → <strong>суддя</strong></li>
+<li>Захищає підсудного → <strong>адвокат / захисник</strong></li>
+<li>Дає показання про те, що бачив → <strong>свідок</strong></li>
+<li>Постраждав від злочину → <strong>потерпілий</strong></li>
+</ol>
+<h3 id="2">Вправа 2: Заповніть пропуски</h3>
+<ol>
+<li><p>Суд ___ (винести) обвинувальний вирок.<br />
+→ <strong>виніс</strong></p></li>
+<li><p>Адвокат планує ___ (оскаржити) рішення в апеляційному суді.<br />
+→ <strong>оскаржити</strong></p></li>
+<li><p>Підсудного ___ (визнати) винним у шахрайстві.<br />
+→ <strong>визнали / визнано</strong></p></li>
+<li><p>Прокурор ___ (пред'явити) обвинувачення.<br />
+→ <strong>пред'явив</strong></p></li>
+<li><p>Президент ___ (помилувати) засудженого з нагоди свята.<br />
+→ <strong>помилував</strong></p></li>
+</ol>
+<h3 id="3">Вправа 3: Перекладіть</h3>
+<ol>
+<li><p>The court found him guilty of fraud.<br />
+→ <strong>Суд визнав його винним у шахрайстві.</strong></p></li>
+<li><p>The lawyer filed an appeal within 30 days.<br />
+→ <strong>Адвокат подав апеляцію протягом 30 днів.</strong></p></li>
+<li><p>He was sentenced to 5 years in prison.<br />
+→ <strong>Його засудили до 5 років позбавлення волі. / Його засуджено до 5 років позбавлення волі.</strong></p></li>
+<li><p>The suspect was arrested yesterday.<br />
+→ <strong>Підозрюваного затримали вчора. / Підозрюваного було затримано вчора.</strong></p></li>
+<li><p>Everyone has the right to a fair trial.<br />
+→ <strong>Кожен має право на справедливий суд.</strong></p></li>
+</ol>
+<hr />
+<h2 id="-12">Продукція</h2>
+<h3 id="-13">Аналіз справи</h3>
+<p>Прочитайте ситуацію та дайте відповідь:</p>
+<blockquote>
+  <p>«Чиновник отримав хабар у розмірі 1 мільйон гривень. НАБУ провело розслідування. САП передала справу до ВАКС. Суд виніс обвинувальний вирок: 7 років позбавлення волі. Захист подав апеляцію.»</p>
+</blockquote>
+<p><strong>Питання:</strong></p>
+<ol>
+<li>Чому справу розглядав саме ВАКС, а не звичайний суд?</li>
+<li>Куди подасть апеляцію захист?</li>
+<li>Що буде, якщо апеляційний суд підтримає вирок?</li>
+</ol>
+<h3 id="-14">Дискусія</h3>
+<p>Обговоріть у парах:</p>
+<ol>
+<li>Чому незалежність суду — основа демократії?</li>
+<li>Чи справедлива система, де 95% справ закінчуються обвинувальним вироком?</li>
+<li>«Краще виправдати 10 винних, ніж засудити одного невинного.» Погоджуєтесь?</li>
+</ol>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Вправи</h3>
+          <span class="section-type practice">practice</span>
+        </div>
+        <div class="section-body md-content"><h2 id="quiz">quiz: Право та правосуддя</h2>
+<blockquote>
+  <p>Виберіть правильну відповідь.</p>
+</blockquote>
+<ol>
+<li>«Підсудний» — це:</li>
+</ol>
+<ul>
+<li>[x] обвинувачений у кримінальній справі</li>
+<li>[ ] суддя</li>
+</ul>
+<blockquote>
+  <p>Підсудний = defendant in a criminal case.</p>
+</blockquote>
+<ol start="2">
+<li>Скільки рівнів має судова система України?</li>
+</ol>
+<ul>
+<li>[ ] 2</li>
+<li>[x] 3</li>
+<li>[ ] 4</li>
+</ul>
+<blockquote>
+  <p>Місцеві суди → Апеляційні → Верховний Суд.</p>
+</blockquote>
+<ol start="3">
+<li>«Винести вирок» означає:</li>
+</ol>
+<ul>
+<li>[x] оголосити рішення суду</li>
+<li>[ ] подати позов</li>
+</ul>
+<blockquote>
+  <p>Вирок = verdict, sentence.</p>
+</blockquote>
+<ol start="4">
+<li>«Апеляція» — це:</li>
+</ol>
+<ul>
+<li>[x] оскарження рішення суду</li>
+<li>[ ] перше засідання</li>
+</ul>
+<blockquote>
+  <p>Апеляція = appeal.</p>
+</blockquote>
+<ol start="5">
+<li>Хто захищає підсудного в суді?</li>
+</ol>
+<ul>
+<li>[x] адвокат / захисник</li>
+<li>[ ] прокурор</li>
+</ul>
+<blockquote>
+  <p>Адвокат = defense lawyer.</p>
+</blockquote>
+<ol start="6">
+<li>«Презумпція невинуватості» означає:</li>
+</ol>
+<ul>
+<li>[x] людина невинна, поки не доведено інше</li>
+<li>[ ] людина завжди винна</li>
+</ul>
+<blockquote>
+  <p>Presumption of innocence — burden of proof on prosecution.</p>
+</blockquote>
+<ol start="7">
+<li>ВАКС — це:</li>
+</ol>
+<ul>
+<li>[x] Вищий антикорупційний суд</li>
+<li>[ ] Вища адміністративна касаційна служба</li>
+</ul>
+<blockquote>
+  <p>ВАКС розглядає справи НАБУ/САП.</p>
+</blockquote>
+<ol start="8">
+<li><strong>[Інтеграція: пасив + регістр]</strong> Офіційний протокол: «Вирок ___»</li>
+</ol>
+<ul>
+<li>[x] винесено</li>
+<li>[ ] винесли</li>
+<li>[ ] виноситься</li>
+</ul>
+<blockquote>
+  <p>Офіційний документ → -но/-то форма.</p>
+</blockquote>
+<ol start="9">
+<li><strong>[Інтеграція: пасив + регістр]</strong> Розмова: «Мені ___, що його засудили.»</li>
+</ol>
+<ul>
+<li>[ ] повідомлено</li>
+<li>[x] сказали</li>
+<li>[ ] говориться</li>
+</ul>
+<blockquote>
+  <p>Розмовний стиль → активний голос.</p>
+</blockquote>
+<ol start="10">
+<li>Хто в Україні може помилувати засудженого?<ul>
+<li>[ ] Суддя</li>
+<li>[ ] Прем'єр-міністр</li>
+<li>[x] Президент<br />
+&gt; Право помилування — у Президента (Ст. 106 Конституції).</li></ul></li>
+</ol>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Словник</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Слово</th>
+<th>Вимова</th>
+<th>Переклад</th>
+<th>Примітки</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>суд</td>
+<td>/sud/</td>
+<td>court</td>
+<td>m</td>
+</tr>
+<tr>
+<td>суддя</td>
+<td>/ˈsudʲːɑ/</td>
+<td>judge</td>
+<td>m/f</td>
+</tr>
+<tr>
+<td>вирок</td>
+<td>/ˈwɪrɔk/</td>
+<td>verdict, sentence</td>
+<td>m</td>
+</tr>
+<tr>
+<td>позов</td>
+<td>/ˈpɔzɔw/</td>
+<td>lawsuit</td>
+<td>m</td>
+</tr>
+<tr>
+<td>адвокат</td>
+<td>/ɑdwɔˈkɑt/</td>
+<td>lawyer, attorney</td>
+<td>m</td>
+</tr>
+<tr>
+<td>прокурор</td>
+<td>/prɔkuˈrɔr/</td>
+<td>prosecutor</td>
+<td>m</td>
+</tr>
+<tr>
+<td>підсудний</td>
+<td>/pʲidˈsudnɪj/</td>
+<td>defendant (criminal)</td>
+<td>m</td>
+</tr>
+<tr>
+<td>свідок</td>
+<td>/ˈswʲidɔk/</td>
+<td>witness</td>
+<td>m</td>
+</tr>
+<tr>
+<td>злочин</td>
+<td>/zlɔˈtʃɪn/</td>
+<td>crime</td>
+<td>m</td>
+</tr>
+<tr>
+<td>покарання</td>
+<td>/pɔkɑˈrɑnʲːɑ/</td>
+<td>punishment</td>
+<td>n</td>
+</tr>
+<tr>
+<td>апеляція</td>
+<td>/ɑpɛˈlʲat͡sʲijɑ/</td>
+<td>appeal</td>
+<td>f</td>
+</tr>
+<tr>
+<td>касація</td>
+<td>/kɑˈsɑt͡sʲijɑ/</td>
+<td>cassation</td>
+<td>f</td>
+</tr>
+<tr>
+<td>виправдати</td>
+<td>/wɪˈprɑwdɑtɪ/</td>
+<td>to acquit</td>
+<td>pf</td>
+</tr>
+<tr>
+<td>засудити</td>
+<td>/zɑsuˈdɪtɪ/</td>
+<td>to convict, sentence</td>
+<td>pf</td>
+</tr>
+<tr>
+<td>позбавлення волі</td>
+<td>/pɔzbɑwˈlɛnʲːɑ ˈwɔlʲi/</td>
+<td>imprisonment</td>
+<td>n</td>
+</tr>
+<tr>
+<td>презумпція</td>
+<td>/prɛˈzumpt͡sʲijɑ/</td>
+<td>presumption</td>
+<td>f</td>
+</tr>
+<tr>
+<td>хабарництво</td>
+<td>/xɑˈbɑrnɪt͡stwo/</td>
+<td>bribery</td>
+<td>n</td>
+</tr>
+<tr>
+<td>конфіскація</td>
+<td>/kɔnfʲisˈkɑt͡sʲijɑ/</td>
+<td>confiscation</td>
+<td>f</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-4">
+        <div class="section-header" onclick="toggleSection(4)">
+          <h3>Підсумок</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Від «Руської Правди» до ВАКС</h2>
+<p>Українська правова традиція — одна з найдавніших у Європі. Сьогодні країна перебудовує судову систему, щоб відновити справедливість.</p>
+<p><strong>Структура судів:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Рівень</th>
+<th>Суд</th>
+<th>Функція</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Перша інстанція</td>
+<td>Місцеві суди</td>
+<td>Розглядають справи</td>
+</tr>
+<tr>
+<td>Апеляція</td>
+<td>Апеляційні</td>
+<td>Переглядають рішення</td>
+</tr>
+<tr>
+<td>Касація</td>
+<td>Верховний Суд</td>
+<td>Перевіряють законність</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Антикорупційна система:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Орган</th>
+<th>Функція</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>НАБУ</td>
+<td>Розслідує</td>
+</tr>
+<tr>
+<td>САП</td>
+<td>Обвинувачує</td>
+</tr>
+<tr>
+<td>ВАКС</td>
+<td>Судить</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Ключові принципи:</strong></p>
+<ul>
+<li>Презумпція невинуватості</li>
+<li>Право на захист</li>
+<li>Право на справедливий суд</li>
+<li>Незалежність суду</li>
+</ul>
+<blockquote>
+  <p><strong>Головне</strong></p>
+  <p>Правосуддя — це не просто суди та закони. Це принцип, за який Україна бореться від часів Ярослава Мудрого. «Руська Правда» XI століття не мала смертної кари. Чи зможемо ми побудувати систему, гідну цієї традиції?</p>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('quiz')">Start →</button></div>
     </section>
     
@@ -169,6 +1022,10 @@
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

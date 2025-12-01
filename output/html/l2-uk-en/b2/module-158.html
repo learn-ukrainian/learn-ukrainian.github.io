@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,17 +136,34 @@
         <p style="color:var(--text-muted)">Вставні слова та конструкції</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="md-content"><h1 id="">Вступ</h1>
-<p>«Він прийде.» — це факт. «Він, <strong>мабуть</strong>, прийде.» — це припущення. «Він, <strong>на жаль</strong>, прийде.» — це небажана подія. «Він, <strong>до речі</strong>, прийде.» — це додаткова інформація. Одне маленьке слово — і весь зміст речення змінюється.</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Вступ</li><li class="toc-item" data-target="section-1">Що таке вставні слова?</li><li class="toc-item" data-target="section-2">Функції вставних слів</li><li class="toc-item" data-target="section-3">Ступінь впевненості</li><li class="toc-item" data-target="section-4">Емоційна оцінка</li><li class="toc-item" data-target="section-5">Джерело інформації</li><li class="toc-item" data-target="section-6">Порядок думок</li><li class="toc-item" data-target="section-7">Зв'язок з контекстом</li><li class="toc-item" data-target="section-8">Привернення уваги</li><li class="toc-item" data-target="section-9">Пунктуація</li><li class="toc-item" data-target="section-10">Вставне слово vs Член речення</li><li class="toc-item" data-target="section-11">НЕ є вставними!</li><li class="toc-item" data-target="section-12">Практика</li><li class="toc-item" data-target="section-13">Словник</li><li class="toc-item" data-target="section-14">Підсумок</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Вступ</h3>
+          <span class="section-type intro">intro</span>
+        </div>
+        <div class="section-body md-content"><p>«Він прийде.» — це факт. «Він, <strong>мабуть</strong>, прийде.» — це припущення. «Він, <strong>на жаль</strong>, прийде.» — це небажана подія. «Він, <strong>до речі</strong>, прийде.» — це додаткова інформація. Одне маленьке слово — і весь зміст речення змінюється.</p>
 <p><strong>Вставні слова</strong> — це як <strong>коментарі автора</strong> до власного тексту. Вони не змінюють факти, але показують, <strong>як автор ставиться</strong> до цих фактів. Чи він упевнений? Чи радіє? Чи шкодує? Чи вважає це важливим додати? Без вставних слів мова звучить сухо, як інструкція до побутової техніки. З ними — як жива розмова, де видно особистість мовця.</p>
 <p>Є ще одна причина вивчати вставні слова: вони <strong>зв'язують текст</strong>. «По-перше… по-друге… нарешті…» — і ваш хаотичний список думок стає структурованим аргументом. «Отже…» — і читач розуміє, що зараз буде висновок. «До речі…» — і він готується до відступу від теми. Вставні слова — це <strong>дорожні знаки</strong> вашого тексту.</p>
 <blockquote>
   <p><strong>Чи знали ви?</strong></p>
   <p>Слово <strong>«мабуть»</strong> походить від «мати бути» — тобто буквально «має бути так». Це давня форма вираження припущення. Цікаво, що в російській мові аналог «может быть» теж пов'язаний із модальним дієсловом «могти». А англійське «maybe» — це «may be», теж модальне дієслово. Людські мови <strong>незалежно</strong> прийшли до схожих способів вираження невпевненості.</p>
 </blockquote>
-<hr />
-<h1 id="-1">Що таке вставні слова?</h1>
-<p><strong>Вставні слова</strong> — слова та вирази, що виражають ставлення мовця до сказаного, але <strong>граматично не пов'язані</strong> з реченням.</p>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Що таке вставні слова?</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><p><strong>Вставні слова</strong> — слова та вирази, що виражають ставлення мовця до сказаного, але <strong>граматично не пов'язані</strong> з реченням.</p>
 <table>
 <thead>
 <tr>
@@ -152,9 +187,14 @@
 </tbody>
 </table>
 <p><strong>Ключова властивість:</strong> Вставне слово можна <strong>видалити</strong> — речення залишиться граматично правильним.</p>
-<hr />
-<h1 id="-2">Функції вставних слів</h1>
-<table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Функції вставних слів</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><table>
 <thead>
 <tr>
 <th>Функція</th>
@@ -192,9 +232,14 @@
 </tr>
 </tbody>
 </table>
-<hr />
-<h1 id="-3">Ступінь впевненості</h1>
-<table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Ступінь впевненості</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><table>
 <thead>
 <tr>
 <th>Рівень</th>
@@ -227,9 +272,14 @@
   <p>❌ <strong>Міф:</strong> «Напевно» і «мабуть» — синоніми.»</p>
   <p>✅ <strong>Факт:</strong> У сучасному вживанні <strong>«напевно»</strong> означає вищий ступінь впевненості, ніж <strong>«мабуть»</strong>. «Він напевно прийде» — майже впевнений. «Він мабуть прийде» — припускаю, але не впевнений. Однак у розмовній мові ці слова часто змішуються.</p>
 </blockquote>
-<hr />
-<h1 id="-4">Емоційна оцінка</h1>
-<table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-4">
+        <div class="section-header" onclick="toggleSection(4)">
+          <h3>Емоційна оцінка</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><table>
 <thead>
 <tr>
 <th>Емоція</th>
@@ -265,9 +315,14 @@
   <p><strong>Чи знали ви?</strong></p>
   <p>Вираз <strong>«на жаль»</strong> — це скорочення від давнішого «на жаль мені» (= «мені сумно»). Аналогічно <strong>«на щастя»</strong> — від «на щастя мені». Ці конструкції показують, що вставні слова часто виникають із <strong>повних речень</strong>, які з часом скоротилися до стійких формул.</p>
 </blockquote>
-<hr />
-<h1 id="-5">Джерело інформації</h1>
-<table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-5">
+        <div class="section-header" onclick="toggleSection(5)">
+          <h3>Джерело інформації</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><table>
 <thead>
 <tr>
 <th>Джерело</th>
@@ -298,9 +353,14 @@
 <li><strong>За даними опитування</strong>, 70% підтримують реформу.</li>
 </ul>
 <p><strong>Чому це важливо?</strong> Вказівка на джерело — це <strong>відповідальність</strong>. «Кажуть» — невідомо хто. «За словами президента» — конкретна особа.</p>
-<hr />
-<h1 id="-6">Порядок думок</h1>
-<table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-6">
+        <div class="section-header" onclick="toggleSection(6)">
+          <h3>Порядок думок</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><table>
 <thead>
 <tr>
 <th>Функція</th>
@@ -328,9 +388,14 @@
 </table>
 <p><strong>Приклад структурованого тексту:</strong><br />
 «<strong>По-перше</strong>, потрібно визначити проблему. <strong>По-друге</strong>, знайти можливі рішення. <strong>Нарешті</strong>, обрати оптимальний варіант. <strong>Отже</strong>, план готовий.»</p>
-<hr />
-<h1 id="-7">Зв'язок з контекстом</h1>
-<table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-7">
+        <div class="section-header" onclick="toggleSection(7)">
+          <h3>Зв'язок з контекстом</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><table>
 <thead>
 <tr>
 <th>Функція</th>
@@ -363,9 +428,14 @@
 <li><strong>Навпаки</strong>, він дуже задоволений.</li>
 <li><strong>Інакше кажучи</strong>, проєкт закрито.</li>
 </ul>
-<hr />
-<h1 id="-8">Привернення уваги</h1>
-<table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-8">
+        <div class="section-header" onclick="toggleSection(8)">
+          <h3>Привернення уваги</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><table>
 <thead>
 <tr>
 <th>Звертання</th>
@@ -396,9 +466,14 @@
 </tbody>
 </table>
 <p>Ці слова створюють <strong>ілюзію діалогу</strong> — ніби мовець звертається безпосередньо до слухача.</p>
-<hr />
-<h1 id="-9">Пунктуація</h1>
-<h2 id="-10">Основне правило</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-9">
+        <div class="section-header" onclick="toggleSection(9)">
+          <h3>Пунктуація</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Основне правило</h2>
 <p><strong>Вставні слова виділяються комами:</strong></p>
 <table>
 <thead>
@@ -422,9 +497,14 @@
 </tr>
 </tbody>
 </table>
-<hr />
-<h1 id="vs">Вставне слово vs Член речення</h1>
-<p><strong>Одне й те саме слово</strong> може бути вставним або членом речення:</p>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-10">
+        <div class="section-header" onclick="toggleSection(10)">
+          <h3>Вставне слово vs Член речення</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><p><strong>Одне й те саме слово</strong> може бути вставним або членом речення:</p>
 <table>
 <thead>
 <tr>
@@ -466,9 +546,14 @@
   <p>❌ <strong>Міф:</strong> «Всі ці слова завжди вставні.»</p>
   <p>✅ <strong>Факт:</strong> Слова «мабуть», «можливо», «здається» можуть бути <strong>і вставними, і членами речення</strong> — залежить від синтаксичної ролі. Контекст вирішує все!</p>
 </blockquote>
-<hr />
-<h1 id="-11">НЕ є вставними!</h1>
-<p><strong>Ці слова часто плутають із вставними:</strong></p>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-11">
+        <div class="section-header" onclick="toggleSection(11)">
+          <h3>НЕ є вставними!</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><p><strong>Ці слова часто плутають із вставними:</strong></p>
 <table>
 <thead>
 <tr>
@@ -500,9 +585,14 @@
 </tbody>
 </table>
 <p><strong>«Наприкінці», «раптом», «також», «навіть», «майже» — НЕ вставні слова!</strong> Вони є обставинами або частками й не виділяються комами.</p>
-<hr />
-<h1 id="-12">Практика</h1>
-<h2 id="-13">Визначте функцію</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-12">
+        <div class="section-header" onclick="toggleSection(12)">
+          <h3>Практика</h3>
+          <span class="section-type practice">practice</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Визначте функцію</h2>
 <ol>
 <li><p>«На жаль, ми не встигли.»<br />
 → <strong>Емоційна оцінка</strong> (сум)</p></li>
@@ -515,7 +605,7 @@
 <li><p>«Безумовно, він правий.»<br />
 → <strong>Ступінь впевненості</strong></p></li>
 </ol>
-<h2 id="-14">Вставте вставне слово</h2>
+<h2 id="-1">Вставте вставне слово</h2>
 <ol>
 <li><p>___, він не прийде. (невпевненість)<br />
 → <strong>Мабуть</strong>, він не прийде.</p></li>
@@ -526,7 +616,7 @@
 <li><p>___, ми домовилися. (підсумок)<br />
 → <strong>Отже</strong>, ми домовилися.</p></li>
 </ol>
-<h2 id="-15">Поставте розділові знаки</h2>
+<h2 id="-2">Поставте розділові знаки</h2>
 <ol>
 <li><p>Він мабуть запізниться.<br />
 → <strong>Він, мабуть, запізниться.</strong></p></li>
@@ -535,7 +625,7 @@
 <li><p>До речі ти чув новину?<br />
 → <strong>До речі, ти чув новину?</strong></p></li>
 </ol>
-<h2 id="-16">Вставне чи член речення?</h2>
+<h2 id="-3">Вставне чи член речення?</h2>
 <ol>
 <li><p>«Можливо, він прийде.»<br />
 → <strong>Вставне</strong> (можна видалити)</p></li>
@@ -546,7 +636,165 @@
 <li><p>«Він здається щасливим.»<br />
 → <strong>Член речення</strong> (допоміжне дієслово)</p></li>
 </ol>
-<hr /></div></div>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-13">
+        <div class="section-header" onclick="toggleSection(13)">
+          <h3>Словник</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Слово</th>
+<th>Переклад</th>
+<th>Примітки</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>вставний</td>
+<td>parenthetical</td>
+<td>не член речення</td>
+</tr>
+<tr>
+<td>мабуть</td>
+<td>perhaps, probably</td>
+<td>припущення</td>
+</tr>
+<tr>
+<td>напевно</td>
+<td>surely, probably</td>
+<td>вища впевненість</td>
+</tr>
+<tr>
+<td>безумовно</td>
+<td>undoubtedly</td>
+<td>повна впевненість</td>
+</tr>
+<tr>
+<td>до речі</td>
+<td>by the way</td>
+<td>додаткова думка</td>
+</tr>
+<tr>
+<td>між іншим</td>
+<td>by the way</td>
+<td>додаткова думка</td>
+</tr>
+<tr>
+<td>на жаль</td>
+<td>unfortunately</td>
+<td>сум</td>
+</tr>
+<tr>
+<td>на щастя</td>
+<td>fortunately</td>
+<td>радість</td>
+</tr>
+<tr>
+<td>по-перше</td>
+<td>firstly</td>
+<td>порядок</td>
+</tr>
+<tr>
+<td>отже</td>
+<td>so, therefore</td>
+<td>підсумок</td>
+</tr>
+<tr>
+<td>словом</td>
+<td>in a word</td>
+<td>підсумок</td>
+</tr>
+<tr>
+<td>інакше кажучи</td>
+<td>in other words</td>
+<td>пояснення</td>
+</tr>
+<tr>
+<td>за словами</td>
+<td>according to</td>
+<td>джерело</td>
+</tr>
+<tr>
+<td>на думку</td>
+<td>in the opinion of</td>
+<td>джерело</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-14">
+        <div class="section-header" onclick="toggleSection(14)">
+          <h3>Підсумок</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Функції вставних слів</h2>
+<table>
+<thead>
+<tr>
+<th>Функція</th>
+<th>Приклади</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Впевненість</td>
+<td>безумовно, мабуть</td>
+</tr>
+<tr>
+<td>Оцінка</td>
+<td>на жаль, на щастя</td>
+</tr>
+<tr>
+<td>Джерело</td>
+<td>кажуть, на думку</td>
+</tr>
+<tr>
+<td>Порядок</td>
+<td>по-перше, нарешті</td>
+</tr>
+<tr>
+<td>Зв'язок</td>
+<td>до речі, отже</td>
+</tr>
+</tbody>
+</table>
+<h2 id="-1">Пунктуація</h2>
+<table>
+<thead>
+<tr>
+<th>Правило</th>
+<th>Приклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Виділення комами</td>
+<td>Він, мабуть, прийде.</td>
+</tr>
+<tr>
+<td>На початку</td>
+<td>Мабуть, він прийде.</td>
+</tr>
+<tr>
+<td>В кінці</td>
+<td>Він прийде, мабуть.</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p><strong>Запам'ятайте:</strong></p>
+  <p>✓ Вставні слова <strong>не є членами речення</strong><br />
+  ✓ Завжди виділяються <strong>комами</strong><br />
+  ✓ <strong>НЕ вставні:</strong> раптом, також, навіть, майже<br />
+  ✓ Одне слово може бути <strong>і вставним, і членом речення</strong><br />
+  ✓ Вставні слова <strong>збагачують</strong> мовлення та <strong>структурують</strong> текст</p>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('vocab')">Start →</button></div>
     </section>
     
@@ -579,6 +827,10 @@
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,14 +136,917 @@
         <p style="color:var(--text-muted)">Медицина: Діагностика та лікування</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>«Пацієнту поставлено діагноз: гостра респіраторна вірусна інфекція. Призначено симптоматичне лікування та постільний режим.» — такий запис ви побачите в українській виписці з лікарні. Звернули увагу на форму? **Поставлено**, **призначено** — це той самий безособовий пасив на -но/-то, який ви вивчали в модулі про офіційний стиль. Медична документація — чудовий приклад реального використання цієї конструкції!</h4><div class="md-content"><p>Медична термінологія в українській мові — це захоплива суміш слов'янських коренів і міжнародних запозичень. Чому «біль» і «pain» такі різні? Бо український корінь <em>бол-</em> — споріднений із «болотом» (щось болюче, як багно, що затягує). А чому «лікар» і «doctor» не схожі? Бо «лікар» — від «ліки», той, хто дає ліки. Натомість «доктор» — від латинського <em>docere</em> (вчити), тобто «вчений».</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Зміст уроку</li><li class="toc-item" data-target="section-1">Вправи</li><li class="toc-item" data-target="section-2">Словник</li><li class="toc-item" data-target="section-3">Підсумок</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Зміст уроку</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Вступ</h2>
+<p>«Пацієнту поставлено діагноз: гостра респіраторна вірусна інфекція. Призначено симптоматичне лікування та постільний режим.» — такий запис ви побачите в українській виписці з лікарні. Звернули увагу на форму? <strong>Поставлено</strong>, <strong>призначено</strong> — це той самий безособовий пасив на -но/-то, який ви вивчали в модулі про офіційний стиль. Медична документація — чудовий приклад реального використання цієї конструкції!</p>
+<p>Медична термінологія в українській мові — це захоплива суміш слов'янських коренів і міжнародних запозичень. Чому «біль» і «pain» такі різні? Бо український корінь <em>бол-</em> — споріднений із «болотом» (щось болюче, як багно, що затягує). А чому «лікар» і «doctor» не схожі? Бо «лікар» — від «ліки», той, хто дає ліки. Натомість «доктор» — від латинського <em>docere</em> (вчити), тобто «вчений».</p>
 <p>Україна пережила колосальну медичну реформу в останні роки. До 2018 року система була радянською: ви йшли в поліклініку за місцем реєстрації, лікар виписував паперовий рецепт, все було «безкоштовно» (тобто неефективно і корумповано). Тепер у вас є <strong>сімейний лікар</strong>, з яким ви підписуєте <strong>декларацію</strong>. Він — ваш перший контакт із медичною системою, «воротар» (так і кажуть!), який за потреби дає <strong>направлення</strong> до вузького спеціаліста. Рецепти — <strong>електронні</strong>, ліки можна отримати за штрих-кодом в аптеці. Революція!</p>
 <p>Пандемія COVID-19 прискорила ці зміни. Українці вивчили нові слова: <strong>ШВЛ</strong> (штучна вентиляція легень), <strong>сатурація</strong> (рівень кисню в крові), <strong>ПЛР-тест</strong>. «Чи ви вакциновані?» — стало звичним питанням. Героїчна праця медиків під час пандемії та війни заслуговує на повагу — вони рятують життя в умовах, які важко уявити.</p>
 <blockquote>
   <p><strong>Чи знали ви?</strong></p>
   <p>Україна має славну медичну історію! <strong>Микола Амосов</strong> (1913–2002) — легендарний кардіохірург, який провів понад 6000 операцій на серці і розробив унікальні техніки. Він також був письменником і філософом, автором «теорії обмеження»: рекомендував помірне харчування та фізичні вправи. У 80 років він щодня робив 1000 присідань!</p>
   <p>А <strong>Данило Заболотний</strong> (1866–1929) відкрив шляхи поширення чуми та холери, рятуючи мільйони життів у всьому світі. Він — один із засновників епідеміології.</p>
-</blockquote></div></div></div>
+</blockquote>
+<hr />
+<blockquote>
+  <p><strong>Міф vs Факт</strong></p>
+  <p>❌ <strong>Міф:</strong> «Терапевт» і «therapist» — однакові слова.</p>
+  <p>✅ <strong>Факт:</strong> Великий підступ! Український <strong>терапевт</strong> — це лікар загальної практики (general practitioner, GP). Англійський <strong>therapist</strong> — часто психотерапевт або фізіотерапевт. Якщо ви скажете «I'm seeing a therapist», українці можуть подумати, що ви йдете до звичайного лікаря, а не до психолога!</p>
+</blockquote>
+<hr />
+<p>Цей урок дасть вам інструменти для спілкування з українськими лікарями, розуміння медичних документів і, сподіваємося, допоможе в ситуаціях, коли здоров'я потребує уваги. Бережіть себе!</p>
+<h2 id="-1">Розминка</h2>
+<h3 id="-2">Медичний текст</h3>
+<p>Прочитайте виписку і знайдіть усі дієслова у формі -но/-то:</p>
+<p>«Пацієнта <strong>госпіталізовано</strong> зі скаргами на біль у грудях та задишку. <strong>Проведено</strong> обстеження: ЕКГ, аналіз крові, рентген легень. <strong>Діагностовано</strong> гостру пневмонію. <strong>Призначено</strong> антибактеріальну терапію. Стан покращується. <strong>Рекомендовано</strong> амбулаторне спостереження після виписки.»</p>
+<p>Скільки форм на -но/-то ви знайшли? Чому медичні документи використовують цю форму?</p>
+<h2 id="-3">Презентація</h2>
+<h3 id="-4">Діагностика: шлях до діагнозу</h3>
+<h4 id="-5">Обстеження та аналізи</h4>
+<table>
+<thead>
+<tr>
+<th>Термін</th>
+<th>English</th>
+<th>Приклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>обстеження</strong></td>
+<td>examination</td>
+<td>Пройшов повне обстеження.</td>
+</tr>
+<tr>
+<td><strong>огляд</strong></td>
+<td>check-up</td>
+<td>Профілактичний огляд раз на рік.</td>
+</tr>
+<tr>
+<td><strong>аналіз</strong></td>
+<td>test, analysis</td>
+<td>Здати аналіз крові.</td>
+</tr>
+<tr>
+<td><strong>аналіз крові</strong></td>
+<td>blood test</td>
+<td>Загальний аналіз крові.</td>
+</tr>
+<tr>
+<td><strong>аналіз сечі</strong></td>
+<td>urine test</td>
+<td>Аналіз сечі в нормі.</td>
+</tr>
+<tr>
+<td><strong>УЗД</strong></td>
+<td>ultrasound</td>
+<td>УЗД черевної порожнини.</td>
+</tr>
+<tr>
+<td><strong>рентген</strong></td>
+<td>X-ray</td>
+<td>Рентген легень.</td>
+</tr>
+<tr>
+<td><strong>МРТ</strong></td>
+<td>MRI</td>
+<td>Призначили МРТ голови.</td>
+</tr>
+<tr>
+<td><strong>КТ</strong></td>
+<td>CT scan</td>
+<td>КТ з контрастом.</td>
+</tr>
+<tr>
+<td><strong>ЕКГ</strong></td>
+<td>ECG/EKG</td>
+<td>ЕКГ показала аритмію.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Скорочення:</strong> Українці обожнюють абревіатури! УЗД = ультразвукове дослідження, МРТ = магнітно-резонансна томографія, КТ = комп'ютерна томографія, ЕКГ = електрокардіограма.</p>
+<h4 id="-6">Симптоми та скарги</h4>
+<table>
+<thead>
+<tr>
+<th>Термін</th>
+<th>English</th>
+<th>Приклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>симптом</strong></td>
+<td>symptom</td>
+<td>Типові симптоми застуди.</td>
+</tr>
+<tr>
+<td><strong>скарга</strong></td>
+<td>complaint</td>
+<td>Скарги на головний біль.</td>
+</tr>
+<tr>
+<td><strong>біль</strong></td>
+<td>pain</td>
+<td>Гострий біль у животі.</td>
+</tr>
+<tr>
+<td><strong>запалення</strong></td>
+<td>inflammation</td>
+<td>Запалення горла.</td>
+</tr>
+<tr>
+<td><strong>інфекція</strong></td>
+<td>infection</td>
+<td>Вірусна інфекція.</td>
+</tr>
+<tr>
+<td><strong>температура</strong></td>
+<td>fever</td>
+<td>Температура 38,5.</td>
+</tr>
+<tr>
+<td><strong>набряк</strong></td>
+<td>swelling</td>
+<td>Набряк ніг.</td>
+</tr>
+<tr>
+<td><strong>висип</strong></td>
+<td>rash</td>
+<td>Висип на шкірі.</td>
+</tr>
+<tr>
+<td><strong>нудота</strong></td>
+<td>nausea</td>
+<td>Нудота та блювання.</td>
+</tr>
+<tr>
+<td><strong>кашель</strong></td>
+<td>cough</td>
+<td>Сухий кашель.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Зверніть увагу:</strong> «Температура» в українській = «fever» в англійській, а не «temperature». «У мене температура» = «I have a fever», не «I have a temperature».</p>
+<h3 id="-7">Лікування: від терапії до реабілітації</h3>
+<h4 id="-8">Види лікування</h4>
+<table>
+<thead>
+<tr>
+<th>Термін</th>
+<th>English</th>
+<th>Примітки</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>лікування</strong></td>
+<td>treatment</td>
+<td>Загальний термін.</td>
+</tr>
+<tr>
+<td><strong>терапія</strong></td>
+<td>therapy</td>
+<td>Часто медикаментозна.</td>
+</tr>
+<tr>
+<td><strong>медикаментозне лікування</strong></td>
+<td>drug treatment</td>
+<td>Ліками.</td>
+</tr>
+<tr>
+<td><strong>хірургічне втручання</strong></td>
+<td>surgical intervention</td>
+<td>Операція.</td>
+</tr>
+<tr>
+<td><strong>операція</strong></td>
+<td>surgery, operation</td>
+<td>Планова / екстрена.</td>
+</tr>
+<tr>
+<td><strong>фізіотерапія</strong></td>
+<td>physiotherapy</td>
+<td>Прогрівання, масаж.</td>
+</tr>
+<tr>
+<td><strong>реабілітація</strong></td>
+<td>rehabilitation</td>
+<td>Після хвороби.</td>
+</tr>
+<tr>
+<td><strong>профілактика</strong></td>
+<td>prevention</td>
+<td>Краще, ніж лікування!</td>
+</tr>
+</tbody>
+</table>
+<h4 id="-9">Ліки та препарати</h4>
+<table>
+<thead>
+<tr>
+<th>Термін</th>
+<th>English</th>
+<th>Приклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>ліки</strong></td>
+<td>medicine, medication</td>
+<td>Приймати ліки.</td>
+</tr>
+<tr>
+<td><strong>препарат</strong></td>
+<td>drug, preparation</td>
+<td>Лікарський препарат.</td>
+</tr>
+<tr>
+<td><strong>таблетка</strong></td>
+<td>pill, tablet</td>
+<td>Таблетка від головного болю.</td>
+</tr>
+<tr>
+<td><strong>капсула</strong></td>
+<td>capsule</td>
+<td>Капсули вітамінів.</td>
+</tr>
+<tr>
+<td><strong>мазь</strong></td>
+<td>ointment</td>
+<td>Мазь від опіків.</td>
+</tr>
+<tr>
+<td><strong>краплі</strong></td>
+<td>drops</td>
+<td>Очні краплі.</td>
+</tr>
+<tr>
+<td><strong>сироп</strong></td>
+<td>syrup</td>
+<td>Сироп від кашлю.</td>
+</tr>
+<tr>
+<td><strong>ін'єкція</strong></td>
+<td>injection</td>
+<td>Внутрішньом'язова ін'єкція.</td>
+</tr>
+<tr>
+<td><strong>укол</strong></td>
+<td>shot (colloquial)</td>
+<td>Зробити укол.</td>
+</tr>
+<tr>
+<td><strong>рецепт</strong></td>
+<td>prescription</td>
+<td>Ліки за рецептом.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Стиль:</strong> «Ін'єкція» — офіційно, «укол» — розмовно. «Мені зробили укол» = «I got a shot».</p>
+<h4 id="-10">Прийом ліків</h4>
+<table>
+<thead>
+<tr>
+<th>Термін</th>
+<th>English</th>
+<th>Приклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>приймати ліки</strong></td>
+<td>to take medicine</td>
+<td>Приймайте двічі на день.</td>
+</tr>
+<tr>
+<td><strong>доза</strong></td>
+<td>dose</td>
+<td>Одна доза — одна таблетка.</td>
+</tr>
+<tr>
+<td><strong>дозування</strong></td>
+<td>dosage</td>
+<td>Дотримуйтесь дозування!</td>
+</tr>
+<tr>
+<td><strong>побічна дія</strong></td>
+<td>side effect</td>
+<td>Можливі побічні дії.</td>
+</tr>
+<tr>
+<td><strong>протипоказання</strong></td>
+<td>contraindication</td>
+<td>Прочитайте протипоказання.</td>
+</tr>
+<tr>
+<td><strong>алергія</strong></td>
+<td>allergy</td>
+<td>Алергія на пеніцилін.</td>
+</tr>
+<tr>
+<td><strong>антибіотик</strong></td>
+<td>antibiotic</td>
+<td>Курс антибіотиків.</td>
+</tr>
+<tr>
+<td><strong>знеболювальне</strong></td>
+<td>painkiller</td>
+<td>Знеболювальне від головного болю.</td>
+</tr>
+<tr>
+<td><strong>жарознижувальне</strong></td>
+<td>antipyretic</td>
+<td>Жарознижувальне для дітей.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="-11">Медичний персонал</h3>
+<table>
+<thead>
+<tr>
+<th>Спеціаліст</th>
+<th>English</th>
+<th>Що лікує</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>лікар</strong></td>
+<td>doctor</td>
+<td>Загальний термін.</td>
+</tr>
+<tr>
+<td><strong>терапевт</strong></td>
+<td>GP (NOT therapist!)</td>
+<td>Загальна практика.</td>
+</tr>
+<tr>
+<td><strong>хірург</strong></td>
+<td>surgeon</td>
+<td>Оперує.</td>
+</tr>
+<tr>
+<td><strong>кардіолог</strong></td>
+<td>cardiologist</td>
+<td>Серце.</td>
+</tr>
+<tr>
+<td><strong>невролог</strong></td>
+<td>neurologist</td>
+<td>Нервова система.</td>
+</tr>
+<tr>
+<td><strong>педіатр</strong></td>
+<td>pediatrician</td>
+<td>Діти.</td>
+</tr>
+<tr>
+<td><strong>гінеколог</strong></td>
+<td>gynecologist</td>
+<td>Жіноче здоров'я.</td>
+</tr>
+<tr>
+<td><strong>стоматолог</strong></td>
+<td>dentist</td>
+<td>Зуби.</td>
+</tr>
+<tr>
+<td><strong>медсестра</strong></td>
+<td>nurse</td>
+<td>Допомога лікарю.</td>
+</tr>
+<tr>
+<td><strong>фармацевт</strong></td>
+<td>pharmacist</td>
+<td>В аптеці.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="-12">Медична реформа в Україні</h3>
+<table>
+<thead>
+<tr>
+<th>Термін</th>
+<th>English</th>
+<th>Контекст</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>сімейний лікар</strong></td>
+<td>family doctor</td>
+<td>Ваш перший контакт.</td>
+</tr>
+<tr>
+<td><strong>декларація</strong></td>
+<td>declaration</td>
+<td>Договір із лікарем.</td>
+</tr>
+<tr>
+<td><strong>направлення</strong></td>
+<td>referral</td>
+<td>Від сімейного до спеціаліста.</td>
+</tr>
+<tr>
+<td><strong>електронний рецепт</strong></td>
+<td>e-prescription</td>
+<td>Через систему eHealth.</td>
+</tr>
+<tr>
+<td><strong>лікарняний</strong></td>
+<td>sick leave</td>
+<td>Офіційний документ.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Культурний контекст:</strong> До реформи українці йшли до вузького спеціаліста напряму. Тепер потрібно <strong>направлення</strong> від сімейного лікаря. Це економить ресурси, але вимагає звички!</p>
+<h3 id="-13">Дієслова медичної сфери</h3>
+<table>
+<thead>
+<tr>
+<th>Дієслово</th>
+<th>Значення</th>
+<th>Приклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>оглядати / оглянути</strong></td>
+<td>to examine</td>
+<td>Лікар оглянув пацієнта.</td>
+</tr>
+<tr>
+<td><strong>діагностувати</strong></td>
+<td>to diagnose</td>
+<td>Діагностували грип.</td>
+</tr>
+<tr>
+<td><strong>призначати / призначити</strong></td>
+<td>to prescribe</td>
+<td>Призначили антибіотики.</td>
+</tr>
+<tr>
+<td><strong>лікувати / вилікувати</strong></td>
+<td>to treat / cure</td>
+<td>Лікують хронічний біль.</td>
+</tr>
+<tr>
+<td><strong>оперувати</strong></td>
+<td>to operate</td>
+<td>Його оперували вчора.</td>
+</tr>
+<tr>
+<td><strong>госпіталізувати</strong></td>
+<td>to hospitalize</td>
+<td>Госпіталізували з інфарктом.</td>
+</tr>
+<tr>
+<td><strong>виписувати / виписати</strong></td>
+<td>to discharge</td>
+<td>Виписали з лікарні.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Пасив у медичному стилі:</strong></p>
+<ul>
+<li>Активний (розмовний): «Лікар призначив ліки.»</li>
+<li>Пасив (офіційний): «Ліки призначено.»</li>
+</ul>
+<h3 id="-14">Медичні заклади</h3>
+<table>
+<thead>
+<tr>
+<th>Заклад</th>
+<th>English</th>
+<th>Функція</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>лікарня</strong></td>
+<td>hospital</td>
+<td>Стаціонар.</td>
+</tr>
+<tr>
+<td><strong>поліклініка</strong></td>
+<td>clinic</td>
+<td>Амбулаторна допомога.</td>
+</tr>
+<tr>
+<td><strong>швидка (допомога)</strong></td>
+<td>ambulance</td>
+<td>Виклик 103.</td>
+</tr>
+<tr>
+<td><strong>приймальне відділення</strong></td>
+<td>ER, emergency room</td>
+<td>Невідкладна допомога.</td>
+</tr>
+<tr>
+<td><strong>стаціонар</strong></td>
+<td>inpatient ward</td>
+<td>Лежиш у лікарні.</td>
+</tr>
+<tr>
+<td><strong>амбулаторія</strong></td>
+<td>outpatient clinic</td>
+<td>Приходиш на прийом.</td>
+</tr>
+<tr>
+<td><strong>аптека</strong></td>
+<td>pharmacy</td>
+<td>Купуєш ліки.</td>
+</tr>
+<tr>
+<td><strong>палата</strong></td>
+<td>ward, room</td>
+<td>Кімната в лікарні.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="-15">Практика</h2>
+<h3 id="1">Вправа 1: Активний → Пасив</h3>
+<p>Перетворіть речення на офіційний стиль (-но/-то):</p>
+<ol>
+<li>Лікар оглянув пацієнта. → ___</li>
+<li>Хірург провів операцію. → ___</li>
+<li>Медсестра зробила укол. → ___</li>
+<li>Фармацевт видав ліки. → ___</li>
+<li>Терапевт призначив лікування. → ___</li>
+</ol>
+<p><details><br />
+<summary>Відповіді</summary></p>
+<ol>
+<li>Пацієнта оглянуто.</li>
+<li>Операцію проведено.</li>
+<li>Укол зроблено.</li>
+<li>Ліки видано.</li>
+<li>Лікування призначено.<br />
+</details></li>
+</ol>
+<h3 id="2">Вправа 2: Заповніть пропуски</h3>
+<ol>
+<li>Мені зробили ___ крові. (blood test)</li>
+<li>Лікар виписав ___ на антибіотики. (prescription)</li>
+<li>Після операції потрібна ___. (rehabilitation)</li>
+<li>У ліків є ___ дія. (side)</li>
+<li>Пацієнта ___ з пневмонією. (hospitalized)</li>
+</ol>
+<p><details><br />
+<summary>Відповіді</summary></p>
+<ol>
+<li>аналіз</li>
+<li>рецепт</li>
+<li>реабілітація</li>
+<li>побічна</li>
+<li>госпіталізували<br />
+</details></li>
+</ol>
+<h3 id="3">Вправа 3: Перекладіть</h3>
+<ol>
+<li>The doctor prescribed antibiotics for five days.</li>
+<li>I have an allergy to penicillin.</li>
+<li>Take this medicine three times a day after meals.</li>
+<li>The patient was discharged from the hospital yesterday.</li>
+<li>Do you have a referral from your family doctor?</li>
+</ol>
+<p><details><br />
+<summary>Відповіді</summary></p>
+<ol>
+<li>Лікар призначив антибіотики на п'ять днів.</li>
+<li>У мене алергія на пеніцилін.</li>
+<li>Приймайте ці ліки тричі на день після їжі.</li>
+<li>Пацієнта вчора виписали з лікарні.</li>
+<li>У вас є направлення від сімейного лікаря?<br />
+</details></li>
+</ol>
+<h2 id="-16">Продукція</h2>
+<h3 id="1-1">Завдання 1: Рольова гра — у лікаря</h3>
+<p>Змоделюйте діалог «лікар — пацієнт»:</p>
+<p><strong>Пацієнт:</strong></p>
+<ul>
+<li>Опис симптомів (коли почалося, що болить)</li>
+<li>Відповіді на запитання лікаря</li>
+<li>Уточнення про лікування</li>
+</ul>
+<p><strong>Лікар:</strong></p>
+<ul>
+<li>Розпитування про симптоми</li>
+<li>Призначення обстеження</li>
+<li>Діагноз і рекомендації</li>
+</ul>
+<p><strong>Приклад початку:</strong><br />
+— Добрий день, на що скаржитеся?<br />
+— Добрий день. У мене вже три дні температура і кашель.<br />
+— Коли саме почалися симптоми?<br />
+— У суботу ввечері…</p>
+<h3 id="2-1">Завдання 2: Виписка</h3>
+<p>Напишіть коротку виписку з історії хвороби (використовуйте пасив -но/-то):</p>
+<p><strong>Шаблон:</strong><br />
+«Пацієнта госпіталізовано з діагнозом ___. Проведено ___. Призначено ___. Рекомендовано ___.»</p>
+<h3 id="3-1">Завдання 3: Обговорення</h3>
+<ol>
+<li>Чи користуєтеся електронними рецептами?</li>
+<li>Як ви ставитеся до системи «сімейний лікар → направлення»?</li>
+<li>Що важливіше — профілактика чи лікування?</li>
+</ol>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Вправи</h3>
+          <span class="section-type practice">practice</span>
+        </div>
+        <div class="section-body md-content"><h2 id="quiz">quiz: Медична термінологія</h2>
+<blockquote>
+  <p>Виберіть правильну відповідь.</p>
+</blockquote>
+<ol>
+<li>«УЗД» — це:</li>
+</ol>
+<ul>
+<li>[x] ультразвукове дослідження</li>
+<li>[ ] рентген</li>
+</ul>
+<blockquote>
+  <p>Ultrasound.</p>
+</blockquote>
+<ol start="2">
+<li>«Терапевт» в українській — це:</li>
+</ol>
+<ul>
+<li>[x] лікар загальної практики (GP)</li>
+<li>[ ] психотерапевт</li>
+</ul>
+<blockquote>
+  <p>NOT therapist!</p>
+</blockquote>
+<ol start="3">
+<li>«Призначити ліки» означає:</li>
+</ol>
+<ul>
+<li>[x] to prescribe medicine</li>
+<li>[ ] to take medicine</li>
+</ul>
+<blockquote>
+  <p>Лікар призначає, пацієнт приймає.</p>
+</blockquote>
+<ol start="4">
+<li>«Побічна дія» — це:</li>
+</ol>
+<ul>
+<li>[x] side effect</li>
+<li>[ ] main effect</li>
+</ul>
+<blockquote>
+  <p>Негативний ефект.</p>
+</blockquote>
+<ol start="5">
+<li>«Направлення» потрібне для:</li>
+</ol>
+<ul>
+<li>[x] візиту до вузького спеціаліста</li>
+<li>[ ] виклику швидкої</li>
+</ul>
+<blockquote>
+  <p>Referral from family doctor.</p>
+</blockquote>
+<ol start="6">
+<li>«Укол» — це розмовний варіант для:</li>
+</ol>
+<ul>
+<li>[x] ін'єкції</li>
+<li>[ ] операції</li>
+</ul>
+<blockquote>
+  <p>Shot/injection.</p>
+</blockquote>
+<ol start="7">
+<li><strong>[Інтеграція: пасив]</strong> Медичний звіт: «Пацієнту ___ діагноз.»</li>
+</ol>
+<ul>
+<li>[x] поставлено</li>
+<li>[ ] поставили</li>
+<li>[ ] ставиться</li>
+</ul>
+<blockquote>
+  <p>Офіційний медичний стиль → -но/-то.</p>
+</blockquote>
+<ol start="8">
+<li><strong>[Інтеграція: регістр]</strong> Розмова: «Мені ___ антибіотики.»</li>
+</ol>
+<ul>
+<li>[ ] призначено</li>
+<li>[x] призначили</li>
+<li>[ ] призначається</li>
+</ul>
+<blockquote>
+  <p>Розмовний стиль → 3-я особа мн.</p>
+</blockquote>
+<ol start="9">
+<li>«Сімейний лікар» — це:</li>
+</ol>
+<ul>
+<li>[x] ваш перший контакт у системі охорони здоров'я</li>
+<li>[ ] лікар, який лікує вашу сім'ю вдома</li>
+</ul>
+<blockquote>
+  <p>Family doctor = GP in Ukrainian reform system.</p>
+</blockquote>
+<ol start="10">
+<li>«У мене температура» означає:<ul>
+<li>[x] у мене жар (fever)</li>
+<li>[ ] у мене є градусник<br />
+&gt; Temperature = fever in this context.</li></ul></li>
+</ol>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Словник</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Слово</th>
+<th>Вимова</th>
+<th>Переклад</th>
+<th>Примітки</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>діагноз</td>
+<td>/dʲiɑɦˈnɔz/</td>
+<td>diagnosis</td>
+<td>m</td>
+</tr>
+<tr>
+<td>симптом</td>
+<td>/sɪmpˈtɔm/</td>
+<td>symptom</td>
+<td>m</td>
+</tr>
+<tr>
+<td>лікування</td>
+<td>/lʲikuˈwɑnʲːɑ/</td>
+<td>treatment</td>
+<td>n</td>
+</tr>
+<tr>
+<td>призначати</td>
+<td>/prɪznɑˈtʃɑtɪ/</td>
+<td>to prescribe</td>
+<td>ipf</td>
+</tr>
+<tr>
+<td>госпіталізувати</td>
+<td>/ɦɔspʲitɑlʲizuˈwɑtɪ/</td>
+<td>to hospitalize</td>
+<td>pf/ipf</td>
+</tr>
+<tr>
+<td>рецепт</td>
+<td>/rɛˈt͡sɛpt/</td>
+<td>prescription</td>
+<td>m</td>
+</tr>
+<tr>
+<td>побічна дія</td>
+<td>/pɔˈbʲitʃnɑ ˈdʲijɑ/</td>
+<td>side effect</td>
+<td>f</td>
+</tr>
+<tr>
+<td>обстеження</td>
+<td>/ɔbstɛˈʒɛnʲːɑ/</td>
+<td>examination</td>
+<td>n</td>
+</tr>
+<tr>
+<td>антибіотик</td>
+<td>/ɑntɪbʲiˈɔtɪk/</td>
+<td>antibiotic</td>
+<td>m</td>
+</tr>
+<tr>
+<td>реабілітація</td>
+<td>/rɛɑbʲilʲiˈtɑt͡sʲijɑ/</td>
+<td>rehabilitation</td>
+<td>f</td>
+</tr>
+<tr>
+<td>направлення</td>
+<td>/nɑprɑwˈlɛnʲːɑ/</td>
+<td>referral</td>
+<td>n</td>
+</tr>
+<tr>
+<td>сімейний лікар</td>
+<td>/sʲiˈmɛjnɪj ˈlʲikɑr/</td>
+<td>family doctor (GP)</td>
+<td>m</td>
+</tr>
+<tr>
+<td>терапевт</td>
+<td>/tɛrɑˈpɛwt/</td>
+<td>GP (NOT therapist!)</td>
+<td>m</td>
+</tr>
+<tr>
+<td>укол</td>
+<td>/uˈkɔl/</td>
+<td>shot, injection</td>
+<td>m, розм.</td>
+</tr>
+<tr>
+<td>жарознижувальне</td>
+<td>/ʒɑrɔznɪˈʒuwɑlʲnɛ/</td>
+<td>antipyretic</td>
+<td>n</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Підсумок</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Діагностика</h2>
+<table>
+<thead>
+<tr>
+<th>Етап</th>
+<th>Терміни</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Обстеження</td>
+<td>огляд, аналіз, УЗД, рентген</td>
+</tr>
+<tr>
+<td>Симптоми</td>
+<td>біль, температура, набряк</td>
+</tr>
+<tr>
+<td>Діагноз</td>
+<td>діагностувати, поставити діагноз</td>
+</tr>
+</tbody>
+</table>
+<h2 id="-1">Лікування</h2>
+<table>
+<thead>
+<tr>
+<th>Тип</th>
+<th>Приклади</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Медикаментозне</td>
+<td>ліки, таблетки, ін'єкції</td>
+</tr>
+<tr>
+<td>Хірургічне</td>
+<td>операція, втручання</td>
+</tr>
+<tr>
+<td>Відновлення</td>
+<td>реабілітація, фізіотерапія</td>
+</tr>
+</tbody>
+</table>
+<h2 id="-2">Головне</h2>
+<blockquote>
+  <p><strong>Запам'ятайте:</strong></p>
+  <ul>
+  <li>Терапевт ≠ therapist (це GP!)</li>
+  <li>Температура = fever (не просто temperature)</li>
+  <li>Пасив у медичних документах: «Призначено», «Рекомендовано»</li>
+  <li>Сімейний лікар → направлення → спеціаліст</li>
+  <li>«Укол» — розмовно, «ін'єкція» — офіційно</li>
+  </ul>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('quiz')">Start →</button></div>
     </section>
     
@@ -163,6 +1084,10 @@
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

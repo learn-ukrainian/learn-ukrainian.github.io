@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,7 +136,22 @@
         <p style="color:var(--text-muted)">Usage and Short Forms (-но/-то)</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Активний vs пасивний стан | Active vs Passive Voice</h4><div class="md-content"><p>Порівняйте:</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Зміст уроку | Lesson Content</li><li class="toc-item" data-target="section-1">Activities</li><li class="toc-item" data-target="section-2">Vocabulary</li><li class="toc-item" data-target="section-3">Summary</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Зміст уроку | Lesson Content</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="warmup">warm-up | Розминка</h2>
+<h3 id="vsactivevspassivevoice">Активний vs пасивний стан | Active vs Passive Voice</h3>
+<p>Порівняйте:</p>
 <p>Compare:</p>
 <p><strong>Активний (Active):</strong></p>
 <ul>
@@ -127,7 +160,10 @@
 <p><strong>Пасивний (Passive):</strong></p>
 <ul>
 <li>Картина <strong>намальована</strong> художником. - The picture was painted by the artist.</li>
-</ul></div></div><div class="canvas-note"><h4>### Повні форми дієприкметників | Full Participle Forms</h4><div class="md-content"><p><strong>Structure:</strong> Subject + бути (optional) + participle (agrees with subject)</p>
+</ul>
+<h2 id="presentation">presentation | Презентація</h2>
+<h3 id="fullparticipleforms">Повні форми дієприкметників | Full Participle Forms</h3>
+<p><strong>Structure:</strong> Subject + бути (optional) + participle (agrees with subject)</p>
 <table>
 <thead>
 <tr>
@@ -158,7 +194,9 @@
 <ul>
 <li>Лист <strong>був написаний</strong> учора. - The letter was written yesterday.</li>
 <li>Робота <strong>буде зроблена</strong> завтра. - The work will be done tomorrow.</li>
-</ul></div></div><div class="canvas-note"><h4>Вираження діяча | Expressing the Agent</h4><div class="md-content"><p><strong>Agent (who did the action) = Instrumental case</strong></p>
+</ul>
+<h3 id="expressingtheagent">Вираження діяча | Expressing the Agent</h3>
+<p><strong>Agent (who did the action) = Instrumental case</strong></p>
 <table>
 <thead>
 <tr>
@@ -185,7 +223,9 @@
 <ul>
 <li>Книга вже прочитана. - The book is already read.</li>
 <li>Вікно відкрите. - The window is open.</li>
-</ul></div></div><div class="canvas-note"><h4>Короткі форми: -но/-то | Short Forms: -но/-то</h4><div class="md-content"><p><strong>Ukrainian has unique impersonal passive forms:</strong></p>
+</ul>
+<h3 id="shortforms">Короткі форми: -но/-то | Short Forms: -но/-то</h3>
+<p><strong>Ukrainian has unique impersonal passive forms:</strong></p>
 <table>
 <thead>
 <tr>
@@ -217,7 +257,9 @@
 <li>Short forms are <strong>invariable</strong> (don't change for gender/number)</li>
 <li>Subject goes in <strong>accusative</strong> case</li>
 <li>Very common in formal/written Ukrainian</li>
-</ul></div></div><div class="canvas-note"><h4>Утворення коротких форм | Short Form Formation</h4><div class="md-content"><table>
+</ul>
+<h3 id="shortformformation">Утворення коротких форм | Short Form Formation</h3>
+<table>
 <thead>
 <tr>
 <th>Full Participle</th>
@@ -251,7 +293,9 @@
 </tr>
 </tbody>
 </table>
-<p><strong>Pattern:</strong> Remove adjective ending, add <strong>-о</strong> (or <strong>-о</strong> after consonant clusters)</p></div></div><div class="canvas-note"><h4>Повна vs коротка форма | Full vs Short Form</h4><div class="md-content"><table>
+<p><strong>Pattern:</strong> Remove adjective ending, add <strong>-о</strong> (or <strong>-о</strong> after consonant clusters)</p>
+<h3 id="vsfullvsshortform">Повна vs коротка форма | Full vs Short Form</h3>
+<table>
 <thead>
 <tr>
 <th>Full Form</th>
@@ -283,7 +327,9 @@
 <li>News reports</li>
 <li>Academic writing</li>
 <li>Signs and announcements</li>
-</ul></div></div><div class="canvas-note"><h4>Приклади коротких форм | Examples of Short Forms</h4><div class="md-content"><p><strong>Офіційні оголошення (Official announcements):</strong></p>
+</ul>
+<h3 id="examplesofshortforms">Приклади коротких форм | Examples of Short Forms</h3>
+<p><strong>Офіційні оголошення (Official announcements):</strong></p>
 <ul>
 <li>Засідання <strong>відкрито</strong>. - The meeting is open.</li>
 <li>Голосування <strong>завершено</strong>. - Voting is complete.</li>
@@ -299,12 +345,16 @@
 <ul>
 <li>Заборонено палити. - Smoking is forbidden.</li>
 <li>Дозволено фотографувати. - Photography is allowed.</li>
-</ul></div></div><div class="canvas-note"><h4>З діячем | With Agent</h4><div class="md-content"><p>Short forms can also express agent:</p>
+</ul>
+<h3 id="withagent">З діячем | With Agent</h3>
+<p>Short forms can also express agent:</p>
 <ul>
 <li>Книгу написано <strong>Шевченком</strong>. - The book was written by Shevchenko.</li>
 <li>Закон ухвалено <strong>парламентом</strong>. - The law was passed by parliament.</li>
 <li>Роботу виконано <strong>студентами</strong>. - The work was done by students.</li>
-</ul></div></div><div class="canvas-note"><h4>Часові форми | Tense Forms</h4><div class="md-content"><p><strong>Present (no auxiliary):</strong></p>
+</ul>
+<h3 id="tenseforms">Часові форми | Tense Forms</h3>
+<p><strong>Present (no auxiliary):</strong></p>
 <ul>
 <li>Вікно відкрито. - The window is open.</li>
 </ul>
@@ -315,13 +365,18 @@
 <p><strong>Future (буде):</strong></p>
 <ul>
 <li>Вікно <strong>буде</strong> відкрито. - The window will be open.</li>
-</ul></div></div><div class="canvas-note"><h4>### Convert to Short Form</h4><div class="md-content"><ol>
+</ul>
+<h2 id="practice">practice | Практика</h2>
+<h3 id="converttoshortform">Convert to Short Form</h3>
+<ol>
 <li>Робота зроблена. → Роботу <strong>зроблено</strong>.</li>
 <li>Книга прочитана. → Книгу <strong>прочитано</strong>.</li>
 <li>Двері закриті. → Двері <strong>закрито</strong>.</li>
 <li>Лист написаний. → Лист <strong>написано</strong>.</li>
 <li>Рішення прийняте. → Рішення <strong>прийнято</strong>.</li>
-</ol></div></div><div class="canvas-note"><h4>Add the Agent</h4><div class="md-content"><ol>
+</ol>
+<h3 id="addtheagent">Add the Agent</h3>
+<ol>
 <li><p>Картину намальовано ___ (художник).<br />
 → Картину намальовано <strong>художником</strong>.</p></li>
 <li><p>Симфонію написано ___ (Бетховен).<br />
@@ -330,7 +385,9 @@
 → Будинок збудовано <strong>робітниками</strong>.</p></li>
 <li><p>Закон ухвалено ___ (парламент).<br />
 → Закон ухвалено <strong>парламентом</strong>.</p></li>
-</ol></div></div><div class="canvas-note"><h4>Choose Full or Short Form</h4><div class="md-content"><ol>
+</ol>
+<h3 id="choosefullorshortform">Choose Full or Short Form</h3>
+<ol>
 <li><p>Офіційне оголошення: «Засідання ___» (відкрите/відкрито)<br />
 → <strong>відкрито</strong> (formal/official)</p></li>
 <li><p>Опис кімнати: «Вікно ___» (відкрите/відкрито)<br />
@@ -339,7 +396,9 @@
 → <strong>підписано</strong> (news style)</p></li>
 <li><p>Розмова: «Робота вже ___» (зроблена/зроблено)<br />
 → both acceptable, <strong>зроблена</strong> more common in speech</p></li>
-</ol></div></div><div class="canvas-note"><h4>Translate to Ukrainian</h4><div class="md-content"><ol>
+</ol>
+<h3 id="translatetoukrainian">Translate to Ukrainian</h3>
+<ol>
 <li><p>The work is done.<br />
 → <strong>Роботу зроблено.</strong> / <strong>Робота зроблена.</strong></p></li>
 <li><p>The decision was made by the director.<br />
@@ -348,16 +407,257 @@
 → <strong>Книгу написано в 1861 році.</strong></p></li>
 <li><p>The window will be closed.<br />
 → <strong>Вікно буде закрито.</strong></p></li>
-</ol></div></div><div class="canvas-note"><h4>### News Report Style</h4><div class="md-content"><p>Write sentences in news style using short forms:</p>
+</ol>
+<h2 id="production">production | Продукція</h2>
+<h3 id="newsreportstyle">News Report Style</h3>
+<p>Write sentences in news style using short forms:</p>
 <ul>
 <li>Угоду підписано.</li>
 <li>Нового президента обрано.</li>
 <li>Засідання завершено.</li>
-</ul></div></div><div class="canvas-note"><h4>Describe Completed Actions</h4><div class="md-content"><p>Use participles to describe what has been done:</p>
+</ul>
+<h3 id="describecompletedactions">Describe Completed Actions</h3>
+<p>Use participles to describe what has been done:</p>
 <ul>
 <li>У кімнаті: вікно відкрито, ліжко застелено…</li>
 <li>На роботі: проєкт закінчено, звіт надіслано…</li>
-</ul></div></div></div>
+</ul>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Activities</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="quizpassiveconstructions">quiz: Passive Constructions</h2>
+<blockquote>
+  <p>Choose the correct form.</p>
+</blockquote>
+<ol>
+<li>Роботу ___ (зроблена/зроблено).</li>
+</ol>
+<ul>
+<li>[x] зроблено</li>
+<li>[ ] зроблена</li>
+</ul>
+<blockquote>
+  <p>Short form with accusative subject.</p>
+</blockquote>
+<ol start="2">
+<li>Книга ___ Шевченком.</li>
+</ol>
+<ul>
+<li>[x] написана</li>
+<li>[ ] написано</li>
+</ul>
+<blockquote>
+  <p>Full form agrees with subject.</p>
+</blockquote>
+<ol start="3">
+<li>Засідання ___ (відкрите/відкрито).</li>
+</ol>
+<ul>
+<li>[x] відкрито</li>
+<li>[ ] відкрите</li>
+</ul>
+<blockquote>
+  <p>Official announcement uses short form.</p>
+</blockquote>
+<ol start="4">
+<li>Вікно було ___ учора.</li>
+</ol>
+<ul>
+<li>[x] відкрито</li>
+<li>[ ] відкрити</li>
+</ul>
+<blockquote>
+  <p>Past passive with було + short form.</p>
+</blockquote>
+<ol start="5">
+<li>Угоду підписано ___ (президент).</li>
+</ol>
+<ul>
+<li>[x] президентом</li>
+<li>[ ] президента</li>
+</ul>
+<blockquote>
+  <p>Agent in instrumental case.</p>
+</blockquote>
+<ol start="6">
+<li>Рішення вже ___.</li>
+</ol>
+<ul>
+<li>[x] прийнято</li>
+<li>[ ] прийняте</li>
+</ul>
+<blockquote>
+  <p>Short form is preferred for formal contexts.</p>
+</blockquote>
+<h2 id="fillinnewsreport">fill-in: News Report</h2>
+<blockquote>
+  <p>Учора в Києві відбулося важливе засідання.</p>
+  <p>Засідання (1)<strong>_ (відкрити) о 10 годині.
+Доповідь (2)</strong>_ (представити) міністром.<br />
+  Новий закон (3)<strong>_ (ухвалити) парламентом.
+Угоду (4)</strong>_ (підписати) обома сторонами.<br />
+  Засідання (5)___ (закрити) о 17 годині.</p>
+</blockquote>
+<p><strong>Answers:</strong></p>
+<ol>
+<li>відкрито</li>
+<li>представлено</li>
+<li>ухвалено</li>
+<li>підписано</li>
+<li>закрито</li>
+</ol>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Vocabulary</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Word</th>
+<th>IPA</th>
+<th>English</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>пасивний стан</td>
+<td>/pɑˈsɪwnɪj stɑn/</td>
+<td>passive voice</td>
+<td>-</td>
+</tr>
+<tr>
+<td>активний стан</td>
+<td>/ɑkˈtɪwnɪj stɑn/</td>
+<td>active voice</td>
+<td>-</td>
+</tr>
+<tr>
+<td>діяч</td>
+<td>/ˈdʲijɑt͡ʃ/</td>
+<td>agent</td>
+<td>m</td>
+</tr>
+<tr>
+<td>коротка форма</td>
+<td>/koˈrotkɑ ˈformɑ/</td>
+<td>short form</td>
+<td>f</td>
+</tr>
+<tr>
+<td>прийнято</td>
+<td>/prɪjˈnʲɑto/</td>
+<td>accepted, adopted</td>
+<td>short form</td>
+</tr>
+<tr>
+<td>ухвалено</td>
+<td>/uxˈvɑlɛno/</td>
+<td>passed (law)</td>
+<td>short form</td>
+</tr>
+<tr>
+<td>підписано</td>
+<td>/pʲidˈpɪsɑno/</td>
+<td>signed</td>
+<td>short form</td>
+</tr>
+<tr>
+<td>відкрито</td>
+<td>/vʲidˈkrɪto/</td>
+<td>opened</td>
+<td>short form</td>
+</tr>
+<tr>
+<td>закрито</td>
+<td>/zɑˈkrɪto/</td>
+<td>closed</td>
+<td>short form</td>
+</tr>
+<tr>
+<td>завершено</td>
+<td>/zɑvɛrˈʃɛno/</td>
+<td>completed</td>
+<td>short form</td>
+</tr>
+<tr>
+<td>затримано</td>
+<td>/zɑˈtrɪmɑno/</td>
+<td>detained</td>
+<td>short form</td>
+</tr>
+<tr>
+<td>заборонено</td>
+<td>/zɑboroˈnɛno/</td>
+<td>forbidden</td>
+<td>short form</td>
+</tr>
+<tr>
+<td>дозволено</td>
+<td>/dozˈvolɛno/</td>
+<td>allowed</td>
+<td>short form</td>
+</tr>
+<tr>
+<td>виконано</td>
+<td>/vɪˈkonɑno/</td>
+<td>performed, done</td>
+<td>short form</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Summary</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="passivevoiceinukrainian">Passive Voice in Ukrainian</h2>
+<h3 id="fullforms">Full Forms</h3>
+<ul>
+<li>Agree with subject in gender/number</li>
+<li>Книга написана. Лист написаний.</li>
+</ul>
+<h3 id="shortforms">Short Forms (-но/-то)</h3>
+<ul>
+<li>Invariable (don't change)</li>
+<li>Subject in accusative</li>
+<li>Formal/official style</li>
+<li>Книгу написано. Лист написано.</li>
+</ul>
+<h3 id="agentexpression">Agent Expression</h3>
+<ul>
+<li>Instrumental case</li>
+<li>Книгу написано <strong>автором</strong>.</li>
+</ul>
+<h3 id="whentouseshortforms">When to Use Short Forms</h3>
+<ul>
+<li>Official documents</li>
+<li>News reports</li>
+<li>Academic writing</li>
+<li>Signs and announcements</li>
+</ul>
+<blockquote>
+  <p><strong>Key Takeaways</strong></p>
+  <ul>
+  <li>Short forms end in -но/-то</li>
+  <li>Short forms don't change for gender/number</li>
+  <li>Short forms take accusative subject</li>
+  <li>Agent = instrumental case</li>
+  <li>Short forms = formal/official style</li>
+  <li>Full forms = everyday speech</li>
+  </ul>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('quiz')">Start →</button></div>
     </section>
     
@@ -395,6 +695,10 @@
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,13 +136,31 @@
         <p style="color:var(--text-muted)">Formation: -ний/-тий</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Що таке дієприкметник? | What is a Participle?</h4><div class="md-content"><p>Дієприкметник — це слово, яке поєднує властивості дієслова та прикметника:</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Зміст уроку | Lesson Content</li><li class="toc-item" data-target="section-1">Activities</li><li class="toc-item" data-target="section-2">Vocabulary</li><li class="toc-item" data-target="section-3">Summary</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Зміст уроку | Lesson Content</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="warmup">warm-up | Розминка</h2>
+<h3 id="whatisaparticiple">Що таке дієприкметник? | What is a Participle?</h3>
+<p>Дієприкметник — це слово, яке поєднує властивості дієслова та прикметника:</p>
 <p>A participle is a word that combines properties of a verb and an adjective:</p>
 <ul>
 <li><strong>Написана</strong> книга - A <strong>written</strong> book (participle from "написати")</li>
 <li><strong>Закрите</strong> вікно - A <strong>closed</strong> window (participle from "закрити")</li>
 <li><strong>Зроблена</strong> робота - <strong>Done</strong> work (participle from "зробити")</li>
-</ul></div></div><div class="canvas-note"><h4>### Пасивні дієприкметники | Passive Participles</h4><div class="md-content"><p><strong>Passive participles</strong> describe a state resulting from an action done TO something:</p>
+</ul>
+<h2 id="presentation">presentation | Презентація</h2>
+<h3 id="passiveparticiples">Пасивні дієприкметники | Passive Participles</h3>
+<p><strong>Passive participles</strong> describe a state resulting from an action done TO something:</p>
 <table>
 <thead>
 <tr>
@@ -155,7 +191,9 @@
 <td>closed</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Утворення з -ний | Formation with -ний</h4><div class="md-content"><p><strong>Most common pattern:</strong> perfective verb stem + <strong>-н-</strong> + adjective ending</p>
+</table>
+<h3 id="formationwith">Утворення з -ний | Formation with -ний</h3>
+<p><strong>Most common pattern:</strong> perfective verb stem + <strong>-н-</strong> + adjective ending</p>
 <table>
 <thead>
 <tr>
@@ -223,7 +261,9 @@
 <td>організувати → організований</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Утворення з -тий | Formation with -тий</h4><div class="md-content"><p><strong>For verbs with stems ending in vowel or certain consonants:</strong></p>
+</table>
+<h3 id="formationwith-1">Утворення з -тий | Formation with -тий</h3>
+<p><strong>For verbs with stems ending in vowel or certain consonants:</strong></p>
 <table>
 <thead>
 <tr>
@@ -275,7 +315,9 @@
 </tr>
 </tbody>
 </table>
-<p><strong>Pattern:</strong> -ти verbs with vowel before -ти usually get <strong>-тий</strong></p></div></div><div class="canvas-note"><h4>Відмінювання дієприкметників | Participle Declension</h4><div class="md-content"><p>Participles decline like adjectives:</p>
+<p><strong>Pattern:</strong> -ти verbs with vowel before -ти usually get <strong>-тий</strong></p>
+<h3 id="participledeclension">Відмінювання дієприкметників | Participle Declension</h3>
+<p>Participles decline like adjectives:</p>
 <table>
 <thead>
 <tr>
@@ -330,7 +372,9 @@
 <td>написаних</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Дієприкметники як прикметники | Participles as Adjectives</h4><div class="md-content"><p>Participles function exactly like adjectives:</p>
+</table>
+<h3 id="participlesasadjectives">Дієприкметники як прикметники | Participles as Adjectives</h3>
+<p>Participles function exactly like adjectives:</p>
 <p><strong>Before noun:</strong></p>
 <ul>
 <li><strong>Написана</strong> книга лежить на столі. - The written book is on the table.</li>
@@ -340,7 +384,9 @@
 <ul>
 <li>Книга <strong>написана</strong>. - The book is written.</li>
 <li>Двері <strong>відкриті</strong>. - The door is open.</li>
-</ul></div></div><div class="canvas-note"><h4>Поширені дієприкметники | Common Participles</h4><div class="md-content"><table>
+</ul>
+<h3 id="commonparticiples">Поширені дієприкметники | Common Participles</h3>
+<table>
 <thead>
 <tr>
 <th>Participle</th>
@@ -425,7 +471,9 @@
 <td>invited</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Порівняння: дієприкметник vs прикметник | Participle vs Adjective</h4><div class="md-content"><p>Some participles have become regular adjectives:</p>
+</table>
+<h3 id="vsparticiplevsadjective">Порівняння: дієприкметник vs прикметник | Participle vs Adjective</h3>
+<p>Some participles have become regular adjectives:</p>
 <table>
 <thead>
 <tr>
@@ -447,7 +495,10 @@
 <td>зайнятий (busy)</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>### Form Participles</h4><div class="md-content"><ol>
+</table>
+<h2 id="practice">practice | Практика</h2>
+<h3 id="formparticiples">Form Participles</h3>
+<ol>
 <li>написати → <strong>написаний</strong></li>
 <li>зробити → <strong>зроблений</strong></li>
 <li>відкрити → <strong>відкритий</strong></li>
@@ -456,7 +507,9 @@
 <li>купити → <strong>куплений</strong></li>
 <li>приготувати → <strong>приготовлений</strong></li>
 <li>збудувати → <strong>збудований</strong></li>
-</ol></div></div><div class="canvas-note"><h4>Complete with Correct Form</h4><div class="md-content"><ol>
+</ol>
+<h3 id="completewithcorrectform">Complete with Correct Form</h3>
+<ol>
 <li><p>___ (написати) лист лежить на столі.<br />
 → <strong>Написаний</strong> лист лежить на столі.</p></li>
 <li><p>Двері ___ (закрити).<br />
@@ -467,7 +520,9 @@
 → <strong>Запрошені</strong> гості вже прийшли.</p></li>
 <li><p>Вечеря вже ___ (приготувати).<br />
 → Вечеря вже <strong>приготовлена</strong>.</p></li>
-</ol></div></div><div class="canvas-note"><h4>Match Verb to Participle</h4><div class="md-content"><table>
+</ol>
+<h3 id="matchverbtoparticiple">Match Verb to Participle</h3>
+<table>
 <thead>
 <tr>
 <th>Verb</th>
@@ -496,7 +551,9 @@
 <td>вимитий</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Translate to Ukrainian</h4><div class="md-content"><ol>
+</table>
+<h3 id="translatetoukrainian">Translate to Ukrainian</h3>
+<ol>
 <li><p>The closed door<br />
 → <strong>Закриті двері</strong></p></li>
 <li><p>A written letter<br />
@@ -507,24 +564,320 @@
 → <strong>Книга прочитана</strong></p></li>
 <li><p>Prepared food<br />
 → <strong>Приготовлена їжа</strong></p></li>
-</ol></div></div><div class="canvas-note"><h4>### Describe Your Room</h4><div class="md-content"><p>Use participles to describe objects:</p>
+</ol>
+<h2 id="production">production | Продукція</h2>
+<h3 id="describeyourroom">Describe Your Room</h3>
+<p>Use participles to describe objects:</p>
 <ul>
 <li>Ліжко застелене. - The bed is made.</li>
 <li>Книги розставлені на полиці. - Books are arranged on the shelf.</li>
 <li>Вікно відкрите. - The window is open.</li>
-</ul></div></div><div class="canvas-note"><h4>What Was Done?</h4><div class="md-content"><p>Describe completed actions using participles:</p>
+</ul>
+<h3 id="whatwasdone">What Was Done?</h3>
+<p>Describe completed actions using participles:</p>
 <ul>
 <li>Домашнє завдання зроблене.</li>
 <li>Лист написаний і відправлений.</li>
 <li>Вечеря приготовлена.</li>
-</ul></div></div></div>
+</ul>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Activities</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="quizparticipleformation">quiz: Participle Formation</h2>
+<blockquote>
+  <p>Choose the correct participle.</p>
+</blockquote>
+<ol>
+<li>Verb: написати → Participle: ___</li>
+</ol>
+<ul>
+<li>[x] написаний</li>
+<li>[ ] написений</li>
+</ul>
+<blockquote>
+  <p>-ати verbs → -аний.</p>
+</blockquote>
+<ol start="2">
+<li>Verb: закрити → Participle: ___</li>
+</ol>
+<ul>
+<li>[x] закритий</li>
+<li>[ ] закрений</li>
+</ul>
+<blockquote>
+  <p>Vowel + -ти → -тий.</p>
+</blockquote>
+<ol start="3">
+<li>Verb: зробити → Participle: ___</li>
+</ol>
+<ul>
+<li>[x] зроблений</li>
+<li>[ ] зроблятий</li>
+</ul>
+<blockquote>
+  <p>-ити verbs → -ений.</p>
+</blockquote>
+<ol start="4">
+<li>___ книга лежить на столі.</li>
+</ol>
+<ul>
+<li>[x] Прочитана</li>
+<li>[ ] Прочитаний</li>
+</ul>
+<blockquote>
+  <p>Feminine noun "книга" needs feminine participle.</p>
+</blockquote>
+<ol start="5">
+<li>Двері ___.</li>
+</ol>
+<ul>
+<li>[x] закриті</li>
+<li>[ ] закрита</li>
+</ul>
+<blockquote>
+  <p>Plural noun "двері" needs plural participle.</p>
+</blockquote>
+<ol start="6">
+<li>Verb: забути → Participle: ___</li>
+</ol>
+<ul>
+<li>[x] забутий</li>
+<li>[ ] забутений</li>
+</ul>
+<blockquote>
+  <p>-ути → -утий.</p>
+</blockquote>
+<h2 id="matchupverbsandparticiples">match-up: Verbs and Participles</h2>
+<table>
+<thead>
+<tr>
+<th>Verb</th>
+<th>Participle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>купити</td>
+<td>куплений</td>
+</tr>
+<tr>
+<td>відкрити</td>
+<td>відкритий</td>
+</tr>
+<tr>
+<td>приготувати</td>
+<td>приготовлений</td>
+</tr>
+<tr>
+<td>знайти</td>
+<td>знайдений</td>
+</tr>
+<tr>
+<td>запросити</td>
+<td>запрошений</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Vocabulary</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Word</th>
+<th>IPA</th>
+<th>English</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>дієприкметник</td>
+<td>/dʲijɛprɪˈkmɛtnɪk/</td>
+<td>participle</td>
+<td>m</td>
+</tr>
+<tr>
+<td>пасивний</td>
+<td>/pɑˈsɪwnɪj/</td>
+<td>passive</td>
+<td>adj</td>
+</tr>
+<tr>
+<td>написаний</td>
+<td>/nɑˈpɪsɑnɪj/</td>
+<td>written</td>
+<td>participle</td>
+</tr>
+<tr>
+<td>прочитаний</td>
+<td>/prot͡ʃɪˈtɑnɪj/</td>
+<td>read</td>
+<td>participle</td>
+</tr>
+<tr>
+<td>зроблений</td>
+<td>/ˈzroblɛnɪj/</td>
+<td>done, made</td>
+<td>participle</td>
+</tr>
+<tr>
+<td>закритий</td>
+<td>/zɑˈkrɪtɪj/</td>
+<td>closed</td>
+<td>participle</td>
+</tr>
+<tr>
+<td>відкритий</td>
+<td>/vʲidˈkrɪtɪj/</td>
+<td>open(ed)</td>
+<td>participle</td>
+</tr>
+<tr>
+<td>забутий</td>
+<td>/zɑˈbutɪj/</td>
+<td>forgotten</td>
+<td>participle</td>
+</tr>
+<tr>
+<td>знайдений</td>
+<td>/znɑjˈdɛnɪj/</td>
+<td>found</td>
+<td>participle</td>
+</tr>
+<tr>
+<td>куплений</td>
+<td>/ˈkuplɛnɪj/</td>
+<td>bought</td>
+<td>participle</td>
+</tr>
+<tr>
+<td>приготовлений</td>
+<td>/prɪɦotoˈwlɛnɪj/</td>
+<td>prepared</td>
+<td>participle</td>
+</tr>
+<tr>
+<td>запрошений</td>
+<td>/zɑˈproʃɛnɪj/</td>
+<td>invited</td>
+<td>participle</td>
+</tr>
+<tr>
+<td>збудований</td>
+<td>/zbuˈdovɑnɪj/</td>
+<td>built</td>
+<td>participle</td>
+</tr>
+<tr>
+<td>організований</td>
+<td>/orɦɑnʲiˈzovɑnɪj/</td>
+<td>organized</td>
+<td>participle</td>
+</tr>
+<tr>
+<td>втрачений</td>
+<td>/vˈtrɑt͡ʃɛnɪj/</td>
+<td>lost</td>
+<td>participle</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Summary</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="pastpassiveparticipleformation">Past Passive Participle Formation</h2>
+<h3 id="twomainsuffixes">Two Main Suffixes</h3>
+<table>
+<thead>
+<tr>
+<th>Suffix</th>
+<th>When</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>-ний/-ений/-аний</strong></td>
+<td>Most verbs</td>
+<td>зроблений, написаний</td>
+</tr>
+<tr>
+<td><strong>-тий</strong></td>
+<td>Vowel stems</td>
+<td>відкритий, забутий</td>
+</tr>
+</tbody>
+</table>
+<h3 id="commonpatterns">Common Patterns</h3>
+<table>
+<thead>
+<tr>
+<th>Verb Type</th>
+<th>Participle</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-ити</td>
+<td>-ений</td>
+<td>зробити → зроблений</td>
+</tr>
+<tr>
+<td>-ати</td>
+<td>-аний</td>
+<td>написати → написаний</td>
+</tr>
+<tr>
+<td>-увати</td>
+<td>-ований</td>
+<td>намалювати → намальований</td>
+</tr>
+<tr>
+<td>-ти (vowel)</td>
+<td>-тий</td>
+<td>відкрити → відкритий</td>
+</tr>
+</tbody>
+</table>
+<h3 id="usage">Usage</h3>
+<ul>
+<li>Participles decline like adjectives</li>
+<li>Can be used before or after nouns</li>
+<li>Agree in gender, number, case</li>
+</ul>
+<blockquote>
+  <p><strong>Key Takeaways</strong></p>
+  <ul>
+  <li>Passive participles = verb meaning + adjective form</li>
+  <li>Two main suffixes: -ний and -тий</li>
+  <li>Decline exactly like adjectives</li>
+  <li>Formed from perfective verbs</li>
+  <li>Very common in written Ukrainian</li>
+  </ul>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('match')">Start →</button></div>
     </section>
     <section id="match" class="section"><div class="card"><h3>Verbs and Participles</h3>
       <div class="score-display"><span class="score"><span id="match-score">0</span>/5</span></div>
       <div class="match-container" id="match-container"><svg class="match-lines" id="match-lines"></svg>
         <div class="match-column" id="match-left"><div class="match-item" data-pair="0">купити</div><div class="match-item" data-pair="1">відкрити</div><div class="match-item" data-pair="2">приготувати</div><div class="match-item" data-pair="3">знайти</div><div class="match-item" data-pair="4">запросити</div></div>
-        <div class="match-column" id="match-right"><div class="match-item" data-pair="0">куплений</div><div class="match-item" data-pair="3">знайдений</div><div class="match-item" data-pair="1">відкритий</div><div class="match-item" data-pair="4">запрошений</div><div class="match-item" data-pair="2">приготовлений</div></div>
+        <div class="match-column" id="match-right"><div class="match-item" data-pair="0">куплений</div><div class="match-item" data-pair="1">відкритий</div><div class="match-item" data-pair="2">приготовлений</div><div class="match-item" data-pair="3">знайдений</div><div class="match-item" data-pair="4">запрошений</div></div>
       </div>
       <div class="completion-message" id="match-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetMatch()">Reset</button><button class="btn btn-primary" onclick="showSection('quiz')">Next →</button></div>
@@ -563,6 +916,10 @@
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

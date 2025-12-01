@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,11 +136,29 @@
         <p style="color:var(--text-muted)">Виходить, що...; Доходити до...</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Beyond Physical Motion</h4><div class="md-content"><p>Motion verbs don't just describe physical movement. They create powerful expressions for abstract ideas!</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Lesson Content</li><li class="toc-item" data-target="section-1">Activities</li><li class="toc-item" data-target="section-2">Vocabulary</li><li class="toc-item" data-target="section-3">Summary</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Lesson Content</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="warmup">warm-up</h2>
+<h3 id="beyondphysicalmotion">Beyond Physical Motion</h3>
+<p>Motion verbs don't just describe physical movement. They create powerful expressions for abstract ideas!</p>
 <p><strong>Compare:</strong></p>
 <p>Physical: Він <strong>виходить</strong> з кімнати. - He is going out of the room.<br />
 Abstract: <strong>Виходить</strong>, що він мав рацію. - It turns out that he was right.</p>
-<p>Today: the most useful figurative uses of motion verbs.</p></div></div><div class="canvas-note"><h4>### Виходити / Вийти - Abstract Uses</h4><div class="md-content"><p><strong>1. Виходить, що… = It turns out that…</strong></p>
+<p>Today: the most useful figurative uses of motion verbs.</p>
+<h2 id="presentation">presentation</h2>
+<h3 id="abstractuses">Виходити / Вийти - Abstract Uses</h3>
+<p><strong>1. Виходить, що… = It turns out that…</strong></p>
 <ul>
 <li><strong>Виходить</strong>, що ти був правий. - It turns out you were right.</li>
 <li><strong>Виходить</strong>, що ми помилилися. - It turns out we were wrong.</li>
@@ -138,7 +174,9 @@ Abstract: <strong>Виходить</strong>, що він мав рацію. - It
 <ul>
 <li>Вона <strong>виходить заміж</strong> у червні. - She's getting married in June.</li>
 <li>Вона <strong>вийшла заміж</strong> за лікаря. - She married a doctor.</li>
-</ul></div></div><div class="canvas-note"><h4>Доходити / Дійти - Abstract Uses</h4><div class="md-content"><p><strong>1. Доходити до (чогось) = To reach, get to (a point)</strong></p>
+</ul>
+<h3 id="abstractuses-1">Доходити / Дійти - Abstract Uses</h3>
+<p><strong>1. Доходити до (чогось) = To reach, get to (a point)</strong></p>
 <ul>
 <li>Справа <strong>дійшла</strong> до суду. - The matter went to court.</li>
 <li>Справа <strong>не дійшла</strong> до бійки. - It didn't come to a fight.</li>
@@ -153,7 +191,9 @@ Abstract: <strong>Виходить</strong>, що він мав рацію. - It
 <p><strong>3. Дохід = Income (that which "comes to" you)</strong></p>
 <ul>
 <li>Місячний <strong>дохід</strong> - monthly income</li>
-</ul></div></div><div class="canvas-note"><h4>Приходити / Прийти - Abstract Uses</h4><div class="md-content"><p><strong>1. Приходити до (висновку) = To come to (a conclusion)</strong></p>
+</ul>
+<h3 id="abstractuses-2">Приходити / Прийти - Abstract Uses</h3>
+<p><strong>1. Приходити до (висновку) = To come to (a conclusion)</strong></p>
 <ul>
 <li>Ми <strong>прийшли до висновку</strong>, що… - We came to the conclusion that…</li>
 <li>Вони <strong>прийшли до згоди</strong>. - They came to an agreement.</li>
@@ -168,7 +208,9 @@ Abstract: <strong>Виходить</strong>, що він мав рацію. - It
 <ul>
 <li>Мені <strong>прийшла на думку</strong> ідея. - An idea came to mind.</li>
 <li>Що тобі <strong>приходить на думку</strong>? - What comes to your mind?</li>
-</ul></div></div><div class="canvas-note"><h4>Переходити / Перейти - Abstract Uses</h4><div class="md-content"><p><strong>1. Переходити до (справи) = To get down to (business)</strong></p>
+</ul>
+<h3 id="abstractuses-3">Переходити / Перейти - Abstract Uses</h3>
+<p><strong>1. Переходити до (справи) = To get down to (business)</strong></p>
 <ul>
 <li>Давайте <strong>перейдемо до справи</strong>. - Let's get down to business.</li>
 <li><strong>Перейдемо до</strong> наступного питання. - Let's move on to the next question.</li>
@@ -182,7 +224,9 @@ Abstract: <strong>Виходить</strong>, що він мав рацію. - It
 <ul>
 <li>Давай <strong>перейдемо на</strong> українську. - Let's switch to Ukrainian.</li>
 <li>Вона <strong>перейшла на</strong> шепіт. - She switched to a whisper.</li>
-</ul></div></div><div class="canvas-note"><h4>Проходити / Пройти - Abstract Uses</h4><div class="md-content"><p><strong>1. Проходити (курс, тест) = To take, pass (a course, test)</strong></p>
+</ul>
+<h3 id="abstractuses-4">Проходити / Пройти - Abstract Uses</h3>
+<p><strong>1. Проходити (курс, тест) = To take, pass (a course, test)</strong></p>
 <ul>
 <li>Я <strong>пройшов</strong> курс з програмування. - I took a programming course.</li>
 <li>Вона <strong>пройшла</strong> співбесіду. - She passed the interview.</li>
@@ -197,7 +241,9 @@ Abstract: <strong>Виходить</strong>, що він мав рацію. - It
 <p><strong>3. Це не пройде = That won't work / fly</strong></p>
 <ul>
 <li>Така відмовка не <strong>пройде</strong>. - That excuse won't fly.</li>
-</ul></div></div><div class="canvas-note"><h4>Заходити / Зайти - Abstract Uses</h4><div class="md-content"><p><strong>1. Розмова зайшла про… = The conversation turned to…</strong></p>
+</ul>
+<h3 id="abstractuses-5">Заходити / Зайти - Abstract Uses</h3>
+<p><strong>1. Розмова зайшла про… = The conversation turned to…</strong></p>
 <ul>
 <li><strong>Розмова зайшла</strong> про політику. - The conversation turned to politics.</li>
 </ul>
@@ -208,7 +254,9 @@ Abstract: <strong>Виходить</strong>, що він мав рацію. - It
 <p><strong>3. Заходити в глухий кут = To reach a dead end</strong></p>
 <ul>
 <li>Переговори <strong>зайшли в глухий кут</strong>. - The negotiations reached a dead end.</li>
-</ul></div></div><div class="canvas-note"><h4>Відходити / Відійти - Abstract Uses</h4><div class="md-content"><p><strong>1. Відійти від теми = To go off topic</strong></p>
+</ul>
+<h3 id="abstractuses-6">Відходити / Відійти - Abstract Uses</h3>
+<p><strong>1. Відійти від теми = To go off topic</strong></p>
 <ul>
 <li>Не <strong>відходьте від</strong> теми! - Don't go off topic!</li>
 <li>Він <strong>відійшов від</strong> справи. - He got off track.</li>
@@ -216,7 +264,9 @@ Abstract: <strong>Виходить</strong>, що він мав рацію. - It
 <p><strong>2. Відійти від справ = To retire</strong></p>
 <ul>
 <li>Він <strong>відійшов від справ</strong>. - He retired from business.</li>
-</ul></div></div><div class="canvas-note"><h4>Common Fixed Expressions</h4><div class="md-content"><table>
+</ul>
+<h3 id="commonfixedexpressions">Common Fixed Expressions</h3>
+<table>
 <thead>
 <tr>
 <th>Expression</th>
@@ -261,7 +311,10 @@ Abstract: <strong>Виходить</strong>, що він мав рацію. - It
 <td>Reached dead end</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>### Complete with Figurative Meaning</h4><div class="md-content"><ol>
+</table>
+<h2 id="practice">practice</h2>
+<h3 id="completewithfigurativemeaning">Complete with Figurative Meaning</h3>
+<ol>
 <li>___, що ми зробили помилку. (It turns out) → <strong>Виходить</strong></li>
 <li>Давайте ___ до справи. (get down to) → <strong>перейдемо</strong></li>
 <li>Мені ___ гарна ідея. (came to mind) → <strong>прийшла на думку</strong></li>
@@ -270,14 +323,18 @@ Abstract: <strong>Виходить</strong>, що він мав рацію. - It
 <li>Три роки ___. (passed) → <strong>пройшли/минули</strong></li>
 <li>Вона ___ заміж. (got married) → <strong>вийшла</strong></li>
 <li>До нього не ___. (doesn't get it) → <strong>доходить</strong></li>
-</ol></div></div><div class="canvas-note"><h4>Translate to Ukrainian</h4><div class="md-content"><ol>
+</ol>
+<h3 id="translatetoukrainian">Translate to Ukrainian</h3>
+<ol>
 <li>It turns out he was right. → <strong>Виходить, що він мав рацію.</strong></li>
 <li>Let's get down to business. → <strong>Давайте перейдемо до справи.</strong></li>
 <li>She came to a conclusion. → <strong>Вона прийшла до висновку.</strong></li>
 <li>Time passes quickly. → <strong>Час проходить/минає швидко.</strong></li>
 <li>It finally dawned on me. → <strong>Нарешті до мене дійшло.</strong></li>
 <li>The negotiations reached a dead end. → <strong>Переговори зайшли в глухий кут.</strong></li>
-</ol></div></div><div class="canvas-note"><h4>Match Expression with Meaning</h4><div class="md-content"><table>
+</ol>
+<h3 id="matchexpressionwithmeaning">Match Expression with Meaning</h3>
+<table>
 <thead>
 <tr>
 <th>Expression</th>
@@ -310,14 +367,19 @@ Abstract: <strong>Виходить</strong>, що він мав рацію. - It
 <td>Pass an interview</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Use in Sentences</h4><div class="md-content"><p>Create sentences using:</p>
+</table>
+<h3 id="useinsentences">Use in Sentences</h3>
+<p>Create sentences using:</p>
 <ol>
 <li><strong>виходить, що</strong> — Виходить, що я помилився.</li>
 <li><strong>перейти до</strong> — Давайте перейдемо до питань.</li>
 <li><strong>прийти на думку</strong> — Мені прийшла на думку думка.</li>
 <li><strong>пройти (курс)</strong> — Я пройшов онлайн-курс.</li>
 <li><strong>дійти до</strong> — Справа дійшла до скандалу.</li>
-</ol></div></div><div class="canvas-note"><h4>### Discussion Phrases</h4><div class="md-content"><p>Use these in conversation:</p>
+</ol>
+<h2 id="production">production</h2>
+<h3 id="discussionphrases">Discussion Phrases</h3>
+<p>Use these in conversation:</p>
 <p><strong>Starting a new topic:</strong></p>
 <ul>
 <li>Давайте перейдемо до наступного питання.</li>
@@ -332,20 +394,265 @@ Abstract: <strong>Виходить</strong>, що він мав рацію. - It
 <ul>
 <li>Ми дійшли до другого розділу.</li>
 <li>Справа не рухається вперед.</li>
-</ul></div></div><div class="canvas-note"><h4>Create a Dialogue</h4><div class="md-content"><p>Use at least 3 figurative motion expressions:</p>
+</ul>
+<h3 id="createadialogue">Create a Dialogue</h3>
+<p>Use at least 3 figurative motion expressions:</p>
 <p><strong>Example:</strong><br />
 A: Давайте <strong>перейдемо до справи</strong>. Що з проєктом?<br />
 B: <strong>Виходить</strong>, що у нас проблема з бюджетом.<br />
 A: До мене <strong>не дійшло</strong>. Поясни детальніше.<br />
 B: Ми <strong>зайшли в глухий кут</strong> з фінансуванням.<br />
-A: Треба <strong>прийти до</strong> якогось рішення.</p></div></div></div>
+A: Треба <strong>прийти до</strong> якогось рішення.</p>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Activities</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="quizfigurativemotion">quiz: Figurative Motion</h2>
+<blockquote>
+  <p>Match the expression with its meaning.</p>
+</blockquote>
+<ol>
+<li>Виходить, що він мав рацію.</li>
+</ol>
+<ul>
+<li>[x] It turns out he was right.</li>
+<li>[ ] He went out and was right.</li>
+</ul>
+<ol>
+<li>До нього не доходить.</li>
+</ol>
+<ul>
+<li>[ ] He can't walk there.</li>
+<li>[x] He doesn't understand.</li>
+</ul>
+<ol>
+<li>Вона прийшла до висновку.</li>
+</ol>
+<ul>
+<li>[x] She came to a conclusion.</li>
+<li>[ ] She came to the entrance.</li>
+</ul>
+<ol>
+<li>Перейдемо до справи.</li>
+</ol>
+<ul>
+<li>[x] Let's get down to business.</li>
+<li>[ ] Let's cross to business.</li>
+</ul>
+<ol>
+<li>Час летить.</li>
+</ol>
+<ul>
+<li>[x] Time flies.</li>
+<li>[ ] Time is flying (plane).</li>
+</ul>
+<ol>
+<li>Справа зайшла далеко.</li>
+</ol>
+<ul>
+<li>[x] Things have gone far.</li>
+<li>[ ] The business went far away.</li>
+</ul>
+<h2 id="matchupfigurativeexpressions">match-up: Figurative Expressions</h2>
+<table>
+<thead>
+<tr>
+<th>Expression</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>виходить, що</td>
+<td>it turns out</td>
+</tr>
+<tr>
+<td>доходить до</td>
+<td>gets through to</td>
+</tr>
+<tr>
+<td>приходить на думку</td>
+<td>comes to mind</td>
+</tr>
+<tr>
+<td>переходить до</td>
+<td>moves on to</td>
+</tr>
+<tr>
+<td>проходить (час)</td>
+<td>passes (time)</td>
+</tr>
+<tr>
+<td>заходить в глухий кут</td>
+<td>reaches dead end</td>
+</tr>
+</tbody>
+</table>
+<h2 id="fillincompleteexpressions">fill-in: Complete Expressions</h2>
+<blockquote>
+  <p>Complete with the correct verb.</p>
+</blockquote>
+<ol>
+<li>___, що ми помилились. → <strong>Виходить</strong></li>
+<li>Мені ___ ідея. → <strong>прийшла</strong> на думку</li>
+<li>До нього не ___. → <strong>доходить</strong></li>
+<li>Час швидко ___. → <strong>проходить/летить</strong></li>
+<li>Вона ___ заміж. → <strong>вийшла</strong></li>
+<li>Справа ___ до суду. → <strong>дійшла</strong></li>
+</ol>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Vocabulary</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Word</th>
+<th>IPA</th>
+<th>English</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>виходить, що</td>
+<td>/vɪˈxodɪtʲ ʃt͡ʃo/</td>
+<td>it turns out that</td>
+<td>impersonal</td>
+</tr>
+<tr>
+<td>доходити до</td>
+<td>/doxoˈdɪtɪ do/</td>
+<td>to get through to</td>
+<td>figurative</td>
+</tr>
+<tr>
+<td>дійшло до мене</td>
+<td>/dijˈʃlo do ˈmɛnɛ/</td>
+<td>it dawned on me</td>
+<td>figurative</td>
+</tr>
+<tr>
+<td>прийти до висновку</td>
+<td>/prɪjˈtɪ do ˈvɪsnovku/</td>
+<td>to come to conclusion</td>
+<td>fixed expr</td>
+</tr>
+<tr>
+<td>прийти до згоди</td>
+<td>/prɪjˈtɪ do ˈzɦodɪ/</td>
+<td>to come to agreement</td>
+<td>fixed expr</td>
+</tr>
+<tr>
+<td>прийти на думку</td>
+<td>/prɪjˈtɪ nɑ ˈdumku/</td>
+<td>to come to mind</td>
+<td>fixed expr</td>
+</tr>
+<tr>
+<td>перейти до справи</td>
+<td>/pɛrɛjˈtɪ do ˈsprɑvɪ/</td>
+<td>to get to business</td>
+<td>fixed expr</td>
+</tr>
+<tr>
+<td>пройти курс</td>
+<td>/projˈtɪ kurs/</td>
+<td>to take a course</td>
+<td>figurative</td>
+</tr>
+<tr>
+<td>пройти тест</td>
+<td>/projˈtɪ tɛst/</td>
+<td>to pass a test</td>
+<td>figurative</td>
+</tr>
+<tr>
+<td>зайти в глухий кут</td>
+<td>/zɑjˈtɪ v ɦluˈxɪj kut/</td>
+<td>to reach dead end</td>
+<td>idiom</td>
+</tr>
+<tr>
+<td>вийти заміж</td>
+<td>/ˈvɪjtɪ ˈzɑmʲiʒ/</td>
+<td>to get married (f)</td>
+<td>fixed expr</td>
+</tr>
+<tr>
+<td>відійти від теми</td>
+<td>/vʲidijˈtɪ vʲid ˈtɛmɪ/</td>
+<td>to go off topic</td>
+<td>fixed expr</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Summary</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="keyfigurativeuses">Key Figurative Uses</h2>
+<h3 id="">Виходити/Вийти</h3>
+<ul>
+<li>Виходить, що… = It turns out…</li>
+<li>Вийти заміж = Get married (woman)</li>
+</ul>
+<h3 id="-1">Доходити/Дійти</h3>
+<ul>
+<li>До нього не доходить = He doesn't get it</li>
+<li>Дійшло до мене = It dawned on me</li>
+<li>Справа дійшла до… = The matter reached…</li>
+</ul>
+<h3 id="-2">Приходити/Прийти</h3>
+<ul>
+<li>Прийти до висновку = Come to conclusion</li>
+<li>Прийти до згоди = Come to agreement</li>
+<li>Прийти на думку = Come to mind</li>
+</ul>
+<h3 id="-3">Переходити/Перейти</h3>
+<ul>
+<li>Перейти до справи = Get down to business</li>
+<li>Перейти на (мову) = Switch to (language)</li>
+<li>Перейти межу = Cross the line</li>
+</ul>
+<h3 id="-4">Проходити/Пройти</h3>
+<ul>
+<li>Пройти курс/тест = Take/pass course/test</li>
+<li>Час проходить = Time passes</li>
+</ul>
+<h3 id="-5">Заходити/Зайти</h3>
+<ul>
+<li>Зайти в глухий кут = Reach dead end</li>
+<li>Розмова зайшла про… = Conversation turned to…</li>
+</ul>
+<blockquote>
+  <p><strong>Key Takeaways</strong></p>
+  <ul>
+  <li>Motion verbs have rich figurative meanings</li>
+  <li>Many fixed expressions use motion verbs</li>
+  <li>Learn expressions as whole units</li>
+  <li>These make your Ukrainian sound natural</li>
+  </ul>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('match')">Start →</button></div>
     </section>
     <section id="match" class="section"><div class="card"><h3>Figurative Expressions</h3>
       <div class="score-display"><span class="score"><span id="match-score">0</span>/6</span></div>
       <div class="match-container" id="match-container"><svg class="match-lines" id="match-lines"></svg>
         <div class="match-column" id="match-left"><div class="match-item" data-pair="0">виходить, що</div><div class="match-item" data-pair="1">доходить до</div><div class="match-item" data-pair="2">приходить на думку</div><div class="match-item" data-pair="3">переходить до</div><div class="match-item" data-pair="4">проходить (час)</div><div class="match-item" data-pair="5">заходить в глухий кут</div></div>
-        <div class="match-column" id="match-right"><div class="match-item" data-pair="1">gets through to</div><div class="match-item" data-pair="4">passes (time)</div><div class="match-item" data-pair="5">reaches dead end</div><div class="match-item" data-pair="2">comes to mind</div><div class="match-item" data-pair="3">moves on to</div><div class="match-item" data-pair="0">it turns out</div></div>
+        <div class="match-column" id="match-right"><div class="match-item" data-pair="2">comes to mind</div><div class="match-item" data-pair="0">it turns out</div><div class="match-item" data-pair="4">passes (time)</div><div class="match-item" data-pair="3">moves on to</div><div class="match-item" data-pair="1">gets through to</div><div class="match-item" data-pair="5">reaches dead end</div></div>
       </div>
       <div class="completion-message" id="match-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetMatch()">Reset</button><button class="btn btn-primary" onclick="showSection('quiz')">Next →</button></div>
@@ -384,6 +691,10 @@ A: Треба <strong>прийти до</strong> якогось рішення.<
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

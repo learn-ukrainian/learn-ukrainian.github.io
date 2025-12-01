@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,14 +136,877 @@
         <p style="color:var(--text-muted)">Технології: Програмне забезпечення та ШІ</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>«Український стартап розробив застосунок на основі штучного інтелекту для аналізу медичних зображень. Алгоритм машинного навчання показує точність 95%.» — такі заголовки ви зустрінете в українських технологічних новинах. І це не просто слова: Україна — справжній IT-гігант!</h4><div class="md-content"><p>Подивіться на цифри: <strong>понад 300 000</strong> IT-спеціалістів, <strong>$7+ мільярдів</strong> експорту IT-послуг щороку, сотні продуктових компаній зі світовим ім'ям. <strong>Grammarly</strong> — той самий сервіс перевірки англійської граматики, яким користуються 30 мільйонів людей — створили українці з Києва! <strong>MacPaw</strong> робить програми для Mac, які люблять у всьому світі. <strong>Readdle</strong> — одні з найкращих застосунків для продуктивності на iOS. <strong>Ajax Systems</strong> — провідна система безпеки «розумного дому». І це далеко не весь список!</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Зміст уроку</li><li class="toc-item" data-target="section-1">Вправи</li><li class="toc-item" data-target="section-2">Словник</li><li class="toc-item" data-target="section-3">Підсумок</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Зміст уроку</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Вступ</h2>
+<p>«Український стартап розробив застосунок на основі штучного інтелекту для аналізу медичних зображень. Алгоритм машинного навчання показує точність 95%.» — такі заголовки ви зустрінете в українських технологічних новинах. І це не просто слова: Україна — справжній IT-гігант!</p>
+<p>Подивіться на цифри: <strong>понад 300 000</strong> IT-спеціалістів, <strong>$7+ мільярдів</strong> експорту IT-послуг щороку, сотні продуктових компаній зі світовим ім'ям. <strong>Grammarly</strong> — той самий сервіс перевірки англійської граматики, яким користуються 30 мільйонів людей — створили українці з Києва! <strong>MacPaw</strong> робить програми для Mac, які люблять у всьому світі. <strong>Readdle</strong> — одні з найкращих застосунків для продуктивності на iOS. <strong>Ajax Systems</strong> — провідна система безпеки «розумного дому». І це далеко не весь список!</p>
 <p>Чому саме Україна? По-перше, потужна математична та інженерна освіта — спадок радянської технічної школи, але без ідеологічного баласту. По-друге, конкурентні ціни та європейська робоча етика. По-третє, географічне розташування: часові пояси зручні і для Європи, і для США.</p>
 <p>А тепер — мовна загадка. Як правильно: <strong>застосунок</strong> чи <strong>додаток</strong>? Обидва слова — переклади англійського "application", але з різними відтінками. «Застосунок» — це програма, яку ви <em>застосовуєте</em> для певної мети. «Додаток» — щось, що <em>додається</em> до чогось іншого. Офіційно рекомендують «застосунок», але в розмовній мові часто кажуть просто «апка» (від англ. app)!</p>
 <blockquote>
   <p><strong>Чи знали ви?</strong></p>
   <p>Українці — піонери кібербезпеки! Під час повномасштабного вторгнення 2022 року Україна відбила сотні потужних кібератак на критичну інфраструктуру. Міністерство цифрової трансформації створило <strong>«IT-армію України»</strong> — унікальний феномен, коли тисячі волонтерів-хакерів з усього світу об'єдналися для кіберзахисту країни.</p>
   <p>А ще Україна — одна з перших країн, яка впровадила <strong>Дію</strong> — мобільний застосунок, де всі документи (паспорт, права, свідоцтва) доступні в цифровому форматі. У 2022 році через Дію вперше в історії провели цифрові вибори!</p>
-</blockquote></div></div></div>
+</blockquote>
+<hr />
+<blockquote>
+  <p><strong>Міф vs Факт</strong></p>
+  <p>❌ <strong>Міф:</strong> «Хакер» — це завжди злочинець.</p>
+  <p>✅ <strong>Факт:</strong> В українській (як і в англійській) слово «хакер» має нейтральне значення — це просто людина, яка глибоко розуміє комп'ютерні системи. «Білі хакери» (white hat hackers) тестують безпеку систем легально. «Чорні хакери» (black hat) — зловмисники. Україна має потужну спільноту етичних хакерів, які захищають критичну інфраструктуру.</p>
+</blockquote>
+<hr />
+<p>Цей урок дасть вам словник для розуміння технологічних новин, спілкування з IT-спеціалістами та участі в цифровому суспільстві. Навіть якщо ви не програміст — ці терміни стали частиною повсякденної мови!</p>
+<h2 id="-1">Розминка</h2>
+<h3 id="-2">Технологічні новини</h3>
+<p>Прочитайте заголовки і знайдіть усі IT-терміни:</p>
+<ol>
+<li>«<strong>Grammarly</strong> залучила $200 млн інвестицій для розвитку <strong>ШІ-функцій</strong>.»</li>
+<li>«<strong>Застосунок Дія</strong> отримав оновлення з <strong>двофакторною автентифікацією</strong>.»</li>
+<li>«Українські <strong>розробники</strong> створили <strong>хмарну платформу</strong> для аналізу <strong>великих даних</strong>.»</li>
+</ol>
+<p>Скільки термінів ви впізнали?</p>
+<h2 id="-3">Презентація</h2>
+<h3 id="-4">Програмне забезпечення</h3>
+<h4 id="-5">Базові терміни</h4>
+<table>
+<thead>
+<tr>
+<th>Термін</th>
+<th>English</th>
+<th>Приклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>програмне забезпечення (ПЗ)</strong></td>
+<td>software</td>
+<td>Оновіть ПЗ.</td>
+</tr>
+<tr>
+<td><strong>застосунок</strong></td>
+<td>application, app</td>
+<td>Мобільний застосунок.</td>
+</tr>
+<tr>
+<td><strong>додаток</strong></td>
+<td>app (informal)</td>
+<td>Завантажив новий додаток.</td>
+</tr>
+<tr>
+<td><strong>апка</strong></td>
+<td>app (slang)</td>
+<td>Класна апка!</td>
+</tr>
+<tr>
+<td><strong>операційна система (ОС)</strong></td>
+<td>operating system</td>
+<td>Windows, macOS, Linux.</td>
+</tr>
+<tr>
+<td><strong>браузер</strong></td>
+<td>browser</td>
+<td>Chrome, Firefox, Safari.</td>
+</tr>
+<tr>
+<td><strong>база даних</strong></td>
+<td>database</td>
+<td>Зберегти в базі даних.</td>
+</tr>
+<tr>
+<td><strong>код</strong></td>
+<td>code</td>
+<td>Писати код.</td>
+</tr>
+<tr>
+<td><strong>програмування</strong></td>
+<td>programming</td>
+<td>Вивчати програмування.</td>
+</tr>
+<tr>
+<td><strong>розробка</strong></td>
+<td>development</td>
+<td>Веб-розробка.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Стиль:</strong></p>
+<ul>
+<li>Офіційно: «застосунок», «програмне забезпечення»</li>
+<li>Розмовно: «апка», «софт»</li>
+<li>IT-сленг: «прога», «апа»</li>
+</ul>
+<h4 id="-6">Дії з програмами</h4>
+<table>
+<thead>
+<tr>
+<th>Дієслово</th>
+<th>English</th>
+<th>Приклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>розробляти</strong></td>
+<td>to develop</td>
+<td>Розробляємо нову версію.</td>
+</tr>
+<tr>
+<td><strong>програмувати</strong></td>
+<td>to program</td>
+<td>Програмую на Python.</td>
+</tr>
+<tr>
+<td><strong>тестувати</strong></td>
+<td>to test</td>
+<td>Тестуємо функціональність.</td>
+</tr>
+<tr>
+<td><strong>оновлювати</strong></td>
+<td>to update</td>
+<td>Оновіть застосунок!</td>
+</tr>
+<tr>
+<td><strong>завантажувати</strong></td>
+<td>to download/upload</td>
+<td>Завантажив файл.</td>
+</tr>
+<tr>
+<td><strong>встановлювати</strong></td>
+<td>to install</td>
+<td>Встановив програму.</td>
+</tr>
+<tr>
+<td><strong>видаляти</strong></td>
+<td>to delete</td>
+<td>Видалив непотрібне.</td>
+</tr>
+<tr>
+<td><strong>зберігати</strong></td>
+<td>to save</td>
+<td>Збережіть документ!</td>
+</tr>
+</tbody>
+</table>
+<h3 id="-7">Штучний інтелект</h3>
+<h4 id="-8">Основні поняття</h4>
+<table>
+<thead>
+<tr>
+<th>Термін</th>
+<th>English</th>
+<th>Пояснення</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>штучний інтелект (ШІ)</strong></td>
+<td>AI</td>
+<td>Загальний термін.</td>
+</tr>
+<tr>
+<td><strong>машинне навчання (МН)</strong></td>
+<td>machine learning</td>
+<td>Тип ШІ.</td>
+</tr>
+<tr>
+<td><strong>нейронна мережа</strong></td>
+<td>neural network</td>
+<td>Імітує мозок.</td>
+</tr>
+<tr>
+<td><strong>глибинне навчання</strong></td>
+<td>deep learning</td>
+<td>Складні нейромережі.</td>
+</tr>
+<tr>
+<td><strong>алгоритм</strong></td>
+<td>algorithm</td>
+<td>Набір інструкцій.</td>
+</tr>
+<tr>
+<td><strong>модель</strong></td>
+<td>model</td>
+<td>Навчена система.</td>
+</tr>
+<tr>
+<td><strong>великі мовні моделі (ВММ)</strong></td>
+<td>LLM</td>
+<td>ChatGPT, Claude.</td>
+</tr>
+<tr>
+<td><strong>генеративний ШІ</strong></td>
+<td>generative AI</td>
+<td>Створює контент.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Етимологія:</strong> «Штучний» = artificial (створений людиною, не природний). «Інтелект» — від латинського <em>intelligere</em> (розуміти). Цікаво, що українське «розум» — від «роз-уміти», теж «розуміння»!</p>
+<h4 id="-9">Застосування ШІ</h4>
+<table>
+<thead>
+<tr>
+<th>Сфера</th>
+<th>Термін</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Зображення</td>
+<td><strong>розпізнавання образів</strong></td>
+<td>image recognition</td>
+</tr>
+<tr>
+<td>Голос</td>
+<td><strong>розпізнавання мовлення</strong></td>
+<td>speech recognition</td>
+</tr>
+<tr>
+<td>Текст</td>
+<td><strong>обробка природної мови</strong></td>
+<td>NLP</td>
+</tr>
+<tr>
+<td>Спілкування</td>
+<td><strong>чат-бот</strong></td>
+<td>chatbot</td>
+</tr>
+<tr>
+<td>Рекомендації</td>
+<td><strong>рекомендаційна система</strong></td>
+<td>recommendation system</td>
+</tr>
+<tr>
+<td>Процеси</td>
+<td><strong>автоматизація</strong></td>
+<td>automation</td>
+</tr>
+</tbody>
+</table>
+<h3 id="-10">Дані та аналітика</h3>
+<table>
+<thead>
+<tr>
+<th>Термін</th>
+<th>English</th>
+<th>Приклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>дані</strong></td>
+<td>data</td>
+<td>Збирати дані.</td>
+</tr>
+<tr>
+<td><strong>великі дані</strong></td>
+<td>big data</td>
+<td>Аналіз великих даних.</td>
+</tr>
+<tr>
+<td><strong>аналітика</strong></td>
+<td>analytics</td>
+<td>Бізнес-аналітика.</td>
+</tr>
+<tr>
+<td><strong>обробка даних</strong></td>
+<td>data processing</td>
+<td>Обробка в реальному часі.</td>
+</tr>
+<tr>
+<td><strong>збір даних</strong></td>
+<td>data collection</td>
+<td>Збір даних користувачів.</td>
+</tr>
+<tr>
+<td><strong>візуалізація даних</strong></td>
+<td>data visualization</td>
+<td>Графіки та діаграми.</td>
+</tr>
+<tr>
+<td><strong>конфіденційність</strong></td>
+<td>privacy</td>
+<td>Захист конфіденційності.</td>
+</tr>
+<tr>
+<td><strong>захист даних</strong></td>
+<td>data protection</td>
+<td>GDPR.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Граматика:</strong> «Дані» в українській — множина! «Ці дані важливі» (не «ці дані важливе»). Порівняйте з англійською, де "data" може бути і однина, і множина.</p>
+<h3 id="-11">Кібербезпека</h3>
+<table>
+<thead>
+<tr>
+<th>Термін</th>
+<th>English</th>
+<th>Приклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>кібербезпека</strong></td>
+<td>cybersecurity</td>
+<td>Фахівець з кібербезпеки.</td>
+</tr>
+<tr>
+<td><strong>хакер</strong></td>
+<td>hacker</td>
+<td>Білий/чорний хакер.</td>
+</tr>
+<tr>
+<td><strong>вірус</strong></td>
+<td>virus</td>
+<td>Комп'ютерний вірус.</td>
+</tr>
+<tr>
+<td><strong>шкідливе ПЗ</strong></td>
+<td>malware</td>
+<td>Виявлено шкідливе ПЗ.</td>
+</tr>
+<tr>
+<td><strong>фішинг</strong></td>
+<td>phishing</td>
+<td>Фішингова атака.</td>
+</tr>
+<tr>
+<td><strong>шифрування</strong></td>
+<td>encryption</td>
+<td>Наскрізне шифрування.</td>
+</tr>
+<tr>
+<td><strong>пароль</strong></td>
+<td>password</td>
+<td>Надійний пароль.</td>
+</tr>
+<tr>
+<td><strong>двофакторна автентифікація (2FA)</strong></td>
+<td>two-factor authentication</td>
+<td>Увімкніть 2FA!</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Культурний контекст:</strong> Після 2022 року кібербезпека стала пріоритетом для кожного українця. Кібератаки на банки, електромережі та державні системи — реальна загроза. Тому терміни як «фішинг», «шифрування», «2FA» знає навіть бабуся!</p>
+<h3 id="-12">Інтернет та мережі</h3>
+<table>
+<thead>
+<tr>
+<th>Термін</th>
+<th>English</th>
+<th>Приклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>мережа</strong></td>
+<td>network</td>
+<td>Комп'ютерна мережа.</td>
+</tr>
+<tr>
+<td><strong>сервер</strong></td>
+<td>server</td>
+<td>Виділений сервер.</td>
+</tr>
+<tr>
+<td><strong>хостинг</strong></td>
+<td>hosting</td>
+<td>Веб-хостинг.</td>
+</tr>
+<tr>
+<td><strong>домен</strong></td>
+<td>domain</td>
+<td>Зареєструвати домен.</td>
+</tr>
+<tr>
+<td><strong>IP-адреса</strong></td>
+<td>IP address</td>
+<td>Статична IP-адреса.</td>
+</tr>
+<tr>
+<td><strong>хмара</strong></td>
+<td>cloud</td>
+<td>Зберігати в хмарі.</td>
+</tr>
+<tr>
+<td><strong>хмарний сервіс</strong></td>
+<td>cloud service</td>
+<td>AWS, Google Cloud.</td>
+</tr>
+<tr>
+<td><strong>VPN</strong></td>
+<td>VPN</td>
+<td>Використовуй VPN!</td>
+</tr>
+<tr>
+<td><strong>пропускна здатність</strong></td>
+<td>bandwidth</td>
+<td>Низька пропускна здатність.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="it">Українські IT-компанії</h3>
+<table>
+<thead>
+<tr>
+<th>Компанія</th>
+<th>Продукт</th>
+<th>Значення</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Grammarly</strong></td>
+<td>Редактор тексту</td>
+<td>30+ млн користувачів.</td>
+</tr>
+<tr>
+<td><strong>MacPaw</strong></td>
+<td>CleanMyMac, Setapp</td>
+<td>Програми для Apple.</td>
+</tr>
+<tr>
+<td><strong>Readdle</strong></td>
+<td>PDF Expert, Spark</td>
+<td>Продуктивність на iOS.</td>
+</tr>
+<tr>
+<td><strong>Ajax Systems</strong></td>
+<td>Охоронні системи</td>
+<td>Розумний дім.</td>
+</tr>
+<tr>
+<td><strong>Preply</strong></td>
+<td>Онлайн-репетитори</td>
+<td>EdTech.</td>
+</tr>
+<tr>
+<td><strong>monobank</strong></td>
+<td>Мобільний банк</td>
+<td>Фінтех-революція.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="-13">Дія — цифрова держава</h3>
+<table>
+<thead>
+<tr>
+<th>Функція</th>
+<th>Опис</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Цифровий паспорт</strong></td>
+<td>Документ у смартфоні.</td>
+</tr>
+<tr>
+<td><strong>Електронні права</strong></td>
+<td>Водійське посвідчення.</td>
+</tr>
+<tr>
+<td><strong>єМалятко</strong></td>
+<td>Реєстрація новонароджених.</td>
+</tr>
+<tr>
+<td><strong>Єпідтримка</strong></td>
+<td>Соціальні виплати.</td>
+</tr>
+<tr>
+<td><strong>Дія.Підпис</strong></td>
+<td>Електронний підпис.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="-14">Практика</h2>
+<h3 id="1">Вправа 1: Заповніть пропуски</h3>
+<ol>
+<li>Компанія ___ (розробляти) новий застосунок.</li>
+<li>Система використовує ___ для аналізу даних. (AI)</li>
+<li>Файли ___ (зашифрувати) для безпеки.</li>
+<li>___ допомагає захистити акаунт. (2FA)</li>
+<li>Дані ___ (зберігати) в хмарі.</li>
+</ol>
+<p><details><br />
+<summary>Відповіді</summary></p>
+<ol>
+<li>розробляє</li>
+<li>ШІ / штучний інтелект / машинне навчання</li>
+<li>зашифровано</li>
+<li>Двофакторна автентифікація</li>
+<li>зберігаються<br />
+</details></li>
+</ol>
+<h3 id="2">Вправа 2: Офіційно → Розмовно</h3>
+<p>Замініть на розмовний варіант:</p>
+<ol>
+<li>застосунок → ___</li>
+<li>програмне забезпечення → ___</li>
+<li>штучний інтелект → ___</li>
+<li>двофакторна автентифікація → ___</li>
+</ol>
+<p><details><br />
+<summary>Відповіді</summary></p>
+<ol>
+<li>апка</li>
+<li>софт</li>
+<li>ШІ</li>
+<li>2FA / двофакторка<br />
+</details></li>
+</ol>
+<h3 id="3">Вправа 3: Перекладіть</h3>
+<ol>
+<li>The company developed an AI-based application.</li>
+<li>Data is encrypted for security.</li>
+<li>Update the software to the latest version.</li>
+<li>Enable two-factor authentication to protect your account.</li>
+<li>Ukraine has one of the largest IT sectors in Europe.</li>
+</ol>
+<p><details><br />
+<summary>Відповіді</summary></p>
+<ol>
+<li>Компанія розробила застосунок на основі ШІ.</li>
+<li>Дані зашифровано для безпеки.</li>
+<li>Оновіть програмне забезпечення до останньої версії.</li>
+<li>Увімкніть двофакторну автентифікацію, щоб захистити акаунт.</li>
+<li>Україна має один з найбільших IT-секторів у Європі.<br />
+</details></li>
+</ol>
+<h3 id="4">Вправа 4: Активний → Пасив</h3>
+<p>Перетворіть на офіційний стиль:</p>
+<ol>
+<li>Розробники створили нову платформу. → ___</li>
+<li>Інженери оновили систему. → ___</li>
+<li>Хакери зашифрували дані. → ___</li>
+</ol>
+<p><details><br />
+<summary>Відповіді</summary></p>
+<ol>
+<li>Нову платформу створено.</li>
+<li>Систему оновлено.</li>
+<li>Дані зашифровано.<br />
+</details></li>
+</ol>
+<h2 id="-15">Продукція</h2>
+<h3 id="1-1">Завдання 1: Обговоріть</h3>
+<ol>
+<li>Якими українськими IT-продуктами ви користуєтеся?</li>
+<li>Як ШІ змінює вашу професію чи повсякденне життя?</li>
+<li>Чи довіряєте ви цифровим документам (Дія)?</li>
+<li>Які ризики великих даних для приватності?</li>
+</ol>
+<h3 id="2-1">Завдання 2: Технологічна новина</h3>
+<p>Напишіть коротку новину про технології (5-7 речень):</p>
+<p><strong>Шаблон:</strong><br />
+«Українська компанія ___ представила ___. Застосунок використовує ___ для ___. За словами розробників, ___. Продукт уже тестують ___. Планується вихід на міжнародний ринок.»</p>
+<h3 id="3-1">Завдання 3: Інтеграція</h3>
+<p>Перепишіть новину в офіційному стилі (пасив -но/-то):</p>
+<p>Оригінал: «Компанія розробила платформу. Інженери інтегрували ШІ-функції. Тестувальники перевірили безпеку.»</p>
+<p><details>
+<summary>Відповідь</summary>
+«Платформу розроблено. ШІ-функції інтегровано. Безпеку перевірено.»
+</details></p>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Вправи</h3>
+          <span class="section-type practice">practice</span>
+        </div>
+        <div class="section-body md-content"><h2 id="quiz">quiz: Технології</h2>
+<blockquote>
+  <p>Виберіть правильну відповідь.</p>
+</blockquote>
+<ol>
+<li>«ШІ» означає:</li>
+</ol>
+<ul>
+<li>[x] штучний інтелект</li>
+<li>[ ] швидкий інтернет</li>
+</ul>
+<blockquote>
+  <p>Artificial intelligence.</p>
+</blockquote>
+<ol start="2">
+<li>Який термін офіційний?</li>
+</ol>
+<ul>
+<li>[x] застосунок</li>
+<li>[ ] апка</li>
+</ul>
+<blockquote>
+  <p>«Апка» — розмовний сленг.</p>
+</blockquote>
+<ol start="3">
+<li>«Машинне навчання» — це:</li>
+</ol>
+<ul>
+<li>[x] тип ШІ</li>
+<li>[ ] навчання машиністів</li>
+</ul>
+<blockquote>
+  <p>Machine learning.</p>
+</blockquote>
+<ol start="4">
+<li>«Шифрування» означає:</li>
+</ol>
+<ul>
+<li>[x] захист даних кодуванням</li>
+<li>[ ] видалення даних</li>
+</ul>
+<blockquote>
+  <p>Encryption.</p>
+</blockquote>
+<ol start="5">
+<li>«Фішинг» — це:</li>
+</ol>
+<ul>
+<li>[x] шахрайство для крадіжки даних</li>
+<li>[ ] тип риболовлі</li>
+</ul>
+<blockquote>
+  <p>Online scam.</p>
+</blockquote>
+<ol start="6">
+<li>«Хмарний сервіс» — це:</li>
+</ol>
+<ul>
+<li>[x] зберігання даних в інтернеті</li>
+<li>[ ] прогноз погоди</li>
+</ul>
+<blockquote>
+  <p>Cloud service.</p>
+</blockquote>
+<ol start="7">
+<li>Grammarly — це:</li>
+</ol>
+<ul>
+<li>[x] українська компанія</li>
+<li>[ ] американська компанія</li>
+</ul>
+<blockquote>
+  <p>Founded in Kyiv!</p>
+</blockquote>
+<ol start="8">
+<li><strong>[Інтеграція: пасив]</strong> Технічний звіт: «Систему ___ для підвищення безпеки.»</li>
+</ol>
+<ul>
+<li>[x] оновлено</li>
+<li>[ ] оновили</li>
+<li>[ ] оновлюється</li>
+</ul>
+<blockquote>
+  <p>Офіційний стиль → -но/-то.</p>
+</blockquote>
+<ol start="9">
+<li><strong>[Інтеграція: регістр]</strong> Розмова: «___ нову апку.»</li>
+</ol>
+<ul>
+<li>[ ] Випущено</li>
+<li>[x] Випустили</li>
+<li>[ ] Випускається</li>
+</ul>
+<blockquote>
+  <p>Розмовний стиль → 3-я особа мн.</p>
+</blockquote>
+<ol start="10">
+<li>«Дані» в українській — це:<ul>
+<li>[x] множина</li>
+<li>[ ] однина<br />
+&gt; «Ці дані важливі» (множина!).</li></ul></li>
+</ol>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Словник</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Слово</th>
+<th>Вимова</th>
+<th>Переклад</th>
+<th>Примітки</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>штучний інтелект</td>
+<td>/ˈʃtutʃnɪj ʲintɛˈlɛkt/</td>
+<td>artificial intelligence</td>
+<td>m</td>
+</tr>
+<tr>
+<td>машинне навчання</td>
+<td>/mɑˈʃɪnːɛ nɑwˈtʃɑnʲːɑ/</td>
+<td>machine learning</td>
+<td>n</td>
+</tr>
+<tr>
+<td>алгоритм</td>
+<td>/ɑlɦɔˈrɪtm/</td>
+<td>algorithm</td>
+<td>m</td>
+</tr>
+<tr>
+<td>застосунок</td>
+<td>/zɑstɔˈsunɔk/</td>
+<td>application</td>
+<td>m, офіц.</td>
+</tr>
+<tr>
+<td>апка</td>
+<td>/ˈɑpkɑ/</td>
+<td>app</td>
+<td>f, розм.</td>
+</tr>
+<tr>
+<td>база даних</td>
+<td>/ˈbɑzɑ ˈdɑnɪx/</td>
+<td>database</td>
+<td>f</td>
+</tr>
+<tr>
+<td>шифрування</td>
+<td>/ʃɪfruˈwɑnʲːɑ/</td>
+<td>encryption</td>
+<td>n</td>
+</tr>
+<tr>
+<td>кібербезпека</td>
+<td>/kʲibɛrbɛzˈpɛkɑ/</td>
+<td>cybersecurity</td>
+<td>f</td>
+</tr>
+<tr>
+<td>хмарний</td>
+<td>/ˈxmɑrnɪj/</td>
+<td>cloud (adj.)</td>
+<td>adj</td>
+</tr>
+<tr>
+<td>розробка</td>
+<td>/rɔzˈrɔbkɑ/</td>
+<td>development</td>
+<td>f</td>
+</tr>
+<tr>
+<td>оновлення</td>
+<td>/ɔnɔwˈlɛnʲːɑ/</td>
+<td>update</td>
+<td>n</td>
+</tr>
+<tr>
+<td>фішинг</td>
+<td>/ˈfʲiʃɪnɦ/</td>
+<td>phishing</td>
+<td>m</td>
+</tr>
+<tr>
+<td>двофакторна автентифікація</td>
+<td>/dwɔˈfɑktɔrnɑ ɑwtɛntɪfʲiˈkɑt͡sʲijɑ/</td>
+<td>2FA</td>
+<td>f</td>
+</tr>
+<tr>
+<td>великі дані</td>
+<td>/wɛˈlɪkʲi ˈdɑnʲi/</td>
+<td>big data</td>
+<td>pl</td>
+</tr>
+<tr>
+<td>хакер</td>
+<td>/ˈxɑkɛr/</td>
+<td>hacker</td>
+<td>m</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Підсумок</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Ключові терміни</h2>
+<table>
+<thead>
+<tr>
+<th>Сфера</th>
+<th>Приклади</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ШІ</td>
+<td>машинне навчання, нейронна мережа, ВММ</td>
+</tr>
+<tr>
+<td>Дані</td>
+<td>аналітика, великі дані, візуалізація</td>
+</tr>
+<tr>
+<td>Безпека</td>
+<td>шифрування, фішинг, 2FA</td>
+</tr>
+</tbody>
+</table>
+<h2 id="it">Українські IT-успіхи</h2>
+<table>
+<thead>
+<tr>
+<th>Факт</th>
+<th>Деталі</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Експорт</td>
+<td>$7+ млрд</td>
+</tr>
+<tr>
+<td>Спеціалісти</td>
+<td>300,000+</td>
+</tr>
+<tr>
+<td>Топ-компанії</td>
+<td>Grammarly, MacPaw, Readdle</td>
+</tr>
+<tr>
+<td>Інновації</td>
+<td>Дія, monobank</td>
+</tr>
+</tbody>
+</table>
+<h2 id="-1">Головне</h2>
+<blockquote>
+  <p><strong>Запам'ятайте:</strong></p>
+  <ul>
+  <li>ШІ = штучний інтелект</li>
+  <li>Застосунок (офіц.) = апка (розм.)</li>
+  <li>Машинне навчання — тип ШІ</li>
+  <li>Шифрування — захист даних</li>
+  <li>Дані — множина! («Ці дані важливі»)</li>
+  <li>Україна — великий IT-хаб Європи</li>
+  </ul>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('quiz')">Start →</button></div>
     </section>
     
@@ -163,6 +1044,10 @@
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

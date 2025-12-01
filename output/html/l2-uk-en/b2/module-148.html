@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,17 +136,34 @@
         <p style="color:var(--text-muted)">Офіційний і неофіційний регістри</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="md-content"><h1 id="">Вступ</h1>
-<p>Англомовний студент зустрів українську бабусю в під'їзді й ввічливо сказав: «Добрий день! Як Ваше здоров'я?» Бабуся посміхнулася. Наступного дня він зустрів свого українського друга-ровесника й так само ввічливо запитав: «Як Ваші справи?» Друг подивився на нього дивно: «Ти що, жартуєш? Ми ж друзі!»</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Вступ</li><li class="toc-item" data-target="section-1">Система «ти/Ви»</li><li class="toc-item" data-target="section-2">Граматичні відмінності</li><li class="toc-item" data-target="section-3">Лексичні маркери</li><li class="toc-item" data-target="section-4">Звертання по імені</li><li class="toc-item" data-target="section-5">Письмові формули</li><li class="toc-item" data-target="section-6">Прохання: шкала формальності</li><li class="toc-item" data-target="section-7">Перехід на «ти»</li><li class="toc-item" data-target="section-8">Практика</li><li class="toc-item" data-target="section-9">Словник</li><li class="toc-item" data-target="section-10">Підсумок</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Вступ</h3>
+          <span class="section-type intro">intro</span>
+        </div>
+        <div class="section-body md-content"><p>Англомовний студент зустрів українську бабусю в під'їзді й ввічливо сказав: «Добрий день! Як Ваше здоров'я?» Бабуся посміхнулася. Наступного дня він зустрів свого українського друга-ровесника й так само ввічливо запитав: «Як Ваші справи?» Друг подивився на нього дивно: «Ти що, жартуєш? Ми ж друзі!»</p>
 <p>Для англомовців це — культурний шок. У сучасній англійській «you» — універсальне. Королеві кажуть «you», і продавцю кажуть «you». А українська зберігає <strong>двоступеневу систему ввічливості</strong>: «ти» для близьких і рівних, «Ви» для старших, незнайомих та офіційних ситуацій.</p>
 <p>Це не просто граматика — це <strong>соціальний код</strong>. Неправильний вибір між «ти» і «Ви» може образити людину, створити незручність або зруйнувати ділові відносини. І водночас, правильний вибір — це знак поваги, який українці дуже цінують.</p>
 <blockquote>
   <p><strong>Чи знали ви?</strong></p>
   <p>Англійська колись теж мала цю систему! <strong>«Thou»</strong> було «ти», а <strong>«you»</strong> — «Ви». Шекспір використовував обидві форми з різним значенням: «thou» — для інтимності або зневаги, «you» — для ввічливості. Поступово «you» витіснило «thou», і система зникла. Українська, на відміну від англійської, зберегла цю архаїчну двоступеневу ввічливість.</p>
 </blockquote>
-<hr />
-<h1 id="-1">Система «ти/Ви»</h1>
-<h2 id="-2">Коли «ти»</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Система «ти/Ви»</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Коли «ти»</h2>
 <p><strong>Ти</strong> — це форма <strong>близькості, рівності, неформальності:</strong></p>
 <ul>
 <li>Друзі та близькі знайомі</li>
@@ -138,7 +173,7 @@
 <li>Тварини (так, домашнім улюбленцям кажуть «ти»!)</li>
 <li>Бог (у молитвах: «Отче наш, що єси на небесах…»)</li>
 </ul>
-<h2 id="-3">Коли «Ви»</h2>
+<h2 id="-1">Коли «Ви»</h2>
 <p><strong>Ви</strong> — це форма <strong>поваги, дистанції, офіційності:</strong></p>
 <ul>
 <li>Незнайомці</li>
@@ -154,9 +189,14 @@
   <p>❌ <strong>Міф:</strong> «Ви» завжди пишеться з великої літери.»</p>
   <p>✅ <strong>Факт:</strong> «Ви» з великої літери — лише в <strong>листах та офіційних документах</strong>, коли звертаємось до конкретної особи. У звичайному тексті («Що ви думаєте?») пишемо з малої. У прямій мові в художньому тексті — зазвичай з малої.</p>
 </blockquote>
-<hr />
-<h1 id="-4">Граматичні відмінності</h1>
-<h2 id="-5">Дієслово</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Граматичні відмінності</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Дієслово</h2>
 <table>
 <thead>
 <tr>
@@ -188,7 +228,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="-6">Імператив</h2>
+<h2 id="-1">Імператив</h2>
 <table>
 <thead>
 <tr>
@@ -219,7 +259,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="-7">Займенники</h2>
+<h2 id="-2">Займенники</h2>
 <table>
 <thead>
 <tr>
@@ -270,9 +310,14 @@
   <p><strong>Чи знали ви?</strong></p>
   <p>Українська форма «Ви» до однієї особи — це <strong>граматична множина для поваги</strong>. Так само в французькій (vous), німецькій (Sie), польській (Pan/Pani). Це явище називається <strong>T-V distinction</strong> (від латинських tu/vos). Воно виникло в середньовічній Європі як спосіб показати соціальну дистанцію.</p>
 </blockquote>
-<hr />
-<h1 id="-8">Лексичні маркери</h1>
-<h2 id="-9">Звертання</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Лексичні маркери</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Звертання</h2>
 <table>
 <thead>
 <tr>
@@ -299,7 +344,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="-10">Прощання</h2>
+<h2 id="-1">Прощання</h2>
 <table>
 <thead>
 <tr>
@@ -322,7 +367,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="-11">Подяка та вибачення</h2>
+<h2 id="-2">Подяка та вибачення</h2>
 <table>
 <thead>
 <tr>
@@ -350,9 +395,14 @@
   <p>❌ <strong>Міф:</strong> «Сорі» — це поганий англіцизм, не треба вживати.»</p>
   <p>✅ <strong>Факт:</strong> «Сорі» давно увійшло в український розмовний сленг, особливо серед молоді. Це <strong>маркер неформального регістру</strong>, як і «ок», «дякс», «чао». В офіційній мові — неприйнятне, але в SMS другові — нормальне.</p>
 </blockquote>
-<hr />
-<h1 id="-12">Звертання по імені</h1>
-<h2 id="-13">Три рівні формальності</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-4">
+        <div class="section-header" onclick="toggleSection(4)">
+          <h3>Звертання по імені</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Три рівні формальності</h2>
 <table>
 <thead>
 <tr>
@@ -379,7 +429,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="-14">По батькові (патронім)</h2>
+<h2 id="-1">По батькові (патронім)</h2>
 <p>В українській культурі <strong>ім'я + по батькові</strong> — це форма поваги:</p>
 <table>
 <thead>
@@ -408,9 +458,14 @@
   <p><strong>Чи знали ви?</strong></p>
   <p>Система <strong>по батькові</strong> — спадщина від часів Київської Русі. Вона показувала рід і походження людини. Цікаво, що в Західній Україні (Галичина, Волинь), яка довго була під польським та австрійським впливом, по батькові вживали рідше. Сьогодні в Україні офіційно можна не мати по батькові в паспорті — це нововведення 2020-х років.</p>
 </blockquote>
-<hr />
-<h1 id="-15">Письмові формули</h1>
-<h2 id="-16">Початок листа</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-5">
+        <div class="section-header" onclick="toggleSection(5)">
+          <h3>Письмові формули</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Початок листа</h2>
 <table>
 <thead>
 <tr>
@@ -433,7 +488,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="-17">Кінець листа</h2>
+<h2 id="-1">Кінець листа</h2>
 <table>
 <thead>
 <tr>
@@ -460,9 +515,14 @@
 </tr>
 </tbody>
 </table>
-<hr />
-<h1 id="-18">Прохання: шкала формальності</h1>
-<table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-6">
+        <div class="section-header" onclick="toggleSection(6)">
+          <h3>Прохання: шкала формальності</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><table>
 <thead>
 <tr>
 <th>Рівень</th>
@@ -503,9 +563,14 @@
 </tr>
 </tbody>
 </table>
-<hr />
-<h1 id="-19">Перехід на «ти»</h1>
-<h2 id="-20">Правила етикету</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-7">
+        <div class="section-header" onclick="toggleSection(7)">
+          <h3>Перехід на «ти»</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Правила етикету</h2>
 <p>Перехід від «Ви» до «ти» — це <strong>соціальний ритуал</strong>:</p>
 <ol>
 <li><strong>Старший</strong> пропонує молодшому</li>
@@ -513,19 +578,19 @@
 <li><strong>Начальник</strong> — підлеглому</li>
 <li><strong>Обидві сторони</strong> мають погодитися</li>
 </ol>
-<h2 id="-21">Як запропонувати</h2>
+<h2 id="-1">Як запропонувати</h2>
 <ul>
 <li>«Може, перейдемо на ти?»</li>
 <li>«Давай на ти!»</li>
 <li>«Можна на ти?»</li>
 </ul>
-<h2 id="-22">Як погодитися</h2>
+<h2 id="-2">Як погодитися</h2>
 <ul>
 <li>«Залюбки!» / «Із задоволенням!»</li>
 <li>«Звичайно!» / «Добре!»</li>
 <li>«Тоді я — Петро.» (представляєтесь ще раз)</li>
 </ul>
-<h2 id="-23">Як відмовити (ввічливо)</h2>
+<h2 id="-3">Як відмовити (ввічливо)</h2>
 <ul>
 <li>«Можливо, трохи пізніше.»</li>
 <li>«Давайте поки що на Ви.»</li>
@@ -535,9 +600,14 @@
   <p><strong>Чи знали ви?</strong></p>
   <p>В українському бізнес-середовищі є <strong>тенденція до «тикання»</strong> у стартапах та IT-компаніях. Там часто всі на «ти» з першого дня, незалежно від посади. Але в державних установах, банках, юридичних фірмах зберігається традиційна система «Ви». Це — маркер корпоративної культури.</p>
 </blockquote>
-<hr />
-<h1 id="-24">Практика</h1>
-<h2 id="-25">Трансформуйте</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-8">
+        <div class="section-header" onclick="toggleSection(8)">
+          <h3>Практика</h3>
+          <span class="section-type practice">practice</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Трансформуйте</h2>
 <p><strong>Неформальний → Формальний:</strong></p>
 <ol>
 <li><p>Привіт! Як справи?<br />
@@ -556,7 +626,7 @@
 <li><p>Вдячна за Вашу допомогу.<br />
 → <strong>Дякую за допомогу!</strong></p></li>
 </ol>
-<h2 id="-26">Виберіть регістр</h2>
+<h2 id="-1">Виберіть регістр</h2>
 <ol>
 <li><p><strong>Розмова з другом дитинства</strong><br />
 → Неформальний: «Привіт! Як ти? Давно не бачилися!»</p></li>
@@ -567,7 +637,149 @@
 <li><p><strong>Телефонний дзвінок у банк</strong><br />
 → Формальний: «Добрий день! Чи могли б Ви мені допомогти з…»</p></li>
 </ol>
-<hr /></div></div>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-9">
+        <div class="section-header" onclick="toggleSection(9)">
+          <h3>Словник</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Слово</th>
+<th>Переклад</th>
+<th>Примітки</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>звертання</td>
+<td>form of address</td>
+<td>як називаємо людину</td>
+</tr>
+<tr>
+<td>шановний</td>
+<td>dear, respected</td>
+<td>офіційне звертання</td>
+</tr>
+<tr>
+<td>вельмишановний</td>
+<td>highly respected</td>
+<td>дуже офіційне</td>
+</tr>
+<tr>
+<td>з повагою</td>
+<td>respectfully</td>
+<td>формула в листах</td>
+</tr>
+<tr>
+<td>вдячний</td>
+<td>grateful</td>
+<td>офіційна подяка</td>
+</tr>
+<tr>
+<td>перепрошую</td>
+<td>I apologize</td>
+<td>формальне вибачення</td>
+</tr>
+<tr>
+<td>залюбки</td>
+<td>gladly</td>
+<td>погодження</td>
+</tr>
+<tr>
+<td>по батькові</td>
+<td>patronymic</td>
+<td>Петрович, Петрівна</td>
+</tr>
+<tr>
+<td>етикет</td>
+<td>etiquette</td>
+<td>правила поведінки</td>
+</tr>
+<tr>
+<td>ровесник</td>
+<td>peer (same age)</td>
+<td>однолітки</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-10">
+        <div class="section-header" onclick="toggleSection(10)">
+          <h3>Підсумок</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Система «ти/Ви»</h2>
+<table>
+<thead>
+<tr>
+<th>Ти</th>
+<th>Ви</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Друзі, родина</td>
+<td>Незнайомці, старші</td>
+</tr>
+<tr>
+<td>Неформальні ситуації</td>
+<td>Офіційні ситуації</td>
+</tr>
+<tr>
+<td>Ім'я (Петре!)</td>
+<td>Пане/Пані + ім'я</td>
+</tr>
+<tr>
+<td>2 ос. однини</td>
+<td>2 ос. множини</td>
+</tr>
+</tbody>
+</table>
+<h2 id="-1">Ключові формули</h2>
+<table>
+<thead>
+<tr>
+<th>Неформальний</th>
+<th>Формальний</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Привіт!</td>
+<td>Добрий день!</td>
+</tr>
+<tr>
+<td>Дай…</td>
+<td>Чи могли б Ви…</td>
+</tr>
+<tr>
+<td>Дякую!</td>
+<td>Дякую Вам!</td>
+</tr>
+<tr>
+<td>Бувай!</td>
+<td>До побачення!</td>
+</tr>
+<tr>
+<td>Вибач!</td>
+<td>Перепрошую!</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p><strong>Запам'ятайте:</strong></p>
+  <p>✓ Вибір «ти/Ви» залежить від <strong>віку, статусу, ситуації</strong><br />
+  ✓ «Ви» з великої літери — лише в <strong>листах</strong><br />
+  ✓ <strong>По батькові</strong> — форма поваги (Петре Івановичу)<br />
+  ✓ Перехід на «ти» <strong>пропонує старший</strong><br />
+  ✓ IT-компанії часто на «ти», банки — на «Ви»</p>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('vocab')">Start →</button></div>
     </section>
     
@@ -600,6 +812,10 @@
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

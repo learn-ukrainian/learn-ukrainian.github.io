@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,13 +136,31 @@
         <p style="color:var(--text-muted)">Подорожі та географія</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Подорожі | Traveling</h4><div class="md-content"><p>Чи любите ви подорожувати? Куди ви їздили?</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Зміст уроку | Lesson Content</li><li class="toc-item" data-target="section-1">Activities</li><li class="toc-item" data-target="section-2">Vocabulary</li><li class="toc-item" data-target="section-3">Summary</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Зміст уроку | Lesson Content</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="warmup">warm-up | Розминка</h2>
+<h3 id="traveling">Подорожі | Traveling</h3>
+<p>Чи любите ви подорожувати? Куди ви їздили?</p>
 <p>Do you like traveling? Where have you been?</p>
 <ul>
 <li>Які <strong>країни</strong> ви відвідали? | Which countries have you visited?</li>
 <li>Як ви зазвичай подорожуєте? | How do you usually travel?</li>
 <li>Що вам потрібно для поїздки за кордон? | What do you need for traveling abroad?</li>
-</ul></div></div><div class="canvas-note"><h4>### Документи для подорожі | Travel Documents</h4><div class="md-content"><table>
+</ul>
+<h2 id="presentation">presentation | Презентація</h2>
+<h3 id="traveldocuments">Документи для подорожі | Travel Documents</h3>
+<table>
 <thead>
 <tr>
 <th>Ukrainian</th>
@@ -169,7 +205,9 @@
 <td>boarding pass</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Кордон та митниця | Border and Customs</h4><div class="md-content"><table>
+</table>
+<h3 id="borderandcustoms">Кордон та митниця | Border and Customs</h3>
+<table>
 <thead>
 <tr>
 <th>Ukrainian</th>
@@ -209,7 +247,9 @@
 <td>to cross the border</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Географія | Geography</h4><div class="md-content"><table>
+</table>
+<h3 id="geography">Географія | Geography</h3>
+<table>
 <thead>
 <tr>
 <th>Ukrainian</th>
@@ -274,7 +314,9 @@
 <td>lake</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Напрямки світу | Cardinal Directions</h4><div class="md-content"><table>
+</table>
+<h3 id="cardinaldirections">Напрямки світу | Cardinal Directions</h3>
+<table>
 <thead>
 <tr>
 <th>Ukrainian</th>
@@ -315,7 +357,9 @@
 <td>western</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Види транспорту | Types of Transport</h4><div class="md-content"><table>
+</table>
+<h3 id="typesoftransport">Види транспорту | Types of Transport</h3>
+<table>
 <thead>
 <tr>
 <th>Ukrainian</th>
@@ -355,7 +399,9 @@
 <td>personal travel</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Місця | Places</h4><div class="md-content"><table>
+</table>
+<h3 id="places">Місця | Places</h3>
+<table>
 <thead>
 <tr>
 <th>Ukrainian</th>
@@ -400,7 +446,9 @@
 <td>destination</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Дієслова | Travel Verbs</h4><div class="md-content"><table>
+</table>
+<h3 id="travelverbs">Дієслова | Travel Verbs</h3>
+<table>
 <thead>
 <tr>
 <th>Ukrainian</th>
@@ -460,7 +508,9 @@
 <td>impf/pf</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Корисні вирази | Useful Expressions</h4><div class="md-content"><table>
+</table>
+<h3 id="usefulexpressions">Корисні вирази | Useful Expressions</h3>
+<table>
 <thead>
 <tr>
 <th>Ukrainian</th>
@@ -501,7 +551,9 @@
 <td>resort town</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Україна: географія | Ukraine: Geography</h4><div class="md-content"><p><strong>Важливі місця:</strong></p>
+</table>
+<h3 id="ukrainegeography">Україна: географія | Ukraine: Geography</h3>
+<p><strong>Важливі місця:</strong></p>
 <ul>
 <li><strong>Київ</strong> — столиця, на річці Дніпро</li>
 <li><strong>Одеса</strong> — портове місто на Чорному морі</li>
@@ -510,13 +562,18 @@
 <li><strong>Крим</strong> — півострів на півдні</li>
 </ul>
 <p><strong>Річки:</strong> Дніпро, Дністер, Південний Буг, Сіверський Донець</p>
-<p><strong>Моря:</strong> Чорне море, Азовське море</p></div></div><div class="canvas-note"><h4>### Match Terms</h4><div class="md-content"><ol>
+<p><strong>Моря:</strong> Чорне море, Азовське море</p>
+<h2 id="practice">practice | Практика</h2>
+<h3 id="matchterms">Match Terms</h3>
+<ol>
 <li>кордон — a) border</li>
 <li>віза — b) visa</li>
 <li>літак — c) airplane</li>
 <li>готель — d) hotel</li>
 <li>столиця — e) capital</li>
-</ol></div></div><div class="canvas-note"><h4>Complete Sentences</h4><div class="md-content"><ol>
+</ol>
+<h3 id="completesentences">Complete Sentences</h3>
+<ol>
 <li><p>Для поїздки за кордон потрібен ___ (passport).<br />
 → <strong>паспорт</strong></p></li>
 <li><p>Літак приземлився в ___ (airport).<br />
@@ -527,12 +584,16 @@
 → <strong>забронювали</strong></p></li>
 <li><p>Карпати — це ___ (mountains) на заході.<br />
 → <strong>гори</strong></p></li>
-</ol></div></div><div class="canvas-note"><h4>Describe a Trip</h4><div class="md-content"><p>Use the vocabulary to describe:</p>
+</ol>
+<h3 id="describeatrip">Describe a Trip</h3>
+<p>Use the vocabulary to describe:</p>
 <ol>
 <li><strong>Документи:</strong> Я взяв паспорт, візу, страховку…</li>
 <li><strong>Транспорт:</strong> Ми летіли літаком, потім їхали поїздом…</li>
 <li><strong>Місця:</strong> Ми відвідали музеї, оглянули старе місто…</li>
-</ol></div></div><div class="canvas-note"><h4>Translate to Ukrainian</h4><div class="md-content"><ol>
+</ol>
+<h3 id="translatetoukrainian">Translate to Ukrainian</h3>
+<ol>
 <li><p>We crossed the border by car.<br />
 → <strong>Ми перетнули кордон на автомобілі.</strong></p></li>
 <li><p>The capital of Ukraine is Kyiv.<br />
@@ -541,19 +602,254 @@
 → <strong>Я забронював прямий рейс.</strong></p></li>
 <li><p>The hotel is near the train station.<br />
 → <strong>Готель знаходиться біля вокзалу.</strong></p></li>
-</ol></div></div><div class="canvas-note"><h4>### Plan a Trip</h4><div class="md-content"><p>Plan a trip to Ukraine:</p>
+</ol>
+<h2 id="production">production | Продукція</h2>
+<h3 id="planatrip">Plan a Trip</h3>
+<p>Plan a trip to Ukraine:</p>
 <ul>
 <li>Куди ви поїдете? (місто, регіон)</li>
 <li>Як ви туди дістанетеся? (транспорт)</li>
 <li>Де ви зупинитеся? (готель, хостел)</li>
 <li>Що ви хочете побачити?</li>
-</ul></div></div><div class="canvas-note"><h4>Describe Your Best Trip</h4><div class="md-content"><p>Talk about a memorable journey:</p>
+</ul>
+<h3 id="describeyourbesttrip">Describe Your Best Trip</h3>
+<p>Talk about a memorable journey:</p>
 <ul>
 <li>Куди ви їздили?</li>
 <li>Як довго тривала поїздка?</li>
 <li>Що ви там робили?</li>
 <li>Що вам найбільше сподобалося?</li>
-</ul></div></div></div>
+</ul>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Activities</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="quiztravelvocabulary">quiz: Travel Vocabulary</h2>
+<blockquote>
+  <p>Choose the correct word.</p>
+</blockquote>
+<ol>
+<li>Документ для міжнародних поїздок:</li>
+</ol>
+<ul>
+<li>[x] паспорт</li>
+<li>[ ] квиток</li>
+</ul>
+<blockquote>
+  <p>Passport for international travel.</p>
+</blockquote>
+<ol start="2">
+<li>Лінія між двома країнами:</li>
+</ol>
+<ul>
+<li>[x] кордон</li>
+<li>[ ] митниця</li>
+</ul>
+<blockquote>
+  <p>Border between countries.</p>
+</blockquote>
+<ol start="3">
+<li>Київ — це:</li>
+</ol>
+<ul>
+<li>[x] столиця</li>
+<li>[ ] область</li>
+</ul>
+<blockquote>
+  <p>Capital city.</p>
+</blockquote>
+<ol start="4">
+<li>Місце, де зупиняються поїзди:</li>
+</ol>
+<ul>
+<li>[x] вокзал</li>
+<li>[ ] аеропорт</li>
+</ul>
+<blockquote>
+  <p>Train station.</p>
+</blockquote>
+<ol start="5">
+<li>Гори на заході України:</li>
+</ol>
+<ul>
+<li>[x] Карпати</li>
+<li>[ ] Альпи</li>
+</ul>
+<blockquote>
+  <p>Carpathian mountains.</p>
+</blockquote>
+<ol start="6">
+<li>Перевірка на кордоні:</li>
+</ol>
+<ul>
+<li>[x] паспортний контроль</li>
+<li>[ ] бронювання</li>
+</ul>
+<blockquote>
+  <p>Passport control at the border.</p>
+</blockquote>
+<h2 id="fillinplanningatrip">fill-in: Planning a Trip</h2>
+<blockquote>
+  <p>Заплануйте поїздку.</p>
+  <p>Наступного місяця я хочу (1)<strong>_ (to travel) до Львова. Я вже (2)</strong>_ (booked) квитки на поїзд. Поїзд (3)<strong>_ (departs) о восьмій ранку з київського (4)</strong>_ (train station). Час у дорозі — близько шести годин. Я (5)<strong>_ (booked) готель у центрі міста. Хочу (6)</strong>_ (to visit) старе місто і (7)___ (to explore) місцеву кухню.</p>
+</blockquote>
+<p><strong>Answers:</strong></p>
+<ol>
+<li>подорожувати / поїхати</li>
+<li>забронював</li>
+<li>відправляється</li>
+<li>вокзалу</li>
+<li>забронював</li>
+<li>відвідати</li>
+<li>дослідити</li>
+</ol>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Vocabulary</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Word</th>
+<th>IPA</th>
+<th>English</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>паспорт</td>
+<td>/ˈpɑsport/</td>
+<td>passport</td>
+<td>m</td>
+</tr>
+<tr>
+<td>віза</td>
+<td>/ˈvʲizɑ/</td>
+<td>visa</td>
+<td>f</td>
+</tr>
+<tr>
+<td>кордон</td>
+<td>/korˈdon/</td>
+<td>border</td>
+<td>m</td>
+</tr>
+<tr>
+<td>митниця</td>
+<td>/ˈmɪtnɪt͡sʲɑ/</td>
+<td>customs</td>
+<td>f</td>
+</tr>
+<tr>
+<td>країна</td>
+<td>/krɑˈjinɑ/</td>
+<td>country</td>
+<td>f</td>
+</tr>
+<tr>
+<td>столиця</td>
+<td>/stoˈlɪt͡sʲɑ/</td>
+<td>capital</td>
+<td>f</td>
+</tr>
+<tr>
+<td>аеропорт</td>
+<td>/ɑɛroˈport/</td>
+<td>airport</td>
+<td>m</td>
+</tr>
+<tr>
+<td>вокзал</td>
+<td>/wokˈzɑl/</td>
+<td>train station</td>
+<td>m</td>
+</tr>
+<tr>
+<td>готель</td>
+<td>/ɦoˈtɛlʲ/</td>
+<td>hotel</td>
+<td>m</td>
+</tr>
+<tr>
+<td>бронювати</td>
+<td>/bronʲuˈvɑtɪ/</td>
+<td>to book</td>
+<td>impf</td>
+</tr>
+<tr>
+<td>подорожувати</td>
+<td>/podoroʒuˈvɑtɪ/</td>
+<td>to travel</td>
+<td>impf</td>
+</tr>
+<tr>
+<td>відвідувати</td>
+<td>/vʲidvʲiˈduvɑtɪ/</td>
+<td>to visit</td>
+<td>impf</td>
+</tr>
+<tr>
+<td>прибувати</td>
+<td>/prɪbuˈvɑtɪ/</td>
+<td>to arrive</td>
+<td>impf</td>
+</tr>
+<tr>
+<td>відправлятися</td>
+<td>/vʲidprɑvˈlʲɑtɪsʲɑ/</td>
+<td>to depart</td>
+<td>impf</td>
+</tr>
+<tr>
+<td>пункт призначення</td>
+<td>-</td>
+<td>destination</td>
+<td>m</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Summary</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="travelvocabularykeypoints">Travel Vocabulary: Key Points</h2>
+<h3 id="documents">Documents</h3>
+<p>паспорт, віза, страховка, квиток, бронювання</p>
+<h3 id="bordercrossing">Border Crossing</h3>
+<p>кордон, митниця, паспортний контроль, декларація</p>
+<h3 id="geography">Geography</h3>
+<p>країна, столиця, область, гори, море, річка</p>
+<h3 id="transport">Transport</h3>
+<p>літак, поїзд, автобус, корабель</p>
+<h3 id="keyverbs">Key Verbs</h3>
+<ul>
+<li>подорожувати (to travel)</li>
+<li>бронювати (to book)</li>
+<li>відвідувати (to visit)</li>
+<li>прибувати / відправлятися (to arrive / depart)</li>
+</ul>
+<blockquote>
+  <p><strong>Key Takeaways</strong></p>
+  <ul>
+  <li>Essential vocabulary for international travel</li>
+  <li>Know the difference: кордон (border) vs митниця (customs)</li>
+  <li>Ukrainian geography vocabulary is useful</li>
+  <li>Practice booking and planning trips</li>
+  <li>Combine transport + destination vocabulary</li>
+  </ul>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('quiz')">Start →</button></div>
     </section>
     
@@ -591,6 +887,10 @@
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

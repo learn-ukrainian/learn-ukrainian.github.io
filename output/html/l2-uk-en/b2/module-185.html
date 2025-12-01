@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,7 +136,22 @@
         <p style="color:var(--text-muted)">Складні сполучники II: Час та умова</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>«Коли він прийшов, ми почали.» — «Після того як він прийшов, ми почали.» — «Щойно він прийшов, ми почали.» Три речення, одна подія, три різні відтінки. Часові сполучники — це хронологічна точність у мові!</h4><div class="md-content"><p>А тепер загадка: «Коли підеш, візьми хліба» — це про час чи про умову? Гарне питання! Залежить від контексту. Якщо ви точно знаєте, що людина піде — це час. Якщо є сумнів — це умова. Українська «коли» — універсальний солдат, який може виражати і час, і умову, і навіть причину!</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Зміст уроку</li><li class="toc-item" data-target="section-1">Вправи</li><li class="toc-item" data-target="section-2">Словник</li><li class="toc-item" data-target="section-3">Підсумок</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Зміст уроку</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Вступ</h2>
+<p>«Коли він прийшов, ми почали.» — «Після того як він прийшов, ми почали.» — «Щойно він прийшов, ми почали.» Три речення, одна подія, три різні відтінки. Часові сполучники — це хронологічна точність у мові!</p>
+<p>А тепер загадка: «Коли підеш, візьми хліба» — це про час чи про умову? Гарне питання! Залежить від контексту. Якщо ви точно знаєте, що людина піде — це час. Якщо є сумнів — це умова. Українська «коли» — універсальний солдат, який може виражати і час, і умову, і навіть причину!</p>
 <p>Сьогодні ми розберемо дві великі категорії сполучників:</p>
 <p><strong>Часові (темпоральні)</strong> — КОЛИ щось відбувається:</p>
 <ul>
@@ -135,7 +168,820 @@
   <p><strong>Чи знали ви?</strong></p>
   <p>Слово «якщо» — відносно молоде! У давньоукраїнській мові замість нього використовували «аще» (споріднене з «ще») або «коли». Сучасне «якщо» — це злиття «як» + «що» (як те, що). Цікаво, що в російській збереглося архаїчне «если» (від «есть» + «ли»), а українська створила власну модерну форму!</p>
   <p>А «доки» і «поки» — близькі родичі. «Доки» — суто українське слово, яке в російській відсутнє. Там кажуть «пока», а «доколе» — архаїзм.</p>
-</blockquote></div></div></div>
+</blockquote>
+<hr />
+<blockquote>
+  <p><strong>Міф vs Факт</strong></p>
+  <p>❌ <strong>Міф:</strong> «Поки» і «доки» — повні синоніми.</p>
+  <p>✅ <strong>Факт:</strong> Є тонка різниця! «Поки» частіше виражає паралельну дію (while): «Поки я готую, ти прибираєш». «Доки» частіше вказує на межу (until): «Чекатиму, доки не прийдеш». Хоча в розмовній мові вони часто взаємозамінні, в офіційних текстах краще дотримуватися цієї різниці.</p>
+</blockquote>
+<hr />
+<p>Ці сполучники — ключ до побудови складних наративів: описання послідовності подій, планування, висловлення умов і застережень. Без них ваша мова буде плоскою і примітивною. З ними — структурованою і професійною!</p>
+<h2 id="-1">Розминка</h2>
+<h3 id="-2">Час чи умова?</h3>
+<p>Визначте, що виражає «коли» — час чи умову:</p>
+<ol>
+<li>«Коли я прийшов, вони вже вечеряли.» (факт минулого)</li>
+<li>«Коли матимеш час, зателефонуй.» (невизначено)</li>
+<li>«Коли він був молодий, грав у футбол.» (факт минулого)</li>
+<li>«Коли захочеш — приходь.» (невизначено)</li>
+</ol>
+<p><details><br />
+<summary>Відповіді</summary></p>
+<ol>
+<li>Час (факт)</li>
+<li>Умова (невизначеність)</li>
+<li>Час (факт)</li>
+<li>Умова (невизначеність)<br />
+</details></li>
+</ol>
+<h2 id="-3">Презентація</h2>
+<h3 id="-4">Часові сполучники: хронологія подій</h3>
+<h4 id="-5">Одночасність — паралельні дії</h4>
+<table>
+<thead>
+<tr>
+<th>Сполучник</th>
+<th>Значення</th>
+<th>Приклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>коли</strong></td>
+<td>when</td>
+<td>Коли він говорив, всі слухали.</td>
+</tr>
+<tr>
+<td><strong>поки</strong></td>
+<td>while</td>
+<td>Поки я готую, ти прибирай.</td>
+</tr>
+<tr>
+<td><strong>в той час як</strong></td>
+<td>while (контраст)</td>
+<td>В той час як одні працюють, інші відпочивають.</td>
+</tr>
+<tr>
+<td><strong>тимчасом як</strong></td>
+<td>meanwhile (книжн.)</td>
+<td>Тимчасом як делегація чекала…</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Нюанси:</strong></p>
+<ul>
+<li>«Поки» — нейтральне, побутове</li>
+<li>«В той час як» — контрастне, часто з протиставленням</li>
+<li>«Тимчасом як» — книжне, офіційне</li>
+</ul>
+<p><strong>Приклади:</strong></p>
+<ul>
+<li>«Поки батько дивився телевізор, мама читала.» (паралельно)</li>
+<li>«В той час як Європа розвивалася, Україна боролася за незалежність.» (контраст)</li>
+</ul>
+<h4 id="-6">Послідовність: ДО події</h4>
+<table>
+<thead>
+<tr>
+<th>Сполучник</th>
+<th>Стиль</th>
+<th>Приклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>перед тим як</strong></td>
+<td>нейтральний</td>
+<td>Перед тим як вийти, перевір ключі.</td>
+</tr>
+<tr>
+<td><strong>до того як</strong></td>
+<td>нейтральний</td>
+<td>До того як почати, прочитай інструкцію.</td>
+</tr>
+<tr>
+<td><strong>перш ніж</strong></td>
+<td>книжний</td>
+<td>Перш ніж відповісти, подумай.</td>
+</tr>
+<tr>
+<td><strong>заки</strong></td>
+<td>діалектний</td>
+<td>Заки сонце зайде… (західноукр.)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Порівняння:</strong></p>
+<ul>
+<li>«Перед тим як» — універсальний</li>
+<li>«Перш ніж» — більш елегантний, книжний</li>
+<li>«До того як» — підкреслює часову межу</li>
+</ul>
+<h4 id="-7">Послідовність: ПІСЛЯ події</h4>
+<table>
+<thead>
+<tr>
+<th>Сполучник</th>
+<th>Значення</th>
+<th>Приклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>після того як</strong></td>
+<td>after</td>
+<td>Після того як закінчив, пішов.</td>
+</tr>
+<tr>
+<td><strong>як тільки</strong></td>
+<td>as soon as</td>
+<td>Як тільки дізнаюсь, повідомлю.</td>
+</tr>
+<tr>
+<td><strong>щойно</strong></td>
+<td>just as/when</td>
+<td>Щойно він вийшов, пішов дощ.</td>
+</tr>
+<tr>
+<td><strong>ледве</strong></td>
+<td>hardly, scarcely</td>
+<td>Ледве встиг вийти, як почався дощ.</td>
+</tr>
+<tr>
+<td><strong>тільки-но</strong></td>
+<td>the moment</td>
+<td>Тільки-но він зайшов…</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Нюанси швидкості:</strong></p>
+<ul>
+<li>«Після того як» — нейтральна послідовність</li>
+<li>«Як тільки» — негайно після</li>
+<li>«Щойно» — майже одночасно</li>
+<li>«Ледве» — ледь встиг, ще до кінця дії</li>
+</ul>
+<p><strong>Приклад драматичної послідовності:</strong><br />
+«Ледве він встиг зайти, як двері зачинилися. Щойно обернувся — побачив тінь. Як тільки зрозумів небезпеку, побіг.»</p>
+<h4 id="-8">Тривалість і межа</h4>
+<table>
+<thead>
+<tr>
+<th>Сполучник</th>
+<th>Значення</th>
+<th>Приклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>поки</strong></td>
+<td>while</td>
+<td>Поки чекав, читав книгу.</td>
+</tr>
+<tr>
+<td><strong>доки</strong></td>
+<td>while/until</td>
+<td>Доки є час, працюй.</td>
+</tr>
+<tr>
+<td><strong>поки не</strong></td>
+<td>until</td>
+<td>Чекатиму, поки не прийде.</td>
+</tr>
+<tr>
+<td><strong>доти… доки не</strong></td>
+<td>until</td>
+<td>Доти не підемо, доки не закінчимо.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Важливо:</strong> Після «поки не» і «доки не» в українській використовується заперечне дієслово, на відміну від англійської:</p>
+<ul>
+<li>«Wait <strong>until</strong> he comes.» → «Чекай, <strong>поки він не прийде</strong>.» (буквально: поки він не прийде)</li>
+</ul>
+<h4 id="-9">Початок дії в минулому</h4>
+<table>
+<thead>
+<tr>
+<th>Сполучник</th>
+<th>Значення</th>
+<th>Приклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>з тих пір як</strong></td>
+<td>since (time)</td>
+<td>З тих пір як він переїхав, не бачилися.</td>
+</tr>
+<tr>
+<td><strong>відколи</strong></td>
+<td>since (colloq.)</td>
+<td>Відколи ти тут?</td>
+</tr>
+<tr>
+<td><strong>відтоді як</strong></td>
+<td>since then</td>
+<td>Відтоді як познайомилися…</td>
+</tr>
+</tbody>
+</table>
+<h3 id="-10">Умовні сполучники: якщо — то</h3>
+<h4 id="-11">Реальна умова (можливо станеться)</h4>
+<table>
+<thead>
+<tr>
+<th>Сполучник</th>
+<th>Стиль</th>
+<th>Приклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>якщо</strong></td>
+<td>нейтральний</td>
+<td>Якщо підеш, візьми парасольку.</td>
+</tr>
+<tr>
+<td><strong>коли</strong></td>
+<td>розмовний</td>
+<td>Коли підеш, візьми хліба.</td>
+</tr>
+<tr>
+<td><strong>як</strong></td>
+<td>дуже розмовний</td>
+<td>Як підеш — візьми.</td>
+</tr>
+<tr>
+<td><strong>раз</strong></td>
+<td>розмовний</td>
+<td>Раз так кажеш, вірю.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Нюанси:</strong></p>
+<ul>
+<li>«Якщо» — стандартний, універсальний</li>
+<li>«Коли» — менш формальний, іноді = «якщо колись»</li>
+<li>«Як» — розмовний, часто на початку речення</li>
+<li>«Раз» — «якщо вже так», прийняття факту</li>
+</ul>
+<h4 id="-12">Нереальна умова (неможливо або малоймовірно)</h4>
+<table>
+<thead>
+<tr>
+<th>Сполучник</th>
+<th>Час</th>
+<th>Приклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>якби</strong></td>
+<td>теперішній</td>
+<td>Якби я був багатим, подорожував би.</td>
+</tr>
+<tr>
+<td><strong>якби</strong></td>
+<td>минулий</td>
+<td>Якби я знав, не пішов би.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Структура:</strong></p>
+<ul>
+<li><strong>Якби + минулий час… + умовний спосіб (б/би)</strong></li>
+<li>«Якби я мав час, допоміг би тобі.» (нереально зараз)</li>
+<li>«Якби я знав раніше, сказав би.» (нереально в минулому)</li>
+</ul>
+<h4 id="-13">Офіційні умовні конструкції</h4>
+<table>
+<thead>
+<tr>
+<th>Сполучник</th>
+<th>Стиль</th>
+<th>Приклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>за умови що</strong></td>
+<td>офіційний</td>
+<td>За умови що ви погодитесь…</td>
+</tr>
+<tr>
+<td><strong>за умови</strong></td>
+<td>офіційний</td>
+<td>За умови дотримання правил…</td>
+</tr>
+<tr>
+<td><strong>у разі якщо</strong></td>
+<td>офіційний</td>
+<td>У разі якщо виникнуть проблеми…</td>
+</tr>
+<tr>
+<td><strong>при умові що</strong></td>
+<td>офіційний</td>
+<td>При умові що документи готові…</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Контекст:</strong> Юридичні документи, контракти, офіційне листування.</p>
+<p><strong>Приклади:</strong></p>
+<ul>
+<li>«Угоду буде підписано за умови, що всі сторони погодяться.»</li>
+<li>«У разі якщо виникнуть запитання, звертайтеся до менеджера.»</li>
+</ul>
+<h4 id="-14">Негативна умова / Виняток</h4>
+<table>
+<thead>
+<tr>
+<th>Сполучник</th>
+<th>Значення</th>
+<th>Приклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>якщо не</strong></td>
+<td>if not</td>
+<td>Якщо не підеш, залиш записку.</td>
+</tr>
+<tr>
+<td><strong>хіба що</strong></td>
+<td>unless</td>
+<td>Не підемо, хіба що дощ припиниться.</td>
+</tr>
+<tr>
+<td><strong>інакше</strong></td>
+<td>otherwise</td>
+<td>Поспішай, інакше запізнишся.</td>
+</tr>
+<tr>
+<td><strong>а то</strong></td>
+<td>otherwise (colloq.)</td>
+<td>Їж, а то захворієш.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Нюанси:</strong></p>
+<ul>
+<li>«Хіба що» — виняток, єдина можливість: «Не допоможу, хіба що дуже попросиш.»</li>
+<li>«Інакше» — попередження про наслідки</li>
+<li>«А то» — розмовне попередження, часто з відтінком турботи</li>
+</ul>
+<h3 id="vs">Порівняння: Коли як час vs Коли як умова</h3>
+<table>
+<thead>
+<tr>
+<th>Тип</th>
+<th>Ознаки</th>
+<th>Приклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Час</strong></td>
+<td>Факт, визначеність</td>
+<td>Коли я прийшов, вони вечеряли.</td>
+</tr>
+<tr>
+<td><strong>Умова</strong></td>
+<td>Гіпотеза, невизначеність</td>
+<td>Коли прийдеш, зателефонуй.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Тест:</strong> Чи можна замінити на «якщо»?</p>
+<ul>
+<li>«Коли прийдеш, зателефонуй.» → «Якщо прийдеш…» (✓ — умова)</li>
+<li>«Коли я прийшов, вони вечеряли.» → «Якщо я прийшов…» (✗ — час)</li>
+</ul>
+<h3 id="-15">Позиція в реченні</h3>
+<p>Більшість часових і умовних сполучників гнучкі:</p>
+<table>
+<thead>
+<tr>
+<th>Позиція</th>
+<th>Приклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Перед</td>
+<td><strong>Коли</strong> він прийшов, ми почали.</td>
+</tr>
+<tr>
+<td>Після</td>
+<td>Ми почали, <strong>коли</strong> він прийшов.</td>
+</tr>
+<tr>
+<td>Перед</td>
+<td><strong>Якщо</strong> матимеш час, зателефонуй.</td>
+</tr>
+<tr>
+<td>Після</td>
+<td>Зателефонуй, <strong>якщо</strong> матимеш час.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Стилістика:</strong> Початкова позиція часто підкреслює умову/час як важливу передумову.</p>
+<h2 id="-16">Практика</h2>
+<h3 id="1">Вправа 1: Визначте тип</h3>
+<p>Визначте тип сполучника (часовий/умовний):</p>
+<ol>
+<li>«Як тільки дізнаюсь, повідомлю.»</li>
+<li>«Якщо погодиться, підпишемо угоду.»</li>
+<li>«Поки він працював, я чекав.»</li>
+<li>«За умови що всі присутні, почнемо.»</li>
+</ol>
+<p><details><br />
+<summary>Відповіді</summary></p>
+<ol>
+<li>Часовий (as soon as)</li>
+<li>Умовний (if)</li>
+<li>Часовий (while)</li>
+<li>Умовний (formal: provided that)<br />
+</details></li>
+</ol>
+<h3 id="2">Вправа 2: Заповніть пропуски</h3>
+<ol>
+<li>___ він прийде, почнемо. (as soon as)</li>
+<li>Чекатиму, ___ не отримаю відповідь. (until)</li>
+<li>___ вийти, перевір документи. (before)</li>
+<li>Поспішай, ___ запізнишся. (otherwise)</li>
+</ol>
+<p><details><br />
+<summary>Відповіді</summary></p>
+<ol>
+<li>Як тільки / Щойно</li>
+<li>поки</li>
+<li>Перед тим як / Перш ніж</li>
+<li>інакше / а то<br />
+</details></li>
+</ol>
+<h3 id="3">Вправа 3: Трансформуйте стиль</h3>
+<p>Перетворіть на офіційний стиль:</p>
+<ol>
+<li>«Як підеш — візьми хліба.»</li>
+<li>«Коли він прийшов, ми почали.»</li>
+<li>«Якщо матиму час, допоможу.»</li>
+</ol>
+<p><details><br />
+<summary>Відповіді</summary></p>
+<ol>
+<li>«У разі виходу, придбайте хліб.» / «Якщо вийдете, візьміть хліба.»</li>
+<li>«Після його прибуття засідання розпочато.»</li>
+<li>«За умови наявності часу, буде надано допомогу.»<br />
+</details></li>
+</ol>
+<h3 id="4">Вправа 4: Реальна чи нереальна умова?</h3>
+<ol>
+<li>«Якщо матиму гроші, куплю.»</li>
+<li>«Якби я мав гроші, купив би.»</li>
+<li>«Якщо він захоче — допоможе.»</li>
+<li>«Якби я був тобою, не робив би цього.»</li>
+</ol>
+<p><details><br />
+<summary>Відповіді</summary></p>
+<ol>
+<li>Реальна (можливо)</li>
+<li>Нереальна (зараз немає грошей)</li>
+<li>Реальна (можливо)</li>
+<li>Нереальна (неможливо)<br />
+</details></li>
+</ol>
+<h3 id="5">Вправа 5: Перекладіть</h3>
+<ol>
+<li>As soon as I know, I'll tell you.</li>
+<li>If you agree, we'll sign the contract.</li>
+<li>Wait until he arrives.</li>
+<li>If I were you, I wouldn't do it.</li>
+<li>Hurry up, or you'll be late.</li>
+</ol>
+<p><details><br />
+<summary>Відповіді</summary></p>
+<ol>
+<li>Як тільки дізнаюсь, скажу тобі.</li>
+<li>Якщо ви погодитесь, ми підпишемо контракт.</li>
+<li>Чекай, поки він не прийде.</li>
+<li>Якби я був тобою, не робив би цього.</li>
+<li>Поспішай, інакше / а то запізнишся.<br />
+</details></li>
+</ol>
+<h2 id="-17">Продукція</h2>
+<h3 id="1-1">Завдання 1: Послідовність подій</h3>
+<p>Опишіть свій ранок, використовуючи часові сполучники:</p>
+<ul>
+<li>«перед тим як», «після того як», «поки», «як тільки»</li>
+</ul>
+<p><strong>Приклад:</strong><br />
+«Як тільки прокидаюсь, перевіряю телефон. Поки снідаю, слухаю новини. Перед тим як вийти, перевіряю сумку. Після того як закриваю двері, йду на роботу.»</p>
+<h3 id="2-1">Завдання 2: Умови та плани</h3>
+<p>Опишіть свої плани на вихідні з умовами:</p>
+<ul>
+<li>«якщо», «за умови що», «інакше»</li>
+</ul>
+<p><strong>Приклад:</strong><br />
+«Якщо погода буде гарна, поїдемо на природу. За умови що всі погодяться, влаштуємо пікнік. Інакше залишимось вдома і дивитимемось фільми.»</p>
+<h3 id="3-1">Завдання 3: Нереальні умови</h3>
+<p>Напишіть 3 речення про нереальні ситуації:</p>
+<ul>
+<li>«Якби я був…», «Якби я мав…», «Якби я знав…»</li>
+</ul>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Вправи</h3>
+          <span class="section-type practice">practice</span>
+        </div>
+        <div class="section-body md-content"><h2 id="quiz">quiz: Часові та умовні сполучники</h2>
+<blockquote>
+  <p>Виберіть правильну відповідь.</p>
+</blockquote>
+<ol>
+<li>«Як тільки» означає:</li>
+</ol>
+<ul>
+<li>[x] as soon as</li>
+<li>[ ] after a long time</li>
+</ul>
+<blockquote>
+  <p>Негайно після.</p>
+</blockquote>
+<ol start="2">
+<li>«Поки не» в українській вимагає:</li>
+</ol>
+<ul>
+<li>[x] заперечного дієслова</li>
+<li>[ ] стверджувального дієслова</li>
+</ul>
+<blockquote>
+  <p>«Чекай, поки не прийде» (not: поки прийде).</p>
+</blockquote>
+<ol start="3">
+<li>«Перш ніж» — це стиль:</li>
+</ol>
+<ul>
+<li>[x] книжний</li>
+<li>[ ] розмовний</li>
+</ul>
+<blockquote>
+  <p>Більш елегантний варіант «перед тим як».</p>
+</blockquote>
+<ol start="4">
+<li>«Хіба що» означає:</li>
+</ol>
+<ul>
+<li>[x] unless (виняток)</li>
+<li>[ ] always</li>
+</ul>
+<blockquote>
+  <p>«Не підемо, хіба що дощ припиниться.»</p>
+</blockquote>
+<ol start="5">
+<li>«Якби» виражає:</li>
+</ol>
+<ul>
+<li>[x] нереальну умову</li>
+<li>[ ] реальну умову</li>
+</ul>
+<blockquote>
+  <p>If I were… = Якби я був…</p>
+</blockquote>
+<ol start="6">
+<li>«За умови що» — це:</li>
+</ol>
+<ul>
+<li>[x] офіційний умовний</li>
+<li>[ ] розмовний часовий</li>
+</ul>
+<blockquote>
+  <p>Formal conditional.</p>
+</blockquote>
+<ol start="7">
+<li>«Доки» частіше виражає:</li>
+</ol>
+<ul>
+<li>[x] межу (until)</li>
+<li>[ ] контраст</li>
+</ul>
+<blockquote>
+  <p>«Чекатиму, доки не прийдеш.»</p>
+</blockquote>
+<ol start="8">
+<li><strong>[Інтеграція: пасив]</strong> «___ всі документи подано, заяву буде розглянуто.»</li>
+</ol>
+<ul>
+<li>[x] За умови що</li>
+<li>[ ] Як</li>
+</ul>
+<blockquote>
+  <p>Офіційний стиль.</p>
+</blockquote>
+<ol start="9">
+<li><strong>[Інтеграція: регістр]</strong> Розмова: «___ підеш, візьми хліба.»</li>
+</ol>
+<ul>
+<li>[x] Як</li>
+<li>[ ] За умови що</li>
+</ul>
+<blockquote>
+  <p>Розмовний стиль.</p>
+</blockquote>
+<ol start="10">
+<li>«Коли» може бути:<ul>
+<li>[x] і часовим, і умовним</li>
+<li>[ ] лише часовим<br />
+&gt; Контекст визначає!</li></ul></li>
+</ol>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Словник</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Сполучник</th>
+<th>Вимова</th>
+<th>Тип</th>
+<th>Стиль</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>коли</td>
+<td>/kɔˈlɪ/</td>
+<td>час/умова</td>
+<td>нейтральний</td>
+</tr>
+<tr>
+<td>поки</td>
+<td>/pɔˈkɪ/</td>
+<td>час</td>
+<td>нейтральний</td>
+</tr>
+<tr>
+<td>доки</td>
+<td>/dɔˈkɪ/</td>
+<td>час</td>
+<td>нейтральний</td>
+</tr>
+<tr>
+<td>щойно</td>
+<td>/ˈʃt͡ʃɔjnɔ/</td>
+<td>час</td>
+<td>нейтральний</td>
+</tr>
+<tr>
+<td>як тільки</td>
+<td>/jak ˈtʲilʲkɪ/</td>
+<td>час</td>
+<td>нейтральний</td>
+</tr>
+<tr>
+<td>перед тим як</td>
+<td>/ˈpɛrɛd tɪm jak/</td>
+<td>час</td>
+<td>нейтральний</td>
+</tr>
+<tr>
+<td>після того як</td>
+<td>/ˈpʲislʲɑ tɔˈɦɔ jak/</td>
+<td>час</td>
+<td>нейтральний</td>
+</tr>
+<tr>
+<td>перш ніж</td>
+<td>/pɛrʃ nʲiʒ/</td>
+<td>час</td>
+<td>книжний</td>
+</tr>
+<tr>
+<td>якщо</td>
+<td>/jakˈʃt͡ʃɔ/</td>
+<td>умова</td>
+<td>нейтральний</td>
+</tr>
+<tr>
+<td>якби</td>
+<td>/jakˈbɪ/</td>
+<td>умова (нереал.)</td>
+<td>нейтральний</td>
+</tr>
+<tr>
+<td>за умови що</td>
+<td>/zɑ uˈmɔwɪ ʃt͡ʃɔ/</td>
+<td>умова</td>
+<td>офіційний</td>
+</tr>
+<tr>
+<td>у разі якщо</td>
+<td>/u ˈrɑzʲi/</td>
+<td>умова</td>
+<td>офіційний</td>
+</tr>
+<tr>
+<td>хіба що</td>
+<td>/xʲiˈbɑ ʃt͡ʃɔ/</td>
+<td>умова (−)</td>
+<td>нейтральний</td>
+</tr>
+<tr>
+<td>інакше</td>
+<td>/ˈinɑkʃɛ/</td>
+<td>умова (−)</td>
+<td>нейтральний</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Підсумок</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Часові сполучники</h2>
+<table>
+<thead>
+<tr>
+<th>Значення</th>
+<th>Сполучники</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Одночасність</td>
+<td>коли, поки, в той час як</td>
+</tr>
+<tr>
+<td>До (раніше)</td>
+<td>перед тим як, до того як, перш ніж</td>
+</tr>
+<tr>
+<td>Після (пізніше)</td>
+<td>після того як, як тільки, щойно</td>
+</tr>
+<tr>
+<td>До межі</td>
+<td>поки не, доки не</td>
+</tr>
+<tr>
+<td>Від початку</td>
+<td>з тих пір як, відколи</td>
+</tr>
+</tbody>
+</table>
+<h2 id="-1">Умовні сполучники</h2>
+<table>
+<thead>
+<tr>
+<th>Тип</th>
+<th>Сполучники</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Реальна умова</td>
+<td>якщо, коли, як</td>
+</tr>
+<tr>
+<td>Нереальна умова</td>
+<td>якби</td>
+</tr>
+<tr>
+<td>Офіційна умова</td>
+<td>за умови що, у разі якщо</td>
+</tr>
+<tr>
+<td>Виняток</td>
+<td>хіба що</td>
+</tr>
+<tr>
+<td>Попередження</td>
+<td>інакше, а то</td>
+</tr>
+</tbody>
+</table>
+<h2 id="-2">Головне</h2>
+<blockquote>
+  <p><strong>Запам'ятайте:</strong></p>
+  <ul>
+  <li>«Коли» = час АБО умова (контекст!)</li>
+  <li>«Якщо» = реальна умова, «якби» = нереальна</li>
+  <li>«Поки не» = until (+ заперечення в українській!)</li>
+  <li>«Перш ніж» — книжний варіант «перед тим як»</li>
+  <li>«За умови що» — офіційний варіант «якщо»</li>
+  </ul>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('quiz')">Start →</button></div>
     </section>
     
@@ -173,6 +1019,10 @@
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,7 +136,22 @@
         <p style="color:var(--text-muted)">Двоє, троє; половина, третина</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Числівники | Numerals Review</h4><div class="md-content"><p>До B1 ви вивчили кількісні та порядкові числівники:</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Зміст уроку | Lesson Content</li><li class="toc-item" data-target="section-1">Activities</li><li class="toc-item" data-target="section-2">Vocabulary</li><li class="toc-item" data-target="section-3">Summary</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Зміст уроку | Lesson Content</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="warmup">warm-up | Розминка</h2>
+<h3 id="numeralsreview">Числівники | Numerals Review</h3>
+<p>До B1 ви вивчили кількісні та порядкові числівники:</p>
 <p>Up to B1 you learned cardinal and ordinal numerals:</p>
 <ul>
 <li><strong>Кількісні</strong>: один, два, три… (one, two, three…)</li>
@@ -129,7 +162,10 @@
 <ul>
 <li><strong>Збірні</strong>: двоє, троє, четверо… (pair, trio, group of four…)</li>
 <li><strong>Дроби</strong>: половина, третина… (half, third…)</li>
-</ul></div></div><div class="canvas-note"><h4>### Збірні числівники | Collective Numerals</h4><div class="md-content"><h4 id="forms">Forms</h4>
+</ul>
+<h2 id="presentation">presentation | Презентація</h2>
+<h3 id="collectivenumerals">Збірні числівники | Collective Numerals</h3>
+<h4 id="forms">Forms</h4>
 <table>
 <thead>
 <tr>
@@ -230,7 +266,9 @@
 <td>Collective for young animals</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Declension of Collectives</h4><div class="md-content"><p>Collectives decline like adjectives in plural:</p>
+</table>
+<h3 id="declensionofcollectives">Declension of Collectives</h3>
+<p>Collectives decline like adjectives in plural:</p>
 <table>
 <thead>
 <tr>
@@ -277,7 +315,9 @@
 <li>Для <strong>двох</strong> людей. - For two people.</li>
 <li>Я бачив <strong>трьох</strong> дітей. - I saw three children.</li>
 <li>З <strong>четверома</strong> друзями. - With four friends.</li>
-</ul></div></div><div class="canvas-note"><h4>Дроби | Fractions</h4><div class="md-content"><h4 id="basicfractions">Basic Fractions</h4>
+</ul>
+<h3 id="fractions">Дроби | Fractions</h3>
+<h4 id="basicfractions">Basic Fractions</h4>
 <table>
 <thead>
 <tr>
@@ -347,7 +387,9 @@
 <li><strong>Половина</strong> студентів прийшла. - Half of the students came.</li>
 <li><strong>Дві третини</strong> роботи зроблено. - Two thirds of the work is done.</li>
 <li><strong>Чверть</strong> населення. - A quarter of the population.</li>
-</ul></div></div><div class="canvas-note"><h4>Десяткові дроби | Decimals</h4><div class="md-content"><table>
+</ul>
+<h3 id="decimals">Десяткові дроби | Decimals</h3>
+<table>
 <thead>
 <tr>
 <th>Decimal</th>
@@ -383,7 +425,9 @@
 <ul>
 <li>1,5 = <strong>півтора</strong> (m/n) / <strong>півтори</strong> (f)</li>
 <li>2,5 = <strong>два з половиною</strong></li>
-</ul></div></div><div class="canvas-note"><h4>Приблизна кількість | Approximate Quantities</h4><div class="md-content"><table>
+</ul>
+<h3 id="approximatequantities">Приблизна кількість | Approximate Quantities</h3>
+<table>
 <thead>
 <tr>
 <th>Expression</th>
@@ -444,7 +488,9 @@
 <li><strong>Близько</strong> 50 студентів прийшли. - About 50 students came.</li>
 <li>Це коштує <strong>понад</strong> 1000 гривень. - It costs over 1000 hryvnias.</li>
 <li>Я був там <strong>кілька</strong> разів. - I was there several times.</li>
-</ul></div></div><div class="canvas-note"><h4>Відсотки | Percentages</h4><div class="md-content"><table>
+</ul>
+<h3 id="percentages">Відсотки | Percentages</h3>
+<table>
 <thead>
 <tr>
 <th>Percentage</th>
@@ -479,7 +525,10 @@
 <li>1 відсоток (nom sg)</li>
 <li>2-4 відсотки (nom pl)</li>
 <li>5+ відсотків (gen pl)</li>
-</ul></div></div><div class="canvas-note"><h4>### Choose Cardinal or Collective</h4><div class="md-content"><ol>
+</ul>
+<h2 id="practice">practice | Практика</h2>
+<h3 id="choosecardinalorcollective">Choose Cardinal or Collective</h3>
+<ol>
 <li><p>У них ___ (два/двоє) сини.<br />
 → <strong>двоє</strong> синів (collective for children)</p></li>
 <li><p>Я бачила ___ (три/троє) жінки.<br />
@@ -490,20 +539,26 @@
 → <strong>п'ять</strong> яблук (cardinal for things)</p></li>
 <li><p>У них ___ (шість/шестеро) дітей.<br />
 → <strong>шестеро</strong> дітей (collective for children)</p></li>
-</ol></div></div><div class="canvas-note"><h4>Express Fractions</h4><div class="md-content"><ol>
+</ol>
+<h3 id="expressfractions">Express Fractions</h3>
+<ol>
 <li>1/2 пирога → <strong>половина пирога</strong></li>
 <li>1/4 години → <strong>чверть години</strong></li>
 <li>2/3 роботи → <strong>дві третини роботи</strong></li>
 <li>3/4 учнів → <strong>три чверті учнів</strong></li>
 <li>1/5 населення → <strong>одна п'ята населення</strong></li>
-</ol></div></div><div class="canvas-note"><h4>Approximate Quantities</h4><div class="md-content"><p>Express approximately:</p>
+</ol>
+<h3 id="approximatequantities-1">Approximate Quantities</h3>
+<p>Express approximately:</p>
 <ol>
 <li>~10 людей → <strong>близько десяти людей</strong></li>
 <li>~100 гривень → <strong>приблизно сто гривень</strong></li>
 <li>&gt;50 студентів → <strong>понад п'ятдесят студентів</strong></li>
 <li>&lt;20 хвилин → <strong>менше ніж двадцять хвилин</strong></li>
 <li>almost all → <strong>майже всі</strong></li>
-</ol></div></div><div class="canvas-note"><h4>Translate to Ukrainian</h4><div class="md-content"><ol>
+</ol>
+<h3 id="translatetoukrainian">Translate to Ukrainian</h3>
+<ol>
 <li><p>We both agree.<br />
 → <strong>Ми обоє згодні.</strong></p></li>
 <li><p>Half of the students passed.<br />
@@ -512,17 +567,300 @@
 → <strong>Близько тридцяти людей прийшло.</strong></p></li>
 <li><p>They have three children.<br />
 → <strong>У них троє дітей.</strong></p></li>
-</ol></div></div><div class="canvas-note"><h4>### Talk About Your Family</h4><div class="md-content"><p>Describe family members using collectives:</p>
+</ol>
+<h2 id="production">production | Продукція</h2>
+<h3 id="talkaboutyourfamily">Talk About Your Family</h3>
+<p>Describe family members using collectives:</p>
 <ul>
 <li>Скільки людей у вашій родині?</li>
 <li>Скільки дітей у ваших батьків?</li>
 <li>Example: «Нас четверо: батьки і двоє дітей.»</li>
-</ul></div></div><div class="canvas-note"><h4>Statistics Discussion</h4><div class="md-content"><p>Discuss using fractions and percentages:</p>
+</ul>
+<h3 id="statisticsdiscussion">Statistics Discussion</h3>
+<p>Discuss using fractions and percentages:</p>
 <ul>
 <li>Скільки відсотків вашого часу ви працюєте?</li>
 <li>Яка частина вашої зарплати йде на їжу?</li>
 <li>Example: «Близько третини зарплати йде на оренду.»</li>
-</ul></div></div></div>
+</ul>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Activities</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="quiznumerals">quiz: Numerals</h2>
+<blockquote>
+  <p>Choose the correct form.</p>
+</blockquote>
+<ol>
+<li>У них ___ дітей.</li>
+</ol>
+<ul>
+<li>[x] троє</li>
+<li>[ ] три</li>
+</ul>
+<blockquote>
+  <p>Collective for children.</p>
+</blockquote>
+<ol start="2">
+<li>Половина пирога — це:</li>
+</ol>
+<ul>
+<li>[x] 1/2</li>
+<li>[ ] 1/4</li>
+</ul>
+<blockquote>
+  <p>Половина = half.</p>
+</blockquote>
+<ol start="3">
+<li>«Близько» означає:</li>
+</ol>
+<ul>
+<li>[x] приблизно</li>
+<li>[ ] точно</li>
+</ul>
+<blockquote>
+  <p>Approximate quantity.</p>
+</blockquote>
+<ol start="4">
+<li>Ми ___ згодні.</li>
+</ol>
+<ul>
+<li>[x] обоє</li>
+<li>[ ] два</li>
+</ul>
+<blockquote>
+  <p>Collective as substantive.</p>
+</blockquote>
+<ol start="5">
+<li>2,5 можна сказати:</li>
+</ol>
+<ul>
+<li>[x] два з половиною</li>
+<li>[ ] двоє половини</li>
+</ul>
+<blockquote>
+  <p>Colloquial form for 2.5.</p>
+</blockquote>
+<ol start="6">
+<li>Понад 100 означає:</li>
+</ol>
+<ul>
+<li>[x] більше ніж 100</li>
+<li>[ ] менше ніж 100</li>
+</ul>
+<blockquote>
+  <p>Понад = over, more than.</p>
+</blockquote>
+<h2 id="fillinfamilystatistics">fill-in: Family Statistics</h2>
+<blockquote>
+  <p>Опишіть сім'ю, використовуючи числівники.</p>
+  <p>У родини Петренків (1)<strong>_ (5) членів. Батьки мають (2)</strong>_ (3) дітей: двох синів і одну дочку. (3)<strong>_ (1/2) дітей вже дорослі. (4)</strong>_ (приблизно) раз на місяць вся родина збирається разом. (5)___ (більше ніж) 80% часу вони проводять у місті.</p>
+</blockquote>
+<p><strong>Answers:</strong></p>
+<ol>
+<li>п'ятеро</li>
+<li>троє</li>
+<li>Половина</li>
+<li>Близько (одного)</li>
+<li>Понад / Більше ніж</li>
+</ol>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Vocabulary</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Word</th>
+<th>IPA</th>
+<th>English</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>збірний</td>
+<td>/zbʲirˈnɪj/</td>
+<td>collective</td>
+<td>adj</td>
+</tr>
+<tr>
+<td>двоє</td>
+<td>/ˈdwojɛ/</td>
+<td>two (collective)</td>
+<td>num</td>
+</tr>
+<tr>
+<td>троє</td>
+<td>/ˈtrojɛ/</td>
+<td>three (collective)</td>
+<td>num</td>
+</tr>
+<tr>
+<td>четверо</td>
+<td>/t͡ʃɛˈtwɛro/</td>
+<td>four (collective)</td>
+<td>num</td>
+</tr>
+<tr>
+<td>п'ятеро</td>
+<td>/pjɑˈtɛro/</td>
+<td>five (collective)</td>
+<td>num</td>
+</tr>
+<tr>
+<td>обоє</td>
+<td>/oˈbojɛ/</td>
+<td>both</td>
+<td>num</td>
+</tr>
+<tr>
+<td>половина</td>
+<td>/poloˈvɪnɑ/</td>
+<td>half</td>
+<td>f</td>
+</tr>
+<tr>
+<td>третина</td>
+<td>/trɛˈtɪnɑ/</td>
+<td>third</td>
+<td>f</td>
+</tr>
+<tr>
+<td>чверть</td>
+<td>/t͡ʃwɛrtʲ/</td>
+<td>quarter</td>
+<td>f</td>
+</tr>
+<tr>
+<td>дріб</td>
+<td>/drʲib/</td>
+<td>fraction</td>
+<td>m</td>
+</tr>
+<tr>
+<td>відсоток</td>
+<td>/vʲidˈsotok/</td>
+<td>percent</td>
+<td>m</td>
+</tr>
+<tr>
+<td>близько</td>
+<td>/ˈblɪzʲko/</td>
+<td>approximately</td>
+<td>adv</td>
+</tr>
+<tr>
+<td>приблизно</td>
+<td>/prɪˈblɪzno/</td>
+<td>approximately</td>
+<td>adv</td>
+</tr>
+<tr>
+<td>понад</td>
+<td>/poˈnɑd/</td>
+<td>over, more than</td>
+<td>prep</td>
+</tr>
+<tr>
+<td>кілька</td>
+<td>/ˈkʲilʲkɑ/</td>
+<td>several</td>
+<td>num</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Summary</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="numeralskeypoints">Numerals: Key Points</h2>
+<h3 id="collectivenumerals">Collective Numerals</h3>
+<table>
+<thead>
+<tr>
+<th>Form</th>
+<th>Use With</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>двоє, троє, четверо</td>
+<td>people, children, paired nouns</td>
+</tr>
+</tbody>
+</table>
+<h3 id="fractions">Fractions</h3>
+<table>
+<thead>
+<tr>
+<th>Ukrainian</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>половина</td>
+<td>half (1/2)</td>
+</tr>
+<tr>
+<td>третина</td>
+<td>third (1/3)</td>
+</tr>
+<tr>
+<td>чверть</td>
+<td>quarter (1/4)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="approximation">Approximation</h3>
+<table>
+<thead>
+<tr>
+<th>Expression</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>близько</td>
+<td>about</td>
+</tr>
+<tr>
+<td>приблизно</td>
+<td>approximately</td>
+</tr>
+<tr>
+<td>понад</td>
+<td>over</td>
+</tr>
+<tr>
+<td>майже</td>
+<td>almost</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p><strong>Key Takeaways</strong></p>
+  <ul>
+  <li>Collectives for people, children, paired nouns</li>
+  <li>Cardinal for objects and specific genders</li>
+  <li>Ukrainian uses comma for decimals</li>
+  <li>Many ways to express approximate quantities</li>
+  <li>Fractions: numerator (cardinal) + denominator (ordinal genitive)</li>
+  </ul>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('quiz')">Start →</button></div>
     </section>
     
@@ -560,6 +898,10 @@
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

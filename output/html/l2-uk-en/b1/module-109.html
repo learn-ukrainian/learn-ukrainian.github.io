@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,14 +136,32 @@
         <p style="color:var(--text-muted)">Because, Due to, Therefore</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Причина та результат | Cause and Result</h4><div class="md-content"><p><strong>Cause</strong> answers "Why?":</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Зміст уроку | Lesson Content</li><li class="toc-item" data-target="section-1">Activities</li><li class="toc-item" data-target="section-2">Vocabulary</li><li class="toc-item" data-target="section-3">Summary</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Зміст уроку | Lesson Content</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="warmup">warm-up | Розминка</h2>
+<h3 id="causeandresult">Причина та результат | Cause and Result</h3>
+<p><strong>Cause</strong> answers "Why?":</p>
 <ul>
 <li>Він не прийшов, <strong>тому що</strong> захворів. (He didn't come <strong>because</strong> he got sick.)</li>
 </ul>
 <p><strong>Result</strong> answers "What happened?":</p>
 <ul>
 <li>Він захворів, <strong>тому</strong> він не прийшов. (He got sick, <strong>therefore</strong> he didn't come.)</li>
-</ul></div></div><div class="canvas-note"><h4>### Тому що — Because (Most Common)</h4><div class="md-content"><p><strong>Тому що</strong> is the most common way to express "because":</p>
+</ul>
+<h2 id="presentation">presentation | Презентація</h2>
+<h3 id="becausemostcommon">Тому що — Because (Most Common)</h3>
+<p><strong>Тому що</strong> is the most common way to express "because":</p>
 <table>
 <thead>
 <tr>
@@ -151,7 +187,9 @@
 <p><strong>Position:</strong> "Тому що" clause usually comes second:</p>
 <ul>
 <li>Main clause + <strong>тому що</strong> + reason</li>
-</ul></div></div><div class="canvas-note"><h4>Бо — Because (Informal)</h4><div class="md-content"><p><strong>Бо</strong> is a shorter, more colloquial alternative:</p>
+</ul>
+<h3 id="becauseinformal">Бо — Because (Informal)</h3>
+<p><strong>Бо</strong> is a shorter, more colloquial alternative:</p>
 <table>
 <thead>
 <tr>
@@ -177,7 +215,9 @@
   <li><strong>Бо</strong> — colloquial, informal speech</li>
   </ul>
   <p>Both are correct; use "тому що" in formal writing.</p>
-</blockquote></div></div><div class="canvas-note"><h4>Оскільки / Позаяк — Since, Because (Formal)</h4><div class="md-content"><p><strong>Оскільки</strong> is more formal, often in written language:</p>
+</blockquote>
+<h3 id="sincebecauseformal">Оскільки / Позаяк — Since, Because (Formal)</h3>
+<p><strong>Оскільки</strong> is more formal, often in written language:</p>
 <table>
 <thead>
 <tr>
@@ -200,7 +240,9 @@
 <p><strong>Позаяк</strong> is an archaic/bureaucratic synonym:</p>
 <ul>
 <li><strong>Позаяк</strong> він не відповів… (Since he didn't respond…)</li>
-</ul></div></div><div class="canvas-note"><h4>Через те, що — Due to the fact that, Because</h4><div class="md-content"><p><strong>Через те, що</strong> emphasizes the cause as an obstacle or problem:</p>
+</ul>
+<h3 id="duetothefactthatbecause">Через те, що — Due to the fact that, Because</h3>
+<p><strong>Через те, що</strong> emphasizes the cause as an obstacle or problem:</p>
 <table>
 <thead>
 <tr>
@@ -219,7 +261,9 @@
 </tr>
 </tbody>
 </table>
-<p><strong>Shorter:</strong> Через те що (without comma)</p></div></div><div class="canvas-note"><h4>Через + Noun — Because of, Due to (Negative)</h4><div class="md-content"><p><strong>Через</strong> + accusative noun (often negative cause):</p>
+<p><strong>Shorter:</strong> Через те що (without comma)</p>
+<h3 id="nounbecauseofduetonegative">Через + Noun — Because of, Due to (Negative)</h3>
+<p><strong>Через</strong> + accusative noun (often negative cause):</p>
 <table>
 <thead>
 <tr>
@@ -241,7 +285,9 @@
 <td>Because of the rain, we stayed home.</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Завдяки тому, що — Thanks to the fact that</h4><div class="md-content"><p><strong>Завдяки тому, що</strong> emphasizes a positive cause:</p>
+</table>
+<h3 id="thankstothefactthat">Завдяки тому, що — Thanks to the fact that</h3>
+<p><strong>Завдяки тому, що</strong> emphasizes a positive cause:</p>
 <table>
 <thead>
 <tr>
@@ -259,7 +305,9 @@
 <td>We made it thanks to leaving early.</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Завдяки + Noun — Thanks to (Positive)</h4><div class="md-content"><p><strong>Завдяки</strong> + dative noun (positive cause):</p>
+</table>
+<h3 id="nounthankstopositive">Завдяки + Noun — Thanks to (Positive)</h3>
+<p><strong>Завдяки</strong> + dative noun (positive cause):</p>
 <table>
 <thead>
 <tr>
@@ -290,7 +338,9 @@
   </ul>
   <p>Через хворобу (because of illness — negative)<br />
   Завдяки допомозі (thanks to help — positive)</p>
-</blockquote></div></div><div class="canvas-note"><h4>Expressing Results</h4><div class="md-content"><p><strong>Тому — Therefore, That's why:</strong></p>
+</blockquote>
+<h3 id="expressingresults">Expressing Results</h3>
+<p><strong>Тому — Therefore, That's why:</strong></p>
 <table>
 <thead>
 <tr>
@@ -346,7 +396,9 @@
 <td>The rain stopped, so we can go.</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Так що — So that (Result)</h4><div class="md-content"><p><strong>Так що</strong> introduces a result:</p>
+</table>
+<h3 id="sothatresult">Так що — So that (Result)</h3>
+<p><strong>Так що</strong> introduces a result:</p>
 <table>
 <thead>
 <tr>
@@ -364,7 +416,9 @@
 <td>She studied everything, so she passed the exam.</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Summary: Cause vs. Result</h4><div class="md-content"><table>
+</table>
+<h3 id="summarycausevsresult">Summary: Cause vs. Result</h3>
+<table>
 <thead>
 <tr>
 <th>Type</th>
@@ -424,7 +478,10 @@
 <td>…так що не прийшов.</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>### Choose the Correct Conjunction</h4><div class="md-content"><ol>
+</table>
+<h2 id="practice">practice | Практика</h2>
+<h3 id="choosethecorrectconjunction">Choose the Correct Conjunction</h3>
+<ol>
 <li>Він не прийшов, ___ захворів.</li>
 </ol>
 <ul>
@@ -463,7 +520,9 @@
 <li>a) Тому що</li>
 <li>b) Оскільки ✓</li>
 <li>c) Тож</li>
-</ul></div></div><div class="canvas-note"><h4>Transform: Cause to Result</h4><div class="md-content"><p><strong>Example:</strong> Я втомився, тому що працював багато.<br />
+</ul>
+<h3 id="transformcausetoresult">Transform: Cause to Result</h3>
+<p><strong>Example:</strong> Я втомився, тому що працював багато.<br />
 → Я працював багато, тому втомився.</p>
 <ol>
 <li><p>Вона запізнилася, тому що пропустила автобус.<br />
@@ -472,7 +531,9 @@
 → Він захворів, <strong>тому</strong> не прийшов.</p></li>
 <li><p>Ми залишилися вдома, тому що йшов дощ.<br />
 → Йшов дощ, <strong>тому</strong> ми залишилися вдома.</p></li>
-</ol></div></div><div class="canvas-note"><h4>Через or Завдяки?</h4><div class="md-content"><ol>
+</ol>
+<h3 id="or">Через or Завдяки?</h3>
+<ol>
 <li><p>Він здав іспит ___ наполегливій праці.<br />
 → <strong>завдяки</strong> (positive cause)</p></li>
 <li><p>Вона запізнилася ___ затор.<br />
@@ -483,7 +544,9 @@
 → <strong>Через</strong> (negative cause)</p></li>
 <li><p>Команда перемогла ___ тренуванням.<br />
 → <strong>завдяки</strong> (positive cause)</p></li>
-</ol></div></div><div class="canvas-note"><h4>Translate to Ukrainian</h4><div class="md-content"><ol>
+</ol>
+<h3 id="translatetoukrainian">Translate to Ukrainian</h3>
+<ol>
 <li><p>I didn't come because I was sick.<br />
 → <strong>Я не прийшов, тому що захворів.</strong></p></li>
 <li><p>Thanks to your help, I succeeded.<br />
@@ -494,7 +557,10 @@
 → <strong>Він втомився, тому пішов спати.</strong></p></li>
 <li><p>Since there are no questions, let's end.<br />
 → <strong>Оскільки немає питань, закінчимо.</strong></p></li>
-</ol></div></div><div class="canvas-note"><h4>### Explain Causes and Results</h4><div class="md-content"><p>Talk about your life using causal/result expressions:</p>
+</ol>
+<h2 id="production">production | Продукція</h2>
+<h3 id="explaincausesandresults">Explain Causes and Results</h3>
+<p>Talk about your life using causal/result expressions:</p>
 <ol>
 <li><p>Чому ви вивчаєте українську?<br />
 → Я вивчаю українську, <strong>тому що</strong>…</p></li>
@@ -504,12 +570,312 @@
 → У мене були труднощі <strong>через</strong>…</p></li>
 </ol>
 <p><strong>Example:</strong><br />
-Я вивчаю українську, <strong>тому що</strong> моя родина з України. <strong>Завдяки</strong> інтернету я можу практикуватися щодня. <strong>Через</strong> брак часу я не завжди можу займатися, <strong>тому</strong> прогрес повільний.</p></div></div><div class="canvas-note"><h4>Discussion: Причини і наслідки</h4><div class="md-content"><p>Discuss causes and results:</p>
+Я вивчаю українську, <strong>тому що</strong> моя родина з України. <strong>Завдяки</strong> інтернету я можу практикуватися щодня. <strong>Через</strong> брак часу я не завжди можу займатися, <strong>тому</strong> прогрес повільний.</p>
+<h3 id="discussion">Discussion: Причини і наслідки</h3>
+<p>Discuss causes and results:</p>
 <ul>
 <li>Чому люди вчать іноземні мови?</li>
 <li>Завдяки чому можна досягти успіху?</li>
 <li>Через що люди стресують?</li>
-</ul></div></div></div>
+</ul>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Activities</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="quizcausalandresultclauses">quiz: Causal and Result Clauses</h2>
+<blockquote>
+  <p>Choose the correct answer.</p>
+</blockquote>
+<ol>
+<li>Він не прийшов, ___ захворів.</li>
+</ol>
+<ul>
+<li>[x] тому що</li>
+<li>[ ] тому</li>
+</ul>
+<blockquote>
+  <p>"Тому що" introduces cause (reason).</p>
+</blockquote>
+<ol start="2">
+<li>Вона досягла успіху ___ наполегливості.</li>
+</ol>
+<ul>
+<li>[x] завдяки</li>
+<li>[ ] через</li>
+</ul>
+<blockquote>
+  <p>"Завдяки" + dative for positive cause.</p>
+</blockquote>
+<ol start="3">
+<li>___ поганої погоди, захід скасували.</li>
+</ol>
+<ul>
+<li>[x] Через</li>
+<li>[ ] Завдяки</li>
+</ul>
+<blockquote>
+  <p>"Через" + accusative for negative cause.</p>
+</blockquote>
+<ol start="4">
+<li>Йшов дощ, ___ ми не пішли.</li>
+</ol>
+<ul>
+<li>[ ] бо</li>
+<li>[x] тому</li>
+</ul>
+<blockquote>
+  <p>"Тому" introduces result.</p>
+</blockquote>
+<ol start="5">
+<li>___ він не готовий, перенесемо зустріч.</li>
+</ol>
+<ul>
+<li>[x] Оскільки</li>
+<li>[ ] Тому що</li>
+</ul>
+<blockquote>
+  <p>"Оскільки" at the start is more formal.</p>
+</blockquote>
+<ol start="6">
+<li>Він працював багато, ___ втомився.</li>
+</ol>
+<ul>
+<li>[x] так що</li>
+<li>[ ] бо</li>
+</ul>
+<blockquote>
+  <p>"Так що" introduces result.</p>
+</blockquote>
+<h2 id="fillincompletetheexplanation">fill-in: Complete the Explanation</h2>
+<blockquote>
+  <p>Я не зміг приїхати на зустріч (1)<strong>_ несподіваних обставин. Мій поїзд затримався (2)</strong>_ того, що була аварія на дорозі. (3)<strong>_ я спізнився на зустріч. Але (4)</strong>_ вашому розумінню все закінчилося добре.</p>
+</blockquote>
+<p><strong>Answers:</strong> через, через те, Тому, завдяки</p>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Vocabulary</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Word</th>
+<th>IPA</th>
+<th>English</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>тому що</td>
+<td>/toˈmu ʃt͡ʃo/</td>
+<td>because</td>
+<td>conj</td>
+</tr>
+<tr>
+<td>бо</td>
+<td>/bo/</td>
+<td>because (informal)</td>
+<td>conj</td>
+</tr>
+<tr>
+<td>оскільки</td>
+<td>/osˈkʲilʲkɪ/</td>
+<td>since, because</td>
+<td>conj (formal)</td>
+</tr>
+<tr>
+<td>через</td>
+<td>/t͡ʃɛˈrɛz/</td>
+<td>because of, due to</td>
+<td>prep + acc</td>
+</tr>
+<tr>
+<td>через те, що</td>
+<td>-</td>
+<td>due to the fact that</td>
+<td>conj</td>
+</tr>
+<tr>
+<td>завдяки</td>
+<td>/zɑvˈdʲɑkɪ/</td>
+<td>thanks to</td>
+<td>prep + dat</td>
+</tr>
+<tr>
+<td>завдяки тому, що</td>
+<td>-</td>
+<td>thanks to the fact that</td>
+<td>conj</td>
+</tr>
+<tr>
+<td>тому</td>
+<td>/toˈmu/</td>
+<td>therefore, that's why</td>
+<td>adv</td>
+</tr>
+<tr>
+<td>отже</td>
+<td>/ˈotʒɛ/</td>
+<td>therefore, thus</td>
+<td>adv (formal)</td>
+</tr>
+<tr>
+<td>тож</td>
+<td>/toʒ/</td>
+<td>so, therefore</td>
+<td>adv (informal)</td>
+</tr>
+<tr>
+<td>так що</td>
+<td>/tɑk ʃt͡ʃo/</td>
+<td>so that, so</td>
+<td>conj</td>
+</tr>
+<tr>
+<td>причина</td>
+<td>/prɪˈt͡ʃɪnɑ/</td>
+<td>reason, cause</td>
+<td>f</td>
+</tr>
+<tr>
+<td>наслідок</td>
+<td>/ˈnɑslʲidok/</td>
+<td>consequence, result</td>
+<td>m</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Summary</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="expressingcausereason">Expressing Cause (Reason)</h2>
+<table>
+<thead>
+<tr>
+<th>Expression</th>
+<th>Structure</th>
+<th>Register</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>тому що</td>
+<td>+ clause</td>
+<td>neutral</td>
+<td>…тому що захворів</td>
+</tr>
+<tr>
+<td>бо</td>
+<td>+ clause</td>
+<td>informal</td>
+<td>…бо захворів</td>
+</tr>
+<tr>
+<td>оскільки</td>
+<td>+ clause</td>
+<td>formal</td>
+<td>Оскільки він хворий…</td>
+</tr>
+<tr>
+<td>через</td>
+<td>+ noun (acc)</td>
+<td>neutral, negative</td>
+<td>…через хворобу</td>
+</tr>
+<tr>
+<td>завдяки</td>
+<td>+ noun (dat)</td>
+<td>neutral, positive</td>
+<td>…завдяки допомозі</td>
+</tr>
+</tbody>
+</table>
+<h2 id="expressingresultconsequence">Expressing Result (Consequence)</h2>
+<table>
+<thead>
+<tr>
+<th>Expression</th>
+<th>Position</th>
+<th>Register</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>тому</td>
+<td>mid-sentence</td>
+<td>neutral</td>
+<td>…тому не прийшов</td>
+</tr>
+<tr>
+<td>отже</td>
+<td>sentence start</td>
+<td>formal</td>
+<td>Отже, він не прийшов.</td>
+</tr>
+<tr>
+<td>тож</td>
+<td>mid-sentence</td>
+<td>informal</td>
+<td>…тож не прийшов</td>
+</tr>
+<tr>
+<td>так що</td>
+<td>mid-sentence</td>
+<td>neutral</td>
+<td>…так що не прийшов</td>
+</tr>
+</tbody>
+</table>
+<h2 id="vs">Через vs. Завдяки</h2>
+<table>
+<thead>
+<tr>
+<th>Preposition</th>
+<th>Case</th>
+<th>Connotation</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>через</td>
+<td>+ accusative</td>
+<td>negative/neutral</td>
+<td>через проблеми</td>
+</tr>
+<tr>
+<td>завдяки</td>
+<td>+ dative</td>
+<td>positive</td>
+<td>завдяки допомозі</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p><strong>Key Takeaways</strong></p>
+  <ul>
+  <li>Тому що = because (most common)</li>
+  <li>Бо = because (informal)</li>
+  <li>Оскільки = since (formal, often first)</li>
+  <li>Через + acc = because of (negative)</li>
+  <li>Завдяки + dat = thanks to (positive)</li>
+  <li>Тому/отже/тож = therefore/so (result)</li>
+  </ul>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('quiz')">Start →</button></div>
     </section>
     
@@ -547,6 +913,10 @@
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

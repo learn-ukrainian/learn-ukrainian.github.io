@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,14 +136,32 @@
         <p style="color:var(--text-muted)">30 More Essential Verb Pairs</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Review: Aspect Selection</h4><div class="md-content"><p>Quick check from Module 87:</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Lesson Content</li><li class="toc-item" data-target="section-1">Activities</li><li class="toc-item" data-target="section-2">Vocabulary</li><li class="toc-item" data-target="section-3">Summary</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Lesson Content</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="warmup">warm-up</h2>
+<h3 id="reviewaspectselection">Review: Aspect Selection</h3>
+<p>Quick check from Module 87:</p>
 <ul>
 <li>What aspect for duration? → <strong>Imperfective</strong></li>
 <li>What aspect for result? → <strong>Perfective</strong></li>
 <li>What aspect with "завжди"? → <strong>Imperfective</strong></li>
 <li>What aspect with "нарешті"? → <strong>Perfective</strong></li>
 </ul>
-<p>Today: 30 more essential pairs for everyday communication.</p></div></div><div class="canvas-note"><h4>### Verbs of Change</h4><div class="md-content"><table>
+<p>Today: 30 more essential pairs for everyday communication.</p>
+<h2 id="presentation">presentation</h2>
+<h3 id="verbsofchange">Verbs of Change</h3>
+<table>
 <thead>
 <tr>
 <th>Imperfective</th>
@@ -192,7 +228,9 @@
 <li>Ціни <strong>збільшуються</strong> щороку. - Prices increase every year.</li>
 <li>Він <strong>змінився</strong>! - He has changed!</li>
 <li>Вона <strong>покращувала</strong> свою українську три місяці. - She was improving her Ukrainian for three months.</li>
-</ul></div></div><div class="canvas-note"><h4>Verbs of Emotion</h4><div class="md-content"><table>
+</ul>
+<h3 id="verbsofemotion">Verbs of Emotion</h3>
+<table>
 <thead>
 <tr>
 <th>Imperfective</th>
@@ -249,7 +287,9 @@
 <li>Не <strong>хвилюйся</strong>! - Don't worry!</li>
 <li>Він <strong>здивувався</strong>, коли побачив мене. - He was surprised when he saw me.</li>
 <li>Вона завжди <strong>хвилюється</strong> перед іспитами. - She always worries before exams.</li>
-</ul></div></div><div class="canvas-note"><h4>Verbs of Daily Routine</h4><div class="md-content"><table>
+</ul>
+<h3 id="verbsofdailyroutine">Verbs of Daily Routine</h3>
+<table>
 <thead>
 <tr>
 <th>Imperfective</th>
@@ -316,7 +356,9 @@
 <li>Вона <strong>засинає</strong> о десятій. - She falls asleep at ten.</li>
 <li><strong>Одягнися</strong> швидше! - Get dressed faster!</li>
 <li>Він <strong>голиться</strong> щоранку. - He shaves every morning.</li>
-</ul></div></div><div class="canvas-note"><h4>Verbs of Starting and Finishing</h4><div class="md-content"><table>
+</ul>
+<h3 id="verbsofstartingandfinishing">Verbs of Starting and Finishing</h3>
+<table>
 <thead>
 <tr>
 <th>Imperfective</th>
@@ -373,7 +415,9 @@
 <li>Вона <strong>закінчила</strong> роботу. - She finished work.</li>
 <li>Дощ <strong>припинився</strong>. - The rain stopped.</li>
 <li>Вони <strong>продовжують</strong> працювати. - They continue working.</li>
-</ul></div></div><div class="canvas-note"><h4>Verbs of Creation and Destruction</h4><div class="md-content"><table>
+</ul>
+<h3 id="verbsofcreationanddestruction">Verbs of Creation and Destruction</h3>
+<table>
 <thead>
 <tr>
 <th>Imperfective</th>
@@ -420,7 +464,9 @@
 <li>Вони <strong>побудували</strong> будинок за рік. - They built a house in a year.</li>
 <li>Треба <strong>відремонтувати</strong> машину. - The car needs to be repaired.</li>
 <li>Хто <strong>зруйнував</strong> це? - Who destroyed this?</li>
-</ul></div></div><div class="canvas-note"><h4>Verbs of Communication (Continued)</h4><div class="md-content"><table>
+</ul>
+<h3 id="verbsofcommunicationcontinued">Verbs of Communication (Continued)</h3>
+<table>
 <thead>
 <tr>
 <th>Imperfective</th>
@@ -467,7 +513,10 @@
 <li>Я <strong>надіслав</strong> листа вчора. - I sent a letter yesterday.</li>
 <li>Вона <strong>отримала</strong> подарунок. - She received a gift.</li>
 <li><strong>Поверни</strong> мені книгу! - Return my book!</li>
-</ul></div></div><div class="canvas-note"><h4>### Aspect Pair Drills</h4><div class="md-content"><p>Fill in the perfective form:</p>
+</ul>
+<h2 id="practice">practice</h2>
+<h3 id="aspectpairdrills">Aspect Pair Drills</h3>
+<p>Fill in the perfective form:</p>
 <ol>
 <li>змінювати → <strong>_</strong> → <strong>змінити</strong></li>
 <li>починати → <strong>_</strong> → <strong>почати</strong></li>
@@ -484,7 +533,9 @@
 <li><strong>_</strong> → заснути → <strong>засинати</strong></li>
 <li><strong>_</strong> → отримати → <strong>отримувати</strong></li>
 <li><strong>_</strong> → полагодити → <strong>лагодити</strong></li>
-</ol></div></div><div class="canvas-note"><h4>Use in Context</h4><div class="md-content"><p>Choose the correct aspect:</p>
+</ol>
+<h3 id="useincontext">Use in Context</h3>
+<p>Choose the correct aspect:</p>
 <ol>
 <li>Вона ___ (просипалася/прокинулася) о п'ятій ранку. → <strong>прокинулася</strong> (single event)</li>
 <li>Він завжди ___ (боявся/злякався) собак. → <strong>боявся</strong> (always)</li>
@@ -492,9 +543,13 @@
 <li>Вона три години ___ (змінювала/змінила) свою зачіску. → <strong>змінювала</strong> (duration)</li>
 <li>Нарешті вона ___ (заспокоювалася/заспокоїлася)! → <strong>заспокоїлася</strong> (finally)</li>
 <li>Діти ___ (засинають/заснуть) о дев'ятій щовечора. → <strong>засинають</strong> (every evening)</li>
-</ol></div></div><div class="canvas-note"><h4>Morning Routine Narrative</h4><div class="md-content"><p>Complete with correct aspect:</p>
+</ol>
+<h3 id="morningroutinenarrative">Morning Routine Narrative</h3>
+<p>Complete with correct aspect:</p>
 <p>Сьогодні я ___ (прокидався/прокинувся) о сьомій. Я ___ (вставав/встав) і ___ (йшов/пішов) у ванну. Я ___ (вмивався/вмився), ___ (голився/поголився) і ___ (одягався/одягнувся). Потім я ___ (снідав/поснідав) і ___ (виходив/вийшов) з дому.</p>
-<p><strong>Answers:</strong> прокинувся, встав, пішов, вмився, поголився, одягнувся, поснідав, вийшов (all perfective - completed sequence)</p></div></div><div class="canvas-note"><h4>Describe Changes</h4><div class="md-content"><p>Use aspect pairs to describe changes:</p>
+<p><strong>Answers:</strong> прокинувся, встав, пішов, вмився, поголився, одягнувся, поснідав, вийшов (all perfective - completed sequence)</p>
+<h3 id="describechanges">Describe Changes</h3>
+<p>Use aspect pairs to describe changes:</p>
 <p><strong>Example:</strong></p>
 <ul>
 <li>Погода <strong>покращилася</strong> — тепер сонячно.</li>
@@ -506,21 +561,329 @@
 <li>Your city</li>
 <li>Technology</li>
 <li>Your language skills</li>
-</ul></div></div><div class="canvas-note"><h4>### Tell a Story Using Emotion Verbs</h4><div class="md-content"><p>Create a short story using at least 5 emotion verbs:</p>
+</ul>
+<h2 id="production">production</h2>
+<h3 id="tellastoryusingemotionverbs">Tell a Story Using Emotion Verbs</h3>
+<p>Create a short story using at least 5 emotion verbs:</p>
 <p><strong>Example:</strong><br />
-Коли вона побачила подарунок, вона дуже <strong>зраділа</strong>. Але потім вона <strong>здивувалася</strong>, бо не знала, хто його надіслав. Вона почала <strong>хвилюватися</strong>. Нарешті вона <strong>заспокоїлася</strong>, коли прочитала записку.</p></div></div><div class="canvas-note"><h4>Daily Routine Interview</h4><div class="md-content"><p>Ask your partner about their routine:</p>
+Коли вона побачила подарунок, вона дуже <strong>зраділа</strong>. Але потім вона <strong>здивувалася</strong>, бо не знала, хто його надіслав. Вона почала <strong>хвилюватися</strong>. Нарешті вона <strong>заспокоїлася</strong>, коли прочитала записку.</p>
+<h3 id="dailyroutineinterview">Daily Routine Interview</h3>
+<p>Ask your partner about their routine:</p>
 <ul>
 <li>О котрій годині ти прокидаєшся?</li>
 <li>Коли ти засинаєш?</li>
 <li>Що ти робиш, коли встаєш?</li>
-</ul></div></div></div>
+</ul>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Activities</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="quizaspectselection">quiz: Aspect Selection</h2>
+<blockquote>
+  <p>Choose the correct form.</p>
+</blockquote>
+<ol>
+<li>Вона ___ вчора о шостій ранку.</li>
+</ol>
+<ul>
+<li>[ ] прокидалася</li>
+<li>[x] прокинулася</li>
+</ul>
+<blockquote>
+  <p>Single past event = perfective</p>
+</blockquote>
+<ol start="2">
+<li>Погода ___ щодня.</li>
+</ol>
+<ul>
+<li>[x] змінюється</li>
+<li>[ ] зміниться</li>
+</ul>
+<blockquote>
+  <p>Щодня = imperfective</p>
+</blockquote>
+<ol start="3">
+<li>Фільм вже ___ .</li>
+</ol>
+<ul>
+<li>[ ] починався</li>
+<li>[x] почався</li>
+</ul>
+<blockquote>
+  <p>Вже = perfective</p>
+</blockquote>
+<ol start="4">
+<li>Він завжди ___ перед виступом.</li>
+</ol>
+<ul>
+<li>[x] хвилюється</li>
+<li>[ ] захвилюється</li>
+</ul>
+<blockquote>
+  <p>Завжди = imperfective</p>
+</blockquote>
+<ol start="5">
+<li>Нарешті вони ___ будинок!</li>
+</ol>
+<ul>
+<li>[ ] будували</li>
+<li>[x] побудували</li>
+</ul>
+<blockquote>
+  <p>Нарешті = perfective</p>
+</blockquote>
+<ol start="6">
+<li>___ мені завтра!</li>
+</ol>
+<ul>
+<li>[ ] Телефонуй</li>
+<li>[x] Зателефонуй</li>
+</ul>
+<blockquote>
+  <p>Specific request = perfective</p>
+</blockquote>
+<h2 id="matchupaspectpairs">match-up: Aspect Pairs</h2>
+<table>
+<thead>
+<tr>
+<th>Imperfective</th>
+<th>Perfective</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>прокидатися</td>
+<td>прокинутися</td>
+</tr>
+<tr>
+<td>засинати</td>
+<td>заснути</td>
+</tr>
+<tr>
+<td>починати</td>
+<td>почати</td>
+</tr>
+<tr>
+<td>хвилюватися</td>
+<td>захвилюватися</td>
+</tr>
+<tr>
+<td>змінювати</td>
+<td>змінити</td>
+</tr>
+<tr>
+<td>створювати</td>
+<td>створити</td>
+</tr>
+</tbody>
+</table>
+<h2 id="groupsortverbcategories">group-sort: Verb Categories</h2>
+<h3 id="changeverbs">Change Verbs</h3>
+<ul>
+<li>змінювати / змінити</li>
+<li>покращувати / покращити</li>
+<li>збільшувати / збільшити</li>
+</ul>
+<h3 id="emotionverbs">Emotion Verbs</h3>
+<ul>
+<li>радіти / зрадіти</li>
+<li>хвилюватися / захвилюватися</li>
+<li>дивуватися / здивуватися</li>
+</ul>
+<h3 id="dailyroutineverbs">Daily Routine Verbs</h3>
+<ul>
+<li>прокидатися / прокинутися</li>
+<li>засинати / заснути</li>
+<li>одягатися / одягнутися</li>
+</ul>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Vocabulary</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Word</th>
+<th>IPA</th>
+<th>English</th>
+<th>Aspect</th>
+<th>Pair</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>прокидатися</td>
+<td>/prokɪˈdɑtɪsʲɑ/</td>
+<td>to wake up</td>
+<td>impf</td>
+<td>прокинутися</td>
+</tr>
+<tr>
+<td>прокинутися</td>
+<td>/prokɪˈnutɪsʲɑ/</td>
+<td>to wake up (pf)</td>
+<td>pf</td>
+<td>прокидатися</td>
+</tr>
+<tr>
+<td>засинати</td>
+<td>/zɑsɪˈnɑtɪ/</td>
+<td>to fall asleep</td>
+<td>impf</td>
+<td>заснути</td>
+</tr>
+<tr>
+<td>заснути</td>
+<td>/zɑsˈnutɪ/</td>
+<td>to fall asleep (pf)</td>
+<td>pf</td>
+<td>засинати</td>
+</tr>
+<tr>
+<td>хвилюватися</td>
+<td>/xvɪlʲuˈvɑtɪsʲɑ/</td>
+<td>to worry</td>
+<td>impf</td>
+<td>захвилюватися</td>
+</tr>
+<tr>
+<td>захвилюватися</td>
+<td>/zɑxvɪlʲuˈvɑtɪsʲɑ/</td>
+<td>to worry (pf)</td>
+<td>pf</td>
+<td>хвилюватися</td>
+</tr>
+<tr>
+<td>змінювати</td>
+<td>/zmʲiˈnʲuvɑtɪ/</td>
+<td>to change</td>
+<td>impf</td>
+<td>змінити</td>
+</tr>
+<tr>
+<td>змінити</td>
+<td>/zmʲiˈnɪtɪ/</td>
+<td>to change (pf)</td>
+<td>pf</td>
+<td>змінювати</td>
+</tr>
+<tr>
+<td>покращувати</td>
+<td>/pokrɑˈʃuvɑtɪ/</td>
+<td>to improve</td>
+<td>impf</td>
+<td>покращити</td>
+</tr>
+<tr>
+<td>покращити</td>
+<td>/pokrɑˈʃɪtɪ/</td>
+<td>to improve (pf)</td>
+<td>pf</td>
+<td>покращувати</td>
+</tr>
+<tr>
+<td>створювати</td>
+<td>/stvoˈrʲuvɑtɪ/</td>
+<td>to create</td>
+<td>impf</td>
+<td>створити</td>
+</tr>
+<tr>
+<td>створити</td>
+<td>/stvoˈrɪtɪ/</td>
+<td>to create (pf)</td>
+<td>pf</td>
+<td>створювати</td>
+</tr>
+<tr>
+<td>телефонувати</td>
+<td>/tɛlɛfonuˈvɑtɪ/</td>
+<td>to call</td>
+<td>impf</td>
+<td>зателефонувати</td>
+</tr>
+<tr>
+<td>зателефонувати</td>
+<td>/zɑtɛlɛfonuˈvɑtɪ/</td>
+<td>to call (pf)</td>
+<td>pf</td>
+<td>телефонувати</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Summary</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="30pairsfromthismodule">30 Pairs from This Module</h2>
+<h3 id="change">Change</h3>
+<ol>
+<li>змінювати / змінити</li>
+<li>покращувати / покращити</li>
+<li>погіршувати / погіршити</li>
+<li>збільшувати / збільшити</li>
+<li>зменшувати / зменшити</li>
+</ol>
+<h3 id="emotion">Emotion</h3>
+<ol start="6">
+<li>радіти / зрадіти</li>
+<li>хвилюватися / захвилюватися</li>
+<li>дивуватися / здивуватися</li>
+<li>боятися / злякатися</li>
+<li>заспокоюватися / заспокоїтися</li>
+</ol>
+<h3 id="dailyroutine">Daily Routine</h3>
+<ol start="11">
+<li>прокидатися / прокинутися</li>
+<li>засинати / заснути</li>
+<li>одягатися / одягнутися</li>
+<li>вмиватися / вмитися</li>
+<li>голитися / поголитися</li>
+</ol>
+<h3 id="startingfinishing">Starting/Finishing</h3>
+<ol start="16">
+<li>починати / почати</li>
+<li>закінчувати / закінчити</li>
+<li>продовжувати / продовжити</li>
+<li>припиняти / припинити</li>
+</ol>
+<h3 id="communication">Communication</h3>
+<ol start="20">
+<li>телефонувати / зателефонувати</li>
+<li>надсилати / надіслати</li>
+<li>отримувати / отримати</li>
+</ol>
+<p>…and more from the lesson!</p>
+<h2 id="totalb11aspectpairs">Total B1.1 Aspect Pairs</h2>
+<p>After modules 87-88: <strong>~60 new aspect pairs</strong></p>
+<p>Combined with A2 knowledge: <strong>100+ aspect pairs</strong></p>
+<blockquote>
+  <p><strong>Key Takeaways</strong></p>
+  <ul>
+  <li>Learn verbs in pairs, not individually</li>
+  <li>Daily routine verbs form sequences (perfective)</li>
+  <li>Emotion verbs often use з-/за- prefix for perfective</li>
+  <li>Change verbs (-увати/-ити pattern) are very productive</li>
+  </ul>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('match')">Start →</button></div>
     </section>
     <section id="match" class="section"><div class="card"><h3>Aspect Pairs</h3>
       <div class="score-display"><span class="score"><span id="match-score">0</span>/6</span></div>
       <div class="match-container" id="match-container"><svg class="match-lines" id="match-lines"></svg>
         <div class="match-column" id="match-left"><div class="match-item" data-pair="0">прокидатися</div><div class="match-item" data-pair="1">засинати</div><div class="match-item" data-pair="2">починати</div><div class="match-item" data-pair="3">хвилюватися</div><div class="match-item" data-pair="4">змінювати</div><div class="match-item" data-pair="5">створювати</div></div>
-        <div class="match-column" id="match-right"><div class="match-item" data-pair="1">заснути</div><div class="match-item" data-pair="0">прокинутися</div><div class="match-item" data-pair="5">створити</div><div class="match-item" data-pair="2">почати</div><div class="match-item" data-pair="4">змінити</div><div class="match-item" data-pair="3">захвилюватися</div></div>
+        <div class="match-column" id="match-right"><div class="match-item" data-pair="1">заснути</div><div class="match-item" data-pair="0">прокинутися</div><div class="match-item" data-pair="5">створити</div><div class="match-item" data-pair="2">почати</div><div class="match-item" data-pair="3">захвилюватися</div><div class="match-item" data-pair="4">змінити</div></div>
       </div>
       <div class="completion-message" id="match-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetMatch()">Reset</button><button class="btn btn-primary" onclick="showSection('quiz')">Next →</button></div>
@@ -565,6 +928,10 @@
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

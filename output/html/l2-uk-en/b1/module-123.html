@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,13 +136,31 @@
         <p style="color:var(--text-muted)">Stress, Recovery, Diet</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Здоров'я та самопочуття | Health and Wellness</h4><div class="md-content"><p>На рівні B1 ми обговорюємо здоров'я глибше:</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Зміст уроку | Lesson Content</li><li class="toc-item" data-target="section-1">Activities</li><li class="toc-item" data-target="section-2">Vocabulary</li><li class="toc-item" data-target="section-3">Summary</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Зміст уроку | Lesson Content</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="warmup">warm-up | Розминка</h2>
+<h3 id="healthandwellness">Здоров'я та самопочуття | Health and Wellness</h3>
+<p>На рівні B1 ми обговорюємо здоров'я глибше:</p>
 <p>At B1 level, we discuss health more deeply:</p>
 <ul>
 <li>Як ви <strong>піклуєтеся</strong> про своє здоров'я? | How do you take care of your health?</li>
 <li>Що допомагає вам <strong>справлятися зі стресом</strong>? | What helps you cope with stress?</li>
 <li>Яку роль грає <strong>харчування</strong> у вашому житті? | What role does nutrition play in your life?</li>
-</ul></div></div><div class="canvas-note"><h4>### Загальне здоров'я | General Health</h4><div class="md-content"><table>
+</ul>
+<h2 id="presentation">presentation | Презентація</h2>
+<h3 id="generalhealth">Загальне здоров'я | General Health</h3>
+<table>
 <thead>
 <tr>
 <th>Ukrainian</th>
@@ -189,7 +225,9 @@
 <td>Профілактика хвороб</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Стрес і психічне здоров'я | Stress and Mental Health</h4><div class="md-content"><table>
+</table>
+<h3 id="stressandmentalhealth">Стрес і психічне здоров'я | Stress and Mental Health</h3>
+<table>
 <thead>
 <tr>
 <th>Ukrainian</th>
@@ -260,7 +298,9 @@
 <td>Когнітивна терапія</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Дієслова здоров'я | Health Verbs</h4><div class="md-content"><table>
+</table>
+<h3 id="healthverbs">Дієслова здоров'я | Health Verbs</h3>
+<table>
 <thead>
 <tr>
 <th>Ukrainian</th>
@@ -320,7 +360,9 @@
 <td>impf</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Харчування | Nutrition</h4><div class="md-content"><table>
+</table>
+<h3 id="nutrition">Харчування | Nutrition</h3>
+<table>
 <thead>
 <tr>
 <th>Ukrainian</th>
@@ -385,7 +427,9 @@
 <td>Харчові добавки</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Фізична активність | Physical Activity</h4><div class="md-content"><table>
+</table>
+<h3 id="physicalactivity">Фізична активність | Physical Activity</h3>
+<table>
 <thead>
 <tr>
 <th>Ukrainian</th>
@@ -450,7 +494,9 @@
 <td>Розвивати витривалість</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Сон і відпочинок | Sleep and Rest</h4><div class="md-content"><table>
+</table>
+<h3 id="sleepandrest">Сон і відпочинок | Sleep and Rest</h3>
+<table>
 <thead>
 <tr>
 <th>Ukrainian</th>
@@ -503,7 +549,9 @@
 <td>impf/pf</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Корисні вирази | Useful Expressions</h4><div class="md-content"><table>
+</table>
+<h3 id="usefulexpressions">Корисні вирази | Useful Expressions</h3>
+<table>
 <thead>
 <tr>
 <th>Ukrainian</th>
@@ -544,7 +592,10 @@
 <td>to get rid of bad habits</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>### Complete with Correct Word</h4><div class="md-content"><ol>
+</table>
+<h2 id="practice">practice | Практика</h2>
+<h3 id="completewithcorrectword">Complete with Correct Word</h3>
+<ol>
 <li><p>Він страждає на хронічний ___ (stress).<br />
 → Він страждає на хронічний <strong>стрес</strong>.</p></li>
 <li><p>Вона дотримується здорової ___ (diet).<br />
@@ -555,7 +606,9 @@
 → Регулярні <strong>тренування</strong> корисні для здоров'я.</p></li>
 <li><p>Вітаміни зміцнюють ___ (immunity).<br />
 → Вітаміни зміцнюють <strong>імунітет</strong>.</p></li>
-</ol></div></div><div class="canvas-note"><h4>Match Problem to Solution</h4><div class="md-content"><table>
+</ol>
+<h3 id="matchproblemtosolution">Match Problem to Solution</h3>
+<table>
 <thead>
 <tr>
 <th>Problem</th>
@@ -584,13 +637,17 @@
 <td>вітаміни, здорове харчування</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Discussion Questions</h4><div class="md-content"><ol>
+</table>
+<h3 id="discussionquestions">Discussion Questions</h3>
+<ol>
 <li>Як ви справляєтеся зі <strong>стресом</strong>?</li>
 <li>Чи дотримуєтеся ви <strong>режиму дня</strong>?</li>
 <li>Скільки годин ви <strong>спите</strong>?</li>
 <li>Чи займаєтеся ви <strong>спортом</strong>?</li>
 <li>Що для вас означає <strong>здоровий спосіб життя</strong>?</li>
-</ol></div></div><div class="canvas-note"><h4>Translate to Ukrainian</h4><div class="md-content"><ol>
+</ol>
+<h3 id="translatetoukrainian">Translate to Ukrainian</h3>
+<ol>
 <li><p>I need to reduce stress.<br />
 → <strong>Мені потрібно зменшити стрес.</strong></p></li>
 <li><p>She follows a healthy diet.<br />
@@ -599,17 +656,258 @@
 → <strong>Регулярні фізичні вправи важливі для здоров'я.</strong></p></li>
 <li><p>I'm trying to get more sleep.<br />
 → <strong>Я намагаюся більше спати / висипатися.</strong></p></li>
-</ol></div></div><div class="canvas-note"><h4>### Describe Your Wellness Routine</h4><div class="md-content"><p>Talk about your health habits:</p>
+</ol>
+<h2 id="production">production | Продукція</h2>
+<h3 id="describeyourwellnessroutine">Describe Your Wellness Routine</h3>
+<p>Talk about your health habits:</p>
 <ul>
 <li>Що ви робите для <strong>фізичного</strong> здоров'я?</li>
 <li>Як ви піклуєтеся про <strong>психічне</strong> здоров'я?</li>
 <li>Як виглядає ваш <strong>режим дня</strong>?</li>
-</ul></div></div><div class="canvas-note"><h4>Give Health Advice</h4><div class="md-content"><p>A friend is stressed and tired. What do you advise?</p>
+</ul>
+<h3 id="givehealthadvice">Give Health Advice</h3>
+<p>A friend is stressed and tired. What do you advise?</p>
 <ul>
 <li>Раджу тобі більше відпочивати…</li>
 <li>Спробуй медитацію…</li>
 <li>Важливо висипатися…</li>
-</ul></div></div></div>
+</ul>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Activities</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="quizhealthandwellness">quiz: Health and Wellness</h2>
+<blockquote>
+  <p>Choose the correct word.</p>
+</blockquote>
+<ol>
+<li>Chronic tiredness:</li>
+</ol>
+<ul>
+<li>[x] хронічна втома</li>
+<li>[ ] хронічний сон</li>
+</ul>
+<blockquote>
+  <p>Втома = fatigue/tiredness.</p>
+</blockquote>
+<ol start="2">
+<li>To cope with stress:</li>
+</ol>
+<ul>
+<li>[x] справлятися зі стресом</li>
+<li>[ ] робити стрес</li>
+</ul>
+<blockquote>
+  <p>Справлятися = to cope.</p>
+</blockquote>
+<ol start="3">
+<li>Healthy eating:</li>
+</ol>
+<ul>
+<li>[x] здорове харчування</li>
+<li>[ ] здорова їжа</li>
+</ul>
+<blockquote>
+  <p>Харчування = nutrition/eating habits.</p>
+</blockquote>
+<ol start="4">
+<li>Professional burnout:</li>
+</ol>
+<ul>
+<li>[x] професійне вигорання</li>
+<li>[ ] професійна втома</li>
+</ul>
+<blockquote>
+  <p>Вигорання = burnout.</p>
+</blockquote>
+<ol start="5">
+<li>To follow a diet:</li>
+</ol>
+<ul>
+<li>[x] дотримуватися дієти</li>
+<li>[ ] тримати дієту</li>
+</ul>
+<blockquote>
+  <p>Дотримуватися = to follow/adhere to.</p>
+</blockquote>
+<ol start="6">
+<li>Immunity:</li>
+</ol>
+<ul>
+<li>[x] імунітет</li>
+<li>[ ] імуна</li>
+</ul>
+<blockquote>
+  <p>Імунітет = immunity.</p>
+</blockquote>
+<h2 id="fillinhealthylifestyletips">fill-in: Healthy Lifestyle Tips</h2>
+<blockquote>
+  <p>Для здоров'я важливо:</p>
+  <ol>
+  <li>Достатньо (1)___ (sleep) — 7-8 годин</li>
+  <li>Дотримуватися здорового (2)___ (nutrition)</li>
+  <li>Регулярно займатися (3)___ (sport)</li>
+  <li>Справлятися зі (4)___ (stress)</li>
+  <li>Пити достатньо (5)___ (water)</li>
+  </ol>
+</blockquote>
+<p><strong>Answers:</strong></p>
+<ol>
+<li>спати / сну</li>
+<li>харчування</li>
+<li>спортом</li>
+<li>стресом</li>
+<li>води</li>
+</ol>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Vocabulary</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Word</th>
+<th>IPA</th>
+<th>English</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>здоров'я</td>
+<td>/zdoˈrowjɑ/</td>
+<td>health</td>
+<td>n</td>
+</tr>
+<tr>
+<td>самопочуття</td>
+<td>/sɑmopoˈt͡ʃutʲːɑ/</td>
+<td>well-being</td>
+<td>n</td>
+</tr>
+<tr>
+<td>стрес</td>
+<td>/strɛs/</td>
+<td>stress</td>
+<td>m</td>
+</tr>
+<tr>
+<td>втома</td>
+<td>/ˈftomɑ/</td>
+<td>fatigue</td>
+<td>f</td>
+</tr>
+<tr>
+<td>вигорання</td>
+<td>/vɪɦoˈrɑnʲːɑ/</td>
+<td>burnout</td>
+<td>n</td>
+</tr>
+<tr>
+<td>депресія</td>
+<td>/dɛˈprɛsʲijɑ/</td>
+<td>depression</td>
+<td>f</td>
+</tr>
+<tr>
+<td>харчування</td>
+<td>/xɑrt͡ʃuˈvɑnʲːɑ/</td>
+<td>nutrition</td>
+<td>n</td>
+</tr>
+<tr>
+<td>дієта</td>
+<td>/dʲiˈjɛtɑ/</td>
+<td>diet</td>
+<td>f</td>
+</tr>
+<tr>
+<td>тренування</td>
+<td>/trɛnuˈvɑnʲːɑ/</td>
+<td>workout</td>
+<td>n</td>
+</tr>
+<tr>
+<td>вправа</td>
+<td>/ˈwprɑvɑ/</td>
+<td>exercise</td>
+<td>f</td>
+</tr>
+<tr>
+<td>сон</td>
+<td>/son/</td>
+<td>sleep</td>
+<td>m</td>
+</tr>
+<tr>
+<td>безсоння</td>
+<td>/bɛzˈsonʲːɑ/</td>
+<td>insomnia</td>
+<td>n</td>
+</tr>
+<tr>
+<td>відпочинок</td>
+<td>/vʲidpoˈt͡ʃɪnok/</td>
+<td>rest</td>
+<td>m</td>
+</tr>
+<tr>
+<td>імунітет</td>
+<td>/imuˈnʲitɛt/</td>
+<td>immunity</td>
+<td>m</td>
+</tr>
+<tr>
+<td>одужання</td>
+<td>/oduˈʒɑnʲːɑ/</td>
+<td>recovery</td>
+<td>n</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Summary</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="keyhealthvocabulary">Key Health Vocabulary</h2>
+<h3 id="generalhealth">General Health</h3>
+<p>здоров'я, самопочуття, імунітет, симптом, лікування, одужання</p>
+<h3 id="mentalhealth">Mental Health</h3>
+<p>стрес, тривожність, депресія, втома, вигорання, релаксація</p>
+<h3 id="nutrition">Nutrition</h3>
+<p>харчування, дієта, калорії, білки, вуглеводи, вітаміни</p>
+<h3 id="exercise">Exercise</h3>
+<p>тренування, вправа, кардіо, йога, біг, плавання</p>
+<h3 id="sleep">Sleep</h3>
+<p>сон, безсоння, режим, відпочинок</p>
+<h3 id="keyexpressions">Key Expressions</h3>
+<ul>
+<li>вести здоровий спосіб життя</li>
+<li>справлятися зі стресом</li>
+<li>дотримуватися режиму</li>
+<li>піклуватися про здоров'я</li>
+</ul>
+<blockquote>
+  <p><strong>Key Takeaways</strong></p>
+  <ul>
+  <li>Health vocabulary covers physical and mental well-being</li>
+  <li>Mental health terms are increasingly important at B1</li>
+  <li>Nutrition vocabulary includes macros (білки, вуглеводи, жири)</li>
+  <li>Lifestyle expressions help discuss health habits</li>
+  <li>Verbs like справлятися, дотримуватися are key</li>
+  </ul>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('quiz')">Start →</button></div>
     </section>
     
@@ -647,6 +945,10 @@
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

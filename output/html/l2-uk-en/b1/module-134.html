@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,7 +136,22 @@
         <p style="color:var(--text-muted)">Бачити/дивитися; знати/розуміти</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Бачити чи дивитися? | See or Look?</h4><div class="md-content"><p>Яка різниця?</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Зміст уроку | Lesson Content</li><li class="toc-item" data-target="section-1">Activities</li><li class="toc-item" data-target="section-2">Vocabulary</li><li class="toc-item" data-target="section-3">Summary</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Зміст уроку | Lesson Content</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="warmup">warm-up | Розминка</h2>
+<h3 id="seeorlook">Бачити чи дивитися? | See or Look?</h3>
+<p>Яка різниця?</p>
 <ul>
 <li>Я <strong>бачу</strong> дерево. (I see the tree)</li>
 <li>Я <strong>дивлюся</strong> на дерево. (I'm looking at the tree)</li>
@@ -127,7 +160,10 @@
 <ul>
 <li>Я <strong>знаю</strong> це слово. (I know this word)</li>
 <li>Я <strong>розумію</strong> цю фразу. (I understand this phrase)</li>
-</ul></div></div><div class="canvas-note"><h4>### Дієслова зору | Verbs of Seeing</h4><div class="md-content"><h4 id="tosee">Бачити / Побачити | To See</h4>
+</ul>
+<h2 id="presentation">presentation | Презентація</h2>
+<h3 id="verbsofseeing">Дієслова зору | Verbs of Seeing</h3>
+<h4 id="tosee">Бачити / Побачити | To See</h4>
 <p><strong>Бачити</strong> — сприймати очима (пасивно).</p>
 <table>
 <thead>
@@ -254,7 +290,9 @@
 <td>Didn't notice the difference.</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Дієслова пізнання | Verbs of Knowing</h4><div class="md-content"><h4 id="toknow">Знати | To Know</h4>
+</table>
+<h3 id="verbsofknowing">Дієслова пізнання | Verbs of Knowing</h3>
+<h4 id="toknow">Знати | To Know</h4>
 <p><strong>Знати</strong> — мати інформацію.</p>
 <table>
 <thead>
@@ -381,7 +419,9 @@
 <td>Didn't recognize him in mask.</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Порівняння | Comparison Charts</h4><div class="md-content"><h4 id="seeingverbs">Seeing Verbs</h4>
+</table>
+<h3 id="comparisoncharts">Порівняння | Comparison Charts</h3>
+<h4 id="seeingverbs">Seeing Verbs</h4>
 <table>
 <thead>
 <tr>
@@ -454,19 +494,26 @@
 <td>Пізнаю світ.</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>### Choose: бачити or дивитися</h4><div class="md-content"><ol>
+</table>
+<h2 id="practice">practice | Практика</h2>
+<h3 id="chooseor">Choose: бачити or дивитися</h3>
+<ol>
 <li>Я ___ телевізор. → <strong>дивлюся</strong> (active watching)</li>
 <li>Ти ___ того чоловіка? → <strong>бачиш</strong> (passive seeing)</li>
 <li>___ на мене! → <strong>Дивися</strong> (command to look)</li>
 <li>Я ___ її вчора в магазині. → <strong>бачив</strong> (noticed)</li>
 <li>Вона ___ у вікно. → <strong>дивиться</strong> (looking out)</li>
-</ol></div></div><div class="canvas-note"><h4>Choose: знати or розуміти</h4><div class="md-content"><ol>
+</ol>
+<h3 id="chooseor-1">Choose: знати or розуміти</h3>
+<ol>
 <li>Я ___ це слово. → <strong>знаю</strong> (know the word)</li>
 <li>Я ___, що він сказав. → <strong>розумію</strong> (understand meaning)</li>
 <li>Ти ___, де він живе? → <strong>знаєш</strong> (have information)</li>
 <li>Вони не ___ один одного. → <strong>розуміють</strong> (don't understand each other)</li>
 <li>Я ___ п'ять мов. → <strong>знаю</strong> (know languages)</li>
-</ol></div></div><div class="canvas-note"><h4>Complete with Correct Verb</h4><div class="md-content"><ol>
+</ol>
+<h3 id="completewithcorrectverb">Complete with Correct Verb</h3>
+<ol>
 <li><p>Лікар ___ (examined) пацієнта.<br />
 → <strong>оглянув</strong></p></li>
 <li><p>Він ___ (noticed) помилку в тексті.<br />
@@ -477,7 +524,9 @@
 → <strong>спостерігаю</strong></p></li>
 <li><p>Він ___ (acknowledged) свою провину.<br />
 → <strong>визнав</strong></p></li>
-</ol></div></div><div class="canvas-note"><h4>Translate</h4><div class="md-content"><ol>
+</ol>
+<h3 id="translate">Translate</h3>
+<ol>
 <li><p>I see a bird in the tree.<br />
 → <strong>Я бачу птаха на дереві.</strong></p></li>
 <li><p>Look at this photo!<br />
@@ -486,17 +535,279 @@
 → <strong>Я не розумію це питання.</strong></p></li>
 <li><p>Do you know where she lives?<br />
 → <strong>Ти знаєш, де вона живе?</strong></p></li>
-</ol></div></div><div class="canvas-note"><h4>### Describe What You See</h4><div class="md-content"><p>Look around and describe:</p>
+</ol>
+<h2 id="production">production | Продукція</h2>
+<h3 id="describewhatyousee">Describe What You See</h3>
+<p>Look around and describe:</p>
 <ul>
 <li>Що ви <strong>бачите</strong>?</li>
 <li>На що ви <strong>дивитеся</strong>?</li>
 <li>Що ви <strong>помічаєте</strong>?</li>
-</ul></div></div><div class="canvas-note"><h4>Knowledge Discussion</h4><div class="md-content"><p>Discuss using knowing verbs:</p>
+</ul>
+<h3 id="knowledgediscussion">Knowledge Discussion</h3>
+<p>Discuss using knowing verbs:</p>
 <ul>
 <li>Що ви <strong>знаєте</strong> про Україну?</li>
 <li>Що ви <strong>розумієте</strong> в українській граматиці?</li>
 <li>Що ви <strong>усвідомили</strong> про мову?</li>
-</ul></div></div></div>
+</ul>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Activities</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="quizseeingandknowing">quiz: Seeing and Knowing</h2>
+<blockquote>
+  <p>Choose the correct verb.</p>
+</blockquote>
+<ol>
+<li>Пасивне сприйняття очима:</li>
+</ol>
+<ul>
+<li>[x] бачити</li>
+<li>[ ] дивитися</li>
+</ul>
+<blockquote>
+  <p>Passive seeing.</p>
+</blockquote>
+<ol start="2">
+<li>Активний погляд:</li>
+</ol>
+<ul>
+<li>[x] дивитися</li>
+<li>[ ] бачити</li>
+</ul>
+<blockquote>
+  <p>Active looking.</p>
+</blockquote>
+<ol start="3">
+<li>Мати інформацію:</li>
+</ol>
+<ul>
+<li>[x] знати</li>
+<li>[ ] розуміти</li>
+</ul>
+<blockquote>
+  <p>Have information.</p>
+</blockquote>
+<ol start="4">
+<li>Осягати сенс:</li>
+</ol>
+<ul>
+<li>[x] розуміти</li>
+<li>[ ] знати</li>
+</ul>
+<blockquote>
+  <p>Comprehend meaning.</p>
+</blockquote>
+<ol start="5">
+<li>«Я ___ фільм» — дивитися:</li>
+</ol>
+<ul>
+<li>[x] дивлюся</li>
+<li>[ ] бачу</li>
+</ul>
+<blockquote>
+  <p>Watching a movie.</p>
+</blockquote>
+<ol start="6">
+<li>«Усвідомити» означає:</li>
+</ol>
+<ul>
+<li>[x] to realize</li>
+<li>[ ] to know</li>
+</ul>
+<blockquote>
+  <p>Realize importance.</p>
+</blockquote>
+<h2 id="fillinperceptionandcognition">fill-in: Perception and Cognition</h2>
+<blockquote>
+  <p>Використайте правильні дієслова.</p>
+  <p>Вчора я (1)<strong>_ (saw) цікавий фільм. Спочатку я не (2)</strong>_ (understood) сюжет, але потім (3)<strong>_ (realized), що це детектив. Я уважно (4)</strong>_ (watched) кожну сцену і (5)<strong>_ (noticed) багато деталей. Тепер я (6)</strong>_ (know), чому цей фільм популярний.</p>
+</blockquote>
+<p><strong>Answers:</strong></p>
+<ol>
+<li>бачив / дивився</li>
+<li>розумів</li>
+<li>зрозумів / усвідомив</li>
+<li>дивився</li>
+<li>помітив</li>
+<li>знаю</li>
+</ol>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Vocabulary</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Word</th>
+<th>IPA</th>
+<th>English</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>бачити</td>
+<td>/ˈbɑt͡ʃɪtɪ/</td>
+<td>to see</td>
+<td>impf, passive</td>
+</tr>
+<tr>
+<td>дивитися</td>
+<td>/dɪˈvɪtɪsʲɑ/</td>
+<td>to look, watch</td>
+<td>impf, active</td>
+</tr>
+<tr>
+<td>оглядати</td>
+<td>/oɦlʲɑˈdɑtɪ/</td>
+<td>to examine</td>
+<td>impf</td>
+</tr>
+<tr>
+<td>спостерігати</td>
+<td>/spostɛrʲiˈɦɑtɪ/</td>
+<td>to observe</td>
+<td>impf</td>
+</tr>
+<tr>
+<td>помічати</td>
+<td>/pomʲiˈt͡ʃɑtɪ/</td>
+<td>to notice</td>
+<td>impf</td>
+</tr>
+<tr>
+<td>знати</td>
+<td>/ˈznɑtɪ/</td>
+<td>to know</td>
+<td>impf</td>
+</tr>
+<tr>
+<td>розуміти</td>
+<td>/rozuˈmʲitɪ/</td>
+<td>to understand</td>
+<td>impf</td>
+</tr>
+<tr>
+<td>усвідомлювати</td>
+<td>/usvʲiˈdomlʲuvɑtɪ/</td>
+<td>to realize</td>
+<td>impf</td>
+</tr>
+<tr>
+<td>визнавати</td>
+<td>/vɪznɑˈvɑtɪ/</td>
+<td>to acknowledge</td>
+<td>impf</td>
+</tr>
+<tr>
+<td>пізнавати</td>
+<td>/pʲiznɑˈvɑtɪ/</td>
+<td>to get to know</td>
+<td>impf</td>
+</tr>
+<tr>
+<td>погляд</td>
+<td>/ˈpoɦlʲɑd/</td>
+<td>glance, look</td>
+<td>m</td>
+</tr>
+<tr>
+<td>знання</td>
+<td>/ˈznɑnʲːɑ/</td>
+<td>knowledge</td>
+<td>n</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Summary</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="seeingverbs">Seeing Verbs</h2>
+<table>
+<thead>
+<tr>
+<th>Verb</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>бачити</td>
+<td>passive seeing</td>
+</tr>
+<tr>
+<td>дивитися</td>
+<td>active looking</td>
+</tr>
+<tr>
+<td>оглядати</td>
+<td>examining</td>
+</tr>
+<tr>
+<td>спостерігати</td>
+<td>observing</td>
+</tr>
+<tr>
+<td>помічати</td>
+<td>noticing</td>
+</tr>
+</tbody>
+</table>
+<h2 id="knowingverbs">Knowing Verbs</h2>
+<table>
+<thead>
+<tr>
+<th>Verb</th>
+<th>Focus</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>знати</td>
+<td>information</td>
+</tr>
+<tr>
+<td>розуміти</td>
+<td>meaning</td>
+</tr>
+<tr>
+<td>усвідомлювати</td>
+<td>importance</td>
+</tr>
+<tr>
+<td>визнавати</td>
+<td>accepting</td>
+</tr>
+<tr>
+<td>пізнавати</td>
+<td>getting to know</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p><strong>Key Takeaways</strong></p>
+  <ul>
+  <li>бачити = passive; дивитися = active</li>
+  <li>знати = information; розуміти = comprehension</li>
+  <li>Context determines the right choice</li>
+  <li>Each verb has specific collocations</li>
+  <li>Master the distinctions for natural speech</li>
+  </ul>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('quiz')">Start →</button></div>
     </section>
     
@@ -534,6 +845,10 @@
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

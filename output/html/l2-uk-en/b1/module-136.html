@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,12 +136,30 @@
         <p style="color:var(--text-muted)">Більше ідіом та виразів</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Приказки та прислів'я | Proverbs and Sayings</h4><div class="md-content"><p>Українські приказки — народна мудрість:</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Зміст уроку | Lesson Content</li><li class="toc-item" data-target="section-1">Activities</li><li class="toc-item" data-target="section-2">Vocabulary</li><li class="toc-item" data-target="section-3">Summary</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Зміст уроку | Lesson Content</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="warmup">warm-up | Розминка</h2>
+<h3 id="proverbsandsayings">Приказки та прислів'я | Proverbs and Sayings</h3>
+<p>Українські приказки — народна мудрість:</p>
 <p>Ukrainian proverbs are folk wisdom:</p>
 <ul>
 <li><strong>Без труда нема плода.</strong> (No pain, no gain.)</li>
 <li><strong>Хто рано встає, тому Бог дає.</strong> (The early bird catches the worm.)</li>
-</ul></div></div><div class="canvas-note"><h4>### Ідіоми про спілкування | Communication Idioms</h4><div class="md-content"><table>
+</ul>
+<h2 id="presentation">presentation | Презентація</h2>
+<h3 id="communicationidioms">Ідіоми про спілкування | Communication Idioms</h3>
+<table>
 <thead>
 <tr>
 <th>Idiom</th>
@@ -168,7 +204,9 @@
 <td>Я беру свої слова назад.</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Ідіоми про знання | Knowledge Idioms</h4><div class="md-content"><table>
+</table>
+<h3 id="knowledgeidioms">Ідіоми про знання | Knowledge Idioms</h3>
+<table>
 <thead>
 <tr>
 <th>Idiom</th>
@@ -203,7 +241,9 @@
 <td>Він вийшов сухим з води.</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Ідіоми про успіх і невдачу | Success/Failure Idioms</h4><div class="md-content"><table>
+</table>
+<h3 id="successfailureidioms">Ідіоми про успіх і невдачу | Success/Failure Idioms</h3>
+<table>
 <thead>
 <tr>
 <th>Idiom</th>
@@ -243,7 +283,9 @@
 <td>Правда вийшла на поверхню.</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Ідіоми про стосунки | Relationship Idioms</h4><div class="md-content"><table>
+</table>
+<h3 id="relationshipidioms">Ідіоми про стосунки | Relationship Idioms</h3>
+<table>
 <thead>
 <tr>
 <th>Idiom</th>
@@ -283,7 +325,9 @@
 <td>Він підставив плече в скрутну хвилину.</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Популярні приказки | Popular Proverbs</h4><div class="md-content"><table>
+</table>
+<h3 id="popularproverbs">Популярні приказки | Popular Proverbs</h3>
+<table>
 <thead>
 <tr>
 <th>Proverb</th>
@@ -332,7 +376,9 @@
 <td>See splinter in other's eye.</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Вирази ввічливості | Polite Expressions</h4><div class="md-content"><table>
+</table>
+<h3 id="politeexpressions">Вирази ввічливості | Polite Expressions</h3>
+<table>
 <thead>
 <tr>
 <th>Expression</th>
@@ -373,7 +419,9 @@
 <td>Bless you! (after sneeze)</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Розмовні вирази | Conversational Expressions</h4><div class="md-content"><table>
+</table>
+<h3 id="conversationalexpressions">Розмовні вирази | Conversational Expressions</h3>
+<table>
 <thead>
 <tr>
 <th>Expression</th>
@@ -414,13 +462,18 @@
 <td>Come on! / Really?</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>### Match Proverb to Meaning</h4><div class="md-content"><ol>
+</table>
+<h2 id="practice">practice | Практика</h2>
+<h3 id="matchproverbtomeaning">Match Proverb to Meaning</h3>
+<ol>
 <li>Без труда нема плода — a) hard work pays off</li>
 <li>Краще пізно, ніж ніколи — b) better late than never</li>
 <li>Тихше їдеш — далі будеш — c) slow and steady</li>
 <li>Яблуко від яблуні недалеко падає — d) like parent like child</li>
 <li>Що посієш, те й пожнеш — e) you reap what you sow</li>
-</ol></div></div><div class="canvas-note"><h4>Complete with Idioms</h4><div class="md-content"><ol>
+</ol>
+<h3 id="completewithidioms">Complete with Idioms</h3>
+<ol>
 <li><p>Я дуже добре знаю це місто — ___ (very well).<br />
 → <strong>як свої п'ять пальців</strong></p></li>
 <li><p>Вони завжди погоджуються — живуть ___ (in harmony).<br />
@@ -431,22 +484,252 @@
 → <strong>тримає слово</strong></p></li>
 <li><p>Все йде добре — ___ (in the bag)!<br />
 → <strong>справа в капелюсі</strong></p></li>
-</ol></div></div><div class="canvas-note"><h4>Use in Sentences</h4><div class="md-content"><p>Create sentences with:</p>
+</ol>
+<h3 id="useinsentences">Use in Sentences</h3>
+<p>Create sentences with:</p>
 <ol>
 <li>знайти спільну мову</li>
 <li>ловити момент</li>
 <li>краще пізно, ніж ніколи</li>
-</ol></div></div><div class="canvas-note"><h4>Respond with Expression</h4><div class="md-content"><ol>
+</ol>
+<h3 id="respondwithexpression">Respond with Expression</h3>
+<ol>
 <li>«Дякую!» → <strong>Будь ласка! / Нема за що!</strong></li>
 <li>«Апчхи!» → <strong>Будьте здорові!</strong></li>
 <li>«Можна тебе запитати?» → <strong>Звичайно! / Прошу!</strong></li>
-</ol></div></div><div class="canvas-note"><h4>### Share Wisdom</h4><div class="md-content"><p>Share a situation where a proverb applies:</p>
+</ol>
+<h2 id="production">production | Продукція</h2>
+<h3 id="sharewisdom">Share Wisdom</h3>
+<p>Share a situation where a proverb applies:</p>
 <p><strong>Example:</strong><br />
-«Одного разу я поспішав і зробив помилку. Тепер я завжди пам'ятаю: "Тихше їдеш — далі будеш."»</p></div></div><div class="canvas-note"><h4>Discuss Proverbs</h4><div class="md-content"><p>Are there similar proverbs in your language?</p>
+«Одного разу я поспішав і зробив помилку. Тепер я завжди пам'ятаю: "Тихше їдеш — далі будеш."»</p>
+<h3 id="discussproverbs">Discuss Proverbs</h3>
+<p>Are there similar proverbs in your language?</p>
 <ul>
 <li>«Без труда нема плода» — чи є схожа приказка?</li>
 <li>Чи погоджуєтеся з приказкою?</li>
-</ul></div></div></div>
+</ul>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Activities</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="quizidiomsandproverbs">quiz: Idioms and Proverbs</h2>
+<blockquote>
+  <p>Choose the correct meaning.</p>
+</blockquote>
+<ol>
+<li>«Тримати слово» означає:</li>
+</ol>
+<ul>
+<li>[x] дотримуватися обіцянки</li>
+<li>[ ] мовчати</li>
+</ul>
+<blockquote>
+  <p>Keep one's word.</p>
+</blockquote>
+<ol start="2">
+<li>«Як свої п'ять пальців» означає:</li>
+</ol>
+<ul>
+<li>[x] дуже добре знати</li>
+<li>[ ] мало знати</li>
+</ul>
+<blockquote>
+  <p>Know very well.</p>
+</blockquote>
+<ol start="3">
+<li>«Краще пізно, ніж ніколи»:</li>
+</ol>
+<ul>
+<li>[x] Better late than never</li>
+<li>[ ] Never say never</li>
+</ul>
+<blockquote>
+  <p>Better to do something late than not at all.</p>
+</blockquote>
+<ol start="4">
+<li>«Справа в капелюсі» означає:</li>
+</ol>
+<ul>
+<li>[x] все вирішено</li>
+<li>[ ] все пропало</li>
+</ul>
+<blockquote>
+  <p>It's in the bag.</p>
+</blockquote>
+<ol start="5">
+<li>«На ножах» означає:</li>
+</ol>
+<ul>
+<li>[x] у ворожих стосунках</li>
+<li>[ ] у дружніх стосунках</li>
+</ul>
+<blockquote>
+  <p>At odds.</p>
+</blockquote>
+<ol start="6">
+<li>«Без труда нема плода»:</li>
+</ol>
+<ul>
+<li>[x] No pain, no gain</li>
+<li>[ ] Easy come, easy go</li>
+</ul>
+<blockquote>
+  <p>Hard work is needed for results.</p>
+</blockquote>
+<h2 id="fillinconversationwithexpressions">fill-in: Conversation with Expressions</h2>
+<blockquote>
+  <p>Заповніть розмову.</p>
+  <p>— Привіт! Давно не бачились! (1)<strong>_ (By the way), як справи?
+— (2)</strong>_ (The thing is), я був зайнятий. Працював (3)<strong>_ (without rest).
+— Розумію. (4)</strong>_ (In my opinion), треба відпочивати.<br />
+  — Так, ти правий. (5)___ (No pain, no gain), але здоров'я важливіше!</p>
+</blockquote>
+<p><strong>Answers:</strong></p>
+<ol>
+<li>До речі</li>
+<li>Справа в тому, що</li>
+<li>не покладаючи рук</li>
+<li>Як на мене</li>
+<li>Без труда нема плода</li>
+</ol>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Vocabulary</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Word</th>
+<th>IPA</th>
+<th>English</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>приказка</td>
+<td>/prɪˈkɑzkɑ/</td>
+<td>proverb, saying</td>
+<td>f</td>
+</tr>
+<tr>
+<td>прислів'я</td>
+<td>/prɪsˈlʲivjɑ/</td>
+<td>proverb</td>
+<td>n</td>
+</tr>
+<tr>
+<td>народна мудрість</td>
+<td>-</td>
+<td>folk wisdom</td>
+<td>f</td>
+</tr>
+<tr>
+<td>тримати слово</td>
+<td>-</td>
+<td>keep one's word</td>
+<td>idiom</td>
+</tr>
+<tr>
+<td>давати слово</td>
+<td>-</td>
+<td>give one's word</td>
+<td>idiom</td>
+</tr>
+<tr>
+<td>справа в капелюсі</td>
+<td>-</td>
+<td>it's in the bag</td>
+<td>idiom</td>
+</tr>
+<tr>
+<td>душа в душу</td>
+<td>-</td>
+<td>in harmony</td>
+<td>idiom</td>
+</tr>
+<tr>
+<td>ні сном ні духом</td>
+<td>-</td>
+<td>have no idea</td>
+<td>idiom</td>
+</tr>
+<tr>
+<td>на ножах</td>
+<td>-</td>
+<td>at odds</td>
+<td>idiom</td>
+</tr>
+<tr>
+<td>без труда нема плода</td>
+<td>-</td>
+<td>no pain no gain</td>
+<td>proverb</td>
+</tr>
+<tr>
+<td>краще пізно ніж ніколи</td>
+<td>-</td>
+<td>better late than never</td>
+<td>proverb</td>
+</tr>
+<tr>
+<td>до речі</td>
+<td>-</td>
+<td>by the way</td>
+<td>expression</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Summary</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="moreidiomsandproverbs">More Idioms and Proverbs</h2>
+<h3 id="communication">Communication</h3>
+<ul>
+<li>тримати/давати слово</li>
+<li>за словом у кишеню не лізти</li>
+<li>говорити на вітер</li>
+</ul>
+<h3 id="relationships">Relationships</h3>
+<ul>
+<li>душа в душу</li>
+<li>знайти спільну мову</li>
+<li>на ножах</li>
+</ul>
+<h3 id="success">Success</h3>
+<ul>
+<li>справа в капелюсі</li>
+<li>ловити момент</li>
+</ul>
+<h3 id="popularproverbs">Popular Proverbs</h3>
+<ul>
+<li>Без труда нема плода</li>
+<li>Краще пізно, ніж ніколи</li>
+<li>Тихше їдеш — далі будеш</li>
+</ul>
+<blockquote>
+  <p><strong>Key Takeaways</strong></p>
+  <ul>
+  <li>Proverbs express folk wisdom</li>
+  <li>Many have English equivalents</li>
+  <li>Polite expressions are essential</li>
+  <li>Conversational fillers add naturalness</li>
+  <li>Practice using idioms in context</li>
+  </ul>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('quiz')">Start →</button></div>
     </section>
     
@@ -484,6 +767,10 @@
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

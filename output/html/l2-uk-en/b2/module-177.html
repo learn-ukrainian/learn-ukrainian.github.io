@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,12 +136,702 @@
         <p style="color:var(--text-muted)">Україна під Польщею</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>Уявіть таку сцену.</h4><div class="md-content"><p>Рік 1550. Ви — український селянин у Литві. Життя непросте, але ви <em>вільні</em>. Ви обробляєте землю, платите податки, але можете переїхати в інше село, якщо вам не подобається пан. Ваші діти — ваші, не панські.</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Зміст уроку</li><li class="toc-item" data-target="section-1">Вправи</li><li class="toc-item" data-target="section-2">Словник</li><li class="toc-item" data-target="section-3">Підсумок</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Зміст уроку</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Вступ: Як з вільних селян зробили рабів</h2>
+<p>Уявіть таку сцену.</p>
+<p>Рік 1550. Ви — український селянин у Литві. Життя непросте, але ви <em>вільні</em>. Ви обробляєте землю, платите податки, але можете переїхати в інше село, якщо вам не подобається пан. Ваші діти — ваші, не панські.</p>
 <p>Рік 1600. Ви — той самий селянин. Але тепер ви під Польщею. І все змінилося. Ви працюєте на пана шість днів на тиждень. У вас залишається один день — неділя — для себе. Ви не можете залишити село без дозволу пана. Пан може вас продати. Пан може вас побити. Пан може забрати ваших дітей.</p>
 <p>Що сталося за ці 50 років?</p>
 <p>Люблінська унія. Річ Посполита. Польське панування.</p>
 <p>Історія українського селянства під Польщею — це історія поступової втрати свободи. Це історія того, як мільйони вільних людей стали кріпаками — фактично рабами. І це історія того, як вони боролися за свою свободу.</p>
-<p>Це — один із найтемніших періодів нашої історії. Але його треба знати, щоб зрозуміти, чому козаки повстали. Чому Хмельниччина сталася. Чому Україна — це нація борців.</p></div></div></div>
+<p>Це — один із найтемніших періодів нашої історії. Але його треба знати, щоб зрозуміти, чому козаки повстали. Чому Хмельниччина сталася. Чому Україна — це нація борців.</p>
+<hr />
+<h2 id="-1">Розминка: До і після</h2>
+<table>
+<thead>
+<tr>
+<th>Аспект</th>
+<th>До Люблінської унії</th>
+<th>Після</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Влада</td>
+<td>Литовський князь</td>
+<td>Польський магнат</td>
+</tr>
+<tr>
+<td>Мова</td>
+<td>Руська (офіційна)</td>
+<td>Польська</td>
+</tr>
+<tr>
+<td>Релігія</td>
+<td>Православ'я захищене</td>
+<td>Тиск католицизму</td>
+</tr>
+<tr>
+<td>Селяни</td>
+<td>Відносно вільні</td>
+<td>Кріпаки</td>
+</tr>
+<tr>
+<td>Еліта</td>
+<td>Руська шляхта</td>
+<td>Полонізована шляхта</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="11569">Частина 1: Люблінська унія — катастрофа 1569 року</h2>
+<h3 id="-2">Що сталося?</h3>
+<p>1 липня 1569 року в місті Люблін підписано документ, який змінив долю України на століття. Велике князівство Литовське та Польське королівство об'єдналися в єдину державу — Річ Посполиту.</p>
+<p>«Річ Посполита» — це латинський термін «Res Publica», що означає «спільна справа». Іронія в тому, що для українців ця «спільна справа» означала <em>втрату</em> всього.</p>
+<h3 id="-3">Чому литовці погодились?</h3>
+<p>Литва переживала кризу. Війна з Москвою (Лівонська війна) виснажувала країну. Литовські магнати хотіли польської допомоги. Поляки погодились — але за ціну.</p>
+<p>Ціна: українські землі — Волинь, Київщина, Поділля, Брацлавщина — переходять <em>напряму</em> під Польську корону. Не під Литву в складі спільної держави — а безпосередньо під Польщу.</p>
+<h3 id="-4">Що це означало для України?</h3>
+<table>
+<thead>
+<tr>
+<th>Аспект</th>
+<th>Зміна</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Адміністрація</td>
+<td>Литовські порядки → Польські воєводства</td>
+</tr>
+<tr>
+<td>Мова документів</td>
+<td>Руська → Польська (поступово)</td>
+</tr>
+<tr>
+<td>Релігія</td>
+<td>Рівноправ'я → Дискримінація православних</td>
+</tr>
+<tr>
+<td>Селяни</td>
+<td>Обмежене кріпацтво → Повне закріпачення</td>
+</tr>
+<tr>
+<td>Еліта</td>
+<td>Руська шляхта → Тиск полонізації</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<blockquote>
+  <p><strong>Чи знали ви?</strong></p>
+  <p>Українські воєводства в складі Речі Посполитої мали величезні території. Київське воєводство охоплювало понад 100 000 км² — більше, ніж сучасна Угорщина! Волинське, Подільське, Брацлавське воєводства — теж величезні.</p>
+  <p>Але ці величезні території контролювали кілька десятків польських магнатів. Вишневецькі, Потоцькі, Конецпольські — вони володіли цілими «державами в державі». І ставилися до селян як до власності.</p>
+</blockquote>
+<hr />
+<h2 id="2">Частина 2: Панщина — українське рабство</h2>
+<h3 id="-5">Як вільні селяни стали рабами</h3>
+<p>Закріпачення не сталося за один день. Це був повільний процес — закон за законом, обмеження за обмеженням.</p>
+<table>
+<thead>
+<tr>
+<th>Рік</th>
+<th>Закон</th>
+<th>Наслідок</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1496</td>
+<td>Заборона переходу</td>
+<td>Селяни не можуть залишати село</td>
+</tr>
+<tr>
+<td>1505</td>
+<td>Обмеження прав</td>
+<td>Селяни втрачають судовий захист</td>
+</tr>
+<tr>
+<td>1520</td>
+<td>Збільшення панщини</td>
+<td>Обов'язкова праця на пана</td>
+</tr>
+<tr>
+<td>1573</td>
+<td>«Генріхові артикули»</td>
+<td>Пан — суддя над селянами</td>
+</tr>
+<tr>
+<td>XVI-XVII ст.</td>
+<td>Повне закріпачення</td>
+<td>Селяни — власність пана</td>
+</tr>
+</tbody>
+</table>
+<h3 id="-6">Що таке панщина?</h3>
+<p>Панщина — це примусова безоплатна праця селянина на землі пана. Спочатку це був один-два дні на тиждень. Потім три. Потім чотири. На момент козацьких повстань — п'ять-шість днів на тиждень.</p>
+<p>Подумайте про це. Шість днів на тиждень ви працюєте <em>безкоштовно</em> на когось іншого. У вас залишається <em>один день</em> — неділя — щоб обробити власну ділянку, вигодувати сім'ю, відпочити.</p>
+<h3 id="vs">Права пана vs Права селянина</h3>
+<table>
+<thead>
+<tr>
+<th>Пан міг</th>
+<th>Селянин не міг</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Продати селянина</td>
+<td>Залишити село без дозволу</td>
+</tr>
+<tr>
+<td>Покарати без суду</td>
+<td>Скаржитися в суд</td>
+</tr>
+<tr>
+<td>Забрати землю</td>
+<td>Володіти майном (все — панське)</td>
+</tr>
+<tr>
+<td>Відібрати дітей</td>
+<td>Одружити дітей без дозволу</td>
+</tr>
+<tr>
+<td>Вбити (формально — ні, реально — без покарання)</td>
+<td>Захистити себе</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<blockquote>
+  <p><strong>Міф vs Факт</strong></p>
+  <p>❌ <strong>Міф:</strong> «Кріпацтво в Україні було такое саме, як у Росії — не краще, не гірше.»</p>
+  <p>✅ <strong>Факт:</strong> Польське кріпацтво було <em>жорстокішим</em> за ранньомосковське в багатьох аспектах. Поляки раніше закріпачили селян. Панщина в Україні досягала 5-6 днів на тиждень — більше, ніж у Росії того часу. І головне — в Україні кріпацтво впроваджували <em>чужинці</em> (поляки), що додавало національного приниження до соціального гноблення.</p>
+</blockquote>
+<hr />
+<h3 id="-7">Оренда — ще гірше</h3>
+<p>Багато польських магнатів не хотіли самі управляти величезними маєтками. Вони здавали їх в <em>оренду</em>. Часто — євреям, яким було заборонено володіти землею, але дозволено орендувати.</p>
+<p>Орендар мав заплатити магнату фіксовану суму, а все зверху — його прибуток. Це створювало <em>стимул</em> вичавлювати з селян максимум. Орендар не думав про довгострокове — йому потрібен прибуток <em>зараз</em>.</p>
+<p>Результат: ще більше гноблення. Селяни ненавиділи і панів, і орендарів. Це пояснює жорстокість козацьких повстань — накопичена ненависть вихлюпувалась.</p>
+<hr />
+<blockquote>
+  <p><strong>Чи знали ви?</strong></p>
+  <p>Літопис XVII століття описує життя українського селянина так:</p>
+  <p><em>«Селянин працює на пана від зорі до зорі. Шість днів — панщина. У неділю — своє поле. Якщо не встигне — голод. Пан може взяти останню корову, останній хліб. Якщо селянин втече — його ловлять, б'ють, калічать.»</em></p>
+  <p>Це не метафора. Це буквальний опис життя мільйонів українців протягом двох століть.</p>
+</blockquote>
+<hr />
+<h2 id="3">Частина 3: Релігійна війна — Брестська унія</h2>
+<h3 id="-8">Чому віра мала значення?</h3>
+<p>У XVI столітті релігія — це не просто «приватна справа». Це ідентичність. Це політика. Це права.</p>
+<p>У Речі Посполитій католики мали привілеї. Православні — ні. Щоб отримати посаду, потрібно було бути католиком. Щоб просунутися в суспільстві — бути католиком. Православні були громадянами «другого сорту».</p>
+<h3 id="1596">Брестська унія 1596 року</h3>
+<p>У 1596 році частина православних єпископів підписала унію з Римом. Вони визнали владу Папи, але зберегли православний обряд. Так виникла <em>Греко-католицька</em> (уніатська) церква.</p>
+<table>
+<thead>
+<tr>
+<th>Аспект</th>
+<th>Деталі</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Дата</td>
+<td>9-10 жовтня 1596</td>
+</tr>
+<tr>
+<td>Місце</td>
+<td>Берестя (Брест)</td>
+</tr>
+<tr>
+<td>Суть</td>
+<td>Частина православних визнала Папу</td>
+</tr>
+<tr>
+<td>Нова церква</td>
+<td>Греко-католицька (уніатська)</td>
+</tr>
+<tr>
+<td>Обряд</td>
+<td>Православний (східний)</td>
+</tr>
+<tr>
+<td>Підпорядкування</td>
+<td>Папа Римський</td>
+</tr>
+</tbody>
+</table>
+<h3 id="-9">Чому єпископи погодились?</h3>
+<p>Мотиви були різні:</p>
+<ul>
+<li><strong>Кар'єризм</strong>: Уніати отримували права нарівні з католиками</li>
+<li><strong>Відчай</strong>: Православна церква була в занепаді, без підтримки</li>
+<li><strong>Ідеалізм</strong>: Деякі вірили, що унія об'єднає християн</li>
+<li><strong>Тиск</strong>: Польська влада підтримувала унію</li>
+</ul>
+<h3 id="-10">Розкол</h3>
+<p>Але не всі погодились. Частина єпископів, більшість духовенства та простий народ <em>відкинули</em> унію. Православна церква продовжила існувати — тепер як «нелегальна».</p>
+<table>
+<thead>
+<tr>
+<th>Група</th>
+<th>Позиція</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Уніатські єпископи</td>
+<td>Прийняли унію</td>
+</tr>
+<tr>
+<td>Православні єпископи</td>
+<td>Відкинули унію</td>
+</tr>
+<tr>
+<td>Більшість духовенства</td>
+<td>Православні</td>
+</tr>
+<tr>
+<td>Козаки</td>
+<td>Категорично православні</td>
+</tr>
+<tr>
+<td>Селяни</td>
+<td>Переважно православні</td>
+</tr>
+<tr>
+<td>Полонізована шляхта</td>
+<td>Католики або уніати</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<blockquote>
+  <p><strong>Міф vs Факт</strong></p>
+  <p>❌ <strong>Міф:</strong> «Греко-католики — "зрадники" православ'я.»</p>
+  <p>✅ <strong>Факт:</strong> Історія складніша. Багато хто прийняв унію під тиском, без вибору. Пізніше греко-католицька церква стала <em>захисником</em> української ідентичності — особливо в Галичині під Австрією, а потім у боротьбі з радянською владою. Засуджувати греко-католиків як «зрадників» — спрощення. Краще розуміти історичний контекст.</p>
+</blockquote>
+<hr />
+<h2 id="4">Частина 4: Культурний спротив — братства та академія</h2>
+<p>Попри всі гоніння, українська культура не зникла. Вона <em>боролася</em>.</p>
+<h3 id="-11">Братства</h3>
+<p>Братства — це міські організації, які захищали православ'я та українську культуру. Вони створювали школи, друкарні, бібліотеки.</p>
+<table>
+<thead>
+<tr>
+<th>Братство</th>
+<th>Місто</th>
+<th>Досягнення</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Львівське</td>
+<td>Львів</td>
+<td>Школа (1586), друкарня, «Граматика»</td>
+</tr>
+<tr>
+<td>Острозьке</td>
+<td>Острог</td>
+<td>Академія (1576), Острозька Біблія (1581)</td>
+</tr>
+<tr>
+<td>Київське</td>
+<td>Київ</td>
+<td>Школа, підтримка Лаври</td>
+</tr>
+<tr>
+<td>Віленське</td>
+<td>Вільно</td>
+<td>Школа, друкарня</td>
+</tr>
+</tbody>
+</table>
+<h3 id="1581">Острозька Біблія (1581)</h3>
+<p>Це була перша повна Біблія церковнослов'янською мовою. Надрукована в Острозі Іваном Федоровим — першим українським друкарем.</p>
+<p>Чому це важливо? Біблія — найважливіша книга для християн. Мати власну Біблію — це мати <em>легітимність</em>. Православні могли сказати: «У нас є Святе Письмо нашою мовою. Ми — справжні християни.»</p>
+<h3 id="1632">Києво-Могилянська академія (1632)</h3>
+<p>У 1632 році митрополит Петро Могила об'єднав школу Києво-Печерської лаври та Київського братства. Так виникла Києво-Могилянська академія — перший вищий навчальний заклад у Східній Європі.</p>
+<p>Академія викладала:</p>
+<ul>
+<li>Латину (мова науки)</li>
+<li>Грецьку (мова церкви)</li>
+<li>Церковнослов'янську</li>
+<li>Риторику, філософію, богослов'я</li>
+</ul>
+<p>Тут навчалися майбутні гетьмани, митрополити, письменники. Це був <em>інтелектуальний центр</em> України.</p>
+<hr />
+<blockquote>
+  <p><strong>Чи знали ви?</strong></p>
+  <p>Києво-Могилянська академія стала зразком для Московської академії (1687). Коли Петро I почав модернізувати Росію, він запрошував саме випускників <em>Київської</em> академії — бо освічених людей у Московії просто не було.</p>
+  <p>Феофан Прокопович, головний ідеолог петровських реформ — випускник Києво-Могилянки. Так само — багато інших діячів російської культури XVIII століття. Вони були <em>українцями</em> за походженням та освітою.</p>
+</blockquote>
+<hr />
+<h2 id="5">Частина 5: Полонізація — як втрачали ідентичність</h2>
+<h3 id="-12">Що таке полонізація?</h3>
+<p>Полонізація — це процес переходу на польську мову та культуру. Для української еліти це часто був <em>свідомий вибір</em> — спосіб отримати привілеї, зробити кар'єру, увійти в «вищий світ».</p>
+<h3 id="-13">Як це виглядало?</h3>
+<p>Покоління 1: Руська шляхта. Православні. Говорять руською. Одружуються з руськими.</p>
+<p>Покоління 2: Руська шляхта, але діти їздять в Польщу на навчання. Вивчають латину, польську. Повертаються «європейцями».</p>
+<p>Покоління 3: Говорять польською вдома. Переходять у католицизм (або унію). Руська мова — «хлопська».</p>
+<p>Покоління 4: Вважають себе поляками. Руське походження — «сором».</p>
+<h3 id="-14">Приклад: Вишневецькі</h3>
+<p>Рід Вишневецьких — класичний приклад.</p>
+<ul>
+<li><strong>Дмитро Вишневецький</strong> (XVI ст.): православний, козацький ватажок, герой народних дум «Байда».</li>
+<li><strong>Єремія Вишневецький</strong> (XVII ст.): католик, полонізований магнат, <em>ворог</em> козаків, один із найжорстокіших переслідувачів Хмельницького.</li>
+</ul>
+<p>За два-три покоління — від козацького героя до козацького ката.</p>
+<hr />
+<blockquote>
+  <p><strong>Міф vs Факт</strong></p>
+  <p>❌ <strong>Міф:</strong> «Полонізація була насильницькою — поляки примушували переходити на польську мову.»</p>
+  <p>✅ <strong>Факт:</strong> Полонізація здебільшого була <em>добровільною</em> — для еліти. Ніхто не тримав пістолета біля скроні. Але <em>система</em> була побудована так, що без полонізації неможливо було просунутися. Це більш підступна форма асиміляції — через привілеї, а не через насильство.</p>
+  <p>Селян ніхто не полонізував — вони і так не мали прав. Вони залишалися українськими (руськими) — і саме з них пізніше виросла козацька нація.</p>
+</blockquote>
+<hr />
+<h2 id="-15">Чому це призвело до вибуху</h2>
+<p>Підсумуємо. До середини XVII століття в Україні:</p>
+<ul>
+<li><strong>Селяни</strong> — кріпаки, фактичні раби, працюють 6 днів на тиждень</li>
+<li><strong>Православні</strong> — громадяни «другого сорту», їхню церкву переслідують</li>
+<li><strong>Козаки</strong> — вільні воїни, але їхні права постійно обмежують</li>
+<li><strong>Еліта</strong> — полонізується, зраджує свій народ</li>
+</ul>
+<p>Це була вибухова суміш. Потрібна була лише іскра.</p>
+<p>У 1648 році ця іскра спалахнула. Богдан Хмельницький підняв повстання. Почалася Хмельниччина — найбільша козацька війна в історії.</p>
+<p>Але це — тема наступних модулів.</p>
+<hr />
+<h2 id="-16">Практика</h2>
+<h3 id="1">Завдання 1: Заповніть пропуски</h3>
+<ol>
+<li><p>Люблінська унія підписана у ___ році.<br />
+→ <strong>1569</strong></p></li>
+<li><p>Брестська унія створила ___ церкву.<br />
+→ <strong>греко-католицьку</strong></p></li>
+<li><p>Острозьку Біблію надруковано у ___ році.<br />
+→ <strong>1581</strong></p></li>
+<li><p>Києво-Могилянську академію заснував ___.<br />
+→ <strong>Петро Могила</strong></p></li>
+<li><p>Примусова безоплатна праця на пана — це ___.<br />
+→ <strong>панщина</strong></p></li>
+</ol>
+<h3 id="2-1">Завдання 2: Хронологія</h3>
+<p>Розставте в правильному порядку:</p>
+<ol>
+<li>Брестська унія</li>
+<li>Люблінська унія</li>
+<li>Острозька Біблія</li>
+<li>Києво-Могилянська академія</li>
+</ol>
+<p><strong>Відповідь:</strong> 2 (1569) → 3 (1581) → 1 (1596) → 4 (1632)</p>
+<h3 id="3-1">Завдання 3: Перекладіть</h3>
+<ol>
+<li><p>Serfdom deprived peasants of their freedom.<br />
+→ <strong>Кріпацтво позбавило селян свободи.</strong></p></li>
+<li><p>The brotherhoods defended Orthodox culture.<br />
+→ <strong>Братства захищали православну культуру.</strong></p></li>
+<li><p>The Polonized elite abandoned their Ukrainian identity.<br />
+→ <strong>Полонізована еліта зреклася своєї української ідентичності.</strong></p></li>
+</ol>
+<hr />
+<h2 id="-17">Продукція</h2>
+<h3 id="-18">Обговоріть</h3>
+<ol>
+<li><p>Чому польське панування можна вважати формою колоніалізму?</p></li>
+<li><p>Яку роль відіграли братства та Києво-Могилянська академія в збереженні української культури?</p></li>
+<li><p>Як панщина та релігійні гоніння призвели до козацьких повстань?</p></li>
+</ol>
+<h3 id="150200">Напишіть (150-200 слів)</h3>
+<p>Порівняйте становище українців у Литві та в Речі Посполитій. Що змінилося на гірше? Що залишилося?</p>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Вправи</h3>
+          <span class="section-type practice">practice</span>
+        </div>
+        <div class="section-body md-content"><h2 id="quiz">quiz: Україна під Польщею</h2>
+<blockquote>
+  <p>Виберіть правильну відповідь.</p>
+</blockquote>
+<ol>
+<li>Люблінська унія підписана у:</li>
+</ol>
+<ul>
+<li>[x] 1569 році</li>
+<li>[ ] 1596 році</li>
+<li>[ ] 1632 році</li>
+</ul>
+<blockquote>
+  <p>Об'єднання Польщі та Литви.</p>
+</blockquote>
+<ol start="2">
+<li>Брестська унія (1596) створила:</li>
+</ol>
+<ul>
+<li>[ ] нову православну церкву</li>
+<li>[x] греко-католицьку церкву</li>
+<li>[ ] протестантську церкву</li>
+</ul>
+<blockquote>
+  <p>Унія з Римом зі збереженням східного обряду.</p>
+</blockquote>
+<ol start="3">
+<li>«Панщина» — це:</li>
+</ol>
+<ul>
+<li>[x] примусова безоплатна праця на пана</li>
+<li>[ ] добровільний податок</li>
+<li>[ ] військова служба</li>
+</ul>
+<blockquote>
+  <p>5-6 днів на тиждень.</p>
+</blockquote>
+<ol start="4">
+<li>Першу повну Біблію церковнослов'янською надрукував:</li>
+</ol>
+<ul>
+<li>[x] Іван Федоров</li>
+<li>[ ] Петро Могила</li>
+<li>[ ] Богдан Хмельницький</li>
+</ul>
+<blockquote>
+  <p>Острозька Біблія, 1581.</p>
+</blockquote>
+<ol start="5">
+<li>Києво-Могилянську академію засновано у:</li>
+</ol>
+<ul>
+<li>[ ] 1569 році</li>
+<li>[ ] 1596 році</li>
+<li>[x] 1632 році</li>
+</ul>
+<blockquote>
+  <p>Петро Могила.</p>
+</blockquote>
+<ol start="6">
+<li>Полонізація означала:</li>
+</ol>
+<ul>
+<li>[x] перехід на польську мову та культуру</li>
+<li>[ ] захист української мови</li>
+<li>[ ] військову службу</li>
+</ul>
+<blockquote>
+  <p>Асиміляція еліти.</p>
+</blockquote>
+<ol start="7">
+<li><strong>[Інтеграція: пасив]</strong> Офіційний текст: «Унію ___ у 1596 році.»</li>
+</ol>
+<ul>
+<li>[x] підписано</li>
+<li>[ ] підписали</li>
+<li>[ ] підписується</li>
+</ul>
+<blockquote>
+  <p>Офіційний/історичний → -но/-то.</p>
+</blockquote>
+<ol start="8">
+<li><strong>[Інтеграція: регістр]</strong> Публіцистика: «Братства ___ героїчну роль у збереженні культури.»</li>
+</ol>
+<ul>
+<li>[ ] відіграно</li>
+<li>[x] відіграли</li>
+<li>[ ] відіграють</li>
+</ul>
+<blockquote>
+  <p>Публіцистичний/оцінний → активний стан.</p>
+</blockquote>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Словник</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Слово</th>
+<th>Вимова</th>
+<th>Переклад</th>
+<th>Приклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Річ Посполита</td>
+<td>/rʲitʃ pɔspɔˈlɪtɑ/</td>
+<td>Commonwealth</td>
+<td>Річ Посполита — польсько-литовська держава.</td>
+</tr>
+<tr>
+<td>панщина</td>
+<td>/ˈpɑnʃt͡ʃɪnɑ/</td>
+<td>serfdom, corvée</td>
+<td>Панщина — 6 днів на тиждень.</td>
+</tr>
+<tr>
+<td>кріпак</td>
+<td>/krʲiˈpɑk/</td>
+<td>serf</td>
+<td>Кріпак не міг залишити село.</td>
+</tr>
+<tr>
+<td>закріпачення</td>
+<td>/zɑkrʲipɑˈtʃɛnʲːɑ/</td>
+<td>enserfment</td>
+<td>Закріпачення тривало століття.</td>
+</tr>
+<tr>
+<td>шляхта</td>
+<td>/ˈʃlʲaxtɑ/</td>
+<td>nobility</td>
+<td>Шляхта мала привілеї.</td>
+</tr>
+<tr>
+<td>магнат</td>
+<td>/mɑɦˈnɑt/</td>
+<td>magnate</td>
+<td>Магнати володіли величезними землями.</td>
+</tr>
+<tr>
+<td>братство</td>
+<td>/ˈbrɑtstwɔ/</td>
+<td>brotherhood</td>
+<td>Братства захищали культуру.</td>
+</tr>
+<tr>
+<td>полонізація</td>
+<td>/pɔlɔnʲiˈzɑt͡sʲijɑ/</td>
+<td>Polonization</td>
+<td>Полонізація еліти тривала покоління.</td>
+</tr>
+<tr>
+<td>уніат</td>
+<td>/unʲiˈjɑt/</td>
+<td>Uniate</td>
+<td>Уніати визнали владу Папи.</td>
+</tr>
+<tr>
+<td>спротив</td>
+<td>/sprɔˈtɪw/</td>
+<td>resistance</td>
+<td>Культурний спротив — братства.</td>
+</tr>
+<tr>
+<td>гноблення</td>
+<td>/ɦnɔˈblɛnʲːɑ/</td>
+<td>oppression</td>
+<td>Гноблення селян призвело до повстань.</td>
+</tr>
+<tr>
+<td>оренда</td>
+<td>/ɔˈrɛndɑ/</td>
+<td>lease</td>
+<td>Оренда маєтків погіршувала становище.</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Підсумок</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Хронологія</h2>
+<table>
+<thead>
+<tr>
+<th>Рік</th>
+<th>Подія</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1569</td>
+<td>Люблінська унія — Україна під Польщею</td>
+</tr>
+<tr>
+<td>1581</td>
+<td>Острозька Біблія</td>
+</tr>
+<tr>
+<td>1596</td>
+<td>Брестська унія — розкол церкви</td>
+</tr>
+<tr>
+<td>1632</td>
+<td>Києво-Могилянська академія</td>
+</tr>
+<tr>
+<td>1648</td>
+<td>Хмельниччина (початок)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="-1">Ключові явища</h2>
+<table>
+<thead>
+<tr>
+<th>Явище</th>
+<th>Суть</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Панщина</td>
+<td>5-6 днів примусової праці</td>
+</tr>
+<tr>
+<td>Брестська унія</td>
+<td>Розкол православних</td>
+</tr>
+<tr>
+<td>Полонізація</td>
+<td>Асиміляція еліти</td>
+</tr>
+<tr>
+<td>Братства</td>
+<td>Культурний спротив</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<blockquote>
+  <p><strong>Чому це важливо</strong></p>
+  <p>Польський період — це урок того, як <em>системне</em> гноблення руйнує суспільство. Панщина, релігійні гоніння, асиміляція еліти — все це разом створило вибухову ситуацію.</p>
+  <p>Але цей період також показує силу <em>спротиву</em>. Братства, друкарні, академія, козаки — українці боролися. Вони не здалися. І врешті — повстали.</p>
+  <p>Коли хтось каже, що «українці — мирний народ без історії боротьби», згадайте Хмельниччину. Згадайте, що їй передувало. І зрозумійте: <em>ми боролися завжди</em>.</p>
+  <p><strong>Слава Україні! Героям слава!</strong></p>
+</blockquote>
+<hr />
+<h2 id="-2">Наступний урок</h2>
+<p>Історія B2.2 завершена! Ви вивчили:</p>
+<ul>
+<li>Дослов'янську Україну (Трипілля, скіфи, греки)</li>
+<li>Київську Русь (виникнення, золота доба, занепад)</li>
+<li>Галицько-Волинське королівство</li>
+<li>Литовський період</li>
+<li>Польське панування</li>
+</ul>
+<p>У наступних модулях B2.3 — козацька доба та імперський період.</p></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('quiz')">Start →</button></div>
     </section>
     
@@ -161,6 +869,10 @@
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

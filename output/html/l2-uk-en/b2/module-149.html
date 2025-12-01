@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,17 +136,34 @@
         <p style="color:var(--text-muted)">Офіційно-діловий стиль</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="md-content"><h1 id="">Вступ</h1>
-<p>Ви хочете взяти відпустку. Підходите до директора й кажете: «Слухайте, мені треба відпочити. Давайте я два тижні не приходитиму?» Директор дивиться на вас, як на інопланетянина: «Напишіть заяву.» І ось тут починається квест.</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Вступ</li><li class="toc-item" data-target="section-1">Типи офіційних документів</li><li class="toc-item" data-target="section-2">Структура заяви</li><li class="toc-item" data-target="section-3">Магічні формули</li><li class="toc-item" data-target="section-4">Кліше офіційного стилю</li><li class="toc-item" data-target="section-5">Офіційний лист</li><li class="toc-item" data-target="section-6">Скарга: структура</li><li class="toc-item" data-target="section-7">Безособовість: ключ до офіційності</li><li class="toc-item" data-target="section-8">Практика</li><li class="toc-item" data-target="section-9">Словник</li><li class="toc-item" data-target="section-10">Підсумок</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Вступ</h3>
+          <span class="section-type intro">intro</span>
+        </div>
+        <div class="section-body md-content"><p>Ви хочете взяти відпустку. Підходите до директора й кажете: «Слухайте, мені треба відпочити. Давайте я два тижні не приходитиму?» Директор дивиться на вас, як на інопланетянина: «Напишіть заяву.» І ось тут починається квест.</p>
 <p>«Заява» — це не просто папірець. Це <strong>ритуал</strong>. Зверху праворуч — кому. Нижче — від кого. Посередині великими літерами — «ЗАЯВА». Далі — магічні слова «Прошу надати мені…». І підпис знизу. Якщо щось не так — повертають переписувати.</p>
 <p>Офіційно-діловий стиль — це мова, де <strong>форма важливіша за зміст</strong>. Ви можете геніально пояснити, чому вам потрібна відпустка, але якщо заява оформлена неправильно — її не приймуть. Це стиль, де панують <strong>шаблони, кліше та канцеляризми</strong> — і без них нікуди.</p>
 <blockquote>
   <p><strong>Чи знали ви?</strong></p>
   <p>Слово <strong>«канцелярія»</strong> походить від латинського <em>cancelli</em> — «решітка». У Римській імперії так називали загородку, за якою сиділи писарі. Згодом слово стало означати установу, де пишуть документи. А «канцеляризм» — це мовний штамп, народжений за тією решіткою. «Вищезазначений», «нижчепідписаний», «належним чином» — усі ці слова живуть тільки в документах.</p>
 </blockquote>
-<hr />
-<h1 id="-1">Типи офіційних документів</h1>
-<table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Типи офіційних документів</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><table>
 <thead>
 <tr>
 <th>Тип</th>
@@ -174,9 +209,14 @@
 </tr>
 </tbody>
 </table>
-<hr />
-<h1 id="-2">Структура заяви</h1>
-<h2 id="-3">Шаблон</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Структура заяви</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Шаблон</h2>
 <pre><code>                                    Директору ТОВ «Компанія»
                                     Петренку Івану Михайловичу
                                     від менеджера відділу продажу
@@ -190,7 +230,7 @@
 25.06.2024                          _________ О.П. Коваленко
                                     (підпис)
 </code></pre>
-<h2 id="-4">Анатомія заяви</h2>
+<h2 id="-1">Анатомія заяви</h2>
 <table>
 <thead>
 <tr>
@@ -237,9 +277,14 @@
   <p>❌ <strong>Міф:</strong> «Головне — написати, що хочеш. Форма не важлива.»</p>
   <p>✅ <strong>Факт:</strong> В офіційному стилі <strong>форма — це закон</strong>. Заяву з неправильною структурою можуть не прийняти. Тому шаблони — не бюрократія, а необхідність. Вони гарантують, що документ буде зрозумілий і дійсний.</p>
 </blockquote>
-<hr />
-<h1 id="-5">Магічні формули</h1>
-<h2 id="-6">Початок</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Магічні формули</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Початок</h2>
 <table>
 <thead>
 <tr>
@@ -274,7 +319,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="-7">Середина</h2>
+<h2 id="-1">Середина</h2>
 <table>
 <thead>
 <tr>
@@ -305,7 +350,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="-8">Завершення</h2>
+<h2 id="-2">Завершення</h2>
 <table>
 <thead>
 <tr>
@@ -336,9 +381,14 @@
   <p><strong>Чи знали ви?</strong></p>
   <p>Формула <strong>«Прошу надати»</strong> — це не просто ввічливість. Юридично це <strong>волевиявлення</strong> — офіційне вираження вашого бажання. Без цієї формули заява може бути визнана недійсною. Тому «Хочу відпустку» ніколи не замінить «Прошу надати мені відпустку».</p>
 </blockquote>
-<hr />
-<h1 id="-9">Кліше офіційного стилю</h1>
-<table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-4">
+        <div class="section-header" onclick="toggleSection(4)">
+          <h3>Кліше офіційного стилю</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><table>
 <thead>
 <tr>
 <th>Кліше</th>
@@ -394,9 +444,14 @@
 </tr>
 </tbody>
 </table>
-<hr />
-<h1 id="-10">Офіційний лист</h1>
-<h2 id="-11">Структура</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-5">
+        <div class="section-header" onclick="toggleSection(5)">
+          <h3>Офіційний лист</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Структура</h2>
 <ol>
 <li><strong>Шапка</strong> — адресат, відправник</li>
 <li><strong>Звертання</strong> — «Шановний пане/пані!»</li>
@@ -405,7 +460,7 @@
 <li><strong>Завершення</strong> — очікування, подяка</li>
 <li><strong>Підпис</strong> — посада, ім'я</li>
 </ol>
-<h2 id="-12">Приклад</h2>
+<h2 id="-1">Приклад</h2>
 <pre><code>                                    Директору ТОВ «Партнер»
                                     Шевченку Віктору Івановичу
 
@@ -424,9 +479,14 @@
 Директор ТОВ «Компанія»
 _________________ І.М. Петренко
 </code></pre>
-<hr />
-<h1 id="-13">Скарга: структура</h1>
-<h2 id="-14">Елементи</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-6">
+        <div class="section-header" onclick="toggleSection(6)">
+          <h3>Скарга: структура</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Елементи</h2>
 <ol>
 <li><strong>Адресат</strong> — кому скаржитесь</li>
 <li><strong>Заявник</strong> — хто скаржиться (+ контакти)</li>
@@ -435,7 +495,7 @@ _________________ І.М. Петренко
 <li><strong>Вимоги</strong> — чого хочете</li>
 <li><strong>Додатки</strong> — докази</li>
 </ol>
-<h2 id="-15">Приклад</h2>
+<h2 id="-1">Приклад</h2>
 <pre><code>                                    Директору магазину «Техніка»
                                     від покупця Коваленко О.П.
                                     тел.: +380 XX XXX XX XX
@@ -461,9 +521,14 @@ _________________ І.М. Петренко
   <p><strong>Чи знали ви?</strong></p>
   <p>Посилання на <strong>Закон України «Про захист прав споживачів»</strong> — не просто формальність. Це юридичний аргумент, що зобов'язує продавця реагувати. Без цього посилання скарга — просто «хотілка». З посиланням — правова вимога.</p>
 </blockquote>
-<hr />
-<h1 id="-16">Безособовість: ключ до офіційності</h1>
-<p>В офіційному стилі <strong>«я» майже не існує</strong>:</p>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-7">
+        <div class="section-header" onclick="toggleSection(7)">
+          <h3>Безособовість: ключ до офіційності</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><p>В офіційному стилі <strong>«я» майже не існує</strong>:</p>
 <table>
 <thead>
 <tr>
@@ -499,9 +564,14 @@ _________________ І.М. Петренко
   <p>❌ <strong>Міф:</strong> «Канцеляризми — це застаріла совкова мова, їх треба уникати.»</p>
   <p>✅ <strong>Факт:</strong> Канцеляризми <strong>необхідні в офіційних документах</strong>. «Здійснити оплату» в заяві — правильно. «Здійснити оплату» в розмові з другом — смішно. Проблема не в канцеляризмах, а в їх <strong>недоречному вживанні</strong>.</p>
 </blockquote>
-<hr />
-<h1 id="-17">Практика</h1>
-<h2 id="-18">Напишіть заяву</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-8">
+        <div class="section-header" onclick="toggleSection(8)">
+          <h3>Практика</h3>
+          <span class="section-type practice">practice</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Напишіть заяву</h2>
 <p><strong>Ситуація:</strong> Ви хочете взяти 3 дні відпустки без збереження зарплати через сімейні обставини.</p>
 <p><strong>Рішення:</strong></p>
 <pre><code>                                    Директору ТОВ «Компанія»
@@ -517,7 +587,7 @@ _________________ І.М. Петренко
 
 [Дата]                              _________ [Підпис, ПІБ]
 </code></pre>
-<h2 id="-19">Трансформуйте в офіційний стиль</h2>
+<h2 id="-1">Трансформуйте в офіційний стиль</h2>
 <table>
 <thead>
 <tr>
@@ -548,7 +618,149 @@ _________________ І.М. Петренко
 </tr>
 </tbody>
 </table>
-<hr /></div></div>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-9">
+        <div class="section-header" onclick="toggleSection(9)">
+          <h3>Словник</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Слово</th>
+<th>Переклад</th>
+<th>Примітки</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>заява</td>
+<td>application, statement</td>
+<td>документ-прохання</td>
+</tr>
+<tr>
+<td>довідка</td>
+<td>certificate, reference</td>
+<td>підтвердження</td>
+</tr>
+<tr>
+<td>наказ</td>
+<td>order, decree</td>
+<td>розпорядження</td>
+</tr>
+<tr>
+<td>скарга</td>
+<td>complaint</td>
+<td>претензія</td>
+</tr>
+<tr>
+<td>договір</td>
+<td>contract, agreement</td>
+<td>угода</td>
+</tr>
+<tr>
+<td>підпис</td>
+<td>signature</td>
+<td>засвідчення</td>
+</tr>
+<tr>
+<td>адресат</td>
+<td>addressee</td>
+<td>кому</td>
+</tr>
+<tr>
+<td>заявник</td>
+<td>applicant</td>
+<td>від кого</td>
+</tr>
+<tr>
+<td>канцеляризм</td>
+<td>bureaucratese</td>
+<td>офіційний штамп</td>
+</tr>
+<tr>
+<td>волевиявлення</td>
+<td>declaration of will</td>
+<td>юридичний термін</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-10">
+        <div class="section-header" onclick="toggleSection(10)">
+          <h3>Підсумок</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Структура документів</h2>
+<table>
+<thead>
+<tr>
+<th>Елемент</th>
+<th>Функція</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Адресат</td>
+<td>Кому</td>
+</tr>
+<tr>
+<td>Заявник</td>
+<td>Від кого</td>
+</tr>
+<tr>
+<td>Назва</td>
+<td>ЗАЯВА, СКАРГА</td>
+</tr>
+<tr>
+<td>Текст</td>
+<td>Суть справи</td>
+</tr>
+<tr>
+<td>Дата, підпис</td>
+<td>Засвідчення</td>
+</tr>
+</tbody>
+</table>
+<h2 id="-1">Ключові формули</h2>
+<table>
+<thead>
+<tr>
+<th>Функція</th>
+<th>Формула</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Прохання</td>
+<td>Прошу надати/видати…</td>
+</tr>
+<tr>
+<td>Причина</td>
+<td>У зв'язку з…</td>
+</tr>
+<tr>
+<td>Посилання</td>
+<td>Відповідно до…</td>
+</tr>
+<tr>
+<td>Завершення</td>
+<td>З повагою,</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p><strong>Запам'ятайте:</strong></p>
+  <p>✓ Офіційний стиль = <strong>форма + шаблон + кліше</strong><br />
+  ✓ «Прошу надати» — не ввічливість, а <strong>юридичне волевиявлення</strong><br />
+  ✓ Безособові форми (<strong>-но/-то</strong>) — норма<br />
+  ✓ Канцеляризми <strong>доречні в документах</strong>, не в розмові<br />
+  ✓ Посилання на закон — <strong>правова сила</strong> скарги</p>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('vocab')">Start →</button></div>
     </section>
     
@@ -581,6 +793,10 @@ _________________ І.М. Петренко
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

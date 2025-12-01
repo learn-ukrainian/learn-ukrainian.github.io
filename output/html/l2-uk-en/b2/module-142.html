@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,8 +136,20 @@
         <p style="color:var(--text-muted)">Пасивні дієприкметники: -ний/-тий</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="md-content"><h1 id="">Вступ</h1>
-<p>Пасивні дієприкметники — це слова-хамелеони. Вони народжуються від дієслів, але живуть життям прикметників. «Написана книга», «відкрите вікно», «зроблена робота» — це все дієприкметники, що описують стан речей.</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Вступ</li><li class="toc-item" data-target="section-1">Утворення: базові правила</li><li class="toc-item" data-target="section-2">Чергування приголосних</li><li class="toc-item" data-target="section-3">Складні випадки</li><li class="toc-item" data-target="section-4">Дієприкметники як прикметники</li><li class="toc-item" data-target="section-5">Узгодження в реченні</li><li class="toc-item" data-target="section-6">Дієприкметникові звороти</li><li class="toc-item" data-target="section-7">Практика</li><li class="toc-item" data-target="section-8">Словник</li><li class="toc-item" data-target="section-9">Підсумок</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Вступ</h3>
+          <span class="section-type intro">intro</span>
+        </div>
+        <div class="section-body md-content"><p>Пасивні дієприкметники — це слова-хамелеони. Вони народжуються від дієслів, але живуть життям прикметників. «Написана книга», «відкрите вікно», «зроблена робота» — це все дієприкметники, що описують стан речей.</p>
 <p>Для англомовного учня це знайома територія: «written book», «opened window», «done work». Але українська додає цікавий поворот: <strong>чергування приголосних</strong>. Те, що в англійській просто «paid» (від pay), в українській стає «заплачений» (від платити) — зверніть увагу, як <strong>т</strong> перетворюється на <strong>ч</strong>.</p>
 <p>Це не примха мови — це давній механізм, що зберігся з праслов'янських часів. Кожного разу, коли ви правильно вимовляєте «спечений» замість *«спектий», ви дотримуєтесь правила, якому понад тисячу років.</p>
 <blockquote>
@@ -127,9 +157,14 @@
   <p>Чергування <strong>к → ч</strong> перед голосними (пекти → спечений) — це реліктове явище, що сягає <strong>праслов'янської епохи</strong> (до VII століття!). Коли ви кажете «спечений хліб», ви використовуєте фонетичний закон, який діяв ще до того, як слов'яни розділилися на окремі народи.</p>
 </blockquote>
 <p>Цей модуль проведе вас через усі закономірності утворення пасивних дієприкметників — від простих до найскладніших.</p>
-<hr />
-<h1 id="-1">Утворення: базові правила</h1>
-<h2 id="-2">Суфікс -ний/-ений/-аний</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Утворення: базові правила</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Суфікс -ний/-ений/-аний</h2>
 <p>Більшість дієприкметників утворюється за передбачуваними схемами:</p>
 <table>
 <thead>
@@ -162,7 +197,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="-3">Суфікс -тий</h2>
+<h2 id="-1">Суфікс -тий</h2>
 <p>Дієслова з голосною перед -ти утворюють дієприкметники на <strong>-тий</strong>:</p>
 <table>
 <thead>
@@ -210,9 +245,14 @@
   <p>❌ <strong>Міф:</strong> «Суфікс -тий — це виняток, який треба запам'ятати.»</p>
   <p>✅ <strong>Факт:</strong> -тий — це <strong>закономірність</strong>. Якщо перед -ти стоїть голосна (і, и, у, а, я), дієприкметник буде на -тий. Не виняток, а правило!</p>
 </blockquote>
-<hr />
-<h1 id="-4">Чергування приголосних</h1>
-<h2 id="-5">Основні чергування</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Чергування приголосних</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Основні чергування</h2>
 <p>При додаванні суфікса -ений відбуваються регулярні чергування:</p>
 <table>
 <thead>
@@ -262,7 +302,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="-6">Приклади в контексті</h2>
+<h2 id="-1">Приклади в контексті</h2>
 <table>
 <thead>
 <tr>
@@ -293,9 +333,14 @@
   <p><strong>Чи знали ви?</strong></p>
   <p>Чергування <strong>г → ж</strong> і <strong>к → ч</strong> називають <strong>першою палаталізацією</strong>. Це фонетичний закон, що діяв у праслов'янській мові ще до появи писемності. Коли ви кажете «збережений» (від берегти), ви повторюєте звуковий перехід, якому понад 1500 років!</p>
 </blockquote>
-<hr />
-<h1 id="-7">Складні випадки</h1>
-<h2 id="-8">Дієслова на -сти/-зти</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Складні випадки</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Дієслова на -сти/-зти</h2>
 <table>
 <thead>
 <tr>
@@ -332,7 +377,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="-9">Особливі форми</h2>
+<h2 id="-1">Особливі форми</h2>
 <table>
 <thead>
 <tr>
@@ -364,9 +409,14 @@
 </tr>
 </tbody>
 </table>
-<hr />
-<h1 id="-10">Дієприкметники як прикметники</h1>
-<h2 id="-11">Перехід у прикметники</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-4">
+        <div class="section-header" onclick="toggleSection(4)">
+          <h3>Дієприкметники як прикметники</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Перехід у прикметники</h2>
 <p>Багато дієприкметників стали звичайними прикметниками з переносним значенням:</p>
 <table>
 <thead>
@@ -413,9 +463,14 @@
   <p><strong>Чи знали ви?</strong></p>
   <p>Слово <strong>«освічений»</strong> походить від «освітити» — буквально «наповнений світлом знань». Ця метафора «освіта = світло» спільна для багатьох європейських мов: англійське Enlightenment, французьке lumières, німецьке Aufklärung. Українська зберігає цей образ у самій будові слова!</p>
 </blockquote>
-<hr />
-<h1 id="-12">Узгодження в реченні</h1>
-<h2 id="-13">Повна таблиця відмінювання</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-5">
+        <div class="section-header" onclick="toggleSection(5)">
+          <h3>Узгодження в реченні</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Повна таблиця відмінювання</h2>
 <table>
 <thead>
 <tr>
@@ -471,7 +526,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="-14">Приклади вживання</h2>
+<h2 id="-1">Приклади вживання</h2>
 <table>
 <thead>
 <tr>
@@ -506,9 +561,14 @@
 </tr>
 </tbody>
 </table>
-<hr />
-<h1 id="-15">Дієприкметникові звороти</h1>
-<h2 id="-16">Позиція в реченні</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-6">
+        <div class="section-header" onclick="toggleSection(6)">
+          <h3>Дієприкметникові звороти</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Позиція в реченні</h2>
 <p><strong>Перед іменником (книжний стиль):</strong></p>
 <ul>
 <li><strong>Написана Шевченком</strong> поезія відома всім.</li>
@@ -530,9 +590,14 @@
   <li>Розмовне: Книга, <strong>яку написав</strong> автор…</li>
   </ul>
 </blockquote>
-<hr />
-<h1 id="-17">Практика</h1>
-<h2 id="-18">Утворіть дієприкметники</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-7">
+        <div class="section-header" onclick="toggleSection(7)">
+          <h3>Практика</h3>
+          <span class="section-type practice">practice</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Утворіть дієприкметники</h2>
 <table>
 <thead>
 <tr>
@@ -594,7 +659,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="-19">Вставте правильну форму</h2>
+<h2 id="-1">Вставте правильну форму</h2>
 <ol>
 <li><p>Я бачив ___ (побудувати) міст.<br />
 → <strong>побудований</strong></p></li>
@@ -607,7 +672,7 @@
 <li><p>Документи ___ (підписати) директором.<br />
 → <strong>підписані</strong> (множина)</p></li>
 </ol>
-<h2 id="-20">Трансформуйте</h2>
+<h2 id="-2">Трансформуйте</h2>
 <p>Замініть підрядне речення дієприкметниковим зворотом:</p>
 <ol>
 <li><p>Книга, яку написав Франко, стала класикою.<br />
@@ -617,7 +682,154 @@
 <li><p>Закон, який ухвалив парламент, набув чинності.<br />
 → <strong>Ухвалений парламентом</strong> закон набув чинності.</p></li>
 </ol>
-<hr /></div></div>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-8">
+        <div class="section-header" onclick="toggleSection(8)">
+          <h3>Словник</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Слово</th>
+<th>Переклад</th>
+<th>Примітки</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>чергування</td>
+<td>alternation</td>
+<td>фонетичне явище</td>
+</tr>
+<tr>
+<td>приголосний</td>
+<td>consonant</td>
+<td>тип звука</td>
+</tr>
+<tr>
+<td>суфікс</td>
+<td>suffix</td>
+<td>частина слова</td>
+</tr>
+<tr>
+<td>зворот</td>
+<td>phrase, construction</td>
+<td>синтаксична одиниця</td>
+</tr>
+<tr>
+<td>книжний стиль</td>
+<td>bookish style</td>
+<td>письмова мова</td>
+</tr>
+<tr>
+<td>підрядне речення</td>
+<td>subordinate clause</td>
+<td>залежне речення</td>
+</tr>
+<tr>
+<td>освічений</td>
+<td>educated</td>
+<td>прикметник</td>
+</tr>
+<tr>
+<td>вихований</td>
+<td>well-mannered</td>
+<td>прикметник</td>
+</tr>
+<tr>
+<td>визнаний</td>
+<td>recognized</td>
+<td>дієприкметник</td>
+</tr>
+<tr>
+<td>збережений</td>
+<td>preserved</td>
+<td>дієприкметник</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-9">
+        <div class="section-header" onclick="toggleSection(9)">
+          <h3>Підсумок</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Правила утворення</h2>
+<table>
+<thead>
+<tr>
+<th>Тип</th>
+<th>Суфікс</th>
+<th>Приклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-ити</td>
+<td>-ений</td>
+<td>зроб<strong>лений</strong></td>
+</tr>
+<tr>
+<td>-ати</td>
+<td>-аний</td>
+<td>напис<strong>аний</strong></td>
+</tr>
+<tr>
+<td>-увати</td>
+<td>-ований</td>
+<td>організ<strong>ований</strong></td>
+</tr>
+<tr>
+<td>голосна + -ти</td>
+<td>-тий</td>
+<td>відкри<strong>тий</strong></td>
+</tr>
+</tbody>
+</table>
+<h2 id="-1">Чергування</h2>
+<table>
+<thead>
+<tr>
+<th>Звук</th>
+<th>Результат</th>
+<th>Приклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>т → ч</td>
+<td>заплач<strong>ений</strong></td>
+<td>платити</td>
+</tr>
+<tr>
+<td>к → ч</td>
+<td>спеч<strong>ений</strong></td>
+<td>пекти</td>
+</tr>
+<tr>
+<td>д → дж</td>
+<td>похо<strong>дж</strong>ений</td>
+<td>ходити</td>
+</tr>
+<tr>
+<td>г → ж</td>
+<td>збере<strong>ж</strong>ений</td>
+<td>берегти</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p><strong>Запам'ятайте:</strong></p>
+  <p>✓ Дієприкметники <strong>узгоджуються</strong> з іменником (рід, число, відмінок)<br />
+  ✓ <strong>Чергування</strong> — це закономірність, не виняток<br />
+  ✓ Дієприкметникові звороти — <strong>книжний стиль</strong><br />
+  ✓ Багато дієприкметників стали <strong>прикметниками</strong></p>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('vocab')">Start →</button></div>
     </section>
     
@@ -650,6 +862,10 @@
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

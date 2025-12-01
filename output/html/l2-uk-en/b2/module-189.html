@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,15 +136,32 @@
         <p style="color:var(--text-muted)">Повторення B2.2</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="md-content"><h1 id="">Вступ</h1>
-<p>B2.2 був подорожжю крізь час і мову — від трипільських землеробів до литовських канцлерів, від «білої ворони» до «каменя на серці», від простого «сказати» до величного «мовити». Це був етап, коли українська перестала бути просто набором правил і стала живою тканиною культури.</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Вступ</li><li class="toc-item" data-target="section-1">Історія України: докозацька доба</li><li class="toc-item" data-target="section-2">Фразеологізми: тематичний огляд</li><li class="toc-item" data-target="section-3">Синоніми: семантичні шкали</li><li class="toc-item" data-target="section-4">Сполучники: стилістичні варіанти</li><li class="toc-item" data-target="section-5">Лексика B2.2</li><li class="toc-item" data-target="section-6">Практика</li><li class="toc-item" data-target="section-7">Підсумок B2.2</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Вступ</h3>
+          <span class="section-type intro">intro</span>
+        </div>
+        <div class="section-body md-content"><p>B2.2 був подорожжю крізь час і мову — від трипільських землеробів до литовських канцлерів, від «білої ворони» до «каменя на серці», від простого «сказати» до величного «мовити». Це був етап, коли українська перестала бути просто набором правил і стала живою тканиною культури.</p>
 <p>Ви тепер знаєте, що Київська Русь — це не російська, а українська історія. Що Данило Галицький був єдиним «королем Русі» в історії. Що руська мова була офіційною в Литовсько-Руській державі ще до того, як Московія навчилася писати документи.</p>
 <p>Ви навчилися говорити ідіомами — не механічно, а з розумінням. «Камінь на серці» — це не просто фраза, а спосіб передати те, що англійське «I'm worried» ніколи не передасть. «Біла ворона» — не переклад «black sheep», а окрема метафора з власною логікою.</p>
 <p>І головне — ви відчули, як синоніми змінюють тон. «Сказати» — нейтрально. «Мовити» — урочисто. «Бовкнути» — невпопад. Це вже не про граматику — це про стиль.</p>
 <p>Цей модуль допоможе вам побачити цілісну картину B2.2 перед фінальною контрольною.</p>
-<hr />
-<h1 id="-1">Історія України: докозацька доба</h1>
-<h2 id="-2">Хронологія</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Історія України: докозацька доба</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Хронологія</h2>
 <table>
 <thead>
 <tr>
@@ -172,7 +207,7 @@
   <p><strong>Чи знали ви?</strong></p>
   <p><strong>Трипільці будували міста</strong> за 3000 років до Риму! Поселення Майданецьке (біля Черкас) мало <strong>20 000 жителів</strong> — це більше, ніж Лондон у той час мав населення взагалі.</p>
 </blockquote>
-<h2 id="-3">Ключові постаті</h2>
+<h2 id="-1">Ключові постаті</h2>
 <table>
 <thead>
 <tr>
@@ -204,7 +239,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="-4">Деколонізаційні тези</h2>
+<h2 id="-2">Деколонізаційні тези</h2>
 <table>
 <thead>
 <tr>
@@ -236,9 +271,14 @@
   <p>❌ <strong>Міф:</strong> «Данило Галицький — цар»</p>
   <p>✅ <strong>Факт:</strong> Данило отримав титул <strong>Rex Russiae</strong> (Король Русі) від Папи Римського у 1253 році. «Цар» — це калька з «caesar», яку Москва почала використовувати аж з 1547 року. Данило був <strong>королем</strong>, не царем!</p>
 </blockquote>
-<hr />
-<h1 id="-5">Фразеологізми: тематичний огляд</h1>
-<h2 id="-6">Частини тіла</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Фразеологізми: тематичний огляд</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Частини тіла</h2>
 <table>
 <thead>
 <tr>
@@ -344,7 +384,7 @@
   <p><strong>Чи знали ви?</strong></p>
   <p>Вираз <strong>«на широку ногу»</strong> походить від середньовічної моди на довгоносе взуття. Чим довший носок черевика — тим багатший власник. «Жити на широку ногу» буквально означало носити взуття з широким, довгим носком — атрибут багатства.</p>
 </blockquote>
-<h2 id="-7">Тварини</h2>
+<h2 id="-1">Тварини</h2>
 <table>
 <thead>
 <tr>
@@ -416,7 +456,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="-8">Природа</h2>
+<h2 id="-2">Природа</h2>
 <table>
 <thead>
 <tr>
@@ -458,9 +498,14 @@
 </tr>
 </tbody>
 </table>
-<hr />
-<h1 id="-9">Синоніми: семантичні шкали</h1>
-<h2 id="-10">Дієслова мовлення</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Синоніми: семантичні шкали</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Дієслова мовлення</h2>
 <table>
 <thead>
 <tr>
@@ -497,7 +542,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="-11">Дієслова інформування</h2>
+<h2 id="-1">Дієслова інформування</h2>
 <table>
 <thead>
 <tr>
@@ -524,7 +569,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="-12">Дієслова мислення</h2>
+<h2 id="-2">Дієслова мислення</h2>
 <table>
 <thead>
 <tr>
@@ -551,7 +596,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="-13">Дієслова розуміння</h2>
+<h2 id="-3">Дієслова розуміння</h2>
 <table>
 <thead>
 <tr>
@@ -578,7 +623,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="-14">Дієслова пам'яті</h2>
+<h2 id="-4">Дієслова пам'яті</h2>
 <table>
 <thead>
 <tr>
@@ -610,9 +655,14 @@
   <p>❌ <strong>Міф:</strong> «Гадати» означає те саме, що «думати»</p>
   <p>✅ <strong>Факт:</strong> «Гадати» виражає <strong>низьку впевненість</strong> — це здогадка, припущення. «Думати» — нейтральний процес. «Вважати» — <strong>впевнене переконання</strong>. Різниця критична!</p>
 </blockquote>
-<hr />
-<h1 id="-15">Сполучники: стилістичні варіанти</h1>
-<h2 id="-16">Причинові</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-4">
+        <div class="section-header" onclick="toggleSection(4)">
+          <h3>Сполучники: стилістичні варіанти</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Причинові</h2>
 <table>
 <thead>
 <tr>
@@ -653,7 +703,7 @@
   <p><strong>Чи знали ви?</strong></p>
   <p>Сполучник <strong>«бо»</strong> — давньоукраїнське слово, що збереглося також у польській та чеській. А от у російській його немає — там тільки «потому что». Коли говорите «бо» — ви говорите щось суто слов'янське західного типу!</p>
 </blockquote>
-<h2 id="-17">Допустові</h2>
+<h2 id="-1">Допустові</h2>
 <table>
 <thead>
 <tr>
@@ -685,7 +735,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="-18">Часові</h2>
+<h2 id="-2">Часові</h2>
 <table>
 <thead>
 <tr>
@@ -722,7 +772,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="-19">Умовні</h2>
+<h2 id="-3">Умовні</h2>
 <table>
 <thead>
 <tr>
@@ -749,9 +799,14 @@
 </tr>
 </tbody>
 </table>
-<hr />
-<h1 id="b22">Лексика B2.2</h1>
-<h2 id="-20">Медицина</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-5">
+        <div class="section-header" onclick="toggleSection(5)">
+          <h3>Лексика B2.2</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Медицина</h2>
 <table>
 <thead>
 <tr>
@@ -783,7 +838,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="-21">Технології</h2>
+<h2 id="-1">Технології</h2>
 <table>
 <thead>
 <tr>
@@ -815,9 +870,14 @@
 </tr>
 </tbody>
 </table>
-<hr />
-<h1 id="-22">Практика</h1>
-<h2 id="-23">Історія: заповніть пропуски</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-6">
+        <div class="section-header" onclick="toggleSection(6)">
+          <h3>Практика</h3>
+          <span class="section-type practice">practice</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Історія: заповніть пропуски</h2>
 <ol>
 <li><p>Київська Русь — ___ (українська / російська) спадщина.<br />
 → <strong>українська</strong></p></li>
@@ -830,7 +890,7 @@
 <li><p>Трипільська культура існувала ___ років тому.<br />
 → <strong>7500-4750</strong> (5500-2750 до н.е.)</p></li>
 </ol>
-<h2 id="-24">Ідіоми: визначте значення</h2>
+<h2 id="-1">Ідіоми: визначте значення</h2>
 <ol>
 <li><p>«Біла ворона» — ___<br />
 → <strong>особлива людина, не як усі</strong></p></li>
@@ -843,7 +903,7 @@
 <li><p>«Працювати як кінь» — ___<br />
 → <strong>важко, багато працювати</strong></p></li>
 </ol>
-<h2 id="-25">Синоніми: виберіть правильне</h2>
+<h2 id="-2">Синоніми: виберіть правильне</h2>
 <ol>
 <li><p>Він ___ (гадає / вважає), що це помилка. (впевнено)<br />
 → <strong>вважає</strong></p></li>
@@ -856,7 +916,84 @@
 <li><p>Прес-секретар ___ (сказав / заявив) про позицію.<br />
 → <strong>заявив</strong></p></li>
 </ol>
-<hr /></div></div>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-7">
+        <div class="section-header" onclick="toggleSection(7)">
+          <h3>Підсумок B2.2</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Що ви вивчили</h2>
+<table>
+<thead>
+<tr>
+<th>Тема</th>
+<th>Досягнення</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Історія</strong></td>
+<td>Докозацька Україна: від Трипілля до Люблінської унії</td>
+</tr>
+<tr>
+<td><strong>Деколонізація</strong></td>
+<td>Розвінчання міфів про «спільну історію»</td>
+</tr>
+<tr>
+<td><strong>Ідіоми</strong></td>
+<td>50+ фразеологізмів (тіло, тварини, природа)</td>
+</tr>
+<tr>
+<td><strong>Синоніми</strong></td>
+<td>Семантичні відтінки мовлення, мислення, пам'яті</td>
+</tr>
+<tr>
+<td><strong>Сполучники</strong></td>
+<td>Причинові, допустові, часові, умовні</td>
+</tr>
+<tr>
+<td><strong>Лексика</strong></td>
+<td>Медицина, технології</td>
+</tr>
+</tbody>
+</table>
+<h2 id="vs">Ключові «Міф vs Факт»</h2>
+<table>
+<thead>
+<tr>
+<th>Міф</th>
+<th>Факт</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Русь = Росія</td>
+<td>Русь — українська спадщина</td>
+</tr>
+<tr>
+<td>Терапевт = therapist</td>
+<td>Терапевт = GP (сімейний лікар)</td>
+</tr>
+<tr>
+<td>Гадати = думати</td>
+<td>Гадати = низька впевненість</td>
+</tr>
+<tr>
+<td>Хакер = злочинець</td>
+<td>Хакер може бути «білим» (етичним)</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p><strong>Готові до контрольної?</strong></p>
+  <p>✓ Повторіть хронологію української історії<br />
+  ✓ Перегляньте ідіоми за темами<br />
+  ✓ Запам'ятайте семантичні шкали синонімів<br />
+  ✓ Знайте стилістичну різницю сполучників</p>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('vocab')">Start →</button></div>
     </section>
     
@@ -889,6 +1026,10 @@
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,17 +136,34 @@
         <p style="color:var(--text-muted)">Зворотний пасив</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="md-content"><h1 id="">Вступ</h1>
-<p>Суфікс <strong>-ся</strong> — один із найзагадковіших елементів української граматики. Він може означати «себе» (митися = мити себе), «один одного» (цілуватися), «само по собі» (двері відчиняються), а іноді — взагалі нічого конкретного (сміятися — хто тут сміє?).</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Вступ</li><li class="toc-item" data-target="section-1">Багатозначність -ся</li><li class="toc-item" data-target="section-2">Зворотний пасив: структура</li><li class="toc-item" data-target="section-3">Дієслова з -ся пасивом</li><li class="toc-item" data-target="section-4">Значення та вживання</li><li class="toc-item" data-target="section-5">-ся пасив vs інші форми</li><li class="toc-item" data-target="section-6">Діяч в орудному відмінку</li><li class="toc-item" data-target="section-7">Обмеження вживання</li><li class="toc-item" data-target="section-8">Практика</li><li class="toc-item" data-target="section-9">Продукція</li><li class="toc-item" data-target="section-10">Словник</li><li class="toc-item" data-target="section-11">Підсумок</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Вступ</h3>
+          <span class="section-type intro">intro</span>
+        </div>
+        <div class="section-body md-content"><p>Суфікс <strong>-ся</strong> — один із найзагадковіших елементів української граматики. Він може означати «себе» (митися = мити себе), «один одного» (цілуватися), «само по собі» (двері відчиняються), а іноді — взагалі нічого конкретного (сміятися — хто тут сміє?).</p>
 <p>Але є ще одне значення, яке особливо важливе для B2: <strong>пасивне</strong>. Коли ви кажете «Будинок будується», ви не маєте на увазі, що будинок сам себе будує. Ви маєте на увазі, що його будують — хтось, невизначений, виконує дію.</p>
 <p>Це значення домінує в <strong>науковому стилі</strong>. Відкрийте будь-яку українську дисертацію, і ви побачите: «У роботі <strong>розглядається</strong> проблема…», «Дані <strong>аналізуються</strong> методом…», «<strong>Пропонується</strong> новий підхід…». Це голос науки — об'єктивний, безособовий, зосереджений на процесі.</p>
 <blockquote>
   <p><strong>Чи знали ви?</strong></p>
   <p>Суфікс <strong>-ся</strong> походить від давньоруського займенника <strong>«ся»</strong> (себе). Спочатку він був окремим словом і міг стояти в різних місцях речення. Поступово він «приклеївся» до дієслова і став постфіксом. У деяких діалектах (наприклад, гуцульському) досі можна почути «я ся бою» замість «я боюся» — реліктовий слід тієї давньої свободи.</p>
 </blockquote>
-<hr />
-<h1 id="-1">Багатозначність -ся</h1>
-<h2 id="-2">П'ять значень одного суфікса</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Багатозначність -ся</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">П'ять значень одного суфікса</h2>
 <table>
 <thead>
 <tr>
@@ -176,9 +211,14 @@
   <p>❌ <strong>Міф:</strong> «Дієслова на -ся завжди означають дію на себе.»</p>
   <p>✅ <strong>Факт:</strong> Тільки <strong>зворотне</strong> значення передбачає «себе». В інших випадках -ся має зовсім інші функції. «Будуватися» не означає «будувати себе» — це пасив!</p>
 </blockquote>
-<hr />
-<h1 id="-3">Зворотний пасив: структура</h1>
-<h2 id="-4">Базова модель</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Зворотний пасив: структура</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Базова модель</h2>
 <p><strong>Активне речення → Пасивне з -ся</strong></p>
 <table>
 <thead>
@@ -202,7 +242,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="-5">Часові форми</h2>
+<h2 id="-1">Часові форми</h2>
 <table>
 <thead>
 <tr>
@@ -229,7 +269,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="-6">Обмеження особи</h2>
+<h2 id="-2">Обмеження особи</h2>
 <table>
 <thead>
 <tr>
@@ -275,9 +315,14 @@
   <p><strong>Чи знали ви?</strong></p>
   <p>Зворотний пасив використовується <strong>майже виключно в 3-й особі</strong>. Чому? Бо пасив описує, що відбувається з об'єктом, а не хто це робить. «Я будуюся» звучить дивно, бо людина рідко є об'єктом будівництва!</p>
 </blockquote>
-<hr />
-<h1 id="-7">Дієслова з -ся пасивом</h1>
-<h2 id="-8">Типові перехідні дієслова</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Дієслова з -ся пасивом</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Типові перехідні дієслова</h2>
 <table>
 <thead>
 <tr>
@@ -339,9 +384,14 @@
 </tr>
 </tbody>
 </table>
-<hr />
-<h1 id="-9">Значення та вживання</h1>
-<h2 id="-10">Чотири контексти</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-4">
+        <div class="section-header" onclick="toggleSection(4)">
+          <h3>Значення та вживання</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Чотири контексти</h2>
 <h3 id="1">1. Процес (триває)</h3>
 <table>
 <thead>
@@ -438,9 +488,14 @@
   <p><strong>Чи знали ви?</strong></p>
   <p>У <strong>наукових текстах</strong> зворотний пасив створює ефект об'єктивності. Замість «Я розглядаю проблему» (суб'єктивно) пишуть «Проблема <strong>розглядається</strong>» (об'єктивно). Це конвенція академічного письма, яка робить текст більш авторитетним.</p>
 </blockquote>
-<hr />
-<h1 id="vs">-ся пасив vs інші форми</h1>
-<h2 id="-11">Порівняльна таблиця</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-5">
+        <div class="section-header" onclick="toggleSection(5)">
+          <h3>-ся пасив vs інші форми</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Порівняльна таблиця</h2>
 <table>
 <thead>
 <tr>
@@ -477,7 +532,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="-12">Вибір за контекстом</h2>
+<h2 id="-1">Вибір за контекстом</h2>
 <table>
 <thead>
 <tr>
@@ -504,9 +559,14 @@
 </tr>
 </tbody>
 </table>
-<hr />
-<h1 id="-13">Діяч в орудному відмінку</h1>
-<h2 id="-14">Можливий, але необов'язковий</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-6">
+        <div class="section-header" onclick="toggleSection(6)">
+          <h3>Діяч в орудному відмінку</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Можливий, але необов'язковий</h2>
 <table>
 <thead>
 <tr>
@@ -534,9 +594,14 @@
   <p>❌ <strong>Міф:</strong> «У пасиві завжди треба вказувати, хто зробив.»</p>
   <p>✅ <strong>Факт:</strong> У -ся пасиві діяч <strong>зазвичай опускається</strong>. Фокус на процесі, а не на виконавці. Якщо важливо, хто робить — використовуйте активний стан.</p>
 </blockquote>
-<hr />
-<h1 id="-15">Обмеження вживання</h1>
-<h2 id="-16">Коли НЕ використовувати -ся пасив</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-7">
+        <div class="section-header" onclick="toggleSection(7)">
+          <h3>Обмеження вживання</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Коли НЕ використовувати -ся пасив</h2>
 <table>
 <thead>
 <tr>
@@ -568,7 +633,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="-17">Коли ВИКОРИСТОВУВАТИ -ся пасив</h2>
+<h2 id="-1">Коли ВИКОРИСТОВУВАТИ -ся пасив</h2>
 <table>
 <thead>
 <tr>
@@ -600,9 +665,14 @@
 </tr>
 </tbody>
 </table>
-<hr />
-<h1 id="-18">Практика</h1>
-<h2 id="-19">Утворіть -ся пасив</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-8">
+        <div class="section-header" onclick="toggleSection(8)">
+          <h3>Практика</h3>
+          <span class="section-type practice">practice</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Утворіть -ся пасив</h2>
 <table>
 <thead>
 <tr>
@@ -639,7 +709,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="-20">Виберіть правильну форму</h2>
+<h2 id="-1">Виберіть правильну форму</h2>
 <ol>
 <li>Проблема ___ уже місяць. (процес)</li>
 </ol>
@@ -670,17 +740,160 @@
 <blockquote>
   <p>Загальне твердження → -ся</p>
 </blockquote>
-<hr />
-<h1 id="-21">Продукція</h1>
-<h2 id="-22">Науковий текст</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-9">
+        <div class="section-header" onclick="toggleSection(9)">
+          <h3>Продукція</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Науковий текст</h2>
 <p>Напишіть абзац наукової статті, використовуючи -ся пасив:</p>
 <p><strong>Приклад:</strong><br />
 «У цій статті <strong>розглядається</strong> проблема забруднення повітря в українських містах. <strong>Аналізуються</strong> дані за останні 10 років. <strong>Досліджуються</strong> основні причини та наслідки. <strong>Порівнюються</strong> показники різних регіонів. <strong>Пропонуються</strong> можливі рішення.»</p>
-<h2 id="-23">Технічний опис</h2>
+<h2 id="-1">Технічний опис</h2>
 <p>Опишіть, як працює пристрій:</p>
 <p><strong>Приклад:</strong><br />
 «Телефон <strong>вмикається</strong> кнопкою збоку. Екран <strong>розблоковується</strong> відбитком пальця або PIN-кодом. Повідомлення <strong>надсилаються</strong> миттєво. Фотографії <strong>зберігаються</strong> автоматично в хмарі. Оновлення <strong>завантажуються</strong> в фоновому режимі.»</p>
-<hr /></div></div>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-10">
+        <div class="section-header" onclick="toggleSection(10)">
+          <h3>Словник</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Слово</th>
+<th>Переклад</th>
+<th>Примітки</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>зворотний</td>
+<td>reflexive</td>
+<td>граматичний термін</td>
+</tr>
+<tr>
+<td>постфікс</td>
+<td>postfix</td>
+<td>частина слова після кореня</td>
+</tr>
+<tr>
+<td>процес</td>
+<td>process</td>
+<td>тривала дія</td>
+</tr>
+<tr>
+<td>вироблятися</td>
+<td>to be produced</td>
+<td>-ся пасив</td>
+</tr>
+<tr>
+<td>застосовуватися</td>
+<td>to be applied</td>
+<td>-ся пасив</td>
+</tr>
+<tr>
+<td>досліджуватися</td>
+<td>to be researched</td>
+<td>-ся пасив</td>
+</tr>
+<tr>
+<td>публікуватися</td>
+<td>to be published</td>
+<td>-ся пасив</td>
+</tr>
+<tr>
+<td>розглядатися</td>
+<td>to be considered</td>
+<td>-ся пасив</td>
+</tr>
+<tr>
+<td>аналізуватися</td>
+<td>to be analyzed</td>
+<td>-ся пасив</td>
+</tr>
+<tr>
+<td>оновлюватися</td>
+<td>to be updated</td>
+<td>-ся пасив</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-11">
+        <div class="section-header" onclick="toggleSection(11)">
+          <h3>Підсумок</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Зворотний пасив -ся</h2>
+<table>
+<thead>
+<tr>
+<th>Аспект</th>
+<th>Характеристика</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Форма</strong></td>
+<td>Дієслово + -ся</td>
+</tr>
+<tr>
+<td><strong>Особа</strong></td>
+<td>Переважно 3-я</td>
+</tr>
+<tr>
+<td><strong>Фокус</strong></td>
+<td>Процес, не результат</td>
+</tr>
+<tr>
+<td><strong>Стиль</strong></td>
+<td>Науковий, технічний</td>
+</tr>
+</tbody>
+</table>
+<h2 id="-1">Порівняння форм</h2>
+<table>
+<thead>
+<tr>
+<th>Форма</th>
+<th>Коли вживати</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-ся пасив</td>
+<td>Процеси, загальні правила</td>
+</tr>
+<tr>
+<td>Дієприкметник</td>
+<td>Результати, стани</td>
+</tr>
+<tr>
+<td>-но/-то</td>
+<td>Офіційні факти</td>
+</tr>
+<tr>
+<td>3-я ос. мн.</td>
+<td>Розмовна мова</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p><strong>Запам'ятайте:</strong></p>
+  <p>✓ -ся пасив описує <strong>процеси</strong> та <strong>загальні твердження</strong><br />
+  ✓ Домінує в <strong>науковому</strong> та <strong>технічному</strong> стилях<br />
+  ✓ Діяч <strong>зазвичай опускається</strong><br />
+  ✓ Для офіційних документів краще <strong>-но/-то</strong><br />
+  ✓ Для розмовної мови краще <strong>3-я особа множини</strong></p>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('vocab')">Start →</button></div>
     </section>
     
@@ -713,6 +926,10 @@
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

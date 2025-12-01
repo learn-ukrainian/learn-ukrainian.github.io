@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,7 +136,22 @@
         <p style="color:var(--text-muted)">Інтеграція B2.2: Історичний текст</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>Ви завершуєте фазу B2.2! За ці модулі ви опанували:</h4><div class="md-content"><ul>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Зміст уроку</li><li class="toc-item" data-target="section-1">Вправи</li><li class="toc-item" data-target="section-2">Словник до тексту</li><li class="toc-item" data-target="section-3">Підсумок B2.2</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Зміст уроку</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Вступ</h2>
+<p>Ви завершуєте фазу B2.2! За ці модулі ви опанували:</p>
+<ul>
 <li><strong>Історію України</strong> від Трипілля до Речі Посполитої</li>
 <li><strong>Ідіоми</strong> з тематикою тіла, тварин і природи</li>
 <li><strong>Синоніми</strong> дієслів мовлення, мислення та пам'яті</li>
@@ -129,7 +162,567 @@
 <blockquote>
   <p><strong>Чи знали ви?</strong></p>
   <p>Данило Галицький — єдиний український правитель, який офіційно носив титул <strong>«короля»</strong> (Rex Russiae). Папа Римський Інокентій IV надіслав йому корону в 1253 році. Цікаво, що Данило спочатку <strong>вагався</strong> — він розумів, що Захід не дасть реальної військової допомоги проти монголів. Але погодився, сподіваючись на дипломатичні переваги.</p>
-</blockquote></div></div></div>
+</blockquote>
+<hr />
+<blockquote>
+  <p><strong>Міф vs Факт</strong></p>
+  <p>❌ <strong>Міф:</strong> Данило Галицький заснував Львів і назвав на честь свого сина Лева.</p>
+  <p>✅ <strong>Факт:</strong> Так, але з нюансом! Історики досі дискутують, чи Львів існував до Данила як невелике поселення. Данило <strong>розбудував</strong> його в потужне місто і назвав на честь сина Лева. Львів швидко став одним із найбільших міст Центральної Європи!</p>
+</blockquote>
+<hr />
+<p>Читаючи текст, звертайте увагу на виділені слова — це ідіоми, синоніми та граматичні конструкції, які ми вивчали. Після читання ви проаналізуєте текст і виконаєте інтеграційні вправи.</p>
+<h2 id="-1">Текст для читання</h2>
+<h3 id="-2">Данило Галицький: Король, який не схилив голови</h3>
+<p><em>Читайте текст уважно, звертаючи увагу на виділені ідіоми, синоніми та сполучники.</em></p>
+<hr />
+<p><strong>Багато води утекло</strong> з часів розквіту Київської Русі. <strong>Після того як</strong> монгольські орди <strong>зруйнували</strong> Київ у 1240 році, здавалося, що руська державність <strong>канула у воду</strong> назавжди. <strong>Проте</strong>, <strong>хоча</strong> центральні землі було спустошено, західні терени вистояли.</p>
+<p>Данило Романович, князь Галицький та Волинський, був людиною зі <strong>світлою головою</strong> та <strong>золотими руками</strong>. Він <strong>усвідомлював</strong>, що для виживання держави потрібні союзники. <strong>Оскільки</strong> монголи загрожували всій Європі, Данило <strong>звернувся</strong> до Папи Римського Інокентія IV з пропозицією церковної унії.</p>
+<p>Переговори тривали роками. Данило <strong>гадав</strong>, що унія принесе військову допомогу. Він <strong>наполягав</strong> на конкретних обіцянках, але <strong>усвідомлював</strong>, що слова Заходу — часто порожні. <strong>Тим не менш</strong>, <strong>попри</strong> сумніви, він погодився на коронацію.</p>
+<p>У 1253 році, <strong>як тільки</strong> посланці Папи прибули до Дорогичина, Данила <strong>коронувано</strong> як Rex Russiae — Короля Русі. Це було перше і єдине таке визнання в історії! <strong>Незважаючи на те що</strong> титул був символічним, він легітимізував Данила в очах європейських монархів.</p>
+<p><strong>Проте</strong> <strong>камінь на серці</strong> не давав спокою. Данило <strong>пам'ятав</strong>, що хрестоносці обіцяли допомогу, але реальних військ не надали. Він <strong>згадував</strong> слова батька: «Не вір словам — вір ділам». <strong>Через те що</strong> допомога не надійшла, Данило був змушений тимчасово визнати зверхність Золотої Орди.</p>
+<p><strong>Хоча</strong> політика вимагала компромісів, Данило <strong>не опускав рук</strong>. Він <strong>працював як кінь</strong>, розбудовуючи державу: засновував міста, будував замки, реформував військо. Львів, названий на честь сина Лева, <strong>пустив коріння</strong> і став одним із найбільших міст регіону.</p>
+<p><strong>Перед тим як</strong> піти з життя у 1264 році, Данило встиг побачити плоди своєї праці. Галицько-Волинське князівство стало потужною державою, яку <strong>поважали</strong> і в Європі, і на Сході. Данило <strong>тримав державу в руках</strong> до останнього подиху.</p>
+<p><strong>Після того як</strong> він помер, його нащадки — Лев, Шварно, Юрій — продовжували боротьбу. <strong>Доки</strong> династія Романовичів правила, держава процвітала. <strong>Проте</strong> у 1340 році, <strong>коли</strong> останній князь Юрій II загинув, Галичина перейшла під владу Польщі.</p>
+<p><strong>Багато води утекло</strong> з тих часів. <strong>Проте</strong> пам'ять про Данила — короля, який <strong>не схилив голови</strong> ні перед монголами, ні перед Заходом — живе в серцях українців.</p>
+<hr />
+<h2 id="-3">Аналіз тексту</h2>
+<h3 id="-4">Ідіоми в тексті</h3>
+<table>
+<thead>
+<tr>
+<th>Ідіома</th>
+<th>Значення</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>багато води утекло</strong></td>
+<td>минуло багато часу</td>
+<td>a lot of water under the bridge</td>
+</tr>
+<tr>
+<td><strong>канути у воду</strong></td>
+<td>зникнути безслідно</td>
+<td>to vanish, disappear</td>
+</tr>
+<tr>
+<td><strong>світла голова</strong></td>
+<td>розумна людина</td>
+<td>bright mind</td>
+</tr>
+<tr>
+<td><strong>золоті руки</strong></td>
+<td>майстер своєї справи</td>
+<td>golden hands</td>
+</tr>
+<tr>
+<td><strong>камінь на серці</strong></td>
+<td>тривога, занепокоєння</td>
+<td>a weight on one's heart</td>
+</tr>
+<tr>
+<td><strong>не опускати рук</strong></td>
+<td>не здаватися</td>
+<td>to not give up</td>
+</tr>
+<tr>
+<td><strong>працювати як кінь</strong></td>
+<td>дуже важко працювати</td>
+<td>to work like a horse</td>
+</tr>
+<tr>
+<td><strong>пустити коріння</strong></td>
+<td>закріпитися, прижитися</td>
+<td>to put down roots</td>
+</tr>
+<tr>
+<td><strong>тримати в руках</strong></td>
+<td>контролювати</td>
+<td>to keep control</td>
+</tr>
+<tr>
+<td><strong>не схилити голови</strong></td>
+<td>не скоритися</td>
+<td>to not bow one's head</td>
+</tr>
+</tbody>
+</table>
+<h3 id="-5">Синоніми дієслів у тексті</h3>
+<table>
+<thead>
+<tr>
+<th>Група</th>
+<th>Дієслова</th>
+<th>Контекст</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Мислення</strong></td>
+<td>усвідомлював, гадав</td>
+<td>Данило розумів ситуацію</td>
+</tr>
+<tr>
+<td><strong>Мовлення</strong></td>
+<td>звернувся, наполягав</td>
+<td>Дипломатичні переговори</td>
+</tr>
+<tr>
+<td><strong>Пам'ять</strong></td>
+<td>пам'ятав, згадував</td>
+<td>Спогади про батька</td>
+</tr>
+</tbody>
+</table>
+<h3 id="-6">Сполучники в тексті</h3>
+<table>
+<thead>
+<tr>
+<th>Сполучник</th>
+<th>Тип</th>
+<th>Функція</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>після того як</strong></td>
+<td>часовий</td>
+<td>послідовність подій</td>
+</tr>
+<tr>
+<td><strong>хоча / проте</strong></td>
+<td>допустовий</td>
+<td>протиріччя</td>
+</tr>
+<tr>
+<td><strong>оскільки</strong></td>
+<td>причиновий</td>
+<td>пояснення причини</td>
+</tr>
+<tr>
+<td><strong>як тільки</strong></td>
+<td>часовий</td>
+<td>негайна послідовність</td>
+</tr>
+<tr>
+<td><strong>незважаючи на те що</strong></td>
+<td>допустовий</td>
+<td>всупереч</td>
+</tr>
+<tr>
+<td><strong>через те що</strong></td>
+<td>причиновий</td>
+<td>негативна причина</td>
+</tr>
+<tr>
+<td><strong>перед тим як</strong></td>
+<td>часовий</td>
+<td>до події</td>
+</tr>
+<tr>
+<td><strong>доки</strong></td>
+<td>часовий</td>
+<td>тривалість</td>
+</tr>
+<tr>
+<td><strong>коли</strong></td>
+<td>часовий/умовний</td>
+<td>момент у часі</td>
+</tr>
+</tbody>
+</table>
+<h3 id="-7">Пасив у тексті</h3>
+<table>
+<thead>
+<tr>
+<th>Активний</th>
+<th>Пасив (-но/-то)</th>
+<th>Контекст</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Монголи зруйнували Київ</td>
+<td>Київ зруйновано</td>
+<td>Історичний факт</td>
+</tr>
+<tr>
+<td>Центр спустошено</td>
+<td>центральні землі було спустошено</td>
+<td>Наслідки навали</td>
+</tr>
+<tr>
+<td>Папа коронував Данила</td>
+<td>Данила коронувано</td>
+<td>Офіційна церемонія</td>
+</tr>
+</tbody>
+</table>
+<h2 id="-8">Практика</h2>
+<h3 id="1">Вправа 1: Знайдіть ідіоми</h3>
+<p>Знайдіть у тексті ідіоми та поясніть їх значення:</p>
+<ol>
+<li>«Здавалося, що руська державність канула у воду.»</li>
+<li>«Камінь на серці не давав спокою.»</li>
+<li>«Данило не опускав рук.»</li>
+<li>«Львів пустив коріння.»</li>
+<li>«Король, який не схилив голови.»</li>
+</ol>
+<p><details><br />
+<summary>Відповіді</summary></p>
+<ol>
+<li>Зникла безслідно (vanished without a trace)</li>
+<li>Тривога, занепокоєння (a weight on his heart)</li>
+<li>Не здавався (didn't give up)</li>
+<li>Закріпився, став важливим (put down roots)</li>
+<li>Не скорився (didn't bow his head / didn't submit)<br />
+</details></li>
+</ol>
+<h3 id="2">Вправа 2: Визначте тип сполучника</h3>
+<p>Визначте тип кожного сполучника (причиновий / допустовий / часовий):</p>
+<ol>
+<li>«Хоча центр було знищено, західні землі вистояли.»</li>
+<li>«Оскільки монголи загрожували Європі…»</li>
+<li>«Як тільки посланці прибули…»</li>
+<li>«Через те що допомога не надійшла…»</li>
+<li>«Доки династія правила, держава процвітала.»</li>
+</ol>
+<p><details><br />
+<summary>Відповіді</summary></p>
+<ol>
+<li>Допустовий (although)</li>
+<li>Причиновий (since/because)</li>
+<li>Часовий (as soon as)</li>
+<li>Причиновий (because/due to)</li>
+<li>Часовий (while/as long as)<br />
+</details></li>
+</ol>
+<h3 id="3">Вправа 3: Замініть синонімами</h3>
+<p>Замініть виділені дієслова на синоніми:</p>
+<ol>
+<li>«Данило <strong>усвідомлював</strong>, що потрібні союзники.»</li>
+<li>«Він <strong>звернувся</strong> до Папи з пропозицією.»</li>
+<li>«Данило <strong>пам'ятав</strong> слова батька.»</li>
+<li>«Він <strong>гадав</strong>, що унія допоможе.»</li>
+</ol>
+<p><details><br />
+<summary>Відповіді</summary></p>
+<ol>
+<li>розумів, збагнув, осягав</li>
+<li>попросив, апелював, повідомив</li>
+<li>згадував, тримав у пам'яті</li>
+<li>вважав, думав, сподівався<br />
+</details></li>
+</ol>
+<h3 id="4">Вправа 4: Активний ↔ Пасив</h3>
+<p>Трансформуйте:</p>
+<ol>
+<li>«Папа коронував Данила.» → пасив (-но/-то)</li>
+<li>«Київ зруйновано.» → активний стан</li>
+<li>«Монголи спустошили землі.» → пасив (-но/-то)</li>
+<li>«Державу збережено.» → активний стан</li>
+</ol>
+<p><details><br />
+<summary>Відповіді</summary></p>
+<ol>
+<li>Данила коронувано.</li>
+<li>Монголи зруйнували Київ.</li>
+<li>Землі спустошено.</li>
+<li>Данило зберіг державу.<br />
+</details></li>
+</ol>
+<h3 id="5">Вправа 5: Дайте відповіді на запитання</h3>
+<p>Дайте повні відповіді, використовуючи вивчені сполучники:</p>
+<ol>
+<li>Чому Данило звернувся до Папи?</li>
+<li>Хоча Данило отримав корону, чому він тривожився?</li>
+<li>Що зробив Данило, перш ніж померти?</li>
+<li>Коли Галичина перейшла під владу Польщі?</li>
+</ol>
+<p><details><br />
+<summary>Відповіді</summary></p>
+<ol>
+<li>Данило звернувся до Папи, <strong>оскільки</strong> йому потрібні були союзники проти монголів.</li>
+<li><strong>Хоча</strong> він став королем, камінь на серці не давав спокою, <strong>тому що</strong> Захід не надав реальної допомоги.</li>
+<li><strong>Перед тим як</strong> померти, Данило встиг розбудувати державу та заснувати Львів.</li>
+<li><strong>Коли</strong> / <strong>Після того як</strong> останній князь Юрій II загинув у 1340 році, Галичина перейшла під владу Польщі.<br />
+</details></li>
+</ol>
+<h2 id="-9">Продукція</h2>
+<h3 id="1-1">Завдання 1: Перекажіть текст</h3>
+<p>Перекажіть історію Данила Галицького (10-15 речень), використовуючи:</p>
+<ul>
+<li>Мінімум 4 ідіоми</li>
+<li>Різні типи сполучників (причинові, допустові, часові)</li>
+<li>Синоніми дієслів мислення та мовлення</li>
+<li>Пасив -но/-то (де доречно)</li>
+</ul>
+<p><strong>Початок:</strong><br />
+«Після того як монголи зруйнували Київ у 1240 році, руська державність опинилася на межі зникнення. Проте на заході піднявся новий лідер…»</p>
+<h3 id="2-1">Завдання 2: Історичний есей</h3>
+<p>Напишіть короткий есей (7-10 речень) на тему:<br />
+«Чи був Данило Галицький успішним правителем?»</p>
+<p>Використовуйте:</p>
+<ul>
+<li>Причинові сполучники для аргументації («оскільки», «завдяки тому що», «через те що»)</li>
+<li>Допустові сполучники для контраргументів («хоча», «попри те що», «незважаючи на»)</li>
+<li>Ідіоми для образності</li>
+</ul>
+<h3 id="3-1">Завдання 3: Сучасні паралелі</h3>
+<p>Обговоріть:</p>
+<ol>
+<li>Чи є паралелі між ситуацією Данила і сучасною Україною?</li>
+<li>Як можна застосувати ідіому «не схилити голови» до сучасних подій?</li>
+<li>Чи актуальна дилема «Схід vs Захід» сьогодні?</li>
+</ol>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Вправи</h3>
+          <span class="section-type practice">practice</span>
+        </div>
+        <div class="section-body md-content"><h2 id="quizb22">quiz: Інтеграція B2.2</h2>
+<blockquote>
+  <p>Виберіть правильну відповідь.</p>
+</blockquote>
+<ol>
+<li>«Канути у воду» означає:</li>
+</ol>
+<ul>
+<li>[x] зникнути безслідно</li>
+<li>[ ] потонути у воді</li>
+</ul>
+<blockquote>
+  <p>Ідіома = зникнути.</p>
+</blockquote>
+<ol start="2">
+<li>«Оскільки» виражає:</li>
+</ol>
+<ul>
+<li>[x] причину</li>
+<li>[ ] допустовість</li>
+</ul>
+<blockquote>
+  <p>Причиновий сполучник.</p>
+</blockquote>
+<ol start="3">
+<li>У реченні «Данила коронувано» використано:</li>
+</ol>
+<ul>
+<li>[x] пасив -но/-то</li>
+<li>[ ] активний стан</li>
+</ul>
+<blockquote>
+  <p>Офіційний пасив.</p>
+</blockquote>
+<ol start="4">
+<li>«Усвідомлювати» порівняно з «розуміти» означає:</li>
+</ol>
+<ul>
+<li>[x] глибше розуміння</li>
+<li>[ ] поверхневіше</li>
+</ul>
+<blockquote>
+  <p>Усвідомлювати = to be fully aware.</p>
+</blockquote>
+<ol start="5">
+<li>«Незважаючи на те що» виражає:</li>
+</ol>
+<ul>
+<li>[x] допустовість</li>
+<li>[ ] причину</li>
+</ul>
+<blockquote>
+  <p>Despite the fact that.</p>
+</blockquote>
+<ol start="6">
+<li>«Не схилити голови» означає:</li>
+</ol>
+<ul>
+<li>[x] не скоритися</li>
+<li>[ ] не нахиляти голову</li>
+</ul>
+<blockquote>
+  <p>Ідіома = не підкоритися.</p>
+</blockquote>
+<ol start="7">
+<li>«Після того як» — це сполучник:</li>
+</ol>
+<ul>
+<li>[x] часовий</li>
+<li>[ ] умовний</li>
+</ul>
+<blockquote>
+  <p>Часова послідовність.</p>
+</blockquote>
+<ol start="8">
+<li>«Через те що» виражає:</li>
+</ol>
+<ul>
+<li>[x] негативну причину</li>
+<li>[ ] позитивну причину</li>
+</ul>
+<blockquote>
+  <p>«Завдяки» — позитивна, «через» — негативна.</p>
+</blockquote>
+<ol start="9">
+<li>«Доки династія правила» означає:</li>
+</ol>
+<ul>
+<li>[x] as long as / while</li>
+<li>[ ] because</li>
+</ul>
+<blockquote>
+  <p>Тривалість у часі.</p>
+</blockquote>
+<ol start="10">
+<li>«Працювати як кінь» означає:<ul>
+<li>[x] дуже важко працювати</li>
+<li>[ ] працювати у полі<br />
+&gt; Ідіома = to work very hard.</li></ul></li>
+</ol>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Словник до тексту</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Слово</th>
+<th>Вимова</th>
+<th>Переклад</th>
+<th>Примітки</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>король</td>
+<td>/kɔˈrɔlʲ/</td>
+<td>king</td>
+<td>m</td>
+</tr>
+<tr>
+<td>корона</td>
+<td>/kɔˈrɔnɑ/</td>
+<td>crown</td>
+<td>f</td>
+</tr>
+<tr>
+<td>коронувати</td>
+<td>/kɔrɔnuˈwɑtɪ/</td>
+<td>to crown</td>
+<td>pf/ipf</td>
+</tr>
+<tr>
+<td>союзник</td>
+<td>/sɔˈjuznɪk/</td>
+<td>ally</td>
+<td>m</td>
+</tr>
+<tr>
+<td>загрожувати</td>
+<td>/zɑɦrɔˈʒuwɑtɪ/</td>
+<td>to threaten</td>
+<td>ipf</td>
+</tr>
+<tr>
+<td>унія</td>
+<td>/ˈunʲijɑ/</td>
+<td>union</td>
+<td>f</td>
+</tr>
+<tr>
+<td>нащадок</td>
+<td>/nɑˈʃt͡ʃɑdɔk/</td>
+<td>descendant</td>
+<td>m</td>
+</tr>
+<tr>
+<td>князівство</td>
+<td>/knʲɑˈzʲiwstwɔ/</td>
+<td>principality</td>
+<td>n</td>
+</tr>
+<tr>
+<td>орда</td>
+<td>/ɔrˈdɑ/</td>
+<td>horde</td>
+<td>f</td>
+</tr>
+<tr>
+<td>хрестоносці</td>
+<td>/xrɛstɔˈnɔsʲt͡sʲi/</td>
+<td>crusaders</td>
+<td>pl</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Підсумок B2.2</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Що ми вивчили</h2>
+<table>
+<thead>
+<tr>
+<th>Тема</th>
+<th>Ключові елементи</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Історія</strong></td>
+<td>Трипілля → Русь → Галичина → Литва → Польща</td>
+</tr>
+<tr>
+<td><strong>Ідіоми</strong></td>
+<td>Тіло, тварини, природа</td>
+</tr>
+<tr>
+<td><strong>Синоніми</strong></td>
+<td>Мовлення, мислення, пам'ять</td>
+</tr>
+<tr>
+<td><strong>Граматика</strong></td>
+<td>Причинові, допустові, часові, умовні сполучники</td>
+</tr>
+<tr>
+<td><strong>Лексика</strong></td>
+<td>Медицина, технології</td>
+</tr>
+</tbody>
+</table>
+<h2 id="-1">Інтеграційні навички</h2>
+<ul>
+<li>Розпізнавання ідіом у контексті</li>
+<li>Вибір синонімів за стилем</li>
+<li>Трансформація активний ↔ пасив</li>
+<li>Аналіз складних речень</li>
+</ul>
+<h2 id="-2">Головне</h2>
+<blockquote>
+  <p><strong>Запам'ятайте:</strong></p>
+  <ul>
+  <li>Ідіоми додають образності</li>
+  <li>Синоніми дозволяють варіювати стиль</li>
+  <li>Сполучники структурують думку</li>
+  <li>Пасив -но/-то — маркер офіційного стилю</li>
+  <li>Всі ці інструменти разом = просунутий рівень!</li>
+  </ul>
+</blockquote>
+<hr />
+<p><strong>Вітаємо! Ви завершили фазу B2.2!</strong></p>
+<p>Тепер ви готові до фінальних модулів B2 і переходу до рівня C1!</p></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('quiz')">Start →</button></div>
     </section>
     
@@ -167,6 +760,10 @@
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,13 +136,31 @@
         <p style="color:var(--text-muted)">Climate, Pollution, and Sustainability</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Довкілля | The Environment</h4><div class="md-content"><p>Екологічні питання важливі для всіх:</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Зміст уроку | Lesson Content</li><li class="toc-item" data-target="section-1">Activities</li><li class="toc-item" data-target="section-2">Vocabulary</li><li class="toc-item" data-target="section-3">Summary</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Зміст уроку | Lesson Content</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="warmup">warm-up | Розминка</h2>
+<h3 id="theenvironment">Довкілля | The Environment</h3>
+<p>Екологічні питання важливі для всіх:</p>
 <p>Environmental issues are important for everyone:</p>
 <ul>
 <li>Які <strong>екологічні проблеми</strong> ви знаєте? | What environmental problems do you know?</li>
 <li>Що ви робите для <strong>захисту довкілля</strong>? | What do you do to protect the environment?</li>
 <li>Чи хвилює вас <strong>зміна клімату</strong>? | Are you worried about climate change?</li>
-</ul></div></div><div class="canvas-note"><h4>### Довкілля та природа | Environment and Nature</h4><div class="md-content"><table>
+</ul>
+<h2 id="presentation">presentation | Презентація</h2>
+<h3 id="environmentandnature">Довкілля та природа | Environment and Nature</h3>
+<table>
 <thead>
 <tr>
 <th>Ukrainian</th>
@@ -177,7 +213,9 @@
 <li>Ми повинні захищати <strong>довкілля</strong>. - We must protect the environment.</li>
 <li><strong>Природа</strong> потребує нашої допомоги. - Nature needs our help.</li>
 <li><strong>Екологія</strong> — важлива наука. - Ecology is an important science.</li>
-</ul></div></div><div class="canvas-note"><h4>Клімат | Climate</h4><div class="md-content"><table>
+</ul>
+<h3 id="climate">Клімат | Climate</h3>
+<table>
 <thead>
 <tr>
 <th>Ukrainian</th>
@@ -242,7 +280,9 @@
 <li><strong>Зміна клімату</strong> — глобальна проблема. - Climate change is a global problem.</li>
 <li>Через <strong>посуху</strong> врожай знищено. - The harvest was destroyed due to drought.</li>
 <li><strong>Глобальне потепління</strong> впливає на всю планету. - Global warming affects the entire planet.</li>
-</ul></div></div><div class="canvas-note"><h4>Забруднення | Pollution</h4><div class="md-content"><table>
+</ul>
+<h3 id="pollution">Забруднення | Pollution</h3>
+<table>
 <thead>
 <tr>
 <th>Ukrainian</th>
@@ -338,7 +378,9 @@
 <li><strong>Забруднення повітря</strong> шкодить здоров'ю. - Air pollution harms health.</li>
 <li>Заводи <strong>забруднюють</strong> річки. - Factories pollute rivers.</li>
 <li>Потрібно зменшити <strong>викиди</strong> CO₂. - We need to reduce CO₂ emissions.</li>
-</ul></div></div><div class="canvas-note"><h4>Ресурси та енергія | Resources and Energy</h4><div class="md-content"><table>
+</ul>
+<h3 id="resourcesandenergy">Ресурси та енергія | Resources and Energy</h3>
+<table>
 <thead>
 <tr>
 <th>Ukrainian</th>
@@ -409,7 +451,9 @@
 <li><strong>Природні ресурси</strong> обмежені. - Natural resources are limited.</li>
 <li>Треба переходити на <strong>відновлювану енергію</strong>. - We need to switch to renewable energy.</li>
 <li><strong>Сонячна енергія</strong> — чиста і безпечна. - Solar energy is clean and safe.</li>
-</ul></div></div><div class="canvas-note"><h4>Захист довкілля | Environmental Protection</h4><div class="md-content"><table>
+</ul>
+<h3 id="environmentalprotection">Захист довкілля | Environmental Protection</h3>
+<table>
 <thead>
 <tr>
 <th>Ukrainian</th>
@@ -474,7 +518,9 @@
 <li>Ми повинні <strong>захищати</strong> ліси. - We must protect forests.</li>
 <li><strong>Переробка</strong> сміття важлива. - Recycling waste is important.</li>
 <li><strong>Заповідники</strong> зберігають рідкісних тварин. - Reserves preserve rare animals.</li>
-</ul></div></div><div class="canvas-note"><h4>Екологічні дії | Environmental Actions</h4><div class="md-content"><table>
+</ul>
+<h3 id="environmentalactions">Екологічні дії | Environmental Actions</h3>
+<table>
 <thead>
 <tr>
 <th>Ukrainian</th>
@@ -524,7 +570,9 @@
 <td>impf/pf</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Екологічні вирази | Environmental Expressions</h4><div class="md-content"><table>
+</table>
+<h3 id="environmentalexpressions">Екологічні вирази | Environmental Expressions</h3>
+<table>
 <thead>
 <tr>
 <th>Ukrainian</th>
@@ -561,14 +609,19 @@
 <td>sustainable development</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>### Complete with Correct Word</h4><div class="md-content"><ol>
+</table>
+<h2 id="practice">practice | Практика</h2>
+<h3 id="completewithcorrectword">Complete with Correct Word</h3>
+<ol>
 <li>___ (Climate change) — глобальна проблема. → <strong>Зміна клімату</strong></li>
 <li>Заводи ___ (pollute) річки. → <strong>забруднюють</strong></li>
 <li>Треба ___ (to recycle) пластик. → <strong>переробляти</strong></li>
 <li>___ (Air pollution) шкодить здоров'ю. → <strong>Забруднення повітря</strong></li>
 <li>Ми повинні ___ (to protect) природу. → <strong>захищати</strong></li>
 <li>___ (Solar energy) — чиста енергія. → <strong>Сонячна енергія</strong></li>
-</ol></div></div><div class="canvas-note"><h4>Match Problem with Solution</h4><div class="md-content"><table>
+</ol>
+<h3 id="matchproblemwithsolution">Match Problem with Solution</h3>
+<table>
 <thead>
 <tr>
 <th>Problem</th>
@@ -597,13 +650,17 @@
 <td>охорона природних територій</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Discussion Questions</h4><div class="md-content"><ol>
+</table>
+<h3 id="discussionquestions">Discussion Questions</h3>
+<ol>
 <li>Що ви робите для <strong>захисту довкілля</strong>?</li>
 <li>Чи <strong>сортуєте</strong> ви сміття?</li>
 <li>Які <strong>екологічні проблеми</strong> є у вашому місті?</li>
 <li>Чи хвилює вас <strong>зміна клімату</strong>?</li>
 <li>Що може зробити кожна людина для <strong>природи</strong>?</li>
-</ol></div></div><div class="canvas-note"><h4>Translate to Ukrainian</h4><div class="md-content"><ol>
+</ol>
+<h3 id="translatetoukrainian">Translate to Ukrainian</h3>
+<ol>
 <li><p>Climate change is a serious problem.<br />
 → <strong>Зміна клімату — серйозна проблема.</strong></p></li>
 <li><p>We need to reduce pollution.<br />
@@ -614,26 +671,263 @@
 → <strong>Відновлювана енергія — це майбутнє.</strong></p></li>
 <li><p>Everyone should protect nature.<br />
 → <strong>Кожен повинен захищати природу.</strong></p></li>
-</ol></div></div><div class="canvas-note"><h4>### Describe Environmental Actions</h4><div class="md-content"><p>Talk about what you do for the environment:</p>
+</ol>
+<h2 id="production">production | Продукція</h2>
+<h3 id="describeenvironmentalactions">Describe Environmental Actions</h3>
+<p>Talk about what you do for the environment:</p>
 <ul>
 <li>Чи ви <strong>сортуєте</strong> сміття?</li>
 <li>Чи ви <strong>економите</strong> воду та електроенергію?</li>
 <li>Чи ви <strong>використовуєте</strong> еко-сумки?</li>
 </ul>
 <p><strong>Example:</strong><br />
-Я намагаюся <strong>захищати довкілля</strong>. Я <strong>сортую</strong> сміття і <strong>переробляю</strong> пластик. Я <strong>економлю</strong> воду і вимикаю світло, коли виходжу з кімнати. Я намагаюся менше їздити на машині.</p></div></div><div class="canvas-note"><h4>Discuss Environmental Issues</h4><div class="md-content"><p>Discuss using vocabulary from this module:</p>
+Я намагаюся <strong>захищати довкілля</strong>. Я <strong>сортую</strong> сміття і <strong>переробляю</strong> пластик. Я <strong>економлю</strong> воду і вимикаю світло, коли виходжу з кімнати. Я намагаюся менше їздити на машині.</p>
+<h3 id="discussenvironmentalissues">Discuss Environmental Issues</h3>
+<p>Discuss using vocabulary from this module:</p>
 <ul>
 <li>Яка <strong>екологічна проблема</strong> найсерйозніша?</li>
 <li>Як можна боротися із <strong>забрудненням</strong>?</li>
 <li>Чи потрібно переходити на <strong>відновлювану енергію</strong>?</li>
-</ul></div></div></div>
+</ul>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Activities</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="quizenvironmentvocabulary">quiz: Environment Vocabulary</h2>
+<blockquote>
+  <p>Choose the correct word.</p>
+</blockquote>
+<ol>
+<li>___ — глобальна проблема.</li>
+</ol>
+<ul>
+<li>[x] Зміна клімату</li>
+<li>[ ] Клімат зміни</li>
+</ul>
+<ol>
+<li>Заводи ___ річки.</li>
+</ol>
+<ul>
+<li>[x] забруднюють</li>
+<li>[ ] забруднення</li>
+</ul>
+<ol>
+<li>Треба ___ пластик.</li>
+</ol>
+<ul>
+<li>[x] переробляти</li>
+<li>[ ] переробка</li>
+</ul>
+<ol>
+<li>Ми повинні ___ природу.</li>
+</ol>
+<ul>
+<li>[x] захищати</li>
+<li>[ ] захист</li>
+</ul>
+<ol>
+<li>___ повітря шкодить здоров'ю.</li>
+</ol>
+<ul>
+<li>[x] Забруднення</li>
+<li>[ ] Забруднювати</li>
+</ul>
+<ol>
+<li>___ енергія — чиста.</li>
+</ol>
+<ul>
+<li>[x] Сонячна</li>
+<li>[ ] Сонце</li>
+</ul>
+<h2 id="matchupenvironmentalterms">match-up: Environmental Terms</h2>
+<table>
+<thead>
+<tr>
+<th>Problem</th>
+<th>Category</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>забруднення</td>
+<td>pollution</td>
+</tr>
+<tr>
+<td>посуха</td>
+<td>climate</td>
+</tr>
+<tr>
+<td>вирубка лісів</td>
+<td>deforestation</td>
+</tr>
+<tr>
+<td>викиди CO₂</td>
+<td>emissions</td>
+</tr>
+<tr>
+<td>відходи</td>
+<td>waste</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Vocabulary</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Word</th>
+<th>IPA</th>
+<th>English</th>
+<th>Gender</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>довкілля</td>
+<td>/dovˈkʲilʲːɑ/</td>
+<td>environment</td>
+<td>n</td>
+</tr>
+<tr>
+<td>природа</td>
+<td>/prɪˈrodɑ/</td>
+<td>nature</td>
+<td>f</td>
+</tr>
+<tr>
+<td>клімат</td>
+<td>/klʲiˈmɑt/</td>
+<td>climate</td>
+<td>m</td>
+</tr>
+<tr>
+<td>забруднення</td>
+<td>/zɑˈbrudnɛnʲːɑ/</td>
+<td>pollution</td>
+<td>n</td>
+</tr>
+<tr>
+<td>сміття</td>
+<td>/smʲiˈtʲːɑ/</td>
+<td>garbage</td>
+<td>n</td>
+</tr>
+<tr>
+<td>відходи</td>
+<td>/vʲidˈxodɪ/</td>
+<td>waste</td>
+<td>pl</td>
+</tr>
+<tr>
+<td>ресурси</td>
+<td>/rɛˈsursɪ/</td>
+<td>resources</td>
+<td>pl</td>
+</tr>
+<tr>
+<td>енергія</td>
+<td>/ɛˈnɛrɦʲijɑ/</td>
+<td>energy</td>
+<td>f</td>
+</tr>
+<tr>
+<td>переробка</td>
+<td>/pɛrɛˈrobkɑ/</td>
+<td>recycling</td>
+<td>f</td>
+</tr>
+<tr>
+<td>захист</td>
+<td>/ˈzɑxɪst/</td>
+<td>protection</td>
+<td>m</td>
+</tr>
+<tr>
+<td>заповідник</td>
+<td>/zɑpoˈvʲidnɪk/</td>
+<td>nature reserve</td>
+<td>m</td>
+</tr>
+<tr>
+<td>стійкість</td>
+<td>/stʲijˈkʲistʲ/</td>
+<td>sustainability</td>
+<td>f</td>
+</tr>
+<tr>
+<td>посуха</td>
+<td>/poˈsuxɑ/</td>
+<td>drought</td>
+<td>f</td>
+</tr>
+<tr>
+<td>повінь</td>
+<td>/poˈvʲinʲ/</td>
+<td>flood</td>
+<td>f</td>
+</tr>
+<tr>
+<td>викиди</td>
+<td>/ˈvɪkɪdɪ/</td>
+<td>emissions</td>
+<td>pl</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Summary</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="keyenvironmentalvocabulary">Key Environmental Vocabulary</h2>
+<h3 id="environment">Environment</h3>
+<p>довкілля, природа, екологія, екосистема, біорізноманіття</p>
+<h3 id="climate">Climate</h3>
+<p>клімат, зміна клімату, глобальне потепління, посуха, повінь</p>
+<h3 id="pollution">Pollution</h3>
+<p>забруднення, сміття, відходи, викиди, токсичний</p>
+<h3 id="resourcesenergy">Resources &amp; Energy</h3>
+<p>ресурси, енергія, паливо, сонячна/вітрова енергія</p>
+<h3 id="protection">Protection</h3>
+<p>захист, охорона, переробка, сортування, заповідник</p>
+<h2 id="usefulexpressions">Useful Expressions</h2>
+<ul>
+<li>Зміна клімату - Climate change</li>
+<li>Забруднення повітря/води - Air/water pollution</li>
+<li>Відновлювана енергія - Renewable energy</li>
+<li>Захист довкілля - Environmental protection</li>
+<li>Переробка відходів - Waste recycling</li>
+<li>Сталий розвиток - Sustainable development</li>
+</ul>
+<blockquote>
+  <p><strong>Key Takeaways</strong></p>
+  <ul>
+  <li>довкілля = environment (more common than навколишнє середовище)</li>
+  <li>забруднення (noun) vs забруднювати (verb)</li>
+  <li>переробка (recycling) vs сортування (sorting)</li>
+  <li>Many environmental terms are compounds: зміна клімату, захист природи</li>
+  <li>Verbs follow aspect patterns: захищати/захистити</li>
+  </ul>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('match')">Start →</button></div>
     </section>
     <section id="match" class="section"><div class="card"><h3>Environmental Terms</h3>
       <div class="score-display"><span class="score"><span id="match-score">0</span>/5</span></div>
       <div class="match-container" id="match-container"><svg class="match-lines" id="match-lines"></svg>
         <div class="match-column" id="match-left"><div class="match-item" data-pair="0">забруднення</div><div class="match-item" data-pair="1">посуха</div><div class="match-item" data-pair="2">вирубка лісів</div><div class="match-item" data-pair="3">викиди CO₂</div><div class="match-item" data-pair="4">відходи</div></div>
-        <div class="match-column" id="match-right"><div class="match-item" data-pair="0">pollution</div><div class="match-item" data-pair="2">deforestation</div><div class="match-item" data-pair="3">emissions</div><div class="match-item" data-pair="1">climate</div><div class="match-item" data-pair="4">waste</div></div>
+        <div class="match-column" id="match-right"><div class="match-item" data-pair="1">climate</div><div class="match-item" data-pair="0">pollution</div><div class="match-item" data-pair="4">waste</div><div class="match-item" data-pair="3">emissions</div><div class="match-item" data-pair="2">deforestation</div></div>
       </div>
       <div class="completion-message" id="match-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetMatch()">Reset</button><button class="btn btn-primary" onclick="showSection('quiz')">Next →</button></div>
@@ -672,6 +966,10 @@
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

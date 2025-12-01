@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,20 +136,577 @@
         <p style="color:var(--text-muted)">The Imperfective Preference with Не</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### A Common Pattern</h4><div class="md-content"><p>Compare these sentences:</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Lesson Content</li><li class="toc-item" data-target="section-1">Activities</li><li class="toc-item" data-target="section-2">Vocabulary</li><li class="toc-item" data-target="section-3">Summary</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Lesson Content</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="warmup">warm-up</h2>
+<h3 id="acommonpattern">A Common Pattern</h3>
+<p>Compare these sentences:</p>
 <ul>
 <li>Ти <strong>прочитав</strong> книгу? - Did you read the book?</li>
 <li>Ні, я <strong>не читав</strong> її. - No, I didn't read it.</li>
 </ul>
 <p>Notice: The question uses perfective, but the negative answer uses imperfective!</p>
-<p>This is a fundamental pattern in Ukrainian: <strong>negation prefers imperfective</strong>.</p></div></div></div>
+<p>This is a fundamental pattern in Ukrainian: <strong>negation prefers imperfective</strong>.</p>
+<hr />
+<blockquote>
+  <p><strong>🔑 KEY RULE: NEGATION PREFERS IMPERFECTIVE</strong></p>
+  <p>When you negate an action, use <strong>IMPERFECTIVE</strong> by default.</p>
+  <p><strong>Why?</strong> If there's no action, there's no result.</p>
+  <table>
+  <thead>
+  <tr>
+  <th>Positive (perfective)</th>
+  <th>Negative (imperfective)</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+  <td>Я <strong>прочитав</strong> книгу.</td>
+  <td>Я <strong>не читав</strong> цю книгу.</td>
+  </tr>
+  <tr>
+  <td>I read the book.</td>
+  <td>I didn't read this book.</td>
+  </tr>
+  </tbody>
+  </table>
+  <p><strong>Exceptions:</strong></p>
+  <ul>
+  <li>"ще не" (not yet) → perfective: Я <strong>ще не прочитав</strong>.</li>
+  <li>Warnings → perfective: <strong>Не забудь!</strong> (Don't forget!)</li>
+  </ul>
+</blockquote>
+<hr />
+<h2 id="presentation">presentation</h2>
+<h3 id="thegeneralrule">The General Rule</h3>
+<p><strong>In negative sentences, Ukrainian strongly prefers imperfective verbs.</strong></p>
+<p>Why? When you deny an action, you're usually saying "the action didn't happen at all" — there was no process, so there's no result to talk about.</p>
+<p><strong>Positive (perfective):</strong> Я <strong>прочитав</strong> книгу. - I read the book.<br />
+<strong>Negative (imperfective):</strong> Я <strong>не читав</strong> цю книгу. - I didn't read this book.</p>
+<p><strong>Positive (perfective):</strong> Він <strong>написав</strong> листа. - He wrote the letter.<br />
+<strong>Negative (imperfective):</strong> Він <strong>не писав</strong> листа. - He didn't write a letter.</p>
+<h3 id="whyimperfective">Why Imperfective?</h3>
+<p>Think of it this way:</p>
+<ul>
+<li><strong>Perfective</strong> asserts a result: "The book got read."</li>
+<li><strong>Imperfective</strong> describes process: "Reading was happening."</li>
+<li><strong>Negative imperfective</strong> says: "No reading process ever occurred."</li>
+</ul>
+<p>If no process happened, how could there be a result? So imperfective is more logical.</p>
+<h3 id="commonnegationpatterns">Common Negation Patterns</h3>
+<p><strong>"Didn't do" (general negation):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Positive (perfective)</th>
+<th>Negative (imperfective)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Я <strong>зробив</strong> це.</td>
+<td>Я <strong>не робив</strong> цього.</td>
+</tr>
+<tr>
+<td>Вона <strong>написала</strong> листа.</td>
+<td>Вона <strong>не писала</strong> листа.</td>
+</tr>
+<tr>
+<td>Ми <strong>купили</strong> хліб.</td>
+<td>Ми <strong>не купували</strong> хліба.</td>
+</tr>
+<tr>
+<td>Він <strong>сказав</strong> правду.</td>
+<td>Він <strong>не говорив</strong> правди.</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p>Note: Objects often shift to genitive case in negative sentences.</p>
+</blockquote>
+<h3 id="questionsandnegativeanswers">Questions and Negative Answers</h3>
+<p><strong>Question (often perfective):</strong> Ти зробив домашнє? - Did you do your homework?<br />
+<strong>Negative (imperfective):</strong> Ні, не робив. - No, I didn't.</p>
+<p><strong>Question:</strong> Ви купили квитки? - Did you buy tickets?<br />
+<strong>Negative:</strong> Ні, ми не купували. - No, we didn't.</p>
+<p><strong>Question:</strong> Вона подзвонила? - Did she call?<br />
+<strong>Negative:</strong> Ні, не телефонувала. - No, she didn't.</p>
+<h3 id="whenperfectivenegationisused">When Perfective Negation IS Used</h3>
+<p>There are specific cases where perfective is used in negation:</p>
+<p><strong>1. Specific expected result didn't happen:</strong></p>
+<ul>
+<li>Я <strong>не знайшов</strong> ключів. - I didn't find the keys. (I searched, but no result)</li>
+<li>Вона <strong>не встигла</strong> на потяг. - She didn't catch the train. (She tried, but failed)</li>
+<li>Ми <strong>не зрозуміли</strong> його. - We didn't understand him. (Specific failure)</li>
+</ul>
+<p><strong>2. Warning that something won't happen:</strong></p>
+<ul>
+<li>Обережно, <strong>не впади</strong>! - Careful, don't fall!</li>
+<li><strong>Не забудь</strong> ключі! - Don't forget the keys!</li>
+<li><strong>Не запізнись</strong>! - Don't be late!</li>
+</ul>
+<p><strong>3. Emphatic denial of specific action:</strong></p>
+<ul>
+<li>Я цього <strong>не сказав</strong>! - I didn't say that! (denying specific statement)</li>
+<li>Він цього <strong>не зробив</strong>! - He didn't do that! (denying specific deed)</li>
+</ul>
+<h3 id="prohibitiondontdothis">Prohibition: Don't Do This!</h3>
+<p><strong>General prohibition (imperfective):</strong> Don't do this type of action.</p>
+<ul>
+<li><strong>Не кури</strong>! - Don't smoke! (in general)</li>
+<li><strong>Не бійся</strong>! - Don't be afraid!</li>
+<li><strong>Не хвилюйся</strong>! - Don't worry!</li>
+<li><strong>Тут не можна паркуватися</strong>. - Parking is not allowed here.</li>
+</ul>
+<p><strong>Specific warning (perfective):</strong> Don't do this one thing!</p>
+<ul>
+<li><strong>Не впусти</strong> тарілку! - Don't drop the plate!</li>
+<li><strong>Не забудь</strong> зателефонувати! - Don't forget to call!</li>
+<li><strong>Не відкривай</strong> двері! - Don't open the door! (this specific time)</li>
+</ul>
+<h3 id="neveralwaysimperfective">"Never" - Always Imperfective</h3>
+<p>With <strong>ніколи</strong> (never), always use imperfective:</p>
+<ul>
+<li>Я <strong>ніколи не курив</strong>. - I have never smoked.</li>
+<li>Вона <strong>ніколи не бачила</strong> моря. - She has never seen the sea.</li>
+<li>Ми <strong>ніколи не ходили</strong> туди. - We have never been there.</li>
+<li>Він <strong>ніколи не запізнювався</strong>. - He was never late.</li>
+</ul>
+<p><strong>NOT:</strong> <del>Я ніколи не покурив.</del> (Incorrect)</p>
+<h3 id="notyetusuallyperfective">"Not yet" - Usually Perfective</h3>
+<p>With <strong>ще не</strong> (not yet), use perfective (result expected but not achieved):</p>
+<ul>
+<li>Я <strong>ще не прочитав</strong> книгу. - I haven't read the book yet.</li>
+<li>Вона <strong>ще не приїхала</strong>. - She hasn't arrived yet.</li>
+<li>Ми <strong>ще не вирішили</strong>. - We haven't decided yet.</li>
+<li>Він <strong>ще не закінчив</strong>. - He hasn't finished yet.</li>
+</ul>
+<h3 id="futurenegation">Future Negation</h3>
+<p><strong>General refusal (imperfective):</strong></p>
+<ul>
+<li>Я <strong>не буду</strong> це <strong>робити</strong>. - I won't do this.</li>
+<li>Вона <strong>не буде</strong> з ним <strong>розмовляти</strong>. - She won't talk to him.</li>
+</ul>
+<p><strong>Specific action won't happen (perfective):</strong></p>
+<ul>
+<li>Я цього <strong>не зроблю</strong>. - I won't do this (specific thing).</li>
+<li>Вона йому <strong>не скаже</strong>. - She won't tell him.</li>
+</ul>
+<h3 id="genitivecaseinnegativesentences">Genitive Case in Negative Sentences</h3>
+<p>Objects often shift to genitive in negation:</p>
+<table>
+<thead>
+<tr>
+<th>Positive (accusative)</th>
+<th>Negative (genitive)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Я <strong>бачив</strong> його (<strong>acc</strong>).</td>
+<td>Я <strong>не бачив</strong> його (<strong>gen</strong>).</td>
+</tr>
+<tr>
+<td>Вона <strong>купила</strong> хліб (<strong>acc</strong>).</td>
+<td>Вона <strong>не купувала</strong> хліба (<strong>gen</strong>).</td>
+</tr>
+<tr>
+<td>Ми <strong>пили</strong> каву (<strong>acc</strong>).</td>
+<td>Ми <strong>не пили</strong> кави (<strong>gen</strong>).</td>
+</tr>
+</tbody>
+</table>
+<p>This is called the "genitive of negation" — another A2+ topic reinforced here.</p>
+<h2 id="practice">practice</h2>
+<h3 id="converttonegative">Convert to Negative</h3>
+<p>Change to negative form (use imperfective):</p>
+<ol>
+<li>Він прочитав книгу. → Він <strong>не читав</strong> книги.</li>
+<li>Вона написала листа. → Вона <strong>не писала</strong> листа.</li>
+<li>Ми купили квитки. → Ми <strong>не купували</strong> квитків.</li>
+<li>Я зробив домашнє. → Я <strong>не робив</strong> домашнього.</li>
+<li>Вони подивилися фільм. → Вони <strong>не дивилися</strong> фільму.</li>
+</ol>
+<h3 id="choosecorrectaspectinnegation">Choose Correct Aspect in Negation</h3>
+<ol>
+<li>Я ніколи ___ (не курив/не покурив). → <strong>не курив</strong> (ніколи = imperfective)</li>
+<li>Обережно, ___ (не падай/не впади)! → <strong>не впади</strong> (warning = perfective)</li>
+<li>Вона ще ___ (не приїжджала/не приїхала). → <strong>не приїхала</strong> (ще не = perfective)</li>
+<li>Я ___ (не буду робити/не зроблю) це (general refusal). → <strong>не буду робити</strong></li>
+<li>___ (Не забувай/Не забудь) взяти парасольку! → <strong>Не забудь</strong> (warning)</li>
+<li>Ми ___ (не говорили/не сказали) йому про це. → <strong>не говорили</strong> (general negation)</li>
+</ol>
+<h3 id="questionandanswer">Question and Answer</h3>
+<p>Answer negatively using imperfective:</p>
+<p><strong>Q:</strong> Ти подзвонив мамі?<br />
+<strong>A:</strong> Ні, я ще <strong>не телефонував</strong>.</p>
+<p><strong>Q:</strong> Ви купили квитки?<br />
+<strong>A:</strong> Ні, ми <strong>не купували</strong>.</p>
+<p><strong>Q:</strong> Вона написала звіт?<br />
+<strong>A:</strong> Ні, вона <strong>не писала</strong> звіту.</p>
+<p><strong>Q:</strong> Він прийшов?<br />
+<strong>A:</strong> Ні, він <strong>не приходив</strong>.</p>
+<h3 id="prohibitionpractice">Prohibition Practice</h3>
+<p>Choose the right form for prohibition:</p>
+<ol>
+<li>(General rule) Тут ___ (не палити/не запалити)! → <strong>не палити</strong></li>
+<li>(Specific warning) ___ (Не торкайся/Не торкнись) цього! → <strong>Не торкайся</strong> OR <strong>Не торкнись</strong></li>
+<li>(General advice) ___ (Не хвилюйся/Не захвилюйся)! → <strong>Не хвилюйся</strong></li>
+<li>(Specific moment) ___ (Не відкривай/Не відкрий) двері! → <strong>Не відкривай</strong></li>
+</ol>
+<h2 id="production">production</h2>
+<h3 id="denialpractice">Denial Practice</h3>
+<p>Practice denying things you didn't do:</p>
+<ul>
+<li>Я не робив цього!</li>
+<li>Я ніколи не казав такого!</li>
+<li>Ми не брали ваших речей!</li>
+</ul>
+<h3 id="prohibitionsigns">Prohibition Signs</h3>
+<p>Create prohibition signs:</p>
+<ul>
+<li>Не палити! (No smoking)</li>
+<li>Не паркуватися! (No parking)</li>
+<li>Не входити! (No entry)</li>
+<li>Не торкатися! (Do not touch)</li>
+</ul>
+<hr />
+<h3 id="roleplaytheexcuseexpert">🎭 ROLE-PLAY: The Excuse Expert</h3>
+<p><strong>Situation:</strong> You're the boss. Your employee didn't complete tasks. They make excuses.</p>
+<p><strong>Partner A (Boss):</strong> Ask why tasks weren't done:</p>
+<ul>
+<li>Чому ви не зробили звіт?</li>
+<li>Ви написали листа клієнту?</li>
+<li>Ви подзвонили партнерам?</li>
+</ul>
+<p><strong>Partner B (Employee):</strong> Make excuses using imperfective negation:</p>
+<p><strong>Example dialogue:</strong></p>
+<pre><code>A: Чому ви не зробили звіт?
+B: Я не робив звіту, тому що не мав даних.
+A: А ви запитали дані в колег?
+B: Ні, я не питав. Я не знав, кому телефонувати.
+A: Ви хоча б почали працювати над цим?
+B: Я ще не починав, але завтра обов'язково зроблю!
+A: Не забудьте цього разу!
+B: Не забуду, обіцяю!
+</code></pre>
+<p><strong>Required structures:</strong></p>
+<ul>
+<li>✅ Imperfective for general negation: не робив, не писав, не знав</li>
+<li>✅ Perfective for "not yet": ще не зробив, ще не почав</li>
+<li>✅ Perfective for warnings: Не забудьте! Не запізніться!</li>
+</ul>
+<p><strong>Switch roles and repeat!</strong></p>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Activities</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="quiznegationaspect">quiz: Negation Aspect</h2>
+<blockquote>
+  <p>Choose the correct aspect.</p>
+</blockquote>
+<ol>
+<li>Я ___ цю книгу.</li>
+</ol>
+<ul>
+<li>[x] не читав</li>
+<li>[ ] не прочитав</li>
+</ul>
+<blockquote>
+  <p>General negation = imperfective</p>
+</blockquote>
+<ol start="2">
+<li>Обережно, ___ !</li>
+</ol>
+<ul>
+<li>[ ] не падай</li>
+<li>[x] не впади</li>
+</ul>
+<blockquote>
+  <p>Specific warning = perfective</p>
+</blockquote>
+<ol start="3">
+<li>Вона ніколи ___ морозива.</li>
+</ol>
+<ul>
+<li>[x] не їла</li>
+<li>[ ] не з'їла</li>
+</ul>
+<blockquote>
+  <p>Ніколи = imperfective</p>
+</blockquote>
+<ol start="4">
+<li>Я ще ___ цей фільм.</li>
+</ol>
+<ul>
+<li>[ ] не дивився</li>
+<li>[x] не подивився</li>
+</ul>
+<blockquote>
+  <p>Ще не = perfective</p>
+</blockquote>
+<ol start="5">
+<li>___ ключі!</li>
+</ol>
+<ul>
+<li>[ ] Не забувай</li>
+<li>[x] Не забудь</li>
+</ul>
+<blockquote>
+  <p>Specific warning = perfective</p>
+</blockquote>
+<ol start="6">
+<li>Ми ___ йому про це.</li>
+</ol>
+<ul>
+<li>[x] не говорили</li>
+<li>[ ] не сказали</li>
+</ul>
+<blockquote>
+  <p>General negation = imperfective</p>
+</blockquote>
+<h2 id="groupsortnegationpatterns">group-sort: Negation Patterns</h2>
+<h3 id="useimperfective">Use Imperfective</h3>
+<ul>
+<li>general negation (Я не робив)</li>
+<li>ніколи (never)</li>
+<li>general prohibition (Не палити!)</li>
+<li>not used to (Він не курив)</li>
+</ul>
+<h3 id="useperfective">Use Perfective</h3>
+<ul>
+<li>ще не (not yet)</li>
+<li>specific warning (Не впади!)</li>
+<li>specific denial (Я цього не сказав!)</li>
+<li>expected result failed (Не знайшов)</li>
+</ul>
+<h2 id="matchuppositivetonegative">match-up: Positive to Negative</h2>
+<table>
+<thead>
+<tr>
+<th>Positive (Perfective)</th>
+<th>Negative (Imperfective)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Він прочитав</td>
+<td>Він не читав</td>
+</tr>
+<tr>
+<td>Вона написала</td>
+<td>Вона не писала</td>
+</tr>
+<tr>
+<td>Ми купили</td>
+<td>Ми не купували</td>
+</tr>
+<tr>
+<td>Я зробив</td>
+<td>Я не робив</td>
+</tr>
+<tr>
+<td>Вони сказали</td>
+<td>Вони не говорили</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Vocabulary</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Word</th>
+<th>IPA</th>
+<th>English</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ніколи</td>
+<td>/nʲiˈkolɪ/</td>
+<td>never</td>
+<td>+ imperfective</td>
+</tr>
+<tr>
+<td>ще не</td>
+<td>/ʃt͡ʃɛ nɛ/</td>
+<td>not yet</td>
+<td>+ perfective</td>
+</tr>
+<tr>
+<td>більше не</td>
+<td>/ˈbʲilʲʃɛ nɛ/</td>
+<td>no longer</td>
+<td>+ imperfective</td>
+</tr>
+<tr>
+<td>ні… ні</td>
+<td>/nʲi nʲi/</td>
+<td>neither… nor</td>
+<td>-</td>
+</tr>
+<tr>
+<td>нічого</td>
+<td>/nʲiˈt͡ʃoɦo/</td>
+<td>nothing</td>
+<td>genitive</td>
+</tr>
+<tr>
+<td>нікого</td>
+<td>/nʲiˈkoɦo/</td>
+<td>nobody</td>
+<td>genitive</td>
+</tr>
+<tr>
+<td>ніде</td>
+<td>/nʲiˈdɛ/</td>
+<td>nowhere</td>
+<td>-</td>
+</tr>
+<tr>
+<td>обережно</td>
+<td>/obɛˈrɛʒno/</td>
+<td>carefully, caution</td>
+<td>-</td>
+</tr>
+<tr>
+<td>заборонено</td>
+<td>/zɑboroˈnɛno/</td>
+<td>forbidden</td>
+<td>-</td>
+</tr>
+<tr>
+<td>не можна</td>
+<td>/nɛ ˈmoʒnɑ/</td>
+<td>not allowed</td>
+<td>-</td>
+</tr>
+<tr>
+<td>не варто</td>
+<td>/nɛ ˈvɑrto/</td>
+<td>not worth it</td>
+<td>-</td>
+</tr>
+<tr>
+<td>не слід</td>
+<td>/nɛ slʲid/</td>
+<td>should not</td>
+<td>-</td>
+</tr>
+<tr>
+<td>даремно</td>
+<td>/dɑˈrɛmno/</td>
+<td>in vain</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Summary</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="thecorerule">The Core Rule</h2>
+<p><strong>Negation prefers imperfective.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Positive</th>
+<th>Negative</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Я прочитав книгу.</td>
+<td>Я не читав книги.</td>
+</tr>
+<tr>
+<td>Вона написала.</td>
+<td>Вона не писала.</td>
+</tr>
+<tr>
+<td>Ми купили.</td>
+<td>Ми не купували.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="exceptionsuseperfective">Exceptions (Use Perfective)</h2>
+<table>
+<thead>
+<tr>
+<th>Context</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>"Not yet" (ще не)</td>
+<td>Я ще не прочитав.</td>
+</tr>
+<tr>
+<td>Specific warning</td>
+<td>Не впади! Не забудь!</td>
+</tr>
+<tr>
+<td>Expected result failed</td>
+<td>Я не знайшов ключів.</td>
+</tr>
+<tr>
+<td>Emphatic denial</td>
+<td>Я цього не сказав!</td>
+</tr>
+</tbody>
+</table>
+<h2 id="keypatterns">Key Patterns</h2>
+<ol>
+<li><strong>Ніколи</strong> (never) → always imperfective</li>
+<li><strong>Ще не</strong> (not yet) → perfective</li>
+<li><strong>General prohibition</strong> → imperfective (Не палити!)</li>
+<li><strong>Specific warning</strong> → perfective (Не впади!)</li>
+</ol>
+<blockquote>
+  <p><strong>Key Takeaways</strong></p>
+  <ul>
+  <li>Default to imperfective in negative sentences</li>
+  <li>"Ніколи" (never) demands imperfective</li>
+  <li>"Ще не" (not yet) uses perfective</li>
+  <li>Warnings about specific events use perfective</li>
+  <li>Objects often shift to genitive in negation</li>
+  <li><strong>Note:</strong> Some prohibitions accept BOTH aspects with different nuances!</li>
+  </ul>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('match')">Start →</button></div>
     </section>
     <section id="match" class="section"><div class="card"><h3>Positive to Negative</h3>
       <div class="score-display"><span class="score"><span id="match-score">0</span>/5</span></div>
       <div class="match-container" id="match-container"><svg class="match-lines" id="match-lines"></svg>
         <div class="match-column" id="match-left"><div class="match-item" data-pair="0">Він прочитав</div><div class="match-item" data-pair="1">Вона написала</div><div class="match-item" data-pair="2">Ми купили</div><div class="match-item" data-pair="3">Я зробив</div><div class="match-item" data-pair="4">Вони сказали</div></div>
-        <div class="match-column" id="match-right"><div class="match-item" data-pair="4">Вони не говорили</div><div class="match-item" data-pair="1">Вона не писала</div><div class="match-item" data-pair="0">Він не читав</div><div class="match-item" data-pair="3">Я не робив</div><div class="match-item" data-pair="2">Ми не купували</div></div>
+        <div class="match-column" id="match-right"><div class="match-item" data-pair="2">Ми не купували</div><div class="match-item" data-pair="1">Вона не писала</div><div class="match-item" data-pair="0">Він не читав</div><div class="match-item" data-pair="4">Вони не говорили</div><div class="match-item" data-pair="3">Я не робив</div></div>
       </div>
       <div class="completion-message" id="match-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetMatch()">Reset</button><button class="btn btn-primary" onclick="showSection('quiz')">Next →</button></div>
@@ -176,6 +751,10 @@
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

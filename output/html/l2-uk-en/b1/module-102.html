@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,7 +136,22 @@
         <p style="color:var(--text-muted)">Де, куди, звідки, коли</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Альтернативи до який | Alternatives to який</h4><div class="md-content"><p>У модулі 101 ми вивчили який/яка/яке/які.</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Зміст уроку | Lesson Content</li><li class="toc-item" data-target="section-1">Activities</li><li class="toc-item" data-target="section-2">Vocabulary</li><li class="toc-item" data-target="section-3">Summary</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Зміст уроку | Lesson Content</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="warmup">warm-up | Розминка</h2>
+<h3 id="alternativesto">Альтернативи до який | Alternatives to який</h3>
+<p>У модулі 101 ми вивчили який/яка/яке/які.</p>
 <p>In module 101, we learned який/яка/яке/які.</p>
 <p>Але є простіші варіанти для місця та часу:</p>
 <p>But there are simpler options for place and time:</p>
@@ -143,7 +176,10 @@
 <td>час, <strong>коли</strong></td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>### Де — Where (Location)</h4><div class="md-content"><p><strong>Де</strong> replaces "в/на якому/якій" for places:</p>
+</table>
+<h2 id="presentation">presentation | Презентація</h2>
+<h3 id="wherelocation">Де — Where (Location)</h3>
+<p><strong>Де</strong> replaces "в/на якому/якій" for places:</p>
 <table>
 <thead>
 <tr>
@@ -201,7 +237,9 @@
   <li>Місто, в <strong>якому</strong> я живу… (more formal)</li>
   </ul>
   <p>Use <strong>де</strong> when the location is the main point. Use <strong>в якому</strong> when you need more precision or formality.</p>
-</blockquote></div></div><div class="canvas-note"><h4>Куди — Where (Direction To)</h4><div class="md-content"><p><strong>Куди</strong> replaces "до якого/якої" or "в/на яке/яку" for direction:</p>
+</blockquote>
+<h3 id="wheredirectionto">Куди — Where (Direction To)</h3>
+<p><strong>Куди</strong> replaces "до якого/якої" or "в/на яке/яку" for direction:</p>
 <table>
 <thead>
 <tr>
@@ -246,7 +284,9 @@
 <td>The park the children are running to is big.</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Звідки — Where (Origin/From)</h4><div class="md-content"><p><strong>Звідки</strong> replaces "з якого/якої" for origin:</p>
+</table>
+<h3 id="whereoriginfrom">Звідки — Where (Origin/From)</h3>
+<p><strong>Звідки</strong> replaces "з якого/якої" for origin:</p>
 <table>
 <thead>
 <tr>
@@ -287,7 +327,9 @@
 <td>The office I'm calling from is downtown.</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Коли — When (Time)</h4><div class="md-content"><p><strong>Коли</strong> replaces "у який/яку" for time expressions:</p>
+</table>
+<h3 id="whentime">Коли — When (Time)</h3>
+<p><strong>Коли</strong> replaces "у який/яку" for time expressions:</p>
 <table>
 <thead>
 <tr>
@@ -340,7 +382,9 @@
   <li>День, <strong>коли</strong> я народився… → День, я народився… (less formal)</li>
   </ul>
   <p>But keeping "коли" is clearer and recommended for learners.</p>
-</blockquote></div></div><div class="canvas-note"><h4>Summary Table</h4><div class="md-content"><table>
+</blockquote>
+<h3 id="summarytable">Summary Table</h3>
+<table>
 <thead>
 <tr>
 <th>Word</th>
@@ -375,7 +419,9 @@
 <td>День, коли я народився…</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Що — That/Which (Alternative)</h4><div class="md-content"><p><strong>Що</strong> can sometimes replace <strong>який</strong> in informal speech, especially after indefinite antecedents:</p>
+</table>
+<h3 id="thatwhichalternative">Що — That/Which (Alternative)</h3>
+<p><strong>Що</strong> can sometimes replace <strong>який</strong> in informal speech, especially after indefinite antecedents:</p>
 <table>
 <thead>
 <tr>
@@ -401,7 +447,10 @@
 <p><strong>Note:</strong> Що doesn't change for case, making it simpler but less precise:</p>
 <ul>
 <li>Книга, <strong>що</strong> я читаю… = Книга, <strong>яку</strong> я читаю… (the book I'm reading)</li>
-</ul></div></div><div class="canvas-note"><h4>### Choose де, куди, звідки, or коли</h4><div class="md-content"><ol>
+</ul>
+<h2 id="practice">practice | Практика</h2>
+<h3 id="chooseor">Choose де, куди, звідки, or коли</h3>
+<ol>
 <li><p>Місто, ___ я народився, — Одеса.<br />
 → <strong>де</strong> (location)</p></li>
 <li><p>Країна, ___ вони переїхали, — Німеччина.<br />
@@ -414,7 +463,9 @@
 → <strong>куди</strong> (direction to)</p></li>
 <li><p>Офіс, ___ він працює, знаходиться на п'ятому поверсі.<br />
 → <strong>де</strong> (location)</p></li>
-</ol></div></div><div class="canvas-note"><h4>Transform Using де/куди/звідки/коли</h4><div class="md-content"><p><strong>Example:</strong> Місто, в якому я живу, велике.<br />
+</ol>
+<h3 id="transformusing">Transform Using де/куди/звідки/коли</h3>
+<p><strong>Example:</strong> Місто, в якому я живу, велике.<br />
 → Місто, <strong>де</strong> я живу, велике.</p>
 <ol>
 <li><p>Країна, з якої вона родом, — Україна.<br />
@@ -427,7 +478,9 @@
 → Бібліотека, <strong>де</strong> я працюю, стара.</p></li>
 <li><p>Момент, у який він зрозумів, був важливим.<br />
 → Момент, <strong>коли</strong> він зрозумів, був важливим.</p></li>
-</ol></div></div><div class="canvas-note"><h4>Translate to Ukrainian</h4><div class="md-content"><ol>
+</ol>
+<h3 id="translatetoukrainian">Translate to Ukrainian</h3>
+<ol>
 <li><p>The country where I was born is Ukraine.<br />
 → Країна, <strong>де</strong> я народився, — Україна.</p></li>
 <li><p>The city he's traveling to is Kyiv.<br />
@@ -438,7 +491,9 @@
 → Місце, <strong>звідки</strong> я родом, невелике.</p></li>
 <li><p>Everything that I have is here.<br />
 → Все, <strong>що</strong> я маю, тут.</p></li>
-</ol></div></div><div class="canvas-note"><h4>Complete the Sentences</h4><div class="md-content"><ol>
+</ol>
+<h3 id="completethesentences">Complete the Sentences</h3>
+<ol>
 <li><p>Це місто, ___ я мрію відвідати. (I dream of visiting)<br />
 → <strong>куди</strong> (direction)</p></li>
 <li><p>Час, ___ ми були разом, був найщасливішим.<br />
@@ -447,7 +502,10 @@
 → <strong>де</strong> (location)</p></li>
 <li><p>Село, ___ приїхала моя бабуся, дуже гарне.<br />
 → <strong>звідки</strong> (origin)</p></li>
-</ol></div></div><div class="canvas-note"><h4>### Describe Your Life</h4><div class="md-content"><p>Use де, куди, звідки, коли to talk about:</p>
+</ol>
+<h2 id="production">production | Продукція</h2>
+<h3 id="describeyourlife">Describe Your Life</h3>
+<p>Use де, куди, звідки, коли to talk about:</p>
 <ol>
 <li>Місце, <strong>де</strong> ви виросли</li>
 <li>Місце, <strong>куди</strong> ви хочете поїхати</li>
@@ -455,12 +513,250 @@
 <li>Час, <strong>коли</strong> ви почали вчити українську</li>
 </ol>
 <p><strong>Example:</strong><br />
-Я виріс у місті, <strong>де</strong> є багато парків. Зараз я живу в країні, <strong>куди</strong> приїхав п'ять років тому. Моя родина <strong>звідки</strong> я — з невеликого села. Час, <strong>коли</strong> я почав вивчати українську, — 2022 рік.</p></div></div><div class="canvas-note"><h4>Discussion Questions</h4><div class="md-content"><p>Discuss using relative clauses:</p>
+Я виріс у місті, <strong>де</strong> є багато парків. Зараз я живу в країні, <strong>куди</strong> приїхав п'ять років тому. Моя родина <strong>звідки</strong> я — з невеликого села. Час, <strong>коли</strong> я почав вивчати українську, — 2022 рік.</p>
+<h3 id="discussionquestions">Discussion Questions</h3>
+<p>Discuss using relative clauses:</p>
 <ol>
 <li>Яке місце, <strong>де</strong> ви найбільше любите бути?</li>
 <li>Куди є місце, <strong>куди</strong> ви хочете поїхати?</li>
 <li>Який час у житті, <strong>коли</strong> ви були найщасливішими?</li>
-</ol></div></div></div>
+</ol>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Activities</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="quizlocationandtimerelatives">quiz: Location and Time Relatives</h2>
+<blockquote>
+  <p>Choose the correct relative word.</p>
+</blockquote>
+<ol>
+<li>Місто, ___ я народився, — Харків.</li>
+</ol>
+<ul>
+<li>[x] де</li>
+<li>[ ] куди</li>
+</ul>
+<blockquote>
+  <p>"Де" for static location (where I was born).</p>
+</blockquote>
+<ol start="2">
+<li>Країна, ___ вони переїхали, — Польща.</li>
+</ol>
+<ul>
+<li>[ ] де</li>
+<li>[x] куди</li>
+</ul>
+<blockquote>
+  <p>"Куди" for direction/destination (where they moved to).</p>
+</blockquote>
+<ol start="3">
+<li>Рік, ___ я закінчив університет, — 2019.</li>
+</ol>
+<ul>
+<li>[ ] де</li>
+<li>[x] коли</li>
+</ul>
+<blockquote>
+  <p>"Коли" for time expressions.</p>
+</blockquote>
+<ol start="4">
+<li>Місто, ___ він родом, — Одеса.</li>
+</ol>
+<ul>
+<li>[ ] куди</li>
+<li>[x] звідки</li>
+</ul>
+<blockquote>
+  <p>"Звідки" for origin (where from).</p>
+</blockquote>
+<ol start="5">
+<li>Офіс, ___ я працюю, на третьому поверсі.</li>
+</ol>
+<ul>
+<li>[x] де</li>
+<li>[ ] куди</li>
+</ul>
+<blockquote>
+  <p>"Де" for location of work.</p>
+</blockquote>
+<ol start="6">
+<li>Все, ___ я знаю, — правда.</li>
+</ol>
+<ul>
+<li>[ ] яке</li>
+<li>[x] що</li>
+</ul>
+<blockquote>
+  <p>"Що" after indefinite pronouns like "все."</p>
+</blockquote>
+<h2 id="fillincompletethestory">fill-in: Complete the Story</h2>
+<blockquote>
+  <p>Я народився в місті, (1)<strong>_ живуть мої батьки. Село, (2)</strong>_ родом моя бабуся, знаходиться недалеко. Університет, (3)<strong>_ я вступив, один з найкращих. Рік, (4)</strong>_ я закінчив навчання, — 2020.</p>
+</blockquote>
+<p><strong>Answers:</strong> де, звідки, куди, коли</p>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Vocabulary</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Word</th>
+<th>IPA</th>
+<th>English</th>
+<th>Gender</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>де</td>
+<td>/dɛ/</td>
+<td>where (location)</td>
+<td>adv</td>
+</tr>
+<tr>
+<td>куди</td>
+<td>/kuˈdɪ/</td>
+<td>where (to), whither</td>
+<td>adv</td>
+</tr>
+<tr>
+<td>звідки</td>
+<td>/ˈzvʲidkɪ/</td>
+<td>from where, whence</td>
+<td>adv</td>
+</tr>
+<tr>
+<td>коли</td>
+<td>/koˈlɪ/</td>
+<td>when</td>
+<td>adv</td>
+</tr>
+<tr>
+<td>що</td>
+<td>/ʃt͡ʃo/</td>
+<td>that, which, what</td>
+<td>pron</td>
+</tr>
+<tr>
+<td>місце</td>
+<td>/ˈmʲist͡sɛ/</td>
+<td>place</td>
+<td>n</td>
+</tr>
+<tr>
+<td>час</td>
+<td>/t͡ʃɑs/</td>
+<td>time</td>
+<td>m</td>
+</tr>
+<tr>
+<td>момент</td>
+<td>/moˈmɛnt/</td>
+<td>moment</td>
+<td>m</td>
+</tr>
+<tr>
+<td>рік</td>
+<td>/rʲik/</td>
+<td>year</td>
+<td>m</td>
+</tr>
+<tr>
+<td>день</td>
+<td>/dɛnʲ/</td>
+<td>day</td>
+<td>m</td>
+</tr>
+<tr>
+<td>родом</td>
+<td>/ˈrodom/</td>
+<td>originally from</td>
+<td>adv</td>
+</tr>
+<tr>
+<td>переїхати</td>
+<td>/pɛrɛˈjixɑtɪ/</td>
+<td>to move (residence)</td>
+<td>pf</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Summary</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="relativewordsforplaceandtime">Relative Words for Place and Time</h2>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+<th>Replaces</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>де</td>
+<td>where (location)</td>
+<td>в якому/якій</td>
+<td>Місто, де я живу…</td>
+</tr>
+<tr>
+<td>куди</td>
+<td>where (to)</td>
+<td>до якого/якої</td>
+<td>Місто, куди я їду…</td>
+</tr>
+<tr>
+<td>звідки</td>
+<td>from where</td>
+<td>з якого/якої</td>
+<td>Місто, звідки я родом…</td>
+</tr>
+<tr>
+<td>коли</td>
+<td>when</td>
+<td>у який/яку</td>
+<td>День, коли я народився…</td>
+</tr>
+<tr>
+<td>що</td>
+<td>that/which</td>
+<td>який/яка/яке</td>
+<td>Все, що я знаю…</td>
+</tr>
+</tbody>
+</table>
+<h2 id="usageguidelines">Usage Guidelines</h2>
+<ol>
+<li><strong>Де</strong> — for static location (living, working, being)</li>
+<li><strong>Куди</strong> — for direction/destination (going, moving, traveling)</li>
+<li><strong>Звідки</strong> — for origin (coming from, originating)</li>
+<li><strong>Коли</strong> — for time expressions (days, years, moments)</li>
+<li><strong>Що</strong> — general relative, doesn't decline, informal</li>
+</ol>
+<blockquote>
+  <p><strong>Key Takeaways</strong></p>
+  <ul>
+  <li>Де/куди/звідки/коли are simpler than який for place/time</li>
+  <li>Choose based on the question word (де? куди? звідки? коли?)</li>
+  <li>Що is a universal relative but doesn't show case</li>
+  <li>These words make complex sentences more natural</li>
+  </ul>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('quiz')">Start →</button></div>
     </section>
     
@@ -498,6 +794,10 @@
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

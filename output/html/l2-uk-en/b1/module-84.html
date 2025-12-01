@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,12 +136,30 @@
         <p style="color:var(--text-muted)">Зроблю vs Буду робити</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Two Futures</h4><div class="md-content"><p>Ukrainian has two ways to express future:</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Lesson Content</li><li class="toc-item" data-target="section-1">Activities</li><li class="toc-item" data-target="section-2">Vocabulary</li><li class="toc-item" data-target="section-3">Summary</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Lesson Content</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="warmup">warm-up</h2>
+<h3 id="twofutures">Two Futures</h3>
+<p>Ukrainian has two ways to express future:</p>
 <ol>
 <li><strong>Perfective future:</strong> Single word (напишу, зроблю, прочитаю)</li>
 <li><strong>Imperfective future:</strong> Буду + infinitive (буду писати, буду робити)</li>
 </ol>
-<p>Both mean "will," but they express different perspectives on the future action.</p></div></div><div class="canvas-note"><h4>### Perfective Future: Single Completed Action</h4><div class="md-content"><p>Form: Conjugate perfective verb in "present" forms.</p>
+<p>Both mean "will," but they express different perspectives on the future action.</p>
+<h2 id="presentation">presentation</h2>
+<h3 id="perfectivefuturesinglecompletedaction">Perfective Future: Single Completed Action</h3>
+<p>Form: Conjugate perfective verb in "present" forms.</p>
 <table>
 <thead>
 <tr>
@@ -180,7 +216,9 @@
 <li>Ми <strong>зробимо</strong> це. - We will do it (get it done).</li>
 <li>Він <strong>подзвонить</strong> тобі. - He will call you (the call will happen).</li>
 <li>Я <strong>вивчу</strong> українську! - I will learn Ukrainian (master it)!</li>
-</ul></div></div><div class="canvas-note"><h4>Imperfective Future: Ongoing or Repeated</h4><div class="md-content"><p>Form: Буду/будеш/буде… + imperfective infinitive.</p>
+</ul>
+<h3 id="imperfectivefutureongoingorrepeated">Imperfective Future: Ongoing or Repeated</h3>
+<p>Form: Буду/будеш/буде… + imperfective infinitive.</p>
 <table>
 <thead>
 <tr>
@@ -230,7 +268,9 @@
 <li>Ми <strong>будемо чекати</strong> на тебе. - We will be waiting for you.</li>
 <li>Він <strong>буде працювати</strong> весь день. - He will be working all day.</li>
 <li>Я <strong>буду вчити</strong> українську щодня. - I will study Ukrainian every day.</li>
-</ul></div></div><div class="canvas-note"><h4>Alternative Imperfective Future: -му/-меш</h4><div class="md-content"><p>Some imperfective verbs also have a synthetic form (less common in speech):</p>
+</ul>
+<h3 id="alternativeimperfectivefuture">Alternative Imperfective Future: -му/-меш</h3>
+<p>Some imperfective verbs also have a synthetic form (less common in speech):</p>
 <ul>
 <li>писатиму = буду писати</li>
 <li>робитиму = буду робити</li>
@@ -270,7 +310,9 @@
 </tr>
 </tbody>
 </table>
-<p>This form is more common in western Ukraine and in writing. Both forms are correct.</p></div></div><div class="canvas-note"><h4>Compare: Same Action, Different Aspect</h4><div class="md-content"><table>
+<p>This form is more common in western Ukraine and in writing. Both forms are correct.</p>
+<h3 id="comparesameactiondifferentaspect">Compare: Same Action, Different Aspect</h3>
+<table>
 <thead>
 <tr>
 <th>Imperfective Future</th>
@@ -303,7 +345,9 @@
 <td>We will do this (get it done).</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>When to Use Each Future</h4><div class="md-content"><p><strong>Use PERFECTIVE future when:</strong></p>
+</table>
+<h3 id="whentouseeachfuture">When to Use Each Future</h3>
+<p><strong>Use PERFECTIVE future when:</strong></p>
 <ol>
 <li><strong>Promise or commitment:</strong> Я зроблю це! - I'll do it!</li>
 <li><strong>Definite single action:</strong> Він прийде завтра. - He will come tomorrow.</li>
@@ -316,7 +360,9 @@
 <li><strong>Process description:</strong> Що ти будеш робити? - What will you be doing?</li>
 <li><strong>Repeated future action:</strong> Я буду ходити в спортзал щодня. - I'll go to the gym every day.</li>
 <li><strong>Ongoing activity:</strong> Вона буде чекати біля входу. - She'll be waiting by the entrance.</li>
-</ol></div></div><div class="canvas-note"><h4>Time Expressions and Future Aspect</h4><div class="md-content"><p><strong>With perfective (single event):</strong></p>
+</ol>
+<h3 id="timeexpressionsandfutureaspect">Time Expressions and Future Aspect</h3>
+<p><strong>With perfective (single event):</strong></p>
 <ul>
 <li>завтра - tomorrow (single)</li>
 <li>післязавтра - day after tomorrow</li>
@@ -331,7 +377,9 @@
 <li>щодня - every day</li>
 <li>завжди - always</li>
 <li>поки - while</li>
-</ul></div></div><div class="canvas-note"><h4>Questions in Future</h4><div class="md-content"><p><strong>Process questions (imperfective):</strong></p>
+</ul>
+<h3 id="questionsinfuture">Questions in Future</h3>
+<p><strong>Process questions (imperfective):</strong></p>
 <ul>
 <li>Що ти будеш робити завтра? - What will you be doing tomorrow?</li>
 <li>Де ви будете жити? - Where will you be living?</li>
@@ -342,7 +390,9 @@
 <li>Коли ти це зробиш? - When will you do/finish it?</li>
 <li>Ти прийдеш? - Will you come?</li>
 <li>Вона напише? - Will she write (it)?</li>
-</ul></div></div><div class="canvas-note"><h4>Negation in Future</h4><div class="md-content"><p><strong>Imperfective negative</strong> (general, no specific action):</p>
+</ul>
+<h3 id="negationinfuture">Negation in Future</h3>
+<p><strong>Imperfective negative</strong> (general, no specific action):</p>
 <ul>
 <li>Я <strong>не буду</strong> це <strong>робити</strong>. - I won't be doing this / I won't do this (general refusal).</li>
 </ul>
@@ -354,26 +404,35 @@
 <ul>
 <li>Я не буду їсти м'ясо. - I won't eat meat. (general principle)</li>
 <li>Я не з'їм це. - I won't eat this. (this specific thing)</li>
-</ul></div></div><div class="canvas-note"><h4>### Choose the Correct Future</h4><div class="md-content"><ol>
+</ul>
+<h2 id="practice">practice</h2>
+<h3 id="choosethecorrectfuture">Choose the Correct Future</h3>
+<ol>
 <li>Завтра я ___ (буду писати/напишу) тобі листа. → <strong>напишу</strong> (promise, single)</li>
 <li>Я ___ (буду працювати/попрацюю) весь день. → <strong>буду працювати</strong> (all day)</li>
 <li>Коли ти ___ (будеш закінчувати/закінчиш) проєкт? → <strong>закінчиш</strong> (result question)</li>
 <li>Вона ___ (буде чекати/зачекає) на нас біля метро. → <strong>буде чекати</strong> (ongoing)</li>
 <li>Ми ___ (будемо ходити/підемо) в спортзал щотижня. → <strong>будемо ходити</strong> (repeated)</li>
 <li>Він ___ (буде приходити/прийде) завтра о третій. → <strong>прийде</strong> (single scheduled event)</li>
-</ol></div></div><div class="canvas-note"><h4>Transform: Imperfective to Perfective</h4><div class="md-content"><p>Change to perfective future (focus on result):</p>
+</ol>
+<h3 id="transformimperfectivetoperfective">Transform: Imperfective to Perfective</h3>
+<p>Change to perfective future (focus on result):</p>
 <ol>
 <li>Я буду читати книгу. → Я <strong>прочитаю</strong> книгу.</li>
 <li>Вона буде писати статтю. → Вона <strong>напише</strong> статтю.</li>
 <li>Ми будемо робити домашнє. → Ми <strong>зробимо</strong> домашнє.</li>
 <li>Вони будуть вчити нові слова. → Вони <strong>вивчать</strong> нові слова.</li>
-</ol></div></div><div class="canvas-note"><h4>Transform: Perfective to Imperfective</h4><div class="md-content"><p>Change to imperfective future (focus on process):</p>
+</ol>
+<h3 id="transformperfectivetoimperfective">Transform: Perfective to Imperfective</h3>
+<p>Change to imperfective future (focus on process):</p>
 <ol>
 <li>Завтра я прочитаю цю книгу. → Завтра я <strong>буду читати</strong> цю книгу.</li>
 <li>Вона приготує вечерю. → Вона <strong>буде готувати</strong> вечерю.</li>
 <li>Він подзвонить тобі. → Він <strong>буде телефонувати</strong> тобі.</li>
 <li>Ми напишемо звіт. → Ми <strong>будемо писати</strong> звіт.</li>
-</ol></div></div><div class="canvas-note"><h4>Complete the Dialogues</h4><div class="md-content"><p><strong>Dialogue 1:</strong></p>
+</ol>
+<h3 id="completethedialogues">Complete the Dialogues</h3>
+<p><strong>Dialogue 1:</strong></p>
 <ul>
 <li>A: Що ти ___ (робитимеш) завтра?</li>
 <li>B: Я ___ (працюватиму) з дому.</li>
@@ -388,25 +447,364 @@
 <li>A: Що ти там ___ (будеш робити)?</li>
 <li>B: ___ (Буду танцювати) і ___ (буду спілкуватися) з друзями.</li>
 </ul>
-<p><strong>Answers:</strong> підеш (single), прийду (promise), будеш робити (process), буду танцювати/буду спілкуватися (process)</p></div></div><div class="canvas-note"><h4>### Plan Your Week</h4><div class="md-content"><p>Describe your plans using both aspects:</p>
+<p><strong>Answers:</strong> підеш (single), прийду (promise), будеш робити (process), буду танцювати/буду спілкуватися (process)</p>
+<h2 id="production">production</h2>
+<h3 id="planyourweek">Plan Your Week</h3>
+<p>Describe your plans using both aspects:</p>
 <p><strong>Single events (perfective):</strong><br />
 У понеділок я напишу звіт. У вівторок зустрінуся з клієнтом. У середу здам проєкт.</p>
 <p><strong>Ongoing activities (imperfective):</strong><br />
-Цілий тиждень я буду працювати над новим проєктом. Щовечора буду ходити в спортзал.</p></div></div><div class="canvas-note"><h4>Make Promises</h4><div class="md-content"><p>Use perfective to make promises:</p>
+Цілий тиждень я буду працювати над новим проєктом. Щовечора буду ходити в спортзал.</p>
+<h3 id="makepromises">Make Promises</h3>
+<p>Use perfective to make promises:</p>
 <ul>
 <li>Я <strong>зроблю</strong> це до завтра!</li>
 <li>Я <strong>подзвоню</strong> тобі ввечері.</li>
 <li>Ми <strong>приїдемо</strong> вчасно.</li>
 <li>Я обіцяю, що <strong>закінчу</strong> роботу.</li>
-</ul></div></div><div class="canvas-note"><h4>Describe Your Daily Routine (Future)</h4><div class="md-content"><p>Use imperfective for repeated activities:</p>
-<p>Наступного тижня я буду вставати о сьомій. Щоранку буду бігати. Буду працювати з дев'ятої до п'ятої…</p></div></div></div>
+</ul>
+<h3 id="describeyourdailyroutinefuture">Describe Your Daily Routine (Future)</h3>
+<p>Use imperfective for repeated activities:</p>
+<p>Наступного тижня я буду вставати о сьомій. Щоранку буду бігати. Буду працювати з дев'ятої до п'ятої…</p>
+<hr />
+<h3 id="roleplayplanningatriptogether">🎭 ROLE-PLAY: Planning a Trip Together</h3>
+<p><strong>Situation:</strong> You and a friend are planning a weekend trip.</p>
+<p><strong>Partner A & B:</strong> Discuss your plans using:</p>
+<ul>
+<li>Definite single actions (perfective): Ми <strong>поїдемо</strong>… Ми <strong>приїдемо</strong>…</li>
+<li>Ongoing activities (imperfective): Будемо <strong>гуляти</strong>… Будемо <strong>відпочивати</strong>…</li>
+<li>Negotiations/suggestions: Може, <strong>підемо</strong>…? А якщо <strong>поїдемо</strong>…?</li>
+</ul>
+<p><strong>Example dialogue:</strong></p>
+<pre><code>A: Куди поїдемо на вихідні?
+B: Давай поїдемо до Львова! Виїдемо в суботу вранці.
+A: Добре. А що там будемо робити?
+B: Будемо гуляти по місту, дивитися архітектуру.
+A: А ввечері?
+B: Підемо в ресторан, замовимо каву і десерт.
+A: Коли повернемося?
+B: Повернемося в неділю ввечері.
+</code></pre>
+<p><strong>Required structures:</strong></p>
+<ul>
+<li>✅ Perfective for definite plans: поїдемо, приїдемо, замовимо</li>
+<li>✅ Imperfective for activities: будемо гуляти, будемо відпочивати</li>
+</ul>
+<p><strong>Switch roles and plan a different trip!</strong></p>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Activities</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="quizfutureaspect">quiz: Future Aspect</h2>
+<blockquote>
+  <p>Select the correct form.</p>
+</blockquote>
+<ol>
+<li>Завтра я ___ їй про все.</li>
+</ol>
+<ul>
+<li>[ ] буду розповідати</li>
+<li>[x] розповім</li>
+</ul>
+<blockquote>
+  <p>Single future action = perfective</p>
+</blockquote>
+<ol start="2">
+<li>Ми ___ на тебе біля входу.</li>
+</ol>
+<ul>
+<li>[x] будемо чекати</li>
+<li>[ ] зачекаємо</li>
+</ul>
+<blockquote>
+  <p>Waiting = ongoing process = imperfective</p>
+</blockquote>
+<ol start="3">
+<li>Скільки часу ви ___ там?</li>
+</ol>
+<ul>
+<li>[x] будете жити</li>
+<li>[ ] проживете</li>
+</ul>
+<blockquote>
+  <p>Duration question = imperfective</p>
+</blockquote>
+<ol start="4">
+<li>Обіцяю, я ___ це!</li>
+</ol>
+<ul>
+<li>[ ] буду робити</li>
+<li>[x] зроблю</li>
+</ul>
+<blockquote>
+  <p>Promise = perfective</p>
+</blockquote>
+<ol start="5">
+<li>Він ___ в цій компанії три роки.</li>
+</ol>
+<ul>
+<li>[x] буде працювати</li>
+<li>[ ] попрацює</li>
+</ul>
+<blockquote>
+  <p>Duration (три роки) = imperfective</p>
+</blockquote>
+<ol start="6">
+<li>Вона ___ завтра о третій.</li>
+</ol>
+<ul>
+<li>[ ] буде приходити</li>
+<li>[x] прийде</li>
+</ul>
+<blockquote>
+  <p>Scheduled single event = perfective</p>
+</blockquote>
+<h2 id="matchupfutureforms">match-up: Future Forms</h2>
+<table>
+<thead>
+<tr>
+<th>Imperfective</th>
+<th>Perfective</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>буду читати</td>
+<td>прочитаю</td>
+</tr>
+<tr>
+<td>буду писати</td>
+<td>напишу</td>
+</tr>
+<tr>
+<td>буду робити</td>
+<td>зроблю</td>
+</tr>
+<tr>
+<td>буду вчити</td>
+<td>вивчу</td>
+</tr>
+<tr>
+<td>буду готувати</td>
+<td>приготую</td>
+</tr>
+<tr>
+<td>буду чекати</td>
+<td>зачекаю</td>
+</tr>
+</tbody>
+</table>
+<h2 id="groupsortwhentouse">group-sort: When to Use</h2>
+<h3 id="perfectivefuture">Perfective Future</h3>
+<ul>
+<li>promises</li>
+<li>single scheduled events</li>
+<li>sequences of events</li>
+<li>result expected</li>
+</ul>
+<h3 id="imperfectivefuture">Imperfective Future</h3>
+<ul>
+<li>duration (весь день)</li>
+<li>ongoing activity</li>
+<li>repeated future action</li>
+<li>general plans</li>
+</ul>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Vocabulary</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Word</th>
+<th>IPA</th>
+<th>English</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>обіцяти</td>
+<td>/oˈbʲit͡sʲɑtɪ/</td>
+<td>to promise</td>
+<td>imperfective</td>
+</tr>
+<tr>
+<td>пообіцяти</td>
+<td>/poobʲiˈt͡sʲɑtɪ/</td>
+<td>to promise (pf)</td>
+<td>perfective</td>
+</tr>
+<tr>
+<td>планувати</td>
+<td>/plɑnuˈvɑtɪ/</td>
+<td>to plan</td>
+<td>imperfective</td>
+</tr>
+<tr>
+<td>запланувати</td>
+<td>/zɑplɑnuˈvɑtɪ/</td>
+<td>to plan (pf)</td>
+<td>perfective</td>
+</tr>
+<tr>
+<td>збиратися</td>
+<td>/zbɪˈrɑtɪsʲɑ/</td>
+<td>to be going to</td>
+<td>+ infinitive</td>
+</tr>
+<tr>
+<td>мати намір</td>
+<td>/ˈmɑtɪ nɑˈmʲir/</td>
+<td>to intend</td>
+<td>+ infinitive</td>
+</tr>
+<tr>
+<td>сподіватися</td>
+<td>/spodʲiˈvɑtɪsʲɑ/</td>
+<td>to hope</td>
+<td>imperfective</td>
+</tr>
+<tr>
+<td>спочатку</td>
+<td>/spoˈt͡ʃɑtku/</td>
+<td>first, at first</td>
+<td>in sequences</td>
+</tr>
+<tr>
+<td>потім</td>
+<td>/poˈtʲim/</td>
+<td>then, afterwards</td>
+<td>in sequences</td>
+</tr>
+<tr>
+<td>наступного тижня</td>
+<td>/nɑˈstupnoɦo ˈtɪʒnʲɑ/</td>
+<td>next week</td>
+<td>-</td>
+</tr>
+<tr>
+<td>післязавтра</td>
+<td>/pʲisʲlʲɑˈzɑvtrɑ/</td>
+<td>day after tomorrow</td>
+<td>-</td>
+</tr>
+<tr>
+<td>найближчим часом</td>
+<td>/nɑjblɪʒˈt͡ʃɪm ˈt͡ʃɑsom/</td>
+<td>in the near future</td>
+<td>-</td>
+</tr>
+<tr>
+<td>до понеділка</td>
+<td>/do ponɛˈdʲilkɑ/</td>
+<td>by Monday</td>
+<td>deadline</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Summary</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="twofutureforms">Two Future Forms</h2>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Form</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Perfective</td>
+<td>Single word (зроблю)</td>
+<td>Completed action, result</td>
+</tr>
+<tr>
+<td>Imperfective</td>
+<td>Буду + infinitive</td>
+<td>Process, duration, repetition</td>
+</tr>
+</tbody>
+</table>
+<h2 id="quickdecisionguide">Quick Decision Guide</h2>
+<table>
+<thead>
+<tr>
+<th>Context</th>
+<th>Aspect</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Promise</td>
+<td>Perfective</td>
+<td>Я зроблю це!</td>
+</tr>
+<tr>
+<td>Duration (весь день)</td>
+<td>Imperfective</td>
+<td>Буду працювати весь день</td>
+</tr>
+<tr>
+<td>Single event</td>
+<td>Perfective</td>
+<td>Він прийде завтра</td>
+</tr>
+<tr>
+<td>Repeated future</td>
+<td>Imperfective</td>
+<td>Буду ходити щодня</td>
+</tr>
+<tr>
+<td>Sequence</td>
+<td>Perfective</td>
+<td>Поснідаю і піду</td>
+</tr>
+<tr>
+<td>Process question</td>
+<td>Imperfective</td>
+<td>Що будеш робити?</td>
+</tr>
+</tbody>
+</table>
+<h2 id="remember">Remember</h2>
+<ul>
+<li>Perfective "present" forms = future meaning</li>
+<li>Буду + imperfective infinitive = imperfective future</li>
+<li>The -тиму form (писатиму) is alternative imperfective future</li>
+<li>Aspect choice follows same logic as in past tense</li>
+</ul>
+<blockquote>
+  <p><strong>Key Takeaways</strong></p>
+  <ul>
+  <li>Perfective future = single completed action (напишу)</li>
+  <li>Imperfective future = process/duration/repetition (буду писати)</li>
+  <li>Promises and commitments usually use perfective</li>
+  <li>Duration expressions require imperfective future</li>
+  </ul>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('match')">Start →</button></div>
     </section>
     <section id="match" class="section"><div class="card"><h3>Future Forms</h3>
       <div class="score-display"><span class="score"><span id="match-score">0</span>/6</span></div>
       <div class="match-container" id="match-container"><svg class="match-lines" id="match-lines"></svg>
         <div class="match-column" id="match-left"><div class="match-item" data-pair="0">буду читати</div><div class="match-item" data-pair="1">буду писати</div><div class="match-item" data-pair="2">буду робити</div><div class="match-item" data-pair="3">буду вчити</div><div class="match-item" data-pair="4">буду готувати</div><div class="match-item" data-pair="5">буду чекати</div></div>
-        <div class="match-column" id="match-right"><div class="match-item" data-pair="5">зачекаю</div><div class="match-item" data-pair="1">напишу</div><div class="match-item" data-pair="4">приготую</div><div class="match-item" data-pair="3">вивчу</div><div class="match-item" data-pair="0">прочитаю</div><div class="match-item" data-pair="2">зроблю</div></div>
+        <div class="match-column" id="match-right"><div class="match-item" data-pair="5">зачекаю</div><div class="match-item" data-pair="1">напишу</div><div class="match-item" data-pair="3">вивчу</div><div class="match-item" data-pair="4">приготую</div><div class="match-item" data-pair="2">зроблю</div><div class="match-item" data-pair="0">прочитаю</div></div>
       </div>
       <div class="completion-message" id="match-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetMatch()">Reset</button><button class="btn btn-primary" onclick="showSection('quiz')">Next →</button></div>
@@ -451,6 +849,10 @@
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,8 +136,20 @@
         <p style="color:var(--text-muted)">Емфаза та інверсія</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="md-content"><h1 id="">Вступ</h1>
-<p>Англійською мова говорить: «Peter bought the book». Ви не можете сказати «The book bought Peter» — це буде інший зміст (книга купила Петра). В англійській <strong>порядок слів фіксований</strong> — він визначає, хто діє, а хто зазнає дії.</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Вступ</li><li class="toc-item" data-target="section-1">Нейтральний порядок слів</li><li class="toc-item" data-target="section-2">Тема і Рема</li><li class="toc-item" data-target="section-3">Інверсія</li><li class="toc-item" data-target="section-4">Емфатичні конструкції</li><li class="toc-item" data-target="section-5">Виділення частин речення</li><li class="toc-item" data-target="section-6">Інверсія у питаннях</li><li class="toc-item" data-target="section-7">Засоби підсилення: зведена таблиця</li><li class="toc-item" data-target="section-8">Позиція прислівників</li><li class="toc-item" data-target="section-9">Практика</li><li class="toc-item" data-target="section-10">Трансформація тексту</li><li class="toc-item" data-target="section-11">Словник</li><li class="toc-item" data-target="section-12">Підсумок</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Вступ</h3>
+          <span class="section-type intro">intro</span>
+        </div>
+        <div class="section-body md-content"><p>Англійською мова говорить: «Peter bought the book». Ви не можете сказати «The book bought Peter» — це буде інший зміст (книга купила Петра). В англійській <strong>порядок слів фіксований</strong> — він визначає, хто діє, а хто зазнає дії.</p>
 <p>А тепер українською: «Петро купив книгу», «Книгу купив Петро», «Купив Петро книгу». Усі три речення означають одне й те саме — Петро купив книгу. Але чому тоді три варіанти? Чи вони справді ідентичні?</p>
 <p>Ні. Різниця — в <strong>акценті</strong>. «Петро купив книгу» — нейтрально, просто факт. «<strong>Книгу</strong> купив Петро» — акцент на книзі (саме книгу, не щось інше). «Купив Петро книгу» — художній стиль, драматизація. Порядок слів в українській — це не граматика, а <strong>стилістика</strong>. Він показує, що для вас важливіше, що нове, що відоме, де емоційний пік.</p>
 <p>Для носія мови це інтуїтивно. Для іноземця — загадка: чому українці кажуть «Прийшла весна», а не «Весна прийшла»? Чому «Саме він це зробив», а не просто «Він це зробив»? Сьогодні ми розгадаємо цю загадку.</p>
@@ -127,9 +157,14 @@
   <p><strong>Чи знали ви?</strong></p>
   <p>Вільний порядок слів — це <strong>спадок праіндоєвропейської мови</strong>. Давні мови (латина, санскрит, давньогрецька) мали розвинену систему відмінків, яка показувала роль слова в реченні незалежно від позиції. Англійська <strong>втратила</strong> більшість відмінків і компенсувала це фіксованим порядком слів. Українська <strong>зберегла</strong> відмінки — і тому порядок слів залишився гнучким, слугуючи для виразності, а не граматики.</p>
 </blockquote>
-<hr />
-<h1 id="-1">Нейтральний порядок слів</h1>
-<p><strong>Стандартна схема:</strong> Підмет + Присудок + Додаток (SVO)</p>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Нейтральний порядок слів</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><p><strong>Стандартна схема:</strong> Підмет + Присудок + Додаток (SVO)</p>
 <table>
 <thead>
 <tr>
@@ -149,9 +184,14 @@
 </tbody>
 </table>
 <p>Це — нейтральний, «безбарвний» порядок. Він не підкреслює нічого конкретного.</p>
-<hr />
-<h1 id="-2">Тема і Рема</h1>
-<p>У лінгвістиці є два ключових поняття:</p>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Тема і Рема</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><p>У лінгвістиці є два ключових поняття:</p>
 <table>
 <thead>
 <tr>
@@ -186,9 +226,14 @@
   <p>❌ <strong>Міф:</strong> «Те, що на початку речення — найважливіше.»</p>
   <p>✅ <strong>Факт:</strong> В українській мові <strong>найважливіше — в кінці</strong>. Початок — це «відома» інформація, контекст. Кінець — це «нова» інформація, відповідь на питання. Це протилежно до англійської, де акцент часто на початку.</p>
 </blockquote>
-<hr />
-<h1 id="-3">Інверсія</h1>
-<p><strong>Інверсія</strong> — зміна звичайного порядку слів для виразності.</p>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Інверсія</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><p><strong>Інверсія</strong> — зміна звичайного порядку слів для виразності.</p>
 <table>
 <thead>
 <tr>
@@ -220,7 +265,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="-4">Інверсія у художньому стилі</h2>
+<h2 id="">Інверсія у художньому стилі</h2>
 <p>В літературі інверсія створює ритм та емоційність:</p>
 <table>
 <thead>
@@ -248,9 +293,14 @@
   <p><strong>Чи знали ви?</strong></p>
   <p>Тарас Шевченко активно використовував інверсію для створення поетичного ритму: «Реве та стогне Дніпр широкий» (не «Широкий Дніпр реве та стогне»). Ця інверсія підкреслює <strong>дію</strong> (реве, стогне), а не об'єкт. Поезія без інверсії звучала б як проза.</p>
 </blockquote>
-<hr />
-<h1 id="-5">Емфатичні конструкції</h1>
-<h2 id="1">1. «Це» + підмет</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-4">
+        <div class="section-header" onclick="toggleSection(4)">
+          <h3>Емфатичні конструкції</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="1">1. «Це» + підмет</h2>
 <p>Для виділення того, хто зробив дію:</p>
 <ul>
 <li><strong>Це Петро</strong> купив книгу. (= Саме Петро)</li>
@@ -280,9 +330,14 @@
 <li>Вона не сказала <strong>навіть слова</strong>. (= абсолютно нічого)</li>
 <li><strong>Навіть якщо</strong> захочеш, не зможеш.</li>
 </ul>
-<hr />
-<h1 id="-6">Виділення частин речення</h1>
-<h2 id="-7">Підмет</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-5">
+        <div class="section-header" onclick="toggleSection(5)">
+          <h3>Виділення частин речення</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Підмет</h2>
 <table>
 <thead>
 <tr>
@@ -305,7 +360,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="-8">Додаток</h2>
+<h2 id="-1">Додаток</h2>
 <table>
 <thead>
 <tr>
@@ -324,7 +379,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="-9">Обставина</h2>
+<h2 id="-2">Обставина</h2>
 <table>
 <thead>
 <tr>
@@ -343,9 +398,14 @@
 </tr>
 </tbody>
 </table>
-<hr />
-<h1 id="-10">Інверсія у питаннях</h1>
-<p><strong>Часткова інверсія (нормальна):</strong></p>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-6">
+        <div class="section-header" onclick="toggleSection(6)">
+          <h3>Інверсія у питаннях</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><p><strong>Часткова інверсія (нормальна):</strong></p>
 <ul>
 <li><strong>Чи прийдеш</strong> ти?</li>
 <li><strong>Де був</strong> ти?</li>
@@ -357,9 +417,14 @@
 <li><strong>Хіба це правда?!</strong></li>
 <li><strong>Чому він так вчинив?!</strong></li>
 </ul>
-<hr />
-<h1 id="-11">Засоби підсилення: зведена таблиця</h1>
-<table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-7">
+        <div class="section-header" onclick="toggleSection(7)">
+          <h3>Засоби підсилення: зведена таблиця</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><table>
 <thead>
 <tr>
 <th>Засіб</th>
@@ -410,9 +475,14 @@
 </tr>
 </tbody>
 </table>
-<hr />
-<h1 id="-12">Позиція прислівників</h1>
-<table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-8">
+        <div class="section-header" onclick="toggleSection(8)">
+          <h3>Позиція прислівників</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><table>
 <thead>
 <tr>
 <th>Позиція</th>
@@ -444,9 +514,14 @@
   <p>❌ <strong>Міф:</strong> «Прислівник завжди стоїть перед дієсловом.»</p>
   <p>✅ <strong>Факт:</strong> Позиція прислівника <strong>гнучка</strong> і залежить від того, що ви хочете підкреслити. «Він швидко побіг» — нейтрально. «Швидко він побіг!» — наголос на швидкості. «Він побіг швидко» — теж наголос.</p>
 </blockquote>
-<hr />
-<h1 id="-13">Практика</h1>
-<h2 id="-14">Змініть порядок для виділення</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-9">
+        <div class="section-header" onclick="toggleSection(9)">
+          <h3>Практика</h3>
+          <span class="section-type practice">practice</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Змініть порядок для виділення</h2>
 <ol>
 <li><p>Петро написав листа. → Виділити «листа»<br />
 → <strong>Листа написав Петро.</strong> / <strong>Саме листа Петро написав.</strong></p></li>
@@ -455,7 +530,7 @@
 <li><p>Він сказав правду. → Виділити «він»<br />
 → <strong>Саме він сказав правду.</strong> / <strong>Це він сказав правду.</strong></p></li>
 </ol>
-<h2 id="-15">Додайте підсилення</h2>
+<h2 id="-1">Додайте підсилення</h2>
 <ol>
 <li><p>Він це зробив. (саме)<br />
 → <strong>Саме він це зробив.</strong></p></li>
@@ -466,7 +541,7 @@
 <li><p>Він погодився. (навіть)<br />
 → <strong>Навіть він погодився.</strong></p></li>
 </ol>
-<h2 id="-16">Визначте, що виділено</h2>
+<h2 id="-2">Визначте, що виділено</h2>
 <ol>
 <li><p>«Книгу Петро купив.»<br />
 → Виділено <strong>книгу</strong> (на початку, незвичайна позиція)</p></li>
@@ -475,15 +550,160 @@
 <li><p>«Він же це знає!»<br />
 → Виділено <strong>факт знання</strong> (емфатична частка)</p></li>
 </ol>
-<hr />
-<h1 id="-17">Трансформація тексту</h1>
-<h2 id="-18">Завдання</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-10">
+        <div class="section-header" onclick="toggleSection(10)">
+          <h3>Трансформація тексту</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Завдання</h2>
 <p>Перепишіть нейтральний текст, додавши інверсію та емфазу:</p>
 <p><strong>Нейтрально:</strong><br />
 «Петро прийшов. Він приніс квіти. Квіти були дуже гарні. Ми зраділи.»</p>
 <p><strong>З емфазою:</strong><br />
 «<strong>Прийшов Петро!</strong> І квіти він приніс — <strong>такі гарні!</strong> <strong>Як же</strong> ми зраділи!»</p>
-<hr /></div></div>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-11">
+        <div class="section-header" onclick="toggleSection(11)">
+          <h3>Словник</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Слово</th>
+<th>Переклад</th>
+<th>Примітки</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>інверсія</td>
+<td>inversion</td>
+<td>зміна порядку</td>
+</tr>
+<tr>
+<td>емфаза</td>
+<td>emphasis</td>
+<td>підсилення</td>
+</tr>
+<tr>
+<td>порядок слів</td>
+<td>word order</td>
+<td>синтаксис</td>
+</tr>
+<tr>
+<td>тема</td>
+<td>theme (given)</td>
+<td>відоме</td>
+</tr>
+<tr>
+<td>рема</td>
+<td>rheme (new)</td>
+<td>нове</td>
+</tr>
+<tr>
+<td>підсилення</td>
+<td>intensification</td>
+<td>акцент</td>
+</tr>
+<tr>
+<td>саме</td>
+<td>exactly, particularly</td>
+<td>найсильніший засіб</td>
+</tr>
+<tr>
+<td>навіть</td>
+<td>even</td>
+<td>несподіванка</td>
+</tr>
+<tr>
+<td>лише</td>
+<td>only</td>
+<td>обмеження</td>
+</tr>
+<tr>
+<td>справді</td>
+<td>really, truly</td>
+<td>підтвердження</td>
+</tr>
+<tr>
+<td>аж</td>
+<td>even, as much as</td>
+<td>інтенсивність</td>
+</tr>
+<tr>
+<td>ж/же</td>
+<td>(emphatic particle)</td>
+<td>очевидність</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-12">
+        <div class="section-header" onclick="toggleSection(12)">
+          <h3>Підсумок</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Порядок слів</h2>
+<table>
+<thead>
+<tr>
+<th>Позиція</th>
+<th>Функція</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Початок</td>
+<td>Тема (відоме) або фокус</td>
+</tr>
+<tr>
+<td>Кінець</td>
+<td>Рема (нова інформація)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="-1">Засоби підсилення</h2>
+<table>
+<thead>
+<tr>
+<th>Засіб</th>
+<th>Приклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Інверсія</td>
+<td>Книгу читає Петро.</td>
+</tr>
+<tr>
+<td>Саме</td>
+<td>Саме він це зробив.</td>
+</tr>
+<tr>
+<td>Ж/Же</td>
+<td>Він же знає!</td>
+</tr>
+<tr>
+<td>Навіть</td>
+<td>Навіть він погодився.</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p><strong>Запам'ятайте:</strong></p>
+  <p>✓ Порядок слів в українській — <strong>засіб виразності</strong><br />
+  ✓ Найважливіше — <strong>в кінці речення</strong><br />
+  ✓ Інверсія додає <strong>емоційності та драматизму</strong><br />
+  ✓ Частки (<strong>саме, ж, навіть</strong>) підсилюють значення<br />
+  ✓ Вільний порядок слів — <strong>спадок давніх мов</strong> із розвиненою відмінковою системою</p>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('vocab')">Start →</button></div>
     </section>
     
@@ -516,6 +736,10 @@
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

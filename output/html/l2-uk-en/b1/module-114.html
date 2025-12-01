@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,7 +136,22 @@
         <p style="color:var(--text-muted)">Complex Sentences and B1.2 Vocabulary</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Огляд B1.2 | B1.2 Overview</h4><div class="md-content"><p>B1.2 introduced <strong>complex sentences</strong> and <strong>thematic vocabulary</strong>:</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Зміст уроку | Lesson Content</li><li class="toc-item" data-target="section-1">Activities</li><li class="toc-item" data-target="section-2">Vocabulary</li><li class="toc-item" data-target="section-3">Summary</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Зміст уроку | Lesson Content</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="warmup">warm-up | Розминка</h2>
+<h3 id="b12b12overview">Огляд B1.2 | B1.2 Overview</h3>
+<p>B1.2 introduced <strong>complex sentences</strong> and <strong>thematic vocabulary</strong>:</p>
 <p><strong>Grammar (Modules 101-110):</strong></p>
 <ul>
 <li>Relative clauses (який, де, куди, коли)</li>
@@ -133,7 +166,10 @@
 <li>Media &amp; News</li>
 <li>Society &amp; Politics</li>
 <li>Environment</li>
-</ul></div></div><div class="canvas-note"><h4>### Complex Sentence Summary</h4><div class="md-content"><table>
+</ul>
+<h2 id="presentation">presentation | Презентація</h2>
+<h3 id="complexsentencesummary">Complex Sentence Summary</h3>
+<table>
 <thead>
 <tr>
 <th>Type</th>
@@ -213,7 +249,9 @@
 <td>Чекай, поки він не прийде.</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Relative Clauses Review</h4><div class="md-content"><p><strong>Який declines for gender/number/case:</strong></p>
+</table>
+<h3 id="relativeclausesreview">Relative Clauses Review</h3>
+<p><strong>Який declines for gender/number/case:</strong></p>
 <table>
 <thead>
 <tr>
@@ -245,7 +283,9 @@
 <li>де = в якому/якій (location)</li>
 <li>куди = до якого (direction)</li>
 <li>коли = у який (time)</li>
-</ul></div></div><div class="canvas-note"><h4>Purpose Clauses Review</h4><div class="md-content"><table>
+</ul>
+<h3 id="purposeclausesreview">Purpose Clauses Review</h3>
+<table>
 <thead>
 <tr>
 <th>Structure</th>
@@ -265,7 +305,9 @@
 <td>Я хочу, щоб ти допоміг.</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Conditionals Review</h4><div class="md-content"><table>
+</table>
+<h3 id="conditionalsreview">Conditionals Review</h3>
+<table>
 <thead>
 <tr>
 <th>Type</th>
@@ -295,7 +337,9 @@
 <td>Навіть якщо піде дощ…</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Other Clause Types Review</h4><div class="md-content"><p><strong>Concessive (although):</strong></p>
+</table>
+<h3 id="otherclausetypesreview">Other Clause Types Review</h3>
+<p><strong>Concessive (although):</strong></p>
 <ul>
 <li>хоча + clause: Хоча йде дощ, я піду.</li>
 <li>незважаючи на + noun: Незважаючи на дощ…</li>
@@ -312,12 +356,17 @@
 <li>після того як: Після того як закінчив…</li>
 <li>перед тим як: Перед тим як піти…</li>
 <li>поки не (until): Поки він не прийде…</li>
-</ul></div></div><div class="canvas-note"><h4>B1.2 Vocabulary Themes</h4><div class="md-content"><p><strong>Media & News:</strong><br />
+</ul>
+<h3 id="b12vocabularythemes">B1.2 Vocabulary Themes</h3>
+<p><strong>Media & News:</strong><br />
 газета, стаття, журналіст, новини, телебачення, соціальні мережі, підписник, коментар</p>
 <p><strong>Society & Politics:</strong><br />
 уряд, демократія, вибори, голосувати, закон, право, громадянин, свобода, реформа</p>
 <p><strong>Environment:</strong><br />
-довкілля, забруднення, клімат, переробка, захист, енергія, ресурси, сталий розвиток</p></div></div><div class="canvas-note"><h4>### Combine Using Correct Conjunction</h4><div class="md-content"><p><strong>Choose:</strong> який/яка, тому що, якщо, хоча, щоб, після того як</p>
+довкілля, забруднення, клімат, переробка, захист, енергія, ресурси, сталий розвиток</p>
+<h2 id="practice">practice | Практика</h2>
+<h3 id="combineusingcorrectconjunction">Combine Using Correct Conjunction</h3>
+<p><strong>Choose:</strong> який/яка, тому що, якщо, хоча, щоб, після того як</p>
 <ol>
 <li><p>Це людина. Людина допомогла мені.<br />
 → Це людина, <strong>яка</strong> допомогла мені.</p></li>
@@ -331,7 +380,9 @@
 → Я прийшов, <strong>щоб</strong> допомогти.</p></li>
 <li><p>Я закінчу роботу. Я відпочину.<br />
 → <strong>Після того як</strong> закінчу роботу, я відпочину.</p></li>
-</ol></div></div><div class="canvas-note"><h4>Complete with Vocabulary</h4><div class="md-content"><ol>
+</ol>
+<h3 id="completewithvocabulary">Complete with Vocabulary</h3>
+<ol>
 <li><p>___ (Elections) відбудуться наступного року.<br />
 → <strong>Вибори</strong> відбудуться наступного року.</p></li>
 <li><p>Заводи ___ (pollute) повітря.<br />
@@ -344,7 +395,9 @@
 → <strong>Переробка</strong> допомагає довкіллю.</p></li>
 <li><p>___ (Climate change) — глобальна проблема.<br />
 → <strong>Зміна клімату</strong> — глобальна проблема.</p></li>
-</ol></div></div><div class="canvas-note"><h4>Mixed Grammar Practice</h4><div class="md-content"><p>Choose the correct form:</p>
+</ol>
+<h3 id="mixedgrammarpractice">Mixed Grammar Practice</h3>
+<p>Choose the correct form:</p>
 <ol>
 <li>Місто, ___ я живу, велике.</li>
 </ol>
@@ -392,7 +445,9 @@
 <li>a) Тому що</li>
 <li>b) Хоча ✓</li>
 <li>c) Після того як</li>
-</ul></div></div><div class="canvas-note"><h4>Translate to Ukrainian</h4><div class="md-content"><ol>
+</ul>
+<h3 id="translatetoukrainian">Translate to Ukrainian</h3>
+<ol>
 <li><p>If I had time, I would read more.<br />
 → <strong>Якби я мав час, я б читав більше.</strong></p></li>
 <li><p>I came to ask you a question.<br />
@@ -403,7 +458,10 @@
 → <strong>Місто, де я народився, гарне.</strong></p></li>
 <li><p>I didn't come because I was busy.<br />
 → <strong>Я не прийшов, тому що був зайнятий.</strong></p></li>
-</ol></div></div><div class="canvas-note"><h4>### Write a Complex Paragraph</h4><div class="md-content"><p>Write about one of these topics using multiple complex sentence types:</p>
+</ol>
+<h2 id="production">production | Продукція</h2>
+<h3 id="writeacomplexparagraph">Write a Complex Paragraph</h3>
+<p>Write about one of these topics using multiple complex sentence types:</p>
 <p><strong>Topic 1: Media</strong><br />
 Use: який/яка, тому що, якщо</p>
 <p><strong>Topic 2: Environment</strong><br />
@@ -411,13 +469,136 @@ Use: хоча, щоб, після того як</p>
 <p><strong>Topic 3: Politics</strong><br />
 Use: де, незважаючи на, коли</p>
 <p><strong>Example (Media):</strong><br />
-Я читаю новини на вебсайті, <strong>який</strong> оновлюється щогодини, <strong>тому що</strong> хочу бути інформованим. <strong>Якщо</strong> бачу цікаву статтю, я ділюся нею в соціальних мережах.</p></div></div><div class="canvas-note"><h4>Discussion</h4><div class="md-content"><p>Discuss using B1.2 grammar and vocabulary:</p>
+Я читаю новини на вебсайті, <strong>який</strong> оновлюється щогодини, <strong>тому що</strong> хочу бути інформованим. <strong>Якщо</strong> бачу цікаву статтю, я ділюся нею в соціальних мережах.</p>
+<h3 id="discussion">Discussion</h3>
+<p>Discuss using B1.2 grammar and vocabulary:</p>
 <ol>
 <li>Що ви робите для <strong>довкілля</strong>?</li>
 <li>Як ви дізнаєтеся <strong>новини</strong>?</li>
 <li>Чи важлива <strong>демократія</strong>?</li>
 </ol>
-<p>Use complex sentences in your answers!</p></div></div></div>
+<p>Use complex sentences in your answers!</p>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Activities</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="quizb12comprehensivereview">quiz: B1.2 Comprehensive Review</h2>
+<blockquote>
+  <p>Choose the correct answer.</p>
+</blockquote>
+<ol>
+<li>Людина, ___ тут працює, моя сестра.</li>
+</ol>
+<ul>
+<li>[x] яка</li>
+<li>[ ] яку</li>
+</ul>
+<ol>
+<li>Я прийшов, ___ допомогти.</li>
+</ol>
+<ul>
+<li>[x] щоб</li>
+<li>[ ] що</li>
+</ul>
+<ol>
+<li>___ він прийде, ми почнемо.</li>
+</ol>
+<ul>
+<li>[x] Якщо</li>
+<li>[ ] Якби</li>
+</ul>
+<ol>
+<li>Він не прийшов ___ хвороби.</li>
+</ol>
+<ul>
+<li>[x] через</li>
+<li>[ ] завдяки</li>
+</ul>
+<ol>
+<li>Чекай, ___ я не зателефоную.</li>
+</ol>
+<ul>
+<li>[x] поки</li>
+<li>[ ] після</li>
+</ul>
+<ol>
+<li>___ було холодно, вони вийшли.</li>
+</ol>
+<ul>
+<li>[x] Хоча</li>
+<li>[ ] Тому що</li>
+</ul>
+<h2 id="fillincompletethestory">fill-in: Complete the Story</h2>
+<blockquote>
+  <p>Я читаю новини на сайті, (1)<strong>_ оновлюється щогодини. Вчора я прочитав статтю про зміну клімату. (2)</strong>_ всі говорять про цю проблему, мало хто діє. Я хочу, (3)<strong>_ люди більше думали про довкілля. (4)</strong>_ ми не почнемо діяти зараз, буде пізно. Я намагаюся робити все, (5)___ допомогти планеті.</p>
+</blockquote>
+<p><strong>Answers:</strong> який, Хоча, щоб, Якщо, щоб</p>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Vocabulary</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><p>This module reviews vocabulary from modules 111-113.</p>
+<h2 id="keytermsbytheme">Key Terms by Theme</h2>
+<h3 id="media">Media</h3>
+<p>газета, стаття, журналіст, новини, передача, соціальна мережа, підписник, коментар, поширювати</p>
+<h3 id="politics">Politics</h3>
+<p>уряд, демократія, вибори, голосувати, закон, право, громадянин, свобода, реформа, корупція</p>
+<h3 id="environment">Environment</h3>
+<p>довкілля, забруднення, клімат, переробка, захист, енергія, ресурси, сміття, викиди</p>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Summary</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="b12grammarreview">B1.2 Grammar Review</h2>
+<h3 id="relativeclauses">Relative Clauses</h3>
+<ul>
+<li>який/яка/яке/які — agrees with noun, declines for case</li>
+<li>де, куди, звідки, коли — simpler alternatives</li>
+</ul>
+<h3 id="purposeclauses">Purpose Clauses</h3>
+<ul>
+<li>Same subject: щоб + infinitive</li>
+<li>Different subjects: щоб + past tense</li>
+</ul>
+<h3 id="conditionals">Conditionals</h3>
+<ul>
+<li>Real: якщо + future</li>
+<li>Unreal: якби + past + б</li>
+</ul>
+<h3 id="otherclauses">Other Clauses</h3>
+<ul>
+<li>Concessive: хоча, незважаючи на</li>
+<li>Causal: тому що, через, завдяки</li>
+<li>Temporal: коли, після того як, перед тим як, поки (не)</li>
+</ul>
+<h2 id="b12vocabularyreview">B1.2 Vocabulary Review</h2>
+<ul>
+<li>Media vocabulary for discussing news and journalism</li>
+<li>Political vocabulary for civic discussions</li>
+<li>Environmental vocabulary for global issues</li>
+</ul>
+<blockquote>
+  <p><strong>Key Takeaways</strong></p>
+  <ul>
+  <li>Complex sentences combine with B1.2 vocabulary</li>
+  <li>Choose correct conjunction based on meaning</li>
+  <li>який declines; де/куди/коли don't</li>
+  <li>Same subject = infinitive; different = past after щоб</li>
+  <li>якщо = real; якби = unreal</li>
+  <li>Ready for B1.2 Checkpoint!</li>
+  </ul>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('quiz')">Start →</button></div>
     </section>
     
@@ -455,6 +636,10 @@ Use: де, незважаючи на, коли</p>
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

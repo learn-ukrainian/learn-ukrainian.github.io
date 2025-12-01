@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,20 +136,928 @@
         <p style="color:var(--text-muted)">30 Essential Verb Pairs</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Building Your Verb Arsenal</h4><div class="md-content"><p>At A2, you learned basic aspect pairs like:</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Lesson Content</li><li class="toc-item" data-target="section-1">Activities</li><li class="toc-item" data-target="section-2">Vocabulary</li><li class="toc-item" data-target="section-3">Summary</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Lesson Content</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="warmup">warm-up</h2>
+<h3 id="buildingyourverbarsenal">Building Your Verb Arsenal</h3>
+<p>At A2, you learned basic aspect pairs like:</p>
 <ul>
 <li>робити / зробити</li>
 <li>читати / прочитати</li>
 <li>писати / написати</li>
 </ul>
-<p>Now it's time to expand systematically. Understanding patterns helps you predict aspect pairs for new verbs.</p></div></div></div>
+<p>Now it's time to expand systematically. Understanding patterns helps you predict aspect pairs for new verbs.</p>
+<hr />
+<blockquote>
+  <p><strong>⭐ TOP 20 ESSENTIAL ASPECT PAIRS</strong></p>
+  <p>Master these first - they're used in almost every conversation:</p>
+  <p><strong>Level 1: Daily Essentials (Top 10)</strong></p>
+  <table>
+  <thead>
+  <tr>
+  <th>#</th>
+  <th>Imperfective</th>
+  <th>Perfective</th>
+  <th>English</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+  <td>1</td>
+  <td>робити</td>
+  <td>зробити</td>
+  <td>to do/make</td>
+  </tr>
+  <tr>
+  <td>2</td>
+  <td>говорити</td>
+  <td>сказати</td>
+  <td>to speak/say</td>
+  </tr>
+  <tr>
+  <td>3</td>
+  <td>брати</td>
+  <td>взяти</td>
+  <td>to take</td>
+  </tr>
+  <tr>
+  <td>4</td>
+  <td>давати</td>
+  <td>дати</td>
+  <td>to give</td>
+  </tr>
+  <tr>
+  <td>5</td>
+  <td>писати</td>
+  <td>написати</td>
+  <td>to write</td>
+  </tr>
+  <tr>
+  <td>6</td>
+  <td>читати</td>
+  <td>прочитати</td>
+  <td>to read</td>
+  </tr>
+  <tr>
+  <td>7</td>
+  <td>їсти</td>
+  <td>з'їсти</td>
+  <td>to eat</td>
+  </tr>
+  <tr>
+  <td>8</td>
+  <td>пити</td>
+  <td>випити</td>
+  <td>to drink</td>
+  </tr>
+  <tr>
+  <td>9</td>
+  <td>бачити</td>
+  <td>побачити</td>
+  <td>to see</td>
+  </tr>
+  <tr>
+  <td>10</td>
+  <td>чути</td>
+  <td>почути</td>
+  <td>to hear</td>
+  </tr>
+  </tbody>
+  </table>
+  <p><strong>Level 2: High Frequency (Top 11-20)</strong></p>
+  <table>
+  <thead>
+  <tr>
+  <th>#</th>
+  <th>Imperfective</th>
+  <th>Perfective</th>
+  <th>English</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+  <td>11</td>
+  <td>купувати</td>
+  <td>купити</td>
+  <td>to buy</td>
+  </tr>
+  <tr>
+  <td>12</td>
+  <td>відкривати</td>
+  <td>відкрити</td>
+  <td>to open</td>
+  </tr>
+  <tr>
+  <td>13</td>
+  <td>закривати</td>
+  <td>закрити</td>
+  <td>to close</td>
+  </tr>
+  <tr>
+  <td>14</td>
+  <td>починати</td>
+  <td>почати</td>
+  <td>to begin</td>
+  </tr>
+  <tr>
+  <td>15</td>
+  <td>закінчувати</td>
+  <td>закінчити</td>
+  <td>to finish</td>
+  </tr>
+  <tr>
+  <td>16</td>
+  <td>питати</td>
+  <td>запитати</td>
+  <td>to ask</td>
+  </tr>
+  <tr>
+  <td>17</td>
+  <td>відповідати</td>
+  <td>відповісти</td>
+  <td>to answer</td>
+  </tr>
+  <tr>
+  <td>18</td>
+  <td>вчити</td>
+  <td>вивчити</td>
+  <td>to learn</td>
+  </tr>
+  <tr>
+  <td>19</td>
+  <td>забувати</td>
+  <td>забути</td>
+  <td>to forget</td>
+  </tr>
+  <tr>
+  <td>20</td>
+  <td>знаходити</td>
+  <td>знайти</td>
+  <td>to find</td>
+  </tr>
+  </tbody>
+  </table>
+  <p><strong>Study tip:</strong> If short on time, focus on starred (⭐) pairs first!</p>
+</blockquote>
+<hr />
+<h2 id="presentation">presentation</h2>
+<h3 id="pattern1prefixcreatesperfective">Pattern 1: Prefix Creates Perfective</h3>
+<p>Most common pattern: Add prefix to imperfective → perfective.</p>
+<table>
+<thead>
+<tr>
+<th>Imperfective</th>
+<th>Perfective</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>будувати</td>
+<td><strong>по</strong>будувати</td>
+<td>to build</td>
+</tr>
+<tr>
+<td>готувати</td>
+<td><strong>при</strong>готувати</td>
+<td>to prepare, cook</td>
+</tr>
+<tr>
+<td>снідати</td>
+<td><strong>по</strong>снідати</td>
+<td>to have breakfast</td>
+</tr>
+<tr>
+<td>обідати</td>
+<td><strong>по</strong>обідати</td>
+<td>to have lunch</td>
+</tr>
+<tr>
+<td>вечеряти</td>
+<td><strong>по</strong>вечеряти</td>
+<td>to have dinner</td>
+</tr>
+<tr>
+<td>радити</td>
+<td><strong>по</strong>радити</td>
+<td>to advise</td>
+</tr>
+<tr>
+<td>цілувати</td>
+<td><strong>по</strong>цілувати</td>
+<td>to kiss</td>
+</tr>
+<tr>
+<td>дякувати</td>
+<td><strong>по</strong>дякувати</td>
+<td>to thank</td>
+</tr>
+<tr>
+<td>вітати</td>
+<td><strong>при</strong>вітати</td>
+<td>to greet, congratulate</td>
+</tr>
+<tr>
+<td>рахувати</td>
+<td><strong>по</strong>рахувати</td>
+<td>to count</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Common prefixes for aspectual pairs:</strong></p>
+<ul>
+<li><strong>по-</strong> (most common): поснідати, пообідати, побудувати</li>
+<li><strong>при-</strong> (often with cooking/preparing): приготувати</li>
+<li><strong>з-/с-</strong> (often with completing): зробити</li>
+</ul>
+<h3 id="pattern2suffixchange">Pattern 2: Suffix Change -ува-/-и-</h3>
+<p>Some verbs switch between <strong>-увати</strong> (imperfective) and <strong>-ити</strong> (perfective):</p>
+<table>
+<thead>
+<tr>
+<th>Imperfective (-увати)</th>
+<th>Perfective (-ити)</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>виконувати</td>
+<td>виконати</td>
+<td>to complete, fulfill</td>
+</tr>
+<tr>
+<td>використовувати</td>
+<td>використати</td>
+<td>to use</td>
+</tr>
+<tr>
+<td>вирішувати</td>
+<td>вирішити</td>
+<td>to decide, solve</td>
+</tr>
+<tr>
+<td>відповідати</td>
+<td>відповісти</td>
+<td>to answer</td>
+</tr>
+<tr>
+<td>замовляти</td>
+<td>замовити</td>
+<td>to order</td>
+</tr>
+<tr>
+<td>запрошувати</td>
+<td>запросити</td>
+<td>to invite</td>
+</tr>
+<tr>
+<td>здійснювати</td>
+<td>здійснити</td>
+<td>to implement</td>
+</tr>
+<tr>
+<td>знайомитися</td>
+<td>познайомитися</td>
+<td>to meet (get acquainted)</td>
+</tr>
+<tr>
+<td>отримувати</td>
+<td>отримати</td>
+<td>to receive</td>
+</tr>
+<tr>
+<td>показувати</td>
+<td>показати</td>
+<td>to show</td>
+</tr>
+</tbody>
+</table>
+<h3 id="pattern3differentrootssuppletive">Pattern 3: Different Roots (Suppletive)</h3>
+<p>Some pairs use completely different words:</p>
+<table>
+<thead>
+<tr>
+<th>Imperfective</th>
+<th>Perfective</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>брати</td>
+<td>взяти</td>
+<td>to take</td>
+</tr>
+<tr>
+<td>говорити</td>
+<td>сказати</td>
+<td>to say</td>
+</tr>
+<tr>
+<td>класти</td>
+<td>покласти</td>
+<td>to put</td>
+</tr>
+<tr>
+<td>шукати</td>
+<td>знайти</td>
+<td>to look for / find</td>
+</tr>
+<tr>
+<td>дивитися</td>
+<td>побачити</td>
+<td>to look / see</td>
+</tr>
+<tr>
+<td>ловити</td>
+<td>спіймати</td>
+<td>to catch</td>
+</tr>
+</tbody>
+</table>
+<p>Note: шукати/знайти is a special pair — looking (process) vs finding (result).</p>
+<h3 id="pattern4stressshift">Pattern 4: Stress Shift</h3>
+<p>Some pairs differ only in stress or minor changes:</p>
+<table>
+<thead>
+<tr>
+<th>Imperfective</th>
+<th>Perfective</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>скидати</td>
+<td>скинути</td>
+<td>to throw off</td>
+</tr>
+<tr>
+<td>кидати</td>
+<td>кинути</td>
+<td>to throw</td>
+</tr>
+<tr>
+<td>штовхати</td>
+<td>штовхнути</td>
+<td>to push</td>
+</tr>
+<tr>
+<td>стукати</td>
+<td>стукнути</td>
+<td>to knock</td>
+</tr>
+</tbody>
+</table>
+<h3 id="newaspectpairscommunication">New Aspect Pairs: Communication</h3>
+<table>
+<thead>
+<tr>
+<th>Imperfective</th>
+<th>Perfective</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>питати</td>
+<td>спитати</td>
+<td>to ask</td>
+</tr>
+<tr>
+<td>запитувати</td>
+<td>запитати</td>
+<td>to ask</td>
+</tr>
+<tr>
+<td>повідомляти</td>
+<td>повідомити</td>
+<td>to inform, notify</td>
+</tr>
+<tr>
+<td>пояснювати</td>
+<td>пояснити</td>
+<td>to explain</td>
+</tr>
+<tr>
+<td>обговорювати</td>
+<td>обговорити</td>
+<td>to discuss</td>
+</tr>
+<tr>
+<td>домовлятися</td>
+<td>домовитися</td>
+<td>to agree, arrange</td>
+</tr>
+<tr>
+<td>обіцяти</td>
+<td>пообіцяти</td>
+<td>to promise</td>
+</tr>
+</tbody>
+</table>
+<h3 id="newaspectpairscognitive">New Aspect Pairs: Cognitive</h3>
+<table>
+<thead>
+<tr>
+<th>Imperfective</th>
+<th>Perfective</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>вчити</td>
+<td>вивчити</td>
+<td>to learn/study</td>
+</tr>
+<tr>
+<td>згадувати</td>
+<td>згадати</td>
+<td>to remember, recall</td>
+</tr>
+<tr>
+<td>забувати</td>
+<td>забути</td>
+<td>to forget</td>
+</tr>
+<tr>
+<td>розуміти</td>
+<td>зрозуміти</td>
+<td>to understand</td>
+</tr>
+<tr>
+<td>пам'ятати</td>
+<td>запам'ятати</td>
+<td>to remember</td>
+</tr>
+<tr>
+<td>вирішувати</td>
+<td>вирішити</td>
+<td>to decide</td>
+</tr>
+<tr>
+<td>думати</td>
+<td>подумати</td>
+<td>to think</td>
+</tr>
+</tbody>
+</table>
+<h3 id="newaspectpairsphysicalactions">New Aspect Pairs: Physical Actions</h3>
+<table>
+<thead>
+<tr>
+<th>Imperfective</th>
+<th>Perfective</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>відкривати</td>
+<td>відкрити</td>
+<td>to open</td>
+</tr>
+<tr>
+<td>закривати</td>
+<td>закрити</td>
+<td>to close</td>
+</tr>
+<tr>
+<td>вмикати</td>
+<td>увімкнути</td>
+<td>to turn on</td>
+</tr>
+<tr>
+<td>вимикати</td>
+<td>вимкнути</td>
+<td>to turn off</td>
+</tr>
+<tr>
+<td>ховати</td>
+<td>сховати</td>
+<td>to hide</td>
+</tr>
+<tr>
+<td>знаходити</td>
+<td>знайти</td>
+<td>to find</td>
+</tr>
+<tr>
+<td>губити</td>
+<td>загубити</td>
+<td>to lose</td>
+</tr>
+<tr>
+<td>ламати</td>
+<td>зламати</td>
+<td>to break</td>
+</tr>
+</tbody>
+</table>
+<h2 id="practice">practice</h2>
+<h3 id="matchthepairs">Match the Pairs</h3>
+<p>Connect imperfective with perfective:</p>
+<table>
+<thead>
+<tr>
+<th>Imperfective</th>
+<th>Perfective</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>будувати</td>
+<td>побудувати</td>
+</tr>
+<tr>
+<td>готувати</td>
+<td>приготувати</td>
+</tr>
+<tr>
+<td>вирішувати</td>
+<td>вирішити</td>
+</tr>
+<tr>
+<td>відповідати</td>
+<td>відповісти</td>
+</tr>
+<tr>
+<td>брати</td>
+<td>взяти</td>
+</tr>
+<tr>
+<td>говорити</td>
+<td>сказати</td>
+</tr>
+</tbody>
+</table>
+<h3 id="fillinthemissingpair">Fill in the Missing Pair</h3>
+<ol>
+<li>запитувати - ___ → <strong>запитати</strong></li>
+<li>___ - зрозуміти → <strong>розуміти</strong></li>
+<li>показувати - ___ → <strong>показати</strong></li>
+<li>___ - забути → <strong>забувати</strong></li>
+<li>відкривати - ___ → <strong>відкрити</strong></li>
+<li>___ - увімкнути → <strong>вмикати</strong></li>
+</ol>
+<h3 id="useincontext">Use in Context</h3>
+<p>Choose the correct aspect:</p>
+<ol>
+<li>Я довго ___ (вирішував/вирішив) цю проблему. → <strong>вирішував</strong> (duration)</li>
+<li>Нарешті він ___ (відповідав/відповів) на моє питання! → <strong>відповів</strong> (finally = result)</li>
+<li>Вона щодня ___ (готувала/приготувала) вечерю. → <strong>готувала</strong> (every day)</li>
+<li>Ми ___ (домовлялися/домовилися) зустрітися завтра. → <strong>домовилися</strong> (result)</li>
+<li>Він часто ___ (забував/забув) свої речі. → <strong>забував</strong> (often)</li>
+<li>Я вже ___ (запрошував/запросив) їх на вечірку. → <strong>запросив</strong> (already)</li>
+</ol>
+<h3 id="transformsentences">Transform Sentences</h3>
+<p>Change aspect while keeping meaning logical:</p>
+<p><strong>Imperfective → Perfective (add result):</strong></p>
+<ol>
+<li>Він готував вечерю. → Він <strong>приготував</strong> вечерю.</li>
+<li>Вона відповідала на листи. → Вона <strong>відповіла</strong> на всі листи.</li>
+<li>Ми обговорювали плани. → Ми <strong>обговорили</strong> плани.</li>
+</ol>
+<p><strong>Perfective → Imperfective (add duration/repetition):</strong></p>
+<ol>
+<li>Він пояснив правило. → Він <strong>пояснював</strong> правило п'ять хвилин.</li>
+<li>Вона запитала. → Вона завжди <strong>запитувала</strong>.</li>
+<li>Я вирішив задачу. → Я <strong>вирішував</strong> задачу годину.</li>
+</ol>
+<h2 id="production">production</h2>
+<h3 id="narrateyourday">Narrate Your Day</h3>
+<p>Use these aspect pairs to describe:</p>
+<ul>
+<li>What you did this morning (perfective for completed actions)</li>
+<li>What you usually do (imperfective for habits)</li>
+</ul>
+<p><strong>Example:</strong><br />
+Сьогодні я <strong>прокинувся</strong> о сьомій, <strong>поснідав</strong>, <strong>відповів</strong> на листи і <strong>пішов</strong> на роботу. Зазвичай я <strong>снідаю</strong> о восьмій і <strong>відповідаю</strong> на листи після обіду.</p>
+<h3 id="createdialogues">Create Dialogues</h3>
+<p>Use at least 5 aspect pairs in a dialogue:</p>
+<p><strong>Example:</strong></p>
+<ul>
+<li>A: Ти вже <strong>приготувала</strong> вечерю?</li>
+<li>B: Ні, я ще <strong>готую</strong>. <strong>Поможеш</strong> мені?</li>
+<li>A: Звичайно! Що <strong>робити</strong>?</li>
+<li>B: <strong>Відкрий</strong> холодильник і <strong>візьми</strong> овочі.</li>
+</ul>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Activities</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="matchupaspectpairs">match-up: Aspect Pairs</h2>
+<table>
+<thead>
+<tr>
+<th>Imperfective</th>
+<th>Perfective</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>будувати</td>
+<td>побудувати</td>
+</tr>
+<tr>
+<td>вирішувати</td>
+<td>вирішити</td>
+</tr>
+<tr>
+<td>відповідати</td>
+<td>відповісти</td>
+</tr>
+<tr>
+<td>забувати</td>
+<td>забути</td>
+</tr>
+<tr>
+<td>показувати</td>
+<td>показати</td>
+</tr>
+<tr>
+<td>запрошувати</td>
+<td>запросити</td>
+</tr>
+</tbody>
+</table>
+<h2 id="quizchoosetheaspect">quiz: Choose the Aspect</h2>
+<blockquote>
+  <p>Select based on context.</p>
+</blockquote>
+<ol>
+<li>Він довго ___ на моє питання.</li>
+</ol>
+<ul>
+<li>[x] відповідав</li>
+<li>[ ] відповів</li>
+</ul>
+<blockquote>
+  <p>Duration = imperfective</p>
+</blockquote>
+<ol start="2">
+<li>Нарешті вона ___ цю проблему!</li>
+</ol>
+<ul>
+<li>[ ] вирішувала</li>
+<li>[x] вирішила</li>
+</ul>
+<blockquote>
+  <p>Нарешті = perfective</p>
+</blockquote>
+<ol start="3">
+<li>Ми щодня ___ нові слова.</li>
+</ol>
+<ul>
+<li>[x] вчили</li>
+<li>[ ] вивчили</li>
+</ul>
+<blockquote>
+  <p>Щодня = imperfective</p>
+</blockquote>
+<ol start="4">
+<li>Вона вже ___ їх на свято.</li>
+</ol>
+<ul>
+<li>[ ] запрошувала</li>
+<li>[x] запросила</li>
+</ul>
+<blockquote>
+  <p>Вже = perfective</p>
+</blockquote>
+<ol start="5">
+<li>Він часто ___ ключі.</li>
+</ol>
+<ul>
+<li>[x] губив</li>
+<li>[ ] загубив</li>
+</ul>
+<blockquote>
+  <p>Часто = imperfective</p>
+</blockquote>
+<ol start="6">
+<li>___ мені, будь ласка, де це!</li>
+</ol>
+<ul>
+<li>[ ] Показуй</li>
+<li>[x] Покажи</li>
+</ul>
+<blockquote>
+  <p>Specific request = perfective</p>
+</blockquote>
+<h2 id="groupsortformationpatterns">group-sort: Formation Patterns</h2>
+<h3 id="prefixcreatesperfective">Prefix Creates Perfective</h3>
+<ul>
+<li>будувати → побудувати</li>
+<li>снідати → поснідати</li>
+<li>готувати → приготувати</li>
+<li>дякувати → подякувати</li>
+</ul>
+<h3 id="suffixchange">Suffix Change (-ува- → -и-)</h3>
+<ul>
+<li>вирішувати → вирішити</li>
+<li>показувати → показати</li>
+<li>запрошувати → запросити</li>
+<li>відповідати → відповісти</li>
+</ul>
+<h3 id="differentroots">Different Roots</h3>
+<ul>
+<li>брати → взяти</li>
+<li>говорити → сказати</li>
+<li>шукати → знайти</li>
+</ul>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Vocabulary</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Word</th>
+<th>IPA</th>
+<th>English</th>
+<th>Aspect</th>
+<th>Pair</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>будувати</td>
+<td>/buduˈvɑtɪ/</td>
+<td>to build</td>
+<td>impf</td>
+<td>побудувати</td>
+</tr>
+<tr>
+<td>побудувати</td>
+<td>/pobuduˈvɑtɪ/</td>
+<td>to build (pf)</td>
+<td>pf</td>
+<td>будувати</td>
+</tr>
+<tr>
+<td>вирішувати</td>
+<td>/vɪrʲiˈʃuvɑtɪ/</td>
+<td>to decide, solve</td>
+<td>impf</td>
+<td>вирішити</td>
+</tr>
+<tr>
+<td>вирішити</td>
+<td>/vɪˈrʲiʃɪtɪ/</td>
+<td>to decide (pf)</td>
+<td>pf</td>
+<td>вирішувати</td>
+</tr>
+<tr>
+<td>відповідати</td>
+<td>/vʲidpoˈvʲidɑtɪ/</td>
+<td>to answer</td>
+<td>impf</td>
+<td>відповісти</td>
+</tr>
+<tr>
+<td>відповісти</td>
+<td>/vʲidpoˈvʲistɪ/</td>
+<td>to answer (pf)</td>
+<td>pf</td>
+<td>відповідати</td>
+</tr>
+<tr>
+<td>показувати</td>
+<td>/pokɑˈzuvɑtɪ/</td>
+<td>to show</td>
+<td>impf</td>
+<td>показати</td>
+</tr>
+<tr>
+<td>показати</td>
+<td>/pokɑˈzɑtɪ/</td>
+<td>to show (pf)</td>
+<td>pf</td>
+<td>показувати</td>
+</tr>
+<tr>
+<td>запрошувати</td>
+<td>/zɑproˈʃuvɑtɪ/</td>
+<td>to invite</td>
+<td>impf</td>
+<td>запросити</td>
+</tr>
+<tr>
+<td>запросити</td>
+<td>/zɑproˈsɪtɪ/</td>
+<td>to invite (pf)</td>
+<td>pf</td>
+<td>запрошувати</td>
+</tr>
+<tr>
+<td>пояснювати</td>
+<td>/pojɑsʲˈnʲuvɑtɪ/</td>
+<td>to explain</td>
+<td>impf</td>
+<td>пояснити</td>
+</tr>
+<tr>
+<td>пояснити</td>
+<td>/pojɑsʲˈnɪtɪ/</td>
+<td>to explain (pf)</td>
+<td>pf</td>
+<td>пояснювати</td>
+</tr>
+<tr>
+<td>домовлятися</td>
+<td>/domovˈlʲɑtɪsʲɑ/</td>
+<td>to agree</td>
+<td>impf</td>
+<td>домовитися</td>
+</tr>
+<tr>
+<td>домовитися</td>
+<td>/domovˈɪtɪsʲɑ/</td>
+<td>to agree (pf)</td>
+<td>pf</td>
+<td>домовлятися</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Summary</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="aspectformationpatterns">Aspect Formation Patterns</h2>
+<h3 id="pattern1prefix">Pattern 1: Prefix</h3>
+<ul>
+<li>готувати → <strong>при</strong>готувати</li>
+<li>снідати → <strong>по</strong>снідати</li>
+<li>будувати → <strong>по</strong>будувати</li>
+</ul>
+<h3 id="pattern2suffixchange">Pattern 2: Suffix Change</h3>
+<ul>
+<li>вирішувати → вирішити</li>
+<li>показувати → показати</li>
+<li>відповідати → відповісти</li>
+</ul>
+<h3 id="pattern3differentroots">Pattern 3: Different Roots</h3>
+<ul>
+<li>брати / взяти</li>
+<li>говорити / сказати</li>
+<li>шукати / знайти</li>
+</ul>
+<h2 id="30pairsfromthismodule">30 Pairs from This Module</h2>
+<ol>
+<li>будувати / побудувати</li>
+<li>готувати / приготувати</li>
+<li>снідати / поснідати</li>
+<li>вирішувати / вирішити</li>
+<li>відповідати / відповісти</li>
+<li>показувати / показати</li>
+<li>запрошувати / запросити</li>
+<li>пояснювати / пояснити</li>
+<li>домовлятися / домовитися</li>
+<li>забувати / забути<br />
+… (and 20 more from the lesson)</li>
+</ol>
+<blockquote>
+  <p><strong>Key Takeaways</strong></p>
+  <ul>
+  <li>Most aspect pairs use prefix addition (по-, при-, з-)</li>
+  <li>Some switch suffix: -увати → -ити</li>
+  <li>A few use completely different roots</li>
+  <li>Learn pairs together, not separately</li>
+  </ul>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('match')">Start →</button></div>
     </section>
     <section id="match" class="section"><div class="card"><h3>Aspect Pairs</h3>
       <div class="score-display"><span class="score"><span id="match-score">0</span>/6</span></div>
       <div class="match-container" id="match-container"><svg class="match-lines" id="match-lines"></svg>
         <div class="match-column" id="match-left"><div class="match-item" data-pair="0">будувати</div><div class="match-item" data-pair="1">вирішувати</div><div class="match-item" data-pair="2">відповідати</div><div class="match-item" data-pair="3">забувати</div><div class="match-item" data-pair="4">показувати</div><div class="match-item" data-pair="5">запрошувати</div></div>
-        <div class="match-column" id="match-right"><div class="match-item" data-pair="2">відповісти</div><div class="match-item" data-pair="3">забути</div><div class="match-item" data-pair="5">запросити</div><div class="match-item" data-pair="4">показати</div><div class="match-item" data-pair="0">побудувати</div><div class="match-item" data-pair="1">вирішити</div></div>
+        <div class="match-column" id="match-right"><div class="match-item" data-pair="2">відповісти</div><div class="match-item" data-pair="5">запросити</div><div class="match-item" data-pair="0">побудувати</div><div class="match-item" data-pair="4">показати</div><div class="match-item" data-pair="3">забути</div><div class="match-item" data-pair="1">вирішити</div></div>
       </div>
       <div class="completion-message" id="match-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetMatch()">Reset</button><button class="btn btn-primary" onclick="showSection('quiz')">Next →</button></div>
@@ -176,6 +1102,10 @@
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

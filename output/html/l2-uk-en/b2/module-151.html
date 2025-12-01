@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,17 +136,34 @@
         <p style="color:var(--text-muted)">Розмовний стиль</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="md-content"><h1 id="">Вступ</h1>
-<p>Ось парадокс: розмовний стиль — найскладніший для іноземця. Здавалося б, що тут складного? Люди просто говорять. Але саме в цій «простоті» ховається пастка.</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Вступ</li><li class="toc-item" data-target="section-1">Характеристики розмовного стилю</li><li class="toc-item" data-target="section-2">Фонетичні особливості</li><li class="toc-item" data-target="section-3">Неповні речення</li><li class="toc-item" data-target="section-4">Частки: душа розмовного стилю</li><li class="toc-item" data-target="section-5">Вигуки: мова емоцій</li><li class="toc-item" data-target="section-6">Розмовна лексика vs сленг</li><li class="toc-item" data-target="section-7">Критично важливо: розмовний ≠ неграмотний</li><li class="toc-item" data-target="section-8">Типові конструкції розмовного стилю</li><li class="toc-item" data-target="section-9">Практика: трансформація</li><li class="toc-item" data-target="section-10">Діалог: приклад</li><li class="toc-item" data-target="section-11">Словник</li><li class="toc-item" data-target="section-12">Підсумок</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Вступ</h3>
+          <span class="section-type intro">intro</span>
+        </div>
+        <div class="section-body md-content"><p>Ось парадокс: розмовний стиль — найскладніший для іноземця. Здавалося б, що тут складного? Люди просто говорять. Але саме в цій «простоті» ховається пастка.</p>
 <p>У підручнику ви вчите: «Добрий день! Як ваші справи?» А реальний українець каже: «Привіт! Як справи?» Або взагалі: «О, привіт! Шо там?» Ви вчите: «Я не знаю.» А чуєте: «Не знаю» (без «я»), або «Та не зна'ю» (з проковтнутою голосною). Ви готуєтесь до повних речень, а отримуєте: «Куди?», «Чого?», «Ну?»</p>
 <p>Розмовний стиль — це мова <strong>скорочень, пропусків і емоцій</strong>. Тут немає часу на граматичну досконалість. Тут важлива швидкість, експресія, взаєморозуміння. І найголовніше — тут <strong>норми інші</strong>, ніж на письмі.</p>
 <blockquote>
   <p><strong>Чи знали ви?</strong></p>
   <p>Лінгвісти називають розмовну мову <strong>«первинною»</strong>, а письмову — <strong>«вторинною»</strong>. Людство говорило тисячі років до появи писемності. Письмо — це штучна система, накладена на природне мовлення. Тому розмовний стиль — не «спрощена» писемна мова, а навпаки: письмова мова — це «ускладнена» розмовна.</p>
 </blockquote>
-<hr />
-<h1 id="-1">Характеристики розмовного стилю</h1>
-<table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Характеристики розмовного стилю</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><table>
 <thead>
 <tr>
 <th>Риса</th>
@@ -164,9 +199,14 @@
 </tr>
 </tbody>
 </table>
-<hr />
-<h1 id="-2">Фонетичні особливості</h1>
-<p>В усному мовленні звуки «проковтуються»:</p>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Фонетичні особливості</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><p>В усному мовленні звуки «проковтуються»:</p>
 <table>
 <thead>
 <tr>
@@ -208,9 +248,14 @@
   <p>❌ <strong>Міф:</strong> «Розмовне мовлення — це неправильна мова, бо звуки "проковтуються".»</p>
   <p>✅ <strong>Факт:</strong> Редукція та злиття — це <strong>норма усного мовлення</strong> в усіх мовах світу. Англійці кажуть "gonna" замість "going to", французи — "j'sais pas" замість "je ne sais pas". Це не помилка — це <strong>фонетична економія</strong>.</p>
 </blockquote>
-<hr />
-<h1 id="-3">Неповні речення</h1>
-<p>В розмовній мові контекст замінює слова:</p>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Неповні речення</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><p>В розмовній мові контекст замінює слова:</p>
 <table>
 <thead>
 <tr>
@@ -247,9 +292,14 @@
 </tr>
 </tbody>
 </table>
-<hr />
-<h1 id="-4">Частки: душа розмовного стилю</h1>
-<p>Частки — маленькі слова, що передають великі смисли:</p>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-4">
+        <div class="section-header" onclick="toggleSection(4)">
+          <h3>Частки: душа розмовного стилю</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><p>Частки — маленькі слова, що передають великі смисли:</p>
 <table>
 <thead>
 <tr>
@@ -295,9 +345,14 @@
   <p><strong>Чи знали ви?</strong></p>
   <p>Частка <strong>«ну»</strong> — справжній чемпіон розмовної мови. Вона може виражати: нетерпіння («Ну!»), згоду («Ну добре»), невпевненість («Ну, не знаю…»), здивування («Ну ти даєш!»), роздратування («Ну що таке!»). Одне слово — десятки значень. В офіційних текстах його немає взагалі.</p>
 </blockquote>
-<hr />
-<h1 id="-5">Вигуки: мова емоцій</h1>
-<table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-5">
+        <div class="section-header" onclick="toggleSection(5)">
+          <h3>Вигуки: мова емоцій</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><table>
 <thead>
 <tr>
 <th>Вигук</th>
@@ -343,9 +398,14 @@
 </tr>
 </tbody>
 </table>
-<hr />
-<h1 id="vs">Розмовна лексика vs сленг</h1>
-<h2 id="-6">Розмовна лексика (нормативна)</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-6">
+        <div class="section-header" onclick="toggleSection(6)">
+          <h3>Розмовна лексика vs сленг</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Розмовна лексика (нормативна)</h2>
 <table>
 <thead>
 <tr>
@@ -376,7 +436,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="-7">Сленг (обережно!)</h2>
+<h2 id="-1">Сленг (обережно!)</h2>
 <table>
 <thead>
 <tr>
@@ -418,9 +478,14 @@
   <p>❌ <strong>Міф:</strong> «Сленг — це мова молоді, дорослі так не говорять.»</p>
   <p>✅ <strong>Факт:</strong> Кожне покоління має свій сленг. «Круто» вважалося молодіжним у 1990-х — тепер це звичайна розмовна лексика. Сленг <strong>швидко змінюється</strong>: те, що модно сьогодні, завтра буде звучати застаріло.</p>
 </blockquote>
-<hr />
-<h1 id="-8">Критично важливо: розмовний ≠ неграмотний</h1>
-<table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-7">
+        <div class="section-header" onclick="toggleSection(7)">
+          <h3>Критично важливо: розмовний ≠ неграмотний</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><table>
 <thead>
 <tr>
 <th>✅ Розмовний стиль</th>
@@ -460,32 +525,42 @@
   <p><strong>Чи знали ви?</strong></p>
   <p>Слово <strong>«гаразд»</strong> — давнє українське слово, що означає «добре, нормально». Воно походить від тюркського <em>haraz</em> (бажання). Натомість «ладно» — російське слово. Коли ви кажете «гаразд» замість «ладно», ви не просто говорите правильно — ви говорите <strong>автентично українською</strong>.</p>
 </blockquote>
-<hr />
-<h1 id="-9">Типові конструкції розмовного стилю</h1>
-<h2 id="-10">Питання-підтвердження</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-8">
+        <div class="section-header" onclick="toggleSection(8)">
+          <h3>Типові конструкції розмовного стилю</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Питання-підтвердження</h2>
 <p>Коли ви очікуєте відповідь «так»:</p>
 <ul>
 <li>«Ти ж прийдеш?» (= Ти прийдеш, правда?)</li>
 <li>«Це ж він?» (= Це він, так?)</li>
 <li>«Правда?», «Так?», «Чи не так?»</li>
 </ul>
-<h2 id="-11">Емфатичні конструкції (здивування)</h2>
+<h2 id="-1">Емфатичні конструкції (здивування)</h2>
 <ul>
 <li>«Це ж треба!» (несподіванка)</li>
 <li>«От тобі й на!» (несподіванка)</li>
 <li>«Ну ти даєш!» (здивування)</li>
 <li>«Отакої!» (несподіванка)</li>
 </ul>
-<h2 id="-12">Повтори (підсилення)</h2>
+<h2 id="-2">Повтори (підсилення)</h2>
 <ul>
 <li>«Так-так-так» (активне підтвердження)</li>
 <li>«Ну-ну» (сумнів, іронія)</li>
 <li>«Добре-добре» (нетерплячу згода)</li>
 <li>«Ой-ой-ой» (турбота, переживання)</li>
 </ul>
-<hr />
-<h1 id="-13">Практика: трансформація</h1>
-<h2 id="-14">Офіційний → Розмовний</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-9">
+        <div class="section-header" onclick="toggleSection(9)">
+          <h3>Практика: трансформація</h3>
+          <span class="section-type practice">practice</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Офіційний → Розмовний</h2>
 <table>
 <thead>
 <tr>
@@ -512,7 +587,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="-15">Розмовний → Офіційний</h2>
+<h2 id="-1">Розмовний → Офіційний</h2>
 <table>
 <thead>
 <tr>
@@ -535,9 +610,14 @@
 </tr>
 </tbody>
 </table>
-<hr />
-<h1 id="-16">Діалог: приклад</h1>
-<p><strong>Офіційна версія:</strong><br />
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-10">
+        <div class="section-header" onclick="toggleSection(10)">
+          <h3>Діалог: приклад</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><p><strong>Офіційна версія:</strong><br />
 — Добрий день! Чи не могли б ви мені допомогти?<br />
 — Звичайно. Чим можу бути корисним?<br />
 — Мені потрібна інформація про розклад.<br />
@@ -547,7 +627,140 @@
 — Ага, що треба?<br />
 — Та от, розклад хочу дізнатися.<br />
 — Зараз, секунду, гляну.</p>
-<hr /></div></div>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-11">
+        <div class="section-header" onclick="toggleSection(11)">
+          <h3>Словник</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Слово</th>
+<th>Переклад</th>
+<th>Примітки</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>просторіччя</td>
+<td>colloquialism</td>
+<td>розмовна лексика</td>
+</tr>
+<tr>
+<td>сленг</td>
+<td>slang</td>
+<td>молодіжна лексика</td>
+</tr>
+<tr>
+<td>частка</td>
+<td>particle</td>
+<td>ну, от, та, ж</td>
+</tr>
+<tr>
+<td>вигук</td>
+<td>interjection</td>
+<td>ого, ой, ех</td>
+</tr>
+<tr>
+<td>редукція</td>
+<td>reduction</td>
+<td>скорочення звуків</td>
+</tr>
+<tr>
+<td>гаразд</td>
+<td>okay, alright</td>
+<td>розмовне «добре»</td>
+</tr>
+<tr>
+<td>русизм</td>
+<td>Russianism</td>
+<td>запозичення з російської</td>
+</tr>
+<tr>
+<td>суржик</td>
+<td>surzhyk</td>
+<td>мішанина мов</td>
+</tr>
+<tr>
+<td>демінутив</td>
+<td>diminutive</td>
+<td>зменшувальна форма</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-12">
+        <div class="section-header" onclick="toggleSection(12)">
+          <h3>Підсумок</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Ознаки розмовного стилю</h2>
+<table>
+<thead>
+<tr>
+<th>Риса</th>
+<th>Приклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Неповнота</td>
+<td>«Куди?» замість «Куди йдеш?»</td>
+</tr>
+<tr>
+<td>Частки</td>
+<td>«ну», «от», «та», «ж»</td>
+</tr>
+<tr>
+<td>Вигуки</td>
+<td>«Ого!», «Ой!», «Ех!»</td>
+</tr>
+<tr>
+<td>Повтори</td>
+<td>«так-так-так», «добре-добре»</td>
+</tr>
+</tbody>
+</table>
+<h2 id="-1">Розмовний ≠ Неграмотний</h2>
+<table>
+<thead>
+<tr>
+<th>✅ Правильно</th>
+<th>❌ Русизм</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Не знаю</td>
+<td>*Нє знаю</td>
+</tr>
+<tr>
+<td>Куди?</td>
+<td>*Куда?</td>
+</tr>
+<tr>
+<td>Дякую</td>
+<td>*Спасібо</td>
+</tr>
+<tr>
+<td>Гаразд</td>
+<td>*Ладно</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p><strong>Запам'ятайте:</strong></p>
+  <p>✓ Розмовний стиль — це <strong>стиль</strong>, не помилки<br />
+  ✓ Неповні речення та частки — <strong>норма</strong><br />
+  ✓ Русизми — <strong>НЕ</strong> розмовний стиль<br />
+  ✓ Сленг <strong>швидко змінюється</strong>, використовуйте обережно<br />
+  ✓ «Гаразд» — українське, «ладно» — русизм</p>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('vocab')">Start →</button></div>
     </section>
     
@@ -580,6 +793,10 @@
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

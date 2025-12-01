@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,7 +136,22 @@
         <p style="color:var(--text-muted)">Синоніми: Дієслова пам'яті</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>*«Народ, який не знає свого минулого, не має майбутнього.»* — ця мудрість особливо резонує з українською історією. Пам'ять — не просто когнітивна функція мозку, а фундамент національної ідентичності. Голодомор, Чорнобиль, Революція Гідності — ці події **врізалися в пам'ять** народу і формують колективну свідомість.</h4><div class="md-content"><p>Але як саме працює пам'ять у мові? Українська розрізняє три фундаментально різні процеси, які англійська часто змішує в одному слові "remember":</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Зміст уроку</li><li class="toc-item" data-target="section-1">Вправи</li><li class="toc-item" data-target="section-2">Словник</li><li class="toc-item" data-target="section-3">Підсумок</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Зміст уроку</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Вступ</h2>
+<p><em>«Народ, який не знає свого минулого, не має майбутнього.»</em> — ця мудрість особливо резонує з українською історією. Пам'ять — не просто когнітивна функція мозку, а фундамент національної ідентичності. Голодомор, Чорнобиль, Революція Гідності — ці події <strong>врізалися в пам'ять</strong> народу і формують колективну свідомість.</p>
+<p>Але як саме працює пам'ять у мові? Українська розрізняє три фундаментально різні процеси, які англійська часто змішує в одному слові "remember":</p>
 <p><strong>Пам'ятати</strong> — це <em>стан</em>. Інформація просто є у вашій свідомості, як книга на полиці. «Я пам'ятаю номер телефону» — не роблю нічого активного, просто <em>знаю</em>.</p>
 <p><strong>Згадувати</strong> — це <em>дія</em>. Активний процес пошуку в глибинах пам'яті, як пірнання за перлинами. «Згадую своє дитинство» — свідомо відтворюю образи минулого.</p>
 <p><strong>Нагадувати</strong> — це <em>комунікація</em>. Допомагаю комусь іншому пригадати: «Нагадай мені завтра!» Або інший відтінок: «Вона нагадує мені бабусю» — викликає асоціацію.</p>
@@ -129,7 +162,701 @@
   <p><strong>Чи знали ви?</strong></p>
   <p>Слово <strong>пам'ять</strong> походить від праслов'янського <em>pamętь</em>, спорідненого з латинським <em>mens</em> (розум) і грецьким <em>μνήμη</em> (мнеме). Від того ж кореня — англійське <em>memory</em>, <em>mind</em>, <em>mental</em>. Цікаво, що грецька богиня пам'яті Мнемозіна була матір'ю всіх муз — давні греки вважали, що без пам'яті немає ані мистецтва, ані науки, ані культури!</p>
   <p>В українській мові є унікальний вираз <strong>«вічная пам'ять»</strong> — літургійний спів на честь померлих. Жодна інша мова не має точного еквіваленту цієї формули, де пам'ять стає формою безсмертя.</p>
-</blockquote></div></div></div>
+</blockquote>
+<hr />
+<blockquote>
+  <p><strong>Міф vs Факт</strong></p>
+  <p>❌ <strong>Міф:</strong> «Напам'ять» і «на пам'ять» — це одне й те саме.</p>
+  <p>✅ <strong>Факт:</strong> Це два різні вирази! <strong>Напам'ять</strong> (разом) = by heart, механічно: «Вивчив вірш напам'ять». <strong>На пам'ять</strong> (окремо) = as a keepsake, на згадку: «Подарувала фото на пам'ять». Англійська не розрізняє ці поняття!</p>
+</blockquote>
+<hr />
+<p>Цей урок завершує нашу серію про дієслова мислення і пізнання. Ви вже знаєте, як українці думають, гадають, вважають, розуміють, усвідомлюють, осягають. Тепер опануєте останню ланку когнітивного ланцюжка — як вони пам'ятають, згадують і, на жаль, забувають.</p>
+<h2 id="-1">Розминка</h2>
+<h3 id="-2">Три процеси пам'яті</h3>
+<p>Прочитайте діалог і визначте тип кожного виділеного дієслова:</p>
+<p>— Ти <strong>пам'ятаєш</strong> нашу першу зустріч?<br />
+— Звісно! Я часто <strong>згадую</strong> той день.<br />
+— <strong>Нагадай</strong> мені, який це був рік?<br />
+— 2019-й. До речі, ти <strong>нагадуєш</strong> мені мою сестру — такий самий допитливий характер!</p>
+<p>Яке дієслово описує:</p>
+<ol>
+<li>Стан (інформація в голові)?</li>
+<li>Активний процес (пошук у пам'яті)?</li>
+<li>Допомогу іншому пригадати?</li>
+<li>Схожість, асоціацію?</li>
+</ol>
+<h2 id="-3">Презентація</h2>
+<h3 id="-4">Тріада: Пам'ятати — Згадувати — Нагадувати</h3>
+<p>Це три кити української системи пам'яті:</p>
+<table>
+<thead>
+<tr>
+<th>Дієслово</th>
+<th>Тип</th>
+<th>Напрямок</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>пам'ятати</strong></td>
+<td>стан</td>
+<td>інформація → я</td>
+<td>remember (state)</td>
+</tr>
+<tr>
+<td><strong>згадувати</strong></td>
+<td>дія</td>
+<td>я → пам'ять</td>
+<td>recall, recollect</td>
+</tr>
+<tr>
+<td><strong>нагадувати</strong></td>
+<td>комунікація</td>
+<td>я → інший</td>
+<td>remind</td>
+</tr>
+</tbody>
+</table>
+<h4 id="-5">Пам'ятати — сховище знань</h4>
+<p><strong>Значення:</strong> мати інформацію в свідомості (не активний процес!)</p>
+<table>
+<thead>
+<tr>
+<th>Аспект</th>
+<th>Форма</th>
+<th>Приклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Недоконаний</td>
+<td>пам'ятати</td>
+<td>Я пам'ятаю її голос.</td>
+</tr>
+<tr>
+<td>Доконаний</td>
+<td>запам'ятати</td>
+<td>Запам'ятай цю адресу!</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Керування:</strong> що? кого? про що?</p>
+<ul>
+<li>Пам'ятаю <strong>цей день</strong> (що?)</li>
+<li>Пам'ятаю <strong>про обіцянку</strong> (про що?)</li>
+<li>Пам'ятаю <strong>бабусю</strong> (кого?)</li>
+</ul>
+<p><strong>Порівняйте:</strong> «Я пам'ятаю» ≈ «Я знаю» (стан), а не «Я роблю» (дія).</p>
+<h4 id="-6">Згадувати / Згадати — подорож у минуле</h4>
+<p><strong>Значення:</strong> активно відтворювати в пам'яті, шукати забуте</p>
+<table>
+<thead>
+<tr>
+<th>Аспект</th>
+<th>Форма</th>
+<th>Приклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Недоконаний</td>
+<td>згадувати</td>
+<td>Часто згадую дитинство.</td>
+</tr>
+<tr>
+<td>Доконаний</td>
+<td>згадати</td>
+<td>Не можу згадати пароль.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Два відтінки:</strong></p>
+<ol>
+<li><strong>Ностальгія:</strong> «Згадую студентські роки» (повертаюся думками)</li>
+<li><strong>Пригадування:</strong> «Не можу згадати, куди поклав ключі» (намагаюся пригадати)</li>
+</ol>
+<p><strong>Синоніми:</strong></p>
+<ul>
+<li><strong>пригадувати</strong> — книжний варіант (з тим самим значенням)</li>
+<li><strong>спогадувати</strong> — поетичний, архаїчний</li>
+</ul>
+<p><strong>Керування:</strong> що? кого? про що? як?</p>
+<ul>
+<li>Згадую <strong>минуле</strong> (що?)</li>
+<li>Згадую <strong>друзів</strong> (кого?)</li>
+<li>Згадую <strong>про неї</strong> (про що?)</li>
+<li>Згадую <strong>з теплотою</strong> (як?)</li>
+</ul>
+<h4 id="-7">Нагадувати / Нагадати — два в одному</h4>
+<p><strong>Увага!</strong> Це дієслово має <em>два різні значення</em>:</p>
+<table>
+<thead>
+<tr>
+<th>Значення</th>
+<th>Конструкція</th>
+<th>Приклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Допомогти пригадати</td>
+<td>кому? про що?</td>
+<td>Нагадай <strong>мені</strong> про зустріч.</td>
+</tr>
+<tr>
+<td>Бути схожим</td>
+<td>кого?</td>
+<td>Він нагадує <strong>батька</strong>.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Приклади:</strong></p>
+<ol>
+<li>«Нагадай мені зателефонувати» — remind me</li>
+<li>«Вона нагадує мені молоду Тіну Кароль» — she reminds me of / resembles</li>
+</ol>
+<p><strong>Типова помилка:</strong> ❌ «Нагадай мене про зустріч» → ✅ «Нагадай мені про зустріч» (кому?, не кого?)</p>
+<h3 id="-8">Шкала запам'ятовування</h3>
+<p>Як інформація потрапляє в пам'ять? Від нейтрального до негативного:</p>
+<table>
+<thead>
+<tr>
+<th>Дієслово</th>
+<th>Спосіб</th>
+<th>Конотація</th>
+<th>Приклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>запам'ятовувати</strong></td>
+<td>будь-який</td>
+<td>нейтральна</td>
+<td>Легко запам'ятовую обличчя.</td>
+</tr>
+<tr>
+<td><strong>заучувати</strong></td>
+<td>систематично</td>
+<td>нейтральна</td>
+<td>Заучую нові слова щодня.</td>
+</tr>
+<tr>
+<td><strong>завчати</strong></td>
+<td>швидко</td>
+<td>поверхова</td>
+<td>Завчив перед іспитом.</td>
+</tr>
+<tr>
+<td><strong>зазубрювати</strong></td>
+<td>механічно</td>
+<td>негативна</td>
+<td>Зазубрив без розуміння.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Етимологія:</strong> «Зазубрювати» походить від «зуб» — образ механічного жування без смаку і задоволення. Педагоги критикують цей метод: «Не зазубрюй, а розумій!»</p>
+<h3 id="-9">Вирази зі словом «пам'ять»</h3>
+<table>
+<thead>
+<tr>
+<th>Вираз</th>
+<th>Значення</th>
+<th>Приклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>врізатися в пам'ять</strong></td>
+<td>запам'ятатися надовго</td>
+<td>Цей день врізався мені в пам'ять.</td>
+</tr>
+<tr>
+<td><strong>тримати в пам'яті</strong></td>
+<td>пам'ятати</td>
+<td>Тримаю в пам'яті твої слова.</td>
+</tr>
+<tr>
+<td><strong>освіжити пам'ять</strong></td>
+<td>нагадати, пригадати</td>
+<td>Давай освіжимо пам'ять.</td>
+</tr>
+<tr>
+<td><strong>випустити з пам'яті</strong></td>
+<td>забути</td>
+<td>Випустив з пам'яті про зустріч.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="-10">Забування: нейтральне та образне</h3>
+<table>
+<thead>
+<tr>
+<th>Дієслово / Вираз</th>
+<th>Стиль</th>
+<th>Приклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>забути</strong></td>
+<td>нейтральний</td>
+<td>Забув ключі вдома.</td>
+</tr>
+<tr>
+<td><strong>вилетіло з голови</strong></td>
+<td>розмовний</td>
+<td>Зовсім вилетіло з голови!</td>
+</tr>
+<tr>
+<td><strong>випустити з пам'яті</strong></td>
+<td>книжний</td>
+<td>Випустив з пам'яті про зустріч.</td>
+</tr>
+<tr>
+<td><strong>запамороки</strong></td>
+<td>діалектний</td>
+<td>У мене запамороки. (I keep forgetting)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Аспектна пара:</strong></p>
+<ul>
+<li><strong>забувати</strong> (НДВ) — процес: «Я забуваю імена»</li>
+<li><strong>забути</strong> (ДВ) — результат: «Я забув ключі»</li>
+</ul>
+<h3 id="-11">Стилістична палітра</h3>
+<table>
+<thead>
+<tr>
+<th>Нейтральне</th>
+<th>Книжне</th>
+<th>Розмовне</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>пам'ятати</td>
+<td>зберігати в пам'яті</td>
+<td>—</td>
+</tr>
+<tr>
+<td>згадувати</td>
+<td>пригадувати, спогадувати</td>
+<td>—</td>
+</tr>
+<tr>
+<td>запам'ятати</td>
+<td>закарбувати в пам'яті</td>
+<td>—</td>
+</tr>
+<tr>
+<td>забути</td>
+<td>випустити з пам'яті</td>
+<td>вилетіло з голови</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Офіційне:</strong> «Згадану подію збережено в історичній пам'яті народу.»<br />
+<strong>Розмовне:</strong> «Та я й забув! Вилетіло геть!»</p>
+<h2 id="-12">Практика</h2>
+<h3 id="1">Вправа 1: Стан чи дія?</h3>
+<p>Визначте, стан (С) чи активна дія (Д):</p>
+<ol>
+<li>Я добре пам'ятаю цей день. → ___</li>
+<li>Не можу згадати її ім'я. → ___</li>
+<li>Пам'ятаю напам'ять усі дати. → ___</li>
+<li>Часто згадую студентські роки. → ___</li>
+<li>Вона пам'ятає кожне слово. → ___</li>
+</ol>
+<p><details>
+<summary>Відповіді</summary>
+1-С, 2-Д, 3-С, 4-Д, 5-С
+</details></p>
+<h3 id="2">Вправа 2: Виберіть правильне дієслово</h3>
+<ol>
+<li>___ (Нагадай / Згадай) мені завтра зателефонувати.</li>
+<li>Вона ___ (нагадує / згадує) мені мою бабусю.</li>
+<li>Не можу ___ (пам'ятати / згадати), як його звуть.</li>
+<li>Я добре ___ (пам'ятаю / згадую) той день.</li>
+<li>Часто ___ (пам'ятаю / згадую) наші розмови з теплотою.</li>
+</ol>
+<p><details><br />
+<summary>Відповіді</summary></p>
+<ol>
+<li>Нагадай (допомогти пригадати)</li>
+<li>нагадує (схожість)</li>
+<li>згадати (активний пошук)</li>
+<li>пам'ятаю (стан)</li>
+<li>згадую (ностальгія)<br />
+</details></li>
+</ol>
+<h3 id="3">Вправа 3: Шкала запам'ятовування</h3>
+<p>Розташуйте від нейтрального до негативного:</p>
+<p>зазубрювати / запам'ятовувати / заучувати / завчати</p>
+<p><details>
+<summary>Відповідь</summary>
+запам'ятовувати → заучувати → завчати → зазубрювати
+</details></p>
+<h3 id="4">Вправа 4: Замініть на синонім</h3>
+<ol>
+<li>«Забув номер.» (ідіоматично)</li>
+<li>«Пам'ятаю цей день.» (книжно)</li>
+<li>«Запам'ятав це надовго.» (образно)</li>
+<li>«Не пам'ятаю.» (розмовно)</li>
+</ol>
+<p><details><br />
+<summary>Відповіді</summary></p>
+<ol>
+<li>Номер вилетів з голови.</li>
+<li>Зберігаю в пам'яті цей день.</li>
+<li>Це врізалося мені в пам'ять.</li>
+<li>Вилетіло геть!<br />
+</details></li>
+</ol>
+<h3 id="5">Вправа 5: Перекладіть</h3>
+<ol>
+<li>I remember this day well.</li>
+<li>I can't recall where I put my keys.</li>
+<li>Remind me to buy milk.</li>
+<li>She reminds me of my sister.</li>
+<li>I memorized the poem by heart.</li>
+</ol>
+<p><details><br />
+<summary>Відповіді</summary></p>
+<ol>
+<li>Я добре пам'ятаю цей день.</li>
+<li>Не можу згадати, куди поклав ключі.</li>
+<li>Нагадай мені купити молоко.</li>
+<li>Вона нагадує мені мою сестру.</li>
+<li>Я вивчив вірш напам'ять. / Я заучив вірш.<br />
+</details></li>
+</ol>
+<h2 id="-13">Продукція</h2>
+<h3 id="1-1">Завдання 1: Спогади</h3>
+<p>Опишіть, використовуючи різні дієслова пам'яті:</p>
+<ol>
+<li>Яскравий спогад з дитинства (врізався в пам'ять)</li>
+<li>Ситуацію, коли забули щось важливе (вилетіло з голови)</li>
+<li>Людину, яка нагадує когось іншого</li>
+</ol>
+<p><strong>Приклад:</strong><br />
+«Одного разу бабуся повела мене на ярмарок. Я пам'ятаю запах свіжого хліба і мед, що продавали в глечиках. Часто згадую цей день з теплотою. Врізався в пам'ять момент, коли бабуся купила мені дерев'яну іграшку. Тепер моя донька нагадує мені бабусю — такий самий допитливий погляд!»</p>
+<h3 id="2-1">Завдання 2: Як ви вчитеся?</h3>
+<p>Опишіть свій підхід до вивчення нового:</p>
+<ul>
+<li>Що ви запам'ятовуєте легко?</li>
+<li>Що доводиться заучувати?</li>
+<li>Чи буває, що зазубрюєте без розуміння?</li>
+</ul>
+<h3 id="3b21">Завдання 3: Інтеграція з B2.1</h3>
+<p>Перепишіть в офіційному стилі (використовуйте пасив на -но/-то):</p>
+<ol>
+<li>«Всі пам'ятають цю подію.»</li>
+<li>«Історики добре задокументували цей факт.»</li>
+<li>«Люди давно забули ці традиції.»</li>
+</ol>
+<p><details><br />
+<summary>Відповіді</summary></p>
+<ol>
+<li>Цю подію збережено в пам'яті народу.</li>
+<li>Цей факт добре задокументовано.</li>
+<li>Ці традиції давно забуто.<br />
+</details></li>
+</ol>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Вправи</h3>
+          <span class="section-type practice">practice</span>
+        </div>
+        <div class="section-body md-content"><h2 id="quiz">quiz: Дієслова пам'яті</h2>
+<blockquote>
+  <p>Виберіть правильну відповідь.</p>
+</blockquote>
+<ol>
+<li>«Пам'ятати» — це:</li>
+</ol>
+<ul>
+<li>[x] стан</li>
+<li>[ ] активна дія</li>
+</ul>
+<blockquote>
+  <p>To remember (state).</p>
+</blockquote>
+<ol start="2">
+<li>«Згадувати» — це:</li>
+</ol>
+<ul>
+<li>[ ] стан</li>
+<li>[x] активна дія</li>
+</ul>
+<blockquote>
+  <p>To recall (action).</p>
+</blockquote>
+<ol start="3">
+<li>«Нагадай мені зателефонувати» означає:</li>
+</ol>
+<ul>
+<li>[x] допомогти пригадати</li>
+<li>[ ] бути схожим</li>
+</ul>
+<blockquote>
+  <p>To remind someone.</p>
+</blockquote>
+<ol start="4">
+<li>«Вона нагадує маму» означає:</li>
+</ol>
+<ul>
+<li>[ ] допомагає пригадати</li>
+<li>[x] схожа на маму</li>
+</ul>
+<blockquote>
+  <p>She resembles / reminds me of mom.</p>
+</blockquote>
+<ol start="5">
+<li>«Зазубрювати» має конотацію:</li>
+</ol>
+<ul>
+<li>[x] негативну (механічно)</li>
+<li>[ ] позитивну</li>
+</ul>
+<blockquote>
+  <p>Mechanical memorization.</p>
+</blockquote>
+<ol start="6">
+<li>«Врізатися в пам'ять» означає:</li>
+</ol>
+<ul>
+<li>[x] запам'ятатися надовго</li>
+<li>[ ] забути</li>
+</ul>
+<blockquote>
+  <p>To be etched in memory.</p>
+</blockquote>
+<ol start="7">
+<li>«Напам'ять» (разом) означає:</li>
+</ol>
+<ul>
+<li>[x] by heart (вивчив напам'ять)</li>
+<li>[ ] as a keepsake (на згадку)</li>
+</ul>
+<blockquote>
+  <p>На пам'ять (окремо) = на згадку.</p>
+</blockquote>
+<ol start="8">
+<li><strong>[Інтеграція: пасив]</strong> Офіційний текст: «Цю подію ___ в історії.»</li>
+</ol>
+<ul>
+<li>[x] збережено</li>
+<li>[ ] зберегли</li>
+<li>[ ] зберігається</li>
+</ul>
+<blockquote>
+  <p>Офіційний стиль → -но/-то.</p>
+</blockquote>
+<ol start="9">
+<li><strong>[Інтеграція: регістр]</strong> Розмова: «Зовсім ___ з голови!»</li>
+</ol>
+<ul>
+<li>[x] вилетіло</li>
+<li>[ ] забуто</li>
+<li>[ ] випущено</li>
+</ul>
+<blockquote>
+  <p>Розмовний стиль → ідіома.</p>
+</blockquote>
+<ol start="10">
+<li>Правильно: «Нагадай ___ про зустріч.»<ul>
+<li>[x] мені (кому?)</li>
+<li>[ ] мене (кого?)<br />
+&gt; Нагадувати комусь, не когось!</li></ul></li>
+</ol>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Словник</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Слово</th>
+<th>Вимова</th>
+<th>Переклад</th>
+<th>Примітки</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>пам'ятати</td>
+<td>/pɑmˈjɑtɑtɪ/</td>
+<td>to remember</td>
+<td>ipf, стан</td>
+</tr>
+<tr>
+<td>запам'ятати</td>
+<td>/zɑpɑmˈjɑtɑtɪ/</td>
+<td>to memorize</td>
+<td>pf</td>
+</tr>
+<tr>
+<td>згадувати</td>
+<td>/zɦɑˈduwɑtɪ/</td>
+<td>to recall</td>
+<td>ipf, дія</td>
+</tr>
+<tr>
+<td>згадати</td>
+<td>/zɦɑˈdɑtɪ/</td>
+<td>to recall</td>
+<td>pf</td>
+</tr>
+<tr>
+<td>нагадувати</td>
+<td>/nɑɦɑˈduwɑtɪ/</td>
+<td>to remind</td>
+<td>ipf</td>
+</tr>
+<tr>
+<td>нагадати</td>
+<td>/nɑɦɑˈdɑtɪ/</td>
+<td>to remind</td>
+<td>pf</td>
+</tr>
+<tr>
+<td>забувати</td>
+<td>/zɑbuˈwɑtɪ/</td>
+<td>to forget</td>
+<td>ipf</td>
+</tr>
+<tr>
+<td>забути</td>
+<td>/zɑˈbutɪ/</td>
+<td>to forget</td>
+<td>pf</td>
+</tr>
+<tr>
+<td>запам'ятовувати</td>
+<td>/zɑpɑmˈjɑtɔwuwɑtɪ/</td>
+<td>to memorize</td>
+<td>ipf</td>
+</tr>
+<tr>
+<td>заучувати</td>
+<td>/zɑuˈtʃuwɑtɪ/</td>
+<td>to learn by heart</td>
+<td>ipf</td>
+</tr>
+<tr>
+<td>зазубрювати</td>
+<td>/zɑzubˈrʲuwɑtɪ/</td>
+<td>to cram</td>
+<td>ipf, негативне</td>
+</tr>
+<tr>
+<td>пригадувати</td>
+<td>/prɪɦɑˈduwɑtɪ/</td>
+<td>to recollect</td>
+<td>ipf, книжне</td>
+</tr>
+<tr>
+<td>напам'ять</td>
+<td>/nɑˈpɑmjɑtʲ/</td>
+<td>by heart</td>
+<td>adv</td>
+</tr>
+<tr>
+<td>на пам'ять</td>
+<td>/nɑ ˈpɑmjɑtʲ/</td>
+<td>as a keepsake</td>
+<td>phrase</td>
+</tr>
+<tr>
+<td>врізатися в пам'ять</td>
+<td>/wrʲiˈzɑtɪsʲɑ w ˈpɑmjɑtʲ/</td>
+<td>to be etched in memory</td>
+<td>idiom</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Підсумок</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Тріада пам'яті</h2>
+<table>
+<thead>
+<tr>
+<th>Тип</th>
+<th>Дієслово</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Стан</td>
+<td>пам'ятати</td>
+<td>remember (I know)</td>
+</tr>
+<tr>
+<td>Дія</td>
+<td>згадувати</td>
+<td>recall (I retrieve)</td>
+</tr>
+<tr>
+<td>Комунікація</td>
+<td>нагадувати</td>
+<td>remind / resemble</td>
+</tr>
+</tbody>
+</table>
+<h2 id="-1">Шкала запам'ятовування</h2>
+<table>
+<thead>
+<tr>
+<th>Дієслово</th>
+<th>Конотація</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>запам'ятовувати</td>
+<td>нейтральна</td>
+</tr>
+<tr>
+<td>заучувати</td>
+<td>систематична</td>
+</tr>
+<tr>
+<td>завчати</td>
+<td>поверхова</td>
+</tr>
+<tr>
+<td>зазубрювати</td>
+<td>негативна</td>
+</tr>
+</tbody>
+</table>
+<h2 id="-2">Головні правила</h2>
+<blockquote>
+  <p><strong>Запам'ятайте:</strong></p>
+  <ul>
+  <li>Пам'ятати = стан (знаю, маю в пам'яті)</li>
+  <li>Згадувати = дія (активно відтворюю)</li>
+  <li>Нагадувати кому? = remind → Нагадай <strong>мені</strong>!</li>
+  <li>Нагадувати кого? = resemble → Вона нагадує <strong>маму</strong></li>
+  <li>Напам'ять (разом) ≠ на пам'ять (окремо)</li>
+  <li>Забув = нейтрально, вилетіло = розмовно</li>
+  </ul>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('quiz')">Start →</button></div>
     </section>
     
@@ -167,6 +894,10 @@
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

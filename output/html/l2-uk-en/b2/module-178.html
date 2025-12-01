@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,7 +136,35 @@
         <p style="color:var(--text-muted)">Фразеологізми: Тварини I</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Тварини як символи</h4><div class="md-content"><p>Які асоціації у вас із цими тваринами?</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Вступ</li><li class="toc-item" data-target="section-1">Зміст уроку</li><li class="toc-item" data-target="section-2">Вправи</li><li class="toc-item" data-target="section-3">Словник</li><li class="toc-item" data-target="section-4">Підсумок</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Вступ</h3>
+          <span class="section-type intro">intro</span>
+        </div>
+        <div class="section-body md-content"><p>Тварини в українських ідіомах — це не просто слова. Це архетипи, що живуть у колективній пам'яті народу тисячі років.</p>
+<p><strong>Вовк</strong> — головний антагоніст українського фольклору. В казках він завжди голодний, хитрий і небезпечний. Але й — самотній. «Скільки вовка не годуй, а він у ліс дивиться» — це не просто про тварину, це про людину, яка не може змінити свою природу, скільки б їй не допомагали.</p>
+<p><strong>Собака</strong> — друг людини, але в ідіомах часто — символ тяжкої долі. «Собаче життя», «собача погода», «працювати як собака» — все це про труднощі. Чому? Бо селянський собака століттями спав надворі, їв рештки, охороняв худобу в будь-яку негоду. Вірний — так. Але життя в нього було не солодке.</p>
+<p><strong>Кінь</strong> — найшляхетніша тварина української культури. У козацькій традиції кінь — не просто транспорт, а бойовий товариш, частина ідентичності. «Козак без коня — як солдат без рушниці». Тому ідіоми з конем — переважно позитивні: «бути на коні» (успіх), «працювати як кінь» (з повагою до праці), «здоровий як кінь» (еталон здоров'я).</p>
+<p>Цікаво порівняти з англійською. «Wolf in sheep's clothing» — дослівний збіг, бо обидві культури читали Біблію. «Work like a horse» — теж спільне, бо і в Англії, і в Україні коні століттями були головною робочою силою. Але «собаці під хвіст» — суто українське, перекласти неможливо.</p>
+<p>У цьому модулі ви познайомитеся з тваринним світом української фразеології — і, можливо, побачите знайомих людей у вовчих, собачих та кінських образах.</p>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Зміст уроку</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Розминка</h2>
+<h3 id="-1">Тварини як символи</h3>
+<p>Які асоціації у вас із цими тваринами?</p>
 <table>
 <thead>
 <tr>
@@ -148,7 +194,646 @@
 <blockquote>
   <p><strong>Чи знали ви?</strong></p>
   <p>У давньоукраїнській міфології <strong>вовк</strong> був не тільки ворогом — він також був оберегом. Воїни-«вовкулаки» (вовки-перевертні) вважалися захисниками племені. Образ вовка — амбівалентний: і страх, і повага.</p>
-</blockquote></div></div></div>
+</blockquote>
+<hr />
+<h2 id="-2">Презентація</h2>
+<h3 id="-3">Ідіоми з «вовк»</h3>
+<h4 id="-4">Хижацтво та лицемірство</h4>
+<table>
+<thead>
+<tr>
+<th>Ідіома</th>
+<th>Значення</th>
+<th>Англійський відповідник</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>вовк у овечій шкурі</strong></td>
+<td>лицемір, небезпечний під маскою добра</td>
+<td>wolf in sheep's clothing</td>
+</tr>
+<tr>
+<td><strong>сірий вовк</strong></td>
+<td>небезпечна, хижа людина</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>голодний як вовк</strong></td>
+<td>дуже голодний</td>
+<td>hungry as a wolf</td>
+</tr>
+<tr>
+<td><strong>вовком дивитися</strong></td>
+<td>дивитися вороже, недружелюбно</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>вовча натура</strong></td>
+<td>хижа, жорстока вдача</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Приклади в контексті:</strong></p>
+<ol>
+<li><p>«Не вір йому — він <strong>вовк у овечій шкурі</strong>. Здається добрим, а насправді використовує людей.»</p></li>
+<li><p>«Після 12-годинного походу ми були <strong>голодні як вовки</strong> — з'їли все, що було.»</p></li>
+<li><p>«Чого ти на мене <strong>вовком дивишся</strong>? Я ж нічого поганого не зробив.»</p></li>
+</ol>
+<blockquote>
+  <p><strong>Чи знали ви?</strong></p>
+  <p>Вираз «<strong>вовк у овечій шкурі</strong>» — біблійного походження. У Нагірній проповіді Ісус попереджає: «Стережіться лжепророків, що приходять до вас в овечій одежі, а всередині — вовки хижі» (Матвія 7:15). Цей образ став універсальним для європейських мов.</p>
+</blockquote>
+<hr />
+<h4 id="-5">Натура та адаптація</h4>
+<table>
+<thead>
+<tr>
+<th>Ідіома</th>
+<th>Значення</th>
+<th>Контекст</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>скільки вовка не годуй, а він у ліс дивиться</strong></td>
+<td>не зміниш чиюсь натуру</td>
+<td>Взяли його на роботу, вчили — а він знову до старих звичок.</td>
+</tr>
+<tr>
+<td><strong>з вовками жити — по-вовчому вити</strong></td>
+<td>адаптуйся до середовища</td>
+<td>У цьому колективі треба бути жорсткішим.</td>
+</tr>
+<tr>
+<td><strong>вовком вити</strong></td>
+<td>страждати, нудьгувати</td>
+<td>Від нудьги хочеться вовком вити.</td>
+</tr>
+<tr>
+<td><strong>вовча яма</strong></td>
+<td>пастка, небезпечна ситуація</td>
+<td>Потрапив у вовчу яму — тепер не знає, як вибратися.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Культурний контекст:</strong></p>
+<p>«Скільки вовка не годуй…» — одне з найвідоміших українських прислів'їв. Воно відображає народну мудрість про те, що справжню природу змінити неможливо. Це не обов'язково негативно — інколи це про те, що треба приймати людей такими, якими вони є.</p>
+<blockquote>
+  <p><strong>Міф vs Факт</strong></p>
+  <p>❌ <strong>Міф:</strong> Вовки в українському фольклорі — завжди негативні персонажі.</p>
+  <p>✅ <strong>Факт:</strong> У багатьох казках вовк допомагає герою (згадайте «Івасика-Телесика» чи «Котигорошка»). Сірий вовк у казці «Іван-царевич» — вірний помічник. Образ вовка складніший за просте «зло».</p>
+</blockquote>
+<hr />
+<h3 id="-6">Ідіоми з «собака»</h3>
+<h4 id="-7">Вірність та служба</h4>
+<table>
+<thead>
+<tr>
+<th>Ідіома</th>
+<th>Значення</th>
+<th>Англійський відповідник</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>вірний як собака</strong></td>
+<td>беззаперечно вірний</td>
+<td>faithful as a dog</td>
+</tr>
+<tr>
+<td><strong>собача вірність</strong></td>
+<td>сліпа, беззаперечна вірність</td>
+<td>dog-like loyalty</td>
+</tr>
+<tr>
+<td><strong>служити як собака</strong></td>
+<td>важко і віддано працювати</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>собачий обов'язок</strong></td>
+<td>невдячна, тяжка праця</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Приклади в контексті:</strong></p>
+<ol>
+<li><p>«Він <strong>вірний як собака</strong> — ніколи не зрадить, навіть якщо це йому невигідно.»</p></li>
+<li><p>«Працюю як собака по 60 годин на тиждень, а зарплата мізерна.»</p></li>
+</ol>
+<hr />
+<h4 id="-8">Негативні контексти</h4>
+<table>
+<thead>
+<tr>
+<th>Ідіома</th>
+<th>Значення</th>
+<th>Приклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>собаче життя</strong></td>
+<td>дуже важке життя</td>
+<td>Після звільнення почалося собаче життя.</td>
+</tr>
+<tr>
+<td><strong>собача погода</strong></td>
+<td>дуже погана погода</td>
+<td>На дворі собача погода — дощ зі снігом.</td>
+</tr>
+<tr>
+<td><strong>собака на сіні</strong></td>
+<td>сам не користується і іншим не дає</td>
+<td>Він як собака на сіні — сам не робить і нікому не дозволяє.</td>
+</tr>
+<tr>
+<td><strong>собак вішати</strong></td>
+<td>наговорювати, звинувачувати</td>
+<td>На нього всіх собак повісили, хоча він невинний.</td>
+</tr>
+<tr>
+<td><strong>собаці під хвіст</strong></td>
+<td>даремно, марно</td>
+<td>Усі зусилля пішли собаці під хвіст.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Етимологічна мініатюра:</strong></p>
+<p>«<strong>Собака на сіні</strong>» — з байки Езопа, яку переказував і Федр. Собака лежить на сіні — сама його не їсть (бо собаки не їдять сіно), але й корові не дає. Ідеальна метафора людини, яка блокує ресурси, які їй не потрібні.</p>
+<blockquote>
+  <p><strong>Чи знали ви?</strong></p>
+  <p>Вираз «<strong>собаці під хвіст</strong>» — евфемізм. Оригінальний образ ще грубіший. Але суть зрозуміла: все пішло туди, звідки немає повернення. Даремно, марно, безнадійно.</p>
+</blockquote>
+<hr />
+<h4 id="-9">Прислів'я з собакою</h4>
+<table>
+<thead>
+<tr>
+<th>Прислів'я</th>
+<th>Значення</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Собака гавкає, караван іде</td>
+<td>Критика не зупинить рішучу людину</td>
+</tr>
+<tr>
+<td>Собака собаку не їсть</td>
+<td>Свої своїх не чіпають</td>
+</tr>
+<tr>
+<td>Битому собаці досить кия показати</td>
+<td>Хто боїться — той розуміє натяк</td>
+</tr>
+<tr>
+<td>Не бійся собаки, що гавкає</td>
+<td>Хто кричить — не найнебезпечніший</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="-10">Ідіоми з «кінь»</h3>
+<h4 id="-11">Сила та важка праця</h4>
+<table>
+<thead>
+<tr>
+<th>Ідіома</th>
+<th>Значення</th>
+<th>Англійський відповідник</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>працювати як кінь</strong></td>
+<td>дуже важко працювати</td>
+<td>work like a horse</td>
+</tr>
+<tr>
+<td><strong>кінська сила</strong></td>
+<td>велика фізична сила</td>
+<td>horsepower (!)</td>
+</tr>
+<tr>
+<td><strong>тягнути як кінь</strong></td>
+<td>працювати без перепочинку</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>здоровий як кінь</strong></td>
+<td>дуже здоровий</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Приклади в контексті:</strong></p>
+<ol>
+<li><p>«Він <strong>працює як кінь</strong> — по 14 годин на день, без вихідних.»</p></li>
+<li><p>«Дідусю вже 85, а він <strong>здоровий як кінь</strong> — досі на городі працює.»</p></li>
+</ol>
+<blockquote>
+  <p><strong>Чи знали ви?</strong></p>
+  <p>«<strong>Кінська сила</strong>» (horsepower) — не просто ідіома, а одиниця вимірювання потужності. Її ввів Джеймс Ватт у XVIII столітті, щоб порівняти потужність парових машин з кіньми. Одна кінська сила ≈ 746 ватів. І в українській, і в англійській ця метафора стала буквальним технічним терміном.</p>
+</blockquote>
+<hr />
+<h4 id="-12">Успіх та мудрість</h4>
+<table>
+<thead>
+<tr>
+<th>Ідіома</th>
+<th>Значення</th>
+<th>Контекст</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>бути на коні</strong></td>
+<td>бути успішним, на вершині</td>
+<td>Після підвищення він на коні!</td>
+</tr>
+<tr>
+<td><strong>посадити на коня</strong></td>
+<td>допомогти досягти успіху</td>
+<td>Батько посадив його на коня в бізнесі.</td>
+</tr>
+<tr>
+<td><strong>коня на переправі не міняють</strong></td>
+<td>не змінюй в критичний момент</td>
+<td>Зараз війна — коня на переправі не міняють.</td>
+</tr>
+<tr>
+<td><strong>дарованому коневі в зуби не дивляться</strong></td>
+<td>не критикуй подарунок</td>
+<td>Don't look a gift horse in the mouth</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Культурний контекст:</strong></p>
+<p>«<strong>Бути на коні</strong>» — образ з козацької культури. Козак верхи — це воїн у повній силі, у висоті, у контролі. «Він на коні» — він на вершині, він переможець.</p>
+<blockquote>
+  <p><strong>Міф vs Факт</strong></p>
+  <p>❌ <strong>Міф:</strong> «Дарованому коневі в зуби не дивляться» — українське прислів'я.</p>
+  <p>✅ <strong>Факт:</strong> Це латинське прислів'я «Equi donati dentes non inspiciuntur», яке прийшло через Біблію та церковнослов'янську традицію. Воно спільне для більшості європейських мов. Зуби коня показують його вік — тому покупці перевіряли. Але перевіряти подарунок — неввічливо.</p>
+</blockquote>
+<hr />
+<h3 id="-13">Порівняння з англійською</h3>
+<table>
+<thead>
+<tr>
+<th>Українська</th>
+<th>Англійська</th>
+<th>Тип відповідності</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>вовк у овечій шкурі</td>
+<td>wolf in sheep's clothing</td>
+<td>✅ Дослівний (біблійний)</td>
+</tr>
+<tr>
+<td>голодний як вовк</td>
+<td>hungry as a wolf</td>
+<td>✅ Схожий образ</td>
+</tr>
+<tr>
+<td>працювати як кінь</td>
+<td>work like a horse</td>
+<td>✅ Дослівний</td>
+</tr>
+<tr>
+<td>собака на сіні</td>
+<td>dog in the manger</td>
+<td>✅ Схожий (езопівський)</td>
+</tr>
+<tr>
+<td>собаці під хвіст</td>
+<td>—</td>
+<td>❌ Немає відповідника</td>
+</tr>
+<tr>
+<td>скільки вовка не годуй…</td>
+<td>—</td>
+<td>❌ Суто слов'янське</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="-14">Практика</h2>
+<h3 id="1">Вправа 1: Доповніть ідіому</h3>
+<ol>
+<li><p>Він ___ у овечій шкурі — не вірте йому.<br />
+→ <strong>вовк</strong></p></li>
+<li><p>Працюю як ___, а грошей не маю.<br />
+→ <strong>кінь / собака</strong></p></li>
+<li><p>Усе пішло ___ під хвіст.<br />
+→ <strong>собаці</strong></p></li>
+<li><p>Скільки вовка не годуй, а він у ___ дивиться.<br />
+→ <strong>ліс</strong></p></li>
+<li><p>Дарованому ___ в зуби не дивляться.<br />
+→ <strong>коневі</strong></p></li>
+</ol>
+<h3 id="2">Вправа 2: Оберіть правильну ідіому</h3>
+<ol>
+<li><p>Він дуже голодний після тренування.<br />
+→ <strong>голодний як вовк</strong></p></li>
+<li><p>Вона завжди дуже важко працює.<br />
+→ <strong>працює як кінь</strong></p></li>
+<li><p>Після підвищення він успішний і щасливий.<br />
+→ <strong>він на коні</strong></p></li>
+<li><p>Усі зусилля виявилися даремними.<br />
+→ <strong>пішли собаці під хвіст</strong></p></li>
+<li><p>Він видається добрим, але насправді небезпечний.<br />
+→ <strong>вовк у овечій шкурі</strong></p></li>
+</ol>
+<h3 id="3">Вправа 3: Перекладіть</h3>
+<ol>
+<li><p>He's a wolf in sheep's clothing.<br />
+→ <strong>Він вовк у овечій шкурі.</strong></p></li>
+<li><p>Don't look a gift horse in the mouth.<br />
+→ <strong>Дарованому коневі в зуби не дивляться.</strong></p></li>
+<li><p>All the work went to waste.<br />
+→ <strong>Уся робота пішла собаці під хвіст.</strong></p></li>
+<li><p>He works like a horse.<br />
+→ <strong>Він працює як кінь.</strong></p></li>
+</ol>
+<hr />
+<h2 id="-15">Продукція</h2>
+<h3 id="-16">Ситуації: Опишіть за допомогою ідіом</h3>
+<p>Використайте щонайменше 2 ідіоми для кожної ситуації:</p>
+<ol>
+<li><p><strong>Колега-маніпулятор:</strong> Здається дружнім, але насправді використовує людей для власної вигоди.</p></li>
+<li><p><strong>Невдалий проєкт:</strong> Команда працювала дуже важко, але результату немає.</p></li>
+<li><p><strong>Успішний друг:</strong> Досяг успіху, тепер щасливий і впевнений.</p></li>
+</ol>
+<h3 id="-17">Дискусія</h3>
+<p>Обговоріть у парах:</p>
+<ol>
+<li>«Скільки вовка не годуй…» — чи можна змінити людську натуру?</li>
+<li>Чи завжди «собача вірність» — позитивна риса?</li>
+</ol>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Вправи</h3>
+          <span class="section-type practice">practice</span>
+        </div>
+        <div class="section-body md-content"><h2 id="quizi">quiz: Ідіоми: Тварини I</h2>
+<blockquote>
+  <p>Виберіть правильну відповідь.</p>
+</blockquote>
+<ol>
+<li>«Вовк у овечій шкурі» означає:</li>
+</ol>
+<ul>
+<li>[x] лицемір, небезпечний під маскою добра</li>
+<li>[ ] добра людина</li>
+</ul>
+<blockquote>
+  <p>Wolf in sheep's clothing — біблійний образ.</p>
+</blockquote>
+<ol start="2">
+<li>«Собака на сіні» означає:</li>
+</ol>
+<ul>
+<li>[x] сам не користується і іншим не дає</li>
+<li>[ ] хороший охоронець</li>
+</ul>
+<blockquote>
+  <p>Dog in the manger — з байки Езопа.</p>
+</blockquote>
+<ol start="3">
+<li>«Працювати як кінь» означає:</li>
+</ol>
+<ul>
+<li>[x] дуже важко працювати</li>
+<li>[ ] швидко бігати</li>
+</ul>
+<blockquote>
+  <p>Work like a horse.</p>
+</blockquote>
+<ol start="4">
+<li>«Бути на коні» означає:</li>
+</ol>
+<ul>
+<li>[x] бути успішним</li>
+<li>[ ] їздити верхи</li>
+</ul>
+<blockquote>
+  <p>Козацький образ — бути на вершині.</p>
+</blockquote>
+<ol start="5">
+<li>«Собаці під хвіст» означає:</li>
+</ol>
+<ul>
+<li>[x] даремно, марно</li>
+<li>[ ] добре</li>
+</ul>
+<blockquote>
+  <p>Суто українська ідіома — немає англійського відповідника.</p>
+</blockquote>
+<ol start="6">
+<li>«Скільки вовка не годуй…» означає:</li>
+</ol>
+<ul>
+<li>[x] не зміниш чиюсь натуру</li>
+<li>[ ] вовки люблять їсти</li>
+</ul>
+<blockquote>
+  <p>Суто слов'янське прислів'я.</p>
+</blockquote>
+<ol start="7">
+<li><strong>[Інтеграція: пасив + регістр]</strong> Офіційний текст: «На нього ___ всіх собак.»</li>
+</ol>
+<ul>
+<li>[x] повішено</li>
+<li>[ ] повісили</li>
+</ul>
+<blockquote>
+  <p>Офіційний стиль → -но/-то форма.</p>
+</blockquote>
+<ol start="8">
+<li><strong>[Інтеграція: регістр]</strong> Розмова: «На нього ___ всіх собак.»</li>
+</ol>
+<ul>
+<li>[ ] повішено</li>
+<li>[x] повісили</li>
+</ul>
+<blockquote>
+  <p>Розмовний стиль → 3-я особа множини.</p>
+</blockquote>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Словник</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Ідіома</th>
+<th>Вимова</th>
+<th>Значення</th>
+<th>Примітки</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>вовк у овечій шкурі</td>
+<td>/wɔwk u ɔˈwɛtʃʲij ˈʃkʲirʲi/</td>
+<td>лицемір</td>
+<td>біблійне</td>
+</tr>
+<tr>
+<td>голодний як вовк</td>
+<td>/ɦɔˈlɔdnɪj jak wɔwk/</td>
+<td>дуже голодний</td>
+<td>idiom</td>
+</tr>
+<tr>
+<td>скільки вовка не годуй</td>
+<td>/ˈskʲilʲkɪ ˈwɔwkɑ nɛ ɦɔˈduj/</td>
+<td>не зміниш натуру</td>
+<td>прислів'я</td>
+</tr>
+<tr>
+<td>собача погода</td>
+<td>/sɔˈbɑtʃɑ pɔˈɦɔdɑ/</td>
+<td>погана погода</td>
+<td>idiom</td>
+</tr>
+<tr>
+<td>собаці під хвіст</td>
+<td>/sɔˈbɑt͡sʲi pʲid xwʲist/</td>
+<td>даремно</td>
+<td>idiom</td>
+</tr>
+<tr>
+<td>собака на сіні</td>
+<td>/sɔˈbɑkɑ nɑ ˈsʲinʲi/</td>
+<td>заважає іншим</td>
+<td>езопівське</td>
+</tr>
+<tr>
+<td>працювати як кінь</td>
+<td>/prɑt͡sʲuˈwɑtɪ jak kʲinʲ/</td>
+<td>важко працювати</td>
+<td>idiom</td>
+</tr>
+<tr>
+<td>бути на коні</td>
+<td>/ˈbutɪ nɑ kɔˈnʲi/</td>
+<td>бути успішним</td>
+<td>козацьке</td>
+</tr>
+<tr>
+<td>дарованому коневі</td>
+<td>/dɑrɔˈwɑnɔmu kɔˈnɛwʲi/</td>
+<td>не критикуй подарунок</td>
+<td>латинське</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-4">
+        <div class="section-header" onclick="toggleSection(4)">
+          <h3>Підсумок</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Вовк: хижацтво, натура</h2>
+<table>
+<thead>
+<tr>
+<th>Ідіома</th>
+<th>Значення</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>вовк у овечій шкурі</td>
+<td>лицемір</td>
+</tr>
+<tr>
+<td>голодний як вовк</td>
+<td>дуже голодний</td>
+</tr>
+<tr>
+<td>скільки вовка не годуй…</td>
+<td>не зміниш натуру</td>
+</tr>
+<tr>
+<td>вовком дивитися</td>
+<td>дивитися вороже</td>
+</tr>
+</tbody>
+</table>
+<h2 id="-1">Собака: вірність, тяжка доля</h2>
+<table>
+<thead>
+<tr>
+<th>Ідіома</th>
+<th>Значення</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>вірний як собака</td>
+<td>дуже вірний</td>
+</tr>
+<tr>
+<td>собаці під хвіст</td>
+<td>даремно</td>
+</tr>
+<tr>
+<td>собака на сіні</td>
+<td>заважає іншим</td>
+</tr>
+<tr>
+<td>собаче життя</td>
+<td>тяжке життя</td>
+</tr>
+</tbody>
+</table>
+<h2 id="-2">Кінь: сила, успіх</h2>
+<table>
+<thead>
+<tr>
+<th>Ідіома</th>
+<th>Значення</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>працювати як кінь</td>
+<td>важко працювати</td>
+</tr>
+<tr>
+<td>бути на коні</td>
+<td>бути успішним</td>
+</tr>
+<tr>
+<td>здоровий як кінь</td>
+<td>дуже здоровий</td>
+</tr>
+<tr>
+<td>дарованому коневі…</td>
+<td>не критикуй подарунок</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p><strong>Головне</strong></p>
+  <p>Вовк, собака, кінь — три архетипи української культури. Вовк — про небезпеку і незмінну натуру. Собака — про вірність і тяжку долю. Кінь — про силу і шляхетність. У цих образах — цінності народу, який століттями жив поруч із цими тваринами.</p>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('quiz')">Start →</button></div>
     </section>
     
@@ -186,6 +871,10 @@
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

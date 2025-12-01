@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,7 +136,22 @@
         <p style="color:var(--text-muted)">When, Before, After, While, Until</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Часові речення | Temporal Clauses</h4><div class="md-content"><p>Temporal clauses describe <strong>when</strong> something happens in relation to another event:</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Зміст уроку | Lesson Content</li><li class="toc-item" data-target="section-1">Activities</li><li class="toc-item" data-target="section-2">Vocabulary</li><li class="toc-item" data-target="section-3">Summary</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Зміст уроку | Lesson Content</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="warmup">warm-up | Розминка</h2>
+<h3 id="temporalclauses">Часові речення | Temporal Clauses</h3>
+<p>Temporal clauses describe <strong>when</strong> something happens in relation to another event:</p>
 <table>
 <thead>
 <tr>
@@ -154,7 +187,10 @@
 <td>Доки він не прийде…</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>### Коли — When</h4><div class="md-content"><p><strong>Коли</strong> is the most basic temporal conjunction:</p>
+</table>
+<h2 id="presentation">presentation | Презентація</h2>
+<h3 id="when">Коли — When</h3>
+<p><strong>Коли</strong> is the most basic temporal conjunction:</p>
 <table>
 <thead>
 <tr>
@@ -177,7 +213,9 @@
 </tr>
 </tbody>
 </table>
-<p><strong>Word order:</strong> The "коли" clause can come first or second.</p></div></div><div class="canvas-note"><h4>Коли + Past for Habitual Actions</h4><div class="md-content"><p><strong>Коли</strong> + imperfective past = repeated past actions (≈ "whenever"):</p>
+<p><strong>Word order:</strong> The "коли" clause can come first or second.</p>
+<h3 id="pastforhabitualactions">Коли + Past for Habitual Actions</h3>
+<p><strong>Коли</strong> + imperfective past = repeated past actions (≈ "whenever"):</p>
 <table>
 <thead>
 <tr>
@@ -195,7 +233,9 @@
 <td>Whenever I saw her, I smiled.</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Перед тим як — Before</h4><div class="md-content"><p><strong>Перед тим як</strong> + infinitive/clause = "before":</p>
+</table>
+<h3 id="before">Перед тим як — Before</h3>
+<p><strong>Перед тим як</strong> + infinitive/clause = "before":</p>
 <table>
 <thead>
 <tr>
@@ -240,7 +280,9 @@
 <td>Before speaking, think.</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>До + Noun — Before/Until + Noun</h4><div class="md-content"><p><strong>До</strong> + genitive noun for "before" or "until":</p>
+</table>
+<h3 id="nounbeforeuntilnoun">До + Noun — Before/Until + Noun</h3>
+<p><strong>До</strong> + genitive noun for "before" or "until":</p>
 <table>
 <thead>
 <tr>
@@ -262,7 +304,9 @@
 <td>Wait until Monday.</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Після того як — After</h4><div class="md-content"><p><strong>Після того як</strong> + clause = "after":</p>
+</table>
+<h3 id="after">Після того як — After</h3>
+<p><strong>Після того як</strong> + clause = "after":</p>
 <table>
 <thead>
 <tr>
@@ -284,7 +328,9 @@
 <td>After she said that, everyone fell silent.</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Після + Noun — After + Noun</h4><div class="md-content"><p><strong>Після</strong> + genitive noun for "after":</p>
+</table>
+<h3 id="nounafternoun">Після + Noun — After + Noun</h3>
+<p><strong>Після</strong> + genitive noun for "after":</p>
 <table>
 <thead>
 <tr>
@@ -306,7 +352,9 @@
 <td>After his departure, it became quiet.</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Поки / Доки — While, Until</h4><div class="md-content"><p><strong>Поки</strong> and <strong>доки</strong> have two meanings:</p>
+</table>
+<h3 id="whileuntil">Поки / Доки — While, Until</h3>
+<p><strong>Поки</strong> and <strong>доки</strong> have two meanings:</p>
 <p><strong>1. While (simultaneous actions):</strong></p>
 <table>
 <thead>
@@ -352,7 +400,9 @@
   <li>Wait <strong>until</strong> he comes = Чекай, <strong>поки</strong> він <strong>не</strong> прийде.</li>
   </ul>
   <p>Without "не," поки/доки means "while."</p>
-</blockquote></div></div><div class="canvas-note"><h4>Щойно — As soon as</h4><div class="md-content"><p><strong>Щойно</strong> = "as soon as" or "just (now)":</p>
+</blockquote>
+<h3 id="assoonas">Щойно — As soon as</h3>
+<p><strong>Щойно</strong> = "as soon as" or "just (now)":</p>
 <table>
 <thead>
 <tr>
@@ -374,7 +424,9 @@
 <td>He just arrived.</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Як тільки — As soon as</h4><div class="md-content"><p><strong>Як тільки</strong> is synonymous with "щойно":</p>
+</table>
+<h3 id="assoonas-1">Як тільки — As soon as</h3>
+<p><strong>Як тільки</strong> is synonymous with "щойно":</p>
 <table>
 <thead>
 <tr>
@@ -392,7 +444,9 @@
 <td>As soon as he left, rain started.</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Ледве — Hardly, Barely (when)</h4><div class="md-content"><p><strong>Ледве</strong> for "barely/hardly…when" (immediate sequence):</p>
+</table>
+<h3 id="hardlybarelywhen">Ледве — Hardly, Barely (when)</h3>
+<p><strong>Ледве</strong> for "barely/hardly…when" (immediate sequence):</p>
 <table>
 <thead>
 <tr>
@@ -410,7 +464,9 @@
 <td>I had barely lain down when they called.</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Summary Table</h4><div class="md-content"><table>
+</table>
+<h3 id="summarytable">Summary Table</h3>
+<table>
 <thead>
 <tr>
 <th>Meaning</th>
@@ -460,7 +516,10 @@
 <td>Щойно дізнаюся…</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>### Choose the Correct Conjunction</h4><div class="md-content"><ol>
+</table>
+<h2 id="practice">practice | Практика</h2>
+<h3 id="choosethecorrectconjunction">Choose the Correct Conjunction</h3>
+<ol>
 <li>___ він прийшов, ми вечеряли.</li>
 </ol>
 <ul>
@@ -499,7 +558,9 @@
 <li>a) Поки</li>
 <li>b) Щойно ✓</li>
 <li>c) До того як</li>
-</ul></div></div><div class="canvas-note"><h4>Complete with Temporal Conjunctions</h4><div class="md-content"><ol>
+</ul>
+<h3 id="completewithtemporalconjunctions">Complete with Temporal Conjunctions</h3>
+<ol>
 <li><p>___ я був студентом, я жив у гуртожитку.<br />
 → <strong>Коли</strong> я був студентом, я жив у гуртожитку.</p></li>
 <li><p>___ піти, перевір усе ще раз.<br />
@@ -510,7 +571,9 @@
 → Не виходь, <strong>поки</strong> / <strong>доки</strong> дощ не закінчиться.</p></li>
 <li><p>___ отримаю результати, зателефоную.<br />
 → <strong>Щойно</strong> / <strong>Як тільки</strong> отримаю результати, зателефоную.</p></li>
-</ol></div></div><div class="canvas-note"><h4>Translate to Ukrainian</h4><div class="md-content"><ol>
+</ol>
+<h3 id="translatetoukrainian">Translate to Ukrainian</h3>
+<ol>
 <li><p>When I was young, I lived in Kyiv.<br />
 → <strong>Коли я був молодим, я жив у Києві.</strong></p></li>
 <li><p>Before leaving, check everything.<br />
@@ -521,7 +584,9 @@
 → <strong>Чекай, поки я не зателефоную.</strong></p></li>
 <li><p>As soon as he arrives, we'll start.<br />
 → <strong>Щойно він приїде, ми почнемо.</strong></p></li>
-</ol></div></div><div class="canvas-note"><h4>Transform Using Different Structures</h4><div class="md-content"><p><strong>With clause → with noun:</strong></p>
+</ol>
+<h3 id="transformusingdifferentstructures">Transform Using Different Structures</h3>
+<p><strong>With clause → with noun:</strong></p>
 <ol>
 <li><p>Після того як він прийшов…<br />
 → <strong>Після його приходу…</strong></p></li>
@@ -529,7 +594,10 @@
 → <strong>Перед її виступом…</strong></p></li>
 <li><p>До того як розпочнеться зустріч…<br />
 → <strong>До початку зустрічі…</strong></p></li>
-</ol></div></div><div class="canvas-note"><h4>### Tell About Your Day</h4><div class="md-content"><p>Describe your typical day using temporal clauses:</p>
+</ol>
+<h2 id="production">production | Продукція</h2>
+<h3 id="tellaboutyourday">Tell About Your Day</h3>
+<p>Describe your typical day using temporal clauses:</p>
 <p><strong>Template:</strong></p>
 <ul>
 <li>Коли я прокидаюся…</li>
@@ -538,12 +606,285 @@
 <li>Поки я їду додому…</li>
 </ul>
 <p><strong>Example:</strong><br />
-Коли я прокидаюся, я п'ю каву. Перед тим як іти на роботу, я снідаю. Після того як закінчую роботу, я йду на тренування. Поки я їду додому, я слухаю подкасти.</p></div></div><div class="canvas-note"><h4>Tell About Your Past</h4><div class="md-content"><p>Use temporal clauses to talk about past events:</p>
+Коли я прокидаюся, я п'ю каву. Перед тим як іти на роботу, я снідаю. Після того як закінчую роботу, я йду на тренування. Поки я їду додому, я слухаю подкасти.</p>
+<h3 id="tellaboutyourpast">Tell About Your Past</h3>
+<p>Use temporal clauses to talk about past events:</p>
 <ul>
 <li>Коли я був/була дитиною…</li>
 <li>Перед тим як почати вчити українську…</li>
 <li>Після того як закінчив/закінчила школу…</li>
-</ul></div></div></div>
+</ul>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Activities</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="quiztemporalclauses">quiz: Temporal Clauses</h2>
+<blockquote>
+  <p>Choose the correct answer.</p>
+</blockquote>
+<ol>
+<li>___ він прийшов, ми вже вечеряли.</li>
+</ol>
+<ul>
+<li>[x] Коли</li>
+<li>[ ] Поки</li>
+</ul>
+<blockquote>
+  <p>"Коли" for "when."</p>
+</blockquote>
+<ol start="2">
+<li>Подумай ___ тим як говорити.</li>
+</ol>
+<ul>
+<li>[x] перед</li>
+<li>[ ] після</li>
+</ul>
+<blockquote>
+  <p>"Before" = "перед тим як."</p>
+</blockquote>
+<ol start="3">
+<li>Чекай, ___ він не прийде.</li>
+</ol>
+<ul>
+<li>[x] поки</li>
+<li>[ ] після того як</li>
+</ul>
+<blockquote>
+  <p>"Until" requires "поки…не."</p>
+</blockquote>
+<ol start="4">
+<li>___ закінчу, відпочину.</li>
+</ol>
+<ul>
+<li>[ ] Перед тим як</li>
+<li>[x] Після того як</li>
+</ul>
+<blockquote>
+  <p>"After" I finish, I'll rest.</p>
+</blockquote>
+<ol start="5">
+<li>___ я дізнаюся, скажу.</li>
+</ol>
+<ul>
+<li>[x] Як тільки</li>
+<li>[ ] Поки</li>
+</ul>
+<blockquote>
+  <p>"As soon as" = "як тільки."</p>
+</blockquote>
+<ol start="6">
+<li>___ роботи я йду додому.</li>
+</ol>
+<ul>
+<li>[x] Після</li>
+<li>[ ] Після того як</li>
+</ul>
+<blockquote>
+  <p>With noun, use "після + gen."</p>
+</blockquote>
+<h2 id="fillincompletethestory">fill-in: Complete the Story</h2>
+<blockquote>
+  <p>(1)<strong>_ я був молодим, я багато подорожував. (2)</strong>_ тим як поїхати в нову країну, я завжди вчив трохи мови. (3)<strong>_ я приїхав в Україну, я одразу закохався в цю країну. (4)</strong>_ я там жив, я щодня вчив нові слова.</p>
+</blockquote>
+<p><strong>Answers:</strong> Коли, Перед, Коли/Щойно, Поки</p>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Vocabulary</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Word</th>
+<th>IPA</th>
+<th>English</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>коли</td>
+<td>/koˈlɪ/</td>
+<td>when</td>
+<td>conj</td>
+</tr>
+<tr>
+<td>перед тим як</td>
+<td>-</td>
+<td>before</td>
+<td>conj</td>
+</tr>
+<tr>
+<td>до того як</td>
+<td>-</td>
+<td>before</td>
+<td>conj (formal)</td>
+</tr>
+<tr>
+<td>перш ніж</td>
+<td>-</td>
+<td>before</td>
+<td>conj (literary)</td>
+</tr>
+<tr>
+<td>після того як</td>
+<td>-</td>
+<td>after</td>
+<td>conj</td>
+</tr>
+<tr>
+<td>до</td>
+<td>/do/</td>
+<td>before, until</td>
+<td>prep + gen</td>
+</tr>
+<tr>
+<td>після</td>
+<td>/ˈpʲislʲɑ/</td>
+<td>after</td>
+<td>prep + gen</td>
+</tr>
+<tr>
+<td>поки</td>
+<td>/poˈkɪ/</td>
+<td>while, until</td>
+<td>conj</td>
+</tr>
+<tr>
+<td>доки</td>
+<td>/doˈkɪ/</td>
+<td>while, until</td>
+<td>conj</td>
+</tr>
+<tr>
+<td>щойно</td>
+<td>/ˈʃt͡ʃojno/</td>
+<td>as soon as, just</td>
+<td>adv/conj</td>
+</tr>
+<tr>
+<td>як тільки</td>
+<td>/jɑk ˈtʲilʲkɪ/</td>
+<td>as soon as</td>
+<td>conj</td>
+</tr>
+<tr>
+<td>ледве</td>
+<td>/ˈlɛdvɛ/</td>
+<td>hardly, barely</td>
+<td>adv</td>
+</tr>
+<tr>
+<td>тим часом</td>
+<td>/tɪm ˈt͡ʃɑsom/</td>
+<td>meanwhile</td>
+<td>adv</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Summary</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="temporalconjunctions">Temporal Conjunctions</h2>
+<table>
+<thead>
+<tr>
+<th>Meaning</th>
+<th>Expression</th>
+<th>Structure</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>when</td>
+<td>коли</td>
+<td>+ clause</td>
+</tr>
+<tr>
+<td>before</td>
+<td>перед тим як</td>
+<td>+ infinitive/clause</td>
+</tr>
+<tr>
+<td>before</td>
+<td>до того як</td>
+<td>+ clause</td>
+</tr>
+<tr>
+<td>after</td>
+<td>після того як</td>
+<td>+ clause</td>
+</tr>
+<tr>
+<td>while</td>
+<td>поки / доки</td>
+<td>+ clause</td>
+</tr>
+<tr>
+<td>until</td>
+<td>поки не / доки не</td>
+<td>+ clause (note: не required!)</td>
+</tr>
+<tr>
+<td>as soon as</td>
+<td>щойно / як тільки</td>
+<td>+ clause</td>
+</tr>
+</tbody>
+</table>
+<h2 id="prepositionsnouns">Prepositions + Nouns</h2>
+<table>
+<thead>
+<tr>
+<th>Meaning</th>
+<th>Preposition</th>
+<th>Case</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>before</td>
+<td>до</td>
+<td>genitive</td>
+<td>до вечері</td>
+</tr>
+<tr>
+<td>after</td>
+<td>після</td>
+<td>genitive</td>
+<td>після роботи</td>
+</tr>
+</tbody>
+</table>
+<h2 id="keypatternuntil">Key Pattern: Until</h2>
+<p>Ukrainian "until" requires negation:</p>
+<ul>
+<li><strong>поки не</strong> / <strong>доки не</strong> + verb</li>
+<li>Wait until he comes = Чекай, <strong>поки він не прийде</strong>.</li>
+</ul>
+<blockquote>
+  <p><strong>Key Takeaways</strong></p>
+  <ul>
+  <li>Коли = when (most common)</li>
+  <li>Перед тим як / до того як = before</li>
+  <li>Після того як = after</li>
+  <li>Поки/доки = while; поки не/доки не = until</li>
+  <li>Щойно / як тільки = as soon as</li>
+  <li>With nouns: до/після + genitive</li>
+  </ul>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('quiz')">Start →</button></div>
     </section>
     
@@ -581,6 +922,10 @@
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,7 +136,22 @@
         <p style="color:var(--text-muted)">Щоб + Infinitive (Same Subject)</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Мета та намір | Purpose and Intention</h4><div class="md-content"><p>Як сказати "навіщо" ви щось робите?</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Зміст уроку | Lesson Content</li><li class="toc-item" data-target="section-1">Activities</li><li class="toc-item" data-target="section-2">Vocabulary</li><li class="toc-item" data-target="section-3">Summary</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Зміст уроку | Lesson Content</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="warmup">warm-up | Розминка</h2>
+<h3 id="purposeandintention">Мета та намір | Purpose and Intention</h3>
+<p>Як сказати "навіщо" ви щось робите?</p>
 <p>How do you say "why" (for what purpose) you do something?</p>
 <p>English uses "to" or "in order to":</p>
 <ul>
@@ -129,7 +162,10 @@
 <ul>
 <li>Я прийшов, <strong>щоб</strong> допомогти.</li>
 <li>Я вчуся, <strong>щоб</strong> знати.</li>
-</ul></div></div><div class="canvas-note"><h4>### Щоб + Infinitive: Basic Pattern</h4><div class="md-content"><p>When the <strong>same person</strong> does both actions, use <strong>щоб + infinitive</strong>:</p>
+</ul>
+<h2 id="presentation">presentation | Презентація</h2>
+<h3 id="infinitivebasicpattern">Щоб + Infinitive: Basic Pattern</h3>
+<p>When the <strong>same person</strong> does both actions, use <strong>щоб + infinitive</strong>:</p>
 <table>
 <thead>
 <tr>
@@ -163,7 +199,9 @@
   <ul>
   <li><strong>Я</strong> хочу, щоб <strong>ти</strong> допоміг. (I want you to help)</li>
   </ul>
-</blockquote></div></div><div class="canvas-note"><h4>Common Verbs with Щоб + Infinitive</h4><div class="md-content"><p><strong>Motion verbs:</strong></p>
+</blockquote>
+<h3 id="commonverbswithinfinitive">Common Verbs with Щоб + Infinitive</h3>
+<p><strong>Motion verbs:</strong></p>
 <table>
 <thead>
 <tr>
@@ -231,7 +269,9 @@
 <td>She trains to win.</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Aspect Choice with Щоб</h4><div class="md-content"><p>Both perfective and imperfective can follow щоб:</p>
+</table>
+<h3 id="aspectchoicewith">Aspect Choice with Щоб</h3>
+<p>Both perfective and imperfective can follow щоб:</p>
 <table>
 <thead>
 <tr>
@@ -278,7 +318,9 @@
   <li><strong>Perfective</strong> is more common after щоб (focus on achieving the goal)</li>
   <li><strong>Imperfective</strong> emphasizes ongoing help, regular activity, or the process</li>
   </ul>
-</blockquote></div></div><div class="canvas-note"><h4>Negative Purpose: Щоб не</h4><div class="md-content"><p>To express negative purpose ("in order not to"):</p>
+</blockquote>
+<h3 id="negativepurpose">Negative Purpose: Щоб не</h3>
+<p>To express negative purpose ("in order not to"):</p>
 <table>
 <thead>
 <tr>
@@ -300,7 +342,9 @@
 <td>He wrote it down so as not to forget.</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Alternatives to Щоб</h4><div class="md-content"><p><strong>Для того щоб</strong> (more formal/emphatic):</p>
+</table>
+<h3 id="alternativesto">Alternatives to Щоб</h3>
+<p><strong>Для того щоб</strong> (more formal/emphatic):</p>
 <table>
 <thead>
 <tr>
@@ -333,13 +377,17 @@
 <td>He does this for the sake of friends.</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Word Order</h4><div class="md-content"><p>The purpose clause typically comes <strong>after</strong> the main clause:</p>
+</table>
+<h3 id="wordorder">Word Order</h3>
+<p>The purpose clause typically comes <strong>after</strong> the main clause:</p>
 <p>✅ Я прийшов, <strong>щоб допомогти</strong>. (normal)<br />
 ✅ <strong>Щоб допомогти</strong>, я прийшов. (emphatic, less common)</p>
 <p>When starting with "щоб," the purpose is emphasized:</p>
 <ul>
 <li><strong>Щоб вивчити мову</strong>, потрібно практикуватися. (To learn a language, one needs to practice.)</li>
-</ul></div></div><div class="canvas-note"><h4>Purpose vs. Result</h4><div class="md-content"><p>Don't confuse purpose (intention) with result (outcome):</p>
+</ul>
+<h3 id="purposevsresult">Purpose vs. Result</h3>
+<p>Don't confuse purpose (intention) with result (outcome):</p>
 <table>
 <thead>
 <tr>
@@ -362,7 +410,10 @@
 </tbody>
 </table>
 <p>Purpose = why you START the action<br />
-Result = what happens BECAUSE of the action</p></div></div><div class="canvas-note"><h4>### Combine with Щоб</h4><div class="md-content"><p><strong>Example:</strong> Я пішов у магазин. Я хотів купити молоко.<br />
+Result = what happens BECAUSE of the action</p>
+<h2 id="practice">practice | Практика</h2>
+<h3 id="combinewith">Combine with Щоб</h3>
+<p><strong>Example:</strong> Я пішов у магазин. Я хотів купити молоко.<br />
 → Я пішов у магазин, <strong>щоб купити</strong> молоко.</p>
 <ol>
 <li><p>Вона відкрила вікно. Вона хотіла провітрити кімнату.<br />
@@ -375,7 +426,9 @@ Result = what happens BECAUSE of the action</p></div></div><div class="canvas-no
 → Вона вчить українську, <strong>щоб працювати</strong> в Україні.</p></li>
 <li><p>Я встав рано. Я не хотів запізнитися.<br />
 → Я встав рано, <strong>щоб не запізнитися</strong>.</p></li>
-</ol></div></div><div class="canvas-note"><h4>Choose the Correct Form</h4><div class="md-content"><ol>
+</ol>
+<h3 id="choosethecorrectform">Choose the Correct Form</h3>
+<ol>
 <li>Вона пішла в магазин, щоб ___ хліб.</li>
 </ol>
 <ul>
@@ -414,7 +467,9 @@ Result = what happens BECAUSE of the action</p></div></div><div class="canvas-no
 <li>a) ✓ (no word needed)</li>
 <li>b) я</li>
 <li>c) щоб</li>
-</ul></div></div><div class="canvas-note"><h4>Translate to Ukrainian</h4><div class="md-content"><ol>
+</ul>
+<h3 id="translatetoukrainian">Translate to Ukrainian</h3>
+<ol>
 <li><p>I came to ask a question.<br />
 → Я прийшов, <strong>щоб запитати</strong>.</p></li>
 <li><p>She studies to pass the exam.<br />
@@ -425,7 +480,9 @@ Result = what happens BECAUSE of the action</p></div></div><div class="canvas-no
 → Він зателефонував, <strong>щоб привітатися</strong>.</p></li>
 <li><p>I woke up early so as not to be late.<br />
 → Я прокинувся рано, <strong>щоб не запізнитися</strong>.</p></li>
-</ol></div></div><div class="canvas-note"><h4>Answer the Questions</h4><div class="md-content"><p>Use "щоб + infinitive" in your answers:</p>
+</ol>
+<h3 id="answerthequestions">Answer the Questions</h3>
+<p>Use "щоб + infinitive" in your answers:</p>
 <ol>
 <li><p>Навіщо ви вчите українську?<br />
 → Я вчу українську, <strong>щоб</strong>… (говорити з друзями / працювати в Україні / подорожувати)</p></li>
@@ -433,7 +490,10 @@ Result = what happens BECAUSE of the action</p></div></div><div class="canvas-no
 → Люди працюють, <strong>щоб</strong>… (заробляти гроші / допомагати родині / мати цікаве життя)</p></li>
 <li><p>Навіщо ви прийшли на урок?<br />
 → Я прийшов на урок, <strong>щоб</strong>… (вчитися / практикувати мову / знайомитися з людьми)</p></li>
-</ol></div></div><div class="canvas-note"><h4>### Express Your Goals</h4><div class="md-content"><p>Complete with your real goals:</p>
+</ol>
+<h2 id="production">production | Продукція</h2>
+<h3 id="expressyourgoals">Express Your Goals</h3>
+<p>Complete with your real goals:</p>
 <ol>
 <li>Я вчу українську, щоб…</li>
 <li>Я працюю, щоб…</li>
@@ -442,12 +502,223 @@ Result = what happens BECAUSE of the action</p></div></div><div class="canvas-no
 <li>Я встаю рано, щоб…</li>
 </ol>
 <p><strong>Example:</strong><br />
-Я вчу українську, <strong>щоб говорити</strong> з моєю родиною в Україні. Я також хочу <strong>щоб читати</strong> українські книги в оригіналі.</p></div></div><div class="canvas-note"><h4>Discussion: Life Goals</h4><div class="md-content"><p>Discuss using purpose clauses:</p>
+Я вчу українську, <strong>щоб говорити</strong> з моєю родиною в Україні. Я також хочу <strong>щоб читати</strong> українські книги в оригіналі.</p>
+<h3 id="discussionlifegoals">Discussion: Life Goals</h3>
+<p>Discuss using purpose clauses:</p>
 <ul>
 <li>Що ви робите, <strong>щоб</strong> бути здоровими?</li>
 <li>Що треба робити, <strong>щоб</strong> вивчити мову?</li>
 <li>Що ви робите, <strong>щоб</strong> бути щасливими?</li>
-</ul></div></div></div>
+</ul>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Activities</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="quizpurposeclauses">quiz: Purpose Clauses</h2>
+<blockquote>
+  <p>Choose the correct answer.</p>
+</blockquote>
+<ol>
+<li>Я пішов у магазин, щоб ___ хліб.</li>
+</ol>
+<ul>
+<li>[x] купити</li>
+<li>[ ] купив</li>
+</ul>
+<blockquote>
+  <p>After "щоб" with same subject, use infinitive.</p>
+</blockquote>
+<ol start="2">
+<li>Вона вчиться, щоб ___ іспит.</li>
+</ol>
+<ul>
+<li>[x] скласти</li>
+<li>[ ] складала</li>
+</ul>
+<blockquote>
+  <p>Infinitive follows "щоб."</p>
+</blockquote>
+<ol start="3">
+<li>Він говорить тихо, щоб ___ розбудити дитину.</li>
+</ol>
+<ul>
+<li>[x] не</li>
+<li>[ ] ні</li>
+</ul>
+<blockquote>
+  <p>"Щоб не" = "so as not to."</p>
+</blockquote>
+<ol start="4">
+<li>___ вивчити мову, треба практикуватися.</li>
+</ol>
+<ul>
+<li>[x] Щоб</li>
+<li>[ ] Що</li>
+</ul>
+<blockquote>
+  <p>"Щоб" can start a sentence for emphasis.</p>
+</blockquote>
+<ol start="5">
+<li>Я зателефонував, ___ запитати про роботу.</li>
+</ol>
+<ul>
+<li>[x] щоб</li>
+<li>[ ] що</li>
+</ul>
+<blockquote>
+  <p>"Щоб" introduces purpose.</p>
+</blockquote>
+<ol start="6">
+<li>Вона поїхала до Києва, щоб ___ виставку.</li>
+</ol>
+<ul>
+<li>[x] відвідати</li>
+<li>[ ] відвідає</li>
+</ul>
+<blockquote>
+  <p>Infinitive (perfective) after "щоб."</p>
+</blockquote>
+<h2 id="fillincompletewithpurposeclauses">fill-in: Complete with Purpose Clauses</h2>
+<blockquote>
+  <p>Учора я рано встав, (1)<strong>_ не запізнитися на роботу. Я випив каву, (2)</strong>_ прокинутися. Потім я поїхав на роботу, (3)<strong>_ почати день вчасно. Увечері я пішов у спортзал, (4)</strong>_ потренуватися.</p>
+</blockquote>
+<p><strong>Answers:</strong> щоб, щоб, щоб, щоб</p>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Vocabulary</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Word</th>
+<th>IPA</th>
+<th>English</th>
+<th>Gender</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>щоб</td>
+<td>/ʃt͡ʃob/</td>
+<td>in order to, so that</td>
+<td>conj</td>
+</tr>
+<tr>
+<td>мета</td>
+<td>/mɛˈtɑ/</td>
+<td>goal, purpose</td>
+<td>f</td>
+</tr>
+<tr>
+<td>намір</td>
+<td>/ˈnɑmʲir/</td>
+<td>intention</td>
+<td>m</td>
+</tr>
+<tr>
+<td>ціль</td>
+<td>/t͡sʲilʲ/</td>
+<td>aim, target</td>
+<td>f</td>
+</tr>
+<tr>
+<td>задля</td>
+<td>/ˈzɑdlʲɑ/</td>
+<td>for the sake of</td>
+<td>prep</td>
+</tr>
+<tr>
+<td>для того щоб</td>
+<td>-</td>
+<td>in order to</td>
+<td>conj</td>
+</tr>
+<tr>
+<td>навіщо</td>
+<td>/nɑˈvʲiʃt͡ʃo/</td>
+<td>why (for what purpose)</td>
+<td>adv</td>
+</tr>
+<tr>
+<td>досягти</td>
+<td>/doˈsʲɑɦtɪ/</td>
+<td>to achieve</td>
+<td>pf</td>
+</tr>
+<tr>
+<td>досягати</td>
+<td>/dosʲɑˈɦɑtɪ/</td>
+<td>to achieve</td>
+<td>impf</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Summary</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="infinitivepattern">Щоб + Infinitive Pattern</h2>
+<h3 id="whentouse">When to Use</h3>
+<ul>
+<li>Same subject in both clauses</li>
+<li>Expressing purpose/intention</li>
+</ul>
+<h3 id="structure">Structure</h3>
+<p>Main clause + <strong>щоб</strong> + infinitive</p>
+<h3 id="examples">Examples</h3>
+<table>
+<thead>
+<tr>
+<th>Ukrainian</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Я прийшов, <strong>щоб допомогти</strong>.</td>
+<td>I came to help.</td>
+</tr>
+<tr>
+<td>Він вчиться, <strong>щоб знати</strong>.</td>
+<td>He studies to know.</td>
+</tr>
+<tr>
+<td>Вона їде, <strong>щоб відпочити</strong>.</td>
+<td>She's going to rest.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="negativepurpose">Negative Purpose</h3>
+<p><strong>Щоб не</strong> + infinitive = "so as not to"</p>
+<ul>
+<li>Я поспішаю, <strong>щоб не запізнитися</strong>. (I'm hurrying so as not to be late.)</li>
+</ul>
+<h3 id="aspectchoice">Aspect Choice</h3>
+<ul>
+<li><strong>Perfective</strong>: complete the action (more common)</li>
+<li><strong>Imperfective</strong>: ongoing/repeated action</li>
+</ul>
+<blockquote>
+  <p><strong>Key Takeaways</strong></p>
+  <ul>
+  <li>Щоб + infinitive when subjects are the same</li>
+  <li>Perfective infinitive is more common</li>
+  <li>Щоб не = negative purpose</li>
+  <li>Purpose clause usually follows main clause</li>
+  <li>Next module: щоб + past (different subjects)</li>
+  </ul>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('quiz')">Start →</button></div>
     </section>
     
@@ -485,6 +756,10 @@ Result = what happens BECAUSE of the action</p></div></div><div class="canvas-no
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

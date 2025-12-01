@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,14 +136,32 @@
         <p style="color:var(--text-muted)">Погоджуюся, Не згоден...</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Мистецтво незгоди | The Art of Disagreeing</h4><div class="md-content"><p>В українській культурі пряма незгода може здаватися неввічливою. Сьогодні ви навчитеся:</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Зміст уроку | Lesson Content</li><li class="toc-item" data-target="section-1">Activities</li><li class="toc-item" data-target="section-2">Vocabulary</li><li class="toc-item" data-target="section-3">Summary</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Зміст уроку | Lesson Content</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="warmup">warm-up | Розминка</h2>
+<h3 id="theartofdisagreeing">Мистецтво незгоди | The Art of Disagreeing</h3>
+<p>В українській культурі пряма незгода може здаватися неввічливою. Сьогодні ви навчитеся:</p>
 <p>In Ukrainian culture, direct disagreement can seem rude. Today you'll learn:</p>
 <ul>
 <li>Як погоджуватися з ентузіазмом | How to agree enthusiastically</li>
 <li>Як ввічливо не погоджуватися | How to disagree politely</li>
 <li>Як частково погоджуватися | How to partially agree</li>
 <li>Як пом'якшувати критику | How to soften criticism</li>
-</ul></div></div><div class="canvas-note"><h4>### Strong Agreement</h4><div class="md-content"><table>
+</ul>
+<h2 id="presentation">presentation</h2>
+<h3 id="strongagreement">Strong Agreement</h3>
+<table>
 <thead>
 <tr>
 <th>Ukrainian</th>
@@ -175,7 +211,9 @@
 <ul>
 <li>A: Україна — красива країна.</li>
 <li>B: <strong>Абсолютно!</strong> / <strong>Точно так!</strong></li>
-</ul></div></div><div class="canvas-note"><h4>Standard Agreement</h4><div class="md-content"><table>
+</ul>
+<h3 id="standardagreement">Standard Agreement</h3>
+<table>
 <thead>
 <tr>
 <th>Ukrainian</th>
@@ -223,7 +261,9 @@
 <li><p>B: <strong>Я погоджуюся.</strong> Це дуже корисно.</p></li>
 <li><p>A: Ми повинні почати раніше.</p></li>
 <li><p>B: <strong>Ви маєте рацію.</strong> Давайте почнемо о восьмій.</p></li>
-</ul></div></div><div class="canvas-note"><h4>Partial Agreement</h4><div class="md-content"><table>
+</ul>
+<h3 id="partialagreement">Partial Agreement</h3>
+<table>
 <thead>
 <tr>
 <th>Ukrainian</th>
@@ -263,7 +303,9 @@
 <li><p>B: <strong>Почасти я згоден</strong>, але іноді важливо бути в офісі.</p></li>
 <li><p>A: Потрібно більше грошей на проєкт.</p></li>
 <li><p>B: <strong>Це правда</strong>, <strong>проте</strong> бюджет обмежений.</p></li>
-</ul></div></div><div class="canvas-note"><h4>Polite Disagreement</h4><div class="md-content"><table>
+</ul>
+<h3 id="politedisagreement">Polite Disagreement</h3>
+<table>
 <thead>
 <tr>
 <th>Ukrainian</th>
@@ -310,7 +352,9 @@
 <li><p>B: <strong>Я не зовсім згоден.</strong> Можливо, є кращі.</p></li>
 <li><p>A: Ми повинні скасувати проєкт.</p></li>
 <li><p>B: <strong>Боюся, що не можу погодитися.</strong> Давайте обговоримо.</p></li>
-</ul></div></div><div class="canvas-note"><h4>Stronger Disagreement</h4><div class="md-content"><table>
+</ul>
+<h3 id="strongerdisagreement">Stronger Disagreement</h3>
+<table>
 <thead>
 <tr>
 <th>Ukrainian</th>
@@ -356,7 +400,9 @@
 <ul>
 <li>A: Всі згодні з цим планом.</li>
 <li>B: <strong>Ні, я не згоден.</strong> Є серйозні проблеми.</li>
-</ul></div></div><div class="canvas-note"><h4>Questioning Without Direct Disagreement</h4><div class="md-content"><table>
+</ul>
+<h3 id="questioningwithoutdirectdisagreement">Questioning Without Direct Disagreement</h3>
+<table>
 <thead>
 <tr>
 <th>Ukrainian</th>
@@ -390,7 +436,9 @@
 <ul>
 <li>A: Ми повинні це зробити сьогодні.</li>
 <li>B: <strong>А ви впевнені?</strong> Може, краще завтра?</li>
-</ul></div></div><div class="canvas-note"><h4>Offering Alternatives</h4><div class="md-content"><table>
+</ul>
+<h3 id="offeringalternatives">Offering Alternatives</h3>
+<table>
 <thead>
 <tr>
 <th>Ukrainian</th>
@@ -425,7 +473,9 @@
 <li><strong>Я б запропонувала</strong> інший підхід.</li>
 <li><strong>Як варіант</strong>, ми можемо почекати.</li>
 <li><strong>А може краще</strong> обговорити це з командою?</li>
-</ul></div></div><div class="canvas-note"><h4>Diplomatic Phrases</h4><div class="md-content"><table>
+</ul>
+<h3 id="diplomaticphrases">Diplomatic Phrases</h3>
+<table>
 <thead>
 <tr>
 <th>Ukrainian</th>
@@ -455,7 +505,10 @@
 <ul>
 <li>A: Ми повинні звільнити половину команди.</li>
 <li>B: <strong>Я розумію вашу точку зору</strong>, але <strong>не можу погодитися</strong>. <strong>А чи не краще</strong> спочатку скоротити інші витрати?</li>
-</ul></div></div><div class="canvas-note"><h4>### Match Levels of Agreement</h4><div class="md-content"><p>Categorize these expressions:</p>
+</ul>
+<h2 id="practice">practice</h2>
+<h3 id="matchlevelsofagreement">Match Levels of Agreement</h3>
+<p>Categorize these expressions:</p>
 <p><strong>Strong agree / Agree / Partial / Soft disagree / Strong disagree</strong></p>
 <ol>
 <li>Абсолютно! → <strong>Strong agree</strong></li>
@@ -464,7 +517,9 @@
 <li>Я категорично проти → <strong>Strong disagree</strong></li>
 <li>Ви маєте рацію → <strong>Agree</strong></li>
 <li>Цікава думка, проте… → <strong>Soft disagree</strong></li>
-</ol></div></div><div class="canvas-note"><h4>Respond to Statements</h4><div class="md-content"><p>Agree or disagree politely:</p>
+</ol>
+<h3 id="respondtostatements">Respond to Statements</h3>
+<p>Agree or disagree politely:</p>
 <p><strong>Statement:</strong> Всі повинні вивчати англійську.</p>
 <ul>
 <li><strong>Agree:</strong> Я погоджуюся. Англійська — міжнародна мова.</li>
@@ -478,17 +533,24 @@
 <p><strong>Statement:</strong> Технології роблять нас щасливішими.</p>
 <ul>
 <li>Your response: ___</li>
-</ul></div></div><div class="canvas-note"><h4>Make These More Polite</h4><div class="md-content"><p>Transform direct disagreement into polite disagreement:</p>
+</ul>
+<h3 id="makethesemorepolite">Make These More Polite</h3>
+<p>Transform direct disagreement into polite disagreement:</p>
 <ol>
 <li>Ні, ви помиляєтесь. → <strong>Я не зовсім згоден. Мені здається, тут є неточність.</strong></li>
 <li>Це погана ідея. → <strong>Цікава думка, проте я б запропонував інший підхід.</strong></li>
 <li>Ні. → <strong>Боюся, що не можу погодитися.</strong></li>
 <li>Ви не праві. → <strong>Не впевнений, що це так. А ви враховували…?</strong></li>
-</ol></div></div><div class="canvas-note"><h4>Role Play: Discussion</h4><div class="md-content"><p>Practice agreeing and disagreeing:</p>
+</ol>
+<h3 id="roleplaydiscussion">Role Play: Discussion</h3>
+<p>Practice agreeing and disagreeing:</p>
 <p><strong>Topic:</strong> Чи повинні студенти працювати під час навчання?</p>
 <p><strong>Person A:</strong> За (agrees that students should work)<br />
 <strong>Person B:</strong> Проти (disagrees)</p>
-<p>Use: Я вважаю, Я погоджуюся, Я не зовсім згоден, Проте, А чи не краще…</p></div></div><div class="canvas-note"><h4>### Debate Practice</h4><div class="md-content"><p>Choose a topic and practice both sides:</p>
+<p>Use: Я вважаю, Я погоджуюся, Я не зовсім згоден, Проте, А чи не краще…</p>
+<h2 id="production">production</h2>
+<h3 id="debatepractice">Debate Practice</h3>
+<p>Choose a topic and practice both sides:</p>
 <p><strong>Topics:</strong></p>
 <ol>
 <li>Соціальні мережі корисні для суспільства.</li>
@@ -500,7 +562,9 @@
 <li>State your opinion</li>
 <li>Have partner disagree politely</li>
 <li>Find compromise using partial agreement</li>
-</ul></div></div><div class="canvas-note"><h4>Real-Life Scenarios</h4><div class="md-content"><p>How would you respond?</p>
+</ul>
+<h3 id="reallifescenarios">Real-Life Scenarios</h3>
+<p>How would you respond?</p>
 <ol>
 <li><p><strong>Колега:</strong> Ми повинні працювати у вихідні.<br />
 Your polite disagreement: ___</p></li>
@@ -508,7 +572,259 @@ Your polite disagreement: ___</p></li>
 Your partial agreement: ___</p></li>
 <li><p><strong>Начальник:</strong> Проєкт потрібно закінчити завтра.<br />
 Your diplomatic response: ___</p></li>
-</ol></div></div></div>
+</ol>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Activities</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="quizagreementdisagreement">quiz: Agreement/Disagreement</h2>
+<blockquote>
+  <p>Match the situation with appropriate response.</p>
+</blockquote>
+<ol>
+<li>Someone says something completely true:</li>
+</ol>
+<ul>
+<li>[x] Абсолютно!</li>
+<li>[ ] Я не зовсім згоден.</li>
+</ul>
+<ol>
+<li>You partially agree with boss:</li>
+</ol>
+<ul>
+<li>[x] Це правда, проте…</li>
+<li>[ ] Ні, це не так.</li>
+</ul>
+<ol>
+<li>Polite disagreement:</li>
+</ol>
+<ul>
+<li>[x] Боюся, що не можу погодитися.</li>
+<li>[ ] Аж ніяк!</li>
+</ul>
+<ol>
+<li>Suggesting alternative:</li>
+</ol>
+<ul>
+<li>[x] А може краще…?</li>
+<li>[ ] Ви помиляєтесь.</li>
+</ul>
+<ol>
+<li>Strong agreement:</li>
+</ol>
+<ul>
+<li>[x] Цілком згоден!</li>
+<li>[ ] Можливо, ви маєте рацію.</li>
+</ul>
+<h2 id="groupsortlevelofagreement">group-sort: Level of Agreement</h2>
+<h3 id="strongagreement">Strong Agreement</h3>
+<ul>
+<li>Абсолютно!</li>
+<li>Цілком згоден!</li>
+<li>Безперечно!</li>
+</ul>
+<h3 id="agreement">Agreement</h3>
+<ul>
+<li>Я погоджуюся</li>
+<li>Ви маєте рацію</li>
+<li>Це так</li>
+</ul>
+<h3 id="partialagreement">Partial Agreement</h3>
+<ul>
+<li>Почасти так, але…</li>
+<li>Загалом так, хоча…</li>
+<li>Це правда, проте…</li>
+</ul>
+<h3 id="politedisagreement">Polite Disagreement</h3>
+<ul>
+<li>Я не зовсім згоден</li>
+<li>Боюся, не можу погодитися</li>
+<li>Дозвольте не погодитися</li>
+</ul>
+<h2 id="fillindialogue">fill-in: Dialogue</h2>
+<blockquote>
+  <p>A: Я думаю, що всім потрібно вчитися до 30 років.<br />
+  B: ___ (Interesting thought), ___ (however) не всі мають таку можливість.<br />
+  A: ___ (You're right). Але освіта важлива!<br />
+  B: ___ (I agree). Проте форми освіти різні.<br />
+  A: ___ (Exactly)!</p>
+</blockquote>
+<p><strong>Answers:</strong> Цікава думка, проте, Ви маєте рацію, Я погоджуюся, Саме так</p>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Vocabulary</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Word</th>
+<th>IPA</th>
+<th>English</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>згоден</td>
+<td>/ˈzɦodɛn/</td>
+<td>agree (m)</td>
+<td>adj</td>
+</tr>
+<tr>
+<td>згодна</td>
+<td>/ˈzɦodnɑ/</td>
+<td>agree (f)</td>
+<td>adj</td>
+</tr>
+<tr>
+<td>погоджуватися</td>
+<td>/poɦoˈdʒuvɑtɪsʲɑ/</td>
+<td>to agree</td>
+<td>impf</td>
+</tr>
+<tr>
+<td>погодитися</td>
+<td>/poɦoˈdɪtɪsʲɑ/</td>
+<td>to agree</td>
+<td>pf</td>
+</tr>
+<tr>
+<td>рація</td>
+<td>/ˈrɑt͡sʲijɑ/</td>
+<td>right (as in "you're right")</td>
+<td>f</td>
+</tr>
+<tr>
+<td>сперечатися</td>
+<td>/spɛrɛˈt͡ʃɑtɪsʲɑ/</td>
+<td>to argue</td>
+<td>impf</td>
+</tr>
+<tr>
+<td>заперечувати</td>
+<td>/zɑpɛrɛˈt͡ʃuvɑtɪ/</td>
+<td>to object</td>
+<td>impf</td>
+</tr>
+<tr>
+<td>заперечити</td>
+<td>/zɑpɛˈrɛt͡ʃɪtɪ/</td>
+<td>to object</td>
+<td>pf</td>
+</tr>
+<tr>
+<td>навпаки</td>
+<td>/nɑvˈpɑkɪ/</td>
+<td>on the contrary</td>
+<td>adv</td>
+</tr>
+<tr>
+<td>натомість</td>
+<td>/nɑˈtomʲistʲ/</td>
+<td>instead</td>
+<td>adv</td>
+</tr>
+<tr>
+<td>почасти</td>
+<td>/poˈt͡ʃɑstɪ/</td>
+<td>partly</td>
+<td>adv</td>
+</tr>
+<tr>
+<td>враховувати</td>
+<td>/vrɑxoˈvuvɑtɪ/</td>
+<td>to consider, take into account</td>
+<td>impf</td>
+</tr>
+<tr>
+<td>врахувати</td>
+<td>/vrɑxuˈvɑtɪ/</td>
+<td>to consider</td>
+<td>pf</td>
+</tr>
+<tr>
+<td>запропонувати</td>
+<td>/zɑproponuˈvɑtɪ/</td>
+<td>to suggest</td>
+<td>pf</td>
+</tr>
+<tr>
+<td>пропонувати</td>
+<td>/proponuˈvɑtɪ/</td>
+<td>to suggest</td>
+<td>impf</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Summary</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="agreementspectrum">Agreement Spectrum</h2>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Expressions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Strong agree</td>
+<td>Абсолютно! Безперечно! Цілком згоден!</td>
+</tr>
+<tr>
+<td>Agree</td>
+<td>Я погоджуюся. Ви маєте рацію.</td>
+</tr>
+<tr>
+<td>Partial</td>
+<td>Почасти так, але… Це правда, проте…</td>
+</tr>
+<tr>
+<td>Soft disagree</td>
+<td>Я не зовсім згоден. Не впевнений…</td>
+</tr>
+<tr>
+<td>Strong disagree</td>
+<td>Я категорично проти. Зовсім ні!</td>
+</tr>
+</tbody>
+</table>
+<h2 id="diplomaticstrategies">Diplomatic Strategies</h2>
+<ol>
+<li><strong>Acknowledge first:</strong> Я розумію вашу точку зору…</li>
+<li><strong>Soften:</strong> Не впевнений… / Боюся…</li>
+<li><strong>Question:</strong> А ви впевнені? / А чи не краще…?</li>
+<li><strong>Offer alternative:</strong> Я б запропонував…</li>
+</ol>
+<h2 id="keypatterns">Key Patterns</h2>
+<ul>
+<li><strong>Partial agreement:</strong> X, але/проте Y</li>
+<li><strong>Polite disagreement:</strong> Боюся, що… / Не впевнений, що…</li>
+<li><strong>Diplomatic alternative:</strong> А може краще…?</li>
+</ul>
+<blockquote>
+  <p><strong>Key Takeaways</strong></p>
+  <ul>
+  <li>Direct disagreement can seem rude in Ukrainian</li>
+  <li>Use softening phrases for polite disagreement</li>
+  <li>Partial agreement is a useful compromise</li>
+  <li>Always consider offering alternatives</li>
+  <li>Match formality to the situation and relationship</li>
+  </ul>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('quiz')">Start →</button></div>
     </section>
     
@@ -552,6 +868,10 @@ Your diplomatic response: ___</p></li>
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

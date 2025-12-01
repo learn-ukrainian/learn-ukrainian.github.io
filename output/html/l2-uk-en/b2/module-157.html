@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,8 +136,20 @@
         <p style="color:var(--text-muted)">Багатокомпонентні речення</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="md-content"><h1 id="">Вступ</h1>
-<p>Порівняйте два тексти:</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Вступ</li><li class="toc-item" data-target="section-1">Від простого до складного</li><li class="toc-item" data-target="section-2">Типи підрядних речень</li><li class="toc-item" data-target="section-3">Три типи підпорядкування</li><li class="toc-item" data-target="section-4">Змішане підпорядкування</li><li class="toc-item" data-target="section-5">Пунктуація: основні правила</li><li class="toc-item" data-target="section-6">Порядок слів у підрядному</li><li class="toc-item" data-target="section-7">Сполучники та сполучні слова</li><li class="toc-item" data-target="section-8">Типові конструкції</li><li class="toc-item" data-target="section-9">Практика</li><li class="toc-item" data-target="section-10">Коли розбивати на кілька речень?</li><li class="toc-item" data-target="section-11">Словник</li><li class="toc-item" data-target="section-12">Підсумок</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Вступ</h3>
+          <span class="section-type intro">intro</span>
+        </div>
+        <div class="section-body md-content"><p>Порівняйте два тексти:</p>
 <p><strong>Текст А:</strong> «Я знаю. Він приїде. Він приїде завтра. Він привезе подарунок. Подарунок для тебе.»</p>
 <p><strong>Текст Б:</strong> «Я знаю, що він приїде завтра і привезе подарунок, який призначений для тебе.»</p>
 <p>П'ять коротких речень проти одного довгого. Який текст звучить природніше? <strong>Текст Б</strong> — і це не випадково. Мова дорослої освіченої людини характеризується <strong>складними реченнями</strong> з кількома підрядними частинами. Дитина каже: «Я бачив собаку. Собака бігла. Собака була велика.» Дорослий: «Я бачив великого собаку, який біг парком.»</p>
@@ -128,9 +158,14 @@
   <p><strong>Чи знали ви?</strong></p>
   <p>Німецький філософ <strong>Іммануїл Кант</strong> був відомий реченнями, що займали цілі сторінки. Його критики жартували, що поки дочитаєш до кінця речення, забудеш початок. Це приклад <strong>стилістичної крайності</strong>. Сучасна українська проза віддає перевагу реченням середньої довжини: достатньо складним, щоб звучати зріло, але не настільки довгим, щоб втратити читача.</p>
 </blockquote>
-<hr />
-<h1 id="-1">Від простого до складного</h1>
-<table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Від простого до складного</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><table>
 <thead>
 <tr>
 <th>Тип речення</th>
@@ -157,9 +192,14 @@
 </tbody>
 </table>
 <p><strong>Складне речення</strong> = головне речення + одне або більше підрядних.</p>
-<hr />
-<h1 id="-2">Типи підрядних речень</h1>
-<table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Типи підрядних речень</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><table>
 <thead>
 <tr>
 <th>Тип</th>
@@ -219,9 +259,14 @@
   <p><strong>Чи знали ви?</strong></p>
   <p>Слово <strong>«сполучник»</strong> буквально означає «той, хто сполучає». В англійській мові аналог — <em>conjunction</em>, від латинського <em>coniungere</em> (з'єднувати). Сполучники — це <strong>клей</strong>, що тримає разом частини речення. Без них речення розсипалося б на фрагменти.</p>
 </blockquote>
-<hr />
-<h1 id="-3">Три типи підпорядкування</h1>
-<h2 id="1">1. Послідовне підпорядкування</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Три типи підпорядкування</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="1">1. Послідовне підпорядкування</h2>
 <p><strong>Одне підрядне залежить від іншого:</strong></p>
 <pre><code>Головне → Підрядне 1 → Підрядне 2
 </code></pre>
@@ -294,9 +339,14 @@
   <p>❌ <strong>Міф:</strong> «Чим більше підрядних, тим краще.»</p>
   <p>✅ <strong>Факт:</strong> Оптимальна кількість підрядних у реченні — <strong>2-3</strong>. Більше — і речення стає важким для сприйняття. Якщо у вас 4+ підрядних, подумайте: чи не краще розбити на кілька речень?</p>
 </blockquote>
-<hr />
-<h1 id="-4">Змішане підпорядкування</h1>
-<p><strong>Комбінація різних типів:</strong></p>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-4">
+        <div class="section-header" onclick="toggleSection(4)">
+          <h3>Змішане підпорядкування</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><p><strong>Комбінація різних типів:</strong></p>
 <p><strong>Приклад:</strong><br />
 «<strong>Коли я прийшов</strong> [1], я побачив [головне], <strong>що він читає книгу</strong> [2], <strong>яку я подарував</strong> [3].»</p>
 <table>
@@ -333,16 +383,21 @@
 <p><strong>Схема:</strong></p>
 <pre><code>[1] → Головне ← [2] ← [3]
 </code></pre>
-<hr />
-<h1 id="-5">Пунктуація: основні правила</h1>
-<h2 id="1-1">1. Кома перед сполучником підрядності</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-5">
+        <div class="section-header" onclick="toggleSection(5)">
+          <h3>Пунктуація: основні правила</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="1">1. Кома перед сполучником підрядності</h2>
 <p><strong>Завжди!</strong></p>
 <ul>
 <li>Я знаю<strong>,</strong> що він прийде.</li>
 <li>Він пішов<strong>,</strong> коли стемніло.</li>
 <li>Вона сказала<strong>,</strong> щоб я зачекав.</li>
 </ul>
-<h2 id="2-1">2. Стик сполучників</h2>
+<h2 id="2">2. Стик сполучників</h2>
 <p>Коли два сполучники стоять поруч:</p>
 <p><strong>Варіант 1 (стандартний):</strong></p>
 <ul>
@@ -356,15 +411,20 @@
   <p><strong>Чи знали ви?</strong></p>
   <p>«Стик сполучників» — одна з найскладніших тем української пунктуації. Навіть носії мови часто помиляються. Просте правило: якщо можна вставити «то» після другого підрядного — кома між сполучниками не потрібна. «Він сказав, що якщо буде час, <strong>то</strong> він прийде» — без коми після «що».</p>
 </blockquote>
-<h2 id="3-1">3. Однорідні підрядні з «і»</h2>
+<h2 id="3">3. Однорідні підрядні з «і»</h2>
 <p>Як однорідні члени речення:</p>
 <ul>
 <li>Я знаю, що він прийде <strong>і</strong> що він принесе квіти. <strong>(без коми перед «і»)</strong></li>
 <li>Я знаю, що він прийде<strong>,</strong> і знаю, що він принесе квіти. <strong>(різні головні → з комою)</strong></li>
 </ul>
-<hr />
-<h1 id="-6">Порядок слів у підрядному</h1>
-<p><strong>Нейтральний порядок:</strong> Сполучник + підмет + присудок + інші члени</p>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-6">
+        <div class="section-header" onclick="toggleSection(6)">
+          <h3>Порядок слів у підрядному</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><p><strong>Нейтральний порядок:</strong> Сполучник + підмет + присудок + інші члени</p>
 <table>
 <thead>
 <tr>
@@ -384,9 +444,14 @@
 </tbody>
 </table>
 <p>Зміна порядку слів — засіб <strong>виділення</strong>. «Що книгу я читаю» наголошує саме на книзі.</p>
-<hr />
-<h1 id="-7">Сполучники та сполучні слова</h1>
-<p><strong>Сполучники</strong> (не є членами речення):</p>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-7">
+        <div class="section-header" onclick="toggleSection(7)">
+          <h3>Сполучники та сполучні слова</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><p><strong>Сполучники</strong> (не є членами речення):</p>
 <ul>
 <li>що, щоб, як, ніби, хоч, якщо, бо</li>
 </ul>
@@ -400,9 +465,14 @@
 <li>Я знаю, <strong>що</strong> він читає. («що» = сполучне слово = що саме/яку книгу)</li>
 </ul>
 <p><strong>Як розрізнити?</strong> Спробуйте замінити на «який/яка/яке». Якщо можна — це сполучне слово.</p>
-<hr />
-<h1 id="-8">Типові конструкції</h1>
-<table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-8">
+        <div class="section-header" onclick="toggleSection(8)">
+          <h3>Типові конструкції</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><table>
 <thead>
 <tr>
 <th>Конструкція</th>
@@ -440,9 +510,14 @@
 </tr>
 </tbody>
 </table>
-<hr />
-<h1 id="-9">Практика</h1>
-<h2 id="-10">Визначте тип підпорядкування</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-9">
+        <div class="section-header" onclick="toggleSection(9)">
+          <h3>Практика</h3>
+          <span class="section-type practice">practice</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Визначте тип підпорядкування</h2>
 <ol>
 <li><p>«Я знаю, що він прийде, коли закінчить роботу.»<br />
 → <strong>Послідовне</strong> (друге залежить від першого)</p></li>
@@ -451,7 +526,7 @@
 <li><p>«Я знаю, що він розумний, що він чесний.»<br />
 → <strong>Однорідне</strong> (однотипні підрядні)</p></li>
 </ol>
-<h2 id="-11">Поставте розділові знаки</h2>
+<h2 id="-1">Поставте розділові знаки</h2>
 <ol>
 <li><p>Він сказав що якщо буде час він прийде.<br />
 → <strong>Він сказав, що, якщо буде час, він прийде.</strong></p>
@@ -461,7 +536,7 @@
 <li><p>Коли я прийшов я побачив що він читає.<br />
 → <strong>Коли я прийшов, я побачив, що він читає.</strong></p></li>
 </ol>
-<h2 id="-12">Об'єднайте в одне речення</h2>
+<h2 id="-2">Об'єднайте в одне речення</h2>
 <ol>
 <li><p>Я знаю це. Він приїде. Він приїде завтра.<br />
 → <strong>Я знаю, що він приїде завтра.</strong></p></li>
@@ -470,9 +545,14 @@
 <li><p>Я читаю книгу. Ти порадив книгу. Ми зустрілися.<br />
 → <strong>Я читаю книгу, яку ти порадив, коли ми зустрілися.</strong></p></li>
 </ol>
-<hr />
-<h1 id="-13">Коли розбивати на кілька речень?</h1>
-<p><strong>Занадто довго:</strong><br />
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-10">
+        <div class="section-header" onclick="toggleSection(10)">
+          <h3>Коли розбивати на кілька речень?</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><p><strong>Занадто довго:</strong><br />
 «Я думаю, що він прийде, коли закінчить роботу, яку йому дав директор, який щойно повернувся з відпустки, куди поїхав після того, як завершив проєкт.»</p>
 <p><strong>Краще:</strong><br />
 «Я думаю, що він прийде, коли закінчить роботу. Цю роботу йому дав директор, який щойно повернувся з відпустки.»</p>
@@ -481,7 +561,151 @@
   <p>❌ <strong>Міф:</strong> «Короткі речення — примітивні, треба писати довгими.»</p>
   <p>✅ <strong>Факт:</strong> Найкращий стиль — <strong>варіативний</strong>. Чергуйте короткі та довгі речення. Довге речення — для складних думок. Коротке — для акценту. Як ритм у музиці.</p>
 </blockquote>
-<hr /></div></div>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-11">
+        <div class="section-header" onclick="toggleSection(11)">
+          <h3>Словник</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Слово</th>
+<th>Переклад</th>
+<th>Примітки</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>підрядне речення</td>
+<td>subordinate clause</td>
+<td>залежне від головного</td>
+</tr>
+<tr>
+<td>головне речення</td>
+<td>main clause</td>
+<td>незалежне</td>
+</tr>
+<tr>
+<td>сполучник</td>
+<td>conjunction</td>
+<td>що, якщо, коли</td>
+</tr>
+<tr>
+<td>сполучне слово</td>
+<td>relative pronoun</td>
+<td>який, де, куди</td>
+</tr>
+<tr>
+<td>підпорядкування</td>
+<td>subordination</td>
+<td>залежність</td>
+</tr>
+<tr>
+<td>послідовний</td>
+<td>sequential</td>
+<td>один за одним</td>
+</tr>
+<tr>
+<td>паралельний</td>
+<td>parallel</td>
+<td>на одному рівні</td>
+</tr>
+<tr>
+<td>однорідний</td>
+<td>homogeneous</td>
+<td>однотипний</td>
+</tr>
+<tr>
+<td>означальний</td>
+<td>attributive</td>
+<td>який? котрий?</td>
+</tr>
+<tr>
+<td>з'ясувальний</td>
+<td>object (clause)</td>
+<td>що? про що?</td>
+</tr>
+<tr>
+<td>стик</td>
+<td>junction</td>
+<td>місце з'єднання</td>
+</tr>
+<tr>
+<td>зміщення</td>
+<td>shift</td>
+<td>зміна порядку</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-12">
+        <div class="section-header" onclick="toggleSection(12)">
+          <h3>Підсумок</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Типи підпорядкування</h2>
+<table>
+<thead>
+<tr>
+<th>Тип</th>
+<th>Структура</th>
+<th>Приклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Послідовне</td>
+<td>Головне → Підр. 1 → Підр. 2</td>
+<td>…що він сказав, коли…</td>
+</tr>
+<tr>
+<td>Паралельне</td>
+<td>Головне ← Підр. 1, Підр. 2</td>
+<td>…що приїде і куди піде</td>
+</tr>
+<tr>
+<td>Однорідне</td>
+<td>Однотипні підрядні</td>
+<td>…що розумний, що чесний</td>
+</tr>
+</tbody>
+</table>
+<h2 id="-1">Пунктуація</h2>
+<table>
+<thead>
+<tr>
+<th>Правило</th>
+<th>Приклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Кома перед сполучником</td>
+<td>Я знаю, що…</td>
+</tr>
+<tr>
+<td>Стик сполучників</td>
+<td>…що, якщо… / …що якщо…, то</td>
+</tr>
+<tr>
+<td>Однорідні з «і»</td>
+<td>…що… і що… (без коми)</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p><strong>Запам'ятайте:</strong></p>
+  <p>✓ Визначайте <strong>тип підпорядкування</strong> перед аналізом<br />
+  ✓ Кома перед <strong>кожним сполучником</strong> підрядності<br />
+  ✓ Однорідні підрядні — як <strong>однорідні члени</strong><br />
+  ✓ <strong>2-3 підрядних</strong> — оптимально, більше — розбивайте<br />
+  ✓ Чергуйте довгі та короткі речення для <strong>кращого ритму</strong></p>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('vocab')">Start →</button></div>
     </section>
     
@@ -514,6 +738,10 @@
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

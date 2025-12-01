@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,19 +136,834 @@
         <p style="color:var(--text-muted)">Prefixes при-, ви-, в-/у-</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Prefixes Change Everything</h4><div class="md-content"><p>When you add a prefix to a motion verb:</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Lesson Content</li><li class="toc-item" data-target="section-1">Activities</li><li class="toc-item" data-target="section-2">Vocabulary</li><li class="toc-item" data-target="section-3">Summary</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Lesson Content</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="warmup">warm-up</h2>
+<h3 id="prefixeschangeeverything">Prefixes Change Everything</h3>
+<p>When you add a prefix to a motion verb:</p>
 <ol>
 <li>It becomes <strong>perfective</strong></li>
 <li>It gains specific <strong>directional meaning</strong></li>
 <li>It creates a new <strong>aspect pair</strong></li>
-</ol></div></div></div>
+</ol>
+<hr />
+<blockquote>
+  <p><strong>🔑 KEY RULE: PREFIXED MOTION VERBS ARE PERFECTIVE</strong></p>
+  <p>When you add ANY prefix to a motion verb, it becomes <strong>PERFECTIVE</strong> (доконаний вид).</p>
+  <p><strong>No exceptions. No memorization needed.</strong></p>
+  <table>
+  <thead>
+  <tr>
+  <th>Base (imperfective)</th>
+  <th>+ Prefix</th>
+  <th>= Perfective</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+  <td>іти (to go)</td>
+  <td>при-</td>
+  <td><strong>прийти</strong> (to come/arrive) ✓ pf</td>
+  </tr>
+  <tr>
+  <td>іти (to go)</td>
+  <td>ви-</td>
+  <td><strong>вийти</strong> (to exit) ✓ pf</td>
+  </tr>
+  <tr>
+  <td>іти (to go)</td>
+  <td>в-/у-</td>
+  <td><strong>увійти</strong> (to enter) ✓ pf</td>
+  </tr>
+  </tbody>
+  </table>
+  <p>A new imperfective is then formed FROM the prefixed perfective:</p>
+  <p>прийти (pf) → <strong>приходити</strong> (impf)</p>
+</blockquote>
+<hr />
+<p>Today: три ключові префікси для руху — при-, ви-, в-/у-</p>
+<h2 id="presentation">presentation</h2>
+<h3 id="prefixarrival">Prefix при- (Arrival)</h3>
+<p><strong>Meaning:</strong> Movement TO a destination, arrival</p>
+<table>
+<thead>
+<tr>
+<th>Base (impf)</th>
+<th>Prefixed (pf)</th>
+<th>New Imperfective</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>іти/ходити</td>
+<td>прийти</td>
+<td>приходити</td>
+<td>to come, arrive (on foot)</td>
+</tr>
+<tr>
+<td>їхати/їздити</td>
+<td>приїхати</td>
+<td>приїжджати</td>
+<td>to arrive (by vehicle)</td>
+</tr>
+<tr>
+<td>бігти/бігати</td>
+<td>прибігти</td>
+<td>прибігати</td>
+<td>to come running</td>
+</tr>
+<tr>
+<td>летіти/літати</td>
+<td>прилетіти</td>
+<td>прилітати</td>
+<td>to arrive (by plane)</td>
+</tr>
+<tr>
+<td>плисти/плавати</td>
+<td>приплисти</td>
+<td>припливати</td>
+<td>to arrive (by water)</td>
+</tr>
+<tr>
+<td>нести/носити</td>
+<td>принести</td>
+<td>приносити</td>
+<td>to bring (carrying)</td>
+</tr>
+<tr>
+<td>везти/возити</td>
+<td>привезти</td>
+<td>привозити</td>
+<td>to bring (by vehicle)</td>
+</tr>
+<tr>
+<td>вести/водити</td>
+<td>привести</td>
+<td>приводити</td>
+<td>to bring (leading)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples:</strong></p>
+<ul>
+<li>Він <strong>прийшов</strong> о третій. - He came at three.</li>
+<li>Вона <strong>приїхала</strong> з Києва. - She arrived from Kyiv.</li>
+<li>Мама <strong>принесла</strong> вечерю. - Mom brought dinner.</li>
+<li>Він завжди <strong>приходить</strong> вчасно. - He always comes on time.</li>
+<li>Літак <strong>прилітає</strong> о восьмій. - The plane arrives at eight.</li>
+</ul>
+<blockquote>
+  <p><strong>Pattern:</strong> при- = TO a point, arrival at destination</p>
+</blockquote>
+<h3 id="prefixexitout">Prefix ви- (Exit, Out)</h3>
+<p><strong>Meaning:</strong> Movement OUT of a place</p>
+<table>
+<thead>
+<tr>
+<th>Base (impf)</th>
+<th>Prefixed (pf)</th>
+<th>New Imperfective</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>іти/ходити</td>
+<td>вийти</td>
+<td>виходити</td>
+<td>to go out, exit</td>
+</tr>
+<tr>
+<td>їхати/їздити</td>
+<td>виїхати</td>
+<td>виїжджати</td>
+<td>to drive out, leave</td>
+</tr>
+<tr>
+<td>бігти/бігати</td>
+<td>вибігти</td>
+<td>вибігати</td>
+<td>to run out</td>
+</tr>
+<tr>
+<td>летіти/літати</td>
+<td>вилетіти</td>
+<td>вилітати</td>
+<td>to fly out</td>
+</tr>
+<tr>
+<td>нести/носити</td>
+<td>винести</td>
+<td>виносити</td>
+<td>to carry out</td>
+</tr>
+<tr>
+<td>везти/возити</td>
+<td>вивезти</td>
+<td>вивозити</td>
+<td>to take out (vehicle)</td>
+</tr>
+<tr>
+<td>вести/водити</td>
+<td>вивести</td>
+<td>виводити</td>
+<td>to lead out</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples:</strong></p>
+<ul>
+<li>Він <strong>вийшов</strong> з кімнати. - He went out of the room.</li>
+<li>Вона <strong>виїхала</strong> з міста. - She left the city.</li>
+<li>Дитина <strong>вибігла</strong> на вулицю. - The child ran out to the street.</li>
+<li>Будь ласка, <strong>винесіть</strong> сміття. - Please take out the trash.</li>
+<li>Я <strong>виходжу</strong> з дому о восьмій. - I leave home at eight.</li>
+</ul>
+<blockquote>
+  <p><strong>Pattern:</strong> ви- = OUT of, exit from</p>
+</blockquote>
+<h3 id="prefixentryin">Prefix в-/у- (Entry, In)</h3>
+<p><strong>Meaning:</strong> Movement INTO a place</p>
+<table>
+<thead>
+<tr>
+<th>Base (impf)</th>
+<th>Prefixed (pf)</th>
+<th>New Imperfective</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>іти/ходити</td>
+<td>увійти</td>
+<td>входити</td>
+<td>to enter (on foot)</td>
+</tr>
+<tr>
+<td>їхати/їздити</td>
+<td>в'їхати</td>
+<td>в'їжджати</td>
+<td>to drive in</td>
+</tr>
+<tr>
+<td>бігти/бігати</td>
+<td>вбігти</td>
+<td>вбігати</td>
+<td>to run in</td>
+</tr>
+<tr>
+<td>летіти/літати</td>
+<td>влетіти</td>
+<td>влітати</td>
+<td>to fly in</td>
+</tr>
+<tr>
+<td>нести/носити</td>
+<td>внести</td>
+<td>вносити</td>
+<td>to bring in</td>
+</tr>
+<tr>
+<td>везти/возити</td>
+<td>ввезти</td>
+<td>ввозити</td>
+<td>to drive in (cargo)</td>
+</tr>
+<tr>
+<td>вести/водити</td>
+<td>ввести</td>
+<td>вводити</td>
+<td>to lead in</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Note:</strong> Use <strong>у-</strong> before consonants for easier pronunciation (увійти), <strong>в-</strong> before vowels or in writing.</p>
+<p><strong>Examples:</strong></p>
+<ul>
+<li>Вона <strong>увійшла</strong> до кімнати. - She entered the room.</li>
+<li>Машина <strong>в'їхала</strong> у двір. - The car drove into the yard.</li>
+<li>Кіт <strong>вбіг</strong> у дім. - The cat ran into the house.</li>
+<li><strong>Внесіть</strong> валізи до кімнати. - Bring the suitcases into the room.</li>
+<li>Він <strong>входить</strong> без стуку. - He enters without knocking.</li>
+</ul>
+<blockquote>
+  <p><strong>Pattern:</strong> в-/у- = INTO, entry</p>
+</blockquote>
+<h3 id="comparevs">Compare: при- vs в-/у-</h3>
+<p>Both involve arrival, but:</p>
+<ul>
+<li><strong>при-</strong> = arrival at destination (general)</li>
+<li><strong>в-/у-</strong> = entry INTO an enclosed space</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>при-</th>
+<th>в-/у-</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Він <strong>прийшов</strong> додому.</td>
+<td>Він <strong>увійшов</strong> до кімнати.</td>
+</tr>
+<tr>
+<td>He came home.</td>
+<td>He entered the room.</td>
+</tr>
+<tr>
+<td>Вона <strong>приїхала</strong> до Києва.</td>
+<td>Вона <strong>в'їхала</strong> до міста.</td>
+</tr>
+<tr>
+<td>She arrived in Kyiv.</td>
+<td>She drove into the city.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="conjugationkeyverbs">Conjugation: Key Verbs</h3>
+<p><strong>Прийти (pf) - to come:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Pronoun</th>
+<th>Past</th>
+<th>Future</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>я</td>
+<td>прийшов/прийшла</td>
+<td>прийду</td>
+</tr>
+<tr>
+<td>ти</td>
+<td>прийшов/прийшла</td>
+<td>прийдеш</td>
+</tr>
+<tr>
+<td>він/вона</td>
+<td>прийшов/прийшла</td>
+<td>прийде</td>
+</tr>
+<tr>
+<td>ми</td>
+<td>прийшли</td>
+<td>прийдемо</td>
+</tr>
+<tr>
+<td>ви</td>
+<td>прийшли</td>
+<td>прийдете</td>
+</tr>
+<tr>
+<td>вони</td>
+<td>прийшли</td>
+<td>прийдуть</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Приходити (impf) - to come:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Pronoun</th>
+<th>Present</th>
+<th>Past</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>я</td>
+<td>приходжу</td>
+<td>приходив/ла</td>
+</tr>
+<tr>
+<td>ти</td>
+<td>приходиш</td>
+<td>приходив/ла</td>
+</tr>
+<tr>
+<td>він/вона</td>
+<td>приходить</td>
+<td>приходив/ла</td>
+</tr>
+<tr>
+<td>ми</td>
+<td>приходимо</td>
+<td>приходили</td>
+</tr>
+<tr>
+<td>ви</td>
+<td>приходите</td>
+<td>приходили</td>
+</tr>
+<tr>
+<td>вони</td>
+<td>приходять</td>
+<td>приходили</td>
+</tr>
+</tbody>
+</table>
+<h3 id="aspectpairsafterprefixation">Aspect Pairs After Prefixation</h3>
+<table>
+<thead>
+<tr>
+<th>Perfective (prefix + uni)</th>
+<th>Imperfective (new)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>прийти</td>
+<td>приходити</td>
+</tr>
+<tr>
+<td>приїхати</td>
+<td>приїжджати</td>
+</tr>
+<tr>
+<td>вийти</td>
+<td>виходити</td>
+</tr>
+<tr>
+<td>виїхати</td>
+<td>виїжджати</td>
+</tr>
+<tr>
+<td>увійти</td>
+<td>входити</td>
+</tr>
+<tr>
+<td>в'їхати</td>
+<td>в'їжджати</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Note:</strong> The new imperfective is formed from the perfective, often with suffix change (-ити → -джати/-ходити).</p>
+<h2 id="practice">practice</h2>
+<h3 id="choosethecorrectprefix">Choose the Correct Prefix</h3>
+<ol>
+<li>Він ___ (прийшов/вийшов) з кімнати. → <strong>вийшов</strong> (out of)</li>
+<li>Вона ___ (приїхала/виїхала) до Львова. → <strong>приїхала</strong> (arrived at)</li>
+<li>Кіт ___ (вбіг/вибіг) на вулицю. → <strong>вибіг</strong> (out)</li>
+<li>Будь ласка, ___ (внесіть/винесіть) квіти до кімнати. → <strong>внесіть</strong> (in)</li>
+<li>Літак ___ (прилетів/вилетів) з Києва. → <strong>вилетів</strong> (departed from)</li>
+<li>Гості ___ (прийшли/увійшли) о шостій. → <strong>прийшли</strong> (arrived)</li>
+<li>Вона ___ (увійшла/вийшла) до кабінету директора. → <strong>увійшла</strong> (entered)</li>
+</ol>
+<h3 id="formtheaspectpair">Form the Aspect Pair</h3>
+<p>Give the imperfective for these perfective verbs:</p>
+<ol>
+<li>прийти → <strong>приходити</strong></li>
+<li>вийти → <strong>виходити</strong></li>
+<li>приїхати → <strong>приїжджати</strong></li>
+<li>виїхати → <strong>виїжджати</strong></li>
+<li>увійти → <strong>входити</strong></li>
+<li>принести → <strong>приносити</strong></li>
+<li>винести → <strong>виносити</strong></li>
+</ol>
+<h3 id="chooseaspectbasedoncontext">Choose Aspect Based on Context</h3>
+<ol>
+<li>Він завжди ___ (приходить/прийде) вчасно. → <strong>приходить</strong> (always)</li>
+<li>Вона вже ___ (приходила/прийшла). → <strong>прийшла</strong> (already, result)</li>
+<li>Я ___ (виходжу/вийду) з дому о восьмій щодня. → <strong>виходжу</strong> (every day)</li>
+<li>Коли він ___ (входив/увійшов), усі замовкли. → <strong>увійшов</strong> (single event)</li>
+<li>Поїзд ___ (прибуває/прибув) о третій щодня. → <strong>прибуває</strong> (every day)</li>
+</ol>
+<h3 id="completesentences">Complete Sentences</h3>
+<p>Use correct prefixed verb:</p>
+<ol>
+<li>Гості ___ о п'ятій. (arrive, pf) → <strong>прийшли/приїхали</strong></li>
+<li>Вона щодня ___ з роботи о шостій. (come, impf) → <strong>приходить</strong></li>
+<li>Діти ___ на вулицю гратися. (run out, pf) → <strong>вибігли</strong></li>
+<li>___ , будь ласка. (enter, imperative) → <strong>Увійдіть</strong> / <strong>Заходьте</strong></li>
+<li>Він ___ з машини і пішов. (get out, pf) → <strong>вийшов</strong></li>
+</ol>
+<h2 id="production">production</h2>
+<h3 id="describearrivalsanddepartures">Describe Arrivals and Departures</h3>
+<p>Use при-, ви-, в-/у- to describe:</p>
+<p><strong>Example - airport:</strong><br />
+Ми <strong>приїхали</strong> до аеропорту о шостій. Ми <strong>увійшли</strong> до терміналу і пішли на реєстрацію. Літак <strong>вилетів</strong> о восьмій. Ми <strong>прилетіли</strong> до Барселони о десятій.</p>
+<p><strong>Your turn:</strong> Describe:</p>
+<ul>
+<li>Arriving at work</li>
+<li>Leaving home</li>
+<li>Entering a building</li>
+</ul>
+<h3 id="dailyroutinewithprefixes">Daily Routine with Prefixes</h3>
+<p>Describe your morning using these verbs:</p>
+<p><strong>Example:</strong><br />
+Я встаю о сьомій. <strong>Виходжу</strong> з дому о восьмій. <strong>Входжу</strong> в офіс о дев'ятій. Колеги <strong>приходять</strong> пізніше.</p>
+<hr />
+<h3 id="roleplaygivingdirections">🎭 ROLE-PLAY: Giving Directions</h3>
+<p><strong>Situation:</strong> A tourist asks you for directions in a Ukrainian city.</p>
+<p><strong>Partner A (Tourist):</strong> Ask how to get to places:</p>
+<ul>
+<li>Як дістатися до музею?</li>
+<li>Де знаходиться метро?</li>
+</ul>
+<p><strong>Partner B (Local):</strong> Give directions using при-, ви-, в-/у-:</p>
+<p><strong>Example dialogue:</strong></p>
+<pre><code>A: Вибачте, як дійти до центрального музею?
+B: Вийдіть з цього будинку і поверніть праворуч.
+A: А далі?
+B: Перейдіть вулицю і увійдіть у парк.
+A: Скільки йти?
+B: Пройдіть через парк — це п'ять хвилин. Музей буде праворуч.
+A: А на метро можна доїхати?
+B: Так! Увійдіть у станцію "Майдан", виїдьте на станції "Арсенальна".
+A: Дякую!
+B: Прошу! Приїжджайте ще!
+</code></pre>
+<p><strong>Required structures:</strong></p>
+<ul>
+<li>✅ ви- (exit): Вийдіть з будинку</li>
+<li>✅ в-/у- (entry): Увійдіть у парк, у станцію</li>
+<li>✅ при- (arrival): Приїжджайте ще!</li>
+</ul>
+<p><strong>Switch roles and ask for directions to different places!</strong></p>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Activities</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="quizprefixselection">quiz: Prefix Selection</h2>
+<blockquote>
+  <p>Choose the correct prefix.</p>
+</blockquote>
+<ol>
+<li>Вона ___ з кімнати.</li>
+</ol>
+<ul>
+<li>[ ] прийшла</li>
+<li>[x] вийшла</li>
+</ul>
+<blockquote>
+  <p>Exit = ви-</p>
+</blockquote>
+<ol start="2">
+<li>Він ___ до Києва вчора.</li>
+</ol>
+<ul>
+<li>[x] приїхав</li>
+<li>[ ] виїхав</li>
+</ul>
+<blockquote>
+  <p>Arrival = при-</p>
+</blockquote>
+<ol start="3">
+<li>Кіт ___ до хати.</li>
+</ol>
+<ul>
+<li>[ ] вибіг</li>
+<li>[x] вбіг</li>
+</ul>
+<blockquote>
+  <p>Entry = в-</p>
+</blockquote>
+<ol start="4">
+<li>Вона завжди ___ о дев'ятій.</li>
+</ol>
+<ul>
+<li>[x] приходить</li>
+<li>[ ] прийде</li>
+</ul>
+<blockquote>
+  <p>Always = imperfective</p>
+</blockquote>
+<ol start="5">
+<li>Літак ___ з Лондона.</li>
+</ol>
+<ul>
+<li>[ ] прилетів</li>
+<li>[x] вилетів</li>
+</ul>
+<blockquote>
+  <p>Departed from = ви-</p>
+</blockquote>
+<ol start="6">
+<li>___ валізу до кімнати!</li>
+</ol>
+<ul>
+<li>[x] Внеси</li>
+<li>[ ] Винеси</li>
+</ul>
+<blockquote>
+  <p>In = в-</p>
+</blockquote>
+<h2 id="matchupaspectpairs">match-up: Aspect Pairs</h2>
+<table>
+<thead>
+<tr>
+<th>Perfective</th>
+<th>Imperfective</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>прийти</td>
+<td>приходити</td>
+</tr>
+<tr>
+<td>вийти</td>
+<td>виходити</td>
+</tr>
+<tr>
+<td>увійти</td>
+<td>входити</td>
+</tr>
+<tr>
+<td>приїхати</td>
+<td>приїжджати</td>
+</tr>
+<tr>
+<td>виїхати</td>
+<td>виїжджати</td>
+</tr>
+<tr>
+<td>принести</td>
+<td>приносити</td>
+</tr>
+</tbody>
+</table>
+<h2 id="groupsortprefixmeanings">group-sort: Prefix Meanings</h2>
+<h3 id="arrival">при- (arrival)</h3>
+<ul>
+<li>прийти</li>
+<li>приїхати</li>
+<li>принести</li>
+<li>прилетіти</li>
+</ul>
+<h3 id="exit">ви- (exit)</h3>
+<ul>
+<li>вийти</li>
+<li>виїхати</li>
+<li>винести</li>
+<li>вилетіти</li>
+</ul>
+<h3 id="entry">в-/у- (entry)</h3>
+<ul>
+<li>увійти</li>
+<li>в'їхати</li>
+<li>внести</li>
+<li>влетіти</li>
+</ul>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Vocabulary</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Word</th>
+<th>IPA</th>
+<th>English</th>
+<th>Aspect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>прийти</td>
+<td>/prɪjˈtɪ/</td>
+<td>to come, arrive</td>
+<td>pf</td>
+</tr>
+<tr>
+<td>приходити</td>
+<td>/prɪxoˈdɪtɪ/</td>
+<td>to come</td>
+<td>impf</td>
+</tr>
+<tr>
+<td>приїхати</td>
+<td>/prɪˈjixɑtɪ/</td>
+<td>to arrive (vehicle)</td>
+<td>pf</td>
+</tr>
+<tr>
+<td>приїжджати</td>
+<td>/prɪjizˈdʒɑtɪ/</td>
+<td>to arrive</td>
+<td>impf</td>
+</tr>
+<tr>
+<td>принести</td>
+<td>/prɪnɛsˈtɪ/</td>
+<td>to bring</td>
+<td>pf</td>
+</tr>
+<tr>
+<td>приносити</td>
+<td>/prɪnoˈsɪtɪ/</td>
+<td>to bring</td>
+<td>impf</td>
+</tr>
+<tr>
+<td>вийти</td>
+<td>/ˈvɪjtɪ/</td>
+<td>to go out</td>
+<td>pf</td>
+</tr>
+<tr>
+<td>виходити</td>
+<td>/vɪxoˈdɪtɪ/</td>
+<td>to go out</td>
+<td>impf</td>
+</tr>
+<tr>
+<td>виїхати</td>
+<td>/vɪˈjixɑtɪ/</td>
+<td>to drive out</td>
+<td>pf</td>
+</tr>
+<tr>
+<td>виїжджати</td>
+<td>/vɪjizˈdʒɑtɪ/</td>
+<td>to drive out</td>
+<td>impf</td>
+</tr>
+<tr>
+<td>увійти</td>
+<td>/uvijˈtɪ/</td>
+<td>to enter</td>
+<td>pf</td>
+</tr>
+<tr>
+<td>входити</td>
+<td>/vxoˈdɪtɪ/</td>
+<td>to enter</td>
+<td>impf</td>
+</tr>
+<tr>
+<td>в'їхати</td>
+<td>/vˈjixɑtɪ/</td>
+<td>to drive in</td>
+<td>pf</td>
+</tr>
+<tr>
+<td>в'їжджати</td>
+<td>/vjizˈdʒɑtɪ/</td>
+<td>to drive in</td>
+<td>impf</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Summary</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="threekeyprefixes">Three Key Prefixes</h2>
+<table>
+<thead>
+<tr>
+<th>Prefix</th>
+<th>Meaning</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>при-</td>
+<td>arrival, TO</td>
+<td>прийти (to come)</td>
+</tr>
+<tr>
+<td>ви-</td>
+<td>exit, OUT</td>
+<td>вийти (to go out)</td>
+</tr>
+<tr>
+<td>в-/у-</td>
+<td>entry, IN</td>
+<td>увійти (to enter)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="newaspectpairs">New Aspect Pairs</h2>
+<p>Adding prefix creates:</p>
+<ol>
+<li><strong>Perfective</strong> (при- + іти = прийти)</li>
+<li><strong>New imperfective</strong> from that (приходити)</li>
+</ol>
+<h2 id="keyverbstomaster">Key Verbs to Master</h2>
+<table>
+<thead>
+<tr>
+<th>English</th>
+<th>Perfective</th>
+<th>Imperfective</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>to come</td>
+<td>прийти</td>
+<td>приходити</td>
+</tr>
+<tr>
+<td>to arrive (vehicle)</td>
+<td>приїхати</td>
+<td>приїжджати</td>
+</tr>
+<tr>
+<td>to bring</td>
+<td>принести</td>
+<td>приносити</td>
+</tr>
+<tr>
+<td>to go out</td>
+<td>вийти</td>
+<td>виходити</td>
+</tr>
+<tr>
+<td>to enter</td>
+<td>увійти</td>
+<td>входити</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p><strong>Key Takeaways</strong></p>
+  <ul>
+  <li>при- = arrival (прийти = to come)</li>
+  <li>ви- = exit (вийти = to go out)</li>
+  <li>в-/у- = entry (увійти = to enter)</li>
+  <li>Prefix + unidirectional = perfective</li>
+  <li>New imperfective formed from prefixed perfective</li>
+  </ul>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('match')">Start →</button></div>
     </section>
     <section id="match" class="section"><div class="card"><h3>Aspect Pairs</h3>
       <div class="score-display"><span class="score"><span id="match-score">0</span>/6</span></div>
       <div class="match-container" id="match-container"><svg class="match-lines" id="match-lines"></svg>
         <div class="match-column" id="match-left"><div class="match-item" data-pair="0">прийти</div><div class="match-item" data-pair="1">вийти</div><div class="match-item" data-pair="2">увійти</div><div class="match-item" data-pair="3">приїхати</div><div class="match-item" data-pair="4">виїхати</div><div class="match-item" data-pair="5">принести</div></div>
-        <div class="match-column" id="match-right"><div class="match-item" data-pair="3">приїжджати</div><div class="match-item" data-pair="2">входити</div><div class="match-item" data-pair="0">приходити</div><div class="match-item" data-pair="5">приносити</div><div class="match-item" data-pair="4">виїжджати</div><div class="match-item" data-pair="1">виходити</div></div>
+        <div class="match-column" id="match-right"><div class="match-item" data-pair="4">виїжджати</div><div class="match-item" data-pair="1">виходити</div><div class="match-item" data-pair="2">входити</div><div class="match-item" data-pair="0">приходити</div><div class="match-item" data-pair="5">приносити</div><div class="match-item" data-pair="3">приїжджати</div></div>
       </div>
       <div class="completion-message" id="match-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetMatch()">Reset</button><button class="btn btn-primary" onclick="showSection('quiz')">Next →</button></div>
@@ -175,6 +1008,10 @@
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

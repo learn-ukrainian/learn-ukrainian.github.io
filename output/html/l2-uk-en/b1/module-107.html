@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,7 +136,22 @@
         <p style="color:var(--text-muted)">Mixed and Complex Conditionals</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Огляд умовних речень | Conditional Review</h4><div class="md-content"><table>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Зміст уроку | Lesson Content</li><li class="toc-item" data-target="section-1">Activities</li><li class="toc-item" data-target="section-2">Vocabulary</li><li class="toc-item" data-target="section-3">Summary</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Зміст уроку | Lesson Content</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="warmup">warm-up | Розминка</h2>
+<h3 id="conditionalreview">Огляд умовних речень | Conditional Review</h3>
+<table>
 <thead>
 <tr>
 <th>Type</th>
@@ -140,7 +173,10 @@
 </tbody>
 </table>
 <p>Тепер: складніші комбінації та варіації.</p>
-<p>Now: more complex combinations and variations.</p></div></div><div class="canvas-note"><h4>### Mixed Conditionals: Past Condition → Present Result</h4><div class="md-content"><p>When a <strong>past condition</strong> affects the <strong>present</strong>:</p>
+<p>Now: more complex combinations and variations.</p>
+<h2 id="presentation">presentation | Презентація</h2>
+<h3 id="mixedconditionalspastconditionpresentresult">Mixed Conditionals: Past Condition → Present Result</h3>
+<p>When a <strong>past condition</strong> affects the <strong>present</strong>:</p>
 <table>
 <thead>
 <tr>
@@ -171,7 +207,9 @@
   <li><strong>тоді / минулого року</strong> = past condition</li>
   <li><strong>зараз / тепер</strong> = present result</li>
   </ul>
-</blockquote></div></div><div class="canvas-note"><h4>Mixed Conditionals: Present Condition → Past Result</h4><div class="md-content"><p>When a <strong>present state</strong> affects <strong>past events</strong>:</p>
+</blockquote>
+<h3 id="mixedconditionalspresentconditionpastresult">Mixed Conditionals: Present Condition → Past Result</h3>
+<p>When a <strong>present state</strong> affects <strong>past events</strong>:</p>
 <table>
 <thead>
 <tr>
@@ -194,7 +232,9 @@
 </tr>
 </tbody>
 </table>
-<p><strong>Pattern:</strong> Якби + past (present state) + б + past (past hypothetical)</p></div></div><div class="canvas-note"><h4>Unless: Якщо не / Хіба що</h4><div class="md-content"><p>"Unless" in Ukrainian:</p>
+<p><strong>Pattern:</strong> Якби + past (present state) + б + past (past hypothetical)</p>
+<h3 id="unless">Unless: Якщо не / Хіба що</h3>
+<p>"Unless" in Ukrainian:</p>
 <table>
 <thead>
 <tr>
@@ -239,7 +279,9 @@
 <td>He won't come unless we ask him.</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Conditional Chains</h4><div class="md-content"><p>Multiple conditions in sequence:</p>
+</table>
+<h3 id="conditionalchains">Conditional Chains</h3>
+<p>Multiple conditions in sequence:</p>
 <table>
 <thead>
 <tr>
@@ -276,7 +318,9 @@
 <td>If I have money or find a sponsor, I'll go abroad.</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Even If: Навіть якщо / Навіть якби</h4><div class="md-content"><table>
+</table>
+<h3 id="evenif">Even If: Навіть якщо / Навіть якби</h3>
+<table>
 <thead>
 <tr>
 <th>Expression</th>
@@ -319,7 +363,9 @@
 <td>Even if he asked, I wouldn't help.</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>What If: А якщо / А що якщо</h4><div class="md-content"><p>Raising hypothetical questions:</p>
+</table>
+<h3 id="whatif">What If: А якщо / А що якщо</h3>
+<p>Raising hypothetical questions:</p>
 <table>
 <thead>
 <tr>
@@ -341,7 +387,9 @@
 <td>What if he found out? (hypothetical)</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>In Case: На випадок, якщо</h4><div class="md-content"><table>
+</table>
+<h3 id="incase">In Case: На випадок, якщо</h3>
+<table>
 <thead>
 <tr>
 <th>Ukrainian</th>
@@ -362,7 +410,9 @@
 <td>Leave a key in case I come earlier.</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Expressing Regrets</h4><div class="md-content"><p>Using conditionals to express regret about the past:</p>
+</table>
+<h3 id="expressingregrets">Expressing Regrets</h3>
+<p>Using conditionals to express regret about the past:</p>
 <table>
 <thead>
 <tr>
@@ -411,7 +461,9 @@
 <td>Якби тільки він сказав!</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Implicit Conditionals</h4><div class="md-content"><p>Sometimes the "if" clause is implied:</p>
+</table>
+<h3 id="implicitconditionals">Implicit Conditionals</h3>
+<p>Sometimes the "if" clause is implied:</p>
 <table>
 <thead>
 <tr>
@@ -437,7 +489,10 @@
 <td>We would have helped. [if we had known]</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>### Match Condition and Result</h4><div class="md-content"><p><strong>Conditions:</strong></p>
+</table>
+<h2 id="practice">practice | Практика</h2>
+<h3 id="matchconditionandresult">Match Condition and Result</h3>
+<p><strong>Conditions:</strong></p>
 <ol>
 <li>Якби я краще вчився у школі…</li>
 <li>Якщо завтра буде дощ…</li>
@@ -449,7 +504,9 @@ a. …я б зараз знав більше.<br />
 b. …ми почекаємо.<br />
 c. …ми залишимося вдома.<br />
 d. …я б допоміг їй.</p>
-<p><strong>Answers:</strong> 1-a, 2-c, 3-d, 4-b</p></div></div><div class="canvas-note"><h4>Choose the Correct Form</h4><div class="md-content"><ol>
+<p><strong>Answers:</strong> 1-a, 2-c, 3-d, 4-b</p>
+<h3 id="choosethecorrectform">Choose the Correct Form</h3>
+<ol>
 <li>Якби я ___ гроші, я б купив машину.</li>
 </ol>
 <ul>
@@ -484,14 +541,18 @@ d. …я б допоміг їй.</p>
 <ul>
 <li>a) якщо ✓</li>
 <li>b) якби</li>
-</ul></div></div><div class="canvas-note"><h4>Complete the Mixed Conditionals</h4><div class="md-content"><ol>
+</ul>
+<h3 id="completethemixedconditionals">Complete the Mixed Conditionals</h3>
+<ol>
 <li><p>Якби я ___ (to study) музику в дитинстві, я б ___ (to play) зараз на піаніно.<br />
 → Якби я <strong>вчився</strong> музику в дитинстві, я б <strong>грав</strong> зараз на піаніно.</p></li>
 <li><p>Якби вона ___ (to be) сміливішою, вона б ___ (to tell) правду вчора.<br />
 → Якби вона <strong>була</strong> сміливішою, вона б <strong>сказала</strong> правду вчора.</p></li>
 <li><p>Якби він не ___ (to leave) минулого року, він би ___ (to live) тут зараз.<br />
 → Якби він не <strong>виїхав</strong> минулого року, він би <strong>жив</strong> тут зараз.</p></li>
-</ol></div></div><div class="canvas-note"><h4>Translate to Ukrainian</h4><div class="md-content"><ol>
+</ol>
+<h3 id="translatetoukrainian">Translate to Ukrainian</h3>
+<ol>
 <li><p>Even if it rains, I'll go.<br />
 → <strong>Навіть якщо піде дощ, я піду.</strong></p></li>
 <li><p>What if she doesn't come?<br />
@@ -502,7 +563,9 @@ d. …я б допоміг їй.</p>
 → <strong>Якби я знав!</strong></p></li>
 <li><p>Take an umbrella in case it rains.<br />
 → <strong>Візьми парасольку на випадок, якщо піде дощ.</strong></p></li>
-</ol></div></div><div class="canvas-note"><h4>Express Regrets</h4><div class="md-content"><p>Express regret about these situations:</p>
+</ol>
+<h3 id="expressregrets">Express Regrets</h3>
+<p>Express regret about these situations:</p>
 <ol>
 <li><p>You didn't learn Ukrainian earlier.<br />
 → Якби я вчив українську раніше! / Шкода, що я не вчив українську раніше.</p></li>
@@ -510,18 +573,285 @@ d. …я б допоміг їй.</p>
 → Якби я пішов на концерт! / Шкода, що я не пішов на концерт.</p></li>
 <li><p>You didn't tell the truth.<br />
 → Якби я сказав правду! / Шкода, що я не сказав правду.</p></li>
-</ol></div></div><div class="canvas-note"><h4>### Life Regrets and What-Ifs</h4><div class="md-content"><p>Discuss using mixed conditionals:</p>
+</ol>
+<h2 id="production">production | Продукція</h2>
+<h3 id="liferegretsandwhatifs">Life Regrets and What-Ifs</h3>
+<p>Discuss using mixed conditionals:</p>
 <ol>
 <li>Якби я зробив щось інакше в минулому, що було б зараз?</li>
 <li>Які ваші найбільші "якби"?</li>
 </ol>
 <p><strong>Example:</strong><br />
-Якби я вивчив програмування в університеті, я б зараз працював в IT-компанії. Якби я більше займався спортом у школі, я б був здоровішим зараз.</p></div></div><div class="canvas-note"><h4>Contingency Planning</h4><div class="md-content"><p>Use "на випадок, якщо" to discuss backup plans:</p>
+Якби я вивчив програмування в університеті, я б зараз працював в IT-компанії. Якби я більше займався спортом у школі, я б був здоровішим зараз.</p>
+<h3 id="contingencyplanning">Contingency Planning</h3>
+<p>Use "на випадок, якщо" to discuss backup plans:</p>
 <ul>
 <li>На випадок, якщо я запізнюся…</li>
 <li>На випадок, якщо забуду пароль…</li>
 <li>На випадок, якщо погода зміниться…</li>
-</ul></div></div></div>
+</ul>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Activities</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="quizcomplexconditionals">quiz: Complex Conditionals</h2>
+<blockquote>
+  <p>Choose the correct answer.</p>
+</blockquote>
+<ol>
+<li>___ буде гарна погода, ми поїдемо на пікнік. (real)</li>
+</ol>
+<ul>
+<li>[x] Якщо</li>
+<li>[ ] Якби</li>
+</ul>
+<blockquote>
+  <p>Real future condition.</p>
+</blockquote>
+<ol start="2">
+<li>___ я був багатим, я б не працював.</li>
+</ol>
+<ul>
+<li>[ ] Якщо</li>
+<li>[x] Якби</li>
+</ul>
+<blockquote>
+  <p>Unreal hypothetical.</p>
+</blockquote>
+<ol start="3">
+<li>Я прийду, ___ не захворію.</li>
+</ol>
+<ul>
+<li>[x] якщо</li>
+<li>[ ] якби</li>
+</ul>
+<blockquote>
+  <p>"Unless" = "якщо не" with real condition.</p>
+</blockquote>
+<ol start="4">
+<li>___ якщо він не прийде?</li>
+</ol>
+<ul>
+<li>[x] А</li>
+<li>[ ] І</li>
+</ul>
+<blockquote>
+  <p>"What if" = "А якщо"</p>
+</blockquote>
+<ol start="5">
+<li>Візьми гроші ___ випадок, якщо треба буде.</li>
+</ol>
+<ul>
+<li>[x] на</li>
+<li>[ ] у</li>
+</ul>
+<blockquote>
+  <p>"In case" = "на випадок, якщо"</p>
+</blockquote>
+<ol start="6">
+<li>___ якби він попросив, я б не погодився.</li>
+</ol>
+<ul>
+<li>[x] Навіть</li>
+<li>[ ] Тільки</li>
+</ul>
+<blockquote>
+  <p>"Even if (unreal)" = "Навіть якби"</p>
+</blockquote>
+<h2 id="fillincompletethescenarios">fill-in: Complete the Scenarios</h2>
+<blockquote>
+  <p>(1)<strong>_ я знав раніше, я б прийшов на зустріч. Тепер (2)<strong><em>, що я не був там. (3)</em></strong> якщо буде ще одна зустріч, я піду. (4)</strong>_ він запросить мене, (5)___ якщо матиму багато роботи.</p>
+</blockquote>
+<p><strong>Answers:</strong> Якби, шкода, Якщо, Навіть, навіть</p>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Vocabulary</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Word</th>
+<th>IPA</th>
+<th>English</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>навіть якщо</td>
+<td>/nɑˈvʲitʲ jɑkˈʃt͡ʃo/</td>
+<td>even if (real)</td>
+<td>conj</td>
+</tr>
+<tr>
+<td>навіть якби</td>
+<td>/nɑˈvʲitʲ jɑkˈbɪ/</td>
+<td>even if (unreal)</td>
+<td>conj</td>
+</tr>
+<tr>
+<td>хіба що</td>
+<td>/xʲiˈbɑ ʃt͡ʃo/</td>
+<td>unless</td>
+<td>conj</td>
+</tr>
+<tr>
+<td>на випадок</td>
+<td>/nɑ ˈvɪpɑdok/</td>
+<td>in case</td>
+<td>prep</td>
+</tr>
+<tr>
+<td>а якщо</td>
+<td>/ɑ jɑkˈʃt͡ʃo/</td>
+<td>what if</td>
+<td>phrase</td>
+</tr>
+<tr>
+<td>шкода</td>
+<td>/ˈʃkodɑ/</td>
+<td>it's a pity</td>
+<td>pred</td>
+</tr>
+<tr>
+<td>жаль</td>
+<td>/ʒɑlʲ/</td>
+<td>it's a pity, regret</td>
+<td>m</td>
+</tr>
+<tr>
+<td>жалкувати</td>
+<td>/ʒɑlkuˈvɑtɪ/</td>
+<td>to regret</td>
+<td>impf</td>
+</tr>
+<tr>
+<td>інакше</td>
+<td>/iˈnɑkʃɛ/</td>
+<td>otherwise, differently</td>
+<td>adv</td>
+</tr>
+<tr>
+<td>раніше</td>
+<td>/rɑˈnʲiʃɛ/</td>
+<td>earlier</td>
+<td>adv</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Summary</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="conditionaltypesoverview">Conditional Types Overview</h2>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Structure</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Real</td>
+<td>якщо + future</td>
+<td>Якщо прийдеш, поговоримо.</td>
+</tr>
+<tr>
+<td>Unreal</td>
+<td>якби + past + б</td>
+<td>Якби прийшов, поговорили б.</td>
+</tr>
+<tr>
+<td>Mixed</td>
+<td>якби + past → present result</td>
+<td>Якби вчився, знав би зараз.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="keyexpressions">Key Expressions</h2>
+<table>
+<thead>
+<tr>
+<th>Expression</th>
+<th>Meaning</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>якщо не</td>
+<td>unless</td>
+<td>Прийду, якщо не захворію.</td>
+</tr>
+<tr>
+<td>навіть якщо</td>
+<td>even if (real)</td>
+<td>Прийду, навіть якщо піде дощ.</td>
+</tr>
+<tr>
+<td>навіть якби</td>
+<td>even if (unreal)</td>
+<td>Прийшов би, навіть якби…</td>
+</tr>
+<tr>
+<td>а якщо</td>
+<td>what if</td>
+<td>А якщо він не прийде?</td>
+</tr>
+<tr>
+<td>на випадок, якщо</td>
+<td>in case</td>
+<td>На випадок, якщо забудеш.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="expressingregret">Expressing Regret</h2>
+<table>
+<thead>
+<tr>
+<th>Pattern</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Якби + past!</td>
+<td>Якби я знав!</td>
+</tr>
+<tr>
+<td>Шкода, що…</td>
+<td>Шкода, що не прийшов.</td>
+</tr>
+<tr>
+<td>Якби тільки…</td>
+<td>Якби тільки він сказав!</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p><strong>Key Takeaways</strong></p>
+  <ul>
+  <li>Mixed conditionals link different time frames</li>
+  <li>"Якщо не" = unless (real), "хіба що" = unless (unlikely)</li>
+  <li>"Навіть якщо/якби" = even if (real/unreal)</li>
+  <li>"А якщо" = what if</li>
+  <li>"На випадок, якщо" = in case</li>
+  <li>Context markers (тоді, зараз) clarify time references</li>
+  </ul>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('quiz')">Start →</button></div>
     </section>
     
@@ -559,6 +889,10 @@ d. …я б допоміг їй.</p>
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

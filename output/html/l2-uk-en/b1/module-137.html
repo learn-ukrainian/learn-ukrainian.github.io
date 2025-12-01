@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,13 +136,31 @@
         <p style="color:var(--text-muted)">Сталі словосполучення</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Що таке колокація? | What Is a Collocation?</h4><div class="md-content"><p>Колокація — слова, які часто вживаються разом:</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Зміст уроку | Lesson Content</li><li class="toc-item" data-target="section-1">Activities</li><li class="toc-item" data-target="section-2">Vocabulary</li><li class="toc-item" data-target="section-3">Summary</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Зміст уроку | Lesson Content</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="warmup">warm-up | Розминка</h2>
+<h3 id="whatisacollocation">Що таке колокація? | What Is a Collocation?</h3>
+<p>Колокація — слова, які часто вживаються разом:</p>
 <p>A collocation is words that often go together:</p>
 <ul>
 <li>приймати <strong>рішення</strong> (NOT: робити рішення)</li>
 <li>make a <strong>decision</strong> (NOT: do a decision)</li>
 </ul>
-<p>Вивчайте слова у сполученнях!</p></div></div><div class="canvas-note"><h4>### Дієслово + Іменник | Verb + Noun Collocations</h4><div class="md-content"><h4 id="todomake">Робити (To Do/Make)</h4>
+<p>Вивчайте слова у сполученнях!</p>
+<h2 id="presentation">presentation | Презентація</h2>
+<h3 id="verbnouncollocations">Дієслово + Іменник | Verb + Noun Collocations</h3>
+<h4 id="todomake">Робити (To Do/Make)</h4>
 <table>
 <thead>
 <tr>
@@ -330,7 +366,9 @@
 <td>Веди себе добре!</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Прикметник + Іменник | Adjective + Noun</h4><div class="md-content"><h4 id="commoncombinations">Загальні комбінації | Common Combinations</h4>
+</table>
+<h3 id="adjectivenoun">Прикметник + Іменник | Adjective + Noun</h3>
+<h4 id="commoncombinations">Загальні комбінації | Common Combinations</h4>
 <table>
 <thead>
 <tr>
@@ -407,7 +445,9 @@
 <td>white bread</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Прислівник + Дієслово | Adverb + Verb</h4><div class="md-content"><table>
+</table>
+<h3 id="adverbverb">Прислівник + Дієслово | Adverb + Verb</h3>
+<table>
 <thead>
 <tr>
 <th>Collocation</th>
@@ -442,7 +482,9 @@
 <td>Треба рішуче діяти.</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Типові помилки | Common Mistakes</h4><div class="md-content"><table>
+</table>
+<h3 id="commonmistakes">Типові помилки | Common Mistakes</h3>
+<table>
 <thead>
 <tr>
 <th>❌ Wrong</th>
@@ -482,13 +524,18 @@
 <td>friend is "close" not "hot"</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>### Choose the Right Verb</h4><div class="md-content"><ol>
+</table>
+<h2 id="practice">practice | Практика</h2>
+<h3 id="choosetherightverb">Choose the Right Verb</h3>
+<ol>
 <li>___ (make/take) рішення → <strong>приймати</strong></li>
 <li>___ (do/make) помилку → <strong>робити</strong></li>
 <li>___ (take/give) участь → <strong>брати</strong></li>
 <li>___ (have/make) сенс → <strong>мати</strong></li>
 <li>___ (give/make) пораду → <strong>давати</strong></li>
-</ol></div></div><div class="canvas-note"><h4>Complete with Correct Collocation</h4><div class="md-content"><ol>
+</ol>
+<h3 id="completewithcorrectcollocation">Complete with Correct Collocation</h3>
+<ol>
 <li><p>Я ___ (make a decision) вчора.<br />
 → <strong>прийняв рішення</strong></p></li>
 <li><p>Він ___ (takes medicine) щодня.<br />
@@ -499,13 +546,17 @@
 → <strong>взяли участь</strong></p></li>
 <li><p>Це ___ (makes sense).<br />
 → <strong>має сенс</strong></p></li>
-</ol></div></div><div class="canvas-note"><h4>Fix the Mistakes</h4><div class="md-content"><ol>
+</ol>
+<h3 id="fixthemistakes">Fix the Mistakes</h3>
+<ol>
 <li>Він робив рішення. → <strong>приймав рішення</strong></li>
 <li>Це не робить сенсу. → <strong>не має сенсу</strong></li>
 <li>Великий дощ іде. → <strong>Сильний дощ іде.</strong></li>
 <li>Вона має великий успіх. → ✅ (correct!)</li>
 <li>Дати відповідальність. → <strong>Взяти відповідальність</strong></li>
-</ol></div></div><div class="canvas-note"><h4>Translate Using Collocations</h4><div class="md-content"><ol>
+</ol>
+<h3 id="translateusingcollocations">Translate Using Collocations</h3>
+<ol>
 <li><p>I made a mistake.<br />
 → <strong>Я зробив помилку.</strong></p></li>
 <li><p>She gives good advice.<br />
@@ -514,17 +565,217 @@
 → <strong>Це має сенс.</strong></p></li>
 <li><p>Take a decision!<br />
 → <strong>Прийми рішення!</strong></p></li>
-</ol></div></div><div class="canvas-note"><h4>### Use Collocations Naturally</h4><div class="md-content"><p>Describe a typical day using collocations:</p>
+</ol>
+<h2 id="production">production | Продукція</h2>
+<h3 id="usecollocationsnaturally">Use Collocations Naturally</h3>
+<p>Describe a typical day using collocations:</p>
 <ul>
 <li>Я приймаю душ…</li>
 <li>Я беру участь у…</li>
 <li>Я приймаю рішення…</li>
-</ul></div></div><div class="canvas-note"><h4>Business Scenario</h4><div class="md-content"><p>Use collocations to describe:</p>
+</ul>
+<h3 id="businessscenario">Business Scenario</h3>
+<p>Use collocations to describe:</p>
 <ul>
 <li>Як ви ведете переговори?</li>
 <li>Як ви приймаєте рішення?</li>
 <li>Яку пораду ви даєте колегам?</li>
-</ul></div></div></div>
+</ul>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Activities</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="quizcollocations">quiz: Collocations</h2>
+<blockquote>
+  <p>Choose the correct collocation.</p>
+</blockquote>
+<ol>
+<li>___ рішення:</li>
+</ol>
+<ul>
+<li>[x] приймати</li>
+<li>[ ] робити</li>
+</ul>
+<blockquote>
+  <p>Make a decision = приймати рішення.</p>
+</blockquote>
+<ol start="2">
+<li>___ помилку:</li>
+</ol>
+<ul>
+<li>[x] робити</li>
+<li>[ ] приймати</li>
+</ul>
+<blockquote>
+  <p>Make a mistake = робити помилку.</p>
+</blockquote>
+<ol start="3">
+<li>___ участь:</li>
+</ol>
+<ul>
+<li>[x] брати</li>
+<li>[ ] давати</li>
+</ul>
+<blockquote>
+  <p>Take part = брати участь.</p>
+</blockquote>
+<ol start="4">
+<li>___ пораду:</li>
+</ol>
+<ul>
+<li>[x] давати</li>
+<li>[ ] робити</li>
+</ul>
+<blockquote>
+  <p>Give advice = давати пораду.</p>
+</blockquote>
+<ol start="5">
+<li>___ сенс:</li>
+</ol>
+<ul>
+<li>[x] мати</li>
+<li>[ ] робити</li>
+</ul>
+<blockquote>
+  <p>Make sense = мати сенс.</p>
+</blockquote>
+<ol start="6">
+<li>___ переговори:</li>
+</ol>
+<ul>
+<li>[x] вести</li>
+<li>[ ] робити</li>
+</ul>
+<blockquote>
+  <p>Conduct negotiations = вести переговори.</p>
+</blockquote>
+<h2 id="fillinbusinessmeeting">fill-in: Business Meeting</h2>
+<blockquote>
+  <p>Використайте колокації.</p>
+  <p>Сьогодні ми (1)<strong>_ (conducted) важливі переговори. Колеги (2)</strong>_ (gave) корисні поради. Нам потрібно (3)<strong>_ (make) рішення до кінця тижня. Ця справа (4)</strong>_ (makes sense). Усі (5)___ (took part) в обговоренні.</p>
+</blockquote>
+<p><strong>Answers:</strong></p>
+<ol>
+<li>вели</li>
+<li>дали / давали</li>
+<li>прийняти</li>
+<li>має сенс</li>
+<li>брали / взяли участь</li>
+</ol>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Vocabulary</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Word</th>
+<th>IPA</th>
+<th>English</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>колокація</td>
+<td>/kolokɑˈt͡sʲijɑ/</td>
+<td>collocation</td>
+<td>f</td>
+</tr>
+<tr>
+<td>словосполучення</td>
+<td>-</td>
+<td>word combination</td>
+<td>n</td>
+</tr>
+<tr>
+<td>приймати рішення</td>
+<td>-</td>
+<td>make a decision</td>
+<td>colloc</td>
+</tr>
+<tr>
+<td>робити помилку</td>
+<td>-</td>
+<td>make a mistake</td>
+<td>colloc</td>
+</tr>
+<tr>
+<td>брати участь</td>
+<td>-</td>
+<td>take part</td>
+<td>colloc</td>
+</tr>
+<tr>
+<td>давати пораду</td>
+<td>-</td>
+<td>give advice</td>
+<td>colloc</td>
+</tr>
+<tr>
+<td>мати сенс</td>
+<td>-</td>
+<td>make sense</td>
+<td>colloc</td>
+</tr>
+<tr>
+<td>вести переговори</td>
+<td>-</td>
+<td>conduct negotiations</td>
+<td>colloc</td>
+</tr>
+<tr>
+<td>мати значення</td>
+<td>-</td>
+<td>matter, be important</td>
+<td>colloc</td>
+</tr>
+<tr>
+<td>брати до уваги</td>
+<td>-</td>
+<td>take into account</td>
+<td>colloc</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Summary</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="keycollocations">Key Collocations</h2>
+<h3 id="with">With робити</h3>
+<p>робити помилку, вправу, вибір</p>
+<h3 id="with-1">With приймати</h3>
+<p>приймати рішення, ліки, участь, душ</p>
+<h3 id="with-2">With брати</h3>
+<p>брати участь, відповідальність, до уваги</p>
+<h3 id="with-3">With давати</h3>
+<p>давати пораду, відповідь, дозвіл</p>
+<h3 id="with-4">With мати</h3>
+<p>мати сенс, право, намір, значення</p>
+<h3 id="with-5">With вести</h3>
+<p>вести переговори, справу, розмову</p>
+<blockquote>
+  <p><strong>Key Takeaways</strong></p>
+  <ul>
+  <li>Learn words in combinations, not isolation</li>
+  <li>Collocations differ from English</li>
+  <li>приймати рішення (NOT робити)</li>
+  <li>мати сенс (NOT робити)</li>
+  <li>Practice collocations in context</li>
+  </ul>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('quiz')">Start →</button></div>
     </section>
     
@@ -562,6 +813,10 @@
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

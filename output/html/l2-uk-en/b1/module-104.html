@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,7 +136,22 @@
         <p style="color:var(--text-muted)">Щоб + Past Tense (Different Subjects)</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Різні суб'єкти | Different Subjects</h4><div class="md-content"><p>У модулі 103: щоб + інфінітив (однаковий суб'єкт)</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Зміст уроку | Lesson Content</li><li class="toc-item" data-target="section-1">Activities</li><li class="toc-item" data-target="section-2">Vocabulary</li><li class="toc-item" data-target="section-3">Summary</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Зміст уроку | Lesson Content</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="warmup">warm-up | Розминка</h2>
+<h3 id="differentsubjects">Різні суб'єкти | Different Subjects</h3>
+<p>У модулі 103: щоб + інфінітив (однаковий суб'єкт)</p>
 <p>In module 103: щоб + infinitive (same subject)</p>
 <ul>
 <li><strong>Я</strong> прийшов, щоб <strong>[-]</strong> допомогти. (I came to help)</li>
@@ -127,7 +160,10 @@
 <p>But what to do when subjects are different?</p>
 <ul>
 <li><strong>Я</strong> хочу, щоб <strong>ти</strong> допоміг. (I want you to help)</li>
-</ul></div></div><div class="canvas-note"><h4>### Щоб + Past Tense: Basic Pattern</h4><div class="md-content"><p>When <strong>different people</strong> are involved, use <strong>щоб + past tense form</strong>:</p>
+</ul>
+<h2 id="presentation">presentation | Презентація</h2>
+<h3 id="pasttensebasicpattern">Щоб + Past Tense: Basic Pattern</h3>
+<p>When <strong>different people</strong> are involved, use <strong>щоб + past tense form</strong>:</p>
 <table>
 <thead>
 <tr>
@@ -158,7 +194,9 @@
   <p><strong>⭐ KEY RULE: The "Subjunctive" Pattern</strong></p>
   <p>Ukrainian doesn't have a separate subjunctive mood. Instead, it uses <strong>past tense forms after щоб</strong> to express wishes, requests, and purposes involving different people.</p>
   <p>This looks like past tense, but it's <strong>not about past time</strong> — it's about wishes/purposes!</p>
-</blockquote></div></div><div class="canvas-note"><h4>The Structure</h4><div class="md-content"><p><strong>Main clause</strong> + <strong>щоб</strong> + <strong>subject</strong> + <strong>past tense verb</strong></p>
+</blockquote>
+<h3 id="thestructure">The Structure</h3>
+<p><strong>Main clause</strong> + <strong>щоб</strong> + <strong>subject</strong> + <strong>past tense verb</strong></p>
 <table>
 <thead>
 <tr>
@@ -188,7 +226,9 @@
 <td>знали</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Common Trigger Verbs</h4><div class="md-content"><p>These verbs commonly take "щоб + past tense":</p>
+</table>
+<h3 id="commontriggerverbs">Common Trigger Verbs</h3>
+<p>These verbs commonly take "щоб + past tense":</p>
 <p><strong>Wanting and wishing:</strong></p>
 <table>
 <thead>
@@ -360,7 +400,9 @@
 <td>We expect them to arrive.</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Negation: Щоб + Не</h4><div class="md-content"><p>For negative wishes/requests:</p>
+</table>
+<h3 id="negation">Negation: Щоб + Не</h3>
+<p>For negative wishes/requests:</p>
 <table>
 <thead>
 <tr>
@@ -382,7 +424,9 @@
 <td>He ordered that no one enter.</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Aspect Choice</h4><div class="md-content"><p>Both perfective and imperfective work after "щоб + past":</p>
+</table>
+<h3 id="aspectchoice">Aspect Choice</h3>
+<p>Both perfective and imperfective work after "щоб + past":</p>
 <table>
 <thead>
 <tr>
@@ -422,7 +466,9 @@
 <td>I want you to write to me. (regularly)</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Impersonal Constructions</h4><div class="md-content"><p>With impersonal expressions:</p>
+</table>
+<h3 id="impersonalconstructions">Impersonal Constructions</h3>
+<p>With impersonal expressions:</p>
 <table>
 <thead>
 <tr>
@@ -448,7 +494,9 @@
 <td>It's better for her to stay.</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Same Subject vs. Different Subject</h4><div class="md-content"><table>
+</table>
+<h3 id="samesubjectvsdifferentsubject">Same Subject vs. Different Subject</h3>
+<table>
 <thead>
 <tr>
 <th>Structure</th>
@@ -471,7 +519,10 @@
 </table>
 <p>⚠️ <strong>Common Error:</strong><br />
 ❌ Я хочу, щоб він допомогти. (wrong)<br />
-✅ Я хочу, щоб він допоміг. (correct)</p></div></div><div class="canvas-note"><h4>### Transform to Different Subject</h4><div class="md-content"><p><strong>Example:</strong> Я хочу прийти. (I want to come)<br />
+✅ Я хочу, щоб він допоміг. (correct)</p>
+<h2 id="practice">practice | Практика</h2>
+<h3 id="transformtodifferentsubject">Transform to Different Subject</h3>
+<p><strong>Example:</strong> Я хочу прийти. (I want to come)<br />
 → Я хочу, щоб <strong>ти прийшов</strong>. (I want you to come)</p>
 <ol>
 <li>Він хоче вивчити українську. → Він хоче, щоб <strong>діти вивчили українську</strong>.</li>
@@ -479,7 +530,9 @@
 <li>Я хочу відпочити. → Я хочу, щоб <strong>він відпочив</strong>.</li>
 <li>Вони хочуть знати правду. → Вони хочуть, щоб <strong>я сказав правду</strong>.</li>
 <li>Ми хочемо бути щасливими. → Ми хочемо, щоб <strong>ви були щасливими</strong>.</li>
-</ol></div></div><div class="canvas-note"><h4>Choose the Correct Form</h4><div class="md-content"><ol>
+</ol>
+<h3 id="choosethecorrectform">Choose the Correct Form</h3>
+<ol>
 <li>Я хочу, щоб він ___ .</li>
 </ol>
 <ul>
@@ -518,7 +571,9 @@
 <li>a) відпочивав ✓</li>
 <li>b) відпочивати</li>
 <li>c) відпочиває</li>
-</ul></div></div><div class="canvas-note"><h4>Translate to Ukrainian</h4><div class="md-content"><ol>
+</ul>
+<h3 id="translatetoukrainian">Translate to Ukrainian</h3>
+<ol>
 <li><p>I want you to help me.<br />
 → Я хочу, <strong>щоб ти допоміг мені</strong>.</p></li>
 <li><p>She asks him to call.<br />
@@ -529,7 +584,9 @@
 → Ми сподіваємося, <strong>щоб вони прийшли</strong>.</p></li>
 <li><p>He ordered us not to enter.<br />
 → Він наказав, <strong>щоб ми не входили</strong>.</p></li>
-</ol></div></div><div class="canvas-note"><h4>Complete the Sentences</h4><div class="md-content"><ol>
+</ol>
+<h3 id="completethesentences">Complete the Sentences</h3>
+<ol>
 <li><p>Мама хоче, щоб я ___ (to study well).<br />
 → Мама хоче, щоб я <strong>добре вчився/вчилася</strong>.</p></li>
 <li><p>Я прошу, щоб ви ___ (to wait).<br />
@@ -538,7 +595,10 @@
 → Важливо, щоб він <strong>знав правду</strong>.</p></li>
 <li><p>Вони хочуть, щоб ми ___ (not to be late).<br />
 → Вони хочуть, щоб ми <strong>не запізнювалися</strong>.</p></li>
-</ol></div></div><div class="canvas-note"><h4>### Express Wishes About Others</h4><div class="md-content"><p>Complete with your real wishes:</p>
+</ol>
+<h2 id="production">production | Продукція</h2>
+<h3 id="expresswishesaboutothers">Express Wishes About Others</h3>
+<p>Complete with your real wishes:</p>
 <ol>
 <li>Я хочу, щоб мої батьки…</li>
 <li>Я хочу, щоб мої друзі…</li>
@@ -547,7 +607,9 @@
 <li>Я мрію, щоб світ…</li>
 </ol>
 <p><strong>Example:</strong><br />
-Я хочу, <strong>щоб мої батьки були здоровими</strong>. Я мрію, <strong>щоб у світі був мир</strong>.</p></div></div><div class="canvas-note"><h4>Roleplay: Making Requests</h4><div class="md-content"><p>Practice making requests using "щоб":</p>
+Я хочу, <strong>щоб мої батьки були здоровими</strong>. Я мрію, <strong>щоб у світі був мир</strong>.</p>
+<h3 id="roleplaymakingrequests">Roleplay: Making Requests</h3>
+<p>Practice making requests using "щоб":</p>
 <p><strong>Situation 1:</strong> You're a boss giving instructions</p>
 <ul>
 <li>Я хочу, щоб ви закінчили проєкт до п'ятниці.</li>
@@ -557,7 +619,257 @@
 <ul>
 <li>Я хочу, щоб ви зробили домашнє завдання.</li>
 <li>Важливо, щоб ви лягли спати рано.</li>
-</ul></div></div></div>
+</ul>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Activities</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="quizdifferentsubjectconstructions">quiz: Different Subject Constructions</h2>
+<blockquote>
+  <p>Choose the correct form.</p>
+</blockquote>
+<ol>
+<li>Я хочу, щоб вона ___ .</li>
+</ol>
+<ul>
+<li>[x] прийшла</li>
+<li>[ ] прийти</li>
+</ul>
+<blockquote>
+  <p>Past tense form with different subject.</p>
+</blockquote>
+<ol start="2">
+<li>Він просить, щоб я йому ___ .</li>
+</ol>
+<ul>
+<li>[x] допоміг</li>
+<li>[ ] допомогти</li>
+</ul>
+<blockquote>
+  <p>Different subjects require past tense form.</p>
+</blockquote>
+<ol start="3">
+<li>Важливо, щоб всі ___ правила.</li>
+</ol>
+<ul>
+<li>[x] знали</li>
+<li>[ ] знати</li>
+</ul>
+<blockquote>
+  <p>Impersonal expression + different subject = past form.</p>
+</blockquote>
+<ol start="4">
+<li>Вона хоче ___ відпочити. (same subject)</li>
+</ol>
+<ul>
+<li>[ ] щоб вона</li>
+<li>[x] - (just infinitive)</li>
+</ul>
+<blockquote>
+  <p>Same subject = just infinitive, no щоб needed.</p>
+</blockquote>
+<ol start="5">
+<li>Лікар радить, щоб він ___ ліки.</li>
+</ol>
+<ul>
+<li>[x] приймав</li>
+<li>[ ] приймати</li>
+</ul>
+<blockquote>
+  <p>Different subject (doctor ≠ he).</p>
+</blockquote>
+<ol start="6">
+<li>Ми сподіваємося, щоб погода ___ гарна.</li>
+</ol>
+<ul>
+<li>[x] була</li>
+<li>[ ] бути</li>
+</ul>
+<blockquote>
+  <p>"Погода" is a different subject.</p>
+</blockquote>
+<h2 id="fillincompletetherequests">fill-in: Complete the Requests</h2>
+<blockquote>
+  <p>Мій керівник хоче, (1)<strong>_ я закінчив звіт до понеділка. Він також просить, (2)</strong>_ всі працівники були на зустрічі. Важливо, (3)<strong>_ ми підготували презентацію. Я сподіваюся, (4)</strong>_ все пройшло добре.</p>
+</blockquote>
+<p><strong>Answers:</strong> щоб, щоб, щоб, щоб</p>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Vocabulary</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Word</th>
+<th>IPA</th>
+<th>English</th>
+<th>Gender</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>хотіти</td>
+<td>/xoˈtʲitɪ/</td>
+<td>to want</td>
+<td>impf</td>
+</tr>
+<tr>
+<td>бажати</td>
+<td>/bɑˈʒɑtɪ/</td>
+<td>to wish</td>
+<td>impf</td>
+</tr>
+<tr>
+<td>просити</td>
+<td>/proˈsɪtɪ/</td>
+<td>to ask, request</td>
+<td>impf</td>
+</tr>
+<tr>
+<td>попросити</td>
+<td>/poproˈsɪtɪ/</td>
+<td>to ask, request</td>
+<td>pf</td>
+</tr>
+<tr>
+<td>наказувати</td>
+<td>/nɑˈkɑzuvɑtɪ/</td>
+<td>to order</td>
+<td>impf</td>
+</tr>
+<tr>
+<td>наказати</td>
+<td>/nɑkɑˈzɑtɪ/</td>
+<td>to order</td>
+<td>pf</td>
+</tr>
+<tr>
+<td>радити</td>
+<td>/ˈrɑdɪtɪ/</td>
+<td>to advise</td>
+<td>impf</td>
+</tr>
+<tr>
+<td>порадити</td>
+<td>/porɑˈdɪtɪ/</td>
+<td>to advise</td>
+<td>pf</td>
+</tr>
+<tr>
+<td>сподіватися</td>
+<td>/spodʲiˈvɑtɪsʲɑ/</td>
+<td>to hope</td>
+<td>impf</td>
+</tr>
+<tr>
+<td>вимагати</td>
+<td>/vɪmɑˈɦɑtɪ/</td>
+<td>to demand</td>
+<td>impf</td>
+</tr>
+<tr>
+<td>пропонувати</td>
+<td>/proponuˈvɑtɪ/</td>
+<td>to suggest</td>
+<td>impf</td>
+</tr>
+<tr>
+<td>запропонувати</td>
+<td>/zɑproponuˈvɑtɪ/</td>
+<td>to suggest</td>
+<td>pf</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Summary</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="pasttensepattern">Щоб + Past Tense Pattern</h2>
+<h3 id="whentouse">When to Use</h3>
+<ul>
+<li>Different subjects in main and subordinate clause</li>
+<li>Expressing wishes, requests, demands about others</li>
+</ul>
+<h3 id="structure">Structure</h3>
+<p>Main clause + <strong>щоб</strong> + subject + <strong>past tense verb</strong></p>
+<h3 id="samesubjectvsdifferentsubject">Same Subject vs. Different Subject</h3>
+<table>
+<thead>
+<tr>
+<th>Subjects</th>
+<th>Structure</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Same</td>
+<td>щоб + infinitive</td>
+<td>Я прийшов, <strong>щоб допомогти</strong>.</td>
+</tr>
+<tr>
+<td>Different</td>
+<td>щоб + past</td>
+<td>Я хочу, <strong>щоб ти допоміг</strong>.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="commontriggers">Common Triggers</h3>
+<ul>
+<li>хотіти, бажати, мріяти (wanting)</li>
+<li>просити, наказувати, вимагати (requesting)</li>
+<li>радити, пропонувати (suggesting)</li>
+<li>сподіватися, очікувати (hoping)</li>
+<li>треба, важливо, краще (impersonal)</li>
+</ul>
+<h3 id="keyexamples">Key Examples</h3>
+<table>
+<thead>
+<tr>
+<th>Ukrainian</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Я хочу, щоб <strong>він прийшов</strong>.</td>
+<td>I want him to come.</td>
+</tr>
+<tr>
+<td>Вона просить, щоб <strong>ми почекали</strong>.</td>
+<td>She asks us to wait.</td>
+</tr>
+<tr>
+<td>Важливо, щоб <strong>всі знали</strong>.</td>
+<td>It's important for all to know.</td>
+</tr>
+<tr>
+<td>Він наказав, щоб <strong>ніхто не входив</strong>.</td>
+<td>He ordered no one to enter.</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p><strong>Key Takeaways</strong></p>
+  <ul>
+  <li>Different subjects = щоб + past tense form</li>
+  <li>Past form doesn't mean past time — it's subjunctive meaning</li>
+  <li>Use with verbs of wanting, asking, ordering, hoping</li>
+  <li>Both aspects work: perfective (one action) or imperfective (ongoing)</li>
+  </ul>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('quiz')">Start →</button></div>
     </section>
     
@@ -595,6 +907,10 @@
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

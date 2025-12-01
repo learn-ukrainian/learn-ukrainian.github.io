@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,7 +136,22 @@
         <p style="color:var(--text-muted)">Думати, гадати, вважати, міркувати</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Синоніми | Synonyms</h4><div class="md-content"><p>В українській мові багато дієслів для опису мислення:</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Зміст уроку | Lesson Content</li><li class="toc-item" data-target="section-1">Activities</li><li class="toc-item" data-target="section-2">Vocabulary</li><li class="toc-item" data-target="section-3">Summary</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Зміст уроку | Lesson Content</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="warmup">warm-up | Розминка</h2>
+<h3 id="synonyms">Синоніми | Synonyms</h3>
+<p>В українській мові багато дієслів для опису мислення:</p>
 <p>Ukrainian has many verbs for describing thinking:</p>
 <ul>
 <li>Я <strong>думаю</strong>, що він правий.</li>
@@ -126,7 +159,10 @@
 <li>Я <strong>гадаю</strong>, він прийде.</li>
 <li>Мені <strong>здається</strong>, це добра ідея.</li>
 </ul>
-<p>Чи це одне й те саме? | Is it all the same?</p></div></div><div class="canvas-note"><h4>### Думати | To Think (General)</h4><div class="md-content"><p><strong>Думати</strong> — найзагальніше дієслово для процесу мислення.</p>
+<p>Чи це одне й те саме? | Is it all the same?</p>
+<h2 id="presentation">presentation | Презентація</h2>
+<h3 id="tothinkgeneral">Думати | To Think (General)</h3>
+<p><strong>Думати</strong> — найзагальніше дієслово для процесу мислення.</p>
 <table>
 <thead>
 <tr>
@@ -153,7 +189,9 @@
 </tr>
 </tbody>
 </table>
-<p><strong>Forms:</strong> думати (impf) / подумати (pf)</p></div></div><div class="canvas-note"><h4>Гадати | To Think, Suppose</h4><div class="md-content"><p><strong>Гадати</strong> — припускати, мати думку (часто невпевнено).</p>
+<p><strong>Forms:</strong> думати (impf) / подумати (pf)</p>
+<h3 id="tothinksuppose">Гадати | To Think, Suppose</h3>
+<p><strong>Гадати</strong> — припускати, мати думку (часто невпевнено).</p>
 <table>
 <thead>
 <tr>
@@ -181,7 +219,9 @@
 </tbody>
 </table>
 <p><strong>Note:</strong> Often implies less certainty than думати.</p>
-<p><strong>Forms:</strong> гадати (impf) / only imperfective commonly used</p></div></div><div class="canvas-note"><h4>Вважати | To Consider, Believe</h4><div class="md-content"><p><strong>Вважати</strong> — мати тверду думку, переконання.</p>
+<p><strong>Forms:</strong> гадати (impf) / only imperfective commonly used</p>
+<h3 id="toconsiderbelieve">Вважати | To Consider, Believe</h3>
+<p><strong>Вважати</strong> — мати тверду думку, переконання.</p>
 <table>
 <thead>
 <tr>
@@ -209,7 +249,9 @@
 </tbody>
 </table>
 <p><strong>Note:</strong> Stronger opinion than думати/гадати.</p>
-<p><strong>Forms:</strong> вважати (impf) / only imperfective commonly used</p></div></div><div class="canvas-note"><h4>Міркувати | To Ponder, Reflect</h4><div class="md-content"><p><strong>Міркувати</strong> — глибоко обдумувати, розмірковувати.</p>
+<p><strong>Forms:</strong> вважати (impf) / only imperfective commonly used</p>
+<h3 id="toponderreflect">Міркувати | To Ponder, Reflect</h3>
+<p><strong>Міркувати</strong> — глибоко обдумувати, розмірковувати.</p>
 <table>
 <thead>
 <tr>
@@ -237,7 +279,9 @@
 </tbody>
 </table>
 <p><strong>Note:</strong> Implies deeper, longer thinking process.</p>
-<p><strong>Forms:</strong> міркувати (impf) / only imperfective commonly used</p></div></div><div class="canvas-note"><h4>Здаватися | To Seem</h4><div class="md-content"><p><strong>Здаватися</strong> — суб'єктивне враження.</p>
+<p><strong>Forms:</strong> міркувати (impf) / only imperfective commonly used</p>
+<h3 id="toseem">Здаватися | To Seem</h3>
+<p><strong>Здаватися</strong> — суб'єктивне враження.</p>
 <table>
 <thead>
 <tr>
@@ -265,7 +309,9 @@
 </tbody>
 </table>
 <p><strong>Structure:</strong> Мені/тобі/йому здається, що…</p>
-<p><strong>Forms:</strong> здаватися (impf) / здатися (pf)</p></div></div><div class="canvas-note"><h4>Роздумувати | To Deliberate</h4><div class="md-content"><p><strong>Роздумувати</strong> — довго обмірковувати, вагатися.</p>
+<p><strong>Forms:</strong> здаватися (impf) / здатися (pf)</p>
+<h3 id="todeliberate">Роздумувати | To Deliberate</h3>
+<p><strong>Роздумувати</strong> — довго обмірковувати, вагатися.</p>
 <table>
 <thead>
 <tr>
@@ -287,7 +333,9 @@
 </tr>
 </tbody>
 </table>
-<p><strong>Forms:</strong> роздумувати (impf) / роздумати (pf) — rare</p></div></div><div class="canvas-note"><h4>Порівняння | Comparison Chart</h4><div class="md-content"><table>
+<p><strong>Forms:</strong> роздумувати (impf) / роздумати (pf) — rare</p>
+<h3 id="comparisonchart">Порівняння | Comparison Chart</h3>
+<table>
 <thead>
 <tr>
 <th>Verb</th>
@@ -328,7 +376,9 @@
 <td>Здається, дощ.</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Колокації | Collocations</h4><div class="md-content"><table>
+</table>
+<h3 id="collocations">Колокації | Collocations</h3>
+<table>
 <thead>
 <tr>
 <th>Verb</th>
@@ -357,7 +407,9 @@
 <td>мені здається, здається що</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Вирази | Expressions</h4><div class="md-content"><table>
+</table>
+<h3 id="expressions">Вирази | Expressions</h3>
+<table>
 <thead>
 <tr>
 <th>Ukrainian</th>
@@ -394,7 +446,10 @@
 <td>It seems to me…</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>### Choose the Right Verb</h4><div class="md-content"><ol>
+</table>
+<h2 id="practice">practice | Практика</h2>
+<h3 id="choosetherightverb">Choose the Right Verb</h3>
+<ol>
 <li><p>Я ___ (довго обмірковував) цю проблему.<br />
 → <strong>міркував над</strong></p></li>
 <li><p>___ (мені здається), що він правий.<br />
@@ -405,7 +460,9 @@
 → <strong>гадав</strong></p></li>
 <li><p>Про що ти ___ (process of thinking)?<br />
 → <strong>думаєш</strong></p></li>
-</ol></div></div><div class="canvas-note"><h4>Complete the Sentences</h4><div class="md-content"><ol>
+</ol>
+<h3 id="completethesentences">Complete the Sentences</h3>
+<ol>
 <li><p>Я ___, що він приїде завтра. (neutral opinion)<br />
 → <strong>думаю / гадаю</strong></p></li>
 <li><p>___, він не правий. (firm belief)<br />
@@ -416,7 +473,9 @@
 → <strong>Здається / Мені здається</strong></p></li>
 <li><p>Не ___, що це можливо. (didn't suppose)<br />
 → <strong>гадав</strong></p></li>
-</ol></div></div><div class="canvas-note"><h4>Translate Nuances</h4><div class="md-content"><ol>
+</ol>
+<h3 id="translatenuances">Translate Nuances</h3>
+<ol>
 <li><p>I think he's right. (neutral)<br />
 → <strong>Думаю, він правий.</strong></p></li>
 <li><p>I believe this is wrong. (firm)<br />
@@ -427,19 +486,256 @@
 → <strong>Мені здається, що…</strong></p></li>
 <li><p>I'm pondering this question. (deep)<br />
 → <strong>Я міркую над цим питанням.</strong></p></li>
-</ol></div></div><div class="canvas-note"><h4>### Express Your Opinion</h4><div class="md-content"><p>Use different verbs to express opinions on:</p>
+</ol>
+<h2 id="production">production | Продукція</h2>
+<h3 id="expressyouropinion">Express Your Opinion</h3>
+<p>Use different verbs to express opinions on:</p>
 <ol>
 <li><strong>Екологія:</strong> Я вважаю, що… / Мені здається…</li>
 <li><strong>Освіта:</strong> Думаю, що… / Гадаю…</li>
 <li><strong>Технології:</strong> Міркуючи над цим… / Я вважаю…</li>
-</ol></div></div><div class="canvas-note"><h4>Discuss a Topic</h4><div class="md-content"><p>Choose a topic and discuss using variety:</p>
+</ol>
+<h3 id="discussatopic">Discuss a Topic</h3>
+<p>Choose a topic and discuss using variety:</p>
 <ul>
 <li>Що ви <strong>думаєте</strong> про…?</li>
 <li>Я <strong>вважаю</strong>, що…</li>
 <li>Мені <strong>здається</strong>…</li>
 <li><strong>Гадаю</strong>, що…</li>
 <li><strong>Міркуючи</strong> над цим…</li>
-</ul></div></div></div>
+</ul>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Activities</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="quizthinkingverbs">quiz: Thinking Verbs</h2>
+<blockquote>
+  <p>Choose the verb with the right nuance.</p>
+</blockquote>
+<ol>
+<li>Тверде переконання:</li>
+</ol>
+<ul>
+<li>[x] вважати</li>
+<li>[ ] гадати</li>
+</ul>
+<blockquote>
+  <p>Strong opinion/belief.</p>
+</blockquote>
+<ol start="2">
+<li>Невпевнене припущення:</li>
+</ol>
+<ul>
+<li>[x] гадати</li>
+<li>[ ] вважати</li>
+</ul>
+<blockquote>
+  <p>Uncertain supposition.</p>
+</blockquote>
+<ol start="3">
+<li>Глибокий роздум:</li>
+</ol>
+<ul>
+<li>[x] міркувати</li>
+<li>[ ] думати</li>
+</ul>
+<blockquote>
+  <p>Deep pondering.</p>
+</blockquote>
+<ol start="4">
+<li>Суб'єктивне враження:</li>
+</ol>
+<ul>
+<li>[x] здаватися</li>
+<li>[ ] вважати</li>
+</ul>
+<blockquote>
+  <p>Subjective impression.</p>
+</blockquote>
+<ol start="5">
+<li>«Мені здається» means:</li>
+</ol>
+<ul>
+<li>[x] it seems to me</li>
+<li>[ ] I firmly believe</li>
+</ul>
+<blockquote>
+  <p>Subjective feeling.</p>
+</blockquote>
+<ol start="6">
+<li>Найзагальніше дієслово:</li>
+</ol>
+<ul>
+<li>[x] думати</li>
+<li>[ ] міркувати</li>
+</ul>
+<blockquote>
+  <p>Most general verb.</p>
+</blockquote>
+<h2 id="fillinopinionparagraph">fill-in: Opinion Paragraph</h2>
+<blockquote>
+  <p>Виразіть свою думку.</p>
+  <p>(1)<strong>_ (I think), що технології змінюють наше життя. (2)</strong>_ (I believe firmly), це позитивні зміни. Однак (3)<strong>_ (it seems to me), що ми занадто залежні від гаджетів. (4)</strong>_ (Pondering) над цим, (5)___ (I suppose), потрібен баланс.</p>
+</blockquote>
+<p><strong>Answers:</strong></p>
+<ol>
+<li>Думаю / Гадаю</li>
+<li>Вважаю</li>
+<li>мені здається</li>
+<li>Міркуючи</li>
+<li>гадаю</li>
+</ol>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Vocabulary</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Word</th>
+<th>IPA</th>
+<th>English</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>думати</td>
+<td>/ˈdumɑtɪ/</td>
+<td>to think</td>
+<td>impf, general</td>
+</tr>
+<tr>
+<td>гадати</td>
+<td>/ɦɑˈdɑtɪ/</td>
+<td>to suppose, think</td>
+<td>impf, uncertain</td>
+</tr>
+<tr>
+<td>вважати</td>
+<td>/vvɑˈʒɑtɪ/</td>
+<td>to consider, believe</td>
+<td>impf, firm</td>
+</tr>
+<tr>
+<td>міркувати</td>
+<td>/mʲirkuˈvɑtɪ/</td>
+<td>to ponder, reflect</td>
+<td>impf, deep</td>
+</tr>
+<tr>
+<td>здаватися</td>
+<td>/zdɑˈvɑtɪsʲɑ/</td>
+<td>to seem</td>
+<td>impf</td>
+</tr>
+<tr>
+<td>роздумувати</td>
+<td>/rozduˈmuvɑtɪ/</td>
+<td>to deliberate</td>
+<td>impf</td>
+</tr>
+<tr>
+<td>припускати</td>
+<td>/prɪpusˈkɑtɪ/</td>
+<td>to suppose, assume</td>
+<td>impf</td>
+</tr>
+<tr>
+<td>переконання</td>
+<td>/pɛrɛkoˈnɑnʲːɑ/</td>
+<td>belief, conviction</td>
+<td>n</td>
+</tr>
+<tr>
+<td>думка</td>
+<td>/ˈdumkɑ/</td>
+<td>thought, opinion</td>
+<td>f</td>
+</tr>
+<tr>
+<td>враження</td>
+<td>/vrɑˈʒɛnʲːɑ/</td>
+<td>impression</td>
+<td>n</td>
+</tr>
+<tr>
+<td>роздум</td>
+<td>/ˈrozdum/</td>
+<td>reflection, thought</td>
+<td>m</td>
+</tr>
+<tr>
+<td>помилятися</td>
+<td>/pomɪˈlʲɑtɪsʲɑ/</td>
+<td>to be mistaken</td>
+<td>impf</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Summary</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="thinkingverbskeydistinctions">Thinking Verbs: Key Distinctions</h2>
+<table>
+<thead>
+<tr>
+<th>Verb</th>
+<th>Use When</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>думати</td>
+<td>General thinking, neutral opinion</td>
+</tr>
+<tr>
+<td>гадати</td>
+<td>Uncertain, guessing, supposing</td>
+</tr>
+<tr>
+<td>вважати</td>
+<td>Strong belief, firm conviction</td>
+</tr>
+<tr>
+<td>міркувати</td>
+<td>Deep reflection, pondering</td>
+</tr>
+<tr>
+<td>здаватися</td>
+<td>Subjective impression</td>
+</tr>
+</tbody>
+</table>
+<h3 id="quickreference">Quick Reference</h3>
+<ul>
+<li><strong>Neutral:</strong> Я думаю, що…</li>
+<li><strong>Unsure:</strong> Я гадаю, що… / Мені здається…</li>
+<li><strong>Certain:</strong> Я вважаю, що…</li>
+<li><strong>Deep:</strong> Я міркую над…</li>
+</ul>
+<blockquote>
+  <p><strong>Key Takeaways</strong></p>
+  <ul>
+  <li>Different verbs show different certainty levels</li>
+  <li>вважати = strongest conviction</li>
+  <li>гадати/здаватися = least certain</li>
+  <li>міркувати = process, not result</li>
+  <li>Choose verb based on how sure you are</li>
+  </ul>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('quiz')">Start →</button></div>
     </section>
     
@@ -477,6 +773,10 @@
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

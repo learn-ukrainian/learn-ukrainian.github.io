@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,13 +136,31 @@
         <p style="color:var(--text-muted)">Mastering All Motion Verbs</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### The Complete System</h4><div class="md-content"><p>You now know:</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Lesson Content</li><li class="toc-item" data-target="section-1">Activities</li><li class="toc-item" data-target="section-2">Vocabulary</li><li class="toc-item" data-target="section-3">Summary</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Lesson Content</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="warmup">warm-up</h2>
+<h3 id="thecompletesystem">The Complete System</h3>
+<p>You now know:</p>
 <ul>
 <li><strong>8 motion verb pairs</strong> (uni/multi)</li>
 <li><strong>10 prefixes</strong> with directional meanings</li>
 <li><strong>Figurative expressions</strong> using motion verbs</li>
 </ul>
-<p>Time to put it all together!</p></div></div><div class="canvas-note"><h4>### Quick Reference: Motion Pairs</h4><div class="md-content"><table>
+<p>Time to put it all together!</p>
+<h2 id="presentation">presentation</h2>
+<h3 id="quickreferencemotionpairs">Quick Reference: Motion Pairs</h3>
+<table>
 <thead>
 <tr>
 <th>Uni (one way)</th>
@@ -174,7 +210,9 @@
 <td>to lead</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Quick Reference: Prefixes</h4><div class="md-content"><table>
+</table>
+<h3 id="quickreferenceprefixes">Quick Reference: Prefixes</h3>
+<table>
 <thead>
 <tr>
 <th>Prefix</th>
@@ -234,7 +272,9 @@
 <td>відійти (step away)</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Decision Tree: Which Verb?</h4><div class="md-content"><p><strong>Step 1: How is movement happening?</strong></p>
+</table>
+<h3 id="decisiontreewhichverb">Decision Tree: Which Verb?</h3>
+<p><strong>Step 1: How is movement happening?</strong></p>
 <ul>
 <li>On foot → іти/ходити family</li>
 <li>By vehicle → їхати/їздити family</li>
@@ -259,7 +299,9 @@
 <ul>
 <li>Completed action → Perfective (prefixed)</li>
 <li>Habitual/process → Imperfective</li>
-</ul></div></div><div class="canvas-note"><h4>Common Scenarios</h4><div class="md-content"><p><strong>1. Daily Commute:</strong></p>
+</ul>
+<h3 id="commonscenarios">Common Scenarios</h3>
+<p><strong>1. Daily Commute:</strong></p>
 <table>
 <thead>
 <tr>
@@ -354,7 +396,9 @@
 <td>об-</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Error Prevention: Common Mistakes</h4><div class="md-content"><p><strong>1. Confusing піти/прийти:</strong></p>
+</table>
+<h3 id="errorpreventioncommonmistakes">Error Prevention: Common Mistakes</h3>
+<p><strong>1. Confusing піти/прийти:</strong></p>
 <ul>
 <li>❌ Він прийшов на роботу. (He came to work) — correct if you're AT work</li>
 <li>✅ Він пішов на роботу. (He left for work) — correct if he left home</li>
@@ -373,19 +417,28 @@
 <ul>
 <li>❌ Він завжди приходить і прийде завтра. (Mixing aspects oddly)</li>
 <li>✅ Він завжди приходить. Він прийде завтра. (Consistent)</li>
-</ul></div></div><div class="canvas-note"><h4>### Scenario 1: Morning Routine</h4><div class="md-content"><p>Fill in with correct motion verb:</p>
+</ul>
+<h2 id="practice">practice</h2>
+<h3 id="scenario1morningroutine">Scenario 1: Morning Routine</h3>
+<p>Fill in with correct motion verb:</p>
 <blockquote>
   <p>Щоранку я ___ (get up: вставати/встати) о сьомій. Потім я ___ (go out: виходити/вийти) з дому о восьмій. Я ___ (go: ходити/йти) до метро пішки. Я ___ (ride: їздити/їхати) на роботу метро. Я ___ (arrive: приходити/прийти) в офіс о дев'ятій.</p>
 </blockquote>
-<p><strong>Answers (habitual context):</strong> встаю, виходжу, ходжу/йду, їжджу, приходжу</p></div></div><div class="canvas-note"><h4>Scenario 2: Yesterday's Journey</h4><div class="md-content"><p>Past tense, completed events:</p>
+<p><strong>Answers (habitual context):</strong> встаю, виходжу, ходжу/йду, їжджу, приходжу</p>
+<h3 id="scenario2yesterdaysjourney">Scenario 2: Yesterday's Journey</h3>
+<p>Past tense, completed events:</p>
 <blockquote>
   <p>Учора я ___ (leave: піти) з дому о сьомій. Я ___ (cross: перейти) вулицю і ___ (enter: увійти) у метро. Я ___ (ride: їхати) двадцять хвилин. Потім я ___ (exit: вийти) і ___ (walk: йти) до офісу. Я ___ (arrive: прийти) вчасно.</p>
 </blockquote>
-<p><strong>Answers:</strong> пішов, перейшов, увійшов, їхав, вийшов, йшов, прийшов</p></div></div><div class="canvas-note"><h4>Scenario 3: Giving Directions</h4><div class="md-content"><p>Imperative forms:</p>
+<p><strong>Answers:</strong> пішов, перейшов, увійшов, їхав, вийшов, йшов, прийшов</p>
+<h3 id="scenario3givingdirections">Scenario 3: Giving Directions</h3>
+<p>Imperative forms:</p>
 <blockquote>
   <p>___ (Go: йти) прямо до перехрестя. Там ___ (cross: перейти) дорогу. Потім ___ (turn: повернути) наліво і ___ (go: пройти) до кінця вулиці. ___ (Enter: увійти) в будинок номер 5.</p>
 </blockquote>
-<p><strong>Answers:</strong> Йдіть, перейдіть, поверніть, пройдіть, увійдіть</p></div></div><div class="canvas-note"><h4>Scenario 4: Prefix Selection</h4><div class="md-content"><p>Choose the correct prefix:</p>
+<p><strong>Answers:</strong> Йдіть, перейдіть, поверніть, пройдіть, увійдіть</p>
+<h3 id="scenario4prefixselection">Scenario 4: Prefix Selection</h3>
+<p>Choose the correct prefix:</p>
 <ol>
 <li>Він ___ (при/по)їхав з Києва. → <strong>приїхав</strong> (arrived from)</li>
 <li>Вона ___ (ви/в)йшла з дому. → <strong>вийшла</strong> (went out)</li>
@@ -393,7 +446,9 @@
 <li>Вони ___ (об/від)ійшли будинок. → <strong>обійшли</strong> (went around)</li>
 <li>Гості ___ (роз/за)йшлися. → <strong>розійшлися</strong> (dispersed)</li>
 <li>___ (За/При)йдіть до мене завтра! → <strong>Зайдіть</strong> (stop by)</li>
-</ol></div></div><div class="canvas-note"><h4>Scenario 5: Figurative vs Literal</h4><div class="md-content"><p>Choose literal (L) or figurative (F):</p>
+</ol>
+<h3 id="scenario5figurativevsliteral">Scenario 5: Figurative vs Literal</h3>
+<p>Choose literal (L) or figurative (F):</p>
 <ol>
 <li>Він пройшов курс. → <strong>F</strong> (took a course)</li>
 <li>Він пройшов повз будинок. → <strong>L</strong> (walked past)</li>
@@ -401,7 +456,9 @@
 <li>Він виходить з кімнати. → <strong>L</strong> (going out)</li>
 <li>До нього не доходить. → <strong>F</strong> (doesn't understand)</li>
 <li>Він дійшов до магазину. → <strong>L</strong> (reached the store)</li>
-</ol></div></div><div class="canvas-note"><h4>Scenario 6: Translation Challenge</h4><div class="md-content"><p>Translate to Ukrainian:</p>
+</ol>
+<h3 id="scenario6translationchallenge">Scenario 6: Translation Challenge</h3>
+<p>Translate to Ukrainian:</p>
 <ol>
 <li>I walk to work every day. → <strong>Я ходжу на роботу пішки щодня.</strong></li>
 <li>She came to visit me. → <strong>Вона прийшла до мене в гості.</strong></li>
@@ -409,18 +466,272 @@
 <li>Let's get down to business. → <strong>Давайте перейдемо до справи.</strong></li>
 <li>He dropped by the store. → <strong>Він зайшов до магазину.</strong></li>
 <li>The guests scattered. → <strong>Гості розійшлися.</strong></li>
-</ol></div></div><div class="canvas-note"><h4>### Story Telling: My Journey</h4><div class="md-content"><p>Create a narrative using at least 10 motion verbs:</p>
+</ol>
+<h2 id="production">production</h2>
+<h3 id="storytellingmyjourney">Story Telling: My Journey</h3>
+<p>Create a narrative using at least 10 motion verbs:</p>
 <p><strong>Example:</strong><br />
-Минулого тижня я <strong>їздив</strong> до Одеси. Вранці я <strong>вийшов</strong> з дому і <strong>поїхав</strong> на вокзал. Поїзд <strong>відійшов</strong> о дев'ятій. Ми <strong>проїхали</strong> через багато міст. О третій я <strong>приїхав</strong> до Одеси. Я <strong>вийшов</strong> з поїзда і <strong>пішов</strong> до готелю. По дорозі я <strong>зайшов</strong> у кав'ярню. Увечері я <strong>ходив</strong> по місту і <strong>обійшов</strong> весь центр.</p></div></div><div class="canvas-note"><h4>Role Play: Tourist and Local</h4><div class="md-content"><p><strong>Tourist:</strong> Asks for directions<br />
+Минулого тижня я <strong>їздив</strong> до Одеси. Вранці я <strong>вийшов</strong> з дому і <strong>поїхав</strong> на вокзал. Поїзд <strong>відійшов</strong> о дев'ятій. Ми <strong>проїхали</strong> через багато міст. О третій я <strong>приїхав</strong> до Одеси. Я <strong>вийшов</strong> з поїзда і <strong>пішов</strong> до готелю. По дорозі я <strong>зайшов</strong> у кав'ярню. Увечері я <strong>ходив</strong> по місту і <strong>обійшов</strong> весь центр.</p>
+<h3 id="roleplaytouristandlocal">Role Play: Tourist and Local</h3>
+<p><strong>Tourist:</strong> Asks for directions<br />
 <strong>Local:</strong> Gives directions using motion verbs</p>
-<p>Use: пройти, перейти, зайти, обійти, увійти, повернути</p></div></div></div>
+<p>Use: пройти, перейти, зайти, обійти, увійти, повернути</p>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Activities</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="quizmotionmasterytest">quiz: Motion Mastery Test</h2>
+<blockquote>
+  <p>Choose the best option.</p>
+</blockquote>
+<ol>
+<li>Я ___ на роботу щодня.</li>
+</ol>
+<ul>
+<li>[ ] йду</li>
+<li>[x] ходжу</li>
+</ul>
+<blockquote>
+  <p>Habitual = multidirectional</p>
+</blockquote>
+<ol start="2">
+<li>Учора вона ___ до Львова.</li>
+</ol>
+<ul>
+<li>[ ] їхала</li>
+<li>[x] їздила</li>
+</ul>
+<blockquote>
+  <p>Round trip past = multidirectional</p>
+</blockquote>
+<ol start="3">
+<li>___ вулицю на світлофорі!</li>
+</ol>
+<ul>
+<li>[x] Перейдіть</li>
+<li>[ ] Пройдіть</li>
+</ul>
+<blockquote>
+  <p>Cross = пере-</p>
+</blockquote>
+<ol start="4">
+<li>Гості ___ о півночі.</li>
+</ol>
+<ul>
+<li>[x] розійшлися</li>
+<li>[ ] зайшлися</li>
+</ul>
+<blockquote>
+  <p>Dispersed = роз-</p>
+</blockquote>
+<ol start="5">
+<li>Він ___ до магазину за хлібом.</li>
+</ol>
+<ul>
+<li>[x] зайшов</li>
+<li>[ ] прийшов</li>
+</ul>
+<blockquote>
+  <p>Stopped by briefly = за-</p>
+</blockquote>
+<ol start="6">
+<li>Виходить, що ми ___!</li>
+</ol>
+<ul>
+<li>[x] помилилися</li>
+<li>[ ] пішли</li>
+</ul>
+<blockquote>
+  <p>It turns out = figurative</p>
+</blockquote>
+<h2 id="fillincompletethejourney">fill-in: Complete the Journey</h2>
+<blockquote>
+  <p>Вчора я ___ (пішов/ходив) у центр міста. Спочатку я ___ (перейшов/пройшов) через парк, потім ___ (перейшов/пройшов) головну вулицю. Я ___ (зайшов/прийшов) до музею і ___ (пробув/побув) там дві години. Потім я ___ (вийшов/пішов) і ___ (зайшов/прийшов) до кав'ярні. Увечері я ___ (повернувся/прийшов) додому.</p>
+</blockquote>
+<p><strong>Answers:</strong> пішов, пройшов, перейшов, зайшов, пробув, вийшов, зайшов, повернувся</p>
+<h2 id="matchupcompletereview">match-up: Complete Review</h2>
+<table>
+<thead>
+<tr>
+<th>Verb</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>приходити</td>
+<td>arrive (habitual)</td>
+</tr>
+<tr>
+<td>виходити</td>
+<td>exit (habitual)</td>
+</tr>
+<tr>
+<td>переходити</td>
+<td>cross (habitual)</td>
+</tr>
+<tr>
+<td>проходити</td>
+<td>pass through</td>
+</tr>
+<tr>
+<td>заходити</td>
+<td>stop by</td>
+</tr>
+<tr>
+<td>обходити</td>
+<td>go around</td>
+</tr>
+<tr>
+<td>розходитися</td>
+<td>disperse</td>
+</tr>
+<tr>
+<td>відходити</td>
+<td>depart</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Vocabulary</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Word</th>
+<th>IPA</th>
+<th>English</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>односпрямований</td>
+<td>/ˌodnospʲrʲɑmoˈvɑnɪj/</td>
+<td>unidirectional</td>
+<td>grammar term</td>
+</tr>
+<tr>
+<td>різноспрямований</td>
+<td>/ˌrʲiznospʲrʲɑmoˈvɑnɪj/</td>
+<td>multidirectional</td>
+<td>grammar term</td>
+</tr>
+<tr>
+<td>напрямок</td>
+<td>/nɑˈprʲɑmok/</td>
+<td>direction</td>
+<td>-</td>
+</tr>
+<tr>
+<td>туди</td>
+<td>/tuˈdɪ/</td>
+<td>there (direction)</td>
+<td>-</td>
+</tr>
+<tr>
+<td>сюди</td>
+<td>/sʲuˈdɪ/</td>
+<td>here (direction)</td>
+<td>-</td>
+</tr>
+<tr>
+<td>звідти</td>
+<td>/zvʲidˈtɪ/</td>
+<td>from there</td>
+<td>-</td>
+</tr>
+<tr>
+<td>звідси</td>
+<td>/zvʲidˈsɪ/</td>
+<td>from here</td>
+<td>-</td>
+</tr>
+<tr>
+<td>повз</td>
+<td>/povz/</td>
+<td>past, by</td>
+<td>preposition</td>
+</tr>
+<tr>
+<td>через</td>
+<td>/ˈt͡ʃɛrɛz/</td>
+<td>through, across</td>
+<td>preposition</td>
+</tr>
+<tr>
+<td>навколо</td>
+<td>/nɑvˈkolo/</td>
+<td>around</td>
+<td>preposition</td>
+</tr>
+<tr>
+<td>вздовж</td>
+<td>/vzdovʒ/</td>
+<td>along</td>
+<td>preposition</td>
+</tr>
+<tr>
+<td>назустріч</td>
+<td>/nɑˈzustrʲit͡ʃ/</td>
+<td>towards, to meet</td>
+<td>preposition</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Summary</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="motionverbsystemcomplete">Motion Verb System Complete</h2>
+<h3 id="8basepairs">8 Base Pairs</h3>
+<p>іти/ходити, їхати/їздити, бігти/бігати, летіти/літати, плисти/плавати, нести/носити, везти/возити, вести/водити</p>
+<h3 id="10prefixes">10 Prefixes</h3>
+<p>при-, в-/у-, ви-, по-, за-, пере-, про-, об-, роз-, від-</p>
+<h3 id="keypatterns">Key Patterns</h3>
+<ol>
+<li><strong>Uni</strong> = one direction, now</li>
+<li><strong>Multi</strong> = round trip, habitual, ability</li>
+<li><strong>Prefix</strong> = direction + perfectivizes</li>
+<li><strong>Figurative</strong> = abstract meanings</li>
+</ol>
+<h2 id="whatyoucannowexpress">What You Can Now Express</h2>
+<ul>
+<li>Daily routines and commutes</li>
+<li>Past trips and journeys</li>
+<li>Giving directions</li>
+<li>Abstract concepts (conclusions, understanding)</li>
+<li>Complex narratives with movement</li>
+</ul>
+<blockquote>
+  <p><strong>Key Takeaways</strong></p>
+  <ul>
+  <li>Motion verbs are a complete system — learn it as a whole</li>
+  <li>Prefix choice depends on direction of movement</li>
+  <li>Uni vs multi depends on whether trip is one-way or habitual</li>
+  <li>Figurative uses make your Ukrainian sound native</li>
+  <li>Practice in real contexts to build fluency</li>
+  </ul>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('match')">Start →</button></div>
     </section>
     <section id="match" class="section"><div class="card"><h3>Complete Review</h3>
       <div class="score-display"><span class="score"><span id="match-score">0</span>/8</span></div>
       <div class="match-container" id="match-container"><svg class="match-lines" id="match-lines"></svg>
         <div class="match-column" id="match-left"><div class="match-item" data-pair="0">приходити</div><div class="match-item" data-pair="1">виходити</div><div class="match-item" data-pair="2">переходити</div><div class="match-item" data-pair="3">проходити</div><div class="match-item" data-pair="4">заходити</div><div class="match-item" data-pair="5">обходити</div><div class="match-item" data-pair="6">розходитися</div><div class="match-item" data-pair="7">відходити</div></div>
-        <div class="match-column" id="match-right"><div class="match-item" data-pair="5">go around</div><div class="match-item" data-pair="0">arrive (habitual)</div><div class="match-item" data-pair="1">exit (habitual)</div><div class="match-item" data-pair="3">pass through</div><div class="match-item" data-pair="4">stop by</div><div class="match-item" data-pair="7">depart</div><div class="match-item" data-pair="2">cross (habitual)</div><div class="match-item" data-pair="6">disperse</div></div>
+        <div class="match-column" id="match-right"><div class="match-item" data-pair="2">cross (habitual)</div><div class="match-item" data-pair="6">disperse</div><div class="match-item" data-pair="0">arrive (habitual)</div><div class="match-item" data-pair="1">exit (habitual)</div><div class="match-item" data-pair="7">depart</div><div class="match-item" data-pair="4">stop by</div><div class="match-item" data-pair="5">go around</div><div class="match-item" data-pair="3">pass through</div></div>
       </div>
       <div class="completion-message" id="match-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetMatch()">Reset</button><button class="btn btn-primary" onclick="showSection('quiz')">Next →</button></div>
@@ -459,6 +770,10 @@
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

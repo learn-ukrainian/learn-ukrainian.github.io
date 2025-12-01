@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,14 +136,640 @@
         <p style="color:var(--text-muted)">Україна під Литвою</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>Уявіть таку ситуацію.</h4><div class="md-content"><p>Ви — литовський князь XIV століття. Ваша держава величезна — від Балтійського моря до Чорного. Ви щойно приєднали Київ, Волинь, Поділля. Вам потрібна мова для офіційних документів, законів, дипломатії.</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Зміст уроку</li><li class="toc-item" data-target="section-1">Вправи</li><li class="toc-item" data-target="section-2">Словник</li><li class="toc-item" data-target="section-3">Підсумок</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Зміст уроку</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Вступ: Коли українська була державною… в Литві</h2>
+<p>Уявіть таку ситуацію.</p>
+<p>Ви — литовський князь XIV століття. Ваша держава величезна — від Балтійського моря до Чорного. Ви щойно приєднали Київ, Волинь, Поділля. Вам потрібна мова для офіційних документів, законів, дипломатії.</p>
 <p>Яку мову ви оберете?</p>
 <p>Литовську? Ні. Литовська мова того часу не мала писемності. Латину? Можливо — це мова західної дипломатії. Але більшість ваших нових підданих її не розуміє.</p>
 <p>Ви обираєте <em>руську</em>. Мову Києва. Мову більшості населення вашої держави. Мову з багатою писемною традицією, літописами, законами.</p>
 <p>І це — не вигадка. Це історичний факт.</p>
 <p>Протягом майже 300 років — з XIV до XVII століття — офіційною мовою Великого князівства Литовського була <em>руська</em> мова. Предок сучасної української та білоруської. Закони писалися руською. Суди проводилися руською. Дипломатичні листи — руською.</p>
 <p>Литовці не просто «терпіли» українську культуру. Вони <em>прийняли</em> її як свою.</p>
-<p>Це унікальний приклад у європейській історії. І це — частина <em>нашої</em> історії.</p></div></div></div>
+<p>Це унікальний приклад у європейській історії. І це — частина <em>нашої</em> історії.</p>
+<hr />
+<h2 id="-1">Розминка: Розвійте міфи</h2>
+<table>
+<thead>
+<tr>
+<th>Твердження</th>
+<th>Правда / Міф</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Велике князівство Литовське = сучасна Литва</td>
+<td>___</td>
+</tr>
+<tr>
+<td>Литовці насаджували свою мову українцям</td>
+<td>___</td>
+</tr>
+<tr>
+<td>Київ був під татарами до XV століття</td>
+<td>___</td>
+</tr>
+<tr>
+<td>Литовські закони написані литовською</td>
+<td>___</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Відповіді:</strong></p>
+<ul>
+<li>Литовське = сучасна Литва? <strong>Міф.</strong> Це була багатонаціональна імперія, де литовці були меншістю.</li>
+<li>Литовці насаджували мову? <strong>Міф.</strong> Вони прийняли руську як офіційну.</li>
+<li>Київ під татарами до XV ст.? <strong>Міф.</strong> Литва звільнила Київ у 1362 році.</li>
+<li>Закони литовською? <strong>Міф.</strong> Литовські статути написані руською.</li>
+</ul>
+<hr />
+<h2 id="1">Частина 1: Що таке Велике князівство Литовське?</h2>
+<p>Почнемо з базового — бо тут багато плутанини.</p>
+<h3 id="-2">Не «сучасна Литва»</h3>
+<p>Коли ми говоримо «Велике князівство Литовське» (ВКЛ), це <em>не</em> сучасна Литовська Республіка. Це зовсім інша держава.</p>
+<p>Уявіть величезну територію — від Балтики до Чорного моря. Сучасна Литва, Білорусь, більша частина України, частина Росії, частина Польщі. Це — ВКЛ на піку могутності.</p>
+<table>
+<thead>
+<tr>
+<th>Сучасна країна</th>
+<th>Частина ВКЛ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Литва</td>
+<td>Так (ядро)</td>
+</tr>
+<tr>
+<td>Білорусь</td>
+<td>Так (майже вся)</td>
+</tr>
+<tr>
+<td>Україна</td>
+<td>Так (центр, північ, захід)</td>
+</tr>
+<tr>
+<td>Росія</td>
+<td>Частково (Смоленськ та ін.)</td>
+</tr>
+<tr>
+<td>Польща</td>
+<td>Частково (Підляшшя)</td>
+</tr>
+<tr>
+<td>Латвія</td>
+<td>Частково</td>
+</tr>
+</tbody>
+</table>
+<h3 id="-3">Парадокс: литовці — меншість</h3>
+<p>Ось найцікавіше: у Великому князівстві Литовському <em>литовці</em> становили меншість населення!</p>
+<p>За різними оцінками, етнічні литовці — 10-20% населення ВКЛ. Решта — русини (предки українців та білорусів), а також поляки, євреї, татари.</p>
+<p>Тому литовські князі й обрали руську мову. Не тому, що вони такі «добрі». А тому, що це було <em>практично</em>. Більшість підданих розуміла руську. Руська мала писемність. Руська мала правову традицію («Руська правда» Ярослава Мудрого).</p>
+<hr />
+<blockquote>
+  <p><strong>Чи знали ви?</strong></p>
+  <p>Литовська мова в XIV-XV століттях <em>не мала власної писемності</em>! Перші книги литовською з'явилися лише в XVI столітті — і то під впливом Реформації.</p>
+  <p>Тобто литовці <em>не могли</em> використовувати свою мову для офіційних документів — навіть якби хотіли. У них просто не було абетки та писемної традиції.</p>
+  <p>А руська мова мала все це з X століття — завдяки Київській Русі.</p>
+</blockquote>
+<hr />
+<h2 id="2">Частина 2: Як Україна стала литовською</h2>
+<h3 id="-4">Монголи йдуть — Литва приходить</h3>
+<p>Після падіння Києва в 1240 році українські землі опинилися в складній ситуації. Монголи контролювали степ, але їхня влада на лісистій півночі та заході була слабкою.</p>
+<p>Литовські князі скористалися цим. Вони почали поступово розширюватися на схід.</p>
+<h3 id="1362">Битва на Синіх Водах (1362) — день визволення</h3>
+<p>Ключовий момент — 1362 рік. Битва на Синіх Водах (річка на Поділлі).</p>
+<p>Литовський князь Ольгерд розбив татарське військо. Це була перша <em>вирішальна</em> перемога над татарами після монгольської навали. Вона відкрила шлях до українських земель.</p>
+<p>Результат:</p>
+<ul>
+<li><strong>Київ</strong> — під Литвою</li>
+<li><strong>Поділля</strong> — під Литвою</li>
+<li><strong>Волинь</strong> — під Литвою</li>
+</ul>
+<p>Українці отримали нових правителів — але звільнилися від татарського ярма.</p>
+<hr />
+<blockquote>
+  <p><strong>Міф vs Факт</strong></p>
+  <p>❌ <strong>Міф:</strong> «Куликовська битва 1380 року — перша перемога над татарами. Москва звільнила Русь.»</p>
+  <p>✅ <strong>Факт:</strong> Битва на Синіх Водах відбулася на <em>18 років раніше</em> — у 1362 році. І це була литовська (!) перемога. Саме Литва, а не Москва, звільнила більшу частину українських земель від татар.</p>
+  <p>Куликовська битва 1380 року — важлива, але вона <em>не</em> звільнила Русь. Через два роки татари знову спалили Москву. Московія залишалася під татарською владою ще століття.</p>
+</blockquote>
+<hr />
+<h3 id="-5">Хронологія приєднання</h3>
+<table>
+<thead>
+<tr>
+<th>Рік</th>
+<th>Територія</th>
+<th>Як</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1340-ві</td>
+<td>Волинь</td>
+<td>Спадок, договір</td>
+</tr>
+<tr>
+<td>1362</td>
+<td>Київ, Поділля</td>
+<td>Перемога над татарами</td>
+</tr>
+<tr>
+<td>1363</td>
+<td>Чернігівщина</td>
+<td>Приєднання</td>
+</tr>
+<tr>
+<td>XV ст.</td>
+<td>Закріплення</td>
+<td>Литва контролює центральну Україну</td>
+</tr>
+</tbody>
+</table>
+<h2 id="3">Частина 3: «Старого не рушити» — литовська політика</h2>
+<h3 id="-6">Принцип автономії</h3>
+<p>Литовці не були завойовниками в класичному сенсі. Вони дотримувалися принципу:</p>
+<p><em>«Старого не рушити, нового не вводити.»</em></p>
+<p>Що це означало?</p>
+<ul>
+<li><strong>Місцеві закони</strong> — зберігаються</li>
+<li><strong>Місцеві еліти</strong> — залишаються при владі</li>
+<li><strong>Релігія</strong> — без примусу (православ'я залишається)</li>
+<li><strong>Мова</strong> — руська стає офіційною</li>
+<li><strong>Звичаї</strong> — не змінюються</li>
+</ul>
+<p>Фактично, українські землі отримали <em>автономію</em> в складі ВКЛ. Київ мав свого князя (литовської династії, але правив за руськими законами). Волинь, Поділля — свої структури.</p>
+<h3 id="-7">Чому литовці були такими «м'якими»?</h3>
+<p>Не через доброту. Через <em>практичність</em>.</p>
+<p>По-перше, литовці були <em>чисельно меншими</em>. Вони не могли силою контролювати величезні території. Їм потрібна була співпраця місцевих еліт.</p>
+<p>По-друге, руська культура була <em>розвиненішою</em>. Литовці не мали писемності, розвиненого права, міської культури. Русини — мали. Литовці <em>переймали</em> руську культуру, а не нав'язували свою.</p>
+<p>По-третє, православ'я було <em>сильним</em>. Примушувати мільйони православних переходити в іншу віру — це рецепт повстання. Литовці це розуміли.</p>
+<hr />
+<blockquote>
+  <p><strong>Чи знали ви?</strong></p>
+  <p>Багато литовських князів <em>приймали православ'я</em>! Ольгерд, який визволив Київ, помер православним і похований у православному монастирі. Його сини правили українськими землями як православні князі.</p>
+  <p>Парадокс: литовські правителі України були більш «руськими» за культурою, ніж «литовськими». Вони говорили руською, сповідували православ'я, одружувалися з руськими княжнами.</p>
+</blockquote>
+<hr />
+<h2 id="4">Частина 4: Руська мова — державна мова Литви</h2>
+<p>Це найважливіший факт цього уроку. Настільки важливий, що його варто повторити:</p>
+<p><strong>Руська мова була офіційною мовою Великого князівства Литовського.</strong></p>
+<h3 id="-8">Литовські статути</h3>
+<p>Литовські статути — це зводи законів ВКЛ. Найважливіші правові документи держави. І вони написані <em>руською мовою</em>.</p>
+<table>
+<thead>
+<tr>
+<th>Статут</th>
+<th>Рік</th>
+<th>Мова</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Перший</td>
+<td>1529</td>
+<td>Руська</td>
+</tr>
+<tr>
+<td>Другий</td>
+<td>1566</td>
+<td>Руська</td>
+</tr>
+<tr>
+<td>Третій</td>
+<td>1588</td>
+<td>Руська</td>
+</tr>
+</tbody>
+</table>
+<p>Зверніть увагу: навіть у 1588 році — майже через 20 років після Люблінської унії з Польщею — закони все ще писалися руською!</p>
+<h3 id="-9">Приклад тексту</h3>
+<p>Ось як виглядає текст Литовського статуту 1588 року:</p>
+<p><em>«Мы, Жикгимонтъ третій… чинимъ відомо симъ нашимъ листомъ, каждому стану тутошнего панства, кому будеть потреба того відати…»</em></p>
+<p>Переклад: «Ми, Сигізмунд третій… оголошуємо цим нашим листом, кожному стану цієї держави, кому буде потрібно це знати…»</p>
+<p>Бачите? Це майже сучасна українська! Різниця — мінімальна. Ви можете прочитати текст XVI століття без словника.</p>
+<hr />
+<blockquote>
+  <p><strong>Чи знали ви?</strong></p>
+  <p>Литовський статут 1588 року вважається одним із найпрогресивніших правових документів свого часу. Він гарантував:</p>
+  <ul>
+  <li><strong>Презумпцію невинуватості</strong> (людина невинна, поки не доведено інакше)</li>
+  <li><strong>Право на захист</strong> (кожен обвинувачений має право на адвоката)</li>
+  <li><strong>Заборону подвійного покарання</strong> (за один злочин — одне покарання)</li>
+  </ul>
+  <p>Ці принципи з'явилися в Європі набагато пізніше! І вони були записані <em>руською мовою</em>.</p>
+</blockquote>
+<hr />
+<h3 id="-10">Де використовували руську?</h3>
+<table>
+<thead>
+<tr>
+<th>Сфера</th>
+<th>Мова</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Закони</td>
+<td>Руська</td>
+</tr>
+<tr>
+<td>Суди</td>
+<td>Руська</td>
+</tr>
+<tr>
+<td>Адміністрація</td>
+<td>Руська</td>
+</tr>
+<tr>
+<td>Дипломатія</td>
+<td>Руська (із сусідами на сході)</td>
+</tr>
+<tr>
+<td>Церква</td>
+<td>Церковнослов'янська</td>
+</tr>
+<tr>
+<td>Освіта</td>
+<td>Руська / Церковнослов'янська</td>
+</tr>
+</tbody>
+</table>
+<p>Литовська мова використовувалася в усному спілкуванні литовців між собою. Але для <em>офіційних</em> цілей — тільки руська.</p>
+<h2 id="5">Частина 5: Унії — шлях до Польщі</h2>
+<p>Все змінилося через унії з Польщею.</p>
+<h3 id="1385">Кревська унія (1385)</h3>
+<p>У 1385 році литовський князь Ягайло одружився з польською королевою Ядвігою. Це було початком союзу Литви та Польщі.</p>
+<p>Умови:</p>
+<ul>
+<li>Ягайло стає королем Польщі</li>
+<li>Литва приймає <em>католицизм</em></li>
+<li>Литва та Польща діють разом проти Тевтонського ордену</li>
+</ul>
+<p>Що це означало для українців? Поки що — нічого особливого. Литва залишалася окремою державою. Автономія українських земель зберігалася.</p>
+<h3 id="1413">Городельська унія (1413)</h3>
+<p>А ось це вже гірше.</p>
+<p>Городельська унія надала привілеї <em>католицьким</em> шляхтичам. Православні (тобто більшість українців) отримали менше прав.</p>
+<p>Це був перший крок до дискримінації за релігійною ознакою.</p>
+<h3 id="1569">Люблінська унія (1569)</h3>
+<p>Це — катастрофа.</p>
+<p>У 1569 році Литва та Польща об'єдналися в єдину державу — Річ Посполиту. Українські землі <em>безпосередньо</em> перейшли під польську владу.</p>
+<table>
+<thead>
+<tr>
+<th>До 1569</th>
+<th>Після 1569</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Автономія в Литві</td>
+<td>Пряме польське правління</td>
+</tr>
+<tr>
+<td>Руська мова офіційна</td>
+<td>Поступова полонізація</td>
+</tr>
+<tr>
+<td>Православ'я захищене</td>
+<td>Тиск католицизму</td>
+</tr>
+<tr>
+<td>Руська шляхта = литовська</td>
+<td>Українці — «другий сорт»</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<blockquote>
+  <p><strong>Міф vs Факт</strong></p>
+  <p>❌ <strong>Міф:</strong> «Литовський період — це просто "проміжок" між Руссю та Польщею. Нічого важливого не сталося.»</p>
+  <p>✅ <strong>Факт:</strong> Литовський період — це 200+ років, коли українська (руська) мова була <em>державною</em>. Коли українські еліти зберігали владу та культуру. Коли православ'я було захищене.</p>
+  <p>Це був період <em>збереження</em> української ідентичності — не «порожнеча».</p>
+</blockquote>
+<hr />
+<h2 id="-11">Практика</h2>
+<h3 id="1-1">Завдання 1: Заповніть пропуски</h3>
+<ol>
+<li><p>Офіційною мовою ВКЛ була ___ мова.<br />
+→ <strong>руська</strong></p></li>
+<li><p>Битва на Синіх Водах відбулася у ___ році.<br />
+→ <strong>1362</strong></p></li>
+<li><p>Принцип управління: «Старого не ___, нового не ___».<br />
+→ <strong>рушити, вводити</strong></p></li>
+<li><p>Литовські статути написані ___ мовою.<br />
+→ <strong>руською</strong></p></li>
+<li><p>Люблінська унія — це ___ рік.<br />
+→ <strong>1569</strong></p></li>
+</ol>
+<h3 id="2-1">Завдання 2: Хронологія</h3>
+<p>Розставте в правильному порядку:</p>
+<ol>
+<li>Люблінська унія</li>
+<li>Битва на Синіх Водах</li>
+<li>Литовський статут 1588</li>
+<li>Кревська унія</li>
+</ol>
+<p><strong>Відповідь:</strong> 2 (1362) → 4 (1385) → 1 (1569) → 3 (1588)</p>
+<h3 id="3-1">Завдання 3: Перекладіть</h3>
+<ol>
+<li><p>The Ruthenian language was official in the Grand Duchy of Lithuania.<br />
+→ <strong>Руська мова була офіційною у Великому князівстві Литовському.</strong></p></li>
+<li><p>Lithuanian princes preserved local customs.<br />
+→ <strong>Литовські князі зберігали місцеві звичаї.</strong></p></li>
+<li><p>The Lithuanian Statutes were written in Ruthenian.<br />
+→ <strong>Литовські статути написані руською мовою.</strong></p></li>
+</ol>
+<hr />
+<h2 id="-12">Продукція</h2>
+<h3 id="-13">Обговоріть</h3>
+<ol>
+<li><p>Чому литовці обрали руську мову, а не литовську?</p></li>
+<li><p>Чи був литовський період «золотою добою» для української культури?</p></li>
+<li><p>Як Люблінська унія змінила становище українців?</p></li>
+</ol>
+<h3 id="150200">Напишіть (150-200 слів)</h3>
+<p>Порівняйте статус українців у Литві та після Люблінської унії. Що змінилося? Що залишилося?</p>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Вправи</h3>
+          <span class="section-type practice">practice</span>
+        </div>
+        <div class="section-body md-content"><h2 id="quiz">quiz: Україна під Литвою</h2>
+<blockquote>
+  <p>Виберіть правильну відповідь.</p>
+</blockquote>
+<ol>
+<li>Офіційна мова Великого князівства Литовського:</li>
+</ol>
+<ul>
+<li>[ ] литовська</li>
+<li>[x] руська</li>
+<li>[ ] латина</li>
+</ul>
+<blockquote>
+  <p>Литовська не мала писемності!</p>
+</blockquote>
+<ol start="2">
+<li>Битва на Синіх Водах (1362):</li>
+</ol>
+<ul>
+<li>[x] литовська перемога над татарами</li>
+<li>[ ] московська перемога над татарами</li>
+<li>[ ] польська перемога</li>
+</ul>
+<blockquote>
+  <p>Ольгерд звільнив українські землі.</p>
+</blockquote>
+<ol start="3">
+<li>Литовські статути написані:</li>
+</ol>
+<ul>
+<li>[ ] литовською</li>
+<li>[x] руською</li>
+<li>[ ] польською</li>
+</ul>
+<blockquote>
+  <p>Усі три статути (1529, 1566, 1588).</p>
+</blockquote>
+<ol start="4">
+<li>Принцип «Старого не рушити» означав:</li>
+</ol>
+<ul>
+<li>[x] збереження місцевих звичаїв</li>
+<li>[ ] заборону будь-яких змін</li>
+<li>[ ] консерватизм</li>
+</ul>
+<blockquote>
+  <p>Автономія для українських земель.</p>
+</blockquote>
+<ol start="5">
+<li>Люблінська унія (1569):</li>
+</ol>
+<ul>
+<li>[ ] союз Литви та Москви</li>
+<li>[x] об'єднання Литви та Польщі</li>
+<li>[ ] унія церков</li>
+</ul>
+<blockquote>
+  <p>Створення Речі Посполитої.</p>
+</blockquote>
+<ol start="6">
+<li>Хто звільнив Київ від татар у 1362 році?</li>
+</ol>
+<ul>
+<li>[ ] Дмитро Донський</li>
+<li>[x] Ольгерд</li>
+<li>[ ] Вітовт</li>
+</ul>
+<blockquote>
+  <p>Литовський князь.</p>
+</blockquote>
+<ol start="7">
+<li><strong>[Інтеграція: пасив]</strong> Офіційний текст: «Статут ___ руською мовою.»</li>
+</ol>
+<ul>
+<li>[x] написано</li>
+<li>[ ] написали</li>
+<li>[ ] пишеться</li>
+</ul>
+<blockquote>
+  <p>Офіційний/історичний → -но/-то.</p>
+</blockquote>
+<ol start="8">
+<li><strong>[Інтеграція: регістр]</strong> Науковий текст: «Руська мова ___ статус офіційної протягом двох століть.»</li>
+</ol>
+<ul>
+<li>[x] зберігала</li>
+<li>[ ] збережено</li>
+<li>[ ] зберігається</li>
+</ul>
+<blockquote>
+  <p>Науковий наратив → активний стан.</p>
+</blockquote>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Словник</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Слово</th>
+<th>Вимова</th>
+<th>Переклад</th>
+<th>Приклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Велике князівство</td>
+<td>/wɛˈlɪkɛ knʲɑˈzʲiwstwɔ/</td>
+<td>Grand Duchy</td>
+<td>Велике князівство Литовське.</td>
+</tr>
+<tr>
+<td>русини</td>
+<td>/ruˈsɪnɪ/</td>
+<td>Ruthenians</td>
+<td>Русини становили більшість населення.</td>
+</tr>
+<tr>
+<td>руська мова</td>
+<td>/ˈrusʲkɑ ˈmɔwɑ/</td>
+<td>Ruthenian language</td>
+<td>Руська мова — офіційна.</td>
+</tr>
+<tr>
+<td>статут</td>
+<td>/stɑˈtut/</td>
+<td>statute</td>
+<td>Литовські статути написані руською.</td>
+</tr>
+<tr>
+<td>автономія</td>
+<td>/ɑwtɔˈnɔmʲijɑ/</td>
+<td>autonomy</td>
+<td>Українські землі мали автономію.</td>
+</tr>
+<tr>
+<td>воєводство</td>
+<td>/wɔjɛˈwɔdstwɔ/</td>
+<td>voivodeship</td>
+<td>Поділля стало воєводством.</td>
+</tr>
+<tr>
+<td>унія</td>
+<td>/ˈunʲijɑ/</td>
+<td>union</td>
+<td>Люблінська унія — 1569 рік.</td>
+</tr>
+<tr>
+<td>полонізація</td>
+<td>/pɔlɔnʲiˈzɑt͡sʲijɑ/</td>
+<td>Polonization</td>
+<td>Полонізація почалася після 1569.</td>
+</tr>
+<tr>
+<td>ярмо</td>
+<td>/ˈjarmɔ/</td>
+<td>yoke</td>
+<td>Татарське ярмо закінчилося в 1362.</td>
+</tr>
+<tr>
+<td>шляхта</td>
+<td>/ˈʃlʲaxtɑ/</td>
+<td>nobility</td>
+<td>Шляхта мала привілеї.</td>
+</tr>
+<tr>
+<td>презумпція</td>
+<td>/prɛˈzumpt͡sʲijɑ/</td>
+<td>presumption</td>
+<td>Презумпція невинуватості.</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Підсумок</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Ключові факти</h2>
+<table>
+<thead>
+<tr>
+<th>Факт</th>
+<th>Деталі</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Офіційна мова ВКЛ</td>
+<td>Руська</td>
+</tr>
+<tr>
+<td>Звільнення від татар</td>
+<td>1362 (Битва на Синіх Водах)</td>
+</tr>
+<tr>
+<td>Принцип управління</td>
+<td>«Старого не рушити»</td>
+</tr>
+<tr>
+<td>Литовські статути</td>
+<td>Написані руською (1529, 1566, 1588)</td>
+</tr>
+<tr>
+<td>Кінець литовського періоду</td>
+<td>1569 (Люблінська унія)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="-1">Хронологія</h2>
+<table>
+<thead>
+<tr>
+<th>Рік</th>
+<th>Подія</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1362</td>
+<td>Битва на Синіх Водах, Київ під Литвою</td>
+</tr>
+<tr>
+<td>1385</td>
+<td>Кревська унія (Литва + Польща)</td>
+</tr>
+<tr>
+<td>1529</td>
+<td>Перший Литовський статут</td>
+</tr>
+<tr>
+<td>1569</td>
+<td>Люблінська унія → Річ Посполита</td>
+</tr>
+<tr>
+<td>1588</td>
+<td>Третій Литовський статут</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<blockquote>
+  <p><strong>Чому це важливо</strong></p>
+  <p>Литовський період — це доказ того, що українська культура <em>ніколи не переривалася</em>. Від Київської Русі до Литви, від Литви до Речі Посполитої — українська (руська) мова залишалася живою, офіційною, державною.</p>
+  <p>Коли росіяни кажуть, що «українська мова — це діалект», згадайте Литовські статути. Державні закони, написані мовою, яку ви можете прочитати без словника. За 500 років до народження будь-якого з сучасних політиків.</p>
+  <p>Наша мова — давня. Наша культура — безперервна. Наша історія — <em>наша</em>.</p>
+  <p><strong>Слава Україні!</strong></p>
+</blockquote>
+<hr />
+<h2 id="-2">Наступний урок</h2>
+<p>У наступному модулі — Річ Посполита: як українці жили в польсько-литовській державі, що таке Берестейська унія, і як це все призвело до козацьких повстань.</p></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('quiz')">Start →</button></div>
     </section>
     
@@ -163,6 +807,10 @@
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,7 +136,22 @@
         <p style="color:var(--text-muted)">Складні сполучники I: Причина та допустовість</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>«Він не прийшов, бо захворів.» — «Він не прийшов, оскільки захворів.» — «Він не прийшов у зв'язку з хворобою.» Три речення, одна причина, три різні стилі. Ласкаво просимо у світ українських сполучників!</h4><div class="md-content"><p>Якщо ви досі використовували лише «бо» для пояснення причин і «хоча» для протиріч — це чудово для розмови на ринку. Але для ділового листування, юридичних документів чи наукових текстів вам потрібен значно ширший арсенал. Сьогодні ми його розширимо!</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Зміст уроку</li><li class="toc-item" data-target="section-1">Вправи</li><li class="toc-item" data-target="section-2">Словник</li><li class="toc-item" data-target="section-3">Підсумок</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Зміст уроку</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Вступ</h2>
+<p>«Він не прийшов, бо захворів.» — «Він не прийшов, оскільки захворів.» — «Він не прийшов у зв'язку з хворобою.» Три речення, одна причина, три різні стилі. Ласкаво просимо у світ українських сполучників!</p>
+<p>Якщо ви досі використовували лише «бо» для пояснення причин і «хоча» для протиріч — це чудово для розмови на ринку. Але для ділового листування, юридичних документів чи наукових текстів вам потрібен значно ширший арсенал. Сьогодні ми його розширимо!</p>
 <p>Українська мова має надзвичайно розвинену систему підрядних сполучників. Де англійська обходиться одним <em>because</em>, українська пропонує цілий спектр: від розмовного «бо» до формального «у зв'язку з тим що». Вибір сполучника — це не просто граматика, це <strong>стилістичний маркер</strong>. Скажете «бо» у офіційному звіті — виглядатимете непрофесійно. Скажете «у зв'язку з тим що» у дружній розмові — здаватиметеся штучним.</p>
 <p>Ми розглянемо дві великі категорії:</p>
 <p><strong>Причинові (каузальні)</strong> — пояснюють, ЧОМУ щось сталося:</p>
@@ -133,7 +166,618 @@
   <p><strong>Чи знали ви?</strong></p>
   <p>Слово «бо» — одне з найдавніших українських слів! Воно походить від праслов'янського <em>bo</em> і має спільний корінь із латинським <em>quod</em> (тому що) та грецьким <em>γάρ</em>. Цікаво, що це слово зберіглося в українській, польській та чеській мовах, але зникло з російської — там використовують «потому что», яке є калькою з грецької.</p>
   <p>«Хоча» — теж стародавнє слово, споріднене з «хотіти». Логіка: «навіть якщо хтось хотів би іншого результату, сталося ось що».</p>
-</blockquote></div></div></div>
+</blockquote>
+<hr />
+<blockquote>
+  <p><strong>Міф vs Факт</strong></p>
+  <p>❌ <strong>Міф:</strong> «Бо» і «тому що» — абсолютно взаємозамінні.</p>
+  <p>✅ <strong>Факт:</strong> Хоч обидва виражають причину, вони мають різну стилістику і позиційні обмеження! «Бо» — ЛИШЕ після головного речення: «Не прийшов, бо захворів» (✓), «Бо захворів, не прийшов» (✗ — дуже розмовно/діалектно). «Тому що» — також переважно після головного. А ось «оскільки» — гнучкий, може стояти і на початку: «Оскільки він захворів, не прийшов» (✓).</p>
+</blockquote>
+<hr />
+<p>Опанувавши ці сполучники, ви зможете перемикатися між регістрами: писати формальні звіти, вести ділове листування і водночас природно спілкуватися у побуті. Це та мовна гнучкість, яка відрізняє «просунутого» мовця від «базового».</p>
+<h2 id="-1">Розминка</h2>
+<h3 id="-2">Шкала формальності</h3>
+<p>Розташуйте ці речення від найрозмовнішого до найофіційнішого:</p>
+<ol>
+<li>«Проєкт призупинено у зв'язку з браком фінансування.»</li>
+<li>«Не зробили, бо грошей нема.»</li>
+<li>«Роботу зупинено, оскільки бюджет вичерпано.»</li>
+<li>«Проєкт закрили, тому що закінчились гроші.»</li>
+</ol>
+<p><details>
+<summary>Відповідь</summary>
+2 (бо) → 4 (тому що) → 3 (оскільки) → 1 (у зв'язку з)
+</details></p>
+<h2 id="-3">Презентація</h2>
+<h3 id="-4">Причинові сполучники: шкала стилів</h3>
+<table>
+<thead>
+<tr>
+<th>Стиль</th>
+<th>Сполучник</th>
+<th>Позиція</th>
+<th>Приклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Розмовний</strong></td>
+<td>бо</td>
+<td>після</td>
+<td>Не прийшов, бо захворів.</td>
+</tr>
+<tr>
+<td><strong>Нейтральний</strong></td>
+<td>тому що</td>
+<td>після</td>
+<td>Не прийшов, тому що захворів.</td>
+</tr>
+<tr>
+<td><strong>Книжний</strong></td>
+<td>оскільки</td>
+<td>перед/після</td>
+<td>Оскільки захворів, не прийшов.</td>
+</tr>
+<tr>
+<td><strong>Офіційний</strong></td>
+<td>через те що</td>
+<td>перед</td>
+<td>Через те що хворий, не прийшов.</td>
+</tr>
+<tr>
+<td><strong>Дуже офіційний</strong></td>
+<td>у зв'язку з тим що</td>
+<td>перед</td>
+<td>У зв'язку з хворобою…</td>
+</tr>
+</tbody>
+</table>
+<h4 id="-5">Бо — найрозмовніший</h4>
+<p><strong>Позиція:</strong> ЛИШЕ після головного речення!</p>
+<ul>
+<li>✓ «Не прийшов, бо захворів.»</li>
+<li>✗ «Бо захворів, не прийшов.» (звучить діалектно)</li>
+</ul>
+<p><strong>Використання:</strong></p>
+<ul>
+<li>Дружні розмови</li>
+<li>Неформальне листування</li>
+<li>Повсякденна комунікація</li>
+</ul>
+<h4 id="-6">Тому що — нейтральний</h4>
+<p><strong>Позиція:</strong> Переважно після головного речення.</p>
+<ul>
+<li>✓ «Запізнився, тому що був великий затор.»</li>
+<li>? «Тому що був затор, запізнився.» (можливо, але рідко)</li>
+</ul>
+<p><strong>Особливість:</strong> Може розділятися комою: «Не прийшов тому, що захворів» (пауза перед «тому»).</p>
+<h4 id="-7">Оскільки — книжний</h4>
+<p><strong>Позиція:</strong> Гнучкий — на початку або в середині.</p>
+<ul>
+<li>✓ «Оскільки він захворів, засідання перенесено.»</li>
+<li>✓ «Засідання перенесено, оскільки він захворів.»</li>
+</ul>
+<p><strong>Використання:</strong></p>
+<ul>
+<li>Офіційні документи</li>
+<li>Наукові тексти</li>
+<li>Публіцистика</li>
+</ul>
+<h4 id="-8">Через те що / Завдяки тому що — конотація</h4>
+<table>
+<thead>
+<tr>
+<th>Сполучник</th>
+<th>Відтінок</th>
+<th>Приклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>через те що</strong></td>
+<td>негативна причина</td>
+<td>Проблеми через те, що не підготувалися.</td>
+</tr>
+<tr>
+<td><strong>завдяки тому що</strong></td>
+<td>позитивна причина</td>
+<td>Успіх завдяки тому, що всі працювали.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Важливо:</strong> «Завдяки» — ТІЛЬКИ для позитивних наслідків!</p>
+<ul>
+<li>✓ «Завдяки вашій допомозі ми перемогли.»</li>
+<li>✗ «Завдяки аварії він запізнився.» (НЕПРАВИЛЬНО — аварія негативна!)</li>
+</ul>
+<h4 id="-9">У зв'язку з тим що / Внаслідок того що — дуже офіційний</h4>
+<p><strong>Використання:</strong> Юридичні документи, офіційні звіти, протоколи.</p>
+<table>
+<thead>
+<tr>
+<th>Сполучник</th>
+<th>Приклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>у зв'язку з тим що</td>
+<td>У зв'язку з тим що термін сплив…</td>
+</tr>
+<tr>
+<td>внаслідок того що</td>
+<td>Внаслідок того що угоду порушено…</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Порада:</strong> Ці сполучники часто скорочують до прийменникових конструкцій:</p>
+<ul>
+<li>«У зв'язку з хворобою» (замість «у зв'язку з тим що він хворий»)</li>
+<li>«Внаслідок порушення» (замість «внаслідок того що порушили»)</li>
+</ul>
+<h3 id="-10">Допустові сполучники: логіка протиріччя</h3>
+<p>Допустовість — це коли результат <strong>всупереч очікуванню</strong>:</p>
+<ul>
+<li>Очікування: «Він хворий → не прийде.»</li>
+<li>Реальність: «<strong>Хоча</strong> він хворий, прийшов.» (всупереч!)</li>
+</ul>
+<h4 id="-11">Хоча / Хоч — базові</h4>
+<table>
+<thead>
+<tr>
+<th>Форма</th>
+<th>Стиль</th>
+<th>Приклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>хоча</td>
+<td>нейтральний</td>
+<td>Хоча погода погана, підемо.</td>
+</tr>
+<tr>
+<td>хоч</td>
+<td>розмовний</td>
+<td>Хоч і холодно, гуляємо.</td>
+</tr>
+<tr>
+<td>хоча б</td>
+<td>мінімум</td>
+<td>Хоча б зателефонуй!</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Позиція:</strong> Переважно на початку підрядного речення.</p>
+<p><strong>Конструкції:</strong></p>
+<ul>
+<li>«Хоч… але…» — «Хоч і важко, але зробив.»</li>
+<li>«Хоча… проте…» — «Хоча він молодий, проте досвідчений.»</li>
+</ul>
+<h4 id="-12">Незважаючи на те що — офіційний</h4>
+<p><strong>Структура:</strong> Довгий, формальний, книжний.</p>
+<ul>
+<li>«Незважаючи на те що бюджет обмежений, проєкт завершено.»</li>
+</ul>
+<p><strong>Скорочення до прийменника:</strong></p>
+<ul>
+<li>«Незважаючи на обмежений бюджет, проєкт завершено.»</li>
+</ul>
+<h4 id="-13">Попри те що — книжний (українізм!)</h4>
+<p><strong>Цікаво:</strong> «Попри» — суто українське слово, яке не має прямого відповідника в російській! Це чудовий маркер української мови.</p>
+<ul>
+<li>«Попри те що було важко, вони впоралися.»</li>
+<li>«Попри труднощі, проєкт успішний.»</li>
+</ul>
+<h4 id="-14">Дарма що — емоційний</h4>
+<p><strong>Відтінок:</strong> Розчарування, негативна оцінка.</p>
+<ul>
+<li>«Дарма що обіцяв — не зробив!» (= хоча обіцяв, але все марно)</li>
+<li>«Дарма що вчився — нічого не знає!»</li>
+</ul>
+<h4 id="-15">Хай / Нехай — піднесений</h4>
+<p><strong>Використання:</strong> Публіцистика, ораторство.</p>
+<ul>
+<li>«Нехай це й важко, але ми переможемо!»</li>
+<li>«Хай він і багатий, та щастя не купиш.»</li>
+</ul>
+<h3 id="vs">Порівняння: Причина vs Допустовість</h3>
+<table>
+<thead>
+<tr>
+<th>Тип</th>
+<th>Логіка</th>
+<th>Сполучник</th>
+<th>Приклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Причина</strong></td>
+<td>X → Y</td>
+<td>бо, тому що</td>
+<td>Не прийшов, бо хворий.</td>
+</tr>
+<tr>
+<td><strong>Допустовість</strong></td>
+<td>X, але Y</td>
+<td>хоча</td>
+<td>Хоча хворий, прийшов.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Графічно:</strong></p>
+<pre><code>Причина:        Хворий ────────→ Не прийшов
+                          (очікуваний результат)
+
+Допустовість:   Хворий ───X───→ Не прийшов
+                          ↓
+                       Прийшов!
+                   (неочікуваний результат)
+</code></pre>
+<h3 id="-16">Позиція та пунктуація</h3>
+<p><strong>Загальне правило:</strong> Підрядне речення відокремлюється комою.</p>
+<table>
+<thead>
+<tr>
+<th>Позиція</th>
+<th>Приклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Після головного</td>
+<td>Не прийшов<strong>,</strong> бо захворів.</td>
+</tr>
+<tr>
+<td>Перед головним</td>
+<td>Оскільки захворів<strong>,</strong> не прийшов.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Виняток:</strong> «Тому що» може розділятися — «Не прийшов тому<strong>,</strong> що захворів» (якщо «тому» належить до головного речення).</p>
+<h2 id="-17">Практика</h2>
+<h3 id="1">Вправа 1: Визначте стиль</h3>
+<p>Визначте стиль кожного речення (розмовний / нейтральний / офіційний):</p>
+<ol>
+<li>«Не зробив, бо часу не було.»</li>
+<li>«Роботу призупинено у зв'язку з технічними причинами.»</li>
+<li>«Він запізнився, тому що був затор.»</li>
+<li>«Оскільки документи не готові, засідання перенесено.»</li>
+</ol>
+<p><details><br />
+<summary>Відповіді</summary></p>
+<ol>
+<li>Розмовний (бо)</li>
+<li>Офіційний (у зв'язку з)</li>
+<li>Нейтральний (тому що)</li>
+<li>Книжний/Офіційний (оскільки)<br />
+</details></li>
+</ol>
+<h3 id="2">Вправа 2: Причина чи допустовість?</h3>
+<p>Визначте тип логічного зв'язку:</p>
+<ol>
+<li>«Хоча він молодий, має великий досвід.»</li>
+<li>«Не поїхав, тому що не було квитків.»</li>
+<li>«Попри дощ, концерт відбувся.»</li>
+<li>«Захід скасували через погану погоду.»</li>
+</ol>
+<p><details><br />
+<summary>Відповіді</summary></p>
+<ol>
+<li>Допустовість</li>
+<li>Причина</li>
+<li>Допустовість</li>
+<li>Причина<br />
+</details></li>
+</ol>
+<h3 id="3">Вправа 3: Трансформуйте стиль</h3>
+<p>Перетворіть на офіційний стиль:</p>
+<ol>
+<li>«Не прийшов, бо захворів.»</li>
+<li>«Хоч і важко було, зробили.»</li>
+<li>«Усе вийшло, бо всі допомагали.»</li>
+</ol>
+<p><details><br />
+<summary>Відповіді</summary></p>
+<ol>
+<li>«Він не з'явився у зв'язку з хворобою.» / «Оскільки він захворів, його не було присутнім.»</li>
+<li>«Незважаючи на труднощі, роботу виконано.»</li>
+<li>«Завдяки спільним зусиллям, проєкт успішно завершено.»<br />
+</details></li>
+</ol>
+<h3 id="4">Вправа 4: Виправте помилку</h3>
+<ol>
+<li>«Завдяки аварії він запізнився.»</li>
+<li>«Бо погода погана, не пішли.»</li>
+</ol>
+<p><details><br />
+<summary>Відповіді</summary></p>
+<ol>
+<li>«Через аварію він запізнився.» (аварія — негативна причина!)</li>
+<li>«Не пішли, бо погода погана.» / «Оскільки погода погана, не пішли.»<br />
+</details></li>
+</ol>
+<h3 id="5">Вправа 5: Перекладіть</h3>
+<ol>
+<li>He didn't come because he was sick.</li>
+<li>Although it's difficult, we'll try.</li>
+<li>Despite the problems, the project was completed.</li>
+<li>Thanks to your help, we succeeded.</li>
+</ol>
+<p><details><br />
+<summary>Відповіді</summary></p>
+<ol>
+<li>Він не прийшов, бо / тому що захворів.</li>
+<li>Хоча це важко, ми спробуємо.</li>
+<li>Незважаючи на проблеми / Попри проблеми, проєкт завершено.</li>
+<li>Завдяки вашій допомозі ми досягли успіху.<br />
+</details></li>
+</ol>
+<h2 id="-18">Продукція</h2>
+<h3 id="1-1">Завдання 1: Офіційний звіт</h3>
+<p>Напишіть короткий офіційний звіт (5-7 речень), використовуючи:</p>
+<ul>
+<li>«оскільки» або «у зв'язку з тим що»</li>
+<li>«незважаючи на те що» або «попри»</li>
+<li>Пасив -но/-то</li>
+</ul>
+<p><strong>Тема:</strong> Чому проєкт затримався, але все одно був успішним.</p>
+<h3 id="2-1">Завдання 2: Розмовний переказ</h3>
+<p>Тепер перекажіть ту саму історію другу, використовуючи:</p>
+<ul>
+<li>«бо»</li>
+<li>«хоч» або «хоча»</li>
+<li>Активний стан</li>
+</ul>
+<h3 id="3-1">Завдання 3: Аргументація</h3>
+<p>Побудуйте аргумент «за» і «проти» чогось:</p>
+<ul>
+<li>«Хоча… проте…»</li>
+<li>«Завдяки тому що… Але з іншого боку, через те що…»</li>
+</ul>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Вправи</h3>
+          <span class="section-type practice">practice</span>
+        </div>
+        <div class="section-body md-content"><h2 id="quiz">quiz: Причинові та допустові сполучники</h2>
+<blockquote>
+  <p>Виберіть правильну відповідь.</p>
+</blockquote>
+<ol>
+<li>«Бо» — це стиль:</li>
+</ol>
+<ul>
+<li>[x] розмовний</li>
+<li>[ ] офіційний</li>
+</ul>
+<blockquote>
+  <p>Найрозмовніший причиновий сполучник.</p>
+</blockquote>
+<ol start="2">
+<li>«Завдяки» використовується для:</li>
+</ol>
+<ul>
+<li>[x] позитивних причин</li>
+<li>[ ] негативних причин</li>
+</ul>
+<blockquote>
+  <p>«Завдяки вашій допомозі» — позитивно!</p>
+</blockquote>
+<ol start="3">
+<li>«Попри» — це:</li>
+</ol>
+<ul>
+<li>[x] суто українське слово</li>
+<li>[ ] запозичення з російської</li>
+</ul>
+<blockquote>
+  <p>Немає прямого відповідника в російській!</p>
+</blockquote>
+<ol start="4">
+<li>«Хоча» виражає:</li>
+</ol>
+<ul>
+<li>[x] допустовість (протиріччя)</li>
+<li>[ ] причину</li>
+</ul>
+<blockquote>
+  <p>Although = незважаючи на те що.</p>
+</blockquote>
+<ol start="5">
+<li>«Оскільки» може стояти:</li>
+</ol>
+<ul>
+<li>[x] і на початку, і в середині речення</li>
+<li>[ ] лише після головного речення</li>
+</ul>
+<blockquote>
+  <p>Гнучка позиція.</p>
+</blockquote>
+<ol start="6">
+<li>«Незважаючи на те що» скорочується до:</li>
+</ol>
+<ul>
+<li>[x] «Незважаючи на + іменник»</li>
+<li>[ ] «Бо + дієслово»</li>
+</ul>
+<blockquote>
+  <p>Незважаючи на труднощі = незважаючи на те що були труднощі.</p>
+</blockquote>
+<ol start="7">
+<li><strong>[Інтеграція: пасив]</strong> «___ звіт не готовий, засідання перенесено.»</li>
+</ol>
+<ul>
+<li>[x] У зв'язку з тим що</li>
+<li>[ ] Бо</li>
+</ul>
+<blockquote>
+  <p>Офіційний стиль + пасив → офіційний сполучник.</p>
+</blockquote>
+<ol start="8">
+<li><strong>[Інтеграція: регістр]</strong> Розмова: «Не прийшов, ___ захворів.»</li>
+</ol>
+<ul>
+<li>[x] бо</li>
+<li>[ ] у зв'язку з тим що</li>
+</ul>
+<blockquote>
+  <p>Розмовний стиль → бо.</p>
+</blockquote>
+<ol start="9">
+<li>«Дарма що» має відтінок:</li>
+</ol>
+<ul>
+<li>[x] розчарування</li>
+<li>[ ] радості</li>
+</ul>
+<blockquote>
+  <p>«Дарма що обіцяв — не зробив!»</p>
+</blockquote>
+<ol start="10">
+<li>Правильно: «___ аварії він запізнився.»<ul>
+<li>[x] Через</li>
+<li>[ ] Завдяки<br />
+&gt; Аварія — негативна причина!</li></ul></li>
+</ol>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Словник</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Сполучник</th>
+<th>Вимова</th>
+<th>Тип</th>
+<th>Стиль</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>бо</td>
+<td>/bɔ/</td>
+<td>причина</td>
+<td>розмовний</td>
+</tr>
+<tr>
+<td>тому що</td>
+<td>/tɔˈmu ʃt͡ʃɔ/</td>
+<td>причина</td>
+<td>нейтральний</td>
+</tr>
+<tr>
+<td>оскільки</td>
+<td>/ɔsˈkʲilʲkɪ/</td>
+<td>причина</td>
+<td>книжний</td>
+</tr>
+<tr>
+<td>через те що</td>
+<td>/ˈtʃɛrɛz tɛ ʃt͡ʃɔ/</td>
+<td>причина (−)</td>
+<td>офіційний</td>
+</tr>
+<tr>
+<td>завдяки тому що</td>
+<td>/zɑwˈdʲakɪ tɔˈmu/</td>
+<td>причина (+)</td>
+<td>офіційний</td>
+</tr>
+<tr>
+<td>у зв'язку з тим що</td>
+<td>/u ˈzwjɑzku z tɪm/</td>
+<td>причина</td>
+<td>дуже офіц.</td>
+</tr>
+<tr>
+<td>хоча</td>
+<td>/xɔˈtʃɑ/</td>
+<td>допустовість</td>
+<td>нейтральний</td>
+</tr>
+<tr>
+<td>хоч</td>
+<td>/xɔtʃ/</td>
+<td>допустовість</td>
+<td>розмовний</td>
+</tr>
+<tr>
+<td>незважаючи на те що</td>
+<td>/nɛzwɑˈʒɑjutʃɪ/</td>
+<td>допустовість</td>
+<td>офіційний</td>
+</tr>
+<tr>
+<td>попри те що</td>
+<td>/pɔˈprɪ tɛ/</td>
+<td>допустовість</td>
+<td>книжний</td>
+</tr>
+<tr>
+<td>дарма що</td>
+<td>/ˈdɑrmɑ ʃt͡ʃɔ/</td>
+<td>допустовість (−)</td>
+<td>розмовний</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Підсумок</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Причинові сполучники</h2>
+<pre><code>Розмовний → → → → → → → → → → → → → → → Офіційний
+    бо      тому що    оскільки    у зв'язку з
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Відтінок</th>
+<th>Сполучник</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Нейтральний</td>
+<td>бо, тому що</td>
+</tr>
+<tr>
+<td>Позитивний</td>
+<td>завдяки тому що</td>
+</tr>
+<tr>
+<td>Негативний</td>
+<td>через те що</td>
+</tr>
+</tbody>
+</table>
+<h2 id="-1">Допустові сполучники</h2>
+<pre><code>Розмовний → → → → → → → → → → → → → → → Офіційний
+  хоч      хоча      попри    незважаючи на
+</code></pre>
+<h2 id="-2">Головне</h2>
+<blockquote>
+  <p><strong>Запам'ятайте:</strong></p>
+  <ul>
+  <li>Причина: X → Y (бо, тому що, оскільки)</li>
+  <li>Допустовість: X, але Y (хоча, попри)</li>
+  <li>«Завдяки» — ТІЛЬКИ позитивне, «через» — негативне</li>
+  <li>«Попри» — суто українське слово!</li>
+  <li>Стиль сполучника = стиль тексту</li>
+  </ul>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('quiz')">Start →</button></div>
     </section>
     
@@ -171,6 +815,10 @@
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

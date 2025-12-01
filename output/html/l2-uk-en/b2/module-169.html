@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,7 +136,35 @@
         <p style="color:var(--text-muted)">Фразеологізми: Очі та вуха</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Буквально чи переносно?</h4><div class="md-content"><p>Прочитайте речення та визначте — буквальне це значення чи переносне:</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Вступ</li><li class="toc-item" data-target="section-1">Зміст уроку</li><li class="toc-item" data-target="section-2">Вправи</li><li class="toc-item" data-target="section-3">Словник</li><li class="toc-item" data-target="section-4">Підсумок</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Вступ</h3>
+          <span class="section-type intro">intro</span>
+        </div>
+        <div class="section-body md-content"><p>Чому саме очі та вуха? Чому не пальці чи коліна?</p>
+<p>Відповідь криється в тому, як наші предки сприймали світ. Очі — вікна душі, інструмент пізнання. Вуха — ворота інформації, шлях до розуму. Тисячі років тому люди помітили: те, що бачиш і чуєш, визначає, хто ти є. І ця мудрість закарбувалася в мові.</p>
+<p>Українські ідіоми з «очі» та «вуха» — не просто красиві вислови. Це капсули давньої психології. Коли українець каже «<strong>очі на лоб полізли</strong>», він не просто описує здивування — він відтворює фізіологічну реакцію, яку спостерігали покоління до нього. Коли каже «<strong>вуха в'януть</strong>» — це метафора рослини, що помирає від чогось токсичного.</p>
+<p>Цікаво, що багато українських ідіом мають прямі відповідники в англійській: «<strong>відкрити очі</strong>» (to open one's eyes), «<strong>не вірити власним очам</strong>» (not to believe one's eyes). Це не випадковість — люди різних культур бачили світ схоже. Але є й суто українські перлини. Спробуйте перекласти «<strong>ведмідь на вухо наступив</strong>» — дослівний переклад викличе в англомовного слухача лише здивування.</p>
+<p>А ще ідіоми — лакмус мовних впливів. Дехто каже «пропускати мимо вух» (калька з російської «мимо ушей»), але автентично по-українськи — «<strong>пропускати повз вуха</strong>». Деколонізація мови — це і про такі дрібниці.</p>
+<p>У цьому модулі ви навчитеся бачити світ очима української мови — і чути його українськими вухами.</p>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Зміст уроку</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Розминка</h2>
+<h3 id="-1">Буквально чи переносно?</h3>
+<p>Прочитайте речення та визначте — буквальне це значення чи переносне:</p>
 <ol>
 <li>«Він не повірив власним очам.»</li>
 <li>«Лікар подивився йому в очі.»</li>
@@ -128,7 +174,657 @@
 <blockquote>
   <p><strong>Чи знали ви?</strong></p>
   <p>Слово «<strong>очі</strong>» — одне з найстаріших у слов'янських мовах. Воно походить від праслов'янського *oko, яке, в свою чергу, від праіндоєвропейського *h₃ekʷ- (бачити). Від того самого кореня — латинське oculus (звідки «окуляр»), грецьке ὄψ (ops) і навіть англійське eye (через германські мови). Коли ви кажете «очі», ви вимовляєте слово з історією в 6000+ років.</p>
-</blockquote></div></div></div>
+</blockquote>
+<hr />
+<h2 id="-2">Презентація</h2>
+<h3 id="-3">Ідіоми з «очі»</h3>
+<h4 id="-4">Бачення, розуміння, правда</h4>
+<p>Очі — інструмент пізнання істини. Звідси — ідіоми про розуміння та правду.</p>
+<table>
+<thead>
+<tr>
+<th>Ідіома</th>
+<th>Значення</th>
+<th>Англійський відповідник</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>відкрити (комусь) очі</strong></td>
+<td>показати правду</td>
+<td>to open someone's eyes</td>
+</tr>
+<tr>
+<td><strong>закривати очі (на щось)</strong></td>
+<td>ігнорувати</td>
+<td>to turn a blind eye</td>
+</tr>
+<tr>
+<td><strong>дивитися правді в очі</strong></td>
+<td>визнавати реальність</td>
+<td>to face the truth</td>
+</tr>
+<tr>
+<td><strong>не вірити (власним) очам</strong></td>
+<td>бути здивованим</td>
+<td>not to believe one's eyes</td>
+</tr>
+<tr>
+<td><strong>бачити на власні очі</strong></td>
+<td>бути свідком</td>
+<td>to see with one's own eyes</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Приклади в контексті:</strong></p>
+<ol>
+<li><p>«Після тієї розмови вона <strong>відкрила мені очі</strong> на справжню ситуацію в компанії. Я нарешті зрозумів, чому всі звільняються.»</p></li>
+<li><p>«Керівництво <strong>закриває очі</strong> на порушення техніки безпеки. Рано чи пізно станеться біда.»</p></li>
+<li><p>«Давайте <strong>дивитися правді в очі</strong>: ми не встигаємо здати проєкт вчасно.»</p></li>
+</ol>
+<blockquote>
+  <p><strong>Міф vs Факт</strong></p>
+  <p>❌ <strong>Міф:</strong> «Закривати очі» і «заплющувати очі» — те саме.</p>
+  <p>✅ <strong>Факт:</strong> «Заплющити очі» — фізична дія (закрити повіки). «Закривати очі на щось» — ігнорувати, робити вигляд, що не помічаєш. «Він заплющив очі і заснув» vs «Він закриває очі на її недоліки».</p>
+</blockquote>
+<hr />
+<h4 id="-5">Увага, бажання, вибір</h4>
+<table>
+<thead>
+<tr>
+<th>Ідіома</th>
+<th>Значення</th>
+<th>Приклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>не зводити очей (з когось)</strong></td>
+<td>постійно дивитися</td>
+<td>Він не зводив з неї очей увесь вечір.</td>
+</tr>
+<tr>
+<td><strong>розбігаються очі</strong></td>
+<td>важко вибрати</td>
+<td>На базарі — очі розбігаються!</td>
+</tr>
+<tr>
+<td><strong>очі горять</strong></td>
+<td>сильне бажання</td>
+<td>У дитини очі горять від захвату.</td>
+</tr>
+<tr>
+<td><strong>око впало (на щось)</strong></td>
+<td>сподобалося</td>
+<td>Око впало на цю сумку — купую!</td>
+</tr>
+<tr>
+<td><strong>очі на лоб лізуть</strong></td>
+<td>дуже здивований</td>
+<td>Від рахунку очі на лоб полізли.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Етимологічна мініатюра:</strong></p>
+<p>«<strong>Очі розбігаються</strong>» — геніальна метафора. Коли перед вами багато варіантів, погляд буквально «біжить» від одного до іншого, не може зупинитися. Так предки описали paralysis of choice задовго до того, як психологи дали цьому назву.</p>
+<blockquote>
+  <p><strong>Чи знали ви?</strong></p>
+  <p>Вираз «<strong>очі на лоб лізуть</strong>» має фізіологічне підґрунтя. При сильному здивуванні людина піднімає брови, широко розплющує очі — і вони ніби «піднімаються» до лоба. Цікаво, що в англійській є схожий образ: «eyes pop out of one's head» (очі вискакують з голови) — ще драматичніша версія.</p>
+</blockquote>
+<hr />
+<h4 id="-6">Чесність, сором, вина</h4>
+<table>
+<thead>
+<tr>
+<th>Ідіома</th>
+<th>Значення</th>
+<th>Контекст</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>дивитися в очі</strong></td>
+<td>бути чесним</td>
+<td>Я можу дивитися тобі в очі — не брехав.</td>
+</tr>
+<tr>
+<td><strong>відвести очі</strong></td>
+<td>уникати погляду</td>
+<td>Він відвів очі — щось приховує.</td>
+</tr>
+<tr>
+<td><strong>опустити очі</strong></td>
+<td>засоромитися</td>
+<td>Вона опустила очі від сорому.</td>
+</tr>
+<tr>
+<td><strong>зачервоніти до вух</strong></td>
+<td>сильно засоромитися</td>
+<td>Він зачервонів до самих вух.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Культурний контекст:</strong></p>
+<p>В українській культурі «дивитися в очі» — знак чесності та поваги. Але обережно: в деяких азійських культурах прямий погляд — неповага до старших. Універсальних правил немає — є культурний код.</p>
+<hr />
+<h3 id="-7">Ідіоми з «вуха»</h3>
+<h4 id="-8">Слухання та увага</h4>
+<table>
+<thead>
+<tr>
+<th>Ідіома</th>
+<th>Значення</th>
+<th>Англійський відповідник</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>навострити вуха</strong></td>
+<td>уважно слухати</td>
+<td>to prick up one's ears</td>
+</tr>
+<tr>
+<td><strong>пропускати повз вуха</strong></td>
+<td>ігнорувати</td>
+<td>to go in one ear and out the other</td>
+</tr>
+<tr>
+<td><strong>слухати краєм вуха</strong></td>
+<td>неуважно слухати</td>
+<td>to half-listen</td>
+</tr>
+<tr>
+<td><strong>не вірити (власним) вухам</strong></td>
+<td>бути здивованим</td>
+<td>not to believe one's ears</td>
+</tr>
+<tr>
+<td><strong>бути весь у вухо</strong></td>
+<td>слухати дуже уважно</td>
+<td>to be all ears</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Приклади в контексті:</strong></p>
+<ol>
+<li><p>«Коли він почув своє ім'я по радіо, одразу <strong>навострив вуха</strong>.»</p></li>
+<li><p>«Все, що я кажу, він <strong>пропускає повз вуха</strong>. Ніякого толку!»</p></li>
+<li><p>«Розкажи, що сталося — я <strong>весь у вухо</strong>!»</p></li>
+</ol>
+<blockquote>
+  <p><strong>Чи знали ви?</strong></p>
+  <p>Вираз «<strong>навострити вуха</strong>» прийшов зі спостережень за тваринами. Собаки, коні, коти — коли чують щось цікаве, їхні вуха буквально «гостріють», повертаються до джерела звуку. Людські вуха не рухаються, але метафора залишилася.</p>
+</blockquote>
+<hr />
+<h4 id="-9">Секрети, чутки, інформація</h4>
+<table>
+<thead>
+<tr>
+<th>Ідіома</th>
+<th>Значення</th>
+<th>Приклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>вуха розвісити</strong></td>
+<td>довірливо слухати нісенітниці</td>
+<td>Не розвішуй вуха — то неправда!</td>
+</tr>
+<tr>
+<td><strong>і вуха не веде</strong></td>
+<td>не реагує</td>
+<td>Сказав йому — а він і вуха не веде.</td>
+</tr>
+<tr>
+<td><strong>по вуха (в чомусь)</strong></td>
+<td>повністю занурений</td>
+<td>По вуха в роботі / у боргах / закоханий.</td>
+</tr>
+<tr>
+<td><strong>дійти до вух</strong></td>
+<td>стати відомим</td>
+<td>До мене дійшли чутки про це.</td>
+</tr>
+<tr>
+<td><strong>прожужжати (всі) вуха</strong></td>
+<td>надокучати розмовами</td>
+<td>Він прожужжав мені вуха про цей стартап.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Приклади в контексті:</strong></p>
+<ol>
+<li><p>«Він <strong>по вуха закоханий</strong> у неї — тільки про неї й говорить.»</p></li>
+<li><p>«До мене <strong>дійшло до вух</strong>, що компанія планує скорочення.»</p></li>
+<li><p>«Колега <strong>прожужжав мені всі вуха</strong> про криптовалюту — тепер і я думаю інвестувати.»</p></li>
+</ol>
+<blockquote>
+  <p><strong>Міф vs Факт</strong></p>
+  <p>❌ <strong>Міф:</strong> «По вуха» завжди має негативне значення (по вуха в боргах).</p>
+  <p>✅ <strong>Факт:</strong> «По вуха» просто означає «повністю, цілком». Можна бути по вуха в боргах (погано), по вуха в роботі (нейтрально), по вуха закоханим (романтично). Контекст визначає тон.</p>
+</blockquote>
+<hr />
+<h4 id="-10">Неприємне, покарання</h4>
+<table>
+<thead>
+<tr>
+<th>Ідіома</th>
+<th>Значення</th>
+<th>Приклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>тягнути за вуха</strong></td>
+<td>змушувати</td>
+<td>Його тягнуть за вуха до університету.</td>
+</tr>
+<tr>
+<td><strong>надерти вуха</strong></td>
+<td>покарати (розмовне)</td>
+<td>Батько йому надере вуха за це.</td>
+</tr>
+<tr>
+<td><strong>вуха в'януть</strong></td>
+<td>неприємно слухати</td>
+<td>Від такої музики вуха в'януть.</td>
+</tr>
+<tr>
+<td><strong>ведмідь на вухо наступив</strong></td>
+<td>немає музичного слуху</td>
+<td>Йому ведмідь на вухо наступив.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Етимологічна мініатюра:</strong></p>
+<p>«<strong>Ведмідь на вухо наступив</strong>» — суто слов'янська ідіома. В англійській є «tone deaf» (глухий до тону), але без ведмедя. Чому саме ведмідь? Можливо, через образ великої, незграбної тварини, яка не розуміє тонкощів. А може, тому що ведмедя в українському фольклорі часто зображують сильним, але не дуже витонченим.</p>
+<blockquote>
+  <p><strong>Чи знали ви?</strong></p>
+  <p>Ідіому «<strong>вуха в'януть</strong>» часто вживають, коли чують щось вульгарне, неетичне або просто огидне. Рослинна метафора: ніжне вухо, як пелюстка, «в'яне» від токсичного впливу. Це не про гучність звуку — про його «якість».</p>
+</blockquote>
+<hr />
+<h3 id="-11">Граматика: дієслівне керування</h3>
+<table>
+<thead>
+<tr>
+<th>Ідіома</th>
+<th>Конструкція</th>
+<th>Приклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>відкрити очі</td>
+<td>кому? (давальний) + на що? (на + знах.)</td>
+<td>Відкрила <strong>йому</strong> очі <strong>на</strong> правду</td>
+</tr>
+<tr>
+<td>закривати очі</td>
+<td>на що? (на + знахідний)</td>
+<td>Закриває очі <strong>на</strong> проблеми</td>
+</tr>
+<tr>
+<td>дивитися в очі</td>
+<td>кому? (давальний)</td>
+<td>Дивлюсь <strong>тобі</strong> в очі</td>
+</tr>
+<tr>
+<td>пропускати повз вуха</td>
+<td>що? (знахідний)</td>
+<td>Пропускає <strong>критику</strong> повз вуха</td>
+</tr>
+<tr>
+<td>по вуха</td>
+<td>в чому? (в + місцевий)</td>
+<td>По вуха <strong>в</strong> роботі</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="-12">Порівняння з англійською</h3>
+<table>
+<thead>
+<tr>
+<th>Українська</th>
+<th>Англійська</th>
+<th>Тип відповідності</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>відкрити очі</td>
+<td>to open eyes</td>
+<td>✅ Дослівний збіг</td>
+</tr>
+<tr>
+<td>очі на лоб</td>
+<td>eyes pop out</td>
+<td>✅ Схожий образ</td>
+</tr>
+<tr>
+<td>закрити очі</td>
+<td>turn a blind eye</td>
+<td>⚠️ Інша структура</td>
+</tr>
+<tr>
+<td>ведмідь на вухо</td>
+<td>tone deaf</td>
+<td>❌ Зовсім інший образ</td>
+</tr>
+<tr>
+<td>по вуха</td>
+<td>up to one's ears</td>
+<td>✅ Схожий образ</td>
+</tr>
+<tr>
+<td>вуха в'януть</td>
+<td>❌</td>
+<td>Немає відповідника</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="-13">Практика</h2>
+<h3 id="1">Вправа 1: Доповніть ідіому</h3>
+<ol>
+<li><p>Він не вірив власним ___.<br />
+→ <strong>очам</strong></p></li>
+<li><p>Вона пропускає все повз ___.<br />
+→ <strong>вуха</strong></p></li>
+<li><p>Очі на лоб ___ від здивування.<br />
+→ <strong>полізли</strong></p></li>
+<li><p>Він по ___ у боргах.<br />
+→ <strong>вуха</strong></p></li>
+<li><p>___ мені очі на правду!<br />
+→ <strong>Відкрий</strong></p></li>
+</ol>
+<h3 id="2">Вправа 2: Оберіть правильну ідіому</h3>
+<ol>
+<li><p>Начальник ігнорує порушення в офісі.<br />
+→ <strong>закриває очі на</strong></p></li>
+<li><p>Вона слухає мене дуже уважно.<br />
+→ <strong>вся у вухо / навострила вуха</strong></p></li>
+<li><p>Вони не могли повірити в новину.<br />
+→ <strong>не повірили власним вухам / очам</strong></p></li>
+<li><p>У нього немає музичного слуху.<br />
+→ <strong>йому ведмідь на вухо наступив</strong></p></li>
+<li><p>Чутка стала йому відомою.<br />
+→ <strong>дійшла до його вух</strong></p></li>
+</ol>
+<h3 id="3">Вправа 3: Перекладіть</h3>
+<ol>
+<li><p>She opened my eyes to what was really happening.<br />
+→ <strong>Вона відкрила мені очі на те, що справді відбувається.</strong></p></li>
+<li><p>He's up to his ears in debt.<br />
+→ <strong>Він по вуха в боргах.</strong></p></li>
+<li><p>The warning fell on deaf ears.<br />
+→ <strong>Попередження пропустили повз вуха.</strong></p></li>
+<li><p>I couldn't believe my eyes when I saw the price.<br />
+→ <strong>Я не повірив власним очам, коли побачив ціну.</strong></p></li>
+</ol>
+<hr />
+<h2 id="-14">Продукція</h2>
+<h3 id="-15">Діалог: Несподівана новина</h3>
+<p>Напишіть діалог (6-8 реплік), використовуючи щонайменше 4 ідіоми з «очі» та «вуха».</p>
+<p><strong>Ситуація:</strong> Друг розповідає вам шокуючу новину про спільного знайомого.</p>
+<p><strong>Приклад початку:</strong><br />
+— Сідай. Маю тобі щось розказати. Тільки приготуйся — <strong>очі на лоб полізуть</strong>.<br />
+— Ну давай, я <strong>весь у вухо</strong>.<br />
+— …</p>
+<h3 id="-16">Дискусія</h3>
+<p>Обговоріть у парах:</p>
+<ol>
+<li>Чи буває корисно «закривати очі» на дрібні проблеми?</li>
+<li>«Хто не хоче чути — пропускає повз вуха.» Коли це про вас?</li>
+</ol>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Вправи</h3>
+          <span class="section-type practice">practice</span>
+        </div>
+        <div class="section-body md-content"><h2 id="quiz">quiz: Ідіоми: Очі та вуха</h2>
+<blockquote>
+  <p>Виберіть правильну відповідь.</p>
+</blockquote>
+<ol>
+<li>«Закривати очі на щось» означає:</li>
+</ol>
+<ul>
+<li>[x] ігнорувати</li>
+<li>[ ] уважно дивитися</li>
+</ul>
+<blockquote>
+  <p>Ігнорувати проблему, робити вигляд, що не помічаєш.</p>
+</blockquote>
+<ol start="2">
+<li>«Навострити вуха» означає:</li>
+</ol>
+<ul>
+<li>[x] почати уважно слухати</li>
+<li>[ ] перестати слухати</li>
+</ul>
+<blockquote>
+  <p>To prick up one's ears.</p>
+</blockquote>
+<ol start="3">
+<li>«По вуха в роботі» означає:</li>
+</ol>
+<ul>
+<li>[x] дуже зайнятий</li>
+<li>[ ] слухає музику на роботі</li>
+</ul>
+<blockquote>
+  <p>Up to one's ears in work.</p>
+</blockquote>
+<ol start="4">
+<li>«Очі на лоб полізли» означає:</li>
+</ol>
+<ul>
+<li>[x] дуже здивувався</li>
+<li>[ ] заснув</li>
+</ul>
+<blockquote>
+  <p>Eyes pop out — екстремальне здивування.</p>
+</blockquote>
+<ol start="5">
+<li>«Ведмідь на вухо наступив» означає:</li>
+</ol>
+<ul>
+<li>[x] немає музичного слуху</li>
+<li>[ ] травма вуха</li>
+</ul>
+<blockquote>
+  <p>Суто слов'янська ідіома про відсутність музичного слуху.</p>
+</blockquote>
+<ol start="6">
+<li>«Вуха в'януть» означає:</li>
+</ol>
+<ul>
+<li>[x] неприємно слухати щось огидне</li>
+<li>[ ] проблеми зі слухом</li>
+</ul>
+<blockquote>
+  <p>Коли чуєш щось вульгарне або неетичне.</p>
+</blockquote>
+<ol start="7">
+<li><strong>[Інтеграція: пасив + регістр]</strong> Офіційний текст: «Йому ___ очі на правду.»</li>
+</ol>
+<ul>
+<li>[x] відкрито</li>
+<li>[ ] відкрили</li>
+<li>[ ] відкриваються</li>
+</ul>
+<blockquote>
+  <p>Офіційний стиль → -но/-то форма.</p>
+</blockquote>
+<ol start="8">
+<li><strong>[Інтеграція: пасив + регістр]</strong> Розмова з другом: «Йому ___ очі на правду.»</li>
+</ol>
+<ul>
+<li>[ ] відкрито</li>
+<li>[x] відкрили</li>
+<li>[ ] відкриваються</li>
+</ul>
+<blockquote>
+  <p>Розмовний стиль → 3-я особа множини.</p>
+</blockquote>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Словник</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Ідіома</th>
+<th>Вимова</th>
+<th>Значення</th>
+<th>Примітки</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>відкрити очі</td>
+<td>/wʲidˈkrɪtɪ ˈɔtʃʲi/</td>
+<td>показати правду</td>
+<td>pf; кому? (дав.)</td>
+</tr>
+<tr>
+<td>закривати очі</td>
+<td>/zɑkrɪˈwɑtɪ ˈɔtʃʲi/</td>
+<td>ігнорувати</td>
+<td>impf; на що?</td>
+</tr>
+<tr>
+<td>не зводити очей</td>
+<td>/nɛ zwɔˈdɪtɪ ɔˈtʃɛj/</td>
+<td>постійно дивитися</td>
+<td>impf; з кого?</td>
+</tr>
+<tr>
+<td>очі розбігаються</td>
+<td>/ˈɔtʃʲi rɔzbʲiˈɦɑjut͡sʲːɑ/</td>
+<td>важко вибрати</td>
+<td>impf</td>
+</tr>
+<tr>
+<td>очі на лоб</td>
+<td>/ˈɔtʃʲi nɑ lɔb/</td>
+<td>здивування</td>
+<td>полізли (pf)</td>
+</tr>
+<tr>
+<td>навострити вуха</td>
+<td>/nɑwɔsˈtrɪtɪ ˈwuxɑ/</td>
+<td>уважно слухати</td>
+<td>pf</td>
+</tr>
+<tr>
+<td>пропускати повз вуха</td>
+<td>/prɔpusˈkɑtɪ pɔwz ˈwuxɑ/</td>
+<td>ігнорувати</td>
+<td>impf</td>
+</tr>
+<tr>
+<td>по вуха</td>
+<td>/pɔ ˈwuxɑ/</td>
+<td>повністю</td>
+<td>в + місц.</td>
+</tr>
+<tr>
+<td>вуха в'януть</td>
+<td>/ˈwuxɑ ˈwjɑnutʲ/</td>
+<td>неприємно слухати</td>
+<td>impf</td>
+</tr>
+<tr>
+<td>ведмідь на вухо наступив</td>
+<td>/wɛdˈmʲidʲ nɑ ˈwuxɔ nɑstuˈpɪw/</td>
+<td>немає музичного слуху</td>
+<td>idiom</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-4">
+        <div class="section-header" onclick="toggleSection(4)">
+          <h3>Підсумок</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Очі: бачення → розуміння</h2>
+<table>
+<thead>
+<tr>
+<th>Ідіома</th>
+<th>Значення</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>відкрити очі</td>
+<td>показати правду</td>
+</tr>
+<tr>
+<td>закривати очі</td>
+<td>ігнорувати</td>
+</tr>
+<tr>
+<td>очі розбігаються</td>
+<td>важко вибрати</td>
+</tr>
+<tr>
+<td>очі на лоб</td>
+<td>екстремальне здивування</td>
+</tr>
+<tr>
+<td>дивитися в очі</td>
+<td>бути чесним</td>
+</tr>
+</tbody>
+</table>
+<h2 id="-1">Вуха: слухання → інформація</h2>
+<table>
+<thead>
+<tr>
+<th>Ідіома</th>
+<th>Значення</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>навострити вуха</td>
+<td>уважно слухати</td>
+</tr>
+<tr>
+<td>повз вуха</td>
+<td>ігнорувати</td>
+</tr>
+<tr>
+<td>по вуха</td>
+<td>повністю занурений</td>
+</tr>
+<tr>
+<td>вуха в'януть</td>
+<td>неприємно слухати</td>
+</tr>
+<tr>
+<td>ведмідь на вухо</td>
+<td>немає музичного слуху</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p><strong>Головне</strong></p>
+  <p>Очі та вуха — ворота до світу. Українські ідіоми з цими словами відображають давню мудрість про пізнання, увагу та правду. Багато з них мають англійські відповідники — бо люди скрізь схоже сприймають світ. Але «ведмідь на вухо» — це тільки наше.</p>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('quiz')">Start →</button></div>
     </section>
     
@@ -166,6 +862,10 @@
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

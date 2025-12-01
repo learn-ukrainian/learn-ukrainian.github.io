@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,13 +136,31 @@
         <p style="color:var(--text-muted)">Experience, Opportunity, and Responsibility</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Життєва лексика | Life Vocabulary</h4><div class="md-content"><p>У модулі 95 ми вивчили ідеї та проблеми. Тепер: лексика для обговорення <strong>життєвого досвіду</strong>.</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Зміст уроку | Lesson Content</li><li class="toc-item" data-target="section-1">Activities</li><li class="toc-item" data-target="section-2">Vocabulary</li><li class="toc-item" data-target="section-3">Summary</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Зміст уроку | Lesson Content</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="warmup">warm-up | Розминка</h2>
+<h3 id="lifevocabulary">Життєва лексика | Life Vocabulary</h3>
+<p>У модулі 95 ми вивчили ідеї та проблеми. Тепер: лексика для обговорення <strong>життєвого досвіду</strong>.</p>
 <p>Module 95 covered ideas and problems. Now: vocabulary for discussing <strong>life experiences</strong>.</p>
 <ul>
 <li>Який досвід ви маєте? | What experiences have you had?</li>
 <li>Які можливості у вас є? | What opportunities do you have?</li>
 <li>Яку відповідальність ви несете? | What responsibilities do you carry?</li>
-</ul></div></div><div class="canvas-note"><h4>### Experience and Knowledge</h4><div class="md-content"><table>
+</ul>
+<h2 id="presentation">presentation | Презентація</h2>
+<h3 id="experienceandknowledge">Experience and Knowledge</h3>
+<table>
 <thead>
 <tr>
 <th>Ukrainian</th>
@@ -191,7 +227,9 @@
 <li>Він має глибокі <strong>знання</strong> в цій галузі. - He has deep knowledge in this field.</li>
 <li>Мені потрібно покращити свої <strong>навички</strong>. - I need to improve my skills.</li>
 <li>Який ваш <strong>рівень</strong> української? - What's your Ukrainian level?</li>
-</ul></div></div><div class="canvas-note"><h4>Opportunities and Chances</h4><div class="md-content"><table>
+</ul>
+<h3 id="opportunitiesandchances">Opportunities and Chances</h3>
+<table>
 <thead>
 <tr>
 <th>Ukrainian</th>
@@ -252,7 +290,9 @@
 <li>У нас є кілька <strong>варіантів</strong>. - We have several options.</li>
 <li>Який <strong>вибір</strong> ти зробив? - What choice did you make?</li>
 <li>У цій компанії хороші <strong>перспективи</strong>. - This company has good prospects.</li>
-</ul></div></div><div class="canvas-note"><h4>Responsibility and Obligation</h4><div class="md-content"><table>
+</ul>
+<h3 id="responsibilityandobligation">Responsibility and Obligation</h3>
+<table>
 <thead>
 <tr>
 <th>Ukrainian</th>
@@ -307,7 +347,9 @@
 <li>Які ваші <strong>обов'язки</strong> на роботі? - What are your duties at work?</li>
 <li>Ви маєте <strong>право</strong> на відпочинок. - You have the right to rest.</li>
 <li>Я виконав свої <strong>зобов'язання</strong>. - I fulfilled my obligations.</li>
-</ul></div></div><div class="canvas-note"><h4>Situation and Circumstances</h4><div class="md-content"><table>
+</ul>
+<h3 id="situationandcircumstances">Situation and Circumstances</h3>
+<table>
 <thead>
 <tr>
 <th>Ukrainian</th>
@@ -361,7 +403,9 @@
 <li>За таких <strong>обставин</strong> я не можу допомогти. - Under these circumstances, I can't help.</li>
 <li>Які <strong>умови</strong> контракту? - What are the contract conditions?</li>
 <li>Він у поганому <strong>стані</strong>. - He's in bad condition.</li>
-</ul></div></div><div class="canvas-note"><h4>Change and Stability</h4><div class="md-content"><table>
+</ul>
+<h3 id="changeandstability">Change and Stability</h3>
+<table>
 <thead>
 <tr>
 <th>Ukrainian</th>
@@ -415,7 +459,9 @@
 <li>Мені потрібна <strong>стабільність</strong>. - I need stability.</li>
 <li>В умовах <strong>невизначеності</strong> важко планувати. - It's hard to plan in uncertainty.</li>
 <li>Це пов'язано з <strong>ризиком</strong>. - This involves risk.</li>
-</ul></div></div><div class="canvas-note"><h4>Verbs for Life Situations</h4><div class="md-content"><table>
+</ul>
+<h3 id="verbsforlifesituations">Verbs for Life Situations</h3>
+<table>
 <thead>
 <tr>
 <th>Ukrainian</th>
@@ -460,14 +506,19 @@
 <td>impf/pf</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>### Complete with Correct Word</h4><div class="md-content"><ol>
+</table>
+<h2 id="practice">practice | Практика</h2>
+<h3 id="completewithcorrectword">Complete with Correct Word</h3>
+<ol>
 <li>У мене десять років ___ (experience). → <strong>досвіду</strong></li>
 <li>Це чудова ___ (opportunity). → <strong>можливість</strong></li>
 <li>Яка ваша ___ (responsibility) в цьому? → <strong>відповідальність</strong></li>
 <li>Який ваш ___ (level) української? → <strong>рівень</strong></li>
 <li>Ми зіткнулися з важкою ___ (situation). → <strong>ситуацією</strong></li>
 <li>Немає ___ (alternative). → <strong>альтернативи</strong></li>
-</ol></div></div><div class="canvas-note"><h4>Match Opposites</h4><div class="md-content"><table>
+</ol>
+<h3 id="matchopposites">Match Opposites</h3>
+<table>
 <thead>
 <tr>
 <th>Word</th>
@@ -496,32 +547,278 @@
 <td>право</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Discussion Questions</h4><div class="md-content"><p>Answer using abstract vocabulary:</p>
+</table>
+<h3 id="discussionquestions">Discussion Questions</h3>
+<p>Answer using abstract vocabulary:</p>
 <ol>
 <li>Який <strong>досвід</strong> ви маєте у вивченні мов?</li>
 <li>Яка найважливіша <strong>навичка</strong> для вашої роботи?</li>
 <li>Які <strong>можливості</strong> дає знання української?</li>
 <li>Які ваші <strong>обов'язки</strong> вдома/на роботі?</li>
 <li>Які <strong>зміни</strong> ви хочете внести у своє життя?</li>
-</ol></div></div><div class="canvas-note"><h4>Translate to Ukrainian</h4><div class="md-content"><ol>
+</ol>
+<h3 id="translatetoukrainian">Translate to Ukrainian</h3>
+<ol>
 <li>I have a lot of experience. → <strong>У мене багато досвіду.</strong></li>
 <li>This is my responsibility. → <strong>Це моя відповідальність.</strong></li>
 <li>We have several options. → <strong>У нас є кілька варіантів.</strong></li>
 <li>Under these circumstances… → <strong>За таких обставин…</strong></li>
 <li>I need stability. → <strong>Мені потрібна стабільність.</strong></li>
-</ol></div></div><div class="canvas-note"><h4>### Describe Your Experience</h4><div class="md-content"><p>Use vocabulary to describe:</p>
+</ol>
+<h2 id="production">production | Продукція</h2>
+<h3 id="describeyourexperience">Describe Your Experience</h3>
+<p>Use vocabulary to describe:</p>
 <ul>
 <li>Your <strong>досвід</strong> (experience)</li>
 <li>Your <strong>навички</strong> (skills)</li>
 <li>Your <strong>рівень</strong> in different areas</li>
 </ul>
 <p><strong>Example:</strong><br />
-У мене п'ять років <strong>досвіду</strong> роботи в IT. Мої головні <strong>навички</strong> — програмування та аналіз даних. Мій <strong>рівень</strong> англійської — просунутий, а української — середній.</p></div></div><div class="canvas-note"><h4>Discuss Opportunities</h4><div class="md-content"><p>Talk about:</p>
+У мене п'ять років <strong>досвіду</strong> роботи в IT. Мої головні <strong>навички</strong> — програмування та аналіз даних. Мій <strong>рівень</strong> англійської — просунутий, а української — середній.</p>
+<h3 id="discussopportunities">Discuss Opportunities</h3>
+<p>Talk about:</p>
 <ul>
 <li><strong>Можливості</strong> you have</li>
 <li><strong>Варіанти</strong> for the future</li>
 <li><strong>Ризики</strong> you face</li>
-</ul></div></div></div>
+</ul>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Activities</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="quizlifevocabulary">quiz: Life Vocabulary</h2>
+<blockquote>
+  <p>Choose the correct word.</p>
+</blockquote>
+<ol>
+<li>У мене великий ___ роботи.</li>
+</ol>
+<ul>
+<li>[x] досвід</li>
+<li>[ ] переживання</li>
+</ul>
+<ol>
+<li>Це моя ___ .</li>
+</ol>
+<ul>
+<li>[x] відповідальність</li>
+<li>[ ] право</li>
+</ul>
+<ol>
+<li>У нас кілька ___ .</li>
+</ol>
+<ul>
+<li>[x] варіантів</li>
+<li>[ ] досвідів</li>
+</ul>
+<ol>
+<li>Яка ___ на роботі?</li>
+</ol>
+<ul>
+<li>[x] ситуація</li>
+<li>[ ] навичка</li>
+</ul>
+<ol>
+<li>Мені потрібна ___ .</li>
+</ol>
+<ul>
+<li>[x] стабільність</li>
+<li>[ ] невизначеність</li>
+</ul>
+<ol>
+<li>Які ваші ___ на роботі?</li>
+</ol>
+<ul>
+<li>[x] обов'язки</li>
+<li>[ ] права</li>
+</ul>
+<h2 id="matchupwordcategories">match-up: Word Categories</h2>
+<table>
+<thead>
+<tr>
+<th>Experience</th>
+<th>Opportunity</th>
+<th>Responsibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>досвід</td>
+<td>можливість</td>
+<td>відповідальність</td>
+</tr>
+<tr>
+<td>знання</td>
+<td>шанс</td>
+<td>обов'язок</td>
+</tr>
+<tr>
+<td>навичка</td>
+<td>вибір</td>
+<td>борг</td>
+</tr>
+</tbody>
+</table>
+<h2 id="fillincompletetheparagraph">fill-in: Complete the Paragraph</h2>
+<blockquote>
+  <p>Я маю великий ___ (experience) роботи. У мене хороші ___ (skills) і високий ___ (level) кваліфікації. Зараз я шукаю нові ___ (opportunities). Мої ___ (duties) включають управління проєктами. Я готовий до ___ (changes) і нових викликів.</p>
+</blockquote>
+<p><strong>Answers:</strong> досвід, навички, рівень, можливості, обов'язки, змін</p>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Vocabulary</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Word</th>
+<th>IPA</th>
+<th>English</th>
+<th>Gender</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>досвід</td>
+<td>/ˈdosvʲid/</td>
+<td>experience</td>
+<td>m</td>
+</tr>
+<tr>
+<td>переживання</td>
+<td>/pɛrɛʒɪˈvɑnʲːɑ/</td>
+<td>experience (emotional)</td>
+<td>n</td>
+</tr>
+<tr>
+<td>знання</td>
+<td>/znɑnʲˈːɑ/</td>
+<td>knowledge</td>
+<td>n (usually pl)</td>
+</tr>
+<tr>
+<td>навичка</td>
+<td>/nɑˈvɪt͡ʃkɑ/</td>
+<td>skill</td>
+<td>f</td>
+</tr>
+<tr>
+<td>вміння</td>
+<td>/vˈmʲinʲːɑ/</td>
+<td>ability</td>
+<td>n</td>
+</tr>
+<tr>
+<td>можливість</td>
+<td>/moʒˈlɪvʲistʲ/</td>
+<td>opportunity</td>
+<td>f</td>
+</tr>
+<tr>
+<td>шанс</td>
+<td>/ʃɑns/</td>
+<td>chance</td>
+<td>m</td>
+</tr>
+<tr>
+<td>вибір</td>
+<td>/ˈvɪbʲir/</td>
+<td>choice</td>
+<td>m</td>
+</tr>
+<tr>
+<td>варіант</td>
+<td>/vɑrʲiˈɑnt/</td>
+<td>option</td>
+<td>m</td>
+</tr>
+<tr>
+<td>відповідальність</td>
+<td>/vʲidpovʲidɑlʲˈnʲistʲ/</td>
+<td>responsibility</td>
+<td>f</td>
+</tr>
+<tr>
+<td>обов'язок</td>
+<td>/oboˈvjɑzok/</td>
+<td>duty</td>
+<td>m</td>
+</tr>
+<tr>
+<td>ситуація</td>
+<td>/sɪtuˈɑt͡sʲijɑ/</td>
+<td>situation</td>
+<td>f</td>
+</tr>
+<tr>
+<td>умови</td>
+<td>/uˈmovɪ/</td>
+<td>conditions</td>
+<td>pl</td>
+</tr>
+<tr>
+<td>зміна</td>
+<td>/ˈzmʲinɑ/</td>
+<td>change</td>
+<td>f</td>
+</tr>
+<tr>
+<td>стабільність</td>
+<td>/stɑˈbʲilʲnʲistʲ/</td>
+<td>stability</td>
+<td>f</td>
+</tr>
+<tr>
+<td>ризик</td>
+<td>/ˈrɪzɪk/</td>
+<td>risk</td>
+<td>m</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Summary</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="keyvocabularybycategory">Key Vocabulary by Category</h2>
+<h3 id="experienceskills">Experience &amp; Skills</h3>
+<p>досвід, знання, навичка, вміння, рівень, освіта</p>
+<h3 id="opportunities">Opportunities</h3>
+<p>можливість, шанс, вибір, варіант, альтернатива, перспектива</p>
+<h3 id="responsibility">Responsibility</h3>
+<p>відповідальність, обов'язок, право, зобов'язання</p>
+<h3 id="situation">Situation</h3>
+<p>ситуація, обставини, умови, стан, середовище</p>
+<h3 id="change">Change</h3>
+<p>зміна, стабільність, невизначеність, ризик, безпека</p>
+<h2 id="usefulexpressions">Useful Expressions</h2>
+<ul>
+<li>У мене є досвід… - I have experience…</li>
+<li>Це моя відповідальність. - This is my responsibility.</li>
+<li>Яка ситуація? - What's the situation?</li>
+<li>У нас є кілька варіантів. - We have several options.</li>
+<li>Готовий до змін. - Ready for changes.</li>
+</ul>
+<blockquote>
+  <p><strong>Key Takeaways</strong></p>
+  <ul>
+  <li>Abstract vocabulary helps discuss life situations</li>
+  <li>Many important abstract nouns are feminine (-ість endings)</li>
+  <li>Use these words in job interviews, discussions, planning</li>
+  <li>Practice forming sentences with these concepts</li>
+  </ul>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('match')">Start →</button></div>
     </section>
     <section id="match" class="section"><div class="card"><h3>Word Categories</h3>
@@ -567,6 +864,10 @@
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

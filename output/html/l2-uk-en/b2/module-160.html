@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,8 +136,20 @@
         <p style="color:var(--text-muted)">Стилістичні сполучники</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="md-content"><h1 id="">Вступ</h1>
-<p>«Він розумний, <strong>але</strong> ледачий.» — це знає кожен студент А1. Але на рівні B2 «але» — це вже занадто просто. Спробуйте сказати те саме <strong>п'ятьма</strong> різними способами:</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Вступ</li><li class="toc-item" data-target="section-1">Але — не єдиний варіант!</li><li class="toc-item" data-target="section-2">Протиставні сполучники</li><li class="toc-item" data-target="section-3">Але vs Проте vs Однак</li><li class="toc-item" data-target="section-4">Втім</li><li class="toc-item" data-target="section-5">Зате</li><li class="toc-item" data-target="section-6">Та vs А</li><li class="toc-item" data-target="section-7">Приєднувальні сполучники</li><li class="toc-item" data-target="section-8">Пояснювальні сполучники</li><li class="toc-item" data-target="section-9">Наслідкові сполучники</li><li class="toc-item" data-target="section-10">Допустові сполучники</li><li class="toc-item" data-target="section-11">Пунктуація</li><li class="toc-item" data-target="section-12">Практика</li><li class="toc-item" data-target="section-13">Аргументативний текст</li><li class="toc-item" data-target="section-14">Словник</li><li class="toc-item" data-target="section-15">Підсумок</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Вступ</h3>
+          <span class="section-type intro">intro</span>
+        </div>
+        <div class="section-body md-content"><p>«Він розумний, <strong>але</strong> ледачий.» — це знає кожен студент А1. Але на рівні B2 «але» — це вже занадто просто. Спробуйте сказати те саме <strong>п'ятьма</strong> різними способами:</p>
 <ul>
 <li>Він розумний, <strong>але</strong> ледачий. (нейтрально)</li>
 <li>Він розумний. <strong>Проте</strong> ледачий. (офіційніше)</li>
@@ -134,9 +164,14 @@
   <p><strong>Чи знали ви?</strong></p>
   <p>Слово <strong>«однак»</strong> походить від давнього <em>однако</em>, що буквально означало «одним способом» (одн-ак). Воно вказувало на несподіваний поворот: «ви думали одне, а виявилося інше». Тому «однак» найкраще вживати, коли результат <strong>суперечить очікуванням</strong>: «Усі думали, що він відмовиться. <strong>Однак</strong> він погодився.»</p>
 </blockquote>
-<hr />
-<h1 id="-1">Але — не єдиний варіант!</h1>
-<table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Але — не єдиний варіант!</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><table>
 <thead>
 <tr>
 <th>Нейтрально</th>
@@ -151,9 +186,14 @@
 </tbody>
 </table>
 <p>Кожен сполучник має свій <strong>відтінок</strong>!</p>
-<hr />
-<h1 id="-2">Протиставні сполучники</h1>
-<table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Протиставні сполучники</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><table>
 <thead>
 <tr>
 <th>Сполучник</th>
@@ -199,21 +239,26 @@
 </tr>
 </tbody>
 </table>
-<hr />
-<h1 id="vsvs">Але vs Проте vs Однак</h1>
-<h2 id="-3">«Але» — універсальний, нейтральний</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Але vs Проте vs Однак</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">«Але» — універсальний, нейтральний</h2>
 <ul>
 <li>Він хотів прийти, <strong>але</strong> не зміг.</li>
 <li>Погода була погана, <strong>але</strong> ми пішли.</li>
 </ul>
 <p>Підходить для будь-якого контексту.</p>
-<h2 id="-4">«Проте» — формальніший, часто на початку речення</h2>
+<h2 id="-1">«Проте» — формальніший, часто на початку речення</h2>
 <ul>
 <li>Він хотів прийти. <strong>Проте</strong> не зміг.</li>
 <li>Погода була погана. <strong>Проте</strong> ми пішли.</li>
 </ul>
 <p>Звучить <strong>офіційніше</strong>, краще для писемного мовлення.</p>
-<h2 id="-5">«Однак» — ще формальніший, наголошує на несподіваності</h2>
+<h2 id="-2">«Однак» — ще формальніший, наголошує на несподіваності</h2>
 <ul>
 <li>Ми чекали дощу. <strong>Однак</strong> небо прояснилося.</li>
 <li>Усі думали, що він відмовиться. <strong>Однак</strong> він погодився.</li>
@@ -224,9 +269,14 @@
   <p>❌ <strong>Міф:</strong> «Проте», «однак», «але» — повні синоніми.»</p>
   <p>✅ <strong>Факт:</strong> Вони мають <strong>різну стилістику</strong>. «Але» — нейтральне. «Проте» — книжне, офіційне. «Однак» — вказує на <strong>несподіванку</strong>, суперечність очікуванням. У розмові краще «але», у статті — «проте» або «однак».</p>
 </blockquote>
-<hr />
-<h1 id="-6">Втім</h1>
-<p><strong>«Втім»</strong> — вносить застереження, коректив:</p>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-4">
+        <div class="section-header" onclick="toggleSection(4)">
+          <h3>Втім</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><p><strong>«Втім»</strong> — вносить застереження, коректив:</p>
 <ul>
 <li>Він добрий. <strong>Втім</strong>, іноді буває різким.</li>
 <li>Це хороша ідея. <strong>Втім</strong>, є кілька проблем.</li>
@@ -237,9 +287,14 @@
   <p><strong>Чи знали ви?</strong></p>
   <p>Слово <strong>«втім»</strong> походить від «в тім» (= «в тому»). Буквально: «в тому [є ще щось]». Це пояснює його функцію — додати <strong>ще одну сторону</strong> питання, не заперечуючи першу.</p>
 </blockquote>
-<hr />
-<h1 id="-7">Зате</h1>
-<p><strong>«Зате»</strong> — компенсація, «в обмін»:</p>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-5">
+        <div class="section-header" onclick="toggleSection(5)">
+          <h3>Зате</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><p><strong>«Зате»</strong> — компенсація, «в обмін»:</p>
 <ul>
 <li>Він не красивий, <strong>зате</strong> розумний.</li>
 <li>Квартира маленька, <strong>зате</strong> дешева.</li>
@@ -261,24 +316,34 @@
 </tbody>
 </table>
 <p>«Зате» потребує <strong>контрасту</strong>: негатив + позитивна компенсація.</p>
-<hr />
-<h1 id="vs">Та vs А</h1>
-<h2 id="-8">«Та» — легке протиставлення</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-6">
+        <div class="section-header" onclick="toggleSection(6)">
+          <h3>Та vs А</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">«Та» — легке протиставлення</h2>
 <ul>
 <li>Хотів, <strong>та</strong> не зміг. (= але, м'якше)</li>
 <li>Намагався, <strong>та</strong> даремно.</li>
 </ul>
 <p>«Та» — менш категоричне, ніж «але».</p>
-<h2 id="-9">«А» — контраст, порівняння</h2>
+<h2 id="-1">«А» — контраст, порівняння</h2>
 <ul>
 <li>Він працює, <strong>а</strong> ти відпочиваєш.</li>
 <li>Вона співає, <strong>а</strong> він грає.</li>
 <li>Учора було холодно, <strong>а</strong> сьогодні тепло.</li>
 </ul>
 <p>«А» показує <strong>паралель або контраст</strong> між двома ситуаціями.</p>
-<hr />
-<h1 id="-10">Приєднувальні сполучники</h1>
-<table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-7">
+        <div class="section-header" onclick="toggleSection(7)">
+          <h3>Приєднувальні сполучники</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><table>
 <thead>
 <tr>
 <th>Сполучник</th>
@@ -315,9 +380,14 @@
 </tbody>
 </table>
 <p>Ці сполучники <strong>додають</strong> інформацію до вже сказаного.</p>
-<hr />
-<h1 id="-11">Пояснювальні сполучники</h1>
-<table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-8">
+        <div class="section-header" onclick="toggleSection(8)">
+          <h3>Пояснювальні сполучники</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><table>
 <thead>
 <tr>
 <th>Сполучник</th>
@@ -343,9 +413,14 @@
 </tr>
 </tbody>
 </table>
-<hr />
-<h1 id="-12">Наслідкові сполучники</h1>
-<table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-9">
+        <div class="section-header" onclick="toggleSection(9)">
+          <h3>Наслідкові сполучники</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><table>
 <thead>
 <tr>
 <th>Сполучник</th>
@@ -385,9 +460,14 @@
   <p><strong>Чи знали ви?</strong></p>
   <p>Слово <strong>«отже»</strong> — це скорочення від «от же» (= «ось і»). Воно сигналізує: «ось і висновок». А <strong>«тож»</strong> — це скорочення від «то ж» (= «то й»). Обидва слова вказують на <strong>підсумок</strong>, але «отже» звучить офіційніше.</p>
 </blockquote>
-<hr />
-<h1 id="-13">Допустові сполучники</h1>
-<table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-10">
+        <div class="section-header" onclick="toggleSection(10)">
+          <h3>Допустові сполучники</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><table>
 <thead>
 <tr>
 <th>Сполучник</th>
@@ -418,9 +498,14 @@
 </tr>
 </tbody>
 </table>
-<hr />
-<h1 id="-14">Пунктуація</h1>
-<h2 id="-15">Але, проте, однак, зате</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-11">
+        <div class="section-header" onclick="toggleSection(11)">
+          <h3>Пунктуація</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Але, проте, однак, зате</h2>
 <p><strong>У складному реченні</strong> — з комою:</p>
 <ul>
 <li>Він розумний<strong>,</strong> <strong>але</strong> ледачий.</li>
@@ -430,16 +515,21 @@
 <ul>
 <li>Він розумний. <strong>Проте</strong> він ледачий.</li>
 </ul>
-<h2 id="-16">Втім, до того ж, крім того</h2>
+<h2 id="-1">Втім, до того ж, крім того</h2>
 <p><strong>Виділяються комами як вставні:</strong></p>
 <ul>
 <li>Він добрий. <strong>Втім,</strong> буває різким.</li>
 <li><strong>До того ж,</strong> він талановитий.</li>
 <li><strong>Крім того,</strong> є ще одна проблема.</li>
 </ul>
-<hr />
-<h1 id="-17">Практика</h1>
-<h2 id="-18">Виберіть сполучник</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-12">
+        <div class="section-header" onclick="toggleSection(12)">
+          <h3>Практика</h3>
+          <span class="section-type practice">practice</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Виберіть сполучник</h2>
 <ol>
 <li><p>Він не красивий, ___ розумний. (компенсація)<br />
 → <strong>зате</strong></p></li>
@@ -452,7 +542,7 @@
 <li><p>Ми запізнилися. ___ нас пустили. (протиставлення)<br />
 → <strong>Але / Проте</strong></p></li>
 </ol>
-<h2 id="-19">Замініть «але»</h2>
+<h2 id="-1">Замініть «але»</h2>
 <ol>
 <li><p>Він хотів прийти, але не зміг.<br />
 → Він хотів прийти. <strong>Проте</strong> не зміг.</p></li>
@@ -463,7 +553,7 @@
 <li><p>Він добрий, але іноді різкий.<br />
 → Він добрий. <strong>Втім</strong>, іноді різкий.</p></li>
 </ol>
-<h2 id="-20">Поєднайте речення</h2>
+<h2 id="-2">Поєднайте речення</h2>
 <ol>
 <li><p>Він не мав досвіду. Він справився.<br />
 → <strong>Він не мав досвіду. Проте справився.</strong></p></li>
@@ -472,13 +562,172 @@
 <li><p>Було пізно. Ми пішли.<br />
 → <strong>Хоча було пізно, ми пішли.</strong></p></li>
 </ol>
-<hr />
-<h1 id="-21">Аргументативний текст</h1>
-<h2 id="-22">Приклад використання різних сполучників</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-13">
+        <div class="section-header" onclick="toggleSection(13)">
+          <h3>Аргументативний текст</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Приклад використання різних сполучників</h2>
 <p><strong>Тема:</strong> Переваги та недоліки міського життя</p>
 <p>«Життя в місті має багато переваг. <strong>Однак</strong> є й суттєві недоліки. <strong>По-перше</strong>, в місті багато можливостей для роботи. <strong>Проте</strong> ціни на житло високі. <strong>Зате</strong> є розвинений транспорт. <strong>Крім того</strong>, багато закладів культури. <strong>Втім</strong>, повітря забруднене. <strong>Отже</strong>, кожен сам вирішує, де жити.»</p>
 <p>Зверніть увагу, як <strong>різні сполучники</strong> створюють <strong>логічний потік</strong> тексту!</p>
-<hr /></div></div>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-14">
+        <div class="section-header" onclick="toggleSection(14)">
+          <h3>Словник</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Слово</th>
+<th>Переклад</th>
+<th>Примітки</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>проте</td>
+<td>however</td>
+<td>книжний</td>
+</tr>
+<tr>
+<td>однак</td>
+<td>however, yet</td>
+<td>несподіванка</td>
+</tr>
+<tr>
+<td>втім</td>
+<td>however, though</td>
+<td>застереження</td>
+</tr>
+<tr>
+<td>зате</td>
+<td>but (in exchange)</td>
+<td>компенсація</td>
+</tr>
+<tr>
+<td>до того ж</td>
+<td>moreover</td>
+<td>додавання</td>
+</tr>
+<tr>
+<td>крім того</td>
+<td>besides</td>
+<td>додавання</td>
+</tr>
+<tr>
+<td>більше того</td>
+<td>what's more</td>
+<td>підсилення</td>
+</tr>
+<tr>
+<td>тобто</td>
+<td>that is</td>
+<td>пояснення</td>
+</tr>
+<tr>
+<td>отже</td>
+<td>so, thus</td>
+<td>наслідок</td>
+</tr>
+<tr>
+<td>відтак</td>
+<td>consequently</td>
+<td>наслідок</td>
+</tr>
+<tr>
+<td>тож</td>
+<td>so</td>
+<td>наслідок</td>
+</tr>
+<tr>
+<td>попри</td>
+<td>despite</td>
+<td>допуст</td>
+</tr>
+<tr>
+<td>дарма що</td>
+<td>although</td>
+<td>допуст</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-15">
+        <div class="section-header" onclick="toggleSection(15)">
+          <h3>Підсумок</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Протиставні сполучники</h2>
+<table>
+<thead>
+<tr>
+<th>Сполучник</th>
+<th>Нюанс</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>але</td>
+<td>нейтральний</td>
+</tr>
+<tr>
+<td>проте</td>
+<td>книжний, формальний</td>
+</tr>
+<tr>
+<td>однак</td>
+<td>книжний, несподіванка</td>
+</tr>
+<tr>
+<td>втім</td>
+<td>застереження</td>
+</tr>
+<tr>
+<td>зате</td>
+<td>компенсація</td>
+</tr>
+</tbody>
+</table>
+<h2 id="-1">Інші сполучники</h2>
+<table>
+<thead>
+<tr>
+<th>Функція</th>
+<th>Сполучники</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Додавання</td>
+<td>до того ж, крім того</td>
+</tr>
+<tr>
+<td>Наслідок</td>
+<td>тому, отже, тож</td>
+</tr>
+<tr>
+<td>Допуст</td>
+<td>хоча, попри</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p><strong>Запам'ятайте:</strong></p>
+  <p>✓ «Але» — не єдиний варіант<br />
+  ✓ Кожен сполучник має свій <strong>відтінок</strong><br />
+  ✓ «Зате» — для <strong>компенсації</strong> (негатив → позитив)<br />
+  ✓ «Втім» — для <strong>застереження</strong> (уточнення)<br />
+  ✓ «Однак» — для <strong>несподіванки</strong> (суперечить очікуванням)<br />
+  ✓ Різноманітність сполучників — ознака <strong>зрілого мовлення</strong></p>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('vocab')">Start →</button></div>
     </section>
     
@@ -511,6 +760,10 @@
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

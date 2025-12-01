@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,8 +136,20 @@
         <p style="color:var(--text-muted)">Дієприкметники та підрядні речення</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="md-content"><h1 id="">Вступ</h1>
-<p>Ви пишете текст і перед вами вибір: «Книга, написана Шевченком» чи «Книга, яку написав Шевченко»? «Студент, читаючий підручник» чи «Студент, який читає підручник»? Обидва варіанти начебто кажуть одне й те саме. Але чи справді вони рівноцінні?</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Вступ</li><li class="toc-item" data-target="section-1">Два способи сказати одне й те саме</li><li class="toc-item" data-target="section-2">Порівняння конструкцій</li><li class="toc-item" data-target="section-3">Пасивні дієприкметники</li><li class="toc-item" data-target="section-4">Активні дієприкметники теперішнього часу</li><li class="toc-item" data-target="section-5">Активні дієприкметники минулого часу</li><li class="toc-item" data-target="section-6">Дієприслівники vs Підрядні речення</li><li class="toc-item" data-target="section-7">Стилістичний вибір: зведена таблиця</li><li class="toc-item" data-target="section-8">Порівняльна таблиця всіх форм</li><li class="toc-item" data-target="section-9">Трансформації</li><li class="toc-item" data-target="section-10">Практика</li><li class="toc-item" data-target="section-11">Редагування тексту</li><li class="toc-item" data-target="section-12">Словник</li><li class="toc-item" data-target="section-13">Підсумок</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Вступ</h3>
+          <span class="section-type intro">intro</span>
+        </div>
+        <div class="section-body md-content"><p>Ви пишете текст і перед вами вибір: «Книга, написана Шевченком» чи «Книга, яку написав Шевченко»? «Студент, читаючий підручник» чи «Студент, який читає підручник»? Обидва варіанти начебто кажуть одне й те саме. Але чи справді вони рівноцінні?</p>
 <p>Якщо ви вивчали європейські мови — англійську, німецьку, французьку — ви звикли, що дієприкметники (participles) універсальні. «The book written by Shevchenko», «Das von Schewtschenko geschriebene Buch» — ці конструкції звучать абсолютно природно. І ви інстинктивно переносите цю логіку на українську: чим коротше, тим краще, правда?</p>
 <p>Неправда. Українська мова живе за <strong>іншими правилами</strong>. Тут підрядне речення — не «довга альтернатива», а <strong>основний спосіб вираження</strong>. Тут дієприкметник — не нейтральний варіант, а <strong>стилістично маркована форма</strong>. І що найважливіше: деякі дієприкметникові форми, які здаються логічними, в українській <strong>не існують взагалі</strong>.</p>
 <p>Сьогодні ми навчимося робити правильний вибір. Не механічний («коротше = краще»), а <strong>стилістичний</strong> («що звучить природно в цьому контексті?»).</p>
@@ -127,9 +157,14 @@
   <p><strong>Чи знали ви?</strong></p>
   <p>Європейські мови — особливо німецька — славляться <strong>дієприкметниковими конструкціями</strong>. Речення на кшталт «Der von dem berühmten Architekten im Jahre 1890 erbaute und später mehrfach renovierte Palast…» (Палац, збудований знаменитим архітектором у 1890 році та пізніше неодноразово реставрований…) — це норма. В українській такі конструкції звучать <strong>штучно та канцелярськи</strong>. Природна українська мова віддає перевагу <strong>підрядним реченням</strong>: «Палац, який збудував знаменитий архітектор у 1890 році і який пізніше кілька разів реставрували…»</p>
 </blockquote>
-<hr />
-<h1 id="-1">Два способи сказати одне й те саме</h1>
-<table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Два способи сказати одне й те саме</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><table>
 <thead>
 <tr>
 <th>Дієприкметник</th>
@@ -152,9 +187,14 @@
 </tbody>
 </table>
 <p>Який варіант кращий? <strong>Залежить від стилю, контексту та типу дієприкметника!</strong></p>
-<hr />
-<h1 id="-2">Порівняння конструкцій</h1>
-<table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Порівняння конструкцій</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><table>
 <thead>
 <tr>
 <th>Критерій</th>
@@ -195,9 +235,14 @@
   <p>❌ <strong>Міф:</strong> «Дієприкметник — це "вища форма" мови, її треба використовувати якнайбільше.»</p>
   <p>✅ <strong>Факт:</strong> В українській мові <strong>підрядне речення — це норма</strong>, а дієприкметник — стилістичний засіб для конкретних контекстів. Надмірне вживання дієприкметників робить текст <strong>канцелярським</strong>, а іноді — <strong>русифікованим</strong>.</p>
 </blockquote>
-<hr />
-<h1 id="-3">Пасивні дієприкметники</h1>
-<h2 id="-4">Вживаються широко</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Пасивні дієприкметники</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Вживаються широко</h2>
 <p>Пасивні дієприкметники на <strong>-ний/-тий</strong> — найбезпечніші. Вони вживаються в усіх стилях:</p>
 <table>
 <thead>
@@ -226,7 +271,7 @@
 </tbody>
 </table>
 <p><strong>Обидва варіанти допустимі</strong>, але дієприкметник — більш офіційний, стислий. Підрядне речення — більш нейтральне, розмовне.</p>
-<h2 id="-5">Коли що обрати?</h2>
+<h2 id="-1">Коли що обрати?</h2>
 <table>
 <thead>
 <tr>
@@ -253,9 +298,14 @@
 </tr>
 </tbody>
 </table>
-<hr />
-<h1 id="-6">Активні дієприкметники теперішнього часу</h1>
-<h2 id="-7">Обмежене вживання</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-4">
+        <div class="section-header" onclick="toggleSection(4)">
+          <h3>Активні дієприкметники теперішнього часу</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Обмежене вживання</h2>
 <p>Пам'ятаєте з модулів 153-154? Активні дієприкметники на <strong>-учий/-ючий</strong> — <strong>книжні</strong>:</p>
 <table>
 <thead>
@@ -283,16 +333,21 @@
 </tr>
 </tbody>
 </table>
-<h2 id="-8">Рекомендація</h2>
+<h2 id="-1">Рекомендація</h2>
 <p>В нейтральному та розмовному стилях <strong>завжди</strong> використовуйте підрядні речення замість активних дієприкметників теперішнього часу.</p>
 <p><strong>Виняток:</strong> усталені вирази («діюча особа», «чинне законодавство»).</p>
 <blockquote>
   <p><strong>Чи знали ви?</strong></p>
   <p>У <strong>радянський період</strong> активні дієприкметники масово насаджувалися через кальки з російської мови. Форми на кшталт «працюючий клас», «завідуючий кафедрою» були нормою офіційної «української» мови. Сьогодні більшість із них визнані <strong>русизмами</strong> або <strong>стилістичними помилками</strong>. Природна українська мова віддає перевагу підрядним реченням або спеціальним іменникам (працівники → робітничий клас, завідувач кафедри).</p>
 </blockquote>
-<hr />
-<h1 id="-9">Активні дієприкметники минулого часу</h1>
-<h2 id="-10">НЕ вживаються (русизми!)</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-5">
+        <div class="section-header" onclick="toggleSection(5)">
+          <h3>Активні дієприкметники минулого часу</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">НЕ вживаються (русизми!)</h2>
 <table>
 <thead>
 <tr>
@@ -320,9 +375,14 @@
 </tbody>
 </table>
 <p>Форми на <strong>-вший/-ший</strong> — <strong>грубі русизми</strong>. Їх не існує в українській мові. Завжди замінюйте підрядним реченням.</p>
-<hr />
-<h1 id="vs">Дієприслівники vs Підрядні речення</h1>
-<p>На відміну від активних дієприкметників, <strong>дієприслівники</strong> вживаються широко:</p>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-6">
+        <div class="section-header" onclick="toggleSection(6)">
+          <h3>Дієприслівники vs Підрядні речення</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><p>На відміну від активних дієприкметників, <strong>дієприслівники</strong> вживаються широко:</p>
 <table>
 <thead>
 <tr>
@@ -346,9 +406,14 @@
 </tbody>
 </table>
 <p><strong>Дієприслівники</strong> — стилістично нейтральніші за активні дієприкметники. Їх можна вживати в більшості контекстів.</p>
-<hr />
-<h1 id="-11">Стилістичний вибір: зведена таблиця</h1>
-<table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-7">
+        <div class="section-header" onclick="toggleSection(7)">
+          <h3>Стилістичний вибір: зведена таблиця</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><table>
 <thead>
 <tr>
 <th>Стиль</th>
@@ -382,9 +447,14 @@
 </tr>
 </tbody>
 </table>
-<hr />
-<h1 id="-12">Порівняльна таблиця всіх форм</h1>
-<table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-8">
+        <div class="section-header" onclick="toggleSection(8)">
+          <h3>Порівняльна таблиця всіх форм</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><table>
 <thead>
 <tr>
 <th>Тип</th>
@@ -420,9 +490,14 @@
 </tr>
 </tbody>
 </table>
-<hr />
-<h1 id="-13">Трансформації</h1>
-<h2 id="-14">Підрядне → Дієприкметник (якщо можливо)</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-9">
+        <div class="section-header" onclick="toggleSection(9)">
+          <h3>Трансформації</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Підрядне → Дієприкметник (якщо можливо)</h2>
 <p>Працює тільки для <strong>пасивних</strong> форм:</p>
 <ol>
 <li><p>«Книга, яку написав Шевченко»<br />
@@ -432,7 +507,7 @@
 <li><p>«Будинок, який збудували»<br />
 → «<strong>Збудований</strong> будинок»</p></li>
 </ol>
-<h2 id="-15">Дієприкметник → Підрядне (завжди можливо)</h2>
+<h2 id="-1">Дієприкметник → Підрядне (завжди можливо)</h2>
 <p>Ця трансформація працює <strong>завжди</strong>:</p>
 <ol>
 <li><p>«Написана книга»<br />
@@ -447,9 +522,14 @@
   <p>❌ <strong>Міф:</strong> «Підрядне речення — це "розведена", менш елегантна форма.»</p>
   <p>✅ <strong>Факт:</strong> Підрядне речення — це <strong>природна українська конструкція</strong>. Воно не «гірше» за дієприкметник — воно <strong>основне</strong>. Намагання завжди використовувати дієприкметники робить текст штучним.</p>
 </blockquote>
-<hr />
-<h1 id="-16">Практика</h1>
-<h2 id="-17">Трансформуйте на підрядне речення</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-10">
+        <div class="section-header" onclick="toggleSection(10)">
+          <h3>Практика</h3>
+          <span class="section-type practice">practice</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Трансформуйте на підрядне речення</h2>
 <ol>
 <li><p>Прочитана книга<br />
 → Книга, <strong>яку прочитали</strong></p></li>
@@ -462,7 +542,7 @@
 <li><p>Збудований будинок<br />
 → Будинок, <strong>який збудували</strong></p></li>
 </ol>
-<h2 id="-18">Виправте русизми</h2>
+<h2 id="-1">Виправте русизми</h2>
 <ol>
 <li><p>❌ «Студенти, здавші іспит…»<br />
 ✓ <strong>«Студенти, які здали іспит…»</strong></p></li>
@@ -471,7 +551,7 @@
 <li><p>❌ «Директор, підписавший наказ…»<br />
 ✓ <strong>«Директор, який підписав наказ…»</strong></p></li>
 </ol>
-<h2 id="-19">Виберіть кращий варіант для стилю</h2>
+<h2 id="-2">Виберіть кращий варіант для стилю</h2>
 <p><strong>Розмовний:</strong></p>
 <ol>
 <li>«Документ, підписаний директором» vs «Документ, який підписав директор»<br />
@@ -487,15 +567,150 @@
 <li>«Дані, що аналізуються» vs «Дані, які аналізують»<br />
 → <strong>«Дані, що аналізуються»</strong> (науковий стиль)</li>
 </ol>
-<hr />
-<h1 id="-20">Редагування тексту</h1>
-<h2 id="-21">Завдання</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-11">
+        <div class="section-header" onclick="toggleSection(11)">
+          <h3>Редагування тексту</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Завдання</h2>
 <p>Зробіть текст менш книжним, виправте русизми:</p>
 <p><strong>Оригінал (❌ містить русизми та надмірну книжність):</strong><br />
 «Студенти, успішно <del>склавші</del> іспити та <del>отримавші</del> дипломи, були запрошені на урочисту церемонію. Особи, <del>бажаючі</del> взяти участь, мають зареєструватися.»</p>
 <p><strong>Редакція:</strong><br />
 «Студентів, <strong>які успішно склали</strong> іспити та <strong>отримали</strong> дипломи, запросили на урочисту церемонію. Усі, <strong>хто хоче</strong> взяти участь, мають зареєструватися.»</p>
-<hr /></div></div>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-12">
+        <div class="section-header" onclick="toggleSection(12)">
+          <h3>Словник</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Слово</th>
+<th>Переклад</th>
+<th>Примітки</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>підрядне речення</td>
+<td>subordinate clause</td>
+<td>основний спосіб</td>
+</tr>
+<tr>
+<td>дієприслівник</td>
+<td>adverbial participle</td>
+<td>широко вживаний</td>
+</tr>
+<tr>
+<td>трансформація</td>
+<td>transformation</td>
+<td>перетворення</td>
+</tr>
+<tr>
+<td>стислість</td>
+<td>conciseness</td>
+<td>коротка форма</td>
+</tr>
+<tr>
+<td>природність</td>
+<td>naturalness</td>
+<td>відповідність мові</td>
+</tr>
+<tr>
+<td>книжний</td>
+<td>bookish</td>
+<td>офіційний, штучний</td>
+</tr>
+<tr>
+<td>нейтральний</td>
+<td>neutral</td>
+<td>звичайний стиль</td>
+</tr>
+<tr>
+<td>допустимий</td>
+<td>permissible</td>
+<td>можна вживати</td>
+</tr>
+<tr>
+<td>редакція</td>
+<td>editing</td>
+<td>виправлення</td>
+</tr>
+<tr>
+<td>калька</td>
+<td>calque</td>
+<td>дослівний переклад</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-13">
+        <div class="section-header" onclick="toggleSection(13)">
+          <h3>Підсумок</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Вибір конструкції за стилем</h2>
+<table>
+<thead>
+<tr>
+<th>Стиль</th>
+<th>Рекомендація</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Розмовний</td>
+<td>Підрядні речення</td>
+</tr>
+<tr>
+<td>Офіційний</td>
+<td>Пасивні дієприкметники</td>
+</tr>
+<tr>
+<td>Науковий</td>
+<td>-ся форми, пасивні дієприкм.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="-1">Правила</h2>
+<table>
+<thead>
+<tr>
+<th>✓ Правильно</th>
+<th>❌ Неправильно</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>який прочитав</td>
+<td>*прочитавший</td>
+</tr>
+<tr>
+<td>написаний</td>
+<td>—</td>
+</tr>
+<tr>
+<td>яка працює</td>
+<td>працююча (книжно)</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p><strong>Запам'ятайте:</strong></p>
+  <p>✓ Пасивні дієприкметники (<strong>-ний/-тий</strong>) вживаються широко<br />
+  ✓ Активні на <strong>-учий/-ючий</strong> — тільки в книжному стилі<br />
+  ✓ Форми на <strong>-вший/-ший — РУСИЗМИ</strong><br />
+  ✓ У розмові <strong>завжди краще підрядне речення</strong><br />
+  ✓ Підрядне речення — не «гірше», а <strong>основне</strong> для української мови</p>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('vocab')">Start →</button></div>
     </section>
     
@@ -528,6 +743,10 @@
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

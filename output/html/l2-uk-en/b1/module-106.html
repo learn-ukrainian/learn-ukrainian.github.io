@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,7 +136,22 @@
         <p style="color:var(--text-muted)">Unreal Conditions with Якби</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Нереальні умови | Unreal Conditions</h4><div class="md-content"><p>У модулі 105: <strong>якщо</strong> для реальних умов.</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Зміст уроку | Lesson Content</li><li class="toc-item" data-target="section-1">Activities</li><li class="toc-item" data-target="section-2">Vocabulary</li><li class="toc-item" data-target="section-3">Summary</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Зміст уроку | Lesson Content</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="warmup">warm-up | Розминка</h2>
+<h3 id="unrealconditions">Нереальні умови | Unreal Conditions</h3>
+<p>У модулі 105: <strong>якщо</strong> для реальних умов.</p>
 <p>In module 105: <strong>якщо</strong> for real conditions.</p>
 <p>Тепер: <strong>якби</strong> для нереальних, гіпотетичних умов.</p>
 <p>Now: <strong>якби</strong> for unreal, hypothetical conditions.</p>
@@ -142,7 +175,10 @@
 <td>If I had time, I would come.</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>### Якби + Past + Б: Basic Pattern</h4><div class="md-content"><p>Unreal conditionals use <strong>якби</strong> + <strong>past tense</strong> + <strong>б(и)</strong>:</p>
+</table>
+<h2 id="presentation">presentation | Презентація</h2>
+<h3 id="pastbasicpattern">Якби + Past + Б: Basic Pattern</h3>
+<p>Unreal conditionals use <strong>якби</strong> + <strong>past tense</strong> + <strong>б(и)</strong>:</p>
 <table>
 <thead>
 <tr>
@@ -169,7 +205,9 @@
   <p><strong>⭐ KEY STRUCTURE</strong></p>
   <p><strong>Якби</strong> + past tense, + subject + <strong>б(и)</strong> + past tense</p>
   <p>The particle <strong>б</strong> (short for <strong>би</strong>) marks the result clause as hypothetical/conditional.</p>
-</blockquote></div></div><div class="canvas-note"><h4>Position of Б(и)</h4><div class="md-content"><p><strong>Б</strong> comes after the first stressed word in the result clause:</p>
+</blockquote>
+<h3 id="positionof">Position of Б(и)</h3>
+<p><strong>Б</strong> comes after the first stressed word in the result clause:</p>
 <table>
 <thead>
 <tr>
@@ -196,7 +234,9 @@
 <ul>
 <li>After consonants: знав <strong>би</strong></li>
 <li>For emphasis: <strong>Якби</strong> ти знав!</li>
-</ul></div></div><div class="canvas-note"><h4>Present Unreal Conditionals</h4><div class="md-content"><p>For situations that are <strong>not true now</strong> (but imagined):</p>
+</ul>
+<h3 id="presentunrealconditionals">Present Unreal Conditionals</h3>
+<p>For situations that are <strong>not true now</strong> (but imagined):</p>
 <table>
 <thead>
 <tr>
@@ -222,7 +262,9 @@
 <td>If he knew Ukrainian, he would understand.</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Past Unreal Conditionals</h4><div class="md-content"><p>For situations that <strong>didn't happen in the past</strong> (counterfactual):</p>
+</table>
+<h3 id="pastunrealconditionals">Past Unreal Conditionals</h3>
+<p>For situations that <strong>didn't happen in the past</strong> (counterfactual):</p>
 <p>The structure is the <strong>same</strong> as present unreal:</p>
 <table>
 <thead>
@@ -258,7 +300,9 @@
   <li><strong>Past unreal:</strong> Якби я знав (тоді), я б сказав. (If I had known [then], I would have told.)</li>
   </ul>
   <p>Context (тоді, вчора, раніше) indicates past reference.</p>
-</blockquote></div></div><div class="canvas-note"><h4>Якби + Бути (To Be)</h4><div class="md-content"><p>Special attention to "to be" in hypotheticals:</p>
+</blockquote>
+<h3 id="tobe">Якби + Бути (To Be)</h3>
+<p>Special attention to "to be" in hypotheticals:</p>
 <table>
 <thead>
 <tr>
@@ -312,7 +356,9 @@
 <td>If it were possible, I would do it.</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Wishes with Якби</h4><div class="md-content"><p><strong>Якби</strong> can express wishes (similar to "if only" or "I wish"):</p>
+</table>
+<h3 id="wisheswith">Wishes with Якби</h3>
+<p><strong>Якби</strong> can express wishes (similar to "if only" or "I wish"):</p>
 <table>
 <thead>
 <tr>
@@ -338,7 +384,9 @@
 <td>If only you were here!</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Expressing Advice with Якби</h4><div class="md-content"><p>"If I were you" construction:</p>
+</table>
+<h3 id="expressingadvicewith">Expressing Advice with Якби</h3>
+<p>"If I were you" construction:</p>
 <table>
 <thead>
 <tr>
@@ -360,7 +408,9 @@
 <td>In your place, I would rest.</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Якщо vs. Якби Summary</h4><div class="md-content"><table>
+</table>
+<h3 id="vssummary">Якщо vs. Якби Summary</h3>
+<table>
 <thead>
 <tr>
 <th>Aspect</th>
@@ -403,7 +453,10 @@
 <td>Hypothetical</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>### Transform Real to Unreal</h4><div class="md-content"><p><strong>Example:</strong> Якщо матиму час, прийду. (real)<br />
+</table>
+<h2 id="practice">practice | Практика</h2>
+<h3 id="transformrealtounreal">Transform Real to Unreal</h3>
+<p><strong>Example:</strong> Якщо матиму час, прийду. (real)<br />
 → Якби я мав час, я б прийшов. (unreal)</p>
 <ol>
 <li><p>Якщо буде гарна погода, поїдемо на море.<br />
@@ -416,7 +469,9 @@
 → Якби ти працював, ти б заробляв гроші.</p></li>
 <li><p>Якщо ми маємо час, ми допомагаємо.<br />
 → Якби ми мали час, ми б допомагали.</p></li>
-</ol></div></div><div class="canvas-note"><h4>Choose Якщо or Якби</h4><div class="md-content"><ol>
+</ol>
+<h3 id="chooseor">Choose Якщо or Якби</h3>
+<ol>
 <li><p>___ я виграю в лотерею, куплю будинок. (possible)<br />
 → <strong>Якщо</strong> (still possible)</p></li>
 <li><p>___ я був президентом, я б змінив закони. (hypothetical)<br />
@@ -427,7 +482,9 @@
 → <strong>Якби</strong> (I didn't know)</p></li>
 <li><p>___ вона мала крила, вона б летіла. (impossible)<br />
 → <strong>Якби</strong> (impossible condition)</p></li>
-</ol></div></div><div class="canvas-note"><h4>Complete the Sentences</h4><div class="md-content"><ol>
+</ol>
+<h3 id="completethesentences">Complete the Sentences</h3>
+<ol>
 <li><p>Якби я знав українську добре, я б ___ (to read Ukrainian books).<br />
 → Якби я знав українську добре, я б <strong>читав українські книги</strong>.</p></li>
 <li><p>Якби у мене було більше грошей, я б ___ (to travel).<br />
@@ -436,7 +493,9 @@
 → Якби вона була вільна, вона б <strong>прийшла на вечірку</strong>.</p></li>
 <li><p>Якби я міг вибирати, я б ___ (to live by the sea).<br />
 → Якби я міг вибирати, я б <strong>жив біля моря</strong>.</p></li>
-</ol></div></div><div class="canvas-note"><h4>Translate to Ukrainian</h4><div class="md-content"><ol>
+</ol>
+<h3 id="translatetoukrainian">Translate to Ukrainian</h3>
+<ol>
 <li><p>If I were you, I would stay home.<br />
 → <strong>Якби я був на твоєму місці, я б залишився вдома.</strong></p></li>
 <li><p>If she had time, she would help.<br />
@@ -447,7 +506,10 @@
 → <strong>Якби він знав, він би сказав мені.</strong></p></li>
 <li><p>If we were rich, we would buy a house.<br />
 → <strong>Якби ми були багаті, ми б купили будинок.</strong></p></li>
-</ol></div></div><div class="canvas-note"><h4>### Imagine Different Life</h4><div class="md-content"><p>Use якби to imagine:</p>
+</ol>
+<h2 id="production">production | Продукція</h2>
+<h3 id="imaginedifferentlife">Imagine Different Life</h3>
+<p>Use якби to imagine:</p>
 <ol>
 <li>Якби я жив в іншій країні…</li>
 <li>Якби я народився 100 років тому…</li>
@@ -456,7 +518,9 @@
 <li>Якби я міг говорити з тваринами…</li>
 </ol>
 <p><strong>Example:</strong><br />
-Якби я жив в Україні, я б ходив на концерти українських співаків. Якби я народився 100 років тому, я б не мав інтернету.</p></div></div><div class="canvas-note"><h4>Give Advice</h4><div class="md-content"><p>Use "якби я був на твоєму місці":</p>
+Якби я жив в Україні, я б ходив на концерти українських співаків. Якби я народився 100 років тому, я б не мав інтернету.</p>
+<h3 id="giveadvice">Give Advice</h3>
+<p>Use "якби я був на твоєму місці":</p>
 <p><strong>Situations:</strong></p>
 <ul>
 <li>Друг не може вирішити, чи змінювати роботу</li>
@@ -464,7 +528,273 @@
 <li>Хтось не знає, що подарувати</li>
 </ul>
 <p><strong>Example:</strong><br />
-Якби я був на твоєму місці, я б змінив роботу. Краще ризикувати, ніж жалкувати.</p></div></div></div>
+Якби я був на твоєму місці, я б змінив роботу. Краще ризикувати, ніж жалкувати.</p>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Activities</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="quizunrealconditionals">quiz: Unreal Conditionals</h2>
+<blockquote>
+  <p>Choose the correct answer.</p>
+</blockquote>
+<ol>
+<li>___ я знав, я б сказав.</li>
+</ol>
+<ul>
+<li>[ ] Якщо</li>
+<li>[x] Якби</li>
+</ul>
+<blockquote>
+  <p>Unreal/hypothetical requires "якби."</p>
+</blockquote>
+<ol start="2">
+<li>Якби вона мала час, вона ___ прийшла.</li>
+</ol>
+<ul>
+<li>[x] б</li>
+<li>[ ] -</li>
+</ul>
+<blockquote>
+  <p>The particle "б" marks the result clause.</p>
+</blockquote>
+<ol start="3">
+<li>Якби я ___ багатим, я б подорожував.</li>
+</ol>
+<ul>
+<li>[x] був</li>
+<li>[ ] буду</li>
+</ul>
+<blockquote>
+  <p>Past tense form with "якби."</p>
+</blockquote>
+<ol start="4">
+<li>___ він зателефонує завтра, передай йому. (possible)</li>
+</ol>
+<ul>
+<li>[x] Якщо</li>
+<li>[ ] Якби</li>
+</ul>
+<blockquote>
+  <p>Real possibility uses "якщо."</p>
+</blockquote>
+<ol start="5">
+<li>Якби я був на твоєму ___ , я б відпочив.</li>
+</ol>
+<ul>
+<li>[x] місці</li>
+<li>[ ] місце</li>
+</ul>
+<blockquote>
+  <p>Fixed expression "на твоєму місці" (in your place).</p>
+</blockquote>
+<ol start="6">
+<li>___ я міг літати!</li>
+</ol>
+<ul>
+<li>[x] Якби</li>
+<li>[ ] Якщо</li>
+</ul>
+<blockquote>
+  <p>Wish expression uses "якби."</p>
+</blockquote>
+<h2 id="fillinwhatwouldyoudo">fill-in: What Would You Do?</h2>
+<blockquote>
+  <p>Якби я (1)<strong>_ мільйон доларів, я (2)</strong>_ купив великий будинок. Якби я (3)<strong>_ біля моря, я (4)</strong>_ плавав кожен день. Якби у мене (5)<strong>_ більше часу, я (6)</strong>_ читав більше книг.</p>
+</blockquote>
+<p><strong>Answers:</strong> мав, б, жив, б, було, б</p>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Vocabulary</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Word</th>
+<th>IPA</th>
+<th>English</th>
+<th>Gender</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>якби</td>
+<td>/jɑkˈbɪ/</td>
+<td>if (unreal)</td>
+<td>conj</td>
+</tr>
+<tr>
+<td>б / би</td>
+<td>/b/ /bɪ/</td>
+<td>would (conditional particle)</td>
+<td>part</td>
+</tr>
+<tr>
+<td>нереальний</td>
+<td>/nɛrɛˈɑlʲnɪj/</td>
+<td>unreal</td>
+<td>adj</td>
+</tr>
+<tr>
+<td>гіпотетичний</td>
+<td>/ɦʲipotɛˈtɪt͡ʃnɪj/</td>
+<td>hypothetical</td>
+<td>adj</td>
+</tr>
+<tr>
+<td>уявити</td>
+<td>/ujɑˈvɪtɪ/</td>
+<td>to imagine</td>
+<td>pf</td>
+</tr>
+<tr>
+<td>уявляти</td>
+<td>/ujɑvˈlʲɑtɪ/</td>
+<td>to imagine</td>
+<td>impf</td>
+</tr>
+<tr>
+<td>мріяти</td>
+<td>/mrʲiˈjɑtɪ/</td>
+<td>to dream</td>
+<td>impf</td>
+</tr>
+<tr>
+<td>на твоєму місці</td>
+<td>-</td>
+<td>in your place</td>
+<td>phrase</td>
+</tr>
+<tr>
+<td>можливо</td>
+<td>/moʒˈlɪvo/</td>
+<td>possibly</td>
+<td>adv</td>
+</tr>
+<tr>
+<td>неможливо</td>
+<td>/nɛmoʒˈlɪvo/</td>
+<td>impossible</td>
+<td>adv</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Summary</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="unrealconditionalswith">Unreal Conditionals with Якби</h2>
+<h3 id="structure">Structure</h3>
+<p><strong>Якби</strong> + past tense, subject + <strong>б(и)</strong> + past tense</p>
+<h3 id="examples">Examples</h3>
+<table>
+<thead>
+<tr>
+<th>Ukrainian</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Якби я <strong>знав</strong>, я <strong>б сказав</strong>.</td>
+<td>If I knew, I would tell.</td>
+</tr>
+<tr>
+<td>Якби вона <strong>мала</strong> час, вона <strong>б прийшла</strong>.</td>
+<td>If she had time, she would come.</td>
+</tr>
+<tr>
+<td>Якби ми <strong>могли</strong>, ми <strong>б допомогли</strong>.</td>
+<td>If we could, we would help.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="presentvspastunreal">Present vs. Past Unreal</h3>
+<p>Same form — context indicates time:</p>
+<ul>
+<li><strong>Present:</strong> Якби я знав (зараз)… — If I knew (now)…</li>
+<li><strong>Past:</strong> Якби я знав (тоді)… — If I had known (then)…</li>
+</ul>
+<h3 id="wishes">Wishes</h3>
+<table>
+<thead>
+<tr>
+<th>Ukrainian</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Якби ти знав!</td>
+<td>If only you knew!</td>
+</tr>
+<tr>
+<td>Якби я міг!</td>
+<td>If only I could!</td>
+</tr>
+</tbody>
+</table>
+<h3 id="advice">Advice</h3>
+<table>
+<thead>
+<tr>
+<th>Ukrainian</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Якби я був на твоєму місці…</td>
+<td>If I were in your place…</td>
+</tr>
+<tr>
+<td>На твоєму місці я б…</td>
+<td>In your place, I would…</td>
+</tr>
+</tbody>
+</table>
+<h3 id="vs">Якщо vs. Якби</h3>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Condition</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Якщо</td>
+<td>Real/possible</td>
+<td>Якщо прийдеш, подзвони.</td>
+</tr>
+<tr>
+<td>Якби</td>
+<td>Unreal/hypothetical</td>
+<td>Якби прийшов, зателефонував би.</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p><strong>Key Takeaways</strong></p>
+  <ul>
+  <li>Якби = unreal/hypothetical conditions</li>
+  <li>Use past tense forms (not about past time!)</li>
+  <li>Б(и) particle marks the result clause</li>
+  <li>Same form for present and past unreal (context clarifies)</li>
+  <li>Next module: mixed and complex conditionals</li>
+  </ul>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('quiz')">Start →</button></div>
     </section>
     
@@ -502,6 +832,10 @@
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

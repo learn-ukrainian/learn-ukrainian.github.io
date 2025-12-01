@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,17 +136,34 @@
         <p style="color:var(--text-muted)">Стилі мовлення: вступ</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="md-content"><h1 id="">Вступ</h1>
-<p>Ви заходите до кав'ярні й кажете бариста: «Прошу Вас надати мені одну порцію кавового напою типу „лате" відповідно до встановлених стандартів обслуговування.» Бариста дивиться на вас, як на інопланетянина. А потім ви йдете на співбесіду в компанію й на запитання «Чому ви хочете тут працювати?» відповідаєте: «Ну, типу, нормальна контора, бабки платите, чому б ні?» Здогадайтесь, чи вас візьмуть.</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Вступ</li><li class="toc-item" data-target="section-1">П'ять функціональних стилів</li><li class="toc-item" data-target="section-2">1. Розмовний стиль</li><li class="toc-item" data-target="section-3">2. Художній стиль</li><li class="toc-item" data-target="section-4">3. Публіцистичний стиль</li><li class="toc-item" data-target="section-5">4. Науковий стиль</li><li class="toc-item" data-target="section-6">5. Офіційно-діловий стиль</li><li class="toc-item" data-target="section-7">Стилістичні маркери</li><li class="toc-item" data-target="section-8">Практика</li><li class="toc-item" data-target="section-9">Продукція</li><li class="toc-item" data-target="section-10">Словник</li><li class="toc-item" data-target="section-11">Підсумок</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Вступ</h3>
+          <span class="section-type intro">intro</span>
+        </div>
+        <div class="section-body md-content"><p>Ви заходите до кав'ярні й кажете бариста: «Прошу Вас надати мені одну порцію кавового напою типу „лате" відповідно до встановлених стандартів обслуговування.» Бариста дивиться на вас, як на інопланетянина. А потім ви йдете на співбесіду в компанію й на запитання «Чому ви хочете тут працювати?» відповідаєте: «Ну, типу, нормальна контора, бабки платите, чому б ні?» Здогадайтесь, чи вас візьмуть.</p>
 <p>Обидві ситуації — приклади <strong>стилістичної катастрофи</strong>. Граматика бездоганна. Слова правильні. Але <strong>регістр</strong> — тобто рівень формальності мовлення — абсолютно не той.</p>
 <p>Українська мова має <strong>п'ять функціональних стилів</strong>, і кожен — це окремий інструмент для окремої ситуації. Офіційно-діловий — для документів. Науковий — для дисертацій. Публіцистичний — для журналістики. Художній — для літератури. Розмовний — для кави з другом. Змішати їх — як принести молоток на скрипковий концерт: технічно це інструмент, але явно не той.</p>
 <blockquote>
   <p><strong>Чи знали ви?</strong></p>
   <p>Термін «функціональний стиль» ввів <strong>празький лінгвіст Вілем Матезіус</strong> у 1930-х роках. Він помітив, що мова — це не єдина система, а набір «підмов», кожна з яких обслуговує свою сферу життя. Українська лінгвістика прийняла цю концепцію й розвинула її в теорію <strong>п'яти стилів</strong>, яку ви вчите в школі.</p>
 </blockquote>
-<hr />
-<h1 id="-1">П'ять функціональних стилів</h1>
-<h2 id="-2">Загальна картина</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>П'ять функціональних стилів</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Загальна картина</h2>
 <table>
 <thead>
 <tr>
@@ -171,9 +206,14 @@
 </tr>
 </tbody>
 </table>
-<hr />
-<h1 id="1">1. Розмовний стиль</h1>
-<p><strong>Де живе:</strong> кухня, кав'ярня, SMS, чати, розмови з друзями</p>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>1. Розмовний стиль</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><p><strong>Де живе:</strong> кухня, кав'ярня, SMS, чати, розмови з друзями</p>
 <p><strong>Його ДНК:</strong></p>
 <ul>
 <li>Неповні речення («Куди?» замість «Куди ти йдеш?»)</li>
@@ -187,9 +227,14 @@
   <p><strong>Чи знали ви?</strong></p>
   <p>Частка <strong>«ну»</strong> — один із найчастіших маркерів розмовного стилю. Вона може виражати невпевненість («Ну, не знаю…»), згоду («Ну добре!»), здивування («Ну ти даєш!»), роздратування («Ну що таке?»). В офіційних текстах її немає взагалі — і це один із найпростіших способів визначити стиль.</p>
 </blockquote>
-<hr />
-<h1 id="2">2. Художній стиль</h1>
-<p><strong>Де живе:</strong> романи, вірші, п'єси, пісні</p>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>2. Художній стиль</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><p><strong>Де живе:</strong> романи, вірші, п'єси, пісні</p>
 <p><strong>Його ДНК:</strong></p>
 <ul>
 <li>Метафори: «серце співає»</li>
@@ -204,9 +249,14 @@
   <p>❌ <strong>Міф:</strong> «Художній стиль — це коли багато незрозумілих слів.»</p>
   <p>✅ <strong>Факт:</strong> Художній стиль — це <strong>образність</strong>, а не складність. Тарас Шевченко писав простими словами, але з такою силою образів, що його рядки стали народними приказками. «Садок вишневий коло хати» — жодного складного слова, але це — шедевр.</p>
 </blockquote>
-<hr />
-<h1 id="3">3. Публіцистичний стиль</h1>
-<p><strong>Де живе:</strong> газети, телебачення, блоги, промови</p>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-4">
+        <div class="section-header" onclick="toggleSection(4)">
+          <h3>3. Публіцистичний стиль</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><p><strong>Де живе:</strong> газети, телебачення, блоги, промови</p>
 <p><strong>Його ДНК:</strong></p>
 <ul>
 <li>Суспільна лексика: «демократія», «реформа», «криза»</li>
@@ -216,9 +266,14 @@
 </ul>
 <p><strong>Як це звучить:</strong><br />
 «Сьогодні Україна стоїть на порозі важливих змін. Чи готові ми до викликів майбутнього? Це питання, яке ставить перед нами сама історія.»</p>
-<hr />
-<h1 id="4">4. Науковий стиль</h1>
-<p><strong>Де живе:</strong> дисертації, статті, підручники, лекції</p>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-5">
+        <div class="section-header" onclick="toggleSection(5)">
+          <h3>4. Науковий стиль</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><p><strong>Де живе:</strong> дисертації, статті, підручники, лекції</p>
 <p><strong>Його ДНК:</strong></p>
 <ul>
 <li>Терміни: «морфема», «синтаксис», «кореляція»</li>
@@ -232,9 +287,14 @@
   <p><strong>Чи знали ви?</strong></p>
   <p>Науковий стиль вимагає <strong>безособовості</strong> — автор «ховається» за текстом. Замість «Я вважаю, що…» пишуть «Можна вважати, що…». Замість «Я дослідив» — «Було досліджено». Це створює ілюзію об'єктивності: ніби не людина думає, а сама наука говорить.</p>
 </blockquote>
-<hr />
-<h1 id="5">5. Офіційно-діловий стиль</h1>
-<p><strong>Де живе:</strong> закони, накази, протоколи, договори, заяви</p>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-6">
+        <div class="section-header" onclick="toggleSection(6)">
+          <h3>5. Офіційно-діловий стиль</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><p><strong>Де живе:</strong> закони, накази, протоколи, договори, заяви</p>
 <p><strong>Його ДНК:</strong></p>
 <ul>
 <li>Кліше: «відповідно до», «у зв'язку з», «з метою»</li>
@@ -249,9 +309,14 @@
   <p>❌ <strong>Міф:</strong> «Канцеляризми — це погана українська, їх треба уникати.»</p>
   <p>✅ <strong>Факт:</strong> Канцеляризми <strong>погані тільки не на своєму місці</strong>. «Вищезазначений документ» у наказі — нормально. «Вищезазначена піца» в розмові з другом — дивно. Стиль визначає доречність.</p>
 </blockquote>
-<hr />
-<h1 id="-3">Стилістичні маркери</h1>
-<h2 id="-4">Як розпізнати стиль</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-7">
+        <div class="section-header" onclick="toggleSection(7)">
+          <h3>Стилістичні маркери</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Як розпізнати стиль</h2>
 <table>
 <thead>
 <tr>
@@ -293,9 +358,14 @@
 </tr>
 </tbody>
 </table>
-<hr />
-<h1 id="-5">Практика</h1>
-<h2 id="-6">Визначте стиль</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-8">
+        <div class="section-header" onclick="toggleSection(8)">
+          <h3>Практика</h3>
+          <span class="section-type practice">practice</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Визначте стиль</h2>
 <ol>
 <li><p>«Рішення про затвердження бюджету прийнято одноголосно.»<br />
 → <strong>Офіційно-діловий</strong> (кліше, пасив -но)</p></li>
@@ -308,7 +378,7 @@
 <li><p>«Чи готова Україна до нових викликів?»<br />
 → <strong>Публіцистичний</strong> (риторичне питання)</p></li>
 </ol>
-<h2 id="-7">Трансформуйте</h2>
+<h2 id="-1">Трансформуйте</h2>
 <p><strong>Розмовний → Офіційний:</strong></p>
 <table>
 <thead>
@@ -332,9 +402,14 @@
 </tr>
 </tbody>
 </table>
-<hr />
-<h1 id="-8">Продукція</h1>
-<h2 id="-9">Одне повідомлення — три стилі</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-9">
+        <div class="section-header" onclick="toggleSection(9)">
+          <h3>Продукція</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Одне повідомлення — три стилі</h2>
 <p><strong>Тема:</strong> Запрошення на зустріч</p>
 <p><strong>Розмовний:</strong><br />
 «Привіт! Слухай, можеш прийти завтра о третій? Треба поговорити. Це важливо!»</p>
@@ -342,7 +417,128 @@
 «Доброго дня! Запрошую вас на зустріч завтра о 15:00. Буду чекати на відповідь.»</p>
 <p><strong>Офіційний:</strong><br />
 «Шановний пане Петренко! Маю честь запросити Вас на зустріч, яка відбудеться завтра, 15 березня 2024 року, о 15:00 у конференц-залі. Просимо підтвердити Вашу присутність.»</p>
-<hr /></div></div>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-10">
+        <div class="section-header" onclick="toggleSection(10)">
+          <h3>Словник</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Слово</th>
+<th>Переклад</th>
+<th>Примітки</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>регістр</td>
+<td>register</td>
+<td>рівень формальності</td>
+</tr>
+<tr>
+<td>функціональний стиль</td>
+<td>functional style</td>
+<td>п'ять стилів</td>
+</tr>
+<tr>
+<td>розмовний</td>
+<td>colloquial</td>
+<td>побутовий</td>
+</tr>
+<tr>
+<td>художній</td>
+<td>literary, artistic</td>
+<td>для літератури</td>
+</tr>
+<tr>
+<td>публіцистичний</td>
+<td>journalistic</td>
+<td>для ЗМІ</td>
+</tr>
+<tr>
+<td>науковий</td>
+<td>scientific, academic</td>
+<td>для науки</td>
+</tr>
+<tr>
+<td>офіційно-діловий</td>
+<td>official, formal</td>
+<td>для документів</td>
+</tr>
+<tr>
+<td>кліше</td>
+<td>cliché</td>
+<td>стандартний вираз</td>
+</tr>
+<tr>
+<td>канцеляризм</td>
+<td>bureaucratese</td>
+<td>офіційний штамп</td>
+</tr>
+<tr>
+<td>маркер</td>
+<td>marker</td>
+<td>ознака стилю</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-11">
+        <div class="section-header" onclick="toggleSection(11)">
+          <h3>Підсумок</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">П'ять стилів української мови</h2>
+<table>
+<thead>
+<tr>
+<th>Стиль</th>
+<th>Сфера</th>
+<th>Ключова риса</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Розмовний</td>
+<td>Побут</td>
+<td>Емоційність, неповнота</td>
+</tr>
+<tr>
+<td>Художній</td>
+<td>Література</td>
+<td>Образність, виразність</td>
+</tr>
+<tr>
+<td>Публіцистичний</td>
+<td>ЗМІ</td>
+<td>Оцінність, актуальність</td>
+</tr>
+<tr>
+<td>Науковий</td>
+<td>Наука</td>
+<td>Точність, термінологія</td>
+</tr>
+<tr>
+<td>Офіційно-діловий</td>
+<td>Документи</td>
+<td>Стандартність, кліше</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p><strong>Запам'ятайте:</strong></p>
+  <p>✓ Вибір стилю залежить від <strong>ситуації</strong><br />
+  ✓ Кожен стиль має свої <strong>маркери</strong><br />
+  ✓ Змішування стилів — це <strong>стилістична помилка</strong><br />
+  ✓ На рівні B2 ви маєте <strong>розрізняти та використовувати</strong> різні стилі<br />
+  ✓ Частка «ну» — найпростіший маркер розмовного стилю</p>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('vocab')">Start →</button></div>
     </section>
     
@@ -375,6 +571,10 @@
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,7 +136,22 @@
         <p style="color:var(--text-muted)">Assessment of Reported Speech and Participles</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Огляд контрольної роботи | Checkpoint Overview</h4><div class="md-content"><p>Ця контрольна робота перевіряє ваші навички B1.3:</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Зміст уроку | Lesson Content</li><li class="toc-item" data-target="section-1">Activities</li><li class="toc-item" data-target="section-2">Vocabulary</li><li class="toc-item" data-target="section-3">Summary</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Зміст уроку | Lesson Content</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="warmup">warm-up | Розминка</h2>
+<h3 id="checkpointoverview">Огляд контрольної роботи | Checkpoint Overview</h3>
+<p>Ця контрольна робота перевіряє ваші навички B1.3:</p>
 <p>This checkpoint tests your B1.3 skills:</p>
 <p><strong>Section 1:</strong> Reported Statements &amp; Questions (25 points)<br />
 <strong>Section 2:</strong> Reported Commands (15 points)<br />
@@ -127,7 +160,10 @@
 <strong>Section 5:</strong> Vocabulary (15 points)<br />
 <strong>Section 6:</strong> Production (10 points)</p>
 <p><strong>Total:</strong> 100 points<br />
-<strong>Passing:</strong> 70 points</p></div></div><div class="canvas-note"><h4>### What to Remember</h4><div class="md-content"><p><strong>Reported Statements:</strong></p>
+<strong>Passing:</strong> 70 points</p>
+<h2 id="presentation">presentation</h2>
+<h3 id="whattoremember">What to Remember</h3>
+<p><strong>Reported Statements:</strong></p>
 <ul>
 <li>що introduces statements</li>
 <li>Pronoun/time changes apply</li>
@@ -152,7 +188,10 @@
 <ul>
 <li>Imperfective: -учи/-ючи (while doing)</li>
 <li>Perfective: -вши/-ши (having done)</li>
-</ul></div></div><div class="canvas-note"><h4>### Section 1: Reported Statements & Questions (25 points)</h4><div class="md-content"><p><em>Convert to reported speech. 2.5 points each.</em></p>
+</ul>
+<h2 id="practice">practice</h2>
+<h3 id="section1reportedstatementsquestions25points">Section 1: Reported Statements &amp; Questions (25 points)</h3>
+<p><em>Convert to reported speech. 2.5 points each.</em></p>
 <ol>
 <li><p>Анна: «Я живу в Києві.»<br />
 → Анна сказала, що ___.</p></li>
@@ -187,7 +226,9 @@
 <li>президент приїхав</li>
 <li>скільки це коштує</li>
 <li>він не знає відповіді</li>
-</ol></div></div><div class="canvas-note"><h4>Section 2: Reported Commands (15 points)</h4><div class="md-content"><p><em>Convert to reported speech. 3 points each.</em></p>
+</ol>
+<h3 id="section2reportedcommands15points">Section 2: Reported Commands (15 points)</h3>
+<p><em>Convert to reported speech. 3 points each.</em></p>
 <ol>
 <li><p>Мама: «Прибери кімнату!»<br />
 → Мама сказала, щоб я ___.</p></li>
@@ -207,7 +248,9 @@
 <li>не розмовляли</li>
 <li>зателефонував їй</li>
 <li>закінчили проєкт</li>
-</ol></div></div><div class="canvas-note"><h4>Section 3: Passive Participles (20 points)</h4><div class="md-content"><p><em>Part A: Form participles. 2 points each.</em></p>
+</ol>
+<h3 id="section3passiveparticiples20points">Section 3: Passive Participles (20 points)</h3>
+<p><em>Part A: Form participles. 2 points each.</em></p>
 <ol>
 <li>написати → ___</li>
 <li>закрити → ___</li>
@@ -238,7 +281,9 @@
 <li>прочитано</li>
 <li>закрито</li>
 <li>написано</li>
-</ol></div></div><div class="canvas-note"><h4>Section 4: Adverbial Participles (15 points)</h4><div class="md-content"><p><em>Part A: Form adverbial participles. 1.5 points each.</em></p>
+</ol>
+<h3 id="section4adverbialparticiples15points">Section 4: Adverbial Participles (15 points)</h3>
+<p><em>Part A: Form adverbial participles. 1.5 points each.</em></p>
 <ol>
 <li>читати (impf) → ___</li>
 <li>прочитати (pf) → ___</li>
@@ -269,7 +314,9 @@
 <li>Закінчивши</li>
 <li>Слухаючи</li>
 <li>Повернувшись</li>
-</ol></div></div><div class="canvas-note"><h4>Section 5: Vocabulary (15 points)</h4><div class="md-content"><p><em>Complete with the correct word. 1.5 points each.</em></p>
+</ol>
+<h3 id="section5vocabulary15points">Section 5: Vocabulary (15 points)</h3>
+<p><em>Complete with the correct word. 1.5 points each.</em></p>
 <ol>
 <li>Відчуття, коли щось не вийшло: ___ (disappointment)</li>
 <li>Вірити комусь: ___ (to trust)</li>
@@ -294,13 +341,18 @@
 <li>тривога/тривожність</li>
 <li>довіра</li>
 <li>примирення</li>
-</ol></div></div><div class="canvas-note"><h4>Section 6: Production (10 points)</h4><div class="md-content"><p><em>Answer in Ukrainian. 5 points each.</em></p>
+</ol>
+<h3 id="section6production10points">Section 6: Production (10 points)</h3>
+<p><em>Answer in Ukrainian. 5 points each.</em></p>
 <p><strong>6.1</strong> Report what someone told you recently.</p>
 <p><strong>Example answer:</strong><br />
 Мій друг сказав, що він переїжджає до іншого міста. Він запитав, чи я допоможу йому з переїздом. Він попросив, щоб я приїхав у суботу.</p>
 <p><strong>6.2</strong> Describe your morning using adverbial participles.</p>
 <p><strong>Example answer:</strong><br />
-Прокинувшись о сьомій, я йду в душ. Снідаючи, я читаю новини. Закінчивши сніданок, я виходжу з дому. Йдучи на роботу, я слухаю подкаст.</p></div></div><div class="canvas-note"><h4>### Self-Assessment</h4><div class="md-content"><p>After completing the checkpoint, assess yourself:</p>
+Прокинувшись о сьомій, я йду в душ. Снідаючи, я читаю новини. Закінчивши сніданок, я виходжу з дому. Йдучи на роботу, я слухаю подкаст.</p>
+<h2 id="production">production</h2>
+<h3 id="selfassessment">Self-Assessment</h3>
+<p>After completing the checkpoint, assess yourself:</p>
 <p><strong>Reported Statements/Questions:</strong> __ / 25</p>
 <ul>
 <li>If &lt;17: Review modules 116-117</li>
@@ -335,7 +387,202 @@
 <li>90+: Excellent! Ready for B1.4</li>
 <li>70-89: Good. Review weak areas, then continue.</li>
 <li>&lt;70: Review B1.3 before continuing.</li>
-</ul></div></div></div>
+</ul>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Activities</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="quizfinalb13assessment">quiz: Final B1.3 Assessment</h2>
+<blockquote>
+  <p>This quiz tests all B1.3 skills.</p>
+</blockquote>
+<ol>
+<li>Він сказав, ___ він працює.</li>
+</ol>
+<ul>
+<li>[x] що</li>
+<li>[ ] чи</li>
+</ul>
+<blockquote>
+  <p>що for statements.</p>
+</blockquote>
+<ol start="2">
+<li>Вона запитала, ___ я прийду.</li>
+</ol>
+<ul>
+<li>[x] чи</li>
+<li>[ ] що</li>
+</ul>
+<blockquote>
+  <p>чи for yes/no questions.</p>
+</blockquote>
+<ol start="3">
+<li>Він попросив, щоб я ___.</li>
+</ol>
+<ul>
+<li>[x] допоміг</li>
+<li>[ ] допомогти</li>
+</ul>
+<blockquote>
+  <p>Past tense after щоб.</p>
+</blockquote>
+<ol start="4">
+<li>Verb: закрити → Participle: ___</li>
+</ol>
+<ul>
+<li>[x] закритий</li>
+<li>[ ] закрений</li>
+</ul>
+<blockquote>
+  <p>-тий after vowel.</p>
+</blockquote>
+<ol start="5">
+<li>Роботу ___.</li>
+</ol>
+<ul>
+<li>[x] зроблено</li>
+<li>[ ] зроблена</li>
+</ul>
+<blockquote>
+  <p>Short form is invariable.</p>
+</blockquote>
+<ol start="6">
+<li>___ книгу, він заснув.</li>
+</ol>
+<ul>
+<li>[x] Прочитавши</li>
+<li>[ ] Читаючи</li>
+</ul>
+<blockquote>
+  <p>Completed action before main verb.</p>
+</blockquote>
+<h2 id="fillincomprehensivetest">fill-in: Comprehensive Test</h2>
+<blockquote>
+  <p>Учора я розмовляв з другом. Він (1)<strong>_ (сказати), що він шукає нову роботу. Він (2)</strong>_ (запитати), чи я знаю про вакансії. Він (3)<strong>_ (попросити), щоб я допоміг йому з резюме. (4)</strong>_ (Закінчити) розмову, я пообіцяв допомогти. Резюме вже (5)___ (написати).</p>
+</blockquote>
+<p><strong>Answers:</strong></p>
+<ol>
+<li>сказав</li>
+<li>запитав</li>
+<li>попросив</li>
+<li>Закінчивши</li>
+<li>написано / написане</li>
+</ol>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Vocabulary</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Word</th>
+<th>IPA</th>
+<th>English</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>контрольна робота</td>
+<td>-</td>
+<td>test, checkpoint</td>
+<td>f</td>
+</tr>
+<tr>
+<td>оцінювання</td>
+<td>/ot͡sʲiˈnʲuvɑnʲːɑ/</td>
+<td>assessment</td>
+<td>n</td>
+</tr>
+<tr>
+<td>бал</td>
+<td>/bɑl/</td>
+<td>point, score</td>
+<td>m</td>
+</tr>
+<tr>
+<td>результат</td>
+<td>/rɛzulʲˈtɑt/</td>
+<td>result</td>
+<td>m</td>
+</tr>
+<tr>
+<td>перевірити</td>
+<td>/pɛrɛˈvʲirɪtɪ/</td>
+<td>to check</td>
+<td>pf</td>
+</tr>
+<tr>
+<td>покращити</td>
+<td>/pokrɑˈʃɪtɪ/</td>
+<td>to improve</td>
+<td>pf</td>
+</tr>
+<tr>
+<td>повторити</td>
+<td>/powtorˈɪtɪ/</td>
+<td>to review, repeat</td>
+<td>pf</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Summary</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="b13complete">B1.3 Complete</h2>
+<p>Congratulations on completing B1.3!</p>
+<h3 id="skillsacquired">Skills Acquired</h3>
+<p><strong>Grammar:</strong></p>
+<ul>
+<li>Reported statements (що)</li>
+<li>Reported questions (чи, question words)</li>
+<li>Reported commands (щоб + past)</li>
+<li>Past passive participles (-ний/-тий)</li>
+<li>Short passive forms (-но/-то)</li>
+<li>Adverbial participles (-учи/-вши)</li>
+</ul>
+<p><strong>Vocabulary:</strong></p>
+<ul>
+<li>Emotions &amp; Relationships (~40 words)</li>
+<li>Health &amp; Wellness (~40 words)</li>
+</ul>
+<p><strong>Communication:</strong></p>
+<ul>
+<li>Reporting what others said</li>
+<li>Using participles for concise expression</li>
+<li>Discussing emotions and health</li>
+</ul>
+<h3 id="nextsteps">Next Steps</h3>
+<p><strong>B1.4 (Modules 126-140):</strong> Expansion &amp; Integration</p>
+<ul>
+<li>Diminutives (-ик, -ок, -еньк-)</li>
+<li>Numerals (collective, fractions)</li>
+<li>Synonymy and word choice</li>
+<li>Idioms and set phrases</li>
+<li>B1 capstone assessment</li>
+</ul>
+<blockquote>
+  <p><strong>Key Takeaways</strong></p>
+  <ul>
+  <li>Reported speech uses що/чи/щоб</li>
+  <li>Participles add sophistication to your Ukrainian</li>
+  <li>B1.3 vocabulary covers emotions and health</li>
+  <li>Practice combining grammar with vocabulary</li>
+  <li>Ready to move to B1.4!</li>
+  </ul>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('quiz')">Start →</button></div>
     </section>
     
@@ -373,6 +620,10 @@
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

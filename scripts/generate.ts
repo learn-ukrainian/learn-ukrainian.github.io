@@ -89,6 +89,14 @@ interface LetterGroups {
   newLetters: string[];
 }
 
+// For B1+ immersive modules with free-form content
+interface ImmersiveSection {
+  id: string;
+  title: string;
+  content: string;
+  type: 'intro' | 'topic' | 'practice' | 'vocabulary' | 'summary';
+}
+
 interface ParsedModule {
   frontmatter: ModuleFrontmatter;
   phases: LessonPhase[];
@@ -96,6 +104,7 @@ interface ParsedModule {
   vocabulary: VocabWord[];
   letterGroups?: LetterGroups;
   rawMarkdown?: string;  // For B2+ modules with free-form content
+  immersiveSections?: ImmersiveSection[];  // Parsed sections for B1+ modules
 }
 
 // ============================================================================
@@ -521,6 +530,73 @@ function parseLetterGroups(body: string): LetterGroups | undefined {
   return groups;
 }
 
+/**
+ * Parse immersive (B1+) module content into sections
+ * Sections are delimited by # headers
+ */
+function parseImmersiveSections(body: string): ImmersiveSection[] {
+  const sections: ImmersiveSection[] = [];
+
+  // Split by # headers (but not ## or ###)
+  const sectionMatches = body.split(/\n(?=# [^#])/);
+
+  for (const sectionText of sectionMatches) {
+    if (!sectionText.trim()) continue;
+
+    // Extract title from first line
+    const lines = sectionText.trim().split('\n');
+    const titleLine = lines[0];
+
+    // Check if this is a # header
+    const titleMatch = titleLine.match(/^# (.+)$/);
+    if (!titleMatch) continue;
+
+    const title = titleMatch[1].trim();
+    const content = lines.slice(1).join('\n').trim();
+
+    // Determine section type based on title
+    let type: ImmersiveSection['type'] = 'topic';
+    const titleLower = title.toLowerCase();
+
+    if (titleLower.includes('вступ') || titleLower === 'introduction') {
+      type = 'intro';
+    } else if (titleLower.includes('практика') || titleLower === 'practice' || titleLower.includes('вправ')) {
+      type = 'practice';
+    } else if (titleLower.includes('словник') || titleLower === 'vocabulary') {
+      type = 'vocabulary';
+    } else if (titleLower.includes('підсумок') || titleLower === 'summary') {
+      type = 'summary';
+    }
+
+    // Generate ID from title
+    const id = title
+      .toLowerCase()
+      .replace(/[^a-zа-яіїєґ0-9]+/g, '-')
+      .replace(/^-|-$/g, '')
+      .substring(0, 30);
+
+    sections.push({ id, title, content, type });
+  }
+
+  return sections;
+}
+
+/**
+ * Check if a module uses immersive format (B1+)
+ */
+function isImmersiveModule(level: string, phases: LessonPhase[]): boolean {
+  // If no PPP phases found, it's immersive format
+  if (phases.length === 0) return true;
+
+  // B1+ levels use immersive format
+  const levelUpper = level.toUpperCase();
+  if (levelUpper.startsWith('B') || levelUpper.startsWith('C')) {
+    return true;
+  }
+
+  return false;
+}
+
 function parseModule(content: string): ParsedModule {
   const { frontmatter, body } = parseFrontmatter(content);
   const { phases, restBody: body2 } = parsePhases(body, frontmatter.module);
@@ -528,18 +604,22 @@ function parseModule(content: string): ParsedModule {
   const { vocabulary } = parseVocabulary(body3, frontmatter.module);
   const letterGroups = parseLetterGroups(body3);
 
-  // For B2+ modules without structured phases, store raw markdown content
-  // Extract content between frontmatter and vocabulary/summary sections
+  // For B1+ modules: parse immersive sections
   let rawMarkdown: string | undefined;
-  if (phases.length === 0) {
-    // Remove vocabulary and summary sections to get main content
+  let immersiveSections: ImmersiveSection[] | undefined;
+
+  if (isImmersiveModule(frontmatter.level, phases)) {
+    // Parse sections by # headers for proper rendering
+    immersiveSections = parseImmersiveSections(body);
+
+    // Also keep rawMarkdown for backward compatibility
     const contentMatch = body.match(/^([\s\S]*?)(?=\n# (?:Словник|Vocabulary|Підсумок|Summary)|$)/);
     if (contentMatch && contentMatch[1].trim()) {
       rawMarkdown = contentMatch[1].trim();
     }
   }
 
-  return { frontmatter, phases, activities, vocabulary, letterGroups, rawMarkdown };
+  return { frontmatter, phases, activities, vocabulary, letterGroups, rawMarkdown, immersiveSections };
 }
 
 // ============================================================================
@@ -547,7 +627,7 @@ function parseModule(content: string): ParsedModule {
 // ============================================================================
 
 function generateVibeJSON(parsed: ParsedModule, langPair: string): any {
-  const { frontmatter: fm, phases, activities, vocabulary, letterGroups, rawMarkdown } = parsed;
+  const { frontmatter: fm, phases, activities, vocabulary, letterGroups, rawMarkdown, immersiveSections } = parsed;
   const now = new Date().toISOString().split('T')[0] + 'T00:00:00Z';
 
   // Add activity references to phases
@@ -594,6 +674,7 @@ function generateVibeJSON(parsed: ParsedModule, langPair: string): any {
       modifiedAt: now,
       phases: phasesWithActivities,
       rawMarkdown,  // For B2+ modules with free-form content
+      immersiveSections,  // Parsed sections for B1+ modules
     },
     activities: activities.map(a => ({
       ...a,
@@ -643,6 +724,10 @@ function generateHTML(vibeJSON: any, nav: NavInfo): string {
   const quizActivity = activities.find((a: any) => a.type === 'quiz');
   const sortActivity = activities.find((a: any) => a.type === 'group-sort');
 
+  // Check if this is an immersive module (B1+)
+  const immersiveSections = lesson.immersiveSections || [];
+  const isImmersive = immersiveSections.length > 0;
+
   const theoryContent = lesson.phases
     .flatMap((phase: any) => phase.items
       .filter((item: any) => item.type === 'canvas' && item.teacherNotes)
@@ -654,10 +739,18 @@ function generateHTML(vibeJSON: any, nav: NavInfo): string {
       })
     );
 
-  // For B2+ modules: use rawMarkdown if no structured phases
+  // For B2+ modules: use rawMarkdown if no structured phases (fallback)
   const rawMarkdownHtml = lesson.rawMarkdown
     ? mdConverter.makeHtml(lesson.rawMarkdown)
     : '';
+
+  // For immersive modules: convert each section to HTML
+  const sectionCards = immersiveSections.map((section: any) => ({
+    id: section.id,
+    title: section.title,
+    type: section.type,
+    html: mdConverter.makeHtml(section.content),
+  }));
 
   // Navigation links
   const prevLink = nav.prevModule
@@ -757,7 +850,25 @@ function generateHTML(vibeJSON: any, nav: NavInfo): string {
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -791,9 +902,24 @@ function generateHTML(vibeJSON: any, nav: NavInfo): string {
         <div class="letter-group false-friends"><h4>⚠ False Friends</h4><p class="letters">${vocabulary.letterGroups.falseFriends?.join(' ')}</p></div>
         <div class="letter-group new-letters"><h4>★ New Letters</h4><p class="letters">${vocabulary.letterGroups.newLetters?.join(' ')}</p></div>
       </div></div>` : ''}
-      <div class="card"><h3>Theory</h3>${theoryContent.length > 0
+      ${isImmersive && sectionCards.length > 0 ? `
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          ${sectionCards.map((s: any, i: number) => `<li class="toc-item${i === 0 ? ' active' : ''}" data-target="section-${i}">${s.title}</li>`).join('')}
+        </ul>
+      </div>
+      ${sectionCards.map((s: any, i: number) => `
+      <div class="section-card" id="section-${i}">
+        <div class="section-header" onclick="toggleSection(${i})">
+          <h3>${s.title}</h3>
+          <span class="section-type ${s.type}">${s.type}</span>
+        </div>
+        <div class="section-body md-content">${s.html}</div>
+      </div>`).join('')}
+      ` : `<div class="card"><h3>Theory</h3>${theoryContent.length > 0
         ? theoryContent.map((t: any) => `<div class="canvas-note"><h4>${t.title}</h4><div class="md-content">${mdConverter.makeHtml(t.content)}</div></div>`).join('')
-        : rawMarkdownHtml ? `<div class="md-content">${rawMarkdownHtml}</div>` : ''}</div>
+        : rawMarkdownHtml ? `<div class="md-content">${rawMarkdownHtml}</div>` : ''}</div>`}
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('${matchActivity ? 'match' : quizActivity ? 'quiz' : 'vocab'}')">Start →</button></div>
     </section>
     ${matchActivity ? `<section id="match" class="section"><div class="card"><h3>${matchActivity.title}</h3>
@@ -845,6 +971,10 @@ function generateHTML(vibeJSON: any, nav: NavInfo): string {
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

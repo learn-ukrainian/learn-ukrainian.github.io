@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,13 +136,31 @@
         <p style="color:var(--text-muted)">Prefixes пере-, про-, об-</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Review: Prefixes So Far</h4><div class="md-content"><p>From Module 90:</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Lesson Content</li><li class="toc-item" data-target="section-1">Activities</li><li class="toc-item" data-target="section-2">Vocabulary</li><li class="toc-item" data-target="section-3">Summary</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Lesson Content</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="warmup">warm-up</h2>
+<h3 id="reviewprefixessofar">Review: Prefixes So Far</h3>
+<p>From Module 90:</p>
 <ul>
 <li><strong>при-</strong> = arrival (прийти)</li>
 <li><strong>ви-</strong> = exit (вийти)</li>
 <li><strong>в-/у-</strong> = entry (увійти)</li>
 </ul>
-<p>Today: три нові префікси — пере-, про-, об-</p></div></div><div class="canvas-note"><h4>### Prefix пере- (Across, Over, Re-)</h4><div class="md-content"><p><strong>Meaning:</strong> Movement ACROSS or OVER something; also "re-doing"</p>
+<p>Today: три нові префікси — пере-, про-, об-</p>
+<h2 id="presentation">presentation</h2>
+<h3 id="prefixacrossoverre">Prefix пере- (Across, Over, Re-)</h3>
+<p><strong>Meaning:</strong> Movement ACROSS or OVER something; also "re-doing"</p>
 <table>
 <thead>
 <tr>
@@ -199,13 +235,17 @@
   <li>Physical: across, over (перейти дорогу)</li>
   <li>Abstract: re-doing, transferring (перенести зустріч)</li>
   </ol>
-</blockquote></div></div><div class="canvas-note"><h4>Special: Переходити / Перейти</h4><div class="md-content"><p>This verb has extended meanings:</p>
+</blockquote>
+<h3 id="special">Special: Переходити / Перейти</h3>
+<p>This verb has extended meanings:</p>
 <ul>
 <li><strong>переходити дорогу</strong> - to cross the street</li>
 <li><strong>переходити на інше місце</strong> - to move to another place</li>
 <li><strong>переходити до справи</strong> - to get down to business</li>
 <li><strong>переходити на українську</strong> - to switch to Ukrainian</li>
-</ul></div></div><div class="canvas-note"><h4>Prefix про- (Through, Past)</h4><div class="md-content"><p><strong>Meaning:</strong> Movement THROUGH or PAST something; also duration</p>
+</ul>
+<h3 id="prefixthroughpast">Prefix про- (Through, Past)</h3>
+<p><strong>Meaning:</strong> Movement THROUGH or PAST something; also duration</p>
 <table>
 <thead>
 <tr>
@@ -261,7 +301,9 @@
 <li>Я <strong>просидів</strong> там годину. - I sat there for an hour.</li>
 <li>Вона <strong>пропрацювала</strong> всю ніч. - She worked all night.</li>
 <li>Ми <strong>прочекали</strong> дві години. - We waited for two hours.</li>
-</ul></div></div><div class="canvas-note"><h4>Prefix об-/обі- (Around)</h4><div class="md-content"><p><strong>Meaning:</strong> Movement AROUND something</p>
+</ul>
+<h3 id="prefixaround">Prefix об-/обі- (Around)</h3>
+<p><strong>Meaning:</strong> Movement AROUND something</p>
 <table>
 <thead>
 <tr>
@@ -315,7 +357,9 @@
 <ul>
 <li><strong>обговорити</strong> - to discuss (go around a topic)</li>
 <li><strong>обслуговувати</strong> - to serve (go around customers)</li>
-</ul></div></div><div class="canvas-note"><h4>Compare: про- vs об-</h4><div class="md-content"><ul>
+</ul>
+<h3 id="comparevs">Compare: про- vs об-</h3>
+<ul>
 <li><strong>про-</strong> = THROUGH or PAST (пройти повз = walk past)</li>
 <li><strong>об-</strong> = AROUND (обійти = walk around)</li>
 </ul>
@@ -344,7 +388,9 @@
 <td>The car drove around the city.</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Conjugation: Перейти (pf)</h4><div class="md-content"><table>
+</table>
+<h3 id="conjugationpf">Conjugation: Перейти (pf)</h3>
+<table>
 <thead>
 <tr>
 <th>Pronoun</th>
@@ -384,7 +430,9 @@
 <td>перейдуть</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Aspect Pairs Summary</h4><div class="md-content"><table>
+</table>
+<h3 id="aspectpairssummary">Aspect Pairs Summary</h3>
+<table>
 <thead>
 <tr>
 <th>Perfective</th>
@@ -424,7 +472,10 @@
 <td>to drive around</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>### Choose the Correct Prefix</h4><div class="md-content"><ol>
+</table>
+<h2 id="practice">practice</h2>
+<h3 id="choosethecorrectprefix">Choose the Correct Prefix</h3>
+<ol>
 <li>Ми ___ (перейшли/пройшли) через міст. → <strong>перейшли</strong> (across)</li>
 <li>Машина ___ (переїхала/проїхала) повз нас. → <strong>проїхала</strong> (past)</li>
 <li>Вона ___ (обійшла/пройшла) магазин. → <strong>обійшла</strong> (around)</li>
@@ -432,7 +483,9 @@
 <li>Ми ___ (переїхали/проїхали) до нового міста. → <strong>переїхали</strong> (moved residence)</li>
 <li>___ (Перейдіть/Пройдіть) до кінця вулиці. → <strong>Пройдіть</strong> (go to)</li>
 <li>Потрібно ___ (обійти/перейти) дорогу. → <strong>перейти</strong> (cross)</li>
-</ol></div></div><div class="canvas-note"><h4>Form Aspect Pairs</h4><div class="md-content"><p>Give the imperfective:</p>
+</ol>
+<h3 id="formaspectpairs">Form Aspect Pairs</h3>
+<p>Give the imperfective:</p>
 <ol>
 <li>перейти → <strong>переходити</strong></li>
 <li>пройти → <strong>проходити</strong></li>
@@ -441,29 +494,358 @@
 <li>проїхати → <strong>проїжджати</strong></li>
 <li>перенести → <strong>переносити</strong></li>
 <li>перевести → <strong>переводити</strong></li>
-</ol></div></div><div class="canvas-note"><h4>Translate to Ukrainian</h4><div class="md-content"><ol>
+</ol>
+<h3 id="translatetoukrainian">Translate to Ukrainian</h3>
+<ol>
 <li>We crossed the street. → Ми <strong>перейшли</strong> вулицю.</li>
 <li>The car drove past us. → Машина <strong>проїхала</strong> повз нас.</li>
 <li>He walked around the park. → Він <strong>обійшов</strong> парк.</li>
 <li>She moved to Kyiv. → Вона <strong>переїхала</strong> до Києва.</li>
 <li>They walked through the forest. → Вони <strong>пройшли</strong> через ліс.</li>
-</ol></div></div><div class="canvas-note"><h4>Complete with Correct Form</h4><div class="md-content"><ol>
+</ol>
+<h3 id="completewithcorrectform">Complete with Correct Form</h3>
+<ol>
 <li>Він завжди ___ (переходить/перейде) дорогу в цьому місці. → <strong>переходить</strong> (always)</li>
 <li>Вона щодня ___ (проходить/пройде) повз цей магазин. → <strong>проходить</strong> (every day)</li>
 <li>Ми вже ___ (проходили/пройшли) це місце. → <strong>пройшли</strong> (already)</li>
 <li>Коли ви ___ (переїжджали/переїхали) сюди? → <strong>переїхали</strong> (single event)</li>
-</ol></div></div><div class="canvas-note"><h4>### Describe a Journey</h4><div class="md-content"><p>Use пере-, про-, об- to describe movement:</p>
+</ol>
+<h2 id="production">production</h2>
+<h3 id="describeajourney">Describe a Journey</h3>
+<p>Use пере-, про-, об- to describe movement:</p>
 <p><strong>Example:</strong><br />
-Ми <strong>вийшли</strong> з дому і <strong>пройшли</strong> вулицею до зупинки. Потім <strong>проїхали</strong> через центр міста. Нам довелося <strong>об'їхати</strong> затор. Нарешті ми <strong>перейшли</strong> міст і <strong>прийшли</strong> до парку.</p></div></div><div class="canvas-note"><h4>Give Directions</h4><div class="md-content"><p>Use these verbs to give directions:</p>
+Ми <strong>вийшли</strong> з дому і <strong>пройшли</strong> вулицею до зупинки. Потім <strong>проїхали</strong> через центр міста. Нам довелося <strong>об'їхати</strong> затор. Нарешті ми <strong>перейшли</strong> міст і <strong>прийшли</strong> до парку.</p>
+<h3 id="givedirections">Give Directions</h3>
+<p>Use these verbs to give directions:</p>
 <p><strong>Example:</strong><br />
-<strong>Пройдіть</strong> прямо до кінця вулиці. Потім <strong>перейдіть</strong> дорогу на світлофорі. <strong>Обійдіть</strong> будинок зліва. Там буде вхід.</p></div></div></div>
+<strong>Пройдіть</strong> прямо до кінця вулиці. Потім <strong>перейдіть</strong> дорогу на світлофорі. <strong>Обійдіть</strong> будинок зліва. Там буде вхід.</p>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Activities</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="quizprefixselection">quiz: Prefix Selection</h2>
+<blockquote>
+  <p>Choose the correct prefix.</p>
+</blockquote>
+<ol>
+<li>Ми ___ вулицю на переході.</li>
+</ol>
+<ul>
+<li>[x] перейшли</li>
+<li>[ ] пройшли</li>
+</ul>
+<blockquote>
+  <p>Cross = пере-</p>
+</blockquote>
+<ol start="2">
+<li>Машина ___ повз нас.</li>
+</ol>
+<ul>
+<li>[ ] переїхала</li>
+<li>[x] проїхала</li>
+</ul>
+<blockquote>
+  <p>Past = про-</p>
+</blockquote>
+<ol start="3">
+<li>Він ___ все місто пішки.</li>
+</ol>
+<ul>
+<li>[x] обійшов</li>
+<li>[ ] пройшов</li>
+</ul>
+<blockquote>
+  <p>Around = об-</p>
+</blockquote>
+<ol start="4">
+<li>Вона ___ книгу з англійської на українську.</li>
+</ol>
+<ul>
+<li>[x] переклала</li>
+<li>[ ] проклала</li>
+</ul>
+<blockquote>
+  <p>Translate = пере-</p>
+</blockquote>
+<ol start="5">
+<li>Ми ___ через ліс.</li>
+</ol>
+<ul>
+<li>[ ] переходили</li>
+<li>[x] проходили</li>
+</ul>
+<blockquote>
+  <p>Through = про-</p>
+</blockquote>
+<ol start="6">
+<li>Він ___ усіх на перегонах.</li>
+</ol>
+<ul>
+<li>[x] обігнав</li>
+<li>[ ] перегнав</li>
+</ul>
+<blockquote>
+  <p>Overtake = об-</p>
+</blockquote>
+<h2 id="matchupprefixmeanings">match-up: Prefix Meanings</h2>
+<table>
+<thead>
+<tr>
+<th>Prefix</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>пере-</td>
+<td>across, re-</td>
+</tr>
+<tr>
+<td>про-</td>
+<td>through, past</td>
+</tr>
+<tr>
+<td>об-</td>
+<td>around</td>
+</tr>
+</tbody>
+</table>
+<h2 id="groupsortverbsbyprefix">group-sort: Verbs by Prefix</h2>
+<h3 id="across">пере- (across)</h3>
+<ul>
+<li>перейти</li>
+<li>переїхати</li>
+<li>перенести</li>
+<li>переплисти</li>
+</ul>
+<h3 id="throughpast">про- (through/past)</h3>
+<ul>
+<li>пройти</li>
+<li>проїхати</li>
+<li>пробігти</li>
+<li>пролетіти</li>
+</ul>
+<h3 id="around">об- (around)</h3>
+<ul>
+<li>обійти</li>
+<li>об'їхати</li>
+<li>обігнати</li>
+<li>облетіти</li>
+</ul>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Vocabulary</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Word</th>
+<th>IPA</th>
+<th>English</th>
+<th>Aspect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>перейти</td>
+<td>/pɛrɛjˈtɪ/</td>
+<td>to cross</td>
+<td>pf</td>
+</tr>
+<tr>
+<td>переходити</td>
+<td>/pɛrɛxoˈdɪtɪ/</td>
+<td>to cross</td>
+<td>impf</td>
+</tr>
+<tr>
+<td>переїхати</td>
+<td>/pɛrɛˈjixɑtɪ/</td>
+<td>to move, drive across</td>
+<td>pf</td>
+</tr>
+<tr>
+<td>переїжджати</td>
+<td>/pɛrɛjizˈdʒɑtɪ/</td>
+<td>to move</td>
+<td>impf</td>
+</tr>
+<tr>
+<td>перенести</td>
+<td>/pɛrɛnɛsˈtɪ/</td>
+<td>to transfer, reschedule</td>
+<td>pf</td>
+</tr>
+<tr>
+<td>переносити</td>
+<td>/pɛrɛnoˈsɪtɪ/</td>
+<td>to transfer</td>
+<td>impf</td>
+</tr>
+<tr>
+<td>пройти</td>
+<td>/projˈtɪ/</td>
+<td>to pass through</td>
+<td>pf</td>
+</tr>
+<tr>
+<td>проходити</td>
+<td>/proxoˈdɪtɪ/</td>
+<td>to pass</td>
+<td>impf</td>
+</tr>
+<tr>
+<td>проїхати</td>
+<td>/proˈjixɑtɪ/</td>
+<td>to drive through</td>
+<td>pf</td>
+</tr>
+<tr>
+<td>проїжджати</td>
+<td>/projizˈdʒɑtɪ/</td>
+<td>to drive through</td>
+<td>impf</td>
+</tr>
+<tr>
+<td>обійти</td>
+<td>/obijˈtɪ/</td>
+<td>to go around</td>
+<td>pf</td>
+</tr>
+<tr>
+<td>обходити</td>
+<td>/obxoˈdɪtɪ/</td>
+<td>to go around</td>
+<td>impf</td>
+</tr>
+<tr>
+<td>об'їхати</td>
+<td>/objˈixɑtɪ/</td>
+<td>to drive around</td>
+<td>pf</td>
+</tr>
+<tr>
+<td>об'їжджати</td>
+<td>/objizˈdʒɑtɪ/</td>
+<td>to drive around</td>
+<td>impf</td>
+</tr>
+<tr>
+<td>обігнати</td>
+<td>/obʲiɦˈnɑtɪ/</td>
+<td>to overtake</td>
+<td>pf</td>
+</tr>
+<tr>
+<td>обганяти</td>
+<td>/obɦɑˈnʲɑtɪ/</td>
+<td>to overtake</td>
+<td>impf</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Summary</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="threeprefixes">Three Prefixes</h2>
+<table>
+<thead>
+<tr>
+<th>Prefix</th>
+<th>Meaning</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>пере-</td>
+<td>across, over, re-</td>
+<td>перейти дорогу (cross the street)</td>
+</tr>
+<tr>
+<td>про-</td>
+<td>through, past</td>
+<td>пройти повз (walk past)</td>
+</tr>
+<tr>
+<td>об-</td>
+<td>around</td>
+<td>обійти будинок (go around)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="keyverbs">Key Verbs</h2>
+<table>
+<thead>
+<tr>
+<th>English</th>
+<th>Perfective</th>
+<th>Imperfective</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>to cross</td>
+<td>перейти</td>
+<td>переходити</td>
+</tr>
+<tr>
+<td>to move (residence)</td>
+<td>переїхати</td>
+<td>переїжджати</td>
+</tr>
+<tr>
+<td>to pass through</td>
+<td>пройти</td>
+<td>проходити</td>
+</tr>
+<tr>
+<td>to go around</td>
+<td>обійти</td>
+<td>обходити</td>
+</tr>
+<tr>
+<td>to overtake</td>
+<td>обігнати</td>
+<td>обганяти</td>
+</tr>
+</tbody>
+</table>
+<h2 id="specialmeanings">Special Meanings</h2>
+<ul>
+<li><strong>переїхати</strong> = to move (residence): Ми переїхали до Києва.</li>
+<li><strong>перекласти</strong> = to translate: Вона переклала книгу.</li>
+<li><strong>перенести</strong> = to reschedule: Перенесіть зустріч.</li>
+<li><strong>про- + time</strong> = spending time: просидіти годину</li>
+</ul>
+<blockquote>
+  <p><strong>Key Takeaways</strong></p>
+  <ul>
+  <li>пере- = across or re-doing</li>
+  <li>про- = through or past (also duration)</li>
+  <li>об- = around</li>
+  <li>Each prefix creates new perfective + new imperfective pair</li>
+  </ul>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('match')">Start →</button></div>
     </section>
     <section id="match" class="section"><div class="card"><h3>Prefix Meanings</h3>
       <div class="score-display"><span class="score"><span id="match-score">0</span>/3</span></div>
       <div class="match-container" id="match-container"><svg class="match-lines" id="match-lines"></svg>
         <div class="match-column" id="match-left"><div class="match-item" data-pair="0">пере-</div><div class="match-item" data-pair="1">про-</div><div class="match-item" data-pair="2">об-</div></div>
-        <div class="match-column" id="match-right"><div class="match-item" data-pair="1">through, past</div><div class="match-item" data-pair="0">across, re-</div><div class="match-item" data-pair="2">around</div></div>
+        <div class="match-column" id="match-right"><div class="match-item" data-pair="2">around</div><div class="match-item" data-pair="1">through, past</div><div class="match-item" data-pair="0">across, re-</div></div>
       </div>
       <div class="completion-message" id="match-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetMatch()">Reset</button><button class="btn btn-primary" onclick="showSection('quiz')">Next →</button></div>
@@ -508,6 +890,10 @@
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

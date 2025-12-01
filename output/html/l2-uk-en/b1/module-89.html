@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,19 +136,929 @@
         <p style="color:var(--text-muted)">All 14 Pairs of Ukrainian Motion Verbs</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### The Motion Verb Challenge</h4><div class="md-content"><p>Ukrainian motion verbs are famous for being difficult. But they follow logical patterns!</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Lesson Content</li><li class="toc-item" data-target="section-1">Activities</li><li class="toc-item" data-target="section-2">Vocabulary</li><li class="toc-item" data-target="section-3">Summary</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Lesson Content</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="warmup">warm-up</h2>
+<h3 id="themotionverbchallenge">The Motion Verb Challenge</h3>
+<p>Ukrainian motion verbs are famous for being difficult. But they follow logical patterns!</p>
 <p><strong>The core distinction:</strong></p>
 <ul>
 <li><strong>Unidirectional:</strong> One direction, one trip, right now</li>
 <li><strong>Multidirectional:</strong> Multiple directions, round trips, habitual</li>
-</ul></div></div></div>
+</ul>
+<hr />
+<blockquote>
+  <p><strong>🔑 KEY RULE: MOTION VERB CHOICE</strong></p>
+  <p>Ask yourself: <strong>Is this ONE trip in ONE direction?</strong></p>
+  <table>
+  <thead>
+  <tr>
+  <th>Answer</th>
+  <th>Verb Type</th>
+  <th>Example</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+  <td><strong>YES</strong></td>
+  <td>Unidirectional</td>
+  <td>Я <strong>йду</strong> на роботу. (right now, one way)</td>
+  </tr>
+  <tr>
+  <td><strong>NO</strong></td>
+  <td>Multidirectional</td>
+  <td>Я <strong>ходжу</strong> на роботу. (regularly, round trip)</td>
+  </tr>
+  </tbody>
+  </table>
+  <p><strong>Round trip = Multidirectional</strong></p>
+  <ul>
+  <li>Я ходив до магазину. (I went to the store and came back)</li>
+  </ul>
+  <p><strong>Happening now = Unidirectional</strong></p>
+  <ul>
+  <li>Куди ти йдеш? (Where are you going right now?)</li>
+  </ul>
+</blockquote>
+<hr />
+<p>At A2, you learned іти/ходити and їхати/їздити. Now: the complete system.</p>
+<hr />
+<blockquote>
+  <p><strong>⭐ MOTION PREFIX PRIORITY GUIDE</strong></p>
+  <p><strong>Master these in order of frequency:</strong></p>
+  <table>
+  <thead>
+  <tr>
+  <th>Priority</th>
+  <th>Prefix</th>
+  <th>Meaning</th>
+  <th>Example</th>
+  <th>Frequency</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+  <td>1</td>
+  <td>при-</td>
+  <td>arrival</td>
+  <td>прийти (to come)</td>
+  <td>★★★★★</td>
+  </tr>
+  <tr>
+  <td>2</td>
+  <td>ви-</td>
+  <td>exit, out</td>
+  <td>вийти (to go out)</td>
+  <td>★★★★★</td>
+  </tr>
+  <tr>
+  <td>3</td>
+  <td>в-/у-</td>
+  <td>entry, in</td>
+  <td>увійти (to enter)</td>
+  <td>★★★★★</td>
+  </tr>
+  <tr>
+  <td>4</td>
+  <td>пере-</td>
+  <td>across</td>
+  <td>перейти (to cross)</td>
+  <td>★★★★☆</td>
+  </tr>
+  <tr>
+  <td>5</td>
+  <td>за-</td>
+  <td>drop by, begin</td>
+  <td>зайти (to stop by)</td>
+  <td>★★★★☆</td>
+  </tr>
+  <tr>
+  <td>6</td>
+  <td>від-</td>
+  <td>away from</td>
+  <td>відійти (to walk away)</td>
+  <td>★★★☆☆</td>
+  </tr>
+  <tr>
+  <td>7</td>
+  <td>до-</td>
+  <td>reach, up to</td>
+  <td>дійти (to reach)</td>
+  <td>★★★☆☆</td>
+  </tr>
+  <tr>
+  <td>8</td>
+  <td>по-</td>
+  <td>begin, set off</td>
+  <td>піти (to leave)</td>
+  <td>★★★☆☆</td>
+  </tr>
+  <tr>
+  <td>9</td>
+  <td>про-</td>
+  <td>through, past</td>
+  <td>пройти (to pass)</td>
+  <td>★★★☆☆</td>
+  </tr>
+  <tr>
+  <td>10</td>
+  <td>роз-</td>
+  <td>disperse</td>
+  <td>розійтися (to disperse)</td>
+  <td>★★☆☆☆</td>
+  </tr>
+  <tr>
+  <td>11</td>
+  <td>об-</td>
+  <td>around</td>
+  <td>обійти (to go around)</td>
+  <td>★★☆☆☆</td>
+  </tr>
+  <tr>
+  <td>12</td>
+  <td>з-/с-</td>
+  <td>down from</td>
+  <td>зійти (to descend)</td>
+  <td>★☆☆☆☆</td>
+  </tr>
+  </tbody>
+  </table>
+  <p><strong>Study tip:</strong> Focus on prefixes 1-5 first — they cover 80% of everyday speech!</p>
+</blockquote>
+<hr />
+<h2 id="presentation">presentation</h2>
+<h3 id="thetwotypesofmotion">The Two Types of Motion</h3>
+<p><strong>Unidirectional (односпрямовані):</strong></p>
+<ul>
+<li>Movement in ONE direction</li>
+<li>ONE specific trip</li>
+<li>Happening NOW or a specific moment</li>
+<li>Linear, goal-oriented</li>
+</ul>
+<p><strong>Multidirectional (різноспрямовані):</strong></p>
+<ul>
+<li>Movement in MULTIPLE directions</li>
+<li>Round trips (there and back)</li>
+<li>Habitual, repeated motion</li>
+<li>General ability to move</li>
+</ul>
+<h3 id="the14motionverbpairs">The 14 Motion Verb Pairs</h3>
+<h4 id="onfoot">On Foot</h4>
+<table>
+<thead>
+<tr>
+<th>Unidirectional</th>
+<th>Multidirectional</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>іти</td>
+<td>ходити</td>
+<td>to go (on foot)</td>
+</tr>
+<tr>
+<td>бігти</td>
+<td>бігати</td>
+<td>to run</td>
+</tr>
+<tr>
+<td>брести</td>
+<td>бродити</td>
+<td>to wander, wade</td>
+</tr>
+<tr>
+<td>лізти</td>
+<td>лазити</td>
+<td>to climb</td>
+</tr>
+<tr>
+<td>повзти</td>
+<td>повзати</td>
+<td>to crawl</td>
+</tr>
+</tbody>
+</table>
+<h4 id="byvehicleairwater">By Vehicle/Air/Water</h4>
+<table>
+<thead>
+<tr>
+<th>Unidirectional</th>
+<th>Multidirectional</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>їхати</td>
+<td>їздити</td>
+<td>to go (by vehicle)</td>
+</tr>
+<tr>
+<td>летіти</td>
+<td>літати</td>
+<td>to fly</td>
+</tr>
+<tr>
+<td>плисти</td>
+<td>плавати</td>
+<td>to swim, sail</td>
+</tr>
+<tr>
+<td>котитися</td>
+<td>кочатися</td>
+<td>to roll</td>
+</tr>
+</tbody>
+</table>
+<h4 id="carryingleading">Carrying/Leading</h4>
+<table>
+<thead>
+<tr>
+<th>Unidirectional</th>
+<th>Multidirectional</th>
+<th>English</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>нести</td>
+<td>носити</td>
+<td>to carry (on foot)</td>
+</tr>
+<tr>
+<td>везти</td>
+<td>возити</td>
+<td>to carry (by vehicle)</td>
+</tr>
+<tr>
+<td>вести</td>
+<td>водити</td>
+<td>to lead</td>
+</tr>
+<tr>
+<td>гнати</td>
+<td>ганяти</td>
+<td>to chase, drive</td>
+</tr>
+<tr>
+<td>тягти</td>
+<td>тягати</td>
+<td>to pull, drag</td>
+</tr>
+</tbody>
+</table>
+<h3 id="core8pairsforb1">Core 8 Pairs for B1</h3>
+<p>Focus on these 8 most common pairs:</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Uni</th>
+<th>Multi</th>
+<th>English</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>іти</td>
+<td>ходити</td>
+<td>go (foot)</td>
+<td>Я йду в магазин. / Я ходжу в магазин щодня.</td>
+</tr>
+<tr>
+<td>2</td>
+<td>їхати</td>
+<td>їздити</td>
+<td>go (vehicle)</td>
+<td>Я їду на роботу. / Я їжджу на роботу щодня.</td>
+</tr>
+<tr>
+<td>3</td>
+<td>бігти</td>
+<td>бігати</td>
+<td>run</td>
+<td>Він біжить. / Він бігає щоранку.</td>
+</tr>
+<tr>
+<td>4</td>
+<td>летіти</td>
+<td>літати</td>
+<td>fly</td>
+<td>Літак летить. / Птахи літають.</td>
+</tr>
+<tr>
+<td>5</td>
+<td>плисти</td>
+<td>плавати</td>
+<td>swim</td>
+<td>Він пливе. / Він плаває добре.</td>
+</tr>
+<tr>
+<td>6</td>
+<td>нести</td>
+<td>носити</td>
+<td>carry</td>
+<td>Він несе сумку. / Він носить окуляри.</td>
+</tr>
+<tr>
+<td>7</td>
+<td>везти</td>
+<td>возити</td>
+<td>transport</td>
+<td>Таксі везе мене. / Він возить товари.</td>
+</tr>
+<tr>
+<td>8</td>
+<td>вести</td>
+<td>водити</td>
+<td>lead</td>
+<td>Він веде дитину. / Він водить машину.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="whentouseunidirectional">When to Use Unidirectional</h3>
+<p><strong>1. Right now, one direction:</strong></p>
+<ul>
+<li>Куди ти <strong>йдеш</strong>? - Where are you going (right now)?</li>
+<li>Я <strong>йду</strong> додому. - I'm going home.</li>
+<li>Дивись, літак <strong>летить</strong>! - Look, a plane is flying!</li>
+</ul>
+<p><strong>2. Single trip in past (narrative):</strong></p>
+<ul>
+<li>Учора я <strong>йшов</strong> додому і зустрів друга. - Yesterday I was going home and met a friend.</li>
+<li>Коли ми <strong>їхали</strong> в Київ, ми бачили красиві краєвиди. - When we were going to Kyiv, we saw beautiful scenery.</li>
+</ul>
+<p><strong>3. Future single trip:</strong></p>
+<ul>
+<li>Завтра я <strong>йду</strong> на концерт. - Tomorrow I'm going to a concert.</li>
+<li>Ми <strong>їдемо</strong> у відпустку. - We're going on vacation.</li>
+</ul>
+<h3 id="whentousemultidirectional">When to Use Multidirectional</h3>
+<p><strong>1. Round trip (there and back):</strong></p>
+<ul>
+<li>Учора я <strong>ходив</strong> у магазин. - Yesterday I went to the store (and came back).</li>
+<li>Вона <strong>їздила</strong> в Одесу. - She went to Odesa (and returned).</li>
+</ul>
+<p><strong>2. Habitual motion:</strong></p>
+<ul>
+<li>Я <strong>ходжу</strong> на роботу пішки. - I walk to work (regularly).</li>
+<li>Він <strong>їздить</strong> на метро. - He takes the metro (regularly).</li>
+<li>Вона <strong>бігає</strong> щоранку. - She runs every morning.</li>
+</ul>
+<p><strong>3. General ability:</strong></p>
+<ul>
+<li>Риби <strong>плавають</strong>. - Fish swim (can swim).</li>
+<li>Птахи <strong>літають</strong>. - Birds fly (can fly).</li>
+<li>Діти вже <strong>ходять</strong>. - The children already walk (can walk).</li>
+</ul>
+<p><strong>4. Motion in various directions:</strong></p>
+<ul>
+<li>Діти <strong>бігають</strong> по кімнаті. - Children are running around the room.</li>
+<li>Він <strong>ходить</strong> туди-сюди. - He's walking back and forth.</li>
+</ul>
+<h3 id="pasttensekeydifference">Past Tense: Key Difference</h3>
+<p><strong>Unidirectional past = in the process of going:</strong></p>
+<ul>
+<li>Я <strong>йшов</strong> додому, коли почався дощ. - I was going home when it started to rain.</li>
+</ul>
+<p><strong>Multidirectional past = completed round trip:</strong></p>
+<ul>
+<li>Я <strong>ходив</strong> у магазин. - I went to the store (and came back).</li>
+</ul>
+<p>Compare:</p>
+<ul>
+<li>Де ти був? — Я <strong>ходив</strong> у бібліотеку. (completed trip)</li>
+<li>Що ти робив? — Я <strong>йшов</strong> по вулиці. (process)</li>
+</ul>
+<h3 id="conjugationreview">Conjugation Review</h3>
+<p><strong>Іти (unidirectional):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Pronoun</th>
+<th>Present</th>
+<th>Past</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>я</td>
+<td>йду</td>
+<td>йшов/йшла</td>
+</tr>
+<tr>
+<td>ти</td>
+<td>йдеш</td>
+<td>йшов/йшла</td>
+</tr>
+<tr>
+<td>він/вона</td>
+<td>йде</td>
+<td>йшов/йшла</td>
+</tr>
+<tr>
+<td>ми</td>
+<td>йдемо</td>
+<td>йшли</td>
+</tr>
+<tr>
+<td>ви</td>
+<td>йдете</td>
+<td>йшли</td>
+</tr>
+<tr>
+<td>вони</td>
+<td>йдуть</td>
+<td>йшли</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Ходити (multidirectional):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Pronoun</th>
+<th>Present</th>
+<th>Past</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>я</td>
+<td>ходжу</td>
+<td>ходив/ходила</td>
+</tr>
+<tr>
+<td>ти</td>
+<td>ходиш</td>
+<td>ходив/ходила</td>
+</tr>
+<tr>
+<td>він/вона</td>
+<td>ходить</td>
+<td>ходив/ходила</td>
+</tr>
+<tr>
+<td>ми</td>
+<td>ходимо</td>
+<td>ходили</td>
+</tr>
+<tr>
+<td>ви</td>
+<td>ходите</td>
+<td>ходили</td>
+</tr>
+<tr>
+<td>вони</td>
+<td>ходять</td>
+<td>ходили</td>
+</tr>
+</tbody>
+</table>
+<h2 id="practice">practice</h2>
+<h3 id="chooseuniormulti">Choose Uni or Multi</h3>
+<ol>
+<li>Куди ти ___ (йдеш/ходиш) зараз? → <strong>йдеш</strong> (right now)</li>
+<li>Вона ___ (їде/їздить) на роботу автобусом щодня. → <strong>їздить</strong> (every day)</li>
+<li>Дивись, птах ___ (летить/літає)! → <strong>летить</strong> (right now, one direction)</li>
+<li>Учора я ___ (йшов/ходив) у кіно. → <strong>ходив</strong> (round trip)</li>
+<li>Риби добре ___ (пливуть/плавають). → <strong>плавають</strong> (ability)</li>
+<li>Він зараз ___ (несе/носить) важку сумку. → <strong>несе</strong> (right now)</li>
+<li>Вона завжди ___ (несе/носить) парасольку. → <strong>носить</strong> (always)</li>
+<li>Коли я ___ (їхав/їздив) на роботу, я бачив аварію. → <strong>їхав</strong> (in process of going)</li>
+</ol>
+<h3 id="completethedialogues">Complete the Dialogues</h3>
+<p><strong>Dialogue 1:</strong></p>
+<ul>
+<li>А: Куди ти ___? (йти)</li>
+<li>Б: Я ___ в магазин. (йти)</li>
+<li>А: Ти часто туди ___? (ходити)</li>
+<li>Б: Так, я ___ туди щодня. (ходити)</li>
+</ul>
+<p><strong>Answers:</strong> йдеш, йду, ходиш, ходжу</p>
+<p><strong>Dialogue 2:</strong></p>
+<ul>
+<li>А: Ти вчора ___ на роботу на машині? (їздити)</li>
+<li>Б: Ні, я ___ пішки, бо машина зламалась. (ходити)</li>
+<li>А: А як ти зараз ___ на роботу? (їхати)</li>
+<li>Б: Я ___ автобусом. (їхати)</li>
+</ul>
+<p><strong>Answers:</strong> їздив, ходив, їдеш, їду</p>
+<h3 id="describemovement">Describe Movement</h3>
+<p>Use the correct verb:</p>
+<ol>
+<li>Літак ___ над містом. (right now) → <strong>летить</strong></li>
+<li>Він добре ___. (ability to swim) → <strong>плаває</strong></li>
+<li>Діти ___ по двору. (multiple directions) → <strong>бігають</strong></li>
+<li>Машина ___ швидко. (right now, one direction) → <strong>їде</strong></li>
+<li>Вона ___ машину. (ability/regular) → <strong>водить</strong></li>
+</ol>
+<h2 id="production">production</h2>
+<h3 id="describeyourcommute">Describe Your Commute</h3>
+<p>Use both types of motion verbs:</p>
+<p><strong>Example:</strong><br />
+Щодня я <strong>їжджу</strong> на роботу метро. Зранку я <strong>йду</strong> до станції пішки. Коли я <strong>їду</strong> в метро, я читаю книгу. Увечері я <strong>йду</strong> додому тією самою дорогою.</p>
+<h3 id="tellaboutatrip">Tell About a Trip</h3>
+<p>Use multidirectional for completed trips:</p>
+<p><strong>Example:</strong><br />
+Минулого тижня я <strong>їздив</strong> у Львів. Там я багато <strong>ходив</strong> по місту. Ми <strong>плавали</strong> у басейні в готелі.</p>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Activities</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="quizmotionverbselection">quiz: Motion Verb Selection</h2>
+<blockquote>
+  <p>Choose the correct verb.</p>
+</blockquote>
+<ol>
+<li>Куди ти ___ зараз?</li>
+</ol>
+<ul>
+<li>[x] йдеш</li>
+<li>[ ] ходиш</li>
+</ul>
+<blockquote>
+  <p>Right now = unidirectional</p>
+</blockquote>
+<ol start="2">
+<li>Вона ___ на роботу щодня.</li>
+</ol>
+<ul>
+<li>[ ] їде</li>
+<li>[x] їздить</li>
+</ul>
+<blockquote>
+  <p>Щодня = multidirectional</p>
+</blockquote>
+<ol start="3">
+<li>Учора я ___ у театр.</li>
+</ol>
+<ul>
+<li>[ ] йшов</li>
+<li>[x] ходив</li>
+</ul>
+<blockquote>
+  <p>Round trip = multidirectional</p>
+</blockquote>
+<ol start="4">
+<li>Дивись, собака ___ !</li>
+</ol>
+<ul>
+<li>[x] біжить</li>
+<li>[ ] бігає</li>
+</ul>
+<blockquote>
+  <p>Right now = unidirectional</p>
+</blockquote>
+<ol start="5">
+<li>Птахи ___ на південь восени.</li>
+</ol>
+<ul>
+<li>[x] летять</li>
+<li>[ ] літають</li>
+</ul>
+<blockquote>
+  <p>One direction (migration) = unidirectional</p>
+</blockquote>
+<ol start="6">
+<li>Діти вже ___ .</li>
+</ol>
+<ul>
+<li>[ ] йдуть</li>
+<li>[x] ходять</li>
+</ul>
+<blockquote>
+  <p>Ability = multidirectional</p>
+</blockquote>
+<h2 id="matchupmotionpairs">match-up: Motion Pairs</h2>
+<table>
+<thead>
+<tr>
+<th>Unidirectional</th>
+<th>Multidirectional</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>іти</td>
+<td>ходити</td>
+</tr>
+<tr>
+<td>їхати</td>
+<td>їздити</td>
+</tr>
+<tr>
+<td>бігти</td>
+<td>бігати</td>
+</tr>
+<tr>
+<td>летіти</td>
+<td>літати</td>
+</tr>
+<tr>
+<td>плисти</td>
+<td>плавати</td>
+</tr>
+<tr>
+<td>нести</td>
+<td>носити</td>
+</tr>
+<tr>
+<td>везти</td>
+<td>возити</td>
+</tr>
+<tr>
+<td>вести</td>
+<td>водити</td>
+</tr>
+</tbody>
+</table>
+<h2 id="groupsortwhentouse">group-sort: When to Use</h2>
+<h3 id="unidirectional">Unidirectional</h3>
+<ul>
+<li>right now, one direction</li>
+<li>single trip in narrative</li>
+<li>future single trip</li>
+<li>linear movement</li>
+</ul>
+<h3 id="multidirectional">Multidirectional</h3>
+<ul>
+<li>round trip (there and back)</li>
+<li>habitual motion</li>
+<li>general ability</li>
+<li>movement in various directions</li>
+</ul>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Vocabulary</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Word</th>
+<th>IPA</th>
+<th>English</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>іти</td>
+<td>/iˈtɪ/</td>
+<td>to go (on foot)</td>
+<td>uni</td>
+</tr>
+<tr>
+<td>ходити</td>
+<td>/xoˈdɪtɪ/</td>
+<td>to go (on foot)</td>
+<td>multi</td>
+</tr>
+<tr>
+<td>їхати</td>
+<td>/ˈjixɑtɪ/</td>
+<td>to go (by vehicle)</td>
+<td>uni</td>
+</tr>
+<tr>
+<td>їздити</td>
+<td>/ˈjizdɪtɪ/</td>
+<td>to go (by vehicle)</td>
+<td>multi</td>
+</tr>
+<tr>
+<td>бігти</td>
+<td>/ˈbʲiɦtɪ/</td>
+<td>to run</td>
+<td>uni</td>
+</tr>
+<tr>
+<td>бігати</td>
+<td>/ˈbʲiɦɑtɪ/</td>
+<td>to run</td>
+<td>multi</td>
+</tr>
+<tr>
+<td>летіти</td>
+<td>/lɛˈtʲitɪ/</td>
+<td>to fly</td>
+<td>uni</td>
+</tr>
+<tr>
+<td>літати</td>
+<td>/lʲiˈtɑtɪ/</td>
+<td>to fly</td>
+<td>multi</td>
+</tr>
+<tr>
+<td>плисти</td>
+<td>/plɪsˈtɪ/</td>
+<td>to swim</td>
+<td>uni</td>
+</tr>
+<tr>
+<td>плавати</td>
+<td>/ˈplɑvɑtɪ/</td>
+<td>to swim</td>
+<td>multi</td>
+</tr>
+<tr>
+<td>нести</td>
+<td>/nɛsˈtɪ/</td>
+<td>to carry</td>
+<td>uni</td>
+</tr>
+<tr>
+<td>носити</td>
+<td>/noˈsɪtɪ/</td>
+<td>to carry, wear</td>
+<td>multi</td>
+</tr>
+<tr>
+<td>везти</td>
+<td>/vɛzˈtɪ/</td>
+<td>to transport</td>
+<td>uni</td>
+</tr>
+<tr>
+<td>возити</td>
+<td>/voˈzɪtɪ/</td>
+<td>to transport</td>
+<td>multi</td>
+</tr>
+<tr>
+<td>вести</td>
+<td>/vɛsˈtɪ/</td>
+<td>to lead</td>
+<td>uni</td>
+</tr>
+<tr>
+<td>водити</td>
+<td>/voˈdɪtɪ/</td>
+<td>to lead, drive</td>
+<td>multi</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Summary</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="themotionverbsystem">The Motion Verb System</h2>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Use</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Unidirectional</td>
+<td>One direction, now</td>
+<td>Я йду в магазин.</td>
+</tr>
+<tr>
+<td>Multidirectional</td>
+<td>Round trip, habitual</td>
+<td>Я ходжу в магазин щодня.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="8corepairs">8 Core Pairs</h2>
+<ol>
+<li>іти / ходити (foot)</li>
+<li>їхати / їздити (vehicle)</li>
+<li>бігти / бігати (run)</li>
+<li>летіти / літати (fly)</li>
+<li>плисти / плавати (swim)</li>
+<li>нести / носити (carry)</li>
+<li>везти / возити (transport)</li>
+<li>вести / водити (lead)</li>
+</ol>
+<h2 id="keydecisionpoints">Key Decision Points</h2>
+<table>
+<thead>
+<tr>
+<th>Context</th>
+<th>Choose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Right now, going somewhere</td>
+<td>Unidirectional</td>
+</tr>
+<tr>
+<td>Round trip in past</td>
+<td>Multidirectional</td>
+</tr>
+<tr>
+<td>Habitual/regular</td>
+<td>Multidirectional</td>
+</tr>
+<tr>
+<td>Ability</td>
+<td>Multidirectional</td>
+</tr>
+<tr>
+<td>Narrative (in process)</td>
+<td>Unidirectional past</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="comingnextmotionprefixes">Coming Next: Motion Prefixes</h2>
+<p>In the next modules, you'll learn to add prefixes to motion verbs. Here's a preview of what's most important:</p>
+<blockquote>
+  <p><strong>📊 MOTION PREFIX PRIORITY PYRAMID</strong></p>
+<pre><code>                 ┌─────────────┐
+                 │  роз-  об-  │  Tier 3: Useful
+                 └─────────────┘
+           ┌────────────────────────┐
+           │  про-  від-  по-  за-  │  Tier 2: Important
+           └────────────────────────┘
+     ┌─────────────────────────────────────┐
+     │         при-    ви-    в-/у-        │  Tier 1: ESSENTIAL
+     │         ━━━━━━━━━━━━━━━━━━━━        │  (Master these first!)
+     └─────────────────────────────────────┘
+</code></pre>
+  <table>
+  <thead>
+  <tr>
+  <th>Tier</th>
+  <th>Prefixes</th>
+  <th>Meaning</th>
+  <th>Priority</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+  <td>1 ⭐</td>
+  <td>при-, ви-, в-/у-</td>
+  <td>arrive, exit, enter</td>
+  <td>Master first!</td>
+  </tr>
+  <tr>
+  <td>2</td>
+  <td>пере-, про-, по-, за-</td>
+  <td>cross, through, leave, stop by</td>
+  <td>High frequency</td>
+  </tr>
+  <tr>
+  <td>3</td>
+  <td>від-, об-, роз-</td>
+  <td>away, around, apart</td>
+  <td>Know these too</td>
+  </tr>
+  </tbody>
+  </table>
+</blockquote>
+<hr />
+<blockquote>
+  <p><strong>Key Takeaways</strong></p>
+  <ul>
+  <li>14 motion verb pairs (8 core for B1)</li>
+  <li>Unidirectional = one way, right now</li>
+  <li>Multidirectional = round trip, habitual, ability</li>
+  <li>"Де ти був?" → answer with multidirectional</li>
+  <li>"Куди ти йдеш?" → answer with unidirectional</li>
+  </ul>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('match')">Start →</button></div>
     </section>
     <section id="match" class="section"><div class="card"><h3>Motion Pairs</h3>
       <div class="score-display"><span class="score"><span id="match-score">0</span>/8</span></div>
       <div class="match-container" id="match-container"><svg class="match-lines" id="match-lines"></svg>
         <div class="match-column" id="match-left"><div class="match-item" data-pair="0">іти</div><div class="match-item" data-pair="1">їхати</div><div class="match-item" data-pair="2">бігти</div><div class="match-item" data-pair="3">летіти</div><div class="match-item" data-pair="4">плисти</div><div class="match-item" data-pair="5">нести</div><div class="match-item" data-pair="6">везти</div><div class="match-item" data-pair="7">вести</div></div>
-        <div class="match-column" id="match-right"><div class="match-item" data-pair="0">ходити</div><div class="match-item" data-pair="7">водити</div><div class="match-item" data-pair="2">бігати</div><div class="match-item" data-pair="3">літати</div><div class="match-item" data-pair="6">возити</div><div class="match-item" data-pair="4">плавати</div><div class="match-item" data-pair="1">їздити</div><div class="match-item" data-pair="5">носити</div></div>
+        <div class="match-column" id="match-right"><div class="match-item" data-pair="0">ходити</div><div class="match-item" data-pair="1">їздити</div><div class="match-item" data-pair="3">літати</div><div class="match-item" data-pair="4">плавати</div><div class="match-item" data-pair="7">водити</div><div class="match-item" data-pair="6">возити</div><div class="match-item" data-pair="2">бігати</div><div class="match-item" data-pair="5">носити</div></div>
       </div>
       <div class="completion-message" id="match-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetMatch()">Reset</button><button class="btn btn-primary" onclick="showSection('quiz')">Next →</button></div>
@@ -175,6 +1103,10 @@
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

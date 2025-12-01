@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,8 +136,20 @@
         <p style="color:var(--text-muted)">Практика стилів</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="md-content"><h1 id="">Вступ</h1>
-<p>Уявіть: ви отримали новину — вас звільнили з роботи. Як ви про це скажете?</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Вступ</li><li class="toc-item" data-target="section-1">Алгоритм визначення стилю</li><li class="toc-item" data-target="section-2">Зведена таблиця маркерів</li><li class="toc-item" data-target="section-3">Типові помилки змішування стилів</li><li class="toc-item" data-target="section-4">Трансформації</li><li class="toc-item" data-target="section-5">Практика</li><li class="toc-item" data-target="section-6">Комплексна трансформація</li><li class="toc-item" data-target="section-7">Три версії одного повідомлення</li><li class="toc-item" data-target="section-8">Словник</li><li class="toc-item" data-target="section-9">Підсумок</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Вступ</h3>
+          <span class="section-type intro">intro</span>
+        </div>
+        <div class="section-body md-content"><p>Уявіть: ви отримали новину — вас звільнили з роботи. Як ви про це скажете?</p>
 <p><strong>Другу в кав'ярні:</strong> «Уявляєш, мене вчора отак взяли і звільнили! Ну от, шукаю тепер нову роботу…»</p>
 <p><strong>У резюме:</strong> «У зв'язку зі скороченням штату трудові відносини було припинено.»</p>
 <p><strong>Журналісту:</strong> «Хвиля звільнень накриває український ринок праці. Ще один працівник став жертвою "оптимізації".»</p>
@@ -130,9 +160,14 @@
   <p><strong>Чи знали ви?</strong></p>
   <p>Здатність <strong>перемикати регістри</strong> (code-switching) — одна з ознак високого рівня володіння мовою. Носії мови роблять це автоматично: з бабусею говорять інакше, ніж з босом, і інакше, ніж з друзями. Для іноземців це — навичка, яку треба свідомо розвивати.</p>
 </blockquote>
-<hr />
-<h1 id="-1">Алгоритм визначення стилю</h1>
-<p>Коли ви бачите текст і не знаєте, який це стиль, шукайте <strong>маркери</strong>:</p>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Алгоритм визначення стилю</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><p>Коли ви бачите текст і не знаєте, який це стиль, шукайте <strong>маркери</strong>:</p>
 <h2 id="1">Крок 1: Лексика</h2>
 <table>
 <thead>
@@ -226,9 +261,14 @@
 </tr>
 </tbody>
 </table>
-<hr />
-<h1 id="-2">Зведена таблиця маркерів</h1>
-<table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Зведена таблиця маркерів</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><table>
 <thead>
 <tr>
 <th>Стиль</th>
@@ -275,27 +315,37 @@
   <p>❌ <strong>Міф:</strong> «Можна визначити стиль за одним словом.»</p>
   <p>✅ <strong>Факт:</strong> Потрібен <strong>комплекс маркерів</strong>. Слово «проблема» є в усіх стилях. Але «проблема досліджується» — науковий, «проблему вирішено» — офіційний, «от проблема!» — розмовний. Контекст вирішує все.</p>
 </blockquote>
-<hr />
-<h1 id="-3">Типові помилки змішування стилів</h1>
-<h2 id="-4">❌ Офіційний + Розмовний</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Типові помилки змішування стилів</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">❌ Офіційний + Розмовний</h2>
 <p>«Відповідно до закону, ну от, працівника звільнено.»</p>
 <p>✅ <strong>Виправлення:</strong> «Відповідно до закону, працівника звільнено.»</p>
-<h2 id="-5">❌ Науковий + Емоційний</h2>
+<h2 id="-1">❌ Науковий + Емоційний</h2>
 <p>«Дослідження показує жахливі результати!!!»</p>
 <p>✅ <strong>Виправлення:</strong> «Дослідження виявило значні відхилення від норми.»</p>
-<h2 id="-6">❌ Розмовний + Канцеляризми</h2>
+<h2 id="-2">❌ Розмовний + Канцеляризми</h2>
 <p>«Ну, у зв'язку з вищезазначеним, я типу не прийду.»</p>
 <p>✅ <strong>Виправлення:</strong> «Слухай, не прийду, вибач.»</p>
-<h2 id="-7">❌ Публіцистичний + Сленг</h2>
+<h2 id="-3">❌ Публіцистичний + Сленг</h2>
 <p>«Парламент ухвалив закон, і це реально круто!»</p>
 <p>✅ <strong>Виправлення:</strong> «Парламент ухвалив довгоочікуваний закон.»</p>
 <blockquote>
   <p><strong>Чи знали ви?</strong></p>
   <p>Змішування стилів іноді <strong>навмисне</strong> — для комічного ефекту. Коли герой фільму каже бабусі «Відповідно до ваших побажань, борщ готовий», це смішно саме тому, що канцеляризм недоречний. Це <strong>стилістична гра</strong>, яка працює, коли ви <strong>знаєте правила</strong>.</p>
 </blockquote>
-<hr />
-<h1 id="-8">Трансформації</h1>
-<h2 id="-9">Розмовний → Офіційний</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-4">
+        <div class="section-header" onclick="toggleSection(4)">
+          <h3>Трансформації</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Розмовний → Офіційний</h2>
 <table>
 <thead>
 <tr>
@@ -330,7 +380,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="-10">Офіційний → Розмовний</h2>
+<h2 id="-1">Офіційний → Розмовний</h2>
 <table>
 <thead>
 <tr>
@@ -361,7 +411,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="-11">Нейтральний → Публіцистичний</h2>
+<h2 id="-2">Нейтральний → Публіцистичний</h2>
 <table>
 <thead>
 <tr>
@@ -388,9 +438,14 @@
 </tr>
 </tbody>
 </table>
-<hr />
-<h1 id="-12">Практика</h1>
-<h2 id="-13">Визначте стиль</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-5">
+        <div class="section-header" onclick="toggleSection(5)">
+          <h3>Практика</h3>
+          <span class="section-type practice">practice</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Визначте стиль</h2>
 <ol>
 <li><p>«Прошу розглянути питання щодо надання відпустки.»<br />
 → <strong>Офіційний</strong> (кліше: «прошу розглянути», «щодо надання»)</p></li>
@@ -403,7 +458,7 @@
 <li><p>«Сонце сідало за обрій, фарбуючи небо в пурпур.»<br />
 → <strong>Художній</strong> (образність, метафора)</p></li>
 </ol>
-<h2 id="-14">Виправте стилістичну помилку</h2>
+<h2 id="-1">Виправте стилістичну помилку</h2>
 <ol>
 <li><p>❌ «Прошу надати мені відпустку, бо типу хочу відпочити.»<br />
 ✅ <strong>«Прошу надати мені відпустку у зв'язку з сімейними обставинами.»</strong></p></li>
@@ -414,26 +469,143 @@
 <li><p>❌ «Чи можемо ми ігнорувати цю, ну, проблему?»<br />
 ✅ <strong>«Чи можемо ми ігнорувати цю проблему?»</strong> (публіцистичний без «ну»)</p></li>
 </ol>
-<hr />
-<h1 id="-15">Комплексна трансформація</h1>
-<h2 id="-16">Вихідний текст (розмовний):</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-6">
+        <div class="section-header" onclick="toggleSection(6)">
+          <h3>Комплексна трансформація</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Вихідний текст (розмовний):</h2>
 <p>«Уявляєш, мене вчора на роботі отак взяли і звільнили! Кажуть — скорочення. Ну от, тепер шукаю нову роботу. От халепа!»</p>
-<h2 id="-17">Офіційна версія:</h2>
+<h2 id="-1">Офіційна версія:</h2>
 <p>«Повідомляю, що 15.06.2024 мене було звільнено з посади у зв'язку зі скороченням штату. На даний момент перебуваю у пошуку нового місця працевлаштування.»</p>
-<h2 id="-18">Публіцистична версія:</h2>
+<h2 id="-2">Публіцистична версія:</h2>
 <p>«Хвиля скорочень не оминає нікого. Учора ще один працівник став жертвою "оптимізації" — улюбленого слова сучасних роботодавців. Чи є світло в кінці тунелю?»</p>
-<h2 id="-19">Наукова версія:</h2>
+<h2 id="-3">Наукова версія:</h2>
 <p>«Зафіксовано випадок звільнення працівника внаслідок оптимізації штатного розпису. Дане явище корелює з загальною тенденцією до скорочення зайнятості в умовах економічної нестабільності.»</p>
-<hr />
-<h1 id="-20">Три версії одного повідомлення</h1>
-<p><strong>Ситуація:</strong> Ви не можете прийти на зустріч.</p>
-<h2 id="-21">Розмовний (другу):</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-7">
+        <div class="section-header" onclick="toggleSection(7)">
+          <h3>Три версії одного повідомлення</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><p><strong>Ситуація:</strong> Ви не можете прийти на зустріч.</p>
+<h2 id="">Розмовний (другу):</h2>
 <p>«Привіт! Слухай, не зможу сьогодні. Щось термінове вискочило. Може, завтра?»</p>
-<h2 id="-22">Нейтральний (колезі):</h2>
+<h2 id="-1">Нейтральний (колезі):</h2>
 <p>«Добрий день! На жаль, не зможу бути на сьогоднішній зустрічі. Чи можемо перенести на завтра?»</p>
-<h2 id="-23">Офіційний (керівнику):</h2>
+<h2 id="-2">Офіційний (керівнику):</h2>
 <p>«Шановний пане директоре! На жаль, у зв'язку з непередбаченими обставинами не маю змоги бути присутнім(-ою) на сьогоднішній зустрічі. Прошу перенести зустріч на завтра. Перепрошую за незручності.»</p>
-<hr /></div></div>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-8">
+        <div class="section-header" onclick="toggleSection(8)">
+          <h3>Словник</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Слово</th>
+<th>Переклад</th>
+<th>Примітки</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>трансформація</td>
+<td>transformation</td>
+<td>перетворення</td>
+</tr>
+<tr>
+<td>маркер</td>
+<td>marker</td>
+<td>ознака стилю</td>
+</tr>
+<tr>
+<td>змішування</td>
+<td>mixing</td>
+<td>помилка стилю</td>
+</tr>
+<tr>
+<td>перемикання</td>
+<td>code-switching</td>
+<td>зміна регістру</td>
+</tr>
+<tr>
+<td>адекватний</td>
+<td>appropriate</td>
+<td>доречний</td>
+</tr>
+<tr>
+<td>троп</td>
+<td>trope</td>
+<td>образний засіб</td>
+</tr>
+<tr>
+<td>комплексний</td>
+<td>complex</td>
+<td>багатоаспектний</td>
+</tr>
+<tr>
+<td>непередбачений</td>
+<td>unforeseen</td>
+<td>несподіваний</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-9">
+        <div class="section-header" onclick="toggleSection(9)">
+          <h3>Підсумок</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Алгоритм</h2>
+<ol>
+<li><strong>Лексика</strong> — шукайте характерні слова</li>
+<li><strong>Граматика</strong> — аналізуйте конструкції</li>
+<li><strong>Контекст</strong> — враховуйте ситуацію</li>
+</ol>
+<h2 id="-1">Типові помилки</h2>
+<table>
+<thead>
+<tr>
+<th>❌ Помилка</th>
+<th>✅ Виправлення</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Змішування стилів</td>
+<td>Один стиль на текст</td>
+</tr>
+<tr>
+<td>Канцеляризми в розмові</td>
+<td>Прості слова</td>
+</tr>
+<tr>
+<td>Сленг в офіційних текстах</td>
+<td>Нейтральна лексика</td>
+</tr>
+<tr>
+<td>«Ну» в публіцистиці</td>
+<td>Без часток</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p><strong>Запам'ятайте:</strong></p>
+  <p>✓ Кожен стиль має свої <strong>маркери</strong><br />
+  ✓ <strong>Не змішуйте</strong> стилі в одному тексті<br />
+  ✓ Вибір стилю залежить від <strong>ситуації та адресата</strong><br />
+  ✓ Трансформація вимагає заміни <strong>лексики та граматики</strong><br />
+  ✓ Перемикання регістрів — ознака <strong>високого рівня</strong> володіння мовою</p>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('vocab')">Start →</button></div>
     </section>
     
@@ -466,6 +638,10 @@
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

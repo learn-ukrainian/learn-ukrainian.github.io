@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,8 +136,20 @@
         <p style="color:var(--text-muted)">Пасивний стан: огляд</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="md-content"><h1 id="">Вступ</h1>
-<p>Пасивний стан — це момент істини для тих, хто хоче звучати по-справжньому українською. В англійській все просто: «The book was written» — і крапка. Одна форма на всі випадки життя.</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Вступ</li><li class="toc-item" data-target="section-1">Чотири форми пасиву</li><li class="toc-item" data-target="section-2">Форма 1: Дієприкметниковий пасив</li><li class="toc-item" data-target="section-3">Форма 2: Безособовий пасив (-но/-то)</li><li class="toc-item" data-target="section-4">Форма 3: Зворотний пасив (-ся)</li><li class="toc-item" data-target="section-5">Форма 4: Невизначено-особовий пасив</li><li class="toc-item" data-target="section-6">Порівняльна таблиця</li><li class="toc-item" data-target="section-7">Вибір форми за контекстом</li><li class="toc-item" data-target="section-8">Практика</li><li class="toc-item" data-target="section-9">Продукція</li><li class="toc-item" data-target="section-10">Словник</li><li class="toc-item" data-target="section-11">Підсумок</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Вступ</h3>
+          <span class="section-type intro">intro</span>
+        </div>
+        <div class="section-body md-content"><p>Пасивний стан — це момент істини для тих, хто хоче звучати по-справжньому українською. В англійській все просто: «The book was written» — і крапка. Одна форма на всі випадки життя.</p>
 <p>А українська? Українська дає вам <strong>чотири різні способи</strong> сказати те саме — і кожен несе свій відтінок значення. Це не ускладнення заради ускладнення. Це <strong>інструментарій</strong>, що дозволяє точно налаштувати тон вашого тексту.</p>
 <p>Уявіть: ви журналіст, і вам треба написати про підписання важливої угоди. Як ви скажете?</p>
 <ul>
@@ -134,9 +164,14 @@
   <p>Форма <strong>-но/-то</strong> (книгу написано, закон ухвалено) — це <strong>унікальне явище української мови</strong>! Її немає ні в російській, ні в польській, ні в чеській. Коли ви кажете «Угоду підписано» — ви говорите щось, чого жодна інша слов'янська мова не може передати однією формою. Це <strong>граматичний маркер українськості</strong>.</p>
 </blockquote>
 <p>Цей модуль — ваша мапа пасивного стану. Ви навчитеся не просто розпізнавати форми, а й відчувати, коли яка доречна.</p>
-<hr />
-<h1 id="-1">Чотири форми пасиву</h1>
-<h2 id="-2">Огляд системи</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Чотири форми пасиву</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Огляд системи</h2>
 <table>
 <thead>
 <tr>
@@ -183,9 +218,14 @@
   <p>❌ <strong>Міф:</strong> «Пасив — це завжди офіційна мова, у розмові його не вживають.»</p>
   <p>✅ <strong>Факт:</strong> Форма з 3-ю особою множини («Мені сказали», «Його запитали») — це теж пасив! І це <strong>найприродніша форма для розмовної мови</strong>. Українці вживають її постійно, просто не задумуються, що це пасив.</p>
 </blockquote>
-<hr />
-<h1 id="1">Форма 1: Дієприкметниковий пасив</h1>
-<h2 id="-3">Структура</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Форма 1: Дієприкметниковий пасив</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Структура</h2>
 <p><strong>Підмет + пасивний дієприкметник (+ діяч в орудному)</strong></p>
 <table>
 <thead>
@@ -218,7 +258,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="-4">Часові форми</h2>
+<h2 id="-1">Часові форми</h2>
 <table>
 <thead>
 <tr>
@@ -245,7 +285,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="-5">Діяч</h2>
+<h2 id="-2">Діяч</h2>
 <p>Хто зробив? → <strong>Орудний відмінок</strong>:</p>
 <ul>
 <li>Книга написана <strong>Шевченком</strong>.</li>
@@ -256,9 +296,14 @@
   <p><strong>Чи знали ви?</strong></p>
   <p>Дієприкметник <strong>описує стан</strong>, а не дію. «Вікно відкрите» — це не про те, що хтось відкрив вікно. Це про те, що вікно <strong>зараз у відкритому стані</strong>. Порівняйте: «Вікно відкрито» (хтось відкрив) vs «Вікно відкрите» (воно зараз таке).</p>
 </blockquote>
-<hr />
-<h1 id="2">Форма 2: Безособовий пасив (-но/-то)</h1>
-<h2 id="-6">Структура</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Форма 2: Безособовий пасив (-но/-то)</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Структура</h2>
 <p><strong>Додаток (знахідний) + -но/-то форма (+ діяч в орудному)</strong></p>
 <table>
 <thead>
@@ -282,13 +327,13 @@
 </tr>
 </tbody>
 </table>
-<h2 id="-7">Особливості</h2>
+<h2 id="-1">Особливості</h2>
 <ul>
 <li>Форма <strong>незмінна</strong> — завжди закінчується на <strong>-о</strong></li>
 <li>Підмет у <strong>знахідному</strong> відмінку (не називному!)</li>
 <li>Найпоширеніша в офіційному стилі</li>
 </ul>
-<h2 id="-8">Типові вживання</h2>
+<h2 id="-2">Типові вживання</h2>
 <table>
 <thead>
 <tr>
@@ -319,9 +364,14 @@
   <p><strong>Чи знали ви?</strong></p>
   <p>Коли ви читаєте українські новини і бачите «Угоду підписано», «Закон ухвалено», «Злочинця затримано» — це все форми на -но/-то. Це <strong>голос офіційної України</strong>: авторитетний, об'єктивний, без зайвих слів.</p>
 </blockquote>
-<hr />
-<h1 id="3">Форма 3: Зворотний пасив (-ся)</h1>
-<h2 id="-9">Структура</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-4">
+        <div class="section-header" onclick="toggleSection(4)">
+          <h3>Форма 3: Зворотний пасив (-ся)</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Структура</h2>
 <p><strong>Підмет + дієслово-ся</strong></p>
 <table>
 <thead>
@@ -345,7 +395,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="-10">Коли вживати</h2>
+<h2 id="-1">Коли вживати</h2>
 <table>
 <thead>
 <tr>
@@ -377,9 +427,14 @@
   <p>❌ <strong>Міф:</strong> «Форми на -ся — це завжди зворотні дієслова (себе).»</p>
   <p>✅ <strong>Факт:</strong> Суфікс -ся має <strong>багато функцій</strong>. «Митися» = мити себе. Але «будуватися» = бути будованим (пасив), «сміятися» = сміх (просто дієслово). Контекст визначає значення.</p>
 </blockquote>
-<hr />
-<h1 id="4">Форма 4: Невизначено-особовий пасив</h1>
-<h2 id="-11">Структура</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-5">
+        <div class="section-header" onclick="toggleSection(5)">
+          <h3>Форма 4: Невизначено-особовий пасив</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Структура</h2>
 <p><strong>Додаток + дієслово 3-ї особи множини (без підмета)</strong></p>
 <table>
 <thead>
@@ -407,13 +462,13 @@
 </tr>
 </tbody>
 </table>
-<h2 id="-12">Особливості</h2>
+<h2 id="-1">Особливості</h2>
 <ul>
 <li>Діяч невідомий або неважливий</li>
 <li><strong>Найприродніша</strong> форма для розмовної мови</li>
 <li>Перекладається англійським пасивом</li>
 </ul>
-<h2 id="-13">Приклади в контексті</h2>
+<h2 id="-2">Приклади в контексті</h2>
 <table>
 <thead>
 <tr>
@@ -440,9 +495,14 @@
   <p><strong>Чи знали ви?</strong></p>
   <p>Коли українець каже «Мені сказали», він не задумується, що це пасивна конструкція. Для нього це просто природний спосіб передати інформацію, коли <strong>хто саме сказав — неважливо</strong>. А для англомовного учня це відкриття: виявляється, «I was told» по-українськи — це «Мені сказали»!</p>
 </blockquote>
-<hr />
-<h1 id="-14">Порівняльна таблиця</h1>
-<table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-6">
+        <div class="section-header" onclick="toggleSection(6)">
+          <h3>Порівняльна таблиця</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><table>
 <thead>
 <tr>
 <th>Критерій</th>
@@ -490,9 +550,14 @@
 </tr>
 </tbody>
 </table>
-<hr />
-<h1 id="-15">Вибір форми за контекстом</h1>
-<h2 id="-16">Практичні рекомендації</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-7">
+        <div class="section-header" onclick="toggleSection(7)">
+          <h3>Вибір форми за контекстом</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Практичні рекомендації</h2>
 <table>
 <thead>
 <tr>
@@ -534,9 +599,14 @@
 </tr>
 </tbody>
 </table>
-<hr />
-<h1 id="-17">Практика</h1>
-<h2 id="-18">Визначте тип пасиву</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-8">
+        <div class="section-header" onclick="toggleSection(8)">
+          <h3>Практика</h3>
+          <span class="section-type practice">practice</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Визначте тип пасиву</h2>
 <ol>
 <li><p>«Рішення прийнято.»<br />
 → <strong>-но/-то</strong> (офіційний, незмінна форма)</p></li>
@@ -549,7 +619,7 @@
 <li><p>«Двері зачинені.»<br />
 → <strong>Дієприкметник</strong> (стан)</p></li>
 </ol>
-<h2 id="-19">Трансформуйте</h2>
+<h2 id="-1">Трансформуйте</h2>
 <p>Перетворіть активне речення на всі можливі пасивні форми:</p>
 <p><strong>Архітектор спроєктував будинок.</strong></p>
 <table>
@@ -597,7 +667,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="-20">Виберіть правильну форму</h2>
+<h2 id="-2">Виберіть правильну форму</h2>
 <ol>
 <li><strong>Офіційне оголошення:</strong> «Засідання ___»</li>
 </ol>
@@ -638,17 +708,140 @@
 <blockquote>
   <p>Науковий стиль, процес → -ся</p>
 </blockquote>
-<hr />
-<h1 id="-21">Продукція</h1>
-<h2 id="-22">Новинний текст</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-9">
+        <div class="section-header" onclick="toggleSection(9)">
+          <h3>Продукція</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Новинний текст</h2>
 <p>Напишіть короткий новинний текст, використовуючи -но/-то форми:</p>
 <p><strong>Приклад:</strong><br />
 «Учора в Києві <strong>підписано</strong> важливу угоду. <strong>Прийнято</strong> рішення про співпрацю у сфері енергетики. Президента <strong>запрошено</strong> на урочисту церемонію. <strong>Досягнуто</strong> домовленості про подальші переговори.»</p>
-<h2 id="-23">Розмовний переказ</h2>
+<h2 id="-1">Розмовний переказ</h2>
 <p>Перекажіть ту саму інформацію розмовним стилем (3-я особа мн.):</p>
 <p><strong>Приклад:</strong><br />
 «Учора в Києві <strong>підписали</strong> важливу угоду. <strong>Прийняли</strong> рішення про співпрацю. Президента <strong>запросили</strong> на церемонію. <strong>Домовилися</strong> про подальші переговори.»</p>
-<hr /></div></div>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-10">
+        <div class="section-header" onclick="toggleSection(10)">
+          <h3>Словник</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Слово</th>
+<th>Переклад</th>
+<th>Примітки</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>пасивний стан</td>
+<td>passive voice</td>
+<td>граматична категорія</td>
+</tr>
+<tr>
+<td>активний стан</td>
+<td>active voice</td>
+<td>протилежність пасиву</td>
+</tr>
+<tr>
+<td>дієприкметник</td>
+<td>participle</td>
+<td>форма дієслова</td>
+</tr>
+<tr>
+<td>зворотне дієслово</td>
+<td>reflexive verb</td>
+<td>дієслово на -ся</td>
+</tr>
+<tr>
+<td>діяч</td>
+<td>agent</td>
+<td>хто виконує дію</td>
+</tr>
+<tr>
+<td>орудний відмінок</td>
+<td>instrumental case</td>
+<td>відмінок діяча</td>
+</tr>
+<tr>
+<td>знахідний відмінок</td>
+<td>accusative case</td>
+<td>відмінок додатка</td>
+</tr>
+<tr>
+<td>узгодження</td>
+<td>agreement</td>
+<td>граматичний зв'язок</td>
+</tr>
+<tr>
+<td>офіційний стиль</td>
+<td>official style</td>
+<td>мова документів</td>
+</tr>
+<tr>
+<td>розмовний стиль</td>
+<td>colloquial style</td>
+<td>повсякденна мова</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-11">
+        <div class="section-header" onclick="toggleSection(11)">
+          <h3>Підсумок</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Чотири форми — чотири інструменти</h2>
+<table>
+<thead>
+<tr>
+<th>Форма</th>
+<th>Коли вживати</th>
+<th>Приклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Дієприкметник</strong></td>
+<td>Опис стану, результату</td>
+<td>Книга написана.</td>
+</tr>
+<tr>
+<td><strong>-но/-то</strong></td>
+<td>Офіційні тексти, новини</td>
+<td>Книгу написано.</td>
+</tr>
+<tr>
+<td><strong>-ся</strong></td>
+<td>Наукові тексти, процеси</td>
+<td>Книга пишеться.</td>
+</tr>
+<tr>
+<td><strong>3-я ос. мн.</strong></td>
+<td>Розмовна мова</td>
+<td>Книгу написали.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="-1">Ключові тези</h2>
+<blockquote>
+  <p><strong>Запам'ятайте:</strong></p>
+  <p>✓ Українська має <strong>4 пасивні форми</strong> (англійська — 1)<br />
+  ✓ Вибір форми залежить від <strong>стилю та контексту</strong><br />
+  ✓ <strong>-но/-то</strong> — унікальна українська форма для офіційного стилю<br />
+  ✓ <strong>3-я особа мн.</strong> — найприродніша для розмовної мови<br />
+  ✓ <strong>Дієприкметник</strong> — для опису станів і результатів<br />
+  ✓ <strong>-ся</strong> — для процесів та наукових текстів</p>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('vocab')">Start →</button></div>
     </section>
     
@@ -681,6 +874,10 @@
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

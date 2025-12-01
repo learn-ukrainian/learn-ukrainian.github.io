@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,7 +136,22 @@
         <p style="color:var(--text-muted)">Assessment of Complex Sentences and Vocabulary</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Огляд контрольної роботи | Checkpoint Overview</h4><div class="md-content"><p>Ця контрольна робота перевіряє ваші навички B1.2:</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Зміст уроку | Lesson Content</li><li class="toc-item" data-target="section-1">Activities</li><li class="toc-item" data-target="section-2">Vocabulary</li><li class="toc-item" data-target="section-3">Summary</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Зміст уроку | Lesson Content</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="warmup">warm-up | Розминка</h2>
+<h3 id="checkpointoverview">Огляд контрольної роботи | Checkpoint Overview</h3>
+<p>Ця контрольна робота перевіряє ваші навички B1.2:</p>
 <p>This checkpoint tests your B1.2 skills:</p>
 <p><strong>Section 1:</strong> Relative Clauses (20 points)<br />
 <strong>Section 2:</strong> Purpose &amp; Conditional Clauses (20 points)<br />
@@ -126,7 +159,10 @@
 <strong>Section 4:</strong> Vocabulary (20 points)<br />
 <strong>Section 5:</strong> Production (20 points)</p>
 <p><strong>Total:</strong> 100 points<br />
-<strong>Passing:</strong> 70 points</p></div></div><div class="canvas-note"><h4>### What to Remember</h4><div class="md-content"><p><strong>Relative Clauses:</strong></p>
+<strong>Passing:</strong> 70 points</p>
+<h2 id="presentation">presentation</h2>
+<h3 id="whattoremember">What to Remember</h3>
+<p><strong>Relative Clauses:</strong></p>
 <ul>
 <li>який/яка/яке/які — declines for gender, number, case</li>
 <li>де = location, куди = direction, коли = time</li>
@@ -147,7 +183,10 @@
 <li>хоча/незважаючи на = although/despite</li>
 <li>тому що/через/завдяки = because/due to/thanks to</li>
 <li>коли/після того як/поки = when/after/while/until</li>
-</ul></div></div><div class="canvas-note"><h4>### Section 1: Relative Clauses (20 points)</h4><div class="md-content"><p><em>Choose the correct relative word. 2 points each.</em></p>
+</ul>
+<h2 id="practice">practice</h2>
+<h3 id="section1relativeclauses20points">Section 1: Relative Clauses (20 points)</h3>
+<p><em>Choose the correct relative word. 2 points each.</em></p>
 <ol>
 <li>Людина, ___ тут працює, мій друг.</li>
 </ol>
@@ -238,7 +277,9 @@
 <li>b (якої - gen, possession)</li>
 <li>b (що - after "все")</li>
 <li>c (якою - instrumental)</li>
-</ol></div></div><div class="canvas-note"><h4>Section 2: Purpose & Conditional Clauses (20 points)</h4><div class="md-content"><p><em>Complete with the correct form. 2 points each.</em></p>
+</ol>
+<h3 id="section2purposeconditionalclauses20points">Section 2: Purpose &amp; Conditional Clauses (20 points)</h3>
+<p><em>Complete with the correct form. 2 points each.</em></p>
 <ol>
 <li>Я прийшов, ___ (щоб/що) допомогти.</li>
 <li>Вона хоче, щоб він ___ (приходити/прийшов).</li>
@@ -263,7 +304,9 @@
 <li>щоб</li>
 <li>Якби</li>
 <li>відпочив</li>
-</ol></div></div><div class="canvas-note"><h4>Section 3: Other Complex Sentences (20 points)</h4><div class="md-content"><p><em>Choose the correct conjunction. 2 points each.</em></p>
+</ol>
+<h3 id="section3othercomplexsentences20points">Section 3: Other Complex Sentences (20 points)</h3>
+<p><em>Choose the correct conjunction. 2 points each.</em></p>
 <ol>
 <li>Він не прийшов, ___ захворів.</li>
 </ol>
@@ -354,7 +397,9 @@
 <li>b (незважаючи на + noun)</li>
 <li>a (result)</li>
 <li>b (перед тим як)</li>
-</ol></div></div><div class="canvas-note"><h4>Section 4: Vocabulary (20 points)</h4><div class="md-content"><p><em>Complete with the correct word. 2 points each.</em></p>
+</ol>
+<h3 id="section4vocabulary20points">Section 4: Vocabulary (20 points)</h3>
+<p><em>Complete with the correct word. 2 points each.</em></p>
 <ol>
 <li>Я читаю ___ (news) щоранку.</li>
 <li>Він працює ___ (journalist) на телеканалі.</li>
@@ -379,7 +424,9 @@
 <li>Уряд</li>
 <li>підписані</li>
 <li>Свобода</li>
-</ol></div></div><div class="canvas-note"><h4>Section 5: Production (20 points)</h4><div class="md-content"><p><em>Answer in Ukrainian. 5 points each.</em></p>
+</ol>
+<h3 id="section5production20points">Section 5: Production (20 points)</h3>
+<p><em>Answer in Ukrainian. 5 points each.</em></p>
 <p><strong>5.1</strong> Describe a person you know using relative clauses.</p>
 <p><strong>Example answer:</strong><br />
 Мій друг, який живе в Києві, працює програмістом. Він людина, яку я дуже поважаю. Компанія, в якій він працює, — міжнародна.</p>
@@ -391,7 +438,10 @@
 Хоча це було важко, я вирішив змінити роботу. Я зробив це, тому що хотів нових можливостей. Незважаючи на страх, я не шкодую про це рішення.</p>
 <p><strong>5.4</strong> Describe your morning routine using temporal clauses.</p>
 <p><strong>Example answer:</strong><br />
-Коли я прокидаюся, я п'ю каву. Після того як снідаю, я перевіряю новини. Перед тим як вийти з дому, я перевіряю погоду. Поки я їду на роботу, я слухаю подкасти.</p></div></div><div class="canvas-note"><h4>### Self-Assessment</h4><div class="md-content"><p>After completing the checkpoint, assess yourself:</p>
+Коли я прокидаюся, я п'ю каву. Після того як снідаю, я перевіряю новини. Перед тим як вийти з дому, я перевіряю погоду. Поки я їду на роботу, я слухаю подкасти.</p>
+<h2 id="production">production</h2>
+<h3 id="selfassessment">Self-Assessment</h3>
+<p>After completing the checkpoint, assess yourself:</p>
 <p><strong>Relative Clauses:</strong> __ / 20</p>
 <ul>
 <li>If &lt;14: Review modules 101-102</li>
@@ -421,7 +471,210 @@
 <li>90+: Excellent! Ready for B1.3</li>
 <li>70-89: Good. Review weak areas, then continue.</li>
 <li>&lt;70: Review B1.2 before continuing.</li>
-</ul></div></div></div>
+</ul>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Activities</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="quizfinalb12assessment">quiz: Final B1.2 Assessment</h2>
+<blockquote>
+  <p>This quiz tests all B1.2 skills.</p>
+</blockquote>
+<ol>
+<li>Людина, ___ мені допомогла, дуже добра.</li>
+</ol>
+<ul>
+<li>[x] яка</li>
+<li>[ ] яку</li>
+</ul>
+<blockquote>
+  <p>Subject of "допомогла" = nominative.</p>
+</blockquote>
+<ol start="2">
+<li>Я хочу, щоб він ___ .</li>
+</ol>
+<ul>
+<li>[x] прийшов</li>
+<li>[ ] прийти</li>
+</ul>
+<blockquote>
+  <p>Different subjects = past tense after щоб.</p>
+</blockquote>
+<ol start="3">
+<li>___ буде час, зателефоную.</li>
+</ol>
+<ul>
+<li>[x] Якщо</li>
+<li>[ ] Якби</li>
+</ul>
+<blockquote>
+  <p>Real future condition.</p>
+</blockquote>
+<ol start="4">
+<li>Він не прийшов ___ хвороби.</li>
+</ol>
+<ul>
+<li>[x] через</li>
+<li>[ ] завдяки</li>
+</ul>
+<blockquote>
+  <p>Negative cause = через.</p>
+</blockquote>
+<ol start="5">
+<li>Чекай, ___ він не зателефонує.</li>
+</ol>
+<ul>
+<li>[x] поки</li>
+<li>[ ] коли</li>
+</ul>
+<blockquote>
+  <p>Until = поки не.</p>
+</blockquote>
+<ol start="6">
+<li>___ погода була погана, ми пішли.</li>
+</ol>
+<ul>
+<li>[x] Хоча</li>
+<li>[ ] Тому що</li>
+</ul>
+<blockquote>
+  <p>Concessive = although.</p>
+</blockquote>
+<h2 id="fillincomprehensivetest">fill-in: Comprehensive Test</h2>
+<blockquote>
+  <p>Учора я читав (1)<strong>_ (article) про зміну клімату. (2)</strong>_ (Although) ця тема складна, вона дуже важлива. Автор, (3)<strong>_ написав статтю, — відомий журналіст. Він хоче, (4)</strong>_ люди зрозуміли серйозність проблеми. (5)<strong>_ ми не почнемо діяти, буде пізно. Я вирішив більше думати про довкілля, (6)</strong>_ допомогти планеті.</p>
+</blockquote>
+<p><strong>Answers:</strong></p>
+<ol>
+<li>статтю</li>
+<li>Хоча</li>
+<li>який</li>
+<li>щоб</li>
+<li>Якщо</li>
+<li>щоб</li>
+</ol>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Vocabulary</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Word</th>
+<th>IPA</th>
+<th>English</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>контрольна робота</td>
+<td>-</td>
+<td>test, assessment</td>
+<td>f</td>
+</tr>
+<tr>
+<td>оцінювання</td>
+<td>/ot͡sʲiˈnʲuvɑnʲːɑ/</td>
+<td>assessment</td>
+<td>n</td>
+</tr>
+<tr>
+<td>бал</td>
+<td>/bɑl/</td>
+<td>point, score</td>
+<td>m</td>
+</tr>
+<tr>
+<td>результат</td>
+<td>/rɛzulʲˈtɑt/</td>
+<td>result</td>
+<td>m</td>
+</tr>
+<tr>
+<td>відповідь</td>
+<td>/vʲidˈpovʲidʲ/</td>
+<td>answer</td>
+<td>f</td>
+</tr>
+<tr>
+<td>перевірити</td>
+<td>/pɛrɛˈvʲirɪtɪ/</td>
+<td>to check</td>
+<td>pf</td>
+</tr>
+<tr>
+<td>покращити</td>
+<td>/pokrɑˈʃɪtɪ/</td>
+<td>to improve</td>
+<td>pf</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Summary</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="b12complete">B1.2 Complete</h2>
+<p>Congratulations on completing B1.2!</p>
+<h3 id="skillsacquired">Skills Acquired</h3>
+<p><strong>Grammar:</strong></p>
+<ul>
+<li>Relative clauses (який, де, куди, коли, що)</li>
+<li>Purpose clauses (щоб + infinitive/past)</li>
+<li>Real conditionals (якщо)</li>
+<li>Unreal conditionals (якби…б)</li>
+<li>Concessive clauses (хоча, незважаючи на)</li>
+<li>Causal clauses (тому що, через, завдяки)</li>
+<li>Temporal clauses (коли, після того як, перед тим як, поки)</li>
+</ul>
+<p><strong>Vocabulary:</strong></p>
+<ul>
+<li>Media &amp; News (~40 words)</li>
+<li>Society &amp; Politics (~40 words)</li>
+<li>Environment (~40 words)</li>
+</ul>
+<p><strong>Communication:</strong></p>
+<ul>
+<li>Building complex sentences</li>
+<li>Expressing cause, purpose, condition</li>
+<li>Discussing current issues</li>
+</ul>
+<h3 id="nextsteps">Next Steps</h3>
+<p><strong>B1.3 (Modules 116-125):</strong> Reported Speech &amp; Participles</p>
+<ul>
+<li>Reported statements, questions, commands</li>
+<li>Past passive participles (-ний/-тий)</li>
+<li>Adverbial participles (читаючи, прочитавши)</li>
+</ul>
+<p><strong>B1.4 (Modules 126-140):</strong> Expansion &amp; Integration</p>
+<ul>
+<li>Diminutives</li>
+<li>Numerals</li>
+<li>Synonymy and idioms</li>
+<li>B1 capstone assessment</li>
+</ul>
+<blockquote>
+  <p><strong>Key Takeaways</strong></p>
+  <ul>
+  <li>Complex sentences are essential for B1</li>
+  <li>Choose conjunctions based on meaning</li>
+  <li>Vocabulary supports expressing complex ideas</li>
+  <li>Continue practicing to build automaticity</li>
+  <li>Ready to move to B1.3!</li>
+  </ul>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('quiz')">Start →</button></div>
     </section>
     
@@ -459,6 +712,10 @@
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

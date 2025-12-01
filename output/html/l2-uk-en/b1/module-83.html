@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,7 +136,22 @@
         <p style="color:var(--text-muted)">What Happened vs What Was Happening</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Two Different Questions</h4><div class="md-content"><p>Consider these two questions:</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Lesson Content</li><li class="toc-item" data-target="section-1">Activities</li><li class="toc-item" data-target="section-2">Vocabulary</li><li class="toc-item" data-target="section-3">Summary</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Lesson Content</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="warmup">warm-up</h2>
+<h3 id="twodifferentquestions">Two Different Questions</h3>
+<p>Consider these two questions:</p>
 <ul>
 <li>Що ти <strong>робив</strong> учора? - What were you doing yesterday?</li>
 <li>Що ти <strong>зробив</strong> учора? - What did you accomplish yesterday?</li>
@@ -130,7 +163,10 @@
 </ul>
 <blockquote>
   <p>This is the heart of Ukrainian aspect: <strong>perspective on the action</strong>.</p>
-</blockquote></div></div><div class="canvas-note"><h4>### Result Focus = Perfective</h4><div class="md-content"><p>When you care about the <strong>outcome</strong> or <strong>completion</strong>, use perfective:</p>
+</blockquote>
+<h2 id="presentation">presentation</h2>
+<h3 id="resultfocusperfective">Result Focus = Perfective</h3>
+<p>When you care about the <strong>outcome</strong> or <strong>completion</strong>, use perfective:</p>
 <p><strong>Signals of result focus:</strong></p>
 <ul>
 <li>Achievement or accomplishment</li>
@@ -145,7 +181,9 @@
 <li>Ми <strong>побудували</strong> дім. - We built a house (it's done).</li>
 <li>Він <strong>вивчив</strong> українську. - He learned Ukrainian (mastered it).</li>
 <li>Ти <strong>зробив</strong> домашнє завдання? - Did you do your homework? (Is it done?)</li>
-</ul></div></div><div class="canvas-note"><h4>Process Focus = Imperfective</h4><div class="md-content"><p>When you care about the <strong>activity itself</strong> or <strong>how time was spent</strong>, use imperfective:</p>
+</ul>
+<h3 id="processfocusimperfective">Process Focus = Imperfective</h3>
+<p>When you care about the <strong>activity itself</strong> or <strong>how time was spent</strong>, use imperfective:</p>
 <p><strong>Signals of process focus:</strong></p>
 <ul>
 <li>Duration (how long)</li>
@@ -164,7 +202,9 @@
 <blockquote>
   <p><strong>⚠️ Ambiguity Note</strong></p>
   <p>"Я <strong>читав</strong> книгу весь вечір" emphasizes duration (process). But if you finished the book that evening, you could also say "Я <strong>прочитав</strong> книгу за вечір" (I read the book in one evening). Both are grammatically correct - the choice depends on whether you want to emphasize the <strong>process</strong> or the <strong>result</strong>. Duration markers make imperfective <em>more natural</em>, but don't make perfective wrong.</p>
-</blockquote></div></div><div class="canvas-note"><h4>The Same Event, Different Perspective</h4><div class="md-content"><table>
+</blockquote>
+<h3 id="thesameeventdifferentperspective">The Same Event, Different Perspective</h3>
+<table>
 <thead>
 <tr>
 <th>Imperfective (process)</th>
@@ -200,14 +240,490 @@
 </table>
 <blockquote>
   <p><strong>Notice:</strong> The same real-world situation can be described with either aspect. The choice depends on what you want to emphasize.</p>
-</blockquote></div></div></div>
+</blockquote>
+<hr />
+<blockquote>
+  <p><strong>🔑 KEY RULE: DURATION vs COMPLETION TIME</strong></p>
+  <table>
+  <thead>
+  <tr>
+  <th>Question</th>
+  <th>Aspect</th>
+  <th>Time Expression</th>
+  <th>Example</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+  <td>"How long?"</td>
+  <td><strong>Imperfective</strong></td>
+  <td>весь день, годинами</td>
+  <td>Я <strong>читав</strong> книгу тиждень.</td>
+  </tr>
+  <tr>
+  <td>"In how much time?"</td>
+  <td><strong>Perfective</strong></td>
+  <td>за годину, за день</td>
+  <td>Я <strong>прочитав</strong> книгу за тиждень.</td>
+  </tr>
+  </tbody>
+  </table>
+  <p><strong>Listen for triggers:</strong></p>
+  <ul>
+  <li>Duration words (весь, цілий, довго) → <strong>imperfective</strong></li>
+  <li>"за + time" (completion) → <strong>perfective</strong></li>
+  </ul>
+</blockquote>
+<hr />
+<h3 id="durationwordsdemandimperfective">Duration Words Demand Imperfective</h3>
+<p>Expressions of duration require imperfective:</p>
+<ul>
+<li><strong>весь день</strong> - all day</li>
+<li><strong>цілий тиждень</strong> - the whole week</li>
+<li><strong>три години</strong> - for three hours</li>
+<li><strong>довго</strong> - for a long time</li>
+<li><strong>весь час</strong> - all the time</li>
+</ul>
+<p><strong>Examples:</strong></p>
+<ul>
+<li>Ми <strong>чекали</strong> на тебе годину. - We were waiting for you for an hour.</li>
+<li>Він <strong>працював</strong> там п'ять років. - He worked there for five years.</li>
+<li>Вона <strong>спала</strong> весь день. - She slept all day.</li>
+<li>Я <strong>думав</strong> про це довго. - I was thinking about it for a long time.</li>
+</ul>
+<p><strong>NOT:</strong> <del>Ми зачекали на тебе годину.</del> (Perfective doesn't combine with duration)</p>
+<h3 id="resultwordsdemandperfective">Result Words Demand Perfective</h3>
+<p>Expressions of result or completion require perfective:</p>
+<ul>
+<li><strong>вже</strong> - already</li>
+<li><strong>нарешті</strong> - finally</li>
+<li><strong>за годину</strong> - in an hour (completion time)</li>
+<li><strong>швидко</strong> - quickly (completed quickly)</li>
+</ul>
+<p><strong>Examples:</strong></p>
+<ul>
+<li>Він <strong>вже приїхав</strong>. - He has already arrived.</li>
+<li>Нарешті ми <strong>закінчили</strong>! - Finally we finished!</li>
+<li>Вона <strong>зробила</strong> це за годину. - She did it in an hour.</li>
+<li>Я швидко <strong>поснідав</strong>. - I quickly had breakfast.</li>
+</ul>
+<h3 id="questionsprocessvsresult">Questions: Process vs Result</h3>
+<p><strong>Asking about process (imperfective):</strong></p>
+<ul>
+<li>Що ти робив? - What were you doing?</li>
+<li>Чим ти займався? - What were you occupied with?</li>
+<li>Як ти проводив час? - How were you spending time?</li>
+<li>Довго ти чекав? - Were you waiting long?</li>
+</ul>
+<p><strong>Asking about result (perfective):</strong></p>
+<ul>
+<li>Що ти зробив? - What did you do/accomplish?</li>
+<li>Ти зробив це? - Did you do it?</li>
+<li>Ти вже поїв? - Have you eaten already?</li>
+<li>Все зрозумів? - Did you understand everything?</li>
+</ul>
+<h3 id="interruptedactionsimperfective">Interrupted Actions = Imperfective</h3>
+<p>When an action was <strong>interrupted</strong> (not completed), use imperfective:</p>
+<ul>
+<li>Я <strong>читав</strong> книгу, коли він прийшов. - I was reading a book when he came.</li>
+<li>Вона <strong>готувала</strong> вечерю, але не закінчила. - She was cooking dinner but didn't finish.</li>
+<li>Ми <strong>дивилися</strong> фільм, коли зникло світло. - We were watching a movie when the power went out.</li>
+</ul>
+<p>The action was in progress but something interrupted it.</p>
+<h3 id="completeddespitedurationperfective">Completed Despite Duration = Perfective</h3>
+<p>If an action was completed, use perfective even with time:</p>
+<ul>
+<li>Я <strong>прочитав</strong> книгу <strong>за тиждень</strong>. - I read the book in a week.</li>
+<li>Вона <strong>написала</strong> статтю <strong>за два дні</strong>. - She wrote the article in two days.</li>
+</ul>
+<p><strong>"За + time"</strong> means "within that time, completed." Different from duration!</p>
+<p>Compare:</p>
+<ul>
+<li>Я читав книгу тиждень. (Process: spent a week reading)</li>
+<li>Я прочитав книгу за тиждень. (Result: finished it within a week)</li>
+</ul>
+<h2 id="practice">practice</h2>
+<h3 id="chooseresultorprocess">Choose: Result or Process?</h3>
+<ol>
+<li>Я ___ (дивився/подивився) цей фільм три рази. → <strong>дивився</strong> (three times = process)</li>
+<li>Ти вже ___ (снідав/поснідав)? → <strong>поснідав</strong> (already = result)</li>
+<li>Вона ___ (працювала/попрацювала) там п'ять років. → <strong>працювала</strong> (duration)</li>
+<li>Він швидко ___ (одягався/одягнувся). → <strong>одягнувся</strong> (quickly completed)</li>
+<li>Ми ___ (будували/побудували) дім за рік. → <strong>побудували</strong> (completed in a year)</li>
+<li>Що ви ___ (робили/зробили) весь день? → <strong>робили</strong> (all day = process)</li>
+</ol>
+<h3 id="answerthequestions">Answer the Questions</h3>
+<p>Answer using the correct aspect:</p>
+<p><strong>Q:</strong> Що ти робив учора ввечері?<br />
+<strong>A:</strong> Я ___ (читав/прочитав) книгу. → <strong>читав</strong> (process question)</p>
+<p><strong>Q:</strong> Ти вже прочитав цю книгу?<br />
+<strong>A:</strong> Так, я вже ___ (читав/прочитав) її. → <strong>прочитав</strong> (result question)</p>
+<p><strong>Q:</strong> Довго ти готував вечерю?<br />
+<strong>A:</strong> Так, я ___ (готував/приготував) її дві години. → <strong>готував</strong> (duration)</p>
+<p><strong>Q:</strong> Вечеря готова?<br />
+<strong>A:</strong> Так, я вже ___ (готував/приготував) її. → <strong>приготував</strong> (result)</p>
+<h3 id="completethedialogues">Complete the Dialogues</h3>
+<p><strong>Dialogue 1:</strong></p>
+<ul>
+<li>A: Що ти робив у вихідні?</li>
+<li>B: Я ___ (писав/написав) статтю.</li>
+<li>A: Ти її закінчив?</li>
+<li>B: Так, я ___ (писав/написав) її в неділю.</li>
+</ul>
+<p><strong>Answers:</strong> писав (process), написав (result)</p>
+<p><strong>Dialogue 2:</strong></p>
+<ul>
+<li>A: Де ти був?</li>
+<li>B: Я ___ (чекав/зачекав) на автобус.</li>
+<li>A: Довго?</li>
+<li>B: Так, я ___ (чекав/зачекав) двадцять хвилин.</li>
+</ul>
+<p><strong>Answers:</strong> чекав (process), чекав (duration = imperfective)</p>
+<h3 id="transformsentences">Transform Sentences</h3>
+<p>Change perspective from result to process:</p>
+<ol>
+<li>Він прочитав книгу. → Він <strong>читав</strong> книгу весь вечір.</li>
+<li>Ми побудували дім. → Ми <strong>будували</strong> дім два роки.</li>
+<li>Вона написала листа. → Вона <strong>писала</strong> листа годину.</li>
+</ol>
+<p>Change perspective from process to result:</p>
+<ol>
+<li>Я вчив нові слова. → Я <strong>вивчив</strong> нові слова.</li>
+<li>Вона готувала обід. → Вона <strong>приготувала</strong> обід.</li>
+<li>Ми шукали ключі. → Ми <strong>знайшли</strong> ключі.</li>
+</ol>
+<h2 id="production">production</h2>
+<h3 id="describeyourdaytwoways">Describe Your Day: Two Ways</h3>
+<p>Describe what you did yesterday using BOTH perspectives:</p>
+<p><strong>Process focus (how you spent time):</strong><br />
+Учора я працював весь день. Я писав звіти, відповідав на листи, розмовляв з колегами…</p>
+<p><strong>Result focus (what you accomplished):</strong><br />
+Учора я написав три звіти, відповів на всі листи, домовився про зустріч…</p>
+<h3 id="interviewquestions">Interview Questions</h3>
+<p>Ask your partner:</p>
+<ol>
+<li>Що ти робив у вихідні? (process)</li>
+<li>Що ти зробив цього тижня? (result)</li>
+<li>Над чим ти працював останнім часом? (process)</li>
+<li>Що ти вже закінчив? (result)</li>
+</ol>
+<hr />
+<h3 id="roleplayjobinterview">🎭 ROLE-PLAY: Job Interview</h3>
+<p><strong>Situation:</strong> You're in a job interview. The interviewer asks about your past work.</p>
+<p><strong>Partner A (Interviewer):</strong> Ask about:</p>
+<ul>
+<li>Completed projects (result → perfective): Що ви <strong>зробили</strong> на попередній роботі?</li>
+<li>Ongoing responsibilities (process → imperfective): Над чим ви <strong>працювали</strong>?</li>
+<li>Duration questions (process → imperfective): Скільки років ви там <strong>працювали</strong>?</li>
+</ul>
+<p><strong>Partner B (Candidate):</strong> Answer using correct aspects:</p>
+<p><strong>Example dialogue:</strong></p>
+<pre><code>A: Розкажіть про вашу попередню роботу. Що ви там робили?
+B: Я працював маркетологом три роки. Я готував рекламні кампанії.
+A: Які проєкти ви завершили?
+B: Я запустив новий вебсайт компанії. Ми збільшили продажі на 30%.
+A: Як довго ви працювали над цим проєктом?
+B: Я працював над ним шість місяців. Закінчив у грудні.
+</code></pre>
+<p><strong>Required structures:</strong></p>
+<ul>
+<li>✅ Perfective for results: зробив, закінчив, запустив</li>
+<li>✅ Imperfective for duration/process: працював, готував, займався</li>
+</ul>
+<p><strong>Switch roles and repeat!</strong></p>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Activities</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="quizprocessorresult">quiz: Process or Result?</h2>
+<blockquote>
+  <p>Choose based on the context.</p>
+</blockquote>
+<ol>
+<li>Я ___ книгу дві години.</li>
+</ol>
+<ul>
+<li>[x] читав</li>
+<li>[ ] прочитав</li>
+</ul>
+<blockquote>
+  <p>Duration = process = imperfective</p>
+</blockquote>
+<ol start="2">
+<li>Нарешті я ___ цю задачу!</li>
+</ol>
+<ul>
+<li>[ ] розв'язував</li>
+<li>[x] розв'язав</li>
+</ul>
+<blockquote>
+  <p>Нарешті = result = perfective</p>
+</blockquote>
+<ol start="3">
+<li>Вона ___ листа, коли я прийшов.</li>
+</ol>
+<ul>
+<li>[x] писала</li>
+<li>[ ] написала</li>
+</ul>
+<blockquote>
+  <p>Interrupted action = imperfective</p>
+</blockquote>
+<ol start="4">
+<li>Він вже ___ снідати.</li>
+</ol>
+<ul>
+<li>[ ] снідав</li>
+<li>[x] поснідав</li>
+</ul>
+<blockquote>
+  <p>Вже = result = perfective</p>
+</blockquote>
+<ol start="5">
+<li>Ми ___ про це весь вечір.</li>
+</ol>
+<ul>
+<li>[x] говорили</li>
+<li>[ ] поговорили</li>
+</ul>
+<blockquote>
+  <p>"Весь вечір" emphasizes duration, making imperfective more natural here</p>
+</blockquote>
+<ol start="6">
+<li>Вона ___ статтю за три дні.</li>
+</ol>
+<ul>
+<li>[ ] писала</li>
+<li>[x] написала</li>
+</ul>
+<blockquote>
+  <p>За три дні = completed within = perfective</p>
+</blockquote>
+<h2 id="matchupdurationvscompletion">match-up: Duration vs Completion</h2>
+<table>
+<thead>
+<tr>
+<th>Expression</th>
+<th>Aspect Signal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>весь день</td>
+<td>imperfective</td>
+</tr>
+<tr>
+<td>за годину</td>
+<td>perfective</td>
+</tr>
+<tr>
+<td>три години</td>
+<td>imperfective</td>
+</tr>
+<tr>
+<td>вже</td>
+<td>perfective</td>
+</tr>
+<tr>
+<td>довго</td>
+<td>imperfective</td>
+</tr>
+<tr>
+<td>нарешті</td>
+<td>perfective</td>
+</tr>
+</tbody>
+</table>
+<h2 id="groupsortsignals">group-sort: Signals</h2>
+<h3 id="processfocusimperfective">Process Focus (Imperfective)</h3>
+<ul>
+<li>весь день</li>
+<li>три години</li>
+<li>довго</li>
+<li>весь час</li>
+<li>цілий тиждень</li>
+</ul>
+<h3 id="resultfocusperfective">Result Focus (Perfective)</h3>
+<ul>
+<li>вже</li>
+<li>нарешті</li>
+<li>за годину</li>
+<li>швидко</li>
+<li>раптом</li>
+</ul>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Vocabulary</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Word</th>
+<th>IPA</th>
+<th>English</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>результат</td>
+<td>/rɛzulʲˈtɑt/</td>
+<td>result</td>
+<td>perfective focus</td>
+</tr>
+<tr>
+<td>процес</td>
+<td>/proˈt͡sɛs/</td>
+<td>process</td>
+<td>imperfective focus</td>
+</tr>
+<tr>
+<td>завершити</td>
+<td>/zɑvɛrˈʃɪtɪ/</td>
+<td>to complete</td>
+<td>perfective</td>
+</tr>
+<tr>
+<td>закінчити</td>
+<td>/zɑkʲinˈt͡ʃɪtɪ/</td>
+<td>to finish</td>
+<td>perfective</td>
+</tr>
+<tr>
+<td>закінчувати</td>
+<td>/zɑkʲinˈt͡ʃuvɑtɪ/</td>
+<td>to be finishing</td>
+<td>imperfective</td>
+</tr>
+<tr>
+<td>досягти</td>
+<td>/doˈsʲɑɦtɪ/</td>
+<td>to achieve</td>
+<td>perfective</td>
+</tr>
+<tr>
+<td>досягати</td>
+<td>/dosʲɑˈɦɑtɪ/</td>
+<td>to be achieving</td>
+<td>imperfective</td>
+</tr>
+<tr>
+<td>тривати</td>
+<td>/trɪˈvɑtɪ/</td>
+<td>to last, to continue</td>
+<td>imperfective only</td>
+</tr>
+<tr>
+<td>продовжувати</td>
+<td>/prodovˈʒuvɑtɪ/</td>
+<td>to continue</td>
+<td>imperfective</td>
+</tr>
+<tr>
+<td>продовжити</td>
+<td>/prodovˈʒɪtɪ/</td>
+<td>to continue (one step)</td>
+<td>perfective</td>
+</tr>
+<tr>
+<td>перервати</td>
+<td>/pɛrɛrˈvɑtɪ/</td>
+<td>to interrupt</td>
+<td>perfective</td>
+</tr>
+<tr>
+<td>переривати</td>
+<td>/pɛrɛrɪˈvɑtɪ/</td>
+<td>to be interrupting</td>
+<td>imperfective</td>
+</tr>
+<tr>
+<td>за годину</td>
+<td>/zɑ ɦoˈdɪnu/</td>
+<td>in an hour (completion)</td>
+<td>signals perfective</td>
+</tr>
+<tr>
+<td>цілий</td>
+<td>/ˈt͡sʲilɪj/</td>
+<td>whole, entire</td>
+<td>with imperfective</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Summary</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="thecoredistinction">The Core Distinction</h2>
+<table>
+<thead>
+<tr>
+<th>Focus</th>
+<th>Aspect</th>
+<th>Question</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Process</td>
+<td>Imperfective</td>
+<td>Що ти робив?</td>
+<td>Я читав книгу.</td>
+</tr>
+<tr>
+<td>Result</td>
+<td>Perfective</td>
+<td>Що ти зробив?</td>
+<td>Я прочитав книгу.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="timeexpressionpatterns">Time Expression Patterns</h2>
+<p><strong>Duration (HOW LONG) = Imperfective:</strong></p>
+<ul>
+<li>весь день, три години, довго, цілий тиждень</li>
+</ul>
+<p><strong>Completion (IN HOW MUCH TIME) = Perfective:</strong></p>
+<ul>
+<li>за годину, за два дні, швидко</li>
+</ul>
+<h2 id="keypatterns">Key Patterns</h2>
+<ol>
+<li><strong>Interrupted action</strong> → imperfective (Я читав, коли…)</li>
+<li><strong>Duration words</strong> → imperfective (…три години)</li>
+<li><strong>"Вже" (already)</strong> → perfective (Він вже приїхав)</li>
+<li><strong>"За + time"</strong> → perfective (Я зробив це за годину)</li>
+</ol>
+<blockquote>
+  <p><strong>Key Takeaways</strong></p>
+  <ul>
+  <li>Ask yourself: Do I care about the result or the process?</li>
+  <li>Duration expressions (весь день, три години) <em>prefer</em> imperfective</li>
+  <li>"За + time" (completion time) <em>requires</em> perfective</li>
+  <li>The same event can be described both ways depending on your focus</li>
+  <li><strong>Remember:</strong> Aspect choice is often about perspective, not right vs wrong!</li>
+  </ul>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('match')">Start →</button></div>
     </section>
     <section id="match" class="section"><div class="card"><h3>Duration vs Completion</h3>
       <div class="score-display"><span class="score"><span id="match-score">0</span>/6</span></div>
       <div class="match-container" id="match-container"><svg class="match-lines" id="match-lines"></svg>
         <div class="match-column" id="match-left"><div class="match-item" data-pair="0">весь день</div><div class="match-item" data-pair="1">за годину</div><div class="match-item" data-pair="2">три години</div><div class="match-item" data-pair="3">вже</div><div class="match-item" data-pair="4">довго</div><div class="match-item" data-pair="5">нарешті</div></div>
-        <div class="match-column" id="match-right"><div class="match-item" data-pair="1">perfective</div><div class="match-item" data-pair="1">perfective</div><div class="match-item" data-pair="0">imperfective</div><div class="match-item" data-pair="1">perfective</div><div class="match-item" data-pair="0">imperfective</div><div class="match-item" data-pair="0">imperfective</div></div>
+        <div class="match-column" id="match-right"><div class="match-item" data-pair="0">imperfective</div><div class="match-item" data-pair="1">perfective</div><div class="match-item" data-pair="0">imperfective</div><div class="match-item" data-pair="1">perfective</div><div class="match-item" data-pair="1">perfective</div><div class="match-item" data-pair="0">imperfective</div></div>
       </div>
       <div class="completion-message" id="match-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetMatch()">Reset</button><button class="btn btn-primary" onclick="showSection('quiz')">Next →</button></div>
@@ -252,6 +768,10 @@
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,8 +136,20 @@
         <p style="color:var(--text-muted)">Дієприслівники: складне вживання</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="md-content"><h1 id="">Вступ</h1>
-<p>«Прийшовши додому, двері були зачинені.» Здається, логічно? Ви прийшли, двері були зачинені. Але цього речення <strong>не існує в українській мові</strong>. Воно граматично неможливе. Чому? Бо двері не приходили додому — прийшли ви. А дієприслівник завжди описує дію <strong>того самого підмета</strong>, що й головне дієслово.</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Вступ</li><li class="toc-item" data-target="section-1">Пригадаємо дієприслівники</li><li class="toc-item" data-target="section-2">Логічні відношення</li><li class="toc-item" data-target="section-3">Позиція в реченні</li><li class="toc-item" data-target="section-4">Пунктуація</li><li class="toc-item" data-target="section-5">Заперечення</li><li class="toc-item" data-target="section-6">ТИПОВІ ПОМИЛКИ</li><li class="toc-item" data-target="section-7">Усталені дієприслівникові звороти</li><li class="toc-item" data-target="section-8">Стилістичні нюанси</li><li class="toc-item" data-target="section-9">Ланцюжки дієприслівників</li><li class="toc-item" data-target="section-10">Дієприслівник vs Підрядне речення</li><li class="toc-item" data-target="section-11">Практика</li><li class="toc-item" data-target="section-12">Словник</li><li class="toc-item" data-target="section-13">Підсумок</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Вступ</h3>
+          <span class="section-type intro">intro</span>
+        </div>
+        <div class="section-body md-content"><p>«Прийшовши додому, двері були зачинені.» Здається, логічно? Ви прийшли, двері були зачинені. Але цього речення <strong>не існує в українській мові</strong>. Воно граматично неможливе. Чому? Бо двері не приходили додому — прийшли ви. А дієприслівник завжди описує дію <strong>того самого підмета</strong>, що й головне дієслово.</p>
 <p>Це найпідступніша пастка дієприслівників. Іноземці (і навіть носії!) потрапляють у неї постійно. Особливо ті, хто вивчав англійську: «Coming home, the door was locked» — граматично сумнівно, але зрозуміло. В українській така конструкція — <strong>безумовна помилка</strong>.</p>
 <p>Дієприслівники — це потужний інструмент. Вони роблять текст динамічним, допомагають уникнути монотонного «він зробив це, потім він зробив те». Але як будь-який потужний інструмент, вони вимагають точності. Один неправильний підмет — і речення руйнується.</p>
 <p>Сьогодні ми навчимося використовувати дієприслівники <strong>на повну силу</strong>, уникаючи помилок, які псують навіть найкращі тексти.</p>
@@ -127,9 +157,14 @@
   <p><strong>Чи знали ви?</strong></p>
   <p>Помилка з різними підметами (так званий <strong>«dangling participle»</strong> або <strong>«звисаючий дієприслівник»</strong>) — одна з найпоширеніших в усіх мовах, де є дієприслівники. Англійською є навіть жарт: «Walking down the street, a brick fell on my head» (Ідучи вулицею, цеглина впала мені на голову). Бо виходить, що цеглина йшла вулицею. В українській такі конструкції <strong>неможливі</strong> — мова чітко вимагає збігу підметів.</p>
 </blockquote>
-<hr />
-<h1 id="-1">Пригадаємо дієприслівники</h1>
-<table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Пригадаємо дієприслівники</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><table>
 <thead>
 <tr>
 <th>Тип</th>
@@ -172,9 +207,14 @@
 </tr>
 </tbody>
 </table>
-<hr />
-<h1 id="-2">Логічні відношення</h1>
-<p>Дієприслівник може виражати різні <strong>відношення</strong> до головного дієслова:</p>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Логічні відношення</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><p>Дієприслівник може виражати різні <strong>відношення</strong> до головного дієслова:</p>
 <table>
 <thead>
 <tr>
@@ -216,7 +256,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="-3">Як визначити відношення?</h2>
+<h2 id="">Як визначити відношення?</h2>
 <p>Запитайте: <strong>чому</strong> автор поставив ці дві дії поруч?</p>
 <ul>
 <li>«Почувши новину, він зрадів.» — <strong>Коли</strong> почув → <strong>час</strong></li>
@@ -228,9 +268,14 @@
   <p>❌ <strong>Міф:</strong> «Дієприслівник завжди означає час (коли?).»</p>
   <p>✅ <strong>Факт:</strong> Дієприслівник може виражати <strong>шість різних відношень</strong>: час, причину, умову, допуст, спосіб, супровід. Контекст визначає, яке саме. Одне речення «Знаючи правду, він мовчав» може означати «оскільки знав» (причина) або «хоча знав» (допуст) — залежно від ситуації.</p>
 </blockquote>
-<hr />
-<h1 id="-4">Позиція в реченні</h1>
-<table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Позиція в реченні</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><table>
 <thead>
 <tr>
 <th>Позиція</th>
@@ -261,16 +306,21 @@
 <li>На початку — наголос на <strong>передумові</strong></li>
 <li>В кінці — наголос на <strong>деталі, нюансі</strong></li>
 </ul>
-<hr />
-<h1 id="-5">Пунктуація</h1>
-<h2 id="-6">Основне правило</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-4">
+        <div class="section-header" onclick="toggleSection(4)">
+          <h3>Пунктуація</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Основне правило</h2>
 <p><strong>Дієприслівник і дієприслівниковий зворот виділяються комами:</strong></p>
 <ul>
 <li>✓ <strong>Прочитавши книгу,</strong> я заснув.</li>
 <li>✓ Він говорив<strong>, жестикулюючи руками.</strong></li>
 <li>✓ Студенти<strong>, слухаючи лекцію,</strong> робили нотатки.</li>
 </ul>
-<h2 id="-7">Винятки</h2>
+<h2 id="-1">Винятки</h2>
 <p><strong>Одиничний дієприслівник у функції прислівника:</strong></p>
 <ul>
 <li>Він сидів <strong>мовчки</strong>. (← від дієприслівника «мовчачи»)</li>
@@ -284,9 +334,14 @@
   <p><strong>Чи знали ви?</strong></p>
   <p>Слово <strong>«мовчки»</strong> — це колишній дієприслівник «мовчачи», який став прислівником. Так само <strong>«стоячи»</strong> у значенні «у стоячому положенні» вже не сприймається як дієприслівник. Це показує, як граматичні форми можуть <strong>змінювати категорію</strong> з часом.</p>
 </blockquote>
-<hr />
-<h1 id="-8">Заперечення</h1>
-<p><strong>«Не» з дієприслівниками пишеться ОКРЕМО:</strong></p>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-5">
+        <div class="section-header" onclick="toggleSection(5)">
+          <h3>Заперечення</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><p><strong>«Не» з дієприслівниками пишеться ОКРЕМО:</strong></p>
 <table>
 <thead>
 <tr>
@@ -314,9 +369,14 @@
 </tbody>
 </table>
 <p><strong>Чому?</strong> Бо дієприслівник зберігає дієслівну природу, а «не» з дієсловами пишеться окремо.</p>
-<hr />
-<h1 id="-9">ТИПОВІ ПОМИЛКИ</h1>
-<h2 id="1">❌ Помилка 1: Різні підмети</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-6">
+        <div class="section-header" onclick="toggleSection(6)">
+          <h3>ТИПОВІ ПОМИЛКИ</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="1">❌ Помилка 1: Різні підмети</h2>
 <p><strong>Це найпоширеніша й найгрубіша помилка!</strong></p>
 <table>
 <thead>
@@ -371,9 +431,14 @@
   <p>❌ <strong>Міф:</strong> «Якщо речення зрозуміле, помилка не страшна.»</p>
   <p>✅ <strong>Факт:</strong> Помилка з підметами — <strong>груба граматична помилка</strong>, яка відразу маркує мовця як неосвіченого. Носії мови її помічають моментально. Це як сказати англійською «Me go home» — зрозуміло, але неграмотно.</p>
 </blockquote>
-<hr />
-<h1 id="-10">Усталені дієприслівникові звороти</h1>
-<p>Ці звороти функціонують як <strong>вставні слова</strong> і виділяються комами:</p>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-7">
+        <div class="section-header" onclick="toggleSection(7)">
+          <h3>Усталені дієприслівникові звороти</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><p>Ці звороти функціонують як <strong>вставні слова</strong> і виділяються комами:</p>
 <table>
 <thead>
 <tr>
@@ -434,9 +499,14 @@
   <p><strong>Чи знали ви?</strong></p>
   <p>Усталені звороти на кшталт <strong>«відверто кажучи»</strong> — це граматичний виняток. Формально тут різні підмети (я кажу + хтось інший діє), але ці звороти настільки «застигли», що вже не сприймаються як дієприслівникові конструкції. Вони перетворилися на <strong>вставні слова</strong>.</p>
 </blockquote>
-<hr />
-<h1 id="-11">Стилістичні нюанси</h1>
-<table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-8">
+        <div class="section-header" onclick="toggleSection(8)">
+          <h3>Стилістичні нюанси</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><table>
 <thead>
 <tr>
 <th>Конструкція</th>
@@ -462,22 +532,32 @@
 </tr>
 </tbody>
 </table>
-<h2 id="-12">Коли НЕ вживати дієприслівники?</h2>
+<h2 id="">Коли НЕ вживати дієприслівники?</h2>
 <ol>
 <li><strong>У дуже розмовному стилі</strong> — краще прості речення</li>
 <li><strong>При складних логічних зв'язках</strong> — краще підрядне речення</li>
 <li><strong>Коли можлива двозначність</strong> — краще експліцитний сполучник</li>
 </ol>
-<hr />
-<h1 id="-13">Ланцюжки дієприслівників</h1>
-<p><strong>Можливо, але обережно:</strong></p>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-9">
+        <div class="section-header" onclick="toggleSection(9)">
+          <h3>Ланцюжки дієприслівників</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><p><strong>Можливо, але обережно:</strong></p>
 <p>✓ «<strong>Прийшовши</strong> додому та <strong>перевдягнувшись</strong>, я почав готувати вечерю.»</p>
 <p>❌ <strong>Занадто довго:</strong><br />
 «*Прийшовши додому, перевдягнувшись, помивши руки, увімкнувши телевізор, я сів вечеряти.»</p>
 <p><strong>Рекомендація:</strong> Не більше 2-3 дієприслівників поспіль. Інакше — розбийте на кілька речень.</p>
-<hr />
-<h1 id="vs">Дієприслівник vs Підрядне речення</h1>
-<table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-10">
+        <div class="section-header" onclick="toggleSection(10)">
+          <h3>Дієприслівник vs Підрядне речення</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><table>
 <thead>
 <tr>
 <th>Критерій</th>
@@ -509,9 +589,14 @@
 </tbody>
 </table>
 <p><strong>Вибір залежить від стилю та ясності.</strong></p>
-<hr />
-<h1 id="-14">Практика</h1>
-<h2 id="-15">Визначте відношення</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-11">
+        <div class="section-header" onclick="toggleSection(11)">
+          <h3>Практика</h3>
+          <span class="section-type practice">practice</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Визначте відношення</h2>
 <ol>
 <li><p>«Почувши новину, він зрадів.»<br />
 → <strong>Час</strong> (коли почув)</p></li>
@@ -522,7 +607,7 @@
 <li><p>«Він говорив, жестикулюючи.»<br />
 → <strong>Спосіб/супровід</strong> (як говорив)</p></li>
 </ol>
-<h2 id="-16">Виправте помилки</h2>
+<h2 id="-1">Виправте помилки</h2>
 <ol>
 <li><p>❌ «Читаючи книгу, мені зателефонували.»<br />
 ✓ <strong>«Коли я читав книгу, мені зателефонували.»</strong></p></li>
@@ -533,7 +618,7 @@
 <li><p>❌ «Дивлячись у вікно, сонце зайшло.»<br />
 ✓ <strong>«Коли я дивився у вікно, сонце зайшло.»</strong></p></li>
 </ol>
-<h2 id="-17">Трансформуйте</h2>
+<h2 id="-2">Трансформуйте</h2>
 <p><strong>Підрядне → Дієприслівник:</strong></p>
 <ol>
 <li><p>Коли він закінчив роботу, він пішов додому.<br />
@@ -548,7 +633,151 @@
 <li><p>Не знаючи дороги, він заблукав.<br />
 → <strong>Оскільки не знав дороги, він заблукав.</strong></p></li>
 </ol>
-<hr /></div></div>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-12">
+        <div class="section-header" onclick="toggleSection(12)">
+          <h3>Словник</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Слово</th>
+<th>Переклад</th>
+<th>Примітки</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>допуст</td>
+<td>concession</td>
+<td>хоча, незважаючи на</td>
+</tr>
+<tr>
+<td>супровід</td>
+<td>accompaniment</td>
+<td>одночасно</td>
+</tr>
+<tr>
+<td>зворот</td>
+<td>phrase, construction</td>
+<td>стійкий вираз</td>
+</tr>
+<tr>
+<td>жестикулювати</td>
+<td>to gesticulate</td>
+<td>рухати руками</td>
+</tr>
+<tr>
+<td>насвистувати</td>
+<td>to whistle</td>
+<td>свистіти мелодію</td>
+</tr>
+<tr>
+<td>заблукати</td>
+<td>to get lost</td>
+<td>загубити дорогу</td>
+</tr>
+<tr>
+<td>відверто</td>
+<td>frankly</td>
+<td>чесно</td>
+</tr>
+<tr>
+<td>зважаючи</td>
+<td>considering</td>
+<td>враховуючи</td>
+</tr>
+<tr>
+<td>виходячи</td>
+<td>based on</td>
+<td>спираючись на</td>
+</tr>
+<tr>
+<td>ланцюжок</td>
+<td>chain</td>
+<td>кілька поспіль</td>
+</tr>
+<tr>
+<td>двозначний</td>
+<td>ambiguous</td>
+<td>неясний</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-13">
+        <div class="section-header" onclick="toggleSection(13)">
+          <h3>Підсумок</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Логічні відношення</h2>
+<table>
+<thead>
+<tr>
+<th>Відношення</th>
+<th>Еквівалент</th>
+<th>Приклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Час</td>
+<td>коли</td>
+<td>Прийшовши, я…</td>
+</tr>
+<tr>
+<td>Причина</td>
+<td>оскільки</td>
+<td>Знаючи, я…</td>
+</tr>
+<tr>
+<td>Умова</td>
+<td>якщо</td>
+<td>Працюючи, досягнеш…</td>
+</tr>
+<tr>
+<td>Допуст</td>
+<td>хоча</td>
+<td>Знаючи, мовчав</td>
+</tr>
+</tbody>
+</table>
+<h2 id="-1">Типові помилки</h2>
+<table>
+<thead>
+<tr>
+<th>❌ Помилка</th>
+<th>✓ Рішення</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Різні підмети</td>
+<td>Один підмет для обох</td>
+</tr>
+<tr>
+<td>З безособовими</td>
+<td>Замінити підрядним</td>
+</tr>
+<tr>
+<td>Занадто довгий ланцюжок</td>
+<td>Розбити на речення</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p><strong>Запам'ятайте:</strong></p>
+  <p>✓ Підмет дієприслівника <strong>=</strong> підмет речення<br />
+  ✓ Дієприслівник виділяється <strong>комами</strong><br />
+  ✓ «Не» пишеться <strong>окремо</strong><br />
+  ✓ Усталені звороти вчіть як <strong>вставні слова</strong><br />
+  ✓ Не перевантажуйте речення дієприслівниками</p>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('vocab')">Start →</button></div>
     </section>
     
@@ -581,6 +810,10 @@
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

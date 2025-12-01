@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,7 +136,36 @@
         <p style="color:var(--text-muted)">Фразеологізми: Голова та серце</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Голова чи серце?</h4><div class="md-content"><p>Як ви приймаєте важливі рішення — головою чи серцем?</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Вступ</li><li class="toc-item" data-target="section-1">Зміст уроку</li><li class="toc-item" data-target="section-2">Вправи</li><li class="toc-item" data-target="section-3">Словник</li><li class="toc-item" data-target="section-4">Підсумок</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Вступ</h3>
+          <span class="section-type intro">intro</span>
+        </div>
+        <div class="section-body md-content"><p>«Голова каже одне, серце — інше.»</p>
+<p>Ця фраза — не просто ідіома. Це філософська концепція, закодована в мові. Тисячоліттями люди вірили, що в нас є два центри прийняття рішень: голова (розум, логіка, аналіз) і серце (емоції, інтуїція, почуття). І вони часто конфліктують.</p>
+<p>Давні греки розмістили розум у голові — Платон писав про «розумну частину душі» в мозку. Але серце вони теж поважали: Арістотель вважав серце центром емоцій і пам'яті. Давні єгиптяни при муміфікації викидали мозок (непотрібний!), а серце ретельно зберігали — бо вірили, що на Суді Осіріса воно буде зважене проти пера Маат (істини).</p>
+<p>Українська мова успадкувала обидві традиції. «<strong>Світла голова</strong>» — про розум. «<strong>Золоте серце</strong>» — про доброту. «<strong>Ламати голову</strong>» — про аналітичне мислення. «<strong>Серце крається</strong>» — про емоційний біль. Два світи, дві мови опису людини.</p>
+<p>Цікаво, що сучасна наука частково підтверджує цю дихотомію. Нейробіологи говорять про «думання системою 1» (швидке, інтуїтивне, емоційне — «серце») та «думання системою 2» (повільне, аналітичне, логічне — «голова»). Наші предки, не знаючи нейронауки, відчули це на рівні мови.</p>
+<p>Але є й суто українські перлини. «<strong>Вітер у голові</strong>» — про легковажність. «<strong>Камінь на серці</strong>» — про тривогу. «<strong>Покласти голову</strong>» — про найвищу жертву, за Батьківщину. У цих фразах — національний характер, історія, цінності.</p>
+<p>У цьому модулі ви навчитеся думати «головою» і відчувати «серцем» — українською.</p>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Зміст уроку</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Розминка</h2>
+<h3 id="-1">Голова чи серце?</h3>
+<p>Як ви приймаєте важливі рішення — головою чи серцем?</p>
 <p><strong>Подумайте:</strong></p>
 <ul>
 <li>Вибір професії — голова чи серце?</li>
@@ -128,7 +175,696 @@
 <blockquote>
   <p><strong>Чи знали ви?</strong></p>
   <p>Слово «<strong>голова</strong>» в українській має багато значень: частина тіла, керівник (голова ради), передня частина (голова колони), верхівка (голова цвяха). Це відображає давнє уявлення: голова = верх = влада = найважливіше. Голова колективу — той, хто «зверху», хто керує.</p>
-</blockquote></div></div></div>
+</blockquote>
+<hr />
+<h2 id="-2">Презентація</h2>
+<h3 id="-3">Ідіоми з «голова»</h3>
+<h4 id="-4">Розум та інтелект</h4>
+<table>
+<thead>
+<tr>
+<th>Ідіома</th>
+<th>Значення</th>
+<th>Англійський відповідник</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>світла голова</strong></td>
+<td>розумна людина</td>
+<td>bright mind</td>
+</tr>
+<tr>
+<td><strong>голова йде обертом</strong></td>
+<td>розгубленість, запаморочення</td>
+<td>head is spinning</td>
+</tr>
+<tr>
+<td><strong>з голови</strong></td>
+<td>з пам'яті, напам'ять</td>
+<td>from memory</td>
+</tr>
+<tr>
+<td><strong>вилетіло з голови</strong></td>
+<td>забув</td>
+<td>slipped my mind</td>
+</tr>
+<tr>
+<td><strong>забити голову (чимось)</strong></td>
+<td>постійно думати про щось</td>
+<td>to rack one's brain</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Приклади в контексті:</strong></p>
+<ol>
+<li><p>«У нього <strong>світла голова</strong> — одразу знаходить рішення найскладніших проблем.»</p></li>
+<li><p>«Від такої кількості інформації <strong>голова йде обертом</strong> — не знаю, з чого почати.»</p></li>
+<li><p>«Вибач, твоє прохання зовсім <strong>вилетіло з голови</strong> — завтра обов'язково зроблю.»</p></li>
+</ol>
+<blockquote>
+  <p><strong>Міф vs Факт</strong></p>
+  <p>❌ <strong>Міф:</strong> «Голова йде обертом» тільки про запаморочення.</p>
+  <p>✅ <strong>Факт:</strong> Ідіома має два значення: 1) Фізичне запаморочення («Від спеки голова йде обертом»). 2) Розгубленість від складності або кількості («Від цих цифр голова йде обертом — не можу все порахувати»). Контекст підкаже.</p>
+</blockquote>
+<hr />
+<h4 id="-5">Дурість та легковажність</h4>
+<table>
+<thead>
+<tr>
+<th>Ідіома</th>
+<th>Значення</th>
+<th>Приклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>клепки бракує</strong></td>
+<td>нерозумний</td>
+<td>Йому явно клепки бракує — такі дурниці робить.</td>
+</tr>
+<tr>
+<td><strong>вітер у голові</strong></td>
+<td>легковажний</td>
+<td>У неї вітер у голові — жодної серйозної думки.</td>
+</tr>
+<tr>
+<td><strong>голова набита соломою</strong></td>
+<td>дурний</td>
+<td>Не питай його — голова набита соломою.</td>
+</tr>
+<tr>
+<td><strong>без царя в голові</strong></td>
+<td>нерозсудливий</td>
+<td>Він без царя в голові — не думає про наслідки.</td>
+</tr>
+<tr>
+<td><strong>ламати голову</strong></td>
+<td>напружено думати</td>
+<td>Уже тиждень ламаю голову над цим завданням.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Етимологічна мініатюра:</strong></p>
+<p>«<strong>Без царя в голові</strong>» — цікава метафора. «Цар» тут — не монарх, а центр контролю, розум-керівник. Людина «без царя в голові» — ніби країна без влади: хаос, безлад, непередбачуваність.</p>
+<blockquote>
+  <p><strong>Чи знали ви?</strong></p>
+  <p>Вираз «<strong>вітер у голові</strong>» має цікаву паралель в англійській: «airhead» (повітряна голова). Ідея та сама: якщо в голові вітер/повітря — там немає нічого твердого, серйозного, вагомого. Легкі думки приходять і йдуть, як вітер.</p>
+</blockquote>
+<hr />
+<h4 id="-6">Відповідальність та жертва</h4>
+<table>
+<thead>
+<tr>
+<th>Ідіома</th>
+<th>Значення</th>
+<th>Контекст</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>відповідати головою</strong></td>
+<td>нести повну відповідальність</td>
+<td>Я відповідаю головою за результат проєкту.</td>
+</tr>
+<tr>
+<td><strong>вдарити в голову</strong></td>
+<td>сп'яніти / осінити ідеєю</td>
+<td>Шампанське вдарило в голову. / Ідея вдарила в голову.</td>
+</tr>
+<tr>
+<td><strong>покласти голову</strong></td>
+<td>пожертвувати життям</td>
+<td>Він поклав голову за Батьківщину.</td>
+</tr>
+<tr>
+<td><strong>зберегти голову</strong></td>
+<td>залишитися живим</td>
+<td>Головне — зберегти голову в цій ситуації.</td>
+</tr>
+<tr>
+<td><strong>схилити голову</strong></td>
+<td>покоритися / вшанувати</td>
+<td>Не схилю голови перед ворогом. / Схилимо голову перед героями.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Культурний контекст:</strong></p>
+<p>«<strong>Покласти голову</strong>» — одна з найсильніших ідіом української мови. Вона часто звучить у контексті війни, боротьби за незалежність. «Поклали голови за Україну» — про Героїв, які віддали життя. Це не просто «загинути» — це свідома жертва, вибір.</p>
+<blockquote>
+  <p><strong>Чи знали ви?</strong></p>
+  <p>«<strong>Схилити голову</strong>» має два протилежні значення: 1) Покоритися, визнати поразку («Не схилю голови перед ворогом»). 2) Вшанувати пам'ять («Схилімо голови перед загиблими»). Перше — негативне, друге — позитивне. Контекст визначає все.</p>
+</blockquote>
+<hr />
+<h3 id="-7">Ідіоми з «серце»</h3>
+<h4 id="-8">Почуття та емоції</h4>
+<table>
+<thead>
+<tr>
+<th>Ідіома</th>
+<th>Значення</th>
+<th>Англійський відповідник</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>від (усього) серця</strong></td>
+<td>щиро</td>
+<td>from the heart</td>
+</tr>
+<tr>
+<td><strong>серце крається</strong></td>
+<td>дуже сумно</td>
+<td>heart breaks</td>
+</tr>
+<tr>
+<td><strong>брати до серця</strong></td>
+<td>переживати, приймати близько</td>
+<td>to take to heart</td>
+</tr>
+<tr>
+<td><strong>камінь на серці</strong></td>
+<td>тривога, важкість</td>
+<td>weight on one's heart</td>
+</tr>
+<tr>
+<td><strong>серце завмирає</strong></td>
+<td>хвилювання, страх</td>
+<td>heart skips a beat</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Приклади в контексті:</strong></p>
+<ol>
+<li><p>«Дякую <strong>від щирого серця</strong> за все, що ви зробили!»</p></li>
+<li><p>«<strong>Серце крається</strong>, коли бачу новини про зруйновані міста.»</p></li>
+<li><p>«Не <strong>бери до серця</strong> — він просто був у поганому настрої, не мав на увазі образити.»</p></li>
+</ol>
+<blockquote>
+  <p><strong>Чи знали ви?</strong></p>
+  <p>Вираз «<strong>камінь на серці</strong>» описує фізичне відчуття тривоги — важкість у грудях. Сучасна медицина пояснює це через зв'язок між стресом та серцево-судинною системою. Тривога справді «тисне» на серце. Наші предки відчули це без МРТ.</p>
+</blockquote>
+<hr />
+<h4 id="-9">Кохання та прихильність</h4>
+<table>
+<thead>
+<tr>
+<th>Ідіома</th>
+<th>Значення</th>
+<th>Приклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>віддати серце</strong></td>
+<td>покохати</td>
+<td>Вона віддала йому своє серце.</td>
+</tr>
+<tr>
+<td><strong>серце не на місці</strong></td>
+<td>тривога за когось</td>
+<td>Коли він на війні, серце не на місці.</td>
+</tr>
+<tr>
+<td><strong>припасти до серця</strong></td>
+<td>сподобатися</td>
+<td>Ця пісня припала мені до серця.</td>
+</tr>
+<tr>
+<td><strong>серцеїд</strong></td>
+<td>спокусник, ловелас</td>
+<td>Він справжній серцеїд — всі дівчата в нього закохані.</td>
+</tr>
+<tr>
+<td><strong>кам'яне серце</strong></td>
+<td>бездушна людина</td>
+<td>У неї кам'яне серце — жодного співчуття.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Етимологічна мініатюра:</strong></p>
+<p>«<strong>Серцеїд</strong>» — геніальна композиція: «серце» + «їсти». Людина, яка буквально «з'їдає» чужі серця, руйнує почуття. Романтичний хижак. В англійській — «heartbreaker» (той, хто ламає серця) — схожий образ, але менш «кривавий».</p>
+<hr />
+<h4 id="-10">Характер та доброта</h4>
+<table>
+<thead>
+<tr>
+<th>Ідіома</th>
+<th>Значення</th>
+<th>Контекст</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>добре серце</strong></td>
+<td>добра людина</td>
+<td>У нього добре серце — завжди допоможе.</td>
+</tr>
+<tr>
+<td><strong>золоте серце</strong></td>
+<td>дуже добра людина</td>
+<td>У бабусі золоте серце — все віддасть.</td>
+</tr>
+<tr>
+<td><strong>м'яке серце</strong></td>
+<td>чутлива людина</td>
+<td>З його м'яким серцем важко відмовляти.</td>
+</tr>
+<tr>
+<td><strong>скипіти серцем</strong></td>
+<td>розгніватися</td>
+<td>Серце скипіло від несправедливості.</td>
+</tr>
+<tr>
+<td><strong>з легким серцем</strong></td>
+<td>без тривоги</td>
+<td>Поїхав з легким серцем — все вирішено.</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p><strong>Міф vs Факт</strong></p>
+  <p>❌ <strong>Міф:</strong> «Золоте серце» і «добре серце» — те саме.</p>
+  <p>✅ <strong>Факт:</strong> «Золоте серце» — сильніше, майже гіперболічне. «Добре серце» — про доброту. «Золоте серце» — про виняткову, рідкісну доброту, коли людина готова віддати останнє. «Золоте» тут = безцінне.</p>
+</blockquote>
+<hr />
+<h3 id="-11">Голова + серце: конфлікт та баланс</h3>
+<table>
+<thead>
+<tr>
+<th>Ідіома</th>
+<th>Значення</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>голова каже одне, серце — інше</strong></td>
+<td>конфлікт логіки та почуттів</td>
+</tr>
+<tr>
+<td><strong>розумом розумію, серцем не приймаю</strong></td>
+<td>інтелектуально vs емоційно</td>
+</tr>
+<tr>
+<td><strong>розбите серце</strong></td>
+<td>нещасне кохання</td>
+</tr>
+<tr>
+<td><strong>тримати в голові й серці</strong></td>
+<td>пам'ятати з любов'ю</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Приклад ситуації:</strong></p>
+<p>«<strong>Голова каже</strong>: залишайся на стабільній роботі, там гарна зарплата. <strong>Серце каже</strong>: кидай все і займайся музикою — це твоя мрія. Що робити?»</p>
+<hr />
+<h3 id="-12">Граматика: дієслівне керування</h3>
+<table>
+<thead>
+<tr>
+<th>Ідіома</th>
+<th>Конструкція</th>
+<th>Приклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ламати голову</td>
+<td>над чим? (над + оруд.)</td>
+<td>Ламаю голову <strong>над</strong> задачею</td>
+</tr>
+<tr>
+<td>брати до серця</td>
+<td>що? (знахідний)</td>
+<td>Не бери <strong>критику</strong> до серця</td>
+</tr>
+<tr>
+<td>припасти до серця</td>
+<td>кому? (давальний)</td>
+<td>Припала <strong>мені</strong> до серця</td>
+</tr>
+<tr>
+<td>відповідати головою</td>
+<td>за що? (за + знах.)</td>
+<td>Відповідаю головою <strong>за</strong> результат</td>
+</tr>
+<tr>
+<td>забити голову</td>
+<td>чим? (орудний)</td>
+<td>Забила голову <strong>роботою</strong></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="-13">Порівняння з англійською</h3>
+<table>
+<thead>
+<tr>
+<th>Українська</th>
+<th>Англійська</th>
+<th>Тип відповідності</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>від серця</td>
+<td>from the heart</td>
+<td>✅ Дослівний збіг</td>
+</tr>
+<tr>
+<td>серце крається</td>
+<td>heart breaks</td>
+<td>✅ Схожий образ</td>
+</tr>
+<tr>
+<td>голова йде обертом</td>
+<td>head spins</td>
+<td>✅ Схожий образ</td>
+</tr>
+<tr>
+<td>камінь на серці</td>
+<td>weight on heart</td>
+<td>✅ Схожий образ</td>
+</tr>
+<tr>
+<td>вітер у голові</td>
+<td>airhead</td>
+<td>⚠️ Схожий сенс</td>
+</tr>
+<tr>
+<td>без царя в голові</td>
+<td>—</td>
+<td>❌ Немає відповідника</td>
+</tr>
+<tr>
+<td>золоте серце</td>
+<td>heart of gold</td>
+<td>✅ Дослівний збіг</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="-14">Практика</h2>
+<h3 id="1">Вправа 1: Доповніть ідіому</h3>
+<ol>
+<li><p>У нього світла ___.<br />
+→ <strong>голова</strong></p></li>
+<li><p>Серце ___ від такої новини.<br />
+→ <strong>крається / завмирає</strong></p></li>
+<li><p>Вибач, ___ з голови — забув.<br />
+→ <strong>вилетіло</strong></p></li>
+<li><p>Дякую від щирого ___.<br />
+→ <strong>серця</strong></p></li>
+<li><p>Ламаю ___ над цим завданням уже тиждень.<br />
+→ <strong>голову</strong></p></li>
+</ol>
+<h3 id="2">Вправа 2: Оберіть правильну ідіому</h3>
+<ol>
+<li><p>Він дуже розумний, швидко вчиться.<br />
+→ <strong>світла голова</strong></p></li>
+<li><p>Я забув про нашу зустріч.<br />
+→ <strong>вилетіло з голови</strong></p></li>
+<li><p>Мені дуже сумно від цих новин.<br />
+→ <strong>серце крається</strong></p></li>
+<li><p>Вона дуже добра, завжди допомагає.<br />
+→ <strong>золоте серце / добре серце</strong></p></li>
+<li><p>Він легковажний, не думає про наслідки.<br />
+→ <strong>вітер у голові / без царя в голові</strong></p></li>
+</ol>
+<h3 id="3">Вправа 3: Перекладіть</h3>
+<ol>
+<li><p>It completely slipped my mind.<br />
+→ <strong>Зовсім вилетіло з голови.</strong></p></li>
+<li><p>Thank you from the bottom of my heart.<br />
+→ <strong>Дякую від щирого серця. / Дякую від усього серця.</strong></p></li>
+<li><p>My heart breaks when I see this.<br />
+→ <strong>Серце крається, коли бачу таке.</strong></p></li>
+<li><p>He's racking his brain over this problem.<br />
+→ <strong>Він ламає голову над цією проблемою.</strong></p></li>
+</ol>
+<hr />
+<h2 id="-15">Продукція</h2>
+<h3 id="-16">Опис людей</h3>
+<p>Використайте ідіоми з «голова» та «серце», щоб описати:</p>
+<ol>
+<li><p><strong>Вчений-геній:</strong> розумний, постійно думає про роботу, але забуває про побут.</p></li>
+<li><p><strong>Волонтер:</strong> дуже добрий, переживає за інших, готовий допомогти будь-кому.</p></li>
+<li><p><strong>Підліток:</strong> легковажний, не думає про майбутнє, живе емоціями.</p></li>
+<li><p><strong>Мати під час війни:</strong> тривожиться за дітей, серце не на місці, але тримається.</p></li>
+</ol>
+<h3 id="-17">Дискусія</h3>
+<p>Обговоріть у парах:</p>
+<ol>
+<li><p>«Голова каже одне, серце — інше.» Коли це було про вас? Чого ви послухали?</p></li>
+<li><p>Чи вірите ви в «інтуїцію серця» vs «логіку голови»?</p></li>
+</ol>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Вправи</h3>
+          <span class="section-type practice">practice</span>
+        </div>
+        <div class="section-body md-content"><h2 id="quiz">quiz: Ідіоми: Голова та серце</h2>
+<blockquote>
+  <p>Виберіть правильну відповідь.</p>
+</blockquote>
+<ol>
+<li>«Світла голова» означає:</li>
+</ol>
+<ul>
+<li>[x] розумна людина</li>
+<li>[ ] людина зі світлим волоссям</li>
+</ul>
+<blockquote>
+  <p>Bright mind — розумний, тямущий.</p>
+</blockquote>
+<ol start="2">
+<li>«Вилетіло з голови» означає:</li>
+</ol>
+<ul>
+<li>[x] забув</li>
+<li>[ ] з'їхав з глузду</li>
+</ul>
+<blockquote>
+  <p>Slipped my mind — забув, не пам'ятаю.</p>
+</blockquote>
+<ol start="3">
+<li>«Серце крається» означає:</li>
+</ol>
+<ul>
+<li>[x] дуже сумно</li>
+<li>[ ] проблеми із серцем</li>
+</ul>
+<blockquote>
+  <p>Heart breaks — глибокий емоційний біль.</p>
+</blockquote>
+<ol start="4">
+<li>«Золоте серце» означає:</li>
+</ol>
+<ul>
+<li>[x] виняткова доброта</li>
+<li>[ ] багата людина</li>
+</ul>
+<blockquote>
+  <p>Heart of gold — дуже добра людина.</p>
+</blockquote>
+<ol start="5">
+<li>«Вітер у голові» означає:</li>
+</ol>
+<ul>
+<li>[x] легковажний</li>
+<li>[ ] застуда</li>
+</ul>
+<blockquote>
+  <p>Airhead — легковажна, несерйозна людина.</p>
+</blockquote>
+<ol start="6">
+<li>«Покласти голову» означає:</li>
+</ol>
+<ul>
+<li>[x] пожертвувати життям</li>
+<li>[ ] лягти спати</li>
+</ul>
+<blockquote>
+  <p>Віддати життя (за ідею, Батьківщину).</p>
+</blockquote>
+<ol start="7">
+<li><strong>[Інтеграція: пасив + регістр]</strong> Офіційний текст: «Цей факт ___ у голові кожного громадянина.»</li>
+</ol>
+<ul>
+<li>[x] закарбовано</li>
+<li>[ ] закарбували</li>
+<li>[ ] закарбовується</li>
+</ul>
+<blockquote>
+  <p>Офіційний стиль → -но/-то форма.</p>
+</blockquote>
+<ol start="8">
+<li><strong>[Інтеграція: регістр]</strong> Поезія: «Серце моє ___»</li>
+</ol>
+<ul>
+<li>[ ] розбито</li>
+<li>[x] розбите</li>
+<li>[ ] розбили</li>
+</ul>
+<blockquote>
+  <p>Художній стиль → дієприкметник для виразності.</p>
+</blockquote>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Словник</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Ідіома</th>
+<th>Вимова</th>
+<th>Значення</th>
+<th>Примітки</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>світла голова</td>
+<td>/ˈswʲitlɑ ɦɔlɔˈwɑ/</td>
+<td>розумна людина</td>
+<td>f</td>
+</tr>
+<tr>
+<td>вилетіло з голови</td>
+<td>/wɪlɛˈtʲilɔ z ɦɔlɔˈwɪ/</td>
+<td>забув</td>
+<td>pf</td>
+</tr>
+<tr>
+<td>ламати голову</td>
+<td>/lɑˈmɑtɪ ɦɔˈlɔwu/</td>
+<td>напружено думати</td>
+<td>impf</td>
+</tr>
+<tr>
+<td>вітер у голові</td>
+<td>/ˈwʲitɛr u ɦɔlɔˈwʲi/</td>
+<td>легковажний</td>
+<td>idiom</td>
+</tr>
+<tr>
+<td>від серця</td>
+<td>/wʲid ˈsɛrt͡sʲɑ/</td>
+<td>щиро</td>
+<td>adv</td>
+</tr>
+<tr>
+<td>серце крається</td>
+<td>/ˈsɛrt͡sɛ ˈkrɑjɛt͡sʲːɑ/</td>
+<td>дуже сумно</td>
+<td>impf</td>
+</tr>
+<tr>
+<td>брати до серця</td>
+<td>/ˈbrɑtɪ dɔ ˈsɛrt͡sʲɑ/</td>
+<td>переживати</td>
+<td>impf</td>
+</tr>
+<tr>
+<td>золоте серце</td>
+<td>/zɔlɔˈtɛ ˈsɛrt͡sɛ/</td>
+<td>виняткова доброта</td>
+<td>n</td>
+</tr>
+<tr>
+<td>камінь на серці</td>
+<td>/ˈkɑmʲinʲ nɑ ˈsɛrt͡sʲi/</td>
+<td>тривога</td>
+<td>m</td>
+</tr>
+<tr>
+<td>покласти голову</td>
+<td>/pɔˈklɑstɪ ɦɔˈlɔwu/</td>
+<td>пожертвувати життям</td>
+<td>pf</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-4">
+        <div class="section-header" onclick="toggleSection(4)">
+          <h3>Підсумок</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Голова: розум, пам'ять, відповідальність</h2>
+<table>
+<thead>
+<tr>
+<th>Ідіома</th>
+<th>Значення</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>світла голова</td>
+<td>розумний</td>
+</tr>
+<tr>
+<td>вилетіло з голови</td>
+<td>забув</td>
+</tr>
+<tr>
+<td>вітер у голові</td>
+<td>легковажний</td>
+</tr>
+<tr>
+<td>ламати голову</td>
+<td>думати</td>
+</tr>
+<tr>
+<td>покласти голову</td>
+<td>пожертвувати життям</td>
+</tr>
+</tbody>
+</table>
+<h2 id="-1">Серце: почуття, кохання, характер</h2>
+<table>
+<thead>
+<tr>
+<th>Ідіома</th>
+<th>Значення</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>від серця</td>
+<td>щиро</td>
+</tr>
+<tr>
+<td>серце крається</td>
+<td>сумно</td>
+</tr>
+<tr>
+<td>золоте серце</td>
+<td>дуже добрий</td>
+</tr>
+<tr>
+<td>камінь на серці</td>
+<td>тривога</td>
+</tr>
+<tr>
+<td>припасти до серця</td>
+<td>сподобатися</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p><strong>Головне</strong></p>
+  <p>Голова — центр розуму, логіки, відповідальності. Серце — центр почуттів, доброти, любові. «Голова каже одне, серце — інше» — це не проблема, це людська природа. Мудрість — знайти баланс.</p>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('quiz')">Start →</button></div>
     </section>
     
@@ -166,6 +902,10 @@
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

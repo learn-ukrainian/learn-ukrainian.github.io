@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,8 +136,20 @@
         <p style="color:var(--text-muted)">Активні дієприкметники -лий</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="md-content"><h1 id="">Вступ</h1>
-<p>У попередньому модулі ви дізналися про активні дієприкметники теперішнього часу — «читаючий», «працюючий» — і їх церковнослов'янське походження. Тепер час познайомитися з ще рідкіснішими формами: активними дієприкметниками <strong>минулого часу</strong> на <strong>-лий</strong>.</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Вступ</li><li class="toc-item" data-target="section-1">Два часи активних дієприкметників</li><li class="toc-item" data-target="section-2">Утворення</li><li class="toc-item" data-target="section-3">Продуктивні форми на -лий</li><li class="toc-item" data-target="section-4">Дієприкметник → Прикметник</li><li class="toc-item" data-target="section-5">Форми, що НЕ вживаються</li><li class="toc-item" data-target="section-6">РУСИЗМИ: Форми на -вший/-ший</li><li class="toc-item" data-target="section-7">Усталені прикметники на -лий</li><li class="toc-item" data-target="section-8">Практика</li><li class="toc-item" data-target="section-9">Словник</li><li class="toc-item" data-target="section-10">Підсумок</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Вступ</h3>
+          <span class="section-type intro">intro</span>
+        </div>
+        <div class="section-body md-content"><p>У попередньому модулі ви дізналися про активні дієприкметники теперішнього часу — «читаючий», «працюючий» — і їх церковнослов'янське походження. Тепер час познайомитися з ще рідкіснішими формами: активними дієприкметниками <strong>минулого часу</strong> на <strong>-лий</strong>.</p>
 <p>Уявіть: ви перекладаєте художній текст і бачите фразу «the wilted flowers». Як українською? «Квіти, які зів'яли»? Це правильно, але довго. «Зів'ялі квіти»? Коротко й красиво. А тепер ви бачите «the person who read the book» і думаєте: «Прочиталий книгу чоловік»? Ні! Цієї форми не існує!</p>
 <p>Ось ключова проблема: деякі форми на <strong>-лий</strong> абсолютно природні («зів'ялий», «посивілий»), а інші — абсолютно неможливі («<em>прочиталий», «</em>зробилий»). Де межа? Чому одні можна, а інші — ні? І що ще гірше — є форми на <strong>-вший/-ший</strong> («прочитавший», «зробивший»), які здаються логічними, але насправді є <strong>грубими русизмами</strong>.</p>
 <p>Це як мінне поле: один неправильний крок — і ви звучите як людина, яка говорить мовою радянських документів. Сьогодні ми навчимося обходити ці міни.</p>
@@ -127,9 +157,14 @@
   <p><strong>Чи знали ви?</strong></p>
   <p>Форми на <strong>-вший/-ший</strong> («прочитавший», «зробивший») — це <strong>калька з російської мови</strong>. В українській вони ніколи не існували як живі граматичні форми. Вони масово впроваджувалися в радянський період через переклади, документацію та освіту. Коли ви бачите ці форми в «українському» тексті — це або російщизм, або переклад з російської, зроблений без редагування. Сучасна українська мова їх категорично відкидає.</p>
 </blockquote>
-<hr />
-<h1 id="-1">Два часи активних дієприкметників</h1>
-<p>Пригадаємо повну картину:</p>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Два часи активних дієприкметників</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><p>Пригадаємо повну картину:</p>
 <table>
 <thead>
 <tr>
@@ -155,9 +190,14 @@
 </tbody>
 </table>
 <p>Активні дієприкметники минулого часу на <strong>-лий</strong> — ще рідкісніші та ще обмеженіші, ніж форми теперішнього часу. Багато теоретично можливих форм <strong>не вживаються взагалі</strong>, а деякі — <strong>русизми</strong>.</p>
-<hr />
-<h1 id="-2">Утворення</h1>
-<h2 id="-3">Формула</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Утворення</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Формула</h2>
 <p><strong>Від основи інфінітива + -лий:</strong></p>
 <table>
 <thead>
@@ -195,7 +235,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="-4">Ключова закономірність</h2>
+<h2 id="-1">Ключова закономірність</h2>
 <p>Вживаються переважно дієприкметники від <strong>неперехідних</strong> дієслів, що означають <strong>зміну стану</strong>:</p>
 <ul>
 <li>зів'янути → <strong>зів'ялий</strong> (квітка змінила стан: була свіжа → стала зів'ялою)</li>
@@ -208,9 +248,14 @@
   <p>❌ <strong>Міф:</strong> «Можна утворити дієприкметник на -лий від будь-якого дієслова.»</p>
   <p>✅ <strong>Факт:</strong> Продуктивні лише форми від <strong>неперехідних дієслів зміни стану</strong>. «Зів'ялий» — так, «*прочиталий» — ні. Це не «нові» форми, а <strong>давно усталені</strong> слова, які функціонують як прикметники.</p>
 </blockquote>
-<hr />
-<h1 id="-5">Продуктивні форми на -лий</h1>
-<h2 id="-6">Від дієслів зміни стану</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Продуктивні форми на -лий</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Від дієслів зміни стану</h2>
 <table>
 <thead>
 <tr>
@@ -267,7 +312,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="-7">Чому ці форми «виживають»?</h2>
+<h2 id="-1">Чому ці форми «виживають»?</h2>
 <p>Вони описують <strong>візуальний результат</strong>:</p>
 <ul>
 <li>Бачиш квітку → вона <strong>зів'яла</strong> → вона <strong>зів'яла</strong></li>
@@ -275,9 +320,14 @@
 <li>Бачиш листя → воно <strong>опало</strong> → воно <strong>опале</strong></li>
 </ul>
 <p>Це майже <strong>фізичні характеристики</strong>, тому вони природно функціонують як прикметники.</p>
-<hr />
-<h1 id="-8">Дієприкметник → Прикметник</h1>
-<p>Багато форм на <strong>-лий</strong> давно стали <strong>звичайними прикметниками</strong>. Вони вже не сприймаються як «той, хто зробив щось», а просто описують якість:</p>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-4">
+        <div class="section-header" onclick="toggleSection(4)">
+          <h3>Дієприкметник → Прикметник</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><p>Багато форм на <strong>-лий</strong> давно стали <strong>звичайними прикметниками</strong>. Вони вже не сприймаються як «той, хто зробив щось», а просто описують якість:</p>
 <table>
 <thead>
 <tr>
@@ -337,9 +387,14 @@
   <p><strong>Чи знали ви?</strong></p>
   <p>Слово <strong>«колишній»</strong> походить від давнього дієслова «колоти/колити», що означало «бути колись, існувати раніше». Сучасне «колись» — від того самого кореня. Тому «колишній президент» буквально означає «той, що був колись президентом». Це не «минувший» (русизм!), а саме <strong>«колишній»</strong> — автентично українське слово з глибоким коренем.</p>
 </blockquote>
-<hr />
-<h1 id="-9">Форми, що НЕ вживаються</h1>
-<h2 id="-10">Від перехідних дієслів</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-5">
+        <div class="section-header" onclick="toggleSection(5)">
+          <h3>Форми, що НЕ вживаються</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Від перехідних дієслів</h2>
 <p>Ви <strong>не можете</strong> утворити активний дієприкметник минулого часу від перехідних дієслів:</p>
 <table>
 <thead>
@@ -372,9 +427,14 @@
 </tbody>
 </table>
 <p><strong>Чому?</strong> Бо ці дієслова описують <strong>активну дію з об'єктом</strong>, а не зміну внутрішнього стану. «Прочитати книгу» — це щось, що ви робите з книгою. «Зів'янути» — це щось, що трапляється з вами самим.</p>
-<hr />
-<h1 id="-11">РУСИЗМИ: Форми на -вший/-ший</h1>
-<h2 id="-12">Категорично уникайте!</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-6">
+        <div class="section-header" onclick="toggleSection(6)">
+          <h3>РУСИЗМИ: Форми на -вший/-ший</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Категорично уникайте!</h2>
 <table>
 <thead>
 <tr>
@@ -418,7 +478,7 @@
 </tbody>
 </table>
 <p>Форми на <strong>-вший/-ший</strong> — це <strong>грубі русизми</strong>! В українській мові їх <strong>не існує</strong>. Вони з'явилися під впливом російської мови, де активні дієприкметники минулого часу на -вший/-ший продуктивні й широко вживані.</p>
-<h2 id="-13">Чому це критично?</h2>
+<h2 id="-1">Чому це критично?</h2>
 <p>Коли ви кажете «прочитавший книгу студент», ви:</p>
 <ol>
 <li>Звучите як перекладач з російської</li>
@@ -436,9 +496,14 @@
   <p>❌ <strong>Міф:</strong> «Форми на -вший звучать "інтелігентно" та "освічено".»</p>
   <p>✅ <strong>Факт:</strong> Вони звучать як <strong>суржик</strong> або <strong>калька з російської</strong>. Справді освічене українське мовлення уникає цих форм повністю. Використання підрядних речень — це не «спрощення», а <strong>норма</strong> української мови.</p>
 </blockquote>
-<hr />
-<h1 id="-14">Усталені прикметники на -лий</h1>
-<p>Ці слова вчіть як <strong>окремі лексичні одиниці</strong> (прикметники), а не як дієприкметники:</p>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-7">
+        <div class="section-header" onclick="toggleSection(7)">
+          <h3>Усталені прикметники на -лий</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><p>Ці слова вчіть як <strong>окремі лексичні одиниці</strong> (прикметники), а не як дієприкметники:</p>
 <table>
 <thead>
 <tr>
@@ -485,7 +550,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="-15">Особливі випадки</h2>
+<h2 id="">Особливі випадки</h2>
 <table>
 <thead>
 <tr>
@@ -512,9 +577,14 @@
 </tr>
 </tbody>
 </table>
-<hr />
-<h1 id="-16">Практика</h1>
-<h2 id="-17">Визначте тип слова</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-8">
+        <div class="section-header" onclick="toggleSection(8)">
+          <h3>Практика</h3>
+          <span class="section-type practice">practice</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Визначте тип слова</h2>
 <ol>
 <li><p>«зів'ялі квіти»<br />
 → <strong>Прикметник</strong> (від зів'янути, означає стан)</p></li>
@@ -527,7 +597,7 @@
 <li><p>«застаріле обладнання»<br />
 → <strong>Прикметник</strong> (від застаріти)</p></li>
 </ol>
-<h2 id="-18">Виправте русизми</h2>
+<h2 id="-1">Виправте русизми</h2>
 <ol>
 <li><p>❌ «Студент, прочитавший книгу…»<br />
 ✓ <strong>«Студент, який прочитав книгу…»</strong></p></li>
@@ -538,7 +608,7 @@
 <li><p>❌ «Документи, підписавші директором…» (подвійна помилка!)<br />
 ✓ <strong>«Документи, підписані директором…»</strong> (пасивний!)</p></li>
 </ol>
-<h2 id="-19">Вставте правильне слово</h2>
+<h2 id="-2">Вставте правильне слово</h2>
 <ol>
 <li><p>У ___ (минулий) році ми відпочивали в Карпатах.<br />
 → <strong>минулому</strong></p></li>
@@ -549,7 +619,164 @@
 <li><p>Він — ___ (бувалий) мандрівник.<br />
 → <strong>бувалий</strong></p></li>
 </ol>
-<hr /></div></div>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-9">
+        <div class="section-header" onclick="toggleSection(9)">
+          <h3>Словник</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Слово</th>
+<th>Переклад</th>
+<th>Примітки</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>зів'ялий</td>
+<td>wilted</td>
+<td>adj, від зів'янути</td>
+</tr>
+<tr>
+<td>посивілий</td>
+<td>gray-haired</td>
+<td>adj, від посивіти</td>
+</tr>
+<tr>
+<td>змарнілий</td>
+<td>emaciated</td>
+<td>adj, від змарніти</td>
+</tr>
+<tr>
+<td>застарілий</td>
+<td>outdated</td>
+<td>adj, від застаріти</td>
+</tr>
+<tr>
+<td>похилий</td>
+<td>tilted; elderly</td>
+<td>adj, «похилого віку»</td>
+</tr>
+<tr>
+<td>минулий</td>
+<td>past</td>
+<td>adj, не «минувший»!</td>
+</tr>
+<tr>
+<td>колишній</td>
+<td>former</td>
+<td>adj, не «бувший»!</td>
+</tr>
+<tr>
+<td>бувалий</td>
+<td>experienced</td>
+<td>adj</td>
+</tr>
+<tr>
+<td>зрілий</td>
+<td>mature, ripe</td>
+<td>adj</td>
+</tr>
+<tr>
+<td>спілий</td>
+<td>ripe</td>
+<td>adj</td>
+</tr>
+<tr>
+<td>запеклий</td>
+<td>fierce</td>
+<td>adj</td>
+</tr>
+<tr>
+<td>перехідний</td>
+<td>transitive</td>
+<td>про дієслова</td>
+</tr>
+<tr>
+<td>неперехідний</td>
+<td>intransitive</td>
+<td>про дієслова</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-10">
+        <div class="section-header" onclick="toggleSection(10)">
+          <h3>Підсумок</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Активні дієприкметники минулого часу</h2>
+<table>
+<thead>
+<tr>
+<th>Аспект</th>
+<th>Правило</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Суфікс</strong></td>
+<td>-лий</td>
+</tr>
+<tr>
+<td><strong>Продуктивність</strong></td>
+<td>Дуже обмежена</td>
+</tr>
+<tr>
+<td><strong>Від яких дієслів</strong></td>
+<td>Тільки неперехідні (зміна стану)</td>
+</tr>
+<tr>
+<td><strong>Альтернатива</strong></td>
+<td>Підрядне речення з «який»</td>
+</tr>
+</tbody>
+</table>
+<h2 id="-1">Русизми — КАТЕГОРИЧНО НІ!</h2>
+<table>
+<thead>
+<tr>
+<th>❌ НІКОЛИ</th>
+<th>✓ Правильно</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>*-вший, *-ший</td>
+<td>який + дієслово мин. ч.</td>
+</tr>
+<tr>
+<td>*прочитавший</td>
+<td>який прочитав</td>
+</tr>
+<tr>
+<td>*зробивший</td>
+<td>який зробив</td>
+</tr>
+<tr>
+<td>*минувший</td>
+<td><strong>минулий</strong></td>
+</tr>
+<tr>
+<td>*бувший</td>
+<td><strong>колишній</strong></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p><strong>Запам'ятайте:</strong></p>
+  <p>✓ Форми на <strong>-вший/-ший — РУСИЗМИ</strong>, яких не існує в українській<br />
+  ✓ Завжди вживайте <strong>підрядні речення</strong>: «який прочитав», «яка зробила»<br />
+  ✓ Деякі форми на -лий стали <strong>прикметниками</strong> (минулий, колишній, бувалий)<br />
+  ✓ Продуктивні лише форми від <strong>неперехідних дієслів зміни стану</strong><br />
+  ✓ «Минулий» — українське, «*минувший» — русизм</p>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('vocab')">Start →</button></div>
     </section>
     
@@ -582,6 +809,10 @@
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

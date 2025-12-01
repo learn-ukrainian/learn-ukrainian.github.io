@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,17 +136,34 @@
         <p style="color:var(--text-muted)">Безособовий пасив</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="md-content"><h1 id="">Вступ</h1>
-<p>Є граматична форма, яка робить українську мову унікальною серед усіх слов'янських мов. Ні російська, ні польська, ні чеська її не мають. Це <strong>безособовий пасив на -но/-то</strong>.</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Вступ</li><li class="toc-item" data-target="section-1">Дві системи: порівняння</li><li class="toc-item" data-target="section-2">Утворення</li><li class="toc-item" data-target="section-3">Структура речення</li><li class="toc-item" data-target="section-4">Часові форми</li><li class="toc-item" data-target="section-5">Заперечення</li><li class="toc-item" data-target="section-6">Стилістичне вживання</li><li class="toc-item" data-target="section-7">Порівняння стилів</li><li class="toc-item" data-target="section-8">Практика</li><li class="toc-item" data-target="section-9">Продукція</li><li class="toc-item" data-target="section-10">Словник</li><li class="toc-item" data-target="section-11">Підсумок</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Вступ</h3>
+          <span class="section-type intro">intro</span>
+        </div>
+        <div class="section-body md-content"><p>Є граматична форма, яка робить українську мову унікальною серед усіх слов'янських мов. Ні російська, ні польська, ні чеська її не мають. Це <strong>безособовий пасив на -но/-то</strong>.</p>
 <p>Коли ви читаєте українські новини, офіційні документи чи закони, ви бачите її постійно: «Угоду підписано», «Закон ухвалено», «Злочинця затримано». Це не просто стилістичний вибір — це <strong>граматичний маркер офіційності</strong>, що не має аналогів в інших мовах.</p>
 <p>Уявіть: ви пишете протокол засідання. В англійській ви скажете «The meeting was opened» — і це звучить формально. В російській «Заседание открыто» — дієприкметник узгоджується. А в українській? «Засідання відкрито» — форма <strong>незмінна</strong>, вона не залежить від роду чи числа. Ця граматична «застиглість» надає їй особливої авторитетності.</p>
 <blockquote>
   <p><strong>Чи знали ви?</strong></p>
   <p>Форма -но/-то розвинулася в українській мові приблизно в <strong>XIV-XV століттях</strong>. Вона виникла з давніх безособових конструкцій і стала характерною рисою саме української (а не російської чи білоруської) ділової мови. Коли козацькі писарі складали універсали, вони вживали саме цю форму: «Оголошено всьому війську…»</p>
 </blockquote>
-<hr />
-<h1 id="-1">Дві системи: порівняння</h1>
-<h2 id="vs">Дієприкметник vs -но/-то</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Дві системи: порівняння</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="vs">Дієприкметник vs -но/-то</h2>
 <table>
 <thead>
 <tr>
@@ -155,7 +190,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="-2">Ключові відмінності</h2>
+<h2 id="">Ключові відмінності</h2>
 <table>
 <thead>
 <tr>
@@ -192,9 +227,14 @@
   <p>❌ <strong>Міф:</strong> «Книга написана» і «Книгу написано» — це те саме, просто інша форма.</p>
   <p>✅ <strong>Факт:</strong> Ці форми мають <strong>різний фокус</strong>. «Книга написана» — опис стану (книга зараз у стані «написаності»). «Книгу написано» — констатація факту (хтось виконав дію написання). Це тонка, але важлива відмінність.</p>
 </blockquote>
-<hr />
-<h1 id="-3">Утворення</h1>
-<h2 id="-4">Від дієприкметника до -но/-то</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Утворення</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Від дієприкметника до -но/-то</h2>
 <table>
 <thead>
 <tr>
@@ -237,9 +277,14 @@
 </tbody>
 </table>
 <p><strong>Просте правило:</strong> Замініть закінчення -ий/-а/-е/-і на <strong>-о</strong>.</p>
-<hr />
-<h1 id="-5">Структура речення</h1>
-<h2 id="-6">Стандартна структура</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Структура речення</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Стандартна структура</h2>
 <pre><code>Додаток (Знахідний) + -но/-то форма + (Діяч в Орудному)
 </code></pre>
 <table>
@@ -269,7 +314,7 @@
 </tbody>
 </table>
 <p><strong>Повне речення:</strong> Книгу написано Шевченком.</p>
-<h2 id="-7">Відмінок додатка</h2>
+<h2 id="-1">Відмінок додатка</h2>
 <table>
 <thead>
 <tr>
@@ -305,9 +350,14 @@
   <p><strong>Чи знали ви?</strong></p>
   <p>Іменники <strong>середнього роду</strong> (рішення, питання, завдання) мають однакову форму в називному і знахідному відмінках. Це може збивати з пантелику: «Рішення прийнято» — де тут знахідний? Контекст підказує: якщо це -но/-то конструкція, «рішення» — у знахідному.</p>
 </blockquote>
-<hr />
-<h1 id="-8">Часові форми</h1>
-<h2 id="-9">Три часи безособового пасиву</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-4">
+        <div class="section-header" onclick="toggleSection(4)">
+          <h3>Часові форми</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Три часи безособового пасиву</h2>
 <table>
 <thead>
 <tr>
@@ -334,7 +384,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="-10">Приклади в контексті</h2>
+<h2 id="-1">Приклади в контексті</h2>
 <table>
 <thead>
 <tr>
@@ -357,9 +407,14 @@
 </tr>
 </tbody>
 </table>
-<hr />
-<h1 id="-11">Заперечення</h1>
-<h2 id="-12">Позиція «не»</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-5">
+        <div class="section-header" onclick="toggleSection(5)">
+          <h3>Заперечення</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Позиція «не»</h2>
 <table>
 <thead>
 <tr>
@@ -383,9 +438,14 @@
 </tbody>
 </table>
 <p><strong>Правило:</strong> «Не» ставиться безпосередньо перед -но/-то формою.</p>
-<hr />
-<h1 id="-13">Стилістичне вживання</h1>
-<h2 id="-14">Де переважають -но/-то форми</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-6">
+        <div class="section-header" onclick="toggleSection(6)">
+          <h3>Стилістичне вживання</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Де переважають -но/-то форми</h2>
 <table>
 <thead>
 <tr>
@@ -422,7 +482,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="-15">Типові формули офіційного стилю</h2>
+<h2 id="-1">Типові формули офіційного стилю</h2>
 <table>
 <thead>
 <tr>
@@ -478,9 +538,14 @@
   <p><strong>Чи знали ви?</strong></p>
   <p>На багатьох українських документах ви побачите штамп <strong>«ЗАТВЕРДЖЕНО»</strong> — це класичний приклад -но/-то форми. Цей штамп сам по собі означає: «Цей документ затверджено уповноваженою особою». Ціле речення сконденсоване в одне слово!</p>
 </blockquote>
-<hr />
-<h1 id="-16">Порівняння стилів</h1>
-<h2 id="vs-1">Офіційний vs Розмовний</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-7">
+        <div class="section-header" onclick="toggleSection(7)">
+          <h3>Порівняння стилів</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="vs">Офіційний vs Розмовний</h2>
 <table>
 <thead>
 <tr>
@@ -507,7 +572,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="-17">Коли вибирати яку форму</h2>
+<h2 id="">Коли вибирати яку форму</h2>
 <table>
 <thead>
 <tr>
@@ -549,9 +614,14 @@
   <p>❌ <strong>Міф:</strong> «-но/-то форми застарілі і скоро вийдуть з ужитку.»</p>
   <p>✅ <strong>Факт:</strong> Навпаки, ці форми <strong>активно використовуються</strong> в сучасній українській офіційній мові, журналістиці та законодавстві. Вони — невід'ємна частина формального регістру і нікуди не зникають.</p>
 </blockquote>
-<hr />
-<h1 id="-18">Практика</h1>
-<h2 id="-19">Трансформуйте</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-8">
+        <div class="section-header" onclick="toggleSection(8)">
+          <h3>Практика</h3>
+          <span class="section-type practice">practice</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Трансформуйте</h2>
 <p>Перетворіть дієприкметникову конструкцію на -но/-то форму:</p>
 <ol>
 <li>Книга написана. → Книгу <strong>написано</strong>.</li>
@@ -560,11 +630,11 @@
 <li>Договір підписаний. → Договір <strong>підписано</strong>.</li>
 <li>Звіт підготовлений. → Звіт <strong>підготовлено</strong>.</li>
 </ol>
-<h2 id="-20">Напишіть офіційний текст</h2>
+<h2 id="-1">Напишіть офіційний текст</h2>
 <p><strong>Тема:</strong> Засідання ради</p>
 <p><strong>Приклад протоколу:</strong><br />
 «Засідання ради <strong>відкрито</strong> о 10:00. <strong>Розглянуто</strong> питання бюджету на наступний рік. <strong>Заслухано</strong> доповідь голови фінансової комісії. <strong>Обговорено</strong> пропозиції членів ради. <strong>Прийнято</strong> рішення про збільшення фінансування. <strong>Доручено</strong> секретарю підготувати документи. Засідання <strong>закрито</strong> о 12:30.»</p>
-<h2 id="-21">Виправте помилки</h2>
+<h2 id="-2">Виправте помилки</h2>
 <ol>
 <li><p>❌ Книга написано.<br />
 ✓ Книгу <strong>написано</strong>. <em>(Знахідний відмінок!)</em></p></li>
@@ -575,9 +645,14 @@
 <li><p>❌ Документів підготовлено.<br />
 ✓ Документи <strong>підготовлено</strong>. <em>(Знахідний, не родовий!)</em></p></li>
 </ol>
-<hr />
-<h1 id="-22">Продукція</h1>
-<h2 id="-23">Протокол засідання</h2>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-9">
+        <div class="section-header" onclick="toggleSection(9)">
+          <h3>Продукція</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Протокол засідання</h2>
 <p>Напишіть короткий протокол, використовуючи -но/-то форми:</p>
 <p><strong>Структура:</strong></p>
 <ol>
@@ -589,7 +664,144 @@
 </ol>
 <p><strong>Приклад:</strong><br />
 «Засідання комісії <strong>відкрито</strong> 15 березня 2024 року о 14:00. Присутні: голова комісії та 5 членів. <strong>Розглянуто</strong> питання про проведення конференції. <strong>Заслухано</strong> пропозицію оргкомітету. <strong>Ухвалено</strong> рішення про проведення конференції 20 квітня. <strong>Доручено</strong> секретарю розіслати запрошення. Засідання <strong>закрито</strong> о 15:30.»</p>
-<hr /></div></div>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-10">
+        <div class="section-header" onclick="toggleSection(10)">
+          <h3>Словник</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Слово</th>
+<th>Переклад</th>
+<th>Примітки</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>безособовий</td>
+<td>impersonal</td>
+<td>граматичний термін</td>
+</tr>
+<tr>
+<td>затверджено</td>
+<td>approved</td>
+<td>офіційна формула</td>
+</tr>
+<tr>
+<td>погоджено</td>
+<td>agreed</td>
+<td>офіційна формула</td>
+</tr>
+<tr>
+<td>виконано</td>
+<td>completed</td>
+<td>офіційна формула</td>
+</tr>
+<tr>
+<td>відхилено</td>
+<td>rejected</td>
+<td>офіційна формула</td>
+</tr>
+<tr>
+<td>розглянуто</td>
+<td>considered</td>
+<td>офіційна формула</td>
+</tr>
+<tr>
+<td>ухвалено</td>
+<td>adopted, passed</td>
+<td>для законів</td>
+</tr>
+<tr>
+<td>доручено</td>
+<td>entrusted, assigned</td>
+<td>для завдань</td>
+</tr>
+<tr>
+<td>заслухано</td>
+<td>heard (report)</td>
+<td>для доповідей</td>
+</tr>
+<tr>
+<td>протокол</td>
+<td>minutes, protocol</td>
+<td>документ</td>
+</tr>
+<tr>
+<td>порядок денний</td>
+<td>agenda</td>
+<td>список питань</td>
+</tr>
+<tr>
+<td>засідання</td>
+<td>meeting, session</td>
+<td>збори</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-11">
+        <div class="section-header" onclick="toggleSection(11)">
+          <h3>Підсумок</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Безособовий пасив -но/-то</h2>
+<table>
+<thead>
+<tr>
+<th>Аспект</th>
+<th>Правило</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Форма</strong></td>
+<td>Незмінна (завжди -о)</td>
+</tr>
+<tr>
+<td><strong>Додаток</strong></td>
+<td>Знахідний відмінок</td>
+</tr>
+<tr>
+<td><strong>Діяч</strong></td>
+<td>Орудний відмінок</td>
+</tr>
+<tr>
+<td><strong>Минулий</strong></td>
+<td>було + -но/-то</td>
+</tr>
+<tr>
+<td><strong>Майбутній</strong></td>
+<td>буде + -но/-то</td>
+</tr>
+<tr>
+<td><strong>Заперечення</strong></td>
+<td>не + -но/-то</td>
+</tr>
+</tbody>
+</table>
+<h2 id="-1">Сфери вживання</h2>
+<ul>
+<li>Офіційні документи</li>
+<li>Новини та ЗМІ</li>
+<li>Юридичні тексти</li>
+<li>Протоколи засідань</li>
+<li>Наукові публікації</li>
+</ul>
+<blockquote>
+  <p><strong>Запам'ятайте:</strong></p>
+  <p>✓ -но/-то — <strong>унікальна українська форма</strong><br />
+  ✓ Форма <strong>незмінна</strong> (не узгоджується)<br />
+  ✓ Додаток у <strong>знахідному</strong> відмінку<br />
+  ✓ Це голос <strong>офіційної України</strong><br />
+  ✓ В розмовній мові краще 3-я особа множини</p>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('vocab')">Start →</button></div>
     </section>
     
@@ -622,6 +834,10 @@
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

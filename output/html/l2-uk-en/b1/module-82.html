@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,7 +136,22 @@
         <p style="color:var(--text-muted)">Одного разу vs Щодня</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Quick Review</h4><div class="md-content"><p>From Module 81, remember:</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Lesson Content</li><li class="toc-item" data-target="section-1">Activities</li><li class="toc-item" data-target="section-2">Vocabulary</li><li class="toc-item" data-target="section-3">Summary</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Lesson Content</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="warmup">warm-up</h2>
+<h3 id="quickreview">Quick Review</h3>
+<p>From Module 81, remember:</p>
 <ul>
 <li><strong>Imperfective</strong> = process, duration, repetition</li>
 <li><strong>Perfective</strong> = single completed action, result</li>
@@ -126,7 +159,10 @@
 <p>Today's focus: <strong>How many times did it happen?</strong></p>
 <blockquote>
   <p>The same event can be described with different aspects depending on whether it happened once or repeatedly.</p>
-</blockquote></div></div><div class="canvas-note"><h4>### Single Event = Perfective</h4><div class="md-content"><p>When something happened <strong>once</strong>, use perfective:</p>
+</blockquote>
+<h2 id="presentation">presentation</h2>
+<h3 id="singleeventperfective">Single Event = Perfective</h3>
+<p>When something happened <strong>once</strong>, use perfective:</p>
 <p><strong>Time markers for single events:</strong></p>
 <ul>
 <li>одного разу - once, one time</li>
@@ -143,7 +179,9 @@
 <li>Минулого тижня ми <strong>купили</strong> нову машину. - Last week we bought a new car.</li>
 <li>Раптом він <strong>закричав</strong>. - Suddenly he shouted.</li>
 <li>Нарешті я <strong>зрозумів</strong>! - Finally I understood!</li>
-</ul></div></div><div class="canvas-note"><h4>Repeated Action = Imperfective</h4><div class="md-content"><p>When something happened <strong>multiple times</strong>, use imperfective:</p>
+</ul>
+<h3 id="repeatedactionimperfective">Repeated Action = Imperfective</h3>
+<p>When something happened <strong>multiple times</strong>, use imperfective:</p>
 <p><strong>Time markers for repetition:</strong></p>
 <ul>
 <li>завжди - always</li>
@@ -164,7 +202,9 @@
 <li>Ми щодня <strong>ходили</strong> на пляж. - We went to the beach every day.</li>
 <li>Він ніколи не <strong>запізнювався</strong>. - He never was late.</li>
 <li>Зазвичай я <strong>снідав</strong> о восьмій. - I usually had breakfast at eight.</li>
-</ul></div></div><div class="canvas-note"><h4>Compare: Same Verb, Different Meaning</h4><div class="md-content"><table>
+</ul>
+<h3 id="comparesameverbdifferentmeaning">Compare: Same Verb, Different Meaning</h3>
+<table>
 <thead>
 <tr>
 <th>Imperfective (repeated)</th>
@@ -201,13 +241,17 @@
 <blockquote>
   <p><strong>Key Insight</strong></p>
   <p>Even "багато разів" (many times) uses imperfective because it's <strong>repeated</strong> action. Perfective would mean you finished the book in one go.</p>
-</blockquote></div></div><div class="canvas-note"><h4>The "Used to" Meaning</h4><div class="md-content"><p>Imperfective past often translates as "used to":</p>
+</blockquote>
+<h3 id="theusedtomeaning">The "Used to" Meaning</h3>
+<p>Imperfective past often translates as "used to":</p>
 <ul>
 <li>Раніше я <strong>курив</strong>. - I used to smoke.</li>
 <li>У дитинстві ми <strong>жили</strong> в селі. - In childhood we used to live in a village.</li>
 <li>Вона <strong>працювала</strong> вчителькою. - She used to work as a teacher.</li>
 <li>Ми <strong>бачилися</strong> щодня. - We used to see each other every day.</li>
-</ul></div></div><div class="canvas-note"><h4>Narrative Sequences: A Special Case</h4><div class="md-content"><p>In stories, <strong>sequences of single events</strong> use perfective:</p>
+</ul>
+<h3 id="narrativesequencesaspecialcase">Narrative Sequences: A Special Case</h3>
+<p>In stories, <strong>sequences of single events</strong> use perfective:</p>
 <ul>
 <li>Він <strong>прокинувся</strong>, <strong>встав</strong>, <strong>умився</strong>, <strong>поснідав</strong> і <strong>пішов</strong> на роботу.</li>
 <li>He woke up, got up, washed, had breakfast, and went to work.</li>
@@ -218,7 +262,9 @@
 <li>Був теплий день. Сонце <strong>світило</strong>, птахи <strong>співали</strong>. Раптом він <strong>почув</strong> дивний звук.</li>
 <li>It was a warm day. The sun was shining, birds were singing. Suddenly he heard a strange sound.</li>
 </ul>
-<p>Background (continuous) = imperfective. Event (sudden) = perfective.</p></div></div><div class="canvas-note"><h4>Common Aspect Pairs: Single vs Repeated</h4><div class="md-content"><table>
+<p>Background (continuous) = imperfective. Event (sudden) = perfective.</p>
+<h3 id="commonaspectpairssinglevsrepeated">Common Aspect Pairs: Single vs Repeated</h3>
+<table>
 <thead>
 <tr>
 <th>Imperfective</th>
@@ -259,26 +305,35 @@
 <td>Ми зустрічалися щотижня.</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>### Choose the Correct Aspect</h4><div class="md-content"><ol>
+</table>
+<h2 id="practice">practice</h2>
+<h3 id="choosethecorrectaspect">Choose the Correct Aspect</h3>
+<ol>
 <li>Він ___ (приходив/прийшов) вчора о п'ятій. → <strong>прийшов</strong> (single event)</li>
 <li>Вона завжди ___ (готувала/приготувала) смачно. → <strong>готувала</strong> (always = repeated)</li>
 <li>Одного разу ми ___ (бачили/побачили) ведмедя в лісі. → <strong>побачили</strong> (once)</li>
 <li>Раніше він часто ___ (хворів/захворів). → <strong>хворів</strong> (often = repeated)</li>
 <li>Минулого року вона ___ (закінчувала/закінчила) університет. → <strong>закінчила</strong> (single)</li>
 <li>Кожного ранку він ___ (бігав/побігав). → <strong>бігав</strong> (every morning = repeated)</li>
-</ol></div></div><div class="canvas-note"><h4>Transform: Single to Repeated</h4><div class="md-content"><p>Change from perfective (single) to imperfective (repeated):</p>
+</ol>
+<h3 id="transformsingletorepeated">Transform: Single to Repeated</h3>
+<p>Change from perfective (single) to imperfective (repeated):</p>
 <ol>
 <li>Він подзвонив мені вчора. → Він <strong>телефонував</strong> мені щодня.</li>
 <li>Вона приготувала вечерю. → Вона завжди <strong>готувала</strong> вечерю.</li>
 <li>Я відповів на запитання. → Я <strong>відповідав</strong> на всі запитання.</li>
 <li>Ми купили хліб. → Ми <strong>купували</strong> хліб щодня.</li>
-</ol></div></div><div class="canvas-note"><h4>Transform: Repeated to Single</h4><div class="md-content"><p>Change from imperfective (repeated) to perfective (single):</p>
+</ol>
+<h3 id="transformrepeatedtosingle">Transform: Repeated to Single</h3>
+<p>Change from imperfective (repeated) to perfective (single):</p>
 <ol>
 <li>Він завжди приходив рано. → Вчора він <strong>прийшов</strong> рано.</li>
 <li>Вона часто писала листи. → Вона <strong>написала</strong> один лист.</li>
 <li>Ми зустрічалися щотижня. → Ми <strong>зустрілися</strong> в понеділок.</li>
 <li>Я читав цю книгу. → Я <strong>прочитав</strong> цю книгу.</li>
-</ol></div></div><div class="canvas-note"><h4>Story Analysis</h4><div class="md-content"><p>Read the text and identify why each aspect was used:</p>
+</ol>
+<h3 id="storyanalysis">Story Analysis</h3>
+<p>Read the text and identify why each aspect was used:</p>
 <blockquote>
   <p>Коли я був студентом, я <strong>жив</strong> у гуртожитку. Щодня я <strong>ходив</strong> на лекції. Я часто <strong>займався</strong> в бібліотеці. Одного разу я <strong>познайомився</strong> з дівчиною. Ми <strong>почали</strong> зустрічатися. Через рік ми <strong>одружилися</strong>.</p>
 </blockquote>
@@ -289,18 +344,300 @@
 <li><strong>познайомився</strong> - perfective (one time event)</li>
 <li><strong>почали</strong> - perfective (beginning = single moment)</li>
 <li><strong>одружилися</strong> - perfective (single completed action)</li>
-</ul></div></div><div class="canvas-note"><h4>### Tell Your Story</h4><div class="md-content"><p>Describe your typical day <strong>last year</strong> (use imperfective for habits):</p>
+</ul>
+<h2 id="production">production</h2>
+<h3 id="tellyourstory">Tell Your Story</h3>
+<p>Describe your typical day <strong>last year</strong> (use imperfective for habits):</p>
 <p><strong>Example:</strong><br />
 Минулого року я зазвичай вставав о сьомій. Щоранку я снідав і йшов на роботу. Після роботи я часто ходив у спортзал.</p>
 <p>Now describe <strong>one special day</strong> (use perfective for events):</p>
 <p><strong>Example:</strong><br />
-Одного разу я запізнився на роботу. Я забув документи. Начальник подзвонив мені і запитав, де я.</p></div></div><div class="canvas-note"><h4>Interview Your Partner</h4><div class="md-content"><p>Ask questions using different aspects:</p>
+Одного разу я запізнився на роботу. Я забув документи. Начальник подзвонив мені і запитав, де я.</p>
+<h3 id="interviewyourpartner">Interview Your Partner</h3>
+<p>Ask questions using different aspects:</p>
 <ul>
 <li>Що ти <strong>робив</strong> на канікулах? (general, process)</li>
 <li>Що ти <strong>зробив</strong> учора? (result focus)</li>
 <li>Куди ти часто <strong>ходив</strong> у дитинстві? (repeated)</li>
 <li>Куди ти <strong>пішов</strong> після школи? (single event)</li>
-</ul></div></div></div>
+</ul>
+<hr />
+<h3 id="roleplaycatchingupwithanoldfriend">🎭 ROLE-PLAY: Catching Up with an Old Friend</h3>
+<p><strong>Situation:</strong> You haven't seen your friend in a year. You meet at a café.</p>
+<p><strong>Partner A (You):</strong> Ask about:</p>
+<ul>
+<li>What they did last summer (single events → perfective)</li>
+<li>What they used to do as a child (repeated → imperfective)</li>
+<li>One special moment (single event → perfective)</li>
+</ul>
+<p><strong>Partner B (Friend):</strong> Answer using correct aspects:</p>
+<p><strong>Example dialogue:</strong></p>
+<pre><code>A: Привіт! Як давно не бачилися! Де ти був минулого літа?
+B: Я їздив до Італії. Там я відвідав багато музеїв.
+A: Класно! А що ти робив у дитинстві влітку?
+B: Я завжди їздив до бабусі в село. Ми щодня купалися в річці.
+A: Що найбільше запам'яталося?
+B: Одного разу я впіймав величезну рибу! Бабуся її приготувала.
+</code></pre>
+<p><strong>Required structures:</strong></p>
+<ul>
+<li>✅ Imperfective for "used to / always / every day" (ходив, робив, грався)</li>
+<li>✅ Perfective for "once / one time" (пішов, зробив, познайомився)</li>
+</ul>
+<p><strong>Switch roles and repeat!</strong></p>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Activities</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="quizsingleorrepeated">quiz: Single or Repeated?</h2>
+<blockquote>
+  <p>Choose the correct aspect based on the time expression.</p>
+</blockquote>
+<ol>
+<li>Вона ___ мені щодня.</li>
+</ol>
+<ul>
+<li>[x] телефонувала</li>
+<li>[ ] зателефонувала</li>
+</ul>
+<blockquote>
+  <p>Щодня = repeated action = imperfective</p>
+</blockquote>
+<ol start="2">
+<li>Одного разу він ___ дуже смішний жарт.</li>
+</ol>
+<ul>
+<li>[ ] розповідав</li>
+<li>[x] розповів</li>
+</ul>
+<blockquote>
+  <p>Одного разу = single event = perfective</p>
+</blockquote>
+<ol start="3">
+<li>Ми завжди ___ разом.</li>
+</ol>
+<ul>
+<li>[x] обідали</li>
+<li>[ ] пообідали</li>
+</ul>
+<blockquote>
+  <p>Завжди = repeated = imperfective</p>
+</blockquote>
+<ol start="4">
+<li>Нарешті я ___ цікавий фільм до кінця.</li>
+</ol>
+<ul>
+<li>[ ] дивився</li>
+<li>[x] подивився</li>
+</ul>
+<blockquote>
+  <p>"Нарешті" + "до кінця" = clear result = perfective</p>
+</blockquote>
+<ol start="5">
+<li>Раніше він часто ___ у цьому кафе.</li>
+</ol>
+<ul>
+<li>[x] снідав</li>
+<li>[ ] поснідав</li>
+</ul>
+<blockquote>
+  <p>Часто = repeated = imperfective</p>
+</blockquote>
+<ol start="6">
+<li>Раптом вона ___ і вийшла.</li>
+</ol>
+<ul>
+<li>[ ] вставала</li>
+<li>[x] встала</li>
+</ul>
+<blockquote>
+  <p>Раптом = sudden single action = perfective</p>
+</blockquote>
+<h2 id="groupsorttimeexpressions">group-sort: Time Expressions</h2>
+<h3 id="signalsingleeventperfective">Signal Single Event (Perfective)</h3>
+<ul>
+<li>одного разу</li>
+<li>раптом</li>
+<li>вчора</li>
+<li>нарешті</li>
+<li>минулого тижня</li>
+</ul>
+<h3 id="signalrepeatedactionimperfective">Signal Repeated Action (Imperfective)</h3>
+<ul>
+<li>завжди</li>
+<li>часто</li>
+<li>щодня</li>
+<li>зазвичай</li>
+<li>кожного разу</li>
+<li>іноді</li>
+</ul>
+<h2 id="fillincompletethestory">fill-in: Complete the Story</h2>
+<p>Fill in with correct aspect:</p>
+<blockquote>
+  <p>Коли я ___ (жив/прожив) у Києві, я ___ (ходив/пішов) на роботу пішки щодня. Зазвичай я ___ (купував/купив) каву по дорозі. Одного ранку я ___ (зустрічав/зустрів) старого друга. Ми ___ (говорили/поговорили) годину і я ___ (запізнювався/запізнився) на роботу.</p>
+</blockquote>
+<p><strong>Answers:</strong> жив (ongoing), ходив (repeated), купував (repeated), зустрів (single), поговорили (completed), запізнився (single result)</p>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Vocabulary</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Word</th>
+<th>IPA</th>
+<th>English</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>одного разу</td>
+<td>/odnoˈɦo ˈrɑzu/</td>
+<td>once, one time</td>
+<td>signals perfective</td>
+</tr>
+<tr>
+<td>раптом</td>
+<td>/ˈrɑptom/</td>
+<td>suddenly</td>
+<td>signals perfective</td>
+</tr>
+<tr>
+<td>нарешті</td>
+<td>/nɑˈrɛʃtʲi/</td>
+<td>finally</td>
+<td>signals perfective</td>
+</tr>
+<tr>
+<td>минулого тижня</td>
+<td>/mɪnuˈloɦo ˈtɪʒnʲɑ/</td>
+<td>last week</td>
+<td>often with perfective</td>
+</tr>
+<tr>
+<td>завжди</td>
+<td>/ˈzɑvʒdɪ/</td>
+<td>always</td>
+<td>signals imperfective</td>
+</tr>
+<tr>
+<td>ніколи</td>
+<td>/nʲiˈkolɪ/</td>
+<td>never</td>
+<td>signals imperfective</td>
+</tr>
+<tr>
+<td>часто</td>
+<td>/ˈt͡ʃɑsto/</td>
+<td>often</td>
+<td>signals imperfective</td>
+</tr>
+<tr>
+<td>рідко</td>
+<td>/ˈrʲidko/</td>
+<td>rarely</td>
+<td>signals imperfective</td>
+</tr>
+<tr>
+<td>щодня</td>
+<td>/ʃt͡ʃoˈdnʲɑ/</td>
+<td>every day</td>
+<td>signals imperfective</td>
+</tr>
+<tr>
+<td>щотижня</td>
+<td>/ʃt͡ʃoˈtɪʒnʲɑ/</td>
+<td>every week</td>
+<td>signals imperfective</td>
+</tr>
+<tr>
+<td>зазвичай</td>
+<td>/zɑˈzvɪt͡ʃɑj/</td>
+<td>usually</td>
+<td>signals imperfective</td>
+</tr>
+<tr>
+<td>іноді</td>
+<td>/iˈnodʲi/</td>
+<td>sometimes</td>
+<td>signals imperfective</td>
+</tr>
+<tr>
+<td>кожного разу</td>
+<td>/ˈkoʒnoɦo ˈrɑzu/</td>
+<td>each time, every time</td>
+<td>signals imperfective</td>
+</tr>
+<tr>
+<td>раніше</td>
+<td>/rɑˈnʲiʃɛ/</td>
+<td>earlier, formerly</td>
+<td>often with imperfective</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Summary</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="thecorerule">The Core Rule</h2>
+<table>
+<thead>
+<tr>
+<th>How many times?</th>
+<th>Aspect</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Once</td>
+<td>Perfective</td>
+<td>Він <strong>прийшов</strong> вчора.</td>
+</tr>
+<tr>
+<td>Multiple times</td>
+<td>Imperfective</td>
+<td>Він <strong>приходив</strong> щодня.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="timeexpressionguide">Time Expression Guide</h2>
+<p><strong>Use PERFECTIVE with:</strong></p>
+<ul>
+<li>одного разу, раптом, нарешті, вчора, минулого тижня</li>
+</ul>
+<p><strong>Use IMPERFECTIVE with:</strong></p>
+<ul>
+<li>завжди, ніколи, часто, рідко, щодня, щотижня, зазвичай, іноді, раніше</li>
+</ul>
+<h2 id="specialcases">Special Cases</h2>
+<ol>
+<li><strong>"Used to"</strong> = imperfective (Раніше я курив.)</li>
+<li><strong>Story sequences</strong> = perfective (Він прийшов, сів, почав читати.)</li>
+<li><strong>Background description</strong> = imperfective (Сонце світило, птахи співали.)</li>
+</ol>
+<blockquote>
+  <p><strong>Key Takeaways</strong></p>
+  <ul>
+  <li>Single event → perfective</li>
+  <li>Repeated/habitual → imperfective</li>
+  <li>Time expressions are your guide</li>
+  <li>In narratives: sequence = perfective, background = imperfective</li>
+  </ul>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('quiz')">Start →</button></div>
     </section>
     
@@ -344,6 +681,10 @@
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

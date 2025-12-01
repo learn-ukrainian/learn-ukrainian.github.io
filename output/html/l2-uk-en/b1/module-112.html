@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,13 +136,31 @@
         <p style="color:var(--text-muted)">Government, Elections, and Civic Life</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Суспільство і політика | Society and Politics</h4><div class="md-content"><p>Ці теми важливі для B1 рівня:</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Зміст уроку | Lesson Content</li><li class="toc-item" data-target="section-1">Activities</li><li class="toc-item" data-target="section-2">Vocabulary</li><li class="toc-item" data-target="section-3">Summary</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Зміст уроку | Lesson Content</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="warmup">warm-up | Розминка</h2>
+<h3 id="societyandpolitics">Суспільство і політика | Society and Politics</h3>
+<p>Ці теми важливі для B1 рівня:</p>
 <p>These topics are important for B1 level:</p>
 <ul>
 <li>Як працює <strong>уряд</strong>? | How does the government work?</li>
 <li>Що таке <strong>демократія</strong>? | What is democracy?</li>
 <li>Як проходять <strong>вибори</strong>? | How do elections work?</li>
-</ul></div></div><div class="canvas-note"><h4>### Держава та уряд | State and Government</h4><div class="md-content"><table>
+</ul>
+<h2 id="presentation">presentation | Презентація</h2>
+<h3 id="stateandgovernment">Держава та уряд | State and Government</h3>
+<table>
 <thead>
 <tr>
 <th>Ukrainian</th>
@@ -207,7 +243,9 @@
 <li>Хто зараз <strong>президент</strong> України? - Who is currently the president of Ukraine?</li>
 <li><strong>Уряд</strong> прийняв нові закони. - The government adopted new laws.</li>
 <li>Він працює в <strong>міністерстві</strong> закордонних справ. - He works in the Ministry of Foreign Affairs.</li>
-</ul></div></div><div class="canvas-note"><h4>Демократія і вибори | Democracy and Elections</h4><div class="md-content"><table>
+</ul>
+<h3 id="democracyandelections">Демократія і вибори | Democracy and Elections</h3>
+<table>
 <thead>
 <tr>
 <th>Ukrainian</th>
@@ -284,7 +322,9 @@
 <li><strong>Вибори</strong> відбудуться восени. - Elections will take place in autumn.</li>
 <li>Ви будете <strong>голосувати</strong>? - Will you vote?</li>
 <li>За якого <strong>кандидата</strong> ви голосували? - Which candidate did you vote for?</li>
-</ul></div></div><div class="canvas-note"><h4>Закон і право | Law and Rights</h4><div class="md-content"><table>
+</ul>
+<h3 id="lawandrights">Закон і право | Law and Rights</h3>
+<table>
 <thead>
 <tr>
 <th>Ukrainian</th>
@@ -355,7 +395,9 @@
 <li><strong>Закон</strong> забороняє це. - The law prohibits this.</li>
 <li>Кожна людина має <strong>права</strong>. - Every person has rights.</li>
 <li>Його засудили за <strong>злочин</strong>. - He was convicted for a crime.</li>
-</ul></div></div><div class="canvas-note"><h4>Громадянство | Citizenship</h4><div class="md-content"><table>
+</ul>
+<h3 id="citizenship">Громадянство | Citizenship</h3>
+<table>
 <thead>
 <tr>
 <th>Ukrainian</th>
@@ -414,7 +456,9 @@
 <li>Він <strong>громадянин</strong> України. - He is a citizen of Ukraine.</li>
 <li>Як отримати <strong>громадянство</strong>? - How to obtain citizenship?</li>
 <li><strong>Суспільство</strong> змінюється. - Society is changing.</li>
-</ul></div></div><div class="canvas-note"><h4>Соціальні питання | Social Issues</h4><div class="md-content"><table>
+</ul>
+<h3 id="socialissues">Соціальні питання | Social Issues</h3>
+<table>
 <thead>
 <tr>
 <th>Ukrainian</th>
@@ -479,7 +523,9 @@
 <li><strong>Безробіття</strong> — серйозна <strong>проблема</strong>. - Unemployment is a serious problem.</li>
 <li>Потрібні <strong>реформи</strong>. - Reforms are needed.</li>
 <li><strong>Свобода слова</strong> дуже важлива. - Freedom of speech is very important.</li>
-</ul></div></div><div class="canvas-note"><h4>Політичні дії | Political Actions</h4><div class="md-content"><table>
+</ul>
+<h3 id="politicalactions">Політичні дії | Political Actions</h3>
+<table>
 <thead>
 <tr>
 <th>Ukrainian</th>
@@ -535,14 +581,19 @@
 <li>Вони <strong>проголосували</strong> за нового президента. - They voted for a new president.</li>
 <li>Народ <strong>обрав</strong> нового лідера. - The people elected a new leader.</li>
 <li>Вони <strong>протестують</strong> проти корупції. - They are protesting against corruption.</li>
-</ul></div></div><div class="canvas-note"><h4>### Complete with Correct Word</h4><div class="md-content"><ol>
+</ul>
+<h2 id="practice">practice | Практика</h2>
+<h3 id="completewithcorrectword">Complete with Correct Word</h3>
+<ol>
 <li>В Україні ___ (elections) відбуваються кожні п'ять років. → <strong>вибори</strong></li>
 <li>Він ___ (citizen) України. → <strong>громадянин</strong></li>
 <li>___ (The government) прийняв новий закон. → <strong>Уряд</strong></li>
 <li>Свобода слова — це важливе ___ (right). → <strong>право</strong></li>
 <li>___ (Unemployment) — серйозна проблема. → <strong>Безробіття</strong></li>
 <li>Вона працює ___ (deputy) у парламенті. → <strong>депутатом</strong></li>
-</ol></div></div><div class="canvas-note"><h4>Match Terms</h4><div class="md-content"><table>
+</ol>
+<h3 id="matchterms">Match Terms</h3>
+<table>
 <thead>
 <tr>
 <th>Term</th>
@@ -571,13 +622,17 @@
 <td>особа, яка має права та обов'язки в державі</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Discussion Questions</h4><div class="md-content"><ol>
+</table>
+<h3 id="discussionquestions">Discussion Questions</h3>
+<ol>
 <li>Яка <strong>політична система</strong> у вашій країні?</li>
 <li>Чи важлива <strong>демократія</strong>? Чому?</li>
 <li>Які <strong>соціальні проблеми</strong> є у вашому суспільстві?</li>
 <li>Чи ви <strong>голосуєте</strong> на виборах?</li>
 <li>Яку роль грають <strong>реформи</strong> у розвитку країни?</li>
-</ol></div></div><div class="canvas-note"><h4>Translate to Ukrainian</h4><div class="md-content"><ol>
+</ol>
+<h3 id="translatetoukrainian">Translate to Ukrainian</h3>
+<ol>
 <li><p>Democracy is important for every country.<br />
 → <strong>Демократія важлива для кожної країни.</strong></p></li>
 <li><p>Citizens have the right to vote.<br />
@@ -588,26 +643,265 @@
 → <strong>Вони борються проти корупції.</strong></p></li>
 <li><p>Freedom of speech is a human right.<br />
 → <strong>Свобода слова — це право людини.</strong></p></li>
-</ol></div></div><div class="canvas-note"><h4>### Describe Political System</h4><div class="md-content"><p>Describe the political system of your country:</p>
+</ol>
+<h2 id="production">production | Продукція</h2>
+<h3 id="describepoliticalsystem">Describe Political System</h3>
+<p>Describe the political system of your country:</p>
 <ul>
 <li>Хто є главою <strong>держави</strong>?</li>
 <li>Як працює <strong>уряд</strong>?</li>
 <li>Як проходять <strong>вибори</strong>?</li>
 </ul>
 <p><strong>Example:</strong><br />
-У моїй країні <strong>президент</strong> є главою держави. <strong>Уряд</strong> складається з міністрів. <strong>Вибори</strong> відбуваються кожні чотири роки. <strong>Громадяни</strong>, яким виповнилося 18 років, мають <strong>право голосувати</strong>.</p></div></div><div class="canvas-note"><h4>Discuss Social Issues</h4><div class="md-content"><p>Discuss using vocabulary from this module:</p>
+У моїй країні <strong>президент</strong> є главою держави. <strong>Уряд</strong> складається з міністрів. <strong>Вибори</strong> відбуваються кожні чотири роки. <strong>Громадяни</strong>, яким виповнилося 18 років, мають <strong>право голосувати</strong>.</p>
+<h3 id="discusssocialissues">Discuss Social Issues</h3>
+<p>Discuss using vocabulary from this module:</p>
 <ul>
 <li>Які <strong>проблеми</strong> є у вашому суспільстві?</li>
 <li>Які <strong>реформи</strong> потрібні?</li>
 <li>Як можна боротися з <strong>нерівністю</strong>?</li>
-</ul></div></div></div>
+</ul>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Activities</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="quizpoliticsvocabulary">quiz: Politics Vocabulary</h2>
+<blockquote>
+  <p>Choose the correct word.</p>
+</blockquote>
+<ol>
+<li>Він працює ___ у парламенті.</li>
+</ol>
+<ul>
+<li>[x] депутатом</li>
+<li>[ ] депутат</li>
+</ul>
+<ol>
+<li>___ відбудуться восени.</li>
+</ol>
+<ul>
+<li>[x] Вибори</li>
+<li>[ ] Голосування</li>
+</ul>
+<ol>
+<li>___ прийняв новий закон.</li>
+</ol>
+<ul>
+<li>[x] Уряд</li>
+<li>[ ] Влади</li>
+</ul>
+<ol>
+<li>Вона ___ України.</li>
+</ol>
+<ul>
+<li>[x] громадянка</li>
+<li>[ ] громадянство</li>
+</ul>
+<ol>
+<li>Свобода слова — це ___ .</li>
+</ol>
+<ul>
+<li>[x] право</li>
+<li>[ ] закон</li>
+</ul>
+<ol>
+<li>Вони ___ проти корупції.</li>
+</ol>
+<ul>
+<li>[x] борються</li>
+<li>[ ] боротися</li>
+</ul>
+<h2 id="matchupgovernmentstructure">match-up: Government Structure</h2>
+<table>
+<thead>
+<tr>
+<th>Position</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>президент</td>
+<td>глава держави</td>
+</tr>
+<tr>
+<td>прем'єр-міністр</td>
+<td>глава уряду</td>
+</tr>
+<tr>
+<td>депутат</td>
+<td>член парламенту</td>
+</tr>
+<tr>
+<td>мер</td>
+<td>глава міста</td>
+</tr>
+<tr>
+<td>міністр</td>
+<td>керівник міністерства</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Vocabulary</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Word</th>
+<th>IPA</th>
+<th>English</th>
+<th>Gender</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>держава</td>
+<td>/dɛrˈʒɑvɑ/</td>
+<td>state</td>
+<td>f</td>
+</tr>
+<tr>
+<td>уряд</td>
+<td>/uˈrʲɑd/</td>
+<td>government</td>
+<td>m</td>
+</tr>
+<tr>
+<td>політика</td>
+<td>/poˈlʲitɪkɑ/</td>
+<td>politics</td>
+<td>f</td>
+</tr>
+<tr>
+<td>демократія</td>
+<td>/dɛmokrɑˈtʲijɑ/</td>
+<td>democracy</td>
+<td>f</td>
+</tr>
+<tr>
+<td>вибори</td>
+<td>/ˈvɪborɪ/</td>
+<td>elections</td>
+<td>pl</td>
+</tr>
+<tr>
+<td>голосувати</td>
+<td>/ɦolosuˈvɑtɪ/</td>
+<td>to vote</td>
+<td>impf</td>
+</tr>
+<tr>
+<td>партія</td>
+<td>/ˈpɑrtʲijɑ/</td>
+<td>party</td>
+<td>f</td>
+</tr>
+<tr>
+<td>закон</td>
+<td>/zɑˈkon/</td>
+<td>law</td>
+<td>m</td>
+</tr>
+<tr>
+<td>право</td>
+<td>/ˈprɑvo/</td>
+<td>right</td>
+<td>n</td>
+</tr>
+<tr>
+<td>громадянин</td>
+<td>/ɦromɑdʲɑˈnɪn/</td>
+<td>citizen</td>
+<td>m</td>
+</tr>
+<tr>
+<td>суспільство</td>
+<td>/susˈpʲilʲstvo/</td>
+<td>society</td>
+<td>n</td>
+</tr>
+<tr>
+<td>свобода</td>
+<td>/svoˈbodɑ/</td>
+<td>freedom</td>
+<td>f</td>
+</tr>
+<tr>
+<td>рівність</td>
+<td>/rʲivˈnʲistʲ/</td>
+<td>equality</td>
+<td>f</td>
+</tr>
+<tr>
+<td>реформа</td>
+<td>/rɛˈformɑ/</td>
+<td>reform</td>
+<td>f</td>
+</tr>
+<tr>
+<td>корупція</td>
+<td>/koˈrupt͡sʲijɑ/</td>
+<td>corruption</td>
+<td>f</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Summary</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="keypoliticalvocabulary">Key Political Vocabulary</h2>
+<h3 id="government">Government</h3>
+<p>держава, уряд, влада, парламент, президент, міністр</p>
+<h3 id="elections">Elections</h3>
+<p>вибори, голосування, кандидат, партія, депутат, виборець</p>
+<h3 id="law">Law</h3>
+<p>закон, право, конституція, суд, правосуддя</p>
+<h3 id="citizenship">Citizenship</h3>
+<p>громадянин, громадянство, суспільство, народ</p>
+<h3 id="socialissues">Social Issues</h3>
+<p>безробіття, бідність, нерівність, корупція, реформа</p>
+<h3 id="values">Values</h3>
+<p>демократія, свобода, рівність, права людини</p>
+<h2 id="usefulexpressions">Useful Expressions</h2>
+<ul>
+<li>Прийти до влади - To come to power</li>
+<li>Прийняти закон - To adopt a law</li>
+<li>Права людини - Human rights</li>
+<li>Свобода слова - Freedom of speech</li>
+<li>Боротися з корупцією - To fight corruption</li>
+<li>Провести реформи - To carry out reforms</li>
+</ul>
+<blockquote>
+  <p><strong>Key Takeaways</strong></p>
+  <ul>
+  <li>уряд (government) vs влада (power/authorities)</li>
+  <li>громадянин (m) / громадянка (f) = citizen</li>
+  <li>право = right (also: law as a field)</li>
+  <li>закон = law (specific law)</li>
+  <li>вибори is always plural</li>
+  </ul>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('match')">Start →</button></div>
     </section>
     <section id="match" class="section"><div class="card"><h3>Government Structure</h3>
       <div class="score-display"><span class="score"><span id="match-score">0</span>/5</span></div>
       <div class="match-container" id="match-container"><svg class="match-lines" id="match-lines"></svg>
         <div class="match-column" id="match-left"><div class="match-item" data-pair="0">президент</div><div class="match-item" data-pair="1">прем'єр-міністр</div><div class="match-item" data-pair="2">депутат</div><div class="match-item" data-pair="3">мер</div><div class="match-item" data-pair="4">міністр</div></div>
-        <div class="match-column" id="match-right"><div class="match-item" data-pair="4">керівник міністерства</div><div class="match-item" data-pair="1">глава уряду</div><div class="match-item" data-pair="0">глава держави</div><div class="match-item" data-pair="3">глава міста</div><div class="match-item" data-pair="2">член парламенту</div></div>
+        <div class="match-column" id="match-right"><div class="match-item" data-pair="3">глава міста</div><div class="match-item" data-pair="1">глава уряду</div><div class="match-item" data-pair="0">глава держави</div><div class="match-item" data-pair="4">керівник міністерства</div><div class="match-item" data-pair="2">член парламенту</div></div>
       </div>
       <div class="completion-message" id="match-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetMatch()">Reset</button><button class="btn btn-primary" onclick="showSection('quiz')">Next →</button></div>
@@ -646,6 +940,10 @@
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

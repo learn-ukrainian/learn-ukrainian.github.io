@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,7 +136,37 @@
         <p style="color:var(--text-muted)">Політика та державне управління</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Політична новина</h4><div class="md-content"><p>Прочитайте заголовок із реального українського медіа:</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Вступ</li><li class="toc-item" data-target="section-1">Зміст уроку</li><li class="toc-item" data-target="section-2">Вправи</li><li class="toc-item" data-target="section-3">Словник</li><li class="toc-item" data-target="section-4">Підсумок</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Вступ</h3>
+          <span class="section-type intro">intro</span>
+        </div>
+        <div class="section-body md-content"><p>Якщо хтось скаже вам, що демократія прийшла в Україну тільки після 1991 року — не вірте. Насправді українські демократичні традиції сягають часів, коли більшість європейських країн навіть не мріяла про вибори.</p>
+<p>XVI століття. Запорозька Січ. Десятки тисяч козаків збираються на <strong>Січову Раду</strong> — загальні збори, де кожен козак має право голосу. Незалежно від походження, багатства чи віку — один козак, один голос. Вони <strong>обирають</strong> гетьмана, <strong>ухвалюють</strong> рішення про війну та мир, <strong>голосують</strong> за закони. І якщо гетьман не виправдав довіри — його можуть <strong>усунути</strong> з посади на наступній раді.</p>
+<p>Подумайте: у той самий час англійські королі вірили в божественне право на владу, французькі монархи казали «держава — це я», а московські царі вважали себе абсолютними правителями. А козаки проводили демократичні вибори. Із передвиборчими кампаніями. Із дебатами. Із підрахунком голосів.</p>
+<p>Гетьман Богдан Хмельницький був <strong>обраний</strong> Військовою Радою у Січі. Іван Мазепа пройшов через складну <strong>передвиборчу кампанію</strong>, де перемагав конкурентів не силою, а переконанням. Пилип Орлик — автор першої в Європі демократичної конституції (1710 рік!) — написав документ, який обмежував владу гетьмана і гарантував права козаків. За 79 років до Французької революції!</p>
+<p>Ця демократична традиція не зникла — її знищували. Російська імперія систематично ліквідувала козацьке самоврядування. Радянський Союз перетворив вибори на фарс із «99% підтримки». Але навіть після 70 років тоталітаризму українці не забули, що таке справжня демократія.</p>
+<p>Помаранчева революція 2004 року. Мільйони людей вийшли на Майдан, коли <strong>влада</strong> спробувала <strong>сфальсифікувати</strong> вибори. Не через економічні вимоги — через право обирати. Революція Гідності 2013-2014. Знову мільйони — цього разу за право вибирати європейське майбутнє. Українці довели, що готові платити найвищу ціну за демократію.</p>
+<p>Сьогодні Україна — парламентсько-президентська республіка. <strong>Верховна Рада</strong> ухвалює закони. <strong>Президент</strong> представляє державу. <strong>Кабінет Міністрів</strong> керує повсякденними справами. Три гілки влади — законодавча, виконавча, судова — мають стримувати одна одну. Ідеальна система? Ні. Українська демократія молода і недосконала. Але вона жива. І за неї борються.</p>
+<p>У цьому модулі ви опануєте лексику, яка дозволить читати політичні новини, розуміти дебати в парламенті та обговорювати українську політику на рівні освіченого громадянина.</p>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Зміст уроку</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Розминка</h2>
+<h3 id="-1">Політична новина</h3>
+<p>Прочитайте заголовок із реального українського медіа:</p>
 <blockquote>
   <p>«Верховна Рада ухвалила законопроєкт про мобілізацію 283 голосами після 4000 поправок та місяців дебатів. Президент підписав закон наступного дня.»</p>
 </blockquote>
@@ -131,7 +179,903 @@
 <blockquote>
   <p><strong>Чи знали ви?</strong></p>
   <p>Верховна Рада має 450 депутатів. Для ухвалення звичайного закону потрібна проста більшість — 226 голосів. Для зміни Конституції — 300 голосів (конституційна більшість). 283 голоси за закон про мобілізацію означає, що його підтримали і провладні, і частина опозиційних депутатів.</p>
-</blockquote></div></div></div>
+</blockquote>
+<hr />
+<h2 id="-2">Презентація</h2>
+<h3 id="-3">Три гілки влади</h3>
+<p>Україна — республіка, де влада розділена на три незалежні гілки. Ця ідея — не українська, але українці знають її ціну краще за багатьох.</p>
+<table>
+<thead>
+<tr>
+<th>Гілка</th>
+<th>Орган</th>
+<th>Функція</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Законодавча</strong></td>
+<td>Верховна Рада</td>
+<td>Приймає закони</td>
+</tr>
+<tr>
+<td><strong>Виконавча</strong></td>
+<td>Президент + Кабінет Міністрів</td>
+<td>Виконує закони</td>
+</tr>
+<tr>
+<td><strong>Судова</strong></td>
+<td>Суди</td>
+<td>Тлумачить закони</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p><strong>Міф vs Факт</strong></p>
+  <p>❌ <strong>Міф:</strong> Президент України — найголовніший і може робити що хоче.</p>
+  <p>✅ <strong>Факт:</strong> Україна — парламентсько-президентська республіка. Президент має значні повноваження (зовнішня політика, оборона, призначення ключових посадовців), але внутрішню політику формує Кабінет Міністрів на чолі з Прем'єр-міністром. Президент не може самостійно ухвалювати закони — це робить тільки Рада.</p>
+</blockquote>
+<hr />
+<h3 id="-4">Верховна Рада України</h3>
+<p>Парламент України має унікальну назву. «Рада» — від давньослов'янського «порада», «збори». Не «дума» (як у Росії), не «парламент» (як у Британії) — саме «рада», що відсилає до козацької традиції.</p>
+<table>
+<thead>
+<tr>
+<th>Термін</th>
+<th>Переклад</th>
+<th>Приклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Верховна Рада</td>
+<td>Parliament (Supreme Council)</td>
+<td>Верховна Рада зібралася на засідання</td>
+</tr>
+<tr>
+<td>народний депутат</td>
+<td>MP (member of parliament)</td>
+<td>450 народних депутатів</td>
+</tr>
+<tr>
+<td>спікер</td>
+<td>speaker</td>
+<td>Спікер відкрив засідання</td>
+</tr>
+<tr>
+<td>фракція</td>
+<td>faction, parliamentary group</td>
+<td>Найбільша фракція має 240 місць</td>
+</tr>
+<tr>
+<td>коаліція</td>
+<td>coalition</td>
+<td>Коаліція контролює парламент</td>
+</tr>
+<tr>
+<td>опозиція</td>
+<td>opposition</td>
+<td>Опозиція критикує уряд</td>
+</tr>
+<tr>
+<td>законопроєкт</td>
+<td>bill, draft law</td>
+<td>Зареєстровано 5000 законопроєктів</td>
+</tr>
+<tr>
+<td>закон</td>
+<td>law</td>
+<td>Закон набув чинності</td>
+</tr>
+<tr>
+<td>голосування</td>
+<td>voting</td>
+<td>Голосування було таємним</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Ключові дієслова парламенту:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Дієслово</th>
+<th>Значення</th>
+<th>Типовий контекст</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>ухвалити</strong></td>
+<td>to adopt, pass</td>
+<td>ухвалити закон / резолюцію</td>
+</tr>
+<tr>
+<td><strong>відхилити</strong></td>
+<td>to reject</td>
+<td>відхилити законопроєкт</td>
+</tr>
+<tr>
+<td><strong>скликати</strong></td>
+<td>to convene</td>
+<td>скликати позачергове засідання</td>
+</tr>
+<tr>
+<td><strong>розпустити</strong></td>
+<td>to dissolve</td>
+<td>Президент розпустив Раду</td>
+</tr>
+<tr>
+<td><strong>зареєструвати</strong></td>
+<td>to register</td>
+<td>зареєструвати законопроєкт</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p><strong>Чи знали ви?</strong></p>
+  <p>Будівля Верховної Ради побудована в 1936-1939 роках як Верховна Рада УРСР. Характерний напівкруглий зал — типова радянська архітектура. Але символіка змінилася: замість серпа і молота — тризуб, замість портрета Леніна — Герб України. За незалежність України проголосували в цьому самому залі 24 серпня 1991 року — 346 голосами «за».</p>
+</blockquote>
+<hr />
+<h3 id="-5">Виконавча влада</h3>
+<table>
+<thead>
+<tr>
+<th>Термін</th>
+<th>Переклад</th>
+<th>Функція</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Президент</td>
+<td>President</td>
+<td>Глава держави, головнокомандувач</td>
+</tr>
+<tr>
+<td>Кабінет Міністрів</td>
+<td>Cabinet of Ministers</td>
+<td>Уряд, виконавча влада</td>
+</tr>
+<tr>
+<td>Прем'єр-міністр</td>
+<td>Prime Minister</td>
+<td>Голова уряду</td>
+</tr>
+<tr>
+<td>міністр</td>
+<td>minister</td>
+<td>Керівник міністерства</td>
+</tr>
+<tr>
+<td>міністерство</td>
+<td>ministry</td>
+<td>Центральний орган влади</td>
+</tr>
+<tr>
+<td>уряд</td>
+<td>government</td>
+<td>Кабмін + міністерства</td>
+</tr>
+<tr>
+<td>указ</td>
+<td>decree</td>
+<td>Документ Президента</td>
+</tr>
+<tr>
+<td>постанова</td>
+<td>resolution</td>
+<td>Документ Кабміну</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Дієслова виконавчої влади:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Дієслово</th>
+<th>Значення</th>
+<th>Приклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>призначити</strong></td>
+<td>to appoint</td>
+<td>Президент призначив посла</td>
+</tr>
+<tr>
+<td><strong>звільнити</strong></td>
+<td>to dismiss</td>
+<td>звільнити з посади</td>
+</tr>
+<tr>
+<td><strong>підписати</strong></td>
+<td>to sign</td>
+<td>підписати указ</td>
+</tr>
+<tr>
+<td><strong>накласти вето</strong></td>
+<td>to veto</td>
+<td>накласти вето на закон</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p><strong>Міф vs Факт</strong></p>
+  <p>❌ <strong>Міф:</strong> Президент призначає Прем'єр-міністра самостійно.</p>
+  <p>✅ <strong>Факт:</strong> Президент <em>вносить</em> кандидатуру Прем'єр-міністра до Ради, але <em>призначає</em> його Верховна Рада голосуванням. Більше того — Рада може висловити недовіру уряду і змусити його піти у відставку. Це і є система стримувань і противаг.</p>
+</blockquote>
+<hr />
+<h3 id="-6">Вибори</h3>
+<p>Вибори — серце демократії. В Україні вони були справжнім полем битви за право народу вирішувати свою долю.</p>
+<table>
+<thead>
+<tr>
+<th>Термін</th>
+<th>Переклад</th>
+<th>Контекст</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>вибори</td>
+<td>elections</td>
+<td>президентські / парламентські вибори</td>
+</tr>
+<tr>
+<td>виборець</td>
+<td>voter</td>
+<td>35 мільйонів виборців</td>
+</tr>
+<tr>
+<td>виборча дільниця</td>
+<td>polling station</td>
+<td>30 000 дільниць по країні</td>
+</tr>
+<tr>
+<td>бюлетень</td>
+<td>ballot</td>
+<td>отримати бюлетень</td>
+</tr>
+<tr>
+<td>кандидат</td>
+<td>candidate</td>
+<td>40 кандидатів у президенти</td>
+</tr>
+<tr>
+<td>передвиборча кампанія</td>
+<td>election campaign</td>
+<td>кампанія тривала 3 місяці</td>
+</tr>
+<tr>
+<td>рейтинг</td>
+<td>rating</td>
+<td>рейтинг кандидата — 25%</td>
+</tr>
+<tr>
+<td>явка</td>
+<td>turnout</td>
+<td>явка склала 70%</td>
+</tr>
+<tr>
+<td>перший/другий тур</td>
+<td>first/second round</td>
+<td>другий тур через 3 тижні</td>
+</tr>
+<tr>
+<td>абсолютна більшість</td>
+<td>absolute majority</td>
+<td>більше 50% голосів</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Дієслова виборів:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Дієслово</th>
+<th>Значення</th>
+<th>Приклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>голосувати</strong></td>
+<td>to vote</td>
+<td>голосувати за кандидата</td>
+</tr>
+<tr>
+<td><strong>обрати/обирати</strong></td>
+<td>to elect</td>
+<td>обрати президента</td>
+</tr>
+<tr>
+<td><strong>балотуватися</strong></td>
+<td>to run (for office)</td>
+<td>балотуватися в депутати</td>
+</tr>
+<tr>
+<td><strong>перемогти</strong></td>
+<td>to win</td>
+<td>перемогти у другому турі</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p><strong>Чи знали ви?</strong></p>
+  <p>Президентські вибори 2019 року встановили рекорд: Володимир Зеленський отримав 73,22% голосів у другому турі — найбільший результат в історії українських виборів. Він переміг у всіх областях, крім Львівської (де його підтримали «лише» 62%). Явка склала 62% — понад 13 мільйонів голосів.</p>
+</blockquote>
+<hr />
+<h3 id="-7">Політичні поняття</h3>
+<table>
+<thead>
+<tr>
+<th>Термін</th>
+<th>Переклад</th>
+<th>Значення для України</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>демократія</td>
+<td>democracy</td>
+<td>За неї боролися на Майданах</td>
+</tr>
+<tr>
+<td>республіка</td>
+<td>republic</td>
+<td>Україна з 1991 року</td>
+</tr>
+<tr>
+<td>конституція</td>
+<td>constitution</td>
+<td>Прийнята 28 червня 1996</td>
+</tr>
+<tr>
+<td>права людини</td>
+<td>human rights</td>
+<td>Захищені Конституцією</td>
+</tr>
+<tr>
+<td>свобода слова</td>
+<td>freedom of speech</td>
+<td>Гарантована, але під загрозою</td>
+</tr>
+<tr>
+<td>верховенство права</td>
+<td>rule of law</td>
+<td>Ключова реформа</td>
+</tr>
+<tr>
+<td>громадянське суспільство</td>
+<td>civil society</td>
+<td>Сильне після Майданів</td>
+</tr>
+<tr>
+<td>корупція</td>
+<td>corruption</td>
+<td>Головний виклик</td>
+</tr>
+<tr>
+<td>реформа</td>
+<td>reform</td>
+<td>Постійний процес</td>
+</tr>
+<tr>
+<td>євроінтеграція</td>
+<td>European integration</td>
+<td>Стратегічний курс</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p><strong>Міф vs Факт</strong></p>
+  <p>❌ <strong>Міф:</strong> Україна отримала статус кандидата в ЄС автоматично через війну.</p>
+  <p>✅ <strong>Факт:</strong> Україна подала заявку на членство в ЄС 28 лютого 2022 року — через 4 дні після початку повномасштабного вторгнення. Але статус кандидата (23 червня 2022) — результат десятиліть реформ: децентралізації, судової реформи, антикорупційних органів, цифровізації. Війна прискорила політичне рішення, але не замінила реформи.</p>
+</blockquote>
+<hr />
+<h3 id="-8">Політичні посади</h3>
+<table>
+<thead>
+<tr>
+<th>Посада</th>
+<th>Переклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Президент України</td>
+<td>President of Ukraine</td>
+</tr>
+<tr>
+<td>Голова Верховної Ради</td>
+<td>Speaker of Parliament</td>
+</tr>
+<tr>
+<td>Прем'єр-міністр</td>
+<td>Prime Minister</td>
+</tr>
+<tr>
+<td>віцепрем'єр</td>
+<td>Deputy Prime Minister</td>
+</tr>
+<tr>
+<td>міністр закордонних справ</td>
+<td>Minister of Foreign Affairs</td>
+</tr>
+<tr>
+<td>міністр оборони</td>
+<td>Minister of Defense</td>
+</tr>
+<tr>
+<td>міністр внутрішніх справ</td>
+<td>Minister of Internal Affairs</td>
+</tr>
+<tr>
+<td>голова ОДА</td>
+<td>head of regional administration</td>
+</tr>
+<tr>
+<td>мер / міський голова</td>
+<td>mayor</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="-9">Сучасний контекст: Реформи</h3>
+<p>Реформи — не просто слово для України. Це умова виживання як держави.</p>
+<table>
+<thead>
+<tr>
+<th>Реформа</th>
+<th>Початок</th>
+<th>Суть</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Децентралізація</td>
+<td>2014</td>
+<td>Громади отримали бюджети та повноваження</td>
+</tr>
+<tr>
+<td>Судова</td>
+<td>2016</td>
+<td>Новий Верховний Суд, кваліфікаційне оцінювання</td>
+</tr>
+<tr>
+<td>Медична</td>
+<td>2017</td>
+<td>Гроші йдуть за пацієнтом</td>
+</tr>
+<tr>
+<td>Земельна</td>
+<td>2021</td>
+<td>Українці можуть купувати землю</td>
+</tr>
+<tr>
+<td>Євроінтеграція</td>
+<td>2022</td>
+<td>Статус кандидата в ЄС</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p><strong>Чи знали ви?</strong></p>
+  <p>Децентралізація — найуспішніша реформа незалежної України. До 2014 року 70% податків ішли до Києва. Після реформи громади залишають собі більшість доходів. Результат: нові школи, дороги, лікарні в селах і малих містах. А коли почалася війна, децентралізовані громади виявилися стійкішими — бо вміли приймати рішення самостійно.</p>
+</blockquote>
+<hr />
+<h2 id="-10">Практика</h2>
+<h3 id="1">Вправа 1: Хто що робить?</h3>
+<p>Оберіть правильний орган влади:</p>
+<ol>
+<li><p>___ ухвалює закони.<br />
+→ <strong>Верховна Рада</strong></p></li>
+<li><p>___ підписує закони.<br />
+→ <strong>Президент</strong></p></li>
+<li><p>___ керує економічною політикою.<br />
+→ <strong>Кабінет Міністрів</strong></p></li>
+<li><p>___ може накласти вето на закон.<br />
+→ <strong>Президент</strong></p></li>
+<li><p>___ призначає Прем'єр-міністра голосуванням.<br />
+→ <strong>Верховна Рада</strong></p></li>
+</ol>
+<h3 id="2">Вправа 2: Заповніть пропуски</h3>
+<ol>
+<li><p>Верховна Рада ___ (ухвалити) новий закон 280 голосами.<br />
+→ <strong>ухвалила</strong></p></li>
+<li><p>Президент ___ (накласти) вето на законопроєкт.<br />
+→ <strong>наклав</strong></p></li>
+<li><p>На виборах громадяни ___ (голосувати) таємно.<br />
+→ <strong>голосують</strong></p></li>
+<li><p>Опозиція ___ (критикувати) рішення уряду.<br />
+→ <strong>критикує / критикувала</strong></p></li>
+<li><p>Прем'єр-міністра ___ (призначити) після голосування в Раді.<br />
+→ <strong>призначили / було призначено</strong></p></li>
+</ol>
+<h3 id="3">Вправа 3: Перекладіть</h3>
+<ol>
+<li><p>Parliament passed the bill with 300 votes.<br />
+→ <strong>Парламент (Верховна Рада) ухвалив законопроєкт 300 голосами.</strong></p></li>
+<li><p>The president vetoed the law.<br />
+→ <strong>Президент наклав вето на закон.</strong></p></li>
+<li><p>Voter turnout was 65%.<br />
+→ <strong>Явка виборців склала 65%.</strong></p></li>
+<li><p>The opposition criticized the government's decision.<br />
+→ <strong>Опозиція розкритикувала рішення уряду.</strong></p></li>
+<li><p>The minister was dismissed from office.<br />
+→ <strong>Міністра звільнили з посади. / Міністра було звільнено з посади.</strong></p></li>
+</ol>
+<hr />
+<h2 id="-11">Продукція</h2>
+<h3 id="-12">Аналіз новини</h3>
+<p>Прочитайте реальну новину та дайте відповіді на питання:</p>
+<blockquote>
+  <p>«Верховна Рада України 238 голосами ухвалила законопроєкт про обмеження використання російської мови в публічному просторі. Опозиційні фракції голосували проти. Президент очікується підписати закон протягом 15 днів.»</p>
+</blockquote>
+<p><strong>Питання:</strong></p>
+<ol>
+<li>Чи достатньо 238 голосів для ухвалення звичайного закону?</li>
+<li>Що станеться, якщо Президент не підпише закон?</li>
+<li>Чи може Рада подолати вето?</li>
+</ol>
+<p><em>(Підказки: проста більшість = 226; Президент може накласти вето; для подолання вето потрібно 300 голосів)</em></p>
+<h3 id="-13">Дискусія</h3>
+<p>Обговоріть у парах або групах:</p>
+<ol>
+<li>Яка різниця між українською та американською/британською системою влади?</li>
+<li>Чому децентралізація важлива для демократії?</li>
+<li>«Майдани довели, що українці цінують демократію.» Погоджуєтесь?</li>
+</ol>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Вправи</h3>
+          <span class="section-type practice">practice</span>
+        </div>
+        <div class="section-body md-content"><h2 id="quiz">quiz: Політика та державне управління</h2>
+<blockquote>
+  <p>Виберіть правильну відповідь.</p>
+</blockquote>
+<ol>
+<li>Верховна Рада — це орган:</li>
+</ol>
+<ul>
+<li>[x] законодавчої влади</li>
+<li>[ ] виконавчої влади</li>
+</ul>
+<blockquote>
+  <p>Парламент приймає закони.</p>
+</blockquote>
+<ol start="2">
+<li>Скільки депутатів у Верховній Раді?</li>
+</ol>
+<ul>
+<li>[x] 450</li>
+<li>[ ] 500</li>
+<li>[ ] 350</li>
+</ul>
+<blockquote>
+  <p>450 народних депутатів.</p>
+</blockquote>
+<ol start="3">
+<li>«Ухвалити закон» означає:</li>
+</ol>
+<ul>
+<li>[x] прийняти закон</li>
+<li>[ ] відхилити закон</li>
+</ul>
+<blockquote>
+  <p>Ухвалити = to adopt, pass.</p>
+</blockquote>
+<ol start="4">
+<li>Хто очолює Кабінет Міністрів?</li>
+</ol>
+<ul>
+<li>[ ] Президент</li>
+<li>[x] Прем'єр-міністр</li>
+</ul>
+<blockquote>
+  <p>Прем'єр — голова уряду.</p>
+</blockquote>
+<ol start="5">
+<li>«Фракція» — це:</li>
+</ol>
+<ul>
+<li>[x] група депутатів однієї партії</li>
+<li>[ ] виборча дільниця</li>
+</ul>
+<blockquote>
+  <p>Фракція = faction, parliamentary group.</p>
+</blockquote>
+<ol start="6">
+<li>Що потрібно для подолання вето Президента?</li>
+</ol>
+<ul>
+<li>[ ] 226 голосів</li>
+<li>[x] 300 голосів</li>
+<li>[ ] 400 голосів</li>
+</ul>
+<blockquote>
+  <p>Конституційна більшість = 2/3 = 300 голосів.</p>
+</blockquote>
+<ol start="7">
+<li>Хто призначає Прем'єр-міністра?</li>
+</ol>
+<ul>
+<li>[ ] Президент одноосібно</li>
+<li>[x] Верховна Рада за поданням Президента</li>
+<li>[ ] Конституційний Суд</li>
+</ul>
+<blockquote>
+  <p>Президент вносить, Рада голосує.</p>
+</blockquote>
+<ol start="8">
+<li><strong>[Інтеграція: пасив + регістр]</strong> Офіційне повідомлення: «Закон ___»</li>
+</ol>
+<ul>
+<li>[x] ухвалено</li>
+<li>[ ] ухвалили</li>
+<li>[ ] ухвалюється</li>
+</ul>
+<blockquote>
+  <p>Офіційний стиль → -но/-то форма.</p>
+</blockquote>
+<ol start="9">
+<li><strong>[Інтеграція: пасив + регістр]</strong> Розмова з другом: «Мені ___, що закон прийняли.»</li>
+</ol>
+<ul>
+<li>[ ] повідомлено</li>
+<li>[x] сказали</li>
+<li>[ ] говориться</li>
+</ul>
+<blockquote>
+  <p>Розмовний стиль → активний голос з «вони».</p>
+</blockquote>
+<ol start="10">
+<li>Конституцію України прийнято в:<ul>
+<li>[ ] 1991 році</li>
+<li>[x] 1996 році</li>
+<li>[ ] 2004 році<br />
+&gt; 28 червня 1996 — День Конституції.</li></ul></li>
+</ol>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Словник</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Слово</th>
+<th>Вимова</th>
+<th>Переклад</th>
+<th>Примітки</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Верховна Рада</td>
+<td>/wɛrˈxɔwnɑ ˈrɑdɑ/</td>
+<td>Parliament</td>
+<td>f</td>
+</tr>
+<tr>
+<td>народний депутат</td>
+<td>/nɑˈrɔdnɪj dɛpuˈtɑt/</td>
+<td>MP</td>
+<td>m</td>
+</tr>
+<tr>
+<td>законопроєкт</td>
+<td>/zɑkɔnɔprɔˈjɛkt/</td>
+<td>bill, draft law</td>
+<td>m</td>
+</tr>
+<tr>
+<td>закон</td>
+<td>/zɑˈkɔn/</td>
+<td>law</td>
+<td>m</td>
+</tr>
+<tr>
+<td>ухвалити</td>
+<td>/uxˈwɑlɪtɪ/</td>
+<td>to adopt, pass</td>
+<td>pf</td>
+</tr>
+<tr>
+<td>відхилити</td>
+<td>/wʲidxɪˈlɪtɪ/</td>
+<td>to reject</td>
+<td>pf</td>
+</tr>
+<tr>
+<td>голосування</td>
+<td>/ɦɔlɔsuˈwɑnʲːɑ/</td>
+<td>voting</td>
+<td>n</td>
+</tr>
+<tr>
+<td>голосувати</td>
+<td>/ɦɔlɔsuˈwɑtɪ/</td>
+<td>to vote</td>
+<td>impf</td>
+</tr>
+<tr>
+<td>виборець</td>
+<td>/wɪˈbɔrɛt͡sʲ/</td>
+<td>voter</td>
+<td>m</td>
+</tr>
+<tr>
+<td>вибори</td>
+<td>/ˈwɪbɔrɪ/</td>
+<td>elections</td>
+<td>pl</td>
+</tr>
+<tr>
+<td>фракція</td>
+<td>/ˈfrɑkt͡sʲijɑ/</td>
+<td>faction</td>
+<td>f</td>
+</tr>
+<tr>
+<td>коаліція</td>
+<td>/kɔɑˈlʲit͡sʲijɑ/</td>
+<td>coalition</td>
+<td>f</td>
+</tr>
+<tr>
+<td>опозиція</td>
+<td>/ɔpɔˈzɪt͡sʲijɑ/</td>
+<td>opposition</td>
+<td>f</td>
+</tr>
+<tr>
+<td>накласти вето</td>
+<td>/nɑˈklɑstɪ ˈwɛtɔ/</td>
+<td>to veto</td>
+<td>pf</td>
+</tr>
+<tr>
+<td>указ</td>
+<td>/uˈkɑz/</td>
+<td>decree</td>
+<td>m</td>
+</tr>
+<tr>
+<td>постанова</td>
+<td>/pɔstɑˈnɔwɑ/</td>
+<td>resolution</td>
+<td>f</td>
+</tr>
+<tr>
+<td>призначити</td>
+<td>/prɪzˈnɑtʃɪtɪ/</td>
+<td>to appoint</td>
+<td>pf</td>
+</tr>
+<tr>
+<td>звільнити</td>
+<td>/zwʲilʲˈnɪtɪ/</td>
+<td>to dismiss</td>
+<td>pf</td>
+</tr>
+<tr>
+<td>передвиборча кампанія</td>
+<td>/pɛrɛdwɪˈbɔrtʃɑ kɑmˈpɑnʲijɑ/</td>
+<td>election campaign</td>
+<td>f</td>
+</tr>
+<tr>
+<td>явка</td>
+<td>/ˈjɑwkɑ/</td>
+<td>turnout</td>
+<td>f</td>
+</tr>
+<tr>
+<td>балотуватися</td>
+<td>/bɑlɔtuˈwɑtɪsʲɑ/</td>
+<td>to run for office</td>
+<td>impf</td>
+</tr>
+<tr>
+<td>реформа</td>
+<td>/rɛˈfɔrmɑ/</td>
+<td>reform</td>
+<td>f</td>
+</tr>
+<tr>
+<td>євроінтеграція</td>
+<td>/jewrɔintɛˈɦrɑt͡sʲijɑ/</td>
+<td>European integration</td>
+<td>f</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-4">
+        <div class="section-header" onclick="toggleSection(4)">
+          <h3>Підсумок</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="">Демократія по-українськи</h2>
+<p>Від козацької Січової Ради до сучасної Верховної Ради — українці століттями боролися за право обирати свою владу.</p>
+<p><strong>Три гілки влади:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Гілка</th>
+<th>Орган</th>
+<th>Функція</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Законодавча</td>
+<td>Верховна Рада</td>
+<td>Ухвалює закони</td>
+</tr>
+<tr>
+<td>Виконавча</td>
+<td>Президент + Кабмін</td>
+<td>Виконує закони</td>
+</tr>
+<tr>
+<td>Судова</td>
+<td>Суди</td>
+<td>Тлумачить закони</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Ключові числа:</strong></p>
+<ul>
+<li>450 — народних депутатів</li>
+<li>226 — проста більшість</li>
+<li>300 — конституційна більшість (для подолання вето)</li>
+</ul>
+<p><strong>Найважливіші дієслова:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Дієслово</th>
+<th>Контекст</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ухвалити</td>
+<td>закон, рішення</td>
+</tr>
+<tr>
+<td>відхилити</td>
+<td>законопроєкт</td>
+</tr>
+<tr>
+<td>накласти вето</td>
+<td>заблокувати закон</td>
+</tr>
+<tr>
+<td>призначити</td>
+<td>міністра, посла</td>
+</tr>
+<tr>
+<td>обрати</td>
+<td>президента, депутата</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p><strong>Головне</strong></p>
+  <p>Українська демократія — молода, недосконала, але загартована Майданами. За неї заплачено найвищу ціну. І саме тому кожен термін цього модуля — не просто слово, а частина боротьби за право бути вільним народом.</p>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('quiz')">Start →</button></div>
     </section>
     
@@ -169,6 +1113,10 @@
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>

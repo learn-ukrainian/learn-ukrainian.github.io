@@ -88,7 +88,25 @@
     .completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
     .completion-message.show { display: block; }
     footer { text-align: center; padding: 2rem; color: var(--text-muted); }
-    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+    /* Immersive module styles */
+    .toc { background: #f8fafc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .toc h4 { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .toc-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .toc-item:hover { border-color: var(--primary); background: #e8f4fd; }
+    .toc-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .section-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; overflow: hidden; scroll-margin-top: 80px; }
+    .section-header { padding: 1rem 1.5rem; background: linear-gradient(135deg, #f0f7ff, #f8f0ff); border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .section-header h3 { font-size: 1.125rem; color: var(--text); margin: 0; }
+    .section-header .section-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.25rem 0.5rem; border-radius: 4px; background: white; color: var(--text-muted); }
+    .section-header .section-type.intro { background: #dbeafe; color: #1e40af; }
+    .section-header .section-type.topic { background: #f3e8ff; color: #7c3aed; }
+    .section-header .section-type.practice { background: #dcfce7; color: #166534; }
+    .section-header .section-type.vocabulary { background: #fef3c7; color: #92400e; }
+    .section-header .section-type.summary { background: #fee2e2; color: #991b1b; }
+    .section-body { padding: 1.5rem; }
+    .section-body.collapsed { display: none; }
+    @media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } .toc-list { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -118,7 +136,22 @@
         <p style="color:var(--text-muted)">Зменшувально-пестливі форми</p>
       </div>
       
-      <div class="card"><h3>Theory</h3><div class="canvas-note"><h4>### Ласкаві слова | Affectionate Words</h4><div class="md-content"><p>В українській мові часто використовують зменшувальні форми:</p>
+      
+      <div class="toc">
+        <h4>Contents</h4>
+        <ul class="toc-list">
+          <li class="toc-item active" data-target="section-0">Зміст уроку | Lesson Content</li><li class="toc-item" data-target="section-1">Activities</li><li class="toc-item" data-target="section-2">Vocabulary</li><li class="toc-item" data-target="section-3">Summary</li>
+        </ul>
+      </div>
+      
+      <div class="section-card" id="section-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <h3>Зміст уроку | Lesson Content</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="warmup">warm-up | Розминка</h2>
+<h3 id="affectionatewords">Ласкаві слова | Affectionate Words</h3>
+<p>В українській мові часто використовують зменшувальні форми:</p>
 <p>In Ukrainian, diminutive forms are frequently used:</p>
 <ul>
 <li><strong>Мамо</strong> → <strong>мамочко</strong> (dear mom)</li>
@@ -130,7 +163,10 @@
 <li>Affection (мамочка, бабусенька)</li>
 <li>Small size (столик, будиночок)</li>
 <li>Politeness (хвилиночку, водички)</li>
-</ul></div></div><div class="canvas-note"><h4>### Основні суфікси | Main Suffixes</h4><div class="md-content"><h4 id="formasculinenouns">For Masculine Nouns</h4>
+</ul>
+<h2 id="presentation">presentation | Презентація</h2>
+<h3 id="mainsuffixes">Основні суфікси | Main Suffixes</h3>
+<h4 id="formasculinenouns">For Masculine Nouns</h4>
 <table>
 <thead>
 <tr>
@@ -258,7 +294,9 @@
 <td>baby (dear)</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Подвійні зменшувальні | Double Diminutives</h4><div class="md-content"><p>Ukrainian can stack diminutive suffixes for extra expressiveness:</p>
+</table>
+<h3 id="doublediminutives">Подвійні зменшувальні | Double Diminutives</h3>
+<p>Ukrainian can stack diminutive suffixes for extra expressiveness:</p>
 <table>
 <thead>
 <tr>
@@ -294,7 +332,9 @@
 <td>small piece of bread</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Зменшувальні прикметники | Diminutive Adjectives</h4><div class="md-content"><p>Adjectives also have diminutive forms:</p>
+</table>
+<h3 id="diminutiveadjectives">Зменшувальні прикметники | Diminutive Adjectives</h3>
+<p>Adjectives also have diminutive forms:</p>
 <table>
 <thead>
 <tr>
@@ -335,7 +375,9 @@
 <td>dear (very dear)</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Використання | Usage Contexts</h4><div class="md-content"><p><strong>1. Affection (найчастіше / most common):</strong></p>
+</table>
+<h3 id="usagecontexts">Використання | Usage Contexts</h3>
+<p><strong>1. Affection (найчастіше / most common):</strong></p>
 <ul>
 <li>Моя донечка така розумна! - My little daughter is so smart!</li>
 <li>Котику, іди сюди! - Kitty, come here!</li>
@@ -354,7 +396,9 @@
 <ul>
 <li>Ну і ситуаційка! - What a situation! (ironic)</li>
 <li>Гарненьке діло! - Nice business! (sarcastic)</li>
-</ul></div></div><div class="canvas-note"><h4>Слова, що існують лише у зменшувальній формі | Words Only in Diminutive Form</h4><div class="md-content"><p>Some words are always used in diminutive form:</p>
+</ul>
+<h3 id="wordsonlyindiminutiveform">Слова, що існують лише у зменшувальній формі | Words Only in Diminutive Form</h3>
+<p>Some words are always used in diminutive form:</p>
 <table>
 <thead>
 <tr>
@@ -390,7 +434,9 @@
 <td>term of endearment</td>
 </tr>
 </tbody>
-</table></div></div><div class="canvas-note"><h4>Правила формування | Formation Rules</h4><div class="md-content"><p><strong>General patterns:</strong></p>
+</table>
+<h3 id="formationrules">Правила формування | Formation Rules</h3>
+<p><strong>General patterns:</strong></p>
 <ol>
 <li><strong>Hard consonants</strong> → usually <strong>-ик, -ок</strong></li>
 </ol>
@@ -416,7 +462,10 @@
 <li>друг → дружок (г→ж)</li>
 <li>книга → книжка (г→ж)</li>
 <li>нога → ніженька (г→ж, о→і)</li>
-</ul></div></div><div class="canvas-note"><h4>### Form Diminutives</h4><div class="md-content"><ol>
+</ul>
+<h2 id="practice">practice | Практика</h2>
+<h3 id="formdiminutives">Form Diminutives</h3>
+<ol>
 <li><p>кіт → ___<br />
 → <strong>котик</strong></p></li>
 <li><p>стіл → ___<br />
@@ -433,14 +482,18 @@
 → <strong>хлібчик / хлібець</strong></p></li>
 <li><p>зірка → ___<br />
 → <strong>зірочка</strong></p></li>
-</ol></div></div><div class="canvas-note"><h4>Match Context to Diminutive</h4><div class="md-content"><p>Choose the appropriate form:</p>
+</ol>
+<h3 id="matchcontexttodiminutive">Match Context to Diminutive</h3>
+<p>Choose the appropriate form:</p>
 <ol>
 <li>«___, іди сюди!» (to a child) → <strong>Синочку / Донечко</strong></li>
 <li>«Зачекайте ___!» (polite request) → <strong>хвилиночку</strong></li>
 <li>«Який гарний ___!» (small house) → <strong>будиночок</strong></li>
 <li>«Моя ___ захворіла.» (beloved grandmother) → <strong>бабусенька</strong></li>
 <li>«Дайте ___ води.» (polite) → <strong>трішечки / крапельку</strong></li>
-</ol></div></div><div class="canvas-note"><h4>Translate with Diminutives</h4><div class="md-content"><ol>
+</ol>
+<h3 id="translatewithdiminutives">Translate with Diminutives</h3>
+<ol>
 <li><p>My dear mother is the best.<br />
 → <strong>Моя мамочка найкраща.</strong></p></li>
 <li><p>Wait just a moment, please.<br />
@@ -451,7 +504,10 @@
 → <strong>Який затишний будиночок!</strong></p></li>
 <li><p>She's my little star.<br />
 → <strong>Вона моя зірочка.</strong></p></li>
-</ol></div></div><div class="canvas-note"><h4>### Describe with Diminutives</h4><div class="md-content"><p>Use diminutives to describe:</p>
+</ol>
+<h2 id="production">production | Продукція</h2>
+<h3 id="describewithdiminutives">Describe with Diminutives</h3>
+<p>Use diminutives to describe:</p>
 <p><strong>Ваш дім:</strong></p>
 <ul>
 <li>Опишіть свій будинок або квартиру, використовуючи зменшувальні форми</li>
@@ -461,12 +517,266 @@
 <ul>
 <li>Розкажіть про членів родини ласкаво</li>
 <li>Example: «Моя бабусенька готує найкращі пиріжки…»</li>
-</ul></div></div><div class="canvas-note"><h4>Create Affectionate Messages</h4><div class="md-content"><p>Write short messages using diminutives:</p>
+</ul>
+<h3 id="createaffectionatemessages">Create Affectionate Messages</h3>
+<p>Write short messages using diminutives:</p>
 <ol>
 <li>To your mother</li>
 <li>To a child</li>
 <li>To a pet</li>
-</ol></div></div></div>
+</ol>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <h3>Activities</h3>
+          <span class="section-type topic">topic</span>
+        </div>
+        <div class="section-body md-content"><h2 id="quizdiminutiveforms">quiz: Diminutive Forms</h2>
+<blockquote>
+  <p>Choose the correct diminutive.</p>
+</blockquote>
+<ol>
+<li>Зменшувальна форма від «стіл»:</li>
+</ol>
+<ul>
+<li>[x] столик</li>
+<li>[ ] столець</li>
+</ul>
+<blockquote>
+  <p>-ик is the common suffix for masculine nouns.</p>
+</blockquote>
+<ol start="2">
+<li>«Мамочка» виражає:</li>
+</ol>
+<ul>
+<li>[x] ласку</li>
+<li>[ ] іронію</li>
+</ul>
+<blockquote>
+  <p>Affection is the primary meaning.</p>
+</blockquote>
+<ol start="3">
+<li>Зменшувальна форма від «вікно»:</li>
+</ol>
+<ul>
+<li>[x] віконечко</li>
+<li>[ ] вікночко</li>
+</ul>
+<blockquote>
+  <p>-ечко for neuter after consonant.</p>
+</blockquote>
+<ol start="4">
+<li>«Зачекайте хвилиночку» — це:</li>
+</ol>
+<ul>
+<li>[x] ввічливе прохання</li>
+<li>[ ] наказ</li>
+</ul>
+<blockquote>
+  <p>Diminutive softens the request.</p>
+</blockquote>
+<ol start="5">
+<li>Яке слово НЕ є зменшувальним:</li>
+</ol>
+<ul>
+<li>[x] батько</li>
+<li>[ ] котик</li>
+</ul>
+<blockquote>
+  <p>батько is the base form.</p>
+</blockquote>
+<ol start="6">
+<li>«Гарненька ситуація» може означати:</li>
+</ol>
+<ul>
+<li>[x] іронію</li>
+<li>[ ] захоплення</li>
+</ul>
+<blockquote>
+  <p>Diminutives can express irony.</p>
+</blockquote>
+<h2 id="fillinusingdiminutives">fill-in: Using Diminutives</h2>
+<blockquote>
+  <p>Виберіть правильну форму.</p>
+  <p>Моя (1)<strong>_ (бабуся) живе в маленькому (2)</strong>_ (село). У неї є затишний (3)<strong>_ (будинок) з гарним (4)</strong>_ (сад). Коли я приїжджаю, вона завжди готує мої улюблені (5)<strong>_ (пиріг). «(6)</strong>_ (Онук), ти такий худенький!» — каже вона. Я люблю свою (7)___ (бабуся)!</p>
+</blockquote>
+<p><strong>Answers:</strong></p>
+<ol>
+<li>бабусенька</li>
+<li>селі (no diminutive needed here, but: сільці)</li>
+<li>будиночок</li>
+<li>садочком / садком</li>
+<li>пиріжки / пиріжечки</li>
+<li>Онучку / Внучку</li>
+<li>бабусеньку</li>
+</ol>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <h3>Vocabulary</h3>
+          <span class="section-type vocabulary">vocabulary</span>
+        </div>
+        <div class="section-body md-content"><table>
+<thead>
+<tr>
+<th>Word</th>
+<th>IPA</th>
+<th>English</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>зменшувальний</td>
+<td>/zmɛnˈʃuvɑlʲnɪj/</td>
+<td>diminutive</td>
+<td>adj</td>
+</tr>
+<tr>
+<td>пестливий</td>
+<td>/pɛstˈlɪvɪj/</td>
+<td>affectionate, tender</td>
+<td>adj</td>
+</tr>
+<tr>
+<td>ласкавий</td>
+<td>/lɑsˈkɑvɪj/</td>
+<td>kind, gentle</td>
+<td>adj</td>
+</tr>
+<tr>
+<td>суфікс</td>
+<td>/ˈsufʲiks/</td>
+<td>suffix</td>
+<td>m</td>
+</tr>
+<tr>
+<td>столик</td>
+<td>/ˈstolɪk/</td>
+<td>small table</td>
+<td>m, dim</td>
+</tr>
+<tr>
+<td>котик</td>
+<td>/ˈkotɪk/</td>
+<td>kitty</td>
+<td>m, dim</td>
+</tr>
+<tr>
+<td>мамочка</td>
+<td>/ˈmɑmot͡ʃkɑ/</td>
+<td>mommy</td>
+<td>f, dim</td>
+</tr>
+<tr>
+<td>бабусенька</td>
+<td>/bɑbuˈsɛnʲkɑ/</td>
+<td>dear grandma</td>
+<td>f, dim</td>
+</tr>
+<tr>
+<td>синочок</td>
+<td>/sɪˈnot͡ʃok/</td>
+<td>dear son</td>
+<td>m, dim</td>
+</tr>
+<tr>
+<td>донечка</td>
+<td>/ˈdonɛt͡ʃkɑ/</td>
+<td>dear daughter</td>
+<td>f, dim</td>
+</tr>
+<tr>
+<td>серденько</td>
+<td>/sɛrˈdɛnʲko/</td>
+<td>dear heart</td>
+<td>n, dim</td>
+</tr>
+<tr>
+<td>сонечко</td>
+<td>/ˈsonɛt͡ʃko/</td>
+<td>sun (dear)</td>
+<td>n, dim</td>
+</tr>
+<tr>
+<td>зірочка</td>
+<td>/ˈzʲirot͡ʃkɑ/</td>
+<td>little star</td>
+<td>f, dim</td>
+</tr>
+<tr>
+<td>хвилиночка</td>
+<td>/xvɪlɪˈnot͡ʃkɑ/</td>
+<td>just a moment</td>
+<td>f, dim</td>
+</tr>
+<tr>
+<td>маленький</td>
+<td>/mɑˈlɛnʲkɪj/</td>
+<td>small, little</td>
+<td>adj, dim</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+      </div>
+      <div class="section-card" id="section-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <h3>Summary</h3>
+          <span class="section-type summary">summary</span>
+        </div>
+        <div class="section-body md-content"><h2 id="diminutiveskeypoints">Diminutives: Key Points</h2>
+<h3 id="mainsuffixes">Main Suffixes</h3>
+<table>
+<thead>
+<tr>
+<th>Gender</th>
+<th>Suffixes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Masculine</td>
+<td>-ик, -ок, -ець, -чик</td>
+</tr>
+<tr>
+<td>Feminine</td>
+<td>-ка, -очка, -ечка, -уся, -енька</td>
+</tr>
+<tr>
+<td>Neuter</td>
+<td>-ко, -це, -ечко, -атко</td>
+</tr>
+</tbody>
+</table>
+<h3 id="functions">Functions</h3>
+<ol>
+<li><strong>Affection</strong> - мамочка, котик</li>
+<li><strong>Small size</strong> - столик, будиночок</li>
+<li><strong>Politeness</strong> - хвилиночку, водички</li>
+<li><strong>Irony</strong> - гарненька ситуація</li>
+</ol>
+<h3 id="importantnotes">Important Notes</h3>
+<ul>
+<li>Diminutives are VERY common in Ukrainian</li>
+<li>They're used much more than in English</li>
+<li>Context determines the exact meaning</li>
+<li>Double diminutives = extra expressiveness</li>
+</ul>
+<blockquote>
+  <p><strong>Key Takeaways</strong></p>
+  <ul>
+  <li>Diminutives express affection, small size, or politeness</li>
+  <li>Different suffixes for different genders</li>
+  <li>Very common in everyday speech</li>
+  <li>Can also express irony in certain contexts</li>
+  <li>Essential for natural-sounding Ukrainian</li>
+  </ul>
+</blockquote></div>
+      </div>
+      
       <div class="btn-group"><button class="btn btn-primary" onclick="showSection('quiz')">Start →</button></div>
     </section>
     
@@ -504,6 +814,10 @@
     function initSort(){const pool=document.getElementById('sort-items');if(!pool||!Object.keys(sortData).length)return;const all=Object.values(sortData).flat().sort(()=>Math.random()-0.5);pool.innerHTML='';all.forEach(letter=>{const group=Object.keys(sortData).find(g=>sortData[g].includes(letter));const item=document.createElement('div');item.className='sort-item';item.textContent=letter;item.draggable=true;item.dataset.group=group;item.addEventListener('dragstart',e=>{dragItem=item;item.classList.add('dragging');});item.addEventListener('dragend',()=>{item.classList.remove('dragging');dragItem=null;});pool.appendChild(item);});document.querySelectorAll('.sort-group').forEach(g=>{g.addEventListener('dragover',e=>{e.preventDefault();g.classList.add('drag-over');});g.addEventListener('dragleave',()=>g.classList.remove('drag-over'));g.addEventListener('drop',e=>{e.preventDefault();g.classList.remove('drag-over');if(!dragItem)return;if(g.dataset.group===dragItem.dataset.group){dragItem.classList.add('correct');g.querySelector('.sort-items').appendChild(dragItem);dragItem.draggable=false;sortScore++;document.getElementById('sort-score').textContent=sortScore;if(sortScore===totalSort)document.getElementById('sort-complete').classList.add('show');}else{dragItem.classList.add('wrong');setTimeout(()=>dragItem.classList.remove('wrong'),300);}});});}
     function resetSort(){sortScore=0;document.getElementById('sort-score').textContent='0';document.getElementById('sort-complete')?.classList.remove('show');document.querySelectorAll('.sort-group .sort-items').forEach(g=>g.innerHTML='');initSort();}
     function initVocab(){const grid=document.getElementById('vocab-grid');if(!grid)return;grid.innerHTML='';vocabData.forEach(v=>{const card=document.createElement('div');card.className='vocab-card';card.innerHTML='<div class="uk">'+v.uk+'</div><div class="translit">'+v.translit+'</div><div class="en">'+v.en+'</div>'+(v.note?'<div class="note">'+v.note+'</div>':'');grid.appendChild(card);});}
+    // Immersive module section toggle and TOC navigation
+    function toggleSection(idx){const body=document.querySelector('#section-'+idx+' .section-body');if(body)body.classList.toggle('collapsed');}
+    function scrollToSection(idx){const el=document.getElementById('section-'+idx);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.toc-item').forEach(t=>t.classList.remove('active'));document.querySelector('[data-target="section-'+idx+'"]')?.classList.add('active');}}
+    document.querySelectorAll('.toc-item').forEach(item=>item.addEventListener('click',()=>scrollToSection(parseInt(item.dataset.target.replace('section-','')))));
     document.addEventListener('DOMContentLoaded',()=>{initQuiz();initSort();initVocab();});
   </script>
 </body>
