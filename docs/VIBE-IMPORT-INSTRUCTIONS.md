@@ -1,82 +1,89 @@
 # Vibe Import Instructions
 
-## JSON Structure Update - December 2024
+## JSON Structure v2 - December 2024
 
-The JSON output format has been updated. **All modules need to be reimported.**
+The JSON output format has been updated to align with CO-VIBE-INTEGRATION.md spec.
 
-### What Changed
+**All modules need to be reimported.**
 
-1. **Answer Format**: Exercise answers now use a unified callout format
-   - Old: `→ відповідь` inline syntax
-   - New: `> [!answer] відповідь` callout syntax in markdown
-   - JSON: Answers are now properly structured, not embedded in text
+### Key Changes
 
-2. **Section Structure**: Cleaner parsing of Ukrainian section headers
-   - `# Вступ` (Introduction)
-   - `# Практика` (Practice)
-   - `# Пояснення` (Explanation)
-   - All sections now captured correctly
+1. **New metadata fields**:
+   - `moduleType`: grammar, vocabulary, checkpoint, history, biography, idioms, skills, literature, culture, functional
+   - `immersionLevel`: 0.0-1.0 (percentage of Ukrainian content)
 
-3. **Activity Types**: Structured activity data for:
-   - `quiz` - Multiple choice questions
-   - `match` - Matching pairs
-   - `sort` - Categorization exercises
-   - `fill-blank` - Gap fill exercises
-   - `translate` - Translation exercises
-   - `true-false` - True/false questions
+2. **Simplified sections**:
+   - Each section has `name`, `type`, and raw markdown `content`
+   - Vibe should extract activities from content (see extraction patterns below)
 
-### How to Import
+3. **Raw markdown always included**:
+   - `rawMarkdown` field contains full source for reference
 
-1. **Location**: `output/json/l2-uk-en/`
-   - `a1/module-01.json` through `module-30.json`
-   - `a2/module-31.json` through `module-60.json`
-   - `a2+/module-61.json` through `module-80.json`
-   - `b1/module-81.json` through `module-140.json`
-   - `b2/module-141.json` through `module-190.json`
-
-2. **Full reimport required**: The content structure changed, so incremental updates won't work.
-
-### JSON Schema
-
-Each module JSON contains:
+### JSON Schema v2
 
 ```json
 {
-  "id": "module-01",
-  "title": "Module Title",
-  "titleUk": "Назва модуля",
-  "level": "A1",
-  "phase": "1",
-  "objectives": ["objective 1", "objective 2"],
-  "vocabulary": [
-    {
-      "uk": "слово",
-      "translit": "slovo",
-      "en": "word",
-      "note": "optional note"
-    }
-  ],
-  "sections": [
-    {
-      "type": "intro|practice|explanation|production|summary",
-      "title": "Section Title",
-      "content": "HTML content..."
-    }
-  ],
-  "activities": {
-    "quiz": [...],
-    "match": {...},
-    "sort": {...}
-  }
+  "lesson": {
+    "id": "lesson-uk-B2-168",
+    "moduleId": "mod-uk-B2-168",
+    "moduleNumber": 168,
+    "moduleType": "history",
+    "immersionLevel": 0.85,
+    "title": "History: Kyivan Rus II",
+    "titleUk": "Київська Русь II",
+    "level": "B2",
+    "phase": "B2.2",
+    "objectives": ["..."],
+    "tags": ["history", "kyivan-rus"],
+    "sections": [
+      {
+        "id": "section-intro",
+        "name": "Вступ",
+        "nameEn": "Introduction",
+        "type": "intro",
+        "content": "raw markdown..."
+      }
+    ],
+    "rawMarkdown": "full source..."
+  },
+  "activities": [...],
+  "vocabulary": {...}
 }
 ```
 
-### Vocabulary Notes
+### Extraction Patterns (for Vibe)
 
-- Transliteration (`translit`) included for A1 modules only
-- B1+ modules have Ukrainian titles (`titleUk`)
-- Vocabulary always includes English translations regardless of immersion level
+Vibe should extract activities from section content:
+
+| Pattern | Activity Type |
+|---------|---------------|
+| `> [!answer] text` | gap-fill answer |
+| `## quiz: Title` | quiz questions |
+| `## match-up: Title` | matching pairs |
+| `## group-sort: Title` | categorization |
+| `Розставте в порядку` + `**Відповідь:**` | ordering |
+| `### Обговоріть` | discussion prompts |
+
+### File Locations
+
+```
+output/json/l2-uk-en/
+├── a1/module-01.json ... module-30.json
+├── a2/module-31.json ... module-60.json
+├── a2+/module-61.json ... module-80.json
+├── b1/module-81.json ... module-140.json
+└── b2/module-141.json ... module-190.json
+```
+
+### Module Types by Level
+
+| Level | Common Types |
+|-------|--------------|
+| A1-A2 | grammar, vocabulary, checkpoint |
+| B1 | grammar, vocabulary, checkpoint, functional |
+| B2 | history, idioms, culture, grammar, vocabulary |
+| C1 | literature, skills, biography |
 
 ### Questions?
 
-Contact the curriculum team if you encounter import issues.
+See `vibe/docs/CO-VIBE-INTEGRATION.md` for the full integration spec.
