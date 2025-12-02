@@ -1,17 +1,17 @@
 ---
 module: 92
 title: "Motion: Starting & Returning"
-subtitle: "Prefixes по-, за-, роз-, від-"
+subtitle: "Піти, зайти, розійтися, відійти"
 level: B1
 phase: B1.1
 duration: 45
 transliteration: none
 tags: [verbs, motion, prefixes, grammar]
 objectives:
-  - Master по- (beginning motion, brief action)
-  - Master за- (stopping by, behind)
-  - Master роз- (dispersal)
-  - Master від- (away from)
+  - Master the prefix по- (beginning of motion)
+  - Master the prefix за- (stopping by, going behind)
+  - Master the prefix роз- (dispersing in different directions)
+  - Master the prefix від- (moving away from)
 grammar:
   - Motion verb prefixation (continued)
   - Inchoative meaning of prefixes
@@ -20,9 +20,9 @@ grammar:
 
 # Lesson Content
 
-## warm-up
+## Warm-up
 
-### Review: Six Prefixes So Far
+### Review: Six Prefixes
 
 | Prefix | Meaning | Example |
 |--------|---------|---------|
@@ -33,15 +33,21 @@ grammar:
 | про- | through/past | пройти |
 | об- | around | обійти |
 
-Today: **по-**, **за-**, **роз-**, **від-** — the final set!
+Today: **по-**, **за-**, **роз-**, **від-** — the final set! After this module, you will know **all 10 main prefixes** for motion verbs.
 
-## presentation
+> **Did you know?**
+>
+> The prefix **по-** is the most frequent in Ukrainian. It has over 15 different meanings! With motion verbs, it means "to start moving, set off." But with other verbs, it can mean "a little" (поговорити - to chat a bit), "one by one" (повідкривати - to open one by one), or simply make the verb perfective (побудувати - to build). A universal helper!
 
-### Prefix по- (Starting Motion, Brief Action)
+---
+
+## Presentation
+
+### Prefix по- (beginning of motion, departure)
 
 **Two main meanings:**
 
-**1. Beginning of motion (setting off):**
+#### 1. Beginning of motion (setting off)
 
 | Perfective | English |
 |------------|---------|
@@ -56,37 +62,43 @@ Today: **по-**, **за-**, **роз-**, **від-** — the final set!
 
 **Examples:**
 
-- Він **пішов** додому. - He went/left home.
-- Вона **поїхала** на роботу. - She left for work.
-- Діти **побігли** на вулицю. - The children ran off to the street.
-- Літак **полетів** о восьмій. - The plane flew off at eight.
+- Він **пішов** додому. — He went/left home.
+- Вона **поїхала** на роботу. — She left for work.
+- Діти **побігли** на вулицю. — The children ran off to the street.
+- Літак **полетів** о восьмій. — The plane flew off at eight.
 
-> **Note:** Піти/поїхати often means "to leave" — starting motion AWAY.
+> **Note:** Піти/поїхати often means "to set off, to go away" — beginning of motion AWAY from the speaker.
 
-**2. Brief action (a little bit):**
+#### 2. Short duration (a bit)
 
-- **походити** - to walk around a bit
-- **поїздити** - to drive around a bit
-- **побігати** - to run around a bit
+- **походити** — to walk around a bit
+- **поїздити** — to drive around a bit
+- **побігати** — to run around a bit
 
-These are perfective verbs meaning "to do for a while":
+These perfective verbs mean "to do for some time":
 
-- Я **походив** по парку. - I walked around the park for a while.
-- Давай **побігаємо**! - Let's run around a bit!
+- Я **походив** по парку. — I walked around the park for a while.
+- Давай **побігаємо**! — Let's run around a bit!
 
-### Compare: Піти vs Прийти vs Вийти
+> **Myth vs Fact**
+>
+> **Myth:** "Піти = go, прийти = come. Just like in English."
+>
+> **Fact:** Not exactly! "Піти" means "to set off, to leave" — emphasis on DEPARTURE. "Він пішов на роботу" = he set off for work. "Він прийшов на роботу" = he arrived at work. The difference is in the viewpoint: from where (піти) or to where (прийти).
+
+### Compare: піти vs прийти vs вийти
 
 | Verb | Direction | Example |
 |------|-----------|---------|
-| прийти | TO (arrival) | Він прийшов до мене. (He came to me.) |
-| вийти | OUT of | Він вийшов з кімнати. (He went out of the room.) |
-| піти | AWAY | Він пішов додому. (He went/left home.) |
+| прийти | TO (arrival) | Він прийшов до мене. — He came to me. |
+| вийти | OUT | Він вийшов з кімнати. — He went out of the room. |
+| піти | AWAY | Він пішов додому. — He went/left home. |
 
-### Prefix за- (Stopping By, Behind)
+### Prefix за- (stopping by, going behind)
 
 **Three main meanings:**
 
-**1. Stopping by, visiting briefly:**
+#### 1. Stopping by briefly
 
 | Perfective | Imperfective | English |
 |------------|--------------|---------|
@@ -96,24 +108,28 @@ These are perfective verbs meaning "to do for a while":
 
 **Examples:**
 
-- **Зайдіть** до мене на каву! - Drop by for coffee!
-- Я **заїхав** до друга по дорозі. - I stopped by my friend's on the way.
-- Вона **забігла** на хвилинку. - She ran in for a minute.
+- **Зайдіть** до мене на каву! — Drop by for coffee!
+- Я **заїхав** до друга по дорозі. — I stopped by my friend's on the way.
+- Вона **забігла** на хвилинку. — She ran in for a minute.
 
-**2. Going behind something:**
+#### 2. Going BEHIND something
 
-- Сонце **зайшло** за хмару. - The sun went behind a cloud.
-- Він **зайшов** за ріг. - He went around/behind the corner.
+- Сонце **зайшло** за хмару. — The sun went behind a cloud.
+- Він **зайшов** за ріг. — He went around/behind the corner.
 
-**3. Beginning of action (inchoative):**
+#### 3. Beginning of an action
 
-- **заговорити** - to start speaking
-- **заспівати** - to start singing
-- **заплакати** - to start crying
+- **заговорити** — to start speaking
+- **заспівати** — to start singing
+- **заплакати** — to start crying
 
-### Prefix роз- (Dispersal, Separation)
+> **Did you know?**
+>
+> The expression "зайти на каву" (drop by for coffee) is typically Slavic. In Ukrainian, Russian, and Polish, "зайти" means not just physical movement, but also a **social visit**. This reflects the hospitality culture: "stopping by" someone's place is a normal daily practice. English "drop by" only partially conveys this.
 
-**Meaning:** Movement in different directions, separating
+### Prefix роз- (dispersing in different directions)
+
+**Meaning:** Movement IN DIFFERENT DIRECTIONS, scattering
 
 | Perfective | Imperfective | English |
 |------------|--------------|---------|
@@ -124,16 +140,16 @@ These are perfective verbs meaning "to do for a while":
 
 **Examples:**
 
-- Гості **розійшлися** о півночі. - The guests dispersed at midnight.
-- Після уроків діти **розбіглися**. - After lessons, the children scattered.
-- Після весілля вони **роз'їхалися** по різних містах. - After the wedding, they went to different cities.
+- Гості **розійшлися** о півночі. — The guests dispersed at midnight.
+- Після уроків діти **розбіглися**. — After lessons, the children scattered.
+- Після весілля вони **роз'їхалися** по різних містах. — After the wedding, they went to different cities.
 
 **Extended meanings:**
 
-- **розібратися** - to figure out, sort out
-- **розповісти** - to tell (spread information)
+- **розібратися** — to figure out, sort out
+- **розповісти** — to tell (spread information)
 
-### Prefix від- (Away From)
+### Prefix від- (moving away)
 
 **Meaning:** Movement AWAY from something
 
@@ -147,12 +163,16 @@ These are perfective verbs meaning "to do for a while":
 
 **Examples:**
 
-- Поїзд **відійшов** о п'ятій. - The train departed at five.
-- Машина **від'їхала**. - The car drove away.
-- **Віднесіть** це в бібліотеку. - Take this back to the library.
-- **Відійдіть** від дверей! - Step away from the door!
+- Поїзд **відійшов** о п'ятій. — The train departed at five.
+- Машина **від'їхала**. — The car drove away.
+- **Віднесіть** це в бібліотеку. — Take this back to the library.
+- **Відійдіть** від дверей! — Step away from the door!
 
-**Compare від- and ви-:**
+> **Did you know?**
+>
+> The verb **відійти** acquired the metaphorical meaning "to die" — "відійти у вічність" (to pass into eternity), "відійти від нас" (to leave us). This euphemism is based on the image of "moving away" from life. Similar euphemisms exist in many languages: English "to pass away," German "abscheiden." Motion as a metaphor for death is a universal phenomenon.
+
+### Compare: від- vs ви-
 
 | від- (away from) | ви- (out of) |
 |------------------|--------------|
@@ -163,25 +183,27 @@ These are perfective verbs meaning "to do for a while":
 
 ### Summary: All Motion Prefixes
 
-| Prefix | Meaning | Example Pair |
-|--------|---------|--------------|
+| Prefix | Meaning | Aspect pair example |
+|--------|---------|---------------------|
 | при- | TO, arrival | прийти / приходити |
 | в-/у- | INTO | увійти / входити |
 | ви- | OUT | вийти / виходити |
-| по- | start/away | піти / ходити |
-| за- | stop by, behind | зайти / заходити |
+| по- | setting off/away | піти / ходити |
+| за- | stopping by, behind | зайти / заходити |
 | пере- | across | перейти / переходити |
 | про- | through/past | пройти / проходити |
 | об- | around | обійти / обходити |
-| роз- | disperse | розійтися / розходитися |
+| роз- | dispersing | розійтися / розходитися |
 | від- | away from | відійти / відходити |
 
-## practice
+---
+
+## Practice
 
 ### Choose the Correct Prefix
 
 1. Він ___ (пішов/прийшов) додому о шостій.
-   > [!answer] **пішов** (left for home)
+   > [!answer] **пішов** (set off home)
 2. Гості ___ (розійшлися/зайшлися) після вечірки.
    > [!answer] **розійшлися** (dispersed)
 3. ___ (Зайдіть/Відійдіть) до мене завтра!
@@ -191,16 +213,16 @@ These are perfective verbs meaning "to do for a while":
 5. Сонце ___ (зайшло/вийшло) за хмару.
    > [!answer] **зайшло** (went behind)
 6. Він ___ (побіг/вибіг) на роботу.
-   > [!answer] **побіг** (ran off to)
+   > [!answer] **побіг** (set off running)
 7. Діти ___ (розбіглися/забігли) по двору.
    > [!answer] **розбіглися** (scattered)
 
 ### Form Aspect Pairs
 
-Give the imperfective:
+Give the imperfective form:
 
 1. піти
-   > [!answer] **ходити** (no new impf, uses base)
+   > [!answer] **ходити** (base form)
 2. зайти
    > [!answer] **заходити**
 3. відійти
@@ -208,7 +230,7 @@ Give the imperfective:
 4. розійтися
    > [!answer] **розходитися**
 5. поїхати
-   > [!answer] **їздити** (uses base)
+   > [!answer] **їздити** (base form)
 6. заїхати
    > [!answer] **заїжджати**
 
@@ -227,131 +249,257 @@ Give the imperfective:
 
 ### Complete the Story
 
-Fill in correct prefixed verbs:
+Fill in the correct prefixed verbs:
 
-> Вранці я ___ (left) з дому о восьмій. По дорозі я ___ (stopped by) магазин за хлібом. Потім я ___ (crossed) вулицю і ___ (entered) в офіс. Після роботи колеги ___ (dispersed) о шостій. Я ___ (walked past) парк і ___ (arrived) додому о сьомій.
+> Вранці я ___ (set off) з дому о восьмій. По дорозі я ___ (stopped by) до магазину за хлібом. Потім я ___ (crossed) вулицю і ___ (entered) в офіс. Після роботи колеги ___ (dispersed) о шостій. Я ___ (walked past) повз парк і ___ (arrived) додому о сьомій.
 
 **Answers:** пішов/вийшов, зайшов, перейшов, увійшов, розійшлися, пройшов, прийшов
 
-## production
+---
+
+## Production
 
 ### Describe a Visit
 
-Use за- verbs to describe stopping by places:
+Use за- verbs to describe stopping at places:
 
 **Example:**
-По дорозі на роботу я **заходжу** до кав'ярні за кавою. Іноді **заїжджаю** на заправку. Увечері **заходжу** до супермаркету.
+По дорозі на роботу я **заходжу** до кав'ярні за кавою. — On the way to work, I stop by the coffee shop for coffee. Іноді **заїжджаю** на заправку. — Sometimes I stop by the gas station. Увечері **заходжу** до супермаркету. — In the evening, I drop by the supermarket.
 
-### Tell About People Leaving
+### Describe a Departure
 
-Use по-, від-, роз- to describe departures:
+Use по-, від-, роз- to describe:
 
 **Example:**
-Вечірка закінчилася о півночі. Спочатку **пішли** друзі, які жили близько. Потім таксі **від'їхали** одне за одним. Нарешті всі **розійшлися**.
+Вечірка закінчилася о півночі. — The party ended at midnight. Спочатку **пішли** друзі, які жили близько. — First, friends who lived nearby left. Потім таксі **від'їхали** одне за одним. — Then the taxis drove away one by one. Нарешті всі **розійшлися**. — Finally, everyone dispersed.
 
 ---
 
-# Activities
-
-## quiz: Final Prefix Test
-
-> Choose the correct prefix.
-
-1. Вона ___ до мене на каву.
-   - [x] зайшла
-   - [ ] пішла
-   > Stop by = за-
-
-2. Поїзд ___ о десятій.
-   - [ ] прийшов
-   - [x] відійшов
-   > Departed = від-
-
-3. Після концерту люди ___ .
-   - [x] розійшлися
-   - [ ] зайшлися
-   > Dispersed = роз-
-
-4. Він ___ на роботу.
-   - [x] пішов
-   - [ ] прийшов
-   > Left for = по-
-
-5. Сонце ___ за гори.
-   - [x] зайшло
-   - [ ] вийшло
-   > Went behind = за-
-
-6. ___ від вогню!
-   - [x] Відійдіть
-   - [ ] Зайдіть
-   > Away from = від-
-
-## match-up: All Prefixes
-
-| Prefix | Meaning |
-|--------|---------|
-| при- | arrival, TO |
-| ви- | exit, OUT |
-| в-/у- | entry, INTO |
-| по- | start/away |
-| за- | stop by, behind |
-| пере- | across |
-| про- | through, past |
-| об- | around |
-| роз- | disperse |
-| від- | away from |
-
-## group-sort: By Prefix
-
-### по- (setting off)
-- піти
-- поїхати
-- побігти
-- полетіти
-
-### за- (stopping by)
-- зайти
-- заїхати
-- забігти
-
-### роз- (dispersal)
-- розійтися
-- роз'їхатися
-- розбігтися
-
-### від- (away from)
-- відійти
-- від'їхати
-- віднести
+---
 
 ---
 
-# Vocabulary
+---
 
-| Word | IPA | English | Aspect |
-|------|-----|---------|--------|
-| піти | /pʲiˈtɪ/ | to go, leave | pf |
-| поїхати | /poˈjixɑtɪ/ | to leave (vehicle) | pf |
-| заїжджати | /zɑjizˈdʒɑtɪ/ | to drive by | impf |
-| розійтися | /rozijˈtɪsʲɑ/ | to disperse | pf |
-| розходитися | /rozxoˈdɪtɪsʲɑ/ | to disperse | impf |
-| роз'їхатися | /rozˈjixɑtɪsʲɑ/ | to drive apart | pf |
-| від'їжджати | /vʲidjizˈdʒɑtɪ/ | to drive away | impf |
-| віднести | /vʲidnɛsˈtɪ/ | to take back | pf |
+# Вправи
+
+## fill-in: Доповніть речення
+
+> Оберіть правильне слово.
+
+1. Незважаючи на те, що ___ вимагає багато часу, це приносить велике задоволення.
+   > [!answer] заїжджати
+   > [!options] змінювати | починати | повертати | заїжджати
+
+2. Незважаючи на те, що ___ вимагає багато часу, це приносить велике задоволення.
+   > [!answer] від'їжджати
+   > [!options] водити | немає | іти | від'їжджати
+
+3. Незважаючи на те, що ___ вимагає багато часу, це приносить велике задоволення.
+   > [!answer] віднести
+   > [!options] віднести | сподіватися | говорити | намалювати
+
+4. Незважаючи на те, що ___ вимагає багато часу, це приносить велике задоволення.
+   > [!answer] роз'їхатися
+   > [!options] роз'їхатися | хвилюватися | запізнюватися | поділитися
+
+## unjumble: Побудуйте речення
+
+> Розташуйте слова в правильному порядку.
+
+## match-up: Знайдіть пари
+
+> З'єднайте українські слова з англійськими.
+
+| Left | Right |
+|------|-------|
+| плавання | swimming |
+| заїжджати | to drive by |
+| розійтися | to disperse |
+| вивчати | to study (subj) |
+| розходитися | to disperse |
+| розбудити | to wake up (sb) (perf) |
+| віднести | to take back |
+| кращий | better |
+| акторка | actress |
+| піти | to go, leave |
+| роз'їхатися | to drive apart |
+| від'їжджати | to drive away |
+| відповідь | answer |
+| поїхати | to leave (vehicle) |
+
+## quiz: Перевірка значень
+
+> Оберіть правильну відповідь.
+
+1. Що означає "розійтися"?
+   - [x] to disperse
+   - [ ] cutting board
+   - [ ] these
+   - [ ] nothing
+   > "розійтися" means "to disperse"
+
+2. Що означає "піти"?
+   - [ ] to taste (enjoy)
+   - [x] to go, leave
+   - [ ] basketball
+   - [ ] to agree (impf)
+   > "піти" means "to go, leave"
+
+3. Що означає "віднести"?
+   - [ ] training
+   - [ ] perspective
+   - [x] to take back
+   - [ ] to swim
+   > "віднести" means "to take back"
+
+4. Що означає "поїхати"?
+   - [ ] to wash (face)
+   - [x] to leave (vehicle)
+   - [ ] mountain
+   - [ ] near, close
+   > "поїхати" means "to leave (vehicle)"
+
+5. Що означає "заїжджати"?
+   - [x] to drive by
+   - [ ] stomach
+   - [ ] to rewrite
+   - [ ] between
+   > "заїжджати" means "to drive by"
+
+6. Що означає "роз'їхатися"?
+   - [ ] basketball
+   - [ ] most interesting
+   - [ ] to fry
+   - [x] to drive apart
+   > "роз'їхатися" means "to drive apart"
+
+7. Що означає "розходитися"?
+   - [x] to disperse
+   - [ ] park
+   - [ ] dishes
+   - [ ] dry cleaner
+   > "розходитися" means "to disperse"
+
+8. Що означає "від'їжджати"?
+   - [ ] speaking
+   - [ ] lightning
+   - [x] to drive away
+   - [ ] video game
+   > "від'їжджати" means "to drive away"
+
+## true-false: Правда чи ні?
+
+> Визначте, чи правильне твердження.
+
+- [x] "розійтися" means "to disperse"
+   > Correct!
+
+- [ ] "заїжджати" means "geography"
+   > Incorrect. "заїжджати" means "to drive by"
+
+- [x] "піти" means "to go, leave"
+   > Correct!
+
+- [x] "поїхати" means "to leave (vehicle)"
+   > Correct!
+
+- [x] "віднести" means "to take back"
+   > Correct!
+
+- [ ] "від'їжджати" means "passport"
+   > Incorrect. "від'їжджати" means "to drive away"
+
+- [x] "розходитися" means "to disperse"
+   > Correct!
+
+- [ ] "роз'їхатися" means "to rejoice"
+   > Incorrect. "роз'їхатися" means "to drive apart"
 
 ---
 
-# Review Vocabulary
+# Словник
 
-| Word | First Module |
-|------|-------------|
-| зайти | 61 |
-| заходити | 61 |
-| заїхати | 61 |
-| відійти | 61 |
-| відходити | 61 |
-| від'їхати | 61 |
+| Word | IPA | English | POS | Note |
+|------|-----|---------|-----|------|
+| піти | /pʲiˈtɪ/ | to go, leave (pf) | verb | по- + іти |
+| поїхати | /poˈjixɑtɪ/ | to leave by vehicle (pf) | verb | по- + їхати |
+| побігти | /pobʲiɦˈtɪ/ | to run off (pf) | verb | по- + бігти |
+| полетіти | /polɛˈtʲitɪ/ | to fly off (pf) | verb | по- + летіти |
+| поплисти | /poplɪsˈtɪ/ | to sail off (pf) | verb | по- + плисти |
+| понести | /ponɛsˈtɪ/ | to carry off (pf) | verb | по- + нести |
+| повезти | /povɛzˈtɪ/ | to drive off with cargo (pf) | verb | по- + везти |
+| повести | /povɛsˈtɪ/ | to lead off (pf) | verb | по- + вести |
+| походити | /poxoˈdɪtɪ/ | to walk around a bit (pf) | verb | delimitative |
+| поїздити | /pojizˈdɪtɪ/ | to drive around a bit (pf) | verb | delimitative |
+| побігати | /pobʲiˈɦɑtɪ/ | to run around a bit (pf) | verb | delimitative |
+| зайти | /zɑjˈtɪ/ | to drop by (pf) | verb | за- + іти |
+| заходити | /zɑxoˈdɪtɪ/ | to drop by (impf) | verb | secondary impf |
+| заїхати | /zɑˈjixɑtɪ/ | to stop by (vehicle) (pf) | verb | за- + їхати |
+| заїжджати | /zɑjizˈdʒɑtɪ/ | to stop by (impf) | verb | secondary impf |
+| забігти | /zɑbʲiɦˈtɪ/ | to run in briefly (pf) | verb | за- + бігти |
+| забігати | /zɑbʲiˈɦɑtɪ/ | to run in briefly (impf) | verb | secondary impf |
+| заговорити | /zɑɦovoˈrɪtɪ/ | to start speaking (pf) | verb | inchoative |
+| заспівати | /zɑspʲiˈvɑtɪ/ | to start singing (pf) | verb | inchoative |
+| заплакати | /zɑplɑˈkɑtɪ/ | to start crying (pf) | verb | inchoative |
+| розійтися | /rozijˈtɪsʲɑ/ | to disperse (pf) | verb | роз- + іти + ся |
+| розходитися | /rozxoˈdɪtɪsʲɑ/ | to disperse (impf) | verb | secondary impf |
+| роз'їхатися | /rozˈjixɑtɪsʲɑ/ | to drive apart (pf) | verb | роз- + їхати + ся |
+| роз'їжджатися | /rozjizˈdʒɑtɪsʲɑ/ | to drive apart (impf) | verb | secondary impf |
+| розбігтися | /rozbʲiɦˈtɪsʲɑ/ | to scatter running (pf) | verb | роз- + бігти + ся |
+| розбігатися | /rozbʲiˈɦɑtɪsʲɑ/ | to scatter running (impf) | verb | secondary impf |
+| розлетітися | /rozlɛˈtʲitɪsʲɑ/ | to fly apart (pf) | verb | роз- + летіти + ся |
+| розлітатися | /rozlʲiˈtɑtɪsʲɑ/ | to fly apart (impf) | verb | secondary impf |
+| розібратися | /rozʲibrɑˈtɪsʲɑ/ | to figure out (pf) | verb | роз- + брати + ся |
+| розповісти | /rozpoˈvʲistɪ/ | to tell (pf) | verb | роз- + повідати |
+| відійти | /vʲidijˈtɪ/ | to step away (pf) | verb | від- + іти |
+| відходити | /vʲidxoˈdɪtɪ/ | to step away (impf) | verb | secondary impf |
+| від'їхати | /vʲidˈjixɑtɪ/ | to drive away (pf) | verb | від- + їхати |
+| від'їжджати | /vʲidjizˈdʒɑtɪ/ | to drive away (impf) | verb | secondary impf |
+| відбігти | /vʲidbʲiɦˈtɪ/ | to run away (pf) | verb | від- + бігти |
+| відбігати | /vʲidbʲiˈɦɑtɪ/ | to run away (impf) | verb | secondary impf |
+| відлетіти | /vʲidlɛˈtʲitɪ/ | to fly away (pf) | verb | від- + летіти |
+| відлітати | /vʲidlʲiˈtɑtɪ/ | to fly away (impf) | verb | secondary impf |
+| віднести | /vʲidnɛsˈtɪ/ | to carry away (pf) | verb | від- + нести |
+| відносити | /vʲidnoˈsɪtɪ/ | to carry away (impf) | verb | secondary impf |
+| додому | /doˈdomu/ | home(ward) | adv | direction |
+| вранці | /ˈvrɑnt͡sʲi/ | in the morning | adv | - |
+| увечері | /uˈvɛt͡ʃɛrʲi/ | in the evening | adv | - |
+| по дорозі | /po doˈrozʲi/ | on the way | phrase | - |
+| вечірка | /vɛˈt͡ʃirkɑ/ | party | noun | f |
+| гість | /ɦʲistʲ/ | guest | noun | m |
+| гості | /ˈɦostʲi/ | guests | noun | pl |
+| колега | /koˈlɛɦɑ/ | colleague | noun | m/f |
+| друг | /druɦ/ | friend (m) | noun | m |
+| кава | /ˈkɑvɑ/ | coffee | noun | f |
+| хліб | /xlʲib/ | bread | noun | m |
+| хвилинка | /xvɪˈlɪnkɑ/ | a moment | noun | f, diminutive |
+| хмара | /ˈxmɑrɑ/ | cloud | noun | f |
+| ріг | /rʲiɦ/ | corner | noun | m |
+| гора | /ɦoˈrɑ/ | mountain | noun | f |
+| двір | /dvʲir/ | yard, courtyard | noun | m |
+| урок | /uˈrok/ | lesson | noun | m |
+| весілля | /vɛˈsʲilʲɑ/ | wedding | noun | n |
+| бібліотека | /bʲiblʲioˈtɛkɑ/ | library | noun | f |
+| двері | /ˈdvɛrʲi/ | door | noun | pl |
+| вогонь | /voˈɦonʲ/ | fire | noun | m |
+| стіл | /stʲil/ | table | noun | m |
+| кав'ярня | /kɑvˈjɑrnʲɑ/ | coffee shop | noun | f |
+| заправка | /zɑˈprɑvkɑ/ | gas station | noun | f |
+| супермаркет | /supɛrˈmɑrkɛt/ | supermarket | noun | m |
+| магазин | /mɑɦɑˈzɪn/ | store | noun | m |
+| таксі | /tɑkˈsʲi/ | taxi | noun | n, indecl |
+| концерт | /konˈt͡sɛrt/ | concert | noun | m |
+| літак | /lʲiˈtɑk/ | airplane | noun | m |
+| північ | /ˈpʲivnʲit͡ʃ/ | midnight; north | noun | f |
+| вічність | /ˈvʲit͡ʃnʲistʲ/ | eternity | noun | f |
+| близько | /ˈblɪzʲko/ | nearby | adv | - |
+| спочатку | /spoˈt͡ʃɑtku/ | at first | adv | - |
+| нарешті | /nɑˈrɛʃtʲi/ | finally | adv | - |
+| іноді | /ˈinodʲi/ | sometimes | adv | - |
+| завтра | /ˈzɑvtrɑ/ | tomorrow | adv | - |
+| давай | /dɑˈvɑj/ | let's | part | - |
+| о | /o/ | at (time) | prep | + locative |
 
 ---
 
@@ -361,9 +509,9 @@ Use по-, від-, роз- to describe departures:
 
 | Prefix | Meaning | Example |
 |--------|---------|---------|
-| по- | start/leave | піти (to leave) |
-| за- | stop by, behind | зайти (to drop by) |
-| роз- | disperse | розійтися (to scatter) |
+| по- | setting off/departure | піти (to leave) |
+| за- | stopping by, behind | зайти (to drop by) |
+| роз- | dispersing | розійтися (to scatter) |
 | від- | away from | відійти (to step away) |
 
 ## All 10 Motion Prefixes
@@ -371,24 +519,21 @@ Use по-, від-, роз- to describe departures:
 1. **при-** = TO, arrival
 2. **в-/у-** = INTO
 3. **ви-** = OUT
-4. **по-** = start/leave
-5. **за-** = stop by
+4. **по-** = setting off/away
+5. **за-** = stopping by
 6. **пере-** = across
 7. **про-** = through/past
 8. **об-** = around
-9. **роз-** = disperse
+9. **роз-** = dispersing
 10. **від-** = away from
 
 ## Key Distinctions
 
-- **піти** = leave, go away
-- **прийти** = arrive, come
-- **зайти** = drop by briefly
-- **відійти** = step away, depart
+- **піти** = to set off, go away
+- **прийти** = to arrive, come to
+- **зайти** = to stop by briefly
+- **відійти** = to step away, depart
 
-> **Key Takeaways**
+> **Key Point**
 >
-> - по- with motion verbs = starting motion, leaving
-> - за- = stopping by briefly OR going behind
-> - роз- = movement in different directions
-> - від- = movement away from something
+> Four final prefixes: **по-** (beginning of motion, departure), **за-** (stopping by briefly or going behind something), **роз-** (movement in different directions), **від-** (movement away from something). Now you know **all 10 prefixes**! "Піти на роботу" = to leave for work. "Зайти на каву" = to stop by for coffee. "Гості розійшлися" = the guests dispersed. "Поїзд відійшов" = the train departed. The system is complete!

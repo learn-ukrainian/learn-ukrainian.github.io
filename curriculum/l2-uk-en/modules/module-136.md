@@ -207,21 +207,235 @@ Are there similar proverbs in your language?
    - [ ] Easy come, easy go
    > Hard work is needed for results.
 
-## fill-in: Conversation with Expressions
 
-> Заповніть розмову.
+## match-up: Vocabulary Match
 
-> — Привіт! Давно не бачились! (1)___ (By the way), як справи?
-> — (2)___ (The thing is), я був зайнятий. Працював (3)___ (without rest).
-> — Розумію. (4)___ (In my opinion), треба відпочивати.
-> — Так, ти правий. (5)___ (No pain, no gain), але здоров'я важливіше!
+> Match each Ukrainian word with its English translation.
 
-**Answers:**
-1. До речі
-2. Справа в тому, що
-3. не покладаючи рук
-4. Як на мене
-5. Без труда нема плода
+| Left | Right |
+|------|-------|
+| приказка | proverb, saying |
+| прислів'я | proverb |
+| справа в капелюсі | it's in the bag |
+| народна мудрість | folk wisdom |
+| давати слово | give one's word |
+| ні сном ні духом | have no idea |
+| душа в душу | in harmony |
+| краще пізно ніж ніколи | better late than never |
+| тримати слово | keep one's word |
+| до речі | by the way |
+| без труда нема плода | no pain no gain |
+| на ножах | at odds |
+
+
+## fill-in: Fill in the Blank
+
+> Choose the correct word to complete each sentence.
+
+1. говорити ___ вітер
+   > [!answer] на
+   > [!options] на | слова | першого | сном
+
+2. слово ___ слово
+   > [!answer] за
+   > [!options] за | на | пішло | сном
+
+3. з ___ слова
+   > [!answer] першого
+   > [!options] першого | на | на | за
+
+4. за словом у ___ не лізти
+   > [!answer] кишеню
+   > [!options] кишеню | на | на | за
+
+5. брати свої ___ назад
+   > [!answer] слова
+   > [!options] слова | на | за | на
+
+6. знати як ___ п'ять пальців
+   > [!answer] свої
+   > [!options] свої | пішло | сном | слова
+
+7. мати ні ___ ні духом
+   > [!answer] сном
+   > [!options] сном | кишеню | на | пішло
+
+8. все ___ шкереберть
+   > [!answer] пішло
+   > [!options] пішло | першого | свої | за
+
+9. вийти ___ поверхню
+   > [!answer] на
+   > [!options] на | сном | свої | слова
+
+
+
+## quiz: Meaning Check
+
+> Choose the correct answer.
+
+1. What does "краще пізно ніж ніколи" mean?
+   - [ ] have no idea
+   - [x] better late than never
+   - [ ] no pain no gain
+   - [ ] in harmony
+   > "краще пізно ніж ніколи" means "better late than never"
+
+2. What does "ні сном ні духом" mean?
+   - [ ] better late than never
+   - [ ] no pain no gain
+   - [x] have no idea
+   - [ ] in harmony
+   > "ні сном ні духом" means "have no idea"
+
+3. What does "душа в душу" mean?
+   - [ ] no pain no gain
+   - [ ] better late than never
+   - [ ] have no idea
+   - [x] in harmony
+   > "душа в душу" means "in harmony"
+
+4. What does "без труда нема плода" mean?
+   - [ ] better late than never
+   - [x] no pain no gain
+   - [ ] have no idea
+   - [ ] in harmony
+   > "без труда нема плода" means "no pain no gain"
+
+5. What does "на ножах" mean?
+   - [x] at odds
+   - [ ] better late than never
+   - [ ] in harmony
+   - [ ] have no idea
+   > "на ножах" means "at odds"
+
+6. What does "приказка" mean?
+   - [ ] better late than never
+   - [ ] in harmony
+   - [x] proverb, saying
+   - [ ] have no idea
+   > "приказка" means "proverb, saying"
+
+7. What does "прислів'я" mean?
+   - [x] proverb
+   - [ ] have no idea
+   - [ ] in harmony
+   - [ ] better late than never
+   > "прислів'я" means "proverb"
+
+8. What does "справа в капелюсі" mean?
+   - [x] it's in the bag
+   - [ ] better late than never
+   - [ ] have no idea
+   - [ ] in harmony
+   > "справа в капелюсі" means "it's in the bag"
+
+9. What does "до речі" mean?
+   - [ ] better late than never
+   - [x] by the way
+   - [ ] in harmony
+   - [ ] have no idea
+   > "до речі" means "by the way"
+
+10. What does "народна мудрість" mean?
+   - [ ] in harmony
+   - [x] folk wisdom
+   - [ ] better late than never
+   - [ ] have no idea
+   > "народна мудрість" means "folk wisdom"
+
+11. What does "тримати слово" mean?
+   - [ ] better late than never
+   - [ ] in harmony
+   - [x] keep one's word
+   - [ ] have no idea
+   > "тримати слово" means "keep one's word"
+
+12. What does "давати слово" mean?
+   - [ ] have no idea
+   - [ ] in harmony
+   - [ ] better late than never
+   - [x] give one's word
+   > "давати слово" means "give one's word"
+
+
+
+## unjumble: Word Order
+
+> Drag the words into the correct order to form a sentence.
+
+1. на / говорити / вітер
+   > [!answer] говорити на вітер
+   > (speak in vain)
+
+2. за / слово / слово
+   > [!answer] слово за слово
+   > (word for word)
+
+3. з / слова / першого
+   > [!answer] з першого слова
+   > (from the first word)
+
+4. кишеню / лізти / словом / за / не / у
+   > [!answer] за словом у кишеню не лізти
+   > (never at loss for words)
+
+5. слова / свої / брати / назад
+   > [!answer] брати свої слова назад
+   > (take back words)
+
+6. знати / п'ять / як / пальців / свої
+   > [!answer] знати як свої п'ять пальців
+   > (know like back of hand)
+
+7. ні / мати / сном / ні / духом
+   > [!answer] мати ні сном ні духом
+   > (have no idea)
+
+8. темі / не / в / бути
+   > [!answer] бути не в темі
+   > (be out of loop)
+
+9. вийти / сухим / з / води
+   > [!answer] вийти сухим з води
+   > (get away with it)
+
+10. в / справа / капелюсі
+   > [!answer] справа в капелюсі
+   > (it's in the bag)
+
+11. дістати / з / неба / зірку
+   > [!answer] дістати зірку з неба
+   > (achieve impossible)
+
+12. все / пішло / шкереберть
+   > [!answer] все пішло шкереберть
+   > (everything went wrong)
+
+13. на / вийти / поверхню
+   > [!answer] вийти на поверхню
+   > (come to light)
+
+14. риба / воді / як / у
+   > [!answer] як риба у воді
+   > (like fish in water)
+
+15. в / душу / жити / душа
+   > [!answer] жити душа в душу
+   > (live in harmony)
+
+16. мову / знайти / спільну
+   > [!answer] знайти спільну мову
+   > (find common language)
+
+17. каблуком / під / бути
+   > [!answer] бути під каблуком
+   > (be under thumb)
+
+18. плода / Без / нема / труда
+   > [!answer] Без труда нема плода.
+   > (No pain, no gain.)
+
 
 ---
 

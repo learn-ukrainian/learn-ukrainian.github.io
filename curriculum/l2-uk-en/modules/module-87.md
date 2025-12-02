@@ -1,79 +1,47 @@
 ---
 module: 87
 title: "Aspect Pairs Expansion I"
-subtitle: "30 Essential Verb Pairs"
+subtitle: "Systematic patterns for verb pairs"
 level: B1
 phase: B1.1
 duration: 45
 transliteration: none
 tags: [aspect, vocabulary, verbs, verb-pairs]
 objectives:
-  - Learn 30 new aspect pairs
-  - Understand aspect formation patterns
-  - Practice using both aspects in context
-  - Build verb vocabulary systematically
+  - Master 30 new aspect pairs
+  - Understand patterns for forming aspect pairs
+  - Apply both aspects in context
+  - Systematically expand verb vocabulary
 grammar:
   - Aspect pair patterns (prefixation)
-  - Aspect pair patterns (stem change)
+  - Aspect pair patterns (suffix change)
   - Aspect pair patterns (different roots)
 ---
 
 # Lesson Content
 
-## warm-up
+## Warm-up
 
-### Building Your Verb Arsenal
+### From Basic to Systematic
 
-At A2, you learned basic aspect pairs like:
-- робити / зробити
-- читати / прочитати
-- писати / написати
+At A2 level, you learned basic aspect pairs:
+- робити / зробити — to do
+- читати / прочитати — to read
+- писати / написати — to write
 
-Now it's time to expand systematically. Understanding patterns helps you predict aspect pairs for new verbs.
+Now it's time to expand your vocabulary **systematically**. Understanding patterns will help you predict aspect pairs for new verbs — instead of memorizing each one separately.
+
+> **Did you know?**
+>
+> Ukrainian has approximately **10,000 aspect pairs** — more than any other word category! But most are formed according to **a few simple patterns**. By mastering these patterns, you'll be able to "guess" the perfective form for new verbs with over 80% accuracy.
 
 ---
 
-> **⭐ TOP 20 ESSENTIAL ASPECT PAIRS**
->
-> Master these first - they're used in almost every conversation:
->
-> **Level 1: Daily Essentials (Top 10)**
-> | # | Imperfective | Perfective | English |
-> |---|--------------|------------|---------|
-> | 1 | робити | зробити | to do/make |
-> | 2 | говорити | сказати | to speak/say |
-> | 3 | брати | взяти | to take |
-> | 4 | давати | дати | to give |
-> | 5 | писати | написати | to write |
-> | 6 | читати | прочитати | to read |
-> | 7 | їсти | з'їсти | to eat |
-> | 8 | пити | випити | to drink |
-> | 9 | бачити | побачити | to see |
-> | 10 | чути | почути | to hear |
->
-> **Level 2: High Frequency (Top 11-20)**
-> | # | Imperfective | Perfective | English |
-> |---|--------------|------------|---------|
-> | 11 | купувати | купити | to buy |
-> | 12 | відкривати | відкрити | to open |
-> | 13 | закривати | закрити | to close |
-> | 14 | починати | почати | to begin |
-> | 15 | закінчувати | закінчити | to finish |
-> | 16 | питати | запитати | to ask |
-> | 17 | відповідати | відповісти | to answer |
-> | 18 | вчити | вивчити | to learn |
-> | 19 | забувати | забути | to forget |
-> | 20 | знаходити | знайти | to find |
->
-> **Study tip:** If short on time, focus on starred (⭐) pairs first!
-
----
-
-## presentation
+## Presentation
 
 ### Pattern 1: Prefix Creates Perfective
 
-Most common pattern: Add prefix to imperfective → perfective.
+The most common pattern: add a prefix to imperfective → get perfective.
 
 | Imperfective | Perfective | English |
 |--------------|------------|---------|
@@ -88,10 +56,16 @@ Most common pattern: Add prefix to imperfective → perfective.
 | вітати | **при**вітати | to greet, congratulate |
 | рахувати | **по**рахувати | to count |
 
-**Common prefixes for aspectual pairs:**
+**Common prefixes for aspect pairs:**
 - **по-** (most common): поснідати, пообідати, побудувати
-- **при-** (often with cooking/preparing): приготувати
-- **з-/с-** (often with completing): зробити
+- **при-** (often with preparation): приготувати, привітати
+- **з-/с-** (often with completion): зробити, з'їсти
+
+> **Myth vs Fact**
+>
+> **Myth:** "Any prefix makes a verb perfective."
+>
+> **Fact:** Not every one! Some prefixes create **new verbs**, not an aspect pair. "Писати → **написати**" — aspect pair. But "писати → **виписати**" (to write out a prescription) — that's a **different verb** with different meaning. Aspect pairs preserve the same meaning.
 
 ### Pattern 2: Suffix Change -ува-/-и-
 
@@ -102,39 +76,48 @@ Some verbs switch between **-увати** (imperfective) and **-ити** (perfec
 | виконувати | виконати | to complete, fulfill |
 | використовувати | використати | to use |
 | вирішувати | вирішити | to decide, solve |
-| відповідати | відповісти | to answer |
 | замовляти | замовити | to order |
 | запрошувати | запросити | to invite |
 | здійснювати | здійснити | to implement |
-| знайомитися | познайомитися | to meet (get acquainted) |
 | отримувати | отримати | to receive |
 | показувати | показати | to show |
+| повідомляти | повідомити | to inform |
+| пояснювати | пояснити | to explain |
 
-### Pattern 3: Different Roots (Suppletive)
+> **Did you know?**
+>
+> The suffix **-увати** historically meant "to do something regularly, repeatedly." That's why it became a marker of imperfective aspect. The shorter **-ити** — a marker of completion. This logic: "longer = ongoing, shorter = completed" — works in many Slavic languages.
+
+### Pattern 3: Different Roots (Suppletion)
 
 Some pairs use completely different words:
 
 | Imperfective | Perfective | English |
 |--------------|------------|---------|
 | брати | взяти | to take |
-| говорити | сказати | to say |
+| говорити | сказати | to speak/say |
 | класти | покласти | to put |
 | шукати | знайти | to look for / find |
 | дивитися | побачити | to look / see |
 | ловити | спіймати | to catch |
 
-Note: шукати/знайти is a special pair — looking (process) vs finding (result).
+**Note:** шукати/знайти — a special pair: searching (process) vs finding (result).
 
-### Pattern 4: Stress Shift
+> **Did you know?**
+>
+> The pair **брати/взяти** is one of the oldest in Slavic languages. "Взяти" comes from Proto-Slavic *vьzęti, and "брати" — from *bьrati. They were never one word! It's like English go/went — different roots joined into one paradigm.
 
-Some pairs differ only in stress or minor changes:
+### Pattern 4: Suffix -ну-
+
+Some pairs use the suffix **-нути** for perfective (often a single action):
 
 | Imperfective | Perfective | English |
 |--------------|------------|---------|
-| скидати | скинути | to throw off |
 | кидати | кинути | to throw |
 | штовхати | штовхнути | to push |
 | стукати | стукнути | to knock |
+| кричати | крикнути | to shout |
+| махати | махнути | to wave |
 
 ### New Aspect Pairs: Communication
 
@@ -173,11 +156,17 @@ Some pairs differ only in stress or minor changes:
 | губити | загубити | to lose |
 | ламати | зламати | to break |
 
-## practice
+> **Myth vs Fact**
+>
+> **Myth:** "You need to learn each aspect pair separately."
+>
+> **Fact:** By understanding **patterns**, you can predict most pairs! If you see "-увати", look for "-ити". If you see a basic verb, try "по-" or "з-". It's like mathematical formulas for language.
+
+---
+
+## Practice
 
 ### Match the Pairs
-
-Connect imperfective with perfective:
 
 | Imperfective | Perfective |
 |--------------|------------|
@@ -210,135 +199,180 @@ Choose the correct aspect:
 1. Я довго ___ (вирішував/вирішив) цю проблему.
    > [!answer] **вирішував** (duration)
 2. Нарешті він ___ (відповідав/відповів) на моє питання!
-   > [!answer] **відповів** (finally = result)
+   > [!answer] **відповів** (нарешті = result)
 3. Вона щодня ___ (готувала/приготувала) вечерю.
-   > [!answer] **готувала** (every day)
+   > [!answer] **готувала** (щодня = repetition)
 4. Ми ___ (домовлялися/домовилися) зустрітися завтра.
    > [!answer] **домовилися** (result)
 5. Він часто ___ (забував/забув) свої речі.
-   > [!answer] **забував** (often)
+   > [!answer] **забував** (часто = repetition)
 6. Я вже ___ (запрошував/запросив) їх на вечірку.
-   > [!answer] **запросив** (already)
+   > [!answer] **запросив** (вже = result)
 
-### Transform Sentences
+### Sentence Transformation
 
-Change aspect while keeping meaning logical:
+Change the aspect, preserving logical meaning:
 
 **Imperfective → Perfective (add result):**
-1. Він готував вечерю.
-   > [!answer] Він **приготував** вечерю.
-2. Вона відповідала на листи.
-   > [!answer] Вона **відповіла** на всі листи.
-3. Ми обговорювали плани.
-   > [!answer] Ми **обговорили** плани.
+1. Він готував вечерю. (He was cooking dinner.)
+   > [!answer] Він **приготував** вечерю. (He cooked dinner.)
+2. Вона відповідала на листи. (She was answering letters.)
+   > [!answer] Вона **відповіла** на всі листи. (She answered all letters.)
+3. Ми обговорювали плани. (We were discussing plans.)
+   > [!answer] Ми **обговорили** плани. (We discussed the plans.)
 
 **Perfective → Imperfective (add duration/repetition):**
-1. Він пояснив правило.
-   > [!answer] Він **пояснював** правило п'ять хвилин.
-2. Вона запитала.
-   > [!answer] Вона завжди **запитувала**.
-3. Я вирішив задачу.
-   > [!answer] Я **вирішував** задачу годину.
+1. Він пояснив правило. (He explained the rule.)
+   > [!answer] Він **пояснював** правило п'ять хвилин. (He was explaining the rule for five minutes.)
+2. Вона запитала. (She asked.)
+   > [!answer] Вона завжди **запитувала**. (She always asked.)
+3. Я вирішив задачу. (I solved the problem.)
+   > [!answer] Я **вирішував** задачу годину. (I was solving the problem for an hour.)
 
-## production
+---
 
-### Narrate Your Day
+## Production
 
-Use these aspect pairs to describe:
-- What you did this morning (perfective for completed actions)
+### Tell About Your Day
+
+Use aspect pairs:
+- What you accomplished today (perfective for completed actions)
 - What you usually do (imperfective for habits)
 
 **Example:**
 Сьогодні я **прокинувся** о сьомій, **поснідав**, **відповів** на листи і **пішов** на роботу. Зазвичай я **снідаю** о восьмій і **відповідаю** на листи після обіду.
+(Today I woke up at seven, had breakfast, answered letters and went to work. Usually I have breakfast at eight and answer letters after lunch.)
 
 ### Create Dialogues
 
-Use at least 5 aspect pairs in a dialogue:
+Use at least 5 aspect pairs:
 
 **Example:**
-- A: Ти вже **приготувала** вечерю?
-- B: Ні, я ще **готую**. **Поможеш** мені?
-- A: Звичайно! Що **робити**?
-- B: **Відкрий** холодильник і **візьми** овочі.
+- A: Ти вже **приготувала** вечерю? (Have you made dinner already?)
+- B: Ні, я ще **готую**. **Поможеш** мені? (No, I'm still cooking. Will you help me?)
+- A: Звичайно! Що **робити**? (Of course! What should I do?)
+- B: **Відкрий** холодильник і **візьми** овочі. (Open the fridge and take the vegetables.)
 
 ---
 
-# Activities
-
-## match-up: Aspect Pairs
-
-| Imperfective | Perfective |
-|--------------|------------|
-| будувати | побудувати |
-| вирішувати | вирішити |
-| відповідати | відповісти |
-| забувати | забути |
-| показувати | показати |
-| запрошувати | запросити |
-
-## quiz: Choose the Aspect
-
-> Select based on context.
-
-1. Він довго ___ на моє питання.
-   - [x] відповідав
-   - [ ] відповів
-   > Duration = imperfective
-
-2. Нарешті вона ___ цю проблему!
-   - [ ] вирішувала
-   - [x] вирішила
-   > Нарешті = perfective
-
-3. Ми щодня ___ нові слова.
-   - [x] вчили
-   - [ ] вивчили
-   > Щодня = imperfective
-
-4. Вона вже ___ їх на свято.
-   - [ ] запрошувала
-   - [x] запросила
-   > Вже = perfective
-
-5. Він часто ___ ключі.
-   - [x] губив
-   - [ ] загубив
-   > Часто = imperfective
-
-6. ___ мені, будь ласка, де це!
-   - [ ] Показуй
-   - [x] Покажи
-   > Specific request = perfective
-
-## group-sort: Formation Patterns
-
-### Prefix Creates Perfective
-- будувати → побудувати
-- снідати → поснідати
-- готувати → приготувати
-- дякувати → подякувати
-
-### Suffix Change (-ува- → -и-)
-- вирішувати → вирішити
-- показувати → показати
-- запрошувати → запросити
-- відповідати → відповісти
-
-### Different Roots
-- брати → взяти
-- говорити → сказати
-- шукати → знайти
+---
 
 ---
 
-# Vocabulary
+---
 
-| Word | IPA | English | Aspect | Pair |
-|------|-----|---------|--------|------|
-| будувати | /buduˈvɑtɪ/ | to build | impf | побудувати |
-| побудувати | /pobuduˈvɑtɪ/ | to build (pf) | pf | будувати |
-| вирішувати | /vɪrʲiˈʃuvɑtɪ/ | to decide, solve | impf | вирішити |
-| пояснювати | /pojɑsʲˈnʲuvɑtɪ/ | to explain | impf | пояснити |
+# Вправи
+
+## fill-in: Доповніть речення
+
+> Оберіть правильне слово.
+
+1. Незважаючи на те, що ___ вимагає багато часу, це приносить велике задоволення.
+   > [!answer] пояснювати
+   > [!options] відпустити | намалювати | помилятися | пояснювати
+
+2. Незважаючи на те, що ___ вимагає багато часу, це приносить велике задоволення.
+   > [!answer] вирішувати
+   > [!options] закінчити | запрошувати | вирішувати | скаржитися
+
+3. Незважаючи на те, що ___ вимагає багато часу, це приносить велике задоволення.
+   > [!answer] будувати
+   > [!options] наймати | обмінювати | буду | будувати
+
+4. Незважаючи на те, що ___ вимагає багато часу, це приносить велике задоволення.
+   > [!answer] побудувати
+   > [!options] показувати | зняти | підслухати | побудувати
+
+## unjumble: Побудуйте речення
+
+> Розташуйте слова в правильному порядку.
+
+## match-up: Знайдіть пари
+
+> З'єднайте українські слова з англійськими.
+
+| Left | Right |
+|------|-------|
+| досягнення | achievement |
+| скасувати | to cancel (perf) |
+| пояснювати | to explain |
+| будувати | to build |
+| режисер | director |
+| тут | here |
+| побудувати | to build |
+| карате | karate |
+| вирішувати | to decide, solve |
+| три | three |
+
+## quiz: Перевірка значень
+
+> Оберіть правильну відповідь.
+
+1. Що означає "побудувати"?
+   - [x] to build
+   - [ ] to be mistaken
+   - [ ] support
+   - [ ] to suit/become
+   > "побудувати" means "to build"
+
+2. Що означає "вирішувати"?
+   - [ ] to serve
+   - [x] to decide, solve
+   - [ ] to find (perf)
+   - [ ] gym
+   > "вирішувати" means "to decide, solve"
+
+3. Що означає "будувати"?
+   - [ ] to compete
+   - [x] to build
+   - [ ] hundred
+   - [ ] economy, farm
+   > "будувати" means "to build"
+
+4. Що означає "пояснювати"?
+   - [ ] to reread
+   - [x] to explain
+   - [ ] Monday
+   - [ ] may, can
+   > "пояснювати" means "to explain"
+
+## true-false: Правда чи ні?
+
+> Визначте, чи правильне твердження.
+
+- [x] "побудувати" means "to build"
+   > Correct!
+
+- [x] "будувати" means "to build"
+   > Correct!
+
+- [x] "пояснювати" means "to explain"
+   > Correct!
+
+- [ ] "вирішувати" means "to reach (on foot)"
+   > Incorrect. "вирішувати" means "to decide, solve"
+
+---
+
+# Словник
+
+| Word | IPA | English | POS | Note |
+|------|-----|---------|-----|------|
+| префікс | /ˈprɛfʲiks/ | prefix | noun | m, grammar term |
+| суфікс | /ˈsufʲiks/ | suffix | noun | m, grammar term |
+| корінь | /ˈkorʲinʲ/ | root | noun | m, grammar term |
+| суплетивізм | /suplɛtɪˈvʲizm/ | suppletion | noun | m, grammar term |
+| модель | /moˈdɛlʲ/ | pattern, model | noun | f |
+| будувати | /buduˈvɑtɪ/ | to build | verb | impf |
+| побудувати | /pobuduˈvɑtɪ/ | to build | verb | pf |
+| вирішувати | /vɪrʲiˈʃuvɑtɪ/ | to decide, solve | verb | impf |
+| вирішити | /vɪˈrʲiʃɪtɪ/ | to decide, solve | verb | pf |
+| пояснювати | /pojɑsʲˈnʲuvɑtɪ/ | to explain | verb | impf |
+| пояснити | /pojɑsˈnɪtɪ/ | to explain | verb | pf |
+| обговорювати | /obɦovɔˈrʲuvɑtɪ/ | to discuss | verb | impf |
+| обговорити | /obɦovoˈrɪtɪ/ | to discuss | verb | pf |
+| згадувати | /zɦɑˈduvɑtɪ/ | to recall | verb | impf |
+| згадати | /zɦɑˈdɑtɪ/ | to recall | verb | pf |
 
 ---
 
@@ -346,14 +380,15 @@ Use at least 5 aspect pairs in a dialogue:
 
 | Word | First Module |
 |------|-------------|
-| вирішити | 62 |
+| вид | 41 |
+| доконаний | 41 |
+| недоконаний | 41 |
 | відповідати | 33 |
 | відповісти | 42 |
 | показувати | 31 |
 | показати | 31 |
 | запрошувати | 49 |
 | запросити | 42 |
-| пояснити | 42 |
 | домовлятися | 46 |
 | домовитися | 46 |
 
@@ -361,40 +396,37 @@ Use at least 5 aspect pairs in a dialogue:
 
 # Summary
 
-## Aspect Formation Patterns
+## Aspect Pair Formation Patterns
 
 ### Pattern 1: Prefix
-- готувати → **при**готувати
-- снідати → **по**снідати
-- будувати → **по**будувати
+- готувати → **при**готувати (to cook)
+- снідати → **по**снідати (to have breakfast)
+- будувати → **по**будувати (to build)
 
 ### Pattern 2: Suffix Change
-- вирішувати → вирішити
-- показувати → показати
-- відповідати → відповісти
+- вирішувати → вирішити (to decide)
+- показувати → показати (to show)
+- відповідати → відповісти (to answer)
 
 ### Pattern 3: Different Roots
-- брати / взяти
-- говорити / сказати
-- шукати / знайти
+- брати / взяти (to take)
+- говорити / сказати (to say)
+- шукати / знайти (to look for / find)
 
 ## 30 Pairs from This Module
 
-1. будувати / побудувати
-2. готувати / приготувати
-3. снідати / поснідати
-4. вирішувати / вирішити
-5. відповідати / відповісти
-6. показувати / показати
-7. запрошувати / запросити
-8. пояснювати / пояснити
-9. домовлятися / домовитися
-10. забувати / забути
+1. будувати / побудувати (to build)
+2. готувати / приготувати (to cook)
+3. снідати / поснідати (to have breakfast)
+4. вирішувати / вирішити (to decide)
+5. відповідати / відповісти (to answer)
+6. показувати / показати (to show)
+7. запрошувати / запросити (to invite)
+8. пояснювати / пояснити (to explain)
+9. домовлятися / домовитися (to agree)
+10. забувати / забути (to forget)
 ... (and 20 more from the lesson)
 
-> **Key Takeaways**
+> **Key Takeaway**
 >
-> - Most aspect pairs use prefix addition (по-, при-, з-)
-> - Some switch suffix: -увати → -ити
-> - A few use completely different roots
-> - Learn pairs together, not separately
+> Most aspect pairs are formed according to **three patterns**: 1) prefix (по-, при-, з-), 2) suffix change (-увати → -ити), 3) different roots (брати/взяти). Learn pairs together, not separately. By understanding patterns, you'll be able to predict the perfective form for new verbs!

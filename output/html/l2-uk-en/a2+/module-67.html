@@ -322,15 +322,18 @@ footer {
 .show-answer-btn:hover { background: #e5e5e5; }
 .show-answer-btn.revealed { background: #e8f8f0; border-color: var(--success); color: var(--success); }
 
-/* Fill-in Activity */
-.fill-container { display: flex; flex-direction: column; gap: 1rem; }
-.fill-question { border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; }
-.fill-question.answered .fill-check { display: none; }
-.fill-input { width: 100%; max-width: 300px; padding: 0.75rem 1rem; font-size: 1.1rem; border: 2px solid var(--border); border-radius: 8px; margin: 0.5rem 0; }
-.fill-input:focus { border-color: var(--primary); outline: none; }
-.fill-input.correct { border-color: var(--success); background: #e8f8f0; }
-.fill-input.wrong { border-color: var(--danger); background: #fde8e8; }
-.fill-check { margin-left: 0.5rem; }
+/* Fill-in Activity - Dropdown in Sentence */
+.fill-container { display: flex; flex-direction: column; gap: 0.75rem; }
+.fill-question { border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.5rem; }
+
+.fill-number { font-weight: 600; color: var(--text-muted); margin-right: 0.5rem; }
+.fill-sentence { font-size: 1.15rem; line-height: 1.8; }
+
+.fill-dropdown { font-size: 1rem; padding: 0.4rem 0.6rem; border: 2px solid var(--primary); border-radius: 6px; background: #fff; color: var(--primary); font-weight: 500; cursor: pointer; min-width: 120px; }
+.fill-dropdown:focus { outline: none; box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.2); }
+.fill-dropdown.correct { border-color: var(--success); background: #e8f8f0; color: var(--success); }
+.fill-dropdown.wrong { border-color: var(--danger); background: #fde8e8; color: var(--danger); }
+
 .fill-feedback { margin-top: 0.5rem; font-weight: 500; }
 .fill-feedback .correct-text { color: var(--success); }
 .fill-feedback .wrong-text { color: var(--danger); }
@@ -346,6 +349,32 @@ footer {
 .order-item.wrong { border-color: var(--danger); background: #fde8e8; }
 .order-handle { color: var(--text-muted); font-size: 1.25rem; }
 .order-text { font-size: 1.1rem; }
+
+/* Unjumble Activity - Drag and Drop */
+.unjumble-question { border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.5rem; margin-bottom: 0.75rem; display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; }
+.unjumble-question.answered .unjumble-word { cursor: default; }
+.unjumble-question.correct { border-color: var(--success); background: #f8fff8; }
+.unjumble-question.wrong { border-color: var(--danger); background: #fff8f8; }
+
+.unjumble-number { font-weight: 600; color: var(--text-muted); min-width: 2rem; }
+
+.unjumble-word-row { display: flex; flex-wrap: wrap; gap: 0.5rem; flex: 1; min-height: 42px; padding: 0.25rem; border-radius: 8px; background: #f8f9fa; }
+.unjumble-word-row.correct { background: #e8f8f0; }
+.unjumble-word-row.wrong { background: #fde8e8; }
+
+.unjumble-word { background: var(--primary); color: white; border-radius: 6px; padding: 0.5rem 0.75rem; font-size: 1rem; cursor: grab; user-select: none; transition: transform 0.1s, box-shadow 0.1s; }
+.unjumble-word:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+.unjumble-word:active { cursor: grabbing; }
+.unjumble-word.dragging { opacity: 0.5; transform: scale(1.05); }
+
+.unjumble-word.touch-clone { position: fixed; z-index: 1000; pointer-events: none; box-shadow: 0 8px 16px rgba(0,0,0,0.2); }
+
+.unjumble-actions { display: flex; gap: 0.5rem; }
+.unjumble-feedback { width: 100%; padding: 0.5rem 0 0 2.5rem; display: none; }
+.unjumble-feedback.show { display: block; }
+.unjumble-feedback .correct-text { color: var(--success); font-weight: 600; }
+.unjumble-feedback .wrong-text { color: var(--danger); }
+.unjumble-feedback .translation { color: var(--text-muted); font-style: italic; margin-left: 0.5rem; }
 
   </style>
 </head>
@@ -367,7 +396,7 @@ footer {
       <button class="nav-tab" data-section="quiz">Quiz</button>
       <button class="nav-tab" data-section="sort">Sort</button>
       <button class="nav-tab" data-section="fill">Fill</button>
-      
+      <button class="nav-tab" data-section="order">Order</button>
       <button class="nav-tab" data-section="vocab">Vocab</button>
     </div>
   </nav>
@@ -913,6 +942,9 @@ footer {
 <hr />
 <hr />
 <hr />
+<hr />
+<hr />
+<hr />
 <hr /></div>
     </div>
   
@@ -1053,38 +1085,44 @@ footer {
     </section>
   
     
-    <section id="match" class="section"><div class="card"><h3>Tool → Action</h3>
-      <div class="score-display"><span class="score"><span id="match-score">0</span>/5</span></div>
+    <section id="match" class="section"><div class="card"><h3>Знайдіть пари</h3>
+      <div class="score-display"><span class="score"><span id="match-score">0</span>/14</span></div>
       <div class="match-container" id="match-container"><svg class="match-lines" id="match-lines"></svg>
-        <div class="match-column" id="match-left"><div class="match-item" data-pair="0">ніж</div><div class="match-item" data-pair="1">сковорода</div><div class="match-item" data-pair="2">духовка</div><div class="match-item" data-pair="3">каструля</div><div class="match-item" data-pair="4">терка</div></div>
-        <div class="match-column" id="match-right"><div class="match-item" data-pair="3">варити</div><div class="match-item" data-pair="0">різати</div><div class="match-item" data-pair="4">терти</div><div class="match-item" data-pair="1">смажити</div><div class="match-item" data-pair="2">пекти</div></div>
+        <div class="match-column" id="match-left"><div class="match-item" data-pair="0">старіший</div><div class="match-item" data-pair="1">морква</div><div class="match-item" data-pair="2">сковорода</div><div class="match-item" data-pair="3">лікарка</div><div class="match-item" data-pair="4">порція</div><div class="match-item" data-pair="5">сіль</div><div class="match-item" data-pair="6">пекти</div><div class="match-item" data-pair="7">поганий</div><div class="match-item" data-pair="8">курятина</div><div class="match-item" data-pair="9">голубці</div><div class="match-item" data-pair="10">гострий</div><div class="match-item" data-pair="11">солодкий</div><div class="match-item" data-pair="12">варити</div><div class="match-item" data-pair="13">музика</div></div>
+        <div class="match-column" id="match-right"><div class="match-item" data-pair="3">doctor (f)</div><div class="match-item" data-pair="5">salt</div><div class="match-item" data-pair="13">music</div><div class="match-item" data-pair="2">frying pan</div><div class="match-item" data-pair="11">sweet</div><div class="match-item" data-pair="12">to boil, cook</div><div class="match-item" data-pair="8">chicken (meat)</div><div class="match-item" data-pair="1">carrot</div><div class="match-item" data-pair="7">bad</div><div class="match-item" data-pair="0">older</div><div class="match-item" data-pair="4">portion</div><div class="match-item" data-pair="6">to bake</div><div class="match-item" data-pair="9">stuffed cabbage</div><div class="match-item" data-pair="10">spicy, sharp</div></div>
       </div>
       <div class="completion-message" id="match-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetMatch()">Reset</button><button class="btn btn-primary" onclick="showSection('quiz')">Next →</button></div>
     </div></section>
     
-    <section id="quiz" class="section"><div class="card"><h3>Food &amp; Cooking</h3>
-      <div class="score-display"><span class="score"><span id="quiz-score">0</span>/6</span></div>
+    <section id="quiz" class="section"><div class="card"><h3>Перевірка значень</h3>
+      <div class="score-display"><span class="score"><span id="quiz-score">0</span>/14</span></div>
       <div id="quiz-container"></div>
       <div class="completion-message" id="quiz-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('sort')">Next →</button></div>
     </div></section>
     
-    <section id="sort" class="section"><div class="card"><h3>Food Categories</h3>
-      <div class="score-display"><span class="score"><span id="sort-score">0</span>/16</span></div>
+    <section id="sort" class="section"><div class="card"><h3>Сортування за родом</h3>
+      <div class="score-display"><span class="score"><span id="sort-score">0</span>/9</span></div>
       <div class="sort-pool" id="sort-pool"><div class="sort-items" id="sort-items"></div></div>
-      <div class="sort-groups"><div class="sort-group true-friends" data-group="true-friends"><h4>М'ясо</h4><div class="sort-items"></div></div><div class="sort-group false-friends" data-group="false-friends"><h4>Овочі</h4><div class="sort-items"></div></div><div class="sort-group new-letters" data-group="new-letters"><h4>Молочні</h4><div class="sort-items"></div></div><div class="sort-group " data-group="group-3"><h4>Смаки</h4><div class="sort-items"></div></div></div>
+      <div class="sort-groups"><div class="sort-group true-friends" data-group="true-friends"><h4>Чоловічий рід</h4><div class="sort-items"></div></div><div class="sort-group false-friends" data-group="false-friends"><h4>Жіночий рід</h4><div class="sort-items"></div></div></div>
       <div class="completion-message" id="sort-complete"><h3>All Sorted!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetSort()">Reset</button><button class="btn btn-primary" onclick="showSection('fill')">Next →</button></div>
     </div></section>
     
-    <section id="fill" class="section"><div class="card"><h3>Fill in the Blank</h3>
-      <div class="score-display"><span class="score"><span id="fill-score">0</span>/0</span></div>
+    <section id="fill" class="section"><div class="card"><h3>Доповніть речення</h3>
+      <div class="score-display"><span class="score"><span id="fill-score">0</span>/14</span></div>
       <div id="fill-container" class="fill-container"></div>
       <div class="completion-message" id="fill-complete"><h3>Complete!</h3></div>
-      <div class="btn-group"><button class="btn btn-outline" onclick="resetFill()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetFill()">Reset</button><button class="btn btn-primary" onclick="showSection('order')">Next →</button></div>
     </div></section>
     
+    <section id="order" class="section"><div class="card"><h3>Побудуйте речення</h3>
+      <div class="score-display"><span class="score"><span id="order-score">0</span>/13</span></div>
+      <div id="order-container" class="order-container"></div>
+      <div class="completion-message" id="order-complete"><h3>Perfect Order!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetOrder()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
+    </div></section>
     
     <section id="vocab" class="section">
       <div class="card">
@@ -1120,13 +1158,13 @@ footer {
   </main><footer>Module 67 · curricula-opus</footer>
   <script>
 
-    const matchPairs = [{"left":"ніж","right":"різати"},{"left":"сковорода","right":"смажити"},{"left":"духовка","right":"пекти"},{"left":"каструля","right":"варити"},{"left":"терка","right":"терти"}];
-    const quizData = [{"question":"To boil water, you ___ it.","options":["вариш","смажиш","печеш","ріжеш"],"correctIndex":0,"explanation":"Варити = to boil."},{"question":"Борщ is made with ___.","options":["буряк","гречка","рис","вівсянка"],"correctIndex":0,"explanation":"Borscht's main ingredient is beet (буряк)."},{"question":"Something very salty is ___.","options":["солоне","солодке","кисле","гірке"],"correctIndex":0,"explanation":"Солоний = salty."},{"question":"You fry food in a ___.","options":["сковорода","духовка","каструля","чайник"],"correctIndex":0,"explanation":"Сковорода = frying pan."},{"question":"Сметана in English is ___.","options":["sour cream","butter","milk","cheese"],"correctIndex":0,"explanation":"Сметана = sour cream."},{"question":"\"I'm full\" in Ukrainian is ___.","options":["Я наївся","Я голодний","Я хочу їсти","Мені смакує"],"correctIndex":0,"explanation":"Наїстися = to eat one's fill."}];
-    const sortData = {"true-friends":["курятина","свинина","яловичина","фарш"],"false-friends":["цибуля","морква","капуста","буряк"],"new-letters":["сметана","сир","вершки","кефір"],"group-3":["солодкий","солоний","кислий","гострий"]};
-    const fillData = {"items":[],"text":"Fill in the blanks with the correct word.","answers":[]};
-    const orderData = {"items":[],"correctOrder":[]};
+    const matchPairs = [{"left":"старіший","right":"older"},{"left":"морква","right":"carrot"},{"left":"сковорода","right":"frying pan"},{"left":"лікарка","right":"doctor (f)"},{"left":"порція","right":"portion"},{"left":"сіль","right":"salt"},{"left":"пекти","right":"to bake"},{"left":"поганий","right":"bad"},{"left":"курятина","right":"chicken (meat)"},{"left":"голубці","right":"stuffed cabbage"},{"left":"гострий","right":"spicy, sharp"},{"left":"солодкий","right":"sweet"},{"left":"варити","right":"to boil, cook"},{"left":"музика","right":"music"}];
+    const quizData = [{"question":"Що означає \"гострий\"?","options":["when","spicy, sharp","we","post office"],"correctIndex":1,"explanation":"\"гострий\" means \"spicy, sharp\""},{"question":"Що означає \"сковорода\"?","options":["to close (perf)","frying pan","to order","apology"],"correctIndex":1,"explanation":"\"сковорода\" means \"frying pan\""},{"question":"Що означає \"гречка\"?","options":["hotel","to become","buckwheat","shelf"],"correctIndex":2,"explanation":"\"гречка\" means \"buckwheat\""},{"question":"Що означає \"гіркий\"?","options":["bitter","message","notebook","fastest"],"correctIndex":0,"explanation":"\"гіркий\" means \"bitter\""},{"question":"Що означає \"варити\"?","options":["beef","resume, CV","to boil, cook","to have dinner"],"correctIndex":2,"explanation":"\"варити\" means \"to boil, cook\""},{"question":"Що означає \"голубці\"?","options":["life","day after tomorrow","traffic jam","stuffed cabbage"],"correctIndex":3,"explanation":"\"голубці\" means \"stuffed cabbage\""},{"question":"Що означає \"сметана\"?","options":["condition","news","he","sour cream"],"correctIndex":3,"explanation":"\"сметана\" means \"sour cream\""},{"question":"Що означає \"деруни\"?","options":["free, available","fifty","better","potato pancakes"],"correctIndex":3,"explanation":"\"деруни\" means \"potato pancakes\""},{"question":"Що означає \"фарш\"?","options":["bill, check","notebook","convinced","ground meat"],"correctIndex":3,"explanation":"\"фарш\" means \"ground meat\""},{"question":"Що означає \"різати\"?","options":["to cut","to believe, consider","to master, own","conductor"],"correctIndex":0,"explanation":"\"різати\" means \"to cut\""},{"question":"Що означає \"терка\"?","options":["conductor","friend (female)","January","grater"],"correctIndex":3,"explanation":"\"терка\" means \"grater\""},{"question":"Що означає \"мішати\"?","options":["to mix, stir","sneakers","cold (adv)","to finish (impf)"],"correctIndex":0,"explanation":"\"мішати\" means \"to mix, stir\""},{"question":"Що означає \"кислий\"?","options":["sour","to transfer","to reread","accounting dept"],"correctIndex":0,"explanation":"\"кислий\" means \"sour\""},{"question":"Що означає \"яловичина\"?","options":["for","professional","viewer","beef"],"correctIndex":3,"explanation":"\"яловичина\" means \"beef\""}];
+    const sortData = {"true-friends":["буряк","фарш","часник"],"false-friends":["терка","духовка","морква","свинина","дошка","цибуля"]};
+    const fillData = {"items":[{"prompt":"Вони довго шукали хорошу ___, але не знайшли.","answer":"духовка","options":["духовка","картка","переїзд","ваза"]},{"prompt":"Я давно мріяв навчитися ___, і нарешті маю таку можливість.","answer":"готувати","options":["готувати","виробляти","відпочити","вивчити"]},{"prompt":"Моя сестра каже, що їй подобається ___ у вільний час.","answer":"варити","options":["давати","варити","немає","перечитати"]},{"prompt":"Я хочу купити цю ___, але вона занадто дорога.","answer":"терка","options":["терка","картка","говоріння","секретарка"]},{"prompt":"Я давно мріяв навчитися ___, і нарешті маю таку можливість.","answer":"додавати","options":["скасувати","додавати","розбити","переходити"]},{"prompt":"Вони довго шукали хорошу ___, але не знайшли.","answer":"сковорода","options":["ремінь","батарея","сковорода","родина"]},{"prompt":"Ця ___ належить моїй подрузі з Києва.","answer":"цибуля","options":["цибуля","ложка","паспорт","депозит"]},{"prompt":"Я вважаю, що ця пропозиція є занадто ___ для нас.","answer":"гіркий","options":["найдорожчий","старіший","морський","гіркий"]},{"prompt":"Вони довго шукали хорошу ___, але не знайшли.","answer":"порція","options":["порція","машина","новість","відео"]},{"prompt":"Я хочу купити цю ___, але вона занадто дорога.","answer":"каструля","options":["виріб","живіт","школа","каструля"]},{"prompt":"Цей варіант здається мені найбільш ___ з усіх.","answer":"солоний","options":["новий","білий","солоний","українська"]},{"prompt":"Я давно мріяв навчитися ___, і нарешті маю таку можливість.","answer":"різати","options":["бракувати","домовитися","вислухати","різати"]},{"prompt":"Ця ___ належить моїй подрузі з Києва.","answer":"гречка","options":["хмара","гречка","січень","підпис"]},{"prompt":"Я вважаю, що ця пропозиція є занадто ___ для нас.","answer":"солодкий","options":["уявний","солодкий","кращий","хмарний"]}],"text":"","answers":[]};
+    const orderData = {"items":[{"words":["знайшли","не","Вони","але","хорошу","шукали","довго","яловичина"],"answer":"Вони довго шукали хорошу яловичина, але не знайшли.","translation":"beef"},{"words":["хорошу","дошка","знайшли","довго","шукали","Вони","але","не"],"answer":"Вони довго шукали хорошу дошка, але не знайшли.","translation":"cutting board"},{"words":["купити","занадто","вона","хочу","Я","але","дорога","цю","цибуля"],"answer":"Я хочу купити цю цибуля, але вона занадто дорога.","translation":"onion"},{"words":["занадто","хочу","цю","вона","каструля","купити","дорога","Я","але"],"answer":"Я хочу купити цю каструля, але вона занадто дорога.","translation":"pot"},{"words":["Я","хочу","він","занадто","дорогий","цей","часник","купити","але"],"answer":"Я хочу купити цей часник, але він занадто дорогий.","translation":"garlic"},{"words":["Ця","моїй","Києва","подрузі","з","капуста","належить"],"answer":"Ця капуста належить моїй подрузі з Києва.","translation":"cabbage"},{"words":["шукали","знайшли","буряк","але","не","довго","Вони","хороший"],"answer":"Вони довго шукали хороший буряк, але не знайшли.","translation":"beet"},{"words":["Вони","знайшли","хорошу","курятина","шукали","довго","не","але"],"answer":"Вони довго шукали хорошу курятина, але не знайшли.","translation":"chicken (meat"},{"words":["хочу","купити","занадто","дорогий","фарш","цей","Я","він","але"],"answer":"Я хочу купити цей фарш, але він занадто дорогий.","translation":"ground meat"},{"words":["належить","моїй","Києва","з","Ця","свинина","подрузі"],"answer":"Ця свинина належить моїй подрузі з Києва.","translation":"pork"},{"words":["зручна","духовка","сестра","що","сказала","її","Моя","дуже"],"answer":"Моя сестра сказала, що її духовка дуже зручна.","translation":"oven"},{"words":["хочу","купити","але","порція","вона","Я","занадто","цю","дорога"],"answer":"Я хочу купити цю порція, але вона занадто дорога.","translation":"portion"},{"words":["сметана","Я","цю","дорога","але","хочу","занадто","купити","вона"],"answer":"Я хочу купити цю сметана, але вона занадто дорога.","translation":"sour cream"}],"isUnjumble":true};
     const vocabData = [{"uk":"варити","translit":"","en":"to boil, cook","note":"impf"},{"uk":"смажити","translit":"","en":"to fry","note":"impf"},{"uk":"пекти","translit":"","en":"to bake","note":"impf"},{"uk":"готувати","translit":"","en":"to prepare, cook","note":"impf"},{"uk":"різати","translit":"","en":"to cut","note":"impf"},{"uk":"мішати","translit":"","en":"to mix, stir","note":"impf"},{"uk":"додавати","translit":"","en":"to add","note":"impf"},{"uk":"каструля","translit":"","en":"pot","note":""},{"uk":"сковорода","translit":"","en":"frying pan","note":""},{"uk":"духовка","translit":"","en":"oven","note":""},{"uk":"терка","translit":"","en":"grater","note":""},{"uk":"дошка","translit":"","en":"cutting board","note":""},{"uk":"курятина","translit":"","en":"chicken (meat)","note":""},{"uk":"свинина","translit":"","en":"pork","note":""},{"uk":"яловичина","translit":"","en":"beef","note":""},{"uk":"фарш","translit":"","en":"ground meat","note":""},{"uk":"цибуля","translit":"","en":"onion","note":""},{"uk":"часник","translit":"","en":"garlic","note":""},{"uk":"морква","translit":"","en":"carrot","note":""},{"uk":"капуста","translit":"","en":"cabbage","note":""},{"uk":"буряк","translit":"","en":"beet","note":""},{"uk":"гречка","translit":"","en":"buckwheat","note":""},{"uk":"сметана","translit":"","en":"sour cream","note":""},{"uk":"вершки","translit":"","en":"cream","note":""},{"uk":"солоний","translit":"","en":"salty","note":""},{"uk":"солодкий","translit":"","en":"sweet","note":""},{"uk":"кислий","translit":"","en":"sour","note":""},{"uk":"гіркий","translit":"","en":"bitter","note":""},{"uk":"гострий","translit":"","en":"spicy, sharp","note":""},{"uk":"соковитий","translit":"","en":"juicy","note":""},{"uk":"порція","translit":"","en":"portion","note":""},{"uk":"смакувати","translit":"","en":"to taste (enjoy)","note":"impf"},{"uk":"наїстися","translit":"","en":"to eat one's fill","note":"pf"},{"uk":"деруни","translit":"","en":"potato pancakes","note":""},{"uk":"голубці","translit":"","en":"stuffed cabbage","note":""},{"uk":"сирники","translit":"","en":"cottage cheese pancakes","note":""}];
-    const totalSort = 16;
+    const totalSort = 9;
   
 // Answer callout toggle (for new > [!answer] syntax)
 function toggleAnswer(id, btn) {
@@ -1333,7 +1371,7 @@ function resetSort() {
 }
 
 
-// Fill-in Activity
+// Fill-in Activity - Dropdown in sentence
 let fillScore = 0, fillAns = 0;
 
 function initFill() {
@@ -1344,45 +1382,82 @@ function initFill() {
   fillData.items.forEach((item, i) => {
     const div = document.createElement('div');
     div.className = 'fill-question';
+
+    // Generate options: correct answer + 3 distractors
+    let options = [];
+    if (item.options && item.options.length >= 4) {
+      options = item.options;
+    } else {
+      // Fallback: generate distractors from other items' answers
+      options = [item.answer];
+      const otherAnswers = fillData.items
+        .filter((_, idx) => idx !== i)
+        .map(it => it.answer)
+        .filter(a => a && a !== item.answer);
+
+      const shuffled = otherAnswers.sort(() => Math.random() - 0.5);
+      options.push(...shuffled.slice(0, 3));
+
+      while (options.length < 4) {
+        options.push('—');
+      }
+    }
+
+    // Shuffle options
+    const shuffledOptions = [...options].sort(() => Math.random() - 0.5);
+
+    // Replace ___ in the sentence with a dropdown
+    const sentence = (item.prompt || item.sentence || '').replace(/___/g,
+      `<select class="fill-dropdown" data-idx="${i}" data-answer="${item.answer}">
+        <option value="" disabled selected>—</option>
+        ${shuffledOptions.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
+      </select>`
+    );
+
     div.innerHTML = `
-      <h4>Q${i + 1}: ${item.prompt || item.sentence || ''}</h4>
-      <input type="text" class="fill-input" data-idx="${i}" data-answer="${item.answer || ''}" placeholder="Type your answer...">
-      <button class="btn btn-outline btn-sm fill-check" data-idx="${i}">Check</button>
+      <div class="fill-sentence">
+        <span class="fill-number">${i + 1}.</span>
+        ${sentence}
+      </div>
       <div class="fill-feedback" id="fill-fb-${i}"></div>
     `;
     c.appendChild(div);
   });
 
-  document.querySelectorAll('.fill-check').forEach(b => b.addEventListener('click', handleFill));
-  document.querySelectorAll('.fill-input').forEach(i => i.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') handleFill({ target: e.target.nextElementSibling });
-  }));
+  // Event delegation for dropdown changes
+  c.addEventListener('change', (e) => {
+    if (e.target.classList.contains('fill-dropdown')) {
+      handleFillChoice(e.target);
+    }
+  });
 }
 
-function handleFill(e) {
-  const idx = e.target.dataset.idx;
-  const q = e.target.closest('.fill-question');
+function handleFillChoice(dropdown) {
+  const q = dropdown.closest('.fill-question');
   if (q.classList.contains('answered')) return;
 
-  const input = q.querySelector('.fill-input');
-  const userAnswer = input.value.trim().toLowerCase();
-  const correctAnswer = input.dataset.answer.toLowerCase();
+  const idx = dropdown.dataset.idx;
+  const userAnswer = dropdown.value;
+  const correctAnswer = dropdown.dataset.answer;
   const fb = document.getElementById('fill-fb-' + idx);
 
   q.classList.add('answered');
+  dropdown.disabled = true;
 
   if (userAnswer === correctAnswer) {
-    input.classList.add('correct');
-    fb.innerHTML = '<span class="correct-text">Correct!</span>';
+    dropdown.classList.add('correct');
+    fb.innerHTML = '<span class="correct-text">✓ Correct!</span>';
     fillScore++;
   } else {
-    input.classList.add('wrong');
-    fb.innerHTML = `<span class="wrong-text">Answer: ${input.dataset.answer}</span>`;
+    dropdown.classList.add('wrong');
+    fb.innerHTML = `<span class="wrong-text">✗ Answer: ${correctAnswer}</span>`;
   }
 
   document.getElementById('fill-score').textContent = fillScore;
   fillAns++;
-  if (fillAns === fillData.items.length) document.getElementById('fill-complete').classList.add('show');
+  if (fillAns === fillData.items.length) {
+    document.getElementById('fill-complete').classList.add('show');
+  }
 }
 
 function resetFill() {
@@ -1402,9 +1477,217 @@ function initOrder() {
   if (!c || !orderData.items.length) return;
   c.innerHTML = '';
 
+  if (orderData.isUnjumble) {
+    initUnjumble(c);
+  } else {
+    initClassicOrder(c);
+  }
+}
+
+// UNJUMBLE: Drag-and-drop words to form sentences
+function initUnjumble(container) {
   orderTotal = orderData.items.length;
 
-  // Shuffle items for display
+  orderData.items.forEach((item, idx) => {
+    const question = document.createElement('div');
+    question.className = 'unjumble-question';
+    question.dataset.idx = idx;
+
+    // Shuffle words
+    const shuffledWords = [...item.words].sort(() => Math.random() - 0.5);
+
+    question.innerHTML = `
+      <div class="unjumble-number">${idx + 1}.</div>
+      <div class="unjumble-word-row" data-idx="${idx}">
+        ${shuffledWords.map((word, i) => `
+          <span class="unjumble-word" draggable="true" data-word="${word}">${word}</span>
+        `).join('')}
+      </div>
+      <div class="unjumble-actions">
+        <button class="btn btn-sm btn-outline unjumble-check" data-idx="${idx}">Check</button>
+        <button class="btn btn-sm btn-outline unjumble-reset" data-idx="${idx}">Reset</button>
+      </div>
+      <div class="unjumble-feedback" data-idx="${idx}"></div>
+    `;
+
+    container.appendChild(question);
+
+    // Initialize drag-and-drop for this row
+    initUnjumbleDragDrop(question.querySelector('.unjumble-word-row'));
+  });
+
+  // Event delegation for buttons
+  container.addEventListener('click', handleUnjumbleClick);
+}
+
+function initUnjumbleDragDrop(row) {
+  let dragItem = null;
+
+  row.querySelectorAll('.unjumble-word').forEach(word => {
+    word.addEventListener('dragstart', (e) => {
+      dragItem = word;
+      word.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    });
+
+    word.addEventListener('dragend', () => {
+      word.classList.remove('dragging');
+      dragItem = null;
+    });
+
+    word.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      if (!dragItem || dragItem === word) return;
+
+      const rect = word.getBoundingClientRect();
+      const midX = rect.left + rect.width / 2;
+
+      if (e.clientX < midX) {
+        row.insertBefore(dragItem, word);
+      } else {
+        row.insertBefore(dragItem, word.nextSibling);
+      }
+    });
+  });
+
+  // Touch support for mobile
+  let touchItem = null;
+  let touchClone = null;
+
+  row.querySelectorAll('.unjumble-word').forEach(word => {
+    word.addEventListener('touchstart', (e) => {
+      touchItem = word;
+      word.classList.add('dragging');
+
+      // Create a clone for visual feedback
+      touchClone = word.cloneNode(true);
+      touchClone.classList.add('touch-clone');
+      document.body.appendChild(touchClone);
+      updateTouchClone(e.touches[0]);
+    });
+
+    word.addEventListener('touchmove', (e) => {
+      e.preventDefault();
+      if (!touchItem) return;
+      updateTouchClone(e.touches[0]);
+
+      // Find which word we're over
+      const touch = e.touches[0];
+      const elements = document.elementsFromPoint(touch.clientX, touch.clientY);
+      const targetWord = elements.find(el => el.classList.contains('unjumble-word') && el !== touchItem);
+
+      if (targetWord && targetWord.parentNode === row) {
+        const rect = targetWord.getBoundingClientRect();
+        const midX = rect.left + rect.width / 2;
+        if (touch.clientX < midX) {
+          row.insertBefore(touchItem, targetWord);
+        } else {
+          row.insertBefore(touchItem, targetWord.nextSibling);
+        }
+      }
+    });
+
+    word.addEventListener('touchend', () => {
+      if (touchItem) touchItem.classList.remove('dragging');
+      if (touchClone) touchClone.remove();
+      touchItem = null;
+      touchClone = null;
+    });
+  });
+
+  function updateTouchClone(touch) {
+    if (touchClone) {
+      touchClone.style.left = (touch.clientX - 40) + 'px';
+      touchClone.style.top = (touch.clientY - 20) + 'px';
+    }
+  }
+}
+
+function handleUnjumbleClick(e) {
+  const target = e.target;
+
+  if (target.classList.contains('unjumble-check')) {
+    checkUnjumbleAnswer(parseInt(target.dataset.idx));
+  }
+
+  if (target.classList.contains('unjumble-reset')) {
+    resetUnjumbleQuestion(parseInt(target.dataset.idx));
+  }
+}
+
+function checkUnjumbleAnswer(idx) {
+  const item = orderData.items[idx];
+  const row = document.querySelector(`.unjumble-word-row[data-idx="${idx}"]`);
+  const feedback = document.querySelector(`.unjumble-feedback[data-idx="${idx}"]`);
+  const question = document.querySelector(`.unjumble-question[data-idx="${idx}"]`);
+
+  // Build user's answer from current word order
+  const words = row.querySelectorAll('.unjumble-word');
+  const userAnswer = Array.from(words).map(w => w.dataset.word).join(' ');
+
+  // Normalize for comparison (handle punctuation)
+  const normalize = (s) => s.replace(/[?!.,]/g, '').toLowerCase().trim();
+  const isCorrect = normalize(userAnswer) === normalize(item.answer);
+
+  if (isCorrect) {
+    question.classList.add('answered', 'correct');
+    row.classList.add('correct');
+    words.forEach(w => w.setAttribute('draggable', 'false'));
+    orderScore++;
+    document.getElementById('order-score').textContent = orderScore;
+
+    feedback.innerHTML = `
+      <span class="correct-text">✓ Correct!</span>
+      <span class="translation">${item.translation || ''}</span>
+    `;
+    feedback.classList.add('show');
+
+    if (orderScore === orderTotal) {
+      document.getElementById('order-complete').classList.add('show');
+    }
+  } else {
+    question.classList.add('wrong');
+    row.classList.add('wrong');
+
+    feedback.innerHTML = `
+      <span class="wrong-text">✗ Try again. Hint: ${item.answer}</span>
+    `;
+    feedback.classList.add('show');
+
+    setTimeout(() => {
+      question.classList.remove('wrong');
+      row.classList.remove('wrong');
+      feedback.classList.remove('show');
+    }, 2000);
+  }
+}
+
+function resetUnjumbleQuestion(idx) {
+  const item = orderData.items[idx];
+  const row = document.querySelector(`.unjumble-word-row[data-idx="${idx}"]`);
+  const question = document.querySelector(`.unjumble-question[data-idx="${idx}"]`);
+  const feedback = document.querySelector(`.unjumble-feedback[data-idx="${idx}"]`);
+
+  if (question.classList.contains('correct')) return;
+
+  // Re-shuffle and rebuild
+  const shuffledWords = [...item.words].sort(() => Math.random() - 0.5);
+  row.innerHTML = shuffledWords.map(word => `
+    <span class="unjumble-word" draggable="true" data-word="${word}">${word}</span>
+  `).join('');
+
+  initUnjumbleDragDrop(row);
+
+  question.classList.remove('wrong');
+  row.classList.remove('wrong');
+  feedback.innerHTML = '';
+  feedback.classList.remove('show');
+}
+
+// CLASSIC ORDER: Drag items into correct sequence
+function initClassicOrder(container) {
+  orderTotal = orderData.items.length;
+
   const shuffled = [...orderData.items].map((item, idx) => ({ text: item, origIdx: idx }));
   shuffled.sort(() => Math.random() - 0.5);
 
@@ -1416,15 +1699,14 @@ function initOrder() {
       <span class="order-text">${item.text}</span>
     </div>
   `).join('');
-  c.appendChild(div);
+  container.appendChild(div);
 
   const checkBtn = document.createElement('button');
   checkBtn.className = 'btn btn-outline';
   checkBtn.textContent = 'Check Order';
   checkBtn.onclick = checkOrder;
-  c.appendChild(checkBtn);
+  container.appendChild(checkBtn);
 
-  // Enable drag and drop
   initDragDrop();
 }
 
@@ -1462,7 +1744,6 @@ function checkOrder() {
   const items = document.querySelectorAll('.order-item');
   const currentOrder = Array.from(items).map(item => parseInt(item.dataset.orig));
 
-  // Check if order is correct (0, 1, 2, 3, ...)
   let correct = true;
   currentOrder.forEach((val, idx) => {
     const expectedIdx = orderData.correctOrder.length ? orderData.correctOrder[idx] : idx;

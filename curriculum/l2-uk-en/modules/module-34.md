@@ -292,150 +292,182 @@ Create sentences: Subject + verb + з + instrumental
 
 ---
 
+---
+
+---
+
+---
+
 # Activities
 
-## match-up: Nominative to Instrumental
+## fill-in: Complete the Sentences
 
-> Match the noun with its instrumental form.
+> Choose the correct word to complete each sentence.
+
+1. Вони планують ___ завтра.
+   > [!answer] знайомитися
+   > [!options] здаватися | відповідати | дзвонити | знайомитися
+
+2. Вони планують ___ завтра.
+   > [!answer] зустрічатися
+   > [!options] зустрічатися | перейти | могти | прошу
+
+3. Вони планують ___ завтра.
+   > [!answer] вітатися
+   > [!options] дарувати | мати | вітатися | вставати
+
+4. Де ваша велика ___?
+   > [!answer] компанія
+   > [!options] 13 | столик | компанія | осінь
+
+## unjumble: Build the Sentence
+
+> Arrange the words in the correct order.
+
+1. Де / ваша / велика / компанія
+   > [!answer] Де ваша велика компанія?
+   > (company, group)
+
+## match-up: Match the Pairs
+
+> Match Ukrainian words to their English meanings.
 
 | Left | Right |
 |------|-------|
-| друг | другом |
-| сестра | сестрою |
-| вчитель | вчителем |
-| Марія | Марією |
-| батьки | батьками |
-| подруга | подругою |
-
-## quiz: Instrumental Case
-
-> Choose the correct instrumental form.
-
-1. "I'm going with a friend (m)" - Я йду з ___.
-   - [x] другом
-   - [ ] друга
-   - [ ] другові
-   - [ ] друг
-   > Masculine instrumental: друг → другом.
-
-2. "She lives with her sister" - Вона живе з ___.
-   - [x] сестрою
-   - [ ] сестри
-   - [ ] сестрі
-   - [ ] сестру
-   > Feminine instrumental: сестра → сестрою.
-
-3. "We're talking with the teacher" - Ми розмовляємо з ___.
-   - [x] вчителем
-   - [ ] вчитель
-   - [ ] вчителя
-   - [ ] вчителеві
-   > Soft masculine instrumental: вчитель → вчителем.
-
-4. "He travels with his parents" - Він їде з ___.
-   - [x] батьками
-   - [ ] батьки
-   - [ ] батьків
-   - [ ] батькам
-   > Plural instrumental: батьки → батьками.
-
-5. "I want to be with you (informal)" - Я хочу бути з ___.
-   - [x] тобою
-   - [ ] тобі
-   - [ ] тебе
-   - [ ] ти
-   > Instrumental of ти = тобою.
-
-6. "She's meeting with him" - Вона зустрічається з ___.
-   - [x] ним
-   - [ ] його
-   - [ ] йому
-   - [ ] він
-   > Instrumental of він = ним.
-
-7. "They work with us" - Вони працюють з ___.
-   - [x] нами
-   - [ ] нас
-   - [ ] нам
-   - [ ] ми
-   > Instrumental of ми = нами.
-
-8. "Come with us!" - Ходімо з ___!
-   - [x] нами
-   - [ ] нас
-   - [ ] нам
-   - [ ] ми
-   > Instrumental of ми = нами.
-
-## group-sort: Gender in Instrumental
-
-> Sort the instrumental forms by the original noun's gender.
-
-### Masculine Instrumental
-- другом
-- братом
-- вчителем
-- батьком
-
-### Feminine Instrumental
-- сестрою
-- подругою
-- мамою
-- Марією
-
-### Plural Instrumental
-- батьками
-- друзями
-- сестрами
-- колегами
-
+| знайомитися | to get acquainted |
+| праворуч | to the right |
+| вітатися | to greet |
+| нами | (with) us |
+| з/із/зі | with |
+| аптека | pharmacy |
+| тобою | (with) you |
+| компанія | company, group |
+| разом | together |
+| четвер | Thursday |
+| нею | (with) her |
+| удвох | the two (together) |
 
 ## quiz: Meaning Check
 
 > Choose the correct answer.
 
-1. What does "прощатися" mean?
-   - [x] to say goodbye
-   - [ ] together
-   - [ ] (with) you
-   - [ ] the three (together)
-   > "прощатися" means "to say goodbye"
+1. What does "вітатися" mean?
+   - [ ] to call (phone)
+   - [ ] discount
+   - [ ] bill, check
+   - [x] to greet
+   > "вітатися" means "to greet"
 
-2. What does "утрьох" mean?
-   - [x] the three (together)
-   - [ ] to say goodbye
-   - [ ] (with) you
-   - [ ] together
-   > "утрьох" means "the three (together)"
+2. What does "знайомитися" mean?
+   - [x] to get acquainted
+   - [ ] window
+   - [ ] discount
+   - [ ] photo
+   > "знайомитися" means "to get acquainted"
 
-3. What does "вами" mean?
-   - [ ] the three (together)
-   - [x] (with) you
-   - [ ] together
-   - [ ] to say goodbye
-   > "вами" means "(with) you"
+3. What does "нею" mean?
+   - [ ] to disturb
+   - [ ] it
+   - [ ] feminine
+   - [x] (with) her
+   > "нею" means "(with) her"
 
-4. What does "разом" mean?
-   - [ ] to say goodbye
-   - [x] together
-   - [ ] the three (together)
-   - [ ] (with) you
-   > "разом" means "together"
+4. What does "ними" mean?
+   - [ ] new
+   - [x] (with) them
+   - [ ] to appear in dream
+   - [ ] dad
+   > "ними" means "(with) them"
 
-5. What does "компанія" mean?
-   - [ ] (with) you
-   - [x] company, group
-   - [ ] to say goodbye
-   - [ ] the three (together)
-   > "компанія" means "company, group"
+5. What does "з/із/зі" mean?
+   - [ ] to see
+   - [ ] banana
+   - [x] with
+   - [ ] to inform
+   > "з/із/зі" means "with"
 
-6. What does "мною" mean?
-   - [ ] the three (together)
-   - [ ] to say goodbye
+6. What does "зустрічатися" mean?
+   - [ ] twenty
+   - [x] to meet
+   - [ ] alphabet
+   - [ ] exit
+   > "зустрічатися" means "to meet"
+
+7. What does "мною" mean?
+   - [ ] soon
+   - [ ] to see
    - [x] (with) me
-   - [ ] (with) you
+   - [ ] calf
    > "мною" means "(with) me"
 
+8. What does "компанія" mean?
+   - [ ] radio
+   - [ ] to them
+   - [ ] to return
+   - [x] company, group
+   > "компанія" means "company, group"
+
+9. What does "тобою" mean?
+   - [ ] fifty
+   - [ ] document
+   - [x] (with) you
+   - [ ] music
+   > "тобою" means "(with) you"
+
+10. What does "вами" mean?
+   - [x] (with) you
+   - [ ] father
+   - [ ] husband
+   - [ ] square
+   > "вами" means "(with) you"
+
+11. What does "ним" mean?
+   - [ ] to seem
+   - [x] (with) him/it
+   - [ ] sneakers
+   - [ ] document
+   > "ним" means "(with) him/it"
+
+12. What does "нами" mean?
+   - [x] (with) us
+   - [ ] hair
+   - [ ] near, close
+   - [ ] every day
+   > "нами" means "(with) us"
+
+## true-false: True or False?
+
+> Determine if each statement is true or false.
+
+- [x] "вами" means "(with) you"
+   > Correct!
+
+- [ ] "з/із/зі" means "meat"
+   > Incorrect. "з/із/зі" means "with"
+
+- [ ] "нами" means "to sell"
+   > Incorrect. "нами" means "(with) us"
+
+- [x] "утрьох" means "the three (together)"
+   > Correct!
+
+- [ ] "знайомитися" means "can, to be able"
+   > Incorrect. "знайомитися" means "to get acquainted"
+
+- [x] "нею" means "(with) her"
+   > Correct!
+
+- [x] "разом" means "together"
+   > Correct!
+
+- [ ] "удвох" means "to advise"
+   > Incorrect. "удвох" means "the two (together)"
+
+- [x] "вітатися" means "to greet"
+   > Correct!
+
+- [x] "ним" means "(with) him/it"
+   > Correct!
 
 ---
 

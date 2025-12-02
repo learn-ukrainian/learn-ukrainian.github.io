@@ -260,136 +260,139 @@ Use тому що/бо:
 
 ---
 
+---
+
+---
+
+---
+
 # Activities
 
-## match-up: Conjunctions
+## fill-in: Complete the Sentences
 
-> Match with meaning.
+> Choose the correct word to complete each sentence.
+
+1. Я хочу навчитися ___.
+   > [!answer] розбудити
+   > [!options] був | просити | йти | розбудити
+
+2. Вони планують ___ завтра.
+   > [!answer] змокнути
+   > [!options] змокнути | ішла | любити | закривати
+
+3. Чи ти вмієш добре ___?
+   > [!answer] продовжувати
+   > [!options] мати | хотіти | продовжувати | стояти
+
+## unjumble: Build the Sentence
+
+> Arrange the words in the correct order.
+
+## match-up: Match the Pairs
+
+> Match Ukrainian words to their English meanings.
 
 | Left | Right |
 |------|-------|
-| щоб | in order to |
+| місяць | month |
 | хоча | although |
-| тому що | because |
+| неохоче | reluctantly |
+| хоч | although (casual) |
+| дякувати | to thank |
+| розбудити | to wake up (sb) (perf) |
+| змокнути | to get wet (perf) |
+| більший | bigger |
+| щоб | in order to, so that |
 | бо | because (casual) |
-| через | because of |
-| поки | while |
-
-## quiz: Complex Sentences
-
-> Choose the correct conjunction.
-
-1. "I study to learn" - Я вчуся, ___ знати.
-   - [x] щоб
-   - [ ] хоча
-   - [ ] тому що
-   - [ ] але
-   > Purpose = щоб.
-
-2. "Although it's cold" - ___ холодно, я вийшов.
-   - [x] Хоча
-   - [ ] Щоб
-   - [ ] Тому що
-   - [ ] Бо
-   > Contrast = хоча.
-
-3. "I stayed because of rain" - Я залишився ___ дощ.
-   - [x] через
-   - [ ] тому що
-   - [ ] щоб
-   - [ ] хоча
-   > Через + noun.
-
-4. "Tell him to come" - Скажи йому, ___ прийшов.
-   - [x] щоб
-   - [ ] що
-   - [ ] який
-   - [ ] коли
-   > Request = щоб + past.
-
-5. "She's happy because..." - Вона щаслива, ___ здала екзамен.
-   - [x] бо
-   - [ ] щоб
-   - [ ] хоча
-   - [ ] але
-   > Reason = бо/тому що.
-
-6. "In order not to be late" - ___ не запізнитися.
-   - [x] Щоб
-   - [ ] Хоча
-   - [ ] Тому що
-   - [ ] Через
-   > Negative purpose = щоб не.
-
-## group-sort: Reason vs Purpose vs Contrast
-
-> Sort by function.
-
-### Purpose (щоб)
-- щоб знати
-- щоб допомогти
-- щоб не запізнитися
-- щоб вони прийшли
-
-### Reason (тому що/бо)
-- тому що втомився
-- бо захворів
-- через затори
-- тому що холодно
-
-### Contrast (хоча)
-- хоча дорого
-- хоча холодно
-- хоча втомився
-- хоча не хотів
-
+| продовжувати | to continue (ongoing) |
 
 ## quiz: Meaning Check
 
 > Choose the correct answer.
 
-1. What does "тому що" mean?
-   - [ ] although
-   - [ ] although (casual)
-   - [ ] to wake up (sb) (perf)
-   - [x] because
-   > "тому що" means "because"
+1. What does "щоб" mean?
+   - [x] in order to, so that
+   - [ ] to turn out
+   - [ ] eight
+   - [ ] your (pl, informal)
+   > "щоб" means "in order to, so that"
 
-2. What does "хоч" mean?
-   - [ ] to wake up (sb) (perf)
-   - [ ] although
-   - [ ] because
+2. What does "бо" mean?
+   - [ ] cold (adv)
+   - [x] because (casual)
+   - [ ] bag
+   - [ ] ten
+   > "бо" means "because (casual)"
+
+3. What does "хоч" mean?
+   - [ ] receipt
+   - [ ] to disturb
+   - [ ] Wednesday
    - [x] although (casual)
    > "хоч" means "although (casual)"
 
-3. What does "хоча" mean?
-   - [ ] although (casual)
-   - [ ] because
-   - [ ] to wake up (sb) (perf)
+4. What does "змокнути" mean?
+   - [ ] advice
+   - [ ] most important
+   - [x] to get wet (perf)
+   - [ ] we
+   > "змокнути" means "to get wet (perf)"
+
+5. What does "хоча" mean?
    - [x] although
+   - [ ] to understand (perf)
+   - [ ] secretary (f)
+   - [ ] one's own (m)
    > "хоча" means "although"
 
-4. What does "розбудити" mean?
-   - [ ] although
-   - [ ] because
-   - [ ] although (casual)
+6. What does "продовжувати" mean?
+   - [ ] back
+   - [ ] tip
+   - [x] to continue (ongoing)
+   - [ ] son
+   > "продовжувати" means "to continue (ongoing)"
+
+7. What does "неохоче" mean?
+   - [x] reluctantly
+   - [ ] if (unreal)
+   - [ ] with
+   - [ ] to wake up (sb) (perf)
+   > "неохоче" means "reluctantly"
+
+8. What does "розбудити" mean?
+   - [ ] help
+   - [ ] Shopping: розмір, колір, ціна, знижка
+   - [ ] to me
    - [x] to wake up (sb) (perf)
    > "розбудити" means "to wake up (sb) (perf)"
 
-5. What does "продовжувати" mean?
-   - [x] to continue (impf)
-   - [ ] although (casual)
-   - [ ] although
-   - [ ] because
-   > "продовжувати" means "to continue (impf)"
+## true-false: True or False?
 
-6. What does "щоб" mean?
-   - [ ] although
-   - [ ] because
-   - [x] in order to, so that
-   - [ ] although (casual)
-   > "щоб" means "in order to, so that"
+> Determine if each statement is true or false.
 
+- [ ] "хоч" means "to ask (perf)"
+   > Incorrect. "хоч" means "although (casual)"
+
+- [ ] "змокнути" means "to you"
+   > Incorrect. "змокнути" means "to get wet (perf)"
+
+- [x] "неохоче" means "reluctantly"
+   > Correct!
+
+- [ ] "хоча" means "car"
+   > Incorrect. "хоча" means "although"
+
+- [x] "продовжувати" means "to continue (ongoing)"
+   > Correct!
+
+- [ ] "щоб" means "to tell (once)"
+   > Incorrect. "щоб" means "in order to, so that"
+
+- [x] "бо" means "because (casual)"
+   > Correct!
+
+- [x] "розбудити" means "to wake up (sb) (perf)"
+   > Correct!
 
 ---
 

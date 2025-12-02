@@ -265,6 +265,123 @@ Describe completed actions using participles:
 | знайти | знайдений |
 | запросити | запрошений |
 
+
+## fill-in: Fill in the Blank
+
+> Choose the correct word to complete each sentence.
+
+
+
+## quiz: Meaning Check
+
+> Choose the correct answer.
+
+1. What does "збудований" mean?
+   - [ ] open(ed)
+   - [ ] passive
+   - [x] built
+   - [ ] invited
+   > "збудований" means "built"
+
+2. What does "відкритий" mean?
+   - [x] open(ed)
+   - [ ] passive
+   - [ ] built
+   - [ ] invited
+   > "відкритий" means "open(ed)"
+
+3. What does "пасивний" mean?
+   - [ ] invited
+   - [ ] open(ed)
+   - [x] passive
+   - [ ] built
+   > "пасивний" means "passive"
+
+4. What does "запрошений" mean?
+   - [x] invited
+   - [ ] built
+   - [ ] passive
+   - [ ] open(ed)
+   > "запрошений" means "invited"
+
+5. What does "дієприкметник" mean?
+   - [ ] passive
+   - [ ] open(ed)
+   - [x] participle
+   - [ ] built
+   > "дієприкметник" means "participle"
+
+6. What does "закритий" mean?
+   - [ ] open(ed)
+   - [x] closed
+   - [ ] built
+   - [ ] passive
+   > "закритий" means "closed"
+
+7. What does "куплений" mean?
+   - [ ] open(ed)
+   - [x] bought
+   - [ ] passive
+   - [ ] built
+   > "куплений" means "bought"
+
+8. What does "приготовлений" mean?
+   - [ ] built
+   - [x] prepared
+   - [ ] open(ed)
+   - [ ] passive
+   > "приготовлений" means "prepared"
+
+9. What does "прочитаний" mean?
+   - [ ] built
+   - [ ] open(ed)
+   - [ ] passive
+   - [x] read
+   > "прочитаний" means "read"
+
+10. What does "написаний" mean?
+   - [ ] passive
+   - [x] written
+   - [ ] built
+   - [ ] open(ed)
+   > "написаний" means "written"
+
+11. What does "організований" mean?
+   - [x] organized
+   - [ ] passive
+   - [ ] built
+   - [ ] open(ed)
+   > "організований" means "organized"
+
+12. What does "забутий" mean?
+   - [ ] open(ed)
+   - [ ] built
+   - [ ] passive
+   - [x] forgotten
+   > "забутий" means "forgotten"
+
+13. What does "зроблений" mean?
+   - [x] done, made
+   - [ ] passive
+   - [ ] built
+   - [ ] open(ed)
+   > "зроблений" means "done, made"
+
+14. What does "знайдений" mean?
+   - [x] found
+   - [ ] open(ed)
+   - [ ] built
+   - [ ] passive
+   > "знайдений" means "found"
+
+15. What does "втрачений" mean?
+   - [ ] built
+   - [ ] passive
+   - [ ] open(ed)
+   - [x] lost
+   > "втрачений" means "lost"
+
+
 ---
 
 # Vocabulary

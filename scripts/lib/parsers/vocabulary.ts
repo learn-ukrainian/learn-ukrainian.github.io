@@ -7,6 +7,7 @@
  *
  * 3 columns (B2+): Слово | Переклад | Примітки
  * 4 columns (B2):  Слово | Вимова | Переклад | Приклад
+ * 5 columns (B1):  Word | IPA | English | POS | Note
  * 6 columns:       Word | IPA | English | POS | Gender | Note
  * 7 columns (A1):  Word | Translit | IPA | English | POS | Gender | Note
  *
@@ -45,18 +46,30 @@ export function parseVocabulary(body: string, moduleNum: number): {
     const vocabContent = vocabMatch[1];
     restBody = restBody.replace(vocabMatch[0], '');
 
-    // Find table in vocab content
-    const tableMatch = vocabContent.match(/\|[^\n]+\|\n\|[-|\s]+\|\n([\s\S]*?)(?=\n\n|$)/);
+    // Find table in vocab content - capture header row too
+    const tableMatch = vocabContent.match(/(\|[^\n]+\|)\n\|[-|\s]+\|\n([\s\S]*?)(?=\n\n|$)/);
 
     if (tableMatch) {
-      const rows = tableMatch[1].trim().split('\n');
+      // Parse header to get expected column count
+      const headerRow = tableMatch[1];
+      const headerCells = headerRow.split('|').slice(1, -1).map(c => c.trim());
+      const expectedCols = headerCells.length;
+
+      const rows = tableMatch[2].trim().split('\n');
 
       for (let i = 0; i < rows.length; i++) {
         const row = rows[i];
-        const cells = row.split('|').filter(c => c.trim());
+        // Split by |, remove first/last empty strings from split
+        const rawCells = row.split('|');
+        const cells = rawCells.slice(1, -1).map(c => c.trim());
+
+        // Pad cells to match header column count (for rows with missing trailing columns)
+        while (cells.length < expectedCols) {
+          cells.push('');
+        }
 
         // Need at least 2 columns (word + translation)
-        if (cells.length >= 2) {
+        if (cells.length >= 2 && cells[0]) {
           const word = parseVocabRow(cells, moduleNum, i);
           word.isNew = true;
           word.firstModule = moduleNum;
@@ -84,12 +97,14 @@ export function parseVocabulary(body: string, moduleNum: number): {
 
       for (let i = 0; i < rows.length; i++) {
         const row = rows[i];
-        const cells = row.split('|').filter(c => c.trim());
+        // Split by |, remove first/last empty strings from split, but keep empty columns
+        const rawCells = row.split('|');
+        const cells = rawCells.slice(1, -1).map(c => c.trim());
 
         // Review table: Word | First Module
-        if (cells.length >= 2) {
-          const uk = cells[0]?.trim() || '';
-          const firstModuleStr = cells[1]?.trim() || '';
+        if (cells.length >= 2 && cells[0]) {
+          const uk = cells[0] || '';
+          const firstModuleStr = cells[1] || '';
           const firstModule = parseInt(firstModuleStr) || 0;
 
           const word: VocabWord = {
@@ -116,6 +131,7 @@ export function parseVocabulary(body: string, moduleNum: number): {
  * Supports multiple table formats:
  * - 3 columns: Word | Translation | Notes (B2+ simplified)
  * - 4 columns: Word | IPA | Translation | Example (B2 with pronunciation)
+ * - 5 columns: Word | IPA | English | POS | Note (B1)
  * - 6 columns: Word | IPA | English | POS | Gender | Note
  * - 7 columns: Word | Translit | IPA | English | POS | Gender | Note
  */
@@ -141,6 +157,15 @@ function parseVocabRow(cells: string[], moduleNum: number, index: number): Vocab
     pos = cells[3]?.trim() || 'noun';
     gender = parseGender(cells[4]?.trim());
     note = cells[5]?.trim() || undefined;
+  } else if (cells.length === 5) {
+    // 5 columns: Word | IPA | English | POS | Note
+    uk = cells[0]?.trim() || '';
+    translit = undefined;
+    ipa = cells[1]?.trim() || undefined;
+    en = cells[2]?.trim() || '';
+    pos = cells[3]?.trim() || 'noun';
+    gender = undefined;
+    note = cells[4]?.trim() || undefined;
   } else if (cells.length === 4) {
     // 4 columns: Word | IPA | Translation | Example
     // IPA starts with /

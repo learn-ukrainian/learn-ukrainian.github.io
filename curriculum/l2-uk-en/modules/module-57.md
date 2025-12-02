@@ -296,183 +296,239 @@ Talk about your work:
 
 ---
 
+---
+
+---
+
+---
+
 # Activities
 
-## match-up: Professions
+## fill-in: Complete the Sentences
 
-> Match Ukrainian with English.
+> Choose the correct word to complete each sentence.
+
+1. Де ваше велике ___?
+   > [!answer] резюме
+   > [!options] резюме | курс | лікар | поїзд
+
+2. Ця ___ коштує сто гривень.
+   > [!answer] зарплата
+   > [!options] чашка | тиждень | зарплата | мова
+
+3. Ця ___ коштує сто гривень.
+   > [!answer] робота
+   > [!options] весна | музика | шепіт | робота
+
+4. Це мій новий ___.
+   > [!answer] графік
+   > [!options] сніг | графік | лист | олівець
+
+5. Це моя нова ___.
+   > [!answer] відпустка
+   > [!options] ліки | відпустка | українець | сало
+
+6. Де ваша велика ___?
+   > [!answer] співбесіда
+   > [!options] музика | дитина | відпустка | співбесіда
+
+## unjumble: Build the Sentence
+
+> Arrange the words in the correct order.
+
+1. цю / Я / відпустка / хочу / купити
+   > [!answer] Я хочу купити цю відпустка.
+   > (vacation)
+
+2. коштує / гривень / Це / сто / підвищення
+   > [!answer] Це підвищення коштує сто гривень.
+   > (promotion)
+
+3. ваша / співбесіда / велика / Де
+   > [!answer] Де ваша велика співбесіда?
+   > (interview)
+
+4. брат / професія / хорошу / Мій / має
+   > [!answer] Мій брат має хорошу професія.
+   > (profession)
+
+5. нова / моя / робота / Це
+   > [!answer] Це моя нова робота.
+   > (work, job)
+
+6. купити / Я / це / резюме / хочу
+   > [!answer] Я хочу купити це резюме.
+   > (resume, CV)
+
+7. Це / графік / новий / мій
+   > [!answer] Це мій новий графік.
+   > (schedule)
+
+8. Я / хочу / купити / обов'язок / цей
+   > [!answer] Я хочу купити цей обов'язок.
+   > (duty, responsibility)
+
+9. нова / вакансія / моя / Це
+   > [!answer] Це моя нова вакансія.
+   > (vacancy, job opening)
+
+10. має / зарплата / брат / Мій / хорошу
+   > [!answer] Мій брат має хорошу зарплата.
+   > (salary)
+
+## match-up: Match the Pairs
+
+> Match Ukrainian words to their English meanings.
 
 | Left | Right |
 |------|-------|
-| програміст | programmer |
-| бухгалтер | accountant |
-| вчитель | teacher |
-| лікар | doctor |
-| менеджер | manager |
-| юрист | lawyer |
-
-## quiz: Work Vocabulary
-
-> Choose the correct answer.
-
-1. "What do you do?" - ___ ви працюєте?
-   - [x] Ким
-   - [ ] Що
-   - [ ] Як
-   - [ ] Де
-   > "As whom" = Ким.
-
-2. "I work as a teacher" - Я працюю ___.
-   - [x] вчителем
-   - [ ] вчитель
-   - [ ] вчителя
-   - [ ] вчителю
-   > Instrumental = вчителем.
-
-3. "I'm looking for a job" - Я ___ роботу.
-   - [x] шукаю
-   - [ ] знаходжу
-   - [ ] маю
-   - [ ] беру
-   > To look for = шукати.
-
-4. "Job interview" - ___.
-   - [x] Співбесіда
-   - [ ] Зустріч
-   - [ ] Розмова
-   - [ ] Бесіда
-   > Job interview = співбесіда.
-
-5. "I got a promotion" - Я отримав ___.
-   - [x] підвищення
-   - [ ] підвищити
-   - [ ] підвищую
-   - [ ] підвищений
-   > Noun = підвищення.
-
-6. "I'm responsible for..." - Я ___ за...
-   - [x] відповідаю
-   - [ ] відповідальний
-   - [ ] відповідь
-   - [ ] відповідати
-   > Verb = відповідаю.
-
-## group-sort: Office vs Service Jobs
-
-> Sort professions.
-
-### Office Jobs
-- програміст
-- бухгалтер
-- менеджер
-- юрист
-- аналітик
-
-### Service Jobs
-- продавець
-- офіціант
-- кухар
-- перукар
-- водій
-
-
-## true-false: True or False?
-
-> Determine if each statement is true or false.
-
-- [x] "професія" is feminine.
-   > Correct! професія is feminine.
-
-- [x] "робота" is feminine.
-   > Correct! робота is feminine.
-
-- [x] "вакансія" is feminine.
-   > Correct! вакансія is feminine.
-
-- [x] "резюме" is neuter.
-   > Correct! резюме is neuter.
-
-- [ ] "співбесіда" is masculine.
-   > Incorrect. співбесіда is feminine.
-
-- [ ] "зарплата" is masculine.
-   > Incorrect. зарплата is feminine.
-
-
-## fill-in: Fill in the Blank
-
-> Fill in the blanks with the correct word.
-
-
+| відпочивати | to rest (impf) |
+| найдорожчий | most expensive |
+| обов'язок | duty, responsibility |
+| віддалено | remotely |
+| попереду | in front, ahead |
+| резюме | resume, CV |
+| робота | work, job |
+| зарплата | salary |
+| співбесіда | interview |
+| графік | schedule |
+| відпустка | vacation |
+| вакансія | vacancy, job opening |
 
 ## quiz: Meaning Check
 
 > Choose the correct answer.
 
-1. What does "резюме" mean?
-   - [ ] interview
-   - [x] resume, CV
-   - [ ] remotely
-   - [ ] salary
-   > "резюме" means "resume, CV"
+1. What does "робота" mean?
+   - [ ] trolleybus
+   - [x] work, job
+   - [ ] wireless
+   - [ ] to count, recount
+   > "робота" means "work, job"
 
-2. What does "віддалено" mean?
-   - [ ] resume, CV
-   - [ ] salary
-   - [x] remotely
-   - [ ] interview
-   > "віддалено" means "remotely"
-
-3. What does "співбесіда" mean?
-   - [x] interview
-   - [ ] salary
-   - [ ] remotely
-   - [ ] resume, CV
-   > "співбесіда" means "interview"
-
-4. What does "зарплата" mean?
-   - [x] salary
-   - [ ] resume, CV
-   - [ ] interview
-   - [ ] remotely
-   > "зарплата" means "salary"
-
-5. What does "професія" mean?
+2. What does "професія" mean?
    - [x] profession
-   - [ ] resume, CV
-   - [ ] remotely
-   - [ ] interview
+   - [ ] to arrive (by vehicle)
+   - [ ] they will be
+   - [ ] one (m)
    > "професія" means "profession"
 
-6. What does "обов'язок" mean?
-   - [ ] resume, CV
-   - [ ] interview
-   - [ ] remotely
+3. What does "відпустка" mean?
+   - [ ] possibly, maybe
+   - [ ] to carry
+   - [x] vacation
+   - [ ] sender
+   > "відпустка" means "vacation"
+
+4. What does "віддалено" mean?
+   - [ ] bag
+   - [ ] meat
+   - [ ] hotel
+   - [x] remotely
+   > "віддалено" means "remotely"
+
+5. What does "співбесіда" mean?
+   - [ ] to return (perf)
+   - [ ] suitcase
+   - [x] interview
+   - [ ] at most
+   > "співбесіда" means "interview"
+
+6. What does "резюме" mean?
+   - [ ] to call (pf)
+   - [ ] dad
+   - [ ] park
+   - [x] resume, CV
+   > "резюме" means "resume, CV"
+
+7. What does "зарплата" mean?
+   - [x] salary
+   - [ ] why
+   - [ ] because (casual)
+   - [ ] to answer (perf)
+   > "зарплата" means "salary"
+
+8. What does "графік" mean?
+   - [ ] hard, heavy
+   - [ ] cheaper
+   - [ ] then
+   - [x] schedule
+   > "графік" means "schedule"
+
+9. What does "обов'язок" mean?
+   - [ ] to try on
+   - [ ] thunderstorm
    - [x] duty, responsibility
+   - [ ] phone
    > "обов'язок" means "duty, responsibility"
 
+10. What does "вакансія" mean?
+   - [ ] to meet
+   - [ ] good, okay
+   - [x] vacancy, job opening
+   - [ ] to master, own
+   > "вакансія" means "vacancy, job opening"
 
+11. What does "підвищення" mean?
+   - [ ] fifty
+   - [ ] my (feminine)
+   - [x] promotion
+   - [ ] color
+   > "підвищення" means "promotion"
 
-## unjumble: Word Order
+## true-false: True or False?
 
-> Put the words in the correct order to form a sentence.
+> Determine if each statement is true or false.
 
-1. працюєте / Ким / ви
-   > [!answer] Ким ви працюєте?
-   > (Я працюю + Instrumental)
+- [x] "співбесіда" means "interview"
+   > Correct!
 
-2. Де / ви / працюєте
-   > [!answer] Де ви працюєте?
-   > (Я працюю в/на + Locative)
+- [x] "відпустка" means "vacation"
+   > Correct!
 
-3. повну / на / ставку
-   > [!answer] на повну ставку
-   > (full-time)
+- [ ] "віддалено" means "newspaper"
+   > Incorrect. "віддалено" means "remotely"
 
-4. часткову / на / ставку
-   > [!answer] на часткову ставку
-   > (part-time)
+- [x] "обов'язок" means "duty, responsibility"
+   > Correct!
 
+- [ ] "графік" means "Sunday"
+   > Incorrect. "графік" means "schedule"
+
+- [ ] "зарплата" means "fresh"
+   > Incorrect. "зарплата" means "salary"
+
+- [ ] "вакансія" means "to lie down"
+   > Incorrect. "вакансія" means "vacancy, job opening"
+
+- [x] "підвищення" means "promotion"
+   > Correct!
+
+- [ ] "професія" means "family"
+   > Incorrect. "професія" means "profession"
+
+- [ ] "резюме" means "medicine"
+   > Incorrect. "резюме" means "resume, CV"
+
+## group-sort: Sort by Gender
+
+> Sort the nouns into gender categories.
+
+### Masculine
+- графік
+- обов'язок
+
+### Feminine
+- професія
+- зарплата
+- вакансія
+- робота
+- співбесіда
+- відпустка
+
+### Neuter
+- підвищення
+- резюме
 
 ---
 

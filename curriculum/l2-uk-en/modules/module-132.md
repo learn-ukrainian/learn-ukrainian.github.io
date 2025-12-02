@@ -240,18 +240,167 @@ Choose a topic and discuss using variety:
    - [ ] міркувати
    > Most general verb.
 
-## fill-in: Opinion Paragraph
 
-> Виразіть свою думку.
+## match-up: Vocabulary Match
 
-> (1)___ (I think), що технології змінюють наше життя. (2)___ (I believe firmly), це позитивні зміни. Однак (3)___ (it seems to me), що ми занадто залежні від гаджетів. (4)___ (Pondering) над цим, (5)___ (I suppose), потрібен баланс.
+> Match each Ukrainian word with its English translation.
 
-**Answers:**
-1. Думаю / Гадаю
-2. Вважаю
-3. мені здається
-4. Міркуючи
-5. гадаю
+| Left | Right |
+|------|-------|
+| роздумувати | to deliberate |
+| переконання | belief, conviction |
+| міркувати | to ponder, reflect |
+| припускати | to suppose, assume |
+| враження | impression |
+| роздум | reflection, thought |
+
+
+## fill-in: Fill in the Blank
+
+> Choose the correct word to complete each sentence.
+
+1. Я думаю ___ тебе.
+   > [!answer] про
+   > [!options] про | його | що | над
+
+2. Я думаю, ___ так.
+   > [!answer] що
+   > [!options] що | здається | над | це
+
+3. Гадаю, ___ спізниться.
+   > [!answer] він
+   > [!options] він | що | його | не
+
+4. Не гадав, ___ так буде.
+   > [!answer] що
+   > [!options] що | про | не | він
+
+5. Гадаю, ___ так.
+   > [!answer] що
+   > [!options] що | про | його | здається
+
+6. Я вважаю ___ помилкою.
+   > [!answer] це
+   > [!options] це | про | здається | що
+
+7. Вважаю ___ другом.
+   > [!answer] його
+   > [!options] його | не | це | про
+
+8. Вважаю, що ___ правий.
+   > [!answer] він
+   > [!options] він | чи | що | що
+
+9. Він міркує ___ проблемою.
+   > [!answer] над
+   > [!options] над | про | здається | що
+
+10. Міркую ___ майбутнє.
+   > [!answer] про
+   > [!options] про | що | чи | здається
+
+11. Мені здається, ___ хворий.
+   > [!answer] він
+   > [!options] він | це | цілий | його
+
+12. Здається, ___ дощ.
+   > [!answer] що
+   > [!options] що | це | його | над
+
+13. Мені ___ так.
+   > [!answer] здається
+   > [!options] здається | що | що | про
+
+14. Роздумую, ___ погодитися.
+   > [!answer] чи
+   > [!options] чи | він | це | про
+
+15. Роздумував ___ день.
+   > [!answer] цілий
+   > [!options] цілий | над | він | його
+
+16. Я так ___ думаю.
+   > [!answer] не
+   > [!options] не | цілий | про | про
+
+
+
+## unjumble: Word Order
+
+> Drag the words into the correct order to form a sentence.
+
+1. тебе / про / Я / думаю
+   > [!answer] Я думаю про тебе.
+   > (I'm thinking about you.)
+
+2. думаю / Я / так / що
+   > [!answer] Я думаю, що так.
+   > (I think so.)
+
+3. він / Гадаю / спізниться
+   > [!answer] Гадаю, він спізниться.
+   > (I suppose he'll be late.)
+
+4. буде / Не / що / гадав / так
+   > [!answer] Не гадав, що так буде.
+   > (Didn't think it would be so.)
+
+5. Гадаю / що / так
+   > [!answer] Гадаю, що так.
+   > (I believe so.)
+
+6. вважаю / Я / помилкою / це
+   > [!answer] Я вважаю це помилкою.
+   > (I consider this a mistake.)
+
+7. Вважаю / його / другом
+   > [!answer] Вважаю його другом.
+   > (I consider him a friend.)
+
+8. правий / він / що / Вважаю
+   > [!answer] Вважаю, що він правий.
+   > (I believe he's right.)
+
+9. над / Він / проблемою / міркує
+   > [!answer] Він міркує над проблемою.
+   > (He's pondering the problem.)
+
+10. про / майбутнє / Міркую
+   > [!answer] Міркую про майбутнє.
+   > (I'm reflecting on the future.)
+
+11. Мені / хворий / здається / він
+   > [!answer] Мені здається, він хворий.
+   > (It seems to me he's sick.)
+
+12. що / Здається / дощ
+   > [!answer] Здається, що дощ.
+   > (It seems like rain.)
+
+13. здається / Мені / так
+   > [!answer] Мені здається так.
+   > (I have a feeling it's so.)
+
+14. Роздумую / чи / погодитися
+   > [!answer] Роздумую, чи погодитися.
+   > (I'm deliberating whether to agree.)
+
+15. Роздумував / цілий / день
+   > [!answer] Роздумував цілий день.
+   > (Mulled it over all day.)
+
+16. так / Я / не / думаю
+   > [!answer] Я так не думаю.
+   > (I don't think so.)
+
+17. Що / про / думаєш / ти / це
+   > [!answer] Що ти про це думаєш?
+   > (What do you think about it?)
+
+18. Я / краще / за / вважаю
+   > [!answer] Я вважаю за краще...
+   > (I consider it better to...)
+
 
 ---
 

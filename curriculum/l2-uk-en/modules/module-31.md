@@ -155,7 +155,7 @@ Change nominative to dative:
 5. ми
    > [!answer] нам
 6. ви
-   > [!answer] вам
+   > [!!answer] вам
 7. вони
    > [!answer] їм
 
@@ -213,143 +213,233 @@ Practice these dialogues:
 
 ---
 
+---
+
+---
+
+---
+
 # Activities
 
-## match-up: Pronouns to Dative
+## fill-in: Dative Pronouns
 
-> Match the nominative pronoun with its dative form.
+> Choose the correct dative pronoun to complete each sentence.
 
-| Left | Right |
-|------|-------|
-| я | мені |
-| ти | тобі |
-| він | йому |
-| вона | їй |
-| ми | нам |
-| ви | вам |
-| вони | їм |
+1. Дай книгу ___ (я), будь ласка.
+   > [!answer] мені
+   > [!options] я | мені | мене | мною
 
-## quiz: Dative Practice
+2. Я скажу ___ (ти) завтра.
+   > [!answer] тобі
+   > [!options] ти | тебе | тобі | тобою
 
-> Choose the correct dative form.
+3. Він допомагає ___ (вони).
+   > [!answer] їм
+   > [!options] вони | їх | їм | ними
 
-1. "Give me water" - Дай ___ воду.
+4. Що ___ (ви) потрібно?
+   > [!answer] вам
+   > [!options] ви | вас | вам | вами
+
+5. Вона показує фото ___ (ми).
+   > [!answer] нам
+   > [!options] ми | нас | нам | нами
+
+6. Подзвони ___ (він) ввечері.
+   > [!answer] йому
+   > [!options] він | його | йому | ним
+
+7. Я дарую квіти ___ (вона).
+   > [!answer] їй
+   > [!options] вона | її | їй | нею
+
+8. Скільки ___ (ти) років?
+   > [!answer] тобі
+   > [!options] ти | тебе | тобі | тобою
+
+9. Як ___ (ви) Київ?
+   > [!answer] вам
+   > [!options] ви | вас | вам | вами
+
+10. Це ___ (я) потрібно.
+    > [!answer] мені
+    > [!options] я | мені | мене | мною
+
+## unjumble: Build the Sentence
+
+> Arrange the words in the correct order to form a grammatically correct sentence using dative pronouns.
+
+1. мені / Дай / книгу
+   > [!answer] Дай мені книгу.
+   > (Give me the book.)
+
+2. тобі / Я / скажу / завтра
+   > [!answer] Я скажу тобі завтра.
+   > (I will tell you tomorrow.)
+
+3. допомагає / Він / їм
+   > [!answer] Він допомагає їм.
+   > (He helps them.)
+
+4. вам / потрібно / Що
+   > [!answer] Що вам потрібно?
+   > (What do you need?)
+
+5. нам / показує / Вона / фото
+   > [!answer] Вона показує нам фото.
+   > (She shows us photos.)
+
+6. дзвони / йому / Подзвони
+   > [!answer] Подзвони йому.
+   > (Call him.)
+
+7. подобається / Мені / музика
+   > [!answer] Мені подобається музика.
+   > (I like music.)
+
+8. тобі / Скільки / років
+   > [!answer] Скільки тобі років?
+   > (How old are you?)
+
+9. Київ / вам / Як
+   > [!answer] Як вам Київ?
+   > (How do you like Kyiv?)
+
+10. холодно / Мені
+    > [!answer] Мені холодно.
+    > (I'm cold.)
+
+## select: Choose the Dative Pronoun
+
+> Select the correct dative pronoun for the given subject.
+
+1. Дай ___ (я) книгу.
+   > [!answer] мені
+   > [!options] мені | тебе | йому
+
+2. Він покаже ___ (вона) фото.
+   > [!answer] їй
+   > [!options] він | їй | їм
+
+3. Що ___ (ми) потрібно?
+   > [!answer] нам
+   > [!options] ми | нас | нам
+
+4. Подзвони ___ (він) ввечері.
+   > [!answer] йому
+   > [!options] він | його | йому
+
+5. Я дарую квіти ___ (ти).
+   > [!answer] тобі
+   > [!options] ти | тебе | тобі
+
+## quiz: Dative Pronouns
+
+> Choose the correct dative form of the pronoun.
+
+1. What is the dative form of "я"?
    - [x] мені
    - [ ] я
    - [ ] мене
-   - [ ] моє
-   > Dative of я = мені.
+   - [ ] мною
+   > "мені" is the dative form of "я"
 
-2. "Show him the way" - Покажи ___ дорогу.
-   - [x] йому
-   - [ ] він
-   - [ ] його
-   - [ ] йому
-   > Dative of він = йому.
-
-3. "Tell her the truth" - Скажи ___ правду.
-   - [x] їй
-   - [ ] вона
-   - [ ] її
-   - [ ] їм
-   > Dative of вона = їй.
-
-4. "I need time" - ___ потрібен час.
-   - [x] Мені
-   - [ ] Я
-   - [ ] Мене
-   - [ ] Мій
-   > "Need" uses dative: мені потрібен.
-
-5. "How old are you?" - Скільки ___ років?
+2. What is the dative form of "ти"?
    - [x] тобі
    - [ ] ти
    - [ ] тебе
-   - [ ] твій
-   > Age expression uses dative.
+   - [ ] тобою
+   > "тобі" is the dative form of "ти"
 
-6. "Call us tomorrow" - Подзвони ___ завтра.
+3. What is the dative form of "він"?
+   - [x] йому
+   - [ ] він
+   - [ ] його
+   - [ ] ним
+   > "йому" is the dative form of "він"
+
+4. What is the dative form of "вона"?
+   - [x] їй
+   - [ ] вона
+   - [ ] її
+   - [ ] нею
+   > "їй" is the dative form of "вона"
+
+5. What is the dative form of "ми"?
    - [x] нам
    - [ ] ми
    - [ ] нас
-   - [ ] наш
-   > Dative of ми = нам.
+   - [ ] нами
+   > "нам" is the dative form of "ми"
 
-7. "I like this music" - ___ подобається ця музика.
-   - [x] Мені
-   - [ ] Я
-   - [ ] Мене
-   - [ ] Моя
-   > "Like" (подобається) uses dative.
+6. What is the dative form of "ви"?
+   - [x] вам
+   - [ ] ви
+   - [ ] вас
+   - [ ] вами
+   > "вам" is the dative form of "ви"
 
-8. "Help them!" - Допоможи ___!
+7. What is the dative form of "вони"?
    - [x] їм
    - [ ] вони
    - [ ] їх
-   - [ ] їхній
-   > Dative of вони = їм.
+   - [ ] ними
+   > "їм" is the dative form of "вони"
 
-## group-sort: Dative vs Accusative
+8. How do you say "I need" (impersonal)?
+   - [x] Мені потрібно
+   - [ ] Я потрібен
+   - [ ] Моє потрібно
+   - [ ] Я потребую
+   > "Мені потрібно" is the correct impersonal expression
 
-> Sort the underlined pronouns by case.
+9. How do you say "I like music" (impersonal)?
+   - [x] Мені подобається музика
+   - [ ] Я подобаю музику
+   - [ ] Я люблю музику
+   - [ ] Музика мені подобається
+   > "Мені подобається музика" is the correct impersonal expression
 
-### Dative (to whom)
-- Дай мені книгу.
-- Скажи йому правду.
-- Покажи нам фото.
+10. What question word asks "to whom"?
+    - [x] Кому?
+    - [ ] Хто?
+    - [ ] Що?
+    - [ ] Де?
+    > "Кому?" is the dative question word
 
-### Accusative (whom/what)
-- Я бачу його.
-- Вона любить мене.
-- Вони знають нас.
+## true-false: True or False?
 
+> Determine if each statement is true or false.
 
-## quiz: Meaning Check
+- [x] "мені" is the dative of "я"
+   > Correct!
 
-> Choose the correct answer.
+- [x] "тобі" is the dative of "ти"
+   > Correct!
 
-1. What does "сказати" mean?
-   - [ ] to me
-   - [x] to tell (pf)
-   - [ ] to gift (pf)
-   - [ ] to you
-   > "сказати" means "to tell (pf)"
+- [ ] "його" is the dative of "він"
+   > Incorrect. "його" is genitive/accusative; "йому" is dative
 
-2. What does "мені" mean?
-   - [ ] to tell (pf)
-   - [x] to me
-   - [ ] to gift (pf)
-   - [ ] to you
-   > "мені" means "to me"
+- [x] "їй" is the dative of "вона"
+   > Correct!
 
-3. What does "подарувати" mean?
-   - [ ] to tell (pf)
-   - [ ] to me
-   - [ ] to you
-   - [x] to gift (pf)
-   > "подарувати" means "to gift (pf)"
+- [x] "нам" is the dative of "ми"
+   > Correct!
 
-4. What does "тобі" mean?
-   - [ ] to tell (pf)
-   - [ ] to gift (pf)
-   - [x] to you
-   - [ ] to me
-   > "тобі" means "to you"
+- [x] "вам" is the dative of "ви"
+   > Correct!
 
-5. What does "їй" mean?
-   - [ ] to gift (pf)
-   - [ ] to tell (pf)
-   - [x] to her
-   - [ ] to me
-   > "їй" means "to her"
+- [x] "їм" is the dative of "вони"
+   > Correct!
 
-6. What does "їм" mean?
-   - [ ] to tell (pf)
-   - [x] to them
-   - [ ] to me
-   - [ ] to gift (pf)
-   > "їм" means "to them"
+- [x] "мені потрібно" means "I need"
+   > Correct!
 
+- [x] "мені подобається" means "I like"
+   > Correct!
+
+- [x] "кому?" means "to whom?"
+   > Correct!
 
 ---
 

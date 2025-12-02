@@ -295,175 +295,266 @@ Create polite requests:
 
 ---
 
+---
+
+---
+
+---
+
 # Activities
 
-## match-up: Service Vocabulary
+## fill-in: Complete the Sentences
 
-> Match Ukrainian with English.
+> Choose the correct word to complete each sentence.
+
+1. Я хочу навчитися ___.
+   > [!answer] обміняти
+   > [!options] відправити | обміняти | пити | принести
+
+2. Мій брат має хороший ___.
+   > [!answer] депозит
+   > [!options] депозит | пляшка | газета | водій
+
+3. Це моя нова ___.
+   > [!answer] вага
+   > [!options] квиток | відправник | столик | вага
+
+4. Ця ___ коштує сто гривень.
+   > [!answer] бандероль
+   > [!options] ніч | салат | бандероль | 15
+
+5. Мій брат має хороший ___.
+   > [!answer] відправник
+   > [!options] відправник | продавчиня | комісія | офіс
+
+6. Мій брат любить ___ щодня.
+   > [!answer] відправити
+   > [!options] закінчити | личити | відправити | сказати
+
+7. Це моя нова ___.
+   > [!answer] комісія
+   > [!options] дружина | картка | черевики | комісія
+
+8. Це мій новий ___.
+   > [!answer] курс
+   > [!options] 11-12 | вишиванка | відповідь | курс
+
+9. Мій брат любить ___ щодня.
+   > [!answer] перерахувати
+   > [!options] будемо | хотіти | виявитися | перерахувати
+
+## unjumble: Build the Sentence
+
+> Arrange the words in the correct order.
+
+1. моя / нова / Це / квитанція
+   > [!answer] Це моя нова квитанція.
+   > (receipt)
+
+2. ваш / великий / кредит / Де
+   > [!answer] Де ваш великий кредит?
+   > (credit, loan)
+
+3. Я / хочу / купити / доставка / цю
+   > [!answer] Я хочу купити цю доставка.
+   > (delivery)
+
+4. мій / новий / депозит / Це
+   > [!answer] Це мій новий депозит.
+   > (deposit)
+
+5. Мій / банкомат / брат / має / хороший
+   > [!answer] Мій брат має хороший банкомат.
+   > (ATM)
+
+6. купити / хочу / цей / Я / відсоток
+   > [!answer] Я хочу купити цей відсоток.
+   > (percent, interest)
+
+7. переказ / Я / хочу / купити / цей
+   > [!answer] Я хочу купити цей переказ.
+   > (transfer)
+
+8. має / підпис / хороший / брат / Мій
+   > [!answer] Мій брат має хороший підпис.
+   > (signature)
+
+9. купити / хочу / цей / курс / Я
+   > [!answer] Я хочу купити цей курс.
+   > (rate)
+
+10. хорошу / бандероль / брат / має / Мій
+   > [!answer] Мій брат має хорошу бандероль.
+   > (small parcel)
+
+11. відправник / Цей / сто / гривень / коштує
+   > [!answer] Цей відправник коштує сто гривень.
+   > (sender)
+
+12. ваш / обмін / Де / великий
+   > [!answer] Де ваш великий обмін?
+   > (exchange)
+
+## match-up: Match the Pairs
+
+> Match Ukrainian words to their English meanings.
 
 | Left | Right |
 |------|-------|
-| посилка | package |
-| марка | stamp |
-| курс обміну | exchange rate |
-| банкомат | ATM |
-| квитанція | receipt |
+| зняти | to withdraw |
+| протягом | during, throughout |
+| зуби | teeth |
 | переказ | transfer |
-
-## quiz: Service Situations
-
-> Choose the correct answer.
-
-1. "I want to send a letter" - Я хочу надіслати ___.
-   - [x] листа
-   - [ ] лист
-   - [ ] листу
-   - [ ] листом
-   > Надіслати + accusative: листа.
-
-2. "How much is a stamp to Germany?" - Скільки коштує марка ___ Німеччини?
-   - [x] до
-   - [ ] у
-   - [ ] на
-   - [ ] з
-   > До + genitive for destinations.
-
-3. "I want to exchange euros for hryvnias" - Я хочу обміняти євро ___ гривні.
-   - [x] на
-   - [ ] до
-   - [ ] з
-   - [ ] у
-   > Обміняти X на Y.
-
-4. "Where's the nearest ATM?" - Де найближчий ___?
-   - [x] банкомат
-   - [ ] банкомату
-   - [ ] банкоматом
-   - [ ] банкоматі
-   > Subject = nominative.
-
-5. "I want to withdraw money from the account" - зняти гроші ___ рахунку.
-   - [x] з
-   - [ ] на
-   - [ ] до
-   - [ ] у
-   > З + genitive = from.
-
-6. "Please sign here" - Розпишіться ___, будь ласка.
-   - [x] тут
-   - [ ] там
-   - [ ] де
-   - [ ] куди
-   > Тут = here.
-
-7. "What's the commission?" - Яка ___?
-   - [x] комісія
-   - [ ] комісію
-   - [ ] комісії
-   - [ ] комісією
-   > Subject = nominative.
-
-8. "Fill out this form" - Заповніть цю ___.
-   - [x] форму
-   - [ ] форма
-   - [ ] форми
-   - [ ] формі
-   > Заповнити + accusative: форму.
-
-## group-sort: Post Office vs Bank
-
-> Sort the words by where you'd use them.
-
-### Post Office (Пошта)
-- марка
-- конверт
-- посилка
-- листівка
-- бандероль
-
-### Bank (Банк)
-- рахунок
-- банкомат
-- курс
-- переказ
-- депозит
-
-
-## true-false: True or False?
-
-> Determine if each statement is true or false.
-
-- [x] "листівка" is feminine.
-   > Correct! листівка is feminine.
-
-- [x] "бандероль" is feminine.
-   > Correct! бандероль is feminine.
-
-- [x] "марка" is feminine.
-   > Correct! марка is feminine.
-
-- [x] "відправник" is masculine.
-   > Correct! відправник is masculine.
-
-- [ ] "одержувач" is feminine.
-   > Incorrect. одержувач is masculine.
-
-- [ ] "індекс" is feminine.
-   > Incorrect. індекс is masculine.
-
-
-## fill-in: Fill in the Blank
-
-> Fill in the blanks with the correct word.
-
-
+| переказати | to transfer |
+| обмін | exchange |
+| підпис | signature |
+| відсоток | percent, interest |
+| бандероль | small parcel |
+| лікарня | hospital |
+| індекс | postal code |
+| квитанція | receipt |
 
 ## quiz: Meaning Check
 
 > Choose the correct answer.
 
-1. What does "відправник" mean?
-   - [ ] to exchange
-   - [ ] stamp
-   - [ ] percent, interest
-   - [x] sender
-   > "відправник" means "sender"
-
-2. What does "обміняти" mean?
-   - [x] to exchange
-   - [ ] percent, interest
-   - [ ] sender
-   - [ ] stamp
-   > "обміняти" means "to exchange"
-
-3. What does "марка" mean?
-   - [x] stamp
-   - [ ] percent, interest
-   - [ ] sender
-   - [ ] to exchange
-   > "марка" means "stamp"
-
-4. What does "відсоток" mean?
-   - [x] percent, interest
-   - [ ] sender
-   - [ ] to exchange
-   - [ ] stamp
-   > "відсоток" means "percent, interest"
-
-5. What does "індекс" mean?
-   - [ ] to exchange
+1. What does "індекс" mean?
+   - [ ] newspaper
+   - [ ] relative
    - [x] postal code
-   - [ ] stamp
-   - [ ] sender
+   - [ ] bicycle
    > "індекс" means "postal code"
 
-6. What does "курс" mean?
-   - [ ] sender
-   - [x] rate
-   - [ ] to exchange
-   - [ ] stamp
-   > "курс" means "rate"
+2. What does "переказати" mean?
+   - [ ] ten
+   - [x] to transfer
+   - [ ] alphabet
+   - [ ] to understand (perf)
+   > "переказати" means "to transfer"
 
+3. What does "вага" mean?
+   - [ ] restaurant
+   - [ ] invitation
+   - [x] weight
+   - [ ] to shave
+   > "вага" means "weight"
+
+4. What does "кредит" mean?
+   - [x] credit, loan
+   - [ ] musician
+   - [ ] exchange
+   - [ ] friend (male)
+   > "кредит" means "credit, loan"
+
+5. What does "відправник" mean?
+   - [ ] five
+   - [x] sender
+   - [ ] postcard
+   - [ ] (with) you
+   > "відправник" means "sender"
+
+6. What does "відправити" mean?
+   - [ ] pleasure, satisfaction
+   - [ ] three
+   - [ ] glass
+   - [x] to send, dispatch
+   > "відправити" means "to send, dispatch"
+
+7. What does "доставка" mean?
+   - [x] delivery
+   - [ ] exit
+   - [ ] to give
+   - [ ] bag
+   > "доставка" means "delivery"
+
+8. What does "відсоток" mean?
+   - [x] percent, interest
+   - [ ] bon appétit
+   - [ ] student
+   - [ ] you (informal)
+   > "відсоток" means "percent, interest"
+
+9. What does "зняти" mean?
+   - [ ] passport
+   - [x] to withdraw
+   - [ ] suitcase
+   - [ ] color
+   > "зняти" means "to withdraw"
+
+10. What does "обміняти" mean?
+   - [x] to exchange
+   - [ ] pork fat
+   - [ ] seller (f)
+   - [ ] to be fascinated
+   > "обміняти" means "to exchange"
+
+11. What does "надіслати" mean?
+   - [ ] doctor (f)
+   - [x] to send
+   - [ ] to be lucky
+   - [ ] married (m)
+   > "надіслати" means "to send"
+
+12. What does "розписатися" mean?
+   - [x] to sign
+   - [ ] bag
+   - [ ] day after tomorrow
+   - [ ] salad
+   > "розписатися" means "to sign"
+
+## true-false: True or False?
+
+> Determine if each statement is true or false.
+
+- [ ] "обміняти" means "Ukrainian (female)"
+   > Incorrect. "обміняти" means "to exchange"
+
+- [x] "відправник" means "sender"
+   > Correct!
+
+- [x] "банкомат" means "ATM"
+   > Correct!
+
+- [ ] "комісія" means "to hurry"
+   > Incorrect. "комісія" means "commission"
+
+- [ ] "депозит" means "went (f)"
+   > Incorrect. "депозит" means "deposit"
+
+- [ ] "надіслати" means "good, okay"
+   > Incorrect. "надіслати" means "to send"
+
+- [x] "доставка" means "delivery"
+   > Correct!
+
+- [x] "марка" means "stamp"
+   > Correct!
+
+- [x] "бандероль" means "small parcel"
+   > Correct!
+
+- [x] "перерахувати" means "to count, recount"
+   > Correct!
+
+## group-sort: Sort by Gender
+
+> Sort the nouns into gender categories.
+
+### Masculine
+- індекс
+- кредит
+- одержувач
+- переказ
+- депозит
+- курс
+
+### Feminine
+- вага
+- квитанція
+- комісія
+- бандероль
+- марка
+- листівка
 
 ---
 

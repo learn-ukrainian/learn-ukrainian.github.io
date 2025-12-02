@@ -265,150 +265,258 @@ Create mini-dialogues:
 
 ---
 
+---
+
+---
+
+---
+
 # Activities
 
-## match-up: Profession Pairs
+## fill-in: Complete the Sentences
 
-> Match masculine and feminine forms.
+> Choose the correct word to complete each sentence.
+
+1. Це мій новий ___.
+   > [!answer] музикант
+   > [!options] музикант | мова | продавчиня | помідор
+
+2. Вони планують ___ завтра.
+   > [!answer] стати
+   > [!options] повідомляти | просити | стати | слухати
+
+3. Вони планують ___ завтра.
+   > [!answer] виявитися
+   > [!options] залишатися | виявитися | відпочити | дивитися
+
+4. Чи ти вмієш добре ___?
+   > [!answer] служити
+   > [!options] служити | почекати | виявитися | вибачте
+
+5. Цей ___ коштує сто гривень.
+   > [!answer] юрист
+   > [!options] сім'я | юрист | паспорт | бухгалтер
+
+6. Це мій новий ___.
+   > [!answer] журналіст
+   > [!options] картопля | журналіст | паспорт | площа
+
+7. Я хочу купити цей ___.
+   > [!answer] програміст
+   > [!options] юрист | програміст | коробка | їжа
+
+8. Мій брат має хороший ___.
+   > [!answer] підприємець
+   > [!options] поїзд | зуби | підприємець | одяг
+
+9. Мій брат має хороший ___.
+   > [!answer] інженер
+   > [!options] музика | інженер | весна | відео
+
+## unjumble: Build the Sentence
+
+> Arrange the words in the correct order.
+
+1. ваш / Де / великий / експерт
+   > [!answer] Де ваш великий експерт?
+   > (expert)
+
+2. має / брат / Мій / хороший / юрист
+   > [!answer] Мій брат має хороший юрист.
+   > (lawyer)
+
+3. програміст / мій / новий / Це
+   > [!answer] Це мій новий програміст.
+   > (programmer)
+
+4. пілот / Цей / коштує / сто / гривень
+   > [!answer] Цей пілот коштує сто гривень.
+   > (pilot)
+
+5. Я / цей / хочу / журналіст / купити
+   > [!answer] Я хочу купити цей журналіст.
+   > (journalist)
+
+6. музикант / Де / великий / ваш
+   > [!answer] Де ваш великий музикант?
+   > (musician)
+
+7. Де / спеціаліст / ваш / великий
+   > [!answer] Де ваш великий спеціаліст?
+   > (specialist)
+
+8. художник / купити / хочу / цей / Я
+   > [!answer] Я хочу купити цей художник.
+   > (artist)
+
+9. новий / бухгалтер / мій / Це
+   > [!answer] Це мій новий бухгалтер.
+   > (accountant)
+
+10. купити / інженер / Я / хочу / цей
+   > [!answer] Я хочу купити цей інженер.
+   > (engineer)
+
+11. хороший / має / Мій / підприємець / брат
+   > [!answer] Мій брат має хороший підприємець.
+   > (entrepreneur)
+
+12. сто / Цей / письменник / коштує / гривень
+   > [!answer] Цей письменник коштує сто гривень.
+   > (writer)
+
+## match-up: Match the Pairs
+
+> Match Ukrainian words to their English meanings.
 
 | Left | Right |
 |------|-------|
-| лікар | лікарка |
-| вчитель | вчителька |
-| журналіст | журналістка |
-| письменник | письменниця |
-| актор | актриса |
-| співак | співачка |
-
-## quiz: Professions + Instrumental
-
-> Choose the correct form.
-
-1. "He works as a doctor" - Він працює ___.
-   - [x] лікарем
-   - [ ] лікар
-   - [ ] лікаря
-   - [ ] лікарю
-   > Працювати + instrumental: лікарем.
-
-2. "She became a teacher" - Вона стала ___.
-   - [x] вчителькою
-   - [ ] вчителька
-   - [ ] вчительку
-   - [ ] вчительці
-   > Стати + instrumental: вчителькою.
-
-3. "What do you work as?" - ___ ти працюєш?
-   - [x] Ким
-   - [ ] Хто
-   - [ ] Що
-   - [ ] Кого
-   > Question for instrumental profession: Ким?
-
-4. "I want to become an engineer" - Я хочу стати ___.
-   - [x] інженером
-   - [ ] інженер
-   - [ ] інженера
-   - [ ] інженеру
-   > Стати + instrumental: інженером.
-
-5. "Father was a driver" - Батько був ___.
-   - [x] водієм
-   - [ ] водій
-   - [ ] водія
-   - [ ] водію
-   > Бути (past) + instrumental: водієм.
-
-6. "She's considered an expert" - Вона вважається ___.
-   - [x] експертом
-   - [ ] експерт
-   - [ ] експерта
-   - [ ] експерту
-   > Вважатися + instrumental: експертом.
-
-7. "He remains the director" - Він залишається ___.
-   - [x] директором
-   - [ ] директор
-   - [ ] директора
-   - [ ] директору
-   > Залишатися + instrumental: директором.
-
-8. "She dreams of becoming an actress" - Вона мріє стати ___.
-   - [x] актрисою
-   - [ ] актриса
-   - [ ] актрису
-   - [ ] актрисі
-   > Стати + instrumental: актрисою.
-
-## group-sort: Masculine vs Feminine Professions
-
-> Sort the professions by gender.
-
-### Masculine
-- лікарем
-- інженером
-- програмістом
-- водієм
-
-### Feminine
-- лікаркою
-- вчителькою
-- медсестрою
-- актрисою
-
-
-## fill-in: Fill in the Blank
-
-> Fill in the blanks with the correct word.
-
-
+| програміст | programmer |
+| журналіст | journalist |
+| підприємець | entrepreneur |
+| художник | artist |
+| юрист | lawyer |
+| ішов | went (m) |
+| станція | station |
+| спеціаліст | specialist |
+| виявитися | to turn out |
+| експерт | expert |
+| вважатися | to be considered |
+| дешево | cheap |
 
 ## quiz: Meaning Check
 
 > Choose the correct answer.
 
-1. What does "художник" mean?
-   - [x] artist
-   - [ ] entrepreneur
-   - [ ] specialist
-   - [ ] to turn out
-   > "художник" means "artist"
+1. What does "експерт" mean?
+   - [x] expert
+   - [ ] back
+   - [ ] that (neuter)
+   - [ ] to advise
+   > "експерт" means "expert"
 
-2. What does "підприємець" mean?
-   - [ ] specialist
-   - [ ] artist
-   - [x] entrepreneur
-   - [ ] to turn out
-   > "підприємець" means "entrepreneur"
+2. What does "залишатися" mean?
+   - [ ] to hear
+   - [ ] to appear in dream
+   - [ ] metro
+   - [x] to remain
+   > "залишатися" means "to remain"
 
-3. What does "виявитися" mean?
-   - [ ] artist
-   - [ ] specialist
-   - [ ] entrepreneur
-   - [x] to turn out
-   > "виявитися" means "to turn out"
+3. What does "музикант" mean?
+   - [ ] thunderstorm
+   - [ ] thing
+   - [ ] Kyiv
+   - [x] musician
+   > "музикант" means "musician"
 
-4. What does "спеціаліст" mean?
-   - [ ] to turn out
-   - [ ] entrepreneur
-   - [x] specialist
-   - [ ] artist
-   > "спеціаліст" means "specialist"
+4. What does "письменник" mean?
+   - [ ] store
+   - [ ] bill, check
+   - [x] writer
+   - [ ] to him/it
+   > "письменник" means "writer"
 
-5. What does "професіонал" mean?
-   - [ ] entrepreneur
-   - [x] professional
-   - [ ] artist
-   - [ ] to turn out
-   > "професіонал" means "professional"
+5. What does "стати" mean?
+   - [ ] colleague
+   - [ ] to undress
+   - [ ] color
+   - [x] to become
+   > "стати" means "to become"
 
-6. What does "програміст" mean?
+6. What does "служити" mean?
+   - [ ] nine
+   - [ ] change (money)
+   - [ ] your (m, formal)
+   - [x] to serve
+   > "служити" means "to serve"
+
+7. What does "журналіст" mean?
+   - [ ] clean
+   - [ ] tourist
+   - [x] journalist
+   - [ ] manager
+   > "журналіст" means "journalist"
+
+8. What does "програміст" mean?
+   - [ ] Genitive: немає, без, для, до
    - [x] programmer
-   - [ ] entrepreneur
-   - [ ] artist
    - [ ] to turn out
+   - [ ] car
    > "програміст" means "programmer"
 
+9. What does "інженер" mean?
+   - [ ] to be engaged in
+   - [x] engineer
+   - [ ] my (plural)
+   - [ ] to her
+   > "інженер" means "engineer"
+
+10. What does "професіонал" mean?
+   - [x] professional
+   - [ ] to close
+   - [ ] to me
+   - [ ] engineer
+   > "професіонал" means "professional"
+
+11. What does "підприємець" mean?
+   - [ ] to pay
+   - [ ] discount
+   - [ ] to advise
+   - [x] entrepreneur
+   > "підприємець" means "entrepreneur"
+
+12. What does "художник" mean?
+   - [ ] spring
+   - [ ] to succeed
+   - [ ] to shave
+   - [x] artist
+   > "художник" means "artist"
+
+## true-false: True or False?
+
+> Determine if each statement is true or false.
+
+- [ ] "професіонал" means "your (masc, informal)"
+   > Incorrect. "професіонал" means "professional"
+
+- [x] "служити" means "to serve"
+   > Correct!
+
+- [ ] "стати" means "jacket"
+   > Incorrect. "стати" means "to become"
+
+- [x] "художник" means "artist"
+   > Correct!
+
+- [x] "виявитися" means "to turn out"
+   > Correct!
+
+- [x] "експерт" means "expert"
+   > Correct!
+
+- [x] "музикант" means "musician"
+   > Correct!
+
+- [x] "інженер" means "engineer"
+   > Correct!
+
+- [x] "програміст" means "programmer"
+   > Correct!
+
+- [ ] "вважатися" means "dish, course"
+   > Incorrect. "вважатися" means "to be considered"
+
+## group-sort: Sort by Gender
+
+> Sort the nouns into gender categories.
+
+### Masculine
+- експерт
+- спеціаліст
+- музикант
+- журналіст
+- професіонал
+- бухгалтер
 
 ---
 

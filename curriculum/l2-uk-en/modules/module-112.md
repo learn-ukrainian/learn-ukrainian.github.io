@@ -253,6 +253,142 @@ Discuss using vocabulary from this module:
 | мер | глава міста |
 | міністр | керівник міністерства |
 
+
+## fill-in: Fill in the Blank
+
+> Choose the correct word to complete each sentence.
+
+
+
+## quiz: Meaning Check
+
+> Choose the correct answer.
+
+1. What does "громадянин" mean?
+   - [ ] freedom
+   - [x] citizen
+   - [ ] equality
+   - [ ] party
+   > "громадянин" means "citizen"
+
+2. What does "свобода" mean?
+   - [ ] party
+   - [x] freedom
+   - [ ] citizen
+   - [ ] equality
+   > "свобода" means "freedom"
+
+3. What does "рівність" mean?
+   - [x] equality
+   - [ ] party
+   - [ ] citizen
+   - [ ] freedom
+   > "рівність" means "equality"
+
+4. What does "партія" mean?
+   - [x] party
+   - [ ] equality
+   - [ ] citizen
+   - [ ] freedom
+   > "партія" means "party"
+
+5. What does "демократія" mean?
+   - [ ] freedom
+   - [ ] equality
+   - [ ] citizen
+   - [x] democracy
+   > "демократія" means "democracy"
+
+6. What does "політика" mean?
+   - [x] politics
+   - [ ] freedom
+   - [ ] citizen
+   - [ ] equality
+   > "політика" means "politics"
+
+7. What does "голосувати" mean?
+   - [ ] equality
+   - [ ] freedom
+   - [x] to vote
+   - [ ] citizen
+   > "голосувати" means "to vote"
+
+8. What does "право" mean?
+   - [ ] citizen
+   - [x] right
+   - [ ] freedom
+   - [ ] equality
+   > "право" means "right"
+
+9. What does "вибори" mean?
+   - [ ] freedom
+   - [ ] equality
+   - [ ] citizen
+   - [x] elections
+   > "вибори" means "elections"
+
+10. What does "реформа" mean?
+   - [x] reform
+   - [ ] citizen
+   - [ ] freedom
+   - [ ] equality
+   > "реформа" means "reform"
+
+11. What does "закон" mean?
+   - [ ] citizen
+   - [x] law
+   - [ ] equality
+   - [ ] freedom
+   > "закон" means "law"
+
+12. What does "уряд" mean?
+   - [ ] citizen
+   - [ ] freedom
+   - [x] government
+   - [ ] equality
+   > "уряд" means "government"
+
+13. What does "держава" mean?
+   - [ ] citizen
+   - [ ] equality
+   - [x] state
+   - [ ] freedom
+   > "держава" means "state"
+
+14. What does "корупція" mean?
+   - [ ] citizen
+   - [ ] equality
+   - [ ] freedom
+   - [x] corruption
+   > "корупція" means "corruption"
+
+
+
+## unjumble: Word Order
+
+> Drag the words into the correct order to form a sentence.
+
+1. / / голосувати / проголосувати
+   > [!answer] голосувати / проголосувати
+   > (to vote)
+
+2. / / обирати / обрати
+   > [!answer] обирати / обрати
+   > (to elect)
+
+3. / / приймати / прийняти
+   > [!answer] приймати / прийняти
+   > (to adopt (a law))
+
+4. підтримувати / підтримати / /
+   > [!answer] підтримувати / підтримати
+   > (to support)
+
+5. / / розкритикувати / критикувати
+   > [!answer] критикувати / розкритикувати
+   > (to criticize)
+
+
 ---
 
 # Vocabulary

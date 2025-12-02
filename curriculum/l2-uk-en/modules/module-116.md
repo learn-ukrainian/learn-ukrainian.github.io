@@ -222,21 +222,105 @@ Report something you heard recently:
    - [ ] знав
    > Present tense is acceptable in Ukrainian reported speech.
 
-## fill-in: Convert to Reported Speech
 
-> Марія: «(1)___ живу в Києві. Мій чоловік (2)___ вчителем. Ми (3)___ двох дітей. Вони (4)___ в школу.»
->
-> Марія сказала, що (5)___ живе в Києві. Її чоловік (6)___ вчителем. Вони (7)___ двох дітей. Вони (8)___ в школу.
+## match-up: Vocabulary Match
 
-**Answers:**
-1. Я
-2. працює
-3. маємо
-4. ходять
-5. вона
-6. працює
-7. мають
-8. ходять
+> Match each Ukrainian word with its English translation.
+
+| Left | Right |
+|------|-------|
+| повідомити | to inform, report |
+| додати | to add |
+| наступного дня | the next day |
+| стверджувати | to claim, assert |
+| пряма мова | direct speech |
+| заявити | to declare, announce |
+| визнати | to admit |
+| того дня | that day |
+| непряма мова | reported speech |
+| напередодні | the day before |
+
+
+## fill-in: Fill in the Blank
+
+> Choose the correct word to complete each sentence.
+
+
+
+## quiz: Meaning Check
+
+> Choose the correct answer.
+
+1. What does "напередодні" mean?
+   - [ ] to add
+   - [ ] the next day
+   - [ ] to admit
+   - [x] the day before
+   > "напередодні" means "the day before"
+
+2. What does "додати" mean?
+   - [x] to add
+   - [ ] the next day
+   - [ ] the day before
+   - [ ] to admit
+   > "додати" means "to add"
+
+3. What does "наступного дня" mean?
+   - [x] the next day
+   - [ ] the day before
+   - [ ] to admit
+   - [ ] to add
+   > "наступного дня" means "the next day"
+
+4. What does "визнати" mean?
+   - [ ] the day before
+   - [x] to admit
+   - [ ] the next day
+   - [ ] to add
+   > "визнати" means "to admit"
+
+5. What does "непряма мова" mean?
+   - [x] reported speech
+   - [ ] the next day
+   - [ ] the day before
+   - [ ] to add
+   > "непряма мова" means "reported speech"
+
+6. What does "того дня" mean?
+   - [x] that day
+   - [ ] the next day
+   - [ ] the day before
+   - [ ] to add
+   > "того дня" means "that day"
+
+7. What does "пряма мова" mean?
+   - [ ] to add
+   - [ ] the next day
+   - [ ] the day before
+   - [x] direct speech
+   > "пряма мова" means "direct speech"
+
+8. What does "повідомити" mean?
+   - [x] to inform, report
+   - [ ] the next day
+   - [ ] the day before
+   - [ ] to add
+   > "повідомити" means "to inform, report"
+
+9. What does "стверджувати" mean?
+   - [x] to claim, assert
+   - [ ] the day before
+   - [ ] the next day
+   - [ ] to add
+   > "стверджувати" means "to claim, assert"
+
+10. What does "заявити" mean?
+   - [ ] the next day
+   - [x] to declare, announce
+   - [ ] the day before
+   - [ ] to add
+   > "заявити" means "to declare, announce"
+
 
 ---
 

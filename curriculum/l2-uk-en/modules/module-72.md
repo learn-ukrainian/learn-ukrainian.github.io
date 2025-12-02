@@ -317,166 +317,296 @@ Give advice to someone looking for work:
 
 ---
 
-# Activities
+---
 
-## match-up: Place → Profession
+---
+
+---
+
+# Вправи
+
+## fill-in: Доповніть речення
+
+> Оберіть правильне слово.
+
+1. Я давно мріяв навчитися ___, і нарешті маю таку можливість.
+   > [!answer] звільнятися
+   > [!options] носити | запрошувати | сказати | звільнятися
+
+2. Цей ___ належить моєму другові з Києва.
+   > [!answer] перукар
+   > [!options] машина | перукар | сковорода | квиток
+
+3. Я хочу купити цей ___, але він занадто дорогий.
+   > [!answer] співробітник
+   > [!options] співробітник | говоріння | читання | плече
+
+4. Я хочу купити цей ___, але він занадто дорогий.
+   > [!answer] викладач
+   > [!options] хвилина | подарунок | викладач | аптека
+
+5. Моя сестра каже, що їй подобається ___ у вільний час.
+   > [!answer] наймати
+   > [!options] наймати | залишатися | запросити | продаватися
+
+6. Я хочу купити цю ___, але вона занадто дорога.
+   > [!answer] премія
+   > [!options] лікарка | премія | чоловічий | задоволення
+
+7. Моя сестра каже, що їй подобається ___ у вільний час.
+   > [!answer] звільняти
+   > [!options] розмовляти | звільняти | передбачати | заважати
+
+8. Моя сестра каже, що їй подобається ___ у вільний час.
+   > [!answer] підвищувати
+   > [!options] відкрити | підвищувати | зайти | нарізати
+
+9. Я хочу купити цю ___, але вона занадто дорога.
+   > [!answer] кар'єра
+   > [!options] графік | кар'єра | записник | прибуття
+
+10. Цей ___ належить моєму другові з Києва.
+   > [!answer] стоматолог
+   > [!options] стоматолог | заметіль | море | решта
+
+11. Ця ___ належить моїй подрузі з Києва.
+   > [!answer] нарада
+   > [!options] умова | капуста | нарада | відбуття
+
+## unjumble: Побудуйте речення
+
+> Розташуйте слова в правильному порядку.
+
+1. знайшли / шукали / премія / не / але / Вони / хорошу / довго
+   > [!answer] Вони довго шукали хорошу премія, але не знайшли.
+   > (bonus)
+
+2. не / знайшли / звіт / довго / але / шукали / хороший / Вони
+   > [!answer] Вони довго шукали хороший звіт, але не знайшли.
+   > (report)
+
+3. купити / занадто / цей / він / хочу / Я / дорогий / але / стоматолог
+   > [!answer] Я хочу купити цей стоматолог, але він занадто дорогий.
+   > (dentist)
+
+4. перукар / він / купити / хочу / Я / цей / дорогий / занадто / але
+   > [!answer] Я хочу купити цей перукар, але він занадто дорогий.
+   > (hairdresser)
+
+5. довго / шукали / не / науковець / але / Вони / хороший / знайшли
+   > [!answer] Вони довго шукали хороший науковець, але не знайшли.
+   > (scientist)
+
+6. хорошу / але / нарада / знайшли / довго / не / Вони / шукали
+   > [!answer] Вони довго шукали хорошу нарада, але не знайшли.
+   > (meeting)
+
+7. хороший / знайшли / довго / але / Вони / не / адвокат / шукали
+   > [!answer] Вони довго шукали хороший адвокат, але не знайшли.
+   > (attorney)
+
+8. другові / Цей / співробітник / належить / Києва / моєму / з
+   > [!answer] Цей співробітник належить моєму другові з Києва.
+   > (coworker)
+
+9. моєму / з / Цей / належить / другові / дедлайн / Києва
+   > [!answer] Цей дедлайн належить моєму другові з Києва.
+   > (deadline)
+
+10. Цей / належить / Києва / моєму / начальник / з / другові
+   > [!answer] Цей начальник належить моєму другові з Києва.
+   > (boss)
+
+11. купити / Я / хочу / занадто / кар'єра / дорога / але / цю / вона
+   > [!answer] Я хочу купити цю кар'єра, але вона занадто дорога.
+   > (career)
+
+12. але / Вони / довго / не / посада / знайшли / хорошу / шукали
+   > [!answer] Вони довго шукали хорошу посада, але не знайшли.
+   > (position)
+
+13. друг / зручний / що / Мій / сказав / його / дуже / викладач
+   > [!answer] Мій друг сказав, що його викладач дуже зручний.
+   > (lecturer)
+
+14. належить / Києва / Цей / хірург / другові / моєму / з
+   > [!answer] Цей хірург належить моєму другові з Києва.
+   > (surgeon)
+
+## match-up: Знайдіть пари
+
+> З'єднайте українські слова з англійськими.
 
 | Left | Right |
 |------|-------|
-| лікарня | лікар |
-| школа | вчитель |
-| ресторан | кухар |
-| суд | суддя |
-| офіс | менеджер |
+| говоріння | speaking |
+| викладач | lecturer |
+| начальник | boss |
+| співробітник | coworker |
+| звільнятися | to quit |
+| кар'єра | career |
+| премія | bonus |
+| балкон | balcony |
+| бездротовий | wireless |
+| відділ | department |
+| заїзд | entrance (for vehicles) |
+| засинати | to fall asleep |
+| звільняти | to fire |
+| обов'язки | duties |
 
-## quiz: Work Vocabulary
+## quiz: Перевірка значень
 
-> Choose the correct answer.
+> Оберіть правильну відповідь.
 
-1. "Співбесіда" means ___.
-   - [x] job interview
-   - [ ] meeting
-   - [ ] presentation
-   - [ ] vacation
-   > Співбесіда = job interview.
+1. Що означає "начальник"?
+   - [x] boss
+   - [ ] reluctantly
+   - [ ] to explain (perf)
+   - [ ] occupied, taken
+   > "начальник" means "boss"
 
-2. A "бухгалтер" works with ___.
-   - [x] finances and accounting
-   - [ ] computers
-   - [ ] patients
-   - [ ] students
-   > Бухгалтер = accountant.
+2. Що означає "адвокат"?
+   - [x] attorney
+   - [ ] to listen
+   - [ ] (with) her
+   - [ ] responsibility
+   > "адвокат" means "attorney"
 
-3. "Звільнити" means ___.
-   - [x] to fire
-   - [ ] to hire
-   - [ ] to quit
-   - [ ] to promote
-   > Звільнити = to fire someone.
+3. Що означає "дедлайн"?
+   - [x] deadline
+   - [ ] along
+   - [ ] to forgive
+   - [ ] convenient
+   > "дедлайн" means "deadline"
 
-4. The feminine form of "програміст" is ___.
-   - [x] програмістка
-   - [ ] програмістиця
-   - [ ] програміста
-   - [ ] програмісткa
-   > Програміст → програмістка.
+4. Що означає "звіт"?
+   - [ ] to dream
+   - [ ] closed
+   - [x] report
+   - [ ] promotion, sale
+   > "звіт" means "report"
 
-5. "Віддалена робота" means ___.
-   - [x] remote work
-   - [ ] overtime
-   - [ ] business trip
-   - [ ] part-time
-   > Віддалена робота = remote work.
-
-6. "Підвищити" means to ___.
-   - [x] promote
-   - [ ] fire
-   - [ ] hire
-   - [ ] train
-   > Підвищити = to promote.
-
-## group-sort: By Sector
-
-### Медицина (Medicine)
-- лікар
-- хірург
-- медсестра
-- стоматолог
-
-### IT / Технології
-- програміст
-- дизайнер
-- аналітик
-- інженер
-
-### Бізнес (Business)
-- бухгалтер
-- менеджер
-- директор
-- підприємець
-
-### Право (Law)
-- юрист
-- адвокат
-- суддя
-- поліцейський
-
-
-## true-false: True or False?
-
-> Determine if each statement is true or false.
-
-- [x] "адвокат" is masculine.
-   > Correct! адвокат is masculine.
-
-- [x] "викладач" is masculine.
-   > Correct! викладач is masculine.
-
-- [x] "науковець" is masculine.
-   > Correct! науковець is masculine.
-
-- [x] "хірург" is masculine.
-   > Correct! хірург is masculine.
-
-- [ ] "стоматолог" is feminine.
-   > Incorrect. стоматолог is masculine.
-
-- [ ] "перукар" is feminine.
-   > Incorrect. перукар is masculine.
-
-
-## fill-in: Fill in the Blank
-
-> Fill in the blanks with the correct word.
-
-
-
-## quiz: Meaning Check
-
-> Choose the correct answer.
-
-1. What does "нарада" mean?
-   - [ ] attorney
-   - [ ] report
-   - [ ] to hire
+5. Що означає "нарада"?
+   - [ ] tomato
+   - [ ] that (feminine)
+   - [ ] waitress
    - [x] meeting
    > "нарада" means "meeting"
 
-2. What does "звіт" mean?
-   - [ ] to hire
-   - [x] report
-   - [ ] attorney
-   - [ ] meeting
-   > "звіт" means "report"
-
-3. What does "наймати" mean?
+6. Що означає "наймати"?
+   - [ ] eight
+   - [ ] agree (m)
+   - [ ] around
    - [x] to hire
-   - [ ] meeting
-   - [ ] attorney
-   - [ ] report
    > "наймати" means "to hire"
 
-4. What does "адвокат" mean?
-   - [x] attorney
-   - [ ] meeting
-   - [ ] to hire
-   - [ ] report
-   > "адвокат" means "attorney"
+7. Що означає "відділ"?
+   - [ ] magazine
+   - [ ] to wake up
+   - [x] department
+   - [ ] to give
+   > "відділ" means "department"
 
-5. What does "науковець" mean?
-   - [ ] meeting
-   - [x] scientist
-   - [ ] report
-   - [ ] to hire
-   > "науковець" means "scientist"
+8. Що означає "підвищувати"?
+   - [ ] company, group
+   - [ ] to transfer
+   - [ ] to gather (perf)
+   - [x] to promote
+   > "підвищувати" means "to promote"
 
-6. What does "перукар" mean?
+9. Що означає "перукар"?
+   - [ ] to distribute
    - [x] hairdresser
-   - [ ] meeting
-   - [ ] report
-   - [ ] to hire
+   - [ ] to envy
+   - [ ] to teach
    > "перукар" means "hairdresser"
 
+10. Що означає "звільнятися"?
+   - [x] to quit
+   - [ ] I will be
+   - [ ] (with) me
+   - [ ] to imagine (perf)
+   > "звільнятися" means "to quit"
+
+11. Що означає "викладач"?
+   - [x] lecturer
+   - [ ] Genitive: немає, без, для, до
+   - [ ] wireless
+   - [ ] to foresee
+   > "викладач" means "lecturer"
+
+12. Що означає "співробітник"?
+   - [ ] card
+   - [x] coworker
+   - [ ] thunder
+   - [ ] reliable
+   > "співробітник" means "coworker"
+
+13. Що означає "премія"?
+   - [x] bonus
+   - [ ] cold (adv)
+   - [ ] pen
+   - [ ] agree (f)
+   > "премія" means "bonus"
+
+14. Що означає "звільняти"?
+   - [ ] to mention (impf)
+   - [x] to fire
+   - [ ] airport
+   - [ ] female student
+   > "звільняти" means "to fire"
+
+## true-false: Правда чи ні?
+
+> Визначте, чи правильне твердження.
+
+- [x] "премія" means "bonus"
+   > Correct!
+
+- [ ] "звіт" means "knife"
+   > Incorrect. "звіт" means "report"
+
+- [ ] "хірург" means "sink"
+   > Incorrect. "хірург" means "surgeon"
+
+- [x] "співробітник" means "coworker"
+   > Correct!
+
+- [x] "перукар" means "hairdresser"
+   > Correct!
+
+- [ ] "дедлайн" means "oven"
+   > Incorrect. "дедлайн" means "deadline"
+
+- [ ] "обов'язки" means "to order"
+   > Incorrect. "обов'язки" means "duties"
+
+- [x] "посада" means "position"
+   > Correct!
+
+- [ ] "нарада" means "sweet"
+   > Incorrect. "нарада" means "meeting"
+
+- [ ] "начальник" means "earlier, before, used to"
+   > Incorrect. "начальник" means "boss"
+
+## group-sort: Сортування за родом
+
+> Розподіліть слова за родами.
+
+### Чоловічий рід
+- звіт
+- начальник
+- співробітник
+- стоматолог
+- хірург
+- викладач
+
+### Жіночий рід
+- посада
+- кар'єра
+- нарада
+- премія
 
 ---
 

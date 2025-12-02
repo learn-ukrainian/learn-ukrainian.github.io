@@ -244,20 +244,158 @@ Talk about a memorable journey:
    - [ ] бронювання
    > Passport control at the border.
 
-## fill-in: Planning a Trip
 
-> Заплануйте поїздку.
+## match-up: Vocabulary Match
 
-> Наступного місяця я хочу (1)___ (to travel) до Львова. Я вже (2)___ (booked) квитки на поїзд. Поїзд (3)___ (departs) о восьмій ранку з київського (4)___ (train station). Час у дорозі — близько шести годин. Я (5)___ (booked) готель у центрі міста. Хочу (6)___ (to visit) старе місто і (7)___ (to explore) місцеву кухню.
+> Match each Ukrainian word with its English translation.
 
-**Answers:**
-1. подорожувати / поїхати
-2. забронював
-3. відправляється
-4. вокзалу
-5. забронював
-6. відвідати
-7. дослідити
+| Left | Right |
+|------|-------|
+| віза | visa |
+| кордон | border |
+| митниця | customs |
+| країна | country |
+| пункт призначення | destination |
+| столиця | capital |
+| подорожувати | to travel |
+| відвідувати | to visit |
+| прибувати | to arrive |
+| відправлятися | to depart |
+
+
+## fill-in: Fill in the Blank
+
+> Choose the correct word to complete each sentence.
+
+1. поїздка ___ кордон
+   > [!answer] за
+
+
+
+## quiz: Meaning Check
+
+> Choose the correct answer.
+
+1. What does "подорожувати" mean?
+   - [ ] to arrive
+   - [ ] border
+   - [ ] visa
+   - [x] to travel
+   > "подорожувати" means "to travel"
+
+2. What does "віза" mean?
+   - [x] visa
+   - [ ] to arrive
+   - [ ] to travel
+   - [ ] border
+   > "віза" means "visa"
+
+3. What does "прибувати" mean?
+   - [ ] visa
+   - [ ] border
+   - [x] to arrive
+   - [ ] to travel
+   > "прибувати" means "to arrive"
+
+4. What does "кордон" mean?
+   - [ ] visa
+   - [ ] to arrive
+   - [ ] to travel
+   - [x] border
+   > "кордон" means "border"
+
+5. What does "митниця" mean?
+   - [ ] to travel
+   - [x] customs
+   - [ ] visa
+   - [ ] to arrive
+   > "митниця" means "customs"
+
+6. What does "відвідувати" mean?
+   - [ ] visa
+   - [ ] to travel
+   - [ ] to arrive
+   - [x] to visit
+   > "відвідувати" means "to visit"
+
+7. What does "столиця" mean?
+   - [ ] to travel
+   - [ ] to arrive
+   - [x] capital
+   - [ ] visa
+   > "столиця" means "capital"
+
+8. What does "відправлятися" mean?
+   - [ ] to travel
+   - [ ] visa
+   - [x] to depart
+   - [ ] to arrive
+   > "відправлятися" means "to depart"
+
+9. What does "пункт призначення" mean?
+   - [x] destination
+   - [ ] to arrive
+   - [ ] to travel
+   - [ ] visa
+   > "пункт призначення" means "destination"
+
+10. What does "країна" mean?
+   - [ ] visa
+   - [x] country
+   - [ ] to arrive
+   - [ ] to travel
+   > "країна" means "country"
+
+
+
+## unjumble: Word Order
+
+> Drag the words into the correct order to form a sentence.
+
+1. / / поїхати / їхати
+   > [!answer] їхати / поїхати
+   > (to go (by transport))
+
+2. / / летіти / полетіти
+   > [!answer] летіти / полетіти
+   > (to fly)
+
+3. / / попливти / пливти
+   > [!answer] пливти / попливти
+   > (to sail)
+
+4. бронювати / / / забронювати
+   > [!answer] бронювати / забронювати
+   > (to book)
+
+5. відвідувати / / / відвідати
+   > [!answer] відвідувати / відвідати
+   > (to visit)
+
+6. оглядати / / / оглянути
+   > [!answer] оглядати / оглянути
+   > (to sightsee)
+
+7. дослідити / / / досліджувати
+   > [!answer] досліджувати / дослідити
+   > (to explore)
+
+8. / / прибути / прибувати
+   > [!answer] прибувати / прибути
+   > (to arrive)
+
+9. відправитися / / / відправлятися
+   > [!answer] відправлятися / відправитися
+   > (to depart)
+
+10. поїздка / за / кордон
+   > [!answer] поїздка за кордон
+   > (trip abroad)
+
+11. у / час / дорозі
+   > [!answer] час у дорозі
+   > (travel time)
+
 
 ---
 

@@ -13,6 +13,7 @@ export type ActivityType =
   | 'fill-blank'
   | 'true-false'
   | 'translate'
+  | 'unjumble'
   | 'order'
   | 'gap-fill';
 
@@ -183,6 +184,7 @@ export interface FillBlankItem {
   hints?: string[];
   answer: string;
   alternatives?: string[];
+  options?: string[];  // Multiple choice options (includes answer + distractors)
   explanation?: string;
 }
 

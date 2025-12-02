@@ -289,188 +289,298 @@ Discuss these questions:
 
 ---
 
-# Activities
+---
 
-## match-up: Term → Category
+---
+
+---
+
+# Вправи
+
+## fill-in: Доповніть речення
+
+> Оберіть правильне слово.
+
+1. Ця ___ належить моїй подрузі з Києва.
+   > [!answer] інформатика
+   > [!options] записник | підписник | інформатика | озеро
+
+2. Цей ___ належить моєму другові з Києва.
+   > [!answer] факультет
+   > [!options] цукор | факультет | новість | ніж
+
+3. Моя сестра сказала, що її ___ дуже зручна.
+   > [!answer] хімія
+   > [!options] хімія | сторінка | ліки | монета
+
+4. Цей ___ належить моєму другові з Києва.
+   > [!answer] випускник
+   > [!options] випускник | перехрестя | індекс | курятина
+
+5. Моя сестра каже, що їй подобається ___ у вільний час.
+   > [!answer] складати
+   > [!options] чистити | складати | забути | повідомляти
+
+6. Цей ___ належить моєму другові з Києва.
+   > [!answer] диплом
+   > [!options] диплом | легені | тато | писання
+
+7. Я хочу купити цей ___, але він занадто дорогий.
+   > [!answer] реферат
+   > [!options] рахунок | вхід | вокзал | реферат
+
+8. Я давно мріяв навчитися ___, і нарешті маю таку можливість.
+   > [!answer] пропускати
+   > [!options] пропускати | виїхати | прошу | від'їхати
+
+9. Моя сестра каже, що їй подобається ___ у вільний час.
+   > [!answer] закінчувати
+   > [!options] закінчувати | дійти | збиратися | завантажити
+
+10. Моя сестра сказала, що її ___ дуже зручна.
+   > [!answer] біологія
+   > [!options] пікнік | біологія | готівка | четвер
+
+11. Моя сестра каже, що їй подобається ___ у вільний час.
+   > [!answer] здавати
+   > [!options] митися | пилососити | згадувати | здавати
+
+## unjumble: Побудуйте речення
+
+> Розташуйте слова в правильному порядку.
+
+1. дорогий / цей / купити / хочу / але / занадто / диплом / Я / він
+   > [!answer] Я хочу купити цей диплом, але він занадто дорогий.
+   > (diploma)
+
+2. дорогий / реферат / хочу / Я / купити / але / цей / занадто / він
+   > [!answer] Я хочу купити цей реферат, але він занадто дорогий.
+   > (essay)
+
+3. другові / з / належить / Києва / моєму / залік / Цей
+   > [!answer] Цей залік належить моєму другові з Києва.
+   > (credit test)
+
+4. не / знайшли / Вони / література / шукали / хорошу / довго / але
+   > [!answer] Вони довго шукали хорошу література, але не знайшли.
+   > (literature)
+
+5. її / аспірантура / сказала / дуже / Моя / зручна / сестра / що
+   > [!answer] Моя сестра сказала, що її аспірантура дуже зручна.
+   > (graduate school)
+
+6. її / біологія / дуже / що / сестра / Моя / зручна / сказала
+   > [!answer] Моя сестра сказала, що її біологія дуже зручна.
+   > (biology)
+
+7. її / зручна / географія / що / сестра / дуже / сказала / Моя
+   > [!answer] Моя сестра сказала, що її географія дуже зручна.
+   > (geography)
+
+8. випускник / Цей / належить / Києва / з / другові / моєму
+   > [!answer] Цей випускник належить моєму другові з Києва.
+   > (graduate)
+
+9. належить / декан / з / Цей / другові / моєму / Києва
+   > [!answer] Цей декан належить моєму другові з Києва.
+   > (dean)
+
+10. знайшли / але / не / довго / шукали / бакалавр / хороший / Вони
+   > [!answer] Вони довго шукали хороший бакалавр, але не знайшли.
+   > (bachelor's)
+
+11. сестра / дуже / сказала / що / її / математика / Моя / зручна
+   > [!answer] Моя сестра сказала, що її математика дуже зручна.
+   > (mathematics)
+
+12. інформатика / зручна / що / сестра / Моя / її / дуже / сказала
+   > [!answer] Моя сестра сказала, що її інформатика дуже зручна.
+   > (computer science)
+
+13. дуже / магістр / друг / що / Мій / сказав / його / зручний
+   > [!answer] Мій друг сказав, що його магістр дуже зручний.
+   > (master's)
+
+14. зручний / дуже / друг / Мій / конспект / що / сказав / його
+   > [!answer] Мій друг сказав, що його конспект дуже зручний.
+   > (notes)
+
+## match-up: Знайдіть пари
+
+> З'єднайте українські слова з англійськими.
 
 | Left | Right |
 |------|-------|
-| математика | subject |
-| професор | person |
-| лекція | activity |
-| диплом | document |
-| університет | institution |
+| завжди | always |
+| математика | mathematics |
+| однокласник | classmate (school) |
+| оцінка | grade |
+| ректор | rector |
+| роздратований | irritated |
+| закінчувати | to graduate |
+| світлий | bright |
+| література | literature |
+| гострий | spicy, sharp |
+| інформатика | computer science |
+| закривати | to close |
+| фізика | physics |
+| одногрупник | classmate (uni) |
 
-## quiz: Education Vocabulary
+## quiz: Перевірка значень
 
-> Choose the correct answer.
+> Оберіть правильну відповідь.
 
-1. "Складати іспит" means ___.
-   - [x] to take an exam
-   - [ ] to pass an exam
-   - [ ] to fail an exam
-   - [ ] to prepare for an exam
-   > Складати = to take. Здати = to pass.
+1. Що означає "відмінник"?
+   - [ ] departure
+   - [x] excellent student
+   - [ ] whisper
+   - [ ] to foresee
+   > "відмінник" means "excellent student"
 
-2. A "факультет" is ___.
-   - [x] faculty/department
-   - [ ] semester
-   - [ ] lecture
-   - [ ] grade
-   > Факультет = faculty, department at university.
+2. Що означає "підручник"?
+   - [x] textbook
+   - [ ] book
+   - [ ] those
+   - [ ] sender
+   > "підручник" means "textbook"
 
-3. "Відмінник" is a student who ___.
-   - [x] gets excellent grades
-   - [ ] fails exams
-   - [ ] misses classes
-   - [ ] teaches others
-   > Відмінник = excellent student.
+3. Що означає "ступінь"?
+   - [x] degree
+   - [ ] commission
+   - [ ] trip
+   - [ ] to clean
+   > "ступінь" means "degree"
 
-4. "Курсова робота" is ___.
-   - [x] term paper
-   - [ ] homework
-   - [ ] final exam
-   - [ ] lecture notes
-   > Курсова робота = term paper.
+4. Що означає "пропускати"?
+   - [ ] grandma
+   - [ ] company, group
+   - [x] to miss
+   - [ ] dad
+   > "пропускати" means "to miss"
 
-5. The Ukrainian grading scale in schools is ___.
-   - [x] 1-12
-   - [ ] 1-5
-   - [ ] 1-10
-   - [ ] A-F
-   > Ukrainian schools use 1-12 scale.
+5. Що означає "закінчувати"?
+   - [x] to graduate
+   - [ ] discount
+   - [ ] not
+   - [ ] to close (perf)
+   > "закінчувати" means "to graduate"
 
-6. "Навчатися" means ___.
-   - [x] to study, be educated
-   - [ ] to teach
-   - [ ] to graduate
-   - [ ] to fail
-   > Навчатися = to study, be in education.
+6. Що означає "спеціальність"?
+   - [ ] mountain
+   - [ ] far
+   - [x] major, specialty
+   - [ ] not
+   > "спеціальність" means "major, specialty"
 
-## group-sort: By Category
+7. Що означає "гімназія"?
+   - [ ] downpour
+   - [ ] to succeed
+   - [x] gymnasium
+   - [ ] glass
+   > "гімназія" means "gymnasium"
 
-### Предмети (Subjects)
-- математика
-- історія
-- біологія
-- фізика
+8. Що означає "вивчати"?
+   - [x] to study (subj)
+   - [ ] pharmacy
+   - [ ] to plan
+   - [ ] hobby
+   > "вивчати" means "to study (subj)"
 
-### Люди (People)
-- студент
-- викладач
-- декан
-- однокласник
+9. Що означає "бакалавр"?
+   - [ ] married (m)
+   - [ ] parents
+   - [x] bachelor's
+   - [ ] to download (perf)
+   > "бакалавр" means "bachelor's"
 
-### Документи (Documents)
-- диплом
-- конспект
-- підручник
-- реферат
+10. Що означає "література"?
+   - [ ] earlier, before, used to
+   - [ ] accounting dept
+   - [ ] how much/many
+   - [x] literature
+   > "література" means "literature"
 
-### Дії (Actions)
-- вчитися
-- складати
-- готуватися
-- закінчувати
+11. Що означає "географія"?
+   - [ ] island
+   - [x] geography
+   - [ ] exchange
+   - [ ] airport
+   > "географія" means "geography"
 
+12. Що означає "математика"?
+   - [ ] secretary (f)
+   - [ ] two (m/n)
+   - [x] mathematics
+   - [ ] to watch, look
+   > "математика" means "mathematics"
 
-## true-false: True or False?
-
-> Determine if each statement is true or false.
-
-- [x] "дитячий садок" is masculine.
-   > Correct! дитячий садок is masculine.
-
-- [x] "початкова школа" is feminine.
-   > Correct! початкова школа is feminine.
-
-- [x] "гімназія" is feminine.
-   > Correct! гімназія is feminine.
-
-- [x] "ліцей" is masculine.
-   > Correct! ліцей is masculine.
-
-- [ ] "аспірантура" is masculine.
-   > Incorrect. аспірантура is feminine.
-
-- [ ] "математика" is masculine.
-   > Incorrect. математика is feminine.
-
-
-## fill-in: Fill in the Blank
-
-> Fill in the blanks with the correct word.
-
-
-
-## quiz: Meaning Check
-
-> Choose the correct answer.
-
-1. What does "дитячий садок" mean?
-   - [ ] diploma
-   - [x] kindergarten
-   - [ ] lyceum
-   - [ ] computer science
-   > "дитячий садок" means "kindergarten"
-
-2. What does "ліцей" mean?
-   - [ ] kindergarten
+13. Що означає "ліцей"?
+   - [ ] painful, it hurts
+   - [ ] ticket
+   - [ ] more
    - [x] lyceum
-   - [ ] diploma
-   - [ ] computer science
    > "ліцей" means "lyceum"
 
-3. What does "інформатика" mean?
-   - [ ] lyceum
-   - [ ] diploma
-   - [x] computer science
-   - [ ] kindergarten
-   > "інформатика" means "computer science"
+14. Що означає "декан"?
+   - [ ] to fire
+   - [ ] your (masc, informal)
+   - [x] dean
+   - [ ] to live
+   > "декан" means "dean"
 
-4. What does "диплом" mean?
-   - [x] diploma
-   - [ ] kindergarten
-   - [ ] computer science
-   - [ ] lyceum
-   > "диплом" means "diploma"
+## true-false: Правда чи ні?
 
-5. What does "зошит" mean?
-   - [ ] lyceum
-   - [x] notebook
-   - [ ] computer science
-   - [ ] kindergarten
-   > "зошит" means "notebook"
+> Визначте, чи правильне твердження.
 
-6. What does "однокласник" mean?
-   - [ ] kindergarten
-   - [x] classmate (school)
-   - [ ] lyceum
-   - [ ] computer science
-   > "однокласник" means "classmate (school)"
+- [x] "вивчати" means "to study (subj)"
+   > Correct!
 
+- [x] "сесія" means "exam period"
+   > Correct!
 
+- [ ] "відмінник" means "fitting room"
+   > Incorrect. "відмінник" means "excellent student"
 
-## unjumble: Word Order
+- [x] "інформатика" means "computer science"
+   > Correct!
 
-> Put the words in the correct order to form a sentence.
+- [x] "здавати" means "to pass"
+   > Correct!
 
-1. / / учениця / учень
-   > [!answer] учень / учениця
-   > (pupil (m/f))
+- [x] "випускник" means "graduate"
+   > Correct!
 
-2. студентка / студент / /
-   > [!answer] студент / студентка
-   > (student (m/f))
+- [x] "ректор" means "rector"
+   > Correct!
 
-3. / / вчитель / вчителька
-   > [!answer] вчитель / вчителька
-   > (teacher (m/f))
+- [ ] "географія" means "to understand"
+   > Incorrect. "географія" means "geography"
 
-4. викладач / викладачка / /
-   > [!answer] викладач / викладачка
-   > (lecturer (m/f))
+- [ ] "математика" means "diploma"
+   > Incorrect. "математика" means "mathematics"
 
+- [ ] "фізика" means "best"
+   > Incorrect. "фізика" means "physics"
+
+## group-sort: Сортування за родом
+
+> Розподіліть слова за родами.
+
+### Чоловічий рід
+- магістр
+- факультет
+- реферат
+- декан
+- відмінник
+- ступінь
+
+### Жіночий рід
+- математика
+- оцінка
+- аспірантура
+- гімназія
+- спеціальність
+- інформатика
 
 ---
 

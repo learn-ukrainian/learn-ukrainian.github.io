@@ -242,19 +242,41 @@ Conduct a short meeting:
    - [ ] подати звіт
    > Meeting a deadline.
 
-## fill-in: Company Description
 
-> Опишіть компанію.
+## fill-in: Fill in the Blank
 
-> Наша (1)___ (company) називається «Укртех». Ми маємо головний (2)___ (office) у Києві і три (3)___ (branches) в інших містах. (4)___ (CEO) керує всією компанією. У кожному відділі є (5)___ (manager). Щотижня ми проводимо (6)___ (meetings) для обговорення проєктів.
+> Choose the correct word to complete each sentence.
 
-**Answers:**
-1. компанія
-2. офіс
-3. філії
-4. Генеральний директор
-5. менеджер
-6. наради / зустрічі
+
+
+## unjumble: Word Order
+
+> Drag the words into the correct order to form a sentence.
+
+1. найняти / наймати / /
+   > [!answer] наймати / найняти
+   > (to hire)
+
+2. / / звільнити / звільняти
+   > [!answer] звільняти / звільнити
+   > (to fire, dismiss)
+
+3. / / підписати / підписувати
+   > [!answer] підписувати / підписати
+   > (to sign)
+
+4. / / домовитися / домовлятися
+   > [!answer] домовлятися / домовитися
+   > (to agree, negotiate)
+
+5. заробляти / / / заробити
+   > [!answer] заробляти / заробити
+   > (to earn)
+
+6. витрачати / / / витратити
+   > [!answer] витрачати / витратити
+   > (to spend)
+
 
 ---
 

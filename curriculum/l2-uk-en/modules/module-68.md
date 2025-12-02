@@ -290,160 +290,297 @@ Give advice to someone who's sick:
 
 ---
 
-# Activities
+---
 
-## match-up: Body Part → System
+---
+
+---
+
+# Вправи
+
+## fill-in: Доповніть речення
+
+> Оберіть правильне слово.
+
+1. Вони довго шукали хороший ___, але не знайшли.
+   > [!answer] лікоть
+   > [!options] лікоть | двері | поїздка | відповідальність
+
+2. Цей варіант здається мені найбільш ___ з усіх.
+   > [!answer] хворий
+   > [!options] дешевший | сестрин | хворий | книжковий
+
+3. Моя сестра каже, що їй подобається ___ у вільний час.
+   > [!answer] почуватися
+   > [!options] почуватися | зрозуміти | буде | повідомляти
+
+4. Моя сестра сказала, що її ___ дуже зручна.
+   > [!answer] інфекція
+   > [!options] калюжа | інфекція | порція | мешканець
+
+5. Мій друг сказав, що його ___ дуже зручний.
+   > [!answer] пацієнт
+   > [!options] пацієнт | продавець | кабінет | втома
+
+6. Вони довго шукали хорошу ___, але не знайшли.
+   > [!answer] травма
+   > [!options] виделка | травма | передбачення | посилання
+
+7. Моя сестра каже, що їй подобається ___ у вільний час.
+   > [!answer] болить
+   > [!options] болить | відкрити | прийти | класти
+
+8. Це ___ належить моєму другові з Києва.
+   > [!answer] плече
+   > [!options] підхід | ліжко | плече | зупинка
+
+9. Моя сестра сказала, що її ___ дуже зручна.
+   > [!answer] алергія
+   > [!options] картопля | море | квиток | алергія
+
+10. Моя сестра сказала, що її ___ дуже зручна.
+   > [!answer] печінка
+   > [!options] пам'ять | 15 | ріг | печінка
+
+11. Я давно мріяв навчитися ___, і нарешті маю таку можливість.
+   > [!answer] одужати
+   > [!options] коштувати | смакувати | одужати | говорити
+
+## unjumble: Побудуйте речення
+
+> Розташуйте слова в правильному порядку.
+
+1. сказала / нудота / дуже / сестра / зручна / що / її / Моя
+   > [!answer] Моя сестра сказала, що її нудота дуже зручна.
+   > (nausea)
+
+2. серце / зручне / Вони / сказали / що / це / дуже
+   > [!answer] Вони сказали, що це серце дуже зручне.
+   > (heart)
+
+3. але / дорога / купити / хочу / цю / вона / шкіра / занадто / Я
+   > [!answer] Я хочу купити цю шкіра, але вона занадто дорога.
+   > (skin)
+
+4. Я / хочу / алергія / дорога / вона / цю / занадто / але / купити
+   > [!answer] Я хочу купити цю алергія, але вона занадто дорога.
+   > (allergy)
+
+5. печінка / її / Моя / що / сестра / дуже / сказала / зручна
+   > [!answer] Моя сестра сказала, що її печінка дуже зручна.
+   > (liver)
+
+6. занадто / дороге / воно / Я / плече / але / купити / хочу / це
+   > [!answer] Я хочу купити це плече, але воно занадто дороге.
+   > (shoulder)
+
+7. дуже / Моя / зручна / що / її / сказала / сестра / кістка
+   > [!answer] Моя сестра сказала, що її кістка дуже зручна.
+   > (bone)
+
+8. Я / цю / але / травма / занадто / дорога / купити / вона / хочу
+   > [!answer] Я хочу купити цю травма, але вона занадто дорога.
+   > (injury)
+
+9. його / шлунок / що / сказав / друг / Мій / зручний / дуже
+   > [!answer] Мій друг сказав, що його шлунок дуже зручний.
+   > (stomach)
+
+10. Вони / дуже / зручне / коліно / сказали / що / це
+   > [!answer] Вони сказали, що це коліно дуже зручне.
+   > (knee)
+
+11. належить / Києва / втома / з / моїй / подрузі / Ця
+   > [!answer] Ця втома належить моїй подрузі з Києва.
+   > (fatigue)
+
+12. знайшли / пацієнт / хороший / довго / Вони / не / шукали / але
+   > [!answer] Вони довго шукали хороший пацієнт, але не знайшли.
+   > (patient)
+
+## match-up: Знайдіть пари
+
+> З'єднайте українські слова з англійськими.
 
 | Left | Right |
 |------|-------|
-| серце | cardiovascular |
-| легені | respiratory |
-| шлунок | digestive |
-| м'яз | muscular |
-| кістка | skeletal |
+| плече | shoulder |
+| втома | fatigue |
+| дитина | child |
+| одужати | to recover |
+| університет | university |
+| діагноз | diagnosis |
+| лікоть | elbow |
+| випити | to drink (perf) |
+| нирки | kidneys |
+| віддалено | remotely |
+| щиколотка | ankle |
+| грип | flu |
+| магазин | store |
+| травма | injury |
 
-## quiz: Health Vocabulary
+## quiz: Перевірка значень
 
-> Choose the correct answer.
+> Оберіть правильну відповідь.
 
-1. "I have a headache" in Ukrainian is ___.
-   - [x] У мене болить голова
-   - [ ] У мене голова болить
-   - [ ] Мій голова болить
-   - [ ] Болить мене голова
-   > Standard structure: (У мене) болить + body part.
-
-2. Where do you buy medicine?
-   - [x] аптека
-   - [ ] лікарня
-   - [ ] поліклініка
-   - [ ] лабораторія
-   > Аптека = pharmacy.
-
-3. "Нежить" means ___.
-   - [x] runny nose
-   - [ ] headache
-   - [ ] fever
-   - [ ] cough
-   > Нежить = runny nose.
-
-4. The plural of "легеня" is ___.
-   - [x] легені
-   - [ ] легеня
-   - [ ] легеняй
-   - [ ] легеней
-   > Легеня → легені (lungs).
-
-5. "Швидка допомога" is ___.
-   - [x] ambulance
-   - [ ] pharmacy
-   - [ ] hospital
-   - [ ] clinic
-   > Швидка допомога = emergency medical service (ambulance).
-
-6. "Одужати" means ___.
-   - [x] to recover
-   - [ ] to get sick
-   - [ ] to diagnose
-   - [ ] to prescribe
-   > Одужати = to recover, get well.
-
-## group-sort: Symptom Categories
-
-### Біль (Pain)
-- головний біль
-- біль у животі
-- біль у спині
-- біль у горлі
-
-### Респіраторні (Respiratory)
-- кашель
-- нежить
-- чхання
-- утруднене дихання
-
-### Загальні (General)
-- температура
-- слабкість
-- запаморочення
-- втома
-
-
-## true-false: True or False?
-
-> Determine if each statement is true or false.
-
-- [x] "серце" is neuter.
-   > Correct! серце is neuter.
-
-- [x] "легені" is neuter.
-   > Correct! легені is neuter.
-
-- [x] "шлунок" is masculine.
-   > Correct! шлунок is masculine.
-
-- [x] "печінка" is feminine.
-   > Correct! печінка is feminine.
-
-- [ ] "нирки" is masculine.
-   > Incorrect. нирки is undefined.
-
-- [ ] "м'яз" is feminine.
-   > Incorrect. м'яз is masculine.
-
-
-## fill-in: Fill in the Blank
-
-> Fill in the blanks with the correct word.
-
-
-
-## quiz: Meaning Check
-
-> Choose the correct answer.
-
-1. What does "плече" mean?
+1. Що означає "плече"?
+   - [ ] weakness
    - [x] shoulder
-   - [ ] joint
-   - [ ] injury
-   - [ ] patient
+   - [ ] to answer
+   - [ ] to pay
    > "плече" means "shoulder"
 
-2. What does "суглоб" mean?
-   - [ ] injury
-   - [ ] shoulder
-   - [x] joint
-   - [ ] patient
-   > "суглоб" means "joint"
+2. Що означає "слабкість"?
+   - [ ] fork
+   - [ ] one (m)
+   - [ ] passenger
+   - [x] weakness
+   > "слабкість" means "weakness"
 
-3. What does "травма" mean?
-   - [ ] shoulder
-   - [ ] patient
-   - [ ] joint
+3. Що означає "травма"?
+   - [ ] we
+   - [ ] seller (f)
+   - [ ] to him/it
    - [x] injury
    > "травма" means "injury"
 
-4. What does "пацієнт" mean?
-   - [x] patient
-   - [ ] joint
-   - [ ] injury
-   - [ ] shoulder
-   > "пацієнт" means "patient"
+4. Що означає "набряк"?
+   - [ ] to you
+   - [ ] her, hers
+   - [x] swelling
+   - [ ] onion
+   > "набряк" means "swelling"
 
-5. What does "почуватися" mean?
-   - [ ] shoulder
+5. Що означає "почуватися"?
+   - [ ] receipt
+   - [ ] to see (perf)
+   - [ ] it's worth
    - [x] to feel
-   - [ ] joint
-   - [ ] injury
    > "почуватися" means "to feel"
 
-6. What does "втома" mean?
-   - [ ] joint
-   - [ ] shoulder
-   - [ ] injury
+6. Що означає "печінка"?
+   - [ ] deposit
+   - [ ] today
+   - [x] liver
+   - [ ] conversation
+   > "печінка" means "liver"
+
+7. Що означає "кров"?
+   - [ ] where
+   - [ ] Monday
+   - [ ] engineer
+   - [x] blood
+   > "кров" means "blood"
+
+8. Що означає "шкіра"?
+   - [ ] talented
+   - [x] skin
+   - [ ] cottage cheese pancakes
+   - [ ] to be afraid
+   > "шкіра" means "skin"
+
+9. Що означає "серце"?
+   - [x] heart
+   - [ ] around
+   - [ ] cash register
+   - [ ] to cancel (perf)
+   > "серце" means "heart"
+
+10. Що означає "болить"?
+   - [ ] to ask, request
+   - [ ] to go (on foot)
+   - [ ] to reach (on foot)
+   - [x] hurts
+   > "болить" means "hurts"
+
+11. Що означає "втома"?
+   - [ ] musical
+   - [ ] sister's
+   - [ ] word
    - [x] fatigue
    > "втома" means "fatigue"
 
+12. Що означає "здоров'я"?
+   - [ ] shelf
+   - [x] health
+   - [ ] to confirm (perf)
+   - [ ] letter
+   > "здоров'я" means "health"
+
+13. Що означає "хворий"?
+   - [ ] phone
+   - [x] sick
+   - [ ] airplane
+   - [ ] in order to, so that
+   > "хворий" means "sick"
+
+14. Що означає "діагноз"?
+   - [ ] small parcel
+   - [ ] trip
+   - [ ] conductor
+   - [x] diagnosis
+   > "діагноз" means "diagnosis"
+
+## true-false: Правда чи ні?
+
+> Визначте, чи правильне твердження.
+
+- [x] "запаморочення" means "dizziness"
+   > Correct!
+
+- [ ] "шкіра" means "cheaper"
+   > Incorrect. "шкіра" means "skin"
+
+- [ ] "набряк" means "doctor (m)"
+   > Incorrect. "набряк" means "swelling"
+
+- [ ] "почуватися" means "pen"
+   > Incorrect. "почуватися" means "to feel"
+
+- [x] "болить" means "hurts"
+   > Correct!
+
+- [ ] "печінка" means "to me"
+   > Incorrect. "печінка" means "liver"
+
+- [ ] "м'яз" means "to be considered"
+   > Incorrect. "м'яз" means "muscle"
+
+- [ ] "боляче" means "to feel"
+   > Incorrect. "боляче" means "painful, it hurts"
+
+- [ ] "одужати" means "in front of"
+   > Incorrect. "одужати" means "to recover"
+
+- [x] "діагноз" means "diagnosis"
+   > Correct!
+
+## group-sort: Сортування за родом
+
+> Розподіліть слова за родами.
+
+### Чоловічий рід
+- лікоть
+- грип
+- набряк
+- шлунок
+- діагноз
+- суглоб
+
+### Жіночий рід
+- алергія
+- травма
+- шкіра
+- слабкість
+- втома
+- печінка
+
+### Середній рід
+- запаморочення
+- плече
+- серце
+- здоров'я
+- коліно
 
 ---
 

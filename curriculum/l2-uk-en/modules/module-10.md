@@ -266,7 +266,32 @@ B: Так / Ні, я ___.
 | ніхто | nobody |
 | п'ять | five |
 
-## quiz: Meaning Check
+## group-sort: Grammar Concepts Review
+
+> Sort these concepts by their grammar category.
+
+### Pronouns & Agreement
+- мій/моя/моє (my - gender agreement)
+- цей/ця/це (this - demonstrative)
+- його/її (his/her - frozen forms)
+- ти vs ви (informal vs formal you)
+
+### Verb Classes
+- Class I: -є- pattern (читаєш)
+- Class II: -и- pattern (говориш)
+- Consonant changes (люблю, ходжу)
+
+### Question Formation
+- Intonation questions (Він студент?)
+- Чи-particle (Чи він студент?)
+- Question words (що, хто, де, куди)
+
+### Negation
+- Simple negation (не + verb)
+- Double negation (ніхто не знає)
+- Negative pronouns (ніхто, нічого, ніколи)
+
+## quiz: A1 Grammar Review
 
 > Review: Choose the correct answer.
 

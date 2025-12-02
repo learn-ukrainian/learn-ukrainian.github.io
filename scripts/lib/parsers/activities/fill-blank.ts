@@ -54,6 +54,12 @@ export class FillBlankParser extends ActivityParser<FillBlankContent> {
       // Parse answer from callouts
       const { answer, explanation, alternatives } = this.parseAnswerBlock(answerBlock);
 
+      // Parse options from [!options] callout
+      const optionsMatch = answerBlock.match(/>\s*\[!options\]\s*(.+)/);
+      const options = optionsMatch
+        ? optionsMatch[1].split('|').map(o => o.trim()).filter(Boolean)
+        : undefined;
+
       // Extract hints from blank pattern: ___ (hint)
       const hintMatch = prompt.match(/___\s*\(([^)]+)\)/);
       const hints = hintMatch ? [hintMatch[1]] : undefined;
@@ -66,6 +72,7 @@ export class FillBlankParser extends ActivityParser<FillBlankContent> {
       if (hints) item.hints = hints;
       if (explanation) item.explanation = explanation;
       if (alternatives && alternatives.length > 0) item.alternatives = alternatives;
+      if (options && options.length > 0) item.options = options;
 
       items.push(item);
     }

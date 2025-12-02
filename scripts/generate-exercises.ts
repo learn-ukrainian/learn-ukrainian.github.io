@@ -91,20 +91,26 @@ function getLevelFromModule(num: number): string {
 function parseVocabulary(content: string): VocabWord[] {
   const words: VocabWord[] = [];
 
-  // Find vocabulary section
-  const vocabMatch = content.match(/# Vocabulary\n\n\| Word \| IPA \|[\s\S]*?\n\n/);
+  // Find vocabulary section (English or Ukrainian header)
+  const vocabMatch = content.match(/# (Vocabulary|Словник)\n\n\|[^\n]+\|[\s\S]*?\n\n/);
   if (!vocabMatch) return words;
 
-  const lines = vocabMatch[0].split('\n').filter(l => l.startsWith('|') && !l.includes('---') && !l.includes('Word'));
+  const lines = vocabMatch[0].split('\n').filter(l =>
+    l.startsWith('|') &&
+    !l.includes('---') &&
+    !l.includes('Word') &&
+    !l.includes('Слово') &&
+    !l.includes('IPA')
+  );
 
   for (const line of lines) {
     const cells = line.split('|').map(c => c.trim()).filter(Boolean);
-    if (cells.length >= 5) {
+    if (cells.length >= 3) {
       words.push({
         word: cells[0],
-        ipa: cells[1],
+        ipa: cells[1] || '',
         english: cells[2],
-        pos: cells[3],
+        pos: cells[3] || '',
         gender: cells[4] || '',
         note: cells[5] || '',
       });
@@ -116,26 +122,33 @@ function parseVocabulary(content: string): VocabWord[] {
 
 function parseExamples(content: string): ExampleSentence[] {
   const examples: ExampleSentence[] = [];
+  const seen = new Set<string>();
 
-  // Find examples in tables with Ukrainian | English columns
-  const tableMatches = content.matchAll(/\| ([^|]+) \| ([^|]+) \|\n/g);
+  // Find ALL table rows and look for Ukrainian/English pairs in any columns
+  const tableRowMatches = content.matchAll(/\|([^|\n]+(?:\|[^|\n]+)+)\|/g);
 
-  for (const match of tableMatches) {
-    const left = match[1].trim();
-    const right = match[2].trim();
+  for (const match of tableRowMatches) {
+    const cells = match[1].split('|').map(c => c.trim());
 
-    // Check if left is Ukrainian (has Cyrillic) and right is English
-    if (/[а-яіїєґ]/i.test(left) && /[a-z]/i.test(right) && !left.includes('---')) {
-      // Clean up markdown formatting
-      const ukr = left.replace(/\*\*/g, '').replace(/\*/g, '');
-      const eng = right.replace(/\*\*/g, '').replace(/\*/g, '');
+    // Skip header/separator rows
+    if (cells.some(c => c.includes('---') || c === 'Word' || c === 'IPA' || c === 'Gender' || c === 'Form')) continue;
 
-      if (ukr.length > 3 && eng.length > 3) {
-        examples.push({
-          ukrainian: ukr,
-          english: eng,
-          source: 'table',
-        });
+    // Look for Ukrainian-English pairs in adjacent cells
+    for (let i = 0; i < cells.length - 1; i++) {
+      const ukr = cells[i].replace(/\*\*/g, '').replace(/\*/g, '').replace(/\([^)]+\)/g, '').trim();
+      const eng = cells[i + 1].replace(/\*\*/g, '').replace(/\*/g, '').trim();
+
+      // Check if this is a Ukrainian-English pair (Ukrainian has Cyrillic, English has Latin)
+      if (/[а-яіїєґ]/i.test(ukr) && /^[a-z]/i.test(eng) && !eng.includes('---')) {
+        // Must be a meaningful phrase (3+ chars, multiple words preferred for sentences)
+        if (ukr.length >= 3 && eng.length >= 3 && !seen.has(ukr)) {
+          seen.add(ukr);
+          examples.push({
+            ukrainian: ukr,
+            english: eng,
+            source: 'table',
+          });
+        }
       }
     }
   }
@@ -147,7 +160,8 @@ function parseExamples(content: string): ExampleSentence[] {
     const ukr = match[1].trim();
     const eng = match[2].trim();
 
-    if (/[а-яіїєґ]/i.test(ukr) && /[a-z]/i.test(eng)) {
+    if (/[а-яіїєґ]/i.test(ukr) && /[a-z]/i.test(eng) && !seen.has(ukr)) {
+      seen.add(ukr);
       examples.push({
         ukrainian: ukr,
         english: eng,
@@ -185,6 +199,42 @@ function parseGrammarTopics(content: string): string[] {
   return topics;
 }
 
+// Cache for accumulated vocabulary from previous modules
+const vocabCache: Map<number, VocabWord[]> = new Map();
+
+async function loadAccumulatedVocabulary(upToModule: number): Promise<VocabWord[]> {
+  // Check cache
+  if (vocabCache.has(upToModule)) {
+    return vocabCache.get(upToModule)!;
+  }
+
+  const allVocab: VocabWord[] = [];
+  const seen = new Set<string>();
+
+  for (let num = 1; num <= upToModule; num++) {
+    const padded = String(num).padStart(2, '0');
+    const modulePath = join(MODULES_DIR, `module-${padded}.md`);
+
+    try {
+      if (!existsSync(modulePath)) continue;
+      const content = await readFile(modulePath, 'utf-8');
+      const vocab = parseVocabulary(content);
+
+      for (const word of vocab) {
+        if (!seen.has(word.word)) {
+          seen.add(word.word);
+          allVocab.push(word);
+        }
+      }
+    } catch {
+      // Skip modules that can't be read
+    }
+  }
+
+  vocabCache.set(upToModule, allVocab);
+  return allVocab;
+}
+
 async function parseModule(modulePath: string): Promise<ModuleData | null> {
   try {
     const content = await readFile(modulePath, 'utf-8');
@@ -202,11 +252,14 @@ async function parseModule(modulePath: string): Promise<ModuleData | null> {
 
     const moduleNum = parseInt(moduleMatch[1]);
 
+    // Load accumulated vocabulary from all previous modules
+    const accumulatedVocab = await loadAccumulatedVocabulary(moduleNum);
+
     return {
       moduleNum,
       level: levelMatch ? levelMatch[1] : getLevelFromModule(moduleNum),
       title: titleMatch ? titleMatch[1] : `Module ${moduleNum}`,
-      vocabulary: parseVocabulary(content),
+      vocabulary: accumulatedVocab, // Use accumulated vocab instead of just this module
       examples: parseExamples(content),
       existingActivities: parseExistingActivities(content),
       grammarTopics: parseGrammarTopics(content),
@@ -225,8 +278,8 @@ function generateMatchUp(data: ModuleData, variant: number): GeneratedActivity |
   const vocab = data.vocabulary.filter(w => w.english && w.word);
   if (vocab.length < 6) return null;
 
-  // Shuffle and take 8
-  const shuffled = vocab.sort(() => Math.random() - 0.5).slice(0, 8);
+  // Shuffle and take up to 12 items
+  const shuffled = vocab.sort(() => Math.random() - 0.5).slice(0, 12);
 
   const titles = [
     'Vocabulary Match',
@@ -253,7 +306,7 @@ function generateTrueFalse(data: ModuleData): GeneratedActivity | null {
   const statements: string[] = [];
 
   // Generate statements from vocabulary
-  for (const w of data.vocabulary.slice(0, 4)) {
+  for (const w of data.vocabulary.slice(0, 6)) {
     if (w.gender && w.pos === 'noun') {
       // True statement
       statements.push(`- [x] "${w.word}" is ${w.gender === 'm' ? 'masculine' : w.gender === 'f' ? 'feminine' : 'neuter'}.\n   > Correct! ${w.word} is ${w.gender === 'm' ? 'masculine' : w.gender === 'f' ? 'feminine' : 'neuter'}.`);
@@ -264,7 +317,7 @@ function generateTrueFalse(data: ModuleData): GeneratedActivity | null {
   const genderMap: Record<string, string> = { 'm': 'masculine', 'f': 'feminine', 'n': 'neuter' };
   const wrongGenders = ['m', 'f', 'n'];
 
-  for (const w of data.vocabulary.slice(4, 8)) {
+  for (const w of data.vocabulary.slice(6, 12)) {
     if (w.gender && w.pos === 'noun') {
       const wrong = wrongGenders.find(g => g !== w.gender) || 'f';
       statements.push(`- [ ] "${w.word}" is ${genderMap[wrong]}.\n   > Incorrect. ${w.word} is ${genderMap[w.gender]}.`);
@@ -274,7 +327,7 @@ function generateTrueFalse(data: ModuleData): GeneratedActivity | null {
   if (statements.length < 4) return null;
 
   let content = `> Determine if each statement is true or false.\n\n`;
-  content += statements.slice(0, 6).join('\n\n') + '\n';
+  content += statements.slice(0, 10).join('\n\n') + '\n';
 
   return {
     type: 'true-false',
@@ -309,7 +362,8 @@ function generateGroupSort(data: ModuleData): GeneratedActivity | null {
 
   for (const [gender, items] of validGroups) {
     content += `### ${genderNames[gender]}\n`;
-    for (const item of items.slice(0, 4)) {
+    // Use up to 6 items per group
+    for (const item of items.slice(0, 6)) {
       content += `- ${item}\n`;
     }
     content += '\n';
@@ -324,29 +378,77 @@ function generateGroupSort(data: ModuleData): GeneratedActivity | null {
 }
 
 function generateFillIn(data: ModuleData): GeneratedActivity | null {
-  const examples = data.examples.filter(e => e.ukrainian.length > 10);
-  if (examples.length < 3) return null;
+  // For early modules (A1), accept shorter phrases; for later modules require longer sentences
+  const minLen = data.moduleNum <= 30 ? 5 : 10;
+  const minWords = data.moduleNum <= 30 ? 2 : 3;
 
-  let content = `> Fill in the blanks with the correct word.\n\n`;
+  const examples = data.examples.filter(e => e.ukrainian.length >= minLen);
 
-  const usedExamples = examples.slice(0, 5);
+  let content = `> Choose the correct word to complete each sentence.\n\n`;
+
+  // Adaptive count: modules 1-10: 8 items, 11-30: 12, 31+: 18
+  const targetCount = data.moduleNum <= 10 ? 8 : data.moduleNum <= 30 ? 12 : 18;
   let num = 1;
 
-  for (const ex of usedExamples) {
-    // Find a word to blank out (prefer content words)
-    const words = ex.ukrainian.split(/\s+/);
-    if (words.length < 3) continue;
+  // Collect all vocab words for distractors
+  const allVocabWords = data.vocabulary.map(v => v.word).filter(w => w.length > 1);
 
-    // Pick a word in the middle (not first or last)
-    const targetIdx = Math.floor(words.length / 2);
+  // First, use example sentences
+  const usedExamples = examples.slice(0, targetCount);
+
+  for (const ex of usedExamples) {
+    if (num > targetCount) break;
+    const words = ex.ukrainian.split(/\s+/);
+    if (words.length < minWords) continue;
+
+    // For 2-word phrases, blank the first word; for longer, blank middle
+    const targetIdx = words.length === 2 ? 0 : Math.floor(words.length / 2);
     const targetWord = words[targetIdx].replace(/[.,!?]/g, '');
+    if (targetWord.length <= 1) continue;
 
     const blanked = words.map((w, i) => i === targetIdx ? '___' : w).join(' ');
 
+    // Generate distractors from vocabulary
+    const distractors = allVocabWords
+      .filter(a => a !== targetWord)
+      .sort(() => Math.random() - 0.5)
+      .slice(0, 3);
+
     content += `${num}. ${blanked}\n`;
-    content += `   > [!answer] ${targetWord}\n\n`;
+    content += `   > [!answer] ${targetWord}\n`;
+    if (distractors.length >= 3) {
+      content += `   > [!options] ${[targetWord, ...distractors].join(' | ')}\n`;
+    }
+    content += `\n`;
     num++;
   }
+
+  // If we don't have enough examples, generate from vocabulary
+  if (num <= targetCount && data.vocabulary.length >= 8) {
+    const shuffledVocab = [...data.vocabulary].sort(() => Math.random() - 0.5);
+
+    for (const word of shuffledVocab) {
+      if (num > targetCount) break;
+      if (!word.english || word.word.length <= 1) continue;
+
+      // Create a translation fill-in: "___ means [english]"
+      const distractors = allVocabWords
+        .filter(w => w !== word.word)
+        .sort(() => Math.random() - 0.5)
+        .slice(0, 3);
+
+      if (distractors.length < 3) continue;
+
+      content += `${num}. ___ — "${word.english}"\n`;
+      content += `   > [!answer] ${word.word}\n`;
+      content += `   > [!options] ${[word.word, ...distractors].join(' | ')}\n`;
+      content += `\n`;
+      num++;
+    }
+  }
+
+  // Return null if no items were generated
+  if (num === 1) return null;
 
   return {
     type: 'fill-in',
@@ -364,7 +466,9 @@ function generateQuiz(data: ModuleData, variant: number): GeneratedActivity | nu
 
   const shuffled = vocab.sort(() => Math.random() - 0.5);
 
-  for (let i = 0; i < Math.min(6, shuffled.length); i++) {
+  // Adaptive count: modules 1-10: 6-8 items, 11-30: 10-12, 31+: 15-18
+  const targetCount = data.moduleNum <= 10 ? 8 : data.moduleNum <= 30 ? 12 : 18;
+  for (let i = 0; i < Math.min(targetCount, shuffled.length); i++) {
     const correct = shuffled[i];
     const wrongs = shuffled.filter((_, idx) => idx !== i).slice(0, 3);
 
@@ -389,16 +493,21 @@ function generateQuiz(data: ModuleData, variant: number): GeneratedActivity | nu
 }
 
 function generateUnjumble(data: ModuleData): GeneratedActivity | null {
+  // For early modules, accept 2-word phrases; for later, require 3+
+  const minWords = data.moduleNum <= 30 ? 2 : 3;
+
   const examples = data.examples.filter(e => {
     const words = e.ukrainian.split(/\s+/);
-    return words.length >= 3 && words.length <= 8;
+    return words.length >= minWords && words.length <= 8;
   });
 
   if (examples.length < 3) return null;
 
-  let content = `> Put the words in the correct order to form a sentence.\n\n`;
+  let content = `> Drag the words into the correct order to form a sentence.\n\n`;
 
-  const usedExamples = examples.slice(0, 4);
+  // Adaptive count: modules 1-10: 8 items, 11-30: 12, 31+: 18
+  const targetCount = data.moduleNum <= 10 ? 8 : data.moduleNum <= 30 ? 12 : 18;
+  const usedExamples = examples.slice(0, targetCount);
   let num = 1;
 
   for (const ex of usedExamples) {
@@ -429,7 +538,7 @@ function generateTransform(data: ModuleData): GeneratedActivity | null {
 // MAIN GENERATOR
 // =============================================================================
 
-function generateActivities(data: ModuleData): GeneratedActivity[] {
+function generateActivities(data: ModuleData, enrich: boolean = false): GeneratedActivity[] {
   const activities: GeneratedActivity[] = [];
   const targets = TARGET_ACTIVITIES[data.level] || TARGET_ACTIVITIES['A1'];
 
@@ -451,10 +560,12 @@ function generateActivities(data: ModuleData): GeneratedActivity[] {
     if (activity) activities.push(activity);
   }
 
-  // Type B (Production) - generate if needed
-  if (!existing.includes('fill-in') && data.examples.length >= 3) {
-    const activity = generateFillIn(data);
-    if (activity) activities.push(activity);
+  // Type B (Production) - ALWAYS generate when enriching, otherwise only if missing
+  if (enrich || !existing.includes('fill-in')) {
+    if (data.examples.length >= 3) {
+      const activity = generateFillIn(data);
+      if (activity) activities.push(activity);
+    }
   }
 
   // Additional quiz variant if we have vocabulary
@@ -463,8 +574,8 @@ function generateActivities(data: ModuleData): GeneratedActivity[] {
     if (activity) activities.push(activity);
   }
 
-  // Type C (Synthesis) - generate if needed
-  if (!existing.includes('unjumble') && !existing.includes('order')) {
+  // Type C (Synthesis) - ALWAYS generate when enriching, otherwise only if missing
+  if (enrich || (!existing.includes('unjumble') && !existing.includes('order'))) {
     const activity = generateUnjumble(data);
     if (activity) activities.push(activity);
   }
@@ -472,11 +583,32 @@ function generateActivities(data: ModuleData): GeneratedActivity[] {
   return activities;
 }
 
+/**
+ * Remove existing fill-in and unjumble activities from content
+ */
+function removeExistingActivities(content: string, types: string[]): string {
+  let result = content;
+
+  for (const type of types) {
+    // Match activity block from ## type: to next ## or section divider
+    const pattern = new RegExp(
+      `\n## ${type}:[^\n]*\n(?:(?!## |# |---)[^\n]*\n)*`,
+      'gi'
+    );
+    result = result.replace(pattern, '\n');
+  }
+
+  // Clean up multiple blank lines
+  result = result.replace(/\n{3,}/g, '\n\n');
+
+  return result;
+}
+
 function formatActivity(activity: GeneratedActivity): string {
   return `## ${activity.type}: ${activity.title}\n\n${activity.content}`;
 }
 
-async function processModule(modulePath: string, dryRun: boolean = false): Promise<void> {
+async function processModule(modulePath: string, dryRun: boolean = false, enrich: boolean = false): Promise<void> {
   const data = await parseModule(modulePath);
   if (!data) {
     console.log(`  Skipping (couldn't parse)`);
@@ -486,19 +618,24 @@ async function processModule(modulePath: string, dryRun: boolean = false): Promi
   const targets = TARGET_ACTIVITIES[data.level] || TARGET_ACTIVITIES['A1'];
   const currentCount = data.existingActivities.length;
 
-  if (currentCount >= targets.total) {
+  // Skip if already has enough activities (unless enriching)
+  if (!enrich && currentCount >= targets.total) {
     console.log(`  Already has ${currentCount}/${targets.total} activities`);
     return;
   }
 
-  const newActivities = generateActivities(data);
+  const newActivities = generateActivities(data, enrich);
 
   if (newActivities.length === 0) {
     console.log(`  No new activities to add (insufficient content)`);
     return;
   }
 
-  console.log(`  Adding ${newActivities.length} activities (${currentCount} → ${currentCount + newActivities.length})`);
+  if (enrich) {
+    console.log(`  Enriching: replacing fill-in/unjumble with ${newActivities.length} new activities`);
+  } else {
+    console.log(`  Adding ${newActivities.length} activities (${currentCount} → ${currentCount + newActivities.length})`);
+  }
 
   if (dryRun) {
     for (const act of newActivities) {
@@ -507,18 +644,25 @@ async function processModule(modulePath: string, dryRun: boolean = false): Promi
     return;
   }
 
-  // Insert new activities into the module file
-  const content = await readFile(modulePath, 'utf-8');
+  // Read and potentially clean content
+  let content = await readFile(modulePath, 'utf-8');
 
-  // Find the end of Activities section (before Vocabulary)
-  const vocabMatch = content.match(/\n---\n\n# Vocabulary/);
+  // If enriching, remove existing fill-in and unjumble activities first
+  if (enrich) {
+    content = removeExistingActivities(content, ['fill-in', 'unjumble', 'order']);
+  }
+
+  // Find the end of Activities section (before Vocabulary/Словник)
+  // Match both English and Ukrainian section headers, with or without ---
+  const vocabPattern = /\n(---\n\n)?# (Vocabulary|Словник)/;
+  const vocabMatch = content.match(vocabPattern);
   if (!vocabMatch || vocabMatch.index === undefined) {
     console.log(`  Can't find Vocabulary section marker`);
     return;
   }
 
-  // Insert before the --- that precedes Vocabulary
-  const insertPoint = content.lastIndexOf('\n---\n\n# Vocabulary');
+  // Insert before the vocabulary section
+  const insertPoint = vocabMatch.index;
   if (insertPoint < 0) {
     console.log(`  Can't find insertion point`);
     return;
@@ -538,6 +682,7 @@ async function processModule(modulePath: string, dryRun: boolean = false): Promi
 async function main(): Promise<void> {
   const args = process.argv.slice(2);
   const dryRun = args.includes('--dry-run');
+  const enrich = args.includes('--enrich');
   const rangeArg = args.find(a => !a.startsWith('--'));
 
   // Parse module range
@@ -555,6 +700,7 @@ async function main(): Promise<void> {
   }
 
   console.log(`\nExercise Generator for Modules ${startModule}-${endModule}`);
+  if (enrich) console.log('MODE: --enrich (replacing existing fill-in/unjumble)');
   console.log(dryRun ? '(DRY RUN - no files will be modified)\n' : '\n');
 
   for (let num = startModule; num <= endModule; num++) {
@@ -566,7 +712,7 @@ async function main(): Promise<void> {
     }
 
     console.log(`Module ${padded}:`);
-    await processModule(modulePath, dryRun);
+    await processModule(modulePath, dryRun, enrich);
   }
 
   console.log('\nDone!');

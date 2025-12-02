@@ -293,195 +293,262 @@ Create sentences using instrumental for means:
 
 ---
 
+---
+
+---
+
+---
+
 # Activities
 
-## match-up: Action + Instrument
+## fill-in: Complete the Sentences
 
-> Match the action with its typical instrument.
+> Choose the correct word to complete each sentence.
+
+1. Це мій новий ___.
+   > [!answer] літак
+   > [!options] тато | літак | неділя | рік
+
+2. Мій брат має хороший ___.
+   > [!answer] автобус
+   > [!options] таксі | рік | автобус | сонце
+
+3. Це мій новий ___.
+   > [!answer] олівець
+   > [!options] літак | менеджер | олівець | адресат
+
+4. Вони планують ___ завтра.
+   > [!answer] захоплюватися
+   > [!options] здаватися | писати | захоплюватися | обідати
+
+5. Вони планують ___ завтра.
+   > [!answer] кивати
+   > [!options] приміряти | кивати | дзвонити | просити
+
+6. Це мій новий ___.
+   > [!answer] шепіт
+   > [!options] море | шепіт | очі | 16
+
+7. Я хочу купити цей ___.
+   > [!answer] велосипед
+   > [!options] меню | дитина | гість | велосипед
+
+8. Я хочу навчитися ___.
+   > [!answer] цікавитися
+   > [!options] виходити | цікавитися | повертатися | бракувати
+
+9. Де ваш великий ___?
+   > [!answer] тролейбус
+   > [!options] одяг | тролейбус | двері | година
+
+## unjumble: Build the Sentence
+
+> Arrange the words in the correct order.
+
+1. Це / мій / новий / автобус
+   > [!answer] Це мій новий автобус.
+   > (bus)
+
+2. брат / Мій / має / хороший / поїзд
+   > [!answer] Мій брат має хороший поїзд.
+   > (train)
+
+3. великий / Де / шепіт / ваш
+   > [!answer] Де ваш великий шепіт?
+   > (whisper)
+
+4. велика / ваша / ложка / Де
+   > [!answer] Де ваша велика ложка?
+   > (spoon)
+
+5. літак / Де / великий / ваш
+   > [!answer] Де ваш великий літак?
+   > (airplane)
+
+6. Я / цей / олівець / хочу / купити
+   > [!answer] Я хочу купити цей олівець.
+   > (pencil)
+
+7. голос / Це / новий / мій
+   > [!answer] Це мій новий голос.
+   > (voice)
+
+8. Це / виделка / нова / моя
+   > [!answer] Це моя нова виделка.
+   > (fork)
+
+9. Це / мій / новий / ніж
+   > [!answer] Це мій новий ніж.
+   > (knife)
+
+10. трамвай / Це / новий / мій
+   > [!answer] Це мій новий трамвай.
+   > (tram)
+
+11. новий / велосипед / мій / Це
+   > [!answer] Це мій новий велосипед.
+   > (bicycle)
+
+12. хочу / Я / тролейбус / цей / купити
+   > [!answer] Я хочу купити цей тролейбус.
+   > (trolleybus)
+
+## match-up: Match the Pairs
+
+> Match Ukrainian words to their English meanings.
 
 | Left | Right |
 |------|-------|
-| писати | ручкою |
-| різати | ножем |
-| їсти суп | ложкою |
-| їхати | автобусом |
-| відкривати двері | ключем |
-| говорити | українською |
-
-## quiz: Instrumental for Means
-
-> Choose the correct instrumental form.
-
-1. "I go to work by bus" - Я їду на роботу ___.
-   - [x] автобусом
-   - [ ] автобус
-   - [ ] автобуса
-   - [ ] з автобусом
-   > Transport uses instrumental without preposition.
-
-2. "She writes with a pen" - Вона пише ___.
-   - [x] ручкою
-   - [ ] ручка
-   - [ ] ручки
-   - [ ] з ручкою
-   > Tools use instrumental without preposition.
-
-3. "He speaks Ukrainian" - Він говорить ___.
-   - [x] українською
-   - [ ] українська
-   - [ ] українську
-   - [ ] з українською
-   > Languages use instrumental with говорити.
-
-4. "We travel by train" - Ми подорожуємо ___.
-   - [x] поїздом
-   - [ ] поїзд
-   - [ ] поїзда
-   - [ ] на поїзді
-   > Transport instrumental: поїзд → поїздом.
-
-5. "I cut bread with a knife" - Я ріжу хліб ___.
-   - [x] ножем
-   - [ ] ніж
-   - [ ] ножа
-   - [ ] з ножем
-   > Tool instrumental: ніж → ножем.
-
-6. "She's interested in music" - Вона цікавиться ___.
-   - [x] музикою
-   - [ ] музика
-   - [ ] музики
-   - [ ] музиці
-   > Цікавитися takes instrumental.
-
-7. "He nods with his head" - Він киває ___.
-   - [x] головою
-   - [ ] голова
-   - [ ] голови
-   - [ ] головою
-   > Body parts as instruments use instrumental.
-
-8. "They fly by plane" - Вони летять ___.
-   - [x] літаком
-   - [ ] літак
-   - [ ] літака
-   - [ ] на літаку
-   > Transport instrumental: літак → літаком.
-
-## group-sort: With Preposition vs Without
-
-> Sort by whether the instrumental uses a preposition or not.
-
-### з + Instrumental (companionship)
-- з другом (with a friend)
-- з сестрою (with a sister)
-- з батьками (with parents)
-- з колегами (with colleagues)
-
-### Instrumental alone (means/tool)
-- автобусом (by bus)
-- ручкою (with a pen)
-- українською (in Ukrainian)
-- ножем (with a knife)
-
-
-## true-false: True or False?
-
-> Determine if each statement is true or false.
-
-- [x] "автобус" is masculine.
-   > Correct! автобус is masculine.
-
-- [x] "тролейбус" is masculine.
-   > Correct! тролейбус is masculine.
-
-- [x] "трамвай" is masculine.
-   > Correct! трамвай is masculine.
-
-- [x] "поїзд" is masculine.
-   > Correct! поїзд is masculine.
-
-- [ ] "літак" is feminine.
-   > Incorrect. літак is masculine.
-
-- [ ] "велосипед" is feminine.
-   > Incorrect. велосипед is masculine.
-
-
-## fill-in: Fill in the Blank
-
-> Fill in the blanks with the correct word.
-
-
+| прочитати | to read (perf) |
+| площа | square |
+| кивати | to nod |
+| цікавитися | to be interested |
+| повідомляти | to inform |
+| трамвай | tram |
+| літак | airplane |
+| захоплюватися | to be fascinated |
+| поїзд | train |
+| голос | voice |
+| автобус | bus |
+| ложка | spoon |
 
 ## quiz: Meaning Check
 
 > Choose the correct answer.
 
-1. What does "трамвай" mean?
-   - [ ] knife
-   - [ ] spoon
+1. What does "захоплюватися" mean?
+   - [ ] company, group
+   - [ ] Café: меню, замовити, рахунок
+   - [x] to be fascinated
+   - [ ] to call (impf)
+   > "захоплюватися" means "to be fascinated"
+
+2. What does "трамвай" mean?
+   - [ ] neighbor (m)
    - [x] tram
-   - [ ] whisper
+   - [ ] experience
+   - [ ] fish
    > "трамвай" means "tram"
 
-2. What does "ніж" mean?
-   - [ ] spoon
-   - [ ] tram
-   - [ ] whisper
+3. What does "автобус" mean?
+   - [ ] Café: меню, замовити, рахунок
+   - [ ] support
+   - [ ] doctor (f)
+   - [x] bus
+   > "автобус" means "bus"
+
+4. What does "олівець" mean?
+   - [ ] (with) you
+   - [ ] to be lucky
+   - [x] pencil
+   - [ ] please/you're welcome
+   > "олівець" means "pencil"
+
+5. What does "ніж" mean?
    - [x] knife
+   - [ ] no kind of
+   - [ ] (with) him/it
+   - [ ] bon appétit
    > "ніж" means "knife"
 
-3. What does "шепіт" mean?
-   - [ ] tram
-   - [ ] spoon
-   - [ ] knife
+6. What does "літак" mean?
+   - [ ] to help (perf)
+   - [x] airplane
+   - [ ] to read (perf)
+   - [ ] to buy
+   > "літак" means "airplane"
+
+7. What does "шепіт" mean?
+   - [ ] twenty
    - [x] whisper
+   - [ ] parents
+   - [ ] nine
    > "шепіт" means "whisper"
 
-4. What does "ложка" mean?
-   - [ ] knife
-   - [ ] whisper
-   - [ ] tram
-   - [x] spoon
-   > "ложка" means "spoon"
+8. What does "керувати" mean?
+   - [x] to drive, manage
+   - [ ] bag
+   - [ ] to sell
+   - [ ] hard, difficult
+   > "керувати" means "to drive, manage"
 
-5. What does "цікавитися" mean?
-   - [ ] knife
-   - [ ] tram
-   - [ ] whisper
+9. What does "голос" mean?
+   - [ ] size
+   - [x] voice
+   - [ ] to call (impf)
+   - [ ] teeth
+   > "голос" means "voice"
+
+10. What does "цікавитися" mean?
+   - [ ] sad
+   - [ ] to go out, leave
+   - [ ] nothing
    - [x] to be interested
    > "цікавитися" means "to be interested"
 
-6. What does "автобус" mean?
-   - [ ] knife
-   - [ ] tram
-   - [x] bus
-   - [ ] whisper
-   > "автобус" means "bus"
+11. What does "тролейбус" mean?
+   - [ ] sea
+   - [x] trolleybus
+   - [ ] declension
+   - [ ] to love
+   > "тролейбус" means "trolleybus"
 
+12. What does "поїзд" mean?
+   - [ ] family
+   - [x] train
+   - [ ] old
+   - [ ] to do (perf)
+   > "поїзд" means "train"
 
+## true-false: True or False?
 
-## unjumble: Word Order
+> Determine if each statement is true or false.
 
-> Put the words in the correct order to form a sentence.
+- [x] "ложка" means "spoon"
+   > Correct!
 
-1. з / + / Instrumental
-   > [!answer] з + Instrumental
-   > (Instrumental alone)
+- [x] "тролейбус" means "trolleybus"
+   > Correct!
 
-2. з / (with / другом / friend)
-   > [!answer] з другом (with friend)
-   > (автобусом (by bus))
+- [ ] "цікавитися" means "to eat"
+   > Incorrect. "цікавитися" means "to be interested"
 
-3. sister) / сестрою / (with / з
-   > [!answer] з сестрою (with sister)
-   > (ручкою (with pen))
+- [x] "поїзд" means "train"
+   > Correct!
 
-4. parents) / батьками / з / (with
-   > [!answer] з батьками (with parents)
-   > (українською (in Ukrainian))
+- [x] "трамвай" means "tram"
+   > Correct!
 
+- [ ] "володіти" means "to wash (face)"
+   > Incorrect. "володіти" means "to master, own"
+
+- [ ] "займатися" means "square"
+   > Incorrect. "займатися" means "to be engaged in"
+
+- [ ] "автобус" means "book"
+   > Incorrect. "автобус" means "bus"
+
+- [x] "захоплюватися" means "to be fascinated"
+   > Correct!
+
+- [x] "голос" means "voice"
+   > Correct!
+
+## group-sort: Sort by Gender
+
+> Sort the nouns into gender categories.
+
+### Masculine
+- тролейбус
+- велосипед
+- трамвай
+- олівець
+- голос
+- шепіт
+
+### Feminine
+- ложка
+- виделка
 
 ---
 

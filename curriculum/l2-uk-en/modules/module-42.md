@@ -305,133 +305,174 @@ This morning (perfective):
 
 ---
 
+---
+
+---
+
+---
+
 # Activities
 
-## match-up: More Aspect Pairs
+## fill-in: Complete the Sentences
 
-> Match imperfective with perfective.
+> Choose the correct word to complete each sentence.
+
+1. Чи ти вмієш добре ___?
+   > [!answer] розповісти
+   > [!options] розповісти | побачити | було | будете
+
+2. Вони планують ___ завтра.
+   > [!answer] запросити
+   > [!options] будете | прокидатися | їсти | запросити
+
+3. Мій брат любить ___ щодня.
+   > [!answer] пояснити
+   > [!options] розписатися | зняти | купити | пояснити
+
+## unjumble: Build the Sentence
+
+> Arrange the words in the correct order.
+
+## match-up: Match the Pairs
+
+> Match Ukrainian words to their English meanings.
 
 | Left | Right |
 |------|-------|
-| відкривати | відкрити |
-| закривати | закрити |
-| починати | почати |
-| питати | запитати |
-| шукати | знайти |
-| бачити | побачити |
-
-## quiz: Aspect Pairs
-
-> Choose the correct form.
-
-1. "She's opening the window" - Вона ___ вікно.
-   - [x] відкриває
-   - [ ] відкрила
-   - [ ] відкриє
-   - [ ] відкрити
-   > In progress = imperfective.
-
-2. "He asked me yesterday" - Він ___ мене вчора.
-   - [x] запитав
-   - [ ] питав
-   - [ ] питає
-   - [ ] запитує
-   > Single past action = perfective.
-
-3. "I'm looking for my phone" - Я ___ телефон.
-   - [x] шукаю
-   - [ ] знайшов
-   - [ ] знайду
-   - [ ] шукав
-   > Process = imperfective.
-
-4. "They found a solution" - Вони ___ рішення.
-   - [x] знайшли
-   - [ ] шукали
-   - [ ] шукають
-   - [ ] знаходять
-   > Result = perfective.
-
-5. "Please close the door!" - ___ двері, будь ласка!
-   - [x] Закрий
-   - [ ] Закривай
-   - [ ] Закриваєш
-   - [ ] Закриєш
-   > Specific command = perfective imperative.
-
-6. "Don't open!" - Не ___!
-   - [x] відкривай
-   - [ ] відкрий
-   - [ ] відкриєш
-   - [ ] відкрив
-   > Negative command = imperfective.
-
-## group-sort: By Prefix Meaning
-
-> Sort perfective verbs by prefix meaning.
-
-### при- (arrival)
-- прийти
-- приїхати
-- принести
-
-### ви- (out/completion)
-- вийти
-- випити
-- вивчити
-
-### за- (beginning)
-- заспівати
-- заплакати
-- закричати
-
+| почути | to hear (perf) |
+| підпис | signature |
+| побачити | to see (perf) |
+| кінчати | to finish (impf) |
+| запросити | to invite (perf) |
+| приїхати | to arrive (by vehicle) |
+| показати | to show (pf) |
+| почати | to begin (perf) |
+| розповісти | to tell (once) |
+| відповісти | to answer (perf) |
+| кафе | café |
+| відкрити | to open (perf) |
 
 ## quiz: Meaning Check
 
 > Choose the correct answer.
 
-1. What does "запросити" mean?
+1. What does "закрити" mean?
+   - [ ] fog
+   - [ ] pen
+   - [ ] company, group
+   - [x] to close (perf)
+   > "закрити" means "to close (perf)"
+
+2. What does "вийти" mean?
+   - [ ] to suit/become
+   - [ ] will be
+   - [ ] to see
+   - [x] to exit
+   > "вийти" means "to exit"
+
+3. What does "пояснити" mean?
+   - [ ] Sunday
+   - [x] to explain (perf)
+   - [ ] bad
+   - [ ] to be considered
+   > "пояснити" means "to explain (perf)"
+
+4. What does "запросити" mean?
    - [x] to invite (perf)
-   - [ ] to finish (impf)
-   - [ ] to see (perf)
-   - [ ] to begin (impf)
+   - [ ] hard, heavy
+   - [ ] umbrella
+   - [ ] to take
    > "запросити" means "to invite (perf)"
 
-2. What does "кінчати" mean?
-   - [ ] to begin (impf)
-   - [x] to finish (impf)
-   - [ ] to see (perf)
-   - [ ] to invite (perf)
-   > "кінчати" means "to finish (impf)"
+5. What does "розповісти" mean?
+   - [x] to tell (once)
+   - [ ] to watch, look
+   - [ ] to be interested
+   - [ ] nobody
+   > "розповісти" means "to tell (once)"
 
-3. What does "побачити" mean?
-   - [ ] to begin (impf)
-   - [x] to see (perf)
-   - [ ] to finish (impf)
-   - [ ] to invite (perf)
-   > "побачити" means "to see (perf)"
-
-4. What does "починати" mean?
-   - [ ] to invite (perf)
-   - [x] to begin (impf)
-   - [ ] to finish (impf)
-   - [ ] to see (perf)
-   > "починати" means "to begin (impf)"
-
-5. What does "відповісти" mean?
+6. What does "відповісти" mean?
+   - [ ] (with) her
    - [x] to answer (perf)
-   - [ ] to see (perf)
-   - [ ] to invite (perf)
-   - [ ] to finish (impf)
+   - [ ] to inform
+   - [ ] to answer
    > "відповісти" means "to answer (perf)"
 
-6. What does "почати" mean?
+7. What does "кінчати" mean?
+   - [ ] Accusative: бачити, читати, любити
+   - [x] to finish (impf)
+   - [ ] there
+   - [ ] color
+   > "кінчати" means "to finish (impf)"
+
+8. What does "відкрити" mean?
+   - [x] to open (perf)
+   - [ ] recipient
+   - [ ] skirt
+   - [ ] seat, place
+   > "відкрити" means "to open (perf)"
+
+9. What does "почути" mean?
+   - [x] to hear (perf)
+   - [ ] bigger
+   - [ ] to give (pf)
+   - [ ] to be considered
+   > "почути" means "to hear (perf)"
+
+10. What does "побачити" mean?
+   - [ ] jeans
+   - [x] to see (perf)
+   - [ ] went (f)
+   - [ ] needed
+   > "побачити" means "to see (perf)"
+
+11. What does "почати" mean?
+   - [ ] deposit
+   - [ ] to appear in dream
    - [x] to begin (perf)
-   - [ ] to finish (impf)
-   - [ ] to invite (perf)
-   - [ ] to see (perf)
+   - [ ] train
    > "почати" means "to begin (perf)"
 
+12. What does "починати" mean?
+   - [ ] young
+   - [ ] that (neuter)
+   - [x] to begin (impf)
+   - [ ] degree
+   > "починати" means "to begin (impf)"
+
+## true-false: True or False?
+
+> Determine if each statement is true or false.
+
+- [x] "вийти" means "to exit"
+   > Correct!
+
+- [x] "почати" means "to begin (perf)"
+   > Correct!
+
+- [ ] "запитати" means "stop"
+   > Incorrect. "запитати" means "to ask (perf)"
+
+- [x] "починати" means "to begin (impf)"
+   > Correct!
+
+- [x] "прийти" means "to arrive (on foot)"
+   > Correct!
+
+- [x] "відкрити" means "to open (perf)"
+   > Correct!
+
+- [x] "розповісти" means "to tell (once)"
+   > Correct!
+
+- [ ] "пояснити" means "skirt"
+   > Incorrect. "пояснити" means "to explain (perf)"
+
+- [x] "кінчати" means "to finish (impf)"
+   > Correct!
+
+- [x] "побачити" means "to see (perf)"
+   > Correct!
 
 ---
 

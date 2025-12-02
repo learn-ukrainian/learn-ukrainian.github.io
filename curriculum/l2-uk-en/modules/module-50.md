@@ -280,138 +280,266 @@ Describe what you did yesterday using appropriate aspects:
 
 ---
 
+---
+
+---
+
 # Activities
 
-## match-up: Grammar Concepts
+## fill-in: Complete the Sentences
 
-> Match concept with example.
+> Choose the correct word to complete each sentence.
+
+1. Чи ти вмієш добре ___?
+   > [!answer] класти
+   > [!options] обідати | заповнити | класти | чекатиму
+
+2. Я хочу купити цю ___.
+   > [!answer] акція
+   > [!options] акція | черевики | 11-12 | сусід
+
+3. Цей ___ коштує сто гривень.
+   > [!answer] понеділок
+   > [!options] машина | сорочка | понеділок | ремінь
+
+4. Моя кімната занадто ___.
+   > [!answer] сумний
+   > [!options] сумний | добрий | легкий | наступний
+
+5. Я хочу навчитися ___.
+   > [!answer] будуть
+   > [!options] будуть | прийти | показувати | спати
+
+6. Ця книга надзвичайно ___.
+   > [!answer] уявний
+   > [!options] уявний | смачний | водонепроникний | свіжий
+
+7. Мій брат має хороший ___.
+   > [!answer] стіл
+   > [!options] 15 | документ | лампа | стіл
+
+8. Де ваш великий ___?
+   > [!answer] рахунок
+   > [!options] підтримка | трамвай | лікарня | рахунок
+
+9. Ця ___ коштує сто гривень.
+   > [!answer] шкода
+   > [!options] шкода | станція | тиждень | дідусь
+
+10. Цей будинок дуже ___.
+   > [!answer] старий
+   > [!options] найбільший | білий | старий | сумний
+
+11. Ця ___ коштує сто гривень.
+   > [!answer] секретарка
+   > [!options] поїзд | секретарка | вишиванка | вага
+
+12. Вони планують ___ завтра.
+   > [!answer] подобатися
+   > [!options] подобатися | кивати | щастити | зібрати
+
+## unjumble: Build the Sentence
+
+> Arrange the words in the correct order.
+
+1. Де / стіл / великий / ваш
+   > [!answer] Де ваш великий стіл?
+   > (table)
+
+2. Де / зупинка / велика / ваша
+   > [!answer] Де ваша велика зупинка?
+   > (stop)
+
+3. купити / цей / Я / хочу / ринок
+   > [!answer] Я хочу купити цей ринок.
+   > (market)
+
+4. Я / хочу / шкода / купити / цю
+   > [!answer] Я хочу купити цю шкода.
+   > (pity, shame)
+
+5. хочу / понеділок / Я / купити / цей
+   > [!answer] Я хочу купити цей понеділок.
+   > (Monday)
+
+6. рахунок / сто / коштує / гривень / Цей
+   > [!answer] Цей рахунок коштує сто гривень.
+   > (bill, check)
+
+7. Мій / хорошу / має / акція / брат
+   > [!answer] Мій брат має хорошу акція.
+   > (promotion, sale)
+
+8. гривень / сто / доставка / Ця / коштує
+   > [!answer] Ця доставка коштує сто гривень.
+   > (delivery)
+
+9. секретарка / Мій / має / брат / хорошу
+   > [!answer] Мій брат має хорошу секретарка.
+   > (secretary (f))
+
+10. гривень / Ця / сто / сумка / коштує
+   > [!answer] Ця сумка коштує сто гривень.
+   > (bag)
+
+## match-up: Match the Pairs
+
+> Match Ukrainian words to their English meanings.
 
 | Left | Right |
 |------|-------|
-| Imperfective (process) | Я читав годину |
-| Perfective (completed) | Я прочитав книгу |
-| Comparative | більший |
-| Superlative | найбільший |
-| Real conditional | Якщо буде... |
-| Unreal conditional | Якби був... |
+| шкода | pity, shame |
+| для | for |
+| вони | they |
+| акція | promotion, sale |
+| доставка | delivery |
+| рахунок | bill, check |
+| зупинка | stop |
+| художник | artist |
+| секретарка | secretary (f) |
+| одружений | married (m) |
+| слухати | to listen |
+| подобатися | to please, like |
 
-## quiz: A2.2 Comprehensive Review
+## quiz: Meaning Check
 
-> Test your knowledge from Modules 41-49.
+> Choose the correct answer.
 
-1. "I was reading for two hours" - Я ___ дві години.
-   - [x] читав
-   - [ ] прочитав
-   - [ ] читаю
-   - [ ] прочитаю
-   > Duration = imperfective.
+1. What does "зупинка" mean?
+   - [x] stop
+   - [ ] friend (female)
+   - [ ] bread
+   - [ ] to you
+   > "зупинка" means "stop"
 
-2. "This is the best restaurant" - Це ___ ресторан.
-   - [x] найкращий
-   - [ ] кращий
-   - [ ] добрий
-   - [ ] краще
-   > Superlative = найкращий.
+2. What does "сумка" mean?
+   - [ ] group
+   - [ ] Ukrainian (adj)
+   - [x] bag
+   - [ ] her, hers
+   > "сумка" means "bag"
 
-3. "If I had time, I would help" - Якби я ___ час, я б допоміг.
-   - [x] мав
-   - [ ] маю
-   - [ ] матиму
-   - [ ] мати
-   > Unreal = past tense after якби.
+3. What does "для" mean?
+   - [ ] Ukrainian (adj)
+   - [ ] to have breakfast
+   - [ ] to watch, look
+   - [x] for
+   > "для" means "for"
 
-4. "Could you help?" - Чи не ___ ви допомогти?
-   - [x] могли б
-   - [ ] можете
-   - [ ] зможете
-   - [ ] могли
-   > Polite = могли б.
+4. What does "уявний" mean?
+   - [ ] beautiful, nice
+   - [ ] temperature
+   - [x] imaginary, hypothetical
+   - [ ] if
+   > "уявний" means "imaginary, hypothetical"
 
-5. "This is too big" - Це ___.
-   - [x] завелике
-   - [ ] великий
-   - [ ] більше
-   - [ ] найбільше
-   > за- = too.
+5. What does "акція" mean?
+   - [ ] near, by
+   - [x] promotion, sale
+   - [ ] (with) us
+   - [ ] to eat (perf)
+   > "акція" means "promotion, sale"
 
-6. "Let's meet tomorrow" - ___ зустрінемося завтра.
-   - [x] Давай
-   - [ ] Давати
-   - [ ] Дай
-   - [ ] Дано
-   > "Let's" = Давай.
+6. What does "секретарка" mean?
+   - [ ] earlier, before, used to
+   - [ ] guest
+   - [x] secretary (f)
+   - [ ] to stay (perf)
+   > "секретарка" means "secretary (f)"
 
-7. "She runs faster than me" - Вона бігає ___ за мене.
-   - [x] швидше
-   - [ ] швидкий
-   - [ ] швидко
-   - [ ] найшвидше
-   > Adverb comparative = швидше.
+7. What does "ринок" mean?
+   - [ ] student
+   - [ ] day after tomorrow
+   - [x] market
+   - [ ] would (after vowel)
+   > "ринок" means "market"
 
-8. "The more, the better" - Чим ___, тим ___.
-   - [x] більше, краще
-   - [ ] багато, добре
-   - [ ] більший, кращий
-   - [ ] найбільше, найкраще
-   > Adverbs in this construction.
+8. What does "доставка" mean?
+   - [ ] to help (impf)
+   - [ ] while
+   - [ ] café
+   - [x] delivery
+   > "доставка" means "delivery"
 
-## group-sort: A2.2 Key Grammar
+9. What does "скільки" mean?
+   - [ ] to succeed
+   - [x] how much/many
+   - [ ] driver
+   - [ ] worst
+   > "скільки" means "how much/many"
 
-> Sort the forms.
+10. What does "будуть" mean?
+   - [ ] t-shirt
+   - [ ] hot
+   - [x] they will be
+   - [ ] wind
+   > "будуть" means "they will be"
 
-### Imperfective Verbs
-- читати
-- писати
-- робити
-- відкривати
-- шукати
+11. What does "класти" mean?
+   - [ ] Ukrainian (adj)
+   - [ ] to see
+   - [ ] to close (perf)
+   - [x] to put
+   > "класти" means "to put"
 
-### Perfective Verbs
-- прочитати
-- написати
-- зробити
-- відкрити
-- знайти
+12. What does "подобатися" mean?
+   - [ ] to help (impf)
+   - [x] to please, like
+   - [ ] deposit
+   - [ ] artist
+   > "подобатися" means "to please, like"
 
+## true-false: True or False?
 
-## fill-in: Fill in the Blank
+> Determine if each statement is true or false.
 
-> Fill in the blanks with the correct word.
+- [ ] "будуть" means "forty"
+   > Incorrect. "будуть" means "they will be"
 
-1. Чи не ___ б ви...?
-   > [!answer] могли
+- [x] "акція" means "promotion, sale"
+   > Correct!
 
-2. Було ___ добре
-   > [!answer] б
+- [ ] "подобатися" means "dish, course"
+   > Incorrect. "подобатися" means "to please, like"
 
-3. Real ___ (якщо):
-   > [!answer] conditionals
+- [ ] "стіл" means "spoon"
+   > Incorrect. "стіл" means "table"
 
-4. Unreal conditionals ___ + б/би):
-   > [!answer] (якби
+- [ ] "секретарка" means "bag"
+   > Incorrect. "секретарка" means "secretary (f)"
 
+- [x] "слухати" means "to listen"
+   > Correct!
 
+- [ ] "понеділок" means "defect"
+   > Incorrect. "понеділок" means "Monday"
 
-## unjumble: Word Order
+- [ ] "для" means "it's necessary"
+   > Incorrect. "для" means "for"
 
-> Put the words in the correct order to form a sentence.
+- [ ] "доставка" means "to understand"
+   > Incorrect. "доставка" means "delivery"
 
-1. би / хотів / Я
-   > [!answer] Я хотів би
-   > (I would like)
+- [x] "сумний" means "sad"
+   > Correct!
 
-2. ви / Чи / могли / б / не
-   > [!answer] Чи не могли б ви...?
-   > (Could you possibly...?)
+## group-sort: Sort by Gender
 
-3. б / добре / Було
-   > [!answer] Було б добре
-   > (It would be good)
+> Sort the nouns into gender categories.
 
-4. (якщо): / Real / conditionals
-   > [!answer] Real conditionals (якщо):
-   > (Якщо + future/present, future)
+### Masculine
+- понеділок
+- ринок
+- стіл
+- рахунок
 
+### Feminine
+- шкода
+- зупинка
+- акція
+- сумка
+- доставка
+- секретарка
 
 ---
 

@@ -310,166 +310,312 @@ Describe your weekly routine:
 
 ---
 
-# Activities
+---
 
-## match-up: Item → Location
+---
+
+---
+
+# Вправи
+
+## fill-in: Доповніть речення
+
+> Оберіть правильне слово.
+
+1. Моя сестра каже, що їй подобається ___ у вільний час.
+   > [!answer] переїжджати
+   > [!options] отримати | переїжджати | поснідати | проспати
+
+2. Цей варіант здається мені найбільш ___ з усіх.
+   > [!answer] затишний
+   > [!options] гіркий | затишний | обладнаний | щасливий
+
+3. Моя сестра каже, що їй подобається ___ у вільний час.
+   > [!answer] орендувати
+   > [!options] подякувати | повертатися | орендувати | дякувати
+
+4. Я вважаю, що ця пропозиція є занадто ___ для нас.
+   > [!answer] просторий
+   > [!options] овочевий | музичний | мамин | просторий
+
+5. Я вважаю, що ця пропозиція є занадто ___ для нас.
+   > [!answer] світлий
+   > [!options] світлий | холодний | важкий | найбільший
+
+6. Мій друг сказав, що його ___ дуже зручний.
+   > [!answer] килим
+   > [!options] килим | група | вокзал | зустріч
+
+7. Мій друг сказав, що його ___ дуже зручний.
+   > [!answer] диван
+   > [!options] буття | родина | диван | лікоть
+
+8. Вони довго шукали хороший ___, але не знайшли.
+   > [!answer] рушник
+   > [!options] станція | вчений | вкладення | рушник
+
+9. Я хочу купити це ___, але воно занадто дороге.
+   > [!answer] мило
+   > [!options] каса | мило | виріб | сусід
+
+10. Я вважаю, що ця пропозиція є занадто ___ для нас.
+   > [!answer] обладнаний
+   > [!options] слухняний | робочий | обладнаний | затишний
+
+11. Я давно мріяв навчитися ___, і нарешті маю таку можливість.
+   > [!answer] пилососити
+   > [!options] здаватися | розказати | пилососити | вчитися
+
+12. Ця ___ належить моїй подрузі з Києва.
+   > [!answer] ковдра
+   > [!options] зустріч | ковдра | травма | купе
+
+13. Я давно мріяв навчитися ___, і нарешті маю таку можливість.
+   > [!answer] прибирати
+   > [!options] дарувати | виявитися | прибирати | погоджуватися
+
+14. Моя сестра сказала, що її ___ дуже зручна.
+   > [!answer] тумбочка
+   > [!options] посуд | тумбочка | людство | цибуля
+
+## unjumble: Побудуйте речення
+
+> Розташуйте слова в правильному порядку.
+
+1. Вони / але / шукали / знайшли / довго / хороше / не / дзеркало
+   > [!answer] Вони довго шукали хороше дзеркало, але не знайшли.
+   > (mirror)
+
+2. моєму / Києва / Це / простирадло / другові / з / належить
+   > [!answer] Це простирадло належить моєму другові з Києва.
+   > (sheet)
+
+3. купити / воно / крісло / занадто / дороге / Я / але / хочу / це
+   > [!answer] Я хочу купити це крісло, але воно занадто дороге.
+   > (armchair)
+
+4. дорога / ковдра / Я / вона / занадто / хочу / але / цю / купити
+   > [!answer] Я хочу купити цю ковдра, але вона занадто дорога.
+   > (blanket)
+
+5. сказав / що / дуже / умивальник / його / друг / Мій / зручний
+   > [!answer] Мій друг сказав, що його умивальник дуже зручний.
+   > (sink (bathroom))
+
+6. але / дорога / цю / вона / купити / ванна / хочу / занадто / Я
+   > [!answer] Я хочу купити цю ванна, але вона занадто дорога.
+   > (bathtub)
+
+7. посуд / він / цей / Я / занадто / купити / дорогий / але / хочу
+   > [!answer] Я хочу купити цей посуд, але він занадто дорогий.
+   > (dishes)
+
+8. не / довго / знайшли / Вони / хороший / ліфт / шукали / але
+   > [!answer] Вони довго шукали хороший ліфт, але не знайшли.
+   > (elevator)
+
+9. шукали / Вони / довго / але / килим / не / хороший / знайшли
+   > [!answer] Вони довго шукали хороший килим, але не знайшли.
+   > (carpet, rug)
+
+10. Вони / не / шукали / знайшли / але / хороший / довго / диван
+   > [!answer] Вони довго шукали хороший диван, але не знайшли.
+   > (sofa)
+
+11. занадто / Я / дорога / вона / цю / купити / шафа / хочу / але
+   > [!answer] Я хочу купити цю шафа, але вона занадто дорога.
+   > (wardrobe)
+
+12. дуже / це / зручне / мило / сказали / Вони / що
+   > [!answer] Вони сказали, що це мило дуже зручне.
+   > (soap)
+
+13. сказала / сестра / подушка / її / зручна / що / дуже / Моя
+   > [!answer] Моя сестра сказала, що її подушка дуже зручна.
+   > (pillow)
+
+## match-up: Знайдіть пари
+
+> З'єднайте українські слова з англійськими.
 
 | Left | Right |
 |------|-------|
-| подушка | ліжко |
-| рушник | ванна |
-| каструля | кухня |
-| диван | вітальня |
-| шампунь | ванна |
+| осінній | autumn |
+| затишний | cozy |
+| обідати | to have lunch |
+| переїжджати | to move |
+| обладнаний | furnished |
+| мило | soap |
+| тумбочка | nightstand |
+| ліфт | elevator |
+| пляшка | bottle |
+| посуд | dishes |
+| ванна | bathtub |
+| сходи | stairs |
+| телефонувати | to call (phone) |
+| деруни | potato pancakes |
 
-## quiz: Home Vocabulary
+## quiz: Перевірка значень
 
-> Choose the correct answer.
+> Оберіть правильну відповідь.
 
-1. "Диван" in English is ___.
-   - [x] sofa
-   - [ ] bed
-   - [ ] chair
-   - [ ] table
-   > Диван = sofa.
+1. Що означає "квартира"?
+   - [ ] my (neuter)
+   - [ ] with
+   - [x] apartment
+   - [ ] daily, daytime
+   > "квартира" means "apartment"
 
-2. Where do you find "холодильник"?
-   - [x] кухня
-   - [ ] спальня
-   - [ ] ванна
-   - [ ] вітальня
-   > Холодильник (refrigerator) is in the kitchen.
+2. Що означає "пилососити"?
+   - [ ] seller (m)
+   - [ ] ankle
+   - [x] to vacuum
+   - [ ] went (m)
+   > "пилососити" means "to vacuum"
 
-3. "Застелити ліжко" means ___.
-   - [x] to make the bed
-   - [ ] to buy a bed
-   - [ ] to sleep
-   - [ ] to break the bed
-   > Застелити = to cover, make (the bed).
+3. Що означає "умивальник"?
+   - [ ] to download (perf)
+   - [ ] these
+   - [x] sink (bathroom)
+   - [ ] from
+   > "умивальник" means "sink (bathroom)"
 
-4. "Затишний" describes a ___ place.
-   - [x] cozy
-   - [ ] dirty
-   - [ ] expensive
-   - [ ] big
-   > Затишний = cozy.
+4. Що означає "балкон"?
+   - [ ] in front of
+   - [x] balcony
+   - [ ] bigger
+   - [ ] significantly
+   > "балкон" means "balcony"
 
-5. "Пральна машина" is ___.
-   - [x] washing machine
-   - [ ] dishwasher
-   - [ ] microwave
-   - [ ] refrigerator
-   > Пральна машина = washing machine.
+5. Що означає "комод"?
+   - [ ] to arrive (on foot)
+   - [ ] to me
+   - [ ] my (plural)
+   - [x] dresser
+   > "комод" means "dresser"
 
-6. "Переїжджати" means ___.
-   - [x] to move (residence)
-   - [ ] to travel
-   - [ ] to rent
-   - [ ] to clean
-   > Переїжджати = to move to a new place.
+6. Що означає "рушник"?
+   - [ ] seven
+   - [ ] to tell (once)
+   - [x] towel
+   - [ ] yesterday
+   > "рушник" means "towel"
 
-## group-sort: By Room
+7. Що означає "килим"?
+   - [ ] tasty
+   - [ ] reading room
+   - [ ] whisper
+   - [x] carpet, rug
+   > "килим" means "carpet, rug"
 
-### Вітальня (Living Room)
-- диван
-- крісло
-- телевізор
-- килим
+8. Що означає "штори"?
+   - [ ] to plan
+   - [ ] to eat (perf)
+   - [x] curtains
+   - [ ] to close
+   > "штори" means "curtains"
 
-### Спальня (Bedroom)
-- ліжко
-- подушка
-- ковдра
-- шафа
-
-### Кухня (Kitchen)
-- холодильник
-- плита
-- мийка
-- чайник
-
-### Ванна (Bathroom)
-- душ
-- рушник
-- мило
-- пральна машина
-
-
-## true-false: True or False?
-
-> Determine if each statement is true or false.
-
-- [x] "диван" is masculine.
-   > Correct! диван is masculine.
-
-- [x] "крісло" is neuter.
-   > Correct! крісло is neuter.
-
-- [x] "журнальний столик" is masculine.
-   > Correct! журнальний столик is masculine.
-
-- [x] "килим" is masculine.
-   > Correct! килим is masculine.
-
-- [ ] "штори" is masculine.
-   > Incorrect. штори is undefined.
-
-- [ ] "матрац" is feminine.
-   > Incorrect. матрац is masculine.
-
-
-## fill-in: Fill in the Blank
-
-> Fill in the blanks with the correct word.
-
-
-
-## quiz: Meaning Check
-
-> Choose the correct answer.
-
-1. What does "прибирати" mean?
-   - [x] to clean
-   - [ ] mirror
-   - [ ] to move
-   - [ ] blanket
-   > "прибирати" means "to clean"
-
-2. What does "переїжджати" mean?
-   - [x] to move
-   - [ ] to clean
-   - [ ] blanket
-   - [ ] mirror
-   > "переїжджати" means "to move"
-
-3. What does "ковдра" mean?
+9. Що означає "ковдра"?
    - [x] blanket
-   - [ ] to clean
-   - [ ] to move
-   - [ ] mirror
+   - [ ] to stay (perf)
+   - [ ] to transfer
+   - [ ] Friday
    > "ковдра" means "blanket"
 
-4. What does "дзеркало" mean?
-   - [ ] to clean
+10. Що означає "орендувати"?
+   - [x] to rent
+   - [ ] convinced
+   - [ ] to go around
+   - [ ] whisper
+   > "орендувати" means "to rent"
+
+11. Що означає "переїжджати"?
+   - [ ] to tell (impf)
+   - [ ] that (neuter)
+   - [ ] sick
+   - [x] to move
+   > "переїжджати" means "to move"
+
+12. Що означає "ліфт"?
+   - [ ] to be mistaken
+   - [ ] art
+   - [x] elevator
+   - [ ] stomach
+   > "ліфт" means "elevator"
+
+13. Що означає "матрац"?
+   - [ ] Kyiv
+   - [x] mattress
+   - [ ] because (casual)
+   - [ ] forbidden
+   > "матрац" means "mattress"
+
+14. Що означає "дзеркало"?
+   - [ ] attachment
+   - [ ] to gift (pf)
    - [x] mirror
-   - [ ] to move
-   - [ ] blanket
+   - [ ] to find out
    > "дзеркало" means "mirror"
 
-5. What does "обладнаний" mean?
-   - [ ] to clean
-   - [ ] blanket
-   - [x] furnished
-   - [ ] to move
-   > "обладнаний" means "furnished"
+## true-false: Правда чи ні?
 
-6. What does "шухляда" mean?
-   - [ ] blanket
-   - [x] drawer
-   - [ ] to move
-   - [ ] to clean
-   > "шухляда" means "drawer"
+> Визначте, чи правильне твердження.
 
+- [x] "ковдра" means "blanket"
+   > Correct!
+
+- [x] "ванна" means "bathtub"
+   > Correct!
+
+- [ ] "сходи" means "under"
+   > Incorrect. "сходи" means "stairs"
+
+- [x] "простирадло" means "sheet"
+   > Correct!
+
+- [ ] "шухляда" means "to earn"
+   > Incorrect. "шухляда" means "drawer"
+
+- [x] "дзеркало" means "mirror"
+   > Correct!
+
+- [x] "переїжджати" means "to move"
+   > Correct!
+
+- [x] "світлий" means "bright"
+   > Correct!
+
+- [x] "пилососити" means "to vacuum"
+   > Correct!
+
+- [x] "квартира" means "apartment"
+   > Correct!
+
+## group-sort: Сортування за родом
+
+> Розподіліть слова за родами.
+
+### Чоловічий рід
+- комод
+- диван
+- рушник
+- умивальник
+- посуд
+- балкон
+
+### Жіночий рід
+- шухляда
+- мийка
+- ковдра
+- шафа
+- подушка
+- тумбочка
+
+### Середній рід
+- крісло
+- простирадло
+- мило
+- дзеркало
 
 ---
 

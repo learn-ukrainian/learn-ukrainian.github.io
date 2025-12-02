@@ -310,166 +310,304 @@ Give workout advice:
 
 ---
 
-# Activities
+---
 
-## match-up: Sport → Equipment
+---
+
+---
+
+# Вправи
+
+## fill-in: Доповніть речення
+
+> Оберіть правильне слово.
+
+1. Я давно мріяв навчитися ___, і нарешті маю таку можливість.
+   > [!answer] плавати
+   > [!options] плакати | плавати | виїхати | вмикати
+
+2. Я давно мріяв навчитися ___, і нарешті маю таку можливість.
+   > [!answer] змагатися
+   > [!options] в'язати | змагатися | заповнити | щастити
+
+3. Моя сестра каже, що їй подобається ___ у вільний час.
+   > [!answer] тренуватися
+   > [!options] мішати | тренуватися | починати | нагадати
+
+4. Я давно мріяв навчитися ___, і нарешті маю таку можливість.
+   > [!answer] перемагати
+   > [!options] перемагати | говорити | відправити | бронювати
+
+5. Мій друг сказав, що його ___ дуже зручний.
+   > [!answer] бокс
+   > [!options] батьки | бокс | лелека | центр
+
+6. Моя сестра сказала, що її ___ дуже зручна.
+   > [!answer] витривалість
+   > [!options] гарантія | музика | грип | витривалість
+
+7. Цей ___ належить моєму другові з Києва.
+   > [!answer] рекорд
+   > [!options] вокзал | універмаг | рекорд | хобі
+
+8. Я хочу купити цей ___, але він занадто дорогий.
+   > [!answer] фінал
+   > [!options] фінал | набряк | школа | білка
+
+9. Цей ___ належить моєму другові з Києва.
+   > [!answer] тренер
+   > [!options] капуста | град | виробництво | тренер
+
+10. Ця ___ належить моїй подрузі з Києва.
+   > [!answer] вправа
+   > [!options] знижка | набряк | гречка | вправа
+
+11. Я хочу купити цю ___, але вона занадто дорога.
+   > [!answer] гімнастика
+   > [!options] лампа | гімнастика | дзеркало | новість
+
+## unjumble: Побудуйте речення
+
+> Розташуйте слова в правильному порядку.
+
+1. що / плавання / сказали / це / зручне / Вони / дуже
+   > [!answer] Вони сказали, що це плавання дуже зручне.
+   > (swimming)
+
+2. не / хорошу / Вони / шукали / довго / медаль / але / знайшли
+   > [!answer] Вони довго шукали хорошу медаль, але не знайшли.
+   > (medal)
+
+3. його / друг / Мій / сказав / дуже / біг / що / зручний
+   > [!answer] Мій друг сказав, що його біг дуже зручний.
+   > (running)
+
+4. хочу / дорогий / він / Я / але / купити / спортзал / занадто / цей
+   > [!answer] Я хочу купити цей спортзал, але він занадто дорогий.
+   > (gym)
+
+5. другові / волейбол / Києва / належить / Цей / моєму / з
+   > [!answer] Цей волейбол належить моєму другові з Києва.
+   > (volleyball)
+
+6. Києва / з / другові / баскетбол / Цей / належить / моєму
+   > [!answer] Цей баскетбол належить моєму другові з Києва.
+   > (basketball)
+
+7. не / шукали / довго / але / хороше / знайшли / карате / Вони
+   > [!answer] Вони довго шукали хороше карате, але не знайшли.
+   > (karate)
+
+8. воно / це / хочу / але / Я / купити / дороге / повторення / занадто
+   > [!answer] Я хочу купити це повторення, але воно занадто дороге.
+   > (repetition)
+
+9. Я / цей / він / дорогий / купити / занадто / чемпіон / але / хочу
+   > [!answer] Я хочу купити цей чемпіон, але він занадто дорогий.
+   > (champion)
+
+10. але / розтяжка / занадто / купити / Я / дорога / цю / вона / хочу
+   > [!answer] Я хочу купити цю розтяжка, але вона занадто дорога.
+   > (stretching)
+
+11. цю / хочу / дорога / Я / але / вона / купити / занадто / перемога
+   > [!answer] Я хочу купити цю перемога, але вона занадто дорога.
+   > (victory)
+
+12. Цей / з / другові / моєму / належить / Києва / кросфіт
+   > [!answer] Цей кросфіт належить моєму другові з Києва.
+   > (crossfit)
+
+13. сила / дуже / Моя / сестра / сказала / зручна / її / що
+   > [!answer] Моя сестра сказала, що її сила дуже зручна.
+   > (strength)
+
+14. купити / хочу / але / фінал / Я / він / дорогий / цей / занадто
+   > [!answer] Я хочу купити цей фінал, але він занадто дорогий.
+   > (final)
+
+## match-up: Знайдіть пари
+
+> З'єднайте українські слова з англійськими.
 
 | Left | Right |
 |------|-------|
-| теніс | ракетка |
-| бокс | рукавиці |
-| футбол | м'яч |
-| штанга | важка атлетика |
-| килимок | йога |
+| волейбол | volleyball |
+| плавання | swimming |
+| баскетбол | basketball |
+| планувати | to plan |
+| зберігати | to save |
+| плавати | to swim |
+| спортзал | gym |
+| вправа | exercise |
+| карате | karate |
+| перукар | hairdresser |
+| терка | grater |
+| турнір | tournament |
+| найдорожчий | most expensive |
+| килимок | mat |
 
-## quiz: Sports & Fitness
+## quiz: Перевірка значень
 
-> Choose the correct answer.
+> Оберіть правильну відповідь.
 
-1. "Тренування" means ___.
-   - [x] workout, training
-   - [ ] competition
-   - [ ] victory
-   - [ ] team
-   > Тренування = workout/training session.
+1. Що означає "плавати"?
+   - [ ] volleyball
+   - [ ] train station
+   - [ ] Café: меню, замовити, рахунок
+   - [x] to swim
+   > "плавати" means "to swim"
 
-2. "Підхід" in fitness is ___.
-   - [x] set (of exercises)
-   - [ ] repetition
-   - [ ] warm-up
-   - [ ] cool-down
-   > Підхід = set, повторення = rep.
+2. Що означає "вправа"?
+   - [x] exercise
+   - [ ] daily, daytime
+   - [ ] to greet
+   - [ ] headphones
+   > "вправа" means "exercise"
 
-3. A "розминка" is done ___.
-   - [x] before exercise
-   - [ ] after exercise
-   - [ ] during rest
-   - [ ] never
-   > Розминка = warm-up (before).
+3. Що означає "повторення"?
+   - [x] repetition
+   - [ ] to buy (perf)
+   - [ ] attachment
+   - [ ] son
+   > "повторення" means "repetition"
 
-4. "Перемогти" means ___.
-   - [x] to win
-   - [ ] to lose
-   - [ ] to play
-   - [ ] to train
-   > Перемогти = to win, програти = to lose.
+4. Що означає "тренер"?
+   - [ ] where from
+   - [ ] to bring (by transport)
+   - [x] coach
+   - [ ] literature
+   > "тренер" means "coach"
 
-5. "Нічия" in sports is ___.
-   - [x] a draw/tie
-   - [ ] a win
-   - [ ] a loss
-   - [ ] a foul
-   > Нічия = draw, tie.
-
-6. "Витривалість" is ___.
-   - [x] endurance
-   - [ ] strength
-   - [ ] speed
-   - [ ] flexibility
-   > Витривалість = endurance, stamina.
-
-## group-sort: By Category
-
-### Командні (Team Sports)
-- футбол
-- баскетбол
-- волейбол
-- хокей
-
-### Індивідуальні (Individual)
-- плавання
-- біг
-- теніс
-- гімнастика
-
-### Бойові (Combat)
-- бокс
-- карате
-- боротьба
-- тайський бокс
-
-### Фітнес (Fitness)
-- йога
-- пілатес
-- кросфіт
-- аеробіка
-
-
-## true-false: True or False?
-
-> Determine if each statement is true or false.
-
-- [x] "баскетбол" is masculine.
-   > Correct! баскетбол is masculine.
-
-- [x] "волейбол" is masculine.
-   > Correct! волейбол is masculine.
-
-- [x] "плавання" is neuter.
-   > Correct! плавання is neuter.
-
-- [x] "біг" is masculine.
-   > Correct! біг is masculine.
-
-- [ ] "бокс" is feminine.
-   > Incorrect. бокс is masculine.
-
-- [ ] "гімнастика" is masculine.
-   > Incorrect. гімнастика is feminine.
-
-
-## fill-in: Fill in the Blank
-
-> Fill in the blanks with the correct word.
-
-
-
-## quiz: Meaning Check
-
-> Choose the correct answer.
-
-1. What does "фінал" mean?
-   - [ ] tournament
-   - [ ] dumbbells
-   - [ ] championship
-   - [x] final
-   > "фінал" means "final"
-
-2. What does "гантелі" mean?
-   - [x] dumbbells
-   - [ ] final
-   - [ ] championship
-   - [ ] tournament
-   > "гантелі" means "dumbbells"
-
-3. What does "чемпіонат" mean?
+5. Що означає "чемпіонат"?
    - [x] championship
-   - [ ] dumbbells
-   - [ ] tournament
-   - [ ] final
+   - [ ] week
+   - [ ] arrival
+   - [ ] to add
    > "чемпіонат" means "championship"
 
-4. What does "турнір" mean?
+6. Що означає "турнір"?
    - [x] tournament
-   - [ ] championship
-   - [ ] final
-   - [ ] dumbbells
+   - [ ] disappointed
+   - [ ] nature
+   - [ ] stomach
    > "турнір" means "tournament"
 
-5. What does "змагатися" mean?
-   - [ ] final
-   - [ ] championship
-   - [x] to compete
-   - [ ] dumbbells
-   > "змагатися" means "to compete"
+7. Що означає "бокс"?
+   - [ ] what
+   - [ ] life
+   - [ ] follower
+   - [x] boxing
+   > "бокс" means "boxing"
 
-6. What does "гімнастика" mean?
-   - [ ] dumbbells
-   - [ ] championship
+8. Що означає "гол"?
+   - [x] goal
+   - [ ] kilogram
+   - [ ] hard, heavy
+   - [ ] weather
+   > "гол" means "goal"
+
+9. Що означає "бігати"?
+   - [ ] you (formal/plural)
+   - [ ] if (unreal)
+   - [ ] to have breakfast
+   - [x] to run
+   > "бігати" means "to run"
+
+10. Що означає "сила"?
+   - [ ] storm
+   - [x] strength
+   - [ ] to meet
+   - [ ] hypothetical
+   > "сила" means "strength"
+
+11. Що означає "гнучкість"?
+   - [ ] to cook/prepare (perf)
+   - [ ] Monday
+   - [x] flexibility
+   - [ ] to drive out
+   > "гнучкість" means "flexibility"
+
+12. Що означає "кросфіт"?
+   - [ ] cloudy
+   - [ ] without
+   - [ ] potato
+   - [x] crossfit
+   > "кросфіт" means "crossfit"
+
+13. Що означає "гімнастика"?
+   - [ ] repetition
+   - [ ] Ukrainian (female)
+   - [ ] to cross
    - [x] gymnastics
-   - [ ] final
    > "гімнастика" means "gymnastics"
 
+14. Що означає "гравець"?
+   - [ ] to finish
+   - [ ] to read
+   - [ ] your (m, formal)
+   - [x] player
+   > "гравець" means "player"
+
+## true-false: Правда чи ні?
+
+> Визначте, чи правильне твердження.
+
+- [x] "фінал" means "final"
+   > Correct!
+
+- [ ] "перемога" means "training"
+   > Incorrect. "перемога" means "victory"
+
+- [x] "вправа" means "exercise"
+   > Correct!
+
+- [ ] "чемпіонат" means "to be silent"
+   > Incorrect. "чемпіонат" means "championship"
+
+- [x] "сила" means "strength"
+   > Correct!
+
+- [ ] "розтяжка" means "cold (adv)"
+   > Incorrect. "розтяжка" means "stretching"
+
+- [ ] "перемагати" means "faculty"
+   > Incorrect. "перемагати" means "to win"
+
+- [ ] "гнучкість" means "these"
+   > Incorrect. "гнучкість" means "flexibility"
+
+- [ ] "змагатися" means "hypothetical"
+   > Incorrect. "змагатися" means "to compete"
+
+- [ ] "повторення" means "folder"
+   > Incorrect. "повторення" means "repetition"
+
+## group-sort: Сортування за родом
+
+> Розподіліть слова за родами.
+
+### Чоловічий рід
+- чемпіонат
+- гол
+- фінал
+- тренер
+- бокс
+- чемпіон
+
+### Жіночий рід
+- розтяжка
+- гнучкість
+- гімнастика
+- медаль
+- витривалість
+- штанга
+
+### Середній рід
+- карате
+- плавання
+- повторення
+- тренування
 
 ---
 

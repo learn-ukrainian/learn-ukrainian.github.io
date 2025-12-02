@@ -286,159 +286,210 @@ Next month:
 
 ---
 
+---
+
+---
+
+---
+
 # Activities
 
-## match-up: Invitations and Responses
+## fill-in: Complete the Sentences
 
-> Match invitation with appropriate response.
+> Choose the correct word to complete each sentence.
+
+1. Цей будинок дуже ___.
+   > [!answer] вільний
+   > [!options] вільний | найкращий | добрий | високий
+
+2. Моя кімната занадто ___.
+   > [!answer] зручний
+   > [!options] маленький | зручний | більший | щасливий
+
+3. Я хочу купити цю ___.
+   > [!answer] зустріч
+   > [!options] обід | зустріч | вечеря | хвилина
+
+4. Я хочу навчитися ___.
+   > [!answer] скасувати
+   > [!options] скасувати | переказати | будуть | приготувати
+
+5. Ваша ідея здається ___.
+   > [!answer] зайнятий
+   > [!options] зайнятий | молодший | важкий | цікавий
+
+6. Мій брат любить ___ щодня.
+   > [!answer] перенести
+   > [!options] сподіватися | перенести | ішов | почекати
+
+7. Де ваш великий ___?
+   > [!answer] план
+   > [!options] туман | картопля | дощ | план
+
+8. Мій брат має хорошу ___.
+   > [!answer] пропозиція
+   > [!options] вівторок | подарунок | вареники | пропозиція
+
+9. Я хочу навчитися ___.
+   > [!answer] призначити
+   > [!options] призначити | принести | ходити | купувати
+
+## unjumble: Build the Sentence
+
+> Arrange the words in the correct order.
+
+1. зустріч / сто / Ця / коштує / гривень
+   > [!answer] Ця зустріч коштує сто гривень.
+   > (meeting)
+
+2. ваш / Де / план / великий
+   > [!answer] Де ваш великий план?
+   > (plan)
+
+3. нова / Це / пропозиція / моя
+   > [!answer] Це моя нова пропозиція.
+   > (suggestion, proposal)
+
+## match-up: Match the Pairs
+
+> Match Ukrainian words to their English meanings.
 
 | Left | Right |
 |------|-------|
-| Давай підемо на каву? | З радістю! |
-| О котрій зустрінемося? | Може, о шостій? |
-| Ти зайнятий у суботу? | Ні, я вільний |
-| Де зустрінемося? | Біля метро? |
-| Точно прийдеш? | Обов'язково! |
-| Чи можна перенести? | Так, давай на понеділок |
-
-## quiz: Making Plans
-
-> Choose the correct phrase.
-
-1. "Let's go to the cinema!" - ___ підемо в кіно!
-   - [x] Давай
-   - [ ] Давати
-   - [ ] Дай
-   - [ ] Давайте мені
-   > Informal "let's" = давай.
-
-2. "At what time?" - О ___?
-   - [x] котрій
-   - [ ] який
-   - [ ] скільки
-   - [ ] коли годині
-   > "At what time?" = О котрій?
-
-3. "Unfortunately, I can't" - ___, не можу.
-   - [x] На жаль
-   - [ ] Жаль
-   - [ ] На щастя
-   - [ ] Шкода що
-   > "Unfortunately" = на жаль.
-
-4. "It's a deal!" - ___!
-   - [x] Домовились
-   - [ ] Домовляємося
-   - [ ] Домова
-   - [ ] Домовити
-   > "Agreed/Deal" = домовились.
-
-5. "Can we reschedule?" - Чи можемо ___?
-   - [x] перенести
-   - [ ] переносити
-   - [ ] перенесли
-   - [ ] переносимо
-   > Infinitive after можемо = перенести.
-
-6. "I'll be waiting for you" - ___ на тебе.
-   - [x] Чекатиму
-   - [ ] Чекаю
-   - [ ] Чекав
-   - [ ] Чекати
-   > Future = чекатиму.
-
-## group-sort: Accept vs Decline
-
-> Sort responses.
-
-### Accepting
-- З радістю!
-- Звичайно!
-- Домовились!
-- Чудово, прийду!
-- Добре!
-
-### Declining
-- На жаль, не можу
-- Вибач, я зайнятий
-- Може, іншим разом?
-- Шкода, але в мене плани
-- Сьогодні не виходить
-
-
-## fill-in: Fill in the Blank
-
-> Fill in the blanks with the correct word.
-
-1. А ___ щодо...?
-   > [!answer] як
-
-
+| опівдні | at noon |
+| перенести | to transfer |
+| вільний | free, available |
+| зручний | convenient |
+| робити | to do, to make |
+| четвер | Thursday |
+| підтвердити | to confirm (perf) |
+| зайнятий | busy |
+| художник | artist |
+| скасувати | to cancel (perf) |
+| призначити | to schedule (perf) |
+| чекатиму | I will wait |
 
 ## quiz: Meaning Check
 
 > Choose the correct answer.
 
-1. What does "запрошувати" mean?
-   - [x] to invite (impf)
-   - [ ] busy
-   - [ ] plan
-   - [ ] convenient
-   > "запрошувати" means "to invite (impf)"
+1. What does "підтвердити" mean?
+   - [x] to confirm (perf)
+   - [ ] to schedule (perf)
+   - [ ] Wednesday
+   - [ ] Possessives: мій, твій, його, її, наш, ваш
+   > "підтвердити" means "to confirm (perf)"
 
-2. What does "план" mean?
-   - [ ] to invite (impf)
-   - [ ] busy
-   - [x] plan
-   - [ ] convenient
-   > "план" means "plan"
+2. What does "опівдні" mean?
+   - [ ] yesterday
+   - [ ] cheaper
+   - [x] at noon
+   - [ ] to love
+   > "опівдні" means "at noon"
 
-3. What does "зручний" mean?
-   - [ ] busy
-   - [x] convenient
-   - [ ] to invite (impf)
-   - [ ] plan
-   > "зручний" means "convenient"
+3. What does "вільний" mean?
+   - [x] free, available
+   - [ ] this, this is
+   - [ ] Food: сніданок, обід, вечеря, борщ
+   - [ ] to teach/learn
+   > "вільний" means "free, available"
 
 4. What does "зайнятий" mean?
+   - [ ] to get dressed
+   - [ ] expert
    - [x] busy
-   - [ ] to invite (impf)
-   - [ ] plan
-   - [ ] convenient
+   - [ ] to ask, request
    > "зайнятий" means "busy"
 
-5. What does "чекатиму" mean?
+5. What does "призначити" mean?
+   - [ ] you (informal)
+   - [ ] airport
+   - [x] to schedule (perf)
+   - [ ] tasty
+   > "призначити" means "to schedule (perf)"
+
+6. What does "чекатиму" mean?
+   - [ ] degree
    - [x] I will wait
-   - [ ] to invite (impf)
-   - [ ] plan
-   - [ ] convenient
+   - [ ] pencil
+   - [ ] (with) him/it
    > "чекатиму" means "I will wait"
 
-6. What does "пропозиція" mean?
-   - [ ] plan
-   - [ ] to invite (impf)
-   - [ ] convenient
-   - [x] suggestion, proposal
-   > "пропозиція" means "suggestion, proposal"
+7. What does "зустріч" mean?
+   - [ ] borscht
+   - [ ] to have
+   - [ ] to buy (perf)
+   - [x] meeting
+   > "зустріч" means "meeting"
 
+8. What does "запрошувати" mean?
+   - [x] to invite (impf)
+   - [ ] to confirm (perf)
+   - [ ] to get acquainted
+   - [ ] cup
+   > "запрошувати" means "to invite (impf)"
 
+9. What does "зручний" mean?
+   - [ ] office
+   - [ ] tall
+   - [ ] if (unreal)
+   - [x] convenient
+   > "зручний" means "convenient"
 
-## unjumble: Word Order
+10. What does "скасувати" mean?
+   - [x] to cancel (perf)
+   - [ ] cold
+   - [ ] clean
+   - [ ] shoes
+   > "скасувати" means "to cancel (perf)"
 
-> Put the words in the correct order to form a sentence.
+11. What does "перенести" mean?
+   - [x] to transfer
+   - [ ] meeting
+   - [ ] to send
+   - [ ] better
+   > "перенести" means "to transfer"
 
-1. А / як / щодо
-   > [!answer] А як щодо...?
-   > (How about...?)
+12. What does "план" mean?
+   - [ ] package
+   - [ ] biggest
+   - [x] plan
+   - [ ] to answer (perf)
+   > "план" means "plan"
 
-2. about): / (How / як / А / щодо
-   > [!answer] А як щодо...? (How about...?):
-   > (**А як щодо** суботи? - How about Saturday?)
+## true-false: True or False?
 
-3. на / місяць / двічі
-   > [!answer] двічі на місяць
-   > (twice a month)
+> Determine if each statement is true or false.
 
+- [x] "перенести" means "to transfer"
+   > Correct!
+
+- [x] "запрошувати" means "to invite (impf)"
+   > Correct!
+
+- [ ] "пропозиція" means "lamp"
+   > Incorrect. "пропозиція" means "suggestion, proposal"
+
+- [x] "вільний" means "free, available"
+   > Correct!
+
+- [x] "призначити" means "to schedule (perf)"
+   > Correct!
+
+- [ ] "нагадати" means "square"
+   > Incorrect. "нагадати" means "to remind (perf)"
+
+- [x] "зручний" means "convenient"
+   > Correct!
+
+- [x] "план" means "plan"
+   > Correct!
+
+- [ ] "чекатиму" means "headphones"
+   > Incorrect. "чекатиму" means "I will wait"
+
+- [ ] "зустріч" means "teeth"
+   > Incorrect. "зустріч" means "meeting"
 
 ---
 

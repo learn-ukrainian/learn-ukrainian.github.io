@@ -213,51 +213,51 @@ Read these tricky words:
 
 # Activities
 
-## fill-in: What Does It Mean?
+## fill-in: False Friends - What Sound?
 
-> Choose the correct English meaning.
+> The letter looks Latin but sounds different! Choose the correct sound.
 
-1. What does "театр" mean?
-   > [!answer] theater
-   > [!options] theater | metro | music | taxi
+1. The Ukrainian letter **Р** makes the sound ___.
+   > [!answer] [r] like "run"
+   > [!options] [p] like "park" | [r] like "run" | [b] like "bat" | [d] like "dog"
 
-2. What does "телефон" mean?
-   > [!answer] telephone
-   > [!options] telephone | tourist | student | park
+2. The Ukrainian letter **В** makes the sound ___.
+   > [!answer] [v] like "van"
+   > [!options] [b] like "bat" | [v] like "van" | [w] like "win" | [f] like "fan"
 
-3. What does "доктор" mean?
-   > [!answer] doctor
-   > [!options] dad | doctor | actor | dentist
+3. The Ukrainian letter **Н** makes the sound ___.
+   > [!answer] [n] like "no"
+   > [!options] [h] like "hat" | [n] like "no" | [m] like "map" | [ng] like "sing"
 
-4. What does "лампа" mean?
-   > [!answer] lamp
-   > [!options] lemon | lamp | map | soup
+4. The Ukrainian letter **С** makes the sound ___.
+   > [!answer] [s] like "sun"
+   > [!options] [k] like "cat" | [s] like "sun" | [ch] like "chin" | [sh] like "ship"
 
-5. What does "зебра" mean?
-   > [!answer] zebra
-   > [!options] cobra | zero | zebra | zoo
+5. The Ukrainian letter **Х** makes the sound ___.
+   > [!answer] [kh] like Scottish "loch"
+   > [!options] [x] like "box" | [h] like "hat" | [kh] like Scottish "loch" | [k] like "cat"
 
-6. What does "клас" mean?
-   > [!answer] class
-   > [!options] glass | class | club | pass
+6. The Ukrainian letter **У** makes the sound ___.
+   > [!answer] [u] like "moon"
+   > [!options] [y] like "yes" | [u] like "moon" | [oo] like "book" | [ju] like "you"
 
-7. What does "план" mean?
-   > [!answer] plan
-   > [!options] plane | plan | pan | man
+7. The word "студент" sounds like ___.
+   > [!answer] stoo-DENT
+   > [!options] STOO-dent | stoo-DENT | STYOO-dent | stu-DYENT
 
-8. What does "спорт" mean?
-   > [!answer] sport
-   > [!options] port | sort | sport | start
+8. The word "метро" sounds like ___.
+   > [!answer] meh-TRO
+   > [!options] MEE-tro | MET-ro | meh-TRO | may-TROH
 
-9. What does "старт" mean?
-   > [!answer] start
-   > [!options] star | tart | start | smart
+9. In "доктор", the letter "о" is pronounced ___.
+   > [!answer] always as [o], never reduced
+   > [!options] as [a] like in Russian | always as [o], never reduced | sometimes [o], sometimes [a] | silent
 
-10. What does "стоп" mean?
-    > [!answer] stop
-    > [!options] step | stop | top | shop
+10. The word "парк" ends with the sound ___.
+    > [!answer] [k] - final consonants stay voiced
+    > [!options] [g] - voiced at the end | [k] - final consonants stay voiced | silent - not pronounced | [kh] - aspirated
 
-## select: Miy, Moya, or Moye?
+## fill-in: Miy, Moya, or Moye?
 
 > Choose the correct possessive pronoun based on the gender.
 
@@ -354,113 +354,142 @@ Read these tricky words:
 | старт | start |
 | стоп | stop |
 
-## quiz: Meaning Check
+## group-sort: Letter Classification
 
-> Choose the correct answer.
+> Sort these Cyrillic letters into the correct categories.
 
-1. What does "піца" mean?
-   - [ ] park
-   - [ ] lemon
-   - [x] pizza
-   - [ ] soup
-   > "піца" means "pizza"
+### True Friends (Same look AND sound)
+- А
+- О
+- К
+- М
+- Т
+- Е
+- І
 
-2. What does "тато" mean?
-   - [ ] radio
-   - [ ] soup
-   - [x] dad
-   - [ ] music
-   > "тато" means "dad"
+### False Friends (Look similar, different sound)
+- В (looks like B, sounds like V)
+- Н (looks like H, sounds like N)
+- Р (looks like P, sounds like R)
+- С (looks like C, sounds like S)
+- У (looks like Y, sounds like U)
+- Х (looks like X, sounds like KH)
 
-3. What does "таксі" mean?
-   - [ ] football
-   - [ ] soup
-   - [x] taxi
-   - [ ] hockey
-   > "таксі" means "taxi"
+### New Letters (Unique to Cyrillic)
+- Б (B sound)
+- Д (D sound)
+- З (Z sound)
+- Л (L sound)
+- П (P sound)
+- Ф (F sound)
 
-4. What does "лимон" mean?
-   - [x] lemon
-   - [ ] café
-   - [ ] football
-   - [ ] music
-   > "лимон" means "lemon"
+## quiz: Cyrillic Alphabet Rules
 
-5. What does "хокей" mean?
-   - [ ] pizza
-   - [x] hockey
-   - [ ] mom
-   - [ ] banana
-   > "хокей" means "hockey"
+> Test your understanding of the Ukrainian alphabet and False Friends.
 
-6. What does "суп" mean?
-   - [x] soup
-   - [ ] pizza
-   - [ ] lemon
-   - [ ] hockey
-   > "суп" means "soup"
+1. The letter **Р** in Ukrainian sounds like:
+   - [ ] English "P"
+   - [x] English "R" (rolled)
+   - [ ] English "B"
+   - [ ] English "D"
+   > Р is a False Friend - looks like P but sounds like R
 
-7. What does "музика" mean?
-   - [ ] student
-   - [x] music
-   - [ ] park
-   - [ ] photo
-   > "музика" means "music"
+2. The letter **Н** in Ukrainian sounds like:
+   - [ ] English "H"
+   - [x] English "N"
+   - [ ] English "M"
+   - [ ] English "Y"
+   > Н is a False Friend - looks like H but sounds like N
 
-8. What does "банан" mean?
-   - [ ] lemon
-   - [x] banana
-   - [ ] dad
-   - [ ] taxi
-   > "банан" means "banana"
+3. Which letter is unique to Ukrainian (not found in Russian)?
+   - [ ] А
+   - [ ] О
+   - [x] Ї
+   - [ ] Е
+   > Ї (yi) only exists in Ukrainian alphabet
 
-9. What does "кафе" mean?
-   - [ ] taxi
-   - [x] café
-   - [ ] photo
-   - [ ] banana
-   > "кафе" means "café"
+4. The letter **В** in Ukrainian sounds like:
+   - [ ] English "B"
+   - [x] English "V"
+   - [ ] English "W"
+   - [ ] English "F"
+   > В is a False Friend - looks like B but sounds like V
 
-10. What does "турист" mean?
-   - [ ] café
-   - [ ] mom
-   - [ ] soup
-   - [x] tourist
-   > "турист" means "tourist"
+5. How many letters are in the Ukrainian alphabet?
+   - [ ] 26
+   - [ ] 30
+   - [x] 33
+   - [ ] 35
+   > Ukrainian has 33 letters (more than English's 26)
 
-## true-false: True or False?
+6. The letter **С** in Ukrainian sounds like:
+   - [ ] English "K"
+   - [x] English "S"
+   - [ ] English "C" as in "cat"
+   - [ ] English "Z"
+   > С is a False Friend - looks like C but always sounds like S
 
-> Determine if each statement is true or false.
+7. Which are "True Friends" (same look AND sound)?
+   - [x] А, О, К, М, Т
+   - [ ] В, Н, Р, С
+   - [ ] Ж, Ш, Щ, Ч
+   - [ ] Є, Ї, Ю, Я
+   > True Friends look Latin and sound the same
 
-- [x] "таксі" means "taxi"
-   > Correct!
+8. The letter **Х** sounds like:
+   - [ ] English "X"
+   - [x] "KH" as in "Bach"
+   - [ ] English "H"
+   - [ ] Silent
+   > Х makes a guttural "kh" sound
 
-- [x] "радіо" means "radio"
-   > Correct!
+9. What does the soft sign **Ь** do?
+   - [ ] Makes a vowel sound
+   - [ ] Makes an "H" sound
+   - [x] Softens the preceding consonant
+   - [ ] Nothing - it's silent and meaningless
+   > Ь doesn't make a sound but softens consonants
 
-- [x] "банк" means "bank"
-   > Correct!
+10. Which letters are "iotated vowels" (add Y-sound)?
+    - [ ] А, О, У, И
+    - [x] Є, Ї, Ю, Я
+    - [ ] Е, І, И
+    - [ ] Б, В, Г
+    > Iotated vowels: Є=YE, Ї=YI, Ю=YU, Я=YA
 
-- [ ] "музика" means "dad"
-   > Incorrect. "музика" means "music"
+## true-false: Alphabet Rules
 
-- [x] "мама" means "mom"
-   > Correct!
+> Determine if each statement about Ukrainian letters is true or false.
 
-- [x] "парк" means "park"
-   > Correct!
+- [x] The Ukrainian letter Р sounds like English "R", not "P".
+   > Correct! Р is a False Friend - looks like P but sounds like rolled R.
 
-- [ ] "турист" means "banana"
-   > Incorrect. "турист" means "tourist"
+- [ ] The letter Н in Ukrainian sounds like English "H".
+   > Incorrect. Н = N sound. It's a False Friend (looks like H).
 
-- [ ] "лимон" means "student"
-   > Incorrect. "лимон" means "lemon"
+- [x] The letters А, О, К, М, Т look AND sound the same in English and Ukrainian.
+   > Correct! These are "True Friends" - identical in both languages.
 
-- [x] "суп" means "soup"
-   > Correct!
+- [ ] The letter В in Ukrainian sounds like English "B".
+   > Incorrect. В = V sound. It's a False Friend (looks like B).
 
-- [ ] "банан" means "music"
-   > Incorrect. "банан" means "banana"
+- [x] The letter С in Ukrainian always sounds like English "S".
+   > Correct! С = S, never the "k" sound of English "C" in "cat".
+
+- [x] Ukrainian has 33 letters, more than English's 26.
+   > Correct! Ukrainian alphabet: 33 letters total.
+
+- [ ] The letter Х in Ukrainian sounds like English "X".
+   > Incorrect. Х = KH sound (like "ch" in Scottish "loch").
+
+- [x] The letter І in Ukrainian sounds like "ee" in "meet".
+   > Correct! І is a True Friend with consistent "ee" pronunciation.
+
+- [ ] All Cyrillic letters that look like Latin letters sound the same.
+   > Incorrect. False Friends (В, Н, Р, С, У, Х) look similar but sound different!
+
+- [x] Learning True Friends first makes reading Ukrainian easier.
+   > Correct! Start with identical letters, then learn False Friends.
 
 ---
 

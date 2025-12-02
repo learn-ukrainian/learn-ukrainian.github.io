@@ -49,7 +49,6 @@ A collocation is words that often go together:
 |-------------|---------|---------|
 | приймати рішення | make a decision | Прийняв важливе рішення. |
 | приймати ліки | take medicine | Приймаю ліки тричі на день. |
-| приймати участь | take part | Приймаю участь у проєкті. |
 | приймати душ | take a shower | Приймаю душ щоранку. |
 | приймати гостей | receive guests | Приймаємо гостей. |
 
@@ -243,18 +242,126 @@ Use collocations to describe:
    - [ ] робити
    > Conduct negotiations = вести переговори.
 
-## fill-in: Business Meeting
 
-> Використайте колокації.
+## match-up: Vocabulary Match
 
-> Сьогодні ми (1)___ (conducted) важливі переговори. Колеги (2)___ (gave) корисні поради. Нам потрібно (3)___ (make) рішення до кінця тижня. Ця справа (4)___ (makes sense). Усі (5)___ (took part) в обговоренні.
+> Match each Ukrainian word with its English translation.
 
-**Answers:**
-1. вели
-2. дали / давали
-3. прийняти
-4. має сенс
-5. брали / взяли участь
+| Left | Right |
+|------|-------|
+| вести переговори | conduct negotiations |
+| колокація | collocation |
+| брати до уваги | take into account |
+| давати пораду | give advice |
+| словосполучення | word combination |
+| брати участь | take part |
+| приймати рішення | make a decision |
+| мати сенс | make sense |
+| робити помилку | make a mistake |
+| мати значення | matter, be important |
+
+
+## fill-in: Fill in the Blank
+
+> Choose the correct word to complete each sentence.
+
+1. брати ___ уваги
+   > [!answer] до
+
+
+
+## quiz: Meaning Check
+
+> Choose the correct answer.
+
+1. What does "колокація" mean?
+   - [x] collocation
+   - [ ] take part
+   - [ ] word combination
+   - [ ] make a mistake
+   > "колокація" means "collocation"
+
+2. What does "робити помилку" mean?
+   - [ ] take part
+   - [x] make a mistake
+   - [ ] collocation
+   - [ ] word combination
+   > "робити помилку" means "make a mistake"
+
+3. What does "брати участь" mean?
+   - [ ] word combination
+   - [x] take part
+   - [ ] collocation
+   - [ ] make a mistake
+   > "брати участь" means "take part"
+
+4. What does "словосполучення" mean?
+   - [ ] make a mistake
+   - [x] word combination
+   - [ ] collocation
+   - [ ] take part
+   > "словосполучення" means "word combination"
+
+5. What does "приймати рішення" mean?
+   - [x] make a decision
+   - [ ] collocation
+   - [ ] take part
+   - [ ] make a mistake
+   > "приймати рішення" means "make a decision"
+
+6. What does "вести переговори" mean?
+   - [ ] make a mistake
+   - [ ] take part
+   - [ ] collocation
+   - [x] conduct negotiations
+   > "вести переговори" means "conduct negotiations"
+
+7. What does "давати пораду" mean?
+   - [ ] collocation
+   - [x] give advice
+   - [ ] make a mistake
+   - [ ] take part
+   > "давати пораду" means "give advice"
+
+8. What does "мати сенс" mean?
+   - [ ] collocation
+   - [x] make sense
+   - [ ] take part
+   - [ ] make a mistake
+   > "мати сенс" means "make sense"
+
+9. What does "мати значення" mean?
+   - [ ] take part
+   - [ ] collocation
+   - [x] matter, be important
+   - [ ] make a mistake
+   > "мати значення" means "matter, be important"
+
+10. What does "брати до уваги" mean?
+   - [x] take into account
+   - [ ] take part
+   - [ ] make a mistake
+   - [ ] collocation
+   > "брати до уваги" means "take into account"
+
+
+
+## unjumble: Word Order
+
+> Drag the words into the correct order to form a sentence.
+
+1. уваги / брати / до
+   > [!answer] брати до уваги
+   > (take into account)
+
+2. сильний / дощ / ✅
+   > [!answer] сильний дощ ✅
+   > (this one is correct!)
+
+3. фото / робити / ✅
+   > [!answer] робити фото ✅
+   > (shorter form common)
+
 
 ---
 

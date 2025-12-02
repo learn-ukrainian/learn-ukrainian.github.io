@@ -264,145 +264,156 @@ Create sentences about news:
 
 ---
 
+---
+
+---
+
+---
+
 # Activities
 
-## match-up: -но/-то Forms
+## fill-in: Complete the Sentences
 
-> Match infinitive with passive form.
+> Choose the correct word to complete each sentence.
+
+1. Вони планують ___ завтра.
+   > [!answer] продаватися
+   > [!options] просити | продаватися | повернути | слухати
+
+2. Я хочу навчитися ___.
+   > [!answer] називатися
+   > [!options] називатися | погоджуватися | чекатиму | домовитися
+
+## unjumble: Build the Sentence
+
+> Arrange the words in the correct order.
+
+## match-up: Match the Pairs
+
+> Match Ukrainian words to their English meanings.
 
 | Left | Right |
 |------|-------|
-| зробити | зроблено |
-| написати | написано |
-| відкрити | відкрито |
-| закрити | закрито |
-| сказати | сказано |
-| продати | продано |
-
-## quiz: Passive & Impersonal
-
-> Choose the correct form.
-
-1. "The work is done" - Роботу ___.
-   - [x] зроблено
-   - [ ] зробити
-   - [ ] зробив
-   - [ ] зроблений
-   > -но form for impersonal passive.
-
-2. "One must work" - ___ працювати.
-   - [x] Треба
-   - [ ] Можна
-   - [ ] Варто
-   - [ ] Слід
-   > Necessity = треба.
-
-3. "It is said that" - ___, що...
-   - [x] Кажуть
-   - [ ] Каже
-   - [ ] Казати
-   - [ ] Казано
-   > Third person plural = кажуть.
-
-4. "This seat is taken" - Це місце ___.
-   - [x] зайнято
-   - [ ] зайняти
-   - [ ] займає
-   - [ ] зайнятий
-   > -то form = зайнято.
-
-5. "It's forbidden to smoke" - Курити ___.
-   - [x] заборонено
-   - [ ] заборонити
-   - [ ] заборона
-   - [ ] забороняє
-   > -но form = заборонено.
-
-6. "It's considered important" - Це ___ важливим.
-   - [x] вважається
-   - [ ] вважати
-   - [ ] вважаємо
-   - [ ] вважано
-   > Reflexive = вважається.
-
-## group-sort: Impersonal Types
-
-> Sort by construction type.
-
-### Modal Impersonal
-- треба
-- можна
-- не можна
-- варто
-- слід
-
-### -но/-то Participles
-- зроблено
-- написано
-- закрито
-- продано
-- зайнято
-
-### Reflexive Passive
-- продається
-- здається
-- вважається
-- називається
-- готується
-
-
-## fill-in: Fill in the Blank
-
-> Fill in the blanks with the correct word.
-
-
+| називатися | to be called |
+| дозволено | allowed |
+| варто | it's worth |
+| продаватися | to be sold |
+| брати | to take |
+| слід | one should |
+| вихід | exit |
+| зроблено | done, made |
+| допомогти | to help (perf) |
+| відкрито | open(ed) |
+| закрито | closed |
+| зайнято | occupied, taken |
 
 ## quiz: Meaning Check
 
 > Choose the correct answer.
 
-1. What does "закрито" mean?
-   - [ ] to be sold
-   - [ ] done, made
-   - [ ] allowed
-   - [x] closed
-   > "закрито" means "closed"
-
-2. What does "зроблено" mean?
-   - [x] done, made
-   - [ ] closed
-   - [ ] to be sold
-   - [ ] allowed
-   > "зроблено" means "done, made"
-
-3. What does "дозволено" mean?
-   - [x] allowed
-   - [ ] to be sold
-   - [ ] done, made
-   - [ ] closed
-   > "дозволено" means "allowed"
-
-4. What does "продаватися" mean?
-   - [x] to be sold
-   - [ ] allowed
-   - [ ] closed
-   - [ ] done, made
-   > "продаватися" means "to be sold"
-
-5. What does "слід" mean?
+1. What does "слід" mean?
+   - [ ] accountant
+   - [ ] end
    - [x] one should
-   - [ ] closed
-   - [ ] done, made
-   - [ ] allowed
+   - [ ] fish
    > "слід" means "one should"
 
-6. What does "називатися" mean?
-   - [ ] closed
-   - [ ] allowed
+2. What does "заборонено" mean?
+   - [x] forbidden
+   - [ ] attachment
+   - [ ] who
+   - [ ] dish, course
+   > "заборонено" means "forbidden"
+
+3. What does "закрито" mean?
+   - [x] closed
+   - [ ] my (plural)
+   - [ ] floor (of building)
+   - [ ] taxi
+   > "закрито" means "closed"
+
+4. What does "дозволено" mean?
+   - [ ] bigger
+   - [x] allowed
+   - [ ] January
+   - [ ] compartment
+   > "дозволено" means "allowed"
+
+5. What does "продаватися" mean?
+   - [x] to be sold
+   - [ ] addressee
+   - [ ] to the left
+   - [ ] may, can
+   > "продаватися" means "to be sold"
+
+6. What does "відкрито" mean?
+   - [ ] hockey
+   - [ ] corner
+   - [ ] hot (adv)
+   - [x] open(ed)
+   > "відкрито" means "open(ed)"
+
+7. What does "називатися" mean?
+   - [ ] bag
+   - [ ] to remain
+   - [ ] phone
    - [x] to be called
-   - [ ] done, made
    > "називатися" means "to be called"
 
+8. What does "зайнято" mean?
+   - [ ] on, at
+   - [ ] to try
+   - [x] occupied, taken
+   - [ ] to me
+   > "зайнято" means "occupied, taken"
+
+9. What does "варто" mean?
+   - [ ] help
+   - [ ] rate
+   - [x] it's worth
+   - [ ] pharmacy
+   > "варто" means "it's worth"
+
+10. What does "зроблено" mean?
+   - [x] done, made
+   - [ ] link
+   - [ ] lunch
+   - [ ] to seem
+   > "зроблено" means "done, made"
+
+## true-false: True or False?
+
+> Determine if each statement is true or false.
+
+- [x] "продаватися" means "to be sold"
+   > Correct!
+
+- [x] "відкрито" means "open(ed)"
+   > Correct!
+
+- [x] "заборонено" means "forbidden"
+   > Correct!
+
+- [x] "варто" means "it's worth"
+   > Correct!
+
+- [ ] "називатися" means "porridge"
+   > Incorrect. "називатися" means "to be called"
+
+- [x] "слід" means "one should"
+   > Correct!
+
+- [ ] "закрито" means "to mention (impf)"
+   > Incorrect. "закрито" means "closed"
+
+- [x] "зайнято" means "occupied, taken"
+   > Correct!
+
+- [ ] "зроблено" means "month"
+   > Incorrect. "зроблено" means "done, made"
+
+- [ ] "дозволено" means "hard, difficult"
+   > Incorrect. "дозволено" means "allowed"
 
 ---
 

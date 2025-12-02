@@ -232,19 +232,72 @@ Write about your favorite city using:
    - [ ] причину
    > Despite expresses contrast.
 
-## fill-in: Essay Structure
 
-> Напишіть есе про важливість освіти.
+## match-up: Vocabulary Match
 
-> (1)___ (In my opinion), освіта дуже важлива. (2)___ (Firstly), вона допомагає знайти роботу. (3)___ (Secondly), вона розширює кругозір. (4)___ (Moreover), освічені люди краще розуміють світ. (5)___ (However), не всі мають доступ до якісної освіти. (6)___ (In conclusion), ми повинні підтримувати освіту для всіх.
+> Match each Ukrainian word with its English translation.
 
-**Answers:**
-1. На мою думку
-2. По-перше
-3. По-друге
-4. Крім того / Більше того
-5. Проте / Однак
-6. У підсумку / Отже
+| Left | Right |
+|------|-------|
+| крім того | besides, moreover |
+| також | also |
+| на мою думку | in my opinion |
+| тобто | that is |
+| наприклад | for example |
+| по-перше | firstly |
+| підсумовуючи | to sum up |
+
+
+## fill-in: Fill in the Blank
+
+> Choose the correct word to complete each sentence.
+
+1. через ___ що
+   > [!answer] те
+   > [!options] те | мою | тому
+
+2. завдяки ___ що
+   > [!answer] тому
+   > [!options] тому | те | мою
+
+3. на ___ думку
+   > [!answer] мою
+   > [!options] мою | тому | те
+
+
+
+## unjumble: Word Order
+
+> Drag the words into the correct order to form a sentence.
+
+1. та / і / /
+   > [!answer] і / та
+   > (and)
+
+2. ж / до / того
+   > [!answer] до того ж
+   > (what's more)
+
+3. не / а / тільки / й
+   > [!answer] не тільки... а й
+   > (not only... but also)
+
+4. одного / боку / боку / з / з / іншого
+   > [!answer] з одного боку... з іншого боку
+   > (on one hand... on the other)
+
+5. те / що / через
+   > [!answer] через те, що
+   > (because, due to)
+
+6. що / завдяки / тому
+   > [!answer] завдяки тому, що
+   > (thanks to, owing to)
+
+7. на / мою / думку
+   > [!answer] на мою думку
+   > (in my opinion)
+
 
 ---
 

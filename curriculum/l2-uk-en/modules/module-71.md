@@ -286,131 +286,210 @@ Give emotional reactions:
 
 ---
 
-# Activities
+---
 
-## match-up: Emotion → Situation
+---
+
+---
+
+# Вправи
+
+## fill-in: Доповніть речення
+
+> Оберіть правильне слово.
+
+1. Моя сестра каже, що їй подобається ___ у вільний час.
+   > [!answer] хвилюватися
+   > [!options] прийти | з'їсти | увійти | хвилюватися
+
+2. Моя сестра каже, що їй подобається ___ у вільний час.
+   > [!answer] заздрити
+   > [!options] буду | заздрити | вечеряти | випити
+
+3. Моя сестра каже, що їй подобається ___ у вільний час.
+   > [!answer] плакати
+   > [!options] намагатися | повернути | плакати | виграти
+
+4. Моя сестра каже, що їй подобається ___ у вільний час.
+   > [!answer] радіти
+   > [!options] відпустити | радіти | помилятися | повертатися
+
+5. Я вважаю, що ця пропозиція є занадто ___ для нас.
+   > [!answer] працьовитий
+   > [!options] світлий | слухняний | мамин | працьовитий
+
+6. Цей варіант здається мені найбільш ___ з усіх.
+   > [!answer] гордий
+   > [!options] переконаний | старий | гордий | молодий
+
+7. Цей варіант здається мені найбільш ___ з усіх.
+   > [!answer] натхненний
+   > [!options] натхненний | найважливіший | сестрин | більший
+
+8. Цей варіант здається мені найбільш ___ з усіх.
+   > [!answer] сміливий
+   > [!options] білий | сучасний | сміливий | вдячний
+
+## unjumble: Побудуйте речення
+
+> Розташуйте слова в правильному порядку.
+
+## match-up: Знайдіть пари
+
+> З'єднайте українські слова з англійськими.
 
 | Left | Right |
 |------|-------|
-| радісний | good news |
-| розчарований | failed expectation |
-| стривожений | bad news coming |
-| вдячний | received help |
-| заздрісний | someone has more |
+| намагатися | to try |
+| футболка | t-shirt |
+| їжак | hedgehog |
+| задоволений | satisfied |
+| самотній | lonely |
+| впертий | stubborn |
+| чесний | honest |
+| шлунок | stomach |
+| закоханий | in love |
+| щедрий | generous |
+| лягати | to lie down |
+| втомлений | tired |
+| стривожений | anxious |
+| грубий | rude |
 
-## quiz: Emotions & Personality
+## quiz: Перевірка значень
 
-> Choose the correct answer.
+> Оберіть правильну відповідь.
 
-1. "Мені сумно" means ___.
-   - [x] I feel sad
-   - [ ] I am a sad person
-   - [ ] Make me sad
-   - [ ] Sadness
-   > Мені + adverb = temporary feeling.
+1. Що означає "радісний"?
+   - [ ] story, history
+   - [ ] to send
+   - [ ] talented
+   - [x] joyful
+   > "радісний" means "joyful"
 
-2. A "щедра" person is ___.
-   - [x] generous
-   - [ ] greedy
-   - [ ] kind
-   - [ ] honest
-   > Щедрий = generous.
-
-3. "Впертий" can be ___.
-   - [x] both positive (determined) and negative (stubborn)
-   - [ ] only negative
-   - [ ] only positive
-   - [ ] neutral
-   > Впертий can mean stubborn or determined.
-
-4. "Я хвилююся" means ___.
-   - [x] I'm worried
-   - [ ] I'm waving
-   - [ ] I'm happy
-   - [ ] I'm angry
-   > Хвилюватися = to worry.
-
-5. The opposite of "сміливий" is ___.
-   - [x] боягузливий
-   - [ ] впертий
-   - [ ] лінивий
-   - [ ] грубий
-   > Сміливий (brave) ↔ боягузливий (cowardly).
-
-6. "Вдячний" means ___.
-   - [x] grateful
+2. Що означає "сміливий"?
+   - [ ] inspired
    - [ ] angry
-   - [ ] jealous
-   - [ ] tired
-   > Вдячний = grateful.
-
-## group-sort: Positive vs Negative
-
-### Позитивні (Positive)
-- щасливий
-- вдячний
-- добрий
-- надійний
-
-### Негативні (Negative)
-- злий
-- заздрісний
-- лінивий
-- грубий
-
-
-## fill-in: Fill in the Blank
-
-> Fill in the blanks with the correct word.
-
-
-
-## quiz: Meaning Check
-
-> Choose the correct answer.
-
-1. What does "втомлений" mean?
-   - [ ] anxious
-   - [x] tired
-   - [ ] brave
-   - [ ] to worry
-   > "втомлений" means "tired"
-
-2. What does "стривожений" mean?
-   - [x] anxious
-   - [ ] tired
-   - [ ] brave
-   - [ ] to worry
-   > "стривожений" means "anxious"
-
-3. What does "хвилюватися" mean?
-   - [ ] brave
-   - [ ] tired
-   - [x] to worry
-   - [ ] anxious
-   > "хвилюватися" means "to worry"
-
-4. What does "сміливий" mean?
+   - [ ] to dream
    - [x] brave
-   - [ ] to worry
-   - [ ] anxious
-   - [ ] tired
    > "сміливий" means "brave"
 
-5. What does "грубий" mean?
-   - [ ] tired
-   - [ ] to worry
-   - [ ] anxious
-   - [x] rude
-   > "грубий" means "rude"
+3. Що означає "плакати"?
+   - [ ] to live (period)
+   - [ ] to admit
+   - [ ] signature
+   - [x] to cry
+   > "плакати" means "to cry"
 
-6. What does "самотній" mean?
-   - [ ] anxious
+4. Що означає "заздрити"?
+   - [x] to envy
+   - [ ] to tell (once)
+   - [ ] injury
+   - [ ] extraordinarily
+   > "заздрити" means "to envy"
+
+5. Що означає "злий"?
+   - [ ] clean
+   - [x] angry
+   - [ ] cream
+   - [ ] to bring
+   > "злий" means "angry"
+
+6. Що означає "терплячий"?
+   - [ ] letter (of alphabet)
+   - [ ] bitter
+   - [x] patient
+   - [ ] to get acquainted
+   > "терплячий" means "patient"
+
+7. Що означає "закоханий"?
+   - [ ] to finish
+   - [ ] forbidden
+   - [x] in love
+   - [ ] wife
+   > "закоханий" means "in love"
+
+8. Що означає "жадібний"?
+   - [ ] restaurant
+   - [x] greedy
+   - [ ] spicy, sharp
+   - [ ] neighbor (f)
+   > "жадібний" means "greedy"
+
+9. Що означає "лінивий"?
+   - [ ] Wednesday
+   - [ ] clean
+   - [x] lazy
+   - [ ] pants
+   > "лінивий" means "lazy"
+
+10. Що означає "схвильований"?
+   - [ ] storm
+   - [x] excited, anxious
+   - [ ] joint
+   - [ ] son
+   > "схвильований" means "excited, anxious"
+
+11. Що означає "щедрий"?
+   - [ ] to imagine (perf)
+   - [ ] partner
+   - [ ] painful, it hurts
+   - [x] generous
+   > "щедрий" means "generous"
+
+12. Що означає "втомлений"?
+   - [ ] to exit
+   - [x] tired
+   - [ ] income
+   - [ ] to sell
+   > "втомлений" means "tired"
+
+13. Що означає "задоволений"?
+   - [ ] shoulder
+   - [ ] to comb one's hair
+   - [x] satisfied
+   - [ ] interview
+   > "задоволений" means "satisfied"
+
+14. Що означає "самотній"?
    - [x] lonely
-   - [ ] tired
-   - [ ] to worry
+   - [ ] it
+   - [ ] to have dinner
+   - [ ] to cook/prepare (perf)
    > "самотній" means "lonely"
 
+## true-false: Правда чи ні?
+
+> Визначте, чи правильне твердження.
+
+- [x] "зарозумілий" means "arrogant"
+   > Correct!
+
+- [x] "засмучений" means "upset"
+   > Correct!
+
+- [ ] "знервований" means "daily, daytime"
+   > Incorrect. "знервований" means "nervous"
+
+- [ ] "хвилюватися" means "to show (pf)"
+   > Incorrect. "хвилюватися" means "to worry"
+
+- [ ] "заздрісний" means "square"
+   > Incorrect. "заздрісний" means "jealous"
+
+- [x] "щедрий" means "generous"
+   > Correct!
+
+- [ ] "чесний" means "soup"
+   > Incorrect. "чесний" means "honest"
+
+- [ ] "самотній" means "to understand (perf)"
+   > Incorrect. "самотній" means "lonely"
+
+- [ ] "вдячний" means "umbrella"
+   > Incorrect. "вдячний" means "grateful"
+
+- [ ] "стривожений" means "buckwheat"
+   > Incorrect. "стривожений" means "anxious"
 
 ---
 

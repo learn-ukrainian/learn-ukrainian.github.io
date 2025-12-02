@@ -310,144 +310,210 @@ With про-: Ми **прожили** там два роки.
 
 ---
 
-# Activities
+---
 
-## match-up: Prefix Function
+---
 
-> Match prefix with its main function.
+---
+
+# Вправи
+
+## fill-in: Доповніть речення
+
+> Оберіть правильне слово.
+
+1. Я давно мріяв навчитися ___, і нарешті маю таку можливість.
+   > [!answer] віддати
+   > [!options] віддати | личити | займатися | збудувати
+
+2. Моя сестра каже, що їй подобається ___ у вільний час.
+   > [!answer] витратити
+   > [!options] вважати | витратити | записати | з'їсти
+
+3. Ця ___ належить моїй подрузі з Києва.
+   > [!answer] історія
+   > [!options] історія | подруга | светр | магазин
+
+4. Я давно мріяв навчитися ___, і нарешті маю таку можливість.
+   > [!answer] почитати
+   > [!options] поділитися | знайти | класти | почитати
+
+5. Я давно мріяв навчитися ___, і нарешті маю таку можливість.
+   > [!answer] подумати
+   > [!options] зустрічатися | писати | дивитися | подумати
+
+6. Я хочу купити цю ___, але вона занадто дорога.
+   > [!answer] помилка
+   > [!options] 16 | помилка | відправлення | початок
+
+## unjumble: Побудуйте речення
+
+> Розташуйте слова в правильному порядку.
+
+1. але / хорошу / помилка / не / шукали / знайшли / Вони / довго
+   > [!answer] Вони довго шукали хорошу помилка, але не знайшли.
+   > (mistake)
+
+2. Києва / подрузі / історія / Ця / належить / моїй / з
+   > [!answer] Ця історія належить моїй подрузі з Києва.
+   > (story, history)
+
+## match-up: Знайдіть пари
+
+> З'єднайте українські слова з англійськими.
 
 | Left | Right |
 |------|-------|
-| на- | accumulation, onto |
-| по- | brief action, result |
-| з-/с- | completion, together |
-| про- | through, fully |
-| роз- | apart, distribute |
-| від- | response, back |
-| ви- | result, mastery |
-| за- | beginning, close |
+| відповідь | answer |
+| навчити | to teach |
+| центр | center |
+| забути | to forget |
+| подякувати | to thank |
+| записати | to write down |
+| помилка | mistake |
+| рейс | flight |
+| сфотографувати | to photograph |
+| поснідати | to have breakfast |
+| пообідати | to have lunch |
+| подумати | to think over |
+| підписувати | to sign (impf) |
+| хмарний | cloudy |
 
-## quiz: Action Verb Prefixes
+## quiz: Перевірка значень
 
-> Choose the correct prefixed verb.
+> Оберіть правильну відповідь.
 
-1. "I wrote a letter" - Я ___ листа.
-   - [x] написав
-   - [ ] записав
-   - [ ] виписав
-   - [ ] переписав
-   > На- + писати = complete writing.
+1. Що означає "пообідати"?
+   - [x] to have lunch
+   - [ ] easy, light
+   - [ ] room
+   - [ ] to be considered
+   > "пообідати" means "to have lunch"
 
-2. "She saw him" - Вона його ___.
-   - [x] побачила
-   - [ ] бачила
-   - [ ] забачила
-   - [ ] вибачила
-   > По- + бачити = catch sight of.
-
-3. "We solved the problem" - Ми ___ проблему.
-   - [x] вирішили
-   - [ ] зарішили
-   - [ ] перерішили
-   - [ ] розрішили
-   > Ви- + рішити = solve (result).
-
-4. "He read the whole book" - Він ___ всю книгу.
-   - [x] прочитав
-   - [ ] зачитав
-   - [ ] начитав
-   - [ ] вичитав
-   > Про- = read through completely.
-
-5. "Tell me about it" - ___ мені про це.
-   - [x] Розкажи
-   - [ ] Закажи
-   - [ ] Покажи
-   - [ ] Накажи
-   > Роз- + казати = narrate/tell.
-
-6. "Close the door" - ___ двері.
-   - [x] Закрий
-   - [ ] Відкрий
-   - [ ] Розкрий
-   - [ ] Покрий
-   > За- + крити = close/cover.
-
-## group-sort: By Prefix Type
-
-> Sort verbs by their prefix.
-
-### на- (onto/accumulate)
-- написати
-- намалювати
-- налити
-- нарізати
-
-### з-/с- (complete/together)
-- зробити
-- з'їсти
-- зібрати
-- сфотографувати
-
-### про- (through)
-- прочитати
-- прослухати
-- прожити
-- проспати
-
-
-## fill-in: Fill in the Blank
-
-> Fill in the blanks with the correct word.
-
-
-
-## quiz: Meaning Check
-
-> Choose the correct answer.
-
-1. What does "подякувати" mean?
-   - [x] to thank
-   - [ ] to live (period)
-   - [ ] to have breakfast
-   - [ ] to write down
-   > "подякувати" means "to thank"
-
-2. What does "поснідати" mean?
-   - [ ] to live (period)
-   - [ ] to thank
-   - [ ] to write down
+2. Що означає "поснідати"?
    - [x] to have breakfast
+   - [ ] percent, interest
+   - [ ] my (masculine)
+   - [ ] language
    > "поснідати" means "to have breakfast"
 
-3. What does "записати" mean?
-   - [ ] to have breakfast
+3. Що означає "почитати"?
+   - [ ] it's worth
+   - [x] to read (a while)
+   - [ ] our (m)
+   - [ ] frost
+   > "почитати" means "to read (a while)"
+
+4. Що означає "намалювати"?
+   - [ ] thin
+   - [x] to draw/paint
+   - [ ] puddle
+   - [ ] feminine
+   > "намалювати" means "to draw/paint"
+
+5. Що означає "подумати"?
+   - [x] to think over
+   - [ ] profession
+   - [ ] arrival, coming
+   - [ ] Wednesday
+   > "подумати" means "to think over"
+
+6. Що означає "записати"?
+   - [ ] reluctantly
+   - [ ] small parcel
+   - [ ] otherwise
    - [x] to write down
-   - [ ] to live (period)
-   - [ ] to thank
    > "записати" means "to write down"
 
-4. What does "прожити" mean?
-   - [ ] to thank
+7. Що означає "розбити"?
+   - [ ] those
+   - [ ] forbidden
+   - [ ] week
+   - [x] to break
+   > "розбити" means "to break"
+
+8. Що означає "вирішити"?
+   - [ ] message
+   - [ ] to write (perf)
+   - [ ] to open
+   - [x] to decide, solve
+   > "вирішити" means "to decide, solve"
+
+9. Що означає "нарізати"?
+   - [x] to slice
+   - [ ] to ask, request
+   - [ ] to have lunch
+   - [ ] nothing
+   > "нарізати" means "to slice"
+
+10. Що означає "подякувати"?
+   - [ ] to become
+   - [x] to thank
+   - [ ] to see
+   - [ ] to lack
+   > "подякувати" means "to thank"
+
+11. Що означає "прожити"?
+   - [ ] to them
    - [x] to live (period)
-   - [ ] to write down
-   - [ ] to have breakfast
+   - [ ] musician
+   - [ ] to pay
    > "прожити" means "to live (period)"
 
-5. What does "спитати" mean?
-   - [ ] to thank
-   - [x] to ask
-   - [ ] to have breakfast
-   - [ ] to write down
-   > "спитати" means "to ask"
+12. Що означає "віддати"?
+   - [ ] to hear
+   - [x] to give back
+   - [ ] answer
+   - [ ] to you
+   > "віддати" means "to give back"
 
-6. What does "відпустити" mean?
-   - [ ] to write down
-   - [x] to release, let go
-   - [ ] to have breakfast
-   - [ ] to thank
-   > "відпустити" means "to release, let go"
+13. Що означає "налити"?
+   - [ ] statement
+   - [ ] to show (impf)
+   - [x] to pour
+   - [ ] yes
+   > "налити" means "to pour"
 
+14. Що означає "сфотографувати"?
+   - [ ] done, made
+   - [ ] to thank
+   - [ ] to drive by
+   - [x] to photograph
+   > "сфотографувати" means "to photograph"
+
+## true-false: Правда чи ні?
+
+> Визначте, чи правильне твердження.
+
+- [x] "розказати" means "to tell, narrate"
+   > Correct!
+
+- [ ] "замовити" means "hot (adv)"
+   > Incorrect. "замовити" means "to order"
+
+- [x] "зварити" means "to cook"
+   > Correct!
+
+- [ ] "роздати" means "dumplings"
+   > Incorrect. "роздати" means "to distribute"
+
+- [x] "розбити" means "to break"
+   > Correct!
+
+- [ ] "вирішити" means "office"
+   > Incorrect. "вирішити" means "to decide, solve"
+
+- [ ] "намалювати" means "to drive around"
+   > Incorrect. "намалювати" means "to draw/paint"
+
+- [x] "почитати" means "to read (a while)"
+   > Correct!
+
+- [ ] "сфотографувати" means "color"
+   > Incorrect. "сфотографувати" means "to photograph"
+
+- [x] "навчити" means "to teach"
+   > Correct!
 
 ---
 

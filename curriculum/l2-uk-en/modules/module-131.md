@@ -221,19 +221,184 @@ Describe trends using vocabulary:
    - [ ] suddenly
    > Gradual, slow change.
 
-## fill-in: Economic Report
 
-> Опишіть економічні зміни.
+## match-up: Vocabulary Match
 
-> За останні роки економіка України активно (1)___ (develop). ВВП (2)___ (increase) на 15% порівняно з попереднім періодом. Безробіття (3)___ (decrease) значно. Однак інфляція (4)___ (remain) високою. Експорт (5)___ (grow) удвічі. Загалом ситуація поступово (6)___ (improve).
+> Match each Ukrainian word with its English translation.
 
-**Answers:**
-1. розвивається / розвивалася
-2. зріс / збільшився
-3. зменшилося / знизилося
-4. залишається / залишилася
-5. зріс / збільшився
-6. покращується
+| Left | Right |
+|------|-------|
+| покращуватися | to improve |
+| знижуватися | to decline |
+| зростання | growth |
+| різко | sharply |
+| підвищуватися | to rise |
+| удвічі | twice |
+| зменшення | decrease |
+| зменшуватися | to decrease |
+| розвиватися | to develop |
+| порівняно з | compared to |
+| погіршуватися | to worsen |
+| поступово | gradually |
+
+
+## fill-in: Fill in the Blank
+
+> Choose the correct word to complete each sentence.
+
+1. за ___ роки
+   > [!answer] останні
+
+
+
+## quiz: Meaning Check
+
+> Choose the correct answer.
+
+1. What does "поступово" mean?
+   - [ ] to develop
+   - [x] gradually
+   - [ ] decrease
+   - [ ] to grow, increase
+   > "поступово" means "gradually"
+
+2. What does "зменшення" mean?
+   - [x] decrease
+   - [ ] to grow, increase
+   - [ ] gradually
+   - [ ] to develop
+   > "зменшення" means "decrease"
+
+3. What does "розвиватися" mean?
+   - [x] to develop
+   - [ ] to grow, increase
+   - [ ] decrease
+   - [ ] gradually
+   > "розвиватися" means "to develop"
+
+4. What does "зростати" mean?
+   - [ ] gradually
+   - [x] to grow, increase
+   - [ ] to develop
+   - [ ] decrease
+   > "зростати" means "to grow, increase"
+
+5. What does "удвічі" mean?
+   - [ ] decrease
+   - [ ] to develop
+   - [ ] gradually
+   - [x] twice
+   > "удвічі" means "twice"
+
+6. What does "порівняно з" mean?
+   - [ ] decrease
+   - [ ] to develop
+   - [ ] gradually
+   - [x] compared to
+   > "порівняно з" means "compared to"
+
+7. What does "різко" mean?
+   - [x] sharply
+   - [ ] to develop
+   - [ ] gradually
+   - [ ] decrease
+   > "різко" means "sharply"
+
+8. What does "зменшуватися" mean?
+   - [x] to decrease
+   - [ ] gradually
+   - [ ] decrease
+   - [ ] to develop
+   > "зменшуватися" means "to decrease"
+
+9. What does "погіршуватися" mean?
+   - [ ] to develop
+   - [ ] gradually
+   - [ ] decrease
+   - [x] to worsen
+   > "погіршуватися" means "to worsen"
+
+10. What does "покращуватися" mean?
+   - [ ] decrease
+   - [ ] to develop
+   - [x] to improve
+   - [ ] gradually
+   > "покращуватися" means "to improve"
+
+11. What does "зростання" mean?
+   - [ ] to develop
+   - [x] growth
+   - [ ] gradually
+   - [ ] decrease
+   > "зростання" means "growth"
+
+12. What does "змінюватися" mean?
+   - [ ] decrease
+   - [x] to change
+   - [ ] to develop
+   - [ ] gradually
+   > "змінюватися" means "to change"
+
+13. What does "підвищуватися" mean?
+   - [ ] gradually
+   - [x] to rise
+   - [ ] decrease
+   - [ ] to develop
+   > "підвищуватися" means "to rise"
+
+14. What does "знижуватися" mean?
+   - [ ] gradually
+   - [ ] to develop
+   - [x] to decline
+   - [ ] decrease
+   > "знижуватися" means "to decline"
+
+
+
+## unjumble: Word Order
+
+> Drag the words into the correct order to form a sentence.
+
+1. покращуватися / / / покращитися
+   > [!answer] покращуватися / покращитися
+   > (to improve)
+
+2. погіршитися / / / погіршуватися
+   > [!answer] погіршуватися / погіршитися
+   > (to worsen)
+
+3. розвинутися / розвиватися / /
+   > [!answer] розвиватися / розвинутися
+   > (to develop)
+
+4. змінюватися / / / змінитися
+   > [!answer] змінюватися / змінитися
+   > (to change)
+
+5. перетворюватися / перетворитися / /
+   > [!answer] перетворюватися / перетворитися
+   > (to transform)
+
+6. перейти / переходити / /
+   > [!answer] переходити / перейти
+   > (to transition)
+
+7. відновлюватися / / / відновитися
+   > [!answer] відновлюватися / відновитися
+   > (to recover)
+
+8.  / на / відсотків
+   > [!answer] на ... відсотків
+   > (by ... percent)
+
+9. останні / за / роки
+   > [!answer] за останні роки
+   > (in recent years)
+
+10. в / з / рік / року
+   > [!answer] з року в рік
+   > (year after year)
+
 
 ---
 

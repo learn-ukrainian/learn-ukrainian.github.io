@@ -292,139 +292,241 @@ Example:
 
 ---
 
+---
+
+---
+
 # Activities
 
-## match-up: Case Functions
+## fill-in: Complete the Sentences
 
-> Match case with primary function.
+> Choose the correct word to complete each sentence.
+
+1. Я хочу навчитися ___.
+   > [!answer] носити
+   > [!options] носити | вмиватися | вітатися | подарувати
+
+2. Вони планують ___ завтра.
+   > [!answer] повернути
+   > [!options] показувати | повернути | будеш | почекати
+
+3. Це ___ коштує сто гривень.
+   > [!answer] м'ясо
+   > [!options] початок | м'ясо | ваза | документ
+
+4. Цей будинок дуже ___.
+   > [!answer] гарний
+   > [!options] гарний | українська | холодний | старий
+
+5. Цей будинок дуже ___.
+   > [!answer] чорний
+   > [!options] легкий | чорний | щасливий | білий
+
+6. Де ваша велика ___?
+   > [!answer] машина
+   > [!options] менеджер | сніг | машина | спідниця
+
+7. Де ваш великий ___?
+   > [!answer] 15
+   > [!options] ціна | чайові | 15 | футбол
+
+8. Чи ти вмієш добре ___?
+   > [!answer] будуть
+   > [!options] радити | голитися | було | будуть
+
+9. Ваша ідея здається ___.
+   > [!answer] потрібний
+   > [!options] потрібний | чорний | одружений | розумний
+
+10. Мій брат має хороший ___.
+   > [!answer] університет
+   > [!options] курка | університет | буква | кафе
+
+11. Мій брат має хороший ___.
+   > [!answer] досвід
+   > [!options] парк | п'ятниця | досвід | салат
+
+12. Я хочу купити цей ___.
+   > [!answer] магазин
+   > [!options] мороз | магазин | кафе | допомога
+
+## unjumble: Build the Sentence
+
+> Arrange the words in the correct order.
+
+1. хороший / має / брат / магазин / Мій
+   > [!answer] Мій брат має хороший магазин.
+   > (store)
+
+2. м'ясо / брат / хороше / має / Мій
+   > [!answer] Мій брат має хороше м'ясо.
+   > (meat)
+
+3. коштує / Цей / сто / 15 / гривень
+   > [!answer] Цей 15 коштує сто гривень.
+   > (City: метро, вулиця, праворуч, ліворуч)
+
+4. сто / коштує / Ця / гривень / машина
+   > [!answer] Ця машина коштує сто гривень.
+   > (car)
+
+5. Цей / університет / гривень / коштує / сто
+   > [!answer] Цей університет коштує сто гривень.
+   > (university)
+
+6. гривень / сто / коштує / досвід / Цей
+   > [!answer] Цей досвід коштує сто гривень.
+   > (experience)
+
+## match-up: Match the Pairs
+
+> Match Ukrainian words to their English meanings.
 
 | Left | Right |
 |------|-------|
-| Nominative | subject |
-| Genitive | possession, "of" |
-| Dative | to/for whom |
-| Accusative | direct object |
-| Instrumental | with/by means |
-| Locative | location |
-| Vocative | calling someone |
+| сумно | sad |
+| утрьох | the three (together) |
+| один | one (m) |
+| м'ясо | meat |
+| подарувати | to gift (pf) |
+| потрібний | needed |
+| гарний | beautiful, nice |
+| зуби | teeth |
+| алфавіт | alphabet |
+| раніше | earlier, before, used to |
+| університет | university |
+| повернути | to turn |
 
-## quiz: A2.1 Comprehensive Review
+## quiz: Meaning Check
 
-> Test your knowledge from Modules 31-39.
+> Choose the correct answer.
 
-1. "I help my brother" - Я допомагаю ___.
-   - [x] братові
-   - [ ] брата
-   - [ ] братом
-   - [ ] брат
-   > Допомагати + dative.
+1. What does "університет" mean?
+   - [ ] three
+   - [ ] guest
+   - [ ] one (m)
+   - [x] university
+   > "університет" means "university"
 
-2. "She works as a doctor" - Вона працює ___.
-   - [x] лікаркою
-   - [ ] лікарка
-   - [ ] лікарці
-   - [ ] лікарку
-   > Працювати + instrumental.
+2. What does "раніше" mean?
+   - [ ] seat, place
+   - [x] earlier, before, used to
+   - [ ] to show (impf)
+   - [ ] kilogram
+   > "раніше" means "earlier, before, used to"
 
-3. "I'm going by bus" - Я їду ___.
-   - [x] автобусом
-   - [ ] автобус
-   - [ ] на автобусі
-   - [ ] з автобусом
-   > Transport uses instrumental without preposition.
+3. What does "гарний" mean?
+   - [ ] to give (pf)
+   - [ ] entrepreneur
+   - [ ] to him/it
+   - [x] beautiful, nice
+   > "гарний" means "beautiful, nice"
 
-4. "The book is on the table" - Книга на ___.
-   - [x] столі
-   - [ ] стіл
-   - [ ] столу
-   - [ ] столом
-   > Location (де?) = locative.
+4. What does "магазин" mean?
+   - [ ] fitting room
+   - [x] store
+   - [ ] Possessives: мій, твій, його, її, наш, ваш
+   - [ ] bag
+   > "магазин" means "store"
 
-5. "I'm going to the park" - Я йду в ___.
-   - [x] парк
-   - [ ] парку
-   - [ ] парком
-   - [ ] парці
-   > Motion (куди?) = accusative.
+5. What does "носити" mean?
+   - [x] to carry
+   - [ ] I will be
+   - [ ] drawing, picture
+   - [ ] answer
+   > "носити" means "to carry"
 
-6. "Send a letter to mom" - Надіслати листа ___.
-   - [x] мамі
-   - [ ] мама
-   - [ ] маму
-   - [ ] мамою
-   > Recipient = dative.
+6. What does "м'ясо" mean?
+   - [x] meat
+   - [ ] where to (direction)
+   - [ ] summer
+   - [ ] were
+   > "м'ясо" means "meat"
 
-7. "Exchange dollars for hryvnias" - Обміняти долари ___ гривні.
-   - [x] на
-   - [ ] з
-   - [ ] до
-   - [ ] у
-   > Обміняти X на Y.
+7. What does "потрібний" mean?
+   - [ ] lecture
+   - [ ] there
+   - [x] needed
+   - [ ] to meet
+   > "потрібний" means "needed"
 
-8. "I need help" - ___ потрібна допомога.
-   - [x] Мені
-   - [ ] Я
-   - [ ] Мене
-   - [ ] Мною
-   > Impersonal + dative.
+8. What does "будуть" mean?
+   - [ ] letter (of alphabet)
+   - [ ] which/what kind (n)
+   - [x] they will be
+   - [ ] warm (adv)
+   > "будуть" means "they will be"
 
-## group-sort: Dative vs Instrumental Verbs
+9. What does "один" mean?
+   - [ ] dish, course
+   - [x] one (m)
+   - [ ] to send
+   - [ ] Ukrainian (male)
+   > "один" means "one (m)"
 
-> Sort the verbs by required case.
+10. What does "два" mean?
+   - [ ] seat, place
+   - [x] two (m/n)
+   - [ ] to undress
+   - [ ] Saturday
+   > "два" means "two (m/n)"
 
-### Dative Verbs
-- допомагати
-- дякувати
-- відповідати
-- радити
-- заважати
+11. What does "утрьох" mean?
+   - [x] the three (together)
+   - [ ] to give
+   - [ ] hour
+   - [ ] which/what kind (m)
+   > "утрьох" means "the three (together)"
 
-### Instrumental Verbs/Patterns
-- працювати (profession)
-- їхати (transport)
-- писати (tool)
-- цікавитися
-- займатися
+12. What does "сумно" mean?
+   - [x] sad
+   - [ ] seller (m)
+   - [ ] tasty
+   - [ ] to send, dispatch
+   > "сумно" means "sad"
 
+## true-false: True or False?
 
-## fill-in: Fill in the Blank
+> Determine if each statement is true or false.
 
-> Fill in the blanks with the correct word.
+- [ ] "один" means "bill, check"
+   > Incorrect. "один" means "one (m)"
 
-1. у ___ (loc)
-   > [!answer] парку
+- [x] "будуть" means "they will be"
+   > Correct!
 
-2. на ___ (loc)
-   > [!answer] столі
+- [ ] "м'ясо" means "back"
+   > Incorrect. "м'ясо" means "meat"
 
-3. під ___ (instr)
-   > [!answer] столом
+- [ ] "раніше" means "frost"
+   > Incorrect. "раніше" means "earlier, before, used to"
 
-4. за ___ (instr)
-   > [!answer] будинком
+- [ ] "чорний" means "to take"
+   > Incorrect. "чорний" means "black"
 
+- [x] "гарячий" means "hot"
+   > Correct!
 
+- [ ] "носити" means "cold"
+   > Incorrect. "носити" means "to carry"
 
-## unjumble: Word Order
+- [x] "два" means "two (m/n)"
+   > Correct!
 
-> Put the words in the correct order to form a sentence.
+- [x] "університет" means "university"
+   > Correct!
 
-1. (loc) / у / парку
-   > [!answer] у парку (loc)
-   > (у парк (acc))
+- [x] "потрібний" means "needed"
+   > Correct!
 
-2. столі / на / (loc)
-   > [!answer] на столі (loc)
-   > (на стіл (acc))
+## group-sort: Sort by Gender
 
-3. столом / під / (instr)
-   > [!answer] під столом (instr)
-   > (під стіл (acc))
+> Sort the nouns into gender categories.
 
-4. будинком / за / (instr)
-   > [!answer] за будинком (instr)
-   > (за будинок (acc))
-
+### Masculine
+- магазин
+- досвід
+- університет
 
 ---
 

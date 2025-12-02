@@ -253,6 +253,126 @@ Talk about:
 | журнал | радіо | блог |
 | стаття | передача | соціальна мережа |
 
+
+## fill-in: Fill in the Blank
+
+> Choose the correct word to complete each sentence.
+
+
+
+## quiz: Meaning Check
+
+> Choose the correct answer.
+
+1. What does "передача" mean?
+   - [x] program
+   - [ ] headline
+   - [ ] article
+   - [ ] social network
+   > "передача" means "program"
+
+2. What does "стаття" mean?
+   - [ ] headline
+   - [x] article
+   - [ ] social network
+   - [ ] program
+   > "стаття" means "article"
+
+3. What does "соціальна мережа" mean?
+   - [ ] headline
+   - [x] social network
+   - [ ] article
+   - [ ] program
+   > "соціальна мережа" means "social network"
+
+4. What does "заголовок" mean?
+   - [ ] social network
+   - [ ] article
+   - [ ] program
+   - [x] headline
+   > "заголовок" means "headline"
+
+5. What does "редактор" mean?
+   - [ ] article
+   - [ ] program
+   - [x] editor
+   - [ ] social network
+   > "редактор" means "editor"
+
+6. What does "телебачення" mean?
+   - [x] television
+   - [ ] program
+   - [ ] social network
+   - [ ] article
+   > "телебачення" means "television"
+
+7. What does "вебсайт" mean?
+   - [ ] social network
+   - [ ] article
+   - [ ] program
+   - [x] website
+   > "вебсайт" means "website"
+
+8. What does "новини" mean?
+   - [ ] article
+   - [x] news
+   - [ ] social network
+   - [ ] program
+   > "новини" means "news"
+
+9. What does "інтернет" mean?
+   - [x] internet
+   - [ ] program
+   - [ ] social network
+   - [ ] article
+   > "інтернет" means "internet"
+
+10. What does "блог" mean?
+   - [ ] program
+   - [ ] article
+   - [ ] social network
+   - [x] blog
+   > "блог" means "blog"
+
+
+
+## unjumble: Word Order
+
+> Drag the words into the correct order to form a sentence.
+
+1. прочитати / читати / /
+   > [!answer] читати / прочитати
+   > (to read)
+
+2. / / дивитися / подивитися
+   > [!answer] дивитися / подивитися
+   > (to watch)
+
+3. / / послухати / слухати
+   > [!answer] слухати / послухати
+   > (to listen)
+
+4. / / опублікувати / публікувати
+   > [!answer] публікувати / опублікувати
+   > (to publish)
+
+5. повідомити / / / повідомляти
+   > [!answer] повідомляти / повідомити
+   > (to report, inform)
+
+6. писати / / / написати
+   > [!answer] писати / написати
+   > (to write)
+
+7. коментувати / / / прокоментувати
+   > [!answer] коментувати / прокоментувати
+   > (to comment)
+
+8. / / поширити / поширювати
+   > [!answer] поширювати / поширити
+   > (to spread, share)
+
+
 ---
 
 # Vocabulary

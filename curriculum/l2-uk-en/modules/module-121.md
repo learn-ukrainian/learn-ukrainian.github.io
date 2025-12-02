@@ -257,22 +257,142 @@ Combine these pairs using adverbial participles:
    - [ ] повертаючись
    > Past stem + -вшись.
 
-## fill-in: Complete the Story
 
-> Мій ранок
->
-> (1)___ (прокинутися) о сьомій, я йду в душ.
-> (2)___ (приймати) душ, я думаю про день.
-> (3)___ (поснідати), я виходжу з дому.
-> (4)___ (йти) на роботу, я слухаю подкаст.
-> (5)___ (прийти) на роботу, я перевіряю пошту.
+## match-up: Vocabulary Match
 
-**Answers:**
-1. Прокинувшись
-2. Приймаючи
-3. Поснідавши
-4. Йдучи/Ідучи
-5. Прийшовши
+> Match each Ukrainian word with its English translation.
+
+| Left | Right |
+|------|-------|
+| дієприслівник | adverbial participle |
+| написавши | having written |
+| прийшовши | having come |
+| сказавши | having said |
+| читаючи | while reading |
+| повернувшись | having returned |
+| почувши | having heard |
+| прочитавши | having read |
+| пишучи | while writing |
+| слухаючи | while listening |
+| дивлячись | while watching |
+| йдучи | while going |
+
+
+## fill-in: Fill in the Blank
+
+> Choose the correct word to complete each sentence.
+
+
+
+## quiz: Meaning Check
+
+> Choose the correct answer.
+
+1. What does "йдучи" mean?
+   - [ ] having come
+   - [x] while going
+   - [ ] having heard
+   - [ ] having returned
+   > "йдучи" means "while going"
+
+2. What does "прийшовши" mean?
+   - [ ] having heard
+   - [x] having come
+   - [ ] while going
+   - [ ] having returned
+   > "прийшовши" means "having come"
+
+3. What does "повернувшись" mean?
+   - [ ] having come
+   - [ ] having heard
+   - [ ] while going
+   - [x] having returned
+   > "повернувшись" means "having returned"
+
+4. What does "почувши" mean?
+   - [ ] while going
+   - [x] having heard
+   - [ ] having come
+   - [ ] having returned
+   > "почувши" means "having heard"
+
+5. What does "слухаючи" mean?
+   - [ ] while going
+   - [x] while listening
+   - [ ] having returned
+   - [ ] having come
+   > "слухаючи" means "while listening"
+
+6. What does "сказавши" mean?
+   - [ ] while going
+   - [ ] having returned
+   - [ ] having come
+   - [x] having said
+   > "сказавши" means "having said"
+
+7. What does "говорячи" mean?
+   - [ ] having returned
+   - [ ] while going
+   - [x] while speaking
+   - [ ] having come
+   > "говорячи" means "while speaking"
+
+8. What does "написавши" mean?
+   - [ ] having come
+   - [ ] having returned
+   - [ ] while going
+   - [x] having written
+   > "написавши" means "having written"
+
+9. What does "дізнавшись" mean?
+   - [ ] having returned
+   - [ ] while going
+   - [x] having learned
+   - [ ] having come
+   > "дізнавшись" means "having learned"
+
+10. What does "пишучи" mean?
+   - [ ] having returned
+   - [x] while writing
+   - [ ] having come
+   - [ ] while going
+   > "пишучи" means "while writing"
+
+11. What does "прочитавши" mean?
+   - [ ] while going
+   - [x] having read
+   - [ ] having returned
+   - [ ] having come
+   > "прочитавши" means "having read"
+
+12. What does "побачивши" mean?
+   - [ ] having returned
+   - [x] having seen
+   - [ ] while going
+   - [ ] having come
+   > "побачивши" means "having seen"
+
+13. What does "читаючи" mean?
+   - [x] while reading
+   - [ ] while going
+   - [ ] having returned
+   - [ ] having come
+   > "читаючи" means "while reading"
+
+14. What does "дієприслівник" mean?
+   - [ ] having come
+   - [x] adverbial participle
+   - [ ] while going
+   - [ ] having returned
+   > "дієприслівник" means "adverbial participle"
+
+15. What does "дивлячись" mean?
+   - [x] while watching
+   - [ ] while going
+   - [ ] having returned
+   - [ ] having come
+   > "дивлячись" means "while watching"
+
 
 ---
 

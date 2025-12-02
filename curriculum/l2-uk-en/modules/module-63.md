@@ -274,167 +274,290 @@ Use -ння/-ття nouns:
 
 ---
 
-# Activities
+---
 
-## match-up: Suffix → Function
+---
 
-> Match suffix with its function.
+---
+
+# Вправи
+
+## fill-in: Доповніть речення
+
+> Оберіть правильне слово.
+
+1. Я хочу купити це ___, але воно занадто дороге.
+   > [!answer] господарство
+   > [!options] господарство | банк | чайові | душ
+
+2. Цей ___ належить моєму другові з Києва.
+   > [!answer] глядач
+   > [!options] літо | ручка | глядач | читач
+
+3. Вони довго шукали хороше ___, але не знайшли.
+   > [!answer] читання
+   > [!options] квиток | хліб | батько | читання
+
+4. Вони довго шукали хороше ___, але не знайшли.
+   > [!answer] писання
+   > [!options] ліки | писання | відпустка | інженер
+
+5. Я хочу купити це ___, але воно занадто дороге.
+   > [!answer] братство
+   > [!options] умова | братство | ручка | ліжко
+
+6. Цей ___ належить моєму другові з Києва.
+   > [!answer] мешканець
+   > [!options] перехрестя | мешканець | очі | сіль
+
+7. Я хочу купити цей ___, але він занадто дорогий.
+   > [!answer] слухач
+   > [!options] магазин | партнер | слухач | дощ
+
+## unjumble: Побудуйте речення
+
+> Розташуйте слова в правильному порядку.
+
+1. дороге / буття / воно / хочу / занадто / купити / Я / це / але
+   > [!answer] Я хочу купити це буття, але воно занадто дороге.
+   > (being, existence)
+
+2. не / довго / Вони / хороший / шукали / але / слухач / знайшли
+   > [!answer] Вони довго шукали хороший слухач, але не знайшли.
+   > (listener)
+
+3. купити / цю / дорога / але / Я / новість / хочу / вона / занадто
+   > [!answer] Я хочу купити цю новість, але вона занадто дорога.
+   > (news)
+
+4. друг / сказав / записник / Мій / зручний / його / дуже / що
+   > [!answer] Мій друг сказав, що його записник дуже зручний.
+   > (notebook)
+
+5. не / шукали / але / молодість / Вони / хорошу / знайшли / довго
+   > [!answer] Вони довго шукали хорошу молодість, але не знайшли.
+   > (youth)
+
+6. Вони / довго / читач / не / але / шукали / хороший / знайшли
+   > [!answer] Вони довго шукали хороший читач, але не знайшли.
+   > (reader)
+
+7. другові / моєму / з / Києва / належить / Це / слухання
+   > [!answer] Це слухання належить моєму другові з Києва.
+   > (listening)
+
+8. це / але / занадто / воно / братство / Я / хочу / дороге / купити
+   > [!answer] Я хочу купити це братство, але воно занадто дороге.
+   > (brotherhood)
+
+9. не / Вони / довго / але / шукали / хороший / будинок / знайшли
+   > [!answer] Вони довго шукали хороший будинок, але не знайшли.
+   > (building, house)
+
+10. занадто / він / мешканець / цей / хочу / але / купити / Я / дорогий
+   > [!answer] Я хочу купити цей мешканець, але він занадто дорогий.
+   > (resident)
+
+11. хорошу / шукали / довго / знайшли / не / вільність / Вони / але
+   > [!answer] Вони довго шукали хорошу вільність, але не знайшли.
+   > (freedom)
+
+12. людство / довго / Вони / шукали / але / не / знайшли / хороше
+   > [!answer] Вони довго шукали хороше людство, але не знайшли.
+   > (humanity)
+
+13. що / навчання / сказали / дуже / це / зручне / Вони
+   > [!answer] Вони сказали, що це навчання дуже зручне.
+   > (learning, education)
+
+14. купити / хочу / це / Я / дороге / читання / але / воно / занадто
+   > [!answer] Я хочу купити це читання, але воно занадто дороге.
+   > (reading)
+
+## match-up: Знайдіть пари
+
+> З'єднайте українські слова з англійськими.
 
 | Left | Right |
 |------|-------|
-| -ння/-ття | action, process |
-| -ість | abstract quality |
-| -ство/-цтво | state, realm |
-| -ач/-ник | person (agent) |
-| -ок/-ець | result, object |
+| людство | humanity |
+| мистецтво | art |
+| надіслати | to send |
+| нам | to us |
+| знання | knowledge |
+| питання | question |
+| глядач | viewer |
+| виробництво | production |
+| валіза | suitcase |
+| життя | life |
+| будинок | building, house |
+| іноді | sometimes |
+| новість | news |
+| курс | rate |
 
-## quiz: Noun Suffixes
+## quiz: Перевірка значень
 
-> Choose the correct derived noun.
+> Оберіть правильну відповідь.
 
-1. "Reading" (from читати) - ___
-   - [x] читання
-   - [ ] читач
-   - [ ] читальня
-   - [ ] читок
-   > -ння forms verbal noun.
+1. Що означає "новість"?
+   - [x] news
+   - [ ] to the left
+   - [ ] five
+   - [ ] (with) you
+   > "новість" means "news"
 
-2. "Possibility" (from можливий) - ___
-   - [x] можливість
-   - [ ] можливництво
-   - [ ] можливач
-   - [ ] можливка
-   > -ість forms abstract noun.
+2. Що означає "відповідальність"?
+   - [ ] to drink
+   - [x] responsibility
+   - [ ] partner
+   - [ ] to succeed
+   > "відповідальність" means "responsibility"
 
-3. "Writer" (person who writes) - ___
-   - [x] письменник
-   - [ ] писання
-   - [ ] писок
-   - [ ] писовість
-   > -ник forms agent noun.
+3. Що означає "господарство"?
+   - [ ] train
+   - [x] economy, farm
+   - [ ] to wash (face)
+   - [ ] rightness
+   > "господарство" means "economy, farm"
 
-4. "Beginning" (from почати) - ___
-   - [x] початок
-   - [ ] почання
-   - [ ] початель
-   - [ ] почист
-   > -ок forms result noun.
+4. Що означає "братство"?
+   - [ ] vase
+   - [ ] to drive by
+   - [x] brotherhood
+   - [ ] no kind of
+   > "братство" means "brotherhood"
 
-5. "Art" (state/realm) - ___
-   - [x] мистецтво
-   - [ ] мистець
-   - [ ] мистість
-   - [ ] мистення
-   > -цтво forms realm/state noun.
+5. Що означає "молодець"?
+   - [ ] move (relocation)
+   - [x] well done! fine fellow
+   - [ ] shelf
+   - [ ] worker
+   > "молодець" means "well done! fine fellow"
 
-6. "Joy" (from радісний) - ___
-   - [x] радість
-   - [ ] радіння
-   - [ ] радач
-   - [ ] радок
-   > -ість forms abstract quality.
-
-## group-sort: By Suffix Type
-
-> Sort nouns by their suffix.
-
-### -ння/-ття (actions)
-- читання
-- писання
-- життя
-- знання
-
-### -ість (qualities)
-- можливість
-- радість
-- відповідальність
-- важливість
-
-### -ач/-ник (people)
-- читач
-- письменник
-- працівник
-- слухач
-
-
-## true-false: True or False?
-
-> Determine if each statement is true or false.
-
-- [x] "читання" is neuter.
-   > Correct! читання is neuter.
-
-- [x] "писання" is neuter.
-   > Correct! писання is neuter.
-
-- [x] "навчання" is neuter.
-   > Correct! навчання is neuter.
-
-- [x] "слухання" is neuter.
-   > Correct! слухання is neuter.
-
-- [ ] "говоріння" is masculine.
-   > Incorrect. говоріння is neuter.
-
-- [ ] "життя" is masculine.
-   > Incorrect. життя is neuter.
-
-
-## fill-in: Fill in the Blank
-
-> Fill in the blanks with the correct word.
-
-1. вільність ___ воля
-   > [!answer] /
-
-
-
-## quiz: Meaning Check
-
-> Choose the correct answer.
-
-1. What does "читання" mean?
-   - [ ] learning, education
-   - [ ] reader
+6. Що означає "читання"?
+   - [ ] interesting
+   - [ ] was (n)
    - [x] reading
-   - [ ] knowledge
+   - [ ] to spend
    > "читання" means "reading"
 
-2. What does "знання" mean?
-   - [ ] reader
-   - [x] knowledge
-   - [ ] reading
-   - [ ] learning, education
-   > "знання" means "knowledge"
+7. Що означає "виробництво"?
+   - [ ] to build
+   - [ ] student
+   - [ ] to drive around
+   - [x] production
+   > "виробництво" means "production"
 
-3. What does "читач" mean?
-   - [ ] learning, education
-   - [ ] reading
-   - [ ] knowledge
+8. Що означає "завдання"?
+   - [ ] to advise
+   - [ ] fastest
+   - [x] task, assignment
+   - [ ] to know
+   > "завдання" means "task, assignment"
+
+9. Що означає "читач"?
+   - [ ] four
+   - [ ] better
    - [x] reader
+   - [ ] to hurt, ache
    > "читач" means "reader"
 
-4. What does "навчання" mean?
-   - [x] learning, education
-   - [ ] reading
-   - [ ] knowledge
-   - [ ] reader
-   > "навчання" means "learning, education"
+10. Що означає "глядач"?
+   - [ ] will be
+   - [ ] your (n, informal)
+   - [ ] rightness
+   - [x] viewer
+   > "глядач" means "viewer"
 
-5. What does "питання" mean?
-   - [ ] reading
-   - [x] question
-   - [ ] reader
-   - [ ] knowledge
-   > "питання" means "question"
+11. Що означає "буття"?
+   - [ ] to understand
+   - [x] being, existence
+   - [ ] to agree, arrange
+   - [ ] puddle
+   > "буття" means "being, existence"
 
-6. What does "мистецтво" mean?
-   - [ ] knowledge
+12. Що означає "говоріння"?
+   - [ ] please/you're welcome
+   - [ ] rainbow
+   - [x] speaking
+   - [ ] cash register
+   > "говоріння" means "speaking"
+
+13. Що означає "мистецтво"?
+   - [ ] Wednesday
    - [x] art
-   - [ ] reading
-   - [ ] reader
+   - [ ] corner
+   - [ ] vacancy, job opening
    > "мистецтво" means "art"
 
+14. Що означає "писання"?
+   - [ ] pity, shame
+   - [ ] package
+   - [ ] borscht
+   - [x] writing
+   > "писання" means "writing"
+
+## true-false: Правда чи ні?
+
+> Визначте, чи правильне твердження.
+
+- [ ] "вільність" means "was (f)"
+   > Incorrect. "вільність" means "freedom"
+
+- [ ] "навчання" means "seller (f)"
+   > Incorrect. "навчання" means "learning, education"
+
+- [ ] "багатство" means "taxi"
+   > Incorrect. "багатство" means "wealth"
+
+- [x] "говоріння" means "speaking"
+   > Correct!
+
+- [x] "слухач" means "listener"
+   > Correct!
+
+- [x] "мешканець" means "resident"
+   > Correct!
+
+- [ ] "робітник" means "to drop by (habitually)"
+   > Incorrect. "робітник" means "worker"
+
+- [x] "старість" means "old age"
+   > Correct!
+
+- [ ] "завдання" means "to give (pf)"
+   > Incorrect. "завдання" means "task, assignment"
+
+- [x] "молодець" means "well done! fine fellow"
+   > Correct!
+
+## group-sort: Сортування за родом
+
+> Розподіліть слова за родами.
+
+### Чоловічий рід
+- записник
+- слухач
+- молодець
+- глядач
+- будинок
+- робітник
+
+### Жіночий рід
+- вільність
+- молодість
+- новість
+- відповідальність
+- особливість
+- старість
+
+### Середній рід
+- людство
+- багатство
+- питання
+- читання
+- господарство
+- виробництво
 
 ---
 

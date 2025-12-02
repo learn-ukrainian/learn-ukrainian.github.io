@@ -264,6 +264,144 @@ Discuss using vocabulary from this module:
 | викиди CO₂ | emissions |
 | відходи | waste |
 
+
+## fill-in: Fill in the Blank
+
+> Choose the correct word to complete each sentence.
+
+1. перейти на ___ енергію
+   > [!answer] зелену
+
+
+
+## quiz: Meaning Check
+
+> Choose the correct answer.
+
+1. What does "викиди" mean?
+   - [ ] energy
+   - [ ] sustainability
+   - [x] emissions
+   - [ ] protection
+   > "викиди" means "emissions"
+
+2. What does "захист" mean?
+   - [ ] emissions
+   - [ ] energy
+   - [x] protection
+   - [ ] sustainability
+   > "захист" means "protection"
+
+3. What does "енергія" mean?
+   - [ ] emissions
+   - [ ] protection
+   - [x] energy
+   - [ ] sustainability
+   > "енергія" means "energy"
+
+4. What does "стійкість" mean?
+   - [ ] emissions
+   - [x] sustainability
+   - [ ] energy
+   - [ ] protection
+   > "стійкість" means "sustainability"
+
+5. What does "посуха" mean?
+   - [ ] emissions
+   - [ ] energy
+   - [x] drought
+   - [ ] protection
+   > "посуха" means "drought"
+
+6. What does "ресурси" mean?
+   - [x] resources
+   - [ ] protection
+   - [ ] emissions
+   - [ ] energy
+   > "ресурси" means "resources"
+
+7. What does "відходи" mean?
+   - [ ] emissions
+   - [x] waste
+   - [ ] protection
+   - [ ] energy
+   > "відходи" means "waste"
+
+8. What does "сміття" mean?
+   - [ ] protection
+   - [ ] emissions
+   - [x] garbage
+   - [ ] energy
+   > "сміття" means "garbage"
+
+9. What does "клімат" mean?
+   - [ ] energy
+   - [ ] emissions
+   - [ ] protection
+   - [x] climate
+   > "клімат" means "climate"
+
+10. What does "повінь" mean?
+   - [ ] energy
+   - [x] flood
+   - [ ] protection
+   - [ ] emissions
+   > "повінь" means "flood"
+
+11. What does "довкілля" mean?
+   - [x] environment
+   - [ ] energy
+   - [ ] protection
+   - [ ] emissions
+   > "довкілля" means "environment"
+
+
+
+## unjumble: Word Order
+
+> Drag the words into the correct order to form a sentence.
+
+1. захистити / / / захищати
+   > [!answer] захищати / захистити
+   > (to protect)
+
+2. забруднити / забруднювати / /
+   > [!answer] забруднювати / забруднити
+   > (to pollute)
+
+3. / / переробити / переробляти
+   > [!answer] переробляти / переробити
+   > (to recycle)
+
+4. / / сортувати / посортувати
+   > [!answer] сортувати / посортувати
+   > (to sort)
+
+5. / / зекономити / економити
+   > [!answer] економити / зекономити
+   > (to save, conserve)
+
+6. спожити / / / споживати
+   > [!answer] споживати / спожити
+   > (to consume)
+
+7. зменшувати / зменшити / /
+   > [!answer] зменшувати / зменшити
+   > (to reduce)
+
+8. / / відновлювати / відновити
+   > [!answer] відновлювати / відновити
+   > (to restore, renew)
+
+9. енергію / перейти / зелену / на
+   > [!answer] перейти на зелену енергію
+   > (to switch to green energy)
+
+10. вуглецевий / залишати / слід
+   > [!answer] залишати вуглецевий слід
+   > (to leave a carbon footprint)
+
+
 ---
 
 # Vocabulary

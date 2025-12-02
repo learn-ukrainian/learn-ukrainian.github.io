@@ -288,137 +288,194 @@ Use -ливий adjectives:
 
 ---
 
-# Activities
+---
 
-## match-up: Suffix → Function
+---
+
+---
+
+# Вправи
+
+## fill-in: Доповніть речення
+
+> Оберіть правильне слово.
+
+1. Я вважаю, що ця пропозиція є занадто ___ для нас.
+   > [!answer] бабусин
+   > [!options] водонепроникний | щасливий | бабусин | молодший
+
+2. Цей варіант здається мені найбільш ___ з усіх.
+   > [!answer] український
+   > [!options] чорний | переконаний | український | зимовий
+
+3. Цей варіант здається мені найбільш ___ з усіх.
+   > [!answer] київський
+   > [!options] минулий | переконаний | київський | свіжий
+
+4. Цей варіант здається мені найбільш ___ з усіх.
+   > [!answer] лісовий
+   > [!options] денний | свіжий | сонячний | лісовий
+
+## unjumble: Побудуйте речення
+
+> Розташуйте слова в правильному порядку.
+
+## match-up: Знайдіть пари
+
+> З'єднайте українські слова з англійськими.
 
 | Left | Right |
 |------|-------|
-| -ний/-ській | relation, belonging |
-| -овий/-евий | type, material |
-| -ливий | tendency, quality |
-| -истий/-астий | abundance |
-| -ів/-ин | possession |
+| ніколи | never |
+| морський | sea, marine |
+| сніданок | breakfast |
+| музичний | musical |
+| річний | annual |
+| денний | daily, daytime |
+| налити | to pour |
+| проспати | to oversleep |
+| лісовий | forest |
+| зоряний | starry |
+| овочевий | vegetable |
+| людський | human |
+| лікар | doctor (m) |
+| київський | Kyivan |
 
-## quiz: Adjective Suffixes
+## quiz: Перевірка значень
 
-> Choose the correct adjective form.
+> Оберіть правильну відповідь.
 
-1. "Ukrainian" (from Україна) - ___ мова
-   - [x] українська
-   - [ ] українова
-   - [ ] україниста
-   - [ ] українива
-   > -ський for origin/belonging.
-
-2. "City" (from місто) - ___ транспорт
-   - [x] міський
-   - [ ] містовий
-   - [ ] містовистий
-   - [ ] містаний
-   > -ський for belonging.
-
-3. "Fruit" (type) - ___ сік
-   - [x] фруктовий
-   - [ ] фруктський
-   - [ ] фруктистий
-   - [ ] фруктливий
-   > -овий for type.
-
-4. "Happy" (quality) - ___ людина
-   - [x] щаслива
-   - [ ] щастева
-   - [ ] щастиста
-   - [ ] щастська
-   > -ливий for tendency/quality.
-
-5. "Rocky" (abundance) - ___ дорога
-   - [x] кам'яниста
-   - [ ] каменева
-   - [ ] кам'янська
-   - [ ] камнива
-   > -истий for abundance.
-
-6. "Mother's" (possessive) - ___ рука
-   - [x] мамина
-   - [ ] мамова
-   - [ ] мамська
-   - [ ] мамиста
-   > -ин for feminine possessive.
-
-## group-sort: By Suffix Type
-
-### -ський (belonging)
-- український
-- міський
-- студентський
-- київський
-
-### -овий (type)
-- книжковий
-- фруктовий
-- спортивний
-- музичний
-
-### -ливий (quality)
-- щасливий
-- талановитий
-- корисний
-- дбайливий
-
-
-## fill-in: Fill in the Blank
-
-> Fill in the blanks with the correct word.
-
-
-
-## quiz: Meaning Check
-
-> Choose the correct answer.
-
-1. What does "корисний" mean?
-   - [ ] summer
-   - [ ] Ukrainian
-   - [ ] rocky
-   - [x] useful
-   > "корисний" means "useful"
-
-2. What does "літній" mean?
-   - [ ] Ukrainian
-   - [x] summer
-   - [ ] rocky
+1. Що означає "річний"?
+   - [ ] cheaper
+   - [ ] more slowly
    - [ ] useful
-   > "літній" means "summer"
+   - [x] annual
+   > "річний" means "annual"
 
-3. What does "кам'янистий" mean?
-   - [ ] Ukrainian
-   - [x] rocky
-   - [ ] useful
-   - [ ] summer
-   > "кам'янистий" means "rocky"
+2. Що означає "лісовий"?
+   - [x] forest
+   - [ ] ticket
+   - [ ] to drive by
+   - [ ] reading
+   > "лісовий" means "forest"
 
-4. What does "український" mean?
+3. Що означає "міський"?
+   - [ ] whether (question particle)
+   - [x] city, urban
+   - [ ] two (m/n)
+   - [ ] to return (perf)
+   > "міський" means "city, urban"
+
+4. Що означає "київський"?
+   - [x] Kyivan
+   - [ ] easy, light
+   - [ ] from
+   - [ ] to learn (perf)
+   > "київський" means "Kyivan"
+
+5. Що означає "спортивний"?
+   - [ ] back
+   - [ ] fork
+   - [ ] dream
+   - [x] sports
+   > "спортивний" means "sports"
+
+6. Що означає "денний"?
+   - [x] daily, daytime
+   - [ ] during, throughout
+   - [ ] bill, check
+   - [ ] to send, dispatch
+   > "денний" means "daily, daytime"
+
+7. Що означає "бабусин"?
+   - [ ] headphones
+   - [ ] to reach (on foot)
+   - [ ] recently
+   - [x] grandmother's
+   > "бабусин" means "grandmother's"
+
+8. Що означає "мамин"?
+   - [x] mother's
+   - [ ] fastest
+   - [ ] sugar
+   - [ ] sure, certain
+   > "мамин" means "mother's"
+
+9. Що означає "дитячий"?
+   - [ ] to thank
+   - [ ] to win
+   - [x] children's
+   - [ ] delivery
+   > "дитячий" means "children's"
+
+10. Що означає "український"?
+   - [ ] musician
+   - [ ] pity, shame
    - [x] Ukrainian
-   - [ ] rocky
-   - [ ] summer
-   - [ ] useful
+   - [ ] vase
    > "український" means "Ukrainian"
 
-5. What does "батьків" mean?
-   - [ ] rocky
+11. Що означає "батьків"?
+   - [ ] autumn
    - [x] father's
-   - [ ] useful
-   - [ ] summer
+   - [ ] to teach/learn
+   - [ ] nothing
    > "батьків" means "father's"
 
-6. What does "музичний" mean?
-   - [ ] useful
-   - [x] musical
-   - [ ] summer
-   - [ ] rocky
-   > "музичний" means "musical"
+12. Що означає "зимовий"?
+   - [ ] back
+   - [ ] hospital
+   - [x] winter
+   - [ ] to give (pf)
+   > "зимовий" means "winter"
 
+13. Що означає "студентський"?
+   - [ ] sea, marine
+   - [ ] lecture
+   - [x] student
+   - [ ] word
+   > "студентський" means "student"
+
+14. Що означає "зоряний"?
+   - [ ] weather
+   - [ ] Tuesday
+   - [ ] to go out, leave
+   - [x] starry
+   > "зоряний" means "starry"
+
+## true-false: Правда чи ні?
+
+> Визначте, чи правильне твердження.
+
+- [ ] "денний" means "above"
+   > Incorrect. "денний" means "daily, daytime"
+
+- [ ] "людський" means "menu"
+   > Incorrect. "людський" means "human"
+
+- [x] "зоряний" means "starry"
+   > Correct!
+
+- [x] "гірський" means "mountain"
+   > Correct!
+
+- [ ] "спортивний" means "secretary (f)"
+   > Incorrect. "спортивний" means "sports"
+
+- [ ] "український" means "to buy (perf)"
+   > Incorrect. "український" means "Ukrainian"
+
+- [ ] "корисний" means "smallest"
+   > Incorrect. "корисний" means "useful"
+
+- [ ] "дитячий" means "viewer"
+   > Incorrect. "дитячий" means "children's"
+
+- [ ] "талановитий" means "to meet"
+   > Incorrect. "талановитий" means "talented"
+
+- [x] "міський" means "city, urban"
+   > Correct!
 
 ---
 

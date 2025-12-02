@@ -245,6 +245,190 @@ Describe a time when you felt:
 | гордість | сором |
 | полегшення | тривога |
 
+
+## fill-in: Fill in the Blank
+
+> Choose the correct word to complete each sentence.
+
+1. бути на ___ небі
+   > [!answer] сьомому
+
+
+
+## quiz: Meaning Check
+
+> Choose the correct answer.
+
+1. What does "гнів" mean?
+   - [ ] conflict
+   - [ ] shame
+   - [x] anger
+   - [ ] sadness
+   > "гнів" means "anger"
+
+2. What does "сум" mean?
+   - [x] sadness
+   - [ ] anger
+   - [ ] shame
+   - [ ] conflict
+   > "сум" means "sadness"
+
+3. What does "сором" mean?
+   - [ ] anger
+   - [ ] conflict
+   - [x] shame
+   - [ ] sadness
+   > "сором" means "shame"
+
+4. What does "конфлікт" mean?
+   - [ ] sadness
+   - [ ] anger
+   - [x] conflict
+   - [ ] shame
+   > "конфлікт" means "conflict"
+
+5. What does "довіра" mean?
+   - [x] trust
+   - [ ] shame
+   - [ ] anger
+   - [ ] sadness
+   > "довіра" means "trust"
+
+6. What does "зрада" mean?
+   - [ ] anger
+   - [ ] shame
+   - [ ] sadness
+   - [x] betrayal
+   > "зрада" means "betrayal"
+
+7. What does "розчарування" mean?
+   - [x] disappointment
+   - [ ] anger
+   - [ ] sadness
+   - [ ] shame
+   > "розчарування" means "disappointment"
+
+8. What does "вдячність" mean?
+   - [x] gratitude
+   - [ ] sadness
+   - [ ] shame
+   - [ ] anger
+   > "вдячність" means "gratitude"
+
+9. What does "дружба" mean?
+   - [ ] anger
+   - [x] friendship
+   - [ ] shame
+   - [ ] sadness
+   > "дружба" means "friendship"
+
+10. What does "полегшення" mean?
+   - [x] relief
+   - [ ] anger
+   - [ ] sadness
+   - [ ] shame
+   > "полегшення" means "relief"
+
+11. What does "тривога" mean?
+   - [x] anxiety
+   - [ ] sadness
+   - [ ] shame
+   - [ ] anger
+   > "тривога" means "anxiety"
+
+12. What does "провина" mean?
+   - [x] guilt
+   - [ ] shame
+   - [ ] anger
+   - [ ] sadness
+   > "провина" means "guilt"
+
+13. What does "примирення" mean?
+   - [ ] shame
+   - [ ] sadness
+   - [ ] anger
+   - [x] reconciliation
+   > "примирення" means "reconciliation"
+
+
+
+## unjumble: Word Order
+
+> Drag the words into the correct order to form a sentence.
+
+1. радіти / / / зрадіти
+   > [!answer] радіти / зрадіти
+   > (to rejoice)
+
+2. розлютитися / / / злитися
+   > [!answer] злитися / розлютитися
+   > (to be angry)
+
+3. / / злякатися / боятися
+   > [!answer] боятися / злякатися
+   > (to be afraid)
+
+4. / / хвилюватися / схвилюватися
+   > [!answer] хвилюватися / схвилюватися
+   > (to worry)
+
+5. розчаровуватися / / / розчаруватися
+   > [!answer] розчаровуватися / розчаруватися
+   > (to be disappointed)
+
+6. соромитися / / / засоромитися
+   > [!answer] соромитися / засоромитися
+   > (to be ashamed)
+
+7. позаздрити / / / заздрити
+   > [!answer] заздрити / позаздрити
+   > (to envy)
+
+8. довіряти / / / довіритися
+   > [!answer] довіряти / довіритися
+   > (to trust)
+
+9. підтримувати / / / підтримати
+   > [!answer] підтримувати / підтримати
+   > (to support)
+
+10. / / сваритися / посваритися
+   > [!answer] сваритися / посваритися
+   > (to quarrel)
+
+11. помиритися / / / миритися
+   > [!answer] миритися / помиритися
+   > (to make up)
+
+12. прощати / / / пробачити
+   > [!answer] прощати / пробачити
+   > (to forgive)
+
+13. зраджувати / / / зрадити
+   > [!answer] зраджувати / зрадити
+   > (to betray)
+
+14. ображати / образити / /
+   > [!answer] ображати / образити
+   > (to offend)
+
+15. / / ображатися / образитися
+   > [!answer] ображатися / образитися
+   > (to take offense)
+
+16. бути / в / захваті
+   > [!answer] бути в захваті
+   > (to be thrilled)
+
+17. бути / небі / сьомому / на
+   > [!answer] бути на сьомому небі
+   > (to be on cloud nine)
+
+18. знаходити / не / місця / собі
+   > [!answer] не знаходити собі місця
+   > (to be restless with worry)
+
+
 ---
 
 # Vocabulary

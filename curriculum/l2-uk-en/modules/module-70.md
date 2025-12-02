@@ -293,187 +293,288 @@ Discuss environmental issues:
 
 ---
 
-# Activities
+---
 
-## match-up: Animal → Category
+---
+
+---
+
+# Вправи
+
+## fill-in: Доповніть речення
+
+> Оберіть правильне слово.
+
+1. Моя сестра сказала, що її ___ дуже зручна.
+   > [!answer] береза
+   > [!options] береза | вхід | суспільство | пілот
+
+2. Цей ___ належить моєму другові з Києва.
+   > [!answer] вовк
+   > [!options] господарство | вовк | пошта | музикант
+
+3. Я хочу купити цей ___, але він занадто дорогий.
+   > [!answer] степ
+   > [!options] книга | степ | заметіль | ведмідь
+
+4. Я хочу купити цей ___, але він занадто дорогий.
+   > [!answer] водоспад
+   > [!options] водій | відповідь | водоспад | застуда
+
+5. Вони довго шукали хорошу ___, але не знайшли.
+   > [!answer] природа
+   > [!options] природа | художник | матрац | плече
+
+6. Я хочу купити цю ___, але вона занадто дорога.
+   > [!answer] білка
+   > [!options] свинина | тато | підпис | білка
+
+7. Вони довго шукали хороше ___, але не знайшли.
+   > [!answer] забруднення
+   > [!options] стілець | забруднення | запаморочення | дуб
+
+## unjumble: Побудуйте речення
+
+> Розташуйте слова в правильному порядку.
+
+1. купити / дорогий / град / але / Я / він / хочу / цей / занадто
+   > [!answer] Я хочу купити цей град, але він занадто дорогий.
+   > (hail)
+
+2. хорошу / але / довго / спека / не / Вони / знайшли / шукали
+   > [!answer] Вони довго шукали хорошу спека, але не знайшли.
+   > (heat)
+
+3. що / її / дуже / зручна / сказала / Моя / бджола / сестра
+   > [!answer] Моя сестра сказала, що її бджола дуже зручна.
+   > (bee)
+
+4. сестра / що / дуже / природа / її / сказала / Моя / зручна
+   > [!answer] Моя сестра сказала, що її природа дуже зручна.
+   > (nature)
+
+5. цю / занадто / долина / Я / вона / купити / хочу / але / дорога
+   > [!answer] Я хочу купити цю долина, але вона занадто дорога.
+   > (valley)
+
+6. Я / вона / цю / хочу / занадто / але / дорога / мряка / купити
+   > [!answer] Я хочу купити цю мряка, але вона занадто дорога.
+   > (drizzle)
+
+7. але / знайшли / шукали / Вони / хороший / їжак / довго / не
+   > [!answer] Вони довго шукали хороший їжак, але не знайшли.
+   > (hedgehog)
+
+8. але / хочу / Я / це / занадто / воно / купити / дороге / болото
+   > [!answer] Я хочу купити це болото, але воно занадто дороге.
+   > (swamp)
+
+9. моєму / Києва / з / Це / належить / другові / озеро
+   > [!answer] Це озеро належить моєму другові з Києва.
+   > (lake)
+
+10. зручна / що / дуже / її / Моя / сказала / лисиця / сестра
+   > [!answer] Моя сестра сказала, що її лисиця дуже зручна.
+   > (fox)
+
+11. але / знайшли / шукали / хорошу / не / Вони / береза / довго
+   > [!answer] Вони довго шукали хорошу береза, але не знайшли.
+   > (birch)
+
+12. хочу / дорогий / купити / але / грім / Я / цей / занадто / він
+   > [!answer] Я хочу купити цей грім, але він занадто дорогий.
+   > (thunder)
+
+13. занадто / купити / але / цей / дорогий / метелик / хочу / Я / він
+   > [!answer] Я хочу купити цей метелик, але він занадто дорогий.
+   > (butterfly)
+
+14. занадто / воно / забруднення / але / Я / хочу / купити / дороге / це
+   > [!answer] Я хочу купити це забруднення, але воно занадто дороге.
+   > (pollution)
+
+## match-up: Знайдіть пари
+
+> З'єднайте українські слова з англійськими.
 
 | Left | Right |
 |------|-------|
-| вовк | дикий звір |
-| лелека | птах |
-| бджола | комаха |
-| риба | водна тварина |
-| заєць | дикий звір |
+| злива | downpour |
+| буря | storm |
+| почитати | to read (a while) |
+| їжак | hedgehog |
+| лисиця | fox |
+| білка | squirrel |
+| будуть | they will be |
+| грім | thunder |
+| вислухати | to hear out |
+| середній | neuter |
+| заповідник | nature reserve |
+| острів | island |
+| каструля | pot |
+| природа | nature |
 
-## quiz: Nature & Weather
+## quiz: Перевірка значень
 
-> Choose the correct answer.
+> Оберіть правильну відповідь.
 
-1. "Гроза" includes ___.
-   - [x] thunder, lightning, rain
-   - [ ] snow and wind
-   - [ ] fog only
-   - [ ] sunshine
-   > Гроза = thunderstorm (грім + блискавка + дощ).
+1. Що означає "дуб"?
+   - [ ] to bring (by transport)
+   - [ ] rain
+   - [ ] to begin (perf)
+   - [x] oak
+   > "дуб" means "oak"
 
-2. The Ukrainian symbol bird is ___.
-   - [x] лелека (stork)
-   - [ ] ворона (crow)
-   - [ ] горобець (sparrow)
-   - [ ] сова (owl)
-   > Лелека (stork) is a beloved symbol.
+2. Що означає "степ"?
+   - [ ] Café: меню, замовити, рахунок
+   - [ ] to me
+   - [x] steppe
+   - [ ] talented
+   > "степ" means "steppe"
 
-3. "Заметіль" is a ___.
-   - [x] snowstorm
-   - [ ] thunderstorm
-   - [ ] fog
-   - [ ] heat wave
-   > Заметіль = snowstorm (snow + strong wind).
+3. Що означає "забруднення"?
+   - [ ] agree (f)
+   - [ ] to cross (habitually)
+   - [x] pollution
+   - [ ] listening
+   > "забруднення" means "pollution"
 
-4. Соняшник means ___.
-   - [x] sunflower
-   - [ ] sunshine
-   - [ ] sunset
-   - [ ] sunrise
-   > Соняшник = sunflower.
+4. Що означає "долина"?
+   - [x] valley
+   - [ ] would (after consonant)
+   - [ ] to understand
+   - [ ] to pay
+   > "долина" means "valley"
 
-5. "Йде дощ" means ___.
-   - [x] It's raining
-   - [ ] Rain is coming
-   - [ ] It will rain
-   - [ ] It rained
-   > Йде дощ = It's raining (present).
+5. Що означає "мряка"?
+   - [x] drizzle
+   - [ ] to teach/learn
+   - [ ] radio
+   - [ ] mountain
+   > "мряка" means "drizzle"
 
-6. "Заповідник" is ___.
-   - [x] nature reserve
-   - [ ] zoo
-   - [ ] park
-   - [ ] garden
-   > Заповідник = nature reserve/protected area.
+6. Що означає "лелека"?
+   - [ ] to finish (impf)
+   - [ ] much (intensifier)
+   - [x] stork
+   - [ ] son
+   > "лелека" means "stork"
 
-## group-sort: By Type
-
-### Погода (Weather)
-- гроза
-- туман
-- спека
-- заметіль
-
-### Ландшафти (Landscapes)
-- гора
-- долина
-- озеро
-- степ
-
-### Рослини (Plants)
-- дуб
-- сосна
-- троянда
-- соняшник
-
-### Тварини (Animals)
-- вовк
-- лелека
-- бджола
-- їжак
-
-
-## true-false: True or False?
-
-> Determine if each statement is true or false.
-
-- [x] "прогноз погоди" is masculine.
-   > Correct! прогноз погоди is masculine.
-
-- [x] "злива" is feminine.
-   > Correct! злива is feminine.
-
-- [x] "блискавка" is feminine.
-   > Correct! блискавка is feminine.
-
-- [x] "грім" is masculine.
-   > Correct! грім is masculine.
-
-- [ ] "град" is feminine.
-   > Incorrect. град is masculine.
-
-- [ ] "заметіль" is masculine.
-   > Incorrect. заметіль is feminine.
-
-
-## fill-in: Fill in the Blank
-
-> Fill in the blanks with the correct word.
-
-1. йти ___ сніг)
-   > [!answer] (дощ
-
-
-
-## quiz: Meaning Check
-
-> Choose the correct answer.
-
-1. What does "заповідник" mean?
-   - [ ] storm
-   - [ ] thunder
-   - [x] nature reserve
-   - [ ] wolf
-   > "заповідник" means "nature reserve"
-
-2. What does "вовк" mean?
-   - [ ] storm
-   - [ ] thunder
-   - [x] wolf
-   - [ ] nature reserve
-   > "вовк" means "wolf"
-
-3. What does "грім" mean?
-   - [x] thunder
-   - [ ] storm
-   - [ ] nature reserve
-   - [ ] wolf
-   > "грім" means "thunder"
-
-4. What does "буря" mean?
-   - [ ] wolf
-   - [ ] thunder
+7. Що означає "буря"?
    - [x] storm
-   - [ ] nature reserve
+   - [ ] among
+   - [ ] after
+   - [ ] to have
    > "буря" means "storm"
 
-5. What does "блискавка" mean?
+8. Що означає "їжак"?
+   - [x] hedgehog
+   - [ ] should, ought to (m)
+   - [ ] to answer
+   - [ ] you (informal)
+   > "їжак" means "hedgehog"
+
+9. Що означає "заповідник"?
+   - [x] nature reserve
+   - [ ] pollution
+   - [ ] letter (of alphabet)
+   - [ ] earnings
+   > "заповідник" means "nature reserve"
+
+10. Що означає "гора"?
+   - [ ] responsibility
+   - [ ] old age
+   - [x] mountain
+   - [ ] eyes
+   > "гора" means "mountain"
+
+11. Що означає "соняшник"?
+   - [x] sunflower
+   - [ ] percent, interest
+   - [ ] discount
+   - [ ] in general
+   > "соняшник" means "sunflower"
+
+12. Що означає "блискавка"?
+   - [ ] to sign (impf)
    - [x] lightning
-   - [ ] wolf
-   - [ ] nature reserve
-   - [ ] thunder
+   - [ ] contract
+   - [ ] to add
    > "блискавка" means "lightning"
 
-6. What does "сосна" mean?
-   - [ ] wolf
-   - [ ] thunder
-   - [x] pine
-   - [ ] nature reserve
-   > "сосна" means "pine"
+13. Що означає "вовк"?
+   - [ ] to order
+   - [ ] to call (impf)
+   - [ ] new
+   - [x] wolf
+   > "вовк" means "wolf"
 
+14. Що означає "переробка"?
+   - [ ] football
+   - [ ] recipient
+   - [ ] seat, place
+   - [x] recycling
+   > "переробка" means "recycling"
 
+## true-false: Правда чи ні?
 
-## unjumble: Word Order
+> Визначте, чи правильне твердження.
 
-> Put the words in the correct order to form a sentence.
+- [x] "водоспад" means "waterfall"
+   > Correct!
 
-1. сніг) / йти / (дощ
-   > [!answer] йти (дощ, сніг)
-   > (to rain, snow)
+- [ ] "береза" means "plan"
+   > Incorrect. "береза" means "birch"
 
-2. дме / дути / /
-   > [!answer] дути / дме
-   > (to blow (wind))
+- [ ] "переробка" means "traffic light"
+   > Incorrect. "переробка" means "recycling"
 
-3. луг / луки / /
-   > [!answer] луг / луки
-   > (meadow)
+- [ ] "мряка" means "father"
+   > Incorrect. "мряка" means "drizzle"
 
+- [x] "рівнина" means "plain"
+   > Correct!
+
+- [x] "природа" means "nature"
+   > Correct!
+
+- [ ] "бджола" means "salary"
+   > Incorrect. "бджола" means "bee"
+
+- [ ] "грім" means "already"
+   > Incorrect. "грім" means "thunder"
+
+- [ ] "білка" means "bicycle"
+   > Incorrect. "білка" means "squirrel"
+
+- [ ] "троянда" means "beautiful, nice"
+   > Incorrect. "троянда" means "rose"
+
+## group-sort: Сортування за родом
+
+> Розподіліть слова за родами.
+
+### Чоловічий рід
+- град
+- соняшник
+- метелик
+- ведмідь
+- водоспад
+- дуб
+
+### Жіночий рід
+- гора
+- переробка
+- долина
+- лисиця
+- сосна
+- блискавка
+
+### Середній рід
+- болото
+- узбережжя
+- забруднення
+- озеро
 
 ---
 

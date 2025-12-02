@@ -295,140 +295,174 @@ Make comparatives from these adjectives:
 
 ---
 
+---
+
+---
+
+---
+
 # Activities
 
-## match-up: Adjective Comparatives
+## fill-in: Complete the Sentences
 
-> Match adjective with comparative.
+> Choose the correct word to complete each sentence.
+
+1. Цей будинок дуже ___.
+   > [!answer] нижчий
+   > [!options] нижчий | сонячний | щасливий | важкий
+
+2. Ця книга надзвичайно ___.
+   > [!answer] молодший
+   > [!options] кращий | сонячний | молодший | недоконаний
+
+3. Ця книга надзвичайно ___.
+   > [!answer] дорожчий
+   > [!options] дорожчий | цікавий | чорний | новий
+
+## unjumble: Build the Sentence
+
+> Arrange the words in the correct order.
+
+## match-up: Match the Pairs
+
+> Match Ukrainian words to their English meanings.
 
 | Left | Right |
 |------|-------|
-| великий | більший |
-| малий | менший |
-| добрий | кращий |
-| поганий | гірший |
-| високий | вищий |
-| дорогий | дорожчий |
-
-## quiz: Comparatives
-
-> Choose the correct form.
-
-1. "Kyiv is bigger than Lviv" - Київ ___ за Львів.
-   - [x] більший
-   - [ ] великий
-   - [ ] найбільший
-   - [ ] більше
-   > Comparative of великий = більший.
-
-2. "This is better" - Це ___.
-   - [x] краще
-   - [ ] добре
-   - [ ] кращий
-   - [ ] найкраще
-   > Adverb/neuter comparative = краще.
-
-3. "She is younger than me" - Вона ___ за мене.
-   - [x] молодша
-   - [ ] молода
-   - [ ] молодший
-   - [ ] молодше
-   > Feminine comparative = молодша.
-
-4. "Speak more slowly!" - Говоріть ___!
-   - [x] повільніше
-   - [ ] повільно
-   - [ ] повільний
-   - [ ] повільніший
-   > Adverb comparative = повільніше.
-
-5. "I need more time" - Мені потрібно ___ часу.
-   - [x] більше
-   - [ ] багато
-   - [ ] більший
-   - [ ] найбільше
-   > "More" (adverb) = більше.
-
-6. "The more, the better" - Чим ___, тим ___.
-   - [x] більше, краще
-   - [ ] великий, добрий
-   - [ ] багато, добре
-   - [ ] більший, кращий
-   > Adverbs in "чим...тим..." construction.
-
-## group-sort: Regular vs Irregular
-
-> Sort by comparative formation.
-
-### Regular (-іший/-ший)
-- новий → новіший
-- старий → старіший
-- молодий → молодший
-- холодний → холодніший
-
-### Irregular
-- великий → більший
-- малий → менший
-- добрий → кращий
-- поганий → гірший
-- високий → вищий
-
-
-## fill-in: Fill in the Blank
-
-> Fill in the blanks with the correct word.
-
-1. Чим більше, ___ краще
-   > [!answer] тим
-
-
+| гірше | worse |
+| набагато | much (intensifier) |
+| молодший | younger |
+| вибачте | excuse me, sorry |
+| нижчий | lower/shorter |
+| більше | more |
+| воно | it |
+| значно | significantly |
+| гірший | worse |
+| відповідати | to answer |
+| краще | better |
+| менше | less |
 
 ## quiz: Meaning Check
 
 > Choose the correct answer.
 
-1. What does "кращий" mean?
-   - [ ] worse
-   - [x] better
-   - [ ] faster
-   - [ ] younger
-   > "кращий" means "better"
+1. What does "дешевший" mean?
+   - [ ] to nod
+   - [x] cheaper
+   - [ ] here
+   - [ ] tasty
+   > "дешевший" means "cheaper"
 
-2. What does "гірший" mean?
-   - [x] worse
-   - [ ] faster
-   - [ ] better
-   - [ ] younger
-   > "гірший" means "worse"
-
-3. What does "молодший" mean?
-   - [ ] faster
-   - [ ] worse
-   - [ ] better
-   - [x] younger
-   > "молодший" means "younger"
-
-4. What does "швидше" mean?
-   - [ ] better
-   - [x] faster
-   - [ ] younger
-   - [ ] worse
-   > "швидше" means "faster"
-
-5. What does "більше" mean?
+2. What does "більше" mean?
+   - [ ] minute
    - [x] more
-   - [ ] better
-   - [ ] worse
-   - [ ] younger
+   - [ ] to bring
+   - [ ] I
    > "більше" means "more"
 
-6. What does "менше" mean?
-   - [x] less
-   - [ ] younger
-   - [ ] better
-   - [ ] worse
-   > "менше" means "less"
+3. What does "вищий" mean?
+   - [x] higher/taller
+   - [ ] three
+   - [ ] for
+   - [ ] to open
+   > "вищий" means "higher/taller"
 
+4. What does "старіший" mean?
+   - [ ] to explain (perf)
+   - [ ] white
+   - [x] older
+   - [ ] always
+   > "старіший" means "older"
+
+5. What does "кращий" mean?
+   - [ ] opposite
+   - [ ] to get dressed
+   - [x] better
+   - [ ] chicken
+   > "кращий" means "better"
+
+6. What does "гірший" mean?
+   - [ ] (with) me
+   - [ ] ten
+   - [x] worse
+   - [ ] to exchange
+   > "гірший" means "worse"
+
+7. What does "молодший" mean?
+   - [x] younger
+   - [ ] to ask (perf)
+   - [ ] airport
+   - [ ] no kind of
+   > "молодший" means "younger"
+
+8. What does "швидше" mean?
+   - [ ] metro
+   - [ ] lemon
+   - [ ] sweater
+   - [x] faster
+   > "швидше" means "faster"
+
+9. What does "гірше" mean?
+   - [ ] shower
+   - [ ] tram
+   - [ ] to serve
+   - [x] worse
+   > "гірше" means "worse"
+
+10. What does "повільніше" mean?
+   - [ ] phone
+   - [x] more slowly
+   - [ ] sometimes
+   - [ ] to understand
+   > "повільніше" means "more slowly"
+
+11. What does "дорожчий" mean?
+   - [ ] bad
+   - [ ] market
+   - [x] more expensive
+   - [ ] office
+   > "дорожчий" means "more expensive"
+
+12. What does "значно" mean?
+   - [ ] to sell
+   - [ ] colleague
+   - [x] significantly
+   - [ ] company, group
+   > "значно" means "significantly"
+
+## true-false: True or False?
+
+> Determine if each statement is true or false.
+
+- [x] "менше" means "less"
+   > Correct!
+
+- [x] "гірше" means "worse"
+   > Correct!
+
+- [x] "краще" means "better"
+   > Correct!
+
+- [ ] "дорожчий" means "entrepreneur"
+   > Incorrect. "дорожчий" means "more expensive"
+
+- [ ] "дешевший" means "were"
+   > Incorrect. "дешевший" means "cheaper"
+
+- [x] "кращий" means "better"
+   > Correct!
+
+- [ ] "більше" means "bus"
+   > Incorrect. "більше" means "more"
+
+- [x] "молодший" means "younger"
+   > Correct!
+
+- [ ] "значно" means "to gift (pf)"
+   > Incorrect. "значно" means "significantly"
+
+- [x] "швидше" means "faster"
+   > Correct!
 
 ---
 

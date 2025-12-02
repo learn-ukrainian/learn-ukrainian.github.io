@@ -198,18 +198,243 @@ Use idioms to describe:
    - [ ] говорити багато
    > Keep secret.
 
-## fill-in: Story with Idioms
 
-> Вставте ідіоми.
+## match-up: Vocabulary Match
 
-> Мій друг Петро (1)___ (is very smart). Але минулого тижня він (2)___ (was very nervous) перед іспитом. Він (3)___ (worked hard) цілий тиждень. І — новина (4)___ (was unexpected)! — він здав на відмінно! Тепер він (5)___ (is very happy).
+> Match each Ukrainian word with its English translation.
 
-**Answers:**
-1. має голову на плечах
-2. сидів як на голках
-3. працював не покладаючи рук
-4. була як грім серед ясного неба (or: впала як грім)
-5. на сьомому небі
+| Left | Right |
+|------|-------|
+| сталий вираз | set phrase |
+| перебільшувати | to exaggerate |
+| на сьомому небі | on cloud nine |
+| тримати язик за зубами | keep secret |
+| не покладаючи рук | without rest |
+| ідіома | idiom |
+| байдики бити | to be idle |
+| як кіт наплакав | very little |
+| собаку з'їсти | be expert |
+| з мухи слона | exaggerate |
+| переносне значення | figurative meaning |
+| коли рак свисне | never |
+
+
+## fill-in: Fill in the Blank
+
+> Choose the correct word to complete each sentence.
+
+1. мати голову ___ плечах
+   > [!answer] на
+   > [!options] на | по | кіт | за
+
+2. в одне вухо ___ в інше вилітає
+   > [!answer] влітає
+   > [!options] влітає | від | рак | кіт
+
+3. тримати язик ___ зубами
+   > [!answer] за
+   > [!options] за | по | на | мухи
+
+4. пальцем ___ ворухнути
+   > [!answer] не
+   > [!options] не | по | ведмежу | до
+
+5. бути ___ вуха
+   > [!answer] по
+   > [!options] по | рак | кіт | не
+
+6. коли ___ свисне
+   > [!answer] рак
+   > [!options] рак | до | на | ведмежу
+
+7. робити з ___ слона
+   > [!answer] мухи
+   > [!options] мухи | влітає | рак | на
+
+8. як ___ наплакав
+   > [!answer] кіт
+   > [!options] кіт | на | до | влітає
+
+9. робити ___ послугу
+   > [!answer] ведмежу
+   > [!options] ведмежу | мухи | за | рак
+
+10. з ранку ___ ночі
+   > [!answer] до
+   > [!options] до | на | ведмежу | влітає
+
+11. час ___ часу
+   > [!answer] від
+   > [!options] від | не | по | на
+
+
+
+## quiz: Meaning Check
+
+> Choose the correct answer.
+
+1. What does "як кіт наплакав" mean?
+   - [x] very little
+   - [ ] to be idle
+   - [ ] idiom
+   - [ ] without rest
+   > "як кіт наплакав" means "very little"
+
+2. What does "байдики бити" mean?
+   - [x] to be idle
+   - [ ] very little
+   - [ ] idiom
+   - [ ] without rest
+   > "байдики бити" means "to be idle"
+
+3. What does "не покладаючи рук" mean?
+   - [x] without rest
+   - [ ] idiom
+   - [ ] to be idle
+   - [ ] very little
+   > "не покладаючи рук" means "without rest"
+
+4. What does "ідіома" mean?
+   - [ ] without rest
+   - [ ] very little
+   - [ ] to be idle
+   - [x] idiom
+   > "ідіома" means "idiom"
+
+5. What does "сталий вираз" mean?
+   - [ ] very little
+   - [x] set phrase
+   - [ ] to be idle
+   - [ ] without rest
+   > "сталий вираз" means "set phrase"
+
+6. What does "переносне значення" mean?
+   - [ ] very little
+   - [ ] to be idle
+   - [ ] without rest
+   - [x] figurative meaning
+   > "переносне значення" means "figurative meaning"
+
+7. What does "перебільшувати" mean?
+   - [ ] without rest
+   - [ ] to be idle
+   - [ ] very little
+   - [x] to exaggerate
+   > "перебільшувати" means "to exaggerate"
+
+8. What does "коли рак свисне" mean?
+   - [ ] without rest
+   - [ ] very little
+   - [ ] to be idle
+   - [x] never
+   > "коли рак свисне" means "never"
+
+9. What does "тримати язик за зубами" mean?
+   - [x] keep secret
+   - [ ] to be idle
+   - [ ] very little
+   - [ ] without rest
+   > "тримати язик за зубами" means "keep secret"
+
+10. What does "з мухи слона" mean?
+   - [ ] to be idle
+   - [x] exaggerate
+   - [ ] very little
+   - [ ] without rest
+   > "з мухи слона" means "exaggerate"
+
+11. What does "собаку з'їсти" mean?
+   - [x] be expert
+   - [ ] without rest
+   - [ ] to be idle
+   - [ ] very little
+   > "собаку з'їсти" means "be expert"
+
+12. What does "на сьомому небі" mean?
+   - [ ] very little
+   - [x] on cloud nine
+   - [ ] without rest
+   - [ ] to be idle
+   > "на сьомому небі" means "on cloud nine"
+
+
+
+## unjumble: Word Order
+
+> Drag the words into the correct order to form a sentence.
+
+1. плечах / голову / на / мати
+   > [!answer] мати голову на плечах
+   > (have head on shoulders)
+
+2. влітає / в / вилітає / інше / одне / в / вухо
+   > [!answer] в одне вухо влітає, в інше вилітає
+   > (in one ear, out the other)
+
+3. язик / зубами / за / тримати
+   > [!answer] тримати язик за зубами
+   > (keep tongue behind teeth)
+
+4. пальцем / не / ворухнути
+   > [!answer] пальцем не ворухнути
+   > (not move a finger)
+
+5. по / бути / вуха
+   > [!answer] бути по вуха
+   > (be up to ears)
+
+6. рак / коли / свисне
+   > [!answer] коли рак свисне
+   > (when crayfish whistles)
+
+7. слона / робити / з / мухи
+   > [!answer] робити з мухи слона
+   > (make elephant from fly)
+
+8. як / кіт / наплакав
+   > [!answer] як кіт наплакав
+   > (as much as cat cried)
+
+9. мішку / купувати / кота / в
+   > [!answer] купувати кота в мішку
+   > (buy cat in bag)
+
+10. ведмежу / робити / послугу
+   > [!answer] робити ведмежу послугу
+   > (do bear's service)
+
+11. ранку / з / ночі / до
+   > [!answer] з ранку до ночі
+   > (from morning to night)
+
+12. часу / час / від
+   > [!answer] час від часу
+   > (from time to time)
+
+13. пізно / рано / чи
+   > [!answer] рано чи пізно
+   > (sooner or later)
+
+14. не / своїй / тарілці / в / бути
+   > [!answer] бути не в своїй тарілці
+   > (feel out of place)
+
+15. небі / на / бути / сьомому
+   > [!answer] бути на сьомому небі
+   > (be on cloud nine)
+
+16. сидіти / голках / як / на
+   > [!answer] сидіти як на голках
+   > (sit on pins and needles)
+
+17. на / триматися / плаву
+   > [!answer] триматися на плаву
+   > (stay afloat)
+
+18. двох / вогнів / між / бути
+   > [!answer] бути між двох вогнів
+   > (be between two fires)
+
 
 ---
 

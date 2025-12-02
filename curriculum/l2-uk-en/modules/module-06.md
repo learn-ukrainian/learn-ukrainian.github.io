@@ -380,113 +380,136 @@ Practice asking questions:
 | думати | to think |
 | хотіти | to want |
 
-## quiz: Meaning Check
+## group-sort: Verb Conjugation Classes
 
-> Choose the correct answer.
+> Sort these verbs by their conjugation class.
 
-1. What is the correct form of "читати" for "я"?
-   - [x] читаю
-   - [ ] читаєш
-   - [ ] читає
-   - [ ] читають
-   > "Я читаю" - I read
+### Class I (-ати verbs, use -є-)
+- читати (читаю, читаЄШ, читаЄ)
+- знати (знаю, знаЄШ, знаЄ)
+- працювати (працюю, працюЄШ)
+- слухати (слухаю, слухаЄШ)
+- думати (думаю, думаЄШ)
+- писати (пишу, пишЕШ - with consonant change)
 
-2. What is the correct form of "знати" for "вона"?
+### Class II (-ити verbs, use -и-)
+- говорити (говорю, говорИШ, говорИТЬ)
+- робити (роблю, робИШ)
+- бачити (бачу, бачИШ)
+- любити (люблю, любИШ)
+
+### Irregular Verbs
+- хотіти (хочу, хочеш - stem change)
+- їсти (їм, їси - unique pattern)
+- пити (п'ю, п'єш - apostrophe)
+
+## quiz: Verb Conjugation Rules
+
+> Test your understanding of Ukrainian verb conjugation patterns.
+
+1. Class I verbs (-ати) use which vowel pattern in conjugation?
+   - [ ] -и- (читиш, читить)
+   - [x] -є- (читаєш, читає)
+   - [ ] -а- (читаш, читать)
+   - [ ] -о- (читош, читоть)
+   > Class I pattern: читаю, читаЄШ, читаЄ, читаЄМО, читаЄТЕ, читають
+
+2. Which is the correct "ви" form of "знати"?
    - [ ] знаю
    - [ ] знаєш
-   - [x] знає
-   - [ ] знають
-   > "Вона знає" - She knows
+   - [ ] знає
+   - [x] знаєте
+   > "Ви" takes -єте ending: знаЄТЕ
 
-3. What does "писати" mean?
-   - [ ] to read
-   - [x] to write
-   - [ ] to speak
-   - [ ] to listen
-   > "писати" means "to write"
+3. Where does "не" go in a negative sentence?
+   - [ ] After the verb
+   - [x] Before the verb
+   - [ ] At the end
+   - [ ] At the beginning only
+   > "не" always immediately precedes the verb: Я НЕ знаю
 
-4. What is the correct form of "говорити" for "ми"?
-   - [ ] говорю
-   - [ ] говориш
-   - [x] говоримо
-   - [ ] говорять
-   > "Ми говоримо" - We speak
+4. Which ending marks the "вони" (they) form?
+   - [ ] -ємо
+   - [ ] -єте
+   - [ ] -є
+   - [x] -ють/-ать
+   > Third person plural ends in -ють (Class I) or -ять (Class II)
 
-5. What does "сьогодні" mean?
-   - [ ] tomorrow
-   - [x] today
-   - [ ] yesterday
-   - [ ] always
-   > "сьогодні" means "today"
+5. How do you form "we read" (ми + читати)?
+   - [ ] Ми читаю
+   - [ ] Ми читаєте
+   - [x] Ми читаємо
+   - [ ] Ми читають
+   > "Ми" takes -ємо ending: читаЄМО
 
-6. What does "завтра" mean?
-   - [x] tomorrow
-   - [ ] today
-   - [ ] yesterday
-   - [ ] never
-   > "завтра" means "tomorrow"
+6. The infinitive "читати" ends in "-ати". This tells you it's:
+   - [x] Class I (є-pattern)
+   - [ ] Class II (и-pattern)
+   - [ ] Irregular
+   - [ ] Past tense
+   > -ати/-яти infinitives are Class I verbs
 
-7. How do you say "I don't know" in Ukrainian?
-   - [x] Я не знаю
-   - [ ] Я знаю не
-   - [ ] Не я знаю
-   - [ ] Знаю не я
-   > "Я не знаю" - I don't know
+7. Which sentence correctly says "She works"?
+   - [ ] Вона працюю.
+   - [ ] Вона працюєш.
+   - [x] Вона працює.
+   - [ ] Вона працюємо.
+   > "Вона" (3rd person singular) takes -є: працюЄ
 
-8. What is the correct form of "працювати" for "вони"?
-   - [ ] працюю
-   - [ ] працюєш
-   - [ ] працює
-   - [x] працюють
-   > "Вони працюють" - They work
+8. What happens to the stem when conjugating "писати"?
+   - [x] піс- (stem changes)
+   - [ ] писа- (stays same)
+   - [ ] пис- (drops -ати)
+   - [ ] писат- (keeps -т-)
+   > писати → пишу (consonant alternation: с→ш)
 
-9. What does "слухати" mean?
-   - [ ] to watch
-   - [ ] to read
-   - [x] to listen
-   - [ ] to write
-   > "слухати" means "to listen"
+9. How do you say "You (informal) know"?
+   - [ ] Ти знаю
+   - [x] Ти знаєш
+   - [ ] Ти знає
+   - [ ] Ти знаємо
+   > "Ти" takes -єш ending: знаЄШ
 
-10. What does "кожен день" mean?
-   - [ ] sometimes
-   - [x] every day
-   - [ ] tomorrow
-   - [ ] never
-   > "кожен день" means "every day"
+10. Which is correct for "I don't read"?
+    - [x] Я не читаю.
+    - [ ] Я читаю не.
+    - [ ] Не я читаю.
+    - [ ] Читаю я не.
+    > Word order: Subject + НЕ + Verb
 
-## true-false: True or False?
+## true-false: Conjugation Rules
 
-> Determine if each statement is true or false.
+> Determine if each statement about Ukrainian verb conjugation is true or false.
 
-- [x] "Я читаю" means "I read"
-   > Correct!
+- [x] Class I verbs (-ати) use -є- in their conjugation: читаєш, читає.
+   > Correct! The -є- pattern is the hallmark of Class I.
 
-- [x] "Вона знає" means "She knows"
-   > Correct!
+- [ ] All verbs use the same conjugation pattern.
+   > Incorrect. Class I (-ати) and Class II (-ити) have different patterns.
 
-- [ ] "Ми говоримо" means "They speak"
-   > Incorrect. "Ми говоримо" means "We speak"
+- [x] The "я" form always ends in -ю (читаю, знаю, говорю).
+   > Correct! First person singular universally ends in -ю.
 
-- [x] "писати" means "to write"
-   > Correct!
+- [ ] "Не" is placed after the verb in negation.
+   > Incorrect. "Не" always goes BEFORE the verb: "Я не знаю".
 
-- [ ] "не" goes after the verb
-   > Incorrect. "не" goes before the verb
+- [x] "Вони" (they) takes -ють (Class I) or -ять (Class II).
+   > Correct! читаЮТЬ (I), говорЯТЬ (II).
 
-- [x] "Я не знаю" means "I don't know"
-   > Correct!
+- [ ] "Ми читає" is correct for "we read".
+   > Incorrect. "Ми" requires -ємо: "Ми читаЄМО".
 
-- [x] "сьогодні" means "today"
-   > Correct!
+- [x] Ukrainian has no auxiliary verbs for negation - just add "не".
+   > Correct! Unlike English "do not", Ukrainian simply adds "не".
 
-- [ ] "завтра" means "yesterday"
-   > Incorrect. "завтра" means "tomorrow"
+- [x] The infinitive (-ти) tells you the conjugation class.
+   > Correct! -ати = Class I, -ити = Class II (mostly).
 
-- [x] "слухати" means "to listen"
-   > Correct!
+- [ ] "Ви" and "вони" use the same verb ending.
+   > Incorrect. Ви = -єте/-ите, Вони = -ють/-ять.
 
-- [ ] "Вони працює" is correct
-   > Incorrect. The correct form is "Вони працюють"
+- [x] "Ми" and "ви" are formal plural, but "ви" is also formal singular.
+   > Correct! "Ви" = you (plural) OR you (formal singular).
 
 ---
 

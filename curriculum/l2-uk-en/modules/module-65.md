@@ -259,203 +259,306 @@ Use -чит-/-пис- words:
 
 ---
 
-# Activities
+---
 
-## match-up: Root → Meaning
+---
+
+---
+
+# Вправи
+
+## fill-in: Доповніть речення
+
+> Оберіть правильне слово.
+
+1. Я давно мріяв навчитися ___, і нарешті маю таку можливість.
+   > [!answer] переписувати
+   > [!options] зайти | переписувати | написати | лежати
+
+2. Я давно мріяв навчитися ___, і нарешті маю таку можливість.
+   > [!answer] розмовляти
+   > [!options] казати | розмовляти | приміряти | пообідати
+
+3. Вони довго шукали хорошу ___, але не знайшли.
+   > [!answer] розмова
+   > [!options] дефект | радіо | розмова | слухання
+
+4. Моя сестра каже, що їй подобається ___ у вільний час.
+   > [!answer] навчатися
+   > [!options] залишитися | виходити | навчатися | виявитися
+
+5. Моя сестра сказала, що її ___ дуже зручна.
+   > [!answer] учениця
+   > [!options] ресторан | знання | субота | учениця
+
+6. Цей ___ належить моєму другові з Києва.
+   > [!answer] учень
+   > [!options] спина | виріб | учень | кредит
+
+7. Я вважаю, що ця пропозиція є занадто ___ для нас.
+   > [!answer] робочий
+   > [!options] минулий | водонепроникний | новий | робочий
+
+8. Я хочу купити цей ___, але він занадто дорогий.
+   > [!answer] опис
+   > [!options] опис | турист | буква | ресторан
+
+9. Моя сестра сказала, що її ___ дуже зручна.
+   > [!answer] читальня
+   > [!options] читальня | сніг | директор | підтримка
+
+10. Моя сестра сказала, що її ___ дуже зручна.
+   > [!answer] промова
+   > [!options] понеділок | вареники | бабуся | промова
+
+11. Цей варіант здається мені найбільш ___ з усіх.
+   > [!answer] науковий
+   > [!options] українська | сільський | науковий | більший
+
+12. Цей варіант здається мені найбільш ___ з усіх.
+   > [!answer] начитаний
+   > [!options] впевнений | морський | зоряний | начитаний
+
+13. Моя сестра каже, що їй подобається ___ у вільний час.
+   > [!answer] мовчати
+   > [!options] залишитися | допомагати | мовчати | спати
+
+14. Я хочу купити цю ___, але вона занадто дорога.
+   > [!answer] записка
+   > [!options] записка | поїзд | життя | радість
+
+## unjumble: Побудуйте речення
+
+> Розташуйте слова в правильному порядку.
+
+1. моїй / належить / з / читальня / подрузі / Ця / Києва
+   > [!answer] Ця читальня належить моїй подрузі з Києва.
+   > (reading room)
+
+2. Києва / моєму / вчитель / другові / належить / з / Цей
+   > [!answer] Цей вчитель належить моєму другові з Києва.
+   > (teacher (m))
+
+3. другові / моєму / Києва / належить / учень / Цей / з
+   > [!answer] Цей учень належить моєму другові з Києва.
+   > (student, pupil)
+
+4. хочу / але / дорога / купити / вона / учениця / Я / занадто / цю
+   > [!answer] Я хочу купити цю учениця, але вона занадто дорога.
+   > (female student)
+
+5. з / Цей / другові / моєму / виріб / належить / Києва
+   > [!answer] Цей виріб належить моєму другові з Києва.
+   > (product)
+
+6. Вони / записка / довго / знайшли / але / не / шукали / хорошу
+   > [!answer] Вони довго шукали хорошу записка, але не знайшли.
+   > (note)
+
+7. запис / дуже / що / зручний / сказав / друг / його / Мій
+   > [!answer] Мій друг сказав, що його запис дуже зручний.
+   > (record, entry)
+
+8. довго / хороше / але / шукали / Вони / мовлення / не / знайшли
+   > [!answer] Вони довго шукали хороше мовлення, але не знайшли.
+   > (speech)
+
+9. цей / Я / він / занадто / дорогий / але / купити / опис / хочу
+   > [!answer] Я хочу купити цей опис, але він занадто дорогий.
+   > (description)
+
+10. Києва / другові / з / моєму / належить / договір / Цей
+   > [!answer] Цей договір належить моєму другові з Києва.
+   > (contract)
+
+11. сказала / що / зручна / Моя / наука / її / дуже / сестра
+   > [!answer] Моя сестра сказала, що її наука дуже зручна.
+   > (science)
+
+12. заробіток / купити / занадто / дорогий / він / цей / Я / хочу / але
+   > [!answer] Я хочу купити цей заробіток, але він занадто дорогий.
+   > (earnings)
+
+13. з / Ця / належить / промова / подрузі / Києва / моїй
+   > [!answer] Ця промова належить моїй подрузі з Києва.
+   > (speech, address)
+
+## match-up: Знайдіть пари
+
+> З'єднайте українські слова з англійськими.
 
 | Left | Right |
 |------|-------|
-| -уч-/-вч- | learning, teaching |
-| -роб- | work, making |
-| -пис- | writing |
-| -чит- | reading |
-| -говор-/-мов- | speech, language |
+| були | were |
+| решта | change (money) |
+| перечитати | to reread |
+| промова | speech, address |
+| робочий | working |
+| вчитель | teacher (m) |
+| учень | student, pupil |
+| мовчати | to be silent |
+| розмір | size |
+| дякувати | to thank |
+| учениця | female student |
+| перемовини | negotiations |
+| записка | note |
+| вам | to you |
 
-## quiz: Root Families
+## quiz: Перевірка значень
 
-> Identify the word from the same root family.
+> Оберіть правильну відповідь.
 
-1. Which word is from the same family as "писати"?
-   - [x] письменник
-   - [ ] читач
-   - [ ] робітник
-   - [ ] вчитель
-   > All contain the root -пис- (writing).
+1. Що означає "мовчати"?
+   - [ ] skirt
+   - [x] to be silent
+   - [ ] to drink
+   - [ ] partner
+   > "мовчати" means "to be silent"
 
-2. Which word is from the same family as "робота"?
-   - [x] виробництво
-   - [ ] навчання
-   - [ ] розмова
-   - [ ] читання
-   > Both contain -роб- (work).
-
-3. Which word is from the same family as "мова"?
-   - [x] розмовляти
-   - [ ] записувати
-   - [ ] працювати
-   - [ ] навчатися
-   > Both contain -мов- (speech).
-
-4. Which word is from the same family as "учень"?
-   - [x] навчання
-   - [ ] читання
-   - [ ] писання
-   - [ ] виробництво
-   > Both contain -уч-/-вч- (learning).
-
-5. Which word is from the same family as "читати"?
-   - [x] перечитати
-   - [ ] переписати
-   - [ ] переробити
-   - [ ] перемовини
-   > Both contain -чит- (reading).
-
-6. "Заробляти" means "to earn." What root does it contain?
-   - [x] -роб- (work)
-   - [ ] -пис- (write)
-   - [ ] -чит- (read)
-   - [ ] -мов- (speech)
-   > За-роб-ляти — earning is related to work!
-
-## group-sort: By Root
-
-### -уч-/-вч- (learning)
-- учень
-- вчитель
-- навчання
-- наука
-
-### -роб- (work)
-- робота
-- робітник
-- виробництво
-- заробляти
-
-### -пис- (writing)
-- писати
-- підпис
-- записка
-- письменник
-
-### -чит- (reading)
-- читати
-- читач
-- прочитати
-- читальня
-
-
-## true-false: True or False?
-
-> Determine if each statement is true or false.
-
-- [x] "учень" is masculine.
-   > Correct! учень is masculine.
-
-- [x] "учениця" is feminine.
-   > Correct! учениця is feminine.
-
-- [x] "вчитель" is masculine.
-   > Correct! вчитель is masculine.
-
-- [x] "вчителька" is feminine.
-   > Correct! вчителька is feminine.
-
-- [ ] "вчений" is feminine.
-   > Incorrect. вчений is masculine.
-
-- [ ] "наука" is masculine.
-   > Incorrect. наука is feminine.
-
-
-## fill-in: Fill in the Blank
-
-> Fill in the blanks with the correct word.
-
-1. учен- ___ -иця
-   > [!answer] +
-
-2. вч- ___ -итель
-   > [!answer] +
-
-3. вчитель- ___ -ка
-   > [!answer] +
-
-4. на- + ___ + -ання
-   > [!answer] вч-
-
-5. на- + ___ + -атися
-   > [!answer] вч-
-
-
-
-## quiz: Meaning Check
-
-> Choose the correct answer.
-
-1. What does "записка" mean?
-   - [ ] product
-   - [ ] student, pupil
-   - [x] note
-   - [ ] scientific
-   > "записка" means "note"
-
-2. What does "учень" mean?
-   - [ ] note
-   - [ ] scientific
-   - [x] student, pupil
-   - [ ] product
-   > "учень" means "student, pupil"
-
-3. What does "виріб" mean?
-   - [ ] note
-   - [ ] scientific
-   - [ ] student, pupil
-   - [x] product
-   > "виріб" means "product"
-
-4. What does "науковий" mean?
+2. Що означає "науковий"?
    - [x] scientific
-   - [ ] product
-   - [ ] note
-   - [ ] student, pupil
+   - [ ] vacancy, job opening
+   - [ ] sea
+   - [ ] passport
    > "науковий" means "scientific"
 
-5. What does "учениця" mean?
-   - [x] female student
-   - [ ] student, pupil
-   - [ ] product
-   - [ ] note
-   > "учениця" means "female student"
+3. Що означає "вчителька"?
+   - [ ] to wait (perf)
+   - [x] teacher (f)
+   - [ ] earth
+   - [ ] alphabet
+   > "вчителька" means "teacher (f)"
 
-6. What does "розмовляти" mean?
-   - [ ] note
-   - [ ] product
+4. Що означає "виробляти"?
+   - [ ] to fall asleep
+   - [ ] duty, responsibility
+   - [x] to produce
+   - [ ] negotiations
+   > "виробляти" means "to produce"
+
+5. Що означає "промова"?
+   - [ ] if
+   - [x] speech, address
+   - [ ] mistake
+   - [ ] pity, shame
+   > "промова" means "speech, address"
+
+6. Що означає "навчатися"?
+   - [ ] faster
+   - [x] to study
+   - [ ] humanity
+   - [ ] well done! fine fellow
+   > "навчатися" means "to study"
+
+7. Що означає "наука"?
+   - [x] science
+   - [ ] this (masculine)
+   - [ ] agree (f)
+   - [ ] spring
+   > "наука" means "science"
+
+8. Що означає "мовлення"?
+   - [ ] to be afraid
+   - [x] speech
+   - [ ] secretary (f)
+   - [ ] small
+   > "мовлення" means "speech"
+
+9. Що означає "запис"?
+   - [ ] reading
+   - [x] record, entry
+   - [ ] you will be
+   - [ ] between
+   > "запис" means "record, entry"
+
+10. Що означає "заробляти"?
+   - [ ] yesterday
+   - [ ] something
+   - [ ] busy
+   - [x] to earn
+   > "заробляти" means "to earn"
+
+11. Що означає "начитаний"?
+   - [ ] recently
+   - [ ] last, past
+   - [x] well-read
+   - [ ] snow
+   > "начитаний" means "well-read"
+
+12. Що означає "заробіток"?
+   - [x] earnings
+   - [ ] charger
+   - [ ] school
+   - [ ] to call (impf)
+   > "заробіток" means "earnings"
+
+13. Що означає "розмовляти"?
    - [x] to converse
-   - [ ] student, pupil
+   - [ ] less
+   - [ ] five
+   - [ ] prescription
    > "розмовляти" means "to converse"
 
+14. Що означає "розмова"?
+   - [ ] to do, to make
+   - [x] conversation
+   - [ ] highest/tallest
+   - [ ] to cook
+   > "розмова" means "conversation"
 
+## true-false: Правда чи ні?
 
-## unjumble: Word Order
+> Визначте, чи правильне твердження.
 
-> Put the words in the correct order to form a sentence.
+- [x] "наука" means "science"
+   > Correct!
 
-1. -ити / + / вч-
-   > [!answer] вч- + -ити
-   > (to teach/learn)
+- [ ] "заробляти" means "to hear (perf)"
+   > Incorrect. "заробляти" means "to earn"
 
-2. + / -ень / уч-
-   > [!answer] уч- + -ень
-   > (student, pupil)
+- [x] "заробіток" means "earnings"
+   > Correct!
 
-3. -иця / учен- / +
-   > [!answer] учен- + -иця
-   > (female student)
+- [ ] "виробляти" means "artist"
+   > Incorrect. "виробляти" means "to produce"
 
-4. вч- / + / -итель
-   > [!answer] вч- + -итель
-   > (teacher (m))
+- [ ] "учень" means "to agree (impf)"
+   > Incorrect. "учень" means "student, pupil"
 
+- [x] "робочий" means "working"
+   > Correct!
+
+- [ ] "науковий" means "to serve"
+   > Incorrect. "науковий" means "scientific"
+
+- [ ] "запис" means "vacation"
+   > Incorrect. "запис" means "record, entry"
+
+- [x] "виріб" means "product"
+   > Correct!
+
+- [ ] "вчителька" means "rate"
+   > Incorrect. "вчителька" means "teacher (f)"
+
+## group-sort: Сортування за родом
+
+> Розподіліть слова за родами.
+
+### Чоловічий рід
+- договір
+- вчений
+- запис
+- опис
+- учень
+- вчитель
+
+### Жіночий рід
+- читальня
+- промова
+- наука
+- учениця
+- вчителька
+- записка
 
 ---
 

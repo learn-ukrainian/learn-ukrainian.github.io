@@ -300,181 +300,240 @@ Imagine you're sick. Describe:
 
 ---
 
+---
+
+---
+
+---
+
 # Activities
 
-## match-up: Body Parts
+## fill-in: Complete the Sentences
 
-> Match Ukrainian with English.
+> Choose the correct word to complete each sentence.
+
+1. Мій брат любить ___ щодня.
+   > [!answer] боліти
+   > [!options] дякувати | була | подарувати | боліти
+
+2. Мій брат має хороше ___.
+   > [!answer] горло
+   > [!options] горло | ручка | чохол | отримувач
+
+3. Де ваша велика ___?
+   > [!answer] голова
+   > [!options] дідусь | голова | вікно | поїзд
+
+4. Це мій новий ___.
+   > [!answer] рецепт
+   > [!options] парк | зима | спідниця | рецепт
+
+5. Цей ___ коштує сто гривень.
+   > [!answer] нежить
+   > [!options] подарунок | хокей | нежить | чашка
+
+6. Де ваш великий ___?
+   > [!answer] живіт
+   > [!options] лікар | вечеря | живіт | екран
+
+7. Ця ___ коштує сто гривень.
+   > [!answer] застуда
+   > [!options] початок | пальто | застуда | одержувач
+
+## unjumble: Build the Sentence
+
+> Arrange the words in the correct order.
+
+1. сто / коштує / голова / Ця / гривень
+   > [!answer] Ця голова коштує сто гривень.
+   > (head)
+
+2. Я / таблетка / хочу / купити / цю
+   > [!answer] Я хочу купити цю таблетка.
+   > (tablet, pill)
+
+3. брат / має / хороший / рецепт / Мій
+   > [!answer] Мій брат має хороший рецепт.
+   > (prescription)
+
+4. спина / Мій / брат / має / хорошу
+   > [!answer] Мій брат має хорошу спина.
+   > (back)
+
+5. сто / кашель / коштує / гривень / Цей
+   > [!answer] Цей кашель коштує сто гривень.
+   > (cough)
+
+6. Це / застуда / нова / моя
+   > [!answer] Це моя нова застуда.
+   > (cold (illness))
+
+7. Це / нежить / новий / мій
+   > [!answer] Це мій новий нежить.
+   > (runny nose)
+
+8. моє / горло / нове / Це
+   > [!answer] Це моє нове горло.
+   > (throat)
+
+9. Це / новий / мій / живіт
+   > [!answer] Це мій новий живіт.
+   > (stomach, belly)
+
+10. Я / хочу / цей / купити / ліки
+   > [!answer] Я хочу купити цей ліки.
+   > (medicine)
+
+## match-up: Match the Pairs
+
+> Match Ukrainian words to their English meanings.
 
 | Left | Right |
 |------|-------|
-| голова | head |
-| рука | arm/hand |
-| горло | throat |
-| живіт | stomach |
+| таблетка | tablet, pill |
 | спина | back |
-| нога | leg/foot |
-
-## quiz: Health Vocabulary
-
-> Choose the correct answer.
-
-1. "My head hurts" - У мене ___ голова.
-   - [x] болить
-   - [ ] болять
-   - [ ] боліти
-   - [ ] болю
-   > Голова (singular) = болить.
-
-2. "My eyes hurt" - У мене ___ очі.
-   - [x] болять
-   - [ ] болить
-   - [ ] боліти
-   - [ ] болю
-   > Очі (plural) = болять.
-
-3. "I have a fever" - У мене ___.
-   - [x] температура
-   - [ ] кашель
-   - [ ] нежить
-   - [ ] біль
-   > Fever = температура.
-
-4. "Something for headache" - Щось ___ головного болю.
-   - [x] від
-   - [ ] для
-   - [ ] з
-   - [ ] на
-   > Medicine "from" = від.
-
-5. "Take three times a day" - Приймайте ___ рази на день.
-   - [x] три
-   - [ ] трьох
-   - [ ] трьома
-   - [ ] третій
-   > Cardinal number = три.
-
-6. "Open your mouth" - ___ рот.
-   - [x] Відкрийте
-   - [ ] Відкриваєте
-   - [ ] Відкривати
-   - [ ] Відкрив
-   > Imperative = відкрийте.
-
-## group-sort: Symptoms vs Body Parts
-
-> Sort vocabulary.
-
-### Body Parts
-- голова
-- рука
-- живіт
-- горло
-- спина
-- очі
-
-### Symptoms
-- температура
-- кашель
-- нежить
-- нудота
-- запаморочення
-- слабкість
-
-
-## true-false: True or False?
-
-> Determine if each statement is true or false.
-
-- [x] "голова" is feminine.
-   > Correct! голова is feminine.
-
-- [x] "горло" is neuter.
-   > Correct! горло is neuter.
-
-- [x] "живіт" is masculine.
-   > Correct! живіт is masculine.
-
-- [x] "спина" is feminine.
-   > Correct! спина is feminine.
-
-- [ ] "кашель" is feminine.
-   > Incorrect. кашель is masculine.
-
-- [ ] "нежить" is feminine.
-   > Incorrect. нежить is masculine.
-
-
-## fill-in: Fill in the Blank
-
-> Fill in the blanks with the correct word.
-
-
+| живіт | stomach, belly |
+| нежить | runny nose |
+| рецепт | prescription |
+| боліти | to hurt, ache |
+| найцікавіший | most interesting |
+| посилка | package |
+| курка | chicken |
+| голова | head |
+| горло | throat |
+| застуда | cold (illness) |
 
 ## quiz: Meaning Check
 
 > Choose the correct answer.
 
-1. What does "голова" mean?
-   - [ ] stomach, belly
-   - [ ] cold (illness)
-   - [x] head
-   - [ ] medicine
-   > "голова" means "head"
-
-2. What does "живіт" mean?
-   - [ ] head
-   - [ ] medicine
-   - [x] stomach, belly
-   - [ ] cold (illness)
-   > "живіт" means "stomach, belly"
-
-3. What does "застуда" mean?
-   - [ ] head
-   - [x] cold (illness)
-   - [ ] stomach, belly
-   - [ ] medicine
-   > "застуда" means "cold (illness)"
-
-4. What does "ліки" mean?
-   - [ ] stomach, belly
-   - [ ] cold (illness)
+1. What does "ліки" mean?
+   - [ ] near, by
    - [x] medicine
-   - [ ] head
+   - [ ] their (m)
+   - [ ] next
    > "ліки" means "medicine"
 
-5. What does "спина" mean?
+2. What does "таблетка" mean?
+   - [ ] partner
+   - [x] tablet, pill
+   - [ ] five
+   - [ ] along
+   > "таблетка" means "tablet, pill"
+
+3. What does "голова" mean?
+   - [ ] much (intensifier)
+   - [ ] more slowly
+   - [x] head
+   - [ ] married (m)
+   > "голова" means "head"
+
+4. What does "застуда" mean?
+   - [x] cold (illness)
+   - [ ] cash register
+   - [ ] result
+   - [ ] five
+   > "застуда" means "cold (illness)"
+
+5. What does "кашель" mean?
+   - [x] cough
+   - [ ] incredibly
+   - [ ] door
+   - [ ] to be mistaken
+   > "кашель" means "cough"
+
+6. What does "боліти" mean?
+   - [ ] relative
+   - [x] to hurt, ache
+   - [ ] hot (adv)
+   - [ ] suddenly
+   > "боліти" means "to hurt, ache"
+
+7. What does "живіт" mean?
+   - [ ] masculine
+   - [x] stomach, belly
+   - [ ] day after tomorrow
+   - [ ] to try on
+   > "живіт" means "stomach, belly"
+
+8. What does "спина" mean?
+   - [ ] to go (on foot)
    - [x] back
-   - [ ] cold (illness)
-   - [ ] head
-   - [ ] stomach, belly
+   - [ ] receipt
+   - [ ] was (f)
    > "спина" means "back"
 
-6. What does "нежить" mean?
-   - [ ] head
+9. What does "рецепт" mean?
+   - [x] prescription
+   - [ ] son
+   - [ ] lemon
+   - [ ] charger
+   > "рецепт" means "prescription"
+
+10. What does "горло" mean?
+   - [ ] more slowly
+   - [ ] tomato
+   - [x] throat
+   - [ ] fresh
+   > "горло" means "throat"
+
+11. What does "нежить" mean?
+   - [ ] sender
+   - [ ] salt
    - [x] runny nose
-   - [ ] cold (illness)
-   - [ ] stomach, belly
+   - [ ] it's necessary
    > "нежить" means "runny nose"
 
+## true-false: True or False?
 
+> Determine if each statement is true or false.
 
-## unjumble: Word Order
+- [ ] "боліти" means "that (masculine)"
+   > Incorrect. "боліти" means "to hurt, ache"
 
-> Put the words in the correct order to form a sentence.
+- [ ] "ліки" means "page"
+   > Incorrect. "ліки" means "medicine"
 
-1. На / що / скаржитесь
-   > [!answer] На що скаржитесь?
-   > (What are your complaints?)
+- [ ] "кашель" means "Wednesday"
+   > Incorrect. "кашель" means "cough"
 
-2. вас / Що / турбує
-   > [!answer] Що вас турбує?
-   > (What's bothering you?)
+- [ ] "нежить" means "seven"
+   > Incorrect. "нежить" means "runny nose"
 
-3. Як / давно / це / почалося
-   > [!answer] Як давно це почалося?
-   > (How long has this been going on?)
+- [x] "застуда" means "cold (illness)"
+   > Correct!
 
+- [x] "рецепт" means "prescription"
+   > Correct!
+
+- [x] "живіт" means "stomach, belly"
+   > Correct!
+
+- [ ] "горло" means "nothing"
+   > Incorrect. "горло" means "throat"
+
+- [x] "спина" means "back"
+   > Correct!
+
+- [x] "голова" means "head"
+   > Correct!
+
+## group-sort: Sort by Gender
+
+> Sort the nouns into gender categories.
+
+### Masculine
+- ліки
+- нежить
+- рецепт
+- кашель
+- живіт
+
+### Feminine
+- таблетка
+- голова
+- спина
+- застуда
 
 ---
 

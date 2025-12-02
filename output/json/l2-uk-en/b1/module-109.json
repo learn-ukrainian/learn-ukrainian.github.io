@@ -46,9 +46,9 @@
         "content": "## Expressing Cause (Reason)\n\n| Expression | Structure | Register | Example |\n|------------|-----------|----------|---------|\n| тому що | + clause | neutral | ...тому що захворів |\n| бо | + clause | informal | ...бо захворів |\n| оскільки | + clause | formal | Оскільки він хворий... |\n| через | + noun (acc) | neutral, negative | ...через хворобу |\n| завдяки | + noun (dat) | neutral, positive | ...завдяки допомозі |\n\n## Expressing Result (Consequence)\n\n| Expression | Position | Register | Example |\n|------------|----------|----------|---------|\n| тому | mid-sentence | neutral | ...тому не прийшов |\n| отже | sentence start | formal | Отже, він не прийшов. |\n| тож | mid-sentence | informal | ...тож не прийшов |\n| так що | mid-sentence | neutral | ...так що не прийшов |\n\n## Через vs. Завдяки\n\n| Preposition | Case | Connotation | Example |\n|-------------|------|-------------|---------|\n| через | + accusative | negative/neutral | через проблеми |\n| завдяки | + dative | positive | завдяки допомозі |\n\n> **Key Takeaways**\n>\n> - Тому що = because (most common)\n> - Бо = because (informal)\n> - Оскільки = since (formal, often first)\n> - Через + acc = because of (negative)\n> - Завдяки + dat = thanks to (positive)\n> - Тому/отже/тож = therefore/so (result)"
       }
     ],
-    "rawMarkdown": "---\nmodule: 109\ntitle: \"Causal and Result Clauses\"\nsubtitle: \"Because, Due to, Therefore\"\nlevel: B1\nphase: B1.2\nduration: 45\ntransliteration: none\ntags: [grammar, causal-clauses, result-clauses, complex-sentences]\nobjectives:\n  - Express reasons with тому що, оскільки, бо\n  - Use через те, що and завдяки тому, що\n  - Express results with тому, отже, так що\n  - Distinguish cause from result expressions\n---\n\n# Зміст уроку | Lesson Content\n\n## warm-up | Розминка\n\n### Причина та результат | Cause and Result\n\n**Cause** answers \"Why?\":\n- Він не прийшов, **тому що** захворів. (He didn't come **because** he got sick.)\n\n**Result** answers \"What happened?\":\n- Він захворів, **тому** він не прийшов. (He got sick, **therefore** he didn't come.)\n\n## presentation | Презентація\n\n### Тому що — Because (Most Common)\n\n**Тому що** is the most common way to express \"because\":\n\n| Ukrainian | English |\n|-----------|---------|\n| Я не пішов, **тому що** був зайнятий. | I didn't go because I was busy. |\n| Вона запізнилася, **тому що** пропустила автобус. | She was late because she missed the bus. |\n| Він вивчає українську, **тому що** хоче жити в Україні. | He studies Ukrainian because he wants to live in Ukraine. |\n\n**Position:** \"Тому що\" clause usually comes second:\n- Main clause + **тому що** + reason\n\n### Бо — Because (Informal)\n\n**Бо** is a shorter, more colloquial alternative:\n\n| Ukrainian | English |\n|-----------|---------|\n| Я не прийшов, **бо** захворів. | I didn't come 'cause I got sick. |\n| Вона не відповіла, **бо** не чула. | She didn't answer because she didn't hear. |\n\n> **⭐ ТОМУ ЩО vs. БО**\n>\n> - **Тому що** — neutral, formal and informal\n> - **Бо** — colloquial, informal speech\n>\n> Both are correct; use \"тому що\" in formal writing.\n\n### Оскільки / Позаяк — Since, Because (Formal)\n\n**Оскільки** is more formal, often in written language:\n\n| Ukrainian | English |\n|-----------|---------|\n| **Оскільки** він не прийшов, ми почали без нього. | Since he didn't come, we started without him. |\n| **Оскільки** немає питань, закінчимо зустріч. | Since there are no questions, let's end the meeting. |\n\n**Position:** \"Оскільки\" clause often comes first (more formal emphasis).\n\n**Позаяк** is an archaic/bureaucratic synonym:\n- **Позаяк** він не відповів... (Since he didn't respond...)\n\n### Через те, що — Due to the fact that, Because\n\n**Через те, що** emphasizes the cause as an obstacle or problem:\n\n| Ukrainian | English |\n|-----------|---------|\n| Я запізнився **через те, що** був затор. | I was late due to the fact that there was traffic. |\n| Вона втомилася **через те, що** мало спала. | She's tired because she didn't sleep much. |\n\n**Shorter:** Через те що (without comma)\n\n### Через + Noun — Because of, Due to (Negative)\n\n**Через** + accusative noun (often negative cause):\n\n| Ukrainian | English |\n|-----------|---------|\n| Він запізнився **через** затор. | He was late because of traffic. |\n| Вона не прийшла **через** хворобу. | She didn't come because of illness. |\n| **Через** дощ ми залишилися вдома. | Because of the rain, we stayed home. |\n\n### Завдяки тому, що — Thanks to the fact that\n\n**Завдяки тому, що** emphasizes a positive cause:\n\n| Ukrainian | English |\n|-----------|---------|\n| Він здав іспит **завдяки тому, що** багато вчився. | He passed the exam thanks to studying a lot. |\n| Ми встигли **завдяки тому, що** виїхали рано. | We made it thanks to leaving early. |\n\n### Завдяки + Noun — Thanks to (Positive)\n\n**Завдяки** + dative noun (positive cause):\n\n| Ukrainian | English |\n|-----------|---------|\n| Він успішний **завдяки** наполегливій праці. | He's successful thanks to hard work. |\n| **Завдяки** друзям я впорався. | Thanks to friends, I managed. |\n| Я вивчив мову **завдяки** вчителю. | I learned the language thanks to my teacher. |\n\n> **⭐ ЧЕРЕЗ VS. ЗАВДЯКИ**\n>\n> - **Через** + acc — negative/neutral cause (problem, obstacle)\n> - **Завдяки** + dat — positive cause (help, benefit)\n>\n> Через хворобу (because of illness — negative)\n> Завдяки допомозі (thanks to help — positive)\n\n### Expressing Results\n\n**Тому — Therefore, That's why:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Я втомився, **тому** пішов спати. | I was tired, therefore I went to sleep. |\n| Йшов дощ, **тому** ми залишилися вдома. | It was raining, that's why we stayed home. |\n\n**Отже / Таким чином — Therefore, Thus (formal):**\n\n| Ukrainian | English |\n|-----------|---------|\n| Він не готовий. **Отже**, перенесемо зустріч. | He's not ready. Therefore, we'll postpone the meeting. |\n| **Таким чином**, проблему вирішено. | Thus, the problem is solved. |\n\n**Тож — So, Therefore (conversational):**\n\n| Ukrainian | English |\n|-----------|---------|\n| Я втомився, **тож** піду спати. | I'm tired, so I'll go to sleep. |\n| Дощ закінчився, **тож** можемо йти. | The rain stopped, so we can go. |\n\n### Так що — So that (Result)\n\n**Так що** introduces a result:\n\n| Ukrainian | English |\n|-----------|---------|\n| Він працював багато, **так що** втомився. | He worked a lot, so he got tired. |\n| Вона вивчила все, **так що** здала іспит. | She studied everything, so she passed the exam. |\n\n### Summary: Cause vs. Result\n\n| Type | Expression | Example |\n|------|------------|---------|\n| **Cause** | тому що | ...тому що захворів. |\n| **Cause** | бо | ...бо захворів. |\n| **Cause** | оскільки | Оскільки він хворий... |\n| **Cause** | через те, що | ...через те, що хворий. |\n| **Cause (negative)** | через + noun | ...через хворобу. |\n| **Cause (positive)** | завдяки + noun | ...завдяки допомозі. |\n| **Result** | тому | ...тому не прийшов. |\n| **Result** | отже | Отже, він не прийшов. |\n| **Result** | тож | ...тож не прийшов. |\n| **Result** | так що | ...так що не прийшов. |\n\n## practice | Практика\n\n### Choose the Correct Conjunction\n\n1. Він не прийшов, ___ захворів.\n   - a) тому що ✓\n   - b) тому\n   - c) хоча\n\n2. Вона втомилася ___ роботу.\n   - a) через ✓\n   - b) завдяки\n   - c) оскільки\n\n3. ___ ваша допомога я впорався.\n   - a) Через\n   - b) Завдяки ✓\n   - c) Тому що\n\n4. Йшов дощ, ___ ми залишилися вдома.\n   - a) бо\n   - b) тому ✓\n   - c) оскільки\n\n5. ___ немає питань, закінчимо зустріч.\n   - a) Тому що\n   - b) Оскільки ✓\n   - c) Тож\n\n### Transform: Cause to Result\n\n**Example:** Я втомився, тому що працював багато.\n> [!answer] Я працював багато, тому втомився.\n\n1. Вона запізнилася, тому що пропустила автобус.\n   > [!answer] Вона пропустила автобус, **тому** запізнилася.\n\n2. Він не прийшов, тому що захворів.\n   > [!answer] Він захворів, **тому** не прийшов.\n\n3. Ми залишилися вдома, тому що йшов дощ.\n   > [!answer] Йшов дощ, **тому** ми залишилися вдома.\n\n### Через or Завдяки?\n\n1. Він здав іспит ___ наполегливій праці.\n   > [!answer] **завдяки**\n   > [!explanation] positive cause\n2. Вона запізнилася ___ затор.\n   > [!answer] **через**\n   > [!explanation] negative cause\n3. ___ друзям я впорався.\n   > [!answer] **Завдяки**\n   > [!explanation] positive cause\n4. ___ хворобу він не прийшов.\n   > [!answer] **Через**\n   > [!explanation] negative cause\n5. Команда перемогла ___ тренуванням.\n   > [!answer] **завдяки**\n   > [!explanation] positive cause\n### Translate to Ukrainian\n\n1. I didn't come because I was sick.\n   > [!answer] **Я не прийшов, тому що захворів.**\n2. Thanks to your help, I succeeded.\n   > [!answer] **Завдяки вашій допомозі я досяг успіху.**\n3. Because of the rain, we stayed home.\n   > [!answer] **Через дощ ми залишилися вдома.**\n4. He was tired, so he went to sleep.\n   > [!answer] **Він втомився, тому пішов спати.**\n5. Since there are no questions, let's end.\n   > [!answer] **Оскільки немає питань, закінчимо.**\n## production | Продукція\n\n### Explain Causes and Results\n\nTalk about your life using causal/result expressions:\n\n1. Чому ви вивчаєте українську?\n   > [!answer] Я вивчаю українську, **тому що**...\n\n2. Завдяки чому ви досягли успіхів?\n   > [!answer] Я досяг успіхів **завдяки**...\n\n3. Через що у вас були труднощі?\n   > [!answer] У мене були труднощі **через**...\n\n**Example:**\nЯ вивчаю українську, **тому що** моя родина з України. **Завдяки** інтернету я можу практикуватися щодня. **Через** брак часу я не завжди можу займатися, **тому** прогрес повільний.\n\n### Discussion: Причини і наслідки\n\nDiscuss causes and results:\n- Чому люди вчать іноземні мови?\n- Завдяки чому можна досягти успіху?\n- Через що люди стресують?\n\n---\n\n# Activities\n\n## quiz: Causal and Result Clauses\n\n> Choose the correct answer.\n\n1. Він не прийшов, ___ захворів.\n   - [x] тому що\n   - [ ] тому\n   > \"Тому що\" introduces cause (reason).\n\n2. Вона досягла успіху ___ наполегливості.\n   - [x] завдяки\n   - [ ] через\n   > \"Завдяки\" + dative for positive cause.\n\n3. ___ поганої погоди, захід скасували.\n   - [x] Через\n   - [ ] Завдяки\n   > \"Через\" + accusative for negative cause.\n\n4. Йшов дощ, ___ ми не пішли.\n   - [ ] бо\n   - [x] тому\n   > \"Тому\" introduces result.\n\n5. ___ він не готовий, перенесемо зустріч.\n   - [x] Оскільки\n   - [ ] Тому що\n   > \"Оскільки\" at the start is more formal.\n\n6. Він працював багато, ___ втомився.\n   - [x] так що\n   - [ ] бо\n   > \"Так що\" introduces result.\n\n## fill-in: Complete the Explanation\n\n> Я не зміг приїхати на зустріч (1)___ несподіваних обставин. Мій поїзд затримався (2)___ того, що була аварія на дорозі. (3)___ я спізнився на зустріч. Але (4)___ вашому розумінню все закінчилося добре.\n\n**Answers:** через, через те, Тому, завдяки\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | Notes |\n|------|-----|---------|-------|\n| оскільки | /osˈkʲilʲkɪ/ | since, because | conj (formal) |\n| через те, що | /ˈtʃɛrɛz tɛ ʃt͡ʃɔ/ | due to the fact that | conj |\n| завдяки | /zɑvˈdʲɑkɪ/ | thanks to | prep + dat |\n| завдяки тому, що | /zɑwˈdʲakɪ tɔˈmu/ | thanks to the fact that | conj |\n| тому | /toˈmu/ | therefore, that's why | adv |\n| тож | /toʒ/ | so, therefore | adv (informal) |\n| так що | /tɑk ʃt͡ʃo/ | so that, so | conj |\n\n---\n\n# Review Vocabulary\n\n| Word | First Module |\n|------|-------------|\n| тому що | 53 |\n| бо | 53 |\n| через | 94 |\n| отже | 58 |\n| причина | 95 |\n| наслідок | 95 |\n\n---\n\n# Summary\n\n## Expressing Cause (Reason)\n\n| Expression | Structure | Register | Example |\n|------------|-----------|----------|---------|\n| тому що | + clause | neutral | ...тому що захворів |\n| бо | + clause | informal | ...бо захворів |\n| оскільки | + clause | formal | Оскільки він хворий... |\n| через | + noun (acc) | neutral, negative | ...через хворобу |\n| завдяки | + noun (dat) | neutral, positive | ...завдяки допомозі |\n\n## Expressing Result (Consequence)\n\n| Expression | Position | Register | Example |\n|------------|----------|----------|---------|\n| тому | mid-sentence | neutral | ...тому не прийшов |\n| отже | sentence start | formal | Отже, він не прийшов. |\n| тож | mid-sentence | informal | ...тож не прийшов |\n| так що | mid-sentence | neutral | ...так що не прийшов |\n\n## Через vs. Завдяки\n\n| Preposition | Case | Connotation | Example |\n|-------------|------|-------------|---------|\n| через | + accusative | negative/neutral | через проблеми |\n| завдяки | + dative | positive | завдяки допомозі |\n\n> **Key Takeaways**\n>\n> - Тому що = because (most common)\n> - Бо = because (informal)\n> - Оскільки = since (formal, often first)\n> - Через + acc = because of (negative)\n> - Завдяки + dat = thanks to (positive)\n> - Тому/отже/тож = therefore/so (result)\n",
-    "createdAt": "2025-12-02T19:45:09.482Z",
-    "modifiedAt": "2025-12-02T19:45:09.482Z",
+    "rawMarkdown": "---\nmodule: 109\ntitle: \"Causal and Result Clauses\"\nsubtitle: \"Because, Due to, Therefore\"\nlevel: B1\nphase: B1.2\nduration: 45\ntransliteration: none\ntags: [grammar, causal-clauses, result-clauses, complex-sentences]\nobjectives:\n  - Express reasons with тому що, оскільки, бо\n  - Use через те, що and завдяки тому, що\n  - Express results with тому, отже, так що\n  - Distinguish cause from result expressions\n---\n\n# Зміст уроку | Lesson Content\n\n## warm-up | Розминка\n\n### Причина та результат | Cause and Result\n\n**Cause** answers \"Why?\":\n- Він не прийшов, **тому що** захворів. (He didn't come **because** he got sick.)\n\n**Result** answers \"What happened?\":\n- Він захворів, **тому** він не прийшов. (He got sick, **therefore** he didn't come.)\n\n## presentation | Презентація\n\n### Тому що — Because (Most Common)\n\n**Тому що** is the most common way to express \"because\":\n\n| Ukrainian | English |\n|-----------|---------|\n| Я не пішов, **тому що** був зайнятий. | I didn't go because I was busy. |\n| Вона запізнилася, **тому що** пропустила автобус. | She was late because she missed the bus. |\n| Він вивчає українську, **тому що** хоче жити в Україні. | He studies Ukrainian because he wants to live in Ukraine. |\n\n**Position:** \"Тому що\" clause usually comes second:\n- Main clause + **тому що** + reason\n\n### Бо — Because (Informal)\n\n**Бо** is a shorter, more colloquial alternative:\n\n| Ukrainian | English |\n|-----------|---------|\n| Я не прийшов, **бо** захворів. | I didn't come 'cause I got sick. |\n| Вона не відповіла, **бо** не чула. | She didn't answer because she didn't hear. |\n\n> **⭐ ТОМУ ЩО vs. БО**\n>\n> - **Тому що** — neutral, formal and informal\n> - **Бо** — colloquial, informal speech\n>\n> Both are correct; use \"тому що\" in formal writing.\n\n### Оскільки / Позаяк — Since, Because (Formal)\n\n**Оскільки** is more formal, often in written language:\n\n| Ukrainian | English |\n|-----------|---------|\n| **Оскільки** він не прийшов, ми почали без нього. | Since he didn't come, we started without him. |\n| **Оскільки** немає питань, закінчимо зустріч. | Since there are no questions, let's end the meeting. |\n\n**Position:** \"Оскільки\" clause often comes first (more formal emphasis).\n\n**Позаяк** is an archaic/bureaucratic synonym:\n- **Позаяк** він не відповів... (Since he didn't respond...)\n\n### Через те, що — Due to the fact that, Because\n\n**Через те, що** emphasizes the cause as an obstacle or problem:\n\n| Ukrainian | English |\n|-----------|---------|\n| Я запізнився **через те, що** був затор. | I was late due to the fact that there was traffic. |\n| Вона втомилася **через те, що** мало спала. | She's tired because she didn't sleep much. |\n\n**Shorter:** Через те що (without comma)\n\n### Через + Noun — Because of, Due to (Negative)\n\n**Через** + accusative noun (often negative cause):\n\n| Ukrainian | English |\n|-----------|---------|\n| Він запізнився **через** затор. | He was late because of traffic. |\n| Вона не прийшла **через** хворобу. | She didn't come because of illness. |\n| **Через** дощ ми залишилися вдома. | Because of the rain, we stayed home. |\n\n### Завдяки тому, що — Thanks to the fact that\n\n**Завдяки тому, що** emphasizes a positive cause:\n\n| Ukrainian | English |\n|-----------|---------|\n| Він здав іспит **завдяки тому, що** багато вчився. | He passed the exam thanks to studying a lot. |\n| Ми встигли **завдяки тому, що** виїхали рано. | We made it thanks to leaving early. |\n\n### Завдяки + Noun — Thanks to (Positive)\n\n**Завдяки** + dative noun (positive cause):\n\n| Ukrainian | English |\n|-----------|---------|\n| Він успішний **завдяки** наполегливій праці. | He's successful thanks to hard work. |\n| **Завдяки** друзям я впорався. | Thanks to friends, I managed. |\n| Я вивчив мову **завдяки** вчителю. | I learned the language thanks to my teacher. |\n\n> **⭐ ЧЕРЕЗ VS. ЗАВДЯКИ**\n>\n> - **Через** + acc — negative/neutral cause (problem, obstacle)\n> - **Завдяки** + dat — positive cause (help, benefit)\n>\n> Через хворобу (because of illness — negative)\n> Завдяки допомозі (thanks to help — positive)\n\n### Expressing Results\n\n**Тому — Therefore, That's why:**\n\n| Ukrainian | English |\n|-----------|---------|\n| Я втомився, **тому** пішов спати. | I was tired, therefore I went to sleep. |\n| Йшов дощ, **тому** ми залишилися вдома. | It was raining, that's why we stayed home. |\n\n**Отже / Таким чином — Therefore, Thus (formal):**\n\n| Ukrainian | English |\n|-----------|---------|\n| Він не готовий. **Отже**, перенесемо зустріч. | He's not ready. Therefore, we'll postpone the meeting. |\n| **Таким чином**, проблему вирішено. | Thus, the problem is solved. |\n\n**Тож — So, Therefore (conversational):**\n\n| Ukrainian | English |\n|-----------|---------|\n| Я втомився, **тож** піду спати. | I'm tired, so I'll go to sleep. |\n| Дощ закінчився, **тож** можемо йти. | The rain stopped, so we can go. |\n\n### Так що — So that (Result)\n\n**Так що** introduces a result:\n\n| Ukrainian | English |\n|-----------|---------|\n| Він працював багато, **так що** втомився. | He worked a lot, so he got tired. |\n| Вона вивчила все, **так що** здала іспит. | She studied everything, so she passed the exam. |\n\n### Summary: Cause vs. Result\n\n| Type | Expression | Example |\n|------|------------|---------|\n| **Cause** | тому що | ...тому що захворів. |\n| **Cause** | бо | ...бо захворів. |\n| **Cause** | оскільки | Оскільки він хворий... |\n| **Cause** | через те, що | ...через те, що хворий. |\n| **Cause (negative)** | через + noun | ...через хворобу. |\n| **Cause (positive)** | завдяки + noun | ...завдяки допомозі. |\n| **Result** | тому | ...тому не прийшов. |\n| **Result** | отже | Отже, він не прийшов. |\n| **Result** | тож | ...тож не прийшов. |\n| **Result** | так що | ...так що не прийшов. |\n\n## practice | Практика\n\n### Choose the Correct Conjunction\n\n1. Він не прийшов, ___ захворів.\n   - a) тому що ✓\n   - b) тому\n   - c) хоча\n\n2. Вона втомилася ___ роботу.\n   - a) через ✓\n   - b) завдяки\n   - c) оскільки\n\n3. ___ ваша допомога я впорався.\n   - a) Через\n   - b) Завдяки ✓\n   - c) Тому що\n\n4. Йшов дощ, ___ ми залишилися вдома.\n   - a) бо\n   - b) тому ✓\n   - c) оскільки\n\n5. ___ немає питань, закінчимо зустріч.\n   - a) Тому що\n   - b) Оскільки ✓\n   - c) Тож\n\n### Transform: Cause to Result\n\n**Example:** Я втомився, тому що працював багато.\n> [!answer] Я працював багато, тому втомився.\n\n1. Вона запізнилася, тому що пропустила автобус.\n   > [!answer] Вона пропустила автобус, **тому** запізнилася.\n\n2. Він не прийшов, тому що захворів.\n   > [!answer] Він захворів, **тому** не прийшов.\n\n3. Ми залишилися вдома, тому що йшов дощ.\n   > [!answer] Йшов дощ, **тому** ми залишилися вдома.\n\n### Через or Завдяки?\n\n1. Він здав іспит ___ наполегливій праці.\n   > [!answer] **завдяки**\n   > [!explanation] positive cause\n2. Вона запізнилася ___ затор.\n   > [!answer] **через**\n   > [!explanation] negative cause\n3. ___ друзям я впорався.\n   > [!answer] **Завдяки**\n   > [!explanation] positive cause\n4. ___ хворобу він не прийшов.\n   > [!answer] **Через**\n   > [!explanation] negative cause\n5. Команда перемогла ___ тренуванням.\n   > [!answer] **завдяки**\n   > [!explanation] positive cause\n### Translate to Ukrainian\n\n1. I didn't come because I was sick.\n   > [!answer] **Я не прийшов, тому що захворів.**\n2. Thanks to your help, I succeeded.\n   > [!answer] **Завдяки вашій допомозі я досяг успіху.**\n3. Because of the rain, we stayed home.\n   > [!answer] **Через дощ ми залишилися вдома.**\n4. He was tired, so he went to sleep.\n   > [!answer] **Він втомився, тому пішов спати.**\n5. Since there are no questions, let's end.\n   > [!answer] **Оскільки немає питань, закінчимо.**\n## production | Продукція\n\n### Explain Causes and Results\n\nTalk about your life using causal/result expressions:\n\n1. Чому ви вивчаєте українську?\n   > [!answer] Я вивчаю українську, **тому що**...\n\n2. Завдяки чому ви досягли успіхів?\n   > [!answer] Я досяг успіхів **завдяки**...\n\n3. Через що у вас були труднощі?\n   > [!answer] У мене були труднощі **через**...\n\n**Example:**\nЯ вивчаю українську, **тому що** моя родина з України. **Завдяки** інтернету я можу практикуватися щодня. **Через** брак часу я не завжди можу займатися, **тому** прогрес повільний.\n\n### Discussion: Причини і наслідки\n\nDiscuss causes and results:\n- Чому люди вчать іноземні мови?\n- Завдяки чому можна досягти успіху?\n- Через що люди стресують?\n\n---\n\n# Activities\n\n## quiz: Causal and Result Clauses\n\n> Choose the correct answer.\n\n1. Він не прийшов, ___ захворів.\n   - [x] тому що\n   - [ ] тому\n   > \"Тому що\" introduces cause (reason).\n\n2. Вона досягла успіху ___ наполегливості.\n   - [x] завдяки\n   - [ ] через\n   > \"Завдяки\" + dative for positive cause.\n\n3. ___ поганої погоди, захід скасували.\n   - [x] Через\n   - [ ] Завдяки\n   > \"Через\" + accusative for negative cause.\n\n4. Йшов дощ, ___ ми не пішли.\n   - [ ] бо\n   - [x] тому\n   > \"Тому\" introduces result.\n\n5. ___ він не готовий, перенесемо зустріч.\n   - [x] Оскільки\n   - [ ] Тому що\n   > \"Оскільки\" at the start is more formal.\n\n6. Він працював багато, ___ втомився.\n   - [x] так що\n   - [ ] бо\n   > \"Так що\" introduces result.\n\n\n## match-up: Vocabulary Match\n\n> Match each Ukrainian word with its English translation.\n\n| Left | Right |\n|------|-------|\n| тож | so, therefore |\n| оскільки | since, because |\n| завдяки тому, що | thanks to the fact that |\n| через те, що | due to the fact that |\n| тому | therefore, that's why |\n| так що | so that, so |\n| завдяки | thanks to |\n\n\n## fill-in: Fill in the Blank\n\n> Choose the correct word to complete each sentence.\n\n1. Я не пішов, ___ що був зайнятий.\n   > [!answer] тому\n   > [!options] тому | те | бо | прийшла\n\n2. Вона запізнилася, тому ___ пропустила автобус.\n   > [!answer] що\n   > [!options] що | тому | прийшов | мову\n\n3. Він вивчає українську, тому ___ хоче жити в Україні.\n   > [!answer] що\n   > [!options] що | те | тому | завдяки\n\n4. Я не ___ бо захворів.\n   > [!answer] прийшов\n   > [!options] прийшов | що | тому | тому\n\n5. Вона не відповіла, ___ не чула.\n   > [!answer] бо\n   > [!options] бо | тому | завдяки | тому\n\n6. Оскільки він не прийшов, ___ почали без нього.\n   > [!answer] ми\n   > [!options] ми | що | тому | тому\n\n7. Оскільки немає ___ закінчимо зустріч.\n   > [!answer] питань\n   > [!options] питань | мову | прийшла | ми\n\n8. Я запізнився через ___ що був затор.\n   > [!answer] те\n   > [!options] те | що | що | тому\n\n9. Вона втомилася через ___ що мало спала.\n   > [!answer] те\n   > [!options] те | мову | прийшла | прийшов\n\n10. Він запізнився ___ затор.\n   > [!answer] через\n   > [!options] через | тому | тому | те\n\n11. Вона не ___ через хворобу.\n   > [!answer] прийшла\n   > [!options] прийшла | те | прийшов | що\n\n12. Через дощ ___ залишилися вдома.\n   > [!answer] ми\n   > [!options] ми | тому | питань | те\n\n13. Він здав іспит завдяки ___ що багато вчився.\n   > [!answer] тому\n   > [!options] тому | ми | те | ми\n\n14. Ми встигли завдяки ___ що виїхали рано.\n   > [!answer] тому\n   > [!options] тому | прийшов | те | через\n\n15. Він успішний ___ наполегливій праці.\n   > [!answer] завдяки\n   > [!options] завдяки | тому | тому | через\n\n16. Я вивчив ___ завдяки вчителю.\n   > [!answer] мову\n   > [!options] мову | тому | питань | ми\n\n17. Я втомився, ___ пішов спати.\n   > [!answer] тому\n   > [!options] тому | прийшов | ми | бо\n\n\n\n## unjumble: Word Order\n\n> Drag the words into the correct order to form a sentence.\n\n1. не / Я / зайнятий / що / пішов / тому / був\n   > [!answer] Я не пішов, тому що був зайнятий.\n   > (I didn't go because I was busy.)\n\n2. запізнилася / що / автобус / тому / пропустила / Вона\n   > [!answer] Вона запізнилася, тому що пропустила автобус.\n   > (She was late because she missed the bus.)\n\n3. прийшов / бо / захворів / не / Я\n   > [!answer] Я не прийшов, бо захворів.\n   > (I didn't come 'cause I got sick.)\n\n4. не / Вона / не / чула / бо / відповіла\n   > [!answer] Вона не відповіла, бо не чула.\n   > (She didn't answer because she didn't hear.)\n\n5. без / Оскільки / почали / він / прийшов / нього / не / ми\n   > [!answer] Оскільки він не прийшов, ми почали без нього.\n   > (Since he didn't come, we started without him.)\n\n6. немає / питань / закінчимо / Оскільки / зустріч\n   > [!answer] Оскільки немає питань, закінчимо зустріч.\n   > (Since there are no questions, let's end the meeting.)\n\n7. затор / був / те / що / запізнився / Я / через\n   > [!answer] Я запізнився через те, що був затор.\n   > (I was late due to the fact that there was traffic.)\n\n8. спала / Вона / через / мало / втомилася / те / що\n   > [!answer] Вона втомилася через те, що мало спала.\n   > (She's tired because she didn't sleep much.)\n\n9. запізнився / затор / Він / через\n   > [!answer] Він запізнився через затор.\n   > (He was late because of traffic.)\n\n10. не / через / Вона / прийшла / хворобу\n   > [!answer] Вона не прийшла через хворобу.\n   > (She didn't come because of illness.)\n\n11. вдома / дощ / ми / залишилися / Через\n   > [!answer] Через дощ ми залишилися вдома.\n   > (Because of the rain, we stayed home.)\n\n12. завдяки / здав / тому / що / Він / іспит / вчився / багато\n   > [!answer] Він здав іспит завдяки тому, що багато вчився.\n   > (He passed the exam thanks to studying a lot.)\n\n13. Ми / встигли / виїхали / тому / що / рано / завдяки\n   > [!answer] Ми встигли завдяки тому, що виїхали рано.\n   > (We made it thanks to leaving early.)\n\n14. наполегливій / успішний / завдяки / праці / Він\n   > [!answer] Він успішний завдяки наполегливій праці.\n   > (He's successful thanks to hard work.)\n\n15. друзям / я / Завдяки / впорався\n   > [!answer] Завдяки друзям я впорався.\n   > (Thanks to friends, I managed.)\n\n16. завдяки / мову / вивчив / вчителю / Я\n   > [!answer] Я вивчив мову завдяки вчителю.\n   > (I learned the language thanks to my teacher.)\n\n17. Я / втомився / пішов / тому / спати\n   > [!answer] Я втомився, тому пішов спати.\n   > (I was tired, therefore I went to sleep.)\n\n18. дощ / залишилися / ми / Йшов / тому / вдома\n   > [!answer] Йшов дощ, тому ми залишилися вдома.\n   > (It was raining, that's why we stayed home.)\n\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | Notes |\n|------|-----|---------|-------|\n| оскільки | /osˈkʲilʲkɪ/ | since, because | conj (formal) |\n| через те, що | /ˈtʃɛrɛz tɛ ʃt͡ʃɔ/ | due to the fact that | conj |\n| завдяки | /zɑvˈdʲɑkɪ/ | thanks to | prep + dat |\n| завдяки тому, що | /zɑwˈdʲakɪ tɔˈmu/ | thanks to the fact that | conj |\n| тому | /toˈmu/ | therefore, that's why | adv |\n| тож | /toʒ/ | so, therefore | adv (informal) |\n| так що | /tɑk ʃt͡ʃo/ | so that, so | conj |\n\n---\n\n# Review Vocabulary\n\n| Word | First Module |\n|------|-------------|\n| тому що | 53 |\n| бо | 53 |\n| через | 94 |\n| отже | 58 |\n| причина | 95 |\n| наслідок | 95 |\n\n---\n\n# Summary\n\n## Expressing Cause (Reason)\n\n| Expression | Structure | Register | Example |\n|------------|-----------|----------|---------|\n| тому що | + clause | neutral | ...тому що захворів |\n| бо | + clause | informal | ...бо захворів |\n| оскільки | + clause | formal | Оскільки він хворий... |\n| через | + noun (acc) | neutral, negative | ...через хворобу |\n| завдяки | + noun (dat) | neutral, positive | ...завдяки допомозі |\n\n## Expressing Result (Consequence)\n\n| Expression | Position | Register | Example |\n|------------|----------|----------|---------|\n| тому | mid-sentence | neutral | ...тому не прийшов |\n| отже | sentence start | formal | Отже, він не прийшов. |\n| тож | mid-sentence | informal | ...тож не прийшов |\n| так що | mid-sentence | neutral | ...так що не прийшов |\n\n## Через vs. Завдяки\n\n| Preposition | Case | Connotation | Example |\n|-------------|------|-------------|---------|\n| через | + accusative | negative/neutral | через проблеми |\n| завдяки | + dative | positive | завдяки допомозі |\n\n> **Key Takeaways**\n>\n> - Тому що = because (most common)\n> - Бо = because (informal)\n> - Оскільки = since (formal, often first)\n> - Через + acc = because of (negative)\n> - Завдяки + dat = thanks to (positive)\n> - Тому/отже/тож = therefore/so (result)\n",
+    "createdAt": "2025-12-02T21:35:38.635Z",
+    "modifiedAt": "2025-12-02T21:35:38.635Z",
     "version": 2
   },
   "activities": [
@@ -126,36 +126,236 @@
       "difficultyLevel": "B1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-02T19:45:09.482Z",
-      "modifiedAt": "2025-12-02T19:45:09.482Z"
+      "createdAt": "2025-12-02T21:35:38.635Z",
+      "modifiedAt": "2025-12-02T21:35:38.635Z"
     },
     {
-      "id": "act-b1-109-gapfill",
-      "type": "gap-fill",
-      "title": "Complete the Explanation",
-      "description": "Я не зміг приїхати на зустріч (1)___ несподіваних обставин. Мій поїзд затримався (2)___ того, що була аварія на дорозі. (3)___ я спізнився на зустріч. Але (4)___ вашому розумінню все закінчилося добре.",
+      "id": "act-b1-109-matchup",
+      "type": "match-up",
+      "title": "Vocabulary Match",
+      "description": "Match each Ukrainian word with its English translation.",
       "content": {
-        "type": "gap-fill",
-        "text": "Я не зміг приїхати на зустріч (1)___ несподіваних обставин. Мій поїзд затримався (2)___ того, що була аварія на дорозі. (3)___ я спізнився на зустріч. Але (4)___ вашому розумінню все закінчилося добре.",
-        "blanks": [
+        "type": "match-up",
+        "pairs": [
           {
-            "index": 0
+            "left": "тож",
+            "right": "so, therefore"
           },
           {
-            "index": 1
+            "left": "оскільки",
+            "right": "since, because"
           },
           {
-            "index": 2
+            "left": "завдяки тому, що",
+            "right": "thanks to the fact that"
           },
           {
-            "index": 3
+            "left": "через те, що",
+            "right": "due to the fact that"
+          },
+          {
+            "left": "тому",
+            "right": "therefore, that's why"
+          },
+          {
+            "left": "так що",
+            "right": "so that, so"
+          },
+          {
+            "left": "завдяки",
+            "right": "thanks to"
           }
         ],
-        "answers": [
-          "через",
-          "через те",
-          "Тому",
-          "завдяки"
+        "shuffleRight": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "B1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-02T21:35:38.635Z",
+      "modifiedAt": "2025-12-02T21:35:38.635Z"
+    },
+    {
+      "id": "act-b1-109-fillblank",
+      "type": "fill-blank",
+      "title": "Fill in the Blank",
+      "description": "Choose the correct word to complete each sentence.",
+      "content": {
+        "type": "fill-blank",
+        "items": [
+          {
+            "prompt": "Я не пішов, ___ що був зайнятий.",
+            "answer": "тому",
+            "options": [
+              "тому",
+              "те",
+              "бо",
+              "прийшла"
+            ]
+          },
+          {
+            "prompt": "Вона запізнилася, тому ___ пропустила автобус.",
+            "answer": "що",
+            "options": [
+              "що",
+              "тому",
+              "прийшов",
+              "мову"
+            ]
+          },
+          {
+            "prompt": "Він вивчає українську, тому ___ хоче жити в Україні.",
+            "answer": "що",
+            "options": [
+              "що",
+              "те",
+              "тому",
+              "завдяки"
+            ]
+          },
+          {
+            "prompt": "Я не ___ бо захворів.",
+            "answer": "прийшов",
+            "options": [
+              "прийшов",
+              "що",
+              "тому",
+              "тому"
+            ]
+          },
+          {
+            "prompt": "Вона не відповіла, ___ не чула.",
+            "answer": "бо",
+            "options": [
+              "бо",
+              "тому",
+              "завдяки",
+              "тому"
+            ]
+          },
+          {
+            "prompt": "Оскільки він не прийшов, ___ почали без нього.",
+            "answer": "ми",
+            "options": [
+              "ми",
+              "що",
+              "тому",
+              "тому"
+            ]
+          },
+          {
+            "prompt": "Оскільки немає ___ закінчимо зустріч.",
+            "answer": "питань",
+            "options": [
+              "питань",
+              "мову",
+              "прийшла",
+              "ми"
+            ]
+          },
+          {
+            "prompt": "Я запізнився через ___ що був затор.",
+            "answer": "те",
+            "options": [
+              "те",
+              "що",
+              "що",
+              "тому"
+            ]
+          },
+          {
+            "prompt": "Вона втомилася через ___ що мало спала.",
+            "answer": "те",
+            "options": [
+              "те",
+              "мову",
+              "прийшла",
+              "прийшов"
+            ]
+          },
+          {
+            "prompt": "Він запізнився ___ затор.",
+            "answer": "через",
+            "options": [
+              "через",
+              "тому",
+              "тому",
+              "те"
+            ]
+          },
+          {
+            "prompt": "Вона не ___ через хворобу.",
+            "answer": "прийшла",
+            "options": [
+              "прийшла",
+              "те",
+              "прийшов",
+              "що"
+            ]
+          },
+          {
+            "prompt": "Через дощ ___ залишилися вдома.",
+            "answer": "ми",
+            "options": [
+              "ми",
+              "тому",
+              "питань",
+              "те"
+            ]
+          },
+          {
+            "prompt": "Він здав іспит завдяки ___ що багато вчився.",
+            "answer": "тому",
+            "options": [
+              "тому",
+              "ми",
+              "те",
+              "ми"
+            ]
+          },
+          {
+            "prompt": "Ми встигли завдяки ___ що виїхали рано.",
+            "answer": "тому",
+            "options": [
+              "тому",
+              "прийшов",
+              "те",
+              "через"
+            ]
+          },
+          {
+            "prompt": "Він успішний ___ наполегливій праці.",
+            "answer": "завдяки",
+            "options": [
+              "завдяки",
+              "тому",
+              "тому",
+              "через"
+            ]
+          },
+          {
+            "prompt": "Я вивчив ___ завдяки вчителю.",
+            "answer": "мову",
+            "options": [
+              "мову",
+              "тому",
+              "питань",
+              "ми"
+            ]
+          },
+          {
+            "prompt": "Я втомився, ___ пішов спати.",
+            "answer": "тому",
+            "options": [
+              "тому",
+              "прийшов",
+              "ми",
+              "бо"
+            ]
+          }
         ]
       },
       "subject": "language",
@@ -165,8 +365,241 @@
       "difficultyLevel": "B1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-02T19:45:09.482Z",
-      "modifiedAt": "2025-12-02T19:45:09.482Z"
+      "createdAt": "2025-12-02T21:35:38.635Z",
+      "modifiedAt": "2025-12-02T21:35:38.635Z"
+    },
+    {
+      "id": "act-b1-109-unjumble",
+      "type": "unjumble",
+      "title": "Word Order",
+      "description": "Drag the words into the correct order to form a sentence.",
+      "content": {
+        "type": "unjumble",
+        "items": [
+          {
+            "words": [
+              "не",
+              "Я",
+              "зайнятий",
+              "що",
+              "пішов",
+              "тому",
+              "був"
+            ],
+            "answer": "Я не пішов, тому що був зайнятий.",
+            "translation": "I didn't go because I was busy."
+          },
+          {
+            "words": [
+              "запізнилася",
+              "що",
+              "автобус",
+              "тому",
+              "пропустила",
+              "Вона"
+            ],
+            "answer": "Вона запізнилася, тому що пропустила автобус.",
+            "translation": "She was late because she missed the bus."
+          },
+          {
+            "words": [
+              "прийшов",
+              "бо",
+              "захворів",
+              "не",
+              "Я"
+            ],
+            "answer": "Я не прийшов, бо захворів.",
+            "translation": "I didn't come 'cause I got sick."
+          },
+          {
+            "words": [
+              "не",
+              "Вона",
+              "не",
+              "чула",
+              "бо",
+              "відповіла"
+            ],
+            "answer": "Вона не відповіла, бо не чула.",
+            "translation": "She didn't answer because she didn't hear."
+          },
+          {
+            "words": [
+              "без",
+              "Оскільки",
+              "почали",
+              "він",
+              "прийшов",
+              "нього",
+              "не",
+              "ми"
+            ],
+            "answer": "Оскільки він не прийшов, ми почали без нього.",
+            "translation": "Since he didn't come, we started without him."
+          },
+          {
+            "words": [
+              "немає",
+              "питань",
+              "закінчимо",
+              "Оскільки",
+              "зустріч"
+            ],
+            "answer": "Оскільки немає питань, закінчимо зустріч.",
+            "translation": "Since there are no questions, let's end the meeting."
+          },
+          {
+            "words": [
+              "затор",
+              "був",
+              "те",
+              "що",
+              "запізнився",
+              "Я",
+              "через"
+            ],
+            "answer": "Я запізнився через те, що був затор.",
+            "translation": "I was late due to the fact that there was traffic."
+          },
+          {
+            "words": [
+              "спала",
+              "Вона",
+              "через",
+              "мало",
+              "втомилася",
+              "те",
+              "що"
+            ],
+            "answer": "Вона втомилася через те, що мало спала.",
+            "translation": "She's tired because she didn't sleep much."
+          },
+          {
+            "words": [
+              "запізнився",
+              "затор",
+              "Він",
+              "через"
+            ],
+            "answer": "Він запізнився через затор.",
+            "translation": "He was late because of traffic."
+          },
+          {
+            "words": [
+              "не",
+              "через",
+              "Вона",
+              "прийшла",
+              "хворобу"
+            ],
+            "answer": "Вона не прийшла через хворобу.",
+            "translation": "She didn't come because of illness."
+          },
+          {
+            "words": [
+              "вдома",
+              "дощ",
+              "ми",
+              "залишилися",
+              "Через"
+            ],
+            "answer": "Через дощ ми залишилися вдома.",
+            "translation": "Because of the rain, we stayed home."
+          },
+          {
+            "words": [
+              "завдяки",
+              "здав",
+              "тому",
+              "що",
+              "Він",
+              "іспит",
+              "вчився",
+              "багато"
+            ],
+            "answer": "Він здав іспит завдяки тому, що багато вчився.",
+            "translation": "He passed the exam thanks to studying a lot."
+          },
+          {
+            "words": [
+              "Ми",
+              "встигли",
+              "виїхали",
+              "тому",
+              "що",
+              "рано",
+              "завдяки"
+            ],
+            "answer": "Ми встигли завдяки тому, що виїхали рано.",
+            "translation": "We made it thanks to leaving early."
+          },
+          {
+            "words": [
+              "наполегливій",
+              "успішний",
+              "завдяки",
+              "праці",
+              "Він"
+            ],
+            "answer": "Він успішний завдяки наполегливій праці.",
+            "translation": "He's successful thanks to hard work."
+          },
+          {
+            "words": [
+              "друзям",
+              "я",
+              "Завдяки",
+              "впорався"
+            ],
+            "answer": "Завдяки друзям я впорався.",
+            "translation": "Thanks to friends, I managed."
+          },
+          {
+            "words": [
+              "завдяки",
+              "мову",
+              "вивчив",
+              "вчителю",
+              "Я"
+            ],
+            "answer": "Я вивчив мову завдяки вчителю.",
+            "translation": "I learned the language thanks to my teacher."
+          },
+          {
+            "words": [
+              "Я",
+              "втомився",
+              "пішов",
+              "тому",
+              "спати"
+            ],
+            "answer": "Я втомився, тому пішов спати.",
+            "translation": "I was tired, therefore I went to sleep."
+          },
+          {
+            "words": [
+              "дощ",
+              "залишилися",
+              "ми",
+              "Йшов",
+              "тому",
+              "вдома"
+            ],
+            "answer": "Йшов дощ, тому ми залишилися вдома.",
+            "translation": "It was raining, that's why we stayed home."
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "B1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-02T21:35:38.635Z",
+      "modifiedAt": "2025-12-02T21:35:38.635Z"
     }
   ],
   "vocabulary": {

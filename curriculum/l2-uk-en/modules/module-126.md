@@ -257,20 +257,131 @@ Write short messages using diminutives:
    - [ ] захоплення
    > Diminutives can express irony.
 
-## fill-in: Using Diminutives
 
-> Виберіть правильну форму.
+## match-up: Vocabulary Match
 
-> Моя (1)___ (бабуся) живе в маленькому (2)___ (село). У неї є затишний (3)___ (будинок) з гарним (4)___ (сад). Коли я приїжджаю, вона завжди готує мої улюблені (5)___ (пиріг). «(6)___ (Онук), ти такий худенький!» — каже вона. Я люблю свою (7)___ (бабуся)!
+> Match each Ukrainian word with its English translation.
 
-**Answers:**
-1. бабусенька
-2. селі (no diminutive needed here, but: сільці)
-3. будиночок
-4. садочком / садком
-5. пиріжки / пиріжечки
-6. Онучку / Внучку
-7. бабусеньку
+| Left | Right |
+|------|-------|
+| сонечко | sun (dear) |
+| бабусенька | dear grandma |
+| зірочка | little star |
+| ласкавий | kind, gentle |
+| серденько | dear heart |
+| суфікс | suffix |
+| хвилиночка | just a moment |
+| донечка | dear daughter |
+| котик | kitty |
+| зменшувальний | diminutive |
+| синочок | dear son |
+| пестливий | affectionate, tender |
+
+
+## fill-in: Fill in the Blank
+
+> Choose the correct word to complete each sentence.
+
+1. | ніж | ножик | small knife | #### For Feminine ___ | Suffix | Base | Diminutive | English | |--------|------|------------|---------| |
+   > [!answer] Nouns
+
+
+
+## quiz: Meaning Check
+
+> Choose the correct answer.
+
+1. What does "суфікс" mean?
+   - [ ] just a moment
+   - [x] suffix
+   - [ ] dear daughter
+   - [ ] sun (dear)
+   > "суфікс" means "suffix"
+
+2. What does "донечка" mean?
+   - [ ] just a moment
+   - [x] dear daughter
+   - [ ] suffix
+   - [ ] sun (dear)
+   > "донечка" means "dear daughter"
+
+3. What does "сонечко" mean?
+   - [ ] just a moment
+   - [ ] dear daughter
+   - [x] sun (dear)
+   - [ ] suffix
+   > "сонечко" means "sun (dear)"
+
+4. What does "хвилиночка" mean?
+   - [ ] sun (dear)
+   - [ ] suffix
+   - [ ] dear daughter
+   - [x] just a moment
+   > "хвилиночка" means "just a moment"
+
+5. What does "ласкавий" mean?
+   - [ ] sun (dear)
+   - [x] kind, gentle
+   - [ ] suffix
+   - [ ] dear daughter
+   > "ласкавий" means "kind, gentle"
+
+6. What does "серденько" mean?
+   - [x] dear heart
+   - [ ] suffix
+   - [ ] sun (dear)
+   - [ ] dear daughter
+   > "серденько" means "dear heart"
+
+7. What does "котик" mean?
+   - [ ] sun (dear)
+   - [x] kitty
+   - [ ] dear daughter
+   - [ ] suffix
+   > "котик" means "kitty"
+
+8. What does "зірочка" mean?
+   - [x] little star
+   - [ ] suffix
+   - [ ] dear daughter
+   - [ ] sun (dear)
+   > "зірочка" means "little star"
+
+9. What does "синочок" mean?
+   - [ ] dear daughter
+   - [ ] sun (dear)
+   - [ ] suffix
+   - [x] dear son
+   > "синочок" means "dear son"
+
+10. What does "бабусенька" mean?
+   - [ ] sun (dear)
+   - [x] dear grandma
+   - [ ] dear daughter
+   - [ ] suffix
+   > "бабусенька" means "dear grandma"
+
+11. What does "пестливий" mean?
+   - [x] affectionate, tender
+   - [ ] sun (dear)
+   - [ ] suffix
+   - [ ] dear daughter
+   > "пестливий" means "affectionate, tender"
+
+12. What does "зменшувальний" mean?
+   - [ ] suffix
+   - [x] diminutive
+   - [ ] dear daughter
+   - [ ] sun (dear)
+   > "зменшувальний" means "diminutive"
+
+13. What does "мамочка" mean?
+   - [ ] suffix
+   - [ ] sun (dear)
+   - [x] mommy
+   - [ ] dear daughter
+   > "мамочка" means "mommy"
+
 
 ---
 

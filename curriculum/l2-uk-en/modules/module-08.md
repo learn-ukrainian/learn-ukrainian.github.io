@@ -330,7 +330,33 @@ Describe what you/others do using Class II verbs:
 | сидіти | to sit |
 | спати | to sleep |
 
-## quiz: Meaning Check
+## group-sort: Verb Consonant Changes
+
+> Sort these Class II verbs by their consonant change in the я-form.
+
+### б → бл change
+- любити → люБЛю (to love)
+- робити → роБЛю (to do)
+
+### д → дж change
+- ходити → хоДЖу (to walk)
+- сидіти → сиДЖу (to sit)
+- бачити → бачу (no change - ч already soft)
+
+### с → ш change
+- носити → ноШу (to carry)
+- просити → проШу (to ask)
+
+### No consonant change
+- говорити → говорю (to speak)
+- жити → живу (to live)
+- спати → сплю (п + л insertion)
+
+### Irregular patterns
+- їсти → їм (to eat - unique)
+- пити → п'ю (to drink - apostrophe)
+
+## quiz: Class II Conjugation Patterns
 
 > Choose the correct answer.
 
@@ -369,33 +395,33 @@ Describe what you/others do using Class II verbs:
    - [x] роблять
    > "Вони роблять" - They do (б→бл change)
 
-6. What does "бачити" mean?
-   - [x] to see
-   - [ ] to hear
-   - [ ] to speak
-   - [ ] to think
-   > "бачити" means "to see"
+6. Which consonant change occurs in "бачити → бачу"?
+   - [ ] б → бл
+   - [ ] д → дж
+   - [ ] с → ш
+   - [x] No change (ч is already soft)
+   > Unlike other consonants, ч doesn't need further softening
 
-7. What does "жити" mean?
-   - [ ] to eat
-   - [ ] to drink
-   - [x] to live
-   - [ ] to work
-   > "жити" means "to live"
+7. What is the ми-form of "жити"?
+   - [ ] живу
+   - [ ] живеш
+   - [x] живемо
+   - [ ] живуть
+   > "Ми живемо" follows the irregular pattern of жити
 
 8. What is the я-form of "пити"?
    - [x] п'ю
    - [ ] п'єш
    - [ ] п'є
    - [ ] п'ють
-   > "Я п'ю" - I drink (irregular verb)
+   > "Я п'ю" - Irregular verb uses apostrophe
 
-9. What does "сидіти" mean?
-   - [ ] to stand
-   - [x] to sit
-   - [ ] to lie down
-   - [ ] to walk
-   > "сидіти" means "to sit"
+9. What consonant change occurs in "сидіти → сиджу"?
+   - [ ] б → бл
+   - [x] д → дж
+   - [ ] с → ш
+   - [ ] No change
+   > The д → дж pattern is common in Class II verbs
 
 10. What is the main difference between Class I and Class II verbs?
    - [ ] Class I ends in -ити

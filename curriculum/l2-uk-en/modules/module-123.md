@@ -230,22 +230,183 @@ A friend is stressed and tired. What do you advise?
    - [ ] імуна
    > Імунітет = immunity.
 
-## fill-in: Healthy Lifestyle Tips
 
-> Для здоров'я важливо:
->
-> 1. Достатньо (1)___ (sleep) — 7-8 годин
-> 2. Дотримуватися здорового (2)___ (nutrition)
-> 3. Регулярно займатися (3)___ (sport)
-> 4. Справлятися зі (4)___ (stress)
-> 5. Пити достатньо (5)___ (water)
+## match-up: Vocabulary Match
 
-**Answers:**
-1. спати / сну
-2. харчування
-3. спортом
-4. стресом
-5. води
+> Match each Ukrainian word with its English translation.
+
+| Left | Right |
+|------|-------|
+| безсоння | insomnia |
+| стрес | stress |
+| одужання | recovery |
+| депресія | depression |
+| сон | sleep |
+| імунітет | immunity |
+| самопочуття | well-being |
+| дієта | diet |
+| харчування | nutrition |
+| вигорання | burnout |
+
+
+## fill-in: Fill in the Blank
+
+> Choose the correct word to complete each sentence.
+
+1. вести здоровий ___ життя
+   > [!answer] спосіб
+   > [!options] спосіб | про | зі | за
+
+2. піклуватися ___ здоров'я
+   > [!answer] про
+   > [!options] про | шкідливих | зі | спосіб
+
+3. справлятися ___ стресом
+   > [!answer] зі
+   > [!options] зі | шкідливих | спосіб | за
+
+4. слідкувати ___ вагою
+   > [!answer] за
+   > [!options] за | про | шкідливих | зі
+
+5. позбуватися ___ звичок
+   > [!answer] шкідливих
+   > [!options] шкідливих | спосіб | зі | про
+
+
+
+## quiz: Meaning Check
+
+> Choose the correct answer.
+
+1. What does "вигорання" mean?
+   - [x] burnout
+   - [ ] recovery
+   - [ ] well-being
+   - [ ] stress
+   > "вигорання" means "burnout"
+
+2. What does "одужання" mean?
+   - [ ] stress
+   - [ ] well-being
+   - [ ] burnout
+   - [x] recovery
+   > "одужання" means "recovery"
+
+3. What does "стрес" mean?
+   - [ ] recovery
+   - [ ] burnout
+   - [x] stress
+   - [ ] well-being
+   > "стрес" means "stress"
+
+4. What does "самопочуття" mean?
+   - [x] well-being
+   - [ ] stress
+   - [ ] burnout
+   - [ ] recovery
+   > "самопочуття" means "well-being"
+
+5. What does "депресія" mean?
+   - [ ] recovery
+   - [x] depression
+   - [ ] burnout
+   - [ ] stress
+   > "депресія" means "depression"
+
+6. What does "імунітет" mean?
+   - [ ] stress
+   - [ ] burnout
+   - [ ] recovery
+   - [x] immunity
+   > "імунітет" means "immunity"
+
+7. What does "дієта" mean?
+   - [x] diet
+   - [ ] burnout
+   - [ ] recovery
+   - [ ] stress
+   > "дієта" means "diet"
+
+8. What does "безсоння" mean?
+   - [x] insomnia
+   - [ ] burnout
+   - [ ] stress
+   - [ ] recovery
+   > "безсоння" means "insomnia"
+
+9. What does "харчування" mean?
+   - [ ] stress
+   - [ ] recovery
+   - [ ] burnout
+   - [x] nutrition
+   > "харчування" means "nutrition"
+
+10. What does "сон" mean?
+   - [ ] stress
+   - [x] sleep
+   - [ ] burnout
+   - [ ] recovery
+   > "сон" means "sleep"
+
+
+
+## unjumble: Word Order
+
+> Drag the words into the correct order to form a sentence.
+
+1. / / хворіти / захворіти
+   > [!answer] хворіти / захворіти
+   > (to be ill / to fall ill)
+
+2. / / одужати / одужувати
+   > [!answer] одужувати / одужати
+   > (to recover)
+
+3. лікувати / / / вилікувати
+   > [!answer] лікувати / вилікувати
+   > (to treat / to cure)
+
+4. відпочити / / / відпочивати
+   > [!answer] відпочивати / відпочити
+   > (to rest)
+
+5. відновитися / відновлюватися / /
+   > [!answer] відновлюватися / відновитися
+   > (to recover, restore)
+
+6. розслабитися / / / розслаблятися
+   > [!answer] розслаблятися / розслабитися
+   > (to relax)
+
+7. справлятися / справитися / /
+   > [!answer] справлятися / справитися
+   > (to cope)
+
+8. вести / здоровий / спосіб / життя
+   > [!answer] вести здоровий спосіб життя
+   > (to lead a healthy lifestyle)
+
+9. про / здоров'я / піклуватися
+   > [!answer] піклуватися про здоров'я
+   > (to take care of one's health)
+
+10. справлятися / зі / стресом
+   > [!answer] справлятися зі стресом
+   > (to cope with stress)
+
+11. за / слідкувати / вагою
+   > [!answer] слідкувати за вагою
+   > (to watch one's weight)
+
+12. бути / формі / у
+   > [!answer] бути у формі
+   > (to be in shape)
+
+13. позбуватися / звичок / шкідливих
+   > [!answer] позбуватися шкідливих звичок
+   > (to get rid of bad habits)
+
 
 ---
 

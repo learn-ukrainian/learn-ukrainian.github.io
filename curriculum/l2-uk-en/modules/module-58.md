@@ -253,166 +253,202 @@ Present both sides:
 
 ---
 
+---
+
+---
+
+---
+
 # Activities
 
-## match-up: Opinion Phrases
+## fill-in: Complete the Sentences
 
-> Match Ukrainian with English.
+> Choose the correct word to complete each sentence.
+
+1. Я хочу купити цю ___.
+   > [!answer] рація
+   > [!options] сніданок | рація | бухгалтерія | підприємець
+
+2. Вони планують ___ завтра.
+   > [!answer] погоджуватися
+   > [!options] здаватися | працювати | засинати | погоджуватися
+
+3. Моя кімната занадто ___.
+   > [!answer] згодна
+   > [!options] найкращий | недоконаний | згодна | сонячний
+
+4. Цей будинок дуже ___.
+   > [!answer] переконаний
+   > [!options] поганий | переконаний | недоконаний | найдорожчий
+
+5. Ця книга надзвичайно ___.
+   > [!answer] впевнений
+   > [!options] щасливий | впевнений | наступний | гірший
+
+6. Де ваша велика ___?
+   > [!answer] думка
+   > [!options] сніданок | 16 | борщ | думка
+
+7. Вони планують ___ завтра.
+   > [!answer] вважати
+   > [!options] розповісти | вважати | вдаватися | читати
+
+8. Вони планують ___ завтра.
+   > [!answer] сумніватися
+   > [!options] лежати | сумніватися | працювати | вчити
+
+## unjumble: Build the Sentence
+
+> Arrange the words in the correct order.
+
+1. брат / має / Мій / рація / хорошу
+   > [!answer] Мій брат має хорошу рація.
+   > (rightness)
+
+2. гривень / Ця / думка / коштує / сто
+   > [!answer] Ця думка коштує сто гривень.
+   > (opinion, thought)
+
+## match-up: Match the Pairs
+
+> Match Ukrainian words to their English meanings.
 
 | Left | Right |
 |------|-------|
-| Я думаю, що | I think that |
-| На мою думку | In my opinion |
-| Я згоден | I agree |
-| Я не згоден | I disagree |
-| Мені здається | It seems to me |
-| Ви маєте рацію | You're right |
-
-## quiz: Expressing Opinions
-
-> Choose the correct phrase.
-
-1. "I think that this is good" - ___, що це добре.
-   - [x] Я думаю
-   - [ ] Мені думка
-   - [ ] Думаючи
-   - [ ] Я думки
-   > "I think" = Я думаю.
-
-2. "I agree" (male speaker) - Я ___.
-   - [x] згоден
-   - [ ] згодна
-   - [ ] згодний
-   - [ ] згода
-   > Male = згоден.
-
-3. "In my opinion" - ___ думку.
-   - [x] На мою
-   - [ ] В моєму
-   - [ ] Моя
-   - [ ] Для моєї
-   > Fixed phrase = на мою думку.
-
-4. "I don't quite agree" - Я не ___ згоден.
-   - [x] зовсім
-   - [ ] повністю
-   - [ ] трохи
-   - [ ] дуже
-   > Polite = не зовсім.
-
-5. "You're right" - Ви ___ рацію.
-   - [x] маєте
-   - [ ] є
-   - [ ] даєте
-   - [ ] берете
-   > Fixed phrase = мати рацію.
-
-6. "Perhaps, but..." - ___, але...
-   - [x] Можливо
-   - [ ] Мабуть що
-   - [ ] Хіба
-   - [ ] Чи
-   > Perhaps = можливо.
-
-## group-sort: Agree vs Disagree
-
-> Sort phrases.
-
-### Agreement
-- Абсолютно згоден
-- Ви маєте рацію
-- Точно
-- Я теж так думаю
-- Повністю погоджуюся
-
-### Disagreement
-- Я не згоден
-- Це не так
-- Я думаю інакше
-- Навпаки
-- Я не можу погодитися
-
-
-## fill-in: Fill in the Blank
-
-> Fill in the blanks with the correct word.
-
-1. тому що ___ бо
-   > [!answer] /
-
-2. справа в ___ що
-   > [!answer] тому
-
-
+| душ | shower |
+| вважати | to believe, consider |
+| сумніватися | to doubt |
+| група | group |
+| згоден | agree (m) |
+| впевнений | sure, certain |
+| рація | rightness |
+| погоджуватися | to agree (impf) |
+| переконаний | convinced |
+| гірший | worse |
+| думка | opinion, thought |
+| навпаки | on the contrary |
 
 ## quiz: Meaning Check
 
 > Choose the correct answer.
 
-1. What does "отже" mean?
-   - [ ] to doubt
-   - [ ] sure, certain
-   - [x] so, therefore
-   - [ ] in general
-   > "отже" means "so, therefore"
-
-2. What does "впевнений" mean?
-   - [ ] to doubt
-   - [x] sure, certain
-   - [ ] so, therefore
-   - [ ] in general
-   > "впевнений" means "sure, certain"
-
-3. What does "загалом" mean?
-   - [ ] so, therefore
-   - [x] in general
-   - [ ] to doubt
-   - [ ] sure, certain
-   > "загалом" means "in general"
-
-4. What does "сумніватися" mean?
-   - [ ] so, therefore
-   - [ ] in general
-   - [x] to doubt
-   - [ ] sure, certain
-   > "сумніватися" means "to doubt"
-
-5. What does "переконаний" mean?
+1. What does "переконаний" mean?
+   - [ ] hotel
+   - [ ] to try
+   - [ ] price
    - [x] convinced
-   - [ ] so, therefore
-   - [ ] in general
-   - [ ] sure, certain
    > "переконаний" means "convinced"
 
-6. What does "згодна" mean?
+2. What does "рація" mean?
+   - [ ] in order to, so that
+   - [ ] to cross
+   - [x] rightness
+   - [ ] credit, loan
+   > "рація" means "rightness"
+
+3. What does "погоджуватися" mean?
+   - [ ] newspaper
+   - [ ] thank you
+   - [ ] winter
+   - [x] to agree (impf)
+   > "погоджуватися" means "to agree (impf)"
+
+4. What does "отже" mean?
+   - [ ] Wednesday
+   - [ ] something
+   - [ ] at least
+   - [x] so, therefore
+   > "отже" means "so, therefore"
+
+5. What does "впевнений" mean?
+   - [ ] Ukrainian (adj)
+   - [x] sure, certain
+   - [ ] to thank
+   - [ ] Accusative: бачити, читати, любити
+   > "впевнений" means "sure, certain"
+
+6. What does "думка" mean?
+   - [ ] car
+   - [x] opinion, thought
+   - [ ] agree (f)
+   - [ ] to write (perf)
+   > "думка" means "opinion, thought"
+
+7. What does "загалом" mean?
+   - [ ] dad
+   - [ ] hot (adv)
+   - [ ] football
+   - [x] in general
+   > "загалом" means "in general"
+
+8. What does "навпаки" mean?
+   - [x] on the contrary
+   - [ ] long ago
+   - [ ] to advise
+   - [ ] agree (m)
+   > "навпаки" means "on the contrary"
+
+9. What does "згодна" mean?
+   - [ ] most (adv)
    - [x] agree (f)
-   - [ ] in general
-   - [ ] so, therefore
-   - [ ] sure, certain
+   - [ ] worst
+   - [ ] fork
    > "згодна" means "agree (f)"
 
+10. What does "сумніватися" mean?
+   - [ ] suitcase
+   - [ ] should, ought to (m)
+   - [x] to doubt
+   - [ ] receipt
+   > "сумніватися" means "to doubt"
 
+11. What does "згоден" mean?
+   - [x] agree (m)
+   - [ ] family
+   - [ ] imaginary, hypothetical
+   - [ ] the two (together)
+   > "згоден" means "agree (m)"
 
-## unjumble: Word Order
+12. What does "вважати" mean?
+   - [ ] rarely
+   - [ ] back
+   - [ ] to say goodbye
+   - [x] to believe, consider
+   > "вважати" means "to believe, consider"
 
-> Put the words in the correct order to form a sentence.
+## true-false: True or False?
 
-1. бо / що / тому / /
-   > [!answer] тому що / бо
-   > (because)
+> Determine if each statement is true or false.
 
-2. що / тому / в / справа
-   > [!answer] справа в тому, що
-   > (the thing is that)
+- [x] "згодна" means "agree (f)"
+   > Correct!
 
-3. думаю / що / Я
-   > [!answer] Я думаю, що
-   > (I think that)
+- [x] "думка" means "opinion, thought"
+   > Correct!
 
-4. На / думку / мою
-   > [!answer] На мою думку
-   > (In my opinion)
+- [x] "переконаний" means "convinced"
+   > Correct!
 
+- [ ] "впевнений" means "worst"
+   > Incorrect. "впевнений" means "sure, certain"
+
+- [x] "погоджуватися" means "to agree (impf)"
+   > Correct!
+
+- [ ] "вважати" means "message"
+   > Incorrect. "вважати" means "to believe, consider"
+
+- [x] "рація" means "rightness"
+   > Correct!
+
+- [ ] "отже" means "best (adv)"
+   > Incorrect. "отже" means "so, therefore"
+
+- [x] "згоден" means "agree (m)"
+   > Correct!
+
+- [x] "загалом" means "in general"
+   > Correct!
 
 ---
 

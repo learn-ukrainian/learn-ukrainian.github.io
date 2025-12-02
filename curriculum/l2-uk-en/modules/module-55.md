@@ -289,185 +289,232 @@ Describe your travel plans:
 
 ---
 
+---
+
+---
+
+---
+
 # Activities
 
-## match-up: Travel Vocabulary
+## fill-in: Complete the Sentences
 
-> Match Ukrainian with English.
+> Choose the correct word to complete each sentence.
+
+1. Мій брат має хороший ___.
+   > [!answer] багаж
+   > [!options] чашка | дочка | пам'ять | багаж
+
+2. Я хочу купити це ___.
+   > [!answer] відправлення
+   > [!options] продавчиня | відправлення | батько | кашель
+
+3. Мій брат має хороший ___.
+   > [!answer] провідник
+   > [!options] провідник | дощ | бухгалтер | година
+
+4. Де ваш великий ___?
+   > [!answer] вокзал
+   > [!options] вокзал | літо | телефон | відео
+
+5. Я хочу купити цю ___.
+   > [!answer] платформа
+   > [!options] художник | сусідка | велосипед | платформа
+
+6. Де ваша велика ___?
+   > [!answer] затримка
+   > [!options] душ | секретарка | светр | затримка
+
+## unjumble: Build the Sentence
+
+> Arrange the words in the correct order.
+
+1. купе / гривень / сто / Це / коштує
+   > [!answer] Це купе коштує сто гривень.
+   > (compartment)
+
+2. гривень / сто / рейс / Цей / коштує
+   > [!answer] Цей рейс коштує сто гривень.
+   > (flight)
+
+3. моя / Це / затримка / нова
+   > [!answer] Це моя нова затримка.
+   > (delay)
+
+4. новий / потяг / мій / Це
+   > [!answer] Це мій новий потяг.
+   > (train)
+
+5. ваше / прибуття / велике / Де
+   > [!answer] Де ваше велике прибуття?
+   > (arrival)
+
+6. великий / провідник / Де / ваш
+   > [!answer] Де ваш великий провідник?
+   > (conductor)
+
+7. коштує / відправлення / Це / гривень / сто
+   > [!answer] Це відправлення коштує сто гривень.
+   > (departure)
+
+8. Де / великий / багаж / ваш
+   > [!answer] Де ваш великий багаж?
+   > (luggage)
+
+9. хочу / Я / купити / цю / платформа
+   > [!answer] Я хочу купити цю платформа.
+   > (platform)
+
+10. вокзал / Де / великий / ваш
+   > [!answer] Де ваш великий вокзал?
+   > (train station)
+
+## match-up: Match the Pairs
+
+> Match Ukrainian words to their English meanings.
 
 | Left | Right |
 |------|-------|
-| потяг | train |
-| літак | airplane |
-| квиток | ticket |
-| вокзал | train station |
-| платформа | platform |
 | багаж | luggage |
-
-## quiz: Travel Situations
-
-> Choose the correct answer.
-
-1. "A ticket to Lviv" - Квиток ___ Львова.
-   - [x] до
-   - [ ] в
-   - [ ] на
-   - [ ] у
-   > Direction "to city" = до.
-
-2. "Round trip" - Туди і ___.
-   - [x] назад
-   - [ ] звідти
-   - [ ] далі
-   - [ ] потім
-   > "There and back" = туди і назад.
-
-3. "What time is departure?" - О котрій ___?
-   - [x] відправлення
-   - [ ] відправляти
-   - [ ] відправитися
-   - [ ] відправляється
-   > Noun = відправлення.
-
-4. "From which platform?" - З якої ___?
-   - [x] платформи
-   - [ ] платформа
-   - [ ] платформу
-   - [ ] платформою
-   > Genitive after з = платформи.
-
-5. "I missed the train" - Я ___ на потяг.
-   - [x] спізнився/спізнилась
-   - [ ] спізнюся
-   - [ ] спізнитися
-   - [ ] спізнював
-   > Past tense = спізнився.
-
-6. "Is there a delay?" - Чи є ___?
-   - [x] затримка
-   - [ ] затримати
-   - [ ] затримується
-   - [ ] затриманий
-   > Noun = затримка.
-
-## group-sort: Train vs Plane
-
-> Sort by transport type.
-
-### Train (Потяг)
-- вокзал
-- вагон
-- купе
-- плацкарт
-- платформа
-- провідник
-
-### Plane (Літак)
-- аеропорт
-- реєстрація
-- посадковий талон
-- вихід
-- митниця
-- ручна поклажа
-
-
-## true-false: True or False?
-
-> Determine if each statement is true or false.
-
-- [x] "потяг" is masculine.
-   > Correct! потяг is masculine.
-
-- [x] "вокзал" is masculine.
-   > Correct! вокзал is masculine.
-
-- [x] "платформа" is feminine.
-   > Correct! платформа is feminine.
-
-- [x] "відправлення" is neuter.
-   > Correct! відправлення is neuter.
-
-- [ ] "прибуття" is masculine.
-   > Incorrect. прибуття is neuter.
-
-- [ ] "затримка" is masculine.
-   > Incorrect. затримка is feminine.
-
-
-## fill-in: Fill in the Blank
-
-> Fill in the blanks with the correct word.
-
-
+| склянка | glass |
+| ніж | knife |
+| платформа | platform |
+| відправлення | departure |
+| вокзал | train station |
+| затримка | delay |
+| земля | earth |
+| потяг | train |
+| купе | compartment |
+| провідник | conductor |
+| прибуття | arrival |
 
 ## quiz: Meaning Check
 
 > Choose the correct answer.
 
-1. What does "потяг" mean?
-   - [ ] departure
-   - [ ] arrival
-   - [ ] compartment
+1. What does "вокзал" mean?
+   - [ ] worst
+   - [ ] rainbow
+   - [x] train station
+   - [ ] ATM
+   > "вокзал" means "train station"
+
+2. What does "відправлення" mean?
+   - [ ] cheap
+   - [ ] not
+   - [ ] waterproof
+   - [x] departure
+   > "відправлення" means "departure"
+
+3. What does "затримка" mean?
+   - [ ] cold (illness)
+   - [ ] accountant
+   - [x] delay
+   - [ ] addressee
+   > "затримка" means "delay"
+
+4. What does "потяг" mean?
+   - [ ] big, large
+   - [ ] was (n)
+   - [ ] rule
    - [x] train
    > "потяг" means "train"
 
-2. What does "прибуття" mean?
-   - [x] arrival
-   - [ ] departure
-   - [ ] train
-   - [ ] compartment
-   > "прибуття" means "arrival"
-
-3. What does "відправлення" mean?
-   - [x] departure
-   - [ ] arrival
-   - [ ] compartment
-   - [ ] train
-   > "відправлення" means "departure"
-
-4. What does "купе" mean?
-   - [ ] departure
-   - [ ] train
-   - [x] compartment
-   - [ ] arrival
-   > "купе" means "compartment"
-
-5. What does "вокзал" mean?
-   - [ ] departure
-   - [x] train station
-   - [ ] train
-   - [ ] arrival
-   > "вокзал" means "train station"
-
-6. What does "провідник" mean?
+5. What does "провідник" mean?
+   - [ ] thing
+   - [ ] receipt
+   - [ ] Ukrainian (adj)
    - [x] conductor
-   - [ ] arrival
-   - [ ] departure
-   - [ ] train
    > "провідник" means "conductor"
 
+6. What does "платформа" mean?
+   - [x] platform
+   - [ ] never
+   - [ ] bank
+   - [ ] invitation
+   > "платформа" means "platform"
 
+7. What does "багаж" mean?
+   - [ ] envelope
+   - [ ] train
+   - [ ] to return
+   - [x] luggage
+   > "багаж" means "luggage"
 
-## unjumble: Word Order
+8. What does "рейс" mean?
+   - [ ] to think
+   - [x] flight
+   - [ ] no
+   - [ ] (with) him/it
+   > "рейс" means "flight"
 
-> Put the words in the correct order to form a sentence.
+9. What does "купе" mean?
+   - [x] compartment
+   - [ ] headphones
+   - [ ] to go out, leave
+   - [ ] to answer
+   > "купе" means "compartment"
 
-1. (на / посадку) / вихід
-   > [!answer] вихід (на посадку)
-   > (gate)
+10. What does "прибуття" mean?
+   - [ ] hundred
+   - [ ] new
+   - [ ] experience
+   - [x] arrival
+   > "прибуття" means "arrival"
 
-2. один / В / бік
-   > [!answer] В один бік
-   > (One way)
+## true-false: True or False?
 
-3. і / Туди / назад
-   > [!answer] Туди і назад
-   > (Round trip)
+> Determine if each statement is true or false.
 
-4. котрій / О / відправлення
-   > [!answer] О котрій відправлення?
-   > (What time departure?)
+- [x] "затримка" means "delay"
+   > Correct!
 
+- [ ] "відправлення" means "smallest"
+   > Incorrect. "відправлення" means "departure"
+
+- [x] "платформа" means "platform"
+   > Correct!
+
+- [x] "потяг" means "train"
+   > Correct!
+
+- [x] "провідник" means "conductor"
+   > Correct!
+
+- [x] "вокзал" means "train station"
+   > Correct!
+
+- [x] "прибуття" means "arrival"
+   > Correct!
+
+- [x] "багаж" means "luggage"
+   > Correct!
+
+- [ ] "рейс" means "to exit"
+   > Incorrect. "рейс" means "flight"
+
+- [ ] "купе" means "to see (perf)"
+   > Incorrect. "купе" means "compartment"
+
+## group-sort: Sort by Gender
+
+> Sort the nouns into gender categories.
+
+### Masculine
+- вокзал
+- потяг
+- рейс
+- провідник
+- багаж
+
+### Feminine
+- платформа
+- затримка
+
+### Neuter
+- прибуття
+- купе
+- відправлення
 
 ---
 

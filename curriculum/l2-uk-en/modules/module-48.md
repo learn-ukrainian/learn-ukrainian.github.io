@@ -286,182 +286,252 @@ Try to get: a lower price, negotiate.
 
 ---
 
+---
+
+---
+
+---
+
 # Activities
 
-## match-up: Shopping Vocabulary
+## fill-in: Complete the Sentences
 
-> Match Ukrainian with English.
+> Choose the correct word to complete each sentence.
+
+1. Я хочу купити цей ___.
+   > [!answer] навушники
+   > [!options] сіль | хвилина | 14 | навушники
+
+2. Мій брат має хороший ___.
+   > [!answer] розпродаж
+   > [!options] розпродаж | дефект | переказ | аптека
+
+3. Де ваша велика ___?
+   > [!answer] акція
+   > [!options] акція | підприємець | парк | салат
+
+4. Цей ___ коштує сто гривень.
+   > [!answer] дефект
+   > [!options] студент | дефект | кабінет | банан
+
+5. Мій брат має хорошу ___.
+   > [!answer] пам'ять
+   > [!options] журнал | конверт | пам'ять | лікарня
+
+6. Ваша ідея здається ___.
+   > [!answer] бездротовий
+   > [!options] бездротовий | англійська | дешевший | молодий
+
+7. Де ваша велика ___?
+   > [!answer] зарядка
+   > [!options] ринок | четвер | виписка | зарядка
+
+8. Ця книга надзвичайно ___.
+   > [!answer] водонепроникний
+   > [!options] українська | цікавий | водонепроникний | уявний
+
+## unjumble: Build the Sentence
+
+> Arrange the words in the correct order.
+
+1. брат / має / Мій / хороший / ремінь
+   > [!answer] Мій брат має хороший ремінь.
+   > (belt)
+
+2. гривень / Цей / сто / коштує / розпродаж
+   > [!answer] Цей розпродаж коштує сто гривень.
+   > (sale (clearance))
+
+3. брат / Мій / має / пам'ять / хорошу
+   > [!answer] Мій брат має хорошу пам'ять.
+   > (memory)
+
+4. Це / нова / моя / батарея
+   > [!answer] Це моя нова батарея.
+   > (battery)
+
+5. мій / Це / екран / новий
+   > [!answer] Це мій новий екран.
+   > (screen)
+
+6. акція / хочу / Я / цю / купити
+   > [!answer] Я хочу купити цю акція.
+   > (promotion, sale)
+
+7. мій / новий / Це / чохол
+   > [!answer] Це мій новий чохол.
+   > (case, cover)
+
+8. Це / новий / дефект / мій
+   > [!answer] Це мій новий дефект.
+   > (defect)
+
+9. навушники / ваш / Де / великий
+   > [!answer] Де ваш великий навушники?
+   > (headphones)
+
+10. цю / хочу / зарядка / Я / купити
+   > [!answer] Я хочу купити цю зарядка.
+   > (charger)
+
+## match-up: Match the Pairs
+
+> Match Ukrainian words to their English meanings.
 
 | Left | Right |
 |------|-------|
-| примірочна | fitting room |
-| розмір | size |
-| знижка | discount |
-| гарантія | warranty |
-| повернути | to return |
-| обміняти | to exchange |
-
-## quiz: Shopping Situations
-
-> Choose the correct phrase.
-
-1. "This is too big" - Це ___.
-   - [x] завелике
-   - [ ] великий
-   - [ ] більше
-   - [ ] найбільше
-   > за- prefix = too.
-
-2. "Is this available in black?" - Чи є це в ___ кольорі?
-   - [x] чорному
-   - [ ] чорний
-   - [ ] чорна
-   - [ ] чорне
-   > Locative = чорному.
-
-3. "Any discounts?" - Чи є ___?
-   - [x] знижки
-   - [ ] знижка
-   - [ ] знижку
-   - [ ] знижкою
-   > Nominative plural = знижки.
-
-4. "What's the warranty?" - Яка ___?
-   - [x] гарантія
-   - [ ] гарантію
-   - [ ] гарантії
-   - [ ] гарантією
-   > Nominative = гарантія.
-
-5. "I want to exchange" - Я хочу ___.
-   - [x] обміняти
-   - [ ] обмін
-   - [ ] обміняв
-   - [ ] обміняю
-   > Infinitive after хочу.
-
-6. "Can it be cheaper?" - Чи можна ___?
-   - [x] дешевше
-   - [ ] дешевий
-   - [ ] дешевший
-   - [ ] найдешевше
-   > Adverb comparative = дешевше.
-
-## group-sort: Store Types
-
-> Sort vocabulary by store.
-
-### Clothes Store (Одяг)
-- примірочна
-- розмір
-- сорочка
-- джинси
-- сукня
-
-### Electronics Store (Електроніка)
-- батарея
-- пам'ять
-- гарантія
-- ноутбук
-- зарядка
-
-
-## true-false: True or False?
-
-> Determine if each statement is true or false.
-
-- [x] "ремінь" is masculine.
-   > Correct! ремінь is masculine.
-
-- [x] "акція" is feminine.
-   > Correct! акція is feminine.
-
-- [x] "розпродаж" is masculine.
-   > Correct! розпродаж is masculine.
-
-- [x] "батарея" is feminine.
-   > Correct! батарея is feminine.
-
-- [ ] "пам'ять" is masculine.
-   > Incorrect. пам'ять is feminine.
-
-- [ ] "екран" is feminine.
-   > Incorrect. екран is masculine.
-
-
-## fill-in: Fill in the Blank
-
-> Fill in the blanks with the correct word.
-
-1. Чи ___ знижки?
-   > [!answer] є
-
-
+| пам'ять | memory |
+| одягатися | to get dressed |
+| акція | promotion, sale |
+| водонепроникний | waterproof |
+| для | for |
+| дефект | defect |
+| один | one (m) |
+| бездротовий | wireless |
+| батарея | battery |
+| розпродаж | sale (clearance) |
+| чохол | case, cover |
+| навушники | headphones |
 
 ## quiz: Meaning Check
 
 > Choose the correct answer.
 
-1. What does "водонепроникний" mean?
-   - [x] waterproof
-   - [ ] charger
-   - [ ] wireless
-   - [ ] defect
-   > "водонепроникний" means "waterproof"
-
-2. What does "дефект" mean?
-   - [x] defect
-   - [ ] wireless
-   - [ ] waterproof
-   - [ ] charger
-   > "дефект" means "defect"
-
-3. What does "зарядка" mean?
-   - [ ] wireless
-   - [ ] defect
-   - [x] charger
-   - [ ] waterproof
-   > "зарядка" means "charger"
-
-4. What does "бездротовий" mean?
-   - [ ] waterproof
-   - [x] wireless
-   - [ ] charger
-   - [ ] defect
-   > "бездротовий" means "wireless"
-
-5. What does "розпродаж" mean?
-   - [ ] waterproof
+1. What does "розпродаж" mean?
+   - [ ] fresh
    - [x] sale (clearance)
-   - [ ] charger
-   - [ ] defect
+   - [ ] card
+   - [ ] night
    > "розпродаж" means "sale (clearance)"
 
-6. What does "навушники" mean?
-   - [ ] defect
-   - [ ] waterproof
-   - [ ] charger
+2. What does "акція" mean?
+   - [ ] to show (impf)
+   - [ ] company, group
+   - [x] promotion, sale
+   - [ ] to drive, manage
+   > "акція" means "promotion, sale"
+
+3. What does "навушники" mean?
+   - [ ] City: метро, вулиця, праворуч, ліворуч
+   - [ ] receipt
    - [x] headphones
+   - [ ] nothing
    > "навушники" means "headphones"
 
+4. What does "чохол" mean?
+   - [x] case, cover
+   - [ ] more expensive
+   - [ ] to exit
+   - [ ] cash
+   > "чохол" means "case, cover"
 
+5. What does "бездротовий" mean?
+   - [ ] twenty
+   - [ ] better
+   - [ ] director
+   - [x] wireless
+   > "бездротовий" means "wireless"
 
-## unjumble: Word Order
+6. What does "дефект" mean?
+   - [ ] this, this is
+   - [ ] window
+   - [x] defect
+   - [ ] recently
+   > "дефект" means "defect"
 
-> Put the words in the correct order to form a sentence.
+7. What does "батарея" mean?
+   - [ ] at most
+   - [ ] to the left
+   - [x] battery
+   - [ ] coat
+   > "батарея" means "battery"
 
-1. є / знижки / Чи
-   > [!answer] Чи є знижки?
-   > (Any discounts?)
+8. What does "екран" mean?
+   - [x] screen
+   - [ ] between
+   - [ ] best
+   - [ ] specialist
+   > "екран" means "screen"
 
-2. дешевше / можна / Чи
-   > [!answer] Чи можна дешевше?
-   > (Can it be cheaper?)
+9. What does "зарядка" mean?
+   - [ ] smallest
+   - [ ] your (n, informal)
+   - [ ] would (after consonant)
+   - [x] charger
+   > "зарядка" means "charger"
 
-3. батарея / тримає / Скільки
-   > [!answer] Скільки тримає батарея?
-   > (How long does battery last?)
+10. What does "водонепроникний" mean?
+   - [x] waterproof
+   - [ ] embroidered shirt
+   - [ ] cloudy
+   - [ ] to appear in dream
+   > "водонепроникний" means "waterproof"
 
+11. What does "пам'ять" mean?
+   - [ ] faster
+   - [x] memory
+   - [ ] corner
+   - [ ] family
+   > "пам'ять" means "memory"
+
+12. What does "ремінь" mean?
+   - [ ] to go (on foot)
+   - [x] belt
+   - [ ] near, by
+   - [ ] hi, hello
+   > "ремінь" means "belt"
+
+## true-false: True or False?
+
+> Determine if each statement is true or false.
+
+- [x] "навушники" means "headphones"
+   > Correct!
+
+- [ ] "дефект" means "tomato"
+   > Incorrect. "дефект" means "defect"
+
+- [x] "акція" means "promotion, sale"
+   > Correct!
+
+- [ ] "екран" means "to turn out"
+   > Incorrect. "екран" means "screen"
+
+- [x] "батарея" means "battery"
+   > Correct!
+
+- [ ] "чохол" means "Café: меню, замовити, рахунок"
+   > Incorrect. "чохол" means "case, cover"
+
+- [ ] "ремінь" means "memory"
+   > Incorrect. "ремінь" means "belt"
+
+- [ ] "бездротовий" means "percent, interest"
+   > Incorrect. "бездротовий" means "wireless"
+
+- [x] "розпродаж" means "sale (clearance)"
+   > Correct!
+
+- [x] "водонепроникний" means "waterproof"
+   > Correct!
+
+## group-sort: Sort by Gender
+
+> Sort the nouns into gender categories.
+
+### Masculine
+- чохол
+- дефект
+- розпродаж
+- навушники
+- ремінь
+- екран
+
+### Feminine
+- пам'ять
+- батарея
+- акція
+- зарядка
 
 ---
 

@@ -278,165 +278,174 @@ Sometimes you want to say "extremely" without comparing:
 
 ---
 
+---
+
+---
+
+---
+
 # Activities
 
-## match-up: Comparatives to Superlatives
+## fill-in: Complete the Sentences
 
-> Match comparative with superlative.
+> Choose the correct word to complete each sentence.
+
+1. Моя кімната занадто ___.
+   > [!answer] найдорожчий
+   > [!options] дорожчий | вищий | молодший | найдорожчий
+
+2. Ця книга надзвичайно ___.
+   > [!answer] найважливіший
+   > [!options] найважливіший | чорний | наступний | найцікавіший
+
+3. Ваша ідея здається ___.
+   > [!answer] найбільший
+   > [!options] вищий | кращий | найбільший | новий
+
+## unjumble: Build the Sentence
+
+> Arrange the words in the correct order.
+
+## match-up: Match the Pairs
+
+> Match Ukrainian words to their English meanings.
 
 | Left | Right |
 |------|-------|
-| більший | найбільший |
-| менший | найменший |
-| кращий | найкращий |
-| гірший | найгірший |
-| вищий | найвищий |
-| дорожчий | найдорожчий |
-
-## quiz: Superlatives
-
-> Choose the correct form.
-
-1. "The biggest city" - ___ місто.
-   - [x] найбільше
-   - [ ] більше
-   - [ ] більший
-   - [ ] великий
-   > Superlative neuter = найбільше.
-
-2. "The best friend" - ___ друг.
-   - [x] найкращий
-   - [ ] кращий
-   - [ ] добрий
-   - [ ] краще
-   > Superlative masculine = найкращий.
-
-3. "She sings the best" - Вона співає ___.
-   - [x] найкраще
-   - [ ] краще
-   - [ ] кращий
-   - [ ] найкраща
-   > Adverb superlative = найкраще.
-
-4. "The most important thing" - ___ річ.
-   - [x] найважливіша
-   - [ ] важливіша
-   - [ ] важлива
-   - [ ] найважливіший
-   > Feminine superlative = найважливіша.
-
-5. "Which is the cheapest?" - Який ___?
-   - [x] найдешевший
-   - [ ] дешевший
-   - [ ] дешевий
-   - [ ] найдешевше
-   > Masculine superlative = найдешевший.
-
-6. "At least ten people" - ___ десять людей.
-   - [x] Щонайменше
-   - [ ] Найменше
-   - [ ] Менше
-   - [ ] Мало
-   > "At least" = щонайменше.
-
-## group-sort: Comparative vs Superlative
-
-> Sort the forms.
-
-### Comparatives
-- більший
-- кращий
-- вищий
-- дорожчий
-- швидше
-
-### Superlatives
-- найбільший
-- найкращий
-- найвищий
-- найдорожчий
-- найшвидше
-
-
-## fill-in: Fill in the Blank
-
-> Fill in the blanks with the correct word.
-
-1. найкраще ___ infinitive
-   > [!answer] +
-
-2. When to ___ найбільш:
-   > [!answer] use
-
-3. Prefix ___ (archaic/emphatic):
-   > [!answer] пре-
-
-
+| найменший | smallest |
+| найкращий | best |
+| надзвичайно | extraordinarily |
+| найбільше | most (adv) |
+| найгірший | worst |
+| найголовніший | most main/important |
+| колега | colleague |
+| найдорожчий | most expensive |
+| найдешевший | cheapest |
+| скільки | how much/many |
+| щонайбільше | at most |
+| столик | table (small) |
 
 ## quiz: Meaning Check
 
 > Choose the correct answer.
 
-1. What does "найбільший" mean?
-   - [x] biggest
-   - [ ] cheapest
-   - [ ] at most
-   - [ ] at least
-   > "найбільший" means "biggest"
+1. What does "найшвидше" mean?
+   - [ ] cold (adv)
+   - [x] fastest
+   - [ ] table (small)
+   - [ ] to me
+   > "найшвидше" means "fastest"
 
-2. What does "найдешевший" mean?
-   - [ ] at least
-   - [ ] at most
+2. What does "найвищий" mean?
+   - [ ] percent, interest
+   - [ ] which/what kind (m)
+   - [ ] pork fat
+   - [x] highest/tallest
+   > "найвищий" means "highest/tallest"
+
+3. What does "найдешевший" mean?
    - [x] cheapest
-   - [ ] biggest
+   - [ ] better
+   - [ ] to lack
+   - [ ] around
    > "найдешевший" means "cheapest"
 
-3. What does "щонайбільше" mean?
-   - [ ] at least
-   - [ ] biggest
-   - [ ] cheapest
-   - [x] at most
-   > "щонайбільше" means "at most"
+4. What does "найголовніший" mean?
+   - [ ] fun, merry
+   - [ ] breakfast
+   - [ ] fish
+   - [x] most main/important
+   > "найголовніший" means "most main/important"
 
-4. What does "щонайменше" mean?
-   - [ ] cheapest
+5. What does "найважливіший" mean?
+   - [ ] to cost
+   - [ ] soon
+   - [x] most important
+   - [ ] to buy (perf)
+   > "найважливіший" means "most important"
+
+6. What does "найгірший" mean?
+   - [ ] father
+   - [x] worst
+   - [ ] must, have to
+   - [ ] to take
+   > "найгірший" means "worst"
+
+7. What does "найцікавіший" mean?
+   - [ ] without
+   - [ ] chicken
+   - [x] most interesting
+   - [ ] floor (of building)
+   > "найцікавіший" means "most interesting"
+
+8. What does "щонайменше" mean?
    - [x] at least
-   - [ ] biggest
-   - [ ] at most
+   - [ ] thin
+   - [ ] to her
+   - [ ] zero
    > "щонайменше" means "at least"
 
-5. What does "неймовірно" mean?
-   - [ ] biggest
-   - [ ] at most
-   - [x] incredibly
-   - [ ] cheapest
-   > "неймовірно" means "incredibly"
+9. What does "найкращий" mean?
+   - [ ] Possessives: мій, твій, його, її, наш, ваш
+   - [x] best
+   - [ ] to read (perf)
+   - [ ] pants
+   > "найкращий" means "best"
 
-6. What does "найбільше" mean?
-   - [ ] at most
-   - [ ] cheapest
+10. What does "найбільше" mean?
+   - [ ] there
+   - [ ] package
    - [x] most (adv)
-   - [ ] biggest
+   - [ ] to you
    > "найбільше" means "most (adv)"
 
+11. What does "найменший" mean?
+   - [x] smallest
+   - [ ] which/what kind (n)
+   - [ ] sunny
+   - [ ] nothing
+   > "найменший" means "smallest"
 
+12. What does "неймовірно" mean?
+   - [ ] to appear in dream
+   - [ ] invitation
+   - [ ] three
+   - [x] incredibly
+   > "неймовірно" means "incredibly"
 
-## unjumble: Word Order
+## true-false: True or False?
 
-> Put the words in the correct order to form a sentence.
+> Determine if each statement is true or false.
 
-1. + / найкраще / infinitive
-   > [!answer] найкраще + infinitive
-   > (it's best to...)
+- [ ] "найбільший" means "instead of"
+   > Incorrect. "найбільший" means "biggest"
 
-2. to / найбільш: / When / use
-   > [!answer] When to use найбільш:
-   > (With compound adjectives)
+- [x] "найкращий" means "best"
+   > Correct!
 
-3. пре- / (archaic/emphatic): / Prefix
-   > [!answer] Prefix пре- (archaic/emphatic):
-   > (**пре**красний - most beautiful (poetic))
+- [ ] "найцікавіший" means "to disturb"
+   > Incorrect. "найцікавіший" means "most interesting"
 
+- [x] "щонайменше" means "at least"
+   > Correct!
+
+- [ ] "найгірший" means "to exchange"
+   > Incorrect. "найгірший" means "worst"
+
+- [x] "найбільше" means "most (adv)"
+   > Correct!
+
+- [x] "надзвичайно" means "extraordinarily"
+   > Correct!
+
+- [x] "найважливіший" means "most important"
+   > Correct!
+
+- [ ] "найголовніший" means "most (adv)"
+   > Incorrect. "найголовніший" means "most main/important"
+
+- [x] "найдешевший" means "cheapest"
+   > Correct!
 
 ---
 

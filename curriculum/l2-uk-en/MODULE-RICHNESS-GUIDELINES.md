@@ -29,10 +29,11 @@ A "rich" module includes:
 - [ ] **Multiple examples** (not just 1-2)
 - [ ] **Authentic materials** (real texts, media)
 - [ ] **Cultural context** where relevant
-- [ ] **Common mistakes** section
+- [ ] **Common mistakes** section (Типові помилки)
 - [ ] **Practice activities** (varied types)
 - [ ] **Production tasks** (speaking/writing)
 - [ ] **Self-assessment** checklist
+- [ ] **Pronunciation guidance** (B2+ grammar modules)
 
 ---
 
@@ -330,6 +331,62 @@ Modules should include **contextual boxes** that make learning memorable and eng
 - Evolution of Ukrainian over centuries
 - Influence of other languages
 - Debates in modern Ukrainian linguistics
+
+---
+
+## Pronunciation Guidance (B2+ Grammar Modules)
+
+### When Required
+
+Grammar modules at B2+ level that introduce new grammatical forms must include pronunciation guidance:
+
+| Grammar Type | Pronunciation Elements |
+|--------------|----------------------|
+| Passive forms | -ий vs -о endings, stress patterns |
+| Participles | Stress shifts, consonant changes |
+| Complex verb forms | Aspect-related stress |
+| Formal registers | Intonation patterns |
+
+### Required Components
+
+1. **IPA transcriptions** for key examples
+2. **Stress pattern tables** showing where stress falls
+3. **Minimal pairs** for forms that sound similar (e.g., написаний vs написано)
+4. **Intonation contours** for sentence-level pronunciation
+
+### Format Example
+
+```markdown
+# Вимова [grammatical form]
+
+## Наголос
+
+| Форма | IPA | Наголос |
+|-------|-----|---------|
+| написа́ний | /nɐpɪˈsɑnɪj/ | на -са- |
+| напи́сано | /nɐpɪˈsɑno/ | на -са- |
+
+## Мінімальні пари
+
+| Форма 1 | IPA | Форма 2 | IPA |
+|---------|-----|---------|-----|
+| -ий | /ɪj/ | -о | /o/ |
+
+## Інтонація
+
+| Контекст | Інтонаційний контур |
+|----------|---------------------|
+| Нейтральний | → ↘ |
+| Офіційний | ↗ ↘ |
+```
+
+### Rationale
+
+At B2+, learners need to:
+- **Produce** accurate pronunciation, not just recognize
+- **Distinguish** similar forms by sound
+- **Match** register through intonation
+- **Self-correct** using stress patterns
 
 ---
 

@@ -322,138 +322,286 @@ Practice giving directions using prefixed verbs:
 
 ---
 
-# Activities
+---
 
-## match-up: Prefix → Meaning
+---
 
-> Match prefix with its core meaning.
+---
+
+# Вправи
+
+## fill-in: Доповніть речення
+
+> Оберіть правильне слово.
+
+1. Я давно мріяв навчитися ___, і нарешті маю таку можливість.
+   > [!answer] заїхати
+   > [!options] заїхати | купувати | заходити | залишатися
+
+2. Ця ___ належить моїй подрузі з Києва.
+   > [!answer] калюжа
+   > [!options] перехрестя | калюжа | автобус | каса
+
+3. Я давно мріяв навчитися ___, і нарешті маю таку можливість.
+   > [!answer] винести
+   > [!options] винести | сподіватися | збирати | керувати
+
+4. Вони довго шукали хороший ___, але не знайшли.
+   > [!answer] заїзд
+   > [!options] розпродаж | заїзд | калюжа | картка
+
+5. Це ___ належить моєму другові з Києва.
+   > [!answer] перехрестя
+   > [!options] лампа | січень | повідомлення | перехрестя
+
+6. Цей ___ належить моєму другові з Києва.
+   > [!answer] світлофор
+   > [!options] градус | запрошення | затримка | світлофор
+
+7. Я давно мріяв навчитися ___, і нарешті маю таку можливість.
+   > [!answer] зайти
+   > [!options] домовитися | дійти | зайти | перерахувати
+
+8. Моя сестра каже, що їй подобається ___ у вільний час.
+   > [!answer] привезти
+   > [!options] привезти | зайти | залишитися | уявляти
+
+9. Вони довго шукали хороший ___, але не знайшли.
+   > [!answer] прихід
+   > [!options] подруга | калюжа | прихід | запрошення
+
+10. Це ___ належить моєму другові з Києва.
+   > [!answer] відбуття
+   > [!options] відбуття | рік | ручка | школа
+
+11. Я хочу купити цей ___, але він занадто дорогий.
+   > [!answer] затор
+   > [!options] затор | сусід | початок | офіс
+
+## unjumble: Побудуйте речення
+
+> Розташуйте слова в правильному порядку.
+
+1. дорогий / Я / цей / перехід / але / купити / хочу / занадто / він
+   > [!answer] Я хочу купити цей перехід, але він занадто дорогий.
+   > (crossing, transition)
+
+2. прихід / моєму / з / Києва / належить / другові / Цей
+   > [!answer] Цей прихід належить моєму другові з Києва.
+   > (arrival, coming)
+
+3. з / перехрестя / Києва / належить / другові / Це / моєму
+   > [!answer] Це перехрестя належить моєму другові з Києва.
+   > (intersection)
+
+4. напрямок / друг / сказав / зручний / дуже / його / Мій / що
+   > [!answer] Мій друг сказав, що його напрямок дуже зручний.
+   > (direction)
+
+5. Вони / знайшли / шукали / довго / не / затор / хороший / але
+   > [!answer] Вони довго шукали хороший затор, але не знайшли.
+   > (traffic jam)
+
+6. знайшли / але / шукали / хороший / відхід / не / довго / Вони
+   > [!answer] Вони довго шукали хороший відхід, але не знайшли.
+   > (departure)
+
+7. Мій / зручний / переїзд / що / друг / його / дуже / сказав
+   > [!answer] Мій друг сказав, що його переїзд дуже зручний.
+   > (move (relocation))
+
+8. калюжа / моїй / Ця / з / Києва / належить / подрузі
+   > [!answer] Ця калюжа належить моїй подрузі з Києва.
+   > (puddle)
+
+9. належить / з / другові / Це / моєму / відбуття / Києва
+   > [!answer] Це відбуття належить моєму другові з Києва.
+   > (departure)
+
+10. хороший / довго / Вони / але / світлофор / знайшли / шукали / не
+   > [!answer] Вони довго шукали хороший світлофор, але не знайшли.
+   > (traffic light)
+
+11. друг / виїзд / сказав / дуже / що / Мій / його / зручний
+   > [!answer] Мій друг сказав, що його виїзд дуже зручний.
+   > (exit (for vehicles))
+
+12. його / дуже / заїзд / друг / сказав / зручний / що / Мій
+   > [!answer] Мій друг сказав, що його заїзд дуже зручний.
+   > (entrance (for vehicles))
+
+## match-up: Знайдіть пари
+
+> З'єднайте українські слова з англійськими.
 
 | Left | Right |
 |------|-------|
-| при- | arrival, toward |
-| ви- | out, exit |
-| в-/у- | into, entry |
-| за- | behind, drop by |
-| пере- | across, over |
-| від- | away from |
-| до- | reaching, up to |
-| об- | around |
+| приходити | to come (habitually) |
+| найдешевший | cheapest |
+| англійська | English (adj) |
+| світлофор | traffic light |
+| відбуття | departure |
+| фото | photo |
+| привезти | to bring (by transport) |
+| прихід | arrival, coming |
+| напрямок | direction |
+| хокей | hockey |
+| прилетіти | to arrive (by plane) |
+| перехрестя | intersection |
+| прошу | please/you're welcome |
+| об'їхати | to drive around |
 
-## quiz: Prefixed Motion Verbs
+## quiz: Перевірка значень
 
-> Choose the correct verb.
+> Оберіть правильну відповідь.
 
-1. "He arrived on time" - Він ___ вчасно.
-   - [x] прийшов
-   - [ ] вийшов
-   - [ ] зайшов
-   - [ ] дійшов
-   > При- = arrival.
+1. Що означає "об'їхати"?
+   - [ ] to meet
+   - [ ] (with) you
+   - [ ] wireless
+   - [x] to drive around
+   > "об'їхати" means "to drive around"
 
-2. "She exited the building" - Вона ___ з будівлі.
-   - [x] вийшла
-   - [ ] увійшла
-   - [ ] прийшла
-   - [ ] зайшла
-   > Ви- = exit.
+2. Що означає "відходити"?
+   - [ ] what
+   - [ ] to eat (perf)
+   - [x] to depart (habitually)
+   - [ ] to drive, manage
+   > "відходити" means "to depart (habitually)"
 
-3. "We crossed the street" - Ми ___ вулицю.
-   - [x] перейшли
-   - [ ] вийшли
-   - [ ] зайшли
-   - [ ] дійшли
-   > Пере- = across.
+3. Що означає "переїзд"?
+   - [ ] nowhere
+   - [ ] often
+   - [ ] smallest
+   - [x] move (relocation)
+   > "переїзд" means "move (relocation)"
 
-4. "Drop by tomorrow" - ___ завтра.
-   - [x] Зайди
-   - [ ] Вийди
-   - [ ] Перейди
-   - [ ] Дійди
-   > За- = drop by.
-
-5. "The train departed" - Поїзд ___.
-   - [x] відійшов
-   - [ ] прийшов
-   - [ ] дійшов
-   - [ ] обійшов
-   > Від- = away, departure.
-
-6. "How do I get to the center?" - Як ___ до центру?
-   - [x] дійти
-   - [ ] прийти
-   - [ ] вийти
-   - [ ] зайти
-   > До- = reaching destination.
-
-## group-sort: By Prefix
-
-> Sort verbs by their prefix.
-
-### при- (arrival)
-- прийти
-- приїхати
-- принести
-- прилетіти
-
-### ви- (exit)
-- вийти
-- виїхати
-- винести
-- вибігти
-
-### пере- (across)
-- перейти
-- переїхати
-- перенести
-- перебігти
-
-
-## quiz: Meaning Check
-
-> Choose the correct answer.
-
-1. What does "обійти" mean?
-   - [x] to go around
-   - [ ] to reach (on foot)
-   - [ ] to drive into
-   - [ ] to come (habitually)
-   > "обійти" means "to go around"
-
-2. What does "дійти" mean?
-   - [ ] to go around
-   - [x] to reach (on foot)
-   - [ ] to come (habitually)
-   - [ ] to drive into
-   > "дійти" means "to reach (on foot)"
-
-3. What does "в'їхати" mean?
-   - [ ] to go around
-   - [ ] to come (habitually)
-   - [x] to drive into
-   - [ ] to reach (on foot)
-   > "в'їхати" means "to drive into"
-
-4. What does "приходити" mean?
-   - [ ] to drive into
-   - [x] to come (habitually)
-   - [ ] to go around
-   - [ ] to reach (on foot)
-   > "приходити" means "to come (habitually)"
-
-5. What does "світлофор" mean?
+4. Що означає "світлофор"?
+   - [ ] no
+   - [ ] convinced
    - [x] traffic light
-   - [ ] to go around
-   - [ ] to reach (on foot)
-   - [ ] to drive into
+   - [ ] reluctantly
    > "світлофор" means "traffic light"
 
-6. What does "напрямок" mean?
-   - [ ] to go around
-   - [ ] to reach (on foot)
-   - [x] direction
-   - [ ] to drive into
-   > "напрямок" means "direction"
+5. Що означає "доїхати"?
+   - [x] to reach (by transport)
+   - [ ] to write
+   - [ ] thin
+   - [ ] passport
+   > "доїхати" means "to reach (by transport)"
 
+6. Що означає "калюжа"?
+   - [ ] to help (impf)
+   - [ ] fish
+   - [ ] signature
+   - [x] puddle
+   > "калюжа" means "puddle"
+
+7. Що означає "заходити"?
+   - [x] to drop by (habitually)
+   - [ ] borscht
+   - [ ] while
+   - [ ] to return
+   > "заходити" means "to drop by (habitually)"
+
+8. Що означає "увійти"?
+   - [ ] to remain
+   - [ ] train
+   - [x] to enter
+   - [ ] platform
+   > "увійти" means "to enter"
+
+9. Що означає "від'їхати"?
+   - [x] to drive away
+   - [ ] to become
+   - [ ] on the contrary
+   - [ ] puddle
+   > "від'їхати" means "to drive away"
+
+10. Що означає "привезти"?
+   - [ ] password
+   - [ ] to hurt, ache
+   - [x] to bring (by transport)
+   - [ ] for
+   > "привезти" means "to bring (by transport)"
+
+11. Що означає "прилетіти"?
+   - [ ] train
+   - [x] to arrive (by plane)
+   - [ ] more slowly
+   - [ ] declension
+   > "прилетіти" means "to arrive (by plane)"
+
+12. Що означає "заїхати"?
+   - [ ] cucumber
+   - [ ] that (neuter)
+   - [ ] biggest
+   - [x] to drive by
+   > "заїхати" means "to drive by"
+
+13. Що означає "відійти"?
+   - [ ] bottle
+   - [ ] change (money)
+   - [ ] entrance
+   - [x] to step away
+   > "відійти" means "to step away"
+
+14. Що означає "перехрестя"?
+   - [ ] imaginary, hypothetical
+   - [ ] there
+   - [x] intersection
+   - [ ] this, this is
+   > "перехрестя" means "intersection"
+
+## true-false: Правда чи ні?
+
+> Визначте, чи правильне твердження.
+
+- [x] "заїхати" means "to drive by"
+   > Correct!
+
+- [ ] "винести" means "if"
+   > Incorrect. "винести" means "to carry out"
+
+- [ ] "виїзд" means "would (after vowel)"
+   > Incorrect. "виїзд" means "exit (for vehicles)"
+
+- [ ] "прилетіти" means "to continue (ongoing)"
+   > Incorrect. "прилетіти" means "to arrive (by plane)"
+
+- [x] "дійти" means "to reach (on foot)"
+   > Correct!
+
+- [x] "вилетіти" means "to fly out, depart"
+   > Correct!
+
+- [x] "в'їхати" means "to drive in"
+   > Correct!
+
+- [x] "обійти" means "to go around"
+   > Correct!
+
+- [ ] "калюжа" means "in order to, so that"
+   > Incorrect. "калюжа" means "puddle"
+
+- [ ] "світлофор" means "pilot"
+   > Incorrect. "світлофор" means "traffic light"
+
+## group-sort: Сортування за родом
+
+> Розподіліть слова за родами.
+
+### Чоловічий рід
+- напрямок
+- виїзд
+- перехід
+- заїзд
+- прихід
+- світлофор
+
+### Середній рід
+- перехрестя
+- відбуття
 
 ---
 

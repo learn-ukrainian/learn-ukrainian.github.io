@@ -1,7 +1,7 @@
 ---
 module: 94
 title: "Motion Practice & Integration"
-subtitle: "Mastering All Motion Verbs"
+subtitle: "Повна система дієслів руху"
 level: B1
 phase: B1.1
 duration: 45
@@ -9,9 +9,9 @@ transliteration: none
 tags: [verbs, motion, practice, review]
 objectives:
   - Review all motion verb pairs
-  - Master prefix selection
+  - Consolidate prefix selection
   - Practice in communicative contexts
-  - Build fluency with motion verbs
+  - Achieve automaticity in motion verb use
 grammar:
   - Motion verb system review
   - Prefix selection practice
@@ -20,23 +20,29 @@ grammar:
 
 # Lesson Content
 
-## warm-up
+## Warm-up
 
-### The Complete System
+### The Complete System in One Place
 
-You now know:
-- **8 motion verb pairs** (uni/multi)
+Over the last 6 modules, you've learned:
+- **8 pairs of motion verbs** (unidirectional/multidirectional)
 - **10 prefixes** with directional meanings
-- **Figurative expressions** using motion verbs
+- **Figurative expressions** with motion verbs
 
-Time to put it all together!
+Time to bring it all together and achieve automaticity!
 
-## presentation
+> **Did you know?**
+>
+> The motion verb system is one of the most challenging topics for learners of Slavic languages. But it's also one of the most beautiful! Once you master it, you can express with one word what English needs three or four words for. "Він вибіг" = "He ran out." Compactness and precision — these are the advantages of the system.
+
+---
+
+## Presentation
 
 ### Quick Reference: Motion Pairs
 
-| Uni (one way) | Multi (round trip) | English |
-|---------------|-------------------|---------|
+| Unidirectional | Multidirectional | English |
+|----------------|------------------|---------|
 | іти | ходити | to go (foot) |
 | їхати | їздити | to go (vehicle) |
 | бігти | бігати | to run |
@@ -53,59 +59,65 @@ Time to put it all together!
 | при- | TO | прийти (come) |
 | в-/у- | INTO | увійти (enter) |
 | ви- | OUT | вийти (exit) |
-| по- | away/start | піти (leave) |
-| за- | stop by | зайти (drop in) |
+| по- | departure/away | піти (leave) |
+| за- | stopping by | зайти (drop in) |
 | пере- | across | перейти (cross) |
-| про- | through | пройти (pass) |
+| про- | through/past | пройти (pass) |
 | об- | around | обійти (go around) |
-| роз- | apart | розійтися (scatter) |
+| роз- | in different directions | розійтися (scatter) |
 | від- | away from | відійти (step away) |
 
-### Decision Tree: Which Verb?
+### Selection Algorithm: Which Verb?
 
-**Step 1: How is movement happening?**
+**Step 1: How is the movement happening?**
 - On foot → іти/ходити family
 - By vehicle → їхати/їздити family
 - Running → бігти/бігати family
-- Flying → летіти/літати family
+- By plane → летіти/літати family
 - Etc.
 
 **Step 2: Direction or repetition?**
-- One direction now → Unidirectional
-- Round trip/habitual → Multidirectional
+- One direction, now → Unidirectional
+- There and back / habit → Multidirectional
 
-**Step 3: Any prefix needed?**
-- TO destination → при-
+**Step 3: Is a prefix needed?**
+- TO a place → при-
 - OUT → ви-
 - INTO → в-/у-
 - ACROSS → пере-
 - Etc.
 
-**Step 4: What aspect?**
+**Step 4: Which aspect?**
 - Completed action → Perfective (prefixed)
-- Habitual/process → Imperfective
+- Habit/process → Imperfective
 
-### Common Scenarios
+> **Myth vs Fact**
+>
+> **Myth:** "You have to think about each motion verb separately."
+>
+> **Fact:** No! The motion verb system is precisely a system. When you understand the logic, the choice becomes automatic. "How is he moving?" + "Where to?" + "Completed?" = correct verb. Practice the algorithm, and it will become intuition.
 
-**1. Daily Commute:**
+### Typical Scenarios
 
-| Ukrainian | English | Verb Type |
+#### 1. Daily Commute to Work
+
+| Ukrainian | English | Verb type |
 |-----------|---------|-----------|
-| Я ходжу на роботу щодня. | I go to work every day. | Multi (habitual) |
-| Сьогодні я йду пізніше. | Today I'm going later. | Uni (specific) |
+| Я ходжу на роботу щодня. | I go to work every day. | Multi (habit) |
+| Сьогодні я йду пізніше. | Today I'm going later. | Uni (specific instance) |
 | Я прийшов на роботу о дев'ятій. | I arrived at work at 9. | Pf (result) |
-| Я виходжу з дому о восьмій. | I leave home at 8. | Impf (habitual) |
+| Я виходжу з дому о восьмій. | I leave home at 8. | Impf (habit) |
 
-**2. Describing a Trip:**
+#### 2. Describing a Trip
 
-| Ukrainian | English | Verb Type |
+| Ukrainian | English | Verb type |
 |-----------|---------|-----------|
-| Ми їздили до Львова. | We went to Lviv (and back). | Multi past |
+| Ми їздили до Львова. | We went to Lviv (and back). | Multi (there and back) |
 | Ми їхали п'ять годин. | We drove for 5 hours. | Uni past (process) |
 | Ми приїхали ввечері. | We arrived in the evening. | Pf (result) |
 | Ми переїхали через міст. | We crossed the bridge. | Pf (completed) |
 
-**3. Giving Directions:**
+#### 3. Giving Directions
 
 | Ukrainian | English | Prefix |
 |-----------|---------|--------|
@@ -114,47 +126,54 @@ Time to put it all together!
 | Зайдіть у двір. | Enter the courtyard. | за- |
 | Обійдіть будинок. | Go around the building. | об- |
 
-### Error Prevention: Common Mistakes
+### Error Prevention
 
-**1. Confusing піти/прийти:**
-- ❌ Він прийшов на роботу. (He came to work) — correct if you're AT work
-- ✅ Він пішов на роботу. (He left for work) — correct if he left home
+**1. Confusion between піти/прийти:**
+- Він прийшов на роботу. (if you're describing his departure from home — wrong context)
+- Він пішов на роботу. — He left for work. (correct: emphasis on departure)
+- Він прийшов на роботу. — He arrived at work. (correct: if you're at work)
 
-**2. Using uni for habitual:**
-- ❌ Я їду на роботу щодня. (Wrong: uni for habitual)
-- ✅ Я їжджу на роботу щодня. (Correct: multi for habitual)
+**2. Unidirectional for habit:**
+- Я їду на роботу щодня. (Wrong: uni for habitual)
+- Я їжджу на роботу щодня. (Correct: multi for habitual)
 
 **3. Wrong prefix:**
-- ❌ Він вийшов в кімнату. (Exit into??)
-- ✅ Він увійшов до кімнати. (Entered the room)
+- Він вийшов в кімнату. (Exit into??)
+- Він увійшов до кімнати. (Entered the room — correct)
 
 **4. Aspect mismatch:**
-- ❌ Він завжди приходить і прийде завтра. (Mixing aspects oddly)
-- ✅ Він завжди приходить. Він прийде завтра. (Consistent)
+- Він завжди приходить і прийде завтра. (Mixing aspects oddly)
+- Він завжди приходить. Він прийде завтра. (Consistent — correct)
 
-## practice
+> **Did you know?**
+>
+> The most common error is using unidirectional instead of multidirectional for habits. "Я їду на роботу щодня" sounds strange to native speakers because unidirectional implies "right now." The rule is simple: if there's "щодня" (every day), "завжди" (always), "зазвичай" (usually) — use multidirectional!
+
+---
+
+## Practice
 
 ### Scenario 1: Morning Routine
 
-Fill in with correct motion verb:
+Fill in the correct motion verb:
 
-> Щоранку я ___ (get up: вставати/встати) о сьомій. Потім я ___ (go out: виходити/вийти) з дому о восьмій. Я ___ (go: ходити/йти) до метро пішки. Я ___ (ride: їздити/їхати) на роботу метро. Я ___ (arrive: приходити/прийти) в офіс о дев'ятій.
+> Щоранку я ___ (get up) о сьомій. Потім я ___ (leave) з дому о восьмій. Я ___ (walk to) до метро пішки. Я ___ (travel) на роботу метро. Я ___ (arrive) в офіс о дев'ятій.
 
-**Answers (habitual context):** встаю, виходжу, ходжу/йду, їжджу, приходжу
+**Answers (habit context):** встаю, виходжу, ходжу, їжджу, приходжу
 
 ### Scenario 2: Yesterday's Journey
 
 Past tense, completed events:
 
-> Учора я ___ (leave: піти) з дому о сьомій. Я ___ (cross: перейти) вулицю і ___ (enter: увійти) у метро. Я ___ (ride: їхати) двадцять хвилин. Потім я ___ (exit: вийти) і ___ (walk: йти) до офісу. Я ___ (arrive: прийти) вчасно.
+> Учора я ___ (left) з дому о сьомій. Я ___ (crossed) вулицю і ___ (entered) у метро. Я ___ (rode) двадцять хвилин. Потім я ___ (exited) і ___ (walked) до офісу. Я ___ (arrived) вчасно.
 
 **Answers:** пішов, перейшов, увійшов, їхав, вийшов, йшов, прийшов
 
 ### Scenario 3: Giving Directions
 
-Imperative forms:
+Imperative mood:
 
-> ___ (Go: йти) прямо до перехрестя. Там ___ (cross: перейти) дорогу. Потім ___ (turn: повернути) наліво і ___ (go: пройти) до кінця вулиці. ___ (Enter: увійти) в будинок номер 5.
+> ___ (Go) прямо до перехрестя. Там ___ (cross) дорогу. Потім ___ (turn) наліво і ___ (walk to) до кінця вулиці. ___ (Enter) в будинок номер 5.
 
 **Answers:** Йдіть, перейдіть, поверніть, пройдіть, увійдіть
 
@@ -165,19 +184,19 @@ Choose the correct prefix:
 1. Він ___ (при/по)їхав з Києва.
    > [!answer] **приїхав** (arrived from)
 2. Вона ___ (ви/в)йшла з дому.
-   > [!answer] **вийшла** (went out)
+   > [!answer] **вийшла** (exited)
 3. Ми ___ (пере/про)йшли повз музей.
-   > [!answer] **пройшли** (went past)
+   > [!answer] **пройшли** (past)
 4. Вони ___ (об/від)ійшли будинок.
-   > [!answer] **обійшли** (went around)
+   > [!answer] **обійшли** (around)
 5. Гості ___ (роз/за)йшлися.
-   > [!answer] **розійшлися** (dispersed)
+   > [!answer] **розійшлися** (in different directions)
 6. ___ (За/При)йдіть до мене завтра!
    > [!answer] **Зайдіть** (stop by)
 
-### Scenario 5: Figurative vs Literal
+### Scenario 5: Literal or Figurative?
 
-Choose literal (L) or figurative (F):
+Determine — literal (L) or figurative (F):
 
 1. Він пройшов курс.
    > [!answer] **F** (took a course)
@@ -192,9 +211,9 @@ Choose literal (L) or figurative (F):
 6. Він дійшов до магазину.
    > [!answer] **L** (reached the store)
 
-### Scenario 6: Translation Challenge
+### Scenario 6: Translation
 
-Translate to Ukrainian:
+Translate into Ukrainian:
 
 1. I walk to work every day.
    > [!answer] **Я ходжу на роботу пішки щодня.**
@@ -209,14 +228,16 @@ Translate to Ukrainian:
 6. The guests scattered.
    > [!answer] **Гості розійшлися.**
 
-## production
+---
 
-### Story Telling: My Journey
+## Production
+
+### Narrative: My Journey
 
 Create a narrative using at least 10 motion verbs:
 
 **Example:**
-Минулого тижня я **їздив** до Одеси. Вранці я **вийшов** з дому і **поїхав** на вокзал. Поїзд **відійшов** о дев'ятій. Ми **проїхали** через багато міст. О третій я **приїхав** до Одеси. Я **вийшов** з поїзда і **пішов** до готелю. По дорозі я **зайшов** у кав'ярню. Увечері я **ходив** по місту і **обійшов** весь центр.
+Минулого тижня я **їздив** до Одеси. — Last week I went to Odesa. Вранці я **вийшов** з дому і **поїхав** на вокзал. — In the morning I left home and went to the station. Поїзд **відійшов** о дев'ятій. — The train departed at nine. Ми **проїхали** через багато міст. — We passed through many cities. О третій я **приїхав** до Одеси. — At three I arrived in Odesa. Я **вийшов** з поїзда і **пішов** до готелю. — I got off the train and went to the hotel. По дорозі я **зайшов** у кав'ярню. — On the way I stopped by a café. Увечері я **ходив** по місту і **обійшов** весь центр. — In the evening I walked around the city and went all around the center.
 
 ### Role Play: Tourist and Local
 
@@ -227,92 +248,205 @@ Use: пройти, перейти, зайти, обійти, увійти, по�
 
 ---
 
-# Activities
-
-## quiz: Motion Mastery Test
-
-> Choose the best option.
-
-1. Я ___ на роботу щодня.
-   - [ ] йду
-   - [x] ходжу
-   > Habitual = multidirectional
-
-2. Учора вона ___ до Львова.
-   - [ ] їхала
-   - [x] їздила
-   > Round trip past = multidirectional
-
-3. ___ вулицю на світлофорі!
-   - [x] Перейдіть
-   - [ ] Пройдіть
-   > Cross = пере-
-
-4. Гості ___ о півночі.
-   - [x] розійшлися
-   - [ ] зайшлися
-   > Dispersed = роз-
-
-5. Він ___ до магазину за хлібом.
-   - [x] зайшов
-   - [ ] прийшов
-   > Stopped by briefly = за-
-
-6. Виходить, що ми ___!
-   - [x] помилилися
-   - [ ] пішли
-   > It turns out = figurative
-
-## fill-in: Complete the Journey
-
-> Вчора я ___ (пішов/ходив) у центр міста. Спочатку я ___ (перейшов/пройшов) через парк, потім ___ (перейшов/пройшов) головну вулицю. Я ___ (зайшов/прийшов) до музею і ___ (пробув/побув) там дві години. Потім я ___ (вийшов/пішов) і ___ (зайшов/прийшов) до кав'ярні. Увечері я ___ (повернувся/прийшов) додому.
-
-**Answers:** пішов, пройшов, перейшов, зайшов, пробув, вийшов, зайшов, повернувся
-
-## match-up: Complete Review
-
-| Verb | Use |
-|------|-----|
-| приходити | arrive (habitual) |
-| виходити | exit (habitual) |
-| переходити | cross (habitual) |
-| проходити | pass through |
-| заходити | stop by |
-| обходити | go around |
-| розходитися | disperse |
-| відходити | depart |
+---
 
 ---
 
-# Vocabulary
+---
 
-| Word | IPA | English | Notes |
-|------|-----|---------|-------|
-| односпрямований | /ˌodnospʲrʲɑmoˈvɑnɪj/ | unidirectional | grammar term |
-| різноспрямований | /ˌrʲiznospʲrʲɑmoˈvɑnɪj/ | multidirectional | grammar term |
-| туди | /tuˈdɪ/ | there (direction) | - |
-| сюди | /sʲuˈdɪ/ | here (direction) | - |
-| звідти | /zvʲidˈtɪ/ | from there | - |
-| звідси | /zvʲidˈsɪ/ | from here | - |
-| повз | /povz/ | past, by | preposition |
-| через | /ˈt͡ʃɛrɛz/ | through, across | preposition |
-| назустріч | /nɑˈzustrʲit͡ʃ/ | towards, to meet | preposition |
+# Вправи
+
+## fill-in: Доповніть речення
+
+> Оберіть правильне слово.
+
+1. Незважаючи на те, що цей підхід видається ___, він має багато переваг.
+   > [!answer] різноспрямований
+   > [!options] український | слухняний | різноспрямований | худий
+
+2. Незважаючи на те, що цей підхід видається ___, він має багато переваг.
+   > [!answer] односпрямований
+   > [!options] односпрямований | схвильований | гарячий | зоряний
+
+## unjumble: Побудуйте речення
+
+> Розташуйте слова в правильному порядку.
+
+## match-up: Знайдіть пари
+
+> З'єднайте українські слова з англійськими.
+
+| Left | Right |
+|------|-------|
+| через | through, across |
+| суспільство | society |
+| різноспрямований | multidirectional |
+| повз | past, by |
+| звідси | from here |
+| односпрямований | unidirectional |
+| лікар | doctor (m) |
+| сюди | here (direction) |
+| радісний | joyful |
+| туди | there (direction) |
+| назустріч | towards, to meet |
+| боліти | to hurt, ache |
+| звідти | from there |
+| ніколи | never |
+| сковорода | frying pan |
+
+## quiz: Перевірка значень
+
+> Оберіть правильну відповідь.
+
+1. Що означає "туди"?
+   - [ ] stamp
+   - [ ] in order to, so that
+   - [ ] defect
+   - [x] there (direction)
+   > "туди" means "there (direction)"
+
+2. Що означає "через"?
+   - [ ] you will be
+   - [x] through, across
+   - [ ] arrogant
+   - [ ] newspaper
+   > "через" means "through, across"
+
+3. Що означає "різноспрямований"?
+   - [x] multidirectional
+   - [ ] entertainment
+   - [ ] graduate
+   - [ ] to seem
+   > "різноспрямований" means "multidirectional"
+
+4. Що означає "звідти"?
+   - [ ] to explain
+   - [x] from there
+   - [ ] significantly
+   - [ ] coworker
+   > "звідти" means "from there"
+
+5. Що означає "сюди"?
+   - [ ] story, history
+   - [ ] may, can
+   - [ ] responsibility
+   - [x] here (direction)
+   > "сюди" means "here (direction)"
+
+6. Що означає "односпрямований"?
+   - [ ] ten
+   - [ ] sure, certain
+   - [ ] balcony
+   - [x] unidirectional
+   > "односпрямований" means "unidirectional"
+
+7. Що означає "звідси"?
+   - [ ] perfective (aspect)
+   - [x] from here
+   - [ ] sick
+   - [ ] scientific
+   > "звідси" means "from here"
+
+8. Що означає "назустріч"?
+   - [ ] to try on
+   - [x] towards, to meet
+   - [ ] completion
+   - [ ] football
+   > "назустріч" means "towards, to meet"
+
+9. Що означає "повз"?
+   - [ ] potato pancakes
+   - [ ] yoga
+   - [x] past, by
+   - [ ] free, available
+   > "повз" means "past, by"
+
+## true-false: Правда чи ні?
+
+> Визначте, чи правильне твердження.
+
+- [x] "повз" means "past, by"
+   > Correct!
+
+- [x] "сюди" means "here (direction)"
+   > Correct!
+
+- [x] "назустріч" means "towards, to meet"
+   > Correct!
+
+- [ ] "через" means "to share"
+   > Incorrect. "через" means "through, across"
+
+- [x] "туди" means "there (direction)"
+   > Correct!
+
+- [ ] "звідси" means "hair salon"
+   > Incorrect. "звідси" means "from here"
+
+- [ ] "звідти" means "every week"
+   > Incorrect. "звідти" means "from there"
+
+- [x] "односпрямований" means "unidirectional"
+   > Correct!
+
+- [ ] "різноспрямований" means "newspaper"
+   > Incorrect. "різноспрямований" means "multidirectional"
 
 ---
 
-# Review Vocabulary
+# Словник
 
-| Word | First Module |
-|------|-------------|
-| напрямок | 61 |
-| навколо | 37 |
-| вздовж | 37 |
+| Word | IPA | English | POS | Note |
+|------|-----|---------|-----|------|
+| односпрямований | /ˌodnospʲrʲɑmoˈvɑnɪj/ | unidirectional | adj | grammar term |
+| різноспрямований | /ˌrʲiznospʲrʲɑmoˈvɑnɪj/ | multidirectional | adj | grammar term |
+| напрямок | /nɑˈprʲɑmok/ | direction | noun | m |
+| сюди | /sʲuˈdɪ/ | here (direction to) | adv | - |
+| туди | /tuˈdɪ/ | there (direction to) | adv | - |
+| звідси | /zvʲidˈsɪ/ | from here | adv | - |
+| звідти | /zvʲidˈtɪ/ | from there | adv | - |
+| через | /ˈt͡ʃɛrɛz/ | through, across | prep | - |
+| повз | /povz/ | past, by | prep | + accusative |
+| назустріч | /nɑˈzustrʲit͡ʃ/ | towards, to meet | prep | + dative |
+| навколо | /nɑvˈkolo/ | around | adv/prep | - |
+| вздовж | /vzdovʒ/ | along | prep | + genitive |
+| перехрестя | /pɛrɛˈxrɛstʲɑ/ | intersection | noun | n |
+| повернути | /povɛrˈnutɪ/ | to turn (pf) | verb | - |
+| повертатися | /povɛrˈtɑtɪsʲɑ/ | to return (impf) | verb | - |
+| повернутися | /povɛrˈnutɪsʲɑ/ | to return (pf) | verb | - |
+| вчасно | /ˈvt͡ʃɑsno/ | on time | adv | - |
+| пізніше | /pʲizˈnʲiʃɛ/ | later | adv | comparative |
+| рутина | /ruˈtɪnɑ/ | routine | noun | f |
+| вокзал | /vokˈzɑl/ | train station | noun | m |
+| готель | /ɦoˈtɛlʲ/ | hotel | noun | m |
+| гості | /ˈɦostʲi/ | guests | noun | pl |
+| в гості | /v ˈɦostʲi/ | to visit | phrase | direction |
+| подорож | /ˈpodorɔʒ/ | journey, trip | noun | f |
+| поїздка | /poˈjizdkɑ/ | trip | noun | f |
+| алгоритм | /ɑlɦoˈrɪtm/ | algorithm | noun | m |
+| автоматизм | /ɑvtomɑˈtɪzm/ | automaticity | noun | m |
+| закономірність | /zɑkonoˈmʲirnʲistʲ/ | pattern, regularity | noun | f |
+| наліво | /nɑˈlʲivo/ | to the left | adv | direction |
+| направо | /nɑˈprɑvo/ | to the right | adv | direction |
+| спочатку | /spoˈt͡ʃɑtku/ | at first | adv | - |
+| потім | /poˈtʲim/ | then | adv | - |
+| нарешті | /nɑˈrɛʃtʲi/ | finally | adv | - |
+| учора | /uˈt͡ʃorɑ/ | yesterday | adv | - |
+| минулого тижня | /mɪˈnuloɦo ˈtɪʒnʲɑ/ | last week | phrase | - |
+| щоранку | /ʃt͡ʃoˈrɑnku/ | every morning | adv | - |
+| щодня | /ʃt͡ʃoˈdnʲɑ/ | every day | adv | - |
+| завжди | /ˈzɑvʒdɪ/ | always | adv | - |
+| зазвичай | /zɑzˈvɪt͡ʃɑj/ | usually | adv | - |
+| буквальний | /bukˈvɑlʲnɪj/ | literal | adj | - |
+| переносний | /pɛrɛˈnosnɪj/ | figurative | adj | - |
+| помилитися | /pomɪˈlɪtɪsʲɑ/ | to make a mistake (pf) | verb | - |
+| помилка | /poˈmɪlkɑ/ | mistake, error | noun | f |
 
 ---
 
 # Summary
 
-## Motion Verb System Complete
+## The Motion Verb System Complete
 
 ### 8 Base Pairs
 іти/ходити, їхати/їздити, бігти/бігати, летіти/літати, плисти/плавати, нести/носити, везти/возити, вести/водити
@@ -321,23 +455,20 @@ Use: пройти, перейти, зайти, обійти, увійти, по�
 при-, в-/у-, ви-, по-, за-, пере-, про-, об-, роз-, від-
 
 ### Key Patterns
+
 1. **Uni** = one direction, now
-2. **Multi** = round trip, habitual, ability
-3. **Prefix** = direction + perfectivizes
+2. **Multi** = there and back, habit, ability
+3. **Prefix** = direction + makes perfective
 4. **Figurative** = abstract meanings
 
 ## What You Can Now Express
 
-- Daily routines and commutes
+- Daily routines and commuting
 - Past trips and journeys
 - Giving directions
 - Abstract concepts (conclusions, understanding)
 - Complex narratives with movement
 
-> **Key Takeaways**
+> **Key Point**
 >
-> - Motion verbs are a complete system — learn it as a whole
-> - Prefix choice depends on direction of movement
-> - Uni vs multi depends on whether trip is one-way or habitual
-> - Figurative uses make your Ukrainian sound native
-> - Practice in real contexts to build fluency
+> Motion verbs are a **complete system**, not a set of separate words. Prefix choice depends on **direction** of movement. Uni or multi depends on whether it's a **one-time** trip or a **habit**. Figurative expressions make your Ukrainian **natural**. Practice in real contexts — and the system will become intuition! Congratulations — you've mastered one of the most challenging topics in Ukrainian grammar!

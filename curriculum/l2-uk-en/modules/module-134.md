@@ -270,19 +270,141 @@ Discuss using knowing verbs:
    - [ ] to know
    > Realize importance.
 
-## fill-in: Perception and Cognition
 
-> Використайте правильні дієслова.
+## fill-in: Fill in the Blank
 
-> Вчора я (1)___ (saw) цікавий фільм. Спочатку я не (2)___ (understood) сюжет, але потім (3)___ (realized), що це детектив. Я уважно (4)___ (watched) кожну сцену і (5)___ (noticed) багато деталей. Тепер я (6)___ (know), чому цей фільм популярний.
+> Choose the correct word to complete each sentence.
 
-**Answers:**
-1. бачив / дивився
-2. розумів
-3. зрозумів / усвідомив
-4. дивився
-5. помітив
-6. знаю
+1. Я ___ будинок.
+   > [!answer] бачу
+   > [!options] бачу | мав | це | 10
+
+2. Ти ___ його?
+   > [!answer] бачив
+   > [!options] бачив | за | його | 10
+
+3. Ми ___ вчора.
+   > [!answer] бачилися
+   > [!options] бачилися | його | це | за
+
+4. Дивлюся ___ картину.
+   > [!answer] на
+   > [!options] на | бачив | помітив | за
+
+5. Подивися ___ це!
+   > [!answer] на
+   > [!options] на | за | бачу | бачив
+
+6. Лікар ___ пацієнта.
+   > [!answer] оглянув
+   > [!options] оглянув | за | це | за
+
+7. Спостерігаю ___ птахами.
+   > [!answer] за
+   > [!options] за | бачилися | бачу | його
+
+8. Спостерігав ___ ситуацією.
+   > [!answer] за
+   > [!options] за | бачилися | бачив | помітив
+
+9. Не ___ різниці.
+   > [!answer] помітив
+   > [!options] помітив | бачив | 10 | бачу
+
+10. Знаю ___ ім'я.
+   > [!answer] його
+   > [!options] його | за | оглянув | це
+
+11. Знаю його ___ років.
+   > [!answer] 10
+   > [!options] 10 | на | бачилися | помітив
+
+12. Знаю, як ___ зробити.
+   > [!answer] це
+   > [!options] це | на | мав | за
+
+13. Зрозумів, що він ___ на увазі.
+   > [!answer] мав
+   > [!options] мав | бачу | помітив | бачилися
+
+
+
+## unjumble: Word Order
+
+> Drag the words into the correct order to form a sentence.
+
+1. Я / бачу / будинок
+   > [!answer] Я бачу будинок.
+   > (I see the house.)
+
+2. бачив / Ти / його
+   > [!answer] Ти бачив його?
+   > (Did you see him?)
+
+3. бачилися / вчора / Ми
+   > [!answer] Ми бачилися вчора.
+   > (We saw each other yesterday.)
+
+4. на / картину / Дивлюся
+   > [!answer] Дивлюся на картину.
+   > (I'm looking at the painting.)
+
+5. Подивися / на / це
+   > [!answer] Подивися на це!
+   > (Look at this!)
+
+6. оглянув / пацієнта / Лікар
+   > [!answer] Лікар оглянув пацієнта.
+   > (Doctor examined the patient.)
+
+7. Спостерігаю / за / птахами
+   > [!answer] Спостерігаю за птахами.
+   > (I observe birds.)
+
+8. ситуацією / за / Спостерігав
+   > [!answer] Спостерігав за ситуацією.
+   > (Watched the situation.)
+
+9. помітив / різниці / Не
+   > [!answer] Не помітив різниці.
+   > (Didn't notice the difference.)
+
+10. Знаю / його / ім'я
+   > [!answer] Знаю його ім'я.
+   > (I know his name.)
+
+11. його / років / 10 / Знаю
+   > [!answer] Знаю його 10 років.
+   > (I've known him for 10 years.)
+
+12. Знаю / зробити / як / це
+   > [!answer] Знаю, як це зробити.
+   > (I know how to do it.)
+
+13. що / мав / на / увазі / Зрозумів / він
+   > [!answer] Зрозумів, що він мав на увазі.
+   > (Understood what he meant.)
+
+14. Усвідомив / свою / помилку
+   > [!answer] Усвідомив свою помилку.
+   > (Realized my mistake.)
+
+15. помилку / свою / Визнаю
+   > [!answer] Визнаю свою помилку.
+   > (I acknowledge my mistake.)
+
+16. його / Визнали / талант
+   > [!answer] Визнали його талант.
+   > (Recognized his talent.)
+
+17. нових / людей / Пізнаю
+   > [!answer] Пізнаю нових людей.
+   > (Getting to know new people.)
+
+18. його / масці / в / Не / пізнав
+   > [!answer] Не пізнав його в масці.
+   > (Didn't recognize him in mask.)
+
 
 ---
 

@@ -39,7 +39,7 @@ export async function renderHtml(
   const quizActivity = activities.find(a => a.type === 'quiz');
   const sortActivity = activities.find(a => a.type === 'group-sort');
   const fillActivity = activities.find(a => a.type === 'gap-fill' || a.type === 'fill-blank');
-  const orderActivity = activities.find(a => a.type === 'order');
+  const orderActivity = activities.find(a => a.type === 'order' || a.type === 'unjumble');
 
   // Build navigation options
   const navOptions: NavOptions = {
@@ -381,11 +381,29 @@ function renderDataScripts(options: DataScriptOptions): string {
     answers: (fillActivity.content as any).answers || [],
   } : { items: [], text: '', answers: [] };
 
-  // Order data
-  const orderData = orderActivity ? {
-    items: (orderActivity.content as any).items || [],
-    correctOrder: (orderActivity.content as any).correctOrder || [],
-  } : { items: [], correctOrder: [] };
+  // Order/Unjumble data
+  let orderData: any = { items: [], correctOrder: [], isUnjumble: false };
+  if (orderActivity) {
+    const content = orderActivity.content as any;
+    if (orderActivity.type === 'unjumble') {
+      // Unjumble format: items have words, answer, translation
+      orderData = {
+        items: (content.items || []).map((item: any) => ({
+          words: item.words || [],
+          answer: item.answer || '',
+          translation: item.translation || '',
+        })),
+        isUnjumble: true,
+      };
+    } else {
+      // Regular order format: items are strings to reorder
+      orderData = {
+        items: content.items || [],
+        correctOrder: content.correctOrder || [],
+        isUnjumble: false,
+      };
+    }
+  }
 
   // Build sort data object
   const sortData: Record<string, string[]> = {};

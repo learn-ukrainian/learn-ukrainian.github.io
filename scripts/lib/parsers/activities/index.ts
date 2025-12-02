@@ -15,6 +15,7 @@ import { TrueFalseParser } from './true-false';
 import { TranslateParser } from './translate';
 import { OrderParser } from './order';
 import { GapFillParser } from './gap-fill';
+import { UnjumbleParser } from './unjumble';
 
 // =============================================================================
 // Parser Registry
@@ -27,6 +28,7 @@ const parsers: ActivityParser[] = [
   new FillBlankParser(),
   new TrueFalseParser(),
   new TranslateParser(),
+  new UnjumbleParser(),  // Must be before OrderParser to handle unjumble/unscramble
   new OrderParser(),
   new GapFillParser(),
 ];
@@ -104,5 +106,6 @@ export { GroupSortParser } from './group-sort';
 export { FillBlankParser } from './fill-blank';
 export { TrueFalseParser } from './true-false';
 export { TranslateParser } from './translate';
+export { UnjumbleParser } from './unjumble';
 export { OrderParser } from './order';
 export { GapFillParser } from './gap-fill';

@@ -200,49 +200,49 @@ The Ukrainian alphabet has a specific order (like ABC in English). Practice sayi
 
 # Activities
 
-## fill-in: What Does It Mean?
+## fill-in: Ukrainian Sounds & Letters
 
-> Choose the correct English meaning.
+> Test your knowledge of Ukrainian letter sounds and unique features.
 
-1. What does "так" mean?
-   > [!answer] yes
-   > [!options] yes | no | okay | please
+1. The letter **Ї** (unique to Ukrainian) makes the sound ___.
+   > [!answer] [yi] like "yeast"
+   > [!options] [i] like "machine" | [yi] like "yeast" | [y] like "yes" | [ee] like "see"
 
-2. What does "ні" mean?
-   > [!answer] no
-   > [!options] yes | no | thank you | sorry
+2. The letter **Г** in Ukrainian is pronounced as ___.
+   > [!answer] soft [h] like "hello"
+   > [!options] hard [g] like "go" | soft [h] like "hello" | [gh] like Arabic | silent
 
-3. What does "добре" mean?
-   > [!answer] good, okay
-   > [!options] yes | no | good, okay | please
+3. The letter **Ґ** (restored after independence) sounds like ___.
+   > [!answer] hard [g] like "go"
+   > [!options] soft [h] like "hello" | hard [g] like "go" | [k] like "cat" | [ng] like "sing"
 
-4. What does "дякую" mean?
-   > [!answer] thank you
-   > [!options] please | sorry | hello | thank you
+4. The letter combination **Щ** is pronounced as ___.
+   > [!answer] [shch] like "fresh cheese"
+   > [!options] [sh] like "ship" | [ch] like "church" | [shch] like "fresh cheese" | [sk] like "sky"
 
-5. What does "привіт" mean?
-   > [!answer] hi, hello
-   > [!options] goodbye | hi, hello | thank you | please
+5. The iotated vowel **Є** sounds like ___.
+   > [!answer] [ye] like "yes"
+   > [!options] [e] like "bed" | [ye] like "yes" | [ay] like "day" | [ee] like "see"
 
-6. What does "кава" mean?
-   > [!answer] coffee
-   > [!options] tea | coffee | soup | water
+6. The soft sign **Ь** functions to ___.
+   > [!answer] soften the preceding consonant
+   > [!options] add a vowel sound | soften the preceding consonant | indicate stress | separate syllables
 
-7. What does "борщ" mean?
-   > [!answer] borscht
-   > [!options] bread | borscht | salad | meat
+7. Which letter does NOT exist in Russian but exists in Ukrainian?
+   > [!answer] Ї
+   > [!options] А | О | Ї | К
 
-8. What does "школа" mean?
-   > [!answer] school
-   > [!options] center | city | school | bank
+8. In the word "Україна", the letter Ї is pronounced ___.
+   > [!answer] as [yi] - two sounds
+   > [!options] as [i] - one sound | as [yi] - two sounds | silently | as [y] only
 
-9. What does "жінка" mean?
-   > [!answer] woman
-   > [!options] man | woman | child | student
+9. The letter **Ж** sounds like ___.
+   > [!answer] [zh] like "vision"
+   > [!options] [z] like "zoo" | [zh] like "vision" | [j] like "jam" | [sh] like "ship"
 
-10. What does "чоловік" mean?
-    > [!answer] man/husband
-    > [!options] man/husband | woman | tourist | doctor
+10. The letter **Ц** sounds like ___.
+    > [!answer] [ts] like "cats"
+    > [!options] [s] like "sun" | [k] like "cat" | [ts] like "cats" | [ch] like "church"
 
 ## unjumble: Build the Sentence
 
@@ -297,113 +297,137 @@ The Ukrainian alphabet has a specific order (like ABC in English). Practice sayi
 | буква | letter (alphabet) |
 | слово | word |
 
-## quiz: Meaning Check
+## group-sort: Letter Sound Categories
+
+> Sort these Ukrainian letters by their sound type.
+
+### Unique Consonants (New sounds)
+- Г (soft H like "hello")
+- Ґ (hard G like "go")
+- Ж (ZH like "vision")
+- Ш (SH like "ship")
+- Щ (SHCH like "fresh cheese")
+- Ч (CH like "church")
+- Ц (TS like "cats")
+
+### Iotated Vowels (Y + vowel)
+- Є (YE like "yes")
+- Ї (YI like "yeast")
+- Ю (YU like "universe")
+- Я (YA like "yard")
+
+### Special Letters
+- И (short I, between "bit" and "but")
+- Й (consonant Y like "yes")
+- Ь (soft sign - silent, softens consonant)
+
+## quiz: Ukrainian Alphabet & Phonetics
 
 > Choose the correct answer.
 
-1. What does "слово" mean?
-   - [ ] where
-   - [ ] letter
-   - [ ] language
-   - [x] word
-   > "слово" means "word"
+1. The letter **Ї** (unique to Ukrainian) is pronounced as:
+   - [ ] Single [i] sound like "meet"
+   - [x] Double sound [yi] like "yeast"
+   - [ ] Short [i] like "bit"
+   - [ ] Silent
+   > Ї = iotated vowel, always two sounds: Y + I
 
-2. What does "де" mean?
-   - [ ] what
-   - [ ] who
-   - [x] where
-   - [ ] how
-   > "де" means "where"
+2. What distinguishes **Г** from **Ґ**?
+   - [ ] Г is hard G, Ґ is soft H
+   - [x] Г is soft H, Ґ is hard G
+   - [ ] They are the same sound
+   - [ ] Г is voiced, Ґ is unvoiced
+   > Г = soft H (hello), Ґ = hard G (go) - Ґ was banned during Soviet era
 
-3. What does "як" mean?
-   - [ ] what
-   - [ ] who
-   - [ ] where
-   - [x] how
-   > "як" means "how"
+3. The soft sign **Ь** functions to:
+   - [ ] Add a vowel sound
+   - [ ] Mark stress position
+   - [x] Soften the preceding consonant
+   - [ ] Separate syllables
+   > Ь makes no sound - it modifies the consonant before it
 
-4. What does "ні" mean?
-   - [ ] yes
-   - [x] no
-   - [ ] okay
-   - [ ] thank you
-   > "ні" means "no"
+4. Which statement about iotated vowels is correct?
+   - [ ] They are pronounced as single sounds
+   - [x] They combine a Y-glide with a vowel (Є=ye, Ю=yu, Я=ya)
+   - [ ] They only exist in Russian
+   - [ ] They are silent in some positions
+   > Iotated = "iota" (Greek) = Y-sound + vowel
 
-5. What does "мова" mean?
-   - [x] language
-   - [ ] letter
-   - [ ] word
-   - [ ] alphabet
-   > "мова" means "language"
+5. The letter **И** sounds like:
+   - [ ] Long "ee" as in "meet"
+   - [x] Short "i" as in "bit" (between i and u)
+   - [ ] "Y" as in "yes"
+   - [ ] "A" as in "cat"
+   > И is unique - between English "i" and "u", not found in English
 
-6. What does "сім'я" mean?
-   - [ ] woman
-   - [ ] man
-   - [x] family
-   - [ ] name
-   > "сім'я" means "family"
+6. How is **Щ** pronounced?
+   - [ ] [sh] like "ship"
+   - [ ] [ch] like "church"
+   - [x] [shch] like "fresh cheese"
+   - [ ] [sk] like "sky"
+   > Щ = Ш + Ч combined = "shch"
 
-7. What does "ім'я" mean?
-   - [ ] family
-   - [ ] city
-   - [ ] center
-   - [x] name
-   > "ім'я" means "name"
+7. What is the apostrophe (') used for in Ukrainian?
+   - [ ] To indicate stress
+   - [ ] To mark possessives
+   - [x] To separate sounds (similar to Russian Ъ)
+   - [ ] To soften consonants
+   > Ukrainian uses ' instead of Russian's hard sign Ъ
 
-8. What does "так" mean?
-   - [ ] no
-   - [x] yes
-   - [ ] okay
-   - [ ] thank you
-   > "так" means "yes"
+8. In cursive, Ukrainian **т** looks like:
+   - [x] Latin "m"
+   - [ ] Latin "n"
+   - [ ] Latin "g"
+   - [ ] Latin "u"
+   > Cursive trap: т→m, п→n, д→g - major reading challenge!
 
-9. What does "дякую" mean?
-   - [ ] please
-   - [ ] sorry
-   - [ ] hello
-   - [x] thank you
-   > "дякую" means "thank you"
+9. Why is **Ґ** called a "survivor letter"?
+   - [ ] It's the oldest Cyrillic letter
+   - [x] It was banned during Soviet Russification and restored after independence
+   - [ ] It survived from Greek alphabet
+   - [ ] It's rarely used
+   > Ґ was banned 1933-1991 as part of suppressing Ukrainian identity
 
-10. What does "що" mean?
-   - [x] what
-   - [ ] who
-   - [ ] where
-   - [ ] how
-   > "що" means "what"
+10. The letter **Й** is classified as:
+    - [x] A consonant (Y-sound in "yes")
+    - [ ] A vowel
+    - [ ] A soft sign
+    - [ ] An iotated letter
+    > Й = consonantal Y, used at word endings (край) and in diphthongs
 
-## true-false: True or False?
+## true-false: Alphabet Rules
 
-> Determine if each statement is true or false.
+> Determine if each statement about Ukrainian letters is true or false.
 
-- [ ] "чай" means "coffee"
-   > Incorrect. "чай" means "tea"
+- [x] The letter Ї exists only in Ukrainian, not in Russian or other Slavic languages.
+   > Correct! Ї is Ukraine's unique signature letter.
 
-- [x] "хто" means "who"
-   > Correct!
+- [ ] The letters Г and Ґ are pronounced the same way.
+   > Incorrect. Г = soft H (hello), Ґ = hard G (go).
 
-- [x] "борщ" means "borscht"
-   > Correct!
+- [x] Iotated vowels (Є, Ї, Ю, Я) all start with a Y-glide sound.
+   > Correct! They combine Y + vowel: ye, yi, yu, ya.
 
-- [x] "як" means "how"
-   > Correct!
+- [ ] The soft sign (Ь) is pronounced as a short vowel.
+   > Incorrect. Ь is silent - it softens the preceding consonant.
 
-- [x] "що" means "what"
-   > Correct!
+- [x] Ukrainian uses an apostrophe (') instead of the Russian hard sign (Ъ).
+   > Correct! This is one way to identify Ukrainian vs Russian text.
 
-- [x] "ні" means "no"
-   > Correct!
+- [ ] The letter И sounds exactly like English "ee" in "meet."
+   > Incorrect. И is a short sound between "i" and "u" - unique to Ukrainian.
 
-- [ ] "мова" means "letter"
-   > Incorrect. "мова" means "language"
+- [x] In cursive writing, Ukrainian т looks like Latin m.
+   > Correct! This is a major "trap" for learners reading handwriting.
 
-- [x] "дякую" means "thank you"
-   > Correct!
+- [x] The letter Ґ was restored to Ukrainian after independence in 1991.
+   > Correct! It was banned during Soviet Russification (1933-1991).
 
-- [ ] "алфавіт" means "word"
-   > Incorrect. "алфавіт" means "alphabet"
+- [ ] The letters Ш and Щ are pronounced identically.
+   > Incorrect. Ш = [sh], Щ = [shch] (two sounds combined).
 
-- [x] "привіт" means "hi, hello"
-   > Correct!
+- [x] Ukrainian has 33 letters in its alphabet.
+   > Correct! More than English (26) but fewer than Russian (33).
 
 ---
 

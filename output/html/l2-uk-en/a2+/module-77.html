@@ -322,15 +322,18 @@ footer {
 .show-answer-btn:hover { background: #e5e5e5; }
 .show-answer-btn.revealed { background: #e8f8f0; border-color: var(--success); color: var(--success); }
 
-/* Fill-in Activity */
-.fill-container { display: flex; flex-direction: column; gap: 1rem; }
-.fill-question { border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; }
-.fill-question.answered .fill-check { display: none; }
-.fill-input { width: 100%; max-width: 300px; padding: 0.75rem 1rem; font-size: 1.1rem; border: 2px solid var(--border); border-radius: 8px; margin: 0.5rem 0; }
-.fill-input:focus { border-color: var(--primary); outline: none; }
-.fill-input.correct { border-color: var(--success); background: #e8f8f0; }
-.fill-input.wrong { border-color: var(--danger); background: #fde8e8; }
-.fill-check { margin-left: 0.5rem; }
+/* Fill-in Activity - Dropdown in Sentence */
+.fill-container { display: flex; flex-direction: column; gap: 0.75rem; }
+.fill-question { border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.5rem; }
+
+.fill-number { font-weight: 600; color: var(--text-muted); margin-right: 0.5rem; }
+.fill-sentence { font-size: 1.15rem; line-height: 1.8; }
+
+.fill-dropdown { font-size: 1rem; padding: 0.4rem 0.6rem; border: 2px solid var(--primary); border-radius: 6px; background: #fff; color: var(--primary); font-weight: 500; cursor: pointer; min-width: 120px; }
+.fill-dropdown:focus { outline: none; box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.2); }
+.fill-dropdown.correct { border-color: var(--success); background: #e8f8f0; color: var(--success); }
+.fill-dropdown.wrong { border-color: var(--danger); background: #fde8e8; color: var(--danger); }
+
 .fill-feedback { margin-top: 0.5rem; font-weight: 500; }
 .fill-feedback .correct-text { color: var(--success); }
 .fill-feedback .wrong-text { color: var(--danger); }
@@ -346,6 +349,32 @@ footer {
 .order-item.wrong { border-color: var(--danger); background: #fde8e8; }
 .order-handle { color: var(--text-muted); font-size: 1.25rem; }
 .order-text { font-size: 1.1rem; }
+
+/* Unjumble Activity - Drag and Drop */
+.unjumble-question { border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.5rem; margin-bottom: 0.75rem; display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; }
+.unjumble-question.answered .unjumble-word { cursor: default; }
+.unjumble-question.correct { border-color: var(--success); background: #f8fff8; }
+.unjumble-question.wrong { border-color: var(--danger); background: #fff8f8; }
+
+.unjumble-number { font-weight: 600; color: var(--text-muted); min-width: 2rem; }
+
+.unjumble-word-row { display: flex; flex-wrap: wrap; gap: 0.5rem; flex: 1; min-height: 42px; padding: 0.25rem; border-radius: 8px; background: #f8f9fa; }
+.unjumble-word-row.correct { background: #e8f8f0; }
+.unjumble-word-row.wrong { background: #fde8e8; }
+
+.unjumble-word { background: var(--primary); color: white; border-radius: 6px; padding: 0.5rem 0.75rem; font-size: 1rem; cursor: grab; user-select: none; transition: transform 0.1s, box-shadow 0.1s; }
+.unjumble-word:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+.unjumble-word:active { cursor: grabbing; }
+.unjumble-word.dragging { opacity: 0.5; transform: scale(1.05); }
+
+.unjumble-word.touch-clone { position: fixed; z-index: 1000; pointer-events: none; box-shadow: 0 8px 16px rgba(0,0,0,0.2); }
+
+.unjumble-actions { display: flex; gap: 0.5rem; }
+.unjumble-feedback { width: 100%; padding: 0.5rem 0 0 2.5rem; display: none; }
+.unjumble-feedback.show { display: block; }
+.unjumble-feedback .correct-text { color: var(--success); font-weight: 600; }
+.unjumble-feedback .wrong-text { color: var(--danger); }
+.unjumble-feedback .translation { color: var(--text-muted); font-style: italic; margin-left: 0.5rem; }
 
   </style>
 </head>
@@ -367,7 +396,7 @@ footer {
       <button class="nav-tab" data-section="quiz">Quiz</button>
       <button class="nav-tab" data-section="sort">Sort</button>
       <button class="nav-tab" data-section="fill">Fill</button>
-      
+      <button class="nav-tab" data-section="order">Order</button>
       <button class="nav-tab" data-section="vocab">Vocab</button>
     </div>
   </nav>
@@ -999,6 +1028,9 @@ footer {
 <hr />
 <hr />
 <hr />
+<hr />
+<hr />
+<hr />
 <hr /></div>
     </div>
   
@@ -1138,38 +1170,44 @@ footer {
     </section>
   
     
-    <section id="match" class="section"><div class="card"><h3>Sport → Equipment</h3>
-      <div class="score-display"><span class="score"><span id="match-score">0</span>/5</span></div>
+    <section id="match" class="section"><div class="card"><h3>Знайдіть пари</h3>
+      <div class="score-display"><span class="score"><span id="match-score">0</span>/14</span></div>
       <div class="match-container" id="match-container"><svg class="match-lines" id="match-lines"></svg>
-        <div class="match-column" id="match-left"><div class="match-item" data-pair="0">теніс</div><div class="match-item" data-pair="1">бокс</div><div class="match-item" data-pair="2">футбол</div><div class="match-item" data-pair="3">штанга</div><div class="match-item" data-pair="4">килимок</div></div>
-        <div class="match-column" id="match-right"><div class="match-item" data-pair="3">важка атлетика</div><div class="match-item" data-pair="1">рукавиці</div><div class="match-item" data-pair="2">м'яч</div><div class="match-item" data-pair="4">йога</div><div class="match-item" data-pair="0">ракетка</div></div>
+        <div class="match-column" id="match-left"><div class="match-item" data-pair="0">волейбол</div><div class="match-item" data-pair="1">плавання</div><div class="match-item" data-pair="2">баскетбол</div><div class="match-item" data-pair="3">планувати</div><div class="match-item" data-pair="4">зберігати</div><div class="match-item" data-pair="5">плавати</div><div class="match-item" data-pair="6">спортзал</div><div class="match-item" data-pair="7">вправа</div><div class="match-item" data-pair="8">карате</div><div class="match-item" data-pair="9">перукар</div><div class="match-item" data-pair="10">терка</div><div class="match-item" data-pair="11">турнір</div><div class="match-item" data-pair="12">найдорожчий</div><div class="match-item" data-pair="13">килимок</div></div>
+        <div class="match-column" id="match-right"><div class="match-item" data-pair="3">to plan</div><div class="match-item" data-pair="2">basketball</div><div class="match-item" data-pair="6">gym</div><div class="match-item" data-pair="1">swimming</div><div class="match-item" data-pair="10">grater</div><div class="match-item" data-pair="11">tournament</div><div class="match-item" data-pair="0">volleyball</div><div class="match-item" data-pair="5">to swim</div><div class="match-item" data-pair="4">to save</div><div class="match-item" data-pair="13">mat</div><div class="match-item" data-pair="9">hairdresser</div><div class="match-item" data-pair="12">most expensive</div><div class="match-item" data-pair="8">karate</div><div class="match-item" data-pair="7">exercise</div></div>
       </div>
       <div class="completion-message" id="match-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetMatch()">Reset</button><button class="btn btn-primary" onclick="showSection('quiz')">Next →</button></div>
     </div></section>
     
-    <section id="quiz" class="section"><div class="card"><h3>Sports &amp; Fitness</h3>
-      <div class="score-display"><span class="score"><span id="quiz-score">0</span>/6</span></div>
+    <section id="quiz" class="section"><div class="card"><h3>Перевірка значень</h3>
+      <div class="score-display"><span class="score"><span id="quiz-score">0</span>/14</span></div>
       <div id="quiz-container"></div>
       <div class="completion-message" id="quiz-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('sort')">Next →</button></div>
     </div></section>
     
-    <section id="sort" class="section"><div class="card"><h3>By Category</h3>
+    <section id="sort" class="section"><div class="card"><h3>Сортування за родом</h3>
       <div class="score-display"><span class="score"><span id="sort-score">0</span>/16</span></div>
       <div class="sort-pool" id="sort-pool"><div class="sort-items" id="sort-items"></div></div>
-      <div class="sort-groups"><div class="sort-group true-friends" data-group="true-friends"><h4>Командні</h4><div class="sort-items"></div></div><div class="sort-group false-friends" data-group="false-friends"><h4>Індивідуальні</h4><div class="sort-items"></div></div><div class="sort-group new-letters" data-group="new-letters"><h4>Бойові</h4><div class="sort-items"></div></div><div class="sort-group " data-group="group-3"><h4>Фітнес</h4><div class="sort-items"></div></div></div>
+      <div class="sort-groups"><div class="sort-group true-friends" data-group="true-friends"><h4>Чоловічий рід</h4><div class="sort-items"></div></div><div class="sort-group false-friends" data-group="false-friends"><h4>Жіночий рід</h4><div class="sort-items"></div></div><div class="sort-group new-letters" data-group="new-letters"><h4>Середній рід</h4><div class="sort-items"></div></div></div>
       <div class="completion-message" id="sort-complete"><h3>All Sorted!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetSort()">Reset</button><button class="btn btn-primary" onclick="showSection('fill')">Next →</button></div>
     </div></section>
     
-    <section id="fill" class="section"><div class="card"><h3>Fill in the Blank</h3>
-      <div class="score-display"><span class="score"><span id="fill-score">0</span>/0</span></div>
+    <section id="fill" class="section"><div class="card"><h3>Доповніть речення</h3>
+      <div class="score-display"><span class="score"><span id="fill-score">0</span>/11</span></div>
       <div id="fill-container" class="fill-container"></div>
       <div class="completion-message" id="fill-complete"><h3>Complete!</h3></div>
-      <div class="btn-group"><button class="btn btn-outline" onclick="resetFill()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetFill()">Reset</button><button class="btn btn-primary" onclick="showSection('order')">Next →</button></div>
     </div></section>
     
+    <section id="order" class="section"><div class="card"><h3>Побудуйте речення</h3>
+      <div class="score-display"><span class="score"><span id="order-score">0</span>/14</span></div>
+      <div id="order-container" class="order-container"></div>
+      <div class="completion-message" id="order-complete"><h3>Perfect Order!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetOrder()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
+    </div></section>
     
     <section id="vocab" class="section">
       <div class="card">
@@ -1205,11 +1243,11 @@ footer {
   </main><footer>Module 77 · curricula-opus</footer>
   <script>
 
-    const matchPairs = [{"left":"теніс","right":"ракетка"},{"left":"бокс","right":"рукавиці"},{"left":"футбол","right":"м'яч"},{"left":"штанга","right":"важка атлетика"},{"left":"килимок","right":"йога"}];
-    const quizData = [{"question":"\"Тренування\" means ___.","options":["workout, training","competition","victory","team"],"correctIndex":0,"explanation":"Тренування = workout/training session."},{"question":"\"Підхід\" in fitness is ___.","options":["set (of exercises)","repetition","warm-up","cool-down"],"correctIndex":0,"explanation":"Підхід = set, повторення = rep."},{"question":"A \"розминка\" is done ___.","options":["before exercise","after exercise","during rest","never"],"correctIndex":0,"explanation":"Розминка = warm-up (before)."},{"question":"\"Перемогти\" means ___.","options":["to win","to lose","to play","to train"],"correctIndex":0,"explanation":"Перемогти = to win, програти = to lose."},{"question":"\"Нічия\" in sports is ___.","options":["a draw/tie","a win","a loss","a foul"],"correctIndex":0,"explanation":"Нічия = draw, tie."},{"question":"\"Витривалість\" is ___.","options":["endurance","strength","speed","flexibility"],"correctIndex":0,"explanation":"Витривалість = endurance, stamina."}];
-    const sortData = {"true-friends":["футбол","баскетбол","волейбол","хокей"],"false-friends":["плавання","біг","теніс","гімнастика"],"new-letters":["бокс","карате","боротьба","тайський бокс"],"group-3":["йога","пілатес","кросфіт","аеробіка"]};
-    const fillData = {"items":[],"text":"Fill in the blanks with the correct word.","answers":[]};
-    const orderData = {"items":[],"correctOrder":[]};
+    const matchPairs = [{"left":"волейбол","right":"volleyball"},{"left":"плавання","right":"swimming"},{"left":"баскетбол","right":"basketball"},{"left":"планувати","right":"to plan"},{"left":"зберігати","right":"to save"},{"left":"плавати","right":"to swim"},{"left":"спортзал","right":"gym"},{"left":"вправа","right":"exercise"},{"left":"карате","right":"karate"},{"left":"перукар","right":"hairdresser"},{"left":"терка","right":"grater"},{"left":"турнір","right":"tournament"},{"left":"найдорожчий","right":"most expensive"},{"left":"килимок","right":"mat"}];
+    const quizData = [{"question":"Що означає \"плавати\"?","options":["volleyball","train station","Café: меню, замовити, рахунок","to swim"],"correctIndex":3,"explanation":"\"плавати\" means \"to swim\""},{"question":"Що означає \"вправа\"?","options":["exercise","daily, daytime","to greet","headphones"],"correctIndex":0,"explanation":"\"вправа\" means \"exercise\""},{"question":"Що означає \"повторення\"?","options":["repetition","to buy (perf)","attachment","son"],"correctIndex":0,"explanation":"\"повторення\" means \"repetition\""},{"question":"Що означає \"тренер\"?","options":["where from","to bring (by transport)","coach","literature"],"correctIndex":2,"explanation":"\"тренер\" means \"coach\""},{"question":"Що означає \"чемпіонат\"?","options":["championship","week","arrival","to add"],"correctIndex":0,"explanation":"\"чемпіонат\" means \"championship\""},{"question":"Що означає \"турнір\"?","options":["tournament","disappointed","nature","stomach"],"correctIndex":0,"explanation":"\"турнір\" means \"tournament\""},{"question":"Що означає \"бокс\"?","options":["what","life","follower","boxing"],"correctIndex":3,"explanation":"\"бокс\" means \"boxing\""},{"question":"Що означає \"гол\"?","options":["goal","kilogram","hard, heavy","weather"],"correctIndex":0,"explanation":"\"гол\" means \"goal\""},{"question":"Що означає \"бігати\"?","options":["you (formal/plural)","if (unreal)","to have breakfast","to run"],"correctIndex":3,"explanation":"\"бігати\" means \"to run\""},{"question":"Що означає \"сила\"?","options":["storm","strength","to meet","hypothetical"],"correctIndex":1,"explanation":"\"сила\" means \"strength\""},{"question":"Що означає \"гнучкість\"?","options":["to cook/prepare (perf)","Monday","flexibility","to drive out"],"correctIndex":2,"explanation":"\"гнучкість\" means \"flexibility\""},{"question":"Що означає \"кросфіт\"?","options":["cloudy","without","potato","crossfit"],"correctIndex":3,"explanation":"\"кросфіт\" means \"crossfit\""},{"question":"Що означає \"гімнастика\"?","options":["repetition","Ukrainian (female)","to cross","gymnastics"],"correctIndex":3,"explanation":"\"гімнастика\" means \"gymnastics\""},{"question":"Що означає \"гравець\"?","options":["to finish","to read","your (m, formal)","player"],"correctIndex":3,"explanation":"\"гравець\" means \"player\""}];
+    const sortData = {"true-friends":["чемпіонат","гол","фінал","тренер","бокс","чемпіон"],"false-friends":["розтяжка","гнучкість","гімнастика","медаль","витривалість","штанга"],"new-letters":["карате","плавання","повторення","тренування"]};
+    const fillData = {"items":[{"prompt":"Я давно мріяв навчитися ___, і нарешті маю таку можливість.","answer":"плавати","options":["плакати","плавати","виїхати","вмикати"]},{"prompt":"Я давно мріяв навчитися ___, і нарешті маю таку можливість.","answer":"змагатися","options":["в'язати","змагатися","заповнити","щастити"]},{"prompt":"Моя сестра каже, що їй подобається ___ у вільний час.","answer":"тренуватися","options":["мішати","тренуватися","починати","нагадати"]},{"prompt":"Я давно мріяв навчитися ___, і нарешті маю таку можливість.","answer":"перемагати","options":["перемагати","говорити","відправити","бронювати"]},{"prompt":"Мій друг сказав, що його ___ дуже зручний.","answer":"бокс","options":["батьки","бокс","лелека","центр"]},{"prompt":"Моя сестра сказала, що її ___ дуже зручна.","answer":"витривалість","options":["гарантія","музика","грип","витривалість"]},{"prompt":"Цей ___ належить моєму другові з Києва.","answer":"рекорд","options":["вокзал","універмаг","рекорд","хобі"]},{"prompt":"Я хочу купити цей ___, але він занадто дорогий.","answer":"фінал","options":["фінал","набряк","школа","білка"]},{"prompt":"Цей ___ належить моєму другові з Києва.","answer":"тренер","options":["капуста","град","виробництво","тренер"]},{"prompt":"Ця ___ належить моїй подрузі з Києва.","answer":"вправа","options":["знижка","набряк","гречка","вправа"]},{"prompt":"Я хочу купити цю ___, але вона занадто дорога.","answer":"гімнастика","options":["лампа","гімнастика","дзеркало","новість"]}],"text":"","answers":[]};
+    const orderData = {"items":[{"words":["що","плавання","сказали","це","зручне","Вони","дуже"],"answer":"Вони сказали, що це плавання дуже зручне.","translation":"swimming"},{"words":["не","хорошу","Вони","шукали","довго","медаль","але","знайшли"],"answer":"Вони довго шукали хорошу медаль, але не знайшли.","translation":"medal"},{"words":["його","друг","Мій","сказав","дуже","біг","що","зручний"],"answer":"Мій друг сказав, що його біг дуже зручний.","translation":"running"},{"words":["хочу","дорогий","він","Я","але","купити","спортзал","занадто","цей"],"answer":"Я хочу купити цей спортзал, але він занадто дорогий.","translation":"gym"},{"words":["другові","волейбол","Києва","належить","Цей","моєму","з"],"answer":"Цей волейбол належить моєму другові з Києва.","translation":"volleyball"},{"words":["Києва","з","другові","баскетбол","Цей","належить","моєму"],"answer":"Цей баскетбол належить моєму другові з Києва.","translation":"basketball"},{"words":["не","шукали","довго","але","хороше","знайшли","карате","Вони"],"answer":"Вони довго шукали хороше карате, але не знайшли.","translation":"karate"},{"words":["воно","це","хочу","але","Я","купити","дороге","повторення","занадто"],"answer":"Я хочу купити це повторення, але воно занадто дороге.","translation":"repetition"},{"words":["Я","цей","він","дорогий","купити","занадто","чемпіон","але","хочу"],"answer":"Я хочу купити цей чемпіон, але він занадто дорогий.","translation":"champion"},{"words":["але","розтяжка","занадто","купити","Я","дорога","цю","вона","хочу"],"answer":"Я хочу купити цю розтяжка, але вона занадто дорога.","translation":"stretching"},{"words":["цю","хочу","дорога","Я","але","вона","купити","занадто","перемога"],"answer":"Я хочу купити цю перемога, але вона занадто дорога.","translation":"victory"},{"words":["Цей","з","другові","моєму","належить","Києва","кросфіт"],"answer":"Цей кросфіт належить моєму другові з Києва.","translation":"crossfit"},{"words":["сила","дуже","Моя","сестра","сказала","зручна","її","що"],"answer":"Моя сестра сказала, що її сила дуже зручна.","translation":"strength"},{"words":["купити","хочу","але","фінал","Я","він","дорогий","цей","занадто"],"answer":"Я хочу купити цей фінал, але він занадто дорогий.","translation":"final"}],"isUnjumble":true};
     const vocabData = [{"uk":"баскетбол","translit":"","en":"basketball","note":""},{"uk":"волейбол","translit":"","en":"volleyball","note":""},{"uk":"плавання","translit":"","en":"swimming","note":""},{"uk":"біг","translit":"","en":"running","note":""},{"uk":"бокс","translit":"","en":"boxing","note":""},{"uk":"гімнастика","translit":"","en":"gymnastics","note":""},{"uk":"команда","translit":"","en":"team","note":""},{"uk":"гравець","translit":"","en":"player","note":""},{"uk":"тренер","translit":"","en":"coach","note":""},{"uk":"матч","translit":"","en":"match","note":""},{"uk":"чемпіонат","translit":"","en":"championship","note":""},{"uk":"турнір","translit":"","en":"tournament","note":""},{"uk":"спортзал","translit":"","en":"gym","note":""},{"uk":"тренування","translit":"","en":"training","note":""},{"uk":"вправа","translit":"","en":"exercise","note":""},{"uk":"повторення","translit":"","en":"repetition","note":""},{"uk":"розминка","translit":"","en":"warm-up","note":""},{"uk":"розтяжка","translit":"","en":"stretching","note":""},{"uk":"гантелі","translit":"","en":"dumbbells","note":""},{"uk":"штанга","translit":"","en":"barbell","note":""},{"uk":"килимок","translit":"","en":"mat","note":""},{"uk":"йога","translit":"","en":"yoga","note":""},{"uk":"кросфіт","translit":"","en":"crossfit","note":""},{"uk":"карате","translit":"","en":"karate","note":"indecl"},{"uk":"перемога","translit":"","en":"victory","note":""},{"uk":"поразка","translit":"","en":"defeat","note":""},{"uk":"гол","translit":"","en":"goal","note":""},{"uk":"медаль","translit":"","en":"medal","note":""},{"uk":"рекорд","translit":"","en":"record","note":""},{"uk":"чемпіон","translit":"","en":"champion","note":""},{"uk":"фінал","translit":"","en":"final","note":""},{"uk":"витривалість","translit":"","en":"endurance","note":""},{"uk":"сила","translit":"","en":"strength","note":""},{"uk":"гнучкість","translit":"","en":"flexibility","note":""},{"uk":"тренуватися","translit":"","en":"to train","note":"impf"},{"uk":"перемагати","translit":"","en":"to win","note":"impf"},{"uk":"програвати","translit":"","en":"to lose","note":"impf"},{"uk":"змагатися","translit":"","en":"to compete","note":"impf"},{"uk":"бігати","translit":"","en":"to run","note":"impf"},{"uk":"плавати","translit":"","en":"to swim","note":"impf"}];
     const totalSort = 16;
   
@@ -1418,7 +1456,7 @@ function resetSort() {
 }
 
 
-// Fill-in Activity
+// Fill-in Activity - Dropdown in sentence
 let fillScore = 0, fillAns = 0;
 
 function initFill() {
@@ -1429,45 +1467,82 @@ function initFill() {
   fillData.items.forEach((item, i) => {
     const div = document.createElement('div');
     div.className = 'fill-question';
+
+    // Generate options: correct answer + 3 distractors
+    let options = [];
+    if (item.options && item.options.length >= 4) {
+      options = item.options;
+    } else {
+      // Fallback: generate distractors from other items' answers
+      options = [item.answer];
+      const otherAnswers = fillData.items
+        .filter((_, idx) => idx !== i)
+        .map(it => it.answer)
+        .filter(a => a && a !== item.answer);
+
+      const shuffled = otherAnswers.sort(() => Math.random() - 0.5);
+      options.push(...shuffled.slice(0, 3));
+
+      while (options.length < 4) {
+        options.push('—');
+      }
+    }
+
+    // Shuffle options
+    const shuffledOptions = [...options].sort(() => Math.random() - 0.5);
+
+    // Replace ___ in the sentence with a dropdown
+    const sentence = (item.prompt || item.sentence || '').replace(/___/g,
+      `<select class="fill-dropdown" data-idx="${i}" data-answer="${item.answer}">
+        <option value="" disabled selected>—</option>
+        ${shuffledOptions.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
+      </select>`
+    );
+
     div.innerHTML = `
-      <h4>Q${i + 1}: ${item.prompt || item.sentence || ''}</h4>
-      <input type="text" class="fill-input" data-idx="${i}" data-answer="${item.answer || ''}" placeholder="Type your answer...">
-      <button class="btn btn-outline btn-sm fill-check" data-idx="${i}">Check</button>
+      <div class="fill-sentence">
+        <span class="fill-number">${i + 1}.</span>
+        ${sentence}
+      </div>
       <div class="fill-feedback" id="fill-fb-${i}"></div>
     `;
     c.appendChild(div);
   });
 
-  document.querySelectorAll('.fill-check').forEach(b => b.addEventListener('click', handleFill));
-  document.querySelectorAll('.fill-input').forEach(i => i.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') handleFill({ target: e.target.nextElementSibling });
-  }));
+  // Event delegation for dropdown changes
+  c.addEventListener('change', (e) => {
+    if (e.target.classList.contains('fill-dropdown')) {
+      handleFillChoice(e.target);
+    }
+  });
 }
 
-function handleFill(e) {
-  const idx = e.target.dataset.idx;
-  const q = e.target.closest('.fill-question');
+function handleFillChoice(dropdown) {
+  const q = dropdown.closest('.fill-question');
   if (q.classList.contains('answered')) return;
 
-  const input = q.querySelector('.fill-input');
-  const userAnswer = input.value.trim().toLowerCase();
-  const correctAnswer = input.dataset.answer.toLowerCase();
+  const idx = dropdown.dataset.idx;
+  const userAnswer = dropdown.value;
+  const correctAnswer = dropdown.dataset.answer;
   const fb = document.getElementById('fill-fb-' + idx);
 
   q.classList.add('answered');
+  dropdown.disabled = true;
 
   if (userAnswer === correctAnswer) {
-    input.classList.add('correct');
-    fb.innerHTML = '<span class="correct-text">Correct!</span>';
+    dropdown.classList.add('correct');
+    fb.innerHTML = '<span class="correct-text">✓ Correct!</span>';
     fillScore++;
   } else {
-    input.classList.add('wrong');
-    fb.innerHTML = `<span class="wrong-text">Answer: ${input.dataset.answer}</span>`;
+    dropdown.classList.add('wrong');
+    fb.innerHTML = `<span class="wrong-text">✗ Answer: ${correctAnswer}</span>`;
   }
 
   document.getElementById('fill-score').textContent = fillScore;
   fillAns++;
-  if (fillAns === fillData.items.length) document.getElementById('fill-complete').classList.add('show');
+  if (fillAns === fillData.items.length) {
+    document.getElementById('fill-complete').classList.add('show');
+  }
 }
 
 function resetFill() {
@@ -1487,9 +1562,217 @@ function initOrder() {
   if (!c || !orderData.items.length) return;
   c.innerHTML = '';
 
+  if (orderData.isUnjumble) {
+    initUnjumble(c);
+  } else {
+    initClassicOrder(c);
+  }
+}
+
+// UNJUMBLE: Drag-and-drop words to form sentences
+function initUnjumble(container) {
   orderTotal = orderData.items.length;
 
-  // Shuffle items for display
+  orderData.items.forEach((item, idx) => {
+    const question = document.createElement('div');
+    question.className = 'unjumble-question';
+    question.dataset.idx = idx;
+
+    // Shuffle words
+    const shuffledWords = [...item.words].sort(() => Math.random() - 0.5);
+
+    question.innerHTML = `
+      <div class="unjumble-number">${idx + 1}.</div>
+      <div class="unjumble-word-row" data-idx="${idx}">
+        ${shuffledWords.map((word, i) => `
+          <span class="unjumble-word" draggable="true" data-word="${word}">${word}</span>
+        `).join('')}
+      </div>
+      <div class="unjumble-actions">
+        <button class="btn btn-sm btn-outline unjumble-check" data-idx="${idx}">Check</button>
+        <button class="btn btn-sm btn-outline unjumble-reset" data-idx="${idx}">Reset</button>
+      </div>
+      <div class="unjumble-feedback" data-idx="${idx}"></div>
+    `;
+
+    container.appendChild(question);
+
+    // Initialize drag-and-drop for this row
+    initUnjumbleDragDrop(question.querySelector('.unjumble-word-row'));
+  });
+
+  // Event delegation for buttons
+  container.addEventListener('click', handleUnjumbleClick);
+}
+
+function initUnjumbleDragDrop(row) {
+  let dragItem = null;
+
+  row.querySelectorAll('.unjumble-word').forEach(word => {
+    word.addEventListener('dragstart', (e) => {
+      dragItem = word;
+      word.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    });
+
+    word.addEventListener('dragend', () => {
+      word.classList.remove('dragging');
+      dragItem = null;
+    });
+
+    word.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      if (!dragItem || dragItem === word) return;
+
+      const rect = word.getBoundingClientRect();
+      const midX = rect.left + rect.width / 2;
+
+      if (e.clientX < midX) {
+        row.insertBefore(dragItem, word);
+      } else {
+        row.insertBefore(dragItem, word.nextSibling);
+      }
+    });
+  });
+
+  // Touch support for mobile
+  let touchItem = null;
+  let touchClone = null;
+
+  row.querySelectorAll('.unjumble-word').forEach(word => {
+    word.addEventListener('touchstart', (e) => {
+      touchItem = word;
+      word.classList.add('dragging');
+
+      // Create a clone for visual feedback
+      touchClone = word.cloneNode(true);
+      touchClone.classList.add('touch-clone');
+      document.body.appendChild(touchClone);
+      updateTouchClone(e.touches[0]);
+    });
+
+    word.addEventListener('touchmove', (e) => {
+      e.preventDefault();
+      if (!touchItem) return;
+      updateTouchClone(e.touches[0]);
+
+      // Find which word we're over
+      const touch = e.touches[0];
+      const elements = document.elementsFromPoint(touch.clientX, touch.clientY);
+      const targetWord = elements.find(el => el.classList.contains('unjumble-word') && el !== touchItem);
+
+      if (targetWord && targetWord.parentNode === row) {
+        const rect = targetWord.getBoundingClientRect();
+        const midX = rect.left + rect.width / 2;
+        if (touch.clientX < midX) {
+          row.insertBefore(touchItem, targetWord);
+        } else {
+          row.insertBefore(touchItem, targetWord.nextSibling);
+        }
+      }
+    });
+
+    word.addEventListener('touchend', () => {
+      if (touchItem) touchItem.classList.remove('dragging');
+      if (touchClone) touchClone.remove();
+      touchItem = null;
+      touchClone = null;
+    });
+  });
+
+  function updateTouchClone(touch) {
+    if (touchClone) {
+      touchClone.style.left = (touch.clientX - 40) + 'px';
+      touchClone.style.top = (touch.clientY - 20) + 'px';
+    }
+  }
+}
+
+function handleUnjumbleClick(e) {
+  const target = e.target;
+
+  if (target.classList.contains('unjumble-check')) {
+    checkUnjumbleAnswer(parseInt(target.dataset.idx));
+  }
+
+  if (target.classList.contains('unjumble-reset')) {
+    resetUnjumbleQuestion(parseInt(target.dataset.idx));
+  }
+}
+
+function checkUnjumbleAnswer(idx) {
+  const item = orderData.items[idx];
+  const row = document.querySelector(`.unjumble-word-row[data-idx="${idx}"]`);
+  const feedback = document.querySelector(`.unjumble-feedback[data-idx="${idx}"]`);
+  const question = document.querySelector(`.unjumble-question[data-idx="${idx}"]`);
+
+  // Build user's answer from current word order
+  const words = row.querySelectorAll('.unjumble-word');
+  const userAnswer = Array.from(words).map(w => w.dataset.word).join(' ');
+
+  // Normalize for comparison (handle punctuation)
+  const normalize = (s) => s.replace(/[?!.,]/g, '').toLowerCase().trim();
+  const isCorrect = normalize(userAnswer) === normalize(item.answer);
+
+  if (isCorrect) {
+    question.classList.add('answered', 'correct');
+    row.classList.add('correct');
+    words.forEach(w => w.setAttribute('draggable', 'false'));
+    orderScore++;
+    document.getElementById('order-score').textContent = orderScore;
+
+    feedback.innerHTML = `
+      <span class="correct-text">✓ Correct!</span>
+      <span class="translation">${item.translation || ''}</span>
+    `;
+    feedback.classList.add('show');
+
+    if (orderScore === orderTotal) {
+      document.getElementById('order-complete').classList.add('show');
+    }
+  } else {
+    question.classList.add('wrong');
+    row.classList.add('wrong');
+
+    feedback.innerHTML = `
+      <span class="wrong-text">✗ Try again. Hint: ${item.answer}</span>
+    `;
+    feedback.classList.add('show');
+
+    setTimeout(() => {
+      question.classList.remove('wrong');
+      row.classList.remove('wrong');
+      feedback.classList.remove('show');
+    }, 2000);
+  }
+}
+
+function resetUnjumbleQuestion(idx) {
+  const item = orderData.items[idx];
+  const row = document.querySelector(`.unjumble-word-row[data-idx="${idx}"]`);
+  const question = document.querySelector(`.unjumble-question[data-idx="${idx}"]`);
+  const feedback = document.querySelector(`.unjumble-feedback[data-idx="${idx}"]`);
+
+  if (question.classList.contains('correct')) return;
+
+  // Re-shuffle and rebuild
+  const shuffledWords = [...item.words].sort(() => Math.random() - 0.5);
+  row.innerHTML = shuffledWords.map(word => `
+    <span class="unjumble-word" draggable="true" data-word="${word}">${word}</span>
+  `).join('');
+
+  initUnjumbleDragDrop(row);
+
+  question.classList.remove('wrong');
+  row.classList.remove('wrong');
+  feedback.innerHTML = '';
+  feedback.classList.remove('show');
+}
+
+// CLASSIC ORDER: Drag items into correct sequence
+function initClassicOrder(container) {
+  orderTotal = orderData.items.length;
+
   const shuffled = [...orderData.items].map((item, idx) => ({ text: item, origIdx: idx }));
   shuffled.sort(() => Math.random() - 0.5);
 
@@ -1501,15 +1784,14 @@ function initOrder() {
       <span class="order-text">${item.text}</span>
     </div>
   `).join('');
-  c.appendChild(div);
+  container.appendChild(div);
 
   const checkBtn = document.createElement('button');
   checkBtn.className = 'btn btn-outline';
   checkBtn.textContent = 'Check Order';
   checkBtn.onclick = checkOrder;
-  c.appendChild(checkBtn);
+  container.appendChild(checkBtn);
 
-  // Enable drag and drop
   initDragDrop();
 }
 
@@ -1547,7 +1829,6 @@ function checkOrder() {
   const items = document.querySelectorAll('.order-item');
   const currentOrder = Array.from(items).map(item => parseInt(item.dataset.orig));
 
-  // Check if order is correct (0, 1, 2, 3, ...)
   let correct = true;
   currentOrder.forEach((val, idx) => {
     const expectedIdx = orderData.correctOrder.length ? orderData.correctOrder[idx] : idx;

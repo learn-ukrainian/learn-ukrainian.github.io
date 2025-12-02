@@ -232,51 +232,51 @@ Look at these words and determine: **Group** and **Gender**.
 
 # Activities
 
-## fill-in: What Does It Mean?
+## fill-in: Gender & Declension System
 
-> Choose the correct English meaning.
+> Test your understanding of noun gender and declension groups.
 
-1. What does "стіл" mean?
-   > [!answer] table
-   > [!options] table | book | window | family
+1. The noun "книга" (book) ends in **-а**, so it belongs to Declension ___.
+   > [!answer] Group I (the -а/-я team)
+   > [!options] Group I (the -а/-я team) | Group II (consonant/о/е team) | Group III (soft feminine) | Group IV (baby animals)
 
-2. What does "книга" mean?
-   > [!answer] book
-   > [!options] day | book | sea | table
+2. The noun "стіл" (table) ends in a **consonant**, so its gender is ___.
+   > [!answer] Masculine
+   > [!options] Masculine | Feminine | Neuter | Can't tell
 
-3. What does "вікно" mean?
-   > [!answer] window
-   > [!options] earth | day | window | group
+3. The noun "вікно" (window) ends in **-о**, so its gender is ___.
+   > [!answer] Neuter
+   > [!options] Masculine | Feminine | Neuter | Can't tell
 
-4. What does "сім'я" mean?
-   > [!answer] family
-   > [!options] sun | family | table | day
+4. The noun "ніч" (night) ends in **-ч** (soft consonant) and is Declension III, meaning it's ___.
+   > [!answer] Feminine (exception!)
+   > [!options] Masculine | Feminine (exception!) | Neuter | Plural only
 
-5. What does "море" mean?
-   > [!answer] sea
-   > [!options] night | group | sea | book
+5. Nouns ending in **-о** or **-е** typically belong to Declension ___.
+   > [!answer] Group II
+   > [!options] Group I | Group II | Group III | Group IV
 
-6. What does "день" mean?
-   > [!answer] day
-   > [!options] day | earth | window | salt
+6. The noun "радість" (joy) ends in **-ість**, which indicates Declension ___.
+   > [!answer] Group III (abstract feminine)
+   > [!options] Group I | Group II | Group III (abstract feminine) | Group IV
 
-7. What does "ніч" mean?
-   > [!answer] night
-   > [!options] sea | group | calf | night
+7. Words like "теля" (calf) and "кошеня" (kitten) belong to Declension ___.
+   > [!answer] Group IV (baby animals)
+   > [!options] Group I | Group II | Group III | Group IV (baby animals)
 
-8. What does "сонце" mean?
-   > [!answer] sun
-   > [!options] book | night | sun | day
+8. The word "тато" (dad) ends in **-о** but is ___ gender.
+   > [!answer] Masculine (exception - refers to male person)
+   > [!options] Masculine (exception - refers to male person) | Feminine | Neuter | Depends on context
 
-9. What does "радість" mean?
-   > [!answer] joy
-   > [!options] joy | table | sea | day
+9. To determine how a noun changes (declines), you need to know its ___.
+   > [!answer] Declension group
+   > [!options] English translation | Declension group | Stress position | First letter
 
-10. What does "земля" mean?
-   > [!answer] earth
-   > [!options] group | family | calf | earth
+10. Abstract nouns ending in **-ь** (like "любов" - love) are typically ___.
+    > [!answer] Feminine, Declension III
+    > [!options] Masculine, Declension II | Feminine, Declension III | Neuter, Declension II | Masculine, Declension III
 
-## select: He, She, or It?
+## fill-in: He, She, or It?
 
 > Replace the noun with the correct pronoun (Він, Вона, Воно).
 
@@ -399,113 +399,113 @@ Look at these words and determine: **Group** and **Gender**.
 | сонце | sun |
 | радість | joy |
 
-## quiz: Meaning Check
+## quiz: Declension & Gender Rules
 
 > Choose the correct answer.
 
-1. What does "вікно" mean?
-   - [ ] book
-   - [x] window
-   - [ ] family
-   - [ ] day
-   > "вікно" means "window"
+1. A noun ending in **-а** or **-я** typically belongs to:
+   - [x] Declension Group I (Feminine)
+   - [ ] Declension Group II (Masculine)
+   - [ ] Declension Group III (Soft Feminine)
+   - [ ] Declension Group IV (Baby Animals)
+   > Group I = the "-а/-я team" - mostly feminine nouns
 
-2. What does "сіль" mean?
-   - [x] salt
-   - [ ] earth
-   - [ ] night
-   - [ ] sea
-   > "сіль" means "salt"
+2. The noun "стіл" (table) ends in a consonant. What is its gender?
+   - [x] Masculine
+   - [ ] Feminine
+   - [ ] Neuter
+   - [ ] Can't determine
+   > Consonant ending → Group II Masculine
 
-3. What does "стіл" mean?
-   - [ ] salt
-   - [ ] night
-   - [ ] sun
-   - [x] table
-   > "стіл" means "table"
+3. Nouns ending in **-о** or **-е** are typically:
+   - [ ] Masculine
+   - [ ] Feminine
+   - [x] Neuter (Group II)
+   - [ ] Group IV
+   > -о/-е endings = Group II Neuter (вікно, море)
 
-4. What does "сонце" mean?
-   - [ ] sea
-   - [ ] family
-   - [x] sun
-   - [ ] book
-   > "сонце" means "sun"
+4. How do you know "ніч" (night) is Feminine, not Masculine?
+   - [ ] It ends in a vowel
+   - [ ] It ends in a consonant, so it's masculine
+   - [x] It belongs to Group III (soft feminine) - must memorize
+   - [ ] All time words are feminine
+   > -ь/-ч nouns can be M or F - "ніч" is Group III Feminine (exception!)
 
-5. What does "ніч" mean?
-   - [ ] day
-   - [x] night
-   - [ ] book
-   - [ ] table
-   > "ніч" means "night"
+5. Words ending in **-ість** (like "радість" - joy) are always:
+   - [ ] Masculine
+   - [x] Feminine, Group III
+   - [ ] Neuter
+   - [ ] Group IV
+   > The -ість ending = 100% Group III Feminine (abstract nouns)
 
-6. What does "книга" mean?
-   - [ ] window
-   - [ ] salt
-   - [ ] sea
-   - [x] book
-   > "книга" means "book"
+6. The word "теля" (calf) ends in -я but is Neuter. Why?
+   - [ ] All -я words are neuter
+   - [x] It's a baby animal (Group IV)
+   - [ ] It's an exception
+   - [ ] -я after soft consonants is neuter
+   > Baby animals (-а/-я) = Group IV Neuter: теля, кошеня, курча
 
-7. What does "теля" mean?
-   - [ ] kitten
-   - [ ] family
-   - [ ] group
-   - [x] calf
-   > "теля" means "calf"
+7. Which pronoun replaces "вікно" (window)?
+   - [ ] Він (he)
+   - [ ] Вона (she)
+   - [x] Воно (it)
+   - [ ] Вони (they)
+   > Вікно is Neuter (-о ending) → Воно
 
-8. What does "група" mean?
-   - [ ] day
-   - [ ] earth
-   - [x] group
-   - [ ] joy
-   > "група" means "group"
+8. The word "тато" (dad) ends in -о but is Masculine because:
+   - [ ] -о is always masculine
+   - [x] Natural gender (refers to a male) overrides ending rules
+   - [ ] It's Group II
+   - [ ] It's an irregular noun
+   > Biological gender overrides grammatical rules for people
 
-9. What does "море" mean?
-   - [ ] sun
-   - [ ] night
-   - [ ] book
-   - [x] sea
-   > "море" means "sea"
+9. To predict how a noun changes in sentences (cases), you need to know:
+   - [ ] Its English translation
+   - [ ] Its stress position
+   - [x] Its Declension Group
+   - [ ] Its first letter
+   > Declension Group = the "team" that determines all ending changes
 
-10. What does "земля" mean?
-   - [ ] family
-   - [x] earth
-   - [ ] window
-   - [ ] table
-   > "земля" means "earth"
+10. Which word pair shows the -ь ending gender difference?
+    - [ ] мама / тато (both feminine)
+    - [x] день (m) / ніч (f) - both end in soft consonant
+    - [ ] вікно / море (both neuter)
+    - [ ] книга / земля (both Group I)
+    > День (day) is Masc Group II, ніч (night) is Fem Group III - same ending, different groups!
 
-## true-false: True or False?
+## true-false: Grammar Rules
 
-> Determine if each statement is true or false.
+> Determine if each statement about Ukrainian grammar is true or false.
 
-- [x] "радість" means "joy"
-   > Correct!
+- [x] Nouns ending in -а or -я are usually Feminine (Group I).
+   > Correct! The "-а/-я team" is mostly feminine.
 
-- [ ] "стіл" means "salt"
-   > Incorrect. "стіл" means "table"
+- [ ] All nouns ending in a consonant are Feminine.
+   > Incorrect. Consonant endings = Group II Masculine (стіл, паспорт).
 
-- [ ] "ніч" means "day"
-   > Incorrect. "ніч" means "night"
+- [x] The ending -ість always indicates Group III Feminine (abstract nouns).
+   > Correct! радість, якість, можливість - always feminine.
 
-- [x] "книга" means "book"
-   > Correct!
+- [ ] The pronoun "Воно" is used for Masculine nouns.
+   > Incorrect. Воно = Neuter, Він = Masculine, Вона = Feminine.
 
-- [ ] "море" means "group"
-   > Incorrect. "море" means "sea"
+- [x] Baby animal nouns (теля, кошеня) are Neuter despite ending in -а/-я.
+   > Correct! Group IV = baby animals = always Neuter.
 
-- [x] "відміна" means "declension"
-   > Correct!
+- [ ] "День" (day) and "ніч" (night) belong to the same Declension group.
+   > Incorrect. День = Group II Masculine, ніч = Group III Feminine.
 
-- [x] "сім'я" means "family"
-   > Correct!
+- [x] "Ти" is informal (friends/family), "Ви" is formal (strangers/elders).
+   > Correct! When in doubt, use Ви to be polite.
 
-- [ ] "день" means "night"
-   > Incorrect. "день" means "day"
+- [x] Knowing a noun's Declension Group helps predict all its case endings.
+   > Correct! That's why we learn "teams" not just individual endings.
 
-- [ ] "сонце" means "table"
-   > Incorrect. "сонце" means "sun"
+- [ ] Words like "тато" (dad) are Feminine because they end in -о.
+   > Incorrect. Natural gender overrides: тато refers to a male → Masculine.
 
-- [x] "земля" means "earth"
-   > Correct!
+- [x] Group II contains both Masculine (consonant) and Neuter (-о/-е) nouns.
+   > Correct! It's the biggest "mixed" group.
 
 ---
 

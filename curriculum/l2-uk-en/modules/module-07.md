@@ -315,113 +315,139 @@ Turn positive to negative:
 | нічого | nothing |
 | ніколи | never |
 
-## quiz: Meaning Check
+## group-sort: Question Word Categories
 
-> Choose the correct answer.
+> Sort these question words by their function.
 
-1. What does "що" mean?
-   - [x] what
-   - [ ] who
-   - [ ] where
-   - [ ] when
-   > "що" means "what"
+### Location Questions
+- де (where - static location)
+- куди (where to - direction)
+- звідки (where from - origin)
 
-2. What does "де" mean?
-   - [ ] what
-   - [ ] who
-   - [x] where (location)
-   - [ ] where to
-   > "де" means "where (location)"
+### Time Questions
+- коли (when)
+- як довго (how long)
 
-3. What does "куди" mean?
-   - [ ] where (location)
-   - [x] where to (direction)
-   - [ ] where from
-   - [ ] when
-   > "куди" means "where to (direction)"
+### Reason/Manner Questions
+- чому (why)
+- як (how)
+- навіщо (what for)
 
-4. What does "звідки" mean?
-   - [ ] where (location)
-   - [ ] where to
-   - [x] where from
-   - [ ] why
-   > "звідки" means "where from"
+### Identity/Thing Questions
+- хто (who)
+- що (what)
+- який/яка/яке (which/what kind)
 
-5. What does "чому" mean?
-   - [ ] what
-   - [ ] how
-   - [ ] when
-   - [x] why
-   > "чому" means "why"
+### Quantity Questions
+- скільки (how much/many)
 
-6. What does "ніхто" mean?
-   - [x] nobody
-   - [ ] nothing
-   - [ ] never
-   - [ ] nowhere
-   > "ніхто" means "nobody"
+## quiz: Questions & Negation Rules
 
-7. What does "нічого" mean?
-   - [ ] nobody
-   - [x] nothing
-   - [ ] never
-   - [ ] nowhere
-   > "нічого" means "nothing"
+> Test your understanding of question formation and double negation.
 
-8. What does "ніколи" mean?
-   - [ ] nobody
-   - [ ] nothing
-   - [x] never
-   - [ ] nowhere
-   > "ніколи" means "never"
+1. How do you form a yes/no question from "Він читає"?
+   - [x] Чи він читає? OR Він читає? (rising tone)
+   - [ ] Він читає чи?
+   - [ ] Читає він?
+   - [ ] Чи читає він є?
+   > Add "Чи" at start OR just use rising intonation
 
-9. What does "чи" mean?
-   - [x] whether (question particle)
-   - [ ] what
-   - [ ] why
-   - [ ] who
-   > "чи" is used to start yes/no questions
+2. "Де" vs "куди" - which asks about direction (where TO)?
+   - [ ] Де
+   - [x] Куди
+   - [ ] Both
+   - [ ] Neither
+   > Де = location (static), Куди = direction (motion toward)
 
-10. What does "скільки" mean?
-   - [ ] what
-   - [ ] why
-   - [x] how much/many
-   - [ ] where
-   > "скільки" means "how much/many"
+3. How do you say "Nobody knows" using double negation?
+   - [ ] Ніхто знає.
+   - [x] Ніхто не знає.
+   - [ ] Не ніхто знає.
+   - [ ] Знає ніхто не.
+   > Double negative required: НІХТО НЕ знає
 
-## true-false: True or False?
+4. Which question word asks "why"?
+   - [ ] Як
+   - [ ] Що
+   - [x] Чому
+   - [ ] Коли
+   > Чому = why (asking for reason)
 
-> Determine if each statement is true or false.
+5. How do you say "I never read" with double negation?
+   - [ ] Я ніколи читаю.
+   - [x] Я ніколи не читаю.
+   - [ ] Я не читаю ніколи.
+   - [ ] Ніколи я читаю не.
+   > Pattern: Subject + НІКОЛИ + НЕ + verb
 
-- [x] "Що це?" means "What is this?"
-   > Correct!
+6. "Звідки ти?" asks about:
+   - [ ] Where you are
+   - [ ] Where you're going
+   - [x] Where you're from
+   - [ ] When you arrived
+   > Звідки = where FROM (origin)
 
-- [x] "Де ти?" means "Where are you?"
-   > Correct!
+7. How do you say "I don't know anything"?
+   - [ ] Я не знаю що.
+   - [x] Я нічого не знаю.
+   - [ ] Я знаю нічого.
+   - [ ] Нічого я знаю.
+   > Double negative: Я НІЧОГО НЕ знаю
 
-- [ ] "куди" means the same as "де"
-   > Incorrect. "куди" means "where to" (direction), "де" means "where" (location)
+8. Which is correct: "Where are you going?"
+   - [ ] Де ти йдеш?
+   - [x] Куди ти йдеш?
+   - [ ] Звідки ти йдеш?
+   - [ ] Коли ти йдеш?
+   > "Куди" for direction/destination
 
-- [x] "Ніхто не знає" means "Nobody knows"
-   > Correct!
+9. In "Чи ти студент?", what does "Чи" do?
+   - [x] Marks it as a yes/no question
+   - [ ] Means "what"
+   - [ ] Negates the sentence
+   - [ ] Makes it past tense
+   > "Чи" is the question particle for yes/no questions
 
-- [x] Ukrainian requires double negatives
-   > Correct! "Я нічого не знаю" - literally "I nothing not know"
+10. How do you ask "How much does this cost?"
+    - [x] Скільки це коштує?
+    - [ ] Що це коштує?
+    - [ ] Чому це коштує?
+    - [ ] Де це коштує?
+    > Скільки = how much/many (quantity)
 
-- [ ] "чому" means "how"
-   > Incorrect. "чому" means "why", "як" means "how"
+## true-false: Question & Negation Rules
 
-- [x] "звідки" means "where from"
-   > Correct!
+> Determine if each statement about Ukrainian grammar is true or false.
 
-- [ ] "Я не знаю нічого" is correct word order
-   > Incorrect. The correct order is "Я нічого не знаю"
+- [x] Yes/no questions can be formed by rising intonation alone.
+   > Correct! "Він читає?" (rising tone) = question, no word change needed.
 
-- [x] "скільки коштує" means "how much does it cost"
-   > Correct!
+- [ ] "Де" and "куди" are interchangeable.
+   > Incorrect. Де = where (location), куди = where to (direction/motion).
 
-- [x] "ніколи" means "never"
-   > Correct!
+- [x] Ukrainian requires double negatives: "Я нічого не знаю".
+   > Correct! Negative pronoun + не + verb (literally "I nothing not know").
+
+- [ ] "Ніхто знає" is grammatically correct.
+   > Incorrect. Must have double negative: "Ніхто НЕ знає".
+
+- [x] The particle "чи" at the start marks a yes/no question.
+   > Correct! "Чи він читає?" = "Does he read?"
+
+- [ ] Question word order changes like in English.
+   > Incorrect. SVO order stays; question words front the sentence.
+
+- [x] "Ні-" words (ніхто, нічого, ніколи) always pair with "не".
+   > Correct! This is the mandatory double negative rule.
+
+- [x] "Звідки" asks about origin (where from), "куди" asks about destination.
+   > Correct! звідки = whence, куди = whither.
+
+- [ ] "Чому" means "how".
+   > Incorrect. Чому = why, як = how.
+
+- [x] The negative pronoun goes BEFORE "не + verb": "Я нічого не знаю".
+   > Correct! Negative word order: [neg pronoun] + не + [verb].
 
 ---
 

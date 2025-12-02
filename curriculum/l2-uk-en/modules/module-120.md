@@ -246,22 +246,135 @@ Use participles to describe what has been done:
    - [ ] прийняте
    > Short form is preferred for formal contexts.
 
-## fill-in: News Report
 
-> Учора в Києві відбулося важливе засідання.
->
-> Засідання (1)___ (відкрити) о 10 годині.
-> Доповідь (2)___ (представити) міністром.
-> Новий закон (3)___ (ухвалити) парламентом.
-> Угоду (4)___ (підписати) обома сторонами.
-> Засідання (5)___ (закрити) о 17 годині.
+## match-up: Vocabulary Match
 
-**Answers:**
-1. відкрито
-2. представлено
-3. ухвалено
-4. підписано
-5. закрито
+> Match each Ukrainian word with its English translation.
+
+| Left | Right |
+|------|-------|
+| виконано | performed, done |
+| затримано | detained |
+| діяч | agent |
+| активний стан | active voice |
+| підписано | signed |
+| ухвалено | passed (law) |
+| пасивний стан | passive voice |
+| коротка форма | short form |
+| завершено | completed |
+| прийнято | accepted, adopted |
+
+
+## fill-in: Fill in the Blank
+
+> Choose the correct word to complete each sentence.
+
+1. Книга ___ Шевченком.
+   > [!answer] написана
+   > [!options] написана | збудований | підписаний
+
+2. Будинок ___ робітниками.
+   > [!answer] збудований
+   > [!options] збудований | написана | підписаний
+
+3. Лист ___ директором.
+   > [!answer] підписаний
+   > [!options] підписаний | збудований | написана
+
+
+
+## quiz: Meaning Check
+
+> Choose the correct answer.
+
+1. What does "активний стан" mean?
+   - [x] active voice
+   - [ ] short form
+   - [ ] passive voice
+   - [ ] agent
+   > "активний стан" means "active voice"
+
+2. What does "коротка форма" mean?
+   - [x] short form
+   - [ ] passive voice
+   - [ ] active voice
+   - [ ] agent
+   > "коротка форма" means "short form"
+
+3. What does "діяч" mean?
+   - [ ] short form
+   - [ ] active voice
+   - [ ] passive voice
+   - [x] agent
+   > "діяч" means "agent"
+
+4. What does "пасивний стан" mean?
+   - [ ] agent
+   - [ ] active voice
+   - [x] passive voice
+   - [ ] short form
+   > "пасивний стан" means "passive voice"
+
+5. What does "підписано" mean?
+   - [ ] active voice
+   - [ ] agent
+   - [x] signed
+   - [ ] short form
+   > "підписано" means "signed"
+
+6. What does "затримано" mean?
+   - [ ] agent
+   - [ ] active voice
+   - [x] detained
+   - [ ] short form
+   > "затримано" means "detained"
+
+7. What does "ухвалено" mean?
+   - [ ] short form
+   - [x] passed (law)
+   - [ ] agent
+   - [ ] active voice
+   > "ухвалено" means "passed (law)"
+
+8. What does "завершено" mean?
+   - [x] completed
+   - [ ] active voice
+   - [ ] agent
+   - [ ] short form
+   > "завершено" means "completed"
+
+9. What does "прийнято" mean?
+   - [ ] short form
+   - [ ] active voice
+   - [ ] agent
+   - [x] accepted, adopted
+   > "прийнято" means "accepted, adopted"
+
+10. What does "виконано" mean?
+   - [ ] agent
+   - [ ] active voice
+   - [x] performed, done
+   - [ ] short form
+   > "виконано" means "performed, done"
+
+
+
+## unjumble: Word Order
+
+> Drag the words into the correct order to form a sentence.
+
+1. написана / Книга / Шевченком
+   > [!answer] Книга написана Шевченком.
+   > (by Shevchenko)
+
+2. Будинок / збудований / робітниками
+   > [!answer] Будинок збудований робітниками.
+   > (by workers)
+
+3. підписаний / Лист / директором
+   > [!answer] Лист підписаний директором.
+   > (by the director)
+
 
 ---
 

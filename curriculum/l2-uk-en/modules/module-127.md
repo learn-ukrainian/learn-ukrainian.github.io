@@ -287,18 +287,174 @@ Discuss using fractions and percentages:
    - [ ] менше ніж 100
    > Понад = over, more than.
 
-## fill-in: Family Statistics
 
-> Опишіть сім'ю, використовуючи числівники.
+## match-up: Vocabulary Match
 
-> У родини Петренків (1)___ (5) членів. Батьки мають (2)___ (3) дітей: двох синів і одну дочку. (3)___ (1/2) дітей вже дорослі. (4)___ (приблизно) раз на місяць вся родина збирається разом. (5)___ (більше ніж) 80% часу вони проводять у місті.
+> Match each Ukrainian word with its English translation.
 
-**Answers:**
-1. п'ятеро
-2. троє
-3. Половина
-4. Близько (одного)
-5. Понад / Більше ніж
+| Left | Right |
+|------|-------|
+| половина | half |
+| п'ятеро | five (collective) |
+| четверо | four (collective) |
+| кілька | several |
+| обоє | both |
+| троє | three (collective) |
+| двоє | two (collective) |
+| збірний | collective |
+| понад | over, more than |
+| чверть | quarter |
+| приблизно | approximately |
+| дріб | fraction |
+
+
+## fill-in: Fill in the Blank
+
+> Choose the correct word to complete each sentence.
+
+1. восьмеро, ___ десятеро
+   > [!answer] дев'ятеро
+   > [!options] дев'ятеро | п'ять | сімдесят | троє
+
+2. нуль цілих ___ десятих
+   > [!answer] п'ять
+   > [!options] п'ять | сімдесят | дев'ятеро | троє
+
+3. одна ціла ___ десятих
+   > [!answer] п'ять
+   > [!options] п'ять | сімдесят | троє | дев'ятеро
+
+4. дві цілих ___ п'ять сотих
+   > [!answer] сімдесят
+   > [!options] сімдесят | троє | п'ять | дев'ятеро
+
+5. двоє, ___ четверо
+   > [!answer] троє
+   > [!options] троє | дев'ятеро | п'ять | сімдесят
+
+
+
+## quiz: Meaning Check
+
+> Choose the correct answer.
+
+1. What does "чверть" mean?
+   - [ ] third
+   - [ ] four (collective)
+   - [x] quarter
+   - [ ] three (collective)
+   > "чверть" means "quarter"
+
+2. What does "третина" mean?
+   - [x] third
+   - [ ] quarter
+   - [ ] three (collective)
+   - [ ] four (collective)
+   > "третина" means "third"
+
+3. What does "четверо" mean?
+   - [ ] third
+   - [x] four (collective)
+   - [ ] three (collective)
+   - [ ] quarter
+   > "четверо" means "four (collective)"
+
+4. What does "троє" mean?
+   - [ ] quarter
+   - [x] three (collective)
+   - [ ] third
+   - [ ] four (collective)
+   > "троє" means "three (collective)"
+
+5. What does "двоє" mean?
+   - [ ] quarter
+   - [ ] third
+   - [x] two (collective)
+   - [ ] four (collective)
+   > "двоє" means "two (collective)"
+
+6. What does "обоє" mean?
+   - [x] both
+   - [ ] four (collective)
+   - [ ] third
+   - [ ] quarter
+   > "обоє" means "both"
+
+7. What does "половина" mean?
+   - [ ] third
+   - [x] half
+   - [ ] quarter
+   - [ ] four (collective)
+   > "половина" means "half"
+
+8. What does "п'ятеро" mean?
+   - [ ] third
+   - [x] five (collective)
+   - [ ] four (collective)
+   - [ ] quarter
+   > "п'ятеро" means "five (collective)"
+
+9. What does "збірний" mean?
+   - [ ] quarter
+   - [ ] four (collective)
+   - [ ] third
+   - [x] collective
+   > "збірний" means "collective"
+
+10. What does "кілька" mean?
+   - [ ] third
+   - [x] several
+   - [ ] quarter
+   - [ ] four (collective)
+   > "кілька" means "several"
+
+11. What does "понад" mean?
+   - [x] over, more than
+   - [ ] quarter
+   - [ ] four (collective)
+   - [ ] third
+   > "понад" means "over, more than"
+
+12. What does "приблизно" mean?
+   - [ ] four (collective)
+   - [x] approximately
+   - [ ] quarter
+   - [ ] third
+   > "приблизно" means "approximately"
+
+13. What does "дріб" mean?
+   - [x] fraction
+   - [ ] third
+   - [ ] four (collective)
+   - [ ] quarter
+   > "дріб" means "fraction"
+
+
+
+## unjumble: Word Order
+
+> Drag the words into the correct order to form a sentence.
+
+1. восьмеро / дев'ятеро / десятеро
+   > [!answer] восьмеро, дев'ятеро, десятеро
+   > (rare)
+
+2. нуль / п'ять / десятих / цілих
+   > [!answer] нуль цілих п'ять десятих
+   > (zero point five)
+
+3. десятих / одна / ціла / п'ять
+   > [!answer] одна ціла п'ять десятих
+   > (one point five)
+
+4. дві / сотих / цілих / п'ять / сімдесят
+   > [!answer] дві цілих сімдесят п'ять сотих
+   > (two point seven five)
+
+5. троє / четверо / двоє
+   > [!answer] двоє, троє, четверо
+   > (people, children, paired nouns)
+
 
 ---
 

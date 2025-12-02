@@ -305,177 +305,155 @@ Generally (imperfective for habits):
 
 ---
 
+---
+
+---
+
+---
+
 # Activities
 
-## match-up: Aspect Pairs
+## fill-in: Complete the Sentences
 
-> Match imperfective with perfective.
+> Choose the correct word to complete each sentence.
+
+1. Чи ти вмієш добре ___?
+   > [!answer] з'їсти
+   > [!options] дякую | перерахувати | з'їсти | була
+
+2. Вони планують ___ завтра.
+   > [!answer] приготувати
+   > [!options] мати | приготувати | надіслати | думати
+
+3. Де ваш великий ___?
+   > [!answer] вид
+   > [!options] розмір | дитина | очі | вид
+
+4. Мій брат любить ___ щодня.
+   > [!answer] купити
+   > [!options] заважати | вчитися | купити | бачити
+
+5. Ваша ідея здається ___.
+   > [!answer] недоконаний
+   > [!options] недоконаний | легкий | маленький | розумний
+
+6. Моя кімната занадто ___.
+   > [!answer] доконаний
+   > [!options] смачний | добрий | маленький | доконаний
+
+## unjumble: Build the Sentence
+
+> Arrange the words in the correct order.
+
+1. вид / Це / новий / мій
+   > [!answer] Це мій новий вид.
+   > (aspect (grammar))
+
+## match-up: Match the Pairs
+
+> Match Ukrainian words to their English meanings.
 
 | Left | Right |
 |------|-------|
-| читати | прочитати |
-| писати | написати |
-| робити | зробити |
-| їсти | з'їсти |
-| пити | випити |
-| вчити | вивчити |
-
-## quiz: Verbal Aspect
-
-> Choose the correct aspect.
-
-1. "I'm reading a book now" - Я ___ книгу.
-   - [x] читаю
-   - [ ] прочитаю
-   - [ ] прочитав
-   - [ ] читав
-   > Present/in progress = imperfective.
-
-2. "I finished the book yesterday" - Я ___ книгу вчора.
-   - [x] прочитав
-   - [ ] читав
-   - [ ] читаю
-   - [ ] буду читати
-   > Completed past = perfective.
-
-3. "She was cooking all day" - Вона ___ весь день.
-   - [x] готувала
-   - [ ] приготувала
-   - [ ] готує
-   - [ ] приготує
-   > Duration = imperfective.
-
-4. "I read every evening" (habit) - Я ___ кожен вечір.
-   - [x] читаю
-   - [ ] прочитаю
-   - [ ] прочитав
-   - [ ] буду читати
-   > Habitual = imperfective.
-
-5. "Tomorrow I'll write you a letter" (one action) - Завтра я ___ тобі листа.
-   - [x] напишу
-   - [ ] буду писати
-   - [ ] написав
-   - [ ] пишу
-   > Single future action = perfective.
-
-6. "He said hello" (once) - Він ___ "привіт."
-   - [x] сказав
-   - [ ] говорив
-   - [ ] говорить
-   - [ ] скаже
-   > Single past action = perfective.
-
-## group-sort: Imperfective vs Perfective
-
-> Sort by aspect.
-
-### Imperfective (process/repeated)
-- читати
-- писати
-- робити
-- готувати
-- говорити
-- вчити
-
-### Perfective (completed/single)
-- прочитати
-- написати
-- зробити
-- приготувати
-- сказати
-- вивчити
-
-
-## fill-in: Fill in the Blank
-
-> Fill in the blanks with the correct word.
-
-1. Я читав. ___ was reading)
-   > [!answer] (I
-
-2. Вона писала. ___ was writing)
-   > [!answer] (She
-
-3. Я читаю. ___ reading)
-   > [!answer] (I'm
-
-4. Вона пише. ___ writing)
-   > [!answer] (She's
-
-5. Я буду читати. ___ will be reading)
-   > [!answer] (I
-
-
+| приготувати | to cook/prepare (perf) |
+| доконаний | perfective (aspect) |
+| ними | (with) them |
+| вивчити | to learn (perf) |
+| допомогти | to help (perf) |
+| купити | to buy (perf) |
+| з'їсти | to eat (perf) |
+| недоконаний | imperfective (aspect) |
+| повернути | to turn |
+| випити | to drink (perf) |
+| вид | aspect (grammar) |
 
 ## quiz: Meaning Check
 
 > Choose the correct answer.
 
 1. What does "з'їсти" mean?
-   - [ ] to drink (perf)
+   - [ ] change (money)
    - [x] to eat (perf)
-   - [ ] to learn (perf)
-   - [ ] to buy (perf)
+   - [ ] during, throughout
+   - [ ] suitcase
    > "з'їсти" means "to eat (perf)"
 
-2. What does "випити" mean?
+2. What does "недоконаний" mean?
+   - [x] imperfective (aspect)
+   - [ ] potato
+   - [ ] shoes
+   - [ ] borscht
+   > "недоконаний" means "imperfective (aspect)"
+
+3. What does "вид" mean?
+   - [ ] tip
+   - [ ] fog
+   - [x] aspect (grammar)
+   - [ ] between
+   > "вид" means "aspect (grammar)"
+
+4. What does "приготувати" mean?
+   - [x] to cook/prepare (perf)
+   - [ ] one's own (m)
+   - [ ] Wednesday
+   - [ ] friend (male)
+   > "приготувати" means "to cook/prepare (perf)"
+
+5. What does "випити" mean?
+   - [ ] month
    - [x] to drink (perf)
-   - [ ] to buy (perf)
-   - [ ] to learn (perf)
-   - [ ] to eat (perf)
+   - [ ] professional
+   - [ ] grandma
    > "випити" means "to drink (perf)"
 
-3. What does "купити" mean?
-   - [ ] to learn (perf)
-   - [ ] to drink (perf)
+6. What does "доконаний" mean?
    - [ ] to eat (perf)
-   - [x] to buy (perf)
-   > "купити" means "to buy (perf)"
+   - [ ] to carry
+   - [ ] potato
+   - [x] perfective (aspect)
+   > "доконаний" means "perfective (aspect)"
 
-4. What does "вивчити" mean?
+7. What does "вивчити" mean?
+   - [ ] to work
+   - [ ] month
+   - [ ] there
    - [x] to learn (perf)
-   - [ ] to eat (perf)
-   - [ ] to drink (perf)
-   - [ ] to buy (perf)
    > "вивчити" means "to learn (perf)"
 
-5. What does "недоконаний" mean?
-   - [ ] to buy (perf)
-   - [ ] to eat (perf)
+8. What does "купити" mean?
+   - [x] to buy (perf)
+   - [ ] to succeed
+   - [ ] office, study
    - [ ] to drink (perf)
-   - [x] imperfective
-   > "недоконаний" means "imperfective"
+   > "купити" means "to buy (perf)"
 
-6. What does "вид" mean?
-   - [ ] to eat (perf)
-   - [ ] to buy (perf)
-   - [x] aspect (grammatical)
-   - [ ] to drink (perf)
-   > "вид" means "aspect (grammatical)"
+## true-false: True or False?
 
+> Determine if each statement is true or false.
 
+- [x] "недоконаний" means "imperfective (aspect)"
+   > Correct!
 
-## unjumble: Word Order
+- [x] "вид" means "aspect (grammar)"
+   > Correct!
 
-> Put the words in the correct order to form a sentence.
+- [x] "випити" means "to drink (perf)"
+   > Correct!
 
-1. was / (I / читав / Я / reading)
-   > [!answer] Я читав. (I was reading)
-   > (Я прочитав. (I read/finished))
+- [ ] "купити" means "passport"
+   > Incorrect. "купити" means "to buy (perf)"
 
-2. (She / писала / writing) / Вона / was
-   > [!answer] Вона писала. (She was writing)
-   > (Вона написала. (She wrote/finished))
+- [ ] "вивчити" means "writer"
+   > Incorrect. "вивчити" means "to learn (perf)"
 
-3. (I'm / reading) / Я / читаю
-   > [!answer] Я читаю. (I'm reading)
-   > (❌ (no present form))
+- [ ] "приготувати" means "sad"
+   > Incorrect. "приготувати" means "to cook/prepare (perf)"
 
-4. пише / Вона / (She's / writing)
-   > [!answer] Вона пише. (She's writing)
-   > (❌ (no present form))
+- [x] "доконаний" means "perfective (aspect)"
+   > Correct!
 
+- [ ] "з'їсти" means "yes"
+   > Incorrect. "з'їсти" means "to eat (perf)"
 
 ---
 

@@ -297,166 +297,306 @@ Describe your ideal weekend activities:
 
 ---
 
-# Activities
+---
 
-## match-up: Hobby → Type
+---
+
+---
+
+# Вправи
+
+## fill-in: Доповніть речення
+
+> Оберіть правильне слово.
+
+1. Моя сестра каже, що їй подобається ___ у вільний час.
+   > [!answer] фотографувати
+   > [!options] різати | вечеряти | закрити | фотографувати
+
+2. Я хочу купити це ___, але воно занадто дороге.
+   > [!answer] дозвілля
+   > [!options] батарея | дозвілля | літо | відпустка
+
+3. Я хочу купити цей ___, але він занадто дорогий.
+   > [!answer] квест
+   > [!options] мило | квест | перемовини | відміна
+
+4. Я давно мріяв навчитися ___, і нарешті маю таку можливість.
+   > [!answer] в'язати
+   > [!options] лежати | мріяти | в'язати | працювати
+
+5. Я хочу купити це ___, але воно занадто дороге.
+   > [!answer] вишивання
+   > [!options] вишивання | радіо | град | мийка
+
+6. Я давно мріяв навчитися ___, і нарешті маю таку можливість.
+   > [!answer] малювати
+   > [!options] вітатися | стояти | уявити | малювати
+
+7. Мій друг сказав, що його ___ дуже зручний.
+   > [!answer] фестиваль
+   > [!options] менеджер | фестиваль | острів | долина
+
+8. Я давно мріяв навчитися ___, і нарешті маю таку можливість.
+   > [!answer] майструвати
+   > [!options] допомогти | майструвати | давати | кивати
+
+9. Вони довго шукали хороше ___, але не знайшли.
+   > [!answer] шиття
+   > [!options] бандероль | шиття | плече | калюжа
+
+10. Я хочу купити цю ___, але вона занадто дорога.
+   > [!answer] фотографія
+   > [!options] ніж | обмін | фотографія | офіціант
+
+11. Мій друг сказав, що його ___ дуже зручний.
+   > [!answer] відпочинок
+   > [!options] відпочинок | можливість | мовлення | хвилина
+
+## unjumble: Побудуйте речення
+
+> Розташуйте слова в правильному порядку.
+
+1. не / Вони / довго / монета / хорошу / але / шукали / знайшли
+   > [!answer] Вони довго шукали хорошу монета, але не знайшли.
+   > (coin)
+
+2. друг / сказав / відпочинок / що / Мій / його / зручний / дуже
+   > [!answer] Мій друг сказав, що його відпочинок дуже зручний.
+   > (rest, relaxation)
+
+3. фотографія / належить / з / Києва / Ця / моїй / подрузі
+   > [!answer] Ця фотографія належить моїй подрузі з Києва.
+   > (photography)
+
+4. хороший / пазл / але / знайшли / не / довго / Вони / шукали
+   > [!answer] Вони довго шукали хороший пазл, але не знайшли.
+   > (puzzle)
+
+5. дозвілля / це / воно / купити / хочу / занадто / дороге / Я / але
+   > [!answer] Я хочу купити це дозвілля, але воно занадто дороге.
+   > (leisure)
+
+6. дорога / занадто / риболовля / цю / але / хочу / купити / Я / вона
+   > [!answer] Я хочу купити цю риболовля, але вона занадто дорога.
+   > (fishing)
+
+7. шукали / захоплення / довго / але / не / Вони / хороше / знайшли
+   > [!answer] Вони довго шукали хороше захоплення, але не знайшли.
+   > (passion, enthusiasm)
+
+8. відеогра / Києва / з / подрузі / належить / моїй / Ця
+   > [!answer] Ця відеогра належить моїй подрузі з Києва.
+   > (video game)
+
+9. шукали / Вони / знайшли / довго / колекція / не / але / хорошу
+   > [!answer] Вони довго шукали хорошу колекція, але не знайшли.
+   > (collection)
+
+10. купити / дороге / Я / це / занадто / садівництво / воно / хочу / але
+   > [!answer] Я хочу купити це садівництво, але воно занадто дороге.
+   > (gardening)
+
+11. не / в'язання / хороше / але / Вони / знайшли / довго / шукали
+   > [!answer] Вони довго шукали хороше в'язання, але не знайшли.
+   > (knitting)
+
+12. хочу / але / Я / дороге / малювання / воно / купити / це / занадто
+   > [!answer] Я хочу купити це малювання, але воно занадто дороге.
+   > (drawing, painting)
+
+13. дороге / воно / шиття / занадто / але / купити / Я / хочу / це
+   > [!answer] Я хочу купити це шиття, але воно занадто дороге.
+   > (sewing)
+
+14. хороший / не / Вони / знайшли / шукали / квест / довго / але
+   > [!answer] Вони довго шукали хороший квест, але не знайшли.
+   > (escape room)
+
+## match-up: Знайдіть пари
+
+> З'єднайте українські слова з англійськими.
 
 | Left | Right |
 |------|-------|
-| в'язання | creative |
-| шахи | game |
-| кемпінг | outdoor |
-| марки | collecting |
-| концерт | entertainment |
+| результат | result |
+| колекція | collection |
+| купити | to buy (perf) |
+| захоплення | passion, enthusiasm |
+| мешканець | resident |
+| квест | escape room |
+| індекс | postal code |
+| розвага | entertainment |
+| шахи | chess |
+| рукоділля | handicrafts |
+| ніщо | nothing |
+| концерт | concert |
+| риболовля | fishing |
+| майструвати | to craft |
 
-## quiz: Hobbies & Leisure
+## quiz: Перевірка значень
 
-> Choose the correct answer.
+> Оберіть правильну відповідь.
 
-1. "Захоплюватися" means ___.
-   - [x] to be passionate about
-   - [ ] to collect
-   - [ ] to play
-   - [ ] to rest
-   > Захоплюватися = to be passionate about.
+1. Що означає "хобі"?
+   - [ ] journalist
+   - [ ] hard, difficult
+   - [ ] this (feminine)
+   - [x] hobby
+   > "хобі" means "hobby"
 
-2. "Настільна гра" is ___.
-   - [x] board game
-   - [ ] video game
-   - [ ] card game
-   - [ ] puzzle
-   > Настільна гра = board game.
+2. Що означає "фотографія"?
+   - [ ] center
+   - [ ] laptop
+   - [x] photography
+   - [ ] grandmother's
+   > "фотографія" means "photography"
 
-3. Traditional Ukrainian handicraft is ___.
-   - [x] вишивання
-   - [ ] в'язання
-   - [ ] шиття
-   - [ ] ліплення
-   > Вишивання (embroidery) is Ukrainian cultural heritage.
+3. Що означає "колекціонування"?
+   - [ ] nightstand
+   - [ ] forty
+   - [ ] children's
+   - [x] collecting
+   > "колекціонування" means "collecting"
 
-4. "Збирання грибів" means ___.
-   - [x] mushroom picking
-   - [ ] berry picking
-   - [ ] flower picking
-   - [ ] wood gathering
-   > Збирання грибів = mushroom picking.
+4. Що означає "майструвати"?
+   - [ ] to read (a while)
+   - [ ] intersection
+   - [ ] driver
+   - [x] to craft
+   > "майструвати" means "to craft"
 
-5. "Квест" in modern usage is ___.
-   - [x] escape room
-   - [ ] video game
-   - [ ] board game
-   - [ ] puzzle
-   > Квест = escape room (quest game).
+5. Що означає "вишивання"?
+   - [ ] brain teaser
+   - [ ] kitten
+   - [ ] to meet
+   - [x] embroidery
+   > "вишивання" means "embroidery"
 
-6. "Чим захоплюєшся?" asks about ___.
-   - [x] your hobbies/interests
-   - [ ] your job
-   - [ ] your family
-   - [ ] your plans
-   > It asks what you're passionate about.
+6. Що означає "захоплення"?
+   - [x] passion, enthusiasm
+   - [ ] move (relocation)
+   - [ ] to cook
+   - [ ] nausea
+   > "захоплення" means "passion, enthusiasm"
 
-## group-sort: By Category
-
-### Творчі (Creative)
-- малювання
-- фотографія
-- в'язання
-- вишивання
-
-### Ігри (Games)
-- шахи
-- настільні ігри
-- відеоігри
-- пазли
-
-### Активний відпочинок (Outdoor)
-- похід
-- риболовля
-- велопрогулянка
-- кемпінг
-
-### Збирання (Collecting)
-- марки
-- монети
-- вінілові платівки
-- антикваріат
-
-
-## true-false: True or False?
-
-> Determine if each statement is true or false.
-
-- [x] "хобі" is neuter.
-   > Correct! хобі is neuter.
-
-- [x] "захоплення" is neuter.
-   > Correct! захоплення is neuter.
-
-- [x] "дозвілля" is neuter.
-   > Correct! дозвілля is neuter.
-
-- [x] "розвага" is feminine.
-   > Correct! розвага is feminine.
-
-- [ ] "відпочинок" is feminine.
-   > Incorrect. відпочинок is masculine.
-
-- [ ] "малювання" is masculine.
-   > Incorrect. малювання is neuter.
-
-
-## fill-in: Fill in the Blank
-
-> Fill in the blanks with the correct word.
-
-
-
-## quiz: Meaning Check
-
-> Choose the correct answer.
-
-1. What does "садівництво" mean?
-   - [x] gardening
-   - [ ] puzzle
-   - [ ] leisure
-   - [ ] escape room
-   > "садівництво" means "gardening"
-
-2. What does "пазл" mean?
-   - [ ] leisure
-   - [x] puzzle
-   - [ ] escape room
-   - [ ] gardening
-   > "пазл" means "puzzle"
-
-3. What does "квест" mean?
-   - [x] escape room
-   - [ ] gardening
-   - [ ] puzzle
-   - [ ] leisure
-   > "квест" means "escape room"
-
-4. What does "дозвілля" mean?
-   - [ ] puzzle
-   - [ ] gardening
-   - [ ] escape room
-   - [x] leisure
-   > "дозвілля" means "leisure"
-
-5. What does "монета" mean?
-   - [ ] gardening
+7. Що означає "монета"?
    - [x] coin
-   - [ ] puzzle
-   - [ ] escape room
+   - [ ] this, this is
+   - [ ] prescription
+   - [ ] usually
    > "монета" means "coin"
 
-6. What does "малювання" mean?
-   - [x] drawing, painting
-   - [ ] escape room
-   - [ ] puzzle
-   - [ ] gardening
-   > "малювання" means "drawing, painting"
+8. Що означає "фотографувати"?
+   - [ ] collecting
+   - [ ] forty
+   - [ ] we will be
+   - [x] to photograph
+   > "фотографувати" means "to photograph"
 
+9. Що означає "в'язати"?
+   - [ ] oneself (dat/loc)
+   - [x] to knit
+   - [ ] wardrobe
+   - [ ] kilogram
+   > "в'язати" means "to knit"
+
+10. Що означає "риболовля"?
+   - [x] fishing
+   - [ ] wealth
+   - [ ] declension
+   - [ ] to turn out
+   > "риболовля" means "fishing"
+
+11. Що означає "шиття"?
+   - [ ] rest, relaxation
+   - [ ] declension
+   - [ ] far
+   - [x] sewing
+   > "шиття" means "sewing"
+
+12. Що означає "малювати"?
+   - [ ] virus
+   - [ ] jeans
+   - [x] to draw, paint
+   - [ ] chicken
+   > "малювати" means "to draw, paint"
+
+13. Що означає "пазл"?
+   - [ ] to invite (perf)
+   - [ ] to tell, narrate
+   - [ ] wireless
+   - [x] puzzle
+   > "пазл" means "puzzle"
+
+14. Що означає "антикваріат"?
+   - [ ] experience
+   - [x] antiques
+   - [ ] potato
+   - [ ] father's
+   > "антикваріат" means "antiques"
+
+## true-false: Правда чи ні?
+
+> Визначте, чи правильне твердження.
+
+- [ ] "фотографія" means "spicy, sharp"
+   > Incorrect. "фотографія" means "photography"
+
+- [x] "фестиваль" means "festival"
+   > Correct!
+
+- [ ] "пікнік" means "dress"
+   > Incorrect. "пікнік" means "picnic"
+
+- [x] "садівництво" means "gardening"
+   > Correct!
+
+- [ ] "майструвати" means "bathtub"
+   > Incorrect. "майструвати" means "to craft"
+
+- [ ] "колекція" means "between"
+   > Incorrect. "колекція" means "collection"
+
+- [x] "відпочинок" means "rest, relaxation"
+   > Correct!
+
+- [ ] "кемпінг" means "seven"
+   > Incorrect. "кемпінг" means "camping"
+
+- [ ] "відеогра" means "along"
+   > Incorrect. "відеогра" means "video game"
+
+- [ ] "концерт" means "your (masc, informal)"
+   > Incorrect. "концерт" means "concert"
+
+## group-sort: Сортування за родом
+
+> Розподіліть слова за родами.
+
+### Чоловічий рід
+- концерт
+- кросворд
+- відпочинок
+- пазл
+- квест
+- пікнік
+
+### Жіночий рід
+- фотографія
+- виставка
+- головоломка
+- відеогра
+- монета
+- колекція
+
+### Середній рід
+- колекціонування
+- караоке
+- шиття
+- захоплення
+- в'язання
+- садівництво
 
 ---
 

@@ -61,118 +61,118 @@
         "content": "> 💡 **What You Learned Today**\n>\n> - **Personal Pronouns:** Я, Ти, Він, Вона, Ми, Ви, Вони\n> - **Nouns belong to 4 Declension Groups (Families)**\n> - **Group I:** -а/-я nouns (mostly Feminine)\n> - **Group II:** Consonant nouns (Masculine) + -о/-е nouns (Neuter)\n> - **Group III:** -ь nouns (Feminine)\n> - **Group IV:** Baby animals (Neuter)\n> - Identifying the Group helps you predict the Gender\n> - **Gender Match:** Він = Masculine nouns, Вона = Feminine nouns, Воно = Neuter nouns\n\n> 🎯 **Coming Next**\n>\n> In Module 04, we will bring these nouns to life with **Verbs**:\n> - How to conjugate verbs (I do, You do, He does)\n> - The two Conjugation Groups (Type 1 vs Type 2)\n> - Building full sentences like \"I see the table\" (Wait, that requires cases! We'll start with \"I read\" and \"I speak\")."
       }
     ],
-    "rawMarkdown": "---\nmodule: 3\ntitle: \"The Gender Code\"\nsubtitle: \"Gender & The 4 Declensions\"\nlevel: A1\nphase: A1.1\nduration: 60\ntransliteration: full\ntags: [grammar, nouns, gender, declensions, basics, pronouns]\nobjectives:\n  - Understand that every Ukrainian noun has grammatical gender\n  - Learn the 4 Declension Groups (Відміни)\n  - Classify nouns into Declensions based on endings\n  - Predict gender from Declension group\n  - Use Personal Pronouns (I, You, He, She, We, They) correctly\ngrammar:\n  - Grammatical gender (чоловічий, жіночий, середній рід)\n  - The 4 Noun Declensions (I, II, III, IV)\n  - Noun ending patterns\n  - Personal Pronouns (Я, Ти, Він, Вона, Воно...)\n---\n\n# Lesson Content\n\n## warm-up\n\n### Why Gender Matters\n\nIn Ukrainian, every single noun has a gender: **Masculine** (чоловічий рід), **Feminine** (жіночий рід), or **Neuter** (середній рід).\n\nBut knowing the gender isn't enough. You need to know **how the word changes**.\nIn English, words barely change (cat → cats). In Ukrainian, words change their endings constantly to show their role in the sentence (Cases).\n\nTo predict these changes, we group nouns into **4 Families** called **Declensions** (Відміни).\nThink of them as \"teams\" that follow the same rules.\n\n> 🔍 **Deep Theory: The System**\n>\n> Many courses teach \"endings\" (if it ends in -a, it's feminine). That works for A1.\n> But to master Ukrainian (B1+), you need the **Declension System**.\n> - **Group I:** The \"-A/-YA\" Team\n> - **Group II:** The \"Consonant & O/E\" Team\n> - **Group III:** The \"Soft Feminine\" Team\n> - **Group IV:** The \"Baby Animal\" Team\n>\n> Learn the Team, and you'll know exactly how to change the word later!\n\n## presentation\n\n### Personal Pronouns (Subject)\n\nBefore we analyze nouns, we need the words to replace them!\n\n| English | Ukrainian | Pronunciation |\n|---------|-----------|---------------|\n| **I** | **Я** | /ya/ |\n| **You** (informal) | **Ти** | /tɪ/ |\n| **He** | **Він** | /vin/ |\n| **She** | **Вона** | /vɔˈnɑ/ |\n| **It** | **Воно** | /vɔˈnɔ/ |\n| **We** | **Ми** | /mɪ/ |\n| **You** (formal/plural) | **Ви** | /vɪ/ |\n| **They** | **Вони** | /vɔˈnɪ/ |\n\n> ⚡ **Pro Tip: Ти vs Ви**\n>\n> - **Ти** is for friends, family, children, and pets.\n> - **Ви** is for strangers, elders, bosses, and groups of people (plural).\n> When in doubt, use **Ви** to be polite!\n\n### Group I: The \"-A/-YA\" Team (First Declension)\n\n**Members:** Mostly **Feminine**, some **Masculine**.\n**Identifier:** Ends in **-а** or **-я**.\n\n| Word | Gender | Meaning |\n|------|--------|---------|\n| мам**а** | Feminine | mom |\n| кних**а** | Feminine | book |\n| земл**я** | Feminine | earth |\n| тат**о** → (Wait!) | Masculine | dad |\n\n*Note on \"Тато\":* Wait, `тато` ends in -o? Actually, `тато` acts like a Group II noun in singular but has mixed behaviors.\nActually, let's look at standard Group I Masculines: **суддя** (judge), **Микола** (Mykola - name).\nMost common Group I words are Feminine.\n\n**Rule:** If it ends in **-а** or **-я**, it's usually **Group I**.\n\n> ⚡ **Pro Tip: Natural Gender Overrides**\n>\n> Words like **тато** (dad) refer to men, so they are **Masculine** gender.\n> However, structurally, most textbooks put -a/-ya nouns here.\n> *Correction:* `тато` ends in -o, so it looks like Group II, but strictly it declines like Group I in some dialects? No, `тато` is usually Group II (hard) in singular. Let's stick to clear examples.\n> **Clear Group I Masculine:** суддя (judge), староста (elder).\n\n### Group II: The \"Main\" Team (Second Declension)\n\nThis is the biggest group.\n**Members:** **Masculine** (consonant) and **Neuter** (-o/-e).\n\n**Identifier:**\n1. **Masculine:** Ends in a **Consonant** (hard or soft) or **-й**.\n2. **Neuter:** Ends in **-о**, **-е**, or **-я** (non-babies).\n\n| Word | Gender | Ending |\n|------|--------|--------|\n| стіл | Masculine | Consonant (L) |\n| музей | Masculine | -й |\n| вікн**о** | Neuter | -о |\n| мор**е** | Neuter | -е |\n| весілл**я** | Neuter | -я (abstract) |\n\n**Rule:**\n- Consonant ending? → **Group II Masculine**.\n- -O/-E ending? → **Group II Neuter**.\n\n### Group III: The \"Soft Feminine\" Team (Third Declension)\n\n**Members:** Exclusively **Feminine**.\n**Identifier:** Ends in **-ь** (soft sign) or sibilant (sh/ch) + soft sign.\n\n| Word | Gender | Ending |\n|------|--------|--------|\n| ніч | Feminine | -ч (implicitly soft context) |\n| любов | Feminine | -в (unique exception) |\n| радіст**ь** | Feminine | -ь |\n\n**Distinguishing from Group II Masculine:**\n- Group II Masculine: ден**ь** (day), вчител**ь** (teacher).\n- Group III Feminine: ніч (night), тінь (shadow).\n*How to tell?* You often have to memorize the gender of -ь words.\n- **Hint:** Abstract nouns ending in **-ість** are ALWAYS Group III Feminine (радість - joy, якість - quality).\n\n### Group IV: The \"Baby\" Team (Fourth Declension)\n\n**Members:** **Neuter**.\n**Identifier:** Ends in **-а/-я** but signifies a **young animal/being**.\n**Secret Test:** When you change it, does a **-т-** appear?\n- курч**а** (chick) → курча**т**а (chicks)\n- ім'**я** (name) → імена (names) - *Wait, this is a special -en- suffix group, traditionally distinct but related.*\n\nLet's stick to the core Group IV: **Baby Animals**.\n- **теля** (calf)\n- **кошеня** (kitten)\n- **дівча** (little girl - neuter!)\n\n**Rule:** Baby animal ending in -a/-ya? → **Group IV Neuter**.\n\n> 🎯 **Summary Table: The 4 Declensions**\n>\n> | Group | Gender | Endings | Examples |\n> |-------|--------|---------|----------|\n> | **I** | Fem (mostly) | -а, -я | мама, сім'я |\n> | **II** | Masc / Neut | Consonant, -о, -е | стіл, вікно |\n> | **III** | Fem | -ь (some), -ість | ніч, радість |\n> | **IV** | Neut | -а/-я (babies) | теля, курча |\n\n## practice\n\n### The Sorter\n\nCategorize these nouns into Declension Groups:\n\n1. **Книга** (book)\n   - Ends in -а. Not a baby.\n   > [!answer] **Group I** (Feminine)\n\n2. **Стіл** (table)\n   - Ends in consonant.\n   > [!answer] **Group II** (Masculine)\n\n3. **Вікно** (window)\n   - Ends in -о.\n   > [!answer] **Group II** (Neuter)\n\n4. **Радість** (joy)\n   - Ends in -ість.\n   > [!answer] **Group III** (Feminine)\n\n5. **Кошеня** (kitten)\n   - Baby animal in -я.\n   > [!answer] **Group IV** (Neuter)\n\n### Gender Prediction\n\nNow that you know the group, the gender is easy!\n\n- Group I (book) → Feminine\n- Group II Consonant (table) → Masculine\n- Group II Vowel (window) → Neuter\n- Group III (joy) → Feminine\n- Group IV (kitten) → Neuter\n\n> ⚡ **Pro Tip: The \"Soft Sign\" Danger**\n>\n> The hardest part is distinguishing **Group II Masculine** (-ь) from **Group III Feminine** (-ь).\n> - **Masculine:** день (day), біль (pain), король (king)\n> - **Feminine:** ніч (night), сіль (salt), осінь (autumn)\n>\n> Memorize these common ones!\n\n## production\n\n### Analyze New Words\n\nLook at these words and determine: **Group** and **Gender**.\n\n1. **Україна**\n   - Ends in -а. Group I. Gender: Feminine.\n2. **Паспорт**\n   - Ends in Consonant. Group II. Gender: Masculine.\n3. **Сонце**\n   - Ends in -е. Group II. Gender: Neuter.\n4. **Любов**\n   - Exception! Looks like Consonant (Group II), but it's actually **Group III** (Feminine).\n\n### Exceptions Note\n\n- **Тато** (dad): Ends in -о (Group II structure), acts Masculine.\n- **Дядько** (uncle): Ends in -о (Group II structure), acts Masculine.\n- **Ім'я** (name): Ends in -я, but is Neuter (Ancient type).\n\n---\n\n---\n\n---\n\n---\n\n---\n\n# Activities\n\n## fill-in: What Does It Mean?\n\n> Choose the correct English meaning.\n\n1. What does \"стіл\" mean?\n   > [!answer] table\n   > [!options] table | book | window | family\n\n2. What does \"книга\" mean?\n   > [!answer] book\n   > [!options] day | book | sea | table\n\n3. What does \"вікно\" mean?\n   > [!answer] window\n   > [!options] earth | day | window | group\n\n4. What does \"сім'я\" mean?\n   > [!answer] family\n   > [!options] sun | family | table | day\n\n5. What does \"море\" mean?\n   > [!answer] sea\n   > [!options] night | group | sea | book\n\n6. What does \"день\" mean?\n   > [!answer] day\n   > [!options] day | earth | window | salt\n\n7. What does \"ніч\" mean?\n   > [!answer] night\n   > [!options] sea | group | calf | night\n\n8. What does \"сонце\" mean?\n   > [!answer] sun\n   > [!options] book | night | sun | day\n\n9. What does \"радість\" mean?\n   > [!answer] joy\n   > [!options] joy | table | sea | day\n\n10. What does \"земля\" mean?\n   > [!answer] earth\n   > [!options] group | family | calf | earth\n\n## select: He, She, or It?\n\n> Replace the noun with the correct pronoun (Він, Вона, Воно).\n\n1. **Мама** (Mom) is...\n   > [!answer] Вона\n   > [!options] Він | Вона | Воно\n\n2. **Тато** (Dad) is...\n   > [!answer] Він\n   > [!options] Він | Вона | Воно\n\n3. **Стіл** (Table) is...\n   > [!answer] Він\n   > [!options] Він | Вона | Воно\n   > (Masculine noun)\n\n4. **Вікно** (Window) is...\n   > [!answer] Воно\n   > [!options] Він | Вона | Воно\n   > (Neuter noun)\n\n5. **Книга** (Book) is...\n   > [!answer] Вона\n   > [!options] Він | Вона | Воно\n\n6. **Сонце** (Sun) is...\n   > [!answer] Воно\n   > [!options] Він | Вона | Воно\n\n7. **День** (Day) is...\n   > [!answer] Він\n   > [!options] Він | Вона | Воно\n\n8. **Ніч** (Night) is...\n   > [!answer] Вона\n   > [!options] Він | Вона | Воно\n\n## unjumble: Build the Sentence\n\n> Arrange the words in the correct order.\n\n1. стіл / мій / Це\n   > [!answer] Це мій стіл.\n   > (This is my table.)\n\n2. книга / моя / Це\n   > [!answer] Це моя книга.\n   > (This is my book.)\n\n3. вікно / Це / моє\n   > [!answer] Це моє вікно.\n   > (This is my window.)\n\n4. сім'я / Це / моя\n   > [!answer] Це моя сім'я.\n   > (This is my family.)\n\n5. море / моє / Це\n   > [!answer] Це моє море.\n   > (This is my sea.)\n\n6. мій / день / Це\n   > [!answer] Це мій день.\n   > (This is my day.)\n\n7. земля / Це / моя\n   > [!answer] Це моя земля.\n   > (This is my land.)\n\n8. сонце / моє / Це\n   > [!answer] Це моє сонце.\n   > (This is my sun.)\n\n9. Тут / стіл / є\n   > [!answer] Тут є стіл.\n   > (Here is a table.)\n\n10. є / вікно / Там\n   > [!answer] Там є вікно.\n   > (There is a window.)\n\n## group-sort: Sort by Gender\n\n> Sort the nouns into gender categories.\n\n### Masculine (Чоловічий рід)\n- стіл\n- день\n\n### Feminine (Жіночий рід)\n- книга\n- земля\n- група\n- сім'я\n- ніч\n- сіль\n- радість\n\n### Neuter (Середній рід)\n- вікно\n- море\n- сонце\n- теля\n- кошеня\n\n## match-up: Match the Pairs\n\n> Match Ukrainian words to their English meanings.\n\n| Left | Right |\n|------|-------|\n| стіл | table |\n| книга | book |\n| вікно | window |\n| сім'я | family |\n| море | sea |\n| день | day |\n| ніч | night |\n| земля | earth |\n| сонце | sun |\n| радість | joy |\n\n## quiz: Meaning Check\n\n> Choose the correct answer.\n\n1. What does \"вікно\" mean?\n   - [ ] book\n   - [x] window\n   - [ ] family\n   - [ ] day\n   > \"вікно\" means \"window\"\n\n2. What does \"сіль\" mean?\n   - [x] salt\n   - [ ] earth\n   - [ ] night\n   - [ ] sea\n   > \"сіль\" means \"salt\"\n\n3. What does \"стіл\" mean?\n   - [ ] salt\n   - [ ] night\n   - [ ] sun\n   - [x] table\n   > \"стіл\" means \"table\"\n\n4. What does \"сонце\" mean?\n   - [ ] sea\n   - [ ] family\n   - [x] sun\n   - [ ] book\n   > \"сонце\" means \"sun\"\n\n5. What does \"ніч\" mean?\n   - [ ] day\n   - [x] night\n   - [ ] book\n   - [ ] table\n   > \"ніч\" means \"night\"\n\n6. What does \"книга\" mean?\n   - [ ] window\n   - [ ] salt\n   - [ ] sea\n   - [x] book\n   > \"книга\" means \"book\"\n\n7. What does \"теля\" mean?\n   - [ ] kitten\n   - [ ] family\n   - [ ] group\n   - [x] calf\n   > \"теля\" means \"calf\"\n\n8. What does \"група\" mean?\n   - [ ] day\n   - [ ] earth\n   - [x] group\n   - [ ] joy\n   > \"група\" means \"group\"\n\n9. What does \"море\" mean?\n   - [ ] sun\n   - [ ] night\n   - [ ] book\n   - [x] sea\n   > \"море\" means \"sea\"\n\n10. What does \"земля\" mean?\n   - [ ] family\n   - [x] earth\n   - [ ] window\n   - [ ] table\n   > \"земля\" means \"earth\"\n\n## true-false: True or False?\n\n> Determine if each statement is true or false.\n\n- [x] \"радість\" means \"joy\"\n   > Correct!\n\n- [ ] \"стіл\" means \"salt\"\n   > Incorrect. \"стіл\" means \"table\"\n\n- [ ] \"ніч\" means \"day\"\n   > Incorrect. \"ніч\" means \"night\"\n\n- [x] \"книга\" means \"book\"\n   > Correct!\n\n- [ ] \"море\" means \"group\"\n   > Incorrect. \"море\" means \"sea\"\n\n- [x] \"відміна\" means \"declension\"\n   > Correct!\n\n- [x] \"сім'я\" means \"family\"\n   > Correct!\n\n- [ ] \"день\" means \"night\"\n   > Incorrect. \"день\" means \"day\"\n\n- [ ] \"сонце\" means \"table\"\n   > Incorrect. \"сонце\" means \"sun\"\n\n- [x] \"земля\" means \"earth\"\n   > Correct!\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| відміна | /vʲidˈmʲinɑ/ | declension | noun | f | Group I |\n| група | /ˈhrupɑ/ | group | noun | f | Group I |\n| стіл | /stʲil/ | table | noun | m | Group II (hard) |\n| вікно | /wʲikˈnɔ/ | window | noun | n | Group II (hard) |\n| книга | /ˈknɪɦɑ/ | book | noun | f | Group I (hard) |\n| ніч | /nʲitʃ/ | night | noun | f | Group III |\n| теля | /tɛˈlʲa/ | calf | noun | n | Group IV |\n| кошеня | /kɔʃɛˈnʲa/ | kitten | noun | n | Group IV |\n| радість | /ˈrɑdʲistʲ/ | joy | noun | f | Group III |\n| сіль | /sʲilʲ/ | salt | noun | f | Group III |\n| день | /dɛnʲ/ | day | noun | m | Group II (soft) |\n| сонце | /ˈsɔnt͡sɛ/ | sun | noun | n | Group II (hard) |\n| море | /ˈmɔrɛ/ | sea | noun | n | Group II (soft) |\n| земля | /zɛmˈlʲa/ | earth | noun | f | Group I (soft) |\n| сім'я | /sʲiˈmjuɑ/ | family | noun | f | Group I (soft) |\n| я | /jɑ/ | I | pron | - | Subject |\n| ти | /tɪ/ | you (informal) | pron | - | Singular |\n| він | /vʲin/ | he | pron | m | Subject |\n| вона | /vɔˈnɑ/ | she | pron | f | Subject |\n| воно | /vɔˈnɔ/ | it | pron | n | Subject |\n| ми | /mɪ/ | we | pron | - | Plural |\n| ви | /vɪ/ | you (formal/plural) | pron | - | Plural |\n| вони | /vɔˈnɪ/ | they | pron | - | Plural |\n\n---\n\n# Declension Reference\n\n## Why memorize groups?\n\nWhen we start changing words (cases), each group has its own pattern.\n\n| If you are in... | Accusative change? |\n|------------------|-------------------|\n| **Group I** | Yes (-у/-ю) |\n| **Group II** | No (if inanimate) |\n| **Group III** | No |\n| **Group IV** | No |\n\nKnowing the group now saves you headaches later!\n\n---\n\n# Summary\n\n> 💡 **What You Learned Today**\n>\n> - **Personal Pronouns:** Я, Ти, Він, Вона, Ми, Ви, Вони\n> - **Nouns belong to 4 Declension Groups (Families)**\n> - **Group I:** -а/-я nouns (mostly Feminine)\n> - **Group II:** Consonant nouns (Masculine) + -о/-е nouns (Neuter)\n> - **Group III:** -ь nouns (Feminine)\n> - **Group IV:** Baby animals (Neuter)\n> - Identifying the Group helps you predict the Gender\n> - **Gender Match:** Він = Masculine nouns, Вона = Feminine nouns, Воно = Neuter nouns\n\n> 🎯 **Coming Next**\n>\n> In Module 04, we will bring these nouns to life with **Verbs**:\n> - How to conjugate verbs (I do, You do, He does)\n> - The two Conjugation Groups (Type 1 vs Type 2)\n> - Building full sentences like \"I see the table\" (Wait, that requires cases! We'll start with \"I read\" and \"I speak\").",
-    "createdAt": "2025-12-02T22:31:47.472Z",
-    "modifiedAt": "2025-12-02T22:31:47.472Z",
+    "rawMarkdown": "---\nmodule: 3\ntitle: \"The Gender Code\"\nsubtitle: \"Gender & The 4 Declensions\"\nlevel: A1\nphase: A1.1\nduration: 60\ntransliteration: full\ntags: [grammar, nouns, gender, declensions, basics, pronouns]\nobjectives:\n  - Understand that every Ukrainian noun has grammatical gender\n  - Learn the 4 Declension Groups (Відміни)\n  - Classify nouns into Declensions based on endings\n  - Predict gender from Declension group\n  - Use Personal Pronouns (I, You, He, She, We, They) correctly\ngrammar:\n  - Grammatical gender (чоловічий, жіночий, середній рід)\n  - The 4 Noun Declensions (I, II, III, IV)\n  - Noun ending patterns\n  - Personal Pronouns (Я, Ти, Він, Вона, Воно...)\n---\n\n# Lesson Content\n\n## warm-up\n\n### Why Gender Matters\n\nIn Ukrainian, every single noun has a gender: **Masculine** (чоловічий рід), **Feminine** (жіночий рід), or **Neuter** (середній рід).\n\nBut knowing the gender isn't enough. You need to know **how the word changes**.\nIn English, words barely change (cat → cats). In Ukrainian, words change their endings constantly to show their role in the sentence (Cases).\n\nTo predict these changes, we group nouns into **4 Families** called **Declensions** (Відміни).\nThink of them as \"teams\" that follow the same rules.\n\n> 🔍 **Deep Theory: The System**\n>\n> Many courses teach \"endings\" (if it ends in -a, it's feminine). That works for A1.\n> But to master Ukrainian (B1+), you need the **Declension System**.\n> - **Group I:** The \"-A/-YA\" Team\n> - **Group II:** The \"Consonant & O/E\" Team\n> - **Group III:** The \"Soft Feminine\" Team\n> - **Group IV:** The \"Baby Animal\" Team\n>\n> Learn the Team, and you'll know exactly how to change the word later!\n\n## presentation\n\n### Personal Pronouns (Subject)\n\nBefore we analyze nouns, we need the words to replace them!\n\n| English | Ukrainian | Pronunciation |\n|---------|-----------|---------------|\n| **I** | **Я** | /ya/ |\n| **You** (informal) | **Ти** | /tɪ/ |\n| **He** | **Він** | /vin/ |\n| **She** | **Вона** | /vɔˈnɑ/ |\n| **It** | **Воно** | /vɔˈnɔ/ |\n| **We** | **Ми** | /mɪ/ |\n| **You** (formal/plural) | **Ви** | /vɪ/ |\n| **They** | **Вони** | /vɔˈnɪ/ |\n\n> ⚡ **Pro Tip: Ти vs Ви**\n>\n> - **Ти** is for friends, family, children, and pets.\n> - **Ви** is for strangers, elders, bosses, and groups of people (plural).\n> When in doubt, use **Ви** to be polite!\n\n### Group I: The \"-A/-YA\" Team (First Declension)\n\n**Members:** Mostly **Feminine**, some **Masculine**.\n**Identifier:** Ends in **-а** or **-я**.\n\n| Word | Gender | Meaning |\n|------|--------|---------|\n| мам**а** | Feminine | mom |\n| кних**а** | Feminine | book |\n| земл**я** | Feminine | earth |\n| тат**о** → (Wait!) | Masculine | dad |\n\n*Note on \"Тато\":* Wait, `тато` ends in -o? Actually, `тато` acts like a Group II noun in singular but has mixed behaviors.\nActually, let's look at standard Group I Masculines: **суддя** (judge), **Микола** (Mykola - name).\nMost common Group I words are Feminine.\n\n**Rule:** If it ends in **-а** or **-я**, it's usually **Group I**.\n\n> ⚡ **Pro Tip: Natural Gender Overrides**\n>\n> Words like **тато** (dad) refer to men, so they are **Masculine** gender.\n> However, structurally, most textbooks put -a/-ya nouns here.\n> *Correction:* `тато` ends in -o, so it looks like Group II, but strictly it declines like Group I in some dialects? No, `тато` is usually Group II (hard) in singular. Let's stick to clear examples.\n> **Clear Group I Masculine:** суддя (judge), староста (elder).\n\n### Group II: The \"Main\" Team (Second Declension)\n\nThis is the biggest group.\n**Members:** **Masculine** (consonant) and **Neuter** (-o/-e).\n\n**Identifier:**\n1. **Masculine:** Ends in a **Consonant** (hard or soft) or **-й**.\n2. **Neuter:** Ends in **-о**, **-е**, or **-я** (non-babies).\n\n| Word | Gender | Ending |\n|------|--------|--------|\n| стіл | Masculine | Consonant (L) |\n| музей | Masculine | -й |\n| вікн**о** | Neuter | -о |\n| мор**е** | Neuter | -е |\n| весілл**я** | Neuter | -я (abstract) |\n\n**Rule:**\n- Consonant ending? → **Group II Masculine**.\n- -O/-E ending? → **Group II Neuter**.\n\n### Group III: The \"Soft Feminine\" Team (Third Declension)\n\n**Members:** Exclusively **Feminine**.\n**Identifier:** Ends in **-ь** (soft sign) or sibilant (sh/ch) + soft sign.\n\n| Word | Gender | Ending |\n|------|--------|--------|\n| ніч | Feminine | -ч (implicitly soft context) |\n| любов | Feminine | -в (unique exception) |\n| радіст**ь** | Feminine | -ь |\n\n**Distinguishing from Group II Masculine:**\n- Group II Masculine: ден**ь** (day), вчител**ь** (teacher).\n- Group III Feminine: ніч (night), тінь (shadow).\n*How to tell?* You often have to memorize the gender of -ь words.\n- **Hint:** Abstract nouns ending in **-ість** are ALWAYS Group III Feminine (радість - joy, якість - quality).\n\n### Group IV: The \"Baby\" Team (Fourth Declension)\n\n**Members:** **Neuter**.\n**Identifier:** Ends in **-а/-я** but signifies a **young animal/being**.\n**Secret Test:** When you change it, does a **-т-** appear?\n- курч**а** (chick) → курча**т**а (chicks)\n- ім'**я** (name) → імена (names) - *Wait, this is a special -en- suffix group, traditionally distinct but related.*\n\nLet's stick to the core Group IV: **Baby Animals**.\n- **теля** (calf)\n- **кошеня** (kitten)\n- **дівча** (little girl - neuter!)\n\n**Rule:** Baby animal ending in -a/-ya? → **Group IV Neuter**.\n\n> 🎯 **Summary Table: The 4 Declensions**\n>\n> | Group | Gender | Endings | Examples |\n> |-------|--------|---------|----------|\n> | **I** | Fem (mostly) | -а, -я | мама, сім'я |\n> | **II** | Masc / Neut | Consonant, -о, -е | стіл, вікно |\n> | **III** | Fem | -ь (some), -ість | ніч, радість |\n> | **IV** | Neut | -а/-я (babies) | теля, курча |\n\n## practice\n\n### The Sorter\n\nCategorize these nouns into Declension Groups:\n\n1. **Книга** (book)\n   - Ends in -а. Not a baby.\n   > [!answer] **Group I** (Feminine)\n\n2. **Стіл** (table)\n   - Ends in consonant.\n   > [!answer] **Group II** (Masculine)\n\n3. **Вікно** (window)\n   - Ends in -о.\n   > [!answer] **Group II** (Neuter)\n\n4. **Радість** (joy)\n   - Ends in -ість.\n   > [!answer] **Group III** (Feminine)\n\n5. **Кошеня** (kitten)\n   - Baby animal in -я.\n   > [!answer] **Group IV** (Neuter)\n\n### Gender Prediction\n\nNow that you know the group, the gender is easy!\n\n- Group I (book) → Feminine\n- Group II Consonant (table) → Masculine\n- Group II Vowel (window) → Neuter\n- Group III (joy) → Feminine\n- Group IV (kitten) → Neuter\n\n> ⚡ **Pro Tip: The \"Soft Sign\" Danger**\n>\n> The hardest part is distinguishing **Group II Masculine** (-ь) from **Group III Feminine** (-ь).\n> - **Masculine:** день (day), біль (pain), король (king)\n> - **Feminine:** ніч (night), сіль (salt), осінь (autumn)\n>\n> Memorize these common ones!\n\n## production\n\n### Analyze New Words\n\nLook at these words and determine: **Group** and **Gender**.\n\n1. **Україна**\n   - Ends in -а. Group I. Gender: Feminine.\n2. **Паспорт**\n   - Ends in Consonant. Group II. Gender: Masculine.\n3. **Сонце**\n   - Ends in -е. Group II. Gender: Neuter.\n4. **Любов**\n   - Exception! Looks like Consonant (Group II), but it's actually **Group III** (Feminine).\n\n### Exceptions Note\n\n- **Тато** (dad): Ends in -о (Group II structure), acts Masculine.\n- **Дядько** (uncle): Ends in -о (Group II structure), acts Masculine.\n- **Ім'я** (name): Ends in -я, but is Neuter (Ancient type).\n\n---\n\n---\n\n---\n\n---\n\n---\n\n# Activities\n\n## fill-in: Gender & Declension System\n\n> Test your understanding of noun gender and declension groups.\n\n1. The noun \"книга\" (book) ends in **-а**, so it belongs to Declension ___.\n   > [!answer] Group I (the -а/-я team)\n   > [!options] Group I (the -а/-я team) | Group II (consonant/о/е team) | Group III (soft feminine) | Group IV (baby animals)\n\n2. The noun \"стіл\" (table) ends in a **consonant**, so its gender is ___.\n   > [!answer] Masculine\n   > [!options] Masculine | Feminine | Neuter | Can't tell\n\n3. The noun \"вікно\" (window) ends in **-о**, so its gender is ___.\n   > [!answer] Neuter\n   > [!options] Masculine | Feminine | Neuter | Can't tell\n\n4. The noun \"ніч\" (night) ends in **-ч** (soft consonant) and is Declension III, meaning it's ___.\n   > [!answer] Feminine (exception!)\n   > [!options] Masculine | Feminine (exception!) | Neuter | Plural only\n\n5. Nouns ending in **-о** or **-е** typically belong to Declension ___.\n   > [!answer] Group II\n   > [!options] Group I | Group II | Group III | Group IV\n\n6. The noun \"радість\" (joy) ends in **-ість**, which indicates Declension ___.\n   > [!answer] Group III (abstract feminine)\n   > [!options] Group I | Group II | Group III (abstract feminine) | Group IV\n\n7. Words like \"теля\" (calf) and \"кошеня\" (kitten) belong to Declension ___.\n   > [!answer] Group IV (baby animals)\n   > [!options] Group I | Group II | Group III | Group IV (baby animals)\n\n8. The word \"тато\" (dad) ends in **-о** but is ___ gender.\n   > [!answer] Masculine (exception - refers to male person)\n   > [!options] Masculine (exception - refers to male person) | Feminine | Neuter | Depends on context\n\n9. To determine how a noun changes (declines), you need to know its ___.\n   > [!answer] Declension group\n   > [!options] English translation | Declension group | Stress position | First letter\n\n10. Abstract nouns ending in **-ь** (like \"любов\" - love) are typically ___.\n    > [!answer] Feminine, Declension III\n    > [!options] Masculine, Declension II | Feminine, Declension III | Neuter, Declension II | Masculine, Declension III\n\n## fill-in: He, She, or It?\n\n> Replace the noun with the correct pronoun (Він, Вона, Воно).\n\n1. **Мама** (Mom) is...\n   > [!answer] Вона\n   > [!options] Він | Вона | Воно\n\n2. **Тато** (Dad) is...\n   > [!answer] Він\n   > [!options] Він | Вона | Воно\n\n3. **Стіл** (Table) is...\n   > [!answer] Він\n   > [!options] Він | Вона | Воно\n   > (Masculine noun)\n\n4. **Вікно** (Window) is...\n   > [!answer] Воно\n   > [!options] Він | Вона | Воно\n   > (Neuter noun)\n\n5. **Книга** (Book) is...\n   > [!answer] Вона\n   > [!options] Він | Вона | Воно\n\n6. **Сонце** (Sun) is...\n   > [!answer] Воно\n   > [!options] Він | Вона | Воно\n\n7. **День** (Day) is...\n   > [!answer] Він\n   > [!options] Він | Вона | Воно\n\n8. **Ніч** (Night) is...\n   > [!answer] Вона\n   > [!options] Він | Вона | Воно\n\n## unjumble: Build the Sentence\n\n> Arrange the words in the correct order.\n\n1. стіл / мій / Це\n   > [!answer] Це мій стіл.\n   > (This is my table.)\n\n2. книга / моя / Це\n   > [!answer] Це моя книга.\n   > (This is my book.)\n\n3. вікно / Це / моє\n   > [!answer] Це моє вікно.\n   > (This is my window.)\n\n4. сім'я / Це / моя\n   > [!answer] Це моя сім'я.\n   > (This is my family.)\n\n5. море / моє / Це\n   > [!answer] Це моє море.\n   > (This is my sea.)\n\n6. мій / день / Це\n   > [!answer] Це мій день.\n   > (This is my day.)\n\n7. земля / Це / моя\n   > [!answer] Це моя земля.\n   > (This is my land.)\n\n8. сонце / моє / Це\n   > [!answer] Це моє сонце.\n   > (This is my sun.)\n\n9. Тут / стіл / є\n   > [!answer] Тут є стіл.\n   > (Here is a table.)\n\n10. є / вікно / Там\n   > [!answer] Там є вікно.\n   > (There is a window.)\n\n## group-sort: Sort by Gender\n\n> Sort the nouns into gender categories.\n\n### Masculine (Чоловічий рід)\n- стіл\n- день\n\n### Feminine (Жіночий рід)\n- книга\n- земля\n- група\n- сім'я\n- ніч\n- сіль\n- радість\n\n### Neuter (Середній рід)\n- вікно\n- море\n- сонце\n- теля\n- кошеня\n\n## match-up: Match the Pairs\n\n> Match Ukrainian words to their English meanings.\n\n| Left | Right |\n|------|-------|\n| стіл | table |\n| книга | book |\n| вікно | window |\n| сім'я | family |\n| море | sea |\n| день | day |\n| ніч | night |\n| земля | earth |\n| сонце | sun |\n| радість | joy |\n\n## quiz: Declension & Gender Rules\n\n> Choose the correct answer.\n\n1. A noun ending in **-а** or **-я** typically belongs to:\n   - [x] Declension Group I (Feminine)\n   - [ ] Declension Group II (Masculine)\n   - [ ] Declension Group III (Soft Feminine)\n   - [ ] Declension Group IV (Baby Animals)\n   > Group I = the \"-а/-я team\" - mostly feminine nouns\n\n2. The noun \"стіл\" (table) ends in a consonant. What is its gender?\n   - [x] Masculine\n   - [ ] Feminine\n   - [ ] Neuter\n   - [ ] Can't determine\n   > Consonant ending → Group II Masculine\n\n3. Nouns ending in **-о** or **-е** are typically:\n   - [ ] Masculine\n   - [ ] Feminine\n   - [x] Neuter (Group II)\n   - [ ] Group IV\n   > -о/-е endings = Group II Neuter (вікно, море)\n\n4. How do you know \"ніч\" (night) is Feminine, not Masculine?\n   - [ ] It ends in a vowel\n   - [ ] It ends in a consonant, so it's masculine\n   - [x] It belongs to Group III (soft feminine) - must memorize\n   - [ ] All time words are feminine\n   > -ь/-ч nouns can be M or F - \"ніч\" is Group III Feminine (exception!)\n\n5. Words ending in **-ість** (like \"радість\" - joy) are always:\n   - [ ] Masculine\n   - [x] Feminine, Group III\n   - [ ] Neuter\n   - [ ] Group IV\n   > The -ість ending = 100% Group III Feminine (abstract nouns)\n\n6. The word \"теля\" (calf) ends in -я but is Neuter. Why?\n   - [ ] All -я words are neuter\n   - [x] It's a baby animal (Group IV)\n   - [ ] It's an exception\n   - [ ] -я after soft consonants is neuter\n   > Baby animals (-а/-я) = Group IV Neuter: теля, кошеня, курча\n\n7. Which pronoun replaces \"вікно\" (window)?\n   - [ ] Він (he)\n   - [ ] Вона (she)\n   - [x] Воно (it)\n   - [ ] Вони (they)\n   > Вікно is Neuter (-о ending) → Воно\n\n8. The word \"тато\" (dad) ends in -о but is Masculine because:\n   - [ ] -о is always masculine\n   - [x] Natural gender (refers to a male) overrides ending rules\n   - [ ] It's Group II\n   - [ ] It's an irregular noun\n   > Biological gender overrides grammatical rules for people\n\n9. To predict how a noun changes in sentences (cases), you need to know:\n   - [ ] Its English translation\n   - [ ] Its stress position\n   - [x] Its Declension Group\n   - [ ] Its first letter\n   > Declension Group = the \"team\" that determines all ending changes\n\n10. Which word pair shows the -ь ending gender difference?\n    - [ ] мама / тато (both feminine)\n    - [x] день (m) / ніч (f) - both end in soft consonant\n    - [ ] вікно / море (both neuter)\n    - [ ] книга / земля (both Group I)\n    > День (day) is Masc Group II, ніч (night) is Fem Group III - same ending, different groups!\n\n## true-false: Grammar Rules\n\n> Determine if each statement about Ukrainian grammar is true or false.\n\n- [x] Nouns ending in -а or -я are usually Feminine (Group I).\n   > Correct! The \"-а/-я team\" is mostly feminine.\n\n- [ ] All nouns ending in a consonant are Feminine.\n   > Incorrect. Consonant endings = Group II Masculine (стіл, паспорт).\n\n- [x] The ending -ість always indicates Group III Feminine (abstract nouns).\n   > Correct! радість, якість, можливість - always feminine.\n\n- [ ] The pronoun \"Воно\" is used for Masculine nouns.\n   > Incorrect. Воно = Neuter, Він = Masculine, Вона = Feminine.\n\n- [x] Baby animal nouns (теля, кошеня) are Neuter despite ending in -а/-я.\n   > Correct! Group IV = baby animals = always Neuter.\n\n- [ ] \"День\" (day) and \"ніч\" (night) belong to the same Declension group.\n   > Incorrect. День = Group II Masculine, ніч = Group III Feminine.\n\n- [x] \"Ти\" is informal (friends/family), \"Ви\" is formal (strangers/elders).\n   > Correct! When in doubt, use Ви to be polite.\n\n- [x] Knowing a noun's Declension Group helps predict all its case endings.\n   > Correct! That's why we learn \"teams\" not just individual endings.\n\n- [ ] Words like \"тато\" (dad) are Feminine because they end in -о.\n   > Incorrect. Natural gender overrides: тато refers to a male → Masculine.\n\n- [x] Group II contains both Masculine (consonant) and Neuter (-о/-е) nouns.\n   > Correct! It's the biggest \"mixed\" group.\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| відміна | /vʲidˈmʲinɑ/ | declension | noun | f | Group I |\n| група | /ˈhrupɑ/ | group | noun | f | Group I |\n| стіл | /stʲil/ | table | noun | m | Group II (hard) |\n| вікно | /wʲikˈnɔ/ | window | noun | n | Group II (hard) |\n| книга | /ˈknɪɦɑ/ | book | noun | f | Group I (hard) |\n| ніч | /nʲitʃ/ | night | noun | f | Group III |\n| теля | /tɛˈlʲa/ | calf | noun | n | Group IV |\n| кошеня | /kɔʃɛˈnʲa/ | kitten | noun | n | Group IV |\n| радість | /ˈrɑdʲistʲ/ | joy | noun | f | Group III |\n| сіль | /sʲilʲ/ | salt | noun | f | Group III |\n| день | /dɛnʲ/ | day | noun | m | Group II (soft) |\n| сонце | /ˈsɔnt͡sɛ/ | sun | noun | n | Group II (hard) |\n| море | /ˈmɔrɛ/ | sea | noun | n | Group II (soft) |\n| земля | /zɛmˈlʲa/ | earth | noun | f | Group I (soft) |\n| сім'я | /sʲiˈmjuɑ/ | family | noun | f | Group I (soft) |\n| я | /jɑ/ | I | pron | - | Subject |\n| ти | /tɪ/ | you (informal) | pron | - | Singular |\n| він | /vʲin/ | he | pron | m | Subject |\n| вона | /vɔˈnɑ/ | she | pron | f | Subject |\n| воно | /vɔˈnɔ/ | it | pron | n | Subject |\n| ми | /mɪ/ | we | pron | - | Plural |\n| ви | /vɪ/ | you (formal/plural) | pron | - | Plural |\n| вони | /vɔˈnɪ/ | they | pron | - | Plural |\n\n---\n\n# Declension Reference\n\n## Why memorize groups?\n\nWhen we start changing words (cases), each group has its own pattern.\n\n| If you are in... | Accusative change? |\n|------------------|-------------------|\n| **Group I** | Yes (-у/-ю) |\n| **Group II** | No (if inanimate) |\n| **Group III** | No |\n| **Group IV** | No |\n\nKnowing the group now saves you headaches later!\n\n---\n\n# Summary\n\n> 💡 **What You Learned Today**\n>\n> - **Personal Pronouns:** Я, Ти, Він, Вона, Ми, Ви, Вони\n> - **Nouns belong to 4 Declension Groups (Families)**\n> - **Group I:** -а/-я nouns (mostly Feminine)\n> - **Group II:** Consonant nouns (Masculine) + -о/-е nouns (Neuter)\n> - **Group III:** -ь nouns (Feminine)\n> - **Group IV:** Baby animals (Neuter)\n> - Identifying the Group helps you predict the Gender\n> - **Gender Match:** Він = Masculine nouns, Вона = Feminine nouns, Воно = Neuter nouns\n\n> 🎯 **Coming Next**\n>\n> In Module 04, we will bring these nouns to life with **Verbs**:\n> - How to conjugate verbs (I do, You do, He does)\n> - The two Conjugation Groups (Type 1 vs Type 2)\n> - Building full sentences like \"I see the table\" (Wait, that requires cases! We'll start with \"I read\" and \"I speak\").",
+    "createdAt": "2025-12-02T23:15:59.375Z",
+    "modifiedAt": "2025-12-02T23:15:59.375Z",
     "version": 2
   },
   "activities": [
     {
       "id": "act-a1-3-fillblank",
       "type": "fill-blank",
-      "title": "What Does It Mean?",
-      "description": "Choose the correct English meaning.",
+      "title": "Gender & Declension System",
+      "description": "Test your understanding of noun gender and declension groups.",
       "content": {
         "type": "fill-blank",
         "items": [
           {
-            "prompt": "What does \"стіл\" mean?",
-            "answer": "table",
+            "prompt": "The noun \"книга\" (book) ends in **-а**, so it belongs to Declension ___.",
+            "answer": "Group I (the -а/-я team)",
             "options": [
-              "table",
-              "book",
-              "window",
-              "family"
+              "Group I (the -а/-я team)",
+              "Group II (consonant/о/е team)",
+              "Group III (soft feminine)",
+              "Group IV (baby animals)"
             ]
           },
           {
-            "prompt": "What does \"книга\" mean?",
-            "answer": "book",
+            "prompt": "The noun \"стіл\" (table) ends in a **consonant**, so its gender is ___.",
+            "answer": "Masculine",
             "options": [
-              "day",
-              "book",
-              "sea",
-              "table"
+              "Masculine",
+              "Feminine",
+              "Neuter",
+              "Can't tell"
             ]
           },
           {
-            "prompt": "What does \"вікно\" mean?",
-            "answer": "window",
+            "prompt": "The noun \"вікно\" (window) ends in **-о**, so its gender is ___.",
+            "answer": "Neuter",
             "options": [
-              "earth",
-              "day",
-              "window",
-              "group"
+              "Masculine",
+              "Feminine",
+              "Neuter",
+              "Can't tell"
             ]
           },
           {
-            "prompt": "What does \"сім'я\" mean?",
-            "answer": "family",
+            "prompt": "The noun \"ніч\" (night) ends in **-ч** (soft consonant) and is Declension III, meaning it's ___.",
+            "answer": "Feminine (exception!)",
             "options": [
-              "sun",
-              "family",
-              "table",
-              "day"
+              "Masculine",
+              "Feminine (exception!)",
+              "Neuter",
+              "Plural only"
             ]
           },
           {
-            "prompt": "What does \"море\" mean?",
-            "answer": "sea",
+            "prompt": "Nouns ending in **-о** or **-е** typically belong to Declension ___.",
+            "answer": "Group II",
             "options": [
-              "night",
-              "group",
-              "sea",
-              "book"
+              "Group I",
+              "Group II",
+              "Group III",
+              "Group IV"
             ]
           },
           {
-            "prompt": "What does \"день\" mean?",
-            "answer": "day",
+            "prompt": "The noun \"радість\" (joy) ends in **-ість**, which indicates Declension ___.",
+            "answer": "Group III (abstract feminine)",
             "options": [
-              "day",
-              "earth",
-              "window",
-              "salt"
+              "Group I",
+              "Group II",
+              "Group III (abstract feminine)",
+              "Group IV"
             ]
           },
           {
-            "prompt": "What does \"ніч\" mean?",
-            "answer": "night",
+            "prompt": "Words like \"теля\" (calf) and \"кошеня\" (kitten) belong to Declension ___.",
+            "answer": "Group IV (baby animals)",
             "options": [
-              "sea",
-              "group",
-              "calf",
-              "night"
+              "Group I",
+              "Group II",
+              "Group III",
+              "Group IV (baby animals)"
             ]
           },
           {
-            "prompt": "What does \"сонце\" mean?",
-            "answer": "sun",
+            "prompt": "The word \"тато\" (dad) ends in **-о** but is ___ gender.",
+            "answer": "Masculine (exception - refers to male person)",
             "options": [
-              "book",
-              "night",
-              "sun",
-              "day"
+              "Masculine (exception - refers to male person)",
+              "Feminine",
+              "Neuter",
+              "Depends on context"
             ]
           },
           {
-            "prompt": "What does \"радість\" mean?",
-            "answer": "joy",
+            "prompt": "To determine how a noun changes (declines), you need to know its ___.",
+            "answer": "Declension group",
             "options": [
-              "joy",
-              "table",
-              "sea",
-              "day"
+              "English translation",
+              "Declension group",
+              "Stress position",
+              "First letter"
             ]
           },
           {
-            "prompt": "What does \"земля\" mean?",
-            "answer": "earth",
+            "prompt": "Abstract nouns ending in **-ь** (like \"любов\" - love) are typically ___.",
+            "answer": "Feminine, Declension III",
             "options": [
-              "group",
-              "family",
-              "calf",
-              "earth"
+              "Masculine, Declension II",
+              "Feminine, Declension III",
+              "Neuter, Declension II",
+              "Masculine, Declension III"
             ]
           }
         ]
@@ -184,8 +184,100 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-02T22:31:47.472Z",
-      "modifiedAt": "2025-12-02T22:31:47.472Z"
+      "createdAt": "2025-12-02T23:15:59.375Z",
+      "modifiedAt": "2025-12-02T23:15:59.375Z"
+    },
+    {
+      "id": "act-a1-3-fillblank",
+      "type": "fill-blank",
+      "title": "He, She, or It?",
+      "description": "Replace the noun with the correct pronoun (Він, Вона, Воно).",
+      "content": {
+        "type": "fill-blank",
+        "items": [
+          {
+            "prompt": "**Мама** (Mom) is...",
+            "answer": "Вона",
+            "options": [
+              "Він",
+              "Вона",
+              "Воно"
+            ]
+          },
+          {
+            "prompt": "**Тато** (Dad) is...",
+            "answer": "Він",
+            "options": [
+              "Він",
+              "Вона",
+              "Воно"
+            ]
+          },
+          {
+            "prompt": "**Стіл** (Table) is...",
+            "answer": "Він",
+            "options": [
+              "Він",
+              "Вона",
+              "Воно"
+            ]
+          },
+          {
+            "prompt": "**Вікно** (Window) is...",
+            "answer": "Воно",
+            "options": [
+              "Він",
+              "Вона",
+              "Воно"
+            ]
+          },
+          {
+            "prompt": "**Книга** (Book) is...",
+            "answer": "Вона",
+            "options": [
+              "Він",
+              "Вона",
+              "Воно"
+            ]
+          },
+          {
+            "prompt": "**Сонце** (Sun) is...",
+            "answer": "Воно",
+            "options": [
+              "Він",
+              "Вона",
+              "Воно"
+            ]
+          },
+          {
+            "prompt": "**День** (Day) is...",
+            "answer": "Він",
+            "options": [
+              "Він",
+              "Вона",
+              "Воно"
+            ]
+          },
+          {
+            "prompt": "**Ніч** (Night) is...",
+            "answer": "Вона",
+            "options": [
+              "Він",
+              "Вона",
+              "Воно"
+            ]
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-02T23:15:59.375Z",
+      "modifiedAt": "2025-12-02T23:15:59.375Z"
     },
     {
       "id": "act-a1-3-unjumble",
@@ -294,8 +386,8 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-02T22:31:47.472Z",
-      "modifiedAt": "2025-12-02T22:31:47.472Z"
+      "createdAt": "2025-12-02T23:15:59.375Z",
+      "modifiedAt": "2025-12-02T23:15:59.375Z"
     },
     {
       "id": "act-a1-3-groupsort",
@@ -350,8 +442,8 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-02T22:31:47.472Z",
-      "modifiedAt": "2025-12-02T22:31:47.472Z"
+      "createdAt": "2025-12-02T23:15:59.375Z",
+      "modifiedAt": "2025-12-02T23:15:59.375Z"
     },
     {
       "id": "act-a1-3-matchup",
@@ -411,126 +503,126 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-02T22:31:47.472Z",
-      "modifiedAt": "2025-12-02T22:31:47.472Z"
+      "createdAt": "2025-12-02T23:15:59.375Z",
+      "modifiedAt": "2025-12-02T23:15:59.375Z"
     },
     {
       "id": "act-a1-3-quiz",
       "type": "quiz",
-      "title": "Meaning Check",
+      "title": "Declension & Gender Rules",
       "description": "Choose the correct answer.",
       "content": {
         "type": "quiz",
         "questions": [
           {
-            "question": "What does \"вікно\" mean?",
+            "question": "A noun ending in **-а** or **-я** typically belongs to:",
             "options": [
-              "book",
-              "window",
-              "family",
-              "day"
-            ],
-            "correctIndex": 1,
-            "explanation": "\"вікно\" means \"window\""
-          },
-          {
-            "question": "What does \"сіль\" mean?",
-            "options": [
-              "salt",
-              "earth",
-              "night",
-              "sea"
+              "Declension Group I (Feminine)",
+              "Declension Group II (Masculine)",
+              "Declension Group III (Soft Feminine)",
+              "Declension Group IV (Baby Animals)"
             ],
             "correctIndex": 0,
-            "explanation": "\"сіль\" means \"salt\""
+            "explanation": "Group I = the \"-а/-я team\" - mostly feminine nouns"
           },
           {
-            "question": "What does \"стіл\" mean?",
+            "question": "The noun \"стіл\" (table) ends in a consonant. What is its gender?",
             "options": [
-              "salt",
-              "night",
-              "sun",
-              "table"
+              "Masculine",
+              "Feminine",
+              "Neuter",
+              "Can't determine"
             ],
-            "correctIndex": 3,
-            "explanation": "\"стіл\" means \"table\""
+            "correctIndex": 0,
+            "explanation": "Consonant ending → Group II Masculine"
           },
           {
-            "question": "What does \"сонце\" mean?",
+            "question": "Nouns ending in **-о** or **-е** are typically:",
             "options": [
-              "sea",
-              "family",
-              "sun",
-              "book"
-            ],
-            "correctIndex": 2,
-            "explanation": "\"сонце\" means \"sun\""
-          },
-          {
-            "question": "What does \"ніч\" mean?",
-            "options": [
-              "day",
-              "night",
-              "book",
-              "table"
-            ],
-            "correctIndex": 1,
-            "explanation": "\"ніч\" means \"night\""
-          },
-          {
-            "question": "What does \"книга\" mean?",
-            "options": [
-              "window",
-              "salt",
-              "sea",
-              "book"
-            ],
-            "correctIndex": 3,
-            "explanation": "\"книга\" means \"book\""
-          },
-          {
-            "question": "What does \"теля\" mean?",
-            "options": [
-              "kitten",
-              "family",
-              "group",
-              "calf"
-            ],
-            "correctIndex": 3,
-            "explanation": "\"теля\" means \"calf\""
-          },
-          {
-            "question": "What does \"група\" mean?",
-            "options": [
-              "day",
-              "earth",
-              "group",
-              "joy"
+              "Masculine",
+              "Feminine",
+              "Neuter (Group II)",
+              "Group IV"
             ],
             "correctIndex": 2,
-            "explanation": "\"група\" means \"group\""
+            "explanation": "-о/-е endings = Group II Neuter (вікно, море)"
           },
           {
-            "question": "What does \"море\" mean?",
+            "question": "How do you know \"ніч\" (night) is Feminine, not Masculine?",
             "options": [
-              "sun",
-              "night",
-              "book",
-              "sea"
+              "It ends in a vowel",
+              "It ends in a consonant, so it's masculine",
+              "It belongs to Group III (soft feminine) - must memorize",
+              "All time words are feminine"
             ],
-            "correctIndex": 3,
-            "explanation": "\"море\" means \"sea\""
+            "correctIndex": 2,
+            "explanation": "-ь/-ч nouns can be M or F - \"ніч\" is Group III Feminine (exception!)"
           },
           {
-            "question": "What does \"земля\" mean?",
+            "question": "Words ending in **-ість** (like \"радість\" - joy) are always:",
             "options": [
-              "family",
-              "earth",
-              "window",
-              "table"
+              "Masculine",
+              "Feminine, Group III",
+              "Neuter",
+              "Group IV"
             ],
             "correctIndex": 1,
-            "explanation": "\"земля\" means \"earth\""
+            "explanation": "The -ість ending = 100% Group III Feminine (abstract nouns)"
+          },
+          {
+            "question": "The word \"теля\" (calf) ends in -я but is Neuter. Why?",
+            "options": [
+              "All -я words are neuter",
+              "It's a baby animal (Group IV)",
+              "It's an exception",
+              "-я after soft consonants is neuter"
+            ],
+            "correctIndex": 1,
+            "explanation": "Baby animals (-а/-я) = Group IV Neuter: теля, кошеня, курча"
+          },
+          {
+            "question": "Which pronoun replaces \"вікно\" (window)?",
+            "options": [
+              "Він (he)",
+              "Вона (she)",
+              "Воно (it)",
+              "Вони (they)"
+            ],
+            "correctIndex": 2,
+            "explanation": "Вікно is Neuter (-о ending) → Воно"
+          },
+          {
+            "question": "The word \"тато\" (dad) ends in -о but is Masculine because:",
+            "options": [
+              "-о is always masculine",
+              "Natural gender (refers to a male) overrides ending rules",
+              "It's Group II",
+              "It's an irregular noun"
+            ],
+            "correctIndex": 1,
+            "explanation": "Biological gender overrides grammatical rules for people"
+          },
+          {
+            "question": "To predict how a noun changes in sentences (cases), you need to know:",
+            "options": [
+              "Its English translation",
+              "Its stress position",
+              "Its Declension Group",
+              "Its first letter"
+            ],
+            "correctIndex": 2,
+            "explanation": "Declension Group = the \"team\" that determines all ending changes"
+          },
+          {
+            "question": "Which word pair shows the -ь ending gender difference?",
+            "options": [
+              "мама / тато (both feminine)",
+              "день (m) / ніч (f) - both end in soft consonant",
+              "вікно / море (both neuter)",
+              "книга / земля (both Group I)"
+            ],
+            "correctIndex": 1,
+            "explanation": "День (day) is Masc Group II, ніч (night) is Fem Group III - same ending, different groups!"
           }
         ],
         "shuffleQuestions": true,
@@ -544,14 +636,14 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-02T22:31:47.472Z",
-      "modifiedAt": "2025-12-02T22:31:47.472Z"
+      "createdAt": "2025-12-02T23:15:59.375Z",
+      "modifiedAt": "2025-12-02T23:15:59.375Z"
     },
     {
       "id": "act-a1-3-truefalse",
       "type": "true-false",
-      "title": "True or False?",
-      "description": "Determine if each statement is true or false.",
+      "title": "Grammar Rules",
+      "description": "Determine if each statement about Ukrainian grammar is true or false.",
       "content": {
         "type": "true-false",
         "statements": []
@@ -563,8 +655,8 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-02T22:31:47.472Z",
-      "modifiedAt": "2025-12-02T22:31:47.472Z"
+      "createdAt": "2025-12-02T23:15:59.375Z",
+      "modifiedAt": "2025-12-02T23:15:59.375Z"
     }
   ],
   "vocabulary": {

@@ -282,192 +282,162 @@ Use the correct preposition + case:
 
 ---
 
+---
+
+---
+
+---
+
 # Activities
 
-## match-up: Preposition + Case
+## fill-in: Complete the Sentences
 
-> Match the preposition with its case(s).
+> Choose the correct word to complete each sentence.
+
+## unjumble: Build the Sentence
+
+> Arrange the words in the correct order.
+
+## match-up: Match the Pairs
+
+> Match Ukrainian words to their English meanings.
 
 | Left | Right |
 |------|-------|
-| до | genitive |
-| з (with) | instrumental |
-| над | instrumental |
-| біля | genitive |
-| між | instrumental |
-| після | genitive |
-
-## quiz: Prepositions
-
-> Choose the correct form.
-
-1. "I'm going to Kyiv" - Я їду до ___.
-   - [x] Києва
-   - [ ] Київ
-   - [ ] Києві
-   - [ ] Києвом
-   > До + genitive: Києва.
-
-2. "She's standing near the window" - Вона стоїть біля ___.
-   - [x] вікна
-   - [ ] вікно
-   - [ ] вікні
-   - [ ] вікном
-   > Біля + genitive: вікна.
-
-3. "I'm going with a friend" - Я йду з ___.
-   - [x] другом
-   - [ ] друг
-   - [ ] друга
-   - [ ] другу
-   > З (with) + instrumental: другом.
-
-4. "The cat is under the table" - Кіт під ___.
-   - [x] столом
-   - [ ] стіл
-   - [ ] столу
-   - [ ] столі
-   > Під (location) + instrumental: столом.
-
-5. "After the lesson" - Після ___.
-   - [x] уроку
-   - [ ] урок
-   - [ ] уроці
-   - [ ] уроком
-   > Після + genitive: уроку.
-
-6. "Between us" - Між ___.
-   - [x] нами
-   - [ ] нас
-   - [ ] нам
-   - [ ] ми
-   > Між + instrumental: нами.
-
-7. "The book is on the table" - Книга на ___.
-   - [x] столі
-   - [ ] стіл
-   - [ ] столу
-   - [ ] столом
-   > На (location) + locative: столі.
-
-8. "I'm putting the book onto the table" - Я кладу книгу на ___.
-   - [x] стіл
-   - [ ] столі
-   - [ ] столу
-   - [ ] столом
-   > На (motion) + accusative: стіл.
-
-## group-sort: Case by Preposition Group
-
-> Sort the prepositions by their required case.
-
-### Genitive Prepositions
-- до
-- від
-- для
-- без
-- після
-- біля
-
-### Instrumental Prepositions
-- з (with)
-- над
-- перед
-- між
-
-### Two-Case (Motion/Location)
-- у/в
-- на
-- під
-- за
-
-
-## fill-in: Fill in the Blank
-
-> Fill in the blanks with the correct word.
-
-1. ✓ Я ___ до парку.
-   > [!answer] йду
-
-2. ✓ Він ___ столу.
-   > [!answer] біля
-
-3. ✓ Ми ___ другом.
-   > [!answer] з
-
-4. ✓ ___ уроку.
-   > [!answer] Після
-
-
+| над | above |
+| між | between |
+| навколо | around |
+| завжди | always |
+| мороз | frost |
+| серед | among |
+| магазин | store |
+| замість | instead of |
+| вздовж | along |
+| попереду | in front, ahead |
+| під | under |
+| поруч | next to |
 
 ## quiz: Meaning Check
 
 > Choose the correct answer.
 
-1. What does "посеред" mean?
-   - [x] in the middle
-   - [ ] behind
-   - [ ] among
-   - [ ] under
-   > "посеред" means "in the middle"
+1. What does "замість" mean?
+   - [x] instead of
+   - [ ] next to
+   - [ ] Accusative: бачити, читати, любити
+   - [ ] bigger
+   > "замість" means "instead of"
 
-2. What does "під" mean?
-   - [x] under
-   - [ ] in the middle
-   - [ ] among
-   - [ ] behind
-   > "під" means "under"
+2. What does "навколо" mean?
+   - [ ] newspaper
+   - [x] around
+   - [ ] to be going to
+   - [ ] to have
+   > "навколо" means "around"
 
 3. What does "позаду" mean?
-   - [ ] in the middle
-   - [ ] among
-   - [ ] under
+   - [ ] to understand
    - [x] behind
+   - [ ] who
+   - [ ] food
    > "позаду" means "behind"
 
-4. What does "серед" mean?
-   - [ ] in the middle
-   - [x] among
-   - [ ] under
-   - [ ] behind
-   > "серед" means "among"
-
-5. What does "над" mean?
-   - [ ] behind
+4. What does "над" mean?
+   - [ ] to understand (perf)
+   - [ ] thirty
+   - [ ] in front of
    - [x] above
-   - [ ] in the middle
-   - [ ] under
    > "над" means "above"
 
-6. What does "попереду" mean?
-   - [ ] in the middle
+5. What does "вздовж" mean?
+   - [x] along
+   - [ ] bag
+   - [ ] lunch
+   - [ ] hryvnia (₴)
+   > "вздовж" means "along"
+
+6. What does "посеред" mean?
+   - [ ] recipient
+   - [ ] end
+   - [ ] to fall asleep
+   - [x] in the middle
+   > "посеред" means "in the middle"
+
+7. What does "серед" mean?
+   - [ ] fog
+   - [ ] beautiful, nice
+   - [x] among
+   - [ ] video
+   > "серед" means "among"
+
+8. What does "під" mean?
+   - [ ] back
+   - [ ] to clean, brush
+   - [x] under
+   - [ ] to put
+   > "під" means "under"
+
+9. What does "поруч" mean?
+   - [ ] to be considered
+   - [ ] discount
+   - [ ] how
+   - [x] next to
+   > "поруч" means "next to"
+
+10. What does "перед" mean?
+   - [ ] smart
+   - [ ] calf
+   - [ ] please/you're welcome
+   - [x] in front of
+   > "перед" means "in front of"
+
+11. What does "між" mean?
+   - [x] between
+   - [ ] fitting room
+   - [ ] white
+   - [ ] must, have to
+   > "між" means "between"
+
+12. What does "попереду" mean?
    - [x] in front, ahead
-   - [ ] under
-   - [ ] behind
+   - [ ] to meet
+   - [ ] without
+   - [ ] to go out, leave
    > "попереду" means "in front, ahead"
 
+## true-false: True or False?
 
+> Determine if each statement is true or false.
 
-## unjumble: Word Order
+- [ ] "серед" means "why"
+   > Incorrect. "серед" means "among"
 
-> Put the words in the correct order to form a sentence.
+- [x] "замість" means "instead of"
+   > Correct!
 
-1. до / Я / ✓ / парку / йду
-   > [!answer] ✓ Я йду до парку.
-   > (до + genitive)
+- [ ] "перед" means "fish"
+   > Incorrect. "перед" means "in front of"
 
-2. біля / ✓ / столу / Він
-   > [!answer] ✓ Він біля столу.
-   > (біля + genitive)
+- [ ] "між" means "color"
+   > Incorrect. "між" means "between"
 
-3. ✓ / Ми / другом / з
-   > [!answer] ✓ Ми з другом.
-   > (з (with) + instrumental)
+- [x] "поруч" means "next to"
+   > Correct!
 
-4. ✓ / уроку / Після
-   > [!answer] ✓ Після уроку.
-   > (після + genitive)
+- [x] "посеред" means "in the middle"
+   > Correct!
 
+- [ ] "над" means "seat, place"
+   > Incorrect. "над" means "above"
+
+- [ ] "попереду" means "to gift (impf)"
+   > Incorrect. "попереду" means "in front, ahead"
+
+- [ ] "навколо" means "seller (m)"
+   > Incorrect. "навколо" means "around"
+
+- [ ] "під" means "table"
+   > Incorrect. "під" means "under"
 
 ---
 

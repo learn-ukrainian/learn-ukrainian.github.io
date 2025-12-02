@@ -259,167 +259,251 @@ Create sentences using all given elements:
 
 ---
 
+---
+
+---
+
+---
+
 # Activities
 
-## match-up: Case Functions
+## fill-in: Complete the Sentences
 
-> Match the case with its primary function.
+> Choose the correct word to complete each sentence.
+
+1. Це мій новий ___.
+   > [!answer] малюнок
+   > [!options] радіо | малюнок | продавчиня | початок
+
+2. Ця ___ коштує сто гривень.
+   > [!answer] ваза
+   > [!options] готель | зуби | бабуся | ваза
+
+3. Це ___ коштує сто гривень.
+   > [!answer] правило
+   > [!options] лист | правило | повідомлення | офіціант
+
+4. Цей ___ коштує сто гривень.
+   > [!answer] кабінет
+   > [!options] вівторок | кабінет | сніданок | дружина
+
+5. Де ваша велика ___?
+   > [!answer] бухгалтерія
+   > [!options] бухгалтерія | двері | клієнт | ручка
+
+6. Ця ___ коштує сто гривень.
+   > [!answer] лекція
+   > [!options] середній | душ | лекція | лікар
+
+## unjumble: Build the Sentence
+
+> Arrange the words in the correct order.
+
+1. Мій / брат / малюнок / має / хороший
+   > [!answer] Мій брат має хороший малюнок.
+   > (drawing, picture)
+
+2. брат / хорошу / має / секретарка / Мій
+   > [!answer] Мій брат має хорошу секретарка.
+   > (secretary (f))
+
+3. хочу / купити / поверх / цей / Я
+   > [!answer] Я хочу купити цей поверх.
+   > (floor (of building))
+
+4. Це / нова / моя / ваза
+   > [!answer] Це моя нова ваза.
+   > (vase)
+
+5. коштує / Ця / сто / гривень / бухгалтерія
+   > [!answer] Ця бухгалтерія коштує сто гривень.
+   > (accounting dept)
+
+6. полиця / Мій / брат / має / хорошу
+   > [!answer] Мій брат має хорошу полиця.
+   > (shelf)
+
+7. Мій / хороший / брат / партнер / має
+   > [!answer] Мій брат має хороший партнер.
+   > (partner)
+
+8. Я / хочу / це / задоволення / купити
+   > [!answer] Я хочу купити це задоволення.
+   > (pleasure, satisfaction)
+
+9. коштує / сто / Цей / кабінет / гривень
+   > [!answer] Цей кабінет коштує сто гривень.
+   > (office, study)
+
+10. Це / моя / нова / лекція
+   > [!answer] Це моя нова лекція.
+   > (lecture)
+
+11. Мій / має / хороше / правило / брат
+   > [!answer] Мій брат має хороше правило.
+   > (rule)
+
+## match-up: Match the Pairs
+
+> Match Ukrainian words to their English meanings.
 
 | Left | Right |
 |------|-------|
-| Nominative | subject |
-| Genitive | possession |
-| Dative | recipient |
-| Accusative | direct object |
-| Instrumental | means/company |
-| Locative | location |
-| Vocative | direct address |
-
-## quiz: Case Integration
-
-> Identify the case of the underlined word.
-
-1. "I give a book to my brother" - Я даю книгу **братові**.
-   - [x] Dative
-   - [ ] Genitive
-   - [ ] Accusative
-   - [ ] Instrumental
-   > Кому? → братові (dative).
-
-2. "I'm going with a friend" - Я йду **з другом**.
-   - [x] Instrumental
-   - [ ] Genitive
-   - [ ] Dative
-   - [ ] Accusative
-   > З ким? → з другом (instrumental).
-
-3. "The book is near the window" - Книга біля **вікна**.
-   - [x] Genitive
-   - [ ] Locative
-   - [ ] Accusative
-   - [ ] Instrumental
-   > Біля + genitive: вікна.
-
-4. "I see my sister" - Я бачу **сестру**.
-   - [x] Accusative
-   - [ ] Nominative
-   - [ ] Dative
-   - [ ] Genitive
-   > Кого бачу? → сестру (accusative).
-
-5. "Dear friend!" - **Друже**!
-   - [x] Vocative
-   - [ ] Nominative
-   - [ ] Genitive
-   - [ ] Dative
-   > Direct address = vocative.
-
-6. "The book is on the table" - Книга на **столі**.
-   - [x] Locative
-   - [ ] Genitive
-   - [ ] Instrumental
-   - [ ] Accusative
-   > На (location) + locative.
-
-7. "This is my brother's book" - Це книга **брата**.
-   - [x] Genitive
-   - [ ] Nominative
-   - [ ] Accusative
-   - [ ] Dative
-   > Чия? → брата (genitive, possession).
-
-8. "The teacher explains the rule" - **Вчитель** пояснює правило.
-   - [x] Nominative
-   - [ ] Accusative
-   - [ ] Genitive
-   - [ ] Vocative
-   > Хто пояснює? → Вчитель (nominative, subject).
-
-## group-sort: Multi-Case Analysis
-
-> Sort the cases found in the sentence: "Батько дав синові книгу про Україну."
-
-### Present in this sentence
-- Nominative (батько)
-- Dative (синові)
-- Accusative (книгу, Україну)
-
-### Not present in this sentence
-- Genitive
-- Instrumental
-- Locative
-- Vocative
-
-
-## true-false: True or False?
-
-> Determine if each statement is true or false.
-
-- [x] "правило" is neuter.
-   > Correct! правило is neuter.
-
-- [x] "полиця" is feminine.
-   > Correct! полиця is feminine.
-
-- [x] "ваза" is feminine.
-   > Correct! ваза is feminine.
-
-- [x] "поверх" is masculine.
-   > Correct! поверх is masculine.
-
-- [ ] "кабінет" is feminine.
-   > Incorrect. кабінет is masculine.
-
-- [ ] "секретарка" is masculine.
-   > Incorrect. секретарка is feminine.
-
+| кабінет | office, study |
+| ваза | vase |
+| малюнок | drawing, picture |
+| протягом | during, throughout |
+| бухгалтерія | accounting dept |
+| партнер | partner |
+| задоволення | pleasure, satisfaction |
+| іноді | sometimes |
+| правило | rule |
+| принести | to bring |
+| полиця | shelf |
+| ви | you (formal/plural) |
 
 ## quiz: Meaning Check
 
 > Choose the correct answer.
 
-1. What does "ваза" mean?
-   - [x] vase
-   - [ ] during, throughout
-   - [ ] rule
-   - [ ] shelf
-   > "ваза" means "vase"
+1. What does "секретарка" mean?
+   - [ ] straight
+   - [x] secretary (f)
+   - [ ] eyes
+   - [ ] Accusative: бачити, читати, любити
+   > "секретарка" means "secretary (f)"
 
-2. What does "полиця" mean?
-   - [ ] rule
-   - [x] shelf
-   - [ ] vase
-   - [ ] during, throughout
-   > "полиця" means "shelf"
+2. What does "задоволення" mean?
+   - [ ] to speak
+   - [ ] lecture
+   - [x] pleasure, satisfaction
+   - [ ] to become
+   > "задоволення" means "pleasure, satisfaction"
 
-3. What does "протягом" mean?
-   - [ ] vase
-   - [ ] rule
-   - [x] during, throughout
-   - [ ] shelf
-   > "протягом" means "during, throughout"
-
-4. What does "правило" mean?
-   - [ ] vase
-   - [ ] during, throughout
-   - [x] rule
-   - [ ] shelf
-   > "правило" means "rule"
-
-5. What does "поверх" mean?
-   - [ ] vase
-   - [ ] during, throughout
+3. What does "поверх" mean?
+   - [ ] to sell
+   - [ ] Kyiv
    - [x] floor (of building)
-   - [ ] shelf
+   - [ ] experience
    > "поверх" means "floor (of building)"
 
-6. What does "бухгалтерія" mean?
-   - [ ] during, throughout
+4. What does "малюнок" mean?
+   - [ ] calf
+   - [x] drawing, picture
+   - [ ] to be considered
+   - [ ] to be lucky
+   > "малюнок" means "drawing, picture"
+
+5. What does "бухгалтерія" mean?
+   - [ ] to understand
+   - [ ] in the middle
+   - [ ] price
    - [x] accounting dept
-   - [ ] vase
-   - [ ] shelf
    > "бухгалтерія" means "accounting dept"
 
+6. What does "полиця" mean?
+   - [x] shelf
+   - [ ] to inform
+   - [ ] thin
+   - [ ] pork fat
+   > "полиця" means "shelf"
+
+7. What does "партнер" mean?
+   - [ ] that
+   - [ ] cucumber
+   - [ ] there
+   - [x] partner
+   > "партнер" means "partner"
+
+8. What does "лекція" mean?
+   - [ ] small
+   - [ ] lemon
+   - [ ] English (adj)
+   - [x] lecture
+   > "лекція" means "lecture"
+
+9. What does "протягом" mean?
+   - [ ] to have
+   - [ ] neighbor (f)
+   - [x] during, throughout
+   - [ ] salt
+   > "протягом" means "during, throughout"
+
+10. What does "правило" mean?
+   - [ ] gift
+   - [ ] we
+   - [x] rule
+   - [ ] to be going to
+   > "правило" means "rule"
+
+11. What does "ваза" mean?
+   - [x] vase
+   - [ ] potato
+   - [ ] to remain
+   - [ ] entrepreneur
+   > "ваза" means "vase"
+
+12. What does "кабінет" mean?
+   - [ ] to try on
+   - [x] office, study
+   - [ ] discount
+   - [ ] porridge
+   > "кабінет" means "office, study"
+
+## true-false: True or False?
+
+> Determine if each statement is true or false.
+
+- [x] "кабінет" means "office, study"
+   > Correct!
+
+- [x] "лекція" means "lecture"
+   > Correct!
+
+- [ ] "ваза" means "can, to be able"
+   > Incorrect. "ваза" means "vase"
+
+- [x] "малюнок" means "drawing, picture"
+   > Correct!
+
+- [x] "протягом" means "during, throughout"
+   > Correct!
+
+- [x] "партнер" means "partner"
+   > Correct!
+
+- [x] "секретарка" means "secretary (f)"
+   > Correct!
+
+- [x] "правило" means "rule"
+   > Correct!
+
+- [ ] "полиця" means "yesterday"
+   > Incorrect. "полиця" means "shelf"
+
+- [x] "бухгалтерія" means "accounting dept"
+   > Correct!
+
+## group-sort: Sort by Gender
+
+> Sort the nouns into gender categories.
+
+### Masculine
+- кабінет
+- малюнок
+- партнер
+- поверх
+
+### Feminine
+- полиця
+- ваза
+- бухгалтерія
+- секретарка
+- лекція
+
+### Neuter
+- задоволення
+- правило
 
 ---
 

@@ -238,24 +238,29 @@ Report what these people typically say:
    - [ ] попросив
    > наказав for strong orders.
 
-## fill-in: At the Doctor's Office
 
-> Лікар дав пацієнту багато порад.
->
-> Лікар (1)___ (порадити), щоб пацієнт більше (2)___ (гуляти).
-> Він (3)___ (сказати), щоб він менше (4)___ (працювати).
-> Лікар (5)___ (заборонити), щоб він (6)___ (палити).
-> Він також (7)___ (порекомендувати), щоб пацієнт (8)___ (приймати) вітаміни.
+## match-up: Vocabulary Match
 
-**Answers:**
-1. порадив
-2. гуляв
-3. сказав
-4. працював
-5. заборонив
-6. палив
-7. порекомендував
-8. приймав
+> Match each Ukrainian word with its English translation.
+
+| Left | Right |
+|------|-------|
+| дозвіл | permission |
+| наказ | order, command |
+| заборона | prohibition |
+| заборонити | to forbid |
+| прохання | request |
+| дозволити | to allow, permit |
+| благати | to beg |
+
+
+## fill-in: Fill in the Blank
+
+> Choose the correct word to complete each sentence.
+
+1. Пряма ___ (Direct):
+   > [!answer] мова
+
 
 ---
 

@@ -353,190 +353,278 @@ Discuss:
 
 ---
 
-# Activities
+---
 
-## match-up: Genre → Category
+---
+
+---
+
+# Вправи
+
+## fill-in: Доповніть речення
+
+> Оберіть правильне слово.
+
+1. Вони довго шукали хорошу ___, але не знайшли.
+   > [!answer] поезія
+   > [!options] антикваріат | набряк | підпис | поезія
+
+2. Ця ___ належить моїй подрузі з Києва.
+   > [!answer] драма
+   > [!options] посилання | драма | друг | вірш
+
+3. Я хочу купити цей ___, але він занадто дорогий.
+   > [!answer] альбом
+   > [!options] нирки | альбом | оркестр | зима
+
+4. Моя сестра сказала, що її ___ дуже зручна.
+   > [!answer] скрипка
+   > [!options] досвід | скрипка | багаж | 13
+
+5. Цей ___ належить моєму другові з Києва.
+   > [!answer] режисер
+   > [!options] водоспад | ціна | режисер | хірург
+
+6. Моя сестра сказала, що її ___ дуже зручна.
+   > [!answer] колядка
+   > [!options] спеціальність | акція | колядка | визнання
+
+7. Цей ___ належить моєму другові з Києва.
+   > [!answer] мультфільм
+   > [!options] скульптура | мультфільм | виробництво | кредит
+
+## unjumble: Побудуйте речення
+
+> Розташуйте слова в правильному порядку.
+
+1. джаз / Мій / друг / зручний / його / дуже / сказав / що
+   > [!answer] Мій друг сказав, що його джаз дуже зручний.
+   > (jazz)
+
+2. друг / його / Мій / що / вірш / зручний / сказав / дуже
+   > [!answer] Мій друг сказав, що його вірш дуже зручний.
+   > (poem)
+
+3. друг / Мій / вінок / що / дуже / сказав / його / зручний
+   > [!answer] Мій друг сказав, що його вінок дуже зручний.
+   > (wreath)
+
+4. купити / вона / але / занадто / хочу / цю / дорога / Я / традиція
+   > [!answer] Я хочу купити цю традиція, але вона занадто дорога.
+   > (tradition)
+
+5. дорога / але / вона / хочу / цю / занадто / Я / купити / вистава
+   > [!answer] Я хочу купити цю вистава, але вона занадто дорога.
+   > (performance)
+
+6. не / знайшли / колядка / Вони / але / хорошу / довго / шукали
+   > [!answer] Вони довго шукали хорошу колядка, але не знайшли.
+   > (Christmas carol)
+
+7. його / друг / дуже / сказав / Мій / що / зручний / альбом
+   > [!answer] Мій друг сказав, що його альбом дуже зручний.
+   > (album)
+
+8. другові / належить / гурт / Києва / моєму / Цей / з
+   > [!answer] Цей гурт належить моєму другові з Києва.
+   > (band)
+
+9. шукали / довго / хороший / бестселер / Вони / знайшли / не / але
+   > [!answer] Вони довго шукали хороший бестселер, але не знайшли.
+   > (bestseller)
+
+10. але / шукали / знайшли / бойовик / не / довго / Вони / хороший
+   > [!answer] Вони довго шукали хороший бойовик, але не знайшли.
+   > (action film)
+
+11. вона / але / бандура / купити / цю / занадто / дорога / хочу / Я
+   > [!answer] Я хочу купити цю бандура, але вона занадто дорога.
+   > (bandura)
+
+12. але / акторка / знайшли / довго / шукали / не / хорошу / Вони
+   > [!answer] Вони довго шукали хорошу акторка, але не знайшли.
+   > (actress)
+
+## match-up: Знайдіть пари
+
+> З'єднайте українські слова з англійськими.
 
 | Left | Right |
 |------|-------|
-| рок | music |
-| комедія | cinema |
-| роман | literature |
-| балет | dance |
-| пейзаж | visual art |
+| ключ | key |
+| твій | your (masc, informal) |
+| джаз | jazz |
+| живопис | painting |
+| традиція | tradition |
+| роман | novel |
+| лісовий | forest |
+| людський | human |
+| мультфільм | cartoon |
+| можна | may, can |
+| комедія | comedy |
+| поезія | poetry |
+| балет | ballet |
+| альбом | album |
 
-## quiz: Arts & Culture
+## quiz: Перевірка значень
 
-> Choose the correct answer.
+> Оберіть правильну відповідь.
 
-1. "Гурт" is ___.
-   - [x] band (music)
-   - [ ] concert
-   - [ ] song
-   - [ ] album
-   > Гурт = band, music group.
+1. Що означає "гітара"?
+   - [ ] speech
+   - [ ] worse
+   - [x] guitar
+   - [ ] essay
+   > "гітара" means "guitar"
 
-2. "Вистава" is ___.
-   - [x] theater performance
-   - [ ] movie
-   - [ ] concert
-   - [ ] exhibition
-   > Вистава = theatrical performance.
+2. Що означає "роман"?
+   - [x] novel
+   - [ ] to cry
+   - [ ] to graduate
+   - [ ] white
+   > "роман" means "novel"
 
-3. "Писанка" is ___.
-   - [x] decorated Easter egg
-   - [ ] Easter bread
-   - [ ] Christmas tree
-   - [ ] wedding dress
-   > Писанка = traditional decorated egg.
+3. Що означає "вистава"?
+   - [ ] to try
+   - [x] performance
+   - [ ] busy
+   - [ ] university
+   > "вистава" means "performance"
 
-4. "Режисер" works in ___.
-   - [x] cinema
-   - [ ] music
-   - [ ] literature
-   - [ ] painting
-   > Режисер = film director.
+4. Що означає "співак"?
+   - [ ] recognition
+   - [ ] sick
+   - [x] singer
+   - [ ] metro
+   > "співак" means "singer"
 
-5. Ukrainian national instrument is ___.
-   - [x] бандура
-   - [ ] гітара
-   - [ ] піаніно
-   - [ ] барабани
-   > Бандура is a traditional Ukrainian instrument.
+5. Що означає "гурт"?
+   - [x] band
+   - [ ] to converse
+   - [ ] shower
+   - [ ] yes
+   > "гурт" means "band"
 
-6. "Колядка" is sung at ___.
-   - [x] Christmas
-   - [ ] Easter
-   - [ ] weddings
-   - [ ] birthdays
-   > Колядки are Christmas carols.
+6. Що означає "пісня"?
+   - [ ] on, at
+   - [ ] strength
+   - [x] song
+   - [ ] winter
+   > "пісня" means "song"
 
-## group-sort: By Art Form
+7. Що означає "режисер"?
+   - [ ] imperfective (aspect)
+   - [ ] infection
+   - [x] director
+   - [ ] square
+   > "режисер" means "director"
 
-### Музика (Music)
-- пісня
-- альбом
-- гурт
-- концерт
+8. Що означає "поет"?
+   - [ ] statement
+   - [ ] drawing, painting
+   - [x] poet
+   - [ ] to graduate
+   > "поет" means "poet"
 
-### Кіно (Cinema)
-- фільм
-- режисер
-- акторка
-- прем'єра
+9. Що означає "жахи"?
+   - [ ] return
+   - [ ] to read
+   - [ ] jealous
+   - [x] horror
+   > "жахи" means "horror"
 
-### Література (Literature)
-- роман
-- поезія
-- письменник
-- бестселер
-
-### Традиції (Traditions)
-- вишиванка
-- писанка
-- колядка
-- рушник
-
-
-## true-false: True or False?
-
-> Determine if each statement is true or false.
-
-- [x] "пісня" is feminine.
-   > Correct! пісня is feminine.
-
-- [x] "мелодія" is feminine.
-   > Correct! мелодія is feminine.
-
-- [x] "альбом" is masculine.
-   > Correct! альбом is masculine.
-
-- [x] "гурт" is masculine.
-   > Correct! гурт is masculine.
-
-- [ ] "співак" is feminine.
-   > Incorrect. співак is masculine.
-
-- [ ] "композитор" is feminine.
-   > Incorrect. композитор is masculine.
-
-
-## fill-in: Fill in the Blank
-
-> Fill in the blanks with the correct word.
-
-1. співак ___ співачка
-   > [!answer] /
-
-2. піаніно ___ фортепіано
-   > [!answer] /
-
-
-
-## quiz: Meaning Check
-
-> Choose the correct answer.
-
-1. What does "альбом" mean?
-   - [ ] bestseller
-   - [x] album
-   - [ ] painting (work)
-   - [ ] drama
-   > "альбом" means "album"
-
-2. What does "бестселер" mean?
-   - [x] bestseller
-   - [ ] album
-   - [ ] painting (work)
-   - [ ] drama
-   > "бестселер" means "bestseller"
-
-3. What does "драма" mean?
+10. Що означає "драма"?
    - [x] drama
-   - [ ] painting (work)
-   - [ ] bestseller
-   - [ ] album
+   - [ ] hryvnia (₴)
+   - [ ] to shave
+   - [ ] story, history
    > "драма" means "drama"
 
-4. What does "картина" mean?
-   - [ ] album
-   - [x] painting (work)
-   - [ ] drama
-   - [ ] bestseller
-   > "картина" means "painting (work)"
+11. Що означає "бандура"?
+   - [ ] Locative: в, на, де, тут, там
+   - [ ] page
+   - [ ] remotely
+   - [x] bandura
+   > "бандура" means "bandura"
 
-5. What does "кінотеатр" mean?
-   - [ ] album
-   - [ ] bestseller
-   - [x] movie theater
-   - [ ] drama
-   > "кінотеатр" means "movie theater"
+12. Що означає "опера"?
+   - [ ] waterproof
+   - [ ] better
+   - [x] opera
+   - [ ] waterfall
+   > "опера" means "opera"
 
-6. What does "комедія" mean?
-   - [x] comedy
-   - [ ] album
-   - [ ] drama
-   - [ ] bestseller
-   > "комедія" means "comedy"
+13. Що означає "мультфільм"?
+   - [ ] pilot
+   - [ ] composer
+   - [ ] invitation
+   - [x] cartoon
+   > "мультфільм" means "cartoon"
 
+14. Що означає "аплодисменти"?
+   - [ ] building, house
+   - [x] applause
+   - [ ] escape room
+   - [ ] rose
+   > "аплодисменти" means "applause"
 
+## true-false: Правда чи ні?
 
-## unjumble: Word Order
+> Визначте, чи правильне твердження.
 
-> Put the words in the correct order to form a sentence.
+- [ ] "вистава" means "spring"
+   > Incorrect. "вистава" means "performance"
 
-1. співачка / співак / /
-   > [!answer] співак / співачка
-   > (singer (m/f))
+- [x] "прем'єра" means "premiere"
+   > Correct!
 
-2. фортепіано / / / піаніно
-   > [!answer] піаніно / фортепіано
-   > (piano)
+- [x] "сценарій" means "screenplay"
+   > Correct!
 
-3. акторка / / / актор
-   > [!answer] актор / акторка
-   > (actor (m/f))
+- [x] "поет" means "poet"
+   > Correct!
 
+- [ ] "бандура" means "entrance (vehicles)"
+   > Incorrect. "бандура" means "bandura"
+
+- [ ] "гурт" means "well done! fine fellow"
+   > Incorrect. "гурт" means "band"
+
+- [x] "скульптура" means "sculpture"
+   > Correct!
+
+- [ ] "традиція" means "description"
+   > Incorrect. "традиція" means "tradition"
+
+- [ ] "піаніно" means "four"
+   > Incorrect. "піаніно" means "piano"
+
+- [ ] "кінотеатр" means "to tell (impf)"
+   > Incorrect. "кінотеатр" means "movie theater"
+
+## group-sort: Сортування за родом
+
+> Розподіліть слова за родами.
+
+### Чоловічий рід
+- джаз
+- композитор
+- мультфільм
+- оркестр
+- роман
+- балет
+
+### Жіночий рід
+- прем'єра
+- пісня
+- мелодія
+- картина
+- традиція
+- гітара
+
+### Середній рід
+- піаніно
+- свято
 
 ---
 

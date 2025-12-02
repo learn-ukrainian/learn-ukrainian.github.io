@@ -264,11 +264,155 @@ Talk about:
    - [ ] якому
    > Accusative case: "відповідати на" + accusative.
 
-## fill-in: Complete with Relative Clauses
 
-> Це моя подруга Оксана, (1)___ працює вчителькою. Школа, в (2)___ вона працює, знаходиться в центрі міста. Учні, (3)___ вона вчить, дуже люблять її. Предмети, (4)___ вона викладає, — математика і фізика.
+## match-up: Vocabulary Match
 
-**Answers:** яка, якій, яких, які
+> Match each Ukrainian word with its English translation.
+
+| Left | Right |
+|------|-------|
+| складний | complex, difficult |
+| речення | sentence |
+| стосуватися | to relate to, concern |
+| простий | simple |
+| з'єднати | to connect |
+| з'єднувати | to connect |
+
+
+## fill-in: Fill in the Blank
+
+> Choose the correct word to complete each sentence.
+
+1. Чоловік, який працює ___ — мій друг.
+   > [!answer] тут
+   > [!options] тут | батько | якому | яким
+
+2. Жінка, яка написала ___ книгу, відома.
+   > [!answer] цю
+   > [!options] цю | тут | на | історія
+
+3. Місто, яке стоїть ___ Дніпрі, — Київ.
+   > [!answer] на
+   > [!options] на | якому | дивилися | тут
+
+4. Студенти, які ___ українську, старанні.
+   > [!answer] вчать
+   > [!options] вчать | читаю | дивилися | яким
+
+5. Книгу, яку я ___ дуже цікава.
+   > [!answer] читаю
+   > [!options] читаю | якому | яким | вчать
+
+6. Фільм, який ми ___ був довгим.
+   > [!answer] дивилися
+   > [!options] дивилися | якому | тут | ми
+
+7. Друг, якого ___ — лікар...
+   > [!answer] батько
+   > [!options] батько | тут | якому | на
+
+8. Місто, якого ___ цікава...
+   > [!answer] історія
+   > [!options] історія | якому | якому | на
+
+9. Люди, яким ___ віримо...
+   > [!answer] ми
+   > [!options] ми | дивилися | вчать | якому
+
+10. Друг, з ___ я працюю...
+   > [!answer] яким
+   > [!options] яким | дивилися | історія | якому
+
+11. Питання, над ___ я думаю...
+   > [!answer] яким
+   > [!options] яким | якому | історія | якому
+
+12. Місто, в ___ я живу...
+   > [!answer] якому
+   > [!options] якому | на | цю | читаю
+
+13. Будинок, у ___ вона народилася...
+   > [!answer] якому
+   > [!options] якому | тут | на | яким
+
+
+
+## unjumble: Word Order
+
+> Drag the words into the correct order to form a sentence.
+
+1. працює / тут / — / який / друг / мій / Чоловік
+   > [!answer] Чоловік, який працює тут, — мій друг.
+   > (The man who works here is my friend.)
+
+2. Жінка / написала / яка / відома / книгу / цю
+   > [!answer] Жінка, яка написала цю книгу, відома.
+   > (The woman who wrote this book is famous.)
+
+3. на / — / Дніпрі / стоїть / Місто / яке / Київ
+   > [!answer] Місто, яке стоїть на Дніпрі, — Київ.
+   > (The city that stands on the Dnipro is Kyiv.)
+
+4. українську / старанні / Студенти / які / вчать
+   > [!answer] Студенти, які вчать українську, старанні.
+   > (The students who study Ukrainian are diligent.)
+
+5. читаю / Книгу / яку / цікава / я / дуже
+   > [!answer] Книгу, яку я читаю, дуже цікава.
+   > (The book that I'm reading is very interesting.)
+
+6. ми / який / довгим / був / дивилися / Фільм
+   > [!answer] Фільм, який ми дивилися, був довгим.
+   > (The film that we watched was long.)
+
+7. Людей / я / яких / знаю / мало
+   > [!answer] Людей, яких я знаю, мало.
+   > (The people whom I know are few.)
+
+8. якого / Друг / — / лікар / батько
+   > [!answer] Друг, якого батько — лікар...
+   > (A friend whose father is a doctor...)
+
+9. якого / цікава / Місто / історія
+   > [!answer] Місто, якого історія цікава...
+   > (A city whose history is interesting...)
+
+10. без / якої / Людина / не / я / можу
+   > [!answer] Людина, без якої я не можу...
+   > (A person without whom I can't...)
+
+11. я / якому / допоміг / Друг
+   > [!answer] Друг, якому я допоміг...
+   > (The friend whom I helped...)
+
+12. Дівчина / дав / якій / книгу / я
+   > [!answer] Дівчина, якій я дав книгу...
+   > (The girl to whom I gave a book...)
+
+13. Люди / яким / ми / віримо
+   > [!answer] Люди, яким ми віримо...
+   > (The people whom we trust...)
+
+14. я / якою / пишу / Ручка
+   > [!answer] Ручка, якою я пишу...
+   > (The pen with which I write...)
+
+15. працюю / з / яким / я / Друг
+   > [!answer] Друг, з яким я працюю...
+   > (The friend with whom I work...)
+
+16. Питання / яким / над / я / думаю
+   > [!answer] Питання, над яким я думаю...
+   > (The question about which I'm thinking...)
+
+17. Місто / в / я / живу / якому
+   > [!answer] Місто, в якому я живу...
+   > (The city in which I live...)
+
+18. у / народилася / Будинок / вона / якому
+   > [!answer] Будинок, у якому вона народилася...
+   > (The house in which she was born...)
+
 
 ---
 

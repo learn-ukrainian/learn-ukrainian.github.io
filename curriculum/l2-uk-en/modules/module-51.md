@@ -263,160 +263,139 @@ Use reflexive verbs for introductions:
 
 ---
 
+---
+
+---
+
+---
+
 # Activities
 
-## match-up: Reflexive Pairs
+## fill-in: Complete the Sentences
 
-> Match non-reflexive with reflexive form.
+> Choose the correct word to complete each sentence.
+
+1. Вони планують ___ завтра.
+   > [!answer] намагатися
+   > [!options] виходити | намагатися | служити | були
+
+2. Мій брат любить ___ щодня.
+   > [!answer] сміятися
+   > [!options] зачісуватися | відправити | сміятися | їсти
+
+3. Чи ти вмієш добре ___?
+   > [!answer] зачісуватися
+   > [!options] йти | зачісуватися | їсти | брати
+
+## unjumble: Build the Sentence
+
+> Arrange the words in the correct order.
+
+## match-up: Match the Pairs
+
+> Match Ukrainian words to their English meanings.
 
 | Left | Right |
 |------|-------|
-| мити | митися |
-| одягати | одягатися |
-| вчити | вчитися |
-| зустрічати | зустрічатися |
-| знайомити | знайомитися |
-| бачити | бачитися |
-
-## quiz: Reflexive Verbs
-
-> Choose the correct form.
-
-1. "I wash myself" - Я ___.
-   - [x] миюся
-   - [ ] мию
-   - [ ] миється
-   - [ ] митися
-   > First person singular + -ся.
-
-2. "She's laughing" - Вона ___.
-   - [x] сміється
-   - [ ] сміятися
-   - [ ] сміюся
-   - [ ] сміються
-   > Third person singular + -ться.
-
-3. "I bought myself a gift" - Я купив ___ подарунок.
-   - [x] собі
-   - [ ] себе
-   - [ ] собою
-   - [ ] мені
-   > Dative for "for oneself."
-
-4. "Take it with you" - Візьми це з ___.
-   - [x] собою
-   - [ ] себе
-   - [ ] собі
-   - [ ] тобою
-   > Instrumental with "з."
-
-5. "We meet each other daily" - Ми ___ щодня.
-   - [x] зустрічаємося
-   - [ ] зустрічаємо
-   - [ ] зустрічати
-   - [ ] зустрінемося
-   > Reflexive = each other.
-
-6. "How do you feel?" - Як ви ___ себе?
-   - [x] почуваєте
-   - [ ] почуваєтеся
-   - [ ] почуваю
-   - [ ] почували
-   > "Почувати себе" - fixed expression.
-
-## group-sort: Always Reflexive vs Pairs
-
-> Sort by type.
-
-### Always Reflexive
-- сміятися
-- боятися
-- намагатися
-- здаватися
-- народитися
-
-### Has Non-Reflexive Pair
-- митися (мити)
-- одягатися (одягати)
-- вчитися (вчити)
-- зустрічатися (зустрічати)
-- знайомитися (знайомити)
-
-
-## fill-in: Fill in the Blank
-
-> Fill in the blanks with the correct word.
-
-
+| 17 | Food: сніданок, обід, вечеря, борщ |
+| собою | oneself (inst) |
+| боятися | to be afraid |
+| сміятися | to laugh |
+| зачісуватися | to comb one's hair |
+| намагатися | to try |
+| собі | oneself (dat/loc) |
+| себе | oneself (acc/gen) |
+| запитати | to ask (perf) |
+| митися | to wash oneself |
+| надіслати | to send |
 
 ## quiz: Meaning Check
 
 > Choose the correct answer.
 
-1. What does "митися" mean?
-   - [x] to wash oneself
-   - [ ] to comb one's hair
-   - [ ] to laugh
-   - [ ] to try
-   > "митися" means "to wash oneself"
-
-2. What does "зачісуватися" mean?
-   - [ ] to try
-   - [x] to comb one's hair
-   - [ ] to laugh
-   - [ ] to wash oneself
-   > "зачісуватися" means "to comb one's hair"
-
-3. What does "сміятися" mean?
-   - [x] to laugh
-   - [ ] to try
-   - [ ] to wash oneself
-   - [ ] to comb one's hair
-   > "сміятися" means "to laugh"
-
-4. What does "намагатися" mean?
-   - [ ] to laugh
+1. What does "намагатися" mean?
+   - [ ] street
+   - [ ] black
+   - [ ] to buy (perf)
    - [x] to try
-   - [ ] to wash oneself
-   - [ ] to comb one's hair
    > "намагатися" means "to try"
 
-5. What does "собі" mean?
-   - [ ] to comb one's hair
-   - [ ] to wash oneself
-   - [ ] to laugh
-   - [x] oneself (dat/loc)
-   > "собі" means "oneself (dat/loc)"
+2. What does "зачісуватися" mean?
+   - [ ] to call (impf)
+   - [x] to comb one's hair
+   - [ ] Wednesday
+   - [ ] document
+   > "зачісуватися" means "to comb one's hair"
 
-6. What does "боятися" mean?
-   - [ ] to wash oneself
+3. What does "митися" mean?
+   - [ ] Monday
+   - [ ] dress
+   - [ ] nowhere
+   - [x] to wash oneself
+   > "митися" means "to wash oneself"
+
+4. What does "сміятися" mean?
+   - [x] to laugh
+   - [ ] package
+   - [ ] to be going to
+   - [ ] lemon
+   > "сміятися" means "to laugh"
+
+5. What does "боятися" mean?
+   - [ ] cucumber
+   - [ ] ticket
    - [x] to be afraid
-   - [ ] to comb one's hair
-   - [ ] to laugh
+   - [ ] these
    > "боятися" means "to be afraid"
 
+6. What does "собі" mean?
+   - [ ] to appear in dream
+   - [ ] waiter
+   - [x] oneself (dat/loc)
+   - [ ] music
+   > "собі" means "oneself (dat/loc)"
 
+7. What does "собою" mean?
+   - [ ] bread
+   - [ ] to call (phone)
+   - [ ] where
+   - [x] oneself (inst)
+   > "собою" means "oneself (inst)"
 
-## unjumble: Word Order
+8. What does "себе" mean?
+   - [ ] can, to be able
+   - [ ] to be mistaken
+   - [ ] pharmacy
+   - [x] oneself (acc/gen)
+   > "себе" means "oneself (acc/gen)"
 
-> Put the words in the correct order to form a sentence.
+## true-false: True or False?
 
-1. в / не / собі
-   > [!answer] не в собі
-   > (not oneself (upset))
+> Determine if each statement is true or false.
 
-2. до / себе / прийти
-   > [!answer] прийти до себе
-   > (to come to one's senses)
+- [ ] "боятися" means "waitress"
+   > Incorrect. "боятися" means "to be afraid"
 
-3. consonants: / -ся / After
-   > [!answer] After consonants: -ся
-   > (митися (to wash oneself) → я **миюся**)
+- [ ] "собою" means "sad"
+   > Incorrect. "собою" means "oneself (inst)"
 
-4. After / -сь / vowels:
-   > [!answer] After vowels: -сь
-   > (миюся → ми **миємось** (colloquial: миємося))
+- [ ] "зачісуватися" means "to schedule (perf)"
+   > Incorrect. "зачісуватися" means "to comb one's hair"
 
+- [x] "митися" means "to wash oneself"
+   > Correct!
+
+- [x] "намагатися" means "to try"
+   > Correct!
+
+- [ ] "сміятися" means "they will be"
+   > Incorrect. "сміятися" means "to laugh"
+
+- [x] "собі" means "oneself (dat/loc)"
+   > Correct!
+
+- [x] "себе" means "oneself (acc/gen)"
+   > Correct!
 
 ---
 

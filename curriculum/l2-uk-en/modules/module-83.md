@@ -1,14 +1,14 @@
 ---
 module: 83
 title: "Aspect in Past: Result vs Process"
-subtitle: "What Happened vs What Was Happening"
+subtitle: "What got done vs What was happening"
 level: B1
 phase: B1.1
 duration: 45
 transliteration: none
 tags: [aspect, grammar, verbs, past-tense, result, process]
 objectives:
-  - Distinguish result-focused from process-focused actions
+  - Distinguish between focus on result and focus on process
   - Use perfective when the result matters
   - Use imperfective when the process matters
   - Master aspect selection in various contexts
@@ -20,67 +20,83 @@ grammar:
 
 # Lesson Content
 
-## warm-up
+## Warm-up
 
-### Two Different Questions
+### Two Questions — Two Worlds
 
-Consider these two questions:
+Compare these questions:
 
-- Що ти **робив** учора? - What were you doing yesterday?
-- Що ти **зробив** учора? - What did you accomplish yesterday?
+- Що ти **робив** учора? — What were you doing yesterday?
+- Що ти **зробив** учора? — What did you accomplish yesterday?
 
-Both ask about yesterday. But they ask about **different things**:
-- First: the process, how you spent time
-- Second: the result, what you completed
+Both questions are about yesterday. But they ask about **different things**:
+- First: process, how you spent your time
+- Second: result, what you completed
 
-> This is the heart of Ukrainian aspect: **perspective on the action**.
+Imagine: your friend returns from vacation. You ask:
 
-## presentation
+**"Що ти робив на відпустці?"** — I'm interested in how they spent their time: swimming, sunbathing, walking...
 
-### Result Focus = Perfective
+**"Що ти зробив на відпустці?"** — I'm interested in what they accomplished: visited a museum, read a book, learned to swim...
 
-When you care about the **outcome** or **completion**, use perfective:
-
-**Signals of result focus:**
-- Achievement or accomplishment
-- "Did you finish?"
-- "What's done?"
-- Concrete output
-
-**Examples:**
-
-- Я **прочитав** книгу. - I read the book (finished it).
-- Вона **написала** статтю. - She wrote the article (completed it).
-- Ми **побудували** дім. - We built a house (it's done).
-- Він **вивчив** українську. - He learned Ukrainian (mastered it).
-- Ти **зробив** домашнє завдання? - Did you do your homework? (Is it done?)
-
-### Process Focus = Imperfective
-
-When you care about the **activity itself** or **how time was spent**, use imperfective:
-
-**Signals of process focus:**
-- Duration (how long)
-- Activity description
-- "What were you doing?"
-- No concern for completion
-
-**Examples:**
-
-- Я **читав** книгу весь вечір. - I was reading a book all evening.
-- Вона **писала** статтю три дні. - She was writing the article for three days.
-- Ми **будували** дім два роки. - We were building a house for two years.
-- Він **вчив** українську в університеті. - He was studying Ukrainian at university.
-- Що ти **робив** учора? - What were you doing yesterday?
-
-> **⚠️ Ambiguity Note**
+> **Did you know?**
 >
-> "Я **читав** книгу весь вечір" emphasizes duration (process). But if you finished the book that evening, you could also say "Я **прочитав** книгу за вечір" (I read the book in one evening). Both are grammatically correct - the choice depends on whether you want to emphasize the **process** or the **result**. Duration markers make imperfective *more natural*, but don't make perfective wrong.
+> This difference is one of the hardest for English speakers. In English, "What did you do?" can mean both process and result — context decides. In Ukrainian, **the verb itself** shows your perspective. This makes Ukrainian incredibly precise — but requires constant choice.
 
-### The Same Event, Different Perspective
+---
+
+## Presentation
+
+### Focus on Result = Perfective (Доконаний)
+
+When the **result** or **completion** matters, use perfective:
+
+**Signals of focus on result:**
+- Achievement, completion
+- "Did you finish?"
+- "What got done?"
+- Concrete outcome
+
+**Examples:**
+
+- Я **прочитав** книгу. — I read the book (finished it).
+- Вона **написала** статтю. — She wrote the article (completed it).
+- Ми **побудували** дім. — We built a house (it's done).
+- Він **вивчив** українську. — He learned Ukrainian (mastered it).
+- Ти **зробив** домашнє завдання? — Did you do your homework? (Is it done?)
+
+### Focus on Process = Imperfective (Недоконаний)
+
+When the **action itself** or **how time was spent** matters, use imperfective:
+
+**Signals of focus on process:**
+- Duration (how long)
+- Description of activity
+- "What were you doing?"
+- No interest in completion
+
+**Examples:**
+
+- Я **читав** книгу весь вечір. — I was reading a book all evening.
+- Вона **писала** статтю три дні. — She was writing the article for three days.
+- Ми **будували** дім два роки. — We were building a house for two years.
+- Він **вчив** українську в університеті. — He was studying Ukrainian at university.
+- Що ти **робив** учора? — What were you doing yesterday?
+
+> **Myth vs Fact**
+>
+> **Myth:** "If there's a time word like 'годину' or 'два роки' — always use imperfective."
+>
+> **Fact:** Not always! Compare:
+> - "Я **читав** книгу тиждень" — process (how long I was reading)
+> - "Я **прочитав** книгу **за** тиждень" — result (how fast I finished)
+>
+> The magic word is **"за"**: it transforms duration into completion time.
+
+### Same Event — Different Perspectives
 
 | Imperfective (process) | Perfective (result) |
-|----------------------|---------------------|
+|------------------------|---------------------|
 | Я **читав** цю книгу. | Я **прочитав** цю книгу. |
 | I was reading this book. | I read (finished) this book. |
 | Вона **готувала** вечерю. | Вона **приготувала** вечерю. |
@@ -88,296 +104,400 @@ When you care about the **activity itself** or **how time was spent**, use imper
 | Він **писав** листа. | Він **написав** листа. |
 | He was writing a letter. | He wrote the letter (done). |
 
-> **Notice:** The same real-world situation can be described with either aspect. The choice depends on what you want to emphasize.
+> **Did you know?**
+>
+> The same real situation can be described with both aspects! It's not a question of "right/wrong" — it's a question of **perspective**. Imagine a camera: imperfective — you're filming the process from inside. Perfective — you're showing the final frame.
 
 ---
 
-> **🔑 KEY RULE: DURATION vs COMPLETION TIME**
->
-> | Question | Aspect | Time Expression | Example |
-> |----------|--------|-----------------|---------|
-> | "How long?" | **Imperfective** | весь день, годинами | Я **читав** книгу тиждень. |
-> | "In how much time?" | **Perfective** | за годину, за день | Я **прочитав** книгу за тиждень. |
->
-> **Listen for triggers:**
-> - Duration words (весь, цілий, довго) → **imperfective**
-> - "за + time" (completion) → **perfective**
+### The Key Rule: Duration vs Completion Time
+
+| Question | Aspect | Preposition | Example |
+|----------|--------|-------------|---------|
+| "How long?" | **Imperfective** | — | Я **читав** книгу тиждень. |
+| "In how much time?" | **Perfective** | **за** | Я **прочитав** книгу **за** тиждень. |
+
+**Listen for triggers:**
+- Duration words (весь, цілий, довго) → **imperfective**
+- "за + time" (completion) → **perfective**
 
 ---
 
-### Duration Words Demand Imperfective
+### Duration Words Require Imperfective
 
-Expressions of duration require imperfective:
+Duration expressions need imperfective:
 
-- **весь день** - all day
-- **цілий тиждень** - the whole week
-- **три години** - for three hours
-- **довго** - for a long time
-- **весь час** - all the time
-
-**Examples:**
-
-- Ми **чекали** на тебе годину. - We were waiting for you for an hour.
-- Він **працював** там п'ять років. - He worked there for five years.
-- Вона **спала** весь день. - She slept all day.
-- Я **думав** про це довго. - I was thinking about it for a long time.
-
-**NOT:** ~~Ми зачекали на тебе годину.~~ (Perfective doesn't combine with duration)
-
-### Result Words Demand Perfective
-
-Expressions of result or completion require perfective:
-
-- **вже** - already
-- **нарешті** - finally
-- **за годину** - in an hour (completion time)
-- **швидко** - quickly (completed quickly)
+| Ukrainian | English |
+|-----------|---------|
+| весь день | all day |
+| цілий тиждень | the whole week |
+| три години | for three hours |
+| довго | for a long time |
+| весь час | all the time |
 
 **Examples:**
 
-- Він **вже приїхав**. - He has already arrived.
-- Нарешті ми **закінчили**! - Finally we finished!
-- Вона **зробила** це за годину. - She did it in an hour.
-- Я швидко **поснідав**. - I quickly had breakfast.
+- Ми **чекали** на тебе годину. — We were waiting for you for an hour.
+- Він **працював** там п'ять років. — He worked there for five years.
+- Вона **спала** весь день. — She slept all day.
+- Я **думав** про це довго. — I was thinking about it for a long time.
+
+### Result Words Require Perfective
+
+Result or completion expressions need perfective:
+
+| Ukrainian | English |
+|-----------|---------|
+| вже | already |
+| нарешті | finally |
+| за годину | in an hour |
+| швидко | quickly |
+
+**Examples:**
+
+- Він **вже приїхав**. — He has already arrived.
+- Нарешті ми **закінчили**! — Finally we finished!
+- Вона **зробила** це за годину. — She did it in an hour.
+- Я швидко **поснідав**. — I quickly had breakfast.
+
+> **Did you know?**
+>
+> The word **"вже"** (already) almost always signals perfective. Why? Because "already" means something is **completed**. "Він вже прийшов" = the result exists. But "Він вже приходив" (imperfective) is possible if it means "he came before" (repetition in the past).
 
 ### Questions: Process vs Result
 
-**Asking about process (imperfective):**
+**Process questions (imperfective):**
 
-- Що ти робив? - What were you doing?
-- Чим ти займався? - What were you occupied with?
-- Як ти проводив час? - How were you spending time?
-- Довго ти чекав? - Were you waiting long?
+- Що ти **робив**? — What were you doing?
+- Чим ти **займався**? — What were you occupied with?
+- Як ти **проводив** час? — How were you spending time?
+- Довго ти **чекав**? — Were you waiting long?
 
-**Asking about result (perfective):**
+**Result questions (perfective):**
 
-- Що ти зробив? - What did you do/accomplish?
-- Ти зробив це? - Did you do it?
-- Ти вже поїв? - Have you eaten already?
-- Все зрозумів? - Did you understand everything?
+- Що ти **зробив**? — What did you do/accomplish?
+- Ти **зробив** це? — Did you do it?
+- Ти вже **поїв**? — Have you eaten already?
+- Все **зрозумів**? — Did you understand everything?
 
-### Interrupted Actions = Imperfective
+### Interrupted Action = Imperfective
 
-When an action was **interrupted** (not completed), use imperfective:
+When an action was **interrupted** (not finished), use imperfective:
 
-- Я **читав** книгу, коли він прийшов. - I was reading a book when he came.
-- Вона **готувала** вечерю, але не закінчила. - She was cooking dinner but didn't finish.
-- Ми **дивилися** фільм, коли зникло світло. - We were watching a movie when the power went out.
+- Я **читав** книгу, коли він прийшов. — I was reading a book when he came.
+- Вона **готувала** вечерю, але не закінчила. — She was cooking dinner but didn't finish.
+- Ми **дивилися** фільм, коли зникло світло. — We were watching a movie when the power went out.
 
-The action was in progress but something interrupted it.
+The action was ongoing, but something interrupted it.
 
-### Completed Despite Duration = Perfective
+> **Did you know?**
+>
+> This structure — "imperfective + коли + perfective" — is classic for storytelling. Imperfective creates the **background** (what was ongoing), perfective creates the **event** (what suddenly happened). "Я **йшов** додому, коли **побачив** аварію." (I was walking home when I saw an accident.) This is the Ukrainian version of English "Past Continuous + when + Past Simple".
 
-If an action was completed, use perfective even with time:
+### Completed Despite Time = Perfective
 
-- Я **прочитав** книгу **за тиждень**. - I read the book in a week.
-- Вона **написала** статтю **за два дні**. - She wrote the article in two days.
+If an action is completed, use perfective even with time expressions:
 
-**"За + time"** means "within that time, completed." Different from duration!
+- Я **прочитав** книгу **за тиждень**. — I read the book in a week.
+- Вона **написала** статтю **за два дні**. — She wrote the article in two days.
+
+**"За + time"** means "within this time, completed". This is different from duration!
 
 Compare:
 - Я читав книгу тиждень. (Process: spent a week reading)
-- Я прочитав книгу за тиждень. (Result: finished it within a week)
+- Я прочитав книгу за тиждень. (Result: finished it in a week)
 
-## practice
+---
+
+## Practice
 
 ### Choose: Result or Process?
 
 1. Я ___ (дивився/подивився) цей фільм три рази.
-   > [!answer] **дивився** (three times = process)
+   > [!answer] **дивився** (три рази = process, repetition)
 2. Ти вже ___ (снідав/поснідав)?
-   > [!answer] **поснідав** (already = result)
+   > [!answer] **поснідав** (вже = result)
 3. Вона ___ (працювала/попрацювала) там п'ять років.
    > [!answer] **працювала** (duration)
 4. Він швидко ___ (одягався/одягнувся).
    > [!answer] **одягнувся** (quickly completed)
 5. Ми ___ (будували/побудували) дім за рік.
-   > [!answer] **побудували** (completed in a year)
+   > [!answer] **побудували** (за рік = completion)
 6. Що ви ___ (робили/зробили) весь день?
-   > [!answer] **робили** (all day = process)
+   > [!answer] **робили** (весь день = process)
 
-### Answer the Questions
+### Answer with the Correct Aspect
 
-Answer using the correct aspect:
+**Question:** Що ти робив учора ввечері?
+**Answer:** Я ___ (читав/прочитав) книгу. → **читав** (question about process)
 
-**Q:** Що ти робив учора ввечері?
-**A:** Я ___ (читав/прочитав) книгу. → **читав** (process question)
+**Question:** Ти вже прочитав цю книгу?
+**Answer:** Так, я вже ___ (читав/прочитав) її. → **прочитав** (question about result)
 
-**Q:** Ти вже прочитав цю книгу?
-**A:** Так, я вже ___ (читав/прочитав) її. → **прочитав** (result question)
+**Question:** Довго ти готував вечерю?
+**Answer:** Так, я ___ (готував/приготував) її дві години. → **готував** (duration)
 
-**Q:** Довго ти готував вечерю?
-**A:** Так, я ___ (готував/приготував) її дві години. → **готував** (duration)
+**Question:** Вечеря готова?
+**Answer:** Так, я вже ___ (готував/приготував) її. → **приготував** (result)
 
-**Q:** Вечеря готова?
-**A:** Так, я вже ___ (готував/приготував) її. → **приготував** (result)
-
-### Complete the Dialogues
-
-**Dialogue 1:**
-- A: Що ти робив у вихідні?
-- B: Я ___ (писав/написав) статтю.
-- A: Ти її закінчив?
-- B: Так, я ___ (писав/написав) її в неділю.
-
-**Answers:** писав (process), написав (result)
-
-**Dialogue 2:**
-- A: Де ти був?
-- B: Я ___ (чекав/зачекав) на автобус.
-- A: Довго?
-- B: Так, я ___ (чекав/зачекав) двадцять хвилин.
-
-**Answers:** чекав (process), чекав (duration = imperfective)
-
-### Transform Sentences
+### Transformation
 
 Change perspective from result to process:
 
-1. Він прочитав книгу.
-   > [!answer] Він **читав** книгу весь вечір.
-2. Ми побудували дім.
-   > [!answer] Ми **будували** дім два роки.
-3. Вона написала листа.
-   > [!answer] Вона **писала** листа годину.
+1. Він прочитав книгу. (He finished the book.)
+   > [!answer] Він **читав** книгу весь вечір. (He was reading the book all evening.)
+2. Ми побудували дім. (We built a house.)
+   > [!answer] Ми **будували** дім два роки. (We were building a house for two years.)
+3. Вона написала листа. (She wrote a letter.)
+   > [!answer] Вона **писала** листа годину. (She was writing a letter for an hour.)
 
 Change perspective from process to result:
 
-1. Я вчив нові слова.
-   > [!answer] Я **вивчив** нові слова.
-2. Вона готувала обід.
-   > [!answer] Вона **приготувала** обід.
-3. Ми шукали ключі.
-   > [!answer] Ми **знайшли** ключі.
+1. Я вчив нові слова. (I was learning new words.)
+   > [!answer] Я **вивчив** нові слова. (I learned the new words.)
+2. Вона готувала обід. (She was making lunch.)
+   > [!answer] Вона **приготувала** обід. (She made lunch.)
+3. Ми шукали ключі. (We were looking for the keys.)
+   > [!answer] Ми **знайшли** ключі. (We found the keys.)
 
-## production
+---
 
-### Describe Your Day: Two Ways
+## Production
 
-Describe what you did yesterday using BOTH perspectives:
+### Describe Your Day Two Ways
 
-**Process focus (how you spent time):**
+Describe what you did yesterday from BOTH perspectives:
+
+**Focus on process (how you spent time):**
 Учора я працював весь день. Я писав звіти, відповідав на листи, розмовляв з колегами...
+(Yesterday I worked all day. I was writing reports, answering letters, talking with colleagues...)
 
-**Result focus (what you accomplished):**
+**Focus on result (what you accomplished):**
 Учора я написав три звіти, відповів на всі листи, домовився про зустріч...
+(Yesterday I wrote three reports, answered all letters, arranged a meeting...)
 
 ### Interview Questions
 
 Ask your partner:
-1. Що ти робив у вихідні? (process)
-2. Що ти зробив цього тижня? (result)
-3. Над чим ти працював останнім часом? (process)
-4. Що ти вже закінчив? (result)
+1. Що ти **робив** у вихідні? (process)
+2. Що ти **зробив** цього тижня? (result)
+3. Над чим ти **працював** останнім часом? (process)
+4. Що ти вже **закінчив**? (result)
 
 ---
 
-### 🎭 ROLE-PLAY: Job Interview
-
-**Situation:** You're in a job interview. The interviewer asks about your past work.
-
-**Partner A (Interviewer):** Ask about:
-- Completed projects (result → perfective): Що ви **зробили** на попередній роботі?
-- Ongoing responsibilities (process → imperfective): Над чим ви **працювали**?
-- Duration questions (process → imperfective): Скільки років ви там **працювали**?
-
-**Partner B (Candidate):** Answer using correct aspects:
-
-**Example dialogue:**
-```
-A: Розкажіть про вашу попередню роботу. Що ви там робили?
-B: Я працював маркетологом три роки. Я готував рекламні кампанії.
-A: Які проєкти ви завершили?
-B: Я запустив новий вебсайт компанії. Ми збільшили продажі на 30%.
-A: Як довго ви працювали над цим проєктом?
-B: Я працював над ним шість місяців. Закінчив у грудні.
-```
-
-**Required structures:**
-- ✅ Perfective for results: зробив, закінчив, запустив
-- ✅ Imperfective for duration/process: працював, готував, займався
-
-**Switch roles and repeat!**
+---
 
 ---
 
-# Activities
+---
 
-## quiz: Process or Result?
+# Вправи
 
-> Choose based on the context.
+## fill-in: Доповніть речення
 
-1. Я ___ книгу дві години.
-   - [x] читав
-   - [ ] прочитав
-   > Duration = process = imperfective
+> Оберіть правильне слово.
 
-2. Нарешті я ___ цю задачу!
-   - [ ] розв'язував
-   - [x] розв'язав
-   > Нарешті = result = perfective
+1. Незважаючи на те, що цей підхід видається ___, він має багато переваг.
+   > [!answer] цілий
+   > [!options] цілий | смачний | обладнаний | білий
 
-3. Вона ___ листа, коли я прийшов.
-   - [x] писала
-   - [ ] написала
-   > Interrupted action = imperfective
+2. Коли я вперше побачив цей ___, я одразу захотів його купити.
+   > [!answer] підсумок
+   > [!options] відхід | витривалість | хмара | підсумок
 
-4. Він вже ___ снідати.
-   - [ ] снідав
-   - [x] поснідав
-   > Вже = result = perfective
+3. Незважаючи на високу ціну, це ___ варте кожної гривні.
+   > [!answer] досягнення
+   > [!options] досягнення | акція | стоматолог | вишивання
 
-5. Ми ___ про це весь вечір.
-   - [x] говорили
-   - [ ] поговорили
-   > "Весь вечір" emphasizes duration, making imperfective more natural here
+4. Незважаючи на те, що ___ вимагає багато часу, це приносить велике задоволення.
+   > [!answer] тривати
+   > [!options] вважатися | тривати | приходити | продаватися
 
-6. Вона ___ статтю за три дні.
-   - [ ] писала
-   - [x] написала
-   > За три дні = completed within = perfective
+5. Незважаючи на те, що ___ вимагає багато часу, це приносить велике задоволення.
+   > [!answer] завершити
+   > [!options] завершити | отримати | дарувати | бронювати
 
-## match-up: Duration vs Completion
+6. Незважаючи на те, що цей підхід видається ___, він має багато переваг.
+   > [!answer] перервана
+   > [!options] старий | чорний | перервана | хмарний
 
-| Expression | Aspect Signal |
-|------------|---------------|
-| весь день | imperfective |
-| за годину | perfective |
-| три години | imperfective |
-| вже | perfective |
-| довго | imperfective |
-| нарешті | perfective |
+7. Незважаючи на те, що ___ вимагає багато часу, це приносить велике задоволення.
+   > [!answer] перервати
+   > [!options] коштувати | перервати | радити | випити
 
-## group-sort: Signals
+8. Незважаючи на те, що ___ вимагає багато часу, це приносить велике задоволення.
+   > [!answer] переривати
+   > [!options] зробити | зустрічатися | переривати | бронювати
 
-### Process Focus (Imperfective)
-- весь день
-- три години
-- довго
-- весь час
-- цілий тиждень
+## unjumble: Побудуйте речення
 
-### Result Focus (Perfective)
-- вже
-- нарешті
-- за годину
-- швидко
-- раптом
+> Розташуйте слова в правильному порядку.
+
+1. це / на / кожної / гривні / досягнення / Незважаючи / ціну / варте / високу
+   > [!answer] Незважаючи на високу ціну, це досягнення варте кожної гривні.
+   > (achievement)
+
+2. який / підсумок / нас / для / Ми / нарешті / ідеально / підходить / знайшли
+   > [!answer] Ми нарешті знайшли підсумок, який ідеально підходить для нас.
+   > (summary, outcome)
+
+## match-up: Знайдіть пари
+
+> З'єднайте українські слова з англійськими.
+
+| Left | Right |
+|------|-------|
+| цілий | whole, entire |
+| продовжити | to continue |
+| перервати | to interrupt |
+| перервана | interrupted |
+| чашка | cup |
+| один | one (m) |
+| досягти | to achieve |
+| наш | our (m) |
+| солодкий | sweet |
+| тривати | to last, continue |
+| досягати | to be achieving |
+| бездротовий | wireless |
+| завершити | to complete |
+| підсумок | summary, outcome |
+| досягнення | achievement |
+| писати | to write |
+
+## quiz: Перевірка значень
+
+> Оберіть правильну відповідь.
+
+1. Що означає "перервати"?
+   - [x] to interrupt
+   - [ ] to seem
+   - [ ] departure
+   - [ ] vacancy, job opening
+   > "перервати" means "to interrupt"
+
+2. Що означає "перервана"?
+   - [ ] old
+   - [x] interrupted
+   - [ ] white
+   - [ ] traffic jam
+   > "перервана" means "interrupted"
+
+3. Що означає "цілий"?
+   - [ ] to hear (perf)
+   - [ ] convinced
+   - [x] whole, entire
+   - [ ] lunch
+   > "цілий" means "whole, entire"
+
+4. Що означає "досягати"?
+   - [ ] poem
+   - [ ] to tell (impf)
+   - [ ] stationery
+   - [x] to be achieving
+   > "досягати" means "to be achieving"
+
+5. Що означає "досягти"?
+   - [ ] to meet (for first time)
+   - [ ] faculty
+   - [x] to achieve
+   - [ ] movie theater
+   > "досягти" means "to achieve"
+
+6. Що означає "переривати"?
+   - [x] to interrupt (ongoing)
+   - [ ] three
+   - [ ] to succeed
+   - [ ] (with) her
+   > "переривати" means "to interrupt (ongoing)"
+
+7. Що означає "підсумок"?
+   - [ ] to swim
+   - [ ] this (feminine)
+   - [x] summary, outcome
+   - [ ] to cook/prepare (perf)
+   > "підсумок" means "summary, outcome"
+
+8. Що означає "досягнення"?
+   - [x] achievement
+   - [ ] to lose
+   - [ ] friend (female)
+   - [ ] winter
+   > "досягнення" means "achievement"
+
+9. Що означає "тривати"?
+   - [ ] stork
+   - [ ] that (masculine)
+   - [x] to last, continue
+   - [ ] duties
+   > "тривати" means "to last, continue"
+
+10. Що означає "завершити"?
+   - [ ] to explain (perf)
+   - [x] to complete
+   - [ ] mattress
+   - [ ] rose
+   > "завершити" means "to complete"
+
+11. Що означає "продовжити"?
+   - [ ] hearing; rumor
+   - [ ] university
+   - [x] to continue
+   - [ ] to succeed
+   > "продовжити" means "to continue"
+
+## true-false: Правда чи ні?
+
+> Визначте, чи правильне твердження.
+
+- [ ] "завершити" means "to drive around"
+   > Incorrect. "завершити" means "to complete"
+
+- [ ] "продовжити" means "drawing, picture"
+   > Incorrect. "продовжити" means "to continue"
+
+- [x] "цілий" means "whole, entire"
+   > Correct!
+
+- [x] "перервана" means "interrupted"
+   > Correct!
+
+- [ ] "досягнення" means "temperature"
+   > Incorrect. "досягнення" means "achievement"
+
+- [ ] "досягти" means "page"
+   > Incorrect. "досягти" means "to achieve"
+
+- [x] "тривати" means "to last, continue"
+   > Correct!
+
+- [x] "досягати" means "to be achieving"
+   > Correct!
+
+- [x] "підсумок" means "summary, outcome"
+   > Correct!
+
+- [x] "переривати" means "to interrupt (ongoing)"
+   > Correct!
 
 ---
 
-# Vocabulary
+# Словник
 
-| Word | IPA | English | Notes |
-|------|-----|---------|-------|
-| завершити | /zɑvɛrˈʃɪtɪ/ | to complete | perfective |
-| досягти | /doˈsʲɑɦtɪ/ | to achieve | perfective |
-| досягати | /dosʲɑˈɦɑtɪ/ | to be achieving | imperfective |
-| тривати | /trɪˈvɑtɪ/ | to last, to continue | imperfective only |
-| продовжити | /prodovˈʒɪtɪ/ | to continue (one step) | perfective |
-| перервати | /pɛrɛrˈvɑtɪ/ | to interrupt | perfective |
-| переривати | /pɛrɛrɪˈvɑtɪ/ | to be interrupting | imperfective |
-| цілий | /ˈt͡sʲilɪj/ | whole, entire | with imperfective |
+| Word | IPA | English | POS | Note |
+|------|-----|---------|-----|------|
+| переривати | /pɛrɛrɪˈvɑtɪ/ | to interrupt (ongoing) | verb | impf |
+| перервати | /pɛrɛrˈvɑtɪ/ | to interrupt | verb | pf |
+| перервана | /pɛrɛrˈvɑnɑ/ | interrupted | adj | перервана дія |
+| досягати | /dosʲɑˈɦɑtɪ/ | to be achieving | verb | impf |
+| досягти | /doˈsʲɑɦtɪ/ | to achieve | verb | pf |
+| досягнення | /dosʲɑɦˈnɛnʲːɑ/ | achievement | noun | n |
+| завершити | /zɑvɛrˈʃɪtɪ/ | to complete | verb | pf |
+| продовжити | /prodovˈʒɪtɪ/ | to continue | verb | pf |
+| тривати | /trɪˈvɑtɪ/ | to last, continue | verb | impf only |
+| цілий | /ˈt͡sʲilɪj/ | whole, entire | adj | used with impf |
+| підсумок | /pʲidˈsumok/ | summary, outcome | noun | m |
+| домашнє завдання | /doˈmɑʃnʲe zɑvˈdɑnʲːɑ/ | homework | phrase | - |
 
 ---
 
@@ -385,25 +505,33 @@ B: Я працював над ним шість місяців. Закінчив
 
 | Word | First Module |
 |------|-------------|
-| результат | 46 |
-| процес | 81 |
-| закінчити | 24 |
-| закінчувати | 75 |
+| перспектива | 81 |
 | продовжувати | 53 |
+| вечеря | 17 |
+| обід | 17 |
+| вид | 41 |
+| доконаний | 41 |
+| недоконаний | 41 |
+| процес | 81 |
+| результат | 46 |
+| тривалість | 81 |
+| завершення | 81 |
 | за годину | 81 |
+| вже | 21 |
+| нарешті | 43 |
 
 ---
 
 # Summary
 
-## The Core Distinction
+## The Main Difference
 
 | Focus | Aspect | Question | Example |
 |-------|--------|----------|---------|
 | Process | Imperfective | Що ти робив? | Я читав книгу. |
 | Result | Perfective | Що ти зробив? | Я прочитав книгу. |
 
-## Time Expression Patterns
+## Patterns with Time Expressions
 
 **Duration (HOW LONG) = Imperfective:**
 - весь день, три години, довго, цілий тиждень
@@ -413,19 +541,13 @@ B: Я працював над ним шість місяців. Закінчив
 
 ## Key Patterns
 
-1. **Interrupted action**
-   > [!answer] imperfective (Я читав, коли...)
-2. **Duration words**
-   > [!answer] imperfective (...три години)
-3. **"Вже" (already)**
-   > [!answer] perfective (Він вже приїхав)
-4. **"За + time"**
-   > [!answer] perfective (Я зробив це за годину)
+| Context | Aspect |
+|---------|--------|
+| Interrupted action (Я читав, коли...) | Imperfective |
+| Duration words (...три години) | Imperfective |
+| "Вже" (Він вже приїхав) | Perfective |
+| "За + time" (Я зробив за годину) | Perfective |
 
-> **Key Takeaways**
+> **Key Takeaway**
 >
-> - Ask yourself: Do I care about the result or the process?
-> - Duration expressions (весь день, три години) *prefer* imperfective
-> - "За + time" (completion time) *requires* perfective
-> - The same event can be described both ways depending on your focus
-> - **Remember:** Aspect choice is often about perspective, not right vs wrong!
+> Ask yourself: am I interested in the **result** or the **process**? Result — perfective ("What got done?"). Process — imperfective ("How was the action progressing?"). The same event can be described both ways — it's a question of your perspective, not "right/wrong"!

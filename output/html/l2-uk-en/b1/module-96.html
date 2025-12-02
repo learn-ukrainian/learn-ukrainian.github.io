@@ -322,15 +322,18 @@ footer {
 .show-answer-btn:hover { background: #e5e5e5; }
 .show-answer-btn.revealed { background: #e8f8f0; border-color: var(--success); color: var(--success); }
 
-/* Fill-in Activity */
-.fill-container { display: flex; flex-direction: column; gap: 1rem; }
-.fill-question { border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; }
-.fill-question.answered .fill-check { display: none; }
-.fill-input { width: 100%; max-width: 300px; padding: 0.75rem 1rem; font-size: 1.1rem; border: 2px solid var(--border); border-radius: 8px; margin: 0.5rem 0; }
-.fill-input:focus { border-color: var(--primary); outline: none; }
-.fill-input.correct { border-color: var(--success); background: #e8f8f0; }
-.fill-input.wrong { border-color: var(--danger); background: #fde8e8; }
-.fill-check { margin-left: 0.5rem; }
+/* Fill-in Activity - Dropdown in Sentence */
+.fill-container { display: flex; flex-direction: column; gap: 0.75rem; }
+.fill-question { border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.5rem; }
+
+.fill-number { font-weight: 600; color: var(--text-muted); margin-right: 0.5rem; }
+.fill-sentence { font-size: 1.15rem; line-height: 1.8; }
+
+.fill-dropdown { font-size: 1rem; padding: 0.4rem 0.6rem; border: 2px solid var(--primary); border-radius: 6px; background: #fff; color: var(--primary); font-weight: 500; cursor: pointer; min-width: 120px; }
+.fill-dropdown:focus { outline: none; box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.2); }
+.fill-dropdown.correct { border-color: var(--success); background: #e8f8f0; color: var(--success); }
+.fill-dropdown.wrong { border-color: var(--danger); background: #fde8e8; color: var(--danger); }
+
 .fill-feedback { margin-top: 0.5rem; font-weight: 500; }
 .fill-feedback .correct-text { color: var(--success); }
 .fill-feedback .wrong-text { color: var(--danger); }
@@ -346,6 +349,32 @@ footer {
 .order-item.wrong { border-color: var(--danger); background: #fde8e8; }
 .order-handle { color: var(--text-muted); font-size: 1.25rem; }
 .order-text { font-size: 1.1rem; }
+
+/* Unjumble Activity - Drag and Drop */
+.unjumble-question { border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.5rem; margin-bottom: 0.75rem; display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; }
+.unjumble-question.answered .unjumble-word { cursor: default; }
+.unjumble-question.correct { border-color: var(--success); background: #f8fff8; }
+.unjumble-question.wrong { border-color: var(--danger); background: #fff8f8; }
+
+.unjumble-number { font-weight: 600; color: var(--text-muted); min-width: 2rem; }
+
+.unjumble-word-row { display: flex; flex-wrap: wrap; gap: 0.5rem; flex: 1; min-height: 42px; padding: 0.25rem; border-radius: 8px; background: #f8f9fa; }
+.unjumble-word-row.correct { background: #e8f8f0; }
+.unjumble-word-row.wrong { background: #fde8e8; }
+
+.unjumble-word { background: var(--primary); color: white; border-radius: 6px; padding: 0.5rem 0.75rem; font-size: 1rem; cursor: grab; user-select: none; transition: transform 0.1s, box-shadow 0.1s; }
+.unjumble-word:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+.unjumble-word:active { cursor: grabbing; }
+.unjumble-word.dragging { opacity: 0.5; transform: scale(1.05); }
+
+.unjumble-word.touch-clone { position: fixed; z-index: 1000; pointer-events: none; box-shadow: 0 8px 16px rgba(0,0,0,0.2); }
+
+.unjumble-actions { display: flex; gap: 0.5rem; }
+.unjumble-feedback { width: 100%; padding: 0.5rem 0 0 2.5rem; display: none; }
+.unjumble-feedback.show { display: block; }
+.unjumble-feedback .correct-text { color: var(--success); font-weight: 600; }
+.unjumble-feedback .wrong-text { color: var(--danger); }
+.unjumble-feedback .translation { color: var(--text-muted); font-style: italic; margin-left: 0.5rem; }
 
   </style>
 </head>
@@ -365,9 +394,9 @@ footer {
       <button class="nav-tab active" data-section="lesson">Lesson</button>
       <button class="nav-tab" data-section="match">Match</button>
       <button class="nav-tab" data-section="quiz">Quiz</button>
-      
+      <button class="nav-tab" data-section="sort">Sort</button>
       <button class="nav-tab" data-section="fill">Fill</button>
-      
+      <button class="nav-tab" data-section="order">Order</button>
       <button class="nav-tab" data-section="vocab">Vocab</button>
     </div>
   </nav>
@@ -824,6 +853,9 @@ footer {
 </ul>
 <hr />
 <hr />
+<hr />
+<hr />
+<hr />
 <hr /></div>
     </div>
   
@@ -860,31 +892,44 @@ footer {
     </section>
   
     
-    <section id="match" class="section"><div class="card"><h3>Word Categories</h3>
-      <div class="score-display"><span class="score"><span id="match-score">0</span>/3</span></div>
+    <section id="match" class="section"><div class="card"><h3>Знайдіть пари</h3>
+      <div class="score-display"><span class="score"><span id="match-score">0</span>/16</span></div>
       <div class="match-container" id="match-container"><svg class="match-lines" id="match-lines"></svg>
-        <div class="match-column" id="match-left"><div class="match-item" data-pair="0">досвід</div><div class="match-item" data-pair="1">знання</div><div class="match-item" data-pair="2">навичка</div></div>
-        <div class="match-column" id="match-right"><div class="match-item" data-pair="2">вибір</div><div class="match-item" data-pair="1">шанс</div><div class="match-item" data-pair="0">можливість</div></div>
+        <div class="match-column" id="match-left"><div class="match-item" data-pair="0">іти</div><div class="match-item" data-pair="1">радіти</div><div class="match-item" data-pair="2">завершити</div><div class="match-item" data-pair="3">зміна</div><div class="match-item" data-pair="4">вибір</div><div class="match-item" data-pair="5">відходити</div><div class="match-item" data-pair="6">витратити</div><div class="match-item" data-pair="7">варіант</div><div class="match-item" data-pair="8">ситуація</div><div class="match-item" data-pair="9">вміння</div><div class="match-item" data-pair="10">навичка</div><div class="match-item" data-pair="11">стабільність</div><div class="match-item" data-pair="12">умови</div><div class="match-item" data-pair="13">ризик</div><div class="match-item" data-pair="14">переживання</div><div class="match-item" data-pair="15">людство</div></div>
+        <div class="match-column" id="match-right"><div class="match-item" data-pair="13">risk</div><div class="match-item" data-pair="15">humanity</div><div class="match-item" data-pair="4">choice</div><div class="match-item" data-pair="3">change</div><div class="match-item" data-pair="9">ability</div><div class="match-item" data-pair="7">option</div><div class="match-item" data-pair="1">to rejoice</div><div class="match-item" data-pair="14">experience (emotional)</div><div class="match-item" data-pair="8">situation</div><div class="match-item" data-pair="0">to go (on foot)</div><div class="match-item" data-pair="2">to complete</div><div class="match-item" data-pair="6">to spend</div><div class="match-item" data-pair="12">conditions</div><div class="match-item" data-pair="5">to depart (habitually)</div><div class="match-item" data-pair="10">skill</div><div class="match-item" data-pair="11">stability</div></div>
       </div>
       <div class="completion-message" id="match-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetMatch()">Reset</button><button class="btn btn-primary" onclick="showSection('quiz')">Next →</button></div>
     </div></section>
     
-    <section id="quiz" class="section"><div class="card"><h3>Life Vocabulary</h3>
-      <div class="score-display"><span class="score"><span id="quiz-score">0</span>/6</span></div>
+    <section id="quiz" class="section"><div class="card"><h3>Перевірка значень</h3>
+      <div class="score-display"><span class="score"><span id="quiz-score">0</span>/11</span></div>
       <div id="quiz-container"></div>
       <div class="completion-message" id="quiz-complete"><h3>Complete!</h3></div>
-      <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('fill')">Next →</button></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('sort')">Next →</button></div>
     </div></section>
     
+    <section id="sort" class="section"><div class="card"><h3>Сортування за родом</h3>
+      <div class="score-display"><span class="score"><span id="sort-score">0</span>/10</span></div>
+      <div class="sort-pool" id="sort-pool"><div class="sort-items" id="sort-items"></div></div>
+      <div class="sort-groups"><div class="sort-group true-friends" data-group="true-friends"><h4>Чоловічий рід</h4><div class="sort-items"></div></div><div class="sort-group false-friends" data-group="false-friends"><h4>Жіночий рід</h4><div class="sort-items"></div></div><div class="sort-group new-letters" data-group="new-letters"><h4>Середній рід</h4><div class="sort-items"></div></div></div>
+      <div class="completion-message" id="sort-complete"><h3>All Sorted!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetSort()">Reset</button><button class="btn btn-primary" onclick="showSection('fill')">Next →</button></div>
+    </div></section>
     
-    <section id="fill" class="section"><div class="card"><h3>Complete the Paragraph</h3>
-      <div class="score-display"><span class="score"><span id="fill-score">0</span>/6</span></div>
+    <section id="fill" class="section"><div class="card"><h3>Доповніть речення</h3>
+      <div class="score-display"><span class="score"><span id="fill-score">0</span>/8</span></div>
       <div id="fill-container" class="fill-container"></div>
       <div class="completion-message" id="fill-complete"><h3>Complete!</h3></div>
-      <div class="btn-group"><button class="btn btn-outline" onclick="resetFill()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetFill()">Reset</button><button class="btn btn-primary" onclick="showSection('order')">Next →</button></div>
     </div></section>
     
+    <section id="order" class="section"><div class="card"><h3>Побудуйте речення</h3>
+      <div class="score-display"><span class="score"><span id="order-score">0</span>/10</span></div>
+      <div id="order-container" class="order-container"></div>
+      <div class="completion-message" id="order-complete"><h3>Perfect Order!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetOrder()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
+    </div></section>
     
     <section id="vocab" class="section">
       <div class="card">
@@ -910,13 +955,13 @@ footer {
   </main><footer>Module 96 · curricula-opus</footer>
   <script>
 
-    const matchPairs = [{"left":"досвід","right":"можливість"},{"left":"знання","right":"шанс"},{"left":"навичка","right":"вибір"}];
-    const quizData = [{"question":"У мене великий ___ роботи.","options":["досвід","переживання"],"correctIndex":0,"explanation":""},{"question":"Це моя ___ .","options":["відповідальність","право"],"correctIndex":0,"explanation":""},{"question":"У нас кілька ___ .","options":["варіантів","досвідів"],"correctIndex":0,"explanation":""},{"question":"Яка ___ на роботі?","options":["ситуація","навичка"],"correctIndex":0,"explanation":""},{"question":"Мені потрібна ___ .","options":["стабільність","невизначеність"],"correctIndex":0,"explanation":""},{"question":"Які ваші ___ на роботі?","options":["обов'язки","права"],"correctIndex":0,"explanation":""}];
-    const sortData = {};
-    const fillData = {"items":[],"text":"Я маю великий ___ (experience) роботи. У мене хороші ___ (skills) і високий ___ (level) кваліфікації. Зараз я шукаю нові ___ (opportunities). Мої ___ (duties) включають управління проєктами. Я готовий до ___ (changes) і нових викликів.","answers":["досвід","навички","рівень","можливості","обов'язки","змін"]};
-    const orderData = {"items":[],"correctOrder":[]};
+    const matchPairs = [{"left":"іти","right":"to go (on foot)"},{"left":"радіти","right":"to rejoice"},{"left":"завершити","right":"to complete"},{"left":"зміна","right":"change"},{"left":"вибір","right":"choice"},{"left":"відходити","right":"to depart (habitually)"},{"left":"витратити","right":"to spend"},{"left":"варіант","right":"option"},{"left":"ситуація","right":"situation"},{"left":"вміння","right":"ability"},{"left":"навичка","right":"skill"},{"left":"стабільність","right":"stability"},{"left":"умови","right":"conditions"},{"left":"ризик","right":"risk"},{"left":"переживання","right":"experience (emotional)"},{"left":"людство","right":"humanity"}];
+    const quizData = [{"question":"Що означає \"варіант\"?","options":["compartment","soon","option","talented"],"correctIndex":2,"explanation":"\"варіант\" means \"option\""},{"question":"Що означає \"вибір\"?","options":["schedule","where to (direction)","choice","where"],"correctIndex":2,"explanation":"\"вибір\" means \"choice\""},{"question":"Що означає \"переживання\"?","options":["steppe","experience (emotional)","you will be","near, by"],"correctIndex":1,"explanation":"\"переживання\" means \"experience (emotional)\""},{"question":"Що означає \"стабільність\"?","options":["to download","to improve","often","stability"],"correctIndex":3,"explanation":"\"стабільність\" means \"stability\""},{"question":"Що означає \"шанс\"?","options":["please/you're welcome","chance","obstacle","nightstand"],"correctIndex":1,"explanation":"\"шанс\" means \"chance\""},{"question":"Що означає \"ризик\"?","options":["risk","book","to drop by (habitually)","most important"],"correctIndex":0,"explanation":"\"ризик\" means \"risk\""},{"question":"Що означає \"навичка\"?","options":["achievement","it's necessary","skill","immediately"],"correctIndex":2,"explanation":"\"навичка\" means \"skill\""},{"question":"Що означає \"ситуація\"?","options":["situation","reading","otherwise","Ukrainian"],"correctIndex":0,"explanation":"\"ситуація\" means \"situation\""},{"question":"Що означає \"умови\"?","options":["conditions","leisure","to thank","embroidery"],"correctIndex":0,"explanation":"\"умови\" means \"conditions\""},{"question":"Що означає \"вміння\"?","options":["ability","expert","change (money)","barbell"],"correctIndex":0,"explanation":"\"вміння\" means \"ability\""},{"question":"Що означає \"зміна\"?","options":["thin","change","no kind of","flu"],"correctIndex":1,"explanation":"\"зміна\" means \"change\""}];
+    const sortData = {"true-friends":["шанс","ризик","варіант","вибір"],"false-friends":["зміна","ситуація","стабільність","навичка"],"new-letters":["переживання","вміння"]};
+    const fillData = {"items":[{"prompt":"Ми нарешті знайшли ___, який ідеально підходить для нас.","answer":"вибір","options":["грім","вибір","вклад","досвід"]},{"prompt":"Моя колега порадила мені цю ___, і я дуже задоволена вибором.","answer":"навичка","options":["навичка","ложка","вихід","ректор"]},{"prompt":"Мій колега порадив мені цей ___, і я дуже задоволений вибором.","answer":"ризик","options":["злива","відпустка","часник","ризик"]},{"prompt":"Моя колега порадила мені цю ___, і я дуже задоволена вибором.","answer":"ситуація","options":["ситуація","правило","туман","концерт"]},{"prompt":"Ми нарешті знайшли ___, яка ідеально підходить для нас.","answer":"зміна","options":["зміна","бокс","блискавка","секретарка"]},{"prompt":"Мій колега порадив мені це ___, і я дуже задоволений вибором.","answer":"переживання","options":["розтяжка","кілограм","поезія","переживання"]},{"prompt":"Мій колега порадив мені цей ___, і я дуже задоволений вибором.","answer":"шанс","options":["шанс","причина","вчитель","жіночий"]},{"prompt":"Незважаючи на високу ціну, ця ___ варта кожної гривні.","answer":"стабільність","options":["опера","стабільність","гуртожиток","ректор"]}],"text":"","answers":[]};
+    const orderData = {"items":[{"words":["кожної","на","варте","високу","це","Незважаючи","гривні","вміння","ціну"],"answer":"Незважаючи на високу ціну, це вміння варте кожної гривні.","translation":"ability"},{"words":["знайшли","яка","для","Ми","підходить","нас","ідеально","нарешті","навичка"],"answer":"Ми нарешті знайшли навичка, яка ідеально підходить для нас.","translation":"skill"},{"words":["знайшли","підходить","нас","ситуація","яка","Ми","для","нарешті","ідеально"],"answer":"Ми нарешті знайшли ситуація, яка ідеально підходить для нас.","translation":"situation"},{"words":["я","я","вперше","його","одразу","побачив","Коли","захотів","вибір","купити","цей"],"answer":"Коли я вперше побачив цей вибір, я одразу захотів його купити.","translation":"choice"},{"words":["ціну","цей","ризик","високу","вартий","гривні","на","Незважаючи","кожної"],"answer":"Незважаючи на високу ціну, цей ризик вартий кожної гривні.","translation":"risk"},{"words":["задоволений","колега","вибором","мені","і","порадив","дуже","я","цей","варіант","Мій"],"answer":"Мій колега порадив мені цей варіант, і я дуже задоволений вибором.","translation":"option"},{"words":["Ми","шанс","нас","знайшли","нарешті","для","який","ідеально","підходить"],"answer":"Ми нарешті знайшли шанс, який ідеально підходить для нас.","translation":"chance"},{"words":["кожної","переживання","ціну","варте","високу","на","гривні","Незважаючи","це"],"answer":"Незважаючи на високу ціну, це переживання варте кожної гривні.","translation":"experience (emotional"},{"words":["вибором","я","стабільність","мені","і","колега","цю","дуже","порадила","Моя","задоволена"],"answer":"Моя колега порадила мені цю стабільність, і я дуже задоволена вибором.","translation":"stability"},{"words":["колега","мені","Моя","задоволена","вибором","зміна","дуже","порадила","і","я","цю"],"answer":"Моя колега порадила мені цю зміна, і я дуже задоволена вибором.","translation":"change"}],"isUnjumble":true};
     const vocabData = [{"uk":"досвід","translit":"","en":"experience","note":"m"},{"uk":"переживання","translit":"","en":"experience (emotional)","note":"n"},{"uk":"знання","translit":"","en":"knowledge","note":"n"},{"uk":"навичка","translit":"","en":"skill","note":"f"},{"uk":"вміння","translit":"","en":"ability","note":"n"},{"uk":"рівень","translit":"","en":"level","note":"m"},{"uk":"розвиток","translit":"","en":"development","note":"m"},{"uk":"освіта","translit":"","en":"education","note":"f"},{"uk":"можливість","translit":"","en":"opportunity, possibility","note":"f"},{"uk":"шанс","translit":"","en":"chance","note":"m"},{"uk":"нагода","translit":"","en":"occasion, opportunity","note":"f"},{"uk":"вибір","translit":"","en":"choice","note":"m"},{"uk":"варіант","translit":"","en":"option","note":"m"},{"uk":"альтернатива","translit":"","en":"alternative","note":"f"},{"uk":"перспектива","translit":"","en":"perspective, prospect","note":"f"},{"uk":"відповідальність","translit":"","en":"responsibility","note":"f"},{"uk":"обов'язок","translit":"","en":"duty, obligation","note":"m"},{"uk":"обов'язки","translit":"","en":"duties","note":"pl"},{"uk":"право","translit":"","en":"right","note":"n"},{"uk":"зобов'язання","translit":"","en":"commitment, obligation","note":"n"},{"uk":"борг","translit":"","en":"debt, duty","note":"m"},{"uk":"ситуація","translit":"","en":"situation","note":"f"},{"uk":"обставини","translit":"","en":"circumstances","note":"pl"},{"uk":"умови","translit":"","en":"conditions","note":"pl"},{"uk":"стан","translit":"","en":"state, condition","note":"m"},{"uk":"становище","translit":"","en":"position, situation","note":"n"},{"uk":"середовище","translit":"","en":"environment","note":"n"},{"uk":"зміна","translit":"","en":"change","note":"f"},{"uk":"зміни","translit":"","en":"changes","note":"pl"},{"uk":"стабільність","translit":"","en":"stability","note":"f"},{"uk":"невизначеність","translit":"","en":"uncertainty","note":"f"},{"uk":"ризик","translit":"","en":"risk","note":"m"},{"uk":"безпека","translit":"","en":"safety, security","note":"f"},{"uk":"переживати","translit":"","en":"to experience","note":"impf"},{"uk":"пережити","translit":"","en":"to experience","note":"pf"},{"uk":"стикатися","translit":"","en":"to encounter","note":"impf"},{"uk":"зіткнутися","translit":"","en":"to encounter","note":"pf"},{"uk":"використовувати","translit":"","en":"to use","note":"impf"},{"uk":"використати","translit":"","en":"to use","note":"pf"},{"uk":"вибирати","translit":"","en":"to choose","note":"impf"},{"uk":"вибрати","translit":"","en":"to choose","note":"pf"},{"uk":"ризикувати","translit":"","en":"to risk","note":"impf"},{"uk":"покращувати","translit":"","en":"to improve","note":"impf"},{"uk":"покращити","translit":"","en":"to improve","note":"pf"},{"uk":"розвивати","translit":"","en":"to develop","note":"impf"},{"uk":"розвинути","translit":"","en":"to develop","note":"pf"},{"uk":"брати на себе","translit":"","en":"to take on (oneself)","note":""},{"uk":"виконувати","translit":"","en":"to fulfill, perform","note":"impf"},{"uk":"виконати","translit":"","en":"to fulfill, perform","note":"pf"},{"uk":"галузь","translit":"","en":"field, branch","note":"f"},{"uk":"кваліфікація","translit":"","en":"qualification","note":"f"},{"uk":"управління","translit":"","en":"management","note":"n"},{"uk":"виклик","translit":"","en":"challenge","note":"m"},{"uk":"контракт","translit":"","en":"contract","note":"m"},{"uk":"здоров'я","translit":"","en":"health","note":"n"},{"uk":"праця","translit":"","en":"work, labor","note":"f"},{"uk":"відпочинок","translit":"","en":"rest","note":"m"},{"uk":"глибокий","translit":"","en":"deep","note":""},{"uk":"унікальний","translit":"","en":"unique","note":""},{"uk":"незабутній","translit":"","en":"unforgettable","note":""},{"uk":"просунутий","translit":"","en":"advanced","note":""},{"uk":"середній","translit":"","en":"middle, intermediate","note":""}];
-    const totalSort = 0;
+    const totalSort = 10;
   
 // Answer callout toggle (for new > [!answer] syntax)
 function toggleAnswer(id, btn) {
@@ -1123,7 +1168,7 @@ function resetSort() {
 }
 
 
-// Fill-in Activity
+// Fill-in Activity - Dropdown in sentence
 let fillScore = 0, fillAns = 0;
 
 function initFill() {
@@ -1134,45 +1179,82 @@ function initFill() {
   fillData.items.forEach((item, i) => {
     const div = document.createElement('div');
     div.className = 'fill-question';
+
+    // Generate options: correct answer + 3 distractors
+    let options = [];
+    if (item.options && item.options.length >= 4) {
+      options = item.options;
+    } else {
+      // Fallback: generate distractors from other items' answers
+      options = [item.answer];
+      const otherAnswers = fillData.items
+        .filter((_, idx) => idx !== i)
+        .map(it => it.answer)
+        .filter(a => a && a !== item.answer);
+
+      const shuffled = otherAnswers.sort(() => Math.random() - 0.5);
+      options.push(...shuffled.slice(0, 3));
+
+      while (options.length < 4) {
+        options.push('—');
+      }
+    }
+
+    // Shuffle options
+    const shuffledOptions = [...options].sort(() => Math.random() - 0.5);
+
+    // Replace ___ in the sentence with a dropdown
+    const sentence = (item.prompt || item.sentence || '').replace(/___/g,
+      `<select class="fill-dropdown" data-idx="${i}" data-answer="${item.answer}">
+        <option value="" disabled selected>—</option>
+        ${shuffledOptions.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
+      </select>`
+    );
+
     div.innerHTML = `
-      <h4>Q${i + 1}: ${item.prompt || item.sentence || ''}</h4>
-      <input type="text" class="fill-input" data-idx="${i}" data-answer="${item.answer || ''}" placeholder="Type your answer...">
-      <button class="btn btn-outline btn-sm fill-check" data-idx="${i}">Check</button>
+      <div class="fill-sentence">
+        <span class="fill-number">${i + 1}.</span>
+        ${sentence}
+      </div>
       <div class="fill-feedback" id="fill-fb-${i}"></div>
     `;
     c.appendChild(div);
   });
 
-  document.querySelectorAll('.fill-check').forEach(b => b.addEventListener('click', handleFill));
-  document.querySelectorAll('.fill-input').forEach(i => i.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') handleFill({ target: e.target.nextElementSibling });
-  }));
+  // Event delegation for dropdown changes
+  c.addEventListener('change', (e) => {
+    if (e.target.classList.contains('fill-dropdown')) {
+      handleFillChoice(e.target);
+    }
+  });
 }
 
-function handleFill(e) {
-  const idx = e.target.dataset.idx;
-  const q = e.target.closest('.fill-question');
+function handleFillChoice(dropdown) {
+  const q = dropdown.closest('.fill-question');
   if (q.classList.contains('answered')) return;
 
-  const input = q.querySelector('.fill-input');
-  const userAnswer = input.value.trim().toLowerCase();
-  const correctAnswer = input.dataset.answer.toLowerCase();
+  const idx = dropdown.dataset.idx;
+  const userAnswer = dropdown.value;
+  const correctAnswer = dropdown.dataset.answer;
   const fb = document.getElementById('fill-fb-' + idx);
 
   q.classList.add('answered');
+  dropdown.disabled = true;
 
   if (userAnswer === correctAnswer) {
-    input.classList.add('correct');
-    fb.innerHTML = '<span class="correct-text">Correct!</span>';
+    dropdown.classList.add('correct');
+    fb.innerHTML = '<span class="correct-text">✓ Correct!</span>';
     fillScore++;
   } else {
-    input.classList.add('wrong');
-    fb.innerHTML = `<span class="wrong-text">Answer: ${input.dataset.answer}</span>`;
+    dropdown.classList.add('wrong');
+    fb.innerHTML = `<span class="wrong-text">✗ Answer: ${correctAnswer}</span>`;
   }
 
   document.getElementById('fill-score').textContent = fillScore;
   fillAns++;
-  if (fillAns === fillData.items.length) document.getElementById('fill-complete').classList.add('show');
+  if (fillAns === fillData.items.length) {
+    document.getElementById('fill-complete').classList.add('show');
+  }
 }
 
 function resetFill() {
@@ -1192,9 +1274,217 @@ function initOrder() {
   if (!c || !orderData.items.length) return;
   c.innerHTML = '';
 
+  if (orderData.isUnjumble) {
+    initUnjumble(c);
+  } else {
+    initClassicOrder(c);
+  }
+}
+
+// UNJUMBLE: Drag-and-drop words to form sentences
+function initUnjumble(container) {
   orderTotal = orderData.items.length;
 
-  // Shuffle items for display
+  orderData.items.forEach((item, idx) => {
+    const question = document.createElement('div');
+    question.className = 'unjumble-question';
+    question.dataset.idx = idx;
+
+    // Shuffle words
+    const shuffledWords = [...item.words].sort(() => Math.random() - 0.5);
+
+    question.innerHTML = `
+      <div class="unjumble-number">${idx + 1}.</div>
+      <div class="unjumble-word-row" data-idx="${idx}">
+        ${shuffledWords.map((word, i) => `
+          <span class="unjumble-word" draggable="true" data-word="${word}">${word}</span>
+        `).join('')}
+      </div>
+      <div class="unjumble-actions">
+        <button class="btn btn-sm btn-outline unjumble-check" data-idx="${idx}">Check</button>
+        <button class="btn btn-sm btn-outline unjumble-reset" data-idx="${idx}">Reset</button>
+      </div>
+      <div class="unjumble-feedback" data-idx="${idx}"></div>
+    `;
+
+    container.appendChild(question);
+
+    // Initialize drag-and-drop for this row
+    initUnjumbleDragDrop(question.querySelector('.unjumble-word-row'));
+  });
+
+  // Event delegation for buttons
+  container.addEventListener('click', handleUnjumbleClick);
+}
+
+function initUnjumbleDragDrop(row) {
+  let dragItem = null;
+
+  row.querySelectorAll('.unjumble-word').forEach(word => {
+    word.addEventListener('dragstart', (e) => {
+      dragItem = word;
+      word.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    });
+
+    word.addEventListener('dragend', () => {
+      word.classList.remove('dragging');
+      dragItem = null;
+    });
+
+    word.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      if (!dragItem || dragItem === word) return;
+
+      const rect = word.getBoundingClientRect();
+      const midX = rect.left + rect.width / 2;
+
+      if (e.clientX < midX) {
+        row.insertBefore(dragItem, word);
+      } else {
+        row.insertBefore(dragItem, word.nextSibling);
+      }
+    });
+  });
+
+  // Touch support for mobile
+  let touchItem = null;
+  let touchClone = null;
+
+  row.querySelectorAll('.unjumble-word').forEach(word => {
+    word.addEventListener('touchstart', (e) => {
+      touchItem = word;
+      word.classList.add('dragging');
+
+      // Create a clone for visual feedback
+      touchClone = word.cloneNode(true);
+      touchClone.classList.add('touch-clone');
+      document.body.appendChild(touchClone);
+      updateTouchClone(e.touches[0]);
+    });
+
+    word.addEventListener('touchmove', (e) => {
+      e.preventDefault();
+      if (!touchItem) return;
+      updateTouchClone(e.touches[0]);
+
+      // Find which word we're over
+      const touch = e.touches[0];
+      const elements = document.elementsFromPoint(touch.clientX, touch.clientY);
+      const targetWord = elements.find(el => el.classList.contains('unjumble-word') && el !== touchItem);
+
+      if (targetWord && targetWord.parentNode === row) {
+        const rect = targetWord.getBoundingClientRect();
+        const midX = rect.left + rect.width / 2;
+        if (touch.clientX < midX) {
+          row.insertBefore(touchItem, targetWord);
+        } else {
+          row.insertBefore(touchItem, targetWord.nextSibling);
+        }
+      }
+    });
+
+    word.addEventListener('touchend', () => {
+      if (touchItem) touchItem.classList.remove('dragging');
+      if (touchClone) touchClone.remove();
+      touchItem = null;
+      touchClone = null;
+    });
+  });
+
+  function updateTouchClone(touch) {
+    if (touchClone) {
+      touchClone.style.left = (touch.clientX - 40) + 'px';
+      touchClone.style.top = (touch.clientY - 20) + 'px';
+    }
+  }
+}
+
+function handleUnjumbleClick(e) {
+  const target = e.target;
+
+  if (target.classList.contains('unjumble-check')) {
+    checkUnjumbleAnswer(parseInt(target.dataset.idx));
+  }
+
+  if (target.classList.contains('unjumble-reset')) {
+    resetUnjumbleQuestion(parseInt(target.dataset.idx));
+  }
+}
+
+function checkUnjumbleAnswer(idx) {
+  const item = orderData.items[idx];
+  const row = document.querySelector(`.unjumble-word-row[data-idx="${idx}"]`);
+  const feedback = document.querySelector(`.unjumble-feedback[data-idx="${idx}"]`);
+  const question = document.querySelector(`.unjumble-question[data-idx="${idx}"]`);
+
+  // Build user's answer from current word order
+  const words = row.querySelectorAll('.unjumble-word');
+  const userAnswer = Array.from(words).map(w => w.dataset.word).join(' ');
+
+  // Normalize for comparison (handle punctuation)
+  const normalize = (s) => s.replace(/[?!.,]/g, '').toLowerCase().trim();
+  const isCorrect = normalize(userAnswer) === normalize(item.answer);
+
+  if (isCorrect) {
+    question.classList.add('answered', 'correct');
+    row.classList.add('correct');
+    words.forEach(w => w.setAttribute('draggable', 'false'));
+    orderScore++;
+    document.getElementById('order-score').textContent = orderScore;
+
+    feedback.innerHTML = `
+      <span class="correct-text">✓ Correct!</span>
+      <span class="translation">${item.translation || ''}</span>
+    `;
+    feedback.classList.add('show');
+
+    if (orderScore === orderTotal) {
+      document.getElementById('order-complete').classList.add('show');
+    }
+  } else {
+    question.classList.add('wrong');
+    row.classList.add('wrong');
+
+    feedback.innerHTML = `
+      <span class="wrong-text">✗ Try again. Hint: ${item.answer}</span>
+    `;
+    feedback.classList.add('show');
+
+    setTimeout(() => {
+      question.classList.remove('wrong');
+      row.classList.remove('wrong');
+      feedback.classList.remove('show');
+    }, 2000);
+  }
+}
+
+function resetUnjumbleQuestion(idx) {
+  const item = orderData.items[idx];
+  const row = document.querySelector(`.unjumble-word-row[data-idx="${idx}"]`);
+  const question = document.querySelector(`.unjumble-question[data-idx="${idx}"]`);
+  const feedback = document.querySelector(`.unjumble-feedback[data-idx="${idx}"]`);
+
+  if (question.classList.contains('correct')) return;
+
+  // Re-shuffle and rebuild
+  const shuffledWords = [...item.words].sort(() => Math.random() - 0.5);
+  row.innerHTML = shuffledWords.map(word => `
+    <span class="unjumble-word" draggable="true" data-word="${word}">${word}</span>
+  `).join('');
+
+  initUnjumbleDragDrop(row);
+
+  question.classList.remove('wrong');
+  row.classList.remove('wrong');
+  feedback.innerHTML = '';
+  feedback.classList.remove('show');
+}
+
+// CLASSIC ORDER: Drag items into correct sequence
+function initClassicOrder(container) {
+  orderTotal = orderData.items.length;
+
   const shuffled = [...orderData.items].map((item, idx) => ({ text: item, origIdx: idx }));
   shuffled.sort(() => Math.random() - 0.5);
 
@@ -1206,15 +1496,14 @@ function initOrder() {
       <span class="order-text">${item.text}</span>
     </div>
   `).join('');
-  c.appendChild(div);
+  container.appendChild(div);
 
   const checkBtn = document.createElement('button');
   checkBtn.className = 'btn btn-outline';
   checkBtn.textContent = 'Check Order';
   checkBtn.onclick = checkOrder;
-  c.appendChild(checkBtn);
+  container.appendChild(checkBtn);
 
-  // Enable drag and drop
   initDragDrop();
 }
 
@@ -1252,7 +1541,6 @@ function checkOrder() {
   const items = document.querySelectorAll('.order-item');
   const currentOrder = Array.from(items).map(item => parseInt(item.dataset.orig));
 
-  // Check if order is correct (0, 1, 2, 3, ...)
   let correct = true;
   currentOrder.forEach((val, idx) => {
     const expectedIdx = orderData.correctOrder.length ? orderData.correctOrder[idx] : idx;

@@ -320,7 +320,6 @@ Calculate your score:
 | рівень | /ˈrʲivɛnʲ/ | level | m |
 | компетенція | /kompɛˈtɛnt͡sʲijɑ/ | competency | f |
 | готовність | /ɦoˈtownʲistʲ/ | readiness | f |
-| досягнення | /dosʲɑɦˈnɛnʲːɑ/ | achievement | n |
 
 ---
 
@@ -328,6 +327,7 @@ Calculate your score:
 
 | Word | First Module |
 |------|-------------|
+| досягнення | 83 |
 | контрольна робота | 115 |
 | оцінка | 75 |
 | бал | 100 |

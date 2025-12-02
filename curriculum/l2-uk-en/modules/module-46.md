@@ -266,170 +266,190 @@ Advice:
 
 ---
 
+---
+
+---
+
+---
+
 # Activities
 
-## match-up: Condition → Result
+## fill-in: Complete the Sentences
 
-> Match conditions with logical results.
+> Choose the correct word to complete each sentence.
+
+1. Я хочу навчитися ___.
+   > [!answer] помилятися
+   > [!options] помилятися | зрозуміти | надіслати | переказати
+
+2. Я хочу навчитися ___.
+   > [!answer] домовлятися
+   > [!options] допомагати | нести | відповісти | домовлятися
+
+3. Де ваш великий ___?
+   > [!answer] результат
+   > [!options] олівець | київ | результат | поверх
+
+4. Чи ти вмієш добре ___?
+   > [!answer] сподіватися
+   > [!options] подарувати | знати | перейти | сподіватися
+
+5. Де ваша велика ___?
+   > [!answer] умова
+   > [!options] голос | риба | рік | умова
+
+## unjumble: Build the Sentence
+
+> Arrange the words in the correct order.
+
+1. великий / Де / результат / ваш
+   > [!answer] Де ваш великий результат?
+   > (result)
+
+2. велика / ваша / умова / Де
+   > [!answer] Де ваша велика умова?
+   > (condition)
+
+## match-up: Match the Pairs
+
+> Match Ukrainian words to their English meanings.
 
 | Left | Right |
 |------|-------|
-| Якщо буде дощ, | візьму парасолю |
-| Якщо матиму час, | зателефоную |
-| Якщо не поспішатимеш, | запізнишся |
-| Якщо хочеш, | можемо піти разом |
-| Якщо він прийде, | ми почнемо |
-| Якщо все буде добре, | приїду в п'ятницю |
-
-## quiz: Conditionals
-
-> Choose the correct form.
-
-1. "If it rains, I'll take an umbrella" - Якщо ___ дощ, я візьму парасолю.
-   - [x] буде
-   - [ ] є
-   - [ ] був
-   - [ ] бути
-   > Future in "if" clause = буде.
-
-2. "___ you get home, call me" (you will) - ___ прийдеш додому, зателефонуй.
-   - [x] Коли
-   - [ ] Якщо
-   - [ ] Що
-   - [ ] Як
-   > Certain event = коли.
-
-3. "If you want, we can go" - ___ хочеш, можемо піти.
-   - [x] Якщо
-   - [ ] Коли
-   - [ ] Що
-   - [ ] Як
-   > Uncertain/offer = якщо.
-
-4. "What happens if he doesn't come?" - Що буде, якщо він не ___?
-   - [x] прийде
-   - [ ] приходить
-   - [ ] прийшов
-   - [ ] прийти
-   > Future after якщо = прийде.
-
-5. "I'll call if anything" - Я зателефоную, ___.
-   - [x] якщо що
-   - [ ] якщо коли
-   - [ ] що якщо
-   - [ ] коли що
-   > "If anything" = якщо що.
-
-6. "If I'm not mistaken" - Якщо не ___.
-   - [x] помиляюся
-   - [ ] помилюсь
-   - [ ] помилятися
-   - [ ] помилився
-   > Present tense in set phrase.
-
-## group-sort: Якщо vs Коли
-
-> Sort by certainty.
-
-### Якщо (uncertain)
-- Якщо побачиш Марію...
-- Якщо буде час...
-- Якщо вийде...
-- Якщо хочеш...
-
-### Коли (certain)
-- Коли прийдеш додому...
-- Коли закінчу роботу...
-- Коли він повернеться...
-- Коли настане літо...
-
-
-## fill-in: Fill in the Blank
-
-> Fill in the blanks with the correct word.
-
-1. Якщо ___ помиляюся
-   > [!answer] не
-
-2. Що ___ якщо...?
-   > [!answer] буде
-
-3. Що ___ якщо...?
-   > [!answer] робити
-
-4. Що буде, якщо...? ___ will happen if...?):
-   > [!answer] (What
-
-
+| якщо | if |
+| копійка | kopeck |
+| сподіватися | to hope |
+| група | group |
+| можливо | possibly, maybe |
+| умова | condition |
+| запізнюватися | to be late |
+| інакше | otherwise |
+| задоволення | pleasure, satisfaction |
+| результат | result |
+| запізнитися | to be late (once) |
+| обов'язково | definitely, certainly |
 
 ## quiz: Meaning Check
 
 > Choose the correct answer.
 
-1. What does "залишитися" mean?
-   - [x] to stay (perf)
-   - [ ] result
-   - [ ] to be late (perf)
-   - [ ] to be late (impf)
-   > "залишитися" means "to stay (perf)"
+1. What does "якщо" mean?
+   - [ ] to stay (perf)
+   - [x] if
+   - [ ] dinner
+   - [ ] to begin (impf)
+   > "якщо" means "if"
 
 2. What does "результат" mean?
-   - [ ] to stay (perf)
-   - [ ] to be late (perf)
-   - [ ] to be late (impf)
+   - [ ] whisper
+   - [ ] glass
+   - [ ] to show (impf)
    - [x] result
    > "результат" means "result"
 
-3. What does "запізнюватися" mean?
-   - [ ] to stay (perf)
-   - [ ] to be late (perf)
-   - [ ] result
-   - [x] to be late (impf)
-   > "запізнюватися" means "to be late (impf)"
-
-4. What does "запізнитися" mean?
-   - [ ] to stay (perf)
-   - [x] to be late (perf)
-   - [ ] to be late (impf)
-   - [ ] result
-   > "запізнитися" means "to be late (perf)"
-
-5. What does "домовитися" mean?
-   - [ ] to stay (perf)
-   - [ ] to be late (impf)
-   - [x] to agree (perf)
-   - [ ] result
-   > "домовитися" means "to agree (perf)"
-
-6. What does "помилятися" mean?
-   - [ ] result
-   - [ ] to stay (perf)
+3. What does "помилятися" mean?
+   - [ ] hard, difficult
+   - [ ] to put
    - [x] to be mistaken
-   - [ ] to be late (impf)
+   - [ ] pharmacy
    > "помилятися" means "to be mistaken"
 
+4. What does "домовитися" mean?
+   - [ ] to cross
+   - [ ] end
+   - [x] to agree (perf)
+   - [ ] fifty
+   > "домовитися" means "to agree (perf)"
 
+5. What does "залишитися" mean?
+   - [ ] to read (perf)
+   - [x] to stay (perf)
+   - [ ] sad
+   - [ ] extraordinarily
+   > "залишитися" means "to stay (perf)"
 
-## unjumble: Word Order
+6. What does "інакше" mean?
+   - [ ] should, ought to (m)
+   - [ ] banana
+   - [x] otherwise
+   - [ ] pants
+   > "інакше" means "otherwise"
 
-> Put the words in the correct order to form a sentence.
+7. What does "запізнюватися" mean?
+   - [x] to be late
+   - [ ] Café: меню, замовити, рахунок
+   - [ ] frost
+   - [ ] for
+   > "запізнюватися" means "to be late"
 
-1. Якщо / не / помиляюся
-   > [!answer] Якщо не помиляюся
-   > (If I'm not mistaken)
+8. What does "умова" mean?
+   - [ ] trolleybus
+   - [ ] to see
+   - [ ] biggest
+   - [x] condition
+   > "умова" means "condition"
 
-2. Що / якщо / буде
-   > [!answer] Що буде, якщо...?
-   > (What will happen if...?)
+9. What does "домовлятися" mean?
+   - [x] to agree, arrange
+   - [ ] what
+   - [ ] bag
+   - [ ] (with) them
+   > "домовлятися" means "to agree, arrange"
 
-3. якщо / робити / Що
-   > [!answer] Що робити, якщо...?
-   > (What to do if...?)
+10. What does "сподіватися" mean?
+   - [ ] month
+   - [x] to hope
+   - [ ] most (adv)
+   - [ ] kilogram
+   > "сподіватися" means "to hope"
 
-4. буде / will / if): / Що / (What / happen / якщо
-   > [!answer] Що буде, якщо...? (What will happen if...?):
-   > (**Що буде**, **якщо** він не прийде? - What happens if he doesn't come?)
+11. What does "обов'язково" mean?
+   - [ ] newspaper
+   - [x] definitely, certainly
+   - [ ] long ago
+   - [ ] to love
+   > "обов'язково" means "definitely, certainly"
 
+12. What does "запізнитися" mean?
+   - [ ] to stay (perf)
+   - [x] to be late (once)
+   - [ ] where from
+   - [ ] shirt
+   > "запізнитися" means "to be late (once)"
+
+## true-false: True or False?
+
+> Determine if each statement is true or false.
+
+- [x] "результат" means "result"
+   > Correct!
+
+- [ ] "інакше" means "family"
+   > Incorrect. "інакше" means "otherwise"
+
+- [ ] "обов'язково" means "kopeck"
+   > Incorrect. "обов'язково" means "definitely, certainly"
+
+- [x] "запізнюватися" means "to be late"
+   > Correct!
+
+- [x] "домовлятися" means "to agree, arrange"
+   > Correct!
+
+- [x] "помилятися" means "to be mistaken"
+   > Correct!
+
+- [x] "домовитися" means "to agree (perf)"
+   > Correct!
+
+- [x] "залишитися" means "to stay (perf)"
+   > Correct!
+
+- [x] "можливо" means "possibly, maybe"
+   > Correct!
+
+- [ ] "умова" means "yesterday"
+   > Incorrect. "умова" means "condition"
 
 ---
 

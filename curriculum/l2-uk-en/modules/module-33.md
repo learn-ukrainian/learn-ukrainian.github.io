@@ -247,152 +247,182 @@ Create sentences with impersonal + dative:
 
 ---
 
+---
+
+---
+
+---
+
 # Activities
 
-## match-up: Verb + Case
+## fill-in: Complete the Sentences
 
-> Match the verb with its required case.
+> Choose the correct word to complete each sentence.
+
+1. Мій брат має хороший ___.
+   > [!answer] досвід
+   > [!options] ніч | продавець | погода | досвід
+
+2. Вони планують ___ завтра.
+   > [!answer] вдаватися
+   > [!options] перейти | закривати | бачити | вдаватися
+
+3. Мій брат любить ___ щодня.
+   > [!answer] бракувати
+   > [!options] бракувати | відкривати | зробити | буду
+
+4. Мій брат любить ___ щодня.
+   > [!answer] радити
+   > [!options] допомогти | ходити | радити | дивитися
+
+## unjumble: Build the Sentence
+
+> Arrange the words in the correct order.
+
+1. досвід / Цей / сто / коштує / гривень
+   > [!answer] Цей досвід коштує сто гривень.
+   > (experience)
+
+## match-up: Match the Pairs
+
+> Match Ukrainian words to their English meanings.
 
 | Left | Right |
 |------|-------|
-| допомагати | dative |
-| бачити | accusative |
-| відповідати | dative |
-| любити | accusative |
-| дякувати | dative |
-| знати | accusative |
-| заважати | dative |
-| радити | dative |
-
-## quiz: Dative Verbs
-
-> Choose the correct form.
-
-1. "I help my brother" - Я допомагаю ___.
-   - [x] братові
-   - [ ] брата
-   - [ ] брат
-   - [ ] братом
-   > Допомагати requires dative: братові.
-
-2. "Thank you!" - Дякую ___!
-   - [x] вам
-   - [ ] вас
-   - [ ] ви
-   - [ ] вами
-   > Дякувати requires dative: вам.
-
-3. "Don't disturb me!" - Не заважай ___!
-   - [x] мені
-   - [ ] мене
-   - [ ] я
-   - [ ] мною
-   > Заважати requires dative: мені.
-
-4. "I advise you to rest" - Раджу ___ відпочити.
-   - [x] тобі
-   - [ ] тебе
-   - [ ] ти
-   - [ ] тобою
-   > Радити requires dative: тобі.
-
-5. "I'm answering the teacher" - Відповідаю ___.
-   - [x] вчителеві
-   - [ ] вчителя
-   - [ ] вчитель
-   - [ ] вчителем
-   > Відповідати requires dative: вчителеві.
-
-6. "I'm cold" - ___ холодно.
-   - [x] Мені
-   - [ ] Мене
-   - [ ] Я
-   - [ ] Мною
-   > Impersonal + dative: Мені холодно.
-
-7. "He lacks time" - ___ бракує часу.
-   - [x] Йому
-   - [ ] Його
-   - [ ] Він
-   - [ ] Ним
-   > Бракувати uses dative for the person lacking.
-
-8. "It seems to me" - ___ здається.
-   - [x] Мені
-   - [ ] Мене
-   - [ ] Я
-   - [ ] Мною
-   > Здаватися uses dative: мені здається.
-
-## group-sort: Dative vs Accusative
-
-> Sort the sentences by which case the underlined pronoun is in.
-
-### Dative (to whom)
-- Допомагаю йому.
-- Дякую їй.
-- Відповідаю вам.
-- Раджу тобі.
-
-### Accusative (whom/what)
-- Бачу його.
-- Люблю її.
-- Знаю вас.
-- Чую тебе.
-
-
-## fill-in: Fill in the Blank
-
-> Fill in the blanks with the correct word.
-
-
+| вдаватися | to succeed |
+| снитися | to appear in dream |
+| весело | fun, merry |
+| личити | to suit/become |
+| дякувати | to thank |
+| належати | to belong |
+| відповідати | to answer |
+| заважати | to disturb |
+| для | for |
+| сумно | sad |
+| щасливий | happy |
+| важко | hard, difficult |
 
 ## quiz: Meaning Check
 
 > Choose the correct answer.
 
-1. What does "заважати" mean?
-   - [x] to disturb
-   - [ ] to answer
-   - [ ] hard, difficult
-   - [ ] experience
-   > "заважати" means "to disturb"
+1. What does "бракувати" mean?
+   - [ ] porridge
+   - [ ] you (informal)
+   - [ ] radio
+   - [x] to lack
+   > "бракувати" means "to lack"
 
-2. What does "відповідати" mean?
-   - [ ] experience
-   - [x] to answer
-   - [ ] hard, difficult
-   - [ ] to disturb
-   > "відповідати" means "to answer"
-
-3. What does "досвід" mean?
-   - [x] experience
-   - [ ] to answer
-   - [ ] to disturb
-   - [ ] hard, difficult
-   > "досвід" means "experience"
-
-4. What does "важко" mean?
-   - [ ] experience
-   - [ ] to disturb
-   - [ ] to answer
+2. What does "важко" mean?
+   - [ ] doctor (m)
+   - [ ] we
+   - [ ] block
    - [x] hard, difficult
    > "важко" means "hard, difficult"
 
-5. What does "повідомляти" mean?
+3. What does "заважати" mean?
+   - [ ] to drink
+   - [ ] to hear
+   - [x] to disturb
+   - [ ] box
+   > "заважати" means "to disturb"
+
+4. What does "щастити" mean?
+   - [x] to be lucky
+   - [ ] chair
+   - [ ] every day
+   - [ ] cloudy
+   > "щастити" means "to be lucky"
+
+5. What does "личити" mean?
+   - [ ] Ukrainian (female)
+   - [ ] box
+   - [ ] next
+   - [x] to suit/become
+   > "личити" means "to suit/become"
+
+6. What does "повідомляти" mean?
+   - [ ] to listen
+   - [ ] Monday
+   - [ ] to turn
    - [x] to inform
-   - [ ] to disturb
-   - [ ] experience
-   - [ ] to answer
    > "повідомляти" means "to inform"
 
-6. What does "належати" mean?
-   - [ ] to disturb
-   - [ ] experience
+7. What does "сумно" mean?
+   - [ ] from
+   - [ ] center
+   - [x] sad
+   - [ ] word
+   > "сумно" means "sad"
+
+8. What does "відповідати" mean?
+   - [ ] relative
+   - [ ] thin
+   - [x] to answer
+   - [ ] Shopping: розмір, колір, ціна, знижка
+   > "відповідати" means "to answer"
+
+9. What does "вдаватися" mean?
+   - [ ] radio
+   - [ ] to open
+   - [ ] room
+   - [x] to succeed
+   > "вдаватися" means "to succeed"
+
+10. What does "радити" mean?
+   - [ ] year
+   - [x] to advise
+   - [ ] tasty
+   - [ ] she
+   > "радити" means "to advise"
+
+11. What does "належати" mean?
+   - [ ] to have dinner
+   - [ ] tourist
+   - [ ] to carry
    - [x] to belong
-   - [ ] to answer
    > "належати" means "to belong"
 
+12. What does "весело" mean?
+   - [ ] minute
+   - [x] fun, merry
+   - [ ] our (m)
+   - [ ] square
+   > "весело" means "fun, merry"
+
+## true-false: True or False?
+
+> Determine if each statement is true or false.
+
+- [x] "радити" means "to advise"
+   > Correct!
+
+- [ ] "личити" means "dad"
+   > Incorrect. "личити" means "to suit/become"
+
+- [ ] "досвід" means "support"
+   > Incorrect. "досвід" means "experience"
+
+- [ ] "відповідати" means "how"
+   > Incorrect. "відповідати" means "to answer"
+
+- [x] "сумно" means "sad"
+   > Correct!
+
+- [x] "заважати" means "to disturb"
+   > Correct!
+
+- [x] "повідомляти" means "to inform"
+   > Correct!
+
+- [x] "належати" means "to belong"
+   > Correct!
+
+- [x] "важко" means "hard, difficult"
+   > Correct!
+
+- [x] "весело" means "fun, merry"
+   > Correct!
 
 ---
 

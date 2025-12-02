@@ -322,15 +322,18 @@ footer {
 .show-answer-btn:hover { background: #e5e5e5; }
 .show-answer-btn.revealed { background: #e8f8f0; border-color: var(--success); color: var(--success); }
 
-/* Fill-in Activity */
-.fill-container { display: flex; flex-direction: column; gap: 1rem; }
-.fill-question { border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; }
-.fill-question.answered .fill-check { display: none; }
-.fill-input { width: 100%; max-width: 300px; padding: 0.75rem 1rem; font-size: 1.1rem; border: 2px solid var(--border); border-radius: 8px; margin: 0.5rem 0; }
-.fill-input:focus { border-color: var(--primary); outline: none; }
-.fill-input.correct { border-color: var(--success); background: #e8f8f0; }
-.fill-input.wrong { border-color: var(--danger); background: #fde8e8; }
-.fill-check { margin-left: 0.5rem; }
+/* Fill-in Activity - Dropdown in Sentence */
+.fill-container { display: flex; flex-direction: column; gap: 0.75rem; }
+.fill-question { border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.5rem; }
+
+.fill-number { font-weight: 600; color: var(--text-muted); margin-right: 0.5rem; }
+.fill-sentence { font-size: 1.15rem; line-height: 1.8; }
+
+.fill-dropdown { font-size: 1rem; padding: 0.4rem 0.6rem; border: 2px solid var(--primary); border-radius: 6px; background: #fff; color: var(--primary); font-weight: 500; cursor: pointer; min-width: 120px; }
+.fill-dropdown:focus { outline: none; box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.2); }
+.fill-dropdown.correct { border-color: var(--success); background: #e8f8f0; color: var(--success); }
+.fill-dropdown.wrong { border-color: var(--danger); background: #fde8e8; color: var(--danger); }
+
 .fill-feedback { margin-top: 0.5rem; font-weight: 500; }
 .fill-feedback .correct-text { color: var(--success); }
 .fill-feedback .wrong-text { color: var(--danger); }
@@ -346,6 +349,32 @@ footer {
 .order-item.wrong { border-color: var(--danger); background: #fde8e8; }
 .order-handle { color: var(--text-muted); font-size: 1.25rem; }
 .order-text { font-size: 1.1rem; }
+
+/* Unjumble Activity - Drag and Drop */
+.unjumble-question { border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.5rem; margin-bottom: 0.75rem; display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; }
+.unjumble-question.answered .unjumble-word { cursor: default; }
+.unjumble-question.correct { border-color: var(--success); background: #f8fff8; }
+.unjumble-question.wrong { border-color: var(--danger); background: #fff8f8; }
+
+.unjumble-number { font-weight: 600; color: var(--text-muted); min-width: 2rem; }
+
+.unjumble-word-row { display: flex; flex-wrap: wrap; gap: 0.5rem; flex: 1; min-height: 42px; padding: 0.25rem; border-radius: 8px; background: #f8f9fa; }
+.unjumble-word-row.correct { background: #e8f8f0; }
+.unjumble-word-row.wrong { background: #fde8e8; }
+
+.unjumble-word { background: var(--primary); color: white; border-radius: 6px; padding: 0.5rem 0.75rem; font-size: 1rem; cursor: grab; user-select: none; transition: transform 0.1s, box-shadow 0.1s; }
+.unjumble-word:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+.unjumble-word:active { cursor: grabbing; }
+.unjumble-word.dragging { opacity: 0.5; transform: scale(1.05); }
+
+.unjumble-word.touch-clone { position: fixed; z-index: 1000; pointer-events: none; box-shadow: 0 8px 16px rgba(0,0,0,0.2); }
+
+.unjumble-actions { display: flex; gap: 0.5rem; }
+.unjumble-feedback { width: 100%; padding: 0.5rem 0 0 2.5rem; display: none; }
+.unjumble-feedback.show { display: block; }
+.unjumble-feedback .correct-text { color: var(--success); font-weight: 600; }
+.unjumble-feedback .wrong-text { color: var(--danger); }
+.unjumble-feedback .translation { color: var(--text-muted); font-style: italic; margin-left: 0.5rem; }
 
   </style>
 </head>
@@ -363,11 +392,11 @@ footer {
     <h1>Module 82: Aspect in Past: Single vs Repeated</h1>
     <div class="nav-tabs">
       <button class="nav-tab active" data-section="lesson">Lesson</button>
-      
+      <button class="nav-tab" data-section="match">Match</button>
       <button class="nav-tab" data-section="quiz">Quiz</button>
       <button class="nav-tab" data-section="sort">Sort</button>
       <button class="nav-tab" data-section="fill">Fill</button>
-      
+      <button class="nav-tab" data-section="order">Order</button>
       <button class="nav-tab" data-section="vocab">Vocab</button>
     </div>
   </nav>
@@ -713,6 +742,9 @@ footer {
 <hr />
 <hr />
 <hr />
+<hr />
+<hr />
+<hr />
 <hr /></div>
     </div>
   
@@ -762,34 +794,49 @@ footer {
     </div>
   
       <div class="btn-group">
-        <button class="btn btn-primary" onclick="showSection('quiz')">Activities →</button>
+        <button class="btn btn-primary" onclick="showSection('match')">Activities →</button>
       </div>
     </section>
   
     
+    <section id="match" class="section"><div class="card"><h3>Знайдіть пари</h3>
+      <div class="score-display"><span class="score"><span id="match-score">0</span>/16</span></div>
+      <div class="match-container" id="match-container"><svg class="match-lines" id="match-lines"></svg>
+        <div class="match-column" id="match-left"><div class="match-item" data-pair="0">звичка</div><div class="match-item" data-pair="1">щоразу</div><div class="match-item" data-pair="2">ключ</div><div class="match-item" data-pair="3">найвищий</div><div class="match-item" data-pair="4">двадцять</div><div class="match-item" data-pair="5">розповідати</div><div class="match-item" data-pair="6">щороку</div><div class="match-item" data-pair="7">повторювана</div><div class="match-item" data-pair="8">гуртожиток</div><div class="match-item" data-pair="9">одружитися</div><div class="match-item" data-pair="10">приїзд</div><div class="match-item" data-pair="11">жарт</div><div class="match-item" data-pair="12">маркер</div><div class="match-item" data-pair="13">сюжет</div><div class="match-item" data-pair="14">в'язати</div><div class="match-item" data-pair="15">вважатися</div></div>
+        <div class="match-column" id="match-right"><div class="match-item" data-pair="14">to knit</div><div class="match-item" data-pair="0">habit</div><div class="match-item" data-pair="9">to get married</div><div class="match-item" data-pair="2">key</div><div class="match-item" data-pair="3">highest/tallest</div><div class="match-item" data-pair="13">plot</div><div class="match-item" data-pair="11">joke</div><div class="match-item" data-pair="7">repeated</div><div class="match-item" data-pair="4">twenty</div><div class="match-item" data-pair="1">every time</div><div class="match-item" data-pair="8">dormitory</div><div class="match-item" data-pair="5">to tell, narrate</div><div class="match-item" data-pair="6">every year</div><div class="match-item" data-pair="15">to be considered</div><div class="match-item" data-pair="10">arrival (vehicles)</div><div class="match-item" data-pair="12">marker</div></div>
+      </div>
+      <div class="completion-message" id="match-complete"><h3>Perfect!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetMatch()">Reset</button><button class="btn btn-primary" onclick="showSection('quiz')">Next →</button></div>
+    </div></section>
     
-    <section id="quiz" class="section"><div class="card"><h3>Single or Repeated?</h3>
-      <div class="score-display"><span class="score"><span id="quiz-score">0</span>/6</span></div>
+    <section id="quiz" class="section"><div class="card"><h3>Перевірка значень</h3>
+      <div class="score-display"><span class="score"><span id="quiz-score">0</span>/10</span></div>
       <div id="quiz-container"></div>
       <div class="completion-message" id="quiz-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('sort')">Next →</button></div>
     </div></section>
     
-    <section id="sort" class="section"><div class="card"><h3>Time Markers</h3>
-      <div class="score-display"><span class="score"><span id="sort-score">0</span>/11</span></div>
+    <section id="sort" class="section"><div class="card"><h3>Сортування за родом</h3>
+      <div class="score-display"><span class="score"><span id="sort-score">0</span>/4</span></div>
       <div class="sort-pool" id="sort-pool"><div class="sort-items" id="sort-items"></div></div>
-      <div class="sort-groups"><div class="sort-group true-friends" data-group="true-friends"><h4>Signal Single Event</h4><div class="sort-items"></div></div><div class="sort-group false-friends" data-group="false-friends"><h4>Signal Repetition</h4><div class="sort-items"></div></div></div>
+      <div class="sort-groups"><div class="sort-group true-friends" data-group="true-friends"><h4>Чоловічий рід</h4><div class="sort-items"></div></div></div>
       <div class="completion-message" id="sort-complete"><h3>All Sorted!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetSort()">Reset</button><button class="btn btn-primary" onclick="showSection('fill')">Next →</button></div>
     </div></section>
     
-    <section id="fill" class="section"><div class="card"><h3>Complete the Story</h3>
-      <div class="score-display"><span class="score"><span id="fill-score">0</span>/6</span></div>
+    <section id="fill" class="section"><div class="card"><h3>Доповніть речення</h3>
+      <div class="score-display"><span class="score"><span id="fill-score">0</span>/8</span></div>
       <div id="fill-container" class="fill-container"></div>
       <div class="completion-message" id="fill-complete"><h3>Complete!</h3></div>
-      <div class="btn-group"><button class="btn btn-outline" onclick="resetFill()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetFill()">Reset</button><button class="btn btn-primary" onclick="showSection('order')">Next →</button></div>
     </div></section>
     
+    <section id="order" class="section"><div class="card"><h3>Побудуйте речення</h3>
+      <div class="score-display"><span class="score"><span id="order-score">0</span>/6</span></div>
+      <div id="order-container" class="order-container"></div>
+      <div class="completion-message" id="order-complete"><h3>Perfect Order!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetOrder()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
+    </div></section>
     
     <section id="vocab" class="section">
       <div class="card">
@@ -825,13 +872,13 @@ footer {
   </main><footer>Module 82 · curricula-opus</footer>
   <script>
 
-    const matchPairs = [];
-    const quizData = [{"question":"Вона ___ мені щодня.","options":["телефонувала","зателефонувала"],"correctIndex":0,"explanation":"Щодня = repetition = imperfective"},{"question":"Одного разу він ___ дуже смішний жарт.","options":["розповідав","розповів"],"correctIndex":1,"explanation":"Одного разу = single event = perfective"},{"question":"Ми завжди ___ разом.","options":["обідали","пообідали"],"correctIndex":0,"explanation":"Завжди = repetition = imperfective"},{"question":"Нарешті я ___ цікавий фільм до кінця.","options":["дивився","подивився"],"correctIndex":1,"explanation":"Нарешті + до кінця = result = perfective"},{"question":"Раніше він часто ___ у цьому кафе.","options":["снідав","поснідав"],"correctIndex":0,"explanation":"Часто = repetition = imperfective"},{"question":"Раптом вона ___ і вийшла.","options":["вставала","встала"],"correctIndex":1,"explanation":"Раптом = sudden event = perfective"}];
-    const sortData = {"true-friends":["одного разу (once)","раптом (suddenly)","вчора (yesterday)","нарешті (finally)","минулого тижня (last week)"],"false-friends":["завжди (always)","часто (often)","щодня (every day)","зазвичай (usually)","кожного разу (every time)","іноді (sometimes)"]};
-    const fillData = {"items":[],"text":"Коли я ___ (жив/прожив) у Києві, я ___ (ходив/пішов) на роботу пішки щодня. Зазвичай я ___ (купував/купив) каву по дорозі. Одного ранку я ___ (зустрічав/зустрів) старого друга. Ми ___ (говорили/поговорили) годину і я ___ (запізнювався/запізнився) на роботу.","answers":["жив (ongoing state)","ходив (щодня = repetition)","купував (зазвичай = repetition)","зустрів (одного ранку = single event)","поговорили (completed action)","запізнився (result)"]};
-    const orderData = {"items":[],"correctOrder":[]};
+    const matchPairs = [{"left":"звичка","right":"habit"},{"left":"щоразу","right":"every time"},{"left":"ключ","right":"key"},{"left":"найвищий","right":"highest/tallest"},{"left":"двадцять","right":"twenty"},{"left":"розповідати","right":"to tell, narrate"},{"left":"щороку","right":"every year"},{"left":"повторювана","right":"repeated"},{"left":"гуртожиток","right":"dormitory"},{"left":"одружитися","right":"to get married"},{"left":"приїзд","right":"arrival (vehicles)"},{"left":"жарт","right":"joke"},{"left":"маркер","right":"marker"},{"left":"сюжет","right":"plot"},{"left":"в'язати","right":"to knit"},{"left":"вважатися","right":"to be considered"}];
+    const quizData = [{"question":"Що означає \"розповідати\"?","options":["drama","to tell, narrate","cottage cheese pancakes","to plan"],"correctIndex":1,"explanation":"\"розповідати\" means \"to tell, narrate\""},{"question":"Що означає \"гуртожиток\"?","options":["final","knee","to listen through","dormitory"],"correctIndex":3,"explanation":"\"гуртожиток\" means \"dormitory\""},{"question":"Що означає \"одружитися\"?","options":["bed","to be mistaken","to nod","to get married"],"correctIndex":3,"explanation":"\"одружитися\" means \"to get married\""},{"question":"Що означає \"звичка\"?","options":["champion","habit","disobedient","novel"],"correctIndex":1,"explanation":"\"звичка\" means \"habit\""},{"question":"Що означає \"щоразу\"?","options":["receipt","every time","behind","village, rural"],"correctIndex":1,"explanation":"\"щоразу\" means \"every time\""},{"question":"Що означає \"маркер\"?","options":["to tell (impf)","tasty","mistake","marker"],"correctIndex":3,"explanation":"\"маркер\" means \"marker\""},{"question":"Що означає \"жарт\"?","options":["to vacuum","to show (pf)","to promote","joke"],"correctIndex":3,"explanation":"\"жарт\" means \"joke\""},{"question":"Що означає \"сюжет\"?","options":["diagnosis","plot","learning, education","magazine"],"correctIndex":1,"explanation":"\"сюжет\" means \"plot\""},{"question":"Що означає \"повторювана\"?","options":["to hire","cream","nature","repeated"],"correctIndex":3,"explanation":"\"повторювана\" means \"repeated\""},{"question":"Що означає \"щороку\"?","options":["every year","to return","steppe","thin"],"correctIndex":0,"explanation":"\"щороку\" means \"every year\""}];
+    const sortData = {"true-friends":["жарт","маркер","гуртожиток","сюжет"]};
+    const fillData = {"items":[{"prompt":"Незважаючи на високу ціну, цей ___ вартий кожної гривні.","answer":"сюжет","options":["ліфт","сюжет","життя","директор"]},{"prompt":"Незважаючи на те, що цей підхід видається ___, він має багато переваг.","answer":"повторювана","options":["доконаний","повторювана","нічний","найцікавіший"]},{"prompt":"Мій колега порадив мені цей ___, і я дуже задоволений вибором.","answer":"маркер","options":["родина","злива","маркер","зупинка"]},{"prompt":"Моя колега порадила мені цю ___, і я дуже задоволена вибором.","answer":"звичка","options":["звичка","посада","карате","виробництво"]},{"prompt":"Мій колега порадив мені цей ___, і я дуже задоволений вибором.","answer":"гуртожиток","options":["друг","кістка","гуртожиток","плавання"]},{"prompt":"Незважаючи на високу ціну, цей ___ вартий кожної гривні.","answer":"жарт","options":["платформа","турнір","жарт","центр"]},{"prompt":"Незважаючи на те, що ___ вимагає багато часу, це приносить велике задоволення.","answer":"одружитися","options":["одружитися","продавати","дякувати","здаватися"]},{"prompt":"Ми нарешті знайшли ___, який ідеально підходить для нас.","answer":"розповідати","options":["лист","розповідати","традиція","бухгалтерія"]}],"text":"","answers":[]};
+    const orderData = {"items":[{"words":["жарт","захотів","цей","його","побачив","я","Коли","одразу","вперше","я","купити"],"answer":"Коли я вперше побачив цей жарт, я одразу захотів його купити.","translation":"joke"},{"words":["цей","Незважаючи","ціну","на","гривні","сюжет","високу","вартий","кожної"],"answer":"Незважаючи на високу ціну, цей сюжет вартий кожної гривні.","translation":"plot"},{"words":["я","купити","його","вперше","цей","Коли","побачив","одразу","захотів","маркер","я"],"answer":"Коли я вперше побачив цей маркер, я одразу захотів його купити.","translation":"marker"},{"words":["на","гуртожиток","вартий","ціну","цей","високу","Незважаючи","гривні","кожної"],"answer":"Незважаючи на високу ціну, цей гуртожиток вартий кожної гривні.","translation":"dormitory"},{"words":["нас","яка","звичка","Ми","знайшли","для","ідеально","нарешті","підходить"],"answer":"Ми нарешті знайшли звичка, яка ідеально підходить для нас.","translation":"habit"},{"words":["захотів","Коли","одразу","вперше","побачив","купити","я","я","цей","його","розповідати"],"answer":"Коли я вперше побачив цей розповідати, я одразу захотів його купити.","translation":"to tell, narrate"}],"isUnjumble":true};
     const vocabData = [{"uk":"повторювана","translit":"","en":"repeated","note":"повторювана дія"},{"uk":"звичка","translit":"","en":"habit","note":"f"},{"uk":"маркер","translit":"","en":"marker","note":"m"},{"uk":"кожного разу","translit":"","en":"each time, every time","note":""},{"uk":"щоразу","translit":"","en":"every time","note":""},{"uk":"щороку","translit":"","en":"every year","note":""},{"uk":"жарт","translit":"","en":"joke","note":"m"},{"uk":"розповідати","translit":"","en":"to tell (stories)","note":"impf"},{"uk":"одружитися","translit":"","en":"to get married","note":"pf"},{"uk":"гуртожиток","translit":"","en":"dormitory","note":"m"},{"uk":"сюжет","translit":"","en":"plot","note":"m"}];
-    const totalSort = 11;
+    const totalSort = 4;
   
 // Answer callout toggle (for new > [!answer] syntax)
 function toggleAnswer(id, btn) {
@@ -1038,7 +1085,7 @@ function resetSort() {
 }
 
 
-// Fill-in Activity
+// Fill-in Activity - Dropdown in sentence
 let fillScore = 0, fillAns = 0;
 
 function initFill() {
@@ -1049,45 +1096,82 @@ function initFill() {
   fillData.items.forEach((item, i) => {
     const div = document.createElement('div');
     div.className = 'fill-question';
+
+    // Generate options: correct answer + 3 distractors
+    let options = [];
+    if (item.options && item.options.length >= 4) {
+      options = item.options;
+    } else {
+      // Fallback: generate distractors from other items' answers
+      options = [item.answer];
+      const otherAnswers = fillData.items
+        .filter((_, idx) => idx !== i)
+        .map(it => it.answer)
+        .filter(a => a && a !== item.answer);
+
+      const shuffled = otherAnswers.sort(() => Math.random() - 0.5);
+      options.push(...shuffled.slice(0, 3));
+
+      while (options.length < 4) {
+        options.push('—');
+      }
+    }
+
+    // Shuffle options
+    const shuffledOptions = [...options].sort(() => Math.random() - 0.5);
+
+    // Replace ___ in the sentence with a dropdown
+    const sentence = (item.prompt || item.sentence || '').replace(/___/g,
+      `<select class="fill-dropdown" data-idx="${i}" data-answer="${item.answer}">
+        <option value="" disabled selected>—</option>
+        ${shuffledOptions.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
+      </select>`
+    );
+
     div.innerHTML = `
-      <h4>Q${i + 1}: ${item.prompt || item.sentence || ''}</h4>
-      <input type="text" class="fill-input" data-idx="${i}" data-answer="${item.answer || ''}" placeholder="Type your answer...">
-      <button class="btn btn-outline btn-sm fill-check" data-idx="${i}">Check</button>
+      <div class="fill-sentence">
+        <span class="fill-number">${i + 1}.</span>
+        ${sentence}
+      </div>
       <div class="fill-feedback" id="fill-fb-${i}"></div>
     `;
     c.appendChild(div);
   });
 
-  document.querySelectorAll('.fill-check').forEach(b => b.addEventListener('click', handleFill));
-  document.querySelectorAll('.fill-input').forEach(i => i.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') handleFill({ target: e.target.nextElementSibling });
-  }));
+  // Event delegation for dropdown changes
+  c.addEventListener('change', (e) => {
+    if (e.target.classList.contains('fill-dropdown')) {
+      handleFillChoice(e.target);
+    }
+  });
 }
 
-function handleFill(e) {
-  const idx = e.target.dataset.idx;
-  const q = e.target.closest('.fill-question');
+function handleFillChoice(dropdown) {
+  const q = dropdown.closest('.fill-question');
   if (q.classList.contains('answered')) return;
 
-  const input = q.querySelector('.fill-input');
-  const userAnswer = input.value.trim().toLowerCase();
-  const correctAnswer = input.dataset.answer.toLowerCase();
+  const idx = dropdown.dataset.idx;
+  const userAnswer = dropdown.value;
+  const correctAnswer = dropdown.dataset.answer;
   const fb = document.getElementById('fill-fb-' + idx);
 
   q.classList.add('answered');
+  dropdown.disabled = true;
 
   if (userAnswer === correctAnswer) {
-    input.classList.add('correct');
-    fb.innerHTML = '<span class="correct-text">Correct!</span>';
+    dropdown.classList.add('correct');
+    fb.innerHTML = '<span class="correct-text">✓ Correct!</span>';
     fillScore++;
   } else {
-    input.classList.add('wrong');
-    fb.innerHTML = `<span class="wrong-text">Answer: ${input.dataset.answer}</span>`;
+    dropdown.classList.add('wrong');
+    fb.innerHTML = `<span class="wrong-text">✗ Answer: ${correctAnswer}</span>`;
   }
 
   document.getElementById('fill-score').textContent = fillScore;
   fillAns++;
-  if (fillAns === fillData.items.length) document.getElementById('fill-complete').classList.add('show');
+  if (fillAns === fillData.items.length) {
+    document.getElementById('fill-complete').classList.add('show');
+  }
 }
 
 function resetFill() {
@@ -1107,9 +1191,217 @@ function initOrder() {
   if (!c || !orderData.items.length) return;
   c.innerHTML = '';
 
+  if (orderData.isUnjumble) {
+    initUnjumble(c);
+  } else {
+    initClassicOrder(c);
+  }
+}
+
+// UNJUMBLE: Drag-and-drop words to form sentences
+function initUnjumble(container) {
   orderTotal = orderData.items.length;
 
-  // Shuffle items for display
+  orderData.items.forEach((item, idx) => {
+    const question = document.createElement('div');
+    question.className = 'unjumble-question';
+    question.dataset.idx = idx;
+
+    // Shuffle words
+    const shuffledWords = [...item.words].sort(() => Math.random() - 0.5);
+
+    question.innerHTML = `
+      <div class="unjumble-number">${idx + 1}.</div>
+      <div class="unjumble-word-row" data-idx="${idx}">
+        ${shuffledWords.map((word, i) => `
+          <span class="unjumble-word" draggable="true" data-word="${word}">${word}</span>
+        `).join('')}
+      </div>
+      <div class="unjumble-actions">
+        <button class="btn btn-sm btn-outline unjumble-check" data-idx="${idx}">Check</button>
+        <button class="btn btn-sm btn-outline unjumble-reset" data-idx="${idx}">Reset</button>
+      </div>
+      <div class="unjumble-feedback" data-idx="${idx}"></div>
+    `;
+
+    container.appendChild(question);
+
+    // Initialize drag-and-drop for this row
+    initUnjumbleDragDrop(question.querySelector('.unjumble-word-row'));
+  });
+
+  // Event delegation for buttons
+  container.addEventListener('click', handleUnjumbleClick);
+}
+
+function initUnjumbleDragDrop(row) {
+  let dragItem = null;
+
+  row.querySelectorAll('.unjumble-word').forEach(word => {
+    word.addEventListener('dragstart', (e) => {
+      dragItem = word;
+      word.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    });
+
+    word.addEventListener('dragend', () => {
+      word.classList.remove('dragging');
+      dragItem = null;
+    });
+
+    word.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      if (!dragItem || dragItem === word) return;
+
+      const rect = word.getBoundingClientRect();
+      const midX = rect.left + rect.width / 2;
+
+      if (e.clientX < midX) {
+        row.insertBefore(dragItem, word);
+      } else {
+        row.insertBefore(dragItem, word.nextSibling);
+      }
+    });
+  });
+
+  // Touch support for mobile
+  let touchItem = null;
+  let touchClone = null;
+
+  row.querySelectorAll('.unjumble-word').forEach(word => {
+    word.addEventListener('touchstart', (e) => {
+      touchItem = word;
+      word.classList.add('dragging');
+
+      // Create a clone for visual feedback
+      touchClone = word.cloneNode(true);
+      touchClone.classList.add('touch-clone');
+      document.body.appendChild(touchClone);
+      updateTouchClone(e.touches[0]);
+    });
+
+    word.addEventListener('touchmove', (e) => {
+      e.preventDefault();
+      if (!touchItem) return;
+      updateTouchClone(e.touches[0]);
+
+      // Find which word we're over
+      const touch = e.touches[0];
+      const elements = document.elementsFromPoint(touch.clientX, touch.clientY);
+      const targetWord = elements.find(el => el.classList.contains('unjumble-word') && el !== touchItem);
+
+      if (targetWord && targetWord.parentNode === row) {
+        const rect = targetWord.getBoundingClientRect();
+        const midX = rect.left + rect.width / 2;
+        if (touch.clientX < midX) {
+          row.insertBefore(touchItem, targetWord);
+        } else {
+          row.insertBefore(touchItem, targetWord.nextSibling);
+        }
+      }
+    });
+
+    word.addEventListener('touchend', () => {
+      if (touchItem) touchItem.classList.remove('dragging');
+      if (touchClone) touchClone.remove();
+      touchItem = null;
+      touchClone = null;
+    });
+  });
+
+  function updateTouchClone(touch) {
+    if (touchClone) {
+      touchClone.style.left = (touch.clientX - 40) + 'px';
+      touchClone.style.top = (touch.clientY - 20) + 'px';
+    }
+  }
+}
+
+function handleUnjumbleClick(e) {
+  const target = e.target;
+
+  if (target.classList.contains('unjumble-check')) {
+    checkUnjumbleAnswer(parseInt(target.dataset.idx));
+  }
+
+  if (target.classList.contains('unjumble-reset')) {
+    resetUnjumbleQuestion(parseInt(target.dataset.idx));
+  }
+}
+
+function checkUnjumbleAnswer(idx) {
+  const item = orderData.items[idx];
+  const row = document.querySelector(`.unjumble-word-row[data-idx="${idx}"]`);
+  const feedback = document.querySelector(`.unjumble-feedback[data-idx="${idx}"]`);
+  const question = document.querySelector(`.unjumble-question[data-idx="${idx}"]`);
+
+  // Build user's answer from current word order
+  const words = row.querySelectorAll('.unjumble-word');
+  const userAnswer = Array.from(words).map(w => w.dataset.word).join(' ');
+
+  // Normalize for comparison (handle punctuation)
+  const normalize = (s) => s.replace(/[?!.,]/g, '').toLowerCase().trim();
+  const isCorrect = normalize(userAnswer) === normalize(item.answer);
+
+  if (isCorrect) {
+    question.classList.add('answered', 'correct');
+    row.classList.add('correct');
+    words.forEach(w => w.setAttribute('draggable', 'false'));
+    orderScore++;
+    document.getElementById('order-score').textContent = orderScore;
+
+    feedback.innerHTML = `
+      <span class="correct-text">✓ Correct!</span>
+      <span class="translation">${item.translation || ''}</span>
+    `;
+    feedback.classList.add('show');
+
+    if (orderScore === orderTotal) {
+      document.getElementById('order-complete').classList.add('show');
+    }
+  } else {
+    question.classList.add('wrong');
+    row.classList.add('wrong');
+
+    feedback.innerHTML = `
+      <span class="wrong-text">✗ Try again. Hint: ${item.answer}</span>
+    `;
+    feedback.classList.add('show');
+
+    setTimeout(() => {
+      question.classList.remove('wrong');
+      row.classList.remove('wrong');
+      feedback.classList.remove('show');
+    }, 2000);
+  }
+}
+
+function resetUnjumbleQuestion(idx) {
+  const item = orderData.items[idx];
+  const row = document.querySelector(`.unjumble-word-row[data-idx="${idx}"]`);
+  const question = document.querySelector(`.unjumble-question[data-idx="${idx}"]`);
+  const feedback = document.querySelector(`.unjumble-feedback[data-idx="${idx}"]`);
+
+  if (question.classList.contains('correct')) return;
+
+  // Re-shuffle and rebuild
+  const shuffledWords = [...item.words].sort(() => Math.random() - 0.5);
+  row.innerHTML = shuffledWords.map(word => `
+    <span class="unjumble-word" draggable="true" data-word="${word}">${word}</span>
+  `).join('');
+
+  initUnjumbleDragDrop(row);
+
+  question.classList.remove('wrong');
+  row.classList.remove('wrong');
+  feedback.innerHTML = '';
+  feedback.classList.remove('show');
+}
+
+// CLASSIC ORDER: Drag items into correct sequence
+function initClassicOrder(container) {
+  orderTotal = orderData.items.length;
+
   const shuffled = [...orderData.items].map((item, idx) => ({ text: item, origIdx: idx }));
   shuffled.sort(() => Math.random() - 0.5);
 
@@ -1121,15 +1413,14 @@ function initOrder() {
       <span class="order-text">${item.text}</span>
     </div>
   `).join('');
-  c.appendChild(div);
+  container.appendChild(div);
 
   const checkBtn = document.createElement('button');
   checkBtn.className = 'btn btn-outline';
   checkBtn.textContent = 'Check Order';
   checkBtn.onclick = checkOrder;
-  c.appendChild(checkBtn);
+  container.appendChild(checkBtn);
 
-  // Enable drag and drop
   initDragDrop();
 }
 
@@ -1167,7 +1458,6 @@ function checkOrder() {
   const items = document.querySelectorAll('.order-item');
   const currentOrder = Array.from(items).map(item => parseInt(item.dataset.orig));
 
-  // Check if order is correct (0, 1, 2, 3, ...)
   let correct = true;
   currentOrder.forEach((val, idx) => {
     const expectedIdx = orderData.correctOrder.length ? orderData.correctOrder[idx] : idx;

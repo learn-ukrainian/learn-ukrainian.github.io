@@ -292,171 +292,199 @@ Transform to polite requests:
 
 ---
 
+---
+
+---
+
+---
+
 # Activities
 
-## match-up: Real vs Unreal
+## fill-in: Complete the Sentences
 
-> Match the condition type.
+> Choose the correct word to complete each sentence.
+
+1. Я хочу навчитися ___.
+   > [!answer] мріяти
+   > [!options] мріяти | щастити | зробити | просити
+
+2. Вони планують ___ завтра.
+   > [!answer] уявити
+   > [!options] було | закінчити | уявити | сказати
+
+3. Мій брат має хорошу ___.
+   > [!answer] шкода
+   > [!options] шкода | кілограм | адресат | підпис
+
+4. Ця ___ коштує сто гривень.
+   > [!answer] можливість
+   > [!options] інженер | можливість | градус | секретарка
+
+5. Це моя нова ___.
+   > [!answer] мрія
+   > [!options] студент | мрія | 14 | менеджер
+
+6. Моя кімната занадто ___.
+   > [!answer] гіпотетичний
+   > [!options] сумний | найменший | важкий | гіпотетичний
+
+7. Мій брат любить ___ щодня.
+   > [!answer] уявляти
+   > [!options] уявляти | прийти | знайти | домовитися
+
+8. Ця книга надзвичайно ___.
+   > [!answer] уявний
+   > [!options] щасливий | українська | старіший | уявний
+
+## unjumble: Build the Sentence
+
+> Arrange the words in the correct order.
+
+1. мрія / коштує / сто / Ця / гривень
+   > [!answer] Ця мрія коштує сто гривень.
+   > (dream)
+
+2. Мій / можливість / брат / має / хорошу
+   > [!answer] Мій брат має хорошу можливість.
+   > (possibility)
+
+3. Ця / сто / шкода / гривень / коштує
+   > [!answer] Ця шкода коштує сто гривень.
+   > (pity, shame)
+
+## match-up: Match the Pairs
+
+> Match Ukrainian words to their English meanings.
 
 | Left | Right |
 |------|-------|
-| Якщо матиму час | real (possible) |
-| Якби мав час | unreal (hypothetical) |
-| Якщо він прийде | real |
-| Якби він прийшов | unreal |
-| Якщо погода буде | real |
-| Якби погода була | unreal |
-
-## quiz: Conditionals with б/би
-
-> Choose the correct form.
-
-1. "If I had time, I would help" - Якби я ___ час, я б допоміг.
-   - [x] мав
-   - [ ] матиму
-   - [ ] маю
-   - [ ] мати
-   > Unreal conditional = past tense after якби.
-
-2. "I would like to go" - Я ___ поїхати.
-   - [x] хотів би
-   - [ ] хочу би
-   - [ ] хотіти б
-   - [ ] хотів
-   > "Would like" = хотів би.
-
-3. "Could you help?" - Чи не ___ ви допомогти?
-   - [x] могли б
-   - [ ] можете би
-   - [ ] могли
-   - [ ] зможете б
-   > Polite = могли б.
-
-4. "It would be good" - ___ добре.
-   - [x] Було б
-   - [ ] Буде б
-   - [ ] Є б
-   - [ ] Бути б
-   > "Would be" = було б.
-
-5. "If she came, we would start" - Якби вона ___, ми б почали.
-   - [x] прийшла
-   - [ ] прийде
-   - [ ] приходить
-   - [ ] прийшла б
-   > No б in якби clause, only in result.
-
-6. "You should call" - Ти ___ зателефонувати.
-   - [x] мав би
-   - [ ] маєш би
-   - [ ] мати б
-   - [ ] мав
-   > "Should" = мав би.
-
-## group-sort: Real vs Hypothetical
-
-> Sort the sentences.
-
-### Real Conditionals (якщо)
-- Якщо буде час, зроблю.
-- Якщо він прийде, почнемо.
-- Якщо хочеш, допоможу.
-
-### Hypothetical Conditionals (якби + б)
-- Якби мав час, зробив би.
-- Якби він прийшов, почали б.
-- Якби хотіла, допомогла б.
-
-
-## fill-in: Fill in the Blank
-
-> Fill in the blanks with the correct word.
-
-1. Якщо ___ час
-   > [!answer] матиму
-
-2. Якби ___ час
-   > [!answer] мав
-
-3. Якщо ___ прийде
-   > [!answer] він
-
-4. Якби ___ прийшов
-   > [!answer] він
-
-5. Якщо ___ буде
-   > [!answer] погода
-
-
+| гіпотетичний | hypothetical |
+| двадцять | twenty |
+| мрія | dream |
+| лампа | lamp |
+| б | would (after vowel) |
+| можливість | possibility |
+| уявний | imaginary, hypothetical |
+| уявляти | to imagine (impf) |
+| якби | if (unreal) |
+| би | would (after consonant) |
+| мріяти | to dream |
+| неймовірно | incredibly |
 
 ## quiz: Meaning Check
 
 > Choose the correct answer.
 
-1. What does "можливість" mean?
-   - [ ] unfortunately
-   - [x] possibility
-   - [ ] to imagine (impf)
-   - [ ] would like (f)
-   > "можливість" means "possibility"
+1. What does "б" mean?
+   - [ ] in front, ahead
+   - [ ] where from
+   - [x] would (after vowel)
+   - [ ] sometimes
+   > "б" means "would (after vowel)"
 
 2. What does "уявляти" mean?
-   - [ ] possibility
-   - [ ] unfortunately
+   - [ ] whose (m)
+   - [ ] family
+   - [ ] dad
    - [x] to imagine (impf)
-   - [ ] would like (f)
    > "уявляти" means "to imagine (impf)"
 
-3. What does "хотіла б" mean?
-   - [ ] possibility
-   - [ ] unfortunately
-   - [x] would like (f)
-   - [ ] to imagine (impf)
-   > "хотіла б" means "would like (f)"
+3. What does "гіпотетичний" mean?
+   - [ ] to call (pf)
+   - [x] hypothetical
+   - [ ] to eat (perf)
+   - [ ] bon appétit
+   > "гіпотетичний" means "hypothetical"
 
-4. What does "на жаль" mean?
-   - [ ] possibility
-   - [ ] would like (f)
-   - [ ] to imagine (impf)
-   - [x] unfortunately
-   > "на жаль" means "unfortunately"
+4. What does "би" mean?
+   - [x] would (after consonant)
+   - [ ] behind
+   - [ ] to watch, look
+   - [ ] fog
+   > "би" means "would (after consonant)"
 
-5. What does "якби" mean?
-   - [x] if (unreal)
-   - [ ] would like (f)
-   - [ ] possibility
-   - [ ] to imagine (impf)
-   > "якби" means "if (unreal)"
-
-6. What does "уявний" mean?
+5. What does "уявний" mean?
+   - [ ] to wake up (perf)
+   - [ ] music
+   - [ ] to succeed
    - [x] imaginary, hypothetical
-   - [ ] possibility
-   - [ ] would like (f)
-   - [ ] to imagine (impf)
    > "уявний" means "imaginary, hypothetical"
 
+6. What does "уявити" mean?
+   - [ ] it
+   - [ ] to help (perf)
+   - [x] to imagine (perf)
+   - [ ] borscht
+   > "уявити" means "to imagine (perf)"
 
+7. What does "можливість" mean?
+   - [x] possibility
+   - [ ] most interesting
+   - [ ] good, kind
+   - [ ] how
+   > "можливість" means "possibility"
 
-## unjumble: Word Order
+8. What does "шкода" mean?
+   - [x] pity, shame
+   - [ ] nothing
+   - [ ] (with) us
+   - [ ] to want
+   > "шкода" means "pity, shame"
 
-> Put the words in the correct order to form a sentence.
+9. What does "якби" mean?
+   - [ ] to serve
+   - [ ] (with) us
+   - [x] if (unreal)
+   - [ ] artist
+   > "якби" means "if (unreal)"
 
-1. матиму / Якщо / час
-   > [!answer] Якщо матиму час
-   > (real (possible))
+10. What does "мріяти" mean?
+   - [ ] to send, dispatch
+   - [x] to dream
+   - [ ] masculine
+   - [ ] fitting room
+   > "мріяти" means "to dream"
 
-2. час / Якби / мав
-   > [!answer] Якби мав час
-   > (unreal (hypothetical))
+11. What does "мрія" mean?
+   - [ ] sun
+   - [ ] Saturday
+   - [x] dream
+   - [ ] bigger
+   > "мрія" means "dream"
 
-3. він / Якщо / прийде
-   > [!answer] Якщо він прийде
-   > (real)
+## true-false: True or False?
 
-4. прийшов / він / Якби
-   > [!answer] Якби він прийшов
-   > (unreal)
+> Determine if each statement is true or false.
 
+- [x] "гіпотетичний" means "hypothetical"
+   > Correct!
+
+- [ ] "би" means "to carry"
+   > Incorrect. "би" means "would (after consonant)"
+
+- [x] "якби" means "if (unreal)"
+   > Correct!
+
+- [ ] "уявляти" means "your (pl, informal)"
+   > Incorrect. "уявляти" means "to imagine (impf)"
+
+- [ ] "можливість" means "husband"
+   > Incorrect. "можливість" means "possibility"
+
+- [ ] "шкода" means "advice"
+   > Incorrect. "шкода" means "pity, shame"
+
+- [x] "уявити" means "to imagine (perf)"
+   > Correct!
+
+- [x] "б" means "would (after vowel)"
+   > Correct!
+
+- [x] "мрія" means "dream"
+   > Correct!
+
+- [ ] "мріяти" means "pen"
+   > Incorrect. "мріяти" means "to dream"
 
 ---
 

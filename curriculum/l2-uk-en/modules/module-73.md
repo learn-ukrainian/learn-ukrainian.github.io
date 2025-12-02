@@ -312,166 +312,299 @@ Discuss social media habits:
 
 ---
 
-# Activities
+---
 
-## match-up: Action → Result
+---
+
+---
+
+# Вправи
+
+## fill-in: Доповніть речення
+
+> Оберіть правильне слово.
+
+1. Вони довго шукали хороший ___, але не знайшли.
+   > [!answer] акумулятор
+   > [!options] місяць | 13 | пацієнт | акумулятор
+
+2. Моя сестра каже, що їй подобається ___ у вільний час.
+   > [!answer] вимикати
+   > [!options] вимикати | засинати | йти | керувати
+
+3. Я хочу купити цей ___, але він занадто дорогий.
+   > [!answer] файл
+   > [!options] сорочка | місце | файл | конверт
+
+4. Моя сестра каже, що їй подобається ___ у вільний час.
+   > [!answer] перезавантажувати
+   > [!options] називатися | знайомитися | перезавантажувати | підтвердити
+
+5. Я хочу купити цей ___, але він занадто дорогий.
+   > [!answer] сайт
+   > [!options] сайт | ручка | їжа | пошук
+
+6. Моя сестра каже, що їй подобається ___ у вільний час.
+   > [!answer] вивантажувати
+   > [!options] будеш | вивантажувати | зрозуміти | зварити
+
+7. Я хочу купити цей ___, але він занадто дорогий.
+   > [!answer] лайк
+   > [!options] лайк | адвокат | менеджер | їжак
+
+8. Моя сестра каже, що їй подобається ___ у вільний час.
+   > [!answer] зберігати
+   > [!options] з'їсти | зберігати | погоджуватися | носити
+
+9. Вони довго шукали хорошу ___, але не знайшли.
+   > [!answer] стрічка
+   > [!options] мама | посилка | стрічка | подушка
+
+10. Цей ___ належить моєму другові з Києва.
+   > [!answer] застосунок
+   > [!options] порція | застосунок | світлофор | шкода
+
+11. Вони сказали, що це ___ дуже зручне.
+   > [!answer] налаштування
+   > [!options] сирники | зупинка | налаштування | хвилина
+
+## unjumble: Побудуйте речення
+
+> Розташуйте слова в правильному порядку.
+
+1. застосунок / Києва / моєму / з / другові / належить / Цей
+   > [!answer] Цей застосунок належить моєму другові з Києва.
+   > (application, app)
+
+2. файл / дуже / друг / що / його / Мій / сказав / зручний
+   > [!answer] Мій друг сказав, що його файл дуже зручний.
+   > (file)
+
+3. вірус / друг / дуже / зручний / що / його / Мій / сказав
+   > [!answer] Мій друг сказав, що його вірус дуже зручний.
+   > (virus)
+
+4. належить / сайт / з / моєму / Києва / Цей / другові
+   > [!answer] Цей сайт належить моєму другові з Києва.
+   > (website)
+
+5. знайшли / довго / хороший / акумулятор / не / шукали / але / Вони
+   > [!answer] Вони довго шукали хороший акумулятор, але не знайшли.
+   > (battery)
+
+6. сестра / її / Моя / стрічка / зручна / що / сказала / дуже
+   > [!answer] Моя сестра сказала, що її стрічка дуже зручна.
+   > (feed)
+
+7. зручний / дуже / сказав / що / Мій / його / друг / ноутбук
+   > [!answer] Мій друг сказав, що його ноутбук дуже зручний.
+   > (laptop)
+
+8. знайшли / хороший / Вони / шукали / але / довго / пошук / не
+   > [!answer] Вони довго шукали хороший пошук, але не знайшли.
+   > (search)
+
+9. довго / не / налаштування / хороше / знайшли / шукали / Вони / але
+   > [!answer] Вони довго шукали хороше налаштування, але не знайшли.
+   > (settings)
+
+10. але / хочу / відеодзвінок / купити / Я / дорогий / він / цей / занадто
+   > [!answer] Я хочу купити цей відеодзвінок, але він занадто дорогий.
+   > (video call)
+
+11. що / зручна / її / сказала / клавіатура / сестра / Моя / дуже
+   > [!answer] Моя сестра сказала, що її клавіатура дуже зручна.
+   > (keyboard)
+
+12. з / Києва / належить / моєму / коментар / Цей / другові
+   > [!answer] Цей коментар належить моєму другові з Києва.
+   > (comment)
+
+13. підписник / але / шукали / знайшли / не / хороший / довго / Вони
+   > [!answer] Вони довго шукали хороший підписник, але не знайшли.
+   > (follower)
+
+14. папка / шукали / але / довго / хорошу / не / Вони / знайшли
+   > [!answer] Вони довго шукали хорошу папка, але не знайшли.
+   > (folder)
+
+## match-up: Знайдіть пари
+
+> З'єднайте українські слова з англійськими.
 
 | Left | Right |
 |------|-------|
-| завантажити | file appears |
-| видалити | file gone |
-| зберегти | file saved |
-| надіслати | message sent |
-| увімкнути | device turns on |
+| завантажувати | to download |
+| смартфон | smartphone |
+| мова | language |
+| вишиванка | embroidered shirt |
+| вивантажувати | to upload |
+| задоволення | pleasure, satisfaction |
+| коментар | comment |
+| смажити | to fry |
+| налаштування | settings |
+| вмикати | to turn on |
+| температура | temperature |
+| вимикати | to turn off |
+| перезавантажувати | to restart |
+| встановлювати | to install |
 
-## quiz: Technology Vocabulary
+## quiz: Перевірка значень
 
-> Choose the correct answer.
+> Оберіть правильну відповідь.
 
-1. "Завантажити" means ___.
-   - [x] to download
-   - [ ] to upload
-   - [ ] to delete
-   - [ ] to save
-   > Завантажити = to download.
-
-2. "Застосунок" is ___.
-   - [x] application, app
-   - [ ] website
-   - [ ] password
-   - [ ] file
-   > Застосунок = app (also: апка).
-
-3. "Акумулятор розрядився" means ___.
-   - [x] the battery is dead
-   - [ ] the screen broke
-   - [ ] the internet is slow
-   - [ ] the file deleted
-   > Розрядився = discharged, dead.
-
-4. "Підписник" means ___.
-   - [x] follower
-   - [ ] subscriber
-   - [ ] message
-   - [ ] post
-   > Підписник = follower (social media).
-
-5. "Зависло" means the program ___.
-   - [x] froze
-   - [ ] crashed
-   - [ ] updated
-   - [ ] started
-   > Зависло = froze (stopped responding).
-
-6. "Резервна копія" is ___.
-   - [x] backup
-   - [ ] update
-   - [ ] settings
-   - [ ] password
-   > Резервна копія = backup.
-
-## group-sort: By Category
-
-### Пристрої (Devices)
-- ноутбук
-- смартфон
-- планшет
-- навушники
-
-### Дії (Actions)
-- завантажити
-- надіслати
-- зберегти
-- видалити
-
-### Проблеми (Problems)
-- не працює
-- зависло
-- повільно
-- помилка
-
-### Соцмережі (Social Media)
-- підписник
-- лайк
-- коментар
-- стрічка
-
-
-## true-false: True or False?
-
-> Determine if each statement is true or false.
-
-- [x] "комп'ютер" is masculine.
-   > Correct! комп'ютер is masculine.
-
-- [x] "ноутбук" is masculine.
-   > Correct! ноутбук is masculine.
-
-- [x] "смартфон" is masculine.
-   > Correct! смартфон is masculine.
-
-- [x] "планшет" is masculine.
-   > Correct! планшет is masculine.
-
-- [ ] "клавіатура" is masculine.
-   > Incorrect. клавіатура is feminine.
-
-- [ ] "акумулятор" is feminine.
-   > Incorrect. акумулятор is masculine.
-
-
-## fill-in: Fill in the Blank
-
-> Fill in the blanks with the correct word.
-
-
-
-## quiz: Meaning Check
-
-> Choose the correct answer.
-
-1. What does "вірус" mean?
-   - [ ] to turn off
-   - [ ] to restart
-   - [x] virus
-   - [ ] video call
-   > "вірус" means "virus"
-
-2. What does "вимикати" mean?
-   - [ ] to restart
-   - [ ] video call
-   - [ ] virus
-   - [x] to turn off
-   > "вимикати" means "to turn off"
-
-3. What does "відеодзвінок" mean?
-   - [ ] to restart
-   - [x] video call
-   - [ ] to turn off
-   - [ ] virus
-   > "відеодзвінок" means "video call"
-
-4. What does "перезавантажувати" mean?
-   - [ ] virus
-   - [x] to restart
-   - [ ] to turn off
-   - [ ] video call
-   > "перезавантажувати" means "to restart"
-
-5. What does "акумулятор" mean?
-   - [x] battery
-   - [ ] video call
-   - [ ] virus
-   - [ ] to turn off
-   > "акумулятор" means "battery"
-
-6. What does "лайк" mean?
-   - [ ] to turn off
+1. Що означає "лайк"?
+   - [ ] to return (perf)
    - [x] like
-   - [ ] virus
-   - [ ] video call
+   - [ ] center
+   - [ ] charger
    > "лайк" means "like"
 
+2. Що означає "вивантажувати"?
+   - [ ] hour
+   - [ ] why
+   - [ ] feed
+   - [x] to upload
+   > "вивантажувати" means "to upload"
+
+3. Що означає "налаштування"?
+   - [ ] rain
+   - [ ] hotel
+   - [x] settings
+   - [ ] to ask, request
+   > "налаштування" means "settings"
+
+4. Що означає "сайт"?
+   - [ ] furnished
+   - [ ] to think over
+   - [x] website
+   - [ ] t-shirt
+   > "сайт" means "website"
+
+5. Що означає "вірус"?
+   - [ ] envelope
+   - [ ] rate
+   - [x] virus
+   - [ ] student
+   > "вірус" means "virus"
+
+6. Що означає "смартфон"?
+   - [x] smartphone
+   - [ ] earlier, before, used to
+   - [ ] hard, heavy
+   - [ ] knee
+   > "смартфон" means "smartphone"
+
+7. Що означає "папка"?
+   - [ ] fresh
+   - [ ] nature reserve
+   - [x] folder
+   - [ ] statement
+   > "папка" means "folder"
+
+8. Що означає "підписник"?
+   - [ ] departure
+   - [ ] to read
+   - [x] follower
+   - [ ] although (casual)
+   > "підписник" means "follower"
+
+9. Що означає "зберігати"?
+   - [ ] hockey
+   - [x] to save
+   - [ ] to cut
+   - [ ] three
+   > "зберігати" means "to save"
+
+10. Що означає "ноутбук"?
+   - [ ] to release, let go
+   - [ ] to tell, narrate
+   - [x] laptop
+   - [ ] husband
+   > "ноутбук" means "laptop"
+
+11. Що означає "вимикати"?
+   - [ ] charger
+   - [x] to turn off
+   - [ ] to upload
+   - [ ] cream
+   > "вимикати" means "to turn off"
+
+12. Що означає "застосунок"?
+   - [ ] to worry
+   - [x] application, app
+   - [ ] hardworking
+   - [ ] bad
+   > "застосунок" means "application, app"
+
+13. Що означає "вмикати"?
+   - [ ] armchair
+   - [x] to turn on
+   - [ ] banana
+   - [ ] more expensive
+   > "вмикати" means "to turn on"
+
+14. Що означає "завантажувати"?
+   - [ ] week
+   - [ ] café
+   - [x] to download
+   - [ ] mattress
+   > "завантажувати" means "to download"
+
+## true-false: Правда чи ні?
+
+> Визначте, чи правильне твердження.
+
+- [x] "встановлювати" means "to install"
+   > Correct!
+
+- [ ] "ноутбук" means "to have lunch"
+   > Incorrect. "ноутбук" means "laptop"
+
+- [ ] "коментар" means "to sign (impf)"
+   > Incorrect. "коментар" means "comment"
+
+- [ ] "акумулятор" means "direction"
+   > Incorrect. "акумулятор" means "battery"
+
+- [ ] "зберігати" means "eyes"
+   > Incorrect. "зберігати" means "to save"
+
+- [ ] "лайк" means "hour"
+   > Incorrect. "лайк" means "like"
+
+- [x] "сайт" means "website"
+   > Correct!
+
+- [x] "вимикати" means "to turn off"
+   > Correct!
+
+- [ ] "надсилати" means "arrogant"
+   > Incorrect. "надсилати" means "to send"
+
+- [ ] "застосунок" means "to agree (impf)"
+   > Incorrect. "застосунок" means "application, app"
+
+## group-sort: Сортування за родом
+
+> Розподіліть слова за родами.
+
+### Чоловічий рід
+- смартфон
+- сайт
+- відеодзвінок
+- лайк
+- підписник
+- застосунок
+
+### Жіночий рід
+- папка
+- стрічка
+- клавіатура
+
+### Середній рід
+- налаштування
+- оновлення
 
 ---
 

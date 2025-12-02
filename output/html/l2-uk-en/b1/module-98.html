@@ -322,15 +322,18 @@ footer {
 .show-answer-btn:hover { background: #e5e5e5; }
 .show-answer-btn.revealed { background: #e8f8f0; border-color: var(--success); color: var(--success); }
 
-/* Fill-in Activity */
-.fill-container { display: flex; flex-direction: column; gap: 1rem; }
-.fill-question { border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; }
-.fill-question.answered .fill-check { display: none; }
-.fill-input { width: 100%; max-width: 300px; padding: 0.75rem 1rem; font-size: 1.1rem; border: 2px solid var(--border); border-radius: 8px; margin: 0.5rem 0; }
-.fill-input:focus { border-color: var(--primary); outline: none; }
-.fill-input.correct { border-color: var(--success); background: #e8f8f0; }
-.fill-input.wrong { border-color: var(--danger); background: #fde8e8; }
-.fill-check { margin-left: 0.5rem; }
+/* Fill-in Activity - Dropdown in Sentence */
+.fill-container { display: flex; flex-direction: column; gap: 0.75rem; }
+.fill-question { border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.5rem; }
+
+.fill-number { font-weight: 600; color: var(--text-muted); margin-right: 0.5rem; }
+.fill-sentence { font-size: 1.15rem; line-height: 1.8; }
+
+.fill-dropdown { font-size: 1rem; padding: 0.4rem 0.6rem; border: 2px solid var(--primary); border-radius: 6px; background: #fff; color: var(--primary); font-weight: 500; cursor: pointer; min-width: 120px; }
+.fill-dropdown:focus { outline: none; box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.2); }
+.fill-dropdown.correct { border-color: var(--success); background: #e8f8f0; color: var(--success); }
+.fill-dropdown.wrong { border-color: var(--danger); background: #fde8e8; color: var(--danger); }
+
 .fill-feedback { margin-top: 0.5rem; font-weight: 500; }
 .fill-feedback .correct-text { color: var(--success); }
 .fill-feedback .wrong-text { color: var(--danger); }
@@ -346,6 +349,32 @@ footer {
 .order-item.wrong { border-color: var(--danger); background: #fde8e8; }
 .order-handle { color: var(--text-muted); font-size: 1.25rem; }
 .order-text { font-size: 1.1rem; }
+
+/* Unjumble Activity - Drag and Drop */
+.unjumble-question { border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.5rem; margin-bottom: 0.75rem; display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; }
+.unjumble-question.answered .unjumble-word { cursor: default; }
+.unjumble-question.correct { border-color: var(--success); background: #f8fff8; }
+.unjumble-question.wrong { border-color: var(--danger); background: #fff8f8; }
+
+.unjumble-number { font-weight: 600; color: var(--text-muted); min-width: 2rem; }
+
+.unjumble-word-row { display: flex; flex-wrap: wrap; gap: 0.5rem; flex: 1; min-height: 42px; padding: 0.25rem; border-radius: 8px; background: #f8f9fa; }
+.unjumble-word-row.correct { background: #e8f8f0; }
+.unjumble-word-row.wrong { background: #fde8e8; }
+
+.unjumble-word { background: var(--primary); color: white; border-radius: 6px; padding: 0.5rem 0.75rem; font-size: 1rem; cursor: grab; user-select: none; transition: transform 0.1s, box-shadow 0.1s; }
+.unjumble-word:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+.unjumble-word:active { cursor: grabbing; }
+.unjumble-word.dragging { opacity: 0.5; transform: scale(1.05); }
+
+.unjumble-word.touch-clone { position: fixed; z-index: 1000; pointer-events: none; box-shadow: 0 8px 16px rgba(0,0,0,0.2); }
+
+.unjumble-actions { display: flex; gap: 0.5rem; }
+.unjumble-feedback { width: 100%; padding: 0.5rem 0 0 2.5rem; display: none; }
+.unjumble-feedback.show { display: block; }
+.unjumble-feedback .correct-text { color: var(--success); font-weight: 600; }
+.unjumble-feedback .wrong-text { color: var(--danger); }
+.unjumble-feedback .translation { color: var(--text-muted); font-style: italic; margin-left: 0.5rem; }
 
   </style>
 </head>
@@ -363,11 +392,11 @@ footer {
     <h1>Module 98: Agreement &amp; Disagreement</h1>
     <div class="nav-tabs">
       <button class="nav-tab active" data-section="lesson">Lesson</button>
+      <button class="nav-tab" data-section="match">Match</button>
+      <button class="nav-tab" data-section="quiz">Quiz</button>
       
-      
-      
-      
-      
+      <button class="nav-tab" data-section="fill">Fill</button>
+      <button class="nav-tab" data-section="order">Order</button>
       <button class="nav-tab" data-section="vocab">Vocab</button>
     </div>
   </nav>
@@ -929,15 +958,480 @@ Your diplomatic response: ___</p></li>
 <li>Боюся, не можу погодитися</li>
 <li>Дозвольте не погодитися</li>
 </ul>
-<h2 id="fillindialogue">fill-in: Dialogue</h2>
+<h2 id="matchupvocabularymatch">match-up: Vocabulary Match</h2>
 <blockquote>
-  <p>A: Я думаю, що всім потрібно вчитися до 30 років. — I think everyone should study until 30.<br />
-  B: ___ (Interesting thought), ___ (however) не всі мають таку можливість. — Not everyone has that opportunity.<br />
-  A: ___ (You're right). Але освіта важлива! — But education is important!<br />
-  B: ___ (I agree). Проте форми освіти різні. — But forms of education vary.<br />
-  A: ___ (Exactly)!</p>
+  <p>Match each Ukrainian word with its English translation.</p>
 </blockquote>
-<p><strong>Answers:</strong> Цікава думка, проте, Ви маєте рацію, Я погоджуюся, Саме так</p>
+<table>
+<thead>
+<tr>
+<th>Left</th>
+<th>Right</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>заперечувати</td>
+<td>to object</td>
+</tr>
+<tr>
+<td>емфатичний</td>
+<td>emphatic</td>
+</tr>
+<tr>
+<td>заперечити</td>
+<td>to object</td>
+</tr>
+<tr>
+<td>погодитися</td>
+<td>to agree</td>
+</tr>
+<tr>
+<td>неввічливий</td>
+<td>impolite</td>
+</tr>
+<tr>
+<td>варіант</td>
+<td>option, variant</td>
+</tr>
+<tr>
+<td>компроміс</td>
+<td>compromise</td>
+</tr>
+<tr>
+<td>натомість</td>
+<td>instead</td>
+</tr>
+<tr>
+<td>сперечатися</td>
+<td>to argue</td>
+</tr>
+<tr>
+<td>пропонувати</td>
+<td>to suggest</td>
+</tr>
+<tr>
+<td>агресивний</td>
+<td>aggressive</td>
+</tr>
+<tr>
+<td>конфронтаційний</td>
+<td>confrontational</td>
+</tr>
+</tbody>
+</table>
+<h2 id="fillinfillintheblank">fill-in: Fill in the Blank</h2>
+<blockquote>
+  <p>Choose the correct word to complete each sentence.</p>
+</blockquote>
+<ol>
+<li><p>Так, ___ правда.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-0', this)">Показати відповідь</button><div class="answer-block" id="ans-0"><div class="callout callout-answer" data-callout="answer">це</div></div>
+<div class="callout callout-options" data-callout="options">це | маєте | згоден | зовсім</div>
+<ol start="2">
+<li><p>Ви ___ рацію.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-1', this)">Показати відповідь</button><div class="answer-block" id="ans-1"><div class="callout callout-answer" data-callout="answer">маєте</div></div>
+<div class="callout callout-options" data-callout="options">маєте | так | маєш | сенсі</div>
+<ol start="3">
+<li><p>Ти ___ рацію.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-2', this)">Показати відповідь</button><div class="answer-block" id="ans-2"><div class="callout callout-answer" data-callout="answer">маєш</div></div>
+<div class="callout callout-options" data-callout="options">маєш | маєте | маєте | так</div>
+<ol start="4">
+<li><p>Думаю, ___ так.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-3', this)">Показати відповідь</button><div class="answer-block" id="ans-3"><div class="callout callout-answer" data-callout="answer">що</div></div>
+<div class="callout callout-options" data-callout="options">що | це | так | правда</div>
+<ol start="5">
+<li><p>Я теж ___ думаю.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-4', this)">Показати відповідь</button><div class="answer-block" id="ans-4"><div class="callout callout-answer" data-callout="answer">так</div></div>
+<div class="callout callout-options" data-callout="options">так | зовсім | сенсі | згоден</div>
+<ol start="6">
+<li><p>Можливо, ви ___ рацію, але…</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-5', this)">Показати відповідь</button><div class="answer-block" id="ans-5"><div class="callout callout-answer" data-callout="answer">маєте</div></div>
+<div class="callout callout-options" data-callout="options">маєте | так | це | що</div>
+<ol start="7">
+<li><p>Почасти я ___ але…</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-6', this)">Показати відповідь</button><div class="answer-block" id="ans-6"><div class="callout callout-answer" data-callout="answer">згоден</div></div>
+<div class="callout callout-options" data-callout="options">згоден | це | правда | так</div>
+<ol start="8">
+<li><p>Це ___ проте…</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-7', this)">Показати відповідь</button><div class="answer-block" id="ans-7"><div class="callout callout-answer" data-callout="answer">правда</div></div>
+<div class="callout callout-options" data-callout="options">правда | зовсім | що | маєш</div>
+<ol start="9">
+<li><p>В якомусь ___ так, але…</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-8', this)">Показати відповідь</button><div class="answer-block" id="ans-8"><div class="callout callout-answer" data-callout="answer">сенсі</div></div>
+<div class="callout callout-options" data-callout="options">сенсі | згоден | так | так</div>
+<ol start="10">
+<li><p>Загалом ___ хоча…</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-9', this)">Показати відповідь</button><div class="answer-block" id="ans-9"><div class="callout callout-answer" data-callout="answer">так</div></div>
+<div class="callout callout-options" data-callout="options">так | зовсім | сенсі | що</div>
+<ol start="11">
+<li><p>Я не ___ згоден/згодна.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-10', this)">Показати відповідь</button><div class="answer-block" id="ans-10"><div class="callout callout-answer" data-callout="answer">зовсім</div></div>
+<div class="callout callout-options" data-callout="options">зовсім | так | що | сенсі</div>
+<h2 id="quizmeaningcheck">quiz: Meaning Check</h2>
+<blockquote>
+  <p>Choose the correct answer.</p>
+</blockquote>
+<ol>
+<li>What does "враховувати" mean?</li>
+</ol>
+<ul>
+<li>[ ] emphatic</li>
+<li>[x] to consider, take into account</li>
+<li>[ ] diplomatic</li>
+<li>[ ] to consider</li>
+</ul>
+<blockquote>
+  <p>"враховувати" means "to consider, take into account"</p>
+</blockquote>
+<ol start="2">
+<li>What does "емфатичний" mean?</li>
+</ol>
+<ul>
+<li>[ ] to consider, take into account</li>
+<li>[x] emphatic</li>
+<li>[ ] to consider</li>
+<li>[ ] diplomatic</li>
+</ul>
+<blockquote>
+  <p>"емфатичний" means "emphatic"</p>
+</blockquote>
+<ol start="3">
+<li>What does "врахувати" mean?</li>
+</ol>
+<ul>
+<li>[ ] emphatic</li>
+<li>[ ] to consider, take into account</li>
+<li>[x] to consider</li>
+<li>[ ] diplomatic</li>
+</ul>
+<blockquote>
+  <p>"врахувати" means "to consider"</p>
+</blockquote>
+<ol start="4">
+<li>What does "дипломатичний" mean?</li>
+</ol>
+<ul>
+<li>[ ] emphatic</li>
+<li>[x] diplomatic</li>
+<li>[ ] to consider</li>
+<li>[ ] to consider, take into account</li>
+</ul>
+<blockquote>
+  <p>"дипломатичний" means "diplomatic"</p>
+</blockquote>
+<ol start="5">
+<li>What does "неввічливий" mean?</li>
+</ol>
+<ul>
+<li>[x] impolite</li>
+<li>[ ] to consider, take into account</li>
+<li>[ ] to consider</li>
+<li>[ ] emphatic</li>
+</ul>
+<blockquote>
+  <p>"неввічливий" means "impolite"</p>
+</blockquote>
+<ol start="6">
+<li>What does "запропонувати" mean?</li>
+</ol>
+<ul>
+<li>[x] to suggest</li>
+<li>[ ] emphatic</li>
+<li>[ ] to consider</li>
+<li>[ ] to consider, take into account</li>
+</ul>
+<blockquote>
+  <p>"запропонувати" means "to suggest"</p>
+</blockquote>
+<ol start="7">
+<li>What does "співрозмовник" mean?</li>
+</ol>
+<ul>
+<li>[ ] emphatic</li>
+<li>[ ] to consider</li>
+<li>[ ] to consider, take into account</li>
+<li>[x] interlocutor</li>
+</ul>
+<blockquote>
+  <p>"співрозмовник" means "interlocutor"</p>
+</blockquote>
+<ol start="8">
+<li>What does "заперечувати" mean?</li>
+</ol>
+<ul>
+<li>[ ] to consider, take into account</li>
+<li>[ ] to consider</li>
+<li>[x] to object</li>
+<li>[ ] emphatic</li>
+</ul>
+<blockquote>
+  <p>"заперечувати" means "to object"</p>
+</blockquote>
+<ol start="9">
+<li>What does "сперечатися" mean?</li>
+</ol>
+<ul>
+<li>[ ] to consider, take into account</li>
+<li>[ ] emphatic</li>
+<li>[x] to argue</li>
+<li>[ ] to consider</li>
+</ul>
+<blockquote>
+  <p>"сперечатися" means "to argue"</p>
+</blockquote>
+<ol start="10">
+<li>What does "почасти" mean?</li>
+</ol>
+<ul>
+<li>[ ] emphatic</li>
+<li>[x] partly</li>
+<li>[ ] to consider</li>
+<li>[ ] to consider, take into account</li>
+</ul>
+<blockquote>
+  <p>"почасти" means "partly"</p>
+</blockquote>
+<ol start="11">
+<li>What does "заперечити" mean?</li>
+</ol>
+<ul>
+<li>[x] to object</li>
+<li>[ ] to consider</li>
+<li>[ ] to consider, take into account</li>
+<li>[ ] emphatic</li>
+</ul>
+<blockquote>
+  <p>"заперечити" means "to object"</p>
+</blockquote>
+<ol start="12">
+<li>What does "пропонувати" mean?</li>
+</ol>
+<ul>
+<li>[ ] emphatic</li>
+<li>[ ] to consider</li>
+<li>[ ] to consider, take into account</li>
+<li>[x] to suggest</li>
+</ul>
+<blockquote>
+  <p>"пропонувати" means "to suggest"</p>
+</blockquote>
+<ol start="13">
+<li>What does "варіант" mean?</li>
+</ol>
+<ul>
+<li>[ ] to consider, take into account</li>
+<li>[ ] to consider</li>
+<li>[x] option, variant</li>
+<li>[ ] emphatic</li>
+</ul>
+<blockquote>
+  <p>"варіант" means "option, variant"</p>
+</blockquote>
+<ol start="14">
+<li>What does "асиметрія" mean?</li>
+</ol>
+<ul>
+<li>[ ] to consider</li>
+<li>[ ] to consider, take into account</li>
+<li>[x] asymmetry</li>
+<li>[ ] emphatic</li>
+</ul>
+<blockquote>
+  <p>"асиметрія" means "asymmetry"</p>
+</blockquote>
+<ol start="15">
+<li>What does "сенс" mean?</li>
+</ol>
+<ul>
+<li>[ ] to consider, take into account</li>
+<li>[ ] emphatic</li>
+<li>[x] sense, meaning</li>
+<li>[ ] to consider</li>
+</ul>
+<blockquote>
+  <p>"сенс" means "sense, meaning"</p>
+</blockquote>
+<ol start="16">
+<li>What does "натомість" mean?</li>
+</ol>
+<ul>
+<li>[ ] to consider, take into account</li>
+<li>[x] instead</li>
+<li>[ ] to consider</li>
+<li>[ ] emphatic</li>
+</ul>
+<blockquote>
+  <p>"натомість" means "instead"</p>
+</blockquote>
+<ol start="17">
+<li>What does "компроміс" mean?</li>
+</ol>
+<ul>
+<li>[ ] to consider</li>
+<li>[ ] emphatic</li>
+<li>[ ] to consider, take into account</li>
+<li>[x] compromise</li>
+</ul>
+<blockquote>
+  <p>"компроміс" means "compromise"</p>
+</blockquote>
+<ol start="18">
+<li>What does "погодитися" mean?</li>
+</ol>
+<ul>
+<li>[ ] to consider</li>
+<li>[ ] to consider, take into account</li>
+<li>[x] to agree</li>
+<li>[ ] emphatic</li>
+</ul>
+<blockquote>
+  <p>"погодитися" means "to agree"</p>
+</blockquote>
+<h2 id="unjumblewordorder">unjumble: Word Order</h2>
+<blockquote>
+  <p>Drag the words into the correct order to form a sentence.</p>
+</blockquote>
+<ol>
+<li><p>згоден / Я / згодна / /</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-11', this)">Показати відповідь</button><div class="answer-block" id="ans-11"><div class="callout callout-answer" data-callout="answer">Я згоден / згодна.</div></div>
+<blockquote>
+  <p>(I agree.)</p>
+</blockquote>
+<ol start="2">
+<li><p>правда / Так / це</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-12', this)">Показати відповідь</button><div class="answer-block" id="ans-12"><div class="callout callout-answer" data-callout="answer">Так, це правда.</div></div>
+<blockquote>
+  <p>(Yes, that's true.)</p>
+</blockquote>
+<ol start="3">
+<li><p>рацію / Ви / маєте</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-13', this)">Показати відповідь</button><div class="answer-block" id="ans-13"><div class="callout callout-answer" data-callout="answer">Ви маєте рацію.</div></div>
+<blockquote>
+  <p>(You're right.)</p>
+</blockquote>
+<ol start="4">
+<li><p>Ти / маєш / рацію</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-14', this)">Показати відповідь</button><div class="answer-block" id="ans-14"><div class="callout callout-answer" data-callout="answer">Ти маєш рацію.</div></div>
+<blockquote>
+  <p>(You're right. (informal))</p>
+</blockquote>
+<ol start="5">
+<li><p>Думаю / що / так</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-15', this)">Показати відповідь</button><div class="answer-block" id="ans-15"><div class="callout callout-answer" data-callout="answer">Думаю, що так.</div></div>
+<blockquote>
+  <p>(I think so.)</p>
+</blockquote>
+<ol start="6">
+<li><p>думаю / Я / теж / так</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-16', this)">Показати відповідь</button><div class="answer-block" id="ans-16"><div class="callout callout-answer" data-callout="answer">Я теж так думаю.</div></div>
+<blockquote>
+  <p>(I think so too.)</p>
+</blockquote>
+<ol start="7">
+<li><p>рацію / Можливо / але / ви / маєте</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-17', this)">Показати відповідь</button><div class="answer-block" id="ans-17"><div class="callout callout-answer" data-callout="answer">Можливо, ви маєте рацію, але...</div></div>
+<blockquote>
+  <p>(Maybe you're right, but…)</p>
+</blockquote>
+<ol start="8">
+<li><p>згоден / я / але / Почасти</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-18', this)">Показати відповідь</button><div class="answer-block" id="ans-18"><div class="callout callout-answer" data-callout="answer">Почасти я згоден, але...</div></div>
+<blockquote>
+  <p>(I partly agree, but…)</p>
+</blockquote>
+<ol start="9">
+<li><p>правда / Це / проте</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-19', this)">Показати відповідь</button><div class="answer-block" id="ans-19"><div class="callout callout-answer" data-callout="answer">Це правда, проте...</div></div>
+<blockquote>
+  <p>(That's true, but…)</p>
+</blockquote>
+<ol start="10">
+<li><p>В / якомусь / але / так / сенсі</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-20', this)">Показати відповідь</button><div class="answer-block" id="ans-20"><div class="callout callout-answer" data-callout="answer">В якомусь сенсі так, але...</div></div>
+<blockquote>
+  <p>(In a sense yes, but…)</p>
+</blockquote>
+<ol start="11">
+<li><p>так / Загалом / хоча</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-21', this)">Показати відповідь</button><div class="answer-block" id="ans-21"><div class="callout callout-answer" data-callout="answer">Загалом так, хоча...</div></div>
+<blockquote>
+  <p>(Generally yes, although…)</p>
+</blockquote>
+<ol start="12">
+<li><p>згоден/згодна / не / зовсім / Я</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-22', this)">Показати відповідь</button><div class="answer-block" id="ans-22"><div class="callout callout-answer" data-callout="answer">Я не зовсім згоден/згодна.</div></div>
+<blockquote>
+  <p>(I don't quite agree.)</p>
+</blockquote>
+<ol start="13">
+<li><p>впевнений/а / Не / що / так / це</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-23', this)">Показати відповідь</button><div class="answer-block" id="ans-23"><div class="callout callout-answer" data-callout="answer">Не впевнений/а, що це так.</div></div>
+<blockquote>
+  <p>(Not sure that's so.)</p>
+</blockquote>
+<ol start="14">
+<li><p>не / Боюся / що / погодитися / можу</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-24', this)">Показати відповідь</button><div class="answer-block" id="ans-24"><div class="callout callout-answer" data-callout="answer">Боюся, що не можу погодитися.</div></div>
+<blockquote>
+  <p>(I'm afraid I can't agree.)</p>
+</blockquote>
+<ol start="15">
+<li><p>іншу / маю / думку / я / жаль / На</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-25', this)">Показати відповідь</button><div class="answer-block" id="ans-25"><div class="callout callout-answer" data-callout="answer">На жаль, я маю іншу думку.</div></div>
+<blockquote>
+  <p>(Unfortunately, I have a different opinion.)</p>
+</blockquote>
+<ol start="16">
+<li><p>не / погодитися / Дозвольте</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-26', this)">Показати відповідь</button><div class="answer-block" id="ans-26"><div class="callout callout-answer" data-callout="answer">Дозвольте не погодитися.</div></div>
+<blockquote>
+  <p>(Allow me to disagree.)</p>
+</blockquote>
+<ol start="17">
+<li><p>Не / так / зовсім</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-27', this)">Показати відповідь</button><div class="answer-block" id="ans-27"><div class="callout callout-answer" data-callout="answer">Не зовсім так.</div></div>
+<blockquote>
+  <p>(Not quite so.)</p>
+</blockquote>
+<ol start="18">
+<li><p>згоден / / / згодна / Я / не / не</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-28', this)">Показати відповідь</button><div class="answer-block" id="ans-28"><div class="callout callout-answer" data-callout="answer">Я не згоден / не згодна.</div></div>
+<blockquote>
+  <p>(I disagree.)</p>
+</blockquote>
+<hr />
+<hr />
+<hr />
 <hr />
 <hr />
 <hr /></div>
@@ -996,15 +1490,42 @@ Your diplomatic response: ___</p></li>
     </div>
   
       <div class="btn-group">
-        <button class="btn btn-primary" onclick="showSection('vocab')">Activities →</button>
+        <button class="btn btn-primary" onclick="showSection('match')">Activities →</button>
       </div>
     </section>
   
     
+    <section id="match" class="section"><div class="card"><h3>Знайдіть пари</h3>
+      <div class="score-display"><span class="score"><span id="match-score">0</span>/16</span></div>
+      <div class="match-container" id="match-container"><svg class="match-lines" id="match-lines"></svg>
+        <div class="match-column" id="match-left"><div class="match-item" data-pair="0">готівка</div><div class="match-item" data-pair="1">не</div><div class="match-item" data-pair="2">питання</div><div class="match-item" data-pair="3">врахувати</div><div class="match-item" data-pair="4">переходити</div><div class="match-item" data-pair="5">натомість</div><div class="match-item" data-pair="6">заперечувати</div><div class="match-item" data-pair="7">почасти</div><div class="match-item" data-pair="8">заперечити</div><div class="match-item" data-pair="9">хімчистка</div><div class="match-item" data-pair="10">пропонувати</div><div class="match-item" data-pair="11">погодитися</div><div class="match-item" data-pair="12">враховувати</div><div class="match-item" data-pair="13">сперечатися</div><div class="match-item" data-pair="14">запропонувати</div><div class="match-item" data-pair="15">фестиваль</div></div>
+        <div class="match-column" id="match-right"><div class="match-item" data-pair="10">to suggest</div><div class="match-item" data-pair="11">to agree</div><div class="match-item" data-pair="1">not</div><div class="match-item" data-pair="6">to object</div><div class="match-item" data-pair="7">partly</div><div class="match-item" data-pair="2">question</div><div class="match-item" data-pair="4">to cross (habitually)</div><div class="match-item" data-pair="12">to consider, take into account</div><div class="match-item" data-pair="3">to consider</div><div class="match-item" data-pair="15">festival</div><div class="match-item" data-pair="0">cash</div><div class="match-item" data-pair="5">instead</div><div class="match-item" data-pair="13">to argue</div><div class="match-item" data-pair="9">dry cleaner</div><div class="match-item" data-pair="10">to suggest</div><div class="match-item" data-pair="6">to object</div></div>
+      </div>
+      <div class="completion-message" id="match-complete"><h3>Perfect!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetMatch()">Reset</button><button class="btn btn-primary" onclick="showSection('quiz')">Next →</button></div>
+    </div></section>
+    
+    <section id="quiz" class="section"><div class="card"><h3>Перевірка значень</h3>
+      <div class="score-display"><span class="score"><span id="quiz-score">0</span>/10</span></div>
+      <div id="quiz-container"></div>
+      <div class="completion-message" id="quiz-complete"><h3>Complete!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('fill')">Next →</button></div>
+    </div></section>
     
     
+    <section id="fill" class="section"><div class="card"><h3>Доповніть речення</h3>
+      <div class="score-display"><span class="score"><span id="fill-score">0</span>/4</span></div>
+      <div id="fill-container" class="fill-container"></div>
+      <div class="completion-message" id="fill-complete"><h3>Complete!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetFill()">Reset</button><button class="btn btn-primary" onclick="showSection('order')">Next →</button></div>
+    </div></section>
     
-    
+    <section id="order" class="section"><div class="card"><h3>Побудуйте речення</h3>
+      <div class="score-display"><span class="score"><span id="order-score">0</span>/0</span></div>
+      <div id="order-container" class="order-container"></div>
+      <div class="completion-message" id="order-complete"><h3>Perfect Order!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetOrder()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
+    </div></section>
     
     <section id="vocab" class="section">
       <div class="card">
@@ -1040,11 +1561,11 @@ Your diplomatic response: ___</p></li>
   </main><footer>Module 98 · curricula-opus</footer>
   <script>
 
-    const matchPairs = [];
-    const quizData = [];
+    const matchPairs = [{"left":"готівка","right":"cash"},{"left":"не","right":"not"},{"left":"питання","right":"question"},{"left":"врахувати","right":"to consider"},{"left":"переходити","right":"to cross (habitually)"},{"left":"натомість","right":"instead"},{"left":"заперечувати","right":"to object"},{"left":"почасти","right":"partly"},{"left":"заперечити","right":"to object"},{"left":"хімчистка","right":"dry cleaner"},{"left":"пропонувати","right":"to suggest"},{"left":"погодитися","right":"to agree"},{"left":"враховувати","right":"to consider, take into account"},{"left":"сперечатися","right":"to argue"},{"left":"запропонувати","right":"to suggest"},{"left":"фестиваль","right":"festival"}];
+    const quizData = [{"question":"Що означає \"запропонувати\"?","options":["to bring (by transport)","reliable","to worry","to suggest"],"correctIndex":3,"explanation":"\"запропонувати\" means \"to suggest\""},{"question":"Що означає \"врахувати\"?","options":["art","to consider","hobby","swelling"],"correctIndex":1,"explanation":"\"врахувати\" means \"to consider\""},{"question":"Що означає \"заперечити\"?","options":["seller (m)","better","to object","traffic light"],"correctIndex":2,"explanation":"\"заперечити\" means \"to object\""},{"question":"Що означає \"натомість\"?","options":["angry","soup","entertainment","instead"],"correctIndex":3,"explanation":"\"натомість\" means \"instead\""},{"question":"Що означає \"заперечувати\"?","options":["which/what kind (f)","to object","well-read","together"],"correctIndex":1,"explanation":"\"заперечувати\" means \"to object\""},{"question":"Що означає \"пропонувати\"?","options":["whose (m)","to suggest","to withdraw","this, this is"],"correctIndex":1,"explanation":"\"пропонувати\" means \"to suggest\""},{"question":"Що означає \"погодитися\"?","options":["clean","hedgehog","to agree","hryvnia (₴)"],"correctIndex":2,"explanation":"\"погодитися\" means \"to agree\""},{"question":"Що означає \"почасти\"?","options":["partly","in front of","head","entertainment"],"correctIndex":0,"explanation":"\"почасти\" means \"partly\""},{"question":"Що означає \"сперечатися\"?","options":["eyes","spring","to argue","went (m)"],"correctIndex":2,"explanation":"\"сперечатися\" means \"to argue\""},{"question":"Що означає \"враховувати\"?","options":["was (m)","to share","better","to consider, take into account"],"correctIndex":3,"explanation":"\"враховувати\" means \"to consider, take into account\""}];
     const sortData = {};
-    const fillData = {"items":[],"text":"","answers":[]};
-    const orderData = {"items":[],"correctOrder":[]};
+    const fillData = {"items":[{"prompt":"Незважаючи на те, що ___ вимагає багато часу, це приносить велике задоволення.","answer":"сперечатися","options":["складати","прощатися","сперечатися","пропонувати"]},{"prompt":"Незважаючи на те, що ___ вимагає багато часу, це приносить велике задоволення.","answer":"заперечувати","options":["переписувати","заперечувати","бронювати","вважати"]},{"prompt":"Незважаючи на те, що ___ вимагає багато часу, це приносить велике задоволення.","answer":"запропонувати","options":["обміняти","налити","проїхати","запропонувати"]},{"prompt":"Незважаючи на те, що ___ вимагає багато часу, це приносить велике задоволення.","answer":"врахувати","options":["дякувати","врахувати","зняти","митися"]}],"text":"","answers":[]};
+    const orderData = {"items":[],"isUnjumble":true};
     const vocabData = [{"uk":"враховувати","translit":"","en":"to consider, take into account","note":"impf"},{"uk":"врахувати","translit":"","en":"to consider","note":"pf"},{"uk":"заперечувати","translit":"","en":"to object","note":"impf"},{"uk":"заперечити","translit":"","en":"to object","note":"pf"},{"uk":"пропонувати","translit":"","en":"to suggest","note":"impf"},{"uk":"запропонувати","translit":"","en":"to suggest","note":"pf"},{"uk":"погодитися","translit":"","en":"to agree","note":"pf"},{"uk":"сперечатися","translit":"","en":"to argue","note":"impf"},{"uk":"почасти","translit":"","en":"partly","note":""},{"uk":"натомість","translit":"","en":"instead","note":""},{"uk":"дипломатичний","translit":"","en":"diplomatic","note":""},{"uk":"конфронтаційний","translit":"","en":"confrontational","note":""},{"uk":"асиметрія","translit":"","en":"asymmetry","note":"f"},{"uk":"неввічливий","translit":"","en":"impolite","note":""},{"uk":"агресивний","translit":"","en":"aggressive","note":""},{"uk":"емфатичний","translit":"","en":"emphatic","note":""},{"uk":"компроміс","translit":"","en":"compromise","note":"m"},{"uk":"варіант","translit":"","en":"option, variant","note":"m"},{"uk":"сенс","translit":"","en":"sense, meaning","note":"m"},{"uk":"співрозмовник","translit":"","en":"interlocutor","note":"m"}];
     const totalSort = 0;
   
@@ -1253,7 +1774,7 @@ function resetSort() {
 }
 
 
-// Fill-in Activity
+// Fill-in Activity - Dropdown in sentence
 let fillScore = 0, fillAns = 0;
 
 function initFill() {
@@ -1264,45 +1785,82 @@ function initFill() {
   fillData.items.forEach((item, i) => {
     const div = document.createElement('div');
     div.className = 'fill-question';
+
+    // Generate options: correct answer + 3 distractors
+    let options = [];
+    if (item.options && item.options.length >= 4) {
+      options = item.options;
+    } else {
+      // Fallback: generate distractors from other items' answers
+      options = [item.answer];
+      const otherAnswers = fillData.items
+        .filter((_, idx) => idx !== i)
+        .map(it => it.answer)
+        .filter(a => a && a !== item.answer);
+
+      const shuffled = otherAnswers.sort(() => Math.random() - 0.5);
+      options.push(...shuffled.slice(0, 3));
+
+      while (options.length < 4) {
+        options.push('—');
+      }
+    }
+
+    // Shuffle options
+    const shuffledOptions = [...options].sort(() => Math.random() - 0.5);
+
+    // Replace ___ in the sentence with a dropdown
+    const sentence = (item.prompt || item.sentence || '').replace(/___/g,
+      `<select class="fill-dropdown" data-idx="${i}" data-answer="${item.answer}">
+        <option value="" disabled selected>—</option>
+        ${shuffledOptions.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
+      </select>`
+    );
+
     div.innerHTML = `
-      <h4>Q${i + 1}: ${item.prompt || item.sentence || ''}</h4>
-      <input type="text" class="fill-input" data-idx="${i}" data-answer="${item.answer || ''}" placeholder="Type your answer...">
-      <button class="btn btn-outline btn-sm fill-check" data-idx="${i}">Check</button>
+      <div class="fill-sentence">
+        <span class="fill-number">${i + 1}.</span>
+        ${sentence}
+      </div>
       <div class="fill-feedback" id="fill-fb-${i}"></div>
     `;
     c.appendChild(div);
   });
 
-  document.querySelectorAll('.fill-check').forEach(b => b.addEventListener('click', handleFill));
-  document.querySelectorAll('.fill-input').forEach(i => i.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') handleFill({ target: e.target.nextElementSibling });
-  }));
+  // Event delegation for dropdown changes
+  c.addEventListener('change', (e) => {
+    if (e.target.classList.contains('fill-dropdown')) {
+      handleFillChoice(e.target);
+    }
+  });
 }
 
-function handleFill(e) {
-  const idx = e.target.dataset.idx;
-  const q = e.target.closest('.fill-question');
+function handleFillChoice(dropdown) {
+  const q = dropdown.closest('.fill-question');
   if (q.classList.contains('answered')) return;
 
-  const input = q.querySelector('.fill-input');
-  const userAnswer = input.value.trim().toLowerCase();
-  const correctAnswer = input.dataset.answer.toLowerCase();
+  const idx = dropdown.dataset.idx;
+  const userAnswer = dropdown.value;
+  const correctAnswer = dropdown.dataset.answer;
   const fb = document.getElementById('fill-fb-' + idx);
 
   q.classList.add('answered');
+  dropdown.disabled = true;
 
   if (userAnswer === correctAnswer) {
-    input.classList.add('correct');
-    fb.innerHTML = '<span class="correct-text">Correct!</span>';
+    dropdown.classList.add('correct');
+    fb.innerHTML = '<span class="correct-text">✓ Correct!</span>';
     fillScore++;
   } else {
-    input.classList.add('wrong');
-    fb.innerHTML = `<span class="wrong-text">Answer: ${input.dataset.answer}</span>`;
+    dropdown.classList.add('wrong');
+    fb.innerHTML = `<span class="wrong-text">✗ Answer: ${correctAnswer}</span>`;
   }
 
   document.getElementById('fill-score').textContent = fillScore;
   fillAns++;
-  if (fillAns === fillData.items.length) document.getElementById('fill-complete').classList.add('show');
+  if (fillAns === fillData.items.length) {
+    document.getElementById('fill-complete').classList.add('show');
+  }
 }
 
 function resetFill() {
@@ -1322,9 +1880,217 @@ function initOrder() {
   if (!c || !orderData.items.length) return;
   c.innerHTML = '';
 
+  if (orderData.isUnjumble) {
+    initUnjumble(c);
+  } else {
+    initClassicOrder(c);
+  }
+}
+
+// UNJUMBLE: Drag-and-drop words to form sentences
+function initUnjumble(container) {
   orderTotal = orderData.items.length;
 
-  // Shuffle items for display
+  orderData.items.forEach((item, idx) => {
+    const question = document.createElement('div');
+    question.className = 'unjumble-question';
+    question.dataset.idx = idx;
+
+    // Shuffle words
+    const shuffledWords = [...item.words].sort(() => Math.random() - 0.5);
+
+    question.innerHTML = `
+      <div class="unjumble-number">${idx + 1}.</div>
+      <div class="unjumble-word-row" data-idx="${idx}">
+        ${shuffledWords.map((word, i) => `
+          <span class="unjumble-word" draggable="true" data-word="${word}">${word}</span>
+        `).join('')}
+      </div>
+      <div class="unjumble-actions">
+        <button class="btn btn-sm btn-outline unjumble-check" data-idx="${idx}">Check</button>
+        <button class="btn btn-sm btn-outline unjumble-reset" data-idx="${idx}">Reset</button>
+      </div>
+      <div class="unjumble-feedback" data-idx="${idx}"></div>
+    `;
+
+    container.appendChild(question);
+
+    // Initialize drag-and-drop for this row
+    initUnjumbleDragDrop(question.querySelector('.unjumble-word-row'));
+  });
+
+  // Event delegation for buttons
+  container.addEventListener('click', handleUnjumbleClick);
+}
+
+function initUnjumbleDragDrop(row) {
+  let dragItem = null;
+
+  row.querySelectorAll('.unjumble-word').forEach(word => {
+    word.addEventListener('dragstart', (e) => {
+      dragItem = word;
+      word.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    });
+
+    word.addEventListener('dragend', () => {
+      word.classList.remove('dragging');
+      dragItem = null;
+    });
+
+    word.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      if (!dragItem || dragItem === word) return;
+
+      const rect = word.getBoundingClientRect();
+      const midX = rect.left + rect.width / 2;
+
+      if (e.clientX < midX) {
+        row.insertBefore(dragItem, word);
+      } else {
+        row.insertBefore(dragItem, word.nextSibling);
+      }
+    });
+  });
+
+  // Touch support for mobile
+  let touchItem = null;
+  let touchClone = null;
+
+  row.querySelectorAll('.unjumble-word').forEach(word => {
+    word.addEventListener('touchstart', (e) => {
+      touchItem = word;
+      word.classList.add('dragging');
+
+      // Create a clone for visual feedback
+      touchClone = word.cloneNode(true);
+      touchClone.classList.add('touch-clone');
+      document.body.appendChild(touchClone);
+      updateTouchClone(e.touches[0]);
+    });
+
+    word.addEventListener('touchmove', (e) => {
+      e.preventDefault();
+      if (!touchItem) return;
+      updateTouchClone(e.touches[0]);
+
+      // Find which word we're over
+      const touch = e.touches[0];
+      const elements = document.elementsFromPoint(touch.clientX, touch.clientY);
+      const targetWord = elements.find(el => el.classList.contains('unjumble-word') && el !== touchItem);
+
+      if (targetWord && targetWord.parentNode === row) {
+        const rect = targetWord.getBoundingClientRect();
+        const midX = rect.left + rect.width / 2;
+        if (touch.clientX < midX) {
+          row.insertBefore(touchItem, targetWord);
+        } else {
+          row.insertBefore(touchItem, targetWord.nextSibling);
+        }
+      }
+    });
+
+    word.addEventListener('touchend', () => {
+      if (touchItem) touchItem.classList.remove('dragging');
+      if (touchClone) touchClone.remove();
+      touchItem = null;
+      touchClone = null;
+    });
+  });
+
+  function updateTouchClone(touch) {
+    if (touchClone) {
+      touchClone.style.left = (touch.clientX - 40) + 'px';
+      touchClone.style.top = (touch.clientY - 20) + 'px';
+    }
+  }
+}
+
+function handleUnjumbleClick(e) {
+  const target = e.target;
+
+  if (target.classList.contains('unjumble-check')) {
+    checkUnjumbleAnswer(parseInt(target.dataset.idx));
+  }
+
+  if (target.classList.contains('unjumble-reset')) {
+    resetUnjumbleQuestion(parseInt(target.dataset.idx));
+  }
+}
+
+function checkUnjumbleAnswer(idx) {
+  const item = orderData.items[idx];
+  const row = document.querySelector(`.unjumble-word-row[data-idx="${idx}"]`);
+  const feedback = document.querySelector(`.unjumble-feedback[data-idx="${idx}"]`);
+  const question = document.querySelector(`.unjumble-question[data-idx="${idx}"]`);
+
+  // Build user's answer from current word order
+  const words = row.querySelectorAll('.unjumble-word');
+  const userAnswer = Array.from(words).map(w => w.dataset.word).join(' ');
+
+  // Normalize for comparison (handle punctuation)
+  const normalize = (s) => s.replace(/[?!.,]/g, '').toLowerCase().trim();
+  const isCorrect = normalize(userAnswer) === normalize(item.answer);
+
+  if (isCorrect) {
+    question.classList.add('answered', 'correct');
+    row.classList.add('correct');
+    words.forEach(w => w.setAttribute('draggable', 'false'));
+    orderScore++;
+    document.getElementById('order-score').textContent = orderScore;
+
+    feedback.innerHTML = `
+      <span class="correct-text">✓ Correct!</span>
+      <span class="translation">${item.translation || ''}</span>
+    `;
+    feedback.classList.add('show');
+
+    if (orderScore === orderTotal) {
+      document.getElementById('order-complete').classList.add('show');
+    }
+  } else {
+    question.classList.add('wrong');
+    row.classList.add('wrong');
+
+    feedback.innerHTML = `
+      <span class="wrong-text">✗ Try again. Hint: ${item.answer}</span>
+    `;
+    feedback.classList.add('show');
+
+    setTimeout(() => {
+      question.classList.remove('wrong');
+      row.classList.remove('wrong');
+      feedback.classList.remove('show');
+    }, 2000);
+  }
+}
+
+function resetUnjumbleQuestion(idx) {
+  const item = orderData.items[idx];
+  const row = document.querySelector(`.unjumble-word-row[data-idx="${idx}"]`);
+  const question = document.querySelector(`.unjumble-question[data-idx="${idx}"]`);
+  const feedback = document.querySelector(`.unjumble-feedback[data-idx="${idx}"]`);
+
+  if (question.classList.contains('correct')) return;
+
+  // Re-shuffle and rebuild
+  const shuffledWords = [...item.words].sort(() => Math.random() - 0.5);
+  row.innerHTML = shuffledWords.map(word => `
+    <span class="unjumble-word" draggable="true" data-word="${word}">${word}</span>
+  `).join('');
+
+  initUnjumbleDragDrop(row);
+
+  question.classList.remove('wrong');
+  row.classList.remove('wrong');
+  feedback.innerHTML = '';
+  feedback.classList.remove('show');
+}
+
+// CLASSIC ORDER: Drag items into correct sequence
+function initClassicOrder(container) {
+  orderTotal = orderData.items.length;
+
   const shuffled = [...orderData.items].map((item, idx) => ({ text: item, origIdx: idx }));
   shuffled.sort(() => Math.random() - 0.5);
 
@@ -1336,15 +2102,14 @@ function initOrder() {
       <span class="order-text">${item.text}</span>
     </div>
   `).join('');
-  c.appendChild(div);
+  container.appendChild(div);
 
   const checkBtn = document.createElement('button');
   checkBtn.className = 'btn btn-outline';
   checkBtn.textContent = 'Check Order';
   checkBtn.onclick = checkOrder;
-  c.appendChild(checkBtn);
+  container.appendChild(checkBtn);
 
-  // Enable drag and drop
   initDragDrop();
 }
 
@@ -1382,7 +2147,6 @@ function checkOrder() {
   const items = document.querySelectorAll('.order-item');
   const currentOrder = Array.from(items).map(item => parseInt(item.dataset.orig));
 
-  // Check if order is correct (0, 1, 2, 3, ...)
   let correct = true;
   currentOrder.forEach((val, idx) => {
     const expectedIdx = orderData.correctOrder.length ? orderData.correctOrder[idx] : idx;

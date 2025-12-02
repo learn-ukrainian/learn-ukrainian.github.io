@@ -281,143 +281,303 @@ Share a simple recipe:
 
 ---
 
-# Activities
+---
 
-## match-up: Tool → Action
+---
+
+---
+
+# Вправи
+
+## fill-in: Доповніть речення
+
+> Оберіть правильне слово.
+
+1. Вони довго шукали хорошу ___, але не знайшли.
+   > [!answer] духовка
+   > [!options] духовка | картка | переїзд | ваза
+
+2. Я давно мріяв навчитися ___, і нарешті маю таку можливість.
+   > [!answer] готувати
+   > [!options] готувати | виробляти | відпочити | вивчити
+
+3. Моя сестра каже, що їй подобається ___ у вільний час.
+   > [!answer] варити
+   > [!options] давати | варити | немає | перечитати
+
+4. Я хочу купити цю ___, але вона занадто дорога.
+   > [!answer] терка
+   > [!options] терка | картка | говоріння | секретарка
+
+5. Я давно мріяв навчитися ___, і нарешті маю таку можливість.
+   > [!answer] додавати
+   > [!options] скасувати | додавати | розбити | переходити
+
+6. Вони довго шукали хорошу ___, але не знайшли.
+   > [!answer] сковорода
+   > [!options] ремінь | батарея | сковорода | родина
+
+7. Ця ___ належить моїй подрузі з Києва.
+   > [!answer] цибуля
+   > [!options] цибуля | ложка | паспорт | депозит
+
+8. Я вважаю, що ця пропозиція є занадто ___ для нас.
+   > [!answer] гіркий
+   > [!options] найдорожчий | старіший | морський | гіркий
+
+9. Вони довго шукали хорошу ___, але не знайшли.
+   > [!answer] порція
+   > [!options] порція | машина | новість | відео
+
+10. Я хочу купити цю ___, але вона занадто дорога.
+   > [!answer] каструля
+   > [!options] виріб | живіт | школа | каструля
+
+11. Цей варіант здається мені найбільш ___ з усіх.
+   > [!answer] солоний
+   > [!options] новий | білий | солоний | українська
+
+12. Я давно мріяв навчитися ___, і нарешті маю таку можливість.
+   > [!answer] різати
+   > [!options] бракувати | домовитися | вислухати | різати
+
+13. Ця ___ належить моїй подрузі з Києва.
+   > [!answer] гречка
+   > [!options] хмара | гречка | січень | підпис
+
+14. Я вважаю, що ця пропозиція є занадто ___ для нас.
+   > [!answer] солодкий
+   > [!options] уявний | солодкий | кращий | хмарний
+
+## unjumble: Побудуйте речення
+
+> Розташуйте слова в правильному порядку.
+
+1. знайшли / не / Вони / але / хорошу / шукали / довго / яловичина
+   > [!answer] Вони довго шукали хорошу яловичина, але не знайшли.
+   > (beef)
+
+2. хорошу / дошка / знайшли / довго / шукали / Вони / але / не
+   > [!answer] Вони довго шукали хорошу дошка, але не знайшли.
+   > (cutting board)
+
+3. купити / занадто / вона / хочу / Я / але / дорога / цю / цибуля
+   > [!answer] Я хочу купити цю цибуля, але вона занадто дорога.
+   > (onion)
+
+4. занадто / хочу / цю / вона / каструля / купити / дорога / Я / але
+   > [!answer] Я хочу купити цю каструля, але вона занадто дорога.
+   > (pot)
+
+5. Я / хочу / він / занадто / дорогий / цей / часник / купити / але
+   > [!answer] Я хочу купити цей часник, але він занадто дорогий.
+   > (garlic)
+
+6. Ця / моїй / Києва / подрузі / з / капуста / належить
+   > [!answer] Ця капуста належить моїй подрузі з Києва.
+   > (cabbage)
+
+7. шукали / знайшли / буряк / але / не / довго / Вони / хороший
+   > [!answer] Вони довго шукали хороший буряк, але не знайшли.
+   > (beet)
+
+8. Вони / знайшли / хорошу / курятина / шукали / довго / не / але
+   > [!answer] Вони довго шукали хорошу курятина, але не знайшли.
+   > (chicken (meat))
+
+9. хочу / купити / занадто / дорогий / фарш / цей / Я / він / але
+   > [!answer] Я хочу купити цей фарш, але він занадто дорогий.
+   > (ground meat)
+
+10. належить / моїй / Києва / з / Ця / свинина / подрузі
+   > [!answer] Ця свинина належить моїй подрузі з Києва.
+   > (pork)
+
+11. зручна / духовка / сестра / що / сказала / її / Моя / дуже
+   > [!answer] Моя сестра сказала, що її духовка дуже зручна.
+   > (oven)
+
+12. хочу / купити / але / порція / вона / Я / занадто / цю / дорога
+   > [!answer] Я хочу купити цю порція, але вона занадто дорога.
+   > (portion)
+
+13. сметана / Я / цю / дорога / але / хочу / занадто / купити / вона
+   > [!answer] Я хочу купити цю сметана, але вона занадто дорога.
+   > (sour cream)
+
+## match-up: Знайдіть пари
+
+> З'єднайте українські слова з англійськими.
 
 | Left | Right |
 |------|-------|
-| ніж | різати |
-| сковорода | смажити |
-| духовка | пекти |
-| каструля | варити |
-| терка | терти |
+| старіший | older |
+| морква | carrot |
+| сковорода | frying pan |
+| лікарка | doctor (f) |
+| порція | portion |
+| сіль | salt |
+| пекти | to bake |
+| поганий | bad |
+| курятина | chicken (meat) |
+| голубці | stuffed cabbage |
+| гострий | spicy, sharp |
+| солодкий | sweet |
+| варити | to boil, cook |
+| музика | music |
 
-## quiz: Food & Cooking
+## quiz: Перевірка значень
 
-> Choose the correct word.
+> Оберіть правильну відповідь.
 
-1. To boil water, you ___ it.
-   - [x] вариш
-   - [ ] смажиш
-   - [ ] печеш
-   - [ ] ріжеш
-   > Варити = to boil.
+1. Що означає "гострий"?
+   - [ ] when
+   - [x] spicy, sharp
+   - [ ] we
+   - [ ] post office
+   > "гострий" means "spicy, sharp"
 
-2. Борщ is made with ___.
-   - [x] буряк
-   - [ ] гречка
-   - [ ] рис
-   - [ ] вівсянка
-   > Borscht's main ingredient is beet (буряк).
+2. Що означає "сковорода"?
+   - [ ] to close (perf)
+   - [x] frying pan
+   - [ ] to order
+   - [ ] apology
+   > "сковорода" means "frying pan"
 
-3. Something very salty is ___.
-   - [x] солоне
-   - [ ] солодке
-   - [ ] кисле
-   - [ ] гірке
-   > Солоний = salty.
-
-4. You fry food in a ___.
-   - [x] сковорода
-   - [ ] духовка
-   - [ ] каструля
-   - [ ] чайник
-   > Сковорода = frying pan.
-
-5. Сметана in English is ___.
-   - [x] sour cream
-   - [ ] butter
-   - [ ] milk
-   - [ ] cheese
-   > Сметана = sour cream.
-
-6. "I'm full" in Ukrainian is ___.
-   - [x] Я наївся
-   - [ ] Я голодний
-   - [ ] Я хочу їсти
-   - [ ] Мені смакує
-   > Наїстися = to eat one's fill.
-
-## group-sort: Food Categories
-
-### М'ясо (Meat)
-- курятина
-- свинина
-- яловичина
-- фарш
-
-### Овочі (Vegetables)
-- цибуля
-- морква
-- капуста
-- буряк
-
-### Молочні (Dairy)
-- сметана
-- сир
-- вершки
-- кефір
-
-### Смаки (Tastes)
-- солодкий
-- солоний
-- кислий
-- гострий
-
-
-## fill-in: Fill in the Blank
-
-> Fill in the blanks with the correct word.
-
-
-
-## quiz: Meaning Check
-
-> Choose the correct answer.
-
-1. What does "варити" mean?
-   - [x] to boil, cook
-   - [ ] buckwheat
-   - [ ] sweet
-   - [ ] to eat one's fill
-   > "варити" means "to boil, cook"
-
-2. What does "солодкий" mean?
-   - [ ] to boil, cook
-   - [ ] buckwheat
-   - [x] sweet
-   - [ ] to eat one's fill
-   > "солодкий" means "sweet"
-
-3. What does "наїстися" mean?
-   - [ ] sweet
-   - [ ] to boil, cook
-   - [ ] buckwheat
-   - [x] to eat one's fill
-   > "наїстися" means "to eat one's fill"
-
-4. What does "гречка" mean?
-   - [ ] sweet
+3. Що означає "гречка"?
+   - [ ] hotel
+   - [ ] to become
    - [x] buckwheat
-   - [ ] to boil, cook
-   - [ ] to eat one's fill
+   - [ ] shelf
    > "гречка" means "buckwheat"
 
-5. What does "голубці" mean?
-   - [ ] to eat one's fill
-   - [ ] sweet
+4. Що означає "гіркий"?
+   - [x] bitter
+   - [ ] message
+   - [ ] notebook
+   - [ ] fastest
+   > "гіркий" means "bitter"
+
+5. Що означає "варити"?
+   - [ ] beef
+   - [ ] resume, CV
+   - [x] to boil, cook
+   - [ ] to have dinner
+   > "варити" means "to boil, cook"
+
+6. Що означає "голубці"?
+   - [ ] life
+   - [ ] day after tomorrow
+   - [ ] traffic jam
    - [x] stuffed cabbage
-   - [ ] to boil, cook
    > "голубці" means "stuffed cabbage"
 
-6. What does "фарш" mean?
+7. Що означає "сметана"?
+   - [ ] condition
+   - [ ] news
+   - [ ] he
+   - [x] sour cream
+   > "сметана" means "sour cream"
+
+8. Що означає "деруни"?
+   - [ ] free, available
+   - [ ] fifty
+   - [ ] better
+   - [x] potato pancakes
+   > "деруни" means "potato pancakes"
+
+9. Що означає "фарш"?
+   - [ ] bill, check
+   - [ ] notebook
+   - [ ] convinced
    - [x] ground meat
-   - [ ] to eat one's fill
-   - [ ] sweet
-   - [ ] to boil, cook
    > "фарш" means "ground meat"
 
+10. Що означає "різати"?
+   - [x] to cut
+   - [ ] to believe, consider
+   - [ ] to master, own
+   - [ ] conductor
+   > "різати" means "to cut"
+
+11. Що означає "терка"?
+   - [ ] conductor
+   - [ ] friend (female)
+   - [ ] January
+   - [x] grater
+   > "терка" means "grater"
+
+12. Що означає "мішати"?
+   - [x] to mix, stir
+   - [ ] sneakers
+   - [ ] cold (adv)
+   - [ ] to finish (impf)
+   > "мішати" means "to mix, stir"
+
+13. Що означає "кислий"?
+   - [x] sour
+   - [ ] to transfer
+   - [ ] to reread
+   - [ ] accounting dept
+   > "кислий" means "sour"
+
+14. Що означає "яловичина"?
+   - [ ] for
+   - [ ] professional
+   - [ ] viewer
+   - [x] beef
+   > "яловичина" means "beef"
+
+## true-false: Правда чи ні?
+
+> Визначте, чи правильне твердження.
+
+- [x] "сирники" means "cottage cheese pancakes"
+   > Correct!
+
+- [ ] "буряк" means "box"
+   > Incorrect. "буряк" means "beet"
+
+- [ ] "сметана" means "to be afraid"
+   > Incorrect. "сметана" means "sour cream"
+
+- [ ] "курятина" means "page"
+   > Incorrect. "курятина" means "chicken (meat)"
+
+- [ ] "смажити" means "thin"
+   > Incorrect. "смажити" means "to fry"
+
+- [ ] "гречка" means "the three (together)"
+   > Incorrect. "гречка" means "buckwheat"
+
+- [ ] "вершки" means "Ukrainian (male)"
+   > Incorrect. "вершки" means "cream"
+
+- [x] "солодкий" means "sweet"
+   > Correct!
+
+- [ ] "яловичина" means "to sign (impf)"
+   > Incorrect. "яловичина" means "beef"
+
+- [ ] "гострий" means "whisper"
+   > Incorrect. "гострий" means "spicy, sharp"
+
+## group-sort: Сортування за родом
+
+> Розподіліть слова за родами.
+
+### Чоловічий рід
+- буряк
+- фарш
+- часник
+
+### Жіночий рід
+- терка
+- духовка
+- морква
+- свинина
+- дошка
+- цибуля
 
 ---
 

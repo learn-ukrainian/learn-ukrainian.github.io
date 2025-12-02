@@ -219,7 +219,7 @@ Fill in the dative form:
 5. Скажи ___ (Марія), що я чекаю.
    > [!answer] Марії
 6. Він дає гроші ___ (студенти).
-   > [!answer] студентам
+   > [!!answer] студентам
 
 ### Build Full Sentences
 
@@ -257,245 +257,230 @@ Create sentences using: Subject + дати/показати/сказати + Obj
 
 ---
 
+---
+
+---
+
+---
+
 # Activities
 
-## match-up: Nominative to Dative
+## fill-in: Dative Noun Endings
 
-> Match the noun with its dative form.
+> Choose the correct dative noun form to complete each sentence.
 
-| Left | Right |
-|------|-------|
-| брат | братові |
-| сестра | сестрі |
-| друг | другові |
-| мама | мамі |
-| батьки | батькам |
-| подруга | подрузі |
+1. Я пишу листа ___ (брат).
+   > [!answer] братові / брату
+   > [!options] брат | братові | брату | брата
 
-## quiz: Dative Nouns
+2. Допоможи ___ (бабуся)!
+   > [!answer] бабусі
+   > [!options] бабуся | бабусі | бабусю | бабусею
 
-> Choose the correct dative form.
+3. Вона дзвонить ___ (подруга).
+   > [!answer] подрузі
+   > [!options] подруга | подрузі | подругу | подругою
 
-1. "I'm writing to my brother" - Я пишу ___.
-   - [x] братові
-   - [ ] брата
-   - [ ] брат
-   - [ ] братом
-   > Dative of брат = братові.
+4. Покажи це ___ (батьки).
+   > [!answer] батькам
+   > [!options] батьки | батьків | батькам | батьками
 
-2. "Help grandma!" - Допоможи ___!
-   - [x] бабусі
-   - [ ] бабуся
-   - [ ] бабусю
-   - [ ] бабусею
-   > Feminine dative: бабуся → бабусі.
+5. Скажи ___ (Марія), що я чекаю.
+   > [!answer] Марії
+   > [!options] Марія | Марії | Марію | Марією
 
-3. "Tell your friend (f)" - Скажи ___.
-   - [x] подрузі
-   - [ ] подруга
-   - [ ] подругу
-   - [ ] подругою
-   > подруга → подрузі (г→з before і).
+6. Він дає гроші ___ (студенти).
+   > [!answer] студентам
+   > [!options] студенти | студентів | студентам | студентами
 
-4. "Show the students" - Покажи ___.
-   - [x] студентам
-   - [ ] студенти
-   - [ ] студентів
-   - [ ] студентами
-   > Plural dative: -ам.
+7. Що потрібно ___ (місто)?
+   > [!answer] місту
+   > [!options] місто | міста | місту | містом
 
-5. "Give it to Maria" - Дай це ___.
-   - [x] Марії
-   - [ ] Марія
-   - [ ] Марію
-   - [ ] Марією
-   > Марія → Марії.
+8. Я допомагаю ___ (вчитель).
+   > [!answer] вчителеві / вчителю
+   > [!options] вчитель | вчителеві | вчителю | вчителя
 
-6. "Call your parents" - Подзвони ___.
-   - [x] батькам
-   - [ ] батьки
-   - [ ] батьків
-   - [ ] батьками
-   > Plural dative: батьки → батькам.
+9. Розкажи це ___ (друзі)!
+   > [!answer] друзям
+   > [!options] друзі | друзів | друзям | друзями
 
-7. "Explain to the teacher (m)" - Поясни ___.
-   - [x] вчителеві
-   - [ ] вчитель
-   - [ ] вчителя
-   - [ ] вчителем
-   > Soft masc: вчитель → вчителеві.
+10. Напиши ___ (колега).
+    > [!answer] колезі
+    > [!options] колега | колегу | колезі | колегою
 
-8. "Write to your sister" - Напиши ___.
+## unjumble: Build the Sentence
+
+> Arrange the words in the correct order to form a grammatically correct sentence using dative nouns.
+
+1. братові / Я / пишу / листа
+   > [!answer] Я пишу листа братові.
+   > (I'm writing a letter to my brother.)
+
+2. бабусі / Допоможи
+   > [!answer] Допоможи бабусі!
+   > (Help grandma!)
+
+3. дзвонить / Вона / подрузі
+   > [!answer] Вона дзвонить подрузі.
+   > (She's calling a friend.)
+
+4. батькам / Покажи / це
+   > [!answer] Покажи це батькам.
+   > (Show this to parents.)
+
+5. Марії / Скажи / що / чекаю / я
+   > [!answer] Скажи Марії, що я чекаю.
+   > (Tell Mariya that I'm waiting.)
+
+6. студентам / Він / дає / гроші
+   > [!answer] Він дає гроші студентам.
+   > (He gives money to students.)
+
+7. місту / потрібно / Що
+   > [!answer] Що потрібно місту?
+   > (What does the city need?)
+
+8. вчителеві / Я / допомагаю
+   > [!answer] Я допомагаю вчителеві.
+   > (I help the teacher.)
+
+9. друзям / Розкажи / це
+   > [!answer] Розкажи це друзям!
+   > (Tell this to friends!)
+
+10. подарунок / Я / даю / сестрі
+    > [!answer] Я даю подарунок сестрі.
+    > (I give a gift to my sister.)
+
+## select: Choose the Dative Noun Form
+
+> Select the correct dative noun form from the options for the given nominative noun.
+
+1. друг
+   > [!answer] другові / другу
+   > [!options] друг | друга | другові | другу
+
+2. сестра
+   > [!answer] сестрі
+   > [!options] сестра | сестру | сестрі | сестрою
+
+3. батьки (plural)
+   > [!answer] батькам
+   > [!options] батьки | батьків | батькам | батьками
+
+4. місто
+   > [!answer] місту
+   > [!options] місто | міста | місту | містом
+
+5. студент (masculine)
+   > [!answer] студентові / студенту
+   > [!options] студент | студента | студентові | студенту
+
+## quiz: Dative Noun Endings
+
+> Choose the correct dative noun form.
+
+1. What is the dative form of "друг"?
+   - [x] другові / другу
+   - [ ] друг
+   - [ ] друга
+   - [ ] другом
+   > Masculine dative -ові/-у
+
+2. What is the dative form of "сестра"?
    - [x] сестрі
    - [ ] сестра
    - [ ] сестру
    - [ ] сестрою
-   > Feminine dative: сестра → сестрі.
+   > Feminine dative -і
 
-## group-sort: Gender in Dative
+3. What is the dative form of "місто"?
+   - [x] місту
+   - [ ] місто
+   - [ ] міста
+   - [ ] містом
+   > Neuter dative -у
 
-> Sort the dative forms by the original noun's gender.
+4. What is the dative form of "батьки" (parents - plural)?
+   - [x] батькам
+   - [ ] батьки
+   - [ ] батьків
+   - [ ] батьками
+   > Plural dative -ам
 
-### Masculine Dative
-- братові
-- другові
-- студентові
-- вчителеві
+5. What is the dative form of "вчитель"?
+   - [x] вчителеві / вчителю
+   - [ ] вчитель
+   - [ ] вчителя
+   - [ ] вчителем
+   > Masculine soft dative -еві/-ю
 
-### Feminine Dative
-- сестрі
-- мамі
-- подрузі
-- бабусі
+6. Which consonant change occurs for "подруга" in dative?
+   - [x] г → з
+   - [ ] к → ц
+   - [ ] х → с
+   - [ ] No change
+   > подруга → подрузі (г → з)
 
-### Plural Dative
-- батькам
-- друзям
-- студентам
-- колегам
+7. What is the dative form of "мама"?
+   - [x] мамі
+   - [ ] мама
+   - [ ] маму
+   - [ ] мамою
+   > Feminine dative -і
 
+8. What is the dative form of "студент" (plural)?
+   - [x] студентам
+   - [ ] студенти
+   - [ ] студентів
+   - [ ] студентами
+   > Plural dative -ам
 
-## true-false: True or False?
+9. When is the -ові ending typically used for masculine nouns?
+   - [x] More formal/literary
+   - [ ] More casual/conversational
+   - [ ] Only for names
+   - [ ] Never
+   > -ові is more formal/distinctly Ukrainian
 
-> Determine if each statement is true or false.
+10. What is the dative form of "дитина" (child)?
+    - [x] дитяті
+    - [ ] дитина
+    - [ ] дитину
+    - [ ] дитиною
+    > Neuter dative -яті (special case)
 
-- [x] "клієнт" is masculine.
-   > Correct! клієнт is masculine.
+## true-false: Dative Noun Rules
 
-- [x] "повідомлення" is neuter.
-   > Correct! повідомлення is neuter.
+> Determine if each statement about dative noun forms is true or false.
 
-- [x] "запрошення" is neuter.
-   > Correct! запрошення is neuter.
+- [x] Masculine nouns can end in -ові or -у in dative.
+   > Correct!
 
-- [x] "відповідь" is feminine.
-   > Correct! відповідь is feminine.
+- [x] Feminine nouns ending in -а change to -і in dative.
+   > Correct!
 
-- [ ] "допомога" is masculine.
-   > Incorrect. допомога is feminine.
+- [x] Plural nouns (all genders) end in -ам or -ям in dative.
+   > Correct!
 
-- [ ] "порада" is masculine.
-   > Incorrect. порада is feminine.
+- [ ] Neuter nouns typically end in -і in dative.
+   > Incorrect. Neuter nouns typically end in -у in dative (місто → місту).
 
+- [x] The -ові ending is considered more formal than -у for masculine nouns.
+   > Correct!
 
-## fill-in: Fill in the Blank
+- [x] "г → з" is a common consonant change before the dative ending -і.
+   > Correct! (подруга → подрузі)
 
-> Fill in the blanks with the correct word.
+- [ ] Names like "Андрій" only take the -у ending in dative.
+   > Incorrect. Андрій → Андрієві / Андрію.
 
-1. Consonant changes ___ -і:
-   > [!answer] before
+- [x] "Я дзвоню мамі" correctly uses the dative case.
+   > Correct!
 
-2. > > The -ові ending developed in Ukrainian during the medieval period (12th-14th centuries) and became a distinctive marker of the language. While Russian uses only -у, ___ proudly maintains both. After Ukraine's independence, using -ові became associated with conscious Ukrainian language use - it's grammar with identity! ### Feminine Dative: -і Feminine nouns change
-   > [!answer] Ukrainian
+- [x] Dative nouns answer the question "Кому?".
+   > Correct!
 
-3. здоров'я! (Wish grandma health!) > > This is extremely common ___ everyday Ukrainian conversations! ### Neuter Dative: -у/-ові Neuter nouns take
-   > [!answer] in
-
-4. (baby), or abstract concepts like "місту потрібні дороги" (the city needs ___ ### Plural Dative: -ам/-ям All genders form plural dative with
-   > [!answer] roads)
-
-
-
-## quiz: Meaning Check
-
-> Choose the correct answer.
-
-1. What does "повідомлення" mean?
-   - [ ] support
-   - [ ] advice
-   - [ ] client
-   - [x] message
-   > "повідомлення" means "message"
-
-2. What does "клієнт" mean?
-   - [ ] message
-   - [x] client
-   - [ ] advice
-   - [ ] support
-   > "клієнт" means "client"
-
-3. What does "підтримка" mean?
-   - [x] support
-   - [ ] message
-   - [ ] advice
-   - [ ] client
-   > "підтримка" means "support"
-
-4. What does "порада" mean?
-   - [ ] message
-   - [x] advice
-   - [ ] client
-   - [ ] support
-   > "порада" means "advice"
-
-5. What does "запрошення" mean?
-   - [ ] message
-   - [ ] support
-   - [x] invitation
-   - [ ] client
-   > "запрошення" means "invitation"
-
-6. What does "отримувач" mean?
-   - [ ] message
-   - [ ] support
-   - [x] recipient
-   - [ ] client
-   > "отримувач" means "recipient"
-
-
----
-
-# Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| клієнт | /klʲiˈjɛnt/ | client | noun | m | Dat: клієнтові |
-| повідомлення | /poʋʲiˈdomlɛnʲːɑ/ | message | noun | n |
-| запрошення | /zɑproˈʃɛnʲːɑ/ | invitation | noun | n |
-| відповідь | /ʋʲidpoˈʋʲidʲ/ | answer | noun | f |
-| допомога | /dopoˈmoɦɑ/ | help | noun | f |
-| порада | /poˈrɑdɑ/ | advice | noun | f |
-| підтримка | /pʲidˈtrɪmkɑ/ | support | noun | f |
-| отримувач | /otrɪˈmuvɑtʃ/ | recipient | noun | m |
-| адресат | /ɑdrɛˈsɑt/ | addressee | noun | m |
-
----
-
-# Summary
-
-## Dative Endings
-
-| Gender | Nom ending | Dat ending | Example |
-|--------|------------|------------|---------|
-| Masculine | consonant | -ові/-у | друг → другові |
-| Masc soft | -ь | -еві/-ю | вчитель → вчителеві |
-| Feminine | -а | -і | сестра → сестрі |
-| Fem soft | -я | -ї | Марія → Марії |
-| Neuter | -о/-е | -у | місто → місту |
-| Plural | - | -ам/-ям | друзі → друзям |
-
-## Consonant Changes (before -і)
-
-| Original | Changes to | Example |
-|----------|------------|---------|
-| г | з | подруга → подрузі |
-| к | ц | донька → доньці |
-| х | с | свекруха → свекрусі |
-
-## Key Sentence Patterns
-
-| Pattern | Example |
-|---------|---------|
-| писати + dat | писати братові |
-| дати + dat | дати сестрі |
-| допомогти + dat | допомогти бабусі |
-| сказати + dat | сказати друзям |
-| показати + dat | показати батькам |
-
-> 💡 **Key Takeaways**
->
-> - Masculine has TWO options: -ові (formal) or -у (casual)
-> - Feminine always uses -і (with consonant changes г→з, к→ц, х→с)
-> - Plural uses -ам for hard stems, -ям for soft stems
-> - Names follow the same patterns as common nouns
-> - The -ові ending is distinctly Ukrainian - use it proudly!
+- [x] The dative form of "колега" (f) is "колезі".
+   > Correct! (колега is a-stem, so changes to -і, with г→з consonant change implicit)

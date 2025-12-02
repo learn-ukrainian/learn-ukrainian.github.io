@@ -352,113 +352,136 @@ Turn these statements into questions (just add ?):
 | друг | friend (male) |
 | подруга | friend (female) |
 
-## quiz: Meaning Check
+## group-sort: Profession Gender Forms
 
-> Choose the correct answer.
+> Sort these professions by whether they have distinct male/female forms.
 
-1. What does "вчителька" mean?
-   - [ ] teacher (male)
-   - [x] teacher (female)
-   - [ ] doctor (female)
-   - [ ] student (female)
-   > "вчителька" means "teacher (female)"
+### Distinct M/F Forms
+- вчитель / вчителька (teacher)
+- лікар / лікарка (doctor)
+- студент / студентка (student)
+- американець / американка (American)
+- канадець / канадка (Canadian)
+- українець / українка (Ukrainian)
 
-2. What does "лікар" mean?
-   - [ ] doctor (female)
-   - [x] doctor (male)
-   - [ ] teacher (male)
-   - [ ] engineer
-   > "лікар" means "doctor (male)"
+### Same Form for Both Genders
+- менеджер (manager)
+- інженер (engineer)
+- програміст (programmer)
+- дизайнер (designer)
+- директор (director)
 
-3. What does "американець" mean?
-   - [ ] American (female)
-   - [x] American (male)
-   - [ ] English (male)
-   - [ ] Canadian (male)
-   > "американець" means "American (male)"
+### Only Masculine Form Common
+- президент (president)
+- міністр (minister)
 
-4. What does "канадка" mean?
-   - [ ] Canadian (male)
-   - [ ] American (female)
-   - [x] Canadian (female)
-   - [ ] Ukrainian (female)
-   > "канадка" means "Canadian (female)"
+## quiz: Zero Copula & Gender Agreement
 
-5. What does "дизайнер" mean?
-   - [ ] doctor
-   - [ ] teacher
-   - [x] designer
-   - [ ] manager
-   > "дизайнер" means "designer"
+> Test your understanding of Ukrainian sentence structure.
 
-6. What does "інженер" mean?
-   - [ ] programmer
-   - [x] engineer
-   - [ ] teacher
-   - [ ] doctor
-   > "інженер" means "engineer"
+1. How do you say "He is a doctor" in Ukrainian?
+   - [x] Він лікар.
+   - [ ] Він є лікар.
+   - [ ] Він лікарка.
+   - [ ] Він бути лікар.
+   > Ukrainian has zero copula - no "is" in present tense
 
-7. What does "програміст" mean?
-   - [x] programmer
-   - [ ] manager
-   - [ ] designer
-   - [ ] student
-   > "програміст" means "programmer"
+2. A woman says "I am Canadian." Which form is correct?
+   - [ ] Я канадець.
+   - [x] Я канадка.
+   - [ ] Я канадці.
+   - [ ] Я Канада.
+   > Women use feminine nationality forms: канадка
 
-8. What does "англієць" mean?
-   - [ ] American (male)
-   - [ ] Canadian (male)
-   - [x] English (male)
-   - [ ] Ukrainian (male)
-   > "англієць" means "English (male)"
+3. Which profession form is correct for "She is a teacher"?
+   - [ ] Вона вчитель.
+   - [x] Вона вчителька.
+   - [ ] Вона вчителі.
+   - [ ] Вона вчити.
+   > Feminine profession form: вчителька
 
-9. What does "менеджер" mean?
-   - [ ] mother
-   - [x] manager
-   - [ ] man
-   - [ ] my
-   > "менеджер" means "manager"
+4. How do you form a question from "Він студент"?
+   - [x] Він студент? (rising intonation)
+   - [ ] Є він студент?
+   - [ ] Чи він є студент?
+   - [ ] Студент він є?
+   > Just add rising intonation - no word order change
 
-10. What does "це" mean?
-    - [x] this is
-    - [ ] that is
-    - [ ] here
-    - [ ] there
-    > "це" means "this is"
+5. Which is correct for "This is my friend" (male friend)?
+   - [x] Це мій друг.
+   - [ ] Це моя друг.
+   - [ ] Це мій подруга.
+   - [ ] Це є мій друг.
+   > "друг" is masculine, so "мій" is used
 
-## true-false: True or False?
+6. A man says "I am American." Which form is correct?
+   - [x] Я американець.
+   - [ ] Я американка.
+   - [ ] Я Америка.
+   - [ ] Я американці.
+   > Men use masculine nationality forms: американець
 
-> Determine if each statement is true or false.
+7. What is missing in "Вона ___ лікарка" in everyday speech?
+   - [x] Nothing - zero copula
+   - [ ] є
+   - [ ] бути
+   - [ ] мати
+   > Ukrainian doesn't use "is" in present tense
 
-- [x] "лікарка" means "doctor (female)"
-   > Correct!
+8. Which sentence correctly says "They are tourists"?
+   - [ ] Вони турист.
+   - [ ] Вони туриста.
+   - [x] Вони туристи.
+   - [ ] Вони є туристи.
+   > Plural subject needs plural noun, no copula
 
-- [x] "вчитель" means "teacher (male)"
-   > Correct!
+9. How do you ask "Who is this?"
+   - [x] Хто це?
+   - [ ] Що це?
+   - [ ] Де це?
+   - [ ] Як це?
+   > "Хто" = who (for people)
 
-- [ ] "інженер" means "designer"
-   > Incorrect. "інженер" means "engineer"
+10. Which is correct for "This is your friend" (female friend)?
+    - [ ] Це твій подруга.
+    - [x] Це твоя подруга.
+    - [ ] Це твоє подруга.
+    - [ ] Це твої подруга.
+    > "подруга" is feminine, so "твоя" is used
 
-- [x] "американка" means "American (female)"
-   > Correct!
+## true-false: Grammar Rules
 
-- [ ] "канадка" means "Canadian (male)"
-   > Incorrect. "канадка" means "Canadian (female)"
+> Determine if each statement about Ukrainian grammar is true or false.
 
-- [x] "програміст" means "programmer"
-   > Correct!
+- [x] Ukrainian has zero copula - "He is a doctor" = "Він лікар" (no "is").
+   > Correct! Present tense doesn't use "є" (to be).
 
-- [ ] "менеджер" means "manager (female only)"
-   > Incorrect. "менеджер" is used for both.
+- [ ] Male and female profession forms are always identical.
+   > Incorrect. Many have distinct forms: вчитель/вчителька, лікар/лікарка.
 
-- [x] "англієць" means "English (male)"
-   > Correct!
+- [x] Nationalities also have masculine and feminine forms.
+   > Correct! американець/американка, канадець/канадка, etc.
 
-- [ ] "тут" means "there"
-   > Incorrect. "тут" means "here"
+- [ ] "Це мій друг" and "Це моя друг" are both correct.
+   > Incorrect. "друг" is masculine, requires "мій" not "моя".
 
-- [x] "там" means "there"
-   > Correct!
+- [x] To form a yes/no question, you can just use rising intonation.
+   > Correct! "Він студент?" with rising tone = question.
+
+- [ ] The word order must change to form questions.
+   > Incorrect. Ukrainian keeps SVO order; intonation or "Чи" marks questions.
+
+- [x] "-ка" is a common feminine profession suffix (вчитель → вчителька).
+   > Correct! Many professions add -ка for feminine form.
+
+- [x] Some professions (like "менеджер") are used for both genders.
+   > Correct! Modern loanwords often lack distinct feminine forms.
+
+- [ ] "Я є студент" is correct in present tense.
+   > Incorrect. Zero copula: "Я студент" (no "є").
+
+- [x] "Тут" (here) and "там" (there) function like English equivalents.
+   > Correct! Location words work similarly.
 
 ---
 

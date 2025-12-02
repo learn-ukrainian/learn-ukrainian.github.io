@@ -297,113 +297,137 @@ Practice: You're buying items. Say the price:
 | дорого | expensive |
 | дешево | cheap |
 
-## quiz: Meaning Check
+## group-sort: Number Agreement Patterns
+
+> Sort numbers by the case/form required for nouns after them.
+
+### Nominative Singular (один)
+- один студент (one student)
+- одна книга (one book)
+- одне вікно (one window)
+
+### Nominative Plural (2-4)
+- два/дві студенти (two students)
+- три книги (three books)
+- чотири вікна (four windows)
+
+### Genitive Plural (5-20, and with certain endings)
+- п'ять студентів (five students)
+- десять книг (ten books)
+- двадцять гривень (twenty hryvnias)
+
+### Irregular Numbers
+- сорок (40) - doesn't follow tens pattern
+- дев'яносто (90) - unique form
+- сто (100) - unique form
+
+## quiz: Number Grammar Rules
 
 > Choose the correct answer.
 
-1. What does "один" mean?
-   - [x] one
-   - [ ] two
-   - [ ] three
-   - [ ] five
-   > "один" means "one"
+1. "Один" agrees with gender. Which is correct for "one book"?
+   - [ ] один книга
+   - [x] одна книга
+   - [ ] одне книга
+   - [ ] одні книга
+   > "книга" is feminine, so use feminine form "одна"
 
-2. What does "дві" mean?
-   - [ ] one
-   - [x] two (feminine)
-   - [ ] three
-   - [ ] four
-   > "дві" is the feminine form of "two"
+2. Why is "дві" used instead of "два" with "книги"?
+   - [ ] "Книга" is neuter
+   - [x] "Книга" is feminine
+   - [ ] Random variation
+   - [ ] "Два" is only for people
+   > "Два" = masc/neut, "дві" = feminine
 
-3. What does "п'ять" mean?
-   - [ ] three
-   - [ ] four
-   - [x] five
-   - [ ] six
-   > "п'ять" means "five"
+3. After numbers 2-4, nouns take which form?
+   - [ ] Genitive singular
+   - [x] Nominative plural
+   - [ ] Genitive plural
+   - [ ] Accusative
+   > 2-4 + nominative plural: три книги, чотири столи
 
-4. What does "десять" mean?
-   - [ ] five
-   - [x] ten
-   - [ ] twenty
-   - [ ] hundred
-   > "десять" means "ten"
+4. After numbers 5-20, nouns take which form?
+   - [ ] Nominative singular
+   - [ ] Nominative plural
+   - [x] Genitive plural
+   - [ ] Accusative
+   > 5-20 + genitive plural: п'ять книг, десять столів
 
-5. What does "сорок" mean?
-   - [ ] thirty
-   - [x] forty
-   - [ ] fifty
-   - [ ] sixty
-   > "сорок" means "forty" (irregular!)
+5. Which is correct for "five hryvnias"?
+   - [ ] п'ять гривня
+   - [ ] п'ять гривні
+   - [x] п'ять гривень
+   - [ ] п'ять гривнями
+   > 5+ requires genitive plural: гривень
 
-6. What does "гривня" mean?
-   - [x] hryvnia (Ukrainian currency)
-   - [ ] kopeck
-   - [ ] dollar
-   - [ ] euro
-   > "гривня" is the Ukrainian currency
+6. Why is "сорок" (40) considered irregular?
+   - [ ] It ends in a vowel
+   - [x] It doesn't follow the pattern -дцять (like 20, 30)
+   - [ ] It requires a different case
+   - [ ] It has gender forms
+   > Other tens: двадцять, тридцять, but сорок is unique
 
-7. What does "дорого" mean?
-   - [x] expensive
-   - [ ] cheap
-   - [ ] good
-   - [ ] bad
-   > "дорого" means "expensive"
+7. "Два студента" vs "дві студентки" - why the different forms?
+   - [ ] Два is more common
+   - [ ] студент is foreign
+   - [x] Два = masc/neut, дві = feminine
+   - [ ] Random variation
+   > Gender agreement: два + masc noun, дві + fem noun
 
-8. What does "дешево" mean?
-   - [ ] expensive
-   - [x] cheap
-   - [ ] good
-   - [ ] bad
-   > "дешево" means "cheap"
+8. What case ending do nouns take after "один"?
+   - [x] Nominative singular (same as dictionary form)
+   - [ ] Genitive singular
+   - [ ] Nominative plural
+   - [ ] Genitive plural
+   > One + nominative singular: один студент, одна книга
 
-9. What does "скільки коштує" mean?
-   - [x] how much does it cost
-   - [ ] where is it
-   - [ ] what is it
-   - [ ] who has it
-   > "скільки коштує" means "how much does it cost"
+9. Which number form is correct with the neuter noun "вікно"?
+   - [ ] дві вікна
+   - [x] два вікна
+   - [ ] двоє вікна
+   - [ ] двох вікна
+   > Neuter nouns take "два" (like masculine)
 
-10. What does "знижка" mean?
-   - [ ] price
-   - [ ] change
-   - [x] discount
-   - [ ] card
-   > "знижка" means "discount"
+10. "100 гривень" uses genitive plural because:
+    - [ ] 100 is a round number
+    - [ ] сто is irregular
+    - [x] Numbers 5+ (including 100) require genitive plural
+    - [ ] гривня is a currency
+    > The 5+ rule applies to all large numbers
 
-## true-false: True or False?
+## true-false: Number Grammar Rules
 
-> Determine if each statement is true or false.
+> Determine if each statement about Ukrainian numbers is true or false.
 
-- [x] "один" means "one"
-   > Correct!
+- [x] The number "один" changes form for gender: один/одна/одне.
+   > Correct! один = masc, одна = fem, одне = neut
 
-- [x] After 5+, nouns take genitive plural (п'ять гривень)
-   > Correct!
+- [x] After numbers 5+, nouns take genitive plural (п'ять гривень).
+   > Correct! This is a key rule for number agreement.
 
-- [ ] "дві книги" uses feminine form of "two"
-   > Correct! "дві" is used with feminine nouns
+- [x] "Дві" is the feminine form of "two" (used with feminine nouns).
+   > Correct! "дві книги" vs "два столи"
 
-- [x] "сорок" (40) is an irregular number
-   > Correct! It doesn't follow the pattern of other tens
+- [x] "Сорок" (40) is irregular - it doesn't follow the -дцять pattern.
+   > Correct! Compare: двадцять, тридцять, but сорок (unique).
 
-- [ ] "два гривні" is correct
-   > Incorrect. "гривня" is feminine, so it should be "дві гривні"
+- [ ] "Два гривні" is grammatically correct.
+   > Incorrect. "гривня" is feminine → "дві гривні"
 
-- [x] "дорого" means "expensive"
-   > Correct!
+- [ ] Numbers 2-4 require genitive plural, just like 5+.
+   > Incorrect. 2-4 take nominative plural (три книги), 5+ takes genitive plural.
 
-- [x] "дешево" means "cheap"
-   > Correct!
+- [x] Neuter nouns use "два" (not "дві") like masculine nouns.
+   > Correct! два вікна, два міста
 
-- [x] "гривня" is the Ukrainian currency
-   > Correct!
+- [ ] "Один" doesn't need to agree with noun gender.
+   > Incorrect. "Один" agrees: один студент, одна книга, одне місто.
 
-- [ ] Numbers 1-4 take genitive plural
-   > Incorrect. Numbers 2-4 take nominative plural, 5+ takes genitive plural
+- [x] "П'ять студентів" uses genitive plural form of студент.
+   > Correct! 5+ triggers genitive plural: студент → студентів
 
-- [x] "копійка" is the smallest Ukrainian currency unit
-   > Correct!
+- [x] The pattern "5+ = genitive plural" applies to numbers like 100, 1000, etc.
+   > Correct! сто гривень, тисяча гривень (all genitive plural)
 
 ---
 

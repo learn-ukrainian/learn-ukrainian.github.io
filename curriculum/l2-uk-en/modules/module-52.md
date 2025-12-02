@@ -254,82 +254,124 @@ Use все/те/щось + що:
 
 ---
 
+---
+
+---
+
+---
+
 # Activities
 
-## match-up: Який Forms
+## fill-in: Complete the Sentences
 
-> Match gender with correct form.
+> Choose the correct word to complete each sentence.
+
+1. Вони планують ___ завтра.
+   > [!answer] згадувати
+   > [!options] збирати | зробити | заповнити | згадувати
+
+2. Вони планують ___ завтра.
+   > [!answer] підписувати
+   > [!options] вибачте | боятися | чути | підписувати
+
+## unjumble: Build the Sentence
+
+> Arrange the words in the correct order.
+
+## match-up: Match the Pairs
+
+> Match Ukrainian words to their English meanings.
 
 | Left | Right |
 |------|-------|
-| чоловік (m) | який |
-| жінка (f) | яка |
-| місто (n) | яке |
-| люди (pl) | які |
-| книга (f) | яка |
-| друг (m) | який |
+| щось | something |
+| каса | cash register |
+| усе | everything |
+| як | how |
+| нічого | nothing |
+| згадувати | to mention (impf) |
+| які | which, that, who (pl) |
+| котрий | which (formal) |
+| підписувати | to sign (impf) |
+| так | yes |
 
-## quiz: Relative Pronouns
+## quiz: Meaning Check
 
-> Choose the correct form.
+> Choose the correct answer.
 
-1. "The book that I read" - Книга, ___ я прочитав.
-   - [x] яку
-   - [ ] яка
-   - [ ] який
-   - [ ] яке
-   > Книга (f) + accusative = яку.
+1. What does "щось" mean?
+   - [ ] to try
+   - [ ] needed
+   - [ ] rule
+   - [x] something
+   > "щось" means "something"
 
-2. "Everything that you said" - Все, ___ ти сказав.
-   - [x] що
-   - [ ] яке
-   - [ ] яка
-   - [ ] який
-   > "Все, що..." is a fixed pattern.
+2. What does "які" mean?
+   - [x] which, that, who (pl)
+   - [ ] pencil
+   - [ ] t-shirt
+   - [ ] borscht
+   > "які" means "which, that, who (pl)"
 
-3. "The man who works here" - Чоловік, ___ тут працює.
-   - [x] який
-   - [ ] яка
-   - [ ] якого
-   - [ ] яким
-   > Чоловік (m) + nominative = який.
+3. What does "котрий" mean?
+   - [x] which (formal)
+   - [ ] most interesting
+   - [ ] friend (male)
+   - [ ] you will be
+   > "котрий" means "which (formal)"
 
-4. "The friend I helped" - Друг, ___ я допоміг.
-   - [x] якому
-   - [ ] який
-   - [ ] якого
-   - [ ] яким
-   > Допомагати + dative = якому.
+4. What does "згадувати" mean?
+   - [x] to mention (impf)
+   - [ ] stamp
+   - [ ] to be late (once)
+   - [ ] no kind of
+   > "згадувати" means "to mention (impf)"
 
-5. "The city where I live" - Місто, ___ я живу.
-   - [x] де
-   - [ ] який
-   - [ ] яке
-   - [ ] що
-   > Location = де.
+5. What does "усе" mean?
+   - [x] everything
+   - [ ] where
+   - [ ] to clean, brush
+   - [ ] to drive, manage
+   > "усе" means "everything"
 
-6. "The woman about whom" - Жінка, про ___ ти говориш.
-   - [x] яку
-   - [ ] яка
-   - [ ] якої
-   - [ ] якій
-   > Про + accusative = яку.
+6. What does "підписувати" mean?
+   - [ ] manager
+   - [ ] accountant
+   - [x] to sign (impf)
+   - [ ] during, throughout
+   > "підписувати" means "to sign (impf)"
 
-## group-sort: Який vs Що
+7. What does "нічого" mean?
+   - [ ] tasty
+   - [ ] to be engaged in
+   - [ ] pants
+   - [x] nothing
+   > "нічого" means "nothing"
 
-> Sort by typical usage.
+## true-false: True or False?
 
-### Який preferred
-- людина, яка
-- чоловік, який
-- книга, яку я читаю
-- місто, яке я люблю
+> Determine if each statement is true or false.
 
-### Що preferred
-- все, що
-- те, що
-- щось, що
-- нічого, що
+- [ ] "згадувати" means "fifty"
+   > Incorrect. "згадувати" means "to mention (impf)"
+
+- [ ] "які" means "to open (perf)"
+   > Incorrect. "які" means "which, that, who (pl)"
+
+- [x] "усе" means "everything"
+   > Correct!
+
+- [x] "котрий" means "which (formal)"
+   > Correct!
+
+- [x] "нічого" means "nothing"
+   > Correct!
+
+- [x] "підписувати" means "to sign (impf)"
+   > Correct!
+
+- [x] "щось" means "something"
+   > Correct!
 
 ---
 

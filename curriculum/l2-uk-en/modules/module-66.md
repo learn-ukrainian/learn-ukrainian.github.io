@@ -269,203 +269,304 @@ Use -знат- words:
 
 ---
 
-# Activities
+---
 
-## match-up: Root → Meaning
+---
+
+---
+
+# Вправи
+
+## fill-in: Доповніть речення
+
+> Оберіть правильне слово.
+
+1. Мій друг сказав, що його ___ дуже зручний.
+   > [!answer] слух
+   > [!options] слух | подруга | чоловік | співбесіда
+
+2. Вони сказали, що це ___ дуже зручне.
+   > [!answer] побачення
+   > [!options] художник | побачення | водій | пам'ять
+
+3. Це ___ належить моєму другові з Києва.
+   > [!answer] вибачення
+   > [!options] музика | рахунок | автобус | вибачення
+
+4. Моя сестра каже, що їй подобається ___ у вільний час.
+   > [!answer] вибачати
+   > [!options] працювати | приготувати | вибачати | планувати
+
+5. Я хочу купити цей ___, але він занадто дорогий.
+   > [!answer] похід
+   > [!options] водій | похід | вибачення | лютий
+
+6. Вони довго шукали хороший ___, але не знайшли.
+   > [!answer] дохід
+   > [!options] дохід | вишиванка | одержувач | меню
+
+7. Цей варіант здається мені найбільш ___ з усіх.
+   > [!answer] слухняний
+   > [!options] слухняний | весняний | найбільший | нижчий
+
+8. Я давно мріяв навчитися ___, і нарешті маю таку можливість.
+   > [!answer] визнавати
+   > [!options] знайти | сидіти | приготувати | визнавати
+
+9. Мій друг сказав, що його ___ дуже зручний.
+   > [!answer] підхід
+   > [!options] молодість | мовлення | суп | підхід
+
+10. Я вважаю, що ця пропозиція є занадто ___ для нас.
+   > [!answer] неслухняний
+   > [!options] кращий | неслухняний | гірський | найбільший
+
+11. Я давно мріяв навчитися ___, і нарешті маю таку можливість.
+   > [!answer] вислухати
+   > [!options] написати | цікавитися | вислухати | брати
+
+12. Я давно мріяв навчитися ___, і нарешті маю таку можливість.
+   > [!answer] підслухати
+   > [!options] був | підслухати | показувати | принести
+
+13. Я хочу купити цю ___, але вона занадто дорога.
+   > [!answer] поїздка
+   > [!options] рація | кросівки | ліжко | поїздка
+
+## unjumble: Побудуйте речення
+
+> Розташуйте слова в правильному порядку.
+
+1. що / вибачення / сказали / Вони / зручне / це / дуже
+   > [!answer] Вони сказали, що це вибачення дуже зручне.
+   > (apology)
+
+2. його / Мій / що / друг / знайомий / дуже / сказав / зручний
+   > [!answer] Мій друг сказав, що його знайомий дуже зручний.
+   > (acquaintance)
+
+3. хочу / Я / підхід / він / занадто / дорогий / але / купити / цей
+   > [!answer] Я хочу купити цей підхід, але він занадто дорогий.
+   > (approach)
+
+4. хорошу / шукали / поїздка / знайшли / але / Вони / довго / не
+   > [!answer] Вони довго шукали хорошу поїздка, але не знайшли.
+   > (trip)
+
+5. другові / належить / з / побачення / Києва / Це / моєму
+   > [!answer] Це побачення належить моєму другові з Києва.
+   > (meeting, date)
+
+6. моєму / з / передбачення / другові / Це / Києва / належить
+   > [!answer] Це передбачення належить моєму другові з Києва.
+   > (prediction)
+
+7. Я / купити / від'їзд / хочу / дорогий / занадто / але / він / цей
+   > [!answer] Я хочу купити цей від'їзд, але він занадто дорогий.
+   > (departure (vehicles))
+
+8. другові / належить / приїзд / Києва / моєму / Цей / з
+   > [!answer] Цей приїзд належить моєму другові з Києва.
+   > (arrival (vehicles))
+
+9. дорогий / хочу / він / цей / Я / в'їзд / купити / занадто / але
+   > [!answer] Я хочу купити цей в'їзд, але він занадто дорогий.
+   > (entrance (vehicles))
+
+10. шукали / хороший / але / похід / довго / Вони / знайшли / не
+   > [!answer] Вони довго шукали хороший похід, але не знайшли.
+   > (hike, campaign)
+
+11. купити / слух / цей / він / але / занадто / Я / дорогий / хочу
+   > [!answer] Я хочу купити цей слух, але він занадто дорогий.
+   > (hearing; rumor)
+
+12. друг / зручний / що / дуже / Мій / дохід / сказав / його
+   > [!answer] Мій друг сказав, що його дохід дуже зручний.
+   > (income)
+
+13. належить / моєму / Цей / Києва / другові / проїзд / з
+   > [!answer] Цей проїзд належить моєму другові з Києва.
+   > (passage; fare)
+
+14. не / шукали / але / довго / хороше / знайшли / Вони / визнання
+   > [!answer] Вони довго шукали хороше визнання, але не знайшли.
+   > (recognition)
+
+## match-up: Знайдіть пари
+
+> З'єднайте українські слова з англійськими.
 
 | Left | Right |
 |------|-------|
-| -ход-/-хід- | walking, going |
-| -їзд- | riding, driving |
-| -бач- | seeing |
-| -слух- | hearing |
-| -знат-/-знай- | knowing |
+| вареники | dumplings |
+| перемовини | negotiations |
+| неслухняний | disobedient |
+| вибачення | apology |
+| в'їзд | entrance (vehicles) |
+| вибачати | to forgive |
+| проїзд | passage; fare |
+| без | without |
+| знайомий | acquaintance |
+| дізнатися | to find out |
+| запрошення | invitation |
+| від'їзд | departure (vehicles) |
+| визнавати | to admit |
+| светр | sweater |
 
-## quiz: Root Families II
+## quiz: Перевірка значень
 
-> Identify words from the same root family.
+> Оберіть правильну відповідь.
 
-1. Which word is from the same family as "вхід"?
-   - [x] вихід
-   - [ ] виїзд
-   - [ ] вибачення
-   - [ ] вислухати
-   > Both contain -хід- (going).
+1. Що означає "познайомитися"?
+   - [x] to meet (for first time)
+   - [ ] possibly, maybe
+   - [ ] bottle
+   - [ ] negotiations
+   > "познайомитися" means "to meet (for first time)"
 
-2. Which word is from the same family as "поїзд"?
-   - [x] поїздка
-   - [ ] похід
-   - [ ] побачення
-   - [ ] послухати
-   > Both contain -їзд- (riding).
+2. Що означає "вибачення"?
+   - [ ] autumn
+   - [ ] waitress
+   - [x] apology
+   - [ ] to, toward
+   > "вибачення" means "apology"
 
-3. Which word is from the same family as "бачити"?
-   - [x] передбачення
-   - [ ] слухання
-   - [ ] знання
-   - [ ] ходіння
-   > Both contain -бач- (seeing).
+3. Що означає "підхід"?
+   - [ ] newspaper
+   - [ ] shelf
+   - [ ] professional
+   - [x] approach
+   > "підхід" means "approach"
 
-4. Which word is from the same family as "слухати"?
-   - [x] неслухняний
-   - [ ] небачений
-   - [ ] незнайомий
-   - [ ] невідомий
-   > Both contain -слух- (hearing).
+4. Що означає "побачення"?
+   - [x] meeting, date
+   - [ ] brotherhood
+   - [ ] much (intensifier)
+   - [ ] bicycle
+   > "побачення" means "meeting, date"
 
-5. Which word is from the same family as "знати"?
-   - [x] познайомитися
-   - [ ] побачити
-   - [ ] послухати
-   - [ ] поїхати
-   > Both contain -знай- (knowing).
+5. Що означає "поїздка"?
+   - [ ] recipient
+   - [x] trip
+   - [ ] thing
+   - [ ] tablet, pill
+   > "поїздка" means "trip"
 
-6. "Дохід" means "income." What root does it contain?
-   - [x] -хід- (going)
-   - [ ] -їзд- (riding)
-   - [ ] -бач- (seeing)
-   - [ ] -знат- (knowing)
-   > До-хід: what "comes to" you = income!
+6. Що означає "дохід"?
+   - [ ] runny nose
+   - [ ] to the left
+   - [x] income
+   - [ ] entrance (for vehicles)
+   > "дохід" means "income"
 
-## group-sort: By Root
+7. Що означає "визнавати"?
+   - [ ] change (money)
+   - [ ] brotherhood
+   - [ ] shower
+   - [x] to admit
+   > "визнавати" means "to admit"
 
-### -ход-/-хід- (motion on foot)
-- вхід
-- вихід
-- перехід
-- похід
+8. Що означає "неслухняний"?
+   - [ ] flight
+   - [x] disobedient
+   - [ ] description
+   - [ ] three
+   > "неслухняний" means "disobedient"
 
-### -їзд- (motion by vehicle)
-- поїзд
-- поїздка
-- приїзд
-- переїзд
+9. Що означає "передбачати"?
+   - [ ] defect
+   - [x] to foresee
+   - [ ] document
+   - [ ] to depart (habitually)
+   > "передбачати" means "to foresee"
 
-### -бач- (seeing)
-- побачити
-- побачення
-- вибачення
-- передбачення
+10. Що означає "підслухати"?
+   - [ ] well done! fine fellow
+   - [ ] minute
+   - [ ] defect
+   - [x] to eavesdrop
+   > "підслухати" means "to eavesdrop"
 
-### -слух- (hearing)
-- слухати
-- слухач
-- вислухати
-- слухняний
-
-
-## true-false: True or False?
-
-> Determine if each statement is true or false.
-
-- [x] "похід" is masculine.
-   > Correct! похід is masculine.
-
-- [x] "підхід" is masculine.
-   > Correct! підхід is masculine.
-
-- [x] "дохід" is masculine.
-   > Correct! дохід is masculine.
-
-- [x] "поїздка" is feminine.
-   > Correct! поїздка is feminine.
-
-- [ ] "в'їзд" is feminine.
-   > Incorrect. в'їзд is masculine.
-
-- [ ] "приїзд" is feminine.
-   > Incorrect. приїзд is masculine.
-
-
-## fill-in: Fill in the Blank
-
-> Fill in the blanks with the correct word.
-
-1. ход- ___ -ити
-   > [!answer] +
-
-2. пере- ___ хід
-   > [!answer] +
-
-3. ви- ___ трат/дат
-   > [!answer] +
-
-4. їзд- ___ -ити
-   > [!answer] +
-
-5. по- + ___ + -ка
-   > [!answer] їзд-
-
-
-
-## quiz: Meaning Check
-
-> Choose the correct answer.
-
-1. What does "слух" mean?
-   - [ ] hike, campaign
-   - [ ] acquaintance
-   - [ ] departure (vehicles)
+11. Що означає "слух"?
+   - [ ] nine
+   - [ ] to have breakfast
    - [x] hearing; rumor
+   - [ ] shirt
    > "слух" means "hearing; rumor"
 
-2. What does "від'їзд" mean?
-   - [x] departure (vehicles)
-   - [ ] acquaintance
-   - [ ] hike, campaign
-   - [ ] hearing; rumor
-   > "від'їзд" means "departure (vehicles)"
+12. Що означає "слухняний"?
+   - [x] obedient
+   - [ ] older
+   - [ ] incredibly
+   - [ ] freedom
+   > "слухняний" means "obedient"
 
-3. What does "знайомий" mean?
-   - [ ] hearing; rumor
-   - [x] acquaintance
-   - [ ] departure (vehicles)
-   - [ ] hike, campaign
-   > "знайомий" means "acquaintance"
+13. Що означає "дізнатися"?
+   - [ ] not
+   - [ ] letter (of alphabet)
+   - [ ] passport
+   - [x] to find out
+   > "дізнатися" means "to find out"
 
-4. What does "похід" mean?
-   - [ ] acquaintance
+14. Що означає "похід"?
+   - [ ] condition
    - [x] hike, campaign
-   - [ ] departure (vehicles)
-   - [ ] hearing; rumor
+   - [ ] to drive by
+   - [ ] exit (for vehicles)
    > "похід" means "hike, campaign"
 
-5. What does "визнання" mean?
-   - [ ] departure (vehicles)
-   - [ ] hearing; rumor
-   - [x] recognition
-   - [ ] acquaintance
-   > "визнання" means "recognition"
+## true-false: Правда чи ні?
 
-6. What does "вибачати" mean?
-   - [ ] acquaintance
-   - [ ] hearing; rumor
-   - [x] to forgive
-   - [ ] departure (vehicles)
-   > "вибачати" means "to forgive"
+> Визначте, чи правильне твердження.
 
+- [x] "похід" means "hike, campaign"
+   > Correct!
 
+- [x] "поїздка" means "trip"
+   > Correct!
 
-## unjumble: Word Order
+- [ ] "пізнавати" means "to buy"
+   > Incorrect. "пізнавати" means "to learn, cognize"
 
-> Put the words in the correct order to form a sentence.
+- [x] "вибачати" means "to forgive"
+   > Correct!
 
-1. ход- / + / -ити
-   > [!answer] ход- + -ити
-   > (to walk, to go)
+- [ ] "від'їзд" means "shirt"
+   > Incorrect. "від'їзд" means "departure (vehicles)"
 
-2. хід / в- / +
-   > [!answer] в- + хід
-   > (entrance)
+- [x] "передбачати" means "to foresee"
+   > Correct!
 
-3. хід / ви- / +
-   > [!answer] ви- + хід
-   > (exit)
+- [x] "вислухати" means "to hear out"
+   > Correct!
 
-4. хід / + / при-
-   > [!answer] при- + хід
-   > (arrival, coming)
+- [x] "познайомитися" means "to meet (for first time)"
+   > Correct!
 
+- [x] "неслухняний" means "disobedient"
+   > Correct!
+
+- [x] "вибачення" means "apology"
+   > Correct!
+
+## group-sort: Сортування за родом
+
+> Розподіліть слова за родами.
+
+### Чоловічий рід
+- приїзд
+- знайомий
+- підхід
+- проїзд
+- слух
+- від'їзд
+
+### Середній рід
+- вибачення
+- побачення
+- передбачення
+- визнання
 
 ---
 

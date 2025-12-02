@@ -322,180 +322,182 @@ Describe yourself for a social media bio:
 
 ---
 
+---
+
+---
+
+---
+
 # Activities
 
-## match-up: Communication Vocabulary
+## fill-in: Complete the Sentences
 
-> Match Ukrainian with English.
+> Choose the correct word to complete each sentence.
+
+1. Мій брат має хороший ___.
+   > [!answer] дзвінок
+   > [!options] сумка | одяг | дзвінок | радіо
+
+2. Мій брат любить ___ щодня.
+   > [!answer] переслати
+   > [!options] подзвонити | здаватися | переслати | лежати
+
+3. Вони планують ___ завтра.
+   > [!answer] підписатися
+   > [!options] займатися | підписатися | пити | щастити
+
+4. Я хочу купити це ___.
+   > [!answer] посилання
+   > [!options] річ | посилання | сорочка | родич
+
+5. Це ___ коштує сто гривень.
+   > [!answer] вкладення
+   > [!options] правило | п'ятниця | вкладення | центр
+
+6. Мій брат любить ___ щодня.
+   > [!answer] отримати
+   > [!options] сміятися | сподіватися | отримати | розповісти
+
+7. Мій брат має хороший ___.
+   > [!answer] пароль
+   > [!options] пароль | пошта | вага | документ
+
+## unjumble: Build the Sentence
+
+> Arrange the words in the correct order.
+
+1. Це / посилання / сто / коштує / гривень
+   > [!answer] Це посилання коштує сто гривень.
+   > (link)
+
+2. гривень / сто / коштує / пароль / Цей
+   > [!answer] Цей пароль коштує сто гривень.
+   > (password)
+
+3. мій / новий / дзвінок / Це
+   > [!answer] Це мій новий дзвінок.
+   > (call)
+
+4. велике / Де / ваше / вкладення
+   > [!answer] Де ваше велике вкладення?
+   > (attachment)
+
+## match-up: Match the Pairs
+
+> Match Ukrainian words to their English meanings.
 
 | Left | Right |
 |------|-------|
+| личити | to suit/become |
+| підписатися | to subscribe, follow |
+| переслати | to forward (perf) |
+| завантажити | to download (perf) |
+| вкладення | attachment |
+| вишиванка | embroidered shirt |
+| отримати | to receive (perf) |
 | дзвінок | call |
-| повідомлення | message |
-| електронна пошта | email |
-| пароль | password |
-| підписатися | to follow |
 | поділитися | to share |
-
-## quiz: Phone & Email
-
-> Choose the correct answer.
-
-1. "Hello?" (phone) - ___?
-   - [x] Алло
-   - [ ] Привіт
-   - [ ] Добрий день
-   - [ ] Здрастуйте
-   > Phone greeting = Алло.
-
-2. "Please wait" - ___, будь ласка.
-   - [x] Зачекайте
-   - [ ] Чекайте
-   - [ ] Чекати
-   - [ ] Почекавши
-   > Imperative = зачекайте.
-
-3. "Who's calling?" - Хто ___?
-   - [x] дзвонить
-   - [ ] дзвонив
-   - [ ] дзвонити
-   - [ ] дзвінок
-   > Present tense = дзвонить.
-
-4. "Best regards" - З ___.
-   - [x] повагою
-   - [ ] повага
-   - [ ] повазі
-   - [ ] поваги
-   > Fixed expression = з повагою.
-
-5. "Send me a link" - ___ мені посилання.
-   - [x] Надішли
-   - [ ] Надіслати
-   - [ ] Надіславши
-   - [ ] Надсилаєш
-   > Imperative = надішли.
-
-6. "Follow me!" - ___ на мене!
-   - [x] Підпишись
-   - [ ] Підписуйся
-   - [ ] Підписатися
-   - [ ] Підписка
-   > Imperative = підпишись.
-
-## group-sort: Formal vs Informal
-
-> Sort by register.
-
-### Formal
-- Шановний пане...
-- З повагою
-- Чи можу я поговорити з...
-- Пишу вам з приводу...
-- Дякую за ваш час
-
-### Informal
-- Привіт!
-- До зв'язку!
-- Скинь посилання
-- Як справи?
-- Напиши мені
-
-
-## true-false: True or False?
-
-> Determine if each statement is true or false.
-
-- [x] "дзвінок" is masculine.
-   > Correct! дзвінок is masculine.
-
-- [x] "вкладення" is neuter.
-   > Correct! вкладення is neuter.
-
-- [ ] "посилання" is masculine.
-   > Incorrect. посилання is neuter.
-
-- [ ] "пароль" is feminine.
-   > Incorrect. пароль is masculine.
-
-
-## fill-in: Fill in the Blank
-
-> Fill in the blanks with the correct word.
-
-1. телефонувати ___ дзвонити
-   > [!answer] /
-
-
+| пароль | password |
+| обідати | to have lunch |
+| посилання | link |
 
 ## quiz: Meaning Check
 
 > Choose the correct answer.
 
-1. What does "дзвінок" mean?
-   - [ ] to download (perf)
-   - [ ] password
-   - [ ] to forward (perf)
+1. What does "посилання" mean?
+   - [x] link
+   - [ ] best (adv)
+   - [ ] lemon
+   - [ ] sunny
+   > "посилання" means "link"
+
+2. What does "поділитися" mean?
+   - [ ] to me
+   - [ ] writer
+   - [x] to share
+   - [ ] embroidered shirt
+   > "поділитися" means "to share"
+
+3. What does "дзвінок" mean?
+   - [ ] waiter
+   - [ ] my (feminine)
+   - [ ] to agree, arrange
    - [x] call
    > "дзвінок" means "call"
 
-2. What does "пароль" mean?
-   - [ ] call
-   - [ ] to download (perf)
-   - [ ] to forward (perf)
-   - [x] password
-   > "пароль" means "password"
+4. What does "отримати" mean?
+   - [ ] to lack
+   - [x] to receive (perf)
+   - [ ] beautiful, nice
+   - [ ] yesterday
+   > "отримати" means "to receive (perf)"
 
-3. What does "переслати" mean?
+5. What does "підписатися" mean?
+   - [ ] grandma
+   - [ ] to answer (perf)
+   - [x] to subscribe, follow
+   - [ ] nobody
+   > "підписатися" means "to subscribe, follow"
+
+6. What does "переслати" mean?
+   - [ ] beginning
+   - [ ] whether (question particle)
    - [x] to forward (perf)
-   - [ ] call
-   - [ ] to download (perf)
-   - [ ] password
+   - [ ] to pay
    > "переслати" means "to forward (perf)"
 
-4. What does "завантажити" mean?
+7. What does "завантажити" mean?
+   - [ ] tall
+   - [ ] for
    - [x] to download (perf)
-   - [ ] to forward (perf)
-   - [ ] call
-   - [ ] password
+   - [ ] imaginary, hypothetical
    > "завантажити" means "to download (perf)"
 
-5. What does "поділитися" mean?
-   - [ ] call
-   - [x] to share
-   - [ ] password
-   - [ ] to forward (perf)
-   > "поділитися" means "to share"
+8. What does "пароль" mean?
+   - [x] password
+   - [ ] worse
+   - [ ] train
+   - [ ] declension
+   > "пароль" means "password"
 
-6. What does "вкладення" mean?
-   - [ ] call
+9. What does "вкладення" mean?
+   - [ ] to invite (impf)
+   - [ ] under
    - [x] attachment
-   - [ ] password
-   - [ ] to forward (perf)
+   - [ ] child
    > "вкладення" means "attachment"
 
+## true-false: True or False?
 
+> Determine if each statement is true or false.
 
-## unjumble: Word Order
+- [ ] "посилання" means "best"
+   > Incorrect. "посилання" means "link"
 
-> Put the words in the correct order to form a sentence.
+- [x] "поділитися" means "to share"
+   > Correct!
 
-1. дзвонити / / / телефонувати
-   > [!answer] телефонувати / дзвонити
-   > (to call)
+- [ ] "пароль" means "sweater"
+   > Incorrect. "пароль" means "password"
 
-2. електронна / пошта / / / імейл
-   > [!answer] електронна пошта / імейл
-   > (email)
+- [ ] "переслати" means "thin"
+   > Incorrect. "переслати" means "to forward (perf)"
 
-3. Так / вас / слухаю
-   > [!answer] Так, слухаю вас.
-   > (Yes, I'm listening.)
+- [ ] "вкладення" means "to transfer"
+   > Incorrect. "вкладення" means "attachment"
 
-4. Не / в / мережі
-   > [!answer] Не в мережі
-   > (offline)
+- [x] "підписатися" means "to subscribe, follow"
+   > Correct!
 
+- [x] "завантажити" means "to download (perf)"
+   > Correct!
+
+- [ ] "дзвінок" means "hard, heavy"
+   > Incorrect. "дзвінок" means "call"
+
+- [x] "отримати" means "to receive (perf)"
+   > Correct!
 
 ---
 

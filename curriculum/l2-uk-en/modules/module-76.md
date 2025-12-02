@@ -305,166 +305,295 @@ Match the action:
 
 ---
 
-# Activities
+---
 
-## match-up: Service → Place
+---
+
+---
+
+# Вправи
+
+## fill-in: Доповніть речення
+
+> Оберіть правильне слово.
+
+1. Моя сестра каже, що їй подобається ___ у вільний час.
+   > [!answer] доставляти
+   > [!options] доставляти | вимикати | привезти | займатися
+
+2. Цей ___ належить моєму другові з Києва.
+   > [!answer] вклад
+   > [!options] вклад | квартал | светр | мовлення
+
+3. Я давно мріяв навчитися ___, і нарешті маю таку можливість.
+   > [!answer] бронювати
+   > [!options] заздрити | бронювати | віддати | закінчити
+
+4. Я давно мріяв навчитися ___, і нарешті маю таку можливість.
+   > [!answer] обмінювати
+   > [!options] написати | плакати | збирати | обмінювати
+
+5. Моя сестра сказала, що її ___ дуже зручна.
+   > [!answer] розстрочка
+   > [!options] легені | серце | яловичина | розстрочка
+
+6. Моя сестра каже, що їй подобається ___ у вільний час.
+   > [!answer] скаржитися
+   > [!options] скаржитися | розбити | змокнути | зібрати
+
+7. Мій друг сказав, що його ___ дуже зручний.
+   > [!answer] автосервіс
+   > [!options] декан | автосервіс | каша | знижка
+
+8. Мій друг сказав, що його ___ дуже зручний.
+   > [!answer] зоомагазин
+   > [!options] виїзд | гора | ліки | зоомагазин
+
+9. Моя сестра сказала, що її ___ дуже зручна.
+   > [!answer] передоплата
+   > [!options] передоплата | суспільство | град | правило
+
+10. Я хочу купити цей ___, але він занадто дорогий.
+   > [!answer] супермаркет
+   > [!options] супермаркет | яловичина | серце | деруни
+
+## unjumble: Побудуйте речення
+
+> Розташуйте слова в правильному порядку.
+
+1. належить / Києва / моєму / супермаркет / другові / Цей / з
+   > [!answer] Цей супермаркет належить моєму другові з Києва.
+   > (supermarket)
+
+2. Ця / моїй / подрузі / кондитерська / належить / Києва / з
+   > [!answer] Ця кондитерська належить моїй подрузі з Києва.
+   > (confectionery)
+
+3. моїй / подрузі / належить / з / передоплата / Києва / Ця
+   > [!answer] Ця передоплата належить моїй подрузі з Києва.
+   > (prepayment)
+
+4. моїй / належить / з / Києва / подрузі / Ця / розстрочка
+   > [!answer] Ця розстрочка належить моїй подрузі з Києва.
+   > (installment)
+
+5. але / довго / шукали / не / хорошу / Вони / знайшли / перукарня
+   > [!answer] Вони довго шукали хорошу перукарня, але не знайшли.
+   > (hair salon)
+
+6. дороге / це / купити / хочу / відстеження / занадто / але / воно / Я
+   > [!answer] Я хочу купити це відстеження, але воно занадто дороге.
+   > (tracking)
+
+7. зручна / дуже / Моя / її / що / хімчистка / сказала / сестра
+   > [!answer] Моя сестра сказала, що її хімчистка дуже зручна.
+   > (dry cleaner)
+
+8. другові / моєму / Києва / Цей / з / зоомагазин / належить
+   > [!answer] Цей зоомагазин належить моєму другові з Києва.
+   > (pet store)
+
+9. але / повернення / Я / купити / хочу / дороге / воно / це / занадто
+   > [!answer] Я хочу купити це повернення, але воно занадто дороге.
+   > (return)
+
+10. моєму / Києва / Цей / другові / з / належить / самовивіз
+   > [!answer] Цей самовивіз належить моєму другові з Києва.
+   > (pickup)
+
+11. Я / дорога / хочу / але / вона / занадто / купити / цю / булочна
+   > [!answer] Я хочу купити цю булочна, але вона занадто дорога.
+   > (bakery)
+
+12. занадто / гарантія / хочу / але / купити / Я / вона / цю / дорога
+   > [!answer] Я хочу купити цю гарантія, але вона занадто дорога.
+   > (warranty)
+
+13. Я / але / купити / хочу / вона / дорога / здача / занадто / цю
+   > [!answer] Я хочу купити цю здача, але вона занадто дорога.
+   > (change)
+
+## match-up: Знайдіть пари
+
+> З'єднайте українські слова з англійськими.
 
 | Left | Right |
 |------|-------|
-| стрижка | перукарня |
-| чистка одягу | хімчистка |
-| обмін валют | банк |
-| ремонт авто | автосервіс |
-| квитки | туристичне агентство |
+| секонд-хенд | secondhand store |
+| бронювати | to book |
+| спека | heat |
+| дарувати | to gift (impf) |
+| здача | change |
+| канцтовари | stationery |
+| самовивіз | pickup |
+| буряк | beet |
+| скаржитися | to complain |
+| гіркий | bitter |
+| хімчистка | dry cleaner |
+| вклад | deposit |
+| хвилина | minute |
+| відстеження | tracking |
 
-## quiz: Shopping & Services
+## quiz: Перевірка значень
 
-> Choose the correct answer.
+> Оберіть правильну відповідь.
 
-1. "Повернути товар" means ___.
-   - [x] to return an item
-   - [ ] to buy an item
-   - [ ] to exchange an item
-   - [ ] to order an item
-   > Повернути = to return.
+1. Що означає "повернення"?
+   - [ ] disobedient
+   - [ ] cheapest
+   - [ ] to us
+   - [x] return
+   > "повернення" means "return"
 
-2. "Здача" is ___.
-   - [x] change (money back)
-   - [ ] receipt
-   - [ ] discount
-   - [ ] price
-   > Здача = change you get back.
+2. Що означає "здача"?
+   - [ ] stubborn
+   - [ ] blood
+   - [x] change
+   - [ ] skin
+   > "здача" means "change"
 
-3. "Накладений платіж" means ___.
-   - [x] cash on delivery
-   - [ ] prepayment
-   - [ ] card payment
-   - [ ] bank transfer
-   > Pay when you receive the item.
+3. Що означає "бронювати"?
+   - [x] to book
+   - [ ] to build
+   - [ ] virus
+   - [ ] stamp
+   > "бронювати" means "to book"
 
-4. Where do you exchange currency?
-   - [x] обмін валют
-   - [ ] банкомат
-   - [ ] каса
-   - [ ] магазин
-   > Обмін валют = currency exchange.
+4. Що означає "доставляти"?
+   - [ ] to cook/prepare (perf)
+   - [x] to deliver
+   - [ ] boss
+   - [ ] squirrel
+   > "доставляти" means "to deliver"
 
-5. "Розпродаж" is ___.
-   - [x] clearance sale
-   - [ ] new arrival
-   - [ ] full price
-   - [ ] luxury item
-   > Розпродаж = sale, clearance.
+5. Що означає "повертати"?
+   - [ ] done, made
+   - [ ] owl
+   - [ ] to watch, look
+   - [x] to return
+   > "повертати" means "to return"
 
-6. "Самовивіз" means ___.
-   - [x] pickup (collect yourself)
-   - [ ] delivery
-   - [ ] return
-   - [ ] exchange
-   > Самовивіз = self-pickup.
-
-## group-sort: By Category
-
-### Магазини (Stores)
-- супермаркет
-- булочна
-- ювелірний
-- зоомагазин
-
-### Послуги (Services)
-- перукарня
-- хімчистка
-- автосервіс
-- майстерня
-
-### Банк (Banking)
-- рахунок
-- переказ
-- кредит
-- банкомат
-
-### Оплата (Payment)
-- готівка
-- картка
-- знижка
-- здача
-
-
-## true-false: True or False?
-
-> Determine if each statement is true or false.
-
-- [x] "супермаркет" is masculine.
-   > Correct! супермаркет is masculine.
-
-- [x] "торговий центр" is masculine.
-   > Correct! торговий центр is masculine.
-
-- [x] "універмаг" is masculine.
-   > Correct! універмаг is masculine.
-
-- [x] "секонд-хенд" is masculine.
-   > Correct! секонд-хенд is masculine.
-
-- [ ] "булочна" is masculine.
-   > Incorrect. булочна is feminine.
-
-- [ ] "кондитерська" is masculine.
-   > Incorrect. кондитерська is feminine.
-
-
-## fill-in: Fill in the Blank
-
-> Fill in the blanks with the correct word.
-
-
-
-## quiz: Meaning Check
-
-> Choose the correct answer.
-
-1. What does "майстерня" mean?
-   - [ ] pet store
-   - [ ] to exchange
-   - [x] repair shop
-   - [ ] hair salon
-   > "майстерня" means "repair shop"
-
-2. What does "перукарня" mean?
+6. Що означає "перукарня"?
+   - [ ] result
+   - [ ] which (formal)
+   - [ ] to lack
    - [x] hair salon
-   - [ ] repair shop
-   - [ ] to exchange
-   - [ ] pet store
    > "перукарня" means "hair salon"
 
-3. What does "зоомагазин" mean?
+7. Що означає "передоплата"?
+   - [ ] to break
+   - [ ] heart
+   - [x] prepayment
+   - [ ] far
+   > "передоплата" means "prepayment"
+
+8. Що означає "зоомагазин"?
+   - [ ] to find (perf)
+   - [ ] teacher (m)
+   - [ ] promotion
    - [x] pet store
-   - [ ] repair shop
-   - [ ] to exchange
-   - [ ] hair salon
    > "зоомагазин" means "pet store"
 
-4. What does "обмінювати" mean?
-   - [ ] pet store
-   - [x] to exchange
-   - [ ] repair shop
-   - [ ] hair salon
-   > "обмінювати" means "to exchange"
+9. Що означає "валюта"?
+   - [x] currency
+   - [ ] to find (perf)
+   - [ ] significantly
+   - [ ] sister's
+   > "валюта" means "currency"
 
-5. What does "кондитерська" mean?
-   - [ ] repair shop
-   - [ ] hair salon
-   - [x] confectionery
-   - [ ] pet store
-   > "кондитерська" means "confectionery"
+10. Що означає "канцтовари"?
+   - [ ] already
+   - [x] stationery
+   - [ ] at most
+   - [ ] long ago
+   > "канцтовари" means "stationery"
 
-6. What does "автосервіс" mean?
-   - [x] car service
-   - [ ] repair shop
-   - [ ] hair salon
-   - [ ] pet store
-   > "автосервіс" means "car service"
+11. Що означає "самовивіз"?
+   - [ ] gardening
+   - [x] pickup
+   - [ ] always
+   - [ ] statement
+   > "самовивіз" means "pickup"
 
+12. Що означає "хімчистка"?
+   - [ ] reading room
+   - [ ] how much/many
+   - [x] dry cleaner
+   - [ ] bear
+   > "хімчистка" means "dry cleaner"
+
+13. Що означає "майстерня"?
+   - [ ] less
+   - [ ] possibly, maybe
+   - [x] repair shop
+   - [ ] to hear
+   > "майстерня" means "repair shop"
+
+14. Що означає "вклад"?
+   - [ ] kilogram
+   - [x] deposit
+   - [ ] supermarket
+   - [ ] passage; fare
+   > "вклад" means "deposit"
+
+## true-false: Правда чи ні?
+
+> Визначте, чи правильне твердження.
+
+- [x] "передоплата" means "prepayment"
+   > Correct!
+
+- [x] "повернення" means "return"
+   > Correct!
+
+- [ ] "розстрочка" means "journalist"
+   > Incorrect. "розстрочка" means "installment"
+
+- [ ] "бронювати" means "sun"
+   > Incorrect. "бронювати" means "to book"
+
+- [ ] "валюта" means "sweater"
+   > Incorrect. "валюта" means "currency"
+
+- [ ] "повертати" means "those"
+   > Incorrect. "повертати" means "to return"
+
+- [x] "скаржитися" means "to complain"
+   > Correct!
+
+- [ ] "автосервіс" means "grater"
+   > Incorrect. "автосервіс" means "car service"
+
+- [ ] "доставляти" means "to withdraw"
+   > Incorrect. "доставляти" means "to deliver"
+
+- [x] "булочна" means "bakery"
+   > Correct!
+
+## group-sort: Сортування за родом
+
+> Розподіліть слова за родами.
+
+### Чоловічий рід
+- автосервіс
+- зоомагазин
+- універмаг
+- супермаркет
+- вклад
+- самовивіз
+
+### Жіночий рід
+- здача
+- гарантія
+- майстерня
+- розстрочка
+- валюта
+- булочна
+
+### Середній рід
+- відстеження
+- повернення
+- ательє
 
 ---
 

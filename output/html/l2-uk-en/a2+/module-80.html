@@ -322,15 +322,18 @@ footer {
 .show-answer-btn:hover { background: #e5e5e5; }
 .show-answer-btn.revealed { background: #e8f8f0; border-color: var(--success); color: var(--success); }
 
-/* Fill-in Activity */
-.fill-container { display: flex; flex-direction: column; gap: 1rem; }
-.fill-question { border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; }
-.fill-question.answered .fill-check { display: none; }
-.fill-input { width: 100%; max-width: 300px; padding: 0.75rem 1rem; font-size: 1.1rem; border: 2px solid var(--border); border-radius: 8px; margin: 0.5rem 0; }
-.fill-input:focus { border-color: var(--primary); outline: none; }
-.fill-input.correct { border-color: var(--success); background: #e8f8f0; }
-.fill-input.wrong { border-color: var(--danger); background: #fde8e8; }
-.fill-check { margin-left: 0.5rem; }
+/* Fill-in Activity - Dropdown in Sentence */
+.fill-container { display: flex; flex-direction: column; gap: 0.75rem; }
+.fill-question { border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.5rem; }
+
+.fill-number { font-weight: 600; color: var(--text-muted); margin-right: 0.5rem; }
+.fill-sentence { font-size: 1.15rem; line-height: 1.8; }
+
+.fill-dropdown { font-size: 1rem; padding: 0.4rem 0.6rem; border: 2px solid var(--primary); border-radius: 6px; background: #fff; color: var(--primary); font-weight: 500; cursor: pointer; min-width: 120px; }
+.fill-dropdown:focus { outline: none; box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.2); }
+.fill-dropdown.correct { border-color: var(--success); background: #e8f8f0; color: var(--success); }
+.fill-dropdown.wrong { border-color: var(--danger); background: #fde8e8; color: var(--danger); }
+
 .fill-feedback { margin-top: 0.5rem; font-weight: 500; }
 .fill-feedback .correct-text { color: var(--success); }
 .fill-feedback .wrong-text { color: var(--danger); }
@@ -346,6 +349,32 @@ footer {
 .order-item.wrong { border-color: var(--danger); background: #fde8e8; }
 .order-handle { color: var(--text-muted); font-size: 1.25rem; }
 .order-text { font-size: 1.1rem; }
+
+/* Unjumble Activity - Drag and Drop */
+.unjumble-question { border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.5rem; margin-bottom: 0.75rem; display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; }
+.unjumble-question.answered .unjumble-word { cursor: default; }
+.unjumble-question.correct { border-color: var(--success); background: #f8fff8; }
+.unjumble-question.wrong { border-color: var(--danger); background: #fff8f8; }
+
+.unjumble-number { font-weight: 600; color: var(--text-muted); min-width: 2rem; }
+
+.unjumble-word-row { display: flex; flex-wrap: wrap; gap: 0.5rem; flex: 1; min-height: 42px; padding: 0.25rem; border-radius: 8px; background: #f8f9fa; }
+.unjumble-word-row.correct { background: #e8f8f0; }
+.unjumble-word-row.wrong { background: #fde8e8; }
+
+.unjumble-word { background: var(--primary); color: white; border-radius: 6px; padding: 0.5rem 0.75rem; font-size: 1rem; cursor: grab; user-select: none; transition: transform 0.1s, box-shadow 0.1s; }
+.unjumble-word:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+.unjumble-word:active { cursor: grabbing; }
+.unjumble-word.dragging { opacity: 0.5; transform: scale(1.05); }
+
+.unjumble-word.touch-clone { position: fixed; z-index: 1000; pointer-events: none; box-shadow: 0 8px 16px rgba(0,0,0,0.2); }
+
+.unjumble-actions { display: flex; gap: 0.5rem; }
+.unjumble-feedback { width: 100%; padding: 0.5rem 0 0 2.5rem; display: none; }
+.unjumble-feedback.show { display: block; }
+.unjumble-feedback .correct-text { color: var(--success); font-weight: 600; }
+.unjumble-feedback .wrong-text { color: var(--danger); }
+.unjumble-feedback .translation { color: var(--text-muted); font-style: italic; margin-left: 0.5rem; }
 
   </style>
 </head>
@@ -366,8 +395,8 @@ footer {
       <button class="nav-tab" data-section="match">Match</button>
       <button class="nav-tab" data-section="quiz">Quiz</button>
       <button class="nav-tab" data-section="sort">Sort</button>
-      
-      
+      <button class="nav-tab" data-section="fill">Fill</button>
+      <button class="nav-tab" data-section="order">Order</button>
       <button class="nav-tab" data-section="vocab">Vocab</button>
     </div>
   </nav>
@@ -639,6 +668,8 @@ Combine: Education + Work + Tech</p>
 <li>"Вчуся в університеті, підробляю онлайн. Все роблю на ноутбуці."</li>
 </ul>
 <h2 id="">##</h2>
+<hr />
+<hr />
 <hr /></div>
     </div>
   
@@ -820,32 +851,44 @@ Combine: Education + Work + Tech</p>
     </section>
   
     
-    <section id="match" class="section"><div class="card"><h3>Topic → Key Word</h3>
-      <div class="score-display"><span class="score"><span id="match-score">0</span>/8</span></div>
+    <section id="match" class="section"><div class="card"><h3>Знайдіть пари</h3>
+      <div class="score-display"><span class="score"><span id="match-score">0</span>/14</span></div>
       <div class="match-container" id="match-container"><svg class="match-lines" id="match-lines"></svg>
-        <div class="match-column" id="match-left"><div class="match-item" data-pair="0">Food</div><div class="match-item" data-pair="1">Health</div><div class="match-item" data-pair="2">Home</div><div class="match-item" data-pair="3">Hobbies</div><div class="match-item" data-pair="4">Education</div><div class="match-item" data-pair="5">Shopping</div><div class="match-item" data-pair="6">Sports</div><div class="match-item" data-pair="7">Arts</div></div>
-        <div class="match-column" id="match-right"><div class="match-item" data-pair="3">захоплення</div><div class="match-item" data-pair="2">квартира</div><div class="match-item" data-pair="5">знижка</div><div class="match-item" data-pair="6">тренування</div><div class="match-item" data-pair="4">університет</div><div class="match-item" data-pair="1">температура</div><div class="match-item" data-pair="0">смачний</div><div class="match-item" data-pair="7">концерт</div></div>
+        <div class="match-column" id="match-left"><div class="match-item" data-pair="0">переїзд</div><div class="match-item" data-pair="1">думати</div><div class="match-item" data-pair="2">кімната</div><div class="match-item" data-pair="3">каса</div><div class="match-item" data-pair="4">сидіти</div><div class="match-item" data-pair="5">купити</div><div class="match-item" data-pair="6">джаз</div><div class="match-item" data-pair="7">час</div><div class="match-item" data-pair="8">навпроти</div><div class="match-item" data-pair="9">платформа</div><div class="match-item" data-pair="10">ними</div><div class="match-item" data-pair="11">їжа</div><div class="match-item" data-pair="12">виписка</div><div class="match-item" data-pair="13">треба</div></div>
+        <div class="match-column" id="match-right"><div class="match-item" data-pair="2">room</div><div class="match-item" data-pair="11">food</div><div class="match-item" data-pair="7">time</div><div class="match-item" data-pair="9">platform</div><div class="match-item" data-pair="0">move (relocation)</div><div class="match-item" data-pair="1">to think</div><div class="match-item" data-pair="3">cash register</div><div class="match-item" data-pair="4">to sit</div><div class="match-item" data-pair="13">it's necessary</div><div class="match-item" data-pair="5">to buy (perf)</div><div class="match-item" data-pair="12">statement</div><div class="match-item" data-pair="6">jazz</div><div class="match-item" data-pair="10">(with) them</div><div class="match-item" data-pair="8">opposite</div></div>
       </div>
       <div class="completion-message" id="match-complete"><h3>Perfect!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetMatch()">Reset</button><button class="btn btn-primary" onclick="showSection('quiz')">Next →</button></div>
     </div></section>
     
-    <section id="quiz" class="section"><div class="card"><h3>Vocabulary Review</h3>
-      <div class="score-display"><span class="score"><span id="quiz-score">0</span>/6</span></div>
+    <section id="quiz" class="section"><div class="card"><h3>Перевірка значень</h3>
+      <div class="score-display"><span class="score"><span id="quiz-score">0</span>/14</span></div>
       <div id="quiz-container"></div>
       <div class="completion-message" id="quiz-complete"><h3>Complete!</h3></div>
       <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('sort')">Next →</button></div>
     </div></section>
     
-    <section id="sort" class="section"><div class="card"><h3>By Topic</h3>
-      <div class="score-display"><span class="score"><span id="sort-score">0</span>/16</span></div>
+    <section id="sort" class="section"><div class="card"><h3>Сортування за родом</h3>
+      <div class="score-display"><span class="score"><span id="sort-score">0</span>/8</span></div>
       <div class="sort-pool" id="sort-pool"><div class="sort-items" id="sort-items"></div></div>
-      <div class="sort-groups"><div class="sort-group true-friends" data-group="true-friends"><h4>Освіта</h4><div class="sort-items"></div></div><div class="sort-group false-friends" data-group="false-friends"><h4>Покупки</h4><div class="sort-items"></div></div><div class="sort-group new-letters" data-group="new-letters"><h4>Спорт</h4><div class="sort-items"></div></div><div class="sort-group " data-group="group-3"><h4>Мистецтво</h4><div class="sort-items"></div></div></div>
+      <div class="sort-groups"><div class="sort-group true-friends" data-group="true-friends"><h4>Чоловічий рід</h4><div class="sort-items"></div></div><div class="sort-group false-friends" data-group="false-friends"><h4>Жіночий рід</h4><div class="sort-items"></div></div></div>
       <div class="completion-message" id="sort-complete"><h3>All Sorted!</h3></div>
-      <div class="btn-group"><button class="btn btn-outline" onclick="resetSort()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetSort()">Reset</button><button class="btn btn-primary" onclick="showSection('fill')">Next →</button></div>
     </div></section>
     
+    <section id="fill" class="section"><div class="card"><h3>Доповніть речення</h3>
+      <div class="score-display"><span class="score"><span id="fill-score">0</span>/12</span></div>
+      <div id="fill-container" class="fill-container"></div>
+      <div class="completion-message" id="fill-complete"><h3>Complete!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetFill()">Reset</button><button class="btn btn-primary" onclick="showSection('order')">Next →</button></div>
+    </div></section>
     
+    <section id="order" class="section"><div class="card"><h3>Побудуйте речення</h3>
+      <div class="score-display"><span class="score"><span id="order-score">0</span>/8</span></div>
+      <div id="order-container" class="order-container"></div>
+      <div class="completion-message" id="order-complete"><h3>Perfect Order!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetOrder()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
+    </div></section>
     
     <section id="vocab" class="section">
       <div class="card">
@@ -871,13 +914,13 @@ Combine: Education + Work + Tech</p>
   </main><footer>Module 80 · curricula-opus</footer>
   <script>
 
-    const matchPairs = [{"left":"Food","right":"смачний"},{"left":"Health","right":"температура"},{"left":"Home","right":"квартира"},{"left":"Hobbies","right":"захоплення"},{"left":"Education","right":"університет"},{"left":"Shopping","right":"знижка"},{"left":"Sports","right":"тренування"},{"left":"Arts","right":"концерт"}];
-    const quizData = [{"question":"\"Смажити\" relates to ___.","options":["cooking","health","technology","emotions"],"correctIndex":0,"explanation":"Смажити = to fry."},{"question":"\"Захоплюватися\" means ___.","options":["to be passionate about","to study","to exercise","to shop"],"correctIndex":0,"explanation":"Захоплюватися = to be into (hobbies)."},{"question":"\"Складати іспит\" means ___.","options":["to take an exam","to pass an exam","to fail an exam","to skip an exam"],"correctIndex":0,"explanation":"Складати = to take."},{"question":"\"Повернути товар\" means ___.","options":["to return an item","to buy an item","to order an item","to exchange an item"],"correctIndex":0,"explanation":"Повернути = to return."},{"question":"\"Тренування\" relates to ___.","options":["sports and fitness","education","technology","shopping"],"correctIndex":0,"explanation":"Тренування = workout."},{"question":"\"Вишиванка\" is ___.","options":["Ukrainian embroidered shirt","traditional dance","folk song","holiday food"],"correctIndex":0,"explanation":"Вишиванка = embroidered shirt."}];
-    const sortData = {"true-friends":["університет","іспит","студент","диплом"],"false-friends":["знижка","повернути","рахунок","доставка"],"new-letters":["тренування","перемога","команда","медаль"],"group-3":["концерт","режисер","пісня","виставка"]};
-    const fillData = {"items":[],"text":"","answers":[]};
-    const orderData = {"items":[],"correctOrder":[]};
+    const matchPairs = [{"left":"переїзд","right":"move (relocation)"},{"left":"думати","right":"to think"},{"left":"кімната","right":"room"},{"left":"каса","right":"cash register"},{"left":"сидіти","right":"to sit"},{"left":"купити","right":"to buy (perf)"},{"left":"джаз","right":"jazz"},{"left":"час","right":"time"},{"left":"навпроти","right":"opposite"},{"left":"платформа","right":"platform"},{"left":"ними","right":"(with) them"},{"left":"їжа","right":"food"},{"left":"виписка","right":"statement"},{"left":"треба","right":"it's necessary"}];
+    const quizData = [{"question":"Що означає \"пити\"?","options":["market","to drink","these","it's necessary"],"correctIndex":1,"explanation":"\"пити\" means \"to drink\""},{"question":"Що означає \"думати\"?","options":["client","to disturb","acquaintance","to think"],"correctIndex":3,"explanation":"\"думати\" means \"to think\""},{"question":"Що означає \"купити\"?","options":["grandpa","floor (of building)","to buy (perf)","beautiful, nice"],"correctIndex":2,"explanation":"\"купити\" means \"to buy (perf)\""},{"question":"Що означає \"склянка\"?","options":["glass","gym","brain teaser","credit test"],"correctIndex":0,"explanation":"\"склянка\" means \"glass\""},{"question":"Що означає \"радісний\"?","options":["joyful","humanity","statement","(with) you"],"correctIndex":0,"explanation":"\"радісний\" means \"joyful\""},{"question":"Що означає \"фруктовий\"?","options":["fruit","breakfast","their (m)","day"],"correctIndex":0,"explanation":"\"фруктовий\" means \"fruit\""},{"question":"Що означає \"джаз\"?","options":["jazz","specialist","departure","to thank"],"correctIndex":0,"explanation":"\"джаз\" means \"jazz\""},{"question":"Що означає \"опівдні\"?","options":["negotiations","at noon","to restart","sometimes"],"correctIndex":1,"explanation":"\"опівдні\" means \"at noon\""},{"question":"Що означає \"канцтовари\"?","options":["to reach (on foot)","client","stationery","to plan"],"correctIndex":2,"explanation":"\"канцтовари\" means \"stationery\""},{"question":"Що означає \"каса\"?","options":["extraordinarily","dry cleaner","cash register","bus"],"correctIndex":2,"explanation":"\"каса\" means \"cash register\""},{"question":"Що означає \"виписка\"?","options":["to graduate","statement","square","promotion"],"correctIndex":1,"explanation":"\"виписка\" means \"statement\""},{"question":"Що означає \"сидіти\"?","options":["to taste (enjoy)","to speak","to sit","applause"],"correctIndex":2,"explanation":"\"сидіти\" means \"to sit\""},{"question":"Що означає \"треба\"?","options":["white","link","it's necessary","less"],"correctIndex":2,"explanation":"\"треба\" means \"it's necessary\""},{"question":"Що означає \"навпроти\"?","options":["weakness","opposite","painful, it hurts","musician"],"correctIndex":1,"explanation":"\"навпроти\" means \"opposite\""}];
+    const sortData = {"true-friends":["літак","час","переїзд","джаз"],"false-friends":["склянка","каса","акторка","виписка"]};
+    const fillData = {"items":[{"prompt":"Цей варіант здається мені найбільш ___ з усіх.","answer":"фруктовий","options":["старий","фруктовий","мамин","роздратований"]},{"prompt":"Моя сестра каже, що їй подобається ___ у вільний час.","answer":"пити","options":["фотографувати","повідомляти","купувати","пити"]},{"prompt":"Вони довго шукали хороший ___, але не знайшли.","answer":"переїзд","options":["вклад","голова","каша","переїзд"]},{"prompt":"Я давно мріяв навчитися ___, і нарешті маю таку можливість.","answer":"стати","options":["закрити","пити","замовляти","стати"]},{"prompt":"Моя сестра каже, що їй подобається ___ у вільний час.","answer":"купити","options":["перенести","дякую","купити","переїжджати"]},{"prompt":"Мій друг сказав, що його ___ дуже зручний.","answer":"час","options":["пошук","час","діагноз","захоплення"]},{"prompt":"Я хочу купити цей ___, але він занадто дорогий.","answer":"джаз","options":["професіонал","квест","заметіль","джаз"]},{"prompt":"Я вважаю, що ця пропозиція є занадто ___ для нас.","answer":"радісний","options":["жадібний","радісний","задоволений","потрібний"]},{"prompt":"Я хочу купити цю ___, але вона занадто дорога.","answer":"виписка","options":["виписка","таксі","запис","письменник"]},{"prompt":"Моя сестра каже, що їй подобається ___ у вільний час.","answer":"думати","options":["думати","смажити","писати","заважати"]},{"prompt":"Моя сестра сказала, що її ___ дуже зручна.","answer":"акторка","options":["вид","акторка","одержувач","комп'ютер"]},{"prompt":"Моя сестра сказала, що її ___ дуже зручна.","answer":"склянка","options":["склянка","підписник","11-12","сіль"]}],"text":"","answers":[]};
+    const orderData = {"items":[{"words":["Мій","переїзд","що","його","друг","зручний","сказав","дуже"],"answer":"Мій друг сказав, що його переїзд дуже зручний.","translation":"move (relocation"},{"words":["знайшли","Вони","шукали","але","довго","каса","не","хорошу"],"answer":"Вони довго шукали хорошу каса, але не знайшли.","translation":"cash register"},{"words":["хочу","виписка","дорога","занадто","Я","цю","але","вона","купити"],"answer":"Я хочу купити цю виписка, але вона занадто дорога.","translation":"statement"},{"words":["Вони","знайшли","хорошу","але","шукали","довго","не","склянка"],"answer":"Вони довго шукали хорошу склянка, але не знайшли.","translation":"glass"},{"words":["Ця","моїй","належить","акторка","з","подрузі","Києва"],"answer":"Ця акторка належить моїй подрузі з Києва.","translation":"actress"},{"words":["джаз","він","але","хочу","дорогий","Я","занадто","купити","цей"],"answer":"Я хочу купити цей джаз, але він занадто дорогий.","translation":"jazz"},{"words":["дорогий","він","хочу","цей","Я","але","час","купити","занадто"],"answer":"Я хочу купити цей час, але він занадто дорогий.","translation":"time"},{"words":["літак","не","знайшли","довго","але","Вони","хороший","шукали"],"answer":"Вони довго шукали хороший літак, але не знайшли.","translation":"airplane"}],"isUnjumble":true};
     const vocabData = [];
-    const totalSort = 16;
+    const totalSort = 8;
   
 // Answer callout toggle (for new > [!answer] syntax)
 function toggleAnswer(id, btn) {
@@ -1084,7 +1127,7 @@ function resetSort() {
 }
 
 
-// Fill-in Activity
+// Fill-in Activity - Dropdown in sentence
 let fillScore = 0, fillAns = 0;
 
 function initFill() {
@@ -1095,45 +1138,82 @@ function initFill() {
   fillData.items.forEach((item, i) => {
     const div = document.createElement('div');
     div.className = 'fill-question';
+
+    // Generate options: correct answer + 3 distractors
+    let options = [];
+    if (item.options && item.options.length >= 4) {
+      options = item.options;
+    } else {
+      // Fallback: generate distractors from other items' answers
+      options = [item.answer];
+      const otherAnswers = fillData.items
+        .filter((_, idx) => idx !== i)
+        .map(it => it.answer)
+        .filter(a => a && a !== item.answer);
+
+      const shuffled = otherAnswers.sort(() => Math.random() - 0.5);
+      options.push(...shuffled.slice(0, 3));
+
+      while (options.length < 4) {
+        options.push('—');
+      }
+    }
+
+    // Shuffle options
+    const shuffledOptions = [...options].sort(() => Math.random() - 0.5);
+
+    // Replace ___ in the sentence with a dropdown
+    const sentence = (item.prompt || item.sentence || '').replace(/___/g,
+      `<select class="fill-dropdown" data-idx="${i}" data-answer="${item.answer}">
+        <option value="" disabled selected>—</option>
+        ${shuffledOptions.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
+      </select>`
+    );
+
     div.innerHTML = `
-      <h4>Q${i + 1}: ${item.prompt || item.sentence || ''}</h4>
-      <input type="text" class="fill-input" data-idx="${i}" data-answer="${item.answer || ''}" placeholder="Type your answer...">
-      <button class="btn btn-outline btn-sm fill-check" data-idx="${i}">Check</button>
+      <div class="fill-sentence">
+        <span class="fill-number">${i + 1}.</span>
+        ${sentence}
+      </div>
       <div class="fill-feedback" id="fill-fb-${i}"></div>
     `;
     c.appendChild(div);
   });
 
-  document.querySelectorAll('.fill-check').forEach(b => b.addEventListener('click', handleFill));
-  document.querySelectorAll('.fill-input').forEach(i => i.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') handleFill({ target: e.target.nextElementSibling });
-  }));
+  // Event delegation for dropdown changes
+  c.addEventListener('change', (e) => {
+    if (e.target.classList.contains('fill-dropdown')) {
+      handleFillChoice(e.target);
+    }
+  });
 }
 
-function handleFill(e) {
-  const idx = e.target.dataset.idx;
-  const q = e.target.closest('.fill-question');
+function handleFillChoice(dropdown) {
+  const q = dropdown.closest('.fill-question');
   if (q.classList.contains('answered')) return;
 
-  const input = q.querySelector('.fill-input');
-  const userAnswer = input.value.trim().toLowerCase();
-  const correctAnswer = input.dataset.answer.toLowerCase();
+  const idx = dropdown.dataset.idx;
+  const userAnswer = dropdown.value;
+  const correctAnswer = dropdown.dataset.answer;
   const fb = document.getElementById('fill-fb-' + idx);
 
   q.classList.add('answered');
+  dropdown.disabled = true;
 
   if (userAnswer === correctAnswer) {
-    input.classList.add('correct');
-    fb.innerHTML = '<span class="correct-text">Correct!</span>';
+    dropdown.classList.add('correct');
+    fb.innerHTML = '<span class="correct-text">✓ Correct!</span>';
     fillScore++;
   } else {
-    input.classList.add('wrong');
-    fb.innerHTML = `<span class="wrong-text">Answer: ${input.dataset.answer}</span>`;
+    dropdown.classList.add('wrong');
+    fb.innerHTML = `<span class="wrong-text">✗ Answer: ${correctAnswer}</span>`;
   }
 
   document.getElementById('fill-score').textContent = fillScore;
   fillAns++;
-  if (fillAns === fillData.items.length) document.getElementById('fill-complete').classList.add('show');
+  if (fillAns === fillData.items.length) {
+    document.getElementById('fill-complete').classList.add('show');
+  }
 }
 
 function resetFill() {
@@ -1153,9 +1233,217 @@ function initOrder() {
   if (!c || !orderData.items.length) return;
   c.innerHTML = '';
 
+  if (orderData.isUnjumble) {
+    initUnjumble(c);
+  } else {
+    initClassicOrder(c);
+  }
+}
+
+// UNJUMBLE: Drag-and-drop words to form sentences
+function initUnjumble(container) {
   orderTotal = orderData.items.length;
 
-  // Shuffle items for display
+  orderData.items.forEach((item, idx) => {
+    const question = document.createElement('div');
+    question.className = 'unjumble-question';
+    question.dataset.idx = idx;
+
+    // Shuffle words
+    const shuffledWords = [...item.words].sort(() => Math.random() - 0.5);
+
+    question.innerHTML = `
+      <div class="unjumble-number">${idx + 1}.</div>
+      <div class="unjumble-word-row" data-idx="${idx}">
+        ${shuffledWords.map((word, i) => `
+          <span class="unjumble-word" draggable="true" data-word="${word}">${word}</span>
+        `).join('')}
+      </div>
+      <div class="unjumble-actions">
+        <button class="btn btn-sm btn-outline unjumble-check" data-idx="${idx}">Check</button>
+        <button class="btn btn-sm btn-outline unjumble-reset" data-idx="${idx}">Reset</button>
+      </div>
+      <div class="unjumble-feedback" data-idx="${idx}"></div>
+    `;
+
+    container.appendChild(question);
+
+    // Initialize drag-and-drop for this row
+    initUnjumbleDragDrop(question.querySelector('.unjumble-word-row'));
+  });
+
+  // Event delegation for buttons
+  container.addEventListener('click', handleUnjumbleClick);
+}
+
+function initUnjumbleDragDrop(row) {
+  let dragItem = null;
+
+  row.querySelectorAll('.unjumble-word').forEach(word => {
+    word.addEventListener('dragstart', (e) => {
+      dragItem = word;
+      word.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    });
+
+    word.addEventListener('dragend', () => {
+      word.classList.remove('dragging');
+      dragItem = null;
+    });
+
+    word.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      if (!dragItem || dragItem === word) return;
+
+      const rect = word.getBoundingClientRect();
+      const midX = rect.left + rect.width / 2;
+
+      if (e.clientX < midX) {
+        row.insertBefore(dragItem, word);
+      } else {
+        row.insertBefore(dragItem, word.nextSibling);
+      }
+    });
+  });
+
+  // Touch support for mobile
+  let touchItem = null;
+  let touchClone = null;
+
+  row.querySelectorAll('.unjumble-word').forEach(word => {
+    word.addEventListener('touchstart', (e) => {
+      touchItem = word;
+      word.classList.add('dragging');
+
+      // Create a clone for visual feedback
+      touchClone = word.cloneNode(true);
+      touchClone.classList.add('touch-clone');
+      document.body.appendChild(touchClone);
+      updateTouchClone(e.touches[0]);
+    });
+
+    word.addEventListener('touchmove', (e) => {
+      e.preventDefault();
+      if (!touchItem) return;
+      updateTouchClone(e.touches[0]);
+
+      // Find which word we're over
+      const touch = e.touches[0];
+      const elements = document.elementsFromPoint(touch.clientX, touch.clientY);
+      const targetWord = elements.find(el => el.classList.contains('unjumble-word') && el !== touchItem);
+
+      if (targetWord && targetWord.parentNode === row) {
+        const rect = targetWord.getBoundingClientRect();
+        const midX = rect.left + rect.width / 2;
+        if (touch.clientX < midX) {
+          row.insertBefore(touchItem, targetWord);
+        } else {
+          row.insertBefore(touchItem, targetWord.nextSibling);
+        }
+      }
+    });
+
+    word.addEventListener('touchend', () => {
+      if (touchItem) touchItem.classList.remove('dragging');
+      if (touchClone) touchClone.remove();
+      touchItem = null;
+      touchClone = null;
+    });
+  });
+
+  function updateTouchClone(touch) {
+    if (touchClone) {
+      touchClone.style.left = (touch.clientX - 40) + 'px';
+      touchClone.style.top = (touch.clientY - 20) + 'px';
+    }
+  }
+}
+
+function handleUnjumbleClick(e) {
+  const target = e.target;
+
+  if (target.classList.contains('unjumble-check')) {
+    checkUnjumbleAnswer(parseInt(target.dataset.idx));
+  }
+
+  if (target.classList.contains('unjumble-reset')) {
+    resetUnjumbleQuestion(parseInt(target.dataset.idx));
+  }
+}
+
+function checkUnjumbleAnswer(idx) {
+  const item = orderData.items[idx];
+  const row = document.querySelector(`.unjumble-word-row[data-idx="${idx}"]`);
+  const feedback = document.querySelector(`.unjumble-feedback[data-idx="${idx}"]`);
+  const question = document.querySelector(`.unjumble-question[data-idx="${idx}"]`);
+
+  // Build user's answer from current word order
+  const words = row.querySelectorAll('.unjumble-word');
+  const userAnswer = Array.from(words).map(w => w.dataset.word).join(' ');
+
+  // Normalize for comparison (handle punctuation)
+  const normalize = (s) => s.replace(/[?!.,]/g, '').toLowerCase().trim();
+  const isCorrect = normalize(userAnswer) === normalize(item.answer);
+
+  if (isCorrect) {
+    question.classList.add('answered', 'correct');
+    row.classList.add('correct');
+    words.forEach(w => w.setAttribute('draggable', 'false'));
+    orderScore++;
+    document.getElementById('order-score').textContent = orderScore;
+
+    feedback.innerHTML = `
+      <span class="correct-text">✓ Correct!</span>
+      <span class="translation">${item.translation || ''}</span>
+    `;
+    feedback.classList.add('show');
+
+    if (orderScore === orderTotal) {
+      document.getElementById('order-complete').classList.add('show');
+    }
+  } else {
+    question.classList.add('wrong');
+    row.classList.add('wrong');
+
+    feedback.innerHTML = `
+      <span class="wrong-text">✗ Try again. Hint: ${item.answer}</span>
+    `;
+    feedback.classList.add('show');
+
+    setTimeout(() => {
+      question.classList.remove('wrong');
+      row.classList.remove('wrong');
+      feedback.classList.remove('show');
+    }, 2000);
+  }
+}
+
+function resetUnjumbleQuestion(idx) {
+  const item = orderData.items[idx];
+  const row = document.querySelector(`.unjumble-word-row[data-idx="${idx}"]`);
+  const question = document.querySelector(`.unjumble-question[data-idx="${idx}"]`);
+  const feedback = document.querySelector(`.unjumble-feedback[data-idx="${idx}"]`);
+
+  if (question.classList.contains('correct')) return;
+
+  // Re-shuffle and rebuild
+  const shuffledWords = [...item.words].sort(() => Math.random() - 0.5);
+  row.innerHTML = shuffledWords.map(word => `
+    <span class="unjumble-word" draggable="true" data-word="${word}">${word}</span>
+  `).join('');
+
+  initUnjumbleDragDrop(row);
+
+  question.classList.remove('wrong');
+  row.classList.remove('wrong');
+  feedback.innerHTML = '';
+  feedback.classList.remove('show');
+}
+
+// CLASSIC ORDER: Drag items into correct sequence
+function initClassicOrder(container) {
+  orderTotal = orderData.items.length;
+
   const shuffled = [...orderData.items].map((item, idx) => ({ text: item, origIdx: idx }));
   shuffled.sort(() => Math.random() - 0.5);
 
@@ -1167,15 +1455,14 @@ function initOrder() {
       <span class="order-text">${item.text}</span>
     </div>
   `).join('');
-  c.appendChild(div);
+  container.appendChild(div);
 
   const checkBtn = document.createElement('button');
   checkBtn.className = 'btn btn-outline';
   checkBtn.textContent = 'Check Order';
   checkBtn.onclick = checkOrder;
-  c.appendChild(checkBtn);
+  container.appendChild(checkBtn);
 
-  // Enable drag and drop
   initDragDrop();
 }
 
@@ -1213,7 +1500,6 @@ function checkOrder() {
   const items = document.querySelectorAll('.order-item');
   const currentOrder = Array.from(items).map(item => parseInt(item.dataset.orig));
 
-  // Check if order is correct (0, 1, 2, 3, ...)
   let correct = true;
   currentOrder.forEach((val, idx) => {
     const expectedIdx = orderData.correctOrder.length ? orderData.correctOrder[idx] : idx;

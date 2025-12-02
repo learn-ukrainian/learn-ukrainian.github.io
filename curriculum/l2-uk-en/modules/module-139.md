@@ -249,22 +249,151 @@ Write about:
    - [ ] рішення
    > вести переговори.
 
-## fill-in: Integrated Paragraph
 
-> Напишіть абзац, використовуючи всю лексику.
+## match-up: Vocabulary Match
 
-> (1)___ (In my opinion), технології значно (2)___ (changed) наше життя. (3)___ (Firstly), ми маємо більше (4)___ (opportunities). (5)___ (Moreover), комунікація (6)___ (improved). (7)___ (However), є і проблеми. Ми повинні (8)___ (make a decision), як використовувати технології правильно. (9)___ (Therefore), потрібен баланс.
+> Match each Ukrainian word with its English translation.
 
-**Answers:**
-1. На мою думку
-2. змінили
-3. По-перше
-4. можливостей
-5. Крім того
-6. покращилася
-7. Проте
-8. прийняти рішення
-9. Отже
+| Left | Right |
+|------|-------|
+| контекст | context |
+| дискурс | discourse |
+| комунікація | communication |
+| синонім | synonym |
+| лексика | vocabulary |
+| колокація | collocation |
+| ідіома | idiom |
+| абстрактний | abstract |
+| вираження думки | opinion expression |
+
+
+## fill-in: Fill in the Blank
+
+> Choose the correct word to complete each sentence.
+
+1. на ___ думку
+   > [!answer] мою
+   > [!options] мою | кіт | рак | одного
+
+2. з ___ боку
+   > [!answer] одного
+   > [!options] одного | рак | мою | кіт
+
+3. має голову ___ плечах
+   > [!answer] на
+   > [!options] на | мою | одного | рак
+
+4. як ___ наплакав
+   > [!answer] кіт
+   > [!options] кіт | на | рак | одного
+
+5. коли ___ свисне
+   > [!answer] рак
+   > [!options] рак | одного | мою | на
+
+6. на ___ небі
+   > [!answer] сьомому
+   > [!options] сьомому | одного | на | мою
+
+
+
+## quiz: Meaning Check
+
+> Choose the correct answer.
+
+1. What does "лексика" mean?
+   - [ ] synonym
+   - [x] vocabulary
+   - [ ] discourse
+   - [ ] opinion expression
+   > "лексика" means "vocabulary"
+
+2. What does "синонім" mean?
+   - [ ] opinion expression
+   - [x] synonym
+   - [ ] discourse
+   - [ ] vocabulary
+   > "синонім" means "synonym"
+
+3. What does "вираження думки" mean?
+   - [x] opinion expression
+   - [ ] synonym
+   - [ ] vocabulary
+   - [ ] discourse
+   > "вираження думки" means "opinion expression"
+
+4. What does "дискурс" mean?
+   - [x] discourse
+   - [ ] opinion expression
+   - [ ] vocabulary
+   - [ ] synonym
+   > "дискурс" means "discourse"
+
+5. What does "абстрактний" mean?
+   - [ ] opinion expression
+   - [x] abstract
+   - [ ] synonym
+   - [ ] vocabulary
+   > "абстрактний" means "abstract"
+
+6. What does "комунікація" mean?
+   - [x] communication
+   - [ ] synonym
+   - [ ] vocabulary
+   - [ ] opinion expression
+   > "комунікація" means "communication"
+
+7. What does "колокація" mean?
+   - [ ] opinion expression
+   - [ ] synonym
+   - [x] collocation
+   - [ ] vocabulary
+   > "колокація" means "collocation"
+
+8. What does "контекст" mean?
+   - [ ] opinion expression
+   - [x] context
+   - [ ] vocabulary
+   - [ ] synonym
+   > "контекст" means "context"
+
+9. What does "ідіома" mean?
+   - [ ] vocabulary
+   - [ ] synonym
+   - [x] idiom
+   - [ ] opinion expression
+   > "ідіома" means "idiom"
+
+
+
+## unjumble: Word Order
+
+> Drag the words into the correct order to form a sentence.
+
+1. думку / мою / на
+   > [!answer] на мою думку
+   > (in my opinion)
+
+2. боку / з / одного
+   > [!answer] з одного боку
+   > (on one hand)
+
+3. має / на / плечах / голову
+   > [!answer] має голову на плечах
+   > (is intelligent)
+
+4. як / кіт / наплакав
+   > [!answer] як кіт наплакав
+   > (hardly any)
+
+5. свисне / коли / рак
+   > [!answer] коли рак свисне
+   > (never)
+
+6. на / небі / сьомому
+   > [!answer] на сьомому небі
+   > (overjoyed)
+
 
 ---
 

@@ -286,203 +286,237 @@ Write a short text (100-150 words) about your ideal job:
 
 ---
 
+---
+
+---
+
+---
+
 # Activities
 
-## match-up: A2 Review
+## fill-in: Complete the Sentences
 
-> Match key phrases.
+> Choose the correct word to complete each sentence.
+
+1. Де ваша велика ___?
+   > [!answer] комісія
+   > [!options] комісія | поверх | сусід | чоловік
+
+2. Ця книга надзвичайно ___.
+   > [!answer] гарячий
+   > [!options] згоден | цікавий | гарячий | вищий
+
+3. Це мій новий ___.
+   > [!answer] банан
+   > [!options] жіночий | банан | посилання | літак
+
+4. Я хочу купити цю ___.
+   > [!answer] голова
+   > [!options] голова | хокей | робота | рахунок
+
+5. Моя кімната занадто ___.
+   > [!answer] високий
+   > [!options] високий | дорожчий | англійська | великий
+
+6. Вони планують ___ завтра.
+   > [!answer] переказати
+   > [!options] прокинутися | мусити | личити | переказати
+
+7. Я хочу купити це ___.
+   > [!answer] купе
+   > [!options] кінець | пілот | купе | таксі
+
+8. Мій брат має хорошу ___.
+   > [!answer] лампа
+   > [!options] площа | підвищення | ложка | лампа
+
+9. Я хочу навчитися ___.
+   > [!answer] буду
+   > [!options] буду | кивати | бачити | лежати
+
+## unjumble: Build the Sentence
+
+> Arrange the words in the correct order.
+
+1. хорошу / осінь / Мій / має / брат
+   > [!answer] Мій брат має хорошу осінь.
+   > (autumn)
+
+2. голова / цю / хочу / Я / купити
+   > [!answer] Я хочу купити цю голова.
+   > (head)
+
+3. хочу / Я / цю / купити / лампа
+   > [!answer] Я хочу купити цю лампа.
+   > (lamp)
+
+4. комісія / Ця / сто / гривень / коштує
+   > [!answer] Ця комісія коштує сто гривень.
+   > (commission)
+
+5. мій / банан / новий / Це
+   > [!answer] Це мій новий банан.
+   > (banana)
+
+6. коштує / гривень / Ця / чашка / сто
+   > [!answer] Ця чашка коштує сто гривень.
+   > (cup)
+
+7. Це / коштує / купе / гривень / сто
+   > [!answer] Це купе коштує сто гривень.
+   > (compartment)
+
+## match-up: Match the Pairs
+
+> Match Ukrainian words to their English meanings.
 
 | Left | Right |
 |------|-------|
-| Як ви почуваєтеся? | How do you feel? |
-| О котрій відправлення? | What time is departure? |
-| Ким ви працюєте? | What do you do for work? |
-| Я думаю, що... | I think that... |
-| Якби я мав час... | If I had time... |
-| Все, що ти сказав | Everything you said |
-
-## quiz: Comprehensive A2
-
-> Final review quiz.
-
-1. "I live in Kyiv" - Я живу ___ Києві.
-   - [x] в/у
-   - [ ] на
-   - [ ] до
-   - [ ] з
-   > Location = в/у + Loc.
-
-2. "Bigger than" - Більший ___ Львів.
-   - [x] за
-   - [ ] від
-   - [ ] з
-   - [ ] до
-   > Comparison = за + Acc (or ніж).
-
-3. "If I had money, I would buy" - Якби я ___ гроші, я б купив.
-   - [x] мав
-   - [ ] маю
-   - [ ] матиму
-   - [ ] мати
-   > Unreal condition = past form.
-
-4. "The book that I read" - Книга, ___ я прочитав.
-   - [x] яку
-   - [ ] яка
-   - [ ] який
-   - [ ] яке
-   > Книга (f) + Acc = яку.
-
-5. "In order to learn" - ___ вивчити.
-   - [x] Щоб
-   - [ ] Що
-   - [ ] Як
-   - [ ] Коли
-   > Purpose = щоб.
-
-6. "I work as a teacher" - Я працюю ___.
-   - [x] вчителем
-   - [ ] вчитель
-   - [ ] вчителя
-   - [ ] вчителю
-   > Profession = Instrumental.
-
-## group-sort: Grammar Categories
-
-> Sort by grammar topic.
-
-### Cases
-- у Києві (Loc)
-- до Львова (Gen)
-- з братом (Inst)
-- бачу маму (Acc)
-- дати мамі (Dat)
-
-### Verb Forms
-- читав (past impf)
-- прочитав (past perf)
-- читатиму (future impf)
-- прочитаю (future perf)
-
-### Sentence Types
-- Якщо буде дощ... (real)
-- Якби мав час... (unreal)
-- Хоча холодно... (concessive)
-- Щоб знати... (purpose)
-
-
-## true-false: True or False?
-
-> Determine if each statement is true or false.
-
-- [x] "досягнення" is neuter.
-   > Correct! досягнення is neuter.
-
-- [x] "мета" is feminine.
-   > Correct! мета is feminine.
-
-- [x] "якість" is feminine.
-   > Correct! якість is feminine.
-
-- [x] "подорож" is feminine.
-   > Correct! подорож is feminine.
-
-- [ ] "спогад" is feminine.
-   > Incorrect. спогад is masculine.
-
-- [ ] "враження" is masculine.
-   > Incorrect. враження is neuter.
-
-
-## fill-in: Fill in the Blank
-
-> Fill in the blanks with the correct word.
-
-1. Як ___ почуваєтеся?
-   > [!answer] ви
-
-2. О ___ відправлення?
-   > [!answer] котрій
-
-3. Ким ___ працюєте?
-   > [!answer] ви
-
-4. Я ___ що...
-   > [!answer] думаю
-
-5. Якби я ___ час...
-   > [!answer] мав
-
-
+| голова | head |
+| високий | tall |
+| під | under |
+| осінь | autumn |
+| купе | compartment |
+| той | that (masculine) |
+| їхній | their (m) |
+| над | above |
+| загалом | in general |
+| ці | these |
+| себе | oneself (acc/gen) |
+| продавати | to sell |
 
 ## quiz: Meaning Check
 
 > Choose the correct answer.
 
-1. What does "успіх" mean?
-   - [ ] memory
-   - [x] success
-   - [ ] goal
-   - [ ] achievement
-   > "успіх" means "success"
+1. What does "навпроти" mean?
+   - [ ] shirt
+   - [ ] to be interested
+   - [x] opposite
+   - [ ] January
+   > "навпроти" means "opposite"
 
-2. What does "спогад" mean?
-   - [x] memory
-   - [ ] goal
-   - [ ] achievement
-   - [ ] success
-   > "спогад" means "memory"
+2. What does "себе" mean?
+   - [ ] park
+   - [ ] cheap
+   - [ ] Possessives: мій, твій, його, її, наш, ваш
+   - [x] oneself (acc/gen)
+   > "себе" means "oneself (acc/gen)"
 
-3. What does "досягнення" mean?
-   - [ ] success
-   - [ ] memory
-   - [ ] goal
-   - [x] achievement
-   > "досягнення" means "achievement"
+3. What does "голова" mean?
+   - [x] head
+   - [ ] breakfast
+   - [ ] to pay
+   - [ ] convenient
+   > "голова" means "head"
 
-4. What does "мета" mean?
-   - [ ] success
-   - [ ] memory
-   - [ ] achievement
-   - [x] goal
-   > "мета" means "goal"
+4. What does "їхній" mean?
+   - [ ] in general
+   - [ ] those
+   - [ ] page
+   - [x] their (m)
+   > "їхній" means "their (m)"
 
-5. What does "здібність" mean?
-   - [ ] success
-   - [ ] memory
-   - [ ] achievement
-   - [x] ability
-   > "здібність" means "ability"
+5. What does "банан" mean?
+   - [ ] programmer
+   - [x] banana
+   - [ ] rain
+   - [ ] summer
+   > "банан" means "banana"
 
-6. What does "подорож" mean?
-   - [ ] success
-   - [x] journey, trip
-   - [ ] memory
-   - [ ] achievement
-   > "подорож" means "journey, trip"
+6. What does "віддалено" mean?
+   - [ ] to lie down
+   - [ ] straight
+   - [ ] agree (m)
+   - [x] remotely
+   > "віддалено" means "remotely"
 
+7. What does "той" mean?
+   - [ ] to cook/prepare (perf)
+   - [x] that (masculine)
+   - [ ] to gather (impf)
+   - [ ] that (neuter)
+   > "той" means "that (masculine)"
 
+8. What does "переказати" mean?
+   - [x] to transfer
+   - [ ] to stand
+   - [ ] worse
+   - [ ] to bring
+   > "переказати" means "to transfer"
 
-## unjumble: Word Order
+9. What does "під" mean?
+   - [ ] imaginary, hypothetical
+   - [x] under
+   - [ ] thirty
+   - [ ] to eat
+   > "під" means "under"
 
-> Put the words in the correct order to form a sentence.
+10. What does "комісія" mean?
+   - [ ] faster
+   - [ ] lecture
+   - [ ] in general
+   - [x] commission
+   > "комісія" means "commission"
 
-1. ви / Як / почуваєтеся
-   > [!answer] Як ви почуваєтеся?
-   > (How do you feel?)
+11. What does "купе" mean?
+   - [ ] tasty
+   - [ ] glass
+   - [ ] winter
+   - [x] compartment
+   > "купе" means "compartment"
 
-2. О / відправлення / котрій
-   > [!answer] О котрій відправлення?
-   > (What time is departure?)
+12. What does "чашка" mean?
+   - [x] cup
+   - [ ] student
+   - [ ] cold (adv)
+   - [ ] most interesting
+   > "чашка" means "cup"
 
-3. Ким / ви / працюєте
-   > [!answer] Ким ви працюєте?
-   > (What do you do for work?)
+## true-false: True or False?
 
-4. що / думаю / Я
-   > [!answer] Я думаю, що...
-   > (I think that...)
+> Determine if each statement is true or false.
 
+- [x] "загалом" means "in general"
+   > Correct!
+
+- [x] "чашка" means "cup"
+   > Correct!
+
+- [ ] "лампа" means "oneself (acc/gen)"
+   > Incorrect. "лампа" means "lamp"
+
+- [ ] "голова" means "which, that, who (pl)"
+   > Incorrect. "голова" means "head"
+
+- [x] "високий" means "tall"
+   > Correct!
+
+- [x] "їхній" means "their (m)"
+   > Correct!
+
+- [ ] "буду" means "to plan"
+   > Incorrect. "буду" means "I will be"
+
+- [x] "той" means "that (masculine)"
+   > Correct!
+
+- [ ] "банан" means "was (n)"
+   > Incorrect. "банан" means "banana"
+
+- [ ] "купе" means "to stay (perf)"
+   > Incorrect. "купе" means "compartment"
+
+## group-sort: Sort by Gender
+
+> Sort the nouns into gender categories.
+
+### Feminine
+- лампа
+- комісія
+- голова
+- осінь
+- чашка
 
 ---
 

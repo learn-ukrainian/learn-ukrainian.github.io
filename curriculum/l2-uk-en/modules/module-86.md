@@ -8,10 +8,10 @@ duration: 45
 transliteration: none
 tags: [aspect, grammar, verbs, imperatives, commands]
 objectives:
-  - Form imperatives from both aspects
-  - Choose correct aspect for different command types
-  - Understand politeness levels in commands
-  - Master invitation vs instruction distinction
+  - Form imperative forms of both aspects
+  - Choose the correct aspect for different types of commands
+  - Distinguish between invitations and instructions
+  - Master negative commands with both aspects
 grammar:
   - Imperfective imperative formation
   - Perfective imperative formation
@@ -20,141 +20,133 @@ grammar:
 
 # Lesson Content
 
-## warm-up
+## Warm-up
 
 ### Two Ways to Say "Read!"
 
-- **Читай!** (imperfective) - Read! / Keep reading! / Start reading!
-- **Прочитай!** (perfective) - Read it! / Finish reading it!
+Imagine: you're giving a book to a friend.
 
-Both are commands to read, but they give different instructions.
+**Option 1:** "**Читай**!" — Read! / Go ahead and read!
+**Option 2:** "**Прочитай**!" — Read it! / Finish reading it!
+
+Both are commands to read. But they convey different things:
+- **Читай** — invitation, process: "Here's a book, feel free to read"
+- **Прочитай** — instruction, result: "Read this book to the end"
+
+It's like the difference between "Help yourself to some food" and "Eat this specific dish!"
+
+> **Did you know?**
+>
+> In English, the command "Read!" is neutral — context determines whether it's an invitation or instruction. In Ukrainian, **the verb form itself** shows your intention. "Читай" sounds warmer, more hospitable. "Прочитай" — more specific, businesslike. Native Ukrainian speakers feel this difference intuitively.
 
 ---
 
-> **🔑 KEY RULE: IMPERATIVE ASPECT = YOUR INTENTION**
->
-> | Aspect | Meaning | Example |
-> |--------|---------|---------|
-> | **Imperfective** | Invitation, general suggestion | **Читай!** = Go ahead and read |
-> | **Perfective** | Specific instruction, get it done | **Прочитай!** = Read this (and finish it) |
->
-> **For negative commands:** Almost always **imperfective**
-> - **Не чіпай!** = Don't touch! (general prohibition)
-> - **Не забудь!** = Don't forget! (exception - specific warning)
+## Presentation
 
----
+### Imperative Formation
 
-## presentation
-
-### Imperative Formation Review
+The **imperative mood** (in Ukrainian: **наказовий спосіб**) is how you give commands.
 
 **Imperfective imperatives:**
 
-| Infinitive | Ти | Ви |
-|------------|----|----|
-| читати | читай | читайте |
-| писати | пиши | пишіть |
-| робити | роби | робіть |
-| говорити | говори | говоріть |
+| Infinitive | Ти (you informal) | Ви (you formal/plural) |
+|-----------|-------------------|------------------------|
+| читати (to read) | читай | читайте |
+| писати (to write) | пиши | пишіть |
+| робити (to do) | роби | робіть |
+| говорити (to speak) | говори | говоріть |
 
 **Perfective imperatives:**
 
-| Infinitive | Ти | Ви |
-|------------|----|----|
-| прочитати | прочитай | прочитайте |
-| написати | напиши | напишіть |
-| зробити | зроби | зробіть |
-| сказати | скажи | скажіть |
+| Infinitive | Ти (you informal) | Ви (you formal/plural) |
+|-----------|-------------------|------------------------|
+| прочитати (to read/finish) | прочитай | прочитайте |
+| написати (to write/complete) | напиши | напишіть |
+| зробити (to do/complete) | зроби | зробіть |
+| сказати (to say) | скажи | скажіть |
 
 ### When to Use Each Aspect
 
 **Imperfective imperative:**
-1. **General invitation/suggestion:** Заходь! (Come in! / Feel free to enter)
-2. **Start doing:** Починай! (Start! / Begin!)
-3. **Continue doing:** Читай далі! (Keep reading!)
-4. **Repeated action:** Телефонуй мені щодня! (Call me every day!)
-5. **Process focus:** Слухай уважно! (Listen carefully!)
+1. **Invitation:** Заходь! — Come in! (Feel free to enter)
+2. **Starting an action:** Починай! — Start! / Begin!
+3. **Continuation:** Читай далі! — Keep reading!
+4. **Repetition:** Телефонуй мені щодня! — Call me every day!
+5. **Focus on process:** Слухай уважно! — Listen carefully!
 
 **Perfective imperative:**
-1. **Complete this specific action:** Прочитай цю книгу! (Read this book!)
-2. **One-time instruction:** Напиши листа! (Write a letter!)
-3. **Result expected:** Зроби це до завтра! (Do this by tomorrow!)
-4. **Urgent single action:** Подзвони мені! (Call me!)
+1. **Complete a specific action:** Прочитай цю книгу! — Read this book (finish it)!
+2. **One-time instruction:** Напиши листа! — Write a letter!
+3. **Expected result:** Зроби це до завтра! — Do this by tomorrow!
+4. **Urgent action:** Подзвони мені! — Call me (now)!
 
-### Compare: Same Verb, Different Meaning
+> **Myth vs Fact**
+>
+> **Myth:** "Perfective imperative is ruder, imperfective is more polite."
+>
+> **Fact:** Not always! "Заходь" and "Зайди" — both can be polite. The difference is in **meaning**, not politeness: "Заходь" — general invitation, "Зайди до мене завтра" — specific arrangement. Politeness is added by "будь ласка" or intonation.
+
+### Comparison: Same Verb, Different Meaning
 
 | Imperfective | Perfective | Difference |
 |--------------|------------|------------|
-| **Читай!** | **Прочитай!** | |
-| Read! (start/keep reading) | Read it! (finish it) | |
-| **Пиши!** | **Напиши!** | |
-| Write! (general) | Write! (this specific thing) | |
-| **Сідай!** | **Сядь!** | |
-| Sit down! (invitation) | Sit down! (instruction) | |
-| **Їж!** | **З'їж!** | |
-| Eat! (go ahead, eat) | Eat it up! (finish it) | |
-| **Бери!** | **Візьми!** | |
-| Take! (feel free) | Take it! (specific item) | |
+| **Читай!** (Read! - go ahead) | **Прочитай!** (Read it! - finish) | process vs result |
+| **Пиши!** (Write! - general) | **Напиши!** (Write! - this thing) | |
+| **Сідай!** (Sit down! - invitation) | **Сядь!** (Sit! - instruction) | |
+| **Їж!** (Eat! - go ahead) | **З'їж!** (Eat it up! - finish) | |
+| **Бери!** (Take! - feel free) | **Візьми!** (Take it! - specific) | |
 
 ### Invitation vs Instruction
 
 **Imperfective = warm invitation:**
 
-- **Заходь!** - Come in! (You're welcome to enter)
-- **Сідай!** - Sit down! (Make yourself comfortable)
-- **Їж!** - Eat! (Please, have some food)
-- **Бери!** - Take! (Help yourself)
+- **Заходь!** — Come in! (You're welcome)
+- **Сідай!** — Sit down! (Make yourself comfortable)
+- **Їж!** — Eat! (Please, have some)
+- **Бери!** — Take! (Help yourself)
 
-These are welcoming, suggesting the listener is free to do the action.
+These commands are hospitable, creating an atmosphere of free choice.
 
-**Perfective = direct instruction:**
+**Perfective = specific instruction:**
 
-- **Зайди** до мене завтра! - Stop by my place tomorrow!
-- **Сядь** на це місце! - Sit in this seat!
-- **З'їж** це!** - Eat this up!
-- **Візьми** парасольку! - Take an umbrella!
+- **Зайди** до мене завтра! — Stop by tomorrow!
+- **Сядь** на це місце! — Sit in this seat!
+- **З'їж** це! — Eat this up!
+- **Візьми** парасольку! — Take an umbrella!
 
-These are specific instructions about what exactly to do.
+These commands are about a specific action that should happen.
 
-### Negative Imperatives: Important Pattern!
+> **Did you know?**
+>
+> The Ukrainian hospitable "**Сідай! Їж!**" (imperfective) sounds warmer than "Сядь! З'їж!" (perfective). This is because imperfective focuses on the **process** — "enjoy the food," while perfective focuses on the **result** — "eat this up." At guests' homes, you'll hear imperfective forms.
 
-**Negative commands usually use IMPERFECTIVE:**
+### Negative Commands: An Important Pattern!
 
-- **Не читай** це! - Don't read this!
-- **Не роби** цього! - Don't do this!
-- **Не кури**! - Don't smoke!
-- **Не хвилюйся**! - Don't worry!
-- **Не запізнюйся**! - Don't be late!
+**Prohibitions usually use IMPERFECTIVE:**
 
-**Perfective negative = warning about specific risk:**
+- **Не читай** це! — Don't read this!
+- **Не роби** цього! — Don't do this!
+- **Не кури**! — Don't smoke!
+- **Не хвилюйся**! — Don't worry!
+- **Не запізнюйся**! — Don't be late!
 
-- **Не впади**! - Don't fall! (Careful!)
-- **Не забудь**! - Don't forget!
-- **Не загуби** ключі! - Don't lose the keys!
-- **Не зламай** це! - Don't break this!
+**Perfective negation = warning about a specific risk:**
 
-### Politeness and Softening
+- **Не впади**! — Don't fall! (Careful!)
+- **Не забудь**! — Don't forget!
+- **Не загуби** ключі! — Don't lose the keys!
+- **Не зламай** це! — Don't break this!
 
-**More polite forms:**
+> **Did you know?**
+>
+> "Не впади!" (perfective) and "Не падай!" (imperfective) — both are correct, but convey different things. "Не впади!" — warning about a **specific moment** (careful, it's slippery!). "Не падай!" — general advice (stay on your feet). Native speakers feel this difference instantly.
 
-Using **будь ласка** (please):
-- Прочитай, **будь ласка**. - Read it, please.
-- Зроби це, **будь ласка**. - Do this, please.
-
-Using **Ви** form for formal:
-- **Прочитайте**, будь ласка. - Please read (formal).
-- **Зробіть** це. - Do this (formal).
-
-Using imperfective for softer tone:
-- **Читай** собі. - Just read. (Relaxed, no pressure)
-- **Сідай**, не стій. - Sit down, don't stand. (Friendly)
-
-### Sequential Commands = Perfective
+### Sequence of Commands = Perfective
 
 When giving a sequence of actions, use perfective:
 
 - **Встань**, **умийся**, **одягнися** і **йди** на роботу!
-- Get up, wash up, get dressed, and go to work!
+- Get up, wash, get dressed, and go to work!
 
 - **Прийди**, **сядь**, **почекай** хвилину.
 - Come, sit down, wait a minute.
@@ -162,53 +154,44 @@ When giving a sequence of actions, use perfective:
 - Спочатку **прочитай** текст, потім **напиши** відповіді.
 - First read the text, then write the answers.
 
-### Encouraging and Urgent Commands
+Each action is a separate "step" with an expected result.
+
+### Encouragement and Urgency
 
 **Encouragement (often imperfective):**
 
-- **Не здавайся**! - Don't give up!
-- **Тримайся**! - Hang in there!
-- **Старайся**! - Try hard!
-- **Продовжуй**! - Keep going!
+- **Не здавайся**! — Don't give up!
+- **Тримайся**! — Hang in there!
+- **Старайся**! — Try hard!
+- **Продовжуй**! — Keep going!
 
 **Urgency (often perfective):**
 
-- **Швидше зроби** це! - Do it faster!
-- **Негайно зателефонуй**! - Call immediately!
-- **Терміново напиши** йому! - Write to him urgently!
+- **Швидше зроби** це! — Do it faster!
+- **Негайно зателефонуй**! — Call immediately!
+- **Терміново напиши** йому! — Write to him urgently!
 
-### Common Imperative Pairs
+### "Давай/Давайте" = Let's
 
-| Imperfective | Perfective | Context |
-|--------------|------------|---------|
-| читай | прочитай | general vs complete |
-| пиши | напиши | general vs complete |
-| роби | зроби | general vs complete |
-| кажи | скажи | tell (ongoing) vs tell (once) |
-| давай | дай | give (offer) vs give (this item) |
-| бери | візьми | take (feel free) vs take (specific) |
-| сідай | сядь | sit (invitation) vs sit (instruction) |
-| вставай | встань | get up (general) vs get up (now) |
-| одягайся | одягнися | get dressed (general) vs get dressed (now) |
-| чекай | почекай | wait (general) vs wait (a moment) |
-| дивись | подивись | look (general) vs look (at this) |
-| слухай | послухай | listen (ongoing) vs listen (to this) |
+**With imperfective infinitive (process):**
+- Давай **читати**! — Let's read!
+- Давайте **говорити** українською! — Let's speak Ukrainian!
 
-### "Let's" = Давай/Давайте + Infinitive
+**With perfective form (specific action):**
+- Давай **прочитаємо** це! — Let's read this!
+- Давайте **зробимо** перерву! — Let's take a break!
+- Давай **підемо**! — Let's go!
+- Давайте **почнемо**! — Let's begin!
 
-**Imperfective infinitive (process):**
-- Давай **читати**! - Let's read!
-- Давайте **говорити** українською! - Let's speak Ukrainian!
+> **Myth vs Fact**
+>
+> **Myth:** "'Давай + infinitive' and 'давай + we-form' are the same."
+>
+> **Fact:** There's a difference! "Давай читати" (infinitive) — general suggestion of a process. "Давай прочитаємо" (we-form) — specific action with a result. "Давай говорити українською" = in general. "Давай поговоримо" = now, a specific conversation.
 
-**Perfective infinitive (specific action):**
-- Давай **прочитаємо** це! - Let's read this!
-- Давайте **зробимо** перерву! - Let's take a break!
+---
 
-Also: Давай(те) + ми form (perfective):
-- Давай **підемо**! - Let's go!
-- Давайте **почнемо**! - Let's begin!
-
-## practice
+## Practice
 
 ### Choose the Correct Aspect
 
@@ -218,20 +201,20 @@ Also: Давай(те) + ми form (perfective):
    > [!answer] **Напиши**
 3. ___ (Не читай/Не прочитай) це! (general prohibition)
    > [!answer] **Не читай**
-4. ___ (Вставай/Встань), вже пізно! (urgent now)
+4. ___ (Вставай/Встань), вже пізно! (urgent)
    > [!answer] **Встань**
-5. ___ (Бери/Візьми) цю парасольку! (specific item)
+5. ___ (Бери/Візьми) цю парасольку! (specific thing)
    > [!answer] **Візьми**
 6. ___ (Не хвилюйся/Не захвилюйся)! (general advice)
    > [!answer] **Не хвилюйся**
-7. ___ (Їж/З'їж) усе! (finish everything)
+7. ___ (Їж/З'їж) усе! (finish it)
    > [!answer] **З'їж**
-8. ___ (Дивись/Подивись) на це! (look at specific thing)
+8. ___ (Дивись/Подивись) на це! (specific thing)
    > [!answer] **Подивись**
 
-### Transform: Invitation to Instruction
+### Transformation: Invitation → Instruction
 
-Change from imperfective (invitation) to perfective (instruction):
+Change imperfective (invitation) to perfective (instruction):
 
 1. Сідай!
    > [!answer] **Сядь** на це місце!
@@ -242,16 +225,18 @@ Change from imperfective (invitation) to perfective (instruction):
 4. Їж!
    > [!answer] **З'їж** це яблуко!
 
-### Create Command Sequences
+### Create a Sequence of Commands
 
-Put these actions in imperative perfective sequence:
+Put the actions in perfective imperative:
 
 *встати, умитися, поснідати, піти*
 
 > [!answer] **Встань, умийся, поснідай і піди!**
+
 *прийти, сісти, почекати*
 
 > [!answer] **Прийди, сядь і почекай!**
+
 ### Negative Commands
 
 Choose the correct aspect:
@@ -265,7 +250,9 @@ Choose the correct aspect:
 4. ___ (Не кури/Не покури) тут! (general rule)
    > [!answer] **Не кури**
 
-## production
+---
+
+## Production
 
 ### Give Instructions
 
@@ -273,119 +260,154 @@ Create a sequence of commands for:
 
 **Morning routine:**
 Встань, умийся, почисти зуби, одягнися, поснідай і йди!
+(Get up, wash, brush your teeth, get dressed, have breakfast and go!)
 
 **Cooking:**
 Візьми яйця, розбий їх, додай сіль, перемішай і смаж!
+(Take eggs, break them, add salt, mix and fry!)
 
-### 🎭 ROLE-PLAY: Cooking Show
+### Hospitality
 
-**Situation:** You're hosting a cooking show. Give instructions to your assistant.
-
-**Partner A (Chef):** Give cooking instructions:
-- Invitations (imperfective): Спробуй! Мішай! Готуй!
-- Instructions (perfective): Наріж! Поклади! Додай!
-- Warnings (imperfective): Не торкайся! Не відкривай!
-
-**Partner B (Assistant):** Follow and confirm:
-
-**Example dialogue:**
-```
-A: Добре, починаємо! Візьми овочі з холодильника.
-B: Взяв! Що далі?
-A: Тепер наріж моркву тонкими шматочками.
-B: Добре, ріжу...
-A: Мішай соус, поки я готую м'ясо.
-B: Мішаю!
-A: Обережно, не торкайся гарячої сковороди!
-B: Зрозуміло!
-A: Тепер додай спеції. Спробуй на смак!
-B: Смакує чудово!
-A: Поклади все на тарілку. Готово!
-```
-
-**Required structures:**
-- ✅ Imperfective for invitations/ongoing: Мішай! Готуй! Спробуй!
-- ✅ Perfective for specific instructions: Наріж! Візьми! Поклади!
-- ✅ Imperfective for prohibitions: Не торкайся! Не забувай!
-
-**Switch roles and cook a different dish!**
+Practice invitations (imperfective):
+- Заходь, заходь! — Come in, come in!
+- Сідай, будь ласка! — Sit down, please!
+- Їж, не соромся! — Eat, don't be shy!
+- Бери ще! — Take more!
 
 ---
 
-# Activities
-
-## quiz: Imperative Aspect
-
-> Choose the correct form.
-
-1. ___ , будь ласка! (invitation to sit)
-   - [x] Сідай
-   - [ ] Сядь
-   > Invitation = imperfective
-
-2. ___ цю статтю до завтра!
-   - [ ] Читай
-   - [x] Прочитай
-   > Deadline = perfective
-
-3. ___ цього!
-   - [x] Не роби
-   - [ ] Не зроби
-   > General prohibition = imperfective
-
-4. ___ , мама чекає!
-   - [ ] Одягайся
-   - [x] Одягнися
-   > Urgent = perfective
-
-5. ___ ключі!
-   - [ ] Не губи
-   - [x] Не загуби
-   > Warning = perfective
-
-6. ___ уважно!
-   - [x] Слухай
-   - [ ] Послухай
-   > Process = imperfective
-
-## group-sort: Imperative Usage
-
-### Imperfective Imperative
-- warm invitation (Заходь!)
-- general prohibition (Не роби!)
-- ongoing process (Слухай уважно!)
-- encouragement (Не здавайся!)
-
-### Perfective Imperative
-- specific instruction (Візьми парасольку!)
-- complete action (Прочитай книгу!)
-- sequence (Встань, умийся, йди!)
-- warning (Не впади!)
-
-## match-up: Imperative Pairs
-
-| Imperfective | Perfective |
-|--------------|------------|
-| читай | прочитай |
-| пиши | напиши |
-| бери | візьми |
-| сідай | сядь |
-| вставай | встань |
-| кажи | скажи |
+---
 
 ---
 
-# Vocabulary
+---
 
-| Word | IPA | English | Notes |
-|------|-----|---------|-------|
-| негайно | /nɛˈɦɑjno/ | immediately | urgency |
-| терміново | /tɛrmʲiˈnovo/ | urgently | urgency |
-| не здаватися | /nɛ zdɑˈvɑtɪsʲɑ/ | to not give up | encouragement |
-| триматися | /trɪˈmɑtɪsʲɑ/ | to hold on | encouragement |
-| старатися | /stɑˈrɑtɪsʲɑ/ | to try hard | encouragement |
-| давай | /dɑˈvɑj/ | let's (informal) | + infinitive |
-| давайте | /dɑˈvɑjtɛ/ | let's (formal) | + infinitive |
+# Вправи
+
+## fill-in: Доповніть речення
+
+> Оберіть правильне слово.
+
+1. Незважаючи на те, що ___ вимагає багато часу, це приносить велике задоволення.
+   > [!answer] триматися
+   > [!options] прожити | допомагати | триматися | винести
+
+2. Незважаючи на те, що ___ вимагає багато часу, це приносить велике задоволення.
+   > [!answer] старатися
+   > [!options] збиратися | відповісти | вивантажувати | старатися
+
+## unjumble: Побудуйте речення
+
+> Розташуйте слова в правильному порядку.
+
+## match-up: Знайдіть пари
+
+> З'єднайте українські слова з англійськими.
+
+| Left | Right |
+|------|-------|
+| негайно | immediately |
+| шухляда | drawer |
+| приїзд | arrival (vehicles) |
+| триматися | to hold on |
+| хімія | chemistry |
+| старатися | to try hard |
+| давай | let's (informal) |
+| допомогти | to help (perf) |
+| офіціант | waiter |
+| терміново | urgently |
+| сім | seven |
+| давайте | let's (formal) |
+
+## quiz: Перевірка значень
+
+> Оберіть правильну відповідь.
+
+1. Що означає "давайте"?
+   - [ ] director
+   - [x] let's (formal)
+   - [ ] to achieve
+   - [ ] possibility
+   > "давайте" means "let's (formal)"
+
+2. Що означає "триматися"?
+   - [ ] approach
+   - [ ] chair
+   - [ ] to them
+   - [x] to hold on
+   > "триматися" means "to hold on"
+
+3. Що означає "старатися"?
+   - [ ] computer
+   - [x] to try hard
+   - [ ] professional
+   - [ ] prepayment
+   > "старатися" means "to try hard"
+
+4. Що означає "терміново"?
+   - [x] urgently
+   - [ ] (with) us
+   - [ ] opposite
+   - [ ] opinion, thought
+   > "терміново" means "urgently"
+
+5. Що означає "негайно"?
+   - [ ] to write down
+   - [ ] violin
+   - [ ] City: метро, вулиця, праворуч, ліворуч
+   - [x] immediately
+   > "негайно" means "immediately"
+
+6. Що означає "давай"?
+   - [ ] thunder
+   - [x] let's (informal)
+   - [ ] husband
+   - [ ] beginning
+   > "давай" means "let's (informal)"
+
+## true-false: Правда чи ні?
+
+> Визначте, чи правильне твердження.
+
+- [x] "старатися" means "to try hard"
+   > Correct!
+
+- [ ] "давай" means "to buy"
+   > Incorrect. "давай" means "let's (informal)"
+
+- [x] "негайно" means "immediately"
+   > Correct!
+
+- [x] "триматися" means "to hold on"
+   > Correct!
+
+- [x] "давайте" means "let's (formal)"
+   > Correct!
+
+- [ ] "терміново" means "pleasure, satisfaction"
+   > Incorrect. "терміново" means "urgently"
+
+---
+
+# Словник
+
+| Word | IPA | English | POS | Note |
+|------|-----|---------|-----|------|
+| наказовий | /nɑkɑˈzovɪj/ | imperative | adj | наказовий спосіб |
+| спосіб | /ˈsposʲib/ | way, mood (grammar) | noun | m |
+| імператив | /ʲimpɛrɑˈtɪw/ | imperative | noun | m, grammar term |
+| команда | /koˈmɑndɑ/ | command | noun | f |
+| запрошення | /zɑproˈʃɛnʲːɑ/ | invitation | noun | n |
+| інструкція | /ʲinˈstrukt͡sʲijɑ/ | instruction | noun | f |
+| давай | /dɑˈvɑj/ | let's (informal) | phrase | + infinitive/we-form |
+| давайте | /dɑˈvɑjtɛ/ | let's (formal) | phrase | + infinitive/we-form |
+| не здаватися | /nɛ zdɑˈvɑtɪsʲɑ/ | to not give up | verb | impf |
+| здатися | /ˈzdɑtɪsʲɑ/ | to give up | verb | pf |
+| негайно | /nɛˈɦɑjno/ | immediately | adv | urgency |
+| старатися | /stɑˈrɑtɪsʲɑ/ | to try hard | verb | impf |
+| терміново | /tɛrmʲiˈnovo/ | urgently | adv | urgency |
+| триматися | /trɪˈmɑtɪsʲɑ/ | to hold on | verb | impf |
+| послідовність | /posʲlʲiˈdovnʲistʲ/ | sequence | noun | f |
 
 ---
 
@@ -398,6 +420,8 @@ A: Поклади все на тарілку. Готово!
 | потім | 21 |
 | продовжувати | 53 |
 | обережно | 85 |
+| попередження | 85 |
+| заборона | 85 |
 
 ---
 
@@ -405,36 +429,32 @@ A: Поклади все на тарілку. Готово!
 
 ## Aspect in Commands
 
-| Use | Aspect | Example |
-|-----|--------|---------|
-| Invitation | Imperfective | Заходь! Сідай! |
-| Specific task | Perfective | Прочитай це! |
-| Prohibition | Imperfective | Не роби цього! |
-| Warning | Perfective | Не впади! |
-| Sequence | Perfective | Встань, умийся, йди! |
+| Usage | Aspect | Example |
+|-------|--------|---------|
+| Invitation | Imperfective | Заходь! Сідай! (Come in! Sit down!) |
+| Specific task | Perfective | Прочитай це! (Read this!) |
+| Prohibition | Imperfective | Не роби цього! (Don't do this!) |
+| Warning | Perfective | Не впади! (Don't fall!) |
+| Sequence | Perfective | Встань, умийся, йди! (Get up, wash, go!) |
 
-## Quick Decision Guide
+## Quick Selection
 
-| Context | Choose | Example |
+| Context | Aspect | Example |
 |---------|--------|---------|
-| "Feel free to..." | Imperfective | Бери! Їж! |
-| "Do this specific thing" | Perfective | Візьми парасольку! |
-| "Don't do this" | Imperfective | Не роби! |
-| "Be careful not to..." | Perfective | Не забудь! |
-| "Keep doing..." | Imperfective | Продовжуй! |
+| "You may..." | Imperfective | Бери! Їж! (Take! Eat!) |
+| "Do this specific thing" | Perfective | Візьми парасольку! (Take the umbrella!) |
+| "Don't do" (general) | Imperfective | Не роби! (Don't do!) |
+| "Careful, don't..." | Perfective | Не забудь! (Don't forget!) |
+| "Keep doing..." | Imperfective | Продовжуй! (Keep going!) |
 
 ## Remember
 
 - Imperfective = process, invitation, general
 - Perfective = result, specific action, urgent
-- Negative commands prefer imperfective
+- Prohibitions prefer imperfective
 - Warnings use perfective (Не впади!)
 - "Давай" + infinitive = "Let's..."
 
-> **Key Takeaways**
+> **Key Takeaway**
 >
-> - Invitations use imperfective (Заходь! Сідай!)
-> - Specific instructions use perfective (Візьми це!)
-> - Prohibitions use imperfective (Не роби!)
-> - Warnings use perfective (Не забудь! Не впади!)
-> - Command sequences use perfective
+> Invitations — **imperfective** (Заходь! Сідай! Їж!). Specific instructions — **perfective** (Візьми! Прочитай! Зроби!). Prohibitions — **imperfective** (Не роби!). Warnings — **perfective** (Не впади! Не забудь!). The choice of aspect in imperatives shows how you see the action: as a **process** or as a **result**.

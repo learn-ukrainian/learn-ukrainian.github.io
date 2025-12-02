@@ -393,113 +393,113 @@ Change "this" to "that" and "my" to "your":
 | його | his, its |
 | її | her, hers |
 
-## quiz: Meaning Check
+## quiz: Gender Agreement Rules
 
-> Choose the correct answer.
+> Test your understanding of demonstrative and possessive agreement.
 
-1. What does "цей" mean?
-   - [x] this (masculine)
-   - [ ] this (feminine)
-   - [ ] that (masculine)
-   - [ ] my (masculine)
-   > "цей" means "this (masculine)"
+1. "Книга" ends in -а. Which demonstrative is correct?
+   - [ ] цей книга
+   - [x] ця книга
+   - [ ] це книга
+   - [ ] ці книга
+   > Feminine nouns (-а ending) take "ця"
 
-2. What does "ця" mean?
-   - [ ] this (masculine)
-   - [x] this (feminine)
-   - [ ] that (feminine)
-   - [ ] my (feminine)
-   > "ця" means "this (feminine)"
+2. "Стіл" ends in a consonant. Which possessive is correct?
+   - [x] мій стіл
+   - [ ] моя стіл
+   - [ ] моє стіл
+   - [ ] мої стіл
+   > Masculine nouns (consonant ending) take "мій"
 
-3. What does "той" mean?
-   - [ ] this (masculine)
-   - [ ] this (neuter)
-   - [x] that (masculine)
-   - [ ] my (masculine)
-   > "той" means "that (masculine)"
+3. "Вікно" ends in -о. Which demonstrative is correct?
+   - [ ] цей вікно
+   - [ ] ця вікно
+   - [x] це вікно
+   - [ ] ці вікно
+   > Neuter nouns (-о ending) take "це"
 
-4. What does "та" mean?
-   - [ ] this (feminine)
-   - [x] that (feminine)
-   - [ ] my (feminine)
-   - [ ] your (feminine)
-   > "та" means "that (feminine)"
+4. Why doesn't "його" change form like "мій"?
+   - [ ] It's a neuter form
+   - [ ] It's defective
+   - [x] It's a frozen genitive form
+   - [ ] It's plural only
+   > "його" and "її" never change - they're invariable
 
-5. What does "моє" mean?
-   - [ ] my (masculine)
-   - [ ] my (feminine)
-   - [x] my (neuter)
-   - [ ] my (plural)
-   > "моє" means "my (neuter)"
+5. Which is correct for "that table" (masculine)?
+   - [x] той стіл
+   - [ ] та стіл
+   - [ ] те стіл
+   - [ ] ті стіл
+   > Masculine nouns take "той" for "that"
 
-6. What does "твої" mean?
-   - [ ] your (masculine)
-   - [ ] your (feminine)
-   - [ ] your (neuter)
-   - [x] your (plural)
-   > "твої" means "your (plural)"
+6. How do you say "my bed" (ліжко = neuter)?
+   - [ ] мій ліжко
+   - [ ] моя ліжко
+   - [x] моє ліжко
+   - [ ] мої ліжко
+   > Neuter nouns take "моє"
 
-7. What does "його" mean?
-   - [ ] my (masculine)
-   - [x] his, its
-   - [ ] her, hers
-   - [ ] their
-   > "його" means "his, its"
+7. "Двері" (door) is always plural. Which possessive?
+   - [ ] мій двері
+   - [ ] моя двері
+   - [ ] моє двері
+   - [x] мої двері
+   > Plural nouns take "мої"
 
-8. What does "її" mean?
-   - [ ] my (feminine)
-   - [ ] his, its
-   - [x] her, hers
-   - [ ] their
-   > "її" means "her, hers"
+8. Which demonstrative pattern is correct?
+   - [x] цей (m), ця (f), це (n), ці (pl)
+   - [ ] цей (m), це (f), ця (n), ці (pl)
+   - [ ] ця (m), цей (f), це (n), ці (pl)
+   - [ ] це (m), ця (f), цей (n), ці (pl)
+   > The pattern is: -ей (m), -я (f), -е (n), -і (pl)
 
-9. What does "ліжко" mean?
-   - [ ] lamp
-   - [x] bed
-   - [ ] chair
-   - [ ] key
-   > "ліжко" means "bed"
+9. "Її книга, її стіл, її вікно" - what's special about "її"?
+   - [ ] It changes for each gender
+   - [x] It stays the same for all genders
+   - [ ] It's only for feminine nouns
+   - [ ] It's only for masculine nouns
+   > "її" is invariable - never changes regardless of noun gender
 
-10. What does "гаманець" mean?
-   - [ ] phone
-   - [ ] bag
-   - [x] wallet
-   - [ ] key
-   > "гаманець" means "wallet"
+10. Which question word follows the same gender pattern as "мій"?
+    - [x] чий (whose)
+    - [ ] що (what)
+    - [ ] де (where)
+    - [ ] хто (who)
+    > "чий, чия, чиє, чиї" follows the same pattern as "мій, моя, моє, мої"
 
-## true-false: True or False?
+## true-false: Grammar Rules
 
-> Determine if each statement is true or false.
+> Determine if each statement about Ukrainian grammar is true or false.
 
-- [x] "цей" means "this (masculine)"
-   > Correct!
+- [x] Demonstratives must agree with noun gender: цей/ця/це.
+   > Correct! Masc=цей, Fem=ця, Neut=це (this); той/та/те (that).
 
-- [x] "ця" means "this (feminine)"
-   > Correct!
+- [ ] "Мій книга" is correct because "мій" means "my".
+   > Incorrect. "книга" is feminine → requires "моя книга".
 
-- [ ] "це" means "that (neuter)"
-   > Incorrect. "це" means "this (neuter)" - "те" means "that (neuter)"
+- [x] Possessives change form based on the noun's gender, not the owner's.
+   > Correct! "мій стіл" (my table), "моя книга" (my book) - noun gender matters.
 
-- [x] "мій" means "my (masculine)"
-   > Correct!
+- [ ] "Його" and "її" change form like "мій/моя/моє".
+   > Incorrect. "Його" and "її" are frozen genitive forms - they never change.
 
-- [ ] "моя" means "your (feminine)"
-   > Incorrect. "моя" means "my (feminine)"
+- [x] "Це" can mean both "this" (demonstrative) and "this is" (identifier).
+   > Correct! "Це вікно" = this window; "Це вікно" = this is a window (context).
 
-- [x] "його" means "his, its"
-   > Correct!
+- [x] To say "that" instead of "this", use той/та/те/ті.
+   > Correct! "той стіл" (that table), "та книга" (that book).
 
-- [ ] "її" means "his, its"
-   > Incorrect. "її" means "her, hers"
+- [x] Plural "these/those" have only one form for all genders.
+   > Correct! "Ці" (these) and "ті" (those) work for all genders in plural.
 
-- [x] "ключ" means "key"
-   > Correct!
+- [x] Third-person possessives (його, її, їхній) indicate the owner's gender.
+   > Correct! його = his/its, її = her, їхній = their.
 
-- [x] "сумка" means "bag"
-   > Correct!
+- [ ] "Моє стіл" is correct because "моє" is neuter.
+   > Incorrect. "стіл" is masculine → requires "мій стіл".
 
-- [ ] "ручка" means "wallet"
-   > Incorrect. "ручка" means "pen"
+- [x] Demonstratives answer "which one?" while possessives answer "whose?".
+   > Correct! цей/той = which, мій/твій = whose.
 
 ---
 

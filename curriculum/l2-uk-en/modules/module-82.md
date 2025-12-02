@@ -1,17 +1,17 @@
 ---
 module: 82
 title: "Aspect in Past: Single vs Repeated"
-subtitle: "Одного разу vs Щодня"
+subtitle: "One time vs Every time"
 level: B1
 phase: B1.1
 duration: 45
 transliteration: none
 tags: [aspect, grammar, verbs, past-tense, repetition]
 objectives:
-  - Distinguish single events from repeated actions in past
-  - Use perfective for one-time events
-  - Use imperfective for habitual/repeated actions
-  - Master time expressions that signal each aspect
+  - Distinguish between single and repeated actions in the past
+  - Use perfective aspect for single events
+  - Use imperfective aspect for habitual actions
+  - Master time markers for each aspect
 grammar:
   - Perfective past for single events
   - Imperfective past for repeated/habitual actions
@@ -20,68 +20,88 @@ grammar:
 
 # Lesson Content
 
-## warm-up
+## Warm-up
 
-### Quick Review
+### One Story — Two Perspectives
 
-From Module 81, remember:
-- **Imperfective** = process, duration, repetition
-- **Perfective** = single completed action, result
+Imagine: your friend is telling you about summer.
 
-Today's focus: **How many times did it happen?**
+**Version 1:** "Я **їздив** на море. **Плавав**, **засмагав**, **гуляв** по пляжу..."
+(I went to the sea. I swam, sunbathed, walked on the beach...)
 
-> The same event can be described with different aspects depending on whether it happened once or repeatedly.
+**Version 2:** "Я **поїхав** на море 15 липня. **Поплавав** годину, **засмаг**, **погуляв** — і назад у готель."
+(I went to the sea on July 15. Swam for an hour, sunbathed, took a walk — and back to the hotel.)
 
-## presentation
+Hear the difference? Version 1 is the **atmosphere**, the general picture of summer. Version 2 is a **specific day**, a sequence of events.
 
-### Single Event = Perfective
+Today we'll learn to talk about what happened **once** (perfective) and what happened **repeatedly** (imperfective).
 
-When something happened **once**, use perfective:
+> **Did you know?**
+>
+> English distinguishes "I went" and "I used to go" — but grammatically these are different constructions. In Ukrainian this difference is built into **the verb itself**: «пішов» (one time) vs «ходив» (many times). This makes Ukrainian an extremely precise language for describing the past.
+
+---
+
+## Presentation
+
+### Single Event = Perfective (Доконаний)
+
+When something happened **one time**, use perfective aspect:
 
 **Time markers for single events:**
-- одного разу - once, one time
-- вчора - yesterday
-- минулого тижня - last week
-- в понеділок - on Monday
-- раптом - suddenly
-- нарешті - finally
+| Ukrainian | English |
+|-----------|---------|
+| одного разу | once, one time |
+| вчора | yesterday |
+| минулого тижня | last week |
+| в понеділок | on Monday |
+| раптом | suddenly |
+| нарешті | finally |
 
 **Examples:**
 
-- Одного разу я **зустрів** цікаву людину. - Once I met an interesting person.
-- Вчора вона **подзвонила** мені. - Yesterday she called me.
-- Минулого тижня ми **купили** нову машину. - Last week we bought a new car.
-- Раптом він **закричав**. - Suddenly he shouted.
-- Нарешті я **зрозумів**! - Finally I understood!
+- Одного разу я **зустрів** цікаву людину. — Once I met an interesting person.
+- Вчора вона **подзвонила** мені. — Yesterday she called me.
+- Минулого тижня ми **купили** нову машину. — Last week we bought a new car.
+- Раптом він **закричав**. — Suddenly he shouted.
+- Нарешті я **зрозумів**! — Finally I understood!
 
-### Repeated Action = Imperfective
+### Repeated Action = Imperfective (Недоконаний)
 
-When something happened **multiple times**, use imperfective:
+When something happened **many times**, use imperfective aspect:
 
 **Time markers for repetition:**
-- завжди - always
-- ніколи - never
-- часто - often
-- рідко - rarely
-- щодня - every day
-- щотижня - every week
-- щоразу - every time
-- зазвичай - usually
-- іноді - sometimes
-- кожного разу - each time
+| Ukrainian | English |
+|-----------|---------|
+| завжди | always |
+| ніколи | never |
+| часто | often |
+| рідко | rarely |
+| щодня | every day |
+| щотижня | every week |
+| щоразу | every time |
+| зазвичай | usually |
+| іноді | sometimes |
+| кожного разу | each time |
 
 **Examples:**
 
-- Я завжди **вставав** рано. - I always got up early.
-- Вона часто **телефонувала** мені. - She often called me.
-- Ми щодня **ходили** на пляж. - We went to the beach every day.
-- Він ніколи не **запізнювався**. - He never was late.
-- Зазвичай я **снідав** о восьмій. - I usually had breakfast at eight.
+- Я завжди **вставав** рано. — I always got up early.
+- Вона часто **телефонувала** мені. — She often called me.
+- Ми щодня **ходили** на пляж. — We went to the beach every day.
+- Він ніколи не **запізнювався**. — He was never late.
+- Зазвичай я **снідав** о восьмій. — I usually had breakfast at eight.
 
-### Compare: Same Verb, Different Meaning
+> **Myth vs Fact**
+>
+> **Myth:** "If something was long ago — it's imperfective."
+>
+> **Fact:** How long ago doesn't matter! "Одного разу, 20 років тому, я **зустрів** її" (Once, 20 years ago, I met her) — this is perfective, because it's **one event**. But "Коли я був студентом, я **зустрічав** її щодня" (When I was a student, I met her every day) — imperfective, because it **repeated**.
 
-| Imperfective (repeated) | Perfective (single) |
-|------------------------|---------------------|
+### Comparison: Same Verb, Different Meaning
+
+| Imperfective (repetition) | Perfective (single) |
+|--------------------------|---------------------|
 | Він **приходив** щодня. | Він **прийшов** вчора. |
 | He came every day. | He came yesterday. |
 | Вона **писала** листи щотижня. | Вона **написала** листа. |
@@ -89,225 +109,368 @@ When something happened **multiple times**, use imperfective:
 | Я **читав** цю книгу багато разів. | Я **прочитав** цю книгу. |
 | I read this book many times. | I read (finished) this book. |
 
-> **Key Insight**
+> **Did you know?**
 >
-> Even "багато разів" (many times) uses imperfective because it's **repeated** action. Perfective would mean you finished the book in one go.
+> Even "багато разів" (many times) requires imperfective, because it's **repetition**! "Я читав цю книгу багато разів" — each reading was a separate time. But "Я прочитав цю книгу" — I read it to the end (one result).
 
 ### The "Used to" Meaning
 
 Imperfective past often translates as "used to":
 
-- Раніше я **курив**. - I used to smoke.
-- У дитинстві ми **жили** в селі. - In childhood we used to live in a village.
-- Вона **працювала** вчителькою. - She used to work as a teacher.
-- Ми **бачилися** щодня. - We used to see each other every day.
+- Раніше я **курив**. — I used to smoke.
+- У дитинстві ми **жили** в селі. — In childhood we used to live in a village.
+- Вона **працювала** вчителькою. — She used to work as a teacher.
+- Ми **бачилися** щодня. — We used to see each other every day.
 
-### Narrative Sequences: A Special Case
+### Narrative: A Special Case
 
-In stories, **sequences of single events** use perfective:
+In stories, a **sequence of events** uses perfective:
 
 - Він **прокинувся**, **встав**, **умився**, **поснідав** і **пішов** на роботу.
 - He woke up, got up, washed, had breakfast, and went to work.
 
-Each action happened once, in sequence, so each verb is perfective.
+Each action happened once, in sequence — so perfective.
 
-But **background description** in stories uses imperfective:
+But **background, atmosphere** uses imperfective:
 
 - Був теплий день. Сонце **світило**, птахи **співали**. Раптом він **почув** дивний звук.
 - It was a warm day. The sun was shining, birds were singing. Suddenly he heard a strange sound.
 
-Background (continuous) = imperfective. Event (sudden) = perfective.
+Background (ongoing) = imperfective. Event (suddenly) = perfective.
+
+> **Did you know?**
+>
+> This structure — "background + sudden event" — is classic for fairy tales and stories in all Slavic languages. "Жив-**був** (impf.) старий дід. Одного дня він **пішов** (pf.) у ліс..." (Once upon a time there lived an old man. One day he went into the forest...) Imperfective creates atmosphere, perfective moves the plot.
 
 ### Common Aspect Pairs: Single vs Repeated
 
-| Imperfective | Perfective | Single Example | Repeated Example |
-|--------------|------------|----------------|------------------|
-| телефонувати | зателефонувати | Він зателефонував вчора. | Він телефонував щодня. |
-| запитувати | запитати | Вона запитала один раз. | Вона завжди запитувала. |
-| відповідати | відповісти | Я відповів на листа. | Я відповідав на всі листи. |
-| відвідувати | відвідати | Ми відвідали музей. | Ми відвідували музей щороку. |
-| зустрічати | зустріти | Я зустрів її вчора. | Ми зустрічалися щотижня. |
+| Imperfective | Perfective | Example (once) | Example (repeated) |
+|--------------|-----------|----------------|-------------------|
+| телефонувати | зателефонувати | Він зателефонував вчора. (He called yesterday.) | Він телефонував щодня. (He called every day.) |
+| запитувати | запитати | Вона запитала один раз. (She asked once.) | Вона завжди запитувала. (She always asked.) |
+| відповідати | відповісти | Я відповів на листа. (I answered the letter.) | Я відповідав на всі листи. (I answered all letters.) |
+| відвідувати | відвідати | Ми відвідали музей. (We visited the museum.) | Ми відвідували музей щороку. (We visited the museum every year.) |
+| зустрічати | зустріти | Я зустрів її вчора. (I met her yesterday.) | Ми зустрічалися щотижня. (We met every week.) |
 
-## practice
+---
+
+## Practice
 
 ### Choose the Correct Aspect
 
 1. Він ___ (приходив/прийшов) вчора о п'ятій.
    > [!answer] **прийшов** (single event)
 2. Вона завжди ___ (готувала/приготувала) смачно.
-   > [!answer] **готувала** (always = repeated)
+   > [!answer] **готувала** (завжди = repetition)
 3. Одного разу ми ___ (бачили/побачили) ведмедя в лісі.
-   > [!answer] **побачили** (once)
+   > [!answer] **побачили** (one time)
 4. Раніше він часто ___ (хворів/захворів).
-   > [!answer] **хворів** (often = repeated)
+   > [!answer] **хворів** (часто = repetition)
 5. Минулого року вона ___ (закінчувала/закінчила) університет.
-   > [!answer] **закінчила** (single)
+   > [!answer] **закінчила** (single event)
 6. Кожного ранку він ___ (бігав/побігав).
-   > [!answer] **бігав** (every morning = repeated)
+   > [!answer] **бігав** (кожного ранку = repetition)
 
-### Transform: Single to Repeated
+### Transformation: Single → Repeated
 
-Change from perfective (single) to imperfective (repeated):
+Change perfective (single) to imperfective (repeated):
 
-1. Він подзвонив мені вчора.
-   > [!answer] Він **телефонував** мені щодня.
-2. Вона приготувала вечерю.
-   > [!answer] Вона завжди **готувала** вечерю.
-3. Я відповів на запитання.
-   > [!answer] Я **відповідав** на всі запитання.
-4. Ми купили хліб.
-   > [!answer] Ми **купували** хліб щодня.
+1. Він подзвонив мені вчора. (He called me yesterday.)
+   > [!answer] Він **телефонував** мені щодня. (He called me every day.)
+2. Вона приготувала вечерю. (She made dinner.)
+   > [!answer] Вона завжди **готувала** вечерю. (She always made dinner.)
+3. Я відповів на запитання. (I answered the question.)
+   > [!answer] Я **відповідав** на всі запитання. (I answered all questions.)
+4. Ми купили хліб. (We bought bread.)
+   > [!answer] Ми **купували** хліб щодня. (We bought bread every day.)
 
-### Transform: Repeated to Single
+### Transformation: Repeated → Single
 
-Change from imperfective (repeated) to perfective (single):
+Change imperfective (repeated) to perfective (single):
 
-1. Він завжди приходив рано.
-   > [!answer] Вчора він **прийшов** рано.
-2. Вона часто писала листи.
-   > [!answer] Вона **написала** один лист.
-3. Ми зустрічалися щотижня.
-   > [!answer] Ми **зустрілися** в понеділок.
-4. Я читав цю книгу.
-   > [!answer] Я **прочитав** цю книгу.
+1. Він завжди приходив рано. (He always came early.)
+   > [!answer] Вчора він **прийшов** рано. (Yesterday he came early.)
+2. Вона часто писала листи. (She often wrote letters.)
+   > [!answer] Вона **написала** один лист. (She wrote one letter.)
+3. Ми зустрічалися щотижня. (We met every week.)
+   > [!answer] Ми **зустрілися** в понеділок. (We met on Monday.)
+4. Я читав цю книгу. (I was reading this book.)
+   > [!answer] Я **прочитав** цю книгу. (I finished this book.)
 
-### Story Analysis
+### Text Analysis
 
-Read the text and identify why each aspect was used:
+Read and identify why each aspect was used:
 
 > Коли я був студентом, я **жив** у гуртожитку. Щодня я **ходив** на лекції. Я часто **займався** в бібліотеці. Одного разу я **познайомився** з дівчиною. Ми **почали** зустрічатися. Через рік ми **одружилися**.
 
-- **жив** - imperfective (ongoing state)
-- **ходив** - imperfective (every day = repeated)
-- **займався** - imperfective (often = repeated)
-- **познайомився** - perfective (one time event)
-- **почали** - perfective (beginning = single moment)
-- **одружилися** - perfective (single completed action)
+- **жив** — imperfective (ongoing state)
+- **ходив** — imperfective (щодня = repetition)
+- **займався** — imperfective (часто = repetition)
+- **познайомився** — perfective (одного разу = single event)
+- **почали** — perfective (beginning = one moment)
+- **одружилися** — perfective (one completed action)
 
-## production
+---
+
+## Production
 
 ### Tell Your Story
 
-Describe your typical day **last year** (use imperfective for habits):
+Describe a typical day **last year** (imperfective for habits):
 
 **Example:**
 Минулого року я зазвичай вставав о сьомій. Щоранку я снідав і йшов на роботу. Після роботи я часто ходив у спортзал.
 
-Now describe **one special day** (use perfective for events):
+(Last year I usually got up at seven. Every morning I had breakfast and went to work. After work I often went to the gym.)
+
+Now describe **one special day** (perfective for events):
 
 **Example:**
 Одного разу я запізнився на роботу. Я забув документи. Начальник подзвонив мені і запитав, де я.
 
-### Interview Your Partner
+(Once I was late to work. I forgot the documents. The boss called me and asked where I was.)
+
+### Interview
 
 Ask questions using different aspects:
 
-- Що ти **робив** на канікулах? (general, process)
-- Що ти **зробив** учора? (result focus)
-- Куди ти часто **ходив** у дитинстві? (repeated)
-- Куди ти **пішов** після школи? (single event)
+- Що ти **робив** на канікулах? (What did you do on vacation? — process)
+- Що ти **зробив** учора? (What did you accomplish yesterday? — result)
+- Куди ти часто **ходив** у дитинстві? (Where did you often go in childhood? — repetition)
+- Куди ти **пішов** після школи? (Where did you go after school? — single event)
 
 ---
 
-### 🎭 ROLE-PLAY: Catching Up with an Old Friend
-
-**Situation:** You haven't seen your friend in a year. You meet at a café.
-
-**Partner A (You):** Ask about:
-- What they did last summer (single events → perfective)
-- What they used to do as a child (repeated → imperfective)
-- One special moment (single event → perfective)
-
-**Partner B (Friend):** Answer using correct aspects:
-
-**Example dialogue:**
-```
-A: Привіт! Як давно не бачилися! Де ти був минулого літа?
-B: Я їздив до Італії. Там я відвідав багато музеїв.
-A: Класно! А що ти робив у дитинстві влітку?
-B: Я завжди їздив до бабусі в село. Ми щодня купалися в річці.
-A: Що найбільше запам'яталося?
-B: Одного разу я впіймав величезну рибу! Бабуся її приготувала.
-```
-
-**Required structures:**
-- ✅ Imperfective for "used to / always / every day" (ходив, робив, грався)
-- ✅ Perfective for "once / one time" (пішов, зробив, познайомився)
-
-**Switch roles and repeat!**
+---
 
 ---
 
-# Activities
+---
 
-## quiz: Single or Repeated?
+# Вправи
 
-> Choose the correct aspect based on the time expression.
+## fill-in: Доповніть речення
 
-1. Вона ___ мені щодня.
-   - [x] телефонувала
-   - [ ] зателефонувала
-   > Щодня = repeated action = imperfective
+> Оберіть правильне слово.
 
-2. Одного разу він ___ дуже смішний жарт.
-   - [ ] розповідав
-   - [x] розповів
-   > Одного разу = single event = perfective
+1. Незважаючи на високу ціну, цей ___ вартий кожної гривні.
+   > [!answer] сюжет
+   > [!options] ліфт | сюжет | життя | директор
 
-3. Ми завжди ___ разом.
-   - [x] обідали
-   - [ ] пообідали
-   > Завжди = repeated = imperfective
+2. Незважаючи на те, що цей підхід видається ___, він має багато переваг.
+   > [!answer] повторювана
+   > [!options] доконаний | повторювана | нічний | найцікавіший
 
-4. Нарешті я ___ цікавий фільм до кінця.
-   - [ ] дивився
-   - [x] подивився
-   > "Нарешті" + "до кінця" = clear result = perfective
+3. Мій колега порадив мені цей ___, і я дуже задоволений вибором.
+   > [!answer] маркер
+   > [!options] родина | злива | маркер | зупинка
 
-5. Раніше він часто ___ у цьому кафе.
-   - [x] снідав
-   - [ ] поснідав
-   > Часто = repeated = imperfective
+4. Моя колега порадила мені цю ___, і я дуже задоволена вибором.
+   > [!answer] звичка
+   > [!options] звичка | посада | карате | виробництво
 
-6. Раптом вона ___ і вийшла.
-   - [ ] вставала
-   - [x] встала
-   > Раптом = sudden single action = perfective
+5. Мій колега порадив мені цей ___, і я дуже задоволений вибором.
+   > [!answer] гуртожиток
+   > [!options] друг | кістка | гуртожиток | плавання
 
-## group-sort: Time Expressions
+6. Незважаючи на високу ціну, цей ___ вартий кожної гривні.
+   > [!answer] жарт
+   > [!options] платформа | турнір | жарт | центр
 
-### Signal Single Event (Perfective)
-- одного разу
-- раптом
-- вчора
-- нарешті
-- минулого тижня
+7. Незважаючи на те, що ___ вимагає багато часу, це приносить велике задоволення.
+   > [!answer] одружитися
+   > [!options] одружитися | продавати | дякувати | здаватися
 
-### Signal Repeated Action (Imperfective)
-- завжди
-- часто
-- щодня
-- зазвичай
-- кожного разу
-- іноді
+8. Ми нарешті знайшли ___, який ідеально підходить для нас.
+   > [!answer] розповідати
+   > [!options] лист | розповідати | традиція | бухгалтерія
 
-## fill-in: Complete the Story
+## unjumble: Побудуйте речення
 
-Fill in with correct aspect:
+> Розташуйте слова в правильному порядку.
 
-> Коли я ___ (жив/прожив) у Києві, я ___ (ходив/пішов) на роботу пішки щодня. Зазвичай я ___ (купував/купив) каву по дорозі. Одного ранку я ___ (зустрічав/зустрів) старого друга. Ми ___ (говорили/поговорили) годину і я ___ (запізнювався/запізнився) на роботу.
+1. жарт / захотів / цей / його / побачив / я / Коли / одразу / вперше / я / купити
+   > [!answer] Коли я вперше побачив цей жарт, я одразу захотів його купити.
+   > (joke)
 
-**Answers:** жив (ongoing), ходив (repeated), купував (repeated), зустрів (single), поговорили (completed), запізнився (single result)
+2. цей / Незважаючи / ціну / на / гривні / сюжет / високу / вартий / кожної
+   > [!answer] Незважаючи на високу ціну, цей сюжет вартий кожної гривні.
+   > (plot)
+
+3. я / купити / його / вперше / цей / Коли / побачив / одразу / захотів / маркер / я
+   > [!answer] Коли я вперше побачив цей маркер, я одразу захотів його купити.
+   > (marker)
+
+4. на / гуртожиток / вартий / ціну / цей / високу / Незважаючи / гривні / кожної
+   > [!answer] Незважаючи на високу ціну, цей гуртожиток вартий кожної гривні.
+   > (dormitory)
+
+5. нас / яка / звичка / Ми / знайшли / для / ідеально / нарешті / підходить
+   > [!answer] Ми нарешті знайшли звичка, яка ідеально підходить для нас.
+   > (habit)
+
+6. захотів / Коли / одразу / вперше / побачив / купити / я / я / цей / його / розповідати
+   > [!answer] Коли я вперше побачив цей розповідати, я одразу захотів його купити.
+   > (to tell, narrate)
+
+## match-up: Знайдіть пари
+
+> З'єднайте українські слова з англійськими.
+
+| Left | Right |
+|------|-------|
+| звичка | habit |
+| щоразу | every time |
+| ключ | key |
+| найвищий | highest/tallest |
+| двадцять | twenty |
+| розповідати | to tell, narrate |
+| щороку | every year |
+| повторювана | repeated |
+| гуртожиток | dormitory |
+| одружитися | to get married |
+| приїзд | arrival (vehicles) |
+| жарт | joke |
+| маркер | marker |
+| сюжет | plot |
+| в'язати | to knit |
+| вважатися | to be considered |
+
+## quiz: Перевірка значень
+
+> Оберіть правильну відповідь.
+
+1. Що означає "розповідати"?
+   - [ ] drama
+   - [x] to tell, narrate
+   - [ ] cottage cheese pancakes
+   - [ ] to plan
+   > "розповідати" means "to tell, narrate"
+
+2. Що означає "гуртожиток"?
+   - [ ] final
+   - [ ] knee
+   - [ ] to listen through
+   - [x] dormitory
+   > "гуртожиток" means "dormitory"
+
+3. Що означає "одружитися"?
+   - [ ] bed
+   - [ ] to be mistaken
+   - [ ] to nod
+   - [x] to get married
+   > "одружитися" means "to get married"
+
+4. Що означає "звичка"?
+   - [ ] champion
+   - [x] habit
+   - [ ] disobedient
+   - [ ] novel
+   > "звичка" means "habit"
+
+5. Що означає "щоразу"?
+   - [ ] receipt
+   - [x] every time
+   - [ ] behind
+   - [ ] village, rural
+   > "щоразу" means "every time"
+
+6. Що означає "маркер"?
+   - [ ] to tell (impf)
+   - [ ] tasty
+   - [ ] mistake
+   - [x] marker
+   > "маркер" means "marker"
+
+7. Що означає "жарт"?
+   - [ ] to vacuum
+   - [ ] to show (pf)
+   - [ ] to promote
+   - [x] joke
+   > "жарт" means "joke"
+
+8. Що означає "сюжет"?
+   - [ ] diagnosis
+   - [x] plot
+   - [ ] learning, education
+   - [ ] magazine
+   > "сюжет" means "plot"
+
+9. Що означає "повторювана"?
+   - [ ] to hire
+   - [ ] cream
+   - [ ] nature
+   - [x] repeated
+   > "повторювана" means "repeated"
+
+10. Що означає "щороку"?
+   - [x] every year
+   - [ ] to return
+   - [ ] steppe
+   - [ ] thin
+   > "щороку" means "every year"
+
+## true-false: Правда чи ні?
+
+> Визначте, чи правильне твердження.
+
+- [x] "щороку" means "every year"
+   > Correct!
+
+- [ ] "гуртожиток" means "bone"
+   > Incorrect. "гуртожиток" means "dormitory"
+
+- [x] "маркер" means "marker"
+   > Correct!
+
+- [x] "сюжет" means "plot"
+   > Correct!
+
+- [ ] "щоразу" means "to turn off"
+   > Incorrect. "щоразу" means "every time"
+
+- [ ] "звичка" means "attorney"
+   > Incorrect. "звичка" means "habit"
+
+- [ ] "розповідати" means "were"
+   > Incorrect. "розповідати" means "to tell, narrate"
+
+- [x] "повторювана" means "repeated"
+   > Correct!
+
+- [x] "одружитися" means "to get married"
+   > Correct!
+
+- [x] "жарт" means "joke"
+   > Correct!
+
+## group-sort: Сортування за родом
+
+> Розподіліть слова за родами.
+
+### Чоловічий рід
+- жарт
+- маркер
+- гуртожиток
+- сюжет
 
 ---
 
-# Vocabulary
+# Словник
 
-| Word | IPA | English | Notes |
-|------|-----|---------|-------|
-| минулого тижня | /mɪnuˈloɦo ˈtɪʒnʲɑ/ | last week | often with perfective |
-| щотижня | /ʃt͡ʃoˈtɪʒnʲɑ/ | every week | signals imperfective |
-| кожного разу | /ˈkoʒnoɦo ˈrɑzu/ | each time, every time | signals imperfective |
+| Word | IPA | English | POS | Note |
+|------|-----|---------|-----|------|
+| повторювана | /povtoˈrʲuvɑnɑ/ | repeated | adj | повторювана дія |
+| звичка | /ˈzvɪt͡ʃkɑ/ | habit | noun | f |
+| маркер | /ˈmɑrkɛr/ | marker | noun | m |
+| кожного разу | /ˈkoʒnoɦo ˈrɑzu/ | each time, every time | phrase | - |
+| щоразу | /ʃt͡ʃoˈrɑzu/ | every time | adv | - |
+| щороку | /ʃt͡ʃoˈroku/ | every year | adv | - |
+| жарт | /ʒɑrt/ | joke | noun | m |
+| розповідати | /rozpovʲiˈdɑtɪ/ | to tell (stories) | verb | impf |
+| одружитися | /oˈdruʒɪtɪsʲɑ/ | to get married | verb | pf |
+| гуртожиток | /ɦurtoˈʒɪtok/ | dormitory | noun | m |
+| сюжет | /sʲuˈʒɛt/ | plot | noun | m |
 
 ---
 
@@ -315,6 +478,15 @@ Fill in with correct aspect:
 
 | Word | First Module |
 |------|-------------|
+| одинична | 81 |
+| раніше | 21 |
+| запізнюватися | 46 |
+| запізнитися | 46 |
+| розповісти | 42 |
+| познайомитися | 66 |
+| вид | 41 |
+| доконаний | 41 |
+| недоконаний | 41 |
 | одного разу | 81 |
 | раптом | 43 |
 | нарешті | 43 |
@@ -323,38 +495,35 @@ Fill in with correct aspect:
 | часто | 7 |
 | рідко | 7 |
 | щодня | 25 |
+| щотижня | 81 |
 | зазвичай | 25 |
 | іноді | 7 |
-| раніше | 21 |
 
 ---
 
 # Summary
 
-## The Core Rule
+## The Main Rule
 
 | How many times? | Aspect | Example |
 |-----------------|--------|---------|
-| Once | Perfective | Він **прийшов** вчора. |
-| Multiple times | Imperfective | Він **приходив** щодня. |
+| Once | Perfective | Він **прийшов** вчора. (He came yesterday.) |
+| Many times | Imperfective | Він **приходив** щодня. (He came every day.) |
 
-## Time Expression Guide
+## Time Markers
 
-**Use PERFECTIVE with:**
+**Perfective (single event):**
 - одного разу, раптом, нарешті, вчора, минулого тижня
 
-**Use IMPERFECTIVE with:**
+**Imperfective (repeated):**
 - завжди, ніколи, часто, рідко, щодня, щотижня, зазвичай, іноді, раніше
 
 ## Special Cases
 
-1. **"Used to"** = imperfective (Раніше я курив.)
-2. **Story sequences** = perfective (Він прийшов, сів, почав читати.)
-3. **Background description** = imperfective (Сонце світило, птахи співали.)
+1. **"Used to" meaning** = imperfective (Раніше я курив. — I used to smoke.)
+2. **Sequence in narrative** = perfective (Він прийшов, сів, почав читати. — He came, sat down, started reading.)
+3. **Background, atmosphere** = imperfective (Сонце світило, птахи співали. — The sun was shining, birds were singing.)
 
-> **Key Takeaways**
+> **Key Takeaway**
 >
-> - Single event → perfective
-> - Repeated/habitual → imperfective
-> - Time expressions are your guide
-> - In narratives: sequence = perfective, background = imperfective
+> Time markers are your best friends! "Щодня", "завжди", "часто" → imperfective. "Вчора", "одного разу", "раптом" → perfective. Listen for these words — and the aspect becomes obvious.

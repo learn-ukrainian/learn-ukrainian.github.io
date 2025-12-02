@@ -9,34 +9,43 @@ transliteration: none
 tags: [vocabulary, communication, opinions, speaking]
 objectives:
   - Learn expressions for stating opinions
-  - Practice agreeing and disagreeing politely
-  - Use hedging language appropriately
-  - Participate in discussions confidently
+  - Express certainty and uncertainty
+  - Justify your position with reasons
+  - Participate in discussions
+grammar:
+  - Opinion expressions
+  - Hedging language
+  - Discourse connectors
 ---
 
-# Зміст уроку | Lesson Content
+# Lesson Content
 
-## warm-up | Розминка
+## Warm-up
 
-### Висловлюємо свою думку | Speaking Your Mind
+### Your voice matters
 
-На рівні B1 потрібно вміти брати участь у дискусіях. Це означає:
+Until now, you've been learning to describe things — what exists, what happened, where to go. But at B1 level, you need to be able to say **what you think**.
 
-At B1, you need to participate in discussions. That means:
-- Чітко висловлювати свою думку | Stating your opinion clearly
-- Обґрунтовувати свою позицію | Supporting your position
-- Реагувати на думки інших | Responding to others' views
+Is learning languages difficult? What's the best season? Is it better to live in a city or a village?
 
-**Сьогодні:** основні вирази для висловлення думок українською мовою.
+There's no "right" answer to these questions. There's only your **думка** (opinion). Today you'll learn to express it — clearly, politely, persuasively.
 
-## presentation
+> 💡 **Did you know?**
+>
+> In Ukrainian culture, a **justified** opinion is highly valued. A simple "I think so" usually isn't enough — an explanation with "because..." is expected. This differs from some cultures where simply stating your position is sufficient. When a Ukrainian asks "чому?" (why?) after your opinion — it's not a challenge, but an invitation to a deeper conversation!
 
-### Stating Your Opinion
+---
+
+## Presentation
+
+### Expressing opinions
+
+Ukrainian has many ways to express opinions, ranging from casual to formal:
 
 **Direct expressions:**
 
-| Ukrainian | English | Formality |
-|-----------|---------|-----------|
+| Ukrainian | English | Register |
+|-----------|---------|----------|
 | Я думаю, що... | I think that... | neutral |
 | Я вважаю, що... | I consider/believe that... | neutral-formal |
 | Я гадаю, що... | I think/suppose that... | neutral |
@@ -48,15 +57,23 @@ At B1, you need to participate in discussions. That means:
 
 **Examples:**
 
-- **Я думаю**, що це гарна ідея. - I think it's a good idea.
-- **Я вважаю**, що він має рацію. - I believe he's right.
-- **На мою думку**, це найкраще рішення. - In my opinion, this is the best solution.
-- **Мені здається**, що ми помиляємося. - It seems to me we're wrong.
-- **Як на мене**, це занадто дорого. - As for me, it's too expensive.
+- **Я думаю**, що це гарна ідея. — I think it's a good idea.
+- **Я вважаю**, що він має рацію. — I believe he's right.
+- **На мою думку**, це найкраще рішення. — In my opinion, this is the best solution.
+- **Мені здається**, що ми помиляємося. — It seems to me we're wrong.
+- **Як на мене**, це занадто дорого. — As for me, it's too expensive.
 
-### Expressing Certainty
+> 🔍 **Myth vs Fact**
+>
+> ❌ **Myth:** "Думати and вважати are the same."
+>
+> ✅ **Fact:** There's a subtle difference! **Думати** is the general, neutral option. **Вважати** is slightly stronger, implying a considered position. "Я думаю, буде дощ" (spontaneous) vs "Я вважаю, що освіта важлива" (considered position). In formal contexts (work, presentations), вважати sounds more professional.
 
-**Strong certainty:**
+### Expressing certainty
+
+When you're confident about something, use these expressions:
+
+**High certainty:**
 
 | Ukrainian | English |
 |-----------|---------|
@@ -69,13 +86,19 @@ At B1, you need to participate in discussions. That means:
 
 **Examples:**
 
-- **Я впевнений**, що це правда. - I'm sure this is true.
-- **Без сумніву**, він найкращий кандидат. - Without a doubt, he's the best candidate.
-- **Очевидно**, що потрібні зміни. - Obviously, changes are needed.
+- **Я впевнений**, що це правда. — I'm sure this is true.
+- **Без сумніву**, він найкращий кандидат. — Without a doubt, he's the best candidate.
+- **Очевидно**, що потрібні зміни. — Obviously, changes are needed.
 
-### Hedging: Expressing Uncertainty
+> 💡 **Did you know?**
+>
+> The word **впевнений** comes from "певний" (certain), which shares a root with "віра" (faith). To be впевнений literally means "to have faith in something." Interestingly, the English "sure" is also related to Latin "securus" (without worry) — certainty as the absence of doubt!
 
-**Less certain:**
+### Expressing uncertainty (Hedging)
+
+When you're less sure, use hedging expressions to soften your statements:
+
+**Lower certainty:**
 
 | Ukrainian | English |
 |-----------|---------|
@@ -89,13 +112,15 @@ At B1, you need to participate in discussions. That means:
 
 **Examples:**
 
-- **Можливо**, це правда. - Perhaps this is true.
-- **Мабуть**, він запізниться. - He'll probably be late.
-- **Не впевнений**, але здається, що так. - Not sure, but it seems so.
+- **Можливо**, це правда. — Perhaps this is true.
+- **Мабуть**, він запізниться. — He'll probably be late.
+- **Не впевнений**, але здається, що так. — Not sure, but it seems so.
 
-### Giving Reasons
+### Justifying your opinion
 
-**Connectors for reasoning:**
+To support your opinion with reasons, use these conjunctions:
+
+**Causal conjunctions:**
 
 | Ukrainian | English |
 |-----------|---------|
@@ -108,11 +133,17 @@ At B1, you need to participate in discussions. That means:
 
 **Examples:**
 
-- Я так думаю, **тому що** це логічно. - I think so because it's logical.
-- Вона права, **оскільки** має досвід. - She's right since she has experience.
-- Це важливо, **адже** впливає на всіх. - This is important because it affects everyone.
+- Я так думаю, **тому що** це логічно. — I think so because it's logical.
+- Вона права, **оскільки** має досвід. — She's right since she has experience.
+- Це важливо, **адже** впливає на всіх. — This is important because it affects everyone.
 
-### Comparing Viewpoints
+> 💡 **Did you know?**
+>
+> The conjunction **адже** is a favorite in journalism and formal speech. It comes from "а" + "ж" + "є" and carries a nuance of "because it's just so" — as if you're appealing to a commonly known fact. "Адже всі знають, що..." ("After all, everyone knows that...") is a rhetorical device that makes your opinion more persuasive.
+
+### Comparing viewpoints
+
+Use these expressions to present different perspectives:
 
 | Ukrainian | English |
 |-----------|---------|
@@ -124,11 +155,13 @@ At B1, you need to participate in discussions. That means:
 
 **Examples:**
 
-- **З одного боку**, це дорого. **З іншого боку**, це якісно. - On one hand, it's expensive. On the other hand, it's quality.
-- **На відміну від** інших, він завжди приходить вчасно. - Unlike others, he always comes on time.
-- Це добре. **Проте** є недоліки. - This is good. However, there are drawbacks.
+- **З одного боку**, це дорого. **З іншого боку**, це якісно. — On one hand, it's expensive. On the other hand, it's quality.
+- **На відміну від** інших, він завжди приходить вчасно. — Unlike others, he always comes on time.
+- Це добре. **Проте** є недоліки. — This is good. However, there are drawbacks.
 
-### Emphasizing Your Point
+### Strengthening your argument
+
+Use these expressions to emphasize key points:
 
 | Ukrainian | English |
 |-----------|---------|
@@ -141,11 +174,13 @@ At B1, you need to participate in discussions. That means:
 
 **Examples:**
 
-- **Головне**, що всі здорові. - The main thing is that everyone's healthy.
-- **Перш за все**, це безпечно. - First of all, it's safe.
-- **До того ж**, це ще й дешево. - Moreover, it's also cheap.
+- **Головне**, що всі здорові. — The main thing is that everyone's healthy.
+- **Перш за все**, це безпечно. — First of all, it's safe.
+- **До того ж**, це ще й дешево. — Moreover, it's also cheap.
 
 ### Summarizing
+
+Use these to wrap up your argument:
 
 | Ukrainian | English |
 |-----------|---------|
@@ -157,15 +192,17 @@ At B1, you need to participate in discussions. That means:
 
 **Examples:**
 
-- **Отже**, ми вирішили погодитися. - So, we decided to agree.
-- **Загалом**, я задоволений. - In general, I'm satisfied.
-- **Підсумовуючи**, це був успіх. - Summarizing, it was a success.
+- **Отже**, ми вирішили погодитися. — So, we decided to agree.
+- **Загалом**, я задоволений. — In general, I'm satisfied.
+- **Підсумовуючи**, це був успіх. — Summarizing, it was a success.
 
-## practice | Практика
+---
 
-### Доповніть вирази | Complete the Expressions
+## Practice
 
-*Виберіть правильне слово. Choose the correct word.*
+### Complete the expressions
+
+Fill in the blanks with the appropriate Ukrainian expression:
 
 1. ___ думку, це правильно. (In my)
    > [!answer] **На мою**
@@ -180,88 +217,90 @@ At B1, you need to participate in discussions. That means:
 6. ___, це хороша ідея. (In general)
    > [!answer] **Загалом**
 
-### Order from Certain to Uncertain
+### Rank by certainty
 
-Rank these from most to least certain:
+Rank these expressions from most certain to least certain:
 
-1. Я впевнений, що...
+1. Я впевнений, що... — I'm sure that...
    > [!answer] **1 (most certain)**
-2. Мені здається, що...
+2. Мені здається, що... — It seems to me that...
    > [!answer] **4**
-3. Безперечно, ...
+3. Безперечно, ... — Undoubtedly
    > [!answer] **2**
-4. Можливо, ...
+4. Можливо, ... — Perhaps
    > [!answer] **5 (least certain)**
-5. Напевно, ...
+5. Напевно, ... — Probably
    > [!answer] **3**
 
-### Дайте відповідь | Respond to Questions
+### Answer the questions
 
-*Висловіть свою думку, використовуючи відповідні вирази:*
+Express your opinion using appropriate expressions:
 
-**Q:** Чи важливо вивчати іноземні мови?
-**A:** На мою думку, це дуже важливо, тому що...
+**Question:** Чи важливо вивчати іноземні мови? — Is it important to learn foreign languages?
+**Answer model:** На мою думку, це дуже важливо, тому що...
 
-**Q:** Яка найкраща пора року?
-**A:** Я вважаю, що..., оскільки...
+**Question:** Яка найкраща пора року? — What's the best season?
+**Answer model:** Я вважаю, що..., оскільки...
 
-**Q:** Чи варто читати книги замість дивитися фільми?
-**A:** З одного боку, ... з іншого боку, ...
+**Question:** Чи варто читати книги замість дивитися фільми? — Should one read books instead of watching movies?
+**Answer model:** З одного боку, ... з іншого боку, ...
 
-### Transform Sentences
+### Make it softer
 
-Make these opinions softer/more hedged:
+Soften these categorical statements using hedging:
 
-1. Він помилився.
-   > [!answer] **Мені здається, що він, можливо, помилився.**
-2. Це погана ідея.
-   > [!answer] **На мою думку, це, мабуть, не найкраща ідея.**
-3. Вона права.
-   > [!answer] **Здається, вона має рацію.**
+1. Він помилився. — He made a mistake.
+   > [!answer] **Мені здається, що він, можливо, помилився.** (It seems to me that he possibly made a mistake.)
+2. Це погана ідея. — It's a bad idea.
+   > [!answer] **На мою думку, це, мабуть, не найкраща ідея.** (In my opinion, this is probably not the best idea.)
+3. Вона права. — She's right.
+   > [!answer] **Здається, вона має рацію.** (It seems she's right.)
 
-Make these stronger/more certain:
+Make them stronger:
 
-1. Можливо, це правильно.
-   > [!answer] **Я впевнений, що це правильно.**
-2. Мабуть, він знає.
-   > [!answer] **Безперечно, він знає.**
-
-## production | Продукція
-
-### Теми для дискусії | Discussion Topics
-
-*Висловіть свою думку на такі теми:*
-
-1. **Дистанційна робота**
-   - Це добре чи погано? Чому?
-   - Які переваги та недоліки?
-
-2. **Соціальні мережі**
-   - Більше користі чи шкоди?
-   - Що ви думаєте про це?
-
-3. **Вивчення мов**
-   - Яка мова найважливіша?
-   - Як найкраще вчити мови?
-
-Use: на мою думку, я вважаю, з одного боку, тому що, однак, загалом
-
-### Mini-Debate
-
-Practice stating opinions for and against:
-
-**Тема:** Чи повинна освіта бути безкоштовною?
-
-**За:** Я вважаю, що так, тому що...
-**Проти:** На мій погляд, ні, оскільки...
+1. Можливо, це правильно. — Perhaps this is correct.
+   > [!answer] **Я впевнений, що це правильно.** (I'm sure this is correct.)
+2. Мабуть, він знає. — He probably knows.
+   > [!answer] **Безперечно, він знає.** (Undoubtedly, he knows.)
 
 ---
 
-# Activities
+## Production
 
-## quiz: Opinion Expressions
+### Discussion topics
 
-> Match Ukrainian with English.
+Express your opinion on these topics:
+
+1. **Дистанційна робота** (Remote work)
+   - Is it good or bad? Why?
+   - What are the advantages and disadvantages?
+
+2. **Соціальні мережі** (Social media)
+   - More benefit or harm?
+   - What do you think about it?
+
+3. **Вивчення мов** (Language learning)
+   - Which language is most important?
+   - What's the best way to learn languages?
+
+Use: на мою думку, я вважаю, з одного боку, тому що, однак, загалом
+
+### Mini-debates
+
+Practice expressing opinions "for" and "against":
+
+**Topic:** Чи повинна освіта бути безкоштовною? — Should education be free?
+
+**For:** Я вважаю, що так, тому що...
+**Against:** На мій погляд, ні, оскільки...
+
+---
+
+# Exercises
+
+## quiz: Opinion expressions
+
+> Match the Ukrainian with the English.
 
 1. На мою думку
    - [x] In my opinion
@@ -287,47 +326,436 @@ Practice stating opinions for and against:
    - [x] In general
    - [ ] Especially
 
-## group-sort: Certainty Level
+## group-sort: Levels of certainty
 
-### High Certainty
+### High certainty
 - Я впевнений
 - Безперечно
 - Без сумніву
 - Очевидно
 
-### Medium Certainty
+### Medium certainty
 - Я думаю
 - На мою думку
 - Напевно
 
-### Low Certainty
+### Low certainty
 - Можливо
 - Мабуть
 - Здається
 - Не впевнений
 
-## fill-in: Complete the Discussion
+## match-up: Vocabulary Match
 
-> A: ___ (In my opinion), це хороша ідея.
-> B: Я не ___ (sure). ___ (Perhaps), є кращі варіанти.
-> A: ___ (I think), ми повинні спробувати.
-> B: ___ (On one hand), так. ___ (However), це ризиковано.
-> A: ___ (In general), ризик виправданий.
+> Match each Ukrainian word with its English translation.
 
-**Answers:** На мою думку, впевнений, Можливо, Я думаю, З одного боку, Однак/Проте, Загалом
+| Left | Right |
+|------|-------|
+| в цілому | on the whole |
+| крім того | besides |
+| гадати | to think, suppose |
+| безперечно | undoubtedly |
+| оскільки | since, as |
+| обґрунтований | justified, grounded |
+| одним словом | in a word |
+| ймовірно | probably, likely |
+| найважливіше | most importantly |
+| категоричний | categorical |
+| порівняно | compared to |
+| завдяки | thanks to |
+
+## fill-in: Fill in the Blank
+
+> Choose the correct word to complete each sentence.
+
+1. Я ___ що...
+   > [!answer] думаю
+   > [!options] думаю | думку | точки | сумніву
+
+2. Я ___ що...
+   > [!answer] вважаю
+   > [!options] вважаю | гадаю | здається | мене
+
+3. Я ___ що...
+   > [!answer] гадаю
+   > [!options] гадаю | погляд | думку | сумніву
+
+4. На мою ___ ...
+   > [!answer] думку
+   > [!options] думку | впевнений/а | погляд | гадаю
+
+5. На мій ___ ...
+   > [!answer] погляд
+   > [!options] погляд | думаю | точки | здається
+
+6. З моєї ___ зору, ...
+   > [!answer] точки
+   > [!options] точки | здається | думку | впевнений/а
+
+7. Мені ___ що...
+   > [!answer] здається
+   > [!options] здається | гадаю | мене | переконаний/а
+
+8. Як на ___ ...
+   > [!answer] мене
+   > [!options] мене | думку | переконаний/а | вважаю
+
+9. Я ___ що...
+   > [!answer] впевнений/а
+   > [!options] впевнений/а | думку | сумніву | здається
+
+10. Я ___ що...
+   > [!answer] переконаний/а
+   > [!options] переконаний/а | погляд | думку | вважаю
+
+11. Без ___ ...
+   > [!answer] сумніву
+   > [!options] сумніву | точки | думку | здається
+
+## quiz: Meaning Check
+
+> Choose the correct answer.
+
+1. What does "безперечно" mean?
+   - [x] undoubtedly
+   - [ ] despite, in spite of
+   - [ ] to think, suppose
+   - [ ] summarizing
+   > "безперечно" means "undoubtedly"
+
+2. What does "гадати" mean?
+   - [ ] despite, in spite of
+   - [ ] summarizing
+   - [ ] undoubtedly
+   - [x] to think, suppose
+   > "гадати" means "to think, suppose"
+
+3. What does "підсумовуючи" mean?
+   - [x] summarizing
+   - [ ] to think, suppose
+   - [ ] undoubtedly
+   - [ ] despite, in spite of
+   > "підсумовуючи" means "summarizing"
+
+4. What does "незважаючи" mean?
+   - [ ] summarizing
+   - [ ] to think, suppose
+   - [ ] undoubtedly
+   - [x] despite, in spite of
+   > "незважаючи" means "despite, in spite of"
+
+5. What does "одним словом" mean?
+   - [ ] to think, suppose
+   - [ ] summarizing
+   - [x] in a word
+   - [ ] undoubtedly
+   > "одним словом" means "in a word"
+
+6. What does "мабуть" mean?
+   - [ ] summarizing
+   - [ ] undoubtedly
+   - [x] probably
+   - [ ] to think, suppose
+   > "мабуть" means "probably"
+
+7. What does "крім того" mean?
+   - [ ] summarizing
+   - [x] besides
+   - [ ] undoubtedly
+   - [ ] to think, suppose
+   > "крім того" means "besides"
+
+8. What does "переконливо" mean?
+   - [ ] undoubtedly
+   - [ ] summarizing
+   - [x] convincingly
+   - [ ] to think, suppose
+   > "переконливо" means "convincingly"
+
+9. What does "нейтрально" mean?
+   - [ ] summarizing
+   - [ ] to think, suppose
+   - [x] neutrally
+   - [ ] undoubtedly
+   > "нейтрально" means "neutrally"
+
+10. What does "однак" mean?
+   - [x] however
+   - [ ] undoubtedly
+   - [ ] summarizing
+   - [ ] to think, suppose
+   > "однак" means "however"
+
+11. What does "адже" mean?
+   - [ ] undoubtedly
+   - [x] after all, since
+   - [ ] to think, suppose
+   - [ ] summarizing
+   > "адже" means "after all, since"
+
+12. What does "публіцистика" mean?
+   - [ ] undoubtedly
+   - [x] journalism
+   - [ ] summarizing
+   - [ ] to think, suppose
+   > "публіцистика" means "journalism"
+
+13. What does "формальність" mean?
+   - [x] formality
+   - [ ] to think, suppose
+   - [ ] summarizing
+   - [ ] undoubtedly
+   > "формальність" means "formality"
+
+14. What does "до того ж" mean?
+   - [ ] undoubtedly
+   - [ ] to think, suppose
+   - [ ] summarizing
+   - [x] moreover
+   > "до того ж" means "moreover"
+
+15. What does "порівняно" mean?
+   - [ ] undoubtedly
+   - [ ] summarizing
+   - [x] compared to
+   - [ ] to think, suppose
+   > "порівняно" means "compared to"
+
+16. What does "оскільки" mean?
+   - [ ] summarizing
+   - [ ] undoubtedly
+   - [x] since, as
+   - [ ] to think, suppose
+   > "оскільки" means "since, as"
+
+17. What does "в цілому" mean?
+   - [x] on the whole
+   - [ ] undoubtedly
+   - [ ] summarizing
+   - [ ] to think, suppose
+   > "в цілому" means "on the whole"
+
+18. What does "перш за все" mean?
+   - [ ] undoubtedly
+   - [ ] to think, suppose
+   - [ ] summarizing
+   - [x] first of all
+   > "перш за все" means "first of all"
+
+## unjumble: Word Order
+
+> Drag the words into the correct order to form a sentence.
+
+1. Я / думаю / що
+   > [!answer] Я думаю, що...
+   > (I think that...)
+
+2. що / вважаю / Я
+   > [!answer] Я вважаю, що...
+   > (I consider/believe that...)
+
+3. Я / що / гадаю
+   > [!answer] Я гадаю, що...
+   > (I think/suppose that...)
+
+4. думку / На / мою / 
+   > [!answer] На мою думку, ...
+   > (In my opinion, ...)
+
+5. На / мій /  / погляд
+   > [!answer] На мій погляд, ...
+   > (In my view, ...)
+
+6. З / зору / моєї /  / точки
+   > [!answer] З моєї точки зору, ...
+   > (From my point of view, ...)
+
+7. що / Мені / здається
+   > [!answer] Мені здається, що...
+   > (It seems to me that...)
+
+8. на /  / Як / мене
+   > [!answer] Як на мене, ...
+   > (As for me, ...)
+
+9. впевнений/а / що / Я
+   > [!answer] Я впевнений/а, що...
+   > (I'm sure that...)
+
+10. що / Я / переконаний/а
+   > [!answer] Я переконаний/а, що...
+   > (I'm convinced that...)
+
+11. сумніву / Без / 
+   > [!answer] Без сумніву, ...
+   > (Without a doubt, ...)
+
+12. Не / впевнений/а / але
+   > [!answer] Не впевнений/а, але...
+   > (Not sure, but...)
+
+13. сказати / Важко / але
+   > [!answer] Важко сказати, але...
+   > (Hard to say, but...)
+
+14. що / через / те
+   > [!answer] через те, що
+   > (because of the fact that)
+
+15. завдяки / тому / що
+   > [!answer] завдяки тому, що
+   > (thanks to the fact that)
+
+16. з /  / З / боку / одного / іншого /  / боку
+   > [!answer] З одного боку, ... з іншого боку, ...
+   > (On one hand, ... on the other hand, ...)
+
+17. відміну / На / від
+   > [!answer] На відміну від...
+   > (Unlike...)
+
+18. / / Однак / Проте
+   > [!answer] Проте / Однак
+   > (However)
 
 ---
 
-# Vocabulary
+---
 
-| Word | IPA | English | Notes |
-|------|-----|---------|-------|
-| гадати | /ɦɑˈdɑtɪ/ | to think, suppose | impf |
-| безперечно | /bɛzpɛˈrɛt͡ʃno/ | undoubtedly | adv |
-| мабуть | /mɑˈbutʲ/ | probably | adv |
-| ймовірно | /jmoˈvʲirno/ | probably, likely | adv |
-| проте | /proˈtɛ/ | however | conj |
-| однак | /odˈnɑk/ | however | conj |
+---
+
+# Вправи
+
+## fill-in: Доповніть речення
+
+> Оберіть правильне слово.
+
+1. Незважаючи на те, що ___ вимагає багато часу, це приносить велике задоволення.
+   > [!answer] гадати
+   > [!options] будуть | відпустити | забути | гадати
+
+## unjumble: Побудуйте речення
+
+> Розташуйте слова в правильному порядку.
+
+## match-up: Знайдіть пари
+
+> З'єднайте українські слова з англійськими.
+
+| Left | Right |
+|------|-------|
+| проте | however |
+| ймовірно | probably, likely |
+| папка | folder |
+| тепло | warm (adv) |
+| гадати | to think, suppose |
+| екран | screen |
+| день | day |
+| безперечно | undoubtedly |
+| однак | however |
+| квест | escape room |
+| мабуть | probably |
+| хірург | surgeon |
+
+## quiz: Перевірка значень
+
+> Оберіть правильну відповідь.
+
+1. Що означає "ймовірно"?
+   - [x] probably, likely
+   - [ ] to study, learn
+   - [ ] meeting
+   - [ ] with
+   > "ймовірно" means "probably, likely"
+
+2. Що означає "гадати"?
+   - [ ] to cut apart
+   - [x] to think, suppose
+   - [ ] engineer
+   - [ ] his, its
+   > "гадати" means "to think, suppose"
+
+3. Що означає "безперечно"?
+   - [ ] perspective
+   - [ ] whisper
+   - [ ] to craft
+   - [x] undoubtedly
+   > "безперечно" means "undoubtedly"
+
+4. Що означає "проте"?
+   - [ ] to bring
+   - [ ] exhibition
+   - [ ] flexibility
+   - [x] however
+   > "проте" means "however"
+
+5. Що означає "однак"?
+   - [x] however
+   - [ ] swimming
+   - [ ] repetition
+   - [ ] secretary (f)
+   > "однак" means "however"
+
+6. Що означає "мабуть"?
+   - [ ] sweet
+   - [x] probably
+   - [ ] happy
+   - [ ] forbidden
+   > "мабуть" means "probably"
+
+## true-false: Правда чи ні?
+
+> Визначте, чи правильне твердження.
+
+- [ ] "проте" means "to learn (perf)"
+   > Incorrect. "проте" means "however"
+
+- [ ] "безперечно" means "video"
+   > Incorrect. "безперечно" means "undoubtedly"
+
+- [x] "гадати" means "to think, suppose"
+   > Correct!
+
+- [ ] "ймовірно" means "to carry"
+   > Incorrect. "ймовірно" means "probably, likely"
+
+- [x] "мабуть" means "probably"
+   > Correct!
+
+- [ ] "однак" means "portion"
+   > Incorrect. "однак" means "however"
+
+---
+
+# Словник
+
+| Word | IPA | English | POS | Note |
+|------|-----|---------|-----|------|
+| гадати | /ɦɑˈdɑtɪ/ | to think, suppose | verb | impf |
+| безперечно | /bɛzpɛˈrɛt͡ʃno/ | undoubtedly | adv | high certainty |
+| ймовірно | /jmoˈvʲirno/ | probably, likely | adv | medium certainty |
+| мабуть | /mɑˈbutʲ/ | probably | adv | low certainty |
+| однак | /odˈnɑk/ | however | conj | contrast |
+| проте | /proˈtɛ/ | however | conj | contrast |
+| адже | /ɑˈdʒɛ/ | after all, since | conj | causal |
+| оскільки | /osˈkʲilʲkɪ/ | since, as | conj | causal |
+| завдяки | /zɑvˈdʲakɪ/ | thanks to | prep | cause (positive) |
+| незважаючи | /nɛzvɑˈʒɑjut͡ʃɪ/ | despite, in spite of | prep | concession |
+| порівняно | /poˈrʲivnʲɑno/ | compared to | adv | comparison |
+| перш за все | /pɛrʃ zɑ vsɛ/ | first of all | phrase | emphasis |
+| до того ж | /do toˈɦo ʒ/ | moreover | phrase | addition |
+| крім того | /krʲim toˈɦo/ | besides | phrase | addition |
+| підсумовуючи | /pʲidsumovuˈjut͡ʃɪ/ | summarizing | adv | conclusion |
+| одним словом | /odˈnɪm ˈslovom/ | in a word | phrase | summary |
+| в цілому | /v t͡sʲiˈlomu/ | on the whole | phrase | general |
+| найважливіше | /nɑjvɑʒˈlɪvʲiʃɛ/ | most importantly | adv | emphasis |
+| формальність | /formɑlʲˈnʲistʲ/ | formality | noun | f |
+| обґрунтований | /obɡruntoˈvɑnɪj/ | justified, grounded | adj | - |
+| переконливо | /pɛrɛkonˈlɪvo/ | convincingly | adv | - |
+| категоричний | /kɑtɛɦoˈrɪt͡ʃnɪj/ | categorical | adj | - |
+| нейтрально | /nɛjˈtrɑlʲno/ | neutrally | adv | - |
+| публіцистика | /publʲit͡sɪsˈtɪkɑ/ | journalism | noun | f |
+| риторичний | /rɪtoˈrɪt͡ʃnɪj/ | rhetorical | adj | - |
 
 ---
 
@@ -350,37 +778,34 @@ Practice stating opinions for and against:
 
 # Summary
 
-## Opinion Expressions
+## Opinion expressions
 
-### Stating Opinion
-- Я думаю/вважаю/гадаю, що...
-- На мою думку / На мій погляд
-- Мені здається, що...
+### Expressing opinions
+- Я думаю/вважаю/гадаю, що... — I think/believe/suppose that...
+- На мою думку / На мій погляд — In my opinion / In my view
+- Мені здається, що... — It seems to me that...
 
-### Certainty
-- High: Я впевнений, Безперечно
-- Medium: Напевно, Ймовірно
-- Low: Можливо, Мабуть
+### Certainty levels
+- High: Я впевнений, Безперечно — I'm sure, Undoubtedly
+- Medium: Напевно, Ймовірно — Probably
+- Low: Можливо, Мабуть — Perhaps, Maybe
 
-### Reasoning
-- тому що, оскільки, адже, бо
+### Justification
+- тому що, оскільки, адже, бо — because, since, for
 
-### Comparing
-- З одного боку... з іншого боку
-- Проте, Однак
+### Comparison
+- З одного боку... з іншого боку — On one hand... on the other
+- Проте, Однак — However
 
-### Concluding
-- Отже, Загалом, Підсумовуючи
+### Conclusion
+- Отже, Загалом, Підсумовуючи — So, In general, Summarizing
 
-## Key Patterns
+## Key patterns
 
 1. **Opinion + reason:** Я думаю, що..., тому що...
 2. **Comparison:** З одного боку... проте...
 3. **Conclusion:** Отже, ...
 
-> **Key Takeaways**
+> 💡 **Key takeaway**
 >
-> - Use hedging for polite uncertainty
-> - Match formality to situation
-> - Always support opinions with reasons
-> - Use comparing expressions for balanced views
+> Expressing opinions is not just knowing the words "думаю" and "вважаю." It's a system: **opinion** → **justification** → **comparison** → **conclusion**. Use hedging for politeness: "Мені здається" sounds softer than "Це так." When you need to be confident — use "Без сумніву," "Безперечно." Choose the certainty level appropriate to the situation!

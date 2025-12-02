@@ -283,92 +283,272 @@ Discuss these cross-topic questions:
 
 ---
 
-# Activities
+---
 
-## match-up: Topic → Key Word
+---
+
+# Вправи
+
+## fill-in: Доповніть речення
+
+> Оберіть правильне слово.
+
+1. Цей варіант здається мені найбільш ___ з усіх.
+   > [!answer] фруктовий
+   > [!options] старий | фруктовий | мамин | роздратований
+
+2. Моя сестра каже, що їй подобається ___ у вільний час.
+   > [!answer] пити
+   > [!options] фотографувати | повідомляти | купувати | пити
+
+3. Вони довго шукали хороший ___, але не знайшли.
+   > [!answer] переїзд
+   > [!options] вклад | голова | каша | переїзд
+
+4. Я давно мріяв навчитися ___, і нарешті маю таку можливість.
+   > [!answer] стати
+   > [!options] закрити | пити | замовляти | стати
+
+5. Моя сестра каже, що їй подобається ___ у вільний час.
+   > [!answer] купити
+   > [!options] перенести | дякую | купити | переїжджати
+
+6. Мій друг сказав, що його ___ дуже зручний.
+   > [!answer] час
+   > [!options] пошук | час | діагноз | захоплення
+
+7. Я хочу купити цей ___, але він занадто дорогий.
+   > [!answer] джаз
+   > [!options] професіонал | квест | заметіль | джаз
+
+8. Я вважаю, що ця пропозиція є занадто ___ для нас.
+   > [!answer] радісний
+   > [!options] жадібний | радісний | задоволений | потрібний
+
+9. Я хочу купити цю ___, але вона занадто дорога.
+   > [!answer] виписка
+   > [!options] виписка | таксі | запис | письменник
+
+10. Моя сестра каже, що їй подобається ___ у вільний час.
+   > [!answer] думати
+   > [!options] думати | смажити | писати | заважати
+
+11. Моя сестра сказала, що її ___ дуже зручна.
+   > [!answer] акторка
+   > [!options] вид | акторка | одержувач | комп'ютер
+
+12. Моя сестра сказала, що її ___ дуже зручна.
+   > [!answer] склянка
+   > [!options] склянка | підписник | 11-12 | сіль
+
+## unjumble: Побудуйте речення
+
+> Розташуйте слова в правильному порядку.
+
+1. Мій / переїзд / що / його / друг / зручний / сказав / дуже
+   > [!answer] Мій друг сказав, що його переїзд дуже зручний.
+   > (move (relocation))
+
+2. знайшли / Вони / шукали / але / довго / каса / не / хорошу
+   > [!answer] Вони довго шукали хорошу каса, але не знайшли.
+   > (cash register)
+
+3. хочу / виписка / дорога / занадто / Я / цю / але / вона / купити
+   > [!answer] Я хочу купити цю виписка, але вона занадто дорога.
+   > (statement)
+
+4. Вони / знайшли / хорошу / але / шукали / довго / не / склянка
+   > [!answer] Вони довго шукали хорошу склянка, але не знайшли.
+   > (glass)
+
+5. Ця / моїй / належить / акторка / з / подрузі / Києва
+   > [!answer] Ця акторка належить моїй подрузі з Києва.
+   > (actress)
+
+6. джаз / він / але / хочу / дорогий / Я / занадто / купити / цей
+   > [!answer] Я хочу купити цей джаз, але він занадто дорогий.
+   > (jazz)
+
+7. дорогий / він / хочу / цей / Я / але / час / купити / занадто
+   > [!answer] Я хочу купити цей час, але він занадто дорогий.
+   > (time)
+
+8. літак / не / знайшли / довго / але / Вони / хороший / шукали
+   > [!answer] Вони довго шукали хороший літак, але не знайшли.
+   > (airplane)
+
+## match-up: Знайдіть пари
+
+> З'єднайте українські слова з англійськими.
 
 | Left | Right |
 |------|-------|
-| Food | смачний |
-| Health | температура |
-| Home | квартира |
-| Hobbies | захоплення |
-| Education | університет |
-| Shopping | знижка |
-| Sports | тренування |
-| Arts | концерт |
+| переїзд | move (relocation) |
+| думати | to think |
+| кімната | room |
+| каса | cash register |
+| сидіти | to sit |
+| купити | to buy (perf) |
+| джаз | jazz |
+| час | time |
+| навпроти | opposite |
+| платформа | platform |
+| ними | (with) them |
+| їжа | food |
+| виписка | statement |
+| треба | it's necessary |
 
-## quiz: Vocabulary Review
+## quiz: Перевірка значень
 
-> Test across all twelve topics.
+> Оберіть правильну відповідь.
 
-1. "Смажити" relates to ___.
-   - [x] cooking
-   - [ ] health
-   - [ ] technology
-   - [ ] emotions
-   > Смажити = to fry.
+1. Що означає "пити"?
+   - [ ] market
+   - [x] to drink
+   - [ ] these
+   - [ ] it's necessary
+   > "пити" means "to drink"
 
-2. "Захоплюватися" means ___.
-   - [x] to be passionate about
-   - [ ] to study
-   - [ ] to exercise
-   - [ ] to shop
-   > Захоплюватися = to be into (hobbies).
+2. Що означає "думати"?
+   - [ ] client
+   - [ ] to disturb
+   - [ ] acquaintance
+   - [x] to think
+   > "думати" means "to think"
 
-3. "Складати іспит" means ___.
-   - [x] to take an exam
-   - [ ] to pass an exam
-   - [ ] to fail an exam
-   - [ ] to skip an exam
-   > Складати = to take.
+3. Що означає "купити"?
+   - [ ] grandpa
+   - [ ] floor (of building)
+   - [x] to buy (perf)
+   - [ ] beautiful, nice
+   > "купити" means "to buy (perf)"
 
-4. "Повернути товар" means ___.
-   - [x] to return an item
-   - [ ] to buy an item
-   - [ ] to order an item
-   - [ ] to exchange an item
-   > Повернути = to return.
+4. Що означає "склянка"?
+   - [x] glass
+   - [ ] gym
+   - [ ] brain teaser
+   - [ ] credit test
+   > "склянка" means "glass"
 
-5. "Тренування" relates to ___.
-   - [x] sports and fitness
-   - [ ] education
-   - [ ] technology
-   - [ ] shopping
-   > Тренування = workout.
+5. Що означає "радісний"?
+   - [x] joyful
+   - [ ] humanity
+   - [ ] statement
+   - [ ] (with) you
+   > "радісний" means "joyful"
 
-6. "Вишиванка" is ___.
-   - [x] Ukrainian embroidered shirt
-   - [ ] traditional dance
-   - [ ] folk song
-   - [ ] holiday food
-   > Вишиванка = embroidered shirt.
+6. Що означає "фруктовий"?
+   - [x] fruit
+   - [ ] breakfast
+   - [ ] their (m)
+   - [ ] day
+   > "фруктовий" means "fruit"
 
-## group-sort: By Topic
+7. Що означає "джаз"?
+   - [x] jazz
+   - [ ] specialist
+   - [ ] departure
+   - [ ] to thank
+   > "джаз" means "jazz"
 
-### Освіта (Education)
-- університет
-- іспит
-- студент
-- диплом
+8. Що означає "опівдні"?
+   - [ ] negotiations
+   - [x] at noon
+   - [ ] to restart
+   - [ ] sometimes
+   > "опівдні" means "at noon"
 
-### Покупки (Shopping)
-- знижка
-- повернути
-- рахунок
-- доставка
+9. Що означає "канцтовари"?
+   - [ ] to reach (on foot)
+   - [ ] client
+   - [x] stationery
+   - [ ] to plan
+   > "канцтовари" means "stationery"
 
-### Спорт (Sports)
-- тренування
-- перемога
-- команда
-- медаль
+10. Що означає "каса"?
+   - [ ] extraordinarily
+   - [ ] dry cleaner
+   - [x] cash register
+   - [ ] bus
+   > "каса" means "cash register"
 
-### Мистецтво (Arts)
-- концерт
-- режисер
-- пісня
-- виставка
+11. Що означає "виписка"?
+   - [ ] to graduate
+   - [x] statement
+   - [ ] square
+   - [ ] promotion
+   > "виписка" means "statement"
+
+12. Що означає "сидіти"?
+   - [ ] to taste (enjoy)
+   - [ ] to speak
+   - [x] to sit
+   - [ ] applause
+   > "сидіти" means "to sit"
+
+13. Що означає "треба"?
+   - [ ] white
+   - [ ] link
+   - [x] it's necessary
+   - [ ] less
+   > "треба" means "it's necessary"
+
+14. Що означає "навпроти"?
+   - [ ] weakness
+   - [x] opposite
+   - [ ] painful, it hurts
+   - [ ] musician
+   > "навпроти" means "opposite"
+
+## true-false: Правда чи ні?
+
+> Визначте, чи правильне твердження.
+
+- [ ] "радісний" means "convenient"
+   > Incorrect. "радісний" means "joyful"
+
+- [x] "треба" means "it's necessary"
+   > Correct!
+
+- [ ] "пити" means "apartment"
+   > Incorrect. "пити" means "to drink"
+
+- [ ] "переїзд" means "bad"
+   > Incorrect. "переїзд" means "move (relocation)"
+
+- [x] "літак" means "airplane"
+   > Correct!
+
+- [ ] "фруктовий" means "keyboard"
+   > Incorrect. "фруктовий" means "fruit"
+
+- [x] "склянка" means "glass"
+   > Correct!
+
+- [ ] "канцтовари" means "your (fem, informal)"
+   > Incorrect. "канцтовари" means "stationery"
+
+- [ ] "навпроти" means "pickup"
+   > Incorrect. "навпроти" means "opposite"
+
+- [ ] "виписка" means "chemistry"
+   > Incorrect. "виписка" means "statement"
+
+## group-sort: Сортування за родом
+
+> Розподіліть слова за родами.
+
+### Чоловічий рід
+- літак
+- час
+- переїзд
+- джаз
+
+### Жіночий рід
+- склянка
+- каса
+- акторка
+- виписка
 
 ---
 

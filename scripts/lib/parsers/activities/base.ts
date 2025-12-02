@@ -60,8 +60,8 @@ export abstract class ActivityParser<T extends ActivityContent = ActivityContent
    */
   protected normalizeType(type: string): ActivityType {
     const typeMap: Record<string, ActivityType> = {
-      'fill-in': 'gap-fill',
-      'fillin': 'gap-fill',
+      'fill-in': 'fill-blank',
+      'fillin': 'fill-blank',
       'fill': 'fill-blank',
       'tf': 'true-false',
       'truefalse': 'true-false',
@@ -69,9 +69,8 @@ export abstract class ActivityParser<T extends ActivityContent = ActivityContent
       'match': 'match-up',
       'sort': 'group-sort',
       'groupsort': 'group-sort',
-      'unjumble': 'order',
-      'unscramble': 'order',
       'reorder': 'order',
+      // Note: unjumble/unscramble/word-order handled by UnjumbleParser
     };
     const normalized = type.toLowerCase().replace(/\s+/g, '-');
     return (typeMap[normalized] || normalized) as ActivityType;

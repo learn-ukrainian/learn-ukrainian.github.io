@@ -288,130 +288,139 @@ Notice:
 
 ---
 
+---
+
+---
+
+---
+
 # Activities
 
-## match-up: Time Expressions + Aspect
+## fill-in: Complete the Sentences
 
-> Match time expression with typical aspect.
+> Choose the correct word to complete each sentence.
+
+1. Вони планують ___ завтра.
+   > [!answer] зібрати
+   > [!options] пояснити | просити | дякую | зібрати
+
+2. Вони планують ___ завтра.
+   > [!answer] прокинутися
+   > [!options] ішла | подзвонити | прокинутися | чути
+
+3. Вони планують ___ завтра.
+   > [!answer] відпочивати
+   > [!options] приміряти | відпочивати | засинати | купити
+
+## unjumble: Build the Sentence
+
+> Arrange the words in the correct order.
+
+## match-up: Match the Pairs
+
+> Match Ukrainian words to their English meanings.
 
 | Left | Right |
 |------|-------|
-| дві години | imperfective |
-| за дві години | perfective |
-| щодня | imperfective |
-| вже | perfective |
-| ще не | perfective |
-| весь день | imperfective |
-
-## quiz: Aspect in Context
-
-> Choose the correct form.
-
-1. "I was writing for two hours" - Я ___ дві години.
-   - [x] писав
-   - [ ] написав
-   - [ ] напишу
-   - [ ] пишу
-   > Duration = imperfective.
-
-2. "I wrote the letter in two hours" - Я ___ листа за дві години.
-   - [x] написав
-   - [ ] писав
-   - [ ] пишу
-   - [ ] буду писати
-   > "За" + time = perfective (completion).
-
-3. "When I was eating, the phone rang" - Коли я ___, зателефонував телефон.
-   - [x] їв
-   - [ ] з'їв
-   - [ ] їм
-   - [ ] з'їм
-   > Background action = imperfective.
-
-4. "Have you (ever) read this book?" - Ти ___ цю книгу?
-   - [x] читав
-   - [ ] прочитав
-   - [ ] прочитаєш
-   - [ ] читаєш
-   > Asking about experience = imperfective.
-
-5. "I haven't finished yet" - Я ще не ___.
-   - [x] закінчив
-   - [ ] закінчував
-   - [ ] закінчую
-   - [ ] буду закінчувати
-   > "Ще не" = perfective.
-
-6. "She finished cooking" - Вона закінчила ___.
-   - [x] готувати
-   - [ ] приготувати
-   - [ ] приготувавши
-   - [ ] готувавши
-   > After "закінчити" = imperfective infinitive.
-
-## group-sort: Context Determines Aspect
-
-> Sort by which aspect fits.
-
-### Imperfective Context
-- "щодня" (every day)
-- "дві години" (for two hours)
-- "коли я снідав" (while eating)
-- negative commands
-
-### Perfective Context
-- "за дві години" (in two hours)
-- "вже" (already)
-- "ще не" (not yet)
-- sequence of events
-
+| скільки | how much/many |
+| нарешті | finally |
+| раптом | suddenly |
+| відпочивати | to rest (impf) |
+| збирати | to gather (impf) |
+| колега | colleague |
+| зібрати | to gather (perf) |
+| повернутися | to return (perf) |
+| поки | while |
+| прокинутися | to wake up (perf) |
+| полиця | shelf |
 
 ## quiz: Meaning Check
 
 > Choose the correct answer.
 
-1. What does "збирати" mean?
-   - [ ] after
-   - [x] to gather (impf)
-   - [ ] before
-   - [ ] suddenly
-   > "збирати" means "to gather (impf)"
-
-2. What does "після того як" mean?
-   - [x] after
-   - [ ] suddenly
-   - [ ] to gather (impf)
-   - [ ] before
-   > "після того як" means "after"
-
-3. What does "перш ніж" mean?
-   - [ ] suddenly
-   - [ ] to gather (impf)
-   - [x] before
-   - [ ] after
-   > "перш ніж" means "before"
-
-4. What does "раптом" mean?
-   - [ ] before
-   - [ ] to gather (impf)
-   - [x] suddenly
-   - [ ] after
-   > "раптом" means "suddenly"
-
-5. What does "зібрати" mean?
-   - [ ] before
-   - [ ] to gather (impf)
+1. What does "зібрати" mean?
+   - [ ] word
    - [x] to gather (perf)
-   - [ ] after
+   - [ ] new
+   - [ ] bag
    > "зібрати" means "to gather (perf)"
 
-6. What does "поки" mean?
-   - [ ] after
-   - [ ] to gather (impf)
+2. What does "нарешті" mean?
+   - [ ] husband
+   - [ ] newspaper
+   - [x] finally
+   - [ ] cheap
+   > "нарешті" means "finally"
+
+3. What does "повернутися" mean?
+   - [ ] which/what kind (f)
+   - [ ] programmer
+   - [x] to return (perf)
+   - [ ] to turn
+   > "повернутися" means "to return (perf)"
+
+4. What does "прокинутися" mean?
+   - [ ] dinner
+   - [ ] relative
+   - [x] to wake up (perf)
+   - [ ] answer
+   > "прокинутися" means "to wake up (perf)"
+
+5. What does "поки" mean?
+   - [ ] joy
+   - [ ] to call (phone)
    - [x] while
-   - [ ] before
+   - [ ] passport
    > "поки" means "while"
 
+6. What does "збирати" mean?
+   - [ ] to call (pf)
+   - [x] to gather (impf)
+   - [ ] sweater
+   - [ ] company, group
+   > "збирати" means "to gather (impf)"
+
+7. What does "раптом" mean?
+   - [x] suddenly
+   - [ ] to gift (impf)
+   - [ ] skirt
+   - [ ] exchange
+   > "раптом" means "suddenly"
+
+8. What does "відпочивати" mean?
+   - [ ] cash register
+   - [ ] accountant
+   - [ ] they will be
+   - [x] to rest (impf)
+   > "відпочивати" means "to rest (impf)"
+
+## true-false: True or False?
+
+> Determine if each statement is true or false.
+
+- [x] "прокинутися" means "to wake up (perf)"
+   > Correct!
+
+- [ ] "поки" means "to buy"
+   > Incorrect. "поки" means "while"
+
+- [ ] "збирати" means "to return (perf)"
+   > Incorrect. "збирати" means "to gather (impf)"
+
+- [x] "відпочивати" means "to rest (impf)"
+   > Correct!
+
+- [ ] "зібрати" means "photo"
+   > Incorrect. "зібрати" means "to gather (perf)"
+
+- [ ] "раптом" means "to do (perf)"
+   > Incorrect. "раптом" means "suddenly"
+
+- [x] "нарешті" means "finally"
+   > Correct!
+
+- [ ] "повернутися" means "cup"
+   > Incorrect. "повернутися" means "to return (perf)"
 
 ---
 

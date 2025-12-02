@@ -270,83 +270,292 @@ Use word formation knowledge to complete:
 
 ---
 
-# Activities
+---
 
-## match-up: Prefix → Meaning
+---
+
+# Вправи
+
+## fill-in: Доповніть речення
+
+> Оберіть правильне слово.
+
+1. Я хочу купити цей ___, але він занадто дорогий.
+   > [!answer] конспект
+   > [!options] суп | конспект | таксі | яловичина
+
+2. Вони довго шукали хороший ___, але не знайшли.
+   > [!answer] лікар
+   > [!options] майстерня | стоматолог | лікар | сонце
+
+3. Моя сестра каже, що їй подобається ___ у вільний час.
+   > [!answer] дякувати
+   > [!options] дійти | запізнюватися | збирати | дякувати
+
+4. Вони довго шукали хороше ___, але не знайшли.
+   > [!answer] малювання
+   > [!options] малювання | декан | копійка | колядка
+
+5. Моя сестра каже, що їй подобається ___ у вільний час.
+   > [!answer] перемагати
+   > [!options] перемагати | одягатися | розмовляти | відповідати
+
+6. Мій друг сказав, що його ___ дуже зручний.
+   > [!answer] ноутбук
+   > [!options] ноутбук | хокей | відпочинок | картина
+
+7. Я хочу купити цей ___, але він занадто дорогий.
+   > [!answer] дуб
+   > [!options] колекціонування | кілограм | бандура | дуб
+
+8. Моя сестра сказала, що її ___ дуже зручна.
+   > [!answer] бандура
+   > [!options] читач | слово | бандура | концерт
+
+9. Я давно мріяв навчитися ___, і нарешті маю таку можливість.
+   > [!answer] дійти
+   > [!options] дійти | змокнути | забути | навчатися
+
+10. Я хочу купити цю ___, але вона занадто дорога.
+   > [!answer] бухгалтерія
+   > [!options] перукар | ковдра | бухгалтерія | слово
+
+## unjumble: Побудуйте речення
+
+> Розташуйте слова в правильному порядку.
+
+1. конспект / він / але / цей / Я / хочу / купити / дорогий / занадто
+   > [!answer] Я хочу купити цей конспект, але він занадто дорогий.
+   > (notes)
+
+2. належить / Цей / моєму / реферат / з / Києва / другові
+   > [!answer] Цей реферат належить моєму другові з Києва.
+   > (essay)
+
+3. не / хорошу / шукали / машина / але / Вони / довго / знайшли
+   > [!answer] Вони довго шукали хорошу машина, але не знайшли.
+   > (car)
+
+4. його / сказав / Мій / дуб / що / друг / зручний / дуже
+   > [!answer] Мій друг сказав, що його дуб дуже зручний.
+   > (oak)
+
+5. зручний / ноутбук / друг / Мій / сказав / дуже / його / що
+   > [!answer] Мій друг сказав, що його ноутбук дуже зручний.
+   > (laptop)
+
+6. Я / дорогий / хірург / занадто / хочу / цей / купити / він / але
+   > [!answer] Я хочу купити цей хірург, але він занадто дорогий.
+   > (surgeon)
+
+7. сказали / це / що / дуже / Вони / малювання / зручне
+   > [!answer] Вони сказали, що це малювання дуже зручне.
+   > (drawing, painting)
+
+8. рація / зручна / що / Моя / її / дуже / сказала / сестра
+   > [!answer] Моя сестра сказала, що її рація дуже зручна.
+   > (rightness)
+
+9. дуже / сестра / зручна / її / Моя / сказала / що / інфекція
+   > [!answer] Моя сестра сказала, що її інфекція дуже зручна.
+   > (infection)
+
+10. що / друг / сказав / його / Мій / дуже / зручний / телефон
+   > [!answer] Мій друг сказав, що його телефон дуже зручний.
+   > (phone)
+
+11. належить / Ця / подрузі / бухгалтерія / моїй / з / Києва
+   > [!answer] Ця бухгалтерія належить моїй подрузі з Києва.
+   > (accounting dept)
+
+12. з / подрузі / Ця / Києва / бандура / моїй / належить
+   > [!answer] Ця бандура належить моїй подрузі з Києва.
+   > (bandura)
+
+13. дуже / біологія / сказала / зручна / сестра / що / її / Моя
+   > [!answer] Моя сестра сказала, що її біологія дуже зручна.
+   > (biology)
+
+14. Вони / лікар / не / але / довго / шукали / знайшли / хороший
+   > [!answer] Вони довго шукали хороший лікар, але не знайшли.
+   > (doctor (m))
+
+## match-up: Знайдіть пари
+
+> З'єднайте українські слова з англійськими.
 
 | Left | Right |
 |------|-------|
-| при- | arrival |
-| ви- | exit, out |
-| пере- | across |
-| роз- | apart |
-| за- | behind, start |
+| здоров'я | health |
+| їй | to her |
+| дякувати | to thank |
+| конспект | notes |
+| реферат | essay |
+| інфекція | infection |
+| ноутбук | laptop |
+| перемагати | to win |
+| лікар | doctor (m) |
+| прокинутися | to wake up (perf) |
+| біологія | biology |
+| інакше | otherwise |
+| турист | tourist |
+| під | under |
 
-## quiz: Word Formation Review
+## quiz: Перевірка значень
 
-> Test your word formation knowledge.
+> Оберіть правильну відповідь.
 
-1. The prefix in "виходити" means ___.
-   - [x] out, exit
-   - [ ] in, enter
-   - [ ] across
-   - [ ] arrival
-   > Ви- = out, exit.
+1. Що означає "хірург"?
+   - [ ] director
+   - [ ] borscht
+   - [ ] artist
+   - [x] surgeon
+   > "хірург" means "surgeon"
 
-2. The suffix "-ість" creates ___.
-   - [x] abstract quality nouns
-   - [ ] verbs
-   - [ ] agent nouns
-   - [ ] adjectives
-   > -ість creates feminine abstract nouns.
+2. Що означає "хоча"?
+   - [x] although
+   - [ ] sugar
+   - [ ] that
+   - [ ] lecture
+   > "хоча" means "although"
 
-3. Words with root "-роб-" relate to ___.
-   - [x] work
-   - [ ] reading
-   - [ ] speaking
-   - [ ] walking
-   > -роб- = work (робота, робити).
+3. Що означає "бухгалтерія"?
+   - [ ] to do (perf)
+   - [ ] after
+   - [x] accounting dept
+   - [ ] departure (vehicles)
+   > "бухгалтерія" means "accounting dept"
 
-4. "Читач" uses the suffix ___.
-   - [x] -ач (agent)
-   - [ ] -ість (quality)
-   - [ ] -ння (verbal noun)
-   - [ ] -ський (belonging)
-   > -ач creates agent nouns.
+4. Що означає "телефон"?
+   - [ ] to remind (perf)
+   - [ ] to reach (on foot)
+   - [x] phone
+   - [ ] every day
+   > "телефон" means "phone"
 
-5. "Міський" comes from ___.
-   - [x] місто (city)
-   - [ ] місяць (month)
-   - [ ] місце (place)
-   - [ ] місія (mission)
-   > Місто → міський.
+5. Що означає "лікар"?
+   - [ ] building, house
+   - [ ] to please, like
+   - [x] doctor (m)
+   - [ ] lonely
+   > "лікар" means "doctor (m)"
 
-6. The root in "навчання" is ___.
-   - [x] -вч-/-уч- (learning)
-   - [ ] -ння (suffix)
-   - [ ] на- (prefix)
-   - [ ] -ан- (connector)
-   > Root -вч- means learning.
+6. Що означає "попереду"?
+   - [ ] lower/shorter
+   - [x] in front, ahead
+   - [ ] bill, check
+   - [ ] fun, merry
+   > "попереду" means "in front, ahead"
 
-## group-sort: By Pattern
+7. Що означає "рація"?
+   - [ ] listening
+   - [ ] book
+   - [ ] my (neuter)
+   - [x] rightness
+   > "рація" means "rightness"
 
-### Motion Prefixes
-- при- (arrival)
-- ви- (exit)
-- пере- (across)
-- в- (enter)
+8. Що означає "інфекція"?
+   - [x] infection
+   - [ ] (with) them
+   - [ ] to agree, arrange
+   - [ ] patient
+   > "інфекція" means "infection"
 
-### Noun Suffixes
-- -ння/-ття
-- -ість
-- -ство
-- -ач/-ник
+9. Що означає "машина"?
+   - [ ] kopeck
+   - [x] car
+   - [ ] karaoke
+   - [ ] best (adv)
+   > "машина" means "car"
 
-### Adjective Suffixes
-- -ний/-ній
-- -ський
-- -овий
-- -ливий
+10. Що означає "біологія"?
+   - [ ] white
+   - [ ] table
+   - [x] biology
+   - [ ] to say goodbye
+   > "біологія" means "biology"
+
+11. Що означає "ноутбук"?
+   - [ ] cloudy
+   - [ ] elevator
+   - [x] laptop
+   - [ ] mirror
+   > "ноутбук" means "laptop"
+
+12. Що означає "дякувати"?
+   - [x] to thank
+   - [ ] next to
+   - [ ] buckwheat
+   - [ ] if (unreal)
+   > "дякувати" means "to thank"
+
+13. Що означає "бандура"?
+   - [ ] wallet
+   - [ ] frost
+   - [x] bandura
+   - [ ] to cry
+   > "бандура" means "bandura"
+
+14. Що означає "реферат"?
+   - [ ] to quit
+   - [ ] repair shop
+   - [x] essay
+   - [ ] intersection
+   > "реферат" means "essay"
+
+## true-false: Правда чи ні?
+
+> Визначте, чи правильне твердження.
+
+- [x] "хоча" means "although"
+   > Correct!
+
+- [x] "ноутбук" means "laptop"
+   > Correct!
+
+- [ ] "лікар" means "cash"
+   > Incorrect. "лікар" means "doctor (m)"
+
+- [x] "дійти" means "to reach (on foot)"
+   > Correct!
+
+- [ ] "інфекція" means "to have"
+   > Incorrect. "інфекція" means "infection"
+
+- [ ] "машина" means "recipient"
+   > Incorrect. "машина" means "car"
+
+- [ ] "бухгалтерія" means "group"
+   > Incorrect. "бухгалтерія" means "accounting dept"
+
+- [x] "бандура" means "bandura"
+   > Correct!
+
+- [x] "попереду" means "in front, ahead"
+   > Correct!
+
+- [x] "телефон" means "phone"
+   > Correct!
+
+## group-sort: Сортування за родом
+
+> Розподіліть слова за родами.
+
+### Чоловічий рід
+- хірург
+- реферат
+- дуб
+- лікар
+- ноутбук
+- телефон
+
+### Жіночий рід
+- бухгалтерія
+- біологія
+- інфекція
+- рація
+- машина
+- бандура
 
 ---
 
