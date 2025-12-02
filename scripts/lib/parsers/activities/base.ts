@@ -69,6 +69,9 @@ export abstract class ActivityParser<T extends ActivityContent = ActivityContent
       'match': 'match-up',
       'sort': 'group-sort',
       'groupsort': 'group-sort',
+      'unjumble': 'order',
+      'unscramble': 'order',
+      'reorder': 'order',
     };
     const normalized = type.toLowerCase().replace(/\s+/g, '-');
     return (typeMap[normalized] || normalized) as ActivityType;
