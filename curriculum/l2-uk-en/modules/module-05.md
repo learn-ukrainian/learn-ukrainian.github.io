@@ -306,47 +306,47 @@ Change "this" to "that" and "my" to "your":
 
 ## unjumble: Build the Sentence
 
-> Arrange the words in the correct order.
+> Arrange the words in the correct order. Sentences range from 4-6 words.
 
-1. стіл / Цей / мій
-   > [!answer] Цей стіл мій.
-   > (This table is mine.)
+1. стіл / Цей / мій / великий / новий
+   > [!answer] Цей великий стіл мій новий.
+   > (This big table is my new one.) [5 words]
 
-2. книга / Ця / моя
-   > [!answer] Ця книга моя.
-   > (This book is mine.)
+2. книга / Ця / моя / українська
+   > [!answer] Ця українська книга моя.
+   > (This Ukrainian book is mine.) [4 words]
 
-3. вікно / моє / Це
-   > [!answer] Це вікно моє.
-   > (This window is mine.)
+3. вікно / моє / Це / чи / твоє
+   > [!answer] Це вікно моє чи твоє?
+   > (Is this window mine or yours?) [5 words]
 
-4. ключ / Де / мій
-   > [!answer] Де мій ключ?
-   > (Where is my key?)
+4. ключ / Де / мій / від / дому
+   > [!answer] Де мій ключ від дому?
+   > (Where is my key to the house?) [5 words]
 
-5. твоя / Це / сумка
-   > [!answer] Це твоя сумка.
-   > (This is your bag.)
+5. твоя / Це / нова / сумка / чи
+   > [!answer] Чи це твоя нова сумка?
+   > (Is this your new bag?) [5 words]
 
-6. телефон / Той / твій
-   > [!answer] Той телефон твій.
-   > (That phone is yours.)
+6. телефон / Той / твій / там / старий
+   > [!answer] Той старий телефон там твій.
+   > (That old phone there is yours.) [5 words]
 
-7. ліжко / Це / моє
-   > [!answer] Це моє ліжко.
-   > (This is my bed.)
+7. ліжко / Це / моє / а / те / твоє
+   > [!answer] Це ліжко моє, а те твоє.
+   > (This bed is mine, and that one is yours.) [6 words]
 
-8. лампа / Ця / моя
-   > [!answer] Ця лампа моя.
-   > (This lamp is mine.)
+8. лампа / Ця / моя / нова / красива
+   > [!answer] Ця красива нова лампа моя.
+   > (This beautiful new lamp is mine.) [5 words]
 
-9. стілець / Цей / твій
-   > [!answer] Цей стілець твій.
-   > (This chair is yours.)
+9. стілець / Цей / твій / чи / мій
+   > [!answer] Цей стілець твій чи мій?
+   > (Is this chair yours or mine?) [5 words]
 
-10. ручка / Де / твоя
-   > [!answer] Де твоя ручка?
-   > (Where is your pen?)
+10. ручка / Де / твоя / синя
+    > [!answer] Де твоя синя ручка?
+    > (Where is your blue pen?) [4 words]
 
 ## group-sort: Sort by Gender
 

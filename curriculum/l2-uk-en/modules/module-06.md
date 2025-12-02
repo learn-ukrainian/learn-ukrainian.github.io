@@ -321,47 +321,47 @@ Practice asking questions:
 
 ## unjumble: Build the Sentence
 
-> Arrange the words in the correct order.
+> Arrange the words in the correct order. Sentences range from 4-6 words.
 
-1. читаю / Я / книгу
-   > [!answer] Я читаю книгу.
-   > (I read a book.)
+1. читаю / Я / цікаву / книгу / нову
+   > [!answer] Я читаю нову цікаву книгу.
+   > (I read a new interesting book.) [5 words]
 
-2. українською / говориш / Ти
-   > [!answer] Ти говориш українською.
-   > (You speak Ukrainian.)
+2. українською / добре / говориш / Ти
+   > [!answer] Ти добре говориш українською.
+   > (You speak Ukrainian well.) [4 words]
 
-3. знає / Вона / це
-   > [!answer] Вона знає це.
-   > (She knows this.)
+3. знає / Вона / все / про / це
+   > [!answer] Вона знає все про це.
+   > (She knows everything about this.) [5 words]
 
-4. пишемо / листа / Ми
-   > [!answer] Ми пишемо листа.
-   > (We write a letter.)
+4. пишемо / довгого / листа / Ми / сьогодні
+   > [!answer] Ми сьогодні пишемо довгого листа.
+   > (We are writing a long letter today.) [5 words]
 
-5. не / Я / знаю
-   > [!answer] Я не знаю.
-   > (I don't know.)
+5. не / Я / добре / знаю / це
+   > [!answer] Я не знаю це добре.
+   > (I don't know this well.) [5 words]
 
-6. працює / Він / тут
-   > [!answer] Він працює тут.
-   > (He works here.)
+6. працює / Він / тут / кожен / день
+   > [!answer] Він працює тут кожен день.
+   > (He works here every day.) [5 words]
 
-7. слухають / музику / Вони
-   > [!answer] Вони слухають музику.
-   > (They listen to music.)
+7. слухають / українську / музику / Вони / часто
+   > [!answer] Вони часто слухають українську музику.
+   > (They often listen to Ukrainian music.) [5 words]
 
-8. сьогодні / читаєш / Ти / що
-   > [!answer] Що ти читаєш сьогодні?
-   > (What are you reading today?)
+8. сьогодні / читаєш / Ти / що / цікаве
+   > [!answer] Що цікаве ти читаєш сьогодні?
+   > (What interesting thing are you reading today?) [5 words]
 
-9. завтра / працюємо / Ми
-   > [!answer] Ми працюємо завтра.
-   > (We work tomorrow.)
+9. завтра / працюємо / не / Ми / тут
+   > [!answer] Ми завтра не працюємо тут.
+   > (We don't work here tomorrow.) [5 words]
 
-10. знаю / не / Я / нічого
-   > [!answer] Я нічого не знаю.
-   > (I don't know anything.)
+10. знаю / не / Я / нічого / про / нього
+    > [!answer] Я нічого не знаю про нього.
+    > (I don't know anything about him.) [6 words]
 
 ## match-up: Match the Pairs
 

@@ -207,47 +207,47 @@ B: Так / Ні, я ___.
 
 ## unjumble: Build the Sentence
 
-> Review: Arrange the words in the correct order.
+> Review: Arrange the words in the correct order. Sentences range from 4-6 words.
 
-1. читаю / Я / книгу
-   > [!answer] Я читаю книгу.
-   > (I read a book.)
+1. читаю / Я / цікаву / книгу
+   > [!answer] Я читаю цікаву книгу.
+   > (I read an interesting book.) [4 words]
 
-2. мій / Це / стіл
-   > [!answer] Це мій стіл.
-   > (This is my table.)
+2. мій / Це / новий / стіл
+   > [!answer] Це мій новий стіл.
+   > (This is my new table.) [4 words]
 
-3. це / Що
-   > [!answer] Що це?
-   > (What is this?)
+3. це / Що / таке / там
+   > [!answer] Що це таке там?
+   > (What is that over there?) [4 words]
 
-4. говорить / українською / Вона
-   > [!answer] Вона говорить українською.
-   > (She speaks Ukrainian.)
+4. говорить / українською / Вона / добре
+   > [!answer] Вона говорить українською добре.
+   > (She speaks Ukrainian well.) [4 words]
 
-5. не / знаю / Я
-   > [!answer] Я не знаю.
-   > (I don't know.)
+5. не / знаю / Я / нічого
+   > [!answer] Я нічого не знаю.
+   > (I don't know anything.) [4 words]
 
-6. коштує / Скільки / це
-   > [!answer] Скільки це коштує?
-   > (How much does this cost?)
+6. коштує / Скільки / це / разом
+   > [!answer] Скільки це коштує разом?
+   > (How much does this cost in total?) [4 words]
 
-7. ти / Звідки
-   > [!answer] Звідки ти?
-   > (Where are you from?)
+7. ти / Звідки / сьогодні / приїхав
+   > [!answer] Звідки ти сьогодні приїхав?
+   > (Where did you come from today?) [4 words]
 
-8. каву / люблю / Я
-   > [!answer] Я люблю каву.
-   > (I love coffee.)
+8. каву / люблю / гарячу / Я / дуже
+   > [!answer] Я дуже люблю гарячу каву.
+   > (I really love hot coffee.) [5 words]
 
-9. книга / моя / Ця
-   > [!answer] Ця книга моя.
-   > (This book is mine.)
+9. книга / моя / Ця / українська / нова
+   > [!answer] Ця нова українська книга моя.
+   > (This new Ukrainian book is mine.) [5 words]
 
-10. студент / Він
-   > [!answer] Він студент.
-   > (He is a student.)
+10. студент / Він / а / вона / вчителька
+    > [!answer] Він студент, а вона вчителька.
+    > (He is a student, and she is a teacher.) [5 words]
 
 ## match-up: Match the Pairs
 

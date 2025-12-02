@@ -246,39 +246,47 @@ The Ukrainian alphabet has a specific order (like ABC in English). Practice sayi
 
 ## unjumble: Build the Sentence
 
-> Arrange the words in the correct order.
+> Arrange the words in the correct order. Sentences range from 3-6 words.
 
-1. моє / слово / Це
-   > [!answer] Це моє слово.
-   > (This is my word.)
+1. українська / красива / мова / Це
+   > [!answer] Це красива українська мова.
+   > (This is a beautiful Ukrainian language.) [4 words]
 
-2. моя / сім'я / Це
-   > [!answer] Це моя сім'я.
-   > (This is my family.)
+2. моя / велика / сім'я / Це
+   > [!answer] Це моя велика сім'я.
+   > (This is my big family.) [4 words]
 
-3. мова / українська / Це
-   > [!answer] Це українська мова.
-   > (This is the Ukrainian language.)
+3. нове / слово / українське / Це / моє
+   > [!answer] Це моє нове українське слово.
+   > (This is my new Ukrainian word.) [5 words]
 
-4. місто / моє / Це
-   > [!answer] Це моє місто.
-   > (This is my city.)
+4. місто / є / Київ / гарне
+   > [!answer] Київ є гарне місто.
+   > (Kyiv is a nice city.) [4 words]
 
-5. це / Що
-   > [!answer] Що це?
-   > (What is this?)
+5. це / Що / таке
+   > [!answer] Що це таке?
+   > (What is this?) [3 words]
 
-6. це / Хто
-   > [!answer] Хто це?
-   > (Who is this?)
+6. це / Хто / там
+   > [!answer] Хто це там?
+   > (Who is that there?) [3 words]
 
-7. ти / Як
-   > [!answer] Як ти?
-   > (How are you?)
+7. ти / Як / сьогодні
+   > [!answer] Як ти сьогодні?
+   > (How are you today?) [3 words]
 
-8. центр / Там / є
-   > [!answer] Там є центр.
-   > (There is a center.)
+8. центр / Там / є / великий / міста
+   > [!answer] Там є великий центр міста.
+   > (There is a big city center.) [5 words]
+
+9. добре / Дякую / все
+   > [!answer] Дякую, все добре.
+   > (Thanks, everything is fine.) [3 words]
+
+10. чай / і / Тут / є / кава
+    > [!answer] Тут є чай і кава.
+    > (Here is tea and coffee.) [5 words]
 
 ## match-up: Match the Pairs
 

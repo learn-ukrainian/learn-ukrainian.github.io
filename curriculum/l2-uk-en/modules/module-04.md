@@ -293,47 +293,47 @@ Turn these statements into questions (just add ?):
 
 ## unjumble: Build the Sentence
 
-> Arrange the words in the correct order.
+> Arrange the words in the correct order. Sentences range from 3-6 words.
 
-1. вчитель / Він
-   > [!answer] Він вчитель.
-   > (He is a teacher.)
+1. вчитель / добрий / Він / мій
+   > [!answer] Він мій добрий вчитель.
+   > (He is my good teacher.) [4 words]
 
-2. лікарка / Вона
-   > [!answer] Вона лікарка.
-   > (She is a doctor.)
+2. нова / лікарка / Вона / тут
+   > [!answer] Вона тут нова лікарка.
+   > (She is the new doctor here.) [4 words]
 
-3. канадець / Ти
-   > [!answer] Ти канадець?
-   > (Are you Canadian?)
+3. канадець / Ти / чи / американець
+   > [!answer] Ти канадець чи американець?
+   > (Are you Canadian or American?) [4 words]
 
-4. подруга / Це / моя
-   > [!answer] Це моя подруга.
-   > (This is my friend.)
+4. подруга / Це / моя / найкраща
+   > [!answer] Це моя найкраща подруга.
+   > (This is my best friend.) [4 words]
 
-5. Я / тут / не
-   > [!answer] Я не тут.
-   > (I am not here.)
+5. Я / тут / не / сьогодні
+   > [!answer] Я сьогодні не тут.
+   > (I am not here today.) [4 words]
 
-6. там / Ти
-   > [!answer] Ти там.
-   > (You are there.)
+6. друг / там / твій / Де
+   > [!answer] Де там твій друг?
+   > (Where is your friend there?) [4 words]
 
-7. українці / Ми
-   > [!answer] Ми українці.
-   > (We are Ukrainians.)
+7. українці / Ми / всі / тут
+   > [!answer] Ми всі тут українці.
+   > (We are all Ukrainians here.) [4 words]
 
-8. дизайнер / Я
-   > [!answer] Я дизайнер.
-   > (I am a designer.)
+8. дизайнер / Я / а / вона / лікарка
+   > [!answer] Я дизайнер, а вона лікарка.
+   > (I'm a designer, and she's a doctor.) [5 words]
 
-9. менеджер / Він
-   > [!answer] Він менеджер.
-   > (He is a manager.)
+9. менеджер / Він / новий / наш
+   > [!answer] Він наш новий менеджер.
+   > (He is our new manager.) [4 words]
 
-10. програміст / Вона
-    > [!answer] Вона програміст.
-    > (She is a programmer.)
+10. програміст / Вона / чи / інженер
+    > [!answer] Вона програміст чи інженер?
+    > (Is she a programmer or engineer?) [4 words]
 
 ## match-up: Match the Pairs
 

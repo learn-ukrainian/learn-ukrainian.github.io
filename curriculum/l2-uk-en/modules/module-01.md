@@ -295,47 +295,47 @@ Read these tricky words:
 
 ## unjumble: Build the Sentence
 
-> Arrange the words in the correct order.
+> Arrange the words in the correct order. Sentences range from 4-6 words.
 
-1. доктор / Це / мій
-   > [!answer] Це мій доктор.
-   > (This is my doctor.)
+1. мій / доктор / Тато / мій
+   > [!answer] Мій тато мій доктор.
+   > (My dad is my doctor.) [4 words]
 
-2. мама / Це / моя
-   > [!answer] Це моя мама.
-   > (This is my mom.)
+2. є / Там / великий / парк
+   > [!answer] Там є великий парк.
+   > (There is a big park.) [4 words]
 
-3. фото / Це / моє
-   > [!answer] Це моє фото.
-   > (This is my photo.)
+3. мама / Моя / вдома / тут
+   > [!answer] Моя мама тут вдома.
+   > (My mom is here at home.) [4 words]
 
-4. є / Тут / театр
-   > [!answer] Тут є театр.
-   > (Here is a theater.)
+4. новий / Це / мій / телефон
+   > [!answer] Це мій новий телефон.
+   > (This is my new phone.) [4 words]
 
-5. парк / є / Там
-   > [!answer] Там є парк.
-   > (There is a park.)
+5. Там / банк / і / є / парк
+   > [!answer] Там є банк і парк.
+   > (There is a bank and park.) [5 words]
 
-6. Це / тато / мій
-   > [!answer] Це мій тато.
-   > (This is my dad.)
+6. моє / фото / старе / Це
+   > [!answer] Це моє старе фото.
+   > (This is my old photo.) [4 words]
 
-7. таксі / моє / Це
-   > [!answer] Це моє таксі.
-   > (This is my taxi.)
+7. театр / Тут / є / великий
+   > [!answer] Тут є великий театр.
+   > (Here is a big theater.) [4 words]
 
-8. клас / є / Тут
-   > [!answer] Тут є клас.
-   > (Here is a class.)
+8. таксі / там / Моє / є
+   > [!answer] Моє таксі є там.
+   > (My taxi is there.) [4 words]
 
-9. моя / музика / Це
-   > [!answer] Це моя музика.
-   > (This is my music.)
+9. і / тато / мама / Це / моя / мій
+   > [!answer] Це мій тато і моя мама.
+   > (This is my dad and my mom.) [6 words]
 
-10. банк / Там / є
-    > [!answer] Там є банк.
-    > (There is a bank.)
+10. лампа / Моя / і / тут / фото
+    > [!answer] Моя лампа і фото тут.
+    > (My lamp and photo are here.) [5 words]
 
 ## match-up: Match the Pairs
 

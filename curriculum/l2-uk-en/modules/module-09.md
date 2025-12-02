@@ -238,47 +238,47 @@ Practice: You're buying items. Say the price:
 
 ## unjumble: Build the Sentence
 
-> Arrange the words in the correct order.
+> Arrange the words in the correct order. Sentences range from 4-6 words.
 
-1. коштує / Скільки / це
-   > [!answer] Скільки це коштує?
-   > (How much does this cost?)
+1. коштує / Скільки / це / книга
+   > [!answer] Скільки коштує ця книга?
+   > (How much does this book cost?) [4 words]
 
-2. п'ять / Це / гривень / коштує
-   > [!answer] Це коштує п'ять гривень.
-   > (This costs 5 hryvnias.)
+2. п'ять / Це / гривень / тільки / коштує
+   > [!answer] Це коштує тільки п'ять гривень.
+   > (This costs only 5 hryvnias.) [5 words]
 
-3. гривні / Ось / дві
-   > [!answer] Ось дві гривні.
-   > (Here are 2 hryvnias.)
+3. гривні / Ось / ваші / дві
+   > [!answer] Ось ваші дві гривні.
+   > (Here are your 2 hryvnias.) [4 words]
 
-4. одна / Це / гривня
-   > [!answer] Це одна гривня.
-   > (This is one hryvnia.)
+4. Одна / гривня / це / мало / дуже
+   > [!answer] Одна гривня — це дуже мало.
+   > (One hryvnia is very little.) [5 words]
 
-5. дорого / Це
-   > [!answer] Це дорого!
-   > (This is expensive!)
+5. дорого / Це / занадто / для / мене
+   > [!answer] Це занадто дорого для мене.
+   > (This is too expensive for me.) [5 words]
 
-6. дешево / Це
-   > [!answer] Це дешево!
-   > (This is cheap!)
+6. тут / Це / дуже / дешево
+   > [!answer] Тут це дуже дешево.
+   > (It's very cheap here.) [4 words]
 
-7. знижка / Є
-   > [!answer] Є знижка?
-   > (Is there a discount?)
+7. знижка / Є / яка / сьогодні
+   > [!answer] Яка знижка є сьогодні?
+   > (What discount is there today?) [4 words]
 
-8. карткою / чи / Готівкою
-   > [!answer] Готівкою чи карткою?
-   > (Cash or card?)
+8. карткою / чи / Платите / готівкою / ви
+   > [!answer] Ви платите готівкою чи карткою?
+   > (Do you pay cash or card?) [5 words]
 
-9. ваша / Решта
-   > [!answer] Решта ваша.
-   > (Keep the change.)
+9. Решта / ваша / Дякую / дуже
+   > [!answer] Дякую дуже, решта ваша.
+   > (Thank you very much, keep the change.) [4 words]
 
-10. гривень / сто / Це / коштує
-   > [!answer] Це коштує сто гривень.
-   > (This costs 100 hryvnias.)
+10. гривень / сто / Це / разом / коштує
+    > [!answer] Це разом коштує сто гривень.
+    > (This costs 100 hryvnias in total.) [5 words]
 
 ## match-up: Match the Pairs
 

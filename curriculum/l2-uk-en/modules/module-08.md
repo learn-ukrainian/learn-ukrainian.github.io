@@ -271,47 +271,47 @@ Describe what you/others do using Class II verbs:
 
 ## unjumble: Build the Sentence
 
-> Arrange the words in the correct order.
+> Arrange the words in the correct order. Sentences range from 4-6 words.
 
-1. каву / люблю / Я
-   > [!answer] Я люблю каву.
-   > (I love coffee.)
+1. каву / люблю / гарячу / Я / дуже
+   > [!answer] Я дуже люблю гарячу каву.
+   > (I really love hot coffee.) [5 words]
 
-2. говорить / Він / українською
-   > [!answer] Він говорить українською.
-   > (He speaks Ukrainian.)
+2. говорить / Він / добре / українською / дуже
+   > [!answer] Він дуже добре говорить українською.
+   > (He speaks Ukrainian very well.) [5 words]
 
-3. бачить / Вона / це
-   > [!answer] Вона бачить це.
-   > (She sees this.)
+3. бачить / Вона / щось / там / цікаве
+   > [!answer] Вона бачить щось цікаве там.
+   > (She sees something interesting there.) [5 words]
 
-4. робимо / Ми / це
-   > [!answer] Ми робимо це.
-   > (We do this.)
+4. робимо / Ми / це / разом / завжди
+   > [!answer] Ми завжди робимо це разом.
+   > (We always do this together.) [5 words]
 
-5. ходжу / до школи / Я
-   > [!answer] Я ходжу до школи.
-   > (I go to school.)
+5. ходжу / до / школи / Я / щодня
+   > [!answer] Я щодня ходжу до школи.
+   > (I go to school every day.) [5 words]
 
-6. п'є / чай / Він
-   > [!answer] Він п'є чай.
-   > (He drinks tea.)
+6. п'є / гарячий / чай / Він / вранці
+   > [!answer] Він п'є гарячий чай вранці.
+   > (He drinks hot tea in the morning.) [5 words]
 
-7. їсть / Вона / яблуко
-   > [!answer] Вона їсть яблуко.
-   > (She eats an apple.)
+7. їсть / Вона / смачне / яблуко / зелене
+   > [!answer] Вона їсть смачне зелене яблуко.
+   > (She eats a tasty green apple.) [5 words]
 
-8. живу / у Києві / Я
-   > [!answer] Я живу у Києві.
-   > (I live in Kyiv.)
+8. живу / у / Києві / Я / тепер
+   > [!answer] Я тепер живу у Києві.
+   > (I now live in Kyiv.) [5 words]
 
-9. сидить / тут / Він
-   > [!answer] Він сидить тут.
-   > (He sits here.)
+9. сидить / тут / Він / і / чекає
+   > [!answer] Він сидить тут і чекає.
+   > (He sits here and waits.) [5 words]
 
-10. люблять / музику / Вони
-   > [!answer] Вони люблять музику.
-   > (They love music.)
+10. люблять / українську / музику / Вони / сучасну
+    > [!answer] Вони люблять сучасну українську музику.
+    > (They love modern Ukrainian music.) [5 words]
 
 ## match-up: Match the Pairs
 
