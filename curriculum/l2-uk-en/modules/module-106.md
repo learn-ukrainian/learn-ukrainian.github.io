@@ -427,12 +427,12 @@ Use "якби я був на твоєму місці":
 
 # Vocabulary
 
-| Word | IPA | English | Gender |
-|------|-----|---------|--------|
-| б / би | /b/ /bɪ/ | would (conditional particle) | part |
-| нереальний | /nɛrɛˈɑlʲnɪj/ | unreal | adj |
-| на твоєму місці | - | in your place | phrase |
-| неможливо | /nɛmoʒˈlɪvo/ | impossible | adv |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| б / би | /b/ /bɪ/ | would (conditional particle) | ім | part |
+| нереальний | /nɛrɛˈɑlʲnɪj/ | unreal | ім | adj |
+| на твоєму місці | - | in your place | ім | phrase |
+| неможливо | /nɛmoʒˈlɪvo/ | impossible | ім | adv |
 
 ---
 

@@ -383,37 +383,37 @@ Describe your morning using these verbs:
 
 # Словник
 
-| Word | IPA | English | POS | Note |
-|------|-----|---------|-----|------|
-| префікс | /ˈprɛfʲiks/ | prefix | noun | m, grammar term |
-| префіксація | /prɛfʲikˈsɑt͡sʲijɑ/ | prefixation | noun | f, grammar term |
-| прибуття | /prɪˈbutʲːɑ/ | arrival | noun | n |
-| вихід | /ˈvɪxʲid/ | exit, way out | noun | m |
-| вхід | /vxʲid/ | entrance | noun | m |
-| прийти | /prɪjˈtɪ/ | to come | verb | pf |
-| приходити | /prɪxoˈdɪtɪ/ | to come | verb | impf |
-| приїхати | /prɪˈjixɑtɪ/ | to arrive | verb | pf |
-| приїжджати | /prɪjizˈdʒɑtɪ/ | to arrive | verb | impf |
-| прилетіти | /prɪlɛˈtʲitɪ/ | to arrive by air | verb | pf |
-| прилітати | /prɪlʲiˈtɑtɪ/ | to arrive by air | verb | impf |
-| принести | /prɪnɛsˈtɪ/ | to bring | verb | pf |
-| приносити | /prɪnoˈsɪtɪ/ | to bring | verb | impf |
-| привезти | /prɪvɛzˈtɪ/ | to bring (vehicle) | verb | pf |
-| привозити | /prɪvoˈzɪtɪ/ | to bring (vehicle) | verb | impf |
-| вийти | /ˈvɪjtɪ/ | to go out | verb | pf |
-| виходити | /vɪxoˈdɪtɪ/ | to go out | verb | impf |
-| виїхати | /vɪˈjixɑtɪ/ | to leave | verb | pf |
-| виїжджати | /vɪjizˈdʒɑtɪ/ | to leave | verb | impf |
-| вилетіти | /vɪlɛˈtʲitɪ/ | to depart by air | verb | pf |
-| вилітати | /vɪlʲiˈtɑtɪ/ | to depart by air | verb | impf |
-| винести | /vɪnɛsˈtɪ/ | to carry out | verb | pf |
-| виносити | /vɪnoˈsɪtɪ/ | to carry out | verb | impf |
-| увійти | /uvijˈtɪ/ | to enter | verb | pf |
-| входити | /vxoˈdɪtɪ/ | to enter | verb | impf |
-| в'їхати | /vjˈixɑtɪ/ | to drive in | verb | pf |
-| в'їжджати | /vjizˈdʒɑtɪ/ | to drive in | verb | impf |
-| внести | /vnɛsˈtɪ/ | to bring in | verb | pf |
-| вносити | /vnoˈsɪtɪ/ | to bring in | verb | impf |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| префікс | /ˈprɛfʲiks/ | prefix | ім | m, grammar term |
+| префіксація | /prɛfʲikˈsɑt͡sʲijɑ/ | prefixation | ім | f, grammar term |
+| прибуття | /prɪˈbutʲːɑ/ | arrival | ім | n |
+| вихід | /ˈvɪxʲid/ | exit, way out | ім | m |
+| вхід | /vxʲid/ | entrance | ім | m |
+| прийти | /prɪjˈtɪ/ | to come | дієсл | pf |
+| приходити | /prɪxoˈdɪtɪ/ | to come | дієсл | impf |
+| приїхати | /prɪˈjixɑtɪ/ | to arrive | дієсл | pf |
+| приїжджати | /prɪjizˈdʒɑtɪ/ | to arrive | дієсл | impf |
+| прилетіти | /prɪlɛˈtʲitɪ/ | to arrive by air | дієсл | pf |
+| прилітати | /prɪlʲiˈtɑtɪ/ | to arrive by air | дієсл | impf |
+| принести | /prɪnɛsˈtɪ/ | to bring | дієсл | pf |
+| приносити | /prɪnoˈsɪtɪ/ | to bring | дієсл | impf |
+| привезти | /prɪvɛzˈtɪ/ | to bring (vehicle) | дієсл | pf |
+| привозити | /prɪvoˈzɪtɪ/ | to bring (vehicle) | дієсл | impf |
+| вийти | /ˈvɪjtɪ/ | to go out | дієсл | pf |
+| виходити | /vɪxoˈdɪtɪ/ | to go out | дієсл | impf |
+| виїхати | /vɪˈjixɑtɪ/ | to leave | дієсл | pf |
+| виїжджати | /vɪjizˈdʒɑtɪ/ | to leave | дієсл | impf |
+| вилетіти | /vɪlɛˈtʲitɪ/ | to depart by air | дієсл | pf |
+| вилітати | /vɪlʲiˈtɑtɪ/ | to depart by air | дієсл | impf |
+| винести | /vɪnɛsˈtɪ/ | to carry out | дієсл | pf |
+| виносити | /vɪnoˈsɪtɪ/ | to carry out | дієсл | impf |
+| увійти | /uvijˈtɪ/ | to enter | дієсл | pf |
+| входити | /vxoˈdɪtɪ/ | to enter | дієсл | impf |
+| в'їхати | /vjˈixɑtɪ/ | to drive in | дієсл | pf |
+| в'їжджати | /vjizˈdʒɑtɪ/ | to drive in | дієсл | impf |
+| внести | /vnɛsˈtɪ/ | to bring in | дієсл | pf |
+| вносити | /vnoˈsɪtɪ/ | to bring in | дієсл | impf |
 
 ---
 

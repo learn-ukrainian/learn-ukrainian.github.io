@@ -483,65 +483,65 @@ Use abstract vocabulary to discuss:
 
 # Словник
 
-| Word | IPA | English | POS | Note |
-|------|-----|---------|-----|------|
-| ідея | /iˈdɛjɑ/ | idea | noun | f |
-| думка | /ˈdumkɑ/ | thought, opinion | noun | f |
-| поняття | /poˈnʲɑtʲːɑ/ | concept, notion | noun | n |
-| уявлення | /ujɑvˈlɛnʲːɑ/ | imagination, idea | noun | n |
-| погляд | /ˈpoɦlʲɑd/ | view, outlook | noun | m |
-| точка зору | /ˈtot͡ʃkɑ ˈzoru/ | point of view | phrase | f |
-| припущення | /prɪpuˈʃt͡ʃɛnʲɑ/ | assumption | noun | n |
-| висновок | /ˈvɪsnovok/ | conclusion | noun | m |
-| проблема | /probˈlɛmɑ/ | problem | noun | f |
-| питання | /pɪˈtɑnʲːɑ/ | question, issue | noun | n |
-| труднощі | /trudˈnoʃt͡ʃʲi/ | difficulties | noun | pl |
-| перешкода | /pɛrɛˈʃkodɑ/ | obstacle | noun | f |
-| складність | /sklɑdˈnʲistʲ/ | complexity | noun | f |
-| недолік | /nɛdoˈlʲik/ | shortcoming | noun | m |
-| помилка | /poˈmɪlkɑ/ | mistake, error | noun | f |
-| невдача | /nɛvˈdɑt͡ʃɑ/ | failure | noun | f |
-| рішення | /rʲiˈʃɛnʲːɑ/ | decision, solution | noun | n |
-| вирішення | /vɪrʲiˈʃɛnʲːɑ/ | solving, resolution | noun | n |
-| вихід | /ˈvɪxʲid/ | way out, exit | noun | m |
-| результат | /rɛzulʲˈtɑt/ | result | noun | m |
-| наслідок | /ˈnɑslʲidok/ | consequence | noun | m |
-| успіх | /uˈspʲix/ | success | noun | m |
-| досягнення | /dosʲɑɦˈnɛnʲːɑ/ | achievement | noun | n |
-| прогрес | /proɦˈrɛs/ | progress | noun | m |
-| причина | /prɪˈt͡ʃɪnɑ/ | reason, cause | noun | f |
-| підстава | /pʲidˈstɑvɑ/ | basis, grounds | noun | f |
-| мотив | /moˈtɪv/ | motive | noun | m |
-| мета | /mɛˈtɑ/ | goal, purpose | noun | f |
-| сенс | /sɛns/ | sense, meaning | noun | m |
-| значення | /znɑˈt͡ʃɛnʲːɑ/ | meaning, importance | noun | n |
-| думати | /ˈdumɑtɪ/ | to think | verb | impf |
-| вважати | /vvɑˈʒɑtɪ/ | to consider, think | verb | impf |
-| припускати | /prɪpusˈkɑtɪ/ | to assume | verb | impf |
-| припустити | /prɪpusˈtɪtɪ/ | to assume | verb | pf |
-| вирішувати | /vɪrʲiˈʃuvɑtɪ/ | to solve, decide | verb | impf |
-| вирішити | /vɪˈrʲiʃɪtɪ/ | to solve, decide | verb | pf |
-| сумніватися | /sumnʲiˈvɑtɪsʲɑ/ | to doubt | verb | impf |
-| робити висновок | /roˈbɪtɪ ˈvɪsnovok/ | to conclude | phrase | impf |
-| зробити висновок | /zroˈbɪtɪ ˈvɪsnovok/ | to conclude | phrase | pf |
-| прийти до висновку | /prɪjˈtɪ do ˈvɪsnovku/ | to come to a conclusion | phrase | pf |
-| зіткнутися з | /zʲitkˈnutɪsʲɑ z/ | to encounter | verb | pf, + instr |
-| стверджувати | /stvɛrˈdʒuvɑtɪ/ | to claim, assert | verb | impf |
-| перевершити | /pɛrɛvɛrˈʃɪtɪ/ | to exceed | verb | pf |
-| очікування | /ot͡ʃʲikuˈvɑnʲːɑ/ | expectations | noun | n |
-| недбалість | /nɛdˈbɑlʲistʲ/ | negligence | noun | f |
-| недосвідченість | /nɛdosvʲidˈt͡ʃɛnʲistʲ/ | inexperience | noun | f |
-| відсутність | /vʲidˈsutnʲistʲ/ | absence | noun | f |
-| брак | /brɑk/ | lack | noun | m |
-| завдання | /zɑvˈdɑnʲːɑ/ | task | noun | n |
-| навички | /nɑˈvɪt͡ʃkɪ/ | skills | noun | pl |
-| з цього приводу | /z ˈt͡sʲoɦo ˈprɪvodu/ | on this matter | phrase | - |
-| серйозний | /sɛrˈjoznɪj/ | serious | adj | - |
-| важливий | /vɑʒˈlɪvɪj/ | important | adj | - |
-| головний | /ɦolovˈnɪj/ | main | adj | - |
-| сучасний | /sut͡ʃɑsˈnɪj/ | modern, contemporary | adj | - |
-| абстрактний | /ɑbstrɑktˈnɪj/ | abstract | adj | - |
-| конкретний | /konkrɛtˈnɪj/ | concrete | adj | - |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| ідея | /iˈdɛjɑ/ | idea | ім | f |
+| думка | /ˈdumkɑ/ | thought, opinion | ім | f |
+| поняття | /poˈnʲɑtʲːɑ/ | concept, notion | ім | n |
+| уявлення | /ujɑvˈlɛnʲːɑ/ | imagination, idea | ім | n |
+| погляд | /ˈpoɦlʲɑd/ | view, outlook | ім | m |
+| точка зору | /ˈtot͡ʃkɑ ˈzoru/ | point of view | фраза | f |
+| припущення | /prɪpuˈʃt͡ʃɛnʲɑ/ | assumption | ім | n |
+| висновок | /ˈvɪsnovok/ | conclusion | ім | m |
+| проблема | /probˈlɛmɑ/ | problem | ім | f |
+| питання | /pɪˈtɑnʲːɑ/ | question, issue | ім | n |
+| труднощі | /trudˈnoʃt͡ʃʲi/ | difficulties | ім | pl |
+| перешкода | /pɛrɛˈʃkodɑ/ | obstacle | ім | f |
+| складність | /sklɑdˈnʲistʲ/ | complexity | ім | f |
+| недолік | /nɛdoˈlʲik/ | shortcoming | ім | m |
+| помилка | /poˈmɪlkɑ/ | mistake, error | ім | f |
+| невдача | /nɛvˈdɑt͡ʃɑ/ | failure | ім | f |
+| рішення | /rʲiˈʃɛnʲːɑ/ | decision, solution | ім | n |
+| вирішення | /vɪrʲiˈʃɛnʲːɑ/ | solving, resolution | ім | n |
+| вихід | /ˈvɪxʲid/ | way out, exit | ім | m |
+| результат | /rɛzulʲˈtɑt/ | result | ім | m |
+| наслідок | /ˈnɑslʲidok/ | consequence | ім | m |
+| успіх | /uˈspʲix/ | success | ім | m |
+| досягнення | /dosʲɑɦˈnɛnʲːɑ/ | achievement | ім | n |
+| прогрес | /proɦˈrɛs/ | progress | ім | m |
+| причина | /prɪˈt͡ʃɪnɑ/ | reason, cause | ім | f |
+| підстава | /pʲidˈstɑvɑ/ | basis, grounds | ім | f |
+| мотив | /moˈtɪv/ | motive | ім | m |
+| мета | /mɛˈtɑ/ | goal, purpose | ім | f |
+| сенс | /sɛns/ | sense, meaning | ім | m |
+| значення | /znɑˈt͡ʃɛnʲːɑ/ | meaning, importance | ім | n |
+| думати | /ˈdumɑtɪ/ | to think | дієсл | impf |
+| вважати | /vvɑˈʒɑtɪ/ | to consider, think | дієсл | impf |
+| припускати | /prɪpusˈkɑtɪ/ | to assume | дієсл | impf |
+| припустити | /prɪpusˈtɪtɪ/ | to assume | дієсл | pf |
+| вирішувати | /vɪrʲiˈʃuvɑtɪ/ | to solve, decide | дієсл | impf |
+| вирішити | /vɪˈrʲiʃɪtɪ/ | to solve, decide | дієсл | pf |
+| сумніватися | /sumnʲiˈvɑtɪsʲɑ/ | to doubt | дієсл | impf |
+| робити висновок | /roˈbɪtɪ ˈvɪsnovok/ | to conclude | фраза | impf |
+| зробити висновок | /zroˈbɪtɪ ˈvɪsnovok/ | to conclude | фраза | pf |
+| прийти до висновку | /prɪjˈtɪ do ˈvɪsnovku/ | to come to a conclusion | фраза | pf |
+| зіткнутися з | /zʲitkˈnutɪsʲɑ z/ | to encounter | дієсл | pf, + instr |
+| стверджувати | /stvɛrˈdʒuvɑtɪ/ | to claim, assert | дієсл | impf |
+| перевершити | /pɛrɛvɛrˈʃɪtɪ/ | to exceed | дієсл | pf |
+| очікування | /ot͡ʃʲikuˈvɑnʲːɑ/ | expectations | ім | n |
+| недбалість | /nɛdˈbɑlʲistʲ/ | negligence | ім | f |
+| недосвідченість | /nɛdosvʲidˈt͡ʃɛnʲistʲ/ | inexperience | ім | f |
+| відсутність | /vʲidˈsutnʲistʲ/ | absence | ім | f |
+| брак | /brɑk/ | lack | ім | m |
+| завдання | /zɑvˈdɑnʲːɑ/ | task | ім | n |
+| навички | /nɑˈvɪt͡ʃkɪ/ | skills | ім | pl |
+| з цього приводу | /z ˈt͡sʲoɦo ˈprɪvodu/ | on this matter | фраза | - |
+| серйозний | /sɛrˈjoznɪj/ | serious | прикм | - |
+| важливий | /vɑʒˈlɪvɪj/ | important | прикм | - |
+| головний | /ɦolovˈnɪj/ | main | прикм | - |
+| сучасний | /sut͡ʃɑsˈnɪj/ | modern, contemporary | прикм | - |
+| абстрактний | /ɑbstrɑktˈnɪj/ | abstract | прикм | - |
+| конкретний | /konkrɛtˈnɪj/ | concrete | прикм | - |
 
 ---
 

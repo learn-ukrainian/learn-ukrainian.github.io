@@ -282,12 +282,12 @@ Conduct a short meeting:
 
 # Vocabulary
 
-| Word | IPA | English | Notes |
-|------|-----|---------|-------|
-| філія | /fʲiˈlʲijɑ/ | branch | f |
-| переговори | /pɛrɛɦoˈvorɪ/ | negotiations | pl |
-| контракт | /konˈtrɑkt/ | contract | m |
-| прибуток | /prɪˈbutok/ | profit | m |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| філія | /fʲiˈlʲijɑ/ | branch | - | f |
+| переговори | /pɛrɛɦoˈvorɪ/ | negotiations | - | pl |
+| контракт | /konˈtrɑkt/ | contract | - | m |
+| прибуток | /prɪˈbutok/ | profit | - | m |
 
 ---
 

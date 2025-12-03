@@ -315,11 +315,11 @@ Calculate your score:
 
 # Vocabulary
 
-| Word | IPA | English | Notes |
-|------|-----|---------|-------|
-| рівень | /ˈrʲivɛnʲ/ | level | m |
-| компетенція | /kompɛˈtɛnt͡sʲijɑ/ | competency | f |
-| готовність | /ɦoˈtownʲistʲ/ | readiness | f |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| рівень | /ˈrʲivɛnʲ/ | level | - | m |
+| компетенція | /kompɛˈtɛnt͡sʲijɑ/ | competency | - | f |
+| готовність | /ɦoˈtownʲistʲ/ | readiness | - | f |
 
 ---
 

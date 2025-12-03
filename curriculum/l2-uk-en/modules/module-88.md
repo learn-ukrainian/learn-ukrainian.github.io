@@ -415,79 +415,79 @@ Ask a partner about their routine:
 
 # Словник
 
-| Word | IPA | English | POS | Note |
-|------|-----|---------|-----|------|
-| змінювати | /zmʲiˈnʲuvɑtɪ/ | to change | verb | impf |
-| змінити | /zmʲiˈnɪtɪ/ | to change | verb | pf |
-| змінюватися | /zmʲiˈnʲuvɑtɪsʲɑ/ | to change (oneself) | verb | impf, refl |
-| змінитися | /zmʲiˈnɪtɪsʲɑ/ | to change (oneself) | verb | pf, refl |
-| покращувати | /pokrɑˈʃuvɑtɪ/ | to improve | verb | impf |
-| покращити | /pokrɑˈʃɪtɪ/ | to improve | verb | pf |
-| погіршувати | /poɦʲirˈʃuvɑtɪ/ | to worsen | verb | impf |
-| погіршити | /poɦʲirˈʃɪtɪ/ | to worsen | verb | pf |
-| збільшувати | /zbʲilʲˈʃuvɑtɪ/ | to increase | verb | impf |
-| збільшити | /zbʲilʲˈʃɪtɪ/ | to increase | verb | pf |
-| зменшувати | /zmɛnˈʃuvɑtɪ/ | to decrease | verb | impf |
-| зменшити | /zmɛnˈʃɪtɪ/ | to decrease | verb | pf |
-| прискорювати | /prɪskoˈrʲuvɑtɪ/ | to speed up | verb | impf |
-| прискорити | /prɪsˈkorɪtɪ/ | to speed up | verb | pf |
-| сповільнювати | /spovʲilʲˈnʲuvɑtɪ/ | to slow down | verb | impf |
-| сповільнити | /spoˈvʲilʲnɪtɪ/ | to slow down | verb | pf |
-| радіти | /rɑˈdʲitɪ/ | to be happy | verb | impf |
-| зрадіти | /zrɑˈdʲitɪ/ | to become happy | verb | pf |
-| сумувати | /sumuˈvɑtɪ/ | to be sad | verb | impf |
-| засумувати | /zɑsumuˈvɑtɪ/ | to become sad | verb | pf |
-| дивуватися | /dɪvuˈvɑtɪsʲɑ/ | to be surprised | verb | impf |
-| здивуватися | /zdɪvuˈvɑtɪsʲɑ/ | to be surprised | verb | pf |
-| боятися | /boˈjɑtɪsʲɑ/ | to be afraid | verb | impf |
-| злякатися | /zlʲɑˈkɑtɪsʲɑ/ | to get scared | verb | pf |
-| сердитися | /sɛrˈdɪtɪsʲɑ/ | to be angry | verb | impf |
-| розсердитися | /rozsɛrˈdɪtɪsʲɑ/ | to get angry | verb | pf |
-| засмучуватися | /zɑsmuˈt͡ʃuvɑtɪsʲɑ/ | to be upset | verb | impf |
-| засмутитися | /zɑsmuˈtɪtɪsʲɑ/ | to become upset | verb | pf |
-| заспокоюватися | /zɑspoˈkojuvɑtɪsʲɑ/ | to calm down | verb | impf |
-| заспокоїтися | /zɑspoˈkojɪtɪsʲɑ/ | to calm down | verb | pf |
-| лягати | /lʲɑˈɦɑtɪ/ | to lie down | verb | impf |
-| лягти | /ˈlʲɑɦtɪ/ | to lie down | verb | pf |
-| одягатися | /odʲɑˈɦɑtɪsʲɑ/ | to get dressed | verb | impf |
-| одягнутися | /odʲɑɦˈnutɪsʲɑ/ | to get dressed | verb | pf |
-| роздягатися | /rozdʲɑˈɦɑtɪsʲɑ/ | to undress | verb | impf |
-| роздягнутися | /rozdʲɑɦˈnutɪsʲɑ/ | to undress | verb | pf |
-| вмиватися | /vmɪˈvɑtɪsʲɑ/ | to wash face | verb | impf |
-| вмитися | /ˈvmɪtɪsʲɑ/ | to wash face | verb | pf |
-| голитися | /ɦoˈlɪtɪsʲɑ/ | to shave | verb | impf |
-| поголитися | /poɦoˈlɪtɪsʲɑ/ | to shave | verb | pf |
-| зачісуватися | /zɑt͡ʃʲisuˈvɑtɪsʲɑ/ | to comb hair | verb | impf |
-| зачесатися | /zɑt͡ʃɛˈsɑtɪsʲɑ/ | to comb hair | verb | pf |
-| закінчувати | /zɑkʲinˈt͡ʃuvɑtɪ/ | to finish | verb | impf |
-| закінчити | /zɑˈkʲint͡ʃɪtɪ/ | to finish | verb | pf |
-| продовжувати | /prodoˈvʒuvɑtɪ/ | to continue | verb | impf |
-| продовжити | /proˈdovʒɪtɪ/ | to continue | verb | pf |
-| припиняти | /prɪpɪˈnʲɑtɪ/ | to stop | verb | impf |
-| припинити | /prɪpɪˈnɪtɪ/ | to stop | verb | pf |
-| створювати | /stvoˈrʲuvɑtɪ/ | to create | verb | impf |
-| створити | /stvoˈrɪtɪ/ | to create | verb | pf |
-| знищувати | /znɪˈʃt͡ʃuvɑtɪ/ | to destroy | verb | impf |
-| знищити | /ˈznɪʃt͡ʃɪtɪ/ | to destroy | verb | pf |
-| руйнувати | /rujnuˈvɑtɪ/ | to ruin | verb | impf |
-| зруйнувати | /zrujnuˈvɑtɪ/ | to ruin | verb | pf |
-| ремонтувати | /rɛmontuˈvɑtɪ/ | to repair | verb | impf |
-| відремонтувати | /vʲidrɛmontuˈvɑtɪ/ | to repair | verb | pf |
-| лагодити | /lɑˈɦodɪtɪ/ | to fix | verb | impf |
-| полагодити | /polɑˈɦodɪtɪ/ | to fix | verb | pf |
-| надсилати | /nɑdsɪˈlɑtɪ/ | to send | verb | impf |
-| надіслати | /nɑdʲisˈlɑtɪ/ | to send | verb | pf |
-| отримувати | /otrɪˈmuvɑtɪ/ | to receive | verb | impf |
-| отримати | /otrɪˈmɑtɪ/ | to receive | verb | pf |
-| повертати | /povɛrˈtɑtɪ/ | to return | verb | impf |
-| повернути | /povɛrˈnutɪ/ | to return | verb | pf |
-| позичати | /pozɪˈt͡ʃɑtɪ/ | to borrow | verb | impf |
-| позичити | /poˈzɪt͡ʃɪtɪ/ | to borrow | verb | pf |
-| перевіряти | /pɛrɛvʲiˈrʲɑtɪ/ | to check | verb | impf |
-| перевірити | /pɛrɛˈvʲirɪtɪ/ | to check | verb | pf |
-| зворотний | /zvoˈrotnɪj/ | reflexive | adj | grammar term |
-| емоція | /ɛˈmot͡sʲijɑ/ | emotion | noun | f |
-| рутина | /ruˈtɪnɑ/ | routine | noun | f |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| змінювати | /zmʲiˈnʲuvɑtɪ/ | to change | дієсл | impf |
+| змінити | /zmʲiˈnɪtɪ/ | to change | дієсл | pf |
+| змінюватися | /zmʲiˈnʲuvɑtɪsʲɑ/ | to change (oneself) | дієсл | impf, refl |
+| змінитися | /zmʲiˈnɪtɪsʲɑ/ | to change (oneself) | дієсл | pf, refl |
+| покращувати | /pokrɑˈʃuvɑtɪ/ | to improve | дієсл | impf |
+| покращити | /pokrɑˈʃɪtɪ/ | to improve | дієсл | pf |
+| погіршувати | /poɦʲirˈʃuvɑtɪ/ | to worsen | дієсл | impf |
+| погіршити | /poɦʲirˈʃɪtɪ/ | to worsen | дієсл | pf |
+| збільшувати | /zbʲilʲˈʃuvɑtɪ/ | to increase | дієсл | impf |
+| збільшити | /zbʲilʲˈʃɪtɪ/ | to increase | дієсл | pf |
+| зменшувати | /zmɛnˈʃuvɑtɪ/ | to decrease | дієсл | impf |
+| зменшити | /zmɛnˈʃɪtɪ/ | to decrease | дієсл | pf |
+| прискорювати | /prɪskoˈrʲuvɑtɪ/ | to speed up | дієсл | impf |
+| прискорити | /prɪsˈkorɪtɪ/ | to speed up | дієсл | pf |
+| сповільнювати | /spovʲilʲˈnʲuvɑtɪ/ | to slow down | дієсл | impf |
+| сповільнити | /spoˈvʲilʲnɪtɪ/ | to slow down | дієсл | pf |
+| радіти | /rɑˈdʲitɪ/ | to be happy | дієсл | impf |
+| зрадіти | /zrɑˈdʲitɪ/ | to become happy | дієсл | pf |
+| сумувати | /sumuˈvɑtɪ/ | to be sad | дієсл | impf |
+| засумувати | /zɑsumuˈvɑtɪ/ | to become sad | дієсл | pf |
+| дивуватися | /dɪvuˈvɑtɪsʲɑ/ | to be surprised | дієсл | impf |
+| здивуватися | /zdɪvuˈvɑtɪsʲɑ/ | to be surprised | дієсл | pf |
+| боятися | /boˈjɑtɪsʲɑ/ | to be afraid | дієсл | impf |
+| злякатися | /zlʲɑˈkɑtɪsʲɑ/ | to get scared | дієсл | pf |
+| сердитися | /sɛrˈdɪtɪsʲɑ/ | to be angry | дієсл | impf |
+| розсердитися | /rozsɛrˈdɪtɪsʲɑ/ | to get angry | дієсл | pf |
+| засмучуватися | /zɑsmuˈt͡ʃuvɑtɪsʲɑ/ | to be upset | дієсл | impf |
+| засмутитися | /zɑsmuˈtɪtɪsʲɑ/ | to become upset | дієсл | pf |
+| заспокоюватися | /zɑspoˈkojuvɑtɪsʲɑ/ | to calm down | дієсл | impf |
+| заспокоїтися | /zɑspoˈkojɪtɪsʲɑ/ | to calm down | дієсл | pf |
+| лягати | /lʲɑˈɦɑtɪ/ | to lie down | дієсл | impf |
+| лягти | /ˈlʲɑɦtɪ/ | to lie down | дієсл | pf |
+| одягатися | /odʲɑˈɦɑtɪsʲɑ/ | to get dressed | дієсл | impf |
+| одягнутися | /odʲɑɦˈnutɪsʲɑ/ | to get dressed | дієсл | pf |
+| роздягатися | /rozdʲɑˈɦɑtɪsʲɑ/ | to undress | дієсл | impf |
+| роздягнутися | /rozdʲɑɦˈnutɪsʲɑ/ | to undress | дієсл | pf |
+| вмиватися | /vmɪˈvɑtɪsʲɑ/ | to wash face | дієсл | impf |
+| вмитися | /ˈvmɪtɪsʲɑ/ | to wash face | дієсл | pf |
+| голитися | /ɦoˈlɪtɪsʲɑ/ | to shave | дієсл | impf |
+| поголитися | /poɦoˈlɪtɪsʲɑ/ | to shave | дієсл | pf |
+| зачісуватися | /zɑt͡ʃʲisuˈvɑtɪsʲɑ/ | to comb hair | дієсл | impf |
+| зачесатися | /zɑt͡ʃɛˈsɑtɪsʲɑ/ | to comb hair | дієсл | pf |
+| закінчувати | /zɑkʲinˈt͡ʃuvɑtɪ/ | to finish | дієсл | impf |
+| закінчити | /zɑˈkʲint͡ʃɪtɪ/ | to finish | дієсл | pf |
+| продовжувати | /prodoˈvʒuvɑtɪ/ | to continue | дієсл | impf |
+| продовжити | /proˈdovʒɪtɪ/ | to continue | дієсл | pf |
+| припиняти | /prɪpɪˈnʲɑtɪ/ | to stop | дієсл | impf |
+| припинити | /prɪpɪˈnɪtɪ/ | to stop | дієсл | pf |
+| створювати | /stvoˈrʲuvɑtɪ/ | to create | дієсл | impf |
+| створити | /stvoˈrɪtɪ/ | to create | дієсл | pf |
+| знищувати | /znɪˈʃt͡ʃuvɑtɪ/ | to destroy | дієсл | impf |
+| знищити | /ˈznɪʃt͡ʃɪtɪ/ | to destroy | дієсл | pf |
+| руйнувати | /rujnuˈvɑtɪ/ | to ruin | дієсл | impf |
+| зруйнувати | /zrujnuˈvɑtɪ/ | to ruin | дієсл | pf |
+| ремонтувати | /rɛmontuˈvɑtɪ/ | to repair | дієсл | impf |
+| відремонтувати | /vʲidrɛmontuˈvɑtɪ/ | to repair | дієсл | pf |
+| лагодити | /lɑˈɦodɪtɪ/ | to fix | дієсл | impf |
+| полагодити | /polɑˈɦodɪtɪ/ | to fix | дієсл | pf |
+| надсилати | /nɑdsɪˈlɑtɪ/ | to send | дієсл | impf |
+| надіслати | /nɑdʲisˈlɑtɪ/ | to send | дієсл | pf |
+| отримувати | /otrɪˈmuvɑtɪ/ | to receive | дієсл | impf |
+| отримати | /otrɪˈmɑtɪ/ | to receive | дієсл | pf |
+| повертати | /povɛrˈtɑtɪ/ | to return | дієсл | impf |
+| повернути | /povɛrˈnutɪ/ | to return | дієсл | pf |
+| позичати | /pozɪˈt͡ʃɑtɪ/ | to borrow | дієсл | impf |
+| позичити | /poˈzɪt͡ʃɪtɪ/ | to borrow | дієсл | pf |
+| перевіряти | /pɛrɛvʲiˈrʲɑtɪ/ | to check | дієсл | impf |
+| перевірити | /pɛrɛˈvʲirɪtɪ/ | to check | дієсл | pf |
+| зворотний | /zvoˈrotnɪj/ | reflexive | прикм | grammar term |
+| емоція | /ɛˈmot͡sʲijɑ/ | emotion | ім | f |
+| рутина | /ruˈtɪnɑ/ | routine | ім | f |
 
 ---
 

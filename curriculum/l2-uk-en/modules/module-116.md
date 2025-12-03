@@ -326,18 +326,18 @@ Report something you heard recently:
 
 # Vocabulary
 
-| Word | IPA | English | Notes |
-|------|-----|---------|-------|
-| непряма мова | /nɛˈprʲɑmɑ ˈmovɑ/ | reported speech | f |
-| пряма мова | /prʲɑˈmɑ ˈmovɑ/ | direct speech | f |
-| повідомити | /povʲiˈdomɪtɪ/ | to inform, report | pf |
-| стверджувати | /stvɛˈrd͡ʒuvɑtɪ/ | to claim, assert | impf |
-| заявити | /zɑjɑˈvɪtɪ/ | to declare, announce | pf |
-| додати | /doˈdɑtɪ/ | to add | pf |
-| визнати | /vɪˈznɑtɪ/ | to admit | pf |
-| напередодні | /nɑpɛrɛˈdodnʲi/ | the day before | adv |
-| наступного дня | - | the next day | - |
-| того дня | - | that day | - |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| непряма мова | /nɛˈprʲɑmɑ ˈmovɑ/ | reported speech | - | f |
+| пряма мова | /prʲɑˈmɑ ˈmovɑ/ | direct speech | - | f |
+| повідомити | /povʲiˈdomɪtɪ/ | to inform, report | - | pf |
+| стверджувати | /stvɛˈrd͡ʒuvɑtɪ/ | to claim, assert | - | impf |
+| заявити | /zɑjɑˈvɪtɪ/ | to declare, announce | - | pf |
+| додати | /doˈdɑtɪ/ | to add | - | pf |
+| визнати | /vɪˈznɑtɪ/ | to admit | - | pf |
+| напередодні | /nɑpɛrɛˈdodnʲi/ | the day before | - | adv |
+| наступного дня | - | the next day | - | - |
+| того дня | - | that day | - | - |
 
 ---
 

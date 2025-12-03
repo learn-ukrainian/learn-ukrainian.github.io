@@ -326,25 +326,25 @@ Create prohibition signs:
 
 # Словник
 
-| Word | IPA | English | POS | Note |
-|------|-----|---------|-----|------|
-| заперечення | /zɑpɛˈrɛt͡ʃɛnʲːɑ/ | negation | noun | n |
-| заперечувати | /zɑpɛrɛˈt͡ʃuvɑtɪ/ | to deny, negate | verb | impf |
-| заперечити | /zɑpɛˈrɛt͡ʃɪtɪ/ | to deny | verb | pf |
-| заборона | /zɑboˈronɑ/ | prohibition | noun | f |
-| заборонений | /zɑboˈronɛnɪj/ | forbidden | adj | - |
-| попередження | /popɛˈrɛdʒɛnʲːɑ/ | warning | noun | n |
-| відмова | /wʲidˈmovɑ/ | refusal | noun | f |
-| відмовлятися | /wʲidmovˈlʲɑtɪsʲɑ/ | to refuse | verb | impf |
-| більше не | /ˈbʲilʲʃɛ nɛ/ | no longer | phrase | + imperfective |
-| даремно | /dɑˈrɛmno/ | in vain | adv | - |
-| не варто | /nɛ ˈvɑrto/ | not worth it | phrase | - |
-| не можна | /nɛ ˈmoʒnɑ/ | not allowed | phrase | - |
-| не слід | /nɛ slʲid/ | should not | phrase | - |
-| ні... ні | /nʲi nʲi/ | neither... nor | phrase | - |
-| нікого | /nʲiˈkoɦo/ | nobody (gen) | pron | genitive |
-| обережно | /obɛˈrɛʒno/ | carefully, caution | adv | - |
-| генітив | /ɦɛnʲiˈtɪw/ | genitive | noun | m, grammar term |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| заперечення | /zɑpɛˈrɛt͡ʃɛnʲːɑ/ | negation | ім | n |
+| заперечувати | /zɑpɛrɛˈt͡ʃuvɑtɪ/ | to deny, negate | дієсл | impf |
+| заперечити | /zɑpɛˈrɛt͡ʃɪtɪ/ | to deny | дієсл | pf |
+| заборона | /zɑboˈronɑ/ | prohibition | ім | f |
+| заборонений | /zɑboˈronɛnɪj/ | forbidden | прикм | - |
+| попередження | /popɛˈrɛdʒɛnʲːɑ/ | warning | ім | n |
+| відмова | /wʲidˈmovɑ/ | refusal | ім | f |
+| відмовлятися | /wʲidmovˈlʲɑtɪsʲɑ/ | to refuse | дієсл | impf |
+| більше не | /ˈbʲilʲʃɛ nɛ/ | no longer | фраза | + imperfective |
+| даремно | /dɑˈrɛmno/ | in vain | присл | - |
+| не варто | /nɛ ˈvɑrto/ | not worth it | фраза | - |
+| не можна | /nɛ ˈmoʒnɑ/ | not allowed | фраза | - |
+| не слід | /nɛ slʲid/ | should not | фраза | - |
+| ні... ні | /nʲi nʲi/ | neither... nor | фраза | - |
+| нікого | /nʲiˈkoɦo/ | nobody (gen) | займ | genitive |
+| обережно | /obɛˈrɛʒno/ | carefully, caution | присл | - |
+| генітив | /ɦɛnʲiˈtɪw/ | genitive | ім | m, grammar term |
 
 ---
 

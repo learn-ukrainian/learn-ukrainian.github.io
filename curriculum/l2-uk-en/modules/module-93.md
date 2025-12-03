@@ -592,62 +592,62 @@ A: Треба **прийти до** якогось рішення. — We need t
 
 # Словник
 
-| Word | IPA | English | POS | Note |
-|------|-----|---------|-----|------|
-| виходить, що | /vɪˈxodɪtʲ ʃt͡ʃo/ | it turns out that | phrase | impersonal |
-| вийти заміж | /ˈvɪjtɪ ˈzɑmʲiʒ/ | to get married (f) | phrase | idiom |
-| доходити | /doxoˈdɪtɪ/ | to reach, get through | verb | impf |
-| дійти | /dijˈtɪ/ | to reach (pf) | verb | pf |
-| до мене дійшло | /do ˈmɛnɛ dijˈʃlo/ | it dawned on me | phrase | figurative |
-| не доходить до нього | /nɛ doxoˈdɪtʲ do ˈnʲoɦo/ | he doesn't get it | phrase | figurative |
-| прийти до висновку | /prɪjˈtɪ do ˈvɪsnovku/ | to come to a conclusion | phrase | idiom |
-| прийти до згоди | /prɪjˈtɪ do ˈzɦodɪ/ | to come to an agreement | phrase | idiom |
-| прийти на думку | /prɪjˈtɪ nɑ ˈdumku/ | to come to mind | phrase | idiom |
-| прийти в себе | /prɪjˈtɪ v sɛˈbɛ/ | to come to one's senses | phrase | idiom |
-| прийти до тями | /prɪjˈtɪ do ˈtʲɑmɪ/ | to come to one's senses | phrase | idiom |
-| перейти до справи | /pɛrɛjˈtɪ do ˈsprɑvɪ/ | to get down to business | phrase | idiom |
-| перейти на | /pɛrɛjˈtɪ nɑ/ | to switch to | phrase | + accusative |
-| перейти межу | /pɛrɛjˈtɪ ˈmɛʒu/ | to cross the line | phrase | idiom |
-| пройти курс | /projˈtɪ kurs/ | to take a course | phrase | figurative |
-| пройти тест | /projˈtɪ tɛst/ | to pass a test | phrase | figurative |
-| пройти співбесіду | /projˈtɪ spʲivbɛˈsʲidu/ | to pass an interview | phrase | figurative |
-| час проходить | /t͡ʃɑs proxoˈdɪtʲ/ | time passes | phrase | figurative |
-| зайти в глухий кут | /zɑjˈtɪ v ɦluˈxɪj kut/ | to reach a dead end | phrase | idiom |
-| розмова зайшла про | /rozˈmovɑ zɑjˈʃlɑ pro/ | conversation turned to | phrase | figurative |
-| справа зайшла далеко | /ˈsprɑvɑ zɑjˈʃlɑ dɑˈlɛko/ | things have gone far | phrase | figurative |
-| відійти від теми | /vʲidijˈtɪ vʲid ˈtɛmɪ/ | to go off topic | phrase | idiom |
-| відійти від справ | /vʲidijˈtɪ vʲid sprɑv/ | to retire | phrase | idiom |
-| висновок | /ˈvɪsnovok/ | conclusion | noun | m |
-| згода | /ˈzɦodɑ/ | agreement | noun | f |
-| думка | /ˈdumkɑ/ | thought, opinion | noun | f |
-| тяма | /ˈtʲɑmɑ/ | sense, consciousness | noun | f |
-| межа | /ˈmɛʒɑ/ | border, limit, line | noun | f |
-| шепіт | /ˈʃɛpʲit/ | whisper | noun | m |
-| глухий кут | /ɦluˈxɪj kut/ | dead end | phrase | literally "deaf corner" |
-| відмовка | /vʲidˈmovkɑ/ | excuse | noun | f |
-| суд | /sud/ | court | noun | m |
-| бійка | /ˈbijkɑ/ | fight | noun | f |
-| курс | /kurs/ | course | noun | m |
-| тест | /tɛst/ | test | noun | m |
-| співбесіда | /spʲivbɛˈsʲidɑ/ | interview | noun | f |
-| рішення | /rʲiˈʃɛnʲɑ/ | decision | noun | n |
-| проєкт | /proˈjɛkt/ | project | noun | m |
-| бюджет | /bʲuˈdʒɛt/ | budget | noun | m |
-| фінансування | /fʲinɑnsuˈvɑnʲɑ/ | funding | noun | n |
-| дохід | /ˈdoxʲid/ | income | noun | m |
-| переговори | /pɛrɛɦoˈvorɪ/ | negotiations | noun | pl |
-| розділ | /ˈrozdʲil/ | chapter, section | noun | m |
-| політика | /poˈlʲitɪkɑ/ | politics | noun | f |
-| операція | /opɛˈrɑt͡sʲijɑ/ | operation, surgery | noun | f |
-| скандал | /skɑnˈdɑl/ | scandal | noun | m |
-| біль | /bʲilʲ/ | pain | noun | m |
-| заміж | /ˈzɑmʲiʒ/ | behind a husband | adv | only in вийти заміж |
-| правий | /ˈprɑvɪj/ | right (correct) | adj | - |
-| рацію мати | /ˈrɑt͡sʲiju ˈmɑtɪ/ | to be right | phrase | - |
-| нарешті | /nɑˈrɛʃtʲi/ | finally | adv | - |
-| занадто | /zɑˈnɑdto/ | too (much) | adv | - |
-| детальніше | /dɛˈtɑlʲnʲiʃɛ/ | in more detail | adv | comparative |
-| отже | /ˈotʒɛ/ | so, therefore | conj | - |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| виходить, що | /vɪˈxodɪtʲ ʃt͡ʃo/ | it turns out that | фраза | impersonal |
+| вийти заміж | /ˈvɪjtɪ ˈzɑmʲiʒ/ | to get married (f) | фраза | idiom |
+| доходити | /doxoˈdɪtɪ/ | to reach, get through | дієсл | impf |
+| дійти | /dijˈtɪ/ | to reach (pf) | дієсл | pf |
+| до мене дійшло | /do ˈmɛnɛ dijˈʃlo/ | it dawned on me | фраза | figurative |
+| не доходить до нього | /nɛ doxoˈdɪtʲ do ˈnʲoɦo/ | he doesn't get it | фраза | figurative |
+| прийти до висновку | /prɪjˈtɪ do ˈvɪsnovku/ | to come to a conclusion | фраза | idiom |
+| прийти до згоди | /prɪjˈtɪ do ˈzɦodɪ/ | to come to an agreement | фраза | idiom |
+| прийти на думку | /prɪjˈtɪ nɑ ˈdumku/ | to come to mind | фраза | idiom |
+| прийти в себе | /prɪjˈtɪ v sɛˈbɛ/ | to come to one's senses | фраза | idiom |
+| прийти до тями | /prɪjˈtɪ do ˈtʲɑmɪ/ | to come to one's senses | фраза | idiom |
+| перейти до справи | /pɛrɛjˈtɪ do ˈsprɑvɪ/ | to get down to business | фраза | idiom |
+| перейти на | /pɛrɛjˈtɪ nɑ/ | to switch to | фраза | + accusative |
+| перейти межу | /pɛrɛjˈtɪ ˈmɛʒu/ | to cross the line | фраза | idiom |
+| пройти курс | /projˈtɪ kurs/ | to take a course | фраза | figurative |
+| пройти тест | /projˈtɪ tɛst/ | to pass a test | фраза | figurative |
+| пройти співбесіду | /projˈtɪ spʲivbɛˈsʲidu/ | to pass an interview | фраза | figurative |
+| час проходить | /t͡ʃɑs proxoˈdɪtʲ/ | time passes | фраза | figurative |
+| зайти в глухий кут | /zɑjˈtɪ v ɦluˈxɪj kut/ | to reach a dead end | фраза | idiom |
+| розмова зайшла про | /rozˈmovɑ zɑjˈʃlɑ pro/ | conversation turned to | фраза | figurative |
+| справа зайшла далеко | /ˈsprɑvɑ zɑjˈʃlɑ dɑˈlɛko/ | things have gone far | фраза | figurative |
+| відійти від теми | /vʲidijˈtɪ vʲid ˈtɛmɪ/ | to go off topic | фраза | idiom |
+| відійти від справ | /vʲidijˈtɪ vʲid sprɑv/ | to retire | фраза | idiom |
+| висновок | /ˈvɪsnovok/ | conclusion | ім | m |
+| згода | /ˈzɦodɑ/ | agreement | ім | f |
+| думка | /ˈdumkɑ/ | thought, opinion | ім | f |
+| тяма | /ˈtʲɑmɑ/ | sense, consciousness | ім | f |
+| межа | /ˈmɛʒɑ/ | border, limit, line | ім | f |
+| шепіт | /ˈʃɛpʲit/ | whisper | ім | m |
+| глухий кут | /ɦluˈxɪj kut/ | dead end | фраза | literally "deaf corner" |
+| відмовка | /vʲidˈmovkɑ/ | excuse | ім | f |
+| суд | /sud/ | court | ім | m |
+| бійка | /ˈbijkɑ/ | fight | ім | f |
+| курс | /kurs/ | course | ім | m |
+| тест | /tɛst/ | test | ім | m |
+| співбесіда | /spʲivbɛˈsʲidɑ/ | interview | ім | f |
+| рішення | /rʲiˈʃɛnʲɑ/ | decision | ім | n |
+| проєкт | /proˈjɛkt/ | project | ім | m |
+| бюджет | /bʲuˈdʒɛt/ | budget | ім | m |
+| фінансування | /fʲinɑnsuˈvɑnʲɑ/ | funding | ім | n |
+| дохід | /ˈdoxʲid/ | income | ім | m |
+| переговори | /pɛrɛɦoˈvorɪ/ | negotiations | ім | pl |
+| розділ | /ˈrozdʲil/ | chapter, section | ім | m |
+| політика | /poˈlʲitɪkɑ/ | politics | ім | f |
+| операція | /opɛˈrɑt͡sʲijɑ/ | operation, surgery | ім | f |
+| скандал | /skɑnˈdɑl/ | scandal | ім | m |
+| біль | /bʲilʲ/ | pain | ім | m |
+| заміж | /ˈzɑmʲiʒ/ | behind a husband | присл | only in вийти заміж |
+| правий | /ˈprɑvɪj/ | right (correct) | прикм | - |
+| рацію мати | /ˈrɑt͡sʲiju ˈmɑtɪ/ | to be right | фраза | - |
+| нарешті | /nɑˈrɛʃtʲi/ | finally | присл | - |
+| занадто | /zɑˈnɑdto/ | too (much) | присл | - |
+| детальніше | /dɛˈtɑlʲnʲiʃɛ/ | in more detail | присл | comparative |
+| отже | /ˈotʒɛ/ | so, therefore | сполучн | - |
 
 ---
 

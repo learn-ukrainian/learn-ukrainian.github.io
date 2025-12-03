@@ -391,23 +391,23 @@ Practice invitations (imperfective):
 
 # Словник
 
-| Word | IPA | English | POS | Note |
-|------|-----|---------|-----|------|
-| наказовий | /nɑkɑˈzovɪj/ | imperative | adj | наказовий спосіб |
-| спосіб | /ˈsposʲib/ | way, mood (grammar) | noun | m |
-| імператив | /ʲimpɛrɑˈtɪw/ | imperative | noun | m, grammar term |
-| команда | /koˈmɑndɑ/ | command | noun | f |
-| запрошення | /zɑproˈʃɛnʲːɑ/ | invitation | noun | n |
-| інструкція | /ʲinˈstrukt͡sʲijɑ/ | instruction | noun | f |
-| давай | /dɑˈvɑj/ | let's (informal) | phrase | + infinitive/we-form |
-| давайте | /dɑˈvɑjtɛ/ | let's (formal) | phrase | + infinitive/we-form |
-| не здаватися | /nɛ zdɑˈvɑtɪsʲɑ/ | to not give up | verb | impf |
-| здатися | /ˈzdɑtɪsʲɑ/ | to give up | verb | pf |
-| негайно | /nɛˈɦɑjno/ | immediately | adv | urgency |
-| старатися | /stɑˈrɑtɪsʲɑ/ | to try hard | verb | impf |
-| терміново | /tɛrmʲiˈnovo/ | urgently | adv | urgency |
-| триматися | /trɪˈmɑtɪsʲɑ/ | to hold on | verb | impf |
-| послідовність | /posʲlʲiˈdovnʲistʲ/ | sequence | noun | f |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| наказовий | /nɑkɑˈzovɪj/ | imperative | прикм | наказовий спосіб |
+| спосіб | /ˈsposʲib/ | way, mood (grammar) | ім | m |
+| імператив | /ʲimpɛrɑˈtɪw/ | imperative | ім | m, grammar term |
+| команда | /koˈmɑndɑ/ | command | ім | f |
+| запрошення | /zɑproˈʃɛnʲːɑ/ | invitation | ім | n |
+| інструкція | /ʲinˈstrukt͡sʲijɑ/ | instruction | ім | f |
+| давай | /dɑˈvɑj/ | let's (informal) | фраза | + infinitive/we-form |
+| давайте | /dɑˈvɑjtɛ/ | let's (formal) | фраза | + infinitive/we-form |
+| не здаватися | /nɛ zdɑˈvɑtɪsʲɑ/ | to not give up | дієсл | impf |
+| здатися | /ˈzdɑtɪsʲɑ/ | to give up | дієсл | pf |
+| негайно | /nɛˈɦɑjno/ | immediately | присл | urgency |
+| старатися | /stɑˈrɑtɪsʲɑ/ | to try hard | дієсл | impf |
+| терміново | /tɛrmʲiˈnovo/ | urgently | присл | urgency |
+| триматися | /trɪˈmɑtɪsʲɑ/ | to hold on | дієсл | impf |
+| послідовність | /posʲlʲiˈdovnʲistʲ/ | sequence | ім | f |
 
 ---
 

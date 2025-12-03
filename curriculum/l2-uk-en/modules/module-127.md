@@ -460,21 +460,21 @@ Discuss using fractions and percentages:
 
 # Vocabulary
 
-| Word | IPA | English | Notes |
-|------|-----|---------|-------|
-| збірний | /zbʲirˈnɪj/ | collective | adj |
-| двоє | /ˈdwojɛ/ | two (collective) | num |
-| троє | /ˈtrojɛ/ | three (collective) | num |
-| четверо | /t͡ʃɛˈtwɛro/ | four (collective) | num |
-| п'ятеро | /pjɑˈtɛro/ | five (collective) | num |
-| обоє | /oˈbojɛ/ | both | num |
-| половина | /poloˈvɪnɑ/ | half | f |
-| третина | /trɛˈtɪnɑ/ | third | f |
-| чверть | /t͡ʃwɛrtʲ/ | quarter | f |
-| дріб | /drʲib/ | fraction | m |
-| приблизно | /prɪˈblɪzno/ | approximately | adv |
-| понад | /poˈnɑd/ | over, more than | prep |
-| кілька | /ˈkʲilʲkɑ/ | several | num |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| збірний | /zbʲirˈnɪj/ | collective | - | adj |
+| двоє | /ˈdwojɛ/ | two (collective) | - | num |
+| троє | /ˈtrojɛ/ | three (collective) | - | num |
+| четверо | /t͡ʃɛˈtwɛro/ | four (collective) | - | num |
+| п'ятеро | /pjɑˈtɛro/ | five (collective) | - | num |
+| обоє | /oˈbojɛ/ | both | - | num |
+| половина | /poloˈvɪnɑ/ | half | - | f |
+| третина | /trɛˈtɪnɑ/ | third | - | f |
+| чверть | /t͡ʃwɛrtʲ/ | quarter | - | f |
+| дріб | /drʲib/ | fraction | - | m |
+| приблизно | /prɪˈblɪzno/ | approximately | - | adv |
+| понад | /poˈnɑd/ | over, more than | - | prep |
+| кілька | /ˈkʲilʲkɑ/ | several | - | num |
 
 ---
 

@@ -793,28 +793,28 @@ How would you respond?
 
 # Словник
 
-| Word | IPA | English | POS | Note |
-|------|-----|---------|-----|------|
-| враховувати | /vrɑxoˈvuvɑtɪ/ | to consider, take into account | verb | impf |
-| врахувати | /vrɑxuˈvɑtɪ/ | to consider | verb | pf |
-| заперечувати | /zɑpɛrɛˈt͡ʃuvɑtɪ/ | to object | verb | impf |
-| заперечити | /zɑpɛˈrɛt͡ʃɪtɪ/ | to object | verb | pf |
-| пропонувати | /proponuˈvɑtɪ/ | to suggest | verb | impf |
-| запропонувати | /zɑproponuˈvɑtɪ/ | to suggest | verb | pf |
-| погодитися | /poɦoˈdɪtɪsʲɑ/ | to agree | verb | pf |
-| сперечатися | /spɛrɛˈt͡ʃɑtɪsʲɑ/ | to argue | verb | impf |
-| почасти | /poˈt͡ʃɑstɪ/ | partly | adv | - |
-| натомість | /nɑˈtomʲistʲ/ | instead | adv | - |
-| дипломатичний | /dɪplomɑˈtɪt͡ʃnɪj/ | diplomatic | adj | - |
-| конфронтаційний | /konfrontɑˈt͡sʲijnɪj/ | confrontational | adj | - |
-| асиметрія | /ɑsɪmɛˈtrʲijɑ/ | asymmetry | noun | f |
-| неввічливий | /nɛvˈvʲit͡ʃlɪvɪj/ | impolite | adj | - |
-| агресивний | /ɑɦrɛˈsɪvnɪj/ | aggressive | adj | - |
-| емфатичний | /ɛmfɑˈtɪt͡ʃnɪj/ | emphatic | adj | - |
-| компроміс | /komproˈmʲis/ | compromise | noun | m |
-| варіант | /vɑrʲiˈɑnt/ | option, variant | noun | m |
-| сенс | /sɛns/ | sense, meaning | noun | m |
-| співрозмовник | /spʲivrozmovˈnɪk/ | interlocutor | noun | m |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| враховувати | /vrɑxoˈvuvɑtɪ/ | to consider, take into account | дієсл | impf |
+| врахувати | /vrɑxuˈvɑtɪ/ | to consider | дієсл | pf |
+| заперечувати | /zɑpɛrɛˈt͡ʃuvɑtɪ/ | to object | дієсл | impf |
+| заперечити | /zɑpɛˈrɛt͡ʃɪtɪ/ | to object | дієсл | pf |
+| пропонувати | /proponuˈvɑtɪ/ | to suggest | дієсл | impf |
+| запропонувати | /zɑproponuˈvɑtɪ/ | to suggest | дієсл | pf |
+| погодитися | /poɦoˈdɪtɪsʲɑ/ | to agree | дієсл | pf |
+| сперечатися | /spɛrɛˈt͡ʃɑtɪsʲɑ/ | to argue | дієсл | impf |
+| почасти | /poˈt͡ʃɑstɪ/ | partly | присл | - |
+| натомість | /nɑˈtomʲistʲ/ | instead | присл | - |
+| дипломатичний | /dɪplomɑˈtɪt͡ʃnɪj/ | diplomatic | прикм | - |
+| конфронтаційний | /konfrontɑˈt͡sʲijnɪj/ | confrontational | прикм | - |
+| асиметрія | /ɑsɪmɛˈtrʲijɑ/ | asymmetry | ім | f |
+| неввічливий | /nɛvˈvʲit͡ʃlɪvɪj/ | impolite | прикм | - |
+| агресивний | /ɑɦrɛˈsɪvnɪj/ | aggressive | прикм | - |
+| емфатичний | /ɛmfɑˈtɪt͡ʃnɪj/ | emphatic | прикм | - |
+| компроміс | /komproˈmʲis/ | compromise | ім | m |
+| варіант | /vɑrʲiˈɑnt/ | option, variant | ім | m |
+| сенс | /sɛns/ | sense, meaning | ім | m |
+| співрозмовник | /spʲivrozmovˈnɪk/ | interlocutor | ім | m |
 
 ---
 

@@ -433,21 +433,21 @@ Describe a time when you felt:
 
 # Vocabulary
 
-| Word | IPA | English | Notes |
-|------|-----|---------|-------|
-| сум | /sum/ | sadness | m |
-| гнів | /ɦnʲiv/ | anger | m |
-| тривога | /trɪˈvoɦɑ/ | anxiety | f |
-| розчарування | /rozt͡ʃɑruˈvɑnʲːɑ/ | disappointment | n |
-| полегшення | /polɛɦˈʃɛnʲːɑ/ | relief | n |
-| сором | /ˈsorom/ | shame | m |
-| провина | /proˈvɪnɑ/ | guilt | f |
-| вдячність | /ˈwdʲɑt͡ʃnʲistʲ/ | gratitude | f |
-| дружба | /ˈdruʒbɑ/ | friendship | f |
-| довіра | /doˈvʲirɑ/ | trust | f |
-| конфлікт | /konˈflʲikt/ | conflict | m |
-| примирення | /prɪmɪˈrɛnʲːɑ/ | reconciliation | n |
-| зрада | /ˈzrɑdɑ/ | betrayal | f |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| сум | /sum/ | sadness | - | m |
+| гнів | /ɦnʲiv/ | anger | - | m |
+| тривога | /trɪˈvoɦɑ/ | anxiety | - | f |
+| розчарування | /rozt͡ʃɑruˈvɑnʲːɑ/ | disappointment | - | n |
+| полегшення | /polɛɦˈʃɛnʲːɑ/ | relief | - | n |
+| сором | /ˈsorom/ | shame | - | m |
+| провина | /proˈvɪnɑ/ | guilt | - | f |
+| вдячність | /ˈwdʲɑt͡ʃnʲistʲ/ | gratitude | - | f |
+| дружба | /ˈdruʒbɑ/ | friendship | - | f |
+| довіра | /doˈvʲirɑ/ | trust | - | f |
+| конфлікт | /konˈflʲikt/ | conflict | - | m |
+| примирення | /prɪmɪˈrɛnʲːɑ/ | reconciliation | - | n |
+| зрада | /ˈzrɑdɑ/ | betrayal | - | f |
 
 ---
 

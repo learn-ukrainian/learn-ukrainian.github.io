@@ -406,19 +406,19 @@ Discuss using vocabulary from this module:
 
 # Vocabulary
 
-| Word | IPA | English | Gender |
-|------|-----|---------|--------|
-| довкілля | /dovˈkʲilʲːɑ/ | environment | n |
-| клімат | /klʲiˈmɑt/ | climate | m |
-| сміття | /smʲiˈtʲːɑ/ | garbage | n |
-| відходи | /vʲidˈxodɪ/ | waste | pl |
-| ресурси | /rɛˈsursɪ/ | resources | pl |
-| енергія | /ɛˈnɛrɦʲijɑ/ | energy | f |
-| захист | /ˈzɑxɪst/ | protection | m |
-| стійкість | /stʲijˈkʲistʲ/ | sustainability | f |
-| посуха | /poˈsuxɑ/ | drought | f |
-| повінь | /poˈvʲinʲ/ | flood | f |
-| викиди | /ˈvɪkɪdɪ/ | emissions | pl |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| довкілля | /dovˈkʲilʲːɑ/ | environment | ім | n |
+| клімат | /klʲiˈmɑt/ | climate | ім | m |
+| сміття | /smʲiˈtʲːɑ/ | garbage | ім | n |
+| відходи | /vʲidˈxodɪ/ | waste | ім | pl |
+| ресурси | /rɛˈsursɪ/ | resources | ім | pl |
+| енергія | /ɛˈnɛrɦʲijɑ/ | energy | ім | f |
+| захист | /ˈzɑxɪst/ | protection | ім | m |
+| стійкість | /stʲijˈkʲistʲ/ | sustainability | ім | f |
+| посуха | /poˈsuxɑ/ | drought | ім | f |
+| повінь | /poˈvʲinʲ/ | flood | ім | f |
+| викиди | /ˈvɪkɪdɪ/ | emissions | ім | pl |
 
 ---
 

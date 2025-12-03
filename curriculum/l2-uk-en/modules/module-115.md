@@ -351,9 +351,9 @@ After completing the checkpoint, assess yourself:
 
 # Vocabulary
 
-| Word | IPA | English | Notes |
-|------|-----|---------|-------|
-| контрольна робота | - | test, assessment | f |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| контрольна робота | - | test, assessment | - | f |
 
 ---
 

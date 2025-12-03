@@ -485,70 +485,70 @@ Talk about:
 
 # Словник
 
-| Word | IPA | English | POS | Note |
-|------|-----|---------|-----|------|
-| досвід | /ˈdosvʲid/ | experience | noun | m |
-| переживання | /pɛrɛʒɪˈvɑnʲːɑ/ | experience (emotional) | noun | n |
-| знання | /ˈznɑnʲːɑ/ | knowledge | noun | n |
-| навичка | /nɑˈvɪt͡ʃkɑ/ | skill | noun | f |
-| вміння | /vˈmʲinʲːɑ/ | ability | noun | n |
-| рівень | /ˈrʲivɛnʲ/ | level | noun | m |
-| розвиток | /ˈrozvɪtok/ | development | noun | m |
-| освіта | /osˈvʲitɑ/ | education | noun | f |
-| можливість | /moʒˈlɪvʲistʲ/ | opportunity, possibility | noun | f |
-| шанс | /ʃɑns/ | chance | noun | m |
-| нагода | /nɑˈɦodɑ/ | occasion, opportunity | noun | f |
-| вибір | /ˈvɪbʲir/ | choice | noun | m |
-| варіант | /vɑrʲiˈɑnt/ | option | noun | m |
-| альтернатива | /ɑlʲtɛrnɑˈtɪvɑ/ | alternative | noun | f |
-| перспектива | /pɛrspɛkˈtɪvɑ/ | perspective, prospect | noun | f |
-| відповідальність | /vʲidpovʲiˈdɑlʲnʲistʲ/ | responsibility | noun | f |
-| обов'язок | /oboˈvjɑzok/ | duty, obligation | noun | m |
-| обов'язки | /oboˈvjɑzkɪ/ | duties | noun | pl |
-| право | /ˈprɑvo/ | right | noun | n |
-| зобов'язання | /zobovˈjɑzɑnʲːɑ/ | commitment, obligation | noun | n |
-| борг | /borɦ/ | debt, duty | noun | m |
-| ситуація | /sɪtuˈɑt͡sʲijɑ/ | situation | noun | f |
-| обставини | /obˈstɑvɪnɪ/ | circumstances | noun | pl |
-| умови | /uˈmovɪ/ | conditions | noun | pl |
-| стан | /stɑn/ | state, condition | noun | m |
-| становище | /stɑˈnovɪʃt͡ʃɛ/ | position, situation | noun | n |
-| середовище | /sɛrɛˈdovɪʃt͡ʃɛ/ | environment | noun | n |
-| зміна | /ˈzmʲinɑ/ | change | noun | f |
-| зміни | /ˈzmʲinɪ/ | changes | noun | pl |
-| стабільність | /stɑˈbʲilʲnʲistʲ/ | stability | noun | f |
-| невизначеність | /nɛvɪznɑˈt͡ʃɛnʲistʲ/ | uncertainty | noun | f |
-| ризик | /ˈrɪzɪk/ | risk | noun | m |
-| безпека | /bɛzˈpɛkɑ/ | safety, security | noun | f |
-| переживати | /pɛrɛʒɪˈvɑtɪ/ | to experience | verb | impf |
-| пережити | /pɛrɛˈʒɪtɪ/ | to experience | verb | pf |
-| стикатися | /stɪˈkɑtɪsʲɑ/ | to encounter | verb | impf |
-| зіткнутися | /zʲitkˈnutɪsʲɑ/ | to encounter | verb | pf |
-| використовувати | /vɪkorɪsˈtovuvɑtɪ/ | to use | verb | impf |
-| використати | /vɪkorɪsˈtɑtɪ/ | to use | verb | pf |
-| вибирати | /vɪbɪˈrɑtɪ/ | to choose | verb | impf |
-| вибрати | /ˈvɪbrɑtɪ/ | to choose | verb | pf |
-| ризикувати | /rɪzɪˈkuvɑtɪ/ | to risk | verb | impf |
-| покращувати | /pokrɑˈʃt͡ʃuvɑtɪ/ | to improve | verb | impf |
-| покращити | /pokrɑˈʃt͡ʃɪtɪ/ | to improve | verb | pf |
-| розвивати | /rozvɪˈvɑtɪ/ | to develop | verb | impf |
-| розвинути | /rozvɪˈnutɪ/ | to develop | verb | pf |
-| брати на себе | /ˈbrɑtɪ nɑ sɛˈbɛ/ | to take on (oneself) | phrase | - |
-| виконувати | /vɪˈkonuvɑtɪ/ | to fulfill, perform | verb | impf |
-| виконати | /vɪˈkonɑtɪ/ | to fulfill, perform | verb | pf |
-| галузь | /ˈɦɑluzʲ/ | field, branch | noun | f |
-| кваліфікація | /kvɑlʲifʲiˈkɑt͡sʲijɑ/ | qualification | noun | f |
-| управління | /uprɑvˈlʲinʲːɑ/ | management | noun | n |
-| виклик | /ˈvɪklɪk/ | challenge | noun | m |
-| контракт | /konˈtrɑkt/ | contract | noun | m |
-| здоров'я | /zdoˈrovjɑ/ | health | noun | n |
-| праця | /ˈprɑt͡sʲɑ/ | work, labor | noun | f |
-| відпочинок | /vʲidˈpot͡ʃɪnok/ | rest | noun | m |
-| глибокий | /ɦlɪˈbokɪj/ | deep | adj | - |
-| унікальний | /unʲiˈkɑlʲnɪj/ | unique | adj | - |
-| незабутній | /nɛzɑˈbutnʲij/ | unforgettable | adj | - |
-| просунутий | /prosuˈnutɪj/ | advanced | adj | - |
-| середній | /sɛˈrɛdnʲij/ | middle, intermediate | adj | - |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| досвід | /ˈdosvʲid/ | experience | ім | m |
+| переживання | /pɛrɛʒɪˈvɑnʲːɑ/ | experience (emotional) | ім | n |
+| знання | /ˈznɑnʲːɑ/ | knowledge | ім | n |
+| навичка | /nɑˈvɪt͡ʃkɑ/ | skill | ім | f |
+| вміння | /vˈmʲinʲːɑ/ | ability | ім | n |
+| рівень | /ˈrʲivɛnʲ/ | level | ім | m |
+| розвиток | /ˈrozvɪtok/ | development | ім | m |
+| освіта | /osˈvʲitɑ/ | education | ім | f |
+| можливість | /moʒˈlɪvʲistʲ/ | opportunity, possibility | ім | f |
+| шанс | /ʃɑns/ | chance | ім | m |
+| нагода | /nɑˈɦodɑ/ | occasion, opportunity | ім | f |
+| вибір | /ˈvɪbʲir/ | choice | ім | m |
+| варіант | /vɑrʲiˈɑnt/ | option | ім | m |
+| альтернатива | /ɑlʲtɛrnɑˈtɪvɑ/ | alternative | ім | f |
+| перспектива | /pɛrspɛkˈtɪvɑ/ | perspective, prospect | ім | f |
+| відповідальність | /vʲidpovʲiˈdɑlʲnʲistʲ/ | responsibility | ім | f |
+| обов'язок | /oboˈvjɑzok/ | duty, obligation | ім | m |
+| обов'язки | /oboˈvjɑzkɪ/ | duties | ім | pl |
+| право | /ˈprɑvo/ | right | ім | n |
+| зобов'язання | /zobovˈjɑzɑnʲːɑ/ | commitment, obligation | ім | n |
+| борг | /borɦ/ | debt, duty | ім | m |
+| ситуація | /sɪtuˈɑt͡sʲijɑ/ | situation | ім | f |
+| обставини | /obˈstɑvɪnɪ/ | circumstances | ім | pl |
+| умови | /uˈmovɪ/ | conditions | ім | pl |
+| стан | /stɑn/ | state, condition | ім | m |
+| становище | /stɑˈnovɪʃt͡ʃɛ/ | position, situation | ім | n |
+| середовище | /sɛrɛˈdovɪʃt͡ʃɛ/ | environment | ім | n |
+| зміна | /ˈzmʲinɑ/ | change | ім | f |
+| зміни | /ˈzmʲinɪ/ | changes | ім | pl |
+| стабільність | /stɑˈbʲilʲnʲistʲ/ | stability | ім | f |
+| невизначеність | /nɛvɪznɑˈt͡ʃɛnʲistʲ/ | uncertainty | ім | f |
+| ризик | /ˈrɪzɪk/ | risk | ім | m |
+| безпека | /bɛzˈpɛkɑ/ | safety, security | ім | f |
+| переживати | /pɛrɛʒɪˈvɑtɪ/ | to experience | дієсл | impf |
+| пережити | /pɛrɛˈʒɪtɪ/ | to experience | дієсл | pf |
+| стикатися | /stɪˈkɑtɪsʲɑ/ | to encounter | дієсл | impf |
+| зіткнутися | /zʲitkˈnutɪsʲɑ/ | to encounter | дієсл | pf |
+| використовувати | /vɪkorɪsˈtovuvɑtɪ/ | to use | дієсл | impf |
+| використати | /vɪkorɪsˈtɑtɪ/ | to use | дієсл | pf |
+| вибирати | /vɪbɪˈrɑtɪ/ | to choose | дієсл | impf |
+| вибрати | /ˈvɪbrɑtɪ/ | to choose | дієсл | pf |
+| ризикувати | /rɪzɪˈkuvɑtɪ/ | to risk | дієсл | impf |
+| покращувати | /pokrɑˈʃt͡ʃuvɑtɪ/ | to improve | дієсл | impf |
+| покращити | /pokrɑˈʃt͡ʃɪtɪ/ | to improve | дієсл | pf |
+| розвивати | /rozvɪˈvɑtɪ/ | to develop | дієсл | impf |
+| розвинути | /rozvɪˈnutɪ/ | to develop | дієсл | pf |
+| брати на себе | /ˈbrɑtɪ nɑ sɛˈbɛ/ | to take on (oneself) | фраза | - |
+| виконувати | /vɪˈkonuvɑtɪ/ | to fulfill, perform | дієсл | impf |
+| виконати | /vɪˈkonɑtɪ/ | to fulfill, perform | дієсл | pf |
+| галузь | /ˈɦɑluzʲ/ | field, branch | ім | f |
+| кваліфікація | /kvɑlʲifʲiˈkɑt͡sʲijɑ/ | qualification | ім | f |
+| управління | /uprɑvˈlʲinʲːɑ/ | management | ім | n |
+| виклик | /ˈvɪklɪk/ | challenge | ім | m |
+| контракт | /konˈtrɑkt/ | contract | ім | m |
+| здоров'я | /zdoˈrovjɑ/ | health | ім | n |
+| праця | /ˈprɑt͡sʲɑ/ | work, labor | ім | f |
+| відпочинок | /vʲidˈpot͡ʃɪnok/ | rest | ім | m |
+| глибокий | /ɦlɪˈbokɪj/ | deep | прикм | - |
+| унікальний | /unʲiˈkɑlʲnɪj/ | unique | прикм | - |
+| незабутній | /nɛzɑˈbutnʲij/ | unforgettable | прикм | - |
+| просунутий | /prosuˈnutɪj/ | advanced | прикм | - |
+| середній | /sɛˈrɛdnʲij/ | middle, intermediate | прикм | - |
 
 ---
 

@@ -414,88 +414,88 @@ Use these verbs to describe a route:
 
 # Словник
 
-| Word | IPA | English | POS | Note |
-|------|-----|---------|-----|------|
-| перейти | /pɛrɛjˈtɪ/ | to cross (pf) | verb | пере- + іти |
-| переходити | /pɛrɛxoˈdɪtɪ/ | to cross (impf) | verb | secondary impf |
-| переїхати | /pɛrɛˈjixɑtɪ/ | to move, drive across (pf) | verb | пере- + їхати |
-| переїжджати | /pɛrɛjizˈdʒɑtɪ/ | to move, drive across (impf) | verb | secondary impf |
-| перебігти | /pɛrɛbʲiɦˈtɪ/ | to run across (pf) | verb | пере- + бігти |
-| перебігати | /pɛrɛbʲiˈɦɑtɪ/ | to run across (impf) | verb | secondary impf |
-| перелетіти | /pɛrɛlɛˈtʲitɪ/ | to fly across (pf) | verb | пере- + летіти |
-| перелітати | /pɛrɛlʲiˈtɑtɪ/ | to fly across (impf) | verb | secondary impf |
-| переплисти | /pɛrɛplɪsˈtɪ/ | to swim across (pf) | verb | пере- + плисти |
-| перепливати | /pɛrɛplɪˈvɑtɪ/ | to swim across (impf) | verb | secondary impf |
-| перенести | /pɛrɛnɛsˈtɪ/ | to carry across, reschedule (pf) | verb | пере- + нести |
-| переносити | /pɛrɛnoˈsɪtɪ/ | to carry across (impf) | verb | secondary impf |
-| перевезти | /pɛrɛvɛzˈtɪ/ | to transport across (pf) | verb | пере- + везти |
-| перевозити | /pɛrɛvoˈzɪtɪ/ | to transport across (impf) | verb | secondary impf |
-| перевести | /pɛrɛvɛsˈtɪ/ | to translate, transfer (pf) | verb | пере- + вести |
-| переводити | /pɛrɛvoˈdɪtɪ/ | to translate, transfer (impf) | verb | secondary impf |
-| перекласти | /pɛrɛklɑsˈtɪ/ | to translate (pf) | verb | alt. form |
-| пройти | /projˈtɪ/ | to pass through (pf) | verb | про- + іти |
-| проходити | /proxoˈdɪtɪ/ | to pass through (impf) | verb | secondary impf |
-| проїхати | /proˈjixɑtɪ/ | to drive through/past (pf) | verb | про- + їхати |
-| проїжджати | /projizˈdʒɑtɪ/ | to drive through/past (impf) | verb | secondary impf |
-| пробігти | /probʲiɦˈtɪ/ | to run past (pf) | verb | про- + бігти |
-| пробігати | /probʲiˈɦɑtɪ/ | to run past (impf) | verb | secondary impf |
-| пролетіти | /prolɛˈtʲitɪ/ | to fly past (pf) | verb | про- + летіти |
-| пролітати | /prolʲiˈtɑtɪ/ | to fly past (impf) | verb | secondary impf |
-| пронести | /pronɛsˈtɪ/ | to carry through (pf) | verb | про- + нести |
-| проносити | /pronoˈsɪtɪ/ | to carry through (impf) | verb | secondary impf |
-| просидіти | /prosɪˈdʲitɪ/ | to sit (for time) (pf) | verb | про- + сидіти |
-| пропрацювати | /proprɑt͡sʲuˈvɑtɪ/ | to work (for time) (pf) | verb | про- + працювати |
-| прочекати | /prot͡ʃɛˈkɑtɪ/ | to wait (for time) (pf) | verb | про- + чекати |
-| прожити | /proʒɪˈtɪ/ | to live (for time) (pf) | verb | про- + жити |
-| обійти | /obijˈtɪ/ | to go around (pf) | verb | об- + іти |
-| обходити | /obxoˈdɪtɪ/ | to go around (impf) | verb | secondary impf |
-| об'їхати | /objˈixɑtɪ/ | to drive around (pf) | verb | об- + їхати |
-| об'їжджати | /objizˈdʒɑtɪ/ | to drive around (impf) | verb | secondary impf |
-| обігнати | /obʲiɦˈnɑtɪ/ | to overtake (pf) | verb | об- + гнати |
-| обганяти | /obɦɑˈnʲɑtɪ/ | to overtake (impf) | verb | secondary impf |
-| облетіти | /oblɛˈtʲitɪ/ | to fly around (pf) | verb | об- + летіти |
-| облітати | /oblʲiˈtɑtɪ/ | to fly around (impf) | verb | secondary impf |
-| обплисти | /obplɪsˈtɪ/ | to sail around (pf) | verb | об- + плисти |
-| обпливати | /obplɪˈvɑtɪ/ | to sail around (impf) | verb | secondary impf |
-| обговорити | /obɦovoˈrɪtɪ/ | to discuss (pf) | verb | об- + говорити |
-| обслуговувати | /obsluɦoˈvuvɑtɪ/ | to serve (impf) | verb | об- + служити |
-| через | /t͡ʃɛˈrɛz/ | through, across | prep | + accusative |
-| повз | /povz/ | past | prep | + accusative |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| перейти | /pɛrɛjˈtɪ/ | to cross (pf) | дієсл | пере- + іти |
+| переходити | /pɛrɛxoˈdɪtɪ/ | to cross (impf) | дієсл | secondary impf |
+| переїхати | /pɛrɛˈjixɑtɪ/ | to move, drive across (pf) | дієсл | пере- + їхати |
+| переїжджати | /pɛrɛjizˈdʒɑtɪ/ | to move, drive across (impf) | дієсл | secondary impf |
+| перебігти | /pɛrɛbʲiɦˈtɪ/ | to run across (pf) | дієсл | пере- + бігти |
+| перебігати | /pɛrɛbʲiˈɦɑtɪ/ | to run across (impf) | дієсл | secondary impf |
+| перелетіти | /pɛrɛlɛˈtʲitɪ/ | to fly across (pf) | дієсл | пере- + летіти |
+| перелітати | /pɛrɛlʲiˈtɑtɪ/ | to fly across (impf) | дієсл | secondary impf |
+| переплисти | /pɛrɛplɪsˈtɪ/ | to swim across (pf) | дієсл | пере- + плисти |
+| перепливати | /pɛrɛplɪˈvɑtɪ/ | to swim across (impf) | дієсл | secondary impf |
+| перенести | /pɛrɛnɛsˈtɪ/ | to carry across, reschedule (pf) | дієсл | пере- + нести |
+| переносити | /pɛrɛnoˈsɪtɪ/ | to carry across (impf) | дієсл | secondary impf |
+| перевезти | /pɛrɛvɛzˈtɪ/ | to transport across (pf) | дієсл | пере- + везти |
+| перевозити | /pɛrɛvoˈzɪtɪ/ | to transport across (impf) | дієсл | secondary impf |
+| перевести | /pɛrɛvɛsˈtɪ/ | to translate, transfer (pf) | дієсл | пере- + вести |
+| переводити | /pɛrɛvoˈdɪtɪ/ | to translate, transfer (impf) | дієсл | secondary impf |
+| перекласти | /pɛrɛklɑsˈtɪ/ | to translate (pf) | дієсл | alt. form |
+| пройти | /projˈtɪ/ | to pass through (pf) | дієсл | про- + іти |
+| проходити | /proxoˈdɪtɪ/ | to pass through (impf) | дієсл | secondary impf |
+| проїхати | /proˈjixɑtɪ/ | to drive through/past (pf) | дієсл | про- + їхати |
+| проїжджати | /projizˈdʒɑtɪ/ | to drive through/past (impf) | дієсл | secondary impf |
+| пробігти | /probʲiɦˈtɪ/ | to run past (pf) | дієсл | про- + бігти |
+| пробігати | /probʲiˈɦɑtɪ/ | to run past (impf) | дієсл | secondary impf |
+| пролетіти | /prolɛˈtʲitɪ/ | to fly past (pf) | дієсл | про- + летіти |
+| пролітати | /prolʲiˈtɑtɪ/ | to fly past (impf) | дієсл | secondary impf |
+| пронести | /pronɛsˈtɪ/ | to carry through (pf) | дієсл | про- + нести |
+| проносити | /pronoˈsɪtɪ/ | to carry through (impf) | дієсл | secondary impf |
+| просидіти | /prosɪˈdʲitɪ/ | to sit (for time) (pf) | дієсл | про- + сидіти |
+| пропрацювати | /proprɑt͡sʲuˈvɑtɪ/ | to work (for time) (pf) | дієсл | про- + працювати |
+| прочекати | /prot͡ʃɛˈkɑtɪ/ | to wait (for time) (pf) | дієсл | про- + чекати |
+| прожити | /proʒɪˈtɪ/ | to live (for time) (pf) | дієсл | про- + жити |
+| обійти | /obijˈtɪ/ | to go around (pf) | дієсл | об- + іти |
+| обходити | /obxoˈdɪtɪ/ | to go around (impf) | дієсл | secondary impf |
+| об'їхати | /objˈixɑtɪ/ | to drive around (pf) | дієсл | об- + їхати |
+| об'їжджати | /objizˈdʒɑtɪ/ | to drive around (impf) | дієсл | secondary impf |
+| обігнати | /obʲiɦˈnɑtɪ/ | to overtake (pf) | дієсл | об- + гнати |
+| обганяти | /obɦɑˈnʲɑtɪ/ | to overtake (impf) | дієсл | secondary impf |
+| облетіти | /oblɛˈtʲitɪ/ | to fly around (pf) | дієсл | об- + летіти |
+| облітати | /oblʲiˈtɑtɪ/ | to fly around (impf) | дієсл | secondary impf |
+| обплисти | /obplɪsˈtɪ/ | to sail around (pf) | дієсл | об- + плисти |
+| обпливати | /obplɪˈvɑtɪ/ | to sail around (impf) | дієсл | secondary impf |
+| обговорити | /obɦovoˈrɪtɪ/ | to discuss (pf) | дієсл | об- + говорити |
+| обслуговувати | /obsluɦoˈvuvɑtɪ/ | to serve (impf) | дієсл | об- + служити |
+| через | /t͡ʃɛˈrɛz/ | through, across | прийм | + accusative |
+| повз | /povz/ | past | прийм | + accusative |
 | навколо | /nɑvˈkolo/ | around | adv/prep | + genitive |
-| дорога | /doˈroɦɑ/ | road, street | noun | f |
-| вулиця | /ˈvulɪt͡sʲɑ/ | street | noun | f |
-| будинок | /buˈdɪnok/ | building, house | noun | m |
-| міст | /mʲist/ | bridge | noun | m |
-| парк | /pɑrk/ | park | noun | m |
-| ліс | /lʲis/ | forest | noun | m |
-| ріка | /rʲiˈkɑ/ | river | noun | f |
-| місто | /ˈmʲisto/ | city | noun | n |
-| центр | /t͡sɛntr/ | center | noun | m |
-| коридор | /korɪˈdor/ | corridor | noun | m |
-| тунель | /tuˈnɛlʲ/ | tunnel | noun | m |
-| зупинка | /zuˈpɪnkɑ/ | stop (bus etc.) | noun | f |
-| затор | /zɑˈtor/ | traffic jam | noun | m |
-| яма | /ˈjɑmɑ/ | hole, pit | noun | f |
-| вхід | /vxʲid/ | entrance | noun | m |
-| змагання | /zmɑˈɦɑnʲɑ/ | competition | noun | n.pl |
-| перегони | /pɛrɛˈɦonɪ/ | race (competition) | noun | pl |
-| зустріч | /ˈzustrit͡ʃ/ | meeting | noun | f |
-| книга | /ˈknɪɦɑ/ | book | noun | f |
-| справа | /ˈsprɑvɑ/ | matter, business | noun | f |
-| місце | /ˈmʲist͡sɛ/ | place | noun | n |
-| час | /t͡ʃɑs/ | time | noun | m |
-| година | /ɦoˈdɪnɑ/ | hour | noun | f |
-| ніч | /nʲit͡ʃ/ | night | noun | f |
-| кілометр | /kʲiloˈmɛtr/ | kilometer | noun | m |
-| світлофор | /svʲitloˈfor/ | traffic light | noun | m |
-| перехід | /pɛrɛˈxʲid/ | crossing (pedestrian) | noun | m |
-| кінець | /kɪˈnɛt͡sʲ/ | end | noun | m |
-| прямо | /ˈprʲɑmo/ | straight | adv | - |
-| зліва | /ˈzlʲivɑ/ | on the left | adv | - |
-| пішки | /pʲiʃˈkɪ/ | on foot | adv | - |
-| швидко | /ˈʃvɪdko/ | quickly | adv | - |
-| нарешті | /nɑˈrɛʃtʲi/ | finally | adv | - |
-| потім | /poˈtʲim/ | then | adv | - |
+| дорога | /doˈroɦɑ/ | road, street | ім | f |
+| вулиця | /ˈvulɪt͡sʲɑ/ | street | ім | f |
+| будинок | /buˈdɪnok/ | building, house | ім | m |
+| міст | /mʲist/ | bridge | ім | m |
+| парк | /pɑrk/ | park | ім | m |
+| ліс | /lʲis/ | forest | ім | m |
+| ріка | /rʲiˈkɑ/ | river | ім | f |
+| місто | /ˈmʲisto/ | city | ім | n |
+| центр | /t͡sɛntr/ | center | ім | m |
+| коридор | /korɪˈdor/ | corridor | ім | m |
+| тунель | /tuˈnɛlʲ/ | tunnel | ім | m |
+| зупинка | /zuˈpɪnkɑ/ | stop (bus etc.) | ім | f |
+| затор | /zɑˈtor/ | traffic jam | ім | m |
+| яма | /ˈjɑmɑ/ | hole, pit | ім | f |
+| вхід | /vxʲid/ | entrance | ім | m |
+| змагання | /zmɑˈɦɑnʲɑ/ | competition | ім | n.pl |
+| перегони | /pɛrɛˈɦonɪ/ | race (competition) | ім | pl |
+| зустріч | /ˈzustrit͡ʃ/ | meeting | ім | f |
+| книга | /ˈknɪɦɑ/ | book | ім | f |
+| справа | /ˈsprɑvɑ/ | matter, business | ім | f |
+| місце | /ˈmʲist͡sɛ/ | place | ім | n |
+| час | /t͡ʃɑs/ | time | ім | m |
+| година | /ɦoˈdɪnɑ/ | hour | ім | f |
+| ніч | /nʲit͡ʃ/ | night | ім | f |
+| кілометр | /kʲiloˈmɛtr/ | kilometer | ім | m |
+| світлофор | /svʲitloˈfor/ | traffic light | ім | m |
+| перехід | /pɛrɛˈxʲid/ | crossing (pedestrian) | ім | m |
+| кінець | /kɪˈnɛt͡sʲ/ | end | ім | m |
+| прямо | /ˈprʲɑmo/ | straight | присл | - |
+| зліва | /ˈzlʲivɑ/ | on the left | присл | - |
+| пішки | /pʲiʃˈkɪ/ | on foot | присл | - |
+| швидко | /ˈʃvɪdko/ | quickly | присл | - |
+| нарешті | /nɑˈrɛʃtʲi/ | finally | присл | - |
+| потім | /poˈtʲim/ | then | присл | - |
 | потрібно | /poˈtrʲibno/ | it is necessary | pred | - |
 
 ---

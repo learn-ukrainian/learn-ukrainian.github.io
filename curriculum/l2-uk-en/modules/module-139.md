@@ -399,17 +399,17 @@ Write about:
 
 # Vocabulary
 
-| Word | IPA | English | Notes |
-|------|-----|---------|-------|
-| лексика | /ˈlɛksɪkɑ/ | vocabulary | f |
-| комунікація | /komunʲikɑˈt͡sʲijɑ/ | communication | f |
-| дискурс | /dɪsˈkurs/ | discourse | m |
-| синонім | /sɪnoˈnʲim/ | synonym | m |
-| колокація | /kolokɑˈt͡sʲijɑ/ | collocation | f |
-| ідіома | /ʲiˈdʲiomɑ/ | idiom | f |
-| вираження думки | - | opinion expression | n |
-| абстрактний | /ɑbsˈtrɑktnɪj/ | abstract | adj |
-| контекст | /konˈtɛkst/ | context | m |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| лексика | /ˈlɛksɪkɑ/ | vocabulary | - | f |
+| комунікація | /komunʲikɑˈt͡sʲijɑ/ | communication | - | f |
+| дискурс | /dɪsˈkurs/ | discourse | - | m |
+| синонім | /sɪnoˈnʲim/ | synonym | - | m |
+| колокація | /kolokɑˈt͡sʲijɑ/ | collocation | - | f |
+| ідіома | /ʲiˈdʲiomɑ/ | idiom | - | f |
+| вираження думки | - | opinion expression | - | n |
+| абстрактний | /ɑbsˈtrɑktnɪj/ | abstract | - | adj |
+| контекст | /konˈtɛkst/ | context | - | m |
 
 ---
 

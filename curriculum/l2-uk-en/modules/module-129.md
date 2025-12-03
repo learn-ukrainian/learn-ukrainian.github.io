@@ -401,18 +401,18 @@ Talk about a memorable journey:
 
 # Vocabulary
 
-| Word | IPA | English | Notes |
-|------|-----|---------|-------|
-| віза | /ˈvʲizɑ/ | visa | f |
-| кордон | /korˈdon/ | border | m |
-| митниця | /ˈmɪtnɪt͡sʲɑ/ | customs | f |
-| країна | /krɑˈjinɑ/ | country | f |
-| столиця | /stoˈlɪt͡sʲɑ/ | capital | f |
-| подорожувати | /podoroʒuˈvɑtɪ/ | to travel | impf |
-| відвідувати | /vʲidvʲiˈduvɑtɪ/ | to visit | impf |
-| прибувати | /prɪbuˈvɑtɪ/ | to arrive | impf |
-| відправлятися | /vʲidprɑvˈlʲɑtɪsʲɑ/ | to depart | impf |
-| пункт призначення | - | destination | m |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| віза | /ˈvʲizɑ/ | visa | - | f |
+| кордон | /korˈdon/ | border | - | m |
+| митниця | /ˈmɪtnɪt͡sʲɑ/ | customs | - | f |
+| країна | /krɑˈjinɑ/ | country | - | f |
+| столиця | /stoˈlɪt͡sʲɑ/ | capital | - | f |
+| подорожувати | /podoroʒuˈvɑtɪ/ | to travel | - | impf |
+| відвідувати | /vʲidvʲiˈduvɑtɪ/ | to visit | - | impf |
+| прибувати | /prɪbuˈvɑtɪ/ | to arrive | - | impf |
+| відправлятися | /vʲidprɑvˈlʲɑtɪsʲɑ/ | to depart | - | impf |
+| пункт призначення | - | destination | - | m |
 
 ---
 

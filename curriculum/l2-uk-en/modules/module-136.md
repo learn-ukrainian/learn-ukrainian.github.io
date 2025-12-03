@@ -441,20 +441,20 @@ Are there similar proverbs in your language?
 
 # Vocabulary
 
-| Word | IPA | English | Notes |
-|------|-----|---------|-------|
-| приказка | /prɪˈkɑzkɑ/ | proverb, saying | f |
-| прислів'я | /prɪsˈlʲivjɑ/ | proverb | n |
-| народна мудрість | - | folk wisdom | f |
-| тримати слово | - | keep one's word | idiom |
-| давати слово | - | give one's word | idiom |
-| справа в капелюсі | - | it's in the bag | idiom |
-| душа в душу | - | in harmony | idiom |
-| ні сном ні духом | - | have no idea | idiom |
-| на ножах | - | at odds | idiom |
-| без труда нема плода | - | no pain no gain | proverb |
-| краще пізно ніж ніколи | - | better late than never | proverb |
-| до речі | - | by the way | expression |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| приказка | /prɪˈkɑzkɑ/ | proverb, saying | - | f |
+| прислів'я | /prɪsˈlʲivjɑ/ | proverb | - | n |
+| народна мудрість | - | folk wisdom | - | f |
+| тримати слово | - | keep one's word | - | idiom |
+| давати слово | - | give one's word | - | idiom |
+| справа в капелюсі | - | it's in the bag | - | idiom |
+| душа в душу | - | in harmony | - | idiom |
+| ні сном ні духом | - | have no idea | - | idiom |
+| на ножах | - | at odds | - | idiom |
+| без труда нема плода | - | no pain no gain | - | proverb |
+| краще пізно ніж ніколи | - | better late than never | - | proverb |
+| до речі | - | by the way | - | expression |
 
 ---
 

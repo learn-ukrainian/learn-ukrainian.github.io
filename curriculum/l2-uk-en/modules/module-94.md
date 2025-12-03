@@ -396,51 +396,51 @@ Use: пройти, перейти, зайти, обійти, увійти, по�
 
 # Словник
 
-| Word | IPA | English | POS | Note |
-|------|-----|---------|-----|------|
-| односпрямований | /ˌodnospʲrʲɑmoˈvɑnɪj/ | unidirectional | adj | grammar term |
-| різноспрямований | /ˌrʲiznospʲrʲɑmoˈvɑnɪj/ | multidirectional | adj | grammar term |
-| напрямок | /nɑˈprʲɑmok/ | direction | noun | m |
-| сюди | /sʲuˈdɪ/ | here (direction to) | adv | - |
-| туди | /tuˈdɪ/ | there (direction to) | adv | - |
-| звідси | /zvʲidˈsɪ/ | from here | adv | - |
-| звідти | /zvʲidˈtɪ/ | from there | adv | - |
-| через | /ˈt͡ʃɛrɛz/ | through, across | prep | - |
-| повз | /povz/ | past, by | prep | + accusative |
-| назустріч | /nɑˈzustrʲit͡ʃ/ | towards, to meet | prep | + dative |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| односпрямований | /ˌodnospʲrʲɑmoˈvɑnɪj/ | unidirectional | прикм | grammar term |
+| різноспрямований | /ˌrʲiznospʲrʲɑmoˈvɑnɪj/ | multidirectional | прикм | grammar term |
+| напрямок | /nɑˈprʲɑmok/ | direction | ім | m |
+| сюди | /sʲuˈdɪ/ | here (direction to) | присл | - |
+| туди | /tuˈdɪ/ | there (direction to) | присл | - |
+| звідси | /zvʲidˈsɪ/ | from here | присл | - |
+| звідти | /zvʲidˈtɪ/ | from there | присл | - |
+| через | /ˈt͡ʃɛrɛz/ | through, across | прийм | - |
+| повз | /povz/ | past, by | прийм | + accusative |
+| назустріч | /nɑˈzustrʲit͡ʃ/ | towards, to meet | прийм | + dative |
 | навколо | /nɑvˈkolo/ | around | adv/prep | - |
-| вздовж | /vzdovʒ/ | along | prep | + genitive |
-| перехрестя | /pɛrɛˈxrɛstʲɑ/ | intersection | noun | n |
-| повернути | /povɛrˈnutɪ/ | to turn (pf) | verb | - |
-| повертатися | /povɛrˈtɑtɪsʲɑ/ | to return (impf) | verb | - |
-| повернутися | /povɛrˈnutɪsʲɑ/ | to return (pf) | verb | - |
-| вчасно | /ˈvt͡ʃɑsno/ | on time | adv | - |
-| пізніше | /pʲizˈnʲiʃɛ/ | later | adv | comparative |
-| рутина | /ruˈtɪnɑ/ | routine | noun | f |
-| вокзал | /vokˈzɑl/ | train station | noun | m |
-| готель | /ɦoˈtɛlʲ/ | hotel | noun | m |
-| гості | /ˈɦostʲi/ | guests | noun | pl |
-| в гості | /v ˈɦostʲi/ | to visit | phrase | direction |
-| подорож | /ˈpodorɔʒ/ | journey, trip | noun | f |
-| поїздка | /poˈjizdkɑ/ | trip | noun | f |
-| алгоритм | /ɑlɦoˈrɪtm/ | algorithm | noun | m |
-| автоматизм | /ɑvtomɑˈtɪzm/ | automaticity | noun | m |
-| закономірність | /zɑkonoˈmʲirnʲistʲ/ | pattern, regularity | noun | f |
-| наліво | /nɑˈlʲivo/ | to the left | adv | direction |
-| направо | /nɑˈprɑvo/ | to the right | adv | direction |
-| спочатку | /spoˈt͡ʃɑtku/ | at first | adv | - |
-| потім | /poˈtʲim/ | then | adv | - |
-| нарешті | /nɑˈrɛʃtʲi/ | finally | adv | - |
-| учора | /uˈt͡ʃorɑ/ | yesterday | adv | - |
-| минулого тижня | /mɪˈnuloɦo ˈtɪʒnʲɑ/ | last week | phrase | - |
-| щоранку | /ʃt͡ʃoˈrɑnku/ | every morning | adv | - |
-| щодня | /ʃt͡ʃoˈdnʲɑ/ | every day | adv | - |
-| завжди | /ˈzɑvʒdɪ/ | always | adv | - |
-| зазвичай | /zɑzˈvɪt͡ʃɑj/ | usually | adv | - |
-| буквальний | /bukˈvɑlʲnɪj/ | literal | adj | - |
-| переносний | /pɛrɛˈnosnɪj/ | figurative | adj | - |
-| помилитися | /pomɪˈlɪtɪsʲɑ/ | to make a mistake (pf) | verb | - |
-| помилка | /poˈmɪlkɑ/ | mistake, error | noun | f |
+| вздовж | /vzdovʒ/ | along | прийм | + genitive |
+| перехрестя | /pɛrɛˈxrɛstʲɑ/ | intersection | ім | n |
+| повернути | /povɛrˈnutɪ/ | to turn (pf) | дієсл | - |
+| повертатися | /povɛrˈtɑtɪsʲɑ/ | to return (impf) | дієсл | - |
+| повернутися | /povɛrˈnutɪsʲɑ/ | to return (pf) | дієсл | - |
+| вчасно | /ˈvt͡ʃɑsno/ | on time | присл | - |
+| пізніше | /pʲizˈnʲiʃɛ/ | later | присл | comparative |
+| рутина | /ruˈtɪnɑ/ | routine | ім | f |
+| вокзал | /vokˈzɑl/ | train station | ім | m |
+| готель | /ɦoˈtɛlʲ/ | hotel | ім | m |
+| гості | /ˈɦostʲi/ | guests | ім | pl |
+| в гості | /v ˈɦostʲi/ | to visit | фраза | direction |
+| подорож | /ˈpodorɔʒ/ | journey, trip | ім | f |
+| поїздка | /poˈjizdkɑ/ | trip | ім | f |
+| алгоритм | /ɑlɦoˈrɪtm/ | algorithm | ім | m |
+| автоматизм | /ɑvtomɑˈtɪzm/ | automaticity | ім | m |
+| закономірність | /zɑkonoˈmʲirnʲistʲ/ | pattern, regularity | ім | f |
+| наліво | /nɑˈlʲivo/ | to the left | присл | direction |
+| направо | /nɑˈprɑvo/ | to the right | присл | direction |
+| спочатку | /spoˈt͡ʃɑtku/ | at first | присл | - |
+| потім | /poˈtʲim/ | then | присл | - |
+| нарешті | /nɑˈrɛʃtʲi/ | finally | присл | - |
+| учора | /uˈt͡ʃorɑ/ | yesterday | присл | - |
+| минулого тижня | /mɪˈnuloɦo ˈtɪʒnʲɑ/ | last week | фраза | - |
+| щоранку | /ʃt͡ʃoˈrɑnku/ | every morning | присл | - |
+| щодня | /ʃt͡ʃoˈdnʲɑ/ | every day | присл | - |
+| завжди | /ˈzɑvʒdɪ/ | always | присл | - |
+| зазвичай | /zɑzˈvɪt͡ʃɑj/ | usually | присл | - |
+| буквальний | /bukˈvɑlʲnɪj/ | literal | прикм | - |
+| переносний | /pɛrɛˈnosnɪj/ | figurative | прикм | - |
+| помилитися | /pomɪˈlɪtɪsʲɑ/ | to make a mistake (pf) | дієсл | - |
+| помилка | /poˈmɪlkɑ/ | mistake, error | ім | f |
 
 ---
 

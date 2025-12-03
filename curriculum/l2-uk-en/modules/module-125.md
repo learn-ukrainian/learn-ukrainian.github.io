@@ -342,9 +342,9 @@ After completing the checkpoint, assess yourself:
 
 # Vocabulary
 
-| Word | IPA | English | Notes |
-|------|-----|---------|-------|
-| повторити | /powtorˈɪtɪ/ | to review, repeat | pf |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| повторити | /powtorˈɪtɪ/ | to review, repeat | - | pf |
 
 ---
 

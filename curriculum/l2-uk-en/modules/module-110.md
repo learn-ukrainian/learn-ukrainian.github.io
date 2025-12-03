@@ -464,15 +464,15 @@ Use temporal clauses to talk about past events:
 
 # Vocabulary
 
-| Word | IPA | English | Notes |
-|------|-----|---------|-------|
-| перед тим як | - | before | conj |
-| до того як | - | before | conj (formal) |
-| доки | /doˈkɪ/ | while, until | conj |
-| щойно | /ˈʃt͡ʃojno/ | as soon as, just | adv/conj |
-| як тільки | /jɑk ˈtʲilʲkɪ/ | as soon as | conj |
-| ледве | /ˈlɛdvɛ/ | hardly, barely | adv |
-| тим часом | /tɪm ˈt͡ʃɑsom/ | meanwhile | adv |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| перед тим як | - | before | - | conj |
+| до того як | - | before | - | conj (formal) |
+| доки | /doˈkɪ/ | while, until | - | conj |
+| щойно | /ˈʃt͡ʃojno/ | as soon as, just | - | adv/conj |
+| як тільки | /jɑk ˈtʲilʲkɪ/ | as soon as | - | conj |
+| ледве | /ˈlɛdvɛ/ | hardly, barely | - | adv |
+| тим часом | /tɪm ˈt͡ʃɑsom/ | meanwhile | - | adv |
 
 ---
 

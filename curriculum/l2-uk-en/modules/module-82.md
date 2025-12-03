@@ -458,19 +458,19 @@ Ask questions using different aspects:
 
 # Словник
 
-| Word | IPA | English | POS | Note |
-|------|-----|---------|-----|------|
-| повторювана | /povtoˈrʲuvɑnɑ/ | repeated | adj | повторювана дія |
-| звичка | /ˈzvɪt͡ʃkɑ/ | habit | noun | f |
-| маркер | /ˈmɑrkɛr/ | marker | noun | m |
-| кожного разу | /ˈkoʒnoɦo ˈrɑzu/ | each time, every time | phrase | - |
-| щоразу | /ʃt͡ʃoˈrɑzu/ | every time | adv | - |
-| щороку | /ʃt͡ʃoˈroku/ | every year | adv | - |
-| жарт | /ʒɑrt/ | joke | noun | m |
-| розповідати | /rozpovʲiˈdɑtɪ/ | to tell (stories) | verb | impf |
-| одружитися | /oˈdruʒɪtɪsʲɑ/ | to get married | verb | pf |
-| гуртожиток | /ɦurtoˈʒɪtok/ | dormitory | noun | m |
-| сюжет | /sʲuˈʒɛt/ | plot | noun | m |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| повторювана | /povtoˈrʲuvɑnɑ/ | repeated | прикм | повторювана дія |
+| звичка | /ˈzvɪt͡ʃkɑ/ | habit | ім | f |
+| маркер | /ˈmɑrkɛr/ | marker | ім | m |
+| кожного разу | /ˈkoʒnoɦo ˈrɑzu/ | each time, every time | фраза | - |
+| щоразу | /ʃt͡ʃoˈrɑzu/ | every time | присл | - |
+| щороку | /ʃt͡ʃoˈroku/ | every year | присл | - |
+| жарт | /ʒɑrt/ | joke | ім | m |
+| розповідати | /rozpovʲiˈdɑtɪ/ | to tell (stories) | дієсл | impf |
+| одружитися | /oˈdruʒɪtɪsʲɑ/ | to get married | дієсл | pf |
+| гуртожиток | /ɦurtoˈʒɪtok/ | dormitory | ім | m |
+| сюжет | /sʲuˈʒɛt/ | plot | ім | m |
 
 ---
 

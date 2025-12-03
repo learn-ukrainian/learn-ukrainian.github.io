@@ -367,18 +367,18 @@ Use collocations to describe:
 
 # Vocabulary
 
-| Word | IPA | English | Notes |
-|------|-----|---------|-------|
-| колокація | /kolokɑˈt͡sʲijɑ/ | collocation | f |
-| словосполучення | - | word combination | n |
-| приймати рішення | - | make a decision | colloc |
-| робити помилку | - | make a mistake | colloc |
-| брати участь | - | take part | colloc |
-| давати пораду | - | give advice | colloc |
-| мати сенс | - | make sense | colloc |
-| вести переговори | - | conduct negotiations | colloc |
-| мати значення | - | matter, be important | colloc |
-| брати до уваги | - | take into account | colloc |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| колокація | /kolokɑˈt͡sʲijɑ/ | collocation | - | f |
+| словосполучення | - | word combination | - | n |
+| приймати рішення | - | make a decision | - | colloc |
+| робити помилку | - | make a mistake | - | colloc |
+| брати участь | - | take part | - | colloc |
+| давати пораду | - | give advice | - | colloc |
+| мати сенс | - | make sense | - | colloc |
+| вести переговори | - | conduct negotiations | - | colloc |
+| мати значення | - | matter, be important | - | colloc |
+| брати до уваги | - | take into account | - | colloc |
 
 ---
 

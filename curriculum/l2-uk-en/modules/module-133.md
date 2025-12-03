@@ -385,10 +385,10 @@ Practice being a news anchor:
 
 # Vocabulary
 
-| Word | IPA | English | Notes |
-|------|-----|---------|-------|
-| заявляти | /zɑjɑvˈlʲɑtɪ/ | to declare | impf |
-| оповідати | /opovʲiˈdɑtɪ/ | to narrate | impf, literary |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| заявляти | /zɑjɑvˈlʲɑtɪ/ | to declare | - | impf |
+| оповідати | /opovʲiˈdɑtɪ/ | to narrate | - | impf, literary |
 
 ---
 

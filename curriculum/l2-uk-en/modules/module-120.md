@@ -380,18 +380,18 @@ Use participles to describe what has been done:
 
 # Vocabulary
 
-| Word | IPA | English | Notes |
-|------|-----|---------|-------|
-| пасивний стан | /pɑˈsɪwnɪj stɑn/ | passive voice | - |
-| активний стан | /ɑkˈtɪwnɪj stɑn/ | active voice | - |
-| діяч | /ˈdʲijɑt͡ʃ/ | agent | m |
-| коротка форма | /koˈrotkɑ ˈformɑ/ | short form | f |
-| прийнято | /prɪjˈnʲɑto/ | accepted, adopted | short form |
-| ухвалено | /uxˈvɑlɛno/ | passed (law) | short form |
-| підписано | /pʲidˈpɪsɑno/ | signed | short form |
-| завершено | /zɑvɛrˈʃɛno/ | completed | short form |
-| затримано | /zɑˈtrɪmɑno/ | detained | short form |
-| виконано | /vɪˈkonɑno/ | performed, done | short form |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| пасивний стан | /pɑˈsɪwnɪj stɑn/ | passive voice | - | - |
+| активний стан | /ɑkˈtɪwnɪj stɑn/ | active voice | - | - |
+| діяч | /ˈdʲijɑt͡ʃ/ | agent | - | m |
+| коротка форма | /koˈrotkɑ ˈformɑ/ | short form | - | f |
+| прийнято | /prɪjˈnʲɑto/ | accepted, adopted | - | short form |
+| ухвалено | /uxˈvɑlɛno/ | passed (law) | - | short form |
+| підписано | /pʲidˈpɪsɑno/ | signed | - | short form |
+| завершено | /zɑvɛrˈʃɛno/ | completed | - | short form |
+| затримано | /zɑˈtrɪmɑno/ | detained | - | short form |
+| виконано | /vɪˈkonɑno/ | performed, done | - | short form |
 
 ---
 

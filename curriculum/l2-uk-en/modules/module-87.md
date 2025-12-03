@@ -356,23 +356,23 @@ Use at least 5 aspect pairs:
 
 # Словник
 
-| Word | IPA | English | POS | Note |
-|------|-----|---------|-----|------|
-| префікс | /ˈprɛfʲiks/ | prefix | noun | m, grammar term |
-| суфікс | /ˈsufʲiks/ | suffix | noun | m, grammar term |
-| корінь | /ˈkorʲinʲ/ | root | noun | m, grammar term |
-| суплетивізм | /suplɛtɪˈvʲizm/ | suppletion | noun | m, grammar term |
-| модель | /moˈdɛlʲ/ | pattern, model | noun | f |
-| будувати | /buduˈvɑtɪ/ | to build | verb | impf |
-| побудувати | /pobuduˈvɑtɪ/ | to build | verb | pf |
-| вирішувати | /vɪrʲiˈʃuvɑtɪ/ | to decide, solve | verb | impf |
-| вирішити | /vɪˈrʲiʃɪtɪ/ | to decide, solve | verb | pf |
-| пояснювати | /pojɑsʲˈnʲuvɑtɪ/ | to explain | verb | impf |
-| пояснити | /pojɑsˈnɪtɪ/ | to explain | verb | pf |
-| обговорювати | /obɦovɔˈrʲuvɑtɪ/ | to discuss | verb | impf |
-| обговорити | /obɦovoˈrɪtɪ/ | to discuss | verb | pf |
-| згадувати | /zɦɑˈduvɑtɪ/ | to recall | verb | impf |
-| згадати | /zɦɑˈdɑtɪ/ | to recall | verb | pf |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| префікс | /ˈprɛfʲiks/ | prefix | ім | m, grammar term |
+| суфікс | /ˈsufʲiks/ | suffix | ім | m, grammar term |
+| корінь | /ˈkorʲinʲ/ | root | ім | m, grammar term |
+| суплетивізм | /suplɛtɪˈvʲizm/ | suppletion | ім | m, grammar term |
+| модель | /moˈdɛlʲ/ | pattern, model | ім | f |
+| будувати | /buduˈvɑtɪ/ | to build | дієсл | impf |
+| побудувати | /pobuduˈvɑtɪ/ | to build | дієсл | pf |
+| вирішувати | /vɪrʲiˈʃuvɑtɪ/ | to decide, solve | дієсл | impf |
+| вирішити | /vɪˈrʲiʃɪtɪ/ | to decide, solve | дієсл | pf |
+| пояснювати | /pojɑsʲˈnʲuvɑtɪ/ | to explain | дієсл | impf |
+| пояснити | /pojɑsˈnɪtɪ/ | to explain | дієсл | pf |
+| обговорювати | /obɦovɔˈrʲuvɑtɪ/ | to discuss | дієсл | impf |
+| обговорити | /obɦovoˈrɪtɪ/ | to discuss | дієсл | pf |
+| згадувати | /zɦɑˈduvɑtɪ/ | to recall | дієсл | impf |
+| згадати | /zɦɑˈdɑtɪ/ | to recall | дієсл | pf |
 
 ---
 

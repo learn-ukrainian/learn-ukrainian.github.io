@@ -406,14 +406,14 @@ Choose a topic and discuss using variety:
 
 # Vocabulary
 
-| Word | IPA | English | Notes |
-|------|-----|---------|-------|
-| міркувати | /mʲirkuˈvɑtɪ/ | to ponder, reflect | impf, deep |
-| роздумувати | /rozduˈmuvɑtɪ/ | to deliberate | impf |
-| припускати | /prɪpusˈkɑtɪ/ | to suppose, assume | impf |
-| переконання | /pɛrɛkoˈnɑnʲːɑ/ | belief, conviction | n |
-| враження | /vrɑˈʒɛnʲːɑ/ | impression | n |
-| роздум | /ˈrozdum/ | reflection, thought | m |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| міркувати | /mʲirkuˈvɑtɪ/ | to ponder, reflect | - | impf, deep |
+| роздумувати | /rozduˈmuvɑtɪ/ | to deliberate | - | impf |
+| припускати | /prɪpusˈkɑtɪ/ | to suppose, assume | - | impf |
+| переконання | /pɛrɛkoˈnɑnʲːɑ/ | belief, conviction | - | n |
+| враження | /vrɑˈʒɛnʲːɑ/ | impression | - | n |
+| роздум | /ˈrozdum/ | reflection, thought | - | m |
 
 ---
 

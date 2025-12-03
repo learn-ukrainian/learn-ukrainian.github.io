@@ -729,33 +729,33 @@ Practice expressing opinions "for" and "against":
 
 # Словник
 
-| Word | IPA | English | POS | Note |
-|------|-----|---------|-----|------|
-| гадати | /ɦɑˈdɑtɪ/ | to think, suppose | verb | impf |
-| безперечно | /bɛzpɛˈrɛt͡ʃno/ | undoubtedly | adv | high certainty |
-| ймовірно | /jmoˈvʲirno/ | probably, likely | adv | medium certainty |
-| мабуть | /mɑˈbutʲ/ | probably | adv | low certainty |
-| однак | /odˈnɑk/ | however | conj | contrast |
-| проте | /proˈtɛ/ | however | conj | contrast |
-| адже | /ɑˈdʒɛ/ | after all, since | conj | causal |
-| оскільки | /osˈkʲilʲkɪ/ | since, as | conj | causal |
-| завдяки | /zɑvˈdʲakɪ/ | thanks to | prep | cause (positive) |
-| незважаючи | /nɛzvɑˈʒɑjut͡ʃɪ/ | despite, in spite of | prep | concession |
-| порівняно | /poˈrʲivnʲɑno/ | compared to | adv | comparison |
-| перш за все | /pɛrʃ zɑ vsɛ/ | first of all | phrase | emphasis |
-| до того ж | /do toˈɦo ʒ/ | moreover | phrase | addition |
-| крім того | /krʲim toˈɦo/ | besides | phrase | addition |
-| підсумовуючи | /pʲidsumovuˈjut͡ʃɪ/ | summarizing | adv | conclusion |
-| одним словом | /odˈnɪm ˈslovom/ | in a word | phrase | summary |
-| в цілому | /v t͡sʲiˈlomu/ | on the whole | phrase | general |
-| найважливіше | /nɑjvɑʒˈlɪvʲiʃɛ/ | most importantly | adv | emphasis |
-| формальність | /formɑlʲˈnʲistʲ/ | formality | noun | f |
-| обґрунтований | /obɡruntoˈvɑnɪj/ | justified, grounded | adj | - |
-| переконливо | /pɛrɛkonˈlɪvo/ | convincingly | adv | - |
-| категоричний | /kɑtɛɦoˈrɪt͡ʃnɪj/ | categorical | adj | - |
-| нейтрально | /nɛjˈtrɑlʲno/ | neutrally | adv | - |
-| публіцистика | /publʲit͡sɪsˈtɪkɑ/ | journalism | noun | f |
-| риторичний | /rɪtoˈrɪt͡ʃnɪj/ | rhetorical | adj | - |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| гадати | /ɦɑˈdɑtɪ/ | to think, suppose | дієсл | impf |
+| безперечно | /bɛzpɛˈrɛt͡ʃno/ | undoubtedly | присл | high certainty |
+| ймовірно | /jmoˈvʲirno/ | probably, likely | присл | medium certainty |
+| мабуть | /mɑˈbutʲ/ | probably | присл | low certainty |
+| однак | /odˈnɑk/ | however | сполучн | contrast |
+| проте | /proˈtɛ/ | however | сполучн | contrast |
+| адже | /ɑˈdʒɛ/ | after all, since | сполучн | causal |
+| оскільки | /osˈkʲilʲkɪ/ | since, as | сполучн | causal |
+| завдяки | /zɑvˈdʲakɪ/ | thanks to | прийм | cause (positive) |
+| незважаючи | /nɛzvɑˈʒɑjut͡ʃɪ/ | despite, in spite of | прийм | concession |
+| порівняно | /poˈrʲivnʲɑno/ | compared to | присл | comparison |
+| перш за все | /pɛrʃ zɑ vsɛ/ | first of all | фраза | emphasis |
+| до того ж | /do toˈɦo ʒ/ | moreover | фраза | addition |
+| крім того | /krʲim toˈɦo/ | besides | фраза | addition |
+| підсумовуючи | /pʲidsumovuˈjut͡ʃɪ/ | summarizing | присл | conclusion |
+| одним словом | /odˈnɪm ˈslovom/ | in a word | фраза | summary |
+| в цілому | /v t͡sʲiˈlomu/ | on the whole | фраза | general |
+| найважливіше | /nɑjvɑʒˈlɪvʲiʃɛ/ | most importantly | присл | emphasis |
+| формальність | /formɑlʲˈnʲistʲ/ | formality | ім | f |
+| обґрунтований | /obɡruntoˈvɑnɪj/ | justified, grounded | прикм | - |
+| переконливо | /pɛrɛkonˈlɪvo/ | convincingly | присл | - |
+| категоричний | /kɑtɛɦoˈrɪt͡ʃnɪj/ | categorical | прикм | - |
+| нейтрально | /nɛjˈtrɑlʲno/ | neutrally | присл | - |
+| публіцистика | /publʲit͡sɪsˈtɪkɑ/ | journalism | ім | f |
+| риторичний | /rɪtoˈrɪt͡ʃnɪj/ | rhetorical | прикм | - |
 
 ---
 

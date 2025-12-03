@@ -404,22 +404,22 @@ Describe trends using vocabulary:
 
 # Vocabulary
 
-| Word | IPA | English | Notes |
-|------|-----|---------|-------|
-| зростати | /zrosˈtɑtɪ/ | to grow, increase | impf |
-| зменшуватися | - | to decrease | impf |
-| підвищуватися | - | to rise | impf |
-| знижуватися | - | to decline | impf |
-| покращуватися | - | to improve | impf |
-| погіршуватися | - | to worsen | impf |
-| розвиватися | - | to develop | impf |
-| змінюватися | - | to change | impf |
-| зростання | /zrosˈtɑnʲːɑ/ | growth | n |
-| зменшення | /zmɛnˈʃɛnʲːɑ/ | decrease | n |
-| різко | /ˈrʲizko/ | sharply | adv |
-| поступово | /postuˈpovo/ | gradually | adv |
-| удвічі | /udˈvʲit͡ʃi/ | twice | adv |
-| порівняно з | - | compared to | prep |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| зростати | /zrosˈtɑtɪ/ | to grow, increase | - | impf |
+| зменшуватися | - | to decrease | - | impf |
+| підвищуватися | - | to rise | - | impf |
+| знижуватися | - | to decline | - | impf |
+| покращуватися | - | to improve | - | impf |
+| погіршуватися | - | to worsen | - | impf |
+| розвиватися | - | to develop | - | impf |
+| змінюватися | - | to change | - | impf |
+| зростання | /zrosˈtɑnʲːɑ/ | growth | - | n |
+| зменшення | /zmɛnˈʃɛnʲːɑ/ | decrease | - | n |
+| різко | /ˈrʲizko/ | sharply | - | adv |
+| поступово | /postuˈpovo/ | gradually | - | adv |
+| удвічі | /udˈvʲit͡ʃi/ | twice | - | adv |
+| порівняно з | - | compared to | - | prep |
 
 ---
 

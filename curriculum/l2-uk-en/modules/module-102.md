@@ -430,10 +430,10 @@ Discuss using relative clauses:
 
 # Vocabulary
 
-| Word | IPA | English | Gender |
-|------|-----|---------|--------|
-| момент | /moˈmɛnt/ | moment | m |
-| родом | /ˈrodom/ | originally from | adv |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| момент | /moˈmɛnt/ | moment | ім | m |
+| родом | /ˈrodom/ | originally from | ім | adv |
 
 ---
 

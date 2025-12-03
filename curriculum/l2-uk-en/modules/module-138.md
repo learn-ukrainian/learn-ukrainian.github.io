@@ -245,12 +245,12 @@ Include:
 
 # Vocabulary
 
-| Word | IPA | English | Notes |
-|------|-----|---------|-------|
-| інтеграція | /ʲintɛɦrɑˈt͡sʲijɑ/ | integration | f |
-| вид дієслова | - | verb aspect | m |
-| сполучник | /spoˈlut͡ʃnɪk/ | conjunction | m |
-| підрядне речення | - | subordinate clause | n |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| інтеграція | /ʲintɛɦrɑˈt͡sʲijɑ/ | integration | - | f |
+| вид дієслова | - | verb aspect | - | m |
+| сполучник | /spoˈlut͡ʃnɪk/ | conjunction | - | m |
+| підрядне речення | - | subordinate clause | - | n |
 
 ---
 

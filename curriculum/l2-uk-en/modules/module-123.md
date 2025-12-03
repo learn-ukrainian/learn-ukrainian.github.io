@@ -412,18 +412,18 @@ A friend is stressed and tired. What do you advise?
 
 # Vocabulary
 
-| Word | IPA | English | Notes |
-|------|-----|---------|-------|
-| самопочуття | /sɑmopoˈt͡ʃutʲːɑ/ | well-being | n |
-| стрес | /strɛs/ | stress | m |
-| вигорання | /vɪɦoˈrɑnʲːɑ/ | burnout | n |
-| депресія | /dɛˈprɛsʲijɑ/ | depression | f |
-| харчування | /xɑrt͡ʃuˈvɑnʲːɑ/ | nutrition | n |
-| дієта | /dʲiˈjɛtɑ/ | diet | f |
-| сон | /son/ | sleep | m |
-| безсоння | /bɛzˈsonʲːɑ/ | insomnia | n |
-| імунітет | /imuˈnʲitɛt/ | immunity | m |
-| одужання | /oduˈʒɑnʲːɑ/ | recovery | n |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| самопочуття | /sɑmopoˈt͡ʃutʲːɑ/ | well-being | - | n |
+| стрес | /strɛs/ | stress | - | m |
+| вигорання | /vɪɦoˈrɑnʲːɑ/ | burnout | - | n |
+| депресія | /dɛˈprɛsʲijɑ/ | depression | - | f |
+| харчування | /xɑrt͡ʃuˈvɑnʲːɑ/ | nutrition | - | n |
+| дієта | /dʲiˈjɛtɑ/ | diet | - | f |
+| сон | /son/ | sleep | - | m |
+| безсоння | /bɛzˈsonʲːɑ/ | insomnia | - | n |
+| імунітет | /imuˈnʲitɛt/ | immunity | - | m |
+| одужання | /oduˈʒɑnʲːɑ/ | recovery | - | n |
 
 ---
 

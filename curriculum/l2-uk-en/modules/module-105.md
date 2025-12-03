@@ -444,11 +444,11 @@ Discuss using conditionals:
 
 # Vocabulary
 
-| Word | IPA | English | Gender |
-|------|-----|---------|--------|
-| імовірно | /imoˈvʲirno/ | probably | adv |
-| у разі | /u ˈrɑzʲi/ | in case | prep |
-| за умови | /zɑ uˈmovɪ/ | provided that | prep |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| імовірно | /imoˈvʲirno/ | probably | ім | adv |
+| у разі | /u ˈrɑzʲi/ | in case | ім | prep |
+| за умови | /zɑ uˈmovɪ/ | provided that | ім | prep |
 
 ---
 

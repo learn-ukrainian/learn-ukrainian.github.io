@@ -453,14 +453,14 @@ Practice making requests using "щоб":
 
 # Vocabulary
 
-| Word | IPA | English | Gender |
-|------|-----|---------|--------|
-| бажати | /bɑˈʒɑtɪ/ | to wish | impf |
-| попросити | /poproˈsɪtɪ/ | to ask, request | pf |
-| наказувати | /nɑˈkɑzuvɑtɪ/ | to order | impf |
-| наказати | /nɑkɑˈzɑtɪ/ | to order | pf |
-| порадити | /porɑˈdɪtɪ/ | to advise | pf |
-| вимагати | /vɪmɑˈɦɑtɪ/ | to demand | impf |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| бажати | /bɑˈʒɑtɪ/ | to wish | ім | impf |
+| попросити | /poproˈsɪtɪ/ | to ask, request | ім | pf |
+| наказувати | /nɑˈkɑzuvɑtɪ/ | to order | ім | impf |
+| наказати | /nɑkɑˈzɑtɪ/ | to order | ім | pf |
+| порадити | /porɑˈdɪtɪ/ | to advise | ім | pf |
+| вимагати | /vɪmɑˈɦɑtɪ/ | to demand | ім | impf |
 
 ---
 

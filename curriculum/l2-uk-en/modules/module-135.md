@@ -440,20 +440,20 @@ Use idioms to describe:
 
 # Vocabulary
 
-| Word | IPA | English | Notes |
-|------|-----|---------|-------|
-| ідіома | /ʲiˈdʲiomɑ/ | idiom | f |
-| сталий вираз | - | set phrase | m |
-| переносне значення | - | figurative meaning | n |
-| перебільшувати | - | to exaggerate | impf |
-| байдики бити | - | to be idle | idiom |
-| на сьомому небі | - | on cloud nine | idiom |
-| як кіт наплакав | - | very little | idiom |
-| коли рак свисне | - | never | idiom |
-| собаку з'їсти | - | be expert | idiom |
-| з мухи слона | - | exaggerate | idiom |
-| тримати язик за зубами | - | keep secret | idiom |
-| не покладаючи рук | - | without rest | idiom |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| ідіома | /ʲiˈdʲiomɑ/ | idiom | - | f |
+| сталий вираз | - | set phrase | - | m |
+| переносне значення | - | figurative meaning | - | n |
+| перебільшувати | - | to exaggerate | - | impf |
+| байдики бити | - | to be idle | - | idiom |
+| на сьомому небі | - | on cloud nine | - | idiom |
+| як кіт наплакав | - | very little | - | idiom |
+| коли рак свисне | - | never | - | idiom |
+| собаку з'їсти | - | be expert | - | idiom |
+| з мухи слона | - | exaggerate | - | idiom |
+| тримати язик за зубами | - | keep secret | - | idiom |
+| не покладаючи рук | - | without rest | - | idiom |
 
 ---
 

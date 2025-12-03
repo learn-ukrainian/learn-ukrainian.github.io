@@ -266,10 +266,10 @@ Report questions you were asked today:
 
 # Vocabulary
 
-| Word | IPA | English | Notes |
-|------|-----|---------|-------|
-| питати | /pɪˈtɑtɪ/ | to ask | impf |
-| поцікавитися | /pot͡sʲikɑˈvɪtɪsʲɑ/ | to inquire | pf |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| питати | /pɪˈtɑtɪ/ | to ask | - | impf |
+| поцікавитися | /pot͡sʲikɑˈvɪtɪsʲɑ/ | to inquire | - | pf |
 
 ---
 

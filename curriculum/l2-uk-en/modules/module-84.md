@@ -438,20 +438,20 @@ Use imperfective for repeated actions:
 
 # Словник
 
-| Word | IPA | English | POS | Note |
-|------|-----|---------|-----|------|
-| майбутній | /mɑjˈbutnʲij/ | future | adj | майбутній час |
-| обіцянка | /oˈbʲit͡sʲɑnkɑ/ | promise | noun | f |
-| обіцяти | /oˈbʲit͡sʲɑtɪ/ | to promise | verb | impf |
-| пообіцяти | /poobʲiˈt͡sʲɑtɪ/ | to promise | verb | pf |
-| запланований | /zɑplɑˈnovɑnɪj/ | planned | adj | - |
-| запланувати | /zɑplɑnuˈvɑtɪ/ | to plan | verb | pf |
-| мати намір | /ˈmɑtɪ nɑˈmʲir/ | to intend | phrase | + infinitive |
-| очікуваний | /ot͡ʃʲikuˈvɑnɪj/ | expected | adj | очікуваний результат |
-| найближчим часом | /nɑjblɪʒˈt͡ʃɪm ˈt͡ʃɑsom/ | in the near future | phrase | - |
-| наступного тижня | /nɑˈstupnoɦo ˈtɪʒnʲɑ/ | next week | phrase | - |
-| до понеділка | /do ponɛˈdʲilkɑ/ | by Monday | phrase | deadline |
-| вчасно | /ˈwt͡ʃɑsno/ | on time | adv | - |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| майбутній | /mɑjˈbutnʲij/ | future | прикм | майбутній час |
+| обіцянка | /oˈbʲit͡sʲɑnkɑ/ | promise | ім | f |
+| обіцяти | /oˈbʲit͡sʲɑtɪ/ | to promise | дієсл | impf |
+| пообіцяти | /poobʲiˈt͡sʲɑtɪ/ | to promise | дієсл | pf |
+| запланований | /zɑplɑˈnovɑnɪj/ | planned | прикм | - |
+| запланувати | /zɑplɑnuˈvɑtɪ/ | to plan | дієсл | pf |
+| мати намір | /ˈmɑtɪ nɑˈmʲir/ | to intend | фраза | + infinitive |
+| очікуваний | /ot͡ʃʲikuˈvɑnɪj/ | expected | прикм | очікуваний результат |
+| найближчим часом | /nɑjblɪʒˈt͡ʃɪm ˈt͡ʃɑsom/ | in the near future | фраза | - |
+| наступного тижня | /nɑˈstupnoɦo ˈtɪʒnʲɑ/ | next week | фраза | - |
+| до понеділка | /do ponɛˈdʲilkɑ/ | by Monday | фраза | deadline |
+| вчасно | /ˈwt͡ʃɑsno/ | on time | присл | - |
 
 ---
 

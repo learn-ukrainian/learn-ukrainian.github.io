@@ -303,15 +303,15 @@ Write about your favorite city using:
 
 # Vocabulary
 
-| Word | IPA | English | Notes |
-|------|-----|---------|-------|
-| також | /tɑˈkoʒ/ | also | adv |
-| крім того | - | besides, moreover | phrase |
-| по-перше | - | firstly | adv |
-| наприклад | /nɑprɪˈklɑd/ | for example | adv |
-| підсумовуючи | - | to sum up | adv part |
-| на мою думку | - | in my opinion | phrase |
-| тобто | /tobˈto/ | that is | adv |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| також | /tɑˈkoʒ/ | also | - | adv |
+| крім того | - | besides, moreover | - | phrase |
+| по-перше | - | firstly | - | adv |
+| наприклад | /nɑprɪˈklɑd/ | for example | - | adv |
+| підсумовуючи | - | to sum up | - | adv part |
+| на мою думку | - | in my opinion | - | phrase |
+| тобто | /tobˈto/ | that is | - | adv |
 
 ---
 

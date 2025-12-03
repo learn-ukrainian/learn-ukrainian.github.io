@@ -387,21 +387,21 @@ Write short messages using diminutives:
 
 # Vocabulary
 
-| Word | IPA | English | Notes |
-|------|-----|---------|-------|
-| зменшувальний | /zmɛnˈʃuvɑlʲnɪj/ | diminutive | adj |
-| пестливий | /pɛstˈlɪvɪj/ | affectionate, tender | adj |
-| ласкавий | /lɑsˈkɑvɪj/ | kind, gentle | adj |
-| суфікс | /ˈsufʲiks/ | suffix | m |
-| котик | /ˈkotɪk/ | kitty | m, dim |
-| мамочка | /ˈmɑmot͡ʃkɑ/ | mommy | f, dim |
-| бабусенька | /bɑbuˈsɛnʲkɑ/ | dear grandma | f, dim |
-| синочок | /sɪˈnot͡ʃok/ | dear son | m, dim |
-| донечка | /ˈdonɛt͡ʃkɑ/ | dear daughter | f, dim |
-| серденько | /sɛrˈdɛnʲko/ | dear heart | n, dim |
-| сонечко | /ˈsonɛt͡ʃko/ | sun (dear) | n, dim |
-| зірочка | /ˈzʲirot͡ʃkɑ/ | little star | f, dim |
-| хвилиночка | /xvɪlɪˈnot͡ʃkɑ/ | just a moment | f, dim |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| зменшувальний | /zmɛnˈʃuvɑlʲnɪj/ | diminutive | - | adj |
+| пестливий | /pɛstˈlɪvɪj/ | affectionate, tender | - | adj |
+| ласкавий | /lɑsˈkɑvɪj/ | kind, gentle | - | adj |
+| суфікс | /ˈsufʲiks/ | suffix | - | m |
+| котик | /ˈkotɪk/ | kitty | - | m, dim |
+| мамочка | /ˈmɑmot͡ʃkɑ/ | mommy | - | f, dim |
+| бабусенька | /bɑbuˈsɛnʲkɑ/ | dear grandma | - | f, dim |
+| синочок | /sɪˈnot͡ʃok/ | dear son | - | m, dim |
+| донечка | /ˈdonɛt͡ʃkɑ/ | dear daughter | - | f, dim |
+| серденько | /sɛrˈdɛnʲko/ | dear heart | - | n, dim |
+| сонечко | /ˈsonɛt͡ʃko/ | sun (dear) | - | n, dim |
+| зірочка | /ˈzʲirot͡ʃkɑ/ | little star | - | f, dim |
+| хвилиночка | /xvɪlɪˈnot͡ʃkɑ/ | just a moment | - | f, dim |
 
 ---
 

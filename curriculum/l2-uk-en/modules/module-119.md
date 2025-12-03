@@ -386,23 +386,23 @@ Describe completed actions using participles:
 
 # Vocabulary
 
-| Word | IPA | English | Notes |
-|------|-----|---------|-------|
-| дієприкметник | /dʲijɛprɪˈkmɛtnɪk/ | participle | m |
-| пасивний | /pɑˈsɪwnɪj/ | passive | adj |
-| написаний | /nɑˈpɪsɑnɪj/ | written | participle |
-| прочитаний | /prot͡ʃɪˈtɑnɪj/ | read | participle |
-| зроблений | /ˈzroblɛnɪj/ | done, made | participle |
-| закритий | /zɑˈkrɪtɪj/ | closed | participle |
-| відкритий | /vʲidˈkrɪtɪj/ | open(ed) | participle |
-| забутий | /zɑˈbutɪj/ | forgotten | participle |
-| знайдений | /znɑjˈdɛnɪj/ | found | participle |
-| куплений | /ˈkuplɛnɪj/ | bought | participle |
-| приготовлений | /prɪɦotoˈwlɛnɪj/ | prepared | participle |
-| запрошений | /zɑˈproʃɛnɪj/ | invited | participle |
-| збудований | /zbuˈdovɑnɪj/ | built | participle |
-| організований | /orɦɑnʲiˈzovɑnɪj/ | organized | participle |
-| втрачений | /vˈtrɑt͡ʃɛnɪj/ | lost | participle |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| дієприкметник | /dʲijɛprɪˈkmɛtnɪk/ | participle | - | m |
+| пасивний | /pɑˈsɪwnɪj/ | passive | - | adj |
+| написаний | /nɑˈpɪsɑnɪj/ | written | - | participle |
+| прочитаний | /prot͡ʃɪˈtɑnɪj/ | read | - | participle |
+| зроблений | /ˈzroblɛnɪj/ | done, made | - | participle |
+| закритий | /zɑˈkrɪtɪj/ | closed | - | participle |
+| відкритий | /vʲidˈkrɪtɪj/ | open(ed) | - | participle |
+| забутий | /zɑˈbutɪj/ | forgotten | - | participle |
+| знайдений | /znɑjˈdɛnɪj/ | found | - | participle |
+| куплений | /ˈkuplɛnɪj/ | bought | - | participle |
+| приготовлений | /prɪɦotoˈwlɛnɪj/ | prepared | - | participle |
+| запрошений | /zɑˈproʃɛnɪj/ | invited | - | participle |
+| збудований | /zbuˈdovɑnɪj/ | built | - | participle |
+| організований | /orɦɑnʲiˈzovɑnɪj/ | organized | - | participle |
+| втрачений | /vˈtrɑt͡ʃɛnɪj/ | lost | - | participle |
 
 ---
 

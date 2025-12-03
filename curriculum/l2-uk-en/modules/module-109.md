@@ -472,15 +472,15 @@ Discuss causes and results:
 
 # Vocabulary
 
-| Word | IPA | English | Notes |
-|------|-----|---------|-------|
-| оскільки | /osˈkʲilʲkɪ/ | since, because | conj (formal) |
-| через те, що | /ˈtʃɛrɛz tɛ ʃt͡ʃɔ/ | due to the fact that | conj |
-| завдяки | /zɑvˈdʲɑkɪ/ | thanks to | prep + dat |
-| завдяки тому, що | /zɑwˈdʲakɪ tɔˈmu/ | thanks to the fact that | conj |
-| тому | /toˈmu/ | therefore, that's why | adv |
-| тож | /toʒ/ | so, therefore | adv (informal) |
-| так що | /tɑk ʃt͡ʃo/ | so that, so | conj |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| оскільки | /osˈkʲilʲkɪ/ | since, because | - | conj (formal) |
+| через те, що | /ˈtʃɛrɛz tɛ ʃt͡ʃɔ/ | due to the fact that | - | conj |
+| завдяки | /zɑvˈdʲɑkɪ/ | thanks to | - | prep + dat |
+| завдяки тому, що | /zɑwˈdʲakɪ tɔˈmu/ | thanks to the fact that | - | conj |
+| тому | /toˈmu/ | therefore, that's why | - | adv |
+| тож | /toʒ/ | so, therefore | - | adv (informal) |
+| так що | /tɑk ʃt͡ʃo/ | so that, so | - | conj |
 
 ---
 

@@ -410,12 +410,12 @@ Discuss using knowing verbs:
 
 # Vocabulary
 
-| Word | IPA | English | Notes |
-|------|-----|---------|-------|
-| оглядати | /oɦlʲɑˈdɑtɪ/ | to examine | impf |
-| спостерігати | /spostɛrʲiˈɦɑtɪ/ | to observe | impf |
-| помічати | /pomʲiˈt͡ʃɑtɪ/ | to notice | impf |
-| усвідомлювати | /usvʲiˈdomlʲuvɑtɪ/ | to realize | impf |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| оглядати | /oɦlʲɑˈdɑtɪ/ | to examine | - | impf |
+| спостерігати | /spostɛrʲiˈɦɑtɪ/ | to observe | - | impf |
+| помічати | /pomʲiˈt͡ʃɑtɪ/ | to notice | - | impf |
+| усвідомлювати | /usvʲiˈdomlʲuvɑtɪ/ | to realize | - | impf |
 
 ---
 

@@ -418,42 +418,42 @@ Use multidirectional for completed round trips:
 
 # Словник
 
-| Word | IPA | English | POS | Note |
-|------|-----|---------|-----|------|
-| односпрямований | /odnosprʲɑˈmovɑnɪj/ | unidirectional | adj | grammar term |
-| різноспрямований | /rʲiznosprʲɑˈmovɑnɪj/ | multidirectional | adj | grammar term |
-| дієслово руху | /dʲijɛˈslovo ˈruxu/ | motion verb | noun | grammar term |
-| напрямок | /nɑˈprʲɑmok/ | direction | noun | m |
-| здатність | /ˈzdɑtnʲistʲ/ | ability | noun | f |
-| іти | /iˈtɪ/ | to go (on foot) | verb | uni |
-| ходити | /xoˈdɪtɪ/ | to go (on foot) | verb | multi |
-| їхати | /ˈjixɑtɪ/ | to go (by vehicle) | verb | uni |
-| їздити | /ˈjizdɪtɪ/ | to go (by vehicle) | verb | multi |
-| бігти | /ˈbʲiɦtɪ/ | to run | verb | uni |
-| бігати | /bʲiˈɦɑtɪ/ | to run | verb | multi |
-| летіти | /lɛˈtʲitɪ/ | to fly | verb | uni |
-| літати | /lʲiˈtɑtɪ/ | to fly | verb | multi |
-| плисти | /plɪsˈtɪ/ | to swim, sail | verb | uni |
-| плавати | /ˈplɑvɑtɪ/ | to swim | verb | multi |
-| нести | /nɛsˈtɪ/ | to carry | verb | uni |
-| носити | /noˈsɪtɪ/ | to carry, wear | verb | multi |
-| везти | /vɛzˈtɪ/ | to transport | verb | uni |
-| возити | /voˈzɪtɪ/ | to transport | verb | multi |
-| вести | /vɛsˈtɪ/ | to lead | verb | uni |
-| водити | /voˈdɪtɪ/ | to lead, drive | verb | multi |
-| гнати | /ɦnɑˈtɪ/ | to chase | verb | uni |
-| ганяти | /ɦɑˈnʲɑtɪ/ | to chase | verb | multi |
-| тягти | /tʲɑɦˈtɪ/ | to pull | verb | uni |
-| тягати | /tʲɑˈɦɑtɪ/ | to pull | verb | multi |
-| брести | /brɛsˈtɪ/ | to wade | verb | uni |
-| бродити | /broˈdɪtɪ/ | to wander | verb | multi |
-| лізти | /ˈlʲiztɪ/ | to climb | verb | uni |
-| лазити | /ˈlɑzɪtɪ/ | to climb | verb | multi |
-| повзти | /ˈpovztɪ/ | to crawl | verb | uni |
-| повзати | /povˈzɑtɪ/ | to crawl | verb | multi |
-| котитися | /koˈtɪtɪsʲɑ/ | to roll | verb | uni |
-| кочатися | /koˈt͡ʃɑtɪsʲɑ/ | to roll | verb | multi |
-| туди й назад | /tuˈdɪ j nɑˈzɑd/ | there and back | phrase | round trip |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| односпрямований | /odnosprʲɑˈmovɑnɪj/ | unidirectional | прикм | grammar term |
+| різноспрямований | /rʲiznosprʲɑˈmovɑnɪj/ | multidirectional | прикм | grammar term |
+| дієслово руху | /dʲijɛˈslovo ˈruxu/ | motion verb | ім | grammar term |
+| напрямок | /nɑˈprʲɑmok/ | direction | ім | m |
+| здатність | /ˈzdɑtnʲistʲ/ | ability | ім | f |
+| іти | /iˈtɪ/ | to go (on foot) | дієсл | uni |
+| ходити | /xoˈdɪtɪ/ | to go (on foot) | дієсл | multi |
+| їхати | /ˈjixɑtɪ/ | to go (by vehicle) | дієсл | uni |
+| їздити | /ˈjizdɪtɪ/ | to go (by vehicle) | дієсл | multi |
+| бігти | /ˈbʲiɦtɪ/ | to run | дієсл | uni |
+| бігати | /bʲiˈɦɑtɪ/ | to run | дієсл | multi |
+| летіти | /lɛˈtʲitɪ/ | to fly | дієсл | uni |
+| літати | /lʲiˈtɑtɪ/ | to fly | дієсл | multi |
+| плисти | /plɪsˈtɪ/ | to swim, sail | дієсл | uni |
+| плавати | /ˈplɑvɑtɪ/ | to swim | дієсл | multi |
+| нести | /nɛsˈtɪ/ | to carry | дієсл | uni |
+| носити | /noˈsɪtɪ/ | to carry, wear | дієсл | multi |
+| везти | /vɛzˈtɪ/ | to transport | дієсл | uni |
+| возити | /voˈzɪtɪ/ | to transport | дієсл | multi |
+| вести | /vɛsˈtɪ/ | to lead | дієсл | uni |
+| водити | /voˈdɪtɪ/ | to lead, drive | дієсл | multi |
+| гнати | /ɦnɑˈtɪ/ | to chase | дієсл | uni |
+| ганяти | /ɦɑˈnʲɑtɪ/ | to chase | дієсл | multi |
+| тягти | /tʲɑɦˈtɪ/ | to pull | дієсл | uni |
+| тягати | /tʲɑˈɦɑtɪ/ | to pull | дієсл | multi |
+| брести | /brɛsˈtɪ/ | to wade | дієсл | uni |
+| бродити | /broˈdɪtɪ/ | to wander | дієсл | multi |
+| лізти | /ˈlʲiztɪ/ | to climb | дієсл | uni |
+| лазити | /ˈlɑzɪtɪ/ | to climb | дієсл | multi |
+| повзти | /ˈpovztɪ/ | to crawl | дієсл | uni |
+| повзати | /povˈzɑtɪ/ | to crawl | дієсл | multi |
+| котитися | /koˈtɪtɪsʲɑ/ | to roll | дієсл | uni |
+| кочатися | /koˈt͡ʃɑtɪsʲɑ/ | to roll | дієсл | multi |
+| туди й назад | /tuˈdɪ j nɑˈzɑd/ | there and back | фраза | round trip |
 
 ---
 

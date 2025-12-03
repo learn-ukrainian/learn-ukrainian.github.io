@@ -448,13 +448,13 @@ Discuss using purpose clauses:
 
 # Vocabulary
 
-| Word | IPA | English | Gender |
-|------|-----|---------|--------|
-| намір | /ˈnɑmʲir/ | intention | m |
-| ціль | /t͡sʲilʲ/ | aim, target | f |
-| задля | /ˈzɑdlʲɑ/ | for the sake of | prep |
-| для того щоб | - | in order to | conj |
-| навіщо | /nɑˈvʲiʃt͡ʃo/ | why (for what purpose) | adv |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| намір | /ˈnɑmʲir/ | intention | ім | m |
+| ціль | /t͡sʲilʲ/ | aim, target | ім | f |
+| задля | /ˈzɑdlʲɑ/ | for the sake of | ім | prep |
+| для того щоб | - | in order to | ім | conj |
+| навіщо | /nɑˈvʲiʃt͡ʃo/ | why (for what purpose) | ім | adv |
 
 ---
 

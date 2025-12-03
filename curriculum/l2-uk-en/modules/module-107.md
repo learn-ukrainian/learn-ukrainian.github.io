@@ -446,15 +446,15 @@ Use "на випадок, якщо" to discuss backup plans:
 
 # Vocabulary
 
-| Word | IPA | English | Notes |
-|------|-----|---------|-------|
-| навіть якщо | /nɑˈvʲitʲ jɑkˈʃt͡ʃo/ | even if (real) | conj |
-| навіть якби | /nɑˈvʲitʲ jɑkˈbɪ/ | even if (unreal) | conj |
-| хіба що | /xʲiˈbɑ ʃt͡ʃo/ | unless | conj |
-| на випадок | /nɑ ˈvɪpɑdok/ | in case | prep |
-| а якщо | /ɑ jɑkˈʃt͡ʃo/ | what if | phrase |
-| жаль | /ʒɑlʲ/ | it's a pity, regret | m |
-| жалкувати | /ʒɑlkuˈvɑtɪ/ | to regret | impf |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| навіть якщо | /nɑˈvʲitʲ jɑkˈʃt͡ʃo/ | even if (real) | - | conj |
+| навіть якби | /nɑˈvʲitʲ jɑkˈbɪ/ | even if (unreal) | - | conj |
+| хіба що | /xʲiˈbɑ ʃt͡ʃo/ | unless | - | conj |
+| на випадок | /nɑ ˈvɪpɑdok/ | in case | - | prep |
+| а якщо | /ɑ jɑkˈʃt͡ʃo/ | what if | - | phrase |
+| жаль | /ʒɑlʲ/ | it's a pity, regret | - | m |
+| жалкувати | /ʒɑlkuˈvɑtɪ/ | to regret | - | impf |
 
 ---
 

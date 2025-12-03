@@ -430,14 +430,14 @@ Describe situations where the result was unexpected:
 
 # Vocabulary
 
-| Word | IPA | English | Notes |
-|------|-----|---------|-------|
-| незважаючи на | /nɛzvɑˈʒɑjut͡ʃɪ nɑ/ | despite | prep + acc |
-| незважаючи на те, що | /nɛzwɑˈʒɑjutʃɪ/ | despite the fact that | conj |
-| попри | /ˈpoprɪ/ | despite (literary) | prep + acc |
-| дарма що | /dɑrˈmɑ ʃt͡ʃo/ | even though | conj (colloq) |
-| але | /ɑˈlɛ/ | but | conj |
-| усупереч | /usuˈpɛrɛt͡ʃ/ | contrary to | prep + dat |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| незважаючи на | /nɛzvɑˈʒɑjut͡ʃɪ nɑ/ | despite | - | prep + acc |
+| незважаючи на те, що | /nɛzwɑˈʒɑjutʃɪ/ | despite the fact that | - | conj |
+| попри | /ˈpoprɪ/ | despite (literary) | - | prep + acc |
+| дарма що | /dɑrˈmɑ ʃt͡ʃo/ | even though | - | conj (colloq) |
+| але | /ɑˈlɛ/ | but | - | conj |
+| усупереч | /usuˈpɛrɛt͡ʃ/ | contrary to | - | prep + dat |
 
 ---
 

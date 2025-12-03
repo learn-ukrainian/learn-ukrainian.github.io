@@ -393,22 +393,22 @@ Discuss using vocabulary from this module:
 
 # Vocabulary
 
-| Word | IPA | English | Gender |
-|------|-----|---------|--------|
-| держава | /dɛrˈʒɑvɑ/ | state | f |
-| уряд | /uˈrʲɑd/ | government | m |
-| політика | /poˈlʲitɪkɑ/ | politics | f |
-| демократія | /dɛmokrɑˈtʲijɑ/ | democracy | f |
-| вибори | /ˈvɪborɪ/ | elections | pl |
-| голосувати | /ɦolosuˈvɑtɪ/ | to vote | impf |
-| партія | /ˈpɑrtʲijɑ/ | party | f |
-| закон | /zɑˈkon/ | law | m |
-| право | /ˈprɑvo/ | right | n |
-| громадянин | /ɦromɑdʲɑˈnɪn/ | citizen | m |
-| свобода | /svoˈbodɑ/ | freedom | f |
-| рівність | /rʲivˈnʲistʲ/ | equality | f |
-| реформа | /rɛˈformɑ/ | reform | f |
-| корупція | /koˈrupt͡sʲijɑ/ | corruption | f |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| держава | /dɛrˈʒɑvɑ/ | state | ім | f |
+| уряд | /uˈrʲɑd/ | government | ім | m |
+| політика | /poˈlʲitɪkɑ/ | politics | ім | f |
+| демократія | /dɛmokrɑˈtʲijɑ/ | democracy | ім | f |
+| вибори | /ˈvɪborɪ/ | elections | ім | pl |
+| голосувати | /ɦolosuˈvɑtɪ/ | to vote | ім | impf |
+| партія | /ˈpɑrtʲijɑ/ | party | ім | f |
+| закон | /zɑˈkon/ | law | ім | m |
+| право | /ˈprɑvo/ | right | ім | n |
+| громадянин | /ɦromɑdʲɑˈnɪn/ | citizen | ім | m |
+| свобода | /svoˈbodɑ/ | freedom | ім | f |
+| рівність | /rʲivˈnʲistʲ/ | equality | ім | f |
+| реформа | /rɛˈformɑ/ | reform | ім | f |
+| корупція | /koˈrupt͡sʲijɑ/ | corruption | ім | f |
 
 ---
 

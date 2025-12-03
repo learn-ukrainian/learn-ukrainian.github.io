@@ -476,17 +476,17 @@ After completing the checkpoint, evaluate yourself:
 
 # Словник
 
-| Word | IPA | English | POS | Note |
-|------|-----|---------|-----|------|
-| бал | /bɑl/ | point, score | noun | m |
-| оцінювання | /ot͡sʲiˈnʲuvɑnʲːɑ/ | assessment | noun | n |
-| перевірити | /pɛrɛˈvʲirɪtɪ/ | to check | verb | pf |
-| виправити | /vɪˈprɑvɪtɪ/ | to correct | verb | pf |
-| правильна відповідь | - | correct answer | phrase | - |
-| неправильна відповідь | - | wrong answer | phrase | - |
-| прохідний | /proxʲidˈnɪj/ | passing (score) | adj | - |
-| самооцінка | /sɑmoˈot͡sʲinkɑ/ | self-assessment | noun | f |
-| віха | /ˈvʲixɑ/ | milestone | noun | f |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| бал | /bɑl/ | point, score | ім | m |
+| оцінювання | /ot͡sʲiˈnʲuvɑnʲːɑ/ | assessment | ім | n |
+| перевірити | /pɛrɛˈvʲirɪtɪ/ | to check | дієсл | pf |
+| виправити | /vɪˈprɑvɪtɪ/ | to correct | дієсл | pf |
+| правильна відповідь | - | correct answer | фраза | - |
+| неправильна відповідь | - | wrong answer | фраза | - |
+| прохідний | /proxʲidˈnɪj/ | passing (score) | прикм | - |
+| самооцінка | /sɑmoˈot͡sʲinkɑ/ | self-assessment | ім | f |
+| віха | /ˈvʲixɑ/ | milestone | ім | f |
 
 ---
 

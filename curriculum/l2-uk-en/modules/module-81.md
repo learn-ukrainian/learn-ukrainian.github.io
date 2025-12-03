@@ -537,25 +537,25 @@ Use both aspects:
 
 # Словник
 
-| Word | IPA | English | POS | Note |
-|------|-----|---------|-----|------|
-| процес | /proˈt͡sɛs/ | process | noun | m |
-| тривалість | /trɪˈvɑlʲistʲ/ | duration | noun | f |
-| завершення | /zɑvɛrˈʃɛnʲːɑ/ | completion | noun | n |
-| дія | /ˈdʲijɑ/ | action | noun | f |
-| подія | /poˈdʲijɑ/ | event | noun | f |
-| одинична | /odɪˈnɪt͡ʃnɑ/ | single, one-time | adj | refers to одна дія |
-| перспектива | /pɛrspɛkˈtɪvɑ/ | perspective | noun | f |
-| наратив | /nɑrɑˈtɪw/ | narrative | noun | m |
-| послідовність | /posʲlʲiˈdovnʲistʲ/ | sequence | noun | f |
-| фон | /fɔn/ | background | noun | m |
-| атмосфера | /ɑtmoˈsfɛrɑ/ | atmosphere | noun | f |
-| фокус | /ˈfokus/ | focus | noun | m |
-| весь час | /wɛsʲ t͡ʃɑs/ | all the time | phrase | - |
-| за годину | /zɑ ɦoˈdɪnu/ | in an hour | phrase | - |
-| одного разу | /odnoˈɦo ˈrɑzu/ | once (upon a time) | phrase | - |
-| щотижня | /ʃt͡ʃoˈtɪʒnʲɑ/ | every week | adv | - |
-| листа | /ˈlɪstɑ/ | letter (acc.) | noun | m, accusative of лист |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| процес | /proˈt͡sɛs/ | process | ім | m |
+| тривалість | /trɪˈvɑlʲistʲ/ | duration | ім | f |
+| завершення | /zɑvɛrˈʃɛnʲːɑ/ | completion | ім | n |
+| дія | /ˈdʲijɑ/ | action | ім | f |
+| подія | /poˈdʲijɑ/ | event | ім | f |
+| одинична | /odɪˈnɪt͡ʃnɑ/ | single, one-time | прикм | refers to одна дія |
+| перспектива | /pɛrspɛkˈtɪvɑ/ | perspective | ім | f |
+| наратив | /nɑrɑˈtɪw/ | narrative | ім | m |
+| послідовність | /posʲlʲiˈdovnʲistʲ/ | sequence | ім | f |
+| фон | /fɔn/ | background | ім | m |
+| атмосфера | /ɑtmoˈsfɛrɑ/ | atmosphere | ім | f |
+| фокус | /ˈfokus/ | focus | ім | m |
+| весь час | /wɛsʲ t͡ʃɑs/ | all the time | фраза | - |
+| за годину | /zɑ ɦoˈdɪnu/ | in an hour | фраза | - |
+| одного разу | /odnoˈɦo ˈrɑzu/ | once (upon a time) | фраза | - |
+| щотижня | /ʃt͡ʃoˈtɪʒnʲɑ/ | every week | присл | - |
+| листа | /ˈlɪstɑ/ | letter (acc.) | ім | m, accusative of лист |
 
 ---
 

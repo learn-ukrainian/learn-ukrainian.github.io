@@ -266,15 +266,15 @@ Report what these people typically say:
 
 # Vocabulary
 
-| Word | IPA | English | Notes |
-|------|-----|---------|-------|
-| заборонити | /zɑboroˈnɪtɪ/ | to forbid | pf |
-| дозволити | /dozvoˈlɪtɪ/ | to allow, permit | pf |
-| благати | /blɑˈɦɑtɪ/ | to beg | impf |
-| наказ | /nɑˈkɑz/ | order, command | m |
-| прохання | /proˈxɑnʲːɑ/ | request | n |
-| заборона | /zɑboˈronɑ/ | prohibition | f |
-| дозвіл | /ˈdozʲvʲil/ | permission | m |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| заборонити | /zɑboroˈnɪtɪ/ | to forbid | - | pf |
+| дозволити | /dozvoˈlɪtɪ/ | to allow, permit | - | pf |
+| благати | /blɑˈɦɑtɪ/ | to beg | - | impf |
+| наказ | /nɑˈkɑz/ | order, command | - | m |
+| прохання | /proˈxɑnʲːɑ/ | request | - | n |
+| заборона | /zɑboˈronɑ/ | prohibition | - | f |
+| дозвіл | /ˈdozʲvʲil/ | permission | - | m |
 
 ---
 

@@ -484,20 +484,20 @@ Ask your partner:
 
 # Словник
 
-| Word | IPA | English | POS | Note |
-|------|-----|---------|-----|------|
-| переривати | /pɛrɛrɪˈvɑtɪ/ | to interrupt (ongoing) | verb | impf |
-| перервати | /pɛrɛrˈvɑtɪ/ | to interrupt | verb | pf |
-| перервана | /pɛrɛrˈvɑnɑ/ | interrupted | adj | перервана дія |
-| досягати | /dosʲɑˈɦɑtɪ/ | to be achieving | verb | impf |
-| досягти | /doˈsʲɑɦtɪ/ | to achieve | verb | pf |
-| досягнення | /dosʲɑɦˈnɛnʲːɑ/ | achievement | noun | n |
-| завершити | /zɑvɛrˈʃɪtɪ/ | to complete | verb | pf |
-| продовжити | /prodovˈʒɪtɪ/ | to continue | verb | pf |
-| тривати | /trɪˈvɑtɪ/ | to last, continue | verb | impf only |
-| цілий | /ˈt͡sʲilɪj/ | whole, entire | adj | used with impf |
-| підсумок | /pʲidˈsumok/ | summary, outcome | noun | m |
-| домашнє завдання | /doˈmɑʃnʲe zɑvˈdɑnʲːɑ/ | homework | phrase | - |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| переривати | /pɛrɛrɪˈvɑtɪ/ | to interrupt (ongoing) | дієсл | impf |
+| перервати | /pɛrɛrˈvɑtɪ/ | to interrupt | дієсл | pf |
+| перервана | /pɛrɛrˈvɑnɑ/ | interrupted | прикм | перервана дія |
+| досягати | /dosʲɑˈɦɑtɪ/ | to be achieving | дієсл | impf |
+| досягти | /doˈsʲɑɦtɪ/ | to achieve | дієсл | pf |
+| досягнення | /dosʲɑɦˈnɛnʲːɑ/ | achievement | ім | n |
+| завершити | /zɑvɛrˈʃɪtɪ/ | to complete | дієсл | pf |
+| продовжити | /prodovˈʒɪtɪ/ | to continue | дієсл | pf |
+| тривати | /trɪˈvɑtɪ/ | to last, continue | дієсл | impf only |
+| цілий | /ˈt͡sʲilɪj/ | whole, entire | прикм | used with impf |
+| підсумок | /pʲidˈsumok/ | summary, outcome | ім | m |
+| домашнє завдання | /doˈmɑʃnʲe zɑvˈdɑnʲːɑ/ | homework | фраза | - |
 
 ---
 

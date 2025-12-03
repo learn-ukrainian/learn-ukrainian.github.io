@@ -377,18 +377,18 @@ Talk about:
 
 # Vocabulary
 
-| Word | IPA | English | Gender |
-|------|-----|---------|--------|
-| стаття | /stɑˈtʲːɑ/ | article | f |
-| заголовок | /zɑˈɦolovok/ | headline | m |
-| редактор | /rɛˈdɑktor/ | editor | m |
-| новини | /noˈvɪnɪ/ | news | pl |
-| телебачення | /tɛlɛˈbɑt͡ʃɛnʲːɑ/ | television | n |
-| передача | /pɛrɛˈdɑt͡ʃɑ/ | program | f |
-| інтернет | /intɛrˈnɛt/ | internet | m |
-| вебсайт | /vɛbˈsɑjt/ | website | m |
-| блог | /bloɦ/ | blog | m |
-| соціальна мережа | - | social network | f |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| стаття | /stɑˈtʲːɑ/ | article | ім | f |
+| заголовок | /zɑˈɦolovok/ | headline | ім | m |
+| редактор | /rɛˈdɑktor/ | editor | ім | m |
+| новини | /noˈvɪnɪ/ | news | ім | pl |
+| телебачення | /tɛlɛˈbɑt͡ʃɛnʲːɑ/ | television | ім | n |
+| передача | /pɛrɛˈdɑt͡ʃɑ/ | program | ім | f |
+| інтернет | /intɛrˈnɛt/ | internet | ім | m |
+| вебсайт | /vɛbˈsɑjt/ | website | ім | m |
+| блог | /bloɦ/ | blog | ім | m |
+| соціальна мережа | - | social network | ім | f |
 
 ---
 

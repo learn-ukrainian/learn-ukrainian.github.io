@@ -398,23 +398,23 @@ Combine these pairs using adverbial participles:
 
 # Vocabulary
 
-| Word | IPA | English | Notes |
-|------|-----|---------|-------|
-| дієприслівник | /dʲijɛprɪˈslʲivnɪk/ | adverbial participle | m |
-| читаючи | /t͡ʃɪˈtɑjut͡ʃɪ/ | while reading | impf |
-| прочитавши | /prot͡ʃɪˈtɑwʃɪ/ | having read | pf |
-| пишучи | /pɪˈʃut͡ʃɪ/ | while writing | impf |
-| написавши | /nɑpɪˈsɑwʃɪ/ | having written | pf |
-| говорячи | /ɦovoˈrʲɑt͡ʃɪ/ | while speaking | impf |
-| сказавши | /skɑˈzɑwʃɪ/ | having said | pf |
-| йдучи | /jˈdut͡ʃɪ/ | while going | impf |
-| прийшовши | /prɪjˈʃowʃɪ/ | having come | pf |
-| слухаючи | /sluˈxɑjut͡ʃɪ/ | while listening | impf |
-| почувши | /poˈt͡ʃuwʃɪ/ | having heard | pf |
-| дивлячись | /dɪwˈlʲɑt͡ʃɪsʲ/ | while watching | impf |
-| побачивши | /poˈbɑt͡ʃɪwʃɪ/ | having seen | pf |
-| повернувшись | /powɛrˈnuwʃɪsʲ/ | having returned | pf |
-| дізнавшись | /dʲizˈnɑwʃɪsʲ/ | having learned | pf |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| дієприслівник | /dʲijɛprɪˈslʲivnɪk/ | adverbial participle | - | m |
+| читаючи | /t͡ʃɪˈtɑjut͡ʃɪ/ | while reading | - | impf |
+| прочитавши | /prot͡ʃɪˈtɑwʃɪ/ | having read | - | pf |
+| пишучи | /pɪˈʃut͡ʃɪ/ | while writing | - | impf |
+| написавши | /nɑpɪˈsɑwʃɪ/ | having written | - | pf |
+| говорячи | /ɦovoˈrʲɑt͡ʃɪ/ | while speaking | - | impf |
+| сказавши | /skɑˈzɑwʃɪ/ | having said | - | pf |
+| йдучи | /jˈdut͡ʃɪ/ | while going | - | impf |
+| прийшовши | /prɪjˈʃowʃɪ/ | having come | - | pf |
+| слухаючи | /sluˈxɑjut͡ʃɪ/ | while listening | - | impf |
+| почувши | /poˈt͡ʃuwʃɪ/ | having heard | - | pf |
+| дивлячись | /dɪwˈlʲɑt͡ʃɪsʲ/ | while watching | - | impf |
+| побачивши | /poˈbɑt͡ʃɪwʃɪ/ | having seen | - | pf |
+| повернувшись | /powɛrˈnuwʃɪsʲ/ | having returned | - | pf |
+| дізнавшись | /dʲizˈnɑwʃɪsʲ/ | having learned | - | pf |
 
 ---
 

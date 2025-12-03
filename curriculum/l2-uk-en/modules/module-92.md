@@ -420,86 +420,86 @@ Use по-, від-, роз- to describe:
 
 # Словник
 
-| Word | IPA | English | POS | Note |
-|------|-----|---------|-----|------|
-| піти | /pʲiˈtɪ/ | to go, leave (pf) | verb | по- + іти |
-| поїхати | /poˈjixɑtɪ/ | to leave by vehicle (pf) | verb | по- + їхати |
-| побігти | /pobʲiɦˈtɪ/ | to run off (pf) | verb | по- + бігти |
-| полетіти | /polɛˈtʲitɪ/ | to fly off (pf) | verb | по- + летіти |
-| поплисти | /poplɪsˈtɪ/ | to sail off (pf) | verb | по- + плисти |
-| понести | /ponɛsˈtɪ/ | to carry off (pf) | verb | по- + нести |
-| повезти | /povɛzˈtɪ/ | to drive off with cargo (pf) | verb | по- + везти |
-| повести | /povɛsˈtɪ/ | to lead off (pf) | verb | по- + вести |
-| походити | /poxoˈdɪtɪ/ | to walk around a bit (pf) | verb | delimitative |
-| поїздити | /pojizˈdɪtɪ/ | to drive around a bit (pf) | verb | delimitative |
-| побігати | /pobʲiˈɦɑtɪ/ | to run around a bit (pf) | verb | delimitative |
-| зайти | /zɑjˈtɪ/ | to drop by (pf) | verb | за- + іти |
-| заходити | /zɑxoˈdɪtɪ/ | to drop by (impf) | verb | secondary impf |
-| заїхати | /zɑˈjixɑtɪ/ | to stop by (vehicle) (pf) | verb | за- + їхати |
-| заїжджати | /zɑjizˈdʒɑtɪ/ | to stop by (impf) | verb | secondary impf |
-| забігти | /zɑbʲiɦˈtɪ/ | to run in briefly (pf) | verb | за- + бігти |
-| забігати | /zɑbʲiˈɦɑtɪ/ | to run in briefly (impf) | verb | secondary impf |
-| заговорити | /zɑɦovoˈrɪtɪ/ | to start speaking (pf) | verb | inchoative |
-| заспівати | /zɑspʲiˈvɑtɪ/ | to start singing (pf) | verb | inchoative |
-| заплакати | /zɑplɑˈkɑtɪ/ | to start crying (pf) | verb | inchoative |
-| розійтися | /rozijˈtɪsʲɑ/ | to disperse (pf) | verb | роз- + іти + ся |
-| розходитися | /rozxoˈdɪtɪsʲɑ/ | to disperse (impf) | verb | secondary impf |
-| роз'їхатися | /rozˈjixɑtɪsʲɑ/ | to drive apart (pf) | verb | роз- + їхати + ся |
-| роз'їжджатися | /rozjizˈdʒɑtɪsʲɑ/ | to drive apart (impf) | verb | secondary impf |
-| розбігтися | /rozbʲiɦˈtɪsʲɑ/ | to scatter running (pf) | verb | роз- + бігти + ся |
-| розбігатися | /rozbʲiˈɦɑtɪsʲɑ/ | to scatter running (impf) | verb | secondary impf |
-| розлетітися | /rozlɛˈtʲitɪsʲɑ/ | to fly apart (pf) | verb | роз- + летіти + ся |
-| розлітатися | /rozlʲiˈtɑtɪsʲɑ/ | to fly apart (impf) | verb | secondary impf |
-| розібратися | /rozʲibrɑˈtɪsʲɑ/ | to figure out (pf) | verb | роз- + брати + ся |
-| розповісти | /rozpoˈvʲistɪ/ | to tell (pf) | verb | роз- + повідати |
-| відійти | /vʲidijˈtɪ/ | to step away (pf) | verb | від- + іти |
-| відходити | /vʲidxoˈdɪtɪ/ | to step away (impf) | verb | secondary impf |
-| від'їхати | /vʲidˈjixɑtɪ/ | to drive away (pf) | verb | від- + їхати |
-| від'їжджати | /vʲidjizˈdʒɑtɪ/ | to drive away (impf) | verb | secondary impf |
-| відбігти | /vʲidbʲiɦˈtɪ/ | to run away (pf) | verb | від- + бігти |
-| відбігати | /vʲidbʲiˈɦɑtɪ/ | to run away (impf) | verb | secondary impf |
-| відлетіти | /vʲidlɛˈtʲitɪ/ | to fly away (pf) | verb | від- + летіти |
-| відлітати | /vʲidlʲiˈtɑtɪ/ | to fly away (impf) | verb | secondary impf |
-| віднести | /vʲidnɛsˈtɪ/ | to carry away (pf) | verb | від- + нести |
-| відносити | /vʲidnoˈsɪtɪ/ | to carry away (impf) | verb | secondary impf |
-| додому | /doˈdomu/ | home(ward) | adv | direction |
-| вранці | /ˈvrɑnt͡sʲi/ | in the morning | adv | - |
-| увечері | /uˈvɛt͡ʃɛrʲi/ | in the evening | adv | - |
-| по дорозі | /po doˈrozʲi/ | on the way | phrase | - |
-| вечірка | /vɛˈt͡ʃirkɑ/ | party | noun | f |
-| гість | /ɦʲistʲ/ | guest | noun | m |
-| гості | /ˈɦostʲi/ | guests | noun | pl |
-| колега | /koˈlɛɦɑ/ | colleague | noun | m/f |
-| друг | /druɦ/ | friend (m) | noun | m |
-| кава | /ˈkɑvɑ/ | coffee | noun | f |
-| хліб | /xlʲib/ | bread | noun | m |
-| хвилинка | /xvɪˈlɪnkɑ/ | a moment | noun | f, diminutive |
-| хмара | /ˈxmɑrɑ/ | cloud | noun | f |
-| ріг | /rʲiɦ/ | corner | noun | m |
-| гора | /ɦoˈrɑ/ | mountain | noun | f |
-| двір | /dvʲir/ | yard, courtyard | noun | m |
-| урок | /uˈrok/ | lesson | noun | m |
-| весілля | /vɛˈsʲilʲɑ/ | wedding | noun | n |
-| бібліотека | /bʲiblʲioˈtɛkɑ/ | library | noun | f |
-| двері | /ˈdvɛrʲi/ | door | noun | pl |
-| вогонь | /voˈɦonʲ/ | fire | noun | m |
-| стіл | /stʲil/ | table | noun | m |
-| кав'ярня | /kɑvˈjɑrnʲɑ/ | coffee shop | noun | f |
-| заправка | /zɑˈprɑvkɑ/ | gas station | noun | f |
-| супермаркет | /supɛrˈmɑrkɛt/ | supermarket | noun | m |
-| магазин | /mɑɦɑˈzɪn/ | store | noun | m |
-| таксі | /tɑkˈsʲi/ | taxi | noun | n, indecl |
-| концерт | /konˈt͡sɛrt/ | concert | noun | m |
-| літак | /lʲiˈtɑk/ | airplane | noun | m |
-| північ | /ˈpʲivnʲit͡ʃ/ | midnight; north | noun | f |
-| вічність | /ˈvʲit͡ʃnʲistʲ/ | eternity | noun | f |
-| близько | /ˈblɪzʲko/ | nearby | adv | - |
-| спочатку | /spoˈt͡ʃɑtku/ | at first | adv | - |
-| нарешті | /nɑˈrɛʃtʲi/ | finally | adv | - |
-| іноді | /ˈinodʲi/ | sometimes | adv | - |
-| завтра | /ˈzɑvtrɑ/ | tomorrow | adv | - |
-| давай | /dɑˈvɑj/ | let's | part | - |
-| о | /o/ | at (time) | prep | + locative |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| піти | /pʲiˈtɪ/ | to go, leave (pf) | дієсл | по- + іти |
+| поїхати | /poˈjixɑtɪ/ | to leave by vehicle (pf) | дієсл | по- + їхати |
+| побігти | /pobʲiɦˈtɪ/ | to run off (pf) | дієсл | по- + бігти |
+| полетіти | /polɛˈtʲitɪ/ | to fly off (pf) | дієсл | по- + летіти |
+| поплисти | /poplɪsˈtɪ/ | to sail off (pf) | дієсл | по- + плисти |
+| понести | /ponɛsˈtɪ/ | to carry off (pf) | дієсл | по- + нести |
+| повезти | /povɛzˈtɪ/ | to drive off with cargo (pf) | дієсл | по- + везти |
+| повести | /povɛsˈtɪ/ | to lead off (pf) | дієсл | по- + вести |
+| походити | /poxoˈdɪtɪ/ | to walk around a bit (pf) | дієсл | delimitative |
+| поїздити | /pojizˈdɪtɪ/ | to drive around a bit (pf) | дієсл | delimitative |
+| побігати | /pobʲiˈɦɑtɪ/ | to run around a bit (pf) | дієсл | delimitative |
+| зайти | /zɑjˈtɪ/ | to drop by (pf) | дієсл | за- + іти |
+| заходити | /zɑxoˈdɪtɪ/ | to drop by (impf) | дієсл | secondary impf |
+| заїхати | /zɑˈjixɑtɪ/ | to stop by (vehicle) (pf) | дієсл | за- + їхати |
+| заїжджати | /zɑjizˈdʒɑtɪ/ | to stop by (impf) | дієсл | secondary impf |
+| забігти | /zɑbʲiɦˈtɪ/ | to run in briefly (pf) | дієсл | за- + бігти |
+| забігати | /zɑbʲiˈɦɑtɪ/ | to run in briefly (impf) | дієсл | secondary impf |
+| заговорити | /zɑɦovoˈrɪtɪ/ | to start speaking (pf) | дієсл | inchoative |
+| заспівати | /zɑspʲiˈvɑtɪ/ | to start singing (pf) | дієсл | inchoative |
+| заплакати | /zɑplɑˈkɑtɪ/ | to start crying (pf) | дієсл | inchoative |
+| розійтися | /rozijˈtɪsʲɑ/ | to disperse (pf) | дієсл | роз- + іти + ся |
+| розходитися | /rozxoˈdɪtɪsʲɑ/ | to disperse (impf) | дієсл | secondary impf |
+| роз'їхатися | /rozˈjixɑtɪsʲɑ/ | to drive apart (pf) | дієсл | роз- + їхати + ся |
+| роз'їжджатися | /rozjizˈdʒɑtɪsʲɑ/ | to drive apart (impf) | дієсл | secondary impf |
+| розбігтися | /rozbʲiɦˈtɪsʲɑ/ | to scatter running (pf) | дієсл | роз- + бігти + ся |
+| розбігатися | /rozbʲiˈɦɑtɪsʲɑ/ | to scatter running (impf) | дієсл | secondary impf |
+| розлетітися | /rozlɛˈtʲitɪsʲɑ/ | to fly apart (pf) | дієсл | роз- + летіти + ся |
+| розлітатися | /rozlʲiˈtɑtɪsʲɑ/ | to fly apart (impf) | дієсл | secondary impf |
+| розібратися | /rozʲibrɑˈtɪsʲɑ/ | to figure out (pf) | дієсл | роз- + брати + ся |
+| розповісти | /rozpoˈvʲistɪ/ | to tell (pf) | дієсл | роз- + повідати |
+| відійти | /vʲidijˈtɪ/ | to step away (pf) | дієсл | від- + іти |
+| відходити | /vʲidxoˈdɪtɪ/ | to step away (impf) | дієсл | secondary impf |
+| від'їхати | /vʲidˈjixɑtɪ/ | to drive away (pf) | дієсл | від- + їхати |
+| від'їжджати | /vʲidjizˈdʒɑtɪ/ | to drive away (impf) | дієсл | secondary impf |
+| відбігти | /vʲidbʲiɦˈtɪ/ | to run away (pf) | дієсл | від- + бігти |
+| відбігати | /vʲidbʲiˈɦɑtɪ/ | to run away (impf) | дієсл | secondary impf |
+| відлетіти | /vʲidlɛˈtʲitɪ/ | to fly away (pf) | дієсл | від- + летіти |
+| відлітати | /vʲidlʲiˈtɑtɪ/ | to fly away (impf) | дієсл | secondary impf |
+| віднести | /vʲidnɛsˈtɪ/ | to carry away (pf) | дієсл | від- + нести |
+| відносити | /vʲidnoˈsɪtɪ/ | to carry away (impf) | дієсл | secondary impf |
+| додому | /doˈdomu/ | home(ward) | присл | direction |
+| вранці | /ˈvrɑnt͡sʲi/ | in the morning | присл | - |
+| увечері | /uˈvɛt͡ʃɛrʲi/ | in the evening | присл | - |
+| по дорозі | /po doˈrozʲi/ | on the way | фраза | - |
+| вечірка | /vɛˈt͡ʃirkɑ/ | party | ім | f |
+| гість | /ɦʲistʲ/ | guest | ім | m |
+| гості | /ˈɦostʲi/ | guests | ім | pl |
+| колега | /koˈlɛɦɑ/ | colleague | ім | m/f |
+| друг | /druɦ/ | friend (m) | ім | m |
+| кава | /ˈkɑvɑ/ | coffee | ім | f |
+| хліб | /xlʲib/ | bread | ім | m |
+| хвилинка | /xvɪˈlɪnkɑ/ | a moment | ім | f, diminutive |
+| хмара | /ˈxmɑrɑ/ | cloud | ім | f |
+| ріг | /rʲiɦ/ | corner | ім | m |
+| гора | /ɦoˈrɑ/ | mountain | ім | f |
+| двір | /dvʲir/ | yard, courtyard | ім | m |
+| урок | /uˈrok/ | lesson | ім | m |
+| весілля | /vɛˈsʲilʲɑ/ | wedding | ім | n |
+| бібліотека | /bʲiblʲioˈtɛkɑ/ | library | ім | f |
+| двері | /ˈdvɛrʲi/ | door | ім | pl |
+| вогонь | /voˈɦonʲ/ | fire | ім | m |
+| стіл | /stʲil/ | table | ім | m |
+| кав'ярня | /kɑvˈjɑrnʲɑ/ | coffee shop | ім | f |
+| заправка | /zɑˈprɑvkɑ/ | gas station | ім | f |
+| супермаркет | /supɛrˈmɑrkɛt/ | supermarket | ім | m |
+| магазин | /mɑɦɑˈzɪn/ | store | ім | m |
+| таксі | /tɑkˈsʲi/ | taxi | ім | n, indecl |
+| концерт | /konˈt͡sɛrt/ | concert | ім | m |
+| літак | /lʲiˈtɑk/ | airplane | ім | m |
+| північ | /ˈpʲivnʲit͡ʃ/ | midnight; north | ім | f |
+| вічність | /ˈvʲit͡ʃnʲistʲ/ | eternity | ім | f |
+| близько | /ˈblɪzʲko/ | nearby | присл | - |
+| спочатку | /spoˈt͡ʃɑtku/ | at first | присл | - |
+| нарешті | /nɑˈrɛʃtʲi/ | finally | присл | - |
+| іноді | /ˈinodʲi/ | sometimes | присл | - |
+| завтра | /ˈzɑvtrɑ/ | tomorrow | присл | - |
+| давай | /dɑˈvɑj/ | let's | частка | - |
+| о | /o/ | at (time) | прийм | + locative |
 
 ---
 

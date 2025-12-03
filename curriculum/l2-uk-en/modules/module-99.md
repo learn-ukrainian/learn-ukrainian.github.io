@@ -423,13 +423,13 @@ Include:
 
 # Словник
 
-| Word | IPA | English | POS | Note |
-|------|-----|---------|-----|------|
-| засвоєння | /zɑsvoˈjɛnʲːɑ/ | mastery, acquisition | noun | n |
-| перевірка | /pɛrɛˈvʲirkɑ/ | check, test | noun | f |
-| практика | /prɑkˈtɪkɑ/ | practice | noun | f |
-| правильний | /prɑˈvɪlʲnɪj/ | correct | adj | - |
-| неправильний | /nɛprɑˈvɪlʲnɪj/ | incorrect | adj | - |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| засвоєння | /zɑsvoˈjɛnʲːɑ/ | mastery, acquisition | ім | n |
+| перевірка | /pɛrɛˈvʲirkɑ/ | check, test | ім | f |
+| практика | /prɑkˈtɪkɑ/ | practice | ім | f |
+| правильний | /prɑˈvɪlʲnɪj/ | correct | прикм | - |
+| неправильний | /nɛprɑˈvɪlʲnɪj/ | incorrect | прикм | - |
 
 ---
 

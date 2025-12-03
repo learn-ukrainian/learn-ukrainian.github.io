@@ -418,14 +418,14 @@ Talk about:
 
 # Vocabulary
 
-| Word | IPA | English | Gender |
-|------|-----|---------|--------|
-| речення | /ˈrɛt͡ʃɛnʲːɑ/ | sentence | n |
-| складний | /sklɑdˈnɪj/ | complex, difficult | adj |
-| простий | /prosˈtɪj/ | simple | adj |
-| з'єднувати | /zjedˈnuvɑtɪ/ | to connect | impf |
-| з'єднати | /zjedˈnɑtɪ/ | to connect | pf |
-| стосуватися | /stosʊˈvɑtɪsʲɑ/ | to relate to, concern | impf |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| речення | /ˈrɛt͡ʃɛnʲːɑ/ | sentence | ім | n |
+| складний | /sklɑdˈnɪj/ | complex, difficult | ім | adj |
+| простий | /prosˈtɪj/ | simple | ім | adj |
+| з'єднувати | /zjedˈnuvɑtɪ/ | to connect | ім | impf |
+| з'єднати | /zjedˈnɑtɪ/ | to connect | ім | pf |
+| стосуватися | /stosʊˈvɑtɪsʲɑ/ | to relate to, concern | ім | impf |
 
 ---
 
