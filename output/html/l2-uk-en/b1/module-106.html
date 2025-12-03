@@ -388,6 +388,35 @@ footer {
 .unjumble-feedback .wrong-text { color: var(--danger); }
 .unjumble-feedback .translation { color: var(--text-muted); font-style: italic; margin-left: 0.5rem; }
 
+/* Order Sentence Activity - Sentence reordering with unjumble-style UI */
+.order-sequence { display: flex; flex-direction: column; align-items: stretch; }
+.order-sentence-row { display: flex; flex-direction: column; flex-wrap: nowrap; gap: 0.5rem; min-height: auto; padding: 0.5rem; flex: none; width: 100%; }
+.order-sentence-item { background: var(--primary); color: white; border-radius: 8px; padding: 0.75rem 1rem; font-size: 1rem; cursor: grab; user-select: none; display: flex; align-items: center; gap: 0.75rem; transition: transform 0.1s, box-shadow 0.1s; }
+.order-sentence-item:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+.order-sentence-item:active { cursor: grabbing; }
+.order-sentence-item.dragging { opacity: 0.5; transform: scale(1.02); }
+.order-sentence-item.correct { background: var(--success); }
+.order-sentence-item.wrong { background: var(--danger); }
+.order-sentence-item.touch-clone { position: fixed; z-index: 1000; pointer-events: none; box-shadow: 0 8px 16px rgba(0,0,0,0.2); max-width: 90vw; }
+.order-num { background: rgba(255,255,255,0.3); padding: 0.25rem 0.5rem; border-radius: 4px; font-weight: 600; min-width: 1.5rem; text-align: center; }
+.order-sentence-text { flex: 1; }
+.order-feedback { width: 100%; padding: 0.5rem 0; display: none; }
+.order-feedback.show { display: block; }
+.order-feedback .correct-text { color: var(--success); font-weight: 600; }
+.order-feedback .wrong-text { color: var(--danger); }
+
+/* Order Card Activity - New class names for classic order */
+.order-items-wrapper { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem; }
+.order-sentence-card { background: var(--primary); color: white; border-radius: 8px; padding: 0.75rem 1rem; font-size: 1rem; cursor: grab; user-select: none; display: flex; align-items: center; gap: 0.75rem; transition: transform 0.1s, box-shadow 0.1s; }
+.order-sentence-card:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+.order-sentence-card:active { cursor: grabbing; }
+.order-sentence-card.dragging { opacity: 0.5; transform: scale(1.02); }
+.order-sentence-card.correct { background: var(--success); }
+.order-sentence-card.wrong { background: var(--danger); }
+.order-card-num { background: rgba(255,255,255,0.3); padding: 0.25rem 0.5rem; border-radius: 4px; font-weight: 600; min-width: 1.5rem; text-align: center; }
+.order-card-text { flex: 1; }
+.order-buttons { margin-top: 0.5rem; }
+
 /* Select Activity - Multi-choice checkboxes */
 .select-container { display: flex; flex-direction: column; gap: 1rem; }
 .select-question { border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; display: flex; gap: 0.75rem; }
@@ -1752,27 +1781,226 @@ function resetUnjumbleQuestion(sectionId, idx) {
 function initClassicOrder(sectionId, container, data) {
   const state = orderState[sectionId];
 
-  const shuffled = [...data.items].map((item, idx) => ({ text: item, origIdx: idx }));
-  shuffled.sort(() => Math.random() - 0.5);
+  // Create array with original indices, then shuffle
+  const items = [...data.items].map((item, idx) => ({ text: item, origIdx: idx }));
+  // Fisher-Yates shuffle
+  for (let i = items.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [items[i], items[j]] = [items[j], items[i]];
+  }
 
-  const div = document.createElement('div');
-  div.className = 'order-items';
-  div.dataset.section = sectionId;
-  div.innerHTML = shuffled.map((item, i) => `
-    <div class="order-item" draggable="true" data-orig="${item.origIdx}" data-section="${sectionId}">
-      <span class="order-handle">☰</span>
-      <span class="order-text">${item.text}</span>
-    </div>
-  `).join('');
-  container.appendChild(div);
+  // Create container div for all items
+  const wrapper = document.createElement('div');
+  wrapper.className = 'order-items-wrapper';
+  wrapper.dataset.section = sectionId;
 
-  const checkBtn = document.createElement('button');
-  checkBtn.className = 'btn btn-outline';
-  checkBtn.textContent = 'Check Order';
-  checkBtn.onclick = () => checkOrder(sectionId);
-  container.appendChild(checkBtn);
+  // Create each sentence as a draggable item
+  items.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'order-sentence-card';
+    div.draggable = true;
+    div.dataset.orig = item.origIdx;
+    div.dataset.section = sectionId;
+    div.innerHTML = '<span class="order-card-num">' + (i + 1) + '</span><span class="order-card-text">' + item.text + '</span>';
+    wrapper.appendChild(div);
+  });
 
-  initDragDrop(div);
+  container.appendChild(wrapper);
+
+  // Add buttons
+  const btnDiv = document.createElement('div');
+  btnDiv.className = 'order-buttons';
+  btnDiv.innerHTML = '<button class="btn btn-outline order-check-btn" data-section="' + sectionId + '">Check Order</button>';
+  container.appendChild(btnDiv);
+
+  // Add feedback area
+  const feedback = document.createElement('div');
+  feedback.className = 'order-feedback';
+  feedback.dataset.section = sectionId;
+  container.appendChild(feedback);
+
+  // Initialize drag-and-drop
+  initOrderCardDragDrop(wrapper);
+
+  // Button click handler
+  btnDiv.querySelector('.order-check-btn').onclick = function() { checkOrder(sectionId); };
+}
+
+function initOrderCardDragDrop(wrapper) {
+  let dragItem = null;
+
+  wrapper.querySelectorAll('.order-sentence-card').forEach(function(card) {
+    card.addEventListener('dragstart', function(e) {
+      dragItem = card;
+      card.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    });
+
+    card.addEventListener('dragend', function() {
+      card.classList.remove('dragging');
+      dragItem = null;
+      updateCardNumbers(wrapper);
+    });
+
+    card.addEventListener('dragover', function(e) {
+      e.preventDefault();
+      if (!dragItem || dragItem === card) return;
+      const rect = card.getBoundingClientRect();
+      const midY = rect.top + rect.height / 2;
+      if (e.clientY < midY) {
+        wrapper.insertBefore(dragItem, card);
+      } else {
+        wrapper.insertBefore(dragItem, card.nextSibling);
+      }
+    });
+  });
+
+  // Touch support
+  let touchItem = null;
+  let touchClone = null;
+
+  wrapper.querySelectorAll('.order-sentence-card').forEach(function(card) {
+    card.addEventListener('touchstart', function(e) {
+      touchItem = card;
+      card.classList.add('dragging');
+      touchClone = card.cloneNode(true);
+      touchClone.style.position = 'fixed';
+      touchClone.style.zIndex = '1000';
+      touchClone.style.pointerEvents = 'none';
+      touchClone.style.opacity = '0.8';
+      touchClone.style.maxWidth = '90vw';
+      document.body.appendChild(touchClone);
+      moveTouchClone(e.touches[0]);
+    });
+
+    card.addEventListener('touchmove', function(e) {
+      e.preventDefault();
+      if (!touchItem) return;
+      moveTouchClone(e.touches[0]);
+      const touch = e.touches[0];
+      const els = document.elementsFromPoint(touch.clientX, touch.clientY);
+      const target = els.find(function(el) { return el.classList.contains('order-sentence-card') && el !== touchItem; });
+      if (target && target.parentNode === wrapper) {
+        const rect = target.getBoundingClientRect();
+        const midY = rect.top + rect.height / 2;
+        if (touch.clientY < midY) {
+          wrapper.insertBefore(touchItem, target);
+        } else {
+          wrapper.insertBefore(touchItem, target.nextSibling);
+        }
+      }
+    });
+
+    card.addEventListener('touchend', function() {
+      if (touchItem) touchItem.classList.remove('dragging');
+      if (touchClone) touchClone.remove();
+      touchItem = null;
+      touchClone = null;
+      updateCardNumbers(wrapper);
+    });
+  });
+
+  function moveTouchClone(touch) {
+    if (touchClone) {
+      touchClone.style.left = (touch.clientX - 100) + 'px';
+      touchClone.style.top = (touch.clientY - 25) + 'px';
+    }
+  }
+}
+
+function updateCardNumbers(wrapper) {
+  wrapper.querySelectorAll('.order-sentence-card').forEach(function(card, i) {
+    card.querySelector('.order-card-num').textContent = i + 1;
+  });
+}
+
+function initOrderSentenceDragDrop(row) {
+  let dragItem = null;
+
+  row.querySelectorAll('.order-sentence-item').forEach(item => {
+    item.addEventListener('dragstart', (e) => {
+      dragItem = item;
+      item.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    });
+
+    item.addEventListener('dragend', () => {
+      item.classList.remove('dragging');
+      dragItem = null;
+      // Update numbers after drag
+      updateOrderNumbers(row);
+    });
+
+    item.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      if (!dragItem || dragItem === item) return;
+
+      const rect = item.getBoundingClientRect();
+      const midY = rect.top + rect.height / 2;
+
+      if (e.clientY < midY) {
+        row.insertBefore(dragItem, item);
+      } else {
+        row.insertBefore(dragItem, item.nextSibling);
+      }
+    });
+  });
+
+  // Touch support
+  let touchItem = null;
+  let touchClone = null;
+
+  row.querySelectorAll('.order-sentence-item').forEach(item => {
+    item.addEventListener('touchstart', (e) => {
+      touchItem = item;
+      item.classList.add('dragging');
+      touchClone = item.cloneNode(true);
+      touchClone.classList.add('touch-clone');
+      document.body.appendChild(touchClone);
+      updateTouchClonePos(e.touches[0], touchClone);
+    });
+
+    item.addEventListener('touchmove', (e) => {
+      e.preventDefault();
+      if (!touchItem) return;
+      updateTouchClonePos(e.touches[0], touchClone);
+
+      const touch = e.touches[0];
+      const elements = document.elementsFromPoint(touch.clientX, touch.clientY);
+      const target = elements.find(el => el.classList.contains('order-sentence-item') && el !== touchItem);
+
+      if (target && target.parentNode === row) {
+        const rect = target.getBoundingClientRect();
+        const midY = rect.top + rect.height / 2;
+        if (touch.clientY < midY) {
+          row.insertBefore(touchItem, target);
+        } else {
+          row.insertBefore(touchItem, target.nextSibling);
+        }
+      }
+    });
+
+    item.addEventListener('touchend', () => {
+      if (touchItem) touchItem.classList.remove('dragging');
+      if (touchClone) touchClone.remove();
+      touchItem = null;
+      touchClone = null;
+      updateOrderNumbers(row);
+    });
+  });
+
+  function updateTouchClonePos(touch, clone) {
+    if (clone) {
+      clone.style.left = (touch.clientX - 100) + 'px';
+      clone.style.top = (touch.clientY - 20) + 'px';
+    }
+  }
+}
+
+function updateOrderNumbers(row) {
+  row.querySelectorAll('.order-sentence-item').forEach((item, i) => {
+    item.querySelector('.order-num').textContent = i + 1;
+  });
 }
 
 function initDragDrop(container) {
@@ -1807,8 +2035,16 @@ function initDragDrop(container) {
 function checkOrder(sectionId) {
   const state = orderState[sectionId];
   const data = state.data;
-  const items = document.querySelectorAll(`.order-item[data-section="${sectionId}"]`);
-  const currentOrder = Array.from(items).map(item => parseInt(item.dataset.orig));
+  // Support multiple class names for order items
+  let items = document.querySelectorAll('.order-sentence-card[data-section="' + sectionId + '"]');
+  if (!items.length) {
+    items = document.querySelectorAll('.order-sentence-item[data-section="' + sectionId + '"]');
+  }
+  if (!items.length) {
+    items = document.querySelectorAll('.order-item[data-section="' + sectionId + '"]');
+  }
+  const currentOrder = Array.from(items).map(function(item) { return parseInt(item.dataset.orig); });
+  const feedback = document.querySelector('.order-feedback[data-section="' + sectionId + '"]');
 
   let correct = true;
   currentOrder.forEach((val, idx) => {
@@ -1831,6 +2067,19 @@ function checkOrder(sectionId) {
     state.score = state.total;
     document.getElementById(sectionId + '-score').textContent = state.score;
     document.getElementById(sectionId + '-complete').classList.add('show');
+    if (feedback) {
+      feedback.innerHTML = '<span class="correct-text">✓ Perfect order!</span>';
+      feedback.classList.add('show');
+    }
+  } else {
+    if (feedback) {
+      feedback.innerHTML = '<span class="wrong-text">✗ Not quite right. Try again!</span>';
+      feedback.classList.add('show');
+    }
+    setTimeout(function() {
+      items.forEach(function(item) { item.classList.remove('wrong'); });
+      if (feedback) feedback.classList.remove('show');
+    }, 2000);
   }
 }
 

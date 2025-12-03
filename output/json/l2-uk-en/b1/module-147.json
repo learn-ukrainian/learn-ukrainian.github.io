@@ -1,0 +1,418 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-B1-147",
+    "moduleId": "mod-uk-B1-147",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "B1",
+    "phase": "B1.5",
+    "moduleNumber": 147,
+    "moduleType": "vocabulary",
+    "immersionLevel": 0.6,
+    "title": "Технології та стартапи",
+    "subtitle": "Technology and Startups in Ukraine",
+    "description": "Learn vocabulary for technology and IT industry",
+    "objectives": [
+      "Learn vocabulary for technology and IT industry",
+      "Discover Ukraine's tech ecosystem",
+      "Understand the role of IT in Ukrainian economy",
+      "Practice discussing technology topics"
+    ],
+    "grammarFocus": [],
+    "tags": [
+      "vocabulary",
+      "technology",
+      "IT",
+      "startups",
+      "business"
+    ],
+    "totalDuration": 45,
+    "transliterationMode": "none",
+    "sections": [
+      {
+        "id": "section-intro",
+        "name": "Вступ",
+        "nameEn": "Introduction",
+        "type": "intro",
+        "content": "Україна — одна з провідних IT-країн світу. Українські програмісти працюють у Google, Microsoft, Amazon. Українські стартапи залучають мільйони доларів інвестицій. Давайте дізнаємося більше про технологічний сектор України.\n\nUkraine is one of the leading IT countries in the world. Ukrainian programmers work at Google, Microsoft, Amazon. Ukrainian startups attract millions of dollars in investments. Let's learn more about Ukraine's technology sector.\n\n> [!note] IT — найбільш стійка галузь української економіки, яка продовжує працювати навіть під час війни.\n\n---"
+      },
+      {
+        "id": "section-зміст-уроку-lesson-content",
+        "name": "Зміст уроку | Lesson Content",
+        "type": "content",
+        "content": "## Частина 1: IT-сектор України\n\n### Факти про український IT\n\n| Показник | Дані |\n|----------|------|\n| IT-спеціалістів | ~300 000 |\n| Експорт IT-послуг | ~$7 млрд на рік |\n| Частка в ВВП | ~4% |\n| Зростання | ~25% щороку |\n\n### Чому Україна стала IT-хабом?\n\n1. **Освіта**: Сильні технічні університети\n2. **Математика**: Традиційно сильна математична школа\n3. **Ціна**: Конкурентоспроможні ціни vs Західна Європа\n4. **Англійська**: Високий рівень англійської\n5. **Культура**: Креативність та працьовитість\n\n> [!tip] **Чи знали ви?** Співзасновник WhatsApp Ян Кум народився в Києві. Засновник PayPal та Palantir Макс Левчин — родом з України.\n\n## Частина 2: Українські стартапи\n\n### Успішні українські компанії\n\n| Стартап | Що робить | Статус |\n|---------|-----------|--------|\n| Grammarly | Перевірка граматики | Єдиноріг ($13 млрд) |\n| GitLab | DevOps платформа | Публічна компанія |\n| Preply | Онлайн-навчання мов | Єдиноріг |\n| Ajax Systems | Розумний дім | Лідер у Європі |\n| People.ai | AI для продажів | Єдиноріг |\n| Reface | AI-додаток | 100+ млн завантажень |\n\n### Grammarly — найуспішніший стартап\n\n**Grammarly** — українська компанія, яка перевіряє граматику англійської мови:\n\n- **Засновники**: Олексій Шевченко, Максим Литвин, Дмитро Лідер\n- **Заснування**: 2009 (Київ)\n- **Користувачі**: 30+ мільйонів щодня\n- **Оцінка**: $13 мільярдів\n\n> «Ми почали в Києві, і ми пишаємося тим, що ми — українська компанія.»\n> — Олексій Шевченко, CEO Grammarly\n\n## Частина 3: Технологічний словник\n\n### Основні терміни\n\n| Українська | English | Примітка |\n|------------|---------|----------|\n| програмування | programming | |\n| програміст | programmer | також: розробник |\n| розробка | development | |\n| застосунок (апка) | app (application) | |\n| сайт | website | |\n| база даних | database | |\n| сервер | server | |\n| хмара | cloud | хмарні технології |\n| штучний інтелект | artificial intelligence | ШІ, AI |\n| машинне навчання | machine learning | |\n\n### IT-жаргон\n\nУкраїнські айтівці часто використовують англіцизми:\n\n| Жаргон | Значення |\n|--------|----------|\n| мітинг | meeting |\n| дедлайн | deadline |\n| фіча | feature |\n| баг | bug |\n| фікс | fix |\n| релізити | to release |\n| девелопер | developer |\n| тімлід | team lead |\n| сіньйор | senior |\n| джуніор | junior |\n\n## Частина 4: IT та війна\n\n### Кіберфронт\n\nУкраїна воює не тільки на землі, але й у кіберпросторі:\n\n**IT-армія України:**\n- Волонтерська організація\n- Кібератаки на російську інфраструктуру\n- DDoS-атаки на російські сайти\n- Інформаційна війна\n\n### Технології на фронті\n\n| Технологія | Застосування |\n|------------|--------------|\n| Дрони | Розвідка, атаки |\n| Starlink | Зв'язок |\n| AI | Аналіз даних |\n| Мобільні додатки | «Повітряна тривога» |\n| GPS | Навігація |\n\n> «Ця війна — перша справжня технологічна війна. І Україна виграє технологічно.»\n> — Міхайло Федоров, міністр цифрової трансформації\n\n### Diia — цифрова держава\n\n**Diia (Дія)** — унікальний український проєкт:\n- Цифровий паспорт у смартфоні\n- Державні послуги онлайн\n- Понад 20 мільйонів користувачів\n- Модель для інших країн\n\n---\n\n\n---\n\n\n---\n\n\n---"
+      },
+      {
+        "id": "section-summary",
+        "name": "Підсумок",
+        "nameEn": "Summary",
+        "type": "summary",
+        "content": "## Що ви вивчили\n\nУ цьому уроці ви дізналися про:\n\n**IT-сектор України:**\n- ~300 000 спеціалістів\n- ~$7 млрд експорту\n- Сильна освіта та математична школа\n\n**Українські стартапи:**\n- Grammarly — $13 млрд\n- GitLab, Preply, Ajax Systems\n- Ян Кум (WhatsApp), Макс Левчин (PayPal)\n\n**Технологічний словник:**\n- програмування, розробка, застосунок\n- IT-жаргон: баг, фіча, дедлайн\n\n**IT та війна:**\n- Кіберфронт, IT-армія\n- Дрони, Starlink, Diia\n\n> **Порада:** Читайте українські IT-новини на сайтах DOU.ua або AIN.ua!\n\n> **Наступний урок:** Спорт в Україні — футбол, бокс та інші популярні види спорту."
+      }
+    ],
+    "rawMarkdown": "---\nmodule: 147\ntitle: \"Технології та стартапи\"\nsubtitle: \"Technology and Startups in Ukraine\"\nlevel: B1\nphase: B1.5\nduration: 45\ntransliteration: none\ntags: [vocabulary, technology, IT, startups, business]\nobjectives:\n  - Learn vocabulary for technology and IT industry\n  - Discover Ukraine's tech ecosystem\n  - Understand the role of IT in Ukrainian economy\n  - Practice discussing technology topics\n---\n\n# Вступ\n\nУкраїна — одна з провідних IT-країн світу. Українські програмісти працюють у Google, Microsoft, Amazon. Українські стартапи залучають мільйони доларів інвестицій. Давайте дізнаємося більше про технологічний сектор України.\n\nUkraine is one of the leading IT countries in the world. Ukrainian programmers work at Google, Microsoft, Amazon. Ukrainian startups attract millions of dollars in investments. Let's learn more about Ukraine's technology sector.\n\n> [!note] IT — найбільш стійка галузь української економіки, яка продовжує працювати навіть під час війни.\n\n---\n\n# Зміст уроку | Lesson Content\n\n## Частина 1: IT-сектор України\n\n### Факти про український IT\n\n| Показник | Дані |\n|----------|------|\n| IT-спеціалістів | ~300 000 |\n| Експорт IT-послуг | ~$7 млрд на рік |\n| Частка в ВВП | ~4% |\n| Зростання | ~25% щороку |\n\n### Чому Україна стала IT-хабом?\n\n1. **Освіта**: Сильні технічні університети\n2. **Математика**: Традиційно сильна математична школа\n3. **Ціна**: Конкурентоспроможні ціни vs Західна Європа\n4. **Англійська**: Високий рівень англійської\n5. **Культура**: Креативність та працьовитість\n\n> [!tip] **Чи знали ви?** Співзасновник WhatsApp Ян Кум народився в Києві. Засновник PayPal та Palantir Макс Левчин — родом з України.\n\n## Частина 2: Українські стартапи\n\n### Успішні українські компанії\n\n| Стартап | Що робить | Статус |\n|---------|-----------|--------|\n| Grammarly | Перевірка граматики | Єдиноріг ($13 млрд) |\n| GitLab | DevOps платформа | Публічна компанія |\n| Preply | Онлайн-навчання мов | Єдиноріг |\n| Ajax Systems | Розумний дім | Лідер у Європі |\n| People.ai | AI для продажів | Єдиноріг |\n| Reface | AI-додаток | 100+ млн завантажень |\n\n### Grammarly — найуспішніший стартап\n\n**Grammarly** — українська компанія, яка перевіряє граматику англійської мови:\n\n- **Засновники**: Олексій Шевченко, Максим Литвин, Дмитро Лідер\n- **Заснування**: 2009 (Київ)\n- **Користувачі**: 30+ мільйонів щодня\n- **Оцінка**: $13 мільярдів\n\n> «Ми почали в Києві, і ми пишаємося тим, що ми — українська компанія.»\n> — Олексій Шевченко, CEO Grammarly\n\n## Частина 3: Технологічний словник\n\n### Основні терміни\n\n| Українська | English | Примітка |\n|------------|---------|----------|\n| програмування | programming | |\n| програміст | programmer | також: розробник |\n| розробка | development | |\n| застосунок (апка) | app (application) | |\n| сайт | website | |\n| база даних | database | |\n| сервер | server | |\n| хмара | cloud | хмарні технології |\n| штучний інтелект | artificial intelligence | ШІ, AI |\n| машинне навчання | machine learning | |\n\n### IT-жаргон\n\nУкраїнські айтівці часто використовують англіцизми:\n\n| Жаргон | Значення |\n|--------|----------|\n| мітинг | meeting |\n| дедлайн | deadline |\n| фіча | feature |\n| баг | bug |\n| фікс | fix |\n| релізити | to release |\n| девелопер | developer |\n| тімлід | team lead |\n| сіньйор | senior |\n| джуніор | junior |\n\n## Частина 4: IT та війна\n\n### Кіберфронт\n\nУкраїна воює не тільки на землі, але й у кіберпросторі:\n\n**IT-армія України:**\n- Волонтерська організація\n- Кібератаки на російську інфраструктуру\n- DDoS-атаки на російські сайти\n- Інформаційна війна\n\n### Технології на фронті\n\n| Технологія | Застосування |\n|------------|--------------|\n| Дрони | Розвідка, атаки |\n| Starlink | Зв'язок |\n| AI | Аналіз даних |\n| Мобільні додатки | «Повітряна тривога» |\n| GPS | Навігація |\n\n> «Ця війна — перша справжня технологічна війна. І Україна виграє технологічно.»\n> — Міхайло Федоров, міністр цифрової трансформації\n\n### Diia — цифрова держава\n\n**Diia (Дія)** — унікальний український проєкт:\n- Цифровий паспорт у смартфоні\n- Державні послуги онлайн\n- Понад 20 мільйонів користувачів\n- Модель для інших країн\n\n---\n\n# Вправи\n\n## quiz: Перевірте себе\n\n> Що ви запам'ятали про українські технології?\n\n1. Скільки IT-спеціалістів в Україні?\n   - [ ] ~100 000\n   - [x] ~300 000\n   - [ ] ~500 000\n   > В Україні працює близько 300 000 IT-спеціалістів.\n\n2. Яка компанія перевіряє граматику англійської?\n   - [ ] Preply\n   - [x] Grammarly\n   - [ ] Ajax\n   > Grammarly — українська компанія для перевірки граматики.\n\n3. Хто заснував WhatsApp?\n   - [ ] Олексій Шевченко\n   - [x] Ян Кум\n   - [ ] Макс Левчин\n   > Ян Кум, уродженець Києва, є співзасновником WhatsApp.\n\n4. Що таке «Дія»?\n   - [ ] соціальна мережа\n   - [x] цифрові державні послуги\n   - [ ] месенджер\n   > Дія — додаток для цифрових державних послуг.\n\n5. Що таке «баг» в IT-жаргоні?\n   - [x] помилка в коді\n   - [ ] нова функція\n   - [ ] тип сервера\n   > Баг — це помилка в програмному коді.\n\n## match-up: Терміни\n\n> Поєднайте терміни.\n\npairs:\n  - left: \"розробник\"\n    right: \"developer\"\n  - left: \"застосунок\"\n    right: \"application\"\n  - left: \"штучний інтелект\"\n    right: \"AI\"\n  - left: \"хмара\"\n    right: \"cloud\"\n  - left: \"база даних\"\n    right: \"database\"\n\n## group-sort: Категорії\n\n> Розподіліть за категоріями.\n\ngroups:\n  Українські стартапи:\n    - \"Grammarly\"\n    - \"Preply\"\n    - \"Ajax Systems\"\n  IT-терміни:\n    - \"програмування\"\n    - \"сервер\"\n    - \"база даних\"\n  IT-жаргон:\n    - \"мітинг\"\n    - \"дедлайн\"\n    - \"баг\"\n\n---\n\n# Словник\n\n| Слово | Вимова | Переклад | ЧМ | Примітка |\n|-------|--------|----------|-----|----------|\n| технологія | /tɛxnɔˈlɔɦʲijɑ/ | technology | ім | f |\n| стартап | /ˈstɑrtɑp/ | startup | ім | m |\n| програмування | /prɔɦrɑmuˈvɑnʲːɑ/ | programming | ім | n |\n| програміст | /prɔɦrɑˈmʲist/ | programmer | ім | m |\n| розробник | /rɔzˈrɔbnɪk/ | developer | ім | m |\n| розробка | /rɔzˈrɔbkɑ/ | development | ім | f |\n| застосунок | /zɑˈstɔsunɔk/ | application, app | ім | m |\n| інвестиція | /invɛsˈtɪt͡sʲijɑ/ | investment | ім | f |\n| єдиноріг | /jɛdɪnɔˈrʲiɦ/ | unicorn (startup) | ім | m; компанія $1+ млрд |\n| сервер | /ˈsɛrvɛr/ | server | ім | m |\n| хмарний | /ˈxmɑrnɪj/ | cloud (adj) | прикм | хмарні технології |\n| штучний | /ˈʃtut͡ʃnɪj/ | artificial | прикм | штучний інтелект |\n| кібер- | /ˈkʲibɛr/ | cyber- | преф | кібербезпека |\n| дрон | /drɔn/ | drone | ім | m |\n| цифровий | /t͡sɪfrɔˈvɪj/ | digital | прикм | |\n| трансформація | /trɑnsfɔrˈmɑt͡sʲijɑ/ | transformation | ім | f |\n| інновація | /innɔˈvɑt͡sʲijɑ/ | innovation | ім | f |\n| залучати | /zɑluˈt͡ʃɑtɪ/ | to attract, raise | дієсл | залучати інвестиції |\n| запускати | /zɑpusˈkɑtɪ/ | to launch | дієсл | |\n\n---\n\n# Review Vocabulary\n\n| Word | First Module |\n|------|-------------|\n| компанія | 67 |\n| бізнес | 89 |\n| економіка | 95 |\n| освіта | 78 |\n| розвиток | 112 |\n\n---\n\n# Підсумок\n\n## Що ви вивчили\n\nУ цьому уроці ви дізналися про:\n\n**IT-сектор України:**\n- ~300 000 спеціалістів\n- ~$7 млрд експорту\n- Сильна освіта та математична школа\n\n**Українські стартапи:**\n- Grammarly — $13 млрд\n- GitLab, Preply, Ajax Systems\n- Ян Кум (WhatsApp), Макс Левчин (PayPal)\n\n**Технологічний словник:**\n- програмування, розробка, застосунок\n- IT-жаргон: баг, фіча, дедлайн\n\n**IT та війна:**\n- Кіберфронт, IT-армія\n- Дрони, Starlink, Diia\n\n> **Порада:** Читайте українські IT-новини на сайтах DOU.ua або AIN.ua!\n\n> **Наступний урок:** Спорт в Україні — футбол, бокс та інші популярні види спорту.\n",
+    "createdAt": "2025-12-03T17:51:10.687Z",
+    "modifiedAt": "2025-12-03T17:51:10.687Z",
+    "version": 2
+  },
+  "activities": [
+    {
+      "id": "act-b1-147-quiz",
+      "type": "quiz",
+      "title": "Перевірте себе",
+      "description": "Що ви запам'ятали про українські технології?",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "question": "Скільки IT-спеціалістів в Україні?",
+            "options": [
+              "~100 000",
+              "~300 000",
+              "~500 000"
+            ],
+            "correctIndex": 1,
+            "explanation": "В Україні працює близько 300 000 IT-спеціалістів."
+          },
+          {
+            "question": "Яка компанія перевіряє граматику англійської?",
+            "options": [
+              "Preply",
+              "Grammarly",
+              "Ajax"
+            ],
+            "correctIndex": 1,
+            "explanation": "Grammarly — українська компанія для перевірки граматики."
+          },
+          {
+            "question": "Хто заснував WhatsApp?",
+            "options": [
+              "Олексій Шевченко",
+              "Ян Кум",
+              "Макс Левчин"
+            ],
+            "correctIndex": 1,
+            "explanation": "Ян Кум, уродженець Києва, є співзасновником WhatsApp."
+          },
+          {
+            "question": "Що таке «Дія»?",
+            "options": [
+              "соціальна мережа",
+              "цифрові державні послуги",
+              "месенджер"
+            ],
+            "correctIndex": 1,
+            "explanation": "Дія — додаток для цифрових державних послуг."
+          },
+          {
+            "question": "Що таке «баг» в IT-жаргоні?",
+            "options": [
+              "помилка в коді",
+              "нова функція",
+              "тип сервера"
+            ],
+            "correctIndex": 0,
+            "explanation": "Баг — це помилка в програмному коді."
+          }
+        ],
+        "shuffleQuestions": true,
+        "shuffleOptions": true,
+        "showCorrectAnswers": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "B1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-03T17:51:10.687Z",
+      "modifiedAt": "2025-12-03T17:51:10.687Z"
+    },
+    {
+      "id": "act-b1-147-matchup",
+      "type": "match-up",
+      "title": "Терміни",
+      "description": "Поєднайте терміни.",
+      "content": {
+        "type": "match-up",
+        "pairs": [],
+        "shuffleRight": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "B1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-03T17:51:10.687Z",
+      "modifiedAt": "2025-12-03T17:51:10.687Z"
+    },
+    {
+      "id": "act-b1-147-groupsort",
+      "type": "group-sort",
+      "title": "Категорії",
+      "description": "Розподіліть за категоріями.",
+      "content": {
+        "type": "group-sort",
+        "groups": [],
+        "shuffleItems": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "B1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-03T17:51:10.687Z",
+      "modifiedAt": "2025-12-03T17:51:10.687Z"
+    }
+  ],
+  "vocabulary": {
+    "moduleId": "mod-uk-B1-147",
+    "level": "B1",
+    "phase": "B1.5",
+    "wordCount": 24,
+    "newWordCount": 19,
+    "reviewWordCount": 5,
+    "transliterationMode": "none",
+    "words": [
+      {
+        "id": "v-tekhnolohiya-147-0",
+        "uk": "технологія",
+        "en": "technology",
+        "pos": "ім",
+        "ipa": "/tɛxnɔˈlɔɦʲijɑ/",
+        "note": "f",
+        "isNew": true,
+        "firstModule": 147
+      },
+      {
+        "id": "v-startap-147-1",
+        "uk": "стартап",
+        "en": "startup",
+        "pos": "ім",
+        "ipa": "/ˈstɑrtɑp/",
+        "note": "m",
+        "isNew": true,
+        "firstModule": 147
+      },
+      {
+        "id": "v-prohramuvannya-147-2",
+        "uk": "програмування",
+        "en": "programming",
+        "pos": "ім",
+        "ipa": "/prɔɦrɑmuˈvɑnʲːɑ/",
+        "note": "n",
+        "isNew": true,
+        "firstModule": 147
+      },
+      {
+        "id": "v-prohramist-147-3",
+        "uk": "програміст",
+        "en": "programmer",
+        "pos": "ім",
+        "ipa": "/prɔɦrɑˈmʲist/",
+        "note": "m",
+        "isNew": true,
+        "firstModule": 147
+      },
+      {
+        "id": "v-rozrobnyk-147-4",
+        "uk": "розробник",
+        "en": "developer",
+        "pos": "ім",
+        "ipa": "/rɔzˈrɔbnɪk/",
+        "note": "m",
+        "isNew": true,
+        "firstModule": 147
+      },
+      {
+        "id": "v-rozrobka-147-5",
+        "uk": "розробка",
+        "en": "development",
+        "pos": "ім",
+        "ipa": "/rɔzˈrɔbkɑ/",
+        "note": "f",
+        "isNew": true,
+        "firstModule": 147
+      },
+      {
+        "id": "v-zastosunok-147-6",
+        "uk": "застосунок",
+        "en": "application, app",
+        "pos": "ім",
+        "ipa": "/zɑˈstɔsunɔk/",
+        "note": "m",
+        "isNew": true,
+        "firstModule": 147
+      },
+      {
+        "id": "v-investytsiya-147-7",
+        "uk": "інвестиція",
+        "en": "investment",
+        "pos": "ім",
+        "ipa": "/invɛsˈtɪt͡sʲijɑ/",
+        "note": "f",
+        "isNew": true,
+        "firstModule": 147
+      },
+      {
+        "id": "v-yedynorih-147-8",
+        "uk": "єдиноріг",
+        "en": "unicorn (startup)",
+        "pos": "ім",
+        "ipa": "/jɛdɪnɔˈrʲiɦ/",
+        "note": "m; компанія $1+ млрд",
+        "isNew": true,
+        "firstModule": 147
+      },
+      {
+        "id": "v-server-147-9",
+        "uk": "сервер",
+        "en": "server",
+        "pos": "ім",
+        "ipa": "/ˈsɛrvɛr/",
+        "note": "m",
+        "isNew": true,
+        "firstModule": 147
+      },
+      {
+        "id": "v-khmarnyy-147-10",
+        "uk": "хмарний",
+        "en": "cloud (adj)",
+        "pos": "прикм",
+        "ipa": "/ˈxmɑrnɪj/",
+        "note": "хмарні технології",
+        "isNew": true,
+        "firstModule": 147
+      },
+      {
+        "id": "v-shtuchnyy-147-11",
+        "uk": "штучний",
+        "en": "artificial",
+        "pos": "прикм",
+        "ipa": "/ˈʃtut͡ʃnɪj/",
+        "note": "штучний інтелект",
+        "isNew": true,
+        "firstModule": 147
+      },
+      {
+        "id": "v-kiber--147-12",
+        "uk": "кібер-",
+        "en": "cyber-",
+        "pos": "преф",
+        "ipa": "/ˈkʲibɛr/",
+        "note": "кібербезпека",
+        "isNew": true,
+        "firstModule": 147
+      },
+      {
+        "id": "v-dron-147-13",
+        "uk": "дрон",
+        "en": "drone",
+        "pos": "ім",
+        "ipa": "/drɔn/",
+        "note": "m",
+        "isNew": true,
+        "firstModule": 147
+      },
+      {
+        "id": "v-tsyfrovyy-147-14",
+        "uk": "цифровий",
+        "en": "digital",
+        "pos": "прикм",
+        "ipa": "/t͡sɪfrɔˈvɪj/",
+        "isNew": true,
+        "firstModule": 147
+      },
+      {
+        "id": "v-transformatsiya-147-15",
+        "uk": "трансформація",
+        "en": "transformation",
+        "pos": "ім",
+        "ipa": "/trɑnsfɔrˈmɑt͡sʲijɑ/",
+        "note": "f",
+        "isNew": true,
+        "firstModule": 147
+      },
+      {
+        "id": "v-innovatsiya-147-16",
+        "uk": "інновація",
+        "en": "innovation",
+        "pos": "ім",
+        "ipa": "/innɔˈvɑt͡sʲijɑ/",
+        "note": "f",
+        "isNew": true,
+        "firstModule": 147
+      },
+      {
+        "id": "v-zaluchaty-147-17",
+        "uk": "залучати",
+        "en": "to attract, raise",
+        "pos": "дієсл",
+        "ipa": "/zɑluˈt͡ʃɑtɪ/",
+        "note": "залучати інвестиції",
+        "isNew": true,
+        "firstModule": 147
+      },
+      {
+        "id": "v-zapuskaty-147-18",
+        "uk": "запускати",
+        "en": "to launch",
+        "pos": "дієсл",
+        "ipa": "/zɑpusˈkɑtɪ/",
+        "isNew": true,
+        "firstModule": 147
+      }
+    ],
+    "reviewWords": [
+      {
+        "id": "v-kompaniya-147-1000",
+        "uk": "компанія",
+        "en": "",
+        "pos": "noun",
+        "isNew": false,
+        "firstModule": 67
+      },
+      {
+        "id": "v-biznes-147-1001",
+        "uk": "бізнес",
+        "en": "",
+        "pos": "noun",
+        "isNew": false,
+        "firstModule": 89
+      },
+      {
+        "id": "v-ekonomika-147-1002",
+        "uk": "економіка",
+        "en": "",
+        "pos": "noun",
+        "isNew": false,
+        "firstModule": 95
+      },
+      {
+        "id": "v-osvita-147-1003",
+        "uk": "освіта",
+        "en": "",
+        "pos": "noun",
+        "isNew": false,
+        "firstModule": 78
+      },
+      {
+        "id": "v-rozvytok-147-1004",
+        "uk": "розвиток",
+        "en": "",
+        "pos": "noun",
+        "isNew": false,
+        "firstModule": 112
+      }
+    ]
+  }
+}

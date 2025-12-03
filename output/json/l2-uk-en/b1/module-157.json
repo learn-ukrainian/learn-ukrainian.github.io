@@ -1,0 +1,369 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-B1-157",
+    "moduleId": "mod-uk-B1-157",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "B1",
+    "phase": "B1.6",
+    "moduleNumber": 157,
+    "moduleType": "culture",
+    "immersionLevel": 0.6,
+    "title": "Документальні фільми",
+    "subtitle": "Documentary Films: Ukrainer Style",
+    "description": "Learn to watch Ukrainian documentaries",
+    "objectives": [
+      "Learn to watch Ukrainian documentaries",
+      "Understand Ukrainer documentary format",
+      "Practice video comprehension strategies",
+      "Discover Ukrainian regions through film"
+    ],
+    "grammarFocus": [],
+    "tags": [
+      "skills",
+      "documentary",
+      "video",
+      "ukrainer",
+      "culture"
+    ],
+    "totalDuration": 45,
+    "transliterationMode": "none",
+    "sections": [
+      {
+        "id": "section-intro",
+        "name": "Вступ",
+        "nameEn": "Introduction",
+        "type": "intro",
+        "content": "Документальні фільми — чудовий спосіб пізнавати Україну. Проєкт Ukrainer створив сотні відео про людей, регіони та традиції. У цьому уроці ви навчитеся ефективно дивитися документальні фільми українською.\n\nDocumentary films are a wonderful way to discover Ukraine. The Ukrainer project has created hundreds of videos about people, regions, and traditions. In this lesson, you'll learn to effectively watch documentaries in Ukrainian.\n\n> [!note] Ukrainer.net — безкоштовно, з субтитрами українською та англійською!\n\n---"
+      },
+      {
+        "id": "section-зміст-уроку-lesson-content",
+        "name": "Зміст уроку | Lesson Content",
+        "type": "content",
+        "content": "## Частина 1: Ukrainer\n\n### Що таке Ukrainer?\n\n**Ukrainer** — це медіапроєкт, який документує Україну:\n\n| Характеристика | Опис |\n|----------------|------|\n| Засновано | 2016 |\n| Формат | короткі документальні відео |\n| Теми | люди, регіони, традиції |\n| Мова | українська + субтитри |\n| Доступ | безкоштовно на YouTube |\n\n### Типи відео\n\n| Серія | Про що | Тривалість |\n|-------|--------|------------|\n| Люди | історії звичайних українців | 5-15 хв |\n| Регіони | подорожі Україною | 10-20 хв |\n| Ремесла | традиційні професії | 5-10 хв |\n| Війна | життя під час війни | різна |\n\n> [!tip] **Порада:** Почніть з коротких відео (5-7 хвилин) і поступово переходьте до довших.\n\n## Частина 2: Як дивитися\n\n### Стратегія перегляду\n\n**Перший перегляд (без субтитрів):**\n1. Дивіться відео повністю\n2. Намагайтеся зрозуміти загально\n3. Не хвилюйтеся через незнайомі слова\n\n**Другий перегляд (з українськими субтитрами):**\n1. Увімкніть субтитри\n2. Зупиняйте на незрозумілих місцях\n3. Виписуйте нові слова\n\n**Третій перегляд (без субтитрів):**\n1. Перевірте, скільки тепер розумієте\n2. Повторіть цікаві фрази\n\n### Що виписувати\n\n| Категорія | Приклади |\n|-----------|----------|\n| Нові слова | професії, місця |\n| Фрази | «у нас кажуть...», «це означає...» |\n| Граматика | цікаві конструкції |\n| Культура | традиції, звичаї |\n\n## Частина 3: Рекомендовані відео\n\n### Для початку (прості)\n\n| Назва | Тема | Чому легко |\n|-------|------|------------|\n| «Гончар» | традиційне ремесло | повільна мова |\n| «Бджоляр» | бджільництво | візуальний контекст |\n| «Ткаля» | ткацтво | прості речення |\n\n### Середній рівень\n\n| Назва | Тема | Регіон |\n|-------|------|--------|\n| «Гуцульщина» | гірська культура | Карпати |\n| «Полісся» | болота, традиції | Північ |\n| «Одеса» | місто, люди | Південь |\n\n### Складніші\n\n| Назва | Тема | Виклик |\n|-------|------|--------|\n| Серія про війну | фронт, волонтери | емоційний контент |\n| Діалекти | регіональна мова | незвична лексика |\n\n## Частина 4: Словник документалістики\n\n### Технічні терміни\n\n| Українська | English |\n|------------|---------|\n| документальний фільм | documentary |\n| режисер | director |\n| оператор | cameraman |\n| монтаж | editing |\n| субтитри | subtitles |\n| закадровий голос | voiceover |\n| інтерв'ю | interview |\n| кадр | shot, frame |\n\n### Описові фрази\n\n| Фраза | Використання |\n|-------|--------------|\n| «Мене звати...» | представлення героя |\n| «Я народився/народилася в...» | біографія |\n| «Я займаюся...» | професія |\n| «Для мене це означає...» | значення |\n| «Найважливіше — це...» | цінності |\n\n---\n\n\n---\n\n\n---\n\n\n---"
+      },
+      {
+        "id": "section-summary",
+        "name": "Підсумок",
+        "nameEn": "Summary",
+        "type": "summary",
+        "content": "## Що ви вивчили\n\nУ цьому уроці ви дізналися:\n\n**Ukrainer:**\n- Безкоштовний проєкт з документальними відео\n- Субтитри українською та англійською\n- Теми: люди, регіони, ремесла\n\n**Стратегія перегляду:**\n- Три перегляди: без → з субтитрами → без\n- Виписуйте нові слова та фрази\n\n**Рекомендації:**\n- Починайте з коротких відео\n- «Гончар», «Бджоляр» — хороший старт\n\n> **Домашнє завдання:** Подивіться одне відео на Ukrainer і напишіть 5 нових слів!\n\n> **Наступний урок:** Подорожі Україною — словник туриста."
+      }
+    ],
+    "rawMarkdown": "---\nmodule: 157\ntitle: \"Документальні фільми\"\nsubtitle: \"Documentary Films: Ukrainer Style\"\nlevel: B1\nphase: B1.6\nduration: 45\ntransliteration: none\ntags: [skills, documentary, video, ukrainer, culture]\nobjectives:\n  - Learn to watch Ukrainian documentaries\n  - Understand Ukrainer documentary format\n  - Practice video comprehension strategies\n  - Discover Ukrainian regions through film\n---\n\n# Вступ\n\nДокументальні фільми — чудовий спосіб пізнавати Україну. Проєкт Ukrainer створив сотні відео про людей, регіони та традиції. У цьому уроці ви навчитеся ефективно дивитися документальні фільми українською.\n\nDocumentary films are a wonderful way to discover Ukraine. The Ukrainer project has created hundreds of videos about people, regions, and traditions. In this lesson, you'll learn to effectively watch documentaries in Ukrainian.\n\n> [!note] Ukrainer.net — безкоштовно, з субтитрами українською та англійською!\n\n---\n\n# Зміст уроку | Lesson Content\n\n## Частина 1: Ukrainer\n\n### Що таке Ukrainer?\n\n**Ukrainer** — це медіапроєкт, який документує Україну:\n\n| Характеристика | Опис |\n|----------------|------|\n| Засновано | 2016 |\n| Формат | короткі документальні відео |\n| Теми | люди, регіони, традиції |\n| Мова | українська + субтитри |\n| Доступ | безкоштовно на YouTube |\n\n### Типи відео\n\n| Серія | Про що | Тривалість |\n|-------|--------|------------|\n| Люди | історії звичайних українців | 5-15 хв |\n| Регіони | подорожі Україною | 10-20 хв |\n| Ремесла | традиційні професії | 5-10 хв |\n| Війна | життя під час війни | різна |\n\n> [!tip] **Порада:** Почніть з коротких відео (5-7 хвилин) і поступово переходьте до довших.\n\n## Частина 2: Як дивитися\n\n### Стратегія перегляду\n\n**Перший перегляд (без субтитрів):**\n1. Дивіться відео повністю\n2. Намагайтеся зрозуміти загально\n3. Не хвилюйтеся через незнайомі слова\n\n**Другий перегляд (з українськими субтитрами):**\n1. Увімкніть субтитри\n2. Зупиняйте на незрозумілих місцях\n3. Виписуйте нові слова\n\n**Третій перегляд (без субтитрів):**\n1. Перевірте, скільки тепер розумієте\n2. Повторіть цікаві фрази\n\n### Що виписувати\n\n| Категорія | Приклади |\n|-----------|----------|\n| Нові слова | професії, місця |\n| Фрази | «у нас кажуть...», «це означає...» |\n| Граматика | цікаві конструкції |\n| Культура | традиції, звичаї |\n\n## Частина 3: Рекомендовані відео\n\n### Для початку (прості)\n\n| Назва | Тема | Чому легко |\n|-------|------|------------|\n| «Гончар» | традиційне ремесло | повільна мова |\n| «Бджоляр» | бджільництво | візуальний контекст |\n| «Ткаля» | ткацтво | прості речення |\n\n### Середній рівень\n\n| Назва | Тема | Регіон |\n|-------|------|--------|\n| «Гуцульщина» | гірська культура | Карпати |\n| «Полісся» | болота, традиції | Північ |\n| «Одеса» | місто, люди | Південь |\n\n### Складніші\n\n| Назва | Тема | Виклик |\n|-------|------|--------|\n| Серія про війну | фронт, волонтери | емоційний контент |\n| Діалекти | регіональна мова | незвична лексика |\n\n## Частина 4: Словник документалістики\n\n### Технічні терміни\n\n| Українська | English |\n|------------|---------|\n| документальний фільм | documentary |\n| режисер | director |\n| оператор | cameraman |\n| монтаж | editing |\n| субтитри | subtitles |\n| закадровий голос | voiceover |\n| інтерв'ю | interview |\n| кадр | shot, frame |\n\n### Описові фрази\n\n| Фраза | Використання |\n|-------|--------------|\n| «Мене звати...» | представлення героя |\n| «Я народився/народилася в...» | біографія |\n| «Я займаюся...» | професія |\n| «Для мене це означає...» | значення |\n| «Найважливіше — це...» | цінності |\n\n---\n\n# Вправи\n\n## quiz: Перевірте себе\n\n> Що ви запам'ятали?\n\n1. Коли засновано Ukrainer?\n   - [ ] 2014\n   - [x] 2016\n   - [ ] 2020\n   > Ukrainer засновано у 2016 році.\n\n2. Скільки переглядів рекомендовано?\n   - [ ] один\n   - [ ] два\n   - [x] три\n   > Три перегляди: без субтитрів → з субтитрами → без субтитрів.\n\n3. Що таке «закадровий голос»?\n   - [x] voiceover\n   - [ ] subtitle\n   - [ ] interview\n   > Закадровий голос = voiceover.\n\n4. З яких відео краще починати?\n   - [x] коротких (5-7 хвилин)\n   - [ ] довгих (20+ хвилин)\n   - [ ] без субтитрів\n   > Починайте з коротких відео, щоб не втомлюватися.\n\n5. Що означає «гончар»?\n   - [ ] beekeeper\n   - [x] potter\n   - [ ] weaver\n   > Гончар — майстер, який робить вироби з глини.\n\n## match-up: Терміни\n\n> Поєднайте.\n\npairs:\n  - left: \"режисер\"\n    right: \"director\"\n  - left: \"оператор\"\n    right: \"cameraman\"\n  - left: \"монтаж\"\n    right: \"editing\"\n  - left: \"кадр\"\n    right: \"shot\"\n  - left: \"субтитри\"\n    right: \"subtitles\"\n\n## group-sort: Категорії відео\n\n> Розподіліть теми.\n\ngroups:\n  Ремесла:\n    - \"гончар\"\n    - \"бджоляр\"\n    - \"ткаля\"\n  Регіони:\n    - \"Гуцульщина\"\n    - \"Полісся\"\n    - \"Одеса\"\n  Складні теми:\n    - \"війна\"\n    - \"діалекти\"\n    - \"історія\"\n\n---\n\n# Словник\n\n| Слово | Вимова | Переклад | ЧМ | Примітка |\n|-------|--------|----------|-----|----------|\n| документальний | /dɔkumɛnˈtɑlʲnɪj/ | documentary | прикм | |\n| фільм | /fʲilʲm/ | film | ім | m |\n| режисер | /rɛʒɪˈsɛr/ | director | ім | m |\n| оператор | /ɔpɛˈrɑtɔr/ | cameraman | ім | m |\n| монтаж | /mɔnˈtɑʒ/ | editing | ім | m |\n| кадр | /kɑdr/ | shot, frame | ім | m |\n| субтитри | /subˈtɪtrɪ/ | subtitles | ім | pl |\n| ремесло | /rɛmɛsˈlɔ/ | craft | ім | n |\n| гончар | /ɦɔnˈt͡ʃɑr/ | potter | ім | m |\n| бджоляр | /bd͡ʒɔˈlʲɑr/ | beekeeper | ім | m |\n| ткаля | /ˈtkɑlʲɑ/ | weaver | ім | f |\n| традиція | /trɑˈdɪt͡sʲijɑ/ | tradition | ім | f |\n| закадровий | /zɑˈkɑdrɔvɪj/ | off-screen | прикм | закадровий голос |\n| переглядати | /pɛrɛɦlʲɑˈdɑtɪ/ | to watch, view | дієсл | impf |\n\n---\n\n# Review Vocabulary\n\n| Word | First Module |\n|------|-------------|\n| дивитися | 23 |\n| розуміти | 34 |\n| мова | 5 |\n| культура | 61 |\n| люди | 12 |\n\n---\n\n# Підсумок\n\n## Що ви вивчили\n\nУ цьому уроці ви дізналися:\n\n**Ukrainer:**\n- Безкоштовний проєкт з документальними відео\n- Субтитри українською та англійською\n- Теми: люди, регіони, ремесла\n\n**Стратегія перегляду:**\n- Три перегляди: без → з субтитрами → без\n- Виписуйте нові слова та фрази\n\n**Рекомендації:**\n- Починайте з коротких відео\n- «Гончар», «Бджоляр» — хороший старт\n\n> **Домашнє завдання:** Подивіться одне відео на Ukrainer і напишіть 5 нових слів!\n\n> **Наступний урок:** Подорожі Україною — словник туриста.\n",
+    "createdAt": "2025-12-03T17:51:10.689Z",
+    "modifiedAt": "2025-12-03T17:51:10.689Z",
+    "version": 2
+  },
+  "activities": [
+    {
+      "id": "act-b1-157-quiz",
+      "type": "quiz",
+      "title": "Перевірте себе",
+      "description": "Що ви запам'ятали?",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "question": "Коли засновано Ukrainer?",
+            "options": [
+              "2014",
+              "2016",
+              "2020"
+            ],
+            "correctIndex": 1,
+            "explanation": "Ukrainer засновано у 2016 році."
+          },
+          {
+            "question": "Скільки переглядів рекомендовано?",
+            "options": [
+              "один",
+              "два",
+              "три"
+            ],
+            "correctIndex": 2,
+            "explanation": "Три перегляди: без субтитрів → з субтитрами → без субтитрів."
+          },
+          {
+            "question": "Що таке «закадровий голос»?",
+            "options": [
+              "voiceover",
+              "subtitle",
+              "interview"
+            ],
+            "correctIndex": 0,
+            "explanation": "Закадровий голос = voiceover."
+          },
+          {
+            "question": "З яких відео краще починати?",
+            "options": [
+              "коротких (5-7 хвилин)",
+              "довгих (20+ хвилин)",
+              "без субтитрів"
+            ],
+            "correctIndex": 0,
+            "explanation": "Починайте з коротких відео, щоб не втомлюватися."
+          },
+          {
+            "question": "Що означає «гончар»?",
+            "options": [
+              "beekeeper",
+              "potter",
+              "weaver"
+            ],
+            "correctIndex": 1,
+            "explanation": "Гончар — майстер, який робить вироби з глини."
+          }
+        ],
+        "shuffleQuestions": true,
+        "shuffleOptions": true,
+        "showCorrectAnswers": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "B1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-03T17:51:10.689Z",
+      "modifiedAt": "2025-12-03T17:51:10.689Z"
+    },
+    {
+      "id": "act-b1-157-matchup",
+      "type": "match-up",
+      "title": "Терміни",
+      "description": "Поєднайте.",
+      "content": {
+        "type": "match-up",
+        "pairs": [],
+        "shuffleRight": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "B1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-03T17:51:10.689Z",
+      "modifiedAt": "2025-12-03T17:51:10.689Z"
+    },
+    {
+      "id": "act-b1-157-groupsort",
+      "type": "group-sort",
+      "title": "Категорії відео",
+      "description": "Розподіліть теми.",
+      "content": {
+        "type": "group-sort",
+        "groups": [],
+        "shuffleItems": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "B1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-03T17:51:10.689Z",
+      "modifiedAt": "2025-12-03T17:51:10.689Z"
+    }
+  ],
+  "vocabulary": {
+    "moduleId": "mod-uk-B1-157",
+    "level": "B1",
+    "phase": "B1.6",
+    "wordCount": 19,
+    "newWordCount": 14,
+    "reviewWordCount": 5,
+    "transliterationMode": "none",
+    "words": [
+      {
+        "id": "v-dokumentalьnyy-157-0",
+        "uk": "документальний",
+        "en": "documentary",
+        "pos": "прикм",
+        "ipa": "/dɔkumɛnˈtɑlʲnɪj/",
+        "isNew": true,
+        "firstModule": 157
+      },
+      {
+        "id": "v-filьm-157-1",
+        "uk": "фільм",
+        "en": "film",
+        "pos": "ім",
+        "ipa": "/fʲilʲm/",
+        "note": "m",
+        "isNew": true,
+        "firstModule": 157
+      },
+      {
+        "id": "v-rezhyser-157-2",
+        "uk": "режисер",
+        "en": "director",
+        "pos": "ім",
+        "ipa": "/rɛʒɪˈsɛr/",
+        "note": "m",
+        "isNew": true,
+        "firstModule": 157
+      },
+      {
+        "id": "v-operator-157-3",
+        "uk": "оператор",
+        "en": "cameraman",
+        "pos": "ім",
+        "ipa": "/ɔpɛˈrɑtɔr/",
+        "note": "m",
+        "isNew": true,
+        "firstModule": 157
+      },
+      {
+        "id": "v-montazh-157-4",
+        "uk": "монтаж",
+        "en": "editing",
+        "pos": "ім",
+        "ipa": "/mɔnˈtɑʒ/",
+        "note": "m",
+        "isNew": true,
+        "firstModule": 157
+      },
+      {
+        "id": "v-kadr-157-5",
+        "uk": "кадр",
+        "en": "shot, frame",
+        "pos": "ім",
+        "ipa": "/kɑdr/",
+        "note": "m",
+        "isNew": true,
+        "firstModule": 157
+      },
+      {
+        "id": "v-subtytry-157-6",
+        "uk": "субтитри",
+        "en": "subtitles",
+        "pos": "ім",
+        "ipa": "/subˈtɪtrɪ/",
+        "note": "pl",
+        "isNew": true,
+        "firstModule": 157
+      },
+      {
+        "id": "v-remeslo-157-7",
+        "uk": "ремесло",
+        "en": "craft",
+        "pos": "ім",
+        "ipa": "/rɛmɛsˈlɔ/",
+        "note": "n",
+        "isNew": true,
+        "firstModule": 157
+      },
+      {
+        "id": "v-honchar-157-8",
+        "uk": "гончар",
+        "en": "potter",
+        "pos": "ім",
+        "ipa": "/ɦɔnˈt͡ʃɑr/",
+        "note": "m",
+        "isNew": true,
+        "firstModule": 157
+      },
+      {
+        "id": "v-bdzholyar-157-9",
+        "uk": "бджоляр",
+        "en": "beekeeper",
+        "pos": "ім",
+        "ipa": "/bd͡ʒɔˈlʲɑr/",
+        "note": "m",
+        "isNew": true,
+        "firstModule": 157
+      },
+      {
+        "id": "v-tkalya-157-10",
+        "uk": "ткаля",
+        "en": "weaver",
+        "pos": "ім",
+        "ipa": "/ˈtkɑlʲɑ/",
+        "note": "f",
+        "isNew": true,
+        "firstModule": 157
+      },
+      {
+        "id": "v-tradytsiya-157-11",
+        "uk": "традиція",
+        "en": "tradition",
+        "pos": "ім",
+        "ipa": "/trɑˈdɪt͡sʲijɑ/",
+        "note": "f",
+        "isNew": true,
+        "firstModule": 157
+      },
+      {
+        "id": "v-zakadrovyy-157-12",
+        "uk": "закадровий",
+        "en": "off-screen",
+        "pos": "прикм",
+        "ipa": "/zɑˈkɑdrɔvɪj/",
+        "note": "закадровий голос",
+        "isNew": true,
+        "firstModule": 157
+      },
+      {
+        "id": "v-perehlyadaty-157-13",
+        "uk": "переглядати",
+        "en": "to watch, view",
+        "pos": "дієсл",
+        "ipa": "/pɛrɛɦlʲɑˈdɑtɪ/",
+        "note": "impf",
+        "isNew": true,
+        "firstModule": 157
+      }
+    ],
+    "reviewWords": [
+      {
+        "id": "v-dyvytysya-157-1000",
+        "uk": "дивитися",
+        "en": "",
+        "pos": "noun",
+        "isNew": false,
+        "firstModule": 23
+      },
+      {
+        "id": "v-rozumity-157-1001",
+        "uk": "розуміти",
+        "en": "",
+        "pos": "noun",
+        "isNew": false,
+        "firstModule": 34
+      },
+      {
+        "id": "v-mova-157-1002",
+        "uk": "мова",
+        "en": "",
+        "pos": "noun",
+        "isNew": false,
+        "firstModule": 5
+      },
+      {
+        "id": "v-kulьtura-157-1003",
+        "uk": "культура",
+        "en": "",
+        "pos": "noun",
+        "isNew": false,
+        "firstModule": 61
+      },
+      {
+        "id": "v-lyudy-157-1004",
+        "uk": "люди",
+        "en": "",
+        "pos": "noun",
+        "isNew": false,
+        "firstModule": 12
+      }
+    ]
+  }
+}

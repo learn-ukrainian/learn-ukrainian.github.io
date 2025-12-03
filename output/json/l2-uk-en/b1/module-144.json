@@ -1,0 +1,439 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-B1-144",
+    "moduleId": "mod-uk-B1-144",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "B1",
+    "phase": "B1.5",
+    "moduleNumber": 144,
+    "moduleType": "culture",
+    "immersionLevel": 0.6,
+    "title": "Українська музика сьогодні",
+    "subtitle": "Contemporary Ukrainian Music Scene",
+    "description": "Learn vocabulary for music genres and industry",
+    "objectives": [
+      "Learn vocabulary for music genres and industry",
+      "Discover contemporary Ukrainian artists",
+      "Understand the cultural significance of Ukrainian music",
+      "Practice listening comprehension through music"
+    ],
+    "grammarFocus": [],
+    "tags": [
+      "culture",
+      "music",
+      "contemporary",
+      "pop",
+      "rock",
+      "hip-hop"
+    ],
+    "totalDuration": 45,
+    "transliterationMode": "none",
+    "sections": [
+      {
+        "id": "section-intro",
+        "name": "Вступ",
+        "nameEn": "Introduction",
+        "type": "intro",
+        "content": "Українська музика переживає справжній ренесанс. Після 2014 року, і особливо після 2022 року, українські артисти стали голосом нації. Музика — це не просто розвага, це спосіб боротьби та ідентичності.\n\nUkrainian music is experiencing a true renaissance. After 2014, and especially after 2022, Ukrainian artists have become the voice of the nation. Music is not just entertainment—it's a way of fighting and expressing identity.\n\n> [!note] У цьому уроці ви познайомитеся з найпопулярнішими українськими артистами та жанрами.\n\n---"
+      },
+      {
+        "id": "section-зміст-уроку-lesson-content",
+        "name": "Зміст уроку | Lesson Content",
+        "type": "content",
+        "content": "## Частина 1: Українська поп-музика\n\n### Поп-зірки України\n\nУкраїнська поп-музика — одна з найуспішніших у Східній Європі. Ось найпопулярніші артисти:\n\n| Артист | Жанр | Відомі пісні |\n|--------|------|--------------|\n| MONATIK | поп, R&B | «Vitamin D», «Кружляю» |\n| Оля Полякова | поп, шоу | «Шльопки», «Королева ночі» |\n| Надя Дорофєєва | поп | «Хороші пісні», «Абнімос» |\n| Тіна Кароль | поп, балади | «Ноченька», «Океан» |\n| Макс Барських | поп, R&B | «Туманы», «Сделай громче» |\n\n### Kalush Orchestra та Євробачення\n\nУ 2022 році гурт **Kalush Orchestra** переміг на Євробаченні з піснею «Stefania». Це була перемога не тільки музична, але й символічна.\n\n> «Мамо, твої сиві коси я заплітаю...»\n> — «Stefania», Kalush Orchestra\n\n**Що особливого в Kalush Orchestra:**\n- Поєднання хіп-хопу та українського фолку\n- Використання сопілки (традиційної флейти)\n- Пісня присвячена матері фронтмена\n\n> [!tip] **Чи знали ви?** Після перемоги на Євробаченні «Stefania» стала гімном матерів, які чекають синів з війни.\n\n## Частина 2: Український рок та інді\n\n### Океан Ельзи — легенда українського року\n\n**Океан Ельзи** — найвідоміший український рок-гурт. Вони грають з 1994 року, і їхні пісні знає кожен українець.\n\n**Найвідоміші пісні:**\n- «Обійми» — можливо, найпопулярніша українська пісня\n- «Без бою» — гімн Майдану 2013-2014\n- «Не питай» — класика 2000-х\n\n> «Ти знаєш, що ти все для мене,\n> Обійми мене, обійми мене...»\n> — «Обійми», Океан Ельзи\n\n### Бумбокс\n\n**Бумбокс** — ще один культовий гурт. Їхній стиль — суміш року, фанку та хіп-хопу.\n\n**Факти про Бумбокс:**\n- Фронтмен Андрій Хливнюк — ветеран війни\n- Його відео з піснею «Ой у лузі червона калина» стало вірусним у 2022 році\n- Пісню використали Pink Floyd у треку «Hey Hey Rise Up»\n\n### Інді-сцена\n\nУкраїнська інді-музика багата та різноманітна:\n\n| Гурт | Стиль | Примітка |\n|------|-------|----------|\n| Один в каное | інді-фолк | мінімалістичне звучання |\n| Dakha Brakha | етно, world music | унікальне поєднання традицій |\n| Onuka | електро-фолк | сучасна електроніка + бандура |\n| The Hardkiss | альтернативний рок | потужний вокал Юлії Саніної |\n| Go_A | фолк-електроніка | Євробачення 2021 |\n\n## Частина 3: Український хіп-хоп та реп\n\n### Хіп-хоп як голос покоління\n\nУкраїнський хіп-хоп став голосом молодого покоління. Артисти реагують на політику, війну та соціальні проблеми.\n\n**Найпопулярніші репери:**\n\n| Артист | Стиль | Про що співає |\n|--------|-------|---------------|\n| alyona alyona | поп-реп | позитив, бодіпозитив |\n| Kalush | хіп-хоп + фолк | традиції, ідентичність |\n| Skofka | реп | вулиця, реальність |\n| Клята | хіп-хоп | війна, біль, надія |\n\n### Alyona Alyona — феномен\n\n**Alyona alyona** — унікальне явище в українському хіп-хопі:\n- Колишня вихователька дитячого садка\n- Співає про прийняття себе та позитив\n- Виступала на Coachella\n- Представляла Україну на Євробаченні 2024 (з Jerry Heil)\n\n> «Падай вниз, стрибай угору,\n> Потруси плечима, потруси головою!»\n> — «Пушка», alyona alyona\n\n## Частина 4: Музика війни\n\n### Пісні, що стали гімнами\n\nПісля початку повномасштабного вторгнення музика стала зброєю:\n\n| Пісня | Артист | Значення |\n|-------|--------|----------|\n| «Ой у лузі червона калина» | народна | символ опору |\n| «Байрактар» | Тарас Боровок | про турецькі дрони |\n| «Доброго вечора» | Андрій Хливнюк | привітання ЗСУ |\n| «Fortytsia» | Kalush Orchestra | про стійкість |\n\n### Концерти на підтримку\n\nУкраїнські артисти проводять концерти по всьому світу, щоб зібрати кошти для України:\n- Благодійні концерти в Європі та США\n- Виступи для військових на передовій\n- Онлайн-концерти для діаспори\n\n---\n\n\n---\n\n\n---\n\n\n---"
+      },
+      {
+        "id": "section-summary",
+        "name": "Підсумок",
+        "nameEn": "Summary",
+        "type": "summary",
+        "content": "## Що ви вивчили\n\nУ цьому уроці ви дізналися про сучасну українську музику:\n\n**Поп:**\n- MONATIK, Тіна Кароль, Макс Барських\n- Kalush Orchestra — переможці Євробачення 2022\n\n**Рок та інді:**\n- Океан Ельзи — легенда українського року\n- Бумбокс, The Hardkiss, Dakha Brakha\n\n**Хіп-хоп:**\n- alyona alyona — феномен позитивного репу\n- Kalush — хіп-хоп + фолк\n\n**Музика війни:**\n- Пісні стали гімнами опору\n- Артисти збирають кошти для України\n\n> **Порада:** Слухайте українську музику, щоб покращити розуміння мови та познайомитися з культурою!\n\n> **Наступний урок:** Українське кіно та серіали — що дивитися українською."
+      }
+    ],
+    "rawMarkdown": "---\nmodule: 144\ntitle: \"Українська музика сьогодні\"\nsubtitle: \"Contemporary Ukrainian Music Scene\"\nlevel: B1\nphase: B1.5\nduration: 45\ntransliteration: none\ntags: [culture, music, contemporary, pop, rock, hip-hop]\nobjectives:\n  - Learn vocabulary for music genres and industry\n  - Discover contemporary Ukrainian artists\n  - Understand the cultural significance of Ukrainian music\n  - Practice listening comprehension through music\n---\n\n# Вступ\n\nУкраїнська музика переживає справжній ренесанс. Після 2014 року, і особливо після 2022 року, українські артисти стали голосом нації. Музика — це не просто розвага, це спосіб боротьби та ідентичності.\n\nUkrainian music is experiencing a true renaissance. After 2014, and especially after 2022, Ukrainian artists have become the voice of the nation. Music is not just entertainment—it's a way of fighting and expressing identity.\n\n> [!note] У цьому уроці ви познайомитеся з найпопулярнішими українськими артистами та жанрами.\n\n---\n\n# Зміст уроку | Lesson Content\n\n## Частина 1: Українська поп-музика\n\n### Поп-зірки України\n\nУкраїнська поп-музика — одна з найуспішніших у Східній Європі. Ось найпопулярніші артисти:\n\n| Артист | Жанр | Відомі пісні |\n|--------|------|--------------|\n| MONATIK | поп, R&B | «Vitamin D», «Кружляю» |\n| Оля Полякова | поп, шоу | «Шльопки», «Королева ночі» |\n| Надя Дорофєєва | поп | «Хороші пісні», «Абнімос» |\n| Тіна Кароль | поп, балади | «Ноченька», «Океан» |\n| Макс Барських | поп, R&B | «Туманы», «Сделай громче» |\n\n### Kalush Orchestra та Євробачення\n\nУ 2022 році гурт **Kalush Orchestra** переміг на Євробаченні з піснею «Stefania». Це була перемога не тільки музична, але й символічна.\n\n> «Мамо, твої сиві коси я заплітаю...»\n> — «Stefania», Kalush Orchestra\n\n**Що особливого в Kalush Orchestra:**\n- Поєднання хіп-хопу та українського фолку\n- Використання сопілки (традиційної флейти)\n- Пісня присвячена матері фронтмена\n\n> [!tip] **Чи знали ви?** Після перемоги на Євробаченні «Stefania» стала гімном матерів, які чекають синів з війни.\n\n## Частина 2: Український рок та інді\n\n### Океан Ельзи — легенда українського року\n\n**Океан Ельзи** — найвідоміший український рок-гурт. Вони грають з 1994 року, і їхні пісні знає кожен українець.\n\n**Найвідоміші пісні:**\n- «Обійми» — можливо, найпопулярніша українська пісня\n- «Без бою» — гімн Майдану 2013-2014\n- «Не питай» — класика 2000-х\n\n> «Ти знаєш, що ти все для мене,\n> Обійми мене, обійми мене...»\n> — «Обійми», Океан Ельзи\n\n### Бумбокс\n\n**Бумбокс** — ще один культовий гурт. Їхній стиль — суміш року, фанку та хіп-хопу.\n\n**Факти про Бумбокс:**\n- Фронтмен Андрій Хливнюк — ветеран війни\n- Його відео з піснею «Ой у лузі червона калина» стало вірусним у 2022 році\n- Пісню використали Pink Floyd у треку «Hey Hey Rise Up»\n\n### Інді-сцена\n\nУкраїнська інді-музика багата та різноманітна:\n\n| Гурт | Стиль | Примітка |\n|------|-------|----------|\n| Один в каное | інді-фолк | мінімалістичне звучання |\n| Dakha Brakha | етно, world music | унікальне поєднання традицій |\n| Onuka | електро-фолк | сучасна електроніка + бандура |\n| The Hardkiss | альтернативний рок | потужний вокал Юлії Саніної |\n| Go_A | фолк-електроніка | Євробачення 2021 |\n\n## Частина 3: Український хіп-хоп та реп\n\n### Хіп-хоп як голос покоління\n\nУкраїнський хіп-хоп став голосом молодого покоління. Артисти реагують на політику, війну та соціальні проблеми.\n\n**Найпопулярніші репери:**\n\n| Артист | Стиль | Про що співає |\n|--------|-------|---------------|\n| alyona alyona | поп-реп | позитив, бодіпозитив |\n| Kalush | хіп-хоп + фолк | традиції, ідентичність |\n| Skofka | реп | вулиця, реальність |\n| Клята | хіп-хоп | війна, біль, надія |\n\n### Alyona Alyona — феномен\n\n**Alyona alyona** — унікальне явище в українському хіп-хопі:\n- Колишня вихователька дитячого садка\n- Співає про прийняття себе та позитив\n- Виступала на Coachella\n- Представляла Україну на Євробаченні 2024 (з Jerry Heil)\n\n> «Падай вниз, стрибай угору,\n> Потруси плечима, потруси головою!»\n> — «Пушка», alyona alyona\n\n## Частина 4: Музика війни\n\n### Пісні, що стали гімнами\n\nПісля початку повномасштабного вторгнення музика стала зброєю:\n\n| Пісня | Артист | Значення |\n|-------|--------|----------|\n| «Ой у лузі червона калина» | народна | символ опору |\n| «Байрактар» | Тарас Боровок | про турецькі дрони |\n| «Доброго вечора» | Андрій Хливнюк | привітання ЗСУ |\n| «Fortytsia» | Kalush Orchestra | про стійкість |\n\n### Концерти на підтримку\n\nУкраїнські артисти проводять концерти по всьому світу, щоб зібрати кошти для України:\n- Благодійні концерти в Європі та США\n- Виступи для військових на передовій\n- Онлайн-концерти для діаспори\n\n---\n\n# Вправи\n\n## quiz: Перевірте себе\n\n> Що ви запам'ятали про українську музику?\n\n1. Хто переміг на Євробаченні 2022?\n   - [ ] Go_A\n   - [x] Kalush Orchestra\n   - [ ] alyona alyona\n   > Kalush Orchestra перемогли з піснею «Stefania».\n\n2. Який гурт виконує пісню «Обійми»?\n   - [x] Океан Ельзи\n   - [ ] Бумбокс\n   - [ ] Dakha Brakha\n   > «Обійми» — найвідоміша пісня Океану Ельзи.\n\n3. Хто такий Андрій Хливнюк?\n   - [ ] репер\n   - [x] фронтмен Бумбоксу\n   - [ ] DJ\n   > Андрій Хливнюк — вокаліст Бумбоксу та ветеран війни.\n\n4. Що особливого в Onuka?\n   - [ ] тільки рок\n   - [x] електроніка + бандура\n   - [ ] реп\n   > Onuka поєднує сучасну електроніку з українськими народними інструментами.\n\n5. Ким раніше працювала alyona alyona?\n   - [ ] вчителькою\n   - [x] вихователькою\n   - [ ] журналісткою\n   > alyona alyona працювала вихователькою в дитячому садку.\n\n## match-up: Артисти та пісні\n\n> Поєднайте артиста з піснею.\n\npairs:\n  - left: \"Kalush Orchestra\"\n    right: \"Stefania\"\n  - left: \"Океан Ельзи\"\n    right: \"Обійми\"\n  - left: \"alyona alyona\"\n    right: \"Пушка\"\n  - left: \"Бумбокс\"\n    right: \"Ой у лузі червона калина\"\n  - left: \"MONATIK\"\n    right: \"Vitamin D\"\n\n## group-sort: Жанри\n\n> Розподіліть артистів за жанрами.\n\ngroups:\n  Поп:\n    - \"MONATIK\"\n    - \"Тіна Кароль\"\n    - \"Надя Дорофєєва\"\n  Рок/Інді:\n    - \"Океан Ельзи\"\n    - \"The Hardkiss\"\n    - \"Бумбокс\"\n  Хіп-хоп:\n    - \"alyona alyona\"\n    - \"Kalush\"\n    - \"Skofka\"\n  Етно/Фолк:\n    - \"Dakha Brakha\"\n    - \"Go_A\"\n    - \"Onuka\"\n\n---\n\n# Словник\n\n| Слово | Вимова | Переклад | ЧМ | Примітка |\n|-------|--------|----------|-----|----------|\n| музика | /ˈmuzɪkɑ/ | music | ім | f |\n| артист | /ɑrˈtɪst/ | artist, performer | ім | m |\n| гурт | /ɦurt/ | band, group | ім | m |\n| пісня | /ˈpʲisnʲɑ/ | song | ім | f |\n| жанр | /ʒɑnr/ | genre | ім | m |\n| поп | /pɔp/ | pop | ім | m |\n| рок | /rɔk/ | rock | ім | m |\n| хіп-хоп | /xʲipˈxɔp/ | hip-hop | ім | m |\n| реп | /rɛp/ | rap | ім | m |\n| інді | /ˈindʲi/ | indie | прикм | |\n| фолк | /fɔlk/ | folk | ім | m |\n| електроніка | /ɛlɛkˈtrɔnʲikɑ/ | electronic music | ім | f |\n| фронтмен | /ˈfrɔntmɛn/ | frontman | ім | m |\n| вокаліст | /vɔkɑˈlʲist/ | vocalist | ім | m |\n| концерт | /kɔnˈt͡sɛrt/ | concert | ім | m |\n| виступ | /ˈvɪstup/ | performance | ім | m |\n| перемога | /pɛrɛˈmɔɦɑ/ | victory | ім | f |\n| гімн | /ɦʲimn/ | anthem, hymn | ім | m |\n| благодійний | /blɑɦɔˈdʲijnɪj/ | charitable | прикм | |\n| сопілка | /sɔˈpʲilkɑ/ | sopilka (folk flute) | ім | f |\n| бандура | /bɑnˈdurɑ/ | bandura (folk instrument) | ім | f |\n\n---\n\n# Review Vocabulary\n\n| Word | First Module |\n|------|-------------|\n| культура | 61 |\n| голос | 45 |\n| покоління | 89 |\n| війна | 95 |\n| підтримка | 78 |\n\n---\n\n# Підсумок\n\n## Що ви вивчили\n\nУ цьому уроці ви дізналися про сучасну українську музику:\n\n**Поп:**\n- MONATIK, Тіна Кароль, Макс Барських\n- Kalush Orchestra — переможці Євробачення 2022\n\n**Рок та інді:**\n- Океан Ельзи — легенда українського року\n- Бумбокс, The Hardkiss, Dakha Brakha\n\n**Хіп-хоп:**\n- alyona alyona — феномен позитивного репу\n- Kalush — хіп-хоп + фолк\n\n**Музика війни:**\n- Пісні стали гімнами опору\n- Артисти збирають кошти для України\n\n> **Порада:** Слухайте українську музику, щоб покращити розуміння мови та познайомитися з культурою!\n\n> **Наступний урок:** Українське кіно та серіали — що дивитися українською.\n",
+    "createdAt": "2025-12-03T17:51:10.686Z",
+    "modifiedAt": "2025-12-03T17:51:10.686Z",
+    "version": 2
+  },
+  "activities": [
+    {
+      "id": "act-b1-144-quiz",
+      "type": "quiz",
+      "title": "Перевірте себе",
+      "description": "Що ви запам'ятали про українську музику?",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "question": "Хто переміг на Євробаченні 2022?",
+            "options": [
+              "Go_A",
+              "Kalush Orchestra",
+              "alyona alyona"
+            ],
+            "correctIndex": 1,
+            "explanation": "Kalush Orchestra перемогли з піснею «Stefania»."
+          },
+          {
+            "question": "Який гурт виконує пісню «Обійми»?",
+            "options": [
+              "Океан Ельзи",
+              "Бумбокс",
+              "Dakha Brakha"
+            ],
+            "correctIndex": 0,
+            "explanation": "«Обійми» — найвідоміша пісня Океану Ельзи."
+          },
+          {
+            "question": "Хто такий Андрій Хливнюк?",
+            "options": [
+              "репер",
+              "фронтмен Бумбоксу",
+              "DJ"
+            ],
+            "correctIndex": 1,
+            "explanation": "Андрій Хливнюк — вокаліст Бумбоксу та ветеран війни."
+          },
+          {
+            "question": "Що особливого в Onuka?",
+            "options": [
+              "тільки рок",
+              "електроніка + бандура",
+              "реп"
+            ],
+            "correctIndex": 1,
+            "explanation": "Onuka поєднує сучасну електроніку з українськими народними інструментами."
+          },
+          {
+            "question": "Ким раніше працювала alyona alyona?",
+            "options": [
+              "вчителькою",
+              "вихователькою",
+              "журналісткою"
+            ],
+            "correctIndex": 1,
+            "explanation": "alyona alyona працювала вихователькою в дитячому садку."
+          }
+        ],
+        "shuffleQuestions": true,
+        "shuffleOptions": true,
+        "showCorrectAnswers": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "B1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-03T17:51:10.686Z",
+      "modifiedAt": "2025-12-03T17:51:10.686Z"
+    },
+    {
+      "id": "act-b1-144-matchup",
+      "type": "match-up",
+      "title": "Артисти та пісні",
+      "description": "Поєднайте артиста з піснею.",
+      "content": {
+        "type": "match-up",
+        "pairs": [],
+        "shuffleRight": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "B1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-03T17:51:10.686Z",
+      "modifiedAt": "2025-12-03T17:51:10.686Z"
+    },
+    {
+      "id": "act-b1-144-groupsort",
+      "type": "group-sort",
+      "title": "Жанри",
+      "description": "Розподіліть артистів за жанрами.",
+      "content": {
+        "type": "group-sort",
+        "groups": [],
+        "shuffleItems": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "B1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-03T17:51:10.686Z",
+      "modifiedAt": "2025-12-03T17:51:10.686Z"
+    }
+  ],
+  "vocabulary": {
+    "moduleId": "mod-uk-B1-144",
+    "level": "B1",
+    "phase": "B1.5",
+    "wordCount": 26,
+    "newWordCount": 21,
+    "reviewWordCount": 5,
+    "transliterationMode": "none",
+    "words": [
+      {
+        "id": "v-muzyka-144-0",
+        "uk": "музика",
+        "en": "music",
+        "pos": "ім",
+        "ipa": "/ˈmuzɪkɑ/",
+        "note": "f",
+        "isNew": true,
+        "firstModule": 144
+      },
+      {
+        "id": "v-artyst-144-1",
+        "uk": "артист",
+        "en": "artist, performer",
+        "pos": "ім",
+        "ipa": "/ɑrˈtɪst/",
+        "note": "m",
+        "isNew": true,
+        "firstModule": 144
+      },
+      {
+        "id": "v-hurt-144-2",
+        "uk": "гурт",
+        "en": "band, group",
+        "pos": "ім",
+        "ipa": "/ɦurt/",
+        "note": "m",
+        "isNew": true,
+        "firstModule": 144
+      },
+      {
+        "id": "v-pisnya-144-3",
+        "uk": "пісня",
+        "en": "song",
+        "pos": "ім",
+        "ipa": "/ˈpʲisnʲɑ/",
+        "note": "f",
+        "isNew": true,
+        "firstModule": 144
+      },
+      {
+        "id": "v-zhanr-144-4",
+        "uk": "жанр",
+        "en": "genre",
+        "pos": "ім",
+        "ipa": "/ʒɑnr/",
+        "note": "m",
+        "isNew": true,
+        "firstModule": 144
+      },
+      {
+        "id": "v-pop-144-5",
+        "uk": "поп",
+        "en": "pop",
+        "pos": "ім",
+        "ipa": "/pɔp/",
+        "note": "m",
+        "isNew": true,
+        "firstModule": 144
+      },
+      {
+        "id": "v-rok-144-6",
+        "uk": "рок",
+        "en": "rock",
+        "pos": "ім",
+        "ipa": "/rɔk/",
+        "note": "m",
+        "isNew": true,
+        "firstModule": 144
+      },
+      {
+        "id": "v-khip-khop-144-7",
+        "uk": "хіп-хоп",
+        "en": "hip-hop",
+        "pos": "ім",
+        "ipa": "/xʲipˈxɔp/",
+        "note": "m",
+        "isNew": true,
+        "firstModule": 144
+      },
+      {
+        "id": "v-rep-144-8",
+        "uk": "реп",
+        "en": "rap",
+        "pos": "ім",
+        "ipa": "/rɛp/",
+        "note": "m",
+        "isNew": true,
+        "firstModule": 144
+      },
+      {
+        "id": "v-indi-144-9",
+        "uk": "інді",
+        "en": "indie",
+        "pos": "прикм",
+        "ipa": "/ˈindʲi/",
+        "isNew": true,
+        "firstModule": 144
+      },
+      {
+        "id": "v-folk-144-10",
+        "uk": "фолк",
+        "en": "folk",
+        "pos": "ім",
+        "ipa": "/fɔlk/",
+        "note": "m",
+        "isNew": true,
+        "firstModule": 144
+      },
+      {
+        "id": "v-elektronika-144-11",
+        "uk": "електроніка",
+        "en": "electronic music",
+        "pos": "ім",
+        "ipa": "/ɛlɛkˈtrɔnʲikɑ/",
+        "note": "f",
+        "isNew": true,
+        "firstModule": 144
+      },
+      {
+        "id": "v-frontmen-144-12",
+        "uk": "фронтмен",
+        "en": "frontman",
+        "pos": "ім",
+        "ipa": "/ˈfrɔntmɛn/",
+        "note": "m",
+        "isNew": true,
+        "firstModule": 144
+      },
+      {
+        "id": "v-vokalist-144-13",
+        "uk": "вокаліст",
+        "en": "vocalist",
+        "pos": "ім",
+        "ipa": "/vɔkɑˈlʲist/",
+        "note": "m",
+        "isNew": true,
+        "firstModule": 144
+      },
+      {
+        "id": "v-kontsert-144-14",
+        "uk": "концерт",
+        "en": "concert",
+        "pos": "ім",
+        "ipa": "/kɔnˈt͡sɛrt/",
+        "note": "m",
+        "isNew": true,
+        "firstModule": 144
+      },
+      {
+        "id": "v-vystup-144-15",
+        "uk": "виступ",
+        "en": "performance",
+        "pos": "ім",
+        "ipa": "/ˈvɪstup/",
+        "note": "m",
+        "isNew": true,
+        "firstModule": 144
+      },
+      {
+        "id": "v-peremoha-144-16",
+        "uk": "перемога",
+        "en": "victory",
+        "pos": "ім",
+        "ipa": "/pɛrɛˈmɔɦɑ/",
+        "note": "f",
+        "isNew": true,
+        "firstModule": 144
+      },
+      {
+        "id": "v-himn-144-17",
+        "uk": "гімн",
+        "en": "anthem, hymn",
+        "pos": "ім",
+        "ipa": "/ɦʲimn/",
+        "note": "m",
+        "isNew": true,
+        "firstModule": 144
+      },
+      {
+        "id": "v-blahodiynyy-144-18",
+        "uk": "благодійний",
+        "en": "charitable",
+        "pos": "прикм",
+        "ipa": "/blɑɦɔˈdʲijnɪj/",
+        "isNew": true,
+        "firstModule": 144
+      },
+      {
+        "id": "v-sopilka-144-19",
+        "uk": "сопілка",
+        "en": "sopilka (folk flute)",
+        "pos": "ім",
+        "ipa": "/sɔˈpʲilkɑ/",
+        "note": "f",
+        "isNew": true,
+        "firstModule": 144
+      },
+      {
+        "id": "v-bandura-144-20",
+        "uk": "бандура",
+        "en": "bandura (folk instrument)",
+        "pos": "ім",
+        "ipa": "/bɑnˈdurɑ/",
+        "note": "f",
+        "isNew": true,
+        "firstModule": 144
+      }
+    ],
+    "reviewWords": [
+      {
+        "id": "v-kulьtura-144-1000",
+        "uk": "культура",
+        "en": "",
+        "pos": "noun",
+        "isNew": false,
+        "firstModule": 61
+      },
+      {
+        "id": "v-holos-144-1001",
+        "uk": "голос",
+        "en": "",
+        "pos": "noun",
+        "isNew": false,
+        "firstModule": 45
+      },
+      {
+        "id": "v-pokolinnya-144-1002",
+        "uk": "покоління",
+        "en": "",
+        "pos": "noun",
+        "isNew": false,
+        "firstModule": 89
+      },
+      {
+        "id": "v-viyna-144-1003",
+        "uk": "війна",
+        "en": "",
+        "pos": "noun",
+        "isNew": false,
+        "firstModule": 95
+      },
+      {
+        "id": "v-pidtrymka-144-1004",
+        "uk": "підтримка",
+        "en": "",
+        "pos": "noun",
+        "isNew": false,
+        "firstModule": 78
+      }
+    ]
+  }
+}

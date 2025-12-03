@@ -1,0 +1,390 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-B1-158",
+    "moduleId": "mod-uk-B1-158",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "B1",
+    "phase": "B1.6",
+    "moduleNumber": 158,
+    "moduleType": "vocabulary",
+    "immersionLevel": 0.6,
+    "title": "Подорожі Україною",
+    "subtitle": "Traveling in Ukraine: Tourist Vocabulary",
+    "description": "Learn vocabulary for travel and tourism",
+    "objectives": [
+      "Learn vocabulary for travel and tourism",
+      "Practice practical communication situations",
+      "Discover Ukrainian tourist destinations",
+      "Develop confidence for real-world interactions"
+    ],
+    "grammarFocus": [],
+    "tags": [
+      "vocabulary",
+      "travel",
+      "tourism",
+      "practical",
+      "communication"
+    ],
+    "totalDuration": 45,
+    "transliterationMode": "none",
+    "sections": [
+      {
+        "id": "section-intro",
+        "name": "Вступ",
+        "nameEn": "Introduction",
+        "type": "intro",
+        "content": "Україна — країна з багатою історією та красивою природою. Від Карпатських гір до Чорного моря, від древніх замків до сучасних міст — тут є що побачити. У цьому уроці ви вивчите словник для подорожей Україною.\n\nUkraine is a country with rich history and beautiful nature. From the Carpathian mountains to the Black Sea, from ancient castles to modern cities — there's much to see. In this lesson, you'll learn vocabulary for traveling in Ukraine.\n\n> [!note] Після перемоги Україна чекає на туристів! Готуйтеся вже зараз.\n\n---"
+      },
+      {
+        "id": "section-зміст-уроку-lesson-content",
+        "name": "Зміст уроку | Lesson Content",
+        "type": "content",
+        "content": "## Частина 1: Туристичні напрямки\n\n### Міста\n\n| Місто | Чому їхати | Що побачити |\n|-------|------------|-------------|\n| Київ | столиця | Софійський собор, Лавра |\n| Львів | культура | Старе місто, кав'ярні |\n| Одеса | море | Потьомкінські сходи, пляжі |\n| Чернівці | архітектура | Університет (UNESCO) |\n| Кам'янець-Подільський | історія | Фортеця |\n\n### Природа\n\n| Місце | Регіон | Активності |\n|-------|--------|------------|\n| Карпати | Захід | піші походи, лижі |\n| Шацькі озера | Волинь | плавання, відпочинок |\n| Софіївський парк | Умань | прогулянки |\n| Буковель | Карпати | лижний курорт |\n| Асканія-Нова | Південь | заповідник, сафарі |\n\n## Частина 2: Транспорт\n\n### Види транспорту\n\n| Транспорт | Коли використовувати | Вартість |\n|-----------|---------------------|----------|\n| потяг | далекі відстані | середня |\n| автобус | міжміські | низька |\n| маршрутка | короткі маршрути | низька |\n| таксі | зручність | висока |\n| метро | Київ, Харків, Дніпро | низька |\n\n### Корисні фрази\n\n**На вокзалі:**\n- «Квиток до Львова, будь ласка» — A ticket to Lviv, please\n- «О котрій відправлення?» — What time is the departure?\n- «З якої платформи?» — From which platform?\n- «Скільки коштує квиток?» — How much is the ticket?\n\n**У таксі:**\n- «Відвезіть мене до...» — Take me to...\n- «Скільки буде коштувати?» — How much will it cost?\n- «Зупиніть тут, будь ласка» — Stop here, please\n\n## Частина 3: Проживання\n\n### Типи проживання\n\n| Тип | Опис | Для кого |\n|-----|------|----------|\n| готель | стандартний сервіс | бізнес |\n| хостел | бюджетний варіант | молодь |\n| апартаменти | самостійно | сім'ї |\n| агротуризм | село, природа | любителі природи |\n| кемпінг | намети | туристи |\n\n### Корисні фрази\n\n**Бронювання:**\n- «Я хочу забронювати номер» — I want to book a room\n- «На скільки ночей?» — For how many nights?\n- «Одномісний чи двомісний?» — Single or double?\n- «Сніданок включено?» — Is breakfast included?\n\n**У готелі:**\n- «Мій ключ, будь ласка» — My key, please\n- «О котрій виселення?» — What time is checkout?\n- «Де сніданок?» — Where is breakfast?\n- «Wi-Fi пароль?» — Wi-Fi password?\n\n## Частина 4: У ресторані та магазині\n\n### Замовлення їжі\n\n**Фрази:**\n- «Меню, будь ласка» — Menu, please\n- «Що порекомендуєте?» — What do you recommend?\n- «Я замовлю...» — I'll order...\n- «Рахунок, будь ласка» — Bill, please\n- «Можна картою?» — Can I pay by card?\n\n### У магазині\n\n**Фрази:**\n- «Скільки це коштує?» — How much is this?\n- «Є знижка?» — Is there a discount?\n- «Можна приміряти?» — Can I try it on?\n- «Де каса?» — Where is the checkout?\n\n## Частина 5: Екстрені ситуації\n\n### Важливі номери\n\n| Служба | Номер |\n|--------|-------|\n| Екстрена допомога | 112 |\n| Поліція | 102 |\n| Швидка допомога | 103 |\n| Пожежна | 101 |\n\n### Корисні фрази\n\n- «Допоможіть!» — Help!\n- «Мені потрібен лікар» — I need a doctor\n- «Де найближча аптека?» — Where is the nearest pharmacy?\n- «Я загубив/загубила паспорт» — I lost my passport\n- «Я не розумію» — I don't understand\n\n---\n\n\n---\n\n\n---\n\n\n---"
+      },
+      {
+        "id": "section-summary",
+        "name": "Підсумок",
+        "nameEn": "Summary",
+        "type": "summary",
+        "content": "## Що ви вивчили\n\nУ цьому уроці ви вивчили:\n\n**Туристичні напрямки:**\n- Міста: Київ, Львів, Одеса\n- Природа: Карпати, Шацькі озера\n\n**Транспорт:**\n- Потяг, автобус, таксі, метро\n- Фрази на вокзалі\n\n**Проживання:**\n- Готель, хостел, апартаменти\n- Бронювання та виселення\n\n**Практичні фрази:**\n- Замовлення їжі\n- Екстрені ситуації\n\n> **Домашнє завдання:** Складіть план подорожі до одного українського міста!\n\n> **Наступний урок:** B1.6 Review — повторення."
+      }
+    ],
+    "rawMarkdown": "---\nmodule: 158\ntitle: \"Подорожі Україною\"\nsubtitle: \"Traveling in Ukraine: Tourist Vocabulary\"\nlevel: B1\nphase: B1.6\nduration: 45\ntransliteration: none\ntags: [vocabulary, travel, tourism, practical, communication]\nobjectives:\n  - Learn vocabulary for travel and tourism\n  - Practice practical communication situations\n  - Discover Ukrainian tourist destinations\n  - Develop confidence for real-world interactions\n---\n\n# Вступ\n\nУкраїна — країна з багатою історією та красивою природою. Від Карпатських гір до Чорного моря, від древніх замків до сучасних міст — тут є що побачити. У цьому уроці ви вивчите словник для подорожей Україною.\n\nUkraine is a country with rich history and beautiful nature. From the Carpathian mountains to the Black Sea, from ancient castles to modern cities — there's much to see. In this lesson, you'll learn vocabulary for traveling in Ukraine.\n\n> [!note] Після перемоги Україна чекає на туристів! Готуйтеся вже зараз.\n\n---\n\n# Зміст уроку | Lesson Content\n\n## Частина 1: Туристичні напрямки\n\n### Міста\n\n| Місто | Чому їхати | Що побачити |\n|-------|------------|-------------|\n| Київ | столиця | Софійський собор, Лавра |\n| Львів | культура | Старе місто, кав'ярні |\n| Одеса | море | Потьомкінські сходи, пляжі |\n| Чернівці | архітектура | Університет (UNESCO) |\n| Кам'янець-Подільський | історія | Фортеця |\n\n### Природа\n\n| Місце | Регіон | Активності |\n|-------|--------|------------|\n| Карпати | Захід | піші походи, лижі |\n| Шацькі озера | Волинь | плавання, відпочинок |\n| Софіївський парк | Умань | прогулянки |\n| Буковель | Карпати | лижний курорт |\n| Асканія-Нова | Південь | заповідник, сафарі |\n\n## Частина 2: Транспорт\n\n### Види транспорту\n\n| Транспорт | Коли використовувати | Вартість |\n|-----------|---------------------|----------|\n| потяг | далекі відстані | середня |\n| автобус | міжміські | низька |\n| маршрутка | короткі маршрути | низька |\n| таксі | зручність | висока |\n| метро | Київ, Харків, Дніпро | низька |\n\n### Корисні фрази\n\n**На вокзалі:**\n- «Квиток до Львова, будь ласка» — A ticket to Lviv, please\n- «О котрій відправлення?» — What time is the departure?\n- «З якої платформи?» — From which platform?\n- «Скільки коштує квиток?» — How much is the ticket?\n\n**У таксі:**\n- «Відвезіть мене до...» — Take me to...\n- «Скільки буде коштувати?» — How much will it cost?\n- «Зупиніть тут, будь ласка» — Stop here, please\n\n## Частина 3: Проживання\n\n### Типи проживання\n\n| Тип | Опис | Для кого |\n|-----|------|----------|\n| готель | стандартний сервіс | бізнес |\n| хостел | бюджетний варіант | молодь |\n| апартаменти | самостійно | сім'ї |\n| агротуризм | село, природа | любителі природи |\n| кемпінг | намети | туристи |\n\n### Корисні фрази\n\n**Бронювання:**\n- «Я хочу забронювати номер» — I want to book a room\n- «На скільки ночей?» — For how many nights?\n- «Одномісний чи двомісний?» — Single or double?\n- «Сніданок включено?» — Is breakfast included?\n\n**У готелі:**\n- «Мій ключ, будь ласка» — My key, please\n- «О котрій виселення?» — What time is checkout?\n- «Де сніданок?» — Where is breakfast?\n- «Wi-Fi пароль?» — Wi-Fi password?\n\n## Частина 4: У ресторані та магазині\n\n### Замовлення їжі\n\n**Фрази:**\n- «Меню, будь ласка» — Menu, please\n- «Що порекомендуєте?» — What do you recommend?\n- «Я замовлю...» — I'll order...\n- «Рахунок, будь ласка» — Bill, please\n- «Можна картою?» — Can I pay by card?\n\n### У магазині\n\n**Фрази:**\n- «Скільки це коштує?» — How much is this?\n- «Є знижка?» — Is there a discount?\n- «Можна приміряти?» — Can I try it on?\n- «Де каса?» — Where is the checkout?\n\n## Частина 5: Екстрені ситуації\n\n### Важливі номери\n\n| Служба | Номер |\n|--------|-------|\n| Екстрена допомога | 112 |\n| Поліція | 102 |\n| Швидка допомога | 103 |\n| Пожежна | 101 |\n\n### Корисні фрази\n\n- «Допоможіть!» — Help!\n- «Мені потрібен лікар» — I need a doctor\n- «Де найближча аптека?» — Where is the nearest pharmacy?\n- «Я загубив/загубила паспорт» — I lost my passport\n- «Я не розумію» — I don't understand\n\n---\n\n# Вправи\n\n## quiz: Перевірте себе\n\n> Що ви запам'ятали?\n\n1. Що означає «О котрій відправлення?»\n   - [x] What time is the departure?\n   - [ ] Where is the departure?\n   - [ ] How much is the departure?\n   > «О котрій» = at what time.\n\n2. Який номер екстреної допомоги в Україні?\n   - [ ] 911\n   - [x] 112\n   - [ ] 999\n   > 112 — єдиний номер екстреної допомоги в Україні.\n\n3. Що таке «хостел»?\n   - [ ] hotel\n   - [x] hostel (budget accommodation)\n   - [ ] hospital\n   > Хостел — бюджетне проживання.\n\n4. Як сказати «Bill, please»?\n   - [x] Рахунок, будь ласка\n   - [ ] Меню, будь ласка\n   - [ ] Ключ, будь ласка\n   > Рахунок = bill (in a restaurant).\n\n5. Де можна покататися на лижах?\n   - [x] Буковель\n   - [ ] Одеса\n   - [ ] Київ\n   > Буковель — найбільший лижний курорт України.\n\n## match-up: Фрази\n\n> Поєднайте.\n\npairs:\n  - left: \"Квиток до Львова\"\n    right: \"A ticket to Lviv\"\n  - left: \"Скільки коштує?\"\n    right: \"How much is it?\"\n  - left: \"Допоможіть!\"\n    right: \"Help!\"\n  - left: \"Де сніданок?\"\n    right: \"Where is breakfast?\"\n  - left: \"Зупиніть тут\"\n    right: \"Stop here\"\n\n## group-sort: Категорії\n\n> Розподіліть за категоріями.\n\ngroups:\n  Транспорт:\n    - \"потяг\"\n    - \"таксі\"\n    - \"маршрутка\"\n  Проживання:\n    - \"готель\"\n    - \"хостел\"\n    - \"апартаменти\"\n  Місця:\n    - \"Карпати\"\n    - \"Львів\"\n    - \"Буковель\"\n\n---\n\n# Словник\n\n| Слово | Вимова | Переклад | ЧМ | Примітка |\n|-------|--------|----------|-----|----------|\n| подорож | /ˈpɔdɔrɔʒ/ | trip, journey | ім | f |\n| турист | /tuˈrɪst/ | tourist | ім | m |\n| квиток | /kvɪˈtɔk/ | ticket | ім | m |\n| потяг | /ˈpɔtʲɑɦ/ | train | ім | m |\n| вокзал | /vɔkˈzɑl/ | train station | ім | m |\n| платформа | /plɑtˈfɔrmɑ/ | platform | ім | f |\n| відправлення | /vʲidprɑvˈlɛnʲːɑ/ | departure | ім | n |\n| прибуття | /prɪˈbutʲːɑ/ | arrival | ім | n |\n| готель | /ɦɔˈtɛlʲ/ | hotel | ім | m |\n| номер | /ˈnɔmɛr/ | room (hotel) | ім | m |\n| бронювати | /brɔnʲuˈvɑtɪ/ | to book | дієсл | impf |\n| виселення | /ˈvɪsɛlɛnʲːɑ/ | checkout | ім | n |\n| рахунок | /rɑˈxunɔk/ | bill | ім | m |\n| меню | /mɛˈnʲu/ | menu | ім | n |\n| аптека | /ɑpˈtɛkɑ/ | pharmacy | ім | f |\n| загубити | /zɑɦuˈbɪtɪ/ | to lose | дієсл | pf |\n\n---\n\n# Review Vocabulary\n\n| Word | First Module |\n|------|-------------|\n| місто | 12 |\n| їхати | 34 |\n| гроші | 45 |\n| їжа | 23 |\n| допомога | 78 |\n\n---\n\n# Підсумок\n\n## Що ви вивчили\n\nУ цьому уроці ви вивчили:\n\n**Туристичні напрямки:**\n- Міста: Київ, Львів, Одеса\n- Природа: Карпати, Шацькі озера\n\n**Транспорт:**\n- Потяг, автобус, таксі, метро\n- Фрази на вокзалі\n\n**Проживання:**\n- Готель, хостел, апартаменти\n- Бронювання та виселення\n\n**Практичні фрази:**\n- Замовлення їжі\n- Екстрені ситуації\n\n> **Домашнє завдання:** Складіть план подорожі до одного українського міста!\n\n> **Наступний урок:** B1.6 Review — повторення.\n",
+    "createdAt": "2025-12-03T17:51:10.689Z",
+    "modifiedAt": "2025-12-03T17:51:10.689Z",
+    "version": 2
+  },
+  "activities": [
+    {
+      "id": "act-b1-158-quiz",
+      "type": "quiz",
+      "title": "Перевірте себе",
+      "description": "Що ви запам'ятали?",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "question": "Що означає «О котрій відправлення?»",
+            "options": [
+              "What time is the departure?",
+              "Where is the departure?",
+              "How much is the departure?"
+            ],
+            "correctIndex": 0,
+            "explanation": "«О котрій» = at what time."
+          },
+          {
+            "question": "Який номер екстреної допомоги в Україні?",
+            "options": [
+              "911",
+              "112",
+              "999"
+            ],
+            "correctIndex": 1,
+            "explanation": "112 — єдиний номер екстреної допомоги в Україні."
+          },
+          {
+            "question": "Що таке «хостел»?",
+            "options": [
+              "hotel",
+              "hostel (budget accommodation)",
+              "hospital"
+            ],
+            "correctIndex": 1,
+            "explanation": "Хостел — бюджетне проживання."
+          },
+          {
+            "question": "Як сказати «Bill, please»?",
+            "options": [
+              "Рахунок, будь ласка",
+              "Меню, будь ласка",
+              "Ключ, будь ласка"
+            ],
+            "correctIndex": 0,
+            "explanation": "Рахунок = bill (in a restaurant)."
+          },
+          {
+            "question": "Де можна покататися на лижах?",
+            "options": [
+              "Буковель",
+              "Одеса",
+              "Київ"
+            ],
+            "correctIndex": 0,
+            "explanation": "Буковель — найбільший лижний курорт України."
+          }
+        ],
+        "shuffleQuestions": true,
+        "shuffleOptions": true,
+        "showCorrectAnswers": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "B1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-03T17:51:10.689Z",
+      "modifiedAt": "2025-12-03T17:51:10.689Z"
+    },
+    {
+      "id": "act-b1-158-matchup",
+      "type": "match-up",
+      "title": "Фрази",
+      "description": "Поєднайте.",
+      "content": {
+        "type": "match-up",
+        "pairs": [],
+        "shuffleRight": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "B1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-03T17:51:10.689Z",
+      "modifiedAt": "2025-12-03T17:51:10.689Z"
+    },
+    {
+      "id": "act-b1-158-groupsort",
+      "type": "group-sort",
+      "title": "Категорії",
+      "description": "Розподіліть за категоріями.",
+      "content": {
+        "type": "group-sort",
+        "groups": [],
+        "shuffleItems": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "B1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-03T17:51:10.689Z",
+      "modifiedAt": "2025-12-03T17:51:10.689Z"
+    }
+  ],
+  "vocabulary": {
+    "moduleId": "mod-uk-B1-158",
+    "level": "B1",
+    "phase": "B1.6",
+    "wordCount": 21,
+    "newWordCount": 16,
+    "reviewWordCount": 5,
+    "transliterationMode": "none",
+    "words": [
+      {
+        "id": "v-podorozh-158-0",
+        "uk": "подорож",
+        "en": "trip, journey",
+        "pos": "ім",
+        "ipa": "/ˈpɔdɔrɔʒ/",
+        "note": "f",
+        "isNew": true,
+        "firstModule": 158
+      },
+      {
+        "id": "v-turyst-158-1",
+        "uk": "турист",
+        "en": "tourist",
+        "pos": "ім",
+        "ipa": "/tuˈrɪst/",
+        "note": "m",
+        "isNew": true,
+        "firstModule": 158
+      },
+      {
+        "id": "v-kvytok-158-2",
+        "uk": "квиток",
+        "en": "ticket",
+        "pos": "ім",
+        "ipa": "/kvɪˈtɔk/",
+        "note": "m",
+        "isNew": true,
+        "firstModule": 158
+      },
+      {
+        "id": "v-potyah-158-3",
+        "uk": "потяг",
+        "en": "train",
+        "pos": "ім",
+        "ipa": "/ˈpɔtʲɑɦ/",
+        "note": "m",
+        "isNew": true,
+        "firstModule": 158
+      },
+      {
+        "id": "v-vokzal-158-4",
+        "uk": "вокзал",
+        "en": "train station",
+        "pos": "ім",
+        "ipa": "/vɔkˈzɑl/",
+        "note": "m",
+        "isNew": true,
+        "firstModule": 158
+      },
+      {
+        "id": "v-platforma-158-5",
+        "uk": "платформа",
+        "en": "platform",
+        "pos": "ім",
+        "ipa": "/plɑtˈfɔrmɑ/",
+        "note": "f",
+        "isNew": true,
+        "firstModule": 158
+      },
+      {
+        "id": "v-vidpravlennya-158-6",
+        "uk": "відправлення",
+        "en": "departure",
+        "pos": "ім",
+        "ipa": "/vʲidprɑvˈlɛnʲːɑ/",
+        "note": "n",
+        "isNew": true,
+        "firstModule": 158
+      },
+      {
+        "id": "v-prybuttya-158-7",
+        "uk": "прибуття",
+        "en": "arrival",
+        "pos": "ім",
+        "ipa": "/prɪˈbutʲːɑ/",
+        "note": "n",
+        "isNew": true,
+        "firstModule": 158
+      },
+      {
+        "id": "v-hotelь-158-8",
+        "uk": "готель",
+        "en": "hotel",
+        "pos": "ім",
+        "ipa": "/ɦɔˈtɛlʲ/",
+        "note": "m",
+        "isNew": true,
+        "firstModule": 158
+      },
+      {
+        "id": "v-nomer-158-9",
+        "uk": "номер",
+        "en": "room (hotel)",
+        "pos": "ім",
+        "ipa": "/ˈnɔmɛr/",
+        "note": "m",
+        "isNew": true,
+        "firstModule": 158
+      },
+      {
+        "id": "v-bronyuvaty-158-10",
+        "uk": "бронювати",
+        "en": "to book",
+        "pos": "дієсл",
+        "ipa": "/brɔnʲuˈvɑtɪ/",
+        "note": "impf",
+        "isNew": true,
+        "firstModule": 158
+      },
+      {
+        "id": "v-vyselennya-158-11",
+        "uk": "виселення",
+        "en": "checkout",
+        "pos": "ім",
+        "ipa": "/ˈvɪsɛlɛnʲːɑ/",
+        "note": "n",
+        "isNew": true,
+        "firstModule": 158
+      },
+      {
+        "id": "v-rakhunok-158-12",
+        "uk": "рахунок",
+        "en": "bill",
+        "pos": "ім",
+        "ipa": "/rɑˈxunɔk/",
+        "note": "m",
+        "isNew": true,
+        "firstModule": 158
+      },
+      {
+        "id": "v-menyu-158-13",
+        "uk": "меню",
+        "en": "menu",
+        "pos": "ім",
+        "ipa": "/mɛˈnʲu/",
+        "note": "n",
+        "isNew": true,
+        "firstModule": 158
+      },
+      {
+        "id": "v-apteka-158-14",
+        "uk": "аптека",
+        "en": "pharmacy",
+        "pos": "ім",
+        "ipa": "/ɑpˈtɛkɑ/",
+        "note": "f",
+        "isNew": true,
+        "firstModule": 158
+      },
+      {
+        "id": "v-zahubyty-158-15",
+        "uk": "загубити",
+        "en": "to lose",
+        "pos": "дієсл",
+        "ipa": "/zɑɦuˈbɪtɪ/",
+        "note": "pf",
+        "isNew": true,
+        "firstModule": 158
+      }
+    ],
+    "reviewWords": [
+      {
+        "id": "v-misto-158-1000",
+        "uk": "місто",
+        "en": "",
+        "pos": "noun",
+        "isNew": false,
+        "firstModule": 12
+      },
+      {
+        "id": "v-yikhaty-158-1001",
+        "uk": "їхати",
+        "en": "",
+        "pos": "noun",
+        "isNew": false,
+        "firstModule": 34
+      },
+      {
+        "id": "v-hroshi-158-1002",
+        "uk": "гроші",
+        "en": "",
+        "pos": "noun",
+        "isNew": false,
+        "firstModule": 45
+      },
+      {
+        "id": "v-yizha-158-1003",
+        "uk": "їжа",
+        "en": "",
+        "pos": "noun",
+        "isNew": false,
+        "firstModule": 23
+      },
+      {
+        "id": "v-dopomoha-158-1004",
+        "uk": "допомога",
+        "en": "",
+        "pos": "noun",
+        "isNew": false,
+        "firstModule": 78
+      }
+    ]
+  }
+}

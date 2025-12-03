@@ -1,0 +1,370 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-B1-154",
+    "moduleId": "mod-uk-B1-154",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "B1",
+    "phase": "B1.6",
+    "moduleNumber": 154,
+    "moduleType": "skills",
+    "immersionLevel": 0.6,
+    "title": "Подкасти: слухаємо українською",
+    "subtitle": "Podcasts: Listening to Ukrainian",
+    "description": "Discover Ukrainian podcasts for learners",
+    "objectives": [
+      "Discover Ukrainian podcasts for learners",
+      "Develop audio comprehension strategies",
+      "Learn vocabulary for podcast discussions",
+      "Practice active listening techniques"
+    ],
+    "grammarFocus": [],
+    "tags": [
+      "skills",
+      "podcasts",
+      "listening",
+      "audio",
+      "comprehension"
+    ],
+    "totalDuration": 45,
+    "transliterationMode": "none",
+    "sections": [
+      {
+        "id": "section-intro",
+        "name": "Вступ",
+        "nameEn": "Introduction",
+        "type": "intro",
+        "content": "Подкасти — ідеальний інструмент для вивчення мови. Ви можете слухати українську під час прогулянки, у транспорті, вдома. У цьому уроці ви дізнаєтеся про найкращі українські подкасти та як їх ефективно слухати.\n\nPodcasts are an ideal tool for language learning. You can listen to Ukrainian while walking, on transport, at home. In this lesson, you'll discover the best Ukrainian podcasts and how to listen to them effectively.\n\n> [!note] Мета: 80% українською. Подкасти допоможуть досягти цього рівня!\n\n---"
+      },
+      {
+        "id": "section-зміст-уроку-lesson-content",
+        "name": "Зміст уроку | Lesson Content",
+        "type": "content",
+        "content": "## Частина 1: Українські подкасти\n\n### Подкасти для вивчення мови\n\n| Назва | Рівень | Опис |\n|-------|--------|------|\n| Ukrainian Lessons | A1-B2 | Подкаст для іноземців |\n| Ukrainianlanguagepod | A1-B1 | Граматика та лексика |\n\n### Подкасти для практики\n\n| Назва | Тема | Складність |\n|-------|------|------------|\n| «Книга-Гак» | література | середня |\n| «Все буде добре» | психологія | середня |\n| «Простими словами» | новини | середня |\n| «Toloking» | культура | середня-висока |\n| «Брат Гітара» | музика | середня |\n| «Наш формат» | інтерв'ю | висока |\n| «Підкаст» | різне | висока |\n\n### Де слухати\n\n| Платформа | Переваги |\n|-----------|----------|\n| Spotify | великий вибір |\n| Apple Podcasts | якісний пошук |\n| Google Podcasts | безкоштовно |\n| YouTube | субтитри можливі |\n| Telegram | канали з аудіо |\n\n## Частина 2: Стратегії слухання\n\n### Рівні слухання\n\n| Рівень | Мета | Як слухати |\n|--------|------|------------|\n| 1. Загальне | Про що? | Без пауз, один раз |\n| 2. Детальне | Факти | З паузами, нотатки |\n| 3. Інтенсивне | Мова | Транскрипт, повтори |\n\n### Техніка «сендвіч»\n\n1. **Слухаєте** — без тексту, загальне розуміння\n2. **Читаєте** — транскрипт, нові слова\n3. **Слухаєте** — з текстом, деталі\n4. **Слухаєте** — без тексту, перевірка\n\n### Активне слухання\n\nПід час прослуховування:\n- Робіть нотатки (ключові слова)\n- Записуйте нові слова\n- Позначайте незрозумілі місця\n- Повторюйте фрази вголос\n\n> [!tip] **Порада:** Слухайте один епізод кілька разів — краще, ніж багато епізодів по одному разу.\n\n## Частина 3: Словник подкастів\n\n### Технічні терміни\n\n| Українська | English |\n|------------|---------|\n| подкаст | podcast |\n| епізод | episode |\n| ведучий | host |\n| гість | guest |\n| слухач | listener |\n| аудіо | audio |\n| транскрипт | transcript |\n| підписка | subscription |\n| завантажити | to download |\n| стрімити | to stream |\n\n### Дискусійні фрази\n\n| Фраза | Використання |\n|-------|--------------|\n| «Сьогодні ми поговоримо про...» | вступ |\n| «Наш гість сьогодні...» | представлення |\n| «Як ви вважаєте?» | питання |\n| «Цікаве питання...» | реакція |\n| «Підсумовуючи...» | завершення |\n| «Дякуємо за увагу» | прощання |\n\n## Частина 4: Практичне завдання\n\n### Як почати\n\n**Тиждень 1-2:**\n- Виберіть 1 подкаст вашого рівня\n- Слухайте 15-20 хвилин на день\n- Не хвилюйтеся, якщо не розумієте все\n\n**Тиждень 3-4:**\n- Додайте другий подкаст\n- Використовуйте техніку «сендвіч»\n- Виписуйте нові слова\n\n**Тиждень 5+:**\n- Спробуйте складніший подкаст\n- Слухайте без субтитрів\n- Обговорюйте почуте\n\n### Чек-лист прогресу\n\n- [ ] Знайшов/знайшла 3 подкасти\n- [ ] Слухаю щодня 15+ хвилин\n- [ ] Веду словник нових слів\n- [ ] Розумію 60%+ без тексту\n- [ ] Можу переказати основну ідею\n\n---\n\n\n---\n\n\n---\n\n\n---"
+      },
+      {
+        "id": "section-summary",
+        "name": "Підсумок",
+        "nameEn": "Summary",
+        "type": "summary",
+        "content": "## Що ви вивчили\n\nУ цьому уроці ви дізналися про:\n\n**Українські подкасти:**\n- Для вивчення: Ukrainian Lessons\n- Для практики: «Книга-Гак», «Простими словами»\n\n**Стратегії слухання:**\n- Три рівні: загальне → детальне → інтенсивне\n- Техніка «сендвіч»\n- Активне слухання з нотатками\n\n**Словник:**\n- Технічні терміни: подкаст, епізод, ведучий\n- Дискусійні фрази\n\n> **Домашнє завдання:** Виберіть один подкаст і слухайте щодня цього тижня!\n\n> **Наступний урок:** Короткі оповідання I — читаємо українську літературу."
+      }
+    ],
+    "rawMarkdown": "---\nmodule: 154\ntitle: \"Подкасти: слухаємо українською\"\nsubtitle: \"Podcasts: Listening to Ukrainian\"\nlevel: B1\nphase: B1.6\nduration: 45\ntransliteration: none\ntags: [skills, podcasts, listening, audio, comprehension]\nobjectives:\n  - Discover Ukrainian podcasts for learners\n  - Develop audio comprehension strategies\n  - Learn vocabulary for podcast discussions\n  - Practice active listening techniques\n---\n\n# Вступ\n\nПодкасти — ідеальний інструмент для вивчення мови. Ви можете слухати українську під час прогулянки, у транспорті, вдома. У цьому уроці ви дізнаєтеся про найкращі українські подкасти та як їх ефективно слухати.\n\nPodcasts are an ideal tool for language learning. You can listen to Ukrainian while walking, on transport, at home. In this lesson, you'll discover the best Ukrainian podcasts and how to listen to them effectively.\n\n> [!note] Мета: 80% українською. Подкасти допоможуть досягти цього рівня!\n\n---\n\n# Зміст уроку | Lesson Content\n\n## Частина 1: Українські подкасти\n\n### Подкасти для вивчення мови\n\n| Назва | Рівень | Опис |\n|-------|--------|------|\n| Ukrainian Lessons | A1-B2 | Подкаст для іноземців |\n| Ukrainianlanguagepod | A1-B1 | Граматика та лексика |\n\n### Подкасти для практики\n\n| Назва | Тема | Складність |\n|-------|------|------------|\n| «Книга-Гак» | література | середня |\n| «Все буде добре» | психологія | середня |\n| «Простими словами» | новини | середня |\n| «Toloking» | культура | середня-висока |\n| «Брат Гітара» | музика | середня |\n| «Наш формат» | інтерв'ю | висока |\n| «Підкаст» | різне | висока |\n\n### Де слухати\n\n| Платформа | Переваги |\n|-----------|----------|\n| Spotify | великий вибір |\n| Apple Podcasts | якісний пошук |\n| Google Podcasts | безкоштовно |\n| YouTube | субтитри можливі |\n| Telegram | канали з аудіо |\n\n## Частина 2: Стратегії слухання\n\n### Рівні слухання\n\n| Рівень | Мета | Як слухати |\n|--------|------|------------|\n| 1. Загальне | Про що? | Без пауз, один раз |\n| 2. Детальне | Факти | З паузами, нотатки |\n| 3. Інтенсивне | Мова | Транскрипт, повтори |\n\n### Техніка «сендвіч»\n\n1. **Слухаєте** — без тексту, загальне розуміння\n2. **Читаєте** — транскрипт, нові слова\n3. **Слухаєте** — з текстом, деталі\n4. **Слухаєте** — без тексту, перевірка\n\n### Активне слухання\n\nПід час прослуховування:\n- Робіть нотатки (ключові слова)\n- Записуйте нові слова\n- Позначайте незрозумілі місця\n- Повторюйте фрази вголос\n\n> [!tip] **Порада:** Слухайте один епізод кілька разів — краще, ніж багато епізодів по одному разу.\n\n## Частина 3: Словник подкастів\n\n### Технічні терміни\n\n| Українська | English |\n|------------|---------|\n| подкаст | podcast |\n| епізод | episode |\n| ведучий | host |\n| гість | guest |\n| слухач | listener |\n| аудіо | audio |\n| транскрипт | transcript |\n| підписка | subscription |\n| завантажити | to download |\n| стрімити | to stream |\n\n### Дискусійні фрази\n\n| Фраза | Використання |\n|-------|--------------|\n| «Сьогодні ми поговоримо про...» | вступ |\n| «Наш гість сьогодні...» | представлення |\n| «Як ви вважаєте?» | питання |\n| «Цікаве питання...» | реакція |\n| «Підсумовуючи...» | завершення |\n| «Дякуємо за увагу» | прощання |\n\n## Частина 4: Практичне завдання\n\n### Як почати\n\n**Тиждень 1-2:**\n- Виберіть 1 подкаст вашого рівня\n- Слухайте 15-20 хвилин на день\n- Не хвилюйтеся, якщо не розумієте все\n\n**Тиждень 3-4:**\n- Додайте другий подкаст\n- Використовуйте техніку «сендвіч»\n- Виписуйте нові слова\n\n**Тиждень 5+:**\n- Спробуйте складніший подкаст\n- Слухайте без субтитрів\n- Обговорюйте почуте\n\n### Чек-лист прогресу\n\n- [ ] Знайшов/знайшла 3 подкасти\n- [ ] Слухаю щодня 15+ хвилин\n- [ ] Веду словник нових слів\n- [ ] Розумію 60%+ без тексту\n- [ ] Можу переказати основну ідею\n\n---\n\n# Вправи\n\n## quiz: Перевірте себе\n\n> Що ви запам'ятали про подкасти?\n\n1. Що таке техніка «сендвіч»?\n   - [x] слухати-читати-слухати-слухати\n   - [ ] слухати три рази\n   - [ ] читати-слухати\n   > Техніка «сендвіч» чергує слухання з читанням транскрипту.\n\n2. Хто такий «ведучий»?\n   - [ ] guest\n   - [x] host\n   - [ ] listener\n   > Ведучий = host (той, хто веде подкаст).\n\n3. Що означає «завантажити»?\n   - [ ] to upload\n   - [x] to download\n   - [ ] to stream\n   > Завантажити = to download.\n\n4. Який подкаст для вивчення української мови?\n   - [x] Ukrainian Lessons\n   - [ ] «Книга-Гак»\n   - [ ] «Наш формат»\n   > Ukrainian Lessons — подкаст спеціально для тих, хто вчить українську.\n\n5. Скільки хвилин на день рекомендовано слухати?\n   - [ ] 5-10\n   - [x] 15-20\n   - [ ] 60+\n   > 15-20 хвилин на день — оптимальний час для початку.\n\n## match-up: Терміни\n\n> Поєднайте терміни.\n\npairs:\n  - left: \"ведучий\"\n    right: \"host\"\n  - left: \"слухач\"\n    right: \"listener\"\n  - left: \"епізод\"\n    right: \"episode\"\n  - left: \"гість\"\n    right: \"guest\"\n  - left: \"підписка\"\n    right: \"subscription\"\n\n## group-sort: Категорії подкастів\n\n> Розподіліть подкасти за темами.\n\ngroups:\n  Для вивчення мови:\n    - \"Ukrainian Lessons\"\n    - \"Ukrainianlanguagepod\"\n  Культура/література:\n    - \"«Книга-Гак»\"\n    - \"«Toloking»\"\n    - \"«Брат Гітара»\"\n  Новини/суспільство:\n    - \"«Простими словами»\"\n    - \"«Наш формат»\"\n    - \"«Підкаст»\"\n\n---\n\n# Словник\n\n| Слово | Вимова | Переклад | ЧМ | Примітка |\n|-------|--------|----------|-----|----------|\n| подкаст | /ˈpɔdkɑst/ | podcast | ім | m |\n| епізод | /ɛˈpʲizɔd/ | episode | ім | m |\n| ведучий | /vɛˈdut͡ʃɪj/ | host | ім | m |\n| слухач | /sluˈxɑt͡ʃ/ | listener | ім | m |\n| аудіо | /ˈɑudʲiɔ/ | audio | ім | n |\n| транскрипт | /trɑnˈskrɪpt/ | transcript | ім | m |\n| підписка | /pʲidˈpɪskɑ/ | subscription | ім | f |\n| завантажувати | /zɑvɑntɑˈʒuvɑtɪ/ | to download | дієсл | impf |\n| стрімити | /ˈstrʲimɪtɪ/ | to stream | дієсл | impf |\n| слухати | /ˈsluxɑtɪ/ | to listen | дієсл | impf |\n| розуміти | /rɔzuˈmʲitɪ/ | to understand | дієсл | impf |\n| повторювати | /pɔvtɔˈrʲuvɑtɪ/ | to repeat | дієсл | impf |\n| нотатка | /nɔˈtɑtkɑ/ | note | ім | f |\n| прослуховування | /prɔsluˈxɔvuvɑnʲːɑ/ | listening | ім | n |\n\n---\n\n# Review Vocabulary\n\n| Word | First Module |\n|------|-------------|\n| слухати | 23 |\n| розуміти | 34 |\n| мова | 5 |\n| вивчати | 12 |\n| практика | 67 |\n\n---\n\n# Підсумок\n\n## Що ви вивчили\n\nУ цьому уроці ви дізналися про:\n\n**Українські подкасти:**\n- Для вивчення: Ukrainian Lessons\n- Для практики: «Книга-Гак», «Простими словами»\n\n**Стратегії слухання:**\n- Три рівні: загальне → детальне → інтенсивне\n- Техніка «сендвіч»\n- Активне слухання з нотатками\n\n**Словник:**\n- Технічні терміни: подкаст, епізод, ведучий\n- Дискусійні фрази\n\n> **Домашнє завдання:** Виберіть один подкаст і слухайте щодня цього тижня!\n\n> **Наступний урок:** Короткі оповідання I — читаємо українську літературу.\n",
+    "createdAt": "2025-12-03T17:51:10.688Z",
+    "modifiedAt": "2025-12-03T17:51:10.688Z",
+    "version": 2
+  },
+  "activities": [
+    {
+      "id": "act-b1-154-quiz",
+      "type": "quiz",
+      "title": "Перевірте себе",
+      "description": "Що ви запам'ятали про подкасти?",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "question": "Що таке техніка «сендвіч»?",
+            "options": [
+              "слухати-читати-слухати-слухати",
+              "слухати три рази",
+              "читати-слухати"
+            ],
+            "correctIndex": 0,
+            "explanation": "Техніка «сендвіч» чергує слухання з читанням транскрипту."
+          },
+          {
+            "question": "Хто такий «ведучий»?",
+            "options": [
+              "guest",
+              "host",
+              "listener"
+            ],
+            "correctIndex": 1,
+            "explanation": "Ведучий = host (той, хто веде подкаст)."
+          },
+          {
+            "question": "Що означає «завантажити»?",
+            "options": [
+              "to upload",
+              "to download",
+              "to stream"
+            ],
+            "correctIndex": 1,
+            "explanation": "Завантажити = to download."
+          },
+          {
+            "question": "Який подкаст для вивчення української мови?",
+            "options": [
+              "Ukrainian Lessons",
+              "«Книга-Гак»",
+              "«Наш формат»"
+            ],
+            "correctIndex": 0,
+            "explanation": "Ukrainian Lessons — подкаст спеціально для тих, хто вчить українську."
+          },
+          {
+            "question": "Скільки хвилин на день рекомендовано слухати?",
+            "options": [
+              "5-10",
+              "15-20",
+              "60+"
+            ],
+            "correctIndex": 1,
+            "explanation": "15-20 хвилин на день — оптимальний час для початку."
+          }
+        ],
+        "shuffleQuestions": true,
+        "shuffleOptions": true,
+        "showCorrectAnswers": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "B1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-03T17:51:10.688Z",
+      "modifiedAt": "2025-12-03T17:51:10.688Z"
+    },
+    {
+      "id": "act-b1-154-matchup",
+      "type": "match-up",
+      "title": "Терміни",
+      "description": "Поєднайте терміни.",
+      "content": {
+        "type": "match-up",
+        "pairs": [],
+        "shuffleRight": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "B1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-03T17:51:10.688Z",
+      "modifiedAt": "2025-12-03T17:51:10.688Z"
+    },
+    {
+      "id": "act-b1-154-groupsort",
+      "type": "group-sort",
+      "title": "Категорії подкастів",
+      "description": "Розподіліть подкасти за темами.",
+      "content": {
+        "type": "group-sort",
+        "groups": [],
+        "shuffleItems": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "B1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-03T17:51:10.688Z",
+      "modifiedAt": "2025-12-03T17:51:10.688Z"
+    }
+  ],
+  "vocabulary": {
+    "moduleId": "mod-uk-B1-154",
+    "level": "B1",
+    "phase": "B1.6",
+    "wordCount": 19,
+    "newWordCount": 14,
+    "reviewWordCount": 5,
+    "transliterationMode": "none",
+    "words": [
+      {
+        "id": "v-podkast-154-0",
+        "uk": "подкаст",
+        "en": "podcast",
+        "pos": "ім",
+        "ipa": "/ˈpɔdkɑst/",
+        "note": "m",
+        "isNew": true,
+        "firstModule": 154
+      },
+      {
+        "id": "v-epizod-154-1",
+        "uk": "епізод",
+        "en": "episode",
+        "pos": "ім",
+        "ipa": "/ɛˈpʲizɔd/",
+        "note": "m",
+        "isNew": true,
+        "firstModule": 154
+      },
+      {
+        "id": "v-veduchyy-154-2",
+        "uk": "ведучий",
+        "en": "host",
+        "pos": "ім",
+        "ipa": "/vɛˈdut͡ʃɪj/",
+        "note": "m",
+        "isNew": true,
+        "firstModule": 154
+      },
+      {
+        "id": "v-slukhach-154-3",
+        "uk": "слухач",
+        "en": "listener",
+        "pos": "ім",
+        "ipa": "/sluˈxɑt͡ʃ/",
+        "note": "m",
+        "isNew": true,
+        "firstModule": 154
+      },
+      {
+        "id": "v-audio-154-4",
+        "uk": "аудіо",
+        "en": "audio",
+        "pos": "ім",
+        "ipa": "/ˈɑudʲiɔ/",
+        "note": "n",
+        "isNew": true,
+        "firstModule": 154
+      },
+      {
+        "id": "v-transkrypt-154-5",
+        "uk": "транскрипт",
+        "en": "transcript",
+        "pos": "ім",
+        "ipa": "/trɑnˈskrɪpt/",
+        "note": "m",
+        "isNew": true,
+        "firstModule": 154
+      },
+      {
+        "id": "v-pidpyska-154-6",
+        "uk": "підписка",
+        "en": "subscription",
+        "pos": "ім",
+        "ipa": "/pʲidˈpɪskɑ/",
+        "note": "f",
+        "isNew": true,
+        "firstModule": 154
+      },
+      {
+        "id": "v-zavantazhuvaty-154-7",
+        "uk": "завантажувати",
+        "en": "to download",
+        "pos": "дієсл",
+        "ipa": "/zɑvɑntɑˈʒuvɑtɪ/",
+        "note": "impf",
+        "isNew": true,
+        "firstModule": 154
+      },
+      {
+        "id": "v-strimyty-154-8",
+        "uk": "стрімити",
+        "en": "to stream",
+        "pos": "дієсл",
+        "ipa": "/ˈstrʲimɪtɪ/",
+        "note": "impf",
+        "isNew": true,
+        "firstModule": 154
+      },
+      {
+        "id": "v-slukhaty-154-9",
+        "uk": "слухати",
+        "en": "to listen",
+        "pos": "дієсл",
+        "ipa": "/ˈsluxɑtɪ/",
+        "note": "impf",
+        "isNew": true,
+        "firstModule": 154
+      },
+      {
+        "id": "v-rozumity-154-10",
+        "uk": "розуміти",
+        "en": "to understand",
+        "pos": "дієсл",
+        "ipa": "/rɔzuˈmʲitɪ/",
+        "note": "impf",
+        "isNew": true,
+        "firstModule": 154
+      },
+      {
+        "id": "v-povtoryuvaty-154-11",
+        "uk": "повторювати",
+        "en": "to repeat",
+        "pos": "дієсл",
+        "ipa": "/pɔvtɔˈrʲuvɑtɪ/",
+        "note": "impf",
+        "isNew": true,
+        "firstModule": 154
+      },
+      {
+        "id": "v-notatka-154-12",
+        "uk": "нотатка",
+        "en": "note",
+        "pos": "ім",
+        "ipa": "/nɔˈtɑtkɑ/",
+        "note": "f",
+        "isNew": true,
+        "firstModule": 154
+      },
+      {
+        "id": "v-proslukhovuvannya-154-13",
+        "uk": "прослуховування",
+        "en": "listening",
+        "pos": "ім",
+        "ipa": "/prɔsluˈxɔvuvɑnʲːɑ/",
+        "note": "n",
+        "isNew": true,
+        "firstModule": 154
+      }
+    ],
+    "reviewWords": [
+      {
+        "id": "v-slukhaty-154-1000",
+        "uk": "слухати",
+        "en": "",
+        "pos": "noun",
+        "isNew": false,
+        "firstModule": 23
+      },
+      {
+        "id": "v-rozumity-154-1001",
+        "uk": "розуміти",
+        "en": "",
+        "pos": "noun",
+        "isNew": false,
+        "firstModule": 34
+      },
+      {
+        "id": "v-mova-154-1002",
+        "uk": "мова",
+        "en": "",
+        "pos": "noun",
+        "isNew": false,
+        "firstModule": 5
+      },
+      {
+        "id": "v-vyvchaty-154-1003",
+        "uk": "вивчати",
+        "en": "",
+        "pos": "noun",
+        "isNew": false,
+        "firstModule": 12
+      },
+      {
+        "id": "v-praktyka-154-1004",
+        "uk": "практика",
+        "en": "",
+        "pos": "noun",
+        "isNew": false,
+        "firstModule": 67
+      }
+    ]
+  }
+}

@@ -1,0 +1,429 @@
+{
+  "$schema": "../../../schemas/vibe-module.schema.json",
+  "lesson": {
+    "id": "lesson-uk-B1-146",
+    "moduleId": "mod-uk-B1-146",
+    "languagePair": "l2-uk-en",
+    "subject": "language",
+    "owner": "curricula-opus",
+    "visibility": "public",
+    "language": "uk",
+    "targetLevel": "B1",
+    "phase": "B1.5",
+    "moduleNumber": 146,
+    "moduleType": "vocabulary",
+    "immersionLevel": 0.6,
+    "title": "Екологія та довкілля",
+    "subtitle": "Environment and Sustainability",
+    "description": "Learn vocabulary for environmental topics",
+    "objectives": [
+      "Learn vocabulary for environmental topics",
+      "Discuss climate change and sustainability in Ukrainian",
+      "Understand environmental challenges in Ukraine",
+      "Practice expressing opinions on ecological issues"
+    ],
+    "grammarFocus": [],
+    "tags": [
+      "vocabulary",
+      "environment",
+      "ecology",
+      "nature",
+      "climate"
+    ],
+    "totalDuration": 45,
+    "transliterationMode": "none",
+    "sections": [
+      {
+        "id": "section-intro",
+        "name": "Вступ",
+        "nameEn": "Introduction",
+        "type": "intro",
+        "content": "Екологія — одна з найважливіших тем XXI століття. Україна стикається з багатьма екологічними викликами: від наслідків Чорнобиля до екологічних злочинів війни. У цьому уроці ви навчитеся говорити про довкілля українською.\n\nEcology is one of the most important topics of the 21st century. Ukraine faces many environmental challenges: from the consequences of Chornobyl to the environmental crimes of war. In this lesson, you will learn to talk about the environment in Ukrainian.\n\n> [!note] Довкілля = навколишнє середовище = environment\n\n---"
+      },
+      {
+        "id": "section-зміст-уроку-lesson-content",
+        "name": "Зміст уроку | Lesson Content",
+        "type": "content",
+        "content": "## Частина 1: Основна лексика\n\n### Природні ресурси\n\n| Українська | English | Примітка |\n|------------|---------|----------|\n| довкілля | environment | синонім: навколишнє середовище |\n| природа | nature | |\n| ресурси | resources | природні ресурси |\n| вода | water | прісна вода = fresh water |\n| повітря | air | |\n| ґрунт | soil | |\n| ліс | forest | |\n| енергія | energy | відновлювана енергія |\n\n### Екологічні проблеми\n\n| Проблема | Problem | Приклад |\n|----------|---------|---------|\n| забруднення | pollution | забруднення повітря, води |\n| зміна клімату | climate change | глобальне потепління |\n| вирубка лісів | deforestation | знищення лісів |\n| вимирання видів | species extinction | червона книга |\n| відходи | waste | пластикові відходи |\n| викиди | emissions | викиди CO₂ |\n\n## Частина 2: Екологічні виклики України\n\n### Чорнобиль — трагедія та урок\n\n26 квітня 1986 року сталася найбільша ядерна катастрофа в історії. Чорнобильська АЕС досі впливає на Україну:\n\n| Наслідок | Масштаб |\n|----------|---------|\n| Зона відчуження | 2600 км² |\n| Евакуйовано | 350 000 людей |\n| Забруднення | 30+ років |\n| Туризм | популярний напрямок |\n\n> [!tip] **Чи знали ви?** Зона відчуження стала унікальним природним заповідником. Тут живуть вовки, коні Пржевальського та інші тварини.\n\n### Екологія та війна\n\nРосійська агресія завдала величезної шкоди довкіллю України:\n\n**Основні екологічні злочини:**\n1. **Каховська ГЕС** — затоплення, знищення екосистеми\n2. **Обстріли промислових об'єктів** — витоки хімікатів\n3. **Міни** — забруднення ґрунтів\n4. **Пожежі** — знищення лісів\n\n> «Війна — це не тільки людська трагедія. Це катастрофа для природи.»\n> — Міністерство екології України\n\n### Позитивні тренди\n\nПопри проблеми, Україна рухається вперед:\n- **Відновлювана енергія**: сонячні та вітрові електростанції\n- **Сортування відходів**: все більше міст впроваджують\n- **Національні парки**: створення нових охоронних територій\n- **Екологічна свідомість**: зростання серед молоді\n\n## Частина 3: Як говорити про екологію\n\n### Корисні дієслова\n\n| Дієслово | Переклад | Приклад |\n|----------|----------|---------|\n| забруднювати | to pollute | Заводи забруднюють повітря |\n| захищати | to protect | Ми повинні захищати ліси |\n| переробляти | to recycle | Потрібно переробляти пластик |\n| економити | to save, conserve | Економте воду! |\n| знищувати | to destroy | Люди знищують природу |\n| відновлювати | to restore | Відновлюємо екосистему |\n\n### Корисні фрази\n\n**Проблеми:**\n- «Це загрожує...» — This threatens...\n- «Ситуація критична» — The situation is critical\n- «Потрібно терміново діяти» — We need to act urgently\n\n**Рішення:**\n- «Ми повинні...» — We must...\n- «Кожен може...» — Everyone can...\n- «Важливо...» — It's important to...\n\n**Думки:**\n- «На мою думку...» — In my opinion...\n- «Я вважаю, що...» — I believe that...\n- «Очевидно, що...» — It's obvious that...\n\n## Частина 4: Що можемо зробити ми?\n\n### Прості дії\n\n| Дія | Чому це важливо |\n|-----|-----------------|\n| Сортувати відходи | Зменшує кількість сміття |\n| Економити воду | Бережемо прісну воду |\n| Використовувати багаторазове | Менше пластику |\n| Їздити велосипедом | Менше викидів |\n| Садити дерева | Очищення повітря |\n| Купувати локальне | Менше транспорту |\n\n### Екологічний словник\n\n**Сортування відходів:**\n- скло — glass\n- папір — paper\n- пластик — plastic\n- метал — metal\n- органіка — organic waste\n\n---\n\n\n---\n\n\n---\n\n\n---"
+      },
+      {
+        "id": "section-summary",
+        "name": "Підсумок",
+        "nameEn": "Summary",
+        "type": "summary",
+        "content": "## Що ви вивчили\n\nУ цьому уроці ви вивчили:\n\n**Основна лексика:**\n- довкілля, забруднення, клімат\n- відходи, викиди, переробка\n\n**Екологічні проблеми України:**\n- Наслідки Чорнобиля\n- Екологічні злочини війни\n- Позитивні тренди: відновлювана енергія\n\n**Корисні дієслова:**\n- забруднювати, захищати, переробляти\n- економити, знищувати, відновлювати\n\n> **Порада:** Використовуйте екологічну лексику, коли читаєте новини українською — це часта тема!\n\n> **Наступний урок:** Технології та стартапи — IT-сфера України."
+      }
+    ],
+    "rawMarkdown": "---\nmodule: 146\ntitle: \"Екологія та довкілля\"\nsubtitle: \"Environment and Sustainability\"\nlevel: B1\nphase: B1.5\nduration: 45\ntransliteration: none\ntags: [vocabulary, environment, ecology, nature, climate]\nobjectives:\n  - Learn vocabulary for environmental topics\n  - Discuss climate change and sustainability in Ukrainian\n  - Understand environmental challenges in Ukraine\n  - Practice expressing opinions on ecological issues\n---\n\n# Вступ\n\nЕкологія — одна з найважливіших тем XXI століття. Україна стикається з багатьма екологічними викликами: від наслідків Чорнобиля до екологічних злочинів війни. У цьому уроці ви навчитеся говорити про довкілля українською.\n\nEcology is one of the most important topics of the 21st century. Ukraine faces many environmental challenges: from the consequences of Chornobyl to the environmental crimes of war. In this lesson, you will learn to talk about the environment in Ukrainian.\n\n> [!note] Довкілля = навколишнє середовище = environment\n\n---\n\n# Зміст уроку | Lesson Content\n\n## Частина 1: Основна лексика\n\n### Природні ресурси\n\n| Українська | English | Примітка |\n|------------|---------|----------|\n| довкілля | environment | синонім: навколишнє середовище |\n| природа | nature | |\n| ресурси | resources | природні ресурси |\n| вода | water | прісна вода = fresh water |\n| повітря | air | |\n| ґрунт | soil | |\n| ліс | forest | |\n| енергія | energy | відновлювана енергія |\n\n### Екологічні проблеми\n\n| Проблема | Problem | Приклад |\n|----------|---------|---------|\n| забруднення | pollution | забруднення повітря, води |\n| зміна клімату | climate change | глобальне потепління |\n| вирубка лісів | deforestation | знищення лісів |\n| вимирання видів | species extinction | червона книга |\n| відходи | waste | пластикові відходи |\n| викиди | emissions | викиди CO₂ |\n\n## Частина 2: Екологічні виклики України\n\n### Чорнобиль — трагедія та урок\n\n26 квітня 1986 року сталася найбільша ядерна катастрофа в історії. Чорнобильська АЕС досі впливає на Україну:\n\n| Наслідок | Масштаб |\n|----------|---------|\n| Зона відчуження | 2600 км² |\n| Евакуйовано | 350 000 людей |\n| Забруднення | 30+ років |\n| Туризм | популярний напрямок |\n\n> [!tip] **Чи знали ви?** Зона відчуження стала унікальним природним заповідником. Тут живуть вовки, коні Пржевальського та інші тварини.\n\n### Екологія та війна\n\nРосійська агресія завдала величезної шкоди довкіллю України:\n\n**Основні екологічні злочини:**\n1. **Каховська ГЕС** — затоплення, знищення екосистеми\n2. **Обстріли промислових об'єктів** — витоки хімікатів\n3. **Міни** — забруднення ґрунтів\n4. **Пожежі** — знищення лісів\n\n> «Війна — це не тільки людська трагедія. Це катастрофа для природи.»\n> — Міністерство екології України\n\n### Позитивні тренди\n\nПопри проблеми, Україна рухається вперед:\n- **Відновлювана енергія**: сонячні та вітрові електростанції\n- **Сортування відходів**: все більше міст впроваджують\n- **Національні парки**: створення нових охоронних територій\n- **Екологічна свідомість**: зростання серед молоді\n\n## Частина 3: Як говорити про екологію\n\n### Корисні дієслова\n\n| Дієслово | Переклад | Приклад |\n|----------|----------|---------|\n| забруднювати | to pollute | Заводи забруднюють повітря |\n| захищати | to protect | Ми повинні захищати ліси |\n| переробляти | to recycle | Потрібно переробляти пластик |\n| економити | to save, conserve | Економте воду! |\n| знищувати | to destroy | Люди знищують природу |\n| відновлювати | to restore | Відновлюємо екосистему |\n\n### Корисні фрази\n\n**Проблеми:**\n- «Це загрожує...» — This threatens...\n- «Ситуація критична» — The situation is critical\n- «Потрібно терміново діяти» — We need to act urgently\n\n**Рішення:**\n- «Ми повинні...» — We must...\n- «Кожен може...» — Everyone can...\n- «Важливо...» — It's important to...\n\n**Думки:**\n- «На мою думку...» — In my opinion...\n- «Я вважаю, що...» — I believe that...\n- «Очевидно, що...» — It's obvious that...\n\n## Частина 4: Що можемо зробити ми?\n\n### Прості дії\n\n| Дія | Чому це важливо |\n|-----|-----------------|\n| Сортувати відходи | Зменшує кількість сміття |\n| Економити воду | Бережемо прісну воду |\n| Використовувати багаторазове | Менше пластику |\n| Їздити велосипедом | Менше викидів |\n| Садити дерева | Очищення повітря |\n| Купувати локальне | Менше транспорту |\n\n### Екологічний словник\n\n**Сортування відходів:**\n- скло — glass\n- папір — paper\n- пластик — plastic\n- метал — metal\n- органіка — organic waste\n\n---\n\n# Вправи\n\n## quiz: Перевірте себе\n\n> Що ви запам'ятали про екологію?\n\n1. Що таке «довкілля»?\n   - [x] навколишнє середовище\n   - [ ] село\n   - [ ] погода\n   > Довкілля = навколишнє середовище = environment.\n\n2. Коли сталася Чорнобильська катастрофа?\n   - [ ] 1976\n   - [x] 1986\n   - [ ] 1996\n   > 26 квітня 1986 року.\n\n3. Що таке «вирубка лісів»?\n   - [ ] planting trees\n   - [x] deforestation\n   - [ ] forest fire\n   > Вирубка лісів = deforestation.\n\n4. Яка ГЕС була знищена в 2023 році?\n   - [ ] Дніпровська\n   - [x] Каховська\n   - [ ] Київська\n   > Каховську ГЕС підірвала Росія 6 червня 2023 року.\n\n5. Що означає «переробляти»?\n   - [ ] to destroy\n   - [x] to recycle\n   - [ ] to pollute\n   > Переробляти = to recycle.\n\n## match-up: Терміни\n\n> Поєднайте українське слово з англійським.\n\npairs:\n  - left: \"забруднення\"\n    right: \"pollution\"\n  - left: \"відходи\"\n    right: \"waste\"\n  - left: \"викиди\"\n    right: \"emissions\"\n  - left: \"вимирання\"\n    right: \"extinction\"\n  - left: \"ґрунт\"\n    right: \"soil\"\n\n## group-sort: Категорії\n\n> Розподіліть слова за категоріями.\n\ngroups:\n  Природні ресурси:\n    - \"вода\"\n    - \"повітря\"\n    - \"ліс\"\n  Екологічні проблеми:\n    - \"забруднення\"\n    - \"зміна клімату\"\n    - \"вирубка лісів\"\n  Дії для захисту:\n    - \"сортувати\"\n    - \"переробляти\"\n    - \"економити\"\n\n---\n\n# Словник\n\n| Слово | Вимова | Переклад | ЧМ | Примітка |\n|-------|--------|----------|-----|----------|\n| екологія | /ɛkɔˈlɔɦʲijɑ/ | ecology | ім | f |\n| довкілля | /dɔvˈkɪlʲːɑ/ | environment | ім | n |\n| забруднення | /zɑˈbrudnɛnʲːɑ/ | pollution | ім | n |\n| клімат | /ˈklʲimɑt/ | climate | ім | m |\n| потепління | /pɔtɛpˈlʲinʲːɑ/ | warming | ім | n; глобальне потепління |\n| ресурси | /rɛˈsursɪ/ | resources | ім | pl |\n| відходи | /ˈvʲidxɔdɪ/ | waste | ім | pl |\n| викиди | /ˈvɪkɪdɪ/ | emissions | ім | pl |\n| переробка | /pɛrɛˈrɔbkɑ/ | recycling | ім | f |\n| сортування | /sɔrtuˈvɑnʲːɑ/ | sorting | ім | n |\n| вирубка | /ˈvɪrubkɑ/ | deforestation, felling | ім | f |\n| вимирання | /vɪmɪˈrɑnʲːɑ/ | extinction | ім | n |\n| заповідник | /zɑpɔˈvʲidnɪk/ | nature reserve | ім | m |\n| екосистема | /ɛkɔsɪsˈtɛmɑ/ | ecosystem | ім | f |\n| відновлюваний | /vʲidnɔvˈlʲuvɑnɪj/ | renewable | прикм | |\n| сонячний | /ˈsɔnʲɑt͡ʃnɪj/ | solar | прикм | сонячна енергія |\n| вітровий | /vʲitrɔˈvɪj/ | wind (adj) | прикм | вітрова електростанція |\n| забруднювати | /zɑˈbrudnʲuvɑtɪ/ | to pollute | дієсл | impf |\n| переробляти | /pɛrɛˈrɔblʲɑtɪ/ | to recycle | дієсл | impf |\n| економити | /ɛkɔˈnɔmɪtɪ/ | to save, conserve | дієсл | impf |\n\n---\n\n# Review Vocabulary\n\n| Word | First Module |\n|------|-------------|\n| природа | 56 |\n| вода | 23 |\n| повітря | 45 |\n| проблема | 67 |\n| рішення | 89 |\n\n---\n\n# Підсумок\n\n## Що ви вивчили\n\nУ цьому уроці ви вивчили:\n\n**Основна лексика:**\n- довкілля, забруднення, клімат\n- відходи, викиди, переробка\n\n**Екологічні проблеми України:**\n- Наслідки Чорнобиля\n- Екологічні злочини війни\n- Позитивні тренди: відновлювана енергія\n\n**Корисні дієслова:**\n- забруднювати, захищати, переробляти\n- економити, знищувати, відновлювати\n\n> **Порада:** Використовуйте екологічну лексику, коли читаєте новини українською — це часта тема!\n\n> **Наступний урок:** Технології та стартапи — IT-сфера України.\n",
+    "createdAt": "2025-12-03T17:51:10.686Z",
+    "modifiedAt": "2025-12-03T17:51:10.686Z",
+    "version": 2
+  },
+  "activities": [
+    {
+      "id": "act-b1-146-quiz",
+      "type": "quiz",
+      "title": "Перевірте себе",
+      "description": "Що ви запам'ятали про екологію?",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "question": "Що таке «довкілля»?",
+            "options": [
+              "навколишнє середовище",
+              "село",
+              "погода"
+            ],
+            "correctIndex": 0,
+            "explanation": "Довкілля = навколишнє середовище = environment."
+          },
+          {
+            "question": "Коли сталася Чорнобильська катастрофа?",
+            "options": [
+              "1976",
+              "1986",
+              "1996"
+            ],
+            "correctIndex": 1,
+            "explanation": "26 квітня 1986 року."
+          },
+          {
+            "question": "Що таке «вирубка лісів»?",
+            "options": [
+              "planting trees",
+              "deforestation",
+              "forest fire"
+            ],
+            "correctIndex": 1,
+            "explanation": "Вирубка лісів = deforestation."
+          },
+          {
+            "question": "Яка ГЕС була знищена в 2023 році?",
+            "options": [
+              "Дніпровська",
+              "Каховська",
+              "Київська"
+            ],
+            "correctIndex": 1,
+            "explanation": "Каховську ГЕС підірвала Росія 6 червня 2023 року."
+          },
+          {
+            "question": "Що означає «переробляти»?",
+            "options": [
+              "to destroy",
+              "to recycle",
+              "to pollute"
+            ],
+            "correctIndex": 1,
+            "explanation": "Переробляти = to recycle."
+          }
+        ],
+        "shuffleQuestions": true,
+        "shuffleOptions": true,
+        "showCorrectAnswers": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "B1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-03T17:51:10.686Z",
+      "modifiedAt": "2025-12-03T17:51:10.686Z"
+    },
+    {
+      "id": "act-b1-146-matchup",
+      "type": "match-up",
+      "title": "Терміни",
+      "description": "Поєднайте українське слово з англійським.",
+      "content": {
+        "type": "match-up",
+        "pairs": [],
+        "shuffleRight": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "B1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-03T17:51:10.686Z",
+      "modifiedAt": "2025-12-03T17:51:10.686Z"
+    },
+    {
+      "id": "act-b1-146-groupsort",
+      "type": "group-sort",
+      "title": "Категорії",
+      "description": "Розподіліть слова за категоріями.",
+      "content": {
+        "type": "group-sort",
+        "groups": [],
+        "shuffleItems": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "B1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-03T17:51:10.686Z",
+      "modifiedAt": "2025-12-03T17:51:10.686Z"
+    }
+  ],
+  "vocabulary": {
+    "moduleId": "mod-uk-B1-146",
+    "level": "B1",
+    "phase": "B1.5",
+    "wordCount": 25,
+    "newWordCount": 20,
+    "reviewWordCount": 5,
+    "transliterationMode": "none",
+    "words": [
+      {
+        "id": "v-ekolohiya-146-0",
+        "uk": "екологія",
+        "en": "ecology",
+        "pos": "ім",
+        "ipa": "/ɛkɔˈlɔɦʲijɑ/",
+        "note": "f",
+        "isNew": true,
+        "firstModule": 146
+      },
+      {
+        "id": "v-dovkillya-146-1",
+        "uk": "довкілля",
+        "en": "environment",
+        "pos": "ім",
+        "ipa": "/dɔvˈkɪlʲːɑ/",
+        "note": "n",
+        "isNew": true,
+        "firstModule": 146
+      },
+      {
+        "id": "v-zabrudnennya-146-2",
+        "uk": "забруднення",
+        "en": "pollution",
+        "pos": "ім",
+        "ipa": "/zɑˈbrudnɛnʲːɑ/",
+        "note": "n",
+        "isNew": true,
+        "firstModule": 146
+      },
+      {
+        "id": "v-klimat-146-3",
+        "uk": "клімат",
+        "en": "climate",
+        "pos": "ім",
+        "ipa": "/ˈklʲimɑt/",
+        "note": "m",
+        "isNew": true,
+        "firstModule": 146
+      },
+      {
+        "id": "v-poteplinnya-146-4",
+        "uk": "потепління",
+        "en": "warming",
+        "pos": "ім",
+        "ipa": "/pɔtɛpˈlʲinʲːɑ/",
+        "note": "n; глобальне потепління",
+        "isNew": true,
+        "firstModule": 146
+      },
+      {
+        "id": "v-resursy-146-5",
+        "uk": "ресурси",
+        "en": "resources",
+        "pos": "ім",
+        "ipa": "/rɛˈsursɪ/",
+        "note": "pl",
+        "isNew": true,
+        "firstModule": 146
+      },
+      {
+        "id": "v-vidkhody-146-6",
+        "uk": "відходи",
+        "en": "waste",
+        "pos": "ім",
+        "ipa": "/ˈvʲidxɔdɪ/",
+        "note": "pl",
+        "isNew": true,
+        "firstModule": 146
+      },
+      {
+        "id": "v-vykydy-146-7",
+        "uk": "викиди",
+        "en": "emissions",
+        "pos": "ім",
+        "ipa": "/ˈvɪkɪdɪ/",
+        "note": "pl",
+        "isNew": true,
+        "firstModule": 146
+      },
+      {
+        "id": "v-pererobka-146-8",
+        "uk": "переробка",
+        "en": "recycling",
+        "pos": "ім",
+        "ipa": "/pɛrɛˈrɔbkɑ/",
+        "note": "f",
+        "isNew": true,
+        "firstModule": 146
+      },
+      {
+        "id": "v-sortuvannya-146-9",
+        "uk": "сортування",
+        "en": "sorting",
+        "pos": "ім",
+        "ipa": "/sɔrtuˈvɑnʲːɑ/",
+        "note": "n",
+        "isNew": true,
+        "firstModule": 146
+      },
+      {
+        "id": "v-vyrubka-146-10",
+        "uk": "вирубка",
+        "en": "deforestation, felling",
+        "pos": "ім",
+        "ipa": "/ˈvɪrubkɑ/",
+        "note": "f",
+        "isNew": true,
+        "firstModule": 146
+      },
+      {
+        "id": "v-vymyrannya-146-11",
+        "uk": "вимирання",
+        "en": "extinction",
+        "pos": "ім",
+        "ipa": "/vɪmɪˈrɑnʲːɑ/",
+        "note": "n",
+        "isNew": true,
+        "firstModule": 146
+      },
+      {
+        "id": "v-zapovidnyk-146-12",
+        "uk": "заповідник",
+        "en": "nature reserve",
+        "pos": "ім",
+        "ipa": "/zɑpɔˈvʲidnɪk/",
+        "note": "m",
+        "isNew": true,
+        "firstModule": 146
+      },
+      {
+        "id": "v-ekosystema-146-13",
+        "uk": "екосистема",
+        "en": "ecosystem",
+        "pos": "ім",
+        "ipa": "/ɛkɔsɪsˈtɛmɑ/",
+        "note": "f",
+        "isNew": true,
+        "firstModule": 146
+      },
+      {
+        "id": "v-vidnovlyuvanyy-146-14",
+        "uk": "відновлюваний",
+        "en": "renewable",
+        "pos": "прикм",
+        "ipa": "/vʲidnɔvˈlʲuvɑnɪj/",
+        "isNew": true,
+        "firstModule": 146
+      },
+      {
+        "id": "v-sonyachnyy-146-15",
+        "uk": "сонячний",
+        "en": "solar",
+        "pos": "прикм",
+        "ipa": "/ˈsɔnʲɑt͡ʃnɪj/",
+        "note": "сонячна енергія",
+        "isNew": true,
+        "firstModule": 146
+      },
+      {
+        "id": "v-vitrovyy-146-16",
+        "uk": "вітровий",
+        "en": "wind (adj)",
+        "pos": "прикм",
+        "ipa": "/vʲitrɔˈvɪj/",
+        "note": "вітрова електростанція",
+        "isNew": true,
+        "firstModule": 146
+      },
+      {
+        "id": "v-zabrudnyuvaty-146-17",
+        "uk": "забруднювати",
+        "en": "to pollute",
+        "pos": "дієсл",
+        "ipa": "/zɑˈbrudnʲuvɑtɪ/",
+        "note": "impf",
+        "isNew": true,
+        "firstModule": 146
+      },
+      {
+        "id": "v-pereroblyaty-146-18",
+        "uk": "переробляти",
+        "en": "to recycle",
+        "pos": "дієсл",
+        "ipa": "/pɛrɛˈrɔblʲɑtɪ/",
+        "note": "impf",
+        "isNew": true,
+        "firstModule": 146
+      },
+      {
+        "id": "v-ekonomyty-146-19",
+        "uk": "економити",
+        "en": "to save, conserve",
+        "pos": "дієсл",
+        "ipa": "/ɛkɔˈnɔmɪtɪ/",
+        "note": "impf",
+        "isNew": true,
+        "firstModule": 146
+      }
+    ],
+    "reviewWords": [
+      {
+        "id": "v-pryroda-146-1000",
+        "uk": "природа",
+        "en": "",
+        "pos": "noun",
+        "isNew": false,
+        "firstModule": 56
+      },
+      {
+        "id": "v-voda-146-1001",
+        "uk": "вода",
+        "en": "",
+        "pos": "noun",
+        "isNew": false,
+        "firstModule": 23
+      },
+      {
+        "id": "v-povitrya-146-1002",
+        "uk": "повітря",
+        "en": "",
+        "pos": "noun",
+        "isNew": false,
+        "firstModule": 45
+      },
+      {
+        "id": "v-problema-146-1003",
+        "uk": "проблема",
+        "en": "",
+        "pos": "noun",
+        "isNew": false,
+        "firstModule": 67
+      },
+      {
+        "id": "v-rishennya-146-1004",
+        "uk": "рішення",
+        "en": "",
+        "pos": "noun",
+        "isNew": false,
+        "firstModule": 89
+      }
+    ]
+  }
+}

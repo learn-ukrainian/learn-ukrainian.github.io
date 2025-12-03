@@ -1,0 +1,2036 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 150: B1.5 Checkpoint | Ukrainian B1</title>
+  <style>
+:root { --primary: #1a5fb4; --primary-light: #3584e4; --success: #26a269; --warning: #e5a50a; --danger: #c01c28; --bg: #fafafa; --card-bg: #fff; --text: #1e1e1e; --text-muted: #5e5e5e; --border: #e0e0e0; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+.top-nav { background: #2e2e2e; color: white; padding: 0.5rem 2rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.875rem; }
+.top-nav a { color: white; text-decoration: none; }
+.top-nav a:hover { text-decoration: underline; }
+.module-nav { display: flex; gap: 1rem; align-items: center; }
+.module-nav-link { color: rgba(255,255,255,0.8); text-decoration: none; padding: 0.25rem 0.5rem; }
+.module-nav-link:hover { color: white; }
+.module-nav-link.disabled { color: rgba(255,255,255,0.3); pointer-events: none; }
+.nav { position: sticky; top: 0; background: var(--primary); color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; z-index: 100; }
+.nav h1 { font-size: 1.25rem; }
+.nav-tabs { display: flex; gap: 0.5rem; }
+.nav-tab { background: rgba(255,255,255,0.2); border: none; color: white; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; }
+.nav-tab.active { background: white; color: var(--primary); }
+main { max-width: 1000px; margin: 0 auto; padding: 2rem; }
+.section { display: none; } .section.active { display: block; }
+.lesson-header { text-align: center; margin-bottom: 2rem; padding: 2rem; background: linear-gradient(135deg, #e8f4fd, #f0e8fd); border-radius: 12px; }
+.level-badge { background: var(--primary); color: white; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.875rem; }
+.card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 1.5rem; margin-bottom: 1.5rem; }
+.card h3 { color: var(--primary); margin-bottom: 1rem; }
+.section-intro { border-left: 4px solid var(--primary); }
+.section-intro h3 { color: var(--primary); }
+.section-topic { border-left: 4px solid var(--border); }
+.section-summary { background: linear-gradient(135deg, #f0f9ff, #e8f4fd); border-left: 4px solid var(--success); }
+.section-summary h3 { color: var(--success); }
+.canvas-note { background: #fffbeb; border-left: 4px solid var(--warning); padding: 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+.canvas-note h4 { color: var(--warning); margin-bottom: 0.5rem; }
+.md-content { line-height: 1.7; }
+.md-content p { margin: 0.75rem 0; }
+.md-content ul, .md-content ol { margin: 0.75rem 0; padding-left: 1.5rem; }
+.md-content li { margin: 0.25rem 0; }
+.md-content strong { color: var(--primary); }
+.md-content blockquote { background: #e8f4fd; border-left: 4px solid var(--primary); padding: 0.75rem 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+.md-content blockquote p { margin: 0.25rem 0; }
+.md-content table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+.md-content th, .md-content td { border: 1px solid var(--border); padding: 0.5rem 0.75rem; text-align: left; }
+.md-content th { background: #f5f5f5; font-weight: 600; }
+.md-content code { background: #f0f0f0; padding: 0.125rem 0.375rem; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
+.md-content details { background: #f8f9fa; border: 1px solid var(--border); border-radius: 8px; padding: 0; margin: 1rem 0; }
+.md-content details summary { background: linear-gradient(135deg, #e8f4fd, #f0e8fd); padding: 0.75rem 1rem; cursor: pointer; font-weight: 600; color: var(--primary); border-radius: 8px; list-style: none; display: flex; align-items: center; gap: 0.5rem; }
+.md-content details summary::-webkit-details-marker { display: none; }
+.md-content details summary::before { content: '▶'; font-size: 0.75rem; transition: transform 0.2s; }
+.md-content details[open] summary::before { transform: rotate(90deg); }
+.md-content details[open] summary { border-radius: 8px 8px 0 0; }
+.md-content details > *:not(summary) { padding: 0 1rem; }
+.md-content details > *:last-child { padding-bottom: 1rem; }
+.md-content p > details { margin: 0; }
+.md-content p:has(> details) { margin: 1rem 0; }
+.inline-answer { background: linear-gradient(135deg, #d4edda, #e8f4fd); padding: 0.125rem 0.5rem; border-radius: 4px; transition: opacity 0.2s; }
+.inline-answer.hidden { opacity: 0; user-select: none; }
+.answer-toggle-btn { display: inline-flex; align-items: center; gap: 0.5rem; background: linear-gradient(135deg, #e8f4fd, #f0e8fd); border: 1px solid var(--primary); color: var(--primary); padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-size: 0.875rem; font-weight: 600; margin: 1rem 0; }
+.answer-toggle-btn:hover { background: var(--primary); color: white; }
+.answer-toggle-btn svg { width: 1rem; height: 1rem; }
+.letter-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0; }
+.letter-group { border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; }
+.letter-group.true-friends { border-color: var(--success); } .letter-group.true-friends .letters { color: var(--success); }
+.letter-group.false-friends { border-color: var(--danger); } .letter-group.false-friends .letters { color: var(--danger); }
+.letter-group.new-letters { border-color: var(--primary); } .letter-group.new-letters .letters { color: var(--primary); }
+.letters { font-size: 1.75rem; letter-spacing: 0.3rem; }
+.btn { padding: 0.75rem 1.5rem; border: none; border-radius: 8px; cursor: pointer; }
+.btn-primary { background: var(--primary); color: white; }
+.btn-outline { background: transparent; border: 2px solid var(--border); }
+.btn-group { display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem; }
+.score-display { text-align: center; padding: 1rem; background: linear-gradient(135deg, #e8f8f0, #e8f4fd); border-radius: 8px; margin-bottom: 1rem; }
+.score-display .score { font-size: 2rem; font-weight: 700; color: var(--success); }
+.completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
+.completion-message.show { display: block; }
+footer { text-align: center; padding: 2rem; color: var(--text-muted); }
+@media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+
+
+/**
+ * Layout styles - Navigation, page structure
+ */
+
+/* Top Navigation */
+.top-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1.5rem;
+  background: #f8f8f8;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.875rem;
+}
+
+.top-nav a {
+  color: var(--text-muted);
+}
+
+.top-nav a:hover {
+  color: var(--primary);
+}
+
+.module-nav {
+  display: flex;
+  gap: 1rem;
+}
+
+.module-nav-link {
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+.module-nav-link:hover {
+  background: #e8f4fd;
+}
+
+/* Main Navigation */
+.nav {
+  background: linear-gradient(135deg, #1a5fb4, #613583);
+  color: white;
+  padding: 1.5rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav h1 {
+  font-size: 1.5rem;
+}
+
+.nav-tabs {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.nav-tab {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: background 0.2s;
+}
+
+.nav-tab:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.nav-tab.active {
+  background: white;
+  color: var(--primary);
+}
+
+/* Main Content */
+main {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Sections */
+.section {
+  display: none;
+}
+
+.section.active {
+  display: block;
+}
+
+/* Lesson Header */
+.lesson-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding: 2rem;
+  background: linear-gradient(135deg, #e8f4fd, #f0e8fd);
+  border-radius: 12px;
+}
+
+.lesson-header h2 {
+  font-size: 2rem;
+  margin: 0.5rem 0;
+}
+
+/* Section Cards */
+.section-intro {
+  border-left: 4px solid var(--primary);
+}
+
+.section-intro h3 {
+  color: var(--primary);
+}
+
+.section-topic {
+  border-left: 4px solid var(--border);
+}
+
+.section-summary {
+  background: linear-gradient(135deg, #f0f9ff, #e8f4fd);
+  border-left: 4px solid var(--success);
+}
+
+.section-summary h3 {
+  color: var(--success);
+}
+
+/* Canvas Notes */
+.canvas-note {
+  background: #fffbeb;
+  border-left: 4px solid var(--warning);
+  padding: 1rem;
+  margin: 1rem 0;
+  border-radius: 0 8px 8px 0;
+}
+
+.canvas-note h4 {
+  color: var(--warning);
+  margin-bottom: 0.5rem;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-muted);
+}
+
+/* Responsive Layout */
+@media (max-width: 768px) {
+  .nav {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .nav h1 {
+    font-size: 1.25rem;
+    text-align: center;
+  }
+
+  .nav-tabs {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  main {
+    padding: 1rem;
+  }
+
+  .top-nav {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+
+
+/* Match Activity */
+.match-container { display: flex; gap: 3rem; padding: 1rem; position: relative; }
+.match-column { flex: 1; display: flex; flex-direction: column; gap: 0.75rem; }
+.match-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; font-size: 1.25rem; cursor: pointer; }
+.match-item.selected { border-color: var(--primary); background: #e8f4fd; }
+.match-item.matched { border-color: var(--success); background: #e8f8f0; }
+.match-item.wrong { border-color: var(--danger); background: #fde8e8; }
+.match-lines { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+
+/* Quiz Activity */
+.quiz-question { border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; }
+.quiz-question.answered { pointer-events: none; }
+.quiz-question .cyrillic { font-size: 1.5rem; color: var(--primary); font-weight: 600; }
+.quiz-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-top: 1rem; }
+.quiz-option { background: #f5f5f5; border: 2px solid var(--border); border-radius: 8px; padding: 1rem; cursor: pointer; text-align: center; }
+.quiz-option.correct { border-color: var(--success); background: #d4edda; }
+.quiz-option.wrong { border-color: var(--danger); background: #f8d7da; }
+.quiz-explanation { margin-top: 1rem; padding: 1rem; background: #e8f4fd; border-radius: 8px; display: none; }
+.quiz-explanation.show { display: block; }
+
+/* True/False Activity */
+.tf-statement { border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; }
+.tf-statement.answered { pointer-events: none; }
+.tf-text { font-size: 1.15rem; margin-bottom: 1rem; }
+.tf-buttons { display: flex; gap: 1rem; }
+.tf-btn { flex: 1; background: #f5f5f5; border: 2px solid var(--border); border-radius: 8px; padding: 0.75rem 1rem; cursor: pointer; font-size: 1rem; font-weight: 500; }
+.tf-btn:hover { background: #e8f4fd; border-color: var(--primary); }
+.tf-btn.correct { border-color: var(--success); background: #d4edda; color: var(--success); }
+.tf-btn.wrong { border-color: var(--danger); background: #f8d7da; color: var(--danger); }
+.tf-explanation { margin-top: 1rem; padding: 1rem; background: #e8f4fd; border-radius: 8px; display: none; }
+.tf-explanation.show { display: block; }
+
+/* Sort Activity */
+.sort-pool { background: #f5f5f5; border: 2px dashed var(--border); border-radius: 12px; padding: 1.5rem; min-height: 80px; margin-bottom: 1rem; }
+.sort-items { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; }
+.sort-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 0.75rem 1.25rem; font-size: 1.5rem; cursor: grab; }
+.sort-item.correct { border-color: var(--success); background: #e8f8f0; }
+.sort-item.wrong { border-color: var(--danger); background: #fde8e8; }
+.sort-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+.sort-group { border: 2px solid var(--border); border-radius: 12px; padding: 1rem; min-height: 150px; }
+.sort-group.drag-over { border-color: var(--primary); background: #e8f4fd; }
+.sort-group h4 { font-size: 0.875rem; text-align: center; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--border); }
+.sort-group.true-friends h4 { color: var(--success); border-color: var(--success); }
+.sort-group.false-friends h4 { color: var(--danger); border-color: var(--danger); }
+.sort-group.new-letters h4 { color: var(--primary); border-color: var(--primary); }
+
+/* Vocabulary Grid (legacy) */
+.vocab-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; }
+.vocab-card { border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; text-align: center; }
+.vocab-card .uk { font-size: 1.75rem; font-weight: 600; color: var(--primary); }
+.vocab-card .translit { color: var(--text-muted); font-style: italic; }
+.vocab-card .en { font-weight: 500; margin: 0.25rem 0; }
+.vocab-card .note { font-size: 0.75rem; color: #613583; background: #f0e8fd; padding: 0.25rem 0.5rem; border-radius: 4px; }
+
+/* Vocabulary Table (book-style) */
+.vocab-table-container { overflow-x: auto; }
+.vocab-table { width: 100%; border-collapse: collapse; font-size: 1rem; }
+.vocab-table thead { background: var(--card-bg); border-bottom: 2px solid var(--border); }
+.vocab-table th { padding: 0.75rem 1rem; text-align: left; font-weight: 600; color: var(--text-muted); font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.5px; }
+.vocab-table td { padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); }
+.vocab-table tbody tr:hover { background: #f8f9fa; }
+.vocab-table .vocab-uk { font-size: 1.25rem; font-weight: 600; color: var(--primary); }
+.vocab-table .vocab-translit { color: var(--text-muted); font-style: italic; }
+.vocab-table .vocab-ipa { font-family: monospace; color: var(--text-muted); font-size: 0.9rem; }
+.vocab-table .vocab-en { font-weight: 500; }
+.vocab-table .vocab-note { font-size: 0.85rem; color: #613583; }
+
+/* Answer Callout Blocks */
+.callout { padding: 0.5rem 1rem; margin: 0.25rem 0; border-radius: 4px; }
+.callout-answer { background: #e8f8f0; border-left: 3px solid var(--success); }
+.callout-explanation { background: #e8f4fd; border-left: 3px solid var(--primary); color: var(--text-muted); font-style: italic; }
+.callout-alt { background: #f5f5f5; border-left: 3px solid var(--border); color: var(--text-muted); }
+
+/* Answer Block Toggle */
+.answer-block { display: none; }
+.answer-block.show { display: block; }
+.show-answer-btn { background: #f0f0f0; border: 1px solid var(--border); border-radius: 6px; padding: 0.25rem 0.75rem; font-size: 0.8rem; cursor: pointer; color: var(--text-muted); margin: 0.25rem 0; }
+.show-answer-btn:hover { background: #e5e5e5; }
+.show-answer-btn.revealed { background: #e8f8f0; border-color: var(--success); color: var(--success); }
+
+/* Fill-in Activity - Dropdown in Sentence */
+.fill-container { display: flex; flex-direction: column; gap: 0.75rem; }
+.fill-question { border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.5rem; }
+
+.fill-number { font-weight: 600; color: var(--text-muted); margin-right: 0.5rem; }
+.fill-sentence { font-size: 1.15rem; line-height: 1.8; }
+
+.fill-dropdown { font-size: 1rem; padding: 0.4rem 0.6rem; border: 2px solid var(--primary); border-radius: 6px; background: #fff; color: var(--primary); font-weight: 500; cursor: pointer; min-width: 120px; }
+.fill-dropdown:focus { outline: none; box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.2); }
+.fill-dropdown.correct { border-color: var(--success); background: #e8f8f0; color: var(--success); }
+.fill-dropdown.wrong { border-color: var(--danger); background: #fde8e8; color: var(--danger); }
+
+.fill-feedback { margin-top: 0.5rem; font-weight: 500; }
+.fill-feedback .correct-text { color: var(--success); }
+.fill-feedback .wrong-text { color: var(--danger); }
+.btn-sm { padding: 0.5rem 1rem; font-size: 0.875rem; }
+
+/* Order/Unjumble Activity */
+.order-container { display: flex; flex-direction: column; gap: 1rem; }
+.order-items { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem; }
+.order-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 1rem; display: flex; align-items: center; gap: 1rem; cursor: grab; user-select: none; }
+.order-item:active { cursor: grabbing; }
+.order-item.dragging { opacity: 0.5; }
+.order-item.correct { border-color: var(--success); background: #e8f8f0; }
+.order-item.wrong { border-color: var(--danger); background: #fde8e8; }
+.order-handle { color: var(--text-muted); font-size: 1.25rem; }
+.order-text { font-size: 1.1rem; }
+
+/* Unjumble Activity - Drag and Drop */
+.unjumble-question { border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.5rem; margin-bottom: 0.75rem; display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; }
+.unjumble-question.answered .unjumble-word { cursor: default; }
+.unjumble-question.correct { border-color: var(--success); background: #f8fff8; }
+.unjumble-question.wrong { border-color: var(--danger); background: #fff8f8; }
+
+.unjumble-number { font-weight: 600; color: var(--text-muted); min-width: 2rem; }
+
+.unjumble-word-row { display: flex; flex-wrap: wrap; gap: 0.5rem; flex: 1; min-height: 42px; padding: 0.25rem; border-radius: 8px; background: #f8f9fa; }
+.unjumble-word-row.correct { background: #e8f8f0; }
+.unjumble-word-row.wrong { background: #fde8e8; }
+
+.unjumble-word { background: var(--primary); color: white; border-radius: 6px; padding: 0.5rem 0.75rem; font-size: 1rem; cursor: grab; user-select: none; transition: transform 0.1s, box-shadow 0.1s; }
+.unjumble-word:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+.unjumble-word:active { cursor: grabbing; }
+.unjumble-word.dragging { opacity: 0.5; transform: scale(1.05); }
+
+.unjumble-word.touch-clone { position: fixed; z-index: 1000; pointer-events: none; box-shadow: 0 8px 16px rgba(0,0,0,0.2); }
+
+.unjumble-actions { display: flex; gap: 0.5rem; }
+.unjumble-feedback { width: 100%; padding: 0.5rem 0 0 2.5rem; display: none; }
+.unjumble-feedback.show { display: block; }
+.unjumble-feedback .correct-text { color: var(--success); font-weight: 600; }
+.unjumble-feedback .wrong-text { color: var(--danger); }
+.unjumble-feedback .translation { color: var(--text-muted); font-style: italic; margin-left: 0.5rem; }
+
+/* Order Sentence Activity - Sentence reordering with unjumble-style UI */
+.order-sequence { display: flex; flex-direction: column; align-items: stretch; }
+.order-sentence-row { display: flex; flex-direction: column; flex-wrap: nowrap; gap: 0.5rem; min-height: auto; padding: 0.5rem; flex: none; width: 100%; }
+.order-sentence-item { background: var(--primary); color: white; border-radius: 8px; padding: 0.75rem 1rem; font-size: 1rem; cursor: grab; user-select: none; display: flex; align-items: center; gap: 0.75rem; transition: transform 0.1s, box-shadow 0.1s; }
+.order-sentence-item:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+.order-sentence-item:active { cursor: grabbing; }
+.order-sentence-item.dragging { opacity: 0.5; transform: scale(1.02); }
+.order-sentence-item.correct { background: var(--success); }
+.order-sentence-item.wrong { background: var(--danger); }
+.order-sentence-item.touch-clone { position: fixed; z-index: 1000; pointer-events: none; box-shadow: 0 8px 16px rgba(0,0,0,0.2); max-width: 90vw; }
+.order-num { background: rgba(255,255,255,0.3); padding: 0.25rem 0.5rem; border-radius: 4px; font-weight: 600; min-width: 1.5rem; text-align: center; }
+.order-sentence-text { flex: 1; }
+.order-feedback { width: 100%; padding: 0.5rem 0; display: none; }
+.order-feedback.show { display: block; }
+.order-feedback .correct-text { color: var(--success); font-weight: 600; }
+.order-feedback .wrong-text { color: var(--danger); }
+
+/* Order Card Activity - New class names for classic order */
+.order-items-wrapper { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem; }
+.order-sentence-card { background: var(--primary); color: white; border-radius: 8px; padding: 0.75rem 1rem; font-size: 1rem; cursor: grab; user-select: none; display: flex; align-items: center; gap: 0.75rem; transition: transform 0.1s, box-shadow 0.1s; }
+.order-sentence-card:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+.order-sentence-card:active { cursor: grabbing; }
+.order-sentence-card.dragging { opacity: 0.5; transform: scale(1.02); }
+.order-sentence-card.correct { background: var(--success); }
+.order-sentence-card.wrong { background: var(--danger); }
+.order-card-num { background: rgba(255,255,255,0.3); padding: 0.25rem 0.5rem; border-radius: 4px; font-weight: 600; min-width: 1.5rem; text-align: center; }
+.order-card-text { flex: 1; }
+.order-buttons { margin-top: 0.5rem; }
+
+/* Select Activity - Multi-choice checkboxes */
+.select-container { display: flex; flex-direction: column; gap: 1rem; }
+.select-question { border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; display: flex; gap: 0.75rem; }
+.select-question.answered .select-checkbox { pointer-events: none; }
+.select-number { font-weight: 600; color: var(--text-muted); min-width: 2rem; }
+.select-content { flex: 1; }
+.select-prompt { font-size: 1.1rem; font-weight: 500; margin-bottom: 0.75rem; }
+.select-options { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 0.75rem; }
+.select-option { display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem 0.75rem; border-radius: 6px; cursor: pointer; transition: background 0.15s; }
+.select-option:hover { background: #f5f5f5; }
+.select-option.correct { background: #d4edda; }
+.select-option.correct-unchecked { background: #f8f9fa; }
+.select-option.wrong { background: #f8d7da; }
+.select-option.missed { background: #fff3cd; border: 1px dashed var(--warning); }
+.select-checkbox { width: 1.25rem; height: 1.25rem; cursor: pointer; }
+.select-text { font-size: 1rem; }
+.select-check { margin-top: 0.5rem; }
+.select-feedback { margin-top: 0.75rem; display: none; }
+.select-feedback.show { display: block; }
+.select-feedback .correct-text { color: var(--success); font-weight: 600; }
+.select-feedback .wrong-text { color: var(--danger); }
+
+  </style>
+</head>
+<body>
+  
+  <div class="top-nav">
+    <a href="../index.html">← l2-uk-en Curriculum</a>
+    <div class="module-nav">
+      <a href="module-149.html" class="module-nav-link">← Module 149</a>
+      <a href="index.html" class="module-nav-link">B1 Index</a>
+      <a href="module-151.html" class="module-nav-link">Module 151 →</a>
+    </div>
+  </div>
+  <nav class="nav">
+    <h1>Module 150: B1.5 Checkpoint</h1>
+    <div class="nav-tabs">
+      <button class="nav-tab active" data-section="lesson">Lesson</button>
+      
+      <button class="nav-tab" data-section="vocab">Vocab</button>
+    </div>
+  </nav>
+  <main>
+    
+    <section id="lesson" class="section active">
+      <div class="lesson-header">
+        <span class="level-badge">B1 · B1.5</span>
+        <h2 style="font-size:2rem;margin:0.5rem 0">B1.5 Checkpoint</h2>
+        <p style="color:var(--text-muted)">Contemporary Ukraine Assessment</p>
+      </div>
+      
+    <div class="card section-intro">
+      <h3>📖 Introduction</h3>
+      <div class="md-content"><p>Вітаємо! Ви завершуєте фазу B1.5 — «Сучасна Україна». Ця контрольна робота перевірить ваші знання про регіони України, сучасну культуру, екологію, технології, спорт та кухню.</p>
+<p>Congratulations! You're completing phase B1.5 — "Contemporary Ukraine." This checkpoint will test your knowledge of Ukrainian regions, contemporary culture, ecology, technology, sports, and cuisine.</p>
+<div class="callout callout-note" data-callout="note">Оцінювання: 80+ балів — готові до B1.6; 60-79 — повторіть слабкі теми; <60 — перегляньте модулі 141-149.</div>
+<hr /></div>
+    </div>
+  
+    <div class="card section-content">
+      <h3>Зміст уроку | Lesson Content</h3>
+      <div class="md-content"><h2 id="125">Частина 1: Регіони України (25 балів)</h2>
+<h3 id="1110">1.1 Правда чи міф? (10 балів)</h3>
+<p><em>2 бали за кожну правильну відповідь</em></p>
+<ol>
+<li><p>Львів був столицею Австро-Угорщини.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-0', this)">Показати відповідь</button><div class="answer-block" id="ans-0"><div class="callout callout-answer" data-callout="answer">Міф</div>
+<div class="callout callout-explanation" data-callout="explanation">Львів належав до Австро-Угорщини, але столицею не був (столиця — Відень).</div></div>
+<ol start="2">
+<li><p>Кримські татари — корінний народ Криму.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-1', this)">Показати відповідь</button><div class="answer-block" id="ans-1"><div class="callout callout-answer" data-callout="answer">Правда</div>
+<div class="callout callout-explanation" data-callout="explanation">Кримські татари жили в Криму тисячі років до російської анексії.</div></div>
+<ol start="3">
+<li><p>Херсон був першим звільненим обласним містом.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-2', this)">Показати відповідь</button><div class="answer-block" id="ans-2"><div class="callout callout-answer" data-callout="answer">Правда</div>
+<div class="callout callout-explanation" data-callout="explanation">Херсон звільнили 11 листопада 2022 року.</div></div>
+<ol start="4">
+<li><p>Донбас — це скорочення від «Донецька область».</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-3', this)">Показати відповідь</button><div class="answer-block" id="ans-3"><div class="callout callout-answer" data-callout="answer">Міф</div>
+<div class="callout callout-explanation" data-callout="explanation">Донбас = Донецький (вугільний) басейн.</div></div>
+<ol start="5">
+<li><p>Харків був столицею УРСР до 1934 року.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-4', this)">Показати відповідь</button><div class="answer-block" id="ans-4"><div class="callout callout-answer" data-callout="answer">Правда</div>
+<div class="callout callout-explanation" data-callout="explanation">Харків був столицею з 1917 до 1934 року.</div></div>
+<h3 id="1215">1.2 Доповніть речення (15 балів)</h3>
+<p><em>3 бали за кожну правильну відповідь</em></p>
+<ol>
+<li><p>Найбільше гірське озеро України — ___.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-5', this)">Показати відповідь</button><div class="answer-block" id="ans-5"><div class="callout callout-answer" data-callout="answer">Синевир</div></div>
+<ol start="2">
+<li><p>Регіон навколо Харкова називається ___.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-6', this)">Показати відповідь</button><div class="answer-block" id="ans-6"><div class="callout callout-answer" data-callout="answer">Слобожанщина</div></div>
+<ol start="3">
+<li><p>Найвідоміші сходи в Одесі — ___ сходи.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-7', this)">Показати відповідь</button><div class="answer-block" id="ans-7"><div class="callout callout-answer" data-callout="answer">Потьомкінські</div></div>
+<ol start="4">
+<li><p>Сталін депортував кримських татар у ___ році.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-8', this)">Показати відповідь</button><div class="answer-block" id="ans-8"><div class="callout callout-answer" data-callout="answer">1944</div></div>
+<ol start="5">
+<li><p>Росія анексувала Крим у ___ році.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-9', this)">Показати відповідь</button><div class="answer-block" id="ans-9"><div class="callout callout-answer" data-callout="answer">2014</div></div>
+<h2 id="225">Частина 2: Культура та мистецтво (25 балів)</h2>
+<h3 id="2110">2.1 Музика (10 балів)</h3>
+<p><em>Поєднайте артиста з фактом. 2 бали за кожен.</em></p>
+<table>
+<thead>
+<tr>
+<th>Артист</th>
+<th>Факт</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kalush Orchestra</td>
+<td>A. Золотий м'яч 2004</td>
+</tr>
+<tr>
+<td>Океан Ельзи</td>
+<td>B. Eurovison 2022</td>
+</tr>
+<tr>
+<td>Андрій Хливнюк</td>
+<td>C. «Обійми»</td>
+</tr>
+<tr>
+<td>Олександр Усик</td>
+<td>D. Бумбокс</td>
+</tr>
+<tr>
+<td>Андрій Шевченко</td>
+<td>E. Абсолютний чемпіон</td>
+</tr>
+</tbody>
+</table>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-10', this)">Показати відповідь</button><div class="answer-block" id="ans-10"><div class="callout callout-answer" data-callout="answer">> Kalush Orchestra — B</div></div>
+<blockquote>
+  <p>Океан Ельзи — C<br />
+  Андрій Хливнюк — D<br />
+  Олександр Усик — E<br />
+  Андрій Шевченко — A</p>
+</blockquote>
+<h3 id="2210">2.2 Кіно (10 балів)</h3>
+<p><em>2 бали за кожну правильну відповідь</em></p>
+<ol>
+<li>Хто є «батьком українського кіно»?</li>
+</ol>
+<ul>
+<li>[ ] Сергій Параджанов</li>
+<li>[x] Олександр Довженко</li>
+<li>[ ] Сергій Лозниця</li>
+</ul>
+<ol>
+<li>Який український документальний фільм отримав Оскар?</li>
+</ol>
+<ul>
+<li>[ ] «Маріуполіс 2»</li>
+<li>[x] «20 днів у Маріуполі»</li>
+<li>[ ] «Донбас»</li>
+</ul>
+<ol>
+<li>Хто грав президента в серіалі «Слуга народу»?</li>
+</ol>
+<ul>
+<li>[x] Володимир Зеленський</li>
+<li>[ ] Євген Кошовий</li>
+<li>[ ] Віталій Кличко</li>
+</ul>
+<ol>
+<li>Який фільм про оборону Донецького аеропорту?</li>
+</ol>
+<ul>
+<li>[ ] «Атлантида»</li>
+<li>[x] «Кіборги»</li>
+<li>[ ] «Черкаси»</li>
+</ul>
+<ol>
+<li>Що означає «шедевр»?</li>
+</ol>
+<ul>
+<li>[ ] director</li>
+<li>[x] masterpiece</li>
+<li>[ ] actor</li>
+</ul>
+<h3 id="235">2.3 Кухня (5 балів)</h3>
+<p><em>1 бал за кожну правильну відповідь</em></p>
+<p>Напишіть українською:</p>
+<ol>
+<li><p>beetroot — ___</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-11', this)">Показати відповідь</button><div class="answer-block" id="ans-11"><div class="callout callout-answer" data-callout="answer">буряк</div></div>
+<ol start="2">
+<li><p>cabbage rolls — ___</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-12', this)">Показати відповідь</button><div class="answer-block" id="ans-12"><div class="callout callout-answer" data-callout="answer">голубці</div></div>
+<ol start="3">
+<li><p>to fry — ___</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-13', this)">Показати відповідь</button><div class="answer-block" id="ans-13"><div class="callout callout-answer" data-callout="answer">смажити</div></div>
+<ol start="4">
+<li><p>tasty — ___</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-14', this)">Показати відповідь</button><div class="answer-block" id="ans-14"><div class="callout callout-answer" data-callout="answer">смачний</div></div>
+<ol start="5">
+<li><p>recipe — ___</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-15', this)">Показати відповідь</button><div class="answer-block" id="ans-15"><div class="callout callout-answer" data-callout="answer">рецепт</div></div>
+<h2 id="325">Частина 3: Соціальні теми (25 балів)</h2>
+<h3 id="3110">3.1 Екологія (10 балів)</h3>
+<p><em>2 бали за кожну правильну відповідь</em></p>
+<ol>
+<li>Що таке «довкілля»?</li>
+</ol>
+<ul>
+<li>[x] environment</li>
+<li>[ ] village</li>
+<li>[ ] weather</li>
+</ul>
+<ol>
+<li>Яка ГЕС була знищена в 2023?</li>
+</ol>
+<ul>
+<li>[ ] Дніпровська</li>
+<li>[x] Каховська</li>
+<li>[ ] Київська</li>
+</ul>
+<ol>
+<li>Що означає «переробляти»?</li>
+</ol>
+<ul>
+<li>[ ] to destroy</li>
+<li>[x] to recycle</li>
+<li>[ ] to pollute</li>
+</ul>
+<ol>
+<li>Коли сталася Чорнобильська катастрофа?</li>
+</ol>
+<ul>
+<li>[ ] 1976</li>
+<li>[x] 1986</li>
+<li>[ ] 1996</li>
+</ul>
+<ol>
+<li>Що таке «викиди»?</li>
+</ol>
+<ul>
+<li>[ ] waste</li>
+<li>[x] emissions</li>
+<li>[ ] pollution</li>
+</ul>
+<h3 id="3210">3.2 Технології (10 балів)</h3>
+<p><em>2 бали за кожну правильну відповідь</em></p>
+<ol>
+<li>Яка компанія перевіряє граматику англійської?</li>
+</ol>
+<ul>
+<li>[ ] Preply</li>
+<li>[x] Grammarly</li>
+<li>[ ] GitLab</li>
+</ul>
+<ol>
+<li>Що таке «Дія»?</li>
+</ol>
+<ul>
+<li>[ ] месенджер</li>
+<li>[x] цифрові державні послуги</li>
+<li>[ ] соціальна мережа</li>
+</ul>
+<ol>
+<li>Хто народився в Києві і заснував WhatsApp?</li>
+</ol>
+<ul>
+<li>[x] Ян Кум</li>
+<li>[ ] Макс Левчин</li>
+<li>[ ] Олексій Шевченко</li>
+</ul>
+<ol>
+<li>Що таке «баг»?</li>
+</ol>
+<ul>
+<li>[x] помилка в коді</li>
+<li>[ ] нова функція</li>
+<li>[ ] тип сервера</li>
+</ul>
+<ol>
+<li>Скільки IT-спеціалістів в Україні?</li>
+</ol>
+<ul>
+<li>[ ] ~100 000</li>
+<li>[x] ~300 000</li>
+<li>[ ] ~500 000</li>
+</ul>
+<h3 id="335">3.3 Спорт (5 балів)</h3>
+<p><em>1 бал за кожну правильну відповідь</em></p>
+<ol>
+<li><p>Хто отримав Золотий м'яч 2004? — ___</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-16', this)">Показати відповідь</button><div class="answer-block" id="ans-16"><div class="callout callout-answer" data-callout="answer">Андрій Шевченко</div></div>
+<ol start="2">
+<li><p>Хто зараз мер Києва? — ___</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-17', this)">Показати відповідь</button><div class="answer-block" id="ans-17"><div class="callout callout-answer" data-callout="answer">Віталій Кличко</div></div>
+<ol start="3">
+<li><p>Який клуб з Донецька? — ___</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-18', this)">Показати відповідь</button><div class="answer-block" id="ans-18"><div class="callout callout-answer" data-callout="answer">Шахтар</div></div>
+<ol start="4">
+<li><p>Що означає «перемога»? — ___</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-19', this)">Показати відповідь</button><div class="answer-block" id="ans-19"><div class="callout callout-answer" data-callout="answer">victory</div></div>
+<ol start="5">
+<li><p>Хто абсолютний чемпіон у важкій вазі (2024)? — ___</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-20', this)">Показати відповідь</button><div class="answer-block" id="ans-20"><div class="callout callout-answer" data-callout="answer">Олександр Усик</div></div>
+<h2 id="425">Частина 4: Словниковий запас (25 балів)</h2>
+<h3 id="4115">4.1 Переклад (15 балів)</h3>
+<p><em>Перекладіть на англійську. 3 бали за кожен.</em></p>
+<ol>
+<li><p>регіон — ___</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-21', this)">Показати відповідь</button><div class="answer-block" id="ans-21"><div class="callout callout-answer" data-callout="answer">region</div></div>
+<ol start="2">
+<li><p>ідентичність — ___</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-22', this)">Показати відповідь</button><div class="answer-block" id="ans-22"><div class="callout callout-answer" data-callout="answer">identity</div></div>
+<ol start="3">
+<li><p>забруднення — ___</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-23', this)">Показати відповідь</button><div class="answer-block" id="ans-23"><div class="callout callout-answer" data-callout="answer">pollution</div></div>
+<ol start="4">
+<li><p>стартап — ___</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-24', this)">Показати відповідь</button><div class="answer-block" id="ans-24"><div class="callout callout-answer" data-callout="answer">startup</div></div>
+<ol start="5">
+<li><p>перемога — ___</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-25', this)">Показати відповідь</button><div class="answer-block" id="ans-25"><div class="callout callout-answer" data-callout="answer">victory</div></div>
+<h3 id="4210">4.2 Заповніть пропуски (10 балів)</h3>
+<p><em>2 бали за кожну правильну відповідь</em></p>
+<ol>
+<li><p>Крим — це ___ (peninsula).</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-26', this)">Показати відповідь</button><div class="answer-block" id="ans-26"><div class="callout callout-answer" data-callout="answer">півострів</div></div>
+<ol start="2">
+<li><p>Кримські татари — ___ народ Криму (indigenous).</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-27', this)">Показати відповідь</button><div class="answer-block" id="ans-27"><div class="callout callout-answer" data-callout="answer">корінний</div></div>
+<ol start="3">
+<li><p>Херсон — ___ місто (frontline adj).</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-28', this)">Показати відповідь</button><div class="answer-block" id="ans-28"><div class="callout callout-answer" data-callout="answer">прифронтове</div></div>
+<ol start="4">
+<li><p>Grammarly — компанія-___ (unicorn).</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-29', this)">Показати відповідь</button><div class="answer-block" id="ans-29"><div class="callout callout-answer" data-callout="answer">єдиноріг</div></div>
+<ol start="5">
+<li><p>Борщ — ___ української кухні (symbol).</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-30', this)">Показати відповідь</button><div class="answer-block" id="ans-30"><div class="callout callout-answer" data-callout="answer">символ</div></div>
+<hr /></div>
+    </div>
+  
+    <div class="card section-summary">
+      <h3>📋 Summary</h3>
+      <div class="md-content"><h2 id="">Підрахунок балів</h2>
+<table>
+<thead>
+<tr>
+<th>Частина</th>
+<th>Максимум</th>
+<th>Ваш бал</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. Регіони</td>
+<td>25</td>
+<td>___</td>
+</tr>
+<tr>
+<td>2. Культура</td>
+<td>25</td>
+<td>___</td>
+</tr>
+<tr>
+<td>3. Соціальні теми</td>
+<td>25</td>
+<td>___</td>
+</tr>
+<tr>
+<td>4. Словник</td>
+<td>25</td>
+<td>___</td>
+</tr>
+<tr>
+<td><strong>Всього</strong></td>
+<td><strong>100</strong></td>
+<td>___</td>
+</tr>
+</tbody>
+</table>
+<h2 id="-1">Інтерпретація</h2>
+<p><strong>90-100:</strong> Відмінно! Ви чудово знаєте сучасну Україну. Готові до B1.6!</p>
+<p><strong>80-89:</strong> Дуже добре! Готові до B1.6 з невеликим повторенням.</p>
+<p><strong>70-79:</strong> Добре. Повторіть слабкі теми перед B1.6.</p>
+<p><strong>60-69:</strong> Задовільно. Рекомендуємо переглянути модулі 141-149.</p>
+<p><strong><60:</strong> Потрібне додаткове вивчення. Повторіть фазу B1.5.</p>
+<h2 id="-2">Що далі?</h2>
+<p><strong>B1.6: Автентичні тексти та медіаграмотність</strong></p>
+<p>У наступній фазі ви:</p>
+<ul>
+<li>Читатимете справжні українські новини</li>
+<li>Слухатимете подкасти</li>
+<li>Вивчатимете короткі оповідання</li>
+<li>Готуватиметеся до фінального B1 екзамену</li>
+</ul>
+<blockquote>
+  <p><strong>Вітаємо з завершенням B1.5!</strong></p>
+  <p>Ви вивчили багато про сучасну Україну — її регіони, культуру, технології, спорт і кухню. Ці знання допоможуть вам краще розуміти українські медіа та спілкуватися з українцями.</p>
+  <p>До зустрічі в B1.6!</p>
+</blockquote>
+<hr />
+<hr /></div>
+    </div>
+  
+      <div class="btn-group">
+        <button class="btn btn-primary" onclick="showSection('vocab')">Activities →</button>
+      </div>
+    </section>
+  
+    
+    
+    <section id="vocab" class="section">
+      <div class="card">
+        <h3>Нові слова (4)</h3>
+        <div class="vocab-table-container">
+          <table class="vocab-table">
+            <thead><tr>
+    <th>Слово</th>
+    
+    <th>IPA</th>
+    <th>Переклад</th>
+    <th>Примітка</th>
+  </tr></thead>
+            <tbody><tr><td class="vocab-uk">контрольна робота</td><td class="vocab-ipa">/kɔnˈtrɔlʲnɑ rɔˈbɔtɑ/</td><td class="vocab-en">test, quiz</td><td class="vocab-note"></td></tr><tr><td class="vocab-uk">оцінювання</td><td class="vocab-ipa">/ɔt͡sʲinʲuˈvɑnʲːɑ/</td><td class="vocab-en">assessment</td><td class="vocab-note">n</td></tr><tr><td class="vocab-uk">бал</td><td class="vocab-ipa">/bɑl/</td><td class="vocab-en">point, score</td><td class="vocab-note">m</td></tr><tr><td class="vocab-uk">повторення</td><td class="vocab-ipa">/pɔvtɔˈrɛnʲːɑ/</td><td class="vocab-en">review, repetition</td><td class="vocab-note">n</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+      
+      <div class="card review-vocab">
+        <h3>Повторення (8)</h3>
+        <p class="review-note">Words from earlier modules for review</p>
+        <div class="vocab-table-container">
+          <table class="vocab-table">
+            <thead><tr><th>Слово</th><th>First Module</th></tr></thead>
+            <tbody><tr><td class="vocab-uk">регіон</td><td class="vocab-module">Module 141</td></tr><tr><td class="vocab-uk">ідентичність</td><td class="vocab-module">Module 141</td></tr><tr><td class="vocab-uk">півострів</td><td class="vocab-module">Module 143</td></tr><tr><td class="vocab-uk">анексія</td><td class="vocab-module">Module 143</td></tr><tr><td class="vocab-uk">екологія</td><td class="vocab-module">Module 146</td></tr><tr><td class="vocab-uk">стартап</td><td class="vocab-module">Module 147</td></tr><tr><td class="vocab-uk">перемога</td><td class="vocab-module">Module 148</td></tr><tr><td class="vocab-uk">кухня</td><td class="vocab-module">Module 149</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="btn-group">
+        <button class="btn btn-primary" onclick="showSection('lesson')">← Back to Lesson</button>
+      </div>
+    </section>
+  </main><footer>Module 150 · curricula-opus</footer>
+  <script>
+
+    const activitiesData = [];
+    const vocabData = [{"uk":"контрольна робота","translit":"","en":"test, quiz","note":""},{"uk":"оцінювання","translit":"","en":"assessment","note":"n"},{"uk":"бал","translit":"","en":"point, score","note":"m"},{"uk":"повторення","translit":"","en":"review, repetition","note":"n"}];
+  
+// Answer callout toggle (for new > [!answer] syntax)
+function toggleAnswer(id, btn) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const isUkrainian = document.querySelector('.level-badge')?.textContent.match(/B[12]|C[12]/);
+  const showText = isUkrainian ? 'Показати відповідь' : 'Show Answer';
+  const hideText = isUkrainian ? 'Сховати відповідь' : 'Hide Answer';
+  const show = !el.classList.contains('show');
+  if (show) {
+    el.classList.add('show');
+    btn.textContent = hideText;
+    btn.classList.add('revealed');
+  } else {
+    el.classList.remove('show');
+    btn.textContent = showText;
+    btn.classList.remove('revealed');
+  }
+}
+
+// Section navigation
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id)?.classList.add('active');
+  document.querySelector('[data-section="' + id + '"]')?.classList.add('active');
+}
+document.querySelectorAll('.nav-tab').forEach(t => t.addEventListener('click', () => showSection(t.dataset.section)));
+
+// Activity reset dispatcher
+function resetActivity(sectionId) {
+  const activity = activitiesData.find(a => a.id === sectionId);
+  if (!activity) return;
+
+  switch (activity.type) {
+    case 'match-up':
+      resetMatch(sectionId);
+      break;
+    case 'quiz':
+      resetQuiz(sectionId);
+      break;
+    case 'true-false':
+      resetTf(sectionId);
+      break;
+    case 'group-sort':
+      resetSort(sectionId);
+      break;
+    case 'fill-blank':
+    case 'gap-fill':
+      resetFill(sectionId);
+      break;
+    case 'order':
+    case 'unjumble':
+      resetOrder(sectionId);
+      break;
+    case 'select':
+      resetSelect(sectionId);
+      break;
+  }
+}
+
+// Initialize all activities from activitiesData array
+document.addEventListener('DOMContentLoaded', () => {
+  if (typeof activitiesData === 'undefined') return;
+
+  activitiesData.forEach(activity => {
+    switch (activity.type) {
+      case 'match-up':
+        initMatch(activity.id, activity.data);
+        break;
+      case 'quiz':
+        initQuiz(activity.id, activity.data);
+        break;
+      case 'true-false':
+        initTf(activity.id, activity.data);
+        break;
+      case 'group-sort':
+        initSort(activity.id, activity.data);
+        break;
+      case 'fill-blank':
+      case 'gap-fill':
+        initFill(activity.id, activity.data);
+        break;
+      case 'order':
+      case 'unjumble':
+        initOrder(activity.id, activity.data);
+        break;
+      case 'select':
+        initSelect(activity.id, activity.data);
+        break;
+    }
+  });
+
+  // Initialize vocabulary
+  if (typeof initVocab === 'function') initVocab();
+});
+
+
+// Quiz Activity - supports multiple instances
+const quizState = {};
+
+function initQuiz(sectionId, data) {
+  const c = document.getElementById(sectionId + '-container');
+  if (!c || !data.questions || !data.questions.length) return;
+
+  quizState[sectionId] = { score: 0, answered: 0, total: data.questions.length, data: data };
+
+  c.innerHTML = '';
+  data.questions.forEach((q, i) => {
+    const sh = [...q.options].sort(() => Math.random() - 0.5);
+    const cor = sh.indexOf(q.options[q.correctIndex]);
+    const div = document.createElement('div');
+    div.className = 'quiz-question';
+    div.dataset.section = sectionId;
+    div.innerHTML = '<h4>Q' + (i + 1) + ': ' + q.question + '</h4><div class="quiz-options">' + sh.map((o, j) => '<div class="quiz-option" data-c="' + (j === cor) + '" data-q="' + i + '" data-section="' + sectionId + '">' + o + '</div>').join('') + '</div><div class="quiz-explanation" id="' + sectionId + '-exp-' + i + '">' + (q.explanation || '') + '</div>';
+    c.appendChild(div);
+  });
+  c.querySelectorAll('.quiz-option').forEach(o => o.addEventListener('click', handleQuiz));
+}
+
+function handleQuiz(e) {
+  const opt = e.target, q = opt.closest('.quiz-question');
+  const sectionId = opt.dataset.section;
+  if (q.classList.contains('answered')) return;
+  q.classList.add('answered');
+
+  const state = quizState[sectionId];
+  if (opt.dataset.c === 'true') {
+    opt.classList.add('correct');
+    state.score++;
+  } else {
+    opt.classList.add('wrong');
+    q.querySelector('[data-c="true"]').classList.add('correct');
+  }
+  document.getElementById(sectionId + '-exp-' + opt.dataset.q)?.classList.add('show');
+  document.getElementById(sectionId + '-score').textContent = state.score;
+  state.answered++;
+  if (state.answered === state.total) document.getElementById(sectionId + '-complete').classList.add('show');
+}
+
+function resetQuiz(sectionId) {
+  const state = quizState[sectionId];
+  if (!state) return;
+  document.getElementById(sectionId + '-score').textContent = '0';
+  document.getElementById(sectionId + '-complete')?.classList.remove('show');
+  initQuiz(sectionId, state.data);
+}
+
+
+// True/False Activity - supports multiple instances
+const tfState = {};
+
+function initTf(sectionId, data) {
+  const c = document.getElementById(sectionId + '-container');
+  if (!c || !data.statements || !data.statements.length) return;
+
+  tfState[sectionId] = { score: 0, answered: 0, total: data.statements.length, data: data };
+
+  c.innerHTML = '';
+  data.statements.forEach((s, i) => {
+    const div = document.createElement('div');
+    div.className = 'tf-statement';
+    div.dataset.section = sectionId;
+    div.innerHTML = '<p class="tf-text">' + s.statement + '</p>' +
+      '<div class="tf-buttons">' +
+      '<button class="tf-btn" data-value="true" data-idx="' + i + '" data-section="' + sectionId + '">True</button>' +
+      '<button class="tf-btn" data-value="false" data-idx="' + i + '" data-section="' + sectionId + '">False</button>' +
+      '</div>' +
+      '<div class="tf-explanation" id="' + sectionId + '-exp-' + i + '">' + (s.explanation || '') + '</div>';
+    div.dataset.correct = s.isTrue;
+    c.appendChild(div);
+  });
+  c.querySelectorAll('.tf-btn').forEach(b => b.addEventListener('click', handleTf));
+}
+
+function handleTf(e) {
+  const btn = e.target;
+  const sectionId = btn.dataset.section;
+  const idx = parseInt(btn.dataset.idx);
+  const statement = btn.closest('.tf-statement');
+  const state = tfState[sectionId];
+  if (statement.classList.contains('answered')) return;
+
+  statement.classList.add('answered');
+  const correct = state.data.statements[idx].isTrue;
+  const clicked = btn.dataset.value === 'true';
+
+  if (clicked === correct) {
+    btn.classList.add('correct');
+    state.score++;
+  } else {
+    btn.classList.add('wrong');
+    // Highlight the correct answer
+    statement.querySelector('[data-value="' + correct + '"]').classList.add('correct');
+  }
+
+  const exp = document.getElementById(sectionId + '-exp-' + idx);
+  if (exp && exp.textContent) exp.classList.add('show');
+
+  document.getElementById(sectionId + '-score').textContent = state.score;
+  state.answered++;
+  if (state.answered === state.total) document.getElementById(sectionId + '-complete').classList.add('show');
+}
+
+function resetTf(sectionId) {
+  const state = tfState[sectionId];
+  if (!state) return;
+  document.getElementById(sectionId + '-score').textContent = '0';
+  document.getElementById(sectionId + '-complete')?.classList.remove('show');
+  initTf(sectionId, state.data);
+}
+
+
+// Match Activity - supports multiple instances
+const matchState = {};
+
+function initMatch(sectionId, data) {
+  const container = document.getElementById(sectionId + '-container');
+  const leftCol = document.getElementById(sectionId + '-left');
+  const rightCol = document.getElementById(sectionId + '-right');
+  if (!container || !leftCol || !rightCol || !data.pairs || !data.pairs.length) return;
+
+  const pairs = data.pairs;
+  matchState[sectionId] = { selected: null, score: 0, matched: [], total: pairs.length, data: data };
+
+  // Create left column items
+  const shuffledLeft = pairs.map((p, i) => ({ text: p.left, idx: i })).sort(() => Math.random() - 0.5);
+  leftCol.innerHTML = shuffledLeft.map(p => '<div class="match-item" data-pair="' + p.idx + '" data-section="' + sectionId + '" data-side="left">' + p.text + '</div>').join('');
+
+  // Create right column items
+  const shuffledRight = pairs.map((p, i) => ({ text: p.right, idx: i })).sort(() => Math.random() - 0.5);
+  rightCol.innerHTML = shuffledRight.map(p => '<div class="match-item" data-pair="' + p.idx + '" data-section="' + sectionId + '" data-side="right">' + p.text + '</div>').join('');
+
+  // Attach click handlers
+  leftCol.querySelectorAll('.match-item').forEach(item => {
+    item.addEventListener('click', () => handleMatchLeft(item));
+  });
+  rightCol.querySelectorAll('.match-item').forEach(item => {
+    item.addEventListener('click', () => handleMatchRight(item));
+  });
+}
+
+function handleMatchLeft(item) {
+  const sectionId = item.dataset.section;
+  const state = matchState[sectionId];
+  if (item.classList.contains('matched')) return;
+
+  const leftCol = document.getElementById(sectionId + '-left');
+  leftCol.querySelectorAll('.match-item').forEach(i => i.classList.remove('selected'));
+  item.classList.add('selected');
+  state.selected = { el: item, pair: item.dataset.pair };
+}
+
+function handleMatchRight(item) {
+  const sectionId = item.dataset.section;
+  const state = matchState[sectionId];
+  if (item.classList.contains('matched') || !state.selected) return;
+
+  if (state.selected.pair === item.dataset.pair) {
+    state.selected.el.classList.remove('selected');
+    state.selected.el.classList.add('matched');
+    item.classList.add('matched');
+    state.matched.push({ left: state.selected.el, right: item });
+    state.score++;
+    document.getElementById(sectionId + '-score').textContent = state.score;
+    drawMatchLines(sectionId);
+    if (state.score === state.total) document.getElementById(sectionId + '-complete').classList.add('show');
+  } else {
+    item.classList.add('wrong');
+    setTimeout(() => item.classList.remove('wrong'), 300);
+  }
+  state.selected = null;
+}
+
+function drawMatchLines(sectionId) {
+  const svg = document.getElementById(sectionId + '-lines');
+  const container = document.getElementById(sectionId + '-container');
+  const state = matchState[sectionId];
+  if (!svg || !container || !state) return;
+
+  const r = container.getBoundingClientRect();
+  svg.innerHTML = '';
+  svg.setAttribute('viewBox', '0 0 ' + r.width + ' ' + r.height);
+  state.matched.forEach(p => {
+    const lr = p.left.getBoundingClientRect(), rr = p.right.getBoundingClientRect();
+    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    line.setAttribute('x1', lr.right - r.left);
+    line.setAttribute('y1', lr.top + lr.height / 2 - r.top);
+    line.setAttribute('x2', rr.left - r.left);
+    line.setAttribute('y2', rr.top + rr.height / 2 - r.top);
+    line.setAttribute('stroke', '#26a269');
+    line.setAttribute('stroke-width', '2');
+    svg.appendChild(line);
+  });
+}
+
+function resetMatch(sectionId) {
+  const state = matchState[sectionId];
+  if (!state) return;
+  document.getElementById(sectionId + '-score').textContent = '0';
+  document.getElementById(sectionId + '-complete')?.classList.remove('show');
+  document.getElementById(sectionId + '-lines').innerHTML = '';
+  initMatch(sectionId, state.data);
+}
+
+// Redraw lines on resize for all match activities
+window.addEventListener('resize', () => {
+  Object.keys(matchState).forEach(sectionId => drawMatchLines(sectionId));
+});
+
+
+// Sort Activity - supports multiple instances
+const sortState = {};
+
+function initSort(sectionId, data) {
+  const pool = document.getElementById(sectionId + '-items');
+  const groupsContainer = document.getElementById(sectionId + '-groups');
+  if (!pool || !groupsContainer || !data.groups || !data.groups.length) return;
+
+  const groups = data.groups;
+  const totalItems = groups.reduce((sum, g) => sum + g.items.length, 0);
+  sortState[sectionId] = { score: 0, total: totalItems, dragItem: null, data: data };
+
+  // Create group containers
+  groupsContainer.innerHTML = groups.map((g, i) =>
+    '<div class="sort-group" data-group="' + i + '" data-section="' + sectionId + '"><h4>' + g.name + '</h4><div class="sort-items"></div></div>'
+  ).join('');
+
+  // Flatten and shuffle all items
+  const allItems = groups.flatMap((g, gi) => g.items.map(item => ({ text: item, group: gi })));
+  allItems.sort(() => Math.random() - 0.5);
+
+  // Create draggable items
+  pool.innerHTML = '';
+  allItems.forEach(item => {
+    const el = document.createElement('div');
+    el.className = 'sort-item';
+    el.textContent = item.text;
+    el.draggable = true;
+    el.dataset.group = item.group;
+    el.dataset.section = sectionId;
+    el.addEventListener('dragstart', () => {
+      sortState[sectionId].dragItem = el;
+      el.classList.add('dragging');
+    });
+    el.addEventListener('dragend', () => {
+      el.classList.remove('dragging');
+      sortState[sectionId].dragItem = null;
+    });
+    pool.appendChild(el);
+  });
+
+  // Setup drop zones
+  groupsContainer.querySelectorAll('.sort-group').forEach(g => {
+    g.addEventListener('dragover', e => {
+      e.preventDefault();
+      g.classList.add('drag-over');
+    });
+    g.addEventListener('dragleave', () => g.classList.remove('drag-over'));
+    g.addEventListener('drop', e => handleSortDrop(e, g));
+  });
+}
+
+function handleSortDrop(e, groupEl) {
+  e.preventDefault();
+  groupEl.classList.remove('drag-over');
+  const sectionId = groupEl.dataset.section;
+  const state = sortState[sectionId];
+  const dragItem = state.dragItem;
+  if (!dragItem) return;
+
+  if (groupEl.dataset.group === dragItem.dataset.group) {
+    dragItem.classList.add('correct');
+    groupEl.querySelector('.sort-items').appendChild(dragItem);
+    dragItem.draggable = false;
+    state.score++;
+    document.getElementById(sectionId + '-score').textContent = state.score;
+    if (state.score === state.total) document.getElementById(sectionId + '-complete').classList.add('show');
+  } else {
+    dragItem.classList.add('wrong');
+    setTimeout(() => dragItem.classList.remove('wrong'), 300);
+  }
+}
+
+function resetSort(sectionId) {
+  const state = sortState[sectionId];
+  if (!state) return;
+  document.getElementById(sectionId + '-score').textContent = '0';
+  document.getElementById(sectionId + '-complete')?.classList.remove('show');
+  initSort(sectionId, state.data);
+}
+
+
+// Fill-in Activity - supports multiple instances
+const fillState = {};
+
+function initFill(sectionId, data) {
+  const c = document.getElementById(sectionId + '-container');
+  if (!c || !data.items || !data.items.length) return;
+
+  fillState[sectionId] = { score: 0, answered: 0, total: data.items.length, data: data };
+  c.innerHTML = '';
+
+  data.items.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'fill-question';
+    div.dataset.section = sectionId;
+
+    // Generate options: correct answer + 3 distractors
+    let options = [];
+    if (item.options && item.options.length >= 4) {
+      options = item.options;
+    } else {
+      // Fallback: generate distractors from other items' answers
+      options = [item.answer];
+      const otherAnswers = data.items
+        .filter((_, idx) => idx !== i)
+        .map(it => it.answer)
+        .filter(a => a && a !== item.answer);
+
+      const shuffled = otherAnswers.sort(() => Math.random() - 0.5);
+      options.push(...shuffled.slice(0, 3));
+
+      while (options.length < 4) {
+        options.push('—');
+      }
+    }
+
+    // Shuffle options
+    const shuffledOptions = [...options].sort(() => Math.random() - 0.5);
+
+    // Replace ___ in the sentence with a dropdown
+    const sentence = (item.prompt || item.sentence || '').replace(/___/g,
+      `<select class="fill-dropdown" data-idx="${i}" data-answer="${item.answer}" data-section="${sectionId}">
+        <option value="" disabled selected>—</option>
+        ${shuffledOptions.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
+      </select>`
+    );
+
+    div.innerHTML = `
+      <div class="fill-sentence">
+        <span class="fill-number">${i + 1}.</span>
+        ${sentence}
+      </div>
+      <div class="fill-feedback" id="${sectionId}-fb-${i}"></div>
+    `;
+    c.appendChild(div);
+  });
+
+  // Event delegation for dropdown changes
+  c.addEventListener('change', (e) => {
+    if (e.target.classList.contains('fill-dropdown')) {
+      handleFillChoice(e.target);
+    }
+  });
+}
+
+function handleFillChoice(dropdown) {
+  const q = dropdown.closest('.fill-question');
+  const sectionId = dropdown.dataset.section;
+  const state = fillState[sectionId];
+  if (q.classList.contains('answered')) return;
+
+  const idx = dropdown.dataset.idx;
+  const userAnswer = dropdown.value;
+  const correctAnswer = dropdown.dataset.answer;
+  const fb = document.getElementById(sectionId + '-fb-' + idx);
+
+  q.classList.add('answered');
+  dropdown.disabled = true;
+
+  if (userAnswer === correctAnswer) {
+    dropdown.classList.add('correct');
+    fb.innerHTML = '<span class="correct-text">✓ Correct!</span>';
+    state.score++;
+  } else {
+    dropdown.classList.add('wrong');
+    fb.innerHTML = `<span class="wrong-text">✗ Answer: ${correctAnswer}</span>`;
+  }
+
+  document.getElementById(sectionId + '-score').textContent = state.score;
+  state.answered++;
+  if (state.answered === state.total) {
+    document.getElementById(sectionId + '-complete').classList.add('show');
+  }
+}
+
+function resetFill(sectionId) {
+  const state = fillState[sectionId];
+  if (!state) return;
+  document.getElementById(sectionId + '-score').textContent = '0';
+  document.getElementById(sectionId + '-complete')?.classList.remove('show');
+  initFill(sectionId, state.data);
+}
+
+
+// Order/Unjumble Activity - supports multiple instances
+const orderState = {};
+
+function initOrder(sectionId, data) {
+  const c = document.getElementById(sectionId + '-container');
+  if (!c || !data.items || !data.items.length) return;
+
+  orderState[sectionId] = { score: 0, total: data.items.length, data: data };
+  c.innerHTML = '';
+
+  if (data.isUnjumble) {
+    initUnjumble(sectionId, c, data);
+  } else {
+    initClassicOrder(sectionId, c, data);
+  }
+}
+
+// UNJUMBLE: Drag-and-drop words to form sentences
+function initUnjumble(sectionId, container, data) {
+  data.items.forEach((item, idx) => {
+    const question = document.createElement('div');
+    question.className = 'unjumble-question';
+    question.dataset.idx = idx;
+    question.dataset.section = sectionId;
+
+    // Shuffle words
+    const shuffledWords = [...item.words].sort(() => Math.random() - 0.5);
+
+    question.innerHTML = `
+      <div class="unjumble-number">${idx + 1}.</div>
+      <div class="unjumble-word-row" data-idx="${idx}" data-section="${sectionId}">
+        ${shuffledWords.map((word, i) => `
+          <span class="unjumble-word" draggable="true" data-word="${word}">${word}</span>
+        `).join('')}
+      </div>
+      <div class="unjumble-actions">
+        <button class="btn btn-sm btn-outline unjumble-check" data-idx="${idx}" data-section="${sectionId}">Check</button>
+        <button class="btn btn-sm btn-outline unjumble-reset" data-idx="${idx}" data-section="${sectionId}">Reset</button>
+      </div>
+      <div class="unjumble-feedback" data-idx="${idx}" data-section="${sectionId}"></div>
+    `;
+
+    container.appendChild(question);
+
+    // Initialize drag-and-drop for this row
+    initUnjumbleDragDrop(question.querySelector('.unjumble-word-row'));
+  });
+
+  // Event delegation for buttons
+  container.addEventListener('click', handleUnjumbleClick);
+}
+
+function initUnjumbleDragDrop(row) {
+  let dragItem = null;
+
+  row.querySelectorAll('.unjumble-word').forEach(word => {
+    word.addEventListener('dragstart', (e) => {
+      dragItem = word;
+      word.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    });
+
+    word.addEventListener('dragend', () => {
+      word.classList.remove('dragging');
+      dragItem = null;
+    });
+
+    word.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      if (!dragItem || dragItem === word) return;
+
+      const rect = word.getBoundingClientRect();
+      const midX = rect.left + rect.width / 2;
+
+      if (e.clientX < midX) {
+        row.insertBefore(dragItem, word);
+      } else {
+        row.insertBefore(dragItem, word.nextSibling);
+      }
+    });
+  });
+
+  // Touch support for mobile
+  let touchItem = null;
+  let touchClone = null;
+
+  row.querySelectorAll('.unjumble-word').forEach(word => {
+    word.addEventListener('touchstart', (e) => {
+      touchItem = word;
+      word.classList.add('dragging');
+
+      // Create a clone for visual feedback
+      touchClone = word.cloneNode(true);
+      touchClone.classList.add('touch-clone');
+      document.body.appendChild(touchClone);
+      updateTouchClone(e.touches[0]);
+    });
+
+    word.addEventListener('touchmove', (e) => {
+      e.preventDefault();
+      if (!touchItem) return;
+      updateTouchClone(e.touches[0]);
+
+      // Find which word we're over
+      const touch = e.touches[0];
+      const elements = document.elementsFromPoint(touch.clientX, touch.clientY);
+      const targetWord = elements.find(el => el.classList.contains('unjumble-word') && el !== touchItem);
+
+      if (targetWord && targetWord.parentNode === row) {
+        const rect = targetWord.getBoundingClientRect();
+        const midX = rect.left + rect.width / 2;
+        if (touch.clientX < midX) {
+          row.insertBefore(touchItem, targetWord);
+        } else {
+          row.insertBefore(touchItem, targetWord.nextSibling);
+        }
+      }
+    });
+
+    word.addEventListener('touchend', () => {
+      if (touchItem) touchItem.classList.remove('dragging');
+      if (touchClone) touchClone.remove();
+      touchItem = null;
+      touchClone = null;
+    });
+  });
+
+  function updateTouchClone(touch) {
+    if (touchClone) {
+      touchClone.style.left = (touch.clientX - 40) + 'px';
+      touchClone.style.top = (touch.clientY - 20) + 'px';
+    }
+  }
+}
+
+function handleUnjumbleClick(e) {
+  const target = e.target;
+
+  if (target.classList.contains('unjumble-check')) {
+    checkUnjumbleAnswer(target.dataset.section, parseInt(target.dataset.idx));
+  }
+
+  if (target.classList.contains('unjumble-reset')) {
+    resetUnjumbleQuestion(target.dataset.section, parseInt(target.dataset.idx));
+  }
+}
+
+function checkUnjumbleAnswer(sectionId, idx) {
+  const state = orderState[sectionId];
+  const item = state.data.items[idx];
+  const row = document.querySelector(`.unjumble-word-row[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const feedback = document.querySelector(`.unjumble-feedback[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const question = document.querySelector(`.unjumble-question[data-section="${sectionId}"][data-idx="${idx}"]`);
+
+  // Build user's answer from current word order
+  const words = row.querySelectorAll('.unjumble-word');
+  const userAnswer = Array.from(words).map(w => w.dataset.word).join(' ');
+
+  // Normalize for comparison (handle punctuation)
+  const normalize = (s) => s.replace(/[?!.,]/g, '').toLowerCase().trim();
+  const isCorrect = normalize(userAnswer) === normalize(item.answer);
+
+  if (isCorrect) {
+    question.classList.add('answered', 'correct');
+    row.classList.add('correct');
+    words.forEach(w => w.setAttribute('draggable', 'false'));
+    state.score++;
+    document.getElementById(sectionId + '-score').textContent = state.score;
+
+    feedback.innerHTML = `
+      <span class="correct-text">✓ Correct!</span>
+      <span class="translation">${item.translation || ''}</span>
+    `;
+    feedback.classList.add('show');
+
+    if (state.score === state.total) {
+      document.getElementById(sectionId + '-complete').classList.add('show');
+    }
+  } else {
+    question.classList.add('wrong');
+    row.classList.add('wrong');
+
+    feedback.innerHTML = `
+      <span class="wrong-text">✗ Try again. Hint: ${item.answer}</span>
+    `;
+    feedback.classList.add('show');
+
+    setTimeout(() => {
+      question.classList.remove('wrong');
+      row.classList.remove('wrong');
+      feedback.classList.remove('show');
+    }, 2000);
+  }
+}
+
+function resetUnjumbleQuestion(sectionId, idx) {
+  const state = orderState[sectionId];
+  const item = state.data.items[idx];
+  const row = document.querySelector(`.unjumble-word-row[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const question = document.querySelector(`.unjumble-question[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const feedback = document.querySelector(`.unjumble-feedback[data-section="${sectionId}"][data-idx="${idx}"]`);
+
+  if (question.classList.contains('correct')) return;
+
+  // Re-shuffle and rebuild
+  const shuffledWords = [...item.words].sort(() => Math.random() - 0.5);
+  row.innerHTML = shuffledWords.map(word => `
+    <span class="unjumble-word" draggable="true" data-word="${word}">${word}</span>
+  `).join('');
+
+  initUnjumbleDragDrop(row);
+
+  question.classList.remove('wrong');
+  row.classList.remove('wrong');
+  feedback.innerHTML = '';
+  feedback.classList.remove('show');
+}
+
+// CLASSIC ORDER: Drag items into correct sequence
+function initClassicOrder(sectionId, container, data) {
+  const state = orderState[sectionId];
+
+  // Create array with original indices, then shuffle
+  const items = [...data.items].map((item, idx) => ({ text: item, origIdx: idx }));
+  // Fisher-Yates shuffle
+  for (let i = items.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [items[i], items[j]] = [items[j], items[i]];
+  }
+
+  // Create container div for all items
+  const wrapper = document.createElement('div');
+  wrapper.className = 'order-items-wrapper';
+  wrapper.dataset.section = sectionId;
+
+  // Create each sentence as a draggable item
+  items.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'order-sentence-card';
+    div.draggable = true;
+    div.dataset.orig = item.origIdx;
+    div.dataset.section = sectionId;
+    div.innerHTML = '<span class="order-card-num">' + (i + 1) + '</span><span class="order-card-text">' + item.text + '</span>';
+    wrapper.appendChild(div);
+  });
+
+  container.appendChild(wrapper);
+
+  // Add buttons
+  const btnDiv = document.createElement('div');
+  btnDiv.className = 'order-buttons';
+  btnDiv.innerHTML = '<button class="btn btn-outline order-check-btn" data-section="' + sectionId + '">Check Order</button>';
+  container.appendChild(btnDiv);
+
+  // Add feedback area
+  const feedback = document.createElement('div');
+  feedback.className = 'order-feedback';
+  feedback.dataset.section = sectionId;
+  container.appendChild(feedback);
+
+  // Initialize drag-and-drop
+  initOrderCardDragDrop(wrapper);
+
+  // Button click handler
+  btnDiv.querySelector('.order-check-btn').onclick = function() { checkOrder(sectionId); };
+}
+
+function initOrderCardDragDrop(wrapper) {
+  let dragItem = null;
+
+  wrapper.querySelectorAll('.order-sentence-card').forEach(function(card) {
+    card.addEventListener('dragstart', function(e) {
+      dragItem = card;
+      card.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    });
+
+    card.addEventListener('dragend', function() {
+      card.classList.remove('dragging');
+      dragItem = null;
+      updateCardNumbers(wrapper);
+    });
+
+    card.addEventListener('dragover', function(e) {
+      e.preventDefault();
+      if (!dragItem || dragItem === card) return;
+      const rect = card.getBoundingClientRect();
+      const midY = rect.top + rect.height / 2;
+      if (e.clientY < midY) {
+        wrapper.insertBefore(dragItem, card);
+      } else {
+        wrapper.insertBefore(dragItem, card.nextSibling);
+      }
+    });
+  });
+
+  // Touch support
+  let touchItem = null;
+  let touchClone = null;
+
+  wrapper.querySelectorAll('.order-sentence-card').forEach(function(card) {
+    card.addEventListener('touchstart', function(e) {
+      touchItem = card;
+      card.classList.add('dragging');
+      touchClone = card.cloneNode(true);
+      touchClone.style.position = 'fixed';
+      touchClone.style.zIndex = '1000';
+      touchClone.style.pointerEvents = 'none';
+      touchClone.style.opacity = '0.8';
+      touchClone.style.maxWidth = '90vw';
+      document.body.appendChild(touchClone);
+      moveTouchClone(e.touches[0]);
+    });
+
+    card.addEventListener('touchmove', function(e) {
+      e.preventDefault();
+      if (!touchItem) return;
+      moveTouchClone(e.touches[0]);
+      const touch = e.touches[0];
+      const els = document.elementsFromPoint(touch.clientX, touch.clientY);
+      const target = els.find(function(el) { return el.classList.contains('order-sentence-card') && el !== touchItem; });
+      if (target && target.parentNode === wrapper) {
+        const rect = target.getBoundingClientRect();
+        const midY = rect.top + rect.height / 2;
+        if (touch.clientY < midY) {
+          wrapper.insertBefore(touchItem, target);
+        } else {
+          wrapper.insertBefore(touchItem, target.nextSibling);
+        }
+      }
+    });
+
+    card.addEventListener('touchend', function() {
+      if (touchItem) touchItem.classList.remove('dragging');
+      if (touchClone) touchClone.remove();
+      touchItem = null;
+      touchClone = null;
+      updateCardNumbers(wrapper);
+    });
+  });
+
+  function moveTouchClone(touch) {
+    if (touchClone) {
+      touchClone.style.left = (touch.clientX - 100) + 'px';
+      touchClone.style.top = (touch.clientY - 25) + 'px';
+    }
+  }
+}
+
+function updateCardNumbers(wrapper) {
+  wrapper.querySelectorAll('.order-sentence-card').forEach(function(card, i) {
+    card.querySelector('.order-card-num').textContent = i + 1;
+  });
+}
+
+function initOrderSentenceDragDrop(row) {
+  let dragItem = null;
+
+  row.querySelectorAll('.order-sentence-item').forEach(item => {
+    item.addEventListener('dragstart', (e) => {
+      dragItem = item;
+      item.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    });
+
+    item.addEventListener('dragend', () => {
+      item.classList.remove('dragging');
+      dragItem = null;
+      // Update numbers after drag
+      updateOrderNumbers(row);
+    });
+
+    item.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      if (!dragItem || dragItem === item) return;
+
+      const rect = item.getBoundingClientRect();
+      const midY = rect.top + rect.height / 2;
+
+      if (e.clientY < midY) {
+        row.insertBefore(dragItem, item);
+      } else {
+        row.insertBefore(dragItem, item.nextSibling);
+      }
+    });
+  });
+
+  // Touch support
+  let touchItem = null;
+  let touchClone = null;
+
+  row.querySelectorAll('.order-sentence-item').forEach(item => {
+    item.addEventListener('touchstart', (e) => {
+      touchItem = item;
+      item.classList.add('dragging');
+      touchClone = item.cloneNode(true);
+      touchClone.classList.add('touch-clone');
+      document.body.appendChild(touchClone);
+      updateTouchClonePos(e.touches[0], touchClone);
+    });
+
+    item.addEventListener('touchmove', (e) => {
+      e.preventDefault();
+      if (!touchItem) return;
+      updateTouchClonePos(e.touches[0], touchClone);
+
+      const touch = e.touches[0];
+      const elements = document.elementsFromPoint(touch.clientX, touch.clientY);
+      const target = elements.find(el => el.classList.contains('order-sentence-item') && el !== touchItem);
+
+      if (target && target.parentNode === row) {
+        const rect = target.getBoundingClientRect();
+        const midY = rect.top + rect.height / 2;
+        if (touch.clientY < midY) {
+          row.insertBefore(touchItem, target);
+        } else {
+          row.insertBefore(touchItem, target.nextSibling);
+        }
+      }
+    });
+
+    item.addEventListener('touchend', () => {
+      if (touchItem) touchItem.classList.remove('dragging');
+      if (touchClone) touchClone.remove();
+      touchItem = null;
+      touchClone = null;
+      updateOrderNumbers(row);
+    });
+  });
+
+  function updateTouchClonePos(touch, clone) {
+    if (clone) {
+      clone.style.left = (touch.clientX - 100) + 'px';
+      clone.style.top = (touch.clientY - 20) + 'px';
+    }
+  }
+}
+
+function updateOrderNumbers(row) {
+  row.querySelectorAll('.order-sentence-item').forEach((item, i) => {
+    item.querySelector('.order-num').textContent = i + 1;
+  });
+}
+
+function initDragDrop(container) {
+  const items = container.querySelectorAll('.order-item');
+  let dragItem = null;
+
+  items.forEach(item => {
+    item.addEventListener('dragstart', (e) => {
+      dragItem = item;
+      item.classList.add('dragging');
+    });
+
+    item.addEventListener('dragend', () => {
+      item.classList.remove('dragging');
+      dragItem = null;
+    });
+
+    item.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      if (!dragItem || dragItem === item) return;
+      const rect = item.getBoundingClientRect();
+      const midY = rect.top + rect.height / 2;
+      if (e.clientY < midY) {
+        container.insertBefore(dragItem, item);
+      } else {
+        container.insertBefore(dragItem, item.nextSibling);
+      }
+    });
+  });
+}
+
+function checkOrder(sectionId) {
+  const state = orderState[sectionId];
+  const data = state.data;
+  // Support multiple class names for order items
+  let items = document.querySelectorAll('.order-sentence-card[data-section="' + sectionId + '"]');
+  if (!items.length) {
+    items = document.querySelectorAll('.order-sentence-item[data-section="' + sectionId + '"]');
+  }
+  if (!items.length) {
+    items = document.querySelectorAll('.order-item[data-section="' + sectionId + '"]');
+  }
+  const currentOrder = Array.from(items).map(function(item) { return parseInt(item.dataset.orig); });
+  const feedback = document.querySelector('.order-feedback[data-section="' + sectionId + '"]');
+
+  let correct = true;
+  currentOrder.forEach((val, idx) => {
+    const expectedIdx = data.correctOrder && data.correctOrder.length ? data.correctOrder[idx] : idx;
+    if (val !== expectedIdx) correct = false;
+  });
+
+  items.forEach((item, idx) => {
+    const expectedIdx = data.correctOrder && data.correctOrder.length ? data.correctOrder[idx] : idx;
+    if (parseInt(item.dataset.orig) === expectedIdx) {
+      item.classList.add('correct');
+      item.classList.remove('wrong');
+    } else {
+      item.classList.add('wrong');
+      item.classList.remove('correct');
+    }
+  });
+
+  if (correct) {
+    state.score = state.total;
+    document.getElementById(sectionId + '-score').textContent = state.score;
+    document.getElementById(sectionId + '-complete').classList.add('show');
+    if (feedback) {
+      feedback.innerHTML = '<span class="correct-text">✓ Perfect order!</span>';
+      feedback.classList.add('show');
+    }
+  } else {
+    if (feedback) {
+      feedback.innerHTML = '<span class="wrong-text">✗ Not quite right. Try again!</span>';
+      feedback.classList.add('show');
+    }
+    setTimeout(function() {
+      items.forEach(function(item) { item.classList.remove('wrong'); });
+      if (feedback) feedback.classList.remove('show');
+    }, 2000);
+  }
+}
+
+function resetOrder(sectionId) {
+  const state = orderState[sectionId];
+  if (!state) return;
+  document.getElementById(sectionId + '-score').textContent = '0';
+  document.getElementById(sectionId + '-complete')?.classList.remove('show');
+  initOrder(sectionId, state.data);
+}
+
+
+// Select Activity - supports multiple instances
+const selectState = {};
+
+function initSelect(sectionId, data) {
+  const c = document.getElementById(sectionId + '-container');
+  if (!c || !data.items || !data.items.length) return;
+
+  selectState[sectionId] = { score: 0, answered: 0, total: data.items.length, data: data };
+  c.innerHTML = '';
+
+  data.items.forEach((item, idx) => {
+    const div = document.createElement('div');
+    div.className = 'select-question';
+    div.dataset.section = sectionId;
+    div.dataset.idx = idx;
+
+    const optionsHtml = item.options.map((opt, oi) =>
+      `<label class="select-option" data-correct="${opt.correct}" data-section="${sectionId}" data-idx="${idx}">
+        <input type="checkbox" class="select-checkbox" data-oi="${oi}">
+        <span class="select-text">${opt.text}</span>
+      </label>`
+    ).join('');
+
+    div.innerHTML = `
+      <div class="select-number">${idx + 1}.</div>
+      <div class="select-content">
+        <p class="select-prompt">${item.question}</p>
+        <div class="select-options">${optionsHtml}</div>
+        <button class="btn btn-sm btn-outline select-check" data-section="${sectionId}" data-idx="${idx}">Check</button>
+        <div class="select-feedback" id="${sectionId}-fb-${idx}"></div>
+      </div>
+    `;
+    c.appendChild(div);
+  });
+
+  // Event delegation for check buttons
+  c.addEventListener('click', (e) => {
+    if (e.target.classList.contains('select-check')) {
+      checkSelectAnswer(e.target.dataset.section, parseInt(e.target.dataset.idx));
+    }
+  });
+}
+
+function checkSelectAnswer(sectionId, idx) {
+  const state = selectState[sectionId];
+  const item = state.data.items[idx];
+  const question = document.querySelector(`.select-question[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const fb = document.getElementById(sectionId + '-fb-' + idx);
+
+  if (question.classList.contains('answered')) return;
+
+  const options = question.querySelectorAll('.select-option');
+  let allCorrect = true;
+
+  options.forEach(opt => {
+    const checkbox = opt.querySelector('.select-checkbox');
+    const isChecked = checkbox.checked;
+    const shouldBeChecked = opt.dataset.correct === 'true';
+
+    if (isChecked === shouldBeChecked) {
+      opt.classList.add(shouldBeChecked ? 'correct' : 'correct-unchecked');
+    } else {
+      opt.classList.add(shouldBeChecked ? 'missed' : 'wrong');
+      allCorrect = false;
+    }
+    checkbox.disabled = true;
+  });
+
+  question.classList.add('answered');
+
+  if (allCorrect) {
+    fb.innerHTML = '<span class="correct-text">✓ Perfect!</span>';
+    state.score++;
+  } else {
+    fb.innerHTML = '<span class="wrong-text">✗ Some answers were incorrect.</span>';
+  }
+  fb.classList.add('show');
+
+  document.getElementById(sectionId + '-score').textContent = state.score;
+  state.answered++;
+
+  if (state.answered === state.total) {
+    document.getElementById(sectionId + '-complete').classList.add('show');
+  }
+}
+
+function resetSelect(sectionId) {
+  const state = selectState[sectionId];
+  if (!state) return;
+  document.getElementById(sectionId + '-score').textContent = '0';
+  document.getElementById(sectionId + '-complete')?.classList.remove('show');
+  initSelect(sectionId, state.data);
+}
+
+
+// Vocabulary
+function initVocab() {
+  const grid = document.getElementById('vocab-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  vocabData.forEach(v => {
+    const card = document.createElement('div');
+    card.className = 'vocab-card';
+    card.innerHTML = '<div class="uk">' + v.uk + '</div><div class="translit">' + v.translit + '</div><div class="en">' + v.en + '</div>' + (v.note ? '<div class="note">' + v.note + '</div>' : '');
+    grid.appendChild(card);
+  });
+}
+
+  </script>
+</body>
+</html>
