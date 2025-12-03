@@ -147,6 +147,56 @@ npx ts-node scripts/generate.ts l2-uk-en 168
 3. Output appears in `output/`
 4. Vibe imports JSON from `output/json/`
 
+## Module Creation & Enrichment Workflow
+
+### Creating New Modules (B1+)
+
+When creating a new module, complete ALL steps before moving to next module:
+
+1. **Write content** - lesson, grammar explanations, examples
+2. **Create activities** - fill-in, unjumble, quiz, match-up
+   - Fill-in sentences: 5-7 words with realistic context
+   - Unjumble sentences: 6-8 words with complex structures
+3. **Add basic vocab section** - all words used in module
+4. **Run vocab enrichment**: `npm run vocab:enrich l2-uk-en [moduleNum]`
+5. **Generate output**: `npx ts-node scripts/generate.ts l2-uk-en [moduleNum]`
+6. **Verify** - spot-check HTML output
+
+### Enrichment Methods
+
+| Task | Method | Command |
+|------|--------|---------|
+| Activity enrichment | Manual (Claude) | - |
+| Vocab enrichment | Script | `npm run vocab:enrich l2-uk-en [moduleNum]` |
+
+### Batch Enrichment Status
+
+Activity enrichment (manual, must be done before vocab enrichment):
+
+| Range | Modules | Status |
+|-------|---------|--------|
+| A1 | 1-30 | ✅ Done |
+| A2 | 31-60 | ⏳ Pending |
+| A2+ | 61-80 | ⏳ Pending |
+| B1.1 | 81-100 | ⏳ Pending |
+| B1.2-B1.4 | 101-140 | ⏳ Pending |
+
+After activity enrichment, run vocab enrichment for the range:
+```bash
+npm run vocab:enrich l2-uk-en
+npx ts-node scripts/generate.ts l2-uk-en
+```
+
+### Vocabulary Section Formats
+
+See `docs/MARKDOWN-FORMAT.md` for complete spec. Quick reference:
+
+| Level | Modules | Header | Columns |
+|-------|---------|--------|---------|
+| A1-A2+ | 1-80 | `# Vocabulary` | Word \| IPA \| English \| POS \| Gender \| Note |
+| B1 | 81-160 | `# Словник` | Слово \| Вимова \| Переклад \| ЧМ \| Примітка |
+| B2+ | 161+ | `# Словник` | Слово \| Переклад \| Примітки |
+
 ## Markdown Format
 
 See `docs/MARKDOWN-FORMAT.md` for full spec. Key patterns:

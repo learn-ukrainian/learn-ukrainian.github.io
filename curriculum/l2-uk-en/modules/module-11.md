@@ -225,89 +225,89 @@ Say what you want:
 
 > Choose the correct accusative form.
 
-1. Я бачу ___. (книга)
+1. Я бачу цікаву ___ на твоєму столі. (I see an interesting book on your table.)
    > [!answer] книгу
    > [!options] книга | книгу | книзі | книги
 
-2. Вона читає ___. (газета)
+2. Вона щодня читає українську ___ вранці. (She reads a Ukrainian newspaper every day in the morning.)
    > [!answer] газету
    > [!options] газета | газету | газеті | газети
 
-3. Ми хочемо ___. (вода)
+3. Ми хочемо холодну ___ після тренування. (We want cold water after training.)
    > [!answer] воду
    > [!options] вода | воду | воді | води
 
-4. Я бачу ___. (стіл) [no change - masculine inanimate]
+4. Я бачу великий новий ___ у кімнаті. (I see a big new table in the room.)
    > [!answer] стіл
    > [!options] стіл | стола | столі | столу
 
-5. Він має ___. (паспорт) [no change - masculine inanimate]
+5. Він завжди має свій ___ у сумці. (He always has his passport in the bag.)
    > [!answer] паспорт
    > [!options] паспорт | паспорта | паспорті | паспорту
 
-6. Вона п'є ___. (кава)
+6. Вона п'є гарячу ___ кожного ранку. (She drinks hot coffee every morning.)
    > [!answer] каву
    > [!options] кава | каву | каві | кави
 
-7. Я бачу ___. (вікно) [no change - neuter]
+7. Я бачу велике чисте ___ у спальні. (I see a big clean window in the bedroom.)
    > [!answer] вікно
    > [!options] вікно | вікна | вікні | вікну
 
-8. Ми хочемо ___. (піца)
+8. Ми хочемо смачну італійську ___ на вечерю. (We want delicious Italian pizza for dinner.)
    > [!answer] піцу
    > [!options] піца | піцу | піці | піци
 
-9. Він бере ___. (валіза)
+9. Він бере свою важку ___ до готелю. (He takes his heavy suitcase to the hotel.)
    > [!answer] валізу
    > [!options] валіза | валізу | валізі | валізи
 
-10. Вони читають ___. (журнал) [no change - masculine inanimate]
+10. Вони читають новий цікавий ___ про науку. (They read a new interesting magazine about science.)
    > [!answer] журнал
    > [!options] журнал | журнала | журналі | журналу
 
 ## unjumble: Build the Sentence
 
-> Arrange the words in the correct order.
+> Arrange the words in the correct order. Sentences range from 5-7 words.
 
-1. книгу / Я / бачу
-   > [!answer] Я бачу книгу.
-   > (I see a book.)
+1. книгу / Я / цікаву / бачу / на / столі
+   > [!answer] Я бачу цікаву книгу на столі.
+   > (I see an interesting book on the table.) [6 words]
 
-2. газету / читає / Вона
-   > [!answer] Вона читає газету.
-   > (She reads a newspaper.)
+2. газету / читає / Вона / українську / щодня / вранці
+   > [!answer] Вона щодня читає українську газету вранці.
+   > (She reads a Ukrainian newspaper every day in the morning.) [6 words]
 
-3. воду / хочемо / Ми
-   > [!answer] Ми хочемо воду.
-   > (We want water.)
+3. воду / холодну / хочемо / Ми / після / тренування
+   > [!answer] Ми хочемо холодну воду після тренування.
+   > (We want cold water after training.) [6 words]
 
-4. бачу / стіл / Я
-   > [!answer] Я бачу стіл.
-   > (I see a table.)
+4. бачу / великий / стіл / Я / новий / у / кімнаті
+   > [!answer] Я бачу великий новий стіл у кімнаті.
+   > (I see a big new table in the room.) [7 words]
 
-5. каву / Він / п'є
-   > [!answer] Він п'є каву.
-   > (He drinks coffee.)
+5. каву / Він / гарячу / п'є / завжди / кожного / ранку
+   > [!answer] Він завжди п'є гарячу каву кожного ранку.
+   > (He always drinks hot coffee every morning.) [7 words]
 
-6. хліб / Ми / хочемо
-   > [!answer] Ми хочемо хліб.
-   > (We want bread.)
+6. свіжий / хліб / Ми / хочемо / смачний / і / воду
+   > [!answer] Ми хочемо свіжий смачний хліб і воду.
+   > (We want fresh delicious bread and water.) [7 words]
 
-7. валізу / бере / Вона
-   > [!answer] Вона бере валізу.
-   > (She takes a suitcase.)
+7. валізу / важку / бере / Вона / свою / до / готелю
+   > [!answer] Вона бере свою важку валізу до готелю.
+   > (She takes her heavy suitcase to the hotel.) [7 words]
 
-8. журнал / читає / Він
-   > [!answer] Він читає журнал.
-   > (He reads a magazine.)
+8. журнал / цікавий / читає / Він / новий / про / науку
+   > [!answer] Він читає новий цікавий журнал про науку.
+   > (He reads a new interesting magazine about science.) [7 words]
 
-9. паспорт / мій / Де
-   > [!answer] Де мій паспорт?
-   > (Where is my passport?)
+9. паспорт / мій / Де / український / у / цій / сумці
+   > [!answer] Де мій український паспорт у цій сумці?
+   > (Where is my Ukrainian passport in this bag?) [7 words]
 
-10. документ / має / Він
-   > [!answer] Він має документ.
-   > (He has a document.)
+10. документ / важливий / має / Він / цей / завжди / з / собою
+    > [!answer] Він завжди має цей важливий документ з собою.
+    > (He always has this important document with him.) [8 words]
 
 ## match-up: Match the Pairs
 
@@ -358,19 +358,19 @@ Say what you want:
    - [ ] all genders
    > Only feminine (-а → -у, -я → -ю)
 
-5. What does "Я бачу книгу" mean?
-   - [x] I see a book
-   - [ ] I have a book
-   - [ ] I want a book
-   - [ ] I read a book
-   > "бачити" = to see
+5. Why is "книгу" correct in "Я бачу книгу"?
+   - [ ] Because it's nominative
+   - [x] Because it's accusative (direct object)
+   - [ ] Because it's genitive
+   - [ ] Because it's locative
+   > The verb "бачити" requires accusative for direct objects
 
-6. What does "Вона хоче воду" mean?
-   - [ ] She sees water
-   - [ ] She has water
-   - [x] She wants water
-   - [ ] She drinks water
-   > "хотіти" = to want
+6. What happens to feminine -а nouns in accusative?
+   - [ ] They don't change
+   - [x] -а changes to -у
+   - [ ] -а changes to -и
+   - [ ] -а changes to -і
+   > Feminine accusative: книга → книгу, вода → воду
 
 7. What is the accusative of "вода"?
    - [ ] вода
@@ -386,12 +386,12 @@ Say what you want:
    - [ ] кави
    > Feminine -а → -у
 
-9. What does "брати" mean?
-   - [ ] to see
-   - [ ] to read
-   - [x] to take
-   - [ ] to want
-   > "брати" = to take
+9. What is the accusative of "земля" (land)?
+   - [ ] земля
+   - [x] землю
+   - [ ] землі
+   - [ ] земель
+   > Feminine -я → -ю in accusative
 
 10. Which verb does NOT take accusative?
    - [ ] бачити (to see)
@@ -433,6 +433,24 @@ Say what you want:
 
 - [x] "валіза" becomes "валізу" in accusative
    > Correct!
+
+## group-sort: Accusative Behavior
+
+> Sort these nouns by how they behave in accusative case (inanimate).
+
+### Changes in Accusative (-а/-я → -у/-ю)
+- книга → книгу
+- газета → газету
+- вода → воду
+- кава → каву
+- валіза → валізу
+
+### No Change in Accusative
+- стіл (masculine)
+- журнал (masculine)
+- паспорт (masculine)
+- вікно (neuter)
+- молоко (neuter)
 
 ---
 

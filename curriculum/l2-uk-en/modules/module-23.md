@@ -239,43 +239,43 @@ A: Добре, домовились!
 
 > Choose the correct word or form to complete each sentence.
 
-1. Сьогодні ___. (Monday)
+1. Сьогодні вже ___, і я йду на роботу. (Monday)
    > [!answer] понеділок
    > [!options] понеділок | вівторок | середа | четвер
 
-2. Я працюю ___ понеділок. (on Monday)
+2. Я завжди багато працюю ___ понеділок. (on Monday)
    > [!answer] у
    > [!options] в | у | на | до
 
-3. Мій день народження ___ липні. (in July)
+3. Мій день народження ___ липні, коли дуже тепло. (in July)
    > [!answer] у
    > [!options] в | у | на | до
 
-4. ___ година? (What time is it?)
-   > [!answer] Котра
-   > [!options] Яка | Котра | Де | Що
+4. Вибачте, ___ зараз година в Україні? (What time is it?)
+   > [!answer] котра
+   > [!options] яка | котра | де | що
 
-5. Зараз ___ година. (5 o'clock)
+5. Зараз вже ___ година, а я ще працюю. (5 o'clock)
    > [!answer] п'ята
    > [!options] п'ять | п'ята | п'яти | п'ятий
 
-6. Зустріч ___ дев'ятій. (at 9)
+6. Наша важлива зустріч завтра ___ дев'ятій ранку. (at 9)
    > [!answer] о
    > [!options] у | на | о | до
 
-7. ___ тепло. (In spring)
+7. ___ в Україні завжди дуже тепло і гарно. (In spring)
    > [!answer] Навесні
    > [!options] Весна | Навесні | У весні | Весною
 
-8. ___ холодно. (In winter)
+8. ___ у Києві буває дуже холодно і сніжно. (In winter)
    > [!answer] Взимку
    > [!options] Зима | Взимку | У зимі | Зимою
 
-9. Який сьогодні ___? (day)
+9. Який сьогодні ___ тижня, понеділок чи вівторок? (day)
    > [!answer] день
    > [!options] день | година | місяць | рік
 
-10. ___ числа твій день народження? (What date)
+10. ___ числа і місяця твій день народження? (What date)
    > [!answer] Якого
    > [!options] Який | Яка | Якого | Яке
 
@@ -283,45 +283,45 @@ A: Добре, домовились!
 
 > Arrange the words in the correct order.
 
-1. понеділок / Сьогодні
-   > [!answer] Сьогодні понеділок.
-   > (Today is Monday.)
+1. понеділок / Сьогодні / звичайний / такий / робочий / вже
+   > [!answer] Сьогодні вже такий звичайний робочий понеділок.
+   > (Today is already such an ordinary working Monday.) [6 words]
 
-2. у / працюю / Я / середу
-   > [!answer] Я працюю у середу.
-   > (I work on Wednesday.)
+2. у / працюю / Я / середу / завжди / багато / дуже
+   > [!answer] Я завжди дуже багато працюю у середу.
+   > (I always work a lot on Wednesday.) [7 words]
 
-3. година / Котра
-   > [!answer] Котра година?
-   > (What time is it?)
+3. година / Котра / зараз / вже / скажіть / будь ласка
+   > [!answer] Скажіть, будь ласка, котра зараз вже година?
+   > (Tell me, please, what time is it already now?) [6 words]
 
-4. п'ята / Зараз / година
-   > [!answer] Зараз п'ята година.
-   > (It's 5 o'clock now.)
+4. п'ята / Зараз / година / вже / майже / вечора
+   > [!answer] Зараз вже майже п'ята година вечора.
+   > (It's already almost 5 PM now.) [6 words]
 
-5. о / Зустріч / дев'ятій
-   > [!answer] Зустріч о дев'ятій.
-   > (The meeting is at 9.)
+5. о / Зустріч / дев'ятій / ранку / завтра / важлива / наша
+   > [!answer] Наша важлива зустріч завтра о дев'ятій ранку.
+   > (Our important meeting is tomorrow at 9 AM.) [7 words]
 
-6. тепло / Навесні
-   > [!answer] Навесні тепло.
-   > (It's warm in spring.)
+6. тепло / Навесні / завжди / дуже / тут / в / Україні
+   > [!answer] Навесні тут в Україні завжди дуже тепло.
+   > (In spring here in Ukraine it's always very warm.) [7 words]
 
-7. холодно / Взимку
-   > [!answer] Взимку холодно.
-   > (It's cold in winter.)
+7. холодно / Взимку / надто / завжди / там / у / Києві
+   > [!answer] Взимку там у Києві завжди надто холодно.
+   > (In winter there in Kyiv it's always too cold.) [7 words]
 
-8. народження / день / Мій / у / липні
-   > [!answer] Мій день народження у липні.
-   > (My birthday is in July.)
+8. народження / день / Мій / у / липні / коли / тепло
+   > [!answer] Мій день народження у липні, коли тепло.
+   > (My birthday is in July, when it's warm.) [7 words]
 
-9. неділя / день / тижня / який
-   > [!answer] Неділя - який день тижня?
-   > (Sunday - which day of the week?)
+9. неділя / сьомий / день / тижня / Це / і / вихідний
+   > [!answer] Неділя це сьомий день тижня і вихідний.
+   > (Sunday is the seventh day of the week and a day off.) [7 words]
 
-10. вівторок / після / понеділка / Йде
-   > [!answer] Вівторок йде після понеділка.
-   > (Tuesday comes after Monday.)
+10. вівторок / після / понеділка / Йде / завжди / другий / день
+    > [!answer] Вівторок, другий день, завжди йде після понеділка.
+    > (Tuesday, the second day, always comes after Monday.) [7 words]
 
 ## match-up: Days and Months
 
@@ -344,12 +344,12 @@ A: Добре, домовились!
 
 > Choose the correct answer.
 
-1. What does "понеділок" mean?
-   - [x] Monday
-   - [ ] Tuesday
-   - [ ] Wednesday
-   - [ ] Thursday
-   > понеділок = Monday
+1. Which case is used with days of the week after "у"?
+   - [x] Accusative
+   - [ ] Locative
+   - [ ] Genitive
+   - [ ] Nominative
+   > Days use accusative: у понеділок, у середу
 
 2. What does "середа" literally mean?
    - [ ] first
@@ -393,12 +393,12 @@ A: Добре, домовились!
    - [ ] о + locative
    > у січні, у лютому (locative)
 
-8. What does "листопад" mean?
-   - [x] November
-   - [ ] October
-   - [ ] December
-   - [ ] September
-   > листопад = leaf fall = November
+8. Which case is used with months after "у"?
+   - [ ] Accusative
+   - [x] Locative
+   - [ ] Genitive
+   - [ ] Nominative
+   > Months use locative: у січні, у лютому
 
 9. What is the adverb form for "in summer"?
    - [ ] у літі
@@ -407,12 +407,12 @@ A: Добре, домовились!
    - [ ] на літо
    > влітку = in summer
 
-10. What does "година" mean?
-   - [x] hour
-   - [ ] day
-   - [ ] week
-   - [ ] month
-   > година = hour
+10. Which numbers are used for telling time?
+    - [ ] Cardinal (один, два)
+    - [x] Ordinal (перша, друга)
+    - [ ] Both equally
+    - [ ] Neither
+    > Time uses ordinal numbers: перша година, друга година
 
 ## true-false: True or False?
 
@@ -447,6 +447,28 @@ A: Добре, домовились!
 
 - [x] "О п'ятій" means "at 5 o'clock"
    > Correct!
+
+## group-sort: Time Words by Category
+
+> Sort these time words into categories.
+
+### Days of the Week
+- понеділок (Monday)
+- вівторок (Tuesday)
+- середа (Wednesday)
+- п'ятниця (Friday)
+
+### Months
+- січень (January)
+- березень (March)
+- липень (July)
+- листопад (November)
+
+### Seasons
+- весна (spring)
+- літо (summer)
+- осінь (autumn)
+- зима (winter)
 
 ---
 

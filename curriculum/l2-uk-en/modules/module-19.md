@@ -224,43 +224,43 @@ Use: Скільки коштує? Чи є...? Можна...? Я візьму...
 
 > Choose the correct word to complete each shopping phrase.
 
-1. ___ коштує? (How much does it cost?)
+1. ___ коштує ця гарна червона сукня? (How much does it cost?)
    > [!answer] Скільки
    > [!options] Де | Скільки | Що | Який
 
-2. Чи є ___ розмір? (bigger)
+2. Чи є ___ розмір цієї білої сорочки? (bigger)
    > [!answer] більший
    > [!options] менший | більший | великий | малий
 
-3. Можна ___? (try on)
+3. Можна ___ ці нові чорні туфлі? (try on)
    > [!answer] приміряти
    > [!options] приміряти | подивитися | купити | продати
 
-4. Де ___? (fitting room)
+4. Де тут знаходиться ваша ___? (fitting room)
    > [!answer] примірочна
    > [!options] каса | примірочна | магазин | ринок
 
-5. Це ___ дорого. (too)
+5. На жаль, це ___ дорого для мене. (too)
    > [!answer] занадто
    > [!options] дуже | занадто | трохи | не
 
-6. Чи є це в ___ кольорі? (another)
+6. Чи є ця сукня в ___ кольорі? (another)
    > [!answer] іншому
    > [!options] цьому | іншому | тому | якому
 
-7. Я ___ це. (I'll take)
+7. Мені все подобається, я ___ це все. (I'll take)
    > [!answer] візьму
    > [!options] візьму | беру | маю | хочу
 
-8. ___ чи карткою? (Cash)
+8. ___ чи карткою ви хочете платити? (Cash)
    > [!answer] Готівкою
    > [!options] Грошима | Готівкою | Чеком | Рахунком
 
-9. Чек ___? (needed)
+9. Вам чек ___, чи ні? (needed)
    > [!answer] потрібен
    > [!options] потрібен | потрібна | потрібне | потрібні
 
-10. Пакет ___? (needed)
+10. Вам пакет ___ для ваших покупок? (needed)
    > [!answer] потрібен
    > [!options] потрібен | потрібна | потрібне | потрібні
 
@@ -268,45 +268,45 @@ Use: Скільки коштує? Чи є...? Можна...? Я візьму...
 
 > Arrange the words in the correct order.
 
-1. коштує / Скільки / це
-   > [!answer] Скільки це коштує?
-   > (How much does this cost?)
+1. коштує / Скільки / ця / разом / гарна / сукня
+   > [!answer] Скільки коштує ця гарна сукня разом?
+   > (How much does this nice dress cost in total?) [6 words]
 
-2. більший / є / Чи / розмір
-   > [!answer] Чи є більший розмір?
-   > (Is there a bigger size?)
+2. більший / є / Чи / розмір / цієї / білої / сорочки
+   > [!answer] Чи є більший розмір цієї білої сорочки?
+   > (Is there a bigger size of this white shirt?) [7 words]
 
-3. приміряти / Можна
-   > [!answer] Можна приміряти?
-   > (May I try this on?)
+3. приміряти / Можна / цю / сукню / червону / нову
+   > [!answer] Можна приміряти цю нову червону сукню?
+   > (May I try on this new red dress?) [6 words]
 
-4. примірочна / Де
-   > [!answer] Де примірочна?
-   > (Where is the fitting room?)
+4. примірочна / Де / тут / знаходиться / ваша / будь ласка
+   > [!answer] Де тут знаходиться ваша примірочна, будь ласка?
+   > (Where is your fitting room here, please?) [6 words]
 
-5. візьму / Я / це
-   > [!answer] Я візьму це.
-   > (I'll take this.)
+5. візьму / Я / це / все / сьогодні / собі
+   > [!answer] Я сьогодні візьму все це собі.
+   > (I'll take all of this for myself today.) [6 words]
 
-6. дорого / Занадто
-   > [!answer] Занадто дорого!
-   > (Too expensive!)
+6. дорого / Занадто / для / мене / на жаль / це
+   > [!answer] На жаль, це занадто дорого для мене.
+   > (Unfortunately, this is too expensive for me.) [6 words]
 
-7. знижка / Є
-   > [!answer] Є знижка?
-   > (Is there a discount?)
+7. знижка / Є / на / це / сьогодні / яка-небудь
+   > [!answer] Чи є яка-небудь знижка на це сьогодні?
+   > (Is there any discount on this today?) [6 words]
 
-8. чорному / в / є / Чи / це
-   > [!answer] Чи є це в чорному?
-   > (Is this available in black?)
+8. чорному / в / є / Чи / це / кольорі / може
+   > [!answer] Чи може це є в чорному кольорі?
+   > (Could this be available in black color?) [7 words]
 
-9. карткою / Можна
-   > [!answer] Можна карткою?
-   > (Can I pay by card?)
+9. карткою / Можна / тут / платити / чи / готівкою / тільки
+   > [!answer] Можна тут платити карткою чи тільки готівкою?
+   > (Can I pay by card here or only cash?) [7 words]
 
-10. подумаю / Я
-   > [!answer] Я подумаю.
-   > (I'll think about it.)
+10. подумаю / Я / ще / трохи / потім / повернусь / і
+    > [!answer] Я ще трохи подумаю і потім повернусь.
+    > (I'll think a bit more and then come back.) [7 words]
 
 ## match-up: Match the Pairs
 
@@ -432,6 +432,28 @@ Use: Скільки коштує? Чи є...? Можна...? Я візьму...
 
 - [x] "Я візьму це" means "I'll take this"
    > Correct!
+
+## group-sort: Shopping Vocabulary Categories
+
+> Sort these shopping words into categories.
+
+### Store Types
+- магазин (store)
+- супермаркет (supermarket)
+- ринок (market)
+- аптека (pharmacy)
+
+### Size & Fit Words
+- розмір (size)
+- більший (bigger)
+- менший (smaller)
+- занадто (too/excessive)
+
+### Payment Words
+- каса (cash register)
+- чек (receipt)
+- готівка (cash)
+- картка (card)
 
 ---
 

@@ -218,43 +218,43 @@ Describe what you did yesterday using past tense:
 
 > Choose the correct past tense form.
 
-1. Він ___ книгу. (читати - to read)
+1. Він вчора весь день ___ цікаву українську книгу. (читати - to read)
    > [!answer] читав
    > [!options] читав | читала | читало | читали
 
-2. Вона ___ у школі. (бути - to be)
+2. Вона минулого тижня ___ в нашій новій школі. (бути - to be)
    > [!answer] була
    > [!options] був | була | було | були
 
-3. Вони ___ фільм. (дивитися - to watch)
+3. Вони разом ___ цікавий український фільм увечері. (дивитися - to watch)
    > [!answer] дивилися
    > [!options] дивився | дивилася | дивилося | дивилися
 
-4. Я (f) ___ вчора. (працювати - to work)
+4. Я (f) ___ весь день вчора у великому офісі. (працювати - to work)
    > [!answer] працювала
    > [!options] працював | працювала | працювало | працювали
 
-5. Ми ___ піцу. (їсти - to eat)
+5. Ми вчора ввечері разом ___ смачну гарячу піцу. (їсти - to eat)
    > [!answer] їли
    > [!options] їв | їла | їло | їли
 
-6. Він ___ додому. (йти - to go)
+6. Він пізно ввечері швидко ___ додому з роботи. (йти - to go)
    > [!answer] ішов
    > [!options] ішов | ішла | ішло | ішли
 
-7. Все ___ добре. (бути - neuter)
+7. Вчора все у нас ___ дуже добре! (бути - neuter)
    > [!answer] було
    > [!options] був | була | було | були
 
-8. Вона ___ каву. (пити - to drink)
+8. Вона вранці ___ гарячу смачну каву з молоком. (пити - to drink)
    > [!answer] пила
    > [!options] пив | пила | пило | пили
 
-9. Ти (m) де ___? (бути)
+9. Ти (m) де вчора увечері ___? (бути)
    > [!answer] був
    > [!options] був | була | було | були
 
-10. Вони ___ разом. (бути)
+10. Вони всі давно ___ разом у нашому місті. (бути)
    > [!answer] були
    > [!options] був | була | було | були
 
@@ -262,45 +262,45 @@ Describe what you did yesterday using past tense:
 
 > Arrange the words in the correct order.
 
-1. читав / книгу / Він
-   > [!answer] Він читав книгу.
-   > (He read a book.)
+1. цікаву / читав / книгу / Він / вчора / весь / день / українську
+   > [!answer] Він вчора весь день читав цікаву українську книгу.
+   > (Yesterday he read an interesting Ukrainian book all day.) [8 words]
 
-2. була / Вона / школі / в
-   > [!answer] Вона була в школі.
-   > (She was at school.)
+2. була / Вона / великій / школі / в / нашій / минулого / тижня
+   > [!answer] Вона минулого тижня була в нашій великій школі.
+   > (She was at our big school last week.) [8 words]
 
-3. фільм / дивилися / Ми
-   > [!answer] Ми дивилися фільм.
-   > (We watched a movie.)
+3. фільм / дивилися / увечері / Ми / цікавий / разом / український
+   > [!answer] Ми увечері разом дивилися цікавий український фільм.
+   > (In the evening we watched an interesting Ukrainian movie together.) [7 words]
 
-4. вчора / працювала / Я
-   > [!answer] Я працювала вчора.
-   > (I worked yesterday.)
+4. вчора / весь / день / працювала / Я / великому / у / офісі
+   > [!answer] Я вчора працювала весь день у великому офісі.
+   > (Yesterday I worked all day in a big office.) [8 words]
 
-5. їли / Вони / піцу
-   > [!answer] Вони їли піцу.
-   > (They ate pizza.)
+5. їли / Вони / піцу / смачну / разом / гарячу / ввечері
+   > [!answer] Вони разом ввечері їли смачну гарячу піцу.
+   > (They ate delicious hot pizza together in the evening.) [7 words]
 
-6. ішов / Він / додому
-   > [!answer] Він ішов додому.
-   > (He went home.)
+6. ішов / Він / швидко / додому / пізно / з / роботи / ввечері
+   > [!answer] Він пізно ввечері швидко ішов додому з роботи.
+   > (He went home quickly from work late in the evening.) [8 words]
 
-7. добре / Все / було
-   > [!answer] Все було добре.
-   > (Everything was fine.)
+7. добре / Все / було / дуже / там / нас / у / вчора
+   > [!answer] Вчора там у нас все було дуже добре.
+   > (Yesterday everything was very good there for us.) [8 words]
 
-8. де / ти / Де / був
-   > [!answer] Де ти був?
-   > (Where were you? - to male)
+8. вчора / ти / Де / був / увечері / так / пізно
+   > [!answer] Де ти був вчора так пізно увечері?
+   > (Where were you yesterday so late in the evening?) [7 words]
 
-9. давно / Це / було
-   > [!answer] Це було давно.
-   > (That was long ago.)
+9. давно / дуже / Це / було / все / нашому / у / місті
+   > [!answer] Це все було дуже давно у нашому місті.
+   > (This all was very long ago in our city.) [8 words]
 
-10. вчора / Що / робив / ти
-   > [!answer] Що ти робив вчора?
-   > (What did you do yesterday?)
+10. вчора / Що / робив / ти / вранці / рано / так
+    > [!answer] Що ти так рано робив вчора вранці?
+    > (What were you doing so early yesterday morning?) [7 words]
 
 ## match-up: Past Tense Forms
 
@@ -358,12 +358,12 @@ Describe what you did yesterday using past tense:
    - [x] -ли
    > All plurals (ми, ви, вони) use -ли
 
-6. What does "вчора" mean?
-   - [x] yesterday
-   - [ ] tomorrow
-   - [ ] today
-   - [ ] last week
-   > вчора = yesterday
+6. What ending does the masculine singular past tense use?
+   - [x] -в
+   - [ ] -ла
+   - [ ] -ло
+   - [ ] -ли
+   > Masculine singular past ends in -в
 
 7. How do you say "I was" if you're female?
    - [ ] Я був
@@ -372,12 +372,12 @@ Describe what you did yesterday using past tense:
    - [ ] Я були
    > Female speakers use feminine form
 
-8. What is "давно" in English?
-   - [ ] recently
-   - [x] long ago
-   - [ ] tomorrow
-   - [ ] soon
-   > давно = long ago
+8. Which form is correct for "She went" (йти)?
+   - [ ] йшла
+   - [x] ішла
+   - [ ] ійшла
+   - [ ] йдела
+   > Irregular past: йти → ішла for feminine
 
 9. What is the past of "їсти" for він?
    - [x] їв
@@ -386,12 +386,12 @@ Describe what you did yesterday using past tense:
    - [ ] їсв
    > Irregular: їсти → їв/їла/їли
 
-10. What does "недавно" mean?
-   - [x] recently
-   - [ ] long ago
-   - [ ] never
-   - [ ] always
-   > недавно = recently
+10. Why does past tense change for "я"?
+    - [ ] It doesn't change
+    - [x] It matches the speaker's gender
+    - [ ] It matches the object's gender
+    - [ ] It's always masculine
+    > Past tense agrees with the subject's gender
 
 ## true-false: True or False?
 
@@ -426,6 +426,28 @@ Describe what you did yesterday using past tense:
 
 - [x] "Давно" means "long ago"
    > Correct!
+
+## group-sort: Past Tense Endings
+
+> Sort these past tense forms by their ending pattern.
+
+### Masculine (-в)
+- читав (read)
+- був (was)
+- працював (worked)
+- ішов (went)
+
+### Feminine (-ла)
+- читала (read)
+- була (was)
+- працювала (worked)
+- ішла (went)
+
+### Plural (-ли)
+- читали (read)
+- були (were)
+- працювали (worked)
+- ішли (went)
 
 ---
 

@@ -236,89 +236,89 @@ Say what you don't have:
 
 > Choose the correct genitive form.
 
-1. Немає ___. (час - time)
+1. У мене сьогодні зовсім немає вільного ___. (I have absolutely no free time today.)
    > [!answer] часу
    > [!options] час | часу | часі | часом
 
-2. Книга ___. (студент - student's book)
+2. Це цікава книга нового українського ___. (This is an interesting book of the new Ukrainian student.)
    > [!answer] студента
    > [!options] студент | студента | студенту | студенті
 
-3. Немає ___. (вода - no water)
+3. У холодильнику зовсім немає холодної ___. (There is absolutely no cold water in the fridge.)
    > [!answer] води
    > [!options] вода | води | воді | водою
 
-4. Кава без ___. (цукор - without sugar)
+4. Я завжди п'ю гарячу каву без ___. (I always drink hot coffee without sugar.)
    > [!answer] цукру
    > [!options] цукор | цукра | цукру | цукрі
 
-5. Чашка ___. (кава - cup of coffee)
+5. Це смачна чашка ранкової ___. (This is a tasty cup of morning coffee.)
    > [!answer] кави
    > [!options] кава | кави | каві | кавою
 
-6. Немає ___. (хліб - no bread)
+6. На столі немає свіжого білого ___. (There is no fresh white bread on the table.)
    > [!answer] хліба
    > [!options] хліб | хліба | хлібу | хлібі
 
-7. Для ___. (друг - for a friend)
+7. Цей подарунок для мого найкращого ___. (This gift is for my best friend.)
    > [!answer] друга
    > [!options] друг | друга | другу | друзі
 
-8. Кінець ___. (день - end of day)
+8. Це вже кінець важкого робочого ___. (This is already the end of a hard working day.)
    > [!answer] дня
    > [!options] день | дня | дню | дні
 
-9. Після ___. (робота - after work)
+9. Я завжди відпочиваю після важкої ___. (I always rest after hard work.)
    > [!answer] роботи
    > [!options] робота | роботи | роботі | роботою
 
-10. Пляшка ___. (вода - bottle of water)
+10. На столі стоїть пляшка холодної мінеральної ___. (There's a bottle of cold mineral water on the table.)
    > [!answer] води
    > [!options] вода | води | воді | водою
 
 ## unjumble: Build the Sentence
 
-> Arrange the words in the correct order.
+> Arrange the words in the correct order. Sentences range from 5-7 words.
 
-1. часу / Немає
-   > [!answer] Немає часу.
-   > (There is no time.)
+1. часу / сьогодні / немає / у / мене / вільного / зовсім
+   > [!answer] У мене сьогодні зовсім немає вільного часу.
+   > (I have absolutely no free time today.) [7 words]
 
-2. студента / книга / Це
-   > [!answer] Це книга студента.
-   > (This is the student's book.)
+2. студента / книга / Це / нового / цікава / українського
+   > [!answer] Це цікава книга нового українського студента.
+   > (This is an interesting book of the new Ukrainian student.) [6 words]
 
-3. води / Немає
-   > [!answer] Немає води.
-   > (There is no water.)
+3. води / немає / холодної / тут / зовсім / мінеральної
+   > [!answer] Тут зовсім немає холодної мінеральної води.
+   > (There's absolutely no cold mineral water here.) [6 words]
 
-4. цукру / без / Кава
-   > [!answer] Кава без цукру.
-   > (Coffee without sugar.)
+4. цукру / без / Кава / гаряча / і / молока
+   > [!answer] Гаряча кава без цукру і молока.
+   > (Hot coffee without sugar and milk.) [6 words]
 
-5. кави / чашка / Це
-   > [!answer] Це чашка кави.
-   > (This is a cup of coffee.)
+5. кави / чашка / смачної / Це / гарячої / моя
+   > [!answer] Це моя чашка смачної гарячої кави.
+   > (This is my cup of tasty hot coffee.) [6 words]
 
-6. друга / для / подарунок / Це
-   > [!answer] Це подарунок для друга.
-   > (This is a gift for a friend.)
+6. друга / для / подарунок / мого / кращого
+   > [!answer] Це подарунок для мого кращого друга.
+   > (This is a gift for my best friend.) [6 words]
 
-7. роботи / після
-   > [!answer] Після роботи.
-   > (After work.)
+7. роботи / після / йду / Я / додому
+   > [!answer] Я йду додому після роботи.
+   > (I go home after work.) [5 words]
 
-8. грошей / немає / У мене
-   > [!answer] У мене немає грошей.
-   > (I don't have money.)
+8. грошей / немає / У мене / зараз
+   > [!answer] У мене зараз немає грошей.
+   > (I don't have money right now.) [5 words]
 
-9. дня / кінець / Це
-   > [!answer] Це кінець дня.
-   > (This is the end of the day.)
+9. дня / кінець / Це / важкого / робочого
+   > [!answer] Це кінець важкого робочого дня.
+   > (This is the end of a hard work day.) [5 words]
 
-10. хліба / Немає
-   > [!answer] Немає хліба.
-   > (There is no bread.)
+10. хліба / Немає / свіжого / в магазині
+    > [!answer] В магазині немає свіжого хліба.
+    > (There's no fresh bread in the store.) [5 words]
 
 ## match-up: Match the Pairs
 
@@ -444,6 +444,27 @@ Say what you don't have:
 
 - [x] "після роботи" means "after work"
    > Correct!
+
+## group-sort: Genitive Uses
+
+> Sort these examples by how genitive is used.
+
+### Possession (whose?)
+- книга студента (student's book)
+- машина брата (brother's car)
+- кінець дня (end of day)
+- чашка кави (cup of coffee)
+
+### Absence (немає + genitive)
+- Немає часу (no time)
+- Немає води (no water)
+- Немає грошей (no money)
+
+### After Prepositions
+- без цукру (without sugar)
+- для друга (for a friend)
+- після роботи (after work)
+- від мами (from mom)
 
 ---
 

@@ -267,91 +267,91 @@ Write or speak about yourself covering:
 
 ## fill-in: A1 Grammar Review
 
-> Choose the correct form to complete each sentence.
+> Choose the correct form to complete each sentence. Sentences are 5-7 words.
 
-1. Я ___ книгу. (read - present)
+1. Я зараз ___ дуже цікаву книгу. (read - present)
    > [!answer] читаю
    > [!options] читаю | читаєш | читає | читають
 
-2. Вона ___ українською. (spoke - past, feminine)
+2. Вона вчора добре ___ українською мовою. (spoke - past, feminine)
    > [!answer] говорила
    > [!options] говорив | говорила | говорило | говорили
 
-3. Ми ___ працювати завтра. (will - future)
+3. Ми завтра ___ разом працювати в офісі. (will - future)
    > [!answer] будемо
    > [!options] буду | будеш | буде | будемо
 
-4. Я живу в ___. (Kyiv - locative)
+4. Я вже давно живу в ___. (Kyiv - locative)
    > [!answer] Києві
    > [!options] Київ | Києва | Києві | Києвом
 
-5. У мене немає ___. (time - genitive)
+5. На жаль, у мене немає ___. (time - genitive)
    > [!answer] часу
    > [!options] час | часу | часі | часом
 
-6. Це ___ дім. (big - masculine)
+6. Це дуже ___ і затишний новий дім. (big - masculine)
    > [!answer] великий
    > [!options] великий | велика | велике | великі
 
-7. Вона носить ___ сукню. (new - feminine accusative)
+7. Вона сьогодні носить гарну ___ сукню. (new - feminine accusative)
    > [!answer] нову
    > [!options] новий | нова | нову | нове
 
-8. Сьогодні ___. (cold - impersonal)
+8. Сьогодні надворі дуже ___ і вітряно. (cold - impersonal)
    > [!answer] холодно
    > [!options] холодний | холодна | холодне | холодно
 
-9. Я ___ говорити українською. (can)
+9. Я вже добре ___ говорити українською. (can)
    > [!answer] можу
    > [!options] можу | можеш | може | можуть
 
-10. ___ мене є брат. (I have)
+10. ___ мене є старший брат Андрій. (I have)
    > [!answer] У
    > [!options] Я | У | На | Мій
 
 ## unjumble: Build the Sentence
 
-> Arrange the words in the correct order.
+> Arrange the words in the correct order. Sentences range from 6-8 words.
 
-1. читаю / Я / книгу
-   > [!answer] Я читаю книгу.
-   > (I am reading a book.)
+1. цікаву / читаю / Я / книгу / зараз / українську / нову
+   > [!answer] Я зараз читаю нову цікаву українську книгу.
+   > (I am now reading a new interesting Ukrainian book.) [7 words]
 
-2. Вона / вчора / працювала
-   > [!answer] Вона вчора працювала.
-   > (She worked yesterday.)
+2. Вона / вчора / довго / працювала / весь / день / в / офісі
+   > [!answer] Вона вчора весь день довго працювала в офісі.
+   > (She worked a long time in the office all day yesterday.) [8 words]
 
-3. буду / Завтра / я / вдома
-   > [!answer] Завтра я буду вдома.
-   > (Tomorrow I will be at home.)
+3. буду / Завтра / я / вдома / весь / день / увечері
+   > [!answer] Завтра увечері я буду весь день вдома.
+   > (Tomorrow evening I will be at home all day.) [7 words]
 
-4. Києві / Я / живу / в
-   > [!answer] Я живу в Києві.
-   > (I live in Kyiv.)
+4. Києві / Я / живу / в / давно / вже / красивому
+   > [!answer] Я вже давно живу в красивому Києві.
+   > (I have been living in beautiful Kyiv for a long time.) [7 words]
 
-5. часу / немає / У / мене
-   > [!answer] У мене немає часу.
-   > (I don't have time.)
+5. часу / немає / У / мене / на / жаль / зовсім
+   > [!answer] На жаль, у мене зовсім немає часу.
+   > (Unfortunately, I have no time at all.) [7 words]
 
-6. велика / Це / родина
-   > [!answer] Це велика родина.
-   > (This is a big family.)
+6. велика / Це / дружна / моя / родина / і / щаслива
+   > [!answer] Це моя велика дружна і щаслива родина.
+   > (This is my big close-knit and happy family.) [7 words]
 
-7. дощ / Йде
-   > [!answer] Йде дощ.
-   > (It's raining.)
+7. сильний / дощ / Сьогодні / йде / холодний / надворі / осінній
+   > [!answer] Сьогодні надворі йде сильний холодний осінній дощ.
+   > (Today a strong cold autumn rain is falling outside.) [7 words]
 
-8. каву / Я / люблю
-   > [!answer] Я люблю каву.
-   > (I love coffee.)
+8. гарячу / каву / Я / дуже / люблю / з / молоком
+   > [!answer] Я дуже люблю гарячу каву з молоком.
+   > (I really love hot coffee with milk.) [7 words]
 
-9. українською / говорити / Я / можу
-   > [!answer] Я можу говорити українською.
-   > (I can speak Ukrainian.)
+9. українською / говорити / Я / можу / вже / добре / мовою
+   > [!answer] Я вже можу добре говорити українською мовою.
+   > (I can already speak Ukrainian language well.) [7 words]
 
-10. Мене / Олена / звати
-   > [!answer] Мене звати Олена.
-   > (My name is Olena.)
+10. Мене / Олена / з / звати / Києва / і / я / студентка
+   > [!answer] Мене звати Олена, я студентка з Києва.
+   > (My name is Olena, I'm a student from Kyiv.) [8 words]
 
 ## match-up: A1 Vocabulary Review
 
@@ -477,5 +477,27 @@ Write or speak about yourself covering:
 
 - [x] "У мене є" means "I have"
    > Correct!
+
+## group-sort: A1 Grammar Review
+
+> Sort these grammatical elements into the correct category.
+
+### Cases (4 A1 Cases)
+- Nominative (хто? що?)
+- Accusative (кого? що?)
+- Genitive (кого? чого?)
+- Locative (де?)
+
+### Verb Tenses
+- Present (-ю, -єш, -є)
+- Past (-в, -ла, -ло, -ли)
+- Future (буду + infinitive)
+- Modal (можу, повинен)
+
+### Word Types
+- Adjectives (-ий, -а, -е)
+- Possessives (мій, моя, моє)
+- Numbers (один, два, три)
+- Pronouns (я, ти, він, вона)
 
 ---

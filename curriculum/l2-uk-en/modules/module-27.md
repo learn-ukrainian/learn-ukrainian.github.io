@@ -233,91 +233,91 @@ Describe yourself or a friend:
 
 ## fill-in: Clothes and Appearance
 
-> Choose the correct word or form.
+> Choose the correct word or form. Sentences are 5-7 words.
 
-1. Я ношу ___ сорочку. (white - feminine accusative)
+1. Я завжди ношу ___ сорочку на роботу. (white - feminine accusative)
    > [!answer] білу
    > [!options] білий | біла | білу | біле
 
-2. Вона носить ___ сукню. (red - feminine accusative)
+2. Вона сьогодні носить дуже гарну ___ сукню. (red - feminine accusative)
    > [!answer] червону
    > [!options] червоний | червона | червону | червоне
 
-3. Він носить ___ штани. (black - plural accusative)
+3. Він зазвичай носить ___ штани на роботу. (black - plural accusative)
    > [!answer] чорні
    > [!options] чорний | чорна | чорне | чорні
 
-4. На мені ___ джинси. (blue - plural)
+4. Сьогодні на мені нові ___ джинси. (blue - plural)
    > [!answer] сині
    > [!options] синій | синя | синє | сині
 
-5. У неї ___ волосся. (long - neuter)
+5. У неї дуже гарне ___ темне волосся. (long - neuter)
    > [!answer] довге
    > [!options] довгий | довга | довге | довгі
 
-6. У нього ___ очі. (brown - plural)
+6. У нього такі красиві ___ великі очі. (brown - plural)
    > [!answer] карі
    > [!options] карий | кара | каре | карі
 
-7. Він ___. (tall - masculine)
+7. Він дуже ___ і стрункий молодий чоловік. (tall - masculine)
    > [!answer] високий
    > [!options] високий | висока | високе | високі
 
-8. Вона ___. (thin - feminine)
+8. Вона така ___ і гарна молода жінка. (thin - feminine)
    > [!answer] худа
    > [!options] худий | худа | худе | худі
 
-9. Я ___ джинси на роботу. (wear - habitual)
+9. Я завжди ___ зручні джинси на роботу. (wear - habitual)
    > [!answer] ношу
    > [!options] ношу | носиш | носить | носять
 
-10. Що ти ___? (wearing)
+10. Що ти зазвичай ___ на вечірку? (wearing)
    > [!answer] носиш
    > [!options] ношу | носиш | носить | носять
 
 ## unjumble: Build the Sentence
 
-> Arrange the words in the correct order.
+> Arrange the words in the correct order. Sentences range from 6-8 words.
 
-1. ношу / Я / джинси
-   > [!answer] Я ношу джинси.
-   > (I wear jeans.)
+1. ношу / Я / джинси / сині / завжди / на / роботу
+   > [!answer] Я завжди ношу сині джинси на роботу.
+   > (I always wear blue jeans to work.) [7 words]
 
-2. сукню / носить / Вона / червону
-   > [!answer] Вона носить червону сукню.
-   > (She wears a red dress.)
+2. сукню / носить / Вона / червону / гарну / на / вечірку
+   > [!answer] Вона носить гарну червону сукню на вечірку.
+   > (She wears a beautiful red dress to the party.) [7 words]
 
-3. На / білу / мені / сорочку
-   > [!answer] На мені білу сорочку.
-   > (I'm wearing a white shirt.)
+3. На / біла / мені / сорочка / нова / сьогодні / гарна
+   > [!answer] Сьогодні на мені нова гарна біла сорочка.
+   > (Today I'm wearing a new beautiful white shirt.) [7 words]
 
-4. волосся / У / довге / неї
-   > [!answer] У неї довге волосся.
-   > (She has long hair.)
+4. волосся / У / довге / неї / темне / дуже / красиве
+   > [!answer] У неї дуже красиве довге темне волосся.
+   > (She has very beautiful long dark hair.) [7 words]
 
-5. очі / нього / карі / У
-   > [!answer] У нього карі очі.
-   > (He has brown eyes.)
+5. очі / нього / карі / У / красиві / великі / такі
+   > [!answer] У нього такі красиві великі карі очі.
+   > (He has such beautiful big brown eyes.) [7 words]
 
-6. високий / Він
-   > [!answer] Він високий.
-   > (He is tall.)
+6. високий / Він / і / дуже / стрункий / молодий / чоловік
+   > [!answer] Він дуже високий і стрункий молодий чоловік.
+   > (He is a very tall and slim young man.) [7 words]
 
-7. окуляри / Вона / носить
-   > [!answer] Вона носить окуляри.
-   > (She wears glasses.)
+7. окуляри / Вона / носить / завжди / модні / на / роботі
+   > [!answer] Вона завжди носить модні окуляри на роботі.
+   > (She always wears fashionable glasses at work.) [7 words]
 
-8. Де / куртка / моя
-   > [!answer] Де моя куртка?
-   > (Where is my jacket?)
+8. Де / куртка / моя / тепла / нова / зимова / синя
+   > [!answer] Де моя нова тепла синя зимова куртка?
+   > (Where is my new warm blue winter jacket?) [7 words]
 
-9. черевики / чорні / Це
-   > [!answer] Це чорні черевики.
-   > (These are black shoes.)
+9. черевики / чорні / Це / мої / нові / зручні / шкіряні
+   > [!answer] Це мої нові зручні чорні шкіряні черевики.
+   > (These are my new comfortable black leather shoes.) [7 words]
 
-10. носиш / Що / ти
-   > [!answer] Що ти носиш?
-   > (What are you wearing?)
+10. носиш / Що / ти / зазвичай / на / роботу / влітку
+    > [!answer] Що ти зазвичай носиш на роботу влітку?
+    > (What do you usually wear to work in summer?) [7 words]
 
 ## match-up: Clothing Vocabulary
 
@@ -443,6 +443,28 @@ Describe yourself or a friend:
 
 - [x] "Черевики" means "shoes"
    > Correct!
+
+## group-sort: Clothing Categories
+
+> Sort these clothing items into categories.
+
+### Tops
+- сорочка (shirt)
+- футболка (t-shirt)
+- светр (sweater)
+- куртка (jacket)
+
+### Bottoms
+- штани (pants)
+- джинси (jeans)
+- спідниця (skirt)
+- шорти (shorts)
+
+### Footwear
+- черевики (shoes)
+- кросівки (sneakers)
+- чоботи (boots)
+- туфлі (dress shoes)
 
 ---
 

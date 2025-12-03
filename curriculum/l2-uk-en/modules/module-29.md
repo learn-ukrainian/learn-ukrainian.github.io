@@ -215,91 +215,91 @@ Tell about your family:
 
 ## fill-in: Family and Possessives
 
-> Choose the correct word or form.
+> Choose the correct word or form. Sentences are 5-7 words.
 
-1. ___ мене є брат. (I have)
+1. ___ мене є старший брат Андрій. (I have)
    > [!answer] У
    > [!options] У | На | З | Від
 
-2. Це ___ мама. (my - feminine)
+2. Це ___ улюблена мама з України. (my - feminine)
    > [!answer] моя
    > [!options] мій | моя | моє | мої
 
-3. Це ___ батько. (my - masculine)
+3. Це ___ рідний батько з Києва. (my - masculine)
    > [!answer] мій
    > [!options] мій | моя | моє | мої
 
-4. У неї п'ять ___. (children - genitive plural)
+4. У неї вже п'ять маленьких ___. (children - genitive plural)
    > [!answer] дітей
    > [!options] діти | дитина | дітей | дитини
 
-5. У мене немає ___. (sister - genitive)
+5. На жаль, у мене немає ___. (sister - genitive)
    > [!answer] сестри
    > [!options] сестра | сестру | сестри | сестрою
 
-6. Я бачу ___. (brother - accusative animate)
+6. Я часто бачу свого старшого ___. (brother - accusative animate)
    > [!answer] брата
    > [!options] брат | брата | брату | братом
 
-7. Я люблю ___. (mom - accusative)
+7. Я дуже сильно люблю свою ___. (mom - accusative)
    > [!answer] маму
    > [!options] мама | маму | мами | мамою
 
-8. Він ___. (married - masculine)
+8. Він давно ___ і має дітей. (married - masculine)
    > [!answer] одружений
    > [!options] одружений | одружена | одружене | одружені
 
-9. Вона ___. (married - feminine)
+9. Вона вже ___ і живе в Києві. (married - feminine)
    > [!answer] одружена
    > [!options] одружений | одружена | одружене | одружені
 
-10. Це ___ діти. (our - plural)
+10. Це ___ улюблені маленькі діти. (our - plural)
    > [!answer] наші
    > [!options] наш | наша | наше | наші
 
 ## unjumble: Build the Sentence
 
-> Arrange the words in the correct order.
+> Arrange the words in the correct order. Sentences range from 6-8 words.
 
-1. є / мене / брат / У
-   > [!answer] У мене є брат.
-   > (I have a brother.)
+1. є / мене / брат / У / старший / і / сестра
+   > [!answer] У мене є старший брат і сестра.
+   > (I have an older brother and a sister.) [7 words]
 
-2. моя / Це / сестра
-   > [!answer] Це моя сестра.
-   > (This is my sister.)
+2. старша / моя / Це / сестра / Марія / улюблена
+   > [!answer] Це моя улюблена старша сестра Марія.
+   > (This is my favorite older sister Maria.) [6 words]
 
-3. мій / Де / батько
-   > [!answer] Де мій батько?
-   > (Where is my father?)
+3. зараз / мій / Де / батько / рідний / живе
+   > [!answer] Де зараз живе мій рідний батько?
+   > (Where does my birth father live now?) [6 words]
 
-4. мама / Моя / лікарка
-   > [!answer] Моя мама лікарка.
-   > (My mom is a doctor.)
+4. в / мама / Моя / лікарні / лікарка / міській / великій
+   > [!answer] Моя мама лікарка в великій міській лікарні.
+   > (My mom is a doctor at a big city hospital.) [7 words]
 
-5. діти / у / Скільки / вас
-   > [!answer] Скільки у вас діти?
-   > (How many children do you have?)
+5. маленьких / дітей / у / Скільки / вас / зараз / є
+   > [!answer] Скільки у вас зараз є маленьких дітей?
+   > (How many small children do you have now?) [7 words]
 
-6. немає / мене / сестри / У
-   > [!answer] У мене немає сестри.
-   > (I don't have a sister.)
+6. немає / мене / сестри / У / на / жаль / рідної
+   > [!answer] На жаль, у мене немає рідної сестри.
+   > (Unfortunately, I don't have a birth sister.) [7 words]
 
-7. батьки / Мої / Києві / живуть / у
-   > [!answer] Мої батьки живуть у Києві.
-   > (My parents live in Kyiv.)
+7. батьки / Мої / Києві / живуть / у / рідні / давно
+   > [!answer] Мої рідні батьки давно живуть у Києві.
+   > (My parents have lived in Kyiv for a long time.) [7 words]
 
-8. брата / Мого / Андрій / звати
-   > [!answer] Мого брата звати Андрій.
-   > (My brother's name is Andriy.)
+8. молодшого / брата / Мого / Андрій / звати / улюбленого
+   > [!answer] Мого улюбленого молодшого брата звати Андрій.
+   > (My favorite younger brother's name is Andriy.) [6 words]
 
-9. велика / У / родина / мене
-   > [!answer] У мене велика родина.
-   > (I have a big family.)
+9. велика / У / дружна / родина / мене / і / щаслива
+   > [!answer] У мене велика дружна і щаслива родина.
+   > (I have a big close-knit and happy family.) [7 words]
 
-10. дітей / п'ять / неї / У
-   > [!answer] У неї п'ять дітей.
-   > (She has five children.)
+10. дітей / п'ять / неї / маленьких / У / вже / гарних
+   > [!answer] У неї вже п'ять гарних маленьких дітей.
+   > (She already has five beautiful small children.) [7 words]
 
 ## match-up: Family Vocabulary
 
@@ -357,12 +357,12 @@ Tell about your family:
    - [ ] accusative form
    > дитина has irregular plural: діти
 
-6. What does "одружений" mean?
-   - [x] married (masculine)
-   - [ ] married (feminine)
-   - [ ] divorced
-   - [ ] single
-   > одружена is feminine
+6. What form is "одружений" vs "одружена"?
+   - [x] Masculine vs feminine adjective agreement
+   - [ ] Past vs present tense
+   - [ ] Singular vs plural
+   - [ ] Formal vs informal
+   > Adjectives agree with subject: він одружений, вона одружена
 
 7. How do you say "my sister" (possessive)?
    - [ ] мій сестра
@@ -371,12 +371,12 @@ Tell about your family:
    - [ ] мої сестра
    > сестра is feminine, so моя
 
-8. What does "свекруха" mean?
-   - [x] mother-in-law (husband's mother)
-   - [ ] mother-in-law (wife's mother)
-   - [ ] aunt
-   - [ ] grandmother
-   > Different words for each in-law
+8. Which case is used after "у мене немає"?
+   - [ ] Nominative
+   - [ ] Accusative
+   - [x] Genitive
+   - [ ] Locative
+   > немає + genitive: у мене немає сестри
 
 9. How do you ask "Do you have siblings?"
    - [x] У тебе є брати чи сестри?
@@ -425,6 +425,28 @@ Tell about your family:
 
 - [x] "Дружина" means "wife"
    > Correct!
+
+## group-sort: Family Categories
+
+> Sort these family terms into the correct category.
+
+### Immediate Family
+- мама (mom)
+- тато (dad)
+- брат (brother)
+- сестра (sister)
+
+### Extended Family
+- дідусь (grandpa)
+- бабуся (grandma)
+- дядько (uncle)
+- тітка (aunt)
+
+### Marriage Terms
+- чоловік (husband)
+- дружина (wife)
+- наречений (fiancé)
+- наречена (fiancée)
 
 ---
 

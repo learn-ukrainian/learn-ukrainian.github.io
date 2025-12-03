@@ -218,43 +218,43 @@ Answer:
 
 > Choose the correct form of the modal verb.
 
-1. Я ___ говорити українською. (can)
+1. Я вже добре ___ говорити українською мовою. (can)
    > [!answer] можу
    > [!options] можу | можеш | може | можуть
 
-2. Ти ___ мені допомогти? (can)
+2. Ти ___ мені сьогодні допомогти з цим завданням? (can)
    > [!answer] можеш
    > [!options] можу | можеш | може | можуть
 
-3. Вона ___ працювати завтра. (must)
+3. Вона ___ багато працювати завтра у великому офісі. (must)
    > [!answer] мусить
    > [!options] мушу | мусиш | мусить | мусять
 
-4. Ми ___ поспішати! (must)
+4. Ми ___ дуже поспішати, бо вже пізно! (must)
    > [!answer] мусимо
    > [!options] мушу | мусимо | мусите | мусять
 
-5. Він ___ допомогти. (should - masculine)
+5. Він обов'язково ___ допомогти своїм друзям сьогодні. (should - masculine)
    > [!answer] повинен
    > [!options] повинен | повинна | повинне | повинні
 
-6. Вона ___ прийти. (should - feminine)
+6. Вона ___ прийти на нашу важливу зустріч завтра. (should - feminine)
    > [!answer] повинна
    > [!options] повинен | повинна | повинне | повинні
 
-7. ___ треба йти. (I need)
+7. ___ вже зараз треба йти додому з роботи. (I need)
    > [!answer] Мені
    > [!options] Я | Мені | Моє | Мій
 
-8. ___ потрібно відпочити. (You need)
+8. ___ сьогодні обов'язково потрібно добре відпочити. (You need)
    > [!answer] Тобі
    > [!options] Ти | Тобі | Твій | Твоє
 
-9. Вони ___ приїхати. (can)
+9. Вони завтра ___ приїхати до нас у гості. (can)
    > [!answer] можуть
    > [!options] можу | можемо | можете | можуть
 
-10. Ви ___ почекати? (can)
+10. Ви ___ трохи почекати тут біля входу? (can)
    > [!answer] можете
    > [!options] можу | можемо | можете | можуть
 
@@ -262,45 +262,45 @@ Answer:
 
 > Arrange the words in the correct order.
 
-1. можу / Я / допомогти
-   > [!answer] Я можу допомогти.
-   > (I can help.)
+1. можу / Я / допомогти / тобі / зараз / з / цим / завданням
+   > [!answer] Я можу зараз допомогти тобі з цим завданням.
+   > (I can help you with this task now.) [8 words]
 
-2. мусить / Вона / працювати
-   > [!answer] Вона мусить працювати.
-   > (She must work.)
+2. мусить / Вона / працювати / сьогодні / багато / у / офісі
+   > [!answer] Вона мусить сьогодні багато працювати у офісі.
+   > (She must work a lot at the office today.) [7 words]
 
-3. повинні / Ми / вчитися
-   > [!answer] Ми повинні вчитися.
-   > (We should study.)
+3. повинні / Ми / вчитися / кожен / день / українську / мову
+   > [!answer] Ми повинні кожен день вчитися українську мову.
+   > (We should study Ukrainian language every day.) [7 words]
 
-4. треба / Мені / йти
-   > [!answer] Мені треба йти.
-   > (I need to go.)
+4. треба / Мені / йти / вже / додому / з / роботи
+   > [!answer] Мені вже треба йти додому з роботи.
+   > (I already need to go home from work.) [7 words]
 
-5. хочуть / Вони / їсти
-   > [!answer] Вони хочуть їсти.
-   > (They want to eat.)
+5. хочуть / Вони / їсти / щось / смачне / і / гаряче
+   > [!answer] Вони хочуть їсти щось смачне і гаряче.
+   > (They want to eat something tasty and hot.) [7 words]
 
-6. не / зрозуміти / можу / Я
-   > [!answer] Я не можу зрозуміти.
-   > (I can't understand.)
+6. не / зрозуміти / можу / Я / це / складне / завдання
+   > [!answer] Я не можу зрозуміти це складне завдання.
+   > (I can't understand this difficult task.) [7 words]
 
-7. поспішати / треба / Не
-   > [!answer] Не треба поспішати.
-   > (No need to hurry.)
+7. поспішати / треба / Не / тобі / зараз / ще / є / час
+   > [!answer] Тобі зараз не треба поспішати, ще є час.
+   > (You don't need to hurry now, there's still time.) [8 words]
 
-8. хоче / Він / відпочити
-   > [!answer] Він хоче відпочити.
-   > (He wants to rest.)
+8. хоче / Він / відпочити / трохи / сьогодні / після / роботи
+   > [!answer] Він хоче сьогодні трохи відпочити після роботи.
+   > (He wants to rest a bit after work today.) [7 words]
 
-9. допомогти / можеш / Ти
-   > [!answer] Ти можеш допомогти?
-   > (Can you help?)
+9. допомогти / можеш / Ти / мені / будь ласка / з / цим
+   > [!answer] Ти можеш мені допомогти з цим, будь ласка?
+   > (Can you help me with this, please?) [7 words]
 
-10. закінчити / мусить / Він / роботу
-   > [!answer] Він мусить закінчити роботу.
-   > (He must finish work.)
+10. закінчити / мусить / Він / роботу / швидко / сьогодні / ввечері
+    > [!answer] Він мусить швидко закінчити роботу сьогодні ввечері.
+    > (He must finish work quickly this evening.) [7 words]
 
 ## match-up: Modal Verbs
 
@@ -365,12 +365,12 @@ Answer:
    - [ ] Не мушу хвилюватися
    > Не треба + infinitive
 
-7. What does "потрібно" mean?
-   - [x] it's necessary/needed
-   - [ ] it's possible
-   - [ ] it's forbidden
-   - [ ] it's good
-   > потрібно = it's needed (= треба)
+7. Which case does "треба" use for "who needs"?
+   - [ ] Nominative
+   - [x] Dative
+   - [ ] Accusative
+   - [ ] Genitive
+   > Мені/тобі/їй треба (dative + infinitive)
 
 8. How do you conjugate мусити for "ми"?
    - [ ] мушу
@@ -426,6 +426,28 @@ Answer:
 
 - [x] "Потрібно" is a synonym of "треба"
    > Correct!
+
+## group-sort: Modal Verb Types
+
+> Sort these expressions by their function.
+
+### Ability (Can)
+- можу (I can)
+- можеш (you can)
+- може (he/she can)
+- можуть (they can)
+
+### Obligation (Must)
+- мушу (I must)
+- мусить (he/she must)
+- повинен (should - m)
+- повинна (should - f)
+
+### Necessity (Need)
+- треба (it's necessary)
+- потрібно (it's needed)
+- мені треба (I need)
+- тобі треба (you need)
 
 ---
 

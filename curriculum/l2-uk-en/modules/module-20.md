@@ -190,43 +190,43 @@ You're a tourist in Kyiv. Practice:
 
 > Choose the correct form for each case.
 
-1. Я бачу ___. (книга - accusative)
+1. Я сьогодні бачу цікаву нову ___. (книга - accusative)
    > [!answer] книгу
    > [!options] книга | книгу | книги | книзі
 
-2. Він бачить ___. (студент - animate accusative)
+2. Вона бачить молодого українського ___. (студент - animate accusative)
    > [!answer] студента
    > [!options] студент | студента | студенту | студенті
 
-3. Книга на ___. (стіл - locative)
+3. Нова велика книга лежить на моєму ___. (стіл - locative)
    > [!answer] столі
    > [!options] стіл | стола | столі | столом
 
-4. Я в ___. (школа - locative)
+4. Мій брат сьогодні вчиться в нашій ___. (школа - locative)
    > [!answer] школі
    > [!options] школа | школу | школі | школою
 
-5. Немає ___. (час - genitive)
+5. У мене зараз зовсім немає вільного ___. (час - genitive)
    > [!answer] часу
    > [!options] час | часу | часі | часом
 
-6. Кава без ___. (цукор - genitive)
+6. Я хочу гарячу каву без солодкого ___. (цукор - genitive)
    > [!answer] цукру
    > [!options] цукор | цукру | цукрі | цукром
 
-7. Це ___ книга. (my, feminine)
+7. Це ___ улюблена українська книга. (my, feminine)
    > [!answer] моя
    > [!options] мій | моя | моє | мої
 
-8. ___ брат студент. (her - doesn't change)
+8. ___ молодший брат зараз студент. (her - doesn't change)
    > [!answer] Її
    > [!options] Її | Його | Їхній | Моя
 
-9. Йдіть ___! (straight)
+9. Йдіть ___ два квартали і поверніть праворуч! (straight)
    > [!answer] прямо
    > [!options] праворуч | ліворуч | прямо | назад
 
-10. ___ меню, будь ласка? (May I have)
+10. ___ нам отримати меню, будь ласка? (May I have)
    > [!answer] Можна
    > [!options] Де | Можна | Що | Чи
 
@@ -234,45 +234,45 @@ You're a tourist in Kyiv. Practice:
 
 > Arrange the words in the correct order.
 
-1. книгу / бачу / Я
-   > [!answer] Я бачу книгу.
-   > (I see the book. - Accusative)
+1. цікаву / бачу / книгу / Я / сьогодні / українську / нову
+   > [!answer] Я сьогодні бачу нову цікаву українську книгу.
+   > (Today I see a new interesting Ukrainian book.) [7 words]
 
-2. студента / бачить / Вона
-   > [!answer] Вона бачить студента.
-   > (She sees the student. - Animate Accusative)
+2. нового / студента / бачить / Вона / молодого / українського
+   > [!answer] Вона бачить нового молодого українського студента.
+   > (She sees a new young Ukrainian student.) [6 words]
 
-3. офісі / Він / в
-   > [!answer] Він в офісі.
-   > (He's in the office. - Locative)
+3. офісі / великому / Він / в / працює / сьогодні / своєму
+   > [!answer] Він сьогодні працює в своєму великому офісі.
+   > (Today he works in his big office.) [7 words]
 
-4. часу / Немає
-   > [!answer] Немає часу.
-   > (There's no time. - Genitive)
+4. зараз / часу / Немає / на / це / у / мене / вільного
+   > [!answer] У мене зараз немає вільного часу на це.
+   > (I don't have free time for this now.) [8 words]
 
-5. книга / моя / Це
-   > [!answer] Це моя книга.
-   > (This is my book. - Possessive)
+5. книга / улюблена / Це / моя / українська / найкраща
+   > [!answer] Це моя найкраща улюблена українська книга.
+   > (This is my best favorite Ukrainian book.) [6 words]
 
-6. прямо / Йдіть
-   > [!answer] Йдіть прямо.
-   > (Go straight. - Direction)
+6. прямо / Йдіть / потім / праворуч / два / квартали / і / поверніть
+   > [!answer] Йдіть прямо два квартали і потім поверніть праворуч.
+   > (Go straight two blocks and then turn right.) [8 words]
 
-7. каву / люблю / Я
-   > [!answer] Я люблю каву.
-   > (I love coffee. - Food/Accusative)
+7. гарячу / каву / люблю / Я / дуже / з / молоком / солодку
+   > [!answer] Я дуже люблю гарячу солодку каву з молоком.
+   > (I really love hot sweet coffee with milk.) [8 words]
 
-8. ласка / будь / меню / Можна
-   > [!answer] Можна меню, будь ласка?
-   > (May I have the menu? - Café)
+8. ласка / будь / меню / Можна / нам / отримати
+   > [!answer] Можна нам отримати меню, будь ласка?
+   > (May we have the menu, please?) [6 words]
 
-9. коштує / Скільки / це
-   > [!answer] Скільки це коштує?
-   > (How much does this cost? - Shopping)
+9. сьогодні / коштує / Скільки / це / все / разом / у / вас
+   > [!answer] Скільки у вас сьогодні коштує це все разом?
+   > (How much does all this cost together at your place today?) [8 words]
 
-10. цукру / без / Кава
-   > [!answer] Кава без цукру.
-   > (Coffee without sugar. - Genitive)
+10. гарячу / молоком / Каву / з / без / цукру / будь ласка
+    > [!answer] Каву гарячу з молоком без цукру, будь ласка.
+    > (Hot coffee with milk without sugar, please.) [7 words]
 
 ## match-up: Match the Cases
 
@@ -398,6 +398,26 @@ You're a tourist in Kyiv. Practice:
 
 - [x] "Можна" is used for polite requests
    > Correct!
+
+## group-sort: A1.2 Grammar Categories
+
+> Sort these words by the grammatical case they trigger.
+
+### Accusative Case
+- бачити (to see)
+- читати (to read)
+- любити (to love)
+- мати (to have)
+
+### Locative Case
+- в/у (in)
+- на (on/at)
+
+### Genitive Case
+- без (without)
+- для (for)
+- до (to/until)
+- немає (there is no)
 
 ---
 

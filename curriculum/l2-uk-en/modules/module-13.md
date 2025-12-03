@@ -202,89 +202,89 @@ Where are these things/people?
 
 > Choose the correct locative form with preposition.
 
-1. Книга ___ столі. (on the table)
+1. Цікава книга лежить ___ великому столі в кімнаті. (The interesting book is lying on the big table in the room.)
    > [!answer] на
    > [!options] в | на | у | до
 
-2. Я ___ школі. (at school)
+2. Я сьогодні цілий день ___ новій школі. (I'm at the new school all day today.)
    > [!answer] у
    > [!options] в | на | у | до
 
-3. Він ___ офісі. (in the office)
+3. Він щодня працює ___ великому офісі в центрі. (He works every day in a big office in the center.)
    > [!answer] в
    > [!options] в | на | у | до
 
-4. Вона ___ ресторані. (in the restaurant)
+4. Вона часто обідає ___ італійському ресторані біля дому. (She often has lunch at an Italian restaurant near home.)
    > [!answer] в
    > [!options] в | на | у | до
 
-5. Ми ___ вулиці. (on the street)
+5. Ми зараз гуляємо ___ центральній вулиці Києва. (We are now walking on the central street of Kyiv.)
    > [!answer] на
    > [!options] в | на | у | до
 
-6. Студент ___ університеті. (at university)
+6. Новий студент вчиться ___ українському університеті. (The new student studies at a Ukrainian university.)
    > [!answer] в
    > [!options] в | на | у | до
 
-7. Кава ___ столі. (on the table)
+7. Гаряча кава стоїть ___ маленькому столі біля вікна. (Hot coffee is standing on the small table near the window.)
    > [!answer] на
    > [!options] в | на | у | до
 
-8. Я живу ___ Києві. (in Kyiv)
+8. Я давно живу ___ красивому Києві. (I have been living in beautiful Kyiv for a long time.)
    > [!answer] в
    > [!options] в | на | у | до
 
-9. Вони ___ концерті. (at the concert)
+9. Вони сьогодні ввечері ___ українському концерті. (They are at a Ukrainian concert this evening.)
    > [!answer] на
    > [!options] в | на | у | до
 
-10. Книга ___ кімнаті. (in the room)
+10. Нова книга лежить ___ великій кімнаті на полиці. (The new book is lying in the big room on the shelf.)
    > [!answer] в
    > [!options] в | на | у | до
 
 ## unjumble: Build the Sentence
 
-> Arrange the words in the correct order.
+> Arrange the words in the correct order. Sentences range from 5-7 words.
 
-1. столі / на / Книга
-   > [!answer] Книга на столі.
-   > (The book is on the table.)
+1. столі / на / Книга / великому / лежить / цікава
+   > [!answer] Цікава книга лежить на великому столі.
+   > (The interesting book is lying on the big table.) [6 words]
 
-2. школі / Я / у
-   > [!answer] Я у школі.
-   > (I'm at school.)
+2. школі / Я / у / сьогодні / новій / цілий / день
+   > [!answer] Я сьогодні цілий день у новій школі.
+   > (I'm at the new school all day today.) [7 words]
 
-3. в / Він / офісі
-   > [!answer] Він в офісі.
-   > (He's in the office.)
+3. в / Він / офісі / зараз / великому / працює / щодня
+   > [!answer] Він щодня зараз працює в великому офісі.
+   > (He now works every day in a big office.) [7 words]
 
-4. кімнаті / в / Вона
-   > [!answer] Вона в кімнаті.
-   > (She's in the room.)
+4. кімнаті / в / Вона / великій / сидить / біля / вікна
+   > [!answer] Вона сидить в великій кімнаті біля вікна.
+   > (She's sitting in the big room near the window.) [7 words]
 
-5. вулиці / Ми / на
-   > [!answer] Ми на вулиці.
-   > (We're on the street.)
+5. вулиці / Ми / на / центральній / зараз / гуляємо / Києва
+   > [!answer] Ми зараз гуляємо на центральній вулиці Києва.
+   > (We're now walking on the central street of Kyiv.) [7 words]
 
-6. університеті / в / Студент
-   > [!answer] Студент в університеті.
-   > (The student is at university.)
+6. університеті / в / Студент / новий / українському / вчиться
+   > [!answer] Новий студент вчиться в українському університеті.
+   > (The new student studies at a Ukrainian university.) [6 words]
 
-7. Києві / живу / в / Я
-   > [!answer] Я живу в Києві.
-   > (I live in Kyiv.)
+7. Києві / живу / в / Я / давно / красивому
+   > [!answer] Я давно живу в красивому Києві.
+   > (I've lived in beautiful Kyiv for a long time.) [6 words]
 
-8. ресторані / Вони / в
-   > [!answer] Вони в ресторані.
-   > (They're in the restaurant.)
+8. ресторані / Вони / в / італійському / обідають / часто / біля / дому
+   > [!answer] Вони часто обідають в італійському ресторані біля дому.
+   > (They often have lunch at an Italian restaurant near home.) [8 words]
 
-9. роботі / на / Він
-   > [!answer] Він на роботі.
-   > (He's at work.)
+9. роботі / на / Він / сьогодні / зайнятій / цілий / день
+   > [!answer] Він сьогодні цілий день на зайнятій роботі.
+   > (He's at his busy work all day today.) [7 words]
 
-10. магазині / Вона / в
-   > [!answer] Вона в магазині.
-   > (She's in the store.)
+10. магазині / Вона / в / новому / великому / біля / метро
+    > [!answer] Вона в новому великому магазині біля метро.
+    > (She's in the new big store near the metro.) [7 words]
 
 ## match-up: Match the Pairs
 
@@ -349,12 +349,12 @@ Where are these things/people?
    - [ ] Never
    > в after vowels, у after consonants
 
-7. What does "Де ти?" mean?
-   - [x] Where are you?
-   - [ ] Who are you?
-   - [ ] What are you doing?
-   - [ ] How are you?
-   > "Де" = where
+7. Why does "книга" become "книзі" in locative?
+   - [ ] Because it's feminine
+   - [ ] Because it ends in -а
+   - [x] Because г changes to з before -і
+   - [ ] It doesn't change
+   > Consonant change: г → з before locative -і
 
 8. What is the locative of "кімната" (room)?
    - [ ] кімната
@@ -370,12 +370,12 @@ Where are these things/people?
    - [ ] No change
    > г → з before -і
 
-10. What does "Я в офісі" mean?
-   - [x] I'm in the office
-   - [ ] I see the office
-   - [ ] I want the office
-   - [ ] I have an office
-   > Locative indicates location
+10. What is the locative ending pattern for most Ukrainian nouns?
+   - [ ] -у for all genders
+   - [ ] -а for all genders
+   - [x] -і for all genders
+   - [ ] No ending change
+   > Most nouns take -і in locative: столі, школі, вікні
 
 ## true-false: True or False?
 
@@ -410,6 +410,24 @@ Where are these things/people?
 
 - [x] "Я живу в Києві" is correct
    > Correct!
+
+## group-sort: Locative Prepositions
+
+> Sort these phrases by which preposition they use.
+
+### Uses в/у (in, inside)
+- в кімнаті (in the room)
+- в офісі (in the office)
+- у школі (at school)
+- в магазині (in the store)
+- в Києві (in Kyiv)
+
+### Uses на (on, at)
+- на столі (on the table)
+- на вулиці (on the street)
+- на роботі (at work)
+- на концерті (at the concert)
+- на площі (on the square)
 
 ---
 

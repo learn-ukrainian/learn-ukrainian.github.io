@@ -225,43 +225,43 @@ Write or speak about your typical day:
 
 > Choose the correct reflexive verb form.
 
-1. Я ___ о сьомій годині. (to wake up)
+1. Я зазвичай ___ о сьомій годині кожен ранок. (to wake up)
    > [!answer] прокидаюся
    > [!options] прокидаюся | прокидаєшся | прокидається | прокидаються
 
-2. Потім я ___ і чищу зуби. (to wash - reflexive)
+2. Потім я швидко ___ і чищу зуби у ванній. (to wash - reflexive)
    > [!answer] вмиваюся
    > [!options] вмиваюся | вмиваєшся | вмивається | вмиваються
 
-3. Вона ___ швидко. (to get dressed)
+3. Вона завжди ___ дуже швидко вранці перед роботою. (to get dressed)
    > [!answer] одягається
    > [!options] одягаюся | одягаєшся | одягається | одягаються
 
-4. О восьмій я ___. (to have breakfast)
+4. О восьмій годині я зазвичай ___ на кухні. (to have breakfast)
    > [!answer] снідаю
    > [!options] снідаю | снідаєш | снідає | снідають
 
-5. Він ___ з роботи о шостій. (to return)
+5. Він щодня ___ з роботи о шостій годині ввечері. (to return)
    > [!answer] повертається
    > [!options] повертаюся | повертаєшся | повертається | повертаються
 
-6. Ввечері ми ___. (to have dinner)
+6. Ввечері ми завжди разом ___ вдома всією родиною. (to have dinner)
    > [!answer] вечеряємо
    > [!options] вечеряю | вечеряєш | вечеряє | вечеряємо
 
-7. Вони ___ спати о одинадцятій. (to go to bed)
+7. Вони зазвичай ___ спати о одинадцятій годині ввечері. (to go to bed)
    > [!answer] лягають
    > [!options] лягаю | лягаєш | лягає | лягають
 
-8. Я ___ зуби двічі на день. (to brush)
+8. Я завжди ___ зуби двічі на день: вранці і ввечері. (to brush)
    > [!answer] чищу
    > [!options] чищу | чистиш | чистить | чистять
 
-9. Він ___ щоранку. (to shave)
+9. Він щоранку ___ у ванній перед сніданком. (to shave)
    > [!answer] голиться
    > [!options] голюся | голишся | голиться | голяться
 
-10. Вона ___ швидко. (to fall asleep)
+10. Вона завжди дуже швидко ___ після важкого дня. (to fall asleep)
    > [!answer] засинає
    > [!options] засинаю | засинаєш | засинає | засинають
 
@@ -269,45 +269,45 @@ Write or speak about your typical day:
 
 > Arrange the words in the correct order.
 
-1. прокидаюся / о / Я / сьомій
-   > [!answer] Я прокидаюся о сьомій.
-   > (I wake up at 7.)
+1. прокидаюся / о / Я / сьомій / зазвичай / годині / кожен / ранок
+   > [!answer] Я зазвичай прокидаюся о сьомій годині кожен ранок.
+   > (I usually wake up at 7 o'clock every morning.) [8 words]
 
-2. вмивається / Він / потім
-   > [!answer] Потім він вмивається.
-   > (Then he washes up.)
+2. вмивається / Він / потім / швидко / у / ванній / і / одягається
+   > [!answer] Потім він швидко вмивається у ванній і одягається.
+   > (Then he quickly washes up in the bathroom and gets dressed.) [8 words]
 
-3. снідає / восьмій / Вона / о
-   > [!answer] Вона снідає о восьмій.
-   > (She has breakfast at 8.)
+3. снідає / восьмій / Вона / о / завжди / на / кухні / годині
+   > [!answer] Вона завжди снідає о восьмій годині на кухні.
+   > (She always has breakfast at 8 o'clock in the kitchen.) [8 words]
 
-4. з / до / працюю / дев'ятої / п'ятої / Я
-   > [!answer] Я працюю з дев'ятої до п'ятої.
-   > (I work from 9 to 5.)
+4. з / до / працюю / дев'ятої / п'ятої / Я / щодня / офісі / у
+   > [!answer] Я щодня працюю у офісі з дев'ятої до п'ятої.
+   > (I work at the office every day from 9 to 5.) [9 words]
 
-5. повертаємося / додому / Ми / ввечері
-   > [!answer] Ми повертаємося додому ввечері.
-   > (We return home in the evening.)
+5. повертаємося / додому / Ми / ввечері / пізно / дуже / з / роботи
+   > [!answer] Ми повертаємося з роботи додому дуже пізно ввечері.
+   > (We return home from work very late in the evening.) [8 words]
 
-6. лягають / Вони / спати / о / одинадцятій
-   > [!answer] Вони лягають спати о одинадцятій.
-   > (They go to bed at 11.)
+6. лягають / Вони / спати / о / одинадцятій / зазвичай / годині / ввечері
+   > [!answer] Вони зазвичай лягають спати о одинадцятій годині ввечері.
+   > (They usually go to bed at 11 PM.) [8 words]
 
-7. вранці / чищу / Я / зуби
-   > [!answer] Я чищу зуби вранці.
-   > (I brush my teeth in the morning.)
+7. вранці / чищу / Я / зуби / завжди / і / ввечері / двічі
+   > [!answer] Я завжди чищу зуби двічі: вранці і ввечері.
+   > (I always brush my teeth twice: in the morning and evening.) [8 words]
 
-8. одягаюся / Спочатку / я
-   > [!answer] Спочатку я одягаюся.
-   > (First I get dressed.)
+8. одягаюся / Спочатку / я / потім / снідаю / швидко / на / кухні
+   > [!answer] Спочатку я швидко одягаюся, потім снідаю на кухні.
+   > (First I quickly get dressed, then I have breakfast in the kitchen.) [8 words]
 
-9. швидко / засинає / Він
-   > [!answer] Він засинає швидко.
-   > (He falls asleep quickly.)
+9. швидко / засинає / Він / зазвичай / ввечері / дуже / після / роботи
+   > [!answer] Він зазвичай дуже швидко засинає ввечері після роботи.
+   > (He usually falls asleep very quickly in the evening after work.) [8 words]
 
-10. щодня / снідаю / Я
-   > [!answer] Я снідаю щодня.
-   > (I have breakfast every day.)
+10. щодня / снідаю / Я / о / восьмій / годині / кухні / на
+    > [!answer] Я щодня снідаю о восьмій годині на кухні.
+    > (I have breakfast every day at 8 o'clock in the kitchen.) [8 words]
 
 ## match-up: Daily Routine Vocabulary
 
@@ -433,6 +433,27 @@ Write or speak about your typical day:
 
 - [x] Time expressions use "о" + locative case
    > Correct!
+
+## group-sort: Daily Routine Categories
+
+> Sort these activities by time of day.
+
+### Morning Activities
+- прокидатися (wake up)
+- вмиватися (wash)
+- снідати (have breakfast)
+- одягатися (get dressed)
+
+### Daytime Activities
+- працювати (work)
+- обідати (have lunch)
+- виходити з дому (leave home)
+
+### Evening Activities
+- повертатися (return)
+- вечеряти (have dinner)
+- лягати спати (go to bed)
+- засинати (fall asleep)
 
 ---
 

@@ -232,43 +232,43 @@ Answer these questions:
 
 > Choose the correct form to complete each sentence.
 
-1. Я люблю ___. (кава - coffee, accusative)
+1. Я завжди люблю гарячу ___ з молоком вранці. (кава - coffee, accusative)
    > [!answer] каву
    > [!options] кава | каву | кави | каві
 
-2. Вона їсть ___. (піца - pizza, accusative)
+2. Вона зазвичай їсть смачну італійську ___ на вечерю. (піца - pizza, accusative)
    > [!answer] піцу
    > [!options] піца | піцу | піци | піці
 
-3. Ми п'ємо ___. (чай - tea, accusative)
+3. Ми завжди п'ємо гарячий ___ після обіду. (чай - tea, accusative)
    > [!answer] чай
    > [!options] чай | чаю | чаї | чаєм
 
-4. Він любить ___. (борщ - borscht, accusative)
+4. Він дуже любить український домашній ___. (борщ - borscht, accusative)
    > [!answer] борщ
    > [!options] борщ | борщу | борщі | борщем
 
-5. Вони їдять ___. (вареники - dumplings, accusative)
+5. Вони часто їдять смачні ___ з картоплею. (вареники - dumplings, accusative)
    > [!answer] вареники
    > [!options] вареники | варениками | вареників | варениках
 
-6. Що ти їси на ___? (сніданок - breakfast)
+6. Що ти зазвичай їси на ___ вранці? (сніданок - breakfast)
    > [!answer] сніданок
    > [!options] сніданок | сніданку | сніданком | сніданці
 
-7. Чашка ___. (кава - cup of coffee, genitive)
+7. Я хочу велику чашку гарячої ___. (кава - cup of coffee, genitive)
    > [!answer] кави
    > [!options] кава | каву | кави | каві
 
-8. Пляшка ___. (вода - bottle of water, genitive)
+8. Мені потрібна пляшка холодної мінеральної ___. (вода - bottle of water, genitive)
    > [!answer] води
    > [!options] вода | воду | води | воді
 
-9. Кілограм ___. (яблуко - kilo of apples, genitive plural)
+9. Дайте мені, будь ласка, кілограм свіжих ___. (яблуко - kilo of apples, genitive plural)
    > [!answer] яблук
    > [!options] яблуко | яблука | яблук | яблукі
 
-10. Це дуже ___! (смачний - tasty, neuter)
+10. Це все дуже ___, дякую! (смачний - tasty, neuter)
    > [!answer] смачне
    > [!options] смачний | смачна | смачне | смачні
 
@@ -276,45 +276,45 @@ Answer these questions:
 
 > Arrange the words in the correct order.
 
-1. каву / люблю / Я
-   > [!answer] Я люблю каву.
-   > (I love coffee.)
+1. каву / люблю / Я / гарячу / з / молоком
+   > [!answer] Я люблю гарячу каву з молоком.
+   > (I love hot coffee with milk.) [6 words]
 
-2. сніданок / на / їси / Що / ти
-   > [!answer] Що ти їси на сніданок?
-   > (What do you eat for breakfast?)
+2. сніданок / на / їси / Що / ти / зазвичай
+   > [!answer] Що ти зазвичай їси на сніданок?
+   > (What do you usually eat for breakfast?) [6 words]
 
-3. борщ / люблять / Вони
-   > [!answer] Вони люблять борщ.
-   > (They love borscht.)
+3. борщ / український / люблять / Вони / смачний / домашній
+   > [!answer] Вони люблять смачний домашній український борщ.
+   > (They love tasty homemade Ukrainian borscht.) [6 words]
 
-4. кави / чашка / Це
-   > [!answer] Це чашка кави.
-   > (This is a cup of coffee.)
+4. кави / чашка / Це / гарячої / моя / смачної
+   > [!answer] Це моя чашка смачної гарячої кави.
+   > (This is my cup of tasty hot coffee.) [6 words]
 
-5. вечерю / на / Що
-   > [!answer] Що на вечерю?
-   > (What's for dinner?)
+5. вечерю / на / Що / ти / хочеш / сьогодні
+   > [!answer] Що ти хочеш на вечерю сьогодні?
+   > (What do you want for dinner today?) [6 words]
 
-6. кашу / Я / їм
-   > [!answer] Я їм кашу.
-   > (I eat porridge.)
+6. кашу / вранці / Я / завжди / їм / гарячу
+   > [!answer] Я завжди їм гарячу кашу вранці.
+   > (I always eat hot porridge in the morning.) [6 words]
 
-7. п'є / Він / молоко
-   > [!answer] Він п'є молоко.
-   > (He drinks milk.)
+7. п'є / Він / холодне / молоко / свіже / завжди
+   > [!answer] Він завжди п'є свіже холодне молоко.
+   > (He always drinks fresh cold milk.) [6 words]
 
-8. смачно / Дуже
-   > [!answer] Дуже смачно!
-   > (Very tasty!)
+8. смачно / Дуже / тут / все / сьогодні / готують
+   > [!answer] Сьогодні тут все готують дуже смачно!
+   > (Today everything is cooked very tasty here!) [6 words]
 
-9. вареники / любить / Вона
-   > [!answer] Вона любить вареники.
-   > (She loves dumplings.)
+9. вареники / з / любить / Вона / картоплею / смачні
+   > [!answer] Вона любить смачні вареники з картоплею.
+   > (She loves tasty dumplings with potatoes.) [6 words]
 
-10. Смачного
-   > [!answer] Смачного!
-   > (Bon appétit!)
+10. риба / сьогодні / свіжа / Це / дуже / смачна
+    > [!answer] Сьогодні це дуже свіжа смачна риба.
+    > (Today this is very fresh tasty fish.) [6 words]
 
 ## match-up: Match the Pairs
 
@@ -440,6 +440,28 @@ Answer these questions:
 
 - [x] "Що на вечерю?" asks "What's for dinner?"
    > Correct!
+
+## group-sort: Food Categories
+
+> Sort these foods by their category.
+
+### Фрукти (Fruits)
+- яблуко (apple)
+- банан (banana)
+- апельсин (orange)
+- груша (pear)
+
+### Овочі (Vegetables)
+- картопля (potato)
+- морква (carrot)
+- цибуля (onion)
+- помідор (tomato)
+
+### М'ясо та молочні (Meat & Dairy)
+- курка (chicken)
+- м'ясо (meat)
+- молоко (milk)
+- сир (cheese)
 
 ---
 

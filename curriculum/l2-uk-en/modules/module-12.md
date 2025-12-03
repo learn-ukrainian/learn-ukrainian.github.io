@@ -174,89 +174,89 @@ Practice with real people:
 
 > Choose the correct accusative form for animate nouns (people).
 
-1. Я бачу ___. (студент - male student)
+1. Я бачу нового українського ___ біля бібліотеки. (I see a new Ukrainian student near the library.)
    > [!answer] студента
    > [!options] студент | студента | студенті | студенту
 
-2. Вона знає ___. (лікар - male doctor)
+2. Вона добре знає цього досвідченого ___. (She knows this experienced doctor well.)
    > [!answer] лікаря
    > [!options] лікар | лікаря | лікарі | лікару
 
-3. Я бачу ___. (студентка - female student)
+3. Я бачу молоду талановиту ___ на сцені. (I see a young talented student on stage.)
    > [!answer] студентку
    > [!options] студентка | студентку | студентці | студенткою
 
-4. Він чекає на ___. (друг - male friend)
+4. Він давно чекає на свого найкращого ___. (He has been waiting for his best friend for a long time.)
    > [!answer] друга
    > [!options] друг | друга | друзі | другу
 
-5. Ми знаємо ___. (вчитель - male teacher)
+5. Ми добре знаємо нашого нового ___. (We know our new teacher well.)
    > [!answer] вчителя
    > [!options] вчитель | вчителя | вчителі | вчителю
 
-6. Вона бачить ___. (жінка - woman)
+6. Вона часто бачить цю молоду ___ в парку. (She often sees this young woman in the park.)
    > [!answer] жінку
    > [!options] жінка | жінку | жінці | жінкою
 
-7. Я знаю ___. (чоловік - man)
+7. Я давно знаю цього розумного ___. (I have known this smart man for a long time.)
    > [!answer] чоловіка
    > [!options] чоловік | чоловіка | чоловіці | чоловіку
 
-8. Він чекає на ___. (подруга - female friend)
+8. Він терпляче чекає на свою добру ___. (He patiently waits for his good friend.)
    > [!answer] подругу
    > [!options] подруга | подругу | подрузі | подругою
 
-9. Ми бачимо ___. (директор)
+9. Ми рідко бачимо нашого зайнятого ___. (We rarely see our busy director.)
    > [!answer] директора
    > [!options] директор | директора | директорі | директору
 
-10. Я знаю ___. (сусідка - female neighbor)
+10. Я добре знаю цю привітну ___. (I know this friendly neighbor well.)
    > [!answer] сусідку
    > [!options] сусідка | сусідку | сусідці | сусідкою
 
 ## unjumble: Build the Sentence
 
-> Arrange the words in the correct order.
+> Arrange the words in the correct order. Sentences range from 5-7 words.
 
-1. студента / бачу / Я
-   > [!answer] Я бачу студента.
-   > (I see a student.)
+1. студента / нового / бачу / Я / українського / біля / бібліотеки
+   > [!answer] Я бачу нового українського студента біля бібліотеки.
+   > (I see a new Ukrainian student near the library.) [7 words]
 
-2. лікаря / знає / Вона
-   > [!answer] Вона знає лікаря.
-   > (She knows the doctor.)
+2. лікаря / добре / знає / Вона / цього / досвідченого
+   > [!answer] Вона добре знає цього досвідченого лікаря.
+   > (She knows this experienced doctor well.) [6 words]
 
-3. подругу / бачить / Він
-   > [!answer] Він бачить подругу.
-   > (He sees a friend.)
+3. подругу / мою / бачить / Він / часто / у / парку
+   > [!answer] Він часто бачить мою подругу у парку.
+   > (He often sees my friend in the park.) [7 words]
 
-4. на / чекаю / друга / Я
-   > [!answer] Я чекаю на друга.
-   > (I'm waiting for a friend.)
+4. на / чекаю / друга / Я / свого / найкращого / давно
+   > [!answer] Я давно чекаю на свого найкращого друга.
+   > (I've been waiting for my best friend for a long time.) [7 words]
 
-5. студентку / знаємо / Ми
-   > [!answer] Ми знаємо студентку.
-   > (We know the student.)
+5. цю / студентку / талановиту / знаємо / Ми / молоду
+   > [!answer] Ми знаємо цю молоду талановиту студентку.
+   > (We know this young talented student.) [6 words]
 
-6. вчителя / бачать / Вони
-   > [!answer] Вони бачать вчителя.
-   > (They see the teacher.)
+6. вчителя / бачать / Вони / нового / досвідченого / у / школі
+   > [!answer] Вони бачать нового досвідченого вчителя у школі.
+   > (They see the new experienced teacher at school.) [7 words]
 
-7. жінку / Він / бачить
-   > [!answer] Він бачить жінку.
-   > (He sees the woman.)
+7. жінку / цю / знаю / Я / добре / молоду / привітну
+   > [!answer] Я добре знаю цю молоду привітну жінку.
+   > (I know this young friendly woman well.) [7 words]
 
-8. на / чекає / лікаря / Вона
-   > [!answer] Вона чекає на лікаря.
-   > (She's waiting for the doctor.)
+8. на / чекає / лікаря / Вона / свого / у / лікарні
+   > [!answer] Вона чекає на свого лікаря у лікарні.
+   > (She's waiting for her doctor at the hospital.) [7 words]
 
-9. чоловіка / знаю / Я
-   > [!answer] Я знаю чоловіка.
-   > (I know the man.)
+9. чоловіка / цього / знаю / Я / давно / розумного
+   > [!answer] Я давно знаю цього розумного чоловіка.
+   > (I've known this smart man for a long time.) [6 words]
 
-10. директора / бачимо / Ми
-   > [!answer] Ми бачимо директора.
-   > (We see the director.)
+10. директора / нашого / бачимо / Ми / рідко / зайнятого
+    > [!answer] Ми рідко бачимо нашого зайнятого директора.
+    > (We rarely see our busy director.) [6 words]
 
 ## match-up: Match the Pairs
 
@@ -307,12 +307,12 @@ Practice with real people:
    - [ ] They don't change
    > Animate endings help clarify who does what
 
-5. What does "Я чекаю на друга" mean?
-   - [ ] I see a friend
-   - [x] I'm waiting for a friend
-   - [ ] I know a friend
-   - [ ] I have a friend
-   > "чекати на" + accusative = wait for
+5. Why does "друг" become "друга" in "Я чекаю на друга"?
+   - [ ] Because it's nominative
+   - [x] Because animate masculine accusative adds -а
+   - [ ] Because it's locative
+   - [ ] It doesn't need to change
+   > Animate masculine nouns add -а/-я in accusative
 
 6. What is the accusative of "друг"?
    - [ ] друг
@@ -382,6 +382,24 @@ Practice with real people:
 
 - [x] "вчитель" becomes "вчителя" in accusative
    > Correct! -ь masculines add -я
+
+## group-sort: Animate Accusative Patterns
+
+> Sort these nouns by their accusative pattern.
+
+### Masculine Animate (add -а/-я)
+- студент → студента
+- друг → друга
+- лікар → лікаря
+- вчитель → вчителя
+- чоловік → чоловіка
+
+### Feminine (both animate/inanimate: -а → -у)
+- студентка → студентку
+- подруга → подругу
+- жінка → жінку
+- лікарка → лікарку
+- сусідка → сусідку
 
 ---
 

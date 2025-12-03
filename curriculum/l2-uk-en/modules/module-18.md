@@ -224,43 +224,43 @@ Practice the complete café experience:
 
 > Choose the correct word to complete each café phrase.
 
-1. ___ меню, будь ласка? (May I have...?)
+1. ___ нам отримати меню, будь ласка? (May I have...?)
    > [!answer] Можна
    > [!options] Де | Можна | Що | Як
 
-2. Мені ___, будь ласка. (coffee, accusative)
+2. Мені гарячу ___ з молоком, будь ласка. (coffee, accusative)
    > [!answer] каву
    > [!options] кава | каву | кави | каві
 
-3. Каву ___ молоком. (with)
+3. Я хочу каву ___ свіжим холодним молоком. (with)
    > [!answer] з
    > [!options] з | без | на | в
 
-4. Каву ___ цукру. (without)
+4. Американо ___ цукру і молока, будь ласка. (without)
    > [!answer] без
    > [!options] з | без | на | до
 
-5. ___, будь ласка, воду. (Bring)
+5. ___, будь ласка, холодну мінеральну воду. (Bring)
    > [!answer] Принесіть
    > [!options] Йдіть | Принесіть | Покажіть | Поверніть
 
-6. ___, будь ласка! (The bill)
+6. ___ нам, будь ласка, ми вже готові платити! (The bill)
    > [!answer] Рахунок
    > [!options] Меню | Столик | Рахунок | Місце
 
-7. Я ___ круасан. (I'll take)
+7. Я сьогодні ___ свіжий круасан і каву. (I'll take)
    > [!answer] візьму
    > [!options] беру | візьму | маю | люблю
 
-8. Скільки ___ мене? (from)
+8. Скільки ___ мене за все разом? (from)
    > [!answer] з
    > [!options] від | до | з | для
 
-9. Можна ___? (by card)
+9. Можна тут платити ___ чи тільки готівкою? (by card)
    > [!answer] карткою
    > [!options] карткою | картка | картки | картку
 
-10. Все було дуже ___! (tasty)
+10. Все сьогодні було дуже ___, дякуємо! (tasty)
    > [!answer] смачно
    > [!options] смачний | смачна | смачно | смачні
 
@@ -268,45 +268,45 @@ Practice the complete café experience:
 
 > Arrange the words in the correct order.
 
-1. меню / Можна
-   > [!answer] Можна меню?
-   > (May I have the menu?)
+1. меню / Можна / будь ласка / нам / отримати
+   > [!answer] Можна нам отримати меню, будь ласка?
+   > (May we have the menu, please?) [6 words]
 
-2. ласка / будь / каву / Мені
-   > [!answer] Мені каву, будь ласка.
-   > (Coffee for me, please.)
+2. ласка / будь / каву / Мені / гарячу / з / молоком
+   > [!answer] Мені гарячу каву з молоком, будь ласка.
+   > (Hot coffee with milk for me, please.) [7 words]
 
-3. цукру / без / Каву
-   > [!answer] Каву без цукру.
-   > (Coffee without sugar.)
+3. цукру / без / Американо / молока / і / будь ласка
+   > [!answer] Американо без цукру і молока, будь ласка.
+   > (Americano without sugar and milk, please.) [6 words]
 
-4. воду / будь ласка / Принесіть
-   > [!answer] Принесіть воду, будь ласка.
-   > (Bring water, please.)
+4. воду / будь ласка / Принесіть / холодну / мінеральну / мені
+   > [!answer] Принесіть мені холодну мінеральну воду, будь ласка.
+   > (Bring me cold mineral water, please.) [6 words]
 
-5. ласка / будь / Рахунок
-   > [!answer] Рахунок, будь ласка!
-   > (The bill, please!)
+5. ласка / будь / Рахунок / нам / готові / платити / ми
+   > [!answer] Рахунок нам, будь ласка, ми готові платити!
+   > (The bill for us, please, we're ready to pay!) [7 words]
 
-6. мене / Скільки / з
-   > [!answer] Скільки з мене?
-   > (How much do I owe?)
+6. мене / Скільки / з / разом / за / все
+   > [!answer] Скільки з мене за все разом?
+   > (How much do I owe for everything in total?) [6 words]
 
-7. карткою / Можна
-   > [!answer] Можна карткою?
-   > (Can I pay by card?)
+7. карткою / Можна / тут / платити / чи / готівкою / тільки
+   > [!answer] Можна тут платити карткою чи тільки готівкою?
+   > (Can I pay by card here or only cash?) [7 words]
 
-8. ваша / Решта
-   > [!answer] Решта - ваша.
-   > (Keep the change.)
+8. ваша / Решта / дякую / дуже / вам
+   > [!answer] Решта ваша, дуже дякую вам.
+   > (Keep the change, thank you very much.) [5 words]
 
-9. замовити / хочемо / Ми
-   > [!answer] Ми хочемо замовити.
-   > (We'd like to order.)
+9. замовити / зараз / хочемо / Ми / каву / і / десерт
+   > [!answer] Ми зараз хочемо замовити каву і десерт.
+   > (We'd like to order coffee and dessert now.) [7 words]
 
-10. смачно / було / дуже / Все
-   > [!answer] Все було дуже смачно!
-   > (Everything was very tasty!)
+10. смачно / було / дуже / Все / сьогодні / дякуємо
+    > [!answer] Сьогодні все було дуже смачно, дякуємо!
+    > (Everything was very tasty today, thank you!) [6 words]
 
 ## match-up: Match the Pairs
 
@@ -432,6 +432,28 @@ Practice the complete café experience:
 
 - [x] Using "будь ласка" makes requests polite
    > Correct!
+
+## group-sort: Café Phrases by Function
+
+> Sort these phrases by their function in a café.
+
+### Ordering (Замовлення)
+- Мені каву, будь ласка (Coffee for me, please)
+- Я візьму... (I'll take...)
+- Що порекомендуєте? (What do you recommend?)
+- Це все (That's all)
+
+### Modifying Orders (Зміни)
+- Без цукру (Without sugar)
+- З молоком (With milk)
+- Гаряче / холодне (Hot / cold)
+- Менше цукру (Less sugar)
+
+### Paying (Оплата)
+- Рахунок, будь ласка (The bill, please)
+- Скільки з мене? (How much do I owe?)
+- Можна карткою? (Can I pay by card?)
+- Решта - ваша (Keep the change)
 
 ---
 

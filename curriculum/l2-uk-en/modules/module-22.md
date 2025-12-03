@@ -214,43 +214,43 @@ Describe your plans for the coming days:
 
 > Choose the correct form of бути to complete the future tense.
 
-1. Я ___ читати книгу. (I will read)
+1. Я завтра ___ читати нову цікаву українську книгу. (I will read)
    > [!answer] буду
    > [!options] буду | будеш | буде | будуть
 
-2. Вона ___ працювати завтра. (She will work)
+2. Вона ___ працювати у великому офісі наступного тижня. (She will work)
    > [!answer] буде
    > [!options] буду | будеш | буде | будуть
 
-3. Ми ___ вивчати українську. (We will study)
+3. Ми разом ___ вивчати українську мову весь рік. (We will study)
    > [!answer] будемо
    > [!options] буду | будемо | будете | будуть
 
-4. Ти ___ вдома? (Will you be at home?)
+4. Ти завтра ввечері ___ вдома чи на роботі? (Will you be at home?)
    > [!answer] будеш
    > [!options] буду | будеш | буде | будуть
 
-5. Вони ___ дивитися фільм. (They will watch)
+5. Вони ___ дивитися новий український фільм увечері. (They will watch)
    > [!answer] будуть
    > [!options] буде | будемо | будете | будуть
 
-6. Ви ___ їсти? (Will you eat?)
+6. Ви ___ їсти смачну домашню вечерю з нами? (Will you eat?)
    > [!answer] будете
    > [!options] буду | будемо | будете | будуть
 
-7. Він ___ там о п'ятій. (He will be there)
+7. Він ___ там о п'ятій годині вранці. (He will be there)
    > [!answer] буде
    > [!options] буду | будеш | буде | будуть
 
-8. Завтра я ___ готувати. (Tomorrow I will cook)
+8. Завтра весь день я ___ готувати смачну українську їжу. (Tomorrow I will cook)
    > [!answer] буду
    > [!options] буду | будеш | буде | будемо
 
-9. Ми ___ разом. (We will be together)
+9. Ми ___ разом на вихідних у нашій новій квартирі. (We will be together)
    > [!answer] будемо
    > [!options] буду | буде | будемо | будуть
 
-10. Вони ___ щасливі. (They will be happy)
+10. Вони обов'язково ___ дуже щасливі у новому домі. (They will be happy)
    > [!answer] будуть
    > [!options] буде | будемо | будете | будуть
 
@@ -258,45 +258,45 @@ Describe your plans for the coming days:
 
 > Arrange the words in the correct order.
 
-1. буду / Я / читати
-   > [!answer] Я буду читати.
-   > (I will read.)
+1. буду / Я / читати / завтра / нову / цікаву / книгу
+   > [!answer] Завтра я буду читати нову цікаву книгу.
+   > (Tomorrow I will read a new interesting book.) [7 words]
 
-2. працювати / буде / Вона
-   > [!answer] Вона буде працювати.
-   > (She will work.)
+2. працювати / буде / у / великому / офісі / Вона / наступного / тижня
+   > [!answer] Вона буде працювати у великому офісі наступного тижня.
+   > (She will work in a big office next week.) [8 words]
 
-3. будемо / українську / вивчати / Ми
-   > [!answer] Ми будемо вивчати українську.
-   > (We will study Ukrainian.)
+3. будемо / українську / вивчати / Ми / разом / мову / весь / рік
+   > [!answer] Ми будемо разом вивчати українську мову весь рік.
+   > (We will study Ukrainian language together all year.) [8 words]
 
-4. будеш / Ти / де / завтра
-   > [!answer] Де ти будеш завтра?
-   > (Where will you be tomorrow?)
+4. будеш / Ти / де / завтра / вранці / рано
+   > [!answer] Де ти будеш завтра рано вранці?
+   > (Where will you be tomorrow early in the morning?) [6 words]
 
-5. будуть / фільм / Вони / дивитися
-   > [!answer] Вони будуть дивитися фільм.
-   > (They will watch a movie.)
+5. будуть / фільм / Вони / дивитися / новий / український / увечері
+   > [!answer] Вони будуть дивитися новий український фільм увечері.
+   > (They will watch a new Ukrainian movie in the evening.) [7 words]
 
-6. робити / будеш / Що / ти
-   > [!answer] Що ти будеш робити?
-   > (What will you do?)
+6. робити / будеш / Що / ти / увечері / сьогодні / вдома
+   > [!answer] Що ти будеш робити сьогодні увечері вдома?
+   > (What will you do at home this evening?) [7 words]
 
-7. скоро / буде / Це
-   > [!answer] Це буде скоро.
-   > (It will be soon.)
+7. скоро / буде / Це / все / готово / дуже
+   > [!answer] Це все буде дуже скоро готово.
+   > (This all will be ready very soon.) [6 words]
 
-8. будемо / вдома / Ми
-   > [!answer] Ми будемо вдома.
-   > (We will be at home.)
+8. будемо / вдома / Ми / разом / ввечері / нашій / у / квартирі
+   > [!answer] Ми будемо разом ввечері вдома у нашій квартирі.
+   > (We will be together in the evening at home in our apartment.) [8 words]
 
-9. пізніше / Я / зателефоную
-   > [!answer] Я зателефоную пізніше.
-   > (I will call later.)
+9. пізніше / Я / зателефоную / тобі / обов'язково / сьогодні / ввечері
+   > [!answer] Я обов'язково зателефоную тобі сьогодні пізніше ввечері.
+   > (I will definitely call you today later in the evening.) [7 words]
 
-10. завтра / працювати / буду / Я
-   > [!answer] Я буду працювати завтра.
-   > (I will work tomorrow.)
+10. завтра / працювати / буду / Я / весь / день / у / офісі
+    > [!answer] Завтра я буду працювати весь день у офісі.
+    > (Tomorrow I will work all day in the office.) [8 words]
 
 ## match-up: Future Forms of Бути
 
@@ -333,12 +333,12 @@ Describe your plans for the coming days:
    - [ ] будуть
    > я буду
 
-3. What does "завтра" mean?
-   - [x] tomorrow
-   - [ ] yesterday
-   - [ ] today
-   - [ ] last week
-   > завтра = tomorrow
+3. Which form of бути is used with "ми"?
+   - [ ] буду
+   - [ ] будеш
+   - [x] будемо
+   - [ ] будуть
+   > ми будемо
 
 4. How do you say "She will work"?
    - [ ] Вона буду працювати
@@ -354,33 +354,33 @@ Describe your plans for the coming days:
    - [x] будуть
    > вони будуть
 
-6. What does "скоро" mean?
-   - [x] soon
-   - [ ] slowly
-   - [ ] already
-   - [ ] never
-   > скоро = soon
+6. How is compound future formed in Ukrainian?
+   - [x] бути (future) + infinitive
+   - [ ] бути (past) + infinitive
+   - [ ] infinitive + infinitive
+   - [ ] past tense only
+   > Compound future = буду/будеш... + infinitive
 
-7. What does "наступний" mean?
-   - [x] next
-   - [ ] last
-   - [ ] first
-   - [ ] previous
-   > наступний = next
+7. Which verb form creates simple future?
+   - [ ] Imperfective present
+   - [x] Perfective with present endings
+   - [ ] Imperfective past
+   - [ ] Infinitive only
+   > Perfective verbs conjugate to express simple future
 
-8. What does "пізніше" mean?
-   - [ ] earlier
-   - [x] later
-   - [ ] now
-   - [ ] always
-   > пізніше = later
+8. What is the perfective of "читати"?
+   - [x] прочитати
+   - [ ] читаю
+   - [ ] читав
+   - [ ] читатиму
+   > Prefix про- makes it perfective (completion)
 
-9. What does "післязавтра" mean?
-   - [ ] yesterday
-   - [ ] the day before yesterday
-   - [x] the day after tomorrow
-   - [ ] next week
-   > післязавтра = day after tomorrow
+9. Which form of бути is used with "ви"?
+   - [ ] буду
+   - [ ] будемо
+   - [x] будете
+   - [ ] будуть
+   > ви будете
 
 10. Which is correct for "We will be together"?
    - [ ] Ми буде разом
@@ -422,6 +422,26 @@ Describe your plans for the coming days:
 
 - [x] "Післязавтра" means "day after tomorrow"
    > Correct!
+
+## group-sort: Future Forms of Бути
+
+> Sort these forms by their pronoun.
+
+### Singular Forms
+- буду (я)
+- будеш (ти)
+- буде (він/вона/воно)
+
+### Plural Forms
+- будемо (ми)
+- будете (ви)
+- будуть (вони)
+
+### Time Expressions (Future)
+- завтра (tomorrow)
+- скоро (soon)
+- наступного тижня (next week)
+- пізніше (later)
 
 ---
 

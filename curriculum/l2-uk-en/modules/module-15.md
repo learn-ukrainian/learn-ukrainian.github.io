@@ -230,89 +230,89 @@ Example:
 
 > Choose the correct word to complete each direction or location phrase.
 
-1. ___ метро? (Where is the metro?)
+1. ___ тут найближче метро, будь ласка? (Where is the nearest metro here, please?)
    > [!answer] Де
    > [!options] Де | Що | Хто | Як
 
-2. Йдіть ___. (Go straight.)
+2. Йдіть ___ два квартали до великого банку. (Go straight two blocks to the big bank.)
    > [!answer] прямо
    > [!options] праворуч | ліворуч | прямо | назад
 
-3. Поверніть ___. (Turn right.)
+3. Поверніть ___ біля великого нового магазину. (Turn right near the big new store.)
    > [!answer] праворуч
    > [!options] прямо | праворуч | назад | далеко
 
-4. Банк ___ метро. (The bank is near the metro.)
+4. Великий банк знаходиться ___ старого метро. (The big bank is located near the old metro.)
    > [!answer] біля
    > [!options] на | в | біля | за
 
-5. ___ вулицю. (Cross the street.)
+5. ___ цю широку вулицю біля світлофора. (Cross this wide street near the traffic light.)
    > [!answer] Перейдіть
    > [!options] Йдіть | Поверніть | Перейдіть | Пройдіть
 
-6. Аптека ___ готелю. (The pharmacy is opposite the hotel.)
+6. Нова аптека знаходиться ___ великого готелю. (The new pharmacy is located opposite the big hotel.)
    > [!answer] навпроти
    > [!options] біля | навпроти | за | до
 
-7. ___ найближча аптека? (Where is the nearest pharmacy?)
-   > [!answer] Де
-   > [!options] Хто | Що | Де | Як
+7. Скажіть, будь ласка, ___ найближча аптека? (Tell me please, where is the nearest pharmacy?)
+   > [!answer] де
+   > [!options] хто | що | де | як
 
-8. Йдіть ___ станції. (Go to the station.)
+8. Йдіть прямо ___ центральної станції метро. (Go straight to the central metro station.)
    > [!answer] до
    > [!options] на | в | біля | до
 
-9. Це ___ рогом. (It's around the corner.)
+9. Невелика аптека знаходиться ___ цим рогом. (The small pharmacy is around this corner.)
    > [!answer] за
    > [!options] біля | на | за | до
 
-10. Метро ___ далеко. (The metro is not far.)
+10. Найближче метро ___ дуже далеко звідси. (The nearest metro is not very far from here.)
    > [!answer] не
    > [!options] не | так | тут | там
 
 ## unjumble: Build the Sentence
 
-> Arrange the words in the correct order.
+> Arrange the words in the correct order. Sentences range from 5-7 words.
 
-1. метро / Де / найближче
-   > [!answer] Де найближче метро?
-   > (Where is the nearest metro?)
+1. метро / Де / найближче / тут / будь / ласка
+   > [!answer] Де тут найближче метро, будь ласка?
+   > (Where is the nearest metro here, please?) [6 words]
 
-2. прямо / Йдіть
-   > [!answer] Йдіть прямо.
-   > (Go straight.)
+2. прямо / Йдіть / два / квартали / до / банку
+   > [!answer] Йдіть прямо два квартали до банку.
+   > (Go straight two blocks to the bank.) [6 words]
 
-3. праворуч / Поверніть
-   > [!answer] Поверніть праворуч.
-   > (Turn right.)
+3. праворуч / Поверніть / біля / великого / нового / магазину
+   > [!answer] Поверніть праворуч біля великого нового магазину.
+   > (Turn right near the big new store.) [6 words]
 
-4. вулицю / Перейдіть
-   > [!answer] Перейдіть вулицю.
-   > (Cross the street.)
+4. вулицю / Перейдіть / цю / широку / біля / світлофора
+   > [!answer] Перейдіть цю широку вулицю біля світлофора.
+   > (Cross this wide street near the traffic light.) [6 words]
 
-5. метро / біля / Банк
-   > [!answer] Банк біля метро.
-   > (The bank is near the metro.)
+5. метро / біля / Банк / великого / старого / знаходиться
+   > [!answer] Банк знаходиться біля великого старого метро.
+   > (The bank is located near the big old metro.) [6 words]
 
-6. рогом / за / Це
-   > [!answer] Це за рогом.
-   > (It's around the corner.)
+6. рогом / за / Аптека / цим / нова / невелика
+   > [!answer] Нова невелика аптека за цим рогом.
+   > (The new small pharmacy is around this corner.) [6 words]
 
-7. ласка / будь / де / Скажіть / аптека
-   > [!answer] Скажіть, будь ласка, де аптека?
-   > (Tell me please, where is the pharmacy?)
+7. ласка / будь / де / Скажіть / найближча / аптека / нова
+   > [!answer] Скажіть, будь ласка, де найближча нова аптека?
+   > (Tell me please, where is the nearest new pharmacy?) [7 words]
 
-8. ліворуч / потім / Йдіть / прямо / поверніть
-   > [!answer] Йдіть прямо, потім поверніть ліворуч.
-   > (Go straight, then turn left.)
+8. ліворуч / потім / Йдіть / прямо / поверніть / біля / парку
+   > [!answer] Йдіть прямо, потім поверніть ліворуч біля парку.
+   > (Go straight, then turn left near the park.) [7 words]
 
-9. Де / банк / тут
-   > [!answer] Де тут банк?
-   > (Where is a bank here?)
+9. Де / банк / тут / найближчий / великий / український
+   > [!answer] Де тут найближчий великий український банк?
+   > (Where is the nearest big Ukrainian bank here?) [6 words]
 
-10. квартали / два / Пройдіть
-   > [!answer] Пройдіть два квартали.
-   > (Go two blocks.)
+10. три / квартали / Пройдіть / прямо / до / станції / метро
+    > [!answer] Пройдіть прямо три квартали до станції метро.
+    > (Go straight three blocks to the metro station.) [7 words]
 
 ## match-up: Match the Pairs
 
@@ -342,12 +342,12 @@ Example:
    - [ ] Як метро?
    > "Де" means "where"
 
-2. What does "Йдіть прямо" mean?
-   - [x] Go straight
-   - [ ] Turn right
-   - [ ] Turn left
-   - [ ] Go back
-   > "прямо" = straight, "йдіть" = go
+2. What verb form is "Йдіть" (go)?
+   - [ ] Infinitive
+   - [ ] First person singular
+   - [x] Imperative (formal/plural)
+   - [ ] Past tense
+   > "Йдіть" is the formal imperative form of "йти"
 
 3. What preposition means "near, by"?
    - [ ] на
@@ -363,12 +363,12 @@ Example:
    - [ ] Поверніть назад
    > "ліворуч" = to the left
 
-5. What does "Перейдіть вулицю" mean?
-   - [ ] Go to the street
-   - [x] Cross the street
-   - [ ] Find the street
-   - [ ] Turn on the street
-   > "перейти" = to cross
+5. What case does "біля" require?
+   - [ ] Nominative
+   - [ ] Accusative
+   - [x] Genitive
+   - [ ] Locative
+   > "біля" + genitive: біля метро, біля банку
 
 6. How do you politely start asking for directions?
    - [ ] Йдіть!
@@ -377,19 +377,19 @@ Example:
    - [ ] Так!
    > "Вибачте" = Excuse me (polite opener)
 
-7. What does "Це за рогом" mean?
-   - [x] It's around the corner
-   - [ ] It's near the corner
-   - [ ] It's opposite the corner
-   - [ ] It's at the corner
-   > "за рогом" = around/behind the corner
+7. What case does "за" + instrumental express?
+   - [ ] Destination (to)
+   - [ ] Location inside
+   - [x] Location behind
+   - [ ] Location on top of
+   > "за рогом" = behind/around the corner (за + instrumental)
 
-8. Which word means "exit"?
-   - [ ] вхід
-   - [x] вихід
-   - [ ] зупинка
-   - [ ] станція
-   > "вихід" = exit, "вхід" = entrance
+8. What prefix does "вихід" (exit) use versus "вхід" (entrance)?
+   - [ ] Both have the same prefix
+   - [x] ви- (out) vs в- (in)
+   - [ ] над- (over) vs під- (under)
+   - [ ] пере- (across) vs за- (behind)
+   > ви- means out/exit, в- means in/entrance
 
 9. How do you say "Go to the station"?
    - [ ] Йдіть на станції
@@ -398,12 +398,12 @@ Example:
    - [ ] Йдіть біля станції
    > "до" + genitive for destination
 
-10. What does "найближча аптека" mean?
-   - [x] nearest pharmacy
-   - [ ] big pharmacy
-   - [ ] good pharmacy
-   - [ ] new pharmacy
-   > "найближча" = nearest
+10. Why is "найближча" (nearest) feminine in "найближча аптека"?
+   - [ ] Because it's an adjective
+   - [ ] Because all superlatives are feminine
+   - [x] Because it agrees with feminine noun "аптека"
+   - [ ] It's a fixed form that never changes
+   > Adjectives/superlatives match noun gender: найближчий (m), найближча (f)
 
 ## true-false: True or False?
 
@@ -438,6 +438,28 @@ Example:
 
 - [ ] "до" and "біля" have the same meaning
    > Incorrect. "до" = to/toward, "біля" = near/by
+
+## group-sort: Direction Types
+
+> Sort these direction words by their function.
+
+### Movement Verbs (Imperatives)
+- Йдіть (go)
+- Поверніть (turn)
+- Перейдіть (cross)
+- Пройдіть (pass through)
+
+### Direction Adverbs
+- прямо (straight)
+- праворуч (to the right)
+- ліворуч (to the left)
+- назад (back)
+
+### Location Prepositions
+- біля (near, by)
+- навпроти (opposite)
+- за (behind)
+- до (to, toward)
 
 ---
 

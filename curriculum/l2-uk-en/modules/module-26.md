@@ -216,91 +216,91 @@ Use adjectives to describe:
 
 ## fill-in: Adjective Agreement
 
-> Choose the correct adjective form to match the noun's gender.
+> Choose the correct adjective form to match the noun's gender. Sentences are 5-7 words.
 
-1. Це ___ дім. (new - masculine)
+1. Це дуже ___ і затишний дім. (new - masculine)
    > [!answer] новий
    > [!options] новий | нова | нове | нові
 
-2. Це ___ книга. (new - feminine)
-   > [!answer] нова
-   > [!options] новий | нова | нове | нові
+2. Моя мама читає дуже ___ книгу. (interesting - feminine accusative)
+   > [!answer] цікаву
+   > [!options] цікавий | цікава | цікаву | цікаві
 
-3. Це ___ вікно. (new - neuter)
+3. У кімнаті є ___ велике вікно. (new - neuter)
    > [!answer] нове
    > [!options] новий | нова | нове | нові
 
-4. Це ___ друзі. (new - plural)
+4. Мої ___ друзі живуть у Києві. (new - plural)
    > [!answer] нові
    > [!options] новий | нова | нове | нові
 
-5. Вона ___ жінка. (smart - feminine)
+5. Вона дуже ___ і талановита жінка. (smart - feminine)
    > [!answer] розумна
    > [!options] розумний | розумна | розумне | розумні
 
-6. Він ___ чоловік. (young - masculine)
+6. Мій сусід ___ і дуже веселий чоловік. (young - masculine)
    > [!answer] молодий
    > [!options] молодий | молода | молоде | молоді
 
-7. Вони ___ люди. (happy - plural)
+7. Вони завжди такі ___ і добрі люди. (happy - plural)
    > [!answer] щасливі
    > [!options] щасливий | щаслива | щасливе | щасливі
 
-8. Це ___ місто. (old - neuter)
+8. Львів - дуже ___ і гарне місто. (old - neuter)
    > [!answer] старе
    > [!options] старий | стара | старе | старі
 
-9. Ця робота ___. (interesting - feminine)
+9. Ця нова робота дуже ___ для мене. (interesting - feminine)
    > [!answer] цікава
    > [!options] цікавий | цікава | цікаве | цікаві
 
-10. Погода сьогодні ___. (bad - feminine)
+10. Погода сьогодні зовсім ___ і холодна. (bad - feminine)
    > [!answer] погана
    > [!options] поганий | погана | погане | погані
 
 ## unjumble: Build the Sentence
 
-> Arrange the words in the correct order.
+> Arrange the words in the correct order. Sentences range from 6-8 words.
 
-1. дім / великий / Це
-   > [!answer] Це великий дім.
-   > (This is a big house.)
+1. дім / великий / Це / дуже / новий / і / затишний
+   > [!answer] Це дуже великий новий і затишний дім.
+   > (This is a very big new and cozy house.) [7 words]
 
-2. книга / цікава / Це
-   > [!answer] Це цікава книга.
-   > (This is an interesting book.)
+2. книга / цікава / Це / моя / улюблена / про / історію
+   > [!answer] Це моя улюблена цікава книга про історію.
+   > (This is my favorite interesting book about history.) [7 words]
 
-3. нове / Це / вікно
-   > [!answer] Це нове вікно.
-   > (This is a new window.)
+3. нове / Це / вікно / таке / чисте / у / кімнаті
+   > [!answer] Це таке чисте нове вікно у кімнаті.
+   > (This is such a clean new window in the room.) [7 words]
 
-4. добрі / друзі / Вони
-   > [!answer] Вони добрі друзі.
-   > (They are good friends.)
+4. добрі / друзі / Вони / мої / найкращі / з / університету
+   > [!answer] Вони мої найкращі добрі друзі з університету.
+   > (They are my best good friends from university.) [7 words]
 
-5. розумна / Вона / жінка
-   > [!answer] Вона розумна жінка.
-   > (She is a smart woman.)
+5. розумна / Вона / дуже / жінка / молода / і / талановита
+   > [!answer] Вона дуже розумна молода і талановита жінка.
+   > (She is a very smart young and talented woman.) [7 words]
 
-6. молодий / чоловік / Він
-   > [!answer] Він молодий чоловік.
-   > (He is a young man.)
+6. молодий / чоловік / Він / і / високий / дуже / веселий
+   > [!answer] Він дуже молодий і високий веселий чоловік.
+   > (He is a very young and tall cheerful man.) [7 words]
 
-7. щасливі / люди / Вони
-   > [!answer] Вони щасливі люди.
-   > (They are happy people.)
+7. щасливі / люди / Вони / такі / завжди / і / добрі
+   > [!answer] Вони завжди такі щасливі і добрі люди.
+   > (They are always such happy and kind people.) [7 words]
 
-8. старе / місто / Це
-   > [!answer] Це старе місто.
-   > (This is an old city.)
+8. старе / місто / Львів / таке / гарне / і / цікаве
+   > [!answer] Львів таке гарне старе і цікаве місто.
+   > (Lviv is such a beautiful old and interesting city.) [7 words]
 
-9. погода / гарна / сьогодні
-   > [!answer] Сьогодні гарна погода.
-   > (Today is nice weather.)
+9. погода / гарна / сьогодні / дуже / і / сонячна / тут
+   > [!answer] Сьогодні тут дуже гарна і сонячна погода.
+   > (Today here is very nice and sunny weather.) [7 words]
 
-10. важка / робота / Це
-   > [!answer] Це важка робота.
-   > (This is hard work.)
+10. важка / робота / Це / але / цікава / і / корисна
+    > [!answer] Це важка, але цікава і корисна робота.
+    > (This is hard but interesting and useful work.) [7 words]
 
 ## match-up: Adjective Forms
 
@@ -426,6 +426,28 @@ Use adjectives to describe:
 
 - [x] "Добрий" and "добра" are masculine and feminine forms
    > Correct!
+
+## group-sort: Adjective Endings by Gender
+
+> Sort these adjective forms by their gender.
+
+### Masculine (-ий)
+- новий (new)
+- старий (old)
+- великий (big)
+- добрий (good)
+
+### Feminine (-а)
+- нова (new)
+- стара (old)
+- велика (big)
+- добра (good)
+
+### Neuter (-е)
+- нове (new)
+- старе (old)
+- велике (big)
+- добре (good)
 
 ---
 

@@ -165,89 +165,89 @@ B: Так / Ні, я ___.
 
 > Review: Choose the correct word to complete each sentence.
 
-1. Я ___ книгу. (I read a book.)
+1. Я завжди ___ цікаві книги вранці. (I always read interesting books in the morning.)
    > [!answer] читаю
    > [!options] читаю | читаєш | читає | читають
 
-2. Це ___ стіл. (This is my table.) [masculine]
+2. Це ___ новий великий стіл у кухні. (This is my new big table in the kitchen.)
    > [!answer] мій
    > [!options] мій | моя | моє | мої
 
-3. ___ це? (What is this?)
+3. ___ це таке на твоєму столі? (What is this on your table?)
    > [!answer] Що
    > [!options] Що | Хто | Де | Як
 
-4. Вона ___ українською. (She speaks Ukrainian.)
+4. Вона добре ___ українською і англійською. (She speaks Ukrainian and English well.)
    > [!answer] говорить
    > [!options] говорю | говориш | говорить | говорять
 
-5. Я ___ не знаю. (I don't know anything.)
+5. Я ___ не знаю про цю людину. (I don't know anything about this person.)
    > [!answer] нічого
    > [!options] ніхто | нічого | ніде | ніколи
 
-6. Це коштує ___ гривень. (This costs 5 hryvnias.)
+6. Ця гарна сумка коштує ___ гривень. (This nice bag costs 5 hryvnias.)
    > [!answer] п'ять
    > [!options] один | три | п'ять | десять
 
-7. ___ ти? (Where are you from?)
+7. ___ ти приїхав до Києва? (Where did you come from to Kyiv?)
    > [!answer] Звідки
    > [!options] Де | Куди | Звідки | Коли
 
-8. Я ___ каву. (I love coffee.)
+8. Я дуже ___ гарячу каву вранці. (I really love hot coffee in the morning.)
    > [!answer] люблю
    > [!options] люблю | любиш | любить | люблять
 
-9. ___ книга. (This book.) [feminine]
+9. ___ нова цікава книга дуже гарна. (This new interesting book is very nice.)
    > [!answer] Ця
    > [!options] Цей | Ця | Це | Ці
 
-10. Він ___ студент. (He is a student.)
+10. Мій старший брат ___ хороший студент. (My older brother is a good student.)
    > [!answer] —
    > [!options] є | — | був | буде
 
 ## unjumble: Build the Sentence
 
-> Review: Arrange the words in the correct order. Sentences range from 4-6 words.
+> Review: Arrange the words in the correct order. Sentences range from 5-7 words.
 
-1. читаю / Я / цікаву / книгу
-   > [!answer] Я читаю цікаву книгу.
-   > (I read an interesting book.) [4 words]
+1. читаю / Я / цікаву / книгу / завжди / вранці
+   > [!answer] Я завжди читаю цікаву книгу вранці.
+   > (I always read an interesting book in the morning.) [6 words]
 
-2. мій / Це / новий / стіл
-   > [!answer] Це мій новий стіл.
-   > (This is my new table.) [4 words]
+2. мій / Це / новий / великий / стіл / у / кухні
+   > [!answer] Це мій новий великий стіл у кухні.
+   > (This is my new big table in the kitchen.) [7 words]
 
-3. це / Що / таке / там
-   > [!answer] Що це таке там?
-   > (What is that over there?) [4 words]
+3. це / Що / таке / там / на / столі
+   > [!answer] Що це таке там на столі?
+   > (What is that over there on the table?) [6 words]
 
-4. говорить / українською / Вона / добре
-   > [!answer] Вона говорить українською добре.
-   > (She speaks Ukrainian well.) [4 words]
+4. говорить / українською / Вона / добре / і / англійською
+   > [!answer] Вона добре говорить українською і англійською.
+   > (She speaks Ukrainian and English well.) [6 words]
 
-5. не / знаю / Я / нічого
-   > [!answer] Я нічого не знаю.
-   > (I don't know anything.) [4 words]
+5. не / знаю / Я / нічого / про / це
+   > [!answer] Я нічого не знаю про це.
+   > (I don't know anything about this.) [6 words]
 
-6. коштує / Скільки / це / разом
-   > [!answer] Скільки це коштує разом?
-   > (How much does this cost in total?) [4 words]
+6. коштує / Скільки / ця / сумка / разом / гарна
+   > [!answer] Скільки коштує ця гарна сумка разом?
+   > (How much does this nice bag cost in total?) [6 words]
 
-7. ти / Звідки / сьогодні / приїхав
-   > [!answer] Звідки ти сьогодні приїхав?
-   > (Where did you come from today?) [4 words]
+7. ти / Звідки / сьогодні / приїхав / до / Києва
+   > [!answer] Звідки ти сьогодні приїхав до Києва?
+   > (Where did you come from to Kyiv today?) [6 words]
 
-8. каву / люблю / гарячу / Я / дуже
-   > [!answer] Я дуже люблю гарячу каву.
-   > (I really love hot coffee.) [5 words]
+8. каву / люблю / гарячу / Я / дуже / вранці
+   > [!answer] Я дуже люблю гарячу каву вранці.
+   > (I really love hot coffee in the morning.) [6 words]
 
-9. книга / моя / Ця / українська / нова
-   > [!answer] Ця нова українська книга моя.
-   > (This new Ukrainian book is mine.) [5 words]
+9. книга / моя / Ця / українська / нова / дуже / цікава
+   > [!answer] Ця нова українська книга моя дуже цікава.
+   > (This new Ukrainian book of mine is very interesting.) [7 words]
 
-10. студент / Він / а / вона / вчителька
-    > [!answer] Він студент, а вона вчителька.
-    > (He is a student, and she is a teacher.) [5 words]
+10. студент / Він / хороший / а / вона / добра / вчителька
+    > [!answer] Він хороший студент, а вона добра вчителька.
+    > (He is a good student, and she is a good teacher.) [7 words]
 
 ## match-up: Match the Pairs
 

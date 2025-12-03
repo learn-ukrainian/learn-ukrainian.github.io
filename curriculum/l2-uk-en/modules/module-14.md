@@ -215,89 +215,89 @@ Describe using possessives:
 
 > Choose the correct possessive form.
 
-1. Це ___ брат. (my - masculine noun)
+1. Це ___ молодший брат, він студент університету. (This is my younger brother, he's a university student.)
    > [!answer] мій
    > [!options] мій | моя | моє | мої
 
-2. Це ___ книга. (my - feminine noun)
+2. Це ___ нова улюблена книга про Україну. (This is my new favorite book about Ukraine.)
    > [!answer] моя
    > [!options] мій | моя | моє | мої
 
-3. Це ___ вікно. (my - neuter noun)
+3. Це ___ велике світле вікно у спальні. (This is my big bright window in the bedroom.)
    > [!answer] моє
    > [!options] мій | моя | моє | мої
 
-4. Це ___ друзі. (my - plural)
+4. Це ___ найкращі друзі з університету. (These are my best friends from university.)
    > [!answer] мої
    > [!options] мій | моя | моє | мої
 
-5. Де ___ телефон? (your informal - masculine)
+5. Де ___ новий телефон, я не бачу його? (Where is your new phone, I don't see it?)
    > [!answer] твій
    > [!options] твій | твоя | твоє | твої
 
-6. ___ машина нова. (our - feminine)
+6. ___ нова машина дуже велика і зручна. (Our new car is very big and comfortable.)
    > [!answer] Наша
    > [!options] Наш | Наша | Наше | Наші
 
-7. Це ___ дім. (their - masculine)
+7. Це ___ великий новий дім у центрі Києва. (This is their big new house in the center of Kyiv.)
    > [!answer] їхній
    > [!options] їхній | їхня | їхнє | їхні
 
-8. ___ брат студент. (her - doesn't change!)
+8. ___ старший брат працює лікарем у лікарні. (Her older brother works as a doctor at a hospital.)
    > [!answer] Її
    > [!options] Її | Його | Їхній | Свій
 
-9. ___ книга цікава. (his - doesn't change!)
+9. ___ цікава книга лежить на столі в кабінеті. (His interesting book is lying on the table in the study.)
    > [!answer] Його
    > [!options] Її | Його | Їхній | Свій
 
-10. Він читає ___ книгу. (his own - reflexive, feminine)
+10. Він завжди читає ___ улюблену книгу вечорами. (He always reads his own favorite book in the evenings.)
    > [!answer] свою
    > [!options] свій | своя | свою | своє
 
 ## unjumble: Build the Sentence
 
-> Arrange the words in the correct order.
+> Arrange the words in the correct order. Sentences range from 5-7 words.
 
-1. брат / мій / Це
-   > [!answer] Це мій брат.
-   > (This is my brother.)
+1. брат / мій / Це / молодший / він / студент
+   > [!answer] Це мій молодший брат, він студент.
+   > (This is my younger brother, he's a student.) [6 words]
 
-2. книга / моя / Це
-   > [!answer] Це моя книга.
-   > (This is my book.)
+2. книга / моя / Це / нова / улюблена / про / Україну
+   > [!answer] Це моя нова улюблена книга про Україну.
+   > (This is my new favorite book about Ukraine.) [7 words]
 
-3. телефон / твій / Де
-   > [!answer] Де твій телефон?
-   > (Where is your phone?)
+3. телефон / твій / Де / новий / я / не / бачу
+   > [!answer] Де твій новий телефон, я не бачу?
+   > (Where is your new phone, I don't see it?) [7 words]
 
-4. машина / Наша / нова
-   > [!answer] Наша машина нова.
-   > (Our car is new.)
+4. машина / Наша / нова / дуже / велика / і / зручна
+   > [!answer] Наша нова машина дуже велика і зручна.
+   > (Our new car is very big and comfortable.) [7 words]
 
-5. дім / їхній / великий
-   > [!answer] Їхній дім великий.
-   > (Their house is big.)
+5. дім / їхній / великий / в / центрі / Києва / новий
+   > [!answer] Їхній великий новий дім в центрі Києва.
+   > (Their big new house is in the center of Kyiv.) [7 words]
 
-6. родина / Це / моя
-   > [!answer] Це моя родина.
-   > (This is my family.)
+6. родина / Це / моя / велика / українська / дружна
+   > [!answer] Це моя велика дружна українська родина.
+   > (This is my big close-knit Ukrainian family.) [6 words]
 
-7. паспорт / ваш / Де
-   > [!answer] Де ваш паспорт?
-   > (Where is your passport?)
+7. паспорт / ваш / Де / український / у / цій / сумці
+   > [!answer] Де ваш український паспорт у цій сумці?
+   > (Where is your Ukrainian passport in this bag?) [7 words]
 
-8. книгу / свою / читає / Він
-   > [!answer] Він читає свою книгу.
-   > (He reads his own book.)
+8. книгу / свою / читає / Він / цікаву / завжди / ввечері
+   > [!answer] Він завжди читає свою цікаву книгу ввечері.
+   > (He always reads his interesting book in the evening.) [7 words]
 
-9. це / Чий / телефон
-   > [!answer] Чий це телефон?
-   > (Whose phone is this?)
+9. це / Чий / телефон / новий / на / столі
+   > [!answer] Чий це новий телефон на столі?
+   > (Whose new phone is this on the table?) [6 words]
 
-10. друзі / наші / Це
-   > [!answer] Це наші друзі.
-   > (These are our friends.)
+10. друзі / наші / Це / найкращі / старі / з / університету
+    > [!answer] Це наші найкращі старі друзі з університету.
+    > (These are our best old friends from university.) [7 words]
 
 ## match-up: Match the Pairs
 
@@ -423,6 +423,21 @@ Describe using possessives:
 
 - [x] Possessive patterns: -ій (m), -я (f), -є (n), -і (pl)
    > Correct!
+
+## group-sort: Possessive Behavior
+
+> Sort these possessives by how they behave.
+
+### Changes for Gender (m/f/n/pl forms)
+- мій / моя / моє / мої (my)
+- твій / твоя / твоє / твої (your informal)
+- наш / наша / наше / наші (our)
+- ваш / ваша / ваше / ваші (your formal)
+- їхній / їхня / їхнє / їхні (their)
+
+### Never Changes (frozen genitive forms)
+- його (his/its) - all genders
+- її (her) - all genders
 
 ---
 

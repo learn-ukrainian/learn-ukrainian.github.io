@@ -215,91 +215,91 @@ Describe the weather for:
 
 ## fill-in: Weather Expressions
 
-> Choose the correct word or form.
+> Choose the correct word or form. Sentences are 5-7 words.
 
-1. Сьогодні ___. (cold - impersonal)
+1. Сьогодні надворі дуже ___ і вітряно. (cold - impersonal)
    > [!answer] холодно
    > [!options] холодний | холодна | холодне | холодно
 
-2. Вчора було ___. (warm - past)
+2. Вчора весь день було дуже ___. (warm - past)
    > [!answer] тепло
    > [!options] тепло | теплий | тепла | тепле
 
-3. Завтра буде ___. (hot - future)
+3. Завтра влітку буде дуже ___ надворі. (hot - future)
    > [!answer] жарко
    > [!options] жарко | жаркий | жарка | жарке
 
-4. Йде ___. (rain)
+4. Зараз надворі йде сильний ___. (rain)
    > [!answer] дощ
    > [!options] дощ | дощовий | дощова | дощі
 
-5. Йде ___. (snow)
+5. Взимку часто йде білий ___. (snow)
    > [!answer] сніг
    > [!options] сніг | сніжний | снігова | сніги
 
-6. Світить ___. (sun)
+6. Сьогодні ранком яскраво світить ___. (sun)
    > [!answer] сонце
    > [!options] сонце | сонячний | сонячна | сонячно
 
-7. Дме ___. (wind)
+7. Надворі дуже сильно дме холодний ___. (wind)
    > [!answer] вітер
    > [!options] вітер | вітряний | вітряна | вітряно
 
-8. Погода сьогодні ___. (sunny - feminine)
+8. Погода сьогодні дуже ___ і тепла. (sunny - feminine)
    > [!answer] сонячна
    > [!options] сонячний | сонячна | сонячне | сонячні
 
-9. Небо ___. (cloudy - neuter)
+9. Небо сьогодні зовсім ___ і сіре. (cloudy - neuter)
    > [!answer] хмарне
    > [!options] хмарний | хмарна | хмарне | хмарні
 
-10. Скільки сьогодні ___? (degrees)
+10. Скільки сьогодні ___ буде на вулиці? (degrees)
    > [!answer] градусів
    > [!options] градус | градуси | градусів | градусом
 
 ## unjumble: Build the Sentence
 
-> Arrange the words in the correct order.
+> Arrange the words in the correct order. Sentences range from 6-8 words.
 
-1. холодно / Сьогодні
-   > [!answer] Сьогодні холодно.
-   > (Today it's cold.)
+1. холодно / Сьогодні / дуже / надворі / і / вітряно
+   > [!answer] Сьогодні надворі дуже холодно і вітряно.
+   > (Today it's very cold and windy outside.) [6 words]
 
-2. тепло / Вчора / було
-   > [!answer] Вчора було тепло.
-   > (Yesterday it was warm.)
+2. тепло / Вчора / було / дуже / тут / і / сонячно
+   > [!answer] Вчора тут було дуже тепло і сонячно.
+   > (Yesterday it was very warm and sunny here.) [7 words]
 
-3. буде / жарко / Завтра
-   > [!answer] Завтра буде жарко.
-   > (Tomorrow it will be hot.)
+3. буде / жарко / Завтра / дуже / влітку / і / душно
+   > [!answer] Завтра влітку буде дуже жарко і душно.
+   > (Tomorrow in summer it will be very hot and humid.) [7 words]
 
-4. дощ / Йде
-   > [!answer] Йде дощ.
-   > (It's raining.)
+4. дощ / Йде / сильний / зараз / надворі / холодний / осінній
+   > [!answer] Зараз надворі йде сильний холодний осінній дощ.
+   > (Right now a strong cold autumn rain is falling outside.) [7 words]
 
-5. сніг / Йде
-   > [!answer] Йде сніг.
-   > (It's snowing.)
+5. сніг / Йде / білий / великий / взимку / у / грудні
+   > [!answer] Взимку у грудні йде великий білий сніг.
+   > (In winter in December big white snow falls.) [7 words]
 
-6. сонце / Світить
-   > [!answer] Світить сонце.
-   > (The sun is shining.)
+6. сонце / Світить / яскраве / сьогодні / ранком / тепле / літнє
+   > [!answer] Сьогодні ранком світить яскраве тепле літнє сонце.
+   > (This morning the bright warm summer sun is shining.) [7 words]
 
-7. вітер / Дме
-   > [!answer] Дме вітер.
-   > (The wind is blowing.)
+7. вітер / Дме / сильний / холодний / надворі / весь / день
+   > [!answer] Надворі весь день дме сильний холодний вітер.
+   > (Outside a strong cold wind is blowing all day.) [7 words]
 
-8. погода / Яка / сьогодні
-   > [!answer] Яка сьогодні погода?
-   > (What's the weather today?)
+8. погода / Яка / сьогодні / тут / гарна / і / тепла
+   > [!answer] Яка сьогодні тут гарна і тепла погода!
+   > (What nice and warm weather here today!) [7 words]
 
-9. дощ / Здається / буде
-   > [!answer] Здається, буде дощ.
-   > (It looks like rain.)
+9. дощ / Здається / буде / сьогодні / сильний / увечері / холодний
+   > [!answer] Здається, сьогодні увечері буде сильний холодний дощ.
+   > (It seems there will be heavy cold rain tonight.) [7 words]
 
-10. парасольку / Візьми
-   > [!answer] Візьми парасольку!
-   > (Take an umbrella!)
+10. парасольку / Візьми / з / собою / обов'язково / сьогодні / теплу
+    > [!answer] Обов'язково візьми сьогодні теплу парасольку з собою!
+    > (Definitely take a warm umbrella with you today!) [7 words]
 
 ## match-up: Weather Vocabulary
 
@@ -425,6 +425,28 @@ Describe the weather for:
 
 - [x] "Мороз" means "frost"
    > Correct!
+
+## group-sort: Weather Categories
+
+> Sort these weather words into categories.
+
+### Temperature Words
+- тепло (warm)
+- холодно (cold)
+- жарко (hot)
+- прохолодно (cool)
+
+### Weather Phenomena
+- дощ (rain)
+- сніг (snow)
+- вітер (wind)
+- туман (fog)
+
+### Weather Adjectives
+- сонячний (sunny)
+- хмарний (cloudy)
+- дощовий (rainy)
+- вітряний (windy)
 
 ---
 
