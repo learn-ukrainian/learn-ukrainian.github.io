@@ -32,31 +32,31 @@ The B2 curriculum bridges "competent" (B1) and "fluent" (C1). It focuses on:
 
 | # | Title | Type | Focus |
 |---|-------|------|-------|
-| 161 | Passive Voice Overview | Grammar | All Ukrainian passive forms |
-| 162 | Past Passive Participles | Grammar | -ний/-тий formation & use |
-| 163 | Impersonal -но/-то | Grammar | Книгу написано vs. Я написав |
-| 164 | Reflexive Passive -ся | Grammar | Будинок будується |
-| 165 | 3rd Person Plural Passive | Grammar | Йому сказали, мене запитали |
-| 166 | Passive in Context | Practice | Choosing the right form |
-| 167 | Register: Introduction | Grammar | Five styles overview |
-| 168 | Register: Formal vs Informal | Grammar | Ти/Ви, lexical choices |
-| 169 | Register: Official Style | Grammar | Documents, applications |
-| 170 | Register: Media Style | Grammar | News, headlines, bias |
-| 171 | Register: Colloquial Style | Grammar | Slang, simplifications |
-| 172 | Register Practice | Practice | Rewriting across registers |
-| 173 | Active Participles I | Grammar | -учий/-ючий (Recognition only) |
-| 174 | Active Participles II | Grammar | -лий (Recognition only) |
-| 175 | Participles vs Clauses | Grammar | Stylistic differences |
-| 176 | Adv. Participles Advanced | Grammar | Complex stylistic usage |
-| 177 | Multi-clause Sentences | Grammar | Nested clauses |
-| 178 | Parenthetical Expressions | Grammar | до речі, між іншим |
-| 179 | Emphasis & Inversion | Grammar | Word order for impact |
-| 180 | Stylistic Connectors | Grammar | проте, втім, зате |
-| 181 | Politics & Government | Vocabulary | Democracy, parliament |
-| 182 | Law & Justice | Vocabulary | Courts, rights |
-| 183 | Economics & Business | Vocabulary | Markets, negotiations |
-| 184 | B2.1 Review | Review | Passive & Register |
-| 185 | B2.1 Checkpoint | Review | Assessment |
+| 201 | Passive Voice Overview | Grammar | All Ukrainian passive forms |
+| 202 | Past Passive Participles | Grammar | -ний/-тий formation & use |
+| 203 | Impersonal -но/-то | Grammar | Книгу написано vs. Я написав |
+| 204 | Reflexive Passive -ся | Grammar | Будинок будується |
+| 205 | 3rd Person Plural Passive | Grammar | Йому сказали, мене запитали |
+| 206 | Passive in Context | Practice | Choosing the right form |
+| 207 | Register: Introduction | Grammar | Five styles overview |
+| 208 | Register: Formal vs Informal | Grammar | Ти/Ви, lexical choices |
+| 209 | Register: Official Style | Grammar | Documents, applications |
+| 210 | Register: Media Style | Grammar | News, headlines, bias |
+| 191 | Register: Colloquial Style | Grammar | Slang, simplifications |
+| 192 | Register Practice | Practice | Rewriting across registers |
+| 193 | Active Participles I | Grammar | -учий/-ючий (Recognition only) |
+| 194 | Active Participles II | Grammar | -лий (Recognition only) |
+| 195 | Participles vs Clauses | Grammar | Stylistic differences |
+| 196 | Adv. Participles Advanced | Grammar | Complex stylistic usage |
+| 197 | Multi-clause Sentences | Grammar | Nested clauses |
+| 198 | Parenthetical Expressions | Grammar | до речі, між іншим |
+| 199 | Emphasis & Inversion | Grammar | Word order for impact |
+| 200 | Stylistic Connectors | Grammar | проте, втім, зате |
+| 201 | Politics & Government | Vocabulary | Democracy, parliament |
+| 202 | Law & Justice | Vocabulary | Courts, rights |
+| 203 | Economics & Business | Vocabulary | Markets, negotiations |
+| 204 | B2.1 Review | Review | Passive & Register |
+| 205 | B2.1 Checkpoint | Review | Assessment |
 
 ---
 
@@ -66,11 +66,11 @@ The B2 curriculum bridges "competent" (B1) and "fluent" (C1). It focuses on:
 
 | # | Title | Type | Focus |
 |---|-------|------|-------|
-| 186 | History: Pre-Slavic Ukraine | History | Trypillia, Scythians |
-| 187 | History: Kyivan Rus I ⚠️ | History | Debunking "Rus = Russia" |
-| 188 | History: Kyivan Rus II | History | Golden Age, Ольга, Володимир, Ярослав |
-| 189 | Idioms: Body (Eyes/Ears) | Phraseology | очі, вуха |
-| 190 | Idioms: Body (Hands/Legs) | Phraseology | руки, ноги |
+| 206 | History: Pre-Slavic Ukraine | History | Trypillia, Scythians |
+| 207 | History: Kyivan Rus I ⚠️ | History | Debunking "Rus = Russia" |
+| 208 | History: Kyivan Rus II | History | Golden Age, Ольга, Володимир, Ярослав |
+| 209 | Idioms: Body (Eyes/Ears) | Phraseology | очі, вуха |
+| 210 | Idioms: Body (Hands/Legs) | Phraseology | руки, ноги |
 | 191 | Idioms: Body (Head/Heart) | Phraseology | голова, серце |
 | 192 | Synonyms: Speaking | Vocabulary | казати/говорити/розповідати |
 | 193 | Synonyms: Informing | Vocabulary | повідомляти/сповіщати/заявляти |
@@ -168,8 +168,8 @@ All B2 modules must follow these quality standards (established in B2.1/B2.2 rew
 
 | Phase | Modules | Status |
 |-------|---------|--------|
-| B2.1 | 161-185 | ✅ Complete (was 141-165, shifted) |
-| B2.2 | 186-210 | ✅ Complete (was 166-190, shifted) |
+| B2.1 | 161-185 | ✅ Complete (was 161-185, shifted) |
+| B2.2 | 186-210 | ✅ Complete (was 186-210, shifted) |
 | B2.3 | 211-225 | ⏳ Planned (NEW: Видатні українки — 15 women) |
 | B2.4 | 226-232 | ⏳ Planned (NEW: Видатні українці — 7 men) |
 
@@ -178,6 +178,6 @@ All B2 modules must follow these quality standards (established in B2.1/B2.2 rew
 ---
 
 ## Related GitHub Issues
-- #54: Phase 1: Rewrite B2.2 modules (166-190) ✅
-- #55: Phase 2: Rewrite B2.1 modules (141-165) ✅
+- #54: Phase 1: Rewrite B2.2 modules (186-210) ✅
+- #55: Phase 2: Rewrite B2.1 modules (161-185) ✅
 - #56: Phase 3: B1 quality improvement + B2 expansion

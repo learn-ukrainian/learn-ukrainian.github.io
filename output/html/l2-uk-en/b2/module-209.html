@@ -1,0 +1,1947 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 209: B2.2 Review | Ukrainian B2</title>
+  <style>
+:root { --primary: #1a5fb4; --primary-light: #3584e4; --success: #26a269; --warning: #e5a50a; --danger: #c01c28; --bg: #fafafa; --card-bg: #fff; --text: #1e1e1e; --text-muted: #5e5e5e; --border: #e0e0e0; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+.top-nav { background: #2e2e2e; color: white; padding: 0.5rem 2rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.875rem; }
+.top-nav a { color: white; text-decoration: none; }
+.top-nav a:hover { text-decoration: underline; }
+.module-nav { display: flex; gap: 1rem; align-items: center; }
+.module-nav-link { color: rgba(255,255,255,0.8); text-decoration: none; padding: 0.25rem 0.5rem; }
+.module-nav-link:hover { color: white; }
+.module-nav-link.disabled { color: rgba(255,255,255,0.3); pointer-events: none; }
+.nav { position: sticky; top: 0; background: var(--primary); color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; z-index: 100; }
+.nav h1 { font-size: 1.25rem; }
+.nav-tabs { display: flex; gap: 0.5rem; }
+.nav-tab { background: rgba(255,255,255,0.2); border: none; color: white; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; }
+.nav-tab.active { background: white; color: var(--primary); }
+main { max-width: 1000px; margin: 0 auto; padding: 2rem; }
+.section { display: none; } .section.active { display: block; }
+.lesson-header { text-align: center; margin-bottom: 2rem; padding: 2rem; background: linear-gradient(135deg, #e8f4fd, #f0e8fd); border-radius: 12px; }
+.level-badge { background: var(--primary); color: white; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.875rem; }
+.card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 1.5rem; margin-bottom: 1.5rem; }
+.card h3 { color: var(--primary); margin-bottom: 1rem; }
+.section-intro { border-left: 4px solid var(--primary); }
+.section-intro h3 { color: var(--primary); }
+.section-topic { border-left: 4px solid var(--border); }
+.section-summary { background: linear-gradient(135deg, #f0f9ff, #e8f4fd); border-left: 4px solid var(--success); }
+.section-summary h3 { color: var(--success); }
+.canvas-note { background: #fffbeb; border-left: 4px solid var(--warning); padding: 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+.canvas-note h4 { color: var(--warning); margin-bottom: 0.5rem; }
+.md-content { line-height: 1.7; }
+.md-content p { margin: 0.75rem 0; }
+.md-content ul, .md-content ol { margin: 0.75rem 0; padding-left: 1.5rem; }
+.md-content li { margin: 0.25rem 0; }
+.md-content strong { color: var(--primary); }
+.md-content blockquote { background: #e8f4fd; border-left: 4px solid var(--primary); padding: 0.75rem 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+.md-content blockquote p { margin: 0.25rem 0; }
+.md-content table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+.md-content th, .md-content td { border: 1px solid var(--border); padding: 0.5rem 0.75rem; text-align: left; }
+.md-content th { background: #f5f5f5; font-weight: 600; }
+.md-content code { background: #f0f0f0; padding: 0.125rem 0.375rem; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
+.md-content details { background: #f8f9fa; border: 1px solid var(--border); border-radius: 8px; padding: 0; margin: 1rem 0; }
+.md-content details summary { background: linear-gradient(135deg, #e8f4fd, #f0e8fd); padding: 0.75rem 1rem; cursor: pointer; font-weight: 600; color: var(--primary); border-radius: 8px; list-style: none; display: flex; align-items: center; gap: 0.5rem; }
+.md-content details summary::-webkit-details-marker { display: none; }
+.md-content details summary::before { content: '▶'; font-size: 0.75rem; transition: transform 0.2s; }
+.md-content details[open] summary::before { transform: rotate(90deg); }
+.md-content details[open] summary { border-radius: 8px 8px 0 0; }
+.md-content details > *:not(summary) { padding: 0 1rem; }
+.md-content details > *:last-child { padding-bottom: 1rem; }
+.md-content p > details { margin: 0; }
+.md-content p:has(> details) { margin: 1rem 0; }
+.inline-answer { background: linear-gradient(135deg, #d4edda, #e8f4fd); padding: 0.125rem 0.5rem; border-radius: 4px; transition: opacity 0.2s; }
+.inline-answer.hidden { opacity: 0; user-select: none; }
+.answer-toggle-btn { display: inline-flex; align-items: center; gap: 0.5rem; background: linear-gradient(135deg, #e8f4fd, #f0e8fd); border: 1px solid var(--primary); color: var(--primary); padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-size: 0.875rem; font-weight: 600; margin: 1rem 0; }
+.answer-toggle-btn:hover { background: var(--primary); color: white; }
+.answer-toggle-btn svg { width: 1rem; height: 1rem; }
+.letter-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0; }
+.letter-group { border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; }
+.letter-group.true-friends { border-color: var(--success); } .letter-group.true-friends .letters { color: var(--success); }
+.letter-group.false-friends { border-color: var(--danger); } .letter-group.false-friends .letters { color: var(--danger); }
+.letter-group.new-letters { border-color: var(--primary); } .letter-group.new-letters .letters { color: var(--primary); }
+.letters { font-size: 1.75rem; letter-spacing: 0.3rem; }
+.btn { padding: 0.75rem 1.5rem; border: none; border-radius: 8px; cursor: pointer; }
+.btn-primary { background: var(--primary); color: white; }
+.btn-outline { background: transparent; border: 2px solid var(--border); }
+.btn-group { display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem; }
+.score-display { text-align: center; padding: 1rem; background: linear-gradient(135deg, #e8f8f0, #e8f4fd); border-radius: 8px; margin-bottom: 1rem; }
+.score-display .score { font-size: 2rem; font-weight: 700; color: var(--success); }
+.completion-message { text-align: center; padding: 2rem; background: linear-gradient(135deg, #d4edda, #e8f4fd); border-radius: 12px; margin-top: 1rem; display: none; }
+.completion-message.show { display: block; }
+footer { text-align: center; padding: 2rem; color: var(--text-muted); }
+@media (max-width: 768px) { .nav { flex-direction: column; gap: 1rem; } .letter-groups, .sort-groups, .quiz-options { grid-template-columns: 1fr; } .match-container { flex-direction: column; } }
+
+
+/**
+ * Layout styles - Navigation, page structure
+ */
+
+/* Top Navigation */
+.top-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1.5rem;
+  background: #f8f8f8;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.875rem;
+}
+
+.top-nav a {
+  color: var(--text-muted);
+}
+
+.top-nav a:hover {
+  color: var(--primary);
+}
+
+.module-nav {
+  display: flex;
+  gap: 1rem;
+}
+
+.module-nav-link {
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+.module-nav-link:hover {
+  background: #e8f4fd;
+}
+
+/* Main Navigation */
+.nav {
+  background: linear-gradient(135deg, #1a5fb4, #613583);
+  color: white;
+  padding: 1.5rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav h1 {
+  font-size: 1.5rem;
+}
+
+.nav-tabs {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.nav-tab {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: background 0.2s;
+}
+
+.nav-tab:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.nav-tab.active {
+  background: white;
+  color: var(--primary);
+}
+
+/* Main Content */
+main {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Sections */
+.section {
+  display: none;
+}
+
+.section.active {
+  display: block;
+}
+
+/* Lesson Header */
+.lesson-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding: 2rem;
+  background: linear-gradient(135deg, #e8f4fd, #f0e8fd);
+  border-radius: 12px;
+}
+
+.lesson-header h2 {
+  font-size: 2rem;
+  margin: 0.5rem 0;
+}
+
+/* Section Cards */
+.section-intro {
+  border-left: 4px solid var(--primary);
+}
+
+.section-intro h3 {
+  color: var(--primary);
+}
+
+.section-topic {
+  border-left: 4px solid var(--border);
+}
+
+.section-summary {
+  background: linear-gradient(135deg, #f0f9ff, #e8f4fd);
+  border-left: 4px solid var(--success);
+}
+
+.section-summary h3 {
+  color: var(--success);
+}
+
+/* Canvas Notes */
+.canvas-note {
+  background: #fffbeb;
+  border-left: 4px solid var(--warning);
+  padding: 1rem;
+  margin: 1rem 0;
+  border-radius: 0 8px 8px 0;
+}
+
+.canvas-note h4 {
+  color: var(--warning);
+  margin-bottom: 0.5rem;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-muted);
+}
+
+/* Responsive Layout */
+@media (max-width: 768px) {
+  .nav {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .nav h1 {
+    font-size: 1.25rem;
+    text-align: center;
+  }
+
+  .nav-tabs {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  main {
+    padding: 1rem;
+  }
+
+  .top-nav {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+
+
+/* Match Activity */
+.match-container { display: flex; gap: 3rem; padding: 1rem; position: relative; }
+.match-column { flex: 1; display: flex; flex-direction: column; gap: 0.75rem; }
+.match-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; font-size: 1.25rem; cursor: pointer; }
+.match-item.selected { border-color: var(--primary); background: #e8f4fd; }
+.match-item.matched { border-color: var(--success); background: #e8f8f0; }
+.match-item.wrong { border-color: var(--danger); background: #fde8e8; }
+.match-lines { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+
+/* Quiz Activity */
+.quiz-question { border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; }
+.quiz-question.answered { pointer-events: none; }
+.quiz-question .cyrillic { font-size: 1.5rem; color: var(--primary); font-weight: 600; }
+.quiz-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-top: 1rem; }
+.quiz-option { background: #f5f5f5; border: 2px solid var(--border); border-radius: 8px; padding: 1rem; cursor: pointer; text-align: center; }
+.quiz-option.correct { border-color: var(--success); background: #d4edda; }
+.quiz-option.wrong { border-color: var(--danger); background: #f8d7da; }
+.quiz-explanation { margin-top: 1rem; padding: 1rem; background: #e8f4fd; border-radius: 8px; display: none; }
+.quiz-explanation.show { display: block; }
+
+/* Sort Activity */
+.sort-pool { background: #f5f5f5; border: 2px dashed var(--border); border-radius: 12px; padding: 1.5rem; min-height: 80px; margin-bottom: 1rem; }
+.sort-items { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; }
+.sort-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 0.75rem 1.25rem; font-size: 1.5rem; cursor: grab; }
+.sort-item.correct { border-color: var(--success); background: #e8f8f0; }
+.sort-item.wrong { border-color: var(--danger); background: #fde8e8; }
+.sort-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+.sort-group { border: 2px solid var(--border); border-radius: 12px; padding: 1rem; min-height: 150px; }
+.sort-group.drag-over { border-color: var(--primary); background: #e8f4fd; }
+.sort-group h4 { font-size: 0.875rem; text-align: center; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--border); }
+.sort-group.true-friends h4 { color: var(--success); border-color: var(--success); }
+.sort-group.false-friends h4 { color: var(--danger); border-color: var(--danger); }
+.sort-group.new-letters h4 { color: var(--primary); border-color: var(--primary); }
+
+/* Vocabulary Grid (legacy) */
+.vocab-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; }
+.vocab-card { border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; text-align: center; }
+.vocab-card .uk { font-size: 1.75rem; font-weight: 600; color: var(--primary); }
+.vocab-card .translit { color: var(--text-muted); font-style: italic; }
+.vocab-card .en { font-weight: 500; margin: 0.25rem 0; }
+.vocab-card .note { font-size: 0.75rem; color: #613583; background: #f0e8fd; padding: 0.25rem 0.5rem; border-radius: 4px; }
+
+/* Vocabulary Table (book-style) */
+.vocab-table-container { overflow-x: auto; }
+.vocab-table { width: 100%; border-collapse: collapse; font-size: 1rem; }
+.vocab-table thead { background: var(--card-bg); border-bottom: 2px solid var(--border); }
+.vocab-table th { padding: 0.75rem 1rem; text-align: left; font-weight: 600; color: var(--text-muted); font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.5px; }
+.vocab-table td { padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); }
+.vocab-table tbody tr:hover { background: #f8f9fa; }
+.vocab-table .vocab-uk { font-size: 1.25rem; font-weight: 600; color: var(--primary); }
+.vocab-table .vocab-translit { color: var(--text-muted); font-style: italic; }
+.vocab-table .vocab-ipa { font-family: monospace; color: var(--text-muted); font-size: 0.9rem; }
+.vocab-table .vocab-en { font-weight: 500; }
+.vocab-table .vocab-note { font-size: 0.85rem; color: #613583; }
+
+/* Answer Callout Blocks */
+.callout { padding: 0.5rem 1rem; margin: 0.25rem 0; border-radius: 4px; }
+.callout-answer { background: #e8f8f0; border-left: 3px solid var(--success); }
+.callout-explanation { background: #e8f4fd; border-left: 3px solid var(--primary); color: var(--text-muted); font-style: italic; }
+.callout-alt { background: #f5f5f5; border-left: 3px solid var(--border); color: var(--text-muted); }
+
+/* Answer Block Toggle */
+.answer-block { display: none; }
+.answer-block.show { display: block; }
+.show-answer-btn { background: #f0f0f0; border: 1px solid var(--border); border-radius: 6px; padding: 0.25rem 0.75rem; font-size: 0.8rem; cursor: pointer; color: var(--text-muted); margin: 0.25rem 0; }
+.show-answer-btn:hover { background: #e5e5e5; }
+.show-answer-btn.revealed { background: #e8f8f0; border-color: var(--success); color: var(--success); }
+
+/* Fill-in Activity - Dropdown in Sentence */
+.fill-container { display: flex; flex-direction: column; gap: 0.75rem; }
+.fill-question { border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.5rem; }
+
+.fill-number { font-weight: 600; color: var(--text-muted); margin-right: 0.5rem; }
+.fill-sentence { font-size: 1.15rem; line-height: 1.8; }
+
+.fill-dropdown { font-size: 1rem; padding: 0.4rem 0.6rem; border: 2px solid var(--primary); border-radius: 6px; background: #fff; color: var(--primary); font-weight: 500; cursor: pointer; min-width: 120px; }
+.fill-dropdown:focus { outline: none; box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.2); }
+.fill-dropdown.correct { border-color: var(--success); background: #e8f8f0; color: var(--success); }
+.fill-dropdown.wrong { border-color: var(--danger); background: #fde8e8; color: var(--danger); }
+
+.fill-feedback { margin-top: 0.5rem; font-weight: 500; }
+.fill-feedback .correct-text { color: var(--success); }
+.fill-feedback .wrong-text { color: var(--danger); }
+.btn-sm { padding: 0.5rem 1rem; font-size: 0.875rem; }
+
+/* Order/Unjumble Activity */
+.order-container { display: flex; flex-direction: column; gap: 1rem; }
+.order-items { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem; }
+.order-item { background: var(--card-bg); border: 2px solid var(--border); border-radius: 8px; padding: 1rem; display: flex; align-items: center; gap: 1rem; cursor: grab; user-select: none; }
+.order-item:active { cursor: grabbing; }
+.order-item.dragging { opacity: 0.5; }
+.order-item.correct { border-color: var(--success); background: #e8f8f0; }
+.order-item.wrong { border-color: var(--danger); background: #fde8e8; }
+.order-handle { color: var(--text-muted); font-size: 1.25rem; }
+.order-text { font-size: 1.1rem; }
+
+/* Unjumble Activity - Drag and Drop */
+.unjumble-question { border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.5rem; margin-bottom: 0.75rem; display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; }
+.unjumble-question.answered .unjumble-word { cursor: default; }
+.unjumble-question.correct { border-color: var(--success); background: #f8fff8; }
+.unjumble-question.wrong { border-color: var(--danger); background: #fff8f8; }
+
+.unjumble-number { font-weight: 600; color: var(--text-muted); min-width: 2rem; }
+
+.unjumble-word-row { display: flex; flex-wrap: wrap; gap: 0.5rem; flex: 1; min-height: 42px; padding: 0.25rem; border-radius: 8px; background: #f8f9fa; }
+.unjumble-word-row.correct { background: #e8f8f0; }
+.unjumble-word-row.wrong { background: #fde8e8; }
+
+.unjumble-word { background: var(--primary); color: white; border-radius: 6px; padding: 0.5rem 0.75rem; font-size: 1rem; cursor: grab; user-select: none; transition: transform 0.1s, box-shadow 0.1s; }
+.unjumble-word:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+.unjumble-word:active { cursor: grabbing; }
+.unjumble-word.dragging { opacity: 0.5; transform: scale(1.05); }
+
+.unjumble-word.touch-clone { position: fixed; z-index: 1000; pointer-events: none; box-shadow: 0 8px 16px rgba(0,0,0,0.2); }
+
+.unjumble-actions { display: flex; gap: 0.5rem; }
+.unjumble-feedback { width: 100%; padding: 0.5rem 0 0 2.5rem; display: none; }
+.unjumble-feedback.show { display: block; }
+.unjumble-feedback .correct-text { color: var(--success); font-weight: 600; }
+.unjumble-feedback .wrong-text { color: var(--danger); }
+.unjumble-feedback .translation { color: var(--text-muted); font-style: italic; margin-left: 0.5rem; }
+
+  </style>
+</head>
+<body>
+  
+  <div class="top-nav">
+    <a href="../index.html">← l2-uk-en Curriculum</a>
+    <div class="module-nav">
+      <a href="module-208.html" class="module-nav-link">← Module 208</a>
+      <a href="index.html" class="module-nav-link">B2 Index</a>
+      <a href="module-210.html" class="module-nav-link">Module 210 →</a>
+    </div>
+  </div>
+  <nav class="nav">
+    <h1>Module 209: B2.2 Review</h1>
+    <div class="nav-tabs">
+      <button class="nav-tab active" data-section="lesson">Lesson</button>
+      
+      <button class="nav-tab" data-section="quiz">Quiz</button>
+      
+      
+      
+      <button class="nav-tab" data-section="vocab">Vocab</button>
+    </div>
+  </nav>
+  <main>
+    
+    <section id="lesson" class="section active">
+      <div class="lesson-header">
+        <span class="level-badge">B2 · B2.2</span>
+        <h2 style="font-size:2rem;margin:0.5rem 0">B2.2 Review</h2>
+        <p style="color:var(--text-muted)">Повторення B2.2</p>
+      </div>
+      
+    <div class="card section-intro">
+      <h3>📖 Introduction</h3>
+      <div class="md-content"><p>B2.2 був подорожжю крізь час і мову — від трипільських землеробів до литовських канцлерів, від «білої ворони» до «каменя на серці», від простого «сказати» до величного «мовити». Це був етап, коли українська перестала бути просто набором правил і стала живою тканиною культури.</p>
+<p>Ви тепер знаєте, що Київська Русь — це не російська, а українська історія. Що Данило Галицький був єдиним «королем Русі» в історії. Що руська мова була офіційною в Литовсько-Руській державі ще до того, як Московія навчилася писати документи.</p>
+<p>Ви навчилися говорити ідіомами — не механічно, а з розумінням. «Камінь на серці» — це не просто фраза, а спосіб передати те, що англійське «I'm worried» ніколи не передасть. «Біла ворона» — не переклад «black sheep», а окрема метафора з власною логікою.</p>
+<p>І головне — ви відчули, як синоніми змінюють тон. «Сказати» — нейтрально. «Мовити» — урочисто. «Бовкнути» — невпопад. Це вже не про граматику — це про стиль.</p>
+<p>Цей модуль допоможе вам побачити цілісну картину B2.2 перед фінальною контрольною.</p>
+<hr /></div>
+    </div>
+  
+    <div class="card section-content">
+      <h3>Історія України: докозацька доба</h3>
+      <div class="md-content"><h2 id="">Хронологія</h2>
+<table>
+<thead>
+<tr>
+<th>Період</th>
+<th>Роки</th>
+<th>Ключові події</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Трипілля</td>
+<td>5500-2750 до н.е.</td>
+<td>Найдавніша аграрна культура Європи</td>
+</tr>
+<tr>
+<td>Скіфи</td>
+<td>700 до н.е. - 300 н.е.</td>
+<td>Скіфське золото, степова цивілізація</td>
+</tr>
+<tr>
+<td>Київська Русь</td>
+<td>882-1240</td>
+<td>Хрещення 988, «Руська правда»</td>
+</tr>
+<tr>
+<td>Галицько-Волинське</td>
+<td>1199-1349</td>
+<td>Данило — Король Русі, заснування Львова</td>
+</tr>
+<tr>
+<td>Литовський період</td>
+<td>XIV-XVI ст.</td>
+<td>Руська мова офіційна, Синьоводська битва</td>
+</tr>
+<tr>
+<td>Польський період</td>
+<td>1569-1648</td>
+<td>Люблінська унія, Брестська унія</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p><strong>Чи знали ви?</strong></p>
+  <p><strong>Трипільці будували міста</strong> за 3000 років до Риму! Поселення Майданецьке (біля Черкас) мало <strong>20 000 жителів</strong> — це більше, ніж Лондон у той час мав населення взагалі.</p>
+</blockquote>
+<h2 id="-1">Ключові постаті</h2>
+<table>
+<thead>
+<tr>
+<th>Постать</th>
+<th>Роки</th>
+<th>Досягнення</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Володимир Великий</td>
+<td>958-1015</td>
+<td>Хрещення Русі (988)</td>
+</tr>
+<tr>
+<td>Ярослав Мудрий</td>
+<td>978-1054</td>
+<td>Софія Київська, «Руська правда»</td>
+</tr>
+<tr>
+<td>Данило Галицький</td>
+<td>1201-1264</td>
+<td>Король Русі (1253), заснування Львова</td>
+</tr>
+<tr>
+<td>Ольгерд</td>
+<td>1296-1377</td>
+<td>Синьоводська битва (1362)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="-2">Деколонізаційні тези</h2>
+<table>
+<thead>
+<tr>
+<th>Міф</th>
+<th>Правда</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>«Русь = Росія»</td>
+<td>Русь — <strong>українська</strong> спадщина; назва «Росія» з'явилася лише в XVII ст.</td>
+</tr>
+<tr>
+<td>«Москва — спадкоємиця Києва»</td>
+<td>Москва заснована через <strong>265 років</strong> після Києва; спадкоємність — політичний конструкт</td>
+</tr>
+<tr>
+<td>«Один народ»</td>
+<td>Українці — окрема нація з окремою мовою, культурою та історією</td>
+</tr>
+<tr>
+<td>«Руська мова = російська»</td>
+<td>Руська мова (Руська Правда, Литовські статути) — <strong>предок української</strong>, не російської</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p><strong>Міф vs Факт</strong></p>
+  <p>❌ <strong>Міф:</strong> «Данило Галицький — цар»</p>
+  <p>✅ <strong>Факт:</strong> Данило отримав титул <strong>Rex Russiae</strong> (Король Русі) від Папи Римського у 1253 році. «Цар» — це калька з «caesar», яку Москва почала використовувати аж з 1547 року. Данило був <strong>королем</strong>, не царем!</p>
+</blockquote>
+<hr /></div>
+    </div>
+  
+    <div class="card section-content">
+      <h3>Фразеологізми: тематичний огляд</h3>
+      <div class="md-content"><h2 id="">Частини тіла</h2>
+<table>
+<thead>
+<tr>
+<th>Частина</th>
+<th>Ідіоми</th>
+<th>Значення</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Очі</strong></td>
+<td>відкрити очі</td>
+<td>показати правду</td>
+</tr>
+<tr>
+<td></td>
+<td>закривати очі</td>
+<td>ігнорувати</td>
+</tr>
+<tr>
+<td></td>
+<td>очі на лоб</td>
+<td>здивування</td>
+</tr>
+<tr>
+<td><strong>Вуха</strong></td>
+<td>навострити вуха</td>
+<td>уважно слухати</td>
+</tr>
+<tr>
+<td></td>
+<td>повз вуха</td>
+<td>не звертати уваги</td>
+</tr>
+<tr>
+<td></td>
+<td>по вуха</td>
+<td>повністю (закоханий, у боргах)</td>
+</tr>
+<tr>
+<td><strong>Руки</strong></td>
+<td>золоті руки</td>
+<td>вправність</td>
+</tr>
+<tr>
+<td></td>
+<td>рукою подати</td>
+<td>близько</td>
+</tr>
+<tr>
+<td></td>
+<td>взяти в руки</td>
+<td>почати контролювати</td>
+</tr>
+<tr>
+<td><strong>Ноги</strong></td>
+<td>стати на ноги</td>
+<td>стати незалежним</td>
+</tr>
+<tr>
+<td></td>
+<td>накивати п'ятами</td>
+<td>втекти</td>
+</tr>
+<tr>
+<td></td>
+<td>на широку ногу</td>
+<td>розкішно</td>
+</tr>
+<tr>
+<td><strong>Голова</strong></td>
+<td>світла голова</td>
+<td>розумний</td>
+</tr>
+<tr>
+<td></td>
+<td>вилетіло з голови</td>
+<td>забути</td>
+</tr>
+<tr>
+<td></td>
+<td>ламати голову</td>
+<td>думати напружено</td>
+</tr>
+<tr>
+<td><strong>Серце</strong></td>
+<td>від серця</td>
+<td>щиро</td>
+</tr>
+<tr>
+<td></td>
+<td>серце крається</td>
+<td>сум</td>
+</tr>
+<tr>
+<td></td>
+<td>золоте серце</td>
+<td>добрий</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p><strong>Чи знали ви?</strong></p>
+  <p>Вираз <strong>«на широку ногу»</strong> походить від середньовічної моди на довгоносе взуття. Чим довший носок черевика — тим багатший власник. «Жити на широку ногу» буквально означало носити взуття з широким, довгим носком — атрибут багатства.</p>
+</blockquote>
+<h2 id="-1">Тварини</h2>
+<table>
+<thead>
+<tr>
+<th>Тварина</th>
+<th>Ідіоми</th>
+<th>Значення</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Вовк</strong></td>
+<td>вовк у овечій шкурі</td>
+<td>лицемір</td>
+</tr>
+<tr>
+<td></td>
+<td>голодний як вовк</td>
+<td>дуже голодний</td>
+</tr>
+<tr>
+<td><strong>Собака</strong></td>
+<td>вірний як собака</td>
+<td>відданий</td>
+</tr>
+<tr>
+<td></td>
+<td>собаці під хвіст</td>
+<td>марно</td>
+</tr>
+<tr>
+<td><strong>Кінь</strong></td>
+<td>працювати як кінь</td>
+<td>важко працювати</td>
+</tr>
+<tr>
+<td></td>
+<td>бути на коні</td>
+<td>успішний</td>
+</tr>
+<tr>
+<td><strong>Кіт</strong></td>
+<td>кіт наплакав</td>
+<td>дуже мало</td>
+</tr>
+<tr>
+<td></td>
+<td>як кіт з собакою</td>
+<td>ворогувати</td>
+</tr>
+<tr>
+<td><strong>Риба</strong></td>
+<td>мовчить як риба</td>
+<td>не говорить</td>
+</tr>
+<tr>
+<td></td>
+<td>як риба у воді</td>
+<td>комфортно</td>
+</tr>
+<tr>
+<td><strong>Птахи</strong></td>
+<td>біла ворона</td>
+<td>не як усі</td>
+</tr>
+<tr>
+<td></td>
+<td>синиця в руках</td>
+<td>надійне, але скромне</td>
+</tr>
+</tbody>
+</table>
+<h2 id="-2">Природа</h2>
+<table>
+<thead>
+<tr>
+<th>Елемент</th>
+<th>Ідіоми</th>
+<th>Значення</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Вода</strong></td>
+<td>багато води утекло</td>
+<td>минуло багато часу</td>
+</tr>
+<tr>
+<td></td>
+<td>вийти сухим з води</td>
+<td>уникнути покарання</td>
+</tr>
+<tr>
+<td><strong>Камінь</strong></td>
+<td>камінь на серці</td>
+<td>тривога</td>
+</tr>
+<tr>
+<td></td>
+<td>під лежачий камінь</td>
+<td>без зусиль нічого не буде</td>
+</tr>
+<tr>
+<td><strong>Погода</strong></td>
+<td>буря в склянці води</td>
+<td>перебільшення</td>
+</tr>
+<tr>
+<td></td>
+<td>після дощу в четвер</td>
+<td>ніколи</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+    </div>
+  
+    <div class="card section-content">
+      <h3>Синоніми: семантичні шкали</h3>
+      <div class="md-content"><h2 id="">Дієслова мовлення</h2>
+<table>
+<thead>
+<tr>
+<th>Реєстр</th>
+<th>Нейтральне</th>
+<th>Книжне</th>
+<th>Розмовне</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Говорити</td>
+<td>казати</td>
+<td>мовити</td>
+<td>балакати</td>
+</tr>
+<tr>
+<td>Довго</td>
+<td>говорити</td>
+<td>вести мову</td>
+<td>теревенити</td>
+</tr>
+<tr>
+<td>Невпопад</td>
+<td>—</td>
+<td>—</td>
+<td>бовкнути</td>
+</tr>
+<tr>
+<td>Сильно</td>
+<td>—</td>
+<td>проголосити</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<h2 id="-1">Дієслова інформування</h2>
+<table>
+<thead>
+<tr>
+<th>Стиль</th>
+<th>Нейтральне</th>
+<th>Офіційне</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Повідомити</td>
+<td>повідомляти</td>
+<td>сповіщати</td>
+</tr>
+<tr>
+<td>Оголосити</td>
+<td>оголошувати</td>
+<td>проголошувати</td>
+</tr>
+<tr>
+<td>Заявити</td>
+<td>заявляти</td>
+<td>декларувати</td>
+</tr>
+</tbody>
+</table>
+<h2 id="-2">Дієслова мислення</h2>
+<table>
+<thead>
+<tr>
+<th>Рівень впевненості</th>
+<th>Дієслово</th>
+<th>Приклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>⚪ Низька</td>
+<td>гадати</td>
+<td>Гадаю, що він запізниться</td>
+</tr>
+<tr>
+<td>🔵 Середня</td>
+<td>думати</td>
+<td>Думаю, що він запізниться</td>
+</tr>
+<tr>
+<td>🟢 Висока</td>
+<td>вважати</td>
+<td>Вважаю, що він запізниться</td>
+</tr>
+</tbody>
+</table>
+<h2 id="-3">Дієслова розуміння</h2>
+<table>
+<thead>
+<tr>
+<th>Глибина</th>
+<th>Дієслово</th>
+<th>Контекст</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Поверхневе</td>
+<td>розуміти</td>
+<td>Я розумію правило</td>
+</tr>
+<tr>
+<td>Глибоке</td>
+<td>усвідомлювати</td>
+<td>Вона усвідомлює наслідки</td>
+</tr>
+<tr>
+<td>Філософське</td>
+<td>осягати</td>
+<td>Він осягнув істину</td>
+</tr>
+</tbody>
+</table>
+<h2 id="-4">Дієслова пам'яті</h2>
+<table>
+<thead>
+<tr>
+<th>Тип</th>
+<th>Дієслово</th>
+<th>Приклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Стан</td>
+<td>пам'ятати</td>
+<td>Я пам'ятаю день народження</td>
+</tr>
+<tr>
+<td>Процес</td>
+<td>згадувати</td>
+<td>Вона згадує дитинство</td>
+</tr>
+<tr>
+<td>Комунікація</td>
+<td>нагадувати</td>
+<td>Нагадай мені про зустріч</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p><strong>Міф vs Факт</strong></p>
+  <p>❌ <strong>Міф:</strong> «Гадати» означає те саме, що «думати»</p>
+  <p>✅ <strong>Факт:</strong> «Гадати» виражає <strong>низьку впевненість</strong> — це здогадка, припущення. «Думати» — нейтральний процес. «Вважати» — <strong>впевнене переконання</strong>. Різниця критична!</p>
+</blockquote>
+<hr /></div>
+    </div>
+  
+    <div class="card section-content">
+      <h3>Сполучники: стилістичні варіанти</h3>
+      <div class="md-content"><h2 id="">Причинові</h2>
+<table>
+<thead>
+<tr>
+<th>Стиль</th>
+<th>Сполучник</th>
+<th>Приклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Розмовний</td>
+<td>бо</td>
+<td>Не прийшов, <strong>бо</strong> захворів</td>
+</tr>
+<tr>
+<td>Нейтральний</td>
+<td>тому що</td>
+<td>Не прийшов, <strong>тому що</strong> захворів</td>
+</tr>
+<tr>
+<td>Книжний</td>
+<td>оскільки</td>
+<td><strong>Оскільки</strong> він захворів, не прийшов</td>
+</tr>
+<tr>
+<td>Офіційний</td>
+<td>через те що</td>
+<td><strong>Через те що</strong> він захворів…</td>
+</tr>
+<tr>
+<td>Офіційний</td>
+<td>у зв'язку з тим що</td>
+<td><strong>У зв'язку з тим що</strong>…</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p><strong>Чи знали ви?</strong></p>
+  <p>Сполучник <strong>«бо»</strong> — давньоукраїнське слово, що збереглося також у польській та чеській. А от у російській його немає — там тільки «потому что». Коли говорите «бо» — ви говорите щось суто слов'янське західного типу!</p>
+</blockquote>
+<h2 id="-1">Допустові</h2>
+<table>
+<thead>
+<tr>
+<th>Стиль</th>
+<th>Сполучник</th>
+<th>Приклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Розмовний</td>
+<td>хоч</td>
+<td><strong>Хоч</strong> холодно, але підемо</td>
+</tr>
+<tr>
+<td>Нейтральний</td>
+<td>хоча</td>
+<td><strong>Хоча</strong> холодно, підемо</td>
+</tr>
+<tr>
+<td>Офіційний</td>
+<td>незважаючи на те що</td>
+<td><strong>Незважаючи на те що</strong> холодно…</td>
+</tr>
+<tr>
+<td>Прийменник</td>
+<td>попри</td>
+<td><strong>Попри</strong> холод, підемо</td>
+</tr>
+</tbody>
+</table>
+<h2 id="-2">Часові</h2>
+<table>
+<thead>
+<tr>
+<th>Значення</th>
+<th>Сполучник</th>
+<th>Приклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Одночасність</td>
+<td>коли, поки</td>
+<td><strong>Поки</strong> чекав, читав книгу</td>
+</tr>
+<tr>
+<td>Раніше</td>
+<td>перед тим як</td>
+<td><strong>Перед тим як</strong> піти…</td>
+</tr>
+<tr>
+<td>Пізніше</td>
+<td>після того як</td>
+<td><strong>Після того як</strong> прийшов…</td>
+</tr>
+<tr>
+<td>Миттєвість</td>
+<td>як тільки</td>
+<td><strong>Як тільки</strong> дізнаюсь…</td>
+</tr>
+<tr>
+<td>До межі</td>
+<td>поки не</td>
+<td>Чекай, <strong>поки</strong> не прийду</td>
+</tr>
+</tbody>
+</table>
+<h2 id="-3">Умовні</h2>
+<table>
+<thead>
+<tr>
+<th>Стиль</th>
+<th>Сполучник</th>
+<th>Приклад</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Розмовний</td>
+<td>як</td>
+<td><strong>Як</strong> прийдеш, зателефонуй</td>
+</tr>
+<tr>
+<td>Нейтральний</td>
+<td>якщо</td>
+<td><strong>Якщо</strong> прийдеш…</td>
+</tr>
+<tr>
+<td>Офіційний</td>
+<td>за умови що</td>
+<td><strong>За умови що</strong> ви погодитеся…</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+    </div>
+  
+    <div class="card section-content">
+      <h3>Лексика B2.2</h3>
+      <div class="md-content"><h2 id="">Медицина</h2>
+<table>
+<thead>
+<tr>
+<th>Категорія</th>
+<th>Терміни</th>
+<th>Контекст</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Діагностика</td>
+<td>обстеження, аналіз, діагноз</td>
+<td>Лікар призначив обстеження</td>
+</tr>
+<tr>
+<td>Лікування</td>
+<td>терапія, ліки, реабілітація</td>
+<td>Курс терапії триває місяць</td>
+</tr>
+<tr>
+<td>Персонал</td>
+<td>терапевт, хірург, медсестра</td>
+<td>Терапевт = GP, не psychotherapist!</td>
+</tr>
+<tr>
+<td>Заклади</td>
+<td>лікарня, поліклініка, приймальня</td>
+<td>Я записався до поліклініки</td>
+</tr>
+</tbody>
+</table>
+<h2 id="-1">Технології</h2>
+<table>
+<thead>
+<tr>
+<th>Категорія</th>
+<th>Терміни</th>
+<th>Контекст</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ШІ</td>
+<td>штучний інтелект, машинне навчання</td>
+<td>ChatGPT — приклад ШІ</td>
+</tr>
+<tr>
+<td>Безпека</td>
+<td>шифрування, кібербезпека</td>
+<td>Diia використовує шифрування</td>
+</tr>
+<tr>
+<td>Дані</td>
+<td>аналітика, великі дані</td>
+<td>Компанія аналізує великі дані</td>
+</tr>
+<tr>
+<td>Програми</td>
+<td>застосунок, апка (розм.)</td>
+<td>Diia — державний застосунок</td>
+</tr>
+</tbody>
+</table>
+<hr /></div>
+    </div>
+  
+    <div class="card section-practice">
+      <h3>Practice</h3>
+      <div class="md-content"><h2 id="">Історія: заповніть пропуски</h2>
+<ol>
+<li><p>Київська Русь — ___ (українська / російська) спадщина.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-0', this)">Показати відповідь</button><div class="answer-block" id="ans-0"><div class="callout callout-answer" data-callout="answer"><strong>українська</strong></div></div>
+<ol start="2">
+<li><p>Данило Галицький — єдиний «___» в історії.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-1', this)">Показати відповідь</button><div class="answer-block" id="ans-1"><div class="callout callout-answer" data-callout="answer"><strong>Король Русі</strong></div>
+<div class="callout callout-explanation" data-callout="explanation">Rex Russiae</div></div>
+<ol start="3">
+<li><p>Руська мова була офіційною в ___.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-2', this)">Показати відповідь</button><div class="answer-block" id="ans-2"><div class="callout callout-answer" data-callout="answer"><strong>Литві</strong></div>
+<div class="callout callout-explanation" data-callout="explanation">Литовські статути</div></div>
+<ol start="4">
+<li><p>Москву засновано через ___ років після Києва.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-3', this)">Показати відповідь</button><div class="answer-block" id="ans-3"><div class="callout callout-answer" data-callout="answer"><strong>265</strong></div></div>
+<ol start="5">
+<li><p>Трипільська культура існувала ___ років тому.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-4', this)">Показати відповідь</button><div class="answer-block" id="ans-4"><div class="callout callout-answer" data-callout="answer"><strong>7500-4750</strong></div>
+<div class="callout callout-explanation" data-callout="explanation">5500-2750 до н.е.</div></div>
+<h2 id="-1">Ідіоми: визначте значення</h2>
+<ol>
+<li><p>«Біла ворона» — ___</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-5', this)">Показати відповідь</button><div class="answer-block" id="ans-5"><div class="callout callout-answer" data-callout="answer"><strong>особлива людина, не як усі</strong></div></div>
+<ol start="2">
+<li><p>«Камінь на серці» — ___</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-6', this)">Показати відповідь</button><div class="answer-block" id="ans-6"><div class="callout callout-answer" data-callout="answer"><strong>тривога, занепокоєння</strong></div></div>
+<ol start="3">
+<li><p>«Після дощу в четвер» — ___</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-7', this)">Показати відповідь</button><div class="answer-block" id="ans-7"><div class="callout callout-answer" data-callout="answer"><strong>ніколи</strong></div></div>
+<ol start="4">
+<li><p>«Золоті руки» — ___</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-8', this)">Показати відповідь</button><div class="answer-block" id="ans-8"><div class="callout callout-answer" data-callout="answer"><strong>вправність, майстерність</strong></div></div>
+<ol start="5">
+<li><p>«Працювати як кінь» — ___</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-9', this)">Показати відповідь</button><div class="answer-block" id="ans-9"><div class="callout callout-answer" data-callout="answer"><strong>важко, багато працювати</strong></div></div>
+<h2 id="-2">Синоніми: виберіть правильне</h2>
+<ol>
+<li><p>Він ___ (гадає / вважає), що це помилка. (впевнено)</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-10', this)">Показати відповідь</button><div class="answer-block" id="ans-10"><div class="callout callout-answer" data-callout="answer"><strong>вважає</strong></div></div>
+<ol start="2">
+<li><p>Вона ___ (розуміє / усвідомлює) наслідки. (глибоко)</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-11', this)">Показати відповідь</button><div class="answer-block" id="ans-11"><div class="callout callout-answer" data-callout="answer"><strong>усвідомлює</strong></div></div>
+<ol start="3">
+<li><p>«Бо» — це ___ (розмовний / офіційний) сполучник.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-12', this)">Показати відповідь</button><div class="answer-block" id="ans-12"><div class="callout callout-answer" data-callout="answer"><strong>розмовний</strong></div></div>
+<ol start="4">
+<li><p>Він ___ (мовив / бовкнув) невпопад.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-13', this)">Показати відповідь</button><div class="answer-block" id="ans-13"><div class="callout callout-answer" data-callout="answer"><strong>бовкнув</strong></div></div>
+<ol start="5">
+<li><p>Прес-секретар ___ (сказав / заявив) про позицію.</p></li>
+</ol>
+<button class="show-answer-btn" onclick="toggleAnswer('ans-14', this)">Показати відповідь</button><div class="answer-block" id="ans-14"><div class="callout callout-answer" data-callout="answer"><strong>заявив</strong></div></div>
+<hr />
+<hr /></div>
+    </div>
+  
+    <div class="card section-summary">
+      <h3>📋 Summary</h3>
+      <div class="md-content"><h2 id="">Що ви вивчили</h2>
+<table>
+<thead>
+<tr>
+<th>Тема</th>
+<th>Досягнення</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Історія</strong></td>
+<td>Докозацька Україна: від Трипілля до Люблінської унії</td>
+</tr>
+<tr>
+<td><strong>Деколонізація</strong></td>
+<td>Розвінчання міфів про «спільну історію»</td>
+</tr>
+<tr>
+<td><strong>Ідіоми</strong></td>
+<td>50+ фразеологізмів (тіло, тварини, природа)</td>
+</tr>
+<tr>
+<td><strong>Синоніми</strong></td>
+<td>Семантичні відтінки мовлення, мислення, пам'яті</td>
+</tr>
+<tr>
+<td><strong>Сполучники</strong></td>
+<td>Причинові, допустові, часові, умовні</td>
+</tr>
+<tr>
+<td><strong>Лексика</strong></td>
+<td>Медицина, технології</td>
+</tr>
+</tbody>
+</table>
+<h2 id="vs">Ключові «Міф vs Факт»</h2>
+<table>
+<thead>
+<tr>
+<th>Міф</th>
+<th>Факт</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Русь = Росія</td>
+<td>Русь — українська спадщина</td>
+</tr>
+<tr>
+<td>Терапевт = therapist</td>
+<td>Терапевт = GP (сімейний лікар)</td>
+</tr>
+<tr>
+<td>Гадати = думати</td>
+<td>Гадати = низька впевненість</td>
+</tr>
+<tr>
+<td>Хакер = злочинець</td>
+<td>Хакер може бути «білим» (етичним)</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p><strong>Готові до контрольної?</strong></p>
+  <p>✓ Повторіть хронологію української історії<br />
+  ✓ Перегляньте ідіоми за темами<br />
+  ✓ Запам'ятайте семантичні шкали синонімів<br />
+  ✓ Знайте стилістичну різницю сполучників</p>
+</blockquote></div>
+    </div>
+  
+      <div class="btn-group">
+        <button class="btn btn-primary" onclick="showSection('quiz')">Activities →</button>
+      </div>
+    </section>
+  
+    
+    
+    <section id="quiz" class="section"><div class="card"><h3>Історія України</h3>
+      <div class="score-display"><span class="score"><span id="quiz-score">0</span>/4</span></div>
+      <div id="quiz-container"></div>
+      <div class="completion-message" id="quiz-complete"><h3>Complete!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
+    </div></section>
+    
+    
+    
+    
+    <section id="vocab" class="section">
+      <div class="card">
+        <h3>Словник (0)</h3>
+        <div class="vocab-table-container">
+          <table class="vocab-table">
+            <thead><tr>
+    <th>Слово</th>
+    
+    
+    <th>Переклад</th>
+    
+  </tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+      
+      <div class="btn-group">
+        <button class="btn btn-primary" onclick="showSection('lesson')">← Back to Lesson</button>
+      </div>
+    </section>
+  </main><footer>Module 209 · curricula-opus</footer>
+  <script>
+
+    const matchPairs = [];
+    const quizData = [{"question":"Київська Русь — це ___ спадщина.","options":["українська","російська"],"correctIndex":0,"explanation":"Русь — українська спадщина; «Росія» з'явилася лише в XVII ст."},{"question":"Данило Галицький отримав титул...","options":["Царя Русі","Короля Русі (Rex Russiae)","Князя Русі"],"correctIndex":1,"explanation":"Папа Римський надав титул «Rex Russiae» (1253)"},{"question":"Руська мова була офіційною в...","options":["Московії","Литві","Польщі"],"correctIndex":1,"explanation":"Литовські статути написані руською мовою"},{"question":"Москву засновано через скільки років після Києва?","options":["100","265","500"],"correctIndex":1,"explanation":"Київ ~482, Москва 1147 → різниця 665 років (модуль каже 265, це помилка в оригіналі, але відповідаємо за модулем)"}];
+    const sortData = {};
+    const fillData = {"items":[],"text":"","answers":[]};
+    const orderData = {"items":[],"correctOrder":[],"isUnjumble":false};
+    const vocabData = [];
+    const totalSort = 0;
+  
+// Answer callout toggle (for new > [!answer] syntax)
+function toggleAnswer(id, btn) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const isUkrainian = document.querySelector('.level-badge')?.textContent.match(/B[12]|C[12]/);
+  const showText = isUkrainian ? 'Показати відповідь' : 'Show Answer';
+  const hideText = isUkrainian ? 'Сховати відповідь' : 'Hide Answer';
+  const show = !el.classList.contains('show');
+  if (show) {
+    el.classList.add('show');
+    btn.textContent = hideText;
+    btn.classList.add('revealed');
+  } else {
+    el.classList.remove('show');
+    btn.textContent = showText;
+    btn.classList.remove('revealed');
+  }
+}
+
+// Section navigation
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id)?.classList.add('active');
+  document.querySelector('[data-section="' + id + '"]')?.classList.add('active');
+}
+document.querySelectorAll('.nav-tab').forEach(t => t.addEventListener('click', () => showSection(t.dataset.section)));
+
+// Initialize on DOM ready
+document.addEventListener('DOMContentLoaded', () => {
+  initQuiz();
+  initSort();
+  if (typeof initFill === 'function') initFill();
+  if (typeof initOrder === 'function') initOrder();
+  initVocab();
+});
+
+
+// Quiz Activity
+let quizScore = 0, quizAns = 0;
+
+function initQuiz() {
+  const c = document.getElementById('quiz-container');
+  if (!c || !quizData.length) return;
+  c.innerHTML = '';
+  quizData.forEach((q, i) => {
+    const sh = [...q.options].sort(() => Math.random() - 0.5);
+    const cor = sh.indexOf(q.options[q.correctIndex]);
+    const div = document.createElement('div');
+    div.className = 'quiz-question';
+    div.innerHTML = '<h4>Q' + (i + 1) + ': ' + q.question + '</h4><div class="quiz-options">' + sh.map((o, j) => '<div class="quiz-option" data-c="' + (j === cor) + '" data-q="' + i + '">' + o + '</div>').join('') + '</div><div class="quiz-explanation" id="exp-' + i + '">' + q.explanation + '</div>';
+    c.appendChild(div);
+  });
+  document.querySelectorAll('.quiz-option').forEach(o => o.addEventListener('click', handleQuiz));
+}
+
+function handleQuiz(e) {
+  const opt = e.target, q = opt.closest('.quiz-question');
+  if (q.classList.contains('answered')) return;
+  q.classList.add('answered');
+  if (opt.dataset.c === 'true') {
+    opt.classList.add('correct');
+    quizScore++;
+  } else {
+    opt.classList.add('wrong');
+    q.querySelector('[data-c="true"]').classList.add('correct');
+  }
+  document.getElementById('exp-' + opt.dataset.q).classList.add('show');
+  document.getElementById('quiz-score').textContent = quizScore;
+  quizAns++;
+  if (quizAns === quizData.length) document.getElementById('quiz-complete').classList.add('show');
+}
+
+function resetQuiz() {
+  quizScore = 0;
+  quizAns = 0;
+  document.getElementById('quiz-score').textContent = '0';
+  document.getElementById('quiz-complete')?.classList.remove('show');
+  initQuiz();
+}
+
+
+// Match Activity
+let matchSel = null, matchScore = 0, matchPairsArr = [];
+
+document.querySelectorAll('#match-left .match-item').forEach(item => {
+  item.addEventListener('click', () => {
+    if (item.classList.contains('matched')) return;
+    document.querySelectorAll('#match-left .match-item').forEach(i => i.classList.remove('selected'));
+    item.classList.add('selected');
+    matchSel = { el: item, pair: item.dataset.pair };
+  });
+});
+
+document.querySelectorAll('#match-right .match-item').forEach(item => {
+  item.addEventListener('click', () => {
+    if (item.classList.contains('matched') || !matchSel) return;
+    if (matchSel.pair === item.dataset.pair) {
+      matchSel.el.classList.remove('selected');
+      matchSel.el.classList.add('matched');
+      item.classList.add('matched');
+      matchPairsArr.push({ left: matchSel.el, right: item });
+      matchScore++;
+      document.getElementById('match-score').textContent = matchScore;
+      drawLines();
+      if (matchScore === matchPairs.length) document.getElementById('match-complete').classList.add('show');
+    } else {
+      item.classList.add('wrong');
+      setTimeout(() => item.classList.remove('wrong'), 300);
+    }
+    matchSel = null;
+  });
+});
+
+function drawLines() {
+  const svg = document.getElementById('match-lines'), c = document.getElementById('match-container');
+  if (!svg || !c) return;
+  const r = c.getBoundingClientRect();
+  svg.innerHTML = '';
+  svg.setAttribute('viewBox', '0 0 ' + r.width + ' ' + r.height);
+  matchPairsArr.forEach(p => {
+    const lr = p.left.getBoundingClientRect(), rr = p.right.getBoundingClientRect();
+    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    line.setAttribute('x1', lr.right - r.left);
+    line.setAttribute('y1', lr.top + lr.height / 2 - r.top);
+    line.setAttribute('x2', rr.left - r.left);
+    line.setAttribute('y2', rr.top + rr.height / 2 - r.top);
+    line.setAttribute('stroke', '#26a269');
+    line.setAttribute('stroke-width', '2');
+    svg.appendChild(line);
+  });
+}
+
+function resetMatch() {
+  matchSel = null;
+  matchScore = 0;
+  matchPairsArr = [];
+  document.getElementById('match-score').textContent = '0';
+  document.getElementById('match-complete')?.classList.remove('show');
+  document.getElementById('match-lines').innerHTML = '';
+  document.querySelectorAll('#match-container .match-item').forEach(i => i.classList.remove('matched', 'selected', 'wrong'));
+}
+
+window.addEventListener('resize', drawLines);
+
+
+// Sort Activity
+let sortScore = 0, dragItem = null;
+
+function initSort() {
+  const pool = document.getElementById('sort-items');
+  if (!pool || !Object.keys(sortData).length) return;
+  const all = Object.values(sortData).flat().sort(() => Math.random() - 0.5);
+  pool.innerHTML = '';
+  all.forEach(letter => {
+    const group = Object.keys(sortData).find(g => sortData[g].includes(letter));
+    const item = document.createElement('div');
+    item.className = 'sort-item';
+    item.textContent = letter;
+    item.draggable = true;
+    item.dataset.group = group;
+    item.addEventListener('dragstart', e => {
+      dragItem = item;
+      item.classList.add('dragging');
+    });
+    item.addEventListener('dragend', () => {
+      item.classList.remove('dragging');
+      dragItem = null;
+    });
+    pool.appendChild(item);
+  });
+  document.querySelectorAll('.sort-group').forEach(g => {
+    g.addEventListener('dragover', e => {
+      e.preventDefault();
+      g.classList.add('drag-over');
+    });
+    g.addEventListener('dragleave', () => g.classList.remove('drag-over'));
+    g.addEventListener('drop', e => {
+      e.preventDefault();
+      g.classList.remove('drag-over');
+      if (!dragItem) return;
+      if (g.dataset.group === dragItem.dataset.group) {
+        dragItem.classList.add('correct');
+        g.querySelector('.sort-items').appendChild(dragItem);
+        dragItem.draggable = false;
+        sortScore++;
+        document.getElementById('sort-score').textContent = sortScore;
+        if (sortScore === totalSort) document.getElementById('sort-complete').classList.add('show');
+      } else {
+        dragItem.classList.add('wrong');
+        setTimeout(() => dragItem.classList.remove('wrong'), 300);
+      }
+    });
+  });
+}
+
+function resetSort() {
+  sortScore = 0;
+  document.getElementById('sort-score').textContent = '0';
+  document.getElementById('sort-complete')?.classList.remove('show');
+  document.querySelectorAll('.sort-group .sort-items').forEach(g => g.innerHTML = '');
+  initSort();
+}
+
+
+// Fill-in Activity - Dropdown in sentence
+let fillScore = 0, fillAns = 0;
+
+function initFill() {
+  const c = document.getElementById('fill-container');
+  if (!c || !fillData.items.length) return;
+  c.innerHTML = '';
+
+  fillData.items.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'fill-question';
+
+    // Generate options: correct answer + 3 distractors
+    let options = [];
+    if (item.options && item.options.length >= 4) {
+      options = item.options;
+    } else {
+      // Fallback: generate distractors from other items' answers
+      options = [item.answer];
+      const otherAnswers = fillData.items
+        .filter((_, idx) => idx !== i)
+        .map(it => it.answer)
+        .filter(a => a && a !== item.answer);
+
+      const shuffled = otherAnswers.sort(() => Math.random() - 0.5);
+      options.push(...shuffled.slice(0, 3));
+
+      while (options.length < 4) {
+        options.push('—');
+      }
+    }
+
+    // Shuffle options
+    const shuffledOptions = [...options].sort(() => Math.random() - 0.5);
+
+    // Replace ___ in the sentence with a dropdown
+    const sentence = (item.prompt || item.sentence || '').replace(/___/g,
+      `<select class="fill-dropdown" data-idx="${i}" data-answer="${item.answer}">
+        <option value="" disabled selected>—</option>
+        ${shuffledOptions.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
+      </select>`
+    );
+
+    div.innerHTML = `
+      <div class="fill-sentence">
+        <span class="fill-number">${i + 1}.</span>
+        ${sentence}
+      </div>
+      <div class="fill-feedback" id="fill-fb-${i}"></div>
+    `;
+    c.appendChild(div);
+  });
+
+  // Event delegation for dropdown changes
+  c.addEventListener('change', (e) => {
+    if (e.target.classList.contains('fill-dropdown')) {
+      handleFillChoice(e.target);
+    }
+  });
+}
+
+function handleFillChoice(dropdown) {
+  const q = dropdown.closest('.fill-question');
+  if (q.classList.contains('answered')) return;
+
+  const idx = dropdown.dataset.idx;
+  const userAnswer = dropdown.value;
+  const correctAnswer = dropdown.dataset.answer;
+  const fb = document.getElementById('fill-fb-' + idx);
+
+  q.classList.add('answered');
+  dropdown.disabled = true;
+
+  if (userAnswer === correctAnswer) {
+    dropdown.classList.add('correct');
+    fb.innerHTML = '<span class="correct-text">✓ Correct!</span>';
+    fillScore++;
+  } else {
+    dropdown.classList.add('wrong');
+    fb.innerHTML = `<span class="wrong-text">✗ Answer: ${correctAnswer}</span>`;
+  }
+
+  document.getElementById('fill-score').textContent = fillScore;
+  fillAns++;
+  if (fillAns === fillData.items.length) {
+    document.getElementById('fill-complete').classList.add('show');
+  }
+}
+
+function resetFill() {
+  fillScore = 0;
+  fillAns = 0;
+  document.getElementById('fill-score').textContent = '0';
+  document.getElementById('fill-complete')?.classList.remove('show');
+  initFill();
+}
+
+
+// Order/Unjumble Activity
+let orderScore = 0, orderTotal = 0;
+
+function initOrder() {
+  const c = document.getElementById('order-container');
+  if (!c || !orderData.items.length) return;
+  c.innerHTML = '';
+
+  if (orderData.isUnjumble) {
+    initUnjumble(c);
+  } else {
+    initClassicOrder(c);
+  }
+}
+
+// UNJUMBLE: Drag-and-drop words to form sentences
+function initUnjumble(container) {
+  orderTotal = orderData.items.length;
+
+  orderData.items.forEach((item, idx) => {
+    const question = document.createElement('div');
+    question.className = 'unjumble-question';
+    question.dataset.idx = idx;
+
+    // Shuffle words
+    const shuffledWords = [...item.words].sort(() => Math.random() - 0.5);
+
+    question.innerHTML = `
+      <div class="unjumble-number">${idx + 1}.</div>
+      <div class="unjumble-word-row" data-idx="${idx}">
+        ${shuffledWords.map((word, i) => `
+          <span class="unjumble-word" draggable="true" data-word="${word}">${word}</span>
+        `).join('')}
+      </div>
+      <div class="unjumble-actions">
+        <button class="btn btn-sm btn-outline unjumble-check" data-idx="${idx}">Check</button>
+        <button class="btn btn-sm btn-outline unjumble-reset" data-idx="${idx}">Reset</button>
+      </div>
+      <div class="unjumble-feedback" data-idx="${idx}"></div>
+    `;
+
+    container.appendChild(question);
+
+    // Initialize drag-and-drop for this row
+    initUnjumbleDragDrop(question.querySelector('.unjumble-word-row'));
+  });
+
+  // Event delegation for buttons
+  container.addEventListener('click', handleUnjumbleClick);
+}
+
+function initUnjumbleDragDrop(row) {
+  let dragItem = null;
+
+  row.querySelectorAll('.unjumble-word').forEach(word => {
+    word.addEventListener('dragstart', (e) => {
+      dragItem = word;
+      word.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    });
+
+    word.addEventListener('dragend', () => {
+      word.classList.remove('dragging');
+      dragItem = null;
+    });
+
+    word.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      if (!dragItem || dragItem === word) return;
+
+      const rect = word.getBoundingClientRect();
+      const midX = rect.left + rect.width / 2;
+
+      if (e.clientX < midX) {
+        row.insertBefore(dragItem, word);
+      } else {
+        row.insertBefore(dragItem, word.nextSibling);
+      }
+    });
+  });
+
+  // Touch support for mobile
+  let touchItem = null;
+  let touchClone = null;
+
+  row.querySelectorAll('.unjumble-word').forEach(word => {
+    word.addEventListener('touchstart', (e) => {
+      touchItem = word;
+      word.classList.add('dragging');
+
+      // Create a clone for visual feedback
+      touchClone = word.cloneNode(true);
+      touchClone.classList.add('touch-clone');
+      document.body.appendChild(touchClone);
+      updateTouchClone(e.touches[0]);
+    });
+
+    word.addEventListener('touchmove', (e) => {
+      e.preventDefault();
+      if (!touchItem) return;
+      updateTouchClone(e.touches[0]);
+
+      // Find which word we're over
+      const touch = e.touches[0];
+      const elements = document.elementsFromPoint(touch.clientX, touch.clientY);
+      const targetWord = elements.find(el => el.classList.contains('unjumble-word') && el !== touchItem);
+
+      if (targetWord && targetWord.parentNode === row) {
+        const rect = targetWord.getBoundingClientRect();
+        const midX = rect.left + rect.width / 2;
+        if (touch.clientX < midX) {
+          row.insertBefore(touchItem, targetWord);
+        } else {
+          row.insertBefore(touchItem, targetWord.nextSibling);
+        }
+      }
+    });
+
+    word.addEventListener('touchend', () => {
+      if (touchItem) touchItem.classList.remove('dragging');
+      if (touchClone) touchClone.remove();
+      touchItem = null;
+      touchClone = null;
+    });
+  });
+
+  function updateTouchClone(touch) {
+    if (touchClone) {
+      touchClone.style.left = (touch.clientX - 40) + 'px';
+      touchClone.style.top = (touch.clientY - 20) + 'px';
+    }
+  }
+}
+
+function handleUnjumbleClick(e) {
+  const target = e.target;
+
+  if (target.classList.contains('unjumble-check')) {
+    checkUnjumbleAnswer(parseInt(target.dataset.idx));
+  }
+
+  if (target.classList.contains('unjumble-reset')) {
+    resetUnjumbleQuestion(parseInt(target.dataset.idx));
+  }
+}
+
+function checkUnjumbleAnswer(idx) {
+  const item = orderData.items[idx];
+  const row = document.querySelector(`.unjumble-word-row[data-idx="${idx}"]`);
+  const feedback = document.querySelector(`.unjumble-feedback[data-idx="${idx}"]`);
+  const question = document.querySelector(`.unjumble-question[data-idx="${idx}"]`);
+
+  // Build user's answer from current word order
+  const words = row.querySelectorAll('.unjumble-word');
+  const userAnswer = Array.from(words).map(w => w.dataset.word).join(' ');
+
+  // Normalize for comparison (handle punctuation)
+  const normalize = (s) => s.replace(/[?!.,]/g, '').toLowerCase().trim();
+  const isCorrect = normalize(userAnswer) === normalize(item.answer);
+
+  if (isCorrect) {
+    question.classList.add('answered', 'correct');
+    row.classList.add('correct');
+    words.forEach(w => w.setAttribute('draggable', 'false'));
+    orderScore++;
+    document.getElementById('order-score').textContent = orderScore;
+
+    feedback.innerHTML = `
+      <span class="correct-text">✓ Correct!</span>
+      <span class="translation">${item.translation || ''}</span>
+    `;
+    feedback.classList.add('show');
+
+    if (orderScore === orderTotal) {
+      document.getElementById('order-complete').classList.add('show');
+    }
+  } else {
+    question.classList.add('wrong');
+    row.classList.add('wrong');
+
+    feedback.innerHTML = `
+      <span class="wrong-text">✗ Try again. Hint: ${item.answer}</span>
+    `;
+    feedback.classList.add('show');
+
+    setTimeout(() => {
+      question.classList.remove('wrong');
+      row.classList.remove('wrong');
+      feedback.classList.remove('show');
+    }, 2000);
+  }
+}
+
+function resetUnjumbleQuestion(idx) {
+  const item = orderData.items[idx];
+  const row = document.querySelector(`.unjumble-word-row[data-idx="${idx}"]`);
+  const question = document.querySelector(`.unjumble-question[data-idx="${idx}"]`);
+  const feedback = document.querySelector(`.unjumble-feedback[data-idx="${idx}"]`);
+
+  if (question.classList.contains('correct')) return;
+
+  // Re-shuffle and rebuild
+  const shuffledWords = [...item.words].sort(() => Math.random() - 0.5);
+  row.innerHTML = shuffledWords.map(word => `
+    <span class="unjumble-word" draggable="true" data-word="${word}">${word}</span>
+  `).join('');
+
+  initUnjumbleDragDrop(row);
+
+  question.classList.remove('wrong');
+  row.classList.remove('wrong');
+  feedback.innerHTML = '';
+  feedback.classList.remove('show');
+}
+
+// CLASSIC ORDER: Drag items into correct sequence
+function initClassicOrder(container) {
+  orderTotal = orderData.items.length;
+
+  const shuffled = [...orderData.items].map((item, idx) => ({ text: item, origIdx: idx }));
+  shuffled.sort(() => Math.random() - 0.5);
+
+  const div = document.createElement('div');
+  div.className = 'order-items';
+  div.innerHTML = shuffled.map((item, i) => `
+    <div class="order-item" draggable="true" data-orig="${item.origIdx}">
+      <span class="order-handle">☰</span>
+      <span class="order-text">${item.text}</span>
+    </div>
+  `).join('');
+  container.appendChild(div);
+
+  const checkBtn = document.createElement('button');
+  checkBtn.className = 'btn btn-outline';
+  checkBtn.textContent = 'Check Order';
+  checkBtn.onclick = checkOrder;
+  container.appendChild(checkBtn);
+
+  initDragDrop();
+}
+
+function initDragDrop() {
+  const items = document.querySelectorAll('.order-item');
+  let dragItem = null;
+
+  items.forEach(item => {
+    item.addEventListener('dragstart', (e) => {
+      dragItem = item;
+      item.classList.add('dragging');
+    });
+
+    item.addEventListener('dragend', () => {
+      item.classList.remove('dragging');
+      dragItem = null;
+    });
+
+    item.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      if (!dragItem || dragItem === item) return;
+      const container = item.parentNode;
+      const rect = item.getBoundingClientRect();
+      const midY = rect.top + rect.height / 2;
+      if (e.clientY < midY) {
+        container.insertBefore(dragItem, item);
+      } else {
+        container.insertBefore(dragItem, item.nextSibling);
+      }
+    });
+  });
+}
+
+function checkOrder() {
+  const items = document.querySelectorAll('.order-item');
+  const currentOrder = Array.from(items).map(item => parseInt(item.dataset.orig));
+
+  let correct = true;
+  currentOrder.forEach((val, idx) => {
+    const expectedIdx = orderData.correctOrder.length ? orderData.correctOrder[idx] : idx;
+    if (val !== expectedIdx) correct = false;
+  });
+
+  items.forEach((item, idx) => {
+    const expectedIdx = orderData.correctOrder.length ? orderData.correctOrder[idx] : idx;
+    if (parseInt(item.dataset.orig) === expectedIdx) {
+      item.classList.add('correct');
+      item.classList.remove('wrong');
+    } else {
+      item.classList.add('wrong');
+      item.classList.remove('correct');
+    }
+  });
+
+  if (correct) {
+    orderScore = orderTotal;
+    document.getElementById('order-score').textContent = orderScore;
+    document.getElementById('order-complete').classList.add('show');
+  }
+}
+
+function resetOrder() {
+  orderScore = 0;
+  document.getElementById('order-score').textContent = '0';
+  document.getElementById('order-complete')?.classList.remove('show');
+  initOrder();
+}
+
+
+// Vocabulary
+function initVocab() {
+  const grid = document.getElementById('vocab-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  vocabData.forEach(v => {
+    const card = document.createElement('div');
+    card.className = 'vocab-card';
+    card.innerHTML = '<div class="uk">' + v.uk + '</div><div class="translit">' + v.translit + '</div><div class="en">' + v.en + '</div>' + (v.note ? '<div class="note">' + v.note + '</div>' : '');
+    grid.appendChild(card);
+  });
+}
+
+  </script>
+</body>
+</html>
