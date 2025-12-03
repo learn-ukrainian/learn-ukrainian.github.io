@@ -300,33 +300,93 @@ Create sentences: Subject + verb + з + instrumental
 
 # Activities
 
-## fill-in: Complete the Sentences
+## fill-in: Instrumental with з
 
-> Choose the correct word to complete each sentence.
+> Choose the correct instrumental form for accompaniment.
 
-1. Вони планують ___ завтра.
-   > [!answer] знайомитися
-   > [!options] здаватися | відповідати | дзвонити | знайомитися
+1. Я йду в кіно з моїм ___ (друг) сьогодні ввечері.
+   > [!answer] другом
+   > [!options] друг | друга | другові | другом
 
-2. Вони планують ___ завтра.
-   > [!answer] зустрічатися
-   > [!options] зустрічатися | перейти | могти | прошу
+2. Вона розмовляє по телефону з ___ (сестра) кожен день.
+   > [!answer] сестрою
+   > [!options] сестра | сестри | сестрі | сестрою
 
-3. Вони планують ___ завтра.
-   > [!answer] вітатися
-   > [!options] дарувати | мати | вітатися | вставати
+3. Ми живемо разом з нашими ___ (батьки) в Києві.
+   > [!answer] батьками
+   > [!options] батьки | батьків | батькам | батьками
 
-4. Де ваша велика ___?
-   > [!answer] компанія
-   > [!options] 13 | столик | компанія | осінь
+4. Він гуляє в парку з ___ (собака) вранці та ввечері.
+   > [!answer] собакою
+   > [!options] собака | собаки | собаці | собакою
+
+5. Я їду на море з ___ (ти) цього літа!
+   > [!answer] тобою
+   > [!options] ти | тебе | тобі | тобою
+
+6. Ти хочеш познайомитися з ___ (вони) на вечірці?
+   > [!answer] ними
+   > [!options] вони | їх | їм | ними
+
+7. Вона щасливо живе з ___ (чоловік) у Львові.
+   > [!answer] чоловіком
+   > [!options] чоловік | чоловіка | чоловікові | чоловіком
+
+8. Діти люблять грати з ___ (котик) на подвір'ї.
+   > [!answer] котиком
+   > [!options] котик | котика | котикові | котиком
+
+9. З ___ (хто) ти йдеш на концерт у суботу?
+   > [!answer] ким
+   > [!options] хто | кого | кому | ким
+
+10. Ми завжди святкуємо Новий рік з ___ (сім'я).
+    > [!answer] сім'єю
+    > [!options] сім'я | сім'ї | сім'ї | сім'єю
 
 ## unjumble: Build the Sentence
 
-> Arrange the words in the correct order.
+> Arrange the words to form sentences with з + instrumental.
 
-1. Де / ваша / велика / компанія
-   > [!answer] Де ваша велика компанія?
-   > (company, group)
+1. другом / Я / в кіно / йду / з / сьогодні
+   > [!answer] Я йду в кіно з другом сьогодні.
+   > (I'm going to the cinema with a friend today.)
+
+2. сестрою / Вона / розмовляє / з / по телефону / часто
+   > [!answer] Вона часто розмовляє з сестрою по телефону.
+   > (She often talks to her sister on the phone.)
+
+3. батьками / Ми / живемо / з / в Києві / разом
+   > [!answer] Ми живемо разом з батьками в Києві.
+   > (We live together with our parents in Kyiv.)
+
+4. собакою / Він / в парку / гуляє / з / вранці
+   > [!answer] Він гуляє в парку з собакою вранці.
+   > (He walks in the park with the dog in the morning.)
+
+5. тобою / Я / на море / їду / з / цього літа
+   > [!answer] Я їду на море з тобою цього літа.
+   > (I'm going to the sea with you this summer.)
+
+6. ними / Ти / хочеш / познайомитися / з / на вечірці
+   > [!answer] Ти хочеш познайомитися з ними на вечірці?
+   > (Do you want to get acquainted with them at the party?)
+
+7. чоловіком / Вона / живе / щасливо / з / у Львові
+   > [!answer] Вона щасливо живе з чоловіком у Львові.
+   > (She lives happily with her husband in Lviv.)
+
+8. сім'єю / Ми / завжди / святкуємо / з / Новий рік
+   > [!answer] Ми завжди святкуємо Новий рік з сім'єю.
+   > (We always celebrate New Year with family.)
+
+9. ким / З / йдеш / ти / на концерт / у суботу
+   > [!answer] З ким ти йдеш на концерт у суботу?
+   > (Who are you going to the concert with on Saturday?)
+
+10. колегами / Він / працює / з / разом / у офісі
+    > [!answer] Він працює разом з колегами у офісі.
+    > (He works together with colleagues in the office.)
 
 ## match-up: Match the Pairs
 
@@ -468,6 +528,125 @@ Create sentences: Subject + verb + з + instrumental
 
 - [x] "ним" means "(with) him/it"
    > Correct!
+
+## select: Choose the Correct Instrumental Form
+
+> Select the correct instrumental form of the pronoun or noun.
+
+1. Я йду в кіно з ___ . (he)
+   > [!answer] ним
+   > [!options] його | йому | ним
+
+2. Вона розмовляє з ___ . (we)
+   > [!answer] нами
+   > [!options] нас | нам | нами
+
+3. Він зустрічається з ___ . (she)
+   > [!answer] нею
+   > [!options] її | їй | нею
+
+4. Ми працюємо з ___ . (friend)
+   > [!answer] другом
+   > [!options] друга | другу | другом
+
+5. Вона знайомиться з ___ . (students)
+   > [!answer] студентами
+   > [!options] студентів | студентам | студентами
+
+6. Я обідаю з ___ . (sister)
+   > [!answer] сестрою
+   > [!options] сестру | сестрі | сестрою
+
+7. Він вітається з ___ . (teacher)
+   > [!answer] вчителем
+   > [!options] вчителя | вчителю | вчителем
+
+8. Ми гуляємо з ___ . (they)
+   > [!answer] ними
+   > [!options] їх | їм | ними
+
+9. Вона прощається з ___ . (you, formal)
+   > [!answer] вами
+   > [!options] вас | вам | вами
+
+10. Я живу з ___ . (parents)
+    > [!answer] батьками
+    > [!options] батьків | батькам | батьками
+
+## group-sort: Instrumental Ending Categories
+
+> Sort these instrumental forms by their ending pattern.
+
+### -ом (Hard Masculine)
+- другом
+- братом
+- студентом
+- батьком
+
+### -ем (Soft Masculine)
+- вчителем
+- хлопцем
+- товаришем
+
+### -ою (Hard Feminine)
+- сестрою
+- мамою
+- подругою
+
+### -ею (Soft Feminine)
+- Марією
+- землею
+- статтею
+
+### -ами/-ями (Plural)
+- друзями
+- батьками
+- студентами
+- сестрами
+
+## order: Instrumental Sentence Building
+
+> Arrange the sentence elements in the correct order.
+
+1. [Я] → [йду] → [в кіно] → [з другом]
+   > [!answer] Я йду в кіно з другом.
+   > (I go to the cinema with a friend.)
+
+2. [Вона] → [зустрічається] → [з подругою] → [в кафе]
+   > [!answer] Вона зустрічається з подругою в кафе.
+   > (She meets with a friend at a cafe.)
+
+3. [Ми] → [живемо] → [разом] → [з батьками]
+   > [!answer] Ми живемо разом з батьками.
+   > (We live together with our parents.)
+
+4. [Він] → [працює] → [з колегами] → [в офісі]
+   > [!answer] Він працює з колегами в офісі.
+   > (He works with colleagues in the office.)
+
+5. [Я] → [вітаюся] → [з вами] → [щодня]
+   > [!answer] Я вітаюся з вами щодня.
+   > (I greet you every day.)
+
+6. [Вона] → [обідає] → [з сестрою] → [вдома]
+   > [!answer] Вона обідає з сестрою вдома.
+   > (She has lunch with her sister at home.)
+
+7. [Ми] → [прощаємося] → [з друзями] → [ввечері]
+   > [!answer] Ми прощаємося з друзями ввечері.
+   > (We say goodbye to friends in the evening.)
+
+8. [Він] → [знайомиться] → [з нею] → [на вечірці]
+   > [!answer] Він знайомиться з нею на вечірці.
+   > (He gets acquainted with her at a party.)
+
+9. [Я] → [гуляю] → [з ними] → [у парку]
+   > [!answer] Я гуляю з ними у парку.
+   > (I walk with them in the park.)
+
+10. [Вона] → [розмовляє] → [з мамою] → [по телефону]
+    > [!answer] Вона розмовляє з мамою по телефону.
+    > (She talks with mom on the phone.)
 
 ---
 

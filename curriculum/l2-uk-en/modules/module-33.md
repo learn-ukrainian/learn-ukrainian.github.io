@@ -255,33 +255,93 @@ Create sentences with impersonal + dative:
 
 # Activities
 
-## fill-in: Complete the Sentences
+## fill-in: Dative Verbs
 
-> Choose the correct word to complete each sentence.
+> Choose the correct dative form to complete each sentence.
 
-1. Мій брат має хороший ___.
-   > [!answer] досвід
-   > [!options] ніч | продавець | погода | досвід
+1. Я завжди з радістю допомагаю ___ (брат).
+   > [!answer] братові / брату
+   > [!options] брат | братові | брату | брата
 
-2. Вони планують ___ завтра.
-   > [!answer] вдаватися
-   > [!options] перейти | закривати | бачити | вдаватися
+2. Дякую ___ (ви) за вашу допомогу сьогодні!
+   > [!answer] вам
+   > [!options] ви | вас | вам | вами
 
-3. Мій брат любить ___ щодня.
-   > [!answer] бракувати
-   > [!options] бракувати | відкривати | зробити | буду
+3. Вона відповідає ___ (вчитель) на уроці англійської.
+   > [!answer] вчителеві / вчителю
+   > [!options] вчитель | вчителеві | вчителю | вчителя
 
-4. Мій брат любить ___ щодня.
-   > [!answer] радити
-   > [!options] допомогти | ходити | радити | дивитися
+4. Не заважай ___ (я), коли я працюю, будь ласка!
+   > [!answer] мені
+   > [!options] я | мене | мені | мною
+
+5. Що ви радите ___ (ми) робити в цій ситуації?
+   > [!answer] нам
+   > [!options] ми | нас | нам | нами
+
+6. ___ (він) сьогодні дуже холодно без куртки.
+   > [!answer] Йому
+   > [!options] Він | Його | Йому | Ним
+
+7. ___ (вона) важко зрозуміти цю нову граматику.
+   > [!answer] Їй
+   > [!options] Вона | Її | Їй | Нею
+
+8. Ця книга належить ___ (моя сестра) з дитинства.
+   > [!answer] моїй сестрі
+   > [!options] моя сестра | мою сестру | моїй сестрі | моєю сестрою
+
+9. ___ (ти) потрібна допомога з домашнім завданням?
+   > [!answer] Тобі
+   > [!options] Ти | Тебе | Тобі | Тобою
+
+10. ___ (я) бракує часу для спорту цього тижня.
+    > [!answer] Мені
+    > [!options] Я | Мене | Мені | Мною
 
 ## unjumble: Build the Sentence
 
-> Arrange the words in the correct order.
+> Arrange the words in the correct order to form sentences with dative verbs.
 
-1. досвід / Цей / сто / коштує / гривень
-   > [!answer] Цей досвід коштує сто гривень.
-   > (experience)
+1. допомагаю / Я / братові / завжди / з радістю
+   > [!answer] Я завжди з радістю допомагаю братові.
+   > (I always gladly help my brother.)
+
+2. вам / Дякую / за / вашу / допомогу / сьогодні
+   > [!answer] Дякую вам за вашу допомогу сьогодні!
+   > (Thank you for your help today!)
+
+3. вчителеві / Вона / відповідає / на уроці / англійської
+   > [!answer] Вона відповідає вчителеві на уроці англійської.
+   > (She answers the teacher in English class.)
+
+4. мені / Не заважай / коли / я / працюю
+   > [!answer] Не заважай мені, коли я працюю!
+   > (Don't disturb me when I'm working!)
+
+5. радите / Що / ви / нам / робити / в цій ситуації
+   > [!answer] Що ви радите нам робити в цій ситуації?
+   > (What do you advise us to do in this situation?)
+
+6. Йому / холодно / сьогодні / дуже / без куртки
+   > [!answer] Йому сьогодні дуже холодно без куртки.
+   > (He's very cold today without a jacket.)
+
+7. Їй / зрозуміти / важко / цю / нову / граматику
+   > [!answer] Їй важко зрозуміти цю нову граматику.
+   > (It's hard for her to understand this new grammar.)
+
+8. належить / Ця / книга / моїй сестрі / з дитинства
+   > [!answer] Ця книга належить моїй сестрі з дитинства.
+   > (This book has belonged to my sister since childhood.)
+
+9. Тобі / потрібна / допомога / з домашнім завданням
+   > [!answer] Тобі потрібна допомога з домашнім завданням?
+   > (Do you need help with homework?)
+
+10. Мені / часу / бракує / для спорту / цього тижня
+    > [!answer] Мені бракує часу для спорту цього тижня.
+    > (I lack time for sports this week.)
 
 ## match-up: Match the Pairs
 
@@ -423,6 +483,116 @@ Create sentences with impersonal + dative:
 
 - [x] "весело" means "fun, merry"
    > Correct!
+
+## select: Choose the Correct Dative Form
+
+> Select the correct dative pronoun or noun for each sentence.
+
+1. Я допомагаю ___ з домашнім завданням. (him)
+   > [!answer] йому
+   > [!options] його | йому | він
+
+2. Вона дякує ___ за подарунок. (you, formal)
+   > [!answer] вам
+   > [!options] вас | вам | ви
+
+3. Не заважай ___, я працюю! (me)
+   > [!answer] мені
+   > [!options] мене | мені | я
+
+4. Він відповідає ___ на запитання. (teacher)
+   > [!answer] вчителеві
+   > [!options] вчителя | вчителеві | вчитель
+
+5. ___ потрібна допомога. (them)
+   > [!answer] Їм
+   > [!options] Їх | Їм | Вони
+
+6. Радимо ___ відпочити. (her)
+   > [!answer] їй
+   > [!options] її | їй | вона
+
+7. ___ холодно в цій кімнаті. (us)
+   > [!answer] Нам
+   > [!options] Нас | Нам | Ми
+
+8. Ця книга належить ___. (brother)
+   > [!answer] братові
+   > [!options] брата | братові | брат
+
+9. ___ подобається ця музика. (me)
+   > [!answer] Мені
+   > [!options] Мене | Мені | Я
+
+10. Він телефонує ___ щодня. (parents)
+    > [!answer] батькам
+    > [!options] батьків | батькам | батьки
+
+## group-sort: Dative Verb Categories
+
+> Sort these verbs by their usage pattern.
+
+### Dative Verbs (object = dative)
+- допомагати (to help)
+- дякувати (to thank)
+- відповідати (to answer)
+- заважати (to disturb)
+
+### Impersonal + Dative (experiencer = dative)
+- холодно (cold)
+- потрібно (need)
+- можна (may)
+- важко (difficult)
+
+### Accusative Verbs (object = accusative)
+- бачити (to see)
+- любити (to love)
+- знати (to know)
+- чути (to hear)
+
+## order: Dative Sentence Building
+
+> Arrange the sentence elements in the correct order.
+
+1. [Я] → [допомагаю] → [братові] → [з роботою]
+   > [!answer] Я допомагаю братові з роботою.
+   > (I help my brother with work.)
+
+2. [Вона] → [дякує] → [вам] → [за допомогу]
+   > [!answer] Вона дякує вам за допомогу.
+   > (She thanks you for help.)
+
+3. [Мені] → [потрібно] → [купити] → [молоко]
+   > [!answer] Мені потрібно купити молоко.
+   > (I need to buy milk.)
+
+4. [Не] → [заважай] → [мені] → [працювати]
+   > [!answer] Не заважай мені працювати!
+   > (Don't disturb me working!)
+
+5. [Їй] → [подобається] → [ця] → [музика]
+   > [!answer] Їй подобається ця музика.
+   > (She likes this music.)
+
+6. [Він] → [відповідає] → [вчителеві] → [чітко]
+   > [!answer] Він відповідає вчителеві чітко.
+   > (He answers the teacher clearly.)
+
+7. [Нам] → [холодно] → [у] → [кімнаті]
+   > [!answer] Нам холодно у кімнаті.
+   > (We are cold in the room.)
+
+8. [Я] → [раджу] → [тобі] → [відпочити]
+   > [!answer] Я раджу тобі відпочити.
+   > (I advise you to rest.)
+
+9. [Цей] → [годинник] → [належить] → [батькові]
+   > [!answer] Цей годинник належить батькові.
+   > (This watch belongs to father.)
+
+10. [Їм] → [важко] → [зрозуміти] → [це]
+    > [!answer] Їм важко зрозуміти це.
+    > (It's hard for them to understand this.)
 
 ---
 

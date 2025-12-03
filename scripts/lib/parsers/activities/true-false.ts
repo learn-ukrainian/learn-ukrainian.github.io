@@ -25,7 +25,26 @@ export class TrueFalseParser extends ActivityParser<TrueFalseContent> {
     const statements: TrueFalseStatement[] = [];
     const body = this.getContentBody(content);
 
-    // Split by numbered items
+    // Try checkbox format first: - [x] statement or - [ ] statement
+    const checkboxMatches = body.matchAll(/^-\s*\[([ xX])\]\s*(.+?)(?:\n\s*>\s*(.+?))?(?=\n-\s*\[|\n*$)/gms);
+    const checkboxResults = [...checkboxMatches];
+
+    if (checkboxResults.length > 0) {
+      for (const match of checkboxResults) {
+        const isChecked = match[1].toLowerCase() === 'x';
+        const statement = match[2].trim();
+        const explanation = match[3]?.trim() || '';
+
+        statements.push({
+          statement,
+          isTrue: isChecked,
+          explanation,
+        });
+      }
+      return { type: 'true-false', statements };
+    }
+
+    // Fall back to numbered format with [!answer] callouts
     const itemMatches = body.matchAll(/(\d+)\.\s+([\s\S]*?)(?=\n\d+\.|$)/g);
 
     for (const match of itemMatches) {

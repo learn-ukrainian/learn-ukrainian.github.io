@@ -313,41 +313,93 @@ Generally (imperfective for habits):
 
 # Activities
 
-## fill-in: Complete the Sentences
+## fill-in: Verbal Aspect Practice
 
-> Choose the correct word to complete each sentence.
+> Choose the correct aspect (imperfective for process/habit, perfective for completed action).
 
-1. Чи ти вмієш добре ___?
-   > [!answer] з'їсти
-   > [!options] дякую | перерахувати | з'їсти | була
+1. Вчора він ___ (читати/прочитати) цю книгу до кінця.
+   > [!answer] прочитав
+   > [!options] читав | прочитав | читає | прочитає
 
-2. Вони планують ___ завтра.
-   > [!answer] приготувати
-   > [!options] мати | приготувати | надіслати | думати
+2. Вона щодня ___ (готувати/приготувати) сніданок для родини.
+   > [!answer] готує
+   > [!options] готує | приготує | готувала | приготувала
 
-3. Де ваш великий ___?
-   > [!answer] вид
-   > [!options] розмір | дитина | очі | вид
+3. Минулого тижня я ___ (вчити/вивчити) всі нові слова.
+   > [!answer] вивчив
+   > [!options] вчив | вивчив | вчу | вивчу
 
-4. Мій брат любить ___ щодня.
-   > [!answer] купити
-   > [!options] заважати | вчитися | купити | бачити
+4. Він зараз ___ (писати/написати) листа другові.
+   > [!answer] пише
+   > [!options] пише | напише | писав | написав
 
-5. Ваша ідея здається ___.
-   > [!answer] недоконаний
-   > [!options] недоконаний | легкий | маленький | розумний
+5. Коли ти ___ (робити/зробити) домашнє завдання, підемо гуляти.
+   > [!answer] зробиш
+   > [!options] робиш | зробиш | робив | зробив
 
-6. Моя кімната занадто ___.
-   > [!answer] доконаний
-   > [!options] смачний | добрий | маленький | доконаний
+6. Вона ___ (дивитися/подивитися) фільми кожного вечора.
+   > [!answer] дивиться
+   > [!options] дивиться | подивиться | дивилася | подивилася
+
+7. Вчора ввечері він ___ (купувати/купити) новий телефон.
+   > [!answer] купив
+   > [!options] купував | купив | купує | купить
+
+8. Ми довго ___ (шукати/знайти) цей ресторан учора.
+   > [!answer] шукали
+   > [!options] шукали | знайшли | шукаємо | знайдемо
+
+9. Раніше вона завжди ___ (допомагати/допомогти) мені з роботою.
+   > [!answer] допомагала
+   > [!options] допомагала | допомогла | допомагає | допоможе
+
+10. Ти вже ___ (їсти/з'їсти) весь торт сьогодні?
+    > [!answer] з'їв
+    > [!options] їв | з'їв | їси | з'їси
 
 ## unjumble: Build the Sentence
 
-> Arrange the words in the correct order.
+> Arrange the words to form sentences with correct aspect usage.
 
-1. вид / Це / новий / мій
-   > [!answer] Це мій новий вид.
-   > (aspect (grammar))
+1. книгу / Вчора / він / прочитав / цю / до кінця
+   > [!answer] Вчора він прочитав цю книгу до кінця.
+   > (Yesterday he finished reading this book. - perfective)
+
+2. готує / Вона / сніданок / щодня / для родини
+   > [!answer] Вона щодня готує сніданок для родини.
+   > (She cooks breakfast for the family every day. - imperfective)
+
+3. вивчив / тижня / Минулого / я / всі / нові слова
+   > [!answer] Минулого тижня я вивчив всі нові слова.
+   > (Last week I learned all the new words. - perfective)
+
+4. пише / Він / листа / зараз / другові
+   > [!answer] Він зараз пише листа другові.
+   > (He is now writing a letter to a friend. - imperfective)
+
+5. зробиш / Коли / ти / домашнє завдання / підемо гуляти
+   > [!answer] Коли ти зробиш домашнє завдання, підемо гуляти.
+   > (When you finish your homework, we'll go for a walk. - perfective)
+
+6. дивиться / Вона / фільми / кожного вечора
+   > [!answer] Вона дивиться фільми кожного вечора.
+   > (She watches movies every evening. - imperfective)
+
+7. купив / Вчора / він / новий телефон / ввечері
+   > [!answer] Вчора ввечері він купив новий телефон.
+   > (Yesterday evening he bought a new phone. - perfective)
+
+8. шукали / Ми / довго / цей ресторан / учора
+   > [!answer] Ми довго шукали цей ресторан учора.
+   > (We looked for this restaurant for a long time yesterday. - imperfective)
+
+9. допомагала / Раніше / вона / завжди / мені / з роботою
+   > [!answer] Раніше вона завжди допомагала мені з роботою.
+   > (Before she always helped me with work. - imperfective)
+
+10. з'їв / Ти / вже / весь торт / сьогодні
+    > [!answer] Ти вже з'їв весь торт сьогодні?
+    > (Have you already eaten the whole cake today? - perfective)
 
 ## match-up: Match the Pairs
 
@@ -454,6 +506,123 @@ Generally (imperfective for habits):
 
 - [ ] "з'їсти" means "yes"
    > Incorrect. "з'їсти" means "to eat (perf)"
+
+## select: Aspect Selection
+
+> Choose the correct verb aspect for each context.
+
+1. I was reading for two hours.
+   - [ ] Я прочитав дві години.
+   - [x] Я читав дві години.
+   - [ ] Я читаю дві години.
+   - [ ] Я буду читати дві години.
+   > Use imperfective for duration: "Я читав дві години."
+
+2. I finished the book yesterday.
+   - [x] Я прочитав книгу вчора.
+   - [ ] Я читав книгу вчора.
+   - [ ] Я читаю книгу вчора.
+   - [ ] Я буду читати книгу.
+   > Use perfective for completed action: "Я прочитав книгу вчора."
+
+3. She writes letters every week.
+   - [ ] Вона напише листи щотижня.
+   - [x] Вона пише листи щотижня.
+   - [ ] Вона написала листи щотижня.
+   - [ ] Вона буде писати листи.
+   > Use imperfective for repeated action: "Вона пише листи щотижня."
+
+4. Tomorrow I will finish my homework.
+   - [x] Завтра я зроблю домашнє завдання.
+   - [ ] Завтра я робив домашнє завдання.
+   - [ ] Завтра я роблю домашнє завдання.
+   - [ ] Завтра я буду робити домашнє завдання.
+   > Use perfective for future completion: "Завтра я зроблю домашнє завдання."
+
+5. He was drinking coffee when I arrived.
+   - [ ] Він випив каву, коли я прийшов.
+   - [x] Він пив каву, коли я прийшов.
+   - [ ] Він п'є каву, коли я прийшов.
+   - [ ] Він буде пити каву.
+   > Use imperfective for action in progress: "Він пив каву, коли я прийшов."
+
+6. I ate the whole pizza.
+   - [x] Я з'їв всю піцу.
+   - [ ] Я їв всю піцу.
+   - [ ] Я їм всю піцу.
+   - [ ] Я буду їсти піцу.
+   > Use perfective for completed action with result: "Я з'їв всю піцу."
+
+7. They learn new words every day.
+   - [ ] Вони вивчать нові слова щодня.
+   - [x] Вони вчать нові слова щодня.
+   - [ ] Вони вивчили нові слова щодня.
+   - [ ] Вони будуть вчити слова.
+   > Use imperfective for habitual action: "Вони вчать нові слова щодня."
+
+8. She will cook dinner tonight.
+   - [x] Вона приготує вечерю сьогодні ввечері.
+   - [ ] Вона готувала вечерю сьогодні.
+   - [ ] Вона готує вечерю сьогодні.
+   - [ ] Вона буде готувати вечерю.
+   > Use perfective for future single action: "Вона приготує вечерю сьогодні ввечері."
+
+9. We were doing homework all evening.
+   - [ ] Ми зробили домашнє завдання весь вечір.
+   - [x] Ми робили домашнє завдання весь вечір.
+   - [ ] Ми робимо домашнє завдання вечір.
+   - [ ] Ми зробимо домашнє завдання.
+   > Use imperfective for duration: "Ми робили домашнє завдання весь вечір."
+
+10. He bought a new car last month.
+    - [x] Він купив нову машину минулого місяця.
+    - [ ] Він купував нову машину минулого місяця.
+    - [ ] Він купує нову машину місяця.
+    - [ ] Він буде купувати машину.
+    > Use perfective for completed single action: "Він купив нову машину минулого місяця."
+
+## order: Aspect Story Sequence
+
+> Put these perfective actions in logical order to tell a story.
+
+- [5] Я ліг спати о десятій годині.
+- [1] Я прийшов додому о восьмій годині.
+- [3] Я приготував вечерю за тридцять хвилин.
+- [2] Я відкрив холодильник і взяв продукти.
+- [4] Я з'їв вечерю і випив чай.
+- [7] Я прочитав книгу годину перед сном.
+- [6] Я прийняв душ і почистив зуби.
+- [9] Я вивчив десять нових слів українською.
+- [8] Я написав повідомлення другу про плани.
+- [10] Я закрив очі і заснув швидко.
+
+## group-sort: Sort by Aspect
+
+> Sort these verbs by their aspect type.
+
+**Imperfective (process, repeated):**
+- читати
+- писати
+- робити
+- їсти
+- пити
+- вчити
+- готувати
+- купувати
+- давати
+- вставати
+
+**Perfective (completed, single):**
+- прочитати
+- написати
+- зробити
+- з'їсти
+- випити
+- вивчити
+- приготувати
+- купити
+- дати
+- встати
 
 ---
 

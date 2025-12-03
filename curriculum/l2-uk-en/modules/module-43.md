@@ -296,25 +296,53 @@ Notice:
 
 # Activities
 
-## fill-in: Complete the Sentences
+## fill-in: Aspect in Context
 
-> Choose the correct word to complete each sentence.
+> Choose the correct form based on the context.
 
-1. Вони планують ___ завтра.
-   > [!answer] зібрати
-   > [!options] пояснити | просити | дякую | зібрати
+1. Я читав цю книгу ___ (дві години / за дві години).
+   > [!answer] дві години
+   > (Duration = imperfective with time expression without "за")
 
-2. Вони планують ___ завтра.
-   > [!answer] прокинутися
-   > [!options] ішла | подзвонити | прокинутися | чути
+2. Поки вона ___ (готувала / приготувала), я читав газету.
+   > [!answer] готувала
+   > (Simultaneous action with "поки" = imperfective)
 
-3. Вони планують ___ завтра.
-   > [!answer] відпочивати
-   > [!options] приміряти | відпочивати | засинати | купити
+3. Він вже ___ (писав / написав) листа своїй сестрі.
+   > [!answer] написав
+   > ("вже" = already = completed result = perfective)
 
-## unjumble: Build the Sentence
+4. Коли я ___ (снідав / поснідав), зателефонував мій друг.
+   > [!answer] снідав
+   > (Background action interrupted = imperfective)
+
+5. Вона ще не ___ (відповідала / відповіла) на моє повідомлення.
+   > [!answer] відповіла
+   > ("ще не" = not yet = perfective)
+
+## unjumble: Aspect Sentences
 
 > Arrange the words in the correct order.
+
+1. читав / Я / книгу / три / години / вчора
+   > [!answer] Я читав книгу три години вчора.
+   > (I was reading a book for three hours yesterday.)
+
+2. вже / написав / Він / листа / своїй / сестрі
+   > [!answer] Він вже написав листа своїй сестрі.
+   > (He has already written a letter to his sister.)
+
+3. готувала / Поки / вона / читав / я / газету
+   > [!answer] Поки вона готувала, я читав газету.
+   > (While she was cooking, I was reading the newspaper.)
+
+4. не / ще / Вона / відповіла / на / лист
+   > [!answer] Вона ще не відповіла на лист.
+   > (She hasn't answered the letter yet.)
+
+5. поснідав / Коли / я / пішов / на / роботу
+   > [!answer] Коли я поснідав, я пішов на роботу.
+   > (When I had breakfast, I went to work.)
 
 ## match-up: Match the Pairs
 
@@ -421,6 +449,123 @@ Notice:
 
 - [ ] "повернутися" means "cup"
    > Incorrect. "повернутися" means "to return (perf)"
+
+## select: Time Expression Aspect
+
+> Choose the correct aspect based on the time expression.
+
+1. I read for three hours yesterday.
+   - [ ] Я прочитав три години вчора.
+   - [x] Я читав три години вчора.
+   - [ ] Я читаю три години вчора.
+   - [ ] Я буду читати три години.
+   > Duration (for how long) uses imperfective: "Я читав три години вчора."
+
+2. She finished the report in two days.
+   - [x] Вона написала звіт за два дні.
+   - [ ] Вона писала звіт за два дні.
+   - [ ] Вона пише звіт за два дні.
+   - [ ] Вона буде писати звіт.
+   > Time limit (in how long) uses perfective: "Вона написала звіт за два дні."
+
+3. They work all day every day.
+   - [ ] Вони зроблять весь день щодня.
+   - [x] Вони працюють весь день щодня.
+   - [ ] Вони зробили весь день.
+   - [ ] Вони працювали щодня.
+   > Habitual action uses imperfective: "Вони працюють весь день щодня."
+
+4. I finally woke up at 7 AM.
+   - [x] Я нарешті прокинувся о сьомій.
+   - [ ] Я нарешті прокидався о сьомій.
+   - [ ] Я нарешті прокидаюся о сьомій.
+   - [ ] Я буду прокидатися.
+   > Single completed action with "finally" uses perfective: "Я нарешті прокинувся о сьомій."
+
+5. While I was eating, he called.
+   - [ ] Поки я з'їв, він подзвонив.
+   - [x] Поки я їв, він подзвонив.
+   - [ ] Поки я їм, він дзвонить.
+   - [ ] Поки я буду їсти.
+   > Background action with "while" uses imperfective: "Поки я їв, він подзвонив."
+
+6. After I finish work, I'll go home.
+   - [x] Після того як я закінчу роботу, я піду додому.
+   - [ ] Після того як я кінчаю роботу, я йду додому.
+   - [ ] Після того як я кінчав роботу, я пішов.
+   - [ ] Після того як я буду кінчати.
+   > Sequential future actions use perfective: "Після того як я закінчу роботу, я піду додому."
+
+7. Before she left, she gathered her things.
+   - [x] Перш ніж вона пішла, вона зібрала речі.
+   - [ ] Перш ніж вона йшла, вона збирала речі.
+   - [ ] Перш ніж вона йде, вона збирає речі.
+   - [ ] Перш ніж вона буде йти.
+   > Sequential past actions use perfective: "Перш ніж вона пішла, вона зібрала речі."
+
+8. We rest every Sunday.
+   - [ ] Ми відпочили кожної неділі.
+   - [x] Ми відпочиваємо кожної неділі.
+   - [ ] Ми відпочинемо кожної неділі.
+   - [ ] Ми будемо відпочивати.
+   > Habitual action uses imperfective: "Ми відпочиваємо кожної неділі."
+
+9. Suddenly he returned from the trip.
+   - [x] Раптом він повернувся з поїздки.
+   - [ ] Раптом він повертався з поїздки.
+   - [ ] Раптом він повертається з поїздки.
+   - [ ] Він буде повертатися.
+   > Single sudden action uses perfective: "Раптом він повернувся з поїздки."
+
+10. I was working when the phone rang.
+    - [ ] Я зробив, коли телефон задзвонив.
+    - [x] Я працював, коли телефон задзвонив.
+    - [ ] Я працюю, коли телефон дзвонить.
+    - [ ] Я буду працювати.
+    > Background action uses imperfective: "Я працював, коли телефон задзвонив."
+
+## order: Morning Routine Sequence
+
+> Put these morning actions in logical order.
+
+- [4] Я зробив каву за п'ять хвилин.
+- [1] Я прокинувся о сьомій годині ранку.
+- [6] Я з'їв сніданок і випив каву.
+- [3] Я прийняв душ і почистив зуби.
+- [8] Я вийшов з дому о восьмій тридцять.
+- [2] Я встав з ліжка і відкрив вікно.
+- [5] Я зібрав речі для роботи.
+- [10] Я приїхав на роботу за двадцять хвилин.
+- [7] Я одягнувся і взяв сумку.
+- [9] Я сів в автобус і поїхав на роботу.
+
+## group-sort: Sort by Aspect Pattern
+
+> Sort these verbs by whether they show duration or completion.
+
+**Duration/Process (Imperfective):**
+- працювати
+- відпочивати
+- збирати
+- повертатися
+- прокидатися
+- кінчати
+- готувати
+- писати
+- читати
+- вчити
+
+**Completion/Result (Perfective):**
+- зробити
+- відпочити
+- зібрати
+- повернутися
+- прокинутися
+- закінчити
+- приготувати
+- написати
+- прочитати
+- вивчити
 
 ---
 

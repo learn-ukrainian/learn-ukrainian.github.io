@@ -290,13 +290,93 @@ Use the correct preposition + case:
 
 # Activities
 
-## fill-in: Complete the Sentences
+## fill-in: Prepositions with Cases
 
-> Choose the correct word to complete each sentence.
+> Choose the correct case form after each preposition.
+
+1. Книга лежить на ___ (стіл) біля вікна.
+   > [!answer] столі
+   > [!options] стіл | стола | столу | столі
+
+2. Він іде до ___ (магазин) за хлібом.
+   > [!answer] магазину
+   > [!options] магазин | магазину | магазині | магазином
+
+3. Діти грають під ___ (велике дерево) в парку.
+   > [!answer] великим деревом
+   > [!options] велике дерево | великого дерева | великому дереву | великим деревом
+
+4. Ми живемо між ___ (станція метро) і парком.
+   > [!answer] станцією метро
+   > [!options] станція метро | станції метро | станцію метро | станцією метро
+
+5. Картина висить над ___ (диван) у вітальні.
+   > [!answer] диваном
+   > [!options] диван | дивана | дивану | диваном
+
+6. Вона йде через ___ (центральний парк) до університету.
+   > [!answer] центральний парк
+   > [!options] центральний парк | центрального парку | центральному парку | центральним парком
+
+7. Навколо ___ (наш будинок) ростуть красиві квіти.
+   > [!answer] нашого будинку
+   > [!options] наш будинок | нашого будинку | нашому будинку | нашим будинком
+
+8. Кіт сидить за ___ (шафа) і ховається від нас.
+   > [!answer] шафою
+   > [!options] шафа | шафи | шафі | шафою
+
+9. Вони гуляють вздовж ___ (річка) кожного вечора.
+   > [!answer] річки
+   > [!options] річка | річки | річці | річкою
+
+10. Я чекаю біля ___ (головний вхід) вже десять хвилин.
+    > [!answer] головного входу
+    > [!options] головний вхід | головного входу | головному входу | головним входом
 
 ## unjumble: Build the Sentence
 
-> Arrange the words in the correct order.
+> Arrange the words to form sentences with prepositions.
+
+1. столі / Книга / на / лежить / біля вікна
+   > [!answer] Книга лежить на столі біля вікна.
+   > (The book lies on the table near the window.)
+
+2. магазину / Він / до / іде / за хлібом
+   > [!answer] Він іде до магазину за хлібом.
+   > (He goes to the store for bread.)
+
+3. деревом / Діти / під / грають / великим / в парку
+   > [!answer] Діти грають під великим деревом в парку.
+   > (Children play under a big tree in the park.)
+
+4. станцією / Ми / живемо / між / метро / і парком
+   > [!answer] Ми живемо між станцією метро і парком.
+   > (We live between the metro station and the park.)
+
+5. диваном / Картина / висить / над / у вітальні
+   > [!answer] Картина висить над диваном у вітальні.
+   > (The picture hangs above the couch in the living room.)
+
+6. парк / Вона / йде / через / центральний / до університету
+   > [!answer] Вона йде через центральний парк до університету.
+   > (She walks through the central park to the university.)
+
+7. будинку / Навколо / нашого / ростуть / красиві квіти
+   > [!answer] Навколо нашого будинку ростуть красиві квіти.
+   > (Beautiful flowers grow around our house.)
+
+8. шафою / Кіт / сидить / за / і ховається
+   > [!answer] Кіт сидить за шафою і ховається.
+   > (The cat sits behind the wardrobe and hides.)
+
+9. річки / Вони / вздовж / гуляють / кожного вечора
+   > [!answer] Вони гуляють вздовж річки кожного вечора.
+   > (They walk along the river every evening.)
+
+10. входу / Я / біля / чекаю / головного / вже десять хвилин
+    > [!answer] Я чекаю біля головного входу вже десять хвилин.
+    > (I've been waiting near the main entrance for ten minutes.)
 
 ## match-up: Match the Pairs
 
@@ -438,6 +518,192 @@ Use the correct preposition + case:
 
 - [ ] "під" means "table"
    > Incorrect. "під" means "under"
+
+## group-sort: Sort by Case Requirement
+
+> Sort the prepositions by which case they require.
+
+### Genitive
+- до
+- від
+- для
+- без
+- біля
+- після
+
+### Instrumental
+- над
+- перед
+- між
+- з (with)
+
+## select: Choose Prepositions and Cases
+
+> Select all words that belong to the category.
+
+1. Which prepositions always take genitive?
+   - [x] до
+   - [ ] у
+   - [x] від
+   - [x] для
+   - [ ] на
+   - [x] без
+   - [x] після
+   - [ ] з (with)
+   - [x] біля
+   - [ ] над
+
+2. Which prepositions take instrumental?
+   - [ ] до
+   - [x] над
+   - [x] перед
+   - [ ] для
+   - [x] між
+   - [x] з (with)
+   - [ ] від
+   - [ ] без
+   - [ ] біля
+   - [ ] після
+
+3. Which prepositions can take TWO different cases?
+   - [ ] до
+   - [x] у
+   - [x] на
+   - [ ] для
+   - [x] під
+   - [x] за
+   - [ ] над
+   - [ ] перед
+   - [ ] між
+   - [ ] біля
+
+4. Which questions indicate LOCATION (locative)?
+   - [x] Де?
+   - [ ] Куди?
+   - [ ] Звідки?
+   - [x] Where?
+   - [ ] Where to?
+   - [x] Where at?
+   - [ ] Where from?
+   - [ ] Коли?
+   - [ ] Чому?
+   - [ ] Як?
+
+5. Which questions indicate MOTION (accusative)?
+   - [ ] Де?
+   - [x] Куди?
+   - [ ] Звідки?
+   - [ ] Where?
+   - [x] Where to?
+   - [ ] Where at?
+   - [ ] Where from?
+   - [ ] Коли?
+   - [ ] Чому?
+   - [ ] Як?
+
+6. Which use locative case for location?
+   - [x] у парку
+   - [ ] у парк
+   - [x] на столі
+   - [ ] на стіл
+   - [x] в кімнаті
+   - [ ] в кімнату
+   - [ ] до парку
+   - [ ] від парку
+   - [ ] без парку
+   - [ ] для парку
+
+7. Which use accusative case for motion?
+   - [ ] у парку
+   - [x] у парк
+   - [ ] на столі
+   - [x] на стіл
+   - [ ] в кімнаті
+   - [x] в кімнату
+   - [ ] над столом
+   - [ ] перед будинком
+   - [ ] між деревами
+   - [ ] до школи
+
+8. Which prepositions indicate direction/movement?
+   - [x] до
+   - [ ] біля
+   - [x] від
+   - [x] у (motion)
+   - [x] на (motion)
+   - [ ] над
+   - [ ] перед
+   - [ ] між
+   - [x] під (motion)
+   - [x] за (motion)
+
+9. Which prepositions indicate spatial relationships?
+   - [ ] до
+   - [x] над
+   - [x] під
+   - [ ] для
+   - [x] перед
+   - [x] за
+   - [x] між
+   - [x] біля
+   - [ ] без
+   - [ ] після
+
+10. Which combine with genitive to mean "from"?
+    - [ ] у
+    - [x] з
+    - [x] від
+    - [ ] до
+    - [ ] на
+    - [ ] для
+    - [ ] без
+    - [ ] над
+    - [ ] перед
+    - [ ] між
+
+## order: Arrange Words into Sentences
+
+> Put the words in the correct order to form grammatically correct sentences.
+
+1. парку / Я / у / гуляю
+   > [!answer] Я гуляю у парку.
+   > (I walk in the park.)
+
+2. йду / парк / у / Я
+   > [!answer] Я йду у парк.
+   > (I go to the park.)
+
+3. на / книга / столі / лежить
+   > [!answer] Книга лежить на столі.
+   > (The book lies on the table.)
+
+4. книгу / стіл / кладу / на / Я
+   > [!answer] Я кладу книгу на стіл.
+   > (I put the book on the table.)
+
+5. парку / до / Ми / йдемо
+   > [!answer] Ми йдемо до парку.
+   > (We go to the park.)
+
+6. парку / Вони / від / приїхали
+   > [!answer] Вони приїхали від парку.
+   > (They came from the park.)
+
+7. над / літає / містом / Птах
+   > [!answer] Птах літає над містом.
+   > (A bird flies above the city.)
+
+8. перед / будинком / стоїть / Машина
+   > [!answer] Машина стоїть перед будинком.
+   > (The car stands in front of the building.)
+
+9. парком / біля / живу / Я
+   > [!answer] Я живу біля парку.
+   > (I live near the park.)
+
+10. між / деревами / Діти / граються
+    > [!answer] Діти граються між деревами.
+    > (Children play between the trees.)
 
 ---
 

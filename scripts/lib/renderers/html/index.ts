@@ -2,6 +2,7 @@
  * HTML Renderer
  *
  * Generates interactive HTML pages from parsed modules
+ * Each activity gets its own tab/section
  */
 
 import {
@@ -32,16 +33,9 @@ export async function renderHtml(
   ctx: RenderContext
 ): Promise<string> {
   const template = await getTemplate();
-  const { frontmatter, sections, activities, vocabulary, reviewVocabulary } = parsed;
+  const { frontmatter, activities, vocabulary, reviewVocabulary } = parsed;
 
-  // Find specific activity types
-  const matchActivity = activities.find(a => a.type === 'match-up');
-  const quizActivity = activities.find(a => a.type === 'quiz');
-  const sortActivity = activities.find(a => a.type === 'group-sort');
-  const fillActivity = activities.find(a => a.type === 'gap-fill' || a.type === 'fill-blank');
-  const orderActivity = activities.find(a => a.type === 'order' || a.type === 'unjumble');
-
-  // Build navigation options
+  // Build navigation options - pass all activities
   const navOptions: NavOptions = {
     moduleNum: frontmatter.module,
     moduleTitle: frontmatter.title,
@@ -49,33 +43,20 @@ export async function renderHtml(
     langPair: ctx.languagePair,
     prevModule: ctx.prevModule,
     nextModule: ctx.nextModule,
-    hasMatch: !!matchActivity,
-    hasQuiz: !!quizActivity,
-    hasSort: !!sortActivity,
-    hasFill: !!fillActivity,
-    hasOrder: !!orderActivity,
+    activities: activities,
   };
 
   // Build page content
   const content = renderMainContent({
     parsed,
-    matchActivity,
-    quizActivity,
-    sortActivity,
-    fillActivity,
-    orderActivity,
+    activities,
     vocabulary,
     reviewVocabulary,
-    sections,
   });
 
   // Build data scripts (activity data as JSON)
   const dataScripts = renderDataScripts({
-    matchActivity,
-    quizActivity,
-    sortActivity,
-    fillActivity,
-    orderActivity,
+    activities,
     vocabulary,
   });
 
@@ -96,60 +77,32 @@ export async function renderHtml(
 
 interface ContentOptions {
   parsed: ParsedModule;
-  matchActivity?: Activity;
-  quizActivity?: Activity;
-  sortActivity?: Activity;
-  fillActivity?: Activity;
-  orderActivity?: Activity;
+  activities: Activity[];
   vocabulary: VocabWord[];
   reviewVocabulary: VocabWord[];
-  sections: Section[];
 }
 
 function renderMainContent(options: ContentOptions): string {
-  const { parsed, matchActivity, quizActivity, sortActivity, fillActivity, orderActivity, vocabulary, reviewVocabulary, sections } = options;
-  const { frontmatter } = parsed;
+  const { parsed, activities, vocabulary, reviewVocabulary } = options;
 
   // Determine first activity for navigation
-  const firstActivity = matchActivity ? 'match' : quizActivity ? 'quiz' : fillActivity ? 'fill' : 'vocab';
+  const firstActivityId = activities.length > 0 ? `activity-0` : 'vocab';
 
   // Render lesson section
-  const lessonSection = renderLessonSection(parsed, firstActivity);
+  const lessonSection = renderLessonSection(parsed, firstActivityId);
 
-  // Render activity sections - determine next section for each
-  const getNextSection = (current: string): string => {
-    const order = ['match', 'quiz', 'sort', 'fill', 'order', 'vocab'];
-    const hasActivity: Record<string, boolean> = {
-      match: !!matchActivity,
-      quiz: !!quizActivity,
-      sort: !!sortActivity,
-      fill: !!fillActivity,
-      order: !!orderActivity,
-      vocab: true,
-    };
-    const currentIdx = order.indexOf(current);
-    for (let i = currentIdx + 1; i < order.length; i++) {
-      if (hasActivity[order[i]]) return order[i];
-    }
-    return 'vocab';
-  };
+  // Render each activity as its own section
+  const activitySections = activities.map((activity, index) => {
+    const nextSection = index < activities.length - 1 ? `activity-${index + 1}` : 'vocab';
+    return renderActivitySection(activity, index, nextSection);
+  }).join('\n');
 
-  const matchSection = matchActivity ? renderMatchSection(matchActivity, getNextSection('match')) : '';
-  const quizSection = quizActivity ? renderQuizSection(quizActivity, getNextSection('quiz')) : '';
-  const sortSection = sortActivity ? renderSortSection(sortActivity, getNextSection('sort')) : '';
-  const fillSection = fillActivity ? renderFillSection(fillActivity, getNextSection('fill')) : '';
-  const orderSection = orderActivity ? renderOrderSection(orderActivity, getNextSection('order')) : '';
-
-  // Render vocabulary section (includes both new and review)
+  // Render vocabulary section
   const vocabSection = renderVocabSection(vocabulary, reviewVocabulary);
 
   return `
     ${lessonSection}
-    ${matchSection}
-    ${quizSection}
-    ${sortSection}
-    ${fillSection}
-    ${orderSection}
+    ${activitySections}
     ${vocabSection}
   `;
 }
@@ -161,16 +114,12 @@ function renderMainContent(options: ContentOptions): string {
 function renderLessonSection(parsed: ParsedModule, nextSection: string): string {
   const { frontmatter, sections, rawMarkdown } = parsed;
 
-  // Book-style: render all sections faithfully in order (except Activities and Vocabulary tabs)
-  // Sections shown in Lesson tab: intro, content, practice, summary
-  // Sections shown separately: activities, vocabulary
   const lessonSections = sections.filter(s => !['activities', 'vocabulary'].includes(s.type));
 
   let contentHtml = '';
   if (lessonSections.length > 0) {
     contentHtml = lessonSections.map(s => renderSectionCard(s)).join('');
   } else {
-    // Fallback: convert raw markdown (excluding activities and vocab)
     const cleanedMarkdown = cleanMarkdownForLesson(rawMarkdown);
     contentHtml = `<div class="card"><div class="md-content">${markdownToHtml(cleanedMarkdown)}</div></div>`;
   }
@@ -202,95 +151,134 @@ function renderSectionCard(section: Section): string {
   `;
 }
 
-function renderMatchSection(activity: Activity, nextSection: string): string {
+/**
+ * Render a single activity section
+ */
+function renderActivitySection(activity: Activity, index: number, nextSection: string): string {
+  const sectionId = `activity-${index}`;
+  const type = activity.type;
+
+  switch (type) {
+    case 'match-up':
+      return renderMatchSection(activity, sectionId, nextSection);
+    case 'quiz':
+      return renderQuizSection(activity, sectionId, nextSection);
+    case 'true-false':
+      return renderTfSection(activity, sectionId, nextSection);
+    case 'group-sort':
+      return renderSortSection(activity, sectionId, nextSection);
+    case 'fill-blank':
+    case 'gap-fill':
+      return renderFillSection(activity, sectionId, nextSection);
+    case 'order':
+    case 'unjumble':
+      return renderOrderSection(activity, sectionId, nextSection);
+    case 'select':
+      return renderSelectSection(activity, sectionId, nextSection);
+    default:
+      // Generic fallback for unknown types
+      return renderGenericSection(activity, sectionId, nextSection);
+  }
+}
+
+function renderMatchSection(activity: Activity, sectionId: string, nextSection: string): string {
   const pairs = (activity.content as any).pairs || [];
 
-  // Shuffle right column
-  const shuffledPairs = [...pairs].sort(() => Math.random() - 0.5);
-
   return `
-    <section id="match" class="section"><div class="card"><h3>${escapeHtml(activity.title)}</h3>
-      <div class="score-display"><span class="score"><span id="match-score">0</span>/${pairs.length}</span></div>
-      <div class="match-container" id="match-container"><svg class="match-lines" id="match-lines"></svg>
-        <div class="match-column" id="match-left">${pairs.map((p: any, i: number) => `<div class="match-item" data-pair="${i}">${p.left}</div>`).join('')}</div>
-        <div class="match-column" id="match-right">${shuffledPairs.map((p: any) => {
-          const idx = pairs.findIndex((x: any) => x.right === p.right);
-          return `<div class="match-item" data-pair="${idx}">${p.right}</div>`;
-        }).join('')}</div>
+    <section id="${sectionId}" class="section"><div class="card"><h3>${escapeHtml(activity.title)}</h3>
+      <div class="score-display"><span class="score"><span id="${sectionId}-score">0</span>/${pairs.length}</span></div>
+      <div class="match-container" id="${sectionId}-container"><svg class="match-lines" id="${sectionId}-lines"></svg>
+        <div class="match-column" id="${sectionId}-left"></div>
+        <div class="match-column" id="${sectionId}-right"></div>
       </div>
-      <div class="completion-message" id="match-complete"><h3>Perfect!</h3></div>
-      <div class="btn-group"><button class="btn btn-outline" onclick="resetMatch()">Reset</button><button class="btn btn-primary" onclick="showSection('${nextSection}')">Next →</button></div>
+      <div class="completion-message" id="${sectionId}-complete"><h3>Perfect!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('${sectionId}')">Reset</button><button class="btn btn-primary" onclick="showSection('${nextSection}')">Next →</button></div>
     </div></section>`;
 }
 
-function renderQuizSection(activity: Activity, nextSection: string): string {
+function renderQuizSection(activity: Activity, sectionId: string, nextSection: string): string {
   const questions = (activity.content as any).questions || [];
 
   return `
-    <section id="quiz" class="section"><div class="card"><h3>${escapeHtml(activity.title)}</h3>
-      <div class="score-display"><span class="score"><span id="quiz-score">0</span>/${questions.length}</span></div>
-      <div id="quiz-container"></div>
-      <div class="completion-message" id="quiz-complete"><h3>Complete!</h3></div>
-      <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('${nextSection}')">Next →</button></div>
+    <section id="${sectionId}" class="section"><div class="card"><h3>${escapeHtml(activity.title)}</h3>
+      <div class="score-display"><span class="score"><span id="${sectionId}-score">0</span>/${questions.length}</span></div>
+      <div id="${sectionId}-container"></div>
+      <div class="completion-message" id="${sectionId}-complete"><h3>Complete!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('${sectionId}')">Reset</button><button class="btn btn-primary" onclick="showSection('${nextSection}')">Next →</button></div>
     </div></section>`;
 }
 
-function renderSortSection(activity: Activity, nextSection: string): string {
+function renderTfSection(activity: Activity, sectionId: string, nextSection: string): string {
+  const statements = (activity.content as any).statements || [];
+
+  return `
+    <section id="${sectionId}" class="section"><div class="card"><h3>${escapeHtml(activity.title)}</h3>
+      <div class="score-display"><span class="score"><span id="${sectionId}-score">0</span>/${statements.length}</span></div>
+      <div id="${sectionId}-container"></div>
+      <div class="completion-message" id="${sectionId}-complete"><h3>Complete!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('${sectionId}')">Reset</button><button class="btn btn-primary" onclick="showSection('${nextSection}')">Next →</button></div>
+    </div></section>`;
+}
+
+function renderSortSection(activity: Activity, sectionId: string, nextSection: string): string {
   const groups = (activity.content as any).groups || [];
   const totalItems = groups.reduce((sum: number, g: any) => sum + g.items.length, 0);
 
-  // Group class names for styling
-  const groupClasses = ['true-friends', 'false-friends', 'new-letters'];
-
   return `
-    <section id="sort" class="section"><div class="card"><h3>${escapeHtml(activity.title)}</h3>
-      <div class="score-display"><span class="score"><span id="sort-score">0</span>/${totalItems}</span></div>
-      <div class="sort-pool" id="sort-pool"><div class="sort-items" id="sort-items"></div></div>
-      <div class="sort-groups">${groups.map((g: any, i: number) => `<div class="sort-group ${groupClasses[i] || ''}" data-group="${groupClasses[i] || `group-${i}`}"><h4>${g.name.split('(')[0].trim()}</h4><div class="sort-items"></div></div>`).join('')}</div>
-      <div class="completion-message" id="sort-complete"><h3>All Sorted!</h3></div>
-      <div class="btn-group"><button class="btn btn-outline" onclick="resetSort()">Reset</button><button class="btn btn-primary" onclick="showSection('${nextSection}')">Next →</button></div>
+    <section id="${sectionId}" class="section"><div class="card"><h3>${escapeHtml(activity.title)}</h3>
+      <div class="score-display"><span class="score"><span id="${sectionId}-score">0</span>/${totalItems}</span></div>
+      <div class="sort-pool" id="${sectionId}-pool"><div class="sort-items" id="${sectionId}-items"></div></div>
+      <div class="sort-groups" id="${sectionId}-groups"></div>
+      <div class="completion-message" id="${sectionId}-complete"><h3>All Sorted!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('${sectionId}')">Reset</button><button class="btn btn-primary" onclick="showSection('${nextSection}')">Next →</button></div>
     </div></section>`;
 }
 
-function renderFillSection(activity: Activity, nextSection: string): string {
-  const items = (activity.content as any).items || (activity.content as any).blanks || [];
-  const text = (activity.content as any).text || '';
-
-  // If it's a gap-fill with text and blanks
-  if (text) {
-    return `
-    <section id="fill" class="section"><div class="card"><h3>${escapeHtml(activity.title)}</h3>
-      <div class="score-display"><span class="score"><span id="fill-score">0</span>/${items.length}</span></div>
-      <div id="fill-container" class="fill-container"></div>
-      <div class="completion-message" id="fill-complete"><h3>Complete!</h3></div>
-      <div class="btn-group"><button class="btn btn-outline" onclick="resetFill()">Reset</button><button class="btn btn-primary" onclick="showSection('${nextSection}')">Next →</button></div>
-    </div></section>`;
-  }
-
-  // Fill-blank items format
-  return `
-    <section id="fill" class="section"><div class="card"><h3>${escapeHtml(activity.title)}</h3>
-      <div class="score-display"><span class="score"><span id="fill-score">0</span>/${items.length}</span></div>
-      <div id="fill-container" class="fill-container"></div>
-      <div class="completion-message" id="fill-complete"><h3>Complete!</h3></div>
-      <div class="btn-group"><button class="btn btn-outline" onclick="resetFill()">Reset</button><button class="btn btn-primary" onclick="showSection('${nextSection}')">Next →</button></div>
-    </div></section>`;
-}
-
-function renderOrderSection(activity: Activity, nextSection: string): string {
+function renderFillSection(activity: Activity, sectionId: string, nextSection: string): string {
   const items = (activity.content as any).items || [];
 
   return `
-    <section id="order" class="section"><div class="card"><h3>${escapeHtml(activity.title)}</h3>
-      <div class="score-display"><span class="score"><span id="order-score">0</span>/${items.length}</span></div>
-      <div id="order-container" class="order-container"></div>
-      <div class="completion-message" id="order-complete"><h3>Perfect Order!</h3></div>
-      <div class="btn-group"><button class="btn btn-outline" onclick="resetOrder()">Reset</button><button class="btn btn-primary" onclick="showSection('${nextSection}')">Next →</button></div>
+    <section id="${sectionId}" class="section"><div class="card"><h3>${escapeHtml(activity.title)}</h3>
+      <div class="score-display"><span class="score"><span id="${sectionId}-score">0</span>/${items.length}</span></div>
+      <div id="${sectionId}-container" class="fill-container"></div>
+      <div class="completion-message" id="${sectionId}-complete"><h3>Complete!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('${sectionId}')">Reset</button><button class="btn btn-primary" onclick="showSection('${nextSection}')">Next →</button></div>
+    </div></section>`;
+}
+
+function renderOrderSection(activity: Activity, sectionId: string, nextSection: string): string {
+  const items = (activity.content as any).items || [];
+
+  return `
+    <section id="${sectionId}" class="section"><div class="card"><h3>${escapeHtml(activity.title)}</h3>
+      <div class="score-display"><span class="score"><span id="${sectionId}-score">0</span>/${items.length}</span></div>
+      <div id="${sectionId}-container" class="order-container"></div>
+      <div class="completion-message" id="${sectionId}-complete"><h3>Perfect Order!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('${sectionId}')">Reset</button><button class="btn btn-primary" onclick="showSection('${nextSection}')">Next →</button></div>
+    </div></section>`;
+}
+
+function renderSelectSection(activity: Activity, sectionId: string, nextSection: string): string {
+  const items = (activity.content as any).items || [];
+
+  return `
+    <section id="${sectionId}" class="section"><div class="card"><h3>${escapeHtml(activity.title)}</h3>
+      <div class="score-display"><span class="score"><span id="${sectionId}-score">0</span>/${items.length}</span></div>
+      <div id="${sectionId}-container" class="select-container"></div>
+      <div class="completion-message" id="${sectionId}-complete"><h3>Complete!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('${sectionId}')">Reset</button><button class="btn btn-primary" onclick="showSection('${nextSection}')">Next →</button></div>
+    </div></section>`;
+}
+
+function renderGenericSection(activity: Activity, sectionId: string, nextSection: string): string {
+  return `
+    <section id="${sectionId}" class="section"><div class="card"><h3>${escapeHtml(activity.title)}</h3>
+      <p>Activity type: ${activity.type}</p>
+      <div class="btn-group"><button class="btn btn-primary" onclick="showSection('${nextSection}')">Next →</button></div>
     </div></section>`;
 }
 
 function renderVocabSection(vocabulary: VocabWord[], reviewVocabulary: VocabWord[] = []): string {
-  // Render vocabulary as a styled table (book-style)
   const hasTranslit = vocabulary.some(v => v.translit);
   const hasIpa = vocabulary.some(v => v.ipa);
   const hasNote = vocabulary.some(v => v.note);
@@ -313,7 +301,6 @@ function renderVocabSection(vocabulary: VocabWord[], reviewVocabulary: VocabWord
     ${hasNote ? '<th>Примітка</th>' : ''}
   </tr>`;
 
-  // Render review vocabulary section if there are review words
   let reviewSection = '';
   if (reviewVocabulary.length > 0) {
     const reviewRows = reviewVocabulary.map(v => {
@@ -333,7 +320,6 @@ function renderVocabSection(vocabulary: VocabWord[], reviewVocabulary: VocabWord
       </div>`;
   }
 
-  const totalWords = vocabulary.length + reviewVocabulary.length;
   const newLabel = reviewVocabulary.length > 0 ? 'Нові слова' : 'Словник';
 
   return `
@@ -359,61 +345,26 @@ function renderVocabSection(vocabulary: VocabWord[], reviewVocabulary: VocabWord
 // =============================================================================
 
 interface DataScriptOptions {
-  matchActivity?: Activity;
-  quizActivity?: Activity;
-  sortActivity?: Activity;
-  fillActivity?: Activity;
-  orderActivity?: Activity;
+  activities: Activity[];
   vocabulary: VocabWord[];
 }
 
 function renderDataScripts(options: DataScriptOptions): string {
-  const { matchActivity, quizActivity, sortActivity, fillActivity, orderActivity, vocabulary } = options;
+  const { activities, vocabulary } = options;
 
-  const matchPairs = matchActivity ? (matchActivity.content as any).pairs : [];
-  const quizQuestions = quizActivity ? (quizActivity.content as any).questions : [];
-  const sortGroups = sortActivity ? (sortActivity.content as any).groups : [];
+  // Build activities data array - each activity with its data
+  const activitiesData = activities.map((activity, index) => {
+    const sectionId = `activity-${index}`;
+    const type = activity.type;
+    const content = activity.content as any;
 
-  // Fill data
-  const fillData = fillActivity ? {
-    items: (fillActivity.content as any).items || [],
-    text: (fillActivity.content as any).text || '',
-    answers: (fillActivity.content as any).answers || [],
-  } : { items: [], text: '', answers: [] };
-
-  // Order/Unjumble data
-  let orderData: any = { items: [], correctOrder: [], isUnjumble: false };
-  if (orderActivity) {
-    const content = orderActivity.content as any;
-    if (orderActivity.type === 'unjumble') {
-      // Unjumble format: items have words, answer, translation
-      orderData = {
-        items: (content.items || []).map((item: any) => ({
-          words: item.words || [],
-          answer: item.answer || '',
-          translation: item.translation || '',
-        })),
-        isUnjumble: true,
-      };
-    } else {
-      // Regular order format: items are strings to reorder
-      orderData = {
-        items: content.items || [],
-        correctOrder: content.correctOrder || [],
-        isUnjumble: false,
-      };
-    }
-  }
-
-  // Build sort data object
-  const sortData: Record<string, string[]> = {};
-  const groupClasses = ['true-friends', 'false-friends', 'new-letters'];
-  sortGroups.forEach((g: any, i: number) => {
-    const key = groupClasses[i] || `group-${i}`;
-    sortData[key] = g.items.map((item: any) => typeof item === 'string' ? item : item.text);
+    return {
+      id: sectionId,
+      type: type,
+      title: activity.title,
+      data: content,
+    };
   });
-
-  const totalSort = sortGroups.reduce((sum: number, g: any) => sum + g.items.length, 0);
 
   // Vocab data
   const vocabData = vocabulary.map(v => ({
@@ -424,13 +375,8 @@ function renderDataScripts(options: DataScriptOptions): string {
   }));
 
   return `
-    const matchPairs = ${JSON.stringify(matchPairs)};
-    const quizData = ${JSON.stringify(quizQuestions)};
-    const sortData = ${JSON.stringify(sortData)};
-    const fillData = ${JSON.stringify(fillData)};
-    const orderData = ${JSON.stringify(orderData)};
+    const activitiesData = ${JSON.stringify(activitiesData)};
     const vocabData = ${JSON.stringify(vocabData)};
-    const totalSort = ${totalSort};
   `;
 }
 
@@ -451,20 +397,12 @@ function padNumber(num: number): string {
   return num.toString().padStart(2, '0');
 }
 
-function isImmersiveLevel(level: string): boolean {
-  return ['B1', 'B2', 'C1', 'C2'].includes(level);
-}
-
 function cleanMarkdownForLesson(markdown: string): string {
-  // Remove frontmatter
   let cleaned = markdown.replace(/^---[\s\S]*?---\n/, '');
-  // Remove Activities section
   cleaned = cleaned.replace(/# (?:Activities|Вправи)[\s\S]*?(?=\n# |$)/, '');
-  // Remove Vocabulary section
   cleaned = cleaned.replace(/# (?:Vocabulary|Словник)[\s\S]*?(?=\n# |$)/, '');
   return cleaned.trim();
 }
-
 
 // =============================================================================
 // Exports

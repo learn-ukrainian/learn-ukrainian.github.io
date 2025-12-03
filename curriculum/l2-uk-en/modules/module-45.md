@@ -286,25 +286,53 @@ Sometimes you want to say "extremely" without comparing:
 
 # Activities
 
-## fill-in: Complete the Sentences
+## fill-in: Superlative Forms
 
-> Choose the correct word to complete each sentence.
+> Choose the correct superlative form.
 
-1. Моя кімната занадто ___.
-   > [!answer] найдорожчий
-   > [!options] дорожчий | вищий | молодший | найдорожчий
+1. Це ___ (великий) місто в Україні і Європі.
+   > [!answer] найбільше
+   > [!options] найбільше | більше | велике | найменше
 
-2. Ця книга надзвичайно ___.
-   > [!answer] найважливіший
-   > [!options] найважливіший | чорний | наступний | найцікавіший
+2. Говерла - це ___ (висока) гора в Україні.
+   > [!answer] найвища
+   > [!options] найвища | вища | висока | найнижча
 
-3. Ваша ідея здається ___.
-   > [!answer] найбільший
-   > [!options] вищий | кращий | найбільший | новий
+3. Він ___ (добрий) студент у нашому класі.
+   > [!answer] найкращий
+   > [!options] найкращий | кращий | добрий | найгірший
 
-## unjumble: Build the Sentence
+4. Я люблю цю книгу ___ (багато) з усіх.
+   > [!answer] найбільше
+   > [!options] найбільше | більше | багато | найменше
+
+5. Це ___ (дешевий) варіант у цьому магазині.
+   > [!answer] найдешевший
+   > [!options] найдешевший | дешевший | дешевий | найдорожчий
+
+## unjumble: Superlative Sentences
 
 > Arrange the words in the correct order.
+
+1. найбільше / Це / місто / в / Україні
+   > [!answer] Це найбільше місто в Україні.
+   > (This is the biggest city in Ukraine.)
+
+2. найкраща / Вона / студентка / в / нашому / класі
+   > [!answer] Вона найкраща студентка в нашому класі.
+   > (She is the best student in our class.)
+
+3. найвища / Говерла / гора / в / Україні
+   > [!answer] Говерла - найвища гора в Україні.
+   > (Hoverla is the highest mountain in Ukraine.)
+
+4. найбільше / люблю / Я / цю / книгу
+   > [!answer] Я люблю цю книгу найбільше.
+   > (I like this book the most.)
+
+5. найдорожчий / Який / ресторан / у / місті
+   > [!answer] Який найдорожчий ресторан у місті?
+   > (Which is the most expensive restaurant in the city?)
 
 ## match-up: Match the Pairs
 
@@ -446,6 +474,123 @@ Sometimes you want to say "extremely" without comparing:
 
 - [x] "найдешевший" means "cheapest"
    > Correct!
+
+## select: Superlative Selection
+
+> Choose the correct superlative form for each sentence.
+
+1. Mount Everest is the highest mountain in the world.
+   - [x] Еверест найвища гора у світі.
+   - [ ] Еверест висока гора у світі.
+   - [ ] Еверест вища гора у світі.
+   - [ ] Еверест найвищий гора у світі.
+   > Use feminine superlative with feminine noun: "Еверест найвища гора у світі."
+
+2. This is the best restaurant in the city.
+   - [x] Це найкращий ресторан у місті.
+   - [ ] Це кращий ресторан у місті.
+   - [ ] Це добрий ресторан у місті.
+   - [ ] Це найкраща ресторан у місті.
+   > Use masculine superlative: "Це найкращий ресторан у місті."
+
+3. She is the most interesting person I know.
+   - [x] Вона найцікавіша особа, яку я знаю.
+   - [ ] Вона цікава особа, яку я знаю.
+   - [ ] Вона цікавіша особа, яку я знаю.
+   - [ ] Вона найцікавіший особа.
+   > Use feminine superlative: "Вона найцікавіша особа, яку я знаю."
+
+4. This is the cheapest phone in the store.
+   - [x] Це найдешевший телефон у магазині.
+   - [ ] Це дешевий телефон у магазині.
+   - [ ] Це дешевший телефон у магазині.
+   - [ ] Це найдешевша телефон.
+   > Use masculine superlative: "Це найдешевший телефон у магазині."
+
+5. Ukraine has the most beautiful nature.
+   - [x] Україна має найкрасивішу природу.
+   - [ ] Україна має красиву природу.
+   - [ ] Україна має красивішу природу.
+   - [ ] Україна має найкрасивіший природу.
+   > Use feminine superlative with accusative: "Україна має найкрасивішу природу."
+
+6. This was the worst day of my life.
+   - [x] Це був найгірший день мого життя.
+   - [ ] Це був поганий день мого життя.
+   - [ ] Це був гірший день мого життя.
+   - [ ] Це був найгірша день.
+   > Use masculine superlative: "Це був найгірший день мого життя."
+
+7. He speaks Ukrainian the best in our class.
+   - [x] Він говорить українською найкраще в нашому класі.
+   - [ ] Він говорить українською добре в нашому класі.
+   - [ ] Він говорить українською краще в класі.
+   - [ ] Він говорить українською найкращий.
+   > Use adverb superlative: "Він говорить українською найкраще в нашому класі."
+
+8. This is the most important lesson.
+   - [x] Це найважливіший урок.
+   - [ ] Це важливий урок.
+   - [ ] Це важливіший урок.
+   - [ ] Це найважливіша урок.
+   > Use masculine superlative: "Це найважливіший урок."
+
+9. She runs the fastest on the team.
+   - [x] Вона бігає найшвидше в команді.
+   - [ ] Вона бігає швидко в команді.
+   - [ ] Вона бігає швидше в команді.
+   - [ ] Вона бігає найшвидший.
+   > Use adverb superlative: "Вона бігає найшвидше в команді."
+
+10. This book is extraordinarily interesting.
+    - [x] Ця книга надзвичайно цікава.
+    - [ ] Ця книга найцікавіша.
+    - [ ] Ця книга цікава.
+    - [ ] Ця книга цікавіша.
+    > Use intensifier with base form: "Ця книга надзвичайно цікава."
+
+## order: Records and Achievements
+
+> Order these achievements from least impressive to most impressive.
+
+- [7] Найдорожчий будинок у місті коштує мільйон.
+- [2] Найдешевша книга коштує десять гривень.
+- [5] Найвища будівля має тридцять поверхів.
+- [1] Найменша дитина в класі має п'ять років.
+- [9] Найшвидший спортсмен пробіг марафон за дві години.
+- [3] Найкраща студентка отримала сто балів.
+- [6] Найцікавіший фільм тривав три години.
+- [10] Найважливіша подія року змінила все.
+- [4] Найстаріша людина в місті має дев'яносто років.
+- [8] Найбільше місто в Україні має три мільйони людей.
+
+## group-sort: Sort Superlatives by Type
+
+> Sort these superlatives by their category.
+
+**Size superlatives:**
+- найбільший
+- найменший
+- найвищий
+- найнижчий
+- найдовший
+- найкоротший
+- найширший
+- найвужчий
+- найглибший
+- найтовщий
+
+**Quality superlatives:**
+- найкращий
+- найгірший
+- найцікавіший
+- найважливіший
+- найкрасивіший
+- найголовніший
+- найдорожчий
+- найдешевший
+- найскладніший
+- найпростіший
 
 ---
 

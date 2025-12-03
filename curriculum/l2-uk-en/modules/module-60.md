@@ -294,77 +294,53 @@ Write a short text (100-150 words) about your ideal job:
 
 # Activities
 
-## fill-in: Complete the Sentences
+## fill-in: A2 Grammar Review
 
 > Choose the correct word to complete each sentence.
 
-1. Де ваша велика ___?
-   > [!answer] комісія
-   > [!options] комісія | поверх | сусід | чоловік
+1. Я живу в ___ (Київ / Києві) і працюю програмістом.
+   > [!answer] Києві
+   > (Locative case after "в")
 
-2. Ця книга надзвичайно ___.
-   > [!answer] гарячий
-   > [!options] згоден | цікавий | гарячий | вищий
+2. Ця книга ___ (краща / кращий), ніж та.
+   > [!answer] краща
+   > (Feminine comparative to agree with "книга")
 
-3. Це мій новий ___.
-   > [!answer] банан
-   > [!options] жіночий | банан | посилання | літак
+3. Якби я ___ (мав / маю) гроші, я б купив машину.
+   > [!answer] мав
+   > (Past tense with якби for unreal conditional)
 
-4. Я хочу купити цю ___.
-   > [!answer] голова
-   > [!options] голова | хокей | робота | рахунок
+4. Жінка, ___ (яка / який) тут працює, моя сестра.
+   > [!answer] яка
+   > (Feminine relative pronoun for жінка)
 
-5. Моя кімната занадто ___.
-   > [!answer] високий
-   > [!options] високий | дорожчий | англійська | великий
+5. Я вчу українську, ___ (щоб / хоча) розуміти українців.
+   > [!answer] щоб
+   > (In order to - purpose)
 
-6. Вони планують ___ завтра.
-   > [!answer] переказати
-   > [!options] прокинутися | мусити | личити | переказати
-
-7. Я хочу купити це ___.
-   > [!answer] купе
-   > [!options] кінець | пілот | купе | таксі
-
-8. Мій брат має хорошу ___.
-   > [!answer] лампа
-   > [!options] площа | підвищення | ложка | лампа
-
-9. Я хочу навчитися ___.
-   > [!answer] буду
-   > [!options] буду | кивати | бачити | лежати
-
-## unjumble: Build the Sentence
+## unjumble: A2 Review Sentences
 
 > Arrange the words in the correct order.
 
-1. хорошу / осінь / Мій / має / брат
-   > [!answer] Мій брат має хорошу осінь.
-   > (autumn)
+1. Києві / в / Я / живу / і / лікарем / працюю
+   > [!answer] Я живу в Києві і працюю лікарем.
+   > (I live in Kyiv and work as a doctor.)
 
-2. голова / цю / хочу / Я / купити
-   > [!answer] Я хочу купити цю голова.
-   > (head)
+2. краща / ніж / Ця / та / книга
+   > [!answer] Ця книга краща, ніж та.
+   > (This book is better than that one.)
 
-3. хочу / Я / цю / купити / лампа
-   > [!answer] Я хочу купити цю лампа.
-   > (lamp)
+3. мав / Якби / гроші / я / б / подорожував / я
+   > [!answer] Якби я мав гроші, я б подорожував.
+   > (If I had money, I would travel.)
 
-4. комісія / Ця / сто / гривень / коштує
-   > [!answer] Ця комісія коштує сто гривень.
-   > (commission)
+4. яку / Книга / читаю / я / цікава / дуже
+   > [!answer] Книга, яку я читаю, дуже цікава.
+   > (The book that I'm reading is very interesting.)
 
-5. мій / банан / новий / Це
-   > [!answer] Це мій новий банан.
-   > (banana)
-
-6. коштує / гривень / Ця / чашка / сто
-   > [!answer] Ця чашка коштує сто гривень.
-   > (cup)
-
-7. Це / коштує / купе / гривень / сто
-   > [!answer] Це купе коштує сто гривень.
-   > (compartment)
+5. Хоча / холодно / було / пішли / ми / на / прогулянку
+   > [!answer] Хоча було холодно, ми пішли на прогулянку.
+   > (Although it was cold, we went for a walk.)
 
 ## match-up: Match the Pairs
 
@@ -517,6 +493,124 @@ Write a short text (100-150 words) about your ideal job:
 - голова
 - осінь
 - чашка
+
+## select: Choose A2 Review Items
+
+> Select the correct answer for mixed A2 grammar and vocabulary.
+
+1. Я ___ цю книгу минулого місяця.
+   - [ ] читаю
+   - [x] прочитав
+   - [ ] буду читати
+   - [ ] читав би
+   > Completed action requires perfective past: "прочитав"
+
+2. Це місто, ___ я народився багато років тому.
+   - [ ] який
+   - [ ] яка
+   - [x] де
+   - [ ] що
+   > Place where: "де"
+
+3. Я вчу українську, ___ розмовляти з друзями вільно.
+   - [x] щоб
+   - [ ] хоча
+   - [ ] тому що
+   - [ ] коли
+   > Purpose requires: "щоб"
+
+4. У мене ___ голова після роботи за комп'ютером.
+   - [x] болить
+   - [ ] болять
+   - [ ] боліти
+   - [ ] болів
+   > Singular subject: "болить"
+
+5. Він працює ___ і не ходить в офіс.
+   - [ ] на повну ставку
+   - [x] віддалено
+   - [ ] професією
+   - [ ] вакансією
+   > Works remotely: "віддалено"
+
+6. Я ___ з вашою думкою про цей фільм.
+   - [ ] вважаю
+   - [x] згоден
+   - [ ] переконаний
+   - [ ] сумніваюся
+   > Agree with: "згоден"
+
+7. Магазин уже ___ на ніч о дев'ятій годині.
+   - [ ] відкрито
+   - [x] закрито
+   - [ ] заборонено
+   - [ ] зайнято
+   > Store closed: "закрито"
+
+8. Я ___ собі новий телефон минулого тижня.
+   - [ ] себе
+   - [x] собі
+   - [ ] собою
+   - [ ] сам
+   > Dative for "for myself": "собі"
+
+9. Це друг, з ___ я подорожував Європою влітку.
+   - [x] яким
+   - [ ] який
+   - [ ] якого
+   - [ ] що
+   > Instrumental after "з": "яким"
+
+10. ___, було холодно, ми пішли гуляти в парк.
+    - [ ] Щоб
+    - [x] Хоча
+    - [ ] Тому що
+    - [ ] Коли
+    > Contrast/although: "Хоча"
+
+## order: Put Words in Order (A2 Review)
+
+> Arrange the words to form correct complex sentences using A2 grammar.
+
+1. Я / вчу / українську / мову / щоб / розмовляти / з / друзями / вільно
+   > [!answer] Я вчу українську мову, щоб розмовляти з друзями вільно.
+   > (I'm learning Ukrainian to speak with friends freely.)
+
+2. Це / місто / де / я / народився / дуже / красиве / та / історичне
+   > [!answer] Це місто, де я народився, дуже красиве та історичне.
+   > (This is the city where I was born, very beautiful and historic.)
+
+3. Хоча / було / дуже / холодно / ми / пішли / на / прогулянку / в / парк
+   > [!answer] Хоча було дуже холодно, ми пішли на прогулянку в парк.
+   > (Although it was very cold, we went for a walk in the park.)
+
+4. У / мене / болить / голова / після / довгого / робочого / дня / за / комп'ютером
+   > [!answer] У мене болить голова після довгого робочого дня за комп'ютером.
+   > (My head hurts after a long work day at the computer.)
+
+5. Я / прочитав / цю / книгу / яку / ти / рекомендував / мені / минулого / місяця
+   > [!answer] Я прочитав цю книгу, яку ти рекомендував мені минулого місяця.
+   > (I read this book that you recommended to me last month.)
+
+6. Він / працює / віддалено / і / не / ходить / в / офіс / щодня
+   > [!answer] Він працює віддалено і не ходить в офіс щодня.
+   > (He works remotely and doesn't go to the office every day.)
+
+7. Я / згоден / з / вашою / думкою / про / цей / важливий / проект
+   > [!answer] Я згоден з вашою думкою про цей важливий проект.
+   > (I agree with your opinion about this important project.)
+
+8. Магазин / уже / закрито / на / ніч / о / десятій / годині / вечора
+   > [!answer] Магазин уже закрито на ніч о десятій годині вечора.
+   > (The store is already closed for the night at ten o'clock in the evening.)
+
+9. Я / купив / собі / новий / телефон / у / магазині / електроніки / вчора
+   > [!answer] Я купив собі новий телефон у магазині електроніки вчора.
+   > (I bought myself a new phone at the electronics store yesterday.)
+
+10. Це / друг / з / яким / я / подорожував / по / Європі / минулого / літа
+    > [!answer] Це друг, з яким я подорожував по Європі минулого літа.
+    > (This is the friend with whom I traveled around Europe last summer.)
 
 ---
 

@@ -274,6 +274,18 @@ footer {
 .quiz-explanation { margin-top: 1rem; padding: 1rem; background: #e8f4fd; border-radius: 8px; display: none; }
 .quiz-explanation.show { display: block; }
 
+/* True/False Activity */
+.tf-statement { border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; }
+.tf-statement.answered { pointer-events: none; }
+.tf-text { font-size: 1.15rem; margin-bottom: 1rem; }
+.tf-buttons { display: flex; gap: 1rem; }
+.tf-btn { flex: 1; background: #f5f5f5; border: 2px solid var(--border); border-radius: 8px; padding: 0.75rem 1rem; cursor: pointer; font-size: 1rem; font-weight: 500; }
+.tf-btn:hover { background: #e8f4fd; border-color: var(--primary); }
+.tf-btn.correct { border-color: var(--success); background: #d4edda; color: var(--success); }
+.tf-btn.wrong { border-color: var(--danger); background: #f8d7da; color: var(--danger); }
+.tf-explanation { margin-top: 1rem; padding: 1rem; background: #e8f4fd; border-radius: 8px; display: none; }
+.tf-explanation.show { display: block; }
+
 /* Sort Activity */
 .sort-pool { background: #f5f5f5; border: 2px dashed var(--border); border-radius: 12px; padding: 1.5rem; min-height: 80px; margin-bottom: 1rem; }
 .sort-items { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; }
@@ -376,6 +388,28 @@ footer {
 .unjumble-feedback .wrong-text { color: var(--danger); }
 .unjumble-feedback .translation { color: var(--text-muted); font-style: italic; margin-left: 0.5rem; }
 
+/* Select Activity - Multi-choice checkboxes */
+.select-container { display: flex; flex-direction: column; gap: 1rem; }
+.select-question { border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; display: flex; gap: 0.75rem; }
+.select-question.answered .select-checkbox { pointer-events: none; }
+.select-number { font-weight: 600; color: var(--text-muted); min-width: 2rem; }
+.select-content { flex: 1; }
+.select-prompt { font-size: 1.1rem; font-weight: 500; margin-bottom: 0.75rem; }
+.select-options { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 0.75rem; }
+.select-option { display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem 0.75rem; border-radius: 6px; cursor: pointer; transition: background 0.15s; }
+.select-option:hover { background: #f5f5f5; }
+.select-option.correct { background: #d4edda; }
+.select-option.correct-unchecked { background: #f8f9fa; }
+.select-option.wrong { background: #f8d7da; }
+.select-option.missed { background: #fff3cd; border: 1px dashed var(--warning); }
+.select-checkbox { width: 1.25rem; height: 1.25rem; cursor: pointer; }
+.select-text { font-size: 1rem; }
+.select-check { margin-top: 0.5rem; }
+.select-feedback { margin-top: 0.75rem; display: none; }
+.select-feedback.show { display: block; }
+.select-feedback .correct-text { color: var(--success); font-weight: 600; }
+.select-feedback .wrong-text { color: var(--danger); }
+
   </style>
 </head>
 <body>
@@ -392,11 +426,14 @@ footer {
     <h1>Module 39: At the Post Office &amp; Bank</h1>
     <div class="nav-tabs">
       <button class="nav-tab active" data-section="lesson">Lesson</button>
-      <button class="nav-tab" data-section="match">Match</button>
-      <button class="nav-tab" data-section="quiz">Quiz</button>
-      <button class="nav-tab" data-section="sort">Sort</button>
-      <button class="nav-tab" data-section="fill">Fill</button>
-      <button class="nav-tab" data-section="order">Order</button>
+      <button class="nav-tab" data-section="activity-0">1. Fill</button>
+      <button class="nav-tab" data-section="activity-1">2. Order</button>
+      <button class="nav-tab" data-section="activity-2">3. Match</button>
+      <button class="nav-tab" data-section="activity-3">4. Quiz</button>
+      <button class="nav-tab" data-section="activity-4">5. T/F</button>
+      <button class="nav-tab" data-section="activity-5">6. Sort</button>
+      <button class="nav-tab" data-section="activity-6">7. Select</button>
+      <button class="nav-tab" data-section="activity-7">8. Order</button>
       <button class="nav-tab" data-section="vocab">Vocab</button>
     </div>
   </nav>
@@ -969,48 +1006,69 @@ footer {
     </div>
   
       <div class="btn-group">
-        <button class="btn btn-primary" onclick="showSection('match')">Activities →</button>
+        <button class="btn btn-primary" onclick="showSection('activity-0')">Activities →</button>
       </div>
     </section>
   
     
-    <section id="match" class="section"><div class="card"><h3>Match the Pairs</h3>
-      <div class="score-display"><span class="score"><span id="match-score">0</span>/12</span></div>
-      <div class="match-container" id="match-container"><svg class="match-lines" id="match-lines"></svg>
-        <div class="match-column" id="match-left"><div class="match-item" data-pair="0">зняти</div><div class="match-item" data-pair="1">протягом</div><div class="match-item" data-pair="2">зуби</div><div class="match-item" data-pair="3">переказ</div><div class="match-item" data-pair="4">переказати</div><div class="match-item" data-pair="5">обмін</div><div class="match-item" data-pair="6">підпис</div><div class="match-item" data-pair="7">відсоток</div><div class="match-item" data-pair="8">бандероль</div><div class="match-item" data-pair="9">лікарня</div><div class="match-item" data-pair="10">індекс</div><div class="match-item" data-pair="11">квитанція</div></div>
-        <div class="match-column" id="match-right"><div class="match-item" data-pair="10">postal code</div><div class="match-item" data-pair="0">to withdraw</div><div class="match-item" data-pair="9">hospital</div><div class="match-item" data-pair="1">during, throughout</div><div class="match-item" data-pair="2">teeth</div><div class="match-item" data-pair="3">transfer</div><div class="match-item" data-pair="7">percent, interest</div><div class="match-item" data-pair="5">exchange</div><div class="match-item" data-pair="11">receipt</div><div class="match-item" data-pair="8">small parcel</div><div class="match-item" data-pair="6">signature</div><div class="match-item" data-pair="4">to transfer</div></div>
+    <section id="activity-0" class="section"><div class="card"><h3>Post Office &amp; Bank Vocabulary</h3>
+      <div class="score-display"><span class="score"><span id="activity-0-score">0</span>/10</span></div>
+      <div id="activity-0-container" class="fill-container"></div>
+      <div class="completion-message" id="activity-0-complete"><h3>Complete!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-0')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-1')">Next →</button></div>
+    </div></section>
+
+    <section id="activity-1" class="section"><div class="card"><h3>Build the Sentence</h3>
+      <div class="score-display"><span class="score"><span id="activity-1-score">0</span>/10</span></div>
+      <div id="activity-1-container" class="order-container"></div>
+      <div class="completion-message" id="activity-1-complete"><h3>Perfect Order!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-1')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-2')">Next →</button></div>
+    </div></section>
+
+    <section id="activity-2" class="section"><div class="card"><h3>Match the Pairs</h3>
+      <div class="score-display"><span class="score"><span id="activity-2-score">0</span>/12</span></div>
+      <div class="match-container" id="activity-2-container"><svg class="match-lines" id="activity-2-lines"></svg>
+        <div class="match-column" id="activity-2-left"></div>
+        <div class="match-column" id="activity-2-right"></div>
       </div>
-      <div class="completion-message" id="match-complete"><h3>Perfect!</h3></div>
-      <div class="btn-group"><button class="btn btn-outline" onclick="resetMatch()">Reset</button><button class="btn btn-primary" onclick="showSection('quiz')">Next →</button></div>
+      <div class="completion-message" id="activity-2-complete"><h3>Perfect!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-2')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-3')">Next →</button></div>
     </div></section>
-    
-    <section id="quiz" class="section"><div class="card"><h3>Meaning Check</h3>
-      <div class="score-display"><span class="score"><span id="quiz-score">0</span>/12</span></div>
-      <div id="quiz-container"></div>
-      <div class="completion-message" id="quiz-complete"><h3>Complete!</h3></div>
-      <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('sort')">Next →</button></div>
+
+    <section id="activity-3" class="section"><div class="card"><h3>Meaning Check</h3>
+      <div class="score-display"><span class="score"><span id="activity-3-score">0</span>/12</span></div>
+      <div id="activity-3-container"></div>
+      <div class="completion-message" id="activity-3-complete"><h3>Complete!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-3')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-4')">Next →</button></div>
     </div></section>
-    
-    <section id="sort" class="section"><div class="card"><h3>Sort by Gender</h3>
-      <div class="score-display"><span class="score"><span id="sort-score">0</span>/12</span></div>
-      <div class="sort-pool" id="sort-pool"><div class="sort-items" id="sort-items"></div></div>
-      <div class="sort-groups"><div class="sort-group true-friends" data-group="true-friends"><h4>Masculine</h4><div class="sort-items"></div></div><div class="sort-group false-friends" data-group="false-friends"><h4>Feminine</h4><div class="sort-items"></div></div></div>
-      <div class="completion-message" id="sort-complete"><h3>All Sorted!</h3></div>
-      <div class="btn-group"><button class="btn btn-outline" onclick="resetSort()">Reset</button><button class="btn btn-primary" onclick="showSection('fill')">Next →</button></div>
+
+    <section id="activity-4" class="section"><div class="card"><h3>True or False?</h3>
+      <div class="score-display"><span class="score"><span id="activity-4-score">0</span>/10</span></div>
+      <div id="activity-4-container"></div>
+      <div class="completion-message" id="activity-4-complete"><h3>Complete!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-4')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-5')">Next →</button></div>
     </div></section>
-    
-    <section id="fill" class="section"><div class="card"><h3>Complete the Sentences</h3>
-      <div class="score-display"><span class="score"><span id="fill-score">0</span>/9</span></div>
-      <div id="fill-container" class="fill-container"></div>
-      <div class="completion-message" id="fill-complete"><h3>Complete!</h3></div>
-      <div class="btn-group"><button class="btn btn-outline" onclick="resetFill()">Reset</button><button class="btn btn-primary" onclick="showSection('order')">Next →</button></div>
+
+    <section id="activity-5" class="section"><div class="card"><h3>Sort by Gender</h3>
+      <div class="score-display"><span class="score"><span id="activity-5-score">0</span>/12</span></div>
+      <div class="sort-pool" id="activity-5-pool"><div class="sort-items" id="activity-5-items"></div></div>
+      <div class="sort-groups" id="activity-5-groups"></div>
+      <div class="completion-message" id="activity-5-complete"><h3>All Sorted!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-5')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-6')">Next →</button></div>
     </div></section>
-    
-    <section id="order" class="section"><div class="card"><h3>Build the Sentence</h3>
-      <div class="score-display"><span class="score"><span id="order-score">0</span>/12</span></div>
-      <div id="order-container" class="order-container"></div>
-      <div class="completion-message" id="order-complete"><h3>Perfect Order!</h3></div>
-      <div class="btn-group"><button class="btn btn-outline" onclick="resetOrder()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
+
+    <section id="activity-6" class="section"><div class="card"><h3>Choose Post Office and Bank Terms</h3>
+      <div class="score-display"><span class="score"><span id="activity-6-score">0</span>/10</span></div>
+      <div id="activity-6-container" class="select-container"></div>
+      <div class="completion-message" id="activity-6-complete"><h3>Complete!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-6')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-7')">Next →</button></div>
+    </div></section>
+
+    <section id="activity-7" class="section"><div class="card"><h3>Arrange Words into Sentences</h3>
+      <div class="score-display"><span class="score"><span id="activity-7-score">0</span>/10</span></div>
+      <div id="activity-7-container" class="order-container"></div>
+      <div class="completion-message" id="activity-7-complete"><h3>Perfect Order!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-7')">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
     <section id="vocab" class="section">
@@ -1037,13 +1095,8 @@ footer {
   </main><footer>Module 39 · curricula-opus</footer>
   <script>
 
-    const matchPairs = [{"left":"зняти","right":"to withdraw"},{"left":"протягом","right":"during, throughout"},{"left":"зуби","right":"teeth"},{"left":"переказ","right":"transfer"},{"left":"переказати","right":"to transfer"},{"left":"обмін","right":"exchange"},{"left":"підпис","right":"signature"},{"left":"відсоток","right":"percent, interest"},{"left":"бандероль","right":"small parcel"},{"left":"лікарня","right":"hospital"},{"left":"індекс","right":"postal code"},{"left":"квитанція","right":"receipt"}];
-    const quizData = [{"question":"What does \"індекс\" mean?","options":["newspaper","relative","postal code","bicycle"],"correctIndex":2,"explanation":"\"індекс\" means \"postal code\""},{"question":"What does \"переказати\" mean?","options":["ten","to transfer","alphabet","to understand (perf)"],"correctIndex":1,"explanation":"\"переказати\" means \"to transfer\""},{"question":"What does \"вага\" mean?","options":["restaurant","invitation","weight","to shave"],"correctIndex":2,"explanation":"\"вага\" means \"weight\""},{"question":"What does \"кредит\" mean?","options":["credit, loan","musician","exchange","friend (male)"],"correctIndex":0,"explanation":"\"кредит\" means \"credit, loan\""},{"question":"What does \"відправник\" mean?","options":["five","sender","postcard","(with) you"],"correctIndex":1,"explanation":"\"відправник\" means \"sender\""},{"question":"What does \"відправити\" mean?","options":["pleasure, satisfaction","three","glass","to send, dispatch"],"correctIndex":3,"explanation":"\"відправити\" means \"to send, dispatch\""},{"question":"What does \"доставка\" mean?","options":["delivery","exit","to give","bag"],"correctIndex":0,"explanation":"\"доставка\" means \"delivery\""},{"question":"What does \"відсоток\" mean?","options":["percent, interest","bon appétit","student","you (informal)"],"correctIndex":0,"explanation":"\"відсоток\" means \"percent, interest\""},{"question":"What does \"зняти\" mean?","options":["passport","to withdraw","suitcase","color"],"correctIndex":1,"explanation":"\"зняти\" means \"to withdraw\""},{"question":"What does \"обміняти\" mean?","options":["to exchange","pork fat","seller (f)","to be fascinated"],"correctIndex":0,"explanation":"\"обміняти\" means \"to exchange\""},{"question":"What does \"надіслати\" mean?","options":["doctor (f)","to send","to be lucky","married (m)"],"correctIndex":1,"explanation":"\"надіслати\" means \"to send\""},{"question":"What does \"розписатися\" mean?","options":["to sign","bag","day after tomorrow","salad"],"correctIndex":0,"explanation":"\"розписатися\" means \"to sign\""}];
-    const sortData = {"true-friends":["індекс","кредит","одержувач","переказ","депозит","курс"],"false-friends":["вага","квитанція","комісія","бандероль","марка","листівка"]};
-    const fillData = {"items":[{"prompt":"Я хочу навчитися ___.","answer":"обміняти","options":["відправити","обміняти","пити","принести"]},{"prompt":"Мій брат має хороший ___.","answer":"депозит","options":["депозит","пляшка","газета","водій"]},{"prompt":"Це моя нова ___.","answer":"вага","options":["квиток","відправник","столик","вага"]},{"prompt":"Ця ___ коштує сто гривень.","answer":"бандероль","options":["ніч","салат","бандероль","15"]},{"prompt":"Мій брат має хороший ___.","answer":"відправник","options":["відправник","продавчиня","комісія","офіс"]},{"prompt":"Мій брат любить ___ щодня.","answer":"відправити","options":["закінчити","личити","відправити","сказати"]},{"prompt":"Це моя нова ___.","answer":"комісія","options":["дружина","картка","черевики","комісія"]},{"prompt":"Це мій новий ___.","answer":"курс","options":["11-12","вишиванка","відповідь","курс"]},{"prompt":"Мій брат любить ___ щодня.","answer":"перерахувати","options":["будемо","хотіти","виявитися","перерахувати"]}],"text":"","answers":[]};
-    const orderData = {"items":[{"words":["моя","нова","Це","квитанція"],"answer":"Це моя нова квитанція.","translation":"receipt"},{"words":["ваш","великий","кредит","Де"],"answer":"Де ваш великий кредит?","translation":"credit, loan"},{"words":["Я","хочу","купити","доставка","цю"],"answer":"Я хочу купити цю доставка.","translation":"delivery"},{"words":["мій","новий","депозит","Це"],"answer":"Це мій новий депозит.","translation":"deposit"},{"words":["Мій","банкомат","брат","має","хороший"],"answer":"Мій брат має хороший банкомат.","translation":"ATM"},{"words":["купити","хочу","цей","Я","відсоток"],"answer":"Я хочу купити цей відсоток.","translation":"percent, interest"},{"words":["переказ","Я","хочу","купити","цей"],"answer":"Я хочу купити цей переказ.","translation":"transfer"},{"words":["має","підпис","хороший","брат","Мій"],"answer":"Мій брат має хороший підпис.","translation":"signature"},{"words":["купити","хочу","цей","курс","Я"],"answer":"Я хочу купити цей курс.","translation":"rate"},{"words":["хорошу","бандероль","брат","має","Мій"],"answer":"Мій брат має хорошу бандероль.","translation":"small parcel"},{"words":["відправник","Цей","сто","гривень","коштує"],"answer":"Цей відправник коштує сто гривень.","translation":"sender"},{"words":["ваш","обмін","Де","великий"],"answer":"Де ваш великий обмін?","translation":"exchange"}],"isUnjumble":true};
+    const activitiesData = [{"id":"activity-0","type":"fill-blank","title":"Post Office & Bank Vocabulary","data":{"type":"fill-blank","items":[{"prompt":"Я хочу відправити ___ (посилка) в Україну, будь ласка.","answer":"посилку","hints":["посилка"],"options":["посилка","посилки","посилці","посилку"]},{"prompt":"Скільки коштує доставка ___ (цей лист) до Львова?","answer":"цього листа","hints":["цей лист"],"options":["цей лист","цього листа","цьому листу","цим листом"]},{"prompt":"Я хочу обміняти долари на ___ (гривня).","answer":"гривні","hints":["гривня"],"options":["гривня","гривні","гривню","гривнею"]},{"prompt":"Мені потрібно зняти гроші з ___ (мій рахунок).","answer":"мого рахунку","hints":["мій рахунок"],"options":["мій рахунок","мого рахунку","моєму рахунку","моїм рахунком"]},{"prompt":"Де я можу отримати ___ (моя посилка)?","answer":"мою посилку","hints":["моя посилка"],"options":["моя посилка","моєї посилки","моїй посилці","мою посилку"]},{"prompt":"Який курс ___ (долар) сьогодні у вашому банку?","answer":"долара","hints":["долар"],"options":["долар","долара","долару","доларом"]},{"prompt":"Будь ласка, напишіть адресу ___ (отримувач) тут.","answer":"отримувача","hints":["отримувач"],"options":["отримувач","отримувача","отримувачу","отримувачем"]},{"prompt":"Я хочу відкрити ___ (новий рахунок) у вашому банку.","answer":"новий рахунок","hints":["новий рахунок"],"options":["новий рахунок","нового рахунку","новому рахунку","новим рахунком"]},{"prompt":"Скільки часу потрібно для ___ (банківський переказ)?","answer":"банківського переказу","hints":["банківський переказ"],"options":["банківський переказ","банківського переказу","банківському переказу","банківським переказом"]},{"prompt":"Мені потрібна квитанція про ___ (оплата) цього рахунку.","answer":"оплату","hints":["оплата"],"options":["оплата","оплати","оплаті","оплату"]}]}},{"id":"activity-1","type":"unjumble","title":"Build the Sentence","data":{"type":"unjumble","isUnjumble":true,"items":[{"words":["посилку","Я","хочу","відправити","в Україну","будь ласка"],"answer":"Я хочу відправити посилку в Україну, будь ласка.","translation":"I want to send a package to Ukraine, please."},{"words":["листа","Скільки","коштує","доставка","цього","до Львова"],"answer":"Скільки коштує доставка цього листа до Львова?","translation":"How much does delivery of this letter to Lviv cost?"},{"words":["гривні","Я","хочу","обміняти","долари","на"],"answer":"Я хочу обміняти долари на гривні.","translation":"I want to exchange dollars for hryvnias."},{"words":["рахунку","Мені","потрібно","зняти","гроші","з мого"],"answer":"Мені потрібно зняти гроші з мого рахунку.","translation":"I need to withdraw money from my account."},{"words":["посилку","Де","я","можу","отримати","мою"],"answer":"Де я можу отримати мою посилку?","translation":"Where can I receive my package?"},{"words":["долара","Який","курс","сьогодні","у вашому банку"],"answer":"Який курс долара сьогодні у вашому банку?","translation":"What is the dollar exchange rate today at your bank?"},{"words":["отримувача","Будь ласка","напишіть","адресу","тут"],"answer":"Будь ласка, напишіть адресу отримувача тут.","translation":"Please write the recipient's address here."},{"words":["рахунок","Я","хочу","відкрити","новий","у вашому банку"],"answer":"Я хочу відкрити новий рахунок у вашому банку.","translation":"I want to open a new account at your bank."},{"words":["переказу","Скільки","часу","потрібно","для","банківського"],"answer":"Скільки часу потрібно для банківського переказу?","translation":"How much time is needed for a bank transfer?"},{"words":["квитанція","Мені","потрібна","про оплату","цього рахунку"],"answer":"Мені потрібна квитанція про оплату цього рахунку.","translation":"I need a receipt for payment of this bill."}]}},{"id":"activity-2","type":"match-up","title":"Match the Pairs","data":{"type":"match-up","pairs":[{"left":"зняти","right":"to withdraw"},{"left":"протягом","right":"during, throughout"},{"left":"зуби","right":"teeth"},{"left":"переказ","right":"transfer"},{"left":"переказати","right":"to transfer"},{"left":"обмін","right":"exchange"},{"left":"підпис","right":"signature"},{"left":"відсоток","right":"percent, interest"},{"left":"бандероль","right":"small parcel"},{"left":"лікарня","right":"hospital"},{"left":"індекс","right":"postal code"},{"left":"квитанція","right":"receipt"}],"shuffleRight":true}},{"id":"activity-3","type":"quiz","title":"Meaning Check","data":{"type":"quiz","questions":[{"question":"What does \"індекс\" mean?","options":["newspaper","relative","postal code","bicycle"],"correctIndex":2,"explanation":"\"індекс\" means \"postal code\""},{"question":"What does \"переказати\" mean?","options":["ten","to transfer","alphabet","to understand (perf)"],"correctIndex":1,"explanation":"\"переказати\" means \"to transfer\""},{"question":"What does \"вага\" mean?","options":["restaurant","invitation","weight","to shave"],"correctIndex":2,"explanation":"\"вага\" means \"weight\""},{"question":"What does \"кредит\" mean?","options":["credit, loan","musician","exchange","friend (male)"],"correctIndex":0,"explanation":"\"кредит\" means \"credit, loan\""},{"question":"What does \"відправник\" mean?","options":["five","sender","postcard","(with) you"],"correctIndex":1,"explanation":"\"відправник\" means \"sender\""},{"question":"What does \"відправити\" mean?","options":["pleasure, satisfaction","three","glass","to send, dispatch"],"correctIndex":3,"explanation":"\"відправити\" means \"to send, dispatch\""},{"question":"What does \"доставка\" mean?","options":["delivery","exit","to give","bag"],"correctIndex":0,"explanation":"\"доставка\" means \"delivery\""},{"question":"What does \"відсоток\" mean?","options":["percent, interest","bon appétit","student","you (informal)"],"correctIndex":0,"explanation":"\"відсоток\" means \"percent, interest\""},{"question":"What does \"зняти\" mean?","options":["passport","to withdraw","suitcase","color"],"correctIndex":1,"explanation":"\"зняти\" means \"to withdraw\""},{"question":"What does \"обміняти\" mean?","options":["to exchange","pork fat","seller (f)","to be fascinated"],"correctIndex":0,"explanation":"\"обміняти\" means \"to exchange\""},{"question":"What does \"надіслати\" mean?","options":["doctor (f)","to send","to be lucky","married (m)"],"correctIndex":1,"explanation":"\"надіслати\" means \"to send\""},{"question":"What does \"розписатися\" mean?","options":["to sign","bag","day after tomorrow","salad"],"correctIndex":0,"explanation":"\"розписатися\" means \"to sign\""}],"shuffleQuestions":true,"shuffleOptions":true,"showCorrectAnswers":true}},{"id":"activity-4","type":"true-false","title":"True or False?","data":{"type":"true-false","statements":[{"statement":"\"обміняти\" means \"Ukrainian (female)\"","isTrue":false,"explanation":"Incorrect. \"обміняти\" means \"to exchange\""},{"statement":"\"відправник\" means \"sender\"","isTrue":true,"explanation":"Correct!"},{"statement":"\"банкомат\" means \"ATM\"","isTrue":true,"explanation":"Correct!"},{"statement":"\"комісія\" means \"to hurry\"","isTrue":false,"explanation":"Incorrect. \"комісія\" means \"commission\""},{"statement":"\"депозит\" means \"went (f)\"","isTrue":false,"explanation":"Incorrect. \"депозит\" means \"deposit\""},{"statement":"\"надіслати\" means \"good, okay\"","isTrue":false,"explanation":"Incorrect. \"надіслати\" means \"to send\""},{"statement":"\"доставка\" means \"delivery\"","isTrue":true,"explanation":"Correct!"},{"statement":"\"марка\" means \"stamp\"","isTrue":true,"explanation":"Correct!"},{"statement":"\"бандероль\" means \"small parcel\"","isTrue":true,"explanation":"Correct!"},{"statement":"\"перерахувати\" means \"to count, recount\"","isTrue":true,"explanation":"Correct!"}]}},{"id":"activity-5","type":"group-sort","title":"Sort by Gender","data":{"type":"group-sort","groups":[{"id":"masculine","name":"Masculine","items":["індекс","кредит","одержувач","переказ","депозит","курс"]},{"id":"feminine","name":"Feminine","items":["вага","квитанція","комісія","бандероль","марка","листівка"]}],"shuffleItems":true}},{"id":"activity-6","type":"select","title":"Choose Post Office and Bank Terms","data":{"type":"select","items":[{"question":"Which are postal items you can send?","options":[{"text":"лист","correct":true},{"text":"листівка","correct":true},{"text":"посилка","correct":true},{"text":"бандероль","correct":true},{"text":"марка","correct":false},{"text":"конверт","correct":false},{"text":"адреса","correct":false},{"text":"індекс","correct":false},{"text":"вага","correct":false},{"text":"квитанція","correct":false}]},{"question":"Which are bank transaction types?","options":[{"text":"лист","correct":false},{"text":"переказ","correct":true},{"text":"обмін валюти","correct":true},{"text":"посилка","correct":false},{"text":"депозит","correct":true},{"text":"кредит","correct":true},{"text":"марка","correct":false},{"text":"зняття готівки","correct":true},{"text":"конверт","correct":false},{"text":"доставка","correct":false}]},{"question":"Which are postal service vocabulary?","options":[{"text":"надіслати","correct":true},{"text":"відправити","correct":true},{"text":"отримати","correct":true},{"text":"доставка","correct":true},{"text":"обміняти","correct":false},{"text":"одержувач","correct":true},{"text":"відправник","correct":true},{"text":"рахунок","correct":false},{"text":"готівка","correct":false},{"text":"валюта","correct":false}]},{"question":"Which are bank-related vocabulary?","options":[{"text":"посилка","correct":false},{"text":"готівка","correct":true},{"text":"валюта","correct":true},{"text":"рахунок","correct":true},{"text":"марка","correct":false},{"text":"обміняти","correct":true},{"text":"курс","correct":true},{"text":"комісія","correct":true},{"text":"листівка","correct":false},{"text":"конверт","correct":false}]},{"question":"Which verbs are used at the post office?","options":[{"text":"надіслати","correct":true},{"text":"відправити","correct":true},{"text":"обміняти","correct":false},{"text":"отримати","correct":true},{"text":"забрати","correct":true},{"text":"зняти","correct":false},{"text":"покласти","correct":false},{"text":"перерахувати","correct":false},{"text":"заощадити","correct":false},{"text":"відкрити рахунок","correct":false}]},{"question":"Which verbs are used at the bank?","options":[{"text":"надіслати","correct":false},{"text":"обміняти","correct":true},{"text":"відправити посилку","correct":false},{"text":"зняти гроші","correct":true},{"text":"покласти гроші","correct":true},{"text":"перерахувати","correct":true},{"text":"відкрити рахунок","correct":true},{"text":"забрати посилку","correct":false},{"text":"отримати листа","correct":false},{"text":"купити марку","correct":false}]},{"question":"Which require accusative case (direct object)?","options":[{"text":"надіслати листа","correct":true},{"text":"відправити посилку","correct":true},{"text":"купити марку","correct":true},{"text":"обміняти гроші","correct":true},{"text":"зняти готівку","correct":true},{"text":"до Америки","correct":false},{"text":"від відправника","correct":false},{"text":"отримати квитанцію","correct":true},{"text":"на рахунку","correct":false},{"text":"у банку","correct":false}]},{"question":"Which require genitive case?","options":[{"text":"надіслати посилку","correct":false},{"text":"до Америки","correct":true},{"text":"від відправника","correct":true},{"text":"відправити листа","correct":false},{"text":"біля пошти","correct":true},{"text":"без комісії","correct":true},{"text":"купити марку","correct":false},{"text":"курс долара","correct":true},{"text":"у банку","correct":false},{"text":"на пошті","correct":false}]},{"question":"Which are currencies mentioned?","options":[{"text":"марка","correct":false},{"text":"долар","correct":true},{"text":"євро","correct":true},{"text":"гривня","correct":true},{"text":"індекс","correct":false},{"text":"кредит","correct":false},{"text":"депозит","correct":false},{"text":"переказ","correct":false},{"text":"курс","correct":false},{"text":"комісія","correct":false}]},{"question":"Which describe payment or money?","options":[{"text":"готівка","correct":true},{"text":"гроші","correct":true},{"text":"посилка","correct":false},{"text":"валюта","correct":true},{"text":"марка","correct":false},{"text":"комісія","correct":true},{"text":"курс","correct":true},{"text":"вага","correct":false},{"text":"рахунок","correct":true},{"text":"доставка","correct":false}]}]}},{"id":"activity-7","type":"order","title":"Arrange Words into Sentences","data":{"type":"order","isUnjumble":true,"items":[{"words":["надіслати","хочу","Я","листа","до","Англії"],"answer":"Я хочу надіслати листа до Англії.","translation":"I want to send a letter to England."},{"words":["посилку","відправити","потрібно","Мені","Канади","до"],"answer":"Мені потрібно відправити посилку до Канади.","translation":"I need to send a package to Canada."},{"words":["коштує","Скільки","марка","до","Америки"],"answer":"Скільки коштує марка до Америки?","translation":"How much is a stamp to America?"},{"words":["купити","можна","Де","конверт"],"answer":"Де можна купити конверт?","translation":"Where can I buy an envelope?"},{"words":["обміняти","хочу","долари","Я","гривні","на"],"answer":"Я хочу обміняти долари на гривні.","translation":"I want to exchange dollars for hryvnias."},{"words":["курс","Який","євро","сьогодні"],"answer":"Який курс євро сьогодні?","translation":"What is the euro exchange rate today?"},{"words":["зняти","хочу","готівку","Я","рахунку","з"],"answer":"Я хочу зняти готівку з рахунку.","translation":"I want to withdraw cash from my account."},{"words":["гроші","покласти","Мені","на","потрібно","рахунок"],"answer":"Мені потрібно покласти гроші на рахунок.","translation":"I need to deposit money into the account."},{"words":["відкрити","можна","Чи","рахунок","у","вашому","банку"],"answer":"Чи можна відкрити рахунок у вашому банку?","translation":"Can I open an account at your bank?"},{"words":["отримати","Я","прийшов","посилку","відділенні","у","цьому"],"answer":"Я прийшов отримати посилку у цьому відділенні.","translation":"I came to pick up a package at this branch."}]}}];
     const vocabData = [{"uk":"листівка","translit":"","en":"postcard","note":""},{"uk":"бандероль","translit":"","en":"small parcel","note":""},{"uk":"марка","translit":"","en":"stamp","note":""},{"uk":"відправник","translit":"","en":"sender","note":""},{"uk":"одержувач","translit":"","en":"recipient","note":""},{"uk":"індекс","translit":"","en":"postal code","note":""},{"uk":"квитанція","translit":"","en":"receipt","note":""},{"uk":"доставка","translit":"","en":"delivery","note":""},{"uk":"вага","translit":"","en":"weight","note":""},{"uk":"переказ","translit":"","en":"transfer","note":""},{"uk":"обмін","translit":"","en":"exchange","note":""},{"uk":"курс","translit":"","en":"rate","note":""},{"uk":"депозит","translit":"","en":"deposit","note":""},{"uk":"кредит","translit":"","en":"credit, loan","note":""},{"uk":"відсоток","translit":"","en":"percent, interest","note":""},{"uk":"банкомат","translit":"","en":"ATM","note":""},{"uk":"комісія","translit":"","en":"commission","note":""},{"uk":"підпис","translit":"","en":"signature","note":""},{"uk":"виписка","translit":"","en":"statement","note":""},{"uk":"надіслати","translit":"","en":"to send","note":"+ acc + dat"},{"uk":"відправити","translit":"","en":"to send, dispatch","note":"+ acc"},{"uk":"обміняти","translit":"","en":"to exchange","note":"+ acc + на + acc"},{"uk":"зняти","translit":"","en":"to withdraw","note":"+ acc + з + gen"},{"uk":"переказати","translit":"","en":"to transfer","note":"+ acc + dat"},{"uk":"заповнити","translit":"","en":"to fill out","note":"+ acc"},{"uk":"розписатися","translit":"","en":"to sign","note":""},{"uk":"перерахувати","translit":"","en":"to count, recount","note":"+ acc"}];
-    const totalSort = 12;
   
 // Answer callout toggle (for new > [!answer] syntax)
 function toggleAnswer(id, btn) {
@@ -1073,99 +1126,261 @@ function showSection(id) {
 }
 document.querySelectorAll('.nav-tab').forEach(t => t.addEventListener('click', () => showSection(t.dataset.section)));
 
-// Initialize on DOM ready
+// Activity reset dispatcher
+function resetActivity(sectionId) {
+  const activity = activitiesData.find(a => a.id === sectionId);
+  if (!activity) return;
+
+  switch (activity.type) {
+    case 'match-up':
+      resetMatch(sectionId);
+      break;
+    case 'quiz':
+      resetQuiz(sectionId);
+      break;
+    case 'true-false':
+      resetTf(sectionId);
+      break;
+    case 'group-sort':
+      resetSort(sectionId);
+      break;
+    case 'fill-blank':
+    case 'gap-fill':
+      resetFill(sectionId);
+      break;
+    case 'order':
+    case 'unjumble':
+      resetOrder(sectionId);
+      break;
+    case 'select':
+      resetSelect(sectionId);
+      break;
+  }
+}
+
+// Initialize all activities from activitiesData array
 document.addEventListener('DOMContentLoaded', () => {
-  initQuiz();
-  initSort();
-  if (typeof initFill === 'function') initFill();
-  if (typeof initOrder === 'function') initOrder();
-  initVocab();
+  if (typeof activitiesData === 'undefined') return;
+
+  activitiesData.forEach(activity => {
+    switch (activity.type) {
+      case 'match-up':
+        initMatch(activity.id, activity.data);
+        break;
+      case 'quiz':
+        initQuiz(activity.id, activity.data);
+        break;
+      case 'true-false':
+        initTf(activity.id, activity.data);
+        break;
+      case 'group-sort':
+        initSort(activity.id, activity.data);
+        break;
+      case 'fill-blank':
+      case 'gap-fill':
+        initFill(activity.id, activity.data);
+        break;
+      case 'order':
+      case 'unjumble':
+        initOrder(activity.id, activity.data);
+        break;
+      case 'select':
+        initSelect(activity.id, activity.data);
+        break;
+    }
+  });
+
+  // Initialize vocabulary
+  if (typeof initVocab === 'function') initVocab();
 });
 
 
-// Quiz Activity
-let quizScore = 0, quizAns = 0;
+// Quiz Activity - supports multiple instances
+const quizState = {};
 
-function initQuiz() {
-  const c = document.getElementById('quiz-container');
-  if (!c || !quizData.length) return;
+function initQuiz(sectionId, data) {
+  const c = document.getElementById(sectionId + '-container');
+  if (!c || !data.questions || !data.questions.length) return;
+
+  quizState[sectionId] = { score: 0, answered: 0, total: data.questions.length, data: data };
+
   c.innerHTML = '';
-  quizData.forEach((q, i) => {
+  data.questions.forEach((q, i) => {
     const sh = [...q.options].sort(() => Math.random() - 0.5);
     const cor = sh.indexOf(q.options[q.correctIndex]);
     const div = document.createElement('div');
     div.className = 'quiz-question';
-    div.innerHTML = '<h4>Q' + (i + 1) + ': ' + q.question + '</h4><div class="quiz-options">' + sh.map((o, j) => '<div class="quiz-option" data-c="' + (j === cor) + '" data-q="' + i + '">' + o + '</div>').join('') + '</div><div class="quiz-explanation" id="exp-' + i + '">' + q.explanation + '</div>';
+    div.dataset.section = sectionId;
+    div.innerHTML = '<h4>Q' + (i + 1) + ': ' + q.question + '</h4><div class="quiz-options">' + sh.map((o, j) => '<div class="quiz-option" data-c="' + (j === cor) + '" data-q="' + i + '" data-section="' + sectionId + '">' + o + '</div>').join('') + '</div><div class="quiz-explanation" id="' + sectionId + '-exp-' + i + '">' + (q.explanation || '') + '</div>';
     c.appendChild(div);
   });
-  document.querySelectorAll('.quiz-option').forEach(o => o.addEventListener('click', handleQuiz));
+  c.querySelectorAll('.quiz-option').forEach(o => o.addEventListener('click', handleQuiz));
 }
 
 function handleQuiz(e) {
   const opt = e.target, q = opt.closest('.quiz-question');
+  const sectionId = opt.dataset.section;
   if (q.classList.contains('answered')) return;
   q.classList.add('answered');
+
+  const state = quizState[sectionId];
   if (opt.dataset.c === 'true') {
     opt.classList.add('correct');
-    quizScore++;
+    state.score++;
   } else {
     opt.classList.add('wrong');
     q.querySelector('[data-c="true"]').classList.add('correct');
   }
-  document.getElementById('exp-' + opt.dataset.q).classList.add('show');
-  document.getElementById('quiz-score').textContent = quizScore;
-  quizAns++;
-  if (quizAns === quizData.length) document.getElementById('quiz-complete').classList.add('show');
+  document.getElementById(sectionId + '-exp-' + opt.dataset.q)?.classList.add('show');
+  document.getElementById(sectionId + '-score').textContent = state.score;
+  state.answered++;
+  if (state.answered === state.total) document.getElementById(sectionId + '-complete').classList.add('show');
 }
 
-function resetQuiz() {
-  quizScore = 0;
-  quizAns = 0;
-  document.getElementById('quiz-score').textContent = '0';
-  document.getElementById('quiz-complete')?.classList.remove('show');
-  initQuiz();
+function resetQuiz(sectionId) {
+  const state = quizState[sectionId];
+  if (!state) return;
+  document.getElementById(sectionId + '-score').textContent = '0';
+  document.getElementById(sectionId + '-complete')?.classList.remove('show');
+  initQuiz(sectionId, state.data);
 }
 
 
-// Match Activity
-let matchSel = null, matchScore = 0, matchPairsArr = [];
+// True/False Activity - supports multiple instances
+const tfState = {};
 
-document.querySelectorAll('#match-left .match-item').forEach(item => {
-  item.addEventListener('click', () => {
-    if (item.classList.contains('matched')) return;
-    document.querySelectorAll('#match-left .match-item').forEach(i => i.classList.remove('selected'));
-    item.classList.add('selected');
-    matchSel = { el: item, pair: item.dataset.pair };
+function initTf(sectionId, data) {
+  const c = document.getElementById(sectionId + '-container');
+  if (!c || !data.statements || !data.statements.length) return;
+
+  tfState[sectionId] = { score: 0, answered: 0, total: data.statements.length, data: data };
+
+  c.innerHTML = '';
+  data.statements.forEach((s, i) => {
+    const div = document.createElement('div');
+    div.className = 'tf-statement';
+    div.dataset.section = sectionId;
+    div.innerHTML = '<p class="tf-text">' + s.statement + '</p>' +
+      '<div class="tf-buttons">' +
+      '<button class="tf-btn" data-value="true" data-idx="' + i + '" data-section="' + sectionId + '">True</button>' +
+      '<button class="tf-btn" data-value="false" data-idx="' + i + '" data-section="' + sectionId + '">False</button>' +
+      '</div>' +
+      '<div class="tf-explanation" id="' + sectionId + '-exp-' + i + '">' + (s.explanation || '') + '</div>';
+    div.dataset.correct = s.isTrue;
+    c.appendChild(div);
   });
-});
+  c.querySelectorAll('.tf-btn').forEach(b => b.addEventListener('click', handleTf));
+}
 
-document.querySelectorAll('#match-right .match-item').forEach(item => {
-  item.addEventListener('click', () => {
-    if (item.classList.contains('matched') || !matchSel) return;
-    if (matchSel.pair === item.dataset.pair) {
-      matchSel.el.classList.remove('selected');
-      matchSel.el.classList.add('matched');
-      item.classList.add('matched');
-      matchPairsArr.push({ left: matchSel.el, right: item });
-      matchScore++;
-      document.getElementById('match-score').textContent = matchScore;
-      drawLines();
-      if (matchScore === matchPairs.length) document.getElementById('match-complete').classList.add('show');
-    } else {
-      item.classList.add('wrong');
-      setTimeout(() => item.classList.remove('wrong'), 300);
-    }
-    matchSel = null;
+function handleTf(e) {
+  const btn = e.target;
+  const sectionId = btn.dataset.section;
+  const idx = parseInt(btn.dataset.idx);
+  const statement = btn.closest('.tf-statement');
+  const state = tfState[sectionId];
+  if (statement.classList.contains('answered')) return;
+
+  statement.classList.add('answered');
+  const correct = state.data.statements[idx].isTrue;
+  const clicked = btn.dataset.value === 'true';
+
+  if (clicked === correct) {
+    btn.classList.add('correct');
+    state.score++;
+  } else {
+    btn.classList.add('wrong');
+    // Highlight the correct answer
+    statement.querySelector('[data-value="' + correct + '"]').classList.add('correct');
+  }
+
+  const exp = document.getElementById(sectionId + '-exp-' + idx);
+  if (exp && exp.textContent) exp.classList.add('show');
+
+  document.getElementById(sectionId + '-score').textContent = state.score;
+  state.answered++;
+  if (state.answered === state.total) document.getElementById(sectionId + '-complete').classList.add('show');
+}
+
+function resetTf(sectionId) {
+  const state = tfState[sectionId];
+  if (!state) return;
+  document.getElementById(sectionId + '-score').textContent = '0';
+  document.getElementById(sectionId + '-complete')?.classList.remove('show');
+  initTf(sectionId, state.data);
+}
+
+
+// Match Activity - supports multiple instances
+const matchState = {};
+
+function initMatch(sectionId, data) {
+  const container = document.getElementById(sectionId + '-container');
+  const leftCol = document.getElementById(sectionId + '-left');
+  const rightCol = document.getElementById(sectionId + '-right');
+  if (!container || !leftCol || !rightCol || !data.pairs || !data.pairs.length) return;
+
+  const pairs = data.pairs;
+  matchState[sectionId] = { selected: null, score: 0, matched: [], total: pairs.length, data: data };
+
+  // Create left column items
+  const shuffledLeft = pairs.map((p, i) => ({ text: p.left, idx: i })).sort(() => Math.random() - 0.5);
+  leftCol.innerHTML = shuffledLeft.map(p => '<div class="match-item" data-pair="' + p.idx + '" data-section="' + sectionId + '" data-side="left">' + p.text + '</div>').join('');
+
+  // Create right column items
+  const shuffledRight = pairs.map((p, i) => ({ text: p.right, idx: i })).sort(() => Math.random() - 0.5);
+  rightCol.innerHTML = shuffledRight.map(p => '<div class="match-item" data-pair="' + p.idx + '" data-section="' + sectionId + '" data-side="right">' + p.text + '</div>').join('');
+
+  // Attach click handlers
+  leftCol.querySelectorAll('.match-item').forEach(item => {
+    item.addEventListener('click', () => handleMatchLeft(item));
   });
-});
+  rightCol.querySelectorAll('.match-item').forEach(item => {
+    item.addEventListener('click', () => handleMatchRight(item));
+  });
+}
 
-function drawLines() {
-  const svg = document.getElementById('match-lines'), c = document.getElementById('match-container');
-  if (!svg || !c) return;
-  const r = c.getBoundingClientRect();
+function handleMatchLeft(item) {
+  const sectionId = item.dataset.section;
+  const state = matchState[sectionId];
+  if (item.classList.contains('matched')) return;
+
+  const leftCol = document.getElementById(sectionId + '-left');
+  leftCol.querySelectorAll('.match-item').forEach(i => i.classList.remove('selected'));
+  item.classList.add('selected');
+  state.selected = { el: item, pair: item.dataset.pair };
+}
+
+function handleMatchRight(item) {
+  const sectionId = item.dataset.section;
+  const state = matchState[sectionId];
+  if (item.classList.contains('matched') || !state.selected) return;
+
+  if (state.selected.pair === item.dataset.pair) {
+    state.selected.el.classList.remove('selected');
+    state.selected.el.classList.add('matched');
+    item.classList.add('matched');
+    state.matched.push({ left: state.selected.el, right: item });
+    state.score++;
+    document.getElementById(sectionId + '-score').textContent = state.score;
+    drawMatchLines(sectionId);
+    if (state.score === state.total) document.getElementById(sectionId + '-complete').classList.add('show');
+  } else {
+    item.classList.add('wrong');
+    setTimeout(() => item.classList.remove('wrong'), 300);
+  }
+  state.selected = null;
+}
+
+function drawMatchLines(sectionId) {
+  const svg = document.getElementById(sectionId + '-lines');
+  const container = document.getElementById(sectionId + '-container');
+  const state = matchState[sectionId];
+  if (!svg || !container || !state) return;
+
+  const r = container.getBoundingClientRect();
   svg.innerHTML = '';
   svg.setAttribute('viewBox', '0 0 ' + r.width + ' ' + r.height);
-  matchPairsArr.forEach(p => {
+  state.matched.forEach(p => {
     const lr = p.left.getBoundingClientRect(), rr = p.right.getBoundingClientRect();
     const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
     line.setAttribute('x1', lr.right - r.left);
@@ -1178,89 +1393,117 @@ function drawLines() {
   });
 }
 
-function resetMatch() {
-  matchSel = null;
-  matchScore = 0;
-  matchPairsArr = [];
-  document.getElementById('match-score').textContent = '0';
-  document.getElementById('match-complete')?.classList.remove('show');
-  document.getElementById('match-lines').innerHTML = '';
-  document.querySelectorAll('#match-container .match-item').forEach(i => i.classList.remove('matched', 'selected', 'wrong'));
+function resetMatch(sectionId) {
+  const state = matchState[sectionId];
+  if (!state) return;
+  document.getElementById(sectionId + '-score').textContent = '0';
+  document.getElementById(sectionId + '-complete')?.classList.remove('show');
+  document.getElementById(sectionId + '-lines').innerHTML = '';
+  initMatch(sectionId, state.data);
 }
 
-window.addEventListener('resize', drawLines);
+// Redraw lines on resize for all match activities
+window.addEventListener('resize', () => {
+  Object.keys(matchState).forEach(sectionId => drawMatchLines(sectionId));
+});
 
 
-// Sort Activity
-let sortScore = 0, dragItem = null;
+// Sort Activity - supports multiple instances
+const sortState = {};
 
-function initSort() {
-  const pool = document.getElementById('sort-items');
-  if (!pool || !Object.keys(sortData).length) return;
-  const all = Object.values(sortData).flat().sort(() => Math.random() - 0.5);
+function initSort(sectionId, data) {
+  const pool = document.getElementById(sectionId + '-items');
+  const groupsContainer = document.getElementById(sectionId + '-groups');
+  if (!pool || !groupsContainer || !data.groups || !data.groups.length) return;
+
+  const groups = data.groups;
+  const totalItems = groups.reduce((sum, g) => sum + g.items.length, 0);
+  sortState[sectionId] = { score: 0, total: totalItems, dragItem: null, data: data };
+
+  // Create group containers
+  groupsContainer.innerHTML = groups.map((g, i) =>
+    '<div class="sort-group" data-group="' + i + '" data-section="' + sectionId + '"><h4>' + g.name + '</h4><div class="sort-items"></div></div>'
+  ).join('');
+
+  // Flatten and shuffle all items
+  const allItems = groups.flatMap((g, gi) => g.items.map(item => ({ text: item, group: gi })));
+  allItems.sort(() => Math.random() - 0.5);
+
+  // Create draggable items
   pool.innerHTML = '';
-  all.forEach(letter => {
-    const group = Object.keys(sortData).find(g => sortData[g].includes(letter));
-    const item = document.createElement('div');
-    item.className = 'sort-item';
-    item.textContent = letter;
-    item.draggable = true;
-    item.dataset.group = group;
-    item.addEventListener('dragstart', e => {
-      dragItem = item;
-      item.classList.add('dragging');
+  allItems.forEach(item => {
+    const el = document.createElement('div');
+    el.className = 'sort-item';
+    el.textContent = item.text;
+    el.draggable = true;
+    el.dataset.group = item.group;
+    el.dataset.section = sectionId;
+    el.addEventListener('dragstart', () => {
+      sortState[sectionId].dragItem = el;
+      el.classList.add('dragging');
     });
-    item.addEventListener('dragend', () => {
-      item.classList.remove('dragging');
-      dragItem = null;
+    el.addEventListener('dragend', () => {
+      el.classList.remove('dragging');
+      sortState[sectionId].dragItem = null;
     });
-    pool.appendChild(item);
+    pool.appendChild(el);
   });
-  document.querySelectorAll('.sort-group').forEach(g => {
+
+  // Setup drop zones
+  groupsContainer.querySelectorAll('.sort-group').forEach(g => {
     g.addEventListener('dragover', e => {
       e.preventDefault();
       g.classList.add('drag-over');
     });
     g.addEventListener('dragleave', () => g.classList.remove('drag-over'));
-    g.addEventListener('drop', e => {
-      e.preventDefault();
-      g.classList.remove('drag-over');
-      if (!dragItem) return;
-      if (g.dataset.group === dragItem.dataset.group) {
-        dragItem.classList.add('correct');
-        g.querySelector('.sort-items').appendChild(dragItem);
-        dragItem.draggable = false;
-        sortScore++;
-        document.getElementById('sort-score').textContent = sortScore;
-        if (sortScore === totalSort) document.getElementById('sort-complete').classList.add('show');
-      } else {
-        dragItem.classList.add('wrong');
-        setTimeout(() => dragItem.classList.remove('wrong'), 300);
-      }
-    });
+    g.addEventListener('drop', e => handleSortDrop(e, g));
   });
 }
 
-function resetSort() {
-  sortScore = 0;
-  document.getElementById('sort-score').textContent = '0';
-  document.getElementById('sort-complete')?.classList.remove('show');
-  document.querySelectorAll('.sort-group .sort-items').forEach(g => g.innerHTML = '');
-  initSort();
+function handleSortDrop(e, groupEl) {
+  e.preventDefault();
+  groupEl.classList.remove('drag-over');
+  const sectionId = groupEl.dataset.section;
+  const state = sortState[sectionId];
+  const dragItem = state.dragItem;
+  if (!dragItem) return;
+
+  if (groupEl.dataset.group === dragItem.dataset.group) {
+    dragItem.classList.add('correct');
+    groupEl.querySelector('.sort-items').appendChild(dragItem);
+    dragItem.draggable = false;
+    state.score++;
+    document.getElementById(sectionId + '-score').textContent = state.score;
+    if (state.score === state.total) document.getElementById(sectionId + '-complete').classList.add('show');
+  } else {
+    dragItem.classList.add('wrong');
+    setTimeout(() => dragItem.classList.remove('wrong'), 300);
+  }
+}
+
+function resetSort(sectionId) {
+  const state = sortState[sectionId];
+  if (!state) return;
+  document.getElementById(sectionId + '-score').textContent = '0';
+  document.getElementById(sectionId + '-complete')?.classList.remove('show');
+  initSort(sectionId, state.data);
 }
 
 
-// Fill-in Activity - Dropdown in sentence
-let fillScore = 0, fillAns = 0;
+// Fill-in Activity - supports multiple instances
+const fillState = {};
 
-function initFill() {
-  const c = document.getElementById('fill-container');
-  if (!c || !fillData.items.length) return;
+function initFill(sectionId, data) {
+  const c = document.getElementById(sectionId + '-container');
+  if (!c || !data.items || !data.items.length) return;
+
+  fillState[sectionId] = { score: 0, answered: 0, total: data.items.length, data: data };
   c.innerHTML = '';
 
-  fillData.items.forEach((item, i) => {
+  data.items.forEach((item, i) => {
     const div = document.createElement('div');
     div.className = 'fill-question';
+    div.dataset.section = sectionId;
 
     // Generate options: correct answer + 3 distractors
     let options = [];
@@ -1269,7 +1512,7 @@ function initFill() {
     } else {
       // Fallback: generate distractors from other items' answers
       options = [item.answer];
-      const otherAnswers = fillData.items
+      const otherAnswers = data.items
         .filter((_, idx) => idx !== i)
         .map(it => it.answer)
         .filter(a => a && a !== item.answer);
@@ -1287,7 +1530,7 @@ function initFill() {
 
     // Replace ___ in the sentence with a dropdown
     const sentence = (item.prompt || item.sentence || '').replace(/___/g,
-      `<select class="fill-dropdown" data-idx="${i}" data-answer="${item.answer}">
+      `<select class="fill-dropdown" data-idx="${i}" data-answer="${item.answer}" data-section="${sectionId}">
         <option value="" disabled selected>—</option>
         ${shuffledOptions.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
       </select>`
@@ -1298,7 +1541,7 @@ function initFill() {
         <span class="fill-number">${i + 1}.</span>
         ${sentence}
       </div>
-      <div class="fill-feedback" id="fill-fb-${i}"></div>
+      <div class="fill-feedback" id="${sectionId}-fb-${i}"></div>
     `;
     c.appendChild(div);
   });
@@ -1313,12 +1556,14 @@ function initFill() {
 
 function handleFillChoice(dropdown) {
   const q = dropdown.closest('.fill-question');
+  const sectionId = dropdown.dataset.section;
+  const state = fillState[sectionId];
   if (q.classList.contains('answered')) return;
 
   const idx = dropdown.dataset.idx;
   const userAnswer = dropdown.value;
   const correctAnswer = dropdown.dataset.answer;
-  const fb = document.getElementById('fill-fb-' + idx);
+  const fb = document.getElementById(sectionId + '-fb-' + idx);
 
   q.classList.add('answered');
   dropdown.disabled = true;
@@ -1326,67 +1571,68 @@ function handleFillChoice(dropdown) {
   if (userAnswer === correctAnswer) {
     dropdown.classList.add('correct');
     fb.innerHTML = '<span class="correct-text">✓ Correct!</span>';
-    fillScore++;
+    state.score++;
   } else {
     dropdown.classList.add('wrong');
     fb.innerHTML = `<span class="wrong-text">✗ Answer: ${correctAnswer}</span>`;
   }
 
-  document.getElementById('fill-score').textContent = fillScore;
-  fillAns++;
-  if (fillAns === fillData.items.length) {
-    document.getElementById('fill-complete').classList.add('show');
+  document.getElementById(sectionId + '-score').textContent = state.score;
+  state.answered++;
+  if (state.answered === state.total) {
+    document.getElementById(sectionId + '-complete').classList.add('show');
   }
 }
 
-function resetFill() {
-  fillScore = 0;
-  fillAns = 0;
-  document.getElementById('fill-score').textContent = '0';
-  document.getElementById('fill-complete')?.classList.remove('show');
-  initFill();
+function resetFill(sectionId) {
+  const state = fillState[sectionId];
+  if (!state) return;
+  document.getElementById(sectionId + '-score').textContent = '0';
+  document.getElementById(sectionId + '-complete')?.classList.remove('show');
+  initFill(sectionId, state.data);
 }
 
 
-// Order/Unjumble Activity
-let orderScore = 0, orderTotal = 0;
+// Order/Unjumble Activity - supports multiple instances
+const orderState = {};
 
-function initOrder() {
-  const c = document.getElementById('order-container');
-  if (!c || !orderData.items.length) return;
+function initOrder(sectionId, data) {
+  const c = document.getElementById(sectionId + '-container');
+  if (!c || !data.items || !data.items.length) return;
+
+  orderState[sectionId] = { score: 0, total: data.items.length, data: data };
   c.innerHTML = '';
 
-  if (orderData.isUnjumble) {
-    initUnjumble(c);
+  if (data.isUnjumble) {
+    initUnjumble(sectionId, c, data);
   } else {
-    initClassicOrder(c);
+    initClassicOrder(sectionId, c, data);
   }
 }
 
 // UNJUMBLE: Drag-and-drop words to form sentences
-function initUnjumble(container) {
-  orderTotal = orderData.items.length;
-
-  orderData.items.forEach((item, idx) => {
+function initUnjumble(sectionId, container, data) {
+  data.items.forEach((item, idx) => {
     const question = document.createElement('div');
     question.className = 'unjumble-question';
     question.dataset.idx = idx;
+    question.dataset.section = sectionId;
 
     // Shuffle words
     const shuffledWords = [...item.words].sort(() => Math.random() - 0.5);
 
     question.innerHTML = `
       <div class="unjumble-number">${idx + 1}.</div>
-      <div class="unjumble-word-row" data-idx="${idx}">
+      <div class="unjumble-word-row" data-idx="${idx}" data-section="${sectionId}">
         ${shuffledWords.map((word, i) => `
           <span class="unjumble-word" draggable="true" data-word="${word}">${word}</span>
         `).join('')}
       </div>
       <div class="unjumble-actions">
-        <button class="btn btn-sm btn-outline unjumble-check" data-idx="${idx}">Check</button>
-        <button class="btn btn-sm btn-outline unjumble-reset" data-idx="${idx}">Reset</button>
+        <button class="btn btn-sm btn-outline unjumble-check" data-idx="${idx}" data-section="${sectionId}">Check</button>
+        <button class="btn btn-sm btn-outline unjumble-reset" data-idx="${idx}" data-section="${sectionId}">Reset</button>
       </div>
-      <div class="unjumble-feedback" data-idx="${idx}"></div>
+      <div class="unjumble-feedback" data-idx="${idx}" data-section="${sectionId}"></div>
     `;
 
     container.appendChild(question);
@@ -1486,19 +1732,20 @@ function handleUnjumbleClick(e) {
   const target = e.target;
 
   if (target.classList.contains('unjumble-check')) {
-    checkUnjumbleAnswer(parseInt(target.dataset.idx));
+    checkUnjumbleAnswer(target.dataset.section, parseInt(target.dataset.idx));
   }
 
   if (target.classList.contains('unjumble-reset')) {
-    resetUnjumbleQuestion(parseInt(target.dataset.idx));
+    resetUnjumbleQuestion(target.dataset.section, parseInt(target.dataset.idx));
   }
 }
 
-function checkUnjumbleAnswer(idx) {
-  const item = orderData.items[idx];
-  const row = document.querySelector(`.unjumble-word-row[data-idx="${idx}"]`);
-  const feedback = document.querySelector(`.unjumble-feedback[data-idx="${idx}"]`);
-  const question = document.querySelector(`.unjumble-question[data-idx="${idx}"]`);
+function checkUnjumbleAnswer(sectionId, idx) {
+  const state = orderState[sectionId];
+  const item = state.data.items[idx];
+  const row = document.querySelector(`.unjumble-word-row[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const feedback = document.querySelector(`.unjumble-feedback[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const question = document.querySelector(`.unjumble-question[data-section="${sectionId}"][data-idx="${idx}"]`);
 
   // Build user's answer from current word order
   const words = row.querySelectorAll('.unjumble-word');
@@ -1512,8 +1759,8 @@ function checkUnjumbleAnswer(idx) {
     question.classList.add('answered', 'correct');
     row.classList.add('correct');
     words.forEach(w => w.setAttribute('draggable', 'false'));
-    orderScore++;
-    document.getElementById('order-score').textContent = orderScore;
+    state.score++;
+    document.getElementById(sectionId + '-score').textContent = state.score;
 
     feedback.innerHTML = `
       <span class="correct-text">✓ Correct!</span>
@@ -1521,8 +1768,8 @@ function checkUnjumbleAnswer(idx) {
     `;
     feedback.classList.add('show');
 
-    if (orderScore === orderTotal) {
-      document.getElementById('order-complete').classList.add('show');
+    if (state.score === state.total) {
+      document.getElementById(sectionId + '-complete').classList.add('show');
     }
   } else {
     question.classList.add('wrong');
@@ -1541,11 +1788,12 @@ function checkUnjumbleAnswer(idx) {
   }
 }
 
-function resetUnjumbleQuestion(idx) {
-  const item = orderData.items[idx];
-  const row = document.querySelector(`.unjumble-word-row[data-idx="${idx}"]`);
-  const question = document.querySelector(`.unjumble-question[data-idx="${idx}"]`);
-  const feedback = document.querySelector(`.unjumble-feedback[data-idx="${idx}"]`);
+function resetUnjumbleQuestion(sectionId, idx) {
+  const state = orderState[sectionId];
+  const item = state.data.items[idx];
+  const row = document.querySelector(`.unjumble-word-row[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const question = document.querySelector(`.unjumble-question[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const feedback = document.querySelector(`.unjumble-feedback[data-section="${sectionId}"][data-idx="${idx}"]`);
 
   if (question.classList.contains('correct')) return;
 
@@ -1564,16 +1812,17 @@ function resetUnjumbleQuestion(idx) {
 }
 
 // CLASSIC ORDER: Drag items into correct sequence
-function initClassicOrder(container) {
-  orderTotal = orderData.items.length;
+function initClassicOrder(sectionId, container, data) {
+  const state = orderState[sectionId];
 
-  const shuffled = [...orderData.items].map((item, idx) => ({ text: item, origIdx: idx }));
+  const shuffled = [...data.items].map((item, idx) => ({ text: item, origIdx: idx }));
   shuffled.sort(() => Math.random() - 0.5);
 
   const div = document.createElement('div');
   div.className = 'order-items';
+  div.dataset.section = sectionId;
   div.innerHTML = shuffled.map((item, i) => `
-    <div class="order-item" draggable="true" data-orig="${item.origIdx}">
+    <div class="order-item" draggable="true" data-orig="${item.origIdx}" data-section="${sectionId}">
       <span class="order-handle">☰</span>
       <span class="order-text">${item.text}</span>
     </div>
@@ -1583,14 +1832,14 @@ function initClassicOrder(container) {
   const checkBtn = document.createElement('button');
   checkBtn.className = 'btn btn-outline';
   checkBtn.textContent = 'Check Order';
-  checkBtn.onclick = checkOrder;
+  checkBtn.onclick = () => checkOrder(sectionId);
   container.appendChild(checkBtn);
 
-  initDragDrop();
+  initDragDrop(div);
 }
 
-function initDragDrop() {
-  const items = document.querySelectorAll('.order-item');
+function initDragDrop(container) {
+  const items = container.querySelectorAll('.order-item');
   let dragItem = null;
 
   items.forEach(item => {
@@ -1607,7 +1856,6 @@ function initDragDrop() {
     item.addEventListener('dragover', (e) => {
       e.preventDefault();
       if (!dragItem || dragItem === item) return;
-      const container = item.parentNode;
       const rect = item.getBoundingClientRect();
       const midY = rect.top + rect.height / 2;
       if (e.clientY < midY) {
@@ -1619,18 +1867,20 @@ function initDragDrop() {
   });
 }
 
-function checkOrder() {
-  const items = document.querySelectorAll('.order-item');
+function checkOrder(sectionId) {
+  const state = orderState[sectionId];
+  const data = state.data;
+  const items = document.querySelectorAll(`.order-item[data-section="${sectionId}"]`);
   const currentOrder = Array.from(items).map(item => parseInt(item.dataset.orig));
 
   let correct = true;
   currentOrder.forEach((val, idx) => {
-    const expectedIdx = orderData.correctOrder.length ? orderData.correctOrder[idx] : idx;
+    const expectedIdx = data.correctOrder && data.correctOrder.length ? data.correctOrder[idx] : idx;
     if (val !== expectedIdx) correct = false;
   });
 
   items.forEach((item, idx) => {
-    const expectedIdx = orderData.correctOrder.length ? orderData.correctOrder[idx] : idx;
+    const expectedIdx = data.correctOrder && data.correctOrder.length ? data.correctOrder[idx] : idx;
     if (parseInt(item.dataset.orig) === expectedIdx) {
       item.classList.add('correct');
       item.classList.remove('wrong');
@@ -1641,17 +1891,113 @@ function checkOrder() {
   });
 
   if (correct) {
-    orderScore = orderTotal;
-    document.getElementById('order-score').textContent = orderScore;
-    document.getElementById('order-complete').classList.add('show');
+    state.score = state.total;
+    document.getElementById(sectionId + '-score').textContent = state.score;
+    document.getElementById(sectionId + '-complete').classList.add('show');
   }
 }
 
-function resetOrder() {
-  orderScore = 0;
-  document.getElementById('order-score').textContent = '0';
-  document.getElementById('order-complete')?.classList.remove('show');
-  initOrder();
+function resetOrder(sectionId) {
+  const state = orderState[sectionId];
+  if (!state) return;
+  document.getElementById(sectionId + '-score').textContent = '0';
+  document.getElementById(sectionId + '-complete')?.classList.remove('show');
+  initOrder(sectionId, state.data);
+}
+
+
+// Select Activity - supports multiple instances
+const selectState = {};
+
+function initSelect(sectionId, data) {
+  const c = document.getElementById(sectionId + '-container');
+  if (!c || !data.items || !data.items.length) return;
+
+  selectState[sectionId] = { score: 0, answered: 0, total: data.items.length, data: data };
+  c.innerHTML = '';
+
+  data.items.forEach((item, idx) => {
+    const div = document.createElement('div');
+    div.className = 'select-question';
+    div.dataset.section = sectionId;
+    div.dataset.idx = idx;
+
+    const optionsHtml = item.options.map((opt, oi) =>
+      `<label class="select-option" data-correct="${opt.correct}" data-section="${sectionId}" data-idx="${idx}">
+        <input type="checkbox" class="select-checkbox" data-oi="${oi}">
+        <span class="select-text">${opt.text}</span>
+      </label>`
+    ).join('');
+
+    div.innerHTML = `
+      <div class="select-number">${idx + 1}.</div>
+      <div class="select-content">
+        <p class="select-prompt">${item.question}</p>
+        <div class="select-options">${optionsHtml}</div>
+        <button class="btn btn-sm btn-outline select-check" data-section="${sectionId}" data-idx="${idx}">Check</button>
+        <div class="select-feedback" id="${sectionId}-fb-${idx}"></div>
+      </div>
+    `;
+    c.appendChild(div);
+  });
+
+  // Event delegation for check buttons
+  c.addEventListener('click', (e) => {
+    if (e.target.classList.contains('select-check')) {
+      checkSelectAnswer(e.target.dataset.section, parseInt(e.target.dataset.idx));
+    }
+  });
+}
+
+function checkSelectAnswer(sectionId, idx) {
+  const state = selectState[sectionId];
+  const item = state.data.items[idx];
+  const question = document.querySelector(`.select-question[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const fb = document.getElementById(sectionId + '-fb-' + idx);
+
+  if (question.classList.contains('answered')) return;
+
+  const options = question.querySelectorAll('.select-option');
+  let allCorrect = true;
+
+  options.forEach(opt => {
+    const checkbox = opt.querySelector('.select-checkbox');
+    const isChecked = checkbox.checked;
+    const shouldBeChecked = opt.dataset.correct === 'true';
+
+    if (isChecked === shouldBeChecked) {
+      opt.classList.add(shouldBeChecked ? 'correct' : 'correct-unchecked');
+    } else {
+      opt.classList.add(shouldBeChecked ? 'missed' : 'wrong');
+      allCorrect = false;
+    }
+    checkbox.disabled = true;
+  });
+
+  question.classList.add('answered');
+
+  if (allCorrect) {
+    fb.innerHTML = '<span class="correct-text">✓ Perfect!</span>';
+    state.score++;
+  } else {
+    fb.innerHTML = '<span class="wrong-text">✗ Some answers were incorrect.</span>';
+  }
+  fb.classList.add('show');
+
+  document.getElementById(sectionId + '-score').textContent = state.score;
+  state.answered++;
+
+  if (state.answered === state.total) {
+    document.getElementById(sectionId + '-complete').classList.add('show');
+  }
+}
+
+function resetSelect(sectionId) {
+  const state = selectState[sectionId];
+  if (!state) return;
+  document.getElementById(sectionId + '-score').textContent = '0';
+  document.getElementById(sectionId + '-complete')?.classList.remove('show');
+  initSelect(sectionId, state.data);
 }
 
 

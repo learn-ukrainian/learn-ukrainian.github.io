@@ -51,128 +51,53 @@
         "content": "## Motion Verb Prefixes\n\n| Prefix | Core Meaning | Example |\n|--------|--------------|---------|\n| при- | toward, arrival | прийти (arrive) |\n| ви- | out, exit | вийти (exit) |\n| в-/у- | into, entry | увійти (enter) |\n| за- | behind, drop by | зайти (drop by) |\n| пере- | across, over | перейти (cross) |\n| від- | away from | відійти (leave) |\n| до- | up to, reaching | дійти (reach) |\n| об- | around | обійти (go around) |\n\n## Related Nouns\n\n| Verb | Noun | Meaning |\n|------|------|---------|\n| увійти | вхід | entrance |\n| вийти | вихід | exit |\n| прийти | прихід | arrival |\n| відійти | відхід | departure |\n| перейти | перехід | crossing |\n\n## Key Pattern\n\n**Base verb + Prefix = New meaning + Perfective aspect**\n\n- йти (impf) + при- = прийти (pf) - to arrive\n- йти (impf) + ви- = вийти (pf) - to exit\n- йти (impf) + пере- = перейти (pf) - to cross\n\n> 💡 **Key Takeaways**\n>\n> - Prefixes dramatically change verb meaning\n> - Most prefixed verbs become perfective\n> - Learning prefixes multiplies your vocabulary\n> - The same prefixes work with different base verbs\n> - Nouns can be formed from prefixed verbs (вийти → вихід)"
       }
     ],
-    "rawMarkdown": "---\nmodule: 61\ntitle: \"Prefixes I: Motion Verbs\"\nsubtitle: \"How Prefixes Change Meaning\"\nlevel: A2+\nphase: A2+.1\nduration: 45\ntransliteration: none\ntags: [word-formation, prefixes, motion-verbs, vocabulary-expansion]\nobjectives:\n  - Understand how prefixes change motion verb meanings\n  - Learn common motion verb prefixes\n  - Form and use prefixed motion verbs\n  - Build vocabulary through derivation\ngrammar:\n  - Prefix + motion verb combinations\n  - Meaning changes with prefixes\n  - Aspect of prefixed verbs\n---\n\n# Lesson Content\n\n## warm-up\n\n### Welcome to A2+!\n\nYou've mastered A2 grammar. Now it's time to **multiply your vocabulary** through word formation!\n\n**The power of prefixes:**\n- You know: йти (to go), їхати (to drive)\n- Add prefixes: прийти, вийти, зайти, перейти...\n- One root → many words!\n\nIn Ukrainian, prefixes don't just modify verbs—they create entirely new meanings. Learning prefixes is the fastest way to expand your vocabulary.\n\n> 💡 **Did You Know?**\n>\n> Ukrainian has about 20 common verb prefixes. Each prefix adds a specific shade of meaning. By learning these prefixes, you can understand hundreds of verbs you've never seen before!\n\n## presentation\n\n### The Prefix System\n\n**How it works:**\n- Base verb: йти (to go on foot)\n- Add prefix: при- + йти = прийти (to arrive)\n- The prefix changes the meaning AND makes it perfective\n\n**Key insight:** Most prefixed verbs are **perfective**. The base verb is usually imperfective.\n\n| Base (Impf) | Prefixed (Perf) | Meaning Change |\n|-------------|-----------------|----------------|\n| йти | прийти | go → arrive |\n| йти | вийти | go → go out |\n| йти | зайти | go → drop by |\n\n### при- (Arrival, Addition)\n\n**Meaning:** movement toward, arrival at destination\n\n| Base | Prefixed | Meaning |\n|------|----------|---------|\n| йти | прийти | to arrive (on foot) |\n| їхати | приїхати | to arrive (by transport) |\n| летіти | прилетіти | to arrive (by plane) |\n| нести | принести | to bring (carrying) |\n| везти | привезти | to bring (by transport) |\n| ходити | приходити | to come (habitually) |\n\n**Examples:**\n- Він **прийшов** о восьмій. - He arrived at 8.\n- Вона **приїхала** з Києва. - She arrived from Kyiv.\n- Я **приніс** тобі книгу. - I brought you a book.\n- Він завжди **приходить** вчасно. - He always comes on time.\n\n> ⚡ **Pro Tip: при- = toward/arrival**\n>\n> Think of при- as \"toward the destination.\" The action ends at a specific point.\n\n### ви- (Exit, Out)\n\n**Meaning:** movement out of, exiting\n\n| Base | Prefixed | Meaning |\n|------|----------|---------|\n| йти | вийти | to go out, exit |\n| їхати | виїхати | to drive out, leave |\n| летіти | вилетіти | to fly out, depart |\n| нести | винести | to carry out |\n| бігти | вибігти | to run out |\n| ходити | виходити | to go out (habitually) |\n\n**Examples:**\n- Він **вийшов** з кімнати. - He went out of the room.\n- Ми **виїхали** о шостій ранку. - We left at 6 AM.\n- Літак **вилетів** вчасно. - The plane departed on time.\n- Вона **виходить** на роботу о сьомій. - She leaves for work at 7.\n\n> 🎭 **Culture Note: Вихід**\n>\n> You'll see \"ВИХІД\" (exit) signs everywhere in Ukraine. It comes from вийти!\n> Similarly: вхід (entrance) from увійти.\n\n### в-/у- (Entry, Into)\n\n**Meaning:** movement into, entering\n\n| Base | Prefixed | Meaning |\n|------|----------|---------|\n| йти | увійти / ввійти | to enter (on foot) |\n| їхати | в'їхати | to drive into |\n| летіти | влетіти | to fly into |\n| нести | внести / унести | to carry in |\n| бігти | вбігти | to run in |\n| ходити | входити | to enter (habitually) |\n\n**Examples:**\n- Вона **увійшла** до кімнати. - She entered the room.\n- Машина **в'їхала** в гараж. - The car drove into the garage.\n- Птах **влетів** у вікно. - A bird flew into the window.\n- Він **входить** без стуку. - He enters without knocking.\n\n> 📝 **Note: в- vs у-**\n>\n> Use у- before consonants (увійти), в- before vowels (ввійти) or after vowels. Both forms are correct.\n\n### за- (Behind, Dropping By)\n\n**Meaning:** movement behind something, or brief stop\n\n| Base | Prefixed | Meaning |\n|------|----------|---------|\n| йти | зайти | to drop by, go behind |\n| їхати | заїхати | to stop by (driving) |\n| бігти | забігти | to run in briefly |\n| нести | занести | to drop off (carrying) |\n| ходити | заходити | to drop by (habitually) |\n\n**Examples:**\n- Я **зайду** до тебе ввечері. - I'll drop by your place tonight.\n- Сонце **зайшло** за хмару. - The sun went behind a cloud.\n- **Заїдь** у магазин по дорозі. - Stop by the store on the way.\n- Він часто **заходить** до нас. - He often drops by our place.\n\n### пере- (Across, Over)\n\n**Meaning:** movement across, from one side to another\n\n| Base | Prefixed | Meaning |\n|------|----------|---------|\n| йти | перейти | to cross (on foot) |\n| їхати | переїхати | to cross (driving), to move |\n| летіти | перелетіти | to fly across |\n| нести | перенести | to carry across, transfer |\n| бігти | перебігти | to run across |\n| ходити | переходити | to cross (habitually) |\n\n**Examples:**\n- **Перейдіть** вулицю на світлофорі. - Cross the street at the traffic light.\n- Ми **переїхали** в нову квартиру. - We moved to a new apartment.\n- Птахи **перелетіли** через річку. - The birds flew across the river.\n- Вона **переходить** дорогу тут щодня. - She crosses the road here every day.\n\n> ⚡ **Pro Tip: пере- = across/transfer**\n>\n> Пере- often implies moving from one state/place to another: переїхати (move house), перенести (reschedule/transfer).\n\n### від- (Away From)\n\n**Meaning:** movement away from starting point\n\n| Base | Prefixed | Meaning |\n|------|----------|---------|\n| йти | відійти | to step away, leave |\n| їхати | від'їхати | to drive away |\n| летіти | відлетіти | to fly away |\n| нести | віднести | to carry away |\n| бігти | відбігти | to run away |\n| ходити | відходити | to depart, leave |\n\n**Examples:**\n- Поїзд **відійшов** 5 хвилин тому. - The train left 5 minutes ago.\n- Машина **від'їхала**. - The car drove away.\n- Птахи **відлетіли** на південь. - The birds flew away to the south.\n- Потяг **відходить** о третій. - The train departs at 3.\n\n### до- (Up To, Reaching)\n\n**Meaning:** movement up to a point, reaching destination\n\n| Base | Prefixed | Meaning |\n|------|----------|---------|\n| йти | дійти | to reach (on foot), to get to |\n| їхати | доїхати | to reach (driving) |\n| летіти | долетіти | to fly to, reach |\n| нести | донести | to carry to |\n| бігти | добігти | to run to |\n\n**Examples:**\n- Я **дійшов** до станції за 10 хвилин. - I reached the station in 10 minutes.\n- Ми **доїхали** до Львова за 5 годин. - We drove to Lviv in 5 hours.\n- Як **дійти** до центру? - How do I get to the center?\n- Лист **дійшов** за тиждень. - The letter arrived in a week.\n\n### об- (Around)\n\n**Meaning:** movement around something\n\n| Base | Prefixed | Meaning |\n|------|----------|---------|\n| йти | обійти | to go around, bypass |\n| їхати | об'їхати | to drive around |\n| летіти | облетіти | to fly around |\n| бігти | оббігти | to run around |\n\n**Examples:**\n- **Обійди** цю калюжу. - Go around this puddle.\n- Ми **об'їхали** затор. - We drove around the traffic jam.\n- Вони **оббігли** стадіон. - They ran around the stadium.\n\n### Summary Table: All Prefixes\n\n| Prefix | Meaning | Example |\n|--------|---------|---------|\n| при- | arrival, toward | прийти (arrive) |\n| ви- | out, exit | вийти (exit) |\n| в-/у- | into, entry | увійти (enter) |\n| за- | behind, drop by | зайти (drop by) |\n| пере- | across, over | перейти (cross) |\n| від- | away from | відійти (leave) |\n| до- | up to, reaching | дійти (reach) |\n| об- | around | обійти (go around) |\n\n## practice\n\n### Match Prefix to Meaning\n\n1. при-\n   > [!answer] arrival\n2. ви-\n   > [!answer] exit\n3. в-/у-\n   > [!answer] entry\n4. за-\n   > [!answer] behind/drop by\n5. пере-\n   > [!answer] across\n6. від-\n   > [!answer] away from\n7. до-\n   > [!answer] reaching\n8. об-\n   > [!answer] around\n\n### Complete with Correct Verb\n\n1. Він ___ (arrive) о восьмій годині.\n   > [!answer] прийшов\n\n2. Вона ___ (exit) з магазину.\n   > [!answer] вийшла\n\n3. Ми ___ (cross) вулицю.\n   > [!answer] перейшли\n\n4. Я ___ (drop by) до друга.\n   > [!answer] зайшов\n\n5. Поїзд ___ (depart) вчасно.\n   > [!answer] відійшов\n\n6. Як ___ (reach) до центру?\n   > [!answer] дійти\n\n7. Вона ___ (enter) в кімнату.\n   > [!answer] увійшла\n\n8. Ми ___ (drive around) затор.\n   > [!answer] об'їхали\n\n### Translate\n\n1. I arrived home at 6.\n   > [!answer] Я прийшов додому о шостій.\n2. She went out to the balcony.\n   > [!answer] Вона вийшла на балкон.\n3. We crossed the bridge.\n   > [!answer] Ми перейшли міст.\n4. Drop by tomorrow!\n   > [!answer] Зайди завтра!\n5. The bus departed.\n   > [!answer] Автобус відійшов.\n6. How do I get to the station?\n   > [!answer] Як дійти до станції?\n\n## production\n\n### Describe Movement\n\n**Use prefixed verbs to describe:**\n\nYour morning:\n- Я **вийшов** з дому о восьмій.\n- Я **дійшов** до зупинки за 5 хвилин.\n- Я **зайшов** у кав'ярню по каву.\n- Я **прийшов** на роботу о дев'ятій.\n\nA trip:\n- Ми **виїхали** рано вранці.\n- Ми **об'їхали** Київ.\n- Ми **перетнули** кордон.\n- Ми **доїхали** до Варшави ввечері.\n\n### Give Directions\n\nPractice giving directions using prefixed verbs:\n\n- **Вийдіть** з метро.\n- **Перейдіть** вулицю.\n- **Дійдіть** до перехрестя.\n- **Зайдіть** у двір.\n\n---\n\n---\n\n---\n\n---\n\n# Вправи\n\n## fill-in: Доповніть речення\n\n> Оберіть правильне слово.\n\n1. Я давно мріяв навчитися ___, і нарешті маю таку можливість.\n   > [!answer] заїхати\n   > [!options] заїхати | купувати | заходити | залишатися\n\n2. Ця ___ належить моїй подрузі з Києва.\n   > [!answer] калюжа\n   > [!options] перехрестя | калюжа | автобус | каса\n\n3. Я давно мріяв навчитися ___, і нарешті маю таку можливість.\n   > [!answer] винести\n   > [!options] винести | сподіватися | збирати | керувати\n\n4. Вони довго шукали хороший ___, але не знайшли.\n   > [!answer] заїзд\n   > [!options] розпродаж | заїзд | калюжа | картка\n\n5. Це ___ належить моєму другові з Києва.\n   > [!answer] перехрестя\n   > [!options] лампа | січень | повідомлення | перехрестя\n\n6. Цей ___ належить моєму другові з Києва.\n   > [!answer] світлофор\n   > [!options] градус | запрошення | затримка | світлофор\n\n7. Я давно мріяв навчитися ___, і нарешті маю таку можливість.\n   > [!answer] зайти\n   > [!options] домовитися | дійти | зайти | перерахувати\n\n8. Моя сестра каже, що їй подобається ___ у вільний час.\n   > [!answer] привезти\n   > [!options] привезти | зайти | залишитися | уявляти\n\n9. Вони довго шукали хороший ___, але не знайшли.\n   > [!answer] прихід\n   > [!options] подруга | калюжа | прихід | запрошення\n\n10. Це ___ належить моєму другові з Києва.\n   > [!answer] відбуття\n   > [!options] відбуття | рік | ручка | школа\n\n11. Я хочу купити цей ___, але він занадто дорогий.\n   > [!answer] затор\n   > [!options] затор | сусід | початок | офіс\n\n## unjumble: Побудуйте речення\n\n> Розташуйте слова в правильному порядку.\n\n1. дорогий / Я / цей / перехід / але / купити / хочу / занадто / він\n   > [!answer] Я хочу купити цей перехід, але він занадто дорогий.\n   > (crossing, transition)\n\n2. прихід / моєму / з / Києва / належить / другові / Цей\n   > [!answer] Цей прихід належить моєму другові з Києва.\n   > (arrival, coming)\n\n3. з / перехрестя / Києва / належить / другові / Це / моєму\n   > [!answer] Це перехрестя належить моєму другові з Києва.\n   > (intersection)\n\n4. напрямок / друг / сказав / зручний / дуже / його / Мій / що\n   > [!answer] Мій друг сказав, що його напрямок дуже зручний.\n   > (direction)\n\n5. Вони / знайшли / шукали / довго / не / затор / хороший / але\n   > [!answer] Вони довго шукали хороший затор, але не знайшли.\n   > (traffic jam)\n\n6. знайшли / але / шукали / хороший / відхід / не / довго / Вони\n   > [!answer] Вони довго шукали хороший відхід, але не знайшли.\n   > (departure)\n\n7. Мій / зручний / переїзд / що / друг / його / дуже / сказав\n   > [!answer] Мій друг сказав, що його переїзд дуже зручний.\n   > (move (relocation))\n\n8. калюжа / моїй / Ця / з / Києва / належить / подрузі\n   > [!answer] Ця калюжа належить моїй подрузі з Києва.\n   > (puddle)\n\n9. належить / з / другові / Це / моєму / відбуття / Києва\n   > [!answer] Це відбуття належить моєму другові з Києва.\n   > (departure)\n\n10. хороший / довго / Вони / але / світлофор / знайшли / шукали / не\n   > [!answer] Вони довго шукали хороший світлофор, але не знайшли.\n   > (traffic light)\n\n11. друг / виїзд / сказав / дуже / що / Мій / його / зручний\n   > [!answer] Мій друг сказав, що його виїзд дуже зручний.\n   > (exit (for vehicles))\n\n12. його / дуже / заїзд / друг / сказав / зручний / що / Мій\n   > [!answer] Мій друг сказав, що його заїзд дуже зручний.\n   > (entrance (for vehicles))\n\n## match-up: Знайдіть пари\n\n> З'єднайте українські слова з англійськими.\n\n| Left | Right |\n|------|-------|\n| приходити | to come (habitually) |\n| найдешевший | cheapest |\n| англійська | English (adj) |\n| світлофор | traffic light |\n| відбуття | departure |\n| фото | photo |\n| привезти | to bring (by transport) |\n| прихід | arrival, coming |\n| напрямок | direction |\n| хокей | hockey |\n| прилетіти | to arrive (by plane) |\n| перехрестя | intersection |\n| прошу | please/you're welcome |\n| об'їхати | to drive around |\n\n## quiz: Перевірка значень\n\n> Оберіть правильну відповідь.\n\n1. Що означає \"об'їхати\"?\n   - [ ] to meet\n   - [ ] (with) you\n   - [ ] wireless\n   - [x] to drive around\n   > \"об'їхати\" means \"to drive around\"\n\n2. Що означає \"відходити\"?\n   - [ ] what\n   - [ ] to eat (perf)\n   - [x] to depart (habitually)\n   - [ ] to drive, manage\n   > \"відходити\" means \"to depart (habitually)\"\n\n3. Що означає \"переїзд\"?\n   - [ ] nowhere\n   - [ ] often\n   - [ ] smallest\n   - [x] move (relocation)\n   > \"переїзд\" means \"move (relocation)\"\n\n4. Що означає \"світлофор\"?\n   - [ ] no\n   - [ ] convinced\n   - [x] traffic light\n   - [ ] reluctantly\n   > \"світлофор\" means \"traffic light\"\n\n5. Що означає \"доїхати\"?\n   - [x] to reach (by transport)\n   - [ ] to write\n   - [ ] thin\n   - [ ] passport\n   > \"доїхати\" means \"to reach (by transport)\"\n\n6. Що означає \"калюжа\"?\n   - [ ] to help (impf)\n   - [ ] fish\n   - [ ] signature\n   - [x] puddle\n   > \"калюжа\" means \"puddle\"\n\n7. Що означає \"заходити\"?\n   - [x] to drop by (habitually)\n   - [ ] borscht\n   - [ ] while\n   - [ ] to return\n   > \"заходити\" means \"to drop by (habitually)\"\n\n8. Що означає \"увійти\"?\n   - [ ] to remain\n   - [ ] train\n   - [x] to enter\n   - [ ] platform\n   > \"увійти\" means \"to enter\"\n\n9. Що означає \"від'їхати\"?\n   - [x] to drive away\n   - [ ] to become\n   - [ ] on the contrary\n   - [ ] puddle\n   > \"від'їхати\" means \"to drive away\"\n\n10. Що означає \"привезти\"?\n   - [ ] password\n   - [ ] to hurt, ache\n   - [x] to bring (by transport)\n   - [ ] for\n   > \"привезти\" means \"to bring (by transport)\"\n\n11. Що означає \"прилетіти\"?\n   - [ ] train\n   - [x] to arrive (by plane)\n   - [ ] more slowly\n   - [ ] declension\n   > \"прилетіти\" means \"to arrive (by plane)\"\n\n12. Що означає \"заїхати\"?\n   - [ ] cucumber\n   - [ ] that (neuter)\n   - [ ] biggest\n   - [x] to drive by\n   > \"заїхати\" means \"to drive by\"\n\n13. Що означає \"відійти\"?\n   - [ ] bottle\n   - [ ] change (money)\n   - [ ] entrance\n   - [x] to step away\n   > \"відійти\" means \"to step away\"\n\n14. Що означає \"перехрестя\"?\n   - [ ] imaginary, hypothetical\n   - [ ] there\n   - [x] intersection\n   - [ ] this, this is\n   > \"перехрестя\" means \"intersection\"\n\n## true-false: Правда чи ні?\n\n> Визначте, чи правильне твердження.\n\n- [x] \"заїхати\" means \"to drive by\"\n   > Correct!\n\n- [ ] \"винести\" means \"if\"\n   > Incorrect. \"винести\" means \"to carry out\"\n\n- [ ] \"виїзд\" means \"would (after vowel)\"\n   > Incorrect. \"виїзд\" means \"exit (for vehicles)\"\n\n- [ ] \"прилетіти\" means \"to continue (ongoing)\"\n   > Incorrect. \"прилетіти\" means \"to arrive (by plane)\"\n\n- [x] \"дійти\" means \"to reach (on foot)\"\n   > Correct!\n\n- [x] \"вилетіти\" means \"to fly out, depart\"\n   > Correct!\n\n- [x] \"в'їхати\" means \"to drive in\"\n   > Correct!\n\n- [x] \"обійти\" means \"to go around\"\n   > Correct!\n\n- [ ] \"калюжа\" means \"in order to, so that\"\n   > Incorrect. \"калюжа\" means \"puddle\"\n\n- [ ] \"світлофор\" means \"pilot\"\n   > Incorrect. \"світлофор\" means \"traffic light\"\n\n## group-sort: Сортування за родом\n\n> Розподіліть слова за родами.\n\n### Чоловічий рід\n- напрямок\n- виїзд\n- перехід\n- заїзд\n- прихід\n- світлофор\n\n### Середній рід\n- перехрестя\n- відбуття\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| прилетіти | /prɪlɛˈtʲitɪ/ | to arrive (by plane) | verb | - | pf |\n| привезти | /prɪvɛzˈtɪ/ | to bring (by transport) | verb | - | pf |\n| приходити | /prɪxoˈdɪtɪ/ | to come (habitually) | verb | - | impf |\n| виїхати | /ˈvɪjixɑtɪ/ | to drive out, leave | verb | - | pf |\n| вилетіти | /vɪlɛˈtʲitɪ/ | to fly out, depart | verb | - | pf |\n| винести | /vɪnɛsˈtɪ/ | to carry out | verb | - | pf |\n| увійти | /uˈvʲijtɪ/ | to enter | verb | - | pf |\n| в'їхати | /ˈvjixɑtɪ/ | to drive into | verb | - | pf |\n| входити | /vxoˈdɪtɪ/ | to enter (habitually) | verb | - | impf |\n| зайти | /zɑjˈtɪ/ | to drop by | verb | - | pf |\n| заїхати | /zɑˈjixɑtɪ/ | to stop by (driving) | verb | - | pf |\n| заходити | /zɑxoˈdɪtɪ/ | to drop by (habitually) | verb | - | impf |\n| переїхати | /pɛrɛˈjixɑtɪ/ | to move (residence) | verb | - | pf |\n| переходити | /pɛrɛxoˈdɪtɪ/ | to cross (habitually) | verb | - | impf |\n| відійти | /vʲidʲijˈtɪ/ | to step away, leave | verb | - | pf |\n| від'їхати | /vʲidˈjixɑtɪ/ | to drive away | verb | - | pf |\n| відходити | /vʲidxoˈdɪtɪ/ | to depart (habitually) | verb | - | impf |\n| дійти | /dʲijˈtɪ/ | to reach (on foot) | verb | - | pf |\n| доїхати | /doˈjixɑtɪ/ | to reach (by transport) | verb | - | pf |\n| обійти | /obʲijˈtɪ/ | to go around | verb | - | pf |\n| об'їхати | /obˈjixɑtɪ/ | to drive around | verb | - | pf |\n| прихід | /ˈprɪxʲid/ | arrival, coming | noun | m |\n| відхід | /ˈvʲidxʲid/ | departure | noun | m |\n| перехід | /ˈpɛrɛxʲid/ | crossing, transition | noun | m |\n| відбуття | /vʲidˈbutʲːɑ/ | departure | noun | n | formal |\n| переїзд | /pɛrɛˈjizd/ | move (relocation) | noun | m |\n| заїзд | /ˈzɑjizd/ | entrance (for vehicles) | noun | m |\n| виїзд | /ˈvɪjizd/ | exit (for vehicles) | noun | m |\n| напрямок | /nɑˈprʲɑmok/ | direction | noun | m |\n| затор | /zɑˈtor/ | traffic jam | noun | m |\n| світлофор | /svʲitloˈfor/ | traffic light | noun | m |\n| перехрестя | /pɛrɛˈxrɛstʲɑ/ | intersection | noun | n |\n| калюжа | /kɑˈlʲuʒɑ/ | puddle | noun | f |\n\n---\n\n# Review Vocabulary\n\n| Word | First Module |\n|------|-------------|\n| прийти | 42 |\n| приїхати | 42 |\n| принести | 18 |\n| вийти | 42 |\n| виходити | 25 |\n| перейти | 15 |\n| вхід | 15 |\n| вихід | 15 |\n| прибуття | 55 |\n\n---\n\n# Summary\n\n## Motion Verb Prefixes\n\n| Prefix | Core Meaning | Example |\n|--------|--------------|---------|\n| при- | toward, arrival | прийти (arrive) |\n| ви- | out, exit | вийти (exit) |\n| в-/у- | into, entry | увійти (enter) |\n| за- | behind, drop by | зайти (drop by) |\n| пере- | across, over | перейти (cross) |\n| від- | away from | відійти (leave) |\n| до- | up to, reaching | дійти (reach) |\n| об- | around | обійти (go around) |\n\n## Related Nouns\n\n| Verb | Noun | Meaning |\n|------|------|---------|\n| увійти | вхід | entrance |\n| вийти | вихід | exit |\n| прийти | прихід | arrival |\n| відійти | відхід | departure |\n| перейти | перехід | crossing |\n\n## Key Pattern\n\n**Base verb + Prefix = New meaning + Perfective aspect**\n\n- йти (impf) + при- = прийти (pf) - to arrive\n- йти (impf) + ви- = вийти (pf) - to exit\n- йти (impf) + пере- = перейти (pf) - to cross\n\n> 💡 **Key Takeaways**\n>\n> - Prefixes dramatically change verb meaning\n> - Most prefixed verbs become perfective\n> - Learning prefixes multiplies your vocabulary\n> - The same prefixes work with different base verbs\n> - Nouns can be formed from prefixed verbs (вийти → вихід)\n",
-    "createdAt": "2025-12-03T08:52:31.875Z",
-    "modifiedAt": "2025-12-03T08:52:31.875Z",
+    "rawMarkdown": "---\nmodule: 61\ntitle: \"Prefixes I: Motion Verbs\"\nsubtitle: \"How Prefixes Change Meaning\"\nlevel: A2+\nphase: A2+.1\nduration: 45\ntransliteration: none\ntags: [word-formation, prefixes, motion-verbs, vocabulary-expansion]\nobjectives:\n  - Understand how prefixes change motion verb meanings\n  - Learn common motion verb prefixes\n  - Form and use prefixed motion verbs\n  - Build vocabulary through derivation\ngrammar:\n  - Prefix + motion verb combinations\n  - Meaning changes with prefixes\n  - Aspect of prefixed verbs\n---\n\n# Lesson Content\n\n## warm-up\n\n### Welcome to A2+!\n\nYou've mastered A2 grammar. Now it's time to **multiply your vocabulary** through word formation!\n\n**The power of prefixes:**\n- You know: йти (to go), їхати (to drive)\n- Add prefixes: прийти, вийти, зайти, перейти...\n- One root → many words!\n\nIn Ukrainian, prefixes don't just modify verbs—they create entirely new meanings. Learning prefixes is the fastest way to expand your vocabulary.\n\n> 💡 **Did You Know?**\n>\n> Ukrainian has about 20 common verb prefixes. Each prefix adds a specific shade of meaning. By learning these prefixes, you can understand hundreds of verbs you've never seen before!\n\n## presentation\n\n### The Prefix System\n\n**How it works:**\n- Base verb: йти (to go on foot)\n- Add prefix: при- + йти = прийти (to arrive)\n- The prefix changes the meaning AND makes it perfective\n\n**Key insight:** Most prefixed verbs are **perfective**. The base verb is usually imperfective.\n\n| Base (Impf) | Prefixed (Perf) | Meaning Change |\n|-------------|-----------------|----------------|\n| йти | прийти | go → arrive |\n| йти | вийти | go → go out |\n| йти | зайти | go → drop by |\n\n### при- (Arrival, Addition)\n\n**Meaning:** movement toward, arrival at destination\n\n| Base | Prefixed | Meaning |\n|------|----------|---------|\n| йти | прийти | to arrive (on foot) |\n| їхати | приїхати | to arrive (by transport) |\n| летіти | прилетіти | to arrive (by plane) |\n| нести | принести | to bring (carrying) |\n| везти | привезти | to bring (by transport) |\n| ходити | приходити | to come (habitually) |\n\n**Examples:**\n- Він **прийшов** о восьмій. - He arrived at 8.\n- Вона **приїхала** з Києва. - She arrived from Kyiv.\n- Я **приніс** тобі книгу. - I brought you a book.\n- Він завжди **приходить** вчасно. - He always comes on time.\n\n> ⚡ **Pro Tip: при- = toward/arrival**\n>\n> Think of при- as \"toward the destination.\" The action ends at a specific point.\n\n### ви- (Exit, Out)\n\n**Meaning:** movement out of, exiting\n\n| Base | Prefixed | Meaning |\n|------|----------|---------|\n| йти | вийти | to go out, exit |\n| їхати | виїхати | to drive out, leave |\n| летіти | вилетіти | to fly out, depart |\n| нести | винести | to carry out |\n| бігти | вибігти | to run out |\n| ходити | виходити | to go out (habitually) |\n\n**Examples:**\n- Він **вийшов** з кімнати. - He went out of the room.\n- Ми **виїхали** о шостій ранку. - We left at 6 AM.\n- Літак **вилетів** вчасно. - The plane departed on time.\n- Вона **виходить** на роботу о сьомій. - She leaves for work at 7.\n\n> 🎭 **Culture Note: Вихід**\n>\n> You'll see \"ВИХІД\" (exit) signs everywhere in Ukraine. It comes from вийти!\n> Similarly: вхід (entrance) from увійти.\n\n### в-/у- (Entry, Into)\n\n**Meaning:** movement into, entering\n\n| Base | Prefixed | Meaning |\n|------|----------|---------|\n| йти | увійти / ввійти | to enter (on foot) |\n| їхати | в'їхати | to drive into |\n| летіти | влетіти | to fly into |\n| нести | внести / унести | to carry in |\n| бігти | вбігти | to run in |\n| ходити | входити | to enter (habitually) |\n\n**Examples:**\n- Вона **увійшла** до кімнати. - She entered the room.\n- Машина **в'їхала** в гараж. - The car drove into the garage.\n- Птах **влетів** у вікно. - A bird flew into the window.\n- Він **входить** без стуку. - He enters without knocking.\n\n> 📝 **Note: в- vs у-**\n>\n> Use у- before consonants (увійти), в- before vowels (ввійти) or after vowels. Both forms are correct.\n\n### за- (Behind, Dropping By)\n\n**Meaning:** movement behind something, or brief stop\n\n| Base | Prefixed | Meaning |\n|------|----------|---------|\n| йти | зайти | to drop by, go behind |\n| їхати | заїхати | to stop by (driving) |\n| бігти | забігти | to run in briefly |\n| нести | занести | to drop off (carrying) |\n| ходити | заходити | to drop by (habitually) |\n\n**Examples:**\n- Я **зайду** до тебе ввечері. - I'll drop by your place tonight.\n- Сонце **зайшло** за хмару. - The sun went behind a cloud.\n- **Заїдь** у магазин по дорозі. - Stop by the store on the way.\n- Він часто **заходить** до нас. - He often drops by our place.\n\n### пере- (Across, Over)\n\n**Meaning:** movement across, from one side to another\n\n| Base | Prefixed | Meaning |\n|------|----------|---------|\n| йти | перейти | to cross (on foot) |\n| їхати | переїхати | to cross (driving), to move |\n| летіти | перелетіти | to fly across |\n| нести | перенести | to carry across, transfer |\n| бігти | перебігти | to run across |\n| ходити | переходити | to cross (habitually) |\n\n**Examples:**\n- **Перейдіть** вулицю на світлофорі. - Cross the street at the traffic light.\n- Ми **переїхали** в нову квартиру. - We moved to a new apartment.\n- Птахи **перелетіли** через річку. - The birds flew across the river.\n- Вона **переходить** дорогу тут щодня. - She crosses the road here every day.\n\n> ⚡ **Pro Tip: пере- = across/transfer**\n>\n> Пере- often implies moving from one state/place to another: переїхати (move house), перенести (reschedule/transfer).\n\n### від- (Away From)\n\n**Meaning:** movement away from starting point\n\n| Base | Prefixed | Meaning |\n|------|----------|---------|\n| йти | відійти | to step away, leave |\n| їхати | від'їхати | to drive away |\n| летіти | відлетіти | to fly away |\n| нести | віднести | to carry away |\n| бігти | відбігти | to run away |\n| ходити | відходити | to depart, leave |\n\n**Examples:**\n- Поїзд **відійшов** 5 хвилин тому. - The train left 5 minutes ago.\n- Машина **від'їхала**. - The car drove away.\n- Птахи **відлетіли** на південь. - The birds flew away to the south.\n- Потяг **відходить** о третій. - The train departs at 3.\n\n### до- (Up To, Reaching)\n\n**Meaning:** movement up to a point, reaching destination\n\n| Base | Prefixed | Meaning |\n|------|----------|---------|\n| йти | дійти | to reach (on foot), to get to |\n| їхати | доїхати | to reach (driving) |\n| летіти | долетіти | to fly to, reach |\n| нести | донести | to carry to |\n| бігти | добігти | to run to |\n\n**Examples:**\n- Я **дійшов** до станції за 10 хвилин. - I reached the station in 10 minutes.\n- Ми **доїхали** до Львова за 5 годин. - We drove to Lviv in 5 hours.\n- Як **дійти** до центру? - How do I get to the center?\n- Лист **дійшов** за тиждень. - The letter arrived in a week.\n\n### об- (Around)\n\n**Meaning:** movement around something\n\n| Base | Prefixed | Meaning |\n|------|----------|---------|\n| йти | обійти | to go around, bypass |\n| їхати | об'їхати | to drive around |\n| летіти | облетіти | to fly around |\n| бігти | оббігти | to run around |\n\n**Examples:**\n- **Обійди** цю калюжу. - Go around this puddle.\n- Ми **об'їхали** затор. - We drove around the traffic jam.\n- Вони **оббігли** стадіон. - They ran around the stadium.\n\n### Summary Table: All Prefixes\n\n| Prefix | Meaning | Example |\n|--------|---------|---------|\n| при- | arrival, toward | прийти (arrive) |\n| ви- | out, exit | вийти (exit) |\n| в-/у- | into, entry | увійти (enter) |\n| за- | behind, drop by | зайти (drop by) |\n| пере- | across, over | перейти (cross) |\n| від- | away from | відійти (leave) |\n| до- | up to, reaching | дійти (reach) |\n| об- | around | обійти (go around) |\n\n## practice\n\n### Match Prefix to Meaning\n\n1. при-\n   > [!answer] arrival\n2. ви-\n   > [!answer] exit\n3. в-/у-\n   > [!answer] entry\n4. за-\n   > [!answer] behind/drop by\n5. пере-\n   > [!answer] across\n6. від-\n   > [!answer] away from\n7. до-\n   > [!answer] reaching\n8. об-\n   > [!answer] around\n\n### Complete with Correct Verb\n\n1. Він ___ (arrive) о восьмій годині.\n   > [!answer] прийшов\n\n2. Вона ___ (exit) з магазину.\n   > [!answer] вийшла\n\n3. Ми ___ (cross) вулицю.\n   > [!answer] перейшли\n\n4. Я ___ (drop by) до друга.\n   > [!answer] зайшов\n\n5. Поїзд ___ (depart) вчасно.\n   > [!answer] відійшов\n\n6. Як ___ (reach) до центру?\n   > [!answer] дійти\n\n7. Вона ___ (enter) в кімнату.\n   > [!answer] увійшла\n\n8. Ми ___ (drive around) затор.\n   > [!answer] об'їхали\n\n### Translate\n\n1. I arrived home at 6.\n   > [!answer] Я прийшов додому о шостій.\n2. She went out to the balcony.\n   > [!answer] Вона вийшла на балкон.\n3. We crossed the bridge.\n   > [!answer] Ми перейшли міст.\n4. Drop by tomorrow!\n   > [!answer] Зайди завтра!\n5. The bus departed.\n   > [!answer] Автобус відійшов.\n6. How do I get to the station?\n   > [!answer] Як дійти до станції?\n\n## production\n\n### Describe Movement\n\n**Use prefixed verbs to describe:**\n\nYour morning:\n- Я **вийшов** з дому о восьмій.\n- Я **дійшов** до зупинки за 5 хвилин.\n- Я **зайшов** у кав'ярню по каву.\n- Я **прийшов** на роботу о дев'ятій.\n\nA trip:\n- Ми **виїхали** рано вранці.\n- Ми **об'їхали** Київ.\n- Ми **перетнули** кордон.\n- Ми **доїхали** до Варшави ввечері.\n\n### Give Directions\n\nPractice giving directions using prefixed verbs:\n\n- **Вийдіть** з метро.\n- **Перейдіть** вулицю.\n- **Дійдіть** до перехрестя.\n- **Зайдіть** у двір.\n\n---\n\n---\n\n---\n\n---\n\n# Вправи\n\n## fill-in: Motion Verb Prefixes\n\n> Оберіть правильне дієслово з префіксом.\n\n1. Він ___ (прийшов / вийшов) о восьмій годині. (arrived)\n   > [!answer] прийшов\n   > (при- = arrival)\n\n2. Вона ___ (увійшла / вийшла) з магазину з покупками. (exited)\n   > [!answer] вийшла\n   > (ви- = exit, out)\n\n3. Ми ___ (перейшли / зайшли) вулицю на світлофорі. (crossed)\n   > [!answer] перейшли\n   > (пере- = across)\n\n4. ___ (Зайди / Дійди) до мене після роботи. (Drop by)\n   > [!answer] Зайди\n   > (за- = drop by briefly)\n\n5. Як ___ (дійти / зайти) до центру міста? (reach, get to)\n   > [!answer] дійти\n   > (до- = reaching destination)\n\n## unjumble: Motion Verb Sentences\n\n> Розташуйте слова в правильному порядку.\n\n1. о / восьмій / Він / прийшов / додому / годині\n   > [!answer] Він прийшов додому о восьмій годині.\n   > (He arrived home at eight o'clock.)\n\n2. вулицю / Перейдіть / на / світлофорі\n   > [!answer] Перейдіть вулицю на світлофорі.\n   > (Cross the street at the traffic light.)\n\n3. кімнати / вийшла / з / Вона\n   > [!answer] Вона вийшла з кімнати.\n   > (She exited the room.)\n\n4. до / Зайди / мене / ввечері\n   > [!answer] Зайди до мене ввечері.\n   > (Drop by my place in the evening.)\n\n5. дійти / до / Як / станції / метро\n   > [!answer] Як дійти до станції метро?\n   > (How do I get to the metro station?)\n\n## match-up: Знайдіть пари\n\n> З'єднайте українські слова з англійськими.\n\n| Left | Right |\n|------|-------|\n| приходити | to come (habitually) |\n| найдешевший | cheapest |\n| англійська | English (adj) |\n| світлофор | traffic light |\n| відбуття | departure |\n| фото | photo |\n| привезти | to bring (by transport) |\n| прихід | arrival, coming |\n| напрямок | direction |\n| хокей | hockey |\n| прилетіти | to arrive (by plane) |\n| перехрестя | intersection |\n| прошу | please/you're welcome |\n| об'їхати | to drive around |\n\n## quiz: Перевірка значень\n\n> Оберіть правильну відповідь.\n\n1. Що означає \"об'їхати\"?\n   - [ ] to meet\n   - [ ] (with) you\n   - [ ] wireless\n   - [x] to drive around\n   > \"об'їхати\" means \"to drive around\"\n\n2. Що означає \"відходити\"?\n   - [ ] what\n   - [ ] to eat (perf)\n   - [x] to depart (habitually)\n   - [ ] to drive, manage\n   > \"відходити\" means \"to depart (habitually)\"\n\n3. Що означає \"переїзд\"?\n   - [ ] nowhere\n   - [ ] often\n   - [ ] smallest\n   - [x] move (relocation)\n   > \"переїзд\" means \"move (relocation)\"\n\n4. Що означає \"світлофор\"?\n   - [ ] no\n   - [ ] convinced\n   - [x] traffic light\n   - [ ] reluctantly\n   > \"світлофор\" means \"traffic light\"\n\n5. Що означає \"доїхати\"?\n   - [x] to reach (by transport)\n   - [ ] to write\n   - [ ] thin\n   - [ ] passport\n   > \"доїхати\" means \"to reach (by transport)\"\n\n6. Що означає \"калюжа\"?\n   - [ ] to help (impf)\n   - [ ] fish\n   - [ ] signature\n   - [x] puddle\n   > \"калюжа\" means \"puddle\"\n\n7. Що означає \"заходити\"?\n   - [x] to drop by (habitually)\n   - [ ] borscht\n   - [ ] while\n   - [ ] to return\n   > \"заходити\" means \"to drop by (habitually)\"\n\n8. Що означає \"увійти\"?\n   - [ ] to remain\n   - [ ] train\n   - [x] to enter\n   - [ ] platform\n   > \"увійти\" means \"to enter\"\n\n9. Що означає \"від'їхати\"?\n   - [x] to drive away\n   - [ ] to become\n   - [ ] on the contrary\n   - [ ] puddle\n   > \"від'їхати\" means \"to drive away\"\n\n10. Що означає \"привезти\"?\n   - [ ] password\n   - [ ] to hurt, ache\n   - [x] to bring (by transport)\n   - [ ] for\n   > \"привезти\" means \"to bring (by transport)\"\n\n11. Що означає \"прилетіти\"?\n   - [ ] train\n   - [x] to arrive (by plane)\n   - [ ] more slowly\n   - [ ] declension\n   > \"прилетіти\" means \"to arrive (by plane)\"\n\n12. Що означає \"заїхати\"?\n   - [ ] cucumber\n   - [ ] that (neuter)\n   - [ ] biggest\n   - [x] to drive by\n   > \"заїхати\" means \"to drive by\"\n\n13. Що означає \"відійти\"?\n   - [ ] bottle\n   - [ ] change (money)\n   - [ ] entrance\n   - [x] to step away\n   > \"відійти\" means \"to step away\"\n\n14. Що означає \"перехрестя\"?\n   - [ ] imaginary, hypothetical\n   - [ ] there\n   - [x] intersection\n   - [ ] this, this is\n   > \"перехрестя\" means \"intersection\"\n\n## true-false: Правда чи ні?\n\n> Визначте, чи правильне твердження.\n\n- [x] \"заїхати\" means \"to drive by\"\n   > Correct!\n\n- [ ] \"винести\" means \"if\"\n   > Incorrect. \"винести\" means \"to carry out\"\n\n- [ ] \"виїзд\" means \"would (after vowel)\"\n   > Incorrect. \"виїзд\" means \"exit (for vehicles)\"\n\n- [ ] \"прилетіти\" means \"to continue (ongoing)\"\n   > Incorrect. \"прилетіти\" means \"to arrive (by plane)\"\n\n- [x] \"дійти\" means \"to reach (on foot)\"\n   > Correct!\n\n- [x] \"вилетіти\" means \"to fly out, depart\"\n   > Correct!\n\n- [x] \"в'їхати\" means \"to drive in\"\n   > Correct!\n\n- [x] \"обійти\" means \"to go around\"\n   > Correct!\n\n- [ ] \"калюжа\" means \"in order to, so that\"\n   > Incorrect. \"калюжа\" means \"puddle\"\n\n- [ ] \"світлофор\" means \"pilot\"\n   > Incorrect. \"світлофор\" means \"traffic light\"\n\n## group-sort: Сортування за родом\n\n> Розподіліть слова за родами.\n\n### Чоловічий рід\n- напрямок\n- виїзд\n- перехід\n- заїзд\n- прихід\n- світлофор\n\n### Середній рід\n- перехрестя\n- відбуття\n\n## select: Виберіть правильний префікс\n\n> Оберіть правильну форму дієслова з префіксом.\n\n1. Вчора ми _______ в нову квартиру на вулиці Хрещатик.\n   - [ ] прийшли\n   - [ ] вийшли\n   - [x] переїхали\n   - [ ] зайшли\n   > \"переїхали\" means \"moved (to a new place)\"\n\n2. Літак з Варшави _______ о восьмій годині ранку.\n   - [x] прилетів\n   - [ ] вилетів\n   - [ ] перелетів\n   - [ ] відлетів\n   > \"прилетів\" means \"arrived (by plane)\"\n\n3. Потрібно _______ вулицю на зеленому світлофорі, а не тут.\n   - [ ] прийти\n   - [x] перейти\n   - [ ] зайти\n   - [ ] вийти\n   > \"перейти\" means \"to cross\"\n\n4. Він щодня _______ до бабусі після школи випити чаю.\n   - [ ] приходить\n   - [ ] виходить\n   - [x] заходить\n   - [ ] переходить\n   > \"заходить\" means \"drops by\"\n\n5. Автобус вже _______, ми запізнилися на п'ять хвилин.\n   - [ ] прийшов\n   - [x] відійшов\n   - [ ] зайшов\n   - [ ] перейшов\n   > \"відійшов\" means \"departed (vehicle)\"\n\n6. Я _______ з будинку о сьомій ранку кожного дня.\n   - [ ] прийду\n   - [x] виходжу\n   - [ ] заходжу\n   - [ ] переходжу\n   > \"виходжу\" means \"go out, leave\"\n\n7. Коли ми _______ до станції метро, дощ ще не почався.\n   - [x] дійшли\n   - [ ] прийшли\n   - [ ] відійшли\n   - [ ] зайшли\n   > \"дійшли\" means \"reached (on foot)\"\n\n8. Він _______ мені подарунок із Львова після відпустки.\n   - [ ] приніс\n   - [x] привіз\n   - [ ] виніс\n   - [ ] перенів\n   > \"привіз\" means \"brought (by transport)\"\n\n9. Вона _______ у кімнату дуже тихо, я не чув.\n   - [x] увійшла\n   - [ ] вийшла\n   - [ ] зайшла\n   - [ ] перейшла\n   > \"увійшла\" means \"entered\"\n\n10. Батьки _______ з вокзалу дві години тому на таксі.\n    - [ ] прийшли\n    - [x] приїхали\n    - [ ] виїхали\n    - [ ] заїхали\n    > \"приїхали\" means \"arrived (by vehicle)\"\n\n11. Машина _______ за рогом і зникла з поля зору.\n    - [ ] приїхала\n    - [ ] виїхала\n    - [x] заїхала\n    - [ ] переїхала\n    > \"заїхала\" means \"drove around/behind\"\n\n12. Птахи _______ на південь, коли стало холодно восени.\n    - [ ] прилетіли\n    - [ ] влетіли\n    - [x] відлетіли\n    - [ ] перелетіли\n    > \"відлетіли\" means \"flew away\"\n\n13. Ми _______ посередині шляху і трохи відпочили біля дерева.\n    - [ ] прийшли\n    - [x] дійшли\n    - [ ] відійшли\n    - [ ] перейшли\n    > \"дійшли\" means \"reached (a point)\"\n\n14. Собака швидко _______ через вулицю до свого господаря.\n    - [ ] прибігла\n    - [x] перебігла\n    - [ ] забігла\n    - [ ] вибігла\n    > \"перебігла\" means \"ran across\"\n\n15. Вони _______ на нашу вечірку ненадовго, лише на годину.\n    - [ ] прийшли\n    - [ ] вийшли\n    - [x] зайшли\n    - [ ] перейшли\n    > \"зайшли\" means \"dropped by\"\n\n## order: Порядок дій у дорозі\n\n> Розставте речення в логічному порядку, щоб розповісти історію.\n\n- [5] Потім я перейшов вулицю на світлофорі біля центрального парку.\n- [8] Нарешті я дійшов до бібліотеки і зайшов усередину по книжку.\n- [2] Я вийшов з дому о дев'ятій годині ранку в суботу.\n- [7] Після кав'ярні я ще трохи пройшов уздовж річки насолоджуючись природою.\n- [10] Коли я виходив з бібліотеки, почав падати дощ та я заїхав додому на таксі.\n- [1] Спочатку я прокинувся і швидко поснідав вдома перед виходом.\n- [4] Біля станції метро я зайшов у маленьку пекарню купити хліб.\n- [6] На протилежному боці я побачив стару кав'ярню і зайшов випити каву.\n- [3] Я дійшов до станції метро приблизно за п'ятнадцять хвилин неквапливо.\n- [9] У бібліотеці я провів дві години вибираючи цікаві книги для читання.\n\n## quiz: Префікси та їх значення\n\n> Оберіть правильне значення префікса.\n\n1. Що означає префікс \"при-\" в дієсловах руху?\n   - [ ] movement away\n   - [ ] movement across\n   - [x] arrival, movement toward\n   - [ ] movement out\n   > \"при-\" indicates arrival or movement toward destination\n\n2. Яке значення має префікс \"ви-\" в дієсловах?\n   - [ ] entry\n   - [x] exit, movement out\n   - [ ] crossing\n   - [ ] arrival\n   > \"ви-\" means exit or outward movement\n\n3. Що означає \"заходити\" (префікс за-)?\n   - [ ] to arrive permanently\n   - [x] to drop by, visit briefly\n   - [ ] to exit\n   - [ ] to cross over\n   > \"за-\" often means brief stop or dropping by\n\n4. Яке значення префікса \"пере-\" в дієсловах руху?\n   - [ ] arrival\n   - [ ] departure\n   - [x] across, over, from one side to another\n   - [ ] entering\n   > \"пере-\" means movement across or transfer\n\n5. Що означає префікс \"від-\" в дієсловах?\n   - [x] movement away from starting point\n   - [ ] movement toward\n   - [ ] movement into\n   - [ ] movement behind\n   > \"від-\" indicates movement away from\n\n6. Який префікс використовується для \"входити, заходити всередину\"?\n   - [ ] ви-\n   - [ ] при-\n   - [x] в-/у-\n   - [ ] за-\n   > \"в-/у-\" means entry or movement into\n\n7. Що означає дієслово \"дійти\" (префікс до-)?\n   - [ ] to go out\n   - [ ] to arrive from afar\n   - [x] to reach, to get to a destination\n   - [ ] to cross\n   > \"до-\" means reaching up to a point\n\n8. Який префікс робить дієслова доконаними (perfective)?\n   - [ ] жоден\n   - [ ] тільки при-\n   - [ ] тільки ви-\n   - [x] майже всі префікси\n   > Most prefixes make verbs perfective\n\n9. Яке слово означає \"entrance\" і походить від \"увійти\"?\n   - [ ] виїзд\n   - [x] вхід\n   - [ ] прихід\n   - [ ] перехід\n   > \"вхід\" (entrance) comes from \"увійти\" (to enter)\n\n10. Що означає \"переїхати\" в контексті житла?\n    - [ ] to visit\n    - [ ] to exit\n    - [x] to move (to a new home)\n    - [ ] to arrive\n    > \"переїхати\" means to move/relocate\n\n11. Який корінь використовується для руху пішки?\n    - [ ] -їх-/-їзд-\n    - [x] -йд-/-ход-\n    - [ ] -лет-\n    - [ ] -нес-\n    > \"-йд-/-ход-\" is used for movement on foot\n\n12. Який корінь використовується для руху транспортом?\n    - [x] -їх-/-їзд-\n    - [ ] -йд-/-ход-\n    - [ ] -біг-\n    - [ ] -нес-\n    > \"-їх-/-їзд-\" is used for movement by vehicle\n\n13. Що означає \"відійшов\" про поїзд?\n    - [ ] arrived\n    - [x] departed\n    - [ ] stopped\n    - [ ] crashed\n    > \"відійшов\" about train means departed\n\n14. Яке дієслово означає \"to carry out\" (винести назовні)?\n    - [ ] внести\n    - [x] винести\n    - [ ] принести\n    - [ ] перенести\n    > \"винести\" means to carry out\n\n15. Що означає \"забігти\" в повсякденному контексті?\n    - [ ] to run away\n    - [x] to run in briefly, pop in quickly\n    - [ ] to run across\n    - [ ] to arrive running\n    > \"забігти\" means to run in briefly\n\n## match-up: Протилежні префікси\n\n> З'єднайте дієслова з протилежними значеннями.\n\n- прийти :: вийти\n- увійти :: вийти\n- приїхати :: виїхати\n- прилетіти :: вилетіти\n- принести :: винести\n- привезти :: вивезти\n- в'їхати :: виїхати\n- прибігти :: вибігти\n- внести :: винести\n- приходити :: виходити\n- підійти :: відійти\n- прийти :: піти\n- вбігти :: вибігти\n- в'їхати :: від'їхати\n- приїздити :: виїздити\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| прилетіти | /prɪlɛˈtʲitɪ/ | to arrive (by plane) | verb | - | pf |\n| привезти | /prɪvɛzˈtɪ/ | to bring (by transport) | verb | - | pf |\n| приходити | /prɪxoˈdɪtɪ/ | to come (habitually) | verb | - | impf |\n| виїхати | /ˈvɪjixɑtɪ/ | to drive out, leave | verb | - | pf |\n| вилетіти | /vɪlɛˈtʲitɪ/ | to fly out, depart | verb | - | pf |\n| винести | /vɪnɛsˈtɪ/ | to carry out | verb | - | pf |\n| увійти | /uˈvʲijtɪ/ | to enter | verb | - | pf |\n| в'їхати | /ˈvjixɑtɪ/ | to drive into | verb | - | pf |\n| входити | /vxoˈdɪtɪ/ | to enter (habitually) | verb | - | impf |\n| зайти | /zɑjˈtɪ/ | to drop by | verb | - | pf |\n| заїхати | /zɑˈjixɑtɪ/ | to stop by (driving) | verb | - | pf |\n| заходити | /zɑxoˈdɪtɪ/ | to drop by (habitually) | verb | - | impf |\n| переїхати | /pɛrɛˈjixɑtɪ/ | to move (residence) | verb | - | pf |\n| переходити | /pɛrɛxoˈdɪtɪ/ | to cross (habitually) | verb | - | impf |\n| відійти | /vʲidʲijˈtɪ/ | to step away, leave | verb | - | pf |\n| від'їхати | /vʲidˈjixɑtɪ/ | to drive away | verb | - | pf |\n| відходити | /vʲidxoˈdɪtɪ/ | to depart (habitually) | verb | - | impf |\n| дійти | /dʲijˈtɪ/ | to reach (on foot) | verb | - | pf |\n| доїхати | /doˈjixɑtɪ/ | to reach (by transport) | verb | - | pf |\n| обійти | /obʲijˈtɪ/ | to go around | verb | - | pf |\n| об'їхати | /obˈjixɑtɪ/ | to drive around | verb | - | pf |\n| прихід | /ˈprɪxʲid/ | arrival, coming | noun | m |\n| відхід | /ˈvʲidxʲid/ | departure | noun | m |\n| перехід | /ˈpɛrɛxʲid/ | crossing, transition | noun | m |\n| відбуття | /vʲidˈbutʲːɑ/ | departure | noun | n | formal |\n| переїзд | /pɛrɛˈjizd/ | move (relocation) | noun | m |\n| заїзд | /ˈzɑjizd/ | entrance (for vehicles) | noun | m |\n| виїзд | /ˈvɪjizd/ | exit (for vehicles) | noun | m |\n| напрямок | /nɑˈprʲɑmok/ | direction | noun | m |\n| затор | /zɑˈtor/ | traffic jam | noun | m |\n| світлофор | /svʲitloˈfor/ | traffic light | noun | m |\n| перехрестя | /pɛrɛˈxrɛstʲɑ/ | intersection | noun | n |\n| калюжа | /kɑˈlʲuʒɑ/ | puddle | noun | f |\n\n---\n\n# Review Vocabulary\n\n| Word | First Module |\n|------|-------------|\n| прийти | 42 |\n| приїхати | 42 |\n| принести | 18 |\n| вийти | 42 |\n| виходити | 25 |\n| перейти | 15 |\n| вхід | 15 |\n| вихід | 15 |\n| прибуття | 55 |\n\n---\n\n# Summary\n\n## Motion Verb Prefixes\n\n| Prefix | Core Meaning | Example |\n|--------|--------------|---------|\n| при- | toward, arrival | прийти (arrive) |\n| ви- | out, exit | вийти (exit) |\n| в-/у- | into, entry | увійти (enter) |\n| за- | behind, drop by | зайти (drop by) |\n| пере- | across, over | перейти (cross) |\n| від- | away from | відійти (leave) |\n| до- | up to, reaching | дійти (reach) |\n| об- | around | обійти (go around) |\n\n## Related Nouns\n\n| Verb | Noun | Meaning |\n|------|------|---------|\n| увійти | вхід | entrance |\n| вийти | вихід | exit |\n| прийти | прихід | arrival |\n| відійти | відхід | departure |\n| перейти | перехід | crossing |\n\n## Key Pattern\n\n**Base verb + Prefix = New meaning + Perfective aspect**\n\n- йти (impf) + при- = прийти (pf) - to arrive\n- йти (impf) + ви- = вийти (pf) - to exit\n- йти (impf) + пере- = перейти (pf) - to cross\n\n> 💡 **Key Takeaways**\n>\n> - Prefixes dramatically change verb meaning\n> - Most prefixed verbs become perfective\n> - Learning prefixes multiplies your vocabulary\n> - The same prefixes work with different base verbs\n> - Nouns can be formed from prefixed verbs (вийти → вихід)\n",
+    "createdAt": "2025-12-03T12:29:30.369Z",
+    "modifiedAt": "2025-12-03T12:29:30.369Z",
     "version": 2
   },
   "activities": [
     {
       "id": "act-a2+-61-fillblank",
       "type": "fill-blank",
-      "title": "Доповніть речення",
-      "description": "Оберіть правильне слово.",
+      "title": "Motion Verb Prefixes",
+      "description": "Оберіть правильне дієслово з префіксом.",
       "content": {
         "type": "fill-blank",
         "items": [
           {
-            "prompt": "Я давно мріяв навчитися ___, і нарешті маю таку можливість.",
-            "answer": "заїхати",
-            "options": [
-              "заїхати",
-              "купувати",
-              "заходити",
-              "залишатися"
+            "prompt": "Він ___ (прийшов / вийшов) о восьмій годині. (arrived)",
+            "answer": "прийшов",
+            "hints": [
+              "прийшов / вийшов"
             ]
           },
           {
-            "prompt": "Ця ___ належить моїй подрузі з Києва.",
-            "answer": "калюжа",
-            "options": [
-              "перехрестя",
-              "калюжа",
-              "автобус",
-              "каса"
+            "prompt": "Вона ___ (увійшла / вийшла) з магазину з покупками. (exited)",
+            "answer": "вийшла",
+            "hints": [
+              "увійшла / вийшла"
             ]
           },
           {
-            "prompt": "Я давно мріяв навчитися ___, і нарешті маю таку можливість.",
-            "answer": "винести",
-            "options": [
-              "винести",
-              "сподіватися",
-              "збирати",
-              "керувати"
+            "prompt": "Ми ___ (перейшли / зайшли) вулицю на світлофорі. (crossed)",
+            "answer": "перейшли",
+            "hints": [
+              "перейшли / зайшли"
             ]
           },
           {
-            "prompt": "Вони довго шукали хороший ___, але не знайшли.",
-            "answer": "заїзд",
-            "options": [
-              "розпродаж",
-              "заїзд",
-              "калюжа",
-              "картка"
+            "prompt": "___ (Зайди / Дійди) до мене після роботи. (Drop by)",
+            "answer": "Зайди",
+            "hints": [
+              "Зайди / Дійди"
             ]
           },
           {
-            "prompt": "Це ___ належить моєму другові з Києва.",
-            "answer": "перехрестя",
-            "options": [
-              "лампа",
-              "січень",
-              "повідомлення",
-              "перехрестя"
-            ]
-          },
-          {
-            "prompt": "Цей ___ належить моєму другові з Києва.",
-            "answer": "світлофор",
-            "options": [
-              "градус",
-              "запрошення",
-              "затримка",
-              "світлофор"
-            ]
-          },
-          {
-            "prompt": "Я давно мріяв навчитися ___, і нарешті маю таку можливість.",
-            "answer": "зайти",
-            "options": [
-              "домовитися",
-              "дійти",
-              "зайти",
-              "перерахувати"
-            ]
-          },
-          {
-            "prompt": "Моя сестра каже, що їй подобається ___ у вільний час.",
-            "answer": "привезти",
-            "options": [
-              "привезти",
-              "зайти",
-              "залишитися",
-              "уявляти"
-            ]
-          },
-          {
-            "prompt": "Вони довго шукали хороший ___, але не знайшли.",
-            "answer": "прихід",
-            "options": [
-              "подруга",
-              "калюжа",
-              "прихід",
-              "запрошення"
-            ]
-          },
-          {
-            "prompt": "Це ___ належить моєму другові з Києва.",
-            "answer": "відбуття",
-            "options": [
-              "відбуття",
-              "рік",
-              "ручка",
-              "школа"
-            ]
-          },
-          {
-            "prompt": "Я хочу купити цей ___, але він занадто дорогий.",
-            "answer": "затор",
-            "options": [
-              "затор",
-              "сусід",
-              "початок",
-              "офіс"
+            "prompt": "Як ___ (дійти / зайти) до центру міста? (reach, get to)",
+            "answer": "дійти",
+            "hints": [
+              "дійти / зайти"
             ]
           }
         ]
@@ -184,181 +109,70 @@
       "difficultyLevel": "A2+",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-03T08:52:31.875Z",
-      "modifiedAt": "2025-12-03T08:52:31.875Z"
+      "createdAt": "2025-12-03T12:29:30.369Z",
+      "modifiedAt": "2025-12-03T12:29:30.369Z"
     },
     {
       "id": "act-a2+-61-unjumble",
       "type": "unjumble",
-      "title": "Побудуйте речення",
+      "title": "Motion Verb Sentences",
       "description": "Розташуйте слова в правильному порядку.",
       "content": {
         "type": "unjumble",
+        "isUnjumble": true,
         "items": [
           {
             "words": [
-              "дорогий",
-              "Я",
-              "цей",
-              "перехід",
-              "але",
-              "купити",
-              "хочу",
-              "занадто",
-              "він"
+              "о",
+              "восьмій",
+              "Він",
+              "прийшов",
+              "додому",
+              "годині"
             ],
-            "answer": "Я хочу купити цей перехід, але він занадто дорогий.",
-            "translation": "crossing, transition"
+            "answer": "Він прийшов додому о восьмій годині.",
+            "translation": "He arrived home at eight o'clock."
           },
           {
             "words": [
-              "прихід",
-              "моєму",
+              "вулицю",
+              "Перейдіть",
+              "на",
+              "світлофорі"
+            ],
+            "answer": "Перейдіть вулицю на світлофорі.",
+            "translation": "Cross the street at the traffic light."
+          },
+          {
+            "words": [
+              "кімнати",
+              "вийшла",
               "з",
-              "Києва",
-              "належить",
-              "другові",
-              "Цей"
+              "Вона"
             ],
-            "answer": "Цей прихід належить моєму другові з Києва.",
-            "translation": "arrival, coming"
+            "answer": "Вона вийшла з кімнати.",
+            "translation": "She exited the room."
           },
           {
             "words": [
-              "з",
-              "перехрестя",
-              "Києва",
-              "належить",
-              "другові",
-              "Це",
-              "моєму"
+              "до",
+              "Зайди",
+              "мене",
+              "ввечері"
             ],
-            "answer": "Це перехрестя належить моєму другові з Києва.",
-            "translation": "intersection"
+            "answer": "Зайди до мене ввечері.",
+            "translation": "Drop by my place in the evening."
           },
           {
             "words": [
-              "напрямок",
-              "друг",
-              "сказав",
-              "зручний",
-              "дуже",
-              "його",
-              "Мій",
-              "що"
+              "дійти",
+              "до",
+              "Як",
+              "станції",
+              "метро"
             ],
-            "answer": "Мій друг сказав, що його напрямок дуже зручний.",
-            "translation": "direction"
-          },
-          {
-            "words": [
-              "Вони",
-              "знайшли",
-              "шукали",
-              "довго",
-              "не",
-              "затор",
-              "хороший",
-              "але"
-            ],
-            "answer": "Вони довго шукали хороший затор, але не знайшли.",
-            "translation": "traffic jam"
-          },
-          {
-            "words": [
-              "знайшли",
-              "але",
-              "шукали",
-              "хороший",
-              "відхід",
-              "не",
-              "довго",
-              "Вони"
-            ],
-            "answer": "Вони довго шукали хороший відхід, але не знайшли.",
-            "translation": "departure"
-          },
-          {
-            "words": [
-              "Мій",
-              "зручний",
-              "переїзд",
-              "що",
-              "друг",
-              "його",
-              "дуже",
-              "сказав"
-            ],
-            "answer": "Мій друг сказав, що його переїзд дуже зручний.",
-            "translation": "move (relocation"
-          },
-          {
-            "words": [
-              "калюжа",
-              "моїй",
-              "Ця",
-              "з",
-              "Києва",
-              "належить",
-              "подрузі"
-            ],
-            "answer": "Ця калюжа належить моїй подрузі з Києва.",
-            "translation": "puddle"
-          },
-          {
-            "words": [
-              "належить",
-              "з",
-              "другові",
-              "Це",
-              "моєму",
-              "відбуття",
-              "Києва"
-            ],
-            "answer": "Це відбуття належить моєму другові з Києва.",
-            "translation": "departure"
-          },
-          {
-            "words": [
-              "хороший",
-              "довго",
-              "Вони",
-              "але",
-              "світлофор",
-              "знайшли",
-              "шукали",
-              "не"
-            ],
-            "answer": "Вони довго шукали хороший світлофор, але не знайшли.",
-            "translation": "traffic light"
-          },
-          {
-            "words": [
-              "друг",
-              "виїзд",
-              "сказав",
-              "дуже",
-              "що",
-              "Мій",
-              "його",
-              "зручний"
-            ],
-            "answer": "Мій друг сказав, що його виїзд дуже зручний.",
-            "translation": "exit (for vehicles"
-          },
-          {
-            "words": [
-              "його",
-              "дуже",
-              "заїзд",
-              "друг",
-              "сказав",
-              "зручний",
-              "що",
-              "Мій"
-            ],
-            "answer": "Мій друг сказав, що його заїзд дуже зручний.",
-            "translation": "entrance (for vehicles"
+            "answer": "Як дійти до станції метро?",
+            "translation": "How do I get to the metro station?"
           }
         ]
       },
@@ -369,8 +183,8 @@
       "difficultyLevel": "A2+",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-03T08:52:31.875Z",
-      "modifiedAt": "2025-12-03T08:52:31.875Z"
+      "createdAt": "2025-12-03T12:29:30.369Z",
+      "modifiedAt": "2025-12-03T12:29:30.369Z"
     },
     {
       "id": "act-a2+-61-matchup",
@@ -446,8 +260,8 @@
       "difficultyLevel": "A2+",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-03T08:52:31.875Z",
-      "modifiedAt": "2025-12-03T08:52:31.875Z"
+      "createdAt": "2025-12-03T12:29:30.369Z",
+      "modifiedAt": "2025-12-03T12:29:30.369Z"
     },
     {
       "id": "act-a2+-61-quiz",
@@ -623,8 +437,8 @@
       "difficultyLevel": "A2+",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-03T08:52:31.875Z",
-      "modifiedAt": "2025-12-03T08:52:31.875Z"
+      "createdAt": "2025-12-03T12:29:30.369Z",
+      "modifiedAt": "2025-12-03T12:29:30.369Z"
     },
     {
       "id": "act-a2+-61-truefalse",
@@ -633,7 +447,58 @@
       "description": "Визначте, чи правильне твердження.",
       "content": {
         "type": "true-false",
-        "statements": []
+        "statements": [
+          {
+            "statement": "\"заїхати\" means \"to drive by\"",
+            "isTrue": true,
+            "explanation": "Correct!"
+          },
+          {
+            "statement": "\"винести\" means \"if\"",
+            "isTrue": false,
+            "explanation": "Incorrect. \"винести\" means \"to carry out\""
+          },
+          {
+            "statement": "\"виїзд\" means \"would (after vowel)\"",
+            "isTrue": false,
+            "explanation": "Incorrect. \"виїзд\" means \"exit (for vehicles)\""
+          },
+          {
+            "statement": "\"прилетіти\" means \"to continue (ongoing)\"",
+            "isTrue": false,
+            "explanation": "Incorrect. \"прилетіти\" means \"to arrive (by plane)\""
+          },
+          {
+            "statement": "\"дійти\" means \"to reach (on foot)\"",
+            "isTrue": true,
+            "explanation": "Correct!"
+          },
+          {
+            "statement": "\"вилетіти\" means \"to fly out, depart\"",
+            "isTrue": true,
+            "explanation": "Correct!"
+          },
+          {
+            "statement": "\"в'їхати\" means \"to drive in\"",
+            "isTrue": true,
+            "explanation": "Correct!"
+          },
+          {
+            "statement": "\"обійти\" means \"to go around\"",
+            "isTrue": true,
+            "explanation": "Correct!"
+          },
+          {
+            "statement": "\"калюжа\" means \"in order to, so that\"",
+            "isTrue": false,
+            "explanation": "Incorrect. \"калюжа\" means \"puddle\""
+          },
+          {
+            "statement": "\"світлофор\" means \"pilot\"",
+            "isTrue": false,
+            "explanation": "Incorrect. \"світлофор\" means \"traffic light\""
+          }
+        ]
       },
       "subject": "language",
       "owner": "curricula-opus",
@@ -642,8 +507,8 @@
       "difficultyLevel": "A2+",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-03T08:52:31.875Z",
-      "modifiedAt": "2025-12-03T08:52:31.875Z"
+      "createdAt": "2025-12-03T12:29:30.369Z",
+      "modifiedAt": "2025-12-03T12:29:30.369Z"
     },
     {
       "id": "act-a2+-61-groupsort",
@@ -683,8 +548,571 @@
       "difficultyLevel": "A2+",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-03T08:52:31.875Z",
-      "modifiedAt": "2025-12-03T08:52:31.875Z"
+      "createdAt": "2025-12-03T12:29:30.369Z",
+      "modifiedAt": "2025-12-03T12:29:30.369Z"
+    },
+    {
+      "id": "act-a2+-61-select",
+      "type": "select",
+      "title": "Виберіть правильний префікс",
+      "description": "Оберіть правильну форму дієслова з префіксом.",
+      "content": {
+        "type": "select",
+        "items": [
+          {
+            "question": "Вчора ми _______ в нову квартиру на вулиці Хрещатик.",
+            "options": [
+              {
+                "text": "прийшли",
+                "correct": false
+              },
+              {
+                "text": "вийшли",
+                "correct": false
+              },
+              {
+                "text": "переїхали",
+                "correct": true
+              },
+              {
+                "text": "зайшли",
+                "correct": false
+              }
+            ]
+          },
+          {
+            "question": "Літак з Варшави _______ о восьмій годині ранку.",
+            "options": [
+              {
+                "text": "прилетів",
+                "correct": true
+              },
+              {
+                "text": "вилетів",
+                "correct": false
+              },
+              {
+                "text": "перелетів",
+                "correct": false
+              },
+              {
+                "text": "відлетів",
+                "correct": false
+              }
+            ]
+          },
+          {
+            "question": "Потрібно _______ вулицю на зеленому світлофорі, а не тут.",
+            "options": [
+              {
+                "text": "прийти",
+                "correct": false
+              },
+              {
+                "text": "перейти",
+                "correct": true
+              },
+              {
+                "text": "зайти",
+                "correct": false
+              },
+              {
+                "text": "вийти",
+                "correct": false
+              }
+            ]
+          },
+          {
+            "question": "Він щодня _______ до бабусі після школи випити чаю.",
+            "options": [
+              {
+                "text": "приходить",
+                "correct": false
+              },
+              {
+                "text": "виходить",
+                "correct": false
+              },
+              {
+                "text": "заходить",
+                "correct": true
+              },
+              {
+                "text": "переходить",
+                "correct": false
+              }
+            ]
+          },
+          {
+            "question": "Автобус вже _______, ми запізнилися на п'ять хвилин.",
+            "options": [
+              {
+                "text": "прийшов",
+                "correct": false
+              },
+              {
+                "text": "відійшов",
+                "correct": true
+              },
+              {
+                "text": "зайшов",
+                "correct": false
+              },
+              {
+                "text": "перейшов",
+                "correct": false
+              }
+            ]
+          },
+          {
+            "question": "Я _______ з будинку о сьомій ранку кожного дня.",
+            "options": [
+              {
+                "text": "прийду",
+                "correct": false
+              },
+              {
+                "text": "виходжу",
+                "correct": true
+              },
+              {
+                "text": "заходжу",
+                "correct": false
+              },
+              {
+                "text": "переходжу",
+                "correct": false
+              }
+            ]
+          },
+          {
+            "question": "Коли ми _______ до станції метро, дощ ще не почався.",
+            "options": [
+              {
+                "text": "дійшли",
+                "correct": true
+              },
+              {
+                "text": "прийшли",
+                "correct": false
+              },
+              {
+                "text": "відійшли",
+                "correct": false
+              },
+              {
+                "text": "зайшли",
+                "correct": false
+              }
+            ]
+          },
+          {
+            "question": "Він _______ мені подарунок із Львова після відпустки.",
+            "options": [
+              {
+                "text": "приніс",
+                "correct": false
+              },
+              {
+                "text": "привіз",
+                "correct": true
+              },
+              {
+                "text": "виніс",
+                "correct": false
+              },
+              {
+                "text": "перенів",
+                "correct": false
+              }
+            ]
+          },
+          {
+            "question": "Вона _______ у кімнату дуже тихо, я не чув.",
+            "options": [
+              {
+                "text": "увійшла",
+                "correct": true
+              },
+              {
+                "text": "вийшла",
+                "correct": false
+              },
+              {
+                "text": "зайшла",
+                "correct": false
+              },
+              {
+                "text": "перейшла",
+                "correct": false
+              }
+            ]
+          },
+          {
+            "question": "Батьки _______ з вокзалу дві години тому на таксі.",
+            "options": [
+              {
+                "text": "прийшли",
+                "correct": false
+              },
+              {
+                "text": "приїхали",
+                "correct": true
+              },
+              {
+                "text": "виїхали",
+                "correct": false
+              },
+              {
+                "text": "заїхали",
+                "correct": false
+              }
+            ]
+          },
+          {
+            "question": "Машина _______ за рогом і зникла з поля зору.",
+            "options": [
+              {
+                "text": "приїхала",
+                "correct": false
+              },
+              {
+                "text": "виїхала",
+                "correct": false
+              },
+              {
+                "text": "заїхала",
+                "correct": true
+              },
+              {
+                "text": "переїхала",
+                "correct": false
+              }
+            ]
+          },
+          {
+            "question": "Птахи _______ на південь, коли стало холодно восени.",
+            "options": [
+              {
+                "text": "прилетіли",
+                "correct": false
+              },
+              {
+                "text": "влетіли",
+                "correct": false
+              },
+              {
+                "text": "відлетіли",
+                "correct": true
+              },
+              {
+                "text": "перелетіли",
+                "correct": false
+              }
+            ]
+          },
+          {
+            "question": "Ми _______ посередині шляху і трохи відпочили біля дерева.",
+            "options": [
+              {
+                "text": "прийшли",
+                "correct": false
+              },
+              {
+                "text": "дійшли",
+                "correct": true
+              },
+              {
+                "text": "відійшли",
+                "correct": false
+              },
+              {
+                "text": "перейшли",
+                "correct": false
+              }
+            ]
+          },
+          {
+            "question": "Собака швидко _______ через вулицю до свого господаря.",
+            "options": [
+              {
+                "text": "прибігла",
+                "correct": false
+              },
+              {
+                "text": "перебігла",
+                "correct": true
+              },
+              {
+                "text": "забігла",
+                "correct": false
+              },
+              {
+                "text": "вибігла",
+                "correct": false
+              }
+            ]
+          },
+          {
+            "question": "Вони _______ на нашу вечірку ненадовго, лише на годину.",
+            "options": [
+              {
+                "text": "прийшли",
+                "correct": false
+              },
+              {
+                "text": "вийшли",
+                "correct": false
+              },
+              {
+                "text": "зайшли",
+                "correct": true
+              },
+              {
+                "text": "перейшли",
+                "correct": false
+              }
+            ]
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2+",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-03T12:29:30.369Z",
+      "modifiedAt": "2025-12-03T12:29:30.369Z"
+    },
+    {
+      "id": "act-a2+-61-order",
+      "type": "order",
+      "title": "Порядок дій у дорозі",
+      "description": "Розставте речення в логічному порядку, щоб розповісти історію.",
+      "content": {
+        "type": "order",
+        "items": [],
+        "correctOrder": []
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2+",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-03T12:29:30.369Z",
+      "modifiedAt": "2025-12-03T12:29:30.369Z"
+    },
+    {
+      "id": "act-a2+-61-quiz",
+      "type": "quiz",
+      "title": "Префікси та їх значення",
+      "description": "Оберіть правильне значення префікса.",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "question": "Що означає префікс \"при-\" в дієсловах руху?",
+            "options": [
+              "movement away",
+              "movement across",
+              "arrival, movement toward",
+              "movement out"
+            ],
+            "correctIndex": 2,
+            "explanation": "\"при-\" indicates arrival or movement toward destination"
+          },
+          {
+            "question": "Яке значення має префікс \"ви-\" в дієсловах?",
+            "options": [
+              "entry",
+              "exit, movement out",
+              "crossing",
+              "arrival"
+            ],
+            "correctIndex": 1,
+            "explanation": "\"ви-\" means exit or outward movement"
+          },
+          {
+            "question": "Що означає \"заходити\" (префікс за-)?",
+            "options": [
+              "to arrive permanently",
+              "to drop by, visit briefly",
+              "to exit",
+              "to cross over"
+            ],
+            "correctIndex": 1,
+            "explanation": "\"за-\" often means brief stop or dropping by"
+          },
+          {
+            "question": "Яке значення префікса \"пере-\" в дієсловах руху?",
+            "options": [
+              "arrival",
+              "departure",
+              "across, over, from one side to another",
+              "entering"
+            ],
+            "correctIndex": 2,
+            "explanation": "\"пере-\" means movement across or transfer"
+          },
+          {
+            "question": "Що означає префікс \"від-\" в дієсловах?",
+            "options": [
+              "movement away from starting point",
+              "movement toward",
+              "movement into",
+              "movement behind"
+            ],
+            "correctIndex": 0,
+            "explanation": "\"від-\" indicates movement away from"
+          },
+          {
+            "question": "Який префікс використовується для \"входити, заходити всередину\"?",
+            "options": [
+              "ви-",
+              "при-",
+              "в-/у-",
+              "за-"
+            ],
+            "correctIndex": 2,
+            "explanation": "\"в-/у-\" means entry or movement into"
+          },
+          {
+            "question": "Що означає дієслово \"дійти\" (префікс до-)?",
+            "options": [
+              "to go out",
+              "to arrive from afar",
+              "to reach, to get to a destination",
+              "to cross"
+            ],
+            "correctIndex": 2,
+            "explanation": "\"до-\" means reaching up to a point"
+          },
+          {
+            "question": "Який префікс робить дієслова доконаними (perfective)?",
+            "options": [
+              "жоден",
+              "тільки при-",
+              "тільки ви-",
+              "майже всі префікси"
+            ],
+            "correctIndex": 3,
+            "explanation": "Most prefixes make verbs perfective"
+          },
+          {
+            "question": "Яке слово означає \"entrance\" і походить від \"увійти\"?",
+            "options": [
+              "виїзд",
+              "вхід",
+              "прихід",
+              "перехід"
+            ],
+            "correctIndex": 1,
+            "explanation": "\"вхід\" (entrance) comes from \"увійти\" (to enter)"
+          },
+          {
+            "question": "Що означає \"переїхати\" в контексті житла?",
+            "options": [
+              "to visit",
+              "to exit",
+              "to move (to a new home)",
+              "to arrive"
+            ],
+            "correctIndex": 2,
+            "explanation": "\"переїхати\" means to move/relocate"
+          },
+          {
+            "question": "Який корінь використовується для руху пішки?",
+            "options": [
+              "-їх-/-їзд-",
+              "-йд-/-ход-",
+              "-лет-",
+              "-нес-"
+            ],
+            "correctIndex": 1,
+            "explanation": "\"-йд-/-ход-\" is used for movement on foot"
+          },
+          {
+            "question": "Який корінь використовується для руху транспортом?",
+            "options": [
+              "-їх-/-їзд-",
+              "-йд-/-ход-",
+              "-біг-",
+              "-нес-"
+            ],
+            "correctIndex": 0,
+            "explanation": "\"-їх-/-їзд-\" is used for movement by vehicle"
+          },
+          {
+            "question": "Що означає \"відійшов\" про поїзд?",
+            "options": [
+              "arrived",
+              "departed",
+              "stopped",
+              "crashed"
+            ],
+            "correctIndex": 1,
+            "explanation": "\"відійшов\" about train means departed"
+          },
+          {
+            "question": "Яке дієслово означає \"to carry out\" (винести назовні)?",
+            "options": [
+              "внести",
+              "винести",
+              "принести",
+              "перенести"
+            ],
+            "correctIndex": 1,
+            "explanation": "\"винести\" means to carry out"
+          },
+          {
+            "question": "Що означає \"забігти\" в повсякденному контексті?",
+            "options": [
+              "to run away",
+              "to run in briefly, pop in quickly",
+              "to run across",
+              "to arrive running"
+            ],
+            "correctIndex": 1,
+            "explanation": "\"забігти\" means to run in briefly"
+          }
+        ],
+        "shuffleQuestions": true,
+        "shuffleOptions": true,
+        "showCorrectAnswers": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2+",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-03T12:29:30.369Z",
+      "modifiedAt": "2025-12-03T12:29:30.369Z"
+    },
+    {
+      "id": "act-a2+-61-matchup",
+      "type": "match-up",
+      "title": "Протилежні префікси",
+      "description": "З'єднайте дієслова з протилежними значеннями.",
+      "content": {
+        "type": "match-up",
+        "pairs": [],
+        "shuffleRight": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2+",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-03T12:29:30.369Z",
+      "modifiedAt": "2025-12-03T12:29:30.369Z"
     }
   ],
   "vocabulary": {

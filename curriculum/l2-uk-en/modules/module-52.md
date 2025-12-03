@@ -262,21 +262,53 @@ Use все/те/щось + що:
 
 # Activities
 
-## fill-in: Complete the Sentences
+## fill-in: Relative Clauses
 
-> Choose the correct word to complete each sentence.
+> Choose the correct form of який.
 
-1. Вони планують ___ завтра.
-   > [!answer] згадувати
-   > [!options] збирати | зробити | заповнити | згадувати
+1. Людина, ___ (який) тут працює, мій друг.
+   > [!answer] яка
+   > (Feminine nominative - людина is feminine)
 
-2. Вони планують ___ завтра.
-   > [!answer] підписувати
-   > [!options] вибачте | боятися | чути | підписувати
+2. Книга, ___ (який) я читаю, дуже цікава.
+   > [!answer] яку
+   > (Feminine accusative - object of читаю)
 
-## unjumble: Build the Sentence
+3. Будинок, у ___ (який) я живу, дуже старий.
+   > [!answer] якому
+   > (Masculine locative after "у")
+
+4. Люди, ___ (який) я знаю, дуже добрі.
+   > [!answer] яких
+   > (Plural accusative - object of знаю)
+
+5. Все, ___ (який / що) ти сказав, — правда.
+   > [!answer] що
+   > (Що is used with все, те, щось, нічого)
+
+## unjumble: Relative Clauses
 
 > Arrange the words in the correct order.
+
+1. яка / Жінка / тут / працює / моя / сестра
+   > [!answer] Жінка, яка тут працює, — моя сестра.
+   > (The woman who works here is my sister.)
+
+2. яку / Книга / читаю / я / цікава / дуже
+   > [!answer] Книга, яку я читаю, дуже цікава.
+   > (The book that I'm reading is very interesting.)
+
+3. якому / Будинок / у / я / живу / старий
+   > [!answer] Будинок, у якому я живу, старий.
+   > (The building in which I live is old.)
+
+4. що / Все / ти / сказав / правда
+   > [!answer] Все, що ти сказав, — правда.
+   > (Everything that you said is true.)
+
+5. де / Місто / я / народився / гарне
+   > [!answer] Місто, де я народився, гарне.
+   > (The city where I was born is beautiful.)
 
 ## match-up: Match the Pairs
 
@@ -372,6 +404,141 @@ Use все/те/щось + що:
 
 - [x] "щось" means "something"
    > Correct!
+
+## select: Choose Correct Relative Form
+
+> Select the correct relative pronoun form.
+
+1. Це книга, ___ я прочитав минулого тижня.
+   - [ ] який
+   - [x] яку
+   - [ ] яка
+   - [ ] які
+   > Accusative feminine needed: "яку"
+
+2. Людина, ___ тут працює, мій брат.
+   - [ ] яку
+   - [x] яка
+   - [ ] які
+   - [ ] якої
+   > Nominative feminine needed: "яка"
+
+3. Друг, з ___ я подорожував, живе в Києві.
+   - [x] яким
+   - [ ] який
+   - [ ] якого
+   - [ ] якому
+   > Instrumental masculine after "з": "яким"
+
+4. Місто, у ___ я народився, дуже красиве.
+   - [ ] які
+   - [ ] який
+   - [x] якому
+   - [ ] якого
+   > Locative neuter after "у": "якому"
+
+5. ___, що ти сказав, правда.
+   - [ ] Щось
+   - [ ] Те
+   - [x] Все
+   - [ ] Нічого
+   > "Everything that you said" requires "Все"
+
+6. Жінка, про ___ ти розповідав, моя тітка.
+   - [ ] яка
+   - [x] яку
+   - [ ] якій
+   - [ ] якою
+   > Accusative after "про": "яку"
+
+7. Люди, ___ я знаю, дуже привітні.
+   - [ ] які
+   - [x] яких
+   - [ ] яким
+   - [ ] якої
+   > Accusative plural: "яких"
+
+8. Ресторан, ___ ми їли вчора, був дорогий.
+   - [ ] який
+   - [ ] якому
+   - [x] де
+   - [ ] куди
+   > "Where" for location: "де"
+
+9. Це те, ___ я хотів сказати.
+   - [ ] який
+   - [ ] яке
+   - [x] що
+   - [ ] котрий
+   > With "те" use: "що"
+
+10. Дівчина, ___ я дав квіти, посміхнулася.
+    - [ ] яка
+    - [ ] яку
+    - [x] якій
+    - [ ] якою
+    > Dative feminine needed: "якій"
+
+## order: Put Words in Order
+
+> Arrange the words to form correct sentences with relative clauses.
+
+1. Це / книга / яку / я / прочитав / минулого / тижня
+   > [!answer] Це книга, яку я прочитав минулого тижня.
+   > (This is the book that I read last week.)
+
+2. Чоловік / який / тут / працює / мій / брат / є
+   > [!answer] Чоловік, який тут працює, є мій брат.
+   > (The man who works here is my brother.)
+
+3. Місто / де / я / народився / дуже / красиве / є
+   > [!answer] Місто, де я народився, є дуже красиве.
+   > (The city where I was born is very beautiful.)
+
+4. Я / знаю / жінку / яка / викладає / українську / мову / в / університеті
+   > [!answer] Я знаю жінку, яка викладає українську мову в університеті.
+   > (I know a woman who teaches Ukrainian at the university.)
+
+5. Це / друг / з / яким / я / подорожував / по / Європі
+   > [!answer] Це друг, з яким я подорожував по Європі.
+   > (This is the friend with whom I traveled around Europe.)
+
+6. Все / що / ти / сказав / правда / є
+   > [!answer] Все, що ти сказав, є правда.
+   > (Everything that you said is true.)
+
+7. Ресторан / у / якому / ми / вечеряли / вчора / був / дуже / дорогий
+   > [!answer] Ресторан, у якому ми вечеряли вчора, був дуже дорогий.
+   > (The restaurant where we had dinner yesterday was very expensive.)
+
+8. Дівчина / якій / я / написав / лист / не / відповіла
+   > [!answer] Дівчина, якій я написав лист, не відповіла.
+   > (The girl to whom I wrote a letter didn't respond.)
+
+9. Країна / куди / ми / їдемо / влітку / дуже / цікава
+   > [!answer] Країна, куди ми їдемо влітку, дуже цікава.
+   > (The country where we're going in summer is very interesting.)
+
+10. Людина / про / яку / ти / питав / вже / пішла / додому
+    > [!answer] Людина, про яку ти питав, вже пішла додому.
+    > (The person you asked about already went home.)
+
+## group-sort: Sort by Gender Agreement
+
+> Sort these relative clause examples by the gender of the antecedent noun.
+
+| Masculine | Feminine | Neuter | Plural |
+|-----------|----------|--------|--------|
+| чоловік, який працює | книга, яка цікава | місто, яке красиве | люди, які живуть |
+| друг, якого я знаю | жінка, яку я бачив | вікно, яке відкрите | діти, яких я вчу |
+| стіл, який стоїть | машина, якою їду | слово, яке сказав | квіти, які купив |
+| будинок, у якому живу | школа, де вчуся | море, де плавав | документи, які підписав |
+| брат, з яким говорю | сестра, про яку думаю | життя, якого хочу | речі, про які мрію |
+| лист, який написав | пісня, яка подобається | серце, яке б'ється | очі, які сяють |
+| телефон, якого немає | робота, на якій працюю | місце, де зустрічаємося | студенти, які вчаться |
+| вчитель, який викладає | дівчина, якій написав | дерево, яке росте | гості, яких запросили |
+| магазин, де купую | дорога, якою їдемо | озеро, біля якого відпочиваємо | вулиці, якими ходжу |
+| фільм, який дивився | країна, звідки приїхав | свято, яке святкуємо | традиції, які зберігаємо |
 
 ---
 

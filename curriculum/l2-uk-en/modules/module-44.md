@@ -303,25 +303,53 @@ Make comparatives from these adjectives:
 
 # Activities
 
-## fill-in: Complete the Sentences
+## fill-in: Comparative Forms
 
-> Choose the correct word to complete each sentence.
+> Choose the correct comparative form.
 
-1. Цей будинок дуже ___.
-   > [!answer] нижчий
-   > [!options] нижчий | сонячний | щасливий | важкий
+1. Київ ___ (великий) за Львів у три рази.
+   > [!answer] більший
+   > [!options] більший | великий | найбільший | менший
 
-2. Ця книга надзвичайно ___.
-   > [!answer] молодший
-   > [!options] кращий | сонячний | молодший | недоконаний
+2. Вона говорить українською ___ (добре), ніж я.
+   > [!answer] краще
+   > [!options] краще | добре | найкраще | гірше
 
-3. Ця книга надзвичайно ___.
+3. Цей телефон набагато ___ (дорогий) за той.
    > [!answer] дорожчий
-   > [!options] дорожчий | цікавий | чорний | новий
+   > [!options] дорожчий | дорогий | найдорожчий | дешевший
 
-## unjumble: Build the Sentence
+4. Мій брат ___ (старий) за мене на два роки.
+   > [!answer] старший
+   > [!options] старший | старий | молодший | найстарший
+
+5. Зима значно ___ (холодний), ніж осінь в Україні.
+   > [!answer] холодніша
+   > [!options] холодніша | холодний | тепліша | найхолодніша
+
+## unjumble: Comparison Sentences
 
 > Arrange the words in the correct order.
+
+1. більший / Київ / ніж / Львів / набагато
+   > [!answer] Київ набагато більший, ніж Львів.
+   > (Kyiv is much bigger than Lviv.)
+
+2. швидше / Він / бігає / за / мене
+   > [!answer] Він бігає швидше за мене.
+   > (He runs faster than me.)
+
+3. краще / Вона / говорить / українською / ніж / я
+   > [!answer] Вона говорить українською краще, ніж я.
+   > (She speaks Ukrainian better than me.)
+
+4. дорожчий / Цей / телефон / за / той
+   > [!answer] Цей телефон дорожчий за той.
+   > (This phone is more expensive than that one.)
+
+5. старший / Мій / брат / за / мене / на / рік
+   > [!answer] Мій брат старший за мене на рік.
+   > (My brother is older than me by a year.)
 
 ## match-up: Match the Pairs
 
@@ -463,6 +491,123 @@ Make comparatives from these adjectives:
 
 - [x] "швидше" means "faster"
    > Correct!
+
+## select: Comparative Forms
+
+> Choose the correct comparative form for each sentence.
+
+1. Kyiv is bigger than Lviv.
+   - [x] Київ більший ніж Львів.
+   - [ ] Київ великий ніж Львів.
+   - [ ] Київ більше ніж Львів.
+   - [ ] Київ більша ніж Львів.
+   > Use masculine form with masculine noun: "Київ більший ніж Львів."
+
+2. This book is better than that one.
+   - [x] Ця книга краща ніж та.
+   - [ ] Ця книга добра ніж та.
+   - [ ] Ця книга кращий ніж та.
+   - [ ] Ця книга більше ніж та.
+   > Use feminine form with feminine noun: "Ця книга краща ніж та."
+
+3. My brother is younger than me.
+   - [x] Мій брат молодший за мене.
+   - [ ] Мій брат молодий за мене.
+   - [ ] Мій брат молодша за мене.
+   - [ ] Мій брат більше за мене.
+   > Use comparative form: "Мій брат молодший за мене."
+
+4. Coffee is more expensive than tea.
+   - [x] Кава дорожча ніж чай.
+   - [ ] Кава дорога ніж чай.
+   - [ ] Кава дорожчий ніж чай.
+   - [ ] Кава більше ніж чай.
+   > Use feminine form with feminine noun: "Кава дорожча ніж чай."
+
+5. He runs faster than I do.
+   - [x] Він бігає швидше ніж я.
+   - [ ] Він бігає швидко ніж я.
+   - [ ] Він бігає більше ніж я.
+   - [ ] Він бігає швидший ніж я.
+   > Use adverb comparative: "Він бігає швидше ніж я."
+
+6. This building is higher than that one.
+   - [ ] Ця будівля висока ніж та.
+   - [x] Ця будівля вища ніж та.
+   - [ ] Ця будівля вищий ніж та.
+   - [ ] Ця будівля більше ніж та.
+   > Use feminine comparative form: "Ця будівля вища ніж та."
+
+7. Today is warmer than yesterday.
+   - [x] Сьогодні тепліше ніж вчора.
+   - [ ] Сьогодні тепло ніж вчора.
+   - [ ] Сьогодні теплий ніж вчора.
+   - [ ] Сьогодні більше ніж вчора.
+   > Use adverb comparative with weather: "Сьогодні тепліше ніж вчора."
+
+8. This car is worse than that one.
+   - [x] Ця машина гірша ніж та.
+   - [ ] Ця машина погана ніж та.
+   - [ ] Ця машина гірший ніж та.
+   - [ ] Ця машина менше ніж та.
+   > Use feminine comparative: "Ця машина гірша ніж та."
+
+9. She speaks significantly better.
+   - [x] Вона говорить значно краще.
+   - [ ] Вона говорить значно добре.
+   - [ ] Вона говорить значно кращий.
+   - [ ] Вона говорить значно більше.
+   > Use adverb comparative with intensifier: "Вона говорить значно краще."
+
+10. This phone is cheaper than mine.
+    - [x] Цей телефон дешевший ніж мій.
+    - [ ] Цей телефон дешевий ніж мій.
+    - [ ] Цей телефон дешевша ніж мій.
+    - [ ] Цей телефон менше ніж мій.
+    > Use masculine comparative: "Цей телефон дешевший ніж мій."
+
+## order: Size Comparison
+
+> Order these items from smallest to largest.
+
+- [8] Україна більша ніж Австрія.
+- [2] Мій телефон менший ніж планшет.
+- [5] Стіл більший ніж стілець.
+- [1] Книга менша ніж ноутбук.
+- [9] Тихий океан більший ніж усі міста.
+- [3] Кімната більша ніж шафа.
+- [6] Будинок більший ніж квартира.
+- [10] Сонце значно більше ніж Земля.
+- [4] Автобус більший ніж машина.
+- [7] Місто більше ніж село.
+
+## group-sort: Sort Comparatives
+
+> Sort these adjectives by their comparative pattern.
+
+**Regular -іший/-ший pattern:**
+- новий → новіший
+- старий → старіший
+- високий → вищий
+- низький → нижчий
+- швидкий → швидший
+- повільний → повільніший
+- теплий → тепліший
+- холодний → холодніший
+- дорогий → дорожчий
+- дешевий → дешевший
+
+**Irregular comparatives:**
+- добрий → кращий
+- поганий → гірший
+- великий → більший
+- малий → менший
+- багато → більше
+- мало → менше
+- добре → краще
+- погано → гірше
+- швидко → швидше
+- повільно → повільніше
 
 ---
 

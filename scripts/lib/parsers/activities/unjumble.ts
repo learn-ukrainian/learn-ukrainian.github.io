@@ -25,6 +25,7 @@ export interface UnjumbleItem {
 
 export interface UnjumbleContent {
   type: 'unjumble';
+  isUnjumble: true;
   items: UnjumbleItem[];
 }
 
@@ -75,6 +76,7 @@ export class UnjumbleParser extends ActivityParser<UnjumbleContent> {
 
     return {
       type: 'unjumble',
+      isUnjumble: true,
       items,
     };
   }

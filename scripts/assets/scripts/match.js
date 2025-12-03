@@ -1,42 +1,74 @@
-// Match Activity
-let matchSel = null, matchScore = 0, matchPairsArr = [];
+// Match Activity - supports multiple instances
+const matchState = {};
 
-document.querySelectorAll('#match-left .match-item').forEach(item => {
-  item.addEventListener('click', () => {
-    if (item.classList.contains('matched')) return;
-    document.querySelectorAll('#match-left .match-item').forEach(i => i.classList.remove('selected'));
-    item.classList.add('selected');
-    matchSel = { el: item, pair: item.dataset.pair };
+function initMatch(sectionId, data) {
+  const container = document.getElementById(sectionId + '-container');
+  const leftCol = document.getElementById(sectionId + '-left');
+  const rightCol = document.getElementById(sectionId + '-right');
+  if (!container || !leftCol || !rightCol || !data.pairs || !data.pairs.length) return;
+
+  const pairs = data.pairs;
+  matchState[sectionId] = { selected: null, score: 0, matched: [], total: pairs.length, data: data };
+
+  // Create left column items
+  const shuffledLeft = pairs.map((p, i) => ({ text: p.left, idx: i })).sort(() => Math.random() - 0.5);
+  leftCol.innerHTML = shuffledLeft.map(p => '<div class="match-item" data-pair="' + p.idx + '" data-section="' + sectionId + '" data-side="left">' + p.text + '</div>').join('');
+
+  // Create right column items
+  const shuffledRight = pairs.map((p, i) => ({ text: p.right, idx: i })).sort(() => Math.random() - 0.5);
+  rightCol.innerHTML = shuffledRight.map(p => '<div class="match-item" data-pair="' + p.idx + '" data-section="' + sectionId + '" data-side="right">' + p.text + '</div>').join('');
+
+  // Attach click handlers
+  leftCol.querySelectorAll('.match-item').forEach(item => {
+    item.addEventListener('click', () => handleMatchLeft(item));
   });
-});
-
-document.querySelectorAll('#match-right .match-item').forEach(item => {
-  item.addEventListener('click', () => {
-    if (item.classList.contains('matched') || !matchSel) return;
-    if (matchSel.pair === item.dataset.pair) {
-      matchSel.el.classList.remove('selected');
-      matchSel.el.classList.add('matched');
-      item.classList.add('matched');
-      matchPairsArr.push({ left: matchSel.el, right: item });
-      matchScore++;
-      document.getElementById('match-score').textContent = matchScore;
-      drawLines();
-      if (matchScore === matchPairs.length) document.getElementById('match-complete').classList.add('show');
-    } else {
-      item.classList.add('wrong');
-      setTimeout(() => item.classList.remove('wrong'), 300);
-    }
-    matchSel = null;
+  rightCol.querySelectorAll('.match-item').forEach(item => {
+    item.addEventListener('click', () => handleMatchRight(item));
   });
-});
+}
 
-function drawLines() {
-  const svg = document.getElementById('match-lines'), c = document.getElementById('match-container');
-  if (!svg || !c) return;
-  const r = c.getBoundingClientRect();
+function handleMatchLeft(item) {
+  const sectionId = item.dataset.section;
+  const state = matchState[sectionId];
+  if (item.classList.contains('matched')) return;
+
+  const leftCol = document.getElementById(sectionId + '-left');
+  leftCol.querySelectorAll('.match-item').forEach(i => i.classList.remove('selected'));
+  item.classList.add('selected');
+  state.selected = { el: item, pair: item.dataset.pair };
+}
+
+function handleMatchRight(item) {
+  const sectionId = item.dataset.section;
+  const state = matchState[sectionId];
+  if (item.classList.contains('matched') || !state.selected) return;
+
+  if (state.selected.pair === item.dataset.pair) {
+    state.selected.el.classList.remove('selected');
+    state.selected.el.classList.add('matched');
+    item.classList.add('matched');
+    state.matched.push({ left: state.selected.el, right: item });
+    state.score++;
+    document.getElementById(sectionId + '-score').textContent = state.score;
+    drawMatchLines(sectionId);
+    if (state.score === state.total) document.getElementById(sectionId + '-complete').classList.add('show');
+  } else {
+    item.classList.add('wrong');
+    setTimeout(() => item.classList.remove('wrong'), 300);
+  }
+  state.selected = null;
+}
+
+function drawMatchLines(sectionId) {
+  const svg = document.getElementById(sectionId + '-lines');
+  const container = document.getElementById(sectionId + '-container');
+  const state = matchState[sectionId];
+  if (!svg || !container || !state) return;
+
+  const r = container.getBoundingClientRect();
   svg.innerHTML = '';
   svg.setAttribute('viewBox', '0 0 ' + r.width + ' ' + r.height);
-  matchPairsArr.forEach(p => {
+  state.matched.forEach(p => {
     const lr = p.left.getBoundingClientRect(), rr = p.right.getBoundingClientRect();
     const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
     line.setAttribute('x1', lr.right - r.left);
@@ -49,14 +81,16 @@ function drawLines() {
   });
 }
 
-function resetMatch() {
-  matchSel = null;
-  matchScore = 0;
-  matchPairsArr = [];
-  document.getElementById('match-score').textContent = '0';
-  document.getElementById('match-complete')?.classList.remove('show');
-  document.getElementById('match-lines').innerHTML = '';
-  document.querySelectorAll('#match-container .match-item').forEach(i => i.classList.remove('matched', 'selected', 'wrong'));
+function resetMatch(sectionId) {
+  const state = matchState[sectionId];
+  if (!state) return;
+  document.getElementById(sectionId + '-score').textContent = '0';
+  document.getElementById(sectionId + '-complete')?.classList.remove('show');
+  document.getElementById(sectionId + '-lines').innerHTML = '';
+  initMatch(sectionId, state.data);
 }
 
-window.addEventListener('resize', drawLines);
+// Redraw lines on resize for all match activities
+window.addEventListener('resize', () => {
+  Object.keys(matchState).forEach(sectionId => drawMatchLines(sectionId));
+});

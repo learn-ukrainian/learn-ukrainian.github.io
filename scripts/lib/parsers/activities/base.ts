@@ -71,6 +71,7 @@ export abstract class ActivityParser<T extends ActivityContent = ActivityContent
       'groupsort': 'group-sort',
       'reorder': 'order',
       // Note: unjumble/unscramble/word-order handled by UnjumbleParser
+      // Note: select is handled by SelectParser
     };
     const normalized = type.toLowerCase().replace(/\s+/g, '-');
     return (typeMap[normalized] || normalized) as ActivityType;

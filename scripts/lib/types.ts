@@ -15,7 +15,8 @@ export type ActivityType =
   | 'translate'
   | 'unjumble'
   | 'order'
-  | 'gap-fill';
+  | 'gap-fill'
+  | 'select';
 
 // =============================================================================
 // Frontmatter

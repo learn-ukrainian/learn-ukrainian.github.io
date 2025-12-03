@@ -232,47 +232,47 @@ You're a tourist in Kyiv. Practice:
 
 ## unjumble: Build the Sentence
 
-> Arrange the words in the correct order.
+> Arrange the words in the correct order. (A1: 4-6 words)
 
-1. цікаву / бачу / книгу / Я / сьогодні / українську / нову
-   > [!answer] Я сьогодні бачу нову цікаву українську книгу.
-   > (Today I see a new interesting Ukrainian book.) [7 words]
+1. книгу / бачу / Я / цікаву
+   > [!answer] Я бачу цікаву книгу.
+   > (I see an interesting book.) [4 words]
 
-2. нового / студента / бачить / Вона / молодого / українського
-   > [!answer] Вона бачить нового молодого українського студента.
-   > (She sees a new young Ukrainian student.) [6 words]
+2. студента / бачить / Вона / нового
+   > [!answer] Вона бачить нового студента.
+   > (She sees a new student.) [4 words]
 
-3. офісі / великому / Він / в / працює / сьогодні / своєму
-   > [!answer] Він сьогодні працює в своєму великому офісі.
-   > (Today he works in his big office.) [7 words]
+3. офісі / Він / в / працює
+   > [!answer] Він працює в офісі.
+   > (He works in the office.) [4 words]
 
-4. зараз / часу / Немає / на / це / у / мене / вільного
-   > [!answer] У мене зараз немає вільного часу на це.
-   > (I don't have free time for this now.) [8 words]
+4. часу / Немає / у / мене
+   > [!answer] У мене немає часу.
+   > (I don't have time.) [4 words]
 
-5. книга / улюблена / Це / моя / українська / найкраща
-   > [!answer] Це моя найкраща улюблена українська книга.
-   > (This is my best favorite Ukrainian book.) [6 words]
+5. книга / Це / моя / улюблена
+   > [!answer] Це моя улюблена книга.
+   > (This is my favorite book.) [4 words]
 
-6. прямо / Йдіть / потім / праворуч / два / квартали / і / поверніть
-   > [!answer] Йдіть прямо два квартали і потім поверніть праворуч.
-   > (Go straight two blocks and then turn right.) [8 words]
+6. прямо / Йдіть / і / праворуч
+   > [!answer] Йдіть прямо і праворуч.
+   > (Go straight and right.) [4 words]
 
-7. гарячу / каву / люблю / Я / дуже / з / молоком / солодку
-   > [!answer] Я дуже люблю гарячу солодку каву з молоком.
-   > (I really love hot sweet coffee with milk.) [8 words]
+7. цукру / без / каву / Я / хочу
+   > [!answer] Я хочу каву без цукру.
+   > (I want coffee without sugar.) [5 words]
 
-8. ласка / будь / меню / Можна / нам / отримати
-   > [!answer] Можна нам отримати меню, будь ласка?
-   > (May we have the menu, please?) [6 words]
+8. столі / на / Книга / лежить
+   > [!answer] Книга лежить на столі.
+   > (The book is on the table.) [4 words]
 
-9. сьогодні / коштує / Скільки / це / все / разом / у / вас
-   > [!answer] Скільки у вас сьогодні коштує це все разом?
-   > (How much does all this cost together at your place today?) [8 words]
+9. метро / Де / тут / найближче
+   > [!answer] Де тут найближче метро?
+   > (Where is the nearest metro here?) [4 words]
 
-10. гарячу / молоком / Каву / з / без / цукру / будь ласка
-    > [!answer] Каву гарячу з молоком без цукру, будь ласка.
-    > (Hot coffee with milk without sugar, please.) [7 words]
+10. друга / Це / книга / мого
+    > [!answer] Це книга мого друга.
+    > (This is my friend's book.) [4 words]
 
 ## match-up: Match the Cases
 

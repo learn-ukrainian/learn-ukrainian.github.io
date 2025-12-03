@@ -269,113 +269,133 @@ Create sentences using: Subject + дати/показати/сказати + Obj
 
 > Choose the correct dative noun form to complete each sentence.
 
-1. Я пишу листа ___ (брат).
+1. Я пишу довгого листа ___ (брат) у Львів.
    > [!answer] братові / брату
    > [!options] брат | братові | брату | брата
 
-2. Допоможи ___ (бабуся)!
+2. Допоможи, будь ласка, ___ (бабуся) на кухні!
    > [!answer] бабусі
    > [!options] бабуся | бабусі | бабусю | бабусею
 
-3. Вона дзвонить ___ (подруга).
+3. Вона щодня дзвонить своїй ___ (подруга) ввечері.
    > [!answer] подрузі
    > [!options] подруга | подрузі | подругу | подругою
 
-4. Покажи це ___ (батьки).
+4. Покажи ці нові фотографії ___ (батьки) сьогодні.
    > [!answer] батькам
    > [!options] батьки | батьків | батькам | батьками
 
-5. Скажи ___ (Марія), що я чекаю.
+5. Скажи ___ (Марія), що я чекаю біля кафе.
    > [!answer] Марії
    > [!options] Марія | Марії | Марію | Марією
 
-6. Він дає гроші ___ (студенти).
+6. Він щомісяця дає гроші ___ (студенти) на проєкти.
    > [!answer] студентам
    > [!options] студенти | студентів | студентам | студентами
 
-7. Що потрібно ___ (місто)?
+7. Що саме потрібно цьому ___ (місто) зараз?
    > [!answer] місту
    > [!options] місто | міста | місту | містом
 
-8. Я допомагаю ___ (вчитель).
+8. Я завжди з радістю допомагаю ___ (вчитель).
    > [!answer] вчителеві / вчителю
    > [!options] вчитель | вчителеві | вчителю | вчителя
 
-9. Розкажи це ___ (друзі)!
+9. Розкажи цю цікаву історію ___ (друзі) завтра!
    > [!answer] друзям
    > [!options] друзі | друзів | друзям | друзями
 
-10. Напиши ___ (колега).
+10. Напиши коротке повідомлення ___ (колега) про зустріч.
     > [!answer] колезі
     > [!options] колега | колегу | колезі | колегою
 
 ## unjumble: Build the Sentence
 
-> Arrange the words in the correct order to form a grammatically correct sentence using dative nouns.
+> Arrange the words in the correct order. (A2: 8-10 words)
 
-1. братові / Я / пишу / листа
-   > [!answer] Я пишу листа братові.
-   > (I'm writing a letter to my brother.)
+1. братові / Я / пишу / листа / довгого / у Львів / старшому / своєму
+   > [!answer] Я пишу довгого листа своєму старшому братові у Львів.
+   > (I'm writing a long letter to my older brother in Lviv.) [8 words]
 
-2. бабусі / Допоможи
-   > [!answer] Допоможи бабусі!
-   > (Help grandma!)
+2. бабусі / Допоможи / на кухні / будь ласка / нашій / готувати / обід
+   > [!answer] Допоможи нашій бабусі готувати обід на кухні, будь ласка!
+   > (Help our grandma cook lunch in the kitchen, please!) [9 words]
 
-3. дзвонить / Вона / подрузі
-   > [!answer] Вона дзвонить подрузі.
-   > (She's calling a friend.)
+3. дзвонить / Вона / подрузі / щодня / ввечері / найкращій / своїй / після роботи
+   > [!answer] Вона щодня дзвонить своїй найкращій подрузі ввечері після роботи.
+   > (She calls her best friend every evening after work.) [9 words]
 
-4. батькам / Покажи / це
-   > [!answer] Покажи це батькам.
-   > (Show this to parents.)
+4. батькам / Покажи / нові / фотографії / ці / сьогодні / нашим / із відпустки
+   > [!answer] Покажи ці нові фотографії із відпустки нашим батькам сьогодні.
+   > (Show these new vacation photos to our parents today.) [9 words]
 
-5. Марії / Скажи / що / чекаю / я
-   > [!answer] Скажи Марії, що я чекаю.
-   > (Tell Mariya that I'm waiting.)
+5. Марії / Скажи / що / чекаю / я / біля кафе / нашого / центрального
+   > [!answer] Скажи Марії, що я чекаю біля нашого центрального кафе.
+   > (Tell Mariya that I'm waiting near our central cafe.) [9 words]
 
-6. студентам / Він / дає / гроші
-   > [!answer] Він дає гроші студентам.
-   > (He gives money to students.)
+6. студентам / Він / дає / гроші / щомісяця / на проєкти / талановитим / молодим
+   > [!answer] Він щомісяця дає гроші талановитим молодим студентам на проєкти.
+   > (He gives money to talented young students monthly for projects.) [9 words]
 
-7. місту / потрібно / Що
-   > [!answer] Що потрібно місту?
-   > (What does the city need?)
+7. місту / потрібно / Що / цьому / нашому / зараз / старому / найбільше
+   > [!answer] Що найбільше зараз потрібно нашому старому місту?
+   > (What does our old city need most now?) [8 words]
 
-8. вчителеві / Я / допомагаю
-   > [!answer] Я допомагаю вчителеві.
-   > (I help the teacher.)
+8. вчителеві / Я / допомагаю / завжди / з радістю / нашому / новому / молодому
+   > [!answer] Я завжди з радістю допомагаю нашому новому молодому вчителеві.
+   > (I always gladly help our new young teacher.) [9 words]
 
-9. друзям / Розкажи / це
-   > [!answer] Розкажи це друзям!
-   > (Tell this to friends!)
+9. друзям / Розкажи / цю / історію / цікаву / завтра / українську / старим / своїм
+   > [!answer] Розкажи цю цікаву українську історію своїм старим друзям завтра!
+   > (Tell this interesting Ukrainian story to your old friends tomorrow!) [10 words]
 
-10. подарунок / Я / даю / сестрі
-    > [!answer] Я даю подарунок сестрі.
-    > (I give a gift to my sister.)
+10. подарунок / Я / даю / сестрі / гарний / на день народження / молодшій / своїй
+    > [!answer] Я даю гарний подарунок своїй молодшій сестрі на день народження.
+    > (I give a nice gift to my younger sister for her birthday.) [10 words]
 
 ## select: Choose the Dative Noun Form
 
-> Select the correct dative noun form from the options for the given nominative noun.
+> Select the correct dative noun form. (A2: 10 items)
 
-1. друг
+1. друг → ___
    > [!answer] другові / другу
-   > [!options] друг | друга | другові | другу
+   > [!options] друга | другові | другу
 
-2. сестра
+2. сестра → ___
    > [!answer] сестрі
-   > [!options] сестра | сестру | сестрі | сестрою
+   > [!options] сестру | сестрі | сестрою
 
-3. батьки (plural)
+3. батьки → ___
    > [!answer] батькам
-   > [!options] батьки | батьків | батькам | батьками
+   > [!options] батьків | батькам | батьками
 
-4. місто
+4. місто → ___
    > [!answer] місту
-   > [!options] місто | міста | місту | містом
+   > [!options] міста | місту | містом
 
-5. студент (masculine)
+5. студент → ___
    > [!answer] студентові / студенту
-   > [!options] студент | студента | студентові | студенту
+   > [!options] студента | студентові | студенту
+
+6. подруга → ___
+   > [!answer] подрузі
+   > [!options] подругу | подрузі | подругою
+
+7. вчитель → ___
+   > [!answer] вчителеві / вчителю
+   > [!options] вчителя | вчителеві | вчителю
+
+8. мама → ___
+   > [!answer] мамі
+   > [!options] маму | мамі | мамою
+
+9. діти → ___
+   > [!answer] дітям
+   > [!options] дітей | дітям | дітьми
+
+10. колега → ___
+    > [!answer] колезі
+    > [!options] колегу | колезі | колегою
 
 ## quiz: Dative Noun Endings
 
@@ -484,3 +504,90 @@ Create sentences using: Subject + дати/показати/сказати + Obj
 
 - [x] The dative form of "колега" (f) is "колезі".
    > Correct! (колега is a-stem, so changes to -і, with г→з consonant change implicit)
+
+## match-up: Dative Noun Pairs
+
+> Match the nominative noun with its dative form.
+
+| Left | Right |
+|------|-------|
+| друг | другові |
+| сестра | сестрі |
+| батьки | батькам |
+| місто | місту |
+| вчитель | вчителеві |
+| подруга | подрузі |
+| мама | мамі |
+| студенти | студентам |
+| брат | братові |
+| дитина | дитині |
+
+## group-sort: Dative Ending Categories
+
+> Sort these dative forms by their ending pattern.
+
+### -ові/-у (Masculine)
+- другові
+- братові
+- студенту
+- вчителю
+
+### -і (Feminine)
+- сестрі
+- мамі
+- подрузі
+- бабусі
+
+### -у (Neuter)
+- місту
+- селу
+
+### -ам/-ям (Plural)
+- батькам
+- друзям
+- студентам
+- дітям
+
+## order: Dative Sentence Building
+
+> Arrange the sentence elements in the correct order.
+
+1. [Я] → [даю] → [подарунок] → [сестрі]
+   > [!answer] Я даю подарунок сестрі.
+   > (I give a gift to my sister.)
+
+2. [Вона] → [пише] → [листа] → [другові]
+   > [!answer] Вона пише листа другові.
+   > (She writes a letter to a friend.)
+
+3. [Ми] → [показуємо] → [фото] → [батькам]
+   > [!answer] Ми показуємо фото батькам.
+   > (We show photos to our parents.)
+
+4. [Він] → [допомагає] → [бабусі] → [на кухні]
+   > [!answer] Він допомагає бабусі на кухні.
+   > (He helps grandma in the kitchen.)
+
+5. [Вони] → [дзвонять] → [друзям] → [щодня]
+   > [!answer] Вони дзвонять друзям щодня.
+   > (They call friends every day.)
+
+6. [Я] → [кажу] → [правду] → [вчителеві]
+   > [!answer] Я кажу правду вчителеві.
+   > (I tell the truth to the teacher.)
+
+7. [Вона] → [надсилає] → [листа] → [колезі]
+   > [!answer] Вона надсилає листа колезі.
+   > (She sends a letter to a colleague.)
+
+8. [Ми] → [даємо] → [книгу] → [студентові]
+   > [!answer] Ми даємо книгу студентові.
+   > (We give a book to the student.)
+
+9. [Він] → [розповідає] → [історію] → [дітям]
+   > [!answer] Він розповідає історію дітям.
+   > (He tells a story to the children.)
+
+10. [Я] → [купую] → [квіти] → [мамі]
+    > [!answer] Я купую квіти мамі.
+    > (I buy flowers for mom.)

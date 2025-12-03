@@ -274,6 +274,18 @@ footer {
 .quiz-explanation { margin-top: 1rem; padding: 1rem; background: #e8f4fd; border-radius: 8px; display: none; }
 .quiz-explanation.show { display: block; }
 
+/* True/False Activity */
+.tf-statement { border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; }
+.tf-statement.answered { pointer-events: none; }
+.tf-text { font-size: 1.15rem; margin-bottom: 1rem; }
+.tf-buttons { display: flex; gap: 1rem; }
+.tf-btn { flex: 1; background: #f5f5f5; border: 2px solid var(--border); border-radius: 8px; padding: 0.75rem 1rem; cursor: pointer; font-size: 1rem; font-weight: 500; }
+.tf-btn:hover { background: #e8f4fd; border-color: var(--primary); }
+.tf-btn.correct { border-color: var(--success); background: #d4edda; color: var(--success); }
+.tf-btn.wrong { border-color: var(--danger); background: #f8d7da; color: var(--danger); }
+.tf-explanation { margin-top: 1rem; padding: 1rem; background: #e8f4fd; border-radius: 8px; display: none; }
+.tf-explanation.show { display: block; }
+
 /* Sort Activity */
 .sort-pool { background: #f5f5f5; border: 2px dashed var(--border); border-radius: 12px; padding: 1.5rem; min-height: 80px; margin-bottom: 1rem; }
 .sort-items { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; }
@@ -376,6 +388,28 @@ footer {
 .unjumble-feedback .wrong-text { color: var(--danger); }
 .unjumble-feedback .translation { color: var(--text-muted); font-style: italic; margin-left: 0.5rem; }
 
+/* Select Activity - Multi-choice checkboxes */
+.select-container { display: flex; flex-direction: column; gap: 1rem; }
+.select-question { border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; display: flex; gap: 0.75rem; }
+.select-question.answered .select-checkbox { pointer-events: none; }
+.select-number { font-weight: 600; color: var(--text-muted); min-width: 2rem; }
+.select-content { flex: 1; }
+.select-prompt { font-size: 1.1rem; font-weight: 500; margin-bottom: 0.75rem; }
+.select-options { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 0.75rem; }
+.select-option { display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem 0.75rem; border-radius: 6px; cursor: pointer; transition: background 0.15s; }
+.select-option:hover { background: #f5f5f5; }
+.select-option.correct { background: #d4edda; }
+.select-option.correct-unchecked { background: #f8f9fa; }
+.select-option.wrong { background: #f8d7da; }
+.select-option.missed { background: #fff3cd; border: 1px dashed var(--warning); }
+.select-checkbox { width: 1.25rem; height: 1.25rem; cursor: pointer; }
+.select-text { font-size: 1rem; }
+.select-check { margin-top: 0.5rem; }
+.select-feedback { margin-top: 0.75rem; display: none; }
+.select-feedback.show { display: block; }
+.select-feedback .correct-text { color: var(--success); font-weight: 600; }
+.select-feedback .wrong-text { color: var(--danger); }
+
   </style>
 </head>
 <body>
@@ -392,11 +426,14 @@ footer {
     <h1>Module 42: Verbal Aspect II</h1>
     <div class="nav-tabs">
       <button class="nav-tab active" data-section="lesson">Lesson</button>
-      <button class="nav-tab" data-section="match">Match</button>
-      <button class="nav-tab" data-section="quiz">Quiz</button>
-      
-      <button class="nav-tab" data-section="fill">Fill</button>
-      <button class="nav-tab" data-section="order">Order</button>
+      <button class="nav-tab" data-section="activity-0">1. Fill</button>
+      <button class="nav-tab" data-section="activity-1">2. Order</button>
+      <button class="nav-tab" data-section="activity-2">3. Match</button>
+      <button class="nav-tab" data-section="activity-3">4. Quiz</button>
+      <button class="nav-tab" data-section="activity-4">5. T/F</button>
+      <button class="nav-tab" data-section="activity-5">6. Select</button>
+      <button class="nav-tab" data-section="activity-6">7. Order</button>
+      <button class="nav-tab" data-section="activity-7">8. Sort</button>
       <button class="nav-tab" data-section="vocab">Vocab</button>
     </div>
   </nav>
@@ -1079,41 +1116,69 @@ footer {
     </div>
   
       <div class="btn-group">
-        <button class="btn btn-primary" onclick="showSection('match')">Activities →</button>
+        <button class="btn btn-primary" onclick="showSection('activity-0')">Activities →</button>
       </div>
     </section>
   
     
-    <section id="match" class="section"><div class="card"><h3>Match the Pairs</h3>
-      <div class="score-display"><span class="score"><span id="match-score">0</span>/12</span></div>
-      <div class="match-container" id="match-container"><svg class="match-lines" id="match-lines"></svg>
-        <div class="match-column" id="match-left"><div class="match-item" data-pair="0">почути</div><div class="match-item" data-pair="1">підпис</div><div class="match-item" data-pair="2">побачити</div><div class="match-item" data-pair="3">кінчати</div><div class="match-item" data-pair="4">запросити</div><div class="match-item" data-pair="5">приїхати</div><div class="match-item" data-pair="6">показати</div><div class="match-item" data-pair="7">почати</div><div class="match-item" data-pair="8">розповісти</div><div class="match-item" data-pair="9">відповісти</div><div class="match-item" data-pair="10">кафе</div><div class="match-item" data-pair="11">відкрити</div></div>
-        <div class="match-column" id="match-right"><div class="match-item" data-pair="11">to open (perf)</div><div class="match-item" data-pair="2">to see (perf)</div><div class="match-item" data-pair="4">to invite (perf)</div><div class="match-item" data-pair="10">café</div><div class="match-item" data-pair="7">to begin (perf)</div><div class="match-item" data-pair="0">to hear (perf)</div><div class="match-item" data-pair="3">to finish (impf)</div><div class="match-item" data-pair="8">to tell (once)</div><div class="match-item" data-pair="1">signature</div><div class="match-item" data-pair="5">to arrive (by vehicle)</div><div class="match-item" data-pair="6">to show (pf)</div><div class="match-item" data-pair="9">to answer (perf)</div></div>
+    <section id="activity-0" class="section"><div class="card"><h3>More Aspect Pairs</h3>
+      <div class="score-display"><span class="score"><span id="activity-0-score">0</span>/10</span></div>
+      <div id="activity-0-container" class="fill-container"></div>
+      <div class="completion-message" id="activity-0-complete"><h3>Complete!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-0')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-1')">Next →</button></div>
+    </div></section>
+
+    <section id="activity-1" class="section"><div class="card"><h3>Build the Sentence</h3>
+      <div class="score-display"><span class="score"><span id="activity-1-score">0</span>/10</span></div>
+      <div id="activity-1-container" class="order-container"></div>
+      <div class="completion-message" id="activity-1-complete"><h3>Perfect Order!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-1')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-2')">Next →</button></div>
+    </div></section>
+
+    <section id="activity-2" class="section"><div class="card"><h3>Match the Pairs</h3>
+      <div class="score-display"><span class="score"><span id="activity-2-score">0</span>/12</span></div>
+      <div class="match-container" id="activity-2-container"><svg class="match-lines" id="activity-2-lines"></svg>
+        <div class="match-column" id="activity-2-left"></div>
+        <div class="match-column" id="activity-2-right"></div>
       </div>
-      <div class="completion-message" id="match-complete"><h3>Perfect!</h3></div>
-      <div class="btn-group"><button class="btn btn-outline" onclick="resetMatch()">Reset</button><button class="btn btn-primary" onclick="showSection('quiz')">Next →</button></div>
+      <div class="completion-message" id="activity-2-complete"><h3>Perfect!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-2')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-3')">Next →</button></div>
     </div></section>
-    
-    <section id="quiz" class="section"><div class="card"><h3>Meaning Check</h3>
-      <div class="score-display"><span class="score"><span id="quiz-score">0</span>/12</span></div>
-      <div id="quiz-container"></div>
-      <div class="completion-message" id="quiz-complete"><h3>Complete!</h3></div>
-      <div class="btn-group"><button class="btn btn-outline" onclick="resetQuiz()">Reset</button><button class="btn btn-primary" onclick="showSection('fill')">Next →</button></div>
+
+    <section id="activity-3" class="section"><div class="card"><h3>Meaning Check</h3>
+      <div class="score-display"><span class="score"><span id="activity-3-score">0</span>/12</span></div>
+      <div id="activity-3-container"></div>
+      <div class="completion-message" id="activity-3-complete"><h3>Complete!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-3')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-4')">Next →</button></div>
     </div></section>
-    
-    
-    <section id="fill" class="section"><div class="card"><h3>Complete the Sentences</h3>
-      <div class="score-display"><span class="score"><span id="fill-score">0</span>/3</span></div>
-      <div id="fill-container" class="fill-container"></div>
-      <div class="completion-message" id="fill-complete"><h3>Complete!</h3></div>
-      <div class="btn-group"><button class="btn btn-outline" onclick="resetFill()">Reset</button><button class="btn btn-primary" onclick="showSection('order')">Next →</button></div>
+
+    <section id="activity-4" class="section"><div class="card"><h3>True or False?</h3>
+      <div class="score-display"><span class="score"><span id="activity-4-score">0</span>/10</span></div>
+      <div id="activity-4-container"></div>
+      <div class="completion-message" id="activity-4-complete"><h3>Complete!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-4')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-5')">Next →</button></div>
     </div></section>
-    
-    <section id="order" class="section"><div class="card"><h3>Build the Sentence</h3>
-      <div class="score-display"><span class="score"><span id="order-score">0</span>/0</span></div>
-      <div id="order-container" class="order-container"></div>
-      <div class="completion-message" id="order-complete"><h3>Perfect Order!</h3></div>
-      <div class="btn-group"><button class="btn btn-outline" onclick="resetOrder()">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
+
+    <section id="activity-5" class="section"><div class="card"><h3>Motion Verb Selection</h3>
+      <div class="score-display"><span class="score"><span id="activity-5-score">0</span>/10</span></div>
+      <div id="activity-5-container" class="select-container"></div>
+      <div class="completion-message" id="activity-5-complete"><h3>Complete!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-5')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-6')">Next →</button></div>
+    </div></section>
+
+    <section id="activity-6" class="section"><div class="card"><h3>Communication Sequence</h3>
+      <div class="score-display"><span class="score"><span id="activity-6-score">0</span>/0</span></div>
+      <div id="activity-6-container" class="order-container"></div>
+      <div class="completion-message" id="activity-6-complete"><h3>Perfect Order!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-6')">Reset</button><button class="btn btn-primary" onclick="showSection('activity-7')">Next →</button></div>
+    </div></section>
+
+    <section id="activity-7" class="section"><div class="card"><h3>Sort Verb Pairs</h3>
+      <div class="score-display"><span class="score"><span id="activity-7-score">0</span>/0</span></div>
+      <div class="sort-pool" id="activity-7-pool"><div class="sort-items" id="activity-7-items"></div></div>
+      <div class="sort-groups" id="activity-7-groups"></div>
+      <div class="completion-message" id="activity-7-complete"><h3>All Sorted!</h3></div>
+      <div class="btn-group"><button class="btn btn-outline" onclick="resetActivity('activity-7')">Reset</button><button class="btn btn-primary" onclick="showSection('vocab')">Next →</button></div>
     </div></section>
     
     <section id="vocab" class="section">
@@ -1140,13 +1205,8 @@ footer {
   </main><footer>Module 42 · curricula-opus</footer>
   <script>
 
-    const matchPairs = [{"left":"почути","right":"to hear (perf)"},{"left":"підпис","right":"signature"},{"left":"побачити","right":"to see (perf)"},{"left":"кінчати","right":"to finish (impf)"},{"left":"запросити","right":"to invite (perf)"},{"left":"приїхати","right":"to arrive (by vehicle)"},{"left":"показати","right":"to show (pf)"},{"left":"почати","right":"to begin (perf)"},{"left":"розповісти","right":"to tell (once)"},{"left":"відповісти","right":"to answer (perf)"},{"left":"кафе","right":"café"},{"left":"відкрити","right":"to open (perf)"}];
-    const quizData = [{"question":"What does \"закрити\" mean?","options":["fog","pen","company, group","to close (perf)"],"correctIndex":3,"explanation":"\"закрити\" means \"to close (perf)\""},{"question":"What does \"вийти\" mean?","options":["to suit/become","will be","to see","to exit"],"correctIndex":3,"explanation":"\"вийти\" means \"to exit\""},{"question":"What does \"пояснити\" mean?","options":["Sunday","to explain (perf)","bad","to be considered"],"correctIndex":1,"explanation":"\"пояснити\" means \"to explain (perf)\""},{"question":"What does \"запросити\" mean?","options":["to invite (perf)","hard, heavy","umbrella","to take"],"correctIndex":0,"explanation":"\"запросити\" means \"to invite (perf)\""},{"question":"What does \"розповісти\" mean?","options":["to tell (once)","to watch, look","to be interested","nobody"],"correctIndex":0,"explanation":"\"розповісти\" means \"to tell (once)\""},{"question":"What does \"відповісти\" mean?","options":["(with) her","to answer (perf)","to inform","to answer"],"correctIndex":1,"explanation":"\"відповісти\" means \"to answer (perf)\""},{"question":"What does \"кінчати\" mean?","options":["Accusative: бачити, читати, любити","to finish (impf)","there","color"],"correctIndex":1,"explanation":"\"кінчати\" means \"to finish (impf)\""},{"question":"What does \"відкрити\" mean?","options":["to open (perf)","recipient","skirt","seat, place"],"correctIndex":0,"explanation":"\"відкрити\" means \"to open (perf)\""},{"question":"What does \"почути\" mean?","options":["to hear (perf)","bigger","to give (pf)","to be considered"],"correctIndex":0,"explanation":"\"почути\" means \"to hear (perf)\""},{"question":"What does \"побачити\" mean?","options":["jeans","to see (perf)","went (f)","needed"],"correctIndex":1,"explanation":"\"побачити\" means \"to see (perf)\""},{"question":"What does \"почати\" mean?","options":["deposit","to appear in dream","to begin (perf)","train"],"correctIndex":2,"explanation":"\"почати\" means \"to begin (perf)\""},{"question":"What does \"починати\" mean?","options":["young","that (neuter)","to begin (impf)","degree"],"correctIndex":2,"explanation":"\"починати\" means \"to begin (impf)\""}];
-    const sortData = {};
-    const fillData = {"items":[{"prompt":"Чи ти вмієш добре ___?","answer":"розповісти","options":["розповісти","побачити","було","будете"]},{"prompt":"Вони планують ___ завтра.","answer":"запросити","options":["будете","прокидатися","їсти","запросити"]},{"prompt":"Мій брат любить ___ щодня.","answer":"пояснити","options":["розписатися","зняти","купити","пояснити"]}],"text":"","answers":[]};
-    const orderData = {"items":[],"isUnjumble":true};
+    const activitiesData = [{"id":"activity-0","type":"fill-blank","title":"More Aspect Pairs","data":{"type":"fill-blank","items":[{"prompt":"Вона часто ___ (розповідати/розповісти) цікаві історії на вечірках.","answer":"розповідає","hints":["розповідати/розповісти"],"options":["розповідає","розповість","розповідала","розповіла"]},{"prompt":"Учора він ___ (показувати/показати) нам свої нові фотографії.","answer":"показав","hints":["показувати/показати"],"options":["показував","показав","показує","покаже"]},{"prompt":"Мама зараз ___ (пояснювати/пояснити) дітям нові правила.","answer":"пояснює","hints":["пояснювати/пояснити"],"options":["пояснює","пояснить","пояснювала","пояснила"]},{"prompt":"Він ___ (відповідати/відповісти) на всі питання вчителя минулого тижня.","answer":"відповів","hints":["відповідати/відповісти"],"options":["відповідав","відповів","відповідає","відповість"]},{"prompt":"Вона щоранку ___ (прокидатися/прокинутися) о сьомій годині.","answer":"прокидається","hints":["прокидатися/прокинутися"],"options":["прокидається","прокинеться","прокидалася","прокинулася"]},{"prompt":"Нарешті ми ___ (знаходити/знайти) гарну квартиру в центрі!","answer":"знайшли","hints":["знаходити/знайти"],"options":["знаходили","знайшли","знаходимо","знайдемо"]},{"prompt":"Він завжди ___ (запрошувати/запросити) друзів на день народження.","answer":"запрошує","hints":["запрошувати/запросити"],"options":["запрошує","запросить","запрошував","запросив"]},{"prompt":"Коли ти ___ (починати/почати) новий курс української?","answer":"почнеш","hints":["починати/почати"],"options":["починаєш","почнеш","починав","почав"]},{"prompt":"Вчора вона ___ (відкривати/відкрити) вікно і впустила свіже повітря.","answer":"відкрила","hints":["відкривати/відкрити"],"options":["відкривала","відкрила","відкриває","відкриє"]},{"prompt":"Ми цілий день ___ (чекати/почекати) на важливий дзвінок.","answer":"чекали","hints":["чекати/почекати"],"options":["чекали","почекали","чекаємо","почекаємо"]}]}},{"id":"activity-1","type":"unjumble","title":"Build the Sentence","data":{"type":"unjumble","isUnjumble":true,"items":[{"words":["розповідає","Вона","часто","цікаві історії","на вечірках"],"answer":"Вона часто розповідає цікаві історії на вечірках.","translation":"She often tells interesting stories at parties. - imperfective"},{"words":["показав","Учора","він","нам","свої нові фотографії"],"answer":"Учора він показав нам свої нові фотографії.","translation":"Yesterday he showed us his new photos. - perfective"},{"words":["пояснює","Мама","зараз","дітям","нові правила"],"answer":"Мама зараз пояснює дітям нові правила.","translation":"Mom is now explaining new rules to the children. - imperfective"},{"words":["відповів","Він","на всі питання","вчителя","минулого тижня"],"answer":"Він відповів на всі питання вчителя минулого тижня.","translation":"He answered all the teacher's questions last week. - perfective"},{"words":["прокидається","Вона","щоранку","о сьомій годині"],"answer":"Вона щоранку прокидається о сьомій годині.","translation":"She wakes up at seven o'clock every morning. - imperfective"},{"words":["знайшли","Нарешті","ми","гарну квартиру","в центрі"],"answer":"Нарешті ми знайшли гарну квартиру в центрі!","translation":"Finally we found a nice apartment in the center! - perfective"},{"words":["запрошує","Він","завжди","друзів","на день народження"],"answer":"Він завжди запрошує друзів на день народження.","translation":"He always invites friends to his birthday. - imperfective"},{"words":["почнеш","Коли","ти","новий курс","української"],"answer":"Коли ти почнеш новий курс української?","translation":"When will you start the new Ukrainian course? - perfective"},{"words":["відкрила","Вчора","вона","вікно","і впустила","свіже повітря"],"answer":"Вчора вона відкрила вікно і впустила свіже повітря.","translation":"Yesterday she opened the window and let in fresh air. - perfective"},{"words":["чекали","Ми","цілий день","на важливий дзвінок"],"answer":"Ми цілий день чекали на важливий дзвінок.","translation":"We waited all day for an important call. - imperfective"}]}},{"id":"activity-2","type":"match-up","title":"Match the Pairs","data":{"type":"match-up","pairs":[{"left":"почути","right":"to hear (perf)"},{"left":"підпис","right":"signature"},{"left":"побачити","right":"to see (perf)"},{"left":"кінчати","right":"to finish (impf)"},{"left":"запросити","right":"to invite (perf)"},{"left":"приїхати","right":"to arrive (by vehicle)"},{"left":"показати","right":"to show (pf)"},{"left":"почати","right":"to begin (perf)"},{"left":"розповісти","right":"to tell (once)"},{"left":"відповісти","right":"to answer (perf)"},{"left":"кафе","right":"café"},{"left":"відкрити","right":"to open (perf)"}],"shuffleRight":true}},{"id":"activity-3","type":"quiz","title":"Meaning Check","data":{"type":"quiz","questions":[{"question":"What does \"закрити\" mean?","options":["fog","pen","company, group","to close (perf)"],"correctIndex":3,"explanation":"\"закрити\" means \"to close (perf)\""},{"question":"What does \"вийти\" mean?","options":["to suit/become","will be","to see","to exit"],"correctIndex":3,"explanation":"\"вийти\" means \"to exit\""},{"question":"What does \"пояснити\" mean?","options":["Sunday","to explain (perf)","bad","to be considered"],"correctIndex":1,"explanation":"\"пояснити\" means \"to explain (perf)\""},{"question":"What does \"запросити\" mean?","options":["to invite (perf)","hard, heavy","umbrella","to take"],"correctIndex":0,"explanation":"\"запросити\" means \"to invite (perf)\""},{"question":"What does \"розповісти\" mean?","options":["to tell (once)","to watch, look","to be interested","nobody"],"correctIndex":0,"explanation":"\"розповісти\" means \"to tell (once)\""},{"question":"What does \"відповісти\" mean?","options":["(with) her","to answer (perf)","to inform","to answer"],"correctIndex":1,"explanation":"\"відповісти\" means \"to answer (perf)\""},{"question":"What does \"кінчати\" mean?","options":["Accusative: бачити, читати, любити","to finish (impf)","there","color"],"correctIndex":1,"explanation":"\"кінчати\" means \"to finish (impf)\""},{"question":"What does \"відкрити\" mean?","options":["to open (perf)","recipient","skirt","seat, place"],"correctIndex":0,"explanation":"\"відкрити\" means \"to open (perf)\""},{"question":"What does \"почути\" mean?","options":["to hear (perf)","bigger","to give (pf)","to be considered"],"correctIndex":0,"explanation":"\"почути\" means \"to hear (perf)\""},{"question":"What does \"побачити\" mean?","options":["jeans","to see (perf)","went (f)","needed"],"correctIndex":1,"explanation":"\"побачити\" means \"to see (perf)\""},{"question":"What does \"почати\" mean?","options":["deposit","to appear in dream","to begin (perf)","train"],"correctIndex":2,"explanation":"\"почати\" means \"to begin (perf)\""},{"question":"What does \"починати\" mean?","options":["young","that (neuter)","to begin (impf)","degree"],"correctIndex":2,"explanation":"\"починати\" means \"to begin (impf)\""}],"shuffleQuestions":true,"shuffleOptions":true,"showCorrectAnswers":true}},{"id":"activity-4","type":"true-false","title":"True or False?","data":{"type":"true-false","statements":[{"statement":"\"вийти\" means \"to exit\"","isTrue":true,"explanation":"Correct!"},{"statement":"\"почати\" means \"to begin (perf)\"","isTrue":true,"explanation":"Correct!"},{"statement":"\"запитати\" means \"stop\"","isTrue":false,"explanation":"Incorrect. \"запитати\" means \"to ask (perf)\""},{"statement":"\"починати\" means \"to begin (impf)\"","isTrue":true,"explanation":"Correct!"},{"statement":"\"прийти\" means \"to arrive (on foot)\"","isTrue":true,"explanation":"Correct!"},{"statement":"\"відкрити\" means \"to open (perf)\"","isTrue":true,"explanation":"Correct!"},{"statement":"\"розповісти\" means \"to tell (once)\"","isTrue":true,"explanation":"Correct!"},{"statement":"\"пояснити\" means \"skirt\"","isTrue":false,"explanation":"Incorrect. \"пояснити\" means \"to explain (perf)\""},{"statement":"\"кінчати\" means \"to finish (impf)\"","isTrue":true,"explanation":"Correct!"},{"statement":"\"побачити\" means \"to see (perf)\"","isTrue":true,"explanation":"Correct!"}]}},{"id":"activity-5","type":"select","title":"Motion Verb Selection","data":{"type":"select","items":[{"question":"I walk to work every day.","options":[{"text":"Я йду на роботу щодня.","correct":false},{"text":"Я ходжу на роботу щодня.","correct":true},{"text":"Я пішов на роботу щодня.","correct":false},{"text":"Я буду йти на роботу.","correct":false}]},{"question":"Yesterday he went home at 6 PM.","options":[{"text":"Вчора він пішов додому о шостій.","correct":true},{"text":"Вчора він йшов додому о шостій.","correct":false},{"text":"Вчора він ходив додому о шостій.","correct":false},{"text":"Він йде додому вчора.","correct":false}]},{"question":"She is going to the store right now.","options":[{"text":"Вона йде до магазину зараз.","correct":true},{"text":"Вона ходить до магазину зараз.","correct":false},{"text":"Вона пішла до магазину зараз.","correct":false},{"text":"Вона ходила до магазину.","correct":false}]},{"question":"They drive to Kyiv twice a month.","options":[{"text":"Вони їдуть до Києва двічі на місяць.","correct":false},{"text":"Вони їздять до Києва двічі на місяць.","correct":true},{"text":"Вони поїхали до Києва двічі.","correct":false},{"text":"Вони поїдуть до Києва.","correct":false}]},{"question":"We left for Lviv this morning.","options":[{"text":"Ми поїхали до Львова сьогодні вранці.","correct":true},{"text":"Ми їдемо до Львова вранці.","correct":false},{"text":"Ми їздимо до Львова вранці.","correct":false},{"text":"Ми їхали до Львова.","correct":false}]},{"question":"The children are coming to the park now.","options":[{"text":"Діти йдуть до парку зараз.","correct":true},{"text":"Діти ходять до парку зараз.","correct":false},{"text":"Діти прийшли до парку.","correct":false},{"text":"Діти приходять до парку.","correct":false}]},{"question":"My friend arrived from Poland yesterday.","options":[{"text":"Мій друг приїхав з Польщі вчора.","correct":true},{"text":"Мій друг їде з Польщі вчора.","correct":false},{"text":"Мій друг їздить з Польщі.","correct":false},{"text":"Мій друг їхав з Польщі.","correct":false}]},{"question":"I usually walk to university.","options":[{"text":"Я йду до університету зазвичай.","correct":false},{"text":"Я ходжу до університету зазвичай.","correct":true},{"text":"Я пішов до університету.","correct":false},{"text":"Я прийшов до університету.","correct":false}]},{"question":"She came to the meeting at 3 PM.","options":[{"text":"Вона прийшла на зустріч о третій.","correct":true},{"text":"Вона йшла на зустріч о третій.","correct":false},{"text":"Вона йде на зустріч о третій.","correct":false},{"text":"Вона ходить на зустріч.","correct":false}]},{"question":"We are driving to the beach right now.","options":[{"text":"Ми їдемо на пляж зараз.","correct":true},{"text":"Ми їздимо на пляж зараз.","correct":false},{"text":"Ми поїхали на пляж зараз.","correct":false},{"text":"Ми приїхали на пляж.","correct":false}]}]}},{"id":"activity-6","type":"order","title":"Communication Sequence","data":{"type":"order","items":[],"correctOrder":[]}},{"id":"activity-7","type":"group-sort","title":"Sort Verb Pairs","data":{"type":"group-sort","groups":[],"shuffleItems":true}}];
     const vocabData = [{"uk":"відкрити","translit":"","en":"to open (perf)","note":""},{"uk":"закрити","translit":"","en":"to close (perf)","note":""},{"uk":"починати","translit":"","en":"to begin (impf)","note":""},{"uk":"почати","translit":"","en":"to begin (perf)","note":""},{"uk":"кінчати","translit":"","en":"to finish (impf)","note":""},{"uk":"запитати","translit":"","en":"to ask (perf)","note":"pf of питати"},{"uk":"відповісти","translit":"","en":"to answer (perf)","note":"pf of відповідати"},{"uk":"пояснити","translit":"","en":"to explain (perf)","note":""},{"uk":"розповісти","translit":"","en":"to tell (perf)","note":""},{"uk":"запросити","translit":"","en":"to invite (perf)","note":""},{"uk":"прийти","translit":"","en":"to arrive (on foot)","note":"pf of йти"},{"uk":"приїхати","translit":"","en":"to arrive (by transport)","note":"pf of їхати"},{"uk":"вийти","translit":"","en":"to go out","note":""},{"uk":"побачити","translit":"","en":"to see (perf)","note":"pf of бачити"},{"uk":"почути","translit":"","en":"to hear (perf)","note":"pf of чути"},{"uk":"знайти","translit":"","en":"to find (perf)","note":"pf of шукати"}];
-    const totalSort = 0;
   
 // Answer callout toggle (for new > [!answer] syntax)
 function toggleAnswer(id, btn) {
@@ -1176,99 +1236,261 @@ function showSection(id) {
 }
 document.querySelectorAll('.nav-tab').forEach(t => t.addEventListener('click', () => showSection(t.dataset.section)));
 
-// Initialize on DOM ready
+// Activity reset dispatcher
+function resetActivity(sectionId) {
+  const activity = activitiesData.find(a => a.id === sectionId);
+  if (!activity) return;
+
+  switch (activity.type) {
+    case 'match-up':
+      resetMatch(sectionId);
+      break;
+    case 'quiz':
+      resetQuiz(sectionId);
+      break;
+    case 'true-false':
+      resetTf(sectionId);
+      break;
+    case 'group-sort':
+      resetSort(sectionId);
+      break;
+    case 'fill-blank':
+    case 'gap-fill':
+      resetFill(sectionId);
+      break;
+    case 'order':
+    case 'unjumble':
+      resetOrder(sectionId);
+      break;
+    case 'select':
+      resetSelect(sectionId);
+      break;
+  }
+}
+
+// Initialize all activities from activitiesData array
 document.addEventListener('DOMContentLoaded', () => {
-  initQuiz();
-  initSort();
-  if (typeof initFill === 'function') initFill();
-  if (typeof initOrder === 'function') initOrder();
-  initVocab();
+  if (typeof activitiesData === 'undefined') return;
+
+  activitiesData.forEach(activity => {
+    switch (activity.type) {
+      case 'match-up':
+        initMatch(activity.id, activity.data);
+        break;
+      case 'quiz':
+        initQuiz(activity.id, activity.data);
+        break;
+      case 'true-false':
+        initTf(activity.id, activity.data);
+        break;
+      case 'group-sort':
+        initSort(activity.id, activity.data);
+        break;
+      case 'fill-blank':
+      case 'gap-fill':
+        initFill(activity.id, activity.data);
+        break;
+      case 'order':
+      case 'unjumble':
+        initOrder(activity.id, activity.data);
+        break;
+      case 'select':
+        initSelect(activity.id, activity.data);
+        break;
+    }
+  });
+
+  // Initialize vocabulary
+  if (typeof initVocab === 'function') initVocab();
 });
 
 
-// Quiz Activity
-let quizScore = 0, quizAns = 0;
+// Quiz Activity - supports multiple instances
+const quizState = {};
 
-function initQuiz() {
-  const c = document.getElementById('quiz-container');
-  if (!c || !quizData.length) return;
+function initQuiz(sectionId, data) {
+  const c = document.getElementById(sectionId + '-container');
+  if (!c || !data.questions || !data.questions.length) return;
+
+  quizState[sectionId] = { score: 0, answered: 0, total: data.questions.length, data: data };
+
   c.innerHTML = '';
-  quizData.forEach((q, i) => {
+  data.questions.forEach((q, i) => {
     const sh = [...q.options].sort(() => Math.random() - 0.5);
     const cor = sh.indexOf(q.options[q.correctIndex]);
     const div = document.createElement('div');
     div.className = 'quiz-question';
-    div.innerHTML = '<h4>Q' + (i + 1) + ': ' + q.question + '</h4><div class="quiz-options">' + sh.map((o, j) => '<div class="quiz-option" data-c="' + (j === cor) + '" data-q="' + i + '">' + o + '</div>').join('') + '</div><div class="quiz-explanation" id="exp-' + i + '">' + q.explanation + '</div>';
+    div.dataset.section = sectionId;
+    div.innerHTML = '<h4>Q' + (i + 1) + ': ' + q.question + '</h4><div class="quiz-options">' + sh.map((o, j) => '<div class="quiz-option" data-c="' + (j === cor) + '" data-q="' + i + '" data-section="' + sectionId + '">' + o + '</div>').join('') + '</div><div class="quiz-explanation" id="' + sectionId + '-exp-' + i + '">' + (q.explanation || '') + '</div>';
     c.appendChild(div);
   });
-  document.querySelectorAll('.quiz-option').forEach(o => o.addEventListener('click', handleQuiz));
+  c.querySelectorAll('.quiz-option').forEach(o => o.addEventListener('click', handleQuiz));
 }
 
 function handleQuiz(e) {
   const opt = e.target, q = opt.closest('.quiz-question');
+  const sectionId = opt.dataset.section;
   if (q.classList.contains('answered')) return;
   q.classList.add('answered');
+
+  const state = quizState[sectionId];
   if (opt.dataset.c === 'true') {
     opt.classList.add('correct');
-    quizScore++;
+    state.score++;
   } else {
     opt.classList.add('wrong');
     q.querySelector('[data-c="true"]').classList.add('correct');
   }
-  document.getElementById('exp-' + opt.dataset.q).classList.add('show');
-  document.getElementById('quiz-score').textContent = quizScore;
-  quizAns++;
-  if (quizAns === quizData.length) document.getElementById('quiz-complete').classList.add('show');
+  document.getElementById(sectionId + '-exp-' + opt.dataset.q)?.classList.add('show');
+  document.getElementById(sectionId + '-score').textContent = state.score;
+  state.answered++;
+  if (state.answered === state.total) document.getElementById(sectionId + '-complete').classList.add('show');
 }
 
-function resetQuiz() {
-  quizScore = 0;
-  quizAns = 0;
-  document.getElementById('quiz-score').textContent = '0';
-  document.getElementById('quiz-complete')?.classList.remove('show');
-  initQuiz();
+function resetQuiz(sectionId) {
+  const state = quizState[sectionId];
+  if (!state) return;
+  document.getElementById(sectionId + '-score').textContent = '0';
+  document.getElementById(sectionId + '-complete')?.classList.remove('show');
+  initQuiz(sectionId, state.data);
 }
 
 
-// Match Activity
-let matchSel = null, matchScore = 0, matchPairsArr = [];
+// True/False Activity - supports multiple instances
+const tfState = {};
 
-document.querySelectorAll('#match-left .match-item').forEach(item => {
-  item.addEventListener('click', () => {
-    if (item.classList.contains('matched')) return;
-    document.querySelectorAll('#match-left .match-item').forEach(i => i.classList.remove('selected'));
-    item.classList.add('selected');
-    matchSel = { el: item, pair: item.dataset.pair };
+function initTf(sectionId, data) {
+  const c = document.getElementById(sectionId + '-container');
+  if (!c || !data.statements || !data.statements.length) return;
+
+  tfState[sectionId] = { score: 0, answered: 0, total: data.statements.length, data: data };
+
+  c.innerHTML = '';
+  data.statements.forEach((s, i) => {
+    const div = document.createElement('div');
+    div.className = 'tf-statement';
+    div.dataset.section = sectionId;
+    div.innerHTML = '<p class="tf-text">' + s.statement + '</p>' +
+      '<div class="tf-buttons">' +
+      '<button class="tf-btn" data-value="true" data-idx="' + i + '" data-section="' + sectionId + '">True</button>' +
+      '<button class="tf-btn" data-value="false" data-idx="' + i + '" data-section="' + sectionId + '">False</button>' +
+      '</div>' +
+      '<div class="tf-explanation" id="' + sectionId + '-exp-' + i + '">' + (s.explanation || '') + '</div>';
+    div.dataset.correct = s.isTrue;
+    c.appendChild(div);
   });
-});
+  c.querySelectorAll('.tf-btn').forEach(b => b.addEventListener('click', handleTf));
+}
 
-document.querySelectorAll('#match-right .match-item').forEach(item => {
-  item.addEventListener('click', () => {
-    if (item.classList.contains('matched') || !matchSel) return;
-    if (matchSel.pair === item.dataset.pair) {
-      matchSel.el.classList.remove('selected');
-      matchSel.el.classList.add('matched');
-      item.classList.add('matched');
-      matchPairsArr.push({ left: matchSel.el, right: item });
-      matchScore++;
-      document.getElementById('match-score').textContent = matchScore;
-      drawLines();
-      if (matchScore === matchPairs.length) document.getElementById('match-complete').classList.add('show');
-    } else {
-      item.classList.add('wrong');
-      setTimeout(() => item.classList.remove('wrong'), 300);
-    }
-    matchSel = null;
+function handleTf(e) {
+  const btn = e.target;
+  const sectionId = btn.dataset.section;
+  const idx = parseInt(btn.dataset.idx);
+  const statement = btn.closest('.tf-statement');
+  const state = tfState[sectionId];
+  if (statement.classList.contains('answered')) return;
+
+  statement.classList.add('answered');
+  const correct = state.data.statements[idx].isTrue;
+  const clicked = btn.dataset.value === 'true';
+
+  if (clicked === correct) {
+    btn.classList.add('correct');
+    state.score++;
+  } else {
+    btn.classList.add('wrong');
+    // Highlight the correct answer
+    statement.querySelector('[data-value="' + correct + '"]').classList.add('correct');
+  }
+
+  const exp = document.getElementById(sectionId + '-exp-' + idx);
+  if (exp && exp.textContent) exp.classList.add('show');
+
+  document.getElementById(sectionId + '-score').textContent = state.score;
+  state.answered++;
+  if (state.answered === state.total) document.getElementById(sectionId + '-complete').classList.add('show');
+}
+
+function resetTf(sectionId) {
+  const state = tfState[sectionId];
+  if (!state) return;
+  document.getElementById(sectionId + '-score').textContent = '0';
+  document.getElementById(sectionId + '-complete')?.classList.remove('show');
+  initTf(sectionId, state.data);
+}
+
+
+// Match Activity - supports multiple instances
+const matchState = {};
+
+function initMatch(sectionId, data) {
+  const container = document.getElementById(sectionId + '-container');
+  const leftCol = document.getElementById(sectionId + '-left');
+  const rightCol = document.getElementById(sectionId + '-right');
+  if (!container || !leftCol || !rightCol || !data.pairs || !data.pairs.length) return;
+
+  const pairs = data.pairs;
+  matchState[sectionId] = { selected: null, score: 0, matched: [], total: pairs.length, data: data };
+
+  // Create left column items
+  const shuffledLeft = pairs.map((p, i) => ({ text: p.left, idx: i })).sort(() => Math.random() - 0.5);
+  leftCol.innerHTML = shuffledLeft.map(p => '<div class="match-item" data-pair="' + p.idx + '" data-section="' + sectionId + '" data-side="left">' + p.text + '</div>').join('');
+
+  // Create right column items
+  const shuffledRight = pairs.map((p, i) => ({ text: p.right, idx: i })).sort(() => Math.random() - 0.5);
+  rightCol.innerHTML = shuffledRight.map(p => '<div class="match-item" data-pair="' + p.idx + '" data-section="' + sectionId + '" data-side="right">' + p.text + '</div>').join('');
+
+  // Attach click handlers
+  leftCol.querySelectorAll('.match-item').forEach(item => {
+    item.addEventListener('click', () => handleMatchLeft(item));
   });
-});
+  rightCol.querySelectorAll('.match-item').forEach(item => {
+    item.addEventListener('click', () => handleMatchRight(item));
+  });
+}
 
-function drawLines() {
-  const svg = document.getElementById('match-lines'), c = document.getElementById('match-container');
-  if (!svg || !c) return;
-  const r = c.getBoundingClientRect();
+function handleMatchLeft(item) {
+  const sectionId = item.dataset.section;
+  const state = matchState[sectionId];
+  if (item.classList.contains('matched')) return;
+
+  const leftCol = document.getElementById(sectionId + '-left');
+  leftCol.querySelectorAll('.match-item').forEach(i => i.classList.remove('selected'));
+  item.classList.add('selected');
+  state.selected = { el: item, pair: item.dataset.pair };
+}
+
+function handleMatchRight(item) {
+  const sectionId = item.dataset.section;
+  const state = matchState[sectionId];
+  if (item.classList.contains('matched') || !state.selected) return;
+
+  if (state.selected.pair === item.dataset.pair) {
+    state.selected.el.classList.remove('selected');
+    state.selected.el.classList.add('matched');
+    item.classList.add('matched');
+    state.matched.push({ left: state.selected.el, right: item });
+    state.score++;
+    document.getElementById(sectionId + '-score').textContent = state.score;
+    drawMatchLines(sectionId);
+    if (state.score === state.total) document.getElementById(sectionId + '-complete').classList.add('show');
+  } else {
+    item.classList.add('wrong');
+    setTimeout(() => item.classList.remove('wrong'), 300);
+  }
+  state.selected = null;
+}
+
+function drawMatchLines(sectionId) {
+  const svg = document.getElementById(sectionId + '-lines');
+  const container = document.getElementById(sectionId + '-container');
+  const state = matchState[sectionId];
+  if (!svg || !container || !state) return;
+
+  const r = container.getBoundingClientRect();
   svg.innerHTML = '';
   svg.setAttribute('viewBox', '0 0 ' + r.width + ' ' + r.height);
-  matchPairsArr.forEach(p => {
+  state.matched.forEach(p => {
     const lr = p.left.getBoundingClientRect(), rr = p.right.getBoundingClientRect();
     const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
     line.setAttribute('x1', lr.right - r.left);
@@ -1281,89 +1503,117 @@ function drawLines() {
   });
 }
 
-function resetMatch() {
-  matchSel = null;
-  matchScore = 0;
-  matchPairsArr = [];
-  document.getElementById('match-score').textContent = '0';
-  document.getElementById('match-complete')?.classList.remove('show');
-  document.getElementById('match-lines').innerHTML = '';
-  document.querySelectorAll('#match-container .match-item').forEach(i => i.classList.remove('matched', 'selected', 'wrong'));
+function resetMatch(sectionId) {
+  const state = matchState[sectionId];
+  if (!state) return;
+  document.getElementById(sectionId + '-score').textContent = '0';
+  document.getElementById(sectionId + '-complete')?.classList.remove('show');
+  document.getElementById(sectionId + '-lines').innerHTML = '';
+  initMatch(sectionId, state.data);
 }
 
-window.addEventListener('resize', drawLines);
+// Redraw lines on resize for all match activities
+window.addEventListener('resize', () => {
+  Object.keys(matchState).forEach(sectionId => drawMatchLines(sectionId));
+});
 
 
-// Sort Activity
-let sortScore = 0, dragItem = null;
+// Sort Activity - supports multiple instances
+const sortState = {};
 
-function initSort() {
-  const pool = document.getElementById('sort-items');
-  if (!pool || !Object.keys(sortData).length) return;
-  const all = Object.values(sortData).flat().sort(() => Math.random() - 0.5);
+function initSort(sectionId, data) {
+  const pool = document.getElementById(sectionId + '-items');
+  const groupsContainer = document.getElementById(sectionId + '-groups');
+  if (!pool || !groupsContainer || !data.groups || !data.groups.length) return;
+
+  const groups = data.groups;
+  const totalItems = groups.reduce((sum, g) => sum + g.items.length, 0);
+  sortState[sectionId] = { score: 0, total: totalItems, dragItem: null, data: data };
+
+  // Create group containers
+  groupsContainer.innerHTML = groups.map((g, i) =>
+    '<div class="sort-group" data-group="' + i + '" data-section="' + sectionId + '"><h4>' + g.name + '</h4><div class="sort-items"></div></div>'
+  ).join('');
+
+  // Flatten and shuffle all items
+  const allItems = groups.flatMap((g, gi) => g.items.map(item => ({ text: item, group: gi })));
+  allItems.sort(() => Math.random() - 0.5);
+
+  // Create draggable items
   pool.innerHTML = '';
-  all.forEach(letter => {
-    const group = Object.keys(sortData).find(g => sortData[g].includes(letter));
-    const item = document.createElement('div');
-    item.className = 'sort-item';
-    item.textContent = letter;
-    item.draggable = true;
-    item.dataset.group = group;
-    item.addEventListener('dragstart', e => {
-      dragItem = item;
-      item.classList.add('dragging');
+  allItems.forEach(item => {
+    const el = document.createElement('div');
+    el.className = 'sort-item';
+    el.textContent = item.text;
+    el.draggable = true;
+    el.dataset.group = item.group;
+    el.dataset.section = sectionId;
+    el.addEventListener('dragstart', () => {
+      sortState[sectionId].dragItem = el;
+      el.classList.add('dragging');
     });
-    item.addEventListener('dragend', () => {
-      item.classList.remove('dragging');
-      dragItem = null;
+    el.addEventListener('dragend', () => {
+      el.classList.remove('dragging');
+      sortState[sectionId].dragItem = null;
     });
-    pool.appendChild(item);
+    pool.appendChild(el);
   });
-  document.querySelectorAll('.sort-group').forEach(g => {
+
+  // Setup drop zones
+  groupsContainer.querySelectorAll('.sort-group').forEach(g => {
     g.addEventListener('dragover', e => {
       e.preventDefault();
       g.classList.add('drag-over');
     });
     g.addEventListener('dragleave', () => g.classList.remove('drag-over'));
-    g.addEventListener('drop', e => {
-      e.preventDefault();
-      g.classList.remove('drag-over');
-      if (!dragItem) return;
-      if (g.dataset.group === dragItem.dataset.group) {
-        dragItem.classList.add('correct');
-        g.querySelector('.sort-items').appendChild(dragItem);
-        dragItem.draggable = false;
-        sortScore++;
-        document.getElementById('sort-score').textContent = sortScore;
-        if (sortScore === totalSort) document.getElementById('sort-complete').classList.add('show');
-      } else {
-        dragItem.classList.add('wrong');
-        setTimeout(() => dragItem.classList.remove('wrong'), 300);
-      }
-    });
+    g.addEventListener('drop', e => handleSortDrop(e, g));
   });
 }
 
-function resetSort() {
-  sortScore = 0;
-  document.getElementById('sort-score').textContent = '0';
-  document.getElementById('sort-complete')?.classList.remove('show');
-  document.querySelectorAll('.sort-group .sort-items').forEach(g => g.innerHTML = '');
-  initSort();
+function handleSortDrop(e, groupEl) {
+  e.preventDefault();
+  groupEl.classList.remove('drag-over');
+  const sectionId = groupEl.dataset.section;
+  const state = sortState[sectionId];
+  const dragItem = state.dragItem;
+  if (!dragItem) return;
+
+  if (groupEl.dataset.group === dragItem.dataset.group) {
+    dragItem.classList.add('correct');
+    groupEl.querySelector('.sort-items').appendChild(dragItem);
+    dragItem.draggable = false;
+    state.score++;
+    document.getElementById(sectionId + '-score').textContent = state.score;
+    if (state.score === state.total) document.getElementById(sectionId + '-complete').classList.add('show');
+  } else {
+    dragItem.classList.add('wrong');
+    setTimeout(() => dragItem.classList.remove('wrong'), 300);
+  }
+}
+
+function resetSort(sectionId) {
+  const state = sortState[sectionId];
+  if (!state) return;
+  document.getElementById(sectionId + '-score').textContent = '0';
+  document.getElementById(sectionId + '-complete')?.classList.remove('show');
+  initSort(sectionId, state.data);
 }
 
 
-// Fill-in Activity - Dropdown in sentence
-let fillScore = 0, fillAns = 0;
+// Fill-in Activity - supports multiple instances
+const fillState = {};
 
-function initFill() {
-  const c = document.getElementById('fill-container');
-  if (!c || !fillData.items.length) return;
+function initFill(sectionId, data) {
+  const c = document.getElementById(sectionId + '-container');
+  if (!c || !data.items || !data.items.length) return;
+
+  fillState[sectionId] = { score: 0, answered: 0, total: data.items.length, data: data };
   c.innerHTML = '';
 
-  fillData.items.forEach((item, i) => {
+  data.items.forEach((item, i) => {
     const div = document.createElement('div');
     div.className = 'fill-question';
+    div.dataset.section = sectionId;
 
     // Generate options: correct answer + 3 distractors
     let options = [];
@@ -1372,7 +1622,7 @@ function initFill() {
     } else {
       // Fallback: generate distractors from other items' answers
       options = [item.answer];
-      const otherAnswers = fillData.items
+      const otherAnswers = data.items
         .filter((_, idx) => idx !== i)
         .map(it => it.answer)
         .filter(a => a && a !== item.answer);
@@ -1390,7 +1640,7 @@ function initFill() {
 
     // Replace ___ in the sentence with a dropdown
     const sentence = (item.prompt || item.sentence || '').replace(/___/g,
-      `<select class="fill-dropdown" data-idx="${i}" data-answer="${item.answer}">
+      `<select class="fill-dropdown" data-idx="${i}" data-answer="${item.answer}" data-section="${sectionId}">
         <option value="" disabled selected>—</option>
         ${shuffledOptions.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
       </select>`
@@ -1401,7 +1651,7 @@ function initFill() {
         <span class="fill-number">${i + 1}.</span>
         ${sentence}
       </div>
-      <div class="fill-feedback" id="fill-fb-${i}"></div>
+      <div class="fill-feedback" id="${sectionId}-fb-${i}"></div>
     `;
     c.appendChild(div);
   });
@@ -1416,12 +1666,14 @@ function initFill() {
 
 function handleFillChoice(dropdown) {
   const q = dropdown.closest('.fill-question');
+  const sectionId = dropdown.dataset.section;
+  const state = fillState[sectionId];
   if (q.classList.contains('answered')) return;
 
   const idx = dropdown.dataset.idx;
   const userAnswer = dropdown.value;
   const correctAnswer = dropdown.dataset.answer;
-  const fb = document.getElementById('fill-fb-' + idx);
+  const fb = document.getElementById(sectionId + '-fb-' + idx);
 
   q.classList.add('answered');
   dropdown.disabled = true;
@@ -1429,67 +1681,68 @@ function handleFillChoice(dropdown) {
   if (userAnswer === correctAnswer) {
     dropdown.classList.add('correct');
     fb.innerHTML = '<span class="correct-text">✓ Correct!</span>';
-    fillScore++;
+    state.score++;
   } else {
     dropdown.classList.add('wrong');
     fb.innerHTML = `<span class="wrong-text">✗ Answer: ${correctAnswer}</span>`;
   }
 
-  document.getElementById('fill-score').textContent = fillScore;
-  fillAns++;
-  if (fillAns === fillData.items.length) {
-    document.getElementById('fill-complete').classList.add('show');
+  document.getElementById(sectionId + '-score').textContent = state.score;
+  state.answered++;
+  if (state.answered === state.total) {
+    document.getElementById(sectionId + '-complete').classList.add('show');
   }
 }
 
-function resetFill() {
-  fillScore = 0;
-  fillAns = 0;
-  document.getElementById('fill-score').textContent = '0';
-  document.getElementById('fill-complete')?.classList.remove('show');
-  initFill();
+function resetFill(sectionId) {
+  const state = fillState[sectionId];
+  if (!state) return;
+  document.getElementById(sectionId + '-score').textContent = '0';
+  document.getElementById(sectionId + '-complete')?.classList.remove('show');
+  initFill(sectionId, state.data);
 }
 
 
-// Order/Unjumble Activity
-let orderScore = 0, orderTotal = 0;
+// Order/Unjumble Activity - supports multiple instances
+const orderState = {};
 
-function initOrder() {
-  const c = document.getElementById('order-container');
-  if (!c || !orderData.items.length) return;
+function initOrder(sectionId, data) {
+  const c = document.getElementById(sectionId + '-container');
+  if (!c || !data.items || !data.items.length) return;
+
+  orderState[sectionId] = { score: 0, total: data.items.length, data: data };
   c.innerHTML = '';
 
-  if (orderData.isUnjumble) {
-    initUnjumble(c);
+  if (data.isUnjumble) {
+    initUnjumble(sectionId, c, data);
   } else {
-    initClassicOrder(c);
+    initClassicOrder(sectionId, c, data);
   }
 }
 
 // UNJUMBLE: Drag-and-drop words to form sentences
-function initUnjumble(container) {
-  orderTotal = orderData.items.length;
-
-  orderData.items.forEach((item, idx) => {
+function initUnjumble(sectionId, container, data) {
+  data.items.forEach((item, idx) => {
     const question = document.createElement('div');
     question.className = 'unjumble-question';
     question.dataset.idx = idx;
+    question.dataset.section = sectionId;
 
     // Shuffle words
     const shuffledWords = [...item.words].sort(() => Math.random() - 0.5);
 
     question.innerHTML = `
       <div class="unjumble-number">${idx + 1}.</div>
-      <div class="unjumble-word-row" data-idx="${idx}">
+      <div class="unjumble-word-row" data-idx="${idx}" data-section="${sectionId}">
         ${shuffledWords.map((word, i) => `
           <span class="unjumble-word" draggable="true" data-word="${word}">${word}</span>
         `).join('')}
       </div>
       <div class="unjumble-actions">
-        <button class="btn btn-sm btn-outline unjumble-check" data-idx="${idx}">Check</button>
-        <button class="btn btn-sm btn-outline unjumble-reset" data-idx="${idx}">Reset</button>
+        <button class="btn btn-sm btn-outline unjumble-check" data-idx="${idx}" data-section="${sectionId}">Check</button>
+        <button class="btn btn-sm btn-outline unjumble-reset" data-idx="${idx}" data-section="${sectionId}">Reset</button>
       </div>
-      <div class="unjumble-feedback" data-idx="${idx}"></div>
+      <div class="unjumble-feedback" data-idx="${idx}" data-section="${sectionId}"></div>
     `;
 
     container.appendChild(question);
@@ -1589,19 +1842,20 @@ function handleUnjumbleClick(e) {
   const target = e.target;
 
   if (target.classList.contains('unjumble-check')) {
-    checkUnjumbleAnswer(parseInt(target.dataset.idx));
+    checkUnjumbleAnswer(target.dataset.section, parseInt(target.dataset.idx));
   }
 
   if (target.classList.contains('unjumble-reset')) {
-    resetUnjumbleQuestion(parseInt(target.dataset.idx));
+    resetUnjumbleQuestion(target.dataset.section, parseInt(target.dataset.idx));
   }
 }
 
-function checkUnjumbleAnswer(idx) {
-  const item = orderData.items[idx];
-  const row = document.querySelector(`.unjumble-word-row[data-idx="${idx}"]`);
-  const feedback = document.querySelector(`.unjumble-feedback[data-idx="${idx}"]`);
-  const question = document.querySelector(`.unjumble-question[data-idx="${idx}"]`);
+function checkUnjumbleAnswer(sectionId, idx) {
+  const state = orderState[sectionId];
+  const item = state.data.items[idx];
+  const row = document.querySelector(`.unjumble-word-row[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const feedback = document.querySelector(`.unjumble-feedback[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const question = document.querySelector(`.unjumble-question[data-section="${sectionId}"][data-idx="${idx}"]`);
 
   // Build user's answer from current word order
   const words = row.querySelectorAll('.unjumble-word');
@@ -1615,8 +1869,8 @@ function checkUnjumbleAnswer(idx) {
     question.classList.add('answered', 'correct');
     row.classList.add('correct');
     words.forEach(w => w.setAttribute('draggable', 'false'));
-    orderScore++;
-    document.getElementById('order-score').textContent = orderScore;
+    state.score++;
+    document.getElementById(sectionId + '-score').textContent = state.score;
 
     feedback.innerHTML = `
       <span class="correct-text">✓ Correct!</span>
@@ -1624,8 +1878,8 @@ function checkUnjumbleAnswer(idx) {
     `;
     feedback.classList.add('show');
 
-    if (orderScore === orderTotal) {
-      document.getElementById('order-complete').classList.add('show');
+    if (state.score === state.total) {
+      document.getElementById(sectionId + '-complete').classList.add('show');
     }
   } else {
     question.classList.add('wrong');
@@ -1644,11 +1898,12 @@ function checkUnjumbleAnswer(idx) {
   }
 }
 
-function resetUnjumbleQuestion(idx) {
-  const item = orderData.items[idx];
-  const row = document.querySelector(`.unjumble-word-row[data-idx="${idx}"]`);
-  const question = document.querySelector(`.unjumble-question[data-idx="${idx}"]`);
-  const feedback = document.querySelector(`.unjumble-feedback[data-idx="${idx}"]`);
+function resetUnjumbleQuestion(sectionId, idx) {
+  const state = orderState[sectionId];
+  const item = state.data.items[idx];
+  const row = document.querySelector(`.unjumble-word-row[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const question = document.querySelector(`.unjumble-question[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const feedback = document.querySelector(`.unjumble-feedback[data-section="${sectionId}"][data-idx="${idx}"]`);
 
   if (question.classList.contains('correct')) return;
 
@@ -1667,16 +1922,17 @@ function resetUnjumbleQuestion(idx) {
 }
 
 // CLASSIC ORDER: Drag items into correct sequence
-function initClassicOrder(container) {
-  orderTotal = orderData.items.length;
+function initClassicOrder(sectionId, container, data) {
+  const state = orderState[sectionId];
 
-  const shuffled = [...orderData.items].map((item, idx) => ({ text: item, origIdx: idx }));
+  const shuffled = [...data.items].map((item, idx) => ({ text: item, origIdx: idx }));
   shuffled.sort(() => Math.random() - 0.5);
 
   const div = document.createElement('div');
   div.className = 'order-items';
+  div.dataset.section = sectionId;
   div.innerHTML = shuffled.map((item, i) => `
-    <div class="order-item" draggable="true" data-orig="${item.origIdx}">
+    <div class="order-item" draggable="true" data-orig="${item.origIdx}" data-section="${sectionId}">
       <span class="order-handle">☰</span>
       <span class="order-text">${item.text}</span>
     </div>
@@ -1686,14 +1942,14 @@ function initClassicOrder(container) {
   const checkBtn = document.createElement('button');
   checkBtn.className = 'btn btn-outline';
   checkBtn.textContent = 'Check Order';
-  checkBtn.onclick = checkOrder;
+  checkBtn.onclick = () => checkOrder(sectionId);
   container.appendChild(checkBtn);
 
-  initDragDrop();
+  initDragDrop(div);
 }
 
-function initDragDrop() {
-  const items = document.querySelectorAll('.order-item');
+function initDragDrop(container) {
+  const items = container.querySelectorAll('.order-item');
   let dragItem = null;
 
   items.forEach(item => {
@@ -1710,7 +1966,6 @@ function initDragDrop() {
     item.addEventListener('dragover', (e) => {
       e.preventDefault();
       if (!dragItem || dragItem === item) return;
-      const container = item.parentNode;
       const rect = item.getBoundingClientRect();
       const midY = rect.top + rect.height / 2;
       if (e.clientY < midY) {
@@ -1722,18 +1977,20 @@ function initDragDrop() {
   });
 }
 
-function checkOrder() {
-  const items = document.querySelectorAll('.order-item');
+function checkOrder(sectionId) {
+  const state = orderState[sectionId];
+  const data = state.data;
+  const items = document.querySelectorAll(`.order-item[data-section="${sectionId}"]`);
   const currentOrder = Array.from(items).map(item => parseInt(item.dataset.orig));
 
   let correct = true;
   currentOrder.forEach((val, idx) => {
-    const expectedIdx = orderData.correctOrder.length ? orderData.correctOrder[idx] : idx;
+    const expectedIdx = data.correctOrder && data.correctOrder.length ? data.correctOrder[idx] : idx;
     if (val !== expectedIdx) correct = false;
   });
 
   items.forEach((item, idx) => {
-    const expectedIdx = orderData.correctOrder.length ? orderData.correctOrder[idx] : idx;
+    const expectedIdx = data.correctOrder && data.correctOrder.length ? data.correctOrder[idx] : idx;
     if (parseInt(item.dataset.orig) === expectedIdx) {
       item.classList.add('correct');
       item.classList.remove('wrong');
@@ -1744,17 +2001,113 @@ function checkOrder() {
   });
 
   if (correct) {
-    orderScore = orderTotal;
-    document.getElementById('order-score').textContent = orderScore;
-    document.getElementById('order-complete').classList.add('show');
+    state.score = state.total;
+    document.getElementById(sectionId + '-score').textContent = state.score;
+    document.getElementById(sectionId + '-complete').classList.add('show');
   }
 }
 
-function resetOrder() {
-  orderScore = 0;
-  document.getElementById('order-score').textContent = '0';
-  document.getElementById('order-complete')?.classList.remove('show');
-  initOrder();
+function resetOrder(sectionId) {
+  const state = orderState[sectionId];
+  if (!state) return;
+  document.getElementById(sectionId + '-score').textContent = '0';
+  document.getElementById(sectionId + '-complete')?.classList.remove('show');
+  initOrder(sectionId, state.data);
+}
+
+
+// Select Activity - supports multiple instances
+const selectState = {};
+
+function initSelect(sectionId, data) {
+  const c = document.getElementById(sectionId + '-container');
+  if (!c || !data.items || !data.items.length) return;
+
+  selectState[sectionId] = { score: 0, answered: 0, total: data.items.length, data: data };
+  c.innerHTML = '';
+
+  data.items.forEach((item, idx) => {
+    const div = document.createElement('div');
+    div.className = 'select-question';
+    div.dataset.section = sectionId;
+    div.dataset.idx = idx;
+
+    const optionsHtml = item.options.map((opt, oi) =>
+      `<label class="select-option" data-correct="${opt.correct}" data-section="${sectionId}" data-idx="${idx}">
+        <input type="checkbox" class="select-checkbox" data-oi="${oi}">
+        <span class="select-text">${opt.text}</span>
+      </label>`
+    ).join('');
+
+    div.innerHTML = `
+      <div class="select-number">${idx + 1}.</div>
+      <div class="select-content">
+        <p class="select-prompt">${item.question}</p>
+        <div class="select-options">${optionsHtml}</div>
+        <button class="btn btn-sm btn-outline select-check" data-section="${sectionId}" data-idx="${idx}">Check</button>
+        <div class="select-feedback" id="${sectionId}-fb-${idx}"></div>
+      </div>
+    `;
+    c.appendChild(div);
+  });
+
+  // Event delegation for check buttons
+  c.addEventListener('click', (e) => {
+    if (e.target.classList.contains('select-check')) {
+      checkSelectAnswer(e.target.dataset.section, parseInt(e.target.dataset.idx));
+    }
+  });
+}
+
+function checkSelectAnswer(sectionId, idx) {
+  const state = selectState[sectionId];
+  const item = state.data.items[idx];
+  const question = document.querySelector(`.select-question[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const fb = document.getElementById(sectionId + '-fb-' + idx);
+
+  if (question.classList.contains('answered')) return;
+
+  const options = question.querySelectorAll('.select-option');
+  let allCorrect = true;
+
+  options.forEach(opt => {
+    const checkbox = opt.querySelector('.select-checkbox');
+    const isChecked = checkbox.checked;
+    const shouldBeChecked = opt.dataset.correct === 'true';
+
+    if (isChecked === shouldBeChecked) {
+      opt.classList.add(shouldBeChecked ? 'correct' : 'correct-unchecked');
+    } else {
+      opt.classList.add(shouldBeChecked ? 'missed' : 'wrong');
+      allCorrect = false;
+    }
+    checkbox.disabled = true;
+  });
+
+  question.classList.add('answered');
+
+  if (allCorrect) {
+    fb.innerHTML = '<span class="correct-text">✓ Perfect!</span>';
+    state.score++;
+  } else {
+    fb.innerHTML = '<span class="wrong-text">✗ Some answers were incorrect.</span>';
+  }
+  fb.classList.add('show');
+
+  document.getElementById(sectionId + '-score').textContent = state.score;
+  state.answered++;
+
+  if (state.answered === state.total) {
+    document.getElementById(sectionId + '-complete').classList.add('show');
+  }
+}
+
+function resetSelect(sectionId) {
+  const state = selectState[sectionId];
+  if (!state) return;
+  document.getElementById(sectionId + '-score').textContent = '0';
+  document.getElementById(sectionId + '-complete')?.classList.remove('show');
+  initSelect(sectionId, state.data);
 }
 
 

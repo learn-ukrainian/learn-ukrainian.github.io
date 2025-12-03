@@ -272,21 +272,53 @@ Create sentences about news:
 
 # Activities
 
-## fill-in: Complete the Sentences
+## fill-in: Passive and Impersonal
 
 > Choose the correct word to complete each sentence.
 
-1. Вони планують ___ завтра.
-   > [!answer] продаватися
-   > [!options] просити | продаватися | повернути | слухати
+1. Тут ___ (можна / не можна) курити. Вхід заборонено.
+   > [!answer] не можна
+   > (Not allowed - smoking is forbidden)
 
-2. Я хочу навчитися ___.
-   > [!answer] називатися
-   > [!options] називатися | погоджуватися | чекатиму | домовитися
+2. Роботу вже ___ (зроблено / зробили).
+   > [!answer] зроблено
+   > (-но form for passive result)
 
-## unjumble: Build the Sentence
+3. Це місце ___ (зайнято / зайняти).
+   > [!answer] зайнято
+   > (-то form - this seat is taken)
+
+4. Магазин ___ (закрито / закритий) на ремонт.
+   > [!answer] закрито
+   > (-то form for impersonal passive)
+
+5. ___ (Кажуть / Кажу), що завтра буде дощ.
+   > [!answer] Кажуть
+   > (They say - impersonal plural)
+
+## unjumble: Impersonal Sentences
 
 > Arrange the words in the correct order.
+
+1. курити / Тут / не / можна
+   > [!answer] Тут не можна курити.
+   > (It's not allowed to smoke here.)
+
+2. вже / Рішення / прийнято
+   > [!answer] Рішення вже прийнято.
+   > (The decision has already been made.)
+
+3. Кажуть / буде / що / завтра / дощ
+   > [!answer] Кажуть, що завтра буде дощ.
+   > (They say it will rain tomorrow.)
+
+4. зайнято / місце / Це / вже
+   > [!answer] Це місце вже зайнято.
+   > (This seat is already taken.)
+
+5. ремонт / Магазин / закрито / на
+   > [!answer] Магазин закрито на ремонт.
+   > (The store is closed for repairs.)
 
 ## match-up: Match the Pairs
 
@@ -414,6 +446,141 @@ Create sentences about news:
 
 - [ ] "дозволено" means "hard, difficult"
    > Incorrect. "дозволено" means "allowed"
+
+## select: Choose Passive Forms
+
+> Select the correct passive or impersonal form.
+
+1. Тут ___ палити в громадських місцях.
+   - [ ] дозволено
+   - [x] заборонено
+   - [ ] закрито
+   - [ ] відкрито
+   > Smoking is forbidden: "заборонено"
+
+2. Магазин уже ___ на ніч о десятій годині.
+   - [ ] відкрито
+   - [x] закрито
+   - [ ] зайнято
+   - [ ] заборонено
+   > Store closed: "закрито"
+
+3. Всі місця вже ___ у кінотеатрі сьогодні ввечері.
+   - [ ] закрито
+   - [ ] відкрито
+   - [x] зайнято
+   - [ ] дозволено
+   > Seats occupied: "зайнято"
+
+4. Робота вже ___ і можна йти додому зараз.
+   - [x] зроблено
+   - [ ] закрито
+   - [ ] заборонено
+   - [ ] зайнято
+   > Work done: "зроблено"
+
+5. Музей ___ з дев'ятої години ранку щодня.
+   - [x] відкрито
+   - [ ] закрито
+   - [ ] зайнято
+   - [ ] заборонено
+   > Museum open: "відкрито"
+
+6. ___ принести документи на зустріч завтра вранці.
+   - [ ] Можна
+   - [x] Треба
+   - [ ] Не можна
+   - [ ] Слід
+   > Must bring: "Треба"
+
+7. Тут ___ фотографувати в музеї за правилами.
+   - [x] можна
+   - [ ] треба
+   - [ ] заборонено
+   - [ ] закрито
+   > Photography allowed: "можна"
+
+8. Це місто ___ Львовом у честь короля Данила.
+   - [ ] продається
+   - [x] називається
+   - [ ] здається
+   - [ ] закривається
+   > Is called: "називається"
+
+9. Ця книга ___ у всіх книгарнях міста зараз.
+   - [x] продається
+   - [ ] називається
+   - [ ] здається
+   - [ ] закривається
+   > Is sold: "продається"
+
+10. ___ подивитися цей фільм у кінотеатрі сьогодні.
+    - [x] Варто
+    - [ ] Треба
+    - [ ] Можна
+    - [ ] Заборонено
+    > Worth watching: "Варто"
+
+## order: Put Words in Order
+
+> Arrange the words to form correct passive/impersonal sentences.
+
+1. Тут / заборонено / палити / в / громадських / місцях / за / законом
+   > [!answer] Тут заборонено палити в громадських місцях за законом.
+   > (Smoking is forbidden here in public places by law.)
+
+2. Магазин / уже / закрито / на / ніч / о / десятій / годині
+   > [!answer] Магазин уже закрито на ніч о десятій годині.
+   > (The store is already closed for the night at ten o'clock.)
+
+3. Всі / місця / вже / зайнято / у / театрі / на / вечірню / виставу
+   > [!answer] Всі місця вже зайнято у театрі на вечірню виставу.
+   > (All seats are already occupied in the theater for the evening performance.)
+
+4. Робота / вже / зроблено / і / можна / йти / додому / зараз
+   > [!answer] Робота вже зроблено, і можна йти додому зараз.
+   > (The work is already done and one can go home now.)
+
+5. Музей / відкрито / з / дев'ятої / години / ранку / до / шостої / вечора
+   > [!answer] Музей відкрито з дев'ятої години ранку до шостої вечора.
+   > (The museum is open from nine in the morning until six in the evening.)
+
+6. Треба / принести / всі / документи / на / зустріч / завтра / вранці
+   > [!answer] Треба принести всі документи на зустріч завтра вранці.
+   > (It's necessary to bring all documents to the meeting tomorrow morning.)
+
+7. Можна / фотографувати / у / цьому / музеї / за / правилами / безкоштовно
+   > [!answer] Можна фотографувати у цьому музеї за правилами безкоштовно.
+   > (One can photograph in this museum according to the rules for free.)
+
+8. Це / місто / називається / Львовом / у / честь / короля / Данила / Галицького
+   > [!answer] Це місто називається Львовом у честь короля Данила Галицького.
+   > (This city is called Lviv in honor of King Danylo of Halych.)
+
+9. Ця / книга / продається / у / всіх / книгарнях / міста / зараз
+   > [!answer] Ця книга продається у всіх книгарнях міста зараз.
+   > (This book is sold in all bookstores in the city now.)
+
+10. Варто / подивитися / цей / новий / фільм / у / кінотеатрі / цього / тижня
+    > [!answer] Варто подивитися цей новий фільм у кінотеатрі цього тижня.
+    > (It's worth watching this new movie in the cinema this week.)
+
+## group-sort: Sort by Passive Type
+
+> Sort these passive constructions by their type.
+
+| -но/-то Forms | Reflexive Passive | Impersonal Modals |
+|---------------|-------------------|-------------------|
+| заборонено | називається | треба |
+| дозволено | продається | можна |
+| зроблено | здається | не можна |
+| закрито | вважається | варто |
+| відкрито | говориться | слід |
+| зайнято | пишеться | потрібно |
+| написано | будується | не варто |
+| побудовано | робиться | необхідно |
+| створено | використовується | не слід |
+| знайдено | знаходиться | дозволяється |
 
 ---
 

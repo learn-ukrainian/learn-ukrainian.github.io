@@ -18,6 +18,18 @@
 .quiz-explanation { margin-top: 1rem; padding: 1rem; background: #e8f4fd; border-radius: 8px; display: none; }
 .quiz-explanation.show { display: block; }
 
+/* True/False Activity */
+.tf-statement { border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; }
+.tf-statement.answered { pointer-events: none; }
+.tf-text { font-size: 1.15rem; margin-bottom: 1rem; }
+.tf-buttons { display: flex; gap: 1rem; }
+.tf-btn { flex: 1; background: #f5f5f5; border: 2px solid var(--border); border-radius: 8px; padding: 0.75rem 1rem; cursor: pointer; font-size: 1rem; font-weight: 500; }
+.tf-btn:hover { background: #e8f4fd; border-color: var(--primary); }
+.tf-btn.correct { border-color: var(--success); background: #d4edda; color: var(--success); }
+.tf-btn.wrong { border-color: var(--danger); background: #f8d7da; color: var(--danger); }
+.tf-explanation { margin-top: 1rem; padding: 1rem; background: #e8f4fd; border-radius: 8px; display: none; }
+.tf-explanation.show { display: block; }
+
 /* Sort Activity */
 .sort-pool { background: #f5f5f5; border: 2px dashed var(--border); border-radius: 12px; padding: 1.5rem; min-height: 80px; margin-bottom: 1rem; }
 .sort-items { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; }
@@ -119,3 +131,25 @@
 .unjumble-feedback .correct-text { color: var(--success); font-weight: 600; }
 .unjumble-feedback .wrong-text { color: var(--danger); }
 .unjumble-feedback .translation { color: var(--text-muted); font-style: italic; margin-left: 0.5rem; }
+
+/* Select Activity - Multi-choice checkboxes */
+.select-container { display: flex; flex-direction: column; gap: 1rem; }
+.select-question { border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; display: flex; gap: 0.75rem; }
+.select-question.answered .select-checkbox { pointer-events: none; }
+.select-number { font-weight: 600; color: var(--text-muted); min-width: 2rem; }
+.select-content { flex: 1; }
+.select-prompt { font-size: 1.1rem; font-weight: 500; margin-bottom: 0.75rem; }
+.select-options { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 0.75rem; }
+.select-option { display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem 0.75rem; border-radius: 6px; cursor: pointer; transition: background 0.15s; }
+.select-option:hover { background: #f5f5f5; }
+.select-option.correct { background: #d4edda; }
+.select-option.correct-unchecked { background: #f8f9fa; }
+.select-option.wrong { background: #f8d7da; }
+.select-option.missed { background: #fff3cd; border: 1px dashed var(--warning); }
+.select-checkbox { width: 1.25rem; height: 1.25rem; cursor: pointer; }
+.select-text { font-size: 1rem; }
+.select-check { margin-top: 0.5rem; }
+.select-feedback { margin-top: 0.75rem; display: none; }
+.select-feedback.show { display: block; }
+.select-feedback .correct-text { color: var(--success); font-weight: 600; }
+.select-feedback .wrong-text { color: var(--danger); }

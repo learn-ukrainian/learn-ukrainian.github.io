@@ -1,57 +1,80 @@
-// Sort Activity
-let sortScore = 0, dragItem = null;
+// Sort Activity - supports multiple instances
+const sortState = {};
 
-function initSort() {
-  const pool = document.getElementById('sort-items');
-  if (!pool || !Object.keys(sortData).length) return;
-  const all = Object.values(sortData).flat().sort(() => Math.random() - 0.5);
+function initSort(sectionId, data) {
+  const pool = document.getElementById(sectionId + '-items');
+  const groupsContainer = document.getElementById(sectionId + '-groups');
+  if (!pool || !groupsContainer || !data.groups || !data.groups.length) return;
+
+  const groups = data.groups;
+  const totalItems = groups.reduce((sum, g) => sum + g.items.length, 0);
+  sortState[sectionId] = { score: 0, total: totalItems, dragItem: null, data: data };
+
+  // Create group containers
+  groupsContainer.innerHTML = groups.map((g, i) =>
+    '<div class="sort-group" data-group="' + i + '" data-section="' + sectionId + '"><h4>' + g.name + '</h4><div class="sort-items"></div></div>'
+  ).join('');
+
+  // Flatten and shuffle all items
+  const allItems = groups.flatMap((g, gi) => g.items.map(item => ({ text: item, group: gi })));
+  allItems.sort(() => Math.random() - 0.5);
+
+  // Create draggable items
   pool.innerHTML = '';
-  all.forEach(letter => {
-    const group = Object.keys(sortData).find(g => sortData[g].includes(letter));
-    const item = document.createElement('div');
-    item.className = 'sort-item';
-    item.textContent = letter;
-    item.draggable = true;
-    item.dataset.group = group;
-    item.addEventListener('dragstart', e => {
-      dragItem = item;
-      item.classList.add('dragging');
+  allItems.forEach(item => {
+    const el = document.createElement('div');
+    el.className = 'sort-item';
+    el.textContent = item.text;
+    el.draggable = true;
+    el.dataset.group = item.group;
+    el.dataset.section = sectionId;
+    el.addEventListener('dragstart', () => {
+      sortState[sectionId].dragItem = el;
+      el.classList.add('dragging');
     });
-    item.addEventListener('dragend', () => {
-      item.classList.remove('dragging');
-      dragItem = null;
+    el.addEventListener('dragend', () => {
+      el.classList.remove('dragging');
+      sortState[sectionId].dragItem = null;
     });
-    pool.appendChild(item);
+    pool.appendChild(el);
   });
-  document.querySelectorAll('.sort-group').forEach(g => {
+
+  // Setup drop zones
+  groupsContainer.querySelectorAll('.sort-group').forEach(g => {
     g.addEventListener('dragover', e => {
       e.preventDefault();
       g.classList.add('drag-over');
     });
     g.addEventListener('dragleave', () => g.classList.remove('drag-over'));
-    g.addEventListener('drop', e => {
-      e.preventDefault();
-      g.classList.remove('drag-over');
-      if (!dragItem) return;
-      if (g.dataset.group === dragItem.dataset.group) {
-        dragItem.classList.add('correct');
-        g.querySelector('.sort-items').appendChild(dragItem);
-        dragItem.draggable = false;
-        sortScore++;
-        document.getElementById('sort-score').textContent = sortScore;
-        if (sortScore === totalSort) document.getElementById('sort-complete').classList.add('show');
-      } else {
-        dragItem.classList.add('wrong');
-        setTimeout(() => dragItem.classList.remove('wrong'), 300);
-      }
-    });
+    g.addEventListener('drop', e => handleSortDrop(e, g));
   });
 }
 
-function resetSort() {
-  sortScore = 0;
-  document.getElementById('sort-score').textContent = '0';
-  document.getElementById('sort-complete')?.classList.remove('show');
-  document.querySelectorAll('.sort-group .sort-items').forEach(g => g.innerHTML = '');
-  initSort();
+function handleSortDrop(e, groupEl) {
+  e.preventDefault();
+  groupEl.classList.remove('drag-over');
+  const sectionId = groupEl.dataset.section;
+  const state = sortState[sectionId];
+  const dragItem = state.dragItem;
+  if (!dragItem) return;
+
+  if (groupEl.dataset.group === dragItem.dataset.group) {
+    dragItem.classList.add('correct');
+    groupEl.querySelector('.sort-items').appendChild(dragItem);
+    dragItem.draggable = false;
+    state.score++;
+    document.getElementById(sectionId + '-score').textContent = state.score;
+    if (state.score === state.total) document.getElementById(sectionId + '-complete').classList.add('show');
+  } else {
+    dragItem.classList.add('wrong');
+    setTimeout(() => dragItem.classList.remove('wrong'), 300);
+  }
+}
+
+function resetSort(sectionId) {
+  const state = sortState[sectionId];
+  if (!state) return;
+  document.getElementById(sectionId + '-score').textContent = '0';
+  document.getElementById(sectionId + '-complete')?.classList.remove('show');
+  initSort(sectionId, state.data);
 }

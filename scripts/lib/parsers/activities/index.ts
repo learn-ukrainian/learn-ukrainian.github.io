@@ -16,12 +16,14 @@ import { TranslateParser } from './translate';
 import { OrderParser } from './order';
 import { GapFillParser } from './gap-fill';
 import { UnjumbleParser } from './unjumble';
+import { SelectParser } from './select';
 
 // =============================================================================
 // Parser Registry
 // =============================================================================
 
 const parsers: ActivityParser[] = [
+  new SelectParser(),    // Must be before FillBlankParser to handle select: headers
   new QuizParser(),
   new MatchUpParser(),
   new GroupSortParser(),
@@ -109,3 +111,4 @@ export { TranslateParser } from './translate';
 export { UnjumbleParser } from './unjumble';
 export { OrderParser } from './order';
 export { GapFillParser } from './gap-fill';
+export { SelectParser } from './select';

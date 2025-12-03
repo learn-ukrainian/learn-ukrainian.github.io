@@ -1,42 +1,43 @@
-// Order/Unjumble Activity
-let orderScore = 0, orderTotal = 0;
+// Order/Unjumble Activity - supports multiple instances
+const orderState = {};
 
-function initOrder() {
-  const c = document.getElementById('order-container');
-  if (!c || !orderData.items.length) return;
+function initOrder(sectionId, data) {
+  const c = document.getElementById(sectionId + '-container');
+  if (!c || !data.items || !data.items.length) return;
+
+  orderState[sectionId] = { score: 0, total: data.items.length, data: data };
   c.innerHTML = '';
 
-  if (orderData.isUnjumble) {
-    initUnjumble(c);
+  if (data.isUnjumble) {
+    initUnjumble(sectionId, c, data);
   } else {
-    initClassicOrder(c);
+    initClassicOrder(sectionId, c, data);
   }
 }
 
 // UNJUMBLE: Drag-and-drop words to form sentences
-function initUnjumble(container) {
-  orderTotal = orderData.items.length;
-
-  orderData.items.forEach((item, idx) => {
+function initUnjumble(sectionId, container, data) {
+  data.items.forEach((item, idx) => {
     const question = document.createElement('div');
     question.className = 'unjumble-question';
     question.dataset.idx = idx;
+    question.dataset.section = sectionId;
 
     // Shuffle words
     const shuffledWords = [...item.words].sort(() => Math.random() - 0.5);
 
     question.innerHTML = `
       <div class="unjumble-number">${idx + 1}.</div>
-      <div class="unjumble-word-row" data-idx="${idx}">
+      <div class="unjumble-word-row" data-idx="${idx}" data-section="${sectionId}">
         ${shuffledWords.map((word, i) => `
           <span class="unjumble-word" draggable="true" data-word="${word}">${word}</span>
         `).join('')}
       </div>
       <div class="unjumble-actions">
-        <button class="btn btn-sm btn-outline unjumble-check" data-idx="${idx}">Check</button>
-        <button class="btn btn-sm btn-outline unjumble-reset" data-idx="${idx}">Reset</button>
+        <button class="btn btn-sm btn-outline unjumble-check" data-idx="${idx}" data-section="${sectionId}">Check</button>
+        <button class="btn btn-sm btn-outline unjumble-reset" data-idx="${idx}" data-section="${sectionId}">Reset</button>
       </div>
-      <div class="unjumble-feedback" data-idx="${idx}"></div>
+      <div class="unjumble-feedback" data-idx="${idx}" data-section="${sectionId}"></div>
     `;
 
     container.appendChild(question);
@@ -136,19 +137,20 @@ function handleUnjumbleClick(e) {
   const target = e.target;
 
   if (target.classList.contains('unjumble-check')) {
-    checkUnjumbleAnswer(parseInt(target.dataset.idx));
+    checkUnjumbleAnswer(target.dataset.section, parseInt(target.dataset.idx));
   }
 
   if (target.classList.contains('unjumble-reset')) {
-    resetUnjumbleQuestion(parseInt(target.dataset.idx));
+    resetUnjumbleQuestion(target.dataset.section, parseInt(target.dataset.idx));
   }
 }
 
-function checkUnjumbleAnswer(idx) {
-  const item = orderData.items[idx];
-  const row = document.querySelector(`.unjumble-word-row[data-idx="${idx}"]`);
-  const feedback = document.querySelector(`.unjumble-feedback[data-idx="${idx}"]`);
-  const question = document.querySelector(`.unjumble-question[data-idx="${idx}"]`);
+function checkUnjumbleAnswer(sectionId, idx) {
+  const state = orderState[sectionId];
+  const item = state.data.items[idx];
+  const row = document.querySelector(`.unjumble-word-row[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const feedback = document.querySelector(`.unjumble-feedback[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const question = document.querySelector(`.unjumble-question[data-section="${sectionId}"][data-idx="${idx}"]`);
 
   // Build user's answer from current word order
   const words = row.querySelectorAll('.unjumble-word');
@@ -162,8 +164,8 @@ function checkUnjumbleAnswer(idx) {
     question.classList.add('answered', 'correct');
     row.classList.add('correct');
     words.forEach(w => w.setAttribute('draggable', 'false'));
-    orderScore++;
-    document.getElementById('order-score').textContent = orderScore;
+    state.score++;
+    document.getElementById(sectionId + '-score').textContent = state.score;
 
     feedback.innerHTML = `
       <span class="correct-text">✓ Correct!</span>
@@ -171,8 +173,8 @@ function checkUnjumbleAnswer(idx) {
     `;
     feedback.classList.add('show');
 
-    if (orderScore === orderTotal) {
-      document.getElementById('order-complete').classList.add('show');
+    if (state.score === state.total) {
+      document.getElementById(sectionId + '-complete').classList.add('show');
     }
   } else {
     question.classList.add('wrong');
@@ -191,11 +193,12 @@ function checkUnjumbleAnswer(idx) {
   }
 }
 
-function resetUnjumbleQuestion(idx) {
-  const item = orderData.items[idx];
-  const row = document.querySelector(`.unjumble-word-row[data-idx="${idx}"]`);
-  const question = document.querySelector(`.unjumble-question[data-idx="${idx}"]`);
-  const feedback = document.querySelector(`.unjumble-feedback[data-idx="${idx}"]`);
+function resetUnjumbleQuestion(sectionId, idx) {
+  const state = orderState[sectionId];
+  const item = state.data.items[idx];
+  const row = document.querySelector(`.unjumble-word-row[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const question = document.querySelector(`.unjumble-question[data-section="${sectionId}"][data-idx="${idx}"]`);
+  const feedback = document.querySelector(`.unjumble-feedback[data-section="${sectionId}"][data-idx="${idx}"]`);
 
   if (question.classList.contains('correct')) return;
 
@@ -214,16 +217,17 @@ function resetUnjumbleQuestion(idx) {
 }
 
 // CLASSIC ORDER: Drag items into correct sequence
-function initClassicOrder(container) {
-  orderTotal = orderData.items.length;
+function initClassicOrder(sectionId, container, data) {
+  const state = orderState[sectionId];
 
-  const shuffled = [...orderData.items].map((item, idx) => ({ text: item, origIdx: idx }));
+  const shuffled = [...data.items].map((item, idx) => ({ text: item, origIdx: idx }));
   shuffled.sort(() => Math.random() - 0.5);
 
   const div = document.createElement('div');
   div.className = 'order-items';
+  div.dataset.section = sectionId;
   div.innerHTML = shuffled.map((item, i) => `
-    <div class="order-item" draggable="true" data-orig="${item.origIdx}">
+    <div class="order-item" draggable="true" data-orig="${item.origIdx}" data-section="${sectionId}">
       <span class="order-handle">☰</span>
       <span class="order-text">${item.text}</span>
     </div>
@@ -233,14 +237,14 @@ function initClassicOrder(container) {
   const checkBtn = document.createElement('button');
   checkBtn.className = 'btn btn-outline';
   checkBtn.textContent = 'Check Order';
-  checkBtn.onclick = checkOrder;
+  checkBtn.onclick = () => checkOrder(sectionId);
   container.appendChild(checkBtn);
 
-  initDragDrop();
+  initDragDrop(div);
 }
 
-function initDragDrop() {
-  const items = document.querySelectorAll('.order-item');
+function initDragDrop(container) {
+  const items = container.querySelectorAll('.order-item');
   let dragItem = null;
 
   items.forEach(item => {
@@ -257,7 +261,6 @@ function initDragDrop() {
     item.addEventListener('dragover', (e) => {
       e.preventDefault();
       if (!dragItem || dragItem === item) return;
-      const container = item.parentNode;
       const rect = item.getBoundingClientRect();
       const midY = rect.top + rect.height / 2;
       if (e.clientY < midY) {
@@ -269,18 +272,20 @@ function initDragDrop() {
   });
 }
 
-function checkOrder() {
-  const items = document.querySelectorAll('.order-item');
+function checkOrder(sectionId) {
+  const state = orderState[sectionId];
+  const data = state.data;
+  const items = document.querySelectorAll(`.order-item[data-section="${sectionId}"]`);
   const currentOrder = Array.from(items).map(item => parseInt(item.dataset.orig));
 
   let correct = true;
   currentOrder.forEach((val, idx) => {
-    const expectedIdx = orderData.correctOrder.length ? orderData.correctOrder[idx] : idx;
+    const expectedIdx = data.correctOrder && data.correctOrder.length ? data.correctOrder[idx] : idx;
     if (val !== expectedIdx) correct = false;
   });
 
   items.forEach((item, idx) => {
-    const expectedIdx = orderData.correctOrder.length ? orderData.correctOrder[idx] : idx;
+    const expectedIdx = data.correctOrder && data.correctOrder.length ? data.correctOrder[idx] : idx;
     if (parseInt(item.dataset.orig) === expectedIdx) {
       item.classList.add('correct');
       item.classList.remove('wrong');
@@ -291,15 +296,16 @@ function checkOrder() {
   });
 
   if (correct) {
-    orderScore = orderTotal;
-    document.getElementById('order-score').textContent = orderScore;
-    document.getElementById('order-complete').classList.add('show');
+    state.score = state.total;
+    document.getElementById(sectionId + '-score').textContent = state.score;
+    document.getElementById(sectionId + '-complete').classList.add('show');
   }
 }
 
-function resetOrder() {
-  orderScore = 0;
-  document.getElementById('order-score').textContent = '0';
-  document.getElementById('order-complete')?.classList.remove('show');
-  initOrder();
+function resetOrder(sectionId) {
+  const state = orderState[sectionId];
+  if (!state) return;
+  document.getElementById(sectionId + '-score').textContent = '0';
+  document.getElementById(sectionId + '-complete')?.classList.remove('show');
+  initOrder(sectionId, state.data);
 }

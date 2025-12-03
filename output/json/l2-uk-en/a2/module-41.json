@@ -53,78 +53,148 @@
         "content": "## Aspect at a Glance\n\n| Aspect | Use for | Example |\n|--------|---------|---------|\n| Imperfective | Process, duration, repetition | Я читав книгу. (was reading) |\n| Perfective | Completion, result, single event | Я прочитав книгу. (finished) |\n\n## Aspect in Tenses\n\n| Tense | Imperfective | Perfective |\n|-------|--------------|------------|\n| Past | читав (was reading) | прочитав (read/finished) |\n| Present | читаю (am reading) | ❌ (none) |\n| Future | буду читати (will be reading) | прочитаю (will read/finish) |\n\n## Common Prefixes for Perfective\n\n| Prefix | Example |\n|--------|---------|\n| про- | прочитати |\n| на- | написати |\n| з-/зі- | зробити |\n| ви- | випити, вивчити |\n| при- | приготувати |\n\n> 💡 **Key Takeaways**\n>\n> - Aspect = HOW (process vs result), not WHEN\n> - Imperfective: ongoing, repeated, duration\n> - Perfective: completed, single, result\n> - Learn verbs in pairs: читати/прочитати\n> - Only imperfective has present tense\n> - Context determines which aspect fits"
       }
     ],
-    "rawMarkdown": "---\nmodule: 41\ntitle: \"Verbal Aspect I\"\nsubtitle: \"Perfective & Imperfective\"\nlevel: A2\nphase: A2.2\nduration: 45\ntransliteration: partial\ntags: [verbs, aspect, perfective, imperfective, grammar]\nobjectives:\n  - Understand the concept of verbal aspect\n  - Distinguish perfective from imperfective verbs\n  - Recognize common aspect pairs\n  - Use aspect in basic contexts\ngrammar:\n  - Verbal aspect introduction\n  - Imperfective (process, repetition)\n  - Perfective (completion, single action)\n  - Common aspect pairs\n---\n\n# Lesson Content\n\n## warm-up\n\n### A New Dimension of Verbs\n\nYou've mastered tenses (past, present, future) and cases. Now meet **aspect** - a uniquely Slavic feature that English doesn't have!\n\n**The big idea:**\n- **Imperfective** = process, ongoing, repeated (like video)\n- **Perfective** = completed, single, result (like photo)\n\nCompare:\n- Я **читав** книгу. (I was reading a book - process, imperfective)\n- Я **прочитав** книгу. (I read/finished the book - completed, perfective)\n\nBoth are past tense, but different aspects!\n\n> 💡 **Did You Know?**\n>\n> English lost verbal aspect centuries ago, but Slavic languages kept it. This is why Ukrainian has \"verb pairs\" - two verbs for every action! It might seem complex, but it allows incredible precision in describing actions.\n\n## presentation\n\n### What Is Aspect?\n\n**Aspect** describes HOW an action happens, not WHEN:\n\n| Aspect | Focus | Think of it as... |\n|--------|-------|-------------------|\n| Imperfective | Process, duration, repetition | Watching a movie |\n| Perfective | Completion, result, single event | Taking a snapshot |\n\n**Same action, different aspects:**\n\n| Imperfective | Perfective | Meaning |\n|--------------|------------|---------|\n| читати | прочитати | to read |\n| писати | написати | to write |\n| робити | зробити | to do/make |\n| їсти | з'їсти | to eat |\n| пити | випити | to drink |\n\n> ⚡ **Pro Tip: The Key Question**\n>\n> Ask yourself:\n> - Is the action **in progress** or **repeated**? → Imperfective\n> - Is the action **completed** or a **single event**? → Perfective\n\n### When to Use Imperfective\n\n**1. Actions in progress:**\n- Що ти **робиш**? - What are you doing? (right now)\n- Я **читаю** книгу. - I'm reading a book. (in progress)\n- Він **писав** листа. - He was writing a letter.\n\n**2. Repeated/habitual actions:**\n- Я **читаю** щодня. - I read every day.\n- Вона **готувала** вечерю кожен день. - She cooked dinner every day.\n- Ми **ходимо** в парк щонеділі. - We go to the park every Sunday.\n\n**3. General statements:**\n- Я **люблю** читати. - I love to read.\n- Він добре **готує**. - He cooks well.\n- Вона **говорить** українською. - She speaks Ukrainian.\n\n**4. Duration markers:**\n- Я **читав** дві години. - I was reading for two hours.\n- Вона **працювала** весь день. - She was working all day.\n\n> 📜 **History Bite: Slavic Aspect**\n>\n> Verbal aspect developed in Proto-Slavic over 1,500 years ago. While most Indo-European languages lost this feature, all Slavic languages (Ukrainian, Russian, Polish, Czech, etc.) preserved it. It's one of the defining characteristics of the Slavic language family!\n\n### When to Use Perfective\n\n**1. Completed actions (with result):**\n- Я **прочитав** книгу. - I read (finished) the book.\n- Вона **написала** листа. - She wrote (completed) the letter.\n- Він **зробив** домашнє завдання. - He did (finished) the homework.\n\n**2. Single, specific events:**\n- Я **купив** каву. - I bought (a) coffee. (one time)\n- Він **сказав** \"привіт.\" - He said \"hello.\" (once)\n- Вона **відкрила** вікно. - She opened the window. (one action)\n\n**3. Sequential actions:**\n- Я **прийшов** додому, **поїв** і **ліг** спати.\n- I came home, ate, and went to bed. (sequence of completed actions)\n\n**4. Future single actions:**\n- Завтра я **прочитаю** цю книгу. - Tomorrow I'll read (finish) this book.\n- Він **напише** тобі. - He'll write to you. (once, completed)\n\n> ⚡ **Pro Tip: Perfective Future**\n>\n> Perfective verbs form the future by **conjugating directly** (like present tense):\n> - прочитати → я прочитаю, ти прочитаєш, він прочитає\n> - написати → я напишу, ти напишеш, він напише\n>\n> Do NOT use \"буду + perfective infinitive\" - that's incorrect!\n> - ❌ Я буду прочитати\n> - ✅ Я прочитаю\n\n> 🎭 **Culture Corner: Aspect in Daily Life**\n>\n> Ukrainians use aspect instinctively. When someone asks \"Що ти робив?\" (imperfective), they want to know about your activities. When they ask \"Що ти зробив?\" (perfective), they want to know what you accomplished!\n\n### Common Aspect Pairs\n\n**Pattern 1: Prefix addition (most common)**\n\n| Imperfective | Perfective | Prefix | Meaning |\n|--------------|------------|--------|---------|\n| читати | **про**читати | про- | to read |\n| писати | **на**писати | на- | to write |\n| робити | **з**робити | з- | to do |\n| їсти | **з'**їсти | з'- | to eat |\n| пити | **ви**пити | ви- | to drink |\n| вчити | **ви**вчити | ви- | to learn |\n| готувати | **при**готувати | при- | to prepare/cook |\n\n**Pattern 2: Suffix change**\n\n| Imperfective | Perfective | Change |\n|--------------|------------|--------|\n| давати | дати | -ва- drops |\n| вставати | встати | -ва- drops |\n| купувати | купити | -ува- → -и- |\n| показувати | показати | -ува- → -а- |\n\n**Pattern 3: Different stems (irregular)**\n\n| Imperfective | Perfective | Meaning |\n|--------------|------------|---------|\n| говорити | сказати | to say/speak |\n| брати | взяти | to take |\n| класти | покласти | to put |\n| шукати | знайти | to look for / find |\n\n> ⚡ **Pro Tip: Learning Pairs**\n>\n> Always learn verbs as pairs! When you learn \"читати\" (to read), immediately learn \"прочитати\" (to read/finish). Your vocabulary cards should show both forms.\n\n### Aspect in Different Tenses\n\n**Past tense - both aspects possible:**\n\n| Imperfective | Perfective |\n|--------------|------------|\n| Я читав. (I was reading) | Я прочитав. (I read/finished) |\n| Вона писала. (She was writing) | Вона написала. (She wrote/finished) |\n\n**Present tense - only imperfective:**\n\n| Imperfective | Perfective |\n|--------------|------------|\n| Я читаю. (I'm reading) | ❌ (no present form) |\n| Вона пише. (She's writing) | ❌ (no present form) |\n\nWhy? Because present means \"in progress\" - that's imperfective by nature!\n\n**Future tense - both aspects, different forms:**\n\n| Imperfective | Perfective |\n|--------------|------------|\n| Я буду читати. (I will be reading) | Я прочитаю. (I will read/finish) |\n| Вона буде писати. (She will be writing) | Вона напише. (She will write/finish) |\n\nNote: Imperfective future = буду + infinitive; Perfective future = conjugated form\n\n### Aspect with Negation\n\n**Imperfective negation - didn't do at all:**\n- Я **не читав** цю книгу. - I didn't read this book. (never)\n- Вона **не готувала** сьогодні. - She didn't cook today. (no cooking happened)\n\n**Perfective negation - didn't complete:**\n- Я **не прочитав** цю книгу. - I didn't finish this book. (started but didn't complete)\n- Вона **не приготувала** вечерю. - She didn't manage to cook dinner. (intended but failed)\n\n> 💡 **Key Insight**\n>\n> Negation + imperfective = action didn't happen\n> Negation + perfective = action didn't reach completion\n\n## practice\n\n### Identify the Aspect\n\nDetermine if imperfective (I) or perfective (P):\n\n1. Я читаю книгу.\n   > [!answer] I (in progress)\n2. Я прочитав книгу.\n   > [!answer] P (completed)\n3. Вона писала весь день.\n   > [!answer] I (duration)\n4. Він написав листа.\n   > [!answer] P (completed)\n5. Ми їмо сніданок.\n   > [!answer] I (in progress)\n6. Вони з'їли все.\n   > [!answer] P (completed)\n7. Я вчу українську щодня.\n   > [!answer] I (habitual)\n8. Я вивчив нові слова.\n   > [!answer] P (completed)\n\n### Choose the Correct Aspect\n\nSelect imperfective or perfective:\n\n1. Я ___ (читати/прочитати) кожен вечір.\n   > [!answer] читаю\n   > [!explanation] habitual action - imperfective\n2. Вчора я ___ (читати/прочитати) цю книгу.\n   > [!answer] прочитав\n   > [!explanation] completed - perfective\n3. Що ти ___ (робити/зробити) зараз?\n   > [!answer] робиш\n   > [!explanation] right now - imperfective\n4. Вона ___ (готувати/приготувати) вечерю за годину.\n   > [!answer] приготувала\n   > [!explanation] completed in one hour - perfective\n5. Він завжди ___ (писати/написати) листи батькам.\n   > [!answer] пише\n   > [!explanation] always - imperfective\n6. Завтра я ___ (писати/написати) тобі.\n   > [!answer] напишу\n   > [!explanation] single future action - perfective\n### Form Aspect Pairs\n\nGive the perfective form:\n\n1. читати\n   > [!answer] прочитати\n2. писати\n   > [!answer] написати\n3. робити\n   > [!answer] зробити\n4. їсти\n   > [!answer] з'їсти\n5. пити\n   > [!answer] випити\n6. вчити\n   > [!answer] вивчити\n7. готувати\n   > [!answer] приготувати\n8. давати\n   > [!answer] дати\n\n## production\n\n### Describe Your Day\n\n**Using both aspects:**\n\nYesterday (perfective for completed actions):\n- Я **прокинувся** о сьомій.\n- Я **приготував** сніданок і **поїв**.\n- Я **прочитав** новини.\n- Я **написав** три листи.\n\nGenerally (imperfective for habits):\n- Я зазвичай **прокидаюся** о сьомій.\n- Я завжди **готую** сніданок.\n- Я **читаю** новини щоранку.\n- Я часто **пишу** листи.\n\n### Compare These Situations\n\n**Situation 1: Reading**\n- Я читав книгу. (I was reading - process)\n- Я прочитав книгу. (I finished reading - result)\n\n**Situation 2: Cooking**\n- Вона готувала вечерю. (She was cooking - process)\n- Вона приготувала вечерю. (She cooked/finished dinner - result)\n\n**Situation 3: Writing**\n- Він писав лист дві години. (He was writing for 2 hours - duration)\n- Він написав лист за дві години. (He wrote the letter in 2 hours - completion)\n\n---\n\n---\n\n---\n\n---\n\n# Activities\n\n## fill-in: Complete the Sentences\n\n> Choose the correct word to complete each sentence.\n\n1. Чи ти вмієш добре ___?\n   > [!answer] з'їсти\n   > [!options] дякую | перерахувати | з'їсти | була\n\n2. Вони планують ___ завтра.\n   > [!answer] приготувати\n   > [!options] мати | приготувати | надіслати | думати\n\n3. Де ваш великий ___?\n   > [!answer] вид\n   > [!options] розмір | дитина | очі | вид\n\n4. Мій брат любить ___ щодня.\n   > [!answer] купити\n   > [!options] заважати | вчитися | купити | бачити\n\n5. Ваша ідея здається ___.\n   > [!answer] недоконаний\n   > [!options] недоконаний | легкий | маленький | розумний\n\n6. Моя кімната занадто ___.\n   > [!answer] доконаний\n   > [!options] смачний | добрий | маленький | доконаний\n\n## unjumble: Build the Sentence\n\n> Arrange the words in the correct order.\n\n1. вид / Це / новий / мій\n   > [!answer] Це мій новий вид.\n   > (aspect (grammar))\n\n## match-up: Match the Pairs\n\n> Match Ukrainian words to their English meanings.\n\n| Left | Right |\n|------|-------|\n| приготувати | to cook/prepare (perf) |\n| доконаний | perfective (aspect) |\n| ними | (with) them |\n| вивчити | to learn (perf) |\n| допомогти | to help (perf) |\n| купити | to buy (perf) |\n| з'їсти | to eat (perf) |\n| недоконаний | imperfective (aspect) |\n| повернути | to turn |\n| випити | to drink (perf) |\n| вид | aspect (grammar) |\n\n## quiz: Meaning Check\n\n> Choose the correct answer.\n\n1. What does \"з'їсти\" mean?\n   - [ ] change (money)\n   - [x] to eat (perf)\n   - [ ] during, throughout\n   - [ ] suitcase\n   > \"з'їсти\" means \"to eat (perf)\"\n\n2. What does \"недоконаний\" mean?\n   - [x] imperfective (aspect)\n   - [ ] potato\n   - [ ] shoes\n   - [ ] borscht\n   > \"недоконаний\" means \"imperfective (aspect)\"\n\n3. What does \"вид\" mean?\n   - [ ] tip\n   - [ ] fog\n   - [x] aspect (grammar)\n   - [ ] between\n   > \"вид\" means \"aspect (grammar)\"\n\n4. What does \"приготувати\" mean?\n   - [x] to cook/prepare (perf)\n   - [ ] one's own (m)\n   - [ ] Wednesday\n   - [ ] friend (male)\n   > \"приготувати\" means \"to cook/prepare (perf)\"\n\n5. What does \"випити\" mean?\n   - [ ] month\n   - [x] to drink (perf)\n   - [ ] professional\n   - [ ] grandma\n   > \"випити\" means \"to drink (perf)\"\n\n6. What does \"доконаний\" mean?\n   - [ ] to eat (perf)\n   - [ ] to carry\n   - [ ] potato\n   - [x] perfective (aspect)\n   > \"доконаний\" means \"perfective (aspect)\"\n\n7. What does \"вивчити\" mean?\n   - [ ] to work\n   - [ ] month\n   - [ ] there\n   - [x] to learn (perf)\n   > \"вивчити\" means \"to learn (perf)\"\n\n8. What does \"купити\" mean?\n   - [x] to buy (perf)\n   - [ ] to succeed\n   - [ ] office, study\n   - [ ] to drink (perf)\n   > \"купити\" means \"to buy (perf)\"\n\n## true-false: True or False?\n\n> Determine if each statement is true or false.\n\n- [x] \"недоконаний\" means \"imperfective (aspect)\"\n   > Correct!\n\n- [x] \"вид\" means \"aspect (grammar)\"\n   > Correct!\n\n- [x] \"випити\" means \"to drink (perf)\"\n   > Correct!\n\n- [ ] \"купити\" means \"passport\"\n   > Incorrect. \"купити\" means \"to buy (perf)\"\n\n- [ ] \"вивчити\" means \"writer\"\n   > Incorrect. \"вивчити\" means \"to learn (perf)\"\n\n- [ ] \"приготувати\" means \"sad\"\n   > Incorrect. \"приготувати\" means \"to cook/prepare (perf)\"\n\n- [x] \"доконаний\" means \"perfective (aspect)\"\n   > Correct!\n\n- [ ] \"з'їсти\" means \"yes\"\n   > Incorrect. \"з'їсти\" means \"to eat (perf)\"\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| вид | /vɪd/ | aspect (grammatical) | noun | m |\n| недоконаний | /nɛdoˈkonɑnɪj/ | imperfective | adj | - | lit. \"unfinished\" |\n| доконаний | /doˈkonɑnɪj/ | perfective | adj | - | lit. \"finished\" |\n| з'їсти | /ˈzjistɪ/ | to eat (perf) | verb | - | pf of їсти |\n| випити | /ˈvɪpɪtɪ/ | to drink (perf) | verb | - | pf of пити |\n| вивчити | /ˈvɪvtʃɪtɪ/ | to learn (perf) | verb | - | pf of вчити |\n| приготувати | /prɪɦotuˈvɑtɪ/ | to cook/prepare (perf) | verb | - | pf of готувати |\n| купити | /kuˈpɪtɪ/ | to buy (perf) | verb | - | pf of купувати |\n\n---\n\n# Summary\n\n## Aspect at a Glance\n\n| Aspect | Use for | Example |\n|--------|---------|---------|\n| Imperfective | Process, duration, repetition | Я читав книгу. (was reading) |\n| Perfective | Completion, result, single event | Я прочитав книгу. (finished) |\n\n## Aspect in Tenses\n\n| Tense | Imperfective | Perfective |\n|-------|--------------|------------|\n| Past | читав (was reading) | прочитав (read/finished) |\n| Present | читаю (am reading) | ❌ (none) |\n| Future | буду читати (will be reading) | прочитаю (will read/finish) |\n\n## Common Prefixes for Perfective\n\n| Prefix | Example |\n|--------|---------|\n| про- | прочитати |\n| на- | написати |\n| з-/зі- | зробити |\n| ви- | випити, вивчити |\n| при- | приготувати |\n\n> 💡 **Key Takeaways**\n>\n> - Aspect = HOW (process vs result), not WHEN\n> - Imperfective: ongoing, repeated, duration\n> - Perfective: completed, single, result\n> - Learn verbs in pairs: читати/прочитати\n> - Only imperfective has present tense\n> - Context determines which aspect fits\n",
-    "createdAt": "2025-12-03T08:52:31.868Z",
-    "modifiedAt": "2025-12-03T08:52:31.868Z",
+    "rawMarkdown": "---\nmodule: 41\ntitle: \"Verbal Aspect I\"\nsubtitle: \"Perfective & Imperfective\"\nlevel: A2\nphase: A2.2\nduration: 45\ntransliteration: partial\ntags: [verbs, aspect, perfective, imperfective, grammar]\nobjectives:\n  - Understand the concept of verbal aspect\n  - Distinguish perfective from imperfective verbs\n  - Recognize common aspect pairs\n  - Use aspect in basic contexts\ngrammar:\n  - Verbal aspect introduction\n  - Imperfective (process, repetition)\n  - Perfective (completion, single action)\n  - Common aspect pairs\n---\n\n# Lesson Content\n\n## warm-up\n\n### A New Dimension of Verbs\n\nYou've mastered tenses (past, present, future) and cases. Now meet **aspect** - a uniquely Slavic feature that English doesn't have!\n\n**The big idea:**\n- **Imperfective** = process, ongoing, repeated (like video)\n- **Perfective** = completed, single, result (like photo)\n\nCompare:\n- Я **читав** книгу. (I was reading a book - process, imperfective)\n- Я **прочитав** книгу. (I read/finished the book - completed, perfective)\n\nBoth are past tense, but different aspects!\n\n> 💡 **Did You Know?**\n>\n> English lost verbal aspect centuries ago, but Slavic languages kept it. This is why Ukrainian has \"verb pairs\" - two verbs for every action! It might seem complex, but it allows incredible precision in describing actions.\n\n## presentation\n\n### What Is Aspect?\n\n**Aspect** describes HOW an action happens, not WHEN:\n\n| Aspect | Focus | Think of it as... |\n|--------|-------|-------------------|\n| Imperfective | Process, duration, repetition | Watching a movie |\n| Perfective | Completion, result, single event | Taking a snapshot |\n\n**Same action, different aspects:**\n\n| Imperfective | Perfective | Meaning |\n|--------------|------------|---------|\n| читати | прочитати | to read |\n| писати | написати | to write |\n| робити | зробити | to do/make |\n| їсти | з'їсти | to eat |\n| пити | випити | to drink |\n\n> ⚡ **Pro Tip: The Key Question**\n>\n> Ask yourself:\n> - Is the action **in progress** or **repeated**? → Imperfective\n> - Is the action **completed** or a **single event**? → Perfective\n\n### When to Use Imperfective\n\n**1. Actions in progress:**\n- Що ти **робиш**? - What are you doing? (right now)\n- Я **читаю** книгу. - I'm reading a book. (in progress)\n- Він **писав** листа. - He was writing a letter.\n\n**2. Repeated/habitual actions:**\n- Я **читаю** щодня. - I read every day.\n- Вона **готувала** вечерю кожен день. - She cooked dinner every day.\n- Ми **ходимо** в парк щонеділі. - We go to the park every Sunday.\n\n**3. General statements:**\n- Я **люблю** читати. - I love to read.\n- Він добре **готує**. - He cooks well.\n- Вона **говорить** українською. - She speaks Ukrainian.\n\n**4. Duration markers:**\n- Я **читав** дві години. - I was reading for two hours.\n- Вона **працювала** весь день. - She was working all day.\n\n> 📜 **History Bite: Slavic Aspect**\n>\n> Verbal aspect developed in Proto-Slavic over 1,500 years ago. While most Indo-European languages lost this feature, all Slavic languages (Ukrainian, Russian, Polish, Czech, etc.) preserved it. It's one of the defining characteristics of the Slavic language family!\n\n### When to Use Perfective\n\n**1. Completed actions (with result):**\n- Я **прочитав** книгу. - I read (finished) the book.\n- Вона **написала** листа. - She wrote (completed) the letter.\n- Він **зробив** домашнє завдання. - He did (finished) the homework.\n\n**2. Single, specific events:**\n- Я **купив** каву. - I bought (a) coffee. (one time)\n- Він **сказав** \"привіт.\" - He said \"hello.\" (once)\n- Вона **відкрила** вікно. - She opened the window. (one action)\n\n**3. Sequential actions:**\n- Я **прийшов** додому, **поїв** і **ліг** спати.\n- I came home, ate, and went to bed. (sequence of completed actions)\n\n**4. Future single actions:**\n- Завтра я **прочитаю** цю книгу. - Tomorrow I'll read (finish) this book.\n- Він **напише** тобі. - He'll write to you. (once, completed)\n\n> ⚡ **Pro Tip: Perfective Future**\n>\n> Perfective verbs form the future by **conjugating directly** (like present tense):\n> - прочитати → я прочитаю, ти прочитаєш, він прочитає\n> - написати → я напишу, ти напишеш, він напише\n>\n> Do NOT use \"буду + perfective infinitive\" - that's incorrect!\n> - ❌ Я буду прочитати\n> - ✅ Я прочитаю\n\n> 🎭 **Culture Corner: Aspect in Daily Life**\n>\n> Ukrainians use aspect instinctively. When someone asks \"Що ти робив?\" (imperfective), they want to know about your activities. When they ask \"Що ти зробив?\" (perfective), they want to know what you accomplished!\n\n### Common Aspect Pairs\n\n**Pattern 1: Prefix addition (most common)**\n\n| Imperfective | Perfective | Prefix | Meaning |\n|--------------|------------|--------|---------|\n| читати | **про**читати | про- | to read |\n| писати | **на**писати | на- | to write |\n| робити | **з**робити | з- | to do |\n| їсти | **з'**їсти | з'- | to eat |\n| пити | **ви**пити | ви- | to drink |\n| вчити | **ви**вчити | ви- | to learn |\n| готувати | **при**готувати | при- | to prepare/cook |\n\n**Pattern 2: Suffix change**\n\n| Imperfective | Perfective | Change |\n|--------------|------------|--------|\n| давати | дати | -ва- drops |\n| вставати | встати | -ва- drops |\n| купувати | купити | -ува- → -и- |\n| показувати | показати | -ува- → -а- |\n\n**Pattern 3: Different stems (irregular)**\n\n| Imperfective | Perfective | Meaning |\n|--------------|------------|---------|\n| говорити | сказати | to say/speak |\n| брати | взяти | to take |\n| класти | покласти | to put |\n| шукати | знайти | to look for / find |\n\n> ⚡ **Pro Tip: Learning Pairs**\n>\n> Always learn verbs as pairs! When you learn \"читати\" (to read), immediately learn \"прочитати\" (to read/finish). Your vocabulary cards should show both forms.\n\n### Aspect in Different Tenses\n\n**Past tense - both aspects possible:**\n\n| Imperfective | Perfective |\n|--------------|------------|\n| Я читав. (I was reading) | Я прочитав. (I read/finished) |\n| Вона писала. (She was writing) | Вона написала. (She wrote/finished) |\n\n**Present tense - only imperfective:**\n\n| Imperfective | Perfective |\n|--------------|------------|\n| Я читаю. (I'm reading) | ❌ (no present form) |\n| Вона пише. (She's writing) | ❌ (no present form) |\n\nWhy? Because present means \"in progress\" - that's imperfective by nature!\n\n**Future tense - both aspects, different forms:**\n\n| Imperfective | Perfective |\n|--------------|------------|\n| Я буду читати. (I will be reading) | Я прочитаю. (I will read/finish) |\n| Вона буде писати. (She will be writing) | Вона напише. (She will write/finish) |\n\nNote: Imperfective future = буду + infinitive; Perfective future = conjugated form\n\n### Aspect with Negation\n\n**Imperfective negation - didn't do at all:**\n- Я **не читав** цю книгу. - I didn't read this book. (never)\n- Вона **не готувала** сьогодні. - She didn't cook today. (no cooking happened)\n\n**Perfective negation - didn't complete:**\n- Я **не прочитав** цю книгу. - I didn't finish this book. (started but didn't complete)\n- Вона **не приготувала** вечерю. - She didn't manage to cook dinner. (intended but failed)\n\n> 💡 **Key Insight**\n>\n> Negation + imperfective = action didn't happen\n> Negation + perfective = action didn't reach completion\n\n## practice\n\n### Identify the Aspect\n\nDetermine if imperfective (I) or perfective (P):\n\n1. Я читаю книгу.\n   > [!answer] I (in progress)\n2. Я прочитав книгу.\n   > [!answer] P (completed)\n3. Вона писала весь день.\n   > [!answer] I (duration)\n4. Він написав листа.\n   > [!answer] P (completed)\n5. Ми їмо сніданок.\n   > [!answer] I (in progress)\n6. Вони з'їли все.\n   > [!answer] P (completed)\n7. Я вчу українську щодня.\n   > [!answer] I (habitual)\n8. Я вивчив нові слова.\n   > [!answer] P (completed)\n\n### Choose the Correct Aspect\n\nSelect imperfective or perfective:\n\n1. Я ___ (читати/прочитати) кожен вечір.\n   > [!answer] читаю\n   > [!explanation] habitual action - imperfective\n2. Вчора я ___ (читати/прочитати) цю книгу.\n   > [!answer] прочитав\n   > [!explanation] completed - perfective\n3. Що ти ___ (робити/зробити) зараз?\n   > [!answer] робиш\n   > [!explanation] right now - imperfective\n4. Вона ___ (готувати/приготувати) вечерю за годину.\n   > [!answer] приготувала\n   > [!explanation] completed in one hour - perfective\n5. Він завжди ___ (писати/написати) листи батькам.\n   > [!answer] пише\n   > [!explanation] always - imperfective\n6. Завтра я ___ (писати/написати) тобі.\n   > [!answer] напишу\n   > [!explanation] single future action - perfective\n### Form Aspect Pairs\n\nGive the perfective form:\n\n1. читати\n   > [!answer] прочитати\n2. писати\n   > [!answer] написати\n3. робити\n   > [!answer] зробити\n4. їсти\n   > [!answer] з'їсти\n5. пити\n   > [!answer] випити\n6. вчити\n   > [!answer] вивчити\n7. готувати\n   > [!answer] приготувати\n8. давати\n   > [!answer] дати\n\n## production\n\n### Describe Your Day\n\n**Using both aspects:**\n\nYesterday (perfective for completed actions):\n- Я **прокинувся** о сьомій.\n- Я **приготував** сніданок і **поїв**.\n- Я **прочитав** новини.\n- Я **написав** три листи.\n\nGenerally (imperfective for habits):\n- Я зазвичай **прокидаюся** о сьомій.\n- Я завжди **готую** сніданок.\n- Я **читаю** новини щоранку.\n- Я часто **пишу** листи.\n\n### Compare These Situations\n\n**Situation 1: Reading**\n- Я читав книгу. (I was reading - process)\n- Я прочитав книгу. (I finished reading - result)\n\n**Situation 2: Cooking**\n- Вона готувала вечерю. (She was cooking - process)\n- Вона приготувала вечерю. (She cooked/finished dinner - result)\n\n**Situation 3: Writing**\n- Він писав лист дві години. (He was writing for 2 hours - duration)\n- Він написав лист за дві години. (He wrote the letter in 2 hours - completion)\n\n---\n\n---\n\n---\n\n---\n\n# Activities\n\n## fill-in: Verbal Aspect Practice\n\n> Choose the correct aspect (imperfective for process/habit, perfective for completed action).\n\n1. Вчора він ___ (читати/прочитати) цю книгу до кінця.\n   > [!answer] прочитав\n   > [!options] читав | прочитав | читає | прочитає\n\n2. Вона щодня ___ (готувати/приготувати) сніданок для родини.\n   > [!answer] готує\n   > [!options] готує | приготує | готувала | приготувала\n\n3. Минулого тижня я ___ (вчити/вивчити) всі нові слова.\n   > [!answer] вивчив\n   > [!options] вчив | вивчив | вчу | вивчу\n\n4. Він зараз ___ (писати/написати) листа другові.\n   > [!answer] пише\n   > [!options] пише | напише | писав | написав\n\n5. Коли ти ___ (робити/зробити) домашнє завдання, підемо гуляти.\n   > [!answer] зробиш\n   > [!options] робиш | зробиш | робив | зробив\n\n6. Вона ___ (дивитися/подивитися) фільми кожного вечора.\n   > [!answer] дивиться\n   > [!options] дивиться | подивиться | дивилася | подивилася\n\n7. Вчора ввечері він ___ (купувати/купити) новий телефон.\n   > [!answer] купив\n   > [!options] купував | купив | купує | купить\n\n8. Ми довго ___ (шукати/знайти) цей ресторан учора.\n   > [!answer] шукали\n   > [!options] шукали | знайшли | шукаємо | знайдемо\n\n9. Раніше вона завжди ___ (допомагати/допомогти) мені з роботою.\n   > [!answer] допомагала\n   > [!options] допомагала | допомогла | допомагає | допоможе\n\n10. Ти вже ___ (їсти/з'їсти) весь торт сьогодні?\n    > [!answer] з'їв\n    > [!options] їв | з'їв | їси | з'їси\n\n## unjumble: Build the Sentence\n\n> Arrange the words to form sentences with correct aspect usage.\n\n1. книгу / Вчора / він / прочитав / цю / до кінця\n   > [!answer] Вчора він прочитав цю книгу до кінця.\n   > (Yesterday he finished reading this book. - perfective)\n\n2. готує / Вона / сніданок / щодня / для родини\n   > [!answer] Вона щодня готує сніданок для родини.\n   > (She cooks breakfast for the family every day. - imperfective)\n\n3. вивчив / тижня / Минулого / я / всі / нові слова\n   > [!answer] Минулого тижня я вивчив всі нові слова.\n   > (Last week I learned all the new words. - perfective)\n\n4. пише / Він / листа / зараз / другові\n   > [!answer] Він зараз пише листа другові.\n   > (He is now writing a letter to a friend. - imperfective)\n\n5. зробиш / Коли / ти / домашнє завдання / підемо гуляти\n   > [!answer] Коли ти зробиш домашнє завдання, підемо гуляти.\n   > (When you finish your homework, we'll go for a walk. - perfective)\n\n6. дивиться / Вона / фільми / кожного вечора\n   > [!answer] Вона дивиться фільми кожного вечора.\n   > (She watches movies every evening. - imperfective)\n\n7. купив / Вчора / він / новий телефон / ввечері\n   > [!answer] Вчора ввечері він купив новий телефон.\n   > (Yesterday evening he bought a new phone. - perfective)\n\n8. шукали / Ми / довго / цей ресторан / учора\n   > [!answer] Ми довго шукали цей ресторан учора.\n   > (We looked for this restaurant for a long time yesterday. - imperfective)\n\n9. допомагала / Раніше / вона / завжди / мені / з роботою\n   > [!answer] Раніше вона завжди допомагала мені з роботою.\n   > (Before she always helped me with work. - imperfective)\n\n10. з'їв / Ти / вже / весь торт / сьогодні\n    > [!answer] Ти вже з'їв весь торт сьогодні?\n    > (Have you already eaten the whole cake today? - perfective)\n\n## match-up: Match the Pairs\n\n> Match Ukrainian words to their English meanings.\n\n| Left | Right |\n|------|-------|\n| приготувати | to cook/prepare (perf) |\n| доконаний | perfective (aspect) |\n| ними | (with) them |\n| вивчити | to learn (perf) |\n| допомогти | to help (perf) |\n| купити | to buy (perf) |\n| з'їсти | to eat (perf) |\n| недоконаний | imperfective (aspect) |\n| повернути | to turn |\n| випити | to drink (perf) |\n| вид | aspect (grammar) |\n\n## quiz: Meaning Check\n\n> Choose the correct answer.\n\n1. What does \"з'їсти\" mean?\n   - [ ] change (money)\n   - [x] to eat (perf)\n   - [ ] during, throughout\n   - [ ] suitcase\n   > \"з'їсти\" means \"to eat (perf)\"\n\n2. What does \"недоконаний\" mean?\n   - [x] imperfective (aspect)\n   - [ ] potato\n   - [ ] shoes\n   - [ ] borscht\n   > \"недоконаний\" means \"imperfective (aspect)\"\n\n3. What does \"вид\" mean?\n   - [ ] tip\n   - [ ] fog\n   - [x] aspect (grammar)\n   - [ ] between\n   > \"вид\" means \"aspect (grammar)\"\n\n4. What does \"приготувати\" mean?\n   - [x] to cook/prepare (perf)\n   - [ ] one's own (m)\n   - [ ] Wednesday\n   - [ ] friend (male)\n   > \"приготувати\" means \"to cook/prepare (perf)\"\n\n5. What does \"випити\" mean?\n   - [ ] month\n   - [x] to drink (perf)\n   - [ ] professional\n   - [ ] grandma\n   > \"випити\" means \"to drink (perf)\"\n\n6. What does \"доконаний\" mean?\n   - [ ] to eat (perf)\n   - [ ] to carry\n   - [ ] potato\n   - [x] perfective (aspect)\n   > \"доконаний\" means \"perfective (aspect)\"\n\n7. What does \"вивчити\" mean?\n   - [ ] to work\n   - [ ] month\n   - [ ] there\n   - [x] to learn (perf)\n   > \"вивчити\" means \"to learn (perf)\"\n\n8. What does \"купити\" mean?\n   - [x] to buy (perf)\n   - [ ] to succeed\n   - [ ] office, study\n   - [ ] to drink (perf)\n   > \"купити\" means \"to buy (perf)\"\n\n## true-false: True or False?\n\n> Determine if each statement is true or false.\n\n- [x] \"недоконаний\" means \"imperfective (aspect)\"\n   > Correct!\n\n- [x] \"вид\" means \"aspect (grammar)\"\n   > Correct!\n\n- [x] \"випити\" means \"to drink (perf)\"\n   > Correct!\n\n- [ ] \"купити\" means \"passport\"\n   > Incorrect. \"купити\" means \"to buy (perf)\"\n\n- [ ] \"вивчити\" means \"writer\"\n   > Incorrect. \"вивчити\" means \"to learn (perf)\"\n\n- [ ] \"приготувати\" means \"sad\"\n   > Incorrect. \"приготувати\" means \"to cook/prepare (perf)\"\n\n- [x] \"доконаний\" means \"perfective (aspect)\"\n   > Correct!\n\n- [ ] \"з'їсти\" means \"yes\"\n   > Incorrect. \"з'їсти\" means \"to eat (perf)\"\n\n## select: Aspect Selection\n\n> Choose the correct verb aspect for each context.\n\n1. I was reading for two hours.\n   - [ ] Я прочитав дві години.\n   - [x] Я читав дві години.\n   - [ ] Я читаю дві години.\n   - [ ] Я буду читати дві години.\n   > Use imperfective for duration: \"Я читав дві години.\"\n\n2. I finished the book yesterday.\n   - [x] Я прочитав книгу вчора.\n   - [ ] Я читав книгу вчора.\n   - [ ] Я читаю книгу вчора.\n   - [ ] Я буду читати книгу.\n   > Use perfective for completed action: \"Я прочитав книгу вчора.\"\n\n3. She writes letters every week.\n   - [ ] Вона напише листи щотижня.\n   - [x] Вона пише листи щотижня.\n   - [ ] Вона написала листи щотижня.\n   - [ ] Вона буде писати листи.\n   > Use imperfective for repeated action: \"Вона пише листи щотижня.\"\n\n4. Tomorrow I will finish my homework.\n   - [x] Завтра я зроблю домашнє завдання.\n   - [ ] Завтра я робив домашнє завдання.\n   - [ ] Завтра я роблю домашнє завдання.\n   - [ ] Завтра я буду робити домашнє завдання.\n   > Use perfective for future completion: \"Завтра я зроблю домашнє завдання.\"\n\n5. He was drinking coffee when I arrived.\n   - [ ] Він випив каву, коли я прийшов.\n   - [x] Він пив каву, коли я прийшов.\n   - [ ] Він п'є каву, коли я прийшов.\n   - [ ] Він буде пити каву.\n   > Use imperfective for action in progress: \"Він пив каву, коли я прийшов.\"\n\n6. I ate the whole pizza.\n   - [x] Я з'їв всю піцу.\n   - [ ] Я їв всю піцу.\n   - [ ] Я їм всю піцу.\n   - [ ] Я буду їсти піцу.\n   > Use perfective for completed action with result: \"Я з'їв всю піцу.\"\n\n7. They learn new words every day.\n   - [ ] Вони вивчать нові слова щодня.\n   - [x] Вони вчать нові слова щодня.\n   - [ ] Вони вивчили нові слова щодня.\n   - [ ] Вони будуть вчити слова.\n   > Use imperfective for habitual action: \"Вони вчать нові слова щодня.\"\n\n8. She will cook dinner tonight.\n   - [x] Вона приготує вечерю сьогодні ввечері.\n   - [ ] Вона готувала вечерю сьогодні.\n   - [ ] Вона готує вечерю сьогодні.\n   - [ ] Вона буде готувати вечерю.\n   > Use perfective for future single action: \"Вона приготує вечерю сьогодні ввечері.\"\n\n9. We were doing homework all evening.\n   - [ ] Ми зробили домашнє завдання весь вечір.\n   - [x] Ми робили домашнє завдання весь вечір.\n   - [ ] Ми робимо домашнє завдання вечір.\n   - [ ] Ми зробимо домашнє завдання.\n   > Use imperfective for duration: \"Ми робили домашнє завдання весь вечір.\"\n\n10. He bought a new car last month.\n    - [x] Він купив нову машину минулого місяця.\n    - [ ] Він купував нову машину минулого місяця.\n    - [ ] Він купує нову машину місяця.\n    - [ ] Він буде купувати машину.\n    > Use perfective for completed single action: \"Він купив нову машину минулого місяця.\"\n\n## order: Aspect Story Sequence\n\n> Put these perfective actions in logical order to tell a story.\n\n- [5] Я ліг спати о десятій годині.\n- [1] Я прийшов додому о восьмій годині.\n- [3] Я приготував вечерю за тридцять хвилин.\n- [2] Я відкрив холодильник і взяв продукти.\n- [4] Я з'їв вечерю і випив чай.\n- [7] Я прочитав книгу годину перед сном.\n- [6] Я прийняв душ і почистив зуби.\n- [9] Я вивчив десять нових слів українською.\n- [8] Я написав повідомлення другу про плани.\n- [10] Я закрив очі і заснув швидко.\n\n## group-sort: Sort by Aspect\n\n> Sort these verbs by their aspect type.\n\n**Imperfective (process, repeated):**\n- читати\n- писати\n- робити\n- їсти\n- пити\n- вчити\n- готувати\n- купувати\n- давати\n- вставати\n\n**Perfective (completed, single):**\n- прочитати\n- написати\n- зробити\n- з'їсти\n- випити\n- вивчити\n- приготувати\n- купити\n- дати\n- встати\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| вид | /vɪd/ | aspect (grammatical) | noun | m |\n| недоконаний | /nɛdoˈkonɑnɪj/ | imperfective | adj | - | lit. \"unfinished\" |\n| доконаний | /doˈkonɑnɪj/ | perfective | adj | - | lit. \"finished\" |\n| з'їсти | /ˈzjistɪ/ | to eat (perf) | verb | - | pf of їсти |\n| випити | /ˈvɪpɪtɪ/ | to drink (perf) | verb | - | pf of пити |\n| вивчити | /ˈvɪvtʃɪtɪ/ | to learn (perf) | verb | - | pf of вчити |\n| приготувати | /prɪɦotuˈvɑtɪ/ | to cook/prepare (perf) | verb | - | pf of готувати |\n| купити | /kuˈpɪtɪ/ | to buy (perf) | verb | - | pf of купувати |\n\n---\n\n# Summary\n\n## Aspect at a Glance\n\n| Aspect | Use for | Example |\n|--------|---------|---------|\n| Imperfective | Process, duration, repetition | Я читав книгу. (was reading) |\n| Perfective | Completion, result, single event | Я прочитав книгу. (finished) |\n\n## Aspect in Tenses\n\n| Tense | Imperfective | Perfective |\n|-------|--------------|------------|\n| Past | читав (was reading) | прочитав (read/finished) |\n| Present | читаю (am reading) | ❌ (none) |\n| Future | буду читати (will be reading) | прочитаю (will read/finish) |\n\n## Common Prefixes for Perfective\n\n| Prefix | Example |\n|--------|---------|\n| про- | прочитати |\n| на- | написати |\n| з-/зі- | зробити |\n| ви- | випити, вивчити |\n| при- | приготувати |\n\n> 💡 **Key Takeaways**\n>\n> - Aspect = HOW (process vs result), not WHEN\n> - Imperfective: ongoing, repeated, duration\n> - Perfective: completed, single, result\n> - Learn verbs in pairs: читати/прочитати\n> - Only imperfective has present tense\n> - Context determines which aspect fits\n",
+    "createdAt": "2025-12-03T12:29:30.358Z",
+    "modifiedAt": "2025-12-03T12:29:30.358Z",
     "version": 2
   },
   "activities": [
     {
       "id": "act-a2-41-fillblank",
       "type": "fill-blank",
-      "title": "Complete the Sentences",
-      "description": "Choose the correct word to complete each sentence.",
+      "title": "Verbal Aspect Practice",
+      "description": "Choose the correct aspect (imperfective for process/habit, perfective for completed action).",
       "content": {
         "type": "fill-blank",
         "items": [
           {
-            "prompt": "Чи ти вмієш добре ___?",
-            "answer": "з'їсти",
+            "prompt": "Вчора він ___ (читати/прочитати) цю книгу до кінця.",
+            "answer": "прочитав",
+            "hints": [
+              "читати/прочитати"
+            ],
             "options": [
-              "дякую",
-              "перерахувати",
-              "з'їсти",
-              "була"
+              "читав",
+              "прочитав",
+              "читає",
+              "прочитає"
             ]
           },
           {
-            "prompt": "Вони планують ___ завтра.",
-            "answer": "приготувати",
+            "prompt": "Вона щодня ___ (готувати/приготувати) сніданок для родини.",
+            "answer": "готує",
+            "hints": [
+              "готувати/приготувати"
+            ],
             "options": [
-              "мати",
-              "приготувати",
-              "надіслати",
-              "думати"
+              "готує",
+              "приготує",
+              "готувала",
+              "приготувала"
             ]
           },
           {
-            "prompt": "Де ваш великий ___?",
-            "answer": "вид",
+            "prompt": "Минулого тижня я ___ (вчити/вивчити) всі нові слова.",
+            "answer": "вивчив",
+            "hints": [
+              "вчити/вивчити"
+            ],
             "options": [
-              "розмір",
-              "дитина",
-              "очі",
-              "вид"
+              "вчив",
+              "вивчив",
+              "вчу",
+              "вивчу"
             ]
           },
           {
-            "prompt": "Мій брат любить ___ щодня.",
-            "answer": "купити",
+            "prompt": "Він зараз ___ (писати/написати) листа другові.",
+            "answer": "пише",
+            "hints": [
+              "писати/написати"
+            ],
             "options": [
-              "заважати",
-              "вчитися",
-              "купити",
-              "бачити"
+              "пише",
+              "напише",
+              "писав",
+              "написав"
             ]
           },
           {
-            "prompt": "Ваша ідея здається ___.",
-            "answer": "недоконаний",
+            "prompt": "Коли ти ___ (робити/зробити) домашнє завдання, підемо гуляти.",
+            "answer": "зробиш",
+            "hints": [
+              "робити/зробити"
+            ],
             "options": [
-              "недоконаний",
-              "легкий",
-              "маленький",
-              "розумний"
+              "робиш",
+              "зробиш",
+              "робив",
+              "зробив"
             ]
           },
           {
-            "prompt": "Моя кімната занадто ___.",
-            "answer": "доконаний",
+            "prompt": "Вона ___ (дивитися/подивитися) фільми кожного вечора.",
+            "answer": "дивиться",
+            "hints": [
+              "дивитися/подивитися"
+            ],
             "options": [
-              "смачний",
-              "добрий",
-              "маленький",
-              "доконаний"
+              "дивиться",
+              "подивиться",
+              "дивилася",
+              "подивилася"
+            ]
+          },
+          {
+            "prompt": "Вчора ввечері він ___ (купувати/купити) новий телефон.",
+            "answer": "купив",
+            "hints": [
+              "купувати/купити"
+            ],
+            "options": [
+              "купував",
+              "купив",
+              "купує",
+              "купить"
+            ]
+          },
+          {
+            "prompt": "Ми довго ___ (шукати/знайти) цей ресторан учора.",
+            "answer": "шукали",
+            "hints": [
+              "шукати/знайти"
+            ],
+            "options": [
+              "шукали",
+              "знайшли",
+              "шукаємо",
+              "знайдемо"
+            ]
+          },
+          {
+            "prompt": "Раніше вона завжди ___ (допомагати/допомогти) мені з роботою.",
+            "answer": "допомагала",
+            "hints": [
+              "допомагати/допомогти"
+            ],
+            "options": [
+              "допомагала",
+              "допомогла",
+              "допомагає",
+              "допоможе"
+            ]
+          },
+          {
+            "prompt": "Ти вже ___ (їсти/з'їсти) весь торт сьогодні?",
+            "answer": "з'їв",
+            "hints": [
+              "їсти/з'їсти"
+            ],
+            "options": [
+              "їв",
+              "з'їв",
+              "їси",
+              "з'їси"
             ]
           }
         ]
@@ -136,26 +206,129 @@
       "difficultyLevel": "A2",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-03T08:52:31.868Z",
-      "modifiedAt": "2025-12-03T08:52:31.868Z"
+      "createdAt": "2025-12-03T12:29:30.358Z",
+      "modifiedAt": "2025-12-03T12:29:30.358Z"
     },
     {
       "id": "act-a2-41-unjumble",
       "type": "unjumble",
       "title": "Build the Sentence",
-      "description": "Arrange the words in the correct order.",
+      "description": "Arrange the words to form sentences with correct aspect usage.",
       "content": {
         "type": "unjumble",
+        "isUnjumble": true,
         "items": [
           {
             "words": [
-              "вид",
-              "Це",
-              "новий",
-              "мій"
+              "книгу",
+              "Вчора",
+              "він",
+              "прочитав",
+              "цю",
+              "до кінця"
             ],
-            "answer": "Це мій новий вид.",
-            "translation": "aspect (grammar"
+            "answer": "Вчора він прочитав цю книгу до кінця.",
+            "translation": "Yesterday he finished reading this book. - perfective"
+          },
+          {
+            "words": [
+              "готує",
+              "Вона",
+              "сніданок",
+              "щодня",
+              "для родини"
+            ],
+            "answer": "Вона щодня готує сніданок для родини.",
+            "translation": "She cooks breakfast for the family every day. - imperfective"
+          },
+          {
+            "words": [
+              "вивчив",
+              "тижня",
+              "Минулого",
+              "я",
+              "всі",
+              "нові слова"
+            ],
+            "answer": "Минулого тижня я вивчив всі нові слова.",
+            "translation": "Last week I learned all the new words. - perfective"
+          },
+          {
+            "words": [
+              "пише",
+              "Він",
+              "листа",
+              "зараз",
+              "другові"
+            ],
+            "answer": "Він зараз пише листа другові.",
+            "translation": "He is now writing a letter to a friend. - imperfective"
+          },
+          {
+            "words": [
+              "зробиш",
+              "Коли",
+              "ти",
+              "домашнє завдання",
+              "підемо гуляти"
+            ],
+            "answer": "Коли ти зробиш домашнє завдання, підемо гуляти.",
+            "translation": "When you finish your homework, we'll go for a walk. - perfective"
+          },
+          {
+            "words": [
+              "дивиться",
+              "Вона",
+              "фільми",
+              "кожного вечора"
+            ],
+            "answer": "Вона дивиться фільми кожного вечора.",
+            "translation": "She watches movies every evening. - imperfective"
+          },
+          {
+            "words": [
+              "купив",
+              "Вчора",
+              "він",
+              "новий телефон",
+              "ввечері"
+            ],
+            "answer": "Вчора ввечері він купив новий телефон.",
+            "translation": "Yesterday evening he bought a new phone. - perfective"
+          },
+          {
+            "words": [
+              "шукали",
+              "Ми",
+              "довго",
+              "цей ресторан",
+              "учора"
+            ],
+            "answer": "Ми довго шукали цей ресторан учора.",
+            "translation": "We looked for this restaurant for a long time yesterday. - imperfective"
+          },
+          {
+            "words": [
+              "допомагала",
+              "Раніше",
+              "вона",
+              "завжди",
+              "мені",
+              "з роботою"
+            ],
+            "answer": "Раніше вона завжди допомагала мені з роботою.",
+            "translation": "Before she always helped me with work. - imperfective"
+          },
+          {
+            "words": [
+              "з'їв",
+              "Ти",
+              "вже",
+              "весь торт",
+              "сьогодні"
+            ],
+            "answer": "Ти вже з'їв весь торт сьогодні?",
+            "translation": "Have you already eaten the whole cake today? - perfective"
           }
         ]
       },
@@ -166,8 +339,8 @@
       "difficultyLevel": "A2",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-03T08:52:31.868Z",
-      "modifiedAt": "2025-12-03T08:52:31.868Z"
+      "createdAt": "2025-12-03T12:29:30.358Z",
+      "modifiedAt": "2025-12-03T12:29:30.358Z"
     },
     {
       "id": "act-a2-41-matchup",
@@ -231,8 +404,8 @@
       "difficultyLevel": "A2",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-03T08:52:31.868Z",
-      "modifiedAt": "2025-12-03T08:52:31.868Z"
+      "createdAt": "2025-12-03T12:29:30.358Z",
+      "modifiedAt": "2025-12-03T12:29:30.358Z"
     },
     {
       "id": "act-a2-41-quiz",
@@ -342,8 +515,8 @@
       "difficultyLevel": "A2",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-03T08:52:31.868Z",
-      "modifiedAt": "2025-12-03T08:52:31.868Z"
+      "createdAt": "2025-12-03T12:29:30.358Z",
+      "modifiedAt": "2025-12-03T12:29:30.358Z"
     },
     {
       "id": "act-a2-41-truefalse",
@@ -352,7 +525,48 @@
       "description": "Determine if each statement is true or false.",
       "content": {
         "type": "true-false",
-        "statements": []
+        "statements": [
+          {
+            "statement": "\"недоконаний\" means \"imperfective (aspect)\"",
+            "isTrue": true,
+            "explanation": "Correct!"
+          },
+          {
+            "statement": "\"вид\" means \"aspect (grammar)\"",
+            "isTrue": true,
+            "explanation": "Correct!"
+          },
+          {
+            "statement": "\"випити\" means \"to drink (perf)\"",
+            "isTrue": true,
+            "explanation": "Correct!"
+          },
+          {
+            "statement": "\"купити\" means \"passport\"",
+            "isTrue": false,
+            "explanation": "Incorrect. \"купити\" means \"to buy (perf)\""
+          },
+          {
+            "statement": "\"вивчити\" means \"writer\"",
+            "isTrue": false,
+            "explanation": "Incorrect. \"вивчити\" means \"to learn (perf)\""
+          },
+          {
+            "statement": "\"приготувати\" means \"sad\"",
+            "isTrue": false,
+            "explanation": "Incorrect. \"приготувати\" means \"to cook/prepare (perf)\""
+          },
+          {
+            "statement": "\"доконаний\" means \"perfective (aspect)\"",
+            "isTrue": true,
+            "explanation": "Correct!"
+          },
+          {
+            "statement": "\"з'їсти\" means \"yes\"",
+            "isTrue": false,
+            "explanation": "Incorrect. \"з'їсти\" means \"to eat (perf)\""
+          }
+        ]
       },
       "subject": "language",
       "owner": "curricula-opus",
@@ -361,8 +575,278 @@
       "difficultyLevel": "A2",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-03T08:52:31.868Z",
-      "modifiedAt": "2025-12-03T08:52:31.868Z"
+      "createdAt": "2025-12-03T12:29:30.358Z",
+      "modifiedAt": "2025-12-03T12:29:30.358Z"
+    },
+    {
+      "id": "act-a2-41-select",
+      "type": "select",
+      "title": "Aspect Selection",
+      "description": "Choose the correct verb aspect for each context.",
+      "content": {
+        "type": "select",
+        "items": [
+          {
+            "question": "I was reading for two hours.",
+            "options": [
+              {
+                "text": "Я прочитав дві години.",
+                "correct": false
+              },
+              {
+                "text": "Я читав дві години.",
+                "correct": true
+              },
+              {
+                "text": "Я читаю дві години.",
+                "correct": false
+              },
+              {
+                "text": "Я буду читати дві години.",
+                "correct": false
+              }
+            ]
+          },
+          {
+            "question": "I finished the book yesterday.",
+            "options": [
+              {
+                "text": "Я прочитав книгу вчора.",
+                "correct": true
+              },
+              {
+                "text": "Я читав книгу вчора.",
+                "correct": false
+              },
+              {
+                "text": "Я читаю книгу вчора.",
+                "correct": false
+              },
+              {
+                "text": "Я буду читати книгу.",
+                "correct": false
+              }
+            ]
+          },
+          {
+            "question": "She writes letters every week.",
+            "options": [
+              {
+                "text": "Вона напише листи щотижня.",
+                "correct": false
+              },
+              {
+                "text": "Вона пише листи щотижня.",
+                "correct": true
+              },
+              {
+                "text": "Вона написала листи щотижня.",
+                "correct": false
+              },
+              {
+                "text": "Вона буде писати листи.",
+                "correct": false
+              }
+            ]
+          },
+          {
+            "question": "Tomorrow I will finish my homework.",
+            "options": [
+              {
+                "text": "Завтра я зроблю домашнє завдання.",
+                "correct": true
+              },
+              {
+                "text": "Завтра я робив домашнє завдання.",
+                "correct": false
+              },
+              {
+                "text": "Завтра я роблю домашнє завдання.",
+                "correct": false
+              },
+              {
+                "text": "Завтра я буду робити домашнє завдання.",
+                "correct": false
+              }
+            ]
+          },
+          {
+            "question": "He was drinking coffee when I arrived.",
+            "options": [
+              {
+                "text": "Він випив каву, коли я прийшов.",
+                "correct": false
+              },
+              {
+                "text": "Він пив каву, коли я прийшов.",
+                "correct": true
+              },
+              {
+                "text": "Він п'є каву, коли я прийшов.",
+                "correct": false
+              },
+              {
+                "text": "Він буде пити каву.",
+                "correct": false
+              }
+            ]
+          },
+          {
+            "question": "I ate the whole pizza.",
+            "options": [
+              {
+                "text": "Я з'їв всю піцу.",
+                "correct": true
+              },
+              {
+                "text": "Я їв всю піцу.",
+                "correct": false
+              },
+              {
+                "text": "Я їм всю піцу.",
+                "correct": false
+              },
+              {
+                "text": "Я буду їсти піцу.",
+                "correct": false
+              }
+            ]
+          },
+          {
+            "question": "They learn new words every day.",
+            "options": [
+              {
+                "text": "Вони вивчать нові слова щодня.",
+                "correct": false
+              },
+              {
+                "text": "Вони вчать нові слова щодня.",
+                "correct": true
+              },
+              {
+                "text": "Вони вивчили нові слова щодня.",
+                "correct": false
+              },
+              {
+                "text": "Вони будуть вчити слова.",
+                "correct": false
+              }
+            ]
+          },
+          {
+            "question": "She will cook dinner tonight.",
+            "options": [
+              {
+                "text": "Вона приготує вечерю сьогодні ввечері.",
+                "correct": true
+              },
+              {
+                "text": "Вона готувала вечерю сьогодні.",
+                "correct": false
+              },
+              {
+                "text": "Вона готує вечерю сьогодні.",
+                "correct": false
+              },
+              {
+                "text": "Вона буде готувати вечерю.",
+                "correct": false
+              }
+            ]
+          },
+          {
+            "question": "We were doing homework all evening.",
+            "options": [
+              {
+                "text": "Ми зробили домашнє завдання весь вечір.",
+                "correct": false
+              },
+              {
+                "text": "Ми робили домашнє завдання весь вечір.",
+                "correct": true
+              },
+              {
+                "text": "Ми робимо домашнє завдання вечір.",
+                "correct": false
+              },
+              {
+                "text": "Ми зробимо домашнє завдання.",
+                "correct": false
+              }
+            ]
+          },
+          {
+            "question": "He bought a new car last month.",
+            "options": [
+              {
+                "text": "Він купив нову машину минулого місяця.",
+                "correct": true
+              },
+              {
+                "text": "Він купував нову машину минулого місяця.",
+                "correct": false
+              },
+              {
+                "text": "Він купує нову машину місяця.",
+                "correct": false
+              },
+              {
+                "text": "Він буде купувати машину.",
+                "correct": false
+              }
+            ]
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-03T12:29:30.358Z",
+      "modifiedAt": "2025-12-03T12:29:30.358Z"
+    },
+    {
+      "id": "act-a2-41-order",
+      "type": "order",
+      "title": "Aspect Story Sequence",
+      "description": "Put these perfective actions in logical order to tell a story.",
+      "content": {
+        "type": "order",
+        "items": [],
+        "correctOrder": []
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-03T12:29:30.358Z",
+      "modifiedAt": "2025-12-03T12:29:30.358Z"
+    },
+    {
+      "id": "act-a2-41-groupsort",
+      "type": "group-sort",
+      "title": "Sort by Aspect",
+      "description": "Sort these verbs by their aspect type.",
+      "content": {
+        "type": "group-sort",
+        "groups": [],
+        "shuffleItems": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-03T12:29:30.358Z",
+      "modifiedAt": "2025-12-03T12:29:30.358Z"
     }
   ],
   "vocabulary": {

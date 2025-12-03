@@ -51,78 +51,148 @@
         "content": "## The 7 Cases at a Glance\n\n| Case | Question | Typical Use |\n|------|----------|-------------|\n| Nominative | Хто? Що? | Subject |\n| Genitive | Кого? Чого? | Possession, absence, \"of\" |\n| Dative | Кому? | To/for whom |\n| Accusative | Кого? Що? | Direct object |\n| Instrumental | Ким? Чим? | With, by means of |\n| Locative | Де? У чому? | Location (with preposition) |\n| Vocative | - | Calling someone |\n\n## Multi-Case Sentence Patterns\n\n| Pattern | Example |\n|---------|---------|\n| NOM + ACC | Я читаю книгу. |\n| NOM + ACC + DAT | Я даю книгу братові. |\n| NOM + з + INSTR | Я йду з другом. |\n| NOM + до + GEN | Я йду до магазину. |\n| NOM + у/на + LOC | Я живу в Києві. |\n\n## Case Identification Strategy\n\n1. Find the verb (or preposition)\n2. Ask: Хто? Що? Кого? Кому? Ким? Де?\n3. Check the ending\n4. Consider the function\n\n> 💡 **Key Takeaways**\n>\n> - Most sentences use 2-4 different cases\n> - Prepositions determine case for nouns that follow\n> - Practice identifying cases in real sentences\n> - The question words (хто, кого, кому, ким) match case questions\n> - Context helps when endings are similar"
       }
     ],
-    "rawMarkdown": "---\nmodule: 38\ntitle: \"Case Integration\"\nsubtitle: \"All 7 Cases Together\"\nlevel: A2\nphase: A2.1\nduration: 45\ntransliteration: partial\ntags: [cases, integration, review, practice]\nobjectives:\n  - Use all 7 cases in context\n  - Build multi-case sentences\n  - Identify cases in complex texts\n  - Switch between cases fluently\ngrammar:\n  - All case functions review\n  - Multi-case sentence building\n  - Case identification strategies\n---\n\n# Lesson Content\n\n## warm-up\n\n### The Complete System\n\nCongratulations! You now know all 7 Ukrainian cases. Let's see them working together:\n\n**One sentence, multiple cases:**\n> Я дав книгу братові біля столу вчора.\n> (I gave a book to my brother near the table yesterday.)\n\n- **Я** - nominative (subject)\n- **книгу** - accusative (direct object)\n- **братові** - dative (to whom)\n- **столу** - genitive (біля + gen)\n\nCases work together to create precise meaning. Today we practice using them all!\n\n> 💡 **Did You Know?**\n>\n> Most Ukrainian sentences use 2-3 different cases. Native speakers don't think about cases consciously - they just \"sound right.\" With practice, you'll develop this intuition too!\n\n## presentation\n\n### The 7 Cases: Complete Review\n\n| Case | Question | Function | Example |\n|------|----------|----------|---------|\n| Nominative | Хто? Що? | Subject | **Брат** читає. |\n| Genitive | Кого? Чого? | Possession, absence, quantities | Книга **брата**. |\n| Dative | Кому? Чому? | To/for whom | Даю **братові**. |\n| Accusative | Кого? Що? | Direct object | Бачу **брата**. |\n| Instrumental | Ким? Чим? | With/by means | Йду з **братом**. |\n| Locative | На/у кому/чому? | Location | Думаю про **брата**. |\n| Vocative | - | Direct address | **Брате**! |\n\n> ⚡ **Pro Tip: Case Recognition**\n>\n> To identify a case in a sentence:\n> 1. Find the verb\n> 2. Ask what question the noun answers\n> 3. Check for prepositions (they determine case)\n> 4. Look at the ending\n\n### Multi-Case Sentences\n\n**Simple (2 cases):**\n- **Мама** (nom) готує **вечерю** (acc). - Mom is preparing dinner.\n- **Я** (nom) йду до **магазину** (gen). - I'm going to the store.\n\n**Medium (3 cases):**\n- **Я** (nom) даю **подарунок** (acc) **сестрі** (dat). - I give a gift to sister.\n- **Ми** (nom) живемо біля **річки** (gen) з **батьками** (instr). - We live near the river with parents.\n\n**Complex (4+ cases):**\n- **Я** (nom) написав **листа** (acc) **другові** (dat) про **подорож** (acc after про).\n  - I wrote a letter to a friend about the trip.\n- **Учитель** (nom) пояснює **учням** (dat) правила **граматики** (gen) **олівцем** (instr).\n  - The teacher explains grammar rules to students with a pencil.\n\n> 📜 **History Bite: Case-Rich Languages**\n>\n> Ukrainian's 7 cases come from Proto-Slavic, which had even more! Finnish has 15 cases, Hungarian has 18. Ukrainian strikes a balance - enough cases to be precise, not so many as to be overwhelming.\n\n### Case Chains: Following the Logic\n\n**Nominative starts the chain:**\nБрат читає книгу сестрі.\n- Хто читає? → Брат (nom)\n- Що читає? → Книгу (acc)\n- Кому читає? → Сестрі (dat)\n\n**Genitive for possession/origin:**\nКнига брата лежить на столі.\n- Що лежить? → Книга (nom)\n- Чия книга? → Брата (gen)\n- Де лежить? → На столі (loc)\n\n**Instrumental for means/company:**\nЯ їду з братом автобусом до Львова.\n- Хто їде? → Я (nom)\n- З ким? → З братом (instr)\n- Чим? → Автобусом (instr)\n- Куди? → До Львова (gen)\n\n### Common Multi-Case Patterns\n\n**Pattern 1: Subject + Action + Object + Recipient**\nNOM + verb + ACC + DAT\n- Батько дав гроші синові.\n- Вчителька показала карту студентам.\n\n**Pattern 2: Subject + Action + Object + Location**\nNOM + verb + ACC + у/на + LOC\n- Я поклав книгу на полицю.\n- Вона поставила вазу у кімнаті.\n\n**Pattern 3: Subject + Action + Companion + Means**\nNOM + verb + з + INSTR + INSTR (means)\n- Ми їдемо з друзями поїздом.\n- Вона йде з сестрою пішки.\n\n**Pattern 4: Subject + Action + Destination + Purpose**\nNOM + verb + до + GEN + за + ACC\n- Він пішов до магазину за хлібом.\n- Я біжу до лікаря за допомогою.\n\n> 🎭 **Culture Corner: Formal Requests**\n>\n> In formal Ukrainian, multi-case sentences show politeness:\n> - \"Прошу Вас передати цю інформацію директорові компанії.\"\n> - (I ask you to pass this information to the company director.)\n>\n> The more precise, the more polite!\n\n### Case Conflicts: Choosing Right\n\n**Same verb, different cases by meaning:**\n\nписати:\n- Я пишу **листа** (acc). - I write a letter. (what)\n- Я пишу **другові** (dat). - I write to a friend. (to whom)\n- Я пишу **ручкою** (instr). - I write with a pen. (by what means)\n\nдивитися:\n- Я дивлюся **фільм** (acc). - I watch a film. (what)\n- Я дивлюся **на тебе** (acc). - I look at you. (direction)\n- Я дивлюся **з цікавістю** (instr). - I look with interest. (manner)\n\nдумати:\n- Я думаю **про тебе** (acc). - I think about you.\n- Я думаю **над проблемою** (instr). - I think over a problem.\n\n> ⚡ **Pro Tip: When in Doubt**\n>\n> 1. Check the preposition - it usually determines case\n> 2. Ask the case question (кого? кому? ким? etc.)\n> 3. Think about the FUNCTION (object? recipient? means?)\n\n### Reading Multi-Case Sentences\n\n**Practice parsing:**\n\n**Sentence 1:**\n> Маленька дівчинка дала красивий малюнок своїй бабусі.\n\nParse:\n- Хто? → маленька дівчинка (nom) - subject\n- Що дала? → красивий малюнок (acc) - direct object\n- Кому? → своїй бабусі (dat) - recipient\n\n**Sentence 2:**\n> Студенти з різних країн зустрілися біля університету перед лекцією.\n\nParse:\n- Хто? → студенти (nom) - subject\n- З яких країн? → з різних країн (gen) - origin\n- Де? → біля університету (gen) - location\n- Коли? → перед лекцією (instr) - time\n\n**Sentence 3:**\n> Мій друг, Іване, передай, будь ласка, цю книгу Марії від мене!\n\nParse:\n- Іване (voc) - direct address\n- Що передай? → цю книгу (acc) - object\n- Кому? → Марії (dat) - recipient\n- Від кого? → від мене (gen) - source\n\n## practice\n\n### Identify All Cases\n\nFind and label each case in the sentences:\n\n1. Мама готує смачний обід для сім'ї.\n   - Мама (nom), обід (acc), сім'ї (gen)\n\n2. Я розповів другові про свою подорож.\n   - Я (nom), другові (dat), подорож (acc)\n\n3. Студентка пише листа батькам ручкою.\n   - Студентка (nom), листа (acc), батькам (dat), ручкою (instr)\n\n4. Брате, дай мені книгу зі столу!\n   - Брате (voc), мені (dat), книгу (acc), столу (gen)\n\n### Complete Multi-Case Sentences\n\nFill in ALL blanks:\n\n1. ___ (я) даю ___ (книга) ___ (сестра).\n   > [!answer] Я даю книгу сестрі.\n\n2. ___ (вчитель) пояснює ___ (правило) ___ (студенти).\n   > [!answer] Вчитель пояснює правило студентам.\n\n3. ___ (ми) йдемо з ___ (друзі) до ___ (парк).\n   > [!answer] Ми йдемо з друзями до парку.\n\n4. ___ (дідусь), розкажи ___ (я) про ___ (війна).\n   > [!answer] Дідусю, розкажи мені про війну.\n\n### Build Complex Sentences\n\nCreate sentences using all given elements:\n\n1. [я / писати / лист / друг / ручка]\n   > [!answer] Я пишу листа другові ручкою.\n\n2. [батько / купити / подарунок / мама / магазин]\n   > [!answer] Батько купив подарунок мамі в магазині.\n\n3. [ми / зустрітися / колеги / кафе / після / робота]\n   > [!answer] Ми зустрілися з колегами в кафе після роботи.\n\n## production\n\n### Real Situations\n\n**Scenario 1: Telling a story**\n- Вчора я пішов до парку з друзями.\n- Ми сиділи біля озера і розмовляли про життя.\n- Потім мій друг дав мені цікаву книгу.\n- Тепер я читаю її з великим задоволенням.\n\n**Scenario 2: Giving instructions**\n- Візьми документи зі столу в кабінеті.\n- Передай їх секретарці на другому поверсі.\n- Скажи їй, що це від директора для бухгалтерії.\n- Після цього повернися до мене.\n\n**Scenario 3: Describing a day**\n- Зранку я їду автобусом на роботу.\n- Протягом дня я працюю з клієнтами.\n- Після обіду я пишу листи партнерам.\n- Увечері зустрічаюся з друзями біля кінотеатру.\n\n---\n\n---\n\n---\n\n---\n\n# Activities\n\n## fill-in: Complete the Sentences\n\n> Choose the correct word to complete each sentence.\n\n1. Це мій новий ___.\n   > [!answer] малюнок\n   > [!options] радіо | малюнок | продавчиня | початок\n\n2. Ця ___ коштує сто гривень.\n   > [!answer] ваза\n   > [!options] готель | зуби | бабуся | ваза\n\n3. Це ___ коштує сто гривень.\n   > [!answer] правило\n   > [!options] лист | правило | повідомлення | офіціант\n\n4. Цей ___ коштує сто гривень.\n   > [!answer] кабінет\n   > [!options] вівторок | кабінет | сніданок | дружина\n\n5. Де ваша велика ___?\n   > [!answer] бухгалтерія\n   > [!options] бухгалтерія | двері | клієнт | ручка\n\n6. Ця ___ коштує сто гривень.\n   > [!answer] лекція\n   > [!options] середній | душ | лекція | лікар\n\n## unjumble: Build the Sentence\n\n> Arrange the words in the correct order.\n\n1. Мій / брат / малюнок / має / хороший\n   > [!answer] Мій брат має хороший малюнок.\n   > (drawing, picture)\n\n2. брат / хорошу / має / секретарка / Мій\n   > [!answer] Мій брат має хорошу секретарка.\n   > (secretary (f))\n\n3. хочу / купити / поверх / цей / Я\n   > [!answer] Я хочу купити цей поверх.\n   > (floor (of building))\n\n4. Це / нова / моя / ваза\n   > [!answer] Це моя нова ваза.\n   > (vase)\n\n5. коштує / Ця / сто / гривень / бухгалтерія\n   > [!answer] Ця бухгалтерія коштує сто гривень.\n   > (accounting dept)\n\n6. полиця / Мій / брат / має / хорошу\n   > [!answer] Мій брат має хорошу полиця.\n   > (shelf)\n\n7. Мій / хороший / брат / партнер / має\n   > [!answer] Мій брат має хороший партнер.\n   > (partner)\n\n8. Я / хочу / це / задоволення / купити\n   > [!answer] Я хочу купити це задоволення.\n   > (pleasure, satisfaction)\n\n9. коштує / сто / Цей / кабінет / гривень\n   > [!answer] Цей кабінет коштує сто гривень.\n   > (office, study)\n\n10. Це / моя / нова / лекція\n   > [!answer] Це моя нова лекція.\n   > (lecture)\n\n11. Мій / має / хороше / правило / брат\n   > [!answer] Мій брат має хороше правило.\n   > (rule)\n\n## match-up: Match the Pairs\n\n> Match Ukrainian words to their English meanings.\n\n| Left | Right |\n|------|-------|\n| кабінет | office, study |\n| ваза | vase |\n| малюнок | drawing, picture |\n| протягом | during, throughout |\n| бухгалтерія | accounting dept |\n| партнер | partner |\n| задоволення | pleasure, satisfaction |\n| іноді | sometimes |\n| правило | rule |\n| принести | to bring |\n| полиця | shelf |\n| ви | you (formal/plural) |\n\n## quiz: Meaning Check\n\n> Choose the correct answer.\n\n1. What does \"секретарка\" mean?\n   - [ ] straight\n   - [x] secretary (f)\n   - [ ] eyes\n   - [ ] Accusative: бачити, читати, любити\n   > \"секретарка\" means \"secretary (f)\"\n\n2. What does \"задоволення\" mean?\n   - [ ] to speak\n   - [ ] lecture\n   - [x] pleasure, satisfaction\n   - [ ] to become\n   > \"задоволення\" means \"pleasure, satisfaction\"\n\n3. What does \"поверх\" mean?\n   - [ ] to sell\n   - [ ] Kyiv\n   - [x] floor (of building)\n   - [ ] experience\n   > \"поверх\" means \"floor (of building)\"\n\n4. What does \"малюнок\" mean?\n   - [ ] calf\n   - [x] drawing, picture\n   - [ ] to be considered\n   - [ ] to be lucky\n   > \"малюнок\" means \"drawing, picture\"\n\n5. What does \"бухгалтерія\" mean?\n   - [ ] to understand\n   - [ ] in the middle\n   - [ ] price\n   - [x] accounting dept\n   > \"бухгалтерія\" means \"accounting dept\"\n\n6. What does \"полиця\" mean?\n   - [x] shelf\n   - [ ] to inform\n   - [ ] thin\n   - [ ] pork fat\n   > \"полиця\" means \"shelf\"\n\n7. What does \"партнер\" mean?\n   - [ ] that\n   - [ ] cucumber\n   - [ ] there\n   - [x] partner\n   > \"партнер\" means \"partner\"\n\n8. What does \"лекція\" mean?\n   - [ ] small\n   - [ ] lemon\n   - [ ] English (adj)\n   - [x] lecture\n   > \"лекція\" means \"lecture\"\n\n9. What does \"протягом\" mean?\n   - [ ] to have\n   - [ ] neighbor (f)\n   - [x] during, throughout\n   - [ ] salt\n   > \"протягом\" means \"during, throughout\"\n\n10. What does \"правило\" mean?\n   - [ ] gift\n   - [ ] we\n   - [x] rule\n   - [ ] to be going to\n   > \"правило\" means \"rule\"\n\n11. What does \"ваза\" mean?\n   - [x] vase\n   - [ ] potato\n   - [ ] to remain\n   - [ ] entrepreneur\n   > \"ваза\" means \"vase\"\n\n12. What does \"кабінет\" mean?\n   - [ ] to try on\n   - [x] office, study\n   - [ ] discount\n   - [ ] porridge\n   > \"кабінет\" means \"office, study\"\n\n## true-false: True or False?\n\n> Determine if each statement is true or false.\n\n- [x] \"кабінет\" means \"office, study\"\n   > Correct!\n\n- [x] \"лекція\" means \"lecture\"\n   > Correct!\n\n- [ ] \"ваза\" means \"can, to be able\"\n   > Incorrect. \"ваза\" means \"vase\"\n\n- [x] \"малюнок\" means \"drawing, picture\"\n   > Correct!\n\n- [x] \"протягом\" means \"during, throughout\"\n   > Correct!\n\n- [x] \"партнер\" means \"partner\"\n   > Correct!\n\n- [x] \"секретарка\" means \"secretary (f)\"\n   > Correct!\n\n- [x] \"правило\" means \"rule\"\n   > Correct!\n\n- [ ] \"полиця\" means \"yesterday\"\n   > Incorrect. \"полиця\" means \"shelf\"\n\n- [x] \"бухгалтерія\" means \"accounting dept\"\n   > Correct!\n\n## group-sort: Sort by Gender\n\n> Sort the nouns into gender categories.\n\n### Masculine\n- кабінет\n- малюнок\n- партнер\n- поверх\n\n### Feminine\n- полиця\n- ваза\n- бухгалтерія\n- секретарка\n- лекція\n\n### Neuter\n- задоволення\n- правило\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| правило | /prɑˈvɪlo/ | rule | noun | n |\n| полиця | /poˈlɪtsʲɑ/ | shelf | noun | f |\n| ваза | /ˈvɑzɑ/ | vase | noun | f |\n| поверх | /ˈpovɛrx/ | floor (of building) | noun | m |\n| кабінет | /kɑbʲiˈnɛt/ | office, study | noun | m |\n| секретарка | /sɛkrɛˈtɑrkɑ/ | secretary (f) | noun | f |\n| бухгалтерія | /buxɦɑlˈtɛrʲijɑ/ | accounting dept | noun | f |\n| партнер | /pɑrtˈnɛr/ | partner | noun | m |\n| малюнок | /mɑˈlʲunok/ | drawing, picture | noun | m |\n| лекція | /ˈlɛktsʲijɑ/ | lecture | noun | f |\n| задоволення | /zɑdoˈvolɛnʲːɑ/ | pleasure, satisfaction | noun | n |\n| протягом | /proˈtʲɑɦom/ | during, throughout | prep | - | + gen |\n\n---\n\n# Summary\n\n## The 7 Cases at a Glance\n\n| Case | Question | Typical Use |\n|------|----------|-------------|\n| Nominative | Хто? Що? | Subject |\n| Genitive | Кого? Чого? | Possession, absence, \"of\" |\n| Dative | Кому? | To/for whom |\n| Accusative | Кого? Що? | Direct object |\n| Instrumental | Ким? Чим? | With, by means of |\n| Locative | Де? У чому? | Location (with preposition) |\n| Vocative | - | Calling someone |\n\n## Multi-Case Sentence Patterns\n\n| Pattern | Example |\n|---------|---------|\n| NOM + ACC | Я читаю книгу. |\n| NOM + ACC + DAT | Я даю книгу братові. |\n| NOM + з + INSTR | Я йду з другом. |\n| NOM + до + GEN | Я йду до магазину. |\n| NOM + у/на + LOC | Я живу в Києві. |\n\n## Case Identification Strategy\n\n1. Find the verb (or preposition)\n2. Ask: Хто? Що? Кого? Кому? Ким? Де?\n3. Check the ending\n4. Consider the function\n\n> 💡 **Key Takeaways**\n>\n> - Most sentences use 2-4 different cases\n> - Prepositions determine case for nouns that follow\n> - Practice identifying cases in real sentences\n> - The question words (хто, кого, кому, ким) match case questions\n> - Context helps when endings are similar\n",
-    "createdAt": "2025-12-03T08:52:31.867Z",
-    "modifiedAt": "2025-12-03T08:52:31.867Z",
+    "rawMarkdown": "---\nmodule: 38\ntitle: \"Case Integration\"\nsubtitle: \"All 7 Cases Together\"\nlevel: A2\nphase: A2.1\nduration: 45\ntransliteration: partial\ntags: [cases, integration, review, practice]\nobjectives:\n  - Use all 7 cases in context\n  - Build multi-case sentences\n  - Identify cases in complex texts\n  - Switch between cases fluently\ngrammar:\n  - All case functions review\n  - Multi-case sentence building\n  - Case identification strategies\n---\n\n# Lesson Content\n\n## warm-up\n\n### The Complete System\n\nCongratulations! You now know all 7 Ukrainian cases. Let's see them working together:\n\n**One sentence, multiple cases:**\n> Я дав книгу братові біля столу вчора.\n> (I gave a book to my brother near the table yesterday.)\n\n- **Я** - nominative (subject)\n- **книгу** - accusative (direct object)\n- **братові** - dative (to whom)\n- **столу** - genitive (біля + gen)\n\nCases work together to create precise meaning. Today we practice using them all!\n\n> 💡 **Did You Know?**\n>\n> Most Ukrainian sentences use 2-3 different cases. Native speakers don't think about cases consciously - they just \"sound right.\" With practice, you'll develop this intuition too!\n\n## presentation\n\n### The 7 Cases: Complete Review\n\n| Case | Question | Function | Example |\n|------|----------|----------|---------|\n| Nominative | Хто? Що? | Subject | **Брат** читає. |\n| Genitive | Кого? Чого? | Possession, absence, quantities | Книга **брата**. |\n| Dative | Кому? Чому? | To/for whom | Даю **братові**. |\n| Accusative | Кого? Що? | Direct object | Бачу **брата**. |\n| Instrumental | Ким? Чим? | With/by means | Йду з **братом**. |\n| Locative | На/у кому/чому? | Location | Думаю про **брата**. |\n| Vocative | - | Direct address | **Брате**! |\n\n> ⚡ **Pro Tip: Case Recognition**\n>\n> To identify a case in a sentence:\n> 1. Find the verb\n> 2. Ask what question the noun answers\n> 3. Check for prepositions (they determine case)\n> 4. Look at the ending\n\n### Multi-Case Sentences\n\n**Simple (2 cases):**\n- **Мама** (nom) готує **вечерю** (acc). - Mom is preparing dinner.\n- **Я** (nom) йду до **магазину** (gen). - I'm going to the store.\n\n**Medium (3 cases):**\n- **Я** (nom) даю **подарунок** (acc) **сестрі** (dat). - I give a gift to sister.\n- **Ми** (nom) живемо біля **річки** (gen) з **батьками** (instr). - We live near the river with parents.\n\n**Complex (4+ cases):**\n- **Я** (nom) написав **листа** (acc) **другові** (dat) про **подорож** (acc after про).\n  - I wrote a letter to a friend about the trip.\n- **Учитель** (nom) пояснює **учням** (dat) правила **граматики** (gen) **олівцем** (instr).\n  - The teacher explains grammar rules to students with a pencil.\n\n> 📜 **History Bite: Case-Rich Languages**\n>\n> Ukrainian's 7 cases come from Proto-Slavic, which had even more! Finnish has 15 cases, Hungarian has 18. Ukrainian strikes a balance - enough cases to be precise, not so many as to be overwhelming.\n\n### Case Chains: Following the Logic\n\n**Nominative starts the chain:**\nБрат читає книгу сестрі.\n- Хто читає? → Брат (nom)\n- Що читає? → Книгу (acc)\n- Кому читає? → Сестрі (dat)\n\n**Genitive for possession/origin:**\nКнига брата лежить на столі.\n- Що лежить? → Книга (nom)\n- Чия книга? → Брата (gen)\n- Де лежить? → На столі (loc)\n\n**Instrumental for means/company:**\nЯ їду з братом автобусом до Львова.\n- Хто їде? → Я (nom)\n- З ким? → З братом (instr)\n- Чим? → Автобусом (instr)\n- Куди? → До Львова (gen)\n\n### Common Multi-Case Patterns\n\n**Pattern 1: Subject + Action + Object + Recipient**\nNOM + verb + ACC + DAT\n- Батько дав гроші синові.\n- Вчителька показала карту студентам.\n\n**Pattern 2: Subject + Action + Object + Location**\nNOM + verb + ACC + у/на + LOC\n- Я поклав книгу на полицю.\n- Вона поставила вазу у кімнаті.\n\n**Pattern 3: Subject + Action + Companion + Means**\nNOM + verb + з + INSTR + INSTR (means)\n- Ми їдемо з друзями поїздом.\n- Вона йде з сестрою пішки.\n\n**Pattern 4: Subject + Action + Destination + Purpose**\nNOM + verb + до + GEN + за + ACC\n- Він пішов до магазину за хлібом.\n- Я біжу до лікаря за допомогою.\n\n> 🎭 **Culture Corner: Formal Requests**\n>\n> In formal Ukrainian, multi-case sentences show politeness:\n> - \"Прошу Вас передати цю інформацію директорові компанії.\"\n> - (I ask you to pass this information to the company director.)\n>\n> The more precise, the more polite!\n\n### Case Conflicts: Choosing Right\n\n**Same verb, different cases by meaning:**\n\nписати:\n- Я пишу **листа** (acc). - I write a letter. (what)\n- Я пишу **другові** (dat). - I write to a friend. (to whom)\n- Я пишу **ручкою** (instr). - I write with a pen. (by what means)\n\nдивитися:\n- Я дивлюся **фільм** (acc). - I watch a film. (what)\n- Я дивлюся **на тебе** (acc). - I look at you. (direction)\n- Я дивлюся **з цікавістю** (instr). - I look with interest. (manner)\n\nдумати:\n- Я думаю **про тебе** (acc). - I think about you.\n- Я думаю **над проблемою** (instr). - I think over a problem.\n\n> ⚡ **Pro Tip: When in Doubt**\n>\n> 1. Check the preposition - it usually determines case\n> 2. Ask the case question (кого? кому? ким? etc.)\n> 3. Think about the FUNCTION (object? recipient? means?)\n\n### Reading Multi-Case Sentences\n\n**Practice parsing:**\n\n**Sentence 1:**\n> Маленька дівчинка дала красивий малюнок своїй бабусі.\n\nParse:\n- Хто? → маленька дівчинка (nom) - subject\n- Що дала? → красивий малюнок (acc) - direct object\n- Кому? → своїй бабусі (dat) - recipient\n\n**Sentence 2:**\n> Студенти з різних країн зустрілися біля університету перед лекцією.\n\nParse:\n- Хто? → студенти (nom) - subject\n- З яких країн? → з різних країн (gen) - origin\n- Де? → біля університету (gen) - location\n- Коли? → перед лекцією (instr) - time\n\n**Sentence 3:**\n> Мій друг, Іване, передай, будь ласка, цю книгу Марії від мене!\n\nParse:\n- Іване (voc) - direct address\n- Що передай? → цю книгу (acc) - object\n- Кому? → Марії (dat) - recipient\n- Від кого? → від мене (gen) - source\n\n## practice\n\n### Identify All Cases\n\nFind and label each case in the sentences:\n\n1. Мама готує смачний обід для сім'ї.\n   - Мама (nom), обід (acc), сім'ї (gen)\n\n2. Я розповів другові про свою подорож.\n   - Я (nom), другові (dat), подорож (acc)\n\n3. Студентка пише листа батькам ручкою.\n   - Студентка (nom), листа (acc), батькам (dat), ручкою (instr)\n\n4. Брате, дай мені книгу зі столу!\n   - Брате (voc), мені (dat), книгу (acc), столу (gen)\n\n### Complete Multi-Case Sentences\n\nFill in ALL blanks:\n\n1. ___ (я) даю ___ (книга) ___ (сестра).\n   > [!answer] Я даю книгу сестрі.\n\n2. ___ (вчитель) пояснює ___ (правило) ___ (студенти).\n   > [!answer] Вчитель пояснює правило студентам.\n\n3. ___ (ми) йдемо з ___ (друзі) до ___ (парк).\n   > [!answer] Ми йдемо з друзями до парку.\n\n4. ___ (дідусь), розкажи ___ (я) про ___ (війна).\n   > [!answer] Дідусю, розкажи мені про війну.\n\n### Build Complex Sentences\n\nCreate sentences using all given elements:\n\n1. [я / писати / лист / друг / ручка]\n   > [!answer] Я пишу листа другові ручкою.\n\n2. [батько / купити / подарунок / мама / магазин]\n   > [!answer] Батько купив подарунок мамі в магазині.\n\n3. [ми / зустрітися / колеги / кафе / після / робота]\n   > [!answer] Ми зустрілися з колегами в кафе після роботи.\n\n## production\n\n### Real Situations\n\n**Scenario 1: Telling a story**\n- Вчора я пішов до парку з друзями.\n- Ми сиділи біля озера і розмовляли про життя.\n- Потім мій друг дав мені цікаву книгу.\n- Тепер я читаю її з великим задоволенням.\n\n**Scenario 2: Giving instructions**\n- Візьми документи зі столу в кабінеті.\n- Передай їх секретарці на другому поверсі.\n- Скажи їй, що це від директора для бухгалтерії.\n- Після цього повернися до мене.\n\n**Scenario 3: Describing a day**\n- Зранку я їду автобусом на роботу.\n- Протягом дня я працюю з клієнтами.\n- Після обіду я пишу листи партнерам.\n- Увечері зустрічаюся з друзями біля кінотеатру.\n\n---\n\n---\n\n---\n\n---\n\n# Activities\n\n## fill-in: All 7 Cases Practice\n\n> Choose the correct case form to complete each sentence. Identify which case is needed.\n\n1. Я бачу ___ (моя сестра) в кафе кожного ранку.\n   > [!answer] мою сестру\n   > [!options] моя сестра | моєї сестри | моїй сестрі | мою сестру\n\n2. Книга належить ___ (мій друг) з дитинства.\n   > [!answer] моєму другові\n   > [!options] мій друг | мого друга | моєму другові | моїм другом\n\n3. Ми живемо біля ___ (центральний парк) у Києві.\n   > [!answer] центрального парку\n   > [!options] центральний парк | центрального парку | центральному парку | центральним парком\n\n4. Вона працює ___ (вчитель) у новій школі.\n   > [!answer] вчителем\n   > [!options] вчитель | вчителя | вчителю | вчителем\n\n5. Книги лежать на ___ (великий стіл) у вітальні.\n   > [!answer] великому столі\n   > [!options] великий стіл | великого стола | великому столі | великим столом\n\n6. Дай, будь ласка, цю каву ___ (мій колега)!\n   > [!answer] моєму колезі\n   > [!options] мій колега | мого колегу | моєму колезі | моїм колегою\n\n7. Ти знаєш ___ (ця жінка) з нашого офісу?\n   > [!answer] цю жінку\n   > [!options] ця жінка | цієї жінки | цій жінці | цю жінку\n\n8. Я їду автобусом до ___ (робота) кожного дня.\n   > [!answer] роботи\n   > [!options] робота | роботи | роботі | роботою\n\n9. ___ (Оксана), допоможи мені, будь ласка!\n   > [!answer] Оксано\n   > [!options] Оксана | Оксани | Оксані | Оксано\n\n10. Він гуляє з ___ (свій собака) у парку.\n    > [!answer] своїм собакою\n    > [!options] свій собака | свого собаку | своєму собаці | своїм собакою\n\n## unjumble: Build the Sentence\n\n> Arrange the words to form multi-case sentences.\n\n1. сестру / Я / бачу / мою / в кафе / кожного ранку\n   > [!answer] Я бачу мою сестру в кафе кожного ранку.\n   > (I see my sister in the cafe every morning. - Accusative)\n\n2. другові / Книга / належить / моєму / з дитинства\n   > [!answer] Книга належить моєму другові з дитинства.\n   > (The book belongs to my friend since childhood. - Dative)\n\n3. парку / Ми / живемо / біля / центрального / у Києві\n   > [!answer] Ми живемо біля центрального парку у Києві.\n   > (We live near the central park in Kyiv. - Genitive)\n\n4. вчителем / Вона / працює / у новій школі\n   > [!answer] Вона працює вчителем у новій школі.\n   > (She works as a teacher at a new school. - Instrumental)\n\n5. столі / Книги / лежать / на / великому / у вітальні\n   > [!answer] Книги лежать на великому столі у вітальні.\n   > (Books lie on a big table in the living room. - Locative)\n\n6. колезі / Дай / цю каву / моєму / будь ласка\n   > [!answer] Дай, будь ласка, цю каву моєму колезі!\n   > (Please give this coffee to my colleague! - Dative)\n\n7. жінку / Ти / знаєш / цю / з нашого офісу\n   > [!answer] Ти знаєш цю жінку з нашого офісу?\n   > (Do you know this woman from our office? - Accusative)\n\n8. роботи / Я / їду / до / автобусом / кожного дня\n   > [!answer] Я їду автобусом до роботи кожного дня.\n   > (I go by bus to work every day. - Genitive + Instrumental)\n\n9. Оксано / допоможи / мені / будь ласка\n   > [!answer] Оксано, допоможи мені, будь ласка!\n   > (Oksana, help me please! - Vocative + Dative)\n\n10. собакою / Він / гуляє / з / своїм / у парку\n    > [!answer] Він гуляє з своїм собакою у парку.\n    > (He walks with his dog in the park. - Instrumental + Locative)\n\n## match-up: Match the Pairs\n\n> Match Ukrainian words to their English meanings.\n\n| Left | Right |\n|------|-------|\n| кабінет | office, study |\n| ваза | vase |\n| малюнок | drawing, picture |\n| протягом | during, throughout |\n| бухгалтерія | accounting dept |\n| партнер | partner |\n| задоволення | pleasure, satisfaction |\n| іноді | sometimes |\n| правило | rule |\n| принести | to bring |\n| полиця | shelf |\n| ви | you (formal/plural) |\n\n## quiz: Meaning Check\n\n> Choose the correct answer.\n\n1. What does \"секретарка\" mean?\n   - [ ] straight\n   - [x] secretary (f)\n   - [ ] eyes\n   - [ ] Accusative: бачити, читати, любити\n   > \"секретарка\" means \"secretary (f)\"\n\n2. What does \"задоволення\" mean?\n   - [ ] to speak\n   - [ ] lecture\n   - [x] pleasure, satisfaction\n   - [ ] to become\n   > \"задоволення\" means \"pleasure, satisfaction\"\n\n3. What does \"поверх\" mean?\n   - [ ] to sell\n   - [ ] Kyiv\n   - [x] floor (of building)\n   - [ ] experience\n   > \"поверх\" means \"floor (of building)\"\n\n4. What does \"малюнок\" mean?\n   - [ ] calf\n   - [x] drawing, picture\n   - [ ] to be considered\n   - [ ] to be lucky\n   > \"малюнок\" means \"drawing, picture\"\n\n5. What does \"бухгалтерія\" mean?\n   - [ ] to understand\n   - [ ] in the middle\n   - [ ] price\n   - [x] accounting dept\n   > \"бухгалтерія\" means \"accounting dept\"\n\n6. What does \"полиця\" mean?\n   - [x] shelf\n   - [ ] to inform\n   - [ ] thin\n   - [ ] pork fat\n   > \"полиця\" means \"shelf\"\n\n7. What does \"партнер\" mean?\n   - [ ] that\n   - [ ] cucumber\n   - [ ] there\n   - [x] partner\n   > \"партнер\" means \"partner\"\n\n8. What does \"лекція\" mean?\n   - [ ] small\n   - [ ] lemon\n   - [ ] English (adj)\n   - [x] lecture\n   > \"лекція\" means \"lecture\"\n\n9. What does \"протягом\" mean?\n   - [ ] to have\n   - [ ] neighbor (f)\n   - [x] during, throughout\n   - [ ] salt\n   > \"протягом\" means \"during, throughout\"\n\n10. What does \"правило\" mean?\n   - [ ] gift\n   - [ ] we\n   - [x] rule\n   - [ ] to be going to\n   > \"правило\" means \"rule\"\n\n11. What does \"ваза\" mean?\n   - [x] vase\n   - [ ] potato\n   - [ ] to remain\n   - [ ] entrepreneur\n   > \"ваза\" means \"vase\"\n\n12. What does \"кабінет\" mean?\n   - [ ] to try on\n   - [x] office, study\n   - [ ] discount\n   - [ ] porridge\n   > \"кабінет\" means \"office, study\"\n\n## true-false: True or False?\n\n> Determine if each statement is true or false.\n\n- [x] \"кабінет\" means \"office, study\"\n   > Correct!\n\n- [x] \"лекція\" means \"lecture\"\n   > Correct!\n\n- [ ] \"ваза\" means \"can, to be able\"\n   > Incorrect. \"ваза\" means \"vase\"\n\n- [x] \"малюнок\" means \"drawing, picture\"\n   > Correct!\n\n- [x] \"протягом\" means \"during, throughout\"\n   > Correct!\n\n- [x] \"партнер\" means \"partner\"\n   > Correct!\n\n- [x] \"секретарка\" means \"secretary (f)\"\n   > Correct!\n\n- [x] \"правило\" means \"rule\"\n   > Correct!\n\n- [ ] \"полиця\" means \"yesterday\"\n   > Incorrect. \"полиця\" means \"shelf\"\n\n- [x] \"бухгалтерія\" means \"accounting dept\"\n   > Correct!\n\n## group-sort: Sort by Gender\n\n> Sort the nouns into gender categories.\n\n### Masculine\n- кабінет\n- малюнок\n- партнер\n- поверх\n\n### Feminine\n- полиця\n- ваза\n- бухгалтерія\n- секретарка\n- лекція\n\n### Neuter\n- задоволення\n- правило\n\n## select: Choose Cases and Functions\n\n> Select all words that belong to the category.\n\n1. Which are nominative case functions?\n   - [x] Subject of sentence\n   - [ ] Direct object\n   - [ ] Possession\n   - [x] Predicate noun\n   - [ ] To/for whom\n   - [ ] Location\n   - [ ] With/by means\n   - [ ] Direct address\n   - [ ] After preposition без\n   - [ ] After preposition з\n\n2. Which are accusative case functions?\n   - [ ] Subject\n   - [x] Direct object\n   - [ ] Possession\n   - [x] Motion destination (у, на + acc)\n   - [ ] To/for whom\n   - [ ] Location\n   - [ ] With/by means\n   - [ ] Direct address\n   - [ ] After до\n   - [ ] After від\n\n3. Which are genitive case functions?\n   - [ ] Subject\n   - [ ] Direct object\n   - [x] Possession\n   - [ ] Motion destination\n   - [x] After без\n   - [x] After до\n   - [x] After від\n   - [x] Quantities\n   - [x] Absence/negation\n   - [ ] With/by means\n\n4. Which are dative case functions?\n   - [ ] Subject\n   - [ ] Direct object\n   - [ ] Possession\n   - [x] To/for whom (indirect object)\n   - [ ] Location\n   - [ ] With/by means\n   - [x] Giving/telling someone\n   - [ ] Direct address\n   - [ ] After без\n   - [ ] After з\n\n5. Which are instrumental case functions?\n   - [ ] Subject\n   - [ ] Direct object\n   - [ ] Possession\n   - [ ] Motion destination\n   - [x] With someone (companionship)\n   - [x] By means of (tool/transport)\n   - [x] Manner of doing\n   - [x] After preposition з (with)\n   - [x] Profession (with працювати, стати)\n   - [ ] After до\n\n6. Which are locative case functions?\n   - [ ] Subject\n   - [ ] Direct object\n   - [ ] Possession\n   - [x] Location (де?)\n   - [x] After у/в (location)\n   - [x] After на (location)\n   - [x] After про (about)\n   - [ ] With/by means\n   - [ ] Direct address\n   - [ ] After від\n\n7. Which questions identify accusative case?\n   - [ ] Хто?\n   - [x] Кого? (animate)\n   - [x] Що? (inanimate)\n   - [ ] Кому?\n   - [ ] Чому?\n   - [x] Куди? (where to)\n   - [ ] Де?\n   - [ ] Чим?\n   - [ ] Ким?\n   - [ ] Кого? (possession)\n\n8. Which questions identify genitive case?\n   - [ ] Хто?\n   - [x] Кого? (possession)\n   - [x] Чого? (possession)\n   - [ ] Кому?\n   - [ ] Що? (direct object)\n   - [ ] Куди?\n   - [ ] Де?\n   - [x] Звідки? (from where)\n   - [ ] Ким?\n   - [ ] Чим?\n\n9. Which require genitive case?\n   - [x] біля парку\n   - [ ] у парку\n   - [x] до школи\n   - [x] від вокзалу\n   - [x] для мами\n   - [x] без води\n   - [ ] з другом\n   - [x] після уроку\n   - [ ] над містом\n   - [ ] перед будинком\n\n10. Which require instrumental case?\n    - [ ] біля парку\n    - [ ] до школи\n    - [x] з другом\n    - [ ] від вокзалу\n    - [ ] для мами\n    - [ ] без води\n    - [x] над містом\n    - [x] перед будинком\n    - [x] між деревами\n    - [x] автобусом (transport)\n\n## order: Arrange Words into Sentences\n\n> Put the words in the correct order to form grammatically correct sentences.\n\n1. книгу / братові / Я / дав / столу / біля\n   > [!answer] Я дав книгу братові біля столу.\n   > (I gave a book to brother near the table.)\n\n2. готує / Мама / вечерю / кухні / на\n   > [!answer] Мама готує вечерю на кухні.\n   > (Mom prepares dinner in the kitchen.)\n\n3. подарунок / сестрі / даю / Я / день / народження / на\n   > [!answer] Я даю подарунок сестрі на день народження.\n   > (I give a gift to sister for birthday.)\n\n4. живемо / Ми / річки / біля / батьками / з\n   > [!answer] Ми живемо біля річки з батьками.\n   > (We live near the river with parents.)\n\n5. листа / Я / другові / написав / подорож / про\n   > [!answer] Я написав листа другові про подорож.\n   > (I wrote a letter to friend about the trip.)\n\n6. Учитель / учням / правила / пояснює / граматики\n   > [!answer] Учитель пояснює учням правила граматики.\n   > (The teacher explains grammar rules to students.)\n\n7. книга / брата / на / лежить / столі\n   > [!answer] Книга брата лежить на столі.\n   > (Brother's book lies on the table.)\n\n8. школу / Вона / до / автобусом / їде\n   > [!answer] Вона їде до школи автобусом.\n   > (She goes to school by bus.)\n\n9. думає / про / екзамен / студент / кімнаті / у\n   > [!answer] Студент думає про екзамен у кімнаті.\n   > (The student thinks about the exam in the room.)\n\n10. працює / Брат / лікарем / лікарні / у / Києві / у\n    > [!answer] Брат працює лікарем у лікарні у Києві.\n    > (Brother works as a doctor at a hospital in Kyiv.)\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| правило | /prɑˈvɪlo/ | rule | noun | n |\n| полиця | /poˈlɪtsʲɑ/ | shelf | noun | f |\n| ваза | /ˈvɑzɑ/ | vase | noun | f |\n| поверх | /ˈpovɛrx/ | floor (of building) | noun | m |\n| кабінет | /kɑbʲiˈnɛt/ | office, study | noun | m |\n| секретарка | /sɛkrɛˈtɑrkɑ/ | secretary (f) | noun | f |\n| бухгалтерія | /buxɦɑlˈtɛrʲijɑ/ | accounting dept | noun | f |\n| партнер | /pɑrtˈnɛr/ | partner | noun | m |\n| малюнок | /mɑˈlʲunok/ | drawing, picture | noun | m |\n| лекція | /ˈlɛktsʲijɑ/ | lecture | noun | f |\n| задоволення | /zɑdoˈvolɛnʲːɑ/ | pleasure, satisfaction | noun | n |\n| протягом | /proˈtʲɑɦom/ | during, throughout | prep | - | + gen |\n\n---\n\n# Summary\n\n## The 7 Cases at a Glance\n\n| Case | Question | Typical Use |\n|------|----------|-------------|\n| Nominative | Хто? Що? | Subject |\n| Genitive | Кого? Чого? | Possession, absence, \"of\" |\n| Dative | Кому? | To/for whom |\n| Accusative | Кого? Що? | Direct object |\n| Instrumental | Ким? Чим? | With, by means of |\n| Locative | Де? У чому? | Location (with preposition) |\n| Vocative | - | Calling someone |\n\n## Multi-Case Sentence Patterns\n\n| Pattern | Example |\n|---------|---------|\n| NOM + ACC | Я читаю книгу. |\n| NOM + ACC + DAT | Я даю книгу братові. |\n| NOM + з + INSTR | Я йду з другом. |\n| NOM + до + GEN | Я йду до магазину. |\n| NOM + у/на + LOC | Я живу в Києві. |\n\n## Case Identification Strategy\n\n1. Find the verb (or preposition)\n2. Ask: Хто? Що? Кого? Кому? Ким? Де?\n3. Check the ending\n4. Consider the function\n\n> 💡 **Key Takeaways**\n>\n> - Most sentences use 2-4 different cases\n> - Prepositions determine case for nouns that follow\n> - Practice identifying cases in real sentences\n> - The question words (хто, кого, кому, ким) match case questions\n> - Context helps when endings are similar\n",
+    "createdAt": "2025-12-03T12:29:30.356Z",
+    "modifiedAt": "2025-12-03T12:29:30.356Z",
     "version": 2
   },
   "activities": [
     {
       "id": "act-a2-38-fillblank",
       "type": "fill-blank",
-      "title": "Complete the Sentences",
-      "description": "Choose the correct word to complete each sentence.",
+      "title": "All 7 Cases Practice",
+      "description": "Choose the correct case form to complete each sentence. Identify which case is needed.",
       "content": {
         "type": "fill-blank",
         "items": [
           {
-            "prompt": "Це мій новий ___.",
-            "answer": "малюнок",
+            "prompt": "Я бачу ___ (моя сестра) в кафе кожного ранку.",
+            "answer": "мою сестру",
+            "hints": [
+              "моя сестра"
+            ],
             "options": [
-              "радіо",
-              "малюнок",
-              "продавчиня",
-              "початок"
+              "моя сестра",
+              "моєї сестри",
+              "моїй сестрі",
+              "мою сестру"
             ]
           },
           {
-            "prompt": "Ця ___ коштує сто гривень.",
-            "answer": "ваза",
+            "prompt": "Книга належить ___ (мій друг) з дитинства.",
+            "answer": "моєму другові",
+            "hints": [
+              "мій друг"
+            ],
             "options": [
-              "готель",
-              "зуби",
-              "бабуся",
-              "ваза"
+              "мій друг",
+              "мого друга",
+              "моєму другові",
+              "моїм другом"
             ]
           },
           {
-            "prompt": "Це ___ коштує сто гривень.",
-            "answer": "правило",
+            "prompt": "Ми живемо біля ___ (центральний парк) у Києві.",
+            "answer": "центрального парку",
+            "hints": [
+              "центральний парк"
+            ],
             "options": [
-              "лист",
-              "правило",
-              "повідомлення",
-              "офіціант"
+              "центральний парк",
+              "центрального парку",
+              "центральному парку",
+              "центральним парком"
             ]
           },
           {
-            "prompt": "Цей ___ коштує сто гривень.",
-            "answer": "кабінет",
+            "prompt": "Вона працює ___ (вчитель) у новій школі.",
+            "answer": "вчителем",
+            "hints": [
+              "вчитель"
+            ],
             "options": [
-              "вівторок",
-              "кабінет",
-              "сніданок",
-              "дружина"
+              "вчитель",
+              "вчителя",
+              "вчителю",
+              "вчителем"
             ]
           },
           {
-            "prompt": "Де ваша велика ___?",
-            "answer": "бухгалтерія",
+            "prompt": "Книги лежать на ___ (великий стіл) у вітальні.",
+            "answer": "великому столі",
+            "hints": [
+              "великий стіл"
+            ],
             "options": [
-              "бухгалтерія",
-              "двері",
-              "клієнт",
-              "ручка"
+              "великий стіл",
+              "великого стола",
+              "великому столі",
+              "великим столом"
             ]
           },
           {
-            "prompt": "Ця ___ коштує сто гривень.",
-            "answer": "лекція",
+            "prompt": "Дай, будь ласка, цю каву ___ (мій колега)!",
+            "answer": "моєму колезі",
+            "hints": [
+              "мій колега"
+            ],
             "options": [
-              "середній",
-              "душ",
-              "лекція",
-              "лікар"
+              "мій колега",
+              "мого колегу",
+              "моєму колезі",
+              "моїм колегою"
+            ]
+          },
+          {
+            "prompt": "Ти знаєш ___ (ця жінка) з нашого офісу?",
+            "answer": "цю жінку",
+            "hints": [
+              "ця жінка"
+            ],
+            "options": [
+              "ця жінка",
+              "цієї жінки",
+              "цій жінці",
+              "цю жінку"
+            ]
+          },
+          {
+            "prompt": "Я їду автобусом до ___ (робота) кожного дня.",
+            "answer": "роботи",
+            "hints": [
+              "робота"
+            ],
+            "options": [
+              "робота",
+              "роботи",
+              "роботі",
+              "роботою"
+            ]
+          },
+          {
+            "prompt": "___ (Оксана), допоможи мені, будь ласка!",
+            "answer": "Оксано",
+            "hints": [
+              "Оксана"
+            ],
+            "options": [
+              "Оксана",
+              "Оксани",
+              "Оксані",
+              "Оксано"
+            ]
+          },
+          {
+            "prompt": "Він гуляє з ___ (свій собака) у парку.",
+            "answer": "своїм собакою",
+            "hints": [
+              "свій собака"
+            ],
+            "options": [
+              "свій собака",
+              "свого собаку",
+              "своєму собаці",
+              "своїм собакою"
             ]
           }
         ]
@@ -134,135 +204,130 @@
       "difficultyLevel": "A2",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-03T08:52:31.867Z",
-      "modifiedAt": "2025-12-03T08:52:31.867Z"
+      "createdAt": "2025-12-03T12:29:30.356Z",
+      "modifiedAt": "2025-12-03T12:29:30.356Z"
     },
     {
       "id": "act-a2-38-unjumble",
       "type": "unjumble",
       "title": "Build the Sentence",
-      "description": "Arrange the words in the correct order.",
+      "description": "Arrange the words to form multi-case sentences.",
       "content": {
         "type": "unjumble",
+        "isUnjumble": true,
         "items": [
           {
             "words": [
-              "Мій",
-              "брат",
-              "малюнок",
-              "має",
-              "хороший"
-            ],
-            "answer": "Мій брат має хороший малюнок.",
-            "translation": "drawing, picture"
-          },
-          {
-            "words": [
-              "брат",
-              "хорошу",
-              "має",
-              "секретарка",
-              "Мій"
-            ],
-            "answer": "Мій брат має хорошу секретарка.",
-            "translation": "secretary (f"
-          },
-          {
-            "words": [
-              "хочу",
-              "купити",
-              "поверх",
-              "цей",
-              "Я"
-            ],
-            "answer": "Я хочу купити цей поверх.",
-            "translation": "floor (of building"
-          },
-          {
-            "words": [
-              "Це",
-              "нова",
-              "моя",
-              "ваза"
-            ],
-            "answer": "Це моя нова ваза.",
-            "translation": "vase"
-          },
-          {
-            "words": [
-              "коштує",
-              "Ця",
-              "сто",
-              "гривень",
-              "бухгалтерія"
-            ],
-            "answer": "Ця бухгалтерія коштує сто гривень.",
-            "translation": "accounting dept"
-          },
-          {
-            "words": [
-              "полиця",
-              "Мій",
-              "брат",
-              "має",
-              "хорошу"
-            ],
-            "answer": "Мій брат має хорошу полиця.",
-            "translation": "shelf"
-          },
-          {
-            "words": [
-              "Мій",
-              "хороший",
-              "брат",
-              "партнер",
-              "має"
-            ],
-            "answer": "Мій брат має хороший партнер.",
-            "translation": "partner"
-          },
-          {
-            "words": [
+              "сестру",
               "Я",
-              "хочу",
-              "це",
-              "задоволення",
-              "купити"
+              "бачу",
+              "мою",
+              "в кафе",
+              "кожного ранку"
             ],
-            "answer": "Я хочу купити це задоволення.",
-            "translation": "pleasure, satisfaction"
+            "answer": "Я бачу мою сестру в кафе кожного ранку.",
+            "translation": "I see my sister in the cafe every morning. - Accusative"
           },
           {
             "words": [
-              "коштує",
-              "сто",
-              "Цей",
-              "кабінет",
-              "гривень"
+              "другові",
+              "Книга",
+              "належить",
+              "моєму",
+              "з дитинства"
             ],
-            "answer": "Цей кабінет коштує сто гривень.",
-            "translation": "office, study"
+            "answer": "Книга належить моєму другові з дитинства.",
+            "translation": "The book belongs to my friend since childhood. - Dative"
           },
           {
             "words": [
-              "Це",
-              "моя",
-              "нова",
-              "лекція"
+              "парку",
+              "Ми",
+              "живемо",
+              "біля",
+              "центрального",
+              "у Києві"
             ],
-            "answer": "Це моя нова лекція.",
-            "translation": "lecture"
+            "answer": "Ми живемо біля центрального парку у Києві.",
+            "translation": "We live near the central park in Kyiv. - Genitive"
           },
           {
             "words": [
-              "Мій",
-              "має",
-              "хороше",
-              "правило",
-              "брат"
+              "вчителем",
+              "Вона",
+              "працює",
+              "у новій школі"
             ],
-            "answer": "Мій брат має хороше правило.",
-            "translation": "rule"
+            "answer": "Вона працює вчителем у новій школі.",
+            "translation": "She works as a teacher at a new school. - Instrumental"
+          },
+          {
+            "words": [
+              "столі",
+              "Книги",
+              "лежать",
+              "на",
+              "великому",
+              "у вітальні"
+            ],
+            "answer": "Книги лежать на великому столі у вітальні.",
+            "translation": "Books lie on a big table in the living room. - Locative"
+          },
+          {
+            "words": [
+              "колезі",
+              "Дай",
+              "цю каву",
+              "моєму",
+              "будь ласка"
+            ],
+            "answer": "Дай, будь ласка, цю каву моєму колезі!",
+            "translation": "Please give this coffee to my colleague! - Dative"
+          },
+          {
+            "words": [
+              "жінку",
+              "Ти",
+              "знаєш",
+              "цю",
+              "з нашого офісу"
+            ],
+            "answer": "Ти знаєш цю жінку з нашого офісу?",
+            "translation": "Do you know this woman from our office? - Accusative"
+          },
+          {
+            "words": [
+              "роботи",
+              "Я",
+              "їду",
+              "до",
+              "автобусом",
+              "кожного дня"
+            ],
+            "answer": "Я їду автобусом до роботи кожного дня.",
+            "translation": "I go by bus to work every day. - Genitive + Instrumental"
+          },
+          {
+            "words": [
+              "Оксано",
+              "допоможи",
+              "мені",
+              "будь ласка"
+            ],
+            "answer": "Оксано, допоможи мені, будь ласка!",
+            "translation": "Oksana, help me please! - Vocative + Dative"
+          },
+          {
+            "words": [
+              "собакою",
+              "Він",
+              "гуляє",
+              "з",
+              "своїм",
+              "у парку"
+            ],
+            "answer": "Він гуляє з своїм собакою у парку.",
+            "translation": "He walks with his dog in the park. - Instrumental + Locative"
           }
         ]
       },
@@ -273,8 +338,8 @@
       "difficultyLevel": "A2",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-03T08:52:31.867Z",
-      "modifiedAt": "2025-12-03T08:52:31.867Z"
+      "createdAt": "2025-12-03T12:29:30.356Z",
+      "modifiedAt": "2025-12-03T12:29:30.356Z"
     },
     {
       "id": "act-a2-38-matchup",
@@ -342,8 +407,8 @@
       "difficultyLevel": "A2",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-03T08:52:31.867Z",
-      "modifiedAt": "2025-12-03T08:52:31.867Z"
+      "createdAt": "2025-12-03T12:29:30.356Z",
+      "modifiedAt": "2025-12-03T12:29:30.356Z"
     },
     {
       "id": "act-a2-38-quiz",
@@ -497,8 +562,8 @@
       "difficultyLevel": "A2",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-03T08:52:31.867Z",
-      "modifiedAt": "2025-12-03T08:52:31.867Z"
+      "createdAt": "2025-12-03T12:29:30.356Z",
+      "modifiedAt": "2025-12-03T12:29:30.356Z"
     },
     {
       "id": "act-a2-38-truefalse",
@@ -507,7 +572,58 @@
       "description": "Determine if each statement is true or false.",
       "content": {
         "type": "true-false",
-        "statements": []
+        "statements": [
+          {
+            "statement": "\"кабінет\" means \"office, study\"",
+            "isTrue": true,
+            "explanation": "Correct!"
+          },
+          {
+            "statement": "\"лекція\" means \"lecture\"",
+            "isTrue": true,
+            "explanation": "Correct!"
+          },
+          {
+            "statement": "\"ваза\" means \"can, to be able\"",
+            "isTrue": false,
+            "explanation": "Incorrect. \"ваза\" means \"vase\""
+          },
+          {
+            "statement": "\"малюнок\" means \"drawing, picture\"",
+            "isTrue": true,
+            "explanation": "Correct!"
+          },
+          {
+            "statement": "\"протягом\" means \"during, throughout\"",
+            "isTrue": true,
+            "explanation": "Correct!"
+          },
+          {
+            "statement": "\"партнер\" means \"partner\"",
+            "isTrue": true,
+            "explanation": "Correct!"
+          },
+          {
+            "statement": "\"секретарка\" means \"secretary (f)\"",
+            "isTrue": true,
+            "explanation": "Correct!"
+          },
+          {
+            "statement": "\"правило\" means \"rule\"",
+            "isTrue": true,
+            "explanation": "Correct!"
+          },
+          {
+            "statement": "\"полиця\" means \"yesterday\"",
+            "isTrue": false,
+            "explanation": "Incorrect. \"полиця\" means \"shelf\""
+          },
+          {
+            "statement": "\"бухгалтерія\" means \"accounting dept\"",
+            "isTrue": true,
+            "explanation": "Correct!"
+          }
+        ]
       },
       "subject": "language",
       "owner": "curricula-opus",
@@ -516,8 +632,8 @@
       "difficultyLevel": "A2",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-03T08:52:31.867Z",
-      "modifiedAt": "2025-12-03T08:52:31.867Z"
+      "createdAt": "2025-12-03T12:29:30.356Z",
+      "modifiedAt": "2025-12-03T12:29:30.356Z"
     },
     {
       "id": "act-a2-38-groupsort",
@@ -566,8 +682,617 @@
       "difficultyLevel": "A2",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-03T08:52:31.867Z",
-      "modifiedAt": "2025-12-03T08:52:31.867Z"
+      "createdAt": "2025-12-03T12:29:30.356Z",
+      "modifiedAt": "2025-12-03T12:29:30.356Z"
+    },
+    {
+      "id": "act-a2-38-select",
+      "type": "select",
+      "title": "Choose Cases and Functions",
+      "description": "Select all words that belong to the category.",
+      "content": {
+        "type": "select",
+        "items": [
+          {
+            "question": "Which are nominative case functions?",
+            "options": [
+              {
+                "text": "Subject of sentence",
+                "correct": true
+              },
+              {
+                "text": "Direct object",
+                "correct": false
+              },
+              {
+                "text": "Possession",
+                "correct": false
+              },
+              {
+                "text": "Predicate noun",
+                "correct": true
+              },
+              {
+                "text": "To/for whom",
+                "correct": false
+              },
+              {
+                "text": "Location",
+                "correct": false
+              },
+              {
+                "text": "With/by means",
+                "correct": false
+              },
+              {
+                "text": "Direct address",
+                "correct": false
+              },
+              {
+                "text": "After preposition без",
+                "correct": false
+              },
+              {
+                "text": "After preposition з",
+                "correct": false
+              }
+            ]
+          },
+          {
+            "question": "Which are accusative case functions?",
+            "options": [
+              {
+                "text": "Subject",
+                "correct": false
+              },
+              {
+                "text": "Direct object",
+                "correct": true
+              },
+              {
+                "text": "Possession",
+                "correct": false
+              },
+              {
+                "text": "Motion destination (у, на + acc)",
+                "correct": true
+              },
+              {
+                "text": "To/for whom",
+                "correct": false
+              },
+              {
+                "text": "Location",
+                "correct": false
+              },
+              {
+                "text": "With/by means",
+                "correct": false
+              },
+              {
+                "text": "Direct address",
+                "correct": false
+              },
+              {
+                "text": "After до",
+                "correct": false
+              },
+              {
+                "text": "After від",
+                "correct": false
+              }
+            ]
+          },
+          {
+            "question": "Which are genitive case functions?",
+            "options": [
+              {
+                "text": "Subject",
+                "correct": false
+              },
+              {
+                "text": "Direct object",
+                "correct": false
+              },
+              {
+                "text": "Possession",
+                "correct": true
+              },
+              {
+                "text": "Motion destination",
+                "correct": false
+              },
+              {
+                "text": "After без",
+                "correct": true
+              },
+              {
+                "text": "After до",
+                "correct": true
+              },
+              {
+                "text": "After від",
+                "correct": true
+              },
+              {
+                "text": "Quantities",
+                "correct": true
+              },
+              {
+                "text": "Absence/negation",
+                "correct": true
+              },
+              {
+                "text": "With/by means",
+                "correct": false
+              }
+            ]
+          },
+          {
+            "question": "Which are dative case functions?",
+            "options": [
+              {
+                "text": "Subject",
+                "correct": false
+              },
+              {
+                "text": "Direct object",
+                "correct": false
+              },
+              {
+                "text": "Possession",
+                "correct": false
+              },
+              {
+                "text": "To/for whom (indirect object)",
+                "correct": true
+              },
+              {
+                "text": "Location",
+                "correct": false
+              },
+              {
+                "text": "With/by means",
+                "correct": false
+              },
+              {
+                "text": "Giving/telling someone",
+                "correct": true
+              },
+              {
+                "text": "Direct address",
+                "correct": false
+              },
+              {
+                "text": "After без",
+                "correct": false
+              },
+              {
+                "text": "After з",
+                "correct": false
+              }
+            ]
+          },
+          {
+            "question": "Which are instrumental case functions?",
+            "options": [
+              {
+                "text": "Subject",
+                "correct": false
+              },
+              {
+                "text": "Direct object",
+                "correct": false
+              },
+              {
+                "text": "Possession",
+                "correct": false
+              },
+              {
+                "text": "Motion destination",
+                "correct": false
+              },
+              {
+                "text": "With someone (companionship)",
+                "correct": true
+              },
+              {
+                "text": "By means of (tool/transport)",
+                "correct": true
+              },
+              {
+                "text": "Manner of doing",
+                "correct": true
+              },
+              {
+                "text": "After preposition з (with)",
+                "correct": true
+              },
+              {
+                "text": "Profession (with працювати, стати)",
+                "correct": true
+              },
+              {
+                "text": "After до",
+                "correct": false
+              }
+            ]
+          },
+          {
+            "question": "Which are locative case functions?",
+            "options": [
+              {
+                "text": "Subject",
+                "correct": false
+              },
+              {
+                "text": "Direct object",
+                "correct": false
+              },
+              {
+                "text": "Possession",
+                "correct": false
+              },
+              {
+                "text": "Location (де?)",
+                "correct": true
+              },
+              {
+                "text": "After у/в (location)",
+                "correct": true
+              },
+              {
+                "text": "After на (location)",
+                "correct": true
+              },
+              {
+                "text": "After про (about)",
+                "correct": true
+              },
+              {
+                "text": "With/by means",
+                "correct": false
+              },
+              {
+                "text": "Direct address",
+                "correct": false
+              },
+              {
+                "text": "After від",
+                "correct": false
+              }
+            ]
+          },
+          {
+            "question": "Which questions identify accusative case?",
+            "options": [
+              {
+                "text": "Хто?",
+                "correct": false
+              },
+              {
+                "text": "Кого? (animate)",
+                "correct": true
+              },
+              {
+                "text": "Що? (inanimate)",
+                "correct": true
+              },
+              {
+                "text": "Кому?",
+                "correct": false
+              },
+              {
+                "text": "Чому?",
+                "correct": false
+              },
+              {
+                "text": "Куди? (where to)",
+                "correct": true
+              },
+              {
+                "text": "Де?",
+                "correct": false
+              },
+              {
+                "text": "Чим?",
+                "correct": false
+              },
+              {
+                "text": "Ким?",
+                "correct": false
+              },
+              {
+                "text": "Кого? (possession)",
+                "correct": false
+              }
+            ]
+          },
+          {
+            "question": "Which questions identify genitive case?",
+            "options": [
+              {
+                "text": "Хто?",
+                "correct": false
+              },
+              {
+                "text": "Кого? (possession)",
+                "correct": true
+              },
+              {
+                "text": "Чого? (possession)",
+                "correct": true
+              },
+              {
+                "text": "Кому?",
+                "correct": false
+              },
+              {
+                "text": "Що? (direct object)",
+                "correct": false
+              },
+              {
+                "text": "Куди?",
+                "correct": false
+              },
+              {
+                "text": "Де?",
+                "correct": false
+              },
+              {
+                "text": "Звідки? (from where)",
+                "correct": true
+              },
+              {
+                "text": "Ким?",
+                "correct": false
+              },
+              {
+                "text": "Чим?",
+                "correct": false
+              }
+            ]
+          },
+          {
+            "question": "Which require genitive case?",
+            "options": [
+              {
+                "text": "біля парку",
+                "correct": true
+              },
+              {
+                "text": "у парку",
+                "correct": false
+              },
+              {
+                "text": "до школи",
+                "correct": true
+              },
+              {
+                "text": "від вокзалу",
+                "correct": true
+              },
+              {
+                "text": "для мами",
+                "correct": true
+              },
+              {
+                "text": "без води",
+                "correct": true
+              },
+              {
+                "text": "з другом",
+                "correct": false
+              },
+              {
+                "text": "після уроку",
+                "correct": true
+              },
+              {
+                "text": "над містом",
+                "correct": false
+              },
+              {
+                "text": "перед будинком",
+                "correct": false
+              }
+            ]
+          },
+          {
+            "question": "Which require instrumental case?",
+            "options": [
+              {
+                "text": "біля парку",
+                "correct": false
+              },
+              {
+                "text": "до школи",
+                "correct": false
+              },
+              {
+                "text": "з другом",
+                "correct": true
+              },
+              {
+                "text": "від вокзалу",
+                "correct": false
+              },
+              {
+                "text": "для мами",
+                "correct": false
+              },
+              {
+                "text": "без води",
+                "correct": false
+              },
+              {
+                "text": "над містом",
+                "correct": true
+              },
+              {
+                "text": "перед будинком",
+                "correct": true
+              },
+              {
+                "text": "між деревами",
+                "correct": true
+              },
+              {
+                "text": "автобусом (transport)",
+                "correct": true
+              }
+            ]
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-03T12:29:30.356Z",
+      "modifiedAt": "2025-12-03T12:29:30.356Z"
+    },
+    {
+      "id": "act-a2-38-order",
+      "type": "order",
+      "title": "Arrange Words into Sentences",
+      "description": "Put the words in the correct order to form grammatically correct sentences.",
+      "content": {
+        "type": "order",
+        "isUnjumble": true,
+        "items": [
+          {
+            "words": [
+              "книгу",
+              "братові",
+              "Я",
+              "дав",
+              "столу",
+              "біля"
+            ],
+            "answer": "Я дав книгу братові біля столу.",
+            "translation": "I gave a book to brother near the table."
+          },
+          {
+            "words": [
+              "готує",
+              "Мама",
+              "вечерю",
+              "кухні",
+              "на"
+            ],
+            "answer": "Мама готує вечерю на кухні.",
+            "translation": "Mom prepares dinner in the kitchen."
+          },
+          {
+            "words": [
+              "подарунок",
+              "сестрі",
+              "даю",
+              "Я",
+              "день",
+              "народження",
+              "на"
+            ],
+            "answer": "Я даю подарунок сестрі на день народження.",
+            "translation": "I give a gift to sister for birthday."
+          },
+          {
+            "words": [
+              "живемо",
+              "Ми",
+              "річки",
+              "біля",
+              "батьками",
+              "з"
+            ],
+            "answer": "Ми живемо біля річки з батьками.",
+            "translation": "We live near the river with parents."
+          },
+          {
+            "words": [
+              "листа",
+              "Я",
+              "другові",
+              "написав",
+              "подорож",
+              "про"
+            ],
+            "answer": "Я написав листа другові про подорож.",
+            "translation": "I wrote a letter to friend about the trip."
+          },
+          {
+            "words": [
+              "Учитель",
+              "учням",
+              "правила",
+              "пояснює",
+              "граматики"
+            ],
+            "answer": "Учитель пояснює учням правила граматики.",
+            "translation": "The teacher explains grammar rules to students."
+          },
+          {
+            "words": [
+              "книга",
+              "брата",
+              "на",
+              "лежить",
+              "столі"
+            ],
+            "answer": "Книга брата лежить на столі.",
+            "translation": "Brother's book lies on the table."
+          },
+          {
+            "words": [
+              "школу",
+              "Вона",
+              "до",
+              "автобусом",
+              "їде"
+            ],
+            "answer": "Вона їде до школи автобусом.",
+            "translation": "She goes to school by bus."
+          },
+          {
+            "words": [
+              "думає",
+              "про",
+              "екзамен",
+              "студент",
+              "кімнаті",
+              "у"
+            ],
+            "answer": "Студент думає про екзамен у кімнаті.",
+            "translation": "The student thinks about the exam in the room."
+          },
+          {
+            "words": [
+              "працює",
+              "Брат",
+              "лікарем",
+              "лікарні",
+              "у",
+              "Києві",
+              "у"
+            ],
+            "answer": "Брат працює лікарем у лікарні у Києві.",
+            "translation": "Brother works as a doctor at a hospital in Kyiv."
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-03T12:29:30.356Z",
+      "modifiedAt": "2025-12-03T12:29:30.356Z"
     }
   ],
   "vocabulary": {

@@ -6,6 +6,7 @@
 
 import { loadStyleAssets, loadScriptAssets, fileExists } from '../../utils/files';
 import { join } from 'path';
+import { Activity } from '../../types';
 
 // =============================================================================
 // Template Class
@@ -34,10 +35,12 @@ export class HtmlTemplate {
     this.js = await loadScriptAssets([
       'main.js',
       'quiz.js',
+      'tf.js',
       'match.js',
       'sort.js',
       'fill.js',
       'order.js',
+      'select.js',
       'vocab.js',
     ]);
 
@@ -113,11 +116,7 @@ export interface NavOptions {
   langPair: string;
   prevModule?: { num: number; title: string };
   nextModule?: { num: number; title: string };
-  hasMatch?: boolean;
-  hasQuiz?: boolean;
-  hasSort?: boolean;
-  hasFill?: boolean;
-  hasOrder?: boolean;
+  activities: Activity[];
 }
 
 /**
@@ -146,23 +145,45 @@ export function renderTopNav(options: NavOptions): string {
 
 /**
  * Generate main navigation with tabs
+ * Each activity gets its own tab
  */
 export function renderMainNav(options: NavOptions): string {
-  const { moduleNum, moduleTitle, hasMatch, hasQuiz, hasSort, hasFill, hasOrder } = options;
+  const { moduleNum, moduleTitle, activities } = options;
+
+  // Generate activity tabs dynamically
+  const activityTabs = activities.map((activity, index) => {
+    const label = getActivityLabel(activity.type, index + 1);
+    return `<button class="nav-tab" data-section="activity-${index}">${label}</button>`;
+  }).join('\n      ');
 
   return `
   <nav class="nav">
     <h1>Module ${padNumber(moduleNum)}: ${escapeHtml(moduleTitle)}</h1>
     <div class="nav-tabs">
       <button class="nav-tab active" data-section="lesson">Lesson</button>
-      ${hasMatch ? '<button class="nav-tab" data-section="match">Match</button>' : ''}
-      ${hasQuiz ? '<button class="nav-tab" data-section="quiz">Quiz</button>' : ''}
-      ${hasSort ? '<button class="nav-tab" data-section="sort">Sort</button>' : ''}
-      ${hasFill ? '<button class="nav-tab" data-section="fill">Fill</button>' : ''}
-      ${hasOrder ? '<button class="nav-tab" data-section="order">Order</button>' : ''}
+      ${activityTabs}
       <button class="nav-tab" data-section="vocab">Vocab</button>
     </div>
   </nav>`;
+}
+
+/**
+ * Get short label for activity type
+ */
+function getActivityLabel(type: string, num: number): string {
+  const labels: Record<string, string> = {
+    'match-up': 'Match',
+    'quiz': 'Quiz',
+    'true-false': 'T/F',
+    'group-sort': 'Sort',
+    'fill-blank': 'Fill',
+    'gap-fill': 'Fill',
+    'order': 'Order',
+    'unjumble': 'Order',
+    'select': 'Select',
+  };
+  const base = labels[type] || type;
+  return `${num}. ${base}`;
 }
 
 // =============================================================================

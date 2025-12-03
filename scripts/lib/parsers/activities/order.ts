@@ -12,17 +12,92 @@
  *
  * > [!answer] 2, 1, 3
  * > [!explanation] Трипілля → Ольвія → Пектораль
+ *
+ * Also handles word-jumble format (when items contain "/"):
+ *
+ * 1. автобусом / роботу / Я / на / їду
+ *    > [!answer] Я їду на роботу автобусом.
  */
 
 import { ActivityParser } from './base';
 import { OrderContent, ParseContext } from '../../types';
 
-export class OrderParser extends ActivityParser<OrderContent> {
+interface UnjumbleItem {
+  words: string[];
+  answer: string;
+  translation?: string;
+}
+
+interface UnjumbleContent {
+  type: 'order';
+  isUnjumble: true;
+  items: UnjumbleItem[];
+}
+
+export class OrderParser extends ActivityParser<OrderContent | UnjumbleContent> {
   readonly type = 'order' as const;
 
-  protected parseContent(content: string, ctx: ParseContext): OrderContent {
-    const items: string[] = [];
+  protected parseContent(content: string, ctx: ParseContext): OrderContent | UnjumbleContent {
     const body = this.getContentBody(content);
+
+    // Check if this is a word-jumble format (items contain "/")
+    const firstItemMatch = body.match(/\d+\.\s+([^\n]+)/);
+    if (firstItemMatch && firstItemMatch[1].includes('/')) {
+      return this.parseAsUnjumble(body);
+    }
+
+    return this.parseAsSequence(body);
+  }
+
+  /**
+   * Parse as word-jumble (unjumble) activity
+   */
+  private parseAsUnjumble(body: string): UnjumbleContent {
+    const items: UnjumbleItem[] = [];
+
+    // Split by numbered items
+    const itemMatches = body.matchAll(/(\d+)\.\s+([\s\S]*?)(?=\n\d+\.|$)/g);
+
+    for (const match of itemMatches) {
+      const itemContent = match[2].trim();
+      const lines = itemContent.split('\n');
+
+      // First line has jumbled words: "Це / твоя / сумка"
+      const jumbledLine = lines[0].trim();
+      const words = jumbledLine.split(/\s*\/\s*/).map(w => w.trim()).filter(Boolean);
+
+      // Parse answer from callout
+      const answerLines = lines.slice(1).join('\n');
+      const { answer } = this.parseAnswerBlock(answerLines);
+
+      // Extract translation from parentheses
+      let translation: string | undefined;
+      const transMatch = answerLines.match(/>\s*\(([^)]+)\)/);
+      if (transMatch) {
+        translation = transMatch[1].trim();
+      }
+
+      if (words.length > 0) {
+        items.push({
+          words,
+          answer: answer || words.join(' '),
+          translation,
+        });
+      }
+    }
+
+    return {
+      type: 'order',
+      isUnjumble: true,
+      items,
+    };
+  }
+
+  /**
+   * Parse as sequence ordering activity
+   */
+  private parseAsSequence(body: string): OrderContent {
+    const items: string[] = [];
 
     // Extract numbered items (before answer callout)
     const itemLines = body.split('\n').filter(line => !line.startsWith('>'));

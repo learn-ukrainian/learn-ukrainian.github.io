@@ -271,25 +271,53 @@ Use reflexive verbs for introductions:
 
 # Activities
 
-## fill-in: Complete the Sentences
+## fill-in: Reflexive Verbs
 
-> Choose the correct word to complete each sentence.
+> Choose the correct form to complete each sentence.
 
-1. Вони планують ___ завтра.
-   > [!answer] намагатися
-   > [!options] виходити | намагатися | служити | були
+1. Я ___ (митися) щоранку холодною водою.
+   > [!answer] миюся
+   > (First person singular = миюся)
 
-2. Мій брат любить ___ щодня.
-   > [!answer] сміятися
-   > [!options] зачісуватися | відправити | сміятися | їсти
+2. Вона ___ (одягатися) дуже швидко перед роботою.
+   > [!answer] одягається
+   > (Third person singular = одягається)
 
-3. Чи ти вмієш добре ___?
-   > [!answer] зачісуватися
-   > [!options] йти | зачісуватися | їсти | брати
+3. Візьми парасолю з ___ (себе), бо буде дощ.
+   > [!answer] собою
+   > (Instrumental case = собою)
 
-## unjumble: Build the Sentence
+4. Я купив ___ (себе) нову книгу в магазині.
+   > [!answer] собі
+   > (Dative case = собі)
+
+5. Діти ___ (сміятися) над смішним відео на телефоні.
+   > [!answer] сміються
+   > (Third person plural = сміються)
+
+## unjumble: Reflexive Sentences
 
 > Arrange the words in the correct order.
+
+1. миюся / Я / щоранку / холодною / водою
+   > [!answer] Я миюся щоранку холодною водою.
+   > (I wash myself every morning with cold water.)
+
+2. одягається / Вона / швидко / дуже
+   > [!answer] Вона одягається дуже швидко.
+   > (She gets dressed very quickly.)
+
+3. парасолю / Візьми / з / собою
+   > [!answer] Візьми парасолю з собою.
+   > (Take the umbrella with you.)
+
+4. купив / Я / собі / нову / книгу
+   > [!answer] Я купив собі нову книгу.
+   > (I bought myself a new book.)
+
+5. сміються / Діти / над / смішним / відео
+   > [!answer] Діти сміються над смішним відео.
+   > (The children are laughing at the funny video.)
 
 ## match-up: Match the Pairs
 
@@ -396,6 +424,141 @@ Use reflexive verbs for introductions:
 
 - [x] "себе" means "oneself (acc/gen)"
    > Correct!
+
+## select: Choose Reflexive Forms
+
+> Select the correct reflexive verb or pronoun form.
+
+1. Я ___ щоранку о сьомій годині.
+   - [ ] прокидаюсь
+   - [x] прокидаюся
+   - [ ] прокидається
+   - [ ] прокидаються
+   > Correct form is "прокидаюся" (I wake up)
+
+2. Вона ___ перед дзеркалом кожен день.
+   - [ ] зачісується
+   - [ ] зачісуюся
+   - [x] зачісується
+   - [ ] зачісуються
+   > Correct form is "зачісується" (she combs her hair)
+
+3. Візьми документи з ___ на зустріч.
+   - [ ] себе
+   - [ ] собі
+   - [x] собою
+   - [ ] сам
+   > Instrumental case requires "собою" (with yourself)
+
+4. Діти ___ над мультфільмом дуже голосно.
+   - [ ] сміється
+   - [ ] сміємося
+   - [ ] сміюся
+   - [x] сміються
+   > Correct form is "сміються" (they laugh)
+
+5. Ми ___ англійської мови в університеті.
+   - [ ] вчиться
+   - [ ] вчуся
+   - [x] вчимося
+   - [ ] вчаться
+   > Correct form is "вчимося" (we study)
+
+6. Він купив ___ новий комп'ютер на день народження.
+   - [ ] себе
+   - [x] собі
+   - [ ] собою
+   - [ ] сам
+   > Dative case requires "собі" (for himself)
+
+7. Я ___ холодною водою після спортзалу.
+   - [x] миюся
+   - [ ] миється
+   - [ ] миємося
+   - [ ] миються
+   > Correct form is "миюся" (I wash myself)
+
+8. Вони ___ кожного тижня в кафе.
+   - [ ] зустрічається
+   - [ ] зустрічаюся
+   - [ ] зустрічаємося
+   - [x] зустрічаються
+   > Correct form is "зустрічаються" (they meet each other)
+
+9. Як ви ___ сьогодні після лікаря?
+   - [ ] почуваю себе
+   - [ ] почуваєш себе
+   - [x] почуваєте себе
+   - [ ] почувають себе
+   > Correct form is "почуваєте себе" (you feel - formal/plural)
+
+10. Вона не впевнена в ___ після помилки.
+    - [ ] себе
+    - [x] собі
+    - [ ] собою
+    - [ ] сама
+    > Locative case requires "собі" (in herself)
+
+## order: Put Words in Order
+
+> Arrange the words to form correct sentences.
+
+1. себе / почуваю / добре / сьогодні / Я
+   > [!answer] Я почуваю себе добре сьогодні.
+   > (I feel good today.)
+
+2. Вони / щодня / зустрічаються / парку / в / після / роботи
+   > [!answer] Вони зустрічаються в парку щодня після роботи.
+   > (They meet in the park every day after work.)
+
+3. Діти / повинні / добре / вести / себе / школі / в
+   > [!answer] Діти повинні вести себе добре в школі.
+   > (Children must behave well at school.)
+
+4. одягається / швидко / Вона / дуже / перед / роботою / завжди
+   > [!answer] Вона завжди одягається дуже швидко перед роботою.
+   > (She always gets dressed very quickly before work.)
+
+5. з / Не / забудь / взяти / собою / гроші / документи / та
+   > [!answer] Не забудь взяти з собою гроші та документи.
+   > (Don't forget to take money and documents with you.)
+
+6. голиться / щоранку / Він / після / душу / холодною / водою
+   > [!answer] Він голиться щоранку після душу холодною водою.
+   > (He shaves every morning after a shower with cold water.)
+
+7. Ми / намагаємося / вивчити / українську / мову / швидко / дуже
+   > [!answer] Ми намагаємося вивчити українську мову дуже швидко.
+   > (We're trying to learn Ukrainian very quickly.)
+
+8. боїться / собак / Моя / сестра / великих / завжди / та / голосних
+   > [!answer] Моя сестра завжди боїться великих та голосних собак.
+   > (My sister is always afraid of big and loud dogs.)
+
+9. купила / Вона / собі / нову / сукню / святкування / для / дня / народження
+   > [!answer] Вона купила собі нову сукню для святкування дня народження.
+   > (She bought herself a new dress for the birthday celebration.)
+
+10. вмиваюся / ранку / зачісуюся / та / Я / кожного / перед / сніданком
+    > [!answer] Я вмиваюся та зачісуюся кожного ранку перед сніданком.
+    > (I wash my face and comb my hair every morning before breakfast.)
+
+## group-sort: Sort by Verb Type
+
+> Sort these verbs into categories.
+
+| Reflexive Only | Reflexive + Non-Reflexive | Non-Reflexive Only |
+|----------------|---------------------------|---------------------|
+| сміятися | митися | пити |
+| боятися | одягатися | їсти |
+| намагатися | вчитися | читати |
+| здаватися | голитися | писати |
+| подобатися | зустрічатися | говорити |
+| дивуватися | бачитися | думати |
+| залишатися | знайомитися | працювати |
+| народитися | роздягатися | купувати |
+| лякатися | готуватися | розуміти |
+| сподіватися | зачісуватися | вивчати |
 
 ---
 

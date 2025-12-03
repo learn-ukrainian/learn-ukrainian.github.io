@@ -267,81 +267,93 @@ Create sentences using all given elements:
 
 # Activities
 
-## fill-in: Complete the Sentences
+## fill-in: All 7 Cases Practice
 
-> Choose the correct word to complete each sentence.
+> Choose the correct case form to complete each sentence. Identify which case is needed.
 
-1. Це мій новий ___.
-   > [!answer] малюнок
-   > [!options] радіо | малюнок | продавчиня | початок
+1. Я бачу ___ (моя сестра) в кафе кожного ранку.
+   > [!answer] мою сестру
+   > [!options] моя сестра | моєї сестри | моїй сестрі | мою сестру
 
-2. Ця ___ коштує сто гривень.
-   > [!answer] ваза
-   > [!options] готель | зуби | бабуся | ваза
+2. Книга належить ___ (мій друг) з дитинства.
+   > [!answer] моєму другові
+   > [!options] мій друг | мого друга | моєму другові | моїм другом
 
-3. Це ___ коштує сто гривень.
-   > [!answer] правило
-   > [!options] лист | правило | повідомлення | офіціант
+3. Ми живемо біля ___ (центральний парк) у Києві.
+   > [!answer] центрального парку
+   > [!options] центральний парк | центрального парку | центральному парку | центральним парком
 
-4. Цей ___ коштує сто гривень.
-   > [!answer] кабінет
-   > [!options] вівторок | кабінет | сніданок | дружина
+4. Вона працює ___ (вчитель) у новій школі.
+   > [!answer] вчителем
+   > [!options] вчитель | вчителя | вчителю | вчителем
 
-5. Де ваша велика ___?
-   > [!answer] бухгалтерія
-   > [!options] бухгалтерія | двері | клієнт | ручка
+5. Книги лежать на ___ (великий стіл) у вітальні.
+   > [!answer] великому столі
+   > [!options] великий стіл | великого стола | великому столі | великим столом
 
-6. Ця ___ коштує сто гривень.
-   > [!answer] лекція
-   > [!options] середній | душ | лекція | лікар
+6. Дай, будь ласка, цю каву ___ (мій колега)!
+   > [!answer] моєму колезі
+   > [!options] мій колега | мого колегу | моєму колезі | моїм колегою
+
+7. Ти знаєш ___ (ця жінка) з нашого офісу?
+   > [!answer] цю жінку
+   > [!options] ця жінка | цієї жінки | цій жінці | цю жінку
+
+8. Я їду автобусом до ___ (робота) кожного дня.
+   > [!answer] роботи
+   > [!options] робота | роботи | роботі | роботою
+
+9. ___ (Оксана), допоможи мені, будь ласка!
+   > [!answer] Оксано
+   > [!options] Оксана | Оксани | Оксані | Оксано
+
+10. Він гуляє з ___ (свій собака) у парку.
+    > [!answer] своїм собакою
+    > [!options] свій собака | свого собаку | своєму собаці | своїм собакою
 
 ## unjumble: Build the Sentence
 
-> Arrange the words in the correct order.
+> Arrange the words to form multi-case sentences.
 
-1. Мій / брат / малюнок / має / хороший
-   > [!answer] Мій брат має хороший малюнок.
-   > (drawing, picture)
+1. сестру / Я / бачу / мою / в кафе / кожного ранку
+   > [!answer] Я бачу мою сестру в кафе кожного ранку.
+   > (I see my sister in the cafe every morning. - Accusative)
 
-2. брат / хорошу / має / секретарка / Мій
-   > [!answer] Мій брат має хорошу секретарка.
-   > (secretary (f))
+2. другові / Книга / належить / моєму / з дитинства
+   > [!answer] Книга належить моєму другові з дитинства.
+   > (The book belongs to my friend since childhood. - Dative)
 
-3. хочу / купити / поверх / цей / Я
-   > [!answer] Я хочу купити цей поверх.
-   > (floor (of building))
+3. парку / Ми / живемо / біля / центрального / у Києві
+   > [!answer] Ми живемо біля центрального парку у Києві.
+   > (We live near the central park in Kyiv. - Genitive)
 
-4. Це / нова / моя / ваза
-   > [!answer] Це моя нова ваза.
-   > (vase)
+4. вчителем / Вона / працює / у новій школі
+   > [!answer] Вона працює вчителем у новій школі.
+   > (She works as a teacher at a new school. - Instrumental)
 
-5. коштує / Ця / сто / гривень / бухгалтерія
-   > [!answer] Ця бухгалтерія коштує сто гривень.
-   > (accounting dept)
+5. столі / Книги / лежать / на / великому / у вітальні
+   > [!answer] Книги лежать на великому столі у вітальні.
+   > (Books lie on a big table in the living room. - Locative)
 
-6. полиця / Мій / брат / має / хорошу
-   > [!answer] Мій брат має хорошу полиця.
-   > (shelf)
+6. колезі / Дай / цю каву / моєму / будь ласка
+   > [!answer] Дай, будь ласка, цю каву моєму колезі!
+   > (Please give this coffee to my colleague! - Dative)
 
-7. Мій / хороший / брат / партнер / має
-   > [!answer] Мій брат має хороший партнер.
-   > (partner)
+7. жінку / Ти / знаєш / цю / з нашого офісу
+   > [!answer] Ти знаєш цю жінку з нашого офісу?
+   > (Do you know this woman from our office? - Accusative)
 
-8. Я / хочу / це / задоволення / купити
-   > [!answer] Я хочу купити це задоволення.
-   > (pleasure, satisfaction)
+8. роботи / Я / їду / до / автобусом / кожного дня
+   > [!answer] Я їду автобусом до роботи кожного дня.
+   > (I go by bus to work every day. - Genitive + Instrumental)
 
-9. коштує / сто / Цей / кабінет / гривень
-   > [!answer] Цей кабінет коштує сто гривень.
-   > (office, study)
+9. Оксано / допоможи / мені / будь ласка
+   > [!answer] Оксано, допоможи мені, будь ласка!
+   > (Oksana, help me please! - Vocative + Dative)
 
-10. Це / моя / нова / лекція
-   > [!answer] Це моя нова лекція.
-   > (lecture)
-
-11. Мій / має / хороше / правило / брат
-   > [!answer] Мій брат має хороше правило.
-   > (rule)
+10. собакою / Він / гуляє / з / своїм / у парку
+    > [!answer] Він гуляє з своїм собакою у парку.
+    > (He walks with his dog in the park. - Instrumental + Locative)
 
 ## match-up: Match the Pairs
 
@@ -504,6 +516,174 @@ Create sentences using all given elements:
 ### Neuter
 - задоволення
 - правило
+
+## select: Choose Cases and Functions
+
+> Select all words that belong to the category.
+
+1. Which are nominative case functions?
+   - [x] Subject of sentence
+   - [ ] Direct object
+   - [ ] Possession
+   - [x] Predicate noun
+   - [ ] To/for whom
+   - [ ] Location
+   - [ ] With/by means
+   - [ ] Direct address
+   - [ ] After preposition без
+   - [ ] After preposition з
+
+2. Which are accusative case functions?
+   - [ ] Subject
+   - [x] Direct object
+   - [ ] Possession
+   - [x] Motion destination (у, на + acc)
+   - [ ] To/for whom
+   - [ ] Location
+   - [ ] With/by means
+   - [ ] Direct address
+   - [ ] After до
+   - [ ] After від
+
+3. Which are genitive case functions?
+   - [ ] Subject
+   - [ ] Direct object
+   - [x] Possession
+   - [ ] Motion destination
+   - [x] After без
+   - [x] After до
+   - [x] After від
+   - [x] Quantities
+   - [x] Absence/negation
+   - [ ] With/by means
+
+4. Which are dative case functions?
+   - [ ] Subject
+   - [ ] Direct object
+   - [ ] Possession
+   - [x] To/for whom (indirect object)
+   - [ ] Location
+   - [ ] With/by means
+   - [x] Giving/telling someone
+   - [ ] Direct address
+   - [ ] After без
+   - [ ] After з
+
+5. Which are instrumental case functions?
+   - [ ] Subject
+   - [ ] Direct object
+   - [ ] Possession
+   - [ ] Motion destination
+   - [x] With someone (companionship)
+   - [x] By means of (tool/transport)
+   - [x] Manner of doing
+   - [x] After preposition з (with)
+   - [x] Profession (with працювати, стати)
+   - [ ] After до
+
+6. Which are locative case functions?
+   - [ ] Subject
+   - [ ] Direct object
+   - [ ] Possession
+   - [x] Location (де?)
+   - [x] After у/в (location)
+   - [x] After на (location)
+   - [x] After про (about)
+   - [ ] With/by means
+   - [ ] Direct address
+   - [ ] After від
+
+7. Which questions identify accusative case?
+   - [ ] Хто?
+   - [x] Кого? (animate)
+   - [x] Що? (inanimate)
+   - [ ] Кому?
+   - [ ] Чому?
+   - [x] Куди? (where to)
+   - [ ] Де?
+   - [ ] Чим?
+   - [ ] Ким?
+   - [ ] Кого? (possession)
+
+8. Which questions identify genitive case?
+   - [ ] Хто?
+   - [x] Кого? (possession)
+   - [x] Чого? (possession)
+   - [ ] Кому?
+   - [ ] Що? (direct object)
+   - [ ] Куди?
+   - [ ] Де?
+   - [x] Звідки? (from where)
+   - [ ] Ким?
+   - [ ] Чим?
+
+9. Which require genitive case?
+   - [x] біля парку
+   - [ ] у парку
+   - [x] до школи
+   - [x] від вокзалу
+   - [x] для мами
+   - [x] без води
+   - [ ] з другом
+   - [x] після уроку
+   - [ ] над містом
+   - [ ] перед будинком
+
+10. Which require instrumental case?
+    - [ ] біля парку
+    - [ ] до школи
+    - [x] з другом
+    - [ ] від вокзалу
+    - [ ] для мами
+    - [ ] без води
+    - [x] над містом
+    - [x] перед будинком
+    - [x] між деревами
+    - [x] автобусом (transport)
+
+## order: Arrange Words into Sentences
+
+> Put the words in the correct order to form grammatically correct sentences.
+
+1. книгу / братові / Я / дав / столу / біля
+   > [!answer] Я дав книгу братові біля столу.
+   > (I gave a book to brother near the table.)
+
+2. готує / Мама / вечерю / кухні / на
+   > [!answer] Мама готує вечерю на кухні.
+   > (Mom prepares dinner in the kitchen.)
+
+3. подарунок / сестрі / даю / Я / день / народження / на
+   > [!answer] Я даю подарунок сестрі на день народження.
+   > (I give a gift to sister for birthday.)
+
+4. живемо / Ми / річки / біля / батьками / з
+   > [!answer] Ми живемо біля річки з батьками.
+   > (We live near the river with parents.)
+
+5. листа / Я / другові / написав / подорож / про
+   > [!answer] Я написав листа другові про подорож.
+   > (I wrote a letter to friend about the trip.)
+
+6. Учитель / учням / правила / пояснює / граматики
+   > [!answer] Учитель пояснює учням правила граматики.
+   > (The teacher explains grammar rules to students.)
+
+7. книга / брата / на / лежить / столі
+   > [!answer] Книга брата лежить на столі.
+   > (Brother's book lies on the table.)
+
+8. школу / Вона / до / автобусом / їде
+   > [!answer] Вона їде до школи автобусом.
+   > (She goes to school by bus.)
+
+9. думає / про / екзамен / студент / кімнаті / у
+   > [!answer] Студент думає про екзамен у кімнаті.
+   > (The student thinks about the exam in the room.)
+
+10. працює / Брат / лікарем / лікарні / у / Києві / у
+    > [!answer] Брат працює лікарем у лікарні у Києві.
+    > (Brother works as a doctor at a hospital in Kyiv.)
 
 ---
 

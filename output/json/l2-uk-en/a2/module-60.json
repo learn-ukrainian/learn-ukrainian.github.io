@@ -61,108 +61,53 @@
         "content": "## A2 Level Complete!\n\n### Grammar Mastered\n\n| Topic | Key Points |\n|-------|------------|\n| Cases | All 6: Nom, Acc, Gen, Dat, Inst, Loc |\n| Aspect | Imperfective vs Perfective |\n| Comparatives | -іший/-ший, ніж/за |\n| Superlatives | най- prefix |\n| Real Conditionals | Якщо + future |\n| Unreal Conditionals | Якби + past + б/би |\n| Reflexives | -ся/-сь, себе/собі/собою |\n| Relative Clauses | який/яка/яке/які, що |\n| Complex Sentences | щоб, хоча, тому що |\n\n### Vocabulary Themes\n\n| Theme | Key Words |\n|-------|-----------|\n| Health | боліти, температура, лікар |\n| Travel | потяг, квиток, відправлення |\n| Work | професія, зарплата, співбесіда |\n| Communication | дзвонити, надіслати, підписатися |\n| Opinions | думати, згоден, на мою думку |\n\n### What You Can Do\n\n| Skill | Examples |\n|-------|----------|\n| Describe | Health, plans, work, opinions |\n| Narrate | Past events, future plans |\n| Compare | People, things, ideas |\n| Hypothesize | Real and unreal conditions |\n| Connect | Complex sentences, reasons |\n\n> 🎉 **Congratulations!**\n>\n> Ви завершили рівень A2! You've completed the A2 level!\n>\n> **Your Ukrainian is now at a solid elementary level.**\n> You can handle everyday situations, express opinions,\n> and understand the main points of clear standard speech.\n>\n> **Next stop: B1 - Intermediate!**\n> Далі: рівень B1 - Середній!\n>\n> Слава Україні! 🇺🇦"
       }
     ],
-    "rawMarkdown": "---\nmodule: 60\ntitle: \"A2 Capstone\"\nsubtitle: \"Comprehensive Review\"\nlevel: A2\nphase: A2.3\nduration: 45\ntransliteration: partial\ntags: [review, checkpoint, capstone, comprehensive]\nobjectives:\n  - Review all A2 grammar and vocabulary\n  - Demonstrate A2-level communication skills\n  - Integrate knowledge from all A2 modules\n  - Prepare for B1 transition\ngrammar:\n  - All cases review\n  - Verbal aspect\n  - Comparatives and superlatives\n  - Conditionals\n  - Reflexives and relative clauses\n  - Complex sentences\n---\n\n# Lesson Content\n\n## warm-up\n\n### A2 Complete!\n\nCongratulations! You've completed the A2 level! Let's review everything you've learned and prepare for B1.\n\n**Your A2 achievements:**\n- All 6 grammatical cases\n- Verbal aspect (perfective/imperfective)\n- Comparatives and superlatives\n- Conditionals (real and unreal)\n- Complex sentences\n- Reflexive verbs and relative clauses\n- Practical topics: health, travel, work, communication\n\n> 💡 **What's Next?**\n>\n> B1 level will introduce more complex grammar (participles, advanced aspect usage), expand your vocabulary significantly, and focus on fluent conversation and understanding of native materials. You're ready!\n\n## presentation\n\n### Grammar Review\n\n#### All Cases\n\n| Case | Question | Use | Example |\n|------|----------|-----|---------|\n| Nominative | хто? що? | subject | Брат читає |\n| Accusative | кого? що? | direct object | Бачу брата |\n| Genitive | кого? чого? | possession, absence | Книга брата |\n| Dative | кому? чому? | indirect object | Даю братові |\n| Instrumental | ким? чим? | with, means | З братом |\n| Locative | на кому? на чому? | location | У брата |\n\n**Quick case test:**\n- Я бачу ___ (друг). → друга (Acc)\n- Це книга ___ (сестра). → сестри (Gen)\n- Я даю подарунок ___ (мама). → мамі (Dat)\n- Я розмовляю з ___ (батько). → батьком (Inst)\n- Я живу в ___ (Київ). → Києві (Loc)\n\n#### Verbal Aspect\n\n| Imperfective | Perfective | Difference |\n|--------------|------------|------------|\n| читати | прочитати | process vs completed |\n| писати | написати | process vs completed |\n| робити | зробити | process vs completed |\n| говорити | сказати | process vs completed |\n\n**Choosing aspect:**\n- Я **читав** книгу годину. (process, duration)\n- Я **прочитав** книгу. (completed)\n- Я **буду читати** завтра. (will be reading)\n- Я **прочитаю** завтра. (will complete)\n\n#### Comparatives and Superlatives\n\n| Adjective | Comparative | Superlative |\n|-----------|-------------|-------------|\n| великий | більший | найбільший |\n| малий | менший | найменший |\n| добрий | кращий | найкращий |\n| поганий | гірший | найгірший |\n| високий | вищий | найвищий |\n\n**Constructions:**\n- Київ **більший**, ніж Львів.\n- Київ **більший** за Львів.\n- Київ — **найбільше** місто України.\n\n#### Conditionals\n\n**Real (якщо):**\n- **Якщо** буде дощ, я візьму парасолю.\n- **Якщо** матиму час, зателефоную.\n\n**Unreal (якби):**\n- **Якби** я мав гроші, я **б** купив машину.\n- **Якби** вона знала, вона **б** допомогла.\n\n#### Reflexive Verbs\n\n**-ся/-сь suffix:**\n- митися, одягатися, сміятися, боятися\n\n**Себе forms:**\n- себе (Acc/Gen), собі (Dat/Loc), собою (Inst)\n\n**Examples:**\n- Я **миюся** вранці.\n- Я купив **собі** каву.\n- Візьми це з **собою**.\n\n#### Relative Clauses\n\n**Який/яка/яке/які:**\n- Книга, **яку** я читаю, цікава.\n- Чоловік, **який** тут працює, мій друг.\n- Місто, **де** я живу, велике.\n\n**Що with все/те:**\n- Все, **що** ти сказав, правда.\n- Те, **що** він зробив, — помилка.\n\n#### Complex Conjunctions\n\n| Conjunction | Meaning | Example |\n|-------------|---------|---------|\n| щоб | in order to | Я вчуся, щоб знати |\n| хоча | although | Хоча холодно, я піду |\n| тому що | because | Я залишився, тому що втомився |\n| бо | because | Не прийшов, бо захворів |\n\n### Vocabulary Themes Review\n\n#### Health (Здоров'я)\n- Body: голова, рука, нога, живіт, спина\n- Symptoms: температура, кашель, біль\n- Phrases: У мене болить..., Мені погано\n\n#### Travel (Подорожі)\n- Transport: потяг, літак, автобус\n- Places: вокзал, аеропорт, зупинка\n- Phrases: Квиток до..., О котрій відправлення?\n\n#### Work (Робота)\n- Jobs: програміст, вчитель, лікар\n- Workplace: офіс, компанія, зарплата\n- Phrases: Ким ви працюєте?, Я шукаю роботу\n\n#### Communication (Спілкування)\n- Phone: дзвінок, повідомлення, Алло?\n- Email: надіслати, отримати, вкладення\n- Social: підписатися, поділитися, лайк\n\n#### Opinions (Думки)\n- Express: Я думаю, На мою думку, Мені здається\n- Agree: Я згоден, Ви маєте рацію\n- Disagree: Я не згоден, Я думаю інакше\n\n### A2 Self-Assessment\n\n**Can you...?**\n\n| Skill | Yes | Sometimes | Need Practice |\n|-------|-----|-----------|---------------|\n| Use all 6 cases correctly | ☐ | ☐ | ☐ |\n| Choose between perf/impf aspect | ☐ | ☐ | ☐ |\n| Form comparatives and superlatives | ☐ | ☐ | ☐ |\n| Make conditional sentences | ☐ | ☐ | ☐ |\n| Use reflexive verbs | ☐ | ☐ | ☐ |\n| Build relative clauses | ☐ | ☐ | ☐ |\n| Discuss health problems | ☐ | ☐ | ☐ |\n| Book travel tickets | ☐ | ☐ | ☐ |\n| Talk about work | ☐ | ☐ | ☐ |\n| Express opinions | ☐ | ☐ | ☐ |\n\n## practice\n\n### Comprehensive Grammar Exercise\n\nFill in with correct forms:\n\n1. Я живу в ___ (Львів) і працюю ___ (програміст).\n   > [!answer] Львові, програмістом\n\n2. Якщо ___ (бути) час, я ___ (зателефонувати) тобі.\n   > [!answer] буде/матиму, зателефоную\n\n3. Книга, ___ (який) я прочитав, дуже цікава.\n   > [!answer] яку\n\n4. Я вчуся, ___ (щоб) знати українську мову.\n   > [!answer] щоб\n\n5. Він ___ (старий) за мене, але ___ (молодий) за брата.\n   > [!answer] старший, молодший\n\n6. Якби я ___ (мати) гроші, я ___ купити цю машину.\n   > [!answer] мав, б/би\n\n7. Вона ___ (митися) і ___ (одягатися) кожного ранку.\n   > [!answer] миється, одягається\n\n8. ___ (хоча) холодно, ми пішли на прогулянку.\n   > [!answer] Хоча\n\n### Dialogue Completion\n\n**At the doctor:**\n- Доброго дня! На що ___?\n- У мене ___ голова і ___.\n- Як давно це ___?\n- ___ три дні.\n- Відкрийте ___. Я вам ___ ліки.\n\n→ скаржитеся, болить, температура, почалося, Уже/Вже, рот, випишу\n\n**Booking a ticket:**\n- Мені потрібен ___ до Одеси.\n- На ___?\n- На завтра. ___ коштує?\n- 500 гривень. ___ чи купе?\n- Купе. О котрій ___?\n- О 18:30 з ___ платформи.\n\n→ квиток, коли, Скільки, Плацкарт, відправлення, третьої\n\n### Translation Challenge\n\n1. I think that this book is better than the movie.\n   > [!answer] Я думаю, що ця книга краща, ніж фільм.\n\n2. If I had time, I would travel more.\n   > [!answer] Якби я мав/мала час, я б більше подорожував/подорожувала.\n\n3. The woman who works here is my sister.\n   > [!answer] Жінка, яка тут працює, — моя сестра.\n\n4. Although it was raining, we went for a walk.\n   > [!answer] Хоча йшов дощ, ми пішли на прогулянку.\n\n5. I came here in order to learn Ukrainian.\n   > [!answer] Я приїхав/приїхала сюди, щоб вивчити українську.\n\n## production\n\n### Comprehensive Speaking Tasks\n\n**Task 1: Introduce Yourself (2 minutes)**\n- Ваше ім'я, звідки ви\n- Ким ви працюєте\n- Ваші хобі\n- Чому вивчаєте українську\n\n**Task 2: Tell a Story (2 minutes)**\n- Розкажіть про подорож, яку ви здійснили\n- Куди їздили, як добиралися\n- Що бачили, що сподобалося\n- Чи хотіли б повернутися\n\n**Task 3: Express Opinion (2 minutes)**\n- Яка, на вашу думку, найважливіша якість друга?\n- Чому ви так думаєте?\n- Чи згодні ви, що друзі важливіші за сім'ю?\n\n**Task 4: Problem Solving (2 minutes)**\n- Уявіть: ви захворіли в іншому місті\n- Що ви робите?\n- Як пояснюєте симптоми лікарю?\n- Як купуєте ліки в аптеці?\n\n### Writing Task\n\nWrite a short text (100-150 words) about your ideal job:\n- Ким би ви хотіли працювати?\n- Чому саме ця професія?\n- Які умови роботи для вас важливі?\n- Що ви вже зробили для досягнення цієї мети?\n\n---\n\n---\n\n---\n\n---\n\n# Activities\n\n## fill-in: Complete the Sentences\n\n> Choose the correct word to complete each sentence.\n\n1. Де ваша велика ___?\n   > [!answer] комісія\n   > [!options] комісія | поверх | сусід | чоловік\n\n2. Ця книга надзвичайно ___.\n   > [!answer] гарячий\n   > [!options] згоден | цікавий | гарячий | вищий\n\n3. Це мій новий ___.\n   > [!answer] банан\n   > [!options] жіночий | банан | посилання | літак\n\n4. Я хочу купити цю ___.\n   > [!answer] голова\n   > [!options] голова | хокей | робота | рахунок\n\n5. Моя кімната занадто ___.\n   > [!answer] високий\n   > [!options] високий | дорожчий | англійська | великий\n\n6. Вони планують ___ завтра.\n   > [!answer] переказати\n   > [!options] прокинутися | мусити | личити | переказати\n\n7. Я хочу купити це ___.\n   > [!answer] купе\n   > [!options] кінець | пілот | купе | таксі\n\n8. Мій брат має хорошу ___.\n   > [!answer] лампа\n   > [!options] площа | підвищення | ложка | лампа\n\n9. Я хочу навчитися ___.\n   > [!answer] буду\n   > [!options] буду | кивати | бачити | лежати\n\n## unjumble: Build the Sentence\n\n> Arrange the words in the correct order.\n\n1. хорошу / осінь / Мій / має / брат\n   > [!answer] Мій брат має хорошу осінь.\n   > (autumn)\n\n2. голова / цю / хочу / Я / купити\n   > [!answer] Я хочу купити цю голова.\n   > (head)\n\n3. хочу / Я / цю / купити / лампа\n   > [!answer] Я хочу купити цю лампа.\n   > (lamp)\n\n4. комісія / Ця / сто / гривень / коштує\n   > [!answer] Ця комісія коштує сто гривень.\n   > (commission)\n\n5. мій / банан / новий / Це\n   > [!answer] Це мій новий банан.\n   > (banana)\n\n6. коштує / гривень / Ця / чашка / сто\n   > [!answer] Ця чашка коштує сто гривень.\n   > (cup)\n\n7. Це / коштує / купе / гривень / сто\n   > [!answer] Це купе коштує сто гривень.\n   > (compartment)\n\n## match-up: Match the Pairs\n\n> Match Ukrainian words to their English meanings.\n\n| Left | Right |\n|------|-------|\n| голова | head |\n| високий | tall |\n| під | under |\n| осінь | autumn |\n| купе | compartment |\n| той | that (masculine) |\n| їхній | their (m) |\n| над | above |\n| загалом | in general |\n| ці | these |\n| себе | oneself (acc/gen) |\n| продавати | to sell |\n\n## quiz: Meaning Check\n\n> Choose the correct answer.\n\n1. What does \"навпроти\" mean?\n   - [ ] shirt\n   - [ ] to be interested\n   - [x] opposite\n   - [ ] January\n   > \"навпроти\" means \"opposite\"\n\n2. What does \"себе\" mean?\n   - [ ] park\n   - [ ] cheap\n   - [ ] Possessives: мій, твій, його, її, наш, ваш\n   - [x] oneself (acc/gen)\n   > \"себе\" means \"oneself (acc/gen)\"\n\n3. What does \"голова\" mean?\n   - [x] head\n   - [ ] breakfast\n   - [ ] to pay\n   - [ ] convenient\n   > \"голова\" means \"head\"\n\n4. What does \"їхній\" mean?\n   - [ ] in general\n   - [ ] those\n   - [ ] page\n   - [x] their (m)\n   > \"їхній\" means \"their (m)\"\n\n5. What does \"банан\" mean?\n   - [ ] programmer\n   - [x] banana\n   - [ ] rain\n   - [ ] summer\n   > \"банан\" means \"banana\"\n\n6. What does \"віддалено\" mean?\n   - [ ] to lie down\n   - [ ] straight\n   - [ ] agree (m)\n   - [x] remotely\n   > \"віддалено\" means \"remotely\"\n\n7. What does \"той\" mean?\n   - [ ] to cook/prepare (perf)\n   - [x] that (masculine)\n   - [ ] to gather (impf)\n   - [ ] that (neuter)\n   > \"той\" means \"that (masculine)\"\n\n8. What does \"переказати\" mean?\n   - [x] to transfer\n   - [ ] to stand\n   - [ ] worse\n   - [ ] to bring\n   > \"переказати\" means \"to transfer\"\n\n9. What does \"під\" mean?\n   - [ ] imaginary, hypothetical\n   - [x] under\n   - [ ] thirty\n   - [ ] to eat\n   > \"під\" means \"under\"\n\n10. What does \"комісія\" mean?\n   - [ ] faster\n   - [ ] lecture\n   - [ ] in general\n   - [x] commission\n   > \"комісія\" means \"commission\"\n\n11. What does \"купе\" mean?\n   - [ ] tasty\n   - [ ] glass\n   - [ ] winter\n   - [x] compartment\n   > \"купе\" means \"compartment\"\n\n12. What does \"чашка\" mean?\n   - [x] cup\n   - [ ] student\n   - [ ] cold (adv)\n   - [ ] most interesting\n   > \"чашка\" means \"cup\"\n\n## true-false: True or False?\n\n> Determine if each statement is true or false.\n\n- [x] \"загалом\" means \"in general\"\n   > Correct!\n\n- [x] \"чашка\" means \"cup\"\n   > Correct!\n\n- [ ] \"лампа\" means \"oneself (acc/gen)\"\n   > Incorrect. \"лампа\" means \"lamp\"\n\n- [ ] \"голова\" means \"which, that, who (pl)\"\n   > Incorrect. \"голова\" means \"head\"\n\n- [x] \"високий\" means \"tall\"\n   > Correct!\n\n- [x] \"їхній\" means \"their (m)\"\n   > Correct!\n\n- [ ] \"буду\" means \"to plan\"\n   > Incorrect. \"буду\" means \"I will be\"\n\n- [x] \"той\" means \"that (masculine)\"\n   > Correct!\n\n- [ ] \"банан\" means \"was (n)\"\n   > Incorrect. \"банан\" means \"banana\"\n\n- [ ] \"купе\" means \"to stay (perf)\"\n   > Incorrect. \"купе\" means \"compartment\"\n\n## group-sort: Sort by Gender\n\n> Sort the nouns into gender categories.\n\n### Feminine\n- лампа\n- комісія\n- голова\n- осінь\n- чашка\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| досягнення | /dosʲɑɦˈnɛnʲɑ/ | achievement | noun | n | |\n| мета | /mɛˈtɑ/ | goal | noun | f | |\n| якість | /ˈjɑkʲistʲ/ | quality | noun | f | |\n| подорож | /ˈpodoroʒ/ | journey, trip | noun | f | |\n| спогад | /ˈspoɦɑd/ | memory | noun | m | |\n| враження | /vrɑˈʒɛnʲɑ/ | impression | noun | n | |\n| здібність | /zdʲibˈnʲistʲ/ | ability | noun | f | |\n| успіх | /uˈspʲix/ | success | noun | m | |\n\n---\n\n# Summary\n\n## A2 Level Complete!\n\n### Grammar Mastered\n\n| Topic | Key Points |\n|-------|------------|\n| Cases | All 6: Nom, Acc, Gen, Dat, Inst, Loc |\n| Aspect | Imperfective vs Perfective |\n| Comparatives | -іший/-ший, ніж/за |\n| Superlatives | най- prefix |\n| Real Conditionals | Якщо + future |\n| Unreal Conditionals | Якби + past + б/би |\n| Reflexives | -ся/-сь, себе/собі/собою |\n| Relative Clauses | який/яка/яке/які, що |\n| Complex Sentences | щоб, хоча, тому що |\n\n### Vocabulary Themes\n\n| Theme | Key Words |\n|-------|-----------|\n| Health | боліти, температура, лікар |\n| Travel | потяг, квиток, відправлення |\n| Work | професія, зарплата, співбесіда |\n| Communication | дзвонити, надіслати, підписатися |\n| Opinions | думати, згоден, на мою думку |\n\n### What You Can Do\n\n| Skill | Examples |\n|-------|----------|\n| Describe | Health, plans, work, opinions |\n| Narrate | Past events, future plans |\n| Compare | People, things, ideas |\n| Hypothesize | Real and unreal conditions |\n| Connect | Complex sentences, reasons |\n\n> 🎉 **Congratulations!**\n>\n> Ви завершили рівень A2! You've completed the A2 level!\n>\n> **Your Ukrainian is now at a solid elementary level.**\n> You can handle everyday situations, express opinions,\n> and understand the main points of clear standard speech.\n>\n> **Next stop: B1 - Intermediate!**\n> Далі: рівень B1 - Середній!\n>\n> Слава Україні! 🇺🇦\n",
-    "createdAt": "2025-12-03T08:52:31.874Z",
-    "modifiedAt": "2025-12-03T08:52:31.874Z",
+    "rawMarkdown": "---\nmodule: 60\ntitle: \"A2 Capstone\"\nsubtitle: \"Comprehensive Review\"\nlevel: A2\nphase: A2.3\nduration: 45\ntransliteration: partial\ntags: [review, checkpoint, capstone, comprehensive]\nobjectives:\n  - Review all A2 grammar and vocabulary\n  - Demonstrate A2-level communication skills\n  - Integrate knowledge from all A2 modules\n  - Prepare for B1 transition\ngrammar:\n  - All cases review\n  - Verbal aspect\n  - Comparatives and superlatives\n  - Conditionals\n  - Reflexives and relative clauses\n  - Complex sentences\n---\n\n# Lesson Content\n\n## warm-up\n\n### A2 Complete!\n\nCongratulations! You've completed the A2 level! Let's review everything you've learned and prepare for B1.\n\n**Your A2 achievements:**\n- All 6 grammatical cases\n- Verbal aspect (perfective/imperfective)\n- Comparatives and superlatives\n- Conditionals (real and unreal)\n- Complex sentences\n- Reflexive verbs and relative clauses\n- Practical topics: health, travel, work, communication\n\n> 💡 **What's Next?**\n>\n> B1 level will introduce more complex grammar (participles, advanced aspect usage), expand your vocabulary significantly, and focus on fluent conversation and understanding of native materials. You're ready!\n\n## presentation\n\n### Grammar Review\n\n#### All Cases\n\n| Case | Question | Use | Example |\n|------|----------|-----|---------|\n| Nominative | хто? що? | subject | Брат читає |\n| Accusative | кого? що? | direct object | Бачу брата |\n| Genitive | кого? чого? | possession, absence | Книга брата |\n| Dative | кому? чому? | indirect object | Даю братові |\n| Instrumental | ким? чим? | with, means | З братом |\n| Locative | на кому? на чому? | location | У брата |\n\n**Quick case test:**\n- Я бачу ___ (друг). → друга (Acc)\n- Це книга ___ (сестра). → сестри (Gen)\n- Я даю подарунок ___ (мама). → мамі (Dat)\n- Я розмовляю з ___ (батько). → батьком (Inst)\n- Я живу в ___ (Київ). → Києві (Loc)\n\n#### Verbal Aspect\n\n| Imperfective | Perfective | Difference |\n|--------------|------------|------------|\n| читати | прочитати | process vs completed |\n| писати | написати | process vs completed |\n| робити | зробити | process vs completed |\n| говорити | сказати | process vs completed |\n\n**Choosing aspect:**\n- Я **читав** книгу годину. (process, duration)\n- Я **прочитав** книгу. (completed)\n- Я **буду читати** завтра. (will be reading)\n- Я **прочитаю** завтра. (will complete)\n\n#### Comparatives and Superlatives\n\n| Adjective | Comparative | Superlative |\n|-----------|-------------|-------------|\n| великий | більший | найбільший |\n| малий | менший | найменший |\n| добрий | кращий | найкращий |\n| поганий | гірший | найгірший |\n| високий | вищий | найвищий |\n\n**Constructions:**\n- Київ **більший**, ніж Львів.\n- Київ **більший** за Львів.\n- Київ — **найбільше** місто України.\n\n#### Conditionals\n\n**Real (якщо):**\n- **Якщо** буде дощ, я візьму парасолю.\n- **Якщо** матиму час, зателефоную.\n\n**Unreal (якби):**\n- **Якби** я мав гроші, я **б** купив машину.\n- **Якби** вона знала, вона **б** допомогла.\n\n#### Reflexive Verbs\n\n**-ся/-сь suffix:**\n- митися, одягатися, сміятися, боятися\n\n**Себе forms:**\n- себе (Acc/Gen), собі (Dat/Loc), собою (Inst)\n\n**Examples:**\n- Я **миюся** вранці.\n- Я купив **собі** каву.\n- Візьми це з **собою**.\n\n#### Relative Clauses\n\n**Який/яка/яке/які:**\n- Книга, **яку** я читаю, цікава.\n- Чоловік, **який** тут працює, мій друг.\n- Місто, **де** я живу, велике.\n\n**Що with все/те:**\n- Все, **що** ти сказав, правда.\n- Те, **що** він зробив, — помилка.\n\n#### Complex Conjunctions\n\n| Conjunction | Meaning | Example |\n|-------------|---------|---------|\n| щоб | in order to | Я вчуся, щоб знати |\n| хоча | although | Хоча холодно, я піду |\n| тому що | because | Я залишився, тому що втомився |\n| бо | because | Не прийшов, бо захворів |\n\n### Vocabulary Themes Review\n\n#### Health (Здоров'я)\n- Body: голова, рука, нога, живіт, спина\n- Symptoms: температура, кашель, біль\n- Phrases: У мене болить..., Мені погано\n\n#### Travel (Подорожі)\n- Transport: потяг, літак, автобус\n- Places: вокзал, аеропорт, зупинка\n- Phrases: Квиток до..., О котрій відправлення?\n\n#### Work (Робота)\n- Jobs: програміст, вчитель, лікар\n- Workplace: офіс, компанія, зарплата\n- Phrases: Ким ви працюєте?, Я шукаю роботу\n\n#### Communication (Спілкування)\n- Phone: дзвінок, повідомлення, Алло?\n- Email: надіслати, отримати, вкладення\n- Social: підписатися, поділитися, лайк\n\n#### Opinions (Думки)\n- Express: Я думаю, На мою думку, Мені здається\n- Agree: Я згоден, Ви маєте рацію\n- Disagree: Я не згоден, Я думаю інакше\n\n### A2 Self-Assessment\n\n**Can you...?**\n\n| Skill | Yes | Sometimes | Need Practice |\n|-------|-----|-----------|---------------|\n| Use all 6 cases correctly | ☐ | ☐ | ☐ |\n| Choose between perf/impf aspect | ☐ | ☐ | ☐ |\n| Form comparatives and superlatives | ☐ | ☐ | ☐ |\n| Make conditional sentences | ☐ | ☐ | ☐ |\n| Use reflexive verbs | ☐ | ☐ | ☐ |\n| Build relative clauses | ☐ | ☐ | ☐ |\n| Discuss health problems | ☐ | ☐ | ☐ |\n| Book travel tickets | ☐ | ☐ | ☐ |\n| Talk about work | ☐ | ☐ | ☐ |\n| Express opinions | ☐ | ☐ | ☐ |\n\n## practice\n\n### Comprehensive Grammar Exercise\n\nFill in with correct forms:\n\n1. Я живу в ___ (Львів) і працюю ___ (програміст).\n   > [!answer] Львові, програмістом\n\n2. Якщо ___ (бути) час, я ___ (зателефонувати) тобі.\n   > [!answer] буде/матиму, зателефоную\n\n3. Книга, ___ (який) я прочитав, дуже цікава.\n   > [!answer] яку\n\n4. Я вчуся, ___ (щоб) знати українську мову.\n   > [!answer] щоб\n\n5. Він ___ (старий) за мене, але ___ (молодий) за брата.\n   > [!answer] старший, молодший\n\n6. Якби я ___ (мати) гроші, я ___ купити цю машину.\n   > [!answer] мав, б/би\n\n7. Вона ___ (митися) і ___ (одягатися) кожного ранку.\n   > [!answer] миється, одягається\n\n8. ___ (хоча) холодно, ми пішли на прогулянку.\n   > [!answer] Хоча\n\n### Dialogue Completion\n\n**At the doctor:**\n- Доброго дня! На що ___?\n- У мене ___ голова і ___.\n- Як давно це ___?\n- ___ три дні.\n- Відкрийте ___. Я вам ___ ліки.\n\n→ скаржитеся, болить, температура, почалося, Уже/Вже, рот, випишу\n\n**Booking a ticket:**\n- Мені потрібен ___ до Одеси.\n- На ___?\n- На завтра. ___ коштує?\n- 500 гривень. ___ чи купе?\n- Купе. О котрій ___?\n- О 18:30 з ___ платформи.\n\n→ квиток, коли, Скільки, Плацкарт, відправлення, третьої\n\n### Translation Challenge\n\n1. I think that this book is better than the movie.\n   > [!answer] Я думаю, що ця книга краща, ніж фільм.\n\n2. If I had time, I would travel more.\n   > [!answer] Якби я мав/мала час, я б більше подорожував/подорожувала.\n\n3. The woman who works here is my sister.\n   > [!answer] Жінка, яка тут працює, — моя сестра.\n\n4. Although it was raining, we went for a walk.\n   > [!answer] Хоча йшов дощ, ми пішли на прогулянку.\n\n5. I came here in order to learn Ukrainian.\n   > [!answer] Я приїхав/приїхала сюди, щоб вивчити українську.\n\n## production\n\n### Comprehensive Speaking Tasks\n\n**Task 1: Introduce Yourself (2 minutes)**\n- Ваше ім'я, звідки ви\n- Ким ви працюєте\n- Ваші хобі\n- Чому вивчаєте українську\n\n**Task 2: Tell a Story (2 minutes)**\n- Розкажіть про подорож, яку ви здійснили\n- Куди їздили, як добиралися\n- Що бачили, що сподобалося\n- Чи хотіли б повернутися\n\n**Task 3: Express Opinion (2 minutes)**\n- Яка, на вашу думку, найважливіша якість друга?\n- Чому ви так думаєте?\n- Чи згодні ви, що друзі важливіші за сім'ю?\n\n**Task 4: Problem Solving (2 minutes)**\n- Уявіть: ви захворіли в іншому місті\n- Що ви робите?\n- Як пояснюєте симптоми лікарю?\n- Як купуєте ліки в аптеці?\n\n### Writing Task\n\nWrite a short text (100-150 words) about your ideal job:\n- Ким би ви хотіли працювати?\n- Чому саме ця професія?\n- Які умови роботи для вас важливі?\n- Що ви вже зробили для досягнення цієї мети?\n\n---\n\n---\n\n---\n\n---\n\n# Activities\n\n## fill-in: A2 Grammar Review\n\n> Choose the correct word to complete each sentence.\n\n1. Я живу в ___ (Київ / Києві) і працюю програмістом.\n   > [!answer] Києві\n   > (Locative case after \"в\")\n\n2. Ця книга ___ (краща / кращий), ніж та.\n   > [!answer] краща\n   > (Feminine comparative to agree with \"книга\")\n\n3. Якби я ___ (мав / маю) гроші, я б купив машину.\n   > [!answer] мав\n   > (Past tense with якби for unreal conditional)\n\n4. Жінка, ___ (яка / який) тут працює, моя сестра.\n   > [!answer] яка\n   > (Feminine relative pronoun for жінка)\n\n5. Я вчу українську, ___ (щоб / хоча) розуміти українців.\n   > [!answer] щоб\n   > (In order to - purpose)\n\n## unjumble: A2 Review Sentences\n\n> Arrange the words in the correct order.\n\n1. Києві / в / Я / живу / і / лікарем / працюю\n   > [!answer] Я живу в Києві і працюю лікарем.\n   > (I live in Kyiv and work as a doctor.)\n\n2. краща / ніж / Ця / та / книга\n   > [!answer] Ця книга краща, ніж та.\n   > (This book is better than that one.)\n\n3. мав / Якби / гроші / я / б / подорожував / я\n   > [!answer] Якби я мав гроші, я б подорожував.\n   > (If I had money, I would travel.)\n\n4. яку / Книга / читаю / я / цікава / дуже\n   > [!answer] Книга, яку я читаю, дуже цікава.\n   > (The book that I'm reading is very interesting.)\n\n5. Хоча / холодно / було / пішли / ми / на / прогулянку\n   > [!answer] Хоча було холодно, ми пішли на прогулянку.\n   > (Although it was cold, we went for a walk.)\n\n## match-up: Match the Pairs\n\n> Match Ukrainian words to their English meanings.\n\n| Left | Right |\n|------|-------|\n| голова | head |\n| високий | tall |\n| під | under |\n| осінь | autumn |\n| купе | compartment |\n| той | that (masculine) |\n| їхній | their (m) |\n| над | above |\n| загалом | in general |\n| ці | these |\n| себе | oneself (acc/gen) |\n| продавати | to sell |\n\n## quiz: Meaning Check\n\n> Choose the correct answer.\n\n1. What does \"навпроти\" mean?\n   - [ ] shirt\n   - [ ] to be interested\n   - [x] opposite\n   - [ ] January\n   > \"навпроти\" means \"opposite\"\n\n2. What does \"себе\" mean?\n   - [ ] park\n   - [ ] cheap\n   - [ ] Possessives: мій, твій, його, її, наш, ваш\n   - [x] oneself (acc/gen)\n   > \"себе\" means \"oneself (acc/gen)\"\n\n3. What does \"голова\" mean?\n   - [x] head\n   - [ ] breakfast\n   - [ ] to pay\n   - [ ] convenient\n   > \"голова\" means \"head\"\n\n4. What does \"їхній\" mean?\n   - [ ] in general\n   - [ ] those\n   - [ ] page\n   - [x] their (m)\n   > \"їхній\" means \"their (m)\"\n\n5. What does \"банан\" mean?\n   - [ ] programmer\n   - [x] banana\n   - [ ] rain\n   - [ ] summer\n   > \"банан\" means \"banana\"\n\n6. What does \"віддалено\" mean?\n   - [ ] to lie down\n   - [ ] straight\n   - [ ] agree (m)\n   - [x] remotely\n   > \"віддалено\" means \"remotely\"\n\n7. What does \"той\" mean?\n   - [ ] to cook/prepare (perf)\n   - [x] that (masculine)\n   - [ ] to gather (impf)\n   - [ ] that (neuter)\n   > \"той\" means \"that (masculine)\"\n\n8. What does \"переказати\" mean?\n   - [x] to transfer\n   - [ ] to stand\n   - [ ] worse\n   - [ ] to bring\n   > \"переказати\" means \"to transfer\"\n\n9. What does \"під\" mean?\n   - [ ] imaginary, hypothetical\n   - [x] under\n   - [ ] thirty\n   - [ ] to eat\n   > \"під\" means \"under\"\n\n10. What does \"комісія\" mean?\n   - [ ] faster\n   - [ ] lecture\n   - [ ] in general\n   - [x] commission\n   > \"комісія\" means \"commission\"\n\n11. What does \"купе\" mean?\n   - [ ] tasty\n   - [ ] glass\n   - [ ] winter\n   - [x] compartment\n   > \"купе\" means \"compartment\"\n\n12. What does \"чашка\" mean?\n   - [x] cup\n   - [ ] student\n   - [ ] cold (adv)\n   - [ ] most interesting\n   > \"чашка\" means \"cup\"\n\n## true-false: True or False?\n\n> Determine if each statement is true or false.\n\n- [x] \"загалом\" means \"in general\"\n   > Correct!\n\n- [x] \"чашка\" means \"cup\"\n   > Correct!\n\n- [ ] \"лампа\" means \"oneself (acc/gen)\"\n   > Incorrect. \"лампа\" means \"lamp\"\n\n- [ ] \"голова\" means \"which, that, who (pl)\"\n   > Incorrect. \"голова\" means \"head\"\n\n- [x] \"високий\" means \"tall\"\n   > Correct!\n\n- [x] \"їхній\" means \"their (m)\"\n   > Correct!\n\n- [ ] \"буду\" means \"to plan\"\n   > Incorrect. \"буду\" means \"I will be\"\n\n- [x] \"той\" means \"that (masculine)\"\n   > Correct!\n\n- [ ] \"банан\" means \"was (n)\"\n   > Incorrect. \"банан\" means \"banana\"\n\n- [ ] \"купе\" means \"to stay (perf)\"\n   > Incorrect. \"купе\" means \"compartment\"\n\n## group-sort: Sort by Gender\n\n> Sort the nouns into gender categories.\n\n### Feminine\n- лампа\n- комісія\n- голова\n- осінь\n- чашка\n\n## select: Choose A2 Review Items\n\n> Select the correct answer for mixed A2 grammar and vocabulary.\n\n1. Я ___ цю книгу минулого місяця.\n   - [ ] читаю\n   - [x] прочитав\n   - [ ] буду читати\n   - [ ] читав би\n   > Completed action requires perfective past: \"прочитав\"\n\n2. Це місто, ___ я народився багато років тому.\n   - [ ] який\n   - [ ] яка\n   - [x] де\n   - [ ] що\n   > Place where: \"де\"\n\n3. Я вчу українську, ___ розмовляти з друзями вільно.\n   - [x] щоб\n   - [ ] хоча\n   - [ ] тому що\n   - [ ] коли\n   > Purpose requires: \"щоб\"\n\n4. У мене ___ голова після роботи за комп'ютером.\n   - [x] болить\n   - [ ] болять\n   - [ ] боліти\n   - [ ] болів\n   > Singular subject: \"болить\"\n\n5. Він працює ___ і не ходить в офіс.\n   - [ ] на повну ставку\n   - [x] віддалено\n   - [ ] професією\n   - [ ] вакансією\n   > Works remotely: \"віддалено\"\n\n6. Я ___ з вашою думкою про цей фільм.\n   - [ ] вважаю\n   - [x] згоден\n   - [ ] переконаний\n   - [ ] сумніваюся\n   > Agree with: \"згоден\"\n\n7. Магазин уже ___ на ніч о дев'ятій годині.\n   - [ ] відкрито\n   - [x] закрито\n   - [ ] заборонено\n   - [ ] зайнято\n   > Store closed: \"закрито\"\n\n8. Я ___ собі новий телефон минулого тижня.\n   - [ ] себе\n   - [x] собі\n   - [ ] собою\n   - [ ] сам\n   > Dative for \"for myself\": \"собі\"\n\n9. Це друг, з ___ я подорожував Європою влітку.\n   - [x] яким\n   - [ ] який\n   - [ ] якого\n   - [ ] що\n   > Instrumental after \"з\": \"яким\"\n\n10. ___, було холодно, ми пішли гуляти в парк.\n    - [ ] Щоб\n    - [x] Хоча\n    - [ ] Тому що\n    - [ ] Коли\n    > Contrast/although: \"Хоча\"\n\n## order: Put Words in Order (A2 Review)\n\n> Arrange the words to form correct complex sentences using A2 grammar.\n\n1. Я / вчу / українську / мову / щоб / розмовляти / з / друзями / вільно\n   > [!answer] Я вчу українську мову, щоб розмовляти з друзями вільно.\n   > (I'm learning Ukrainian to speak with friends freely.)\n\n2. Це / місто / де / я / народився / дуже / красиве / та / історичне\n   > [!answer] Це місто, де я народився, дуже красиве та історичне.\n   > (This is the city where I was born, very beautiful and historic.)\n\n3. Хоча / було / дуже / холодно / ми / пішли / на / прогулянку / в / парк\n   > [!answer] Хоча було дуже холодно, ми пішли на прогулянку в парк.\n   > (Although it was very cold, we went for a walk in the park.)\n\n4. У / мене / болить / голова / після / довгого / робочого / дня / за / комп'ютером\n   > [!answer] У мене болить голова після довгого робочого дня за комп'ютером.\n   > (My head hurts after a long work day at the computer.)\n\n5. Я / прочитав / цю / книгу / яку / ти / рекомендував / мені / минулого / місяця\n   > [!answer] Я прочитав цю книгу, яку ти рекомендував мені минулого місяця.\n   > (I read this book that you recommended to me last month.)\n\n6. Він / працює / віддалено / і / не / ходить / в / офіс / щодня\n   > [!answer] Він працює віддалено і не ходить в офіс щодня.\n   > (He works remotely and doesn't go to the office every day.)\n\n7. Я / згоден / з / вашою / думкою / про / цей / важливий / проект\n   > [!answer] Я згоден з вашою думкою про цей важливий проект.\n   > (I agree with your opinion about this important project.)\n\n8. Магазин / уже / закрито / на / ніч / о / десятій / годині / вечора\n   > [!answer] Магазин уже закрито на ніч о десятій годині вечора.\n   > (The store is already closed for the night at ten o'clock in the evening.)\n\n9. Я / купив / собі / новий / телефон / у / магазині / електроніки / вчора\n   > [!answer] Я купив собі новий телефон у магазині електроніки вчора.\n   > (I bought myself a new phone at the electronics store yesterday.)\n\n10. Це / друг / з / яким / я / подорожував / по / Європі / минулого / літа\n    > [!answer] Це друг, з яким я подорожував по Європі минулого літа.\n    > (This is the friend with whom I traveled around Europe last summer.)\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| досягнення | /dosʲɑɦˈnɛnʲɑ/ | achievement | noun | n | |\n| мета | /mɛˈtɑ/ | goal | noun | f | |\n| якість | /ˈjɑkʲistʲ/ | quality | noun | f | |\n| подорож | /ˈpodoroʒ/ | journey, trip | noun | f | |\n| спогад | /ˈspoɦɑd/ | memory | noun | m | |\n| враження | /vrɑˈʒɛnʲɑ/ | impression | noun | n | |\n| здібність | /zdʲibˈnʲistʲ/ | ability | noun | f | |\n| успіх | /uˈspʲix/ | success | noun | m | |\n\n---\n\n# Summary\n\n## A2 Level Complete!\n\n### Grammar Mastered\n\n| Topic | Key Points |\n|-------|------------|\n| Cases | All 6: Nom, Acc, Gen, Dat, Inst, Loc |\n| Aspect | Imperfective vs Perfective |\n| Comparatives | -іший/-ший, ніж/за |\n| Superlatives | най- prefix |\n| Real Conditionals | Якщо + future |\n| Unreal Conditionals | Якби + past + б/би |\n| Reflexives | -ся/-сь, себе/собі/собою |\n| Relative Clauses | який/яка/яке/які, що |\n| Complex Sentences | щоб, хоча, тому що |\n\n### Vocabulary Themes\n\n| Theme | Key Words |\n|-------|-----------|\n| Health | боліти, температура, лікар |\n| Travel | потяг, квиток, відправлення |\n| Work | професія, зарплата, співбесіда |\n| Communication | дзвонити, надіслати, підписатися |\n| Opinions | думати, згоден, на мою думку |\n\n### What You Can Do\n\n| Skill | Examples |\n|-------|----------|\n| Describe | Health, plans, work, opinions |\n| Narrate | Past events, future plans |\n| Compare | People, things, ideas |\n| Hypothesize | Real and unreal conditions |\n| Connect | Complex sentences, reasons |\n\n> 🎉 **Congratulations!**\n>\n> Ви завершили рівень A2! You've completed the A2 level!\n>\n> **Your Ukrainian is now at a solid elementary level.**\n> You can handle everyday situations, express opinions,\n> and understand the main points of clear standard speech.\n>\n> **Next stop: B1 - Intermediate!**\n> Далі: рівень B1 - Середній!\n>\n> Слава Україні! 🇺🇦\n",
+    "createdAt": "2025-12-03T12:29:30.368Z",
+    "modifiedAt": "2025-12-03T12:29:30.368Z",
     "version": 2
   },
   "activities": [
     {
       "id": "act-a2-60-fillblank",
       "type": "fill-blank",
-      "title": "Complete the Sentences",
+      "title": "A2 Grammar Review",
       "description": "Choose the correct word to complete each sentence.",
       "content": {
         "type": "fill-blank",
         "items": [
           {
-            "prompt": "Де ваша велика ___?",
-            "answer": "комісія",
-            "options": [
-              "комісія",
-              "поверх",
-              "сусід",
-              "чоловік"
+            "prompt": "Я живу в ___ (Київ / Києві) і працюю програмістом.",
+            "answer": "Києві",
+            "hints": [
+              "Київ / Києві"
             ]
           },
           {
-            "prompt": "Ця книга надзвичайно ___.",
-            "answer": "гарячий",
-            "options": [
-              "згоден",
-              "цікавий",
-              "гарячий",
-              "вищий"
+            "prompt": "Ця книга ___ (краща / кращий), ніж та.",
+            "answer": "краща",
+            "hints": [
+              "краща / кращий"
             ]
           },
           {
-            "prompt": "Це мій новий ___.",
-            "answer": "банан",
-            "options": [
-              "жіночий",
-              "банан",
-              "посилання",
-              "літак"
+            "prompt": "Якби я ___ (мав / маю) гроші, я б купив машину.",
+            "answer": "мав",
+            "hints": [
+              "мав / маю"
             ]
           },
           {
-            "prompt": "Я хочу купити цю ___.",
-            "answer": "голова",
-            "options": [
-              "голова",
-              "хокей",
-              "робота",
-              "рахунок"
+            "prompt": "Жінка, ___ (яка / який) тут працює, моя сестра.",
+            "answer": "яка",
+            "hints": [
+              "яка / який"
             ]
           },
           {
-            "prompt": "Моя кімната занадто ___.",
-            "answer": "високий",
-            "options": [
-              "високий",
-              "дорожчий",
-              "англійська",
-              "великий"
-            ]
-          },
-          {
-            "prompt": "Вони планують ___ завтра.",
-            "answer": "переказати",
-            "options": [
-              "прокинутися",
-              "мусити",
-              "личити",
-              "переказати"
-            ]
-          },
-          {
-            "prompt": "Я хочу купити це ___.",
-            "answer": "купе",
-            "options": [
-              "кінець",
-              "пілот",
-              "купе",
-              "таксі"
-            ]
-          },
-          {
-            "prompt": "Мій брат має хорошу ___.",
-            "answer": "лампа",
-            "options": [
-              "площа",
-              "підвищення",
-              "ложка",
-              "лампа"
-            ]
-          },
-          {
-            "prompt": "Я хочу навчитися ___.",
-            "answer": "буду",
-            "options": [
-              "буду",
-              "кивати",
-              "бачити",
-              "лежати"
+            "prompt": "Я вчу українську, ___ (щоб / хоча) розуміти українців.",
+            "answer": "щоб",
+            "hints": [
+              "щоб / хоча"
             ]
           }
         ]
@@ -174,92 +119,79 @@
       "difficultyLevel": "A2",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-03T08:52:31.874Z",
-      "modifiedAt": "2025-12-03T08:52:31.874Z"
+      "createdAt": "2025-12-03T12:29:30.368Z",
+      "modifiedAt": "2025-12-03T12:29:30.368Z"
     },
     {
       "id": "act-a2-60-unjumble",
       "type": "unjumble",
-      "title": "Build the Sentence",
+      "title": "A2 Review Sentences",
       "description": "Arrange the words in the correct order.",
       "content": {
         "type": "unjumble",
+        "isUnjumble": true,
         "items": [
           {
             "words": [
-              "хорошу",
-              "осінь",
-              "Мій",
-              "має",
-              "брат"
-            ],
-            "answer": "Мій брат має хорошу осінь.",
-            "translation": "autumn"
-          },
-          {
-            "words": [
-              "голова",
-              "цю",
-              "хочу",
+              "Києві",
+              "в",
               "Я",
-              "купити"
+              "живу",
+              "і",
+              "лікарем",
+              "працюю"
             ],
-            "answer": "Я хочу купити цю голова.",
-            "translation": "head"
+            "answer": "Я живу в Києві і працюю лікарем.",
+            "translation": "I live in Kyiv and work as a doctor."
           },
           {
             "words": [
-              "хочу",
-              "Я",
-              "цю",
-              "купити",
-              "лампа"
-            ],
-            "answer": "Я хочу купити цю лампа.",
-            "translation": "lamp"
-          },
-          {
-            "words": [
-              "комісія",
+              "краща",
+              "ніж",
               "Ця",
-              "сто",
-              "гривень",
-              "коштує"
+              "та",
+              "книга"
             ],
-            "answer": "Ця комісія коштує сто гривень.",
-            "translation": "commission"
+            "answer": "Ця книга краща, ніж та.",
+            "translation": "This book is better than that one."
           },
           {
             "words": [
-              "мій",
-              "банан",
-              "новий",
-              "Це"
+              "мав",
+              "Якби",
+              "гроші",
+              "я",
+              "б",
+              "подорожував",
+              "я"
             ],
-            "answer": "Це мій новий банан.",
-            "translation": "banana"
+            "answer": "Якби я мав гроші, я б подорожував.",
+            "translation": "If I had money, I would travel."
           },
           {
             "words": [
-              "коштує",
-              "гривень",
-              "Ця",
-              "чашка",
-              "сто"
+              "яку",
+              "Книга",
+              "читаю",
+              "я",
+              "цікава",
+              "дуже"
             ],
-            "answer": "Ця чашка коштує сто гривень.",
-            "translation": "cup"
+            "answer": "Книга, яку я читаю, дуже цікава.",
+            "translation": "The book that I'm reading is very interesting."
           },
           {
             "words": [
-              "Це",
-              "коштує",
-              "купе",
-              "гривень",
-              "сто"
+              "Хоча",
+              "холодно",
+              "було",
+              "пішли",
+              "ми",
+              "на",
+              "прогулянку"
             ],
-            "answer": "Це купе коштує сто гривень.",
-            "translation": "compartment"
+            "answer": "Хоча було холодно, ми пішли на прогулянку.",
+            "translation": "Although it was cold, we went for a walk."
           }
         ]
       },
@@ -270,8 +202,8 @@
       "difficultyLevel": "A2",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-03T08:52:31.874Z",
-      "modifiedAt": "2025-12-03T08:52:31.874Z"
+      "createdAt": "2025-12-03T12:29:30.368Z",
+      "modifiedAt": "2025-12-03T12:29:30.368Z"
     },
     {
       "id": "act-a2-60-matchup",
@@ -339,8 +271,8 @@
       "difficultyLevel": "A2",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-03T08:52:31.874Z",
-      "modifiedAt": "2025-12-03T08:52:31.874Z"
+      "createdAt": "2025-12-03T12:29:30.368Z",
+      "modifiedAt": "2025-12-03T12:29:30.368Z"
     },
     {
       "id": "act-a2-60-quiz",
@@ -494,8 +426,8 @@
       "difficultyLevel": "A2",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-03T08:52:31.874Z",
-      "modifiedAt": "2025-12-03T08:52:31.874Z"
+      "createdAt": "2025-12-03T12:29:30.368Z",
+      "modifiedAt": "2025-12-03T12:29:30.368Z"
     },
     {
       "id": "act-a2-60-truefalse",
@@ -504,7 +436,58 @@
       "description": "Determine if each statement is true or false.",
       "content": {
         "type": "true-false",
-        "statements": []
+        "statements": [
+          {
+            "statement": "\"загалом\" means \"in general\"",
+            "isTrue": true,
+            "explanation": "Correct!"
+          },
+          {
+            "statement": "\"чашка\" means \"cup\"",
+            "isTrue": true,
+            "explanation": "Correct!"
+          },
+          {
+            "statement": "\"лампа\" means \"oneself (acc/gen)\"",
+            "isTrue": false,
+            "explanation": "Incorrect. \"лампа\" means \"lamp\""
+          },
+          {
+            "statement": "\"голова\" means \"which, that, who (pl)\"",
+            "isTrue": false,
+            "explanation": "Incorrect. \"голова\" means \"head\""
+          },
+          {
+            "statement": "\"високий\" means \"tall\"",
+            "isTrue": true,
+            "explanation": "Correct!"
+          },
+          {
+            "statement": "\"їхній\" means \"their (m)\"",
+            "isTrue": true,
+            "explanation": "Correct!"
+          },
+          {
+            "statement": "\"буду\" means \"to plan\"",
+            "isTrue": false,
+            "explanation": "Incorrect. \"буду\" means \"I will be\""
+          },
+          {
+            "statement": "\"той\" means \"that (masculine)\"",
+            "isTrue": true,
+            "explanation": "Correct!"
+          },
+          {
+            "statement": "\"банан\" means \"was (n)\"",
+            "isTrue": false,
+            "explanation": "Incorrect. \"банан\" means \"banana\""
+          },
+          {
+            "statement": "\"купе\" means \"to stay (perf)\"",
+            "isTrue": false,
+            "explanation": "Incorrect. \"купе\" means \"compartment\""
+          }
+        ]
       },
       "subject": "language",
       "owner": "curricula-opus",
@@ -513,8 +496,8 @@
       "difficultyLevel": "A2",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-03T08:52:31.874Z",
-      "modifiedAt": "2025-12-03T08:52:31.874Z"
+      "createdAt": "2025-12-03T12:29:30.368Z",
+      "modifiedAt": "2025-12-03T12:29:30.368Z"
     },
     {
       "id": "act-a2-60-groupsort",
@@ -545,8 +528,413 @@
       "difficultyLevel": "A2",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-03T08:52:31.874Z",
-      "modifiedAt": "2025-12-03T08:52:31.874Z"
+      "createdAt": "2025-12-03T12:29:30.368Z",
+      "modifiedAt": "2025-12-03T12:29:30.368Z"
+    },
+    {
+      "id": "act-a2-60-select",
+      "type": "select",
+      "title": "Choose A2 Review Items",
+      "description": "Select the correct answer for mixed A2 grammar and vocabulary.",
+      "content": {
+        "type": "select",
+        "items": [
+          {
+            "question": "Я ___ цю книгу минулого місяця.",
+            "options": [
+              {
+                "text": "читаю",
+                "correct": false
+              },
+              {
+                "text": "прочитав",
+                "correct": true
+              },
+              {
+                "text": "буду читати",
+                "correct": false
+              },
+              {
+                "text": "читав би",
+                "correct": false
+              }
+            ]
+          },
+          {
+            "question": "Це місто, ___ я народився багато років тому.",
+            "options": [
+              {
+                "text": "який",
+                "correct": false
+              },
+              {
+                "text": "яка",
+                "correct": false
+              },
+              {
+                "text": "де",
+                "correct": true
+              },
+              {
+                "text": "що",
+                "correct": false
+              }
+            ]
+          },
+          {
+            "question": "Я вчу українську, ___ розмовляти з друзями вільно.",
+            "options": [
+              {
+                "text": "щоб",
+                "correct": true
+              },
+              {
+                "text": "хоча",
+                "correct": false
+              },
+              {
+                "text": "тому що",
+                "correct": false
+              },
+              {
+                "text": "коли",
+                "correct": false
+              }
+            ]
+          },
+          {
+            "question": "У мене ___ голова після роботи за комп'ютером.",
+            "options": [
+              {
+                "text": "болить",
+                "correct": true
+              },
+              {
+                "text": "болять",
+                "correct": false
+              },
+              {
+                "text": "боліти",
+                "correct": false
+              },
+              {
+                "text": "болів",
+                "correct": false
+              }
+            ]
+          },
+          {
+            "question": "Він працює ___ і не ходить в офіс.",
+            "options": [
+              {
+                "text": "на повну ставку",
+                "correct": false
+              },
+              {
+                "text": "віддалено",
+                "correct": true
+              },
+              {
+                "text": "професією",
+                "correct": false
+              },
+              {
+                "text": "вакансією",
+                "correct": false
+              }
+            ]
+          },
+          {
+            "question": "Я ___ з вашою думкою про цей фільм.",
+            "options": [
+              {
+                "text": "вважаю",
+                "correct": false
+              },
+              {
+                "text": "згоден",
+                "correct": true
+              },
+              {
+                "text": "переконаний",
+                "correct": false
+              },
+              {
+                "text": "сумніваюся",
+                "correct": false
+              }
+            ]
+          },
+          {
+            "question": "Магазин уже ___ на ніч о дев'ятій годині.",
+            "options": [
+              {
+                "text": "відкрито",
+                "correct": false
+              },
+              {
+                "text": "закрито",
+                "correct": true
+              },
+              {
+                "text": "заборонено",
+                "correct": false
+              },
+              {
+                "text": "зайнято",
+                "correct": false
+              }
+            ]
+          },
+          {
+            "question": "Я ___ собі новий телефон минулого тижня.",
+            "options": [
+              {
+                "text": "себе",
+                "correct": false
+              },
+              {
+                "text": "собі",
+                "correct": true
+              },
+              {
+                "text": "собою",
+                "correct": false
+              },
+              {
+                "text": "сам",
+                "correct": false
+              }
+            ]
+          },
+          {
+            "question": "Це друг, з ___ я подорожував Європою влітку.",
+            "options": [
+              {
+                "text": "яким",
+                "correct": true
+              },
+              {
+                "text": "який",
+                "correct": false
+              },
+              {
+                "text": "якого",
+                "correct": false
+              },
+              {
+                "text": "що",
+                "correct": false
+              }
+            ]
+          },
+          {
+            "question": "___, було холодно, ми пішли гуляти в парк.",
+            "options": [
+              {
+                "text": "Щоб",
+                "correct": false
+              },
+              {
+                "text": "Хоча",
+                "correct": true
+              },
+              {
+                "text": "Тому що",
+                "correct": false
+              },
+              {
+                "text": "Коли",
+                "correct": false
+              }
+            ]
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-03T12:29:30.368Z",
+      "modifiedAt": "2025-12-03T12:29:30.368Z"
+    },
+    {
+      "id": "act-a2-60-order",
+      "type": "order",
+      "title": "Put Words in Order (A2 Review)",
+      "description": "Arrange the words to form correct complex sentences using A2 grammar.",
+      "content": {
+        "type": "order",
+        "isUnjumble": true,
+        "items": [
+          {
+            "words": [
+              "Я",
+              "вчу",
+              "українську",
+              "мову",
+              "щоб",
+              "розмовляти",
+              "з",
+              "друзями",
+              "вільно"
+            ],
+            "answer": "Я вчу українську мову, щоб розмовляти з друзями вільно.",
+            "translation": "I'm learning Ukrainian to speak with friends freely."
+          },
+          {
+            "words": [
+              "Це",
+              "місто",
+              "де",
+              "я",
+              "народився",
+              "дуже",
+              "красиве",
+              "та",
+              "історичне"
+            ],
+            "answer": "Це місто, де я народився, дуже красиве та історичне.",
+            "translation": "This is the city where I was born, very beautiful and historic."
+          },
+          {
+            "words": [
+              "Хоча",
+              "було",
+              "дуже",
+              "холодно",
+              "ми",
+              "пішли",
+              "на",
+              "прогулянку",
+              "в",
+              "парк"
+            ],
+            "answer": "Хоча було дуже холодно, ми пішли на прогулянку в парк.",
+            "translation": "Although it was very cold, we went for a walk in the park."
+          },
+          {
+            "words": [
+              "У",
+              "мене",
+              "болить",
+              "голова",
+              "після",
+              "довгого",
+              "робочого",
+              "дня",
+              "за",
+              "комп'ютером"
+            ],
+            "answer": "У мене болить голова після довгого робочого дня за комп'ютером.",
+            "translation": "My head hurts after a long work day at the computer."
+          },
+          {
+            "words": [
+              "Я",
+              "прочитав",
+              "цю",
+              "книгу",
+              "яку",
+              "ти",
+              "рекомендував",
+              "мені",
+              "минулого",
+              "місяця"
+            ],
+            "answer": "Я прочитав цю книгу, яку ти рекомендував мені минулого місяця.",
+            "translation": "I read this book that you recommended to me last month."
+          },
+          {
+            "words": [
+              "Він",
+              "працює",
+              "віддалено",
+              "і",
+              "не",
+              "ходить",
+              "в",
+              "офіс",
+              "щодня"
+            ],
+            "answer": "Він працює віддалено і не ходить в офіс щодня.",
+            "translation": "He works remotely and doesn't go to the office every day."
+          },
+          {
+            "words": [
+              "Я",
+              "згоден",
+              "з",
+              "вашою",
+              "думкою",
+              "про",
+              "цей",
+              "важливий",
+              "проект"
+            ],
+            "answer": "Я згоден з вашою думкою про цей важливий проект.",
+            "translation": "I agree with your opinion about this important project."
+          },
+          {
+            "words": [
+              "Магазин",
+              "уже",
+              "закрито",
+              "на",
+              "ніч",
+              "о",
+              "десятій",
+              "годині",
+              "вечора"
+            ],
+            "answer": "Магазин уже закрито на ніч о десятій годині вечора.",
+            "translation": "The store is already closed for the night at ten o'clock in the evening."
+          },
+          {
+            "words": [
+              "Я",
+              "купив",
+              "собі",
+              "новий",
+              "телефон",
+              "у",
+              "магазині",
+              "електроніки",
+              "вчора"
+            ],
+            "answer": "Я купив собі новий телефон у магазині електроніки вчора.",
+            "translation": "I bought myself a new phone at the electronics store yesterday."
+          },
+          {
+            "words": [
+              "Це",
+              "друг",
+              "з",
+              "яким",
+              "я",
+              "подорожував",
+              "по",
+              "Європі",
+              "минулого",
+              "літа"
+            ],
+            "answer": "Це друг, з яким я подорожував по Європі минулого літа.",
+            "translation": "This is the friend with whom I traveled around Europe last summer."
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A2",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-03T12:29:30.368Z",
+      "modifiedAt": "2025-12-03T12:29:30.368Z"
     }
   ],
   "vocabulary": {

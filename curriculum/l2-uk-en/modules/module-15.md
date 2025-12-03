@@ -228,91 +228,91 @@ Example:
 
 ## fill-in: Directions and Location
 
-> Choose the correct word to complete each direction or location phrase.
+> Choose the correct word to complete each direction or location phrase. (A1: 3-5 words)
 
-1. ___ тут найближче метро, будь ласка? (Where is the nearest metro here, please?)
+1. ___ тут метро? (Where is the metro?)
    > [!answer] Де
-   > [!options] Де | Що | Хто | Як
+   > [!options] Де | Що | Хто
 
-2. Йдіть ___ два квартали до великого банку. (Go straight two blocks to the big bank.)
+2. Йдіть ___ два квартали. (Go straight two blocks.)
    > [!answer] прямо
-   > [!options] праворуч | ліворуч | прямо | назад
+   > [!options] праворуч | ліворуч | прямо
 
-3. Поверніть ___ біля великого нового магазину. (Turn right near the big new store.)
+3. Поверніть ___ біля банку. (Turn right near the bank.)
    > [!answer] праворуч
-   > [!options] прямо | праворуч | назад | далеко
+   > [!options] прямо | праворуч | назад
 
-4. Великий банк знаходиться ___ старого метро. (The big bank is located near the old metro.)
+4. Банк знаходиться ___ метро. (The bank is near the metro.)
    > [!answer] біля
-   > [!options] на | в | біля | за
+   > [!options] на | в | біля
 
-5. ___ цю широку вулицю біля світлофора. (Cross this wide street near the traffic light.)
+5. ___ цю вулицю. (Cross this street.)
    > [!answer] Перейдіть
-   > [!options] Йдіть | Поверніть | Перейдіть | Пройдіть
+   > [!options] Йдіть | Поверніть | Перейдіть
 
-6. Нова аптека знаходиться ___ великого готелю. (The new pharmacy is located opposite the big hotel.)
+6. Аптека ___ готелю. (The pharmacy is opposite the hotel.)
    > [!answer] навпроти
-   > [!options] біля | навпроти | за | до
+   > [!options] біля | навпроти | за
 
-7. Скажіть, будь ласка, ___ найближча аптека? (Tell me please, where is the nearest pharmacy?)
-   > [!answer] де
-   > [!options] хто | що | де | як
-
-8. Йдіть прямо ___ центральної станції метро. (Go straight to the central metro station.)
-   > [!answer] до
-   > [!options] на | в | біля | до
-
-9. Невелика аптека знаходиться ___ цим рогом. (The small pharmacy is around this corner.)
+7. Магазин ___ рогом. (The store is around the corner.)
    > [!answer] за
-   > [!options] біля | на | за | до
+   > [!options] до | за | біля
 
-10. Найближче метро ___ дуже далеко звідси. (The nearest metro is not very far from here.)
-   > [!answer] не
-   > [!options] не | так | тут | там
+8. Йдіть ___ станції. (Go to the station.)
+   > [!answer] до
+   > [!options] біля | на | до
+
+9. Метро ___ близько. (The metro is close.)
+   > [!answer] тут
+   > [!options] там | тут | далеко
+
+10. ___ прямо і праворуч. (Go straight and right.)
+    > [!answer] Йдіть
+    > [!options] Йдіть | Де | Що
 
 ## unjumble: Build the Sentence
 
-> Arrange the words in the correct order. Sentences range from 5-7 words.
+> Arrange the words in the correct order. (A1: 4-6 words)
 
-1. метро / Де / найближче / тут / будь / ласка
-   > [!answer] Де тут найближче метро, будь ласка?
-   > (Where is the nearest metro here, please?) [6 words]
+1. метро / Де / тут
+   > [!answer] Де тут метро?
+   > (Where is the metro here?) [3 words]
 
-2. прямо / Йдіть / два / квартали / до / банку
-   > [!answer] Йдіть прямо два квартали до банку.
-   > (Go straight two blocks to the bank.) [6 words]
+2. прямо / Йдіть / два / квартали
+   > [!answer] Йдіть прямо два квартали.
+   > (Go straight two blocks.) [4 words]
 
-3. праворуч / Поверніть / біля / великого / нового / магазину
-   > [!answer] Поверніть праворуч біля великого нового магазину.
-   > (Turn right near the big new store.) [6 words]
+3. праворуч / Поверніть / біля / банку
+   > [!answer] Поверніть праворуч біля банку.
+   > (Turn right near the bank.) [4 words]
 
-4. вулицю / Перейдіть / цю / широку / біля / світлофора
-   > [!answer] Перейдіть цю широку вулицю біля світлофора.
-   > (Cross this wide street near the traffic light.) [6 words]
+4. вулицю / Перейдіть / цю
+   > [!answer] Перейдіть цю вулицю.
+   > (Cross this street.) [3 words]
 
-5. метро / біля / Банк / великого / старого / знаходиться
-   > [!answer] Банк знаходиться біля великого старого метро.
-   > (The bank is located near the big old metro.) [6 words]
+5. метро / біля / Банк / знаходиться
+   > [!answer] Банк знаходиться біля метро.
+   > (The bank is near the metro.) [4 words]
 
-6. рогом / за / Аптека / цим / нова / невелика
-   > [!answer] Нова невелика аптека за цим рогом.
-   > (The new small pharmacy is around this corner.) [6 words]
+6. рогом / за / Аптека / цим
+   > [!answer] Аптека за цим рогом.
+   > (The pharmacy is around this corner.) [4 words]
 
-7. ласка / будь / де / Скажіть / найближча / аптека / нова
-   > [!answer] Скажіть, будь ласка, де найближча нова аптека?
-   > (Tell me please, where is the nearest new pharmacy?) [7 words]
+7. ліворуч / Поверніть / і / прямо
+   > [!answer] Поверніть ліворуч і прямо.
+   > (Turn left and straight.) [4 words]
 
-8. ліворуч / потім / Йдіть / прямо / поверніть / біля / парку
-   > [!answer] Йдіть прямо, потім поверніть ліворуч біля парку.
-   > (Go straight, then turn left near the park.) [7 words]
+8. станції / до / Йдіть / цієї
+   > [!answer] Йдіть до цієї станції.
+   > (Go to this station.) [4 words]
 
-9. Де / банк / тут / найближчий / великий / український
-   > [!answer] Де тут найближчий великий український банк?
-   > (Where is the nearest big Ukrainian bank here?) [6 words]
+9. близько / Метро / тут / дуже
+   > [!answer] Метро тут дуже близько.
+   > (The metro is very close here.) [4 words]
 
-10. три / квартали / Пройдіть / прямо / до / станції / метро
-    > [!answer] Пройдіть прямо три квартали до станції метро.
-    > (Go straight three blocks to the metro station.) [7 words]
+10. аптека / найближча / Де / тут
+    > [!answer] Де тут найближча аптека?
+    > (Where is the nearest pharmacy here?) [4 words]
 
 ## match-up: Match the Pairs
 

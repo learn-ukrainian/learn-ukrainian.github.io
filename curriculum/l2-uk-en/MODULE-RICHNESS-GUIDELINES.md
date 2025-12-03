@@ -12,14 +12,76 @@ Modules should be **rich, engaging, and comprehensive**. One curriculum module m
 
 ### Minimum Content Requirements
 
-| Level | Min Duration | Min Vocabulary | Min Activities | Depth Expectation |
-|-------|--------------|----------------|----------------|-------------------|
-| A1 | 30 min | 15 words | 3 | Foundation building |
-| A2 | 35 min | 20 words | 4 | Skill expansion |
-| B1 | 40 min | 25 words | 4 | Complex integration |
-| B2 | 45 min | 30 words | 5 | Professional depth |
-| C1 | 50 min | 30 words | 5 | Near-native richness |
-| Tracks | 45-60 min | 35 words | 5 | Domain expertise |
+| Level | Min Duration | Min Vocabulary | Activity Count | Items per Activity | Depth Expectation |
+|-------|--------------|----------------|----------------|-------------------|-------------------|
+| A1 | 30 min | 15 words | 6 | 10 | Foundation building |
+| A2 | 35 min | 20 words | 8 | 10 | Skill expansion |
+| A2+ | 40 min | 22 words | 10 | 15 | Transition to B1 |
+| B1 | 40 min | 25 words | 12 | 20 | Complex integration |
+| B2 | 45 min | 30 words | 14 | 20 | Professional depth |
+| C1 | 50 min | 30 words | 14 | 20 | Near-native richness |
+| Tracks | 45-60 min | 35 words | 14 | 20 | Domain expertise |
+
+### Activity Type Priority
+
+When adding activities to a module, prioritize in this order:
+
+1. **quiz** - Multiple choice comprehension
+2. **match-up** - Vocabulary associations
+3. **group-sort** - Categorization skills
+4. **true-false** - Statement validation
+5. **select** - Word selection
+6. **order** - Sequence building
+7. **fill-in** - Gap completion (sentence complexity applies)
+8. **unjumble** - Word ordering (sentence complexity applies)
+
+**Rationale:** fill-in and unjumble are highest cognitive load activities. Build comprehension with lower-load activities first, then challenge with production tasks.
+
+---
+
+## CEFR Sentence Complexity Standards
+
+Activity sentences must follow CEFR complexity progression:
+
+| Level | Fill-in Words | Unjumble Words | Sentence Structure Examples |
+|-------|---------------|----------------|----------------------------|
+| A1 | 3-5 | 4-6 | Simple isolated phrases: `Я читаю книгу.` |
+| A2 | 6-8 | 8-10 | Simple sentences + connectors: `Я завжди даю мамі квіти на свято.` |
+| A2+ | 8-10 | 10-12 | Subordinate clauses begin: `Він каже, що хоче допомогти своїй сестрі.` |
+| B1 | 10-14 | 12-16 | Complex sentences, conditionals: `Якби я мав більше часу, я б допоміг тобі з роботою.` |
+| B2 | 12-16 | 14-18 | Sophisticated structures, passive: `Було вирішено, що проєкт буде завершено до кінця місяця.` |
+
+### Complexity Progression Principles
+
+1. **A1 (Modules 1-30)**: Foundation
+   - Simple SVO sentences
+   - Basic vocabulary, high-frequency words
+   - No subordinate clauses
+   - Example: `Це моя книга.` (3 words)
+
+2. **A2 (Modules 31-60)**: Expansion
+   - Add adjectives, adverbs, time expressions
+   - Simple connectors (і, але, тому що)
+   - Basic prepositional phrases
+   - Example: `Я завжди читаю цікаві книги ввечері.` (6 words)
+
+3. **A2+ (Modules 61-80)**: Transition
+   - Subordinate clauses with що, який, коли
+   - More complex verb forms
+   - Multiple modifiers
+   - Example: `Дівчина, яка працює в цьому офісі, дуже добре говорить англійською.` (10 words)
+
+4. **B1 (Modules 81-140)**: Integration
+   - Conditional sentences (якщо, якби)
+   - Reported speech
+   - Complex time expressions
+   - Example: `Якби я знав про цю проблему раніше, я б обов'язково допоміг тобі її вирішити.` (14 words)
+
+5. **B2 (Modules 141-190)**: Sophistication
+   - Passive constructions
+   - Abstract vocabulary
+   - Nuanced connectors
+   - Example: `Незважаючи на те, що проєкт був складним, команда успішно завершила його вчасно.` (12 words)
 
 ### Content Depth Indicators
 
