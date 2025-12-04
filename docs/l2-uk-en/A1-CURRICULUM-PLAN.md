@@ -43,7 +43,7 @@ By module 30, learners can:
 - Understand noun gender system
 - Use present tense of common verbs
 - Form basic sentences without 'to be'
-- Count and use numbers 0-100
+- Talk about basic food and drinks
 
 ### Grammar Progression
 
@@ -57,7 +57,7 @@ By module 30, learners can:
 | 06 | Present tense Class I (-ати) | M04 | Action statements |
 | 07 | Questions (чи, що, хто, де) + Negation | M06 | Conversations |
 | 08 | Present tense Class II (-ити) | M06 | More verbs |
-| 09 | Numbers 0-100 | M03 | Prices, quantities |
+| 09 | Food vocabulary | M08 | Eating, drinking |
 | 10 | REVIEW | M01-09 | Consolidation |
 
 ### Vocabulary Plan A1.1 (240 words)
@@ -72,7 +72,7 @@ By module 30, learners can:
 | 06 | 25 | Action verbs | читати, писати, говорити, працювати, знати, розуміти... |
 | 07 | 20 | Question words | що, хто, де, куди, коли, чому, як, скільки, так, ні... |
 | 08 | 25 | More verbs | робити, бачити, хотіти, любити, жити, ходити... |
-| 09 | 35 | Numbers | нуль-сто, гривня, копійка, ціна, дорого, дешево... |
+| 09 | 30 | Food | їжа, сніданок, обід, вечеря, борщ, вареники, хліб... |
 | 10 | 10 | Review | (consolidation of above) |
 
 ### Module Content Specifications
@@ -213,22 +213,21 @@ By module 30, learners can:
 
 ---
 
-#### Module 09: Numbers & Money
-**Grammar:** Cardinals 0-100, один agrees in gender
+#### Module 09: Food & Drinks
+**Grammar:** None (vocabulary focus) - uses verbs їсти/пити from M08
 
-**Number patterns:**
-- 1: один/одна/одне
-- 2-4: + nominative plural
-- 5-20: + genitive plural
-- 21, 31...: pattern repeats
+**Key patterns:**
+- Це борщ. (This is borscht.)
+- Я їм хліб. (I eat bread.)
+- Вона п'є чай. (She drinks tea.)
 
-**Vocabulary (35 words):**
-нуль, один-двадцять (20), тридцять, сорок, п'ятдесят, шістдесят, сімдесят, вісімдесят, дев'яносто, сто, гривня, копійка, долар, євро, ціна, скільки коштує, дорого, дешево, знижка, решта, платити, рахунок, готівка, картка
+**Vocabulary (30 words):**
+їжа, сніданок, обід, вечеря, борщ, суп, вареники, хліб, м'ясо, курка, риба, овочі, фрукти, яблуко, банан, картопля, помідор, огірок, цибуля, сир, яйце, чай, кава, вода, сік, молоко, смачний, смачно, Смачного!, їсти, пити
 
 **Activities:**
-1. Listen & type: Number dictation
-2. Quiz: Math problems in Ukrainian
-3. Role-play: Buying scenarios
+1. Match-up: Food → category (fruit, vegetable, meat, drink)
+2. Quiz: What do Ukrainians eat for breakfast/lunch/dinner?
+3. Gap-fill: Complete sentences with food vocabulary
 
 ---
 
@@ -240,7 +239,7 @@ By module 30, learners can:
 2. Gender identification
 3. Verb conjugation (Class I + II)
 4. Question formation
-5. Number comprehension
+5. Food vocabulary comprehension
 6. Basic dialogue completion
 
 **Vocabulary (10 words):** Review selection
@@ -266,7 +265,7 @@ By module 30, learners can:
 | 14 | Possessive pronouns | M04 pronouns | "My/your X" |
 | 15 | City vocabulary | M13 locative | Navigation |
 | 16 | Genitive (absence) | M03 gender | "There is no X" |
-| 17 | Genitive (numbers 5+) | M09, M16 | "Five apples" |
+| 17 | Numbers 0-100 + money | M16 genitive | Prices, quantities |
 | 18 | Food vocabulary | M11, M16, M17 | Restaurant |
 | 19 | Functional: Café | M11-18 | Real interaction |
 | 20 | REVIEW | M11-19 | Consolidation |
@@ -291,7 +290,7 @@ By module 30, learners can:
 | 14 | 20 | Possessives | мій, твій, його, її, наш, ваш, їхній + forms |
 | 15 | 40 | City | вулиця, площа, міст, зупинка, станція, напрямки... |
 | 16 | 25 | Absence | немає, нема, без + common nouns in genitive |
-| 17 | 25 | Quantities | багато, мало, кілька, трохи, пляшка води... |
+| 17 | 35 | Numbers | нуль-сто, гривня, копійка, ціна, дорого, дешево... |
 | 18 | 45 | Food/Restaurant | меню, страва, напій, офіціант, рахунок... |
 | 19 | 10 | Café phrases | Що порекомендуєте? Можна рахунок?... |
 | 20 | 10 | Review | (consolidation of above) |
@@ -448,27 +447,26 @@ By module 30, learners can:
 
 ---
 
-#### Module 17: The Genitive II - Counting
-**Grammar:** Genitive with numbers 2-4 (nom pl), 5+ (gen pl)
+#### Module 17: Numbers & Money
+**Grammar:** Cardinals 0-100, numbers 5+ use genitive plural (from M16)
 
-**Number agreement:**
-- 1: nominative singular (одна книга)
-- 2-4: nominative plural (дві книги)
-- 5-20: genitive plural (п'ять книг)
-- 21: nominative singular (двадцять одна книга)
+**Number patterns:**
+- 1: один/одна/одне (+ nominative singular)
+- 2-4: + nominative plural (дві книги)
+- 5-20: + genitive plural (п'ять книг)
+- 21, 31...: pattern repeats
 
-**Genitive plural patterns:**
-- Feminine -а: -∅ (книга → книг)
-- Masculine: -ів/-ей (студент → студентів)
-- Neuter: -∅/-ів (вікно → вікон)
+**Currency:**
+- гривня (1), гривні (2-4), гривень (5+)
+- Скільки коштує? (How much does it cost?)
 
-**Vocabulary (25 words):**
-два/дві, три, чотири, п'ять... (review), раз, рази, разів, штука, пара, кілограм, літр, метр, кілометр, година, хвилина, секунда, день, тиждень, місяць, рік, багато, мало, кілька, декілька, трохи
+**Vocabulary (35 words):**
+нуль, один-двадцять (20), тридцять, сорок, п'ятдесят, шістдесят, сімдесят, вісімдесят, дев'яносто, сто, гривня, копійка, долар, євро, ціна, скільки коштує, дорого, дешево, знижка, решта, платити, рахунок, готівка, картка
 
 **Activities:**
-1. Quiz: Choose correct form after number
-2. Gap-fill: "X items" with correct case
-3. Match-up: Number → case required
+1. Listen & type: Number dictation
+2. Quiz: Math problems in Ukrainian
+3. Role-play: Buying scenarios with genitive plural
 
 ---
 
@@ -814,7 +812,7 @@ By module 30, learners can:
 | Household | 65 | 03, 05 |
 | Food & Drink | 70 | 03, 18 |
 | City & Transport | 50 | 15 |
-| Numbers & Money | 40 | 09 |
+| Numbers & Money | 40 | 17 |
 | Time & Calendar | 45 | 23 |
 | Verbs (action) | 80 | 06, 08, 25 |
 | Question words | 25 | 07 |
@@ -881,8 +879,12 @@ M04 Pronouns
   └── M14 Possessives
         └── M29 Family
 
-M09 Numbers
-  └── M17 Genitive + Numbers
+M08 Verbs II
+  └── M09 Food
+        └── M18 Food (advanced)
+
+M16 Genitive I
+  └── M17 Numbers (uses genitive plural)
         └── M23 Calendar
 
 M26 Adjectives

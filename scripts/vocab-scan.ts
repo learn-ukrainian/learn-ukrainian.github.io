@@ -340,8 +340,11 @@ function main(): void {
   let results: ScanResult[];
 
   if (moduleNum) {
-    // Process single module
-    const modulePath = path.join(curriculumPath, 'modules', `module-${moduleNum}.md`);
+    // Process single module - try both padded and unpadded filenames
+    let modulePath = path.join(curriculumPath, 'modules', `module-${moduleNum.toString().padStart(2, '0')}.md`);
+    if (!fs.existsSync(modulePath)) {
+      modulePath = path.join(curriculumPath, 'modules', `module-${moduleNum}.md`);
+    }
     if (!fs.existsSync(modulePath)) {
       console.error(`Module not found: ${modulePath}`);
       process.exit(1);

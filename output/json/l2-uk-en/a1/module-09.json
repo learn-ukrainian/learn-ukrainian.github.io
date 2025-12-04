@@ -13,24 +13,24 @@
     "moduleNumber": 9,
     "moduleType": "vocabulary",
     "immersionLevel": 0.3,
-    "title": "Numbers & Money",
-    "subtitle": "Counting & Currency",
-    "description": "Count from 0 to 100 in Ukrainian",
+    "title": "Food & Drinks",
+    "subtitle": "Basic Food Vocabulary",
+    "description": "Learn essential food vocabulary",
     "objectives": [
-      "Count from 0 to 100 in Ukrainian",
-      "Understand Ukrainian currency (гривня)",
-      "Learn how numbers affect noun endings",
-      "Handle basic shopping transactions"
+      "Learn essential food vocabulary",
+      "Identify common Ukrainian foods and drinks",
+      "Talk about meals of the day",
+      "Use є/немає with food items"
     ],
     "grammarFocus": [
-      "Cardinal numbers 0-100",
-      "Number-noun agreement (1, 2-4, 5+)",
-      "Gender agreement with один/одна/одне"
+      "Noun genders with food vocabulary",
+      "Using є (there is) / немає (there is no)",
+      "Identifying foods with \"Це...\" (This is...)"
     ],
     "tags": [
       "vocabulary",
-      "numbers",
-      "money",
+      "food",
+      "drinks",
       "practical"
     ],
     "totalDuration": 50,
@@ -41,134 +41,154 @@
         "name": "Вступ",
         "nameEn": "Introduction",
         "type": "intro",
-        "content": "## warm-up\n\n### Numbers Are Everywhere\n\nShopping, telling time, giving your phone number, ordering \"two coffees\" - numbers are essential! Ukrainian numbers have some twists English speakers need to know:\n\n1. **Один** (one) changes for gender: один, одна, одне\n2. Numbers 2-4 take a different noun form than 5+\n3. Some numbers have tricky pronunciation\n\n> 💡 **Did You Know?**\n>\n> Ukrainian uses a \"long scale\" thinking for large numbers, like most of Europe. But for everyday A1 purposes, we'll focus on 0-100 - enough for prices, time, ages, and phone numbers!\n\n## presentation\n\n### Numbers 0-10\n\n| Number | Ukrainian | Transliteration |\n|--------|-----------|-----------------|\n| 0 | нуль | nul' |\n| 1 | один/одна/одне | odyn/odna/odne |\n| 2 | два/дві | dva/dvi |\n| 3 | три | try |\n| 4 | чотири | chotyry |\n| 5 | п'ять | pyat' |\n| 6 | шість | shist' |\n| 7 | сім | sim |\n| 8 | вісім | visim |\n| 9 | дев'ять | devyat' |\n| 10 | десять | desyat' |\n\n> ⚡ **Pro Tip: Gender of \"One\" and \"Two\"**\n>\n> **Один** changes for gender:\n> - один студент (one male student)\n> - одна книга (one book - feminine)\n> - одне вікно (one window - neuter)\n>\n> **Два/дві** changes only for feminine:\n> - два студенти, два вікна (masc/neut)\n> - дві книги, дві жінки (feminine)\n\n### Numbers 11-19\n\n| Number | Ukrainian | Pattern |\n|--------|-----------|---------|\n| 11 | одинадцять | один + на + дцять |\n| 12 | дванадцять | два + на + дцять |\n| 13 | тринадцять | три + на + дцять |\n| 14 | чотирнадцять | чотир + на + дцять |\n| 15 | п'ятнадцять | п'ят + на + дцять |\n| 16 | шістнадцять | шіст + на + дцять |\n| 17 | сімнадцять | сім + на + дцять |\n| 18 | вісімнадцять | вісім + на + дцять |\n| 19 | дев'ятнадцять | дев'ят + на + дцять |\n\n> 📜 **History Bite: The -надцять Pattern**\n>\n> The suffix **-надцять** comes from \"на десять\" (on ten). So \"одинадцять\" literally means \"one on ten\" = eleven. This pattern exists in most Slavic languages and even has a distant cousin in English: \"eleven\" comes from \"one left (over ten).\"\n\n### Numbers 20-100\n\n| Number | Ukrainian | Transliteration |\n|--------|-----------|-----------------|\n| 20 | двадцять | dvadtsyat' |\n| 30 | тридцять | trydtsyat' |\n| 40 | сорок | sorok |\n| 50 | п'ятдесят | pyatdesyat |\n| 60 | шістдесят | shistdesyat |\n| 70 | сімдесят | simdesyat |\n| 80 | вісімдесят | visimdesyat |\n| 90 | дев'яносто | devyanosto |\n| 100 | сто | sto |\n\n**Compound numbers:** 21 = двадцять один, 35 = тридцять п'ять, 99 = дев'яносто дев'ять\n\n> 🎯 **Fun Fact: Why Is 40 Different?**\n>\n> Notice **сорок** (40) doesn't follow the pattern? This word comes from an old word for a bundle of 40 sable pelts - a standard trade unit in medieval times! It replaced the regular form \"четиридесят\" centuries ago. Similar quirks exist in French (quatre-vingts = 4×20) and Danish.\n\n### Number + Noun Agreement\n\nThis is crucial! The noun form changes based on the number:\n\n| Number | Noun Form | Example |\n|--------|-----------|---------|\n| 1 | Nominative singular | одна книга (one book) |\n| 2, 3, 4 | Nominative plural | дві книги (two books) |\n| 5-20 | Genitive plural | п'ять книг (five books) |\n| 21 | Nominative singular | двадцять одна книга |\n| 22-24 | Nominative plural | двадцять дві книги |\n| 25-30 | Genitive plural | двадцять п'ять книг |\n\n> 🔗 **Language Link: The 5+ Rule**\n>\n> Why genitive plural after 5+? In Old Slavic, numbers 5-10 were nouns meaning \"a fiver, a sixer\" etc. So \"п'ять книг\" originally meant \"a fiver of books\" - hence genitive (possession). This ancient grammar fossilized into modern Ukrainian!\n\n### Ukrainian Currency: Гривня\n\n| Currency | Ukrainian | Transliteration |\n|----------|-----------|-----------------|\n| hryvnia | гривня | hryvnya |\n| kopeck | копійка | kopiyka |\n\n**Price patterns:**\n- 1 гривня, 2-4 гривні, 5+ гривень\n- 1 копійка, 2-4 копійки, 5+ копійок\n\n> 🎭 **Culture Corner: The Гривня**\n>\n> The **гривня** (₴) has been Ukraine's currency since 1996. The name comes from a medieval unit of weight/currency - a silver neckpiece worn by Kyivan Rus' nobility. The word is related to \"грива\" (mane) - the neckpiece resembled a horse's mane! Current banknotes feature famous Ukrainians like Taras Shevchenko (100₴) and Bohdan Khmelnytsky (5₴).\n\n## practice\n\n### Number Dictation\n\nRead these numbers:\n- 15 → п'ятнадцять\n- 27 → двадцять сім\n- 43 → сорок три\n- 68 → шістдесят вісім\n- 91 → дев'яносто один\n\n### Prices\n\nSay these prices:\n- 5₴ → п'ять гривень\n- 12₴ → дванадцять гривень\n- 24₴ → двадцять чотири гривні\n- 51₴ → п'ятдесят одна гривня\n- 100₴ → сто гривень\n\n> 🌍 **Real World: Shopping Phrases**\n>\n> Essential phrases for shopping:\n> - **Скільки коштує?** - How much does it cost?\n> - **Це коштує 50 гривень.** - This costs 50 hryvnias.\n> - **Дорого!** - Expensive!\n> - **Дешево!** - Cheap!\n> - **Є знижка?** - Is there a discount?\n> - **Готівкою чи карткою?** - Cash or card?\n> - **Решта - ваша.** - Keep the change.\n\n## production\n\n### Count and Calculate\n\n1. 10 + 5 = ___ (п'ятнадцять)\n2. 20 + 3 = ___ (двадцять три)\n3. 50 - 10 = ___ (сорок)\n4. 100 - 1 = ___ (дев'яносто дев'ять)\n\n### Shopping Scenario\n\nPractice: You're buying items. Say the price:\n- Кава: 35₴ → Кава коштує тридцять п'ять гривень.\n- Книга: 120₴ → Книга коштує сто двадцять гривень.\n- Хліб: 18₴ → Хліб коштує вісімнадцять гривень.\n\n---\n\n---\n\n---\n\n---\n\n---\n\n\n---\n\n\n---"
+        "content": "## warm-up\n\n### Що це? Це їжа!\n\nFood is central to Ukrainian culture. In this module, you'll learn to identify foods and talk about what's available using є (there is) and немає (there is no).\n\n> 💡 **Did You Know?**\n>\n> Ukrainian cuisine is rich and hearty, developed for cold winters and hard physical work. Борщ (beet soup) is so iconic that UNESCO added it to the list of Intangible Cultural Heritage! Other staples include вареники (dumplings), сало (cured pork fat), and голубці (stuffed cabbage rolls).\n\n## presentation\n\n### Meals of the Day\n\n| Ukrainian | English | Time |\n|-----------|---------|------|\n| сніданок | breakfast | morning |\n| обід | lunch | midday |\n| вечеря | dinner/supper | evening |\n| перекус | snack | anytime |\n\n**Basic phrases:**\n- Що це? Це сніданок. (What is this? This is breakfast.)\n- Є обід? (Is there lunch?)\n- Що на сніданок? (What's for breakfast?)\n\n> 🎭 **Culture Corner: Ukrainian Meal Traditions**\n>\n> - **Сніданок** is often light: каша (porridge)\n> - **Обід** is the main meal, traditionally hearty with soup + main course\n> - **Вечеря** is lighter, often leftovers or simple dishes\n>\n> Ukrainians say \"Смачного!\" (Bon appétit!) before eating.\n\n### Fruits (Фрукти)\n\n| Ukrainian | English | Gender |\n|-----------|---------|--------|\n| яблуко | apple | n |\n| банан | banana | m |\n| апельсин | orange | m |\n| лимон | lemon | m |\n| груша | pear | f |\n| виноград | grapes | m |\n| полуниця | strawberry | f |\n| кавун | watermelon | m |\n\n> ⚡ **Pro Tip: Gender Recognition**\n>\n> Notice the patterns:\n> - **Masculine:** банан, апельсин, лимон, кавун (consonant endings)\n> - **Feminine:** груша, полуниця (-а endings)\n> - **Neuter:** яблуко (-о ending)\n\n### Vegetables (Овочі)\n\n| Ukrainian | English | Gender |\n|-----------|---------|--------|\n| картопля | potato | f |\n| морква | carrot | f |\n| цибуля | onion | f |\n| помідор | tomato | m |\n| огірок | cucumber | m |\n| капуста | cabbage | f |\n| буряк | beet | m |\n\n> 📜 **History Bite: Potato = \"Earth Apple\"**\n>\n> \"Картопля\" came to Ukrainian via German (Kartoffel), which came from Italian \"tartufolo\" (truffle - because they grow underground). Many European languages have similar words. In some Ukrainian dialects, you'll hear \"бульба\" - another word for potato!\n\n### Meat & Protein (М'ясо)\n\n| Ukrainian | English | Gender |\n|-----------|---------|--------|\n| м'ясо | meat | n |\n| курка | chicken | f |\n| риба | fish | f |\n| яйце | egg | n |\n| ковбаса | sausage | f |\n| сало | pork fat | n |\n\n> 🎯 **Fun Fact: Сало Culture**\n>\n> Сало (cured pork fat) is so beloved in Ukraine that there are festivals dedicated to it, a monument to it in Lviv, and countless jokes about Ukrainians and сало. It's typically served thinly sliced with garlic on black bread!\n\n### Dairy (Молочні продукти)\n\n| Ukrainian | English | Gender |\n|-----------|---------|--------|\n| молоко | milk | n |\n| сир | cheese/cottage cheese | m |\n| сметана | sour cream | f |\n| масло | butter | n |\n| йогурт | yogurt | m |\n\n> 🔗 **Language Link: Сир vs Cheese**\n>\n> \"Сир\" traditionally means cottage cheese. For hard/aged cheese, Ukrainians use borrowed words like \"пармезан.\" This can cause confusion!\n\n### Drinks (Напої)\n\n| Ukrainian | English | Gender |\n|-----------|---------|--------|\n| вода | water | f |\n| кава | coffee | f |\n| чай | tea | m |\n| сік | juice | m |\n| молоко | milk | n |\n| пиво | beer | n |\n| вино | wine | n |\n\n### Other Foods\n\n| Ukrainian | English | Gender |\n|-----------|---------|--------|\n| хліб | bread | m |\n| рис | rice | m |\n| каша | porridge/cereal | f |\n| суп | soup | m |\n| борщ | borscht | m |\n| вареники | dumplings | pl |\n| салат | salad | m |\n| піца | pizza | f |\n\n> 🌍 **Real World: Simple Food Phrases**\n>\n> Use what you know:\n> - **Що це?** - What is this?\n> - **Це борщ.** - This is borscht.\n> - **Є хліб?** - Is there bread?\n> - **Так, є.** - Yes, there is.\n> - **Ні, хліб не тут.** - No, the bread isn't here.\n> - **Смачного!** - Bon appétit!\n\n## practice\n\n### Identify Foods\n\nWhat is it?\n1. Це ___. (This is borscht.)\n   > [!answer] борщ\n2. Це ___. (This is bread.)\n   > [!answer] хліб\n3. Це ___. (This is coffee.)\n   > [!answer] кава\n4. Це ___. (This is an apple.)\n   > [!answer] яблуко\n\n### Є or Немає?\n\nComplete with є (there is) or немає (there is no):\n1. ___ хліб? Так, є! (Is there bread? Yes, there is!)\n   > [!answer] Є\n2. ___ молоко? Ні, ___. (Is there milk? No, there isn't.)\n   > [!answer] Є, немає\n3. Тут ___ борщ. (There is borscht here.)\n   > [!answer] є\n4. ___ кава? Ні, ___. (Is there coffee? No, there isn't.)\n   > [!answer] Є, немає\n\n### Talk About Meals\n\nAnswer in Ukrainian:\n1. Що на сніданок? (What's for breakfast?)\n   > [!answer] (Answers vary: Каша. / Хліб. / Яйце.)\n2. Що на обід? (What's for lunch?)\n   > [!answer] (Answers vary: Борщ. / Суп.)\n3. Що на вечерю? (What's for dinner?)\n   > [!answer] (Answers vary: Риба. / М'ясо.)\n\n## production\n\n### Food Questions\n\nPractice asking and answering:\n1. Є молоко? — Так, є. / Ні, немає.\n2. Є хліб? — Так, є. / Ні, немає.\n3. Що це? — Це вареники.\n4. Що на обід? — Борщ.\n\n---\n\n---\n\n---\n\n---\n\n---\n\n\n---\n\n\n---"
       },
       {
-        "id": "section-number-patterns",
-        "name": "Number Patterns",
+        "id": "section-food-phrases",
+        "name": "Food Phrases",
         "type": "content",
-        "content": "## Numbers 0-100\n\n| Range | Pattern | Examples |\n|-------|---------|----------|\n| 0-10 | Basic | нуль, один, два... десять |\n| 11-19 | X + надцять | одинадцять, дванадцять... |\n| 20, 30 | X + дцять | двадцять, тридцять |\n| 40 | Irregular | сорок |\n| 50-80 | X + десят | п'ятдесят, шістдесят... |\n| 90 | Irregular | дев'яносто |\n| 100 | Irregular | сто |\n\n## Number-Noun Agreement\n\n| Number | Noun Case | Example |\n|--------|-----------|---------|\n| 1 (21, 31...) | Nom. sing. | одна книга |\n| 2-4 (22-24...) | Nom. plural | дві книги |\n| 5-20 (25-30...) | Gen. plural | п'ять книг |\n\n---"
+        "content": "## Basic Questions\n\n| Ukrainian | English |\n|-----------|---------|\n| Що це? | What is this? |\n| Це борщ. | This is borscht. |\n| Є хліб? | Is there bread? |\n| Так, є. | Yes, there is. |\n| Ні, немає. | No, there isn't. |\n\n## Meals\n\n| Ukrainian | English |\n|-----------|---------|\n| Що на сніданок? | What's for breakfast? |\n| Що на обід? | What's for lunch? |\n| Що на вечерю? | What's for dinner? |\n| Смачного! | Bon appétit! |\n\n---"
       },
       {
         "id": "section-summary",
         "name": "Підсумок",
         "nameEn": "Summary",
         "type": "summary",
-        "content": "> 💡 **What You Learned Today**\n>\n> - Numbers 0-100 in Ukrainian\n> - **Один** agrees in gender (один/одна/одне)\n> - **Два/дві** - дві for feminine nouns\n> - **Сорок** (40) and **дев'яносто** (90) are irregular\n> - Number-noun agreement: 1 = nom.sg., 2-4 = nom.pl., 5+ = gen.pl.\n> - Currency: гривня (₴), копійка\n> - Shopping phrases: Скільки коштує? Дорого! Дешево!\n\n> 🎯 **Coming Next**\n>\n> Module 10 is your first **Checkpoint** - a review of everything in A1.1:\n> - Cyrillic alphabet\n> - Noun genders\n> - Verb conjugation (Class I & II)\n> - Questions and negation\n> - Numbers"
+        "content": "> 💡 **What You Learned Today**\n>\n> - Meals: сніданок, обід, вечеря\n> - Fruits: яблуко, банан, апельсин, груша...\n> - Vegetables: картопля, морква, цибуля, помідор...\n> - Meat & dairy: курка, м'ясо, молоко, сир\n> - Drinks: вода, кава, чай, сік\n> - Traditional foods: борщ, вареники, сало\n> - \"Смачного!\" = Bon appétit!\n> - Gender patterns in food words\n\n> 🎯 **Coming Next**\n>\n> Module 10 is your first **Checkpoint** - a review of everything in A1.1:\n> - Cyrillic alphabet\n> - Noun genders\n> - Verb conjugation (Class I & II)\n> - Questions and negation\n> - Food vocabulary"
       }
     ],
-    "rawMarkdown": "---\nmodule: 9\ntitle: \"Numbers & Money\"\nsubtitle: \"Counting & Currency\"\nlevel: A1\nphase: A1.1\nduration: 50\ntransliteration: full\ntags: [vocabulary, numbers, money, practical]\nobjectives:\n  - Count from 0 to 100 in Ukrainian\n  - Understand Ukrainian currency (гривня)\n  - Learn how numbers affect noun endings\n  - Handle basic shopping transactions\ngrammar:\n  - Cardinal numbers 0-100\n  - Number-noun agreement (1, 2-4, 5+)\n  - Gender agreement with один/одна/одне\n---\n\n# Lesson Content\n\n## warm-up\n\n### Numbers Are Everywhere\n\nShopping, telling time, giving your phone number, ordering \"two coffees\" - numbers are essential! Ukrainian numbers have some twists English speakers need to know:\n\n1. **Один** (one) changes for gender: один, одна, одне\n2. Numbers 2-4 take a different noun form than 5+\n3. Some numbers have tricky pronunciation\n\n> 💡 **Did You Know?**\n>\n> Ukrainian uses a \"long scale\" thinking for large numbers, like most of Europe. But for everyday A1 purposes, we'll focus on 0-100 - enough for prices, time, ages, and phone numbers!\n\n## presentation\n\n### Numbers 0-10\n\n| Number | Ukrainian | Transliteration |\n|--------|-----------|-----------------|\n| 0 | нуль | nul' |\n| 1 | один/одна/одне | odyn/odna/odne |\n| 2 | два/дві | dva/dvi |\n| 3 | три | try |\n| 4 | чотири | chotyry |\n| 5 | п'ять | pyat' |\n| 6 | шість | shist' |\n| 7 | сім | sim |\n| 8 | вісім | visim |\n| 9 | дев'ять | devyat' |\n| 10 | десять | desyat' |\n\n> ⚡ **Pro Tip: Gender of \"One\" and \"Two\"**\n>\n> **Один** changes for gender:\n> - один студент (one male student)\n> - одна книга (one book - feminine)\n> - одне вікно (one window - neuter)\n>\n> **Два/дві** changes only for feminine:\n> - два студенти, два вікна (masc/neut)\n> - дві книги, дві жінки (feminine)\n\n### Numbers 11-19\n\n| Number | Ukrainian | Pattern |\n|--------|-----------|---------|\n| 11 | одинадцять | один + на + дцять |\n| 12 | дванадцять | два + на + дцять |\n| 13 | тринадцять | три + на + дцять |\n| 14 | чотирнадцять | чотир + на + дцять |\n| 15 | п'ятнадцять | п'ят + на + дцять |\n| 16 | шістнадцять | шіст + на + дцять |\n| 17 | сімнадцять | сім + на + дцять |\n| 18 | вісімнадцять | вісім + на + дцять |\n| 19 | дев'ятнадцять | дев'ят + на + дцять |\n\n> 📜 **History Bite: The -надцять Pattern**\n>\n> The suffix **-надцять** comes from \"на десять\" (on ten). So \"одинадцять\" literally means \"one on ten\" = eleven. This pattern exists in most Slavic languages and even has a distant cousin in English: \"eleven\" comes from \"one left (over ten).\"\n\n### Numbers 20-100\n\n| Number | Ukrainian | Transliteration |\n|--------|-----------|-----------------|\n| 20 | двадцять | dvadtsyat' |\n| 30 | тридцять | trydtsyat' |\n| 40 | сорок | sorok |\n| 50 | п'ятдесят | pyatdesyat |\n| 60 | шістдесят | shistdesyat |\n| 70 | сімдесят | simdesyat |\n| 80 | вісімдесят | visimdesyat |\n| 90 | дев'яносто | devyanosto |\n| 100 | сто | sto |\n\n**Compound numbers:** 21 = двадцять один, 35 = тридцять п'ять, 99 = дев'яносто дев'ять\n\n> 🎯 **Fun Fact: Why Is 40 Different?**\n>\n> Notice **сорок** (40) doesn't follow the pattern? This word comes from an old word for a bundle of 40 sable pelts - a standard trade unit in medieval times! It replaced the regular form \"четиридесят\" centuries ago. Similar quirks exist in French (quatre-vingts = 4×20) and Danish.\n\n### Number + Noun Agreement\n\nThis is crucial! The noun form changes based on the number:\n\n| Number | Noun Form | Example |\n|--------|-----------|---------|\n| 1 | Nominative singular | одна книга (one book) |\n| 2, 3, 4 | Nominative plural | дві книги (two books) |\n| 5-20 | Genitive plural | п'ять книг (five books) |\n| 21 | Nominative singular | двадцять одна книга |\n| 22-24 | Nominative plural | двадцять дві книги |\n| 25-30 | Genitive plural | двадцять п'ять книг |\n\n> 🔗 **Language Link: The 5+ Rule**\n>\n> Why genitive plural after 5+? In Old Slavic, numbers 5-10 were nouns meaning \"a fiver, a sixer\" etc. So \"п'ять книг\" originally meant \"a fiver of books\" - hence genitive (possession). This ancient grammar fossilized into modern Ukrainian!\n\n### Ukrainian Currency: Гривня\n\n| Currency | Ukrainian | Transliteration |\n|----------|-----------|-----------------|\n| hryvnia | гривня | hryvnya |\n| kopeck | копійка | kopiyka |\n\n**Price patterns:**\n- 1 гривня, 2-4 гривні, 5+ гривень\n- 1 копійка, 2-4 копійки, 5+ копійок\n\n> 🎭 **Culture Corner: The Гривня**\n>\n> The **гривня** (₴) has been Ukraine's currency since 1996. The name comes from a medieval unit of weight/currency - a silver neckpiece worn by Kyivan Rus' nobility. The word is related to \"грива\" (mane) - the neckpiece resembled a horse's mane! Current banknotes feature famous Ukrainians like Taras Shevchenko (100₴) and Bohdan Khmelnytsky (5₴).\n\n## practice\n\n### Number Dictation\n\nRead these numbers:\n- 15 → п'ятнадцять\n- 27 → двадцять сім\n- 43 → сорок три\n- 68 → шістдесят вісім\n- 91 → дев'яносто один\n\n### Prices\n\nSay these prices:\n- 5₴ → п'ять гривень\n- 12₴ → дванадцять гривень\n- 24₴ → двадцять чотири гривні\n- 51₴ → п'ятдесят одна гривня\n- 100₴ → сто гривень\n\n> 🌍 **Real World: Shopping Phrases**\n>\n> Essential phrases for shopping:\n> - **Скільки коштує?** - How much does it cost?\n> - **Це коштує 50 гривень.** - This costs 50 hryvnias.\n> - **Дорого!** - Expensive!\n> - **Дешево!** - Cheap!\n> - **Є знижка?** - Is there a discount?\n> - **Готівкою чи карткою?** - Cash or card?\n> - **Решта - ваша.** - Keep the change.\n\n## production\n\n### Count and Calculate\n\n1. 10 + 5 = ___ (п'ятнадцять)\n2. 20 + 3 = ___ (двадцять три)\n3. 50 - 10 = ___ (сорок)\n4. 100 - 1 = ___ (дев'яносто дев'ять)\n\n### Shopping Scenario\n\nPractice: You're buying items. Say the price:\n- Кава: 35₴ → Кава коштує тридцять п'ять гривень.\n- Книга: 120₴ → Книга коштує сто двадцять гривень.\n- Хліб: 18₴ → Хліб коштує вісімнадцять гривень.\n\n---\n\n---\n\n---\n\n---\n\n---\n\n# Activities\n\n## fill-in: Complete the Sentences\n\n> Choose the correct number or word.\n\n1. Це коштує ___ гривень. (This costs 5 hryvnias.)\n   > [!answer] п'ять\n   > [!options] один | два | п'ять | десять\n\n2. Я маю ___ гривні. (I have 2 hryvnias.)\n   > [!answer] дві\n   > [!options] один | дві | п'ять | сто\n\n3. Ось ___ гривня. (Here is 1 hryvnia.)\n   > [!answer] одна\n   > [!options] одна | дві | три | п'ять\n\n4. Ціна — ___ гривень. (The price is 10 hryvnias.)\n   > [!answer] десять\n   > [!options] один | три | десять | сто\n\n5. Це ___! (This is expensive!)\n   > [!answer] дорого\n   > [!options] дорого | дешево | добре | багато\n\n6. Є ___? (Is there a discount?)\n   > [!answer] знижка\n   > [!options] гривня | копійка | знижка | картка\n\n7. Готівкою чи ___? (Cash or card?)\n   > [!answer] карткою\n   > [!options] готівкою | карткою | грошима | рештою\n\n8. Тут є ___. (Here is the change.)\n   > [!answer] решта\n   > [!options] решта | ціна | знижка | гривня\n\n9. Скільки це ___? (How much does it cost?)\n   > [!answer] коштує\n   > [!options] коштує | має | знає | бачить\n\n10. Це коштує ___ гривень. (This costs 100 hryvnias.)\n   > [!answer] сто\n   > [!options] десять | двадцять | п'ятдесят | сто\n\n## unjumble: Build the Sentence\n\n> Arrange the words in the correct order. Sentences range from 4-6 words.\n\n1. коштує / Скільки / це / книга\n   > [!answer] Скільки коштує ця книга?\n   > (How much does this book cost?) [4 words]\n\n2. п'ять / Це / гривень / тільки / коштує\n   > [!answer] Це коштує тільки п'ять гривень.\n   > (This costs only 5 hryvnias.) [5 words]\n\n3. гривні / Ось / ваші / дві\n   > [!answer] Ось ваші дві гривні.\n   > (Here are your 2 hryvnias.) [4 words]\n\n4. Одна / гривня / це / мало / дуже\n   > [!answer] Одна гривня — це дуже мало.\n   > (One hryvnia is very little.) [5 words]\n\n5. дорого / Це / занадто / для / мене\n   > [!answer] Це занадто дорого для мене.\n   > (This is too expensive for me.) [5 words]\n\n6. тут / Це / дуже / дешево\n   > [!answer] Тут це дуже дешево.\n   > (It's very cheap here.) [4 words]\n\n7. знижка / Є / яка / сьогодні\n   > [!answer] Яка знижка є сьогодні?\n   > (What discount is there today?) [4 words]\n\n8. карткою / чи / Платите / готівкою / ви\n   > [!answer] Ви платите готівкою чи карткою?\n   > (Do you pay cash or card?) [5 words]\n\n9. Решта / ваша / Дякую / дуже\n   > [!answer] Дякую дуже, решта ваша.\n   > (Thank you very much, keep the change.) [4 words]\n\n10. гривень / сто / Це / разом / коштує\n    > [!answer] Це разом коштує сто гривень.\n    > (This costs 100 hryvnias in total.) [5 words]\n\n## match-up: Match the Pairs\n\n> Match Ukrainian words to their English meanings.\n\n| Left | Right |\n|------|-------|\n| один | one |\n| два | two |\n| три | three |\n| п'ять | five |\n| десять | ten |\n| двадцять | twenty |\n| сто | hundred |\n| гривня | hryvnia |\n| дорого | expensive |\n| дешево | cheap |\n\n## group-sort: Number Agreement Patterns\n\n> Sort numbers by the case/form required for nouns after them.\n\n### Nominative Singular (один)\n- один студент (one student)\n- одна книга (one book)\n- одне вікно (one window)\n\n### Nominative Plural (2-4)\n- два/дві студенти (two students)\n- три книги (three books)\n- чотири вікна (four windows)\n\n### Genitive Plural (5-20, and with certain endings)\n- п'ять студентів (five students)\n- десять книг (ten books)\n- двадцять гривень (twenty hryvnias)\n\n### Irregular Numbers\n- сорок (40) - doesn't follow tens pattern\n- дев'яносто (90) - unique form\n- сто (100) - unique form\n\n## quiz: Number Grammar Rules\n\n> Choose the correct answer.\n\n1. \"Один\" agrees with gender. Which is correct for \"one book\"?\n   - [ ] один книга\n   - [x] одна книга\n   - [ ] одне книга\n   - [ ] одні книга\n   > \"книга\" is feminine, so use feminine form \"одна\"\n\n2. Why is \"дві\" used instead of \"два\" with \"книги\"?\n   - [ ] \"Книга\" is neuter\n   - [x] \"Книга\" is feminine\n   - [ ] Random variation\n   - [ ] \"Два\" is only for people\n   > \"Два\" = masc/neut, \"дві\" = feminine\n\n3. After numbers 2-4, nouns take which form?\n   - [ ] Genitive singular\n   - [x] Nominative plural\n   - [ ] Genitive plural\n   - [ ] Accusative\n   > 2-4 + nominative plural: три книги, чотири столи\n\n4. After numbers 5-20, nouns take which form?\n   - [ ] Nominative singular\n   - [ ] Nominative plural\n   - [x] Genitive plural\n   - [ ] Accusative\n   > 5-20 + genitive plural: п'ять книг, десять столів\n\n5. Which is correct for \"five hryvnias\"?\n   - [ ] п'ять гривня\n   - [ ] п'ять гривні\n   - [x] п'ять гривень\n   - [ ] п'ять гривнями\n   > 5+ requires genitive plural: гривень\n\n6. Why is \"сорок\" (40) considered irregular?\n   - [ ] It ends in a vowel\n   - [x] It doesn't follow the pattern -дцять (like 20, 30)\n   - [ ] It requires a different case\n   - [ ] It has gender forms\n   > Other tens: двадцять, тридцять, but сорок is unique\n\n7. \"Два студента\" vs \"дві студентки\" - why the different forms?\n   - [ ] Два is more common\n   - [ ] студент is foreign\n   - [x] Два = masc/neut, дві = feminine\n   - [ ] Random variation\n   > Gender agreement: два + masc noun, дві + fem noun\n\n8. What case ending do nouns take after \"один\"?\n   - [x] Nominative singular (same as dictionary form)\n   - [ ] Genitive singular\n   - [ ] Nominative plural\n   - [ ] Genitive plural\n   > One + nominative singular: один студент, одна книга\n\n9. Which number form is correct with the neuter noun \"вікно\"?\n   - [ ] дві вікна\n   - [x] два вікна\n   - [ ] двоє вікна\n   - [ ] двох вікна\n   > Neuter nouns take \"два\" (like masculine)\n\n10. \"100 гривень\" uses genitive plural because:\n    - [ ] 100 is a round number\n    - [ ] сто is irregular\n    - [x] Numbers 5+ (including 100) require genitive plural\n    - [ ] гривня is a currency\n    > The 5+ rule applies to all large numbers\n\n## true-false: Number Grammar Rules\n\n> Determine if each statement about Ukrainian numbers is true or false.\n\n- [x] The number \"один\" changes form for gender: один/одна/одне.\n   > Correct! один = masc, одна = fem, одне = neut\n\n- [x] After numbers 5+, nouns take genitive plural (п'ять гривень).\n   > Correct! This is a key rule for number agreement.\n\n- [x] \"Дві\" is the feminine form of \"two\" (used with feminine nouns).\n   > Correct! \"дві книги\" vs \"два столи\"\n\n- [x] \"Сорок\" (40) is irregular - it doesn't follow the -дцять pattern.\n   > Correct! Compare: двадцять, тридцять, but сорок (unique).\n\n- [ ] \"Два гривні\" is grammatically correct.\n   > Incorrect. \"гривня\" is feminine → \"дві гривні\"\n\n- [ ] Numbers 2-4 require genitive plural, just like 5+.\n   > Incorrect. 2-4 take nominative plural (три книги), 5+ takes genitive plural.\n\n- [x] Neuter nouns use \"два\" (not \"дві\") like masculine nouns.\n   > Correct! два вікна, два міста\n\n- [ ] \"Один\" doesn't need to agree with noun gender.\n   > Incorrect. \"Один\" agrees: один студент, одна книга, одне місто.\n\n- [x] \"П'ять студентів\" uses genitive plural form of студент.\n   > Correct! 5+ triggers genitive plural: студент → студентів\n\n- [x] The pattern \"5+ = genitive plural\" applies to numbers like 100, 1000, etc.\n   > Correct! сто гривень, тисяча гривень (all genitive plural)\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| нуль | /nulʲ/ | zero | num | m |\n| один | /ɔˈdɪn/ | one (m) | num | m | одна (f), одне (n) |\n| два | /dvɑ/ | two (m/n) | num | - | дві (f) |\n| три | /trɪ/ | three | num | - |\n| чотири | /tʃɔˈtɪrɪ/ | four | num | - |\n| п'ять | /pjɑtʲ/ | five | num | - |\n| шість | /ʃʲistʲ/ | six | num | - |\n| сім | /sʲim/ | seven | num | - |\n| вісім | /ˈvʲisʲim/ | eight | num | - |\n| дев'ять | /ˈdɛvjɑtʲ/ | nine | num | - |\n| десять | /ˈdɛsʲɑtʲ/ | ten | num | - |\n| двадцять | /ˈdvɑd͡tsʲɑtʲ/ | twenty | num | - |\n| тридцять | /ˈtrɪd͡tsʲɑtʲ/ | thirty | num | - |\n| сорок | /ˈsɔrɔk/ | forty | num | - | Irregular! |\n| п'ятдесят | /pjɑtdɛˈsʲɑt/ | fifty | num | - |\n| сто | /stɔ/ | hundred | num | - |\n| гривня | /ˈɦrɪvnʲɑ/ | hryvnia (₴) | noun | f | 2-4: гривні, 5+: гривень |\n| копійка | /kɔˈpʲijkɑ/ | kopeck | noun | f | 2-4: копійки, 5+: копійок |\n| ціна | /t͡sʲiˈnɑ/ | price | noun | f |\n| коштувати | /kɔʃtuˈvɑtɪ/ | to cost | verb | - | коштує (it costs) |\n| дорого | /ˈdɔrɔɦɔ/ | expensive | adv | - |\n| дешево | /ˈdɛʃɛvɔ/ | cheap | adv | - |\n| знижка | /ˈznɪʒkɑ/ | discount | noun | f |\n| решта | /ˈrɛʃtɑ/ | change (money) | noun | f |\n| готівка | /ɦɔˈtʲivkɑ/ | cash | noun | f |\n| картка | /ˈkɑrtkɑ/ | card | noun | f | Bank card |\n\n---\n\n# Number Patterns\n\n## Numbers 0-100\n\n| Range | Pattern | Examples |\n|-------|---------|----------|\n| 0-10 | Basic | нуль, один, два... десять |\n| 11-19 | X + надцять | одинадцять, дванадцять... |\n| 20, 30 | X + дцять | двадцять, тридцять |\n| 40 | Irregular | сорок |\n| 50-80 | X + десят | п'ятдесят, шістдесят... |\n| 90 | Irregular | дев'яносто |\n| 100 | Irregular | сто |\n\n## Number-Noun Agreement\n\n| Number | Noun Case | Example |\n|--------|-----------|---------|\n| 1 (21, 31...) | Nom. sing. | одна книга |\n| 2-4 (22-24...) | Nom. plural | дві книги |\n| 5-20 (25-30...) | Gen. plural | п'ять книг |\n\n---\n\n# Summary\n\n> 💡 **What You Learned Today**\n>\n> - Numbers 0-100 in Ukrainian\n> - **Один** agrees in gender (один/одна/одне)\n> - **Два/дві** - дві for feminine nouns\n> - **Сорок** (40) and **дев'яносто** (90) are irregular\n> - Number-noun agreement: 1 = nom.sg., 2-4 = nom.pl., 5+ = gen.pl.\n> - Currency: гривня (₴), копійка\n> - Shopping phrases: Скільки коштує? Дорого! Дешево!\n\n> 🎯 **Coming Next**\n>\n> Module 10 is your first **Checkpoint** - a review of everything in A1.1:\n> - Cyrillic alphabet\n> - Noun genders\n> - Verb conjugation (Class I & II)\n> - Questions and negation\n> - Numbers\n",
-    "createdAt": "2025-12-04T13:10:41.293Z",
-    "modifiedAt": "2025-12-04T13:10:41.293Z",
+    "rawMarkdown": "---\nmodule: 9\ntitle: \"Food & Drinks\"\nsubtitle: \"Basic Food Vocabulary\"\nlevel: A1\nphase: A1.1\nduration: 50\ntransliteration: full\ntags: [vocabulary, food, drinks, practical]\nobjectives:\n  - Learn essential food vocabulary\n  - Identify common Ukrainian foods and drinks\n  - Talk about meals of the day\n  - Use є/немає with food items\ngrammar:\n  - Noun genders with food vocabulary\n  - Using є (there is) / немає (there is no)\n  - Identifying foods with \"Це...\" (This is...)\n---\n\n# Lesson Content\n\n## warm-up\n\n### Що це? Це їжа!\n\nFood is central to Ukrainian culture. In this module, you'll learn to identify foods and talk about what's available using є (there is) and немає (there is no).\n\n> 💡 **Did You Know?**\n>\n> Ukrainian cuisine is rich and hearty, developed for cold winters and hard physical work. Борщ (beet soup) is so iconic that UNESCO added it to the list of Intangible Cultural Heritage! Other staples include вареники (dumplings), сало (cured pork fat), and голубці (stuffed cabbage rolls).\n\n## presentation\n\n### Meals of the Day\n\n| Ukrainian | English | Time |\n|-----------|---------|------|\n| сніданок | breakfast | morning |\n| обід | lunch | midday |\n| вечеря | dinner/supper | evening |\n| перекус | snack | anytime |\n\n**Basic phrases:**\n- Що це? Це сніданок. (What is this? This is breakfast.)\n- Є обід? (Is there lunch?)\n- Що на сніданок? (What's for breakfast?)\n\n> 🎭 **Culture Corner: Ukrainian Meal Traditions**\n>\n> - **Сніданок** is often light: каша (porridge)\n> - **Обід** is the main meal, traditionally hearty with soup + main course\n> - **Вечеря** is lighter, often leftovers or simple dishes\n>\n> Ukrainians say \"Смачного!\" (Bon appétit!) before eating.\n\n### Fruits (Фрукти)\n\n| Ukrainian | English | Gender |\n|-----------|---------|--------|\n| яблуко | apple | n |\n| банан | banana | m |\n| апельсин | orange | m |\n| лимон | lemon | m |\n| груша | pear | f |\n| виноград | grapes | m |\n| полуниця | strawberry | f |\n| кавун | watermelon | m |\n\n> ⚡ **Pro Tip: Gender Recognition**\n>\n> Notice the patterns:\n> - **Masculine:** банан, апельсин, лимон, кавун (consonant endings)\n> - **Feminine:** груша, полуниця (-а endings)\n> - **Neuter:** яблуко (-о ending)\n\n### Vegetables (Овочі)\n\n| Ukrainian | English | Gender |\n|-----------|---------|--------|\n| картопля | potato | f |\n| морква | carrot | f |\n| цибуля | onion | f |\n| помідор | tomato | m |\n| огірок | cucumber | m |\n| капуста | cabbage | f |\n| буряк | beet | m |\n\n> 📜 **History Bite: Potato = \"Earth Apple\"**\n>\n> \"Картопля\" came to Ukrainian via German (Kartoffel), which came from Italian \"tartufolo\" (truffle - because they grow underground). Many European languages have similar words. In some Ukrainian dialects, you'll hear \"бульба\" - another word for potato!\n\n### Meat & Protein (М'ясо)\n\n| Ukrainian | English | Gender |\n|-----------|---------|--------|\n| м'ясо | meat | n |\n| курка | chicken | f |\n| риба | fish | f |\n| яйце | egg | n |\n| ковбаса | sausage | f |\n| сало | pork fat | n |\n\n> 🎯 **Fun Fact: Сало Culture**\n>\n> Сало (cured pork fat) is so beloved in Ukraine that there are festivals dedicated to it, a monument to it in Lviv, and countless jokes about Ukrainians and сало. It's typically served thinly sliced with garlic on black bread!\n\n### Dairy (Молочні продукти)\n\n| Ukrainian | English | Gender |\n|-----------|---------|--------|\n| молоко | milk | n |\n| сир | cheese/cottage cheese | m |\n| сметана | sour cream | f |\n| масло | butter | n |\n| йогурт | yogurt | m |\n\n> 🔗 **Language Link: Сир vs Cheese**\n>\n> \"Сир\" traditionally means cottage cheese. For hard/aged cheese, Ukrainians use borrowed words like \"пармезан.\" This can cause confusion!\n\n### Drinks (Напої)\n\n| Ukrainian | English | Gender |\n|-----------|---------|--------|\n| вода | water | f |\n| кава | coffee | f |\n| чай | tea | m |\n| сік | juice | m |\n| молоко | milk | n |\n| пиво | beer | n |\n| вино | wine | n |\n\n### Other Foods\n\n| Ukrainian | English | Gender |\n|-----------|---------|--------|\n| хліб | bread | m |\n| рис | rice | m |\n| каша | porridge/cereal | f |\n| суп | soup | m |\n| борщ | borscht | m |\n| вареники | dumplings | pl |\n| салат | salad | m |\n| піца | pizza | f |\n\n> 🌍 **Real World: Simple Food Phrases**\n>\n> Use what you know:\n> - **Що це?** - What is this?\n> - **Це борщ.** - This is borscht.\n> - **Є хліб?** - Is there bread?\n> - **Так, є.** - Yes, there is.\n> - **Ні, хліб не тут.** - No, the bread isn't here.\n> - **Смачного!** - Bon appétit!\n\n## practice\n\n### Identify Foods\n\nWhat is it?\n1. Це ___. (This is borscht.)\n   > [!answer] борщ\n2. Це ___. (This is bread.)\n   > [!answer] хліб\n3. Це ___. (This is coffee.)\n   > [!answer] кава\n4. Це ___. (This is an apple.)\n   > [!answer] яблуко\n\n### Є or Немає?\n\nComplete with є (there is) or немає (there is no):\n1. ___ хліб? Так, є! (Is there bread? Yes, there is!)\n   > [!answer] Є\n2. ___ молоко? Ні, ___. (Is there milk? No, there isn't.)\n   > [!answer] Є, немає\n3. Тут ___ борщ. (There is borscht here.)\n   > [!answer] є\n4. ___ кава? Ні, ___. (Is there coffee? No, there isn't.)\n   > [!answer] Є, немає\n\n### Talk About Meals\n\nAnswer in Ukrainian:\n1. Що на сніданок? (What's for breakfast?)\n   > [!answer] (Answers vary: Каша. / Хліб. / Яйце.)\n2. Що на обід? (What's for lunch?)\n   > [!answer] (Answers vary: Борщ. / Суп.)\n3. Що на вечерю? (What's for dinner?)\n   > [!answer] (Answers vary: Риба. / М'ясо.)\n\n## production\n\n### Food Questions\n\nPractice asking and answering:\n1. Є молоко? — Так, є. / Ні, немає.\n2. Є хліб? — Так, є. / Ні, немає.\n3. Що це? — Це вареники.\n4. Що на обід? — Борщ.\n\n---\n\n---\n\n---\n\n---\n\n---\n\n# Activities\n\n## fill-in: Food Vocabulary\n\n> Choose the correct word to complete each sentence.\n\n1. Що це? Це ___. (What is this? This is borscht.)\n   > [!answer] борщ\n   > [!options] борщ | хліб | молоко | вода\n\n2. Що це? Це ___. (What is this? This is coffee.)\n   > [!answer] кава\n   > [!options] кава | борщ | хліб | яблуко\n\n3. Є ___? Так, є! (Is there bread? Yes, there is!)\n   > [!answer] хліб\n   > [!options] вода | хліб | молоко | кава\n\n4. Є ___? Ні, немає. (Is there water? No, there isn't.)\n   > [!answer] вода\n   > [!options] хліб | борщ | вода | яблуко\n\n5. Це ___. Це фрукт. (This is an apple. It's a fruit.)\n   > [!answer] яблуко\n   > [!options] хліб | борщ | яблуко | молоко\n\n6. ___ — це їжа вранці. (Breakfast is food in the morning.)\n   > [!answer] Сніданок\n   > [!options] Сніданок | Обід | Вечеря | Перекус\n\n7. Українці кажуть \"___!\" перед їжею. (Ukrainians say \"___!\" before eating.)\n   > [!answer] Смачного\n   > [!options] Дякую | Привіт | Смачного | Добре\n\n8. Що на ___? Борщ! (What's for lunch? Borscht!)\n   > [!answer] обід\n   > [!options] сніданок | обід | вечеря | перекус\n\n9. Що це? Це ___. (What is this? These are dumplings.)\n   > [!answer] вареники\n   > [!options] вода | кава | вареники | молоко\n\n10. Є ___? Так, є! (Is there tea? Yes, there is!)\n    > [!answer] чай\n    > [!options] хліб | чай | борщ | яблуко\n\n11. Це ___. Це овоч. (This is a tomato. It's a vegetable.)\n    > [!answer] помідор\n    > [!options] яблуко | банан | помідор | молоко\n\n12. Є ___? Так, є! (Is there milk? Yes, there is!)\n    > [!answer] молоко\n    > [!options] молоко | хліб | борщ | каша\n\n## unjumble: Build the Sentence\n\n> Arrange the words in the correct order. Sentences range from 3-5 words.\n\n1. борщ / Це\n   > [!answer] Це борщ.\n   > (This is borscht.) [2 words]\n\n2. кава / Це / є\n   > [!answer] Це є кава.\n   > (This is coffee.) [3 words]\n\n3. хліб / Є / тут\n   > [!answer] Тут є хліб.\n   > (There is bread here.) [3 words]\n\n4. Є / вода / ні / немає\n   > [!answer] Є вода? Ні, немає.\n   > (Is there water? No, there isn't.) [4 words]\n\n5. обід / Що / на\n   > [!answer] Що на обід?\n   > (What's for lunch?) [3 words]\n\n6. Смачного / Дякую\n   > [!answer] Дякую! Смачного!\n   > (Thank you! Bon appétit!) [2 words]\n\n7. молоко / Є / тут\n   > [!answer] Тут є молоко.\n   > (There is milk here.) [3 words]\n\n8. це / Що / вареники\n   > [!answer] Що це? Вареники.\n   > (What is this? Dumplings.) [3 words]\n\n9. сніданок / на / Що\n   > [!answer] Що на сніданок?\n   > (What's for breakfast?) [3 words]\n\n10. чай / Є / є / так\n    > [!answer] Є чай? Так, є.\n    > (Is there tea? Yes, there is.) [4 words]\n\n11. яблуко / Це / чи / банан\n    > [!answer] Це яблуко чи банан?\n    > (Is this an apple or banana?) [4 words]\n\n12. борщ / це / Що\n    > [!answer] Що це? Борщ.\n    > (What is this? Borscht.) [3 words]\n\n## match-up: Match the Pairs\n\n> Match Ukrainian words to their English meanings.\n\n| Left | Right |\n|------|-------|\n| сніданок | breakfast |\n| обід | lunch |\n| вечеря | dinner |\n| борщ | borscht |\n| вареники | dumplings |\n| хліб | bread |\n| молоко | milk |\n| кава | coffee |\n| яблуко | apple |\n| смачного | bon appétit |\n| вода | water |\n| чай | tea |\n\n## group-sort: Food Categories\n\n> Sort these foods by their category.\n\n### Фрукти (Fruits)\n- яблуко (apple)\n- банан (banana)\n- апельсин (orange)\n- груша (pear)\n\n### Овочі (Vegetables)\n- картопля (potato)\n- морква (carrot)\n- цибуля (onion)\n- помідор (tomato)\n\n### Напої (Drinks)\n- вода (water)\n- кава (coffee)\n- чай (tea)\n- молоко (milk)\n\n### Їжа (Other Food)\n- хліб (bread)\n- борщ (borscht)\n- вареники (dumplings)\n- каша (porridge)\n\n## quiz: Food and Meals\n\n> Choose the correct answer.\n\n1. What does \"сніданок\" mean?\n   - [x] breakfast\n   - [ ] lunch\n   - [ ] dinner\n   - [ ] snack\n   > \"сніданок\" = breakfast\n\n2. What is \"борщ\"?\n   - [ ] dumplings\n   - [x] beet soup\n   - [ ] porridge\n   - [ ] bread\n   > Traditional Ukrainian beet soup\n\n3. What gender is \"яблуко\" (apple)?\n   - [ ] masculine\n   - [ ] feminine\n   - [x] neuter\n   - [ ] plural\n   > -о ending = neuter\n\n4. What does \"Смачного!\" mean?\n   - [ ] Thank you!\n   - [x] Bon appétit!\n   - [ ] Hello!\n   - [ ] Goodbye!\n   > Said before eating\n\n5. What gender is \"кава\" (coffee)?\n   - [ ] masculine\n   - [x] feminine\n   - [ ] neuter\n   - [ ] plural\n   > -а ending = feminine\n\n6. What are \"вареники\"?\n   - [ ] beet soup\n   - [ ] bread\n   - [x] dumplings\n   - [ ] sausage\n   > Traditional Ukrainian dumplings\n\n7. What does \"Є молоко?\" mean?\n   - [ ] This is milk\n   - [x] Is there milk?\n   - [ ] I want milk\n   - [ ] Milk is good\n   > \"Є молоко?\" = Is there milk?\n\n8. What does \"обід\" mean?\n   - [ ] breakfast\n   - [x] lunch\n   - [ ] dinner\n   - [ ] snack\n   > \"обід\" = lunch (main meal)\n\n9. What does \"немає\" mean?\n   - [ ] there is\n   - [x] there is no\n   - [ ] this is\n   - [ ] what is\n   > \"немає\" = there is no / there isn't\n\n10. What gender is \"хліб\" (bread)?\n    - [x] masculine\n    - [ ] feminine\n    - [ ] neuter\n    - [ ] plural\n    > consonant ending = masculine\n\n11. What does \"вечеря\" mean?\n    - [ ] breakfast\n    - [ ] lunch\n    - [x] dinner\n    - [ ] snack\n    > \"вечеря\" = dinner/supper\n\n12. What is \"сало\"?\n    - [ ] soup\n    - [ ] bread\n    - [ ] cheese\n    - [x] cured pork fat\n    > A beloved Ukrainian food\n\n## true-false: True or False?\n\n> Determine if each statement is true or false.\n\n- [x] \"Сніданок\" means \"breakfast\"\n   > Correct!\n\n- [x] \"Борщ\" is traditional Ukrainian beet soup\n   > Correct!\n\n- [ ] \"Яблуко\" is masculine gender\n   > Incorrect. \"яблуко\" is neuter (-о ending)\n\n- [x] \"Смачного!\" is said before eating\n   > Correct!\n\n- [ ] \"Кава\" is masculine gender\n   > Incorrect. \"кава\" is feminine (-а ending)\n\n- [x] \"Вареники\" means \"dumplings\"\n   > Correct!\n\n- [x] \"Обід\" is the main meal of the day in Ukraine\n   > Correct!\n\n- [ ] \"Молоко\" is feminine gender\n   > Incorrect. \"молоко\" is neuter (-о ending)\n\n- [x] \"Сало\" is cured pork fat\n   > Correct!\n\n- [x] \"Є молоко?\" means \"Is there milk?\"\n   > Correct!\n\n- [ ] \"Хліб\" is neuter gender\n   > Incorrect. \"хліб\" is masculine (consonant ending)\n\n- [x] \"Немає\" means \"there is no\"\n   > Correct!\n\n## match-up: Food Genders\n\n> Match each food word with its correct gender.\n\n| Left | Right |\n|------|-------|\n| яблуко | neuter |\n| банан | masculine |\n| кава | feminine |\n| хліб | masculine |\n| молоко | neuter |\n| груша | feminine |\n| чай | masculine |\n| вода | feminine |\n| борщ | masculine |\n| піца | feminine |\n| пиво | neuter |\n| сік | masculine |\n\n## fill-in: Є vs Немає\n\n> Complete the sentences with \"є\" (there is) or \"немає\" (there is no).\n\n1. ___ хліб? Так, є! (Is there bread? Yes!)\n   > [!answer] Є\n   > [!options] Є | Немає\n\n2. ___ молоко? Ні, немає. (Is there milk? No.)\n   > [!answer] Є\n   > [!options] Є | Немає\n\n3. Тут ___ борщ. (There is borscht here.)\n   > [!answer] є\n   > [!options] є | немає\n\n4. Тут ___ кава. (There is no coffee here.)\n   > [!answer] немає\n   > [!options] є | немає\n\n5. ___ вода? Так, є! (Is there water? Yes!)\n   > [!answer] Є\n   > [!options] Є | Немає\n\n6. ___ чай? Ні, немає. (Is there tea? No.)\n   > [!answer] Є\n   > [!options] Є | Немає\n\n7. Тут ___ яблуко. (There is an apple here.)\n   > [!answer] є\n   > [!options] є | немає\n\n8. Тут ___ сік. (There is no juice here.)\n   > [!answer] немає\n   > [!options] є | немає\n\n9. ___ вареники? Так, є! (Are there dumplings? Yes!)\n   > [!answer] Є\n   > [!options] Є | Немає\n\n10. ___ піца? Ні, немає. (Is there pizza? No.)\n    > [!answer] Є\n    > [!options] Є | Немає\n\n11. Тут ___ хліб і молоко. (There is bread and milk here.)\n    > [!answer] є\n    > [!options] є | немає\n\n12. Тут ___ борщ, але є суп. (There is no borscht, but there is soup.)\n    > [!answer] немає\n    > [!options] є | немає\n\n---\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| їжа | /ˈjizʲɑ/ | food | noun | f |\n| сніданок | /snʲiˈdɑnɔk/ | breakfast | noun | m |\n| обід | /ɔˈbʲid/ | lunch | noun | m |\n| вечеря | /vɛˈtʃɛrʲɑ/ | dinner | noun | f |\n| перекус | /pɛrɛˈkus/ | snack | noun | m |\n| фрукти | /ˈfruktɪ/ | fruits | noun | pl |\n| яблуко | /ˈjɑblukɔ/ | apple | noun | n |\n| банан | /bɑˈnɑn/ | banana | noun | m |\n| апельсин | /ɑpɛlʲˈsɪn/ | orange | noun | m |\n| лимон | /lɪˈmɔn/ | lemon | noun | m |\n| груша | /ˈɦruʃɑ/ | pear | noun | f |\n| виноград | /vɪnɔˈɦrɑd/ | grapes | noun | m |\n| полуниця | /pɔluˈnɪt͡sʲɑ/ | strawberry | noun | f |\n| кавун | /kɑˈwun/ | watermelon | noun | m |\n| овочі | /ˈɔvɔtʃi/ | vegetables | noun | pl |\n| картопля | /kɑrˈtɔplʲɑ/ | potato | noun | f |\n| морква | /ˈmɔrkvɑ/ | carrot | noun | f |\n| цибуля | /t͡sɪˈbulʲɑ/ | onion | noun | f |\n| помідор | /pɔmʲiˈdɔr/ | tomato | noun | m |\n| огірок | /ɔɦʲiˈrɔk/ | cucumber | noun | m |\n| капуста | /kɑˈpustɑ/ | cabbage | noun | f |\n| буряк | /buˈrʲɑk/ | beet | noun | m |\n| м'ясо | /ˈmjɑsɔ/ | meat | noun | n |\n| курка | /ˈkurkɑ/ | chicken | noun | f |\n| риба | /ˈrɪbɑ/ | fish | noun | f |\n| яйце | /jɑjˈt͡sɛ/ | egg | noun | n |\n| ковбаса | /kɔu̯bɑˈsɑ/ | sausage | noun | f |\n| сало | /ˈsɑlɔ/ | pork fat | noun | n | Cured, sliced thin |\n| молоко | /mɔlɔˈkɔ/ | milk | noun | n |\n| сир | /sɪr/ | cheese/cottage cheese | noun | m |\n| сметана | /smɛˈtɑnɑ/ | sour cream | noun | f |\n| масло | /ˈmɑslɔ/ | butter | noun | n |\n| йогурт | /ˈjɔɦurt/ | yogurt | noun | m |\n| вода | /ˈvɔdɑ/ | water | noun | f |\n| кава | /ˈkɑvɑ/ | coffee | noun | f |\n| чай | /tʃɑj/ | tea | noun | m |\n| сік | /sʲik/ | juice | noun | m |\n| пиво | /ˈpɪvɔ/ | beer | noun | n |\n| вино | /vɪˈnɔ/ | wine | noun | n |\n| хліб | /xlʲib/ | bread | noun | m |\n| рис | /rɪs/ | rice | noun | m |\n| каша | /ˈkɑʃɑ/ | porridge | noun | f |\n| суп | /sup/ | soup | noun | m |\n| борщ | /bɔrʃtʃ/ | borscht | noun | m | Beet soup |\n| вареники | /vɑˈrɛnɪkɪ/ | dumplings | noun | pl |\n| салат | /sɑˈlɑt/ | salad | noun | m |\n| піца | /ˈpitsɑ/ | pizza | noun | f |\n| смачного | /smɑtʃˈnɔɦɔ/ | bon appétit | phrase | - | Said before eating |\n| є | /jɛ/ | there is | verb | - | Existence |\n| немає | /nɛˈmɑjɛ/ | there is no | verb | - | Absence |\n\n---\n\n# Food Phrases\n\n## Basic Questions\n\n| Ukrainian | English |\n|-----------|---------|\n| Що це? | What is this? |\n| Це борщ. | This is borscht. |\n| Є хліб? | Is there bread? |\n| Так, є. | Yes, there is. |\n| Ні, немає. | No, there isn't. |\n\n## Meals\n\n| Ukrainian | English |\n|-----------|---------|\n| Що на сніданок? | What's for breakfast? |\n| Що на обід? | What's for lunch? |\n| Що на вечерю? | What's for dinner? |\n| Смачного! | Bon appétit! |\n\n---\n\n# Summary\n\n> 💡 **What You Learned Today**\n>\n> - Meals: сніданок, обід, вечеря\n> - Fruits: яблуко, банан, апельсин, груша...\n> - Vegetables: картопля, морква, цибуля, помідор...\n> - Meat & dairy: курка, м'ясо, молоко, сир\n> - Drinks: вода, кава, чай, сік\n> - Traditional foods: борщ, вареники, сало\n> - \"Смачного!\" = Bon appétit!\n> - Gender patterns in food words\n\n> 🎯 **Coming Next**\n>\n> Module 10 is your first **Checkpoint** - a review of everything in A1.1:\n> - Cyrillic alphabet\n> - Noun genders\n> - Verb conjugation (Class I & II)\n> - Questions and negation\n> - Food vocabulary\n",
+    "createdAt": "2025-12-04T23:47:24.843Z",
+    "modifiedAt": "2025-12-04T23:47:24.843Z",
     "version": 2
   },
   "activities": [
     {
       "id": "act-a1-9-fillblank",
       "type": "fill-blank",
-      "title": "Complete the Sentences",
-      "description": "Choose the correct number or word.",
+      "title": "Food Vocabulary",
+      "description": "Choose the correct word to complete each sentence.",
       "content": {
         "type": "fill-blank",
         "items": [
           {
-            "prompt": "Це коштує ___ гривень. (This costs 5 hryvnias.)",
-            "answer": "п'ять",
+            "prompt": "Що це? Це ___. (What is this? This is borscht.)",
+            "answer": "борщ",
             "options": [
-              "один",
-              "два",
-              "п'ять",
-              "десять"
+              "борщ",
+              "хліб",
+              "молоко",
+              "вода"
             ]
           },
           {
-            "prompt": "Я маю ___ гривні. (I have 2 hryvnias.)",
-            "answer": "дві",
+            "prompt": "Що це? Це ___. (What is this? This is coffee.)",
+            "answer": "кава",
             "options": [
-              "один",
-              "дві",
-              "п'ять",
-              "сто"
+              "кава",
+              "борщ",
+              "хліб",
+              "яблуко"
             ]
           },
           {
-            "prompt": "Ось ___ гривня. (Here is 1 hryvnia.)",
-            "answer": "одна",
+            "prompt": "Є ___? Так, є! (Is there bread? Yes, there is!)",
+            "answer": "хліб",
             "options": [
-              "одна",
-              "дві",
-              "три",
-              "п'ять"
+              "вода",
+              "хліб",
+              "молоко",
+              "кава"
             ]
           },
           {
-            "prompt": "Ціна — ___ гривень. (The price is 10 hryvnias.)",
-            "answer": "десять",
+            "prompt": "Є ___? Ні, немає. (Is there water? No, there isn't.)",
+            "answer": "вода",
             "options": [
-              "один",
-              "три",
-              "десять",
-              "сто"
+              "хліб",
+              "борщ",
+              "вода",
+              "яблуко"
             ]
           },
           {
-            "prompt": "Це ___! (This is expensive!)",
-            "answer": "дорого",
+            "prompt": "Це ___. Це фрукт. (This is an apple. It's a fruit.)",
+            "answer": "яблуко",
             "options": [
-              "дорого",
-              "дешево",
-              "добре",
-              "багато"
+              "хліб",
+              "борщ",
+              "яблуко",
+              "молоко"
             ]
           },
           {
-            "prompt": "Є ___? (Is there a discount?)",
-            "answer": "знижка",
+            "prompt": "___ — це їжа вранці. (Breakfast is food in the morning.)",
+            "answer": "Сніданок",
             "options": [
-              "гривня",
-              "копійка",
-              "знижка",
-              "картка"
+              "Сніданок",
+              "Обід",
+              "Вечеря",
+              "Перекус"
             ]
           },
           {
-            "prompt": "Готівкою чи ___? (Cash or card?)",
-            "answer": "карткою",
+            "prompt": "Українці кажуть \"___!\" перед їжею. (Ukrainians say \"___!\" before eating.)",
+            "answer": "Смачного",
             "options": [
-              "готівкою",
-              "карткою",
-              "грошима",
-              "рештою"
+              "Дякую",
+              "Привіт",
+              "Смачного",
+              "Добре"
             ]
           },
           {
-            "prompt": "Тут є ___. (Here is the change.)",
-            "answer": "решта",
+            "prompt": "Що на ___? Борщ! (What's for lunch? Borscht!)",
+            "answer": "обід",
             "options": [
-              "решта",
-              "ціна",
-              "знижка",
-              "гривня"
+              "сніданок",
+              "обід",
+              "вечеря",
+              "перекус"
             ]
           },
           {
-            "prompt": "Скільки це ___? (How much does it cost?)",
-            "answer": "коштує",
+            "prompt": "Що це? Це ___. (What is this? These are dumplings.)",
+            "answer": "вареники",
             "options": [
-              "коштує",
-              "має",
-              "знає",
-              "бачить"
+              "вода",
+              "кава",
+              "вареники",
+              "молоко"
             ]
           },
           {
-            "prompt": "Це коштує ___ гривень. (This costs 100 hryvnias.)",
-            "answer": "сто",
+            "prompt": "Є ___? Так, є! (Is there tea? Yes, there is!)",
+            "answer": "чай",
             "options": [
-              "десять",
-              "двадцять",
-              "п'ятдесят",
-              "сто"
+              "хліб",
+              "чай",
+              "борщ",
+              "яблуко"
+            ]
+          },
+          {
+            "prompt": "Це ___. Це овоч. (This is a tomato. It's a vegetable.)",
+            "answer": "помідор",
+            "options": [
+              "яблуко",
+              "банан",
+              "помідор",
+              "молоко"
+            ]
+          },
+          {
+            "prompt": "Є ___? Так, є! (Is there milk? Yes, there is!)",
+            "answer": "молоко",
+            "options": [
+              "молоко",
+              "хліб",
+              "борщ",
+              "каша"
             ]
           }
         ]
@@ -180,122 +200,126 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-04T13:10:41.293Z",
-      "modifiedAt": "2025-12-04T13:10:41.293Z"
+      "createdAt": "2025-12-04T23:47:24.843Z",
+      "modifiedAt": "2025-12-04T23:47:24.843Z"
     },
     {
       "id": "act-a1-9-unjumble",
       "type": "unjumble",
       "title": "Build the Sentence",
-      "description": "Arrange the words in the correct order. Sentences range from 4-6 words.",
+      "description": "Arrange the words in the correct order. Sentences range from 3-5 words.",
       "content": {
         "type": "unjumble",
         "isUnjumble": true,
         "items": [
           {
             "words": [
-              "коштує",
-              "Скільки",
-              "це",
-              "книга"
+              "борщ",
+              "Це"
             ],
-            "answer": "Скільки коштує ця книга?",
-            "translation": "How much does this book cost?"
+            "answer": "Це борщ.",
+            "translation": "This is borscht."
           },
           {
             "words": [
-              "п'ять",
+              "кава",
               "Це",
-              "гривень",
-              "тільки",
-              "коштує"
+              "є"
             ],
-            "answer": "Це коштує тільки п'ять гривень.",
-            "translation": "This costs only 5 hryvnias."
+            "answer": "Це є кава.",
+            "translation": "This is coffee."
           },
           {
             "words": [
-              "гривні",
-              "Ось",
-              "ваші",
-              "дві"
-            ],
-            "answer": "Ось ваші дві гривні.",
-            "translation": "Here are your 2 hryvnias."
-          },
-          {
-            "words": [
-              "Одна",
-              "гривня",
-              "це",
-              "мало",
-              "дуже"
-            ],
-            "answer": "Одна гривня — це дуже мало.",
-            "translation": "One hryvnia is very little."
-          },
-          {
-            "words": [
-              "дорого",
-              "Це",
-              "занадто",
-              "для",
-              "мене"
-            ],
-            "answer": "Це занадто дорого для мене.",
-            "translation": "This is too expensive for me."
-          },
-          {
-            "words": [
-              "тут",
-              "Це",
-              "дуже",
-              "дешево"
-            ],
-            "answer": "Тут це дуже дешево.",
-            "translation": "It's very cheap here."
-          },
-          {
-            "words": [
-              "знижка",
+              "хліб",
               "Є",
-              "яка",
-              "сьогодні"
+              "тут"
             ],
-            "answer": "Яка знижка є сьогодні?",
-            "translation": "What discount is there today?"
+            "answer": "Тут є хліб.",
+            "translation": "There is bread here."
           },
           {
             "words": [
-              "карткою",
-              "чи",
-              "Платите",
-              "готівкою",
-              "ви"
+              "Є",
+              "вода",
+              "ні",
+              "немає"
             ],
-            "answer": "Ви платите готівкою чи карткою?",
-            "translation": "Do you pay cash or card?"
+            "answer": "Є вода? Ні, немає.",
+            "translation": "Is there water? No, there isn't."
           },
           {
             "words": [
-              "Решта",
-              "ваша",
-              "Дякую",
-              "дуже"
+              "обід",
+              "Що",
+              "на"
             ],
-            "answer": "Дякую дуже, решта ваша.",
-            "translation": "Thank you very much, keep the change."
+            "answer": "Що на обід?",
+            "translation": "What's for lunch?"
           },
           {
             "words": [
-              "гривень",
-              "сто",
+              "Смачного",
+              "Дякую"
+            ],
+            "answer": "Дякую! Смачного!",
+            "translation": "Thank you! Bon appétit!"
+          },
+          {
+            "words": [
+              "молоко",
+              "Є",
+              "тут"
+            ],
+            "answer": "Тут є молоко.",
+            "translation": "There is milk here."
+          },
+          {
+            "words": [
+              "це",
+              "Що",
+              "вареники"
+            ],
+            "answer": "Що це? Вареники.",
+            "translation": "What is this? Dumplings."
+          },
+          {
+            "words": [
+              "сніданок",
+              "на",
+              "Що"
+            ],
+            "answer": "Що на сніданок?",
+            "translation": "What's for breakfast?"
+          },
+          {
+            "words": [
+              "чай",
+              "Є",
+              "є",
+              "так"
+            ],
+            "answer": "Є чай? Так, є.",
+            "translation": "Is there tea? Yes, there is."
+          },
+          {
+            "words": [
+              "яблуко",
               "Це",
-              "разом",
-              "коштує"
+              "чи",
+              "банан"
             ],
-            "answer": "Це разом коштує сто гривень.",
-            "translation": "This costs 100 hryvnias in total."
+            "answer": "Це яблуко чи банан?",
+            "translation": "Is this an apple or banana?"
+          },
+          {
+            "words": [
+              "борщ",
+              "це",
+              "Що"
+            ],
+            "answer": "Що це? Борщ.",
+            "translation": "What is this? Borscht."
           }
         ]
       },
@@ -306,8 +330,8 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-04T13:10:41.293Z",
-      "modifiedAt": "2025-12-04T13:10:41.293Z"
+      "createdAt": "2025-12-04T23:47:24.843Z",
+      "modifiedAt": "2025-12-04T23:47:24.843Z"
     },
     {
       "id": "act-a1-9-matchup",
@@ -318,44 +342,52 @@
         "type": "match-up",
         "pairs": [
           {
-            "left": "один",
-            "right": "one"
+            "left": "сніданок",
+            "right": "breakfast"
           },
           {
-            "left": "два",
-            "right": "two"
+            "left": "обід",
+            "right": "lunch"
           },
           {
-            "left": "три",
-            "right": "three"
+            "left": "вечеря",
+            "right": "dinner"
           },
           {
-            "left": "п'ять",
-            "right": "five"
+            "left": "борщ",
+            "right": "borscht"
           },
           {
-            "left": "десять",
-            "right": "ten"
+            "left": "вареники",
+            "right": "dumplings"
           },
           {
-            "left": "двадцять",
-            "right": "twenty"
+            "left": "хліб",
+            "right": "bread"
           },
           {
-            "left": "сто",
-            "right": "hundred"
+            "left": "молоко",
+            "right": "milk"
           },
           {
-            "left": "гривня",
-            "right": "hryvnia"
+            "left": "кава",
+            "right": "coffee"
           },
           {
-            "left": "дорого",
-            "right": "expensive"
+            "left": "яблуко",
+            "right": "apple"
           },
           {
-            "left": "дешево",
-            "right": "cheap"
+            "left": "смачного",
+            "right": "bon appétit"
+          },
+          {
+            "left": "вода",
+            "right": "water"
+          },
+          {
+            "left": "чай",
+            "right": "tea"
           }
         ],
         "shuffleRight": true
@@ -367,55 +399,60 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-04T13:10:41.293Z",
-      "modifiedAt": "2025-12-04T13:10:41.293Z"
+      "createdAt": "2025-12-04T23:47:24.843Z",
+      "modifiedAt": "2025-12-04T23:47:24.843Z"
     },
     {
       "id": "act-a1-9-groupsort",
       "type": "group-sort",
-      "title": "Number Agreement Patterns",
-      "description": "Sort numbers by the case/form required for nouns after them.",
+      "title": "Food Categories",
+      "description": "Sort these foods by their category.",
       "content": {
         "type": "group-sort",
         "groups": [
           {
-            "id": "nominative-singular",
-            "name": "Nominative Singular",
+            "id": "",
+            "name": "Фрукти",
             "items": [
-              "один студент (one student)",
-              "одна книга (one book)",
-              "одне вікно (one window)"
+              "яблуко (apple)",
+              "банан (banana)",
+              "апельсин (orange)",
+              "груша (pear)"
             ],
-            "nameUk": "один"
+            "nameUk": "Fruits"
           },
           {
-            "id": "nominative-plural",
-            "name": "Nominative Plural",
+            "id": "",
+            "name": "Овочі",
             "items": [
-              "два/дві студенти (two students)",
-              "три книги (three books)",
-              "чотири вікна (four windows)"
+              "картопля (potato)",
+              "морква (carrot)",
+              "цибуля (onion)",
+              "помідор (tomato)"
             ],
-            "nameUk": "2-4"
+            "nameUk": "Vegetables"
           },
           {
-            "id": "genitive-plural",
-            "name": "Genitive Plural",
+            "id": "",
+            "name": "Напої",
             "items": [
-              "п'ять студентів (five students)",
-              "десять книг (ten books)",
-              "двадцять гривень (twenty hryvnias)"
+              "вода (water)",
+              "кава (coffee)",
+              "чай (tea)",
+              "молоко (milk)"
             ],
-            "nameUk": "5-20, and with certain endings"
+            "nameUk": "Drinks"
           },
           {
-            "id": "irregular-numbers",
-            "name": "Irregular Numbers",
+            "id": "",
+            "name": "Їжа",
             "items": [
-              "сорок (40) - doesn't follow tens pattern",
-              "дев'яносто (90) - unique form",
-              "сто (100) - unique form"
-            ]
+              "хліб (bread)",
+              "борщ (borscht)",
+              "вареники (dumplings)",
+              "каша (porridge)"
+            ],
+            "nameUk": "Other Food"
           }
         ],
         "shuffleItems": true
@@ -427,126 +464,148 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-04T13:10:41.293Z",
-      "modifiedAt": "2025-12-04T13:10:41.293Z"
+      "createdAt": "2025-12-04T23:47:24.843Z",
+      "modifiedAt": "2025-12-04T23:47:24.843Z"
     },
     {
       "id": "act-a1-9-quiz",
       "type": "quiz",
-      "title": "Number Grammar Rules",
+      "title": "Food and Meals",
       "description": "Choose the correct answer.",
       "content": {
         "type": "quiz",
         "questions": [
           {
-            "question": "\"Один\" agrees with gender. Which is correct for \"one book\"?",
+            "question": "What does \"сніданок\" mean?",
             "options": [
-              "один книга",
-              "одна книга",
-              "одне книга",
-              "одні книга"
-            ],
-            "correctIndex": 1,
-            "explanation": "\"книга\" is feminine, so use feminine form \"одна\""
-          },
-          {
-            "question": "Why is \"дві\" used instead of \"два\" with \"книги\"?",
-            "options": [
-              "\"Книга\" is neuter",
-              "\"Книга\" is feminine",
-              "Random variation",
-              "\"Два\" is only for people"
-            ],
-            "correctIndex": 1,
-            "explanation": "\"Два\" = masc/neut, \"дві\" = feminine"
-          },
-          {
-            "question": "After numbers 2-4, nouns take which form?",
-            "options": [
-              "Genitive singular",
-              "Nominative plural",
-              "Genitive plural",
-              "Accusative"
-            ],
-            "correctIndex": 1,
-            "explanation": "2-4 + nominative plural: три книги, чотири столи"
-          },
-          {
-            "question": "After numbers 5-20, nouns take which form?",
-            "options": [
-              "Nominative singular",
-              "Nominative plural",
-              "Genitive plural",
-              "Accusative"
-            ],
-            "correctIndex": 2,
-            "explanation": "5-20 + genitive plural: п'ять книг, десять столів"
-          },
-          {
-            "question": "Which is correct for \"five hryvnias\"?",
-            "options": [
-              "п'ять гривня",
-              "п'ять гривні",
-              "п'ять гривень",
-              "п'ять гривнями"
-            ],
-            "correctIndex": 2,
-            "explanation": "5+ requires genitive plural: гривень"
-          },
-          {
-            "question": "Why is \"сорок\" (40) considered irregular?",
-            "options": [
-              "It ends in a vowel",
-              "It doesn't follow the pattern -дцять (like 20, 30)",
-              "It requires a different case",
-              "It has gender forms"
-            ],
-            "correctIndex": 1,
-            "explanation": "Other tens: двадцять, тридцять, but сорок is unique"
-          },
-          {
-            "question": "\"Два студента\" vs \"дві студентки\" - why the different forms?",
-            "options": [
-              "Два is more common",
-              "студент is foreign",
-              "Два = masc/neut, дві = feminine",
-              "Random variation"
-            ],
-            "correctIndex": 2,
-            "explanation": "Gender agreement: два + masc noun, дві + fem noun"
-          },
-          {
-            "question": "What case ending do nouns take after \"один\"?",
-            "options": [
-              "Nominative singular (same as dictionary form)",
-              "Genitive singular",
-              "Nominative plural",
-              "Genitive plural"
+              "breakfast",
+              "lunch",
+              "dinner",
+              "snack"
             ],
             "correctIndex": 0,
-            "explanation": "One + nominative singular: один студент, одна книга"
+            "explanation": "\"сніданок\" = breakfast"
           },
           {
-            "question": "Which number form is correct with the neuter noun \"вікно\"?",
+            "question": "What is \"борщ\"?",
             "options": [
-              "дві вікна",
-              "два вікна",
-              "двоє вікна",
-              "двох вікна"
+              "dumplings",
+              "beet soup",
+              "porridge",
+              "bread"
             ],
             "correctIndex": 1,
-            "explanation": "Neuter nouns take \"два\" (like masculine)"
+            "explanation": "Traditional Ukrainian beet soup"
           },
           {
-            "question": "\"100 гривень\" uses genitive plural because:",
+            "question": "What gender is \"яблуко\" (apple)?",
             "options": [
-              "100 is a round number",
-              "сто is irregular",
-              "Numbers 5+ (including 100) require genitive plural",
-              "гривня is a currency"
+              "masculine",
+              "feminine",
+              "neuter",
+              "plural"
             ],
             "correctIndex": 2,
-            "explanation": "The 5+ rule applies to all large numbers"
+            "explanation": "-о ending = neuter"
+          },
+          {
+            "question": "What does \"Смачного!\" mean?",
+            "options": [
+              "Thank you!",
+              "Bon appétit!",
+              "Hello!",
+              "Goodbye!"
+            ],
+            "correctIndex": 1,
+            "explanation": "Said before eating"
+          },
+          {
+            "question": "What gender is \"кава\" (coffee)?",
+            "options": [
+              "masculine",
+              "feminine",
+              "neuter",
+              "plural"
+            ],
+            "correctIndex": 1,
+            "explanation": "-а ending = feminine"
+          },
+          {
+            "question": "What are \"вареники\"?",
+            "options": [
+              "beet soup",
+              "bread",
+              "dumplings",
+              "sausage"
+            ],
+            "correctIndex": 2,
+            "explanation": "Traditional Ukrainian dumplings"
+          },
+          {
+            "question": "What does \"Є молоко?\" mean?",
+            "options": [
+              "This is milk",
+              "Is there milk?",
+              "I want milk",
+              "Milk is good"
+            ],
+            "correctIndex": 1,
+            "explanation": "\"Є молоко?\" = Is there milk?"
+          },
+          {
+            "question": "What does \"обід\" mean?",
+            "options": [
+              "breakfast",
+              "lunch",
+              "dinner",
+              "snack"
+            ],
+            "correctIndex": 1,
+            "explanation": "\"обід\" = lunch (main meal)"
+          },
+          {
+            "question": "What does \"немає\" mean?",
+            "options": [
+              "there is",
+              "there is no",
+              "this is",
+              "what is"
+            ],
+            "correctIndex": 1,
+            "explanation": "\"немає\" = there is no / there isn't"
+          },
+          {
+            "question": "What gender is \"хліб\" (bread)?",
+            "options": [
+              "masculine",
+              "feminine",
+              "neuter",
+              "plural"
+            ],
+            "correctIndex": 0,
+            "explanation": "consonant ending = masculine"
+          },
+          {
+            "question": "What does \"вечеря\" mean?",
+            "options": [
+              "breakfast",
+              "lunch",
+              "dinner",
+              "snack"
+            ],
+            "correctIndex": 2,
+            "explanation": "\"вечеря\" = dinner/supper"
+          },
+          {
+            "question": "What is \"сало\"?",
+            "options": [
+              "soup",
+              "bread",
+              "cheese",
+              "cured pork fat"
+            ],
+            "correctIndex": 3,
+            "explanation": "A beloved Ukrainian food"
           }
         ],
         "shuffleQuestions": true,
@@ -560,66 +619,76 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-04T13:10:41.293Z",
-      "modifiedAt": "2025-12-04T13:10:41.293Z"
+      "createdAt": "2025-12-04T23:47:24.843Z",
+      "modifiedAt": "2025-12-04T23:47:24.843Z"
     },
     {
       "id": "act-a1-9-truefalse",
       "type": "true-false",
-      "title": "Number Grammar Rules",
-      "description": "Determine if each statement about Ukrainian numbers is true or false.",
+      "title": "True or False?",
+      "description": "Determine if each statement is true or false.",
       "content": {
         "type": "true-false",
         "statements": [
           {
-            "statement": "The number \"один\" changes form for gender: один/одна/одне.",
+            "statement": "\"Сніданок\" means \"breakfast\"",
             "isTrue": true,
-            "explanation": "Correct! один = masc, одна = fem, одне = neut"
+            "explanation": "Correct!"
           },
           {
-            "statement": "After numbers 5+, nouns take genitive plural (п'ять гривень).",
+            "statement": "\"Борщ\" is traditional Ukrainian beet soup",
             "isTrue": true,
-            "explanation": "Correct! This is a key rule for number agreement."
+            "explanation": "Correct!"
           },
           {
-            "statement": "\"Дві\" is the feminine form of \"two\" (used with feminine nouns).",
-            "isTrue": true,
-            "explanation": "Correct! \"дві книги\" vs \"два столи\""
-          },
-          {
-            "statement": "\"Сорок\" (40) is irregular - it doesn't follow the -дцять pattern.",
-            "isTrue": true,
-            "explanation": "Correct! Compare: двадцять, тридцять, but сорок (unique)."
-          },
-          {
-            "statement": "\"Два гривні\" is grammatically correct.",
+            "statement": "\"Яблуко\" is masculine gender",
             "isTrue": false,
-            "explanation": "Incorrect. \"гривня\" is feminine → \"дві гривні\""
+            "explanation": "Incorrect. \"яблуко\" is neuter (-о ending)"
           },
           {
-            "statement": "Numbers 2-4 require genitive plural, just like 5+.",
+            "statement": "\"Смачного!\" is said before eating",
+            "isTrue": true,
+            "explanation": "Correct!"
+          },
+          {
+            "statement": "\"Кава\" is masculine gender",
             "isTrue": false,
-            "explanation": "Incorrect. 2-4 take nominative plural (три книги), 5+ takes genitive plural."
+            "explanation": "Incorrect. \"кава\" is feminine (-а ending)"
           },
           {
-            "statement": "Neuter nouns use \"два\" (not \"дві\") like masculine nouns.",
+            "statement": "\"Вареники\" means \"dumplings\"",
             "isTrue": true,
-            "explanation": "Correct! два вікна, два міста"
+            "explanation": "Correct!"
           },
           {
-            "statement": "\"Один\" doesn't need to agree with noun gender.",
+            "statement": "\"Обід\" is the main meal of the day in Ukraine",
+            "isTrue": true,
+            "explanation": "Correct!"
+          },
+          {
+            "statement": "\"Молоко\" is feminine gender",
             "isTrue": false,
-            "explanation": "Incorrect. \"Один\" agrees: один студент, одна книга, одне місто."
+            "explanation": "Incorrect. \"молоко\" is neuter (-о ending)"
           },
           {
-            "statement": "\"П'ять студентів\" uses genitive plural form of студент.",
+            "statement": "\"Сало\" is cured pork fat",
             "isTrue": true,
-            "explanation": "Correct! 5+ triggers genitive plural: студент → студентів"
+            "explanation": "Correct!"
           },
           {
-            "statement": "The pattern \"5+ = genitive plural\" applies to numbers like 100, 1000, etc.",
+            "statement": "\"Є молоко?\" means \"Is there milk?\"",
             "isTrue": true,
-            "explanation": "Correct! сто гривень, тисяча гривень (all genitive plural)"
+            "explanation": "Correct!"
+          },
+          {
+            "statement": "\"Хліб\" is neuter gender",
+            "isTrue": false,
+            "explanation": "Incorrect. \"хліб\" is masculine (consonant ending)"
+          },
+          {
+            "statement": "\"Немає\" means \"there is no\"",
+            "isTrue": true,
+            "explanation": "Correct!"
           }
         ]
       },
@@ -630,266 +699,700 @@
       "difficultyLevel": "A1",
       "duration": 5,
       "tags": [],
-      "createdAt": "2025-12-04T13:10:41.293Z",
-      "modifiedAt": "2025-12-04T13:10:41.293Z"
+      "createdAt": "2025-12-04T23:47:24.843Z",
+      "modifiedAt": "2025-12-04T23:47:24.843Z"
+    },
+    {
+      "id": "act-a1-9-matchup",
+      "type": "match-up",
+      "title": "Food Genders",
+      "description": "Match each food word with its correct gender.",
+      "content": {
+        "type": "match-up",
+        "pairs": [
+          {
+            "left": "яблуко",
+            "right": "neuter"
+          },
+          {
+            "left": "банан",
+            "right": "masculine"
+          },
+          {
+            "left": "кава",
+            "right": "feminine"
+          },
+          {
+            "left": "хліб",
+            "right": "masculine"
+          },
+          {
+            "left": "молоко",
+            "right": "neuter"
+          },
+          {
+            "left": "груша",
+            "right": "feminine"
+          },
+          {
+            "left": "чай",
+            "right": "masculine"
+          },
+          {
+            "left": "вода",
+            "right": "feminine"
+          },
+          {
+            "left": "борщ",
+            "right": "masculine"
+          },
+          {
+            "left": "піца",
+            "right": "feminine"
+          },
+          {
+            "left": "пиво",
+            "right": "neuter"
+          },
+          {
+            "left": "сік",
+            "right": "masculine"
+          }
+        ],
+        "shuffleRight": true
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-04T23:47:24.843Z",
+      "modifiedAt": "2025-12-04T23:47:24.843Z"
+    },
+    {
+      "id": "act-a1-9-fillblank",
+      "type": "fill-blank",
+      "title": "Є vs Немає",
+      "description": "Complete the sentences with \"є\" (there is) or \"немає\" (there is no).",
+      "content": {
+        "type": "fill-blank",
+        "items": [
+          {
+            "prompt": "___ хліб? Так, є! (Is there bread? Yes!)",
+            "answer": "Є",
+            "options": [
+              "Є",
+              "Немає"
+            ]
+          },
+          {
+            "prompt": "___ молоко? Ні, немає. (Is there milk? No.)",
+            "answer": "Є",
+            "options": [
+              "Є",
+              "Немає"
+            ]
+          },
+          {
+            "prompt": "Тут ___ борщ. (There is borscht here.)",
+            "answer": "є",
+            "options": [
+              "є",
+              "немає"
+            ]
+          },
+          {
+            "prompt": "Тут ___ кава. (There is no coffee here.)",
+            "answer": "немає",
+            "options": [
+              "є",
+              "немає"
+            ]
+          },
+          {
+            "prompt": "___ вода? Так, є! (Is there water? Yes!)",
+            "answer": "Є",
+            "options": [
+              "Є",
+              "Немає"
+            ]
+          },
+          {
+            "prompt": "___ чай? Ні, немає. (Is there tea? No.)",
+            "answer": "Є",
+            "options": [
+              "Є",
+              "Немає"
+            ]
+          },
+          {
+            "prompt": "Тут ___ яблуко. (There is an apple here.)",
+            "answer": "є",
+            "options": [
+              "є",
+              "немає"
+            ]
+          },
+          {
+            "prompt": "Тут ___ сік. (There is no juice here.)",
+            "answer": "немає",
+            "options": [
+              "є",
+              "немає"
+            ]
+          },
+          {
+            "prompt": "___ вареники? Так, є! (Are there dumplings? Yes!)",
+            "answer": "Є",
+            "options": [
+              "Є",
+              "Немає"
+            ]
+          },
+          {
+            "prompt": "___ піца? Ні, немає. (Is there pizza? No.)",
+            "answer": "Є",
+            "options": [
+              "Є",
+              "Немає"
+            ]
+          },
+          {
+            "prompt": "Тут ___ хліб і молоко. (There is bread and milk here.)",
+            "answer": "є",
+            "options": [
+              "є",
+              "немає"
+            ]
+          },
+          {
+            "prompt": "Тут ___ борщ, але є суп. (There is no borscht, but there is soup.)",
+            "answer": "немає",
+            "options": [
+              "є",
+              "немає"
+            ]
+          }
+        ]
+      },
+      "subject": "language",
+      "owner": "curricula-opus",
+      "visibility": "public",
+      "language": "uk",
+      "difficultyLevel": "A1",
+      "duration": 5,
+      "tags": [],
+      "createdAt": "2025-12-04T23:47:24.843Z",
+      "modifiedAt": "2025-12-04T23:47:24.843Z"
     }
   ],
   "vocabulary": {
     "moduleId": "mod-uk-A1-9",
     "level": "A1",
     "phase": "A1.1",
-    "wordCount": 26,
-    "newWordCount": 26,
+    "wordCount": 50,
+    "newWordCount": 50,
     "reviewWordCount": 0,
     "transliterationMode": "full",
     "words": [
       {
-        "id": "v-nulь-9-0",
-        "uk": "нуль",
-        "en": "zero",
-        "pos": "num",
-        "ipa": "/nulʲ/",
+        "id": "v-yizha-9-0",
+        "uk": "їжа",
+        "en": "food",
+        "pos": "noun",
+        "ipa": "/ˈjizʲɑ/",
+        "gender": "f",
+        "isNew": true,
+        "firstModule": 9
+      },
+      {
+        "id": "v-snidanok-9-1",
+        "uk": "сніданок",
+        "en": "breakfast",
+        "pos": "noun",
+        "ipa": "/snʲiˈdɑnɔk/",
         "gender": "m",
         "isNew": true,
         "firstModule": 9
       },
       {
-        "id": "v-odyn-9-1",
-        "uk": "один",
-        "en": "one (m)",
-        "pos": "num",
-        "ipa": "/ɔˈdɪn/",
+        "id": "v-obid-9-2",
+        "uk": "обід",
+        "en": "lunch",
+        "pos": "noun",
+        "ipa": "/ɔˈbʲid/",
         "gender": "m",
-        "note": "одна (f), одне (n)",
         "isNew": true,
         "firstModule": 9
       },
       {
-        "id": "v-dva-9-2",
-        "uk": "два",
-        "en": "two (m/n)",
-        "pos": "num",
-        "ipa": "/dvɑ/",
-        "note": "дві (f)",
-        "isNew": true,
-        "firstModule": 9
-      },
-      {
-        "id": "v-try-9-3",
-        "uk": "три",
-        "en": "three",
-        "pos": "num",
-        "ipa": "/trɪ/",
-        "isNew": true,
-        "firstModule": 9
-      },
-      {
-        "id": "v-chotyry-9-4",
-        "uk": "чотири",
-        "en": "four",
-        "pos": "num",
-        "ipa": "/tʃɔˈtɪrɪ/",
-        "isNew": true,
-        "firstModule": 9
-      },
-      {
-        "id": "v-p'yatь-9-5",
-        "uk": "п'ять",
-        "en": "five",
-        "pos": "num",
-        "ipa": "/pjɑtʲ/",
-        "isNew": true,
-        "firstModule": 9
-      },
-      {
-        "id": "v-shistь-9-6",
-        "uk": "шість",
-        "en": "six",
-        "pos": "num",
-        "ipa": "/ʃʲistʲ/",
-        "isNew": true,
-        "firstModule": 9
-      },
-      {
-        "id": "v-sim-9-7",
-        "uk": "сім",
-        "en": "seven",
-        "pos": "num",
-        "ipa": "/sʲim/",
-        "isNew": true,
-        "firstModule": 9
-      },
-      {
-        "id": "v-visim-9-8",
-        "uk": "вісім",
-        "en": "eight",
-        "pos": "num",
-        "ipa": "/ˈvʲisʲim/",
-        "isNew": true,
-        "firstModule": 9
-      },
-      {
-        "id": "v-dev'yatь-9-9",
-        "uk": "дев'ять",
-        "en": "nine",
-        "pos": "num",
-        "ipa": "/ˈdɛvjɑtʲ/",
-        "isNew": true,
-        "firstModule": 9
-      },
-      {
-        "id": "v-desyatь-9-10",
-        "uk": "десять",
-        "en": "ten",
-        "pos": "num",
-        "ipa": "/ˈdɛsʲɑtʲ/",
-        "isNew": true,
-        "firstModule": 9
-      },
-      {
-        "id": "v-dvadtsyatь-9-11",
-        "uk": "двадцять",
-        "en": "twenty",
-        "pos": "num",
-        "ipa": "/ˈdvɑd͡tsʲɑtʲ/",
-        "isNew": true,
-        "firstModule": 9
-      },
-      {
-        "id": "v-trydtsyatь-9-12",
-        "uk": "тридцять",
-        "en": "thirty",
-        "pos": "num",
-        "ipa": "/ˈtrɪd͡tsʲɑtʲ/",
-        "isNew": true,
-        "firstModule": 9
-      },
-      {
-        "id": "v-sorok-9-13",
-        "uk": "сорок",
-        "en": "forty",
-        "pos": "num",
-        "ipa": "/ˈsɔrɔk/",
-        "note": "Irregular!",
-        "isNew": true,
-        "firstModule": 9
-      },
-      {
-        "id": "v-p'yatdesyat-9-14",
-        "uk": "п'ятдесят",
-        "en": "fifty",
-        "pos": "num",
-        "ipa": "/pjɑtdɛˈsʲɑt/",
-        "isNew": true,
-        "firstModule": 9
-      },
-      {
-        "id": "v-sto-9-15",
-        "uk": "сто",
-        "en": "hundred",
-        "pos": "num",
-        "ipa": "/stɔ/",
-        "isNew": true,
-        "firstModule": 9
-      },
-      {
-        "id": "v-hryvnya-9-16",
-        "uk": "гривня",
-        "en": "hryvnia (₴)",
+        "id": "v-vecherya-9-3",
+        "uk": "вечеря",
+        "en": "dinner",
         "pos": "noun",
-        "ipa": "/ˈɦrɪvnʲɑ/",
-        "gender": "f",
-        "note": "2-4: гривні, 5+: гривень",
-        "isNew": true,
-        "firstModule": 9
-      },
-      {
-        "id": "v-kopiyka-9-17",
-        "uk": "копійка",
-        "en": "kopeck",
-        "pos": "noun",
-        "ipa": "/kɔˈpʲijkɑ/",
-        "gender": "f",
-        "note": "2-4: копійки, 5+: копійок",
-        "isNew": true,
-        "firstModule": 9
-      },
-      {
-        "id": "v-tsina-9-18",
-        "uk": "ціна",
-        "en": "price",
-        "pos": "noun",
-        "ipa": "/t͡sʲiˈnɑ/",
+        "ipa": "/vɛˈtʃɛrʲɑ/",
         "gender": "f",
         "isNew": true,
         "firstModule": 9
       },
       {
-        "id": "v-koshtuvaty-9-19",
-        "uk": "коштувати",
-        "en": "to cost",
+        "id": "v-perekus-9-4",
+        "uk": "перекус",
+        "en": "snack",
+        "pos": "noun",
+        "ipa": "/pɛrɛˈkus/",
+        "gender": "m",
+        "isNew": true,
+        "firstModule": 9
+      },
+      {
+        "id": "v-frukty-9-5",
+        "uk": "фрукти",
+        "en": "fruits",
+        "pos": "noun",
+        "ipa": "/ˈfruktɪ/",
+        "isNew": true,
+        "firstModule": 9
+      },
+      {
+        "id": "v-yabluko-9-6",
+        "uk": "яблуко",
+        "en": "apple",
+        "pos": "noun",
+        "ipa": "/ˈjɑblukɔ/",
+        "gender": "n",
+        "isNew": true,
+        "firstModule": 9
+      },
+      {
+        "id": "v-banan-9-7",
+        "uk": "банан",
+        "en": "banana",
+        "pos": "noun",
+        "ipa": "/bɑˈnɑn/",
+        "gender": "m",
+        "isNew": true,
+        "firstModule": 9
+      },
+      {
+        "id": "v-apelьsyn-9-8",
+        "uk": "апельсин",
+        "en": "orange",
+        "pos": "noun",
+        "ipa": "/ɑpɛlʲˈsɪn/",
+        "gender": "m",
+        "isNew": true,
+        "firstModule": 9
+      },
+      {
+        "id": "v-lymon-9-9",
+        "uk": "лимон",
+        "en": "lemon",
+        "pos": "noun",
+        "ipa": "/lɪˈmɔn/",
+        "gender": "m",
+        "isNew": true,
+        "firstModule": 9
+      },
+      {
+        "id": "v-hrusha-9-10",
+        "uk": "груша",
+        "en": "pear",
+        "pos": "noun",
+        "ipa": "/ˈɦruʃɑ/",
+        "gender": "f",
+        "isNew": true,
+        "firstModule": 9
+      },
+      {
+        "id": "v-vynohrad-9-11",
+        "uk": "виноград",
+        "en": "grapes",
+        "pos": "noun",
+        "ipa": "/vɪnɔˈɦrɑd/",
+        "gender": "m",
+        "isNew": true,
+        "firstModule": 9
+      },
+      {
+        "id": "v-polunytsya-9-12",
+        "uk": "полуниця",
+        "en": "strawberry",
+        "pos": "noun",
+        "ipa": "/pɔluˈnɪt͡sʲɑ/",
+        "gender": "f",
+        "isNew": true,
+        "firstModule": 9
+      },
+      {
+        "id": "v-kavun-9-13",
+        "uk": "кавун",
+        "en": "watermelon",
+        "pos": "noun",
+        "ipa": "/kɑˈwun/",
+        "gender": "m",
+        "isNew": true,
+        "firstModule": 9
+      },
+      {
+        "id": "v-ovochi-9-14",
+        "uk": "овочі",
+        "en": "vegetables",
+        "pos": "noun",
+        "ipa": "/ˈɔvɔtʃi/",
+        "isNew": true,
+        "firstModule": 9
+      },
+      {
+        "id": "v-kartoplya-9-15",
+        "uk": "картопля",
+        "en": "potato",
+        "pos": "noun",
+        "ipa": "/kɑrˈtɔplʲɑ/",
+        "gender": "f",
+        "isNew": true,
+        "firstModule": 9
+      },
+      {
+        "id": "v-morkva-9-16",
+        "uk": "морква",
+        "en": "carrot",
+        "pos": "noun",
+        "ipa": "/ˈmɔrkvɑ/",
+        "gender": "f",
+        "isNew": true,
+        "firstModule": 9
+      },
+      {
+        "id": "v-tsybulya-9-17",
+        "uk": "цибуля",
+        "en": "onion",
+        "pos": "noun",
+        "ipa": "/t͡sɪˈbulʲɑ/",
+        "gender": "f",
+        "isNew": true,
+        "firstModule": 9
+      },
+      {
+        "id": "v-pomidor-9-18",
+        "uk": "помідор",
+        "en": "tomato",
+        "pos": "noun",
+        "ipa": "/pɔmʲiˈdɔr/",
+        "gender": "m",
+        "isNew": true,
+        "firstModule": 9
+      },
+      {
+        "id": "v-ohirok-9-19",
+        "uk": "огірок",
+        "en": "cucumber",
+        "pos": "noun",
+        "ipa": "/ɔɦʲiˈrɔk/",
+        "gender": "m",
+        "isNew": true,
+        "firstModule": 9
+      },
+      {
+        "id": "v-kapusta-9-20",
+        "uk": "капуста",
+        "en": "cabbage",
+        "pos": "noun",
+        "ipa": "/kɑˈpustɑ/",
+        "gender": "f",
+        "isNew": true,
+        "firstModule": 9
+      },
+      {
+        "id": "v-buryak-9-21",
+        "uk": "буряк",
+        "en": "beet",
+        "pos": "noun",
+        "ipa": "/buˈrʲɑk/",
+        "gender": "m",
+        "isNew": true,
+        "firstModule": 9
+      },
+      {
+        "id": "v-m'yaso-9-22",
+        "uk": "м'ясо",
+        "en": "meat",
+        "pos": "noun",
+        "ipa": "/ˈmjɑsɔ/",
+        "gender": "n",
+        "isNew": true,
+        "firstModule": 9
+      },
+      {
+        "id": "v-kurka-9-23",
+        "uk": "курка",
+        "en": "chicken",
+        "pos": "noun",
+        "ipa": "/ˈkurkɑ/",
+        "gender": "f",
+        "isNew": true,
+        "firstModule": 9
+      },
+      {
+        "id": "v-ryba-9-24",
+        "uk": "риба",
+        "en": "fish",
+        "pos": "noun",
+        "ipa": "/ˈrɪbɑ/",
+        "gender": "f",
+        "isNew": true,
+        "firstModule": 9
+      },
+      {
+        "id": "v-yaytse-9-25",
+        "uk": "яйце",
+        "en": "egg",
+        "pos": "noun",
+        "ipa": "/jɑjˈt͡sɛ/",
+        "gender": "n",
+        "isNew": true,
+        "firstModule": 9
+      },
+      {
+        "id": "v-kovbasa-9-26",
+        "uk": "ковбаса",
+        "en": "sausage",
+        "pos": "noun",
+        "ipa": "/kɔu̯bɑˈsɑ/",
+        "gender": "f",
+        "isNew": true,
+        "firstModule": 9
+      },
+      {
+        "id": "v-salo-9-27",
+        "uk": "сало",
+        "en": "pork fat",
+        "pos": "noun",
+        "ipa": "/ˈsɑlɔ/",
+        "gender": "n",
+        "note": "Cured, sliced thin",
+        "isNew": true,
+        "firstModule": 9
+      },
+      {
+        "id": "v-moloko-9-28",
+        "uk": "молоко",
+        "en": "milk",
+        "pos": "noun",
+        "ipa": "/mɔlɔˈkɔ/",
+        "gender": "n",
+        "isNew": true,
+        "firstModule": 9
+      },
+      {
+        "id": "v-syr-9-29",
+        "uk": "сир",
+        "en": "cheese/cottage cheese",
+        "pos": "noun",
+        "ipa": "/sɪr/",
+        "gender": "m",
+        "isNew": true,
+        "firstModule": 9
+      },
+      {
+        "id": "v-smetana-9-30",
+        "uk": "сметана",
+        "en": "sour cream",
+        "pos": "noun",
+        "ipa": "/smɛˈtɑnɑ/",
+        "gender": "f",
+        "isNew": true,
+        "firstModule": 9
+      },
+      {
+        "id": "v-maslo-9-31",
+        "uk": "масло",
+        "en": "butter",
+        "pos": "noun",
+        "ipa": "/ˈmɑslɔ/",
+        "gender": "n",
+        "isNew": true,
+        "firstModule": 9
+      },
+      {
+        "id": "v-yohurt-9-32",
+        "uk": "йогурт",
+        "en": "yogurt",
+        "pos": "noun",
+        "ipa": "/ˈjɔɦurt/",
+        "gender": "m",
+        "isNew": true,
+        "firstModule": 9
+      },
+      {
+        "id": "v-voda-9-33",
+        "uk": "вода",
+        "en": "water",
+        "pos": "noun",
+        "ipa": "/ˈvɔdɑ/",
+        "gender": "f",
+        "isNew": true,
+        "firstModule": 9
+      },
+      {
+        "id": "v-kava-9-34",
+        "uk": "кава",
+        "en": "coffee",
+        "pos": "noun",
+        "ipa": "/ˈkɑvɑ/",
+        "gender": "f",
+        "isNew": true,
+        "firstModule": 9
+      },
+      {
+        "id": "v-chay-9-35",
+        "uk": "чай",
+        "en": "tea",
+        "pos": "noun",
+        "ipa": "/tʃɑj/",
+        "gender": "m",
+        "isNew": true,
+        "firstModule": 9
+      },
+      {
+        "id": "v-sik-9-36",
+        "uk": "сік",
+        "en": "juice",
+        "pos": "noun",
+        "ipa": "/sʲik/",
+        "gender": "m",
+        "isNew": true,
+        "firstModule": 9
+      },
+      {
+        "id": "v-pyvo-9-37",
+        "uk": "пиво",
+        "en": "beer",
+        "pos": "noun",
+        "ipa": "/ˈpɪvɔ/",
+        "gender": "n",
+        "isNew": true,
+        "firstModule": 9
+      },
+      {
+        "id": "v-vyno-9-38",
+        "uk": "вино",
+        "en": "wine",
+        "pos": "noun",
+        "ipa": "/vɪˈnɔ/",
+        "gender": "n",
+        "isNew": true,
+        "firstModule": 9
+      },
+      {
+        "id": "v-khlib-9-39",
+        "uk": "хліб",
+        "en": "bread",
+        "pos": "noun",
+        "ipa": "/xlʲib/",
+        "gender": "m",
+        "isNew": true,
+        "firstModule": 9
+      },
+      {
+        "id": "v-rys-9-40",
+        "uk": "рис",
+        "en": "rice",
+        "pos": "noun",
+        "ipa": "/rɪs/",
+        "gender": "m",
+        "isNew": true,
+        "firstModule": 9
+      },
+      {
+        "id": "v-kasha-9-41",
+        "uk": "каша",
+        "en": "porridge",
+        "pos": "noun",
+        "ipa": "/ˈkɑʃɑ/",
+        "gender": "f",
+        "isNew": true,
+        "firstModule": 9
+      },
+      {
+        "id": "v-sup-9-42",
+        "uk": "суп",
+        "en": "soup",
+        "pos": "noun",
+        "ipa": "/sup/",
+        "gender": "m",
+        "isNew": true,
+        "firstModule": 9
+      },
+      {
+        "id": "v-borshch-9-43",
+        "uk": "борщ",
+        "en": "borscht",
+        "pos": "noun",
+        "ipa": "/bɔrʃtʃ/",
+        "gender": "m",
+        "note": "Beet soup",
+        "isNew": true,
+        "firstModule": 9
+      },
+      {
+        "id": "v-varenyky-9-44",
+        "uk": "вареники",
+        "en": "dumplings",
+        "pos": "noun",
+        "ipa": "/vɑˈrɛnɪkɪ/",
+        "isNew": true,
+        "firstModule": 9
+      },
+      {
+        "id": "v-salat-9-45",
+        "uk": "салат",
+        "en": "salad",
+        "pos": "noun",
+        "ipa": "/sɑˈlɑt/",
+        "gender": "m",
+        "isNew": true,
+        "firstModule": 9
+      },
+      {
+        "id": "v-pitsa-9-46",
+        "uk": "піца",
+        "en": "pizza",
+        "pos": "noun",
+        "ipa": "/ˈpitsɑ/",
+        "gender": "f",
+        "isNew": true,
+        "firstModule": 9
+      },
+      {
+        "id": "v-smachnoho-9-47",
+        "uk": "смачного",
+        "en": "bon appétit",
+        "pos": "phrase",
+        "ipa": "/smɑtʃˈnɔɦɔ/",
+        "note": "Said before eating",
+        "isNew": true,
+        "firstModule": 9
+      },
+      {
+        "id": "v-ye-9-48",
+        "uk": "є",
+        "en": "there is",
         "pos": "verb",
-        "ipa": "/kɔʃtuˈvɑtɪ/",
-        "note": "коштує (it costs)",
+        "ipa": "/jɛ/",
+        "note": "Existence",
         "isNew": true,
         "firstModule": 9
       },
       {
-        "id": "v-doroho-9-20",
-        "uk": "дорого",
-        "en": "expensive",
-        "pos": "adv",
-        "ipa": "/ˈdɔrɔɦɔ/",
-        "isNew": true,
-        "firstModule": 9
-      },
-      {
-        "id": "v-deshevo-9-21",
-        "uk": "дешево",
-        "en": "cheap",
-        "pos": "adv",
-        "ipa": "/ˈdɛʃɛvɔ/",
-        "isNew": true,
-        "firstModule": 9
-      },
-      {
-        "id": "v-znyzhka-9-22",
-        "uk": "знижка",
-        "en": "discount",
-        "pos": "noun",
-        "ipa": "/ˈznɪʒkɑ/",
-        "gender": "f",
-        "isNew": true,
-        "firstModule": 9
-      },
-      {
-        "id": "v-reshta-9-23",
-        "uk": "решта",
-        "en": "change (money)",
-        "pos": "noun",
-        "ipa": "/ˈrɛʃtɑ/",
-        "gender": "f",
-        "isNew": true,
-        "firstModule": 9
-      },
-      {
-        "id": "v-hotivka-9-24",
-        "uk": "готівка",
-        "en": "cash",
-        "pos": "noun",
-        "ipa": "/ɦɔˈtʲivkɑ/",
-        "gender": "f",
-        "isNew": true,
-        "firstModule": 9
-      },
-      {
-        "id": "v-kartka-9-25",
-        "uk": "картка",
-        "en": "card",
-        "pos": "noun",
-        "ipa": "/ˈkɑrtkɑ/",
-        "gender": "f",
-        "note": "Bank card",
+        "id": "v-nemaye-9-49",
+        "uk": "немає",
+        "en": "there is no",
+        "pos": "verb",
+        "ipa": "/nɛˈmɑjɛ/",
+        "note": "Absence",
         "isNew": true,
         "firstModule": 9
       }

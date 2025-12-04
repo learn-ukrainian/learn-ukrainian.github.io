@@ -267,8 +267,8 @@ export function parseLetterGroups(body: string): {
 } {
   const groups: LetterGroup[] = [];
 
-  // Find letter groups section
-  const match = body.match(/# Letter Groups\n([\s\S]*?)$/);
+  // Find letter groups section - stop at next # header or end of file
+  const match = body.match(/# Letter Groups\n([\s\S]*?)(?=\n# |\n---\s*$|$)/);
 
   if (!match) {
     return { letterGroups: [], restBody: body };

@@ -282,53 +282,53 @@ Ukrainian has built-in rules that make words flow together smoothly. One simple 
 
 > Arrange the words in the correct order. Sentences have 5-7 words.
 
-1. українська / красива / дуже / мова / Це
-   > [!answer] Це дуже красива українська мова.
-   > (This is a very beautiful Ukrainian language.) [5 words]
+1. мова / Це / українська / є / і
+   > [!answer] Це є українська мова.
+   > (This is the Ukrainian language.) [4 words]
 
-2. моя / велика / і / сім'я / Це / дружня
-   > [!answer] Це моя велика і дружня сім'я.
-   > (This is my big and friendly family.) [6 words]
+2. моя / сім'я / Це / мама / й / тато
+   > [!answer] Це моя сім'я: мама й тато.
+   > (This is my family: mom and dad.) [6 words]
 
-3. смачний / борщ / Це / український / дуже
-   > [!answer] Це дуже смачний український борщ.
-   > (This is very tasty Ukrainian borscht.) [5 words]
+3. є / Тут / борщ / і / кава / чай
+   > [!answer] Тут є борщ, кава і чай.
+   > (Here is borscht, coffee, and tea.) [6 words]
 
-4. місто / є / Київ / гарне / велике / і
-   > [!answer] Київ є гарне і велике місто.
-   > (Kyiv is a nice and big city.) [6 words]
+4. є / місто / Київ / Україна / і
+   > [!answer] Київ є місто і Україна.
+   > (Kyiv is a city and Ukraine.) [5 words]
 
-5. жінка / українська / Це / красива / молода
-   > [!answer] Це молода красива українська жінка.
-   > (This is a young beautiful Ukrainian woman.) [5 words]
+5. мама / Це / моя / вона / і / жінка
+   > [!answer] Це моя мама і вона жінка.
+   > (This is my mom and she is a woman.) [6 words]
 
-6. чоловік / мій / Це / і / тато / він
-   > [!answer] Це мій чоловік і він тато.
-   > (This is my husband and he is a dad.) [6 words]
+6. тато / мій / Це / і / він / чоловік
+   > [!answer] Це мій тато і він чоловік.
+   > (This is my dad and he is a man.) [6 words]
 
-7. чай / гарячий / Це / і / смачний / дуже
-   > [!answer] Це дуже гарячий і смачний чай.
-   > (This is very hot and tasty tea.) [6 words]
+7. чай / є / і / кава / Тут / там
+   > [!answer] Тут є чай і там кава.
+   > (Here is tea and there is coffee.) [6 words]
 
-8. центр / Там / є / великий / міста / красивий
-   > [!answer] Там є великий красивий центр міста.
-   > (There is a big beautiful city center.) [6 words]
+8. є / Там / школа / і / центр
+   > [!answer] Там є школа і центр.
+   > (There is a school and center.) [5 words]
 
 9. добре / Дякую / все / у / мене
    > [!answer] Дякую, у мене все добре.
    > (Thanks, everything is fine with me.) [5 words]
 
-10. чай / й / Тут / є / кава / смачна
-    > [!answer] Тут є смачна кава й чай.
-    > (Here is tasty coffee and tea.) [6 words]
+10. чай / й / Тут / є / кава
+    > [!answer] Тут є кава й чай.
+    > (Here is coffee and tea.) [5 words]
 
-11. школа / Це / українська / моя / велика
-    > [!answer] Це моя велика українська школа.
-    > (This is my big Ukrainian school.) [5 words]
+11. моя / Це / школа / тут / і / вона
+    > [!answer] Це моя школа і вона тут.
+    > (This is my school and it is here.) [6 words]
 
-12. мова / красива / і / Українська / мелодійна
-    > [!answer] Українська мова красива і мелодійна.
-    > (Ukrainian language is beautiful and melodic.) [5 words]
+12. тато / мама / Там / і / є
+    > [!answer] Там є мама і тато.
+    > (There are mom and dad.) [5 words]
 
 ## match-up: Match the Pairs
 

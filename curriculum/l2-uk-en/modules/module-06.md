@@ -206,7 +206,7 @@ Let's practice conjugating more Class I verbs:
 
 | Person | Form | Example |
 |--------|------|---------|
-| я | слухаю | Я слухаю музику. |
+| я | слухаю | Я слухаю добре. |
 | ти | слухаєш | Ти слухаєш? |
 | він/вона | слухає | Він слухає. |
 | ми | слухаємо | Ми слухаємо. |
@@ -218,9 +218,9 @@ Let's practice conjugating more Class I verbs:
 > These Class I verb forms appear constantly in everyday Ukrainian:
 >
 > - **Що ти читаєш?** - What are you reading?
-> - **Я читаю книгу.** - I'm reading a book.
+> - **Я читаю добре.** - I read well.
 > - **Вона не знає.** - She doesn't know.
-> - **Ми пишемо листа.** - We're writing a letter.
+> - **Ми пишемо тут.** - We're writing here.
 > - **Ви працюєте тут?** - Do you work here?
 
 ### Making Questions
@@ -250,7 +250,7 @@ Use these Class I verbs to describe yourself:
 ### Ask Your Partner
 
 Practice asking questions:
-1. Ти _______ музику? (listen)
+1. Ти _______ добре? (listen)
    > [!answer] слухаєш
 2. Що ти _______? (read)
    > [!answer] читаєш
@@ -281,11 +281,11 @@ Practice asking questions:
 
 > Choose the correct Class I verb form to complete each sentence.
 
-1. Я ___ книгу. (I read a book.)
+1. Я ___ добре. (I read well.)
    > [!answer] читаю
    > [!options] читаю | читаєш | читає | читають
 
-2. Ти ___ українську? (Do you know Ukrainian?)
+2. Ти ___ це? (Do you know this?)
    > [!answer] знаєш
    > [!options] знаю | знаєш | знає | знають
 
@@ -293,11 +293,11 @@ Practice asking questions:
    > [!answer] знає
    > [!options] знаю | знаєш | знає | знають
 
-4. Ми ___ листа. (We write a letter.)
+4. Ми ___ тут. (We write here.)
    > [!answer] пишемо
    > [!options] пишу | пишеш | пишемо | пишуть
 
-5. Вони ___ музику. (They listen to music.)
+5. Вони ___ добре. (They listen well.)
    > [!answer] слухають
    > [!options] слухаю | слухаєш | слухає | слухають
 
@@ -313,73 +313,73 @@ Practice asking questions:
    > [!answer] знаю
    > [!options] знаю | знаєш | знає | знають
 
-9. Вона ___ листа. (She writes a letter.)
+9. Вона ___ добре. (She writes well.)
    > [!answer] пише
    > [!options] пишу | пишеш | пише | пишуть
 
-10. Ми ___ музику. (We listen to music.)
-   > [!answer] слухаємо
-   > [!options] слухаю | слухаєш | слухаємо | слухають
+10. Ми ___ тут. (We listen here.)
+    > [!answer] слухаємо
+    > [!options] слухаю | слухаєш | слухаємо | слухають
 
 11. Вони ___ щодня. (They rest every day.)
-   > [!answer] відпочивають
-   > [!options] відпочиваю | відпочиваєш | відпочиває | відпочивають
+    > [!answer] відпочивають
+    > [!options] відпочиваю | відпочиваєш | відпочиває | відпочивають
 
-12. Ти ___ сніданок? (Do you have breakfast?)
-   > [!answer] снідаєш
-   > [!options] снідаю | снідаєш | снідає | снідають
+12. Ти ___ вранці? (Do you have breakfast in the morning?)
+    > [!answer] снідаєш
+    > [!options] снідаю | снідаєш | снідає | снідають
 
 ## unjumble: Build the Sentence
 
 > Arrange the words in the correct order. Use 5-7 words per sentence (Class I verbs only).
 
-1. читаю / Я / книгу / тут
-   > [!answer] Я читаю книгу тут.
-   > (I read a book here.) [4 words]
+1. читаю / Я / добре / тут / і
+   > [!answer] Я добре читаю і тут.
+   > (I read well here too.) [5 words]
 
-2. українську / добре / знаєш / Ти / мову
-   > [!answer] Ти добре знаєш українську мову.
-   > (You know Ukrainian well.) [5 words]
+2. добре / знаєш / Ти / це / і
+   > [!answer] Ти добре знаєш це і...
+   > (You know this well and...) [5 words]
 
 3. знає / Вона / все / про / це
    > [!answer] Вона знає все про це.
    > (She knows everything about this.) [5 words]
 
-4. пишемо / листа / Ми / тут
-   > [!answer] Ми пишемо листа тут.
-   > (We write a letter here.) [4 words]
+4. пишемо / Ми / тут / добре / і
+   > [!answer] Ми добре пишемо і тут.
+   > (We write well here too.) [5 words]
 
 5. не / Я / добре / знаю / це
    > [!answer] Я не знаю це добре.
    > (I don't know this well.) [5 words]
 
-6. працює / Він / тут / добре
-   > [!answer] Він добре працює тут.
-   > (He works well here.) [4 words]
+6. працює / Він / тут / добре / завжди
+   > [!answer] Він завжди добре працює тут.
+   > (He always works well here.) [5 words]
 
-7. слухають / музику / Вони / часто
-   > [!answer] Вони часто слухають музику.
-   > (They often listen to music.) [4 words]
+7. слухають / Вони / добре / тут / часто
+   > [!answer] Вони часто добре слухають тут.
+   > (They often listen well here.) [5 words]
 
-8. читаєш / Ти / що / тут
-   > [!answer] Що ти читаєш тут?
-   > (What are you reading here?) [4 words]
+8. читаєш / Ти / де / тут / чи
+   > [!answer] Де ти читаєш? Тут чи...?
+   > (Where do you read? Here or...?) [5 words]
 
-9. працюємо / не / Ми / тут
-   > [!answer] Ми не працюємо тут.
-   > (We don't work here.) [4 words]
+9. працюємо / не / Ми / тут / добре
+   > [!answer] Ми не працюємо тут добре.
+   > (We don't work well here.) [5 words]
 
 10. знаю / не / Я / нічого / про / це
     > [!answer] Я нічого не знаю про це.
     > (I don't know anything about this.) [6 words]
 
-11. вечеряє / Він / пізно / завжди
-    > [!answer] Він завжди пізно вечеряє.
-    > (He always has dinner late.) [4 words]
+11. вечеряє / Він / пізно / завжди / тут
+    > [!answer] Він завжди пізно вечеряє тут.
+    > (He always has dinner late here.) [5 words]
 
-12. малюють / діти / тут / добре
-    > [!answer] Діти добре малюють тут.
-    > (The children draw well here.) [4 words]
+12. малюють / діти / тут / добре / завжди
+    > [!answer] Діти завжди добре малюють тут.
+    > (The children always draw well here.) [5 words]
 
 ## match-up: Match the Pairs
 
@@ -547,8 +547,8 @@ Practice asking questions:
 - [x] Some verbs have consonant changes like с→ш (писати → пишу).
    > Correct! This is a regular consonant alternation pattern.
 
-- [ ] "Він читаю книгу" is grammatically correct.
-   > Incorrect. "Він" requires 3rd person: "Він читаЄ книгу".
+- [ ] "Він читаю добре" is grammatically correct.
+   > Incorrect. "Він" requires 3rd person: "Він читаЄ добре".
 
 ## match-up: Conjugation Forms
 
@@ -573,11 +573,11 @@ Practice asking questions:
 
 > Choose the correct Class I verb form to complete each negative sentence.
 
-1. Я не ___ цього. (I don't know this.)
+1. Я не ___ це. (I don't know this.)
    > [!answer] знаю
    > [!options] знаю | знаєш | знає | знають
 
-2. Вона не ___ листа. (She doesn't write a letter.)
+2. Вона не ___ тут. (She doesn't write here.)
    > [!answer] пише
    > [!options] пишу | пишеш | пише | пишуть
 
@@ -589,15 +589,15 @@ Practice asking questions:
    > [!answer] знають
    > [!options] знаю | знаєш | знає | знають
 
-5. Ти не ___ листи? (You don't write letters?)
+5. Ти не ___ добре? (You don't write well?)
    > [!answer] пишеш
    > [!options] пишу | пишеш | пише | пишуть
 
-6. Він не ___ музику. (He doesn't listen to music.)
+6. Він не ___ добре. (He doesn't listen well.)
    > [!answer] слухає
    > [!options] слухаю | слухаєш | слухає | слухають
 
-7. Я не ___ книги. (I don't read books.)
+7. Я не ___ добре. (I don't read well.)
    > [!answer] читаю
    > [!options] читаю | читаєш | читає | читають
 
@@ -609,7 +609,7 @@ Practice asking questions:
    > [!answer] снідаємо
    > [!options] снідаю | снідаєш | снідає | снідаємо
 
-10. Вона не ___ музику. (She doesn't listen to music.)
+10. Вона не ___ добре. (She doesn't listen well.)
     > [!answer] слухає
     > [!options] слухаю | слухаєш | слухає | слухають
 
@@ -651,7 +651,7 @@ Practice asking questions:
 | шукати | /ʃuˈkɑtɪ/ | to search | verb | - | Class I: шукаю... |
 | називати | /nɑzɪˈvɑtɪ/ | to name, call | verb | - | Class I: називаю... |
 | не | /nɛ/ | not | part | - | Goes before verb |
-| лист | /lɪst/ | letter | noun | m | Object of писати |
+| лист | /lɪst/ | letter | noun | m | Written correspondence |
 ---
 
 # Conjugation Summary

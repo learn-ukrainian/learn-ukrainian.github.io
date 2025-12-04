@@ -117,7 +117,6 @@ export interface NavOptions {
   prevModule?: { num: number; title: string };
   nextModule?: { num: number; title: string };
   activities: Activity[];
-  hasSummary?: boolean;
 }
 
 /**
@@ -149,7 +148,7 @@ export function renderTopNav(options: NavOptions): string {
  * Each activity gets its own tab
  */
 export function renderMainNav(options: NavOptions): string {
-  const { moduleNum, moduleTitle, activities, hasSummary } = options;
+  const { moduleNum, moduleTitle, activities } = options;
 
   // Generate activity tabs dynamically
   const activityTabs = activities.map((activity, index) => {
@@ -157,18 +156,12 @@ export function renderMainNav(options: NavOptions): string {
     return `<button class="nav-tab" data-section="activity-${index}">${label}</button>`;
   }).join('\n      ');
 
-  // Summary tab (only if module has a summary section)
-  const summaryTab = hasSummary
-    ? `<button class="nav-tab" data-section="summary">Summary</button>`
-    : '';
-
   return `
   <nav class="nav">
     <h1>Module ${padNumber(moduleNum)}: ${escapeHtml(moduleTitle)}</h1>
     <div class="nav-tabs">
       <button class="nav-tab active" data-section="lesson">Lesson</button>
       ${activityTabs}
-      ${summaryTab}
       <button class="nav-tab" data-section="vocab">Vocab</button>
     </div>
   </nav>`;

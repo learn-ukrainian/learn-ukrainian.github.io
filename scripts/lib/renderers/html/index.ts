@@ -33,10 +33,7 @@ export async function renderHtml(
   ctx: RenderContext
 ): Promise<string> {
   const template = await getTemplate();
-  const { frontmatter, sections, activities, vocabulary, reviewVocabulary } = parsed;
-
-  // Check if module has a summary section
-  const hasSummary = sections.some(s => s.type === 'summary');
+  const { frontmatter, activities, vocabulary, reviewVocabulary } = parsed;
 
   // Build navigation options - pass all activities
   const navOptions: NavOptions = {
@@ -47,7 +44,6 @@ export async function renderHtml(
     prevModule: ctx.prevModule,
     nextModule: ctx.nextModule,
     activities: activities,
-    hasSummary,
   };
 
   // Build page content
@@ -89,30 +85,19 @@ interface ContentOptions {
 function renderMainContent(options: ContentOptions): string {
   const { parsed, activities, vocabulary, reviewVocabulary } = options;
 
-  // Check if there's a summary section
-  const summarySection = parsed.sections.find(s => s.type === 'summary');
-  const hasSummary = !!summarySection;
-
   // Determine first activity for navigation
   const firstActivityId = activities.length > 0 ? `activity-0` : 'vocab';
 
-  // Render lesson section
+  // Render lesson section (includes summary at end)
   const lessonSection = renderLessonSection(parsed, firstActivityId);
 
   // Render each activity as its own section
-  // Last activity links to summary (if exists) or vocab
+  // Last activity links directly to vocab (summary is now part of lesson)
   const activitySections = activities.map((activity, index) => {
     const isLast = index === activities.length - 1;
-    const nextSection = isLast
-      ? (hasSummary ? 'summary' : 'vocab')
-      : `activity-${index + 1}`;
+    const nextSection = isLast ? 'vocab' : `activity-${index + 1}`;
     return renderActivitySection(activity, index, nextSection);
   }).join('\n');
-
-  // Render summary section (if exists)
-  const summarySectionHtml = summarySection
-    ? renderSummarySection(summarySection, 'vocab')
-    : '';
 
   // Render vocabulary section
   const vocabSection = renderVocabSection(vocabulary, reviewVocabulary);
@@ -120,7 +105,6 @@ function renderMainContent(options: ContentOptions): string {
   return `
     ${lessonSection}
     ${activitySections}
-    ${summarySectionHtml}
     ${vocabSection}
   `;
 }
@@ -132,8 +116,9 @@ function renderMainContent(options: ContentOptions): string {
 function renderLessonSection(parsed: ParsedModule, nextSection: string): string {
   const { frontmatter, sections, rawMarkdown } = parsed;
 
-  // Exclude activities, vocabulary, and summary (summary is rendered separately after activities)
+  // Exclude activities, vocabulary - summary is now included at end of lesson
   const lessonSections = sections.filter(s => !['activities', 'vocabulary', 'summary'].includes(s.type));
+  const summarySection = sections.find(s => s.type === 'summary');
 
   let contentHtml = '';
   if (lessonSections.length > 0) {
@@ -143,6 +128,9 @@ function renderLessonSection(parsed: ParsedModule, nextSection: string): string 
     contentHtml = `<div class="card"><div class="md-content">${markdownToHtml(cleanedMarkdown)}</div></div>`;
   }
 
+  // Add summary at the end of lesson content (before Activities button)
+  const summaryHtml = summarySection ? renderSectionCard(summarySection) : '';
+
   return `
     <section id="lesson" class="section active">
       <div class="lesson-header">
@@ -151,6 +139,7 @@ function renderLessonSection(parsed: ParsedModule, nextSection: string): string 
         ${frontmatter.subtitle ? `<p style="color:var(--text-muted)">${escapeHtml(frontmatter.subtitle)}</p>` : ''}
       </div>
       ${contentHtml}
+      ${summaryHtml}
       <div class="btn-group">
         <button class="btn btn-primary" onclick="showSection('${nextSection}')">Activities →</button>
       </div>
@@ -167,23 +156,6 @@ function renderSectionCard(section: Section): string {
       <h3>${icon}${escapeHtml(section.title)}</h3>
       <div class="md-content">${markdownToHtml(section.content)}</div>
     </div>
-  `;
-}
-
-/**
- * Render the summary section (displayed after activities, before vocabulary)
- */
-function renderSummarySection(section: Section, nextSection: string): string {
-  return `
-    <section id="summary" class="section">
-      <div class="card section-summary">
-        <h3>📋 ${escapeHtml(section.title)}</h3>
-        <div class="md-content">${markdownToHtml(section.content)}</div>
-      </div>
-      <div class="btn-group">
-        <button class="btn btn-primary" onclick="showSection('${nextSection}')">Vocabulary →</button>
-      </div>
-    </section>
   `;
 }
 

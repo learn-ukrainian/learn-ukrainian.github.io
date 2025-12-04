@@ -1,220 +1,185 @@
 ---
 module: 17
-title: "Food & Drinks"
-subtitle: "What's on the Menu?"
+title: "Numbers & Money"
+subtitle: "Counting & Currency"
 level: A1
 phase: A1.2
 duration: 50
 transliteration: full
-tags: [vocabulary, food, drinks, practical]
+tags: [vocabulary, numbers, money, practical]
 objectives:
-  - Learn essential food vocabulary
-  - Discuss meals and eating habits
-  - Express likes and dislikes about food
-  - Shop for groceries
+  - Count from 0 to 100 in Ukrainian
+  - Understand Ukrainian currency (гривня)
+  - Apply genitive case with numbers 5+
+  - Handle basic shopping transactions
 grammar:
-  - Review of accusative with їсти (to eat)
-  - Genitive partitive (склянка молока)
-  - любити + accusative (I love pizza)
+  - Cardinal numbers 0-100
+  - Number-noun agreement (1, 2-4, 5+)
+  - Gender agreement with один/одна/одне
+  - Genitive plural after 5+ (review from M16)
 ---
 
 # Lesson Content
 
 ## warm-up
 
-### Їсти, пити, жити!
+### Numbers Are Everywhere
 
-"Їж, пий, та веселись!" (Eat, drink, and be merry!) - a universal saying. Food is central to Ukrainian culture, and you'll need this vocabulary every day!
+Shopping, telling time, giving your phone number, ordering "two coffees" - numbers are essential! Ukrainian numbers have some twists English speakers need to know:
 
-Basic verbs you know:
-- **їсти** (to eat): я їм, ти їси, він їсть
-- **пити** (to drink): я п'ю, ти п'єш, він п'є
+1. **Один** (one) changes for gender: один, одна, одне
+2. Numbers 2-4 take nominative plural
+3. Numbers 5+ take **genitive plural** (you learned this case in Module 16!)
 
 > 💡 **Did You Know?**
 >
-> Ukrainian cuisine is rich and hearty, developed for cold winters and hard physical work. Borsch (борщ) is so iconic that UNESCO added it to the list of Intangible Cultural Heritage! Other staples include varenyky (вареники - dumplings), salo (сало - cured pork fat), and holubtsi (голубці - stuffed cabbage rolls).
+> Ukrainian uses a "long scale" thinking for large numbers, like most of Europe. But for everyday A1 purposes, we'll focus on 0-100 - enough for prices, time, ages, and phone numbers!
 
 ## presentation
 
-### Meals of the Day
+### Numbers 0-10
 
-| Ukrainian | Transliteration | English | Time |
-|-----------|-----------------|---------|------|
-| сніданок | snidanok | breakfast | morning |
-| обід | obid | lunch | midday |
-| вечеря | vecherya | dinner/supper | evening |
-| перекус | perekus | snack | anytime |
+| Number | Ukrainian | Transliteration |
+|--------|-----------|-----------------|
+| 0 | нуль | nul' |
+| 1 | один/одна/одне | odyn/odna/odne |
+| 2 | два/дві | dva/dvi |
+| 3 | три | try |
+| 4 | чотири | chotyry |
+| 5 | п'ять | pyat' |
+| 6 | шість | shist' |
+| 7 | сім | sim |
+| 8 | вісім | visim |
+| 9 | дев'ять | devyat' |
+| 10 | десять | desyat' |
 
-**Phrases:**
-- Що ти їси на сніданок? (What do you eat for breakfast?)
-- Коли ви обідаєте? (When do you have lunch?)
-- Що на вечерю? (What's for dinner?)
-
-> 🎭 **Culture Corner: Ukrainian Meal Traditions**
+> ⚡ **Pro Tip: Gender of "One" and "Two"**
 >
-> - **Сніданок** is often light: каша (porridge), бутерброди (sandwiches), or сирники (cheese pancakes)
-> - **Обід** is the main meal, traditionally hearty with soup + main course
-> - **Вечеря** is lighter, often leftovers or simple dishes
+> **Один** changes for gender:
+> - один студент (one male student)
+> - одна книга (one book - feminine)
+> - одне вікно (one window - neuter)
 >
-> Ukrainians often say "Смачного!" (Bon appétit!) before eating.
+> **Два/дві** changes only for feminine:
+> - два студенти, два вікна (masc/neut)
+> - дві книги, дві жінки (feminine)
 
-### Fruits (Фрукти)
+### Numbers 11-19
 
-| Ukrainian | Transliteration | English |
-|-----------|-----------------|---------|
-| яблуко | yabluko | apple |
-| банан | banan | banana |
-| апельсин | apelsyn | orange |
-| лимон | lymon | lemon |
-| груша | hrusha | pear |
-| виноград | vynograd | grapes |
-| полуниця | polunytsya | strawberry |
-| кавун | kavun | watermelon |
-| персик | persyk | peach |
-| слива | slyva | plum |
+| Number | Ukrainian | Pattern |
+|--------|-----------|---------|
+| 11 | одинадцять | один + на + дцять |
+| 12 | дванадцять | два + на + дцять |
+| 13 | тринадцять | три + на + дцять |
+| 14 | чотирнадцять | чотир + на + дцять |
+| 15 | п'ятнадцять | п'ят + на + дцять |
+| 16 | шістнадцять | шіст + на + дцять |
+| 17 | сімнадцять | сім + на + дцять |
+| 18 | вісімнадцять | вісім + на + дцять |
+| 19 | дев'ятнадцять | дев'ят + на + дцять |
 
-> ⚡ **Pro Tip: Gender Recognition**
+> 📜 **History Bite: The -надцять Pattern**
 >
-> Notice the patterns:
-> - **Masculine:** банан, апельсин, лимон, кавун (consonant endings)
-> - **Feminine:** груша, полуниця, слива (-а endings)
-> - **Neuter:** яблуко (-о ending)
+> The suffix **-надцять** comes from "на десять" (on ten). So "одинадцять" literally means "one on ten" = eleven. This pattern exists in most Slavic languages and even has a distant cousin in English: "eleven" comes from "one left (over ten)."
 
-### Vegetables (Овочі)
+### Numbers 20-100
 
-| Ukrainian | Transliteration | English |
-|-----------|-----------------|---------|
-| картопля | kartoplya | potato |
-| морква | morkva | carrot |
-| цибуля | tsybulya | onion |
-| часник | chasnyk | garlic |
-| помідор | pomidor | tomato |
-| огірок | ohirok | cucumber |
-| капуста | kapusta | cabbage |
-| буряк | buryak | beet |
-| перець | perets | pepper |
-| гриби | hryby | mushrooms |
+| Number | Ukrainian | Transliteration |
+|--------|-----------|-----------------|
+| 20 | двадцять | dvadtsyat' |
+| 30 | тридцять | trydtsyat' |
+| 40 | сорок | sorok |
+| 50 | п'ятдесят | pyatdesyat |
+| 60 | шістдесят | shistdesyat |
+| 70 | сімдесят | simdesyat |
+| 80 | вісімдесят | visimdesyat |
+| 90 | дев'яносто | devyanosto |
+| 100 | сто | sto |
 
-> 📜 **History Bite: Potato = "Earth Apple"**
+**Compound numbers:** 21 = двадцять один, 35 = тридцять п'ять, 99 = дев'яносто дев'ять
+
+> 🎯 **Fun Fact: Why Is 40 Different?**
 >
-> "Картопля" came to Ukrainian via German (Kartoffel), which came from Italian "tartufolo" (truffle - because they grow underground). Many European languages have similar words. In some Ukrainian dialects, you'll hear "бульба" - another word for potato!
+> Notice **сорок** (40) doesn't follow the pattern? This word comes from an old word for a bundle of 40 sable pelts - a standard trade unit in medieval times! It replaced the regular form "четиридесят" centuries ago. Similar quirks exist in French (quatre-vingts = 4×20) and Danish.
 
-### Meat & Protein (М'ясо)
+### Number + Noun Agreement
 
-| Ukrainian | Transliteration | English |
-|-----------|-----------------|---------|
-| м'ясо | myaso | meat |
-| курка | kurka | chicken |
-| свинина | svynyna | pork |
-| яловичина | yalovychyna | beef |
-| риба | ryba | fish |
-| яйце | yaitse | egg |
-| ковбаса | kovbasa | sausage |
-| шинка | shynka | ham |
-| сало | salo | pork fat |
+This is crucial! The noun form changes based on the number. You learned genitive in Module 16 - now you'll see it in action with numbers!
 
-> 🎯 **Fun Fact: Сало Culture**
+| Number | Noun Form | Example |
+|--------|-----------|---------|
+| 1 | Nominative singular | одна книга (one book) |
+| 2, 3, 4 | Nominative plural | дві книги (two books) |
+| 5-20 | **Genitive plural** | п'ять книг (five books) |
+| 21 | Nominative singular | двадцять одна книга |
+| 22-24 | Nominative plural | двадцять дві книги |
+| 25-30 | **Genitive plural** | двадцять п'ять книг |
+
+> 🔗 **Language Link: The 5+ Rule**
 >
-> Сало (cured pork fat) is so beloved in Ukraine that there are festivals dedicated to it, a monument to it in Lviv, and countless jokes about Ukrainians and сало. It's typically served thinly sliced with garlic on black bread!
+> Why genitive plural after 5+? In Old Slavic, numbers 5-10 were nouns meaning "a fiver, a sixer" etc. So "п'ять книг" originally meant "a fiver of books" - hence genitive (possession). This ancient grammar fossilized into modern Ukrainian!
 
-### Dairy (Молочні продукти)
+### Ukrainian Currency: Гривня
 
-| Ukrainian | Transliteration | English |
-|-----------|-----------------|---------|
-| молоко | moloko | milk |
-| сир | syr | cheese/cottage cheese |
-| сметана | smetana | sour cream |
-| масло | maslo | butter |
-| йогурт | yohurt | yogurt |
-| кефір | kefir | kefir |
-| вершки | vershky | cream |
+| Currency | Ukrainian | Transliteration |
+|----------|-----------|-----------------|
+| hryvnia | гривня | hryvnya |
+| kopeck | копійка | kopiyka |
 
-> 🔗 **Language Link: Сир vs Cheese**
+**Price patterns (using genitive plural for 5+):**
+- 1 гривня, 2-4 гривні, 5+ гривень
+- 1 копійка, 2-4 копійки, 5+ копійок
+
+> 🎭 **Culture Corner: The Гривня**
 >
-> "Сир" traditionally means cottage cheese (творог in Russian). For hard/aged cheese, Ukrainians say "твердий сир" or borrowed words like "пармезан." This can cause confusion - if you order "сирник" you get a cottage cheese pancake, not a cheese dish!
-
-### Drinks (Напої)
-
-| Ukrainian | Transliteration | English |
-|-----------|-----------------|---------|
-| вода | voda | water |
-| кава | kava | coffee |
-| чай | chai | tea |
-| сік | sik | juice |
-| молоко | moloko | milk |
-| пиво | pyvo | beer |
-| вино | vyno | wine |
-| компот | kompot | fruit drink |
-| узвар | uzvar | dried fruit drink |
-
-### Other Foods
-
-| Ukrainian | Transliteration | English |
-|-----------|-----------------|---------|
-| хліб | khlib | bread |
-| рис | rys | rice |
-| макарони | makarony | pasta |
-| каша | kasha | porridge/cereal |
-| суп | sup | soup |
-| борщ | borshch | borscht |
-| вареники | varenyky | dumplings |
-| салат | salat | salad |
-| піца | pitsa | pizza |
-| бутерброд | buterbrod | sandwich |
-
-> 🌍 **Real World: Shopping Phrases**
->
-> At the store or market:
-> - **Дайте, будь ласка, хліб.** - Give me bread, please.
-> - **Скільки коштує кілограм яблук?** - How much is a kilo of apples?
-> - **Мені потрібно молоко.** - I need milk.
-> - **Це свіже?** - Is this fresh?
-> - **Пакет потрібен?** - Do you need a bag?
+> The **гривня** (₴) has been Ukraine's currency since 1996. The name comes from a medieval unit of weight/currency - a silver neckpiece worn by Kyivan Rus' nobility. The word is related to "грива" (mane) - the neckpiece resembled a horse's mane! Current banknotes feature famous Ukrainians like Taras Shevchenko (100₴) and Bohdan Khmelnytsky (5₴).
 
 ## practice
 
-### Express Preferences
+### Number Dictation
 
-Use любити + accusative:
-1. I love coffee.
-   > [!answer] Я люблю каву.
-2. She loves pizza.
-   > [!answer] Вона любить піцу.
-3. They love Ukrainian food.
-   > [!answer] Вони люблять українську їжу.
+Read these numbers:
+- 15 → п'ятнадцять
+- 27 → двадцять сім
+- 43 → сорок три
+- 68 → шістдесят вісім
+- 91 → дев'яносто один
 
-### Order Quantities
+### Prices
 
-Use genitive after quantities:
-1. A cup of coffee
-   > [!answer] чашка кави
-2. A glass of milk
-   > [!answer] склянка молока
-3. A kilo of apples
-   > [!answer] кілограм яблук
-4. A bottle of water
-   > [!answer] пляшка води
+Say these prices (notice the genitive plural!):
+- 5₴ → п'ять гривень
+- 12₴ → дванадцять гривень
+- 24₴ → двадцять чотири гривні
+- 51₴ → п'ятдесят одна гривня
+- 100₴ → сто гривень
 
-### Talk About Meals
-
-1. What do you eat for breakfast?
-   > [!answer] Що ти їси на сніданок?
-2. I eat porridge and drink coffee.
-   > [!answer] Я їм кашу і п'ю каву.
-3. What's for dinner?
-   > [!answer] Що на вечерю?
-4. Chicken with potatoes.
-   > [!answer] Курка з картоплею.
+> 🌍 **Real World: Shopping Phrases**
+>
+> Essential phrases for shopping:
+> - **Скільки коштує?** - How much does it cost?
+> - **Це коштує 50 гривень.** - This costs 50 hryvnias.
+> - **Дорого!** - Expensive!
+> - **Дешево!** - Cheap!
+> - **Є знижка?** - Is there a discount?
+> - **Готівкою чи карткою?** - Cash or card?
+> - **Решта твоя.** - Keep the change.
 
 ## production
 
-### Describe Your Diet
+### Count and Calculate
 
-Answer these questions:
-1. Що ви зазвичай їсте на сніданок?
-2. Яка ваша улюблена їжа?
-3. Чи ви любите борщ?
-4. Що ви п'єте вранці?
+1. 10 + 5 = ___ (п'ятнадцять)
+2. 20 + 3 = ___ (двадцять три)
+3. 50 - 10 = ___ (сорок)
+4. 100 - 1 = ___ (дев'яносто дев'ять)
+
+### Shopping Scenario
+
+Practice: You're buying items. Say the price:
+- Кава: 35₴ → Кава коштує тридцять п'ять гривень.
+- Книга: 120₴ → Книга коштує сто двадцять гривень.
+- Хліб: 18₴ → Хліб коштує вісімнадцять гривень.
 
 ---
 
@@ -228,93 +193,109 @@ Answer these questions:
 
 # Activities
 
-## fill-in: Food Vocabulary and Grammar
+## fill-in: Complete the Sentences
 
-> Choose the correct form to complete each sentence.
+> Choose the correct number or word.
 
-1. Я завжди люблю гарячу ___ з молоком вранці. (кава - coffee, accusative)
-   > [!answer] каву
-   > [!options] кава | каву | кави | каві
+1. Це коштує ___ гривень. (This costs 5 hryvnias.)
+   > [!answer] п'ять
+   > [!options] один | два | п'ять | десять
 
-2. Вона зазвичай їсть смачну італійську ___ на вечерю. (піца - pizza, accusative)
-   > [!answer] піцу
-   > [!options] піца | піцу | піци | піці
+2. Тут є ___ гривні. (Here are 2 hryvnias.)
+   > [!answer] дві
+   > [!options] один | дві | п'ять | сто
 
-3. Ми завжди п'ємо гарячий ___ після обіду. (чай - tea, accusative)
-   > [!answer] чай
-   > [!options] чай | чаю | чаї | чаєм
+3. Ось ___ гривня. (Here is 1 hryvnia.)
+   > [!answer] одна
+   > [!options] одна | дві | три | п'ять
 
-4. Він дуже любить український домашній ___. (борщ - borscht, accusative)
-   > [!answer] борщ
-   > [!options] борщ | борщу | борщі | борщем
+4. Ціна — ___ гривень. (The price is 10 hryvnias.)
+   > [!answer] десять
+   > [!options] один | три | десять | сто
 
-5. Вони часто їдять смачні ___ з картоплею. (вареники - dumplings, accusative)
-   > [!answer] вареники
-   > [!options] вареники | варениками | вареників | варениках
+5. Це ___! (This is expensive!)
+   > [!answer] дорого
+   > [!options] дорого | дешево | добре | багато
 
-6. Що ти зазвичай їси на ___ вранці? (сніданок - breakfast)
-   > [!answer] сніданок
-   > [!options] сніданок | сніданку | сніданком | сніданці
+6. Є ___? (Is there a discount?)
+   > [!answer] знижка
+   > [!options] гривня | копійка | знижка | картка
 
-7. Я хочу велику чашку гарячої ___. (кава - cup of coffee, genitive)
-   > [!answer] кави
-   > [!options] кава | каву | кави | каві
+7. Готівкою чи ___? (Cash or card?)
+   > [!answer] карткою
+   > [!options] готівкою | карткою | грошима | рештою
 
-8. Мені потрібна пляшка холодної мінеральної ___. (вода - bottle of water, genitive)
-   > [!answer] води
-   > [!options] вода | воду | води | воді
+8. Тут є ___. (Here is the change.)
+   > [!answer] решта
+   > [!options] решта | ціна | знижка | гривня
 
-9. Дайте мені, будь ласка, кілограм свіжих ___. (яблуко - kilo of apples, genitive plural)
-   > [!answer] яблук
-   > [!options] яблуко | яблука | яблук | яблукі
+9. Скільки це ___? (How much does it cost?)
+   > [!answer] коштує
+   > [!options] коштує | має | знає | бачить
 
-10. Це все дуже ___, дякую! (смачний - tasty, neuter)
-   > [!answer] смачне
-   > [!options] смачний | смачна | смачне | смачні
+10. Це коштує ___ гривень. (This costs 100 hryvnias.)
+   > [!answer] сто
+   > [!options] десять | двадцять | п'ятдесят | сто
+
+11. Тут є ___ гривні. (Here are 4 hryvnias.)
+   > [!answer] чотири
+   > [!options] один | три | чотири | п'ять
+
+12. Кава коштує ___ гривень. (Coffee costs 20 hryvnias.)
+   > [!answer] двадцять
+   > [!options] десять | двадцять | тридцять | сорок
 
 ## unjumble: Build the Sentence
 
-> Arrange the words in the correct order.
+> Arrange the words in the correct order. Sentences range from 4-6 words.
 
-1. каву / люблю / Я / гарячу / з / молоком
-   > [!answer] Я люблю гарячу каву з молоком.
-   > (I love hot coffee with milk.) [6 words]
+1. коштує / Скільки / ця / книга
+   > [!answer] Скільки коштує ця книга?
+   > (How much does this book cost?) [4 words]
 
-2. сніданок / на / їси / Що / ти / зазвичай
-   > [!answer] Що ти зазвичай їси на сніданок?
-   > (What do you usually eat for breakfast?) [6 words]
+2. п'ять / Це / гривень / тільки / коштує
+   > [!answer] Це коштує тільки п'ять гривень.
+   > (This costs only 5 hryvnias.) [5 words]
 
-3. борщ / український / люблять / Вони / смачний / домашній
-   > [!answer] Вони люблять смачний домашній український борщ.
-   > (They love tasty homemade Ukrainian borscht.) [6 words]
+3. гривні / Ось / твої / дві
+   > [!answer] Ось твої дві гривні.
+   > (Here are your 2 hryvnias.) [4 words]
 
-4. кави / чашка / Це / гарячої / моя / смачної
-   > [!answer] Це моя чашка смачної гарячої кави.
-   > (This is my cup of tasty hot coffee.) [6 words]
+4. Одна / гривня / це / мало / дуже
+   > [!answer] Одна гривня — це дуже мало.
+   > (One hryvnia is very little.) [5 words]
 
-5. вечерю / на / Що / ти / хочеш / сьогодні
-   > [!answer] Що ти хочеш на вечерю сьогодні?
-   > (What do you want for dinner today?) [6 words]
+5. дорого / Це / занадто / для / мене
+   > [!answer] Це занадто дорого для мене.
+   > (This is too expensive for me.) [5 words]
 
-6. кашу / вранці / Я / завжди / їм / гарячу
-   > [!answer] Я завжди їм гарячу кашу вранці.
-   > (I always eat hot porridge in the morning.) [6 words]
+6. тут / Це / дуже / дешево
+   > [!answer] Тут це дуже дешево.
+   > (It's very cheap here.) [4 words]
 
-7. п'є / Він / холодне / молоко / свіже / завжди
-   > [!answer] Він завжди п'є свіже холодне молоко.
-   > (He always drinks fresh cold milk.) [6 words]
+7. знижка / Є / яка / сьогодні
+   > [!answer] Яка знижка є сьогодні?
+   > (What discount is there today?) [4 words]
 
-8. смачно / Дуже / тут / все / сьогодні / готують
-   > [!answer] Сьогодні тут все готують дуже смачно!
-   > (Today everything is cooked very tasty here!) [6 words]
+8. карткою / чи / Готівкою / це
+   > [!answer] Готівкою чи карткою це?
+   > (Cash or card for this?) [4 words]
 
-9. вареники / з / любить / Вона / картоплею / смачні
-   > [!answer] Вона любить смачні вареники з картоплею.
-   > (She loves tasty dumplings with potatoes.) [6 words]
+9. Решта / твоя / Дякую / дуже
+   > [!answer] Дякую дуже, решта твоя.
+   > (Thank you very much, keep the change.) [4 words]
 
-10. риба / сьогодні / свіжа / Це / дуже / смачна
-    > [!answer] Сьогодні це дуже свіжа смачна риба.
-    > (Today this is very fresh tasty fish.) [6 words]
+10. гривень / сто / Це / разом / коштує
+    > [!answer] Це разом коштує сто гривень.
+    > (This costs 100 hryvnias in total.) [5 words]
+
+11. гривень / п'ять / Кава / тільки / коштує
+    > [!answer] Кава коштує тільки п'ять гривень.
+    > (Coffee costs only 5 hryvnias.) [5 words]
+
+12. чотири / Ось / мої / гривні
+    > [!answer] Ось мої чотири гривні.
+    > (Here are my 4 hryvnias.) [4 words]
 
 ## match-up: Match the Pairs
 
@@ -322,146 +303,170 @@ Answer these questions:
 
 | Left | Right |
 |------|-------|
-| сніданок | breakfast |
-| обід | lunch |
-| вечеря | dinner |
-| борщ | borscht |
-| вареники | dumplings |
-| м'ясо | meat |
-| риба | fish |
-| курка | chicken |
-| картопля | potato |
-| смачного | bon appétit |
+| один | one |
+| два | two |
+| три | three |
+| п'ять | five |
+| десять | ten |
+| двадцять | twenty |
+| сто | hundred |
+| гривня | hryvnia |
+| дорого | expensive |
+| дешево | cheap |
+| знижка | discount |
+| решта | change |
 
-## quiz: Food and Meals
+## group-sort: Number Agreement Patterns
+
+> Sort numbers by the case/form required for nouns after them.
+
+### Nominative Singular (один)
+- один студент (one student)
+- одна книга (one book)
+- одне вікно (one window)
+
+### Nominative Plural (2-4)
+- два/дві студенти (two students)
+- три книги (three books)
+- чотири вікна (four windows)
+
+### Genitive Plural (5-20, and with certain endings)
+- п'ять студентів (five students)
+- десять книг (ten books)
+- двадцять гривень (twenty hryvnias)
+
+### Irregular Numbers
+- сорок (40) - doesn't follow tens pattern
+- дев'яносто (90) - unique form
+- сто (100) - unique form
+
+## quiz: Number Grammar Rules
 
 > Choose the correct answer.
 
-1. How do you say "I love coffee" (accusative)?
-   - [ ] Я люблю кава.
-   - [x] Я люблю каву.
-   - [ ] Я люблю кави.
-   - [ ] Я люблю каві.
-   > Feminine -а → -у in accusative
+1. "Один" agrees with gender. Which is correct for "one book"?
+   - [ ] один книга
+   - [x] одна книга
+   - [ ] одне книга
+   - [ ] одні книга
+   > "книга" is feminine, so use feminine form "одна"
 
-2. What is "чашка кави"?
-   - [x] a cup of coffee
-   - [ ] a cup for coffee
-   - [ ] a big coffee
-   - [ ] coffee cup broken
-   > Genitive after quantity words
+2. Why is "дві" used instead of "два" with "книги"?
+   - [ ] "Книга" is neuter
+   - [x] "Книга" is feminine
+   - [ ] Random variation
+   - [ ] "Два" is only for people
+   > "Два" = masc/neut, "дві" = feminine
 
-3. Which meal is "сніданок"?
-   - [x] breakfast
-   - [ ] lunch
-   - [ ] dinner
-   - [ ] snack
-   > "сніданок" = breakfast
+3. After numbers 2-4, nouns take which form?
+   - [ ] Genitive singular
+   - [x] Nominative plural
+   - [ ] Genitive plural
+   - [ ] Accusative
+   > 2-4 + nominative plural: три книги, чотири столи
 
-4. What does "Смачного!" mean?
-   - [ ] Thank you!
-   - [x] Bon appétit!
-   - [ ] Hello!
-   - [ ] Goodbye!
-   > Said before eating
+4. After numbers 5-20, nouns take which form?
+   - [ ] Nominative singular
+   - [ ] Nominative plural
+   - [x] Genitive plural
+   - [ ] Accusative
+   > 5-20 + genitive plural: п'ять книг, десять столів
 
-5. How do you say "She eats pizza" (accusative)?
-   - [ ] Вона їсть піца.
-   - [x] Вона їсть піцу.
-   - [ ] Вона їсть піци.
-   - [ ] Вона їсть піці.
-   > Feminine -а → -у in accusative
+5. Which is correct for "five hryvnias"?
+   - [ ] п'ять гривня
+   - [ ] п'ять гривні
+   - [x] п'ять гривень
+   - [ ] п'ять гривнями
+   > 5+ requires genitive plural: гривень
 
-6. What is "борщ"?
-   - [ ] dumplings
-   - [x] beet soup
-   - [ ] porridge
-   - [ ] bread
-   > Traditional Ukrainian beet soup
+6. Why is "сорок" (40) considered irregular?
+   - [ ] It ends in a vowel
+   - [x] It doesn't follow the pattern -дцять (like 20, 30)
+   - [ ] It requires a different case
+   - [ ] It has gender forms
+   > Other tens: двадцять, тридцять, but сорок is unique
 
-7. What is "кілограм яблук"?
-   - [ ] apple kilogram
-   - [x] a kilogram of apples
-   - [ ] kilo with apples
-   - [ ] apple kilo price
-   > Genitive plural after 5+
+7. "Два студента" vs "дві студентки" - why the different forms?
+   - [ ] Два is more common
+   - [ ] студент is foreign
+   - [x] Два = masc/neut, дві = feminine
+   - [ ] Random variation
+   > Gender agreement: два + masc noun, дві + fem noun
 
-8. Which adjective means "fresh"?
-   - [ ] смачний
-   - [x] свіжий
-   - [ ] гарячий
-   - [ ] холодний
-   > "свіжий" = fresh
+8. What case ending do nouns take after "один"?
+   - [x] Nominative singular (same as dictionary form)
+   - [ ] Genitive singular
+   - [ ] Nominative plural
+   - [ ] Genitive plural
+   > One + nominative singular: один студент, одна книга
 
-9. What is the accusative of "молоко" (neuter)?
-   - [x] молоко
-   - [ ] молока
-   - [ ] молоку
-   - [ ] молоці
-   > Neuter nouns don't change in accusative
+9. Which number form is correct with the neuter noun "вікно"?
+   - [ ] дві вікна
+   - [x] два вікна
+   - [ ] двоє вікна
+   - [ ] двох вікна
+   > Neuter nouns take "два" (like masculine)
 
-10. What are "вареники"?
-   - [ ] beet soup
-   - [ ] bread
-   - [x] dumplings
-   - [ ] sausage
-   > Traditional Ukrainian dumplings
+10. "100 гривень" uses genitive plural because:
+    - [ ] 100 is a round number
+    - [ ] сто is irregular
+    - [x] Numbers 5+ (including 100) require genitive plural
+    - [ ] гривня is a currency
+    > The 5+ rule applies to all large numbers
 
-## true-false: True or False?
+11. What is the genitive plural of "книга"?
+    - [ ] книга
+    - [ ] книги
+    - [x] книг
+    - [ ] книгів
+    > Feminine -а drops: книга → книг
 
-> Determine if each statement is true or false.
+12. What is the genitive plural of "гривня"?
+    - [ ] гривня
+    - [ ] гривні
+    - [x] гривень
+    - [ ] гривнів
+    > Special ending: гривня → гривень
 
-- [x] "Я люблю каву" is correct for "I love coffee"
-   > Correct! Feminine accusative -а → -у
+## true-false: Number Grammar Rules
 
-- [ ] "Я люблю кава" is grammatically correct
-   > Incorrect. Need accusative: "Я люблю каву"
+> Determine if each statement about Ukrainian numbers is true or false.
 
-- [x] "Чашка кави" means "a cup of coffee"
-   > Correct! Genitive after quantity
+- [x] The number "один" changes form for gender: один/одна/одне.
+   > Correct! один = masc, одна = fem, одне = neut
 
-- [x] "Смачного!" is said before eating
-   > Correct!
+- [x] After numbers 5+, nouns take genitive plural (п'ять гривень).
+   > Correct! This is a key rule for number agreement.
 
-- [ ] "сніданок" means "dinner"
-   > Incorrect. "сніданок" = breakfast, "вечеря" = dinner
+- [x] "Дві" is the feminine form of "two" (used with feminine nouns).
+   > Correct! "дві книги" vs "два столи"
 
-- [x] "борщ" is traditional Ukrainian beet soup
-   > Correct!
+- [x] "Сорок" (40) is irregular - it doesn't follow the -дцять pattern.
+   > Correct! Compare: двадцять, тридцять, but сорок (unique).
 
-- [x] Neuter nouns don't change in accusative
-   > Correct! молоко → молоко
+- [ ] "Два гривні" is grammatically correct.
+   > Incorrect. "гривня" is feminine → "дві гривні"
 
-- [ ] "вареники" means "borscht"
-   > Incorrect. "вареники" = dumplings
+- [ ] Numbers 2-4 require genitive plural, just like 5+.
+   > Incorrect. 2-4 take nominative plural (три книги), 5+ takes genitive plural.
 
-- [x] "свіжий" means "fresh"
-   > Correct!
+- [x] Neuter nouns use "два" (not "дві") like masculine nouns.
+   > Correct! два вікна, два міста
 
-- [x] "Що на вечерю?" asks "What's for dinner?"
-   > Correct!
+- [ ] "Один" doesn't need to agree with noun gender.
+   > Incorrect. "Один" agrees: один студент, одна книга, одне місто.
 
-## group-sort: Food Categories
+- [x] "П'ять студентів" uses genitive plural form of студент.
+   > Correct! 5+ triggers genitive plural: студент → студентів
 
-> Sort these foods by their category.
+- [x] The pattern "5+ = genitive plural" applies to numbers like 100, 1000, etc.
+   > Correct! сто гривень, тисяча гривень (all genitive plural)
 
-### Фрукти (Fruits)
-- яблуко (apple)
-- банан (banana)
-- апельсин (orange)
-- груша (pear)
+- [x] "Книг" is the genitive plural of "книга".
+   > Correct! Feminine -а drops in genitive plural.
 
-### Овочі (Vegetables)
-- картопля (potato)
-- морква (carrot)
-- цибуля (onion)
-- помідор (tomato)
-
-### М'ясо та молочні (Meat & Dairy)
-- курка (chicken)
-- м'ясо (meat)
-- молоко (milk)
-- сир (cheese)
+- [x] Genitive case was introduced in Module 16.
+   > Correct! Numbers 5+ use genitive plural learned in M16.
 
 ---
 
@@ -469,120 +474,64 @@ Answer these questions:
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
-| їжа | /ˈjizʲɑ/ | food | noun | f |
-| сніданок | /snʲiˈdɑnɔk/ | breakfast | noun | m |
-| обід | /ɔˈbʲid/ | lunch | noun | m |
-| вечеря | /vɛˈtʃɛrʲɑ/ | dinner | noun | f |
-| перекус | /pɛrɛˈkus/ | snack | noun | m |
-| фрукти | /ˈfruktɪ/ | fruits | noun | pl |
-| яблуко | /ˈjɑblukɔ/ | apple | noun | n |
-| банан | /bɑˈnɑn/ | banana | noun | m |
-| апельсин | /ɑpɛlʲˈsɪn/ | orange | noun | m |
-| лимон | /lɪˈmɔn/ | lemon | noun | m |
-| груша | /ˈɦruʃɑ/ | pear | noun | f |
-| виноград | /vɪnɔˈɦrɑd/ | grapes | noun | m |
-| полуниця | /pɔluˈnɪt͡sʲɑ/ | strawberry | noun | f |
-| кавун | /kɑˈwun/ | watermelon | noun | m |
-| персик | /ˈpɛrsɪk/ | peach | noun | m |
-| слива | /ˈslɪvɑ/ | plum | noun | f |
-| овочі | /ˈɔvɔtʃi/ | vegetables | noun | pl |
-| картопля | /kɑrˈtɔplʲɑ/ | potato | noun | f | Collective, no plural |
-| морква | /ˈmɔrkvɑ/ | carrot | noun | f |
-| цибуля | /t͡sɪˈbulʲɑ/ | onion | noun | f |
-| часник | /t͡ʃɑsˈnɪk/ | garlic | noun | m |
-| помідор | /pɔmʲiˈdɔr/ | tomato | noun | m |
-| огірок | /ɔɦʲiˈrɔk/ | cucumber | noun | m |
-| капуста | /kɑˈpustɑ/ | cabbage | noun | f |
-| буряк | /buˈrʲɑk/ | beet | noun | m |
-| перець | /ˈpɛrɛt͡sʲ/ | pepper | noun | m |
-| гриби | /ɦrɪˈbɪ/ | mushrooms | noun | pl |
-| м'ясо | /ˈmjɑsɔ/ | meat | noun | n |
-| курка | /ˈkurkɑ/ | chicken | noun | f |
-| свинина | /svɪˈnɪnɑ/ | pork | noun | f |
-| яловичина | /jɑlɔvɪˈtʃɪnɑ/ | beef | noun | f |
-| риба | /ˈrɪbɑ/ | fish | noun | f |
-| яйце | /jɑjˈt͡sɛ/ | egg | noun | n |
-| ковбаса | /kɔu̯bɑˈsɑ/ | sausage | noun | f |
-| шинка | /ˈʃɪnkɑ/ | ham | noun | f |
-| сало | /ˈsɑlɔ/ | pork fat | noun | n | Cured, sliced thin |
-| молоко | /mɔlɔˈkɔ/ | milk | noun | n |
-| сир | /sɪr/ | cheese/cottage cheese | noun | m |
-| сметана | /smɛˈtɑnɑ/ | sour cream | noun | f |
-| масло | /ˈmɑslɔ/ | butter | noun | n |
-| йогурт | /ˈjɔɦurt/ | yogurt | noun | m |
-| кефір | /kɛˈfʲir/ | kefir | noun | m |
-| вершки | /ˈvɛrʃkɪ/ | cream | noun | pl |
-| вода | /ˈvɔdɑ/ | water | noun | f |
-| кава | /ˈkɑvɑ/ | coffee | noun | f |
-| чай | /tʃɑj/ | tea | noun | m |
-| сік | /sʲik/ | juice | noun | m |
-| пиво | /ˈpɪvɔ/ | beer | noun | n |
-| вино | /vɪˈnɔ/ | wine | noun | n |
-| компот | /kɔmˈpɔt/ | fruit drink | noun | m |
-| узвар | /uzˈvɑr/ | dried fruit drink | noun | m |
-| хліб | /xlʲib/ | bread | noun | m |
-| рис | /rɪs/ | rice | noun | m |
-| макарони | /mɑkɑˈrɔnɪ/ | pasta | noun | pl |
-| каша | /ˈkɑʃɑ/ | porridge | noun | f | Buckwheat, oats, etc. |
-| суп | /sup/ | soup | noun | m |
-| борщ | /bɔrʃtʃ/ | borscht | noun | m | Beet soup |
-| вареники | /vɑˈrɛnɪkɪ/ | dumplings | noun | pl | Singular: вареник |
-| салат | /sɑˈlɑt/ | salad | noun | m |
-| піца | /ˈpitsɑ/ | pizza | noun | f |
-| бутерброд | /butɛrˈbrɔd/ | sandwich | noun | m |
-| смачний | /ˈsmɑtʃnɪj/ | tasty | adj | m | смачна (f), смачне (n) |
-| свіжий | /ˈsvʲiʒɪj/ | fresh | adj | m | свіжа (f), свіже (n) |
-| смачного | /smɑtʃˈnɔɦɔ/ | bon appétit | phrase | - | Literally "of tasty" |
-| меню | /mɛˈnʲu/ | menu | noun | n | Indeclinable |
-| страва | /ˈstrɑvɑ/ | dish, course | noun | f |
-| закуска | /zɑˈkuskɑ/ | appetizer | noun | f |
-| головна страва | /ɦɔˈlɔvnɑ ˈstrɑvɑ/ | main course | phrase | f |
-| десерт | /dɛˈsɛrt/ | dessert | noun | m |
-| напій | /ˈnɑpij/ | drink | noun | m |
-| смажений | /ˈsmɑʒɛnɪj/ | fried | adj | m |
-| варений | /vɑˈrɛnɪj/ | boiled | adj | m |
-| печений | /ˈpɛtʃɛnɪj/ | baked | adj | m |
-| гарячий | /ɦɑˈrʲɑtʃɪj/ | hot | adj | m |
-| холодний | /xɔˈlɔdnɪj/ | cold | adj | m |
-| солодкий | /sɔˈlɔdkɪj/ | sweet | adj | m |
-| солоний | /sɔˈlɔnɪj/ | salty | adj | m |
-| гострий | /ˈɦɔstrɪj/ | spicy | adj | m |
-| порція | /ˈpɔrt͡sʲijɑ/ | portion | noun | f |
-| тарілка | /tɑˈrʲilkɑ/ | plate | noun | f |
-| склянка | /ˈsklʲɑnkɑ/ | glass | noun | f |
-| пляшка | /ˈplʲɑʃkɑ/ | bottle | noun | f |
-| офіціант | /ɔfʲit͡sʲiˈɑnt/ | waiter | noun | m |
-| замовлення | /zɑmɔvˈlʲɛnʲːɑ/ | order (food) | noun | n |
-| рахунок | /rɑˈxunɔk/ | bill, check | noun | m |
-| чайові | /tʃɑjɔˈvʲi/ | tip | noun | pl |
+| нуль | /nulʲ/ | zero | num | m |
+| один | /ɔˈdɪn/ | one (m) | num | m | одна (f), одне (n) |
+| два | /dvɑ/ | two (m/n) | num | - | дві (f) |
+| три | /trɪ/ | three | num | - |
+| чотири | /tʃɔˈtɪrɪ/ | four | num | - |
+| п'ять | /pjɑtʲ/ | five | num | - |
+| шість | /ʃʲistʲ/ | six | num | - |
+| сім | /sʲim/ | seven | num | - |
+| вісім | /ˈvʲisʲim/ | eight | num | - |
+| дев'ять | /ˈdɛvjɑtʲ/ | nine | num | - |
+| десять | /ˈdɛsʲɑtʲ/ | ten | num | - |
+| одинадцять | /ɔdɪˈnɑd͡tsʲɑtʲ/ | eleven | num | - |
+| дванадцять | /dvɑˈnɑd͡tsʲɑtʲ/ | twelve | num | - |
+| двадцять | /ˈdvɑd͡tsʲɑtʲ/ | twenty | num | - |
+| тридцять | /ˈtrɪd͡tsʲɑtʲ/ | thirty | num | - |
+| сорок | /ˈsɔrɔk/ | forty | num | - | Irregular! |
+| п'ятдесят | /pjɑtdɛˈsʲɑt/ | fifty | num | - |
+| шістдесят | /ʃʲistdɛˈsʲɑt/ | sixty | num | - |
+| сімдесят | /sʲimdɛˈsʲɑt/ | seventy | num | - |
+| вісімдесят | /vʲisʲimdɛˈsʲɑt/ | eighty | num | - |
+| дев'яносто | /dɛvjɑˈnɔstɔ/ | ninety | num | - | Irregular! |
+| сто | /stɔ/ | hundred | num | - |
+| гривня | /ˈɦrɪvnʲɑ/ | hryvnia (₴) | noun | f | 2-4: гривні, 5+: гривень |
+| копійка | /kɔˈpʲijkɑ/ | kopeck | noun | f | 2-4: копійки, 5+: копійок |
+| ціна | /t͡sʲiˈnɑ/ | price | noun | f |
+| коштувати | /kɔʃtuˈvɑtɪ/ | to cost | verb | - | коштує (it costs) |
+| дорого | /ˈdɔrɔɦɔ/ | expensive | adv | - |
+| дешево | /ˈdɛʃɛvɔ/ | cheap | adv | - |
+| знижка | /ˈznɪʒkɑ/ | discount | noun | f |
+| решта | /ˈrɛʃtɑ/ | change (money) | noun | f |
 | готівка | /ɦɔˈtʲivkɑ/ | cash | noun | f |
-| картка | /ˈkɑrtkɑ/ | card | noun | f |
-| долар | /ˈdɔlɑr/ | dollar | noun | m |
-| євро | /ˈjɛvrɔ/ | euro | noun | n |
+| картка | /ˈkɑrtkɑ/ | card | noun | f | Bank card |
+| скільки | /ˈskʲilʲkɪ/ | how much/many | adv | - | + genitive |
+| разом | /ˈrɑzɔm/ | together, total | adv | - |
 
 ---
 
-# Food Phrases
+# Number Patterns
 
-## Ordering & Shopping
+## Numbers 0-100
 
-| Ukrainian | English |
-|-----------|---------|
-| Що ви порекомендуєте? | What do you recommend? |
-| Дайте, будь ласка... | Give me, please... |
-| Скільки коштує...? | How much is...? |
-| Це свіже? | Is this fresh? |
-| Мені потрібно... | I need... |
+| Range | Pattern | Examples |
+|-------|---------|----------|
+| 0-10 | Basic | нуль, один, два... десять |
+| 11-19 | X + надцять | одинадцять, дванадцять... |
+| 20, 30 | X + дцять | двадцять, тридцять |
+| 40 | Irregular | сорок |
+| 50-80 | X + десят | п'ятдесят, шістдесят... |
+| 90 | Irregular | дев'яносто |
+| 100 | Irregular | сто |
 
-## Expressing Preferences
+## Number-Noun Agreement
 
-| Ukrainian | English |
-|-----------|---------|
-| Я люблю... | I love... |
-| Я не люблю... | I don't like... |
-| Моя улюблена їжа - ... | My favorite food is... |
-| Я не їм м'яса. | I don't eat meat. |
-| Я вегетаріанець/вегетаріанка. | I'm vegetarian. |
+| Number | Noun Case | Example |
+|--------|-----------|---------|
+| 1 (21, 31...) | Nom. sing. | одна книга |
+| 2-4 (22-24...) | Nom. plural | дві книги |
+| 5-20 (25-30...) | Gen. plural | п'ять книг |
 
 ---
 
@@ -590,13 +539,13 @@ Answer these questions:
 
 > 💡 **What You Learned Today**
 >
-> - Meals: сніданок, обід, вечеря
-> - Fruits: яблуко, банан, апельсин...
-> - Vegetables: картопля, морква, цибуля...
-> - Meat & dairy: курка, м'ясо, молоко, сир
-> - Drinks: вода, кава, чай, сік
-> - Traditional foods: борщ, вареники, сало
-> - "Смачного!" = Bon appétit!
+> - Numbers 0-100 in Ukrainian
+> - **Один** agrees in gender (один/одна/одне)
+> - **Два/дві** - дві for feminine nouns
+> - **Сорок** (40) and **дев'яносто** (90) are irregular
+> - Number-noun agreement: 1 = nom.sg., 2-4 = nom.pl., 5+ = **gen.pl.**
+> - Currency: гривня (₴), копійка
+> - Shopping phrases: Скільки коштує? Дорого! Дешево!
 
 > 🎯 **Coming Next**
 >

@@ -370,9 +370,9 @@ Read these tricky words:
    > [!answer] Це мій тато, мій доктор.
    > (This is my dad, my doctor.) [5 words]
 
-2. є / Там / великий / парк / і / банк
-   > [!answer] Там є великий парк і банк.
-   > (There is a big park and bank.) [6 words]
+2. є / Там / парк / і / банк / кафе
+   > [!answer] Там є парк, банк і кафе.
+   > (There is a park, bank and café.) [6 words]
 
 3. мама / Моя / тут / і / тато / мій
    > [!answer] Моя мама тут і мій тато.

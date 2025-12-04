@@ -557,7 +557,8 @@ Say what you don't have:
 
 > 🎯 **Coming Next**
 >
-> In Module 17, you'll learn **food vocabulary**:
-> - Що ти їси на сніданок? (What do you eat for breakfast?)
-> - Fruits, vegetables, meats, drinks
-> - Shopping for groceries
+> In Module 17, you'll learn **numbers and money**:
+> - Counting from 0 to 100 in Ukrainian
+> - Ukrainian currency: гривня (₴)
+> - Numbers 5+ use genitive plural (п'ять гривень)
+> - Shopping phrases: Скільки коштує?
