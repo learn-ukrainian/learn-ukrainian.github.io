@@ -55,7 +55,14 @@ After narrative enrichment, run:
 npm run vocab:enrich l2-uk-en [moduleNum]
 ```
 
-This captures ALL words from the enriched lesson. Wait for this to complete before Step 3.
+This captures ALL words from the enriched lesson.
+
+**If vocab:enrich made changes**, also rebuild the master vocabulary database:
+```bash
+npm run vocab:rebuild
+```
+
+Wait for this to complete before Step 3.
 
 ### STEP 3: COMPLETELY RECREATE ALL ACTIVITIES
 
@@ -328,6 +335,7 @@ For Module 01 (The Cyrillic Code I), the audit found:
 
 - [ ] Step 1 complete: Narrative enriched with 12+ examples, 3+ engagement boxes
 - [ ] Step 2 complete: `vocab:enrich` ran successfully
+- [ ] Step 2b complete: If vocab changed, `vocab:rebuild` ran successfully
 - [ ] Step 3 complete: ALL old activities deleted, 8+ new activities created
 - [ ] Each activity has 12+ items
 - [ ] Fill-in sentences are 5-8 words

@@ -46,6 +46,11 @@ npm run vocab:enrich l2-uk-en [moduleNum]
 ```
 - Captures ALL words from enriched lesson
 - Must run AFTER narrative changes, BEFORE activities
+- **If vocab:enrich made changes**, also run:
+```bash
+npm run vocab:rebuild
+```
+- This rebuilds the master vocabulary database (vocabulary.csv)
 
 ### Step 3: COMPLETELY RECREATE ALL ACTIVITIES
 - **DELETE every existing activity** - no exceptions
