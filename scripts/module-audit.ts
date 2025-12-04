@@ -1001,22 +1001,28 @@ function auditModule(filePath: string, vocabDb?: VocabDatabase): ModuleAudit {
   const immersionReq = immersionConfig[level];
 
   if (totalChars > 200 && immersionReq) {
-    const actualImmersion = cyrillicChars / totalChars;
-    const targetImmersion = immersionReq.target;
-    const tolerance = immersionReq.tolerance;
-    const deviation = actualImmersion - targetImmersion;
+    // Exception: Modules 1-3 are alphabet-teaching modules where low Ukrainian % is expected
+    // These modules need extensive English explanations for Cyrillic letters
+    const isAlphabetModule = moduleNum >= 1 && moduleNum <= 3;
 
-    if (Math.abs(deviation) > tolerance) {
-      const actualPercent = Math.round(actualImmersion * 100);
-      const targetPercent = Math.round(targetImmersion * 100);
-      const tolerancePercent = Math.round(tolerance * 100);
-      const direction = deviation > 0 ? 'too much Ukrainian' : 'too much English';
+    if (!isAlphabetModule) {
+      const actualImmersion = cyrillicChars / totalChars;
+      const targetImmersion = immersionReq.target;
+      const tolerance = immersionReq.tolerance;
+      const deviation = actualImmersion - targetImmersion;
 
-      issues.push({
-        type: 'warning',
-        category: 'immersion',
-        message: `Immersion imbalance: ${actualPercent}% Ukrainian (target: ${targetPercent}% ±${tolerancePercent}%) - ${direction}`,
-      });
+      if (Math.abs(deviation) > tolerance) {
+        const actualPercent = Math.round(actualImmersion * 100);
+        const targetPercent = Math.round(targetImmersion * 100);
+        const tolerancePercent = Math.round(tolerance * 100);
+        const direction = deviation > 0 ? 'too much Ukrainian' : 'too much English';
+
+        issues.push({
+          type: 'warning',
+          category: 'immersion',
+          message: `Immersion imbalance: ${actualPercent}% Ukrainian (target: ${targetPercent}% ±${tolerancePercent}%) - ${direction}`,
+        });
+      }
     }
   }
 

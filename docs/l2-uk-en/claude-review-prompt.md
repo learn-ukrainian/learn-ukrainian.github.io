@@ -1,319 +1,337 @@
-# Claude Module Review Prompt
+# Module Enrichment Prompt
 
-Use this prompt to review and enrich curriculum modules. Copy the relevant section for the level you're reviewing.
+<constraints>
+## CRITICAL RULES - READ FIRST
 
----
+**NEVER:**
+- NEVER keep existing activities - DELETE ALL and recreate from scratch
+- NEVER add activities without rebuilding vocabulary first
+- NEVER skip any step in the 3-step workflow
+- NEVER use vocabulary words not in the module's vocabulary section
+- NEVER create activities with fewer items than required
+- NEVER write sentences shorter than required word count
 
-## Quick Review Command
-
-```
-Review module [X] against the guidelines. Check activities, vocabulary, engagement boxes, and narrative richness. Fix any issues.
-```
-
----
-
-## Full Review Prompt
-
-```
-Review and enrich module [X] following these requirements:
-
-## Immersion Levels (Ukrainian vs English %)
-
-When writing or enriching content, maintain the correct language balance for each level:
-
-| Level | Modules | Ukrainian % | English % | Practical Meaning |
-|-------|---------|-------------|-----------|-------------------|
-| A1 | 1-30 | 30% | 70% | Mostly English explanations, Ukrainian examples/vocab |
-| A2 | 31-60 | 40% | 60% | More Ukrainian in dialogues, English explanations |
-| A2+ | 61-80 | 50% | 50% | Equal balance, section headers in Ukrainian |
-| B1 | 81-120 | 60% | 40% | Ukrainian-dominant, English for complex grammar |
-| B1+ | 121-160 | 70% | 30% | More Ukrainian, English for nuance only |
-| B2 | 161-200 | 85% | 15% | Almost entirely Ukrainian, English only for nuance |
-| B2+ | 201-240 | 90% | 10% | Near-full immersion, minimal English |
-| C1 | 241+ | 95% | 5% | Full immersion, English only for rare clarifications |
-
-**Important**: When adding prose/narrative content to fix "dry narration" issues, write new content in the appropriate language mix. Don't just add English explanations to B2 modules or Ukrainian prose to A1 modules.
-
-**Tolerance**: ±10% from target is acceptable.
+**ALWAYS:**
+- ALWAYS follow the 3-step workflow in EXACT order
+- ALWAYS delete ALL existing activities before creating new ones
+- ALWAYS run vocab:enrich after narrative changes
+- ALWAYS verify every activity answer is correct
+- ALWAYS use ONLY vocabulary from the rebuilt vocabulary section
+</constraints>
 
 ---
 
-## Level-Specific Requirements
+## The 3-Step Enrichment Workflow
 
-### A1 (Modules 1-30)
-- **Immersion**: 30% Ukrainian, 70% English
-- Activities: 6 minimum, 10 items each
-- Vocabulary: 15-20 new words per module
-- Sentence complexity: Simple SVO (3-6 words)
-- Transliteration: Full (modules 1-10), vocab only (11-20), first occurrence (21-30)
-- Checkpoints: 10, 20, 30 need named characters + testimonies
+<instructions>
+**This is the ONLY correct way to enrich a module. No shortcuts.**
 
-### A2 (Modules 31-60)
-- **Immersion**: 40% Ukrainian, 60% English
-- Activities: 8 minimum, 10 items each
-- Vocabulary: 20-25 new words per module
-- Sentence complexity: Compound sentences with connectors (6-8 words)
-- Transliteration: None
-- Checkpoints: 40, 50, 60
+### STEP 1: ENRICH NARRATIVE CONTENT
 
-### A2+ (Modules 61-80)
-- **Immersion**: 50% Ukrainian, 50% English
-- Activities: 10 minimum, 15 items each
-- Vocabulary: 35-40 new words per module
-- Sentence complexity: Subordinate clauses begin (8-10 words)
-- Checkpoints: 70, 80
+Improve the lesson content (everything BEFORE `# Activities`):
 
-### B1 (Modules 81-120)
-- **Immersion**: 60% Ukrainian, 40% English
-- Activities: 12 minimum, 20 items each
-- Vocabulary: 25-30 new words per module
-- Sentence complexity: Complex sentences, conditionals (10-14 words)
-- Checkpoints: 100, 120
+1. **Add engagement boxes** (minimum 3 for A1, see table below)
+   - 💡 Did You Know - Interesting facts
+   - 🎬 Pop Culture Moment - Movies, games, music (Lord of the Rings, S.T.A.L.K.E.R., Witcher)
+   - 🌍 Real World - Practical usage scenarios
+   - 🎯 Fun Fact - Memorable trivia
+   - 🎮 Gamer's Corner - Gaming references
 
-### B1+ (Modules 121-160)
-- **Immersion**: 70% Ukrainian, 30% English
-- Activities: 12 minimum, 20 items each
-- Vocabulary: 25-30 new words per module
-- Sentence complexity: Extended complexity, participles (10-14 words)
-- Checkpoints: 140, 160
+2. **Add example sentences** (minimum 12 for A1)
+   - Each example: Ukrainian + transliteration (for A1) + English
+   - Show the grammar/vocabulary in realistic context
 
-### B2 (Modules 161-200)
-- **Immersion**: 85% Ukrainian, 15% English
-- Activities: 14 minimum, 20 items each
-- Vocabulary: 25-30 new words per module
-- Sentence complexity: Sophisticated structures, passive (12-16 words)
-- Pronunciation guidance required for grammar modules
-- Checkpoints: 180, 200
+3. **Enrich explanations**
+   - Add tables for grammar patterns
+   - Add comparison boxes (correct vs incorrect)
+   - Add memory tricks and mnemonics
 
-### B2+ (Modules 201-240)
-- **Immersion**: 90% Ukrainian, 10% English
-- Activities: 14 minimum, 20 items each
-- Vocabulary: 25-30 new words per module
-- Sentence complexity: Advanced stylistic variation (12-16 words)
-- Pronunciation guidance required for grammar modules
-- Checkpoints: 220, 240
+4. **DO NOT touch the Activities section yet**
 
-### C1 (Modules 241+)
-- **Immersion**: 95% Ukrainian, 5% English
-- Activities: 14 minimum, 20 items each
-- Vocabulary: 30-35 new words per module
-- Sentence complexity: Advanced academic/literary (14-18 words)
-- Pronunciation guidance required
+### STEP 2: REBUILD VOCABULARY
 
-## Activity Priority Order (use in this sequence)
-1. quiz - Multiple choice (low cognitive load)
-2. match-up - Vocabulary associations
-3. group-sort - Categorization
-4. true-false - Statement validation
-5. select - Word selection
-6. order - Sequence building
-7. fill-in - Gap completion (high cognitive load)
-8. unjumble - Word ordering (highest cognitive load)
+After narrative enrichment, run:
+```bash
+npm run vocab:enrich l2-uk-en [moduleNum]
+```
 
-## Required Activity Formats
+This captures ALL words from the enriched lesson. Wait for this to complete before Step 3.
 
-### fill-in
+### STEP 3: COMPLETELY RECREATE ALL ACTIVITIES
+
+**DELETE the entire `# Activities` section and everything in it.**
+
+Then create fresh activities that:
+- Use ONLY vocabulary from the rebuilt vocabulary section (Step 2)
+- Meet all quantity requirements (see tables below)
+- Have verified correct answers
+- Follow the activity format templates exactly
+
+### STEP 4: GENERATE AND VERIFY
+
+```bash
+npx ts-node scripts/generate.ts l2-uk-en [moduleNum]
+```
+
+Open the HTML output and verify activities work correctly.
+</instructions>
+
+---
+
+## Requirements by Level
+
+### Activity Requirements
+
+| Level | Modules | Min Activities | Items per Activity | Fill-in Words | Unjumble Words |
+|-------|---------|----------------|-------------------|---------------|----------------|
+| **A1** | 1-30 | **8** | **12** | 5-8 | 5-8 |
+| A2 | 31-60 | 10 | 12 | 6-9 | 6-9 |
+| A2+ | 61-80 | 10 | 12 | 6-10 | 6-10 |
+| B1 | 81-120 | 12 | 14 | 7-11 | 7-11 |
+| B1+ | 121-160 | 12 | 14 | 8-12 | 8-12 |
+| B2 | 161-200 | 14 | 16 | 9-14 | 9-14 |
+
+### Content Requirements
+
+| Level | Min Examples | Min Engagement Boxes | Immersion (Ukrainian %) |
+|-------|--------------|---------------------|------------------------|
+| **A1** | **12** | **3** | 30% (±15% tolerance) |
+| A2 | 15 | 4 | 40% |
+| A2+ | 18 | 4 | 50% |
+| B1 | 22 | 5 | 60% |
+| B1+ | 24 | 5 | 70% |
+| B2 | 26 | 6 | 85% |
+
+### Required Activity Types (use at least 4 different types)
+
+1. `fill-in` - Gap fill with options
+2. `unjumble` - Reorder words into sentence
+3. `quiz` - Multiple choice questions
+4. `match-up` - Match pairs
+5. `group-sort` - Sort items into categories
+6. `true-false` - True/false statements
+
+---
+
+## Activity Format Templates
+
+### fill-in (Gap Fill)
+
 ```markdown
 ## fill-in: Title
 
-> Instructions.
+> Instructions explaining what to do.
 
-1. Sentence with ___ blank.
+1. Sentence with ___ blank here. (5-8 words for A1)
    > [!answer] correct answer
-   > [!options] opt1 | opt2 | opt3 | opt4
+   > [!options] wrong1 | correct answer | wrong2 | wrong3
+
+2. Another ___ sentence here. (5-8 words for A1)
+   > [!answer] correct answer
+   > [!options] wrong1 | wrong2 | correct answer | wrong3
 ```
 
-### quiz
-```markdown
-## quiz: Title
+**Requirements:**
+- Minimum 12 items for A1
+- Each sentence: 5-8 words for A1
+- 4 options per item (1 correct, 3 distractors)
+- Distractors must be plausible but clearly wrong
 
-> Instructions.
+### unjumble (Word Ordering)
 
-1. Question?
-   - [x] Correct
-   - [ ] Wrong
-   - [ ] Wrong
-   > Explanation (optional)
-```
-
-### match-up
-```markdown
-## match-up: Title
-
-> Instructions.
-
-| Left | Right |
-|------|-------|
-| item1 | match1 |
-| item2 | match2 |
-```
-
-### unjumble
 ```markdown
 ## unjumble: Title
 
-> Instructions.
+> Arrange the words in correct order.
 
-1. word1 / word2 / word3 / word4
-   > [!answer] Correct sentence.
-   > (English translation)
+1. слово1 / слово2 / слово3 / слово4 / слово5
+   > [!answer] Correct sentence in proper order.
+   > (English translation) [5 words]
+
+2. слово1 / слово2 / слово3 / слово4 / слово5 / слово6
+   > [!answer] Correct sentence in proper order.
+   > (English translation) [6 words]
 ```
 
-### true-false
+**Requirements:**
+- Minimum 12 items for A1
+- Each sentence: 5-8 words for A1
+- Include word count in brackets
+- Words separated by ` / `
+
+### quiz (Multiple Choice)
+
 ```markdown
-## true-false: Title
+## quiz: Title
 
-> Instructions.
+> Choose the correct answer.
 
-- [x] True statement.
-- [ ] False statement.
-  > Explanation.
+1. Question about the topic?
+   - [ ] Wrong answer
+   - [x] Correct answer
+   - [ ] Wrong answer
+   - [ ] Wrong answer
+   > Explanation of why this is correct.
+
+2. Another question?
+   - [x] Correct answer
+   - [ ] Wrong answer
+   - [ ] Wrong answer
+   - [ ] Wrong answer
+   > Explanation.
 ```
 
-### group-sort
+**Requirements:**
+- Minimum 12 items for A1
+- 4 options per question
+- Exactly one `[x]` correct answer
+- Explanation after each question
+
+### match-up (Pair Matching)
+
+```markdown
+## match-up: Title
+
+> Match the Ukrainian words with their English meanings.
+
+| Left | Right |
+|------|-------|
+| українське | english |
+| слово | word |
+| речення | sentence |
+```
+
+**Requirements:**
+- Minimum 12 pairs for A1
+- Left column: Ukrainian
+- Right column: English (or matching concept)
+
+### group-sort (Categorization)
+
 ```markdown
 ## group-sort: Title
 
-> Instructions.
+> Sort these items into the correct categories.
 
-### Category 1
-- item1
-- item2
+### Category 1 Name
+- item belonging to category 1
+- another item for category 1
+- third item for category 1
 
-### Category 2
-- item3
-- item4
+### Category 2 Name
+- item belonging to category 2
+- another item for category 2
+- third item for category 2
 ```
 
-## Engagement Boxes (1-2 per section minimum)
+**Requirements:**
+- Minimum 12 total items for A1
+- 2-4 categories
+- At least 3 items per category
 
-| Type | Icon | Use for |
-|------|------|---------|
-| Did You Know? | 💡 | Fascinating facts |
-| Myth Buster | 🔍 | Correct misconceptions |
-| Pro Tip | ⚡ | Practical advice |
-| Culture Corner | 🎭 | Traditions, customs |
-| History Bite | 📜 | Historical context |
-| Fun Fact | 🎯 | Memorable tidbits |
-| Language Link | 🔗 | English connections |
-| Real World | 🌍 | Modern relevance |
+### true-false (Statement Validation)
 
-Format:
+```markdown
+## true-false: Title
+
+> Determine if each statement is true or false.
+
+- [x] True statement about the topic.
+  > Explanation of why this is true.
+
+- [ ] False statement about the topic.
+  > Explanation of why this is false and what the correct fact is.
+```
+
+**Requirements:**
+- Minimum 12 items for A1
+- Mix of true `[x]` and false `[ ]` statements
+- Explanation for each item
+
+---
+
+## Engagement Box Formats
+
 ```markdown
 > 💡 **Did You Know?**
 >
-> Interesting fact here.
+> Interesting fact that helps learners remember the content.
+
+> 🎬 **Pop Culture Moment**
+>
+> Reference to movies, games, or music that Ukrainian learners love.
+> (Lord of the Rings, S.T.A.L.K.E.R., The Witcher, Metro 2033)
+
+> 🌍 **Real World**
+>
+> How this is actually used in Ukraine today.
+
+> 🎯 **Fun Fact**
+>
+> Memorable trivia that sticks in the learner's mind.
 ```
 
-## Checkpoint Module Requirements (every 10th module)
-
-Checkpoints MUST have:
-1. **Named character** with age, nationality, city (e.g., "Ліам, 26, Irish, Dublin")
-2. **Opening narrative** - Character's journal entry or story
-3. **Dialogue tables** showing real conversations:
-   ```markdown
-   | Speaker | Ukrainian | English |
-   |---------|-----------|---------|
-   | Ліам | Добрий день! | Hello! |
-   | Офіціант | Що замовите? | What will you order? |
-   ```
-4. **Testimonies** from 3-4 other learners (with names, ages, nationalities)
-5. **Activities framed** as "Help [Character]..." challenges
+---
 
 ## Vocabulary Table Format
+
+### A1-A2+ (Modules 1-80)
 
 ```markdown
 # Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
-| слово | /ˈslɔwɔ/ | word | noun | n | Gen: слова |
+| слово | /ˈslɔvɔ/ | word | noun | n | Example usage note |
 ```
 
-## Vocabulary Consistency (Cascade Rule)
+### B1-B1+ (Modules 81-160)
 
-**IMPORTANT**: Each word should only appear as "new vocabulary" in ONE module - the first module where it's introduced.
+```markdown
+# Словник
 
-When adding vocabulary to a module:
-1. Check if the word was already introduced in an earlier module
-2. If yes, **do NOT** add it to this module's Vocabulary section
-3. If no, add it - this module becomes the word's "first appearance"
-
-**Example problem:**
-- Module 12 introduces "книга" (book)
-- Later, you add "книга" to Module 45's vocabulary
-- This is wrong! Module 45 should NOT list "книга" as new vocab
-
-**After editing vocabulary:**
-Run `npm run vocab:rebuild` to rebuild the vocabulary database and detect duplicates.
-
-The `module-audit.ts` script will flag these duplicates automatically.
-
-## Module Structure
-
-1. YAML frontmatter (module, title, level, phase, tags, objectives, grammar)
-2. `# Lesson Content`
-   - `## warm-up` - Hook, context
-   - `## presentation` - Theory, tables, examples
-   - `## practice` - Guided exercises
-   - `## production` - Free practice
-3. `# Activities` - All activity blocks
-4. `# Vocabulary` - Word table
-5. `# Summary` - What was learned, what's next
-
-## Review Checklist
-
-- [ ] Correct activity count for level
-- [ ] Each activity has required item count
-- [ ] Activity types in priority order
-- [ ] Engagement boxes in each section
-- [ ] Rich narrative (especially checkpoints)
-- [ ] Dialogue tables for conversations
-- [ ] Vocabulary table complete with IPA
-- [ ] **No duplicate vocab** (words already introduced in earlier modules)
-- [ ] No placeholder text
-- [ ] Correct answer format (> [!answer], - [x], etc.)
-- [ ] **Immersion level** matches target (±10% tolerance)
-
-After review, regenerate with: `npx ts-node scripts/generate.ts l2-uk-en [module_number]`
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| слово | /ˈslɔvɔ/ | word | ім. | Example note |
 ```
 
 ---
 
-## Batch Review Command
+## Module 01 Specific Guidance
 
-```
-Review modules [X] through [Y] at level [LEVEL]. For each module:
-1. Check activity count and item counts
-2. Verify engagement boxes exist
-3. Check narrative richness (especially checkpoints)
-4. Flag any format errors
+For Module 01 (The Cyrillic Code I), the audit found:
 
-Report issues in a table:
-| Module | Issues | Priority |
-|--------|--------|----------|
-```
+| Issue | Current | Required |
+|-------|---------|----------|
+| Activities | 7 | 8+ |
+| Items per activity | 8-10 | 12+ |
+| Examples | ~10 | 12+ |
+| Immersion | 8% | 30% ±15% |
+
+**Special considerations for Module 01:**
+- This is an alphabet-teaching module, so lower Ukrainian % is acceptable
+- Focus on letter recognition and basic sound patterns
+- Use transliteration for ALL Ukrainian text: `Слово (Slovo)`
+- Activities should reinforce letter-sound connections
+
+**Activity ideas for alphabet modules:**
+1. `quiz` - Letter sound identification ("What sound does Г make?")
+2. `match-up` - Letters to sounds, letters to transliteration
+3. `group-sort` - True friends vs False friends vs New letters
+4. `fill-in` - Complete the transliteration
+5. `true-false` - Statements about letter sounds
+6. `quiz` - Word reading practice
 
 ---
 
-## Quick Fix Commands
+## Checklist Before Submitting
 
-**Add missing activities:**
-```
-Module [X] only has [N] activities. Add [missing types] to reach the minimum of [required] activities with [items] items each.
-```
-
-**Enrich checkpoint:**
-```
-Module [X] is a checkpoint but lacks narrative. Add a named character, dialogue tables, and learner testimonies.
-```
-
-**Fix activity format:**
-```
-Module [X] has wrong answer format in [activity type]. Fix to use correct > [!answer] syntax.
-```
-
-**Add engagement boxes:**
-```
-Module [X] is missing engagement boxes. Add 💡/🎭/📜/⚡ boxes to each major section.
-```
+- [ ] Step 1 complete: Narrative enriched with 12+ examples, 3+ engagement boxes
+- [ ] Step 2 complete: `vocab:enrich` ran successfully
+- [ ] Step 3 complete: ALL old activities deleted, 8+ new activities created
+- [ ] Each activity has 12+ items
+- [ ] Fill-in sentences are 5-8 words
+- [ ] Unjumble sentences are 5-8 words
+- [ ] All answers verified correct
+- [ ] All vocabulary used is from the vocabulary section
+- [ ] Step 4 complete: Generated and visually verified HTML output
