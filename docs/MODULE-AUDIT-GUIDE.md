@@ -41,7 +41,7 @@ npx ts-node scripts/module-audit.ts l2-uk-en 1-30 --fix
 npx ts-node scripts/generate.ts l2-uk-en [module_number]
 
 # Rebuild vocabulary database
-npm run vocab:build
+npm run vocab:rebuild
 ```
 
 ---
@@ -109,9 +109,11 @@ Module Markdown → Audit Script → Issues Report
 | A1 | 1-30 | 6 | 10 | 15-20 |
 | A2 | 31-60 | 8 | 10 | 20-25 |
 | A2+ | 61-80 | 10 | 15 | 35-40 |
-| B1 | 81-140 | 12 | 20 | 25-30 |
-| B2 | 141-190 | 14 | 20 | 25-30 |
-| C1 | 191+ | 14 | 20 | 30-35 |
+| B1 | 81-120 | 12 | 20 | 25-30 |
+| B1+ | 121-160 | 12 | 20 | 25-30 |
+| B2 | 161-235 | 14 | 20 | 25-30 |
+| B2+ | 236-310 | 14 | 20 | 25-30 |
+| C1 | 311-400 | 14 | 20 | 30-35 |
 
 ### Immersion Levels
 
@@ -121,7 +123,9 @@ Module Markdown → Audit Script → Issues Report
 | A2 | 40% | 60% | ±10% |
 | A2+ | 50% | 50% | ±10% |
 | B1 | 60% | 40% | ±10% |
+| B1+ | 70% | 30% | ±10% |
 | B2 | 85% | 15% | ±10% |
+| B2+ | 90% | 10% | ±10% |
 | C1 | 95% | 5% | ±10% |
 
 ### Sentence Complexity
@@ -132,7 +136,9 @@ Module Markdown → Audit Script → Issues Report
 | A2 | 6-8 | 8-10 |
 | A2+ | 8-10 | 10-12 |
 | B1 | 10-14 | 12-16 |
+| B1+ | 10-14 | 12-16 |
 | B2 | 12-16 | 14-18 |
+| B2+ | 12-16 | 14-18 |
 | C1 | 14-18 | 16-20 |
 
 ---
@@ -164,7 +170,7 @@ The audit script detects these cascades automatically:
 ### After Detection
 
 1. Remove the duplicate words from the later module's Vocabulary section
-2. Run `npm run vocab:build` to rebuild the database
+2. Run `npm run vocab:rebuild` to rebuild the database
 3. Re-run the audit to verify
 
 ---
@@ -239,7 +245,7 @@ The following words were already introduced in earlier modules:
 4. **Generate fix prompts** if needed
 5. **Edit modules** using prompts
 6. **Regenerate output** (`scripts/generate.ts`)
-7. **Rebuild vocab DB** (`npm run vocab:build`)
+7. **Rebuild vocab DB** (`npm run vocab:rebuild`)
 8. **Re-run audit** to verify fixes
 
 ### After Vocabulary Changes
@@ -247,7 +253,7 @@ The following words were already introduced in earlier modules:
 When adding/removing vocabulary words:
 
 1. Edit the module's `# Vocabulary` section
-2. Run `npm run vocab:build` to rebuild database
+2. Run `npm run vocab:rebuild` to rebuild database
 3. Run audit to check for cascading duplicates
 4. Fix any duplicates in later modules
 5. Regenerate affected modules
@@ -260,8 +266,9 @@ When adding/removing vocabulary words:
 |--------|---------|
 | `scripts/module-audit.ts` | Main audit script |
 | `scripts/generate.ts` | Generate HTML/JSON from markdown |
-| `scripts/vocab-build.ts` | Rebuild vocabulary.csv |
-| `scripts/vocab-scan.ts` | Populate vocabulary.db |
+| `scripts/vocab-init.ts` | Initialize vocabulary.db |
+| `scripts/vocab-scan.ts` | Populate vocabulary.db from modules |
+| `scripts/vocab-enrich.ts` | Enrich module vocabulary sections |
 | `scripts/vocab-audit.ts` | Audit vocab usage in module content |
 
 ---
@@ -290,7 +297,7 @@ The immersion check requires at least 100 alphabetic characters in the main cont
 ### Vocab duplicates not detected
 
 Ensure:
-1. `vocabulary.db` exists and is up to date (`npm run vocab:build`)
+1. `vocabulary.db` exists and is up to date (`npm run vocab:rebuild`)
 2. The vocab table uses standard format with Ukrainian words in first column
 
 ### Fix prompts not showing

@@ -29,7 +29,10 @@ async function testModule(jsonPath: string, htmlPath: string): Promise<TestResul
   const warnings: string[] = [];
 
   const moduleName = jsonPath.split('/').pop()?.replace('.json', '') || 'unknown';
-  const level = jsonPath.includes('/b2/') ? 'B2' :
+  const level = jsonPath.includes('/c1/') ? 'C1' :
+                jsonPath.includes('/b2+/') ? 'B2+' :
+                jsonPath.includes('/b2/') ? 'B2' :
+                jsonPath.includes('/b1+/') ? 'B1+' :
                 jsonPath.includes('/b1/') ? 'B1' :
                 jsonPath.includes('/a2+/') ? 'A2+' :
                 jsonPath.includes('/a2/') ? 'A2' : 'A1';
@@ -55,7 +58,7 @@ async function testModule(jsonPath: string, htmlPath: string): Promise<TestResul
   }
 
   // Test 4: B1+ modules should have immersive sections
-  if (['B1', 'B2'].includes(level)) {
+  if (['B1', 'B1+', 'B2', 'B2+', 'C1'].includes(level)) {
     const sections = json.lesson?.immersiveSections || [];
     if (sections.length === 0) {
       warnings.push('B1+ module has no immersive sections');
@@ -70,11 +73,11 @@ async function testModule(jsonPath: string, htmlPath: string): Promise<TestResul
     if (!hasSummary) warnings.push('Missing summary section');
   }
 
-  // Test 5: Activities exist for B2
-  if (level === 'B2') {
+  // Test 5: Activities exist for B2+
+  if (['B2', 'B2+', 'C1'].includes(level)) {
     const activities = json.activities || [];
     if (activities.length === 0) {
-      warnings.push('B2 module has no structured activities');
+      warnings.push('B2+ module has no structured activities');
     }
   }
 
@@ -93,8 +96,8 @@ async function testModule(jsonPath: string, htmlPath: string): Promise<TestResul
       if (!html.includes('id="lesson"')) errors.push('HTML missing lesson section');
       if (!html.includes('id="vocab"')) errors.push('HTML missing vocab section');
 
-      // Check for quiz data in B2
-      if (level === 'B2' && !html.includes('quizData') && !html.includes('quizData=')) {
+      // Check for quiz data in B2+
+      if (['B2', 'B2+', 'C1'].includes(level) && !html.includes('quizData') && !html.includes('quizData=')) {
         warnings.push('HTML has no quiz data');
       }
 

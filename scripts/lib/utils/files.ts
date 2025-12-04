@@ -180,8 +180,10 @@ export function getLevelFromModuleNum(moduleNum: number): string {
   if (moduleNum <= 30) return 'a1';
   if (moduleNum <= 60) return 'a2';
   if (moduleNum <= 80) return 'a2+';
-  if (moduleNum <= 160) return 'b1';
-  if (moduleNum <= 232) return 'b2';
+  if (moduleNum <= 120) return 'b1';
+  if (moduleNum <= 160) return 'b1+';
+  if (moduleNum <= 235) return 'b2';
+  if (moduleNum <= 310) return 'b2+';
   return 'c1';
 }
 

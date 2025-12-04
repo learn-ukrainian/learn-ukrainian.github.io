@@ -2,7 +2,7 @@
  * vocab-db.ts
  *
  * Vocabulary database module for tracking first appearances.
- * Used by both the generator and vocab-build scripts.
+ * Used by the generator and vocabulary scripts.
  *
  * Features:
  * - Loads vocabulary.csv into memory
@@ -36,9 +36,11 @@ export const LEVEL_RANGES: Record<string, [number, number]> = {
   'A1': [1, 30],
   'A2': [31, 60],
   'A2+': [61, 80],
-  'B1': [81, 140],
-  'B2': [141, 190],
-  'C1': [191, 250],
+  'B1': [81, 120],
+  'B1+': [121, 160],
+  'B2': [161, 235],
+  'B2+': [236, 310],
+  'C1': [311, 400],
 };
 
 // Vocabulary targets from curriculum plans
@@ -46,8 +48,10 @@ export const VOCAB_TARGETS: Record<string, { cumulative: number; perModule: numb
   'A1': { cumulative: 500, perModule: 17 },
   'A2': { cumulative: 820, perModule: 11 },
   'A2+': { cumulative: 1600, perModule: 40 },
-  'B1': { cumulative: 3500, perModule: 25 },
-  'B2': { cumulative: 5800, perModule: 23 },
+  'B1': { cumulative: 2500, perModule: 25 },
+  'B1+': { cumulative: 3500, perModule: 25 },
+  'B2': { cumulative: 5000, perModule: 25 },
+  'B2+': { cumulative: 6500, perModule: 25 },
   'C1': { cumulative: 9000, perModule: 30 },
 };
 

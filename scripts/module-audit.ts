@@ -102,7 +102,7 @@ const LEVEL_REQUIREMENTS: Record<string, LevelRequirements> = {
     immersionLevel: 0.50,  // 50% Ukrainian, 50% English
   },
   'B1': {
-    moduleRange: [81, 160],
+    moduleRange: [81, 120],
     newWordsMin: 25, newWordsMax: 30,
     activityCount: 12,
     itemsPerActivity: 20,
@@ -110,8 +110,17 @@ const LEVEL_REQUIREMENTS: Record<string, LevelRequirements> = {
     unjumbleWords: [12, 16],
     immersionLevel: 0.60,  // 60% Ukrainian, 40% English
   },
+  'B1+': {
+    moduleRange: [121, 160],
+    newWordsMin: 25, newWordsMax: 30,
+    activityCount: 12,
+    itemsPerActivity: 20,
+    fillInWords: [10, 14],
+    unjumbleWords: [12, 16],
+    immersionLevel: 0.70,  // 70% Ukrainian, 30% English
+  },
   'B2': {
-    moduleRange: [161, 310],
+    moduleRange: [161, 235],
     newWordsMin: 25, newWordsMax: 30,
     activityCount: 14,
     itemsPerActivity: 20,
@@ -119,8 +128,17 @@ const LEVEL_REQUIREMENTS: Record<string, LevelRequirements> = {
     unjumbleWords: [14, 18],
     immersionLevel: 0.85,  // 85% Ukrainian, 15% English
   },
+  'B2+': {
+    moduleRange: [236, 310],
+    newWordsMin: 25, newWordsMax: 30,
+    activityCount: 14,
+    itemsPerActivity: 20,
+    fillInWords: [12, 16],
+    unjumbleWords: [14, 18],
+    immersionLevel: 0.90,  // 90% Ukrainian, 10% English
+  },
   'C1': {
-    moduleRange: [311, 430],
+    moduleRange: [311, 400],
     newWordsMin: 30, newWordsMax: 35,
     activityCount: 14,
     itemsPerActivity: 20,

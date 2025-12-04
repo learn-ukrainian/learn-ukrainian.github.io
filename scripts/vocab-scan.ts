@@ -373,7 +373,7 @@ function main(): void {
   console.log(`Total expressions: ${stats.totalExpressions}`);
 
   console.log('\nBy Level:');
-  for (const level of ['A1', 'A2', 'A2+', 'B1', 'B2', 'C1', 'C2']) {
+  for (const level of ['A1', 'A2', 'A2+', 'B1', 'B1+', 'B2', 'B2+', 'C1']) {
     const data = stats.byLevel[level];
     if (data) {
       console.log(`  ${level}: ${data.lemmas} lemmas, ${data.expressions} expressions`);

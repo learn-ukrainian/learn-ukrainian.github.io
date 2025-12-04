@@ -35,7 +35,10 @@ const TARGET_ACTIVITIES: Record<string, { total: number; typeA: number; typeB: n
   'A2': { total: 6, typeA: 2, typeB: 3, typeC: 2 },
   'A2+': { total: 7, typeA: 2, typeB: 3, typeC: 2 },
   'B1': { total: 8, typeA: 2, typeB: 3, typeC: 3 },
+  'B1+': { total: 8, typeA: 2, typeB: 3, typeC: 3 },
   'B2': { total: 8, typeA: 2, typeB: 3, typeC: 3 },
+  'B2+': { total: 8, typeA: 2, typeB: 3, typeC: 3 },
+  'C1': { total: 10, typeA: 2, typeB: 4, typeC: 4 },
 };
 
 // =============================================================================
@@ -83,8 +86,10 @@ function getLevelFromModule(num: number): string {
   if (num <= 30) return 'A1';
   if (num <= 60) return 'A2';
   if (num <= 80) return 'A2+';
-  if (num <= 140) return 'B1';
-  if (num <= 190) return 'B2';
+  if (num <= 120) return 'B1';
+  if (num <= 160) return 'B1+';
+  if (num <= 235) return 'B2';
+  if (num <= 310) return 'B2+';
   return 'C1';
 }
 

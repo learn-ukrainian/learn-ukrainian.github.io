@@ -228,7 +228,7 @@ When adding vocabulary to a module:
 - This is wrong! Module 45 should NOT list "книга" as new vocab
 
 **After editing vocabulary:**
-Run `npm run vocab:build` to rebuild the vocabulary database and detect duplicates.
+Run `npm run vocab:rebuild` to rebuild the vocabulary database and detect duplicates.
 
 The `module-audit.ts` script will flag these duplicates automatically.
 

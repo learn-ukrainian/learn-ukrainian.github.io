@@ -82,10 +82,11 @@ export const LEVEL_RANGES: Record<string, [number, number]> = {
   'A1': [1, 30],
   'A2': [31, 60],
   'A2+': [61, 80],
-  'B1': [81, 140],
-  'B2': [141, 190],
-  'C1': [191, 220],
-  'C2': [221, 250],
+  'B1': [81, 120],
+  'B1+': [121, 160],
+  'B2': [161, 235],
+  'B2+': [236, 310],
+  'C1': [311, 400],
 };
 
 export function getLevelFromModule(moduleNum: number): string {
@@ -94,7 +95,7 @@ export function getLevelFromModule(moduleNum: number): string {
       return level;
     }
   }
-  return 'C2';
+  return 'C1';
 }
 
 // =============================================================================
