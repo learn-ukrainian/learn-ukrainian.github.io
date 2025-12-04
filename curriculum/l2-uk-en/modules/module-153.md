@@ -2,8 +2,8 @@
 module: 153
 title: "Блоги та соцмережі"
 subtitle: "Blogs and Social Media in Ukrainian"
-level: B1
-phase: B1.6
+level: B1+
+phase: B1+.6
 duration: 45
 transliteration: none
 tags: [skills, social media, blogs, internet, informal]

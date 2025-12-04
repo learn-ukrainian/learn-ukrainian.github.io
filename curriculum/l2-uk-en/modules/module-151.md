@@ -2,8 +2,8 @@
 module: 151
 title: "Новини: як читати та розуміти"
 subtitle: "News Literacy: Reading and Understanding"
-level: B1
-phase: B1.6
+level: B1+
+phase: B1+.6
 duration: 45
 transliteration: none
 tags: [skills, news, media, literacy, reading]

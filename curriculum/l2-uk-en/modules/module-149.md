@@ -2,8 +2,8 @@
 module: 149
 title: "Українська кухня: більше ніж борщ"
 subtitle: "Ukrainian Cuisine: Beyond Borscht"
-level: B1
-phase: B1.5
+level: B1+
+phase: B1+.5
 duration: 45
 transliteration: none
 tags: [culture, food, cuisine, traditions, vocabulary]

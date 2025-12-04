@@ -2,8 +2,8 @@
 module: 154
 title: "Подкасти: слухаємо українською"
 subtitle: "Podcasts: Listening to Ukrainian"
-level: B1
-phase: B1.6
+level: B1+
+phase: B1+.6
 duration: 45
 transliteration: none
 tags: [skills, podcasts, listening, audio, comprehension]

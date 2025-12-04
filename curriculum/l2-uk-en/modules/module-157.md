@@ -2,8 +2,8 @@
 module: 157
 title: "Документальні фільми"
 subtitle: "Documentary Films: Ukrainer Style"
-level: B1
-phase: B1.6
+level: B1+
+phase: B1+.6
 duration: 45
 transliteration: none
 tags: [skills, documentary, video, ukrainer, culture]

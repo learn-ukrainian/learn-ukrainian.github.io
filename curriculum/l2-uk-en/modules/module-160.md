@@ -2,8 +2,8 @@
 module: 160
 title: "B1 Фінальний тест"
 subtitle: "B1 Final Checkpoint: Comprehensive Assessment"
-level: B1
-phase: B1.6
+level: B1+
+phase: B1+.6
 duration: 60
 transliteration: none
 tags: [checkpoint, assessment, final, B1, comprehensive]

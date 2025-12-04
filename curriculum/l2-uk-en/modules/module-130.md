@@ -2,8 +2,8 @@
 module: 130
 title: "Discourse Markers"
 subtitle: "Слова-зв'язки"
-level: B1
-phase: B1.4
+level: B1+
+phase: B1+.4
 duration: 45
 transliteration: none
 tags: [vocabulary, discourse, connectors, coherence]

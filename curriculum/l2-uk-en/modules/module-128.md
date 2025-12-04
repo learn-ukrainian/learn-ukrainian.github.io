@@ -2,8 +2,8 @@
 module: 128
 title: "Business Basics"
 subtitle: "Основи бізнесу"
-level: B1
-phase: B1.4
+level: B1+
+phase: B1+.4
 duration: 45
 transliteration: none
 tags: [vocabulary, business, work, professional]

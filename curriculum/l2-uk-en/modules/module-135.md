@@ -2,8 +2,8 @@
 module: 135
 title: "Idioms & Set Phrases I"
 subtitle: "Ідіоми та сталі вирази"
-level: B1
-phase: B1.4
+level: B1+
+phase: B1+.4
 duration: 45
 transliteration: none
 tags: [vocabulary, idioms, expressions, figurative]

@@ -2,8 +2,8 @@
 module: 158
 title: "Подорожі Україною"
 subtitle: "Traveling in Ukraine: Tourist Vocabulary"
-level: B1
-phase: B1.6
+level: B1+
+phase: B1+.6
 duration: 45
 transliteration: none
 tags: [vocabulary, travel, tourism, practical, communication]

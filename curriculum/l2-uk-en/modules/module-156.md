@@ -2,8 +2,8 @@
 module: 156
 title: "Короткі оповідання II"
 subtitle: "Short Stories: Contemporary Voices"
-level: B1
-phase: B1.6
+level: B1+
+phase: B1+.6
 duration: 45
 transliteration: none
 tags: [literature, reading, stories, contemporary, war]

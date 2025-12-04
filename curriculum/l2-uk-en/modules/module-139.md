@@ -2,8 +2,8 @@
 module: 139
 title: "B1 Integration II"
 subtitle: "Vocabulary & Communication"
-level: B1
-phase: B1.4
+level: B1+
+phase: B1+.4
 duration: 45
 transliteration: none
 tags: [practice, integration, vocabulary, communication]

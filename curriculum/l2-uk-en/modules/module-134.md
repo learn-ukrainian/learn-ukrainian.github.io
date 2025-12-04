@@ -2,8 +2,8 @@
 module: 134
 title: "Synonymy III: Seeing/Knowing"
 subtitle: "Бачити/дивитися; знати/розуміти"
-level: B1
-phase: B1.4
+level: B1+
+phase: B1+.4
 duration: 45
 transliteration: none
 tags: [vocabulary, synonyms, verbs, perception, cognition]

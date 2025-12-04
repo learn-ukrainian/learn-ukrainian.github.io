@@ -2,8 +2,8 @@
 module: 132
 title: "Synonymy I: Thinking"
 subtitle: "Думати, гадати, вважати, міркувати"
-level: B1
-phase: B1.4
+level: B1+
+phase: B1+.4
 duration: 45
 transliteration: none
 tags: [vocabulary, synonyms, verbs, thinking]

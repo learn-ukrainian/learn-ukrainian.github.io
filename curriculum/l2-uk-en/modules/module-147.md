@@ -2,8 +2,8 @@
 module: 147
 title: "Технології та стартапи"
 subtitle: "Technology and Startups in Ukraine"
-level: B1
-phase: B1.5
+level: B1+
+phase: B1+.5
 duration: 45
 transliteration: none
 tags: [vocabulary, technology, IT, startups, business]

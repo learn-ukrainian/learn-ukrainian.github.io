@@ -2,8 +2,8 @@
 module: 131
 title: "Describing Changes"
 subtitle: "Зміни та тенденції"
-level: B1
-phase: B1.4
+level: B1+
+phase: B1+.4
 duration: 45
 transliteration: none
 tags: [vocabulary, changes, trends, comparison]

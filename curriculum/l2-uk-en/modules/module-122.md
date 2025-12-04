@@ -2,8 +2,8 @@
 module: 122
 title: "Emotions & Relationships Vocabulary"
 subtitle: "Trust, Conflict, Support"
-level: B1
-phase: B1.3
+level: B1+
+phase: B1+.3
 duration: 45
 transliteration: none
 tags: [vocabulary, emotions, relationships, feelings]

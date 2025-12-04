@@ -2,8 +2,8 @@
 module: 155
 title: "Короткі оповідання I"
 subtitle: "Short Stories: Introduction to Ukrainian Literature"
-level: B1
-phase: B1.6
+level: B1+
+phase: B1+.6
 duration: 45
 transliteration: none
 tags: [literature, reading, stories, culture, comprehension]

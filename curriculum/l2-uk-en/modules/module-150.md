@@ -2,8 +2,8 @@
 module: 150
 title: "B1.5 Checkpoint"
 subtitle: "Contemporary Ukraine Assessment"
-level: B1
-phase: B1.5
+level: B1+
+phase: B1+.5
 duration: 45
 transliteration: none
 tags: [review, checkpoint, assessment, B1.5]

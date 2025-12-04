@@ -2,8 +2,8 @@
 module: 136
 title: "Idioms & Set Phrases II"
 subtitle: "Більше ідіом та виразів"
-level: B1
-phase: B1.4
+level: B1+
+phase: B1+.4
 duration: 45
 transliteration: none
 tags: [vocabulary, idioms, expressions, figurative]

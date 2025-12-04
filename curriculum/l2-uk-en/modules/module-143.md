@@ -2,8 +2,8 @@
 module: 143
 title: "Українські регіони: Південь"
 subtitle: "Southern Ukraine: Odesa, Kherson, Crimea"
-level: B1
-phase: B1.5
+level: B1+
+phase: B1+.5
 duration: 45
 transliteration: none
 tags: [culture, regions, geography, south, odesa, crimea, kherson]

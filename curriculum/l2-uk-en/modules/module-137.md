@@ -2,8 +2,8 @@
 module: 137
 title: "Collocations Review"
 subtitle: "Сталі словосполучення"
-level: B1
-phase: B1.4
+level: B1+
+phase: B1+.4
 duration: 45
 transliteration: none
 tags: [vocabulary, collocations, word-combinations, review]

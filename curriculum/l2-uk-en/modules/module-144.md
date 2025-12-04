@@ -2,8 +2,8 @@
 module: 144
 title: "Українська музика сьогодні"
 subtitle: "Contemporary Ukrainian Music Scene"
-level: B1
-phase: B1.5
+level: B1+
+phase: B1+.5
 duration: 45
 transliteration: none
 tags: [culture, music, contemporary, pop, rock, hip-hop]

@@ -2,8 +2,8 @@
 module: 126
 title: "Diminutives"
 subtitle: "Зменшувально-пестливі форми"
-level: B1
-phase: B1.4
+level: B1+
+phase: B1+.4
 duration: 45
 transliteration: none
 tags: [grammar, diminutives, word-formation, expressiveness]

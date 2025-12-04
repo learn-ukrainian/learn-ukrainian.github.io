@@ -2,8 +2,8 @@
 module: 146
 title: "Екологія та довкілля"
 subtitle: "Environment and Sustainability"
-level: B1
-phase: B1.5
+level: B1+
+phase: B1+.5
 duration: 45
 transliteration: none
 tags: [vocabulary, environment, ecology, nature, climate]

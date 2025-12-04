@@ -2,8 +2,8 @@
 module: 140
 title: "B1 Capstone"
 subtitle: "Comprehensive B1 Assessment"
-level: B1
-phase: B1.4
+level: B1+
+phase: B1+.4
 duration: 60
 transliteration: none
 tags: [assessment, capstone, comprehensive, review]

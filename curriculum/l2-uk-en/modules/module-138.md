@@ -2,8 +2,8 @@
 module: 138
 title: "B1 Integration I"
 subtitle: "Grammar Skills Review"
-level: B1
-phase: B1.4
+level: B1+
+phase: B1+.4
 duration: 45
 transliteration: none
 tags: [practice, integration, grammar, review]

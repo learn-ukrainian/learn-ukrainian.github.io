@@ -2,8 +2,8 @@
 module: 133
 title: "Synonymy II: Speaking"
 subtitle: "Казати, говорити, розповідати, повідомляти"
-level: B1
-phase: B1.4
+level: B1+
+phase: B1+.4
 duration: 45
 transliteration: none
 tags: [vocabulary, synonyms, verbs, speaking]

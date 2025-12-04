@@ -2,8 +2,8 @@
 module: 121
 title: "Adverbial Participles"
 subtitle: "Читаючи, прочитавши"
-level: B1
-phase: B1.3
+level: B1+
+phase: B1+.3
 duration: 45
 transliteration: none
 tags: [grammar, participles, adverbial, дієприслівник]

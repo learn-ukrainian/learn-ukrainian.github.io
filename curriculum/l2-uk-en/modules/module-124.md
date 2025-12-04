@@ -2,8 +2,8 @@
 module: 124
 title: "B1.3 Review"
 subtitle: "Reported Speech and Participles"
-level: B1
-phase: B1.3
+level: B1+
+phase: B1+.3
 duration: 45
 transliteration: none
 tags: [review, reported-speech, participles, vocabulary]

@@ -2,8 +2,8 @@
 module: 125
 title: "B1.3 Checkpoint"
 subtitle: "Assessment of Reported Speech and Participles"
-level: B1
-phase: B1.3
+level: B1+
+phase: B1+.3
 duration: 45
 transliteration: none
 tags: [assessment, checkpoint, review]

@@ -2,8 +2,8 @@
 module: 145
 title: "Українське кіно та серіали"
 subtitle: "Ukrainian Cinema and TV Series"
-level: B1
-phase: B1.5
+level: B1+
+phase: B1+.5
 duration: 45
 transliteration: none
 tags: [culture, cinema, film, tv, series, media]

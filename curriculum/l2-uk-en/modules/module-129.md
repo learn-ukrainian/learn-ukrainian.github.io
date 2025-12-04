@@ -2,8 +2,8 @@
 module: 129
 title: "Travel & Geography"
 subtitle: "Подорожі та географія"
-level: B1
-phase: B1.4
+level: B1+
+phase: B1+.4
 duration: 45
 transliteration: none
 tags: [vocabulary, travel, geography, tourism]

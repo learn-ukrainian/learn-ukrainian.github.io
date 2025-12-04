@@ -2,8 +2,8 @@
 module: 159
 title: "B1.6 Повторення"
 subtitle: "B1.6 Review: Authentic Texts & Media"
-level: B1
-phase: B1.6
+level: B1+
+phase: B1+.6
 duration: 45
 transliteration: none
 tags: [review, checkpoint, media, literature, skills]

@@ -2,8 +2,8 @@
 module: 148
 title: "Спорт в Україні"
 subtitle: "Sports Culture and Achievements"
-level: B1
-phase: B1.5
+level: B1+
+phase: B1+.5
 duration: 45
 transliteration: none
 tags: [vocabulary, sports, culture, football, boxing]

@@ -2,8 +2,8 @@
 module: 142
 title: "Українські регіони: Схід"
 subtitle: "Eastern Ukraine: Kharkiv, Donbas, Slobozhanshchyna"
-level: B1
-phase: B1.5
+level: B1+
+phase: B1+.5
 duration: 45
 transliteration: none
 tags: [culture, regions, geography, east, kharkiv, donbas, war]

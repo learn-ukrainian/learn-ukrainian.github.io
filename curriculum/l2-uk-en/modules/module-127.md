@@ -2,8 +2,8 @@
 module: 127
 title: "Numerals: Collectives & Fractions"
 subtitle: "Двоє, троє; половина, третина"
-level: B1
-phase: B1.4
+level: B1+
+phase: B1+.4
 duration: 45
 transliteration: none
 tags: [grammar, numerals, collectives, fractions]

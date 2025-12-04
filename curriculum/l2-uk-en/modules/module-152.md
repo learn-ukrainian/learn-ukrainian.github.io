@@ -2,8 +2,8 @@
 module: 152
 title: "Інтерв'ю: розмовний стиль"
 subtitle: "Interviews: Conversational Ukrainian"
-level: B1
-phase: B1.6
+level: B1+
+phase: B1+.6
 duration: 45
 transliteration: none
 tags: [skills, interview, conversation, listening, speaking]

@@ -2,8 +2,8 @@
 module: 123
 title: "Health & Wellness Vocabulary"
 subtitle: "Stress, Recovery, Diet"
-level: B1
-phase: B1.3
+level: B1+
+phase: B1+.3
 duration: 45
 transliteration: none
 tags: [vocabulary, health, wellness, lifestyle]
