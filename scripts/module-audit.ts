@@ -873,7 +873,6 @@ function auditModule(filePath: string): ModuleAudit {
 function generateFixPrompt(audit: ModuleAudit): string {
   const errors = audit.issues.filter(i => i.type === 'error');
   const warnings = audit.issues.filter(i => i.type === 'warning');
-  const infos = audit.issues.filter(i => i.type === 'info');
 
   // Group issues by category for clearer instructions
   const issuesByCategory: Record<string, Issue[]> = {};
@@ -884,9 +883,21 @@ function generateFixPrompt(audit: ModuleAudit): string {
     issuesByCategory[issue.category].push(issue);
   }
 
+  // Level-specific requirements
+  const levelReqs: Record<string, string> = {
+    'A1': 'Activities: 6 min, 10 items each | Vocab: 15-20 | Sentences: 3-6 words (simple SVO)',
+    'A2': 'Activities: 8 min, 10 items each | Vocab: 20-25 | Sentences: 6-8 words (connectors)',
+    'A2+': 'Activities: 10 min, 15 items each | Vocab: 35-40 | Sentences: 8-10 words (subordinate clauses)',
+    'B1': 'Activities: 12 min, 20 items each | Vocab: 25-30 | Sentences: 10-14 words (conditionals)',
+    'B2': 'Activities: 14 min, 20 items each | Vocab: 25-30 | Sentences: 12-16 words (passive, sophisticated)',
+    'C1': 'Activities: 14 min, 20 items each | Vocab: 30-35 | Sentences: 14-18 words (academic)',
+  };
+
   // Build the fix prompt
   const lines: string[] = [];
-  lines.push(`Fix module ${audit.module} (${audit.title}, ${audit.level}):`);
+  lines.push(`Review and fix module ${audit.module} (${audit.title}, ${audit.level}).`);
+  lines.push('');
+  lines.push(`**${audit.level} Requirements:** ${levelReqs[audit.level] || 'See guidelines'}`);
   lines.push('');
 
   // Priority 1: Broken formats (must fix)
@@ -1000,8 +1011,17 @@ function generateFixPrompt(audit: ModuleAudit): string {
     lines.push('');
   }
 
+  // Add quality review checklist
+  lines.push('## ✅ ALSO REVIEW:');
+  lines.push('- Grammar/spelling accuracy in Ukrainian');
+  lines.push('- Natural, useful examples (not textbook-dry)');
+  lines.push('- Cultural accuracy and sensitivity');
+  lines.push('- Activity answers are correct');
+  lines.push('- Engagement boxes are interesting/memorable');
+  lines.push('');
+
   // Add regeneration reminder
-  lines.push('After fixing, regenerate: npx ts-node scripts/generate.ts l2-uk-en ' + audit.module);
+  lines.push('After fixing, regenerate: `npx ts-node scripts/generate.ts l2-uk-en ' + audit.module + '`');
 
   return lines.join('\n');
 }
