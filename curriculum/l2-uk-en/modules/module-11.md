@@ -5,7 +5,7 @@ subtitle: "Direct Objects - Things"
 level: A1
 phase: A1.2
 duration: 50
-transliteration: full
+transliteration: partial
 tags: [grammar, cases, accusative, objects]
 objectives:
   - Understand what cases are and why they matter
@@ -226,91 +226,107 @@ Say what you want:
 
 ## fill-in: Accusative Case
 
-> Choose the correct accusative form.
+> Choose the correct accusative form for the direct object.
 
-1. Я бачу цікаву ___ на твоєму столі. (I see an interesting book on your table.)
+1. Я бачу ___. Це моя книга. (I see the book. This is my book.)
    > [!answer] книгу
    > [!options] книга | книгу | книзі | книги
 
-2. Вона щодня читає українську ___ вранці. (She reads a Ukrainian newspaper every day in the morning.)
+2. Вона читає ___ щодня. (She reads the newspaper every day.)
    > [!answer] газету
    > [!options] газета | газету | газеті | газети
 
-3. Ми хочемо холодну ___ після тренування. (We want cold water after training.)
+3. Ми хочемо ___. (We want water.)
    > [!answer] воду
    > [!options] вода | воду | воді | води
 
-4. Я бачу великий новий ___ у кімнаті. (I see a big new table in the room.)
+4. Я бачу ___. (I see the table.)
    > [!answer] стіл
    > [!options] стіл | стола | столі | столу
 
-5. Він завжди має свій ___ у сумці. (He always has his passport in the bag.)
+5. Він має ___. (He has a passport.)
    > [!answer] паспорт
    > [!options] паспорт | паспорта | паспорті | паспорту
 
-6. Вона п'є гарячу ___ кожного ранку. (She drinks hot coffee every morning.)
+6. Вона п'є ___. (She drinks coffee.)
    > [!answer] каву
    > [!options] кава | каву | каві | кави
 
-7. Я бачу велике чисте ___ у спальні. (I see a big clean window in the bedroom.)
+7. Я бачу ___. (I see the window.)
    > [!answer] вікно
    > [!options] вікно | вікна | вікні | вікну
 
-8. Ми хочемо смачну італійську ___ на вечерю. (We want delicious Italian pizza for dinner.)
+8. Ми хочемо ___. (We want pizza.)
    > [!answer] піцу
    > [!options] піца | піцу | піці | піци
 
-9. Він бере свою важку ___ до готелю. (He takes his heavy suitcase to the hotel.)
+9. Він бере ___. (He takes the suitcase.)
    > [!answer] валізу
    > [!options] валіза | валізу | валізі | валізи
 
-10. Вони читають новий цікавий ___ про науку. (They read a new interesting magazine about science.)
-   > [!answer] журнал
-   > [!options] журнал | журнала | журналі | журналу
+10. Вони читають ___. (They read the magazine.)
+    > [!answer] журнал
+    > [!options] журнал | журнала | журналі | журналу
+
+11. Я хочу ___. (I want tea.)
+    > [!answer] чай
+    > [!options] чай | чаю | чаї | чаєм
+
+12. Вона бере ___. (She takes the box.)
+    > [!answer] коробку
+    > [!options] коробка | коробку | коробці | коробки
 
 ## unjumble: Build the Sentence
 
-> Arrange the words in the correct order. Sentences range from 5-7 words.
+> Arrange the words in the correct order.
 
-1. книгу / Я / цікаву / бачу / на / столі
-   > [!answer] Я бачу цікаву книгу на столі.
-   > (I see an interesting book on the table.) [6 words]
+1. книгу / Я / бачу / цю
+   > [!answer] Я бачу цю книгу.
+   > (I see this book.) [4 words]
 
-2. газету / читає / Вона / українську / щодня / вранці
-   > [!answer] Вона щодня читає українську газету вранці.
-   > (She reads a Ukrainian newspaper every day in the morning.) [6 words]
+2. газету / читає / Вона / щодня
+   > [!answer] Вона читає газету щодня.
+   > (She reads the newspaper every day.) [4 words]
 
-3. воду / холодну / хочемо / Ми / після / тренування
-   > [!answer] Ми хочемо холодну воду після тренування.
-   > (We want cold water after training.) [6 words]
+3. воду / хочемо / Ми / і / чай
+   > [!answer] Ми хочемо воду і чай.
+   > (We want water and tea.) [5 words]
 
-4. бачу / великий / стіл / Я / новий / у / кімнаті
-   > [!answer] Я бачу великий новий стіл у кімнаті.
-   > (I see a big new table in the room.) [7 words]
+4. бачу / стіл / Я / і / вікно
+   > [!answer] Я бачу стіл і вікно.
+   > (I see the table and window.) [5 words]
 
-5. каву / Він / гарячу / п'є / завжди / кожного / ранку
-   > [!answer] Він завжди п'є гарячу каву кожного ранку.
-   > (He always drinks hot coffee every morning.) [7 words]
+5. каву / Він / п'є / завжди
+   > [!answer] Він завжди п'є каву.
+   > (He always drinks coffee.) [4 words]
 
-6. свіжий / хліб / Ми / хочемо / смачний / і / воду
-   > [!answer] Ми хочемо свіжий смачний хліб і воду.
-   > (We want fresh delicious bread and water.) [7 words]
+6. хліб / Ми / хочемо / і / воду
+   > [!answer] Ми хочемо хліб і воду.
+   > (We want bread and water.) [5 words]
 
-7. валізу / важку / бере / Вона / свою / до / готелю
-   > [!answer] Вона бере свою важку валізу до готелю.
-   > (She takes her heavy suitcase to the hotel.) [7 words]
+7. валізу / бере / Вона / і / сумку
+   > [!answer] Вона бере валізу і сумку.
+   > (She takes the suitcase and bag.) [5 words]
 
-8. журнал / цікавий / читає / Він / новий / про / науку
-   > [!answer] Він читає новий цікавий журнал про науку.
-   > (He reads a new interesting magazine about science.) [7 words]
+8. журнал / читає / Він / і / газету
+   > [!answer] Він читає журнал і газету.
+   > (He reads the magazine and newspaper.) [5 words]
 
-9. паспорт / мій / Де / український / у / цій / сумці
-   > [!answer] Де мій український паспорт у цій сумці?
-   > (Where is my Ukrainian passport in this bag?) [7 words]
+9. паспорт / Де / мій / і / квиток
+   > [!answer] Де мій паспорт і квиток?
+   > (Where is my passport and ticket?) [5 words]
 
-10. документ / важливий / має / Він / цей / завжди / з / собою
-    > [!answer] Він завжди має цей важливий документ з собою.
-    > (He always has this important document with him.) [8 words]
+10. документ / має / Він / цей
+    > [!answer] Він має цей документ.
+    > (He has this document.) [4 words]
+
+11. коробку / Вона / бере / цю
+    > [!answer] Вона бере цю коробку.
+    > (She takes this box.) [4 words]
+
+12. посилку / Я / хочу / цю
+    > [!answer] Я хочу цю посилку.
+    > (I want this package.) [4 words]
 
 ## match-up: Match the Pairs
 
@@ -322,6 +338,8 @@ Say what you want:
 | читати | to read |
 | хотіти | to want |
 | брати | to take |
+| давати | to give |
+| мати | to have |
 | газета | newspaper |
 | журнал | magazine |
 | паспорт | passport |
@@ -397,11 +415,25 @@ Say what you want:
    > Feminine -я → -ю in accusative
 
 10. Which verb does NOT take accusative?
-   - [ ] бачити (to see)
-   - [ ] читати (to read)
-   - [ ] хотіти (to want)
-   - [x] бути (to be)
-   > "бути" doesn't take direct objects
+    - [ ] бачити (to see)
+    - [ ] читати (to read)
+    - [ ] хотіти (to want)
+    - [x] бути (to be)
+    > "бути" doesn't take direct objects
+
+11. What is the accusative of "посилка" (package)?
+    - [ ] посилка
+    - [x] посилку
+    - [ ] посилці
+    - [ ] посилки
+    > Feminine -а → -у in accusative
+
+12. What is the accusative of "сік" (juice)?
+    - [x] сік
+    - [ ] соку
+    - [ ] соці
+    - [ ] соком
+    > Masculine inanimate = no change
 
 ## true-false: True or False?
 
@@ -437,6 +469,12 @@ Say what you want:
 - [x] "валіза" becomes "валізу" in accusative
    > Correct!
 
+- [x] "посилка" becomes "посилку" in accusative
+   > Correct! Feminine -а → -у
+
+- [ ] "молоко" becomes "молоку" in accusative
+   > Incorrect. Neuter inanimate = no change (молоко)
+
 ## group-sort: Accusative Behavior
 
 > Sort these nouns by how they behave in accusative case (inanimate).
@@ -447,6 +485,7 @@ Say what you want:
 - вода → воду
 - кава → каву
 - валіза → валізу
+- посилка → посилку
 
 ### No Change in Accusative
 - стіл (masculine)
@@ -454,6 +493,66 @@ Say what you want:
 - паспорт (masculine)
 - вікно (neuter)
 - молоко (neuter)
+- хліб (masculine)
+
+## fill-in: Transform to Accusative
+
+> Change the nominative form to accusative.
+
+1. книга → ___
+   > [!answer] книгу
+
+2. газета → ___
+   > [!answer] газету
+
+3. вода → ___
+   > [!answer] воду
+
+4. стіл → ___
+   > [!answer] стіл
+
+5. вікно → ___
+   > [!answer] вікно
+
+6. кава → ___
+   > [!answer] каву
+
+7. журнал → ___
+   > [!answer] журнал
+
+8. валіза → ___
+   > [!answer] валізу
+
+9. паспорт → ___
+   > [!answer] паспорт
+
+10. посилка → ___
+    > [!answer] посилку
+
+11. молоко → ___
+    > [!answer] молоко
+
+12. коробка → ___
+    > [!answer] коробку
+
+## match-up: Nominative vs Accusative
+
+> Match the nominative form to its accusative form.
+
+| Left | Right |
+|------|-------|
+| книга | книгу |
+| газета | газету |
+| вода | воду |
+| кава | каву |
+| валіза | валізу |
+| посилка | посилку |
+| коробка | коробку |
+| земля | землю |
+| Україна | Україну |
+| піца | піцу |
+| сумка | сумку |
+| машина | машину |
 
 ---
 
@@ -461,6 +560,7 @@ Say what you want:
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
+| бачити | /ˈbɑtʃɪtɪ/ | to see | verb | - | бачу, бачиш + Acc |
 | чути | /ˈtʃutɪ/ | to hear | verb | - | чую, чуєш + Acc |
 | брати | /ˈbrɑtɪ/ | to take | verb | - | беру, береш + Acc |
 | давати | /dɑˈvɑtɪ/ | to give | verb | - | даю, даєш + Acc |
@@ -475,12 +575,14 @@ Say what you want:
 | ховати | /xɔˈvɑtɪ/ | to hide | verb | - | ховаю + Acc |
 | газета | /ɦɑˈzɛtɑ/ | newspaper | noun | f | газету in Acc |
 | журнал | /ʒurˈnɑl/ | magazine | noun | m | No change in Acc |
+| лист | /lɪst/ | letter | noun | m | No change in Acc |
 | конверт | /kɔnˈvɛrt/ | envelope | noun | m | No change |
 | посилка | /pɔˈsɪlkɑ/ | package | noun | f | посилку in Acc |
 | подарунок | /pɔdɑˈrunɔk/ | gift | noun | m | No change |
 | квиток | /kvɪˈtɔk/ | ticket | noun | m | No change |
 | паспорт | /ˈpɑspɔrt/ | passport | noun | m | No change |
 | документ | /dɔkuˈmɛnt/ | document | noun | m | No change |
+| сумка | /ˈsumkɑ/ | bag | noun | f | сумку in Acc |
 | валіза | /vɑˈlʲizɑ/ | suitcase | noun | f | валізу in Acc |
 | коробка | /kɔˈrɔbkɑ/ | box | noun | f | коробку in Acc |
 ---

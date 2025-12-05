@@ -246,6 +246,26 @@ An A1 module with 30% Ukrainian immersion still cannot use:
 | B1 | 25-30 | +5 words max |
 | B2 | 25-30 | +5 words max |
 
+### Vocabulary Plan Compliance (CRITICAL)
+
+**Every module has a specific vocabulary list in CURRICULUM-PLAN.md.** The module's vocabulary table MUST include all planned words.
+
+**Audit steps:**
+1. Look up the module in the relevant CURRICULUM-PLAN.md (A1, A2, B1, etc.)
+2. Find the "Vocabulary (X words):" line for that module
+3. Compare against the module's `# Vocabulary` table
+4. Report:
+   - **Missing words**: Words in plan but not in vocabulary table
+   - **Extra words**: Words in vocabulary table but not in plan (may be OK if related)
+   - **Count mismatch**: Actual count vs planned count
+
+**Example violation:**
+```
+Plan for M11: "бачити, чути, брати, давати, мати, нести, класти..."
+Module M11 vocab table: missing "бачити" (the main verb!)
+→ VIOLATION: Core vocabulary word from plan is missing
+```
+
 ### Vocabulary Leakage (Common Problem)
 
 Words scheduled for later modules should NOT appear early:
@@ -377,6 +397,32 @@ Every module MUST include engagement boxes (minimum 3 for A1):
 - ❌ "English only has one B-sound" (false - English has both /b/ and /v/)
 - ❌ Etymology errors about Ukrainian vs Russian word origins
 
+### Level-Appropriate Complexity
+
+**A1-A2 engagement boxes should be:**
+- ✅ Immediately practical and relevant
+- ✅ Simple language, short explanations
+- ✅ Connected to real-world usage
+- ❌ NOT abstract linguistic theory
+- ❌ NOT historical linguistics (Proto-Slavic evolution)
+- ❌ NOT academic explanations
+
+**Example violation (A1):**
+```markdown
+❌ WRONG for A1:
+> 📜 **History Bite: Why Feminine Changes**
+> In Proto-Slavic, the accusative originally had distinct endings for all genders.
+> Over time, masculine and neuter inanimate forms merged with nominative...
+
+✅ BETTER for A1:
+> ⚡ **Pro Tip: The -у Rule**
+> Most feminine nouns ending in -а change to -у in accusative.
+> книга → книгу, вода → воду, кава → каву
+> Easy pattern to remember!
+```
+
+**History Bite / Etymology boxes** are better suited for B1+ where learners appreciate linguistic depth.
+
 ---
 
 ## 9. The Review Process
@@ -440,6 +486,8 @@ Use the table from Section 0 to verify:
 - ❌ Inaccurate linguistic facts in engagement boxes
 - ❌ Vocabulary from future modules appearing early
 - ❌ Exceeding vocabulary count limits significantly
+- ❌ Missing planned vocabulary words (compare to CURRICULUM-PLAN.md)
+- ❌ Abstract/academic engagement boxes in A1-A2 (History Bite about Proto-Slavic, etc.)
 
 **Immersion errors:**
 - ❌ Full Ukrainian prose in A1 modules (should be 30% Ukrainian)
@@ -479,7 +527,13 @@ When reviewing a module, report findings in this format:
 
 ### Vocabulary Violations
 1. **Word count**: [actual] words vs [target] target ([+/-] over/under)
-2. **Leakage**: `word` scheduled for Module [XX], appears here
+2. **Missing planned words**: `word1`, `word2` from CURRICULUM-PLAN.md not in vocab table
+3. **Leakage**: `word` scheduled for Module [XX], appears here
+
+### Engagement Box Violations (A1-A2)
+1. **Too abstract**: "[Box name]" uses academic/historical linguistics not appropriate for [level]
+   - Issue: [description]
+   - Fix: Simplify to practical tip or move to B1+
 
 ### Transliteration Violations
 1. **Rule**: [description of violation]
