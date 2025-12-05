@@ -1,17 +1,19 @@
 /**
  * Unjumble activity parser
  *
- * Parses word reordering exercises:
+ * Parses word reordering exercises. Supports two formats:
  *
+ * Slash-separated (explicit word boundaries):
  * ## unjumble: Word Order
- * > Put the words in the correct order to form a sentence.
- *
  * 1. Це / твоя / сумка
  *    > [!answer] Це твоя сумка?
  *    > (Is this your bag?)
  *
- * 2. моя / Де / ручка
- *    > [!answer] Де моя ручка?
+ * Space-separated (implicit word boundaries):
+ * ## unjumble: Word Order
+ * 1. немає мене часу У
+ *    > [!answer] У мене немає часу.
+ *    > (I don't have time.)
  */
 
 import { ActivityParser } from './base';
@@ -50,9 +52,13 @@ export class UnjumbleParser extends ActivityParser<UnjumbleContent> {
       const itemContent = match[2].trim();
       const lines = itemContent.split('\n');
 
-      // First line has jumbled words: "Це / твоя / сумка"
+      // First line has jumbled words: "Це / твоя / сумка" or "Це твоя сумка"
       const jumbledLine = lines[0].trim();
-      const words = jumbledLine.split(/\s*\/\s*/).map(w => w.trim()).filter(Boolean);
+      // Support both slash-separated (explicit) and space-separated (implicit) formats
+      const hasSlashes = jumbledLine.includes('/');
+      const words = hasSlashes
+        ? jumbledLine.split(/\s*\/\s*/).map(w => w.trim()).filter(Boolean)
+        : jumbledLine.split(/\s+/).filter(Boolean);
 
       // Parse answer from callout
       const answerLines = lines.slice(1).join('\n');
