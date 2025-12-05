@@ -139,6 +139,54 @@
 - ✅ Use adverbs instead: добре (well), швидко (quickly), повільно (slowly)
 - ✅ Isolated adjectives in vocabulary lists are OK if absolutely necessary
 
+### Imperative Mood at A1 (Special Case)
+
+**Imperatives are NOT formally taught in A1, but are needed for functional modules (M15 directions, M19 café).**
+
+**How to handle imperatives at A1:**
+- ✅ Treat as **lexical chunks** (memorized phrases), NOT conjugatable verbs
+- ✅ Present in fixed form: "Йдіть прямо" = "Go straight" (phrase to memorize)
+- ❌ Do NOT list infinitives in vocabulary (implies full conjugation needed)
+- ❌ Do NOT explain imperative formation rules
+- ❌ Do NOT include imperative conjugation in activities
+
+**Vocabulary table format for imperatives:**
+```markdown
+# WRONG - implies verb learning:
+| повернути | to turn | verb | - | pf |  ← Problem: learner thinks they need to conjugate
+
+# RIGHT - presents as phrase:
+| Поверніть ліворуч | Turn left | phrase | - | Memorize as chunk |
+| Йдіть прямо | Go straight | phrase | - | Memorize as chunk |
+```
+
+**Activity restrictions:**
+- ✅ Recognition: "What does 'Йдіть прямо' mean?" → "Go straight"
+- ✅ Matching: Match phrase to meaning
+- ❌ Production: "How do you say 'Turn right'?" (requires knowing imperative formation)
+- ❌ Transformation: "Change to imperative" (not taught)
+
+### Verbal Aspect at A1 (AVOID)
+
+**Aspect (perfective vs imperfective) is NOT taught at A1.** Learners have only seen imperfective verbs.
+
+**Problem verbs to flag:**
+| Imperfective | Perfective | Issue |
+|--------------|------------|-------|
+| повертати | повернути | повернути is perfective - confusing if conjugated |
+| переходити | перейти | перейти is perfective |
+| йти | піти | піти is perfective |
+
+**Why this matters:**
+- Perfective verbs in present tense = FUTURE meaning
+- "Я поверну" ≠ "I turn" → it means "I will turn"
+- Learners don't know this yet → major confusion
+
+**A1 solution:**
+- Use imperatives as chunks (avoid infinitive/conjugation entirely)
+- If infinitive needed, prefer imperfective: повертати, переходити
+- Never require conjugating perfective verbs in activities
+
 ---
 
 ## 3. Immersion Level Rules (CRITICAL)
@@ -209,7 +257,7 @@ Words scheduled for later modules should NOT appear early:
 
 **Always check CURRICULUM-PLAN.md for the specific module's vocabulary list.**
 
-### Example/Activity Vocabulary Check (NEW)
+### Example/Activity Vocabulary Check
 
 **Every noun used in examples and activities MUST either:**
 1. Be in the current module's vocabulary table, OR
@@ -227,6 +275,77 @@ Words scheduled for later modules should NOT appear early:
 - Generic nouns in possessive examples: телефон, книга, сумка, машина
 - People nouns in animate accusative: друг, лікар, студент, сусід
 - Place nouns in locative examples: школа, магазин, офіс, ресторан
+
+### Vocabulary Bloat Detection (CRITICAL)
+
+**Vocabulary tables must stay within target AND maintain thematic focus.**
+
+**Bloat indicators:**
+1. **Count exceeds plan by >10%**: If plan says 40 words, max is ~44
+2. **Thematic drift**: Words unrelated to module's core function
+3. **Synonym overload**: Multiple words for same concept (pick ONE for production)
+4. **Scope creep**: Including "nice to have" vocabulary from adjacent topics
+
+**Example - M15 City Navigation:**
+```
+Plan focus: "Finding your way" (walking, metro, asking directions)
+❌ Bloat: автобус, трамвай, тролейбус (transport modes = separate topic)
+❌ Bloat: праворуч AND направо (synonyms - pick one)
+✅ Core: прямо, наліво, направо, назад (direction adverbs)
+✅ Core: метро, станція, вулиця (essential navigation nouns)
+```
+
+**Resolution:**
+- Remove words that exceed target count
+- Prioritize CURRICULUM-PLAN.md vocabulary
+- For synonyms: keep the one in the plan, note the other as "also used"
+- Move thematic drift words to their proper module
+
+### Synonym/Doublet Detection
+
+**At A1, learners need ONE word per concept for active production.**
+
+**Common doublets to flag:**
+| Concept | Option A | Option B | A1 Recommendation |
+|---------|----------|----------|-------------------|
+| to the right | направо | праворуч | Pick направо (plan term) |
+| to the left | наліво | ліворуч | Pick наліво (plan term) |
+| near | біля | поруч | Pick поруч (no case needed) |
+| here | тут | сюди | тут (location), сюди = direction |
+
+**Rule:** If both appear in vocabulary:
+1. Mark one as "active" (for production in activities)
+2. Mark other as "recognition only" with note: "Also used: X"
+3. Do NOT test both in quizzes - only test the active one
+
+### Case Notation in Vocabulary Tables (A1 WARNING)
+
+**At A1, vocabulary tables should NOT include case requirements that haven't been taught.**
+
+**Problematic pattern:**
+```markdown
+| біля | near, by | prep | - | + genitive |  ← PROBLEM!
+| за | behind | prep | - | + instrumental |  ← PROBLEM!
+```
+
+**Why this is bad:**
+- Learner sees "+ genitive" but hasn't learned genitive (M16)
+- Implies they need to learn case endings NOW
+- Creates anxiety and cognitive overload
+
+**A1-safe alternatives:**
+```markdown
+# Option 1: Omit case info entirely
+| біля | near, by | prep | - | Use as chunk |
+
+# Option 2: Note as preview
+| біля | near, by | prep | - | Case endings taught M16 |
+
+# Option 3: Remove prepositions requiring untaught cases
+(Don't include біля, до, навпроти until M16+)
+```
+
+**Best practice for M15:** Focus on adverbs (прямо, наліво) that need NO case, and simple prepositions with nominative/accusative only.
 
 ---
 
@@ -371,22 +490,30 @@ Before anything else, check for scope violations:
 
 ### Step 4: Vocabulary Audit
 
-- Count total words (within limit?)
+- Count total words (within ±10% of target?)
 - Check against CURRICULUM-PLAN.md target list
 - Identify any words from future modules (leakage)
-- **NEW**: Check example/activity nouns against vocabulary table
+- Check example/activity nouns against vocabulary table
+- **NEW**: Check for vocabulary bloat (thematic drift, synonyms)
+- **NEW**: Check for case notation on untaught cases
 
-### Step 5: Coming Next Verification (NEW)
+### Step 5: Coming Next Verification
 
 - Read "Coming Next" section
 - Cross-check against next module in CURRICULUM-PLAN.md
 - Verify terminology matches exactly (no synonyms)
 
-### Step 6: Advanced Topic Check (NEW)
+### Step 6: Advanced Topic Check
 
 - Identify any grammar/vocabulary above module scope
 - Verify appropriate "Preview" labels are present
 - Ensure preview topics are NOT in quizzes/activities
+
+### Step 7: Imperative/Aspect Check (A1 functional modules)
+
+- Are imperatives presented as phrases or conjugatable verbs?
+- Are perfective verbs avoided or handled correctly?
+- Do activities require production of imperatives (bad) or just recognition (ok)?
 
 ---
 
@@ -412,10 +539,13 @@ Before anything else, check for scope violations:
    - Fix: Replace with `alternative`
 
 ### Vocabulary Violations
-1. **Word count**: [actual] words vs [target] target
+1. **Word count**: [actual] words vs [target] target (max +10%)
 2. **Missing planned words**: `word1`, `word2` from CURRICULUM-PLAN.md
 3. **Leakage**: `word` scheduled for Module [XX], appears here
 4. **Example/Activity leakage**: `noun` used in examples but not in vocabulary table
+5. **Bloat - thematic drift**: `word` not related to module focus
+6. **Bloat - synonyms**: `word1` and `word2` are doublets (keep one)
+7. **Case notation**: Vocabulary shows "+ [case]" for untaught case
 
 ### Transliteration Violations
 1. **Rule**: [description of violation]
@@ -424,9 +554,14 @@ Before anything else, check for scope violations:
 1. **Terminology mismatch**: Used `word` but plan specifies `correct_word`
 2. **Wrong module reference**: Previews M[X] content but should preview M[Y]
 
-### Advanced Topic Issues (NEW)
+### Advanced Topic Issues
 1. **Missing label**: `concept` introduced without "Preview" marker
 2. **In activity**: Preview concept `word` appears in quiz/test (should be recognition only)
+
+### Imperative/Aspect Issues (A1)
+1. **Infinitive listed**: `verb` shown as infinitive instead of phrase chunk
+2. **Perfective verb**: `verb` is perfective, will confuse if conjugated
+3. **Production required**: Activity asks learner to produce imperative (not just recognize)
 
 ## Fixes Required
 - [ ] Fix 1
