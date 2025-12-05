@@ -122,24 +122,23 @@ Same root "мо-", different endings for each gender.
 >
 > "Наш" and "ваш" have the same ancient root as English "us" and Latin "nos." These pronouns have been remarkably stable for thousands of years across Indo-European languages. When you say "наш," you're using a word that Bronze Age speakers would have recognized!
 
-### The Special Свій (Reflexive Possessive)
+### Preview: Свій (Reflexive Possessive)
 
 Ukrainian has a special possessive **свій** meaning "one's own" - it refers back to the subject:
 
 - Я читаю **свою** книгу. (I read my [own] book.)
 - Він любить **свою** роботу. (He loves his [own] job.)
-- Вона взяла **свій** телефон. (She took her [own] phone.)
 
 **Свій changes like мій:**
 - свій, своя, своє, свої
 
-> 🔍 **Myth Buster: "Свій is Optional"**
+> 💡 **Note: Advanced Topic**
 >
-> Many learners skip свій, but it matters! Compare:
+> Свій is a useful but subtle concept. For now, just recognize it when you see it. Compare:
 > - Він взяв **свій** телефон. = He took his own phone.
 > - Він взяв **його** телефон. = He took his (someone else's) phone.
 >
-> Without свій, you might cause confusion about whose phone was taken!
+> You'll practice this more at A2 level!
 
 > 🎭 **Culture Corner: Formal vs Informal**
 >
@@ -569,6 +568,12 @@ Describe using possessives:
 | окремо | /ɔˈkrɛmɔ/ | separately | adv | - |
 | родина | /rɔˈdɪnɑ/ | family | noun | f |
 | машина | /mɑˈʃɪnɑ/ | car | noun | f |
+| сумка | /ˈsumkɑ/ | bag | noun | f |
+| паспорт | /ˈpɑspɔrt/ | passport | noun | m |
+| валіза | /vɑˈlʲizɑ/ | suitcase | noun | f |
+| документ | /dɔkuˈmɛnt/ | document | noun | m |
+| телефон | /tɛlɛˈfɔn/ | phone | noun | m |
+| рішення | /rʲiˈʃɛnʲːɑ/ | decision | noun | n |
 
 ---
 
@@ -609,5 +614,4 @@ Describe using possessives:
 >
 > In Module 15, you'll learn to navigate the city:
 > - Де метро? (Where is the metro?)
-> - Як дійти до...? (How do I get to...?)
-> - Directions: прямо, праворуч, ліворуч
+> - Directions: прямо, наліво, направо, назад
