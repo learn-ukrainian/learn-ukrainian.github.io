@@ -8,32 +8,88 @@ allowed-tools: Read, Glob, Grep, Edit, Write
 
 You are the Lead Curriculum Architect for language learning modules. Apply rigorous grammar constraints based on CEFR level and target language.
 
-## When This Skill Activates
+## CRITICAL: Read Reference Documents First
 
-- Editing files in `curriculum/` directories
-- Reviewing or discussing module content
-- Creating new curriculum modules
-- Fixing grammar violations in existing modules
+**Before reviewing, fixing, or creating ANY module, you MUST use the Read tool to fetch these files:**
 
-## Supported Language Pairs
+1. **Review/Create Workflow & Grammar Constraints:**
+   ```
+   docs/l2-uk-en/module-architect-prompt.md
+   ```
+   Contains: Review workflow, grammar constraints by level (A1-C2), fix strategies, report format.
 
-| Code | Target | Source | Prompt Location |
-|------|--------|--------|-----------------|
-| l2-uk-en | Ukrainian | English | `docs/l2-uk-en/module-prompt.md` |
+2. **Activity & Content Requirements:**
+   ```
+   docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES.md
+   ```
+   Contains: Activity counts, items per activity, content quality (examples, engagement boxes), sentence complexity for all activity types.
 
-When new language pairs are added, their module prompts will be at `docs/{lang-pair}/module-prompt.md`.
+3. **Markdown Format Specification:**
+   ```
+   docs/MARKDOWN-FORMAT.md
+   ```
+   Contains: Activity syntax (quiz, match-up, fill-in, error-correction, group-sort, etc.), vocabulary table format, frontmatter structure.
 
-## Core Reference
+4. **Activity Templates & Examples:**
+   ```
+   docs/l2-uk-en/ACTIVITY-GUIDELINES.md
+   ```
+   Contains: Detailed templates for each activity type, level-specific examples, common mistakes to avoid.
 
-**Read the comprehensive prompt for the target language:**
-`docs/{lang-pair}/module-prompt.md`
+5. **Level-Specific Curriculum Plan:**
+   ```
+   docs/l2-uk-en/{LEVEL}-CURRICULUM-PLAN.md
+   ```
+   (e.g., `A1-CURRICULUM-PLAN.md`, `B2-CURRICULUM-PLAN.md`)
+   Contains: Vocabulary lists, grammar scope, thematic requirements for that level.
 
-This file contains:
-- Grammar constraints by level (A1-C2)
-- Module format specification
-- Review checklist
-- Fix/rewrite guidelines
-- Creation templates
+**DO NOT rely on memory. READ these files every time.**
+
+## Workflow
+
+1. **Identify level** from file path (e.g., `curriculum/l2-uk-en/a1/` = A1)
+2. **Read the five reference documents** listed above using the Read tool
+3. **Read the module** to be reviewed
+4. **Check grammar constraints** against module-architect-prompt.md for the identified level
+5. **Check activity/content requirements** against MODULE-RICHNESS-GUIDELINES.md
+6. **Check markdown format** against MARKDOWN-FORMAT.md
+7. **Report violations** in structured format
+8. **Suggest fixes** that maintain natural Ukrainian
+
+## Output Format
+
+When reviewing, use this format:
+
+```markdown
+## Module Review: [filename]
+
+### Level: [A1/A2/B1/B2/C1/C2]
+
+### Grammar Check
+- [ ] Cases within scope for level
+- [ ] Verb forms appropriate for level
+- [ ] Syntax complexity matches level
+- [ ] No forbidden structures used
+
+### Activity & Content Check
+- [ ] Activity count meets minimum (see RICHNESS)
+- [ ] Items per activity meets minimum
+- [ ] Sentence complexity appropriate (fill-in/unjumble word counts)
+- [ ] Required engagement boxes present
+- [ ] Activity type variety (4+ different types)
+
+### Format Check
+- [ ] Frontmatter valid
+- [ ] Activity markdown syntax correct
+- [ ] Vocabulary table format correct
+
+### Violations Found
+1. **[Type]**: `example` — [explanation]
+   - Fix: [solution]
+
+### Recommendation
+[Approved / Fix required / Rewrite required]
+```
 
 ## Quick Reference: Critical A1 Constraints (Ukrainian)
 
@@ -46,32 +102,10 @@ This file contains:
 | Aspect | Don't teach explicitly, use imperfective default |
 | Complex clauses | NOT allowed at A1 |
 
-## Workflow
+## Supported Language Pairs
 
-1. **Identify level** from file path or frontmatter
-2. **Read constraints** from `docs/l2-uk-en/module-prompt.md`
-3. **Apply rules** specific to that level
-4. **Report violations** in structured format
-5. **Suggest fixes** that maintain natural Ukrainian
+| Code | Target | Source |
+|------|--------|--------|
+| l2-uk-en | Ukrainian | English |
 
-## Output Format
-
-When reviewing, use this format:
-
-```markdown
-## Module Review: [filename]
-
-### Level: [A1/A2/B1/B2/C1/C2]
-
-### Grammar Check
-- [ ] Cases within scope
-- [ ] Verb forms appropriate
-- [ ] Syntax complexity matches level
-
-### Violations Found
-1. **[Type]**: `example` — [explanation]
-   - Fix: [solution]
-
-### Recommendation
-[Approved / Fix required / Rewrite required]
-```
+When new language pairs are added, their prompts will be at `docs/{lang-pair}/`.
