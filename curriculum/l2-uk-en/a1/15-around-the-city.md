@@ -125,31 +125,34 @@ These are your navigation essentials:
 
 ### Types of Transport
 
-| Ukrainian | English | Preposition |
-|-----------|---------|-------------|
-| автобус | bus | автобусом |
-| тролейбус | trolleybus | тролейбусом |
-| трамвай | tram | трамваєм |
-| метро | metro | метро |
-| таксі | taxi | таксі |
-| машина | car | машиною |
-| велосипед | bicycle | велосипедом |
+| Ukrainian | English |
+|-----------|---------|
+| автобус | bus |
+| тролейбус | trolleybus |
+| трамвай | tram |
+| метро | metro |
+| таксі | taxi |
+| машина | car |
+| велосипед | bicycle |
 
-### "By" Transport
+### Talking About Transport
 
-To express "by [transport]," use the instrumental case:
+At A1, focus on these simple patterns:
 
-| English | Ukrainian |
-|---------|-----------|
-| by bus | автобусом |
-| by tram | трамваєм |
-| by car | машиною |
-| on foot | пішки |
+| Pattern | Example | Meaning |
+|---------|---------|---------|
+| на + транспорт | на автобусі | on the bus |
+| їхати на | Я їду на метро. | I'm going by metro. |
+| пішки | Ми йдемо пішки. | We're going on foot. |
 
 **Examples:**
-- Я їду автобусом. (I'm going by bus.)
-- Вона їздить на роботу трамваєм. (She goes to work by tram.)
+- Я їду на автобусі. (I'm going on the bus.)
+- Вона їде на роботу на трамваї. (She goes to work on the tram.)
 - Ми йдемо пішки. (We're going on foot.)
+
+> 💡 **Did You Know?**
+>
+> Ukrainian has a special grammar form (instrumental case) for "by transport" that you'll learn in A2. For now, "на + transport" works great!
 
 > 🌍 **Real World**
 > Kyiv's metro is one of the deepest in the world—some stations are over 100 meters underground! The famous Arsenalna station is the deepest metro station globally at 105.5 meters.

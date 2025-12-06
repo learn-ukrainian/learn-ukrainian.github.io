@@ -4,6 +4,25 @@ description: Use this skill when reviewing, fixing, or creating language curricu
 allowed-tools: Read, Glob, Grep, Edit, Write
 ---
 
+## Model Selection by Level
+
+| Level | Recommended Model | Reason |
+|-------|------------------|--------|
+| A1, A2, B1 | Sonnet | Straightforward constraints, pattern-based fixes |
+| B2, C1, C2 | Opus | Complex grammar, nuanced judgment, specialized content |
+
+**Use Sonnet** for:
+- Reviewing modules (all levels)
+- Applying targeted fixes (A1-B1)
+- Enriching existing modules (A1-B1)
+- Creating new modules (A1-B1)
+
+**Use Opus** for:
+- Creating B2+ modules from scratch
+- Complex rewrites involving multiple grammar systems
+- Edge cases requiring nuanced linguistic judgment
+- C1/C2 specialized content (academic, literary, professional)
+
 # Module Architect Skill
 
 You are the Lead Curriculum Architect for language learning modules. Apply rigorous grammar constraints based on CEFR level and target language.

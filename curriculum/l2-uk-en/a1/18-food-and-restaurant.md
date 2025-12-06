@@ -91,20 +91,24 @@ When specifying amounts, use **genitive case**:
 > **Myth:** "Borsch is Russian."
 > **Fact:** Borsch (борщ) is Ukrainian! The word entered English from Ukrainian. UNESCO recognized Ukrainian borsch-making as endangered cultural heritage during Russia's invasion.
 
-### Hot and Cold Foods
+### Describing Food
 
-| Ukrainian | English |
-|-----------|---------|
-| гарячий | hot (temperature) |
-| холодний | cold |
-| теплий | warm |
-| смажений | fried |
-| варений | boiled |
-| печений | baked |
-| солодкий | sweet |
-| солоний | salty |
-| гострий | spicy |
-| смачний | tasty, delicious |
+> 💡 **Preview Vocabulary**
+>
+> These cooking terms and taste words are essential for restaurant ordering. You'll learn adjective grammar formally in Module 26, but you can use these descriptive words now as fixed phrases.
+
+| Ukrainian | English | Use in ordering |
+|-----------|---------|-----------------|
+| гарячий | hot (temperature) | гарячий суп |
+| холодний | cold | холодна вода |
+| теплий | warm | теплий чай |
+| смажений | fried | смажена риба |
+| варений | boiled | варені яйця |
+| печений | baked | печена картопля |
+| солодкий | sweet | солодкий десерт |
+| солоний | salty | солоний суп |
+| гострий | spicy | гострий соус |
+| смачний | tasty, delicious | Дуже смачно! |
 
 > 🌍 **Real World**
 >
@@ -551,15 +555,16 @@ Create a dialogue using:
 | яйце | /jɑjˈt͡sɛ/ | egg | noun | n | |
 | ковбаса | /kɔvbɑˈsɑ/ | sausage | noun | f | |
 | шинка | /ˈʃɪnkɑ/ | ham | noun | f | |
-| смажений | /ˈsmɑʒɛnɪj/ | fried | adj | m | |
-| варений | /ˈvɑrɛnɪj/ | boiled | adj | m | |
-| печений | /ˈpɛt͡ʃɛnɪj/ | baked | adj | m | |
-| гарячий | /ɦɑˈrʲɑt͡ʃɪj/ | hot (temp) | adj | m | |
-| холодний | /xɔˈlɔdnɪj/ | cold | adj | m | |
-| солодкий | /sɔˈlɔdkɪj/ | sweet | adj | m | |
-| солоний | /sɔˈlɔnɪj/ | salty | adj | m | |
-| гострий | /ˈɦɔstrɪj/ | spicy | adj | m | |
-| смачний | /ˈsmɑt͡ʃnɪj/ | tasty | adj | m | |
+| смажений | /ˈsmɑʒɛnɪj/ | fried | adj | m | Preview: cooking term |
+| варений | /ˈvɑrɛnɪj/ | boiled | adj | m | Preview: cooking term |
+| печений | /ˈpɛt͡ʃɛnɪj/ | baked | adj | m | Preview: cooking term |
+| гарячий | /ɦɑˈrʲɑt͡ʃɪj/ | hot (temp) | adj | m | Preview: food descriptor |
+| холодний | /xɔˈlɔdnɪj/ | cold | adj | m | Preview: food descriptor |
+| теплий | /ˈtɛplɪj/ | warm | adj | m | Preview: food descriptor |
+| солодкий | /sɔˈlɔdkɪj/ | sweet | adj | m | Preview: taste word |
+| солоний | /sɔˈlɔnɪj/ | salty | adj | m | Preview: taste word |
+| гострий | /ˈɦɔstrɪj/ | spicy | adj | m | Preview: taste word |
+| смачний | /ˈsmɑt͡ʃnɪj/ | tasty | adj | m | Preview: taste word |
 | меню | /mɛˈnʲu/ | menu | noun | n | indeclinable |
 | порція | /ˈpɔrt͡sʲijɑ/ | portion | noun | f | |
 | тарілка | /tɑˈrʲilkɑ/ | plate | noun | f | |

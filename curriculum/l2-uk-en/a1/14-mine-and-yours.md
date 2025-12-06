@@ -55,7 +55,7 @@ Ukrainian possessive pronouns change form based on the **gender and number of th
 **Examples in sentences:**
 - Це **мій** будинок. (This is my house.)
 - Де **моя** сумка? (Where is my bag?)
-- **Моє** місто красиве. (My city is beautiful.)
+- **Моє** місто — Київ. (My city is Kyiv.)
 - **Мої** батьки живуть у Києві. (My parents live in Kyiv.)
 
 ---
@@ -113,9 +113,9 @@ These are **invariable**—they never change form!
 | Plural | наші | наші друзі (our friends) |
 
 **Examples:**
-- **Наш** будинок великий. (Our house is big.)
-- **Наша** вчителька добра. (Our teacher is kind.)
-- **Наше** завдання складне. (Our task is difficult.)
+- **Наш** будинок тут. (Our house is here.)
+- **Наша** вчителька українка. (Our teacher is Ukrainian.)
+- **Наше** завдання тут. (Our task is here.)
 - **Наші** сусіди українці. (Our neighbors are Ukrainians.)
 
 > 🎬 **Pop Culture Moment**
@@ -156,8 +156,8 @@ The only plural possessive that changes:
 | Plural | їхні | їхні діти (their children) |
 
 **Examples:**
-- **Їхній** кіт сірий. (Their cat is gray.)
-- **Їхня** квартира велика. (Their apartment is big.)
+- **Їхній** кіт тут. (Their cat is here.)
+- **Їхня** квартира там. (Their apartment is there.)
 - **Їхнє** місто далеко. (Their city is far.)
 - **Їхні** друзі приїхали. (Their friends arrived.)
 
@@ -212,8 +212,8 @@ The question word "whose" also changes for gender:
 |-----------|---------|
 | Це мій телефон. | This is my phone. |
 | Де твоя сумка? | Where is your bag? |
-| Його машина нова. | His car is new. |
-| Наша квартира маленька. | Our apartment is small. |
+| Його машина тут. | His car is here. |
+| Наша квартира там. | Our apartment is there. |
 
 ### Family Context
 
@@ -479,15 +479,15 @@ Write sentences about family members:
    > [!answer] твоя
    > [!options] твоя | твій | твоє | її
 
-3. ___ машина нова.
+3. ___ машина тут.
    > [!answer] Його
    > [!options] Його | Її | Мій | Наш
 
-4. ___ сумка красива.
+4. ___ сумка тут.
    > [!answer] Її
    > [!options] Її | Його | Моя | Твоя
 
-5. ___ дім великий.
+5. ___ дім тут.
    > [!answer] Наш
    > [!options] Наш | Наша | Наше | Ваш
 
@@ -499,7 +499,7 @@ Write sentences about family members:
    > [!answer] Їхні
    > [!options] Їхні | Їхній | Їхня | Наші
 
-8. ___ місто красиве.
+8. ___ місто — Київ.
    > [!answer] Моє
    > [!options] Моє | Мій | Моя | Твоє
 
@@ -611,7 +611,7 @@ Write sentences about family members:
    > [!answer] Наші
    > [!options] Наші | Наш | Ваші | Їхні
 
-6. ___ сім'я велика.
+6. ___ сім'я тут.
    > [!answer] Їхня
    > [!options] Їхня | Їхній | Наша | Ваша
 
@@ -631,11 +631,11 @@ Write sentences about family members:
     > [!answer] Його
     > [!options] Його | Її | Наша | Їхня
 
-11. ___ кіт сірий.
+11. ___ кіт тут.
     > [!answer] Їхній
     > [!options] Їхній | Їхня | Наш | Мій
 
-12. ___ собака великий.
+12. ___ собака тут.
     > [!answer] Наш
     > [!options] Наш | Наша | Ваш | Їхній
 
@@ -675,7 +675,7 @@ In this module, you learned:
 **Key patterns:**
 - Це мій телефон. (This is my phone.)
 - Де твоя книга? (Where is your book?)
-- Його машина нова. (His car is new.)
-- Наша країна красива. (Our country is beautiful.)
+- Його машина тут. (His car is here.)
+- Наша країна — Україна. (Our country is Ukraine.)
 
 Next module: Around the City! You'll learn directions and navigation vocabulary to get around Ukrainian cities.

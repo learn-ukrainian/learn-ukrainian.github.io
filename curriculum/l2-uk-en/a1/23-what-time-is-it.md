@@ -105,7 +105,6 @@ For other minutes, Ukrainian uses two patterns:
 | до | until, by | до п'ятої години (until 5 o'clock) |
 | після | after | після обіду (after lunch) |
 | з...до | from...to | з дев'ятої до п'ятої (from 9 to 5) |
-| перед | before | перед обідом (before lunch) |
 | протягом | during | протягом дня (during the day) |
 
 > 💡 **Did You Know?**
@@ -616,7 +615,6 @@ Include:
 | о/об | ɔ/ɔb | at (time) | prep | — | "об" before vowels |
 | до | dɔ | until, to | prep | — | + genitive |
 | після | ˈpislʲɐ | after | prep | — | + genitive |
-| перед | ˈpɛrɛd | before | prep | — | + instrumental (A2) |
 | з...до | z...dɔ | from...to | prep | — | |
 | протягом | prɔˈtʲɑɦɔm | during | prep | — | + genitive |
 
